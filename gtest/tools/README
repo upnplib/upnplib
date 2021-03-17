@@ -1,0 +1,3 @@
+// Author: 2021-03-17 - Ingo Höft <Ingo@Hoeft-online.de>
+
+Compile it with ../compile.sh test_tools.cpp
