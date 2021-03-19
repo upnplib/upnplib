@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-BUILD_DIR="$HOME/devel/pupnp-dev/pupnp"
+BUILD_DIR="$HOME/devel/upnpoo-dev/upnpoo"
 TESTNAME=$(/usr/bin/basename -s.cpp "$1")
 /usr/bin/g++ -std=c++11 -pedantic-errors -Wall \
 -o"$TESTNAME".a \

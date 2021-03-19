@@ -17,6 +17,7 @@
 *.s
 *.ko
 *.so
+*.so.*
 *.so.dbg
 *.mod.c
 *.i
@@ -32,6 +33,13 @@ modules.builtin
 *.patch
 *.gcno
 *.sha1
+_deps/
+bin/
+autoconfig.h.cm
+*.cmake
+!CmDaB.cmake
+*CMake*
+!*CMakeLists.txt
 
 #
 # Top-level generic files
