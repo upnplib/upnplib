@@ -54,6 +54,8 @@
 
 #define NUM_HANDLE 200
 
+struct IUpnp;
+
 extern size_t g_maxContentLength;
 extern int g_UpnpSdkEQMaxLen;
 extern int g_UpnpSdkEQMaxAge;

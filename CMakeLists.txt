@@ -1,6 +1,9 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 3.11)
 CMAKE_POLICY (VERSION 3.13)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 include (CmDaB.cmake)
@@ -58,7 +61,7 @@ if (NOT PUPNP_VERSION_STRING)
 				string (STRIP ${CMAKE_MATCH_3} ${CMAKE_MATCH_3})
 				file (APPEND ${CMAKE_CURRENT_BINARY_DIR}/autoconfig.h.cm "/* ${CMAKE_MATCH_3} */\n")
 				file (APPEND ${CMAKE_CURRENT_BINARY_DIR}/autoconfig.h.cm "#cmakedefine ${CMAKE_MATCH_1} 1\n\n")
- 				list (APPEND WRITTEN_VARS ${CMAKE_MATCH_1})
+				list (APPEND WRITTEN_VARS ${CMAKE_MATCH_1})
 			elseif (line MATCHES "^AC_SUBST.*LT_VERSION_IXML, ([0-9]*):([0-9]*):([0-9]*).*")
 				set (IXML_VERSION_MAJOR ${CMAKE_MATCH_1} CACHE STRING "Majorversion of libixml" FORCE)
 				set (IXML_VERSION ${CMAKE_MATCH_1}.${CMAKE_MATCH_2}.${CMAKE_MATCH_3} CACHE STRING "Version of libixml" FORCE)
@@ -487,3 +490,5 @@ configure_file (${CMAKE_CURRENT_SOURCE_DIR}/libupnp.pc.in ${CMAKE_CURRENT_BINARY
 install (FILES ${CMAKE_CURRENT_BINARY_DIR}/libupnp.pc
 	DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
+
+# vim: tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent nowrap

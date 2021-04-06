@@ -267,7 +267,38 @@ TEST_F(UpnpApiIPv4TestSuite, initialize_with_UpnpInit2)
     EXPECT_STREQ(UpnpGetErrorMessage(
                   UpnpInit2("if0v4", PORT)), "UPNP_E_SUCCESS");
 }
+/*
+TEST_F(UpnpApiIPv4TestSuite, initialize_with_object_oUpnp)
+{
+    struct ifaddrs* ifaddr = nullptr;
 
+    // provide a network interface
+    Ifaddr4 ifaddr4;
+    ifaddr4.set("if0v4", "192.168.99.3/20");
+    ifaddr = ifaddr4.get();
+
+    EXPECT_CALL(mockGetifaddrsObj, getifaddrs(_))
+        .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
+    EXPECT_CALL(mockFreeifaddrsObj, freeifaddrs(ifaddr))
+        .Times(1);
+    EXPECT_CALL(mockIf_nametoindexObj, if_nametoindex(_))
+        .Times(1);
+    EXPECT_CALL(mockBindObj, bind(_,_,_))
+        .Times(5);
+    EXPECT_CALL(mockListenObj, listen(_,_))
+        .Times(3);
+    EXPECT_CALL(mockSelectObj, select(_,_,_,_,_))
+        .Times(7);
+    EXPECT_CALL(mockAcceptObj, accept(_,_,_))
+        .Times(3);
+    EXPECT_CALL(mockSetsockoptObj, setsockopt(_,_,_,_,_))
+        .Times(11);
+
+    IUpnp oUpnp;
+    EXPECT_STREQ(UpnpGetErrorMessage(
+                  oUpnp.UpnpInit2("if0v4", PORT)), "UPNP_E_SUCCESS");
+}
+*/
 
 /* first tests with IP6 not working anymore with mocking, will be improved next
 // UpnpApi Testsuite for IP6

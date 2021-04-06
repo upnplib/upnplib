@@ -484,6 +484,21 @@ static int UpnpInitStartServers(
         return UPNP_E_SUCCESS;
 }
 
+class IUpnp {   // class interface
+public:
+    virtual ~IUpnp() {}
+    virtual int UpnpInit2(const char *IfName, unsigned short DestPort) = 0;
+};
+
+class CUpnp : public IUpnp {
+public:
+    virtual ~CUpnp() {}
+
+    int UpnpInit2(const char *IfName, unsigned short DestPort) override {
+        return UpnpInit2(IfName, DestPort);
+    }
+};
+
 int UpnpInit2(const char *IfName, unsigned short DestPort)
 {
         int retVal;
@@ -896,7 +911,7 @@ int UpnpRegisterRootDevice(const char *DescUrl,
                 "legacy CPs %s\n",
                 HInfo->LowerDescURL);
         HInfo->Callback = Fun;
-        HInfo->Cookie = (void *)Cookie;
+        HInfo->Cookie = (char*)Cookie;
         HInfo->MaxAge = DEFAULT_MAXAGE;
         HInfo->DeviceList = NULL;
         HInfo->ServiceList = NULL;
@@ -1101,7 +1116,7 @@ int UpnpRegisterRootDevice2(Upnp_DescType descriptionType,
         HInfo->aliasInstalled = config_baseURL != 0;
         HInfo->HType = HND_DEVICE;
         HInfo->Callback = Fun;
-        HInfo->Cookie = (void *)Cookie;
+        HInfo->Cookie = (char*)Cookie;
         HInfo->MaxAge = DEFAULT_MAXAGE;
         HInfo->DeviceList = NULL;
         HInfo->ServiceList = NULL;
@@ -1282,7 +1297,7 @@ int UpnpRegisterRootDevice4(const char *DescUrl,
                 "legacy CPs %s\n",
                 HInfo->LowerDescURL);
         HInfo->Callback = Fun;
-        HInfo->Cookie = (void *)Cookie;
+        HInfo->Cookie = (char*)Cookie;
         HInfo->MaxAge = DEFAULT_MAXAGE;
         HInfo->DeviceList = NULL;
         HInfo->ServiceList = NULL;
@@ -1524,7 +1539,7 @@ int UpnpRegisterClient(
         }
         HInfo->HType = HND_CLIENT;
         HInfo->Callback = Fun;
-        HInfo->Cookie = (void *)Cookie;
+        HInfo->Cookie = (char*)Cookie;
         HInfo->ClientSubList = NULL;
         ListInit(&HInfo->SsdpSearchList, NULL, NULL);
 #ifdef INCLUDE_DEVICE_APIS
@@ -1997,7 +2012,7 @@ int UpnpSearchAsync(UpnpClient_Handle Hnd,
         }
 
         HandleUnlock();
-        retVal = SearchByTarget(Hnd, Mx, Target, (void *)Cookie_const);
+        retVal = SearchByTarget(Hnd, Mx, Target, (char*)Cookie_const);
         if (retVal != 1)
                 return retVal;
 
@@ -2161,7 +2176,7 @@ int UpnpSubscribeAsync(UpnpClient_Handle Hnd,
         strncpy(Param->Url, EvtUrl, sizeof(Param->Url) - 1);
         Param->TimeOut = TimeOut;
         Param->Fun = Fun;
-        Param->Cookie = (void *)Cookie_const;
+        Param->Cookie = (char*)Cookie_const;
 
         TPJobInit(&job, (start_routine)UpnpThreadDistribution, Param);
         TPJobSetFreeFunction(&job, (free_routine)free);
@@ -2361,7 +2376,7 @@ int UpnpUnSubscribeAsync(UpnpClient_Handle Hnd,
         Param->Handle = Hnd;
         strncpy(Param->SubsId, SubsId, sizeof(Param->SubsId) - 1);
         Param->Fun = Fun;
-        Param->Cookie = (void *)Cookie_const;
+        Param->Cookie = (char*)Cookie_const;
         TPJobInit(&job, (start_routine)UpnpThreadDistribution, Param);
         TPJobSetFreeFunction(&job, (free_routine)free);
         TPJobSetPriority(&job, MED_PRIORITY);
@@ -2496,7 +2511,7 @@ int UpnpRenewSubscriptionAsync(UpnpClient_Handle Hnd,
         Param->Handle = Hnd;
         strncpy(Param->SubsId, SubsId, sizeof(Param->SubsId) - 1);
         Param->Fun = Fun;
-        Param->Cookie = (void *)Cookie_const;
+        Param->Cookie = (char*)Cookie_const;
         Param->TimeOut = TimeOut;
 
         TPJobInit(&job, (start_routine)UpnpThreadDistribution, Param);
@@ -2979,7 +2994,7 @@ int UpnpSendActionAsync(UpnpClient_Handle Hnd,
                 }
         }
         ixmlFreeDOMString(tmpStr);
-        Param->Cookie = (void *)Cookie_const;
+        Param->Cookie = (char*)Cookie_const;
         Param->Fun = Fun;
 
         TPJobInit(&job, (start_routine)UpnpThreadDistribution, Param);
@@ -3108,7 +3123,7 @@ int UpnpSendActionExAsync(UpnpClient_Handle Hnd,
         ixmlFreeDOMString(tmpStr);
         ixmlFreeDOMString(headerStr);
 
-        Param->Cookie = (void *)Cookie_const;
+        Param->Cookie = (char*)Cookie_const;
         Param->Fun = Fun;
 
         TPJobInit(&job, (start_routine)UpnpThreadDistribution, Param);
@@ -3180,7 +3195,7 @@ int UpnpGetServiceVarStatusAsync(UpnpClient_Handle Hnd,
         strncpy(Param->Url, ActionURL, sizeof(Param->Url) - 1);
         strncpy(Param->VarName, VarName, sizeof(Param->VarName) - 1);
         Param->Fun = Fun;
-        Param->Cookie = (void *)Cookie_const;
+        Param->Cookie = (char*)Cookie_const;
 
         TPJobInit(&job, (start_routine)UpnpThreadDistribution, Param);
         TPJobSetFreeFunction(&job, (free_routine)free);
@@ -4161,7 +4176,7 @@ int PrintHandleInfo(UpnpClient_Handle Hnd)
 {
         struct Handle_Info *HndInfo;
         if (HandleTable[Hnd] != NULL) {
-                HndInfo = HandleTable[Hnd];
+                HndInfo = (Handle_Info*)HandleTable[Hnd];
                 UpnpPrintf(UPNP_ALL,
                         API,
                         __FILE__,
