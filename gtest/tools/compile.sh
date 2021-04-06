@@ -5,7 +5,7 @@ if [ "$#" -ne 1 ]; then
     >&2 echo 'Set BUILD_DIR to point to the pupnp build directory'
 fi
 
-BUILD_DIR="../.."
+BUILD_DIR=".."
 
 TESTNAME=$(/usr/bin/basename -s.cpp "$1")
 /usr/bin/g++ -std=c++11 -pedantic-errors -Wall \
