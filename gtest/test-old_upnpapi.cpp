@@ -1,5 +1,5 @@
 // Mock network interfaces
-// Author: 2021-03-06 - Ingo Höft <Ingo@Hoeft-online.de>
+// Copyright (c) 2021 Ingo Höft, last modified: 2021-03-06
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"

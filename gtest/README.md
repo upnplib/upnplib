@@ -29,4 +29,4 @@ you can execute the test for example with:
     GITHUB_ACTIONS="true" ./test_template-static
 
 <br />
-// Last modified: 2021-04-06
+Author: 2021-03-26 - Ingo Höft, last modified: 2021-04-06

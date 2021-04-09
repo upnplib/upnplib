@@ -1,7 +1,6 @@
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
-// Author: 2021-03-06 - Ingo Höft
-// Last modified: 2021-04-06
+// Copyright (c) 2021 Ingo Höft, last modified: 2021-04-06
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
