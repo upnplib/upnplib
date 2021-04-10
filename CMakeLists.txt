@@ -1,9 +1,18 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 3.11)
+CMAKE_MINIMUM_REQUIRED (VERSION 3.18)
 CMAKE_POLICY (VERSION 3.13)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+    message ("In-source builds are not supported.")
+    message ("Use a separate folder for building, for example:\n")
+    message ("    cmake -B ../upnplib-build .")
+    message ("    cmake --build ../upnplib-build\n")
+    message ("Before that, remove the files already created:\n")
+    message ("    rm -rf CMakeCache.txt CMakeFiles\n")
+    message (FATAL_ERROR "")
+endif()
 
-#include (CmDaB.cmake)
+set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD_REQUIRED True)
 
 if (NOT PUPNP_VERSION_STRING)
     file (GLOB_RECURSE MACROFILES
