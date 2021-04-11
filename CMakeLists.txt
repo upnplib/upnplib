@@ -1,6 +1,5 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 3.18)
 CMAKE_POLICY (VERSION 3.13)
-
 if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
     message ("In-source builds are not supported.")
     message ("Use a separate folder for building, for example:\n")
@@ -14,73 +13,7 @@ endif()
 set (CMAKE_CXX_STANDARD 11)
 set (CMAKE_CXX_STANDARD_REQUIRED True)
 
-if (NOT PUPNP_VERSION_STRING)
-    file (GLOB_RECURSE MACROFILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/
-        *.m4
-    )
-
-    list (APPEND MACROFILES ${CMAKE_CURRENT_SOURCE_DIR}/configure.ac)
-    list (APPEND WRITTEN_VARS DEBUG)
-    list (APPEND WRITTEN_VARS NDEBUG)
-
-    foreach (MACROFILE ${MACROFILES})
-        file (STRINGS ${MACROFILE} configure)
-        file (REMOVE ${CMAKE_CURRENT_BINARY_DIR}/autoconfig.h.cm)
-
-        foreach (line ${configure})
-            string (REGEX REPLACE "\\]" "" line ${line})
-            string (REGEX REPLACE "\\[" "" line ${line})
-            string (REGEX REPLACE ";" "" line ${line})
-            string (REGEX REPLACE "[ \t\r\n] *" " " line ${line})
-
-            if (line MATCHES "AC_INIT.* ([0-9]*\\.[0-9]*\\.[0-9]*).*")
-                message (STATUS "Setting package-version to ${CMAKE_MATCH_1}")
-                set (PUPNP_VERSION_STRING ${CMAKE_MATCH_1} CACHE STRING "Version of the whole package" FORCE)
-            elseif (line MATCHES "[. \t]*AC_DEFINE_UNQUOTED *\\(([^,]*), *([^,]*), *([^\\)]*)")
-                set (SAVED_MATCH ${CMAKE_MATCH_1})
-
-                if ("${CMAKE_MATCH_1}" IN_LIST WRITTEN_VARS)
-                    continue()
-                endif()
-
-                string (SUBSTRING ${CMAKE_MATCH_2} 0 1 FIRSTCHAR)
-                string (STRIP ${CMAKE_MATCH_3} ${CMAKE_MATCH_3})
-                file (APPEND ${CMAKE_CURRENT_BINARY_DIR}/autoconfig.h.cm "/* ${CMAKE_MATCH_3} */\n")
-
-                if (FIRSTCHAR STREQUAL "\"")
-                    file (APPEND ${CMAKE_CURRENT_BINARY_DIR}/autoconfig.h.cm "#cmakedefine ${CMAKE_MATCH_1} \"\$\{${CMAKE_MATCH_1}\}\"\n\n")
-                else()
-                    if (${CMAKE_MATCH_1} MATCHES VERSION AND NOT ${${CMAKE_MATCH_1}})
-                        file (APPEND ${CMAKE_CURRENT_BINARY_DIR}/autoconfig.h.cm "#cmakedefine01 ${SAVED_MATCH}\n\n")
-                    else()
-                        file (APPEND ${CMAKE_CURRENT_BINARY_DIR}/autoconfig.h.cm "#cmakedefine ${SAVED_MATCH} \$\{${SAVED_MATCH}\}\n\n")
-                    endif()
-                endif()
-
-                list (APPEND WRITTEN_VARS ${SAVED_MATCH})
-            elseif (line MATCHES "[. \t]*AC_DEFINE *\\(([^,]*), *([^,]*), *([^\\)]*)")
-                if ("${CMAKE_MATCH_1}" IN_LIST WRITTEN_VARS)
-                    continue()
-                endif()
-
-                string (STRIP ${CMAKE_MATCH_3} ${CMAKE_MATCH_3})
-                file (APPEND ${CMAKE_CURRENT_BINARY_DIR}/autoconfig.h.cm "/* ${CMAKE_MATCH_3} */\n")
-                file (APPEND ${CMAKE_CURRENT_BINARY_DIR}/autoconfig.h.cm "#cmakedefine ${CMAKE_MATCH_1} 1\n\n")
-                list (APPEND WRITTEN_VARS ${CMAKE_MATCH_1})
-            elseif (line MATCHES "^AC_SUBST.*LT_VERSION_IXML, ([0-9]*):([0-9]*):([0-9]*).*")
-                set (IXML_VERSION_MAJOR ${CMAKE_MATCH_1} CACHE STRING "Majorversion of libixml" FORCE)
-                set (IXML_VERSION ${CMAKE_MATCH_1}.${CMAKE_MATCH_2}.${CMAKE_MATCH_3} CACHE STRING "Version of libixml" FORCE)
-                message (STATUS "Setting ixml-version to ${IXML_VERSION}")
-            elseif (line MATCHES "^AC_SUBST.*LT_VERSION_UPNP, ([0-9]*):([0-9]*):([0-9]*).*")
-                set (UPNP_VERSION_MAJOR ${CMAKE_MATCH_1} CACHE STRING "Majorversion of libupnp" FORCE)
-                set (UPNP_VERSION ${CMAKE_MATCH_1}.${CMAKE_MATCH_2}.${CMAKE_MATCH_3} CACHE STRING "Version of libupnp" FORCE)
-                set (UPNP_VERSION_STRING ${UPNP_VERSION} CACHE STRING "see upnpconfig.h" FORCE)
-                message (STATUS "Setting upnp-version to ${UPNP_VERSION}")
-            endif()
-        endforeach()
-    endforeach()
-endif()
+include (cmake/autoheader.cmake)
 
 project (PUPNP VERSION ${PUPNP_VERSION_STRING} LANGUAGES C)
 include (GNUInstallDirs)
@@ -90,6 +23,7 @@ if (WIN32)
     set (STATIC_POSTFIX s)
 endif()
 
+option (GOOGLETEST "Download and build Googletest" OFF)
 option (BUILD_TESTING "Run Tests after compile" ON)
 
 if (BUILD_TESTING)
@@ -490,34 +424,36 @@ install (FILES ${CMAKE_CURRENT_BINARY_DIR}/libupnp.pc
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
 
-# Download and unpack googletest at configure time
-configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
-execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-  RESULT_VARIABLE result
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-if(result)
-  message(FATAL_ERROR "CMake step for googletest failed: ${result}")
-endif()
-execute_process(COMMAND ${CMAKE_COMMAND} --build .
-  RESULT_VARIABLE result
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-if(result)
-  message(FATAL_ERROR "Build step for googletest failed: ${result}")
-endif()
+if (GOOGLETEST)
+    # Download and unpack googletest at configure time
+    configure_file(cmake/googletest-download.cmake googletest-download/CMakeLists.txt)
+    execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+        RESULT_VARIABLE result
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+    if(result)
+        message(FATAL_ERROR "CMake step for googletest failed: ${result}")
+    endif()
+    execute_process(COMMAND ${CMAKE_COMMAND} --build .
+        RESULT_VARIABLE result
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+    if(result)
+        message(FATAL_ERROR "Build step for googletest failed: ${result}")
+    endif()
 
-# Prevent overriding the parent project's compiler/linker
-# settings on Windows
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    # Prevent overriding the parent project's compiler/linker
+    # settings on Windows
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-# Add googletest directly to our build. This defines
-# the gtest and gtest_main targets.
-add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
-                 ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
-                 EXCLUDE_FROM_ALL)
+    # Add googletest directly to our build. This defines
+    # the gtest and gtest_main targets.
+    add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
+                     ${CMAKE_CURRENT_BINARY_DIR}/googletest-build)
+                     # EXCLUDE_FROM_ALL)
 
-# The gtest/gtest_main targets carry header search path
-# dependencies automatically when using CMake 2.8.11 or
-# later. Otherwise we have to add them here ourselves.
-if (CMAKE_VERSION VERSION_LESS 2.8.11)
-  include_directories("${gtest_SOURCE_DIR}/include")
+    # The gtest/gtest_main targets carry header search path
+    # dependencies automatically when using CMake 2.8.11 or
+    # later. Otherwise we have to add them here ourselves.
+    if (CMAKE_VERSION VERSION_LESS 2.8.11)
+        include_directories("${gtest_SOURCE_DIR}/include")
+    endif()
 endif()
