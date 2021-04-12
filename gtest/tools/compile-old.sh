@@ -13,8 +13,8 @@ TESTNAME=$(/usr/bin/basename -s.cpp "$1")
 -o"$TESTNAME".a \
 -I"$BUILD_DIR"/googletest-src/googletest/include \
 -I"$BUILD_DIR"/googletest-src/googlemock/include \
--I"$SOURCE_DIR" \
--I"$SOURCE_DIR"/upnp/src \
+-I"$BUILD_DIR" \
+-I"$BUILD_DIR"/upnp/inc \
 -I"$SOURCE_DIR"/upnp/inc \
 -I"$SOURCE_DIR"/upnp/src/inc \
 -I"$SOURCE_DIR"/upnp/src/threadutil \

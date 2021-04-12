@@ -3,7 +3,8 @@
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
-#include "./tools/ifaddrs.cpp"
+#include "./tools/tools.cpp"
+#include "upnptools.h"
 
 // for TestSuites needing headers linked against the static C library
 extern "C" {
@@ -87,11 +88,12 @@ protected:
 
 TEST_F(UpnpApiIPv4TestSuite, UpnpGetIfInfo)
 {
-    struct ifaddrs* ifaddr = nullptr;
+    // provide a network interface
+    CIfaddr4 ifaddr4Obj;
+    ifaddr4Obj.set("if0v4", "192.168.99.3/11");
+    struct ifaddrs* ifaddr = ifaddr4Obj.get();
 
-    Ifaddr4 ifaddr4;
-    ifaddr = ifaddr4.get();
-
+    // set mocks
     GetifaddrsMock getifaddrsMockObj;
     ptrGetifaddrsMockObj = &getifaddrsMockObj;
 
@@ -108,9 +110,16 @@ TEST_F(UpnpApiIPv4TestSuite, UpnpGetIfInfo)
     EXPECT_CALL(if_nametoindexMockObj, if_nametoindex(_))
         .WillOnce(Return(1));
 
-    EXPECT_EQ(UpnpGetIfInfo(ifaddr->ifa_name), UPNP_E_SUCCESS);
-    EXPECT_STREQ(gIF_NAME, ifaddr->ifa_name);
-    EXPECT_THAT(gIF_IPV4, MatchesRegex("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}"));
+    // call unit
+    EXPECT_STREQ(UpnpGetErrorMessage(
+                  UpnpGetIfInfo(ifaddr->ifa_name)),
+                  "UPNP_E_SUCCESS");
+
+    // verify expectations
+    EXPECT_STREQ(gIF_NAME, "if0v4");
+    //EXPECT_THAT(gIF_IPV4, MatchesRegex("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}"));
+    EXPECT_STREQ(gIF_IPV4, "192.168.99.3");
+    EXPECT_STREQ(gIF_IPV4_NETMASK, "255.224.0.0");
     EXPECT_STREQ(gIF_IPV6, "");
     EXPECT_STREQ(gIF_IPV6_ULA_GUA, "");
     EXPECT_EQ(gIF_INDEX, (const unsigned int)1);
@@ -118,12 +127,12 @@ TEST_F(UpnpApiIPv4TestSuite, UpnpGetIfInfo)
 
 TEST_F(UpnpApiIPv4TestSuite, UpnpInit2)
 {
-    //GTEST_SKIP();
-    struct ifaddrs* ifaddr = nullptr;
+    // provide a network interface
+    CIfaddr4 ifaddr4Obj;
+    ifaddr4Obj.set("if1v4", "192.168.99.3/20");
+    struct ifaddrs* ifaddr = ifaddr4Obj.get();
 
-    Ifaddr4 ifaddr4;
-    ifaddr = ifaddr4.get();
-
+    // set mocks
     GetifaddrsMock getifaddrsMockObj;
     ptrGetifaddrsMockObj = &getifaddrsMockObj;
 
@@ -140,8 +149,10 @@ TEST_F(UpnpApiIPv4TestSuite, UpnpInit2)
     EXPECT_CALL(if_nametoindexMockObj, if_nametoindex(_))
         .Times(1);
 
-    int return_value = UpnpInit2(ifaddr->ifa_name, PORT);
-    EXPECT_EQ(return_value, UPNP_E_SOCKET_BIND);
+    // call unit
+    EXPECT_STREQ(UpnpGetErrorMessage(
+                  UpnpInit2("if1v4", PORT)),
+                  "UPNP_E_SUCCESS");
 }
 
 

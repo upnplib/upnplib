@@ -68,7 +68,6 @@ public:
     ifaddrs* get()
     // Return the pointer to the ifaddr structure
     {
-        std::cout << this << " CIfaddr4.get(): " << ifaddr.ifa_name << "\n";
         return &ifaddr;
     }
 
@@ -79,7 +78,6 @@ public:
     // Returns true if successful.
     {
         ifaddr.ifa_name = (char*)pIfname.c_str();
-        std::cout << this << " CIfaddr4.set(): " << ifaddr.ifa_name << "\n";
 
         // get the netmask from the bitmask
         // the bitmask is the offset in the netmasks array.

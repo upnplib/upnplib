@@ -51,6 +51,7 @@ TEST(ToolsTestSuite, initializing_interface_addresses)
 
 TEST(ToolsTestSuite, initializing_interface_address_container)
 {
+    GTEST_SKIP() << "Test work in progress";
     CIfaddr4Container ifaddr4Container;
 
     EXPECT_TRUE(ifaddr4Container.add("if1v4", "192.168.17.5/22"));
@@ -72,6 +73,7 @@ TEST(ToolsTestSuite, initializing_interface_address_container)
 
 TEST(ToolsTestSuite, running_test_container)
 {
+    GTEST_SKIP() << "Test work in progress";
     CTestContainer testContainerObj;
     testContainerObj.add(456);
     testContainerObj.get();
