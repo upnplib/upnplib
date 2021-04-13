@@ -11,8 +11,8 @@ BUILD_DIR="$HOME/devel/upnplib-dev/upnplib-build"
 TESTNAME=$(/usr/bin/basename -s.cpp "$1")
 /usr/bin/g++ -std=c++11 -pedantic-errors -Wall \
 -o"$TESTNAME".a \
--I"$BUILD_DIR"/googletest-src/googletest/include \
--I"$BUILD_DIR"/googletest-src/googlemock/include \
+-I"$BUILD_DIR"/_deps/googletest-src/googletest/include \
+-I"$BUILD_DIR"/_deps/googletest-src/googlemock/include \
 -I"$BUILD_DIR" \
 -I"$BUILD_DIR"/upnp/inc \
 -I"$SOURCE_DIR"/upnp/inc \
