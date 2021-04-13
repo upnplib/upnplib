@@ -23,7 +23,6 @@ if (WIN32)
     set (STATIC_POSTFIX s)
 endif()
 
-option (GOOGLETEST "Download and build Googletest" OFF)
 option (BUILD_TESTING "Run Tests after compile" ON)
 
 if (BUILD_TESTING)
@@ -424,8 +423,12 @@ install (FILES ${CMAKE_CURRENT_BINARY_DIR}/libupnp.pc
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
 
+
+# Download and unpack googletest at configure time
+Find_Package (Git)
+cmake_dependent_option (GOOGLETEST "Download and build Googletest" OFF ${Git_FOUND} OFF)
+
 if (GOOGLETEST)
-    # Download and unpack googletest at configure time
     configure_file(cmake/googletest-download.cmake googletest-download/CMakeLists.txt)
     execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
         RESULT_VARIABLE result
@@ -449,11 +452,5 @@ if (GOOGLETEST)
     add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                      ${CMAKE_CURRENT_BINARY_DIR}/googletest-build)
                      # EXCLUDE_FROM_ALL)
-
-    # The gtest/gtest_main targets carry header search path
-    # dependencies automatically when using CMake 2.8.11 or
-    # later. Otherwise we have to add them here ourselves.
-    if (CMAKE_VERSION VERSION_LESS 2.8.11)
-        include_directories("${gtest_SOURCE_DIR}/include")
-    endif()
 endif()
+
