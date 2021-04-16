@@ -23,6 +23,9 @@ class CIfaddr4
     struct sockaddr_in ifa_netmask;   // netmask
     struct sockaddr_in ifa_ifu;    // broadcast addr or point-to-point dest addr
 
+    std::string mIfname;              // interface name
+    std::string mIfaddress;           // interface ip address
+
     // the bitmask is the offset in the netmasks array.
     std::string netmasks[33] = {"0.0.0.0",
             "128.0.0.0", "192.0.0.0", "224.0.0.0", "240.0.0.0",
@@ -54,21 +57,21 @@ public:
         //ifa_ifu.sin_port = htons(MYPORT);
         inet_aton("0.0.0.0", &(ifa_ifu.sin_addr));
 
-        ifaddr.ifa_next = nullptr;  // pointer to next ifaddrs structure
-        ifaddr.ifa_name = (char*)"lo";
+        this->ifaddr.ifa_next = nullptr;  // pointer to next ifaddrs structure
+        this->ifaddr.ifa_name = (char*)"lo";
         // v-- Flags from SIOCGIFFLAGS, man 7 netdevice
-        ifaddr.ifa_flags = 0 | IFF_LOOPBACK | IFF_UP;
-        ifaddr.ifa_addr = (struct sockaddr*)&ifa_addr;
-        ifaddr.ifa_netmask = (struct sockaddr*)&ifa_netmask;
-        ifaddr.ifa_broadaddr = (struct sockaddr*)&ifa_ifu;
-        ifaddr.ifa_data = nullptr;
+        this->ifaddr.ifa_flags = 0 | IFF_LOOPBACK | IFF_UP;
+        this->ifaddr.ifa_addr = (struct sockaddr*)&ifa_addr;
+        this->ifaddr.ifa_netmask = (struct sockaddr*)&ifa_netmask;
+        this->ifaddr.ifa_broadaddr = (struct sockaddr*)&ifa_ifu;
+        this->ifaddr.ifa_data = nullptr;
     }
 
 
     ifaddrs* get()
     // Return the pointer to the ifaddr structure
     {
-        return &ifaddr;
+        return &this->ifaddr;
     }
 
 
@@ -77,37 +80,45 @@ public:
     // set to an ipv4 UP interface, supporting broadcast and multicast.
     // Returns true if successful.
     {
-        ifaddr.ifa_name = (char*)pIfname.c_str();
+        if (pIfname == "" or pIfaddress == "")
+            return false;
+
+        // to be thread save we will have the strings here
+        this->mIfname = pIfname;
+        this->mIfaddress = pIfaddress;
+        this->ifaddr.ifa_name = (char*)this->mIfname.c_str();
 
         // get the netmask from the bitmask
         // the bitmask is the offset in the netmasks array.
-        std::size_t slashpos = pIfaddress.find_first_of("/");
-        std::string address = pIfaddress;
+        std::size_t slashpos = this->mIfaddress.find_first_of("/");
+        std::string address = this->mIfaddress;
         std::string bitmask = "32";
         if (slashpos != std::string::npos) {
-            address = pIfaddress.substr(0,slashpos);
-            bitmask = pIfaddress.substr(slashpos+1);
+            address = this->mIfaddress.substr(0,slashpos);
+            bitmask = this->mIfaddress.substr(slashpos+1);
         }
-        //std::cout << "address: '" << address << "', bitmask: '" << bitmask << "', netmask: "
-        //          << netmasks[std::stoi(bitmask)] << ", slashpos: " << slashpos << "\n";
+        //std::cout << "DEBUG! set ifa_name: " << this->ifaddr.ifa_name << ", address: '" << address << "', bitmask: '" << bitmask << "', netmask: " << netmasks[std::stoi(bitmask)] << ", slashpos: " << slashpos << "\n";
 
         // convert address strings to numbers and store them
-        inet_aton(address.c_str(), &(ifa_addr.sin_addr));
+        inet_aton(address.c_str(), &(this->ifa_addr.sin_addr));
         std::string netmask = netmasks[std::stoi(bitmask)];
-        inet_aton(netmask.c_str(), &(ifa_netmask.sin_addr));
-        ifaddr.ifa_flags = 0 | IFF_UP | IFF_BROADCAST | IFF_MULTICAST;
+        inet_aton(netmask.c_str(), &(this->ifa_netmask.sin_addr));
+        this->ifaddr.ifa_flags = 0 | IFF_UP | IFF_BROADCAST | IFF_MULTICAST;
 
         // calculate broadcast address as follows: broadcast = ip | ( ~ subnet )
         // broadcast = ip-addr ored the inverted subnet-mask
-        ifa_ifu.sin_addr.s_addr = ifa_addr.sin_addr.s_addr | ~ ifa_netmask.sin_addr.s_addr;
+        this->ifa_ifu.sin_addr.s_addr = this->ifa_addr.sin_addr.s_addr | ~ this->ifa_netmask.sin_addr.s_addr;
 
+        this->ifaddr.ifa_addr = (struct sockaddr*)&this->ifa_addr;
+        this->ifaddr.ifa_netmask = (struct sockaddr*)&this->ifa_netmask;
+        this->ifaddr.ifa_broadaddr = (struct sockaddr*)&this->ifa_ifu;
         return true;
     }
 
 
-    void set_next_addr(struct ifaddrs* ptrNextAddr)
+    void chain_next_addr(struct ifaddrs* ptrNextAddr)
     {
-        ifaddr.ifa_next = ptrNextAddr;
+        this->ifaddr.ifa_next = ptrNextAddr;
     }
 };
 
@@ -115,93 +126,56 @@ public:
 class CIfaddr4Container
 // This is a Container for multiple network interface structures that are
 // chained by ifaddr.ifa_next as given by the low level struct ifaddrs.
+//
+// It is IMPORTANT to know that the ifaddr.ifa_next address pointer chain
+// changes when adding an interface address object. You MUST get_ifaddr(..)
+// the new address pointer for ongoing work.
 {
-    // Have a container with two address types
     std::vector<CIfaddr4> ifaddr4Container;
 
 public:
-    bool add(std::string pIfname, std::string pIfaddress)
+    bool add(std::string prmIfname, std::string prmIfaddress)
     {
-        CIfaddr4 ifaddr4Obj;
+        ifaddrs* ifaddr4New;
+
+        if (prmIfname == "lo" and prmIfaddress != "127.0.0.1/8")
+            return false;
 
         if (this->ifaddr4Container.empty())
         {
-            if ( ! ifaddr4Obj.set(pIfname, pIfaddress))
-                return false;
-
             // On an empty container just push an interface object to it
-            //std::cout << this << ": " << ifaddr4Obj.get()->ifa_name << "\n";
-            ifaddr4Obj.get();
-            //ifaddr4Obj.get()->ifa_name = (char*)"yyyyy";
-            this->ifaddr4Container.push_back(ifaddr4Obj);
-            this->ifaddr4Container[0].get();
-            //CIfaddr4* ifaddr4O = this->ifaddr4Container.data();
-            //std::cout << this << ": " << ifaddr4O->get()->ifa_name << "\n";
-            //this->ifaddr4Container[0].get()->ifa_name = (char*)"xxxxx";
-            //std::cout << "here " << this->ifaddr4Container[0].get()->ifa_name << "\n";
-            return true;
+            this->ifaddr4Container.push_back(CIfaddr4());
+            if (prmIfname == "lo")
+                return true;
+            return this->ifaddr4Container[0].set(prmIfname, prmIfaddress);
         }
-        return false;
 
-        // If the container is not empty, get the pointer to the last
+        // If the container is not empty, get the position to the last
         // interface object, append a new interface object and chain it to the
         // low level structure ifaddrs, managed by previous interface object.
-        CIfaddr4 ifaddr4Prev = this->ifaddr4Container.back();
-        this->ifaddr4Container.push_back (CIfaddr4());
-        CIfaddr4 ifaddr4New = this->ifaddr4Container.back();
-        ifaddr4Prev.set_next_addr(ifaddr4New.get());
-        return ifaddr4New.set(pIfname, pIfaddress);
+        // pos is zero based, so the size points direct to a new entry.
+        int pos = this->ifaddr4Container.size();
+        this->ifaddr4Container.push_back(CIfaddr4());
+
+        // Because the ifaddr.ifa_next address pointer chain changes when adding
+        // an interface object, the chain must be rebuild
+        for (int i = 1; i <= pos; i++) {
+            ifaddr4New = this->ifaddr4Container.at(i).get();
+            this->ifaddr4Container.at(i-1).chain_next_addr(ifaddr4New);
+        }
+
+        if (prmIfname == "lo")
+            return true;
+        return this->ifaddr4Container.at(pos).set(prmIfname, prmIfaddress);
     }
 
-    ifaddrs* ifaddr(long unsigned int pIdx)
+    ifaddrs* get_ifaddr(long unsigned int pIdx)
     {
-        std::cout << pIdx << "\n";
-        if (pIdx < 1 or pIdx > this->ifaddr4Container.size())
-            return nullptr;
+        if (pIdx == 0) return nullptr;
 
-        std::cout << this << " " << this->ifaddr4Container[0].get()->ifa_name << "\n";
-        CIfaddr4 ifaddr4Obj = this->ifaddr4Container[0];
-        ifaddrs* ifad = ifaddr4Obj.get();
-        //std::cout << this << ": " << ifad->ifa_name << "\n";
-        return ifad;
-    }
-};
-
-
-class CTestClass
-{
-    int mVal;
-public:
-    CTestClass() {
-        this->mVal = 123;
-    }
-    int get() {
-        return this->mVal;
-    }
-    void set(int pVal) {
-        this->mVal = pVal;
-        return;
-    }
-};
-
-
-class CTestContainer
-{
-    std::vector<CTestClass>testContainer;
-    //CTestClass testClassObj;
-
-public:
-    void add(int pVal)
-    {
-        this->testContainer.push_back(CTestClass());
-        CTestClass testObj = testContainer.back();
-        std::cout << "val is '" << testObj.get() << "'\n";
-        return;
-    }
-
-    void get()
-    {
-        std::cout << "get: '" << testContainer[0].get() << "'\n";
+        // this throws an exception if vector.size() is violated
+        ifaddrs* ifaddr4 = this->ifaddr4Container.at(pIdx-1).get();
+        return ifaddr4;
     }
 };
 
