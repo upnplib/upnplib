@@ -172,7 +172,7 @@ unsigned short LOCAL_PORT_V6;
 unsigned short LOCAL_PORT_V6_ULA_GUA;
 
 /*! UPnP device and control point handle table  */
-static void *HandleTable[NUM_HANDLE];
+static Handle_Info *HandleTable[NUM_HANDLE];
 
 /*! a local dir which serves as webserver root */
 extern membuffer gDocumentRootDir;
@@ -214,10 +214,10 @@ int UpnpSdkDeviceRegisteredV4 = 0;
  * == 0 if unregistered, == 1 if registered. */
 int UpnpSdkDeviceregisteredV6 = 0;
 
-#ifdef UPNP_HAVE_OPTSSDP
+//#ifdef UPNP_HAVE_OPTSSDP
 /*! Global variable used in discovery notifications. */
 Upnp_SID gUpnpSdkNLSuuid;
-#endif /* UPNP_HAVE_OPTSSDP */
+//#endif /* UPNP_HAVE_OPTSSDP */
 
 /*! Global variable used as to store the OpenSSL context object
  * to be used for all SSL/TLS connections
@@ -618,7 +618,9 @@ int UpnpFinish(void)
 #ifdef INCLUDE_CLIENT_APIS
         UpnpClient_Handle client_handle;
 #endif
+#if defined(INCLUDE_DEVICE_APIS) || defined(INCLUDE_CLIENT_APIS)
         struct Handle_Info *temp;
+#endif
 #ifdef UPNP_ENABLE_OPEN_SSL
         if (gSslCtx) {
                 SSL_CTX_free(gSslCtx);
@@ -771,6 +773,7 @@ char *UpnpGetServerUlaGuaIp6Address(void)
  * \return On success, an integer greater than zero or UPNP_E_OUTOF_HANDLE on
  * 	failure.
  */
+#if defined(INCLUDE_DEVICE_APIS) || defined(INCLUDE_CLIENT_APIS)
 static int GetFreeHandle()
 {
         /* Handle 0 is not used as NULL translates to 0 when passed as a handle
@@ -830,6 +833,7 @@ static int FreeHandle(
 
         return ret;
 }
+#endif /* INCLUDE_DEVICE_APIS || INCLUDE_CLIENT_APIS */
 
 #ifdef INCLUDE_DEVICE_APIS
 int UpnpRegisterRootDevice(const char *DescUrl,
@@ -895,7 +899,7 @@ int UpnpRegisterRootDevice(const char *DescUrl,
                 "legacy CPs %s\n",
                 HInfo->LowerDescURL);
         HInfo->Callback = Fun;
-        HInfo->Cookie = (void *)Cookie;
+        HInfo->Cookie = (char *)Cookie;
         HInfo->MaxAge = DEFAULT_MAXAGE;
         HInfo->DeviceList = NULL;
         HInfo->ServiceList = NULL;
@@ -1010,6 +1014,7 @@ exit_function:
 /*!
  * \brief Fills the sockadr_in with miniserver information.
  */
+#ifdef INCLUDE_DEVICE_APIS
 static int GetDescDocumentAndURL(
         /* [in] pointer to server address structure. */
         Upnp_DescType descriptionType,
@@ -1024,7 +1029,6 @@ static int GetDescDocumentAndURL(
         /* [out] . */
         char descURL[LINE_SIZE]);
 
-#ifdef INCLUDE_DEVICE_APIS
 int UpnpRegisterRootDevice2(Upnp_DescType descriptionType,
         const char *description_const,
         size_t bufferLen, /* ignored */
@@ -1100,7 +1104,7 @@ int UpnpRegisterRootDevice2(Upnp_DescType descriptionType,
         HInfo->aliasInstalled = config_baseURL != 0;
         HInfo->HType = HND_DEVICE;
         HInfo->Callback = Fun;
-        HInfo->Cookie = (void *)Cookie;
+        HInfo->Cookie = (char *)Cookie;
         HInfo->MaxAge = DEFAULT_MAXAGE;
         HInfo->DeviceList = NULL;
         HInfo->ServiceList = NULL;
@@ -1281,7 +1285,7 @@ int UpnpRegisterRootDevice4(const char *DescUrl,
                 "legacy CPs %s\n",
                 HInfo->LowerDescURL);
         HInfo->Callback = Fun;
-        HInfo->Cookie = (void *)Cookie;
+        HInfo->Cookie = (char *)Cookie;
         HInfo->MaxAge = DEFAULT_MAXAGE;
         HInfo->DeviceList = NULL;
         HInfo->ServiceList = NULL;
@@ -1523,7 +1527,7 @@ int UpnpRegisterClient(
         }
         HInfo->HType = HND_CLIENT;
         HInfo->Callback = Fun;
-        HInfo->Cookie = (void *)Cookie;
+        HInfo->Cookie = (char *)Cookie;
         HInfo->ClientSubList = NULL;
         ListInit(&HInfo->SsdpSearchList, NULL, NULL);
 #ifdef INCLUDE_DEVICE_APIS
@@ -2162,7 +2166,7 @@ int UpnpSubscribeAsync(UpnpClient_Handle Hnd,
         strncpy(Param->Url, EvtUrl, sizeof(Param->Url) - 1);
         Param->TimeOut = TimeOut;
         Param->Fun = Fun;
-        Param->Cookie = (void *)Cookie_const;
+        Param->Cookie = (char *)Cookie_const;
 
         TPJobInit(&job, (start_routine)UpnpThreadDistribution, Param);
         TPJobSetFreeFunction(&job, (free_routine)free);
@@ -2362,7 +2366,7 @@ int UpnpUnSubscribeAsync(UpnpClient_Handle Hnd,
         Param->Handle = Hnd;
         strncpy(Param->SubsId, SubsId, sizeof(Param->SubsId) - 1);
         Param->Fun = Fun;
-        Param->Cookie = (void *)Cookie_const;
+        Param->Cookie = (char *)Cookie_const;
         TPJobInit(&job, (start_routine)UpnpThreadDistribution, Param);
         TPJobSetFreeFunction(&job, (free_routine)free);
         TPJobSetPriority(&job, MED_PRIORITY);
@@ -2497,7 +2501,7 @@ int UpnpRenewSubscriptionAsync(UpnpClient_Handle Hnd,
         Param->Handle = Hnd;
         strncpy(Param->SubsId, SubsId, sizeof(Param->SubsId) - 1);
         Param->Fun = Fun;
-        Param->Cookie = (void *)Cookie_const;
+        Param->Cookie = (char *)Cookie_const;
         Param->TimeOut = TimeOut;
 
         TPJobInit(&job, (start_routine)UpnpThreadDistribution, Param);
@@ -2980,7 +2984,7 @@ int UpnpSendActionAsync(UpnpClient_Handle Hnd,
                 }
         }
         ixmlFreeDOMString(tmpStr);
-        Param->Cookie = (void *)Cookie_const;
+        Param->Cookie = (char *)Cookie_const;
         Param->Fun = Fun;
 
         TPJobInit(&job, (start_routine)UpnpThreadDistribution, Param);
@@ -3109,7 +3113,7 @@ int UpnpSendActionExAsync(UpnpClient_Handle Hnd,
         ixmlFreeDOMString(tmpStr);
         ixmlFreeDOMString(headerStr);
 
-        Param->Cookie = (void *)Cookie_const;
+        Param->Cookie = (char *)Cookie_const;
         Param->Fun = Fun;
 
         TPJobInit(&job, (start_routine)UpnpThreadDistribution, Param);
@@ -3181,7 +3185,7 @@ int UpnpGetServiceVarStatusAsync(UpnpClient_Handle Hnd,
         strncpy(Param->Url, ActionURL, sizeof(Param->Url) - 1);
         strncpy(Param->VarName, VarName, sizeof(Param->VarName) - 1);
         Param->Fun = Fun;
-        Param->Cookie = (void *)Cookie_const;
+        Param->Cookie = (char *)Cookie_const;
 
         TPJobInit(&job, (start_routine)UpnpThreadDistribution, Param);
         TPJobSetFreeFunction(&job, (free_routine)free);

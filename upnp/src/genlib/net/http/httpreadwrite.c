@@ -190,7 +190,7 @@ static int get_hoststr(const char *url_str, char **hoststr, size_t *hostlen)
         char *urlPath = alloca(strlen(url_str) + 1);
         char *temp;
         memset(urlPath, 0, strlen(url_str) + 1);
-        strncpy(urlPath, url_str, strlen(url_str));
+        strncpy(urlPath, url_str, strlen(urlPath));
         *hoststr = strstr(urlPath, "//");
         if (*hoststr == NULL)
                 return UPNP_E_INVALID_URL;
@@ -817,7 +817,7 @@ int http_Download(const char *url_str,
         /* make msg */
         membuffer_init(&request);
         memset(urlPath, 0, strlen(url_str) + (size_t)1);
-        strncpy(urlPath, url_str, strlen(url_str));
+        strncpy(urlPath, url_str, strlen(urlPath));
         hoststr = strstr(urlPath, "//");
         if (hoststr == NULL)
                 return UPNP_E_INVALID_URL;
@@ -2036,7 +2036,7 @@ int MakeGetMessageEx(const char *url_str,
                         break;
                 }
                 memset(urlPath, 0, strlen(url_str) + (size_t)1);
-                strncpy(urlPath, url_str, strlen(url_str));
+                strncpy(urlPath, url_str, strlen(urlPath));
                 hoststr = strstr(urlPath, "//");
                 if (hoststr == NULL) {
                         errCode = UPNP_E_INVALID_URL;

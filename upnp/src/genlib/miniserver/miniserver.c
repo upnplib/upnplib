@@ -375,12 +375,14 @@ static void web_server_accept(SOCKET lsock, fd_set *set)
 #endif /* INTERNAL_WEB_SERVER */
 }
 
+#ifdef UPNP_HAVE_OPTSSDP
 static void ssdp_read(SOCKET rsock, fd_set *set)
 {
         if (rsock != INVALID_SOCKET && FD_ISSET(rsock, set)) {
                 readFromSSDPSocket(rsock);
         }
 }
+#endif /* UPNP_HAVE_OPTSSDP */
 
 static int receive_from_stopSock(SOCKET ssock, fd_set *set)
 {
@@ -495,6 +497,7 @@ static void RunMiniServer(
                         web_server_accept(miniSock->miniServerSock6, &rdSet);
                         web_server_accept(
                                 miniSock->miniServerSock6UlaGua, &rdSet);
+#ifdef UPNP_HAVE_OPTSSDP
 #ifdef INCLUDE_CLIENT_APIS
                         ssdp_read(miniSock->ssdpReqSock4, &rdSet);
                         ssdp_read(miniSock->ssdpReqSock6, &rdSet);
@@ -502,6 +505,7 @@ static void RunMiniServer(
                         ssdp_read(miniSock->ssdpSock4, &rdSet);
                         ssdp_read(miniSock->ssdpSock6, &rdSet);
                         ssdp_read(miniSock->ssdpSock6UlaGua, &rdSet);
+#endif /* UPNP_HAVE_OPTSSDP */
                         stopSock = receive_from_stopSock(
                                 miniSock->miniServerStopSock, &rdSet);
                 }
@@ -1049,6 +1053,7 @@ int StartMiniServer(
                 free(miniSocket);
                 return ret_code;
         }
+#ifdef UPNP_HAVE_OPTSSDP
         /* SSDP socket for discovery/advertising. */
         ret_code = get_ssdp_sockets(miniSocket);
         if (ret_code != UPNP_E_SUCCESS) {
@@ -1059,6 +1064,7 @@ int StartMiniServer(
                 free(miniSocket);
                 return ret_code;
         }
+#endif /* UPNP_HAVE_OPTSSDP */
         TPJobInit(&job, (start_routine)RunMiniServer, (void *)miniSocket);
         TPJobSetPriority(&job, MED_PRIORITY);
         TPJobSetFreeFunction(&job, (free_routine)free);
