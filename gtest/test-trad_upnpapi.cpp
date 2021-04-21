@@ -10,10 +10,9 @@
 
 #include "api/upnpapi.cpp"
 
-// for TestSuites needing headers linked against the static C library
-extern "C" {
-}
 
+// UpnpApi Testsuite for IP4
+//==========================
 using ::testing::_;
 using ::testing::Return;
 using ::testing::DoAll;
@@ -121,9 +120,9 @@ int setsockopt(int sockfd, int level, int optname, const void* optval,
 }
 
 
-// UpnpApi Testsuite for IP4
-//==========================
-class UpnpApiIPv4TestSuite: public ::testing::Test
+// This TestSuite is with initializing mocks
+//------------------------------------------
+class ApiIPv4MockTestSuite: public ::testing::Test
 // Fixtures for this Testsuite
 {
 protected:
@@ -141,10 +140,8 @@ protected:
     MockSetsockopt mockSetsockoptObj;
 
     // constructor of this testsuite
-    UpnpApiIPv4TestSuite()
+    ApiIPv4MockTestSuite()
     {
-        #include "init_global_var.inc"
-
         // set the global pointer to the mock objects
         ptrMockGetifaddrsObj = &mockGetifaddrsObj;
         ptrMockFreeifaddrObj = &mockFreeifaddrsObj;
@@ -154,11 +151,49 @@ protected:
         ptrMockSelectObj = &mockSelectObj;
         ptrMockAcceptObj = &mockAcceptObj;
         ptrMockSetsockoptObj = &mockSetsockoptObj;
+
+        // initialize global variables with file scope for upnpapi.cpp
+        virtualDirCallback = {};
+        pVirtualDirList = nullptr;
+        //GlobalClientSubscribeMutex; // mutex, must be initialized, only used with gena.h
+        //GlobalHndRWLock;         // mutex, must be initialzed
+        //gTimerThread             // must be initialized
+        gSDKInitMutex = PTHREAD_MUTEX_INITIALIZER;
+        //gUUIDMutex               // mutex, must be initialzed
+        //gSendThreadPool          // type ThreadPool must be initialized
+        //gRecvThreadPool;         // type ThreadPool must be initialized
+        //gMiniServerThreadPool;   // type ThreadPool must be initialized
+        bWebServerState = WEB_SERVER_DISABLED;
+        gIF_NAME[LINE_SIZE] = {'\0'};
+        gIF_IPV4[INET_ADDRSTRLEN] = {'\0'};
+        gIF_IPV4_NETMASK[INET_ADDRSTRLEN] = {'\0'};
+        gIF_IPV6[INET6_ADDRSTRLEN] = {'\0'};
+        gIF_IPV6_PREFIX_LENGTH = 0;
+        gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN] = {'\0'};
+        gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
+        gIF_INDEX = (unsigned)-1;
+        LOCAL_PORT_V4 = 0;
+        LOCAL_PORT_V6 = 0;
+        LOCAL_PORT_V6_ULA_GUA = 0;
+        HandleTable[NUM_HANDLE] = nullptr;
+        g_maxContentLength = DEFAULT_SOAP_CONTENT_LENGTH;
+        g_UpnpSdkEQMaxLen = MAX_SUBSCRIPTION_QUEUED_EVENTS;
+        g_UpnpSdkEQMaxAge = MAX_SUBSCRIPTION_EVENT_AGE;
+        UpnpSdkInit = 0;
+        UpnpSdkClientRegistered = 0;
+        UpnpSdkDeviceRegisteredV4 = 0;
+        UpnpSdkDeviceregisteredV6 = 0;
+        #ifdef UPNP_HAVE_OPTSSDP
+        gUpnpSdkNLSuuid = {};
+        #endif /* UPNP_HAVE_OPTSSDP */
+        #ifdef UPNP_ENABLE_OPEN_SSL
+        SSL_CTX *gSslCtx = nullptr;
+        #endif
     }
 };
 
 
-TEST_F(UpnpApiIPv4TestSuite, UpnpGetIfInfo_called_with_valid_interface)
+TEST_F(ApiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface)
 {
     // SKIP on Github Actions
     char* github_action = std::getenv("GITHUB_ACTIONS");
@@ -179,6 +214,7 @@ TEST_F(UpnpApiIPv4TestSuite, UpnpGetIfInfo_called_with_valid_interface)
     EXPECT_CALL(mockIf_nametoindexObj, if_nametoindex(_))
         .WillOnce(Return(2));
 
+    // call the unit
     EXPECT_STREQ(UpnpGetErrorMessage(
                   UpnpGetIfInfo("if0v4")),
                   "UPNP_E_SUCCESS");
@@ -201,7 +237,7 @@ TEST_F(UpnpApiIPv4TestSuite, UpnpGetIfInfo_called_with_valid_interface)
 }
 
 
-TEST_F(UpnpApiIPv4TestSuite, UpnpGetIfInfo_called_with_unknown_interface)
+TEST_F(ApiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface)
 {
     // SKIP on Github Actions
     char* github_action = std::getenv("GITHUB_ACTIONS");
@@ -248,7 +284,7 @@ TEST_F(UpnpApiIPv4TestSuite, UpnpGetIfInfo_called_with_unknown_interface)
 }
 
 
-TEST_F(UpnpApiIPv4TestSuite, initialize_default_UpnpInit2)
+TEST_F(ApiIPv4MockTestSuite, initialize_default_UpnpInit2)
 {
     // SKIP on Github Actions
     char* github_action = std::getenv("GITHUB_ACTIONS");
@@ -284,17 +320,44 @@ TEST_F(UpnpApiIPv4TestSuite, initialize_default_UpnpInit2)
     captFdObj.capture(2);   // 1 = stdout, 2 = stderr
 
     // call the unit
+    EXPECT_EQ(UpnpSdkInit, 0);
     EXPECT_STREQ(UpnpGetErrorMessage(
                   UpnpInit2(NULL, 0)),
                   "UPNP_E_SUCCESS");
 
     EXPECT_FALSE(captFdObj.print(std::cerr))
         << "Output to stderr is true. There should not be any output to stderr";
+    EXPECT_EQ(UpnpSdkInit, 1);
+
+    // call the unit again
+    EXPECT_STREQ(UpnpGetErrorMessage(
+                  UpnpInit2(NULL, 0)),
+                  "UPNP_E_INIT");
+    EXPECT_EQ(UpnpSdkInit, 1);
 }
 
+/*
+// TestSuite without mocking
+//--------------------------
+class ApiIPv4TestSuite: public ::testing::Test
+// Fixtures for this Testsuite
+{
+protected:
+    // constructor of this testsuite
+    ApiIPv4TestSuite()
+    {
+        #include "init_global_var_upnpapi.inc"
+    }
+};
+*/
 
 // UpnpApi common Testsuite
 //-------------------------
+TEST(UpnpApiTestSuite, WinsockInit)
+{
+    EXPECT_STREQ(UpnpGetErrorMessage(UPNP_E_SUCCESS), "UPNP_E_SUCCESS");
+}
+
 TEST(UpnpApiTestSuite, get_handle_info)
 {
     Handle_Info **HndInfo = 0;

@@ -69,35 +69,35 @@ static char *fileName;
  * risk of race, probably not a problem, and not worth fixing. */
 int UpnpInitLog(void)
 {
-        if (!initwascalled) {
-                ithread_mutex_init(&GlobalDebugMutex, NULL);
-                initwascalled = 1;
-        }
-        /* If the user did not ask for logging do nothing */
-        if (setlogwascalled == 0) {
-                return UPNP_E_SUCCESS;
-        }
-
-        if (fp) {
-                if (is_stderr == 0) {
-                        fclose(fp);
-                        fp = NULL;
-                }
-        }
-        is_stderr = 0;
-        if (fileName) {
-                if ((fp = fopen(fileName, "a")) == NULL) {
-                        fprintf(stderr,
-                                "Failed to open fileName (%s): %s\n",
-                                fileName,
-                                strerror(errno));
-                }
-        }
-        if (fp == NULL) {
-                fp = stderr;
-                is_stderr = 1;
-        }
+    if (!initwascalled) {
+        ithread_mutex_init(&GlobalDebugMutex, NULL);
+        initwascalled = 1;
+    }
+    /* If the user did not ask for logging do nothing */
+    if (setlogwascalled == 0) {
         return UPNP_E_SUCCESS;
+    }
+
+    if (fp) {
+        if (is_stderr == 0) {
+            fclose(fp);
+            fp = NULL;
+        }
+    }
+    is_stderr = 0;
+    if (fileName) {
+        if ((fp = fopen(fileName, "a")) == NULL) {
+            fprintf(stderr,
+                "Failed to open fileName (%s): %s\n",
+                fileName,
+                strerror(errno));
+        }
+    }
+    if (fp == NULL) {
+        fp = stderr;
+        is_stderr = 1;
+    }
+    return UPNP_E_SUCCESS;
 }
 
 void UpnpSetLogLevel(Upnp_LogLevel log_level)

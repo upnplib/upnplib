@@ -1,5 +1,5 @@
 // Tools and helper classes to manage gtests
-// Author: 2021-03-12 - Ingo Höft
+// Author: 2021 - Ingo Höft, last modified: 2021-04-20
 
 #include <ifaddrs.h>
 #include <arpa/inet.h>
@@ -10,7 +10,12 @@
 #include <vector>
 #include <variant>
 #include <unistd.h>
+#include <filesystem>
+#include "upnp.h"
 
+// Errormessages taken from https://github.com/pupnp/pupnp
+// Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+//------------------------------------------------------------
 /*!
  * \brief Structure to maintain a error code and string associated with the
  * error code.
@@ -263,53 +268,61 @@ class CCaptureFd
 // to avoid confusing output loops. For a new capture after print(..) you have
 // to call capture(..) again.
 {
-    int mFd;
-    int mFd_old;
-    int mFd_log;
-    bool mErr = true;
-    char mCaptFname[16] = ".captfd.log";
+    int fd;
+    int fd_old;
+    int fd_log;
+    bool err = true;
+    std::string captFname;
 
 public:
-    void capture(int fd)
+    CCaptureFd()
     {
-        mFd = fd;
-        mFd_old = ::dup(fd);
-        if (mFd_old < 0) {
-            return;
-        }
-        mFd_log = ::open(mCaptFname, O_WRONLY|O_CREAT|O_TRUNC, 0660);
-        if (mFd_log < 0) {
-            ::close(mFd_old);
-            return;
-        }
-        if (::dup2(mFd_log, fd) < 0) {
-            ::close(mFd_old);
-            ::close(mFd_log);
-            return;
-        }
-        mErr = false;
+        // generate random temporary filename to be thread-safe
+        std::srand(std::time(nullptr));
+        this->captFname = (std::string)std::filesystem::temp_directory_path()
+                          + "/gtestcapt" + std::to_string(std::rand());
     }
 
     ~CCaptureFd()
     {
         this->closeFds();
-        remove(mCaptFname);
+        remove(this->captFname.c_str());
+    }
+
+    void capture(int prmFd)
+    {
+        this->fd = prmFd;
+        this->fd_old = ::dup(prmFd);
+        if (this->fd_old < 0) {
+            return;
+        }
+        this->fd_log = ::open(this->captFname.c_str(), O_WRONLY|O_CREAT|O_TRUNC, 0660);
+        if (this->fd_log < 0) {
+            ::close(this->fd_old);
+            return;
+        }
+        if (::dup2(this->fd_log, prmFd) < -2) {
+            ::close(this->fd_old);
+            ::close(this->fd_log);
+            return;
+        }
+        this->err = false;
     }
 
     bool print(std::ostream &pOut)
     // Close all file descriptors and print captured file content.
     // If nothing was captured, then the return value is false.
     {
-        if (mErr) return false;
+        if (this->err) return false;
         this->closeFds();
 
-        std::ifstream readFileObj(mCaptFname);
+        std::ifstream readFileObj(this->captFname.c_str());
         std::string lineBuf = "";
 
         std::getline(readFileObj, lineBuf);
         if (lineBuf == "") {
             readFileObj.close();
-            remove(mCaptFname);
+            remove(this->captFname.c_str());
             return false;
         }
 
@@ -318,7 +331,7 @@ public:
                 pOut << lineBuf << "\n";
 
         readFileObj.close();
-        remove(mCaptFname);
+        remove(this->captFname.c_str());
         return true;
     }
 
@@ -326,9 +339,9 @@ private:
     void closeFds()
     {
         // restore old fd
-        ::dup2(mFd_old, mFd);
-        ::close(mFd_old);
-        ::close(mFd_log);
-        mErr = true;
+        ::dup2(this->fd_old, this->fd);
+        ::close(this->fd_old);
+        ::close(this->fd_log);
+        this->err = true;
     }
 };

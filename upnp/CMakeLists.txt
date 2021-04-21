@@ -19,7 +19,7 @@ set (UPNP_SOURCES
 	src/api/UpnpSubscriptionRequest.c
 	src/api/UpnpString.c
 	src/api/upnpapi.cpp
-	src/api/upnpdebug.c
+	src/api/upnpdebug.cpp
 	src/genlib/client_table/GenlibClientSubscription.c
 	src/genlib/client_table/client_table.c
 	src/genlib/miniserver/miniserver.c
