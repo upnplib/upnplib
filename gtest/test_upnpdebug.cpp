@@ -3,7 +3,7 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include <stdio.h>
-#include "tools/tools.cpp"
+#include "tools.h"
 
 #include "api/upnpdebug.cpp"
 
@@ -268,6 +268,7 @@ TEST(UpnpDebugSimpleTestSuite, set_log_level)
     EXPECT_EQ(g_log_level, UPNP_INFO);
     EXPECT_EQ(setlogwascalled, 1);
 }
+
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);

@@ -11,6 +11,7 @@
 #include <variant>
 #include <unistd.h>
 #include <filesystem>
+#include "tools.h"
 #include "upnp.h"
 
 // Errormessages taken from https://github.com/pupnp/pupnp
@@ -79,7 +80,7 @@ struct ErrorString ErrorMessages[] = {
         {UPNP_E_INTERNAL_ERROR, "UPNP_E_INTERNAL_ERROR"},
 };
 
-const char *UpnpGetErrorMessage(int rc)
+const char* UpnpGetErrorMessage(int rc)
 {
         size_t i;
 
@@ -93,115 +94,89 @@ const char *UpnpGetErrorMessage(int rc)
 }
 
 
-class CIfaddr4
-// Tool to manage and fill a socket address structure. This is needed
-// for mocked network interfaces.
+CIfaddr4::CIfaddr4()
+// With constructing the object you get a loopback device by default.
 {
-    // this is the ifaddr structure to filled and returned
-    struct ifaddrs ifaddr;
+    // loopback interface
+    //-------------------
+    // set network address
+    ifa_addr.sin_family = AF_INET;
+    //ifa_addr.sin_port = htons(MYPORT);
+    inet_aton("127.0.0.1", &(ifa_addr.sin_addr));
 
-    struct sockaddr_in ifa_addr;      // network address
-    struct sockaddr_in ifa_netmask;   // netmask
-    struct sockaddr_in ifa_ifu;    // broadcast addr or point-to-point dest addr
+    // set netmask
+    ifa_netmask.sin_family = AF_INET;
+    //ifa_netmask.sin_port = htons(MYPORT);
+    inet_aton("255.0.0.0", &(ifa_netmask.sin_addr));
 
-    std::string mIfname;              // interface name
-    std::string mIfaddress;           // interface ip address
+    // set broadcast address or Point-to-point destination address
+    ifa_ifu.sin_family = AF_INET;
+    //ifa_ifu.sin_port = htons(MYPORT);
+    inet_aton("0.0.0.0", &(ifa_ifu.sin_addr));
 
+    this->ifaddr.ifa_next = nullptr;  // pointer to next ifaddrs structure
+    this->ifaddr.ifa_name = (char*)"lo";
+    // v-- Flags from SIOCGIFFLAGS, man 7 netdevice
+    this->ifaddr.ifa_flags = 0 | IFF_LOOPBACK | IFF_UP;
+    this->ifaddr.ifa_addr = (struct sockaddr*)&ifa_addr;
+    this->ifaddr.ifa_netmask = (struct sockaddr*)&ifa_netmask;
+    this->ifaddr.ifa_broadaddr = (struct sockaddr*)&ifa_ifu;
+    this->ifaddr.ifa_data = nullptr;
+}
+
+
+ifaddrs* CIfaddr4::get()
+// Return the pointer to the ifaddr structure
+{
+    return &this->ifaddr;
+}
+
+
+bool CIfaddr4::set(std::string pIfname, std::string pIfaddress)
+// Set the interface name and the ipv4 address with bitmask. Properties are
+// set to an ipv4 UP interface, supporting broadcast and multicast.
+// Returns true if successful.
+{
+    if (pIfname == "" or pIfaddress == "")
+        return false;
+
+    // to be thread save we will have the strings here
+    this->mIfname = pIfname;
+    this->mIfaddress = pIfaddress;
+    this->ifaddr.ifa_name = (char*)this->mIfname.c_str();
+
+    // get the netmask from the bitmask
     // the bitmask is the offset in the netmasks array.
-    std::string netmasks[33] = {"0.0.0.0",
-            "128.0.0.0", "192.0.0.0", "224.0.0.0", "240.0.0.0",
-            "248.0.0.0", "252.0.0.0", "254.0.0.0", "255.0.0.0",
-            "255.128.0.0", "255.192.0.0", "255.224.0.0", "255.240.0.0",
-            "255.248.0.0", "255.252.0.0", "255.254.0.0", "255.255.0.0",
-            "255.255.128.0", "255.255.192.0", "255.255.224.0", "255.255.240.0",
-            "255.255.248.0", "255.255.252.0", "255.255.254.0", "255.255.255.0",
-            "255.255.255.128", "255.255.255.192", "255.255.255.224", "255.255.255.240",
-            "255.255.255.248", "255.255.255.252", "255.255.255.254", "255.255.255.255"};
-public:
-    CIfaddr4()
-    // With constructing the object you get a loopback device by default.
-    {
-        // loopback interface
-        //-------------------
-        // set network address
-        ifa_addr.sin_family = AF_INET;
-        //ifa_addr.sin_port = htons(MYPORT);
-        inet_aton("127.0.0.1", &(ifa_addr.sin_addr));
-
-        // set netmask
-        ifa_netmask.sin_family = AF_INET;
-        //ifa_netmask.sin_port = htons(MYPORT);
-        inet_aton("255.0.0.0", &(ifa_netmask.sin_addr));
-
-        // set broadcast address or Point-to-point destination address
-        ifa_ifu.sin_family = AF_INET;
-        //ifa_ifu.sin_port = htons(MYPORT);
-        inet_aton("0.0.0.0", &(ifa_ifu.sin_addr));
-
-        this->ifaddr.ifa_next = nullptr;  // pointer to next ifaddrs structure
-        this->ifaddr.ifa_name = (char*)"lo";
-        // v-- Flags from SIOCGIFFLAGS, man 7 netdevice
-        this->ifaddr.ifa_flags = 0 | IFF_LOOPBACK | IFF_UP;
-        this->ifaddr.ifa_addr = (struct sockaddr*)&ifa_addr;
-        this->ifaddr.ifa_netmask = (struct sockaddr*)&ifa_netmask;
-        this->ifaddr.ifa_broadaddr = (struct sockaddr*)&ifa_ifu;
-        this->ifaddr.ifa_data = nullptr;
+    std::size_t slashpos = this->mIfaddress.find_first_of("/");
+    std::string address = this->mIfaddress;
+    std::string bitmask = "32";
+    if (slashpos != std::string::npos) {
+        address = this->mIfaddress.substr(0,slashpos);
+        bitmask = this->mIfaddress.substr(slashpos+1);
     }
+    //std::cout << "DEBUG! set ifa_name: " << this->ifaddr.ifa_name << ", address: '" << address << "', bitmask: '" << bitmask << "', netmask: " << netmasks[std::stoi(bitmask)] << ", slashpos: " << slashpos << "\n";
+
+    // convert address strings to numbers and store them
+    inet_aton(address.c_str(), &(this->ifa_addr.sin_addr));
+    std::string netmask = netmasks[std::stoi(bitmask)];
+    inet_aton(netmask.c_str(), &(this->ifa_netmask.sin_addr));
+    this->ifaddr.ifa_flags = 0 | IFF_UP | IFF_BROADCAST | IFF_MULTICAST;
+
+    // calculate broadcast address as follows: broadcast = ip | ( ~ subnet )
+    // broadcast = ip-addr ored the inverted subnet-mask
+    this->ifa_ifu.sin_addr.s_addr = this->ifa_addr.sin_addr.s_addr | ~ this->ifa_netmask.sin_addr.s_addr;
+
+    this->ifaddr.ifa_addr = (struct sockaddr*)&this->ifa_addr;
+    this->ifaddr.ifa_netmask = (struct sockaddr*)&this->ifa_netmask;
+    this->ifaddr.ifa_broadaddr = (struct sockaddr*)&this->ifa_ifu;
+    return true;
+}
 
 
-    ifaddrs* get()
-    // Return the pointer to the ifaddr structure
-    {
-        return &this->ifaddr;
-    }
-
-
-    bool set(std::string pIfname, std::string pIfaddress)
-    // Set the interface name and the ipv4 address with bitmask. Properties are
-    // set to an ipv4 UP interface, supporting broadcast and multicast.
-    // Returns true if successful.
-    {
-        if (pIfname == "" or pIfaddress == "")
-            return false;
-
-        // to be thread save we will have the strings here
-        this->mIfname = pIfname;
-        this->mIfaddress = pIfaddress;
-        this->ifaddr.ifa_name = (char*)this->mIfname.c_str();
-
-        // get the netmask from the bitmask
-        // the bitmask is the offset in the netmasks array.
-        std::size_t slashpos = this->mIfaddress.find_first_of("/");
-        std::string address = this->mIfaddress;
-        std::string bitmask = "32";
-        if (slashpos != std::string::npos) {
-            address = this->mIfaddress.substr(0,slashpos);
-            bitmask = this->mIfaddress.substr(slashpos+1);
-        }
-        //std::cout << "DEBUG! set ifa_name: " << this->ifaddr.ifa_name << ", address: '" << address << "', bitmask: '" << bitmask << "', netmask: " << netmasks[std::stoi(bitmask)] << ", slashpos: " << slashpos << "\n";
-
-        // convert address strings to numbers and store them
-        inet_aton(address.c_str(), &(this->ifa_addr.sin_addr));
-        std::string netmask = netmasks[std::stoi(bitmask)];
-        inet_aton(netmask.c_str(), &(this->ifa_netmask.sin_addr));
-        this->ifaddr.ifa_flags = 0 | IFF_UP | IFF_BROADCAST | IFF_MULTICAST;
-
-        // calculate broadcast address as follows: broadcast = ip | ( ~ subnet )
-        // broadcast = ip-addr ored the inverted subnet-mask
-        this->ifa_ifu.sin_addr.s_addr = this->ifa_addr.sin_addr.s_addr | ~ this->ifa_netmask.sin_addr.s_addr;
-
-        this->ifaddr.ifa_addr = (struct sockaddr*)&this->ifa_addr;
-        this->ifaddr.ifa_netmask = (struct sockaddr*)&this->ifa_netmask;
-        this->ifaddr.ifa_broadaddr = (struct sockaddr*)&this->ifa_ifu;
-        return true;
-    }
-
-
-    void chain_next_addr(struct ifaddrs* ptrNextAddr)
-    {
-        this->ifaddr.ifa_next = ptrNextAddr;
-    }
-};
+void CIfaddr4::chain_next_addr(struct ifaddrs* ptrNextAddr)
+{
+    this->ifaddr.ifa_next = ptrNextAddr;
+}
 
 
 class CIfaddr4Container
@@ -261,87 +236,71 @@ public:
 };
 
 
-class CCaptureFd
-// Tool to capture output to a file descriptor, mainly used to capture program
-// output to stdout or stderr.
-// When printing the captured output, all opened file descriptor will be closed
-// to avoid confusing output loops. For a new capture after print(..) you have
-// to call capture(..) again.
+CCaptureFd::CCaptureFd()
 {
-    int fd;
-    int fd_old;
-    int fd_log;
-    bool err = true;
-    std::string captFname;
+    // generate random temporary filename to be thread-safe
+    std::srand(std::time(nullptr));
+    this->captFname = (std::string)std::filesystem::temp_directory_path()
+                      + "/gtestcapt" + std::to_string(std::rand());
+}
 
-public:
-    CCaptureFd()
-    {
-        // generate random temporary filename to be thread-safe
-        std::srand(std::time(nullptr));
-        this->captFname = (std::string)std::filesystem::temp_directory_path()
-                          + "/gtestcapt" + std::to_string(std::rand());
+CCaptureFd::~CCaptureFd()
+{
+    this->closeFds();
+    remove(this->captFname.c_str());
+}
+
+void CCaptureFd::capture(int prmFd)
+{
+    this->fd = prmFd;
+    this->fd_old = ::dup(prmFd);
+    if (this->fd_old < 0) {
+        return;
     }
-
-    ~CCaptureFd()
-    {
-        this->closeFds();
-        remove(this->captFname.c_str());
+    this->fd_log = ::open(this->captFname.c_str(), O_WRONLY|O_CREAT|O_TRUNC, 0660);
+    if (this->fd_log < 0) {
+        ::close(this->fd_old);
+        return;
     }
-
-    void capture(int prmFd)
-    {
-        this->fd = prmFd;
-        this->fd_old = ::dup(prmFd);
-        if (this->fd_old < 0) {
-            return;
-        }
-        this->fd_log = ::open(this->captFname.c_str(), O_WRONLY|O_CREAT|O_TRUNC, 0660);
-        if (this->fd_log < 0) {
-            ::close(this->fd_old);
-            return;
-        }
-        if (::dup2(this->fd_log, prmFd) < -2) {
-            ::close(this->fd_old);
-            ::close(this->fd_log);
-            return;
-        }
-        this->err = false;
-    }
-
-    bool print(std::ostream &pOut)
-    // Close all file descriptors and print captured file content.
-    // If nothing was captured, then the return value is false.
-    {
-        if (this->err) return false;
-        this->closeFds();
-
-        std::ifstream readFileObj(this->captFname.c_str());
-        std::string lineBuf = "";
-
-        std::getline(readFileObj, lineBuf);
-        if (lineBuf == "") {
-            readFileObj.close();
-            remove(this->captFname.c_str());
-            return false;
-        }
-
-        pOut << lineBuf << "\n";
-        while (std::getline(readFileObj, lineBuf))
-                pOut << lineBuf << "\n";
-
-        readFileObj.close();
-        remove(this->captFname.c_str());
-        return true;
-    }
-
-private:
-    void closeFds()
-    {
-        // restore old fd
-        ::dup2(this->fd_old, this->fd);
+    if (::dup2(this->fd_log, prmFd) < -2) {
         ::close(this->fd_old);
         ::close(this->fd_log);
-        this->err = true;
+        return;
     }
-};
+    this->err = false;
+}
+
+bool CCaptureFd::print(std::ostream &pOut)
+// Close all file descriptors and print captured file content.
+// If nothing was captured, then the return value is false.
+{
+    if (this->err) return false;
+    this->closeFds();
+
+    std::ifstream readFileObj(this->captFname.c_str());
+    std::string lineBuf = "";
+
+    std::getline(readFileObj, lineBuf);
+    if (lineBuf == "") {
+        readFileObj.close();
+        remove(this->captFname.c_str());
+        return false;
+    }
+
+    pOut << lineBuf << "\n";
+    while (std::getline(readFileObj, lineBuf))
+            pOut << lineBuf << "\n";
+
+    readFileObj.close();
+    remove(this->captFname.c_str());
+    return true;
+}
+
+void CCaptureFd::closeFds()
+{
+    // restore old fd
+    ::dup2(this->fd_old, this->fd);
+    ::close(this->fd_old);
+    ::close(this->fd_log);
+    this->err = true;
+}

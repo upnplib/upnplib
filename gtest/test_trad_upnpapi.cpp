@@ -6,7 +6,7 @@
 #include "gmock/gmock.h"
 #include "upnptools.h"
 #include "miniserver.h"
-#include "tools/tools.cpp"
+#include "tools.h"
 
 #include "api/upnpapi.cpp"
 
