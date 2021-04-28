@@ -36,10 +36,10 @@ set (UPNP_SOURCES
 	src/genlib/util/strintmap.c
 	src/genlib/util/upnp_timeout.c
 	src/genlib/util/util.c
-	src/threadutil/FreeList.c
-	src/threadutil/LinkedList.c
-	src/threadutil/ThreadPool.c
-	src/threadutil/TimerThread.c
+	src/threadutil/FreeList.cpp
+	src/threadutil/LinkedList.cpp
+	src/threadutil/ThreadPool.cpp
+	src/threadutil/TimerThread.cpp
 	src/urlconfig/urlconfig.c
 )
 

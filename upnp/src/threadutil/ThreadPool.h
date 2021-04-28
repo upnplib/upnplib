@@ -126,7 +126,7 @@ typedef enum priority
  *
  * Always include stats because code change is minimal.
  */
-#define STATS 1
+//#define STATS 1
 
 #ifdef _DEBUG
 #define DEBUG 1
@@ -255,6 +255,7 @@ typedef struct THREADPOOL
  *
  * \return
  * \li \c 0 on success.
+ * \li \c EINVAL with invalid ThreadPool.
  * \li \c EAGAIN if not enough system resources to create minimum threads.
  * \li \c INVALID_POLICY if schedPolicy can't be set.
  * \li \c EMAXTHREADS if minimum threads is greater than maximum threads.
@@ -404,7 +405,7 @@ int TPJobSetFreeFunction(
  * \brief Initializes thread pool attributes. Sets values to defaults defined
  * in ThreadPool.h.
  *
- * \return Always returns 0.
+ * \returns 0 if successful, otherwise EINVAL.
  */
 int TPAttrInit(
         /*! must be valid thread pool attributes. */
@@ -505,21 +506,21 @@ int TPAttrSetMaxJobsTotal(
  *
  * \return Always returns 0.
  */
-#ifdef STATS
+//#ifdef STATS
 EXPORT_SPEC int ThreadPoolGetStats(
         /*! Valid initialized threadpool. */
         ThreadPool *tp,
         /*! Valid stats, out parameter. */
         ThreadPoolStats *stats);
-#else
-static UPNP_INLINE int ThreadPoolGetStats(
-        /*! Valid initialized threadpool. */
-        ThreadPool *tp,
-        /*! Valid stats, out parameter. */
-        ThreadPoolStats *stats)
-{
-}
-#endif
+//#else
+//static UPNP_INLINE int ThreadPoolGetStats(
+//        /*! Valid initialized threadpool. */
+//        ThreadPool *tp,
+//        /*! Valid stats, out parameter. */
+//        ThreadPoolStats *stats)
+//{
+//}
+//#endif
 
 /*!
  * \brief

@@ -33,12 +33,12 @@ link_libraries(
     "pthread"
 )
 
-add_executable(test_template.a
-    ${PROJECT_SOURCE_DIR}/test_template.cpp
-)
-add_executable(test_trad_upnpapi.a
+#add_executable(test_template.a
+#    ${PROJECT_SOURCE_DIR}/test_template.cpp
+#)
+add_executable(test_upnpapi.a
     ${PROJECT_SOURCE_DIR}/tools/tools.cpp
-    ${PROJECT_SOURCE_DIR}/test_trad_upnpapi.cpp
+    ${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
 )
 add_executable(test_upnpdebug.a
     ${PROJECT_SOURCE_DIR}/tools/tools.cpp
@@ -46,4 +46,7 @@ add_executable(test_upnpdebug.a
 )
 add_executable(test_upnpdebug_nomock.a
     ${PROJECT_SOURCE_DIR}/test_upnpdebug_nomock.cpp
+)
+add_executable(test_threadutil.a
+    ${PROJECT_SOURCE_DIR}/test_threadutil.cpp
 )

@@ -19,7 +19,7 @@ extern "C" {
     ASSERT_LE((VAL), (MAX))
 
 /*
-// --- mock strerror -----------------------------
+// --- mock strerror ---------------------------------------
 class CMock_strerror {
 public:
     MOCK_METHOD(char*, strerror, (int errnum));

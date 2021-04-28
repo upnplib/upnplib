@@ -62,7 +62,7 @@ void *FreeListAlloc(FreeList *free_list)
                 free_list->head = free_list->head->next;
                 free_list->freeListLength--;
         } else {
-                ret = malloc(free_list->element_size);
+                ret = (FreeListNode*)malloc(free_list->element_size);
         }
 
         return ret;

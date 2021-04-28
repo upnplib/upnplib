@@ -36,9 +36,9 @@
  * \file
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+//#ifdef __cplusplus
+//extern "C" {
+//#endif
 
 #include "ithread.h"
 
@@ -123,8 +123,8 @@ int FreeListDestroy(
         /*! Must be valid, non null, pointer to a linked list. */
         FreeList *free_list);
 
-#ifdef __cplusplus
-}
-#endif
+//#ifdef __cplusplus
+//}
+//#endif
 
 #endif /* FREE_LIST_H */

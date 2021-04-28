@@ -1223,9 +1223,11 @@ void ThreadPoolPrintStats(ThreadPoolStats *stats)
                 "Total Time spent Idle in seconds : %f\n",
                 stats->totalIdleTime);
 }
+#endif /* STATS */
 
 int ThreadPoolGetStats(ThreadPool *tp, ThreadPoolStats *stats)
 {
+#ifdef STATS
         if (tp == NULL || stats == NULL)
                 return EINVAL;
         /* if not shutdown then acquire mutex */
@@ -1257,10 +1259,10 @@ int ThreadPoolGetStats(ThreadPool *tp, ThreadPoolStats *stats)
         /* if not shutdown then release mutex */
         if (!tp->shutdown)
                 ithread_mutex_unlock(&tp->mutex);
+#endif /* STATS */
 
         return 0;
 }
-#endif /* STATS */
 
 #ifdef _WIN32
 #if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
