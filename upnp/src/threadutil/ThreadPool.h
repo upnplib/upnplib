@@ -513,7 +513,7 @@ EXPORT_SPEC int ThreadPoolGetStats(
         /*! Valid stats, out parameter. */
         ThreadPoolStats *stats);
 //#else
-//static UPNP_INLINE int ThreadPoolGetStats(
+// static UPNP_INLINE int ThreadPoolGetStats(
 //        /*! Valid initialized threadpool. */
 //        ThreadPool *tp,
 //        /*! Valid stats, out parameter. */
