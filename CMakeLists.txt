@@ -10,7 +10,7 @@ if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
     message (FATAL_ERROR "")
 endif()
 
-set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_STANDARD_REQUIRED True)
 
 include(cmake/autoheader.cmake)
@@ -36,17 +36,21 @@ endif (EXISTS "${CMAKE_SOURCE_DIR}/.git")
 
 # Set the possible values of build type for cmake-gui
 if (CMAKE_CONFIGURATION_TYPES)
-    set (CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE
-        STRING "Semicolon separated list of supported configuration types, only supports debug and release, anything else will be ignored" FORCE
+    set (CMAKE_CONFIGURATION_TYPES "Debug;Release"
+        CACHE STRING
+        "Semicolon separated list of supported configuration types, only supports debug and release, anything else will be ignored"
+        FORCE
     )
 
-    set_property (CACHE CMAKE_CONFIGURATION_TYPES PROPERTY STRINGS
+    set_property (CACHE CMAKE_CONFIGURATION_TYPES
+        PROPERTY STRINGS
         "Debug" "Release"
     )
 endif()
 
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     message (STATUS "Setting build type to '${DEFAULT_BUILD_TYPE}' as none was specified.")
+
     set (CMAKE_BUILD_TYPE "${DEFAULT_BUILD_TYPE}" CACHE
         STRING "Choose the type of build." FORCE
     )
@@ -124,7 +128,7 @@ if (open_ssl)
     endif()
 endif()
 
-option (blocking_tcp_connections "blocking TCP connections" ON)
+option (blocking_tcp_connections "blocking TCP connections" OFF)
 if (blocking_tcp_connections)
     set (UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS 1) #see upnpconfig.h
 endif()
@@ -135,7 +139,7 @@ set (IXML_HAVE_SCRIPTSUPPORT ${scriptsupport}) #see upnpconfig.h
 option (postwrite "write to the filesystem on otherwise unhandled POST requests" OFF)
 set (UPNP_ENABLE_POST_WRITE ${postwrite}) #see upnpconfig.h
 
-option (reuseaddr "bind the miniserver socket with reuseaddr to allow clean restarts" OFF)
+option (reuseaddr "bind the miniserver socket with reuseaddr to allow clean restarts" ON)
 set (UPNP_MINISERVER_REUSEADDR ${reuseaddr}) #see upnpconfig.h
 
 option (samples "compilation of upnp/sample/ code" ON)
@@ -145,7 +149,6 @@ cmake_dependent_option (DOWNLOAD_AND_BUILD_DEPS "Get all missing stuff" OFF ${Gi
 
 #
 # Checks for header files (which aren't needed on Win32)
-# TODO Use CHECK_INCLUDE_FILES instead
 #
 include (CheckIncludeFile)
 
@@ -246,7 +249,6 @@ if (NOT OFF_T_SIZE)
 endif()
 
 unset (CMAKE_REQUIRED_DEFINITIONS)
-
 #
 # Checks for library functions
 #
@@ -380,7 +382,7 @@ configure_package_config_file (
 )
 
 write_basic_package_version_file (IXMLConfigVersion.cmake
-    VERSION ${IXML_VERSION}
+    VERSION ${PUPNP_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
@@ -390,7 +392,7 @@ configure_package_config_file (
 )
 
 write_basic_package_version_file (UPNPConfigVersion.cmake
-    VERSION ${UPNP_VERSION}
+    VERSION ${PUPNP_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
@@ -406,7 +408,7 @@ install (FILES
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/UPNP/
 )
 
-set (VERSION ${UPNP_VERSION_STRING})
+set (VERSION ${PUPNP_VERSION_STRING})
 set (prefix ${CMAKE_INSTALL_PREFIX})
 set (exec_prefix "\${prefix}")
 set (libdir "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
