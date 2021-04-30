@@ -427,7 +427,7 @@ static void SetSeed(void)
                 (unsigned int)ithread_get_current_thread_id().p);
 #elif defined(BSD) || defined(__APPLE__) || defined(__FreeBSD_kernel__)
         srand(t.tv_usec +
-                (unsigned int)ithread_get_current_thread_id());
+                ithread_get_current_thread_id());
 #elif defined(__linux__) || defined(__sun) || defined(__CYGWIN__) || \
         defined(__GLIBC__)
         srand((unsigned int)t.tv_usec +
