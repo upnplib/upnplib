@@ -317,7 +317,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2)
     EXPECT_CALL(mockAcceptObj, accept(_,_,_))
         .Times(1);
     EXPECT_CALL(mockSetsockoptObj, setsockopt(_,_,_,_,_))
-        .Times(0);
+        .Times(1);
 
     // Initialize capturing of the stderr output
     CCaptureFd captFdObj;

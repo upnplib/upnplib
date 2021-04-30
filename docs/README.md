@@ -1,4 +1,4 @@
-# Styleguide
+# Guideline
 ## Formating of source files
 This follows the [LLVM coding standards](https://llvm.org/docs/CodingStandards.html) in general with an indention of 4 spaces. To ensure this, clang-format-11 is used with this `.clang-format` configuration file:
 
