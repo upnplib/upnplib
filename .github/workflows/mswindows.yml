@@ -1,0 +1,51 @@
+name: Build for MS Windows
+
+on: [push, pull_request]
+
+jobs:
+  windows:
+    name: Build (${{ matrix.os }})  - ${{ matrix.conf }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [windows-2016, windows-2019]
+        conf: [Debug, Release]
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install pthreads for Windows
+        run: |
+            cd pthreads4w
+            nmake realclean VC
+
+      - name: Test pthreads for Windows
+        run: |
+            cd pthreads4w\tests
+            nmake VC
+
+# Work in progress
+#      - name: Configure upnplib
+#        run: >
+#          cmake
+#          -S .
+#          -B build
+#          -D CMAKE_BUILD_TYPE=${{ matrix.conf }}
+#          -D GOOGLETEST=ON
+#          -D BUILD_TESTING=OFF
+#          -D client=OFF
+#          -D device=OFF
+#          -D gena=OFF
+#          -D ipv6=OFF
+#          -D optssdp=OFF
+#          -D samples=OFF
+#          -D scriptsupport=OFF
+#          -D soap=OFF
+#          -D ssdp=OFF
+#          -D tools=OFF
+#
+#      - name: Build upnplib
+#        run: cmake --build build
