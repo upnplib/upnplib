@@ -369,12 +369,12 @@
  *
  * @{
  */
-#define EXCLUDE_SSDP 0
-#define EXCLUDE_SOAP 0
-#define EXCLUDE_GENA 0
-#define EXCLUDE_DOM 0
-#define EXCLUDE_MINISERVER 0
-#define EXCLUDE_WEB_SERVER 0
+#define EXCLUDE_SSDP 1
+#define EXCLUDE_SOAP 1
+#define EXCLUDE_GENA 1
+#define EXCLUDE_DOM 1
+#define EXCLUDE_MINISERVER 1
+#define EXCLUDE_WEB_SERVER 1
 #ifdef USE_JNI
 #define EXCLUDE_JNI 0
 #else
