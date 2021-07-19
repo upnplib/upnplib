@@ -14,7 +14,9 @@ if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
 
 # set the project name and version
-project(UPnPlib VERSION 0001
+set (UPNP_VERSION_STRING "0001")
+set (UPNP_VERSION_MAJOR 1)
+project(UPnPlib VERSION ${UPNP_VERSION_STRING}
                 DESCRIPTION "UPnP library"
                 HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -23,21 +25,26 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-# First check available library functions. We need that for later configuration.
-include (CheckFunctionExists)
-check_function_exists (strnlen HAVE_STRNLEN)
-check_function_exists (strndup HAVE_STRNDUP)
+# Set library options
+#------------------------------------------------------------------------
+# If you add or modify an option you MUST also do it in the corresponding
+# "${PROJECT_SOURCE_DIR}/upnp/cmake/upnpconfig.h.cmake".
 
-# Initialize options from config files.
-# upnpconfig.h and autoconfig.h are synchronized
-# autoheader.cmake will create autoconfig.h.cm
-#include(${PROJECT_SOURCE_DIR}/cmake/autoheader.cmake)
-#configure_file (${PROJECT_BINARY_DIR}/autoconfig.h.cm
-#                ${PROJECT_BINARY_DIR}/autoconfig.h)
-#configure_file (${PROJECT_SOURCE_DIR}/upnp/inc/upnpconfig.h.cm
-#                ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.h)
+    # Check available library functions. We need that for later configuration.
+    include (CheckFunctionExists)
+    check_function_exists (strnlen HAVE_STRNLEN)
+    check_function_exists (strndup HAVE_STRNDUP)
+
+    configure_file(${PROJECT_SOURCE_DIR}/cmake/upnpconfig.h.cmake
+                   ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.h)
+    # TODO: Remove symlink which is only for compatibility reasons
+    file(CREATE_LINK ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.h
+                     ${PROJECT_BINARY_DIR}/autoconfig.h
+                     SYMBOLIC)
 
 
+# Configure and compile settings
+#-------------------------------
 include_directories(
 #    "${PROJECT_SOURCE_DIR}/../build/_deps/googletest-src/googletest/include"
 #    "${PROJECT_SOURCE_DIR}/../build/_deps/googletest-src/googlemock/include"
@@ -47,6 +54,7 @@ include_directories(
     "${PROJECT_SOURCE_DIR}/ixml/inc"
     "${PROJECT_SOURCE_DIR}/ixml/src/inc"
     "${PROJECT_BINARY_DIR}"
+    "${PROJECT_BINARY_DIR}/upnp/inc"
 )
 
 link_libraries("pthread")

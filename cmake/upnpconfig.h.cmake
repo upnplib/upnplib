@@ -1,7 +1,7 @@
-/* -*- C -*- */
 /*******************************************************************************
  *
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
+ * Copyright (c) 2021 Ingo Höft     <Ingo@Hoeft-online.de>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,98 +37,98 @@
  * Library version
  ***************************************************************************/
 
+// TODO: Check the version handling
 /** The library version (string) e.g. "1.3.0" */
-#define UPNP_VERSION_STRING "18.0.0"
-
+#cmakedefine UPNP_VERSION_STRING "${UPNP_VERSION_STRING}"
 /** Major version of the library */
-#define UPNP_VERSION_MAJOR 18
-
+#cmakedefine UPNP_VERSION_MAJOR ${UPNP_VERSION_MAJOR}
 /** Minor version of the library */
-/* #undef UPNP_VERSION_MINOR */
-#ifndef UPNP_VERSION_MINOR
-#	define UPNP_VERSION_MINOR 0
-#endif
-
+#define UPNP_VERSION_MINOR 0
 /** Patch version of the library */
-/* #undef UPNP_VERSION_PATCH */
-#ifndef UPNP_VERSION_PATCH
-#	define UPNP_VERSION_PATCH 0
-#endif
-
+#define UPNP_VERSION_PATCH 0
 /** The library version (numeric) e.g. 10300 means version 1.3.0 */
 #define UPNP_VERSION \
-	((UPNP_VERSION_MAJOR * 100 + UPNP_VERSION_MINOR) * 100 + \
-		UPNP_VERSION_PATCH)
+((UPNP_VERSION_MAJOR * 100 + UPNP_VERSION_MINOR) * 100 + \
+UPNP_VERSION_PATCH)
 
 /***************************************************************************
  * Large file support
  ***************************************************************************/
-
-/* #undef UPNP_LARGEFILE_SENSITIVE */
+/* whether the system defaults to 32bit off_t but can do 64bit when requested */
+//#cmakedefine UPNP_LARGEFILE_SENSITIVE 1
 
 /***************************************************************************
  * Library optional features
  ***************************************************************************/
-
 /*
  * The following defines can be tested in order to know which
  * optional features have been included in the installed library.
  */
 
-/** Defined to 1 if the library has been compiled with client API enabled
- *  (i.e. configure --enable-client) */
-/* #undef UPNP_HAVE_CLIENT */
+/** Defined to 1 if the library has been compiled with client API enabled */
+//#cmakedefine UPNP_HAVE_CLIENT 1
 
-/** Defined to 1 if the library has been compiled with device API enabled
- *  (i.e. configure --enable-device) */
-/* #undef UPNP_HAVE_DEVICE */
+/** Defined to 1 if the library has been compiled with device API enabled */
+//#cmakedefine UPNP_HAVE_DEVICE 1
 
-/** Defined to 1 if the library has been compiled with integrated web server
- *  (i.e. configure --enable-webserver --enable-device) */
-/* #undef UPNP_HAVE_WEBSERVER */
+/** Defined to 1 if the library has been compiled with integrated web server */
+//#cmakedefine UPNP_HAVE_WEBSERVER 1
 
-/** Defined to 1 if the library has been compiled with the SSDP part enabled
- *  (i.e. configure --enable-ssdp) */
-/* #undef UPNP_HAVE_SSDP */
+/** Defined to 1 if the library has been compiled with the SSDP part enabled */
+//#cmakedefine UPNP_HAVE_SSDP 1
 
 /** Defined to 1 if the library has been compiled with optional SSDP headers
- *  support (i.e. configure --enable-optssdp) */
-/* #undef UPNP_HAVE_OPTSSDP */
+ *  support */
+//#cmakedefine UPNP_HAVE_OPTSSDP 1
 
-/** Defined to 1 if the library has been compiled with the SOAP part enabled
- *  (i.e. configure --enable-soap) */
-/* #undef UPNP_HAVE_SOAP */
+/** Defined to 1 if the library has been compiled with the SOAP part enabled */
+//#cmakedefine UPNP_HAVE_SOAP 1
 
-/** Defined to 1 if the library has been compiled with the GENA part enabled
- *  (i.e. configure --enable-gena) */
-/* #undef UPNP_HAVE_GENA */
+/** Defined to 1 if the library has been compiled with the GENA part enabled */
+//#cmakedefine UPNP_HAVE_GENA 1
 
 /** Defined to 1 if the library has been compiled with helper API
- *  (i.e. configure --enable-tools) : <upnp/upnptools.h> file is available */
-/* #undef UPNP_HAVE_TOOLS */
+ * <upnp/upnptools.h> file is available */
+//#cmakedefine UPNP_HAVE_TOOLS 1
 
-/** Defined to 1 if the library has been compiled with ipv6 support
- *  (i.e. configure --enable-ipv6) */
-/* #undef UPNP_ENABLE_IPV6 */
+/** Defined to 1 if the library has been compiled with ipv6 support */
+//#cmakedefine UPNP_ENABLE_IPV6 1
 
 /** Defined to 1 if the library has been compiled with unspecified SERVER
- * header (i.e. configure --enable-unspecified_server) */
-/* #undef UPNP_ENABLE_UNSPECIFIED_SERVER */
+ * header */
+//#cmakedefine UPNP_ENABLE_UNSPECIFIED_SERVER 1
 
-/** Defined to 1 if the library has been compiled with OpenSSL support
- *  (i.e. configure --enable-open_ssl) */
-/* #undef UPNP_ENABLE_OPEN_SSL */
+/** Defined to 1 if the library has been compiled with OpenSSL support */
+//#cmakedefine UPNP_ENABLE_OPEN_SSL 1
 
 /** Defined to 1 if the library has been compiled to use blocking TCP socket
- * calls (i.e. configure --enable_blocking_tcp_connections) */
-/* #undef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS */
+ * calls */
+//#cmakedefine UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS 1
 
 /** Defined to 1 if the library has been compiled to support filesystem writes
- * on POST (i.e. configure --enable-postwrite) */
-/* #undef UPNP_ENABLE_POST_WRITE */
+ * on POST */
+//#cmakedefine UPNP_ENABLE_POST_WRITE 1
 
 /** Defined to 1 if the library has been compiled bind the miniserver socket
- * with SO_REUSEADDR (i.e. configure --enable_reuseaddr) */
-/* #undef UPNP_MINISERVER_REUSEADDR */
+ * with SO_REUSEADDR */
+//#cmakedefine UPNP_MINISERVER_REUSEADDR 1
+
+/* Defined to 1 if the library has been compiled with debug information */
+//#cmakedefine UPNP_HAVE_DEBUG 1
+
+/* Defined to 1 if the library has IXML script support enabled */
+//#cmakedefine IXML_HAVE_SCRIPTSUPPORT 1
+
+/* Type for storing the length of struct sockaddr */
+//#cmakedefine socklen_t 1
+
+/* Defines if strnlen is available on your system */
+#cmakedefine HAVE_STRNLEN ${HAVE_STRNLEN}
+
+/* Defines if strndup is available on your system */
+#cmakedefine HAVE_STRNDUP ${HAVE_STRNDUP}
+
+/* Use pthread_rwlock_t */
+//#cmakedefine UPNP_USE_RWLOCK 1
 
 #endif /* UPNP_CONFIG_H */
