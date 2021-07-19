@@ -40,24 +40,24 @@
  * \brief Implements the sockets functionality.
  */
 
-#include "config.h"
+//#include "config.h"
 
 #include "sock.h"
 
-#include "UpnpStdInt.h" /* for ssize_t */
-#include "unixutil.h" /* for socklen_t, EAFNOSUPPORT */
-#include "upnp.h"
+//#include "UpnpStdInt.h" /* for ssize_t */
+//#include "unixutil.h" /* for socklen_t, EAFNOSUPPORT */
+//#include "upnp.h"
 #include "upnpdebug.h"
 #include "upnputil.h"
 
 #include <assert.h>
-#include <errno.h>
+//#include <errno.h>
 #include <fcntl.h> /* for F_GETFL, F_SETFL, O_NONBLOCK */
 #include <string.h>
-#include <time.h>
+//#include <time.h>
 
 #ifdef UPNP_ENABLE_OPEN_SSL
-#include <openssl/ssl.h>
+//#include <openssl/ssl.h>
 #endif
 
 #ifndef MSG_NOSIGNAL

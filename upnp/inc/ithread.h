@@ -38,11 +38,11 @@
  */
 
 #if !defined(_WIN32)
-#include <sys/param.h>
+//#include <sys/param.h>
 #endif
 
 #include "UpnpGlobal.h" /* For UPNP_INLINE, EXPORT_SPEC */
-#include "UpnpUniStd.h" /* for close() */
+//#include "UpnpUniStd.h" /* for close() */
 
 #ifdef __cplusplus
 extern "C" {

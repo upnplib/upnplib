@@ -14,7 +14,7 @@ if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
 
 # set the project name and version
-set (UPNP_VERSION_STRING "0001")
+set (UPNP_VERSION_STRING "1.0.0")
 set (UPNP_VERSION_MAJOR 1)
 project(UPnPlib VERSION ${UPNP_VERSION_STRING}
                 DESCRIPTION "UPnP library"
@@ -31,9 +31,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # "${PROJECT_SOURCE_DIR}/upnp/cmake/upnpconfig.h.cmake".
 
     # Check available library functions. We need that for later configuration.
-    include (CheckFunctionExists)
-    check_function_exists (strnlen HAVE_STRNLEN)
-    check_function_exists (strndup HAVE_STRNDUP)
+    include(CheckCXXSymbolExists)
+    check_cxx_symbol_exists(strnlen "cstring" HAVE_STRNLEN)
+    check_cxx_symbol_exists(strndup "cstring" HAVE_STRNDUP)
 
     configure_file(${PROJECT_SOURCE_DIR}/cmake/upnpconfig.h.cmake
                    ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.h)

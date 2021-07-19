@@ -3,7 +3,7 @@
 #ifndef IXMLDEBUG_H
 #define IXMLDEBUG_H
 
-#include "UpnpGlobal.h"
+//#include "UpnpGlobal.h"
 #include "ixml.h"
 
 /*!

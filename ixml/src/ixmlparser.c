@@ -34,7 +34,7 @@
  * \file
  */
 
-#include "autoconfig.h"
+//#include "autoconfig.h"
 
 #include "ixmlparser.h"
 
@@ -43,7 +43,7 @@
 #include <assert.h>
 #include <stddef.h> /* for ptrdiff_t */
 #include <stdio.h>
-#include <stdlib.h> /* for free(), malloc() */
+//#include <stdlib.h> /* for free(), malloc() */
 #include <string.h>
 
 #ifdef _WIN32

@@ -38,13 +38,13 @@
 #include "upnpdebug.h"
 
 #include "ithread.h"
-#include "ixml.h"
+//#include "ixml.h"
 #include "upnp.h"
 
 #include <errno.h>
 #include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
+//#include <stdio.h>
+//#include <stdlib.h>
 #include <string.h>
 
 /*! Mutex to synchronize all the log file operations in the debug mode */

@@ -37,41 +37,41 @@
  * It defines functions to receive messages, process messages, send messages.
  */
 
-#include "config.h"
+//#include "config.h"
 
 #include "httpreadwrite.h"
 
 #include "UpnpExtraHeaders.h"
-#include "UpnpFileInfo.h"
-#include "UpnpInet.h"
+//#include "UpnpFileInfo.h"
+//#include "UpnpInet.h"
 #include "UpnpIntTypes.h"
-#include "UpnpStdInt.h"
-#include "membuffer.h"
-#include "sock.h"
+//#include "UpnpStdInt.h"
+//#include "membuffer.h"
+//#include "sock.h"
 #include "statcodes.h"
-#include "unixutil.h"
-#include "upnp.h"
+//#include "unixutil.h"
+//#include "upnp.h"
 #include "upnpapi.h"
-#include "uri.h"
+//#include "uri.h"
 #include "webserver.h"
 
 #include <assert.h>
 #include <stdarg.h>
-#include <string.h>
+//#include <string.h>
 
 #ifdef _WIN32
-#include <malloc.h>
+//#include <malloc.h>
 #define fseeko fseek
 #if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf _snprintf
 #endif
 #else /* _WIN32 */
-#include <alloca.h>
-#include <arpa/inet.h>
-#include <sys/time.h>
-#include <sys/types.h>
+//#include <alloca.h>
+//#include <arpa/inet.h>
+//#include <sys/time.h>
+//#include <sys/types.h>
 #include <sys/utsname.h>
-#include <sys/wait.h>
+//#include <sys/wait.h>
 #endif /* _WIN32 */
 
 /*

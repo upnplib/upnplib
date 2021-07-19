@@ -54,8 +54,9 @@ UPNP_VERSION_PATCH)
 /***************************************************************************
  * Large file support
  ***************************************************************************/
-/* whether the system defaults to 32bit off_t but can do 64bit when requested */
-//#cmakedefine UPNP_LARGEFILE_SENSITIVE 1
+/* whether the system defaults to 32bit off_t but can do 64bit when requested
+ * warning libupnp requires largefile mode - use AC_SYS_LARGEFILE */
+#cmakedefine UPNP_LARGEFILE_SENSITIVE 1
 
 /***************************************************************************
  * Library optional features
@@ -65,6 +66,7 @@ UPNP_VERSION_PATCH)
  * optional features have been included in the installed library.
  */
 
+// TODO: optimize following defines in ./upnp/src/inc/config.h
 /** Defined to 1 if the library has been compiled with client API enabled */
 //#cmakedefine UPNP_HAVE_CLIENT 1
 
@@ -87,10 +89,6 @@ UPNP_VERSION_PATCH)
 /** Defined to 1 if the library has been compiled with the GENA part enabled */
 //#cmakedefine UPNP_HAVE_GENA 1
 
-/** Defined to 1 if the library has been compiled with helper API
- * <upnp/upnptools.h> file is available */
-//#cmakedefine UPNP_HAVE_TOOLS 1
-
 /** Defined to 1 if the library has been compiled with ipv6 support */
 //#cmakedefine UPNP_ENABLE_IPV6 1
 
@@ -105,22 +103,11 @@ UPNP_VERSION_PATCH)
  * calls */
 //#cmakedefine UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS 1
 
-/** Defined to 1 if the library has been compiled to support filesystem writes
- * on POST */
-//#cmakedefine UPNP_ENABLE_POST_WRITE 1
-
-/** Defined to 1 if the library has been compiled bind the miniserver socket
- * with SO_REUSEADDR */
-//#cmakedefine UPNP_MINISERVER_REUSEADDR 1
-
 /* Defined to 1 if the library has been compiled with debug information */
 //#cmakedefine UPNP_HAVE_DEBUG 1
 
 /* Defined to 1 if the library has IXML script support enabled */
 //#cmakedefine IXML_HAVE_SCRIPTSUPPORT 1
-
-/* Type for storing the length of struct sockaddr */
-//#cmakedefine socklen_t 1
 
 /* Defines if strnlen is available on your system */
 #cmakedefine HAVE_STRNLEN ${HAVE_STRNLEN}

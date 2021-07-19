@@ -36,7 +36,7 @@
  * \file
  */
 
-#include "ixml.h"
+//#include "ixml.h"
 #include "ixmlmembuf.h"
 
 /* Parser definitions */

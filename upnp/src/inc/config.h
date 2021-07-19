@@ -33,7 +33,7 @@
 #ifndef INTERNAL_CONFIG_H
 #define INTERNAL_CONFIG_H
 
-#include "autoconfig.h"
+//#include "autoconfig.h"
 
 /*!
  *  \name Compile time configuration options

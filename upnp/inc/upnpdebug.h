@@ -39,7 +39,7 @@
 
 #include "upnpconfig.h"
 
-#include "UpnpGlobal.h" /* for UPNP_INLINE */
+//#include "UpnpGlobal.h" /* for UPNP_INLINE */
 
 #include <stdio.h>
 

@@ -15,11 +15,12 @@
  * \brief UpnpString object implementation.
  */
 
-#include "config.h"
+//#include "config.h"
+#include "autoconfig.h"
 
 #include "UpnpString.h"
 
-#include <stdlib.h> /* for calloc(), free() */
+//#include <stdlib.h> /* for calloc(), free() */
 #include <string.h> /* for strlen(), strdup() */
 
 #ifdef _WIN32

@@ -32,10 +32,10 @@
 #ifndef GENLIB_NET_HTTP_WEBSERVER_H
 #define GENLIB_NET_HTTP_WEBSERVER_H
 
-#include "httpparser.h"
-#include "sock.h"
+//#include "httpparser.h"
+//#include "sock.h"
 
-#include <time.h>
+//#include <time.h>
 
 #ifdef __cplusplus
 extern "C" {

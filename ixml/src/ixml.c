@@ -34,10 +34,10 @@
  */
 
 #include "ixmldebug.h"
-#include "ixmlmembuf.h"
+//#include "ixmlmembuf.h"
 #include "ixmlparser.h"
 
-#include <stdlib.h> /* for free() */
+//#include <stdlib.h> /* for free() */
 #include <string.h>
 
 /*!

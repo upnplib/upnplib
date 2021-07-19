@@ -41,8 +41,8 @@
  * \file
  */
 
-#include "UpnpGlobal.h"
-#include "UpnpInet.h"
+//#include "UpnpGlobal.h"
+//#include "UpnpInet.h"
 #include "ixml.h"
 
 /*
@@ -50,18 +50,18 @@
  * include mess in an include file like UpnpTime.h
  */
 #ifdef _WIN32
-#include <time.h>
+//#include <time.h>
 #if defined(UPNP_USE_MSVCPP) || defined(UPNP_USE_BCBPP)
-#include <sys/types.h> /* needed for off_t */
+//#include <sys/types.h> /* needed for off_t */
 #endif
 #elif (defined(BSD) && BSD >= 199306)
-#include <time.h>
+//#include <time.h>
 #else
 /* Other systems ??? */
 #endif
 
 #ifdef UPNP_ENABLE_OPEN_SSL
-#include <openssl/ssl.h>
+//#include <openssl/ssl.h>
 #endif
 
 #define LINE_SIZE (size_t)180
@@ -396,15 +396,15 @@
  * the internal implementation of these data structures without breaking
  * the API.
  */
-#include "UpnpActionComplete.h"
+//#include "UpnpActionComplete.h"
 #include "UpnpActionRequest.h"
-#include "UpnpDiscovery.h"
-#include "UpnpEvent.h"
-#include "UpnpEventSubscribe.h"
+//#include "UpnpDiscovery.h"
+//#include "UpnpEvent.h"
+//#include "UpnpEventSubscribe.h"
 #include "UpnpFileInfo.h"
-#include "UpnpStateVarComplete.h"
-#include "UpnpStateVarRequest.h"
-#include "UpnpSubscriptionRequest.h"
+//#include "UpnpStateVarComplete.h"
+//#include "UpnpStateVarRequest.h"
+//#include "UpnpSubscriptionRequest.h"
 
 /*!
  * \name Constants and Types

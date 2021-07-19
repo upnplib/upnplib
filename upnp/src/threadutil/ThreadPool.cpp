@@ -35,13 +35,13 @@
  */
 
 #if !defined(_WIN32)
-#include <sys/param.h>
+//#include <sys/param.h>
 #endif
 
-#include "FreeList.h"
+//#include "FreeList.h"
 #include "ThreadPool.h"
 
-#include <assert.h>
+//#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> /* for memset()*/

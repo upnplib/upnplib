@@ -8,12 +8,12 @@
  *
  * \author Marcelo Roberto Jimenez
  */
-#include "config.h"
+//#include "config.h"
 
 #include "UpnpExtraHeaders.h"
 
-#include <stdlib.h> /* for calloc(), free() */
-#include <string.h> /* for strlen(), strdup() */
+//#include <stdlib.h> /* for calloc(), free() */
+//#include <string.h> /* for strlen(), strdup() */
 
 struct s_UpnpExtraHeaders
 {

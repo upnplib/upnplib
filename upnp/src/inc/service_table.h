@@ -41,16 +41,16 @@
 extern "C" {
 #endif
 
-#include "config.h"
+//#include "config.h"
 
-#include "LinkedList.h"
-#include "ixml.h"
-#include "upnp.h"
+//#include "LinkedList.h"
+//#include "ixml.h"
+//#include "upnp.h"
 #include "upnpdebug.h"
 #include "uri.h"
 
-#include <stdio.h>
-#include <time.h>
+//#include <stdio.h>
+//#include <time.h>
 
 #define SID_SIZE (size_t)41
 

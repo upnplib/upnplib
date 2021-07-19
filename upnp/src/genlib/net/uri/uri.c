@@ -37,9 +37,9 @@
  */
 
 #ifdef __FreeBSD__
-#include <osreldate.h>
+//#include <osreldate.h>
 #if __FreeBSD_version < 601103
-#include <lwres/netdb.h>
+//#include <lwres/netdb.h>
 #endif
 #endif
 #ifdef _WIN32
@@ -47,10 +47,10 @@
 #define snprintf _snprintf
 #endif
 #endif
-#include "config.h"
+//#include "config.h"
 
 #include "upnpapi.h"
-#include "uri.h"
+//#include "uri.h"
 
 #include <assert.h>
 

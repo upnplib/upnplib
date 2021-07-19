@@ -36,10 +36,10 @@
 
 #include "ixmlmembuf.h"
 
-#include "ixml.h"
+//#include "ixml.h"
 
 #include <assert.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <string.h>
 
 /*!

@@ -39,7 +39,7 @@
 
 #include "upnputil.h"
 
-#include <stdlib.h>
+//#include <stdlib.h>
 
 #define MINVAL(a, b) ((a) < (b) ? (a) : (b))
 #define MAXVAL(a, b) ((a) > (b) ? (a) : (b))

@@ -40,23 +40,23 @@
 #define _GNU_SOURCE /* For strcasestr() in string.h */
 #endif
 
-#include "config.h"
+//#include "config.h"
 
 #include "httpparser.h"
 
 #include "UpnpExtraHeaders.h"
-#include "list.h"
+//#include "list.h"
 #include "statcodes.h"
 #include "strintmap.h"
-#include "unixutil.h"
+//#include "unixutil.h"
 #include "upnpdebug.h"
 
 #include <assert.h>
-#include <ctype.h>
-#include <limits.h>
+//#include <ctype.h>
+//#include <limits.h>
 #include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
+//#include <stdio.h>
+//#include <string.h>
 
 /* entity positions */
 

@@ -38,45 +38,45 @@
  * \file
  */
 
-#include "config.h"
+//#include "config.h"
 
 #include "upnpapi.h"
 
-#include "ThreadPool.h"
-#include "UpnpStdInt.h"
-#include "UpnpUniStd.h" /* for close() */
+//#include "ThreadPool.h"
+//#include "UpnpStdInt.h"
+//#include "UpnpUniStd.h" /* for close() */
 #include "httpreadwrite.h"
-#include "membuffer.h"
-#include "soaplib.h"
-#include "ssdplib.h"
-#include "sysdep.h"
-#include "uuid.h"
+//#include "membuffer.h"
+//#include "soaplib.h"
+//#include "ssdplib.h"
+//#include "sysdep.h"
+//#include "uuid.h"
 
 /* Needed for GENA */
-#include "gena.h"
-#include "miniserver.h"
-#include "service_table.h"
+//#include "gena.h"
+//#include "miniserver.h"
+//#include "service_table.h"
 
 #ifdef INTERNAL_WEB_SERVER
-#include "urlconfig.h"
+//#include "urlconfig.h"
 
-#include "VirtualDir.h"
-#include "webserver.h"
+//#include "VirtualDir.h"
+//#include "webserver.h"
 #endif /* INTERNAL_WEB_SERVER */
 
-#include <assert.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
+//#include <assert.h>
+//#include <signal.h>
+//#include <stdlib.h>
+//#include <string.h>
+//#include <sys/stat.h>
 
 #ifdef _WIN32
 /* Do not include these files */
 #else
 #include <ifaddrs.h>
-#include <sys/ioctl.h>
-#include <sys/param.h>
-#include <sys/types.h>
+//#include <sys/ioctl.h>
+//#include <sys/param.h>
+//#include <sys/types.h>
 #endif
 
 // ifr_netmask is not defined on eg OmniOS/Solaris, but since
@@ -86,7 +86,7 @@
 #endif
 
 #ifdef UPNP_ENABLE_OPEN_SSL
-#include <openssl/ssl.h>
+//#include <openssl/ssl.h>
 #endif
 
 #ifndef IN6_IS_ADDR_GLOBAL

@@ -37,7 +37,7 @@
 #include "ixmlparser.h"
 
 #include <assert.h>
-#include <stdlib.h> /* for free() */
+//#include <stdlib.h> /* for free() */
 #include <string.h>
 
 void ixmlElement_init(IXML_Element *element)

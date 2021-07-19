@@ -10,17 +10,17 @@
 extern "C" {
 #endif
 
-#include "GenlibClientSubscription.h"
+//#include "GenlibClientSubscription.h"
 #include "TimerThread.h"
-#include "UpnpString.h"
+//#include "UpnpString.h"
 #include "service_table.h"
-#include "upnp.h"
-#include "upnp_timeout.h"
-#include "uri.h"
+//#include "upnp.h"
+//#include "upnp_timeout.h"
+//#include "uri.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <time.h>
 
 extern TimerThread gTimerThread;
 

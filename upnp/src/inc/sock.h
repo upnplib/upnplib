@@ -46,7 +46,7 @@
 #include "UpnpGlobal.h" /* for UPNP_INLINE */
 #include "UpnpInet.h" /* for SOCKET, netinet/in */
 #ifdef UPNP_ENABLE_OPEN_SSL
-#include <openssl/ssl.h>
+//#include <openssl/ssl.h>
 #endif
 
 /* The following are not defined under winsock.h */

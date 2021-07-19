@@ -32,7 +32,7 @@
 #ifndef GENLIB_UTIL_STRINTMAP_H
 #define GENLIB_UTIL_STRINTMAP_H
 
-#include "upnputil.h"
+//#include "upnputil.h"
 
 #include <stdlib.h>
 

@@ -37,16 +37,16 @@
  * \file
  */
 
-#include "FreeList.h"
+//#include "FreeList.h"
 #include "LinkedList.h"
-#include "UpnpGlobal.h" /* for UPNP_INLINE, EXPORT_SPEC */
-#include "UpnpInet.h"
-#include "ithread.h"
+//#include "UpnpGlobal.h" /* for UPNP_INLINE, EXPORT_SPEC */
+//#include "UpnpInet.h"
+//#include "ithread.h"
 
-#include <errno.h>
+//#include <errno.h>
 
 #ifdef _WIN32
-#include <time.h>
+//#include <time.h>
 
 #ifndef _TIMEZONE_DEFINED
 struct timezone
@@ -57,10 +57,10 @@ struct timezone
 int gettimeofday(struct timeval *tv, struct timezone *tz);
 #endif
 #else /* _WIN32 */
-#include <sys/param.h>
+//#include <sys/param.h>
 #include <sys/time.h> /* for gettimeofday() */
 #if defined(__APPLE__) || defined(__NetBSD__)
-#include <sys/resource.h> /* for setpriority() */
+//#include <sys/resource.h> /* for setpriority() */
 #endif
 #endif
 
