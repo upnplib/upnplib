@@ -56,7 +56,7 @@ UPNP_VERSION_PATCH)
  ***************************************************************************/
 /* whether the system defaults to 32bit off_t but can do 64bit when requested
  * warning libupnp requires largefile mode - use AC_SYS_LARGEFILE */
-#cmakedefine UPNP_LARGEFILE_SENSITIVE 1
+#define UPNP_LARGEFILE_SENSITIVE 1
 
 /***************************************************************************
  * Library optional features
@@ -108,6 +108,12 @@ UPNP_VERSION_PATCH)
 
 /* Defined to 1 if the library has IXML script support enabled */
 //#cmakedefine IXML_HAVE_SCRIPTSUPPORT 1
+
+/* Defined to ON if the library will be created statically linkable */
+#cmakedefine UPNP_STATIC_LIB ${UPNP_STATIC_LIB}
+
+/* Defined to ON if the library will use the static pthreads4W library */
+#cmakedefine PTW32_STATIC_LIB ${PTW32_STATIC_LIB}
 
 /* Defines if strnlen is available on your system */
 #cmakedefine HAVE_STRNLEN ${HAVE_STRNLEN}

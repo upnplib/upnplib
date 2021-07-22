@@ -41,6 +41,10 @@
 #include "client_table.h"
 //#include "upnp.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define MAX_INTERFACES 256
 
 #define DEV_LIMIT 200
@@ -314,5 +318,9 @@ int PrintHandleInfo(
         UpnpClient_Handle Hnd);
 
 extern WebServerState bWebServerState;
+
+#ifdef __cplusplus
+}  // extern "C"
+#endif
 
 #endif /* UPNPAPI_H */

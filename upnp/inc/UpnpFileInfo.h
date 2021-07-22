@@ -11,14 +11,16 @@
  *
  * \author Marcelo Roberto Jimenez
  */
-//#include "UpnpGlobal.h" /* for EXPORT_SPEC */
-//#include "UpnpInet.h"
-//#include "UpnpString.h"
-//#include "ixml.h"
-//#include "list.h"
+#ifdef _WIN32
+#include "UpnpGlobal.h" /* for EXPORT_SPEC */
+#include "UpnpInet.h"
+#include "UpnpString.h"
+#include "ixml.h"
+#include "list.h"
 
-//#include <stdlib.h> /* for size_t */
-//#include <sys/types.h>
+#include <stdlib.h> /* for size_t */
+#include <sys/types.h>
+#endif // _WIN32
 #include <time.h>
 
 #ifdef __cplusplus

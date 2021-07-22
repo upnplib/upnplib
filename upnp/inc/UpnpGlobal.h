@@ -7,6 +7,8 @@
  * \brief Defines constants that for some reason are not defined on some
  * systems.
  */
+// TODO: Check if this include is needed here
+#include "upnpconfig.h"
 
 #if defined UPNP_LARGEFILE_SENSITIVE && _FILE_OFFSET_BITS + 0 != 64
 #if defined __GNUC__
@@ -47,7 +49,7 @@
 /* define some things the M$ VC++ doesn't know */
 #define UPNP_INLINE _inline
 typedef __int64 int64_t;
-#define PRId64 "I64d"
+//#define PRId64 "I64d"
 #define PRIzd "ld"
 #define PRIzu "lu"
 #define PRIzx "lx"

@@ -15,11 +15,11 @@
 #include "UpnpUniStd.h" /* for close() */
 
 #ifdef _WIN32
-//#include <winsock2.h>
+#include <winsock2.h>
 
-//#include <iphlpapi.h>
-//#include <stdarg.h>
-//#include <ws2tcpip.h>
+#include <iphlpapi.h>
+#include <stdarg.h>
+#include <ws2tcpip.h>
 
 #define UpnpCloseSocket closesocket
 
@@ -29,7 +29,7 @@ typedef short sa_family_t;
 typedef ADDRESS_FAMILY sa_family_t;
 #endif
 
-#else /* _WIN32 */
+#else // _WIN32
 #include <sys/param.h>
 #if defined(__sun)
 //#include <fcntl.h>
