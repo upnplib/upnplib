@@ -16,6 +16,10 @@ if(NOT WIN32)
     # If not on MS Windows we don't need the pthreads library
     file(REMOVE ${PTHREADS4W_ARCHIVE})
 
+    # In order to compile pthreads with C++ we need this additional flag,
+    # but not on MS Windows
+    target_link_libraries(upnplib -pthread)
+
     return()
 endif()
 

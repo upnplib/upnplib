@@ -11,9 +11,9 @@
 #
 .*
 *~
+pthreads4w-code*
 tags
 build/
-pthreads4w/
 
 #
 # git files that we don't want to ignore even it they are dot-files

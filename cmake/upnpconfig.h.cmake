@@ -56,7 +56,7 @@ UPNP_VERSION_PATCH)
  ***************************************************************************/
 /* whether the system defaults to 32bit off_t but can do 64bit when requested
  * warning libupnp requires largefile mode - use AC_SYS_LARGEFILE */
-#define UPNP_LARGEFILE_SENSITIVE 1
+#cmakedefine UPNP_LARGEFILE_SENSITIVE
 
 /***************************************************************************
  * Library optional features
