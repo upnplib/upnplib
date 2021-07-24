@@ -1,5 +1,5 @@
 # Copyright 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-07-21
+# Last modified: 2021-07-23
 
 CMAKE_MINIMUM_REQUIRED (VERSION 3.18)
 CMAKE_POLICY (VERSION 3.18)
@@ -33,6 +33,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # #cmakedefine VAR1 ${VAR} does not work.
 # #cmakedefine VAR2 1  : VAR2 must be exist before even you set a constant.
 
+    option(BUILDTESTS "Enable time- and storage-consuming extended tests on the installation" ON)
+
     # TODO: Test this option to link statically
     # UPNP_STATIC_LIB - for creating a statically linkable UPnP-library
     option(UPNP_STATIC_LIB "Create a statically linkable UPnP-library" OFF)
@@ -57,6 +59,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Configure and compile settings
 #-------------------------------
+set(PTHREADS4W_DIR ${PROJECT_BINARY_DIR}/pthreads4w)
+
 if (MSVC)
     # TODO: Fix warnings from the MSVC compiler
     # Reports the compiler warning that is specified by nnnn only once.
@@ -77,8 +81,7 @@ include_directories(
     "${PROJECT_SOURCE_DIR}/upnp/src/threadutil"
     "${PROJECT_SOURCE_DIR}/ixml/inc"
     "${PROJECT_SOURCE_DIR}/ixml/src/inc"
-    # TODO: Check correct include path for pthreads4w
-    "${PROJECT_SOURCE_DIR}/pthreads4w"
+    "${PTHREADS4W_DIR}/include"
     "${PROJECT_BINARY_DIR}"
     "${PROJECT_BINARY_DIR}/upnp/inc"
 )
@@ -126,17 +129,6 @@ target_compile_definitions (upnplib
     PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
 )
 
-
-if (WIN32)
-# Only on MS Windows we must link to the open source pthreads library.
-# Microsoft does not support POSIX threads that we need.
-
-    add_library(pthreads4w STATIC IMPORTED)
-    set_target_properties(pthreads4w PROPERTIES IMPORTED_LOCATION
-                          ${PROJECT_SOURCE_DIR}/pthreads4w/pthreadVC3)
-
-    # In addition to pthreads We need some more system libraries
-    # ws2_32: winsock to support sockets
-    # iphlpapi: ip helper interface to get network management tools
-    target_link_libraries(upnplib ws2_32 iphlpapi pthreads4w)
-endif()
+# All common work is done.
+# Process Microsoft Windows specific configuriation
+include(${PROJECT_SOURCE_DIR}/cmake/ms-windows.cmake)
