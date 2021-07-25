@@ -1,20 +1,18 @@
 # Copyright 2021 GPL 3 or higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-07-24
+# Last modified: 2021-07-25
 
-# This is included from the main CMakeLists.txt and contains all settings
-# to configure and build the project on Microsoft Windows.
-#========================================================================
+project(pthreads4w-build DESCRIPTION "POSIX Threads for Windows")
 
-# Search the compressed archive of the open source POSIX threads library
-# for Microsoft Windows that we need to install
-file(GLOB PTHREADS4W_ARCHIVE
-     LIST_DIRECTORIES false CONFIGURE_DEPENDS
-     "${PROJECT_SOURCE_DIR}/pthreads4w-code*.zip")
+# This contains all settings to configure and build the project
+# on Microsoft Windows.
+#==============================================================
 
 if(NOT WIN32)
 
     # If not on MS Windows we don't need the pthreads library
-    file(REMOVE ${PTHREADS4W_ARCHIVE})
+    if(NOT DEVEL)
+        file(REMOVE_RECURSE ${PTHREADS4W_SOURCE_DIR}/pthreads4w/)
+    endif()
 
     # In order to compile pthreads with C++ we need this additional flag,
     # but not on MS Windows
@@ -37,6 +35,12 @@ if(NOT MSVC)
     message("   Using your compiler is not tested and may not work.")
 endif()
 
+# Search the compressed archive of the open source POSIX threads library
+# for Microsoft Windows that we need to install
+file(GLOB PTHREADS4W_ARCHIVE
+     LIST_DIRECTORIES false CONFIGURE_DEPENDS
+     "${PROJECT_SOURCE_DIR}/pthreads4w-code*.zip")
+
 # extract the pthreads library archive
 file(ARCHIVE_EXTRACT
      INPUT ${PTHREADS4W_ARCHIVE}
@@ -46,7 +50,8 @@ file(GLOB PTHREADS4W_BUILD_PATH
      LIST_DIRECTORIES true
     "${PROJECT_BINARY_DIR}/pthreads4w-code*")
 
-# Build the pthreads library
+# Build the pthreads library with its native installation.
+# We call it as an external process.
 message(CHECK_START "building pthreads4w library")
 execute_process(COMMAND ${NMAKE} realclean VC
                 WORKING_DIRECTORY ${PTHREADS4W_BUILD_PATH}
@@ -58,8 +63,10 @@ if(NOT ${RETURN_CODE} EQUAL 0)
     message(FATAL_ERROR ${PTHREAD_ERROR_MESSAGE})
 endif()
 
-if(BUILDTESTS)
-# Running tests on the pthreads library
+if(NOT DEVEL)
+# Running tests on the pthreads library with executing its native testsuite
+# as an external process. This takes some time, so we can disable it
+# with an option.
     execute_process(COMMAND ${NMAKE} VC
                     WORKING_DIRECTORY ${PTHREADS4W_BUILD_PATH}/tests
                     RESULT_VARIABLE RETURN_CODE

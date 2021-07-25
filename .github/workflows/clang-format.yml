@@ -11,4 +11,4 @@ jobs:
       with:
         source: './upnp ./ixml'
         extensions: 'cpp'
-        clangFormatVersion: 12
+        clangFormatVersion: 11

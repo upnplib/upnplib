@@ -1,8 +1,10 @@
 # Copyright 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-07-23
+# Last modified: 2021-07-25
 
 CMAKE_MINIMUM_REQUIRED (VERSION 3.18)
 CMAKE_POLICY (VERSION 3.18)
+
+# This is a guard that you do not build direct in the source tree.
 if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
     message ("In-source builds are not supported.")
     message ("Use a separate folder for building, for example:\n")
@@ -14,6 +16,7 @@ if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
 
 # set the project name and version
+#---------------------------------
 set (UPNP_VERSION_STRING "1.0.0")
 set (UPNP_VERSION_MAJOR 1)
 project(UPnPlib VERSION ${UPNP_VERSION_STRING}
@@ -33,7 +36,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # #cmakedefine VAR1 ${VAR} does not work.
 # #cmakedefine VAR2 1  : VAR2 must be exist before even you set a constant.
 
-    option(BUILDTESTS "Enable time- and storage-consuming extended tests on the installation" ON)
+    option(DEVEL "Set developement environment with GoogleTest. ATTENTION! 'git commit' your edits before setting OFF. Never use for production!" OFF)
 
     # TODO: Test this option to link statically
     # UPNP_STATIC_LIB - for creating a statically linkable UPnP-library
@@ -49,77 +52,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
     check_cxx_symbol_exists(strndup "cstring" HAVE_STRNDUP)
 
 
-# Configure and compile settings
-#-------------------------------
+# Definition of general paths
+#----------------------------
+set(PTHREADS4W_SOURCE_DIR ${PROJECT_BINARY_DIR}/pthreads4w)
 set(PTHREADS4W_DIR ${PROJECT_BINARY_DIR}/pthreads4w)
-
-if (MSVC)
-    # TODO: Fix warnings from the MSVC compiler
-    # Reports the compiler warning that is specified by nnnn only once.
-    #add_compile_options(/wo4273)
-    # suppress all warnings for development to see only errors
-    #add_compile_options(/W0)
-else()
-    # lots of warnings and all warnings as errors
-    #add_compile_options(-Wall -Wextra -pedantic -Werror)
-endif()
-
-
-include_directories(
-#    "${PROJECT_SOURCE_DIR}/../build/_deps/googletest-src/googletest/include"
-#    "${PROJECT_SOURCE_DIR}/../build/_deps/googletest-src/googlemock/include"
-    "${PROJECT_SOURCE_DIR}/upnp/inc"
-    "${PROJECT_SOURCE_DIR}/upnp/src/inc"
-    "${PROJECT_SOURCE_DIR}/upnp/src/threadutil"
-    "${PROJECT_SOURCE_DIR}/ixml/inc"
-    "${PROJECT_SOURCE_DIR}/ixml/src/inc"
-    "${PTHREADS4W_DIR}/include"
-    "${PROJECT_BINARY_DIR}"
-    "${PROJECT_BINARY_DIR}/upnp/inc"
-)
-
-add_executable(upnplib
-    ${PROJECT_SOURCE_DIR}/ixml/src/attr.c
-    ${PROJECT_SOURCE_DIR}/ixml/src/document.c
-    ${PROJECT_SOURCE_DIR}/ixml/src/element.c
-    ${PROJECT_SOURCE_DIR}/ixml/src/ixml.c
-    ${PROJECT_SOURCE_DIR}/ixml/src/ixmlmembuf.c
-    ${PROJECT_SOURCE_DIR}/ixml/src/ixmlparser.c
-    ${PROJECT_SOURCE_DIR}/ixml/src/namedNodeMap.c
-    ${PROJECT_SOURCE_DIR}/ixml/src/node.c
-    ${PROJECT_SOURCE_DIR}/ixml/src/nodeList.c
-
-    ${PROJECT_SOURCE_DIR}/upnp/src/threadutil/FreeList.cpp
-    ${PROJECT_SOURCE_DIR}/upnp/src/threadutil/LinkedList.cpp
-    ${PROJECT_SOURCE_DIR}/upnp/src/threadutil/ThreadPool.cpp
-    ${PROJECT_SOURCE_DIR}/upnp/src/threadutil/TimerThread.cpp
-
-    ${PROJECT_SOURCE_DIR}/upnp/src/genlib/net/sock.c
-
-    ${PROJECT_SOURCE_DIR}/upnp/src/genlib/net/uri/uri.c
-
-    ${PROJECT_SOURCE_DIR}/upnp/src/genlib/net/http/httpparser.c
-    ${PROJECT_SOURCE_DIR}/upnp/src/genlib/net/http/httpreadwrite.c
-    ${PROJECT_SOURCE_DIR}/upnp/src/genlib/net/http/statcodes.c
-
-    ${PROJECT_SOURCE_DIR}/upnp/src/genlib/util/list.c
-    ${PROJECT_SOURCE_DIR}/upnp/src/genlib/util/membuffer.c
-    ${PROJECT_SOURCE_DIR}/upnp/src/genlib/util/strintmap.c
-
-    ${PROJECT_SOURCE_DIR}/upnp/src/api/UpnpExtraHeaders.c
-    ${PROJECT_SOURCE_DIR}/upnp/src/api/UpnpString.c
-    ${PROJECT_SOURCE_DIR}/upnp/src/api/upnpapi.cpp
-    ${PROJECT_SOURCE_DIR}/upnp/src/api/upnpdebug.cpp
-
-    ${PROJECT_SOURCE_DIR}/upnp/src/upnplib.cpp
-)
-
-target_compile_definitions (upnplib
-    #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-    #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
-    PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
-    PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
-)
 
 
 # Checks for large-file-sensitivity
@@ -217,9 +153,14 @@ if (NOT OFF_T_SIZE)
     endif()
 endif()
 
+
 # All common work is done.
+
+# Build UPnP library
+add_subdirectory(upnp)
+
 # Process Microsoft Windows specific configuriation
-include(${PROJECT_SOURCE_DIR}/cmake/ms-windows.cmake)
+add_subdirectory(pthreads4w)
 
 
 # Hope we have all needed variables defined so we can write upnpconfig.h now
