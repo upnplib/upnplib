@@ -10,7 +10,7 @@ project(pthreads4w-build DESCRIPTION "POSIX Threads for Windows")
 if(NOT WIN32)
 
     # If not on MS Windows we don't need the pthreads library
-    if(NOT DEVEL)
+    if(NOT UPNP_DEVEL)
         file(REMOVE_RECURSE ${PTHREADS4W_SOURCE_DIR}/pthreads4w/)
     endif()
 
@@ -63,7 +63,7 @@ if(NOT ${RETURN_CODE} EQUAL 0)
     message(FATAL_ERROR ${PTHREAD_ERROR_MESSAGE})
 endif()
 
-if(NOT DEVEL)
+if(NOT UPNP_DEVEL AND NOT UPNP_PTHREADS4W_TESTS_PASSED)
 # Running tests on the pthreads library with executing its native testsuite
 # as an external process. This takes some time, so we can disable it
 # with an option.
@@ -75,6 +75,7 @@ if(NOT DEVEL)
         # This will stop the installation
         message(FATAL_ERROR)
     endif()
+    set (UPNP_PTHREADS4W_TESTS_PASSED 1 CACHE INTERNAL "Long time test suite of pthreads4w has successfully passed" FORCE)
 endif()
 
 # Install pthreads binaries and header files for use only local.
@@ -82,25 +83,28 @@ endif()
 # Copy following files is normaly done with "nmake install" from the libraries
 # installation program but its buggy. Look at its Makefile what
 # "nmake install" should do. I have done it here instead.
-file(COPY ${PTHREADS4W_BUILD_PATH}/pthread.obj DESTINATION ${PTHREADS4W_DIR}/bin)
+file(COPY ${PTHREADS4W_BUILD_PATH}/pthread.obj DESTINATION ${PTHREADS4W_BINARY_DIR}/bin)
 file(GLOB FILES_TO_COPY ${PTHREADS4W_BUILD_PATH}/pthreadV*.dll)
-file(COPY ${FILES_TO_COPY} DESTINATION ${PTHREADS4W_DIR}/bin)
+file(COPY ${FILES_TO_COPY} DESTINATION ${PTHREADS4W_BINARY_DIR}/bin)
 file(GLOB FILES_TO_COPY ${PTHREADS4W_BUILD_PATH}/pthreadV*.lib)
-file(COPY ${FILES_TO_COPY} DESTINATION ${PTHREADS4W_DIR}/lib)
-file(COPY ${PTHREADS4W_BUILD_PATH}/_ptw32.h DESTINATION ${PTHREADS4W_DIR}/include)
-file(COPY ${PTHREADS4W_BUILD_PATH}/pthread.h DESTINATION ${PTHREADS4W_DIR}/include)
-file(COPY ${PTHREADS4W_BUILD_PATH}/sched.h DESTINATION ${PTHREADS4W_DIR}/include)
-file(COPY ${PTHREADS4W_BUILD_PATH}/semaphore.h DESTINATION ${PTHREADS4W_DIR}/include)
+file(COPY ${FILES_TO_COPY} DESTINATION ${PTHREADS4W_BINARY_DIR}/lib)
+file(COPY ${PTHREADS4W_BUILD_PATH}/_ptw32.h DESTINATION ${PTHREADS4W_BINARY_DIR}/include)
+file(COPY ${PTHREADS4W_BUILD_PATH}/pthread.h DESTINATION ${PTHREADS4W_BINARY_DIR}/include)
+file(COPY ${PTHREADS4W_BUILD_PATH}/sched.h DESTINATION ${PTHREADS4W_BINARY_DIR}/include)
+file(COPY ${PTHREADS4W_BUILD_PATH}/semaphore.h DESTINATION ${PTHREADS4W_BINARY_DIR}/include)
 
-# Clean up build files. We don't need them anymore.
-file(REMOVE_RECURSE ${PTHREADS4W_BUILD_PATH})
+IF(NOT UPNP_DEVEL)
+    # Clean up build files. We don't need them anymore.
+    file(REMOVE_RECURSE ${PTHREADS4W_BUILD_PATH})
+endif()
+
 message(CHECK_PASS "done")
 
 
 # Import the pthreads library to this build system to be able to link it
 add_library(pthreads4w STATIC IMPORTED)
 set_target_properties(pthreads4w PROPERTIES IMPORTED_LOCATION
-                      ${PTHREADS4W_DIR}/bin/pthread)
+                      ${PTHREADS4W_BINARY_DIR}/bin/pthread)
 
 # In addition to pthreads we need some more system libraries
 # ws2_32: winsock to support sockets

@@ -27,14 +27,14 @@ endif()
 include_directories(
 #    "${PROJECT_SOURCE_DIR}/../build/_deps/googletest-src/googletest/include"
 #    "${PROJECT_SOURCE_DIR}/../build/_deps/googletest-src/googlemock/include"
-    "${PROJECT_SOURCE_DIR}/inc"
-    "${PROJECT_SOURCE_DIR}/src/inc"
-    "${PROJECT_SOURCE_DIR}/src/threadutil"
-    "${CMAKE_SOURCE_DIR}/ixml/inc"
-    "${CMAKE_SOURCE_DIR}/ixml/src/inc"
-    "${PTHREADS4W_DIR}/include"
-    "${CMAKE_BINARY_DIR}"
-    "${CMAKE_BINARY_DIR}/upnp/inc"
+    ${PROJECT_SOURCE_DIR}/inc
+    ${PROJECT_SOURCE_DIR}/src/inc
+    ${PROJECT_SOURCE_DIR}/src/threadutil
+    ${CMAKE_SOURCE_DIR}/ixml/inc
+    ${CMAKE_SOURCE_DIR}/ixml/src/inc
+    ${CMAKE_BINARY_DIR}
+    ${CMAKE_BINARY_DIR}/upnp/inc
+    ${PTHREADS4W_BINARY_DIR}/include
 )
 
 add_executable(upnplib

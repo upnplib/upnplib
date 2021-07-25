@@ -36,26 +36,30 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # #cmakedefine VAR1 ${VAR} does not work.
 # #cmakedefine VAR2 1  : VAR2 must be exist before even you set a constant.
 
-    option(DEVEL "Set developement environment with GoogleTest. ATTENTION! 'git commit' your edits before setting OFF. Never use for production!" OFF)
+# TODO: Test this option to link statically
+# UPNP_STATIC_LIB - for creating a statically linkable UPnP-library
+option(UPNP_STATIC_LIB "Create a statically linkable UPnP-library" OFF)
 
-    # TODO: Test this option to link statically
-    # UPNP_STATIC_LIB - for creating a statically linkable UPnP-library
-    option(UPNP_STATIC_LIB "Create a statically linkable UPnP-library" OFF)
+# TODO: Test this option to use the static pthreads4W
+# PTW32_STATIC_LIB - for using the static pthreads4W library
+option(PTW32_STATIC_LIB "For using the static pthreads4W library" OFF)
 
-    # TODO: Test this option to use the static pthreads4W
-    # PTW32_STATIC_LIB - for using the static pthreads4W library
-    option(PTW32_STATIC_LIB "For using the static pthreads4W library" OFF)
+# Check available library functions. We need that for later configuration.
+include(CheckCXXSymbolExists)
+check_cxx_symbol_exists(strnlen "cstring" HAVE_STRNLEN)
+check_cxx_symbol_exists(strndup "cstring" HAVE_STRNDUP)
 
-    # Check available library functions. We need that for later configuration.
-    include(CheckCXXSymbolExists)
-    check_cxx_symbol_exists(strnlen "cstring" HAVE_STRNLEN)
-    check_cxx_symbol_exists(strndup "cstring" HAVE_STRNDUP)
+if(DEVEL)
+# Commandline variables are always cached. This one shouldn't.
+    unset (DEVEL CACHE)
+    set(UPNP_DEVEL ON)
+endif()
 
 
 # Definition of general paths
 #----------------------------
-set(PTHREADS4W_SOURCE_DIR ${PROJECT_BINARY_DIR}/pthreads4w)
-set(PTHREADS4W_DIR ${PROJECT_BINARY_DIR}/pthreads4w)
+set(PTHREADS4W_SOURCE_DIR ${PROJECT_SOURCE_DIR}/pthreads4w)
+set(PTHREADS4W_BINARY_DIR ${PTHREADS4W_SOURCE_DIR}/build)
 
 
 # Checks for large-file-sensitivity
@@ -160,7 +164,7 @@ endif()
 add_subdirectory(upnp)
 
 # Process Microsoft Windows specific configuriation
-add_subdirectory(pthreads4w)
+add_subdirectory(${PTHREADS4W_SOURCE_DIR} ${PTHREADS4W_BINARY_DIR})
 
 
 # Hope we have all needed variables defined so we can write upnpconfig.h now
