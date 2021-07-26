@@ -1,25 +1,11 @@
 # Copyright 2021 GPL 3 or higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-07-25
+# Last modified: 2021-07-26
 
-project(pthreads4w-build DESCRIPTION "POSIX Threads for Windows")
+project(UPNP_PTHREADS4W DESCRIPTION "POSIX Threads for Windows")
 
 # This contains all settings to configure and build the project
 # on Microsoft Windows.
 #==============================================================
-
-if(NOT WIN32)
-
-    # If not on MS Windows we don't need the pthreads library
-    if(NOT UPNP_DEVEL)
-        file(REMOVE_RECURSE ${PTHREADS4W_SOURCE_DIR}/pthreads4w/)
-    endif()
-
-    # In order to compile pthreads with C++ we need this additional flag,
-    # but not on MS Windows
-    target_link_libraries(upnplib -pthread)
-
-    return()
-endif()
 
 # Only on MS Windows we must link to the open source pthreads library.
 # Microsoft does not support POSIX threads that we need.

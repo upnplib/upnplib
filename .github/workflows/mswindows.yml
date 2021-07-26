@@ -1,23 +1,46 @@
 name: Build for MS Windows
-
 on: [push, pull_request]
 
 jobs:
-  windows:
-    name: Build (${{ matrix.os }})  - ${{ matrix.conf }}
-    runs-on: ${{ matrix.os }}
+  MS-windows-win32:
+    name: MS Windows 32bit version
+    runs-on: windows-2016
 
-    strategy:
       matrix:
-        os: [windows-2016, windows-2019]
+#        os: [windows-2016, windows-2019]
         conf: [Debug, Release]
       fail-fast: false
 
     steps:
       - uses: actions/checkout@v2
       - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: win32
+      - name: Configure upnplib with win32
+        run: >
+          cmake
+          -S .
+          -B build
+          -D CMAKE_BUILD_TYPE=${{ matrix.conf }}
 
-      - name: Configure upnplib
+      - name: Build upnplib
+        run: cmake --build build
+
+# new job
+  MS-windows-amd64:
+    name: MS Windows 64bit version
+    runs-on: windows-2019
+
+      matrix:
+        conf: [Debug, Release]
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+      - name: Configure upnplib with amd64
         run: >
           cmake
           -S .

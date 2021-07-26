@@ -1,5 +1,5 @@
 # Copyright 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-07-25
+# Last modified: 2021-07-26
 
 CMAKE_MINIMUM_REQUIRED (VERSION 3.18)
 CMAKE_POLICY (VERSION 3.18)
@@ -15,8 +15,8 @@ if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
     message (FATAL_ERROR "")
 endif()
 
-# set the project name and version
-#---------------------------------
+# set the project name, version and compiler standard
+#----------------------------------------------------
 set (UPNP_VERSION_STRING "1.0.0")
 set (UPNP_VERSION_MAJOR 1)
 project(UPnPlib VERSION ${UPNP_VERSION_STRING}
@@ -28,7 +28,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-# Set upnplib options
+# Define custom cmake options for commandline and cmake-gui
 #------------------------------------------------------------------------
 # If you add or modify an option you MUST also do it in the corresponding
 # "${PROJECT_SOURCE_DIR}/upnp/cmake/upnpconfig.h.cmake".
@@ -44,6 +44,17 @@ option(UPNP_STATIC_LIB "Create a statically linkable UPnP-library" OFF)
 # PTW32_STATIC_LIB - for using the static pthreads4W library
 option(PTW32_STATIC_LIB "For using the static pthreads4W library" OFF)
 
+
+# Setup configure and build environment
+#--------------------------------------
+# Set the default build type
+message(CHECK_START "Looking for build type")
+if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    set (CMAKE_BUILD_TYPE "Release" CACHE
+        STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ..." FORCE)
+endif()
+message(CHECK_PASS "is ${CMAKE_BUILD_TYPE}")
+
 # Check available library functions. We need that for later configuration.
 include(CheckCXXSymbolExists)
 check_cxx_symbol_exists(strnlen "cstring" HAVE_STRNLEN)
@@ -54,12 +65,6 @@ if(DEVEL)
     unset (DEVEL CACHE)
     set(UPNP_DEVEL ON)
 endif()
-
-
-# Definition of general paths
-#----------------------------
-set(PTHREADS4W_SOURCE_DIR ${PROJECT_SOURCE_DIR}/pthreads4w)
-set(PTHREADS4W_BINARY_DIR ${PTHREADS4W_SOURCE_DIR}/build)
 
 
 # Checks for large-file-sensitivity
@@ -164,7 +169,18 @@ endif()
 add_subdirectory(upnp)
 
 # Process Microsoft Windows specific configuriation
-add_subdirectory(${PTHREADS4W_SOURCE_DIR} ${PTHREADS4W_BINARY_DIR})
+#--------------------------------------------------
+if(WIN32)
+    # This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
+    # e.g. UPNP_PTHREADS4W_SOURCE_DIR and UPNP_PTHREADS4W_BINARY_DIR
+    add_subdirectory(${PROJECT_SOURCE_DIR}/pthreads4w
+                     ${PROJECT_SOURCE_DIR}/pthreads4w/build)
+else()
+    # If not on MS Windows we don't need the pthreads library
+    if(NOT UPNP_DEVEL)
+        file(REMOVE_RECURSE ${PROJECT_SOURCE_DIR}/pthreads4w)
+    endif()
+endif()
 
 
 # Hope we have all needed variables defined so we can write upnpconfig.h now

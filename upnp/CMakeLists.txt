@@ -1,7 +1,7 @@
 # Copyright 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-07-25
+# Last modified: 2021-07-26
 
-project(upnplib-build DESCRIPTION "Binary build of the UPnP library")
+project(UPNP_CORE DESCRIPTION "Binary build of the UPnP library core")
 
 # This contains all settings to compile the library dynamically and static.
 #==========================================================================
@@ -79,3 +79,9 @@ target_compile_definitions (upnplib
     PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
     PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
 )
+
+if(NOT WIN32)
+    # In order to compile pthreads with C++ we need this additional flag,
+    # but not on MS Windows
+    target_link_libraries(upnplib -pthread)
+endif()
