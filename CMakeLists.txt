@@ -1,31 +1,15 @@
 # Copyright 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 # Last modified: 2021-07-26
 
-CMAKE_MINIMUM_REQUIRED (VERSION 3.18)
-CMAKE_POLICY (VERSION 3.18)
+cmake_minimum_required(VERSION 3.18)
+cmake_policy(VERSION 3.18)
+include(cmake/project-header.cmake)
 
-# This is a guard that you do not build direct in the source tree.
-if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
-    message ("In-source builds are not supported.")
-    message ("Use a separate folder for building, for example:\n")
-    message ("    cmake -S . -B build/")
-    message ("    cmake --build build/\n")
-    message ("Before that, remove the files already created:\n")
-    message ("    rm -rf CMakeCache.txt CMakeFiles\n")
-    message (FATAL_ERROR "")
-endif()
-
-# set the project name, version and compiler standard
-#----------------------------------------------------
 set (UPNP_VERSION_STRING "1.0.0")
 set (UPNP_VERSION_MAJOR 1)
 project(UPnPlib VERSION ${UPNP_VERSION_STRING}
                 DESCRIPTION "UPnP library"
                 HOMEPAGE_URL "https://github.com/upnplib")
-
-# specify the C++ standard
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 # Define custom cmake options for commandline and cmake-gui
@@ -48,12 +32,10 @@ option(PTW32_STATIC_LIB "For using the static pthreads4W library" OFF)
 # Setup configure and build environment
 #--------------------------------------
 # Set the default build type
-message(CHECK_START "Looking for build type")
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set (CMAKE_BUILD_TYPE "Release" CACHE
         STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ..." FORCE)
 endif()
-message(CHECK_PASS "is ${CMAKE_BUILD_TYPE}")
 
 # Check available library functions. We need that for later configuration.
 include(CheckCXXSymbolExists)
@@ -163,11 +145,6 @@ if (NOT OFF_T_SIZE)
 endif()
 
 
-# All common work is done.
-
-# Build UPnP library
-add_subdirectory(upnp)
-
 # Process Microsoft Windows specific configuriation
 #--------------------------------------------------
 if(WIN32)
@@ -182,11 +159,24 @@ else()
     endif()
 endif()
 
+# Build UPnP core library
+#------------------------
+# This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
+# e.g. UPNP_CORE_SOURCE_DIR and UPNP_CORE_BINARY_DIR
+add_subdirectory(${PROJECT_SOURCE_DIR}/upnp
+                 ${PROJECT_SOURCE_DIR}/upnp/build)
 
-# Hope we have all needed variables defined so we can write upnpconfig.h now
+
+# Export cmake variables
+#-----------------------
+# to compiler macros (#define ...) for conditions to the program source.
+# Hope we have all needed variables defined so we can write upnpconfig.h now.
+# To meet all variables this should be the last statement.
 configure_file(${PROJECT_SOURCE_DIR}/cmake/upnpconfig.h.cmake
                ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.h)
 # TODO: Remove symlink which is only for compatibility reasons
 file(CREATE_LINK ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.h
                  ${PROJECT_BINARY_DIR}/autoconfig.h
                  COPY_ON_ERROR SYMBOLIC)
+
+message("-- Build type is ${CMAKE_BUILD_TYPE}")

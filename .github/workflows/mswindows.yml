@@ -6,6 +6,7 @@ jobs:
     name: MS Windows 32bit version
     runs-on: windows-2016
 
+    strategy:
       matrix:
 #        os: [windows-2016, windows-2019]
         conf: [Debug, Release]
@@ -31,6 +32,7 @@ jobs:
     name: MS Windows 64bit version
     runs-on: windows-2019
 
+    strategy:
       matrix:
         conf: [Debug, Release]
       fail-fast: false
@@ -49,3 +51,12 @@ jobs:
 
       - name: Build upnplib
         run: cmake --build build
+        run: dir /b pthreads4w/build
+
+      - name: Check build directory
+        run: >
+          cmake
+          -S .
+          -B build
+          -D DEVEL=ON
+        run: dir /b pthreads4w/build

@@ -1,6 +1,10 @@
 # Copyright 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 # Last modified: 2021-07-26
 
+cmake_minimum_required(VERSION 3.18)
+cmake_policy(VERSION 3.18)
+include(../cmake/project-header.cmake)
+
 project(UPNP_CORE DESCRIPTION "Binary build of the UPnP library core")
 
 # This contains all settings to compile the library dynamically and static.
@@ -10,11 +14,13 @@ project(UPNP_CORE DESCRIPTION "Binary build of the UPnP library core")
 #-----------------
 
 if (MSVC)
-    # TODO: Fix warnings from the MSVC compiler
+    # TODO: Increase error levels on compilers
     # Reports the compiler warning that is specified by nnnn only once.
     #add_compile_options(/wo4273)
     # suppress all warnings for development to see only errors
     #add_compile_options(/W0)
+    # warning level 4 and all warnings as errors
+    #add_compile_options(/W4 /WX)
 else()
     # lots of warnings and all warnings as errors
     #add_compile_options(-Wall -Wextra -pedantic -Werror)
@@ -23,6 +29,7 @@ endif()
 
 # Source files and compile settings
 #----------------------------------
+# TODO: Remove references to '${CMAKE_SOURCE_DIR}/ixml' if possible
 
 include_directories(
 #    "${PROJECT_SOURCE_DIR}/../build/_deps/googletest-src/googletest/include"
@@ -37,7 +44,7 @@ include_directories(
     ${PTHREADS4W_BINARY_DIR}/include
 )
 
-add_executable(upnplib
+set(UPNP_SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/ixml/src/attr.c
     ${CMAKE_SOURCE_DIR}/ixml/src/document.c
     ${CMAKE_SOURCE_DIR}/ixml/src/element.c
@@ -73,6 +80,16 @@ add_executable(upnplib
     ${PROJECT_SOURCE_DIR}/src/upnplib.cpp
 )
 
+
+# Create test executable and librries
+#------------------------------------
+# All builds should have the same target_compile_definitions
+
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS YES CACHE BOOL "Export all symbols")
+
+# Test executable
+add_executable(upnplib ${UPNP_SOURCE_FILES}
+)
 target_compile_definitions (upnplib
     #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
     #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
@@ -80,8 +97,44 @@ target_compile_definitions (upnplib
     PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
 )
 
+# Shared library
+add_library(upnplibShared SHARED ${UPNP_SOURCE_FILES}
+)
+target_compile_definitions (upnplibShared
+    PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
+    PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+)
+set_target_properties(upnplibShared PROPERTIES
+                      OUTPUT_NAME upnplib
+                      LIBRARY_OUTPUT_DIRECTORY shared
+)
+
+# Static library
+add_library(upnplibStatic STATIC ${UPNP_SOURCE_FILES}
+)
+target_compile_definitions (upnplibStatic
+    PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
+    PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+)
+set_target_properties(upnplibStatic PROPERTIES
+                      OUTPUT_NAME upnplib
+                      ARCHIVE_OUTPUT_DIRECTORY static
+)
+
 if(NOT WIN32)
     # In order to compile pthreads with C++ we need this additional flag,
     # but not on MS Windows
     target_link_libraries(upnplib -pthread)
 endif()
+
+
+# Installation will be done with packaging
+#-----------------------------------------
+#set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/shared)
+#install(
+#    TARGETS upnplib
+#    LIBRARY DESTINATION lib
+#    ARCHIVE DESTINATION lib
+#    RUNTIME DESTINATION bin
+#    PUBLIC_HEADER DESTINATION ${PROJECT_BINARY_DIR}/include
+#)
