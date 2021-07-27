@@ -48,7 +48,11 @@
 extern "C" {
 #endif
 
+#ifdef _WIN32
+#include "pthread.h"
+#else
 #include <pthread.h>
+#endif
 
 #if defined(BSD) && !defined(__GNU__)
 #define PTHREAD_MUTEX_RECURSIVE_NP PTHREAD_MUTEX_RECURSIVE
