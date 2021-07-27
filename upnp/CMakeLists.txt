@@ -41,7 +41,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/ixml/src/inc
     ${CMAKE_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/upnp/inc
-    ${PTHREADS4W_BINARY_DIR}/include
+    ${UPNP_PTHREADS4W_BINARY_DIR}/include
 )
 
 set(UPNP_SOURCE_FILES
@@ -96,6 +96,9 @@ target_compile_definitions (upnplib
     PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
     PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
 )
+set_target_properties(upnplib PROPERTIES
+                      RUNTIME_OUTPUT_DIRECTORY runtime
+)
 
 # Shared library
 add_library(upnplibShared SHARED ${UPNP_SOURCE_FILES}
@@ -104,9 +107,11 @@ target_compile_definitions (upnplibShared
     PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
     PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
 )
-set_target_properties(upnplibShared PROPERTIES
-                      OUTPUT_NAME upnplib
-                      LIBRARY_OUTPUT_DIRECTORY shared
+set_target_properties(upnplibShared
+    PROPERTIES
+        OUTPUT_NAME upnplib
+        LIBRARY_OUTPUT_DIRECTORY shared     # used if not WIN32
+        RUNTIME_OUTPUT_DIRECTORY shared     # used if WIN32
 )
 
 # Static library
@@ -117,8 +122,8 @@ target_compile_definitions (upnplibStatic
     PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
 )
 set_target_properties(upnplibStatic PROPERTIES
-                      OUTPUT_NAME upnplib
-                      ARCHIVE_OUTPUT_DIRECTORY static
+    OUTPUT_NAME upnplib
+    ARCHIVE_OUTPUT_DIRECTORY static
 )
 
 if(NOT WIN32)

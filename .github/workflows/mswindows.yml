@@ -51,6 +51,8 @@ jobs:
 
       - name: Build upnplib
         run: cmake --build build
+
+      - name: Check build
         run: dir /b pthreads4w/build
 
       - name: Check build directory
@@ -59,4 +61,6 @@ jobs:
           -S .
           -B build
           -D DEVEL=ON
+
+      - name: Check configure paths
         run: dir /b pthreads4w/build

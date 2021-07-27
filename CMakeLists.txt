@@ -43,8 +43,8 @@ check_cxx_symbol_exists(strnlen "cstring" HAVE_STRNLEN)
 check_cxx_symbol_exists(strndup "cstring" HAVE_STRNDUP)
 
 if(DEVEL)
-# Commandline variables are always cached. This one shouldn't.
-    unset (DEVEL CACHE)
+# Commandline variables are always cached. This one shouldn't?
+#    unset (DEVEL CACHE)
     set(UPNP_DEVEL ON)
 endif()
 
@@ -145,6 +145,14 @@ if (NOT OFF_T_SIZE)
 endif()
 
 
+# Build UPnP core library
+#------------------------
+# This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
+# e.g. UPNP_CORE_SOURCE_DIR and UPNP_CORE_BINARY_DIR
+add_subdirectory(${PROJECT_SOURCE_DIR}/upnp
+                 ${PROJECT_SOURCE_DIR}/upnp/build)
+
+
 # Process Microsoft Windows specific configuriation
 #--------------------------------------------------
 if(WIN32)
@@ -158,13 +166,6 @@ else()
         file(REMOVE_RECURSE ${PROJECT_SOURCE_DIR}/pthreads4w)
     endif()
 endif()
-
-# Build UPnP core library
-#------------------------
-# This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
-# e.g. UPNP_CORE_SOURCE_DIR and UPNP_CORE_BINARY_DIR
-add_subdirectory(${PROJECT_SOURCE_DIR}/upnp
-                 ${PROJECT_SOURCE_DIR}/upnp/build)
 
 
 # Export cmake variables
