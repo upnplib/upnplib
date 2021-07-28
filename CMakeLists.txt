@@ -1,5 +1,5 @@
 # Copyright 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-07-26
+# Last modified: 2021-07-28
 
 cmake_minimum_required(VERSION 3.18)
 cmake_policy(VERSION 3.18)
@@ -31,6 +31,13 @@ option(PTW32_STATIC_LIB "For using the static pthreads4W library" OFF)
 
 # Setup configure and build environment
 #--------------------------------------
+# Check developement setting from cmake option (-D UPNP_DEVEL)
+if(UPNP_DEVEL)
+# Commandline variables are always cached. This one shouldn't?
+    unset(UPNP_DEVEL CACHE)
+    set(UPNP_DEVEL ON)
+endif()
+
 # Set the default build type
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set (CMAKE_BUILD_TYPE "Release" CACHE
@@ -41,12 +48,6 @@ endif()
 include(CheckCXXSymbolExists)
 check_cxx_symbol_exists(strnlen "cstring" HAVE_STRNLEN)
 check_cxx_symbol_exists(strndup "cstring" HAVE_STRNDUP)
-
-if(DEVEL)
-# Commandline variables are always cached. This one shouldn't?
-#    unset (DEVEL CACHE)
-    set(UPNP_DEVEL ON)
-endif()
 
 
 # Checks for large-file-sensitivity
@@ -145,27 +146,29 @@ if (NOT OFF_T_SIZE)
 endif()
 
 
-# Build UPnP core library
-#------------------------
-# This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
-# e.g. UPNP_CORE_SOURCE_DIR and UPNP_CORE_BINARY_DIR
-add_subdirectory(${PROJECT_SOURCE_DIR}/upnp
-                 ${PROJECT_SOURCE_DIR}/upnp/build)
-
-
-# Process Microsoft Windows specific configuriation
-#--------------------------------------------------
+# Installation of POSIX Threads for Windows (pthreads4w)
+#-------------------------------------------------------
+# This should be one of the first installations to have pthreads available.
 if(WIN32)
     # This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
     # e.g. UPNP_PTHREADS4W_SOURCE_DIR and UPNP_PTHREADS4W_BINARY_DIR
     add_subdirectory(${PROJECT_SOURCE_DIR}/pthreads4w
-                     ${PROJECT_SOURCE_DIR}/pthreads4w/build)
+                     ${PROJECT_SOURCE_DIR}/pthreads4w/build
+                     EXCLUDE_FROM_ALL)
 else()
     # If not on MS Windows we don't need the pthreads library
     if(NOT UPNP_DEVEL)
         file(REMOVE_RECURSE ${PROJECT_SOURCE_DIR}/pthreads4w)
     endif()
 endif()
+
+
+# Build UPnP core library
+#------------------------
+# This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
+# e.g. UPNP_CORE_SOURCE_DIR and UPNP_CORE_BINARY_DIR
+add_subdirectory(${PROJECT_SOURCE_DIR}/upnp
+                 ${PROJECT_SOURCE_DIR}/upnp/build)
 
 
 # Export cmake variables

@@ -1,5 +1,9 @@
 # Copyright 2021 GPL 3 or higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-07-26
+# Last modified: 2021-07-28
+
+cmake_minimum_required(VERSION 3.18)
+cmake_policy(VERSION 3.18)
+include(../cmake/project-header.cmake)
 
 project(UPNP_PTHREADS4W DESCRIPTION "POSIX Threads for Windows")
 
@@ -85,31 +89,3 @@ IF(NOT UPNP_DEVEL)
 endif()
 
 message(CHECK_PASS "done")
-
-
-# Haven't found a solution so far to link a shared library to a shared library
-# but will not throw this away. Finding the correct import took me a long time.
-# So I just link the very small static pthreads4w to the shared library upnplib.
-#add_library(pthreadVC3 SHARED IMPORTED)
-#set_target_properties(pthreadVC3 PROPERTIES
-#            IMPORTED_LOCATION ${UPNP_PTHREADS4W_BINARY_DIR}/bin/pthreadVC3.dll
-#            IMPORTED_IMPLIB ${UPNP_PTHREADS4W_BINARY_DIR}/lib/pthreadVC3.lib
-#)
-# Import the static pthreads library to this build system to be able to link it
-add_library(pthreads4w STATIC IMPORTED)
-set_target_properties(pthreads4w PROPERTIES
-            IMPORTED_LOCATION ${UPNP_PTHREADS4W_BINARY_DIR}/bin/pthread
-)
-
-# In addition to pthreads we need some more system libraries
-# ws2_32: winsock to support sockets
-# iphlpapi: ip helper interface to get network management tools
-target_link_libraries(upnplib ws2_32 iphlpapi pthreads4w)
-target_link_libraries(upnplibShared ws2_32 iphlpapi pthreads4w)
-target_link_libraries(upnplibStatic ws2_32 iphlpapi pthreads4w)
-
-# I got warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs;
-# use /NODEFAULTLIB:library
-target_link_libraries(upnplib -NODEFAULTLIB:MSVCRTD)
-target_link_libraries(upnplibShared -NODEFAULTLIB:MSVCRTD)
-target_link_libraries(upnplibStatic -NODEFAULTLIB:MSVCRTD)

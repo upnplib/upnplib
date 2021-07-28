@@ -1,5 +1,5 @@
 # Copyright 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-07-26
+# Last modified: 2021-07-28
 
 cmake_minimum_required(VERSION 3.18)
 cmake_policy(VERSION 3.18)
@@ -126,7 +126,41 @@ set_target_properties(upnplibStatic PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY static
 )
 
-if(NOT WIN32)
+if(WIN32)
+# Link POSIX Threads for Windows (pthreads4w) if needed
+#------------------------------------------------------
+# Pthreads are not supported by MS Windows. So we have installed the
+# third party library pthreads4w (see subproject pthreads4w if installed).
+
+    # Haven't found a solution so far to link a shared library to a shared library
+    # but will not throw this away. Finding the correct import took me a long time.
+    # So I just link the very small static pthreads4w to the shared library upnplib.
+    #add_library(pthreadVC3 SHARED IMPORTED)
+    #set_target_properties(pthreadVC3 PROPERTIES
+    #            IMPORTED_LOCATION ${UPNP_PTHREADS4W_BINARY_DIR}/bin/pthreadVC3.dll
+    #            IMPORTED_IMPLIB ${UPNP_PTHREADS4W_BINARY_DIR}/lib/pthreadVC3.lib
+    #)
+    # Import the static pthreads library to this build system to be able to link it
+    add_library(pthreads4w STATIC IMPORTED)
+    set_target_properties(pthreads4w PROPERTIES
+                IMPORTED_LOCATION ${UPNP_PTHREADS4W_BINARY_DIR}/bin/pthread
+    )
+
+    # In addition to pthreads we need some more system libraries
+    # ws2_32: winsock to support sockets
+    # iphlpapi: ip helper interface to get network management tools
+    target_link_libraries(upnplib ws2_32 iphlpapi pthreads4w)
+    target_link_libraries(upnplibShared ws2_32 iphlpapi pthreads4w)
+    target_link_libraries(upnplibStatic ws2_32 iphlpapi pthreads4w)
+
+    # I got warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs;
+    # use /NODEFAULTLIB:library
+    target_link_libraries(upnplib -NODEFAULTLIB:MSVCRTD)
+    target_link_libraries(upnplibShared -NODEFAULTLIB:MSVCRTD)
+    target_link_libraries(upnplibStatic -NODEFAULTLIB:MSVCRTD)
+
+else()
+
     # In order to compile pthreads with C++ we need this additional flag,
     # but not on MS Windows
     target_link_libraries(upnplib -pthread)
