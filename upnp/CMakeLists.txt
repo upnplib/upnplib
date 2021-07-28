@@ -2,7 +2,6 @@
 # Last modified: 2021-07-28
 
 cmake_minimum_required(VERSION 3.18)
-cmake_policy(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 project(UPNP_CORE DESCRIPTION "Binary build of the UPnP library core")
@@ -41,7 +40,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/ixml/src/inc
     ${CMAKE_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/upnp/inc
-    ${UPNP_PTHREADS4W_BINARY_DIR}/include
+    ${PTHREADS4W_BINARY_DIR}/include
 )
 
 set(UPNP_SOURCE_FILES
@@ -137,13 +136,13 @@ if(WIN32)
     # So I just link the very small static pthreads4w to the shared library upnplib.
     #add_library(pthreadVC3 SHARED IMPORTED)
     #set_target_properties(pthreadVC3 PROPERTIES
-    #            IMPORTED_LOCATION ${UPNP_PTHREADS4W_BINARY_DIR}/bin/pthreadVC3.dll
-    #            IMPORTED_IMPLIB ${UPNP_PTHREADS4W_BINARY_DIR}/lib/pthreadVC3.lib
+    #            IMPORTED_LOCATION ${PTHREADS4W_BINARY_DIR}/bin/pthreadVC3.dll
+    #            IMPORTED_IMPLIB ${PTHREADS4W_BINARY_DIR}/lib/pthreadVC3.lib
     #)
     # Import the static pthreads library to this build system to be able to link it
     add_library(pthreads4w STATIC IMPORTED)
     set_target_properties(pthreads4w PROPERTIES
-                IMPORTED_LOCATION ${UPNP_PTHREADS4W_BINARY_DIR}/bin/pthread
+                IMPORTED_LOCATION ${PTHREADS4W_BINARY_DIR}/bin/pthread
     )
 
     # In addition to pthreads we need some more system libraries

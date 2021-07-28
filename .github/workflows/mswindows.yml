@@ -27,40 +27,69 @@ jobs:
       - name: Build upnplib
         run: cmake --build build
 
-# new job
+
+# Job MS Windows 64 bit checking Debug and Release installation
+#--------------------------------------------------------------
   MS-windows-amd64:
     name: MS Windows 64bit version
     runs-on: windows-2019
 
     strategy:
-      matrix:
-        conf: [Debug, Release]
+#      matrix:
+#        conf: [Debug, Release]
       fail-fast: false
 
     steps:
+    # Step with checking Debug installation
+      - name: Install upnplib with Debug
       - uses: actions/checkout@v2
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: amd64
-      - name: Configure upnplib with amd64
-        run: >
-          cmake
-          -S .
-          -B build
-          -D CMAKE_BUILD_TYPE=${{ matrix.conf }}
 
-      - name: Build upnplib
+      - name: Configure upnplib with default Debug
+        run: cmake -S . -B build
+
+      - name: Build upnplib with default Debug
         run: cmake --build build
 
       - name: Check build
-        run: dir /b pthreads4w/build
+        run: dir /b pthreads4w\build
 
       - name: Check build directory
-        run: >
-          cmake
-          -S .
-          -B build
-          -D DEVEL=ON
+        run: cmake -S . -B build -D UPNP_DEVEL=ON
 
       - name: Check configure paths
-        run: dir /b pthreads4w/build
+        run: dir /b pthreads4w\build
+
+#----------------------------
+#    strategy:
+#      matrix:
+#        conf: [Debug, Release]
+#      fail-fast: false
+
+#    steps:
+    # Step with checking Release installation
+      - name: Install upnplib with Release
+      - uses: actions/checkout@v2
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - name: Test pthreads4w
+        run: cmake -S pthreads4w -B pthreads4w/build -D PT4W_RUN_TESTS=ON
+
+      - name: Configure upnplib with Release
+        run: rmdir /S /Q pthreads4w\build && cmake -S . -B build
+
+      - name: Build upnplib with Release
+        run: cmake --build build --config Release
+
+      - name: Check build
+        run: dir /b pthreads4w\build
+
+      - name: Check build directory
+        run: cmake -S . -B build -D UPNP_DEVEL=ON
+
+      - name: Check configure paths
+        run: dir /b pthreads4w\build

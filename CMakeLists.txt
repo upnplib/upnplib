@@ -2,7 +2,6 @@
 # Last modified: 2021-07-28
 
 cmake_minimum_required(VERSION 3.18)
-cmake_policy(VERSION 3.18)
 include(cmake/project-header.cmake)
 
 set (UPNP_VERSION_STRING "1.0.0")
@@ -151,7 +150,7 @@ endif()
 # This should be one of the first installations to have pthreads available.
 if(WIN32)
     # This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
-    # e.g. UPNP_PTHREADS4W_SOURCE_DIR and UPNP_PTHREADS4W_BINARY_DIR
+    # e.g. PTHREADS4W_SOURCE_DIR and PTHREADS4W_BINARY_DIR
     add_subdirectory(${PROJECT_SOURCE_DIR}/pthreads4w
                      ${PROJECT_SOURCE_DIR}/pthreads4w/build
                      EXCLUDE_FROM_ALL)
