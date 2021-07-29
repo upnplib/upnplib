@@ -1,5 +1,5 @@
-# Copyright 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-07-28
+# Copyright (C) 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+# Last modified: 2021-07-29
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -164,6 +164,14 @@ else()
 endif()
 
 
+# Build UPnP core library
+#------------------------
+# This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
+# e.g. UPNP_CORE_SOURCE_DIR and UPNP_CORE_BINARY_DIR
+add_subdirectory(${PROJECT_SOURCE_DIR}/upnp
+                 ${PROJECT_SOURCE_DIR}/upnp/build)
+
+
 # Download, configure and build googletest
 #-----------------------------------------
 #cmake_minimum_required(VERSION 3.14)
@@ -181,15 +189,10 @@ if (GOOGLETEST)
         GIT_CONFIG        advice.detachedHead=false
     )
     FetchContent_MakeAvailable(googletest)
+
+    add_subdirectory(${PROJECT_SOURCE_DIR}/gtest
+                     ${PROJECT_SOURCE_DIR}/gtest/build)
 endif()
-
-
-# Build UPnP core library
-#------------------------
-# This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
-# e.g. UPNP_CORE_SOURCE_DIR and UPNP_CORE_BINARY_DIR
-add_subdirectory(${PROJECT_SOURCE_DIR}/upnp
-                 ${PROJECT_SOURCE_DIR}/upnp/build)
 
 
 # Export cmake variables

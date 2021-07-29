@@ -4,8 +4,6 @@
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
-#include "upnptools.h"
-#include "miniserver.h"
 #include "tools.h"
 
 #include "api/upnpapi.cpp"
@@ -165,12 +163,14 @@ protected:
         //gRecvThreadPool;         // type ThreadPool must be initialized
         //gMiniServerThreadPool;   // type ThreadPool must be initialized
         bWebServerState = WEB_SERVER_DISABLED;
-        gIF_NAME[LINE_SIZE] = {'\0'};
-        gIF_IPV4[INET_ADDRSTRLEN] = {'\0'};
-        gIF_IPV4_NETMASK[INET_ADDRSTRLEN] = {'\0'};
-        gIF_IPV6[INET6_ADDRSTRLEN] = {'\0'};
+        // Due to a bug there is annoying warning with initializing gIF_*:
+        // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=99578
+        //gIF_NAME[LINE_SIZE] = {'\0'};
+        //gIF_IPV4[INET_ADDRSTRLEN] = {'\0'};
+        //gIF_IPV4_NETMASK[INET_ADDRSTRLEN] = {'\0'};
+        //gIF_IPV6[INET6_ADDRSTRLEN] = {'\0'};
         gIF_IPV6_PREFIX_LENGTH = 0;
-        gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN] = {'\0'};
+        //gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN] = {'\0'};
         gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
         gIF_INDEX = (unsigned)-1;
         LOCAL_PORT_V4 = 0;
@@ -368,21 +368,6 @@ TEST(UpnpapiTestSuite, get_error_message)
     EXPECT_STREQ(UpnpGetErrorMessage(0), "UPNP_E_SUCCESS");
     EXPECT_STREQ(UpnpGetErrorMessage(-121), "UPNP_E_INVALID_INTERFACE");
     EXPECT_STREQ(UpnpGetErrorMessage(1), "Unknown error code");
-}
-
-TEST(UpnpapiTestSuite, start_mini_server)
-{
-    short unsigned int* listen_port4 = (short unsigned int*)51515;
-    short unsigned int* listen_port6 = (short unsigned int*)51516;
-    short unsigned int* listen_port6UlaGua = (short unsigned int*)51517;
-
-    // TODO! The MiniServer should start successfull
-        EXPECT_STREQ(UpnpGetErrorMessage(
-                StartMiniServer(listen_port4, listen_port6, listen_port6UlaGua)),
-                "UPNP_E_INTERNAL_ERROR");
-        //EXPECT_STREQ(UpnpGetErrorMessage(
-        //        StartMiniServer(listen_port4, listen_port6, listen_port6UlaGua)),
-        //        "UPNP_E_SUCCESS");
 }
 
 

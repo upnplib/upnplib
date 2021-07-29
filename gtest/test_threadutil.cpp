@@ -1,7 +1,9 @@
-// Copyright (c) 2021 Ingo Höft, <Ingo@Hoeft-online.de>
-// Last modified: 2021-04-24
+// Copyright (C) 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Last modified: 2021-07-29
 
+#ifndef NDEBUG
 #define NDEBUG
+#endif
 
 #include "gtest/gtest.h"
 

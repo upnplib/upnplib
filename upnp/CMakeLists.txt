@@ -1,5 +1,5 @@
-# Copyright 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-07-28
+# Copyright (C) 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+# Last modified: 2021-07-29
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -31,8 +31,6 @@ endif()
 # TODO: Remove references to '${CMAKE_SOURCE_DIR}/ixml' if possible
 
 include_directories(
-#    "${PROJECT_SOURCE_DIR}/../build/_deps/googletest-src/googletest/include"
-#    "${PROJECT_SOURCE_DIR}/../build/_deps/googletest-src/googlemock/include"
     ${PROJECT_SOURCE_DIR}/inc
     ${PROJECT_SOURCE_DIR}/src/inc
     ${PROJECT_SOURCE_DIR}/src/threadutil
@@ -162,7 +160,7 @@ else()
 
     # In order to compile pthreads with C++ we need this additional flag,
     # but not on MS Windows
-    target_link_libraries(upnplib -pthread)
+    target_link_libraries(upnplib pthread)
 endif()
 
 
