@@ -19,6 +19,8 @@ project(UPnPlib VERSION ${UPNP_VERSION_STRING}
 # #cmakedefine VAR1 ${VAR} does not work.
 # #cmakedefine VAR2 1  : VAR2 must be exist before even you set a constant.
 
+include(CMakeDependentOption)
+
 # TODO: Test this option to link statically
 # UPNP_STATIC_LIB - for creating a statically linkable UPnP-library
 option(UPNP_STATIC_LIB "Create a statically linkable UPnP-library" OFF)
@@ -162,6 +164,26 @@ else()
 endif()
 
 
+# Download, configure and build googletest
+#-----------------------------------------
+#cmake_minimum_required(VERSION 3.14)
+Find_Package(Git)
+cmake_dependent_option(GOOGLETEST "Download and build Googletest" OFF ${Git_FOUND} OFF)
+
+if (GOOGLETEST)
+    include(FetchContent)
+
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY    https://github.com/google/googletest.git
+        GIT_TAG           origin/master
+        GIT_SHALLOW       ON
+        GIT_CONFIG        advice.detachedHead=false
+    )
+    FetchContent_MakeAvailable(googletest)
+endif()
+
+
 # Build UPnP core library
 #------------------------
 # This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
@@ -176,10 +198,12 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/upnp
 # Hope we have all needed variables defined so we can write upnpconfig.h now.
 # To meet all variables this should be the last statement.
 configure_file(${PROJECT_SOURCE_DIR}/cmake/upnpconfig.h.cmake
-               ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.h)
+               ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.h
+)
 # TODO: Remove symlink which is only for compatibility reasons
 file(CREATE_LINK ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.h
                  ${PROJECT_BINARY_DIR}/autoconfig.h
-                 COPY_ON_ERROR SYMBOLIC)
+                 COPY_ON_ERROR SYMBOLIC
+)
 
 message("-- Build type is ${CMAKE_BUILD_TYPE}")

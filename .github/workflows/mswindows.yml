@@ -41,7 +41,6 @@ jobs:
 
     steps:
     # Step with checking Debug installation
-      - name: Install upnplib with Debug
       - uses: actions/checkout@v2
       - uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -70,14 +69,13 @@ jobs:
 
 #    steps:
     # Step with checking Release installation
-      - name: Install upnplib with Release
       - uses: actions/checkout@v2
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: amd64
 
       - name: Test pthreads4w
-        run: cmake -S pthreads4w -B pthreads4w/build -D PT4W_RUN_TESTS=ON
+        run: cmake -S pthreads4w -B pthreads4w\build -D PT4W_RUN_TESTS=ON
 
       - name: Configure upnplib with Release
         run: rmdir /S /Q pthreads4w\build && cmake -S . -B build
