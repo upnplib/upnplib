@@ -14,14 +14,11 @@ jobs:
       fail-fast: false
 
     steps:
+    # Step building the core upnplib
       - uses: actions/checkout@v2
 
-      - name: Configure
-        run: >
-          cmake
-          -S .
-          -B build
-          -D CMAKE_BUILD_TYPE=${{ matrix.conf }}
+      - name: Configure core upnplib ${{ matrix.conf }}
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.conf }}
 #          -D GOOGLETEST=ON
 #          -D BUILD_TESTING=OFF
 #          -D client=OFF
@@ -34,6 +31,20 @@ jobs:
 #          -D soap=OFF
 #          -D ssdp=OFF
 #          -D tools=OFF
+
+      - name: Build
+        run: cmake --build build
+
+    # Step building core upnplib with GoogleTest ${{ matrix.conf }}
+      - uses: actions/checkout@v2
+
+      - name: Configure core upnplib with GoogleTest ${{ matrix.conf }}
+        run: >
+          cmake
+          -S .
+          -B build
+          -D CMAKE_BUILD_TYPE=${{ matrix.conf }}
+          -D GOOGLETEST=ON
 
       - name: Build
         run: cmake --build build
@@ -61,18 +72,6 @@ jobs:
           -S .
           -B build
           -D CMAKE_BUILD_TYPE=${{ matrix.conf }}
-#          -D GOOGLETEST=ON
-#          -D BUILD_TESTING=OFF
-#          -D client=OFF
-#          -D device=OFF
-#          -D gena=OFF
-#          -D ipv6=OFF
-#          -D optssdp=OFF
-#          -D samples=OFF
-#          -D scriptsupport=OFF
-#          -D soap=OFF
-#          -D ssdp=OFF
-#          -D tools=OFF
 
       - name: Build
         run: cmake --build build

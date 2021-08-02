@@ -82,6 +82,7 @@ link_libraries(${UPNP_GTEST_STATIC_LIBRARY}
                ${UPNP_GMOCK_STATIC_LIBRARY}
                ${UPNP_GTEST_MAIN_STATIC_LIBRARY}
                ${UPNP_GMOCK_MAIN_STATIC_LIBRARY}
+               pthread
 )
 
 add_executable(test_template
