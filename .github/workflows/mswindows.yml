@@ -8,7 +8,6 @@ jobs:
 
     strategy:
       matrix:
-#        os: [windows-2016, windows-2019]
         conf: [Debug, Release]
       fail-fast: false
 
@@ -35,8 +34,6 @@ jobs:
     runs-on: windows-2019
 
     strategy:
-#      matrix:
-#        conf: [Debug, Release]
       fail-fast: false
 
     steps:
@@ -63,13 +60,7 @@ jobs:
         #run: dir /b pthreads4w\build
         run: dir pthreads4w\build
 
-#----------------------------
-#    strategy:
-#      matrix:
-#        conf: [Debug, Release]
-#      fail-fast: false
 
-#    steps:
     # Step with checking Release installation
       - uses: actions/checkout@v2
       - uses: ilammy/msvc-dev-cmd@v1
@@ -79,20 +70,25 @@ jobs:
       - name: Test pthreads4w
         run: cmake -S pthreads4w -B pthreads4w\build -D PT4W_RUN_TESTS=ON
 
-      - name: Configure upnplib with Release
-        #run: rmdir /S /Q pthreads4w\build && cmake -S . -B build
-        run: rmdir /?
+      - name: Test escape character
+        run: dir
+      - run: dir \/?
 
-      - name: Build upnplib with Release
-        run: cmake --build build --config Release
-
-      - name: Check build
-        #run: dir /b pthreads4w\build
-        run: dir pthreads4w\build
-
-      - name: Check build directory
-        run: cmake -S . -B build -D UPNP_DEVEL=ON
-
-      - name: Check configure paths
-        #run: dir /b pthreads4w\build
-        run: dir pthreads4w\build
+# Work in progress, installation tye Release doesn't work so far
+#      - name: Configure upnplib with Release
+#        #run: rmdir /S /Q pthreads4w\build && cmake -S . -B build
+#        run: rmdir /?
+#
+#      - name: Build upnplib with Release
+#        run: cmake --build build --config Release
+#
+#      - name: Check build
+#        #run: dir /b pthreads4w\build
+#        run: dir pthreads4w\build
+#
+#      - name: Check build directory
+#        run: cmake -S . -B build -D UPNP_DEVEL=ON
+#
+#      - name: Check configure paths
+#        #run: dir /b pthreads4w\build
+#        run: dir pthreads4w\build

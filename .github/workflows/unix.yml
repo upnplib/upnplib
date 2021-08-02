@@ -17,7 +17,7 @@ jobs:
     # Step building the core upnplib
       - uses: actions/checkout@v2
 
-      - name: Configure core upnplib ${{ matrix.conf }}
+      - name: Configure core upnplib
         run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.conf }}
 #          -D GOOGLETEST=ON
 #          -D BUILD_TESTING=OFF
@@ -35,10 +35,10 @@ jobs:
       - name: Build
         run: cmake --build build
 
-    # Step building core upnplib with GoogleTest ${{ matrix.conf }}
+    # Step building core upnplib with GoogleTest
       - uses: actions/checkout@v2
 
-      - name: Configure core upnplib with GoogleTest ${{ matrix.conf }}
+      - name: Configure core upnplib with GoogleTest
         run: >
           cmake
           -S .
@@ -60,6 +60,7 @@ jobs:
       fail-fast: false
 
     steps:
+    # Step building the core upnplib
       - uses: actions/checkout@v2
 
       - name: Install build tools
@@ -72,6 +73,24 @@ jobs:
           -S .
           -B build
           -D CMAKE_BUILD_TYPE=${{ matrix.conf }}
+
+      - name: Build
+        run: cmake --build build
+
+    # Step building the core upnplib with GoogleTest
+      - uses: actions/checkout@v2
+
+      - name: Install build tools
+        run: brew install pkg-config cmake ninja
+
+      - name: Configure
+        run: >
+          cmake
+          -G Ninja
+          -S .
+          -B build
+          -D CMAKE_BUILD_TYPE=${{ matrix.conf }}
+          -D GOOGLETEST=ON
 
       - name: Build
         run: cmake --build build
