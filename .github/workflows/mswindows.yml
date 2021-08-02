@@ -54,14 +54,14 @@ jobs:
 
       - name: Check build
         #run: dir /b pthreads4w\build
-        run: dir
+        run: dir pthreads4w\build
 
       - name: Check build directory
         run: cmake -S . -B build -D UPNP_DEVEL=ON
 
       - name: Check configure paths
         #run: dir /b pthreads4w\build
-        run: dir
+        run: dir pthreads4w\build
 
 #----------------------------
 #    strategy:
@@ -80,18 +80,19 @@ jobs:
         run: cmake -S pthreads4w -B pthreads4w\build -D PT4W_RUN_TESTS=ON
 
       - name: Configure upnplib with Release
-        run: rmdir /S /Q pthreads4w\build && cmake -S . -B build
+        #run: rmdir /S /Q pthreads4w\build && cmake -S . -B build
+        run: rmdir /?
 
       - name: Build upnplib with Release
         run: cmake --build build --config Release
 
       - name: Check build
         #run: dir /b pthreads4w\build
-        run: dir
+        run: dir pthreads4w\build
 
       - name: Check build directory
         run: cmake -S . -B build -D UPNP_DEVEL=ON
 
       - name: Check configure paths
         #run: dir /b pthreads4w\build
-        run: dir
+        run: dir pthreads4w\build

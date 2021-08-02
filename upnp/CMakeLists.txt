@@ -77,14 +77,13 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/upnplib.cpp
 )
 
-
-# Create test executable and librries
-#------------------------------------
+# Create test executable for information and create libraries
+#------------------------------------------------------------
 # All builds should have the same target_compile_definitions
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS YES CACHE BOOL "Export all symbols")
 
-# Test executable
+# Executable for information
 add_executable(upnplib ${UPNP_SOURCE_FILES}
 )
 target_compile_definitions (upnplib
@@ -158,7 +157,7 @@ if(WIN32)
 
 else()
 
-    # In order to compile pthreads with C++ we need this additional flag,
+    # In order to compile pthreads with C++ we need its library,
     # but not on MS Windows
     target_link_libraries(upnplib pthread)
 endif()
