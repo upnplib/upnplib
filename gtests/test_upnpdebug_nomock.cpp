@@ -1,7 +1,7 @@
 // Copyright (c) 2021 Ingo Höft, last modified: 2021-04-21
 
-#include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "gtest/gtest.h"
 #include <filesystem>
 #include <fstream>
 
@@ -9,15 +9,13 @@
 
 using ::testing::MatchesRegex;
 
-
 // Tests for the debugging and logging module
 //-------------------------------------------
-TEST(UpnpDebugNoMockTestSuite, display_file_and_line)
-{
+TEST(UpnpDebugNoMockTestSuite, display_file_and_line) {
     // generate random temporary filename
     std::srand(std::time(nullptr));
-    std::string fname = (std::string)std::filesystem::temp_directory_path()
-                      + "/gtest" + std::to_string(std::rand());
+    std::string fname = (std::string)std::filesystem::temp_directory_path() +
+                        "/gtest" + std::to_string(std::rand());
     fp = fopen(fname.c_str(), "a");
 
     // process the unit that will write to the open fp
@@ -29,30 +27,27 @@ TEST(UpnpDebugNoMockTestSuite, display_file_and_line)
     std::string str;
     std::getline(file, str);
     std::remove(fname.c_str());
-    //"2021-04-21 10:05:38 UPNP-API_-3: Thread:0x7F998124D740 [gtest_filename.dummy:0]: "
-    EXPECT_THAT(str, MatchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2} "
-                                  "[0-9]{2}:[0-9]{2}:[0-9]{2} UPNP-API_-3: "
-                                  "Thread:0x[0-9A-F]{12} \\[gtest_filename.dummy:0\\]: "));
+    //"2021-04-21 10:05:38 UPNP-API_-3: Thread:0x7F998124D740
+    //[gtest_filename.dummy:0]: "
+    EXPECT_THAT(
+        str,
+        MatchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2} "
+                     "[0-9]{2}:[0-9]{2}:[0-9]{2} UPNP-API_-3: "
+                     "Thread:0x[0-9A-F]{12} \\[gtest_filename.dummy:0\\]: "));
 }
 
-TEST(UpnpDebugNoMockTestSuite, UpnpPrintf_valid_call)
-{
+TEST(UpnpDebugNoMockTestSuite, UpnpPrintf_valid_call) {
     initwascalled = 1;
 
     // generate random temporary filename
     std::srand(std::time(nullptr));
-    std::string fname = (std::string)std::filesystem::temp_directory_path()
-                      + "/gtest" + std::to_string(std::rand());
+    std::string fname = (std::string)std::filesystem::temp_directory_path() +
+                        "/gtest" + std::to_string(std::rand());
     fp = fopen(fname.c_str(), "a");
 
     // process the unit that will write to the open fp
-    UpnpPrintf(UPNP_INFO,
-            API,
-            "gtest_filename.dummy",
-            0,
-            "UpnpInit2 with IfName=%s, DestPort=%d.\n",
-            "NULL",
-            51515);
+    UpnpPrintf(UPNP_INFO, API, "gtest_filename.dummy", 0,
+               "UpnpInit2 with IfName=%s, DestPort=%d.\n", "NULL", 51515);
     fclose(fp);
 
     // look if the output is as expected
@@ -60,31 +55,27 @@ TEST(UpnpDebugNoMockTestSuite, UpnpPrintf_valid_call)
     std::string str;
     std::getline(file, str);
     std::remove(fname.c_str());
-    //"2021-04-21 21:54:50 UPNP-API_-2: Thread:0x7FF8CF8C7740 [gtest_filename.dummy:0]: UpnpInit2 with IfName=NULL, DestPort=51515."
-    EXPECT_THAT(str, MatchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2} "
-                                  "[0-9]{2}:[0-9]{2}:[0-9]{2} UPNP-API_-2: "
-                                  "Thread:0x[0-9A-F]{12} \\[gtest_filename.dummy:0\\]: "
-                                  "UpnpInit2 with IfName=NULL, DestPort=51515."));
+    //"2021-04-21 21:54:50 UPNP-API_-2: Thread:0x7FF8CF8C7740
+    //[gtest_filename.dummy:0]: UpnpInit2 with IfName=NULL, DestPort=51515."
+    EXPECT_THAT(
+        str, MatchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2} "
+                          "[0-9]{2}:[0-9]{2}:[0-9]{2} UPNP-API_-2: "
+                          "Thread:0x[0-9A-F]{12} \\[gtest_filename.dummy:0\\]: "
+                          "UpnpInit2 with IfName=NULL, DestPort=51515."));
 }
 
-TEST(UpnpDebugNoMockTestSuite, UpnpPrintf_not_initialized)
-{
+TEST(UpnpDebugNoMockTestSuite, UpnpPrintf_not_initialized) {
     initwascalled = 0;
 
     // generate random temporary filename
     std::srand(std::time(nullptr));
-    std::string fname = (std::string)std::filesystem::temp_directory_path()
-                      + "/gtest" + std::to_string(std::rand());
+    std::string fname = (std::string)std::filesystem::temp_directory_path() +
+                        "/gtest" + std::to_string(std::rand());
     fp = fopen(fname.c_str(), "a");
 
     // process the unit that will write to the open fp
-    UpnpPrintf(UPNP_INFO,
-            API,
-            "gtest_filename.dummy",
-            0,
-            "UpnpInit2 with IfName=%s, DestPort=%d.\n",
-            "NULL",
-            51515);
+    UpnpPrintf(UPNP_INFO, API, "gtest_filename.dummy", 0,
+               "UpnpInit2 with IfName=%s, DestPort=%d.\n", "NULL", 51515);
     fclose(fp);
 
     // look if the output is as expected
@@ -97,8 +88,7 @@ TEST(UpnpDebugNoMockTestSuite, UpnpPrintf_not_initialized)
     EXPECT_EQ(str, "");
 }
 
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

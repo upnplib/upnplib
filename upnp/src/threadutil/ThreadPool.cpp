@@ -196,7 +196,7 @@ static time_t StatsTime(
 
     return tv.tv_sec;
 }
-#else /* STATS */
+#else  /* STATS */
 static UPNP_INLINE void StatsInit(ThreadPoolStats* stats) {}
 static UPNP_INLINE void StatsAccountLQ(ThreadPool* tp, long diffTime) {}
 static UPNP_INLINE void StatsAccountMQ(ThreadPool* tp, long diffTime) {}

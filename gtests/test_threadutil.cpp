@@ -7,40 +7,35 @@
 
 #include "gtest/gtest.h"
 
-#include "ThreadPool.cpp"
 #include "FreeList.cpp"
 #include "LinkedList.cpp"
+#include "ThreadPool.cpp"
 #include "TimerThread.cpp"
-
 
 // testsuite with fixtures
 //------------------------
-class ThreadPoolFixtureTestSuite: public ::testing::Test
-{
-protected:
+class ThreadPoolFixtureTestSuite : public ::testing::Test {
+  protected:
     // for testing job free_function
-    free_routine free_func() {return 0;}
+    free_routine free_func() { return 0; }
 };
-
 
 // testsuites without fixtures
 //----------------------------
-TEST(FreeListTestSuite, initialize_FreeList_with_no_items)
-{
+TEST(FreeListTestSuite, initialize_FreeList_with_no_items) {
     FreeList free_list = {};
 
     EXPECT_EQ(FreeListInit(nullptr, 0, 0), EINVAL);
     EXPECT_EQ(FreeListInit(&free_list, 0, 0), 0);
     // TODO! Should return nullptr as failure because of 0 items possible
-        EXPECT_NE(FreeListAlloc(&free_list), nullptr);
-    //EXPECT_EQ(FreeListAlloc(&free_list), nullptr);
+    EXPECT_NE(FreeListAlloc(&free_list), nullptr);
+    // EXPECT_EQ(FreeListAlloc(&free_list), nullptr);
 
     EXPECT_EQ(FreeListDestroy(nullptr), EINVAL);
     EXPECT_EQ(FreeListDestroy(&free_list), 0);
 }
 
-TEST(FreeListTestSuite, allocate_item_in_FreeList)
-{
+TEST(FreeListTestSuite, allocate_item_in_FreeList) {
     int element = 999;
     FreeList free_list = {};
 
@@ -51,21 +46,20 @@ TEST(FreeListTestSuite, allocate_item_in_FreeList)
     EXPECT_NE(FreeListAlloc(&free_list), nullptr);
     EXPECT_NE(FreeListAlloc(&free_list), nullptr);
     // Exeeding maxFreeListLength should return nullptr?
-    //EXPECT_EQ(FreeListAlloc(&free_list), nullptr);
-    //EXPECT_NE(FreeListAlloc(&free_list), nullptr);
+    // EXPECT_EQ(FreeListAlloc(&free_list), nullptr);
+    // EXPECT_NE(FreeListAlloc(&free_list), nullptr);
 
     EXPECT_EQ(FreeListFree(&free_list, &element), 0);
     EXPECT_EQ(FreeListFree(&free_list, &element), 0);
     // TODO! Check why the test abort with 'munmap_chunk(): invalid pointer'
     // when freeing same amount of elements as allocated
-    //EXPECT_EQ(FreeListFree(&free_list, &element), 0);
+    // EXPECT_EQ(FreeListFree(&free_list, &element), 0);
 
     // Destroy aborted test after free list with 'free(): invalid pointer'
-    //EXPECT_EQ(FreeListDestroy(&free_list), 0);
+    // EXPECT_EQ(FreeListDestroy(&free_list), 0);
 }
 
-TEST(LinkedListTestSuite, process_nodes_add_delete_point_to)
-{
+TEST(LinkedListTestSuite, process_nodes_add_delete_point_to) {
     LinkedList ll = {};
     int item1 = 111;
     int item2 = 222;
@@ -125,9 +119,7 @@ TEST(LinkedListTestSuite, process_nodes_add_delete_point_to)
     EXPECT_EQ(ListTail(&ll), nullptr);
 }
 
-
-TEST(ThreadPoolTestSuite, initialize_threadpool)
-{
+TEST(ThreadPoolTestSuite, initialize_threadpool) {
     GTEST_SKIP() << "This test produces random segfault\n";
 
     ThreadPool tp = {};
@@ -137,8 +129,7 @@ TEST(ThreadPoolTestSuite, initialize_threadpool)
     EXPECT_EQ(ThreadPoolInit(&tp, nullptr), 0);
 }
 
-TEST(ThreadPoolTestSuite, add_persistent_job_to_threadpool_bug)
-{
+TEST(ThreadPoolTestSuite, add_persistent_job_to_threadpool_bug) {
     GTEST_SKIP() << "Unit hang, does not finish with empty job structure";
 
     ThreadPool tp = {};
@@ -149,13 +140,12 @@ TEST(ThreadPoolTestSuite, add_persistent_job_to_threadpool_bug)
     EXPECT_EQ(ThreadPoolAddPersistent(&tp, &job, &jobId), EINVAL);
 }
 
-TEST(ThreadPoolTestSuite, add_persistent_job_to_empty_threadpool)
-{
+TEST(ThreadPoolTestSuite, add_persistent_job_to_empty_threadpool) {
     ThreadPool tp = {};
     ThreadPoolJob job = {};
     int jobId = 0;
 
-    //process unit
+    // process unit
     EXPECT_EQ(ThreadPoolAddPersistent(nullptr, nullptr, nullptr), EINVAL);
     EXPECT_EQ(ThreadPoolAddPersistent(nullptr, nullptr, &jobId), EINVAL);
     EXPECT_EQ(ThreadPoolAddPersistent(nullptr, &job, nullptr), EINVAL);
@@ -165,8 +155,7 @@ TEST(ThreadPoolTestSuite, add_persistent_job_to_empty_threadpool)
     EXPECT_EQ(jobId, 0);
 }
 
-TEST(ThreadPoolTestSuite, get_current_attributes_of_threadpool)
-{
+TEST(ThreadPoolTestSuite, get_current_attributes_of_threadpool) {
     GTEST_SKIP() << "This test produces random segfault\n";
 
     ThreadPool tp = {};
@@ -190,8 +179,7 @@ TEST(ThreadPoolTestSuite, get_current_attributes_of_threadpool)
     EXPECT_EQ(attr.schedPolicy, 0);
 }
 
-TEST(ThreadPoolTestSuite, set_threadpool_attributes)
-{
+TEST(ThreadPoolTestSuite, set_threadpool_attributes) {
     GTEST_SKIP() << "This test produces random segfault\n";
 
     ThreadPool tp = {};
@@ -202,8 +190,7 @@ TEST(ThreadPoolTestSuite, set_threadpool_attributes)
     EXPECT_EQ(ThreadPoolSetAttr(&tp, &attr), 0);
 }
 
-TEST(ThreadPoolTestSuite, add_job_to_threadpool)
-{
+TEST(ThreadPoolTestSuite, add_job_to_threadpool) {
     ThreadPool tp = {};
     ThreadPoolJob job = {};
     int jobId = 0;
@@ -219,12 +206,11 @@ TEST(ThreadPoolTestSuite, add_job_to_threadpool)
 
     GTEST_SKIP() << "Threadpool job must be initialized\n";
 
-    //EXPECT_EQ(TPJobInit(&job, func, &arg), 0);
+    // EXPECT_EQ(TPJobInit(&job, func, &arg), 0);
     EXPECT_EQ(ThreadPoolAdd(&tp, &job, &jobId), 0);
 }
 
-TEST(ThreadPoolTestSuite, remove_job_from_threadpool)
-{
+TEST(ThreadPoolTestSuite, remove_job_from_threadpool) {
     GTEST_SKIP() << "This test produces random segfault\n";
 
     ThreadPool tp = {};
@@ -240,37 +226,35 @@ TEST(ThreadPoolTestSuite, remove_job_from_threadpool)
     EXPECT_EQ(ThreadPoolRemove(&tp, 0, nullptr), EOUTOFMEM);
     EXPECT_EQ(ThreadPoolRemove(&tp, 0, &removedJob), EOUTOFMEM);
 
-    GTEST_SKIP() << "Threadpool job must be initialized, segfault should be fixed\n";
+    GTEST_SKIP()
+        << "Threadpool job must be initialized, segfault should be fixed\n";
 
     EXPECT_EQ(ThreadPoolRemove(&tp, 0, &removedJob), 0);
 }
 
-TEST(ThreadPoolTestSuite, shutdown_threadpool)
-{
+TEST(ThreadPoolTestSuite, shutdown_threadpool) {
     ThreadPool tp = {};
     EXPECT_EQ(ThreadPoolInit(&tp, nullptr), 0);
-    //process unit
+    // process unit
     EXPECT_EQ(ThreadPoolShutdown(nullptr), EINVAL);
     EXPECT_EQ(ThreadPoolShutdown(&tp), 0);
 }
 
-TEST(ThreadPoolTestSuite, add_persistent_job_to_threadpool)
-{
+TEST(ThreadPoolTestSuite, add_persistent_job_to_threadpool) {
     GTEST_SKIP() << "Unknown how to initialize a threadpool job";
 
     ThreadPool tp = {};
     ThreadPoolJob job = {};
     int jobId = 0;
 
-    //TPJobInit(&job, func, arg);
+    // TPJobInit(&job, func, arg);
 
-    //process unit
+    // process unit
     EXPECT_EQ(ThreadPoolAddPersistent(&tp, &job, &jobId), 0);
     EXPECT_EQ(jobId, 0);
 }
 
-TEST(ThreadPoolTestSuite, set_job_priority)
-{
+TEST(ThreadPoolTestSuite, set_job_priority) {
     ThreadPoolJob job = {};
 
     EXPECT_EQ(TPJobSetPriority(nullptr, LOW_PRIORITY), EINVAL);
@@ -281,15 +265,13 @@ TEST(ThreadPoolTestSuite, set_job_priority)
     EXPECT_EQ(TPJobSetPriority(&job, (ThreadPriority)3), EINVAL);
 }
 
-TEST_F(ThreadPoolFixtureTestSuite, set_job_free_function)
-{
+TEST_F(ThreadPoolFixtureTestSuite, set_job_free_function) {
     ThreadPoolJob job = {};
 
     EXPECT_EQ(TPJobSetFreeFunction(&job, free_func()), 0);
 }
 
-TEST(ThreadPoolTestSuite, initialize_default_threadpool_attributes)
-{
+TEST(ThreadPoolTestSuite, initialize_default_threadpool_attributes) {
     ThreadPoolAttr attr = {};
 
     EXPECT_EQ(TPAttrInit(nullptr), EINVAL);
@@ -305,8 +287,7 @@ TEST(ThreadPoolTestSuite, initialize_default_threadpool_attributes)
     EXPECT_EQ(attr.schedPolicy, 0);
 }
 
-TEST(ThreadPoolTestSuite, set_maximal_threads)
-{
+TEST(ThreadPoolTestSuite, set_maximal_threads) {
     ThreadPoolAttr attr = {};
 
     EXPECT_EQ(TPAttrSetMaxThreads(nullptr, 0), EINVAL);
@@ -318,7 +299,8 @@ TEST(ThreadPoolTestSuite, set_maximal_threads)
     EXPECT_EQ(attr.minThreads, 0);
     EXPECT_EQ(attr.maxThreads, 1);
 
-    GTEST_SKIP() << "It should not be possible to set maxThreads < 0 or < minThreads";
+    GTEST_SKIP()
+        << "It should not be possible to set maxThreads < 0 or < minThreads";
 
     EXPECT_EQ(TPAttrSetMaxThreads(&attr, -1), EINVAL);
     attr.minThreads = 2;
@@ -327,8 +309,7 @@ TEST(ThreadPoolTestSuite, set_maximal_threads)
     EXPECT_EQ(attr.maxThreads, 1);
 }
 
-TEST(ThreadPoolTestSuite, set_minimal_threads)
-{
+TEST(ThreadPoolTestSuite, set_minimal_threads) {
     ThreadPoolAttr attr = {};
 
     EXPECT_EQ(TPAttrSetMinThreads(nullptr, 0), EINVAL);
@@ -341,7 +322,8 @@ TEST(ThreadPoolTestSuite, set_minimal_threads)
     EXPECT_EQ(attr.minThreads, 1);
     EXPECT_EQ(attr.maxThreads, 2);
 
-    GTEST_SKIP() << "It should not be possible to set minThreads < 0 or > maxThreads";
+    GTEST_SKIP()
+        << "It should not be possible to set minThreads < 0 or > maxThreads";
 
     EXPECT_EQ(TPAttrSetMinThreads(&attr, -1), EINVAL);
     EXPECT_EQ(TPAttrSetMinThreads(&attr, 3), EINVAL);
@@ -349,8 +331,7 @@ TEST(ThreadPoolTestSuite, set_minimal_threads)
     EXPECT_EQ(attr.maxThreads, 2);
 }
 
-TEST(ThreadPoolTestSuite, set_stack_size)
-{
+TEST(ThreadPoolTestSuite, set_stack_size) {
     ThreadPoolAttr attr = {};
 
     EXPECT_EQ(TPAttrSetStackSize(nullptr, 0), EINVAL);
@@ -362,8 +343,7 @@ TEST(ThreadPoolTestSuite, set_stack_size)
     EXPECT_EQ(TPAttrSetStackSize(&attr, -1), EINVAL);
 }
 
-TEST(ThreadPoolTestSuite, set_idle_time)
-{
+TEST(ThreadPoolTestSuite, set_idle_time) {
     ThreadPoolAttr attr = {};
 
     EXPECT_EQ(TPAttrSetIdleTime(nullptr, 0), EINVAL);
@@ -375,8 +355,7 @@ TEST(ThreadPoolTestSuite, set_idle_time)
     EXPECT_EQ(TPAttrSetStackSize(&attr, -1), EINVAL);
 }
 
-TEST(ThreadPoolTestSuite, set_jobs_per_thread)
-{
+TEST(ThreadPoolTestSuite, set_jobs_per_thread) {
     ThreadPoolAttr attr = {};
 
     EXPECT_EQ(TPAttrSetJobsPerThread(nullptr, 0), EINVAL);
@@ -388,8 +367,7 @@ TEST(ThreadPoolTestSuite, set_jobs_per_thread)
     EXPECT_EQ(TPAttrSetStackSize(&attr, -1), EINVAL);
 }
 
-TEST(ThreadPoolTestSuite, set_starvation_time)
-{
+TEST(ThreadPoolTestSuite, set_starvation_time) {
     ThreadPoolAttr attr = {};
 
     EXPECT_EQ(TPAttrSetStarvationTime(nullptr, 0), EINVAL);
@@ -401,16 +379,14 @@ TEST(ThreadPoolTestSuite, set_starvation_time)
     EXPECT_EQ(TPAttrSetStackSize(&attr, -1), EINVAL);
 }
 
-TEST(ThreadPoolTestSuite, set_scheduling_policy)
-{
+TEST(ThreadPoolTestSuite, set_scheduling_policy) {
     ThreadPoolAttr attr = {};
 
     EXPECT_EQ(TPAttrSetSchedPolicy(nullptr, 0), EINVAL);
     EXPECT_EQ(TPAttrSetSchedPolicy(&attr, SCHED_OTHER), 0);
 }
 
-TEST(ThreadPoolTestSuite, set_max_jobs_qeued_totally)
-{
+TEST(ThreadPoolTestSuite, set_max_jobs_qeued_totally) {
     ThreadPoolAttr attr = {};
 
     EXPECT_EQ(TPAttrSetMaxJobsTotal(nullptr, 0), EINVAL);
@@ -422,8 +398,7 @@ TEST(ThreadPoolTestSuite, set_max_jobs_qeued_totally)
     EXPECT_EQ(TPAttrSetStackSize(&attr, -1), EINVAL);
 }
 
-TEST(ThreadPoolTestSuite, DiffMillis)
-{
+TEST(ThreadPoolTestSuite, DiffMillis) {
     // Very simple, 999 us ingnored
     struct timeval time1 = {};
     struct timeval time2 = {};
@@ -443,68 +418,65 @@ TEST(ThreadPoolTestSuite, DiffMillis)
     EXPECT_EQ(DiffMillis(&time2, &time1), -1001);
 }
 
-TEST(ThreadPoolTestSuite, StatsInit_for_thread_statistic)
-{
+TEST(ThreadPoolTestSuite, StatsInit_for_thread_statistic) {
     ThreadPoolStats stats;
     stats.totalTimeHQ = -1;
     StatsInit(&stats);
     EXPECT_EQ(stats.totalTimeHQ, -1);
 }
 
-TEST(ThreadPoolTestSuite, StatsAccount)
-{
+TEST(ThreadPoolTestSuite, StatsAccount) {
     // TODO! Enable thread statistics in ThreadPool.h #define STATS 1
-        ThreadPool tp;
-        tp.stats.totalJobsLQ = 1;
-        tp.stats.totalTimeLQ = 2;
-        // process unit
-        StatsAccountLQ(&tp, 1);
-        EXPECT_EQ(tp.stats.totalJobsLQ, 1);
-        EXPECT_EQ(tp.stats.totalTimeLQ, 2);
-    //ThreadPool tp;
-    //tp.stats.totalJobsLQ = 1;
-    //tp.stats.totalTimeLQ = 2;
-    //StatsAccountLQ(&tp, 1);
-    //EXPECT_EQ(tp.stats.totalJobsLQ, 2);
-    //EXPECT_EQ(tp.stats.totalTimeLQ, 3);
+    ThreadPool tp;
+    tp.stats.totalJobsLQ = 1;
+    tp.stats.totalTimeLQ = 2;
+    // process unit
+    StatsAccountLQ(&tp, 1);
+    EXPECT_EQ(tp.stats.totalJobsLQ, 1);
+    EXPECT_EQ(tp.stats.totalTimeLQ, 2);
+    // ThreadPool tp;
+    // tp.stats.totalJobsLQ = 1;
+    // tp.stats.totalTimeLQ = 2;
+    // StatsAccountLQ(&tp, 1);
+    // EXPECT_EQ(tp.stats.totalJobsLQ, 2);
+    // EXPECT_EQ(tp.stats.totalTimeLQ, 3);
 
-        tp.stats.totalJobsMQ = 3;
-        tp.stats.totalTimeMQ = 4;
-        // process unit
-        StatsAccountMQ(&tp, 1);
-        EXPECT_EQ(tp.stats.totalJobsMQ, 3);
-        EXPECT_EQ(tp.stats.totalTimeMQ, 4);
+    tp.stats.totalJobsMQ = 3;
+    tp.stats.totalTimeMQ = 4;
+    // process unit
+    StatsAccountMQ(&tp, 1);
+    EXPECT_EQ(tp.stats.totalJobsMQ, 3);
+    EXPECT_EQ(tp.stats.totalTimeMQ, 4);
 
-        tp.stats.totalJobsHQ = 5;
-        tp.stats.totalTimeHQ = 6;
-        // process unit
-        StatsAccountHQ(&tp, 1);
-        EXPECT_EQ(tp.stats.totalJobsHQ, 5);
-        EXPECT_EQ(tp.stats.totalTimeHQ, 6);
+    tp.stats.totalJobsHQ = 5;
+    tp.stats.totalTimeHQ = 6;
+    // process unit
+    StatsAccountHQ(&tp, 1);
+    EXPECT_EQ(tp.stats.totalJobsHQ, 5);
+    EXPECT_EQ(tp.stats.totalTimeHQ, 6);
 
-        ThreadPoolJob job;
-        job.requestTime.tv_sec = 3;
-        // process unit
-        CalcWaitTime(&tp, LOW_PRIORITY, &job);
-        EXPECT_EQ(tp.stats.totalTimeLQ, 2);
-        EXPECT_EQ(job.requestTime.tv_sec, 3);
-        // process unit
-        CalcWaitTime(&tp, MED_PRIORITY, &job);
-        EXPECT_EQ(tp.stats.totalTimeMQ, 4);
-        EXPECT_EQ(job.requestTime.tv_sec, 3);
-        // process unit
-        CalcWaitTime(&tp, HIGH_PRIORITY, &job);
-        EXPECT_EQ(tp.stats.totalTimeHQ, 6);
-        EXPECT_EQ(job.requestTime.tv_sec, 3);
+    ThreadPoolJob job;
+    job.requestTime.tv_sec = 3;
+    // process unit
+    CalcWaitTime(&tp, LOW_PRIORITY, &job);
+    EXPECT_EQ(tp.stats.totalTimeLQ, 2);
+    EXPECT_EQ(job.requestTime.tv_sec, 3);
+    // process unit
+    CalcWaitTime(&tp, MED_PRIORITY, &job);
+    EXPECT_EQ(tp.stats.totalTimeMQ, 4);
+    EXPECT_EQ(job.requestTime.tv_sec, 3);
+    // process unit
+    CalcWaitTime(&tp, HIGH_PRIORITY, &job);
+    EXPECT_EQ(tp.stats.totalTimeHQ, 6);
+    EXPECT_EQ(job.requestTime.tv_sec, 3);
 
-        time_t time = -1;
-        // process unit
-        EXPECT_EQ(StatsTime(&time), 0);
-        EXPECT_EQ(time, -1);
+    time_t time = -1;
+    // process unit
+    EXPECT_EQ(StatsTime(&time), 0);
+    EXPECT_EQ(time, -1);
 }
 
-TEST(ThreadPoolTestSuite, compare_threadpool_job)
-{
+TEST(ThreadPoolTestSuite, compare_threadpool_job) {
     ThreadPoolJob job1 = {};
     ThreadPoolJob job2 = {};
     job1.jobId = -1;
@@ -516,8 +488,7 @@ TEST(ThreadPoolTestSuite, compare_threadpool_job)
     EXPECT_FALSE(CmpThreadPoolJob(&job1, &job2));
 }
 
-TEST(ThreadPoolTestSuite, free_threadpool_job)
-{
+TEST(ThreadPoolTestSuite, free_threadpool_job) {
     // TODO! Check if FreeListFree can be called direct
     ThreadPool tp = {};
     ThreadPoolJob tpj = {};
@@ -525,18 +496,16 @@ TEST(ThreadPoolTestSuite, free_threadpool_job)
 
     // process unit
     // TODO! Check why test abort with 'free(): invalid pointer'
-    //FreeThreadPoolJob(&tp, &tpj);
-    //EXPECT_EQ(tp.jobFreeList.freeListLength, 0);
+    // FreeThreadPoolJob(&tp, &tpj);
+    // EXPECT_EQ(tp.jobFreeList.freeListLength, 0);
 }
 
-TEST(ThreadPoolTestSuite, set_policy_type)
-{
+TEST(ThreadPoolTestSuite, set_policy_type) {
     // TODO! Check different operating systems
     EXPECT_EQ(SetPolicyType(DEFAULT_POLICY), 0);
 }
 
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

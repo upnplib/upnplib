@@ -42,10 +42,10 @@
 //#include "upnpdebug.h"
 
 int main(int argc, char* argv[]) {
-//    int rc;
+    //    int rc;
     int a, b, c;
-//    (void)argc;
-//    (void)argv;
+    //    (void)argc;
+    //    (void)argv;
 
     /*
      * Check library version (and formats)
@@ -100,30 +100,30 @@ int main(int argc, char* argv[]) {
     printf("UPNP_HAVE_TOOLS \t= no\n");
 #endif
 
-//    /*
-//     * Test library initialisation
-//     */
-//    printf("\n");
-//    printf("Initializing UPnP ... \n");
-//    UpnpSetLogFileNames(0, 0);
-//    rc = UpnpInit2(NULL, 0);
-//    if (UPNP_E_SUCCESS == rc) {
-//        const char* ip_address = UpnpGetServerIpAddress();
-//        unsigned short port = UpnpGetServerPort();
-//
-//        printf("UPnP Initialized OK ip=%s, port=%d\n",
-//               (ip_address ? ip_address : "UNKNOWN"), port);
-//    } else {
-//        printf("** ERROR UpnpInit2(): %d", rc);
-//#if UPNP_HAVE_TOOLS
-//        printf(" %s", UpnpGetErrorMessage(rc));
-//#endif
-//        printf("\n");
-//        exit(EXIT_FAILURE);
-//    }
-//
-//    (void)UpnpFinish();
-//    printf("\n");
-//
-//    exit(EXIT_SUCCESS);
+    //    /*
+    //     * Test library initialisation
+    //     */
+    //    printf("\n");
+    //    printf("Initializing UPnP ... \n");
+    //    UpnpSetLogFileNames(0, 0);
+    //    rc = UpnpInit2(NULL, 0);
+    //    if (UPNP_E_SUCCESS == rc) {
+    //        const char* ip_address = UpnpGetServerIpAddress();
+    //        unsigned short port = UpnpGetServerPort();
+    //
+    //        printf("UPnP Initialized OK ip=%s, port=%d\n",
+    //               (ip_address ? ip_address : "UNKNOWN"), port);
+    //    } else {
+    //        printf("** ERROR UpnpInit2(): %d", rc);
+    //#if UPNP_HAVE_TOOLS
+    //        printf(" %s", UpnpGetErrorMessage(rc));
+    //#endif
+    //        printf("\n");
+    //        exit(EXIT_FAILURE);
+    //    }
+    //
+    //    (void)UpnpFinish();
+    //    printf("\n");
+    //
+    //    exit(EXIT_SUCCESS);
 }

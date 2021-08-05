@@ -1,11 +1,10 @@
 // Testing the tools, of course ;-)
 // Author: 2021-03-12 - Ingo Höft
 
-#include "gtest/gtest.h"
 #include "tools.cpp"
+#include "gtest/gtest.h"
 
-TEST(ToolsTestSuite, initialize_interface_addresses)
-{
+TEST(ToolsTestSuite, initialize_interface_addresses) {
     struct ifaddrs* ifaddr = nullptr;
     struct sockaddr_in* ifa_addr_in = nullptr;
     struct sockaddr_in* ifa_netmask_in = nullptr;
@@ -37,29 +36,39 @@ TEST(ToolsTestSuite, initialize_interface_addresses)
 
     EXPECT_TRUE(ifaddr4Obj.set("if0v4", "192.168.168.168/20"));
     EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
-    inet_ntop(AF_INET, &ifa_addr_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
-    EXPECT_STREQ(addr4buf, "192.168.168.168") << "    addr4buf contains the ip address";
-    inet_ntop(AF_INET, &ifa_netmask_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
-    EXPECT_STREQ(addr4buf, "255.255.240.0") << "    addr4buf contains the netmask";
-    EXPECT_EQ(ifaddr->ifa_flags, (const unsigned int)0 | IFF_UP | IFF_BROADCAST | IFF_MULTICAST);
+    inet_ntop(AF_INET, &ifa_addr_in->sin_addr.s_addr, addr4buf,
+              INET_ADDRSTRLEN);
+    EXPECT_STREQ(addr4buf, "192.168.168.168")
+        << "    addr4buf contains the ip address";
+    inet_ntop(AF_INET, &ifa_netmask_in->sin_addr.s_addr, addr4buf,
+              INET_ADDRSTRLEN);
+    EXPECT_STREQ(addr4buf, "255.255.240.0")
+        << "    addr4buf contains the netmask";
+    EXPECT_EQ(ifaddr->ifa_flags,
+              (const unsigned int)0 | IFF_UP | IFF_BROADCAST | IFF_MULTICAST);
     inet_ntop(AF_INET, &ifa_ifu_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
-    EXPECT_STREQ(addr4buf, "192.168.175.255") << "    addr4buf contains the broadcast address";
+    EXPECT_STREQ(addr4buf, "192.168.175.255")
+        << "    addr4buf contains the broadcast address";
 
     EXPECT_TRUE(ifaddr4Obj.set("if1v4", "10.168.168.200"));
-    inet_ntop(AF_INET, &ifa_addr_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
-    EXPECT_STREQ(addr4buf, "10.168.168.200") << "    addr4buf contains the ip address";
-    inet_ntop(AF_INET, &ifa_netmask_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
-    EXPECT_STREQ(addr4buf, "255.255.255.255") << "    addr4buf contains the netmask";
-    EXPECT_EQ(ifaddr->ifa_flags, (const unsigned int)0 | IFF_UP | IFF_BROADCAST | IFF_MULTICAST);
+    inet_ntop(AF_INET, &ifa_addr_in->sin_addr.s_addr, addr4buf,
+              INET_ADDRSTRLEN);
+    EXPECT_STREQ(addr4buf, "10.168.168.200")
+        << "    addr4buf contains the ip address";
+    inet_ntop(AF_INET, &ifa_netmask_in->sin_addr.s_addr, addr4buf,
+              INET_ADDRSTRLEN);
+    EXPECT_STREQ(addr4buf, "255.255.255.255")
+        << "    addr4buf contains the netmask";
+    EXPECT_EQ(ifaddr->ifa_flags,
+              (const unsigned int)0 | IFF_UP | IFF_BROADCAST | IFF_MULTICAST);
     inet_ntop(AF_INET, &ifa_ifu_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
-    EXPECT_STREQ(addr4buf, "10.168.168.200") << "    addr4buf contains the broadcast address";
+    EXPECT_STREQ(addr4buf, "10.168.168.200")
+        << "    addr4buf contains the broadcast address";
 
     EXPECT_ANY_THROW(ifaddr4Obj.set("if2v4", "10.168.168.47/"));
 }
 
-
-TEST(ToolsTestSuite, initialize_interface_address_container)
-{
+TEST(ToolsTestSuite, initialize_interface_address_container) {
     CIfaddr4Container ifaddr4Container;
 
     struct ifaddrs* ifaddr = nullptr;
@@ -78,12 +87,17 @@ TEST(ToolsTestSuite, initialize_interface_address_container)
     ifa_ifu_in = (sockaddr_in*)ifaddr->ifa_broadaddr;
 
     EXPECT_STREQ(ifaddr->ifa_name, "if1v4");
-    inet_ntop(AF_INET, &ifa_addr_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
-    EXPECT_STREQ(addr4buf, "192.168.0.168") << "    addr4buf contains the ip address";
-    inet_ntop(AF_INET, &ifa_netmask_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
-    EXPECT_STREQ(addr4buf, "255.255.240.0") << "    addr4buf contains the netmask";
+    inet_ntop(AF_INET, &ifa_addr_in->sin_addr.s_addr, addr4buf,
+              INET_ADDRSTRLEN);
+    EXPECT_STREQ(addr4buf, "192.168.0.168")
+        << "    addr4buf contains the ip address";
+    inet_ntop(AF_INET, &ifa_netmask_in->sin_addr.s_addr, addr4buf,
+              INET_ADDRSTRLEN);
+    EXPECT_STREQ(addr4buf, "255.255.240.0")
+        << "    addr4buf contains the netmask";
     inet_ntop(AF_INET, &ifa_ifu_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
-    EXPECT_STREQ(addr4buf, "192.168.15.255") << "    addr4buf contains the broadcast address";
+    EXPECT_STREQ(addr4buf, "192.168.15.255")
+        << "    addr4buf contains the broadcast address";
 
     EXPECT_ANY_THROW(ifaddr4Container.get_ifaddr(-1));
     EXPECT_ANY_THROW(ifaddr4Container.get_ifaddr(2));
@@ -93,9 +107,7 @@ TEST(ToolsTestSuite, initialize_interface_address_container)
     EXPECT_FALSE(ifaddr4Container.add("if3v4", ""));
 }
 
-
-TEST(ToolsTestSuite, chain_ifaddr_in_interface_address_container)
-{
+TEST(ToolsTestSuite, chain_ifaddr_in_interface_address_container) {
     CIfaddr4Container ifaddr4Container;
 
     struct ifaddrs* ifaddr1 = nullptr;
@@ -112,8 +124,10 @@ TEST(ToolsTestSuite, chain_ifaddr_in_interface_address_container)
     ifa_addr_in = (sockaddr_in*)ifaddr1->ifa_addr;
 
     EXPECT_STREQ(ifaddr1->ifa_name, "lo");
-    inet_ntop(AF_INET, &ifa_addr_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
-    EXPECT_STREQ(addr4buf, "127.0.0.1") << "    addr4buf contains the ip address";
+    inet_ntop(AF_INET, &ifa_addr_in->sin_addr.s_addr, addr4buf,
+              INET_ADDRSTRLEN);
+    EXPECT_STREQ(addr4buf, "127.0.0.1")
+        << "    addr4buf contains the ip address";
 
     EXPECT_TRUE(ifaddr4Container.add("lo", "127.0.0.1/8"));
     ifaddr2 = ifaddr4Container.get_ifaddr(2);
@@ -135,19 +149,22 @@ TEST(ToolsTestSuite, chain_ifaddr_in_interface_address_container)
     ifa_netmask_in = (sockaddr_in*)ifaddr3->ifa_netmask;
     ifa_ifu_in = (sockaddr_in*)ifaddr3->ifa_broadaddr;
     EXPECT_STREQ(ifaddr3->ifa_name, "if3v4");
-    inet_ntop(AF_INET, &ifa_addr_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
-    EXPECT_STREQ(addr4buf, "192.168.1.2") << "    addr4buf contains the ip address";
-    inet_ntop(AF_INET, &ifa_netmask_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
-    EXPECT_STREQ(addr4buf, "255.255.255.0") << "    addr4buf contains the netmask";
+    inet_ntop(AF_INET, &ifa_addr_in->sin_addr.s_addr, addr4buf,
+              INET_ADDRSTRLEN);
+    EXPECT_STREQ(addr4buf, "192.168.1.2")
+        << "    addr4buf contains the ip address";
+    inet_ntop(AF_INET, &ifa_netmask_in->sin_addr.s_addr, addr4buf,
+              INET_ADDRSTRLEN);
+    EXPECT_STREQ(addr4buf, "255.255.255.0")
+        << "    addr4buf contains the netmask";
     inet_ntop(AF_INET, &ifa_ifu_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
-    EXPECT_STREQ(addr4buf, "192.168.1.255") << "    addr4buf contains the broadcast address";
+    EXPECT_STREQ(addr4buf, "192.168.1.255")
+        << "    addr4buf contains the broadcast address";
 }
 
-
-TEST(ToolsTestSuite, capture_output)
-{
+TEST(ToolsTestSuite, capture_output) {
     CCaptureFd captFdObj;
-    captFdObj.capture(2);   // 1 = stdout, 2 = stderr
+    captFdObj.capture(2); // 1 = stdout, 2 = stderr
     std::cerr << "1: output 1 to stderr captured\n";
     std::cerr << "2: output 1 to stderr captured\n";
     EXPECT_TRUE(captFdObj.print(std::cerr));
@@ -165,8 +182,7 @@ TEST(ToolsTestSuite, capture_output)
     std::cerr << "output 3 to stderr\n";
 }
 
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

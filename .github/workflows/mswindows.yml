@@ -60,14 +60,12 @@ jobs:
         run: cmake --build build
 
       - name: Check build
-        #run: dir /b pthreads4w\build
         run: dir pthreads4w\build
 
       - name: Check build directory
         run: cmake -S . -B build -D UPNP_DEVEL=ON
 
       - name: Check configure paths
-        #run: dir /b pthreads4w\build
         run: dir pthreads4w\build
 
 
@@ -79,10 +77,6 @@ jobs:
 
       - name: Test pthreads4w
         run: cmake -S pthreads4w -B pthreads4w\build -D PT4W_RUN_TESTS=ON
-
-      - name: Test escape character
-        run: dir
-      - run: dir \/?
 
 # Work in progress, installation tye Release doesn't work so far
 #      - name: Configure upnplib with Release

@@ -54,12 +54,11 @@ jobs:
         run: cmake --build build
 
   macos:
-    name: Job build (${{ matrix.os }}) - ${{ matrix.conf }}
-    runs-on: ${{ matrix.os }}
+    name: Job build (macos-latest) - ${{ matrix.conf }}
+    runs-on: macos-latest
 
     strategy:
       matrix:
-        os: [macos-11, macos-latest]
         conf: [Debug, Release]
       fail-fast: false
 

@@ -6,16 +6,16 @@
 
 // for TestSuites linked against the static C library
 extern "C" {
-    //#include "upnp.h"
+//    #include "upnp.h"
 }
 
 // two macros to compare values in a range
-#define EXPECT_IN_RANGE(VAL, MIN, MAX) \
-    EXPECT_GE((VAL), (MIN));           \
+#define EXPECT_IN_RANGE(VAL, MIN, MAX)                                         \
+    EXPECT_GE((VAL), (MIN));                                                   \
     EXPECT_LE((VAL), (MAX))
 
-#define ASSERT_IN_RANGE(VAL, MIN, MAX) \
-    ASSERT_GE((VAL), (MIN));           \
+#define ASSERT_IN_RANGE(VAL, MIN, MAX)                                         \
+    ASSERT_GE((VAL), (MIN));                                                   \
     ASSERT_LE((VAL), (MAX))
 
 /*
@@ -32,12 +32,11 @@ char* strerror(int errnum) {
 
 // testsuite with fixtures
 //------------------------
-class EmptyFixtureTestSuite : public ::testing::Test
-{
-    // You can remove any or all of the following functions if their bodies would
-    // be empty.
+class EmptyFixtureTestSuite : public ::testing::Test {
+    // You can remove any or all of the following functions if their bodies
+    // would be empty.
 
-    public:
+  public:
     static void SetUpTestSuite() {
         // Here you can do set-up work once for all tests on the TestSuite.
     }
@@ -47,16 +46,16 @@ class EmptyFixtureTestSuite : public ::testing::Test
         // that doesn't throw exceptions here.
     }
 
-    protected:
+  protected:
     // Instantiate the mock objects.
     // The global pointer to them are set in the constructor below.
-    //CMock_strerror mock_strerror;
+    // CMock_strerror mock_strerror;
 
     EmptyFixtureTestSuite() {
         // Constructor, you can do set-up work for each test here.
 
         // set the global pointer to the mock objects
-        //ptrMock_strerror = &mock_strerror;
+        // ptrMock_strerror = &mock_strerror;
     }
 
     ~EmptyFixtureTestSuite() override {
@@ -80,26 +79,22 @@ class EmptyFixtureTestSuite : public ::testing::Test
     // for Foo.
 };
 
-TEST_F(EmptyFixtureTestSuite, empty_gtest_with_fixture)
-{
-}
-
+TEST_F(EmptyFixtureTestSuite, empty_gtest_with_fixture) {}
 
 // simple testsuite without fixtures
 //----------------------------------
-TEST(EmptyTestSuite, empty_gtest)
-{
-    //GTEST_SKIP_("to show this feature");
-    //GTEST_SKIP() << "to show this feature\n";
+TEST(EmptyTestSuite, empty_gtest) {
+    // GTEST_SKIP_("to show this feature");
+    // GTEST_SKIP() << "to show this feature\n";
 
     // SKIP on Github Actions
-    //char* github_action = std::getenv("GITHUB_ACTIONS");
-    //if(github_action) { GTEST_SKIP()
+    // char* github_action = std::getenv("GITHUB_ACTIONS");
+    // if(github_action) { GTEST_SKIP()
     //    << "  to show this feature";
     //}
 }
 
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
