@@ -1,9 +1,19 @@
 name: Build for MS Windows
-on: [push, pull_request]
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+defaults:
+  run:
+    shell: cmd
 
 jobs:
+# Job MS Windows 32 bit checking Debug and Release installation
+#--------------------------------------------------------------
   MS-windows-win32:
-    name: MS Windows 32bit version
+    name: Job MS Windows 32bit version
     runs-on: windows-2016
 
     strategy:
@@ -30,7 +40,7 @@ jobs:
 # Job MS Windows 64 bit checking Debug and Release installation
 #--------------------------------------------------------------
   MS-windows-amd64:
-    name: MS Windows 64bit version
+    name: Job MS Windows 64bit version
     runs-on: windows-2019
 
     strategy:

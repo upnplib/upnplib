@@ -1,14 +1,14 @@
-name: lint-clang-format
+name: Check clang format
 
-on: [push, pull_request]
+on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: DoozyX/clang-format-lint-action@v0.11
+    - uses: actions/checkout@v2
+    - uses: DoozyX/clang-format-lint-action@v0.12
       with:
-        source: './upnp ./ixml'
+        source: './upnp ./ixml ./gtests'
         extensions: 'cpp'
-        clangFormatVersion: 11
+        clangFormatVersion: 12
