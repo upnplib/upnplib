@@ -1,0 +1,100 @@
+name: Continues Integration
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Job: Run tests of the pthreads4w library
+  #-----------------------------------------
+  test-pthreads4w:
+    name: Run tests of the pthreads4w library
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ windows-2016, windows-latest ]
+      fail-fast: false
+
+    steps:
+    # Step building the pthreads4w library
+      - uses: actions/checkout@v2
+
+      - if: matrix.os == 'windows-2016'
+        name: Use MS Windows 32 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: win32
+
+      - if: matrix.os == 'windows-latest'
+        name: Use MS Windows 64 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - name: Configure pthreads4w library with tests
+        run: cmake -S pthreads4w -B pthreads4w/build -D PT4W_RUN_TESTS=ON
+
+
+  # Job: configure and build operating systems for default Release
+  #---------------------------------------------------------------
+  build-release:
+    name: Configure and build ${{ matrix.os }} for Release
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-18.04, ubuntu-latest, macOS-latest, windows-2016, windows-latest ]
+      fail-fast: false
+
+    steps:
+    # Step building the core upnplib
+      - uses: actions/checkout@v2
+
+      - if: matrix.os == 'windows-2016'
+        name: Use MS Windows 32 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: win32
+
+      - if: matrix.os == 'windows-latest'
+        name: Use MS Windows 64 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - name: Configure core upnplib
+        run: cmake -S . -B build
+#          -D CMAKE_BUILD_TYPE=Release
+#          -D GOOGLETEST=ON
+#          -D BUILD_TESTING=OFF
+#          -D client=OFF
+#          -D device=OFF
+#          -D gena=OFF
+#          -D ipv6=OFF
+#          -D optssdp=OFF
+#          -D samples=OFF
+#          -D scriptsupport=OFF
+#          -D soap=OFF
+#          -D ssdp=OFF
+#          -D tools=OFF
+
+      - if: startsWith( matrix.os, 'windows-' ) == false
+        name: Build core upnplib
+        run: |
+          cmake --build build
+          echo "Check if build binary file does NOT contain debug info..."
+          objdump -g upnp/build/shared/libupnplib.so | grep --invert-match --ignore-case --max-count=1 "Contents of the .debug_info section"
+          echo "Done."
+
+      - if: startsWith( matrix.os, 'windows-' )
+        name: Build core upnplib on MS Windows
+        run: |
+          cmake --build build --config Release
+          echo "Check if binary Release file is build..."
+          dir -Name upnp\build\static\Release\upnplib.lib
+
+# TODO: For later debug checking we can use this:
+# objdump -g upnp/build/static/libupnplib.a | grep --invert-match --ignore-case --max-count=1 "Contents of the .debug_info section"
