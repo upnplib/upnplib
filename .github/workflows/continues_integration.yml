@@ -41,12 +41,13 @@ jobs:
   # Job: configure and build operating systems for default Release
   #---------------------------------------------------------------
   build-release:
-    name: Configure and build ${{ matrix.os }} for Release
-    runs-on: ${{ matrix.os }}
+    name: Release build ${{matrix.os}} ${{matrix.option}}
+    runs-on: ${{matrix.os}}
 
     strategy:
       matrix:
         os: [ ubuntu-18.04, ubuntu-latest, macOS-latest, windows-2016, windows-latest ]
+        option: [ '', '-D GOOGLETEST=ON' ]
       fail-fast: false
 
     steps:
@@ -66,7 +67,7 @@ jobs:
           arch: amd64
 
       - name: Configure core upnplib
-        run: cmake -S . -B build
+        run: cmake -S . -B build ${{matrix.option}}
 #          -D CMAKE_BUILD_TYPE=Release
 #          -D GOOGLETEST=ON
 #          -D BUILD_TESTING=OFF
@@ -81,7 +82,7 @@ jobs:
 #          -D ssdp=OFF
 #          -D tools=OFF
 
-      - if: startsWith( matrix.os, 'windows-' ) == false
+      - if: runner.os != 'Windows'
         name: Build core upnplib
         run: |
           cmake --build build
@@ -89,7 +90,7 @@ jobs:
           objdump -g upnp/build/shared/libupnplib.so | grep --invert-match --ignore-case --max-count=1 "Contents of the .debug_info section"
           echo "Done."
 
-      - if: startsWith( matrix.os, 'windows-' )
+      - if: runner.os == 'Windows'
         name: Build core upnplib on MS Windows
         run: |
           cmake --build build --config Release
