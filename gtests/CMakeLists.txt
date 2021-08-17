@@ -1,11 +1,11 @@
-# Copyright (C) 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-08-02
+# Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2021-08-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(GTEST VERSION 0003
+project(GTEST VERSION 0004
                DESCRIPTION "Unit Tests using googletest"
                HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -29,19 +29,19 @@ if(   NOT UPNP_GTEST_STATIC_LIBRARY OR NOT UPNP_GMOCK_STATIC_LIBRARY
                     ERROR_VARIABLE PTHREAD_ERROR_MESSAGE
                     COMMAND_ECHO STDOUT)
     if(NOT ${RETURN_CODE} EQUAL 0)
-        message("${RETURN_CODE}: ${PTHREAD_ERROR_MESSAGE}")
-        return()
+        # This will stop the installation
+        message(FATAL_ERROR "${RETURN_CODE}: ${PTHREAD_ERROR_MESSAGE}")
     endif()
 
 # TODO: manage build option Release or Debug
-    execute_process(COMMAND cmake --build build
+    execute_process(COMMAND cmake --build build --config Release
                     WORKING_DIRECTORY ${UPNP_GOOGLETEST_SOURCE_DIR}
                     RESULT_VARIABLE RETURN_CODE
                     ERROR_VARIABLE PTHREAD_ERROR_MESSAGE
                     COMMAND_ECHO STDOUT)
     if(NOT ${RETURN_CODE} EQUAL 0)
-        message("${RETURN_CODE}: ${PTHREAD_ERROR_MESSAGE}")
-        return()
+        # This will stop the installation
+        message(FATAL_ERROR "${RETURN_CODE}: ${PTHREAD_ERROR_MESSAGE}")
     endif()
 
     find_library(UPNP_GTEST_STATIC_LIBRARY gtest gtestd
@@ -82,7 +82,7 @@ link_libraries(${UPNP_GTEST_STATIC_LIBRARY}
                ${UPNP_GMOCK_STATIC_LIBRARY}
                ${UPNP_GTEST_MAIN_STATIC_LIBRARY}
                ${UPNP_GMOCK_MAIN_STATIC_LIBRARY}
-               pthread
+               ${UPNP_PTHREADS_SHARED_LIBRARY}
 )
 
 add_executable(test_template

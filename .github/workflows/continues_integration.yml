@@ -87,7 +87,8 @@ jobs:
         run: |
           cmake --build build
           echo "Check if build binary file does NOT contain debug info..."
-          objdump -g upnp/build/shared/libupnplib.so | grep --invert-match --ignore-case --max-count=1 "Contents of the .debug_info section"
+          objdump -g upnp/build/lib/libupnplib.so | grep --invert-match --ignore-case --max-count=1 "Contents of the .debug_info section"
+          ls upnp/build/lib/libupnplib.a
           echo "Done."
 
       - if: runner.os == 'Windows'

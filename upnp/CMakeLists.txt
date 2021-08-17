@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-17
+# Redistribution only with this Copyright remark. Last modified: 2021-08-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -92,9 +92,6 @@ target_compile_definitions (upnplib
         PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
         PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
 )
-#set_target_properties(upnplib PROPERTIES
-#        RUNTIME_OUTPUT_DIRECTORY runtime
-#)
 
 # Shared library
 add_library(upnplibShared SHARED ${UPNP_SOURCE_FILES}
@@ -116,16 +113,26 @@ target_compile_definitions (upnplibStatic
         PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
         PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
 )
-set_target_properties(upnplibStatic PROPERTIES
-        OUTPUT_NAME upnplib
-#        ARCHIVE_OUTPUT_DIRECTORY lib
-)
 
-if(WIN32)
-# Link POSIX Threads for Windows (pthreads4w)
-#--------------------------------------------
-# Pthreads are not supported by MS Windows. So we have installed the
-# third party library pthreads4w (see subproject pthreads4w if installed).
+if(NOT WIN32)
+    # If not on MS Windows we have another output directory for the library
+    set_target_properties(upnplibStatic PROPERTIES
+            OUTPUT_NAME upnplib
+            ARCHIVE_OUTPUT_DIRECTORY lib
+    )
+    # In order to compile pthreads with C++ we need its library,
+    # but not on MS Windows
+    target_link_libraries(upnplib ${UPNP_PTHREADS_SHARED_LIBRARY})
+    # TODO: Check why libraries does not need pthread
+#    target_link_libraries(upnplibShared pthread)
+#    target_link_libraries(upnplibStatic pthread)
+
+else()
+
+    # Link POSIX Threads for Windows (pthreads4w)
+    #--------------------------------------------
+    # Pthreads are not supported by MS Windows. So we have installed the
+    # third party library pthreads4w (see subproject pthreads4w if installed).
 
     set_target_properties(upnplibStatic PROPERTIES
             OUTPUT_NAME upnplib-a
@@ -140,12 +147,6 @@ if(WIN32)
     target_link_libraries(upnplib ${UPNP_LINK_OPTIONS})
     target_link_libraries(upnplibShared ${UPNP_LINK_OPTIONS})
     target_link_libraries(upnplibStatic ${UPNP_LINK_OPTIONS})
-
-else()
-
-    # In order to compile pthreads with C++ we need its library,
-    # but not on MS Windows
-    target_link_libraries(upnplib pthread)
 endif()
 
 

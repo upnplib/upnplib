@@ -3,14 +3,14 @@
 Not usable at time. README.md only as draft, work in progress.
 
 ## 1. Overview
-This is a fork of the [Portable SDK for UPnP Devices (pupnp)](https://github.com/pupnp/) with the aim of a comölete re-engeneering. The following general goals are in progress or planned:
+This is a fork of the [Portable SDK for UPnP Devices (pupnp)](https://github.com/pupnp/) with the aim of a complete re-engeneering. The following general goals are in progress or planned:
 - Drop in compatibillity with the old pupnp library
 - Continue optimization for embedded devices
 - Based on C++ instead of C
 - Object oriented programming
 - Unit-Test driven developement
 - Using only cmake for installation
-- Emphasis on IPv6 support 
+- Emphasis on IPv6 support
 
 ## 2. Build Instructions
 ### 2.1. Linux

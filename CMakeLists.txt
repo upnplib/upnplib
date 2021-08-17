@@ -1,10 +1,10 @@
-# Copyright (C) 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-08-02
+# Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2021-08-18
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
 
-set (UPNP_VERSION_STRING "2.0.0")
+set (UPNP_VERSION_STRING "3.0.0")
 set (UPNP_VERSION_MAJOR 1)
 project(UPnPlib VERSION ${UPNP_VERSION_STRING}
                 DESCRIPTION "UPnP library"
@@ -156,8 +156,15 @@ if(WIN32)
     add_subdirectory(${PROJECT_SOURCE_DIR}/pthreads4w
                      ${PROJECT_SOURCE_DIR}/pthreads4w/build
                      EXCLUDE_FROM_ALL)
+    set(UPNP_PTHREADS_SHARED_LIBRARY ${PTHREADS4W_BINARY_DIR}/lib/pthreadVC3.lib
+            CACHE INTERNAL  # Implies FORCE
+            "Name of the linkable shared library for POSIX threads")
 else()
-    # If not on MS Windows we don't need the pthreads library
+    set(UPNP_PTHREADS_SHARED_LIBRARY pthread
+            CACHE INTERNAL  # Implies FORCE
+            "Name of the linkable shared library for POSIX threads")
+
+    # If not on MS Windows we don't need the pthreads4w library
     if(NOT UPNP_DEVEL)
         file(REMOVE_RECURSE ${PROJECT_SOURCE_DIR}/pthreads4w)
     endif()
