@@ -1,5 +1,5 @@
-# Copyright 2021 GPL 3 or higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-07-28
+# Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2021-08-17
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -13,7 +13,7 @@ project(PTHREADS4W DESCRIPTION "POSIX Threads for Windows")
 # installing the main project without involving it. You should run its tests at
 # least one time from the CMAKE_SOURCE_DIR:
 # cmake -S pthreads4w -B pthreads4w/build -D PT4W_RUN_TESTS=ON
-#==========================================================================
+#===============================================================================
 
 # Only on MS Windows we must link to the open source pthreads library.
 # Microsoft does not support POSIX threads that we need.
@@ -25,7 +25,7 @@ message(CHECK_PASS "found")
 
 if(NOT MSVC)
     message("-- WARNING!")
-    message("   You are NOT using the Microsoft (R) C/C++ Optimizing Compiler.")
+    message("   You are NOT using the Microsoft (R) C/C++ Optimizing Compiler (MSVC).")
     message("   Using your compiler is not tested and may not work.")
 endif()
 
@@ -35,7 +35,7 @@ file(GLOB PTHREADS4W_ARCHIVE
      LIST_DIRECTORIES false CONFIGURE_DEPENDS
      "${PROJECT_SOURCE_DIR}/pthreads4w-code*.zip")
 
-# extract the pthreads library archive
+# Extract the pthreads library archive
 file(ARCHIVE_EXTRACT
      INPUT ${PTHREADS4W_ARCHIVE}
      DESTINATION ${PROJECT_BINARY_DIR})
@@ -44,9 +44,33 @@ file(GLOB PTHREADS4W_BUILD_PATH
      LIST_DIRECTORIES true
     "${PROJECT_BINARY_DIR}/pthreads4w-code*")
 
-# Build the pthreads library with its native installation.
+# According to the README of pthreads4s we need these header files for compiling
+file(COPY ${PTHREADS4W_BUILD_PATH}/_ptw32.h DESTINATION ${PTHREADS4W_BINARY_DIR}/include)
+file(COPY ${PTHREADS4W_BUILD_PATH}/pthread.h DESTINATION ${PTHREADS4W_BINARY_DIR}/include)
+file(COPY ${PTHREADS4W_BUILD_PATH}/sched.h DESTINATION ${PTHREADS4W_BINARY_DIR}/include)
+file(COPY ${PTHREADS4W_BUILD_PATH}/semaphore.h DESTINATION ${PTHREADS4W_BINARY_DIR}/include)
+
+# First we build the static pthreads library with its native installation.
 # We call it as an external process.
-message(CHECK_START "building pthreads4w library")
+message(CHECK_START "building pthreads4w static library")
+execute_process(COMMAND ${NMAKE} realclean VC-static
+                WORKING_DIRECTORY ${PTHREADS4W_BUILD_PATH}
+                RESULT_VARIABLE RETURN_CODE
+                ERROR_VARIABLE PTHREAD_ERROR_MESSAGE
+                COMMAND_ECHO NONE)
+if(NOT ${RETURN_CODE} EQUAL 0)
+    # This will stop the installation
+    message(FATAL_ERROR ${PTHREAD_ERROR_MESSAGE})
+endif()
+
+# Save the static pthreads4w library
+file(GLOB FILES_TO_COPY ${PTHREADS4W_BUILD_PATH}/libpthreadV*.lib)
+file(COPY ${FILES_TO_COPY} DESTINATION ${PTHREADS4W_BINARY_DIR}/lib)
+message(CHECK_PASS "done")
+
+message(CHECK_START "building pthreads4w shared library")
+# Then we build the shared pthreads library with its native installation.
+# We call it as an external process.
 execute_process(COMMAND ${NMAKE} realclean VC
                 WORKING_DIRECTORY ${PTHREADS4W_BUILD_PATH}
                 RESULT_VARIABLE RETURN_CODE
@@ -57,7 +81,15 @@ if(NOT ${RETURN_CODE} EQUAL 0)
     message(FATAL_ERROR ${PTHREAD_ERROR_MESSAGE})
 endif()
 
+# Save the shared pthreads4w library
+file(GLOB FILES_TO_COPY ${PTHREADS4W_BUILD_PATH}/pthreadV*.lib)
+file(COPY ${FILES_TO_COPY} DESTINATION ${PTHREADS4W_BINARY_DIR}/lib)
+file(GLOB FILES_TO_COPY ${PTHREADS4W_BUILD_PATH}/pthreadV*.dll)
+file(COPY ${FILES_TO_COPY} DESTINATION ${PTHREADS4W_BINARY_DIR}/lib)
+message(CHECK_PASS "done")
+
 if(PT4W_RUN_TESTS)
+message(CHECK_START "run pthreads4w tests")
 # Running tests on the pthreads library with executing its native testsuite
 # as an external process. This takes some time.
     # commandline options always cached but this one shouldn't
@@ -70,26 +102,10 @@ if(PT4W_RUN_TESTS)
         # This will stop the installation
         message(FATAL_ERROR)
     endif()
+message(CHECK_PASS "done")
 endif()
-
-# Install pthreads binaries and header files for use only in the project.
-# It will not clutter your system.
-# Copy following files is normaly done with "nmake install" from the libraries
-# installation program but its buggy. Look at its Makefile what
-# "nmake install" should do. I have done it here instead.
-file(COPY ${PTHREADS4W_BUILD_PATH}/pthread.obj DESTINATION ${PTHREADS4W_BINARY_DIR}/bin)
-file(GLOB FILES_TO_COPY ${PTHREADS4W_BUILD_PATH}/pthreadV*.dll)
-file(COPY ${FILES_TO_COPY} DESTINATION ${PTHREADS4W_BINARY_DIR}/bin)
-file(GLOB FILES_TO_COPY ${PTHREADS4W_BUILD_PATH}/pthreadV*.lib)
-file(COPY ${FILES_TO_COPY} DESTINATION ${PTHREADS4W_BINARY_DIR}/lib)
-file(COPY ${PTHREADS4W_BUILD_PATH}/_ptw32.h DESTINATION ${PTHREADS4W_BINARY_DIR}/include)
-file(COPY ${PTHREADS4W_BUILD_PATH}/pthread.h DESTINATION ${PTHREADS4W_BINARY_DIR}/include)
-file(COPY ${PTHREADS4W_BUILD_PATH}/sched.h DESTINATION ${PTHREADS4W_BINARY_DIR}/include)
-file(COPY ${PTHREADS4W_BUILD_PATH}/semaphore.h DESTINATION ${PTHREADS4W_BINARY_DIR}/include)
 
 IF(NOT UPNP_DEVEL)
     # Clean up build files. We don't need them anymore.
     file(REMOVE_RECURSE ${PTHREADS4W_BUILD_PATH})
 endif()
-
-message(CHECK_PASS "done")
