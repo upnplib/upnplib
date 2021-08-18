@@ -38,6 +38,9 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/ixml/src/inc
     ${CMAKE_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/upnp/inc
+
+    # if pthreads4w isn't installed this path is empty. The linker
+    # doesn't find "pthread.h" and looks next at <pthread.h>
     ${PTHREADS4W_BINARY_DIR}/include
 )
 
@@ -73,8 +76,6 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/api/UpnpString.c
     ${PROJECT_SOURCE_DIR}/src/api/upnpapi.cpp
     ${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp
-
-    ${PROJECT_SOURCE_DIR}/src/upnplib.cpp
 )
 
 # Create test executable for information and create libraries
@@ -83,52 +84,49 @@ set(UPNP_SOURCE_FILES
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS YES CACHE BOOL "Export all symbols")
 
-# Executable for information
-add_executable(upnplib ${UPNP_SOURCE_FILES}
-)
-target_compile_definitions (upnplib
-        #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-        #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
-        PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
-        PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
-)
-
 # Shared library
 add_library(upnplibShared SHARED ${UPNP_SOURCE_FILES}
-)
-target_compile_definitions (upnplibShared
-        PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
-        PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
 )
 set_target_properties(upnplibShared PROPERTIES
         OUTPUT_NAME upnplib
         LIBRARY_OUTPUT_DIRECTORY lib     # used if not WIN32
 #        RUNTIME_OUTPUT_DIRECTORY lib     # used if WIN32
 )
-
-# Static library
-add_library(upnplibStatic STATIC ${UPNP_SOURCE_FILES}
-)
-target_compile_definitions (upnplibStatic
+target_compile_definitions (upnplibShared
+        #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
+        #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
         PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
         PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
 )
 
+# Static library
+add_library(upnplibStatic STATIC ${UPNP_SOURCE_FILES}
+)
 if(NOT WIN32)
-    # If not on MS Windows we have another output directory for the library
+    # On MS Windows we have an other output directory for the library, see below
     set_target_properties(upnplibStatic PROPERTIES
             OUTPUT_NAME upnplib
             ARCHIVE_OUTPUT_DIRECTORY lib
     )
-    # In order to compile pthreads with C++ we need its library,
-    # but not on MS Windows
-    target_link_libraries(upnplib ${UPNP_PTHREADS_SHARED_LIBRARY})
-    # TODO: Check why libraries does not need pthread
-#    target_link_libraries(upnplibShared pthread)
-#    target_link_libraries(upnplibStatic pthread)
+endif()
+target_compile_definitions (upnplibStatic
+        #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
+        #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
+        PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
+        PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+)
 
-else()
+# Test executable linked with the static library
+add_executable(upnplib.a ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
+target_link_libraries(upnplib.a upnplibStatic ${UPNP_PTHREADS_SHARED_LIBRARY}
+)
 
+# Test executable linked with the shared library
+add_executable(upnplib ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
+target_link_libraries(upnplib upnplibShared ${UPNP_PTHREADS_SHARED_LIBRARY}
+)
+
+if(WIN32)
     # Link POSIX Threads for Windows (pthreads4w)
     #--------------------------------------------
     # Pthreads are not supported by MS Windows. So we have installed the
@@ -143,20 +141,8 @@ else()
     # I got warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other
     # libs; use /NODEFAULTLIB:library
     set(UPNP_LINK_OPTIONS ws2_32 iphlpapi -NODEFAULTLIB:LIBCMT
-                          ${PTHREADS4W_BINARY_DIR}/lib/libpthreadVC3.lib)
+                          ${UPNP_PTHREADS_SHARED_LIBRARY})
     target_link_libraries(upnplib ${UPNP_LINK_OPTIONS})
     target_link_libraries(upnplibShared ${UPNP_LINK_OPTIONS})
     target_link_libraries(upnplibStatic ${UPNP_LINK_OPTIONS})
 endif()
-
-
-# Installation will be done with packaging
-#-----------------------------------------
-#set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/shared)
-#install(
-#    TARGETS upnplib
-#    LIBRARY DESTINATION lib
-#    ARCHIVE DESTINATION lib
-#    RUNTIME DESTINATION bin
-#    PUBLIC_HEADER DESTINATION ${PROJECT_BINARY_DIR}/include
-#)

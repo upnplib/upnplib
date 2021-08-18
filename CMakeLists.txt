@@ -32,6 +32,11 @@ option(PTW32_STATIC_LIB "For using the static pthreads4W library" OFF)
 
 # Setup configure and build environment
 #--------------------------------------
+# Set default POSIX threads shared library. May be overwritten if pthreads4w is
+# used. See below on installing pthreads4w.
+set(UPNP_PTHREADS_SHARED_LIBRARY pthread CACHE INTERNAL  # Implies FORCE
+    "Name of the linkable shared library for POSIX threads")
+
 # Check developement setting from cmake option (-D UPNP_DEVEL)
 if(UPNP_DEVEL)
 # Commandline variables are always cached. This one shouldn't?
@@ -160,10 +165,6 @@ if(WIN32)
             CACHE INTERNAL  # Implies FORCE
             "Name of the linkable shared library for POSIX threads")
 else()
-    set(UPNP_PTHREADS_SHARED_LIBRARY pthread
-            CACHE INTERNAL  # Implies FORCE
-            "Name of the linkable shared library for POSIX threads")
-
     # If not on MS Windows we don't need the pthreads4w library
     if(NOT UPNP_DEVEL)
         file(REMOVE_RECURSE ${PROJECT_SOURCE_DIR}/pthreads4w)

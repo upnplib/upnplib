@@ -10,7 +10,8 @@ This is a fork of the [Portable SDK for UPnP Devices (pupnp)](https://github.com
 - Object oriented programming
 - Unit-Test driven developement
 - Using only cmake for installation
-- Emphasis on IPv6 support
+- Focus on IPv6 support
+- Continous integration with build number
 
 ## 2. Build Instructions
 ### 2.1. Linux

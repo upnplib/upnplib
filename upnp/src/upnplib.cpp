@@ -32,101 +32,69 @@
  *
  *************************************************************************/
 
+#include "pthread.h"
 #include "upnpconfig.h"
+#include <iostream>
 
-//#include "upnp.h"
+namespace // no name, i.e. anonymous for file scope
+          // this is the C++ way for decorator STATIC
+{
+void* start_routine(void*) {
+    std::cout << "-- Thread started" << std::endl;
 
-#include <stdio.h>
-#include <stdlib.h>
+    std::cout << "UPNP_VERSION_STRING = " << UPNP_VERSION_STRING << "\n";
+    std::cout << "UPNP_VERSION_MAJOR = " << UPNP_VERSION_MAJOR << "\n";
+    std::cout << "UPNP_VERSION_MINOR = " << UPNP_VERSION_MINOR << "\n";
+    std::cout << "UPNP_VERSION_PATCH = " << UPNP_VERSION_PATCH << "\n";
+    std::cout << "UPNP_VERSION = " << UPNP_VERSION << "\n";
 
-//#if UPNP_HAVE_TOOLS
-//#include "upnptools.h"
-//#endif
-//#include "upnpdebug.h"
-
-int main(int argc, char* argv[]) {
-    //    int rc;
-    int a, b, c;
-    //    (void)argc;
-    //    (void)argv;
-
-    /*
-     * Check library version (and formats)
-     */
-    printf("\n");
-
-    printf("UPNP_VERSION_STRING = \"%s\"\n", UPNP_VERSION_STRING);
-    printf("UPNP_VERSION_MAJOR  = %d\n", UPNP_VERSION_MAJOR);
-    printf("UPNP_VERSION_MINOR  = %d\n", UPNP_VERSION_MINOR);
-    printf("UPNP_VERSION_PATCH  = %d\n", UPNP_VERSION_PATCH);
-    printf("UPNP_VERSION        = %d\n", UPNP_VERSION);
-
-    if (sscanf(UPNP_VERSION_STRING, "%d.%d.%d", &a, &b, &c) != 3 ||
-        a != UPNP_VERSION_MAJOR || b != UPNP_VERSION_MINOR ||
-        c != UPNP_VERSION_PATCH) {
-        printf("** ERROR malformed UPNP_VERSION_STRING\n");
-        exit(EXIT_FAILURE);
-    }
-
-    /*
-     * Check library optional features
-     */
-    printf("\n");
-
+/*
+ * Check library optional features
+ */
 #if UPNP_HAVE_DEBUG
-    printf("UPNP_HAVE_DEBUG \t= yes\n");
+    std::cout << "UPNP_HAVE_DEBUG \t= yes\n";
 #else
-    printf("UPNP_HAVE_DEBUG \t= no\n");
+    std::cout << "UPNP_HAVE_DEBUG \t= no\n";
 #endif
 
 #if UPNP_HAVE_CLIENT
-    printf("UPNP_HAVE_CLIENT\t= yes\n");
+    std::cout << "UPNP_HAVE_CLIENT \t= yes\n";
 #else
-    printf("UPNP_HAVE_CLIENT\t= no\n");
+    std::cout << "UPNP_HAVE_CLIENT \t= no\n";
 #endif
 
 #if UPNP_HAVE_DEVICE
-    printf("UPNP_HAVE_DEVICE\t= yes\n");
+    std::cout << "UPNP_HAVE_DEVICE \t= yes\n";
 #else
-    printf("UPNP_HAVE_DEVICE\t= no\n");
+    std::cout << "UPNP_HAVE_DEVICE \t= no\n";
 #endif
 
 #if UPNP_HAVE_WEBSERVER
-    printf("UPNP_HAVE_WEBSERVER\t= yes\n");
+    std::cout << "UPNP_HAVE_WEBSERVER \t= yes\n";
 #else
-    printf("UPNP_HAVE_WEBSERVER\t= no\n");
+    std::cout << "UPNP_HAVE_WEBSERVER \t= no\n";
 #endif
 
 #if UPNP_HAVE_TOOLS
-    printf("UPNP_HAVE_TOOLS \t= yes\n");
+    std::cout << "UPNP_HAVE_TOOLS \t= yes\n";
 #else
-    printf("UPNP_HAVE_TOOLS \t= no\n");
+    std::cout << "UPNP_HAVE_TOOLS \t= no\n";
 #endif
 
-    //    /*
-    //     * Test library initialisation
-    //     */
-    //    printf("\n");
-    //    printf("Initializing UPnP ... \n");
-    //    UpnpSetLogFileNames(0, 0);
-    //    rc = UpnpInit2(NULL, 0);
-    //    if (UPNP_E_SUCCESS == rc) {
-    //        const char* ip_address = UpnpGetServerIpAddress();
-    //        unsigned short port = UpnpGetServerPort();
-    //
-    //        printf("UPnP Initialized OK ip=%s, port=%d\n",
-    //               (ip_address ? ip_address : "UNKNOWN"), port);
-    //    } else {
-    //        printf("** ERROR UpnpInit2(): %d", rc);
-    //#if UPNP_HAVE_TOOLS
-    //        printf(" %s", UpnpGetErrorMessage(rc));
-    //#endif
-    //        printf("\n");
-    //        exit(EXIT_FAILURE);
-    //    }
-    //
-    //    (void)UpnpFinish();
-    //    printf("\n");
-    //
-    //    exit(EXIT_SUCCESS);
+    std::cout << "-- Thread ended" << std::endl;
+    return (0); // calls pthread_exit()
+}
+} // namespace
+
+int main() {
+    pthread_t thread;
+    int rc;
+
+    rc = pthread_create(&thread, NULL, &start_routine, NULL);
+    if (rc) {
+        std::cerr << "Error! unable to create thread, " << rc << std::endl;
+        exit(-1);
+    }
+
+    pthread_exit(NULL); // last thread in process: exits program with status 0
 }
