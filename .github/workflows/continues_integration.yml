@@ -96,9 +96,12 @@ jobs:
         run: |
           cmake --build build --config Release
           echo "Check if binary Release file is build..."
-          dir -Name upnp\build\Release\upnplib.lib
           dir -Name upnp\build\Release\upnplib.dll
-          dir -Name upnp\build\Release\upnplib-a.lib
+          dir -Name upnp\build\Release\upnplib.exe
+          dir -Name upnp\build\Release\upnplib.exp
+          dir -Name upnp\build\Release\upnplib.lib
+          dir -Name upnp\build\Release\upnplibStatic.exe
+          dir -Name upnp\build\Release\upnplibStatic.lib
 
 # TODO: For later debug checking we can use this:
 # objdump -g upnp/build/static/libupnplib.a | grep --invert-match --ignore-case --max-count=1 "Contents of the .debug_info section"
