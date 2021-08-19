@@ -4,7 +4,7 @@
  * All rights reserved.
  *
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-08-17
+ * Redistribution only with this Copyright remark. Last modified: 2021-08-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,12 +36,11 @@
 #include "upnpconfig.h"
 #include <iostream>
 
+
 namespace // no name, i.e. anonymous for file scope
           // this is the C++ way for decorator STATIC
 {
 void* start_routine(void*) {
-    std::cout << "-- Thread started" << std::endl;
-
     std::cout << "UPNP_VERSION_STRING = " << UPNP_VERSION_STRING << "\n";
     std::cout << "UPNP_VERSION_MAJOR = " << UPNP_VERSION_MAJOR << "\n";
     std::cout << "UPNP_VERSION_MINOR = " << UPNP_VERSION_MINOR << "\n";
@@ -81,7 +80,7 @@ void* start_routine(void*) {
     std::cout << "UPNP_HAVE_TOOLS \t= no\n";
 #endif
 
-    std::cout << "-- Thread ended" << std::endl;
+    std::cout << "-- POSIX Thread ended" << std::endl;
     return (0); // calls pthread_exit()
 }
 } // namespace
@@ -89,12 +88,25 @@ void* start_routine(void*) {
 int main() {
     pthread_t thread;
     int rc;
+    void* retval;
+
+    std::cout << "-- starting POSIX Thread" << std::endl;
 
     rc = pthread_create(&thread, NULL, &start_routine, NULL);
-    if (rc) {
+    if (rc != 0) {
         std::cerr << "Error! unable to create thread, " << rc << std::endl;
-        exit(-1);
+        exit(1);
     }
 
-    pthread_exit(NULL); // last thread in process: exits program with status 0
+    rc = pthread_join(thread, &retval);
+    if (rc != 0) {
+        std::cerr << "Error! Unable to join thread with rc=" << rc << std::endl;
+        exit(1);
+    }
+    if (retval != NULL) {
+        std::cerr << "Error! Thread failed with retval=" << retval << std::endl;
+        exit(1);
+    }
+
+    return(0);
 }

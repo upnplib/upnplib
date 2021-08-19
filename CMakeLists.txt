@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-18
+# Redistribution only with this Copyright remark. Last modified: 2021-08-19
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -25,17 +25,19 @@ include(CMakeDependentOption)
 # UPNP_STATIC_LIB - for creating a statically linkable UPnP-library
 option(UPNP_STATIC_LIB "Create a statically linkable UPnP-library" OFF)
 
-# TODO: Test this option to use the static pthreads4W
+# TODO: Test this option to use the static pthreads4w
 # PTW32_STATIC_LIB - for using the static pthreads4W library
-option(PTW32_STATIC_LIB "For using the static pthreads4W library" OFF)
+option(PTW32_STATIC_LIB "For using the static pthreads4w library" OFF)
 
 
 # Setup configure and build environment
 #--------------------------------------
-# Set default POSIX threads shared library. May be overwritten if pthreads4w is
+# Set default POSIX threads libraries. May be overwritten if pthreads4w is
 # used. See below on installing pthreads4w.
 set(UPNP_PTHREADS_SHARED_LIBRARY pthread CACHE INTERNAL  # Implies FORCE
     "Name of the linkable shared library for POSIX threads")
+set(UPNP_PTHREADS_STATIC_LIBRARY libpthread.a CACHE INTERNAL  # Implies FORCE
+    "Name of the linkable static library for POSIX threads")
 
 # Check developement setting from cmake option (-D UPNP_DEVEL)
 if(UPNP_DEVEL)
@@ -164,6 +166,9 @@ if(WIN32)
     set(UPNP_PTHREADS_SHARED_LIBRARY ${PTHREADS4W_BINARY_DIR}/lib/pthreadVC3.lib
             CACHE INTERNAL  # Implies FORCE
             "Name of the linkable shared library for POSIX threads")
+    set(UPNP_PTHREADS_STATIC_LIBRARY ${PTHREADS4W_BINARY_DIR}/lib/libpthreadVC3.lib
+            CACHE INTERNAL  # Implies FORCE
+            "Name of the linkable static library for POSIX threads")
 else()
     # If not on MS Windows we don't need the pthreads4w library
     if(NOT UPNP_DEVEL)

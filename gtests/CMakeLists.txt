@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-18
+# Redistribution only with this Copyright remark. Last modified: 2021-08-19
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -78,12 +78,15 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/ixml/inc
 )
 
+# TODO: Check if better link pthread static
 link_libraries(${UPNP_GTEST_STATIC_LIBRARY}
                ${UPNP_GMOCK_STATIC_LIBRARY}
                ${UPNP_GTEST_MAIN_STATIC_LIBRARY}
                ${UPNP_GMOCK_MAIN_STATIC_LIBRARY}
                ${UPNP_PTHREADS_SHARED_LIBRARY}
+               # ${UPNP_PTHREADS_STATIC_LIBRARY}
 )
 
 add_executable(test_template
-    ${PROJECT_SOURCE_DIR}/test_template.cpp)
+    ${PROJECT_SOURCE_DIR}/test_template.cpp
+)

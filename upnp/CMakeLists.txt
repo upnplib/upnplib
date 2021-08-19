@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-18
+# Redistribution only with this Copyright remark. Last modified: 2021-08-19
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -38,9 +38,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/ixml/src/inc
     ${CMAKE_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/upnp/inc
-
     # if pthreads4w isn't installed this path is empty. The linker
-    # doesn't find "pthread.h" and looks next at <pthread.h>
+    # doesn't find "pthread.h" and falls back to look at <pthread.h>.
     ${PTHREADS4W_BINARY_DIR}/include
 )
 
@@ -79,70 +78,97 @@ set(UPNP_SOURCE_FILES
 )
 
 # Create test executable for information and create libraries
-#------------------------------------------------------------
+#============================================================
 # All builds should have the same target_compile_definitions
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS YES CACHE BOOL "Export all symbols")
 
-# Shared library
-add_library(upnplibShared SHARED ${UPNP_SOURCE_FILES}
-)
-set_target_properties(upnplibShared PROPERTIES
-        OUTPUT_NAME upnplib
-        LIBRARY_OUTPUT_DIRECTORY lib     # used if not WIN32
-#        RUNTIME_OUTPUT_DIRECTORY lib     # used if WIN32
-)
-target_compile_definitions (upnplibShared
-        #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-        #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
-        PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
-        PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
-)
-
-# Static library
-add_library(upnplibStatic STATIC ${UPNP_SOURCE_FILES}
-)
 if(NOT WIN32)
-    # On MS Windows we have an other output directory for the library, see below
+    # Shared library
+    add_library(upnplibShared SHARED ${UPNP_SOURCE_FILES}
+    )
+    set_target_properties(upnplibShared PROPERTIES
+            OUTPUT_NAME upnplib
+            LIBRARY_OUTPUT_DIRECTORY lib     # used if not WIN32
+    #        RUNTIME_OUTPUT_DIRECTORY lib     # used if WIN32
+    )
+
+    # Static library
+    add_library(upnplibStatic STATIC ${UPNP_SOURCE_FILES}
+    )
     set_target_properties(upnplibStatic PROPERTIES
             OUTPUT_NAME upnplib
             ARCHIVE_OUTPUT_DIRECTORY lib
     )
-endif()
-target_compile_definitions (upnplibStatic
-        #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-        #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
-        PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
-        PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
-)
 
-# Test executable linked with the static library
-add_executable(upnplib.a ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
-target_link_libraries(upnplib.a upnplibStatic ${UPNP_PTHREADS_SHARED_LIBRARY}
-)
+    # Test executable linked with the static library
+    add_executable(upnplib.a ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
+    target_link_libraries(upnplib.a upnplibStatic
+            ${UPNP_PTHREADS_STATIC_LIBRARY}
+    )
 
-# Test executable linked with the shared library
-add_executable(upnplib ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
-target_link_libraries(upnplib upnplibShared ${UPNP_PTHREADS_SHARED_LIBRARY}
-)
+    # Test executable linked with the shared library
+    add_executable(upnplib ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
+    target_link_libraries(upnplib upnplibShared
+            ${UPNP_PTHREADS_SHARED_LIBRARY}
+    )
 
-if(WIN32)
+else() # WIN32
+
     # Link POSIX Threads for Windows (pthreads4w)
-    #--------------------------------------------
+    #============================================
     # Pthreads are not supported by MS Windows. So we have installed the
     # third party library pthreads4w (see subproject pthreads4w if installed).
 
-    set_target_properties(upnplibStatic PROPERTIES
-            OUTPUT_NAME upnplib-a
+    # Shared library
+    #---------------
+    add_library(upnplib SHARED ${UPNP_SOURCE_FILES}
     )
-    # In addition to pthreads we need some more system libraries
+    target_compile_definitions(upnplib
+            #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
+            #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
+            PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
+            PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+    )
+    # In addition to pthreads we need some more system libraries here
     # ws2_32: winsock to support sockets
     # iphlpapi: ip helper interface to get network management tools
+    target_link_libraries(upnplib ws2_32 iphlpapi
+            ${UPNP_PTHREADS_SHARED_LIBRARY}
+    )
+    # Test executable linked with the shared library
+    add_executable(upnplib_shared_exe ${PROJECT_SOURCE_DIR}/src/upnplib.cpp
+    )
+    set_target_properties(upnplib_shared_exe PROPERTIES
+            OUTPUT_NAME upnplib
+    )
+    target_link_libraries(upnplib_shared_exe
+            ${UPNP_PTHREADS_SHARED_LIBRARY}
+            upnplib
+    )
+
+    # Static library
+    #---------------
+    add_library(upnplibStatic STATIC ${UPNP_SOURCE_FILES}
+    )
+    target_compile_definitions(upnplibStatic
+            #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
+            #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
+            PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
+            PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+    )
+    # Test executable linked with the static library
+    add_executable(upnplib_static_exe ${PROJECT_SOURCE_DIR}/src/upnplib.cpp
+    )
+    set_target_properties(upnplib_static_exe PROPERTIES
+            OUTPUT_NAME upnplibStatic
+    )
     # I got warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other
     # libs; use /NODEFAULTLIB:library
-    set(UPNP_LINK_OPTIONS ws2_32 iphlpapi -NODEFAULTLIB:LIBCMT
-                          ${UPNP_PTHREADS_SHARED_LIBRARY})
-    target_link_libraries(upnplib ${UPNP_LINK_OPTIONS})
-    target_link_libraries(upnplibShared ${UPNP_LINK_OPTIONS})
-    target_link_libraries(upnplibStatic ${UPNP_LINK_OPTIONS})
-endif()
+    target_link_libraries(upnplib_static_exe
+            ${UPNP_PTHREADS_STATIC_LIBRARY}
+            upnplibStatic
+            -NODEFAULTLIB:LIBCMT
+    )
+
+endif() # WIN32
