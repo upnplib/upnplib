@@ -1,5 +1,5 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Last modified: 2021-07-29
+// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2021-08-20
 
 #ifndef NDEBUG
 #define NDEBUG
@@ -7,6 +7,7 @@
 
 #include "gtest/gtest.h"
 
+// Test of local functions, not linkable
 #include "FreeList.cpp"
 #include "LinkedList.cpp"
 #include "ThreadPool.cpp"

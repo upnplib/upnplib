@@ -1,10 +1,12 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-19
+# Redistribution only with this Copyright remark. Last modified: 2021-08-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNP_CORE DESCRIPTION "Binary build of the UPnP library core")
+project(UPNP_CORE VERSION 0001
+        DESCRIPTION "Binary build of the UPnP library core"
+        HOMEPAGE_URL "https://github.com/upnplib")
 
 # This contains all settings to compile the library dynamically and static.
 #==========================================================================
@@ -77,46 +79,60 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 
-# Create test executable for information and create libraries
+# Create libraries and create test executable for information
 #============================================================
-# All builds should have the same target_compile_definitions
-
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS YES CACHE BOOL "Export all symbols")
-
 if(NOT WIN32)
+
     # Shared library
-    add_library(upnplibShared SHARED ${UPNP_SOURCE_FILES}
+    #---------------
+    add_library(upnplib_shared SHARED ${UPNP_SOURCE_FILES})
+    set_target_properties(upnplib_shared PROPERTIES
+            OUTPUT_NAME upnplib  # lib*.so will be added
+            LIBRARY_OUTPUT_DIRECTORY lib  # used if not WIN32
+    #       RUNTIME_OUTPUT_DIRECTORY lib  # used if WIN32
     )
-    set_target_properties(upnplibShared PROPERTIES
+
+    # Test executable linked with the shared library
+    add_executable(upnplib_shared_run ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
+    set_target_properties(upnplib_shared_run PROPERTIES
             OUTPUT_NAME upnplib
-            LIBRARY_OUTPUT_DIRECTORY lib     # used if not WIN32
-    #        RUNTIME_OUTPUT_DIRECTORY lib     # used if WIN32
+    )
+    target_link_libraries(upnplib_shared_run
+            upnplib_shared
+            ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
     # Static library
-    add_library(upnplibStatic STATIC ${UPNP_SOURCE_FILES}
-    )
-    set_target_properties(upnplibStatic PROPERTIES
-            OUTPUT_NAME upnplib
+    #---------------
+    add_library(upnplib_static STATIC ${UPNP_SOURCE_FILES})
+    set_target_properties(upnplib_static PROPERTIES
+            OUTPUT_NAME upnplib  # lib*.a will be added
             ARCHIVE_OUTPUT_DIRECTORY lib
     )
 
     # Test executable linked with the static library
-    add_executable(upnplib.a ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
-    target_link_libraries(upnplib.a upnplibStatic
-            ${UPNP_PTHREADS_STATIC_LIBRARY}
-    )
-
-    # Test executable linked with the shared library
-    add_executable(upnplib ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
-    target_link_libraries(upnplib upnplibShared
-            ${UPNP_PTHREADS_SHARED_LIBRARY}
-    )
+    # Tried to do it but got warnings and link errors. Only linking with
+    # UPNP_PTHREADS_SHARED_LIBRARY helps but it doesn't give a static program.
+    # It is the same as the shared linked program.
+#    add_executable(upnplib_static_run ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
+#    set_target_properties(upnplib_static_run PROPERTIES
+#            OUTPUT_NAME upnplib.a
+#    )
+#    target_link_libraries(upnplib_static_run
+#            upnplib_static
+#            #libc.a
+#            # linking with _STATIC_... gives errors, don't know why :-(
+#            ${UPNP_PTHREADS_STATIC_LIBRARY}
+#    )
 
 else() # WIN32
 
-    # Link POSIX Threads for Windows (pthreads4w)
-    #============================================
+    # Can be general initialized with CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS
+    # but will have it under control individual
+    set(WINDOWS_EXPORT_ALL_SYMBOLS YES)
+
+    # Link with POSIX Threads for Windows (pthreads4w)
+    #=================================================
     # Pthreads are not supported by MS Windows. So we have installed the
     # third party library pthreads4w (see subproject pthreads4w if installed).
 
@@ -149,9 +165,9 @@ else() # WIN32
 
     # Static library
     #---------------
-    add_library(upnplibStatic STATIC ${UPNP_SOURCE_FILES}
+    add_library(upnplib_static_win STATIC ${UPNP_SOURCE_FILES}
     )
-    target_compile_definitions(upnplibStatic
+    target_compile_definitions(upnplib_static_win
             #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
             #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
             PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
@@ -167,7 +183,7 @@ else() # WIN32
     # libs; use /NODEFAULTLIB:library
     target_link_libraries(upnplib_static_exe
             ${UPNP_PTHREADS_STATIC_LIBRARY}
-            upnplibStatic
+            upnplib_static_win
             -NODEFAULTLIB:LIBCMT
     )
 

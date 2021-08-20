@@ -36,7 +36,6 @@
 #include "upnpconfig.h"
 #include <iostream>
 
-
 namespace // no name, i.e. anonymous for file scope
           // this is the C++ way for decorator STATIC
 {
@@ -108,5 +107,5 @@ int main() {
         exit(1);
     }
 
-    return(0);
+    return (0);
 }

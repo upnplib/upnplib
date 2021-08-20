@@ -1,17 +1,14 @@
+// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2021-08-20
+
 // Tools and helper classes to manage gtests
-// Author: 2021 - Ingo Höft, last modified: 2021-04-20
+// =========================================
 
 #include "tools.h"
 #include "upnp.h"
-#include <arpa/inet.h>
 #include <fcntl.h>
 #include <filesystem>
 #include <fstream>
-#include <ifaddrs.h>
-#include <iostream>
-#include <net/if.h>
-#include <unistd.h>
-#include <variant>
 #include <vector>
 
 // Errormessages taken from https://github.com/pupnp/pupnp

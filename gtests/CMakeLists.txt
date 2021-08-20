@@ -1,13 +1,13 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-19
+# Redistribution only with this Copyright remark. Last modified: 2021-08-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(GTEST VERSION 0004
-               DESCRIPTION "Unit Tests using googletest"
-               HOMEPAGE_URL "https://github.com/upnplib")
+project(GTEST VERSION 0005
+              DESCRIPTION "Unit Tests using googletest"
+              HOMEPAGE_URL "https://github.com/upnplib")
 
 
 set(UPNP_GOOGLETEST_SOURCE_DIR ${PROJECT_SOURCE_DIR}/googletest)
@@ -70,12 +70,15 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/inc
     ${UPNP_GOOGLETEST_BINARY_DIR}/_deps/googletest-src/googletest/include
     ${UPNP_GOOGLETEST_BINARY_DIR}/_deps/googletest-src/googlemock/include
-    ${CMAKE_SOURCE_DIR}/upnp/inc
-    ${CMAKE_SOURCE_DIR}/upnp/src
-    ${CMAKE_SOURCE_DIR}/upnp/src/inc
-    ${CMAKE_SOURCE_DIR}/upnp/src/threadutil
+    ${UPNP_CORE_SOURCE_DIR}/inc
+    ${UPNP_CORE_SOURCE_DIR}/src
+    ${UPNP_CORE_SOURCE_DIR}/src/inc
+    ${UPNP_CORE_SOURCE_DIR}/src/threadutil
+    ${UPNP_CORE_BINARY_DIR}/inc
+    ${CMAKE_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/upnp/inc
     ${CMAKE_SOURCE_DIR}/ixml/inc
+    ${CMAKE_SOURCE_DIR}/ixml/src/inc
 )
 
 # TODO: Check if better link pthread static
@@ -84,9 +87,65 @@ link_libraries(${UPNP_GTEST_STATIC_LIBRARY}
                ${UPNP_GTEST_MAIN_STATIC_LIBRARY}
                ${UPNP_GMOCK_MAIN_STATIC_LIBRARY}
                ${UPNP_PTHREADS_SHARED_LIBRARY}
+               # It isn't possible to link with static lib due to link errors
                # ${UPNP_PTHREADS_STATIC_LIBRARY}
 )
 
-add_executable(test_template
-    ${PROJECT_SOURCE_DIR}/test_template.cpp
+# add_executable(test_template ${PROJECT_SOURCE_DIR}/test_template.cpp)
+
+add_executable(test_upnpapi
+    ${CMAKE_SOURCE_DIR}/ixml/src/attr.c
+    ${CMAKE_SOURCE_DIR}/ixml/src/document.c
+    ${CMAKE_SOURCE_DIR}/ixml/src/element.c
+    ${CMAKE_SOURCE_DIR}/ixml/src/ixml.c
+    ${CMAKE_SOURCE_DIR}/ixml/src/ixmlmembuf.c
+    ${CMAKE_SOURCE_DIR}/ixml/src/ixmlparser.c
+    ${CMAKE_SOURCE_DIR}/ixml/src/namedNodeMap.c
+    ${CMAKE_SOURCE_DIR}/ixml/src/node.c
+    ${CMAKE_SOURCE_DIR}/ixml/src/nodeList.c
+
+    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
+    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
+    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/TimerThread.cpp
+
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/sock.c
+
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.c
+
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpparser.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/statcodes.c
+
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
+
+    ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
+    ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.c
+    # ${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp
+
+    ${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
+    ${PROJECT_SOURCE_DIR}/tools/tools.cpp
+)
+
+#add_executable(test_upnpapi
+#    ${PROJECT_SOURCE_DIR}/tools/tools.cpp
+#    ${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
+#)
+#target_link_libraries(test_upnpapi
+#    ${UPNP_CORE_BINARY_DIR}/lib/libupnplib.a
+#)
+
+add_executable(test_threadutil
+    ${PROJECT_SOURCE_DIR}/test_threadutil.cpp
+)
+
+add_executable(test_upnpdebug
+    ${PROJECT_SOURCE_DIR}/tools/tools.cpp
+    ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp
+)
+
+add_executable(test_upnpdebug_nomock
+    ${PROJECT_SOURCE_DIR}/test_upnpdebug_nomock.cpp
 )

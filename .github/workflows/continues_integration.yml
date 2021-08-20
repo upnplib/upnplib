@@ -90,6 +90,8 @@ jobs:
           objdump -g upnp/build/lib/libupnplib.so | grep --invert-match --ignore-case --max-count=1 "Contents of the .debug_info section"
           ls upnp/build/lib/libupnplib.a
           echo "Done."
+          echo "Running the small info program 'upnplib'"
+          ./upnp/build/upnplib
 
       - if: runner.os == 'Windows'
         name: Build core upnplib on MS Windows
@@ -102,6 +104,8 @@ jobs:
           dir -Name upnp\build\Release\upnplib.lib
           dir -Name upnp\build\Release\upnplibStatic.exe
           dir -Name upnp\build\Release\upnplibStatic.lib
+          echo Running the small info program 'upnplib.exe'
+          .\upnp\build\Release\upnplib.exe
 
 # TODO: For later debug checking we can use this:
 # objdump -g upnp/build/static/libupnplib.a | grep --invert-match --ignore-case --max-count=1 "Contents of the .debug_info section"
