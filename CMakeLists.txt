@@ -201,9 +201,9 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/upnp
 # Download, configure and build googletest
 #-----------------------------------------
 Find_Package(Git)
-cmake_dependent_option(GOOGLETEST "Download and build Googletest" OFF ${Git_FOUND} OFF)
+cmake_dependent_option(UPNP_GOOGLETEST "Download and build Googletest" OFF ${Git_FOUND} OFF)
 
-if (GOOGLETEST)
+if (UPNP_GOOGLETEST)
     add_subdirectory(${PROJECT_SOURCE_DIR}/gtests
                      ${PROJECT_SOURCE_DIR}/gtests/build)
 endif()

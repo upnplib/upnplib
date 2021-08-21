@@ -10,66 +10,51 @@ project(GTEST VERSION 0005
               HOMEPAGE_URL "https://github.com/upnplib")
 
 
-set(UPNP_GOOGLETEST_SOURCE_DIR ${PROJECT_SOURCE_DIR}/googletest)
-set(UPNP_GOOGLETEST_BINARY_DIR ${PROJECT_SOURCE_DIR}/googletest/build)
-
-# Install GoogleTest libraries if not available
-#----------------------------------------------
-# Check if the GoogleTest libraries are available. If not then download and
-# install them. The problem is that we need the libraries already build to get
-# its paths in this configure stage. We do it with an isolated project
-# (no add_subdirectory()). So we can configure and build them direct in two
-# external processes and have them available immediately.
-if(   NOT UPNP_GTEST_STATIC_LIBRARY OR NOT UPNP_GMOCK_STATIC_LIBRARY
-   OR NOT UPNP_GTEST_MAIN_STATIC_LIBRARY OR NOT UPNP_GMOCK_MAIN_STATIC_LIBRARY)
-
-    execute_process(COMMAND cmake -S . -B build
-                    WORKING_DIRECTORY ${UPNP_GOOGLETEST_SOURCE_DIR}
-                    RESULT_VARIABLE RETURN_CODE
-                    ERROR_VARIABLE PTHREAD_ERROR_MESSAGE
-                    COMMAND_ECHO STDOUT)
-    if(NOT ${RETURN_CODE} EQUAL 0)
-        # This will stop the installation
-        message(FATAL_ERROR "${RETURN_CODE}: ${PTHREAD_ERROR_MESSAGE}")
-    endif()
+# Install GoogleTest libraries
+#-----------------------------
+include(FetchContent)
 
 # TODO: manage build option Release or Debug
-    execute_process(COMMAND cmake --build build --config Release
-                    WORKING_DIRECTORY ${UPNP_GOOGLETEST_SOURCE_DIR}
-                    RESULT_VARIABLE RETURN_CODE
-                    ERROR_VARIABLE PTHREAD_ERROR_MESSAGE
-                    COMMAND_ECHO STDOUT)
-    if(NOT ${RETURN_CODE} EQUAL 0)
-        # This will stop the installation
-        message(FATAL_ERROR "${RETURN_CODE}: ${PTHREAD_ERROR_MESSAGE}")
-    endif()
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY    https://github.com/google/googletest.git
+    GIT_TAG           origin/master
+    GIT_SHALLOW       ON
+    GIT_CONFIG        advice.detachedHead=false
+)
+FetchContent_MakeAvailable(googletest)
 
-    find_library(UPNP_GTEST_STATIC_LIBRARY gtest gtestd
-                 PATHS ${UPNP_GOOGLETEST_BINARY_DIR}/lib
-                 PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
-                 NO_DEFAULT_PATH)
-    find_library(UPNP_GMOCK_STATIC_LIBRARY gmock gmockd
-                 PATHS ${UPNP_GOOGLETEST_BINARY_DIR}/lib
-                 PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
-                 NO_DEFAULT_PATH)
+# Because we have different prefixes and suffixes depending on installation type
+# and operating system we must use find_library to get the current gtest library
+# names.
+find_library(UPNP_GTEST_LIBRARY gtest gtestd
+             PATHS ${CMAKE_BINARY_DIR}/lib
+             PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
+             NO_DEFAULT_PATH)
+find_library(UPNP_GMOCK_LIBRARY gmock gmockd
+             PATHS ${CMAKE_BINARY_DIR}/lib
+             PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
+             NO_DEFAULT_PATH)
 
-    find_library(UPNP_GTEST_MAIN_STATIC_LIBRARY gtest_main gtest_maind
-                 PATHS ${UPNP_GOOGLETEST_BINARY_DIR}/lib
-                 PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
-                 NO_DEFAULT_PATH)
-    find_library(UPNP_GMOCK_MAIN_STATIC_LIBRARY gmock_main gmock_maind
-                 PATHS ${UPNP_GOOGLETEST_BINARY_DIR}/lib
-                 PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
-                 NO_DEFAULT_PATH)
-endif()
+find_library(UPNP_GTEST_MAIN_LIBRARY gtest_main gtest_maind
+             PATHS ${CMAKE_BINARY_DIR}/lib
+             PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
+             NO_DEFAULT_PATH)
+find_library(UPNP_GMOCK_MAIN_LIBRARY gmock_main gmock_maind
+             PATHS ${CMAKE_BINARY_DIR}/lib
+             PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
+             NO_DEFAULT_PATH
+)
 
+# TODO: Use gtest to build and execute the following Unit Tests
+return()
 
 # Create the Unit Tests
 #----------------------
 include_directories(
-    ${PROJECT_SOURCE_DIR}/inc
-    ${UPNP_GOOGLETEST_BINARY_DIR}/_deps/googletest-src/googletest/include
-    ${UPNP_GOOGLETEST_BINARY_DIR}/_deps/googletest-src/googlemock/include
+    ${gtest_SOURCE_DIR}/include
+    ${gmock_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/include
     ${UPNP_CORE_SOURCE_DIR}/inc
     ${UPNP_CORE_SOURCE_DIR}/src
     ${UPNP_CORE_SOURCE_DIR}/src/inc
@@ -84,10 +69,10 @@ include_directories(
     ${PTHREADS4W_BINARY_DIR}/include
 )
 
-link_libraries(${UPNP_GTEST_STATIC_LIBRARY}
-               ${UPNP_GMOCK_STATIC_LIBRARY}
-               ${UPNP_GTEST_MAIN_STATIC_LIBRARY}
-               ${UPNP_GMOCK_MAIN_STATIC_LIBRARY}
+link_libraries(${UPNP_GTEST_LIBRARY}
+               ${UPNP_GMOCK_LIBRARY}
+               ${UPNP_GTEST_MAIN_LIBRARY}
+               ${UPNP_GMOCK_MAIN_LIBRARY}
                ${UPNP_PTHREADS_SHARED_LIBRARY}
                # It isn't possible to link with static lib due to link errors
                # ${UPNP_PTHREADS_STATIC_LIBRARY}

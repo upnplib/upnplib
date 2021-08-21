@@ -5,7 +5,7 @@
 # Manual test compile for development, not for production use!
 
 # build with:
-#rm -rf ./build/ && cmake -B ./build/ -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -DGOOGLETEST=OFF -Dclient=OFF -Ddevice=OFF -Dgena=OFF -Dipv6=OFF -Doptssdp=OFF -Dsamples=OFF -Dscriptsupport=OFF -Dsoap=OFF -Dssdp=OFF -Dtools=OFF -LH .
+#rm -rf ./build/ && cmake -B ./build/ -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -DUPNP_GOOGLETEST=OFF -Dclient=OFF -Ddevice=OFF -Dgena=OFF -Dipv6=OFF -Doptssdp=OFF -Dsamples=OFF -Dscriptsupport=OFF -Dsoap=OFF -Dssdp=OFF -Dtools=OFF -LH .
 
 SOURCE_DIR="$HOME/devel/upnplib-dev/upnplib"
 BUILD_DIR="$HOME/devel/upnplib-dev/upnplib/build"

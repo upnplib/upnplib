@@ -1,4 +1,6 @@
 name: Continues Integration
+# ubuntu-18.04 isn't used for tests because it doesn't support open standard
+# ISO C++20 that we declared to use for UPnPlib.
 
 on:
   push:
@@ -46,8 +48,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ ubuntu-18.04, ubuntu-latest, macOS-latest, windows-2016, windows-latest ]
-        option: [ '', '-D GOOGLETEST=ON' ]
+        os: [ ubuntu-latest, macOS-latest, windows-2016, windows-latest ]
+        option: [ '', '-D UPNP_GOOGLETEST=ON' ]
       fail-fast: false
 
     steps:
@@ -69,7 +71,7 @@ jobs:
       - name: Configure core upnplib
         run: cmake -S . -B build ${{matrix.option}}
 #          -D CMAKE_BUILD_TYPE=Release
-#          -D GOOGLETEST=ON
+#          -D UPNP_GOOGLETEST=ON
 #          -D BUILD_TESTING=OFF
 #          -D client=OFF
 #          -D device=OFF
@@ -104,7 +106,7 @@ jobs:
           dir -Name upnp\build\Release\upnplib.lib
           dir -Name upnp\build\Release\upnplibStatic.exe
           dir -Name upnp\build\Release\upnplibStatic.lib
-          echo Running the small info program 'upnplib.exe'
+          echo "Running the small info program 'upnplib.exe'"
           .\upnp\build\Release\upnplib.exe
 
 # TODO: For later debug checking we can use this:
