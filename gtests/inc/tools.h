@@ -2,7 +2,7 @@
 // Redistribution only with this Copyright remark. Last modified: 2021-08-20
 
 #pragma once
-#include <arpa/inet.h>
+#include "UpnpInet.h"
 #include <ifaddrs.h>
 #include <string>
 

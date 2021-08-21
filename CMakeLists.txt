@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-19
+# Redistribution only with this Copyright remark. Last modified: 2021-08-21
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -13,9 +13,12 @@ project(UPnPlib VERSION ${UPNP_VERSION_STRING}
 
 # Define custom cmake options for commandline and cmake-gui
 #------------------------------------------------------------------------
-# If you add or modify an option you MUST also do it in the corresponding
-# "${PROJECT_SOURCE_DIR}/upnp/cmake/upnpconfig.h.cmake".
-# Variablename and its value-placeholder must be the same.
+# If you add or modify an option you should also have attention to a possible
+# corresponding flag in "${PROJECT_SOURCE_DIR}/cmake/upnpconfig.h.cmake". These
+# variables are exported at the end. See below at section "Export cmake
+# variables".
+# Variablename and its value-placeholder must be the same, e.g.
+# #cmakedefine VAR1 ${VAR1}
 # #cmakedefine VAR1 ${VAR} does not work.
 # #cmakedefine VAR2 1  : VAR2 must be exist before even you set a constant.
 
@@ -23,10 +26,12 @@ include(CMakeDependentOption)
 
 # TODO: Test this option to link statically
 # UPNP_STATIC_LIB - for creating a statically linkable UPnP-library
+# The option is contained in cmake/upnpconfig.h.cmake.
 option(UPNP_STATIC_LIB "Create a statically linkable UPnP-library" OFF)
 
 # TODO: Test this option to use the static pthreads4w
 # PTW32_STATIC_LIB - for using the static pthreads4W library
+# The option is contained in cmake/upnpconfig.h.cmake.
 option(PTW32_STATIC_LIB "For using the static pthreads4w library" OFF)
 
 
@@ -54,8 +59,16 @@ endif()
 
 # Check available library functions. We need that for later configuration.
 include(CheckCXXSymbolExists)
+# The option is contained in cmake/upnpconfig.h.cmake.
 check_cxx_symbol_exists(strnlen "cstring" HAVE_STRNLEN)
+# The option is contained in cmake/upnpconfig.h.cmake.
 check_cxx_symbol_exists(strndup "cstring" HAVE_STRNDUP)
+
+# Set a compiler flag to respect specific features of the compiler.
+# The option is contained in cmake/upnpconfig.h.cmake.
+if(MSVC)
+    set(UPNP_USE_MSVCPP 1)
+endif()
 
 
 # Checks for large-file-sensitivity
@@ -201,6 +214,10 @@ endif()
 # to compiler macros (#define ...) for conditions to the program source.
 # Hope we have all needed variables defined so we can write upnpconfig.h now.
 # To meet all variables this should be the last statement.
+# Variablename and its value-placeholder must be the same, e.g.
+# #cmakedefine VAR1 ${VAR1}
+# #cmakedefine VAR1 ${VAR} does not work.
+# #cmakedefine VAR2 1  : VAR2 must be exist before even you set a constant.
 configure_file(${PROJECT_SOURCE_DIR}/cmake/upnpconfig.h.cmake
                ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.h
 )

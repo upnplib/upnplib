@@ -124,4 +124,7 @@ UPNP_VERSION_PATCH)
 /* Use pthread_rwlock_t */
 //#cmakedefine UPNP_USE_RWLOCK 1
 
+/* Defines if MSVC is used */
+#cmakedefine UPNP_USE_MSVCPP ${UPNP_USE_MSVCPP}
+
 #endif /* UPNP_CONFIG_H */

@@ -138,50 +138,50 @@ else() # WIN32
 
     # Shared library
     #---------------
-    add_library(upnplib SHARED ${UPNP_SOURCE_FILES}
+    add_library(upnplib_shared_win SHARED ${UPNP_SOURCE_FILES})
+    set_target_properties(upnplib_shared_win PROPERTIES
+            OUTPUT_NAME upnplib
     )
-    target_compile_definitions(upnplib
+    target_compile_definitions(upnplib_shared_win
             #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
             #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
-            PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
             PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
     )
     # In addition to pthreads we need some more system libraries here
     # ws2_32: winsock to support sockets
     # iphlpapi: ip helper interface to get network management tools
-    target_link_libraries(upnplib ws2_32 iphlpapi
+    target_link_libraries(upnplib_shared_win ws2_32 iphlpapi
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
     # Test executable linked with the shared library
-    add_executable(upnplib_shared_exe ${PROJECT_SOURCE_DIR}/src/upnplib.cpp
-    )
-    set_target_properties(upnplib_shared_exe PROPERTIES
+    add_executable(upnplib_shared_win_exe ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
+    set_target_properties(upnplib_shared_win_exe PROPERTIES
             OUTPUT_NAME upnplib
     )
-    target_link_libraries(upnplib_shared_exe
+    target_link_libraries(upnplib_shared_win_exe
             ${UPNP_PTHREADS_SHARED_LIBRARY}
-            upnplib
+            upnplib_shared_win
     )
 
     # Static library
     #---------------
-    add_library(upnplib_static_win STATIC ${UPNP_SOURCE_FILES}
+    add_library(upnplib_static_win STATIC ${UPNP_SOURCE_FILES})
+    set_target_properties(upnplib_static_win PROPERTIES
+            OUTPUT_NAME upnplibStatic
     )
     target_compile_definitions(upnplib_static_win
             #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
             #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
-            PUBLIC $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
             PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
     )
     # Test executable linked with the static library
-    add_executable(upnplib_static_exe ${PROJECT_SOURCE_DIR}/src/upnplib.cpp
-    )
-    set_target_properties(upnplib_static_exe PROPERTIES
+    add_executable(upnplib_static_win_exe ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
+    set_target_properties(upnplib_static_win_exe PROPERTIES
             OUTPUT_NAME upnplibStatic
     )
     # I got warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other
     # libs; use /NODEFAULTLIB:library
-    target_link_libraries(upnplib_static_exe
+    target_link_libraries(upnplib_static_win_exe
             ${UPNP_PTHREADS_STATIC_LIBRARY}
             upnplib_static_win
             -NODEFAULTLIB:LIBCMT

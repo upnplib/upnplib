@@ -79,9 +79,11 @@ include_directories(
     ${CMAKE_BINARY_DIR}/upnp/inc
     ${CMAKE_SOURCE_DIR}/ixml/inc
     ${CMAKE_SOURCE_DIR}/ixml/src/inc
+    # if pthreads4w isn't installed this path is empty. The linker
+    # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+    ${PTHREADS4W_BINARY_DIR}/include
 )
 
-# TODO: Check if better link pthread static
 link_libraries(${UPNP_GTEST_STATIC_LIBRARY}
                ${UPNP_GMOCK_STATIC_LIBRARY}
                ${UPNP_GTEST_MAIN_STATIC_LIBRARY}
@@ -91,43 +93,67 @@ link_libraries(${UPNP_GTEST_STATIC_LIBRARY}
                # ${UPNP_PTHREADS_STATIC_LIBRARY}
 )
 
-# add_executable(test_template ${PROJECT_SOURCE_DIR}/test_template.cpp)
+add_executable(test_template ${PROJECT_SOURCE_DIR}/test_template.cpp)
 
-add_executable(test_upnpapi
-    ${CMAKE_SOURCE_DIR}/ixml/src/attr.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/document.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/element.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/ixml.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/ixmlmembuf.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/ixmlparser.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/namedNodeMap.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/node.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/nodeList.c
+add_executable(test_threadutil ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
+#target_compile_definitions(test_threadutil
+#        PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+#)
 
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/TimerThread.cpp
+if(NOT WIN32)
+    # TODO: Make tests running on MS Windows
+    # Not usable on MS Windows at time because <ifaddrs.h> isn't available
+    # there. We need it for struct ifaddrs and functions getifaddrs(),
+    # freeifaddrs().
+    add_executable(test_upnpapi
+	${CMAKE_SOURCE_DIR}/ixml/src/attr.c
+	${CMAKE_SOURCE_DIR}/ixml/src/document.c
+	${CMAKE_SOURCE_DIR}/ixml/src/element.c
+	${CMAKE_SOURCE_DIR}/ixml/src/ixml.c
+	${CMAKE_SOURCE_DIR}/ixml/src/ixmlmembuf.c
+	${CMAKE_SOURCE_DIR}/ixml/src/ixmlparser.c
+	${CMAKE_SOURCE_DIR}/ixml/src/namedNodeMap.c
+	${CMAKE_SOURCE_DIR}/ixml/src/node.c
+	${CMAKE_SOURCE_DIR}/ixml/src/nodeList.c
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/sock.c
+	${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
+	${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+	${UPNP_CORE_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
+	${UPNP_CORE_SOURCE_DIR}/src/threadutil/TimerThread.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.c
+	${UPNP_CORE_SOURCE_DIR}/src/genlib/net/sock.c
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpparser.c
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.c
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/statcodes.c
+	${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.c
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.c
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.c
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
+	${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpparser.c
+	${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.c
+	${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/statcodes.c
 
-    ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
-    ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.c
-    # ${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp
+	${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.c
+	${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.c
+	${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
 
-    ${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
-    ${PROJECT_SOURCE_DIR}/tools/tools.cpp
-)
+	${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
+	${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.c
+	# ${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp
+
+	${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
+	${PROJECT_SOURCE_DIR}/tools/tools.cpp
+    )
+
+    # On MS Windows: test_upnpdebug_nomock.cpp(17,77): error C2440: 'type cast':
+    # cannot convert from 'std ::filesystem::path' to 'std::string'
+    add_executable(test_upnpdebug_nomock
+        ${PROJECT_SOURCE_DIR}/test_upnpdebug_nomock.cpp
+    )
+
+    # On MS Windows: inc\tools.h(17,20): error C2079: 'CIfaddr4::ifaddr' uses
+    # undefined struct 'ifaddrs'
+    add_executable(test_upnpdebug
+        ${PROJECT_SOURCE_DIR}/tools/tools.cpp
+        ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp
+    )
+endif()
 
 #add_executable(test_upnpapi
 #    ${PROJECT_SOURCE_DIR}/tools/tools.cpp
@@ -136,16 +162,3 @@ add_executable(test_upnpapi
 #target_link_libraries(test_upnpapi
 #    ${UPNP_CORE_BINARY_DIR}/lib/libupnplib.a
 #)
-
-add_executable(test_threadutil
-    ${PROJECT_SOURCE_DIR}/test_threadutil.cpp
-)
-
-add_executable(test_upnpdebug
-    ${PROJECT_SOURCE_DIR}/tools/tools.cpp
-    ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp
-)
-
-add_executable(test_upnpdebug_nomock
-    ${PROJECT_SOURCE_DIR}/test_upnpdebug_nomock.cpp
-)
