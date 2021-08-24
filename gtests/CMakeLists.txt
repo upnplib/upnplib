@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-23
+# Redistribution only with this Copyright remark. Last modified: 2021-08-24
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNP_GTESTS VERSION 0006
+project(UPNP_GTESTS VERSION 0007
               DESCRIPTION "Unit Tests using googletest"
               HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -20,9 +20,8 @@ project(UPNP_GTESTS VERSION 0006
 set(UPNP_GOOGLETEST_SOURCE_DIR ${PROJECT_SOURCE_DIR}/googletest)
 set(UPNP_GOOGLETEST_BINARY_DIR ${PROJECT_SOURCE_DIR}/googletest/build)
 
-file(GLOB FILES_TO_DELETE LIST_DIRECTORIES true
-        ${UPNP_GOOGLETEST_BINARY_DIR}/lib/*)
-file(REMOVE_RECURSE " " ${FILES_TO_DELETE})
+file(REMOVE_RECURSE ${UPNP_GOOGLETEST_BINARY_DIR}/lib/
+                    ${UPNP_GOOGLETEST_BINARY_DIR}/bin/)
 
 execute_process(COMMAND cmake -S . -B build
                               -D BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}

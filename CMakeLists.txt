@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-23
+# Redistribution only with this Copyright remark. Last modified: 2021-08-24
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -52,7 +52,7 @@ if(UPNP_DEVEL)
 endif()
 
 # Set the default build type
-if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+if (NOT CMAKE_BUILD_TYPE)
     set (CMAKE_BUILD_TYPE "Release" CACHE
         STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ..." FORCE)
 endif()

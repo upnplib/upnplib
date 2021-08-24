@@ -93,7 +93,8 @@ jobs:
           echo "Running the small info program 'upnplib'"
           ./upnp/build/upnplib
 
-      - if: runner.os != 'Windows' && \
+      - if: >
+          runner.os != 'Windows' &&
           matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON'
         name: Check Googletest library builds
         run: |
@@ -135,33 +136,42 @@ jobs:
           echo "Running the small info program upnplib.exe"
           .\upnp\build\Release\upnplib.exe
 
-      - if: runner.os == 'Windows' && \
+      - if: >
+          runner.os == 'Windows' &&
           matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON'
         name: Check Googletest library builds
         run: |
           echo "Default Release Shared build..."
-          ls gtests/googletest/build/lib/libgtest.so
-          ls gtests/googletest/build/lib/libgmock.so
-          ls gtests/googletest/build/lib/libgtest_main.so
-          ls gtests/googletest/build/lib/libgmock_main.so
+          ls gtests/googletest/build/bin/Release/gtest.dll
+          ls gtests/googletest/build/bin/Release/gmock.dll
+          ls gtests/googletest/build/bin/Release/gtest_main.dll
+          ls gtests/googletest/build/bin/Release/gmock_main.dll
+          ls gtests/googletest/build/lib/Release/gtest.lib
+          ls gtests/googletest/build/lib/Release/gmock.lib
+          ls gtests/googletest/build/lib/Release/gtest_main.lib
+          ls gtests/googletest/build/lib/Release/gmock_main.lib
           echo "Debug Static build..."
           cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=OFF -D CMAKE_BUILD_TYPE=Debug
-          ls gtests/googletest/build/lib/libgtestd.a
-          ls gtests/googletest/build/lib/libgmockd.a
-          ls gtests/googletest/build/lib/libgtest_maind.a
-          ls gtests/googletest/build/lib/libgmock_maind.a
+          ls gtests/googletest/build/lib/Debug/gtestd.lib
+          ls gtests/googletest/build/lib/Debug/gmockd.lib
+          ls gtests/googletest/build/lib/Debug/gtest_maind.lib
+          ls gtests/googletest/build/lib/Debug/gmock_maind.lib
           echo "Release Static build..."
           cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=OFF -D CMAKE_BUILD_TYPE=Release
-          ls gtests/googletest/build/lib/libgtest.a
-          ls gtests/googletest/build/lib/libgmock.a
-          ls gtests/googletest/build/lib/libgtest_main.a
-          ls gtests/googletest/build/lib/libgmock_main.a
+          ls gtests/googletest/build/lib/Release/gtest.lib
+          ls gtests/googletest/build/lib/Release/gmock.lib
+          ls gtests/googletest/build/lib/Release/gtest_main.lib
+          ls gtests/googletest/build/lib/Release/gmock_main.lib
           echo "Debug Shared build..."
           cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE=Debug
-          ls gtests/googletest/build/lib/libgtestd.so
-          ls gtests/googletest/build/lib/libgmockd.so
-          ls gtests/googletest/build/lib/libgtest_maind.so
-          ls gtests/googletest/build/lib/libgmock_maind.so
+          ls gtests/googletest/build/bin/Debug/gtestd.dll
+          ls gtests/googletest/build/bin/Debug/gmockd.dll
+          ls gtests/googletest/build/bin/Debug/gtest_maind.dll
+          ls gtests/googletest/build/bin/Debug/gmock_maind.dll
+          ls gtests/googletest/build/lib/Debug/gtestd.lib
+          ls gtests/googletest/build/lib/Debug/gmockd.lib
+          ls gtests/googletest/build/lib/Debug/gtest_maind.lib
+          ls gtests/googletest/build/lib/Debug/gmock_maind.lib
 
 # TODO: For later debug checking we can use this:
 # objdump -g upnp/build/static/libupnplib.a | grep --invert-match --ignore-case --max-count=1 "Contents of the .debug_info section"
