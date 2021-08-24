@@ -18,6 +18,7 @@ If nothing others said we are always staying at the root directory of the projec
 
 ### 2.1. Linux build
 t.b.d.
+
     upnplib$ cmake -S . -B build
     upnplib$ cmake --build build
 
@@ -58,20 +59,18 @@ Please note that option BUILD_SHARED_LIBS only effects Googletest. By default pr
     # t.b.d.
 
 ## 3. Configure Options for cmake
-Following the default options are shown.
-
-- -D UPNP_GOOGLETEST=OFF     Enables installation of GoogleTest for Unit-Tests. For deatails look at section [Googletest build]().
-
-- -D BUILD_SHARED_LIBS=OFF  This option affects only Googletest to build it with shared gtest libraries. UPnPlib is always build shared and static.
-
-- -D CMAKE_BUILD_TYPE=Release   Possible options: Debug, Release, MinSizeRel, RelWithDebInfo. If you set this option to **Debug** you will have additional developement support. The mnemonic program symbols are compiled into the binary programs so you can better examine the code and simply debug it. But I think it is better to write a Unit Test instead of using a debugger. Compiling with symbols increases the program size a big amount. With focus on embedded devices this is not good idea.
+Option prefixed with -D | Default | Description
+-------|---------|---
+UPNP_GOOGLETEST=[ON\|OFF] | OFF | Enables installation of GoogleTest for Unit-Tests. For details look at section *Googletest build*.
+BUILD_SHARED_LIBS=[ON\|OFF] | OFF | This option affects only Googletest to build it with shared gtest libraries. UPnPlib is always build shared and static.
+CMAKE_BUILD_TYPE=[Debug\|Release\|MinSizeRel\|RelWithDebInfo] | Release | MinSizeRel and RelWithDebinfo have no effect so far. If you set this option to **Debug** you will have additional developement support. The mnemonic program symbols are compiled into the binary programs so you can better examine the code and simply debug it. But I think it is better to write a Unit Test instead of using a debugger. Compiling with symbols increases the program size a big amount. With focus on embedded devices this is a bad idea.
 
 <!-- - -D DEVEL=OFF          This enables some additional information for developement. It preserves installation options that normaly will be deleted after Installation for Optimisation so you can examine them. These are mainly the installation directory from **pthread4w** and its temporary installation files even on a non MS Windows environment.
 -->
 ## Limitations
 No limits documented so far.
 
-<br /><pre>
+<pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
 // Redistribution only with this Copyright remark. Last modified: 2021-08-23
-</pre>
+</sup></sup>
