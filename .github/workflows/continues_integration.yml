@@ -49,7 +49,18 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, macOS-latest, windows-2016, windows-latest ]
-        option: [ '', '-D UPNP_GOOGLETEST=ON' ]
+        option: [ '', '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON' ]
+                # -D CMAKE_BUILD_TYPE=Release
+                # -D client=OFF
+                # -D device=OFF
+                # -D gena=OFF
+                # -D ipv6=OFF
+                # -D optssdp=OFF
+                # -D samples=OFF
+                # -D scriptsupport=OFF
+                # -D soap=OFF
+                # -D ssdp=OFF
+                # -D tools=OFF
       fail-fast: false
 
     steps:
@@ -70,19 +81,6 @@ jobs:
 
       - name: Configure core upnplib
         run: cmake -S . -B build ${{matrix.option}}
-#          -D CMAKE_BUILD_TYPE=Release
-#          -D UPNP_GOOGLETEST=ON
-#          -D BUILD_TESTING=OFF
-#          -D client=OFF
-#          -D device=OFF
-#          -D gena=OFF
-#          -D ipv6=OFF
-#          -D optssdp=OFF
-#          -D samples=OFF
-#          -D scriptsupport=OFF
-#          -D soap=OFF
-#          -D ssdp=OFF
-#          -D tools=OFF
 
       - if: runner.os != 'Windows'
         name: Build core upnplib
@@ -95,6 +93,34 @@ jobs:
           echo "Running the small info program 'upnplib'"
           ./upnp/build/upnplib
 
+      - if: runner.os != 'Windows' && \
+          matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON'
+        name: Check Googletest library builds
+        run: |
+          echo "Default Release Shared build..."
+          ls gtests/googletest/build/lib/libgtest.so
+          ls gtests/googletest/build/lib/libgmock.so
+          ls gtests/googletest/build/lib/libgtest_main.so
+          ls gtests/googletest/build/lib/libgmock_main.so
+          echo "Debug Static build..."
+          cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=OFF -D CMAKE_BUILD_TYPE=Debug
+          ls gtests/googletest/build/lib/libgtestd.a
+          ls gtests/googletest/build/lib/libgmockd.a
+          ls gtests/googletest/build/lib/libgtest_maind.a
+          ls gtests/googletest/build/lib/libgmock_maind.a
+          echo "Release Static build..."
+          cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=OFF -D CMAKE_BUILD_TYPE=Release
+          ls gtests/googletest/build/lib/libgtest.a
+          ls gtests/googletest/build/lib/libgmock.a
+          ls gtests/googletest/build/lib/libgtest_main.a
+          ls gtests/googletest/build/lib/libgmock_main.a
+          echo "Debug Shared build..."
+          cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE=Debug
+          ls gtests/googletest/build/lib/libgtestd.so
+          ls gtests/googletest/build/lib/libgmockd.so
+          ls gtests/googletest/build/lib/libgtest_maind.so
+          ls gtests/googletest/build/lib/libgmock_maind.so
+
       - if: runner.os == 'Windows'
         name: Build core upnplib on MS Windows
         run: |
@@ -106,8 +132,36 @@ jobs:
           dir -Name upnp\build\Release\upnplib.lib
           dir -Name upnp\build\Release\upnplibStatic.exe
           dir -Name upnp\build\Release\upnplibStatic.lib
-          echo "Running the small info program 'upnplib.exe'"
+          echo "Running the small info program upnplib.exe"
           .\upnp\build\Release\upnplib.exe
+
+      - if: runner.os == 'Windows' && \
+          matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON'
+        name: Check Googletest library builds
+        run: |
+          echo "Default Release Shared build..."
+          ls gtests/googletest/build/lib/libgtest.so
+          ls gtests/googletest/build/lib/libgmock.so
+          ls gtests/googletest/build/lib/libgtest_main.so
+          ls gtests/googletest/build/lib/libgmock_main.so
+          echo "Debug Static build..."
+          cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=OFF -D CMAKE_BUILD_TYPE=Debug
+          ls gtests/googletest/build/lib/libgtestd.a
+          ls gtests/googletest/build/lib/libgmockd.a
+          ls gtests/googletest/build/lib/libgtest_maind.a
+          ls gtests/googletest/build/lib/libgmock_maind.a
+          echo "Release Static build..."
+          cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=OFF -D CMAKE_BUILD_TYPE=Release
+          ls gtests/googletest/build/lib/libgtest.a
+          ls gtests/googletest/build/lib/libgmock.a
+          ls gtests/googletest/build/lib/libgtest_main.a
+          ls gtests/googletest/build/lib/libgmock_main.a
+          echo "Debug Shared build..."
+          cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE=Debug
+          ls gtests/googletest/build/lib/libgtestd.so
+          ls gtests/googletest/build/lib/libgmockd.so
+          ls gtests/googletest/build/lib/libgtest_maind.so
+          ls gtests/googletest/build/lib/libgmock_maind.so
 
 # TODO: For later debug checking we can use this:
 # objdump -g upnp/build/static/libupnplib.a | grep --invert-match --ignore-case --max-count=1 "Contents of the .debug_info section"

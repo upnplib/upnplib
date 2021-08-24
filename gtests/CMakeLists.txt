@@ -1,59 +1,88 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-20
+# Redistribution only with this Copyright remark. Last modified: 2021-08-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(GTEST VERSION 0005
+project(UPNP_GTESTS VERSION 0006
               DESCRIPTION "Unit Tests using googletest"
               HOMEPAGE_URL "https://github.com/upnplib")
 
 
 # Install GoogleTest libraries
 #-----------------------------
-include(FetchContent)
+# Download and install Googletest. The problem is that we need the libraries
+# already build to get its paths in this configure stage. We do it with an
+# isolated project (no add_subdirectory()). So we can configure and build them
+# direct in two external processes and have them available immediately.
 
-# TODO: manage build option Release or Debug
-FetchContent_Declare(
-    googletest
-    GIT_REPOSITORY    https://github.com/google/googletest.git
-    GIT_TAG           origin/master
-    GIT_SHALLOW       ON
-    GIT_CONFIG        advice.detachedHead=false
-)
-FetchContent_MakeAvailable(googletest)
+set(UPNP_GOOGLETEST_SOURCE_DIR ${PROJECT_SOURCE_DIR}/googletest)
+set(UPNP_GOOGLETEST_BINARY_DIR ${PROJECT_SOURCE_DIR}/googletest/build)
+
+file(GLOB FILES_TO_DELETE LIST_DIRECTORIES true
+        ${UPNP_GOOGLETEST_BINARY_DIR}/lib/*)
+file(REMOVE_RECURSE " " ${FILES_TO_DELETE})
+
+execute_process(COMMAND cmake -S . -B build
+                              -D BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+                              -D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+                WORKING_DIRECTORY ${UPNP_GOOGLETEST_SOURCE_DIR}
+                RESULT_VARIABLE RETURN_CODE
+                ERROR_VARIABLE UPNP_ERROR_MESSAGE
+                COMMAND_ECHO STDOUT)
+if(NOT ${RETURN_CODE} EQUAL 0)
+    # This will stop the installation
+    message(FATAL_ERROR "${RETURN_CODE}: ${UPNP_ERROR_MESSAGE}")
+endif()
+
+execute_process(COMMAND cmake --build build --config ${CMAKE_BUILD_TYPE}
+                WORKING_DIRECTORY ${UPNP_GOOGLETEST_SOURCE_DIR}
+                RESULT_VARIABLE RETURN_CODE
+                ERROR_VARIABLE UPNP_ERROR_MESSAGE
+                COMMAND_ECHO STDOUT)
+if(NOT ${RETURN_CODE} EQUAL 0)
+    # This will stop the installation
+    message(FATAL_ERROR "${RETURN_CODE}: ${UPNP_ERROR_MESSAGE}")
+endif()
 
 # Because we have different prefixes and suffixes depending on installation type
 # and operating system we must use find_library to get the current gtest library
-# names.
+# names. The names are cached for the whole project so you can get them global.
+unset (UPNP_GTEST_LIBRARY CACHE)
 find_library(UPNP_GTEST_LIBRARY gtest gtestd
-             PATHS ${CMAKE_BINARY_DIR}/lib
+             DOC "Path to the Googletest library"
+             PATHS ${UPNP_GOOGLETEST_BINARY_DIR}/lib
              PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
              NO_DEFAULT_PATH)
+unset (UPNP_GMOCK_LIBRARY CACHE)
 find_library(UPNP_GMOCK_LIBRARY gmock gmockd
-             PATHS ${CMAKE_BINARY_DIR}/lib
+             DOC "Path to the Googlemock library"
+             PATHS ${UPNP_GOOGLETEST_BINARY_DIR}/lib
              PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
              NO_DEFAULT_PATH)
 
+unset (UPNP_GTEST_MAIN_LIBRARY CACHE)
 find_library(UPNP_GTEST_MAIN_LIBRARY gtest_main gtest_maind
-             PATHS ${CMAKE_BINARY_DIR}/lib
+             DOC "Path to the Googletest library with main entry point"
+             PATHS ${UPNP_GOOGLETEST_BINARY_DIR}/lib
              PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
              NO_DEFAULT_PATH)
+unset (UPNP_GMOCK_MAIN_LIBRARY CACHE)
 find_library(UPNP_GMOCK_MAIN_LIBRARY gmock_main gmock_maind
-             PATHS ${CMAKE_BINARY_DIR}/lib
+             DOC "Path to the Googlemock library with main entry point"
+             PATHS ${UPNP_GOOGLETEST_BINARY_DIR}/lib
              PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
              NO_DEFAULT_PATH
 )
 
 # TODO: Use gtest to build and execute the following Unit Tests
-return()
 
 # Create the Unit Tests
 #----------------------
 include_directories(
-    ${gtest_SOURCE_DIR}/include
-    ${gmock_SOURCE_DIR}/include
+    ${UPNP_GOOGLETEST_BINARY_DIR}/_deps/googletest-src/googletest/include
+    ${UPNP_GOOGLETEST_BINARY_DIR}/_deps/googletest-src/googlemock/include
     ${PROJECT_SOURCE_DIR}/include
     ${UPNP_CORE_SOURCE_DIR}/inc
     ${UPNP_CORE_SOURCE_DIR}/src

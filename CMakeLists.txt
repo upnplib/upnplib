@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-21
+# Redistribution only with this Copyright remark. Last modified: 2021-08-23
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -202,6 +202,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/upnp
 #-----------------------------------------
 Find_Package(Git)
 cmake_dependent_option(UPNP_GOOGLETEST "Download and build Googletest" OFF ${Git_FOUND} OFF)
+cmake_dependent_option(UPNP_GOOGLETEST "Build Googletest shared libraries" OFF ${Git_FOUND} OFF)
 
 if (UPNP_GOOGLETEST)
     add_subdirectory(${PROJECT_SOURCE_DIR}/gtests

@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-20
+# Redistribution only with this Copyright remark. Last modified: 2021-08-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNP_CORE VERSION 0001
+project(UPNP_CORE VERSION 0002
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -81,6 +81,7 @@ set(UPNP_SOURCE_FILES
 
 # Create libraries and create test executable for information
 #============================================================
+# TODO: Build differnt Release or Debug libraries
 if(NOT WIN32)
 
     # Shared library
