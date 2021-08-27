@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-24
+# Redistribution only with this Copyright remark. Last modified: 2021-08-27
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -194,8 +194,11 @@ endif()
 #------------------------
 # This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
 # e.g. UPNP_CORE_SOURCE_DIR and UPNP_CORE_BINARY_DIR
+
 add_subdirectory(${PROJECT_SOURCE_DIR}/upnp
                  ${PROJECT_SOURCE_DIR}/upnp/build)
+add_subdirectory(${PROJECT_SOURCE_DIR}/ixml
+                 ${PROJECT_SOURCE_DIR}/ixml/build)
 
 
 # Download, configure and build googletest

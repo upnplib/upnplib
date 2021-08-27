@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-24
+# Redistribution only with this Copyright remark. Last modified: 2021-08-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNP_GTESTS VERSION 0007
+project(UPNP_GTESTS VERSION 0008
               DESCRIPTION "Unit Tests using googletest"
               HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -72,10 +72,10 @@ find_library(UPNP_GMOCK_MAIN_LIBRARY gmock_main gmock_maind
              DOC "Path to the Googlemock library with main entry point"
              PATHS ${UPNP_GOOGLETEST_BINARY_DIR}/lib
              PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
-             NO_DEFAULT_PATH
-)
+             NO_DEFAULT_PATH)
 
-# TODO: Use gtest to build and execute the following Unit Tests
+
+enable_testing()
 
 # Create the Unit Tests
 #----------------------
@@ -88,10 +88,10 @@ include_directories(
     ${UPNP_CORE_SOURCE_DIR}/src/inc
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil
     ${UPNP_CORE_BINARY_DIR}/inc
-    ${CMAKE_BINARY_DIR}
-    ${CMAKE_BINARY_DIR}/upnp/inc
-    ${CMAKE_SOURCE_DIR}/ixml/inc
-    ${CMAKE_SOURCE_DIR}/ixml/src/inc
+    ${UPnPlib_BINARY_DIR}
+    ${UPnPlib_BINARY_DIR}/upnp/inc
+    ${UPNP_IXML_SOURCE_DIR}/inc
+    ${UPNP_IXML_SOURCE_DIR}/src/inc
     # if pthreads4w isn't installed this path is empty. The linker
     # doesn't find "pthread.h" and falls back to look at <pthread.h>.
     ${PTHREADS4W_BINARY_DIR}/include
@@ -107,8 +107,10 @@ link_libraries(${UPNP_GTEST_LIBRARY}
 )
 
 add_executable(test_template ${PROJECT_SOURCE_DIR}/test_template.cpp)
+add_test(NAME ctest_template COMMAND test_template)
 
 add_executable(test_threadutil ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
+add_test(NAME ctest_threadutil COMMAND test_threadutil)
 #target_compile_definitions(test_threadutil
 #        PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
 #)
@@ -151,27 +153,28 @@ if(NOT WIN32)
 	# ${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp
 
 	${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
-	${PROJECT_SOURCE_DIR}/tools/tools.cpp
-    )
+	${PROJECT_SOURCE_DIR}/tools/tools.cpp)
+    add_test(NAME ctest_upnpapi COMMAND test_upnpapi)
+
+    # Example link with upnplib library instead with sources
+    #add_executable(test_upnpapi
+    #    ${PROJECT_SOURCE_DIR}/tools/tools.cpp
+    #    ${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
+    #)
+    #target_link_libraries(test_upnpapi
+    #    ${UPNP_CORE_BINARY_DIR}/lib/libupnplib.a
+    #)
 
     # On MS Windows: test_upnpdebug_nomock.cpp(17,77): error C2440: 'type cast':
     # cannot convert from 'std ::filesystem::path' to 'std::string'
     add_executable(test_upnpdebug_nomock
-        ${PROJECT_SOURCE_DIR}/test_upnpdebug_nomock.cpp
-    )
+        ${PROJECT_SOURCE_DIR}/test_upnpdebug_nomock.cpp)
+    add_test(NAME ctest_upnpdebug_nomock COMMAND test_upnpdebug_nomock)
 
     # On MS Windows: inc\tools.h(17,20): error C2079: 'CIfaddr4::ifaddr' uses
     # undefined struct 'ifaddrs'
     add_executable(test_upnpdebug
         ${PROJECT_SOURCE_DIR}/tools/tools.cpp
-        ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp
-    )
+        ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
+    add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
 endif()
-
-#add_executable(test_upnpapi
-#    ${PROJECT_SOURCE_DIR}/tools/tools.cpp
-#    ${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
-#)
-#target_link_libraries(test_upnpapi
-#    ${UPNP_CORE_BINARY_DIR}/lib/libupnplib.a
-#)
