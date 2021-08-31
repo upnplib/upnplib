@@ -83,7 +83,7 @@ jobs:
         run: cmake -S . -B build ${{matrix.option}}
 
       - if: runner.os != 'Windows'
-        name: Build core upnplib on ${{runner.os}}
+        name: Build core upnplib on ${{matrix.os}}
         run: |
           cmake --build build
           echo "Check if build binary file does NOT contain debug info..."
@@ -93,14 +93,14 @@ jobs:
           echo "Running the small info program 'upnplib'"
           ./upnp/build/upnplib
 
-      - if: (runner.os == 'macOS-latest') && (matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON')
-        name: Check Googletest library builds on ${{runner.os}}
+      - if: (runner.os == 'macOS') && (matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON')
+        name: Check Googletest library builds on ${{ matrix.os }}
         run: |
           ls gtests/googletest/build/
           return 1
 
-      - if: (runner.os == 'ubuntu-latest') && (matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON')
-        name: Check Googletest library builds on ${{runner.os}}
+      - if: (runner.os == 'Linux') && (matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON')
+        name: Check Googletest library builds on ${{ matrix.os }}
         run: |
           echo "Default Release Shared build..."
           ls gtests/googletest/build/lib/libgtest.so
@@ -127,7 +127,7 @@ jobs:
           ls gtests/googletest/build/lib/libgmock_maind.so
 
       - if: runner.os == 'Windows'
-        name: Build core upnplib on ${{runner.os}}
+        name: Build core upnplib on ${{ matrix.os }}
         run: |
           cmake --build build --config Release
           echo "Check if binary Release file is build..."
@@ -141,7 +141,7 @@ jobs:
           #.\upnp\build\Release\upnplib.exe
 
       - if: (runner.os == 'Windows') && (matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON')
-        name: Check Googletest library builds on ${{runner.os}}
+        name: Check Googletest library builds on ${{ matrix.os }}
         run: |
           echo "Default Release Shared build..."
           ls gtests/googletest/build/bin/Release/gtest.dll

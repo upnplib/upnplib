@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-27
+# Redistribution only with this Copyright remark. Last modified: 2021-08-31
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNP_GTESTS VERSION 0008
+project(UPNP_GTESTS VERSION 0009
               DESCRIPTION "Unit Tests using googletest"
               HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -75,10 +75,10 @@ find_library(UPNP_GMOCK_MAIN_LIBRARY gmock_main gmock_maind
              NO_DEFAULT_PATH)
 
 
-enable_testing()
-
 # Create the Unit Tests
 #----------------------
+enable_testing()
+
 include_directories(
     ${UPNP_GOOGLETEST_BINARY_DIR}/_deps/googletest-src/googletest/include
     ${UPNP_GOOGLETEST_BINARY_DIR}/_deps/googletest-src/googlemock/include
@@ -106,21 +106,27 @@ link_libraries(${UPNP_GTEST_LIBRARY}
                # ${UPNP_PTHREADS_STATIC_LIBRARY}
 )
 
+
 add_executable(test_template ${PROJECT_SOURCE_DIR}/test_template.cpp)
+add_executable(test_template_old ${PROJECT_SOURCE_DIR}/test_template.cpp)
+target_compile_definitions(test_template_old PRIVATE OLD_TEST)
 add_test(NAME ctest_template COMMAND test_template)
+add_test(NAME ctest_template_old COMMAND test_template_old)
+
 
 add_executable(test_threadutil ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
+add_executable(test_threadutil_old ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
+target_compile_definitions(test_threadutil_old PRIVATE OLD_TEST)
 add_test(NAME ctest_threadutil COMMAND test_threadutil)
-#target_compile_definitions(test_threadutil
-#        PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
-#)
+add_test(NAME ctest_threadutil_old COMMAND test_threadutil_old)
+
 
 if(NOT WIN32)
     # TODO: Make tests running on MS Windows
     # Not usable on MS Windows at time because <ifaddrs.h> isn't available
     # there. We need it for struct ifaddrs and functions getifaddrs(),
     # freeifaddrs().
-    add_executable(test_upnpapi
+    set(UPNP_UPNPAPI_SOURCE_FILES
 	${CMAKE_SOURCE_DIR}/ixml/src/attr.c
 	${CMAKE_SOURCE_DIR}/ixml/src/document.c
 	${CMAKE_SOURCE_DIR}/ixml/src/element.c
@@ -153,28 +159,37 @@ if(NOT WIN32)
 	# ${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp
 
 	${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
-	${PROJECT_SOURCE_DIR}/tools/tools.cpp)
+	${PROJECT_SOURCE_DIR}/tools/tools.cpp
+    )
+    add_executable(test_upnpapi ${UPNP_UPNPAPI_SOURCE_FILES})
+    add_executable(test_upnpapi_old ${UPNP_UPNPAPI_SOURCE_FILES})
+    target_compile_definitions(test_upnpapi_old PRIVATE OLD_TEST)
     add_test(NAME ctest_upnpapi COMMAND test_upnpapi)
+    add_test(NAME ctest_upnpapi_old COMMAND test_upnpapi_old)
 
     # Example link with upnplib library instead with sources
-    #add_executable(test_upnpapi
-    #    ${PROJECT_SOURCE_DIR}/tools/tools.cpp
-    #    ${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
-    #)
-    #target_link_libraries(test_upnpapi
-    #    ${UPNP_CORE_BINARY_DIR}/lib/libupnplib.a
-    #)
+#    add_executable(test_upnpapi
+#        ${PROJECT_SOURCE_DIR}/tools/tools.cpp
+#        ${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
+#    )
+#    target_link_libraries(test_upnpapi
+#        ${UPNP_CORE_BINARY_DIR}/lib/libupnplib.a
+#    )
+
 
     # On MS Windows: test_upnpdebug_nomock.cpp(17,77): error C2440: 'type cast':
     # cannot convert from 'std ::filesystem::path' to 'std::string'
-    add_executable(test_upnpdebug_nomock
+    add_executable(test_upnpdebug_nomock_old
         ${PROJECT_SOURCE_DIR}/test_upnpdebug_nomock.cpp)
-    add_test(NAME ctest_upnpdebug_nomock COMMAND test_upnpdebug_nomock)
+    target_compile_definitions(test_upnpdebug_nomock_old PRIVATE OLD_TEST)
+    add_test(NAME ctest_upnpdebug_nomock_old COMMAND test_upnpdebug_nomock_old)
+
 
     # On MS Windows: inc\tools.h(17,20): error C2079: 'CIfaddr4::ifaddr' uses
     # undefined struct 'ifaddrs'
-    add_executable(test_upnpdebug
+    add_executable(test_upnpdebug_old
         ${PROJECT_SOURCE_DIR}/tools/tools.cpp
         ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
-    add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
+    target_compile_definitions(test_upnpdebug_old PRIVATE OLD_TEST)
+    add_test(NAME ctest_upnpdebug_old COMMAND test_upnpdebug_old)
 endif()

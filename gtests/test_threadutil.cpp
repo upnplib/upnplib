@@ -11,7 +11,7 @@
 #include "FreeList.cpp"
 #include "LinkedList.cpp"
 #include "ThreadPool.cpp"
-#include "TimerThread.cpp"
+//#include "TimerThread.cpp"
 
 // testsuite with fixtures
 //------------------------
@@ -24,14 +24,20 @@ class ThreadPoolFixtureTestSuite : public ::testing::Test {
 // testsuites without fixtures
 //----------------------------
 TEST(FreeListTestSuite, initialize_FreeList_with_no_items) {
+    int element = 123;
     FreeList free_list = {};
 
     EXPECT_EQ(FreeListInit(nullptr, 0, 0), EINVAL);
     EXPECT_EQ(FreeListInit(&free_list, 0, 0), 0);
-    // TODO! Should return nullptr as failure because of 0 items possible
+    EXPECT_EQ(FreeListInit(&free_list, sizeof(element), 0), 0);
+#ifdef OLD_TEST
+    std::cout << "  BUG! Allocate item on FreeList with 0 elements "
+              << "should return a nullptr.\n";
     EXPECT_NE(FreeListAlloc(&free_list), nullptr);
-    // EXPECT_EQ(FreeListAlloc(&free_list), nullptr);
-
+#else
+    EXPECT_EQ(FreeListAlloc(&free_list), nullptr)
+    << "# Allocate item on FreeList with 0 elements should return a nullptr.";
+#endif
     EXPECT_EQ(FreeListDestroy(nullptr), EINVAL);
     EXPECT_EQ(FreeListDestroy(&free_list), 0);
 }
@@ -40,24 +46,24 @@ TEST(FreeListTestSuite, allocate_item_in_FreeList) {
     int element = 999;
     FreeList free_list = {};
 
-    // maxFreeListLength is 2
-    EXPECT_EQ(FreeListInit(&free_list, sizeof(element), 3), 0);
-    // allocate item
+    // maxFreeListLength is for 1 element
+    EXPECT_EQ(FreeListInit(&free_list, sizeof(element), 1), 0);
+    // allocate 1 item
     EXPECT_NE(FreeListAlloc(&free_list), nullptr);
+#ifdef OLD_TEST
+    std::cout << "  BUG! Exeeding maxFreeListLength should return a nullptr.\n";
     EXPECT_NE(FreeListAlloc(&free_list), nullptr);
-    EXPECT_NE(FreeListAlloc(&free_list), nullptr);
-    // Exeeding maxFreeListLength should return nullptr?
-    // EXPECT_EQ(FreeListAlloc(&free_list), nullptr);
-    // EXPECT_NE(FreeListAlloc(&free_list), nullptr);
-
-    EXPECT_EQ(FreeListFree(&free_list, &element), 0);
-    EXPECT_EQ(FreeListFree(&free_list, &element), 0);
-    // TODO! Check why the test abort with 'munmap_chunk(): invalid pointer'
-    // when freeing same amount of elements as allocated
+    // Cannot free the allocated item! Seems to be a problem with boundaries.
+    std::cout << "  BUG! Cannot free same amount of elements as allocated.\n";
     // EXPECT_EQ(FreeListFree(&free_list, &element), 0);
-
+#else
+    EXPECT_EQ(FreeListAlloc(&free_list), nullptr)
+    << "# Exeeding maxFreeListLength should return a nullptr.";
+    FAIL() << "# Cannot free same amount of elements as allocated.";
+    EXPECT_EQ(FreeListFree(&free_list, &element), 0);
+#endif
     // Destroy aborted test after free list with 'free(): invalid pointer'
-    // EXPECT_EQ(FreeListDestroy(&free_list), 0);
+    EXPECT_EQ(FreeListDestroy(&free_list), 0);
 }
 
 TEST(LinkedListTestSuite, process_nodes_add_delete_point_to) {
@@ -121,8 +127,14 @@ TEST(LinkedListTestSuite, process_nodes_add_delete_point_to) {
 }
 
 TEST(ThreadPoolTestSuite, initialize_threadpool) {
-    GTEST_SKIP() << "This test produces random segfault\n";
-
+#ifdef OLD_TEST
+    std::cout << "  BUG! This test produces random segfault.\n";
+#else
+    FAIL() << "# This test produces random segfault.";
+    // Test with: ./build/test_threadutil \
+    // --gtest_filter=ThreadPoolTestSuite.initialize_threadpool \
+    // --gtest_repeat=100
+#endif
     ThreadPool tp = {};
 
     // process unit
@@ -130,8 +142,11 @@ TEST(ThreadPoolTestSuite, initialize_threadpool) {
     EXPECT_EQ(ThreadPoolInit(&tp, nullptr), 0);
 }
 
-TEST(ThreadPoolTestSuite, add_persistent_job_to_threadpool_bug) {
-    GTEST_SKIP() << "Unit hang, does not finish with empty job structure";
+TEST(ThreadPoolTestSuite, add_persistent_job_to_threadpool_with_uninitialized_job) {
+#ifdef OLD_TEST
+    GTEST_SKIP() << "  BUG! Unit does not finish with empty job structure.";
+#else
+    FAIL() << "# Unit does not finish with empty job structure.";
 
     ThreadPool tp = {};
     ThreadPoolJob job = {};
@@ -139,6 +154,29 @@ TEST(ThreadPoolTestSuite, add_persistent_job_to_threadpool_bug) {
 
     EXPECT_EQ(ThreadPoolAddPersistent(&tp, &job, nullptr), EINVAL);
     EXPECT_EQ(ThreadPoolAddPersistent(&tp, &job, &jobId), EINVAL);
+#endif
+}
+
+
+void func(void*) {}
+
+TEST(ThreadPoolTestSuite, add_persistent_job_to_threadpool_with_initialized_job) {
+    ThreadPool tp = {};
+    ThreadPoolJob job = {};
+    int jobId = 0;
+    void* arg;
+
+    // Initialize a job
+    EXPECT_EQ(TPJobInit(&job, &func, &arg), 0);
+
+#ifdef OLD_TEST
+    GTEST_SKIP() << "  BUG! Add persistent job does not finish.";
+#else
+    FAIL() << "# Add persistent job does not finish.";
+    // process unit
+    EXPECT_EQ(ThreadPoolAddPersistent(&tp, &job, &jobId), 0);
+    EXPECT_EQ(jobId, 0);
+#endif
 }
 
 TEST(ThreadPoolTestSuite, add_persistent_job_to_empty_threadpool) {
@@ -157,8 +195,14 @@ TEST(ThreadPoolTestSuite, add_persistent_job_to_empty_threadpool) {
 }
 
 TEST(ThreadPoolTestSuite, get_current_attributes_of_threadpool) {
-    GTEST_SKIP() << "This test produces random segfault\n";
-
+#ifdef OLD_TEST
+    std::cout << "  BUG! This test produces random segfault.\n";
+#else
+    FAIL() << "# This test produces random segfault.";
+    // Test with: ./build/test_threadutil \
+    // --gtest_filter=ThreadPoolTestSuite.get_current_attributes_of_threadpool \
+    // --gtest_repeat=100
+#endif
     ThreadPool tp = {};
     ThreadPoolAttr attr = {};
 
@@ -181,8 +225,14 @@ TEST(ThreadPoolTestSuite, get_current_attributes_of_threadpool) {
 }
 
 TEST(ThreadPoolTestSuite, set_threadpool_attributes) {
-    GTEST_SKIP() << "This test produces random segfault\n";
-
+#ifdef OLD_TEST
+    std::cout << "  BUG! This test produces random segfault.\n";
+#else
+    FAIL() << "# This test produces random segfault.";
+    // Test with: ./build/test_threadutil \
+    // --gtest_filter=ThreadPoolTestSuite.set_threadpool_attributes \
+    // --gtest_repeat=100
+#endif
     ThreadPool tp = {};
     ThreadPoolAttr attr = {};
 
@@ -195,6 +245,7 @@ TEST(ThreadPoolTestSuite, add_job_to_threadpool) {
     ThreadPool tp = {};
     ThreadPoolJob job = {};
     int jobId = 0;
+    void* arg;
 
     EXPECT_EQ(ThreadPoolAdd(nullptr, nullptr, nullptr), EINVAL);
     EXPECT_EQ(ThreadPoolAdd(nullptr, nullptr, &jobId), EINVAL);
@@ -205,15 +256,19 @@ TEST(ThreadPoolTestSuite, add_job_to_threadpool) {
     EXPECT_EQ(ThreadPoolAdd(&tp, &job, nullptr), EOUTOFMEM);
     EXPECT_EQ(ThreadPoolAdd(&tp, &job, &jobId), EOUTOFMEM);
 
-    GTEST_SKIP() << "Threadpool job must be initialized\n";
-
-    // EXPECT_EQ(TPJobInit(&job, func, &arg), 0);
-    EXPECT_EQ(ThreadPoolAdd(&tp, &job, &jobId), 0);
+    EXPECT_EQ(TPJobInit(&job, &func, &arg), 0);
+    EXPECT_EQ(ThreadPoolAdd(&tp, &job, &jobId), EOUTOFMEM);
 }
 
 TEST(ThreadPoolTestSuite, remove_job_from_threadpool) {
-    GTEST_SKIP() << "This test produces random segfault\n";
-
+#ifdef OLD_TEST
+    std::cout << "  BUG! This test produces random segfault.\n";
+#else
+    FAIL() << "# This test produces random segfault.";
+    // Test with: ./build/test_threadutil \
+    // --gtest_filter=ThreadPoolTestSuite.remove_job_from_threadpool \
+    // --gtest_repeat=1000
+#endif
     ThreadPool tp = {};
     int jobId = 0;
     ThreadPoolJob removedJob = {};
@@ -226,11 +281,10 @@ TEST(ThreadPoolTestSuite, remove_job_from_threadpool) {
 
     EXPECT_EQ(ThreadPoolRemove(&tp, 0, nullptr), EOUTOFMEM);
     EXPECT_EQ(ThreadPoolRemove(&tp, 0, &removedJob), EOUTOFMEM);
-
-    GTEST_SKIP()
-        << "Threadpool job must be initialized, segfault should be fixed\n";
-
+#ifndef OLD_TEST
+    FAIL() << "# Threadpool remove job segfaults if no job is initialized.";
     EXPECT_EQ(ThreadPoolRemove(&tp, 0, &removedJob), 0);
+#endif
 }
 
 TEST(ThreadPoolTestSuite, shutdown_threadpool) {
@@ -239,20 +293,6 @@ TEST(ThreadPoolTestSuite, shutdown_threadpool) {
     // process unit
     EXPECT_EQ(ThreadPoolShutdown(nullptr), EINVAL);
     EXPECT_EQ(ThreadPoolShutdown(&tp), 0);
-}
-
-TEST(ThreadPoolTestSuite, add_persistent_job_to_threadpool) {
-    GTEST_SKIP() << "Unknown how to initialize a threadpool job";
-
-    ThreadPool tp = {};
-    ThreadPoolJob job = {};
-    int jobId = 0;
-
-    // TPJobInit(&job, func, arg);
-
-    // process unit
-    EXPECT_EQ(ThreadPoolAddPersistent(&tp, &job, &jobId), 0);
-    EXPECT_EQ(jobId, 0);
 }
 
 TEST(ThreadPoolTestSuite, set_job_priority) {
@@ -299,13 +339,19 @@ TEST(ThreadPoolTestSuite, set_maximal_threads) {
     EXPECT_EQ(TPAttrSetMaxThreads(&attr, 1), 0);
     EXPECT_EQ(attr.minThreads, 0);
     EXPECT_EQ(attr.maxThreads, 1);
-
-    GTEST_SKIP()
-        << "It should not be possible to set maxThreads < 0 or < minThreads";
-
-    EXPECT_EQ(TPAttrSetMaxThreads(&attr, -1), EINVAL);
+#ifdef OLD_TEST
+    std::cout << "  BUG! It should not be possible to set maxThreads < 0"
+             << " or < minThreads.\n";
+    EXPECT_EQ(TPAttrSetMaxThreads(&attr, -1), 0);
     attr.minThreads = 2;
-    EXPECT_EQ(TPAttrSetMaxThreads(&attr, 1), EINVAL);
+    EXPECT_EQ(TPAttrSetMaxThreads(&attr, 1), 0);
+#else
+    EXPECT_EQ(TPAttrSetMaxThreads(&attr, -1), EINVAL)
+        << "# It should not be possible to set maxThreads < 0.";
+    attr.minThreads = 2;
+    EXPECT_EQ(TPAttrSetMaxThreads(&attr, 1), EINVAL)
+        << "# It should not be possible to set maxThreads < minThreads.";
+#endif
     EXPECT_EQ(attr.minThreads, 2);
     EXPECT_EQ(attr.maxThreads, 1);
 }
@@ -322,13 +368,20 @@ TEST(ThreadPoolTestSuite, set_minimal_threads) {
     EXPECT_EQ(TPAttrSetMinThreads(&attr, 1), 0);
     EXPECT_EQ(attr.minThreads, 1);
     EXPECT_EQ(attr.maxThreads, 2);
-
-    GTEST_SKIP()
-        << "It should not be possible to set minThreads < 0 or > maxThreads";
-
-    EXPECT_EQ(TPAttrSetMinThreads(&attr, -1), EINVAL);
-    EXPECT_EQ(TPAttrSetMinThreads(&attr, 3), EINVAL);
-    EXPECT_EQ(attr.minThreads, 1);
+#ifdef OLD_TEST
+    std::cout << "  BUG! It should not be possible to set minThreads < 0"
+              << " or > maxThreads.\n";
+    EXPECT_EQ(TPAttrSetMinThreads(&attr, -1), 0);
+    EXPECT_EQ(TPAttrSetMinThreads(&attr, 3), 0);
+    EXPECT_EQ(attr.minThreads, 3);
+#else
+    EXPECT_EQ(TPAttrSetMinThreads(&attr, -1), EINVAL)
+        << "# It should not be possible to set minThreads < 0.";
+    EXPECT_EQ(TPAttrSetMinThreads(&attr, 3), EINVAL)
+        << "# It should not be possible to set minThreads > maxThreads.";
+    EXPECT_EQ(attr.minThreads, 1)
+        << "# Wrong settings should not modify old minThreads value.";
+#endif
     EXPECT_EQ(attr.maxThreads, 2);
 }
 
@@ -338,22 +391,34 @@ TEST(ThreadPoolTestSuite, set_stack_size) {
     EXPECT_EQ(TPAttrSetStackSize(nullptr, 0), EINVAL);
     EXPECT_EQ(TPAttrSetStackSize(&attr, 0), 0);
     EXPECT_EQ(TPAttrSetStackSize(&attr, 1), 0);
-
-    GTEST_SKIP() << "It should not be possible to set StackSize < 0";
-
-    EXPECT_EQ(TPAttrSetStackSize(&attr, -1), EINVAL);
+#ifdef OLD_TEST
+    std::cout << "  BUG! It should not be possible to set StackSize < 0.\n";
+    EXPECT_EQ(TPAttrSetStackSize(&attr, -1), 0);
+    EXPECT_EQ(attr.stackSize, -1);
+#else
+    EXPECT_EQ(TPAttrSetStackSize(&attr, -1), EINVAL)
+        << "# It should not be possible to set StackSize < 0.";
+    EXPECT_EQ(attr.stackSize, 1)
+        << "# Wrong settings should not modify old stackSize value.";
+#endif
 }
 
-TEST(ThreadPoolTestSuite, set_idle_time) {
+TEST(ThreadPoolTestSuite, set_max_idle_time) {
     ThreadPoolAttr attr = {};
 
     EXPECT_EQ(TPAttrSetIdleTime(nullptr, 0), EINVAL);
     EXPECT_EQ(TPAttrSetIdleTime(&attr, 0), 0);
     EXPECT_EQ(TPAttrSetIdleTime(&attr, 1), 0);
-
-    GTEST_SKIP() << "It should not be possible to set IdleTime < 0";
-
-    EXPECT_EQ(TPAttrSetStackSize(&attr, -1), EINVAL);
+#ifdef OLD_TEST
+    std::cout << "  BUG! It should not be possible to set IdleTime < 0.\n";
+    EXPECT_EQ(TPAttrSetIdleTime(&attr, -1), 0);
+    EXPECT_EQ(attr.maxIdleTime, -1);
+#else
+    EXPECT_EQ(TPAttrSetIdleTime(&attr, -1), EINVAL)
+        << "# It should not be possible to set IdleTime < 0.";
+    EXPECT_EQ(attr.maxIdleTime, 1)
+        << "# Wrong settings should not modify old maxIdleTime value.";
+#endif
 }
 
 TEST(ThreadPoolTestSuite, set_jobs_per_thread) {
@@ -362,10 +427,16 @@ TEST(ThreadPoolTestSuite, set_jobs_per_thread) {
     EXPECT_EQ(TPAttrSetJobsPerThread(nullptr, 0), EINVAL);
     EXPECT_EQ(TPAttrSetJobsPerThread(&attr, 0), 0);
     EXPECT_EQ(TPAttrSetJobsPerThread(&attr, 1), 0);
-
-    GTEST_SKIP() << "It should not be possible to set JobsPerThread < 0";
-
-    EXPECT_EQ(TPAttrSetStackSize(&attr, -1), EINVAL);
+#ifdef OLD_TEST
+    std::cout << "  BUG! It should not be possible to set JobsPerThread < 0.\n";
+    EXPECT_EQ(TPAttrSetJobsPerThread(&attr, -1), 0);
+    EXPECT_EQ(attr.jobsPerThread, -1);
+#else
+    EXPECT_EQ(TPAttrSetJobsPerThread(&attr, -1), EINVAL)
+        << "# It should not be possible to set JobsPerThread < 0.";
+    EXPECT_EQ(attr.jobsPerThread, 1)
+        << "# Wrong settings should not modify old JobsPerThread value.";
+#endif
 }
 
 TEST(ThreadPoolTestSuite, set_starvation_time) {
@@ -374,17 +445,41 @@ TEST(ThreadPoolTestSuite, set_starvation_time) {
     EXPECT_EQ(TPAttrSetStarvationTime(nullptr, 0), EINVAL);
     EXPECT_EQ(TPAttrSetStarvationTime(&attr, 0), 0);
     EXPECT_EQ(TPAttrSetStarvationTime(&attr, 1), 0);
-
-    GTEST_SKIP() << "It should not be possible to set StarvationTime < 0";
-
-    EXPECT_EQ(TPAttrSetStackSize(&attr, -1), EINVAL);
+#ifdef OLD_TEST
+    std::cout << "  BUG! It should not be possible to set StarvationTime < 0.\n";
+    EXPECT_EQ(TPAttrSetStarvationTime(&attr, -1), 0);
+    EXPECT_EQ(attr.starvationTime, -1);
+#else
+    EXPECT_EQ(TPAttrSetStarvationTime(&attr, -1), EINVAL)
+        << "# It should not be possible to set StarvationTime < 0.";
+    EXPECT_EQ(attr.starvationTime, 1)
+        << "# Wrong settings should not modify old starvationTime value.";
+#endif
 }
 
 TEST(ThreadPoolTestSuite, set_scheduling_policy) {
     ThreadPoolAttr attr = {};
 
+    // std::cout << "SCHED_OTHER: " << SCHED_OTHER
+    //     << ", SCHED_IDLE: " << SCHED_IDLE
+    //     << ", SCHED_BATCH: " << SCHED_BATCH << ", SCHED_FIFO: " << SCHED_FIFO
+    //     << ", SCHED_RR: " << SCHED_RR
+    //     << ", SCHED_DEADLINE; " << SCHED_DEADLINE << "\n";
+
     EXPECT_EQ(TPAttrSetSchedPolicy(nullptr, 0), EINVAL);
     EXPECT_EQ(TPAttrSetSchedPolicy(&attr, SCHED_OTHER), 0);
+#ifdef OLD_TEST
+    std::cout << "  BUG! Only SCHED_OTHER, SCHED_IDLE, SCHED_BATCH, SCHED_FIFO,"
+              << " SCHED_RR or SCHED_DEADLINE should be valid.\n";
+    EXPECT_EQ(TPAttrSetSchedPolicy(&attr, 0x5a5a), 0);
+    EXPECT_EQ(attr.schedPolicy, 0x5a5a);
+#else
+    EXPECT_EQ(TPAttrSetSchedPolicy(&attr, 0x5a5a), EINVAL)
+        << "# Only SCHED_OTHER, SCHED_IDLE, SCHED_BATCH, SCHED_FIFO,"
+        << " SCHED_RR or SCHED_DEADLINE should be valid.";
+    EXPECT_EQ(attr.schedPolicy, SCHED_OTHER)
+        << "# Wrong settings should not modify old schedPolicy value.";
+#endif
 }
 
 TEST(ThreadPoolTestSuite, set_max_jobs_qeued_totally) {
@@ -393,10 +488,16 @@ TEST(ThreadPoolTestSuite, set_max_jobs_qeued_totally) {
     EXPECT_EQ(TPAttrSetMaxJobsTotal(nullptr, 0), EINVAL);
     EXPECT_EQ(TPAttrSetMaxJobsTotal(&attr, 0), 0);
     EXPECT_EQ(TPAttrSetMaxJobsTotal(&attr, 1), 0);
-
-    GTEST_SKIP() << "It should not be possible to set MaxJobsTotal < 0";
-
-    EXPECT_EQ(TPAttrSetStackSize(&attr, -1), EINVAL);
+#ifdef OLD_TEST
+    std::cout << "  BUG! It should not be possible to set MaxJobsTotal < 0.\n";
+    EXPECT_EQ(TPAttrSetMaxJobsTotal(&attr, -1), 0);
+    EXPECT_EQ(attr.maxJobsTotal, -1);
+#else
+    EXPECT_EQ(TPAttrSetMaxJobsTotal(&attr, -1), EINVAL)
+        << "# It should not be possible to set MaxJobsTotal < 0.";
+    EXPECT_EQ(attr.maxJobsTotal, 1)
+        << "# Wrong settings should not modify old maxJobsTotal value.";
+#endif
 }
 
 TEST(ThreadPoolTestSuite, DiffMillis) {

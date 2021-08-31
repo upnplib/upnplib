@@ -1,5 +1,7 @@
+// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2021-08-31
+
 // This test should always run, reporting no failure
-// Copyright (c) 2021 Ingo Höft, last modified: 2021-04-06
 
 #include "gtest/gtest.h"
 //#include "gmock/gmock.h"
@@ -29,7 +31,6 @@ char* strerror(int errnum) {
     return ptrMock_strerror->strerror(errnum);
 }
 */
-
 // testsuite with fixtures
 //------------------------
 class EmptyFixtureTestSuite : public ::testing::Test {
@@ -96,5 +97,9 @@ TEST(EmptyTestSuite, empty_gtest) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    int rc = RUN_ALL_TESTS();
+#ifdef TEST_OLD
+    std::cout << "Compiling tests compatible for OLD PUPNP library\n";
+#endif
+    return rc;
 }

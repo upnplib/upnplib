@@ -918,8 +918,8 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
 /* !defined(UPNP_USE_MSVCPP) should probably also have pthreads version check -
  * but it's not clear if that is possible */
 /* NK: Added for satisfying the gcc compiler */
-EXPORT_SPEC int pthread_mutexattr_setkind_np(
-        pthread_mutexattr_t *attr, int kind);
+// EXPORT_SPEC int pthread_mutexattr_setkind_np(
+//         pthread_mutexattr_t *attr, int kind);
 #endif
 
 #ifdef __cplusplus

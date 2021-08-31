@@ -51,18 +51,18 @@ EXPORT_SPEC void UpnpString_delete(
  *
  * \return A pointer to a new allocated copy of the original object.
  */
-EXPORT_SPEC UpnpString *UpnpString_dup(
-        /*! [in] The \em \b this pointer. */
-        const UpnpString *p);
+//EXPORT_SPEC UpnpString *UpnpString_dup(
+//        /*! [in] The \em \b this pointer. */
+//        const UpnpString *p);
 
 /*!
  * \brief Assignment operator.
  */
-EXPORT_SPEC void UpnpString_assign(
-        /*! [in] The \em \b this pointer. */
-        UpnpString *p,
-        /*! [in] The \em \b that pointer. */
-        const UpnpString *q);
+//EXPORT_SPEC void UpnpString_assign(
+//        /*! [in] The \em \b this pointer. */
+//        UpnpString *p,
+//        /*! [in] The \em \b that pointer. */
+//        const UpnpString *q);
 
 /*!
  * \brief Returns the length of the string.
@@ -77,11 +77,11 @@ EXPORT_SPEC size_t UpnpString_get_Length(
  * \brief Truncates the string to the specified lenght, or does nothing
  * if the current lenght is less than or equal to the requested length.
  * */
-EXPORT_SPEC void UpnpString_set_Length(
-        /*! [in] The \em \b this pointer. */
-        UpnpString *p,
-        /*! [in] The requested length. */
-        size_t n);
+//EXPORT_SPEC void UpnpString_set_Length(
+//        /*! [in] The \em \b this pointer. */
+//        UpnpString *p,
+//        /*! [in] The requested length. */
+//        size_t n);
 
 /*!
  * \brief Returns the pointer to char.
@@ -124,22 +124,22 @@ EXPORT_SPEC void UpnpString_clear(
  *
  * \return The result of strcmp().
  */
-EXPORT_SPEC int UpnpString_cmp(
-        /*! [in] The \em \b the first string. */
-        UpnpString *p,
-        /*! [in] The \em \b the second string. */
-        UpnpString *q);
+//EXPORT_SPEC int UpnpString_cmp(
+//        /*! [in] The \em \b the first string. */
+//        UpnpString *p,
+//        /*! [in] The \em \b the second string. */
+//        UpnpString *q);
 
 /*!
  * \brief Compares two strings for equality. Case does not matter.
  *
  * \return The result of strcasecmp().
  */
-EXPORT_SPEC int UpnpString_casecmp(
-        /*! [in] The \em \b the first string. */
-        UpnpString *p,
-        /*! [in] The \em \b the second string. */
-        UpnpString *q);
+//EXPORT_SPEC int UpnpString_casecmp(
+//        /*! [in] The \em \b the first string. */
+//        UpnpString *p,
+//        /*! [in] The \em \b the second string. */
+//        UpnpString *q);
 
 #ifdef __cplusplus
 }

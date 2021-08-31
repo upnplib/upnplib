@@ -1,8 +1,28 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-08-31
-
+// Redistribution only with this Copyright remark. Last modified: 2021-08-29
+//
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
+// Tested on old pupnp library with following options:
+//
+// option (BUILD_TESTING "Run Tests after compile" ON)
+// option (client "control point code (client)" ON)
+// option (device "device specific code (implies --disable-webserver if disabled)" ON)
+// cmake_dependent_option (webserver "integrated web server" ON NOT device OFF)
+// option (ssdp "SSDP part" ON)
+// option (optssdp "optional SSDP headers support" ON)
+// option (soap "SOAP part" ON)
+// option (gena "GENA part" ON)
+// option (tools "helper APIs in upnptools.h" ON)
+// option (ipv6 "ipv6 support" ON)
+// option (unspecified_server "unspecified SERVER header" OFF)
+// option (open_ssl "open-ssl support" OFF)
+// option (blocking_tcp_connections "blocking TCP connections" ON)
+// option (scriptsupport "script support for IXML document tree, see ixml.h" ON)
+// option (postwrite "write to the filesystem on otherwise unhandled POST requests" OFF)
+// option (reuseaddr "bind the miniserver socket with reuseaddr to allow clean restarts" OFF)
+// option (samples "compilation of upnp/sample/ code" ON)
+// cmake_dependent_option (DOWNLOAD_AND_BUILD_DEPS "Get all missing stuff" OFF ${Git_FOUND} OFF)
 
 #include "tools.h"
 #include "gmock/gmock.h"
@@ -255,31 +275,18 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     EXPECT_CALL(mockIf_nametoindexObj, if_nametoindex(_)).Times(0);
 
     // call the unit
-    // "ATTENTION! There is a wrong upper case 'O', not zero in 'ethO'";
     EXPECT_STREQ(UpnpGetErrorMessage(UpnpGetIfInfo("ethO")),
                  "UPNP_E_INVALID_INTERFACE");
-#ifdef OLD_TEST
-    std::cout << "  BUG! Interface name (e.g. ethO with upper case O), ip "
-            << "address and netmask should not be modified on wrong entries.\n";
+
     // gIF_NAME mocked with getifaddrs above
-    // ATTENTION! There is a wrong upper case 'O', not zero in "ethO";
+    // TODO! interface name and ip address should not be modified
     EXPECT_STREQ(gIF_NAME, "ethO");
-    // gIF_IPV4 with "192.68.77.48/22" mocked by getifaddrs above
-    // but get ip address from previous successful call
-    EXPECT_STREQ(gIF_IPV4, "192.168.99.3");
-    // get netmask from previous successful call
-    EXPECT_STREQ(gIF_IPV4_NETMASK, "255.224.0.0");
-#else
-    // gIF_NAME mocked with getifaddrs above
-    EXPECT_STREQ(gIF_NAME, "")
-        << "ATTENTION! There is a wrong upper case 'O', not zero in \"ethO\".\n"
-        << "# Interface name should not be modified on wrong entries.";
+    // EXPECT_STREQ(gIF_NAME, "")
+    //    << "ATTENTION! There is a wrong upper case 'O', not zero in \"ethO\"";
     // gIF_IPV4 mocked with getifaddrs above
-    EXPECT_STREQ(gIF_IPV4, "")
-        << "# Ip address should not be modified on wrong entries.";
-    EXPECT_STREQ(gIF_IPV4_NETMASK, "")
-        << "# Netmask should not be modified on wrong entries.";
-#endif
+    EXPECT_STREQ(gIF_IPV4, "192.168.99.3");
+    // EXPECT_STREQ(gIF_IPV4, "");
+    EXPECT_STREQ(gIF_IPV4_NETMASK, "");
     EXPECT_STREQ(gIF_IPV6, "");
     EXPECT_EQ(gIF_IPV6_PREFIX_LENGTH, (unsigned)0);
     EXPECT_STREQ(gIF_IPV6_ULA_GUA, "");
@@ -308,13 +315,13 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
     EXPECT_CALL(mockGetifaddrsObj, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
     EXPECT_CALL(mockFreeifaddrsObj, freeifaddrs(ifaddr)).Times(1);
-    EXPECT_CALL(mockBindObj, bind(_, _, _)).Times(0);
+    EXPECT_CALL(mockBindObj, bind(_, _, _)).Times(2);
     EXPECT_CALL(mockIf_nametoindexObj, if_nametoindex(_)).Times(1);
-    EXPECT_CALL(mockListenObj, listen(_, _)).Times(0);
-    EXPECT_CALL(mockSelectObj, select(_, _, _, _, _)).Times(0);
+    EXPECT_CALL(mockListenObj, listen(_, _)).Times(1);
+    EXPECT_CALL(mockSelectObj, select(_, _, _, _, _)).Times(3);
     //        .Times(AtLeast(1));
-    EXPECT_CALL(mockAcceptObj, accept(_, _, _)).Times(0);
-    EXPECT_CALL(mockSetsockoptObj, setsockopt(_, _, _, _, _)).Times(0);
+    EXPECT_CALL(mockAcceptObj, accept(_, _, _)).Times(1);
+    EXPECT_CALL(mockSetsockoptObj, setsockopt(_, _, _, _, _)).Times(1);
 
     // Initialize capturing of the stderr output
     CCaptureFd captFdObj;
