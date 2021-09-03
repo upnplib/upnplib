@@ -143,10 +143,14 @@ TEST_F(UpnpDebugTestSuite, log_stderr_and_using_file) {
     fp = (FILE*)0x123456abcde0;
     fileName = (char*)"gtest.log";
 
+#ifdef OLD_TEST
+    std::cout << "  BUG! fopen should not be called.\n";
     EXPECT_CALL(mock_fopen, fopen((const char*)"gtest.log", "a"))
-        // TODO! fopen should not be called
         .Times(1);
-    //.Times(0);
+#else
+    EXPECT_CALL(mock_fopen, fopen((const char*)"gtest.log", "a"))
+        .Times(0);
+#endif
     EXPECT_CALL(mock_strerror, strerror(_))
         .Times(1)
         .WillOnce(Return((char*)"mocked error"));
@@ -175,11 +179,16 @@ TEST_F(UpnpDebugTestSuite, log_stderr_but_not_using_file) {
     EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
 
     EXPECT_NE(fp, nullptr);
-    // TODO! fp should be set to stderr
+#ifdef OLD_TEST
+    std::cout << "  BUG! fp should be set to stderr.\n";
     EXPECT_EQ(fp, (FILE*)0x123456abcde0);
     EXPECT_EQ(is_stderr, 0);
-    // EXPECT_NE(fp, (FILE*)0x123456abcde0);
-    // EXPECT_EQ(is_stderr, 1);
+#else
+     EXPECT_NE(fp, (FILE*)0x123456abcde0)
+        << "# fp should be set to stderr.";
+     EXPECT_EQ(is_stderr, 1)
+        << "# fp should be set to stderr.";
+#endif
     EXPECT_EQ(fileName, nullptr);
     EXPECT_EQ(initwascalled, 1);
     EXPECT_EQ(setlogwascalled, 1);

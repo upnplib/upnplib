@@ -93,13 +93,17 @@ TEST(EmptyTestSuite, empty_gtest) {
     // if(github_action) { GTEST_SKIP()
     //    << "  to show this feature";
     //}
+
+#ifdef OLD_TEST
+    // Place tests for old code here
+    std::cout << "# Compiling tests compatible for OLD PUPNP library.\n";
+#else
+    // Place tests for current code here
+    std::cout << "# Compiling tests for curent code base.\n";
+#endif
 }
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    int rc = RUN_ALL_TESTS();
-#ifdef TEST_OLD
-    std::cout << "Compiling tests compatible for OLD PUPNP library\n";
-#endif
-    return rc;
+    return RUN_ALL_TESTS();
 }

@@ -56,7 +56,7 @@ set(UPNP_SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/ixml/src/node.c
     ${CMAKE_SOURCE_DIR}/ixml/src/nodeList.c
 
-    # ${PROJECT_SOURCE_DIR}/src/threadutil/FreeList.cpp
+    ${PROJECT_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${PROJECT_SOURCE_DIR}/src/threadutil/LinkedList.cpp
     ${PROJECT_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
     ${PROJECT_SOURCE_DIR}/src/threadutil/TimerThread.cpp
@@ -74,7 +74,7 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/genlib/util/strintmap.c
 
     ${PROJECT_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
-    ${PROJECT_SOURCE_DIR}/src/api/UpnpString.c
+    ${PROJECT_SOURCE_DIR}/src/api/UpnpString.cpp
     ${PROJECT_SOURCE_DIR}/src/api/upnpapi.cpp
     ${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp
 )

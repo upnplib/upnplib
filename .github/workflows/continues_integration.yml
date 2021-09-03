@@ -83,7 +83,7 @@ jobs:
         run: cmake -S . -B build ${{matrix.option}}
 
       - if: runner.os != 'Windows'
-        name: Build core upnplib on ${{matrix.os}}
+        name: Build core upnplib if not MS Windows
         run: |
           cmake --build build
           echo "Check if build binary file does NOT contain debug info..."
@@ -94,13 +94,13 @@ jobs:
           ./upnp/build/upnplib
 
       - if: (runner.os == 'macOS') && (matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON')
-        name: Check Googletest library builds on ${{ matrix.os }}
+        name: Check Googletest library builds on macOS
         run: |
           ls gtests/googletest/build/
           return 1
 
       - if: (runner.os == 'Linux') && (matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON')
-        name: Check Googletest library builds on ${{ matrix.os }}
+        name: Check Googletest library builds on Linux
         run: |
           echo "Default Release Shared build..."
           ls gtests/googletest/build/lib/libgtest.so
@@ -127,7 +127,7 @@ jobs:
           ls gtests/googletest/build/lib/libgmock_maind.so
 
       - if: runner.os == 'Windows'
-        name: Build core upnplib on ${{ matrix.os }}
+        name: Build core upnplib on MS Windows
         run: |
           cmake --build build --config Release
           echo "Check if binary Release file is build..."
@@ -141,7 +141,7 @@ jobs:
           #.\upnp\build\Release\upnplib.exe
 
       - if: (runner.os == 'Windows') && (matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON')
-        name: Check Googletest library builds on ${{ matrix.os }}
+        name: Check Googletest library builds on MS Windows
         run: |
           echo "Default Release Shared build..."
           ls gtests/googletest/build/bin/Release/gtest.dll

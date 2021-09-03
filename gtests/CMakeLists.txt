@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-08-31
+# Redistribution only with this Copyright remark. Last modified: 2021-09-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNP_GTESTS VERSION 0009
+project(UPNP_GTESTS VERSION 0010
               DESCRIPTION "Unit Tests using googletest"
               HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -107,18 +107,29 @@ link_libraries(${UPNP_GTEST_LIBRARY}
 )
 
 
+# template
 add_executable(test_template ${PROJECT_SOURCE_DIR}/test_template.cpp)
 add_executable(test_template_old ${PROJECT_SOURCE_DIR}/test_template.cpp)
 target_compile_definitions(test_template_old PRIVATE OLD_TEST)
 add_test(NAME ctest_template COMMAND test_template)
 add_test(NAME ctest_template_old COMMAND test_template_old)
 
-
+# threadutil
 add_executable(test_threadutil ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
 add_executable(test_threadutil_old ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
 target_compile_definitions(test_threadutil_old PRIVATE OLD_TEST)
 add_test(NAME ctest_threadutil COMMAND test_threadutil)
 add_test(NAME ctest_threadutil_old COMMAND test_threadutil_old)
+
+# UpnpString
+add_executable(test_UpnpString_old ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
+target_compile_definitions(test_UpnpString_old PRIVATE OLD_TEST)
+add_test(NAME ctest_UpnpString_old COMMAND test_UpnpString_old)
+add_executable(test_UpnpString ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
+add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
+add_executable(test_UpnpString_mock_old ${PROJECT_SOURCE_DIR}/test_UpnpString_mock.cpp)
+target_compile_definitions(test_UpnpString_mock_old PRIVATE OLD_TEST)
+add_test(NAME ctest_UpnpString_mock_old COMMAND test_UpnpString_mock_old)
 
 
 if(NOT WIN32)
@@ -155,7 +166,7 @@ if(NOT WIN32)
 	${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
 
 	${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
-	${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.c
+	${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.cpp
 	# ${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp
 
 	${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
@@ -187,9 +198,13 @@ if(NOT WIN32)
 
     # On MS Windows: inc\tools.h(17,20): error C2079: 'CIfaddr4::ifaddr' uses
     # undefined struct 'ifaddrs'
+    add_executable(test_upnpdebug
+        ${PROJECT_SOURCE_DIR}/tools/tools.cpp
+        ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
     add_executable(test_upnpdebug_old
         ${PROJECT_SOURCE_DIR}/tools/tools.cpp
         ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
     target_compile_definitions(test_upnpdebug_old PRIVATE OLD_TEST)
+    add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
     add_test(NAME ctest_upnpdebug_old COMMAND test_upnpdebug_old)
 endif()
