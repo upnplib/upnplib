@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-09-07
+# Redistribution only with this Copyright remark. Last modified: 2021-09-08
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNP_GTESTS VERSION 0011
+project(UPNP_GTESTS VERSION 0012
               DESCRIPTION "Unit Tests using googletest"
               HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -198,25 +198,24 @@ if(NOT WIN32)
 #    )
 
 
-    # upnpdebug_nomock
-    # On MS Windows: test_upnpdebug_nomock.cpp(17,77): error C2440: 'type cast':
-    # cannot convert from 'std ::filesystem::path' to 'std::string'
-    add_executable(test_upnpdebug_nomock_old
-        ${PROJECT_SOURCE_DIR}/test_upnpdebug_nomock.cpp)
-    target_compile_definitions(test_upnpdebug_nomock_old PRIVATE OLD_TEST)
-    add_test(NAME ctest_upnpdebug_nomock_old COMMAND test_upnpdebug_nomock_old)
-
-
     # upnpdebug
+    # On MS Windows: test_upnpdebug.cpp(17,77): error C2440: 'type cast':
+    # cannot convert from 'std ::filesystem::path' to 'std::string'
+    add_executable(test_upnpdebug_old ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
+    target_compile_definitions(test_upnpdebug_old PRIVATE OLD_TEST)
+    add_test(NAME ctest_upnpdebug_old COMMAND test_upnpdebug_old)
+
+
+    # upnpdebug_mock
     # On MS Windows: inc\tools.h(17,20): error C2079: 'CIfaddr4::ifaddr' uses
     # undefined struct 'ifaddrs'
-    add_executable(test_upnpdebug
+    add_executable(test_upnpdebug_mock
         ${PROJECT_SOURCE_DIR}/tools/tools.cpp
-        ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
-    add_executable(test_upnpdebug_old
+        ${PROJECT_SOURCE_DIR}/test_upnpdebug_mock.cpp)
+    add_test(NAME ctest_upnpdebug_mock COMMAND test_upnpdebug_mock)
+    add_executable(test_upnpdebug_mock_old
         ${PROJECT_SOURCE_DIR}/tools/tools.cpp
-        ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
-    target_compile_definitions(test_upnpdebug_old PRIVATE OLD_TEST)
-    add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
-    add_test(NAME ctest_upnpdebug_old COMMAND test_upnpdebug_old)
+        ${PROJECT_SOURCE_DIR}/test_upnpdebug_mock.cpp)
+    target_compile_definitions(test_upnpdebug_mock_old PRIVATE OLD_TEST)
+    add_test(NAME ctest_upnpdebug_mock_old COMMAND test_upnpdebug_mock_old)
 endif()

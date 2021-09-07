@@ -1,237 +1,98 @@
-// Copyright (c) 2021 Ingo Höft, last modified: 2021-04-21
+// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2021-09-08
 
-#include "tools.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
-#include <stdio.h>
+#include <filesystem>
+#include <fstream>
 
 #include "api/upnpdebug.cpp"
 
-using ::testing::_;
-using ::testing::Return;
-
-// --- mock strerror ----------------------------------
-class CMock_strerror {
-  public:
-    MOCK_METHOD(char*, strerror, (int errnum));
-};
-CMock_strerror* ptrMock_strerror = nullptr;
-char* strerror(int errnum) { return ptrMock_strerror->strerror(errnum); }
-
-// --- mock fopen -------------------------------------
-class CMock_fopen {
-  public:
-    MOCK_METHOD(FILE*, fopen, (const char* pathname, const char* mode));
-};
-CMock_fopen* ptrMock_fopen = nullptr;
-FILE* fopen(const char* pathname, const char* mode) {
-    return ptrMock_fopen->fopen(pathname, mode);
-}
-
-// --- mock fclose ------------------------------------
-class CMock_fclose {
-  public:
-    MOCK_METHOD(int, fclose, (FILE * stream));
-};
-CMock_fclose* ptrMock_fclose = nullptr;
-int fclose(FILE* stream) { return ptrMock_fclose->fclose(stream); }
+using ::testing::MatchesRegex;
 
 // Tests for the debugging and logging module
 //-------------------------------------------
-class UpnpDebugTestSuite : public ::testing::Test {
-  protected:
-    // Instantiate the mock objects.
-    // The global pointer to them are set in the constructor below.
-    CMock_strerror mock_strerror;
-    CMock_fopen mock_fopen;
-    CMock_fclose mock_fclose;
+TEST(UpnpdebugTestSuite, display_file_and_line) {
+    // generate random temporary filename
+    std::srand(std::time(nullptr));
+    std::string fname = (std::string)std::filesystem::temp_directory_path() +
+                        "/gtest" + std::to_string(std::rand());
+    fp = fopen(fname.c_str(), "a");
 
-    UpnpDebugTestSuite() {
-        // set the global pointer to the mock objects
-        ptrMock_strerror = &mock_strerror;
-        ptrMock_fopen = &mock_fopen;
-        ptrMock_fclose = &mock_fclose;
+    // process the unit that will write to the open fp
+    UpnpDisplayFileAndLine(fp, "gtest_filename.dummy", 0, UPNP_ALL, API);
+    fclose(fp);
 
-        // Initialize the global variable
-        g_log_level = UPNP_DEFAULT_LOG_LEVEL;
-        fp = nullptr;
-        is_stderr = 0;
-        setlogwascalled = 0;
-        initwascalled = 0;
-        fileName = nullptr;
-    }
-};
-
-TEST_F(UpnpDebugTestSuite, default_init_log)
-// For the ithread_mutex_t structure look at
-// https://stackoverflow.com/q/23449508/5014688
-{
-    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
-    EXPECT_EQ(initwascalled, 1);
-    EXPECT_EQ(setlogwascalled, 0);
-    EXPECT_EQ(pthread_mutex_destroy(&GlobalDebugMutex), 0);
+    // look if the output is as expected
+    std::ifstream file(fname);
+    std::string str;
+    std::getline(file, str);
+    std::remove(fname.c_str());
+    //"2021-04-21 10:05:38 UPNP-API_-3: Thread:0x7F998124D740
+    //[gtest_filename.dummy:0]: "
+    EXPECT_THAT(
+        str,
+        MatchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2} "
+                     "[0-9]{2}:[0-9]{2}:[0-9]{2} UPNP-API_-3: "
+                     "Thread:0x[0-9A-F]{12} \\[gtest_filename.dummy:0\\]: "));
 }
 
-TEST_F(UpnpDebugTestSuite, set_log_was_called) {
-    setlogwascalled = 1;
-    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
-    EXPECT_EQ(initwascalled, 1);
-    EXPECT_EQ(setlogwascalled, 1);
-    EXPECT_EQ(pthread_mutex_destroy(&GlobalDebugMutex), 0);
-}
-
-TEST_F(UpnpDebugTestSuite, log_not_stderr_but_to_file) {
-    initwascalled = 1;
-    setlogwascalled = 1;
-    fp = (FILE*)0x123456abcde0;
-    fileName = (char*)"gtest.log";
-
-    EXPECT_CALL(mock_fopen, fopen((const char*)"gtest.log", "a"))
-        .Times(1)
-        .WillOnce(Return((FILE*)0x123456abcdef));
-    EXPECT_CALL(mock_fclose, fclose(fp)).Times(1).WillOnce(Return(0));
-
-    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
-    EXPECT_EQ(fp, (FILE*)0x123456abcdef);
-    EXPECT_EQ(initwascalled, 1);
-    EXPECT_EQ(setlogwascalled, 1);
-}
-
-TEST_F(UpnpDebugTestSuite, log_not_stderr_but_opening_file_fails) {
-    initwascalled = 1;
-    setlogwascalled = 1;
-    fp = (FILE*)0x123456abcde0;
-    fileName = (char*)"gtest.log";
-
-    EXPECT_CALL(mock_fopen, fopen((const char*)"gtest.log", "a"))
-        .Times(1)
-        .WillOnce(Return((FILE*)NULL));
-    EXPECT_CALL(mock_strerror, strerror(_))
-        .Times(1)
-        .WillOnce(Return((char*)"mocked error"));
-    EXPECT_CALL(mock_fclose, fclose(fp)).Times(1).WillOnce(Return(0));
-
-    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
-
-    EXPECT_NE(fp, nullptr);
-    EXPECT_NE(fp, (FILE*)0x123456abcde0);
-    EXPECT_EQ(is_stderr, 1);
-    EXPECT_EQ(initwascalled, 1);
-    EXPECT_EQ(setlogwascalled, 1);
-}
-
-TEST_F(UpnpDebugTestSuite, log_stderr_but_not_to_file) {
-    initwascalled = 1;
-    setlogwascalled = 1;
-    is_stderr = 1;
-
-    EXPECT_CALL(mock_fopen, fopen((const char*)nullptr, "a")).Times(0);
-    EXPECT_CALL(mock_fclose, fclose(fp)).Times(0);
-
-    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
-
-    EXPECT_NE(fp, nullptr);
-    EXPECT_EQ(is_stderr, 1);
-    EXPECT_EQ(initwascalled, 1);
-    EXPECT_EQ(setlogwascalled, 1);
-}
-
-TEST_F(UpnpDebugTestSuite, log_stderr_and_using_file) {
-    initwascalled = 1;
-    setlogwascalled = 1;
-    is_stderr = 1;
-    fp = (FILE*)0x123456abcde0;
-    fileName = (char*)"gtest.log";
-
-#ifdef OLD_TEST
-    std::cout << "  BUG! fopen should not be called.\n";
-    EXPECT_CALL(mock_fopen, fopen((const char*)"gtest.log", "a"))
-        .Times(1);
-#else
-    EXPECT_CALL(mock_fopen, fopen((const char*)"gtest.log", "a"))
-        .Times(0);
-#endif
-    EXPECT_CALL(mock_strerror, strerror(_))
-        .Times(1)
-        .WillOnce(Return((char*)"mocked error"));
-    EXPECT_CALL(mock_fclose, fclose(fp)).Times(0);
-
-    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
-
-    EXPECT_NE(fp, nullptr);
-    EXPECT_NE(fp, (FILE*)0x123456abcde0);
-    EXPECT_STREQ(fileName, (char*)"gtest.log");
-    EXPECT_EQ(is_stderr, 1);
-    EXPECT_EQ(initwascalled, 1);
-    EXPECT_EQ(setlogwascalled, 1);
-}
-
-TEST_F(UpnpDebugTestSuite, log_stderr_but_not_using_file) {
-    initwascalled = 1;
-    setlogwascalled = 1;
-    is_stderr = 1;
-    fp = (FILE*)0x123456abcde0;
-    fileName = nullptr;
-
-    EXPECT_CALL(mock_fopen, fopen(nullptr, "a")).Times(0);
-    EXPECT_CALL(mock_fclose, fclose(fp)).Times(0);
-
-    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
-
-    EXPECT_NE(fp, nullptr);
-#ifdef OLD_TEST
-    std::cout << "  BUG! fp should be set to stderr.\n";
-    EXPECT_EQ(fp, (FILE*)0x123456abcde0);
-    EXPECT_EQ(is_stderr, 0);
-#else
-     EXPECT_NE(fp, (FILE*)0x123456abcde0)
-        << "# fp should be set to stderr.";
-     EXPECT_EQ(is_stderr, 1)
-        << "# fp should be set to stderr.";
-#endif
-    EXPECT_EQ(fileName, nullptr);
-    EXPECT_EQ(initwascalled, 1);
-    EXPECT_EQ(setlogwascalled, 1);
-}
-
-TEST_F(UpnpDebugTestSuite, upnp_close_log) {
-    initwascalled = 1;
-    pthread_mutex_init(&GlobalDebugMutex, NULL);
-
-    // process the unit
-    UpnpCloseLog();
-
-    EXPECT_EQ(fp, nullptr);
-    EXPECT_EQ(is_stderr, 0);
-    EXPECT_EQ(initwascalled, 0);
-}
-
-TEST_F(UpnpDebugTestSuite, upnp_close_log_with_open_logfile) {
-    pthread_mutex_init(&GlobalDebugMutex, NULL);
-    initwascalled = 1;
-    fp = (FILE*)0x123456abcdef;
-    is_stderr = 0;
-    EXPECT_CALL(mock_fclose, fclose(fp)).Times(1);
-
-    // process the unit
-    UpnpCloseLog();
-}
-
-TEST_F(UpnpDebugTestSuite, upnp_close_log_stderr_on) {
-    pthread_mutex_init(&GlobalDebugMutex, NULL);
-    initwascalled = 1;
-    fp = (FILE*)0x123456abcdef;
-    is_stderr = 1;
-    EXPECT_CALL(mock_fclose, fclose(fp)).Times(0);
-
-    // process the unit
-    UpnpCloseLog();
-}
-
-TEST(UpnpDebugSimpleTestSuite, set_log_level) {
+TEST(UpnpdebugTestSuite, setLogLevel) {
     UpnpSetLogLevel(UPNP_INFO);
     EXPECT_EQ(g_log_level, UPNP_INFO);
     EXPECT_EQ(setlogwascalled, 1);
+}
+
+TEST(UpnpdebugTestSuite, UpnpPrintf_valid_call) {
+    initwascalled = 1;
+
+    // generate random temporary filename
+    std::srand(std::time(nullptr));
+    std::string fname = (std::string)std::filesystem::temp_directory_path() +
+                        "/gtest" + std::to_string(std::rand());
+    fp = fopen(fname.c_str(), "a");
+
+    // process the unit that will write to the open fp
+    UpnpPrintf(UPNP_INFO, API, "gtest_filename.dummy", 0,
+               "UpnpInit2 with IfName=%s, DestPort=%d.\n", "NULL", 51515);
+    fclose(fp);
+
+    // look if the output is as expected
+    std::ifstream file(fname);
+    std::string str;
+    std::getline(file, str);
+    std::remove(fname.c_str());
+    //"2021-04-21 21:54:50 UPNP-API_-2: Thread:0x7FF8CF8C7740
+    //[gtest_filename.dummy:0]: UpnpInit2 with IfName=NULL, DestPort=51515."
+    EXPECT_THAT(
+        str, MatchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2} "
+                          "[0-9]{2}:[0-9]{2}:[0-9]{2} UPNP-API_-2: "
+                          "Thread:0x[0-9A-F]{12} \\[gtest_filename.dummy:0\\]: "
+                          "UpnpInit2 with IfName=NULL, DestPort=51515."));
+}
+
+TEST(UpnpdebugTestSuite, UpnpPrintf_not_initialized) {
+    initwascalled = 0;
+
+    // generate random temporary filename
+    std::srand(std::time(nullptr));
+    std::string fname = (std::string)std::filesystem::temp_directory_path() +
+                        "/gtest" + std::to_string(std::rand());
+    fp = fopen(fname.c_str(), "a");
+
+    // process the unit that will write to the open fp
+    UpnpPrintf(UPNP_INFO, API, "gtest_filename.dummy", 0,
+               "UpnpInit2 with IfName=%s, DestPort=%d.\n", "NULL", 51515);
+    fclose(fp);
+
+    // look if the output is as expected
+    std::ifstream file(fname);
+    std::string str;
+    std::getline(file, str);
+    std::remove(fname.c_str());
+
+    // nothing happend
+    EXPECT_EQ(str, "");
 }
 
 int main(int argc, char** argv) {
