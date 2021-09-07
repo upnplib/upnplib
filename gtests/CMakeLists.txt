@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-09-04
+# Redistribution only with this Copyright remark. Last modified: 2021-09-07
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNP_GTESTS VERSION 0010
+project(UPNP_GTESTS VERSION 0011
               DESCRIPTION "Unit Tests using googletest"
               HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -52,31 +52,40 @@ unset (UPNP_GTEST_LIBRARY CACHE)
 find_library(UPNP_GTEST_LIBRARY gtest gtestd
              DOC "Path to the Googletest library"
              PATHS ${UPNP_GOOGLETEST_BINARY_DIR}/lib
-             PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
+             PATH_SUFFIXES ${CMAKE_BUILD_TYPE}
              NO_DEFAULT_PATH)
 unset (UPNP_GMOCK_LIBRARY CACHE)
 find_library(UPNP_GMOCK_LIBRARY gmock gmockd
              DOC "Path to the Googlemock library"
              PATHS ${UPNP_GOOGLETEST_BINARY_DIR}/lib
-             PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
+             PATH_SUFFIXES ${CMAKE_BUILD_TYPE}
              NO_DEFAULT_PATH)
 
 unset (UPNP_GTEST_MAIN_LIBRARY CACHE)
 find_library(UPNP_GTEST_MAIN_LIBRARY gtest_main gtest_maind
              DOC "Path to the Googletest library with main entry point"
              PATHS ${UPNP_GOOGLETEST_BINARY_DIR}/lib
-             PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
+             PATH_SUFFIXES ${CMAKE_BUILD_TYPE}
              NO_DEFAULT_PATH)
 unset (UPNP_GMOCK_MAIN_LIBRARY CACHE)
 find_library(UPNP_GMOCK_MAIN_LIBRARY gmock_main gmock_maind
              DOC "Path to the Googlemock library with main entry point"
              PATHS ${UPNP_GOOGLETEST_BINARY_DIR}/lib
-             PATH_SUFFIXES Debug Release MinSizeRel RelWithDebInfo
+             PATH_SUFFIXES ${CMAKE_BUILD_TYPE}
              NO_DEFAULT_PATH)
+if(WIN32)
+    # Copy .dll libraries on MS Windows to the tests executable directory.
+    file(GLOB UPNP_GOOGLETEST_DLL_LIBRARIES
+         LIST_DIRECTORIES false CONFIGURE_DEPENDS
+         ${UPNP_GOOGLETEST_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/*.dll)
+    file(COPY ${UPNP_GOOGLETEST_DLL_LIBRARIES}
+         DESTINATION ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+endif()
 
 
 # Create the Unit Tests
 #----------------------
+set(WINDOWS_EXPORT_ALL_SYMBOLS YES)
 enable_testing()
 
 include_directories(
@@ -106,7 +115,6 @@ link_libraries(${UPNP_GTEST_LIBRARY}
                # ${UPNP_PTHREADS_STATIC_LIBRARY}
 )
 
-
 # template
 add_executable(test_template ${PROJECT_SOURCE_DIR}/test_template.cpp)
 add_executable(test_template_old ${PROJECT_SOURCE_DIR}/test_template.cpp)
@@ -134,6 +142,8 @@ add_test(NAME ctest_UpnpString_mock_old COMMAND test_UpnpString_mock_old)
 
 if(NOT WIN32)
     # TODO: Make tests running on MS Windows
+
+    # upnpapi
     # Not usable on MS Windows at time because <ifaddrs.h> isn't available
     # there. We need it for struct ifaddrs and functions getifaddrs(),
     # freeifaddrs().
@@ -188,6 +198,7 @@ if(NOT WIN32)
 #    )
 
 
+    # upnpdebug_nomock
     # On MS Windows: test_upnpdebug_nomock.cpp(17,77): error C2440: 'type cast':
     # cannot convert from 'std ::filesystem::path' to 'std::string'
     add_executable(test_upnpdebug_nomock_old
@@ -196,6 +207,7 @@ if(NOT WIN32)
     add_test(NAME ctest_upnpdebug_nomock_old COMMAND test_upnpdebug_nomock_old)
 
 
+    # upnpdebug
     # On MS Windows: inc\tools.h(17,20): error C2079: 'CIfaddr4::ifaddr' uses
     # undefined struct 'ifaddrs'
     add_executable(test_upnpdebug

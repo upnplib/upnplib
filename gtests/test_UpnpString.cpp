@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-09-04
+// Redistribution only with this Copyright remark. Last modified: 2021-09-07
 
 #include "api/UpnpString.cpp"
 #include "gtest/gtest.h"
@@ -78,40 +78,40 @@ TEST(UpnpStringTestSuite, deleteUpnpString) {
 
 TEST(UpnpStringTestSuite, setUpnpString) {
     // provide an empty UpnpString
-    char mstring[] = {};
+    char mstring[] = {0};
     SUpnpString upnpstr = {0, *&mstring};
     UpnpString* p = (UpnpString*)&upnpstr;
 
     // call the unit
-    EXPECT_PRED2(UpnpString_set_String, p, *&"set string");
+    EXPECT_PRED2(UpnpString_set_String, p, (const char*)"set string");
     EXPECT_EQ(upnpstr.m_length, 10);
     EXPECT_STREQ(upnpstr.m_string, "set string");
 }
 
 TEST(UpnpStringTestSuite, setUpnpStringN) {
     // provide an empty UpnpString
-    char mstring[] = {};
+    char mstring[] = {0};
     SUpnpString upnpstr = {0, *&mstring};
     UpnpString* p = (UpnpString*)&upnpstr;
 
     // call the unit
-    EXPECT_PRED3(UpnpString_set_StringN, p, *&"hello world", 0);
+    EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 0);
     EXPECT_EQ(upnpstr.m_length, 0);
     EXPECT_STREQ(upnpstr.m_string, "");
 
-    EXPECT_PRED3(UpnpString_set_StringN, p, *&"hello world", 1);
+    EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 1);
     EXPECT_EQ(upnpstr.m_length, 1);
     EXPECT_STREQ(upnpstr.m_string, "h");
 
-    EXPECT_PRED3(UpnpString_set_StringN, p, *&"hello world", 10);
+    EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 10);
     EXPECT_EQ(upnpstr.m_length, 10);
     EXPECT_STREQ(upnpstr.m_string, "hello worl");
 
-    EXPECT_PRED3(UpnpString_set_StringN, p, *&"hello world", 11);
+    EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 11);
     EXPECT_EQ(upnpstr.m_length, 11);
     EXPECT_STREQ(upnpstr.m_string, "hello world");
 
-    EXPECT_PRED3(UpnpString_set_StringN, p, *&"hello world", 12);
+    EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 12);
     EXPECT_EQ(upnpstr.m_length, 11);
     EXPECT_STREQ(upnpstr.m_string, "hello world");
 }
@@ -223,6 +223,12 @@ TEST(UpnpStringDeathTest, clearUpnpString) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     // https://google.github.io/googletest/advanced.html#death-test-styles
+#ifndef _WIN32
+    // On MS Windows this flag isn't defined (error LNK2019: unresolved external
+    // symbol). By default it behaves much like the "threadsafe" mode on POSIX
+    // by default.
+    // See https://google.github.io/googletest/reference/assertions.html#death
     GTEST_FLAG_SET(death_test_style, "threadsafe");
+#endif
     return RUN_ALL_TESTS();
 }
