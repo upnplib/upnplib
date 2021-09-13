@@ -1,10 +1,9 @@
-# Copyright 2021 GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Last modified: 2021-07-28
+# Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2021-09-12
 
 # This is the common header included by all (sub)projects
 #--------------------------------------------------------
 # Version 3.18 is the version from the Debian 11 (bullseye) repository.
-#cmake_policy(VERSION 3.18)
 
 # This is a guard that you do not build direct in the source tree.
 if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")

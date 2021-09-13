@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-09-08
+# Redistribution only with this Copyright remark. Last modified: 2021-09-12
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -11,17 +11,22 @@ project(UPnPlib VERSION ${UPNP_VERSION_STRING}
                 HOMEPAGE_URL "https://github.com/upnplib")
 
 
-# Define custom cmake options for commandline and cmake-gui
-#------------------------------------------------------------------------
-# If you add or modify an option you should also have attention to a possible
-# corresponding flag in "${PROJECT_SOURCE_DIR}/cmake/upnpconfig.h.cmake". These
-# variables are exported at the end. See below at section "Export cmake
-# variables".
-# Variablename and its value-placeholder must be the same, e.g.
-# #cmakedefine VAR1 ${VAR1}
-# #cmakedefine VAR1 ${VAR} does not work.
-# #cmakedefine VAR2 1  : VAR2 must be exist before even you set a constant.
+#################################
+# Paths                         #
+#################################
+# Add cmake subdirectory to module search paths so we can just include() custom
+# functions without prefixing the path.
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake")
 
+# Set default POSIX threads libraries. May be overwritten if pthreads4w is used.
+# See below on installing pthreads4w.
+set(UPNP_PTHREADS_SHARED_LIBRARY pthread CACHE INTERNAL "Name of the linkable shared library for POSIX threads")  # Implies FORCE
+set(UPNP_PTHREADS_STATIC_LIBRARY libpthread.a CACHE INTERNAL "Name of the linkable static library for POSIX threads")  # Implies FORCE
+
+
+#################################
+# Options                       #
+#################################
 include(CMakeDependentOption)
 
 # TODO: Test this option to link statically
@@ -35,32 +40,32 @@ option(UPNP_STATIC_LIB "Create a statically linkable UPnP-library" OFF)
 option(PTW32_STATIC_LIB "For using the static pthreads4w library" OFF)
 
 
-# Setup configure and build environment
-#--------------------------------------
-# Set default POSIX threads libraries. May be overwritten if pthreads4w is
-# used. See below on installing pthreads4w.
-set(UPNP_PTHREADS_SHARED_LIBRARY pthread CACHE INTERNAL  # Implies FORCE
-    "Name of the linkable shared library for POSIX threads")
-set(UPNP_PTHREADS_STATIC_LIBRARY libpthread.a CACHE INTERNAL  # Implies FORCE
-    "Name of the linkable static library for POSIX threads")
-
-# Check developement setting from cmake option (-D UPNP_DEVEL)
-if(UPNP_DEVEL)
-# Commandline variables are always cached. This one shouldn't?
-    unset(UPNP_DEVEL CACHE)
-    set(UPNP_DEVEL ON)
-endif()
+#################################
+# Compiling                     #
+#################################
+# Define custom cmake options for commandline and cmake-gui
+#------------------------------------------------------------------------
+# If you add or modify an option you should also have attention to a possible
+# corresponding flag in "${PROJECT_SOURCE_DIR}/cmake/upnpconfig.h.cmake". These
+# variables are exported at the end. See below at section "Export cmake
+# variables".
+# Variablename and its value-placeholder must be the same, e.g.
+# #cmakedefine VAR1 ${VAR1}
+# #cmakedefine VAR1 ${VAR} does not work.
+# #cmakedefine VAR2 1  : VAR2 must be exist before even you set a constant.
 
 # Set the default build type
-if (NOT CMAKE_BUILD_TYPE)
-    set (CMAKE_BUILD_TYPE "MinSizeRel" CACHE
-        STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ..." FORCE)
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "MinSizeRel" CACHE STRING "Choose the type of build, options are: None, Debug, Release, RelWithDebInfo, or MinSizeRel." FORCE)
+    message(STATUS "No build type specified, defaulting to MinSizeRel.")
 endif()
 
 # Check available library functions. We need that for later configuration.
 include(CheckCXXSymbolExists)
+
 # The option is contained in cmake/upnpconfig.h.cmake.
 check_cxx_symbol_exists(strnlen "cstring" HAVE_STRNLEN)
+
 # The option is contained in cmake/upnpconfig.h.cmake.
 check_cxx_symbol_exists(strndup "cstring" HAVE_STRNDUP)
 
@@ -71,8 +76,9 @@ if(MSVC)
 endif()
 
 
-# Checks for large-file-sensitivity
-#----------------------------------------------------
+#################################
+# Large-file-sensitivity        #
+#################################
 # TODO: Check large-file-sensitivity
 # Check for what CMAKE_REQUIRED_DEFINITIONS is needed
 # In the changelog I found this:
@@ -167,43 +173,94 @@ if (NOT OFF_T_SIZE)
 endif()
 
 
-# Installation of POSIX Threads for Windows (pthreads4w)
-#-------------------------------------------------------
+#################################
+# Packages                      #
+#################################
+Find_Package(Git)
+
+
+##########################################
+# POSIX Threads for Windows (pthreads4w) #
+##########################################
 # This should be one of the first installations to have pthreads available.
 if(WIN32)
-    # This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
-    # e.g. PTHREADS4W_SOURCE_DIR and PTHREADS4W_BINARY_DIR
-    add_subdirectory(${PROJECT_SOURCE_DIR}/pthreads4w
-                     ${PROJECT_SOURCE_DIR}/pthreads4w/build
-                     EXCLUDE_FROM_ALL)
-    set(UPNP_PTHREADS_SHARED_LIBRARY ${PTHREADS4W_BINARY_DIR}/lib/pthreadVC3.lib
-            CACHE INTERNAL  # Implies FORCE
-            "Name of the linkable shared library for POSIX threads")
-    set(UPNP_PTHREADS_STATIC_LIBRARY ${PTHREADS4W_BINARY_DIR}/lib/libpthreadVC3.lib
-            CACHE INTERNAL  # Implies FORCE
-            "Name of the linkable static library for POSIX threads")
-else()
-    # If not on MS Windows we don't need the pthreads4w library
-    if(NOT UPNP_DEVEL)
-        file(REMOVE_RECURSE ${PROJECT_SOURCE_DIR}/pthreads4w)
+    # This dependent project must use generator "NMake Makefiles" that may
+    # differ from default generator "Visual Studio *". So we cannot use
+    # add_directory() because this will also compile the dependent project
+    # with "Visual Studio *". We have to configure and build it in separate
+    # processes.
+
+    if(NOT ${Git_FOUND})
+        # We need git to download the library. If not available
+        # this will stop the installation
+        message(FATAL_ERROR "A git client isn't available. We need it to download POSIX Threads for Windows.")
     endif()
-endif()
+
+    include(FetchContent)
+
+    FetchContent_Declare(
+        pthreads4w
+        GIT_REPOSITORY  https://github.com/jwinarske/pthreads4w.git
+        GIT_TAG         origin/cmake
+        GIT_SHALLOW     ON)
+
+    # Check if population has already been performed
+    FetchContent_GetProperties(pthreads4w)
+    if(NOT pthreads4w_POPULATED)
+        # Fetch the content using previously declared details.
+        # This caches pthreads4w_SOURCE_DIR, pthreads4w_BINARY_DIR and pthreads4w_POPULATED.
+        FetchContent_Populate(pthreads4w)
+
+        # message("DEBUG! pthreads4w_SOURCE_DIR is: ${pthreads4w_SOURCE_DIR}")
+        # message("DEBUG! pthreads4w_BINARY_DIR is: ${pthreads4w_BINARY_DIR}")
+
+        message(STATUS "Configure pthreads4w")
+        execute_process(COMMAND cmake -S ${pthreads4w_SOURCE_DIR} -B ${pthreads4w_BINARY_DIR} -G "NMake Makefiles" -D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -D BUILD_TESTING=${BUILD_TESTING}
+                        WORKING_DIRECTORY ${pthreads4w_SOURCE_DIR}
+                        RESULT_VARIABLE RETURN_CODE
+                        ERROR_VARIABLE UPNP_ERROR_MESSAGE
+                        COMMAND_ECHO STDOUT)
+        if(NOT ${RETURN_CODE} EQUAL 0)
+            # This will stop the installation
+            message(FATAL_ERROR "${RETURN_CODE}: ${UPNP_ERROR_MESSAGE}")
+        endif()
+
+        message(STATUS "Build pthreads4w")
+        execute_process(COMMAND cmake --build  ${pthreads4w_BINARY_DIR} --config ${CMAKE_BUILD_TYPE} --target install
+                        WORKING_DIRECTORY ${pthreads4w_SOURCE_DIR}
+                        RESULT_VARIABLE RETURN_CODE
+                        ERROR_VARIABLE UPNP_ERROR_MESSAGE
+                        COMMAND_ECHO STDOUT)
+        if(NOT ${RETURN_CODE} EQUAL 0)
+            # This will stop the installation
+            message(FATAL_ERROR "${RETURN_CODE}: ${UPNP_ERROR_MESSAGE}")
+        endif()
+
+        include(target_arch)
+        get_target_arch(TARGET_ARCH)
+
+        set(UPNP_PTHREADS_SHARED_LIBRARY ${pthreads4w_SOURCE_DIR}/PTHREADS-BUILT/${TARGET_ARCH}/${CMAKE_BUILD_TYPE}/lib/pthreadVC3.lib CACHE INTERNAL "Name of the linkable shared library for POSIX threads")  # Implies FORCE
+        set(UPNP_PTHREADS_STATIC_LIBRARY ${pthreads4w_SOURCE_DIR}/PTHREADS-BUILT/${TARGET_ARCH}/${CMAKE_BUILD_TYPE}/lib/libpthreadVC3.lib CACHE INTERNAL "Name of the linkable static library for POSIX threads")  # Implies FORCE
+
+    endif(NOT pthreads4w_POPULATED)
+
+endif(WIN32)
 
 
-# Build UPnP core library
-#------------------------
+#################################
+# UPnP core library             #
+#################################
 # This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
 # e.g. UPNP_CORE_SOURCE_DIR and UPNP_CORE_BINARY_DIR
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/upnp
-                 ${PROJECT_SOURCE_DIR}/upnp/build)
-add_subdirectory(${PROJECT_SOURCE_DIR}/ixml
-                 ${PROJECT_SOURCE_DIR}/ixml/build)
+add_subdirectory(${PROJECT_SOURCE_DIR}/upnp ${PROJECT_SOURCE_DIR}/upnp/build)
+add_subdirectory(${PROJECT_SOURCE_DIR}/ixml ${PROJECT_SOURCE_DIR}/ixml/build)
 
 
-# Download, configure and build googletest
-#-----------------------------------------
-Find_Package(Git)
+#################################
+# Googletest                    #
+#################################
+# Download, configure and build
 cmake_dependent_option(UPNP_GOOGLETEST "Download and build Googletest" OFF ${Git_FOUND} OFF)
 cmake_dependent_option(UPNP_GOOGLETEST "Build Googletest shared libraries" OFF ${Git_FOUND} OFF)
 
@@ -213,8 +270,11 @@ if (UPNP_GOOGLETEST)
 endif()
 
 
-# Export cmake variables; should be the last statement
-#-----------------------------------------------------
+#################################
+# Export cmake variables        #
+#################################
+# This should be the last statement
+#----------------------------------
 # to compiler macros (#define ...) for conditions to the program source.
 # Hope we have all needed variables defined so we can write upnpconfig.h now.
 # To meet all variables this should be the last statement.
@@ -231,4 +291,4 @@ file(CREATE_LINK ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.h
                  COPY_ON_ERROR SYMBOLIC
 )
 
-message("-- Build type is ${CMAKE_BUILD_TYPE}")
+message(STATUS "Build type is ${CMAKE_BUILD_TYPE}")
