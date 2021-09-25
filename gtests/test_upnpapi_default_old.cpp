@@ -5,6 +5,7 @@
 // For further information look at https://stackoverflow.com/a/66498073/5014688
 // Tested on old pupnp library with following options:
 //
+// clang-format off
 // option (BUILD_TESTING "Run Tests after compile" ON)
 // option (client "control point code (client)" ON)
 // option (device "device specific code (implies --disable-webserver if disabled)" ON)
@@ -23,6 +24,7 @@
 // option (reuseaddr "bind the miniserver socket with reuseaddr to allow clean restarts" OFF)
 // option (samples "compilation of upnp/sample/ code" ON)
 // cmake_dependent_option (DOWNLOAD_AND_BUILD_DEPS "Get all missing stuff" OFF ${Git_FOUND} OFF)
+// clang-format on
 
 #include "tools.h"
 #include "gmock/gmock.h"

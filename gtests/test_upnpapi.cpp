@@ -259,8 +259,9 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     EXPECT_STREQ(UpnpGetErrorMessage(UpnpGetIfInfo("ethO")),
                  "UPNP_E_INVALID_INTERFACE");
 #ifdef OLD_TEST
-    std::cout << "  BUG! Interface name (e.g. ethO with upper case O), ip "
-            << "address and netmask should not be modified on wrong entries.\n";
+    std::cout
+        << "  BUG! Interface name (e.g. ethO with upper case O), ip "
+        << "address and netmask should not be modified on wrong entries.\n";
     // gIF_NAME mocked with getifaddrs above
     // ATTENTION! There is a wrong upper case 'O', not zero in "ethO";
     EXPECT_STREQ(gIF_NAME, "ethO");

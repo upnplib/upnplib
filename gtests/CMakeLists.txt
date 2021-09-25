@@ -63,18 +63,21 @@ add_executable(test_threadutil_old ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
 target_compile_definitions(test_threadutil_old PRIVATE OLD_TEST)
 add_test(NAME ctest_threadutil_old COMMAND test_threadutil_old)
 
-# UpnpString
-add_executable(test_UpnpString ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
-add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
-add_executable(test_UpnpString_old ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
-target_compile_definitions(test_UpnpString_old PRIVATE OLD_TEST)
-add_test(NAME ctest_UpnpString_old COMMAND test_UpnpString_old)
-add_executable(test_UpnpString_mock_old ${PROJECT_SOURCE_DIR}/test_UpnpString_mock.cpp)
-target_compile_definitions(test_UpnpString_mock_old PRIVATE OLD_TEST)
-add_test(NAME ctest_UpnpString_mock_old COMMAND test_UpnpString_mock_old)
-
 if(NOT WIN32)
     # TODO: Make tests running on MS Windows
+
+    # UpnpString
+    # On MS Windows: error LNK2005: free already defined in test_UpnpString.cpp.obj
+    # It does not occur if linking with shared libs
+    add_executable(test_UpnpString ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
+    add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
+    add_executable(test_UpnpString_old ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
+    target_compile_definitions(test_UpnpString_old PRIVATE OLD_TEST)
+    add_test(NAME ctest_UpnpString_old COMMAND test_UpnpString_old)
+    add_executable(test_UpnpString_mock_old ${PROJECT_SOURCE_DIR}/test_UpnpString_mock.cpp)
+    target_compile_definitions(test_UpnpString_mock_old PRIVATE OLD_TEST)
+    add_test(NAME ctest_UpnpString_mock_old COMMAND test_UpnpString_mock_old)
+
 
     # upnpdebug
     # On MS Windows: test_upnpdebug.cpp(17,77): error C2440: 'type cast':

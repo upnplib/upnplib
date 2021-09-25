@@ -36,7 +36,8 @@ TEST(FreeListTestSuite, initialize_FreeList_with_no_items) {
     EXPECT_NE(FreeListAlloc(&free_list), nullptr);
 #else
     EXPECT_EQ(FreeListAlloc(&free_list), nullptr)
-    << "# Allocate item on FreeList with 0 elements should return a nullptr.";
+        << "# Allocate item on FreeList with 0 elements should return a "
+           "nullptr.";
 #endif
     EXPECT_EQ(FreeListDestroy(nullptr), EINVAL);
     EXPECT_EQ(FreeListDestroy(&free_list), 0);
@@ -58,7 +59,7 @@ TEST(FreeListTestSuite, allocate_item_in_FreeList) {
     // EXPECT_EQ(FreeListFree(&free_list, &element), 0);
 #else
     EXPECT_EQ(FreeListAlloc(&free_list), nullptr)
-    << "# Exeeding maxFreeListLength should return a nullptr.";
+        << "# Exeeding maxFreeListLength should return a nullptr.";
     FAIL() << "# Cannot free same amount of elements as allocated.";
     EXPECT_EQ(FreeListFree(&free_list, &element), 0);
 #endif
@@ -142,7 +143,8 @@ TEST(ThreadPoolTestSuite, initialize_threadpool) {
     EXPECT_EQ(ThreadPoolInit(&tp, nullptr), 0);
 }
 
-TEST(ThreadPoolTestSuite, add_persistent_job_to_threadpool_with_uninitialized_job) {
+TEST(ThreadPoolTestSuite,
+     add_persistent_job_to_threadpool_with_uninitialized_job) {
 #ifdef OLD_TEST
     GTEST_SKIP() << "  BUG! Unit does not finish with empty job structure.";
 #else
@@ -157,10 +159,10 @@ TEST(ThreadPoolTestSuite, add_persistent_job_to_threadpool_with_uninitialized_jo
 #endif
 }
 
-
 void func(void*) {}
 
-TEST(ThreadPoolTestSuite, add_persistent_job_to_threadpool_with_initialized_job) {
+TEST(ThreadPoolTestSuite,
+     add_persistent_job_to_threadpool_with_initialized_job) {
     ThreadPool tp = {};
     ThreadPoolJob job = {};
     int jobId = 0;
@@ -341,7 +343,7 @@ TEST(ThreadPoolTestSuite, set_maximal_threads) {
     EXPECT_EQ(attr.maxThreads, 1);
 #ifdef OLD_TEST
     std::cout << "  BUG! It should not be possible to set maxThreads < 0"
-             << " or < minThreads.\n";
+              << " or < minThreads.\n";
     EXPECT_EQ(TPAttrSetMaxThreads(&attr, -1), 0);
     attr.minThreads = 2;
     EXPECT_EQ(TPAttrSetMaxThreads(&attr, 1), 0);
@@ -446,7 +448,8 @@ TEST(ThreadPoolTestSuite, set_starvation_time) {
     EXPECT_EQ(TPAttrSetStarvationTime(&attr, 0), 0);
     EXPECT_EQ(TPAttrSetStarvationTime(&attr, 1), 0);
 #ifdef OLD_TEST
-    std::cout << "  BUG! It should not be possible to set StarvationTime < 0.\n";
+    std::cout
+        << "  BUG! It should not be possible to set StarvationTime < 0.\n";
     EXPECT_EQ(TPAttrSetStarvationTime(&attr, -1), 0);
     EXPECT_EQ(attr.starvationTime, -1);
 #else

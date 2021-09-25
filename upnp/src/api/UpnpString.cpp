@@ -117,7 +117,7 @@ void UpnpString_delete(UpnpString* p) {
     free(p);
 }
 
-//UpnpString* UpnpString_dup(const UpnpString* p) {
+// UpnpString* UpnpString_dup(const UpnpString* p) {
 //    struct SUpnpString* q =
 //        (SUpnpString*)calloc((size_t)1, sizeof(struct SUpnpString));
 //    if (q == NULL) {
@@ -132,13 +132,13 @@ void UpnpString_delete(UpnpString* p) {
 //    return (UpnpString*)q;
 //
 //    /*free(q->m_string); */
-//error_handler2:
+// error_handler2:
 //    free(q);
-//error_handler1:
+// error_handler1:
 //    return NULL;
 //}
 
-//void UpnpString_assign(UpnpString* p, const UpnpString* q) {
+// void UpnpString_assign(UpnpString* p, const UpnpString* q) {
 //    if (p != q) {
 //        UpnpString_set_String(p, UpnpString_get_String(q));
 //    }
@@ -148,7 +148,7 @@ size_t UpnpString_get_Length(const UpnpString* p) {
     return ((struct SUpnpString*)p)->m_length;
 }
 
-//void UpnpString_set_Length(UpnpString* p, size_t n) {
+// void UpnpString_set_Length(UpnpString* p, size_t n) {
 //    if (((struct SUpnpString*)p)->m_length > n) {
 //        ((struct SUpnpString*)p)->m_length = n;
 //        /* No need to realloc now, will do later when needed. */
@@ -190,14 +190,14 @@ void UpnpString_clear(UpnpString* p) {
     ((struct SUpnpString*)p)->m_string[0] = 0;
 }
 
-//int UpnpString_cmp(UpnpString* p, UpnpString* q) {
+// int UpnpString_cmp(UpnpString* p, UpnpString* q) {
 //    const char* cp = UpnpString_get_String(p);
 //    const char* cq = UpnpString_get_String(q);
 //
 //    return strcmp(cp, cq);
 //}
 
-//int UpnpString_casecmp(UpnpString* p, UpnpString* q) {
+// int UpnpString_casecmp(UpnpString* p, UpnpString* q) {
 //    const char* cp = UpnpString_get_String(p);
 //    const char* cq = UpnpString_get_String(q);
 //

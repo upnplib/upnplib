@@ -35,8 +35,7 @@ class CMock_fclose {
     MOCK_METHOD(int, fclose, (FILE * stream));
 };
 CMock_fclose* ptrMock_fclose = nullptr;
-int fclose(FILE* stream) { return ptrMock_fclose->fclose(stream);
-}
+int fclose(FILE* stream) { return ptrMock_fclose->fclose(stream); }
 
 // Tests for the debugging and logging module
 //-------------------------------------------
@@ -147,11 +146,9 @@ TEST_F(UpnpdebugMockTestSuite, logStderrAndUsingFile) {
 
 #ifdef OLD_TEST
     std::cout << "  BUG! fopen should not be called.\n";
-    EXPECT_CALL(mock_fopen, fopen((const char*)"gtest.log", "a"))
-        .Times(1);
+    EXPECT_CALL(mock_fopen, fopen((const char*)"gtest.log", "a")).Times(1);
 #else
-    EXPECT_CALL(mock_fopen, fopen((const char*)"gtest.log", "a"))
-        .Times(0);
+    EXPECT_CALL(mock_fopen, fopen((const char*)"gtest.log", "a")).Times(0);
 #endif
     EXPECT_CALL(mock_strerror, strerror(_))
         .Times(1)
@@ -186,10 +183,8 @@ TEST_F(UpnpdebugMockTestSuite, logStderrButNotUsingFile) {
     EXPECT_EQ(fp, (FILE*)0x123456abcde0);
     EXPECT_EQ(is_stderr, 0);
 #else
-     EXPECT_NE(fp, (FILE*)0x123456abcde0)
-        << "# fp should be set to stderr.";
-     EXPECT_EQ(is_stderr, 1)
-        << "# fp should be set to stderr.";
+    EXPECT_NE(fp, (FILE*)0x123456abcde0) << "# fp should be set to stderr.";
+    EXPECT_EQ(is_stderr, 1) << "# fp should be set to stderr.";
 #endif
     EXPECT_EQ(fileName, nullptr);
     EXPECT_EQ(initwascalled, 1);
