@@ -505,21 +505,21 @@ int TPAttrSetMaxJobsTotal(
  *
  * \return Always returns 0.
  */
-////#ifdef STATS
-//EXPORT_SPEC int ThreadPoolGetStats(
+//#ifdef STATS
+EXPORT_SPEC int ThreadPoolGetStats(
+        /*! Valid initialized threadpool. */
+        ThreadPool *tp,
+        /*! Valid stats, out parameter. */
+        ThreadPoolStats *stats);
+//#else
+// static UPNP_INLINE int ThreadPoolGetStats(
 //        /*! Valid initialized threadpool. */
 //        ThreadPool *tp,
 //        /*! Valid stats, out parameter. */
-//        ThreadPoolStats *stats);
-////#else
-//// static UPNP_INLINE int ThreadPoolGetStats(
-////        /*! Valid initialized threadpool. */
-////        ThreadPool *tp,
-////        /*! Valid stats, out parameter. */
-////        ThreadPoolStats *stats)
-////{
-////}
-////#endif
+//        ThreadPoolStats *stats)
+//{
+//}
+//#endif
 
 /*!
  * \brief

@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-09-12
+# Redistribution only with this Copyright remark. Last modified: 2021-09-25
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -14,11 +14,7 @@ project(UPnPlib VERSION ${UPNP_VERSION_STRING}
 #################################
 # Paths                         #
 #################################
-# Add cmake subdirectory to module search paths so we can just include() custom
-# functions without prefixing the path.
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake")
-
-# Set default POSIX threads libraries. May be overwritten if pthreads4w is used.
+# Set default POSIX Threads Libraries. May be overwritten if pthreads4w is used.
 # See below on installing pthreads4w.
 set(UPNP_PTHREADS_SHARED_LIBRARY pthread CACHE INTERNAL "Name of the linkable shared library for POSIX threads")  # Implies FORCE
 set(UPNP_PTHREADS_STATIC_LIBRARY libpthread.a CACHE INTERNAL "Name of the linkable static library for POSIX threads")  # Implies FORCE
@@ -28,6 +24,14 @@ set(UPNP_PTHREADS_STATIC_LIBRARY libpthread.a CACHE INTERNAL "Name of the linkab
 # Options                       #
 #################################
 include(CMakeDependentOption)
+
+option(UPNP_GOOGLETEST "Download and build Googletest" OFF)
+# gtest_disable_pthreads is an option of the GoogleTest package set to OFF by
+# default. Due to bugs we do not want GoogleTest to compile with PThreads except
+# the User wants it. Here we disable it by default.
+cmake_dependent_option(gtest_disable_pthreads "Disable Googletest to use POSIX Threads" ON ${UPNP_GOOGLETEST} ON)
+
+cmake_dependent_option(PT4W_BUILD_TESTING "Build the time and space consuming test suite of pthreads4w" OFF ${WIN32} OFF)
 
 # TODO: Test this option to link statically
 # UPNP_STATIC_LIB - for creating a statically linkable UPnP-library
@@ -73,6 +77,11 @@ check_cxx_symbol_exists(strndup "cstring" HAVE_STRNDUP)
 # The option is contained in cmake/upnpconfig.h.cmake.
 if(MSVC)
     set(UPNP_USE_MSVCPP 1)
+endif()
+
+# Suffix on libraries having built with Debug information
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(UPNP_DEBUG_SUFFIX "d")
 endif()
 
 
@@ -173,12 +182,6 @@ if (NOT OFF_T_SIZE)
 endif()
 
 
-#################################
-# Packages                      #
-#################################
-Find_Package(Git)
-
-
 ##########################################
 # POSIX Threads for Windows (pthreads4w) #
 ##########################################
@@ -190,13 +193,9 @@ if(WIN32)
     # with "Visual Studio *". We have to configure and build it in separate
     # processes.
 
-    if(NOT ${Git_FOUND})
-        # We need git to download the library. If not available
-        # this will stop the installation
-        message(FATAL_ERROR "A git client isn't available. We need it to download POSIX Threads for Windows.")
-    endif()
-
     include(FetchContent)
+
+    message(CHECK_START "Download and configuring POSIX Threads for Windows")
 
     FetchContent_Declare(
         pthreads4w
@@ -211,36 +210,39 @@ if(WIN32)
         # This caches pthreads4w_SOURCE_DIR, pthreads4w_BINARY_DIR and pthreads4w_POPULATED.
         FetchContent_Populate(pthreads4w)
 
-        # message("DEBUG! pthreads4w_SOURCE_DIR is: ${pthreads4w_SOURCE_DIR}")
-        # message("DEBUG! pthreads4w_BINARY_DIR is: ${pthreads4w_BINARY_DIR}")
+        # Output with cmake option --log-level=DEBUG
+        message(DEBUG "  DEBUG: pthreads4w_SOURCE_DIR is: ${pthreads4w_SOURCE_DIR}")
+        message(DEBUG "  DEBUG: pthreads4w_BINARY_DIR is: ${pthreads4w_BINARY_DIR}")
 
-        message(STATUS "Configure pthreads4w")
-        execute_process(COMMAND cmake -S ${pthreads4w_SOURCE_DIR} -B ${pthreads4w_BINARY_DIR} -G "NMake Makefiles" -D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -D BUILD_TESTING=${BUILD_TESTING}
+        execute_process(COMMAND cmake -S ${pthreads4w_SOURCE_DIR} -B ${pthreads4w_BINARY_DIR} -G "NMake Makefiles" -D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -D BUILD_TESTING=${PT4W_BUILD_TESTING}
                         WORKING_DIRECTORY ${pthreads4w_SOURCE_DIR}
-                        RESULT_VARIABLE RETURN_CODE
-                        ERROR_VARIABLE UPNP_ERROR_MESSAGE
+                        RESULT_VARIABLE PT4W_RETURN_CODE
+                        ERROR_VARIABLE PT4W_ERROR_MESSAGE
                         COMMAND_ECHO STDOUT)
-        if(NOT ${RETURN_CODE} EQUAL 0)
+        if(NOT ${PT4W_RETURN_CODE} EQUAL 0)
             # This will stop the installation
-            message(FATAL_ERROR "${RETURN_CODE}: ${UPNP_ERROR_MESSAGE}")
+            message(FATAL_ERROR "${PT4W_RETURN_CODE}: ${PT4W_ERROR_MESSAGE}")
         endif()
 
-        message(STATUS "Build pthreads4w")
-        execute_process(COMMAND cmake --build  ${pthreads4w_BINARY_DIR} --config ${CMAKE_BUILD_TYPE} --target install
+        message(CHECK_PASS "done")
+        message(CHECK_START "Building POSIX Threads for Windows libraries")
+
+        execute_process(COMMAND cmake --build ${pthreads4w_BINARY_DIR} --config ${CMAKE_BUILD_TYPE}
                         WORKING_DIRECTORY ${pthreads4w_SOURCE_DIR}
-                        RESULT_VARIABLE RETURN_CODE
-                        ERROR_VARIABLE UPNP_ERROR_MESSAGE
-                        COMMAND_ECHO STDOUT)
-        if(NOT ${RETURN_CODE} EQUAL 0)
+                        RESULT_VARIABLE PT4W_RETURN_CODE
+                        ERROR_VARIABLE PT4W_ERROR_MESSAGE
+                        OUTPUT_QUIET)
+        if(NOT ${PT4W_RETURN_CODE} EQUAL 0)
             # This will stop the installation
-            message(FATAL_ERROR "${RETURN_CODE}: ${UPNP_ERROR_MESSAGE}")
+            message(FATAL_ERROR "${PT4W_RETURN_CODE}: ${PT4W_ERROR_MESSAGE}")
         endif()
 
-        include(target_arch)
-        get_target_arch(TARGET_ARCH)
+        set(UPNP_PTHREADS_SHARED_LIBRARY "${pthreads4w_BINARY_DIR}/pthreadVC3${UPNP_DEBUG_SUFFIX}.lib"
+            CACHE INTERNAL "Name of the linkable shared library for POSIX threads")  # Implies FORCE
+        set(UPNP_PTHREADS_STATIC_LIBRARY "${pthreads4w_BINARY_DIR}/libpthreadVC3${UPNP_DEBUG_SUFFIX}.lib"
+            CACHE INTERNAL "Name of the linkable static library for POSIX threads")  # Implies FORCE
 
-        set(UPNP_PTHREADS_SHARED_LIBRARY ${pthreads4w_SOURCE_DIR}/PTHREADS-BUILT/${TARGET_ARCH}/${CMAKE_BUILD_TYPE}/lib/pthreadVC3.lib CACHE INTERNAL "Name of the linkable shared library for POSIX threads")  # Implies FORCE
-        set(UPNP_PTHREADS_STATIC_LIBRARY ${pthreads4w_SOURCE_DIR}/PTHREADS-BUILT/${TARGET_ARCH}/${CMAKE_BUILD_TYPE}/lib/libpthreadVC3.lib CACHE INTERNAL "Name of the linkable static library for POSIX threads")  # Implies FORCE
+        message(CHECK_PASS "done")
 
     endif(NOT pthreads4w_POPULATED)
 
@@ -261,14 +263,84 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/ixml ${PROJECT_SOURCE_DIR}/ixml/build)
 # Googletest                    #
 #################################
 # Download, configure and build
-cmake_dependent_option(UPNP_GOOGLETEST "Download and build Googletest" OFF ${Git_FOUND} OFF)
-cmake_dependent_option(UPNP_GOOGLETEST "Build Googletest shared libraries" OFF ${Git_FOUND} OFF)
+if(UPNP_GOOGLETEST)
 
-if (UPNP_GOOGLETEST)
-    add_subdirectory(${PROJECT_SOURCE_DIR}/gtests
-                     ${PROJECT_SOURCE_DIR}/gtests/build)
-endif()
+    message(CHECK_START "Download and configuring GoogleTest")
 
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY    https://github.com/google/googletest.git
+        GIT_TAG           origin/master
+        GIT_SHALLOW       ON
+    )
+    if(WIN32)
+        # reference: build/_deps/googletest-src/googletest/README.md
+        set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    endif()
+
+    # This caches googletest_SOURCE_DIR, googletest_BINARY_DIR and googletest_POPULATED.
+    FetchContent_MakeAvailable(googletest)
+
+    # Output with cmake option --log-level=DEBUG
+    message(DEBUG "  DEBUG: googletest_SOURCE_DIR is: ${googletest_SOURCE_DIR}")
+    message(DEBUG "  DEBUG: googletest_BINARY_DIR is: ${googletest_BINARY_DIR}")
+
+    # Cache the different GoogleTest library names for later use
+    if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
+        set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gtest${UPNP_DEBUG_SUFFIX}.lib
+                                 ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gmock${UPNP_DEBUG_SUFFIX}.lib
+                                 ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gtest_main${UPNP_DEBUG_SUFFIX}.lib
+                                 ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gmock_main${UPNP_DEBUG_SUFFIX}.lib
+                                 CACHE INTERNAL "Names of the GoogleTest/GoogleMock libraries")
+    else()
+        set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/gtest${UPNP_DEBUG_SUFFIX}.lib
+                                 ${PROJECT_BINARY_DIR}/lib/gmock${UPNP_DEBUG_SUFFIX}.lib
+                                 ${PROJECT_BINARY_DIR}/lib/gtest_main${UPNP_DEBUG_SUFFIX}.lib
+                                 ${PROJECT_BINARY_DIR}/lib/gmock_main${UPNP_DEBUG_SUFFIX}.lib
+                                 CACHE INTERNAL "Names of the GoogleTest/GoogleMock libraries")
+    endif()
+
+    message(CHECK_PASS "done")
+
+
+    #################################
+    # Build Unit Tests              #
+    #################################
+
+    message(CHECK_START "configuring Unit Tests")
+
+    # This caches UPNP_GTESTS_SOURCE_DIR and UPNP_GTESTS_BINARY_DIR
+    add_subdirectory(${PROJECT_SOURCE_DIR}/gtests ${PROJECT_SOURCE_DIR}/gtests/build)
+
+    # Create symlinks for shared gtest .dlls so the Unit Tests can find them.
+    if(WIN32 AND BUILD_SHARED_LIBS)
+        if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
+            # Make Directory is necessary because sub directory ${CMAKE_BUILD_TYPE} isn't available yet.
+            file(MAKE_DIRECTORY ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gtest${UPNP_DEBUG_SUFFIX}.dll
+                             ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gtest${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gmock${UPNP_DEBUG_SUFFIX}.dll
+                             ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gmock${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gtest_main${UPNP_DEBUG_SUFFIX}.dll
+                             ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gtest_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gmock_main${UPNP_DEBUG_SUFFIX}.dll
+                             ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gmock_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+        else()
+            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gtest${UPNP_DEBUG_SUFFIX}.dll
+                             ${UPNP_GTESTS_BINARY_DIR}/gtest${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gmock${UPNP_DEBUG_SUFFIX}.dll
+                             ${UPNP_GTESTS_BINARY_DIR}/gmock${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gtest_main${UPNP_DEBUG_SUFFIX}.dll
+                             ${UPNP_GTESTS_BINARY_DIR}/gtest_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gmock_main${UPNP_DEBUG_SUFFIX}.dll
+                             ${UPNP_GTESTS_BINARY_DIR}/gmock_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+        endif()
+
+    endif(WIN32 AND BUILD_SHARED_LIBS)
+
+    message(CHECK_PASS "done")
+
+endif(UPNP_GOOGLETEST)
 
 #################################
 # Export cmake variables        #

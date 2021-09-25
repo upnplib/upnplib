@@ -1,0 +1,107 @@
+name: Inspect gtest with pthreads4w
+# ubuntu-18.04 isn't used for tests because it doesn't support open standard
+# ISO C++20 that we declared to use for UPnPlib.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Job: Run testsuite of the pthreads4w library
+  #---------------------------------------------
+#  test-pthreads4w:
+#    name: Run tests of the pthreads4w library
+#    runs-on: ${{ matrix.os }}
+#
+#    strategy:
+#      matrix:
+#        os: [ windows-2016, windows-latest ]
+#      fail-fast: false
+#
+#    steps:
+#    # Step building the pthreads4w library
+#      - uses: actions/checkout@v2
+#
+#      - if: matrix.os == 'windows-2016'
+#        name: Use MS Windows 32 bit
+#        uses: ilammy/msvc-dev-cmd@v1
+#        with:
+#          arch: win32
+#
+#      - if: matrix.os == 'windows-latest'
+#        name: Use MS Windows 64 bit
+#        uses: ilammy/msvc-dev-cmd@v1
+#        with:
+#          arch: amd64
+#
+#      - name: Configure pthreads4w library with tests
+#        run: cmake -S pthreads4w -B pthreads4w/build -D PT4W_RUN_TESTS=ON
+
+
+  # Job: Configure and build with Visual Studio
+  #--------------------------------------------
+  Configure_and_build:
+    name: Build with Visual Studio
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        #os: [ windows-2016, windows-latest ]
+        os: [ windows-latest ]
+        #generator: [ '', '-G "NMake Makefiles"' ]
+        googletest: [ '', '-D UPNP_GOOGLETEST=ON' ]
+        build: [ '', '-D BUILD_SHARED_LIBS=ON' ]
+        buildtype: [ 'MinSizeRel', 'Debug' ]
+      fail-fast: false
+
+    steps:
+    # Step building the core upnplib
+      - uses: actions/checkout@v2
+        env:
+          POSTFIX: "${{ matrix.buildtye == 'Debug' && 'd' || '' }}"
+
+      - if: matrix.os == 'windows-2016'
+        name: Use MS Windows 32 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: win32
+
+      - if: matrix.os == 'windows-latest'
+        name: Use MS Windows 64 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - name: Configure
+        run: cmake -S . -B build ${{matrix.googletest}} ${{matrix.build}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+
+      - name: Build
+        run: cmake --build build --config ${{matrix.buildtype}}
+
+      - if: matrix.googletest == '-D UPNP_GOOGLETEST=ON'
+        name: GTest link libraries build with Visual Studio
+        run: |
+          ls build/lib/${{matrix.buildtype}}/gtest${{POSTFIX}}.lib
+          ls build/lib/${{matrix.buildtype}}/gmock${{POSTFIX}}.lib
+          ls build/lib/${{matrix.buildtype}}/gtest_main${{POSTFIX}}.lib
+          ls build/lib/${{matrix.buildtype}}/gmock_main${{POSTFIX}}.lib
+
+      - if: (matrix.googletest == '-D UPNP_GOOGLETEST=ON') && (matrix.build == '-D BUILD_SHARED_LIBS=ON')
+        name: GTest .dll libraries build with Visual Studio
+        run: |
+          ls build/bin/${{matrix.buildtype}}/gtest${{POSTFIX}}.dll
+          ls build/bin/${{matrix.buildtype}}/gmock${{POSTFIX}}.dll
+          ls build/bin/${{matrix.buildtype}}/gtest_main${{POSTFIX}}.dll
+          ls build/bin/${{matrix.buildtype}}/gmock_main${{POSTFIX}}.dll
+
+      - if: matrix.googletest == '-D UPNP_GOOGLETEST=ON'
+        name: Run simple gtest
+        run: ./gtests/build/${{matrix.buildtype}}/test_simple.exe
+
+      - name: Run static test program
+        run: ./upnp/build/${{matrix.buildtype}}/upnplibStatic.exe
+
+      - name: Run shared test program
+        run: ./upnp/build/${{matrix.buildtype}}/upnplib.exe

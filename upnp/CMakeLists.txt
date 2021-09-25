@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-09-08
+# Redistribution only with this Copyright remark. Last modified: 2021-09-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNP_CORE VERSION 0003
+project(UPNP_CORE VERSION 0004
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -42,7 +42,7 @@ include_directories(
     ${CMAKE_BINARY_DIR}/upnp/inc
     # if pthreads4w isn't installed this path is empty. The linker
     # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-    ${PTHREADS4W_BINARY_DIR}/include
+    ${pthreads4w_SOURCE_DIR}/
 )
 
 set(UPNP_SOURCE_FILES
@@ -134,7 +134,7 @@ else() # WIN32
     # Link with POSIX Threads for Windows (pthreads4w)
     #=================================================
     # Pthreads are not supported by MS Windows. So we have installed the
-    # third party library pthreads4w (see subproject pthreads4w if installed).
+    # third party library pthreads4w.
 
     # Shared library
     #---------------
@@ -151,15 +151,18 @@ else() # WIN32
     # ws2_32: winsock to support sockets
     # iphlpapi: ip helper interface to get network management tools
     target_link_libraries(upnplib_shared_win ws2_32 iphlpapi
-            ${UPNP_PTHREADS_SHARED_LIBRARY}
+            ${UPNP_PTHREADS_STATIC_LIBRARY}
+            # If you link with the shared pthreads4w library then its .dll file
+            # must also be found.
+            #${UPNP_PTHREADS_SHARED_LIBRARY}
     )
+
     # Test executable linked with the shared library
     add_executable(upnplib_shared_win_exe ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
     set_target_properties(upnplib_shared_win_exe PROPERTIES
             OUTPUT_NAME upnplib
     )
     target_link_libraries(upnplib_shared_win_exe
-            ${UPNP_PTHREADS_SHARED_LIBRARY}
             upnplib_shared_win
     )
 
@@ -174,17 +177,17 @@ else() # WIN32
             #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
             PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
     )
+    target_link_libraries(upnplib_static_win
+            ${UPNP_PTHREADS_STATIC_LIBRARY}
+    )
+
     # Test executable linked with the static library
     add_executable(upnplib_static_win_exe ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
     set_target_properties(upnplib_static_win_exe PROPERTIES
             OUTPUT_NAME upnplibStatic
     )
-    # I got warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other
-    # libs; use /NODEFAULTLIB:library
     target_link_libraries(upnplib_static_win_exe
-            ${UPNP_PTHREADS_STATIC_LIBRARY}
             upnplib_static_win
-            -NODEFAULTLIB:LIBCMT
     )
 
 endif() # WIN32
