@@ -25,13 +25,17 @@ set(UPNP_PTHREADS_STATIC_LIBRARY libpthread.a CACHE INTERNAL "Name of the linkab
 #################################
 include(CMakeDependentOption)
 
+option(PT4W_BUILD_TESTING "Build the time and space consuming test suite of pthreads4w" OFF)
+
 option(UPNP_GOOGLETEST "Download and build Googletest" OFF)
 # gtest_disable_pthreads is an option of the GoogleTest package set to OFF by
-# default. Due to bugs we do not want GoogleTest to compile with PThreads except
-# the User wants it. Here we disable it by default.
-cmake_dependent_option(gtest_disable_pthreads "Disable Googletest to use POSIX Threads" ON ${UPNP_GOOGLETEST} ON)
-
-cmake_dependent_option(PT4W_BUILD_TESTING "Build the time and space consuming test suite of pthreads4w" OFF ${WIN32} OFF)
+# default so it always compiles with PThreads. This does not compiles on MS
+# Windows with pthreads4w. But we cannot disable pthreads by default because on
+# Linux mocked functions segfault without it. So we must disable PThreads only
+# on MS Windows. The user can set gtest_disable_pthreads as he like.
+if(WIN32)
+    cmake_dependent_option(gtest_disable_pthreads "Disable Googletest to use POSIX Threads" ON ${UPNP_GOOGLETEST} ON)
+endif()
 
 # TODO: Test this option to link statically
 # UPNP_STATIC_LIB - for creating a statically linkable UPnP-library
@@ -265,6 +269,11 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/ixml ${PROJECT_SOURCE_DIR}/ixml/build)
 # Download, configure and build
 if(UPNP_GOOGLETEST)
 
+    # It may already included to install pthreads4w on WIN32
+    if(NOT WIN32)
+        include(FetchContent)
+    endif()
+
     message(CHECK_START "Download and configuring GoogleTest")
 
     FetchContent_Declare(
@@ -274,71 +283,110 @@ if(UPNP_GOOGLETEST)
         GIT_SHALLOW       ON
     )
     if(WIN32)
-        # reference: build/_deps/googletest-src/googletest/README.md
+
+        # Reference: build/_deps/googletest-src/googletest/README.md
+        # Must be set before FetchContent_MakeAvailable().
         set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-    endif()
 
-    # This caches googletest_SOURCE_DIR, googletest_BINARY_DIR and googletest_POPULATED.
-    FetchContent_MakeAvailable(googletest)
+        # This caches googletest_SOURCE_DIR, googletest_BINARY_DIR and googletest_POPULATED.
+        FetchContent_MakeAvailable(googletest)
 
-    # Output with cmake option --log-level=DEBUG
-    message(DEBUG "  DEBUG: googletest_SOURCE_DIR is: ${googletest_SOURCE_DIR}")
-    message(DEBUG "  DEBUG: googletest_BINARY_DIR is: ${googletest_BINARY_DIR}")
+        # Output with cmake option --log-level=DEBUG
+        message(DEBUG "  DEBUG: googletest_SOURCE_DIR is: ${googletest_SOURCE_DIR}")
+        message(DEBUG "  DEBUG: googletest_BINARY_DIR is: ${googletest_BINARY_DIR}")
 
-    # Cache the different GoogleTest library names for later use
-    if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
-        set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gtest${UPNP_DEBUG_SUFFIX}.lib
-                                 ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gmock${UPNP_DEBUG_SUFFIX}.lib
-                                 ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gtest_main${UPNP_DEBUG_SUFFIX}.lib
-                                 ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gmock_main${UPNP_DEBUG_SUFFIX}.lib
-                                 CACHE INTERNAL "Names of the GoogleTest/GoogleMock libraries")
-    else()
-        set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/gtest${UPNP_DEBUG_SUFFIX}.lib
-                                 ${PROJECT_BINARY_DIR}/lib/gmock${UPNP_DEBUG_SUFFIX}.lib
-                                 ${PROJECT_BINARY_DIR}/lib/gtest_main${UPNP_DEBUG_SUFFIX}.lib
-                                 ${PROJECT_BINARY_DIR}/lib/gmock_main${UPNP_DEBUG_SUFFIX}.lib
-                                 CACHE INTERNAL "Names of the GoogleTest/GoogleMock libraries")
-    endif()
-
-    message(CHECK_PASS "done")
-
-
-    #################################
-    # Build Unit Tests              #
-    #################################
-
-    message(CHECK_START "configuring Unit Tests")
-
-    # This caches UPNP_GTESTS_SOURCE_DIR and UPNP_GTESTS_BINARY_DIR
-    add_subdirectory(${PROJECT_SOURCE_DIR}/gtests ${PROJECT_SOURCE_DIR}/gtests/build)
-
-    # Create symlinks for shared gtest .dlls so the Unit Tests can find them.
-    if(WIN32 AND BUILD_SHARED_LIBS)
+        # Cache the different GoogleTest library names for later use
         if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
-            # Make Directory is necessary because sub directory ${CMAKE_BUILD_TYPE} isn't available yet.
-            file(MAKE_DIRECTORY ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE})
-            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gtest${UPNP_DEBUG_SUFFIX}.dll
-                             ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gtest${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
-            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gmock${UPNP_DEBUG_SUFFIX}.dll
-                             ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gmock${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
-            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gtest_main${UPNP_DEBUG_SUFFIX}.dll
-                             ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gtest_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
-            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gmock_main${UPNP_DEBUG_SUFFIX}.dll
-                             ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gmock_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+            set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gtest${UPNP_DEBUG_SUFFIX}.lib
+                                     ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gmock${UPNP_DEBUG_SUFFIX}.lib
+                                     ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gtest_main${UPNP_DEBUG_SUFFIX}.lib
+                                     ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gmock_main${UPNP_DEBUG_SUFFIX}.lib
+                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock libraries")
         else()
-            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gtest${UPNP_DEBUG_SUFFIX}.dll
-                             ${UPNP_GTESTS_BINARY_DIR}/gtest${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
-            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gmock${UPNP_DEBUG_SUFFIX}.dll
-                             ${UPNP_GTESTS_BINARY_DIR}/gmock${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
-            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gtest_main${UPNP_DEBUG_SUFFIX}.dll
-                             ${UPNP_GTESTS_BINARY_DIR}/gtest_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
-            file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gmock_main${UPNP_DEBUG_SUFFIX}.dll
-                             ${UPNP_GTESTS_BINARY_DIR}/gmock_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+            set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/gtest${UPNP_DEBUG_SUFFIX}.lib
+                                     ${PROJECT_BINARY_DIR}/lib/gmock${UPNP_DEBUG_SUFFIX}.lib
+                                     ${PROJECT_BINARY_DIR}/lib/gtest_main${UPNP_DEBUG_SUFFIX}.lib
+                                     ${PROJECT_BINARY_DIR}/lib/gmock_main${UPNP_DEBUG_SUFFIX}.lib
+                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock libraries")
         endif()
 
-    endif(WIN32 AND BUILD_SHARED_LIBS)
+        message(CHECK_PASS "done")
 
-    message(CHECK_PASS "done")
+
+        ##################################
+        # Build Unit Tests on MS Windows #
+        ##################################
+
+        message(CHECK_START "configuring Unit Tests")
+
+        # This caches UPNP_GTESTS_SOURCE_DIR and UPNP_GTESTS_BINARY_DIR
+        add_subdirectory(${PROJECT_SOURCE_DIR}/gtests ${PROJECT_SOURCE_DIR}/gtests/build)
+
+        # Create symlinks for shared gtest .dlls so the Unit Tests can find them.
+        if(BUILD_SHARED_LIBS)
+            if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
+                # Make Directory is necessary because sub directory ${CMAKE_BUILD_TYPE} isn't available yet.
+                file(MAKE_DIRECTORY ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+                file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gtest${UPNP_DEBUG_SUFFIX}.dll
+                                 ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gtest${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+                file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gmock${UPNP_DEBUG_SUFFIX}.dll
+                                 ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gmock${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+                file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gtest_main${UPNP_DEBUG_SUFFIX}.dll
+                                 ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gtest_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+                file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gmock_main${UPNP_DEBUG_SUFFIX}.dll
+                                 ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gmock_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+            else()
+                file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gtest${UPNP_DEBUG_SUFFIX}.dll
+                                 ${UPNP_GTESTS_BINARY_DIR}/gtest${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+                file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gmock${UPNP_DEBUG_SUFFIX}.dll
+                                 ${UPNP_GTESTS_BINARY_DIR}/gmock${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+                file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gtest_main${UPNP_DEBUG_SUFFIX}.dll
+                                 ${UPNP_GTESTS_BINARY_DIR}/gtest_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+                file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gmock_main${UPNP_DEBUG_SUFFIX}.dll
+                                 ${UPNP_GTESTS_BINARY_DIR}/gmock_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+            endif()
+
+        endif(BUILD_SHARED_LIBS)
+
+    else(WIN32) # AND UPNP_GOOGLETEST
+
+        # This caches googletest_SOURCE_DIR, googletest_BINARY_DIR and googletest_POPULATED.
+        FetchContent_MakeAvailable(googletest)
+
+        # Output with cmake option --log-level=DEBUG
+        message(DEBUG "  DEBUG: googletest_SOURCE_DIR is: ${googletest_SOURCE_DIR}")
+        message(DEBUG "  DEBUG: googletest_BINARY_DIR is: ${googletest_BINARY_DIR}")
+
+        # Cache the GoogleTest library names for later use
+        if(BUILD_SHARED_LIBS)
+            set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgtest${UPNP_DEBUG_SUFFIX}.so
+                                     ${PROJECT_BINARY_DIR}/lib/libgmock${UPNP_DEBUG_SUFFIX}.so
+                                     ${PROJECT_BINARY_DIR}/lib/libgtest_main${UPNP_DEBUG_SUFFIX}.so
+                                     ${PROJECT_BINARY_DIR}/lib/libgmock_main${UPNP_DEBUG_SUFFIX}.so
+                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock shared libraries")
+        else()
+            set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgtest${UPNP_DEBUG_SUFFIX}.a
+                                     ${PROJECT_BINARY_DIR}/lib/libgmock${UPNP_DEBUG_SUFFIX}.a
+                                     ${PROJECT_BINARY_DIR}/lib/libgtest_main${UPNP_DEBUG_SUFFIX}.a
+                                     ${PROJECT_BINARY_DIR}/lib/libgmock_main${UPNP_DEBUG_SUFFIX}.a
+                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock static libraries")
+        endif(BUILD_SHARED_LIBS)
+
+        message(CHECK_PASS "done")
+
+
+        ##################################
+        # Build default Unit Tests       #
+        ##################################
+
+        message(CHECK_START "configuring Unit Tests")
+
+        # This caches UPNP_GTESTS_SOURCE_DIR and UPNP_GTESTS_BINARY_DIR
+        add_subdirectory(${PROJECT_SOURCE_DIR}/gtests ${PROJECT_SOURCE_DIR}/gtests/build)
+
+        message(CHECK_PASS "done")
+
+    endif(WIN32)
 
 endif(UPNP_GOOGLETEST)
 

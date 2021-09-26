@@ -41,8 +41,13 @@ add_compile_definitions(
 )
 
 link_libraries(${UPNP_GTEST_LIBRARIES}
-               ${UPNP_PTHREADS_STATIC_LIBRARY}
-               #${UPNP_PTHREADS_SHARED_LIBRARY}
+               # On Linux we cannot link with the static pthreads library
+               # because then we have also link with a static libc that's not
+               # available by default.
+               $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_PTHREADS_SHARED_LIBRARY}>
+               # On MS Windows we link with the static pthreads4w library to
+               # avoid error prone managing access to its .dll file.
+               $<$<BOOL:${WIN32}>:${UPNP_PTHREADS_STATIC_LIBRARY}>
 )
 
 # template
@@ -121,7 +126,7 @@ if(NOT WIN32)
 
 	${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
 	${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.cpp
-	# ${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp
+	${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp
 
 	${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
 	${PROJECT_SOURCE_DIR}/tools/tools.cpp

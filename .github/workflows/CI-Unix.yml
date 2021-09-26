@@ -1,4 +1,4 @@
-name: Continues Integration
+name: CI Linux
 # ubuntu-18.04 isn't used for tests because it doesn't support open standard
 # ISO C++20 that we declared to use for UPnPlib.
 
@@ -9,182 +9,92 @@ on:
     branches: [ main ]
 
 jobs:
-  # Job: Run tests of the pthreads4w library
-  #-----------------------------------------
-  test-pthreads4w:
-    name: Run tests of the pthreads4w library
-    runs-on: ${{ matrix.os }}
+  # Job: Configure and build
+  #-------------------------
+  Configure_and_build:
+    name: Build
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        os: [ windows-2016, windows-latest ]
-      fail-fast: false
-
-    steps:
-    # Step building the pthreads4w library
-      - uses: actions/checkout@v2
-
-      - if: matrix.os == 'windows-2016'
-        name: Use MS Windows 32 bit
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: win32
-
-      - if: matrix.os == 'windows-latest'
-        name: Use MS Windows 64 bit
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: amd64
-
-      - name: Configure pthreads4w library with tests
-        run: cmake -S pthreads4w -B pthreads4w/build -D PT4W_RUN_TESTS=ON
-
-
-  # Job: configure and build operating systems for default MinSizeRel
-  #---------------------------------------------------------------
-  build-release:
-    name: MinSizeRel build ${{matrix.os}} ${{matrix.option}}
-    runs-on: ${{matrix.os}}
-
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, macOS-latest, windows-2016, windows-latest ]
-        option: [ '', '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON' ]
-                # -D CMAKE_BUILD_TYPE=MinSizeRel
-                # -D client=OFF
-                # -D device=OFF
-                # -D gena=OFF
-                # -D ipv6=OFF
-                # -D optssdp=OFF
-                # -D samples=OFF
-                # -D scriptsupport=OFF
-                # -D soap=OFF
-                # -D ssdp=OFF
-                # -D tools=OFF
+        googletest: [ '', '-D UPNP_GOOGLETEST=ON' ]
+        shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
+        buildtype: [ 'MinSizeRel', 'Debug' ]
+          # Possible old options from pupnp
+          # -D CMAKE_BUILD_TYPE=MinSizeRel
+          # -D client=OFF
+          # -D device=OFF
+          # -D gena=OFF
+          # -D ipv6=OFF
+          # -D optssdp=OFF
+          # -D samples=OFF
+          # -D scriptsupport=OFF
+          # -D soap=OFF
+          # -D ssdp=OFF
+          # -D tools=OFF
       fail-fast: false
 
     steps:
     # Step building the core upnplib
       - uses: actions/checkout@v2
 
-      - if: matrix.os == 'windows-2016'
-        name: Use MS Windows 32 bit
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: win32
+      - name: Configure
+        run: cmake -S . -B build ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
 
-      - if: matrix.os == 'windows-latest'
-        name: Use MS Windows 64 bit
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: amd64
+      - name: Build
+        run: cmake --build build --config ${{matrix.buildtype}}
 
-      - name: Configure core upnplib
-        run: cmake -S . -B build ${{matrix.option}}
-
-      - if: runner.os != 'Windows'
-        name: Build core upnplib if not MS Windows
+      - if: (matrix.googletest == '-D UPNP_GOOGLETEST=ON') && (matrix.shared == '') && (matrix.buildtype != 'Debug')
+        name: Check gtest library files, static, NOT Debug
         run: |
-          cmake --build build
-          echo "Check if build binary file does NOT contain debug info..."
-          objdump -g upnp/build/lib/libupnplib.so | grep --invert-match --ignore-case --max-count=1 "Contents of the .debug_info section"
+          ls ./build/lib/libgtest.a
+          ls ./build/lib/libgmock.a
+          ls ./build/lib/libgtest_main.a
+          ls ./build/lib/libgmock_main.a
+
+      - if: (matrix.googletest == '-D UPNP_GOOGLETEST=ON') && (matrix.shared == '') && (matrix.buildtype == 'Debug')
+        name: Check gtest library files, static, Debug
+        run: |
+          ls ./build/lib/libgtestd.a
+          ls ./build/lib/libgmockd.a
+          ls ./build/lib/libgtest_maind.a
+          ls ./build/lib/libgmock_maind.a
+
+      - if: (matrix.googletest == '-D UPNP_GOOGLETEST=ON') && (matrix.shared == '-D BUILD_SHARED_LIBS=ON') && (matrix.buildtype != 'Debug')
+        name: Check gtest library files, shared, NOT Debug
+        run: |
+          ls ./build/lib/libgtest.so
+          ls ./build/lib/libgmock.so
+          ls ./build/lib/libgtest_main.so
+          ls ./build/lib/libgmock_main.so
+
+      - if: (matrix.googletest == '-D UPNP_GOOGLETEST=ON') && (matrix.shared == '-D BUILD_SHARED_LIBS=ON') && (matrix.buildtype == 'Debug')
+        name: Check gtest library files, shared, Debug
+        run: |
+          ls ./build/lib/libgtestd.so
+          ls ./build/lib/libgmockd.so
+          ls ./build/lib/libgtest_maind.so
+          ls ./build/lib/libgmock_maind.so
+
+      - if: matrix.googletest == '-D UPNP_GOOGLETEST=ON'
+        name: Run simple gtest
+        # This gtest is always built with GoogleTest
+        run: ./gtests/build/test_simple
+
+      - if: matrix.buildtype != 'Debug'
+        name: Verify if NO Debug info
+        # These two libraries are always built
+        run: |
+          objdump -g upnp/build/lib/libupnplib.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
           ls upnp/build/lib/libupnplib.a
-          echo "Done."
-          echo "Running the small info program 'upnplib'"
-          ./upnp/build/upnplib
 
-      - if: (runner.os == 'macOS') && (matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON')
-        name: Check Googletest library builds on macOS
+      - if: matrix.buildtype == 'Debug'
+        name: Verify if Debug info
+        # These two libraries are always built
         run: |
-          find gtests/googletest/build/{bin,lib}
+          objdump -g upnp/build/lib/libupnplib.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          ls upnp/build/lib/libupnplib.a
 
-      - if: (runner.os == 'Linux') && (matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON')
-        name: Check Googletest library builds on Linux
-        run: |
-          echo "Default MinSizeRel Shared build..."
-          ls gtests/googletest/build/lib/libgtest.so
-          ls gtests/googletest/build/lib/libgmock.so
-          ls gtests/googletest/build/lib/libgtest_main.so
-          ls gtests/googletest/build/lib/libgmock_main.so
-          echo "Debug Static build..."
-          cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=OFF -D CMAKE_BUILD_TYPE=Debug
-          ls gtests/googletest/build/lib/libgtestd.a
-          ls gtests/googletest/build/lib/libgmockd.a
-          ls gtests/googletest/build/lib/libgtest_maind.a
-          ls gtests/googletest/build/lib/libgmock_maind.a
-          echo "Release Static build..."
-          cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=OFF -D CMAKE_BUILD_TYPE=Release
-          ls gtests/googletest/build/lib/libgtest.a
-          ls gtests/googletest/build/lib/libgmock.a
-          ls gtests/googletest/build/lib/libgtest_main.a
-          ls gtests/googletest/build/lib/libgmock_main.a
-          echo "Debug Shared build..."
-          cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE=Debug
-          ls gtests/googletest/build/lib/libgtestd.so
-          ls gtests/googletest/build/lib/libgmockd.so
-          ls gtests/googletest/build/lib/libgtest_maind.so
-          ls gtests/googletest/build/lib/libgmock_maind.so
-          echo "MinSizeRel Static build..."
-          cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=OFF -D CMAKE_BUILD_TYPE=MinSizeRel
-          ls gtests/googletest/build/lib/libgtest.a
-          ls gtests/googletest/build/lib/libgmock.a
-          ls gtests/googletest/build/lib/libgtest_main.a
-          ls gtests/googletest/build/lib/libgmock_main.a
-          echo "Release Shared build..."
-          cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE=Release
-          ls gtests/googletest/build/lib/libgtest.so
-          ls gtests/googletest/build/lib/libgmock.so
-          ls gtests/googletest/build/lib/libgtest_main.so
-          ls gtests/googletest/build/lib/libgmock_main.so
-
-      - if: runner.os == 'Windows'
-        name: Build core upnplib on MS Windows
-        run: |
-          cmake --build build --config MinSizeRel
-          echo "Check if binary MinSizeRel file is build..."
-          dir -Name upnp\build\MinSizeRel\upnplib.dll
-          dir -Name upnp\build\MinSizeRel\upnplib.exe
-          dir -Name upnp\build\MinSizeRel\upnplib.exp
-          dir -Name upnp\build\MinSizeRel\upnplib.lib
-          dir -Name upnp\build\MinSizeRel\upnplibStatic.exe
-          dir -Name upnp\build\MinSizeRel\upnplibStatic.lib
-          echo "Running the small info program..."
-          .\upnp\build\MinSizeRel\upnplib.exe
-
-      - if: (runner.os == 'Windows') && (matrix.option == '-D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON')
-        name: Check Googletest library builds on MS Windows
-        run: |
-          echo "Default MinSizeRel Shared build..."
-          ls gtests/googletest/build/bin/MinSizeRel/gtest.dll
-          ls gtests/googletest/build/bin/MinSizeRel/gmock.dll
-          ls gtests/googletest/build/bin/MinSizeRel/gtest_main.dll
-          ls gtests/googletest/build/bin/MinSizeRel/gmock_main.dll
-          ls gtests/googletest/build/lib/MinSizeRel/gtest.lib
-          ls gtests/googletest/build/lib/MinSizeRel/gmock.lib
-          ls gtests/googletest/build/lib/MinSizeRel/gtest_main.lib
-          ls gtests/googletest/build/lib/MinSizeRel/gmock_main.lib
-          echo "Debug Static build..."
-          cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=OFF -D CMAKE_BUILD_TYPE=Debug
-          ls gtests/googletest/build/lib/Debug/gtestd.lib
-          ls gtests/googletest/build/lib/Debug/gmockd.lib
-          ls gtests/googletest/build/lib/Debug/gtest_maind.lib
-          ls gtests/googletest/build/lib/Debug/gmock_maind.lib
-          echo "Release Static build..."
-          cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=OFF -D CMAKE_BUILD_TYPE=Release
-          ls gtests/googletest/build/lib/Release/gtest.lib
-          ls gtests/googletest/build/lib/Release/gmock.lib
-          ls gtests/googletest/build/lib/Release/gtest_main.lib
-          ls gtests/googletest/build/lib/Release/gmock_main.lib
-          echo "Debug Shared build..."
-          cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE=Debug
-          ls gtests/googletest/build/bin/Debug/gtestd.dll
-          ls gtests/googletest/build/bin/Debug/gmockd.dll
-          ls gtests/googletest/build/bin/Debug/gtest_maind.dll
-          ls gtests/googletest/build/bin/Debug/gmock_maind.dll
-          ls gtests/googletest/build/lib/Debug/gtestd.lib
-          ls gtests/googletest/build/lib/Debug/gmockd.lib
-          ls gtests/googletest/build/lib/Debug/gtest_maind.lib
-          ls gtests/googletest/build/lib/Debug/gmock_maind.lib
-
-# TODO: For later debug checking we can use this:
-# objdump -g upnp/build/static/libupnplib.a | grep --invert-match --ignore-case --max-count=1 "Contents of the .debug_info section"
+      - name: Run upnplib info program
+        # This program is always built
+        run: ./upnp/build/upnplib
