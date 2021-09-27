@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-09-25
+# Redistribution only with this Copyright remark. Last modified: 2021-09-27
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -231,11 +231,18 @@ if(WIN32)
         message(CHECK_PASS "done")
         message(CHECK_START "Building POSIX Threads for Windows libraries")
 
+        if(PT4W_BUILD_TESTING)
+            set(PT4W_COMMAND COMMAND_ECHO)
+            set(PT4W_COMMAND_OUTPUT "STDOUT")
+        else()
+            set(PT4W_COMMAND OUTPUT_QUIET)
+            set(PT4W_COMMAND_OUTPUT "")
+        endif()
         execute_process(COMMAND cmake --build ${pthreads4w_BINARY_DIR} --config ${CMAKE_BUILD_TYPE}
                         WORKING_DIRECTORY ${pthreads4w_SOURCE_DIR}
                         RESULT_VARIABLE PT4W_RETURN_CODE
                         ERROR_VARIABLE PT4W_ERROR_MESSAGE
-                        OUTPUT_QUIET)
+                        ${PT4W_COMMAND} ${PT4W_COMMAND_OUTPUT})
         if(NOT ${PT4W_RETURN_CODE} EQUAL 0)
             # This will stop the installation
             message(FATAL_ERROR "${PT4W_RETURN_CODE}: ${PT4W_ERROR_MESSAGE}")

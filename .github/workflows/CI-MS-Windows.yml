@@ -9,33 +9,43 @@ on:
 jobs:
   # Job: Run testsuite of the pthreads4w library
   #---------------------------------------------
-#  test-pthreads4w:
-#    name: Run tests of the pthreads4w library
-#    runs-on: ${{ matrix.os }}
-#
-#    strategy:
-#      matrix:
-#        os: [ windows-2016, windows-latest ]
-#      fail-fast: false
-#
-#    steps:
-#    # Step building the pthreads4w library
-#      - uses: actions/checkout@v2
-#
-#      - if: matrix.os == 'windows-2016'
-#        name: Use MS Windows 32 bit
-#        uses: ilammy/msvc-dev-cmd@v1
-#        with:
-#          arch: win32
-#
-#      - if: matrix.os == 'windows-latest'
-#        name: Use MS Windows 64 bit
-#        uses: ilammy/msvc-dev-cmd@v1
-#        with:
-#          arch: amd64
-#
-#      - name: Configure pthreads4w library with tests
-#        run: cmake -S pthreads4w -B pthreads4w/build -D PT4W_RUN_TESTS=ON
+  test-pthreads4w:
+    name: Run testsuite of pthreads4w
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ windows-2016, windows-latest ]
+      fail-fast: false
+
+    steps:
+    # Step building the pthreads4w library
+      - uses: actions/checkout@v2
+
+      - if: matrix.os == 'windows-2016'
+        name: Use MS Windows 32 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: win32
+
+      - if: matrix.os == 'windows-latest'
+        name: Use MS Windows 64 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - name: Configure pthreads4w with tests
+        run: cmake -S . -B build -D PT4W_BUILD_TESTING=ON -D CMAKE_BUILD_TYPE=MinSizeRel
+
+      - name: Append build directory to path
+        run: |
+          # The modification is first seen at the next step!
+          echo "${{github.workspace}}\build\_deps\pthreads4w-build" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Run pthreads4w testsuite
+        run: |
+          cd build\_deps\pthreads4w-build\tests
+          ctest -C MinSizeRel -V
 
 
   # Job: Configure and build with Visual Studio
