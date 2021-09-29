@@ -365,13 +365,22 @@ if(UPNP_GOOGLETEST)
         message(DEBUG "  DEBUG: googletest_BINARY_DIR is: ${googletest_BINARY_DIR}")
 
         # Cache the GoogleTest library names for later use
+        # TODO: Import as external libraries
         if(BUILD_SHARED_LIBS)
-            set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgtest${UPNP_DEBUG_SUFFIX}.so
-                                     ${PROJECT_BINARY_DIR}/lib/libgmock${UPNP_DEBUG_SUFFIX}.so
-                                     ${PROJECT_BINARY_DIR}/lib/libgtest_main${UPNP_DEBUG_SUFFIX}.so
-                                     ${PROJECT_BINARY_DIR}/lib/libgmock_main${UPNP_DEBUG_SUFFIX}.so
-                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock shared libraries")
-        else()
+            if(APPLE)
+                set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgtest${UPNP_DEBUG_SUFFIX}.dylib
+                                         ${PROJECT_BINARY_DIR}/lib/libgmock${UPNP_DEBUG_SUFFIX}.dylib
+                                         ${PROJECT_BINARY_DIR}/lib/libgtest_main${UPNP_DEBUG_SUFFIX}.dylib
+                                         ${PROJECT_BINARY_DIR}/lib/libgmock_main${UPNP_DEBUG_SUFFIX}.dylib
+                                         CACHE INTERNAL "Names of the GoogleTest/GoogleMock shared libraries")
+            else()
+                set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgtest${UPNP_DEBUG_SUFFIX}.so
+                                         ${PROJECT_BINARY_DIR}/lib/libgmock${UPNP_DEBUG_SUFFIX}.so
+                                         ${PROJECT_BINARY_DIR}/lib/libgtest_main${UPNP_DEBUG_SUFFIX}.so
+                                         ${PROJECT_BINARY_DIR}/lib/libgmock_main${UPNP_DEBUG_SUFFIX}.so
+                                         CACHE INTERNAL "Names of the GoogleTest/GoogleMock shared libraries")
+            endif()
+        else(BUILD_SHARED_LIBS)
             set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgtest${UPNP_DEBUG_SUFFIX}.a
                                      ${PROJECT_BINARY_DIR}/lib/libgmock${UPNP_DEBUG_SUFFIX}.a
                                      ${PROJECT_BINARY_DIR}/lib/libgtest_main${UPNP_DEBUG_SUFFIX}.a

@@ -49,25 +49,11 @@ link_libraries(${UPNP_GTEST_LIBRARIES}
                # avoid error prone managing access to its .dll file.
                $<$<BOOL:${WIN32}>:${UPNP_PTHREADS_STATIC_LIBRARY}>
 )
+# For macOS we must tell the linker where it finds the shared libraries
+add_link_options($<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/lib>)
 
-# template
-add_executable(test_template ${PROJECT_SOURCE_DIR}/test_template.cpp)
-add_test(NAME ctest_template COMMAND test_template)
-add_executable(test_template_old ${PROJECT_SOURCE_DIR}/test_template.cpp)
-target_compile_definitions(test_template_old PRIVATE OLD_TEST)
-add_test(NAME ctest_template_old COMMAND test_template_old)
 
-# simple test
-add_executable(test_simple ${PROJECT_SOURCE_DIR}/test_simple.cpp)
-add_test(NAME ctest_simple COMMAND test_simple)
-
-# threadutil
-add_executable(test_threadutil ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
-add_test(NAME ctest_threadutil COMMAND test_threadutil)
-add_executable(test_threadutil_old ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
-target_compile_definitions(test_threadutil_old PRIVATE OLD_TEST)
-add_test(NAME ctest_threadutil_old COMMAND test_threadutil_old)
-
+# The tests are build in reverse order. test_template.cpp will be build first.
 if(NOT WIN32)
     # TODO: Make tests running on MS Windows
 
@@ -160,3 +146,21 @@ if(NOT WIN32)
     target_compile_definitions(test_upnpdebug_mock_old PRIVATE OLD_TEST)
     add_test(NAME ctest_upnpdebug_mock_old COMMAND test_upnpdebug_mock_old)
 endif()
+
+# threadutil
+add_executable(test_threadutil_old ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
+target_compile_definitions(test_threadutil_old PRIVATE OLD_TEST)
+add_test(NAME ctest_threadutil_old COMMAND test_threadutil_old)
+add_executable(test_threadutil ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
+add_test(NAME ctest_threadutil COMMAND test_threadutil)
+
+# simple test
+add_executable(test_simple ${PROJECT_SOURCE_DIR}/test_simple.cpp)
+add_test(NAME ctest_simple COMMAND test_simple)
+
+# template
+add_executable(test_template_old ${PROJECT_SOURCE_DIR}/test_template.cpp)
+target_compile_definitions(test_template_old PRIVATE OLD_TEST)
+add_test(NAME ctest_template_old COMMAND test_template_old)
+add_executable(test_template ${PROJECT_SOURCE_DIR}/test_template.cpp)
+add_test(NAME ctest_template COMMAND test_template)

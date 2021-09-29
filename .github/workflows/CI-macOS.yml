@@ -1,6 +1,4 @@
-name: CI Linux
-# ubuntu-18.04 isn't used for tests because it doesn't support open standard
-# ISO C++20 that we declared to use for UPnPlib.
+name: CI macOS
 
 on:
   push:
@@ -12,30 +10,19 @@ jobs:
   # Job: Configure and build
   #-------------------------
   Configure_and_build:
-    name: Build
-    runs-on: ubuntu-latest
+    name: Configure and build
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
+        os: [ macOS-10.15, macOS-latest ]
         googletest: [ '', '-D UPNP_GOOGLETEST=ON' ]
         shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
         buildtype: [ 'MinSizeRel', 'Debug' ]
-          # Possible old options from pupnp
-          # -D CMAKE_BUILD_TYPE=MinSizeRel
-          # -D client=OFF
-          # -D device=OFF
-          # -D gena=OFF
-          # -D ipv6=OFF
-          # -D optssdp=OFF
-          # -D samples=OFF
-          # -D scriptsupport=OFF
-          # -D soap=OFF
-          # -D ssdp=OFF
-          # -D tools=OFF
       fail-fast: false
 
     steps:
-    # Step building the core upnplib
+    # Steps to build and test the core upnplib
       - uses: actions/checkout@v2
 
       - name: Configure
@@ -63,18 +50,18 @@ jobs:
       - if: (matrix.googletest == '-D UPNP_GOOGLETEST=ON') && (matrix.shared == '-D BUILD_SHARED_LIBS=ON') && (matrix.buildtype != 'Debug')
         name: Check gtest library files, shared, NOT Debug
         run: |
-          ls ./build/lib/libgtest.so
-          ls ./build/lib/libgmock.so
-          ls ./build/lib/libgtest_main.so
-          ls ./build/lib/libgmock_main.so
+          ls ./build/lib/libgtest.dylib
+          ls ./build/lib/libgmock.dylib
+          ls ./build/lib/libgtest_main.dylib
+          ls ./build/lib/libgmock_main.dylib
 
       - if: (matrix.googletest == '-D UPNP_GOOGLETEST=ON') && (matrix.shared == '-D BUILD_SHARED_LIBS=ON') && (matrix.buildtype == 'Debug')
         name: Check gtest library files, shared, Debug
         run: |
-          ls ./build/lib/libgtestd.so
-          ls ./build/lib/libgmockd.so
-          ls ./build/lib/libgtest_maind.so
-          ls ./build/lib/libgmock_maind.so
+          ls ./build/lib/libgtestd.dylib
+          ls ./build/lib/libgmockd.dylib
+          ls ./build/lib/libgtest_maind.dylib
+          ls ./build/lib/libgmock_maind.dylib
 
       - if: matrix.googletest == '-D UPNP_GOOGLETEST=ON'
         name: Run simple gtest
@@ -85,14 +72,18 @@ jobs:
         name: Verify if NO Debug info
         # These two libraries are always built
         run: |
-          objdump -g upnp/build/lib/libupnplib.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          # objdump does not work (this way?) on macOS
+          #objdump [-a] -g upnp/build/lib/libupnplib.dylib | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          ls upnp/build/lib/libupnplib.dylib
           ls upnp/build/lib/libupnplib.a
 
       - if: matrix.buildtype == 'Debug'
         name: Verify if Debug info
         # These two libraries are always built
         run: |
-          objdump -g upnp/build/lib/libupnplib.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          # objdump does not work (this way?) on macOS
+          #objdump [-a] -g upnp/build/lib/libupnplib.dylib | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          ls upnp/build/lib/libupnplib.dylib
           ls upnp/build/lib/libupnplib.a
 
       - name: Run upnplib info program
