@@ -49,8 +49,10 @@ link_libraries(${UPNP_GTEST_LIBRARIES}
                # avoid error prone managing access to its .dll file.
                $<$<BOOL:${WIN32}>:${UPNP_PTHREADS_STATIC_LIBRARY}>
 )
-# For macOS we must tell the linker where it finds the shared libraries
-add_link_options($<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/lib>)
+# For macOS we must tell the linker where it finds the shared libraries.
+# This is linked into the executable. Alternative or additional you can also
+# set the environment variable DYLD_LIBRARY_PATH.
+add_link_options($<$<AND:$<BOOL:${APPLE}>,$<BOOL:${BUILD_SHARED_LIBS}>>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/lib>)
 
 
 # The tests are build in reverse order. test_template.cpp will be build first.

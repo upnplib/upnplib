@@ -6,21 +6,6 @@
 
 #include <pthread.h>
 
-#ifdef _MSC_VER
-// Reference: ./build/_deps/googletest-src/googletest/README.md
-#ifdef GTEST_IS_THREADSAFE
-#pragma message("pthread is available")
-#else
-#pragma message("pthread is NOT available")
-#endif
-#else // _MSC_VER
-#ifdef GTEST_IS_THREADSAFE
-#warning "only Info: pthread is available"
-#else
-#warning "only Info: pthread is NOT available"
-#endif
-#endif // _MSC_VER
-
 // simple mocked class
 // -------------------
 class Foo {

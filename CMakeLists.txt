@@ -214,10 +214,6 @@ if(WIN32)
         # This caches pthreads4w_SOURCE_DIR, pthreads4w_BINARY_DIR and pthreads4w_POPULATED.
         FetchContent_Populate(pthreads4w)
 
-        # Output with cmake option --log-level=DEBUG
-        message(DEBUG "  DEBUG: pthreads4w_SOURCE_DIR is: ${pthreads4w_SOURCE_DIR}")
-        message(DEBUG "  DEBUG: pthreads4w_BINARY_DIR is: ${pthreads4w_BINARY_DIR}")
-
         execute_process(COMMAND cmake -S ${pthreads4w_SOURCE_DIR} -B ${pthreads4w_BINARY_DIR} -G "NMake Makefiles" -D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -D BUILD_TESTING=${PT4W_BUILD_TESTING}
                         WORKING_DIRECTORY ${pthreads4w_SOURCE_DIR}
                         RESULT_VARIABLE PT4W_RETURN_CODE
@@ -256,6 +252,10 @@ if(WIN32)
         message(CHECK_PASS "done")
 
     endif(NOT pthreads4w_POPULATED)
+
+    # Output with cmake option --log-level=DEBUG
+    message(DEBUG "  DEBUG: pthreads4w_SOURCE_DIR is: ${pthreads4w_SOURCE_DIR}")
+    message(DEBUG "  DEBUG: pthreads4w_BINARY_DIR is: ${pthreads4w_BINARY_DIR}")
 
 endif(WIN32)
 
@@ -297,10 +297,6 @@ if(UPNP_GOOGLETEST)
 
         # This caches googletest_SOURCE_DIR, googletest_BINARY_DIR and googletest_POPULATED.
         FetchContent_MakeAvailable(googletest)
-
-        # Output with cmake option --log-level=DEBUG
-        message(DEBUG "  DEBUG: googletest_SOURCE_DIR is: ${googletest_SOURCE_DIR}")
-        message(DEBUG "  DEBUG: googletest_BINARY_DIR is: ${googletest_BINARY_DIR}")
 
         # Cache the different GoogleTest library names for later use
         if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
@@ -360,12 +356,7 @@ if(UPNP_GOOGLETEST)
         # This caches googletest_SOURCE_DIR, googletest_BINARY_DIR and googletest_POPULATED.
         FetchContent_MakeAvailable(googletest)
 
-        # Output with cmake option --log-level=DEBUG
-        message(DEBUG "  DEBUG: googletest_SOURCE_DIR is: ${googletest_SOURCE_DIR}")
-        message(DEBUG "  DEBUG: googletest_BINARY_DIR is: ${googletest_BINARY_DIR}")
-
         # Cache the GoogleTest library names for later use
-        # TODO: Import as external libraries
         if(BUILD_SHARED_LIBS)
             if(APPLE)
                 set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgtest${UPNP_DEBUG_SUFFIX}.dylib
@@ -404,6 +395,10 @@ if(UPNP_GOOGLETEST)
 
     endif(WIN32)
 
+    # Output with cmake option --log-level=DEBUG
+    message(DEBUG "  DEBUG: googletest_SOURCE_DIR is: ${googletest_SOURCE_DIR}")
+    message(DEBUG "  DEBUG: googletest_BINARY_DIR is: ${googletest_BINARY_DIR}")
+
 endif(UPNP_GOOGLETEST)
 
 #################################
@@ -426,5 +421,18 @@ file(CREATE_LINK ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.h
                  ${PROJECT_BINARY_DIR}/autoconfig.h
                  COPY_ON_ERROR SYMBOLIC
 )
+
+# RPATH settings to find shared libraries
+# reference: https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling
+# Output with cmake option --log-level=DEBUG
+message(DEBUG "\n     DEBUG: RPATH settings\n     ---------------------")
+message(DEBUG "  DEBUG: CMAKE_SKIP_RPATH is ................: ${CMAKE_SKIP_RPATH}")
+message(DEBUG "  DEBUG: CMAKE_SKIP_INSTALL_RPATH is ........: ${CMAKE_SKIP_INSTALL_RPATH}")
+message(DEBUG "  DEBUG: CMAKE_MACOSX_RPATH is ..............: ${CMAKE_MACOSX_RPATH}")
+message(DEBUG "  DEBUG: CMAKE_INSTALL_NAME_DIR is ..........: ${CMAKE_INSTALL_NAME_DIR}")
+message(DEBUG "  DEBUG: CMAKE_INSTALL_RPATH is .............: ${CMAKE_INSTALL_RPATH}")
+message(DEBUG "  DEBUG: CMAKE_SKIP_BUILD_RPATH is ..........: ${CMAKE_SKIP_BUILD_RPATH}")
+message(DEBUG "  DEBUG: CMAKE_BUILD_WITH_INSTALL_RPATH is ..: ${CMAKE_BUILD_WITH_INSTALL_RPATH}")
+message(DEBUG "  DEBUG: CMAKE_INSTALL_RPATH_USE_LINK_PATH is: ${CMAKE_INSTALL_RPATH_USE_LINK_PATH}")
 
 message(STATUS "Build type is ${CMAKE_BUILD_TYPE}")
