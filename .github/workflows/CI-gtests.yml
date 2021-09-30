@@ -1,0 +1,53 @@
+name: CI gtests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Job: Configure and build
+  #-------------------------
+  Configure_and_build:
+    name: Configure and build
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macOS-10.15, macOS-latest, windows-2016, windows-latest ]
+      fail-fast: false
+
+    steps:
+    # Step building gtests
+      - uses: actions/checkout@v2
+
+      - if: matrix.os == 'windows-2016'
+        name: Use MS Windows 32 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: win32
+
+      - if: matrix.os == 'windows-latest'
+        name: Use MS Windows 64 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - name: Configure
+        run: cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE=MinSizeRel
+
+      - name: Build
+        run: cmake --build build --config MinSizeRel
+
+      - if: runner.os != 'Windows'
+        name: Run gtests not on MS Windows
+        run: |
+          cd ./gtests/build
+          ctest --output-on-failure
+
+      - if: runner.os == 'Windows'
+        name: Run gtests on MS Windows
+        run: |
+          cd ./gtests/build
+          ctest -C MinSizeRel --output-on-failure

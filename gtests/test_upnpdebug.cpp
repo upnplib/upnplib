@@ -31,10 +31,9 @@ TEST(UpnpdebugTestSuite, display_file_and_line) {
     //"2021-04-21 10:05:38 UPNP-API_-3: Thread:0x7F998124D740
     //[gtest_filename.dummy:0]: "
     EXPECT_THAT(
-        str,
-        MatchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2} "
-                     "[0-9]{2}:[0-9]{2}:[0-9]{2} UPNP-API_-3: "
-                     "Thread:0x[0-9A-F]{12} \\[gtest_filename.dummy:0\\]: "));
+        str, MatchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2} "
+                          "[0-9]{2}:[0-9]{2}:[0-9]{2} UPNP-API_-3: "
+                          "Thread:0x[0-9A-F]+ \\[gtest_filename.dummy:0\\]: "));
 }
 
 TEST(UpnpdebugTestSuite, setLogLevel) {
@@ -64,11 +63,11 @@ TEST(UpnpdebugTestSuite, UpnpPrintf_valid_call) {
     std::remove(fname.c_str());
     //"2021-04-21 21:54:50 UPNP-API_-2: Thread:0x7FF8CF8C7740
     //[gtest_filename.dummy:0]: UpnpInit2 with IfName=NULL, DestPort=51515."
-    EXPECT_THAT(
-        str, MatchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2} "
-                          "[0-9]{2}:[0-9]{2}:[0-9]{2} UPNP-API_-2: "
-                          "Thread:0x[0-9A-F]{12} \\[gtest_filename.dummy:0\\]: "
-                          "UpnpInit2 with IfName=NULL, DestPort=51515."));
+    EXPECT_THAT(str,
+                MatchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2} "
+                             "[0-9]{2}:[0-9]{2}:[0-9]{2} UPNP-API_-2: "
+                             "Thread:0x[0-9A-F]+ \\[gtest_filename.dummy:0\\]: "
+                             "UpnpInit2 with IfName=NULL, DestPort=51515."));
 }
 
 TEST(UpnpdebugTestSuite, UpnpPrintf_not_initialized) {
