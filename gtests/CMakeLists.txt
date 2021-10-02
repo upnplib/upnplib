@@ -76,14 +76,6 @@ if(NOT DEFINED ENV{GITHUB_ACTIONS})
 			       PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 endif()
 
-# UpnpString_mock
-#----------------
-add_executable(test_UpnpString_mock_old ${PROJECT_SOURCE_DIR}/test_UpnpString_mock.cpp)
-add_test(NAME ctest_UpnpString_mock_old COMMAND test_UpnpString_mock_old)
-target_compile_definitions(test_UpnpString_mock_old
-                           PRIVATE OLD_TEST
-                           PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
-                           )
 
 # upnpdebug
 if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT WIN32)

@@ -16,6 +16,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, macOS-10.15, macOS-latest, windows-2016, windows-latest ]
+        shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
       fail-fast: false
 
     steps:
@@ -35,7 +36,7 @@ jobs:
           arch: amd64
 
       - name: Configure
-        run: cmake -S . -B build -D UPNP_GOOGLETEST=ON -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE=MinSizeRel
+        run: cmake -S . -B build -D UPNP_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=MinSizeRel
 
       - name: Build
         run: cmake --build build --config MinSizeRel

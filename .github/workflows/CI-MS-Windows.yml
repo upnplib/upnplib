@@ -2,9 +2,9 @@ name: CI Microsoft Windows
 
 on:
   push:
-    branches: [ main ]
+    branches: [ gtests, main ]
   pull_request:
-    branches: [ main ]
+    branches: [ gtests, main ]
 
 jobs:
   # Job: Run testsuite of the pthreads4w library
