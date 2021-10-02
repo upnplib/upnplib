@@ -1,16 +1,24 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2021-09-07
 
-#include "api/UpnpString.cpp"
 #include "gtest/gtest.h"
 
 #undef HAVE_STRNLEN
 #undef HAVE_STRNDUP
 
-void free(void* ptr) {}
-// This function overwrites the 'free' function from the system library that
-// frees allocated memory from the heap. The test settings does not use memory
-// on the heap so this dummy function just do nothing.
+namespace { // no name, i.e. anonymous for file scope
+            // this is the C++ way for decorator STATIC
+
+void free(void* ptr) {
+    // This function overwrites the 'free' function from the system library.
+    // This is only possible with a local (file) scope of this function. Also it
+    // must be defined before the included program. It frees allocated memory
+    // from the heap. The test settings does not use memory on the heap so this
+    // dummy function just do nothing.
+}
+
+#include "api/UpnpString.cpp"
+} // namespace
 
 // simple testsuite without fixtures
 //----------------------------------

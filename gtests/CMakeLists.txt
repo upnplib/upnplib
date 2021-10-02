@@ -62,19 +62,26 @@ add_link_options($<$<AND:$<BOOL:${APPLE}>,$<BOOL:${BUILD_SHARED_LIBS}>>:LINKER:-
 #set(ENV{GITHUB_ACTIONS} 1)
 
 # UpnpString
-# On MS Windows: error LNK2005: free already defined in test_UpnpString.cpp.obj
-# It does not occur if linking with shared libs
-if(NOT WIN32)
+#-----------
 add_executable(test_UpnpString_old ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
-target_compile_definitions(test_UpnpString_old PRIVATE OLD_TEST)
 add_test(NAME ctest_UpnpString_old COMMAND test_UpnpString_old)
-add_executable(test_UpnpString_mock_old ${PROJECT_SOURCE_DIR}/test_UpnpString_mock.cpp)
-target_compile_definitions(test_UpnpString_mock_old PRIVATE OLD_TEST)
-add_test(NAME ctest_UpnpString_mock_old COMMAND test_UpnpString_mock_old)
-endif()
-if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT WIN32)
+target_compile_definitions(test_UpnpString_old
+			   PRIVATE OLD_TEST
+			   PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+)
+if(NOT DEFINED ENV{GITHUB_ACTIONS})
     add_executable(test_UpnpString ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
     add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
+    target_compile_definitions(test_UpnpString
+			       PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+)
+endif()
+
+# UpnpString_mock
+if(NOT WIN32)
+    add_executable(test_UpnpString_mock_old ${PROJECT_SOURCE_DIR}/test_UpnpString_mock.cpp)
+    target_compile_definitions(test_UpnpString_mock_old PRIVATE OLD_TEST)
+    add_test(NAME ctest_UpnpString_mock_old COMMAND test_UpnpString_mock_old)
 endif()
 
 # upnpdebug
