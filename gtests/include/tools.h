@@ -1,7 +1,9 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-08-20
+// Redistribution only with this Copyright remark. Last modified: 2021-10-02
 
-#pragma once
+#ifndef UPNP_GTEST_TOOLS_H
+#define UPNP_GTEST_TOOLS_H
+
 #include "UpnpInet.h"
 #include <ifaddrs.h>
 #include <string>
@@ -65,3 +67,5 @@ class CCaptureFd
   private:
     void closeFds();
 };
+
+#endif // UPNP_GTEST_TOOLS_H

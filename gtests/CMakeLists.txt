@@ -68,21 +68,22 @@ add_test(NAME ctest_UpnpString_old COMMAND test_UpnpString_old)
 target_compile_definitions(test_UpnpString_old
 			   PRIVATE OLD_TEST
 			   PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
-)
+                           )
 if(NOT DEFINED ENV{GITHUB_ACTIONS})
     add_executable(test_UpnpString ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
     add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
     target_compile_definitions(test_UpnpString
-			       PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
-)
+			       PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 endif()
 
 # UpnpString_mock
-if(NOT WIN32)
-    add_executable(test_UpnpString_mock_old ${PROJECT_SOURCE_DIR}/test_UpnpString_mock.cpp)
-    target_compile_definitions(test_UpnpString_mock_old PRIVATE OLD_TEST)
-    add_test(NAME ctest_UpnpString_mock_old COMMAND test_UpnpString_mock_old)
-endif()
+#----------------
+add_executable(test_UpnpString_mock_old ${PROJECT_SOURCE_DIR}/test_UpnpString_mock.cpp)
+add_test(NAME ctest_UpnpString_mock_old COMMAND test_UpnpString_mock_old)
+target_compile_definitions(test_UpnpString_mock_old
+                           PRIVATE OLD_TEST
+                           PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+                           )
 
 # upnpdebug
 if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT WIN32)
