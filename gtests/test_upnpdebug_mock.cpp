@@ -1,23 +1,18 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-09-08
+// Redistribution only with this Copyright remark. Last modified: 2021-10.04
 
 #include "tools.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include <stdio.h>
 
-#include "api/upnpdebug.cpp"
-
 using ::testing::_;
 using ::testing::Return;
 
-// --- mock strerror ----------------------------------
-class CMock_strerror {
-  public:
-    MOCK_METHOD(char*, strerror, (int errnum));
-};
-CMock_strerror* ptrMock_strerror = nullptr;
-char* strerror(int errnum) { return ptrMock_strerror->strerror(errnum); }
+namespace { // No name for file scope. This is the C++ way for decorator static.
+
+// The following functions overwrite the functions from the system library.
+// This is only possible with a local (file) scope of these functions.
 
 // --- mock fopen -------------------------------------
 class CMock_fopen {
@@ -25,9 +20,12 @@ class CMock_fopen {
     MOCK_METHOD(FILE*, fopen, (const char* pathname, const char* mode));
 };
 CMock_fopen* ptrMock_fopen = nullptr;
-FILE* fopen(const char* pathname, const char* mode) {
+static FILE* fopen(const char* pathname, const char* mode) {
+    std::cout << "DEBUG: mock fopen called\n";
     return ptrMock_fopen->fopen(pathname, mode);
 }
+
+#include "api/upnpdebug.cpp"
 
 // --- mock fclose ------------------------------------
 class CMock_fclose {
@@ -35,7 +33,60 @@ class CMock_fclose {
     MOCK_METHOD(int, fclose, (FILE * stream));
 };
 CMock_fclose* ptrMock_fclose = nullptr;
-int fclose(FILE* stream) { return ptrMock_fclose->fclose(stream); }
+static int fclose(FILE* stream) { return ptrMock_fclose->fclose(stream); }
+
+// --- mock strerror ----------------------------------
+class CMock_strerror {
+  public:
+    MOCK_METHOD(char*, strerror, (int errnum));
+};
+CMock_strerror* ptrMock_strerror = nullptr;
+static char* strerror(int errnum) { return ptrMock_strerror->strerror(errnum); }
+
+// --- mock pthread_mutex_init ------------------------
+class CMock_pthread_mutex_init {
+  public:
+    MOCK_METHOD(int, pthread_mutex_init,
+                (pthread_mutex_t * mutex,
+                 const pthread_mutexattr_t* mutexattr));
+};
+CMock_pthread_mutex_init* ptrMock_pthread_mutex_init = nullptr;
+static int pthread_mutex_init(pthread_mutex_t* mutex,
+                              const pthread_mutexattr_t* mutexattr) {
+    return ptrMock_pthread_mutex_init->pthread_mutex_init(mutex, mutexattr);
+}
+
+// --- mock pthread_mutex_lock ------------------------
+class CMock_pthread_mutex_lock {
+  public:
+    MOCK_METHOD(int, pthread_mutex_lock, (pthread_mutex_t * mutex));
+};
+CMock_pthread_mutex_lock* ptrMock_pthread_mutex_lock = nullptr;
+static int pthread_mutex_lock(pthread_mutex_t* mutex) {
+    return ptrMock_pthread_mutex_lock->pthread_mutex_lock(mutex);
+}
+
+// --- mock pthread_mutex_unlock ----------------------
+class CMock_pthread_mutex_unlock {
+  public:
+    MOCK_METHOD(int, pthread_mutex_unlock, (pthread_mutex_t * mutex));
+};
+CMock_pthread_mutex_unlock* ptrMock_pthread_mutex_unlock = nullptr;
+static int pthread_mutex_unlock(pthread_mutex_t* mutex) {
+    return ptrMock_pthread_mutex_unlock->pthread_mutex_unlock(mutex);
+}
+
+// --- mock pthread_mutex_destroy ---------------------
+class CMock_pthread_mutex_destroy {
+  public:
+    MOCK_METHOD(int, pthread_mutex_destroy, (pthread_mutex_t * mutex));
+};
+CMock_pthread_mutex_destroy* ptrMock_pthread_mutex_destroy = nullptr;
+static int pthread_mutex_destroy(pthread_mutex_t* mutex) {
+    return ptrMock_pthread_mutex_destroy->pthread_mutex_destroy(mutex);
+}
+
+} // namespace
 
 // Tests for the debugging and logging module
 //-------------------------------------------
@@ -46,12 +97,20 @@ class UpnpdebugMockTestSuite : public ::testing::Test {
     CMock_strerror mock_strerror;
     CMock_fopen mock_fopen;
     CMock_fclose mock_fclose;
+    CMock_pthread_mutex_init mock_pthread_mutex_init;
+    CMock_pthread_mutex_lock mock_pthread_mutex_lock;
+    CMock_pthread_mutex_unlock mock_pthread_mutex_unlock;
+    CMock_pthread_mutex_destroy mock_pthread_mutex_destroy;
 
     UpnpdebugMockTestSuite() {
         // set the global pointer to the mock objects
         ptrMock_strerror = &mock_strerror;
         ptrMock_fopen = &mock_fopen;
         ptrMock_fclose = &mock_fclose;
+        ptrMock_pthread_mutex_init = &mock_pthread_mutex_init;
+        ptrMock_pthread_mutex_lock = &mock_pthread_mutex_lock;
+        ptrMock_pthread_mutex_unlock = &mock_pthread_mutex_unlock;
+        ptrMock_pthread_mutex_destroy = &mock_pthread_mutex_destroy;
 
         // Initialize the global variable
         g_log_level = UPNP_DEFAULT_LOG_LEVEL;
@@ -63,41 +122,97 @@ class UpnpdebugMockTestSuite : public ::testing::Test {
     }
 };
 
-TEST_F(UpnpdebugMockTestSuite, defaultInitLog)
+TEST_F(UpnpdebugMockTestSuite, initLogButNoLogWanted)
 // For the ithread_mutex_t structure look at
 // https://stackoverflow.com/q/23449508/5014688
 {
+    EXPECT_CALL(mock_pthread_mutex_init, pthread_mutex_init(_, _)).Times(1);
+    // process unit
     EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
-    EXPECT_EQ(initwascalled, 1);
-    EXPECT_EQ(setlogwascalled, 0);
-    EXPECT_EQ(pthread_mutex_destroy(&GlobalDebugMutex), 0);
+
+    // EXPECT_EQ(g_log_level, UPNP_DEFAULT_LOG_LEVEL);
+    // EXPECT_EQ(fp, nullptr);
+    // EXPECT_EQ(is_stderr, 0);
+    // EXPECT_EQ(setlogwascalled, 0);
+    // EXPECT_EQ(initwascalled, 1);
+    // EXPECT_EQ(fileName, nullptr);
+
+    EXPECT_CALL(mock_pthread_mutex_init, pthread_mutex_init(_, _)).Times(0);
+    // process unit again
+    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
 }
 
-TEST_F(UpnpdebugMockTestSuite, setLogWasCalled) {
-    setlogwascalled = 1;
+TEST_F(UpnpdebugMockTestSuite, closeLog) {
+    EXPECT_CALL(mock_pthread_mutex_lock, pthread_mutex_lock(_)).Times(0);
+    EXPECT_CALL(mock_pthread_mutex_unlock, pthread_mutex_unlock(_)).Times(0);
+    EXPECT_CALL(mock_pthread_mutex_destroy, pthread_mutex_destroy(_)).Times(0);
+    // process unit
+    UpnpCloseLog();
+
+    EXPECT_CALL(mock_pthread_mutex_init, pthread_mutex_init(_, _)).Times(1);
+    // process unit
     EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
-    EXPECT_EQ(initwascalled, 1);
-    EXPECT_EQ(setlogwascalled, 1);
-    EXPECT_EQ(pthread_mutex_destroy(&GlobalDebugMutex), 0);
+
+    EXPECT_CALL(mock_pthread_mutex_lock, pthread_mutex_lock(_)).Times(1);
+    EXPECT_CALL(mock_pthread_mutex_unlock, pthread_mutex_unlock(_)).Times(1);
+    EXPECT_CALL(mock_pthread_mutex_destroy, pthread_mutex_destroy(_)).Times(1);
+    // process unit
+    UpnpCloseLog();
+}
+
+TEST_F(UpnpdebugMockTestSuite, setLogLevel) {
+    // process unit
+    UpnpSetLogLevel(UPNP_INFO);
+
+    EXPECT_CALL(mock_pthread_mutex_init, pthread_mutex_init(_, _)).Times(1);
+    // process unit
+    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
+}
+
+TEST_F(UpnpdebugMockTestSuite, getDebugFile) {
+
+    EXPECT_EQ(UpnpGetDebugFile(UPNP_INFO, API), (FILE*)NULL);
+}
+
+TEST_F(UpnpdebugMockTestSuite, logStderrButNotToFile) {
+
+    EXPECT_CALL(mock_fopen, fopen(_, _)).Times(0);
+    EXPECT_CALL(mock_fclose, fclose(_)).Times(0);
+    EXPECT_CALL(mock_pthread_mutex_init, pthread_mutex_init(_, _)).Times(1);
+
+    // Just set the log level but no filename. This should log to stderr.
+    UpnpSetLogLevel(UPNP_INFO);
+    // process unit
+    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
+    // Get file pointer
+    EXPECT_EQ(UpnpGetDebugFile(UPNP_INFO, API), stderr);
 }
 
 TEST_F(UpnpdebugMockTestSuite, logNotStderrButToFile) {
-    initwascalled = 1;
-    setlogwascalled = 1;
-    fp = (FILE*)0x123456abcde0;
-    fileName = (char*)"gtest.log";
+    // Set the filenmae, second parameter is unused but defined
+    UpnpSetLogFileNames("upnpdebug.log", nullptr);
 
-    EXPECT_CALL(mock_fopen, fopen((const char*)"gtest.log", "a"))
-        .Times(1)
+    EXPECT_CALL(mock_pthread_mutex_init, pthread_mutex_init(_, _)).Times(1);
+    EXPECT_CALL(mock_fclose, fclose(_)).Times(0);
+    EXPECT_CALL(mock_fopen, fopen(_, "a"))
         .WillOnce(Return((FILE*)0x123456abcdef));
-    EXPECT_CALL(mock_fclose, fclose(fp)).Times(1).WillOnce(Return(0));
 
+    // process unit
     EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
-    EXPECT_EQ(fp, (FILE*)0x123456abcdef);
-    EXPECT_EQ(initwascalled, 1);
-    EXPECT_EQ(setlogwascalled, 1);
-}
+    // Get file pointer
+    EXPECT_EQ(UpnpGetDebugFile(UPNP_INFO, API), (FILE*)0x123456abcdef);
 
+    EXPECT_CALL(mock_pthread_mutex_init, pthread_mutex_init(_, _)).Times(0);
+    EXPECT_CALL(mock_fclose, fclose(_)).Times(1);
+    EXPECT_CALL(mock_fopen, fopen(_, "a"))
+        .WillOnce(Return((FILE*)0x5a5a5a5a5a5a));
+
+    // process unit
+    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
+    // Get file pointer
+    EXPECT_EQ(UpnpGetDebugFile(UPNP_INFO, API), (FILE*)0x5a5a5a5a5a5a);
+}
+/*
 TEST_F(UpnpdebugMockTestSuite, logNotStderrButOpeningFileFails) {
     initwascalled = 1;
     setlogwascalled = 1;
@@ -116,22 +231,6 @@ TEST_F(UpnpdebugMockTestSuite, logNotStderrButOpeningFileFails) {
 
     EXPECT_NE(fp, nullptr);
     EXPECT_NE(fp, (FILE*)0x123456abcde0);
-    EXPECT_EQ(is_stderr, 1);
-    EXPECT_EQ(initwascalled, 1);
-    EXPECT_EQ(setlogwascalled, 1);
-}
-
-TEST_F(UpnpdebugMockTestSuite, logStderrButNotToFile) {
-    initwascalled = 1;
-    setlogwascalled = 1;
-    is_stderr = 1;
-
-    EXPECT_CALL(mock_fopen, fopen((const char*)nullptr, "a")).Times(0);
-    EXPECT_CALL(mock_fclose, fclose(fp)).Times(0);
-
-    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
-
-    EXPECT_NE(fp, nullptr);
     EXPECT_EQ(is_stderr, 1);
     EXPECT_EQ(initwascalled, 1);
     EXPECT_EQ(setlogwascalled, 1);
@@ -165,7 +264,7 @@ TEST_F(UpnpdebugMockTestSuite, logStderrAndUsingFile) {
     EXPECT_EQ(setlogwascalled, 1);
 }
 
-TEST_F(UpnpdebugMockTestSuite, logStderrButNotUsingFile) {
+TEST_F(UpnpdebugMockTestSuite, logStderrAndToFileWithWrongFilename) {
     initwascalled = 1;
     setlogwascalled = 1;
     is_stderr = 1;
@@ -224,7 +323,7 @@ TEST_F(UpnpdebugMockTestSuite, upnpCloseLogStderrOn) {
     // process the unit
     UpnpCloseLog();
 }
-
+*/
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

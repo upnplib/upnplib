@@ -2,9 +2,9 @@ name: CI macOS
 
 on:
   push:
-    branches: [ gtests, main ]
+    branches: [ main ]
   pull_request:
-    branches: [ gtests, main ]
+    branches: [ main ]
 
 jobs:
   # Job: Configure and build

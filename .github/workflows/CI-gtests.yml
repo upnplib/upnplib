@@ -2,9 +2,9 @@ name: CI gtests
 
 on:
   push:
-    branches: [ gtests, main ]
+    branches: [ gtests, main, workflow_dispatch ]
   pull_request:
-    branches: [ gtests, main ]
+    branches: [ gtests, main, workflow_dispatch ]
 
 jobs:
   # Job: Configure and build

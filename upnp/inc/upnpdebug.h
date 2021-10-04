@@ -43,7 +43,7 @@
 #include <stdio.h>
 
 #ifdef __cplusplus
-extern "C" {
+ extern "C" {
 #endif
 
 /*! \name Other debugging features
@@ -67,25 +67,23 @@ extern "C" {
  *    \li \c UPNP_INFO [2]
  *    \li \c UPNP_ALL [3]
  */
-typedef enum Upnp_Module
-{
-        SSDP,
-        SOAP,
-        GENA,
-        TPOOL,
-        MSERV,
-        DOM,
-        API,
-        HTTP
+typedef enum Upnp_Module {
+    SSDP,
+    SOAP,
+    GENA,
+    TPOOL,
+    MSERV,
+    DOM,
+    API,
+    HTTP
 } Dbg_Module;
 
 /*@{*/
-typedef enum Upnp_LogLevel_e
-{
-        UPNP_CRITICAL,
-        UPNP_ERROR,
-        UPNP_INFO,
-        UPNP_ALL
+typedef enum Upnp_LogLevel_e {
+    UPNP_CRITICAL,
+    UPNP_ERROR,
+    UPNP_INFO,
+    UPNP_ALL
 } Upnp_LogLevel;
 /*@}*/
 
@@ -116,15 +114,14 @@ static UPNP_INLINE int UpnpInitLog_Inlined(void) { return UPNP_E_SUCCESS; }
  * \brief Set the log level (see \c Upnp_LogLevel).
  */
 void UpnpSetLogLevel(
-        /*! [in] Log level. */
-        Upnp_LogLevel log_level);
+    /*! [in] Log level. */
+    Upnp_LogLevel log_level);
 
 #if defined NDEBUG && !defined UPNP_DEBUG_C
 #define UpnpSetLogLevel UpnpSetLogLevel_Inlined
-static UPNP_INLINE void UpnpSetLogLevel_Inlined(Upnp_LogLevel log_level)
-{
-        (void)log_level;
-        return;
+static UPNP_INLINE void UpnpSetLogLevel_Inlined(Upnp_LogLevel log_level) {
+    (void)log_level;
+    return;
 }
 #endif
 
@@ -144,19 +141,18 @@ static UPNP_INLINE void UpnpCloseLog_Inlined(void) {}
  * Use a NULL file name for logging to stderr.
  */
 void UpnpSetLogFileNames(
-        /*! [in] Name of the log file. */
-        const char *fileName,
-        /*! [in] Ignored. */
-        const char *Ignored);
+    /*! [in] Name of the log file. */
+    const char* fileName,
+    /*! [in] Ignored. */
+    const char* Ignored);
 
 #if defined NDEBUG && !defined UPNP_DEBUG_C
 #define UpnpSetLogFileNames UpnpSetLogFileNames_Inlined
-static UPNP_INLINE void UpnpSetLogFileNames_Inlined(
-        const char *ErrFileName, const char *ignored)
-{
-        (void)ErrFileName;
-        (void)ignored;
-        return;
+static UPNP_INLINE void UpnpSetLogFileNames_Inlined(const char* ErrFileName,
+                                                    const char* ignored) {
+    (void)ErrFileName;
+    (void)ignored;
+    return;
 }
 #endif
 
@@ -167,21 +163,20 @@ static UPNP_INLINE void UpnpSetLogFileNames_Inlined(
  * \return NULL if the module is turn off for debug otherwise returns the
  *	right FILE pointer.
  */
-FILE *UpnpGetDebugFile(
-        /*! [in] The level of the debug logging. It will decide whether debug
-         * statement will go to standard output, or any of the log files. */
-        Upnp_LogLevel level,
-        /*! [in] debug will go in the name of this module. */
-        Dbg_Module module);
+FILE* UpnpGetDebugFile(
+    /*! [in] The level of the debug logging. It will decide whether debug
+     * statement will go to standard output, or any of the log files. */
+    Upnp_LogLevel level,
+    /*! [in] debug will go in the name of this module. */
+    Dbg_Module module);
 
 #if defined NDEBUG && !defined UPNP_DEBUG_C
 #define UpnpGetDebugFile UpnpGetDebugFile_Inlined
-static UPNP_INLINE FILE *UpnpGetDebugFile_Inlined(
-        Upnp_LogLevel level, Dbg_Module module)
-{
-        (void)level;
-        (void)module;
-        return NULL;
+static UPNP_INLINE FILE* UpnpGetDebugFile_Inlined(Upnp_LogLevel level,
+                                                  Dbg_Module module) {
+    (void)level;
+    (void)module;
+    return NULL;
 }
 #endif
 
@@ -190,26 +185,26 @@ static UPNP_INLINE FILE *UpnpGetDebugFile_Inlined(
  * along with the information from where this debug statement is coming.
  */
 void UpnpPrintf(
-        /*! [in] The level of the debug logging. It will decide whether debug
-         * statement will go to standard output, or any of the log files. */
-        Upnp_LogLevel DLevel,
-        /*! [in] debug will go in the name of this module. */
-        Dbg_Module Module,
-        /*! [in] Name of the file from where debug statement is coming. */
-        const char *DbgFileName,
-        /*! [in] Line number of the file from where debug statement is coming.
-         */
-        int DbgLineNo,
-        /*! [in] Printf like format specification. */
-        const char *FmtStr,
-        /*! [in] Printf like Variable number of arguments that will go in the
-         * debug statement. */
-        ...)
+    /*! [in] The level of the debug logging. It will decide whether debug
+     * statement will go to standard output, or any of the log files. */
+    Upnp_LogLevel DLevel,
+    /*! [in] debug will go in the name of this module. */
+    Dbg_Module Module,
+    /*! [in] Name of the file from where debug statement is coming. */
+    const char* DbgFileName,
+    /*! [in] Line number of the file from where debug statement is coming.
+     */
+    int DbgLineNo,
+    /*! [in] Printf like format specification. */
+    const char* FmtStr,
+    /*! [in] Printf like Variable number of arguments that will go in the
+     * debug statement. */
+    ...)
 #if (__GNUC__ >= 3)
-        /* This enables printf like format checking by the compiler. */
-        __attribute__((format(__printf__, 5, 6)))
+    /* This enables printf like format checking by the compiler. */
+    __attribute__((format(__printf__, 5, 6)))
 #endif
-        ;
+    ;
 
 #if defined NDEBUG && !defined UPNP_DEBUG_C
 #define UpnpPrintf UpnpPrintf_Inlined
@@ -225,18 +220,16 @@ void UpnpPrintf(
 // #endif
 // 	;
 static UPNP_INLINE void UpnpPrintf_Inlined(Upnp_LogLevel DLevel,
-        Dbg_Module Module,
-        const char *DbgFileName,
-        int DbgLineNo,
-        const char *FmtStr,
-        ...)
-{
-        (void)DLevel;
-        (void)Module;
-        (void)DbgFileName;
-        (void)DbgLineNo;
-        (void)FmtStr;
-        return;
+                                           Dbg_Module Module,
+                                           const char* DbgFileName,
+                                           int DbgLineNo, const char* FmtStr,
+                                           ...) {
+    (void)DLevel;
+    (void)Module;
+    (void)DbgFileName;
+    (void)DbgLineNo;
+    (void)FmtStr;
+    return;
 }
 #endif /* DEBUG */
 

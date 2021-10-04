@@ -20,6 +20,7 @@ include_directories(
     ${googletest_SOURCE_DIR}/googletest/include/
     ${googletest_SOURCE_DIR}/googlemock/include/
     ${PROJECT_SOURCE_DIR}/include
+    ${UPNP_CORE_SOURCE_DIR}/include
     ${UPNP_CORE_SOURCE_DIR}/inc
     ${UPNP_CORE_SOURCE_DIR}/src
     ${UPNP_CORE_SOURCE_DIR}/src/inc
@@ -78,29 +79,32 @@ endif()
 
 
 # upnpdebug
+#----------
+# Completely rework needed
 if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT WIN32)
     # On MS Windows: test_upnpdebug.cpp(17,77): error C2440: 'type cast':
     # cannot convert from 'std ::filesystem::path' to 'std::string'
     add_executable(test_upnpdebug_old ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
-    target_compile_definitions(test_upnpdebug_old PRIVATE OLD_TEST)
     add_test(NAME ctest_upnpdebug_old COMMAND test_upnpdebug_old)
+    target_compile_definitions(test_upnpdebug_old PRIVATE OLD_TEST)
 endif()
 
 # upnpdebug_mock
+#---------------
+# Completely rework needed
 if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT WIN32)
-    # On MS Windows: inc\tools.h(17,20): error C2079: 'CIfaddr4::ifaddr' uses
-    # undefined struct 'ifaddrs'
     add_executable(test_upnpdebug_mock_old
         ${PROJECT_SOURCE_DIR}/tools/tools.cpp
         ${PROJECT_SOURCE_DIR}/test_upnpdebug_mock.cpp)
     add_test(NAME ctest_upnpdebug_mock_old COMMAND test_upnpdebug_mock_old)
-    target_compile_definitions(test_upnpdebug_mock_old PRIVATE OLD_TEST
-    )
+    target_compile_definitions(test_upnpdebug_mock_old
+                               PRIVATE OLD_TEST)
     add_executable(test_upnpdebug_mock
         ${PROJECT_SOURCE_DIR}/tools/tools.cpp
         ${PROJECT_SOURCE_DIR}/test_upnpdebug_mock.cpp)
     add_test(NAME ctest_upnpdebug_mock COMMAND test_upnpdebug_mock)
 endif()
+
 
 # upnpapi
 set(UPNP_UPNPAPI_SOURCE_FILES
@@ -152,13 +156,21 @@ if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT WIN32)
 endif()
 
 # threadutil
-if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT WIN32)
-    # test_threadutil_old segfaults randomly
-    add_executable(test_threadutil_old ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
-    target_compile_definitions(test_threadutil_old PRIVATE OLD_TEST)
-    add_test(NAME ctest_threadutil_old COMMAND test_threadutil_old)
+#-----------
+if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT APPLE)
+# These tests randomly segfault on macOS so they mostly fail
+add_executable(test_threadutil_old ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
+add_test(NAME ctest_threadutil_old COMMAND test_threadutil_old)
+target_compile_definitions(test_threadutil_old
+                           PRIVATE OLD_TEST
+                           PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+endif()
+if(NOT DEFINED ENV{GITHUB_ACTIONS})
+    # test_threadutil segfaults before passing
     add_executable(test_threadutil ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
     add_test(NAME ctest_threadutil COMMAND test_threadutil)
+    target_compile_definitions(test_threadutil
+                               PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 endif()
 
 # simple test

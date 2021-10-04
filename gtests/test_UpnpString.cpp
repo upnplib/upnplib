@@ -25,24 +25,20 @@ class CMock_free {
 };
 CMock_free* ptrMock_free = nullptr;
 
-
-namespace { // no name, i.e. anonymous for file scope
-            // this is the C++ way for decorator STATIC
+namespace { // No name for file scope. This is the C++ way for decorator STATIC.
 
 // The following functions overwrite the functions from the system library.
 // This is only possible with a local (file) scope of these functions. Also they
-// must be defined before the included program.
+// must be defined before the included program that is tested.
 
 void* calloc(size_t nmemb, size_t size) {
     return ptrMock_calloc->calloc(nmemb, size);
 }
-void free(void* ptr) { return ptrMock_free->free(ptr);
-}
+void free(void* ptr) { return ptrMock_free->free(ptr); }
 
 #include "api/UpnpString.cpp"
 
 } // namespace
-
 
 // testsuite with fixtures
 //------------------------
@@ -152,7 +148,6 @@ TEST_F(UpnpStringMockTestSuite, setUpnpStringN) {
     EXPECT_EQ(upnpstr.m_length, 11);
     EXPECT_STREQ(upnpstr.m_string, "hello world");
 }
-
 
 // simple testsuite without fixtures
 //----------------------------------

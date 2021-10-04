@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-08-20
+// Redistribution only with this Copyright remark. Last modified: 2021-10-02
 
 #ifndef NDEBUG
 #define NDEBUG
@@ -128,19 +128,16 @@ TEST(LinkedListTestSuite, process_nodes_add_delete_point_to) {
 }
 
 TEST(ThreadPoolTestSuite, initialize_threadpool) {
-#ifdef OLD_TEST
-    std::cout << "  BUG! This test produces random segfault.\n";
-#else
-    FAIL() << "# This test produces random segfault.";
-    // Test with: ./build/test_threadutil \
-    // --gtest_filter=ThreadPoolTestSuite.initialize_threadpool \
-    // --gtest_repeat=100
-#endif
     ThreadPool tp = {};
 
     // process unit
     EXPECT_EQ(ThreadPoolInit(nullptr, nullptr), EINVAL);
+#ifdef OLD_TEST
+    std::cout << "  BUG! This test crashes with segfault.\n";
+#else
+    // FAIL() << "# This test crashes with segfault.";
     EXPECT_EQ(ThreadPoolInit(&tp, nullptr), 0);
+#endif
 }
 
 TEST(ThreadPoolTestSuite,
@@ -223,24 +220,36 @@ TEST(ThreadPoolTestSuite, get_current_attributes_of_threadpool) {
     EXPECT_EQ(attr.jobsPerThread, 10);
     EXPECT_EQ(attr.maxJobsTotal, 100);
     EXPECT_EQ(attr.starvationTime, 500);
-    EXPECT_EQ(attr.schedPolicy, 0);
+    // Default scheduling policy is OS dependent
+#ifdef __APPLE__
+    EXPECT_EQ(attr.schedPolicy, 1);
+#else
+    EXPECT_EQ(attr.schedPolicy, SCHED_OTHER);
+#endif
 }
 
 TEST(ThreadPoolTestSuite, set_threadpool_attributes) {
-#ifdef OLD_TEST
-    std::cout << "  BUG! This test produces random segfault.\n";
-#else
-    FAIL() << "# This test produces random segfault.";
-    // Test with: ./build/test_threadutil \
-    // --gtest_filter=ThreadPoolTestSuite.set_threadpool_attributes \
-    // --gtest_repeat=100
-#endif
     ThreadPool tp = {};
     ThreadPoolAttr attr = {};
 
     // set default attributs
+#ifdef OLD_TEST
+    std::cout << "  BUG! This test crashes with segfault.\n";
+#else
+    // FAIL() << "# This test crashes with segfault.";
     EXPECT_EQ(ThreadPoolSetAttr(&tp, nullptr), 0);
+    // "unknown file: error: SEH exception with code 0xc0000005 thrown in the
+    // test body."
+    // The SEH error presumably occurred as soon as unallocated memory was
+    // accessed. So check for null pointers!
     EXPECT_EQ(ThreadPoolSetAttr(&tp, &attr), 0);
+    // initialize threadpool with default attributes
+    EXPECT_EQ(ThreadPoolInit(&tp, nullptr), 0);
+    // points to empty attribute structure
+    EXPECT_EQ(ThreadPoolSetAttr(&tp, &attr), 0);
+    // set default attributes
+    EXPECT_EQ(ThreadPoolSetAttr(&tp, 0), 0);
+#endif
 }
 
 TEST(ThreadPoolTestSuite, add_job_to_threadpool) {
@@ -255,18 +264,22 @@ TEST(ThreadPoolTestSuite, add_job_to_threadpool) {
     EXPECT_EQ(ThreadPoolAdd(nullptr, &job, &jobId), EINVAL);
     EXPECT_EQ(ThreadPoolAdd(&tp, nullptr, nullptr), EINVAL);
     EXPECT_EQ(ThreadPoolAdd(&tp, nullptr, &jobId), EINVAL);
+    EXPECT_EQ(TPJobInit(&job, &func, &arg), 0);
+#ifdef OLD_TEST
+    std::cout << "  BUG! This test crashes with unknown file: error: SEH "
+                 "exception thrown in the test body.\n";
+#else
     EXPECT_EQ(ThreadPoolAdd(&tp, &job, nullptr), EOUTOFMEM);
     EXPECT_EQ(ThreadPoolAdd(&tp, &job, &jobId), EOUTOFMEM);
-
-    EXPECT_EQ(TPJobInit(&job, &func, &arg), 0);
     EXPECT_EQ(ThreadPoolAdd(&tp, &job, &jobId), EOUTOFMEM);
+#endif
 }
 
 TEST(ThreadPoolTestSuite, remove_job_from_threadpool) {
 #ifdef OLD_TEST
-    std::cout << "  BUG! This test produces random segfault.\n";
+    std::cout << "  BUG! This test crashes with segfault.\n";
 #else
-    FAIL() << "# This test produces random segfault.";
+    FAIL() << "# This test crashes with segfault.";
     // Test with: ./build/test_threadutil \
     // --gtest_filter=ThreadPoolTestSuite.remove_job_from_threadpool \
     // --gtest_repeat=1000
@@ -278,13 +291,13 @@ TEST(ThreadPoolTestSuite, remove_job_from_threadpool) {
     EXPECT_EQ(ThreadPoolRemove(nullptr, 0, nullptr), EINVAL);
     EXPECT_EQ(ThreadPoolRemove(nullptr, 0, &removedJob), EINVAL);
 
+#ifndef OLD_TEST
+    FAIL() << "# Threadpool remove job segfaults if no job is initialized.";
     // ThreadPool must be initialized, otherwise we get a segfault
     EXPECT_EQ(ThreadPoolInit(&tp, nullptr), 0);
 
     EXPECT_EQ(ThreadPoolRemove(&tp, 0, nullptr), EOUTOFMEM);
     EXPECT_EQ(ThreadPoolRemove(&tp, 0, &removedJob), EOUTOFMEM);
-#ifndef OLD_TEST
-    FAIL() << "# Threadpool remove job segfaults if no job is initialized.";
     EXPECT_EQ(ThreadPoolRemove(&tp, 0, &removedJob), 0);
 #endif
 }
@@ -327,7 +340,12 @@ TEST(ThreadPoolTestSuite, initialize_default_threadpool_attributes) {
     EXPECT_EQ(attr.jobsPerThread, 10);
     EXPECT_EQ(attr.maxJobsTotal, 100);
     EXPECT_EQ(attr.starvationTime, 500);
-    EXPECT_EQ(attr.schedPolicy, 0);
+    // Default scheduling policy is OS dependent
+#ifdef __APPLE__
+    EXPECT_EQ(attr.schedPolicy, 1);
+#else
+    EXPECT_EQ(attr.schedPolicy, SCHED_OTHER);
+#endif
 }
 
 TEST(ThreadPoolTestSuite, set_maximal_threads) {
