@@ -47,6 +47,9 @@
 //#include <stdlib.h>
 #include <string.h>
 
+#include "sys/pthreadif.h"
+#include "sys/stdioif.h"
+
 /*! Mutex to synchronize all the log file operations in the debug mode */
 static ithread_mutex_t GlobalDebugMutex;
 
@@ -69,7 +72,7 @@ static char* fileName;
  * risk of race, probably not a problem, and not worth fixing. */
 int UpnpInitLog(void) {
     if (!initwascalled) {
-        ithread_mutex_init(&GlobalDebugMutex, NULL);
+        pthread->pthread_mutex_init(&GlobalDebugMutex, NULL);
         initwascalled = 1;
     }
     /* If the user did not ask for logging do nothing */
@@ -79,13 +82,13 @@ int UpnpInitLog(void) {
 
     if (fp) {
         if (is_stderr == 0) {
-            fclose(fp);
+            stdio->fclose(fp);
             fp = NULL;
         }
     }
     is_stderr = 0;
     if (fileName) {
-        if ((fp = fopen(fileName, "a")) == NULL) {
+        if ((fp = stdio->fopen(fileName, "a")) == NULL) {
             fprintf(stderr, "Failed to open fileName (%s): %s\n", fileName,
                     strerror(errno));
         }
@@ -113,7 +116,7 @@ void UpnpCloseLog(void) {
     ithread_mutex_lock(&GlobalDebugMutex);
 
     if (fp != NULL && is_stderr == 0) {
-        fclose(fp);
+        stdio->fclose(fp);
     }
     fp = NULL;
     is_stderr = 0;

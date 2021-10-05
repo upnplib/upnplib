@@ -41,7 +41,13 @@ add_compile_definitions(
     PRIVATE $<$<AND:$<BOOL:${UPNP_GOOGLETEST}>,$<BOOL:${BUILD_SHARED_LIBS}>>:GTEST_LINKED_AS_SHARED_LIBRARY>
 )
 
-link_libraries(${UPNP_GTEST_LIBRARIES}
+# Due to issue https://github.com/google/googletest/issues/1325#issuecomment-903884914
+# it should only link with the gmock libraries on WIN32. On Unix it doesn't compile
+# without gtest libraries.
+link_libraries(${UPNP_GMOCK_LIBRARIES}
+               ${UPNP_GMOCK_MAIN_LIBRARIES}
+               $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_GTEST_LIBRARIES}>
+               $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_GTEST_MAIN_LIBRARIES}>
                # On Linux we cannot link with the static pthreads library
                # because then we have also link with a static libc that's not
                # available by default.
@@ -92,13 +98,13 @@ endif()
 # upnpdebug_mock
 #---------------
 # Completely rework needed
-if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT WIN32)
     add_executable(test_upnpdebug_mock_old
         ${PROJECT_SOURCE_DIR}/tools/tools.cpp
         ${PROJECT_SOURCE_DIR}/test_upnpdebug_mock.cpp)
     add_test(NAME ctest_upnpdebug_mock_old COMMAND test_upnpdebug_mock_old)
     target_compile_definitions(test_upnpdebug_mock_old
                                PRIVATE OLD_TEST)
+if(NOT DEFINED ENV{GITHUB_ACTIONS})
     add_executable(test_upnpdebug_mock
         ${PROJECT_SOURCE_DIR}/tools/tools.cpp
         ${PROJECT_SOURCE_DIR}/test_upnpdebug_mock.cpp)
