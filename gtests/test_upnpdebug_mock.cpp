@@ -1,22 +1,33 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10.04
+// Redistribution only with this Copyright remark. Last modified: 2021-10.06
 
 #include "tools.h"
 #include "gmock/gmock.h"
 
 #include <stdio.h>
 
+#include "upnpmock/pthreadif.h"
+#include "upnpmock/stdioif.h"
+#include "upnpmock/stringif.h"
+
 #include "api/upnpdebug.cpp"
-#include "sys/pthreadif.h"
-#include "sys/stdioif.h"
 
 using ::testing::_;
 using ::testing::Return;
+
+class Mock_string : public Istring {
+    // Class to mock the free system functions.
+  public:
+    virtual ~Mock_string() {}
+    Mock_string() { stringif = this; }
+    MOCK_METHOD(char*, strerror, (int errnum), (override));
+};
 
 class Mock_stdio : public Istdio {
     // Class to mock the free system functions.
   public:
     virtual ~Mock_stdio() {}
+    Mock_stdio() { stdioif = this; }
     MOCK_METHOD(FILE*, fopen, (const char* pathname, const char* mode),
                 (override));
     MOCK_METHOD(int, fclose, (FILE * stream), (override));
@@ -26,6 +37,7 @@ class Mock_pthread : public Ipthread {
     // Class to mock the free system functions.
   public:
     virtual ~Mock_pthread() {}
+    Mock_pthread() { pthreadif = this; }
     MOCK_METHOD(int, pthread_mutex_init,
                 (pthread_mutex_t * mutex, const pthread_mutexattr_t* mutexattr),
                 (override));
@@ -36,22 +48,18 @@ class Mock_pthread : public Ipthread {
                 (override));
 };
 
-/*
-// --- mock strerror ----------------------------------
-class CMock_strerror {
-  public:
-    MOCK_METHOD(char*, strerror, (int errnum));
-};
-CMock_strerror* ptrMock_strerror = nullptr;
-static char* strerror(int errnum) { return ptrMock_strerror->strerror(errnum); }
-*/
-
-// Tests for the debugging and logging module
-//-------------------------------------------
+// Test class for the debugging and logging module
+//------------------------------------------------
 class UpnpdebugMockTestSuite : public ::testing::Test {
   protected:
+    // Member variables: instantiate the mock objects.
+    Mock_pthread mocked_pthread;
+    Mock_stdio mocked_stdio;
+    Mock_string mocked_string;
+
+    // constructor
     UpnpdebugMockTestSuite() {
-        // Initialize the global variable
+        // Clear the static variables of the unit
         g_log_level = UPNP_DEFAULT_LOG_LEVEL;
         fp = nullptr;
         is_stderr = 0;
@@ -65,9 +73,6 @@ TEST_F(UpnpdebugMockTestSuite, initlog_but_no_log_wanted)
 // For the pthread_mutex_t structure look at
 // https://stackoverflow.com/q/23449508/5014688
 {
-    Mock_pthread mocked_pthread;
-    pthread = &mocked_pthread;
-
     EXPECT_CALL(mocked_pthread, pthread_mutex_init(_, _)).Times(1);
     // process unit
     EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
@@ -76,25 +81,25 @@ TEST_F(UpnpdebugMockTestSuite, initlog_but_no_log_wanted)
     // process unit again
     EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
 }
-/*
-TEST_F(UpnpdebugMockTestSuite, closeLog) {
-    EXPECT_CALL(mock_pthread_mutex_lock, pthread_mutex_lock(_)).Times(0);
-    EXPECT_CALL(mock_pthread_mutex_unlock, pthread_mutex_unlock(_)).Times(0);
-    EXPECT_CALL(mock_pthread_mutex_destroy, pthread_mutex_destroy(_)).Times(0);
+
+TEST_F(UpnpdebugMockTestSuite, close_log) {
+    EXPECT_CALL(mocked_pthread, pthread_mutex_lock(_)).Times(0);
+    EXPECT_CALL(mocked_pthread, pthread_mutex_unlock(_)).Times(0);
+    EXPECT_CALL(mocked_pthread, pthread_mutex_destroy(_)).Times(0);
     // process unit
     UpnpCloseLog();
 
-    EXPECT_CALL(mock_pthread_mutex_init, pthread_mutex_init(_, _)).Times(1);
+    EXPECT_CALL(mocked_pthread, pthread_mutex_init(_, _)).Times(1);
     // process unit
     EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
 
-    EXPECT_CALL(mock_pthread_mutex_lock, pthread_mutex_lock(_)).Times(1);
-    EXPECT_CALL(mock_pthread_mutex_unlock, pthread_mutex_unlock(_)).Times(1);
-    EXPECT_CALL(mock_pthread_mutex_destroy, pthread_mutex_destroy(_)).Times(1);
+    EXPECT_CALL(mocked_pthread, pthread_mutex_lock(_)).Times(1);
+    EXPECT_CALL(mocked_pthread, pthread_mutex_unlock(_)).Times(1);
+    EXPECT_CALL(mocked_pthread, pthread_mutex_destroy(_)).Times(1);
     // process unit
     UpnpCloseLog();
 }
-
+/*
 TEST_F(UpnpdebugMockTestSuite, setLogLevel) {
     // process unit
     UpnpSetLogLevel(UPNP_INFO);
@@ -110,12 +115,6 @@ TEST_F(UpnpdebugMockTestSuite, getDebugFile) {
 }
 */
 TEST_F(UpnpdebugMockTestSuite, log_stderr_but_not_to_fIle) {
-    Mock_stdio mocked_stdio;
-    stdio = &mocked_stdio;
-
-    Mock_pthread mocked_pthread;
-    pthread = &mocked_pthread;
-
     EXPECT_CALL(mocked_stdio, fopen(_, _)).Times(0);
     EXPECT_CALL(mocked_stdio, fclose(_)).Times(0);
     EXPECT_CALL(mocked_pthread, pthread_mutex_init(_, _)).Times(1);
@@ -152,30 +151,28 @@ TEST_F(UpnpdebugMockTestSuite, logNotStderrButToFile) {
     // Get file pointer
     EXPECT_EQ(UpnpGetDebugFile(UPNP_INFO, API), (FILE*)0x5a5a5a5a5a5a);
 }
+*/
+TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_opening_file_fails) {
+    // Set the filenmae, second parameter is unused but defined
+    UpnpSetLogFileNames("upnpdebug.log", nullptr);
 
-TEST_F(UpnpdebugMockTestSuite, logNotStderrButOpeningFileFails) {
-    initwascalled = 1;
-    setlogwascalled = 1;
-    fp = (FILE*)0x123456abcde0;
-    fileName = (char*)"gtest.log";
-
-    EXPECT_CALL(mock_fopen, fopen((const char*)"gtest.log", "a"))
-        .Times(1)
-        .WillOnce(Return((FILE*)NULL));
-    EXPECT_CALL(mock_strerror, strerror(_))
-        .Times(1)
+    EXPECT_CALL(mocked_pthread, pthread_mutex_init(_, _)).Times(1);
+    EXPECT_CALL(mocked_stdio, fopen(_, "a")).WillOnce(Return((FILE*)NULL));
+    // Cast from const char* to char* is possible because the string it isn't
+    // changed in this scope. Otherwise it would give a runtime error.
+    EXPECT_CALL(mocked_string, strerror(_))
         .WillOnce(Return((char*)"mocked error"));
-    EXPECT_CALL(mock_fclose, fclose(fp)).Times(1).WillOnce(Return(0));
+    EXPECT_CALL(mocked_stdio, fclose(_)).Times(0);
 
+    // process unit
+#ifdef OLD_TEST
+    std::cout << "  BUG! UpnpInitLog() should return with failure.\n";
     EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
-
-    EXPECT_NE(fp, nullptr);
-    EXPECT_NE(fp, (FILE*)0x123456abcde0);
-    EXPECT_EQ(is_stderr, 1);
-    EXPECT_EQ(initwascalled, 1);
-    EXPECT_EQ(setlogwascalled, 1);
+#else
+    EXPECT_STRNE(UpnpGetErrorMessage(UpnpInitLog()), "UPNP_E_SUCCESS");
+#endif
 }
-
+/*
 TEST_F(UpnpdebugMockTestSuite, logStderrAndUsingFile) {
     initwascalled = 1;
     setlogwascalled = 1;

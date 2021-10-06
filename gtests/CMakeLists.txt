@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-10-02
+# Redistribution only with this Copyright remark. Last modified: 2021-10-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNP_GTESTS VERSION 0015
+project(UPNP_GTESTS VERSION 0016
                     DESCRIPTION "Unit Tests using googletest"
                     HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -145,8 +145,9 @@ set(UPNP_UPNPAPI_SOURCE_FILES
     ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp
 
-    ${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
     ${PROJECT_SOURCE_DIR}/tools/tools.cpp
+    ${PROJECT_SOURCE_DIR}/tools/upnpifaddrs.cpp
+    ${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
 )
 if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT WIN32)
     # Not usable on MS Windows at time because <ifaddrs.h> isn't available

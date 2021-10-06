@@ -1,10 +1,11 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-08-31
+// Redistribution only with this Copyright remark. Last modified: 2021-10-06
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
 
 #include "tools.h"
+#include "upnpifaddrs.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 

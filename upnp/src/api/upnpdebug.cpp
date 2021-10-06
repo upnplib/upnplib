@@ -1,6 +1,7 @@
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
+ * Copyright (C) 2021 Ingo Höft, <Ingo@Hoeft-online.de>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,10 +46,11 @@
 #include <stdarg.h>
 //#include <stdio.h>
 //#include <stdlib.h>
-#include <string.h>
+//#include <string.h>
 
-#include "sys/pthreadif.h"
-#include "sys/stdioif.h"
+#include "upnpmock/pthreadif.h"
+#include "upnpmock/stdioif.h"
+#include "upnpmock/stringif.h"
 
 /*! Mutex to synchronize all the log file operations in the debug mode */
 static ithread_mutex_t GlobalDebugMutex;
@@ -72,7 +74,7 @@ static char* fileName;
  * risk of race, probably not a problem, and not worth fixing. */
 int UpnpInitLog(void) {
     if (!initwascalled) {
-        pthread->pthread_mutex_init(&GlobalDebugMutex, NULL);
+        pthreadif->pthread_mutex_init(&GlobalDebugMutex, NULL);
         initwascalled = 1;
     }
     /* If the user did not ask for logging do nothing */
@@ -82,15 +84,15 @@ int UpnpInitLog(void) {
 
     if (fp) {
         if (is_stderr == 0) {
-            stdio->fclose(fp);
+            stdioif->fclose(fp);
             fp = NULL;
         }
     }
     is_stderr = 0;
     if (fileName) {
-        if ((fp = stdio->fopen(fileName, "a")) == NULL) {
+        if ((fp = stdioif->fopen(fileName, "a")) == NULL) {
             fprintf(stderr, "Failed to open fileName (%s): %s\n", fileName,
-                    strerror(errno));
+                    stringif->strerror(errno));
         }
     }
     if (fp == NULL) {
@@ -113,16 +115,16 @@ void UpnpCloseLog(void) {
     /* Calling lock() assumes that someone called UpnpInitLog(), but
      * this is reasonable as it is called from UpnpInit2(). We risk a
      * crash if we do this without a lock.*/
-    ithread_mutex_lock(&GlobalDebugMutex);
+    pthreadif->pthread_mutex_lock(&GlobalDebugMutex);
 
     if (fp != NULL && is_stderr == 0) {
-        stdio->fclose(fp);
+        stdioif->fclose(fp);
     }
     fp = NULL;
     is_stderr = 0;
     initwascalled = 0;
-    ithread_mutex_unlock(&GlobalDebugMutex);
-    ithread_mutex_destroy(&GlobalDebugMutex);
+    pthreadif->pthread_mutex_unlock(&GlobalDebugMutex);
+    pthreadif->pthread_mutex_destroy(&GlobalDebugMutex);
 }
 
 void UpnpSetLogFileNames(const char* newFileName, const char* ignored) {

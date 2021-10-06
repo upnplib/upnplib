@@ -1,15 +1,14 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-08-20
+// Redistribution only with this Copyright remark. Last modified: 2021-10-06
 
 // Tools and helper classes to manage gtests
 // =========================================
 
 #include "upnpifaddrs.h"
-//#include "upnp.h"
-//#include <fcntl.h>
-//#include <filesystem>
-//#include <fstream>
-//#include <vector>
+
+#include <arpa/inet.h>
+#include <net/if.h>
+#include <vector>
 
 CIfaddr4::CIfaddr4()
 // With constructing the object you get a loopback device by default.
