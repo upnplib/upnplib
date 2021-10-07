@@ -232,9 +232,9 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
 
     if (!DebugAtThisLevel(DLevel, Module))
         return;
-    ithread_mutex_lock(&GlobalDebugMutex);
+    pthreadif->pthread_mutex_lock(&GlobalDebugMutex);
     if (fp == NULL) {
-        ithread_mutex_unlock(&GlobalDebugMutex);
+        pthreadif->pthread_mutex_unlock(&GlobalDebugMutex);
         return;
     }
 
@@ -245,7 +245,7 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
         fflush(fp);
     }
     va_end(ArgList);
-    ithread_mutex_unlock(&GlobalDebugMutex);
+    pthreadif->pthread_mutex_unlock(&GlobalDebugMutex);
 }
 
 /* No locking here, the app should be careful about not calling

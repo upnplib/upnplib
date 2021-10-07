@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-06
+// Redistribution only with this Copyright remark. Last modified: 2021-10-07
 
 #ifndef UPNP_STDIOIF_H
 #define UPNP_STDIOIF_H
@@ -14,6 +14,8 @@ class Istdio {
     virtual int fclose(FILE* stream) = 0;
 };
 
+// Global pointer to the current object (real or mocked), will be set by the
+// constructor of the respective object.
 Istdio* stdioif;
 
 class Cstdio : public Istdio {
@@ -43,7 +45,9 @@ Cstdio stdioObj;
 // stdioif->fopen(...)
 
 /*
- * The following class should be coppied to the test source.
+ * The following class should be coppied to the test source. It is not a good
+ * idea to move it here to the header. It uses googletest macros and you always
+ * have to compile the code with googletest even for production and not used.
 
 class Mock_stdio : public Istdio {
 // Class to mock the free system functions.
@@ -55,8 +59,7 @@ class Mock_stdio : public Istdio {
 };
 
  * In a gtest you will instantiate the Mock class, prefered as protected member
- * variable:
- * class now, e.g.:
+ * variable for the whole testsuite:
 
     Mock_stdio mocked_stdio;
 

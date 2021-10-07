@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-06
+// Redistribution only with this Copyright remark. Last modified: 2021-10-07
 
 #ifndef UPNP_STRINGIF_H
 #define UPNP_STRINGIF_H
@@ -13,6 +13,8 @@ class Istring {
     virtual char* strerror(int errnum) = 0;
 };
 
+// Global pointer to the current object (real or mocked), will be set by the
+// constructor of the respective object.
 Istring* stringif;
 
 class Cstring : public Istring {
@@ -38,7 +40,9 @@ Cstring stringObj;
 // stringif->strerror(0)
 
 /*
- * The following class should be coppied to the test source.
+ * The following class should be coppied to the test source. It is not a good
+ * idea to move it here to the header. It uses googletest macros and you always
+ * have to compile the code with googletest even for production and not used.
 
 class Mock_string : public Istring {
 // Class to mock the free system functions.
@@ -49,7 +53,7 @@ class Mock_string : public Istring {
 };
 
  * In a gtest you will instantiate the Mock class, prefered as protected member
- * variable:
+ * variable for the whole testsuite:
 
     Mock_string mocked_string;
 

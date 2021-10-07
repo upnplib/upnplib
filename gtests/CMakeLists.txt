@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-10-05
+# Redistribution only with this Copyright remark. Last modified: 2021-10-08
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNP_GTESTS VERSION 0016
+project(UPNP_GTESTS VERSION 0017
                     DESCRIPTION "Unit Tests using googletest"
                     HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -86,29 +86,17 @@ endif()
 
 # upnpdebug
 #----------
-# Completely rework needed
-if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT WIN32)
-    # On MS Windows: test_upnpdebug.cpp(17,77): error C2440: 'type cast':
-    # cannot convert from 'std ::filesystem::path' to 'std::string'
-    add_executable(test_upnpdebug_old ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
-    add_test(NAME ctest_upnpdebug_old COMMAND test_upnpdebug_old)
-    target_compile_definitions(test_upnpdebug_old PRIVATE OLD_TEST)
-endif()
-
-# upnpdebug_mock
-#---------------
-# Completely rework needed
-    add_executable(test_upnpdebug_mock_old
+    add_executable(test_upnpdebug_old
         ${PROJECT_SOURCE_DIR}/tools/tools.cpp
-        ${PROJECT_SOURCE_DIR}/test_upnpdebug_mock.cpp)
-    add_test(NAME ctest_upnpdebug_mock_old COMMAND test_upnpdebug_mock_old)
-    target_compile_definitions(test_upnpdebug_mock_old
+        ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
+    add_test(NAME ctest_upnpdebug_old COMMAND test_upnpdebug_old)
+    target_compile_definitions(test_upnpdebug_old
                                PRIVATE OLD_TEST)
 if(NOT DEFINED ENV{GITHUB_ACTIONS})
-    add_executable(test_upnpdebug_mock
+    add_executable(test_upnpdebug
         ${PROJECT_SOURCE_DIR}/tools/tools.cpp
-        ${PROJECT_SOURCE_DIR}/test_upnpdebug_mock.cpp)
-    add_test(NAME ctest_upnpdebug_mock COMMAND test_upnpdebug_mock)
+        ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
+    add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
 endif()
 
 
