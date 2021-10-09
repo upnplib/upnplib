@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-09-30
+# Redistribution only with this Copyright remark. Last modified: 2021-10-10
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -88,6 +88,11 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(UPNP_DEBUG_SUFFIX "d")
 endif()
 
+# General define DEBUG if configuration is Debug, otherwise define NDEBUG.
+# TODO: manage setting NDEBUG is done by cmake by default. Check against it.
+add_compile_definitions(
+    PRIVATE $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
+)
 
 #################################
 # Large-file-sensitivity        #
@@ -266,8 +271,8 @@ endif(WIN32)
 # This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
 # e.g. UPNP_CORE_SOURCE_DIR and UPNP_CORE_BINARY_DIR
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/upnp ${PROJECT_SOURCE_DIR}/upnp/build)
 add_subdirectory(${PROJECT_SOURCE_DIR}/ixml ${PROJECT_SOURCE_DIR}/ixml/build)
+add_subdirectory(${PROJECT_SOURCE_DIR}/upnp ${PROJECT_SOURCE_DIR}/upnp/build)
 
 
 #################################

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10.08
+// Redistribution only with this Copyright remark. Last modified: 2021-10.10
 
 #include "upnpmock/pthreadif.h"
 #include "upnpmock/stdioif.h"
@@ -9,26 +9,6 @@
 #include "gmock/gmock.h"
 
 #include "api/upnpdebug.cpp"
-
-// clang-format off
-#ifndef NDEBUG
-  #error "NDEBUG is NOT defined"
-#endif
-
-#ifdef UPNP_DEBUG_C
-  #ifdef _MSC_VER
-    #pragma message("UPNP_DEBUG_C is defined")
-  #else
-    #warning "only Info: UPNP_DEBUG_C is defined"
-  #endif
-#else
-  #ifdef _MSC_VER
-    #pragma message("UPNP_DEBUG_C is NOT defined")
-  #else
-    #warning "only Info: UPNP_DEBUG_C is NOT defined"
-  #endif
-#endif
-// clang-format on
 
 using ::testing::_;
 using ::testing::Return;

@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-10-08
+# Redistribution only with this Copyright remark. Last modified: 2021-10-10
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNP_GTESTS VERSION 0017
+project(UPNP_GTESTS VERSION 0018
                     DESCRIPTION "Unit Tests using googletest"
                     HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -61,6 +61,17 @@ link_libraries(${UPNP_GMOCK_LIBRARIES}
 # set the environment variable DYLD_LIBRARY_PATH.
 add_link_options($<$<AND:$<BOOL:${APPLE}>,$<BOOL:${BUILD_SHARED_LIBS}>>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/lib>)
 
+# Maybe we need this on MS Windows, or with /MD[d].
+# Reference: https://gitlab.kitware.com/cmake/cmake/-/issues/18390#note_462068
+#if(MSVC)
+#    add_compile_options(
+#        $<$<CONFIG:>:/MT> #------------|
+#        $<$<CONFIG:Debug>:/MTd> #------|-- Statically link the runtime libraries
+#        $<$<CONFIG:Release>:/MT> #-----|
+#        $<$<CONFIG:MinSizeRel>:/MT> #--|
+#    )
+#endif()
+
 
 #################################
 # Unit Tests                    #
@@ -102,15 +113,16 @@ endif()
 
 # upnpapi
 set(UPNP_UPNPAPI_SOURCE_FILES
-    ${CMAKE_SOURCE_DIR}/ixml/src/attr.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/document.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/element.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/ixml.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/ixmlmembuf.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/ixmlparser.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/namedNodeMap.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/node.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/nodeList.c
+    ${UPNP_IXML_SOURCE_DIR}/src/attr.c
+    ${UPNP_IXML_SOURCE_DIR}/src/document.c
+    ${UPNP_IXML_SOURCE_DIR}/src/element.c
+    ${UPNP_IXML_SOURCE_DIR}/src/ixml.c
+    ${UPNP_IXML_SOURCE_DIR}/src/ixmlmembuf.c
+    ${UPNP_IXML_SOURCE_DIR}/src/ixmlparser.c
+    ${UPNP_IXML_SOURCE_DIR}/src/namedNodeMap.c
+    ${UPNP_IXML_SOURCE_DIR}/src/node.c
+    ${UPNP_IXML_SOURCE_DIR}/src/nodeList.c
+    $<$<CONFIG:Debug>:${UPNP_IXML_SOURCE_DIR}/src/ixmldebug.c>
 
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp

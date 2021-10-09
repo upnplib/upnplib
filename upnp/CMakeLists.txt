@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-09-25
+# Redistribution only with this Copyright remark. Last modified: 2021-10-10
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNP_CORE VERSION 0004
+project(UPNP_CORE VERSION 0005
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -47,15 +47,16 @@ include_directories(
 )
 
 set(UPNP_SOURCE_FILES
-    ${CMAKE_SOURCE_DIR}/ixml/src/attr.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/document.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/element.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/ixml.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/ixmlmembuf.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/ixmlparser.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/namedNodeMap.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/node.c
-    ${CMAKE_SOURCE_DIR}/ixml/src/nodeList.c
+    ${UPNP_IXML_SOURCE_DIR}/src/attr.c
+    ${UPNP_IXML_SOURCE_DIR}/src/document.c
+    ${UPNP_IXML_SOURCE_DIR}/src/element.c
+    ${UPNP_IXML_SOURCE_DIR}/src/ixml.c
+    ${UPNP_IXML_SOURCE_DIR}/src/ixmlmembuf.c
+    ${UPNP_IXML_SOURCE_DIR}/src/ixmlparser.c
+    ${UPNP_IXML_SOURCE_DIR}/src/namedNodeMap.c
+    ${UPNP_IXML_SOURCE_DIR}/src/node.c
+    ${UPNP_IXML_SOURCE_DIR}/src/nodeList.c
+    $<$<CONFIG:Debug>:${UPNP_IXML_SOURCE_DIR}/src/ixmldebug.c>
 
     ${PROJECT_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${PROJECT_SOURCE_DIR}/src/threadutil/LinkedList.cpp
@@ -79,6 +80,7 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/api/upnpapi.cpp
     ${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
+
 
 # Create libraries and create test executable for information
 #============================================================
@@ -111,21 +113,6 @@ if(NOT WIN32)
             ARCHIVE_OUTPUT_DIRECTORY lib
     )
 
-    # Test executable linked with the static library
-    # Tried to do it but got warnings and link errors. Only linking with
-    # UPNP_PTHREADS_SHARED_LIBRARY helps but it doesn't give a static program.
-    # It is the same as the shared linked program.
-#    add_executable(upnplib_static_run ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
-#    set_target_properties(upnplib_static_run PROPERTIES
-#            OUTPUT_NAME upnplib.a
-#    )
-#    target_link_libraries(upnplib_static_run
-#            upnplib_static
-#            #libc.a
-#            # linking with _STATIC_... gives errors, don't know why :-(
-#            ${UPNP_PTHREADS_STATIC_LIBRARY}
-#    )
-
 else() # WIN32
 
     # Can be general initialized with CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS
@@ -145,7 +132,6 @@ else() # WIN32
     )
     target_compile_definitions(upnplib_shared_win
             #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-            #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
             PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
     )
     # In addition to pthreads we need some more system libraries here
@@ -175,7 +161,6 @@ else() # WIN32
     )
     target_compile_definitions(upnplib_static_win
             #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-            #PUBLIC $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
             PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
     )
     target_link_libraries(upnplib_static_win

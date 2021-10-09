@@ -4,7 +4,7 @@
  * All rights reserved.
  *
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-08-20
+ * Redistribution only with this Copyright remark. Last modified: 2021-10-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,7 +34,10 @@
 
 #include "pthread.h"
 #include "upnpconfig.h"
+
 #include <iostream>
+
+#include "port.h"
 
 namespace // no name, i.e. anonymous for file scope
           // this is the C++ way for decorator STATIC
