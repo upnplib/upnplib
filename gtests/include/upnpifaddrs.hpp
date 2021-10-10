@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-06
+// Redistribution only with this Copyright remark. Last modified: 2021-10-10
 
 #ifndef UPNP_IFADDRS_H
 #define UPNP_IFADDRS_H
@@ -8,6 +8,8 @@
 #include <ifaddrs.h>
 #include <netinet/in.h> // for sockaddr_in
 #include <string>
+
+namespace upnp {
 
 class CIfaddr4
 // Tool to manage and fill a socket address structure. This is needed
@@ -43,5 +45,7 @@ class CIfaddr4
 };
 
 class CIfaddr4Container;
+
+} // namespace upnp
 
 #endif // UPNP_IFADDRS_H

@@ -1,10 +1,10 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-03
+// Redistribution only with this Copyright remark. Last modified: 2021-10-10
 
 // Tools and helper classes to manage gtests
 // =========================================
 
-#include "tools.h"
+#include "tools.hpp"
 #include "port.hpp"
 #include "upnp.h" // for UPNP_E_* constants
 
@@ -12,6 +12,8 @@
 #include <filesystem>
 #include <fstream>
 #include PORT_UNISTD_H
+
+namespace upnp {
 
 // Errormessages taken from https://github.com/pupnp/pupnp
 // Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
@@ -156,3 +158,5 @@ void CCaptureFd::closeFds() {
     ::close(this->fd_log);
     this->err = true;
 }
+
+} // namespace upnp

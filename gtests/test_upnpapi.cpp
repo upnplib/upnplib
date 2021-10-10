@@ -1,11 +1,11 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-06
+// Redistribution only with this Copyright remark. Last modified: 2021-10-10
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
 
-#include "tools.h"
-#include "upnpifaddrs.h"
+#include "tools.hpp"
+#include "upnpifaddrs.hpp"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
@@ -119,6 +119,8 @@ int setsockopt(int sockfd, int level, int optname, const void* optval,
                                             optlen);
 }
 
+namespace upnp {
+
 // This TestSuite is with initializing mocks
 //------------------------------------------
 class UpnpapiIPv4MockTestSuite : public ::testing::Test
@@ -212,7 +214,8 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
     EXPECT_CALL(mockIf_nametoindexObj, if_nametoindex(_)).WillOnce(Return(2));
 
     // call the unit
-    EXPECT_STREQ(UpnpGetErrorMessage(UpnpGetIfInfo("if0v4")), "UPNP_E_SUCCESS");
+    EXPECT_STREQ(UpnpGetErrorMessage(::UpnpGetIfInfo("if0v4")),
+                 "UPNP_E_SUCCESS");
 
     // gIF_NAME mocked with getifaddrs above
     EXPECT_STREQ(gIF_NAME, "if0v4");
@@ -356,6 +359,8 @@ TEST(UpnpapiTestSuite, get_error_message) {
     EXPECT_STREQ(UpnpGetErrorMessage(-121), "UPNP_E_INVALID_INTERFACE");
     EXPECT_STREQ(UpnpGetErrorMessage(1), "Unknown error code");
 }
+
+} // namespace upnp
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

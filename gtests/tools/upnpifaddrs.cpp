@@ -1,14 +1,16 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-06
+// Redistribution only with this Copyright remark. Last modified: 2021-10-10
 
 // Tools and helper classes to manage gtests
 // =========================================
 
-#include "upnpifaddrs.h"
+#include "upnpifaddrs.hpp"
 
 #include <arpa/inet.h>
 #include <net/if.h>
 #include <vector>
+
+namespace upnp {
 
 CIfaddr4::CIfaddr4()
 // With constructing the object you get a loopback device by default.
@@ -146,3 +148,5 @@ class CIfaddr4Container
         return ifaddr4;
     }
 };
+
+} // namespace upnp

@@ -1,10 +1,12 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-07
+// Redistribution only with this Copyright remark. Last modified: 2021-10-10
 
 #ifndef UPNP_PTHREAD_H
 #define UPNP_PTHREAD_H
 
 #include <pthread.h>
+
+namespace upnp {
 
 class Ipthread {
     // Interface to pthread system calls
@@ -84,5 +86,7 @@ class Mock_pthread : public Ipthread {
  *  or                    pthreadif->pthread_mutex_init(...)
  * clang-format on
 */
+
+} // namespace upnp
 
 #endif // UPNP_PTHREAD_H

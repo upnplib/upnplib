@@ -1,17 +1,19 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10.10
+// Redistribution only with this Copyright remark. Last modified: 2021-10-10
 
 #include "upnpmock/pthreadif.hpp"
 #include "upnpmock/stdioif.hpp"
 #include "upnpmock/stringif.hpp"
 
-#include "tools.h"
+#include "tools.hpp"
 #include "gmock/gmock.h"
 
 #include "api/upnpdebug.cpp"
 
 using ::testing::_;
 using ::testing::Return;
+
+namespace upnp {
 
 //
 // Interface for the upnpdebug module
@@ -404,6 +406,8 @@ TEST_F(UpnpdebugTestSuite, UpnpPrintf_not_initialized) {
     EXPECT_EQ(str, "");
 }
 */
+} // namespace upnp
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

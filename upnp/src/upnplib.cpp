@@ -3,9 +3,6 @@
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
  *
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-10-10
- *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -30,6 +27,9 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2021-10-10
+ *
  *************************************************************************/
 
 #include "pthread.h"
@@ -39,9 +39,8 @@
 
 #include "port.hpp"
 
-namespace // no name, i.e. anonymous for file scope
-          // this is the C++ way for decorator STATIC
-{
+namespace upnp {
+
 void* start_routine(void*) {
     std::cout << "UPNP_VERSION_STRING = " << UPNP_VERSION_STRING << "\n";
     std::cout << "UPNP_VERSION_MAJOR = " << UPNP_VERSION_MAJOR << "\n";
@@ -85,7 +84,7 @@ void* start_routine(void*) {
     std::cout << "-- POSIX Thread ended" << std::endl;
     return (0); // calls pthread_exit()
 }
-} // namespace
+} // namespace upnp
 
 int main() {
     pthread_t thread;
@@ -94,7 +93,7 @@ int main() {
 
     std::cout << "-- starting POSIX Thread" << std::endl;
 
-    rc = pthread_create(&thread, NULL, &start_routine, NULL);
+    rc = pthread_create(&thread, NULL, &upnp::start_routine, NULL);
     if (rc != 0) {
         std::cerr << "Error! unable to create thread, " << rc << std::endl;
         exit(1);

@@ -1,10 +1,12 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-07
+// Redistribution only with this Copyright remark. Last modified: 2021-10-10
 
 #ifndef UPNP_STDIOIF_H
 #define UPNP_STDIOIF_H
 
 #include <stdio.h>
+
+namespace upnp {
 
 class Istdio {
     // Interface to stdio system calls
@@ -67,5 +69,7 @@ class Mock_stdio : public Istdio {
  *  or                    stdioif->fopen(...)
  * clang-format on
 */
+
+} // namespace upnp
 
 #endif // UPNP_STDIOIF_H

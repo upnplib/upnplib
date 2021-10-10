@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-08-29
+// Redistribution only with this Copyright remark. Last modified: 2021-10-10
 //
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -26,7 +26,7 @@
 // cmake_dependent_option (DOWNLOAD_AND_BUILD_DEPS "Get all missing stuff" OFF ${Git_FOUND} OFF)
 // clang-format on
 
-#include "tools.h"
+#include "tools.hpp"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
