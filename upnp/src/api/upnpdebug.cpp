@@ -48,9 +48,9 @@
 //#include <stdlib.h>
 //#include <string.h>
 
-#include "upnpmock/pthreadif.h"
-#include "upnpmock/stdioif.h"
-#include "upnpmock/stringif.h"
+#include "upnpmock/pthreadif.hpp"
+#include "upnpmock/stdioif.hpp"
+#include "upnpmock/stringif.hpp"
 
 /*! Mutex to synchronize all the log file operations in the debug mode */
 static ithread_mutex_t GlobalDebugMutex;

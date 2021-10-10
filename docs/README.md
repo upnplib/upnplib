@@ -29,6 +29,7 @@ In general we refere Bjarne Stroustrup [C++ Core Guidelines](https://isocpp.gith
 - I prefer to use "snake case" variable_names_with_underscores. I find it better readable than "camel case" variablesWithUpperCaseLetters.
 - Clases start with upper case C: CmyClass;
 - Interfaces start with upper case I: ImyClass;
+- New header files have a postfix of .hpp. Old C style header files will be renamened to postfix .hpp during re-engeneering.
 
 ## Git Commit Messages
 The [Udacity Git Commit Message Style Guide](https://udacity.github.io/git-styleguide/) served as a template.
@@ -51,7 +52,7 @@ The type is contained within the title and can be one of these types:
 - fix: A bug fix
 - docs: Changes to documentation
 - style: Formatting, missing semi colons, etc; no code change
-- refactor: Refactoring production code
+- re-engineer: Re-engineering production code
 - test: Adding tests, refactoring test; no production code change
 - build: Updating build tasks, package manager configs, etc; no production code change
 

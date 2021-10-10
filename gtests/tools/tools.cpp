@@ -5,7 +5,7 @@
 // =========================================
 
 #include "tools.h"
-#include "port.h"
+#include "port.hpp"
 #include "upnp.h" // for UPNP_E_* constants
 
 #include <fcntl.h>

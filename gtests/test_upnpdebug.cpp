@@ -1,9 +1,9 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2021-10.10
 
-#include "upnpmock/pthreadif.h"
-#include "upnpmock/stdioif.h"
-#include "upnpmock/stringif.h"
+#include "upnpmock/pthreadif.hpp"
+#include "upnpmock/stdioif.hpp"
+#include "upnpmock/stringif.hpp"
 
 #include "tools.h"
 #include "gmock/gmock.h"

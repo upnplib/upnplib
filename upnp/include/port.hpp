@@ -3,8 +3,8 @@
 
 // Header file for portable definitions
 // ====================================
-// This header should be included into every source file to have portable
-// definitions available. So it cannot have other includes.
+// This header should be includable into any source file to have portable
+// definitions available. So it should never have other includes.
 
 #ifndef UPNP_INCLUDE_PORT_H
 #define UPNP_INCLUDE_PORT_H

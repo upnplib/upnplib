@@ -39,6 +39,11 @@ Cstring stringObj;
 // In the production code you must call it with, e.g.:
 // stringif->strerror(0)
 
+// For completeness (not used here): you can also create the object on the heap
+// Istring* stringObj = new Cstring(); // need to address constructor with ()
+// char* msg = stringObj->strerror(errno);
+// delete stringObj; // Important to avoid memory leaks!
+
 /*
  * The following class should be coppied to the test source. It is not a good
  * idea to move it here to the header. It uses googletest macros and you always
