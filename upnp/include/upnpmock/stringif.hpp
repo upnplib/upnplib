@@ -53,9 +53,12 @@ Cstring stringObj;
 
 class Mock_string : public Istring {
 // Class to mock the free system functions.
+    Istring* m_oldptr;
   public:
-    virtual ~Mock_string() {}
-    Mock_string() { stringif = this; }
+    // Save and restore the old pointer to the production function
+    Mock_string() { m_oldptr = stringif; stringif = this; }
+    virtual ~Mock_string() { stringif = m_oldptr; }
+
     MOCK_METHOD(char*, strerror, (int errnum), (override));
 };
 
@@ -64,8 +67,7 @@ class Mock_string : public Istring {
 
     Mock_string mocked_string;
 
- *  and call it with: mocked_string.strerror(..) (prefered)
- *  or                    stringif->strerror(..)
+ *  and call it with: mocked_string.strerror(..)
  * clang-format on
 */
 

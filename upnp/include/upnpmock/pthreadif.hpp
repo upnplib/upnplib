@@ -67,9 +67,12 @@ Cpthread pthreadObj;
 
 class Mock_pthread : public Ipthread {
 // Class to mock the free system functions.
+    Ipthread* m_oldptr;
   public:
-    virtual ~Mock_pthread() {}
-    Mock_pthread() { pthreadif = this; }
+    // Save and restore the old pointer to the production function
+    Mock_pthread() { m_oldptr = pthreadif; pthreadif = this; }
+    virtual ~Mock_pthread() { pthreadif = m_oldptr; }
+
     MOCK_METHOD(int, pthread_mutex_init, (pthread_mutex_t* mutex,
                 const pthread_mutexattr_t* mutexattr), (override));
     MOCK_METHOD(int, pthread_mutex_lock, (pthread_mutex_t* mutex), (override));
@@ -82,8 +85,7 @@ class Mock_pthread : public Ipthread {
 
     Mock_pthread mocked_pthread;
 
- *  and call it with: mocked_pthread.pthread_mutex_init(...) (prefered)
- *  or                    pthreadif->pthread_mutex_init(...)
+ *  and call it with: mocked_pthread.pthread_mutex_init(...)
  * clang-format on
 */
 

@@ -244,7 +244,7 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
     if (DbgFileName) {
         UpnpDisplayFileAndLine(fp, DbgFileName, DbgLineNo, DLevel, Module);
         vfprintf(fp, FmtStr, ArgList);
-        fflush(fp);
+        upnp::stdioif->fflush(fp);
     }
     va_end(ArgList);
     upnp::pthreadif->pthread_mutex_unlock(&GlobalDebugMutex);

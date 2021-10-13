@@ -14,6 +14,7 @@ class Istdio {
     virtual ~Istdio() {}
     virtual FILE* fopen(const char* pathname, const char* mode) = 0;
     virtual int fclose(FILE* stream) = 0;
+    virtual int fflush(FILE* stream) = 0;
 };
 
 // Global pointer to the current object (real or mocked), will be set by the
@@ -32,8 +33,8 @@ class Cstdio : public Istdio {
     FILE* fopen(const char* pathname, const char* mode) override {
         return ::fopen(pathname, mode);
     }
-
     int fclose(FILE* stream) override { return ::fclose(stream); }
+    int fflush(FILE* stream) override { return ::fflush(stream); }
 };
 
 // clang-format off
@@ -44,7 +45,7 @@ class Cstdio : public Istdio {
 Cstdio stdioObj;
 
 // In the production code you must call it with, e.g.:
-// stdioif->fopen(...)
+// stdioif->fopen(pathname, mode)
 
 /*
  * The following class should be coppied to the test source. It is not a good
@@ -53,11 +54,15 @@ Cstdio stdioObj;
 
 class Mock_stdio : public Istdio {
 // Class to mock the free system functions.
+    Istdio* m_oldptr;
   public:
-    virtual ~Mock_stdio() {}
-    Mock_stdio() { stdioif = this; }
+    // Save and restore the old pointer to the production function
+    Mock_stdio() { m_oldptr = stdioif; stdioif = this; }
+    virtual ~Mock_stdio() { stdioif = m_oldptr; }
+
     MOCK_METHOD(FILE*, fopen, (const char* pathname, const char* mode), (override));
     MOCK_METHOD(int, fclose, (FILE* stream), (override));
+    MOCK_METHOD(int, fflush, (FILE* stream), (override));
 };
 
  * In a gtest you will instantiate the Mock class, prefered as protected member
@@ -65,8 +70,7 @@ class Mock_stdio : public Istdio {
 
     Mock_stdio mocked_stdio;
 
- *  and call it with: mocked_stdio.fopen(...) (prefered)
- *  or                    stdioif->fopen(...)
+ *  and call it with: mocked_stdio.fopen(pathname, mode)
  * clang-format on
 */
 
