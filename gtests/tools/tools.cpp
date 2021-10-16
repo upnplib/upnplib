@@ -1,17 +1,16 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-10
+// Redistribution only with this Copyright remark. Last modified: 2021-10-16
 
 // Tools and helper classes to manage gtests
 // =========================================
 
 #include "tools.hpp"
 #include "port.hpp"
+#include "port_unistd.hpp"
 #include "upnp.h" // for UPNP_E_* constants
 
-#include <fcntl.h>
-#include <filesystem>
-#include <fstream>
-#include PORT_UNISTD_H
+#include <iostream>
+#include <string.h>
 
 namespace upnp {
 
@@ -92,71 +91,75 @@ const char* UpnpGetErrorMessage(int rc) {
     return "Unknown error code";
 }
 
-CCaptureFd::CCaptureFd() {
-    // generate random temporary filename to be thread-safe
-    std::srand(std::time(nullptr));
-    this->captFname = std::filesystem::temp_directory_path().string() +
-                      "/gtestcapt" + std::to_string(std::rand());
-}
-
-CCaptureFd::~CCaptureFd() {
-    this->closeFds();
-    remove(this->captFname.c_str());
-}
-
-void CCaptureFd::capture(int prmFd) {
-    this->fd = prmFd;
-    this->fd_old = ::dup(prmFd);
-    if (this->fd_old < 0) {
+//
+// class CCaptureStdOutErr definition
+// ----------------------------------
+CCaptureStdOutErr::CCaptureStdOutErr(int t_fileno) {
+    if (t_fileno != STDOUT_FILENO && t_fileno != STDERR_FILENO) {
+        m_error = true;
+        std::cerr << "\n[ ERROR    ] " << __FILE__ << ", Line " << __LINE__
+                  << ", constructor: Only STDOUT_FILENO and STDERR_FILENO "
+                     "supported. Nothing will be captured."
+                  << std::endl;
         return;
     }
-    this->fd_log =
-        ::open(this->captFname.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0660);
-    if (this->fd_log < 0) {
-        ::close(this->fd_old);
+    // make a pipe
+#ifdef _WIN32
+    int rc = ::_pipe(m_out_pipe, UPNP_PIPE_BUFFER_SIZE, O_TEXT);
+#else
+    int rc = ::pipe(m_out_pipe);
+#endif
+    if (rc != 0) {
+        m_error = true;
+        std::cerr << "\n[ ERROR    ] " << __FILE__ << ", Line " << __LINE__
+                  << ", constructor: Creating a pipe failed. "
+                  << strerror(errno) << std::endl;
         return;
     }
-    if (::dup2(this->fd_log, prmFd) < -2) {
-        ::close(this->fd_old);
-        ::close(this->fd_log);
-        return;
-    }
-    this->err = false;
+    m_std_fileno = t_fileno;
+    m_saved_stdno = ::dup(t_fileno); // save stderr to restore after capturing
 }
 
-bool CCaptureFd::print(std::ostream& pOut)
-// Close all file descriptors and print captured file content.
-// If nothing was captured, then the return value is false.
-{
-    if (this->err)
+bool CCaptureStdOutErr::start() {
+    if (m_error)
         return false;
-    this->closeFds();
 
-    std::ifstream readFileObj(this->captFname.c_str());
-    std::string lineBuf = "";
-
-    std::getline(readFileObj, lineBuf);
-    if (lineBuf == "") {
-        readFileObj.close();
-        remove(this->captFname.c_str());
-        return false;
-    }
-
-    pOut << lineBuf << "\n";
-    while (std::getline(readFileObj, lineBuf))
-        pOut << lineBuf << "\n";
-
-    readFileObj.close();
-    remove(this->captFname.c_str());
+    ::dup2(m_out_pipe[1], m_std_fileno); // redirect stderr to the pipe
     return true;
 }
 
-void CCaptureFd::closeFds() {
-    // restore old fd
-    ::dup2(this->fd_old, this->fd);
-    ::close(this->fd_old);
-    ::close(this->fd_log);
-    this->err = true;
+bool CCaptureStdOutErr::get(std::string& t_captured) {
+    if (m_error)
+        return false;
+
+    char capture_buffer[UPNP_PIPE_BUFFER_SIZE]{};
+
+    // We always write a nullbyte to the pipe so read always returns
+    // and does not wait endless if there is nothing captured.
+    const char nullbyte[1] = {'\0'};
+    ::write(m_std_fileno, &nullbyte, 1);
+
+    // read from pipe into capture_buffer
+    ssize_t count =
+        ::read(m_out_pipe[0], &capture_buffer, sizeof(capture_buffer) - 1);
+
+    // reconnect stderr
+    ::dup2(m_saved_stdno, m_std_fileno);
+
+    if (count == sizeof(capture_buffer) - 1) {
+        // Not all characters read
+        std::cerr << "\n[ ERROR    ] " << __FILE__ << ", Line " << __LINE__
+                  << ", method " << __func__
+                  << ": capture_buffer to small, captured characters may be "
+                     "lost. You must increase it."
+                  << std::endl;
+        return false;
+    }
+
+    // Return the character buffer as string object.
+    std::string s = capture_buffer;
+    t_captured = s;
+    return true;
 }
 
 } // namespace upnp

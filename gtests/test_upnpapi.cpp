@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-10
+// Redistribution only with this Copyright remark. Last modified: 2021-10-16
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -322,15 +322,19 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
     EXPECT_CALL(mockSetsockoptObj, setsockopt(_, _, _, _, _)).Times(0);
 
     // Initialize capturing of the stderr output
-    CCaptureFd captFdObj;
-    captFdObj.capture(2); // 1 = stdout, 2 = stderr
+    CCaptureStdOutErr captureObj(STDERR_FILENO);
+    std::string capturedStderr;
+    ASSERT_TRUE(captureObj.start());
 
     // call the unit
     EXPECT_EQ(UpnpSdkInit, 0);
     EXPECT_STREQ(UpnpGetErrorMessage(UpnpInit2(NULL, 0)), "UPNP_E_SUCCESS");
 
-    EXPECT_FALSE(captFdObj.print(std::cerr))
-        << "Output to stderr is true. There should not be any output to stderr";
+    // Get and check the captured data
+    ASSERT_TRUE(captureObj.get(capturedStderr));
+    EXPECT_EQ(capturedStderr, "")
+        << "  There should not be any output to stderr.";
+
     EXPECT_EQ(UpnpSdkInit, 1);
 
     // call the unit again

@@ -1,8 +1,11 @@
-// Testing the tools, of course ;-)
-// Author: 2021-03-12 - Ingo Höft
+// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2021-10-16
 
 #include "tools.cpp"
+#include "upnpifaddrs.cpp"
 #include "gtest/gtest.h"
+
+namespace upnp {
 
 TEST(ToolsTestSuite, initialize_interface_addresses) {
     struct ifaddrs* ifaddr = nullptr;
@@ -162,25 +165,26 @@ TEST(ToolsTestSuite, chain_ifaddr_in_interface_address_container) {
         << "    addr4buf contains the broadcast address";
 }
 
-TEST(ToolsTestSuite, capture_output) {
-    CCaptureFd captFdObj;
-    captFdObj.capture(2); // 1 = stdout, 2 = stderr
-    std::cerr << "1: output 1 to stderr captured\n";
-    std::cerr << "2: output 1 to stderr captured\n";
-    EXPECT_TRUE(captFdObj.print(std::cerr));
-    std::cerr << "output 1 to stderr\n";
+TEST(ToolsTestSuite, capture_output_with_pipe) {
+    // CCaptureStdOutErr captureObj(STDOUT_FILENO);
+    CCaptureStdOutErr captureObj(STDERR_FILENO);
+    std::string captured;
 
-    captFdObj.capture(2);
-    EXPECT_FALSE(captFdObj.print(std::cerr));
-    captFdObj.capture(2);
-    std::cerr << "1: output 2 to stderr captured\n";
-    EXPECT_TRUE(captFdObj.print(std::cout));
-    std::cerr << "output 2 to stderr\n";
-    captFdObj.capture(2);
-    // nothing captured
-    EXPECT_FALSE(captFdObj.print(std::cerr));
-    std::cerr << "output 3 to stderr\n";
+    ASSERT_TRUE(captureObj.start());
+    std::cerr << "Hello ";
+    std::cerr << "World" << std::endl;
+    ASSERT_TRUE(captureObj.get(captured));
+
+    std::cerr << "First capture: " << captured;
+
+    ASSERT_TRUE(captureObj.start());
+    std::cerr << "Hello World again" << std::endl;
+    ASSERT_TRUE(captureObj.get(captured));
+
+    std::cerr << "Second start: " << captured;
 }
+
+} // namespace upnp
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

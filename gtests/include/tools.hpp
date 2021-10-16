@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-10
+// Redistribution only with this Copyright remark. Last modified: 2021-10-16
 
 #ifndef UPNP_GTEST_TOOLS_H
 #define UPNP_GTEST_TOOLS_H
@@ -10,27 +10,41 @@ namespace upnp {
 
 const char* UpnpGetErrorMessage(int rc);
 
-class CCaptureFd
-// Tool to capture output to a file descriptor, mainly used to capture program
-// output to stdout or stderr.
-// When printing the captured output, all opened file descriptor will be closed
-// to avoid confusing output loops. For a new capture after print(..) you have
-// to call capture(..) again.
-{
-    int fd;
-    int fd_old;
-    int fd_log;
-    bool err = true;
-    std::string captFname;
+//
+// Capture output to stdout or stderr
+// ----------------------------------
+// class CCaptureStdOutErr declaration
+//
+// Helper class to capture output to stdout or stderr into a buffer so we can
+// compare it. Previous version with capturing to a temporary disk file can be
+// found at git commit 884a040.
+// clang-format off
+//
+// Typical usage is:
+/*
+    CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    std::string capturedStderr;
+    ASSERT_TRUE(captureObj.start());
+    std::cerr << "Hello World"; // or any other output from within functions
+    ASSERT_TRUE(captureObj.get(capturedStderr));
+    EXPECT_THAT( capturedStderr, MatchesRegex("Hello .*"));
+*/
+// clang-format on
+
+// Increase the size of the capture buffer if you get an error message.
+// It is used to read the captured output from the pipe.
+#define UPNP_PIPE_BUFFER_SIZE 256
+
+class CCaptureStdOutErr {
+    int m_out_pipe[2]{};
+    int m_std_fileno{};
+    int m_saved_stdno{};
+    bool m_error = false;
 
   public:
-    CCaptureFd();
-    ~CCaptureFd();
-    void capture(int prmFd);
-    bool print(std::ostream& pOut);
-
-  private:
-    void closeFds();
+    CCaptureStdOutErr(int);
+    bool start(void);
+    bool get(std::string&);
 };
 
 } // namespace upnp

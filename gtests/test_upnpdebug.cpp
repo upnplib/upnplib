@@ -1,16 +1,19 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-12
+// Redistribution only with this Copyright remark. Last modified: 2021-10-17
 
 #include "upnpmock/pthreadif.hpp"
 #include "upnpmock/stdioif.hpp"
 #include "upnpmock/stringif.hpp"
-
-#include "tools.hpp"
 #include "gmock/gmock.h"
+
+#include "port_unistd.hpp"
+#include "tools.hpp"
+#include <string>
 
 #include "api/upnpdebug.cpp"
 
 using ::testing::_;
+using ::testing::MatchesRegex;
 using ::testing::Return;
 
 namespace upnp {
@@ -517,8 +520,8 @@ TEST(UpnpdebugTestSuite, UpnpPrintf_without_init) {
 }
 
 TEST(UpnpdebugTestSuite, UpnpPrintf_normal_use) {
-    // pthreadif = &pthreadObj;
-    // stdioif = &stdioObj;
+    CCaptureStdOutErr captureObj(STDERR_FILENO);
+    std::string captured;
 
     // Enable and initialize logging
     ::UpnpSetLogLevel(UPNP_ALL);
@@ -527,8 +530,21 @@ TEST(UpnpdebugTestSuite, UpnpPrintf_normal_use) {
     EXPECT_EQ(::UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
               stderr);
 
+    ASSERT_TRUE(captureObj.start());
+
     ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
                  "Unit Test for %s on line %d.\n", "UpnpPrintf", __LINE__);
+
+    ASSERT_TRUE(captureObj.get(captured));
+
+    // Example: "2021-10-17 21:09:01 UPNP-API_-2: Thread:0x7F1366618740
+    // [/home/ingo/devel/upnplib-dev/upnplib/gtests/test_upnpdebug.cpp:535]:
+    // Unit Test for UpnpPrintf on line 536.\n"
+    EXPECT_THAT(
+        captured,
+        MatchesRegex("....-..-.. ..:..:.. UPNP-API_-2: "
+                     "Thread:0x.+ \\[.+\\]: Unit Test for UpnpPrintf on line "
+                     ".+\\.\n"));
 }
 
 } // namespace upnp
