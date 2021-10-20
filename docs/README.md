@@ -20,7 +20,7 @@ Just add option `-i` to modify the source files.
 ## C++ programming rules
 In general we refere Bjarne Stroustrup [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines). In detail we mainly follow this [Style](https://lefticus.gitbooks.io/cpp-best-practices/content/03-Style.html) with some exceptions as listed below.
 
-- Using exceptions is not allowed.
+- Using exceptions is permitted.
 - The names of global variables should start with //.
 - Check variables against visibility, lifetime, and thread safety.
 - [Declare local variables nearly where they are first used](https://isocpp.org/wiki/faq/coding-standards#declare-near-first-use), not always at the top of a function.
@@ -99,5 +99,5 @@ The footer is optional and is used to reference issue tracker IDs.
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2021-10-06
+// Redistribution only with this Copyright remark. Last modified: 2021-10-18
 </sup></sup>

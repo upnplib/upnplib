@@ -1,71 +1,18 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-02
+// Redistribution only with this Copyright remark. Last modified: 2021-10-20
 
-#ifndef NDEBUG
-#define NDEBUG
-#endif
-
+#include "port.hpp"
 #include "gtest/gtest.h"
 
-// Test of local functions, not linkable
 #include "FreeList.cpp"
 #include "LinkedList.cpp"
 #include "ThreadPool.cpp"
-//#include "TimerThread.cpp"
 
-// testsuite with fixtures
-//------------------------
-class ThreadPoolFixtureTestSuite : public ::testing::Test {
-  protected:
-    // for testing job free_function
-    free_routine free_func() { return 0; }
-};
+namespace upnp {
 
-// testsuites without fixtures
-//----------------------------
-TEST(FreeListTestSuite, initialize_FreeList_with_no_items) {
-    int element = 123;
-    FreeList free_list = {};
-
-    EXPECT_EQ(FreeListInit(nullptr, 0, 0), EINVAL);
-    EXPECT_EQ(FreeListInit(&free_list, 0, 0), 0);
-    EXPECT_EQ(FreeListInit(&free_list, sizeof(element), 0), 0);
-#ifdef OLD_TEST
-    std::cout << "  BUG! Allocate item on FreeList with 0 elements "
-              << "should return a nullptr.\n";
-    EXPECT_NE(FreeListAlloc(&free_list), nullptr);
-#else
-    EXPECT_EQ(FreeListAlloc(&free_list), nullptr)
-        << "# Allocate item on FreeList with 0 elements should return a "
-           "nullptr.";
-#endif
-    EXPECT_EQ(FreeListDestroy(nullptr), EINVAL);
-    EXPECT_EQ(FreeListDestroy(&free_list), 0);
-}
-
-TEST(FreeListTestSuite, allocate_item_in_FreeList) {
-    int element = 999;
-    FreeList free_list = {};
-
-    // maxFreeListLength is for 1 element
-    EXPECT_EQ(FreeListInit(&free_list, sizeof(element), 1), 0);
-    // allocate 1 item
-    EXPECT_NE(FreeListAlloc(&free_list), nullptr);
-#ifdef OLD_TEST
-    std::cout << "  BUG! Exeeding maxFreeListLength should return a nullptr.\n";
-    EXPECT_NE(FreeListAlloc(&free_list), nullptr);
-    // Cannot free the allocated item! Seems to be a problem with boundaries.
-    std::cout << "  BUG! Cannot free same amount of elements as allocated.\n";
-    // EXPECT_EQ(FreeListFree(&free_list, &element), 0);
-#else
-    EXPECT_EQ(FreeListAlloc(&free_list), nullptr)
-        << "# Exeeding maxFreeListLength should return a nullptr.";
-    FAIL() << "# Cannot free same amount of elements as allocated.";
-    EXPECT_EQ(FreeListFree(&free_list, &element), 0);
-#endif
-    // Destroy aborted test after free list with 'free(): invalid pointer'
-    EXPECT_EQ(FreeListDestroy(&free_list), 0);
-}
+//###############################
+// Linked List Testsuite        #
+//###############################
 
 TEST(LinkedListTestSuite, process_nodes_add_delete_point_to) {
     LinkedList ll = {};
@@ -125,6 +72,22 @@ TEST(LinkedListTestSuite, process_nodes_add_delete_point_to) {
     EXPECT_EQ(ListSize(&ll), 0);
     EXPECT_EQ(ListHead(&ll), nullptr);
     EXPECT_EQ(ListTail(&ll), nullptr);
+}
+
+//###############################
+// ThreadPool Testsuite         #
+//###############################
+
+class ThreadPoolFixtureTestSuite : public ::testing::Test {
+  protected:
+    // for testing job free_function
+    free_routine free_func() { return 0; }
+};
+
+TEST_F(ThreadPoolFixtureTestSuite, set_job_free_function) {
+    ThreadPoolJob job = {};
+
+    EXPECT_EQ(TPJobSetFreeFunction(&job, free_func()), 0);
 }
 
 TEST(ThreadPoolTestSuite, initialize_threadpool) {
@@ -319,12 +282,6 @@ TEST(ThreadPoolTestSuite, set_job_priority) {
     EXPECT_EQ(TPJobSetPriority(&job, MED_PRIORITY), 0);
     EXPECT_EQ(TPJobSetPriority(&job, HIGH_PRIORITY), 0);
     EXPECT_EQ(TPJobSetPriority(&job, (ThreadPriority)3), EINVAL);
-}
-
-TEST_F(ThreadPoolFixtureTestSuite, set_job_free_function) {
-    ThreadPoolJob job = {};
-
-    EXPECT_EQ(TPJobSetFreeFunction(&job, free_func()), 0);
 }
 
 TEST(ThreadPoolTestSuite, initialize_default_threadpool_attributes) {
@@ -627,6 +584,8 @@ TEST(ThreadPoolTestSuite, set_policy_type) {
     // TODO! Check different operating systems
     EXPECT_EQ(SetPolicyType(DEFAULT_POLICY), 0);
 }
+
+} // namespace upnp
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

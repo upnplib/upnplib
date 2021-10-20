@@ -97,12 +97,12 @@ endif()
 
 # upnpdebug
 #----------
-    add_executable(test_upnpdebug_old
-        ${PROJECT_SOURCE_DIR}/tools/tools.cpp
-        ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
-    add_test(NAME ctest_upnpdebug_old COMMAND test_upnpdebug_old)
-    target_compile_definitions(test_upnpdebug_old
-                               PRIVATE OLD_TEST)
+add_executable(test_upnpdebug_old
+    ${PROJECT_SOURCE_DIR}/tools/tools.cpp
+    ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
+add_test(NAME ctest_upnpdebug_old COMMAND test_upnpdebug_old)
+target_compile_definitions(test_upnpdebug_old
+                           PRIVATE OLD_TEST)
 if(NOT DEFINED ENV{GITHUB_ACTIONS})
     add_executable(test_upnpdebug
         ${PROJECT_SOURCE_DIR}/tools/tools.cpp
@@ -112,6 +112,7 @@ endif()
 
 
 # upnpapi
+#--------
 set(UPNP_UPNPAPI_SOURCE_FILES
     ${UPNP_IXML_SOURCE_DIR}/src/attr.c
     ${UPNP_IXML_SOURCE_DIR}/src/document.c
@@ -162,6 +163,17 @@ if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT WIN32)
                                PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 endif()
 
+# FreeList
+#---------
+add_executable(test_FreeList_old ${PROJECT_SOURCE_DIR}/test_FreeList.cpp)
+add_test(NAME ctest_FreeList_old COMMAND test_FreeList_old)
+target_compile_definitions(test_FreeList_old
+                           PRIVATE OLD_TEST)
+if(NOT DEFINED ENV{GITHUB_ACTIONS})
+add_executable(test_FreeList ${PROJECT_SOURCE_DIR}/test_FreeList.cpp)
+add_test(NAME ctest_FreeList COMMAND test_FreeList)
+endif()
+
 # threadutil
 #-----------
 if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT APPLE)
@@ -181,9 +193,11 @@ if(NOT DEFINED ENV{GITHUB_ACTIONS})
 endif()
 
 # simple test
+#------------
 add_executable(test_simple ${PROJECT_SOURCE_DIR}/test_simple.cpp)
 
 # template
+#---------
 add_executable(test_template_old ${PROJECT_SOURCE_DIR}/test_template.cpp)
 target_compile_definitions(test_template_old PRIVATE OLD_TEST)
 add_executable(test_template ${PROJECT_SOURCE_DIR}/test_template.cpp)
