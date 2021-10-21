@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-19
+// Redistribution only with this Copyright remark. Last modified: 2021-10-21
 
 #ifndef UPNP_STDLIBIF_H
 #define UPNP_STDLIBIF_H
@@ -18,7 +18,7 @@ class Istdlib {
 
 // Global pointer to the current object (real or mocked), will be set by the
 // constructor of the respective object.
-Istdlib* stdlibif;
+Istdlib* stdlib_h;
 
 class Cstdlib : public Istdlib {
     // Real class to call the system functions
@@ -27,7 +27,7 @@ class Cstdlib : public Istdlib {
 
     // With the constructor initialize the pointer to the interface that may be
     // overwritten to point to a mock object instead.
-    Cstdlib() { stdlibif = this; }
+    Cstdlib() { stdlib_h = this; }
 
     void* malloc(size_t size) override { return ::malloc(size); }
     void free(void* ptr) override { return ::free(ptr); }
@@ -35,13 +35,13 @@ class Cstdlib : public Istdlib {
 
 // clang-format off
 // This is the instance to call the system functions. This object is called
-// with its pointer stdlibif (see above) that is initialzed with the
+// with its pointer stdlib_h (see above) that is initialzed with the
 // constructor. That pointer can be overwritten to point to a mock object
 // instead.
 Cstdlib stdlibObj;
 
 // In the production code you must call it with, e.g.:
-// stdlibif->malloc(sizeof(whatever))
+// upnp::stdlib_h->malloc(sizeof(whatever))
 
 /*
  * The following class should be coppied to the test source. It is not a good
@@ -53,8 +53,8 @@ class Mock_stdlib : public Istdlib {
     Istdlib* m_oldptr;
   public:
     // Save and restore the old pointer to the production function
-    Mock_stdlib() { m_oldptr = stdlibif; stdlibif = this; }
-    virtual ~Mock_stdlib() { stdlibif = m_oldptr; }
+    Mock_stdlib() { m_oldptr = stdlib_h; stdlib_h = this; }
+    virtual ~Mock_stdlib() { stdlib_h = m_oldptr; }
 
     MOCK_METHOD(void*, malloc, (size_t size), (override));
     MOCK_METHOD(void, free, (void* ptr), (override));

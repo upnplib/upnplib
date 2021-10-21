@@ -1,8 +1,8 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-10
+// Redistribution only with this Copyright remark. Last modified: 2021-10-21
 
-#ifndef UPNP_PTHREAD_H
-#define UPNP_PTHREAD_H
+#ifndef UPNP_PTHREADIF_H
+#define UPNP_PTHREADIF_H
 
 #include <pthread.h>
 
@@ -21,7 +21,7 @@ class Ipthread {
 
 // Global pointer to the current object (real or mocked), will be set by the
 // constructor of the respective object.
-Ipthread* pthreadif;
+Ipthread* pthread_h;
 
 class Cpthread : public Ipthread {
     // Real class to call the system functions.
@@ -30,7 +30,7 @@ class Cpthread : public Ipthread {
 
     // With the constructor initialize the pointer to the interface that may be
     // overwritten to point to a mock object instead.
-    Cpthread() { pthreadif = this; }
+    Cpthread() { pthread_h = this; }
 
     int pthread_mutex_init(pthread_mutex_t* mutex,
                            const pthread_mutexattr_t* mutexattr) override {
@@ -52,13 +52,13 @@ class Cpthread : public Ipthread {
 
 // clang-format off
 // This is the instance to call the system functions. This object is called
-// with its pointer pthreadif (see above) that is initialzed with the
+// with its pointer pthread_h (see above) that is initialzed with the
 // constructor. That pointer can be overwritten to point to a mock object
 // instead.
 Cpthread pthreadObj;
 
 // In the production code you must call it with, e.g.:
-// pthreadif->pthread_mutex_init(...)
+// upnp::pthread_h->pthread_mutex_init(...)
 
 /*
  * The following class should be coppied to the test source. It is not a good
@@ -70,8 +70,8 @@ class Mock_pthread : public Ipthread {
     Ipthread* m_oldptr;
   public:
     // Save and restore the old pointer to the production function
-    Mock_pthread() { m_oldptr = pthreadif; pthreadif = this; }
-    virtual ~Mock_pthread() { pthreadif = m_oldptr; }
+    Mock_pthread() { m_oldptr = pthread_h; pthread_h = this; }
+    virtual ~Mock_pthread() { pthread_h = m_oldptr; }
 
     MOCK_METHOD(int, pthread_mutex_init, (pthread_mutex_t* mutex,
                 const pthread_mutexattr_t* mutexattr), (override));
@@ -91,4 +91,4 @@ class Mock_pthread : public Ipthread {
 
 } // namespace upnp
 
-#endif // UPNP_PTHREAD_H
+#endif // UPNP_PTHREADIF_H

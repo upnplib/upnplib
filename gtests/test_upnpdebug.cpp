@@ -1,9 +1,9 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-17
+// Redistribution only with this Copyright remark. Last modified: 2021-10-21
 
-#include "upnpmock/pthreadif.hpp"
-#include "upnpmock/stdioif.hpp"
-#include "upnpmock/stringif.hpp"
+#include "upnpmock/pthread.hpp"
+#include "upnpmock/stdio.hpp"
+#include "upnpmock/string.hpp"
 #include "gmock/gmock.h"
 
 #include "port_unistd.hpp"
@@ -70,10 +70,10 @@ class Mock_string : public Istring {
   public:
     // Save and restore the old pointer to the production function
     Mock_string() {
-        m_oldptr = stringif;
-        stringif = this;
+        m_oldptr = string_h;
+        string_h = this;
     }
-    virtual ~Mock_string() { stringif = m_oldptr; }
+    virtual ~Mock_string() { string_h = m_oldptr; }
 
     MOCK_METHOD(char*, strerror, (int errnum), (override));
 };
@@ -85,10 +85,10 @@ class Mock_stdio : public Istdio {
   public:
     // Save and restore the old pointer to the production function
     Mock_stdio() {
-        m_oldptr = stdioif;
-        stdioif = this;
+        m_oldptr = stdio_h;
+        stdio_h = this;
     }
-    virtual ~Mock_stdio() { stdioif = m_oldptr; }
+    virtual ~Mock_stdio() { stdio_h = m_oldptr; }
 
     MOCK_METHOD(FILE*, fopen, (const char* pathname, const char* mode),
                 (override));
@@ -103,10 +103,10 @@ class Mock_pthread : public Ipthread {
   public:
     // Save and restore the old pointer to the production function
     Mock_pthread() {
-        m_oldptr = pthreadif;
-        pthreadif = this;
+        m_oldptr = pthread_h;
+        pthread_h = this;
     }
-    virtual ~Mock_pthread() { pthreadif = m_oldptr; }
+    virtual ~Mock_pthread() { pthread_h = m_oldptr; }
 
     MOCK_METHOD(int, pthread_mutex_init,
                 (pthread_mutex_t * mutex, const pthread_mutexattr_t* mutexattr),

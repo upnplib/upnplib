@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-10-10
+ * Redistribution only with this Copyright remark. Last modified: 2021-10-21
  *
  ******************************************************************************/
 
@@ -50,9 +50,9 @@
 //#include <stdlib.h>
 //#include <string.h>
 
-#include "upnpmock/pthreadif.hpp"
-#include "upnpmock/stdioif.hpp"
-#include "upnpmock/stringif.hpp"
+#include "upnpmock/pthread.hpp"
+#include "upnpmock/stdio.hpp"
+#include "upnpmock/string.hpp"
 
 /*! Mutex to synchronize all the log file operations in the debug mode */
 static ithread_mutex_t GlobalDebugMutex;
@@ -76,7 +76,7 @@ static char* fileName;
  * risk of race, probably not a problem, and not worth fixing. */
 int UpnpInitLog(void) {
     if (!initwascalled) {
-        upnp::pthreadif->pthread_mutex_init(&GlobalDebugMutex, NULL);
+        upnp::pthread_h->pthread_mutex_init(&GlobalDebugMutex, NULL);
         initwascalled = 1;
     }
     /* If the user did not ask for logging do nothing */
@@ -86,15 +86,15 @@ int UpnpInitLog(void) {
 
     if (fp) {
         if (is_stderr == 0) {
-            upnp::stdioif->fclose(fp);
+            upnp::stdio_h->fclose(fp);
             fp = NULL;
         }
     }
     is_stderr = 0;
     if (fileName) {
-        if ((fp = upnp::stdioif->fopen(fileName, "a")) == NULL) {
+        if ((fp = upnp::stdio_h->fopen(fileName, "a")) == NULL) {
             fprintf(stderr, "Failed to open fileName (%s): %s\n", fileName,
-                    upnp::stringif->strerror(errno));
+                    upnp::string_h->strerror(errno));
         }
     }
     if (fp == NULL) {
@@ -117,16 +117,16 @@ void UpnpCloseLog(void) {
     /* Calling lock() assumes that someone called UpnpInitLog(), but
      * this is reasonable as it is called from UpnpInit2(). We risk a
      * crash if we do this without a lock.*/
-    upnp::pthreadif->pthread_mutex_lock(&GlobalDebugMutex);
+    upnp::pthread_h->pthread_mutex_lock(&GlobalDebugMutex);
 
     if (fp != NULL && is_stderr == 0) {
-        upnp::stdioif->fclose(fp);
+        upnp::stdio_h->fclose(fp);
     }
     fp = NULL;
     is_stderr = 0;
     initwascalled = 0;
-    upnp::pthreadif->pthread_mutex_unlock(&GlobalDebugMutex);
-    upnp::pthreadif->pthread_mutex_destroy(&GlobalDebugMutex);
+    upnp::pthread_h->pthread_mutex_unlock(&GlobalDebugMutex);
+    upnp::pthread_h->pthread_mutex_destroy(&GlobalDebugMutex);
 }
 
 void UpnpSetLogFileNames(const char* newFileName, const char* ignored) {
@@ -234,9 +234,9 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
 
     if (!DebugAtThisLevel(DLevel, Module))
         return;
-    upnp::pthreadif->pthread_mutex_lock(&GlobalDebugMutex);
+    upnp::pthread_h->pthread_mutex_lock(&GlobalDebugMutex);
     if (fp == NULL) {
-        upnp::pthreadif->pthread_mutex_unlock(&GlobalDebugMutex);
+        upnp::pthread_h->pthread_mutex_unlock(&GlobalDebugMutex);
         return;
     }
 
@@ -244,10 +244,10 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
     if (DbgFileName) {
         UpnpDisplayFileAndLine(fp, DbgFileName, DbgLineNo, DLevel, Module);
         vfprintf(fp, FmtStr, ArgList);
-        upnp::stdioif->fflush(fp);
+        upnp::stdio_h->fflush(fp);
     }
     va_end(ArgList);
-    upnp::pthreadif->pthread_mutex_unlock(&GlobalDebugMutex);
+    upnp::pthread_h->pthread_mutex_unlock(&GlobalDebugMutex);
 }
 
 /* No locking here, the app should be careful about not calling

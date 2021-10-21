@@ -27,10 +27,13 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2021-10-21
+ *
  **************************************************************************/
 
 #include "FreeList.h"
-#include "upnpmock/stdlibif.hpp"
+#include "upnpmock/stdlib.hpp"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -62,7 +65,7 @@ void* FreeListAlloc(FreeList* free_list) {
         free_list->head = free_list->head->next;
         free_list->freeListLength--;
     } else {
-        ret = (FreeListNode*)upnp::stdlibif->malloc(free_list->element_size);
+        ret = (FreeListNode*)upnp::stdlib_h->malloc(free_list->element_size);
     }
 
     return ret;
@@ -82,7 +85,7 @@ int FreeListFree(FreeList* free_list, void* element) {
         temp->next = free_list->head;
         free_list->head = temp;
     } else {
-        upnp::stdlibif->free(element);
+        upnp::stdlib_h->free(element);
     }
 
     return 0;
@@ -99,7 +102,7 @@ int FreeListDestroy(FreeList* free_list) {
     while (free_list->head) {
         i++;
         temp = free_list->head->next;
-        upnp::stdlibif->free(free_list->head);
+        upnp::stdlib_h->free(free_list->head);
         free_list->head = temp;
     }
     free_list->freeListLength = 0;

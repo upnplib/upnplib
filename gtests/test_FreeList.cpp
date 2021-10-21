@@ -1,7 +1,7 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-20
+// Redistribution only with this Copyright remark. Last modified: 2021-10-21
 
-#include "upnpmock/stdlibif.hpp"
+#include "upnpmock/stdlib.hpp"
 
 #include "port.hpp"
 #include "gmock/gmock.h"
@@ -25,10 +25,10 @@ class Mock_stdlib : public Istdlib {
   public:
     // Save and restore the old pointer to the production function
     Mock_stdlib() {
-        m_oldptr = stdlibif;
-        stdlibif = this;
+        m_oldptr = stdlib_h;
+        stdlib_h = this;
     }
-    virtual ~Mock_stdlib() { stdlibif = m_oldptr; }
+    virtual ~Mock_stdlib() { stdlib_h = m_oldptr; }
 
     MOCK_METHOD(void*, malloc, (size_t size), (override));
     MOCK_METHOD(void, free, (void* ptr), (override));

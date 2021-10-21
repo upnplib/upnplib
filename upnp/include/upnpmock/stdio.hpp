@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-10
+// Redistribution only with this Copyright remark. Last modified: 2021-10-21
 
 #ifndef UPNP_STDIOIF_H
 #define UPNP_STDIOIF_H
@@ -19,7 +19,7 @@ class Istdio {
 
 // Global pointer to the current object (real or mocked), will be set by the
 // constructor of the respective object.
-Istdio* stdioif;
+Istdio* stdio_h;
 
 class Cstdio : public Istdio {
     // Real class to call the system functions.
@@ -28,7 +28,7 @@ class Cstdio : public Istdio {
 
     // With the constructor initialize the pointer to the interface that may be
     // overwritten to point to a mock object instead.
-    Cstdio() { stdioif = this; }
+    Cstdio() { stdio_h = this; }
 
     FILE* fopen(const char* pathname, const char* mode) override {
         return ::fopen(pathname, mode);
@@ -39,13 +39,13 @@ class Cstdio : public Istdio {
 
 // clang-format off
 // This is the instance to call the system functions. This object is called
-// with its pointer stdioif (see above) that is initialzed with the
+// with its pointer stdio_h (see above) that is initialzed with the
 // constructor. That pointer can be overwritten to point to a mock object
 // instead.
 Cstdio stdioObj;
 
 // In the production code you must call it with, e.g.:
-// stdioif->fopen(pathname, mode)
+// upnp::stdio_h->fopen(pathname, mode)
 
 /*
  * The following class should be coppied to the test source. It is not a good
@@ -57,8 +57,8 @@ class Mock_stdio : public Istdio {
     Istdio* m_oldptr;
   public:
     // Save and restore the old pointer to the production function
-    Mock_stdio() { m_oldptr = stdioif; stdioif = this; }
-    virtual ~Mock_stdio() { stdioif = m_oldptr; }
+    Mock_stdio() { m_oldptr = stdio_h; stdio_h = this; }
+    virtual ~Mock_stdio() { stdio_h = m_oldptr; }
 
     MOCK_METHOD(FILE*, fopen, (const char* pathname, const char* mode), (override));
     MOCK_METHOD(int, fclose, (FILE* stream), (override));

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-10
+// Redistribution only with this Copyright remark. Last modified: 2021-10-21
 
 #ifndef UPNP_STRINGIF_H
 #define UPNP_STRINGIF_H
@@ -17,7 +17,7 @@ class Istring {
 
 // Global pointer to the current object (real or mocked), will be set by the
 // constructor of the respective object.
-Istring* stringif;
+Istring* string_h;
 
 class Cstring : public Istring {
     // Real class to call the system functions
@@ -26,20 +26,20 @@ class Cstring : public Istring {
 
     // With the constructor initialize the pointer to the interface that may be
     // overwritten to point to a mock object instead.
-    Cstring() { stringif = this; }
+    Cstring() { string_h = this; }
 
     char* strerror(int errnum) override { return ::strerror(errnum); }
 };
 
 // clang-format off
 // This is the instance to call the system functions. This object is called
-// with its pointer stringif (see above) that is initialzed with the
+// with its pointer string_h (see above) that is initialzed with the
 // constructor. That pointer can be overwritten to point to a mock object
 // instead.
 Cstring stringObj;
 
 // In the production code you must call it with, e.g.:
-// stringif->strerror(0)
+// upnp::string_h->strerror(0)
 
 // For completeness (not used here): you can also create the object on the heap
 // Istring* stringObj = new Cstring(); // need to address constructor with ()
@@ -56,8 +56,8 @@ class Mock_string : public Istring {
     Istring* m_oldptr;
   public:
     // Save and restore the old pointer to the production function
-    Mock_string() { m_oldptr = stringif; stringif = this; }
-    virtual ~Mock_string() { stringif = m_oldptr; }
+    Mock_string() { m_oldptr = string_h; string_h = this; }
+    virtual ~Mock_string() { string_h = m_oldptr; }
 
     MOCK_METHOD(char*, strerror, (int errnum), (override));
 };
