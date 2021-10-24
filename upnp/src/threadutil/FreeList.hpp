@@ -49,21 +49,19 @@
  * Memory for node is borrowed from allocated items.
  * \internal
  */
-typedef struct FREELISTNODE
-{
-        struct FREELISTNODE *next;
+typedef struct FREELISTNODE {
+    struct FREELISTNODE* next;
 } FreeListNode;
 
 /*!
  * Stores head and size of free list, as well as mutex for protection.
  * \internal
  */
-typedef struct FREELIST
-{
-        FreeListNode *head;
-        size_t element_size;
-        int maxFreeListLength;
-        int freeListLength;
+typedef struct FREELIST {
+    FreeListNode* head;
+    size_t element_size;
+    int maxFreeListLength;
+    int freeListLength;
 } FreeList;
 
 /*!
@@ -76,13 +74,13 @@ typedef struct FREELIST
  *	\li \c EINVAL on failure.
  */
 int FreeListInit(
-        /*! Must be valid, non null, pointer to a linked list. */
-        FreeList *free_list,
-        /*! Size of elements to store in free list. */
-        size_t elementSize,
-        /*! Max size that the free list can grow to before returning
-         * memory to O.S. */
-        int maxFreeListLength);
+    /*! Must be valid, non null, pointer to a linked list. */
+    FreeList* free_list,
+    /*! Size of elements to store in free list. */
+    size_t elementSize,
+    /*! Max size that the free list can grow to before returning
+     * memory to O.S. */
+    int maxFreeListLength);
 
 /*!
  * \brief Allocates chunk of set size.
@@ -92,9 +90,9 @@ int FreeListInit(
  *
  * \return Non NULL on success. NULL on failure.
  */
-void *FreeListAlloc(
-        /*! Must be valid, non null, pointer to a linked list. */
-        FreeList *free_list);
+void* FreeListAlloc(
+    /*! Must be valid, non null, pointer to a linked list. */
+    FreeList* free_list);
 
 /*!
  * \brief Returns an item to the Free List.
@@ -107,10 +105,10 @@ void *FreeListAlloc(
  *	\li \c EINVAL on failure.
  */
 int FreeListFree(
-        /*! Must be valid, non null, pointer to a free list. */
-        FreeList *free_list,
-        /*! Must be a pointer allocated by FreeListAlloc. */
-        void *element);
+    /*! Must be valid, non null, pointer to a free list. */
+    FreeList* free_list,
+    /*! Must be a pointer allocated by FreeListAlloc. */
+    void* element);
 
 /*!
  * \brief Releases the resources stored with the free list.
@@ -120,8 +118,8 @@ int FreeListFree(
  *	\li \c EINVAL on failure.
  */
 int FreeListDestroy(
-        /*! Must be valid, non null, pointer to a linked list. */
-        FreeList *free_list);
+    /*! Must be valid, non null, pointer to a linked list. */
+    FreeList* free_list);
 
 //#ifdef __cplusplus
 //}

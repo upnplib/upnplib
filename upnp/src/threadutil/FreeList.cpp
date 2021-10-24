@@ -32,7 +32,7 @@
  *
  **************************************************************************/
 
-#include "FreeList.h"
+#include "FreeList.hpp"
 #include "upnpmock/stdlib.hpp"
 
 #include <assert.h>

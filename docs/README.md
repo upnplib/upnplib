@@ -52,7 +52,7 @@ The type is contained within the title and can be one of these types:
 - fix: A bug fix
 - docs: Changes to documentation
 - style: Formatting, missing semi colons, etc; no code change
-- re-engineer: Re-engineering production code
+- re-en: Re-engineering program code
 - test: Adding tests, refactoring test; no production code change
 - build: Updating build tasks, package manager configs, etc; no production code change
 
@@ -99,5 +99,5 @@ The footer is optional and is used to reference issue tracker IDs.
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2021-10-18
+// Redistribution only with this Copyright remark. Last modified: 2021-10-24
 </sup></sup>

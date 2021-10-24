@@ -2,6 +2,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2021-10-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,7 +38,7 @@
  * \file
  */
 
-#include "FreeList.h"
+#include "FreeList.hpp"
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,8 +47,8 @@ extern "C" {
 #define EOUTOFMEM (-7 & 1 << 29)
 
 #define FREELISTSIZE 100
-#define LIST_SUCCESS 1
-#define LIST_FAIL 0
+//#define LIST_SUCCESS 1
+//#define LIST_FAIL 0
 
 /*! Function for freeing list items. */
 typedef void (*free_function)(void *arg);

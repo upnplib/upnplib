@@ -2,6 +2,8 @@
  *
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2021-10-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,20 +29,17 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-10-21
- *
  *************************************************************************/
 
-#include "FreeList.h"
+#include "port.hpp"
+
+#include "FreeList.hpp"
 #include "pthread.h"
 #include "upnpconfig.h"
 #include "upnpdebug.h"
 
 #include <iostream>
 #include <sstream>
-
-#include "port.hpp"
 
 namespace upnp {
 
@@ -98,7 +97,7 @@ void* library_info(void*) {
 // -------------------------------
 #ifdef _WIN32
 // There is a problem with EXPORT_SPEC. We have to modify the original source
-// upnp/src/threadutil/FreeList.h to export its function names. Modifications
+// upnp/src/threadutil/FreeList.hpp to export its function names. Modifications
 // of the original sources are not intended at this stage of re-engeneering.
 void* check_freelist(void*) {
     std::cout << "-> Check module FreeList is temporary disabled on MS Windows "

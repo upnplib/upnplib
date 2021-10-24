@@ -11,7 +11,6 @@ This is a fork of the [Portable SDK for UPnP Devices (pupnp)](https://github.com
 - Unit-Test driven developement
 - Using CMake for managing the code
 - Focus on IPv6 support
-- Continous integration with build number
 
 ## 2. Version numbering
 We follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html#semantic-versioning-200).

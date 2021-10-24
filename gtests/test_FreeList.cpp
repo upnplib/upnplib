@@ -80,7 +80,7 @@ class CFreeList : public IFreeList {
 class FreeListTestSuite : public ::testing::Test {
   protected:
     // Member variables: instantiate the module object
-    CFreeList FreeListObj;
+    CFreeList FreeListObj{};
     FreeList m_free_list{};
 
     // instantiate the mock objects.

@@ -163,6 +163,17 @@ if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT WIN32)
                                PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 endif()
 
+# LinkedList
+#-----------
+add_executable(test_LinkedList_old ${PROJECT_SOURCE_DIR}/test_LinkedList.cpp)
+add_test(NAME ctest_LinkedList_old COMMAND test_LinkedList_old)
+target_compile_definitions(test_LinkedList_old
+                           PRIVATE OLD_TEST)
+if(NOT DEFINED ENV{GITHUB_ACTIONS})
+add_executable(test_LinkedList ${PROJECT_SOURCE_DIR}/test_LinkedList.cpp)
+add_test(NAME ctest_LinkedList COMMAND test_LinkedList)
+endif()
+
 # FreeList
 #---------
 add_executable(test_FreeList_old ${PROJECT_SOURCE_DIR}/test_FreeList.cpp)
