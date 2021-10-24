@@ -98,6 +98,7 @@ endif()
 # upnpdebug
 #----------
 add_executable(test_upnpdebug_old
+    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
     ${PROJECT_SOURCE_DIR}/tools/tools.cpp
     ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
 add_test(NAME ctest_upnpdebug_old COMMAND test_upnpdebug_old)
@@ -105,6 +106,7 @@ target_compile_definitions(test_upnpdebug_old
                            PRIVATE OLD_TEST)
 if(NOT DEFINED ENV{GITHUB_ACTIONS})
     add_executable(test_upnpdebug
+        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
         ${PROJECT_SOURCE_DIR}/tools/tools.cpp
         ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
     add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
@@ -124,6 +126,8 @@ set(UPNP_UPNPAPI_SOURCE_FILES
     ${UPNP_IXML_SOURCE_DIR}/src/node.c
     ${UPNP_IXML_SOURCE_DIR}/src/nodeList.c
     $<$<CONFIG:Debug>:${UPNP_IXML_SOURCE_DIR}/src/ixmldebug.c>
+
+    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
 
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
@@ -185,22 +189,24 @@ add_executable(test_FreeList ${PROJECT_SOURCE_DIR}/test_FreeList.cpp)
 add_test(NAME ctest_FreeList COMMAND test_FreeList)
 endif()
 
-# threadutil
+# ThreadPool
 #-----------
-if(NOT DEFINED ENV{GITHUB_ACTIONS} AND NOT APPLE)
-# These tests randomly segfault on macOS so they mostly fail
-add_executable(test_threadutil_old ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
-add_test(NAME ctest_threadutil_old COMMAND test_threadutil_old)
-target_compile_definitions(test_threadutil_old
+add_executable(test_ThreadPool_old
+        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+        ${PROJECT_SOURCE_DIR}/test_ThreadPool.cpp)
+add_test(NAME ctest_ThreadPool_old COMMAND test_ThreadPool_old)
+target_compile_definitions(test_ThreadPool_old
                            PRIVATE OLD_TEST
-                           PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
-endif()
+                           #PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+                           )
 if(NOT DEFINED ENV{GITHUB_ACTIONS})
-    # test_threadutil segfaults before passing
-    add_executable(test_threadutil ${PROJECT_SOURCE_DIR}/test_threadutil.cpp)
-    add_test(NAME ctest_threadutil COMMAND test_threadutil)
-    target_compile_definitions(test_threadutil
-                               PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+    add_executable(test_ThreadPool
+            ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+            ${PROJECT_SOURCE_DIR}/test_ThreadPool.cpp)
+    add_test(NAME ctest_ThreadPool COMMAND test_ThreadPool)
+#    target_compile_definitions(test_ThreadPool
+#                               PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+#                               )
 endif()
 
 # simple test

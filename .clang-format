@@ -6,3 +6,4 @@ IndentWidth: 4
 Language: Cpp
 # Force pointers to the type for C++.
 PointerAlignment: Left
+#IndentPPDirectives: AfterHash

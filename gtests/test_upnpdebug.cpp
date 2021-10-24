@@ -96,9 +96,9 @@ class Mock_stdio : public Istdio {
     MOCK_METHOD(int, fflush, (FILE * stream), (override));
 };
 
-class Mock_pthread : public Ipthread {
+class Mock_pthread : public Bpthread {
     // Class to mock the free system functions.
-    Ipthread* m_oldptr;
+    Bpthread* m_oldptr;
 
   public:
     // Save and restore the old pointer to the production function
@@ -117,6 +117,52 @@ class Mock_pthread : public Ipthread {
     MOCK_METHOD(int, pthread_mutex_destroy, (pthread_mutex_t * mutex),
                 (override));
 };
+
+//
+// Test class for the debugging and logging module without fixtures.
+// IMPORTANT! Due to the global mocking pointer this testsuite must
+// run first.
+//------------------------------------------------------------------
+TEST(UpnpdebugTestSuite, UpnpPrintf_without_init) {
+    // Process unit
+    ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
+                 "Unit Test for %s. It should not be called.\n", "UpnpPrintf");
+    // This will enable logging but no initializing
+    ::UpnpSetLogLevel(UPNP_ALL);
+    // Process unit
+    ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
+                 "Unit Test for %s with logging enabled but not "
+                 "initialized. It should not be called.\n",
+                 "UpnpPrintf");
+}
+
+TEST(UpnpdebugTestSuite, UpnpPrintf_normal_use) {
+    CCaptureStdOutErr captureObj(STDERR_FILENO);
+    std::string captured;
+
+    // Enable and initialize logging
+    ::UpnpSetLogLevel(UPNP_ALL);
+
+    EXPECT_STREQ(UpnpGetErrorMessage(::UpnpInitLog()), "UPNP_E_SUCCESS");
+    EXPECT_EQ(::UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
+              stderr);
+
+    ASSERT_TRUE(captureObj.start());
+
+    ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
+                 "Unit Test for %s on line %d.\n", "UpnpPrintf", __LINE__);
+
+    ASSERT_TRUE(captureObj.get(captured));
+
+    // Example: "2021-10-17 21:09:01 UPNP-API_-2: Thread:0x7F1366618740
+    // [/home/ingo/devel/upnplib-dev/upnplib/gtests/test_upnpdebug.cpp:535]:
+    // Unit Test for UpnpPrintf on line 536.\n"
+    EXPECT_THAT(
+        captured,
+        MatchesRegex("....-..-.. ..:..:.. UPNP-API_-2: "
+                     "Thread:0x.+ \\[.+\\]: Unit Test for UpnpPrintf on line "
+                     ".+\\.\n"));
+}
 
 //
 // Test class for the debugging and logging module
@@ -504,47 +550,6 @@ TEST_F(UpnpdebugMockTestSuite, close_log_without_init_log) {
     EXPECT_CALL(mocked_pthread, pthread_mutex_destroy(_)).Times(0);
     // Process unit
     upnpdebugObj.UpnpCloseLog();
-}
-
-TEST(UpnpdebugTestSuite, UpnpPrintf_without_init) {
-    // Process unit
-    ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                 "Unit Test for %s. It should not be called.\n", "UpnpPrintf");
-    // This will enable logging but no initializing
-    ::UpnpSetLogLevel(UPNP_ALL);
-    // Process unit
-    ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                 "Unit Test for %s with logging enabled but not "
-                 "initialized. It should not be called.\n",
-                 "UpnpPrintf");
-}
-
-TEST(UpnpdebugTestSuite, UpnpPrintf_normal_use) {
-    CCaptureStdOutErr captureObj(STDERR_FILENO);
-    std::string captured;
-
-    // Enable and initialize logging
-    ::UpnpSetLogLevel(UPNP_ALL);
-
-    EXPECT_STREQ(UpnpGetErrorMessage(::UpnpInitLog()), "UPNP_E_SUCCESS");
-    EXPECT_EQ(::UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
-              stderr);
-
-    ASSERT_TRUE(captureObj.start());
-
-    ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                 "Unit Test for %s on line %d.\n", "UpnpPrintf", __LINE__);
-
-    ASSERT_TRUE(captureObj.get(captured));
-
-    // Example: "2021-10-17 21:09:01 UPNP-API_-2: Thread:0x7F1366618740
-    // [/home/ingo/devel/upnplib-dev/upnplib/gtests/test_upnpdebug.cpp:535]:
-    // Unit Test for UpnpPrintf on line 536.\n"
-    EXPECT_THAT(
-        captured,
-        MatchesRegex("....-..-.. ..:..:.. UPNP-API_-2: "
-                     "Thread:0x.+ \\[.+\\]: Unit Test for UpnpPrintf on line "
-                     ".+\\.\n"));
 }
 
 } // namespace upnp

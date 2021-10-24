@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-10-24
+ * Redistribution only with this Copyright remark. Last modified: 2021-10-31
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -127,7 +127,7 @@ typedef enum priority
  *
  * Always include stats because code change is minimal.
  */
-//#define STATS 1
+#define STATS 1
 
 #ifdef _DEBUG
 #define DEBUG 1
@@ -381,9 +381,9 @@ int TPJobInit(
         void *arg);
 
 /*!
- * \brief Sets the max threads for the thread pool attributes.
+ * \brief Sets the priority of the threadpool job.
  *
- * \return Always returns 0.
+ * \returns 0 if successful, otherwise EINVAL.
  */
 int TPJobSetPriority(
         /*! must be valid thread pool attributes. */
@@ -392,9 +392,9 @@ int TPJobSetPriority(
         ThreadPriority priority);
 
 /*!
- * \brief Sets the max threads for the thread pool attributes.
+ * \brief Sets the jobs free function.
  *
- * \return Always returns 0.
+ * \returns 0 if successful, otherwise EINVAL.
  */
 int TPJobSetFreeFunction(
         /*! must be valid thread pool attributes. */
@@ -415,7 +415,7 @@ int TPAttrInit(
 /*!
  * \brief Sets the max threads for the thread pool attributes.
  *
- * \return Always returns 0.
+ * \returns 0 if successful, otherwise EINVAL.
  */
 int TPAttrSetMaxThreads(
         /*! must be valid thread pool attributes. */
@@ -426,7 +426,7 @@ int TPAttrSetMaxThreads(
 /*!
  * \brief Sets the min threads for the thread pool attributes.
  *
- * \return Always returns 0.
+ * \returns 0 if successful, otherwise EINVAL.
  */
 int TPAttrSetMinThreads(
         /*! must be valid thread pool attributes. */
@@ -437,7 +437,7 @@ int TPAttrSetMinThreads(
 /*!
  * \brief Sets the stack size for the thread pool attributes.
  *
- * \return Always returns 0.
+ * \returns 0 if successful, otherwise EINVAL.
  */
 int TPAttrSetStackSize(
         /*! must be valid thread pool attributes. */
@@ -448,7 +448,7 @@ int TPAttrSetStackSize(
 /*!
  * \brief Sets the idle time for the thread pool attributes.
  *
- * \return Always returns 0.
+ * \returns 0 if successful, otherwise EINVAL.
  */
 int TPAttrSetIdleTime(
         /*! must be valid thread pool attributes. */
@@ -459,7 +459,7 @@ int TPAttrSetIdleTime(
 /*!
  * \brief Sets the jobs per thread ratio
  *
- * \return Always returns 0.
+ * \returns 0 if successful, otherwise EINVAL.
  */
 int TPAttrSetJobsPerThread(
         /*! must be valid thread pool attributes. */
@@ -470,7 +470,7 @@ int TPAttrSetJobsPerThread(
 /*!
  * \brief Sets the starvation time for the thread pool attributes.
  *
- * \return Always returns 0.
+ * \returns 0 if successful, otherwise EINVAL.
  */
 int TPAttrSetStarvationTime(
         /*! must be valid thread pool attributes. */
@@ -481,7 +481,7 @@ int TPAttrSetStarvationTime(
 /*!
  * \brief Sets the scheduling policy for the thread pool attributes.
  *
- * \return Always returns 0.
+ * \returns 0 if successful, otherwise EINVAL.
  */
 int TPAttrSetSchedPolicy(
         /*! must be valid thread pool attributes. */
@@ -492,7 +492,7 @@ int TPAttrSetSchedPolicy(
 /*!
  * \brief Sets the maximum number jobs that can be qeued totally.
  *
- * \return Always returns 0.
+ * \returns 0 if successful, otherwise EINVAL.
  */
 int TPAttrSetMaxJobsTotal(
         /*! must be valid thread pool attributes. */
@@ -505,37 +505,37 @@ int TPAttrSetMaxJobsTotal(
  *
  * Only valid if STATS has been defined.
  *
- * \return Always returns 0.
+ * \returns 0 if successful, otherwise EINVAL.
  */
-//#ifdef STATS
+#ifdef STATS
 EXPORT_SPEC int ThreadPoolGetStats(
         /*! Valid initialized threadpool. */
         ThreadPool *tp,
         /*! Valid stats, out parameter. */
         ThreadPoolStats *stats);
-//#else
-// static UPNP_INLINE int ThreadPoolGetStats(
-//        /*! Valid initialized threadpool. */
-//        ThreadPool *tp,
-//        /*! Valid stats, out parameter. */
-//        ThreadPoolStats *stats)
-//{
-//}
-//#endif
+#else
+static EXPORT_SPEC UPNP_INLINE int ThreadPoolGetStats(
+        /*! Valid initialized threadpool. */
+        ThreadPool *tp,
+        /*! Valid stats, out parameter. */
+        ThreadPoolStats *stats)
+{
+}
+#endif
 
 /*!
  * \brief
  */
 #ifdef STATS
-//EXPORT_SPEC void ThreadPoolPrintStats(
-//        /*! . */
-//        ThreadPoolStats *stats);
+EXPORT_SPEC void ThreadPoolPrintStats(
+        /*! . */
+        ThreadPoolStats *stats);
 #else
-//static UPNP_INLINE void ThreadPoolPrintStats(
-//        /*! . */
-//        ThreadPoolStats *stats)
-//{
-//}
+static EXPORT_SPEC UPNP_INLINE void ThreadPoolPrintStats(
+        /*! . */
+        ThreadPoolStats *stats)
+{
+}
 #endif
 
 #ifdef __cplusplus

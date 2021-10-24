@@ -79,6 +79,7 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/api/UpnpString.cpp
     ${PROJECT_SOURCE_DIR}/src/api/upnpapi.cpp
     ${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp
+    ${PROJECT_SOURCE_DIR}/src/global.cpp
 )
 
 

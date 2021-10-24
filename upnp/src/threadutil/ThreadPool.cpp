@@ -3,6 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2021-10-27
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,7 +43,7 @@
 //#include "FreeList.h"
 #include "ThreadPool.h"
 
-//#include <assert.h>
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> /* for memset()*/
@@ -196,7 +198,7 @@ static time_t StatsTime(
 
     return tv.tv_sec;
 }
-#else /* STATS */
+#else  /* STATS */
 static UPNP_INLINE void StatsInit(ThreadPoolStats* stats) {}
 static UPNP_INLINE void StatsAccountLQ(ThreadPool* tp, long diffTime) {}
 static UPNP_INLINE void StatsAccountMQ(ThreadPool* tp, long diffTime) {}
