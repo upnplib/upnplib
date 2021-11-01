@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-10-10
+# Redistribution only with this Copyright remark. Last modified: 2021-11-01
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -169,23 +169,31 @@ endif()
 
 # LinkedList
 #-----------
-add_executable(test_LinkedList_old ${PROJECT_SOURCE_DIR}/test_LinkedList.cpp)
+add_executable(test_LinkedList_old
+        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+        ${PROJECT_SOURCE_DIR}/test_LinkedList.cpp)
 add_test(NAME ctest_LinkedList_old COMMAND test_LinkedList_old)
 target_compile_definitions(test_LinkedList_old
                            PRIVATE OLD_TEST)
 if(NOT DEFINED ENV{GITHUB_ACTIONS})
-add_executable(test_LinkedList ${PROJECT_SOURCE_DIR}/test_LinkedList.cpp)
+add_executable(test_LinkedList
+        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+        ${PROJECT_SOURCE_DIR}/test_LinkedList.cpp)
 add_test(NAME ctest_LinkedList COMMAND test_LinkedList)
 endif()
 
 # FreeList
 #---------
-add_executable(test_FreeList_old ${PROJECT_SOURCE_DIR}/test_FreeList.cpp)
+add_executable(test_FreeList_old
+        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+        ${PROJECT_SOURCE_DIR}/test_FreeList.cpp)
 add_test(NAME ctest_FreeList_old COMMAND test_FreeList_old)
 target_compile_definitions(test_FreeList_old
                            PRIVATE OLD_TEST)
 if(NOT DEFINED ENV{GITHUB_ACTIONS})
-add_executable(test_FreeList ${PROJECT_SOURCE_DIR}/test_FreeList.cpp)
+add_executable(test_FreeList
+        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+        ${PROJECT_SOURCE_DIR}/test_FreeList.cpp)
 add_test(NAME ctest_FreeList COMMAND test_FreeList)
 endif()
 

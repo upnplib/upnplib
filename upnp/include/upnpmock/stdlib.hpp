@@ -1,56 +1,51 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-21
+// Redistribution only with this Copyright remark. Last modified: 2021-11-01
 
-#ifndef UPNP_STDLIBIF_H
-#define UPNP_STDLIBIF_H
+#ifndef UPNP_STDLIBIF_HPP
+#define UPNP_STDLIBIF_HPP
 
 #include <stdlib.h>
 
 namespace upnp {
 
-class Istdlib {
-    // Interface to system calls
-  public:
-    virtual ~Istdlib() {}
-    virtual void* malloc(size_t size) = 0;
-    virtual void free(void* ptr) = 0;
-};
-
 // Global pointer to the current object (real or mocked), will be set by the
 // constructor of the respective object.
-Istdlib* stdlib_h;
+class Bstdlib; // Declaration of the class for the following pointer.
+extern Bstdlib* stdlib_h;
 
-class Cstdlib : public Istdlib {
+class Bstdlib {
     // Real class to call the system functions
   public:
-    virtual ~Cstdlib() {}
+    virtual ~Bstdlib() {}
 
     // With the constructor initialize the pointer to the interface that may be
     // overwritten to point to a mock object instead.
-    Cstdlib() { stdlib_h = this; }
+    Bstdlib() { stdlib_h = this; }
 
-    void* malloc(size_t size) override { return ::malloc(size); }
-    void free(void* ptr) override { return ::free(ptr); }
+    virtual void* malloc(size_t size) { return ::malloc(size); }
+    virtual void free(void* ptr) { return ::free(ptr); }
 };
 
-// clang-format off
 // This is the instance to call the system functions. This object is called
 // with its pointer stdlib_h (see above) that is initialzed with the
 // constructor. That pointer can be overwritten to point to a mock object
 // instead.
-Cstdlib stdlibObj;
+extern Bstdlib stdlibObj;
 
-// In the production code you must call it with, e.g.:
-// upnp::stdlib_h->malloc(sizeof(whatever))
+// In the production code you just prefix the old system call with
+// 'upnp::stdlib_h->' so the new call looks like this:
+//  upnp::stdlib_h->malloc(sizeof(whatever))
 
-/*
- * The following class should be coppied to the test source. It is not a good
+/* clang-format off
+ * The following class should be copied to the test source. You do not need to
+ * copy all MOCK_METHOD, only that are acually used. It is not a good
  * idea to move it here to the header. It uses googletest macros and you always
  * have to compile the code with googletest even for production and not used.
 
-class Mock_stdlib : public Istdlib {
-// Class to mock the free system functions.
-    Istdlib* m_oldptr;
+class Mock_stdlib : public Bstdlib {
+    // Class to mock the free system functions.
+    Bstdlib* m_oldptr;
+
   public:
     // Save and restore the old pointer to the production function
     Mock_stdlib() { m_oldptr = stdlib_h; stdlib_h = this; }
@@ -61,14 +56,14 @@ class Mock_stdlib : public Istdlib {
 };
 
  * In a gtest you will instantiate the Mock class, prefered as protected member
- * variable for the whole testsuite:
+ * variable at the constructor of the testsuite:
 
-    Mock_stdlib mocked_stdlib;
+    Mock_stdlib m_mocked_stdlib;
 
- *  and call it with: mocked_stdlib.malloc(sizeof(whatever));
+ *  and call it with: m_mocked_stdlib.malloc(sizeof(whatever));
  * clang-format on
 */
 
 } // namespace upnp
 
-#endif // UPNP_STDLIBIF_H
+#endif // UPNP_STDLIBIF_HPP

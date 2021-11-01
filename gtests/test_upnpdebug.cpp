@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-21
+// Redistribution only with this Copyright remark. Last modified: 2021-11-01
 
 #include "upnpmock/pthread.hpp"
 #include "upnpmock/stdio.hpp"
@@ -63,9 +63,9 @@ class Cupnpdebug : public Iupnpdebug {
 // Mocked system calls
 // -------------------
 // See the respective include files in upnp/include/upnpmock/
-class Mock_string : public Istring {
+class Mock_string : public Bstring {
     // Class to mock the free system functions.
-    Istring* m_oldptr;
+    Bstring* m_oldptr;
 
   public:
     // Save and restore the old pointer to the production function
@@ -78,9 +78,9 @@ class Mock_string : public Istring {
     MOCK_METHOD(char*, strerror, (int errnum), (override));
 };
 
-class Mock_stdio : public Istdio {
+class Mock_stdio : public Bstdio {
     // Class to mock the free system functions.
-    Istdio* m_oldptr;
+    Bstdio* m_oldptr;
 
   public:
     // Save and restore the old pointer to the production function

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-21
+// Redistribution only with this Copyright remark. Last modified: 2021-11-01
 
 #include "upnpmock/stdlib.hpp"
 
@@ -18,9 +18,9 @@ namespace upnp {
 // -------------------
 // See the respective include files in upnp/include/upnpmock/
 
-class Mock_stdlib : public Istdlib {
+class Mock_stdlib : public Bstdlib {
     // Class to mock the free system functions.
-    Istdlib* m_oldptr;
+    Bstdlib* m_oldptr;
 
   public:
     // Save and restore the old pointer to the production function
