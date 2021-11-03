@@ -2,7 +2,7 @@ name: CI Microsoft Windows
 
 on:
   push:
-    branches: [ main ]
+    branches: [ gtests, main ]
   pull_request:
     branches: [ main ]
 

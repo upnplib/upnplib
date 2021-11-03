@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-11-01
+# Redistribution only with this Copyright remark. Last modified: 2021-11-03
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNP_GTESTS VERSION 0018
+project(UPNP_GTESTS VERSION 0019
                     DESCRIPTION "Unit Tests using googletest"
                     HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -20,7 +20,7 @@ include_directories(
     ${googletest_SOURCE_DIR}/googletest/include/
     ${googletest_SOURCE_DIR}/googlemock/include/
     ${PROJECT_SOURCE_DIR}/include
-    ${UPNP_CORE_SOURCE_DIR}/include
+    ${UPNPLIB_CORE_SOURCE_DIR}/include
     ${UPNP_CORE_SOURCE_DIR}/inc
     ${UPNP_CORE_SOURCE_DIR}/src
     ${UPNP_CORE_SOURCE_DIR}/src/inc
@@ -212,9 +212,6 @@ if(NOT DEFINED ENV{GITHUB_ACTIONS})
             ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
             ${PROJECT_SOURCE_DIR}/test_ThreadPool.cpp)
     add_test(NAME ctest_ThreadPool COMMAND test_ThreadPool)
-#    target_compile_definitions(test_ThreadPool
-#                               PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
-#                               )
 endif()
 
 # simple test
