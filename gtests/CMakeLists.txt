@@ -214,6 +214,23 @@ if(NOT DEFINED ENV{GITHUB_ACTIONS})
     add_test(NAME ctest_ThreadPool COMMAND test_ThreadPool)
 endif()
 
+# TimerThread
+#------------
+add_executable(test_TimerThread_old
+        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+        ${PROJECT_SOURCE_DIR}/test_TimerThread.cpp)
+add_test(NAME ctest_TimerThread_old COMMAND test_TimerThread_old)
+target_compile_definitions(test_TimerThread_old
+                           PRIVATE OLD_TEST
+                           #PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+                           )
+if(NOT DEFINED ENV{GITHUB_ACTIONS})
+    add_executable(test_TimerThread
+            ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+            ${PROJECT_SOURCE_DIR}/test_TimerThread.cpp)
+    add_test(NAME ctest_TimerThread COMMAND test_TimerThread)
+endif()
+
 # simple test
 #------------
 add_executable(test_simple ${PROJECT_SOURCE_DIR}/test_simple.cpp)

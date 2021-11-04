@@ -585,9 +585,9 @@ TEST(ThreadPoolErrorCondTestSuite, set_threadpool_attributes) {
 }
 
 TEST(ThreadPoolNormalTestSuite, get_and_print_threadpool_status) {
-    CThreadPool tpObj{}; // ThreadPool Object
-    ThreadPool tp{};     // Structure for a threadpool
-    ThreadPoolStats stats{};
+    CThreadPool tpObj{};     // ThreadPool Object
+    ThreadPool tp{};         // Structure for a threadpool
+    ThreadPoolStats stats{}; // Structure for the threadpool status
 
     // Initialize threadpool
     EXPECT_EQ(tpObj.ThreadPoolInit(&tp, nullptr), 0);
@@ -602,9 +602,9 @@ TEST(ThreadPoolNormalTestSuite, get_and_print_threadpool_status) {
 }
 
 TEST(ThreadPoolErrorCondTestSuite, get_and_print_threadpool_status) {
-    CThreadPool tpObj{}; // ThreadPool Object
-    ThreadPool tp{};     // Structure for a threadpool
-    ThreadPoolStats stats{};
+    CThreadPool tpObj{};     // ThreadPool Object
+    ThreadPool tp{};         // Structure for a threadpool
+    ThreadPoolStats stats{}; // Structure for the threadpool status
 
     // Get status
     EXPECT_EQ(tpObj.ThreadPoolGetStats(nullptr, nullptr), EINVAL);
