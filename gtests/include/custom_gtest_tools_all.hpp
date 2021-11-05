@@ -4,11 +4,12 @@
 #ifndef UPNP_GTEST_TOOLS_H
 #define UPNP_GTEST_TOOLS_H
 
+#include "UpnpGlobal.h" /* for UPNP_INLINE, EXPORT_SPEC */
 #include <string>
 
 namespace upnp {
 
-const char* UpnpGetErrorMessage(int rc);
+EXPORT_SPEC const char* UpnpGetErrorMessage(int rc);
 
 //
 // Capture output to stdout or stderr
@@ -42,9 +43,9 @@ class CCaptureStdOutErr {
     bool m_error = false;
 
   public:
-    CCaptureStdOutErr(int);
-    bool start(void);
-    bool get(std::string&);
+    EXPORT_SPEC CCaptureStdOutErr(int);
+    EXPORT_SPEC bool start(void);
+    EXPORT_SPEC bool get(std::string&);
 };
 
 } // namespace upnp

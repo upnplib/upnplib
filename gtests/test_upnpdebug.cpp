@@ -6,8 +6,8 @@
 #include "upnpmock/string.hpp"
 #include "gmock/gmock.h"
 
+#include "custom_gtest_tools_all.hpp"
 #include "port_unistd.hpp"
-#include "tools.hpp"
 #include <string>
 
 #include "api/upnpdebug.cpp"

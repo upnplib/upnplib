@@ -4,7 +4,7 @@
 // Tools and helper classes to manage gtests
 // =========================================
 
-#include "tools.hpp"
+#include "custom_gtest_tools_all.hpp"
 #include "port.hpp"
 #include "port_unistd.hpp"
 #include "upnp.h" // for UPNP_E_* constants

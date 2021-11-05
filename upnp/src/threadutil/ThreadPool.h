@@ -44,7 +44,6 @@
 #ifdef _WIN32
 #include <time.h>
 #include "FreeList.hpp"
-#include "UpnpGlobal.h" /* for UPNP_INLINE, EXPORT_SPEC */
 #include "UpnpInet.h"
 #include "ithread.h"
 #include <errno.h>
@@ -508,13 +507,13 @@ int TPAttrSetMaxJobsTotal(
  * \returns 0 if successful, otherwise EINVAL.
  */
 #ifdef STATS
-EXPORT_SPEC int ThreadPoolGetStats(
+int ThreadPoolGetStats(
         /*! Valid initialized threadpool. */
         ThreadPool *tp,
         /*! Valid stats, out parameter. */
         ThreadPoolStats *stats);
 #else
-static EXPORT_SPEC UPNP_INLINE int ThreadPoolGetStats(
+static UPNP_INLINE int ThreadPoolGetStats(
         /*! Valid initialized threadpool. */
         ThreadPool *tp,
         /*! Valid stats, out parameter. */
@@ -527,11 +526,11 @@ static EXPORT_SPEC UPNP_INLINE int ThreadPoolGetStats(
  * \brief
  */
 #ifdef STATS
-EXPORT_SPEC void ThreadPoolPrintStats(
+void ThreadPoolPrintStats(
         /*! . */
         ThreadPoolStats *stats);
 #else
-static EXPORT_SPEC UPNP_INLINE void ThreadPoolPrintStats(
+static UPNP_INLINE void ThreadPoolPrintStats(
         /*! . */
         ThreadPoolStats *stats)
 {

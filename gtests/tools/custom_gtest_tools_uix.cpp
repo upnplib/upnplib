@@ -4,13 +4,16 @@
 // Tools and helper classes to manage gtests
 // =========================================
 
-#include "upnpifaddrs.hpp"
+#include "custom_gtest_tools_uix.hpp"
 
 #include <arpa/inet.h>
 #include <net/if.h>
-#include <vector>
 
 namespace upnp {
+
+//
+// CIfaddr4
+// --------
 
 CIfaddr4::CIfaddr4()
 // With constructing the object you get a loopback device by default.
@@ -95,58 +98,50 @@ void CIfaddr4::chain_next_addr(struct ifaddrs* ptrNextAddr) {
     this->ifaddr.ifa_next = ptrNextAddr;
 }
 
-class CIfaddr4Container
-// This is a Container for multiple network interface structures that are
-// chained by ifaddr.ifa_next as given by the low level struct ifaddrs.
 //
-// It is IMPORTANT to know that the ifaddr.ifa_next address pointer chain
-// changes when adding an interface address object. You MUST get_ifaddr(..)
-// the new address pointer for ongoing work.
-{
-    std::vector<CIfaddr4> ifaddr4Container;
+// CIfaddr4Container
+// -----------------
 
-  public:
-    bool add(std::string prmIfname, std::string prmIfaddress) {
-        ifaddrs* ifaddr4New;
+bool CIfaddr4Container::add(std::string prmIfname, std::string prmIfaddress) {
+    ifaddrs* ifaddr4New;
 
-        if (prmIfname == "lo" and prmIfaddress != "127.0.0.1/8")
-            return false;
+    if (prmIfname == "lo" and prmIfaddress != "127.0.0.1/8")
+        return false;
 
-        if (this->ifaddr4Container.empty()) {
-            // On an empty container just push an interface object to it
-            this->ifaddr4Container.push_back(CIfaddr4());
-            if (prmIfname == "lo")
-                return true;
-            return this->ifaddr4Container[0].set(prmIfname, prmIfaddress);
-        }
-
-        // If the container is not empty, get the position to the last
-        // interface object, append a new interface object and chain it to the
-        // low level structure ifaddrs, managed by previous interface object.
-        // pos is zero based, so the size points direct to a new entry.
-        int pos = this->ifaddr4Container.size();
+    if (this->ifaddr4Container.empty()) {
+        // On an empty container just push an interface object to it
         this->ifaddr4Container.push_back(CIfaddr4());
-
-        // Because the ifaddr.ifa_next address pointer chain changes when adding
-        // an interface object, the chain must be rebuild
-        for (int i = 1; i <= pos; i++) {
-            ifaddr4New = this->ifaddr4Container.at(i).get();
-            this->ifaddr4Container.at(i - 1).chain_next_addr(ifaddr4New);
-        }
-
         if (prmIfname == "lo")
             return true;
-        return this->ifaddr4Container.at(pos).set(prmIfname, prmIfaddress);
+        return this->ifaddr4Container[0].set(prmIfname, prmIfaddress);
     }
 
-    ifaddrs* get_ifaddr(long unsigned int pIdx) {
-        if (pIdx == 0)
-            return nullptr;
+    // If the container is not empty, get the position to the last
+    // interface object, append a new interface object and chain it to the
+    // low level structure ifaddrs, managed by previous interface object.
+    // pos is zero based, so the size points direct to a new entry.
+    int pos = this->ifaddr4Container.size();
+    this->ifaddr4Container.push_back(CIfaddr4());
 
-        // this throws an exception if vector.size() is violated
-        ifaddrs* ifaddr4 = this->ifaddr4Container.at(pIdx - 1).get();
-        return ifaddr4;
+    // Because the ifaddr.ifa_next address pointer chain changes when adding
+    // an interface object, the chain must be rebuild
+    for (int i = 1; i <= pos; i++) {
+        ifaddr4New = this->ifaddr4Container.at(i).get();
+        this->ifaddr4Container.at(i - 1).chain_next_addr(ifaddr4New);
     }
-};
+
+    if (prmIfname == "lo")
+        return true;
+    return this->ifaddr4Container.at(pos).set(prmIfname, prmIfaddress);
+}
+
+ifaddrs* CIfaddr4Container::get_ifaddr(long unsigned int pIdx) {
+    if (pIdx == 0)
+        return nullptr;
+
+    // this throws an exception if vector.size() is violated
+    ifaddrs* ifaddr4 = this->ifaddr4Container.at(pIdx - 1).get();
+    return ifaddr4;
+}
 
 } // namespace upnp

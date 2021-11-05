@@ -6,4 +6,6 @@ IndentWidth: 4
 Language: Cpp
 # Force pointers to the type for C++.
 PointerAlignment: Left
+# There are some includes on MS Windows that require specific order
+SortIncludes: false
 #IndentPPDirectives: AfterHash
