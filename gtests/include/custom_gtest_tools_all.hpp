@@ -4,12 +4,12 @@
 #ifndef UPNP_GTEST_TOOLS_H
 #define UPNP_GTEST_TOOLS_H
 
-#include "UpnpGlobal.h" /* for UPNP_INLINE, EXPORT_SPEC */
+#include "port.hpp"
 #include <string>
 
 namespace upnp {
 
-EXPORT_SPEC const char* UpnpGetErrorMessage(int rc);
+UPNP_API const char* UpnpGetErrorMessage(int rc);
 
 //
 // Capture output to stdout or stderr
@@ -36,16 +36,17 @@ EXPORT_SPEC const char* UpnpGetErrorMessage(int rc);
 // It is used to read the captured output from the pipe.
 #define UPNP_PIPE_BUFFER_SIZE 256
 
-class CCaptureStdOutErr {
+class UPNP_API CCaptureStdOutErr {
+  public:
+    CCaptureStdOutErr(int);
+    bool start(void);
+    bool get(std::string&);
+
+  private:
     int m_out_pipe[2]{};
     int m_std_fileno{};
     int m_saved_stdno{};
     bool m_error = false;
-
-  public:
-    EXPORT_SPEC CCaptureStdOutErr(int);
-    EXPORT_SPEC bool start(void);
-    EXPORT_SPEC bool get(std::string&);
 };
 
 } // namespace upnp

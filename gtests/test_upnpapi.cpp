@@ -64,8 +64,7 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
     }
 };
 
-TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
-}
+TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {}
 
 } // namespace upnp
 

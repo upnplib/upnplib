@@ -20,16 +20,17 @@ Just add option `-i` to modify the source files.
 ## C++ programming rules
 In general we refere Bjarne Stroustrup [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines). In detail we mainly follow this [Style](https://lefticus.gitbooks.io/cpp-best-practices/content/03-Style.html) with some exceptions as listed below.
 
-- Using exceptions is permitted.
+- Using exceptions for error handling.
 - The names of global variables should start with //.
 - Check variables against visibility, lifetime, and thread safety.
 - [Declare local variables nearly where they are first used](https://isocpp.org/wiki/faq/coding-standards#declare-near-first-use), not always at the top of a function.
-- Always prefix namespace std::
+- Always prefix namespace std::, never "using namespace std".
 - Avoid pointer casts and/or reference casts.
 - I prefer to use "snake case" variable_names_with_underscores. I find it better readable than "camel case" variablesWithUpperCaseLetters.
-- Clases start with upper case C: CmyClass;
-- Interfaces start with upper case I: ImyClass;
+- Clases start with upper case C: CMyClass;
+- Interfaces start with upper case I: IMyClass;
 - New header files have a postfix of .hpp. Old C style header files will be renamened to postfix .hpp during re-engeneering.
+- Use [C++ visibility](https://gcc.gnu.org/wiki/Visibility).
 
 ## Git Commit Messages
 The [Udacity Git Commit Message Style Guide](https://udacity.github.io/git-styleguide/) served as a template.
@@ -99,5 +100,5 @@ The footer is optional and is used to reference issue tracker IDs.
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2021-10-24
+// Redistribution only with this Copyright remark. Last modified: 2021-11-08
 </sup></sup>

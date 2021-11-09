@@ -13,7 +13,6 @@ project(UPNP_GTESTS VERSION 0020
 #################################
 # Build the Unit Tests          #
 #################################
-set(WINDOWS_EXPORT_ALL_SYMBOLS YES)
 enable_testing()
 
 include_directories(
@@ -80,8 +79,10 @@ add_library(custom_gtest_tools SHARED
         ${PROJECT_SOURCE_DIR}/tools/custom_gtest_tools_all.cpp
         $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/custom_gtest_tools_win.cpp>
         $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/custom_gtest_tools_uix.cpp>)
-target_compile_definitions(custom_gtest_tools
-        PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+set_target_properties(custom_gtest_tools PROPERTIES
+        CXX_VISIBILITY_PRESET hidden
+        VISIBILITY_INLINES_HIDDEN ON)
+target_compile_definitions(custom_gtest_tools PRIVATE UPNP_DLL)
 add_dependencies(custom_gtest_tools gtest gtest_main gmock gmock_main)
 
 
@@ -250,8 +251,8 @@ if(NOT DEFINED ENV{GITHUB_ACTIONS})
     add_test(NAME ctest_TimerThread COMMAND test_TimerThread)
 endif()
 
-# custom_gtest_tools
-#-------------------
+# test custom_gtest_tools
+#------------------------
 if(NOT APPLE)
     # Needs rework, segfaults on macOS.
     add_executable(test_custom_gtest_tools

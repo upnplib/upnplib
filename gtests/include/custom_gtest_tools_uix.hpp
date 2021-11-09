@@ -4,6 +4,7 @@
 #ifndef UPNP_IFADDRS_UIX_HPP
 #define UPNP_IFADDRS_UIX_HPP
 
+#include "port.hpp"
 #include <ifaddrs.h>
 #include <netinet/in.h> // for sockaddr_in
 #include <string>
@@ -11,7 +12,7 @@
 
 namespace upnp {
 
-class CIfaddr4 {
+class UPNP_API CIfaddr4 {
     // Tool to manage and fill a socket address structure. This is needed
     // for mocked network interfaces.
   public:
@@ -45,7 +46,7 @@ class CIfaddr4 {
 };
 
 //
-class CIfaddr4Container {
+class UPNP_API CIfaddr4Container {
     // This is a Container for multiple network interface structures that are
     // chained by ifaddr.ifa_next as given by the low level struct ifaddrs.
     //
