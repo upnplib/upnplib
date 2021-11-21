@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-11-07
+# Redistribution only with this Copyright remark. Last modified: 2021-11-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -82,7 +82,9 @@ add_library(custom_gtest_tools SHARED
 set_target_properties(custom_gtest_tools PROPERTIES
         CXX_VISIBILITY_PRESET hidden
         VISIBILITY_INLINES_HIDDEN ON)
-target_compile_definitions(custom_gtest_tools PRIVATE UPNP_DLL)
+target_compile_definitions(custom_gtest_tools PRIVATE UPNP_DLL UPNP_DLL_EXPORTS)
+target_link_libraries(custom_gtest_tools
+        $<$<BOOL:${WIN32}>:ws2_32>)
 add_dependencies(custom_gtest_tools gtest gtest_main gmock gmock_main)
 
 
@@ -171,8 +173,8 @@ target_compile_definitions(test_upnpapi_old
                            PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 target_link_libraries(test_upnpapi_old
                       PRIVATE custom_gtest_tools
-                      PRIVATE $<$<BOOL:${MSVC}>:ws2_32>
-                      PRIVATE $<$<BOOL:${MSVC}>:iphlpapi>)
+                      PRIVATE $<$<BOOL:${WIN32}>:ws2_32>
+                      PRIVATE $<$<BOOL:${WIN32}>:iphlpapi>)
 add_test(NAME ctest_upnpapi_old COMMAND test_upnpapi_old
 )
 add_executable(test_upnpapi ${UPNP_UPNPAPI_SOURCE_FILES})
@@ -180,8 +182,8 @@ target_compile_definitions(test_upnpapi
                            PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 target_link_libraries(test_upnpapi
                       PRIVATE custom_gtest_tools
-                      PRIVATE $<$<BOOL:${MSVC}>:ws2_32>
-                      PRIVATE $<$<BOOL:${MSVC}>:iphlpapi>)
+                      PRIVATE $<$<BOOL:${WIN32}>:ws2_32>
+                      PRIVATE $<$<BOOL:${WIN32}>:iphlpapi>)
 add_test(NAME ctest_upnpapi COMMAND test_upnpapi)
 
 # LinkedList
@@ -259,7 +261,9 @@ if(NOT APPLE)
             $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/test_tools_win.cpp>
             $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/test_tools_uix.cpp>)
     target_link_libraries(test_custom_gtest_tools
-            PRIVATE custom_gtest_tools)
+            custom_gtest_tools
+            $<$<BOOL:${WIN32}>:ws2_32>
+            $<$<BOOL:${WIN32}>:iphlpapi>)
     add_test(NAME ctest_custom_gtest_tools COMMAND test_custom_gtest_tools)
 endif()
 

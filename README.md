@@ -1,5 +1,5 @@
 # The UPnP Library
-**Under developement!**  
+**Under developement!**
 Not usable at time. README.md only as draft, work in progress.
 
 ## 1. Overview
@@ -22,10 +22,16 @@ The last release before forking is [release-1.14.2](https://github.com/upnplib/u
 
 Because we will use CMake to manage the code it can be seen as integral part of it. The version number will also include changes to the CMake system.
 
-## 3. Build Instructions
+## 3. Milestones
+- Ongoing: create extensive Unit Tests for IP4 without modification of the old source code
+- Ongoing: define C++ interfaces for the API
+- ToDo:    change old C program to C++ objects but preserve drop in compatibility
+- ToDo:    support IP6
+
+## 4. Build Instructions
 If nothing others said we are always staying at the root directory of the project (CMAKE_SOURCE_DIR), that is **upnplib/** if you don't changed the name.
 
-### 3.1. Linux build
+### 4.1. Linux build
 t.b.d.
 
     upnplib$ cmake -S . -B build
@@ -35,7 +41,7 @@ As noted by cmake to clean up a build you will have to delete all build director
 
     upnplib$ find -type d -name build -exec rm -rf {} \;
 
-### 3.2. Microsoft Windows Build
+### 4.2. Microsoft Windows Build
 The developement of this UPnP Library has started on Linux. So for historical reasons it uses POSIX threads (pthreads) as specified by [The Open Group](http://get.posixcertified.ieee.org/certification_guide.html). Unfortunately Microsoft Windows does not support it so we have to use a third party library. We use the well known and well supported [pthreads4w library](https://sourceforge.net/p/pthreads4w). To keep things simple for you I have copied the latest stable version archive to this project. It will be build with the installation of this project and should do out of the box. This archive will always be downloaded but deleted on other systems than MS Windows. To build the UPnPlib just do
 
     upnplib$ cmake -S . -B build
@@ -47,7 +53,7 @@ As noted by cmake to clean up a build you will have to delete all build director
 
 If you need more details about installation of POSIX threads on Microsoft Windows I have made an example at [github pthreadsWinLin](https://github.com/upnplib/pthreadsWinLin.git).
 
-### 3.3 Googletest build
+### 4.3 Googletest build
 I recommend to [use shared gtest libraries](https://github.com/upnplib/upnplib/blob/main/gtests/README.md) for this project. But you can still build with default static gtest libraries if you prefer it.
 
     # recommended shared libs
@@ -67,7 +73,7 @@ Please note that option BUILD_SHARED_LIBS only effects Googletest. By default pr
     # On MS Windows
     # t.b.d.
 
-## 4. Configure Options for cmake
+## 5. Configure Options for cmake
 Option prefixed with -D | Default | Description
 -------|---------|---
 UPNP_GOOGLETEST=[ON\|OFF] | OFF | Enables installation of GoogleTest for Unit-Tests. For details look at section *Googletest build*.
@@ -77,10 +83,10 @@ PT4W_BUILD_TESTING=[ON\|OFF] | OFF | Runs the testsuite of pthreads4w (PT4W) wit
 
 <!-- - -D DEVEL=OFF          This enables some additional information for developement. It preserves installation options that normaly will be deleted after Installation for Optimisation so you can examine them. These are mainly the installation directory from **pthread4w** and its temporary installation files even on a non MS Windows environment.
 -->
-## 5. Limitations
+## 6. Limitations
 No limits documented so far.
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2021-09-29
+// Redistribution only with this Copyright remark. Last modified: 2021-11-20
 </sup></sup>

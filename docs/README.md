@@ -20,7 +20,7 @@ Just add option `-i` to modify the source files.
 ## C++ programming rules
 In general we refere Bjarne Stroustrup [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines). In detail we mainly follow this [Style](https://lefticus.gitbooks.io/cpp-best-practices/content/03-Style.html) with some exceptions as listed below.
 
-- Using exceptions for error handling.
+- Using [exceptions for error handling](https://www.acodersjourney.com/top-15-c-exception-handling-mistakes-avoid/).
 - The names of global variables should start with //.
 - Check variables against visibility, lifetime, and thread safety.
 - [Declare local variables nearly where they are first used](https://isocpp.org/wiki/faq/coding-standards#declare-near-first-use), not always at the top of a function.
@@ -30,7 +30,8 @@ In general we refere Bjarne Stroustrup [C++ Core Guidelines](https://isocpp.gith
 - Clases start with upper case C: CMyClass;
 - Interfaces start with upper case I: IMyClass;
 - New header files have a postfix of .hpp. Old C style header files will be renamened to postfix .hpp during re-engeneering.
-- Use [C++ visibility](https://gcc.gnu.org/wiki/Visibility).
+- Use [C++ visibility](https://stackoverflow.com/q/69890807/5014688).
+- [Pull methods outside of a class](https://www.fluentcpp.com/2017/06/20/interface-principle-cpp/), whenever it is possible.
 
 ## Git Commit Messages
 The [Udacity Git Commit Message Style Guide](https://udacity.github.io/git-styleguide/) served as a template.
@@ -98,7 +99,10 @@ The footer is optional and is used to reference issue tracker IDs.
     Resolves: #123
     See also: #456, #789
 
+## Optimization
+- [Optimize String Use](https://www.oreilly.com/library/view/optimized-c/9781491922057/ch04.html)
+
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2021-11-08
+// Redistribution only with this Copyright remark. Last modified: 2021-11-16
 </sup></sup>
