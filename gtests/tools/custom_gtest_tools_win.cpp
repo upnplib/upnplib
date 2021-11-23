@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-11-20
+// Redistribution only with this Copyright remark. Last modified: 2021-11-23
 
 // Implementation of the ifaddrs classes
 // =====================================
@@ -62,7 +62,7 @@ void CIfaddr4::set(std::wstring_view a_ifname, std::string_view a_ifaddress) {
     }
 
     // Split address and bit mask from ip address string
-    std::size_t slashpos = a_ifaddress.find_first_of("/");
+    std::size_t slashpos = a_ifaddress.find_last_of("/");
     std::string address;
     std::string bitmask;
     if (slashpos != std::string_view::npos) {

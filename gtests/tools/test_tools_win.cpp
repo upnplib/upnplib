@@ -1,47 +1,65 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-11-20
+// Redistribution only with this Copyright remark. Last modified: 2021-11-23
 
 #include "custom_gtest_tools_win.hpp"
 #include <ws2tcpip.h>
 #include "gmock/gmock.h"
 
-using testing::ElementsAre;
+using ::testing::ElementsAre;
 
 namespace upnp {
 
+class Cmalloc_adapts {
+    // This is a wrapper class to use traditional malloc for an adapter address
+    // structure. It follows the RAII paradigm and ensures that allocated memory
+    // is always freed with the destructor.
+  public:
+    ::PIP_ADAPTER_ADDRESSES addr;
+    Cmalloc_adapts(::ULONG a_size) {
+        addr = (::PIP_ADAPTER_ADDRESSES)::malloc(a_size);
+        if (addr)
+            ::memset(addr, 0, a_size);
+    }
+    ~Cmalloc_adapts() { ::free(addr); }
+};
+
+//
+// Simple test suite without fixtures
+// ##################################
+//
 TEST(ToolsTestSuite, show_real_loopback_interface) {
     // For the structure look at
     // https://docs.microsoft.com/en-us/windows/win32/api/iptypes/ns-iptypes-ip_adapter_addresses_lh
 
-    ::PIP_ADAPTER_ADDRESSES adapts{};
     ULONG adapts_sz{};
+#if false
+    // Does not return correct buffer size with MS Windows Server 2019 on
+    // Github Actions CI Tests. Don't know why. So we will use a fixed
+    // buffer size here.
 
-#if false // Does not return correct buffer size with MS Windows Server 2019 on
-          // Github Actions CI Tests. Don't know why. So we will use a fixed
-          // buffer size here.
     // Get Adapters addresses required size. Check with nullptr to adapts
     // structure will fail with ERROR_BUFFER_OVERFLOW but return required size.
     EXPECT_EQ(::GetAdaptersAddresses(
                   AF_INET, GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_DNS_SERVER,
-                  NULL, adapts, &adapts_sz),
+                  NULL, nullptr, &adapts_sz),
               ERROR_BUFFER_OVERFLOW);
 #else
     adapts_sz = 16383;
 #endif
     // Allocate needed memory.
-    adapts = (::PIP_ADAPTER_ADDRESSES)::malloc(adapts_sz);
-    ASSERT_NE(adapts, nullptr);
-    ::memset(adapts, 0, adapts_sz);
+    Cmalloc_adapts adaptsObj(adapts_sz);
+    ASSERT_NE(adaptsObj.addr, nullptr);
+
     // Do the call that will actually return the info.
     ULONG rc = ::GetAdaptersAddresses(
         AF_UNSPEC, GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_DNS_SERVER, NULL,
-        adapts, &adapts_sz);
+        adaptsObj.addr, &adapts_sz);
     std::cout << "adapts_sz             : " << adapts_sz << '\n';
     EXPECT_EQ(rc, ERROR_SUCCESS);
 
     // Look for the loopback interface with IfIndex 1
-    for (::PIP_ADAPTER_ADDRESSES adapts_item = adapts; adapts_item != nullptr;
-         adapts_item = adapts_item->Next) {
+    for (::PIP_ADAPTER_ADDRESSES adapts_item = adaptsObj.addr;
+         adapts_item != nullptr; adapts_item = adapts_item->Next) {
         if (adapts_item->IfIndex == 1) {
             // std::wcout << "---------------------------------\n";
             std::wcout << "IfIndex               : " << adapts_item->IfIndex
@@ -62,7 +80,7 @@ TEST(ToolsTestSuite, show_real_loopback_interface) {
             std::wcout << "PhysicalAddressLength : "
                        << adapts_item->PhysicalAddressLength << '\n';
             EXPECT_EQ(adapts_item->PhysicalAddressLength, 0);
-            std::wcout << "Mtu                   : " << adapts_item->Mtu
+            std::wcout << "Mtu                   : " << (LONG)adapts_item->Mtu
                        << " (signed -1)\n";
             std::wcout << "IfType                : " << adapts_item->IfType
                        << "\n";
@@ -115,7 +133,6 @@ TEST(ToolsTestSuite, show_real_loopback_interface) {
             break;
         }
     }
-    ::free(adapts);
 }
 
 TEST(ToolsTestSuite, get_fake_loopback_interface) {
@@ -133,7 +150,8 @@ TEST(ToolsTestSuite, get_fake_loopback_interface) {
         (::sockaddr_in*)adapts->FirstUnicastAddress->Address.lpSockaddr;
     EXPECT_EQ(ip_addr->sin_family, AF_INET);
     EXPECT_EQ(ip_addr->sin_port, 0);
-    EXPECT_STREQ(::inet_ntoa(ip_addr->sin_addr), "127.0.0.1");
+    EXPECT_EQ(ip_addr->sin_addr.s_addr, 16777343)
+        << "    Should be 16777343 (\"127.0.0.1\")";
     // There should not be other first addresses
     EXPECT_EQ(adapts->FirstAnycastAddress, nullptr);
     EXPECT_EQ(adapts->FirstMulticastAddress, nullptr);
@@ -145,7 +163,7 @@ TEST(ToolsTestSuite, get_fake_loopback_interface) {
     EXPECT_THAT(adapts->PhysicalAddress, ElementsAre(0, 0, 0, 0, 0, 0, 0, 0));
     EXPECT_EQ(adapts->PhysicalAddressLength, 0);
     EXPECT_EQ(adapts->Flags, IP_ADAPTER_IPV4_ENABLED);
-    EXPECT_EQ(adapts->Mtu, 4294967295); // That is signed -1
+    EXPECT_EQ((LONG)adapts->Mtu, -1);
     EXPECT_EQ(adapts->IfType, IF_TYPE_SOFTWARE_LOOPBACK);
     EXPECT_EQ(adapts->OperStatus, ::IfOperStatusUp);
     // Only AF_INET (IPv4) available here
@@ -171,22 +189,32 @@ TEST(ToolsTestSuite, set_regular_fake_network_interface) {
     // Check subnet bit mask
     EXPECT_EQ(adapts->FirstUnicastAddress->OnLinkPrefixLength, 24);
     // Check other settings
-    EXPECT_EQ(adapts->Mtu, 1500);
+    EXPECT_EQ((LONG)adapts->Mtu, 1500);
+    EXPECT_EQ(adapts->IfType, IF_TYPE_ETHERNET_CSMACD);
+
+    // Interface but with zero ip address
+    ifaddr4Obj.set(L"Ethernet 2", "");
+    EXPECT_STREQ(adapts->FriendlyName, L"Ethernet 2");
+    EXPECT_EQ(ip_addr->sin_family, AF_INET);
+    EXPECT_EQ(ip_addr->sin_port, 0);
+    EXPECT_EQ(ip_addr->sin_addr.s_addr, 0);
+    EXPECT_EQ(adapts->FirstUnicastAddress->OnLinkPrefixLength, 0);
+    EXPECT_EQ((LONG)adapts->Mtu, 1500);
     EXPECT_EQ(adapts->IfType, IF_TYPE_ETHERNET_CSMACD);
 
     // Set interface with ip address but no bit mask
-    ifaddr4Obj.set(L"Ethernet 2", "192.168.26.30");
-    EXPECT_STREQ(adapts->FriendlyName, L"Ethernet 2");
+    ifaddr4Obj.set(L"Ethernet 3", "192.168.26.30");
+    EXPECT_STREQ(adapts->FriendlyName, L"Ethernet 3");
     inet_ntop(AF_INET, &ip_addr->sin_addr, ip_str, INET_ADDRSTRLEN);
     EXPECT_STREQ(ip_str, "192.168.26.30");
     // Check subnet bit mask
     EXPECT_EQ(adapts->FirstUnicastAddress->OnLinkPrefixLength, 32);
     // Check other settings
-    EXPECT_EQ(adapts->Mtu, 1500);
+    EXPECT_EQ((LONG)adapts->Mtu, 1500);
     EXPECT_EQ(adapts->IfType, IF_TYPE_ETHERNET_CSMACD);
 }
 
-TEST(ToolsTestSuite, set_fake_network_interface_with_failures) {
+TEST(ToolsTestSuite, set_fake_network_if_with_no_name) {
     CIfaddr4 ifaddr4Obj;
     ::IP_ADAPTER_ADDRESSES const* adapts = ifaddr4Obj.get();
 
@@ -200,7 +228,7 @@ TEST(ToolsTestSuite, set_fake_network_interface_with_failures) {
     inet_ntop(AF_INET, &ip_addr->sin_addr, ip_str, INET_ADDRSTRLEN);
     EXPECT_STREQ(ip_str, "127.0.0.1");
     EXPECT_EQ(adapts->FirstUnicastAddress->OnLinkPrefixLength, 8);
-    EXPECT_EQ(adapts->Mtu, -1);
+    EXPECT_EQ((LONG)adapts->Mtu, -1);
     EXPECT_EQ(adapts->IfType, IF_TYPE_SOFTWARE_LOOPBACK);
 
     // No changes with empty interface name
@@ -210,64 +238,41 @@ TEST(ToolsTestSuite, set_fake_network_interface_with_failures) {
     inet_ntop(AF_INET, &ip_addr->sin_addr, ip_str, INET_ADDRSTRLEN);
     EXPECT_STREQ(ip_str, "127.0.0.1");
     EXPECT_EQ(adapts->FirstUnicastAddress->OnLinkPrefixLength, 8);
-    EXPECT_EQ(adapts->Mtu, -1);
+    EXPECT_EQ((LONG)adapts->Mtu, -1);
     EXPECT_EQ(adapts->IfType, IF_TYPE_SOFTWARE_LOOPBACK);
+}
 
-    // Interface but with zero ip address
-    ifaddr4Obj.set(L"Ethernet 1", "");
-    EXPECT_STREQ(adapts->FriendlyName, L"Ethernet 1");
-    EXPECT_EQ(ip_addr->sin_family, AF_INET);
-    EXPECT_EQ(ip_addr->sin_port, 0);
-    EXPECT_EQ(ip_addr->sin_addr.s_addr, 0);
-    EXPECT_EQ(adapts->FirstUnicastAddress->OnLinkPrefixLength, 0);
-    EXPECT_EQ(adapts->Mtu, 1500);
-    EXPECT_EQ(adapts->IfType, IF_TYPE_ETHERNET_CSMACD);
+//
+// Parameterized test suite
+// ########################
+//
+using ::testing::TestWithParam;
+using ::testing::Values;
+
+class ToolsParamTestSuite : public ::testing::TestWithParam<std::string> {};
+
+INSTANTIATE_TEST_SUITE_P(
+    ip_addresses, ToolsParamTestSuite,
+    ::testing::Values("192.168.24.129/", "/", "192.168.129.129:24",
+                      "192.168.168.168/-1", "192.168.168.168/33",
+                      "192.168.168.168/24/24", "192.168.168:168/24"));
+
+TEST_P(ToolsParamTestSuite, set_fake_network_if_with_wrong_ip) {
+    CIfaddr4 ifaddr4Obj;
+    ::IP_ADAPTER_ADDRESSES const* adapts = ifaddr4Obj.get();
+
+    ::sockaddr_in* ip_addr =
+        (::sockaddr_in*)adapts->FirstUnicastAddress->Address.lpSockaddr;
 
     // Interface but with wrong ip address should do nothing
-    ifaddr4Obj.set(L"Ethernet wrong IP", "192.168.24.129/");
-    EXPECT_STREQ(adapts->FriendlyName, L"Ethernet 1");
+    ifaddr4Obj.set(L"Ethernet wrong IP", GetParam());
+    EXPECT_STREQ(adapts->FriendlyName, L"Loopback Pseudo-Interface 1");
     EXPECT_EQ(ip_addr->sin_family, AF_INET);
     EXPECT_EQ(ip_addr->sin_port, 0);
-    EXPECT_EQ(ip_addr->sin_addr.s_addr, 0);
-    EXPECT_EQ(adapts->FirstUnicastAddress->OnLinkPrefixLength, 0);
-    EXPECT_EQ(adapts->Mtu, 1500);
-    EXPECT_EQ(adapts->IfType, IF_TYPE_ETHERNET_CSMACD);
-
-    ifaddr4Obj.set(L"Ethernet wrong IP", "192.168.129.129:24");
-    EXPECT_STREQ(adapts->FriendlyName, L"Ethernet 1");
-    EXPECT_EQ(ip_addr->sin_family, AF_INET);
-    EXPECT_EQ(ip_addr->sin_port, 0);
-    EXPECT_EQ(ip_addr->sin_addr.s_addr, 0);
-    EXPECT_EQ(adapts->FirstUnicastAddress->OnLinkPrefixLength, 0);
-    EXPECT_EQ(adapts->Mtu, 1500);
-    EXPECT_EQ(adapts->IfType, IF_TYPE_ETHERNET_CSMACD);
-
-    ifaddr4Obj.set(L"Ethernet wrong IP", "/");
-    EXPECT_STREQ(adapts->FriendlyName, L"Ethernet 1");
-    EXPECT_EQ(ip_addr->sin_family, AF_INET);
-    EXPECT_EQ(ip_addr->sin_port, 0);
-    EXPECT_EQ(ip_addr->sin_addr.s_addr, 0);
-    EXPECT_EQ(adapts->FirstUnicastAddress->OnLinkPrefixLength, 0);
-    EXPECT_EQ(adapts->Mtu, 1500);
-    EXPECT_EQ(adapts->IfType, IF_TYPE_ETHERNET_CSMACD);
-
-    ifaddr4Obj.set(L"Ethernet wrong IP", "192.168.168.168/-1");
-    EXPECT_STREQ(adapts->FriendlyName, L"Ethernet 1");
-    EXPECT_EQ(ip_addr->sin_family, AF_INET);
-    EXPECT_EQ(ip_addr->sin_port, 0);
-    EXPECT_EQ(ip_addr->sin_addr.s_addr, 0);
-    EXPECT_EQ(adapts->FirstUnicastAddress->OnLinkPrefixLength, 0);
-    EXPECT_EQ(adapts->Mtu, 1500);
-    EXPECT_EQ(adapts->IfType, IF_TYPE_ETHERNET_CSMACD);
-
-    ifaddr4Obj.set(L"Ethernet wrong IP", "192.168.168.168/33");
-    EXPECT_STREQ(adapts->FriendlyName, L"Ethernet 1");
-    EXPECT_EQ(ip_addr->sin_family, AF_INET);
-    EXPECT_EQ(ip_addr->sin_port, 0);
-    EXPECT_EQ(ip_addr->sin_addr.s_addr, 0);
-    EXPECT_EQ(adapts->FirstUnicastAddress->OnLinkPrefixLength, 0);
-    EXPECT_EQ(adapts->Mtu, 1500);
-    EXPECT_EQ(adapts->IfType, IF_TYPE_ETHERNET_CSMACD);
+    EXPECT_EQ(ip_addr->sin_addr.s_addr, 16777343); // "127.0.0.1"
+    EXPECT_EQ(adapts->FirstUnicastAddress->OnLinkPrefixLength, 8);
+    EXPECT_EQ((LONG)adapts->Mtu, -1);
+    EXPECT_EQ(adapts->IfType, IF_TYPE_SOFTWARE_LOOPBACK);
 }
 
 } // namespace upnp
