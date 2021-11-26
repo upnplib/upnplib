@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-11-23
+// Redistribution only with this Copyright remark. Last modified: 2021-11-27
 
 // Implementation of the ifaddrs classes
 // =====================================
@@ -12,6 +12,8 @@ namespace upnp {
 
 CIfaddr4::CIfaddr4() {
     // set ip4 unicast address structures
+    // std::cout << "DEBUG: constructor executed." << std::endl;
+
     m_inaddr.sin_family = AF_INET;
     m_inaddr.sin_port = 0;
     m_inaddr.sin_addr.s_addr = 16777343; // "127.0.0.1"
@@ -38,7 +40,7 @@ CIfaddr4::CIfaddr4() {
     m_adapts.FirstAnycastAddress = nullptr;
     m_adapts.FirstMulticastAddress = nullptr;
     m_adapts.FirstDnsServerAddress = nullptr;
-    m_adapts.DnsSuffix = (::PWCHAR) "";
+    m_adapts.DnsSuffix = (::PWCHAR)L"";
     m_adapts.Description = (::PWCHAR)m_Description.c_str();
     m_adapts.FriendlyName = (::PWCHAR)m_FriendlyName.c_str();
     // m_adapts.PhysicalAddress is initialized to {0}
@@ -52,11 +54,15 @@ CIfaddr4::CIfaddr4() {
     // more settings are needed in the future or for special cases.
 }
 
-::PIP_ADAPTER_ADDRESSES CIfaddr4::get() const {
-    return (PIP_ADAPTER_ADDRESSES)&m_adapts;
+CIfaddr4::~CIfaddr4() {
+    // std::cout << "DEBUG: destructor executed." << std::endl;
 }
 
-void CIfaddr4::set(std::wstring_view a_ifname, std::string_view a_ifaddress) {
+::PIP_ADAPTER_ADDRESSES CIfaddr4::get() const {
+    return (::PIP_ADAPTER_ADDRESSES)&m_adapts;
+}
+
+void CIfaddr4::set(std::wstring a_ifname, std::string_view a_ifaddress) {
     if (a_ifname == L"") {
         return;
     }
@@ -78,24 +84,20 @@ void CIfaddr4::set(std::wstring_view a_ifname, std::string_view a_ifaddress) {
     if (address != "") {
         int rc = ::inet_pton(AF_INET, address.c_str(), &nipaddr);
         if (rc != 1) {
-            return;
+            throw std::invalid_argument(
+                std::string("Invalid ip address " + (std::string)a_ifaddress));
         }
     }
 
     // Convert bitmask string to number
-    int nbitmsk;
-    try {
-        nbitmsk = std::stoi(bitmask);
-    } catch (std::out_of_range const& e) {
-        // std::cerr << "DEBUG: Catched exception - " << e.what() << '\n';
-        return;
-    } catch (std::invalid_argument const& e) {
-        // std::cerr << "DEBUG: Catched exception - " << e.what() << ",
-        // bitmask=\"" << bitmask << "\"\n";
-        return;
+    std::size_t pos{};
+    int nbitmsk = std::stoi(bitmask, &pos);
+    if (pos < bitmask.size()) {
+        throw std::invalid_argument(
+            std::string("Not a valid bitmask: " + bitmask));
     }
     if (nbitmsk < 0 || nbitmsk > 32) {
-        return;
+        throw std::invalid_argument(std::string("Bitmask not in range 0..32"));
     }
 
     // No errors so far, modify the interface structure
@@ -106,6 +108,44 @@ void CIfaddr4::set(std::wstring_view a_ifname, std::string_view a_ifaddress) {
     m_adapts.IfType = IF_TYPE_ETHERNET_CSMACD;
 }
 
-void CIfaddr4::chain_next_addr(::PIP_ADAPTER_ADDRESSES t_ptrNextAddr) {}
+void CIfaddr4::set_ifindex(IF_INDEX a_IfIndex) { m_adapts.IfIndex = a_IfIndex; }
+void CIfaddr4::chain_next_addr(::PIP_ADAPTER_ADDRESSES a_ptrNextAddr) {
+    m_adapts.Next = a_ptrNextAddr;
+}
+
+//
+// CIfaddr4Container
+// -----------------
+
+void CIfaddr4Container::add(std::wstring a_ifname,
+                            std::string_view a_Ifaddress) {
+    if (a_ifname == L"")
+        return;
+
+    CIfaddr4 ifaddr4Obj{};
+    ifaddr4Obj.set_ifindex(m_ifaddr4Container.size() + 1);
+    ifaddr4Obj.set(a_ifname, a_Ifaddress);
+
+    // Just move the interface object to the vector.
+    m_ifaddr4Container.push_back(std::move(ifaddr4Obj));
+
+    // Because the low level ifaddr address pointer chain changes when adding
+    // an interface object, the address chain must be rebuilt.
+    for (int i = 1; i < m_ifaddr4Container.size(); i++) {
+        ::PIP_ADAPTER_ADDRESSES ifaddr4New = m_ifaddr4Container[i].get();
+        m_ifaddr4Container[i - 1].chain_next_addr(ifaddr4New);
+    }
+    return;
+}
+
+PIP_ADAPTER_ADDRESSES
+CIfaddr4Container::get_ifaddr(long unsigned int a_idx) const {
+    if (a_idx == 0)
+        return nullptr;
+
+    // this throws an exception if vector.size() is violated
+    PIP_ADAPTER_ADDRESSES ifaddr4 = m_ifaddr4Container.at(a_idx - 1).get();
+    return ifaddr4;
+}
 
 } // namespace upnp

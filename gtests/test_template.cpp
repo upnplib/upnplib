@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-08-31
+// Redistribution only with this Copyright remark. Last modified: 2021-11-27
 
 // This test should always run, reporting no failure
 
@@ -61,6 +61,8 @@ class EmptyFixtureTestSuite : public ::testing::Test {
 
     ~EmptyFixtureTestSuite() override {
         // Destructor, do clean-up work that doesn't throw exceptions here.
+        // Marking destructors override on state-owning subclasses is textbook
+        // hygiene that you should all be doing by routine.
     }
 
     // If the constructor and destructor are not enough for setting up
