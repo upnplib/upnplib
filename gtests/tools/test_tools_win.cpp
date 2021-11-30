@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-11-27
+// Redistribution only with this Copyright remark. Last modified: 2021-11-30
 
 #include "custom_gtest_tools_win.hpp"
 #include <ws2tcpip.h>
@@ -136,7 +136,7 @@ TEST(Ifaddr4TestSuite, show_real_loopback_interface) {
 }
 
 TEST(Ifaddr4TestSuite, get_default_fake_loopback_interface) {
-    CIfaddr4 ifaddr4Obj;
+    CNetIf4 ifaddr4Obj;
     ::IP_ADAPTER_ADDRESSES const* adapts = ifaddr4Obj.get();
 
     EXPECT_NE(adapts, nullptr);
@@ -171,7 +171,7 @@ TEST(Ifaddr4TestSuite, get_default_fake_loopback_interface) {
 }
 
 TEST(Ifaddr4TestSuite, set_regular_fake_network_interface) {
-    CIfaddr4 ifaddr4Obj;
+    CNetIf4 ifaddr4Obj;
     ::IP_ADAPTER_ADDRESSES const* adapts = ifaddr4Obj.get();
 
     // Set interface with ip address and bit mask
@@ -218,7 +218,7 @@ TEST(Ifaddr4TestSuite, set_regular_fake_network_interface) {
 }
 
 TEST(Ifaddr4TestSuite, set_fake_network_if_with_no_name) {
-    CIfaddr4 ifaddr4Obj;
+    CNetIf4 ifaddr4Obj;
     ::IP_ADAPTER_ADDRESSES const* adapts = ifaddr4Obj.get();
 
     // Check ip address, no changes with empty interface name
@@ -269,7 +269,7 @@ INSTANTIATE_TEST_SUITE_P(
                       "192.168.168.168/24/24", "192.168.168:168/24"));
 
 TEST_P(Ifaddr4ParamTestSuite, set_fake_network_if_with_wrong_ip) {
-    CIfaddr4 ifaddr4Obj;
+    CNetIf4 ifaddr4Obj;
     ::IP_ADAPTER_ADDRESSES const* adapts = ifaddr4Obj.get();
 
     ::sockaddr_in* ip_addr =
@@ -289,91 +289,53 @@ TEST_P(Ifaddr4ParamTestSuite, set_fake_network_if_with_wrong_ip) {
 }
 
 //
-// Ifaddr4 Container simple test suite with fixtures
-// #################################################
+// Network interface chain test suite
+// ##################################
 //
-class Ifaddr4ContainerTestSuite : public ::testing::Test {
-  protected:
-    CIfaddr4Container m_ifsObj{};
-    ::IP_ADAPTER_ADDRESSES const* m_ifaddr{};
-};
+TEST(NetIfs4ChainTestSuite, add_fake_interface_to_chain) {
+    ::IP_ADAPTER_ADDRESSES const* p_netif{};
 
-TEST_F(Ifaddr4ContainerTestSuite, add_fake_interface_to_if_list_0) {
+    CNetIf4 netif4_1{};
 
-    // SKIP on Github Actions because this doesn't work stable and may failing
-    char* github_action = std::getenv("GITHUB_ACTIONS");
-    if (github_action) {
-        GTEST_SKIP() << "   This test does not work stable and need rework.";
-    }
+    CNetIf4 netif4_2{};
+    netif4_1.chain_next(netif4_2.get());
 
-    m_ifsObj.add(L"Loopback Pseudo-Interface 1", "127.0.0.1/8");
-    m_ifaddr = m_ifsObj.get_ifaddr(1);
-    EXPECT_EQ(m_ifaddr->IfIndex, 1);
-    EXPECT_STREQ(m_ifaddr->FriendlyName, L"Loopback Pseudo-Interface 1");
+    netif4_2.set_ifindex(20);
+    netif4_2.set(L"if1v4", "192.168.10.10/24");
+    p_netif = netif4_2.get();
+    EXPECT_EQ(p_netif->IfIndex, 20);
+    EXPECT_EQ(p_netif->Next, nullptr);
+    EXPECT_STREQ(p_netif->FriendlyName, L"if1v4");
 
-    m_ifsObj.add(L"if2v4", "192.168.0.168/20");
-    m_ifaddr = m_ifsObj.get_ifaddr(2);
-    EXPECT_EQ(m_ifaddr->IfIndex, 2);
-    EXPECT_STREQ(m_ifaddr->FriendlyName, L"if2v4");
+    CNetIf4 netif4_3{};
+    netif4_2.chain_next(netif4_3.get());
+    netif4_3.set_ifindex(30);
+    netif4_3.set(L"if2v4", "192.168.20.20");
+    p_netif = netif4_3.get();
+    EXPECT_EQ(p_netif->IfIndex, 30);
+    EXPECT_EQ(p_netif->Next, nullptr);
+    EXPECT_STREQ(p_netif->FriendlyName, L"if2v4");
 
-    m_ifsObj.add(L"if3v4", "127.0.0.1/8");
-    m_ifaddr = m_ifsObj.get_ifaddr(3);
-    EXPECT_EQ(m_ifaddr->IfIndex, 3);
-    EXPECT_STREQ(m_ifaddr->FriendlyName, L"if3v4");
+    netif4_3.set(L"lo", "127.0.0.1/8");
+    EXPECT_EQ(p_netif->IfIndex, 30);
+    EXPECT_EQ(p_netif->Next, nullptr);
+    EXPECT_STREQ(p_netif->FriendlyName, L"lo");
 
     // Follow low level address chain.
-    m_ifaddr = m_ifsObj.get_ifaddr(1);
-    EXPECT_EQ(m_ifaddr->IfIndex, 1);
-    EXPECT_EQ(m_ifaddr->Next->IfIndex, 2);
-    EXPECT_EQ(m_ifaddr->Next->Next->IfIndex, 3);
+    p_netif = netif4_1.get();
+    EXPECT_EQ(p_netif->IfIndex, 1);
+    EXPECT_EQ(p_netif->Next->IfIndex, 20);
+    EXPECT_EQ(p_netif->Next->Next->IfIndex, 30);
 
-    EXPECT_STREQ(m_ifaddr->FriendlyName, L"Loopback Pseudo-Interface 1");
-    EXPECT_STREQ(m_ifaddr->Next->FriendlyName, L"if2v4");
-    EXPECT_STREQ(m_ifaddr->Next->Next->FriendlyName, L"if3v4");
+    EXPECT_STREQ(p_netif->FriendlyName, L"Loopback Pseudo-Interface 1");
+    EXPECT_STREQ(p_netif->Next->FriendlyName, L"if1v4");
+    EXPECT_STREQ(p_netif->Next->Next->FriendlyName, L"lo");
 
-    EXPECT_STREQ(m_ifaddr->Description, L"Mocked Adapter for Unit testing");
-    EXPECT_STREQ(m_ifaddr->Next->Description,
+    EXPECT_STREQ(p_netif->Description, L"Mocked Adapter for Unit testing");
+    EXPECT_STREQ(p_netif->Next->Description,
                  L"Mocked Adapter for Unit testing");
-    EXPECT_STREQ(m_ifaddr->Next->Next->Description,
+    EXPECT_STREQ(p_netif->Next->Next->Description,
                  L"Mocked Adapter for Unit testing");
-
-#if false
-    EXPECT_THROW(ifsObj.get_ifaddr(-1), std::out_of_range);
-
-    // No interface added
-    ifsObj.add(L"", "");
-    ifaddr = ifsObj.get_ifaddr(3);
-    EXPECT_STREQ(ifaddr->FriendlyName, L"Loopback Pseudo-Interface 1");
-    EXPECT_THROW(ifsObj.get_ifaddr(4), std::out_of_range);
-
-    ifsObj.add(L"", "10.0.0.1/24");
-    ifaddr = ifsObj.get_ifaddr(3);
-    EXPECT_STREQ(ifaddr->FriendlyName, L"Loopback Pseudo-Interface 1");
-    EXPECT_THROW(ifsObj.get_ifaddr(4), std::out_of_range);
-
-    // Interface added without ip address
-    ifsObj.add(L"if4v4", "");
-    ifaddr = ifsObj.get_ifaddr(4);
-    EXPECT_STREQ(ifaddr->FriendlyName, L"if4v4");
-    EXPECT_THROW(ifsObj.get_ifaddr(5), std::out_of_range);
-
-    // Invalid ip address should do nothing
-    EXPECT_THROW(ifsObj.add(L"if5v4", "10.0.0.1/24/24"), std::invalid_argument);
-    ifaddr = ifsObj.get_ifaddr(4);
-    EXPECT_STREQ(ifaddr->FriendlyName, L"if4v4");
-    EXPECT_THROW(ifsObj.get_ifaddr(5), std::out_of_range);
-
-    // Invalid bitmask should do nothing
-    EXPECT_THROW(ifsObj.add(L"if6v4", "10.0.0.2/"), std::invalid_argument);
-    ifaddr = ifsObj.get_ifaddr(4);
-    EXPECT_STREQ(ifaddr->FriendlyName, L"if4v4");
-    EXPECT_THROW(ifsObj.get_ifaddr(5), std::out_of_range);
-
-    // This gives "unknown file: error: SEH exception with code 0xc0000005
-    // thrown in the test body" and cannot be catched by googletest.
-    // EXPECT_ANY_THROW(ifsObj.add(NULL, "10.0.0.1/8"));
-    // EXPECT_ANY_THROW(ifsObj.add(L"if3v4", NULL));
-#endif
 }
 
 } // namespace upnp

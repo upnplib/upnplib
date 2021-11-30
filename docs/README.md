@@ -101,8 +101,9 @@ The footer is optional and is used to reference issue tracker IDs.
 
 ## Optimization
 - [Optimize String Use](https://www.oreilly.com/library/view/optimized-c/9781491922057/ch04.html)
+- [ Move Objects](https://newbedev.com/is-std-vector-copying-the-objects-with-a-push-back) instead of coppying.
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2021-11-16
+// Redistribution only with this Copyright remark. Last modified: 2021-11-30
 </sup></sup>
