@@ -1,29 +1,31 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2021-12-02
 
-#ifndef UPNP_STDLIBIF_HPP
-#define UPNP_STDLIBIF_HPP
+#ifndef UPNP_SYS_SELECTIF_HPP
+#define UPNP_SYS_SELECTIF_HPP
 
-#include <stdlib.h>
+#include <sys/select.h>
 
 namespace upnp {
 
-class Bstdlib {
+class Bsys_select {
     // Real class to call the system functions
   public:
-    virtual ~Bstdlib() {}
+    virtual ~Bsys_select() {}
 
-    virtual void* malloc(size_t size) { return ::malloc(size); }
-    virtual void free(void* ptr) { return ::free(ptr); }
+    virtual int select(int nfds, fd_set* readfds, fd_set* writefds,
+                       fd_set* exceptfds, struct timeval* timeout) {
+        return ::select(nfds, readfds, writefds, exceptfds, timeout);
+    }
 };
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bstdlib* stdlib_h;
+extern Bsys_select* sys_select_h;
 
 // In the production code you just prefix the old system call with
-// 'upnp::stdlib_h->' so the new call looks like this:
-//  upnp::stdlib_h->malloc(sizeof(whatever))
+// 'upnp::sys_select_h->' so the new call looks like this:
+//  upnp::sys_select_h->select(..)
 
 /* clang-format off
  * The following class should be copied to the test source. You do not need to
@@ -31,28 +33,30 @@ extern Bstdlib* stdlib_h;
  * idea to move it here to the header. It uses googletest macros and you always
  * have to compile the code with googletest even for production and not used.
 
-class Mock_stdlib : public Bstdlib {
+class Mock_sys_select : public Bsys_select {
     // Class to mock the free system functions.
-    Bstdlib* m_oldptr;
+    Bsys_select* m_oldptr;
 
   public:
     // Save and restore the old pointer to the production function
-    Mock_stdlib() { m_oldptr = stdlib_h; stdlib_h = this; }
-    virtual ~Mock_stdlib() { stdlib_h = m_oldptr; }
+    Mock_sys_select() { m_oldptr = sys_select_h; sys_select_h = this; }
+    virtual ~Mock_sys_select() { sys_select_h = m_oldptr; }
 
-    MOCK_METHOD(void*, malloc, (size_t size), (override));
-    MOCK_METHOD(void, free, (void* ptr), (override));
+    MOCK_METHOD(int, select,
+                (int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds,
+                 struct timeval* timeout),
+                (override));
 };
 
  * In a gtest you will instantiate the Mock class, prefered as protected member
  * variable at the constructor of the testsuite:
 
-    Mock_stdlib m_mocked_stdlib;
+    Mock_sys_select m_mocked_sys_select;
 
- *  and call it with: m_mocked_stdlib.malloc(sizeof(whatever));
+ *  and call it with: m_mocked_sys_select.select(..)
  * clang-format on
 */
 
 } // namespace upnp
 
-#endif // UPNP_STDLIBIF_HPP
+#endif // UPNP_SYS_SELECTIF_HPP

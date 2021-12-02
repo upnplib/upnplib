@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-11-01
+// Redistribution only with this Copyright remark. Last modified: 2021-12-02
 
 #ifndef UPNP_STDIOIF_HPP
 #define UPNP_STDIOIF_HPP
@@ -8,19 +8,10 @@
 
 namespace upnp {
 
-// Global pointer to the current object (real or mocked), will be set by the
-// constructor of the respective object.
-class Bstdio; // Declaration of the class for the following pointer.
-extern Bstdio* stdio_h;
-
 class Bstdio {
     // Base class to call the system functions.
   public:
     virtual ~Bstdio() {}
-
-    // With the constructor initialize the pointer to the interface that may be
-    // overwritten to point to a mock object instead.
-    Bstdio() { stdio_h = this; }
 
     virtual FILE* fopen(const char* pathname, const char* mode) {
         return ::fopen(pathname, mode);
@@ -29,11 +20,9 @@ class Bstdio {
     virtual int fflush(FILE* stream) { return ::fflush(stream); }
 };
 
-// This is the instance to call the system functions. This object is called
-// with its pointer stdio_h (see above) that is initialzed with the
-// constructor. That pointer can be overwritten to point to a mock object
-// instead.
-extern Bstdio stdioObj;
+// Global pointer to the current object (real or mocked), will be modified by
+// the constructor of the mock object.
+extern Bstdio* stdio_h;
 
 // In the production code you just prefix the old system call with
 // 'upnp::stdio_h->' so the new call looks like this:

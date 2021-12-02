@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-11-20
+# Redistribution only with this Copyright remark. Last modified: 2021-12-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -73,12 +73,12 @@ add_link_options($<$<AND:$<BOOL:${APPLE}>,$<BOOL:${BUILD_SHARED_LIBS}>>:LINKER:-
 
 # Create custom helper tools library for gtests. We have version
 # custom_gtest_tools_all for all operating systems,
-# custom_gtest_tools_uix for Unix operating systems and
-# custom_gtest_tools_win for Microsoft Windows
+# custom_gtest_tools_unix for Unix operating systems and
+# custom_gtest_tools_win32 for Microsoft Windows
 add_library(custom_gtest_tools SHARED
         ${PROJECT_SOURCE_DIR}/tools/custom_gtest_tools_all.cpp
-        $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/custom_gtest_tools_win.cpp>
-        $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/custom_gtest_tools_uix.cpp>)
+        $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/custom_gtest_tools_win32.cpp>
+        $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/custom_gtest_tools_unix.cpp>)
 set_target_properties(custom_gtest_tools PROPERTIES
         CXX_VISIBILITY_PRESET hidden
         VISIBILITY_INLINES_HIDDEN ON)
@@ -142,6 +142,8 @@ set(UPNP_UPNPAPI_SOURCE_FILES
     $<$<CONFIG:Debug>:${UPNP_IXML_SOURCE_DIR}/src/ixmldebug.c>
 
     ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+    $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/global_win32.cpp>
+    $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/global_unix.cpp>
 
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
@@ -163,11 +165,11 @@ set(UPNP_UPNPAPI_SOURCE_FILES
     ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
     ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp
-
-    ${PROJECT_SOURCE_DIR}/test_upnpapi.cpp
 )
 
-add_executable(test_upnpapi_old ${UPNP_UPNPAPI_SOURCE_FILES})
+add_executable(test_upnpapi_old ${UPNP_UPNPAPI_SOURCE_FILES}
+               $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/test_upnpapi_win32.cpp>
+               $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/test_upnpapi_unix.cpp>)
 target_compile_definitions(test_upnpapi_old
                            PRIVATE OLD_TEST
                            PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
@@ -177,14 +179,16 @@ target_link_libraries(test_upnpapi_old
                       PRIVATE $<$<BOOL:${WIN32}>:iphlpapi>)
 add_test(NAME ctest_upnpapi_old COMMAND test_upnpapi_old
 )
-add_executable(test_upnpapi ${UPNP_UPNPAPI_SOURCE_FILES})
-target_compile_definitions(test_upnpapi
-                           PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
-target_link_libraries(test_upnpapi
-                      PRIVATE custom_gtest_tools
-                      PRIVATE $<$<BOOL:${WIN32}>:ws2_32>
-                      PRIVATE $<$<BOOL:${WIN32}>:iphlpapi>)
-add_test(NAME ctest_upnpapi COMMAND test_upnpapi)
+# if(NOT DEFINED ENV{GITHUB_ACTIONS})
+# add_executable(test_upnpapi ${UPNP_UPNPAPI_SOURCE_FILES})
+# target_compile_definitions(test_upnpapi
+#                            PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+# target_link_libraries(test_upnpapi
+#                       PRIVATE custom_gtest_tools
+#                       PRIVATE $<$<BOOL:${WIN32}>:ws2_32>
+#                       PRIVATE $<$<BOOL:${WIN32}>:iphlpapi>)
+# add_test(NAME ctest_upnpapi COMMAND test_upnpapi)
+# endif()
 
 # LinkedList
 #-----------
@@ -258,8 +262,8 @@ endif()
 if(NOT APPLE)
     # Needs rework, segfaults on macOS.
     add_executable(test_custom_gtest_tools
-            $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/test_tools_win.cpp>
-            $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/test_tools_uix.cpp>)
+            $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/test_tools_win32.cpp>
+            $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/test_tools_unix.cpp>)
     target_link_libraries(test_custom_gtest_tools
             custom_gtest_tools
             $<$<BOOL:${WIN32}>:ws2_32>

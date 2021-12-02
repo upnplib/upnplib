@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-11-03
+# Redistribution only with this Copyright remark. Last modified: 2021-12-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -78,7 +78,10 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/api/UpnpString.cpp
     ${PROJECT_SOURCE_DIR}/src/api/upnpapi.cpp
     ${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp
+
     ${PROJECT_SOURCE_DIR}/src/global.cpp
+    $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/global_win32.cpp>
+    $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/global_unix.cpp>
 )
 
 

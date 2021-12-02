@@ -1,157 +1,69 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-16
+// Redistribution only with this Copyright remark. Last modified: 2021-12-02
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
 
-#include "tools.hpp"
-#include "upnpifaddrs.hpp"
 #include "gmock/gmock.h"
-#include "gtest/gtest.h"
-
+#include "custom_gtest_tools_all.hpp"
+#include "custom_gtest_tools_uix.hpp"
 #include "api/upnpapi.cpp"
 
-// UpnpApi Testsuite for IP4
-//==========================
 using ::testing::_;
 using ::testing::AtLeast;
 using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 
-// --- mock getifaddrs -------------------------------------
-class MockGetifaddrs {
-  public:
-    MOCK_METHOD(int, getifaddrs, (struct ifaddrs**));
-};
-
-MockGetifaddrs* ptrMockGetifaddrsObj = nullptr;
-int getifaddrs(struct ifaddrs** ifap) {
-    return ptrMockGetifaddrsObj->getifaddrs(ifap);
-}
-
-// --- mock freeifaddrs ------------------------------------
-class MockFreeifaddrs {
-  public:
-    MOCK_METHOD(void, freeifaddrs, (struct ifaddrs*));
-};
-
-MockFreeifaddrs* ptrMockFreeifaddrObj = nullptr;
-void freeifaddrs(struct ifaddrs* ifap) {
-    return ptrMockFreeifaddrObj->freeifaddrs(ifap);
-}
-
-// --- mock bind -------------------------------------------
-class MockBind {
-  public:
-    MOCK_METHOD(int, bind, (int, const struct sockaddr*, socklen_t));
-};
-
-MockBind* ptrMockBindObj = nullptr;
-int bind(int sockfd, const struct sockaddr* addr, socklen_t addrlen) {
-    return ptrMockBindObj->bind(sockfd, addr, addrlen);
-}
-
-// --- mock if_nametoindex ---------------------------------
-class MockIf_nametoindex {
-  public:
-    MOCK_METHOD(unsigned int, if_nametoindex, (const char*));
-};
-
-MockIf_nametoindex* ptrMockIf_nametoindexObj = nullptr;
-unsigned int if_nametoindex(const char* ifname) {
-    return ptrMockIf_nametoindexObj->if_nametoindex(ifname);
-}
-
-// --- mock listen -----------------------------------------
-class MockListen {
-  public:
-    MOCK_METHOD(int, listen, (int, int));
-};
-
-MockListen* ptrMockListenObj = nullptr;
-int listen(int sockfd, int backlog) {
-    return ptrMockListenObj->listen(sockfd, backlog);
-}
-
-// --- mock select -----------------------------------------
-class MockSelect {
-  public:
-    MOCK_METHOD(int, select,
-                (int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds,
-                 struct timeval* timeout));
-};
-
-MockSelect* ptrMockSelectObj = nullptr;
-int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds,
-           struct timeval* timeout) {
-    return ptrMockSelectObj->select(nfds, readfds, writefds, exceptfds,
-                                    timeout);
-}
-
-// --- mock accept -----------------------------------------
-class MockAccept {
-  public:
-    MOCK_METHOD(int, accept,
-                (int sockfd, struct sockaddr* addr, socklen_t* addrlen));
-};
-
-MockAccept* ptrMockAcceptObj = nullptr;
-int accept(int sockfd, struct sockaddr* addr, socklen_t* addrlen) {
-    return ptrMockAcceptObj->accept(sockfd, addr, addrlen);
-}
-
-// --- mock getsockname ------------------------------------
-// If needed
-
-// --- mock setsockopt--------------------------------------
-class MockSetsockopt {
-  public:
-    MOCK_METHOD(int, setsockopt,
-                (int sockfd, int level, int optname, const void* optval,
-                 socklen_t optlen));
-};
-
-MockSetsockopt* ptrMockSetsockoptObj = nullptr;
-int setsockopt(int sockfd, int level, int optname, const void* optval,
-               socklen_t optlen) {
-    return ptrMockSetsockoptObj->setsockopt(sockfd, level, optname, optval,
-                                            optlen);
-}
-
 namespace upnp {
 
-// This TestSuite is with initializing mocks
-//------------------------------------------
+class Mock_ifaddrs : public Bifaddrs {
+    // Class to mock the free system functions.
+    Bifaddrs* m_oldptr;
+
+  public:
+    // Save and restore the old pointer to the production function
+    Mock_ifaddrs() {
+        m_oldptr = ifaddrs_h;
+        ifaddrs_h = this;
+    }
+    virtual ~Mock_ifaddrs() override { ifaddrs_h = m_oldptr; }
+
+    MOCK_METHOD(int, getifaddrs, (struct ifaddrs**), (override));
+    MOCK_METHOD(void, freeifaddrs, (struct ifaddrs*), (override));
+};
+
+class Mock_net_if : public Bnet_if {
+    // Class to mock the free system functions.
+    Bnet_if* m_oldptr;
+
+  public:
+    // Save and restore the old pointer to the production function
+    Mock_net_if() {
+        m_oldptr = net_if_h;
+        net_if_h = this;
+    }
+    virtual ~Mock_net_if() { net_if_h = m_oldptr; }
+
+    MOCK_METHOD(unsigned int, if_nametoindex, (const char* ifname), (override));
+};
+
+//
+// UpnpApi Testsuite for IP4
+//==========================
+
+// This TestSuite is with instantiating mocks
+//-------------------------------------------
 class UpnpapiIPv4MockTestSuite : public ::testing::Test
 // Fixtures for this Testsuite
 {
   protected:
-    unsigned short PORT = 51515;
-
-    // Instantiate the mock objects.
-    // The global pointer to them are set in the constructor below.
-    MockGetifaddrs mockGetifaddrsObj;
-    MockFreeifaddrs mockFreeifaddrsObj;
-    MockBind mockBindObj;
-    MockIf_nametoindex mockIf_nametoindexObj;
-    MockListen mockListenObj;
-    MockSelect mockSelectObj;
-    MockAccept mockAcceptObj;
-    MockSetsockopt mockSetsockoptObj;
+    // Provide mocked functions
+    Mock_ifaddrs m_mocked_ifaddrs;
+    Mock_net_if m_mocked_net_if;
 
     // constructor of this testsuite
     UpnpapiIPv4MockTestSuite() {
-        // set the global pointer to the mock objects
-        ptrMockGetifaddrsObj = &mockGetifaddrsObj;
-        ptrMockFreeifaddrObj = &mockFreeifaddrsObj;
-        ptrMockBindObj = &mockBindObj;
-        ptrMockIf_nametoindexObj = &mockIf_nametoindexObj;
-        ptrMockListenObj = &mockListenObj;
-        ptrMockSelectObj = &mockSelectObj;
-        ptrMockAcceptObj = &mockAcceptObj;
-        ptrMockSetsockoptObj = &mockSetsockoptObj;
-
         // initialize global variables with file scope for upnpapi.cpp
         virtualDirCallback = {};
         pVirtualDirList = nullptr;
@@ -196,22 +108,18 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
 };
 
 TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
-    // SKIP on Github Actions
-    char* github_action = std::getenv("GITHUB_ACTIONS");
-    if (github_action) {
-        GTEST_SKIP() << "  due to issues with googlemock";
-    }
-
     // provide a network interface
     struct ifaddrs* ifaddr = nullptr;
+
     CIfaddr4 ifaddr4Obj;
     ifaddr4Obj.set("if0v4", "192.168.99.3/11");
     ifaddr = ifaddr4Obj.get();
+    EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
 
-    EXPECT_CALL(mockGetifaddrsObj, getifaddrs(_))
+    EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
-    EXPECT_CALL(mockFreeifaddrsObj, freeifaddrs(ifaddr)).Times(1);
-    EXPECT_CALL(mockIf_nametoindexObj, if_nametoindex(_)).WillOnce(Return(2));
+    EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);
+    EXPECT_CALL(m_mocked_net_if, if_nametoindex(_)).WillOnce(Return(2));
 
     // call the unit
     EXPECT_STREQ(UpnpGetErrorMessage(::UpnpGetIfInfo("if0v4")),
@@ -236,27 +144,24 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
 }
 
 TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
-    // SKIP on Github Actions
-    char* github_action = std::getenv("GITHUB_ACTIONS");
-    if (github_action) {
-        GTEST_SKIP() << "  due to issues with googlemock";
-    }
-
-    //    GTEST_SKIP() << "due to failed github sanity check because of issue
-    //    #247.\n"
-    //                 << "Comment GTEST_SKIP() in the TestSuite to enable this
-    //                 test.";
+    // // SKIP on Github Actions
+    // char* github_action = std::getenv("GITHUB_ACTIONS");
+    // if (github_action) {
+    //     GTEST_SKIP() << "  due to issues with googlemock";
+    // }
 
     // provide a network interface
     struct ifaddrs* ifaddr = nullptr;
+
     CIfaddr4 ifaddr4Obj;
     ifaddr4Obj.set("eth0", "192.168.77.48/22");
     ifaddr = ifaddr4Obj.get();
+    EXPECT_STREQ(ifaddr->ifa_name, "eth0");
 
-    EXPECT_CALL(mockGetifaddrsObj, getifaddrs(_))
+    EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
-    EXPECT_CALL(mockFreeifaddrsObj, freeifaddrs(ifaddr)).Times(1);
-    EXPECT_CALL(mockIf_nametoindexObj, if_nametoindex(_)).Times(0);
+    EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);
+    EXPECT_CALL(m_mocked_net_if, if_nametoindex(_)).Times(0);
 
     // call the unit
     // "ATTENTION! There is a wrong upper case 'O', not zero in 'ethO'";
@@ -297,29 +202,24 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
 }
 
 TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
-    // SKIP on Github Actions
-    char* github_action = std::getenv("GITHUB_ACTIONS");
-    if (github_action) {
-        GTEST_SKIP()
-            << "  due to failed github sanity check because of issue #272";
-    }
+    // // SKIP on Github Actions
+    // char* github_action = std::getenv("GITHUB_ACTIONS");
+    // if (github_action) {
+    //     GTEST_SKIP()
+    //         << "  due to failed github sanity check because of issue #272";
+    // }
 
     // provide a network interface
     CIfaddr4 ifaddr4Obj;
     ifaddr4Obj.set("if0v4", "192.168.99.3/20");
     struct ifaddrs* ifaddr = ifaddr4Obj.get();
+    EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
 
     // expect calls to system functions (which are mocked)
-    EXPECT_CALL(mockGetifaddrsObj, getifaddrs(_))
+    EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
-    EXPECT_CALL(mockFreeifaddrsObj, freeifaddrs(ifaddr)).Times(1);
-    EXPECT_CALL(mockBindObj, bind(_, _, _)).Times(0);
-    EXPECT_CALL(mockIf_nametoindexObj, if_nametoindex(_)).Times(1);
-    EXPECT_CALL(mockListenObj, listen(_, _)).Times(0);
-    EXPECT_CALL(mockSelectObj, select(_, _, _, _, _)).Times(0);
-    //        .Times(AtLeast(1));
-    EXPECT_CALL(mockAcceptObj, accept(_, _, _)).Times(0);
-    EXPECT_CALL(mockSetsockoptObj, setsockopt(_, _, _, _, _)).Times(0);
+    EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);
+    EXPECT_CALL(m_mocked_net_if, if_nametoindex(_)).Times(1);
 
     // Initialize capturing of the stderr output
     CCaptureStdOutErr captureObj(STDERR_FILENO);
@@ -342,15 +242,17 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
     EXPECT_EQ(UpnpSdkInit, 1);
 }
 
-TEST_F(UpnpapiIPv4MockTestSuite, UpnpInitMutexes) {
-    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitMutexes()), "UPNP_E_SUCCESS");
-}
+// TEST_F(UpnpapiIPv4MockTestSuite, UpnpInitMutexes) {
+// TODO
+//    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitMutexes()), "UPNP_E_SUCCESS");
+// }
 
 // UpnpApi common Testsuite
 //-------------------------
-TEST(UpnpapiTestSuite, WinsockInit) {
-    EXPECT_STREQ(UpnpGetErrorMessage(UPNP_E_SUCCESS), "UPNP_E_SUCCESS");
-}
+// TEST(UpnpapiTestSuite, WinsockInit) {
+// TODO
+//    EXPECT_STREQ(UpnpGetErrorMessage(UPNP_E_SUCCESS), "UPNP_E_SUCCESS");
+// }
 
 TEST(UpnpapiTestSuite, get_handle_info) {
     Handle_Info** HndInfo = 0;

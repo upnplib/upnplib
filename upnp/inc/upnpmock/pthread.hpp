@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-25
+// Redistribution only with this Copyright remark. Last modified: 2021-12-02
 
 #ifndef UPNP_PTHREADIF_HPP
 #define UPNP_PTHREADIF_HPP
@@ -8,19 +8,10 @@
 
 namespace upnp {
 
-// Global pointer to the current object (real or mocked), will be set by the
-// constructor of the respective object.
-class Bpthread; // Declaration of the class for the following pointer.
-extern Bpthread* pthread_h;
-
 class Bpthread {
     // Base class to pthread system calls
   public:
     virtual ~Bpthread() {}
-
-    // With the constructor initialize the pointer to the interface that may be
-    // overwritten to point to a mock object instead.
-    Bpthread() { pthread_h = this; }
 
     virtual int pthread_mutex_init(pthread_mutex_t* mutex,
                                    const pthread_mutexattr_t* mutexattr) {
@@ -60,11 +51,9 @@ class Bpthread {
     }
 };
 
-// This is the instance to call the system functions. This object is called
-// with its pointer pthread_h (see above) that is initialized with the
-// constructor. That pointer can be overwritten to point to a mock object
-// instead.
-extern Bpthread pthreadObj;
+// Global pointer to the current object (real or mocked), will be modified by
+// the constructor of the mock object.
+extern Bpthread* pthread_h;
 
 // In the production code you just prefix the old system call with
 // 'upnp::pthread_h->' so the new call looks like this:

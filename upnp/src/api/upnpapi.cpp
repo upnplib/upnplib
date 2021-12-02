@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-11-04
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,6 +43,11 @@
 //#include "config.h"
 
 #include "upnpapi.h"
+
+#ifndef _WIN32
+#include "upnpmock/ifaddrs.hpp"
+#include "upnpmock/net_if.hpp"
+#endif
 
 //#include "ThreadPool.h"
 //#include "UpnpStdInt.h"
@@ -3195,7 +3200,7 @@ int UpnpGetIfInfo(const char* IfName) {
         ifname_found = 1;
     }
     /* Get system interface addresses. */
-    if (getifaddrs(&ifap) != 0) {
+    if (upnp::ifaddrs_h->getifaddrs(&ifap) != 0) {
         UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
                    "getifaddrs failed to find list of addresses\n");
         return UPNP_E_INIT;
@@ -3277,7 +3282,7 @@ int UpnpGetIfInfo(const char* IfName) {
             break;
         }
     }
-    freeifaddrs(ifap);
+    upnp::ifaddrs_h->freeifaddrs(ifap);
     /* Failed to find a valid interface, or valid address. */
     if (ifname_found == 0 ||
         (valid_v4_addr_found == 0 && valid_v6_addr_found == 0 &&
@@ -3292,7 +3297,7 @@ int UpnpGetIfInfo(const char* IfName) {
         inet_ntop(AF_INET, &v4_netmask, gIF_IPV4_NETMASK,
                   sizeof(gIF_IPV4_NETMASK));
     }
-    gIF_INDEX = if_nametoindex(gIF_NAME);
+    gIF_INDEX = upnp::net_if_h->if_nametoindex(gIF_NAME);
     if (!IN6_IS_ADDR_UNSPECIFIED(&v6_addr)) {
         if (valid_v6_addr_found) {
             inet_ntop(AF_INET6, &v6_addr, gIF_IPV6, sizeof(gIF_IPV6));

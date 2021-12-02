@@ -32,6 +32,7 @@ In general we refere Bjarne Stroustrup [C++ Core Guidelines](https://isocpp.gith
 - New header files have a postfix of .hpp. Old C style header files will be renamened to postfix .hpp during re-engeneering.
 - Use [C++ visibility](https://stackoverflow.com/q/69890807/5014688).
 - [Pull methods outside of a class](https://www.fluentcpp.com/2017/06/20/interface-principle-cpp/), whenever it is possible.
+- Friend classes and friend functions are not used.
 
 ## Git Commit Messages
 The [Udacity Git Commit Message Style Guide](https://udacity.github.io/git-styleguide/) served as a template.
@@ -105,5 +106,5 @@ The footer is optional and is used to reference issue tracker IDs.
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2021-11-30
+// Redistribution only with this Copyright remark. Last modified: 2021-12-03
 </sup></sup>

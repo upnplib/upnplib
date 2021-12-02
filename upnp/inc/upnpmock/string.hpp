@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-11-01
+// Redistribution only with this Copyright remark. Last modified: 2021-12-02
 
 #ifndef UPNP_STRINGIF_HPP
 #define UPNP_STRINGIF_HPP
@@ -8,28 +8,17 @@
 
 namespace upnp {
 
-// Global pointer to the current object (real or mocked), will be set by the
-// constructor of the respective object.
-class Bstring; // Declaration of the class for the following pointer.
-extern Bstring* string_h;
-
 class Bstring {
     // Real class to call the system functions
   public:
     virtual ~Bstring() {}
 
-    // With the constructor initialize the pointer to the interface that may be
-    // overwritten to point to a mock object instead.
-    Bstring() { string_h = this; }
-
     virtual char* strerror(int errnum) { return ::strerror(errnum); }
 };
 
-// This is the instance to call the system functions. This object is called
-// with its pointer string_h (see above) that is initialzed with the
-// constructor. That pointer can be overwritten to point to a mock object
-// instead.
-extern Bstring stringObj;
+// Global pointer to the current object (real or mocked), will be modified by
+// the constructor of the mock object.
+extern Bstring* string_h;
 
 // In the production code you just prefix the old system call with
 // 'upnp::string_h->' so the new call looks like this:

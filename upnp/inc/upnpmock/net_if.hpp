@@ -1,29 +1,34 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2021-12-02
 
-#ifndef UPNP_STDLIBIF_HPP
-#define UPNP_STDLIBIF_HPP
+#ifndef UPNP_NETIFIF_HPP
+#define UPNP_NETIFIF_HPP
 
-#include <stdlib.h>
+#include <net/if.h>
 
 namespace upnp {
 
-class Bstdlib {
+class Bnet_if {
     // Real class to call the system functions
   public:
-    virtual ~Bstdlib() {}
+    virtual ~Bnet_if() {}
 
-    virtual void* malloc(size_t size) { return ::malloc(size); }
-    virtual void free(void* ptr) { return ::free(ptr); }
+    // With the constructor initialize the pointer to the interface that may be
+    // overwritten to point to a mock object instead.
+    // Bnet_if() { net_if_h = this; }
+
+    virtual unsigned int if_nametoindex(const char* ifname) {
+        return ::if_nametoindex(ifname);
+    }
 };
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bstdlib* stdlib_h;
+extern Bnet_if* net_if_h;
 
 // In the production code you just prefix the old system call with
-// 'upnp::stdlib_h->' so the new call looks like this:
-//  upnp::stdlib_h->malloc(sizeof(whatever))
+// 'upnp::net_if_h->' so the new call looks like this:
+//  upnp::net_if_h->if_nametoindex("eth0")
 
 /* clang-format off
  * The following class should be copied to the test source. You do not need to
@@ -31,28 +36,27 @@ extern Bstdlib* stdlib_h;
  * idea to move it here to the header. It uses googletest macros and you always
  * have to compile the code with googletest even for production and not used.
 
-class Mock_stdlib : public Bstdlib {
+class Mock_net_if : public Bnet_if {
     // Class to mock the free system functions.
-    Bstdlib* m_oldptr;
+    Bnet_if* m_oldptr;
 
   public:
     // Save and restore the old pointer to the production function
-    Mock_stdlib() { m_oldptr = stdlib_h; stdlib_h = this; }
-    virtual ~Mock_stdlib() { stdlib_h = m_oldptr; }
+    Mock_net_if() { m_oldptr = net_if_h; net_if_h = this; }
+    virtual ~Mock_net_if() { net_if_h = m_oldptr; }
 
-    MOCK_METHOD(void*, malloc, (size_t size), (override));
-    MOCK_METHOD(void, free, (void* ptr), (override));
+    MOCK_METHOD(unsigned int, if_nametoindex, (const char* ifname), (override));
 };
 
  * In a gtest you will instantiate the Mock class, prefered as protected member
  * variable at the constructor of the testsuite:
 
-    Mock_stdlib m_mocked_stdlib;
+    Mock_net_if m_mocked_net_if;
 
- *  and call it with: m_mocked_stdlib.malloc(sizeof(whatever));
+ * and call it with: m_mocked_net_if.if_nametoindex(..)
  * clang-format on
 */
 
 } // namespace upnp
 
-#endif // UPNP_STDLIBIF_HPP
+#endif // UPNP_NETIFIF_HPP
