@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-03
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,10 +41,11 @@
  */
 
 //#include "config.h"
-
 #include "upnpapi.h"
 
-#ifndef _WIN32
+#ifdef _WIN32
+#include "upnpmock/iphlpapi.hpp"
+#else
 #include "upnpmock/ifaddrs.hpp"
 #include "upnpmock/net_if.hpp"
 #endif
@@ -3056,9 +3057,9 @@ int UpnpGetIfInfo(const char* IfName) {
     int valid_addr_found = 0;
 
     /* Get Adapters addresses required size. */
-    ret = GetAdaptersAddresses(AF_UNSPEC,
-                               GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_DNS_SERVER,
-                               NULL, adapts, &adapts_sz);
+    ret = upnp::iphlpapi_h->GetAdaptersAddresses(
+        AF_UNSPEC, GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_DNS_SERVER, NULL,
+        adapts, &adapts_sz);
     if (ret != ERROR_BUFFER_OVERFLOW) {
         UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
                    "GetAdaptersAddresses failed to find list of "
@@ -3071,9 +3072,9 @@ int UpnpGetIfInfo(const char* IfName) {
         return UPNP_E_OUTOF_MEMORY;
     }
     /* Do the call that will actually return the info. */
-    ret = GetAdaptersAddresses(AF_UNSPEC,
-                               GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_DNS_SERVER,
-                               NULL, adapts, &adapts_sz);
+    ret = upnp::iphlpapi_h->GetAdaptersAddresses(
+        AF_UNSPEC, GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_DNS_SERVER, NULL,
+        adapts, &adapts_sz);
     if (ret != ERROR_SUCCESS) {
         free(adapts);
         UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,

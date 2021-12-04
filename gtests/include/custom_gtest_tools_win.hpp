@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-11-30
+// Redistribution only with this Copyright remark. Last modified: 2021-12-04
 
 #ifndef UPNP_TOOLS_WIN_HPP
 #define UPNP_TOOLS_WIN_HPP
@@ -25,7 +25,7 @@ class UPNP_API CNetIf4
     // Properties are set to an ipv4 UP interface, supporting broadcast and
     // multicast.
 
-    ::PIP_ADAPTER_ADDRESSES get() const;
+    ::PIP_ADAPTER_ADDRESSES get();
     // Return the pointer to a network interface structure.
     //
     // Exception: no-fail guarantee.

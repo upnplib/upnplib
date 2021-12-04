@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-11-30
+// Redistribution only with this Copyright remark. Last modified: 2021-12-04
 
 // Implementation of the NetIf classes
 // ===================================
@@ -53,9 +53,7 @@ CNetIf4::CNetIf4() {
     // more settings are needed in the future or for special cases.
 }
 
-::PIP_ADAPTER_ADDRESSES CNetIf4::get() const {
-    return (::PIP_ADAPTER_ADDRESSES)&m_adapts;
-}
+::PIP_ADAPTER_ADDRESSES CNetIf4::get() { return &m_adapts; }
 
 void CNetIf4::set(std::wstring_view a_ifname, std::string_view a_ifaddress) {
     if (a_ifname == L"") {

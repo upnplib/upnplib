@@ -10,6 +10,11 @@
 //
 // For further information look at the header files in upnp/include/upnpmock/.
 
+#include "upnpmock/iphlpapi.hpp"
+
 namespace upnp {
-//
+
+Biphlpapi iphlpapiObj{};
+Biphlpapi* iphlpapi_h = &iphlpapiObj;
+
 } // namespace upnp

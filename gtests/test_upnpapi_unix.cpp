@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-02
+// Redistribution only with this Copyright remark. Last modified: 2021-12-04
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -144,12 +144,6 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
 }
 
 TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
-    // // SKIP on Github Actions
-    // char* github_action = std::getenv("GITHUB_ACTIONS");
-    // if (github_action) {
-    //     GTEST_SKIP() << "  due to issues with googlemock";
-    // }
-
     // provide a network interface
     struct ifaddrs* ifaddr = nullptr;
 
@@ -202,13 +196,6 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
 }
 
 TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
-    // // SKIP on Github Actions
-    // char* github_action = std::getenv("GITHUB_ACTIONS");
-    // if (github_action) {
-    //     GTEST_SKIP()
-    //         << "  due to failed github sanity check because of issue #272";
-    // }
-
     // provide a network interface
     CIfaddr4 ifaddr4Obj;
     ifaddr4Obj.set("if0v4", "192.168.99.3/20");
