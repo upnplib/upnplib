@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-05
+// Redistribution only with this Copyright remark. Last modified: 2021-12-06
 
 // Implementation of the NetIf classes
 // ===================================
@@ -55,16 +55,17 @@ CNetIf4::CNetIf4() {
 
 ::PIP_ADAPTER_ADDRESSES CNetIf4::get() { return &m_adapts; }
 
-void CNetIf4::set(std::wstring_view a_ifname, std::string_view a_ifaddress) {
+void CNetIf4::set(::std::wstring_view a_ifname,
+                  ::std::string_view a_ifaddress) {
     if (a_ifname == L"") {
         return;
     }
 
     // Split address and bit mask from ip address string
-    std::size_t slashpos = a_ifaddress.find_last_of("/");
-    std::string address;
-    std::string bitmask;
-    if (slashpos != std::string_view::npos) {
+    ::std::size_t slashpos = a_ifaddress.find_last_of("/");
+    ::std::string address;
+    ::std::string bitmask;
+    if (slashpos != ::std::string_view::npos) {
         address = a_ifaddress.substr(0, slashpos);
         bitmask = a_ifaddress.substr(slashpos + 1);
     } else {
@@ -77,20 +78,21 @@ void CNetIf4::set(std::wstring_view a_ifname, std::string_view a_ifaddress) {
     if (address != "") {
         int rc = ::inet_pton(AF_INET, address.c_str(), &nipaddr);
         if (rc != 1) {
-            throw std::invalid_argument(
-                std::string("Invalid ip address " + (std::string)a_ifaddress));
+            throw ::std::invalid_argument(::std::string(
+                "Invalid ip address " + (::std::string)a_ifaddress));
         }
     }
 
     // Convert bitmask string to number
-    std::size_t pos{};
-    int nbitmsk = std::stoi(bitmask, &pos);
+    ::std::size_t pos{};
+    int nbitmsk = ::std::stoi(bitmask, &pos);
     if (pos < bitmask.size()) {
-        throw std::invalid_argument(
-            std::string("Not a valid bitmask: " + bitmask));
+        throw ::std::invalid_argument(
+            ::std::string("Not a valid bitmask: " + bitmask));
     }
     if (nbitmsk < 0 || nbitmsk > 32) {
-        throw std::invalid_argument(std::string("Bitmask not in range 0..32"));
+        throw ::std::invalid_argument(
+            ::std::string("Bitmask not in range 0..32"));
     }
 
     // No errors so far, modify the interface structure

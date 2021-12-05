@@ -208,15 +208,14 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
 
     // Initialize capturing of the stderr output
     CCaptureStdOutErr captureObj(STDERR_FILENO);
-    std::string capturedStderr;
-    ASSERT_TRUE(captureObj.start());
+    captureObj.start();
 
     // call the unit
     EXPECT_EQ(UpnpSdkInit, 0);
     EXPECT_STREQ(UpnpGetErrorMessage(UpnpInit2(NULL, 0)), "UPNP_E_SUCCESS");
 
     // Get and check the captured data
-    ASSERT_TRUE(captureObj.get(capturedStderr));
+    std::string capturedStderr = captureObj.get();
     EXPECT_EQ(capturedStderr, "")
         << "  There should not be any output to stderr.";
 

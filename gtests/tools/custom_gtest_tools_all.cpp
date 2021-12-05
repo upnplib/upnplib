@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-16
+// Redistribution only with this Copyright remark. Last modified: 2021-12-06
 
 // Tools and helper classes to manage gtests
 // =========================================
@@ -94,72 +94,61 @@ const char* UpnpGetErrorMessage(int rc) {
 //
 // class CCaptureStdOutErr definition
 // ----------------------------------
-CCaptureStdOutErr::CCaptureStdOutErr(int t_fileno) {
-    if (t_fileno != STDOUT_FILENO && t_fileno != STDERR_FILENO) {
-        m_error = true;
-        std::cerr << "\n[ ERROR    ] " << __FILE__ << ", Line " << __LINE__
-                  << ", constructor: Only STDOUT_FILENO and STDERR_FILENO "
-                     "supported. Nothing will be captured."
-                  << std::endl;
-        return;
+CCaptureStdOutErr::CCaptureStdOutErr(int a_fileno) {
+    if (a_fileno != STDOUT_FILENO && a_fileno != STDERR_FILENO) {
+        throw ::std::invalid_argument(::std::string(
+            (::std::string)__FILE__ + ":" + ::std::to_string(__LINE__) +
+            ", constructor " + __func__ +
+            ". Only STDOUT_FILENO and STDERR_FILENO supported. "
+            "Nothing will be captured."));
     }
     // make a pipe
 #ifdef _WIN32
-    int rc = ::_pipe(m_out_pipe, UPNP_PIPE_BUFFER_SIZE, O_TEXT);
+    int rc = ::_pipe(m_out_pipe, m_chunk_size, O_TEXT);
 #else
     int rc = ::pipe(m_out_pipe);
 #endif
     if (rc != 0) {
-        m_error = true;
-        std::cerr << "\n[ ERROR    ] " << __FILE__ << ", Line " << __LINE__
-                  << ", constructor: Creating a pipe failed. "
-                  << strerror(errno) << std::endl;
-        return;
+        throw ::std::runtime_error(::std::string(
+            (::std::string)__FILE__ + ":" + ::std::to_string(__LINE__) +
+            ", constructor " + __func__ + ". Creating a pipe failed. " +
+            (::std::string)strerror(errno) + '.'));
     }
-    m_std_fileno = t_fileno;
-    m_saved_stdno = ::dup(t_fileno); // save stderr to restore after capturing
+    m_std_fileno = a_fileno;
+    m_saved_stdno =
+        ::dup(a_fileno); // save stdout/stderr to restore after capturing
 }
 
-bool CCaptureStdOutErr::start() {
-    if (m_error)
-        return false;
-
-    ::dup2(m_out_pipe[1], m_std_fileno); // redirect stderr to the pipe
-    return true;
+//
+CCaptureStdOutErr::~CCaptureStdOutErr() {
+    ::close(m_out_pipe[0]);
+    ::close(m_out_pipe[1]);
 }
 
-bool CCaptureStdOutErr::get(std::string& t_captured) {
-    if (m_error)
-        return false;
+//
+void CCaptureStdOutErr::start() {
+    ::dup2(m_out_pipe[1], m_std_fileno); // redirect stdout/stderr to the pipe
+}
 
-    char capture_buffer[UPNP_PIPE_BUFFER_SIZE]{};
-
+//
+::std::string CCaptureStdOutErr::get() {
     // We always write a nullbyte to the pipe so read always returns
     // and does not wait endless if there is nothing captured.
     const char nullbyte[1] = {'\0'};
     ::write(m_std_fileno, &nullbyte, 1);
 
-    // read from pipe into capture_buffer
-    ssize_t count =
-        ::read(m_out_pipe[0], &capture_buffer, sizeof(capture_buffer) - 1);
-
-    // reconnect stderr
-    ::dup2(m_saved_stdno, m_std_fileno);
-
-    if (count == sizeof(capture_buffer) - 1) {
-        // Not all characters read
-        std::cerr << "\n[ ERROR    ] " << __FILE__ << ", Line " << __LINE__
-                  << ", method " << __func__
-                  << ": capture_buffer to small, captured characters may be "
-                     "lost. You must increase it."
-                  << std::endl;
-        return false;
+    // read from pipe into chunk and append the chunk to a string
+    char chunk[m_chunk_size];
+    ::std::string strbuffer;
+    while (::read(m_out_pipe[0], &chunk, m_chunk_size - 1) > 1) {
+        strbuffer += chunk;
+        ::write(m_std_fileno, &nullbyte, 1);
     }
 
-    // Return the character buffer as string object.
-    std::string s = capture_buffer;
-    t_captured = s;
-    return true;
+    // reconnect stdout/stderr
+    ::dup2(m_saved_stdno, m_std_fileno);
+
+    return strbuffer;
 }
 
 } // namespace upnp

@@ -1,11 +1,10 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-05
+// Redistribution only with this Copyright remark. Last modified: 2021-12-06
 
 #include "custom_gtest_tools_all.hpp"
 #include "custom_gtest_tools_unix.hpp"
 #include "gtest/gtest.h"
 
-#include <sys/ioctl.h>
 #include <net/if.h>
 #include <arpa/inet.h>
 
@@ -36,9 +35,10 @@ TEST(ToolsTestSuite, initialize_interface_addresses) {
     EXPECT_EQ(ifa_ifu_in->sin_addr.s_addr, (const unsigned int)0);
     EXPECT_EQ(ifaddr->ifa_data, nullptr);
 
-    EXPECT_ANY_THROW(ifaddr4Obj.set(NULL, "192.168.168.3/24"));
+    // This throws a segfault by C++ and does not need to be tested
+    // EXPECT_ANY_THROW(ifaddr4Obj.set(NULL, "192.168.168.3/24"));
+    // EXPECT_ANY_THROW(ifaddr4Obj.set("if0v4", NULL));
     EXPECT_FALSE(ifaddr4Obj.set("", "192.168.168.3/24"));
-    EXPECT_ANY_THROW(ifaddr4Obj.set("if0v4", NULL));
     EXPECT_FALSE(ifaddr4Obj.set("if0v4", ""));
 
     EXPECT_TRUE(ifaddr4Obj.set("if0v4", "192.168.168.168/20"));
@@ -106,11 +106,12 @@ TEST(ToolsTestSuite, initialize_interface_address_container) {
     EXPECT_STREQ(addr4buf, "192.168.15.255")
         << "    addr4buf contains the broadcast address";
 
+    // This throws a segfault by C++ and does not need to be tested
+    // EXPECT_ANY_THROW(ifaddr4Container.add(NULL, "10.0.0.1/8"));
+    // EXPECT_ANY_THROW(ifaddr4Container.add("if3v4", NULL));
     EXPECT_ANY_THROW(ifaddr4Container.get_ifaddr(-1));
     EXPECT_ANY_THROW(ifaddr4Container.get_ifaddr(2));
-    EXPECT_ANY_THROW(ifaddr4Container.add(NULL, "10.0.0.1/8"));
     EXPECT_FALSE(ifaddr4Container.add("", "10.0.0.1/8"));
-    EXPECT_ANY_THROW(ifaddr4Container.add("if3v4", NULL));
     EXPECT_FALSE(ifaddr4Container.add("if3v4", ""));
 }
 
@@ -170,26 +171,38 @@ TEST(ToolsTestSuite, chain_ifaddr_in_interface_address_container) {
 }
 
 TEST(ToolsTestSuite, capture_output_with_pipe) {
+    CCaptureStdOutErr captOutObj(STDOUT_FILENO);
+    CCaptureStdOutErr captErrObj(STDERR_FILENO);
 
-    GTEST_SKIP() << "  BUG! \"Line 114, constructor: Creating a pipe failed. "
-                    "Too many open files\" after 341 repeats.";
+    captErrObj.start();
+    captOutObj.start();
+    std::cerr << "err: First output ";
+    std::cout << "out: First output ";
+    std::cerr << "to StdErr" << std::endl;
+    std::cout << "to StdOut" << std::endl;
+    std::string captured_err = captErrObj.get();
+    std::string captured_out = captOutObj.get();
 
-    // CCaptureStdOutErr captureObj(STDOUT_FILENO);
-    CCaptureStdOutErr captureObj(STDERR_FILENO);
-    std::string captured;
+    EXPECT_STREQ(captured_err.c_str(), "err: First output to StdErr\n");
+    EXPECT_STREQ(captured_out.c_str(), "out: First output to StdOut\n");
+    // std::cout << "First capture " << captured_err;
+    // std::cout << "First capture " << captured_out;
 
-    ASSERT_TRUE(captureObj.start());
-    std::cerr << "Hello ";
-    std::cerr << "World" << std::endl;
-    ASSERT_TRUE(captureObj.get(captured));
+    captErrObj.start();
+    captOutObj.start();
+    std::cerr << "err: Second output to StdErr" << std::endl;
+    std::cout << "out: Second output to StdOut" << std::endl;
+    captured_err = captErrObj.get();
+    captured_out = captOutObj.get();
 
-    std::cerr << "First capture: " << captured;
+    EXPECT_STREQ(captured_err.c_str(), "err: Second output to StdErr\n");
+    EXPECT_STREQ(captured_out.c_str(), "out: Second output to StdOut\n");
+    // std::cout << "Second start " << captured_err;
+    // std::cout << "Second start " << captured_out;
+}
 
-    ASSERT_TRUE(captureObj.start());
-    std::cerr << "Hello World again" << std::endl;
-    ASSERT_TRUE(captureObj.get(captured));
-
-    std::cerr << "Second start: " << captured;
+TEST(ToolsTestSuite, throw_exception) {
+    EXPECT_THROW(CCaptureStdOutErr capttureObj(-1), ::std::invalid_argument);
 }
 
 } // namespace upnp

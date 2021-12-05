@@ -197,17 +197,14 @@ add_test(NAME ctest_TimerThread COMMAND test_TimerThread)
 
 # test custom_gtest_tools
 #------------------------
-if(NOT APPLE)
-    # Needs rework, segfaults on macOS.
-    add_executable(test_custom_gtest_tools
-            $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/test_tools_win32.cpp>
-            $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/test_tools_unix.cpp>)
-    target_link_libraries(test_custom_gtest_tools
-            custom_gtest_tools
-            $<$<BOOL:${WIN32}>:ws2_32>
-            $<$<BOOL:${WIN32}>:iphlpapi>)
-    add_test(NAME ctest_custom_gtest_tools COMMAND test_custom_gtest_tools)
-endif()
+add_executable(test_custom_gtest_tools
+        $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/test_tools_win32.cpp>
+        $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/test_tools_unix.cpp>)
+target_link_libraries(test_custom_gtest_tools
+        custom_gtest_tools
+        $<$<BOOL:${WIN32}>:ws2_32>
+        $<$<BOOL:${WIN32}>:iphlpapi>)
+add_test(NAME ctest_custom_gtest_tools COMMAND test_custom_gtest_tools)
 
 # simple test
 #------------

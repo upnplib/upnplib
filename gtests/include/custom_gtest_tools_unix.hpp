@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-11-06
+// Redistribution only with this Copyright remark. Last modified: 2021-12-05
 
 #ifndef UPNP_IFADDRS_UIX_HPP
 #define UPNP_IFADDRS_UIX_HPP
@@ -19,18 +19,18 @@ class UPNP_API CIfaddr4
   public:
     CIfaddr4();
     ifaddrs* get();
-    bool set(std::string pIfname, std::string pIfaddress);
-    void chain_next_addr(struct ifaddrs* ptrNextAddr);
+    bool set(std::string_view a_Ifname, std::string_view a_Ifaddress);
+    void chain_next_addr(struct ifaddrs* a_ptrNextAddr);
 
   private:
-    struct ifaddrs ifaddr;
+    struct ifaddrs m_ifaddr;
 
-    struct sockaddr_in ifa_addr;    // network address
-    struct sockaddr_in ifa_netmask; // netmask
-    struct sockaddr_in ifa_ifu; // broadcast addr or point-to-point dest addr
+    struct sockaddr_in m_ifa_addr;    // network address
+    struct sockaddr_in m_ifa_netmask; // netmask
+    struct sockaddr_in m_ifa_ifu; // broadcast addr or point-to-point dest addr
 
-    std::string mIfname;    // interface name
-    std::string mIfaddress; // interface ip address
+    std::string m_Ifname;    // interface name
+    std::string m_Ifaddress; // interface ip address
 
     // clang-format off
     // the bitmask is the offset in the netmasks array.
@@ -55,11 +55,11 @@ class UPNP_API CIfaddr4Container {
     // changes when adding an interface address object. You MUST get_ifaddr(..)
     // the new address pointer for ongoing work.
   public:
-    bool add(std::string prmIfname, std::string prmIfaddress);
+    bool add(std::string_view a_Ifname, std::string_view a_Ifaddress);
     ifaddrs* get_ifaddr(long unsigned int pIdx);
 
   private:
-    std::vector<CIfaddr4> ifaddr4Container;
+    std::vector<CIfaddr4> m_ifaddr4Container;
 };
 
 } // namespace upnp

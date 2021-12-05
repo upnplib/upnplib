@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-16
+// Redistribution only with this Copyright remark. Last modified: 2021-12-06
 
 #ifndef UPNP_GTEST_TOOLS_H
 #define UPNP_GTEST_TOOLS_H
@@ -24,29 +24,30 @@ UPNP_API const char* UpnpGetErrorMessage(int rc);
 // Typical usage is:
 /*
     CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
-    std::string capturedStderr;
-    ASSERT_TRUE(captureObj.start());
+    captureObj.start();
     std::cerr << "Hello World"; // or any other output from within functions
-    ASSERT_TRUE(captureObj.get(capturedStderr));
-    EXPECT_THAT( capturedStderr, MatchesRegex("Hello .*"));
+    std::string capturedStderr = captureObj.get();
+    EXPECT_THAT(capturedStderr, MatchesRegex("Hello .*"));
 */
+// Exception: Strong guarantee (no modifications)
+//    throws: [std::logic_error] <- std::invalid_argument
+//            Only stdout or stderr can be redirected.
+//    throws: runtime_error
+//            Creating a pipe failed.
 // clang-format on
-
-// Increase the size of the capture buffer if you get an error message.
-// It is used to read the captured output from the pipe.
-#define UPNP_PIPE_BUFFER_SIZE 256
 
 class UPNP_API CCaptureStdOutErr {
   public:
-    CCaptureStdOutErr(int);
-    bool start(void);
-    bool get(std::string&);
+    CCaptureStdOutErr(int a_fileno);
+    virtual ~CCaptureStdOutErr();
+    void start();
+    std::string get();
 
   private:
+    static constexpr int m_chunk_size{512};
     int m_out_pipe[2]{};
     int m_std_fileno{};
     int m_saved_stdno{};
-    bool m_error = false;
 };
 
 } // namespace upnp
