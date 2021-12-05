@@ -12,9 +12,10 @@
 
 namespace upnp {
 
-class UPNP_API CIfaddr4 {
-    // Tool to manage and fill a socket address structure. This is needed
-    // for mocked network interfaces.
+class UPNP_API CIfaddr4
+// Tool to manage and fill a socket address structure. This is needed
+// for mocked network interfaces.
+{
   public:
     CIfaddr4();
     ifaddrs* get();

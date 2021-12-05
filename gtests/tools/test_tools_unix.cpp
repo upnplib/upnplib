@@ -1,8 +1,8 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-16
+// Redistribution only with this Copyright remark. Last modified: 2021-12-05
 
 #include "custom_gtest_tools_all.hpp"
-#include "custom_gtest_tools_uix.hpp"
+#include "custom_gtest_tools_unix.hpp"
 #include "gtest/gtest.h"
 
 #include <sys/ioctl.h>
@@ -12,11 +12,11 @@
 namespace upnp {
 
 TEST(ToolsTestSuite, initialize_interface_addresses) {
-    struct ifaddrs* ifaddr = nullptr;
-    struct sockaddr_in* ifa_addr_in = nullptr;
-    struct sockaddr_in* ifa_netmask_in = nullptr;
-    struct sockaddr_in* ifa_ifu_in = nullptr;
-    char addr4buf[INET_ADDRSTRLEN] = {};
+    struct ifaddrs* ifaddr{};
+    struct sockaddr_in* ifa_addr_in{};
+    struct sockaddr_in* ifa_netmask_in{};
+    struct sockaddr_in* ifa_ifu_in{};
+    char addr4buf[INET_ADDRSTRLEN]{};
 
     CIfaddr4 ifaddr4Obj;
     ifaddr = ifaddr4Obj.get();

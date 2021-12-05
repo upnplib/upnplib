@@ -6,7 +6,7 @@
 
 #include "gmock/gmock.h"
 #include "custom_gtest_tools_all.hpp"
-#include "custom_gtest_tools_win.hpp"
+#include "custom_gtest_tools_win32.hpp"
 #include "port_unistd.hpp"
 
 #include "api/upnpapi.cpp"

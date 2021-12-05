@@ -1,7 +1,7 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-11-30
+// Redistribution only with this Copyright remark. Last modified: 2021-12-05
 
-#include "custom_gtest_tools_win.hpp"
+#include "custom_gtest_tools_win32.hpp"
 #include <ws2tcpip.h>
 #include "gmock/gmock.h"
 

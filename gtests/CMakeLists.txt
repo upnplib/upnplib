@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-12-04
+# Redistribution only with this Copyright remark. Last modified: 2021-12-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -36,8 +36,9 @@ include_directories(
 # If linking with shared build gtest libs we need to tell it the compiler.
 # I have found a vague hint about the flag GTEST_LINKED_AS_SHARED_LIBRARY at
 # build/_deps/googletest-src/googletest/README.md
-add_compile_definitions(
-    PRIVATE $<$<AND:$<BOOL:${UPNP_GOOGLETEST}>,$<BOOL:${BUILD_SHARED_LIBS}>>:GTEST_LINKED_AS_SHARED_LIBRARY>
+add_compile_definitions(PRIVATE
+    OLD_TEST
+    $<$<AND:$<BOOL:${UPNP_GOOGLETEST}>,$<BOOL:${BUILD_SHARED_LIBS}>>:GTEST_LINKED_AS_SHARED_LIBRARY>
 )
 
 # Due to issue https://github.com/google/googletest/issues/1325#issuecomment-903884914
@@ -96,35 +97,18 @@ add_dependencies(custom_gtest_tools gtest gtest_main gmock gmock_main)
 
 # UpnpString
 #-----------
-add_executable(test_UpnpString_old ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
-add_test(NAME ctest_UpnpString_old COMMAND test_UpnpString_old)
-target_compile_definitions(test_UpnpString_old
-			   PRIVATE OLD_TEST
-			   PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
-                           )
-if(NOT DEFINED ENV{GITHUB_ACTIONS})
-    add_executable(test_UpnpString ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
-    add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
-    target_compile_definitions(test_UpnpString
-			       PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
-endif()
-
+add_executable(test_UpnpString ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
+add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
+target_compile_definitions(test_UpnpString PRIVATE
+                           $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 
 # upnpdebug
 #----------
-add_executable(test_upnpdebug_old
+add_executable(test_upnpdebug
     ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
     ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
-target_compile_definitions(test_upnpdebug_old PRIVATE OLD_TEST)
-target_link_libraries(test_upnpdebug_old PRIVATE custom_gtest_tools)
-add_test(NAME ctest_upnpdebug_old COMMAND test_upnpdebug_old)
-if(NOT DEFINED ENV{GITHUB_ACTIONS})
-    add_executable(test_upnpdebug
-        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-        ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
-    target_link_libraries(test_upnpdebug PRIVATE custom_gtest_tools)
-    add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
-endif()
+target_link_libraries(test_upnpdebug custom_gtest_tools)
+add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
 
 
 # upnpapi
@@ -167,73 +151,37 @@ set(UPNP_UPNPAPI_SOURCE_FILES
     ${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 
-add_executable(test_upnpapi_old ${UPNP_UPNPAPI_SOURCE_FILES}
+add_executable(test_upnpapi ${UPNP_UPNPAPI_SOURCE_FILES}
                $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/test_upnpapi_win32.cpp>
                $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/test_upnpapi_unix.cpp>)
-target_compile_definitions(test_upnpapi_old
-                           PRIVATE OLD_TEST
-                           PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
-target_link_libraries(test_upnpapi_old
-                      PRIVATE custom_gtest_tools
-                      PRIVATE $<$<BOOL:${WIN32}>:ws2_32>
-                      PRIVATE $<$<BOOL:${WIN32}>:iphlpapi>)
-add_test(NAME ctest_upnpapi_old COMMAND test_upnpapi_old
+target_compile_definitions(test_upnpapi PRIVATE
+                           $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+target_link_libraries(test_upnpapi
+                      custom_gtest_tools
+                      $<$<BOOL:${WIN32}>:ws2_32>
+                      $<$<BOOL:${WIN32}>:iphlpapi>)
+add_test(NAME ctest_upnpapi COMMAND test_upnpapi
 )
-# if(NOT DEFINED ENV{GITHUB_ACTIONS})
-# add_executable(test_upnpapi ${UPNP_UPNPAPI_SOURCE_FILES})
-# target_compile_definitions(test_upnpapi
-#                            PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
-# target_link_libraries(test_upnpapi
-#                       PRIVATE custom_gtest_tools
-#                       PRIVATE $<$<BOOL:${WIN32}>:ws2_32>
-#                       PRIVATE $<$<BOOL:${WIN32}>:iphlpapi>)
-# add_test(NAME ctest_upnpapi COMMAND test_upnpapi)
-# endif()
 
 # LinkedList
 #-----------
-add_executable(test_LinkedList_old
-        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-        ${PROJECT_SOURCE_DIR}/test_LinkedList.cpp)
-add_test(NAME ctest_LinkedList_old COMMAND test_LinkedList_old)
-target_compile_definitions(test_LinkedList_old
-                           PRIVATE OLD_TEST)
-if(NOT DEFINED ENV{GITHUB_ACTIONS})
 add_executable(test_LinkedList
         ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
         ${PROJECT_SOURCE_DIR}/test_LinkedList.cpp)
 add_test(NAME ctest_LinkedList COMMAND test_LinkedList)
-endif()
 
 # FreeList
 #---------
-add_executable(test_FreeList_old
-        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-        ${PROJECT_SOURCE_DIR}/test_FreeList.cpp)
-add_test(NAME ctest_FreeList_old COMMAND test_FreeList_old)
-target_compile_definitions(test_FreeList_old
-                           PRIVATE OLD_TEST)
-if(NOT DEFINED ENV{GITHUB_ACTIONS})
 add_executable(test_FreeList
         ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
         ${PROJECT_SOURCE_DIR}/test_FreeList.cpp)
 add_test(NAME ctest_FreeList COMMAND test_FreeList)
-endif()
 
 # ThreadPool
 #-----------
 if(NOT APPLE)
     # Random with out of memory
     # [  FAILED  ] ThreadPoolNormalTestSuite.add_and_remove_3_jobs_on_threadpool
-    add_executable(test_ThreadPool_old
-            ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-            ${PROJECT_SOURCE_DIR}/test_ThreadPool.cpp)
-    target_compile_definitions(test_ThreadPool_old
-                               PRIVATE OLD_TEST)
-    add_test(NAME ctest_ThreadPool_old COMMAND test_ThreadPool_old
-    )
-endif()
-if(NOT DEFINED ENV{GITHUB_ACTIONS})
     add_executable(test_ThreadPool
             ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
             ${PROJECT_SOURCE_DIR}/test_ThreadPool.cpp)
@@ -242,20 +190,10 @@ endif()
 
 # TimerThread
 #------------
-add_executable(test_TimerThread_old
+add_executable(test_TimerThread
         ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
         ${PROJECT_SOURCE_DIR}/test_TimerThread.cpp)
-add_test(NAME ctest_TimerThread_old COMMAND test_TimerThread_old)
-target_compile_definitions(test_TimerThread_old
-                           PRIVATE OLD_TEST
-                           #PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
-                           )
-if(NOT DEFINED ENV{GITHUB_ACTIONS})
-    add_executable(test_TimerThread
-            ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-            ${PROJECT_SOURCE_DIR}/test_TimerThread.cpp)
-    add_test(NAME ctest_TimerThread COMMAND test_TimerThread)
-endif()
+add_test(NAME ctest_TimerThread COMMAND test_TimerThread)
 
 # test custom_gtest_tools
 #------------------------
@@ -277,6 +215,7 @@ add_executable(test_simple ${PROJECT_SOURCE_DIR}/test_simple.cpp)
 
 # template
 #---------
-add_executable(test_template_old ${PROJECT_SOURCE_DIR}/test_template.cpp)
-target_compile_definitions(test_template_old PRIVATE OLD_TEST)
 add_executable(test_template ${PROJECT_SOURCE_DIR}/test_template.cpp)
+
+# if(NOT APPLE)
+# if(NOT DEFINED ENV{GITHUB_ACTIONS})
