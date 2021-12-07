@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-12-05
+# Redistribution only with this Copyright remark. Last modified: 2021-12-07
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -95,12 +95,60 @@ add_dependencies(custom_gtest_tools gtest gtest_main gmock gmock_main)
 # The tests are build in reverse order. test_template.cpp will be build first.
 #set(ENV{GITHUB_ACTIONS} 1)
 
+# httpparser
+#-----------
+add_executable(test_httpparser
+    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
+    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
+    $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
+
+    ${PROJECT_SOURCE_DIR}/test_httpparser.cpp
+)
+target_link_libraries(test_httpparser
+                      $<$<BOOL:${WIN32}>:ws2_32>
+                      $<$<BOOL:${WIN32}>:iphlpapi>)
+add_test(NAME ctest_httpparser COMMAND test_httpparser)
+
+
+# httpreadwrite incl. statcodes
+#------------------------------
+add_executable(test_httpreadwrite
+    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+
+    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
+    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/sock.c
+
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.c
+
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
+
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
+
+    # ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
+    ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.cpp
+    $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
+
+    ${PROJECT_SOURCE_DIR}/test_httpreadwrite.cpp
+)
+target_link_libraries(test_httpreadwrite
+                      $<$<BOOL:${WIN32}>:ws2_32>
+                      $<$<BOOL:${WIN32}>:iphlpapi>)
+add_test(NAME ctest_httpreadwrite COMMAND test_httpreadwrite)
+
 # UpnpString
 #-----------
 add_executable(test_UpnpString ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
 add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
-target_compile_definitions(test_UpnpString PRIVATE
-                           $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 
 # upnpdebug
 #----------
@@ -138,24 +186,22 @@ set(UPNP_UPNPAPI_SOURCE_FILES
 
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.c
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpparser.c
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.c
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/statcodes.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.c
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.c
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
 
-    ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
+    # ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
     ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp
+    $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
 )
 
 add_executable(test_upnpapi ${UPNP_UPNPAPI_SOURCE_FILES}
                $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/test_upnpapi_win32.cpp>
                $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/test_upnpapi_unix.cpp>)
-target_compile_definitions(test_upnpapi PRIVATE
-                           $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 target_link_libraries(test_upnpapi
                       custom_gtest_tools
                       $<$<BOOL:${WIN32}>:ws2_32>
@@ -179,14 +225,10 @@ add_test(NAME ctest_FreeList COMMAND test_FreeList)
 
 # ThreadPool
 #-----------
-if(NOT APPLE)
-    # Random with out of memory
-    # [  FAILED  ] ThreadPoolNormalTestSuite.add_and_remove_3_jobs_on_threadpool
-    add_executable(test_ThreadPool
-            ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-            ${PROJECT_SOURCE_DIR}/test_ThreadPool.cpp)
-    add_test(NAME ctest_ThreadPool COMMAND test_ThreadPool)
-endif()
+add_executable(test_ThreadPool
+        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+        ${PROJECT_SOURCE_DIR}/test_ThreadPool.cpp)
+add_test(NAME ctest_ThreadPool COMMAND test_ThreadPool)
 
 # TimerThread
 #------------
@@ -216,3 +258,5 @@ add_executable(test_template ${PROJECT_SOURCE_DIR}/test_template.cpp)
 
 # if(NOT APPLE)
 # if(NOT DEFINED ENV{GITHUB_ACTIONS})
+# target_compile_definitions(test_httpparser PRIVATE
+#                            $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)

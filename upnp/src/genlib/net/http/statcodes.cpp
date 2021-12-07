@@ -3,6 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,7 +40,7 @@
 
 //#include "config.h"
 
-//#include "statcodes.h"
+#include "statcodes.hpp"
 
 #include "upnputil.h"
 
@@ -50,13 +52,13 @@
 #endif
 
 #define NUM_1XX_CODES 2
-static const char *Http1xxCodes[NUM_1XX_CODES];
-static const char *Http1xxStr = "Continue\0"
+static const char* Http1xxCodes[NUM_1XX_CODES];
+static const char* Http1xxStr = "Continue\0"
                                 "Switching Protocols\0";
 
 #define NUM_2XX_CODES 7
-static const char *Http2xxCodes[NUM_2XX_CODES];
-static const char *Http2xxStr = "OK\0"
+static const char* Http2xxCodes[NUM_2XX_CODES];
+static const char* Http2xxStr = "OK\0"
                                 "Created\0"
                                 "Accepted\0"
                                 "Non-Authoratative Information\0"
@@ -65,8 +67,8 @@ static const char *Http2xxStr = "OK\0"
                                 "Partial Content\0";
 
 #define NUM_3XX_CODES 8
-static const char *Http3xxCodes[NUM_3XX_CODES];
-static const char *Http3xxStr = "Multiple Choices\0"
+static const char* Http3xxCodes[NUM_3XX_CODES];
+static const char* Http3xxStr = "Multiple Choices\0"
                                 "Moved Permanently\0"
                                 "Found\0"
                                 "See Other\0"
@@ -76,8 +78,8 @@ static const char *Http3xxStr = "Multiple Choices\0"
                                 "Temporary Redirect\0";
 
 #define NUM_4XX_CODES 18
-static const char *Http4xxCodes[NUM_4XX_CODES];
-static const char *Http4xxStr = "Bad Request\0"
+static const char* Http4xxCodes[NUM_4XX_CODES];
+static const char* Http4xxStr = "Bad Request\0"
                                 "Unauthorized\0"
                                 "Payment Required\0"
                                 "Forbidden\0"
@@ -97,8 +99,8 @@ static const char *Http4xxStr = "Bad Request\0"
                                 "Expectation Failed\0";
 
 #define NUM_5XX_CODES 11
-static const char *Http5xxCodes[NUM_5XX_CODES];
-static const char *Http5xxStr = "Internal Server Error\0"
+static const char* Http5xxCodes[NUM_5XX_CODES];
+static const char* Http5xxStr = "Internal Server Error\0"
                                 "Not Implemented\0"
                                 "Bad Gateway\0"
                                 "Service Unavailable\0"
@@ -132,16 +134,15 @@ static int gInitialized = 0;
  * Returns:
  *	 void
  ************************************************************************/
-static UPNP_INLINE void init_table(
-        const char *encoded_str, const char *table[], int tbl_size)
-{
-        int i;
-        const char *s = encoded_str;
+static UPNP_INLINE void init_table(const char* encoded_str, const char* table[],
+                                   int tbl_size) {
+    int i;
+    const char* s = encoded_str;
 
-        for (i = 0; i < tbl_size; i++) {
-                table[i] = s;
-                s += strlen(s) + (size_t)1; /* next entry */
-        }
+    for (i = 0; i < tbl_size; i++) {
+        table[i] = s;
+        s += strlen(s) + (size_t)1; /* next entry */
+    }
 }
 
 /************************************************************************
@@ -156,15 +157,14 @@ static UPNP_INLINE void init_table(
  * Returns:
  *	 void
  ************************************************************************/
-static UPNP_INLINE void init_tables(void)
-{
-        init_table(Http1xxStr, Http1xxCodes, NUM_1XX_CODES);
-        init_table(Http2xxStr, Http2xxCodes, NUM_2XX_CODES);
-        init_table(Http3xxStr, Http3xxCodes, NUM_3XX_CODES);
-        init_table(Http4xxStr, Http4xxCodes, NUM_4XX_CODES);
-        init_table(Http5xxStr, Http5xxCodes, NUM_5XX_CODES);
+static UPNP_INLINE void init_tables(void) {
+    init_table(Http1xxStr, Http1xxCodes, NUM_1XX_CODES);
+    init_table(Http2xxStr, Http2xxCodes, NUM_2XX_CODES);
+    init_table(Http3xxStr, Http3xxCodes, NUM_3XX_CODES);
+    init_table(Http4xxStr, Http4xxCodes, NUM_4XX_CODES);
+    init_table(Http5xxStr, Http5xxCodes, NUM_5XX_CODES);
 
-        gInitialized = 1; /* mark only after complete */
+    gInitialized = 1; /* mark only after complete */
 }
 
 /************************************************************************
@@ -180,41 +180,40 @@ static UPNP_INLINE void init_tables(void)
  * Returns:
  *	 const char* ptr - pointer to the status message string
  ************************************************************************/
-const char *http_get_code_text(int statusCode)
-{
-        int index;
-        int table_num;
+const char* http_get_code_text(int statusCode) {
+    int index;
+    int table_num;
 
-        if (!gInitialized) {
-                init_tables();
-        }
+    if (!gInitialized) {
+        init_tables();
+    }
 
-        if (statusCode < 100 || statusCode >= 600) {
-                return NULL;
-        }
-
-        index = statusCode % 100;
-        table_num = statusCode / 100;
-
-        if (table_num == 1 && index < NUM_1XX_CODES) {
-                return Http1xxCodes[index];
-        }
-
-        if (table_num == 2 && index < NUM_2XX_CODES) {
-                return Http2xxCodes[index];
-        }
-
-        if (table_num == 3 && index < NUM_3XX_CODES) {
-                return Http3xxCodes[index];
-        }
-
-        if (table_num == 4 && index < NUM_4XX_CODES) {
-                return Http4xxCodes[index];
-        }
-
-        if (table_num == 5 && index < NUM_5XX_CODES) {
-                return Http5xxCodes[index];
-        }
-
+    if (statusCode < 100 || statusCode >= 600) {
         return NULL;
+    }
+
+    index = statusCode % 100;
+    table_num = statusCode / 100;
+
+    if (table_num == 1 && index < NUM_1XX_CODES) {
+        return Http1xxCodes[index];
+    }
+
+    if (table_num == 2 && index < NUM_2XX_CODES) {
+        return Http2xxCodes[index];
+    }
+
+    if (table_num == 3 && index < NUM_3XX_CODES) {
+        return Http3xxCodes[index];
+    }
+
+    if (table_num == 4 && index < NUM_4XX_CODES) {
+        return Http4xxCodes[index];
+    }
+
+    if (table_num == 5 && index < NUM_5XX_CODES) {
+        return Http5xxCodes[index];
+    }
+
+    return NULL;
 }

@@ -3,6 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,34 +49,31 @@
 /* scanner */
 
 /* Used to represent different types of tokens in input. */
-typedef enum
-{
-        TT_IDENTIFIER,
-        TT_WHITESPACE,
-        TT_CRLF,
-        TT_CTRL,
-        TT_SEPARATOR,
-        TT_QUOTEDSTRING
+typedef enum {
+    TT_IDENTIFIER,
+    TT_WHITESPACE,
+    TT_CRLF,
+    TT_CTRL,
+    TT_SEPARATOR,
+    TT_QUOTEDSTRING
 } token_type_t;
 
-typedef struct
-{
-        /*! raw http msg. */
-        membuffer *msg;
-        /*! current position in buffer. */
-        size_t cursor;
-        /*! set this to 1 if the entire msg is loaded in 'msg';
-         * else 0 if only partial msg in 'msg' (default is 0). */
-        int entire_msg_loaded;
+typedef struct {
+    /*! raw http msg. */
+    membuffer* msg;
+    /*! current position in buffer. */
+    size_t cursor;
+    /*! set this to 1 if the entire msg is loaded in 'msg';
+     * else 0 if only partial msg in 'msg' (default is 0). */
+    int entire_msg_loaded;
 } scanner_t;
 
-typedef enum
-{
-        POS_REQUEST_LINE,
-        POS_RESPONSE_LINE,
-        POS_HEADERS,
-        POS_ENTITY,
-        POS_COMPLETE
+typedef enum {
+    POS_REQUEST_LINE,
+    POS_RESPONSE_LINE,
+    POS_HEADERS,
+    POS_ENTITY,
+    POS_COMPLETE
 } parser_pos_t;
 
 #define ENTREAD_DETERMINE_READ_METHOD 1
@@ -89,21 +88,20 @@ typedef enum
 /* method in a HTTP request.
  * IMPORTANT: The enum values of the standard HTTP method should match
  * those of Upnp_HttpMethod enum defined in upnp.h */
-typedef enum
-{
-        HTTPMETHOD_PUT = UPNP_HTTPMETHOD_PUT,
-        HTTPMETHOD_DELETE = UPNP_HTTPMETHOD_DELETE,
-        HTTPMETHOD_GET = UPNP_HTTPMETHOD_GET,
-        HTTPMETHOD_HEAD = UPNP_HTTPMETHOD_HEAD,
-        HTTPMETHOD_POST = UPNP_HTTPMETHOD_POST,
-        HTTPMETHOD_MPOST,
-        HTTPMETHOD_SUBSCRIBE,
-        HTTPMETHOD_UNSUBSCRIBE,
-        HTTPMETHOD_NOTIFY,
-        HTTPMETHOD_MSEARCH,
-        HTTPMETHOD_UNKNOWN,
-        SOAPMETHOD_POST,
-        HTTPMETHOD_SIMPLEGET
+typedef enum {
+    HTTPMETHOD_PUT = UPNP_HTTPMETHOD_PUT,
+    HTTPMETHOD_DELETE = UPNP_HTTPMETHOD_DELETE,
+    HTTPMETHOD_GET = UPNP_HTTPMETHOD_GET,
+    HTTPMETHOD_HEAD = UPNP_HTTPMETHOD_HEAD,
+    HTTPMETHOD_POST = UPNP_HTTPMETHOD_POST,
+    HTTPMETHOD_MPOST,
+    HTTPMETHOD_SUBSCRIBE,
+    HTTPMETHOD_UNSUBSCRIBE,
+    HTTPMETHOD_NOTIFY,
+    HTTPMETHOD_MSEARCH,
+    HTTPMETHOD_UNKNOWN,
+    SOAPMETHOD_POST,
+    HTTPMETHOD_SIMPLEGET
 } http_method_t;
 
 /* different types of HTTP headers */
@@ -148,94 +146,90 @@ typedef enum
 #define HDR_TE 36
 
 /*! status of parsing */
-typedef enum
-{
-        /*! msg was parsed successfully. */
-        PARSE_SUCCESS = 0,
-        /*! need more data to continue. */
-        PARSE_INCOMPLETE,
-        /*! for responses that don't have length specified. */
-        PARSE_INCOMPLETE_ENTITY,
-        /*! parse failed; check status code for details. */
-        PARSE_FAILURE,
-        /*! done partial. */
-        PARSE_OK,
-        /*! token not matched. */
-        PARSE_NO_MATCH,
-        /*! private. */
-        PARSE_CONTINUE_1
+typedef enum {
+    /*! msg was parsed successfully. */
+    PARSE_SUCCESS = 0,
+    /*! need more data to continue. */
+    PARSE_INCOMPLETE,
+    /*! for responses that don't have length specified. */
+    PARSE_INCOMPLETE_ENTITY,
+    /*! parse failed; check status code for details. */
+    PARSE_FAILURE,
+    /*! done partial. */
+    PARSE_OK,
+    /*! token not matched. */
+    PARSE_NO_MATCH,
+    /*! private. */
+    PARSE_CONTINUE_1
 } parse_status_t;
 
-typedef struct
-{
-        /*! header name as a string. */
-        memptr name;
-        /*! header name id (for a selective group of headers only). */
-        int name_id;
-        /*! raw-value; could be multi-lined; min-length = 0. */
-        membuffer value;
-        /* private. */
-        membuffer name_buf;
+typedef struct {
+    /*! header name as a string. */
+    memptr name;
+    /*! header name id (for a selective group of headers only). */
+    int name_id;
+    /*! raw-value; could be multi-lined; min-length = 0. */
+    membuffer value;
+    /* private. */
+    membuffer name_buf;
 } http_header_t;
 
-typedef struct
-{
-        int initialized;
-        /*! request only. */
-        http_method_t method;
-        /*! request only. */
-        uri_type uri;
-        /*! response only. */
-        http_method_t request_method;
-        /*! response only. */
-        int status_code;
-        /*! response only. */
-        membuffer status_msg;
-        /*! response only. the amount of data that's been read by the user,
-         * that's no longer in the raw message buffer.
-         */
-        size_t amount_discarded;
-        /* fields used in both request or response messages. */
-        /*! if 1, msg is a request, else response. */
-        int is_request;
-        /* http major version. */
-        int major_version;
-        /* http minor version. */
-        int minor_version;
-        /*! . */
-        LinkedList headers;
-        /*! message body(entity). */
-        memptr entity;
-        /* private fields. */
-        /*! entire raw message. */
-        membuffer msg;
-        /*! storage for url string. */
-        char *urlbuf;
+typedef struct {
+    int initialized;
+    /*! request only. */
+    http_method_t method;
+    /*! request only. */
+    uri_type uri;
+    /*! response only. */
+    http_method_t request_method;
+    /*! response only. */
+    int status_code;
+    /*! response only. */
+    membuffer status_msg;
+    /*! response only. the amount of data that's been read by the user,
+     * that's no longer in the raw message buffer.
+     */
+    size_t amount_discarded;
+    /* fields used in both request or response messages. */
+    /*! if 1, msg is a request, else response. */
+    int is_request;
+    /* http major version. */
+    int major_version;
+    /* http minor version. */
+    int minor_version;
+    /*! . */
+    LinkedList headers;
+    /*! message body(entity). */
+    memptr entity;
+    /* private fields. */
+    /*! entire raw message. */
+    membuffer msg;
+    /*! storage for url string. */
+    char* urlbuf;
 } http_message_t;
 
-typedef struct
-{
-        http_message_t msg;
-        /*! read-only; in case of parse error, this
-         * contains the HTTP error code (4XX or 5XX). */
-        int http_error_code;
-        /*! read-only; this is set to 1 if a NOTIFY request has no
-         * content-length. used to read valid sspd notify msg. */
-        int valid_ssdp_notify_hack;
-        /* private data -- don't touch. */
-        parser_pos_t position;
-        int ent_position;
-        unsigned int content_length;
-        size_t chunk_size;
-        /*! offset in the the raw message buffer, which contains the message
-         * body. preceding this are the headers of the messsage. */
-        size_t entity_start_position;
-        scanner_t scanner;
+typedef struct {
+    http_message_t msg;
+    /*! read-only; in case of parse error, this
+     * contains the HTTP error code (4XX or 5XX). */
+    int http_error_code;
+    /*! read-only; this is set to 1 if a NOTIFY request has no
+     * content-length. used to read valid sspd notify msg. */
+    int valid_ssdp_notify_hack;
+    /* private data -- don't touch. */
+    parser_pos_t position;
+    int ent_position;
+    unsigned int content_length;
+    size_t chunk_size;
+    /*! offset in the the raw message buffer, which contains the message
+     * body. preceding this are the headers of the messsage. */
+    size_t entity_start_position;
+    scanner_t scanner;
 } http_parser_t;
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+//#ifdef __cplusplus
+// extern "C" {
+//#endif /* __cplusplus */
 
 /************************************************************************
  *	Function :	httpmsg_init
@@ -249,7 +243,7 @@ extern "C" {
  *
  *	Note :
  ************************************************************************/
-void httpmsg_init(http_message_t *msg);
+void httpmsg_init(http_message_t* msg);
 
 /************************************************************************
  *	Function :	httpmsg_destroy
@@ -263,7 +257,7 @@ void httpmsg_init(http_message_t *msg);
  *
  *	Note :
  ************************************************************************/
-void httpmsg_destroy(http_message_t *msg);
+void httpmsg_destroy(http_message_t* msg);
 
 /************************************************************************
  *	Function :	httpmsg_find_hdr_str
@@ -279,8 +273,8 @@ void httpmsg_destroy(http_message_t *msg);
  *			 NULL on failure
  *	Note :
  ************************************************************************/
-http_header_t *httpmsg_find_hdr_str(
-        http_message_t *msg, const char *header_name);
+http_header_t* httpmsg_find_hdr_str(http_message_t* msg,
+                                    const char* header_name);
 
 /************************************************************************
  *	Function :	httpmsg_find_hdr
@@ -297,8 +291,8 @@ http_header_t *httpmsg_find_hdr_str(
  *
  *	Note :
  ************************************************************************/
-http_header_t *httpmsg_find_hdr(
-        http_message_t *msg, int header_name_id, memptr *value);
+http_header_t* httpmsg_find_hdr(http_message_t* msg, int header_name_id,
+                                memptr* value);
 
 /************************************************************************
  * Function: parser_request_init
@@ -311,7 +305,7 @@ http_header_t *httpmsg_find_hdr(
  * Returns:
  *	 void
  ************************************************************************/
-void parser_request_init(http_parser_t *parser);
+void parser_request_init(http_parser_t* parser);
 
 /************************************************************************
  * Function: parser_response_init
@@ -325,7 +319,7 @@ void parser_request_init(http_parser_t *parser);
  * Returns:
  *	 void
  ************************************************************************/
-void parser_response_init(http_parser_t *parser, http_method_t request_method);
+void parser_response_init(http_parser_t* parser, http_method_t request_method);
 
 /************************************************************************
  * Function: parser_parse
@@ -339,7 +333,7 @@ void parser_response_init(http_parser_t *parser, http_method_t request_method);
  * Returns:
  *	 void
  ************************************************************************/
-parse_status_t parser_parse(http_parser_t *parser);
+parse_status_t parser_parse(http_parser_t* parser);
 
 /************************************************************************
  * Function: parser_parse_responseline
@@ -354,7 +348,7 @@ parse_status_t parser_parse(http_parser_t *parser);
  *	PARSE_SUCCESS
  *	PARSE_FAILURE
  ************************************************************************/
-parse_status_t parser_parse_responseline(http_parser_t *parser);
+parse_status_t parser_parse_responseline(http_parser_t* parser);
 
 /************************************************************************
  * Function: parser_parse_headers
@@ -369,7 +363,7 @@ parse_status_t parser_parse_responseline(http_parser_t *parser);
  *	PARSE_SUCCESS
  *	PARSE_FAILURE
  ************************************************************************/
-parse_status_t parser_parse_headers(http_parser_t *parser);
+parse_status_t parser_parse_headers(http_parser_t* parser);
 
 /************************************************************************
  * Function: parser_parse_entity
@@ -384,7 +378,7 @@ parse_status_t parser_parse_headers(http_parser_t *parser);
  * 	 PARSE_FAILURE
  *	 PARSE_COMPLETE	-- no more reading to do
  ************************************************************************/
-parse_status_t parser_parse_entity(http_parser_t *parser);
+parse_status_t parser_parse_entity(http_parser_t* parser);
 
 /************************************************************************
  * Function: parser_get_entity_read_method
@@ -399,7 +393,7 @@ parse_status_t parser_parse_entity(http_parser_t *parser);
  * 	 PARSE_FAILURE
  *	 PARSE_COMPLETE	-- no more reading to do
  ************************************************************************/
-parse_status_t parser_get_entity_read_method(http_parser_t *parser);
+parse_status_t parser_get_entity_read_method(http_parser_t* parser);
 
 /************************************************************************
  * Function: parser_append
@@ -416,8 +410,8 @@ parse_status_t parser_get_entity_read_method(http_parser_t *parser);
  * Returns:
  *	 void
  ************************************************************************/
-parse_status_t parser_append(
-        http_parser_t *parser, const char *buf, size_t buf_length);
+parse_status_t parser_append(http_parser_t* parser, const char* buf,
+                             size_t buf_length);
 
 /************************************************************************
  * Function: parser_get_unknown_headers
@@ -433,7 +427,7 @@ parse_status_t parser_append(
  *	HTTP_INTERNAL_SERVER_ERROR
  ************************************************************************/
 
-int parser_get_unknown_headers(http_message_t *req, UpnpListHead *list);
+int parser_get_unknown_headers(http_message_t* req, UpnpListHead* list);
 
 /************************************************************************
  * Function: free_http_headers_list
@@ -447,7 +441,7 @@ int parser_get_unknown_headers(http_message_t *req, UpnpListHead *list);
  *	HTTP_OK
  *	HTTP_INTERNAL_SERVER_ERROR
  ************************************************************************/
-void free_http_headers_list(UpnpListHead *list);
+void free_http_headers_list(UpnpListHead* list);
 
 /************************************************************************
  * Function: matchstr
@@ -466,7 +460,7 @@ void free_http_headers_list(UpnpListHead *list);
  *   PARSE_NO_MATCH -- failure to match pattern 'fmt'
  *   PARSE_FAILURE	-- 'str' is bad input
  ************************************************************************/
-parse_status_t matchstr(char *str, size_t slen, const char *fmt, ...);
+parse_status_t matchstr(char* str, size_t slen, const char* fmt, ...);
 
 /************************************************************************
  * Function: raw_to_int
@@ -480,7 +474,7 @@ parse_status_t matchstr(char *str, size_t slen, const char *fmt, ...);
  * Returns:
  *	 int
  ************************************************************************/
-int raw_to_int(memptr *raw_value, int base);
+int raw_to_int(memptr* raw_value, int base);
 
 /************************************************************************
  * Function: raw_find_str
@@ -496,7 +490,7 @@ int raw_to_int(memptr *raw_value, int base);
  * Returns:
  *	 int - index at which the substring is found.
  ************************************************************************/
-int raw_find_str(memptr *raw_value, const char *str);
+int raw_find_str(memptr* raw_value, const char* str);
 
 /************************************************************************
  * Function: method_to_str
@@ -510,7 +504,7 @@ int raw_find_str(memptr *raw_value, const char *str);
  * Returns:
  *	 const char* ptr - Ptr to the HTTP Method
  ************************************************************************/
-const char *method_to_str(http_method_t method);
+const char* method_to_str(http_method_t method);
 
 /*!
  * \brief Print the HTTP headers.
@@ -518,16 +512,16 @@ const char *method_to_str(http_method_t method);
 
 #ifdef DEBUG
 void print_http_headers(
-        /*! [in] HTTP Message object. */
-        http_message_t *hmsg);
+    /*! [in] HTTP Message object. */
+    http_message_t* hmsg);
 #else
-#define print_http_headers(hmsg) \
-        do { \
-        } while (0)
+#define print_http_headers(hmsg)                                               \
+    do {                                                                       \
+    } while (0)
 #endif
 
-#ifdef __cplusplus
-} /* extern "C" */
-#endif /* __cplusplus */
+//#ifdef __cplusplus
+//} /* extern "C" */
+//#endif /* __cplusplus */
 
 #endif /* GENLIB_NET_HTTP_HTTPPARSER_H */

@@ -2,6 +2,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -91,9 +93,9 @@
 #define HTTP_E_TIMEDOUT -4
 #define HTTP_E_FILE_READ -5
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// #ifdef __cplusplus
+// extern "C" {
+// #endif
 
 /************************************************************************
  * Function: http_get_code_text
@@ -108,10 +110,10 @@ extern "C" {
  * Returns:
  *	 const char* ptr - pointer to the status message string
  ************************************************************************/
-const char *http_get_code_text(int statusCode);
+const char* http_get_code_text(int statusCode);
 
-#ifdef __cplusplus
-} /* extern C */
-#endif
+// #ifdef __cplusplus
+// } /* extern C */
+// #endif
 
 #endif /* GENLIB_NET_HTTP_STATCODES_H */

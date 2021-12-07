@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-12-04
+# Redistribution only with this Copyright remark. Last modified: 2021-12-07
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -66,9 +66,9 @@ set(UPNP_SOURCE_FILES
 
     ${PROJECT_SOURCE_DIR}/src/genlib/net/uri/uri.c
 
-    ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpparser.c
-    ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.c
-    ${PROJECT_SOURCE_DIR}/src/genlib/net/http/statcodes.c
+    ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
+    ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
+    ${PROJECT_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
     ${PROJECT_SOURCE_DIR}/src/genlib/util/list.c
     ${PROJECT_SOURCE_DIR}/src/genlib/util/membuffer.c
@@ -77,7 +77,7 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
     ${PROJECT_SOURCE_DIR}/src/api/UpnpString.cpp
     ${PROJECT_SOURCE_DIR}/src/api/upnpapi.cpp
-    ${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp
+    $<$<CONFIG:Debug>:${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
     ${PROJECT_SOURCE_DIR}/src/global.cpp
     $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/global_win32.cpp>

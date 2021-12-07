@@ -50,9 +50,11 @@
 //#include "config.h"
 
 #include "upnpapi.h"
-//#include "uri.h"
+#include "uri.h"
 
 #include <assert.h>
+
+extern unsigned int gIF_INDEX;
 
 /*!
  * \brief Returns a 1 if a char is a RESERVED char as defined in

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-05
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -53,7 +53,7 @@
 //#include "ThreadPool.h"
 //#include "UpnpStdInt.h"
 //#include "UpnpUniStd.h" /* for close() */
-#include "httpreadwrite.h"
+#include "httpreadwrite.hpp"
 //#include "membuffer.h"
 //#include "soaplib.h"
 //#include "ssdplib.h"
@@ -167,8 +167,10 @@ char gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN] = {'\0'};
 /*! IPv6 ULA or GUA prefix length. (extern'ed in upnp.h) */
 unsigned gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
 
-/*! Contains interface index. (extern'ed in upnp.h) */
-unsigned gIF_INDEX = (unsigned)-1;
+/* ! Contains interface index. (extern'ed in upnp.h) */
+// moved to global.cpp
+extern unsigned gIF_INDEX;
+// unsigned gIF_INDEX = (unsigned)-1;
 
 /*! local IPv4 port for the mini-server */
 unsigned short LOCAL_PORT_V4;
@@ -185,10 +187,12 @@ static Handle_Info* HandleTable[NUM_HANDLE];
 /*! a local dir which serves as webserver root */
 extern membuffer gDocumentRootDir;
 
-/*! Maximum content-length (in bytes) that the SDK will process on an incoming
+/* ! Maximum content-length (in bytes) that the SDK will process on an incoming
  * packet. Content-Length exceeding this size will be not processed and
  * error 413 (HTTP Error Code) will be returned to the remote end point. */
-size_t g_maxContentLength = DEFAULT_SOAP_CONTENT_LENGTH;
+// moved to global.cpp
+extern size_t g_maxContentLength;
+// size_t g_maxContentLength = DEFAULT_SOAP_CONTENT_LENGTH;
 
 /*! Global variable to determines the maximum number of
  *  events which can be queued for a given subscription before events begin

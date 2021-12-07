@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-11-27
+// Redistribution only with this Copyright remark. Last modified: 2021-12-07
 
 // This test should always run, reporting no failure
 
@@ -20,17 +20,8 @@ extern "C" {
     ASSERT_GE((VAL), (MIN));                                                   \
     ASSERT_LE((VAL), (MAX))
 
-/*
-// --- mock strerror ---------------------------------------
-class CMock_strerror {
-public:
-    MOCK_METHOD(char*, strerror, (int errnum));
-};
-CMock_strerror* ptrMock_strerror = nullptr;
-char* strerror(int errnum) {
-    return ptrMock_strerror->strerror(errnum);
-}
-*/
+namespace upnp {
+
 // testsuite with fixtures
 //------------------------
 class EmptyFixtureTestSuite : public ::testing::Test {
@@ -104,6 +95,8 @@ TEST(EmptyTestSuite, empty_gtest) {
     std::cout << "# Compiling tests for curent code base.\n";
 #endif
 }
+
+} // namespace upnp
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
