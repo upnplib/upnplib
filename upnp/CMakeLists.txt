@@ -64,7 +64,7 @@ set(UPNP_SOURCE_FILES
 
     ${PROJECT_SOURCE_DIR}/src/genlib/net/sock.c
 
-    ${PROJECT_SOURCE_DIR}/src/genlib/net/uri/uri.c
+    ${PROJECT_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
 
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-05
+// Redistribution only with this Copyright remark. Last modified: 2021-12-08
 
 #include "upnpmock/pthread.hpp"
 #include "upnpmock/stdio.hpp"
@@ -21,43 +21,39 @@ namespace upnp {
 //
 // Interface for the upnpdebug module
 // ----------------------------------
+// clang-format off
 class Iupnpdebug {
   public:
     virtual ~Iupnpdebug() {}
+
     virtual int UpnpInitLog(void) = 0;
     virtual void UpnpSetLogLevel(Upnp_LogLevel log_level) = 0;
     virtual void UpnpCloseLog(void) = 0;
-    virtual void UpnpSetLogFileNames(const char* newFileName,
-                                     const char* ignored) = 0;
+    virtual void UpnpSetLogFileNames(const char* newFileName, const char* ignored) = 0;
     virtual void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
-                            const char* DbgFileName, int DbgLineNo,
-                            const char* FmtStr, ...) = 0;
+            const char* DbgFileName, int DbgLineNo, const char* FmtStr, ...) = 0;
     virtual FILE* UpnpGetDebugFile(Upnp_LogLevel DLevel, Dbg_Module Module) = 0;
 };
 
 class Cupnpdebug : public Iupnpdebug {
   public:
-    virtual ~Cupnpdebug() {}
+    virtual ~Cupnpdebug() override {}
 
-    int UpnpInitLog(void) override { return ::UpnpInitLog(); }
+    int UpnpInitLog(void) override {
+        return ::UpnpInitLog(); }
     void UpnpSetLogLevel(Upnp_LogLevel log_level) override {
-        ::UpnpSetLogLevel(log_level);
-    }
-    void UpnpCloseLog(void) override { ::UpnpCloseLog(); }
-    void UpnpSetLogFileNames(const char* newFileName,
-                             const char* ignored) override {
-        ::UpnpSetLogFileNames(newFileName, ignored);
-    }
-    void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
-                    const char* DbgFileName, int DbgLineNo, const char* FmtStr,
-                    ...) override {
-        return;
-    }
-
-    FILE* UpnpGetDebugFile(Upnp_LogLevel DLevel, Dbg_Module Module) override {
-        return ::UpnpGetDebugFile(DLevel, Module);
-    }
+        return ::UpnpSetLogLevel(log_level); }
+    void UpnpCloseLog(void) override {
+        return ::UpnpCloseLog(); }
+    void UpnpSetLogFileNames( const char* newFileName, const char* ignored) override {
+        return ::UpnpSetLogFileNames(newFileName, ignored); }
+    void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module, const char* DbgFileName,
+                    int DbgLineNo, const char* FmtStr, ...) override {
+        return; }
+    FILE* UpnpGetDebugFile( Upnp_LogLevel DLevel, Dbg_Module Module) override {
+        return ::UpnpGetDebugFile(DLevel, Module); }
 };
+// clang-format on
 
 //
 // Mocked system calls

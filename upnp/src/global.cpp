@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-07
+// Redistribution only with this Copyright remark. Last modified: 2021-12-10
 
 // Here we only define global variables. There are no other references so we do
 // not have to compile additional sources only to access a global.
@@ -28,6 +28,7 @@ size_t g_maxContentLength = DEFAULT_SOAP_CONTENT_LENGTH;
 #include "upnpmock/stdio.hpp"
 #include "upnpmock/stdlib.hpp"
 #include "upnpmock/string.hpp"
+#include "upnpmock/netdb.hpp"
 
 namespace upnp
 // Yes, we have this global varibles in namespace ::upnp, but they are only
@@ -50,5 +51,8 @@ Bstdlib* stdlib_h = &stdlibObj;
 
 Bstring stringObj{};
 Bstring* string_h = &stringObj;
+
+Bnetdb netdbObj{};
+Bnetdb* netdb_h = &netdbObj;
 
 } // namespace upnp

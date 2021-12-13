@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-12-07
+# Redistribution only with this Copyright remark. Last modified: 2021-12-11
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -37,8 +37,8 @@ include_directories(
 # I have found a vague hint about the flag GTEST_LINKED_AS_SHARED_LIBRARY at
 # build/_deps/googletest-src/googletest/README.md
 add_compile_definitions(PRIVATE
-    OLD_TEST
     $<$<AND:$<BOOL:${UPNP_GOOGLETEST}>,$<BOOL:${BUILD_SHARED_LIBS}>>:GTEST_LINKED_AS_SHARED_LIBRARY>
+    OLD_TEST
 )
 
 # Due to issue https://github.com/google/googletest/issues/1325#issuecomment-903884914
@@ -55,6 +55,9 @@ link_libraries(${UPNP_GMOCK_LIBRARIES}
                # On MS Windows we link with the static pthreads4w library to
                # avoid error prone managing access to its .dll file.
                $<$<BOOL:${WIN32}>:${UPNP_PTHREADS_STATIC_LIBRARY}>
+               # On MS Windows we need winsocket and ip helper
+               $<$<BOOL:${WIN32}>:ws2_32>
+               $<$<BOOL:${WIN32}>:iphlpapi>
 )
 # For macOS we must tell the linker where it finds the external shared libraries.
 # This is linked into the executable. Alternative or additional you can also
@@ -84,8 +87,6 @@ set_target_properties(custom_gtest_tools PROPERTIES
         CXX_VISIBILITY_PRESET hidden
         VISIBILITY_INLINES_HIDDEN ON)
 target_compile_definitions(custom_gtest_tools PRIVATE UPNP_DLL UPNP_DLL_EXPORTS)
-target_link_libraries(custom_gtest_tools
-        $<$<BOOL:${WIN32}>:ws2_32>)
 add_dependencies(custom_gtest_tools gtest gtest_main gmock gmock_main)
 
 
@@ -95,13 +96,22 @@ add_dependencies(custom_gtest_tools gtest gtest_main gmock gmock_main)
 # The tests are build in reverse order. test_template.cpp will be build first.
 #set(ENV{GITHUB_ACTIONS} 1)
 
+# uri
+#----
+add_executable(test_uri
+    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+    ${PROJECT_SOURCE_DIR}/test_uri.cpp
+)
+add_test(NAME ctest_uri COMMAND test_uri)
+
+
 # httpparser
 #-----------
 add_executable(test_httpparser
     ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.c
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.c
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
@@ -109,9 +119,6 @@ add_executable(test_httpparser
 
     ${PROJECT_SOURCE_DIR}/test_httpparser.cpp
 )
-target_link_libraries(test_httpparser
-                      $<$<BOOL:${WIN32}>:ws2_32>
-                      $<$<BOOL:${WIN32}>:iphlpapi>)
 add_test(NAME ctest_httpparser COMMAND test_httpparser)
 
 
@@ -125,7 +132,7 @@ add_executable(test_httpreadwrite
 
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/sock.c
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
 
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
@@ -140,9 +147,6 @@ add_executable(test_httpreadwrite
 
     ${PROJECT_SOURCE_DIR}/test_httpreadwrite.cpp
 )
-target_link_libraries(test_httpreadwrite
-                      $<$<BOOL:${WIN32}>:ws2_32>
-                      $<$<BOOL:${WIN32}>:iphlpapi>)
 add_test(NAME ctest_httpreadwrite COMMAND test_httpreadwrite)
 
 # UpnpString
@@ -184,7 +188,7 @@ set(UPNP_UPNPAPI_SOURCE_FILES
 
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/sock.c
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
 
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
@@ -203,9 +207,7 @@ add_executable(test_upnpapi ${UPNP_UPNPAPI_SOURCE_FILES}
                $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/test_upnpapi_win32.cpp>
                $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/test_upnpapi_unix.cpp>)
 target_link_libraries(test_upnpapi
-                      custom_gtest_tools
-                      $<$<BOOL:${WIN32}>:ws2_32>
-                      $<$<BOOL:${WIN32}>:iphlpapi>)
+                      custom_gtest_tools)
 add_test(NAME ctest_upnpapi COMMAND test_upnpapi
 )
 
@@ -243,9 +245,7 @@ add_executable(test_custom_gtest_tools
         $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/test_tools_win32.cpp>
         $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/test_tools_unix.cpp>)
 target_link_libraries(test_custom_gtest_tools
-        custom_gtest_tools
-        $<$<BOOL:${WIN32}>:ws2_32>
-        $<$<BOOL:${WIN32}>:iphlpapi>)
+        custom_gtest_tools)
 add_test(NAME ctest_custom_gtest_tools COMMAND test_custom_gtest_tools)
 
 # simple test

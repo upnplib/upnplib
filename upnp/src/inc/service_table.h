@@ -47,7 +47,7 @@ extern "C" {
 //#include "ixml.h"
 //#include "upnp.h"
 #include "upnpdebug.h"
-#include "uri.h"
+#include "uri.hpp"
 
 //#include <stdio.h>
 //#include <time.h>

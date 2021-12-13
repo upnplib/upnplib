@@ -2,6 +2,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-11
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -77,81 +79,60 @@ extern "C" {
 
 #define HTTP_SUCCESS 1
 
-enum hostType
-{
-        HOSTNAME,
-        IPv4address
-};
+enum hostType { HOSTNAME, IPv4address };
 
-enum pathType
-{
-        ABS_PATH,
-        REL_PATH,
-        OPAQUE_PART
-};
+enum pathType { ABS_PATH, REL_PATH, OPAQUE_PART };
 
 #ifdef _WIN32
 /* there is a conflict in windows with other symbols. */
-enum uriType
-{
-        absolute,
-        relative
-};
+enum uriType { absolute, relative };
 #else
-enum uriType
-{
-        ABSOLUTE,
-        RELATIVE
-};
+enum uriType { ABSOLUTE, RELATIVE };
 #endif
 
 /*!
  * \brief Buffer used in parsinghttp messages, urls, etc. generally this simply
  * holds a pointer into a larger array.
  */
-typedef struct TOKEN
-{
-        const char *buff;
-        size_t size;
+typedef struct TOKEN {
+    const char* buff;
+    size_t size;
 } token;
 
 /*!
  * \brief Represents a host port: e.g. "127.127.0.1:80" text is a token
  * pointing to the full string representation.
  */
-typedef struct HOSTPORT
-{
-        /*! Full host port. */
-        token text;
-        /* Network Byte Order */
-        struct sockaddr_storage IPaddress;
+typedef struct HOSTPORT {
+    /*! Full host port. */
+    token text;
+    /* Network Byte Order */
+    struct sockaddr_storage IPaddress;
 } hostport_type;
 
 /*!
  * \brief Represents a URI used in parse_uri and elsewhere
  */
-typedef struct URI
-{
-        enum uriType type;
-        token scheme;
-        enum pathType path_type;
-        token pathquery;
-        token fragment;
-        hostport_type hostport;
+typedef struct URI {
+    enum uriType type;
+    token scheme;
+    enum pathType path_type;
+    token pathquery;
+    token fragment;
+    hostport_type hostport;
 } uri_type;
 
 /*!
  * \brief Represents a list of URLs as in the "callback" header of SUBSCRIBE
  * message in GENA. "char *" URLs holds dynamic memory.
  */
-typedef struct URL_LIST
-{
-        /*! */
-        size_t size;
-        /*! All the urls, delimited by <> */
-        char *URLs;
-        /*! */
-        uri_type *parsedURLs;
+typedef struct URL_LIST {
+    /*! */
+    size_t size;
+    /*! All the urls, delimited by <> */
+    char* URLs;
+    /*! */
+    uri_type* parsedURLs;
 } URL_list;
 
 /*!
@@ -167,12 +148,12 @@ typedef struct URL_LIST
  * \return
  */
 int replace_escaped(
-        /*! [in,out] String of characters. */
-        char *in,
-        /*! [in] Index at which to start checking the characters. */
-        size_t index,
-        /*! [out] . */
-        size_t *max);
+    /*! [in,out] String of characters. */
+    char* in,
+    /*! [in] Index at which to start checking the characters. */
+    size_t index,
+    /*! [out] . */
+    size_t* max);
 
 /*!
  * \brief Copies one URL_list into another.
@@ -186,10 +167,10 @@ int replace_escaped(
  * 	\li UPNP_E_OUTOF_MEMORY - On Failure to allocate memory.
  */
 int copy_URL_list(
-        /*! [in] Source URL list. */
-        URL_list *in,
-        /*! [out] Destination URL list. */
-        URL_list *out);
+    /*! [in] Source URL list. */
+    URL_list* in,
+    /*! [out] Destination URL list. */
+    URL_list* out);
 
 /*!
  * \brief Frees the memory associated with a URL_list.
@@ -198,20 +179,20 @@ int copy_URL_list(
  * pointer to the list itself ( i.e. does NOT free(list)).
  */
 void free_URL_list(
-        /*! [in] URL list object. */
-        URL_list *list);
+    /*! [in] URL list object. */
+    URL_list* list);
 
 /*!
  * \brief Function useful in debugging for printing a parsed uri.
  */
 #ifdef DEBUG
 void print_uri(
-        /*! [in] URI object to print. */
-        uri_type *in);
+    /*! [in] URI object to print. */
+    uri_type* in);
 #else
-#define print_uri(in) \
-        do { \
-        } while (0)
+#define print_uri(in)                                                          \
+    do {                                                                       \
+    } while (0)
 #endif
 
 /*!
@@ -219,12 +200,12 @@ void print_uri(
  */
 #ifdef DEBUG
 void print_token(
-        /*! [in] Token object to print. */
-        token *in);
+    /*! [in] Token object to print. */
+    token* in);
 #else
-#define print_token(in) \
-        do { \
-        } while (0)
+#define print_token(in)                                                        \
+    do {                                                                       \
+    } while (0)
 #endif
 
 /*!
@@ -236,10 +217,10 @@ void print_token(
  * 	\li > 0, if string1 is greater than string2.
  */
 int token_string_casecmp(
-        /*! [in] Token object whose buffer is to be compared. */
-        token *in1,
-        /*! [in] String of characters to compare with. */
-        const char *in2);
+    /*! [in] Token object whose buffer is to be compared. */
+    token* in1,
+    /*! [in] String of characters to compare with. */
+    const char* in2);
 
 /*!
  * \brief Compares two tokens.
@@ -250,10 +231,10 @@ int token_string_casecmp(
  * 	\li > 0, if string1 is greater than string2.
  */
 int token_cmp(
-        /*! [in] First token object whose buffer is to be compared. */
-        token *in1,
-        /*! [in] Second token object used for the comparison. */
-        token *in2);
+    /*! [in] First token object whose buffer is to be compared. */
+    token* in1,
+    /*! [in] Second token object used for the comparison. */
+    token* in2);
 
 /*!
  * \brief Removes http escaped characters such as: "%20" and replaces them with
@@ -265,10 +246,10 @@ int token_cmp(
  * \return UPNP_E_SUCCESS.
  */
 int remove_escaped_chars(
-        /*! [in,out] String of characters to be modified. */
-        char *in,
-        /*! [in,out] Size limit for the number of characters. */
-        size_t *size);
+    /*! [in,out] String of characters to be modified. */
+    char* in,
+    /*! [in,out] Size limit for the number of characters. */
+    size_t* size);
 
 /*!
  * \brief Removes ".", and ".." from a path.
@@ -293,10 +274,10 @@ int remove_escaped_chars(
  * 	\li UPNP_E_INVALID_URL - Failure to resolve URL.
  */
 int remove_dots(
-        /*! [in] String of characters from which "dots" have to be removed. */
-        char *in,
-        /*! [in] Size limit for the number of characters. */
-        size_t size);
+    /*! [in] String of characters from which "dots" have to be removed. */
+    char* in,
+    /*! [in] Size limit for the number of characters. */
+    size_t size);
 
 /*!
  * \brief resolves a relative url with a base url returning a NEW (dynamically
@@ -312,11 +293,11 @@ int remove_dots(
  *
  * \return
  */
-char *resolve_rel_url(
-        /*! [in] Base URL. */
-        char *base_url,
-        /*! [in] Relative URL. */
-        char *rel_url);
+char* resolve_rel_url(
+    /*! [in] Base URL. */
+    char* base_url,
+    /*! [in] Relative URL. */
+    char* rel_url);
 
 /*!
  * \brief Parses a uri as defined in http://www.ietf.org/rfc/rfc2396.txt
@@ -331,13 +312,13 @@ char *resolve_rel_url(
  * \return
  */
 int parse_uri(
-        /*! [in] Character string containing uri information to be parsed. */
-        const char *in,
-        /*! [in] Maximum limit on the number of characters. */
-        size_t max,
-        /*! [out] Output parameter which will have the parsed uri information.
-         */
-        uri_type *out);
+    /*! [in] Character string containing uri information to be parsed. */
+    const char* in,
+    /*! [in] Maximum limit on the number of characters. */
+    size_t max,
+    /*! [out] Output parameter which will have the parsed uri information.
+     */
+    uri_type* out);
 
 /*!
  * \brief
@@ -345,12 +326,12 @@ int parse_uri(
  * \return
  */
 int parse_token(
-        /*! [in] . */
-        char *in,
-        /*! [out] . */
-        token *out,
-        /*! [in] . */
-        int max_size);
+    /*! [in] . */
+    char* in,
+    /*! [out] . */
+    token* out,
+    /*! [in] . */
+    int max_size);
 
 #ifdef __cplusplus
 }
