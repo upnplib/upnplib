@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-13
+// Redistribution only with this Copyright remark. Last modified: 2021-12-16
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -18,7 +18,7 @@ namespace upnp {
 
 //
 // Interface for the uri module
-// ----------------------------
+// ============================
 // TODO: complete the interface
 // clang-format off
 
@@ -45,7 +45,7 @@ class Curi : Iuri {
 
 //
 // Mocking
-// -------
+// =======
 class Mock_netdb : public Bnetdb {
     // Class to mock the free system functions.
     Bnetdb* m_oldptr;
@@ -66,111 +66,37 @@ class Mock_netdb : public Bnetdb {
 };
 
 //
-// testsuite for uri
-//------------------
-TEST(UriTestSuite, parse_scheme_of_uri) {
-    ::token out;
-
-    EXPECT_EQ(::parse_scheme("https://dummy.net:80/page", 25, &out), 5);
-    EXPECT_EQ(out.size, 5);
-#ifdef OLD_TEST
-    ::std::cerr << "  BUG! Only the http scheme (e.g. https) should be "
-                   "returned, not the whole URI.\n";
-    EXPECT_STREQ(out.buff, "https://dummy.net:80/page");
-#else
-    EXPECT_STREQ(out.buff, "https") << "  # Only the http scheme (e.g. https) "
-                                       "should be returned, not the whole URI.";
-#endif
-    EXPECT_EQ(::parse_scheme("https://dummy.net:80/page", 6, &out), 5);
-    EXPECT_EQ(out.size, 5);
-#ifdef OLD_TEST
-    // same as above
-    EXPECT_STREQ(out.buff, "https://dummy.net:80/page");
-#else
-    EXPECT_STREQ(out.buff, "https");
-#endif
-    EXPECT_EQ(::parse_scheme("h:tps://dummy.net:80/page", 32, &out), 1);
-    EXPECT_EQ(out.size, 1);
-#ifdef OLD_TEST
-    // same as above
-    EXPECT_STREQ(out.buff, "h:tps://dummy.net:80/page");
-#else
-    EXPECT_STREQ(out.buff, "h");
-#endif
-    EXPECT_EQ(::parse_scheme("https://dummy.net:80/page", 5, &out), 0);
-    EXPECT_EQ(out.size, 0);
-    EXPECT_STREQ(out.buff, nullptr);
-    EXPECT_EQ(::parse_scheme("1ttps://dummy.net:80/page", 32, &out), 0);
-    EXPECT_EQ(out.size, 0);
-    EXPECT_STREQ(out.buff, nullptr);
-    EXPECT_EQ(::parse_scheme("h§tps://dummy.net:80/page", 32, &out), 0);
-    EXPECT_EQ(out.size, 0);
-    EXPECT_STREQ(out.buff, nullptr);
-    EXPECT_EQ(::parse_scheme(":ttps://dummy.net:80/page", 32, &out), 0);
-    EXPECT_EQ(out.size, 0);
-    EXPECT_STREQ(out.buff, nullptr);
-    EXPECT_EQ(::parse_scheme("h*tps://dummy.net:80/page", 32, &out), 0);
-    EXPECT_EQ(out.size, 0);
-    EXPECT_STREQ(out.buff, nullptr);
-}
-
-TEST(UriTestSuite, check_token_string_casecmp) {
-    Curi uriObj;
-
-    token in1{"some entry", 10};
-
-    const char in2[] = "some entry";
-    EXPECT_EQ(uriObj.token_string_casecmp(&in1, in2), 0);
-
-    // < 0, if string1 is less than string2.
-    const char in3[] = "some longer entry";
-#ifdef OLD_TEST
-    ::std::cerr << "  BUG! With string1 less than string2 it should return < 0 "
-                   "not > 0.\n";
-    EXPECT_GT(uriObj.token_string_casecmp(&in1, in3), 0);
-#else
-    EXPECT_LT(uriObj.token_string_casecmp(&in1, in3), 0)
-        << "  # With string1 less than string2 it should return < 0 not > 0.";
-#endif
-
-    // > 0, if string1 is greater than string2.
-    const char in4[] = "entry";
-    EXPECT_GT(uriObj.token_string_casecmp(&in1, in4), 0);
-}
-
+// parse_hostport() function: tests from the uri module
+// ====================================================
 #if false
-// This test is only for humans to get an idea what's going on. If you need it,
-// just enable it temporary. It is not intended to be permanent part of the
-// tests. It doesn't really test things.
+TEST(HostportIp4TestSuite, check_getaddrinfo)
+// This is for humans only to check what getaddrinfo() returns exactly so we can
+// correct mock it. Don't set '#if true' permanently because it calls the real
+// ::getaddrinfo() and will slow down this gtest dramatically. It calls DNS
+// internet server that may have a long delay.
+{
+    const struct addrinfo hints {
+        {}, AF_INET, {}, {}, {}, {}, {}, {}
+    };
+    struct addrinfo* res{};
 
-TEST(UriTestSuite, parse_uri) {
-    // const char*
-    // uri_str{"https://example-site.de:80/home-page?query-something#section1"};
-    const char* uri_str{"scheme://example-site.de:80/path?query#fragment"};
-    uri_type out;
-    Curi uriObj;
+    int rc = ::getaddrinfo("http://google.com", NULL, &hints, &res);
+    ::std::cout << "DEBUG: return info = " << ::gai_strerror(rc) << "(" << rc
+                << ")\n"
+                << "DEBUG: EAI_NONAME has number " << EAI_NONAME << '\n';
 
-    // Execute unit
-    EXPECT_EQ(uriObj.parse_uri(uri_str, 64, &out), HTTP_SUCCESS);
-    ::std::cerr << "DEBUG: out.scheme.buff = " << out.scheme.buff
-                << ::std::endl;
-    ::std::cerr << "DEBUG: out.type ABSOLUTE(0), RELATIVE(1) = " << out.type
-                << ::std::endl;
-    ::std::cerr
-        << "DEBUG: out.path_type ABS_PATH(0), REL_PATH(1), OPAQUE_PART(2) = "
-        << out.path_type << ::std::endl;
-    ::std::cerr << "DEBUG: out.hostport.text.buff = " << out.hostport.text.buff
-                << ::std::endl;
-    ::std::cerr << "DEBUG: out.pathquery.buff = " << out.pathquery.buff
-                << ::std::endl;
-    ::std::cerr << "DEBUG: out.fragment.buff = " << out.fragment.buff
-                << ::std::endl;
-    ::std::cerr << "DEBUG: out.fragment.size = " << (signed)out.fragment.size
-                << ::std::endl;
+    EXPECT_EQ(::getaddrinfo("127.0.0.1", NULL, &hints, &res), 0);
+    EXPECT_EQ(::getaddrinfo("google.com", NULL, &hints, &res), 0);
+    //  EAI_NONAME(-2) = Name or service not known
+    EXPECT_EQ(::getaddrinfo("http://127.0.0.1", NULL, &hints, &res), EAI_NONAME);
+    EXPECT_EQ(::getaddrinfo("http://google.com", NULL, &hints, &res), EAI_NONAME);
 }
 #endif
 
-class UriIp4FTestSuite : public ::testing::Test {
+//
+// parse_hostport() checks that getaddrinfo() isn't called.
+// --------------------------------------------------------
+class HostportIp4FTestSuite : public ::testing::Test {
   protected:
     Mock_netdb m_mocked_netdb;
     hostport_type m_out;
@@ -180,7 +106,7 @@ class UriIp4FTestSuite : public ::testing::Test {
     struct sockaddr_in m_sa {};
     struct addrinfo m_res {};
 
-    UriIp4FTestSuite() {
+    HostportIp4FTestSuite() {
         // Complete the addrinfo structure
         m_res.ai_addrlen = sizeof(struct sockaddr);
         m_res.ai_addr = (sockaddr*)&m_sa;
@@ -189,14 +115,13 @@ class UriIp4FTestSuite : public ::testing::Test {
         // unexpected call but it should not occur. An ip address should not be
         // asked for name resolution.
         ON_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _))
-            .WillByDefault(
-                DoAll(SetArgPointee<3>(&m_res), Return(EAI_FAIL)));
+            .WillByDefault(DoAll(SetArgPointee<3>(&m_res), Return(EAI_NONAME)));
         EXPECT_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _)).Times(0);
         EXPECT_CALL(m_mocked_netdb, freeaddrinfo(_)).Times(0);
     }
 };
 
-TEST_F(UriIp4FTestSuite, parse_hostport_ip_address_without_port) {
+TEST_F(HostportIp4FTestSuite, parse_ip_address_without_port) {
     // ip address without port
     EXPECT_EQ(parse_hostport("192.168.1.1", 80, &m_out), 11);
     EXPECT_STREQ(m_out.text.buff, "192.168.1.1");
@@ -206,7 +131,7 @@ TEST_F(UriIp4FTestSuite, parse_hostport_ip_address_without_port) {
     EXPECT_STREQ(inet_ntoa(m_sai4->sin_addr), "192.168.1.1");
 }
 
-TEST_F(UriIp4FTestSuite, parse_hostport_ip_address_with_port) {
+TEST_F(HostportIp4FTestSuite, parse_ip_address_with_port) {
     // Ip address with port
     EXPECT_EQ(parse_hostport("192.168.1.2:443", 80, &m_out), 15);
     EXPECT_STREQ(m_out.text.buff, "192.168.1.2:443");
@@ -216,14 +141,29 @@ TEST_F(UriIp4FTestSuite, parse_hostport_ip_address_with_port) {
     EXPECT_STREQ(inet_ntoa(m_sai4->sin_addr), "192.168.1.2");
 }
 
-TEST(UriIp4TestSuite, parse_hostport_ip_address_with_scheme_will_fail) {
+//
+// parse_hostport() calls should fail
+// ----------------------------------
+class HostportFailIp4PTestSuite
+    : public ::testing::TestWithParam<
+          //           uristr,      ipaddr,      port
+          ::std::tuple<const char*, const char*, int>> {};
+
+TEST_P(HostportFailIp4PTestSuite, parse_name_with_scheme) {
     Mock_netdb mocked_netdb;
+
+    // Get parameter
+    ::std::tuple params = GetParam();
+    const char* uristr = ::std::get<0>(params);
+    const char* ipaddr = ::std::get<1>(params);
+    const int port = ::std::get<2>(params);
+    const int size = ::strcspn(uristr, "/");
 
     // Provide structures to mock system call for network address
     struct sockaddr_in sa {};
     sa.sin_family = AF_INET;
-    sa.sin_port = htons(80);
-    inet_pton(AF_INET, "192.168.1.3", &sa.sin_addr);
+    sa.sin_port = htons(port);
+    inet_pton(AF_INET, ipaddr, &sa.sin_addr);
 
     struct addrinfo res {};
     res.ai_family = sa.sin_family;
@@ -232,69 +172,48 @@ TEST(UriIp4TestSuite, parse_hostport_ip_address_with_scheme_will_fail) {
 
     // Mock for network address system call
     EXPECT_CALL(mocked_netdb, getaddrinfo(_, _, _, _))
-        .WillOnce(DoAll(SetArgPointee<3>(&res), Return(0)));
-    EXPECT_CALL(mocked_netdb, freeaddrinfo(_)).Times(1);
+        .WillOnce(DoAll(SetArgPointee<3>(&res), Return(EAI_NONAME)));
+    EXPECT_CALL(mocked_netdb, freeaddrinfo(_)).Times(0);
 
-    // Call unit for ip address with scheme
+    // Provide arguments to execute the unit
     hostport_type out{};
     struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.IPaddress;
 
-    // Execute unit without port should fail
-    EXPECT_EQ(parse_hostport("http://192.168.1.3", 80, &out),
-              UPNP_E_INVALID_URL);
-    EXPECT_EQ(out.text.buff, nullptr);
+    // Execute the unit
+    EXPECT_EQ(parse_hostport(uristr, 80, &out), UPNP_E_INVALID_URL);
+    EXPECT_STREQ(out.text.buff, nullptr);
     EXPECT_EQ(out.text.size, 0);
-    EXPECT_EQ(sai4->sin_family, AF_INET);
-    EXPECT_EQ(sai4->sin_port, htons(80));
-    EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "192.168.1.3");
+    EXPECT_EQ(sai4->sin_family, AF_UNSPEC);
+    EXPECT_EQ(sai4->sin_port, 0);
+    EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "0.0.0.0");
 }
 
-TEST(UriIp4TestSuite,
-     parse_hostport_ip_address_with_scheme_and_port_will_fail) {
-    Mock_netdb mocked_netdb;
-
-    // Provide structures to mock system call for network address
-    struct sockaddr_in sa {};
-    sa.sin_family = AF_INET;
-    sa.sin_port = htons(443);
-    inet_pton(AF_INET, "192.168.1.4", &sa.sin_addr);
-
-    struct addrinfo res {};
-    res.ai_family = sa.sin_family;
-    res.ai_addrlen = sizeof(struct sockaddr);
-    res.ai_addr = (sockaddr*)&sa;
-
-    // Mock for network address system call
-    EXPECT_CALL(mocked_netdb, getaddrinfo(_, _, _, _))
-        .WillRepeatedly(DoAll(SetArgPointee<3>(&res), Return(0)));
-    EXPECT_CALL(mocked_netdb, freeaddrinfo(_)).Times(1);
-
-    // Call unit for ip address with scheme
-    hostport_type out{};
-    struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.IPaddress;
-
-    // Execute unit with port should fail
-    EXPECT_EQ(parse_hostport("http://192.168.1.4:443", 80, &out),
-              UPNP_E_INVALID_URL);
-    EXPECT_EQ(out.text.buff, nullptr);
-    EXPECT_EQ(out.text.size, 0);
-    EXPECT_EQ(sai4->sin_family, AF_INET);
-    EXPECT_EQ(sai4->sin_port, htons(443));
-    EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "192.168.1.4");
-}
+INSTANTIATE_TEST_SUITE_P(
+    uri, HostportFailIp4PTestSuite,
+    ::testing::Values(
+        //                 uristr,      ipaddr,     port
+        ::std::make_tuple("http://192.168.1.3", "192.168.1.3", 80),
+        ::std::make_tuple("/192.168.1.4:433", "192.168.1.4", 433),
+        ::std::make_tuple("http://example.com/site", "192.168.1.5", 80),
+        ::std::make_tuple(":example.com:443/site", "192.168.1.6", 433)));
 
 //
-// Ip4 Parameterized test suite
-// ############################
-//
-class UriIp4PTestSuite : public ::testing::TestWithParam<
-                             ::std::tuple<const char*, const char*, int>> {};
+// parse_hostport() calls should be successful
+// -------------------------------------------
+class HostportIp4PTestSuite : public ::testing::TestWithParam<
+                                  //           uristr,      ipaddr,      port
+                                  ::std::tuple<const char*, const char*, int>> {
+};
 
-TEST_P(UriIp4PTestSuite, parse_hostport_successful) {
+TEST_P(HostportIp4PTestSuite, parse_hostport_successful) {
     Mock_netdb mocked_netdb;
-    const char* uristr = ::std::get<0>(GetParam());
-    const char* ipaddr = ::std::get<1>(GetParam());
-    int port = ::std::get<2>(GetParam());
+
+    // Get parameter
+    ::std::tuple params = GetParam();
+    const char* uristr = ::std::get<0>(params);
+    const char* ipaddr = ::std::get<1>(params);
+    const int port = ::std::get<2>(params);
+    const int size = ::strcspn(uristr, "/");
 
     // Provide structures to mock system call for network address
     struct sockaddr_in sa {};
@@ -312,22 +231,23 @@ TEST_P(UriIp4PTestSuite, parse_hostport_successful) {
         .WillOnce(DoAll(SetArgPointee<3>(&res), Return(0)));
     EXPECT_CALL(mocked_netdb, freeaddrinfo(_)).Times(1);
 
-    // Call unit for address name without port
+    // Provide arguments to execute the unit
     hostport_type out{};
     struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.IPaddress;
 
-    EXPECT_EQ(parse_hostport(uristr, 80, &out), ::strcspn(uristr, "/"));
+    // Execute the unit
+    EXPECT_EQ(parse_hostport(uristr, 80, &out), size);
     EXPECT_STREQ(out.text.buff, uristr);
-    EXPECT_EQ(out.text.size, ::strcspn(uristr, "/"));
+    EXPECT_EQ(out.text.size, size);
     EXPECT_EQ(sai4->sin_family, AF_INET);
     EXPECT_EQ(sai4->sin_port, htons(port));
     EXPECT_STREQ(inet_ntoa(sai4->sin_addr), ipaddr);
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    uri, UriIp4PTestSuite,
+    uri, HostportIp4PTestSuite,
     ::testing::Values(
-        //                 uristr,       ipaddr,      port
+        //                 uristr,      ipaddr,     port
         ::std::make_tuple("localhost", "127.0.0.1", 80),
         ::std::make_tuple("example.com", "192.168.1.3", 80),
         ::std::make_tuple("example.com:433", "192.168.1.4", 433),
@@ -337,7 +257,7 @@ INSTANTIATE_TEST_SUITE_P(
                           "192.168.1.5", 433)));
 
 //
-TEST(UriIp6TestSuite, parse_hostport_without_name_resolution)
+TEST(HostportIp6TestSuite, parse_hostport_without_name_resolution)
 // TODO: Improve ip6 tests.
 {
     hostport_type out;
@@ -355,6 +275,312 @@ TEST(UriIp6TestSuite, parse_hostport_without_name_resolution)
     EXPECT_EQ(sai6->sin6_port, htons(443));
     inet_ntop(AF_INET6, (const void*)sai6->sin6_addr.s6_addr, dst, sizeof(dst));
     EXPECT_STREQ(dst, "2001:db8:85a3:8d3:1319:8a2e:370:7348");
+}
+
+//
+// token_string_casecmp() function: tests from the uri module
+// ==========================================================
+TEST(UriTestSuite, check_token_string_casecmp) {
+    Curi uriObj;
+
+    token in1{"some entry", 10};
+
+    const char in2[] = "some entry";
+    EXPECT_EQ(uriObj.token_string_casecmp(&in1, in2), 0);
+
+    // < 0, if string1 is less than string2.
+    const char in3[] = "some longer entry";
+#ifdef OLD_TEST
+    ::std::cout << "  BUG! With string1 less than string2 it should return < 0 "
+                   "not > 0.\n";
+    EXPECT_GT(uriObj.token_string_casecmp(&in1, in3), 0);
+#else
+    EXPECT_LT(uriObj.token_string_casecmp(&in1, in3), 0)
+        << "  # With string1 less than string2 it should return < 0 not > 0.";
+#endif
+
+    // > 0, if string1 is greater than string2.
+    const char in4[] = "entry";
+    EXPECT_GT(uriObj.token_string_casecmp(&in1, in4), 0);
+}
+
+//
+// parse_uri() function: tests from the uri module
+// ===============================================
+#if false
+TEST(UriTestSuite, parse_uri_simple_call)
+// This test is only for humans to get an idea what's going on. If you need it,
+// set '#if true' only temporary. It is not intended to be permanent part of
+// the tests. It doesn't really test things and because unmocked, it queries
+// DNS server on the internet that may have long delays.
+{
+    const char* uri_str{"scheme://example-site.de:80/uripath?uriquery#urifragment"};
+    // const char* uri_str{"mailto:a@b.com"};
+    uri_type out;
+    Curi uriObj;
+
+    // Execute unit
+    EXPECT_EQ(uriObj.parse_uri(uri_str, 64, &out), HTTP_SUCCESS);
+    ::std::cout << "DEBUG: out.scheme.buff = " << out.scheme.buff
+                << ::std::endl;
+    ::std::cout << "DEBUG: out.type ABSOLUTE(0), RELATIVE(1) = " << out.type
+                << ::std::endl;
+    ::std::cout
+        << "DEBUG: out.path_type ABS_PATH(0), REL_PATH(1), OPAQUE_PART(2) = "
+        << out.path_type << ::std::endl;
+    ::std::cout << "DEBUG: out.hostport.text.buff = " << out.hostport.text.buff
+                << ::std::endl;
+    ::std::cout << "DEBUG: out.pathquery.buff = " << out.pathquery.buff
+                << ::std::endl;
+    ::std::cout << "DEBUG: out.fragment.buff = " << out.fragment.buff
+                << ::std::endl;
+    ::std::cout << "DEBUG: out.fragment.size = " << (signed)out.fragment.size
+                << ::std::endl;
+}
+#endif
+
+TEST(UriTestSuite, parse_scheme_of_uri) {
+    ::token out;
+
+    EXPECT_EQ(::parse_scheme("https://dummy.net:80/page", 6, &out), 5);
+    EXPECT_EQ(out.size, 5);
+    EXPECT_STREQ(out.buff, "https://dummy.net:80/page");
+    EXPECT_EQ(::parse_scheme("https://dummy.net:80/page", 5, &out), 0);
+    EXPECT_EQ(out.size, 0);
+    EXPECT_STREQ(out.buff, nullptr);
+    EXPECT_EQ(::parse_scheme("h:tps://dummy.net:80/page", 32, &out), 1);
+    EXPECT_EQ(out.size, 1);
+    EXPECT_STREQ(out.buff, "h:tps://dummy.net:80/page");
+    EXPECT_EQ(::parse_scheme("1ttps://dummy.net:80/page", 32, &out), 0);
+    EXPECT_EQ(out.size, 0);
+    EXPECT_STREQ(out.buff, nullptr);
+    EXPECT_EQ(::parse_scheme("h§tps://dummy.net:80/page", 32, &out), 0);
+    EXPECT_EQ(out.size, 0);
+    EXPECT_STREQ(out.buff, nullptr);
+    EXPECT_EQ(::parse_scheme(":ttps://dummy.net:80/page", 32, &out), 0);
+    EXPECT_EQ(out.size, 0);
+    EXPECT_STREQ(out.buff, nullptr);
+    EXPECT_EQ(::parse_scheme("h*tps://dummy.net:80/page", 32, &out), 0);
+    EXPECT_EQ(out.size, 0);
+    EXPECT_STREQ(out.buff, nullptr);
+    EXPECT_EQ(::parse_scheme("mailto:a@b.com", 7, &out), 6);
+    EXPECT_EQ(out.size, 6);
+    EXPECT_STREQ(out.buff, "mailto:a@b.com");
+    EXPECT_EQ(::parse_scheme("mailto:a@b.com", 6, &out), 0);
+    EXPECT_EQ(out.size, 0);
+    EXPECT_STREQ(out.buff, nullptr);
+}
+
+class UriFTestSuite : public ::testing::Test {
+  protected:
+    Mock_netdb m_mocked_netdb;
+    uri_type m_out;
+    struct sockaddr_in* m_sai4 = (struct sockaddr_in*)&m_out.hostport.IPaddress;
+
+    // Provide empty structures for mocking. Will be filled in the tests.
+    struct sockaddr_in m_sa {};
+    struct addrinfo m_res {};
+
+    UriFTestSuite() {
+        // Complete the addrinfo structure
+        m_res.ai_addrlen = sizeof(struct sockaddr);
+        m_res.ai_addr = (sockaddr*)&m_sa;
+    }
+};
+
+TEST_F(UriFTestSuite, parse_absolute_uri) {
+    // Set values to mock system call for network address
+    m_sa.sin_family = AF_INET;
+    m_res.ai_family = m_sa.sin_family;
+    m_sa.sin_port = htons(80);
+    inet_pton(AF_INET, "192.168.10.10", &m_sa.sin_addr);
+
+    // Mock for network address system call
+    EXPECT_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _))
+        .WillOnce(DoAll(SetArgPointee<3>(&m_res), Return(0)));
+    EXPECT_CALL(m_mocked_netdb, freeaddrinfo(_)).Times(1);
+
+    // Execute the unit
+#ifdef OLD_TEST
+    ::std::cout << "  BUG! parse_uri must fail with to short max size instead "
+                   "of returning wrong values!\n";
+    EXPECT_EQ(
+        parse_uri("https://example-site.de:80/uri/path?uriquery#urifragment",
+                  128, &m_out),
+        HTTP_SUCCESS);
+#else
+    EXPECT_EQ(
+        parse_uri("https://example-site.de:80/uri/path?uriquery#urifragment", 7,
+                  &m_out),
+        UPNP_E_INVALID_URL);
+#endif
+    // Check the uri-parts scheme, hostport, pathquery and fragment
+    EXPECT_STREQ(m_out.scheme.buff,
+                 "https://example-site.de:80/uri/path?uriquery#urifragment");
+    EXPECT_STREQ(m_out.hostport.text.buff,
+                 "example-site.de:80/uri/path?uriquery#urifragment");
+    EXPECT_STREQ(m_out.pathquery.buff, "/uri/path?uriquery#urifragment");
+    EXPECT_STREQ(m_out.fragment.buff, "urifragment");
+
+    ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
+                   "ABSOLUTE constant name. See issue #3.\n";
+#ifdef _WIN32
+    EXPECT_EQ(m_out.type, 1); // What ever this means.
+#else
+    EXPECT_EQ(m_out.type, ABSOLUTE);
+#endif
+    EXPECT_EQ(m_out.path_type, ABS_PATH);
+    EXPECT_EQ(m_sai4->sin_family, AF_INET);
+    EXPECT_EQ(m_sai4->sin_port, htons(80));
+    EXPECT_STREQ(inet_ntoa(m_sai4->sin_addr), "192.168.10.10");
+}
+
+TEST_F(UriFTestSuite, parse_relative_uri_with_authority_and_absolute_path) {
+    // Set values to mock system call for network address
+    m_sa.sin_family = AF_INET;
+    m_res.ai_family = m_sa.sin_family;
+    m_sa.sin_port = htons(80);
+    inet_pton(AF_INET, "192.168.10.10", &m_sa.sin_addr);
+
+    // Mock for network address system call
+    EXPECT_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _))
+        .WillOnce(DoAll(SetArgPointee<3>(&m_res), Return(0)));
+    EXPECT_CALL(m_mocked_netdb, freeaddrinfo(_)).Times(1);
+
+    // Execute the unit
+    EXPECT_EQ(parse_uri("//example-site.de:80/uri/path?uriquery#urifragment",
+                        51, &m_out),
+              HTTP_SUCCESS);
+    // Check the uri-parts scheme, hostport, pathquery and fragment
+    EXPECT_STREQ(m_out.scheme.buff, nullptr);
+    EXPECT_STREQ(m_out.hostport.text.buff,
+                 "example-site.de:80/uri/path?uriquery#urifragment");
+    EXPECT_STREQ(m_out.pathquery.buff, "/uri/path?uriquery#urifragment");
+    EXPECT_STREQ(m_out.fragment.buff, "urifragment");
+
+    ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
+                   "ABSOLUTE constant name. See issue #3.\n";
+#ifdef _WIN32
+    EXPECT_EQ(m_out.type, 2); // What ever this means
+#else
+    EXPECT_EQ(m_out.type, RELATIVE);
+#endif
+    EXPECT_EQ(m_out.path_type, ABS_PATH);
+    EXPECT_EQ(m_sai4->sin_family, AF_INET);
+    EXPECT_EQ(m_sai4->sin_port, htons(80));
+    EXPECT_STREQ(inet_ntoa(m_sai4->sin_addr), "192.168.10.10");
+}
+
+TEST_F(UriFTestSuite, parse_relative_uri_with_absolute_path) {
+    // Set values to mock system call for network address
+    m_sa.sin_family = AF_UNSPEC;
+    m_res.ai_family = m_sa.sin_family;
+    m_sa.sin_port = htons(0);
+    inet_pton(AF_INET, "0.0.0.0", &m_sa.sin_addr);
+
+    // Set default return values for network address system call in case we get
+    // an unexpected call but it should not occur. An ip address should not be
+    // asked for name resolution because we do not have one.
+    ON_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _))
+        .WillByDefault(DoAll(SetArgPointee<3>(&m_res), Return(EAI_NONAME)));
+    EXPECT_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _)).Times(0);
+    EXPECT_CALL(m_mocked_netdb, freeaddrinfo(_)).Times(0);
+
+    // Execute the unit
+    EXPECT_EQ(parse_uri("/uri/path?uriquery#urifragment", 31, &m_out),
+              HTTP_SUCCESS);
+    // Check the uri-parts scheme, hostport, pathquery and fragment
+    EXPECT_STREQ(m_out.scheme.buff, nullptr);
+    EXPECT_STREQ(m_out.hostport.text.buff, nullptr);
+    EXPECT_STREQ(m_out.pathquery.buff, "/uri/path?uriquery#urifragment");
+    EXPECT_STREQ(m_out.fragment.buff, "urifragment");
+
+    ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
+                   "ABSOLUTE constant name. See issue #3.\n";
+#ifdef _WIN32
+    EXPECT_EQ(m_out.type, 2); // What ever this means.
+#else
+    EXPECT_EQ(m_out.type, RELATIVE);
+#endif
+    EXPECT_EQ(m_out.path_type, ABS_PATH);
+    EXPECT_EQ(m_sai4->sin_family, AF_UNSPEC);
+    EXPECT_EQ(m_sai4->sin_port, htons(0));
+    EXPECT_STREQ(inet_ntoa(m_sai4->sin_addr), "0.0.0.0");
+}
+
+TEST_F(UriFTestSuite, parse_relative_uri_with_relative_path) {
+    // Set values to mock system call for network address
+    m_sa.sin_family = AF_UNSPEC;
+    m_sa.sin_port = htons(0);
+    inet_pton(AF_INET, "0.0.0.0", &m_sa.sin_addr);
+    m_res.ai_family = m_sa.sin_family;
+
+    // Set default return values for network address system call in case we get
+    // an unexpected call but it should not occur. An ip address should not be
+    // asked for name resolution because we do not have one.
+    ON_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _))
+        .WillByDefault(DoAll(SetArgPointee<3>(&m_res), Return(EAI_NONAME)));
+    EXPECT_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _)).Times(0);
+    EXPECT_CALL(m_mocked_netdb, freeaddrinfo(_)).Times(0);
+
+    // Execute the unit
+    // The relative path does not have a leading /
+    EXPECT_EQ(parse_uri("uri/path?uriquery#urifragment", 30, &m_out),
+              HTTP_SUCCESS);
+    // Check the uri-parts scheme, hostport, pathquery and fragment
+    EXPECT_STREQ(m_out.scheme.buff, nullptr);
+    EXPECT_STREQ(m_out.hostport.text.buff, nullptr);
+    EXPECT_STREQ(m_out.pathquery.buff, "uri/path?uriquery#urifragment");
+    EXPECT_STREQ(m_out.fragment.buff, "urifragment");
+
+    ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
+                   "ABSOLUTE constant name. See issue #3.\n";
+#ifdef _WIN32
+    EXPECT_EQ(m_out.type, 2); // What ever this means.
+#else
+    EXPECT_EQ(m_out.type, RELATIVE);
+#endif
+    EXPECT_EQ(m_out.path_type, REL_PATH);
+    EXPECT_EQ(m_sai4->sin_family, AF_UNSPEC);
+    EXPECT_EQ(m_sai4->sin_port, htons(0));
+    EXPECT_STREQ(inet_ntoa(m_sai4->sin_addr), "0.0.0.0");
+}
+
+TEST_F(UriFTestSuite, parse__uri_with_opaque_part) {
+    // Set values to mock system call for network address
+    m_sa.sin_family = AF_UNSPEC;
+    m_sa.sin_port = htons(0);
+    inet_pton(AF_INET, "0.0.0.0", &m_sa.sin_addr);
+    m_res.ai_family = m_sa.sin_family;
+
+    // Set default return values for network address system call in case we get
+    // an unexpected call but it should not occur. An ip address should not be
+    // asked for name resolution because we do not have one.
+    ON_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _))
+        .WillByDefault(DoAll(SetArgPointee<3>(&m_res), Return(EAI_NONAME)));
+    EXPECT_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _)).Times(0);
+    EXPECT_CALL(m_mocked_netdb, freeaddrinfo(_)).Times(0);
+
+    // Execute the unit
+    // The relative path does not have a leading /
+    EXPECT_EQ(parse_uri("mailto:a@b.com", 15, &m_out), HTTP_SUCCESS);
+    // Check the uri-parts scheme, hostport, pathquery and fragment
+    EXPECT_STREQ(m_out.scheme.buff, "mailto:a@b.com");
+    EXPECT_STREQ(m_out.hostport.text.buff, nullptr);
+    EXPECT_STREQ(m_out.pathquery.buff, "a@b.com");
+    EXPECT_STREQ(m_out.fragment.buff, nullptr);
+
+    ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
+                   "ABSOLUTE constant name. See issue #3.\n";
+#ifdef _WIN32
+    EXPECT_EQ(m_out.type, 1); // What ever this means.
+#else
+    EXPECT_EQ(m_out.type, ABSOLUTE);
+#endif
+    EXPECT_EQ(m_out.path_type, OPAQUE_PART);
+    EXPECT_EQ(m_sai4->sin_family, AF_UNSPEC);
+    EXPECT_EQ(m_sai4->sin_port, htons(0));
+    EXPECT_STREQ(inet_ntoa(m_sai4->sin_addr), "0.0.0.0");
 }
 
 } // namespace upnp

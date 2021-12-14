@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-11
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-16
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -304,12 +304,12 @@ char* resolve_rel_url(
  * (RFC explaining URIs).
  *
  * Handles absolute, relative, and opaque uris. Parses into the following
- * pieces: scheme, hostport, pathquery, fragment (path and query are treated
- * as one token)
+ * pieces: scheme, hostport, pathquery, fragment (host with port and path with
+ * query are treated as one token)
  *
  * Caller should check for the pieces they require.
  *
- * \return
+ * \return HTTP_SUCCESS or UPNP_E_INVALID_URL
  */
 int parse_uri(
     /*! [in] Character string containing uri information to be parsed. */

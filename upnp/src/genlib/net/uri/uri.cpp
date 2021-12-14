@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-11
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-16
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -283,7 +283,8 @@ int token_cmp(token* in1, token* in2) {
  * or "localhost") and fills out a hostport_type struct with internet address
  * and a token representing the full host and port.
  *
- * Uses getaddrinfo to resolve DNS names.
+ * Uses getaddrinfo to resolve DNS names. This may result in a longer delay
+ * until response from the internet.
  */
 static int parse_hostport(
     /*! [in] String of characters representing host and port. */
@@ -427,8 +428,16 @@ static int parse_hostport(
  *
  * \note String MUST include ':' within the max charcters.
  *
- * \return
+ * \return size of the scheme identifier (e.g. 4 for "http"). Will be 0 with
+ * invalid scheme identifier.
  */
+// http://docs.oracle.com/javase/8/docs/api/java/net/URI.html#isOpaque--
+// A URI is opaque if, and only if, it is absolute and its scheme-specific part
+// does not begin with a slash character ('/'). An opaque URI has a scheme, a
+// scheme-specific part, and possibly a fragment; all other components are
+// undefined. A typical example of an opaque uri is a mail to url
+// mailto:a@b.com.
+//
 static size_t parse_scheme(
     /*! [in] String of characters representing a scheme. */
     const char* in,
@@ -701,7 +710,7 @@ int parse_uri(const char* in, size_t max, uri_type* out) {
         if (begin_path >= 0) {
             begin_path += (int)begin_hostport;
         } else
-            return begin_path;
+            return begin_path; // error code from parse_hostport()
     } else {
         memset(&out->hostport, 0, sizeof(out->hostport));
         begin_path = (int)begin_hostport;
