@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-16
+// Redistribution only with this Copyright remark. Last modified: 2021-12-18
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -19,15 +19,28 @@ namespace upnp {
 //
 // Interface for the uri module
 // ============================
-// TODO: complete the interface
 // clang-format off
 
 class Iuri {
   public:
     virtual ~Iuri() {}
 
+    virtual int replace_escaped(
+            char* in, size_t index, size_t* max) = 0;
+    virtual int copy_URL_list(
+            URL_list* in, URL_list* out) = 0;
+    virtual void free_URL_list(
+            URL_list* list) = 0;
     virtual int token_string_casecmp(
             token* in1, const char* in2) = 0;
+    virtual int token_cmp(
+            token* in1, token* in2) = 0;
+    virtual int remove_escaped_chars(
+            char* in, size_t* size) = 0;
+    virtual int remove_dots(
+            char* buf, size_t size) = 0;
+    virtual char* resolve_rel_url(
+            char* base_url, char* rel_url) = 0;
     virtual int parse_uri(
             const char *in, size_t max, uri_type *out) = 0;
 };
@@ -36,8 +49,22 @@ class Curi : Iuri {
   public:
     virtual ~Curi() override {}
 
+    int replace_escaped(char* in, size_t index, size_t* max) override {
+        return ::replace_escaped(in, index, max); }
+    int copy_URL_list(URL_list* in, URL_list* out) override {
+        return ::copy_URL_list(in, out); }
+    void free_URL_list(URL_list* list) override {
+        return ::free_URL_list(list); }
     int token_string_casecmp(token* in1, const char* in2) override {
         return ::token_string_casecmp(in1, in2); }
+    int token_cmp(token* in1, token* in2) override {
+        return ::token_cmp(in1, in2); }
+    int remove_escaped_chars(char* in, size_t* size) override {
+        return ::remove_escaped_chars(in, size); }
+    int remove_dots(char* buf, size_t size) override {
+        return ::remove_dots(buf, size); }
+    char* resolve_rel_url(char* base_url, char* rel_url) override {
+        return ::resolve_rel_url(base_url, rel_url); }
     int parse_uri(const char *in, size_t max, uri_type *out) override {
         return ::parse_uri(in, max, out); }
 };
@@ -46,8 +73,10 @@ class Curi : Iuri {
 //
 // Mocking
 // =======
-class Mock_netdb : public Bnetdb {
-    // Class to mock the free system functions.
+class Mock_netdb : public Bnetdb
+// Class to mock the free system functions.
+{
+  private:
     Bnetdb* m_oldptr;
 
   public:
@@ -56,13 +85,47 @@ class Mock_netdb : public Bnetdb {
         m_oldptr = netdb_h;
         netdb_h = this;
     }
-    virtual ~Mock_netdb() { netdb_h = m_oldptr; }
+    virtual ~Mock_netdb() override { netdb_h = m_oldptr; }
 
     MOCK_METHOD(int, getaddrinfo,
                 (const char* node, const char* service,
                  const struct addrinfo* hints, struct addrinfo** res),
                 (override));
     MOCK_METHOD(void, freeaddrinfo, (struct addrinfo * res), (override));
+};
+
+class Mock_netv4info : public Mock_netdb
+// This is a derived class from mocking netdb to provide a structure for
+// addrinfo that can be given to the mocked program.
+{
+  private:
+    Bnetdb* m_oldptr;
+
+    // Provide structures to mock system call for network address
+    struct sockaddr_in m_sa {};
+    struct addrinfo m_res {};
+
+  public:
+    // Save and restore the old pointer to the production function
+    Mock_netv4info() {
+        m_oldptr = netdb_h;
+        netdb_h = this;
+
+        m_sa.sin_family = AF_INET;
+    }
+
+    virtual ~Mock_netv4info() override { netdb_h = m_oldptr; }
+
+    addrinfo* set(const char* a_ipaddr, short int a_port) {
+        inet_pton(m_sa.sin_family, a_ipaddr, &m_sa.sin_addr);
+        m_sa.sin_port = htons(a_port);
+
+        m_res.ai_family = m_sa.sin_family;
+        m_res.ai_addrlen = sizeof(struct sockaddr);
+        m_res.ai_addr = (sockaddr*)&m_sa;
+
+        return &m_res;
+    }
 };
 
 //
@@ -150,8 +213,6 @@ class HostportFailIp4PTestSuite
           ::std::tuple<const char*, const char*, int>> {};
 
 TEST_P(HostportFailIp4PTestSuite, parse_name_with_scheme) {
-    Mock_netdb mocked_netdb;
-
     // Get parameter
     ::std::tuple params = GetParam();
     const char* uristr = ::std::get<0>(params);
@@ -159,21 +220,13 @@ TEST_P(HostportFailIp4PTestSuite, parse_name_with_scheme) {
     const int port = ::std::get<2>(params);
     const int size = ::strcspn(uristr, "/");
 
-    // Provide structures to mock system call for network address
-    struct sockaddr_in sa {};
-    sa.sin_family = AF_INET;
-    sa.sin_port = htons(port);
-    inet_pton(AF_INET, ipaddr, &sa.sin_addr);
-
-    struct addrinfo res {};
-    res.ai_family = sa.sin_family;
-    res.ai_addrlen = sizeof(struct sockaddr);
-    res.ai_addr = (sockaddr*)&sa;
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set(ipaddr, port);
 
     // Mock for network address system call
-    EXPECT_CALL(mocked_netdb, getaddrinfo(_, _, _, _))
-        .WillOnce(DoAll(SetArgPointee<3>(&res), Return(EAI_NONAME)));
-    EXPECT_CALL(mocked_netdb, freeaddrinfo(_)).Times(0);
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillOnce(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
 
     // Provide arguments to execute the unit
     hostport_type out{};
@@ -206,8 +259,6 @@ class HostportIp4PTestSuite : public ::testing::TestWithParam<
 };
 
 TEST_P(HostportIp4PTestSuite, parse_hostport_successful) {
-    Mock_netdb mocked_netdb;
-
     // Get parameter
     ::std::tuple params = GetParam();
     const char* uristr = ::std::get<0>(params);
@@ -215,21 +266,13 @@ TEST_P(HostportIp4PTestSuite, parse_hostport_successful) {
     const int port = ::std::get<2>(params);
     const int size = ::strcspn(uristr, "/");
 
-    // Provide structures to mock system call for network address
-    struct sockaddr_in sa {};
-    sa.sin_family = AF_INET;
-    sa.sin_port = htons(port);
-    inet_pton(AF_INET, ipaddr, &sa.sin_addr);
-
-    struct addrinfo res {};
-    res.ai_family = sa.sin_family;
-    res.ai_addrlen = sizeof(struct sockaddr);
-    res.ai_addr = (sockaddr*)&sa;
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set(ipaddr, port);
 
     // Mock for network address system call
-    EXPECT_CALL(mocked_netdb, getaddrinfo(_, _, _, _))
-        .WillOnce(DoAll(SetArgPointee<3>(&res), Return(0)));
-    EXPECT_CALL(mocked_netdb, freeaddrinfo(_)).Times(1);
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
 
     // Provide arguments to execute the unit
     hostport_type out{};
@@ -280,7 +323,7 @@ TEST(HostportIp6TestSuite, parse_hostport_without_name_resolution)
 //
 // token_string_casecmp() function: tests from the uri module
 // ==========================================================
-TEST(UriTestSuite, check_token_string_casecmp) {
+TEST(UriIp4TestSuite, check_token_string_casecmp) {
     Curi uriObj;
 
     token in1{"some entry", 10};
@@ -308,7 +351,7 @@ TEST(UriTestSuite, check_token_string_casecmp) {
 // parse_uri() function: tests from the uri module
 // ===============================================
 #if false
-TEST(UriTestSuite, parse_uri_simple_call)
+TEST(UriIp4TestSuite, parse_uri_simple_call)
 // This test is only for humans to get an idea what's going on. If you need it,
 // set '#if true' only temporary. It is not intended to be permanent part of
 // the tests. It doesn't really test things and because unmocked, it queries
@@ -339,7 +382,7 @@ TEST(UriTestSuite, parse_uri_simple_call)
 }
 #endif
 
-TEST(UriTestSuite, parse_scheme_of_uri) {
+TEST(UriIp4TestSuite, parse_scheme_of_uri) {
     ::token out;
 
     EXPECT_EQ(::parse_scheme("https://dummy.net:80/page", 6, &out), 5);
@@ -371,216 +414,374 @@ TEST(UriTestSuite, parse_scheme_of_uri) {
     EXPECT_STREQ(out.buff, nullptr);
 }
 
-class UriFTestSuite : public ::testing::Test {
-  protected:
-    Mock_netdb m_mocked_netdb;
-    uri_type m_out;
-    struct sockaddr_in* m_sai4 = (struct sockaddr_in*)&m_out.hostport.IPaddress;
-
-    // Provide empty structures for mocking. Will be filled in the tests.
-    struct sockaddr_in m_sa {};
-    struct addrinfo m_res {};
-
-    UriFTestSuite() {
-        // Complete the addrinfo structure
-        m_res.ai_addrlen = sizeof(struct sockaddr);
-        m_res.ai_addr = (sockaddr*)&m_sa;
-    }
-};
-
-TEST_F(UriFTestSuite, parse_absolute_uri) {
-    // Set values to mock system call for network address
-    m_sa.sin_family = AF_INET;
-    m_res.ai_family = m_sa.sin_family;
-    m_sa.sin_port = htons(80);
-    inet_pton(AF_INET, "192.168.10.10", &m_sa.sin_addr);
+TEST(UriIp4TestSuite, parse_absolute_uri) {
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set("192.168.10.10", 80);
 
     // Mock for network address system call
-    EXPECT_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _))
-        .WillOnce(DoAll(SetArgPointee<3>(&m_res), Return(0)));
-    EXPECT_CALL(m_mocked_netdb, freeaddrinfo(_)).Times(1);
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
+
+    uri_type out;
+    struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.hostport.IPaddress;
 
     // Execute the unit
 #ifdef OLD_TEST
-    ::std::cout << "  BUG! parse_uri must fail with to short max size instead "
+    ::std::cout << "  BUG! parse_uri must fail with too short max size instead "
                    "of returning wrong values!\n";
     EXPECT_EQ(
         parse_uri("https://example-site.de:80/uri/path?uriquery#urifragment",
-                  128, &m_out),
+                  128, &out),
         HTTP_SUCCESS);
 #else
     EXPECT_EQ(
         parse_uri("https://example-site.de:80/uri/path?uriquery#urifragment", 7,
-                  &m_out),
+                  &out),
         UPNP_E_INVALID_URL);
 #endif
     // Check the uri-parts scheme, hostport, pathquery and fragment
-    EXPECT_STREQ(m_out.scheme.buff,
+    EXPECT_STREQ(out.scheme.buff,
                  "https://example-site.de:80/uri/path?uriquery#urifragment");
-    EXPECT_STREQ(m_out.hostport.text.buff,
+    EXPECT_STREQ(out.hostport.text.buff,
                  "example-site.de:80/uri/path?uriquery#urifragment");
-    EXPECT_STREQ(m_out.pathquery.buff, "/uri/path?uriquery#urifragment");
-    EXPECT_STREQ(m_out.fragment.buff, "urifragment");
+    EXPECT_STREQ(out.pathquery.buff, "/uri/path?uriquery#urifragment");
+    EXPECT_STREQ(out.fragment.buff, "urifragment");
 
     ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
                    "ABSOLUTE constant name. See issue #3.\n";
 #ifdef _WIN32
-    EXPECT_EQ(m_out.type, 1); // What ever this means.
+    EXPECT_EQ(out.type, 1); // What ever this means.
 #else
-    EXPECT_EQ(m_out.type, ABSOLUTE);
+    EXPECT_EQ(out.type, ABSOLUTE);
 #endif
-    EXPECT_EQ(m_out.path_type, ABS_PATH);
-    EXPECT_EQ(m_sai4->sin_family, AF_INET);
-    EXPECT_EQ(m_sai4->sin_port, htons(80));
-    EXPECT_STREQ(inet_ntoa(m_sai4->sin_addr), "192.168.10.10");
+    EXPECT_EQ(out.path_type, ABS_PATH);
+    EXPECT_EQ(sai4->sin_family, AF_INET);
+    EXPECT_EQ(sai4->sin_port, htons(80));
+    EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "192.168.10.10");
 }
 
-TEST_F(UriFTestSuite, parse_relative_uri_with_authority_and_absolute_path) {
-    // Set values to mock system call for network address
-    m_sa.sin_family = AF_INET;
-    m_res.ai_family = m_sa.sin_family;
-    m_sa.sin_port = htons(80);
-    inet_pton(AF_INET, "192.168.10.10", &m_sa.sin_addr);
+TEST(UriIp4TestSuite, parse_relative_uri_with_authority_and_absolute_path) {
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set("192.168.10.10", 80);
 
     // Mock for network address system call
-    EXPECT_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _))
-        .WillOnce(DoAll(SetArgPointee<3>(&m_res), Return(0)));
-    EXPECT_CALL(m_mocked_netdb, freeaddrinfo(_)).Times(1);
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
+
+    uri_type out;
+    struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.hostport.IPaddress;
 
     // Execute the unit
     EXPECT_EQ(parse_uri("//example-site.de:80/uri/path?uriquery#urifragment",
-                        51, &m_out),
+                        51, &out),
               HTTP_SUCCESS);
     // Check the uri-parts scheme, hostport, pathquery and fragment
-    EXPECT_STREQ(m_out.scheme.buff, nullptr);
-    EXPECT_STREQ(m_out.hostport.text.buff,
+    EXPECT_STREQ(out.scheme.buff, nullptr);
+    EXPECT_STREQ(out.hostport.text.buff,
                  "example-site.de:80/uri/path?uriquery#urifragment");
-    EXPECT_STREQ(m_out.pathquery.buff, "/uri/path?uriquery#urifragment");
-    EXPECT_STREQ(m_out.fragment.buff, "urifragment");
+    EXPECT_STREQ(out.pathquery.buff, "/uri/path?uriquery#urifragment");
+    EXPECT_STREQ(out.fragment.buff, "urifragment");
 
     ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
                    "ABSOLUTE constant name. See issue #3.\n";
 #ifdef _WIN32
-    EXPECT_EQ(m_out.type, 2); // What ever this means
+    EXPECT_EQ(out.type, 2); // What ever this means
 #else
-    EXPECT_EQ(m_out.type, RELATIVE);
+    EXPECT_EQ(out.type, RELATIVE);
 #endif
-    EXPECT_EQ(m_out.path_type, ABS_PATH);
-    EXPECT_EQ(m_sai4->sin_family, AF_INET);
-    EXPECT_EQ(m_sai4->sin_port, htons(80));
-    EXPECT_STREQ(inet_ntoa(m_sai4->sin_addr), "192.168.10.10");
+    EXPECT_EQ(out.path_type, ABS_PATH);
+    EXPECT_EQ(sai4->sin_family, AF_INET);
+    EXPECT_EQ(sai4->sin_port, htons(80));
+    EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "192.168.10.10");
 }
 
-TEST_F(UriFTestSuite, parse_relative_uri_with_absolute_path) {
-    // Set values to mock system call for network address
-    m_sa.sin_family = AF_UNSPEC;
-    m_res.ai_family = m_sa.sin_family;
-    m_sa.sin_port = htons(0);
-    inet_pton(AF_INET, "0.0.0.0", &m_sa.sin_addr);
+TEST(UriIp4TestSuite, parse_relative_uri_with_absolute_path) {
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set("0.0.0.0", 0);
 
     // Set default return values for network address system call in case we get
     // an unexpected call but it should not occur. An ip address should not be
     // asked for name resolution because we do not have one.
-    ON_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _))
-        .WillByDefault(DoAll(SetArgPointee<3>(&m_res), Return(EAI_NONAME)));
-    EXPECT_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _)).Times(0);
-    EXPECT_CALL(m_mocked_netdb, freeaddrinfo(_)).Times(0);
+    ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
+
+    uri_type out;
+    struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.hostport.IPaddress;
 
     // Execute the unit
-    EXPECT_EQ(parse_uri("/uri/path?uriquery#urifragment", 31, &m_out),
+    EXPECT_EQ(parse_uri("/uri/path?uriquery#urifragment", 31, &out),
               HTTP_SUCCESS);
     // Check the uri-parts scheme, hostport, pathquery and fragment
-    EXPECT_STREQ(m_out.scheme.buff, nullptr);
-    EXPECT_STREQ(m_out.hostport.text.buff, nullptr);
-    EXPECT_STREQ(m_out.pathquery.buff, "/uri/path?uriquery#urifragment");
-    EXPECT_STREQ(m_out.fragment.buff, "urifragment");
+    EXPECT_STREQ(out.scheme.buff, nullptr);
+    EXPECT_STREQ(out.hostport.text.buff, nullptr);
+    EXPECT_STREQ(out.pathquery.buff, "/uri/path?uriquery#urifragment");
+    EXPECT_STREQ(out.fragment.buff, "urifragment");
 
     ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
                    "ABSOLUTE constant name. See issue #3.\n";
 #ifdef _WIN32
-    EXPECT_EQ(m_out.type, 2); // What ever this means.
+    EXPECT_EQ(out.type, 2); // What ever this means.
 #else
-    EXPECT_EQ(m_out.type, RELATIVE);
+    EXPECT_EQ(out.type, RELATIVE);
 #endif
-    EXPECT_EQ(m_out.path_type, ABS_PATH);
-    EXPECT_EQ(m_sai4->sin_family, AF_UNSPEC);
-    EXPECT_EQ(m_sai4->sin_port, htons(0));
-    EXPECT_STREQ(inet_ntoa(m_sai4->sin_addr), "0.0.0.0");
+    EXPECT_EQ(out.path_type, ABS_PATH);
+    EXPECT_EQ(sai4->sin_family, AF_UNSPEC);
+    EXPECT_EQ(sai4->sin_port, htons(0));
+    EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "0.0.0.0");
 }
 
-TEST_F(UriFTestSuite, parse_relative_uri_with_relative_path) {
-    // Set values to mock system call for network address
-    m_sa.sin_family = AF_UNSPEC;
-    m_sa.sin_port = htons(0);
-    inet_pton(AF_INET, "0.0.0.0", &m_sa.sin_addr);
-    m_res.ai_family = m_sa.sin_family;
+TEST(UriIp4TestSuite, parse_relative_uri_with_relative_path) {
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set("0.0.0.0", 0);
 
     // Set default return values for network address system call in case we get
     // an unexpected call but it should not occur. An ip address should not be
     // asked for name resolution because we do not have one.
-    ON_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _))
-        .WillByDefault(DoAll(SetArgPointee<3>(&m_res), Return(EAI_NONAME)));
-    EXPECT_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _)).Times(0);
-    EXPECT_CALL(m_mocked_netdb, freeaddrinfo(_)).Times(0);
+    ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
+
+    uri_type out;
+    struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.hostport.IPaddress;
 
     // Execute the unit
     // The relative path does not have a leading /
-    EXPECT_EQ(parse_uri("uri/path?uriquery#urifragment", 30, &m_out),
+    EXPECT_EQ(parse_uri("uri/path?uriquery#urifragment", 30, &out),
               HTTP_SUCCESS);
     // Check the uri-parts scheme, hostport, pathquery and fragment
-    EXPECT_STREQ(m_out.scheme.buff, nullptr);
-    EXPECT_STREQ(m_out.hostport.text.buff, nullptr);
-    EXPECT_STREQ(m_out.pathquery.buff, "uri/path?uriquery#urifragment");
-    EXPECT_STREQ(m_out.fragment.buff, "urifragment");
+    EXPECT_STREQ(out.scheme.buff, nullptr);
+    EXPECT_STREQ(out.hostport.text.buff, nullptr);
+    EXPECT_STREQ(out.pathquery.buff, "uri/path?uriquery#urifragment");
+    EXPECT_STREQ(out.fragment.buff, "urifragment");
 
     ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
                    "ABSOLUTE constant name. See issue #3.\n";
 #ifdef _WIN32
-    EXPECT_EQ(m_out.type, 2); // What ever this means.
+    EXPECT_EQ(out.type, 2); // What ever this means.
 #else
-    EXPECT_EQ(m_out.type, RELATIVE);
+    EXPECT_EQ(out.type, RELATIVE);
 #endif
-    EXPECT_EQ(m_out.path_type, REL_PATH);
-    EXPECT_EQ(m_sai4->sin_family, AF_UNSPEC);
-    EXPECT_EQ(m_sai4->sin_port, htons(0));
-    EXPECT_STREQ(inet_ntoa(m_sai4->sin_addr), "0.0.0.0");
+    EXPECT_EQ(out.path_type, REL_PATH);
+    EXPECT_EQ(sai4->sin_family, AF_UNSPEC);
+    EXPECT_EQ(sai4->sin_port, htons(0));
+    EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "0.0.0.0");
 }
 
-TEST_F(UriFTestSuite, parse__uri_with_opaque_part) {
-    // Set values to mock system call for network address
-    m_sa.sin_family = AF_UNSPEC;
-    m_sa.sin_port = htons(0);
-    inet_pton(AF_INET, "0.0.0.0", &m_sa.sin_addr);
-    m_res.ai_family = m_sa.sin_family;
+TEST(UriIp4TestSuite, parse_uri_with_opaque_part) {
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set("0.0.0.0", 0);
 
     // Set default return values for network address system call in case we get
     // an unexpected call but it should not occur. An ip address should not be
     // asked for name resolution because we do not have one.
-    ON_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _))
-        .WillByDefault(DoAll(SetArgPointee<3>(&m_res), Return(EAI_NONAME)));
-    EXPECT_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _)).Times(0);
-    EXPECT_CALL(m_mocked_netdb, freeaddrinfo(_)).Times(0);
+    ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
+
+    uri_type out;
+    struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.hostport.IPaddress;
 
     // Execute the unit
     // The relative path does not have a leading /
-    EXPECT_EQ(parse_uri("mailto:a@b.com", 15, &m_out), HTTP_SUCCESS);
+    EXPECT_EQ(parse_uri("mailto:a@b.com", 15, &out), HTTP_SUCCESS);
     // Check the uri-parts scheme, hostport, pathquery and fragment
-    EXPECT_STREQ(m_out.scheme.buff, "mailto:a@b.com");
-    EXPECT_STREQ(m_out.hostport.text.buff, nullptr);
-    EXPECT_STREQ(m_out.pathquery.buff, "a@b.com");
-    EXPECT_STREQ(m_out.fragment.buff, nullptr);
+    EXPECT_STREQ(out.scheme.buff, "mailto:a@b.com");
+    EXPECT_STREQ(out.hostport.text.buff, nullptr);
+    EXPECT_STREQ(out.pathquery.buff, "a@b.com");
+    EXPECT_STREQ(out.fragment.buff, nullptr);
 
     ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
                    "ABSOLUTE constant name. See issue #3.\n";
 #ifdef _WIN32
-    EXPECT_EQ(m_out.type, 1); // What ever this means.
+    EXPECT_EQ(out.type, 1); // What ever this means.
 #else
-    EXPECT_EQ(m_out.type, ABSOLUTE);
+    EXPECT_EQ(out.type, ABSOLUTE);
 #endif
-    EXPECT_EQ(m_out.path_type, OPAQUE_PART);
-    EXPECT_EQ(m_sai4->sin_family, AF_UNSPEC);
-    EXPECT_EQ(m_sai4->sin_port, htons(0));
-    EXPECT_STREQ(inet_ntoa(m_sai4->sin_addr), "0.0.0.0");
+    EXPECT_EQ(out.path_type, OPAQUE_PART);
+    EXPECT_EQ(sai4->sin_family, AF_UNSPEC);
+    EXPECT_EQ(sai4->sin_port, htons(0));
+    EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "0.0.0.0");
+}
+
+//
+// resolve_rel_url() function: tests from the uri module
+// =====================================================
+
+TEST(ResolveRelUrlIp4TestSuite, resolve_successful) {
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set("192.168.186.186", 443);
+
+    // Mock for network address system call
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
+
+    // Provide arguments to execute the unit
+    char base_url[]{"https://example.com:443"};
+    char rel_url[]{"homepage#this-fragment"};
+
+    // Execute the unit
+    char* abs_url = resolve_rel_url(*&base_url, *&rel_url);
+    EXPECT_STREQ(abs_url, "https://example.com:443/homepage#this-fragment");
+}
+
+TEST(ResolveRelUrlIp4TestSuite, null_base_url_should_return_rel_url) {
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set("0.0.0.0", 0);
+
+    // Mock for network address system call
+    ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
+
+    // Provide arguments to execute the unit
+    char rel_url[]{"homepage#this-fragment"};
+
+    // Execute the unit
+    char* abs_url = resolve_rel_url(NULL, *&rel_url);
+    EXPECT_STREQ(abs_url, "homepage#this-fragment");
+}
+
+TEST(ResolveRelUrlIp4TestSuite, empty_base_url_should_return_rel_url) {
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set("0.0.0.0", 0);
+
+    // Mock for network address system call
+    ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
+
+    // Provide arguments to execute the unit
+    char base_url[]{""};
+    char rel_url[]{"homepage#this-fragment"};
+
+    // Execute the unit
+    char* abs_url = resolve_rel_url(*&base_url, *&rel_url);
+#ifdef OLD_TEST
+    ::std::cout << "  BUG! Empty base url should return rel url, not NULL.\n";
+    EXPECT_EQ(abs_url, nullptr);
+#else
+    EXPECT_STREQ(abs_url, "homepage#this-fragment");
+#endif
+}
+
+TEST(ResolveRelUrlIp4TestSuite, null_rel_url_should_return_base_url) {
+#ifdef OLD_TEST
+    ::std::cout << "  BUG! Segfault if rel_url is NULL.\n";
+#else
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set("192.168.168.168", 80);
+
+    // Mock for network address system call
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
+
+    // Provide arguments to execute the unit
+    char base_url[]{"http://example.com"};
+
+    // Execute the unit
+    char* abs_url = resolve_rel_url(*&base_url, NULL);
+    EXPECT_STREQ(abs_url, "http://example.com");
+#endif
+}
+
+TEST(ResolveRelUrlIp4TestSuite, empty_rel_url_should_return_base_url) {
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set("192.168.168.168", 80);
+
+    // Mock for network address system call
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
+
+    // Provide arguments to execute the unit
+    char base_url[]{"http://example.com"};
+    char rel_url[]{""};
+
+    // Execute the unit
+    char* abs_url = resolve_rel_url(*&base_url, *&rel_url);
+    EXPECT_STREQ(abs_url, "http://example.com");
+}
+
+TEST(ResolveRelUrlIp4TestSuite, null_base_and_rel_url_should_return_null) {
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set("0.0.0.0", 0);
+
+    // Mock for network address system call
+    ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
+
+    // Execute the unit
+    char* abs_url = resolve_rel_url(NULL, NULL);
+    EXPECT_EQ(abs_url, nullptr);
+}
+
+TEST(ResolveRelUrlIp4TestSuite, empty_base_and_rel_url_should_return_null) {
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set("0.0.0.0", 0);
+
+    // Mock for network address system call
+    ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
+
+    // Provide arguments to execute the unit
+    char base_url[]{""};
+    char rel_url[]{""};
+
+    // Execute the unit
+    char* abs_url = resolve_rel_url(*&base_url, *&rel_url);
+    EXPECT_EQ(abs_url, nullptr);
+}
+
+TEST(ResolveRelUrlIp4TestSuite, absolute_rel_url_should_return_a_copy_of_it) {
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set("192.168.168.168", 443);
+
+    // Mock for network address system call
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
+
+    // Provide arguments to execute the unit
+    char base_url[]{"http://example.com"};
+    char rel_url[]{"https://absolute.net:443/home-page#fragment"};
+
+    // Execute the unit
+    char* abs_url = resolve_rel_url(*&base_url, *&rel_url);
+    EXPECT_STREQ(abs_url, "https://absolute.net:443/home-page#fragment");
+}
+
+TEST(ResolveRelUrlIp4TestSuite,
+     base_and_rel_url_not_absolute_should_return_null) {
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.set("0.0.0.0", 0);
+
+    // Mock for network address system call
+    ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
+
+    // Provide arguments to execute the unit
+    char base_url[]{"/example.com"};
+    char rel_url[]{"home-page#fragment"};
+
+    // Execute the unit
+    char* abs_url = resolve_rel_url(*&base_url, *&rel_url);
+    EXPECT_EQ(abs_url, nullptr);
 }
 
 } // namespace upnp

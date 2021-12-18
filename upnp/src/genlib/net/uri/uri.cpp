@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-16
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -81,6 +81,7 @@ static int is_reserved(
  *
  * \return 1 if char is a MARKED char.
  */
+// TODO: set to static, no interface function
 int is_mark(
     /*! [in] Char to be matched for MARKED characters. */
     char in) {
@@ -577,6 +578,7 @@ char* resolve_rel_url(char* base_url, char* rel_url) {
         return strdup(rel_url);
     }
 
+    // BUG! Following segfaults if rel_url is NULL
     len_rel = strlen(rel_url);
     if (parse_uri(rel_url, len_rel, &rel) != HTTP_SUCCESS)
         return NULL;

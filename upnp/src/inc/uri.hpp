@@ -314,7 +314,8 @@ char* resolve_rel_url(
 int parse_uri(
     /*! [in] Character string containing uri information to be parsed. */
     const char* in,
-    /*! [in] Maximum limit on the number of characters. */
+    /*! [in] Maximum limit on the number of characters without terminating null
+       byte ('\0'). */
     size_t max,
     /*! [out] Output parameter which will have the parsed uri information.
      */
