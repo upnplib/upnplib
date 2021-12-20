@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-18
+// Redistribution only with this Copyright remark. Last modified: 2021-12-21
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -326,13 +326,26 @@ TEST(HostportIp6TestSuite, parse_hostport_without_name_resolution)
 TEST(UriIp4TestSuite, check_token_string_casecmp) {
     Curi uriObj;
 
-    token in1{"some entry", 10};
+    // == 0, if string1 is identical to string2 case insensitive.
+    token inull{nullptr, 0};
+    const char in5[]{""};
+#ifdef OLD_TEST
+    ::std::cout
+        << "  BUG! A nullptr in the token structure, segfaults on MS Windows "
+           "(why only there?)\n";
+#endif
+#ifndef _WIN32
+    EXPECT_EQ(uriObj.token_string_casecmp(&inull, in5), 0);
+#endif
+    token in0{"", 0};
+    EXPECT_EQ(uriObj.token_string_casecmp(&in0, in5), 0);
 
-    const char in2[] = "some entry";
+    token in1{"some entry", 10};
+    const char in2[]{"SOME ENTRY"};
     EXPECT_EQ(uriObj.token_string_casecmp(&in1, in2), 0);
 
     // < 0, if string1 is less than string2.
-    const char in3[] = "some longer entry";
+    const char in3[]{"some longer entry"};
 #ifdef OLD_TEST
     ::std::cout << "  BUG! With string1 less than string2 it should return < 0 "
                    "not > 0.\n";
@@ -343,8 +356,264 @@ TEST(UriIp4TestSuite, check_token_string_casecmp) {
 #endif
 
     // > 0, if string1 is greater than string2.
-    const char in4[] = "entry";
+    const char in4[]{"entry"};
     EXPECT_GT(uriObj.token_string_casecmp(&in1, in4), 0);
+}
+
+//
+// token_cmp() function: tests from the uri module
+// ===============================================
+
+TEST(UriIp4TestSuite, check_token_cmp) {
+    Curi uriObj;
+
+    // == 0, if string1 is identical to string2.
+    token inull{nullptr, 0};
+    EXPECT_EQ(uriObj.token_cmp(&inull, &inull), 0);
+
+    token in0{"", 0};
+    EXPECT_EQ(uriObj.token_cmp(&in0, &in0), 0);
+
+    token in1{"some entry", 10};
+    EXPECT_EQ(uriObj.token_cmp(&in1, &in1), 0);
+
+    // < 0, if string1 is less than string2.
+    token in2{"some longer entry", 17};
+#ifdef OLD_TEST
+    ::std::cout << "  BUG! With string1 less than string2 it should return < 0 "
+                   "not > 0.\n";
+    EXPECT_GT(uriObj.token_cmp(&in1, &in2), 0);
+#else
+    EXPECT_LT(uriObj.token_cmp(&in1, &in2), 0)
+        << "  # With string1 less than string2 it should return < 0 not > 0.";
+#endif
+
+    // > 0, if string1 is greater than string2.
+    token in3{"entry", 5};
+    EXPECT_GT(uriObj.token_cmp(&in1, &in3), 0);
+}
+
+//
+// replace_escaped() function: tests from the uri module
+// =====================================================
+
+TEST(UriIp4TestSuite, replace_escaped_check_buffer) {
+    const char escstr[]{"%20"};
+    size_t max = sizeof(escstr);
+    char strbuf[sizeof(escstr)];
+    memset(strbuf, 0xFF, max);
+    EXPECT_EQ(strbuf[3], '\xFF');
+    // Copies escstr with null terminator
+    strcpy(strbuf, escstr);
+
+    EXPECT_EQ(strbuf[0], '%');
+    EXPECT_EQ(strbuf[1], '2');
+    EXPECT_EQ(strbuf[2], '0');
+    EXPECT_EQ(strbuf[3], '\0');
+    EXPECT_EQ(strbuf[max - 1], '\0');
+
+    // Execute unit; will fill trailing bytes with null
+    Curi uriObj;
+    ASSERT_EQ(uriObj.replace_escaped(strbuf, 0, &max), 1);
+    EXPECT_EQ(strbuf[0], ' ');
+    EXPECT_EQ(strbuf[1], '\0');
+    EXPECT_EQ(strbuf[2], '\0');
+    EXPECT_EQ(strbuf[3], '\0');
+    EXPECT_EQ(max, sizeof(escstr) - 2);
+}
+
+TEST(UriIp4TestSuite, replace_escaped) {
+    const char escstr[]{"Hello%20%0AWorld%G0!%0x"};
+    size_t max = sizeof(escstr);
+    char strbuf[sizeof(escstr)];
+    memset(strbuf, 0xFF, max);
+    strcpy(strbuf, escstr);
+    EXPECT_EQ(strbuf[max - 1], '\0');
+
+    // Execute the unit.
+    // The function converts only one escaped character and the index must
+    // exactly point to its '%'.
+    Curi uriObj;
+    ASSERT_EQ(uriObj.replace_escaped(strbuf, 5, &max), 1);
+    EXPECT_STREQ(strbuf, "Hello %0AWorld%G0!%0x");
+    // max buffer length is reduced by two characters (redudce '%xx' to ' ').
+    EXPECT_EQ(max, sizeof(escstr) - 2);
+    EXPECT_EQ(max, strlen(strbuf) + 1);
+    // The two trailing free characters are filled with '\0'.
+    EXPECT_EQ(strbuf[max - 2], 'x');
+    EXPECT_EQ(strbuf[max - 1], '\0'); // regular new delimiter
+    EXPECT_EQ(strbuf[max], '\0');     // filled
+    EXPECT_EQ(strbuf[max + 1], '\0'); // filled
+    EXPECT_EQ(max + 2, sizeof(strbuf));
+
+    // Not pointing to an escaped character
+    EXPECT_EQ(uriObj.replace_escaped(strbuf, 0, &max), 0);
+    // No hex values after escape character
+    EXPECT_EQ(uriObj.replace_escaped(strbuf, 16, &max), 0);
+    EXPECT_EQ(uriObj.replace_escaped(strbuf, 20, &max), 0);
+    // Failures should not modify output.
+    EXPECT_STREQ(strbuf, "Hello %0AWorld%G0!%0x");
+    EXPECT_EQ(max, sizeof(escstr) - 2);
+}
+
+//
+// remove_escaped_chars() function: tests from the uri module
+// ==========================================================
+class RemoveEscCharsIp4PTestSuite
+    : public ::testing::TestWithParam<
+          //           escstr,      resultstr,   resultsize
+          ::std::tuple<const char*, const char*, size_t>> {};
+
+TEST_P(RemoveEscCharsIp4PTestSuite, remove_escaped_chars) {
+    // Get parameter
+    ::std::tuple params = GetParam();
+    const char* escstr = ::std::get<0>(params);
+    size_t size{strlen(escstr)}; // without '\0'
+
+    // string buffer; we have to set it with a constant because we cannot get
+    // the string size from pointer escstr. But there is a guard (ASSERT_GT).
+    // strbuf must be one byte greater for '\0' than the strlen of escstr.
+    char strbuf[32];
+    ASSERT_GT(sizeof(strbuf), size)
+        << "Error: string buffer too small for testing. You must increase it "
+           "in this test.\n";
+    strcpy(strbuf, escstr); // with '\0'
+
+    // Prozess the unit.
+    Curi uriObj;
+    EXPECT_EQ(uriObj.remove_escaped_chars(strbuf, &size), UPNP_E_SUCCESS);
+    EXPECT_STREQ(strbuf, ::std::get<1>(params)); // new result string
+    EXPECT_EQ(size, ::std::get<2>(params));      // new result size
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    uri, RemoveEscCharsIp4PTestSuite,
+    ::testing::Values(
+        //                 escstr,                   resultstr,       resultsize
+        ::std::make_tuple("%3CHello%20world%21%3E", "<Hello world!>", 14),
+        ::std::make_tuple("", "", 0), ::std::make_tuple("%20", " ", 1),
+        ::std::make_tuple("%3C%3E", "<>", 2),
+        ::std::make_tuple("hello", "hello", 5)));
+
+//
+TEST(UriIp4TestSuite, remove_escaped_chars_edge_conditions) {
+#ifdef OLD_TEST
+    ::std::cout << "  BUG! Calling remove_escaped_chars() with nullptr should "
+                   "not segfault.\n";
+#else
+    char strbuf[32]{};
+    size_t size{strlen(strbuf)};
+    Curi uriObj;
+    EXPECT_EQ(uriObj.remove_escaped_chars(nullptr, nullptr), UPNP_E_SUCCESS);
+
+    strcpy(strbuf, "hello"); // with '\0'
+    size = strlen(strbuf);
+    EXPECT_EQ(uriObj.remove_escaped_chars(nullptr, &size), UPNP_E_SUCCESS);
+    EXPECT_EQ(size, 5);
+
+    EXPECT_EQ(uriObj.remove_escaped_chars(strbuf, nullptr), UPNP_E_SUCCESS);
+    EXPECT_STREQ(strbuf, "hello");
+#endif
+}
+
+//
+// remove_dots() function: tests from the uri module
+// =================================================
+class RemoveDotsIp4PTestSuite
+    : public ::testing::TestWithParam<
+          //           path,        size,   result,      retval
+          ::std::tuple<const char*, size_t, const char*, int>> {};
+
+TEST_P(RemoveDotsIp4PTestSuite, remove_dots) {
+    // Get parameter
+    ::std::tuple params = GetParam();
+    const char* path = ::std::get<0>(params);
+    size_t size = ::std::get<1>(params);
+    const char* result = ::std::get<2>(params);
+    int retval = ::std::get<3>(params);
+
+    // string buffer; we have to set it with a constant because we cannot get
+    // the string size from pointer path. But there is a guard (ASSERT_GT).
+    // strbuf must be one byte greater for '\0' than the strlen of path.
+    char strbuf[32];
+    ASSERT_GT(sizeof(strbuf), strlen(path))
+        << "Error: string buffer too small for testing. You must increase it "
+           "in this test.\n";
+    strcpy(strbuf, path); // with '\0'
+
+    // Prozess the unit.
+    Curi uriObj;
+    EXPECT_EQ(uriObj.remove_dots(strbuf, size), retval);
+    EXPECT_STREQ(strbuf, result);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    uri, RemoveDotsIp4PTestSuite,
+    ::testing::Values(
+        //                 path,    size, result,  retval
+        ::std::make_tuple("/./hello", 8, "/hello", UPNP_E_SUCCESS),
+        ::std::make_tuple("./hello", 7, "hello", UPNP_E_SUCCESS),
+        //::std::make_tuple("/../hello", 9, "/../hello", UPNP_E_INVALID_URL),
+        ::std::make_tuple("/../hello", 9, "/hello", UPNP_E_SUCCESS), // BUG!
+        //::std::make_tuple("../hello", 8, "../hello", UPNP_E_INVALID_URL),
+        ::std::make_tuple("../hello", 8, "hello", UPNP_E_SUCCESS), // BUG!
+        ::std::make_tuple("hello/", 6, "hello/", UPNP_E_SUCCESS),
+        ::std::make_tuple("/hello/./", 9, "/hello/", UPNP_E_SUCCESS),
+        ::std::make_tuple("/./hello/./world", 16, "/hello/world",
+                          UPNP_E_SUCCESS),
+        ::std::make_tuple("/hello/../world", 15, "/world", UPNP_E_SUCCESS),
+        ::std::make_tuple("hello/../world", 14, "/world", UPNP_E_SUCCESS),
+        ::std::make_tuple("/hello/world/../", 16, "/hello/", UPNP_E_SUCCESS),
+        ::std::make_tuple("/hello/world/..", 15, "/hello/", UPNP_E_SUCCESS),
+        ::std::make_tuple("/hello/../dear/../world", 23, "/world",
+                          UPNP_E_SUCCESS),
+        ::std::make_tuple("/./hello/foo/../goodbye", 23, "/hello/goodbye",
+                          UPNP_E_SUCCESS),
+        ::std::make_tuple(".", 1, "", UPNP_E_SUCCESS),
+        ::std::make_tuple("..", 2, "", UPNP_E_SUCCESS),
+        ::std::make_tuple("/", 1, "/", UPNP_E_SUCCESS),
+        //::std::make_tuple("ab", 1, "a", UPNP_E_SUCCESS), // BUG! Does not
+        //finish
+        ::std::make_tuple("ab", 2, "ab", UPNP_E_SUCCESS)));
+
+TEST(UriIp4TestSuite, remove_dots_report_bugs) {
+    Curi uriObj;
+    // Have attention to the buffer size for this test to be greater than the
+    // longest tested string.
+    char strbuf[31 + 1];
+
+    // Prozess the unit.
+#ifdef OLD_TEST
+    strcpy(strbuf, "/../hello"); // with '\0'
+    ::std::cout << "  BUG! path beginning with '/../<segment>' or "
+                   "'../<segment>' must fail.\n";
+    EXPECT_EQ(uriObj.remove_dots(strbuf, strlen(strbuf)), UPNP_E_SUCCESS);
+    EXPECT_STREQ(strbuf, "/hello");
+    strcpy(strbuf, "../hello"); // with '\0'
+    EXPECT_EQ(uriObj.remove_dots(strbuf, strlen(strbuf)), UPNP_E_SUCCESS);
+    EXPECT_STREQ(strbuf, "hello");
+
+    ::std::cout << "  BUG! Argument 'size' shorter than strlen should not hang "
+                   "the function.\n";
+    // see below
+#else
+    ::std::cout << "  BUG! Argument 'size' shorter than strlen should not hang "
+                   "the function...\n";
+    strcpy(strbuf, "ab"); // with '\0'
+    // EXPECT_EQ(uriObj.remove_dots(strbuf, 1), UPNP_E_SUCCESS);
+    EXPECT_STREQ(strbuf, "a");
+
+    strcpy(strbuf, "/../hello"); // with '\0'
+    EXPECT_EQ(uriObj.remove_dots(strbuf, strlen(strbuf)), UPNP_E_INVALID_URL)
+        << "  # path beginning with '/../<segment>' must fail with "
+           "UPNP_E_INVALID_URL(-108).";
+    EXPECT_STREQ(strbuf, "/../hello");
+    strcpy(strbuf, "../hello"); // with '\0'
+    EXPECT_EQ(uriObj.remove_dots(strbuf, strlen(strbuf)), UPNP_E_INVALID_URL)
+        << "  # path beginning with '../<segment>' must fail with "
+           "UPNP_E_INVALID_URL(-108).";
+    EXPECT_STREQ(strbuf, "../hello");
+#endif
 }
 
 //
@@ -427,18 +696,19 @@ TEST(UriIp4TestSuite, parse_absolute_uri) {
     struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.hostport.IPaddress;
 
     // Execute the unit
+    Curi uriObj;
 #ifdef OLD_TEST
     ::std::cout << "  BUG! parse_uri must fail with too short max size instead "
                    "of returning wrong values!\n";
-    EXPECT_EQ(
-        parse_uri("https://example-site.de:80/uri/path?uriquery#urifragment",
+    EXPECT_EQ(uriObj.parse_uri(
+                  "https://example-site.de:80/uri/path?uriquery#urifragment",
                   128, &out),
-        HTTP_SUCCESS);
+              HTTP_SUCCESS);
 #else
-    EXPECT_EQ(
-        parse_uri("https://example-site.de:80/uri/path?uriquery#urifragment", 7,
+    EXPECT_EQ(uriObj.parse_uri(
+                  "https://example-site.de:80/uri/path?uriquery#urifragment", 7,
                   &out),
-        UPNP_E_INVALID_URL);
+              UPNP_E_INVALID_URL);
 #endif
     // Check the uri-parts scheme, hostport, pathquery and fragment
     EXPECT_STREQ(out.scheme.buff,
@@ -474,9 +744,11 @@ TEST(UriIp4TestSuite, parse_relative_uri_with_authority_and_absolute_path) {
     struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.hostport.IPaddress;
 
     // Execute the unit
-    EXPECT_EQ(parse_uri("//example-site.de:80/uri/path?uriquery#urifragment",
-                        51, &out),
-              HTTP_SUCCESS);
+    Curi uriObj;
+    EXPECT_EQ(
+        uriObj.parse_uri("//example-site.de:80/uri/path?uriquery#urifragment",
+                         51, &out),
+        HTTP_SUCCESS);
     // Check the uri-parts scheme, hostport, pathquery and fragment
     EXPECT_STREQ(out.scheme.buff, nullptr);
     EXPECT_STREQ(out.hostport.text.buff,
@@ -513,7 +785,8 @@ TEST(UriIp4TestSuite, parse_relative_uri_with_absolute_path) {
     struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.hostport.IPaddress;
 
     // Execute the unit
-    EXPECT_EQ(parse_uri("/uri/path?uriquery#urifragment", 31, &out),
+    Curi uriObj;
+    EXPECT_EQ(uriObj.parse_uri("/uri/path?uriquery#urifragment", 31, &out),
               HTTP_SUCCESS);
     // Check the uri-parts scheme, hostport, pathquery and fragment
     EXPECT_STREQ(out.scheme.buff, nullptr);
@@ -551,7 +824,8 @@ TEST(UriIp4TestSuite, parse_relative_uri_with_relative_path) {
 
     // Execute the unit
     // The relative path does not have a leading /
-    EXPECT_EQ(parse_uri("uri/path?uriquery#urifragment", 30, &out),
+    Curi uriObj;
+    EXPECT_EQ(uriObj.parse_uri("uri/path?uriquery#urifragment", 30, &out),
               HTTP_SUCCESS);
     // Check the uri-parts scheme, hostport, pathquery and fragment
     EXPECT_STREQ(out.scheme.buff, nullptr);
@@ -589,7 +863,8 @@ TEST(UriIp4TestSuite, parse_uri_with_opaque_part) {
 
     // Execute the unit
     // The relative path does not have a leading /
-    EXPECT_EQ(parse_uri("mailto:a@b.com", 15, &out), HTTP_SUCCESS);
+    Curi uriObj;
+    EXPECT_EQ(uriObj.parse_uri("mailto:a@b.com", 15, &out), HTTP_SUCCESS);
     // Check the uri-parts scheme, hostport, pathquery and fragment
     EXPECT_STREQ(out.scheme.buff, "mailto:a@b.com");
     EXPECT_STREQ(out.hostport.text.buff, nullptr);
@@ -627,7 +902,8 @@ TEST(ResolveRelUrlIp4TestSuite, resolve_successful) {
     char rel_url[]{"homepage#this-fragment"};
 
     // Execute the unit
-    char* abs_url = resolve_rel_url(*&base_url, *&rel_url);
+    Curi uriObj;
+    char* abs_url = uriObj.resolve_rel_url(*&base_url, *&rel_url);
     EXPECT_STREQ(abs_url, "https://example.com:443/homepage#this-fragment");
 }
 
@@ -645,7 +921,8 @@ TEST(ResolveRelUrlIp4TestSuite, null_base_url_should_return_rel_url) {
     char rel_url[]{"homepage#this-fragment"};
 
     // Execute the unit
-    char* abs_url = resolve_rel_url(NULL, *&rel_url);
+    Curi uriObj;
+    char* abs_url = uriObj.resolve_rel_url(NULL, *&rel_url);
     EXPECT_STREQ(abs_url, "homepage#this-fragment");
 }
 
@@ -664,7 +941,8 @@ TEST(ResolveRelUrlIp4TestSuite, empty_base_url_should_return_rel_url) {
     char rel_url[]{"homepage#this-fragment"};
 
     // Execute the unit
-    char* abs_url = resolve_rel_url(*&base_url, *&rel_url);
+    Curi uriObj;
+    char* abs_url = uriObj.resolve_rel_url(*&base_url, *&rel_url);
 #ifdef OLD_TEST
     ::std::cout << "  BUG! Empty base url should return rel url, not NULL.\n";
     EXPECT_EQ(abs_url, nullptr);
@@ -689,7 +967,8 @@ TEST(ResolveRelUrlIp4TestSuite, null_rel_url_should_return_base_url) {
     char base_url[]{"http://example.com"};
 
     // Execute the unit
-    char* abs_url = resolve_rel_url(*&base_url, NULL);
+    Curi uriObj;
+    char* abs_url = uriObj.resolve_rel_url(*&base_url, NULL);
     EXPECT_STREQ(abs_url, "http://example.com");
 #endif
 }
@@ -708,7 +987,8 @@ TEST(ResolveRelUrlIp4TestSuite, empty_rel_url_should_return_base_url) {
     char rel_url[]{""};
 
     // Execute the unit
-    char* abs_url = resolve_rel_url(*&base_url, *&rel_url);
+    Curi uriObj;
+    char* abs_url = uriObj.resolve_rel_url(*&base_url, *&rel_url);
     EXPECT_STREQ(abs_url, "http://example.com");
 }
 
@@ -723,7 +1003,8 @@ TEST(ResolveRelUrlIp4TestSuite, null_base_and_rel_url_should_return_null) {
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
 
     // Execute the unit
-    char* abs_url = resolve_rel_url(NULL, NULL);
+    Curi uriObj;
+    char* abs_url = uriObj.resolve_rel_url(NULL, NULL);
     EXPECT_EQ(abs_url, nullptr);
 }
 
@@ -742,7 +1023,8 @@ TEST(ResolveRelUrlIp4TestSuite, empty_base_and_rel_url_should_return_null) {
     char rel_url[]{""};
 
     // Execute the unit
-    char* abs_url = resolve_rel_url(*&base_url, *&rel_url);
+    Curi uriObj;
+    char* abs_url = uriObj.resolve_rel_url(*&base_url, *&rel_url);
     EXPECT_EQ(abs_url, nullptr);
 }
 
@@ -760,7 +1042,8 @@ TEST(ResolveRelUrlIp4TestSuite, absolute_rel_url_should_return_a_copy_of_it) {
     char rel_url[]{"https://absolute.net:443/home-page#fragment"};
 
     // Execute the unit
-    char* abs_url = resolve_rel_url(*&base_url, *&rel_url);
+    Curi uriObj;
+    char* abs_url = uriObj.resolve_rel_url(*&base_url, *&rel_url);
     EXPECT_STREQ(abs_url, "https://absolute.net:443/home-page#fragment");
 }
 
@@ -780,8 +1063,20 @@ TEST(ResolveRelUrlIp4TestSuite,
     char rel_url[]{"home-page#fragment"};
 
     // Execute the unit
-    char* abs_url = resolve_rel_url(*&base_url, *&rel_url);
+    Curi uriObj;
+    char* abs_url = uriObj.resolve_rel_url(*&base_url, *&rel_url);
     EXPECT_EQ(abs_url, nullptr);
+}
+
+TEST(UriIp4TestSuite, copy_URL_list) {
+    GTEST_SKIP() << "Format of the URL_list unclear so far. Test must be "
+                    "created later.";
+}
+
+TEST(UriIp4TestSuite, free_URL_list) {
+    GTEST_SKIP()
+        << "free_URL_list frees memory of copy_URL_list and test must be "
+           "created together with it.";
 }
 
 } // namespace upnp

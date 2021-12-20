@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-16
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-19
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -136,23 +136,26 @@ typedef struct URL_LIST {
 } URL_list;
 
 /*!
- * \brief Replaces an escaped sequence with its unescaped version as in
- * http://www.ietf.org/rfc/rfc2396.txt  (RFC explaining URIs)
+ * \brief Replaces one single escaped character within a string with its
+ * unescaped version as in http://www.ietf.org/rfc/rfc2396.txt (RFC explaining
+ * URIs). The index must exactly point to the '%' character, otherwise the
+ * function will return unsuccessful.
  *
- * Size of array is NOT checked (MUST be checked by caller)
+ * Size of array is NOT checked (MUST be checked by caller).
  *
- * \note This function modifies the string. If the sequence is an escaped
- * sequence it is replaced, the other characters in the string are shifted
- * over, and NULL characters are placed at the end of the string.
+ * \note This function modifies the string and the max size. If the sequence is
+ * an escaped sequence it is replaced, the other characters in the string are
+ * shifted over, and NULL characters are placed at the end of the string.
  *
- * \return
+ * \return 1 if an escaped character was converted, otherwise return 0.
  */
 int replace_escaped(
     /*! [in,out] String of characters. */
     char* in,
     /*! [in] Index at which to start checking the characters. */
     size_t index,
-    /*! [out] . */
+    /*! [in,out] Maximal size of the string buffer will be reduced by 2 if a
+       character is converted. */
     size_t* max);
 
 /*!
@@ -209,7 +212,8 @@ void print_token(
 #endif
 
 /*!
- * \brief Compares buffer in the token object with the buffer in in2.
+ * \brief Compares buffer in the token object with the buffer in in2 case
+ * insensitive.
  *
  * \return
  * 	\li < 0, if string1 is less than string2.

@@ -119,6 +119,8 @@ add_executable(test_httpparser
 
     ${PROJECT_SOURCE_DIR}/test_httpparser.cpp
 )
+target_compile_definitions(test_httpparser PRIVATE
+                            $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 add_test(NAME ctest_httpparser COMMAND test_httpparser)
 
 
@@ -147,11 +149,15 @@ add_executable(test_httpreadwrite
 
     ${PROJECT_SOURCE_DIR}/test_httpreadwrite.cpp
 )
+target_compile_definitions(test_httpreadwrite PRIVATE
+                            $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 add_test(NAME ctest_httpreadwrite COMMAND test_httpreadwrite)
 
 # UpnpString
 #-----------
 add_executable(test_UpnpString ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
+target_compile_definitions(test_UpnpString PRIVATE
+                            $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
 
 # upnpdebug
@@ -206,6 +212,8 @@ set(UPNP_UPNPAPI_SOURCE_FILES
 add_executable(test_upnpapi ${UPNP_UPNPAPI_SOURCE_FILES}
                $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/test_upnpapi_win32.cpp>
                $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/test_upnpapi_unix.cpp>)
+target_compile_definitions(test_upnpapi PRIVATE
+                            $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 target_link_libraries(test_upnpapi
                       custom_gtest_tools)
 add_test(NAME ctest_upnpapi COMMAND test_upnpapi

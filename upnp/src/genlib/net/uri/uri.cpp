@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-18
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-19
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -211,6 +211,7 @@ int copy_URL_list(URL_list* in, URL_list* out) {
     out->parsedURLs = (uri_type*)malloc(sizeof(uri_type) * in->size);
 
     if (!out->URLs || !out->parsedURLs)
+        // TODO: Bugfix - if one malloc succeds then we have a memory leak
         return UPNP_E_OUTOF_MEMORY;
     memcpy(out->URLs, in->URLs, len);
     for (i = (size_t)0; i < in->size; i++) {
@@ -471,6 +472,7 @@ static size_t parse_scheme(
 }
 
 int remove_escaped_chars(/* INOUT */ char* in, /* INOUT */ size_t* size) {
+    // TODO: Optimize with prechecking the delimiter '%'.
     size_t i = (size_t)0;
 
     for (i = (size_t)0; i < *size; i++) {
