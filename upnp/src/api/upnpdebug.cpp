@@ -2,6 +2,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -210,11 +212,11 @@ static void UpnpDisplayFileAndLine(FILE* fp, const char* DbgFileName,
     timeinfo = localtime(&now);
     strftime(timebuf, 26, "%Y-%m-%d %H:%M:%S", timeinfo);
 
-    fprintf(fp, "%s UPNP-%s-%s: Thread:0x%lX [%s:%d]: ", timebuf, smod, slev,
+    fprintf(fp, "%s UPNP-%s-%s: Thread:0x%llX [%s:%d]: ", timebuf, smod, slev,
 #ifdef __PTW32_DLLPORT
-            (unsigned long int)ithread_self().p
+            (unsigned long long int)ithread_self().p
 #else
-            (unsigned long int)ithread_self()
+            (unsigned long long int)ithread_self()
 #endif
             ,
             DbgFileName, DbgLineNo);

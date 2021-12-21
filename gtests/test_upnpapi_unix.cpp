@@ -90,7 +90,8 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
         LOCAL_PORT_V4 = 0;
         LOCAL_PORT_V6 = 0;
         LOCAL_PORT_V6_ULA_GUA = 0;
-        HandleTable[NUM_HANDLE] = {};
+        for (int i = 0; i < NUM_HANDLE; i++)
+            HandleTable[i] = {};
         g_maxContentLength = DEFAULT_SOAP_CONTENT_LENGTH;
         g_UpnpSdkEQMaxLen = MAX_SUBSCRIPTION_QUEUED_EVENTS;
         g_UpnpSdkEQMaxAge = MAX_SUBSCRIPTION_EVENT_AGE;

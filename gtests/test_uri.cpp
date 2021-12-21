@@ -188,7 +188,7 @@ TEST_F(HostportIp4FTestSuite, parse_ip_address_without_port) {
     // ip address without port
     EXPECT_EQ(parse_hostport("192.168.1.1", 80, &m_out), 11);
     EXPECT_STREQ(m_out.text.buff, "192.168.1.1");
-    EXPECT_EQ(m_out.text.size, 11);
+    EXPECT_EQ(m_out.text.size, (size_t)11);
     EXPECT_EQ(m_sai4->sin_family, AF_INET);
     EXPECT_EQ(m_sai4->sin_port, htons(80));
     EXPECT_STREQ(inet_ntoa(m_sai4->sin_addr), "192.168.1.1");
@@ -198,7 +198,7 @@ TEST_F(HostportIp4FTestSuite, parse_ip_address_with_port) {
     // Ip address with port
     EXPECT_EQ(parse_hostport("192.168.1.2:443", 80, &m_out), 15);
     EXPECT_STREQ(m_out.text.buff, "192.168.1.2:443");
-    EXPECT_EQ(m_out.text.size, 15);
+    EXPECT_EQ(m_out.text.size, (size_t)15);
     EXPECT_EQ(m_sai4->sin_family, AF_INET);
     EXPECT_EQ(m_sai4->sin_port, htons(443));
     EXPECT_STREQ(inet_ntoa(m_sai4->sin_addr), "192.168.1.2");
@@ -218,7 +218,6 @@ TEST_P(HostportFailIp4PTestSuite, parse_name_with_scheme) {
     const char* uristr = ::std::get<0>(params);
     const char* ipaddr = ::std::get<1>(params);
     const int port = ::std::get<2>(params);
-    const int size = ::strcspn(uristr, "/");
 
     Mock_netv4info netv4inf;
     addrinfo* res = netv4inf.set(ipaddr, port);
@@ -235,7 +234,7 @@ TEST_P(HostportFailIp4PTestSuite, parse_name_with_scheme) {
     // Execute the unit
     EXPECT_EQ(parse_hostport(uristr, 80, &out), UPNP_E_INVALID_URL);
     EXPECT_STREQ(out.text.buff, nullptr);
-    EXPECT_EQ(out.text.size, 0);
+    EXPECT_EQ(out.text.size, (size_t)0);
     EXPECT_EQ(sai4->sin_family, AF_UNSPEC);
     EXPECT_EQ(sai4->sin_port, 0);
     EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "0.0.0.0");
@@ -264,7 +263,7 @@ TEST_P(HostportIp4PTestSuite, parse_hostport_successful) {
     const char* uristr = ::std::get<0>(params);
     const char* ipaddr = ::std::get<1>(params);
     const int port = ::std::get<2>(params);
-    const int size = ::strcspn(uristr, "/");
+    const size_t size = ::strcspn(uristr, "/");
 
     Mock_netv4info netv4inf;
     addrinfo* res = netv4inf.set(ipaddr, port);
@@ -279,7 +278,7 @@ TEST_P(HostportIp4PTestSuite, parse_hostport_successful) {
     struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.IPaddress;
 
     // Execute the unit
-    EXPECT_EQ(parse_hostport(uristr, 80, &out), size);
+    EXPECT_EQ((const size_t)parse_hostport(uristr, 80, &out), size);
     EXPECT_STREQ(out.text.buff, uristr);
     EXPECT_EQ(out.text.size, size);
     EXPECT_EQ(sai4->sin_family, AF_INET);
@@ -313,7 +312,7 @@ TEST(HostportIp6TestSuite, parse_hostport_without_name_resolution)
         parse_hostport("[2001:db8:85a3:8d3:1319:8a2e:370:7348]:443", 80, &out),
         42);
     EXPECT_STREQ(out.text.buff, "[2001:db8:85a3:8d3:1319:8a2e:370:7348]:443");
-    EXPECT_EQ(out.text.size, 42);
+    EXPECT_EQ(out.text.size, (size_t)42);
     EXPECT_EQ(sai6->sin6_family, AF_INET6);
     EXPECT_EQ(sai6->sin6_port, htons(443));
     inet_ntop(AF_INET6, (const void*)sai6->sin6_addr.s6_addr, dst, sizeof(dst));
@@ -573,7 +572,7 @@ INSTANTIATE_TEST_SUITE_P(
         ::std::make_tuple("..", 2, "", UPNP_E_SUCCESS),
         ::std::make_tuple("/", 1, "/", UPNP_E_SUCCESS),
         //::std::make_tuple("ab", 1, "a", UPNP_E_SUCCESS), // BUG! Does not
-        //finish
+        // finish
         ::std::make_tuple("ab", 2, "ab", UPNP_E_SUCCESS)));
 
 TEST(UriIp4TestSuite, remove_dots_report_bugs) {
@@ -654,32 +653,32 @@ TEST(UriIp4TestSuite, parse_uri_simple_call)
 TEST(UriIp4TestSuite, parse_scheme_of_uri) {
     ::token out;
 
-    EXPECT_EQ(::parse_scheme("https://dummy.net:80/page", 6, &out), 5);
-    EXPECT_EQ(out.size, 5);
+    EXPECT_EQ(::parse_scheme("https://dummy.net:80/page", 6, &out), (size_t)5);
+    EXPECT_EQ(out.size, (size_t)5);
     EXPECT_STREQ(out.buff, "https://dummy.net:80/page");
-    EXPECT_EQ(::parse_scheme("https://dummy.net:80/page", 5, &out), 0);
-    EXPECT_EQ(out.size, 0);
+    EXPECT_EQ(::parse_scheme("https://dummy.net:80/page", 5, &out), (size_t)0);
+    EXPECT_EQ(out.size, (size_t)0);
     EXPECT_STREQ(out.buff, nullptr);
-    EXPECT_EQ(::parse_scheme("h:tps://dummy.net:80/page", 32, &out), 1);
-    EXPECT_EQ(out.size, 1);
+    EXPECT_EQ(::parse_scheme("h:tps://dummy.net:80/page", 32, &out), (size_t)1);
+    EXPECT_EQ(out.size, (size_t)1);
     EXPECT_STREQ(out.buff, "h:tps://dummy.net:80/page");
-    EXPECT_EQ(::parse_scheme("1ttps://dummy.net:80/page", 32, &out), 0);
-    EXPECT_EQ(out.size, 0);
+    EXPECT_EQ(::parse_scheme("1ttps://dummy.net:80/page", 32, &out), (size_t)0);
+    EXPECT_EQ(out.size, (size_t)0);
     EXPECT_STREQ(out.buff, nullptr);
-    EXPECT_EQ(::parse_scheme("h§tps://dummy.net:80/page", 32, &out), 0);
-    EXPECT_EQ(out.size, 0);
+    EXPECT_EQ(::parse_scheme("h§tps://dummy.net:80/page", 32, &out), (size_t)0);
+    EXPECT_EQ(out.size, (size_t)0);
     EXPECT_STREQ(out.buff, nullptr);
-    EXPECT_EQ(::parse_scheme(":ttps://dummy.net:80/page", 32, &out), 0);
-    EXPECT_EQ(out.size, 0);
+    EXPECT_EQ(::parse_scheme(":ttps://dummy.net:80/page", 32, &out), (size_t)0);
+    EXPECT_EQ(out.size, (size_t)0);
     EXPECT_STREQ(out.buff, nullptr);
-    EXPECT_EQ(::parse_scheme("h*tps://dummy.net:80/page", 32, &out), 0);
-    EXPECT_EQ(out.size, 0);
+    EXPECT_EQ(::parse_scheme("h*tps://dummy.net:80/page", 32, &out), (size_t)0);
+    EXPECT_EQ(out.size, (size_t)0);
     EXPECT_STREQ(out.buff, nullptr);
-    EXPECT_EQ(::parse_scheme("mailto:a@b.com", 7, &out), 6);
-    EXPECT_EQ(out.size, 6);
+    EXPECT_EQ(::parse_scheme("mailto:a@b.com", 7, &out), (size_t)6);
+    EXPECT_EQ(out.size, (size_t)6);
     EXPECT_STREQ(out.buff, "mailto:a@b.com");
-    EXPECT_EQ(::parse_scheme("mailto:a@b.com", 6, &out), 0);
-    EXPECT_EQ(out.size, 0);
+    EXPECT_EQ(::parse_scheme("mailto:a@b.com", 6, &out), (size_t)0);
+    EXPECT_EQ(out.size, (size_t)0);
     EXPECT_STREQ(out.buff, nullptr);
 }
 
@@ -1082,6 +1081,7 @@ TEST(UriIp4TestSuite, free_URL_list) {
 } // namespace upnp
 
 int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
+    // ::testing::InitGoogleTest(&argc, argv);
+    ::testing::InitGoogleMock(&argc, argv);
     return RUN_ALL_TESTS();
 }

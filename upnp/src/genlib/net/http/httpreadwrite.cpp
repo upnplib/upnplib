@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-07
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -303,7 +303,13 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
                    "connect error: %d\n", WSAGetLastError());
 #endif
         if (shutdown(connfd, SD_BOTH) == -1) {
-            strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
+// TODO: fix source code to only use POSIX versions, not GNU nonstandard
+#ifdef _GNU_SOURCE
+            char* ret;
+#else // POSIX
+            int ret;
+#endif
+            ret = strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
             UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
                        "Error in shutdown: %s\n", errorBuffer);
         }
@@ -1567,9 +1573,9 @@ int http_MakeMessage(membuffer* buf, int http_major_version,
             RespInstr =
                 (struct SendInstruction*)va_arg(argp, struct SendInstruction*);
             assert(RespInstr);
-            if (strcmp(RespInstr->AcceptLanguageHeader, "") &&
-                strcmp(WEB_SERVER_CONTENT_LANGUAGE, "") &&
-                http_MakeMessage(
+            if ((bool)strcmp(RespInstr->AcceptLanguageHeader, "") &&
+                (bool)strcmp(WEB_SERVER_CONTENT_LANGUAGE, "") &&
+                (bool)http_MakeMessage(
                     buf, http_major_version, http_minor_version, "ssc",
                     "CONTENT-LANGUAGE: ", WEB_SERVER_CONTENT_LANGUAGE) != 0)
                 goto error_handler;

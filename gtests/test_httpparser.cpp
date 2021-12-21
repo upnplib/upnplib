@@ -75,7 +75,7 @@ class Chttpparser : public Ihttpparser {
         return ::httpmsg_init(msg); }
     void httpmsg_destroy(http_message_t* msg) override {
         return ::httpmsg_destroy(msg); }
-    http_header_t* httpmsg_find_hdr_str(http_message_t* msg, const char* header_name) {
+    http_header_t* httpmsg_find_hdr_str(http_message_t* msg, const char* header_name) override {
         return ::httpmsg_find_hdr_str(msg, header_name); }
     http_header_t* httpmsg_find_hdr(http_message_t* msg, int header_name_id, memptr* value) override {
         return ::httpmsg_find_hdr(msg, header_name_id, value); }

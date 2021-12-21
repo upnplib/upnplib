@@ -135,14 +135,14 @@ void CCaptureStdOutErr::start() {
     // We always write a nullbyte to the pipe so read always returns
     // and does not wait endless if there is nothing captured.
     const char nullbyte[1] = {'\0'};
-    ::write(m_std_fileno, &nullbyte, 1);
+    ssize_t rc = ::write(m_std_fileno, &nullbyte, 1);
 
     // read from pipe into chunk and append the chunk to a string
     char chunk[m_chunk_size];
     ::std::string strbuffer;
     while (::read(m_out_pipe[0], &chunk, m_chunk_size - 1) > 1) {
         strbuffer += chunk;
-        ::write(m_std_fileno, &nullbyte, 1);
+        rc = ::write(m_std_fileno, &nullbyte, 1);
     }
 
     // reconnect stdout/stderr

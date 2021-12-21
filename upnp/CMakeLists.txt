@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-12-07
+# Redistribution only with this Copyright remark. Last modified: 2021-12-21
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -10,23 +10,6 @@ project(UPNP_CORE VERSION 0006
 
 # This contains all settings to compile the library dynamically and static.
 #==========================================================================
-
-# Compiler options
-#-----------------
-
-if (MSVC)
-    # TODO: Increase error levels on compilers
-    # Reports the compiler warning that is specified by nnnn only once.
-    #add_compile_options(/wo4273)
-    # suppress all warnings for development to see only errors
-    #add_compile_options(/W0)
-    # warning level 4 and all warnings as errors
-    #add_compile_options(/W4 /WX)
-else()
-    # lots of warnings and all warnings as errors
-    #add_compile_options(-Wall -Wextra -pedantic -Werror)
-endif()
-
 
 # Source files and compile settings
 #----------------------------------
@@ -84,6 +67,29 @@ set(UPNP_SOURCE_FILES
     $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/global_unix.cpp>
 )
 
+# Some compiler options for MSVC
+#-------------------------------
+# Reports the compiler warning that is specified by nnnn only once.
+#add_compile_options(/wo4273)
+# suppress all warnings for development to see only errors
+#add_compile_options(/W0)
+# warning level 4 and all warnings as errors
+# but suppress 'type cast': pointer truncation
+#add_compile_options(/W4 /wd4311 /WX)
+
+# TODO: Increase error levels on compilers
+add_compile_options(
+        # all warnings as errors
+        # but suppress 'type cast': pointer truncation
+        $<$<CXX_COMPILER_ID:MSVC>:/WX>
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4311>
+        # lots of warnings and all warnings as errors
+        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall>
+        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wextra>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wpedantic>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Werror>
+)
+
 
 # Create libraries and create test executable for information
 #============================================================
@@ -117,10 +123,6 @@ if(NOT WIN32)
     )
 
 else() # WIN32
-
-    # Can be general initialized with CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS
-    # but will have it under control individual
-    set(WINDOWS_EXPORT_ALL_SYMBOLS YES)
 
     # Link with POSIX Threads for Windows (pthreads4w)
     #=================================================

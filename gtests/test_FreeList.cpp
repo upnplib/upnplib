@@ -91,7 +91,7 @@ TEST_F(FreeListTestSuite, init_alocate_free_destroy) {
     // initialize the freelist
     EXPECT_EQ(FreeListObj.FreeListInit(&m_free_list, sizeof(int), 3), 0);
     EXPECT_EQ(m_free_list.head, nullptr);
-    EXPECT_EQ(m_free_list.element_size, 4);
+    EXPECT_EQ(m_free_list.element_size, (size_t)4);
     EXPECT_EQ(m_free_list.maxFreeListLength, 3);
     EXPECT_EQ(m_free_list.freeListLength, 0);
 
@@ -104,7 +104,7 @@ TEST_F(FreeListTestSuite, init_alocate_free_destroy) {
         (FreeListNode*)FreeListObj.FreeListAlloc(&m_free_list);
     EXPECT_EQ(newnode, &anynode0);
     EXPECT_EQ(m_free_list.head, nullptr);
-    EXPECT_EQ(m_free_list.element_size, 4);
+    EXPECT_EQ(m_free_list.element_size, (size_t)4);
     EXPECT_EQ(m_free_list.maxFreeListLength, 3);
     EXPECT_EQ(m_free_list.freeListLength, 0);
 
@@ -161,7 +161,7 @@ TEST_F(FreeListTestSuite, init_alocate_free_destroy) {
     newnode = (FreeListNode*)FreeListObj.FreeListAlloc(&m_free_list);
     EXPECT_EQ(newnode, &anynode1);
     EXPECT_EQ(m_free_list.head, nullptr);
-    EXPECT_EQ(m_free_list.element_size, 4);
+    EXPECT_EQ(m_free_list.element_size, (size_t)4);
     EXPECT_EQ(m_free_list.maxFreeListLength, 3);
     EXPECT_EQ(m_free_list.freeListLength, 0);
 
@@ -174,7 +174,7 @@ TEST_F(FreeListTestSuite, init_alocate_free_destroy) {
 
     EXPECT_EQ(FreeListObj.FreeListDestroy(&m_free_list), 0);
     EXPECT_EQ(m_free_list.head, nullptr);
-    EXPECT_EQ(m_free_list.element_size, 4);
+    EXPECT_EQ(m_free_list.element_size, (size_t)4);
     EXPECT_EQ(m_free_list.maxFreeListLength, 3);
     EXPECT_EQ(m_free_list.freeListLength, 0);
 }
@@ -186,7 +186,7 @@ TEST_F(FreeListTestSuite, freelist_for_0_size_nodes) {
     EXPECT_CALL(mocked_stdlib, malloc(0)).WillOnce(Return(nullptr));
     EXPECT_EQ(FreeListObj.FreeListAlloc(&m_free_list), nullptr);
     EXPECT_EQ(m_free_list.head, nullptr);
-    EXPECT_EQ(m_free_list.element_size, 0);
+    EXPECT_EQ(m_free_list.element_size, (size_t)0);
     EXPECT_EQ(m_free_list.maxFreeListLength, 3);
     EXPECT_EQ(m_free_list.freeListLength, 0);
 
@@ -194,7 +194,7 @@ TEST_F(FreeListTestSuite, freelist_for_0_size_nodes) {
     FreeListNode anynode1{};
     EXPECT_EQ(FreeListObj.FreeListFree(&m_free_list, &anynode1), 0);
     EXPECT_EQ(m_free_list.maxFreeListLength, 3);
-    EXPECT_EQ(m_free_list.element_size, 0);
+    EXPECT_EQ(m_free_list.element_size, (size_t)0);
 #ifdef OLD_TEST
     // It isn't possible to allocate a 0-sized memory block. malloc() returns a
     // nullptr. So it should also be impossible to add a 0-sized node to the
@@ -215,7 +215,7 @@ TEST_F(FreeListTestSuite, destroy_freelist_for_0_size_nodes) {
 
     EXPECT_EQ(FreeListObj.FreeListDestroy(&m_free_list), 0);
     EXPECT_EQ(m_free_list.head, nullptr);
-    EXPECT_EQ(m_free_list.element_size, 0);
+    EXPECT_EQ(m_free_list.element_size, (size_t)0);
     EXPECT_EQ(m_free_list.maxFreeListLength, 3);
     EXPECT_EQ(m_free_list.freeListLength, 0);
 }
@@ -224,7 +224,7 @@ TEST_F(FreeListTestSuite, allocate_node_from_freelist_with_maximal_0_items) {
     EXPECT_EQ(FreeListObj.FreeListInit(&m_free_list, 4, 0), 0);
 
     EXPECT_EQ(m_free_list.head, nullptr);
-    EXPECT_EQ(m_free_list.element_size, 4);
+    EXPECT_EQ(m_free_list.element_size, (size_t)4);
     EXPECT_EQ(m_free_list.maxFreeListLength, 0);
     EXPECT_EQ(m_free_list.freeListLength, 0);
 
@@ -234,7 +234,7 @@ TEST_F(FreeListTestSuite, allocate_node_from_freelist_with_maximal_0_items) {
     EXPECT_CALL(mocked_stdlib, malloc(4)).WillOnce(Return(&anynode1));
     EXPECT_EQ(FreeListObj.FreeListAlloc(&m_free_list), &anynode1);
     EXPECT_EQ(m_free_list.head, nullptr);
-    EXPECT_EQ(m_free_list.element_size, 4);
+    EXPECT_EQ(m_free_list.element_size, (size_t)4);
     EXPECT_EQ(m_free_list.maxFreeListLength, 0);
     EXPECT_EQ(m_free_list.freeListLength, 0);
 }
@@ -248,7 +248,7 @@ TEST_F(FreeListTestSuite, put_free_node_to_freelist_with_maximal_0_items) {
     EXPECT_CALL(mocked_stdlib, free(&anynode1)).Times(1);
     EXPECT_EQ(FreeListObj.FreeListFree(&m_free_list, &anynode1), 0);
     EXPECT_EQ(m_free_list.head, nullptr);
-    EXPECT_EQ(m_free_list.element_size, 4);
+    EXPECT_EQ(m_free_list.element_size, (size_t)4);
     EXPECT_EQ(m_free_list.maxFreeListLength, 0);
     EXPECT_EQ(m_free_list.freeListLength, 0);
 }

@@ -305,11 +305,11 @@ TEST(ThreadPoolNormalTestSuite, set_stack_size_to_attribute) {
 #ifdef OLD_TEST
     std::cout << "  BUG! It should not be possible to set StackSize < 0.\n";
     EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, -1), 0);
-    EXPECT_EQ(TPAttr.stackSize, -1);
+    EXPECT_EQ(TPAttr.stackSize, (size_t)-1);
 #else
     EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, -1), EINVAL)
         << "# It should not be possible to set StackSize < 0.";
-    EXPECT_EQ(TPAttr.stackSize, 1)
+    EXPECT_EQ(TPAttr.stackSize, (size_t)1)
         << "# Wrong settings should not modify old stackSize value.";
 #endif
 }
@@ -513,7 +513,7 @@ TEST(ThreadPoolNormalTestSuite, get_current_attributes_of_threadpool) {
 
     EXPECT_EQ(TPAttr.minThreads, 1);
     EXPECT_EQ(TPAttr.maxThreads, 10);
-    EXPECT_EQ(TPAttr.stackSize, 0);
+    EXPECT_EQ(TPAttr.stackSize, (size_t)0);
     EXPECT_EQ(TPAttr.maxIdleTime, 10000);
     EXPECT_EQ(TPAttr.jobsPerThread, 10);
     EXPECT_EQ(TPAttr.maxJobsTotal, 100);
@@ -558,7 +558,7 @@ TEST(ThreadPoolNormalTestSuite, set_threadpool_attributes) {
     // Check attributes
     EXPECT_EQ(tp.attr.minThreads, 0);
     EXPECT_EQ(tp.attr.maxThreads, 0);
-    EXPECT_EQ(tp.attr.stackSize, 0);
+    EXPECT_EQ(tp.attr.stackSize, (size_t)0);
     EXPECT_EQ(tp.attr.maxIdleTime, 0);
     EXPECT_EQ(tp.attr.jobsPerThread, 0);
     EXPECT_EQ(tp.attr.maxJobsTotal, 0);
@@ -569,7 +569,7 @@ TEST(ThreadPoolNormalTestSuite, set_threadpool_attributes) {
     EXPECT_EQ(tpObj.ThreadPoolSetAttr(&tp, nullptr), 0);
     EXPECT_EQ(tp.attr.minThreads, 1);
     EXPECT_EQ(tp.attr.maxThreads, 10);
-    EXPECT_EQ(tp.attr.stackSize, 0);
+    EXPECT_EQ(tp.attr.stackSize, (size_t)0);
     EXPECT_EQ(tp.attr.maxIdleTime, 10000);
     EXPECT_EQ(tp.attr.jobsPerThread, 10);
     EXPECT_EQ(tp.attr.maxJobsTotal, 100);

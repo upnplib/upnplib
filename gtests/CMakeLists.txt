@@ -38,8 +38,31 @@ include_directories(
 # build/_deps/googletest-src/googletest/README.md
 add_compile_definitions(PRIVATE
     $<$<AND:$<BOOL:${UPNP_GOOGLETEST}>,$<BOOL:${BUILD_SHARED_LIBS}>>:GTEST_LINKED_AS_SHARED_LIBRARY>
+    # Compile tests for the old (pupnp) source code.
     OLD_TEST
 )
+
+# Some compiler options for MSVC
+#-------------------------------
+# Reports the compiler warning that is specified by nnnn only once.
+#add_compile_options(/wo4273)
+# suppress all warnings for development to see only errors
+#add_compile_options(/W0)
+# warning level 4 and all warnings as errors
+# but suppress 'type cast': pointer truncation
+#add_compile_options(/W4 /wd4311 /WX)
+
+# TODO: Increase error levels on compilers
+add_compile_options(
+        # all warnings as errors
+        $<$<CXX_COMPILER_ID:MSVC>:/WX>
+        # lots of warnings and all warnings as errors
+        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall>
+        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wextra>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wpedantic>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Werror>
+)
+
 
 # Due to issue https://github.com/google/googletest/issues/1325#issuecomment-903884914
 # it should only link with the gmock libraries on WIN32. On Unix it doesn't compile
@@ -165,6 +188,9 @@ add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
 add_executable(test_upnpdebug
     ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
     ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
+target_compile_options(test_upnpdebug PRIVATE
+        # suppress warning C4311: 'type cast': pointer truncation
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4311>)
 target_link_libraries(test_upnpdebug custom_gtest_tools)
 add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
 
@@ -213,7 +239,10 @@ add_executable(test_upnpapi ${UPNP_UPNPAPI_SOURCE_FILES}
                $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/test_upnpapi_win32.cpp>
                $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/test_upnpapi_unix.cpp>)
 target_compile_definitions(test_upnpapi PRIVATE
-                            $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+                           $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+target_compile_options(test_upnpapi PRIVATE
+                       # suppress warning C4311: 'type cast': pointer truncation
+                       $<$<CXX_COMPILER_ID:MSVC>:/wd4311>)
 target_link_libraries(test_upnpapi
                       custom_gtest_tools)
 add_test(NAME ctest_upnpapi COMMAND test_upnpapi
@@ -238,6 +267,9 @@ add_test(NAME ctest_FreeList COMMAND test_FreeList)
 add_executable(test_ThreadPool
         ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
         ${PROJECT_SOURCE_DIR}/test_ThreadPool.cpp)
+target_compile_options(test_ThreadPool PRIVATE
+        # suppress warning C4311: 'type cast': pointer truncation
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4311>)
 add_test(NAME ctest_ThreadPool COMMAND test_ThreadPool)
 
 # TimerThread
@@ -245,6 +277,9 @@ add_test(NAME ctest_ThreadPool COMMAND test_ThreadPool)
 add_executable(test_TimerThread
         ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
         ${PROJECT_SOURCE_DIR}/test_TimerThread.cpp)
+target_compile_options(test_TimerThread PRIVATE
+        # suppress warning C4311: 'type cast': pointer truncation
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4311>)
 add_test(NAME ctest_TimerThread COMMAND test_TimerThread)
 
 # test custom_gtest_tools
