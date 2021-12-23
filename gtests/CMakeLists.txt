@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-12-11
+# Redistribution only with this Copyright remark. Last modified: 2021-12-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -117,7 +117,13 @@ add_dependencies(custom_gtest_tools gtest gtest_main gmock gmock_main)
 # Unit Tests                    #
 #################################
 # The tests are build in reverse order. test_template.cpp will be build first.
-#set(ENV{GITHUB_ACTIONS} 1)
+
+# membuffer
+#----------
+add_executable(test_membuffer
+    ${PROJECT_SOURCE_DIR}/test_membuffer.cpp
+)
+add_test(NAME ctest_membuffer COMMAND test_membuffer)
 
 # uri
 #----
@@ -136,7 +142,7 @@ add_executable(test_httpparser
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.c
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
     $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
@@ -163,7 +169,7 @@ add_executable(test_httpreadwrite
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.c
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
 
     # ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
@@ -227,7 +233,7 @@ set(UPNP_UPNPAPI_SOURCE_FILES
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.c
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
 
     # ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
@@ -299,6 +305,7 @@ add_executable(test_simple ${PROJECT_SOURCE_DIR}/test_simple.cpp)
 #---------
 add_executable(test_template ${PROJECT_SOURCE_DIR}/test_template.cpp)
 
+# set(ENV{GITHUB_ACTIONS} 1)
 # if(NOT APPLE)
 # if(NOT DEFINED ENV{GITHUB_ACTIONS})
 # target_compile_definitions(test_httpparser PRIVATE

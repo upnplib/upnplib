@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-12-21
+# Redistribution only with this Copyright remark. Last modified: 2021-12-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -54,7 +54,7 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
     ${PROJECT_SOURCE_DIR}/src/genlib/util/list.c
-    ${PROJECT_SOURCE_DIR}/src/genlib/util/membuffer.c
+    ${PROJECT_SOURCE_DIR}/src/genlib/util/membuffer.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/util/strintmap.c
 
     ${PROJECT_SOURCE_DIR}/src/api/UpnpExtraHeaders.c

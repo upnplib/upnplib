@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-07
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-23
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,8 +40,8 @@
  */
 
 #include "LinkedList.h"
-#include "membuffer.h"
-//#include "upnputil.h"
+#include "membuffer.hpp"
+#include "upnputil.h"
 #include "uri.hpp"
 
 /* private types */
