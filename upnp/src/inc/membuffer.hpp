@@ -96,6 +96,10 @@ char* str_alloc(
  * \li <  0 string1 substring less than string2 substring
  * \li == 0 string1 substring identical to string2 substring
  * \li >  0 string1 substring greater than string2 substring
+ *
+ * \note Different cases result in different length:
+ * \li "abC" compared with "abc": < 0
+ * \li "abc" compared with "abC": > 0
  */
 int memptr_cmp(
     /*! [in] Input memory object. */
@@ -118,7 +122,7 @@ int memptr_cmp(
 int memptr_cmp_nocase(
     /*! [in] Input memory object. */
     memptr* m,
-    /*! [in] Constatnt string for the memory object to be compared with. */
+    /*! [in] Constant string for the memory object to be compared with. */
     const char* s);
 
 /*!
@@ -225,7 +229,7 @@ int membuffer_insert(
 
 /*!
  * \brief Shrink the size of the buffer depending on the current size of the
- * bufer and te input parameters. Move contents from the old buffer to the
+ * buffer and the input parameters. Move contents from the old buffer to the
  * new sized buffer.
  */
 void membuffer_delete(

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-21
+// Redistribution only with this Copyright remark. Last modified: 2021-12-23
 
 // This test should always run, reporting no failure
 
@@ -89,10 +89,10 @@ TEST(EmptyTestSuite, empty_gtest) {
 
 #ifdef OLD_TEST
     // Place tests for old code here
-    ::std::cerr << "  BUG! Compiling tests compatible for OLD PUPNP library.\n";
+    ::std::cout << "  BUG! Compiling tests compatible for OLD PUPNP library.\n";
 #else
     // Place tests for current code here
-    ::std::cerr << "  # Compiling tests for curent code base.";
+    ::std::cout << "  # Compiling tests for curent code base.";
 #endif
 }
 
