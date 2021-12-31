@@ -2,6 +2,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-31
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,8 +31,8 @@
  *
  ******************************************************************************/
 
-#ifndef GENLIB_UTIL_STRINTMAP_H
-#define GENLIB_UTIL_STRINTMAP_H
+#ifndef GENLIB_UTIL_STRINTMAP_HPP
+#define GENLIB_UTIL_STRINTMAP_HPP
 
 //#include "upnputil.h"
 
@@ -40,13 +42,13 @@
 
 typedef struct /* str_int_entry */
 {
-        const char *name; /* a value in string form */
-        int id; /* same value in integer form */
+    const char* name; /* a value in string form */
+    int id;           /* same value in integer form */
 } str_int_entry;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// #ifdef __cplusplus
+// extern "C" {
+// #endif
 
 /************************************************************************
  *	Function :	map_str_to_int
@@ -70,11 +72,8 @@ extern "C" {
  *
  *	Note :
  ************************************************************************/
-int map_str_to_int(const char *name,
-        size_t name_len,
-        str_int_entry *table,
-        int num_entries,
-        int case_sensitive);
+int map_str_to_int(const char* name, size_t name_len, str_int_entry* table,
+                   int num_entries, int case_sensitive);
 
 /************************************************************************
  *	Function :	map_int_to_str
@@ -93,10 +92,10 @@ int map_str_to_int(const char *name,
  *
  *	Note :
  ************************************************************************/
-int map_int_to_str(int id, str_int_entry *table, int num_entries);
+int map_int_to_str(int id, str_int_entry* table, int num_entries);
 
-#ifdef __cplusplus
-} /* extern C */
-#endif
+// #ifdef __cplusplus
+// } /* extern C */
+// #endif
 
-#endif /* GENLIB_UTIL_STRINTMAP_H */
+#endif /* GENLIB_UTIL_STRINTMAP_HPP */

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-23
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-31
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -70,9 +70,9 @@ typedef struct {
 #define MEMBUF_DEF_SIZE_INC (size_t)5
 } membuffer;
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+// #ifdef __cplusplus
+// extern "C" {
+// #endif /* __cplusplus */
 
 /*!
  * \brief Allocate memory and copy information from the input string to the
@@ -267,8 +267,8 @@ void membuffer_attach(
     /*! [in] Length of the source buffer. */
     size_t buf_len);
 
-#ifdef __cplusplus
-} /* extern "C" */
-#endif /* __cplusplus */
+// #ifdef __cplusplus
+// } /* extern "C" */
+// #endif /* __cplusplus */
 
 #endif /* GENLIB_UTIL_MEMBUFFER_H */

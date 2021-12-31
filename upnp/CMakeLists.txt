@@ -55,7 +55,7 @@ set(UPNP_SOURCE_FILES
 
     ${PROJECT_SOURCE_DIR}/src/genlib/util/list.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-    ${PROJECT_SOURCE_DIR}/src/genlib/util/strintmap.c
+    ${PROJECT_SOURCE_DIR}/src/genlib/util/strintmap.cpp
 
     ${PROJECT_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
     ${PROJECT_SOURCE_DIR}/src/api/UpnpString.cpp
@@ -67,29 +67,10 @@ set(UPNP_SOURCE_FILES
     $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/global_unix.cpp>
 )
 
-# Some compiler options for MSVC
-#-------------------------------
-# Reports the compiler warning that is specified by nnnn only once.
-#add_compile_options(/wo4273)
-# suppress all warnings for development to see only errors
-#add_compile_options(/W0)
-# warning level 4 and all warnings as errors
-# but suppress 'type cast': pointer truncation
-#add_compile_options(/W4 /wd4311 /WX)
-
-# TODO: Increase error levels on compilers
 add_compile_options(
-        # all warnings as errors
-        # but suppress 'type cast': pointer truncation
-        $<$<CXX_COMPILER_ID:MSVC>:/WX>
+        # suppress warning 'type cast': pointer truncation
         $<$<CXX_COMPILER_ID:MSVC>:/wd4311>
-        # lots of warnings and all warnings as errors
-        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall>
-        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wextra>
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wpedantic>
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Werror>
 )
-
 
 # Create libraries and create test executable for information
 #============================================================

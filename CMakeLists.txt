@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-11-21
+# Redistribution only with this Copyright remark. Last modified: 2021-12-31
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -93,6 +93,30 @@ endif()
 add_compile_definitions(
     PRIVATE $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
 )
+
+# Set general compile options
+#----------------------------
+# TODO: Increase error levels on compilers
+add_compile_options(
+        # all warnings as errors
+        $<$<CXX_COMPILER_ID:MSVC>:/WX>
+        # lots of warnings and all warnings as errors
+        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall>
+        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wextra>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wpedantic>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Werror>
+        # Following is only valid for C++/ObjC++ but not for C
+        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wsuggest-override>
+)
+# Some compiler options for MSVC:
+# Reports the compiler warning that is specified by nnnn only once.
+#add_compile_options(/wo4273)
+# suppress all warnings for development to see only errors
+#add_compile_options(/W0)
+# warning level 4 and all warnings as errors
+# but suppress 'type cast': pointer truncation
+#add_compile_options(/W4 /wd4311 /WX)
+
 
 #################################
 # Large-file-sensitivity        #

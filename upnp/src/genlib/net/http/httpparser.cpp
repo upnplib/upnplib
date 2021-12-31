@@ -49,7 +49,7 @@
 #include "UpnpExtraHeaders.h"
 //#include "list.h"
 #include "statcodes.hpp"
-#include "strintmap.h"
+#include "strintmap.hpp"
 //#include "unixutil.h"
 #include "upnpdebug.h"
 

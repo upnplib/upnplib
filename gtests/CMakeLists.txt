@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-12-23
+# Redistribution only with this Copyright remark. Last modified: 2021-12-31
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -41,28 +41,6 @@ add_compile_definitions(PRIVATE
     # Compile tests for the old (pupnp) source code.
     OLD_TEST
 )
-
-# Some compiler options for MSVC
-#-------------------------------
-# Reports the compiler warning that is specified by nnnn only once.
-#add_compile_options(/wo4273)
-# suppress all warnings for development to see only errors
-#add_compile_options(/W0)
-# warning level 4 and all warnings as errors
-# but suppress 'type cast': pointer truncation
-#add_compile_options(/W4 /wd4311 /WX)
-
-# TODO: Increase error levels on compilers
-add_compile_options(
-        # all warnings as errors
-        $<$<CXX_COMPILER_ID:MSVC>:/WX>
-        # lots of warnings and all warnings as errors
-        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall>
-        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wextra>
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wpedantic>
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Werror>
-)
-
 
 # Due to issue https://github.com/google/googletest/issues/1325#issuecomment-903884914
 # it should only link with the gmock libraries on WIN32. On Unix it doesn't compile
@@ -118,6 +96,13 @@ add_dependencies(custom_gtest_tools gtest gtest_main gmock gmock_main)
 #################################
 # The tests are build in reverse order. test_template.cpp will be build first.
 
+# strintmap
+#----------
+add_executable(test_strintmap
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
+    ${PROJECT_SOURCE_DIR}/test_strintmap.cpp)
+add_test(NAME ctest_strintmap COMMAND test_strintmap)
+
 # list
 #-----
 add_executable(test_list
@@ -151,7 +136,7 @@ add_executable(test_httpparser
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.cpp
     $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
     ${PROJECT_SOURCE_DIR}/test_httpparser.cpp
@@ -178,7 +163,7 @@ add_executable(test_httpreadwrite
 
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.cpp
 
     # ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
     ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.cpp
@@ -242,7 +227,7 @@ set(UPNP_UPNPAPI_SOURCE_FILES
 
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.cpp
 
     # ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
     ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.cpp
