@@ -3,6 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-29
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,39 +32,35 @@
  *
  ******************************************************************************/
 
-#include "list.h"
+#include "list.hpp"
 
-void UpnpListInit(UpnpListHead *list)
-{
-        list->next = list;
-        list->prev = list;
+void UpnpListInit(UpnpListHead* list) {
+    list->next = list;
+    list->prev = list;
 }
 
-UpnpListIter UpnpListBegin(UpnpListHead *list) { return list->next; }
+UpnpListIter UpnpListBegin(UpnpListHead* list) { return list->next; }
 
-UpnpListIter UpnpListEnd(UpnpListHead *list) { return list; }
+UpnpListIter UpnpListEnd(UpnpListHead* list) { return list; }
 
-UpnpListIter UpnpListNext(UpnpListHead *list, UpnpListIter pos)
-{
-        (void)list;
-        return pos->next;
+UpnpListIter UpnpListNext(UpnpListHead* list, UpnpListIter pos) {
+    (void)list;
+    return pos->next;
 }
 
-UpnpListIter UpnpListInsert(
-        UpnpListHead *list, UpnpListIter pos, UpnpListHead *elt)
-{
-        (void)list;
-        elt->prev = pos->prev;
-        elt->next = pos;
-        pos->prev->next = elt;
-        pos->prev = elt;
-        return elt;
+UpnpListIter UpnpListInsert(UpnpListHead* list, UpnpListIter pos,
+                            UpnpListHead* elt) {
+    (void)list;
+    elt->prev = pos->prev;
+    elt->next = pos;
+    pos->prev->next = elt;
+    pos->prev = elt;
+    return elt;
 }
 
-UpnpListIter UpnpListErase(UpnpListHead *list, UpnpListIter pos)
-{
-        (void)list;
-        pos->prev->next = pos->next;
-        pos->next->prev = pos->prev;
-        return pos->next;
+UpnpListIter UpnpListErase(UpnpListHead* list, UpnpListIter pos) {
+    (void)list;
+    pos->prev->next = pos->next;
+    pos->next->prev = pos->prev;
+    return pos->next;
 }

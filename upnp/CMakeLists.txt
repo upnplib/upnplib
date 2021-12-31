@@ -53,7 +53,7 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
-    ${PROJECT_SOURCE_DIR}/src/genlib/util/list.c
+    ${PROJECT_SOURCE_DIR}/src/genlib/util/list.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/util/membuffer.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/util/strintmap.c
 

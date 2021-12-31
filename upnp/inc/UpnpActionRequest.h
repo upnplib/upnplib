@@ -15,7 +15,7 @@
 #include "UpnpInet.h"
 #include "UpnpString.h"
 //#include "ixml.h"
-#include "list.h"
+#include "list.hpp"
 
 //#include <stdlib.h> /* for size_t */
 

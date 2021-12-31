@@ -14,7 +14,7 @@
 //#include "UpnpGlobal.h" /* for EXPORT_SPEC */
 #include "UpnpString.h"
 #include "ixml.h"
-#include "list.h"
+#include "list.hpp"
 
 //#include <stdlib.h> /* for size_t */
 

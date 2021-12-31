@@ -82,6 +82,8 @@ class Cmembuffer : Imembuffer {
 // clang-format on
 
 //
+// Testsuite for the membuffer module
+// ==================================
 TEST(MembufferTestSuite, init_and_destroy) {
     membuffer mbuf{};
 

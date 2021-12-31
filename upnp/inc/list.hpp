@@ -6,6 +6,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2021-12-29
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -48,33 +50,32 @@ extern "C" {
  *  member objects, except if you want to do member offset arithmetic
  *  instead of simple casts (look up "containerof"). The list code itself
  *  does not care. */
-typedef struct UpnpListHead
-{
-        struct UpnpListHead *next, *prev;
+typedef struct UpnpListHead {
+    struct UpnpListHead *next, *prev;
 } UpnpListHead;
 
 /** List iterator. Not strictly necessary, but clarifies the interface. */
-typedef UpnpListHead *UpnpListIter;
+typedef UpnpListHead* UpnpListIter;
 
 /** Initialize empty list */
-EXPORT_SPEC void UpnpListInit(UpnpListHead *list);
+EXPORT_SPEC void UpnpListInit(UpnpListHead* list);
 
 /** Return iterator pointing to the first list element, or
  *  UpnpListEnd(list) if the list is empty */
-EXPORT_SPEC UpnpListIter UpnpListBegin(UpnpListHead *list);
+EXPORT_SPEC UpnpListIter UpnpListBegin(UpnpListHead* list);
 
 /** Return end of list sentinel iterator (not an element) */
-EXPORT_SPEC UpnpListIter UpnpListEnd(UpnpListHead *list);
+EXPORT_SPEC UpnpListIter UpnpListEnd(UpnpListHead* list);
 
 /** Return iterator pointing to element after pos, or end() */
-EXPORT_SPEC UpnpListIter UpnpListNext(UpnpListHead *list, UpnpListIter pos);
+EXPORT_SPEC UpnpListIter UpnpListNext(UpnpListHead* list, UpnpListIter pos);
 
 /** Insert element before pos, returns iterator pointing to inserted element. */
-EXPORT_SPEC UpnpListIter UpnpListInsert(
-        UpnpListHead *list, UpnpListIter pos, UpnpListHead *elt);
+EXPORT_SPEC UpnpListIter UpnpListInsert(UpnpListHead* list, UpnpListIter pos,
+                                        UpnpListHead* elt);
 
 /** Erase element at pos, return next one, or end()*/
-EXPORT_SPEC UpnpListIter UpnpListErase(UpnpListHead *list, UpnpListIter pos);
+EXPORT_SPEC UpnpListIter UpnpListErase(UpnpListHead* list, UpnpListIter pos);
 
 #ifdef __cplusplus
 }

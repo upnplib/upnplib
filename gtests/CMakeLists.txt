@@ -118,6 +118,14 @@ add_dependencies(custom_gtest_tools gtest gtest_main gmock gmock_main)
 #################################
 # The tests are build in reverse order. test_template.cpp will be build first.
 
+# list
+#-----
+add_executable(test_list
+    ${PROJECT_SOURCE_DIR}/test_list.cpp)
+target_compile_definitions(test_list PRIVATE
+                           $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+add_test(NAME ctest_list COMMAND test_list)
+
 # membuffer
 #----------
 add_executable(test_membuffer
@@ -141,7 +149,7 @@ add_executable(test_httpparser
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
     $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
@@ -168,7 +176,7 @@ add_executable(test_httpreadwrite
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
 
@@ -232,7 +240,7 @@ set(UPNP_UPNPAPI_SOURCE_FILES
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.c
 
