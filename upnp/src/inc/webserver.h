@@ -37,9 +37,9 @@
 
 //#include <time.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// #ifdef __cplusplus
+// extern "C" {
+// #endif
 
 struct SendInstruction
 {
@@ -128,8 +128,8 @@ void web_server_callback(
         /*! [in,out] . */
         SOCKINFO *info);
 
-#ifdef __cplusplus
-} /* extern C */
-#endif
+// #ifdef __cplusplus
+// } /* extern C */
+// #endif
 
 #endif /* GENLIB_NET_HTTP_WEBSERVER_H */

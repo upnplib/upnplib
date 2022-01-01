@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-12-31
+# Redistribution only with this Copyright remark. Last modified: 2022-01-01
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -96,6 +96,14 @@ add_dependencies(custom_gtest_tools gtest gtest_main gmock gmock_main)
 #################################
 # The tests are build in reverse order. test_template.cpp will be build first.
 
+# sock
+#-----
+add_executable(test_sock
+    $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/global.cpp>
+    $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
+    ${PROJECT_SOURCE_DIR}/test_sock.cpp)
+add_test(NAME ctest_sock COMMAND test_sock)
+
 # strintmap
 #----------
 add_executable(test_strintmap
@@ -154,7 +162,7 @@ add_executable(test_httpreadwrite
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/sock.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/sock.cpp
 
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
 
@@ -217,7 +225,7 @@ set(UPNP_UPNPAPI_SOURCE_FILES
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/TimerThread.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/sock.c
+    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/sock.cpp
 
     ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
 

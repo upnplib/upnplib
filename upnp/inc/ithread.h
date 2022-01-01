@@ -44,9 +44,9 @@
 #include "UpnpGlobal.h" /* For UPNP_INLINE, EXPORT_SPEC */
 //#include "UpnpUniStd.h" /* for close() */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// #ifdef __cplusplus
+// extern "C" {
+// #endif
 
 #ifdef _WIN32
 #include "pthread.h"
@@ -922,8 +922,8 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
 //         pthread_mutexattr_t *attr, int kind);
 #endif
 
-#ifdef __cplusplus
-}
-#endif
+// #ifdef __cplusplus
+// }
+// #endif
 
 #endif /* ITHREAD_H */

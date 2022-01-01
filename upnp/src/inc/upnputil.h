@@ -45,9 +45,9 @@
 #define EVENT_TIMEDOUT -2
 #define EVENT_TERMINATE -3
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// #ifdef __cplusplus
+// extern "C" {
+// #endif
 
 /*!
  * \brief Copy no of bytes spcified by the LINE_SIZE constant, from the
@@ -85,9 +85,9 @@ void linecopylen(
         /*! [in] bytes to be copied. */
         size_t srclen);
 
-#ifdef __cplusplus
-}
-#endif
+// #ifdef __cplusplus
+// }
+// #endif
 
 /* Size of the errorBuffer variable, passed to the strerror_r() function */
 #define ERROR_BUFFER_LEN (size_t)256

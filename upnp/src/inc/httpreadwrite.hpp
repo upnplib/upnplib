@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-07
+ * Redistribution only with this Copyright remark. Last modified: 2022-01-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,7 +39,7 @@
  * \file
  */
 #include "httpparser.hpp"
-#include "sock.h"
+#include "sock.hpp"
 //#include "upnputil.h"
 
 /*! timeout in secs. */

@@ -51,7 +51,7 @@
 #include "statcodes.hpp"
 #include "strintmap.hpp"
 //#include "unixutil.h"
-#include "upnpdebug.h"
+#include "upnpdebug.hpp"
 
 #include <assert.h>
 //#include <ctype.h>

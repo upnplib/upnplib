@@ -36,7 +36,7 @@
 #include "FreeList.hpp"
 #include "pthread.h"
 #include "upnpconfig.h"
-#include "upnpdebug.h"
+#include "upnpdebug.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -145,7 +145,7 @@ void* check_freelist(void*) {
 // --------------------------------
 #ifdef _WIN32
 // There is a problem with EXPORT_SPEC. We have to modify the original source
-// upnp/inc/upnpdebug.h to export its function names. Modifications
+// upnp/inc/upnpdebug.hpp to export its function names. Modifications
 // of the original sources are not intended at this stage of re-engeneering.
 void* check_upnpdebug(void*) {
     std::cout

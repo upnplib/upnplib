@@ -18,9 +18,9 @@
 
 //#include <stdlib.h> /* for size_t */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+// #ifdef __cplusplus
+// extern "C" {
+// #endif /* __cplusplus */
 
 /*!
  * UpnpExtraHeaders
@@ -97,8 +97,8 @@ EXPORT_SPEC int UpnpExtraHeaders_set_resp(
 //EXPORT_SPEC const char *UpnpExtraHeaders_get_resp_cstr(
 //        const UpnpExtraHeaders *p);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+// #ifdef __cplusplus
+// }
+// #endif /* __cplusplus */
 
 #endif /* UPNPEXTRAHEADERS_H */

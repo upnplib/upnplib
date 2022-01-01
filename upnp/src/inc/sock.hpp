@@ -1,11 +1,13 @@
-#ifndef GENLIB_NET_SOCK_H
-#define GENLIB_NET_SOCK_H
+#ifndef GENLIB_NET_SOCK_HPP
+#define GENLIB_NET_SOCK_HPP
 
 /**************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2022-01-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,7 +46,7 @@
 #include "config.h"
 
 #include "UpnpGlobal.h" /* for UPNP_INLINE */
-#include "UpnpInet.h" /* for SOCKET, netinet/in */
+#include "UpnpInet.h"   /* for SOCKET, netinet/in */
 #ifdef UPNP_ENABLE_OPEN_SSL
 //#include <openssl/ssl.h>
 #endif
@@ -57,20 +59,19 @@
 #endif
 
 /*! */
-typedef struct
-{
-        /*! Handle/descriptor to a socket. */
-        SOCKET socket;
-        /*! The following two fields are filled only in incoming requests. */
-        struct sockaddr_storage foreign_sockaddr;
+typedef struct {
+    /*! Handle/descriptor to a socket. */
+    SOCKET socket;
+    /*! The following two fields are filled only in incoming requests. */
+    struct sockaddr_storage foreign_sockaddr;
 #ifdef UPNP_ENABLE_OPEN_SSL
-        SSL *ssl;
+    SSL* ssl;
 #endif
 } SOCKINFO;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// #ifdef __cplusplus
+// extern "C" {
+// #endif
 
 /*!
  * \brief Closes the socket if it is different from -1.
@@ -78,15 +79,14 @@ extern "C" {
  * \return -1 if an error occurred or if the socket is -1.
  */
 static UPNP_INLINE int sock_close(
-        /*! Socket descriptor. */
-        SOCKET sock)
-{
-        int ret = -1;
+    /*! Socket descriptor. */
+    SOCKET sock) {
+    int ret = -1;
 
-        if (sock != INVALID_SOCKET)
-                ret = UpnpCloseSocket(sock);
+    if (sock != INVALID_SOCKET)
+        ret = UpnpCloseSocket(sock);
 
-        return ret;
+    return ret;
 }
 
 /*!
@@ -99,10 +99,10 @@ static UPNP_INLINE int sock_close(
  * \li \c UPNP_E_SOCKET_ERROR
  */
 int sock_init(
-        /*! [out] Socket Information Object. */
-        SOCKINFO *info,
-        /*! [in] Socket Descriptor. */
-        SOCKET sockfd);
+    /*! [out] Socket Information Object. */
+    SOCKINFO* info,
+    /*! [in] Socket Descriptor. */
+    SOCKET sockfd);
 
 /*!
  * \brief Calls the sock_init function and assigns the passed in IP address
@@ -114,12 +114,12 @@ int sock_init(
  * \li \c UPNP_E_SOCKET_ERROR
  */
 int sock_init_with_ip(
-        /*! [out] Socket Information Object. */
-        SOCKINFO *info,
-        /*! [in] Socket Descriptor. */
-        SOCKET sockfd,
-        /*! [in] Remote socket address. */
-        struct sockaddr *foreign_sockaddr);
+    /*! [out] Socket Information Object. */
+    SOCKINFO* info,
+    /*! [in] Socket Descriptor. */
+    SOCKET sockfd,
+    /*! [in] Remote socket address. */
+    struct sockaddr* foreign_sockaddr);
 
 /*!
  * \brief Associates an SSL object with the socket and begins
@@ -131,8 +131,8 @@ int sock_init_with_ip(
  */
 #ifdef UPNP_ENABLE_OPEN_SSL
 int sock_ssl_connect(
-        /*! [out] Socket Information Object. */
-        SOCKINFO *info);
+    /*! [out] Socket Information Object. */
+    SOCKINFO* info);
 #endif
 
 /*!
@@ -147,10 +147,10 @@ int sock_ssl_connect(
  * \li \c UPNP_E_SUCCESS on success.
  */
 int sock_destroy(
-        /*! [in,out] Socket Information Object. */
-        SOCKINFO *info,
-        /*! [in] How to shutdown the socket. Used by sockets's shutdown(). */
-        int ShutdownMethod);
+    /*! [in,out] Socket Information Object. */
+    SOCKINFO* info,
+    /*! [in] How to shutdown the socket. Used by sockets's shutdown(). */
+    int ShutdownMethod);
 
 /*!
  * \brief Reads data on socket in sockinfo.
@@ -161,14 +161,14 @@ int sock_destroy(
  * \li \c UPNP_E_SOCKET_ERROR - Error on socket calls.
  */
 int sock_read(
-        /*! [in] Socket Information Object. */
-        SOCKINFO *info,
-        /*! [out] Buffer to get data to. */
-        char *buffer,
-        /*! [in] Size of the buffer. */
-        size_t bufsize,
-        /*! [in,out] timeout value. */
-        int *timeoutSecs);
+    /*! [in] Socket Information Object. */
+    SOCKINFO* info,
+    /*! [out] Buffer to get data to. */
+    char* buffer,
+    /*! [in] Size of the buffer. */
+    size_t bufsize,
+    /*! [in,out] timeout value. */
+    int* timeoutSecs);
 
 /*!
  * \brief Writes data on the socket in sockinfo.
@@ -179,14 +179,14 @@ int sock_read(
  * \li \c UPNP_E_SOCKET_ERROR - Error on socket calls.
  */
 int sock_write(
-        /*! [in] Socket Information Object. */
-        SOCKINFO *info,
-        /*! [in] Buffer to send data from. */
-        const char *buffer,
-        /*! [in] Size of the buffer. */
-        size_t bufsize,
-        /*! [in,out] timeout value. */
-        int *timeoutSecs);
+    /*! [in] Socket Information Object. */
+    SOCKINFO* info,
+    /*! [in] Buffer to send data from. */
+    const char* buffer,
+    /*! [in] Size of the buffer. */
+    size_t bufsize,
+    /*! [in,out] timeout value. */
+    int* timeoutSecs);
 
 /*!
  * \brief Make socket blocking.
@@ -194,8 +194,8 @@ int sock_write(
  * \return 0 if successful, -1 otherwise.
  */
 int sock_make_blocking(
-        /* [in] socket. */
-        SOCKET sock);
+    /* [in] socket. */
+    SOCKET sock);
 
 /*!
  * \brief Make socket non-blocking.
@@ -203,13 +203,13 @@ int sock_make_blocking(
  * \return 0 if successful, -1 otherwise.
  */
 int sock_make_no_blocking(
-        /* [in] socket. */
-        SOCKET sock);
+    /* [in] socket. */
+    SOCKET sock);
 
-#ifdef __cplusplus
-} /* #extern "C" */
-#endif
+// #ifdef __cplusplus
+// } /* #extern "C" */
+// #endif
 
 /* @} Sock Network Socket Library */
 
-#endif /* GENLIB_NET_SOCK_H */
+#endif /* GENLIB_NET_SOCK_HPP */

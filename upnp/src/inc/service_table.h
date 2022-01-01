@@ -37,16 +37,16 @@
  * \file
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// #ifdef __cplusplus
+// extern "C" {
+// #endif
 
 //#include "config.h"
 
 //#include "LinkedList.h"
 //#include "ixml.h"
 //#include "upnp.h"
-#include "upnpdebug.h"
+#include "upnpdebug.hpp"
 #include "uri.hpp"
 
 //#include <stdio.h>
@@ -356,8 +356,8 @@ int getSubElement(
 
 #endif /* INCLUDE_DEVICE_APIS */
 
-#ifdef __cplusplus
-}
-#endif
+// #ifdef __cplusplus
+// }
+// #endif
 
 #endif /* SERVICE_TABLE */

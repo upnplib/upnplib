@@ -499,9 +499,9 @@ typedef enum Upnp_DescType_e Upnp_DescType;
 
 /* @} Constants and Types */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+// #ifdef __cplusplus
+// extern "C" {
+// #endif /* __cplusplus */
 
 /*!
  * \name Initialization and Registration
@@ -2813,9 +2813,9 @@ EXPORT_SPEC void UpnpRemoveAllVirtualDirs(void);
 
 // /* @} Web Server API */
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+// #ifdef __cplusplus
+// }
+// #endif /* __cplusplus */
 
 /* @} UPnPAPI UPnP API */
 

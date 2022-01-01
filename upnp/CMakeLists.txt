@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-12-23
+# Redistribution only with this Copyright remark. Last modified: 2022-01-01
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -45,7 +45,7 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
     ${PROJECT_SOURCE_DIR}/src/threadutil/TimerThread.cpp
 
-    ${PROJECT_SOURCE_DIR}/src/genlib/net/sock.c
+    ${PROJECT_SOURCE_DIR}/src/genlib/net/sock.cpp
 
     ${PROJECT_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
 

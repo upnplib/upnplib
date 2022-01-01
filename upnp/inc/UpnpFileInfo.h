@@ -23,9 +23,9 @@
 #endif // _WIN32
 #include <time.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+// #ifdef __cplusplus
+// extern "C" {
+// #endif /* __cplusplus */
 
 /*!
  * UpnpFileInfo
@@ -105,8 +105,8 @@ typedef struct s_UpnpFileInfo UpnpFileInfo;
 // /*! UpnpFileInfo_clear_Os */
 // EXPORT_SPEC void UpnpFileInfo_clear_Os(UpnpFileInfo *p);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+// #ifdef __cplusplus
+// }
+// #endif /* __cplusplus */
 
 #endif /* UPNPFILEINFO_H */
