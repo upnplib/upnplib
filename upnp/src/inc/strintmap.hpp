@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-31
+ * Redistribution only with this Copyright remark. Last modified: 2022-01-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -67,8 +67,8 @@ typedef struct /* str_int_entry */
  *		table. Returns the index of the table when the entry is found.
  *
  *	Return : int ;
- *		index - On Success
- *		-1 - On failure
+ *		On success - zero based index (position) on the table of entries
+ *		On failure - -1
  *
  *	Note :
  ************************************************************************/
@@ -89,6 +89,8 @@ int map_str_to_int(const char* name, size_t name_len, str_int_entry* table,
  *		the entry from the table.
  *
  *	Return : int ;
+ *		On success - zero based index (position) on the table of entries
+ *		On failure - -1
  *
  *	Note :
  ************************************************************************/

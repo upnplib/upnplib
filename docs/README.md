@@ -22,9 +22,10 @@ In general we refere Bjarne Stroustrup [C++ Core Guidelines](https://isocpp.gith
 
 - Using [exceptions for error handling](https://www.acodersjourney.com/top-15-c-exception-handling-mistakes-avoid/).
 - The names of global variables should start with //.
+- A Unit that can produce a segmentation fault is considered to be buggy.
 - Check variables against visibility, lifetime, and thread safety.
 - [Declare local variables nearly where they are first used](https://isocpp.org/wiki/faq/coding-standards#declare-near-first-use), not always at the top of a function.
-- Always prefix namespace std::, never "using namespace std".
+- Always prefix namespace ::std::, never "using namespace std".
 - Avoid pointer casts and/or reference casts.
 - I prefer to use "snake case" variable_names_with_underscores. I find it better readable than "camel case" variablesWithUpperCaseLetters.
 - Clases start with upper case C: CMyClass;
@@ -106,5 +107,5 @@ The footer is optional and is used to reference issue tracker IDs.
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2021-12-03
+// Redistribution only with this Copyright remark. Last modified: 2022-01-01
 </sup></sup>

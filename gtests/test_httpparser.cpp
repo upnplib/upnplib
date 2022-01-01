@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-08
+// Redistribution only with this Copyright remark. Last modified: 2022-01-01
 
 #include "gtest/gtest.h"
 
@@ -113,9 +113,18 @@ class Chttpparser : public Ihttpparser {
 };
 // clang-format on
 
+//
 // testsuite for httpparser
 //-------------------------
-TEST(HttpparserTestSuite, dummy_test) {}
+TEST(HttpparserTestSuite, map_str_to_int) {
+    GTEST_SKIP() << "  # Move function map_str_to_int() to httpparser.cpp, "
+                    "test it here and remove module strintmap.";
+}
+
+TEST(HttpparserTestSuite, map_int_to_str) {
+    GTEST_SKIP() << "  # Move function map_int_to_str() to httpparser.cpp, "
+                    "test it here and remove module strintmap.";
+}
 
 } // namespace upnp
 
