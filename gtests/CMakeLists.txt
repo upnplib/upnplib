@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-01-01
+# Redistribution only with this Copyright remark. Last modified: 2022-01-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -99,9 +99,12 @@ add_dependencies(custom_gtest_tools gtest gtest_main gmock gmock_main)
 # sock
 #-----
 add_executable(test_sock
-    $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/global.cpp>
+    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+    $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/global_win32.cpp>
+    $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/global_unix.cpp>
     $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
     ${PROJECT_SOURCE_DIR}/test_sock.cpp)
+target_link_libraries(test_sock custom_gtest_tools)
 add_test(NAME ctest_sock COMMAND test_sock)
 
 # strintmap
@@ -158,6 +161,8 @@ add_test(NAME ctest_httpparser COMMAND test_httpparser)
 #------------------------------
 add_executable(test_httpreadwrite
     ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+    $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/global_win32.cpp>
+    $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/global_unix.cpp>
 
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp

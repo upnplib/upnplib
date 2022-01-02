@@ -12,8 +12,6 @@
 
 #include "upnpmock/ifaddrs.hpp"
 #include "upnpmock/net_if.hpp"
-#include "upnpmock/sys_socket.hpp"
-#include "upnpmock/sys_select.hpp"
 
 namespace upnp {
 
@@ -22,11 +20,5 @@ Bifaddrs* ifaddrs_h = &ifaddrsObj;
 
 Bnet_if net_ifObj{};
 Bnet_if* net_if_h = &net_ifObj;
-
-Bsys_socket sys_socketObj{};
-Bsys_socket* sys_socket_h = &sys_socketObj;
-
-Bsys_select sys_selectObj{};
-Bsys_select* sys_select_h = &sys_selectObj;
 
 } // namespace upnp

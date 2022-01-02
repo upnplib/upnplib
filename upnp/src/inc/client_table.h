@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 //#include "GenlibClientSubscription.h"
-#include "TimerThread.h"
+#include "TimerThread.hpp"
 //#include "UpnpString.h"
 #include "service_table.h"
 //#include "upnp.h"

@@ -1,10 +1,14 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-02
+// Redistribution only with this Copyright remark. Last modified: 2022-01-04
 
 #ifndef UPNP_SYS_SELECTIF_HPP
 #define UPNP_SYS_SELECTIF_HPP
 
+#ifdef _WIN32
+#include <winsock2.h>
+#else
 #include <sys/select.h>
+#endif
 
 namespace upnp {
 
@@ -40,7 +44,7 @@ class Mock_sys_select : public Bsys_select {
   public:
     // Save and restore the old pointer to the production function
     Mock_sys_select() { m_oldptr = sys_select_h; sys_select_h = this; }
-    virtual ~Mock_sys_select() { sys_select_h = m_oldptr; }
+    virtual ~Mock_sys_select() override { sys_select_h = m_oldptr; }
 
     MOCK_METHOD(int, select,
                 (int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds,

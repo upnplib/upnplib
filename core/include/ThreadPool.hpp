@@ -1,10 +1,10 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-11-04
+// Redistribution only with this Copyright remark. Last modified: 2022-01-02
 
 #ifndef UPNP_THREADPOOL_HPP
 #define UPNP_THREADPOOL_HPP
 
-#include "ThreadPool.h"
+#include "ThreadPool.hpp"
 
 namespace upnp {
 

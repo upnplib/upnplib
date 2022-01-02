@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-02
+// Redistribution only with this Copyright remark. Last modified: 2022-01-04
 
 #ifndef UPNP_STRINGIF_HPP
 #define UPNP_STRINGIF_HPP
@@ -42,7 +42,7 @@ class Mock_string : public Bstring {
   public:
     // Save and restore the old pointer to the production function
     Mock_string() { m_oldptr = string_h; string_h = this; }
-    virtual ~Mock_string() { string_h = m_oldptr; }
+    virtual ~Mock_string() override { string_h = m_oldptr; }
 
     MOCK_METHOD(char*, strerror, (int errnum), (override));
 };

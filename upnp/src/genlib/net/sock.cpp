@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-01
+ * Redistribution only with this Copyright remark. Last modified: 2022-01-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -59,6 +59,12 @@
 #include <errno.h>
 #include <time.h>
 #endif // _WIN32
+
+#include "upnpmock/sys_socket.hpp"
+#include "upnpmock/sys_select.hpp"
+#include "upnpmock/unistd.hpp"
+
+#include <iostream> // DEBUG:
 
 #ifdef UPNP_ENABLE_OPEN_SSL
 //#include <openssl/ssl.h>
@@ -127,17 +133,24 @@ int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
             info->ssl = NULL;
         }
 #endif
-        if (shutdown(info->socket, ShutdownMethod) == -1) {
+        if (upnp::sys_socket_h->shutdown(info->socket, ShutdownMethod) == -1) {
 // TODO: fix source code to only use POSIX versions, not GNU nonstandard
 #ifdef _GNU_SOURCE
-            char* ret;
+            // BUG: errorBuffer is not used and uninitialized in this case.
+            //      It will print garbage then.
+            // errorBuffer[0] = '\0'; // DEBUG: uncomment if verifying
+            char* retcode;
 #else // POSIX
-            int ret;
+            int retcode;
 #endif
-            ret = strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
+            retcode = strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
+            // ::std::cout << "DEBUG: shutdown retcode = '" << retcode
+            //             << "', errorBuffer = '" << errorBuffer << "'\n";
             UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
                        "Error in shutdown: %s\n", errorBuffer);
         }
+        // BUG: closesocket on _WIN32 does not return -1 on error, but positive
+        // numbers. This must check != 0.
         if (sock_close(info->socket) == -1) {
             ret = UPNP_E_SOCKET_ERROR;
         }
@@ -163,7 +176,8 @@ static int sock_read_write(
     char* buffer,
     /*! [in] Size of the buffer. */
     size_t bufsize,
-    /*! [in] timeout value. */
+    /*! [in] timeout value: < 0 blocks indefinitely waiting for a file
+       descriptor to become ready. */
     int* timeoutSecs,
     /*! [in] Boolean value specifying read or write option. */
     int bRead) {
@@ -187,10 +201,17 @@ static int sock_read_write(
     timeout.tv_sec = *timeoutSecs;
     timeout.tv_usec = 0;
     while (1) {
-        if (*timeoutSecs < 0)
-            retCode = select(sockfd + 1, &readSet, &writeSet, NULL, NULL);
-        else
-            retCode = select(sockfd + 1, &readSet, &writeSet, NULL, &timeout);
+        if (*timeoutSecs < 0) {
+            ::std::cout << "DEBUG: Tracepoint 1\n";
+            retCode = upnp::sys_select_h->select(sockfd + 1, &readSet,
+                                                 &writeSet, NULL, NULL);
+            ::std::cout << "DEBUG: select retCode = " << retCode << ::std::endl;
+        } else {
+            ::std::cout << "DEBUG: Tracepoint 2\n";
+            retCode = upnp::sys_select_h->select(sockfd + 1, &readSet,
+                                                 &writeSet, NULL, &timeout);
+            ::std::cout << "DEBUG: select retCode = " << retCode << ::std::endl;
+        }
         if (retCode == 0)
             return UPNP_E_TIMEDOUT;
         if (retCode == -1) {
@@ -216,7 +237,10 @@ static int sock_read_write(
             } else {
 #endif
                 /* read data. */
-                numBytes = (long)recv(sockfd, buffer, bufsize, MSG_NOSIGNAL);
+                numBytes = (long)upnp::sys_socket_h->recv(
+                    sockfd, buffer, bufsize, MSG_NOSIGNAL);
+                ::std::cout << "DEBUG: buffer = " << buffer
+                            << ", numBytes = " << numBytes << '\n';
 #ifdef UPNP_ENABLE_OPEN_SSL
             }
 #endif
@@ -231,8 +255,11 @@ static int sock_read_write(
                 } else {
 #endif
                     /* write data. */
-                    num_written = send(sockfd, buffer + bytes_sent, byte_left,
-                                       MSG_DONTROUTE | MSG_NOSIGNAL);
+                    num_written = upnp::sys_socket_h->send(
+                        sockfd, buffer + bytes_sent, byte_left,
+                        MSG_DONTROUTE | MSG_NOSIGNAL);
+                    ::std::cout << "DEBUG: buffer = " << buffer
+                                << ", num_written = " << num_written << '\n';
 #ifdef UPNP_ENABLE_OPEN_SSL
                 }
 #endif

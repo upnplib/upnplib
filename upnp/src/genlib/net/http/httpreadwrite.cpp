@@ -305,11 +305,11 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
         if (shutdown(connfd, SD_BOTH) == -1) {
 // TODO: fix source code to only use POSIX versions, not GNU nonstandard
 #ifdef _GNU_SOURCE
-            char* ret;
+            char* retcode;
 #else // POSIX
-            int ret;
+            int retcode;
 #endif
-            ret = strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
+            retcode = strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
             UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
                        "Error in shutdown: %s\n", errorBuffer);
         }

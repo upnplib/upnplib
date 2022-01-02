@@ -260,6 +260,6 @@ TEST_F(FreeListTestSuite, initialize_not_existing_freelist) {
 } // namespace upnp
 
 int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
+    ::testing::InitGoogleMock(&argc, argv);
     return RUN_ALL_TESTS();
 }

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-11-03
+ * Redistribution only with this Copyright remark. Last modified: 2022-01-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,7 +36,7 @@
  * \file
  */
 
-#include "TimerThread.h"
+#include "TimerThread.hpp"
 
 #include <assert.h>
 

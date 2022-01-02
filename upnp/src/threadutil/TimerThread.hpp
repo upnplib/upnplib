@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-11-03
+ * Redistribution only with this Copyright remark. Last modified: 2022-01-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,7 +40,7 @@
 
 //#include "FreeList.h"
 //#include "LinkedList.h"
-#include "ThreadPool.h"
+#include "ThreadPool.hpp"
 //#include "ithread.h"
 
 #ifdef __cplusplus
@@ -50,12 +50,11 @@ extern "C" {
 #define INVALID_EVENT_ID (-10 & 1 << 29)
 
 /*! Timeout Types. */
-typedef enum timeoutType
-{
-        /*! seconds from Jan 1, 1970. */
-        ABS_SEC,
-        /*! seconds from current time. */
-        REL_SEC
+typedef enum timeoutType {
+    /*! seconds from Jan 1, 1970. */
+    ABS_SEC,
+    /*! seconds from current time. */
+    REL_SEC
 } TimeoutType;
 
 /*!
@@ -67,15 +66,14 @@ typedef enum timeoutType
  *
  * Uses ThreadPool, Mutex, Condition, Thread.
  */
-typedef struct TIMERTHREAD
-{
-        ithread_mutex_t mutex;
-        ithread_cond_t condition;
-        int lastEventId;
-        LinkedList eventQ;
-        int shutdown;
-        FreeList freeEvents;
-        ThreadPool *tp;
+typedef struct TIMERTHREAD {
+    ithread_mutex_t mutex;
+    ithread_cond_t condition;
+    int lastEventId;
+    LinkedList eventQ;
+    int shutdown;
+    FreeList freeEvents;
+    ThreadPool* tp;
 } TimerThread;
 
 /*!
@@ -83,14 +81,13 @@ typedef struct TIMERTHREAD
  *
  * Internal to the TimerThread.
  */
-typedef struct TIMEREVENT
-{
-        ThreadPoolJob job;
-        /*! [in] Absolute time for event in seconds since Jan 1, 1970. */
-        time_t eventTime;
-        /*! [in] Long term or short term job. */
-        Duration persistent;
-        int id;
+typedef struct TIMEREVENT {
+    ThreadPoolJob job;
+    /*! [in] Absolute time for event in seconds since Jan 1, 1970. */
+    time_t eventTime;
+    /*! [in] Long term or short term job. */
+    Duration persistent;
+    int id;
 } TimerEvent;
 
 /*!
@@ -100,11 +97,11 @@ typedef struct TIMEREVENT
  * 	ThreadPoolAddPersistent on failure.
  */
 int TimerThreadInit(
-        /*! [in] Valid timer thread pointer. */
-        TimerThread *timer,
-        /*! [in] Valid thread pool to use. Must be started. Must be valid for
-         * lifetime of timer. Timer must be shutdown BEFORE thread pool. */
-        ThreadPool *tp);
+    /*! [in] Valid timer thread pointer. */
+    TimerThread* timer,
+    /*! [in] Valid thread pool to use. Must be started. Must be valid for
+     * lifetime of timer. Timer must be shutdown BEFORE thread pool. */
+    ThreadPool* tp);
 
 /*!
  * \brief Schedules an event to run at a specified time.
@@ -113,20 +110,20 @@ int TimerThreadInit(
  * 	to schedule job.
  */
 int TimerThreadSchedule(
-        /*! [in] Valid timer thread pointer. */
-        TimerThread *timer,
-        /*! [in] time of event. Either in absolute seconds, or relative
-         * seconds in the future. */
-        time_t time,
-        /*! [in] either ABS_SEC, or REL_SEC. If REL_SEC, then the event
-         * will be scheduled at the current time + REL_SEC. */
-        TimeoutType type,
-        /*! [in] Valid Thread pool job with following fields. */
-        ThreadPoolJob *job,
-        /*! [in] . */
-        Duration duration,
-        /*! [in] Id of timer event. (out, can be null). */
-        int *id);
+    /*! [in] Valid timer thread pointer. */
+    TimerThread* timer,
+    /*! [in] time of event. Either in absolute seconds, or relative
+     * seconds in the future. */
+    time_t time,
+    /*! [in] either ABS_SEC, or REL_SEC. If REL_SEC, then the event
+     * will be scheduled at the current time + REL_SEC. */
+    TimeoutType type,
+    /*! [in] Valid Thread pool job with following fields. */
+    ThreadPoolJob* job,
+    /*! [in] . */
+    Duration duration,
+    /*! [in] Id of timer event. (out, can be null). */
+    int* id);
 
 /*!
  * \brief Removes an event from the timer Q.
@@ -136,12 +133,12 @@ int TimerThreadSchedule(
  * \return 0 on success, INVALID_EVENT_ID on failure.
  */
 int TimerThreadRemove(
-        /*! [in] Valid timer thread pointer. */
-        TimerThread *timer,
-        /*! [in] Id of event to remove. */
-        int id,
-        /*! [in] Space for thread pool job. */
-        ThreadPoolJob *out);
+    /*! [in] Valid timer thread pointer. */
+    TimerThread* timer,
+    /*! [in] Id of event to remove. */
+    int id,
+    /*! [in] Space for thread pool job. */
+    ThreadPoolJob* out);
 
 /*!
  * \brief Shutdown the timer thread.
@@ -153,8 +150,8 @@ int TimerThreadRemove(
  * \return 0 if succesfull, nonzero otherwise. Always returns 0.
  */
 int TimerThreadShutdown(
-        /*! [in] Valid timer thread pointer. */
-        TimerThread *timer);
+    /*! [in] Valid timer thread pointer. */
+    TimerThread* timer);
 
 #ifdef __cplusplus
 }

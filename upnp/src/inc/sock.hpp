@@ -7,7 +7,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-01
+ * Redistribution only with this Copyright remark. Last modified: 2022-01-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -52,6 +52,8 @@
 #endif
 
 /* The following are not defined under winsock.h */
+// TODO: Cleanup constants: In <sys/socket.h> are defined
+// SHUT_RD, SHUT_WR, SHUT_RDWR with 0, 1, 2, according to man 2 shutdown.
 #ifndef SD_RECEIVE
 #define SD_RECEIVE 0x00
 #define SD_SEND 0x01
@@ -174,7 +176,7 @@ int sock_read(
  * \brief Writes data on the socket in sockinfo.
  *
  * \return Integer:
- * \li \c numBytes - On Success, no of bytes received.
+ * \li \c numBytes - On Success, no of bytes sent.
  * \li \c UPNP_E_TIMEDOUT - Timeout.
  * \li \c UPNP_E_SOCKET_ERROR - Error on socket calls.
  */
