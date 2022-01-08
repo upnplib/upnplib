@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-07
+ * Redistribution only with this Copyright remark. Last modified: 2022-01-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -63,8 +63,6 @@
 #include "upnpmock/sys_socket.hpp"
 #include "upnpmock/sys_select.hpp"
 #include "upnpmock/unistd.hpp"
-
-#include <iostream> // DEBUG:
 
 #ifdef UPNP_ENABLE_OPEN_SSL
 //#include <openssl/ssl.h>
@@ -201,16 +199,16 @@ static int sock_read_write(
     timeout.tv_sec = *timeoutSecs;
     timeout.tv_usec = 0;
     while (1) {
+        // BUG! To get correct error messages from the system call for checking
+        //      signals EINTR (see below) the errno must be resetted. I have
+        //      seen an endless loop here with old setting of errno.
+        // errno = 0;
         if (*timeoutSecs < 0) {
-            ::std::cout << "DEBUG: Tracepoint 1\n";
             retCode = upnp::sys_select_h->select(sockfd + 1, &readSet,
                                                  &writeSet, NULL, NULL);
-            ::std::cout << "DEBUG: select retCode = " << retCode << ::std::endl;
         } else {
-            ::std::cout << "DEBUG: Tracepoint 2\n";
             retCode = upnp::sys_select_h->select(sockfd + 1, &readSet,
                                                  &writeSet, NULL, &timeout);
-            ::std::cout << "DEBUG: select retCode = " << retCode << ::std::endl;
         }
         if (retCode == 0)
             return UPNP_E_TIMEDOUT;
@@ -239,8 +237,6 @@ static int sock_read_write(
                 /* read data. */
                 numBytes = (long)upnp::sys_socket_h->recv(
                     sockfd, buffer, bufsize, MSG_NOSIGNAL);
-                ::std::cout << "DEBUG: buffer = " << buffer
-                            << ", numBytes = " << numBytes << '\n';
 #ifdef UPNP_ENABLE_OPEN_SSL
             }
 #endif
@@ -258,8 +254,6 @@ static int sock_read_write(
                     num_written = upnp::sys_socket_h->send(
                         sockfd, buffer + bytes_sent, byte_left,
                         MSG_DONTROUTE | MSG_NOSIGNAL);
-                    ::std::cout << "DEBUG: buffer = " << buffer
-                                << ", num_written = " << num_written << '\n';
 #ifdef UPNP_ENABLE_OPEN_SSL
                 }
 #endif
@@ -267,6 +261,7 @@ static int sock_read_write(
 #ifdef SO_NOSIGPIPE
                     setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &old, olen);
 #endif
+                    // BUG: Should return UPNP_E_SOCKET_ERROR
                     return (int)num_written;
                 }
                 byte_left -= (size_t)num_written;
