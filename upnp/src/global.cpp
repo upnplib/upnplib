@@ -33,8 +33,8 @@ size_t g_maxContentLength = DEFAULT_SOAP_CONTENT_LENGTH;
 #include "upnpmock/sys_select.hpp"
 #include "upnpmock/unistd.hpp"
 
-namespace upnp
-// Yes, we have this global varibles in namespace ::upnp, but they are only
+namespace upnplib
+// Yes, we have this global varibles in namespace ::upnplib, but they are only
 // needed as long as the old C sources not re-engeneered to C++ objects. We need
 // these globals to mock calls of system functions from the old C sources
 // because there is no dependency injection possible. In the production
@@ -67,4 +67,4 @@ Bsys_select* sys_select_h = &sys_selectObj;
 Bunistd unistdObj{};
 Bunistd* unistd_h = &unistdObj;
 
-} // namespace upnp
+} // namespace upnplib

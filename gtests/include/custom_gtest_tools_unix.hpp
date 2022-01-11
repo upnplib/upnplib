@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace upnp {
+namespace upnplib {
 
 class UPNP_API CIfaddr4
 // Tool to manage and fill a socket address structure. This is needed
@@ -62,6 +62,6 @@ class UPNP_API CIfaddr4Container {
     std::vector<CIfaddr4> m_ifaddr4Container;
 };
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_IFADDRS_UIX_HPP

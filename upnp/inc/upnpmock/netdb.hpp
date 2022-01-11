@@ -10,7 +10,7 @@
 #include <netdb.h>
 #endif
 
-namespace upnp {
+namespace upnplib {
 
 class Bnetdb {
     // Real class to call the system functions
@@ -32,8 +32,8 @@ class Bnetdb {
 extern Bnetdb* netdb_h;
 
 // In the production code you just prefix the old system call with
-// 'upnp::netdb_h->' so the new call looks like this:
-//  upnp::netdb_h->getaddrinfo(..)
+// 'upnplib::netdb_h->' so the new call looks like this:
+//  upnplib::netdb_h->getaddrinfo(..)
 
 /* clang-format off
  * The following class should be copied to the test source. You do not need to
@@ -63,6 +63,6 @@ class Mock_netdb : public Bnetdb {
  * clang-format on
 */
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_NETDBIF_HPP

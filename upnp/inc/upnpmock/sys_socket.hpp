@@ -18,7 +18,7 @@
 #define UPNP_SIZE_T_INT size_t
 #endif
 
-namespace upnp {
+namespace upnplib {
 
 class Bsys_socket {
     // Real class to call the system functions
@@ -66,8 +66,8 @@ class Bsys_socket {
 extern Bsys_socket* sys_socket_h;
 
 // In the production code you just prefix the old system call with
-// 'upnp::sys_socket_h->' so the new call looks like this:
-//  upnp::sys_socket_h->bind(..)
+// 'upnplib::sys_socket_h->' so the new call looks like this:
+//  upnplib::sys_socket_h->bind(..)
 
 /* clang-format off
  * The following class should be copied to the test source. You do not need to
@@ -115,6 +115,6 @@ class Mock_sys_socket : public Bsys_socket {
  * clang-format on
 */
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_SYS_SOCKETIF_HPP

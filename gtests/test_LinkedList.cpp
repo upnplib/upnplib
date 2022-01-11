@@ -12,7 +12,7 @@
 using ::testing::_;
 using ::testing::Return;
 
-namespace upnp {
+namespace upnplib {
 
 //
 // Mocked system calls
@@ -301,7 +301,7 @@ TEST_F(LinkedListTestSuite, use_all_functions_on_one_initialized_list) {
 // the address of the member function to have the same signature than
 // free_function so we could call it direct. See also
 // https://stackoverflow.com/a/8865807/5014688
-void free_func(void* t_free_func) { upnp::stdlib_h->free(t_free_func); }
+void free_func(void* t_free_func) { upnplib::stdlib_h->free(t_free_func); }
 
 TEST_F(LinkedListTestSuite, ListDelNode_with_free_function) {
     ListNode node1{};
@@ -388,7 +388,7 @@ TEST_F(LinkedListTestSuite, ListFind_with_comparing_items) {
     EXPECT_EQ(LinkedListObj.ListDestroy(&m_linked_list, 0), 0);
 }
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

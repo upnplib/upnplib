@@ -8,7 +8,7 @@
 #include <net/if.h>
 #include <arpa/inet.h>
 
-namespace upnp {
+namespace upnplib {
 
 TEST(ToolsTestSuite, initialize_interface_addresses) {
     struct ifaddrs* ifaddr{};
@@ -205,7 +205,7 @@ TEST(ToolsTestSuite, throw_exception) {
     EXPECT_THROW(CCaptureStdOutErr capttureObj(-1), ::std::invalid_argument);
 }
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

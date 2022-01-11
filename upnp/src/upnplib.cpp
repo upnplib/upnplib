@@ -39,7 +39,7 @@
 #include <iostream>
 #include <sstream>
 
-namespace upnp {
+namespace upnplib {
 
 void* library_info(void*) {
     // Using this will not split output string on '<<' by output from other
@@ -183,7 +183,7 @@ void* check_upnpdebug(void*) {
 }
 #endif // _WIN32
 
-} // namespace upnp
+} // namespace upnplib
 
 //
 // main entry
@@ -198,7 +198,7 @@ int main() {
 
     pthread_t thread_info;
 
-    rc = pthread_create(&thread_info, NULL, &upnp::library_info, NULL);
+    rc = pthread_create(&thread_info, NULL, &upnplib::library_info, NULL);
     if (rc != 0) {
         std::cerr << "Error! unable to create thread_info, " << rc << std::endl;
         exit(1);
@@ -206,7 +206,7 @@ int main() {
 
     pthread_t thread_freelist;
 
-    rc = pthread_create(&thread_freelist, NULL, &upnp::check_freelist, NULL);
+    rc = pthread_create(&thread_freelist, NULL, &upnplib::check_freelist, NULL);
     if (rc != 0) {
         std::cerr << "Error! unable to create thread_freelist, " << rc
                   << std::endl;
@@ -215,7 +215,7 @@ int main() {
 
     pthread_t thread_upnpdebug;
 
-    rc = pthread_create(&thread_upnpdebug, NULL, &upnp::check_upnpdebug, NULL);
+    rc = pthread_create(&thread_upnpdebug, NULL, &upnplib::check_upnpdebug, NULL);
     if (rc != 0) {
         std::cerr << "Error! unable to create thread_upnpdebug, " << rc
                   << std::endl;

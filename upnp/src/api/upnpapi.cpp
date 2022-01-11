@@ -3061,7 +3061,7 @@ int UpnpGetIfInfo(const char* IfName) {
     int valid_addr_found = 0;
 
     /* Get Adapters addresses required size. */
-    ret = upnp::iphlpapi_h->GetAdaptersAddresses(
+    ret = upnplib::iphlpapi_h->GetAdaptersAddresses(
         AF_UNSPEC, GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_DNS_SERVER, NULL,
         adapts, &adapts_sz);
     if (ret != ERROR_BUFFER_OVERFLOW) {
@@ -3076,7 +3076,7 @@ int UpnpGetIfInfo(const char* IfName) {
         return UPNP_E_OUTOF_MEMORY;
     }
     /* Do the call that will actually return the info. */
-    ret = upnp::iphlpapi_h->GetAdaptersAddresses(
+    ret = upnplib::iphlpapi_h->GetAdaptersAddresses(
         AF_UNSPEC, GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_DNS_SERVER, NULL,
         adapts, &adapts_sz);
     if (ret != ERROR_SUCCESS) {
@@ -3205,7 +3205,7 @@ int UpnpGetIfInfo(const char* IfName) {
         ifname_found = 1;
     }
     /* Get system interface addresses. */
-    if (upnp::ifaddrs_h->getifaddrs(&ifap) != 0) {
+    if (upnplib::ifaddrs_h->getifaddrs(&ifap) != 0) {
         UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
                    "getifaddrs failed to find list of addresses\n");
         return UPNP_E_INIT;
@@ -3287,7 +3287,7 @@ int UpnpGetIfInfo(const char* IfName) {
             break;
         }
     }
-    upnp::ifaddrs_h->freeifaddrs(ifap);
+    upnplib::ifaddrs_h->freeifaddrs(ifap);
     /* Failed to find a valid interface, or valid address. */
     if (ifname_found == 0 ||
         (valid_v4_addr_found == 0 && valid_v6_addr_found == 0 &&
@@ -3302,7 +3302,7 @@ int UpnpGetIfInfo(const char* IfName) {
         inet_ntop(AF_INET, &v4_netmask, gIF_IPV4_NETMASK,
                   sizeof(gIF_IPV4_NETMASK));
     }
-    gIF_INDEX = upnp::net_if_h->if_nametoindex(gIF_NAME);
+    gIF_INDEX = upnplib::net_if_h->if_nametoindex(gIF_NAME);
     if (!IN6_IS_ADDR_UNSPECIFIED(&v6_addr)) {
         if (valid_v6_addr_found) {
             inet_ntop(AF_INET6, &v6_addr, gIF_IPV6, sizeof(gIF_IPV6));

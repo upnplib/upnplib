@@ -5,7 +5,7 @@
 
 #include "genlib/net/http/httpreadwrite.cpp"
 
-namespace upnp {
+namespace upnplib {
 
 //
 // Interface for the httpreadwrite module
@@ -166,7 +166,7 @@ TEST(StatcodesTestSuite, http_get_code_text) {
     EXPECT_EQ(::http_get_code_text(600), nullptr);
 }
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

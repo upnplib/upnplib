@@ -65,7 +65,7 @@ void* FreeListAlloc(FreeList* free_list) {
         free_list->head = free_list->head->next;
         free_list->freeListLength--;
     } else {
-        ret = (FreeListNode*)upnp::stdlib_h->malloc(free_list->element_size);
+        ret = (FreeListNode*)upnplib::stdlib_h->malloc(free_list->element_size);
     }
 
     return ret;
@@ -85,7 +85,7 @@ int FreeListFree(FreeList* free_list, void* element) {
         temp->next = free_list->head;
         free_list->head = temp;
     } else {
-        upnp::stdlib_h->free(element);
+        upnplib::stdlib_h->free(element);
     }
 
     return 0;
@@ -102,7 +102,7 @@ int FreeListDestroy(FreeList* free_list) {
     while (free_list->head) {
         i++;
         temp = free_list->head->next;
-        upnp::stdlib_h->free(free_list->head);
+        upnplib::stdlib_h->free(free_list->head);
         free_list->head = temp;
     }
     free_list->freeListLength = 0;

@@ -12,9 +12,9 @@
 
 #include "upnpmock/iphlpapi.hpp"
 
-namespace upnp {
+namespace upnplib {
 
 Biphlpapi iphlpapiObj{};
 Biphlpapi* iphlpapi_h = &iphlpapiObj;
 
-} // namespace upnp
+} // namespace upnplib

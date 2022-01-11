@@ -6,7 +6,7 @@
 
 #include <pthread.h>
 
-namespace upnp {
+namespace upnplib {
 
 class Bpthread {
     // Base class to pthread system calls
@@ -56,8 +56,8 @@ class Bpthread {
 extern Bpthread* pthread_h;
 
 // In the production code you just prefix the old system call with
-// 'upnp::pthread_h->' so the new call looks like this:
-//  upnp::pthread_h->pthread_mutex_init(...)
+// 'upnplib::pthread_h->' so the new call looks like this:
+//  upnplib::pthread_h->pthread_mutex_init(...)
 
 /* clang-format off
  * The following class should be copied to the test source. You do not need to
@@ -105,6 +105,6 @@ class Mock_pthread : public Bpthread {
  * clang-format on
 */
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_PTHREADIF_HPP

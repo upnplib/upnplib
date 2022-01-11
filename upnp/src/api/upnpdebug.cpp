@@ -78,7 +78,7 @@ static char* fileName;
  * risk of race, probably not a problem, and not worth fixing. */
 int UpnpInitLog(void) {
     if (!initwascalled) {
-        upnp::pthread_h->pthread_mutex_init(&GlobalDebugMutex, NULL);
+        upnplib::pthread_h->pthread_mutex_init(&GlobalDebugMutex, NULL);
         initwascalled = 1;
     }
     /* If the user did not ask for logging do nothing */
@@ -88,15 +88,15 @@ int UpnpInitLog(void) {
 
     if (fp) {
         if (is_stderr == 0) {
-            upnp::stdio_h->fclose(fp);
+            upnplib::stdio_h->fclose(fp);
             fp = NULL;
         }
     }
     is_stderr = 0;
     if (fileName) {
-        if ((fp = upnp::stdio_h->fopen(fileName, "a")) == NULL) {
+        if ((fp = upnplib::stdio_h->fopen(fileName, "a")) == NULL) {
             fprintf(stderr, "Failed to open fileName (%s): %s\n", fileName,
-                    upnp::string_h->strerror(errno));
+                    upnplib::string_h->strerror(errno));
         }
     }
     if (fp == NULL) {
@@ -119,16 +119,16 @@ void UpnpCloseLog(void) {
     /* Calling lock() assumes that someone called UpnpInitLog(), but
      * this is reasonable as it is called from UpnpInit2(). We risk a
      * crash if we do this without a lock.*/
-    upnp::pthread_h->pthread_mutex_lock(&GlobalDebugMutex);
+    upnplib::pthread_h->pthread_mutex_lock(&GlobalDebugMutex);
 
     if (fp != NULL && is_stderr == 0) {
-        upnp::stdio_h->fclose(fp);
+        upnplib::stdio_h->fclose(fp);
     }
     fp = NULL;
     is_stderr = 0;
     initwascalled = 0;
-    upnp::pthread_h->pthread_mutex_unlock(&GlobalDebugMutex);
-    upnp::pthread_h->pthread_mutex_destroy(&GlobalDebugMutex);
+    upnplib::pthread_h->pthread_mutex_unlock(&GlobalDebugMutex);
+    upnplib::pthread_h->pthread_mutex_destroy(&GlobalDebugMutex);
 }
 
 void UpnpSetLogFileNames(const char* newFileName, const char* ignored) {
@@ -236,9 +236,9 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
 
     if (!DebugAtThisLevel(DLevel, Module))
         return;
-    upnp::pthread_h->pthread_mutex_lock(&GlobalDebugMutex);
+    upnplib::pthread_h->pthread_mutex_lock(&GlobalDebugMutex);
     if (fp == NULL) {
-        upnp::pthread_h->pthread_mutex_unlock(&GlobalDebugMutex);
+        upnplib::pthread_h->pthread_mutex_unlock(&GlobalDebugMutex);
         return;
     }
 
@@ -246,10 +246,10 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
     if (DbgFileName) {
         UpnpDisplayFileAndLine(fp, DbgFileName, DbgLineNo, DLevel, Module);
         vfprintf(fp, FmtStr, ArgList);
-        upnp::stdio_h->fflush(fp);
+        upnplib::stdio_h->fflush(fp);
     }
     va_end(ArgList);
-    upnp::pthread_h->pthread_mutex_unlock(&GlobalDebugMutex);
+    upnplib::pthread_h->pthread_mutex_unlock(&GlobalDebugMutex);
 }
 
 /* No locking here, the app should be careful about not calling

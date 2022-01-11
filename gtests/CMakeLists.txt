@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-01-04
+# Redistribution only with this Copyright remark. Last modified: 2022-01-11
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -16,6 +16,8 @@ project(UPNP_GTESTS VERSION 0020
 enable_testing()
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/include
     ${googletest_SOURCE_DIR}/googletest/include/
     ${googletest_SOURCE_DIR}/googlemock/include/
     ${PROJECT_SOURCE_DIR}/include

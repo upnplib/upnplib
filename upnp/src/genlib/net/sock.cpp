@@ -131,7 +131,7 @@ int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
             info->ssl = NULL;
         }
 #endif
-        if (upnp::sys_socket_h->shutdown(info->socket, ShutdownMethod) == -1) {
+        if (upnplib::sys_socket_h->shutdown(info->socket, ShutdownMethod) == -1) {
 // TODO: fix source code to only use POSIX versions, not GNU nonstandard
 #ifdef _GNU_SOURCE
             // BUG: errorBuffer is not used and uninitialized in this case.
@@ -204,10 +204,10 @@ static int sock_read_write(
         //      seen an endless loop here with old setting of errno.
         // errno = 0;
         if (*timeoutSecs < 0) {
-            retCode = upnp::sys_select_h->select(sockfd + 1, &readSet,
+            retCode = upnplib::sys_select_h->select(sockfd + 1, &readSet,
                                                  &writeSet, NULL, NULL);
         } else {
-            retCode = upnp::sys_select_h->select(sockfd + 1, &readSet,
+            retCode = upnplib::sys_select_h->select(sockfd + 1, &readSet,
                                                  &writeSet, NULL, &timeout);
         }
         if (retCode == 0)
@@ -235,7 +235,7 @@ static int sock_read_write(
             } else {
 #endif
                 /* read data. */
-                numBytes = (long)upnp::sys_socket_h->recv(
+                numBytes = (long)upnplib::sys_socket_h->recv(
                     sockfd, buffer, bufsize, MSG_NOSIGNAL);
 #ifdef UPNP_ENABLE_OPEN_SSL
             }
@@ -251,7 +251,7 @@ static int sock_read_write(
                 } else {
 #endif
                     /* write data. */
-                    num_written = upnp::sys_socket_h->send(
+                    num_written = upnplib::sys_socket_h->send(
                         sockfd, buffer + bytes_sent, byte_left,
                         MSG_DONTROUTE | MSG_NOSIGNAL);
 #ifdef UPNP_ENABLE_OPEN_SSL

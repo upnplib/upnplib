@@ -12,7 +12,7 @@
 #include <iostream>
 #include <string.h>
 
-namespace upnp {
+namespace upnplib {
 
 // Errormessages taken from https://github.com/pupnp/pupnp
 // Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
@@ -151,4 +151,4 @@ void CCaptureStdOutErr::start() {
     return strbuffer;
 }
 
-} // namespace upnp
+} // namespace upnplib

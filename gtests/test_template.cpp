@@ -20,7 +20,7 @@ extern "C" {
     ASSERT_GE((VAL), (MIN));                                                   \
     ASSERT_LE((VAL), (MAX))
 
-namespace upnp {
+namespace upnplib {
 
 // testsuite with fixtures
 //------------------------
@@ -98,7 +98,7 @@ TEST(EmptyTestSuite, empty_gtest) {
 #endif
 }
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

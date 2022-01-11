@@ -9,7 +9,7 @@
 #include <arpa/inet.h>
 #include <net/if.h>
 
-namespace upnp {
+namespace upnplib {
 
 //
 // CIfaddr4
@@ -145,4 +145,4 @@ ifaddrs* CIfaddr4Container::get_ifaddr(long unsigned int pIdx) {
     return ifaddr4;
 }
 
-} // namespace upnp
+} // namespace upnplib

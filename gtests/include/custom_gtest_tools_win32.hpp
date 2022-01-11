@@ -9,7 +9,7 @@
 #include <iphlpapi.h>
 #include <iostream>
 
-namespace upnp {
+namespace upnplib {
 
 class UPNP_API CNetIf4
 // Object to manage and fill a network adapter structure. This is needed for
@@ -68,6 +68,6 @@ class UPNP_API CNetIf4
     std::wstring m_FriendlyName{L"Loopback Pseudo-Interface 1"};
 };
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_TOOLS_WIN_HPP

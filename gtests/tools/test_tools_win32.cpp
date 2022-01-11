@@ -7,7 +7,7 @@
 
 using ::testing::ElementsAre;
 
-namespace upnp {
+namespace upnplib {
 
 class Cmalloc_adapts {
     // This is a wrapper class to use traditional malloc for an adapter address
@@ -338,7 +338,7 @@ TEST(NetIfs4ChainTestSuite, add_fake_interface_to_chain) {
                  L"Mocked Adapter for Unit testing");
 }
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

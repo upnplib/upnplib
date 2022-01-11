@@ -6,7 +6,7 @@
 
 #include <string.h>
 
-namespace upnp {
+namespace upnplib {
 
 class Bstring {
     // Real class to call the system functions
@@ -21,8 +21,8 @@ class Bstring {
 extern Bstring* string_h;
 
 // In the production code you just prefix the old system call with
-// 'upnp::string_h->' so the new call looks like this:
-//  upnp::string_h->strerror(0)
+// 'upnplib::string_h->' so the new call looks like this:
+//  upnplib::string_h->strerror(0)
 
 // For completeness (not used here): you can also create the object on the heap
 // Istring* stringObj = new Bstring(); // need to address constructor with ()
@@ -56,6 +56,6 @@ class Mock_string : public Bstring {
  * clang-format on
 */
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_STRINGIF_HPP

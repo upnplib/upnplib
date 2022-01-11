@@ -7,7 +7,7 @@
 #include <winsock2.h>
 #include <iphlpapi.h>
 
-namespace upnp {
+namespace upnplib {
 
 class Biphlpapi {
     // Real class to call the system functions
@@ -29,8 +29,8 @@ class Biphlpapi {
 extern Biphlpapi* iphlpapi_h;
 
 // In the production code you just prefix the old system call with
-// 'upnp::iphlpapi_h->' so the new call looks like this:
-//  upnp::iphlpapi_h->GetAdaptersAddresses(..)
+// 'upnplib::iphlpapi_h->' so the new call looks like this:
+//  upnplib::iphlpapi_h->GetAdaptersAddresses(..)
 
 /* clang-format off
  * The following class should be copied to the test source. You do not need to
@@ -59,6 +59,6 @@ class Mock_iphlpapi : public Biphlpapi {
  * clang-format on
 */
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_IPHLPAPIIF_HPP

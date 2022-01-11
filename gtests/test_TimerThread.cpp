@@ -29,7 +29,7 @@
 
 #include "TimerThread.cpp"
 
-namespace upnp {
+namespace upnplib {
 
 //###############################
 // TimerThread Interface        #
@@ -220,7 +220,7 @@ TEST(TimerThreadNormalTestSuite, remove_timer_thread) {
     EXPECT_EQ(tpObj.ThreadPoolShutdown(&tp), 0);
 }
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

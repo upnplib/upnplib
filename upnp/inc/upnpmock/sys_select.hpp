@@ -10,7 +10,7 @@
 #include <sys/select.h>
 #endif
 
-namespace upnp {
+namespace upnplib {
 
 class Bsys_select {
     // Real class to call the system functions
@@ -28,8 +28,8 @@ class Bsys_select {
 extern Bsys_select* sys_select_h;
 
 // In the production code you just prefix the old system call with
-// 'upnp::sys_select_h->' so the new call looks like this:
-//  upnp::sys_select_h->select(..)
+// 'upnplib::sys_select_h->' so the new call looks like this:
+//  upnplib::sys_select_h->select(..)
 
 /* clang-format off
  * The following class should be copied to the test source. You do not need to
@@ -61,6 +61,6 @@ class Mock_sys_select : public Bsys_select {
  * clang-format on
 */
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_SYS_SELECTIF_HPP

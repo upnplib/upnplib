@@ -11,7 +11,7 @@
 using ::testing::_;
 using ::testing::Return;
 
-namespace upnp {
+namespace upnplib {
 
 //
 // Mocked system calls
@@ -257,7 +257,7 @@ TEST_F(FreeListTestSuite, initialize_not_existing_freelist) {
     EXPECT_EQ(FreeListObj.FreeListInit(nullptr, 0, 0), EINVAL);
 }
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);

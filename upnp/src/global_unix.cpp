@@ -13,7 +13,7 @@
 #include "upnpmock/ifaddrs.hpp"
 #include "upnpmock/net_if.hpp"
 
-namespace upnp {
+namespace upnplib {
 
 Bifaddrs ifaddrsObj{};
 Bifaddrs* ifaddrs_h = &ifaddrsObj;
@@ -21,4 +21,4 @@ Bifaddrs* ifaddrs_h = &ifaddrsObj;
 Bnet_if net_ifObj{};
 Bnet_if* net_if_h = &net_ifObj;
 
-} // namespace upnp
+} // namespace upnplib

@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 
-namespace upnp {
+namespace upnplib {
 
 class Bstdlib {
     // Real class to call the system functions
@@ -22,8 +22,8 @@ class Bstdlib {
 extern Bstdlib* stdlib_h;
 
 // In the production code you just prefix the old system call with
-// 'upnp::stdlib_h->' so the new call looks like this:
-//  upnp::stdlib_h->malloc(sizeof(whatever))
+// 'upnplib::stdlib_h->' so the new call looks like this:
+//  upnplib::stdlib_h->malloc(sizeof(whatever))
 
 /* clang-format off
  * The following class should be copied to the test source. You do not need to
@@ -53,6 +53,6 @@ class Mock_stdlib : public Bstdlib {
  * clang-format on
 */
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_STDLIBIF_HPP

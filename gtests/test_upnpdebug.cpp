@@ -16,7 +16,7 @@ using ::testing::_;
 using ::testing::MatchesRegex;
 using ::testing::Return;
 
-namespace upnp {
+namespace upnplib {
 
 //
 // Interface for the upnpdebug module
@@ -547,7 +547,7 @@ TEST_F(UpnpdebugMockTestSuite, close_log_without_init_log) {
     upnpdebugObj.UpnpCloseLog();
 }
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

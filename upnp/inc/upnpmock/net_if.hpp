@@ -6,7 +6,7 @@
 
 #include <net/if.h>
 
-namespace upnp {
+namespace upnplib {
 
 class Bnet_if {
     // Real class to call the system functions
@@ -27,8 +27,8 @@ class Bnet_if {
 extern Bnet_if* net_if_h;
 
 // In the production code you just prefix the old system call with
-// 'upnp::net_if_h->' so the new call looks like this:
-//  upnp::net_if_h->if_nametoindex("eth0")
+// 'upnplib::net_if_h->' so the new call looks like this:
+//  upnplib::net_if_h->if_nametoindex("eth0")
 
 /* clang-format off
  * The following class should be copied to the test source. You do not need to
@@ -57,6 +57,6 @@ class Mock_net_if : public Bnet_if {
  * clang-format on
 */
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_NETIFIF_HPP

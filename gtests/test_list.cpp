@@ -6,7 +6,7 @@
 
 #include "genlib/util/list.cpp"
 
-namespace upnp {
+namespace upnplib {
 
 // Interface for the list module
 // =============================
@@ -351,7 +351,7 @@ TEST(ListTestSuite, UpnpListErase_with_position_to_end) {
     EXPECT_EQ(list_next_ptr, list_end_ptr);
 }
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

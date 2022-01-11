@@ -16,7 +16,7 @@ using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 
-namespace upnp {
+namespace upnplib {
 
 class Mock_iphlpapi : public Biphlpapi {
     // Class to mock the free system functions.
@@ -250,7 +250,7 @@ TEST(UpnpapiTestSuite, get_error_message) {
     EXPECT_STREQ(UpnpGetErrorMessage(1), "Unknown error code");
 }
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

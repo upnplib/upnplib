@@ -7,7 +7,7 @@
 #include "genlib/util/strintmap.cpp"
 #include "httpparser.hpp" // for HTTPMETHOD* constants
 
-namespace upnp {
+namespace upnplib {
 
 // Interface for the strintmap module
 // ==================================
@@ -161,7 +161,7 @@ TEST_F(StrintmapTestSuite, map_int_to_str_with_oversized_table_entiries) {
     EXPECT_EQ(idx, -1);
 }
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

@@ -20,7 +20,7 @@ using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::SetArrayArgument;
 
-namespace upnp {
+namespace upnplib {
 
 // Interface for the sock module
 // =============================
@@ -817,7 +817,7 @@ TEST(SockTestSuite, sock_make_blocking_and_sock_make_no_blocking) {
     // change the socket to non-blocking. Knowing this we will do some checks.
 
     WSADATA wsaData;
-    ASSERT_EQ(WSAStartup(MAKEWORD(2,2), &wsaData), NO_ERROR);
+    ASSERT_EQ(WSAStartup(MAKEWORD(2, 2), &wsaData), NO_ERROR);
     SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
     ASSERT_NE(sock, INVALID_SOCKET);
 
@@ -859,7 +859,7 @@ TEST(SockTestSuite, sock_ssl_connect) {
 }
 #endif
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);

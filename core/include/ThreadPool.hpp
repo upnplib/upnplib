@@ -6,7 +6,7 @@
 
 #include "ThreadPool.hpp"
 
-namespace upnp {
+namespace upnplib {
 
 //###############################
 // ThreadPool Interface         #
@@ -123,6 +123,6 @@ class CThreadPool : public IThreadPool {
     }
 };
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_THREADPOOL_HPP

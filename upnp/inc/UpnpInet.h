@@ -25,7 +25,7 @@
 #include <stdarg.h>
 #include <ws2tcpip.h>
 
-#define UpnpCloseSocket upnp::unistd_h->closesocket
+#define UpnpCloseSocket upnplib::unistd_h->closesocket
 
 #if (_WIN32_WINNT < 0x0600)
 typedef short sa_family_t;
@@ -60,7 +60,7 @@ typedef int SOCKET;
 #define SOCKET_ERROR (-1)
 
 /*! Alias to close() to make code more WIN32 tolerant. */
-#define UpnpCloseSocket upnp::unistd_h->close
+#define UpnpCloseSocket upnplib::unistd_h->close
 #endif /* _WIN32 */
 
 /* @} Sock */

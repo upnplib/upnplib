@@ -6,7 +6,7 @@
 
 #include <ifaddrs.h>
 
-namespace upnp {
+namespace upnplib {
 
 class Bifaddrs {
     // Real class to call the system functions
@@ -22,8 +22,8 @@ class Bifaddrs {
 extern Bifaddrs* ifaddrs_h;
 
 // In the production code you just prefix the old system call with
-// 'upnp::ifaddrs_h->' so the new call looks like this:
-//  upnp::ifaddrs_h->getifaddrs(..)
+// 'upnplib::ifaddrs_h->' so the new call looks like this:
+//  upnplib::ifaddrs_h->getifaddrs(..)
 
 /* clang-format off
  * The following class should be copied to the test source. You do not need to
@@ -52,6 +52,6 @@ class Mock_ifaddrs : public Bifaddrs {
  * clang-format on
 */
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_IFADDRSIF_HPP

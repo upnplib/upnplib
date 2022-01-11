@@ -1,11 +1,10 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-01
+// Redistribution only with this Copyright remark. Last modified: 2022-01-11
 
 #include "gtest/gtest.h"
 
-#include "genlib/net/http/httpparser.cpp"
-
-namespace upnp {
+#include "upnp/src/genlib/net/http/httpparser.cpp"
+#include "core/src/genlib/net/http/httpparser.cpp"
 
 //
 // Interface for the httpparser module
@@ -126,7 +125,37 @@ TEST(HttpparserTestSuite, map_int_to_str) {
                     "test it here and remove module strintmap.";
 }
 
-} // namespace upnp
+TEST(HttpparserTestSuite, httpmsg_init_and_httpmsg_destroy) {
+    http_message_t msg;
+    memset(&msg, 0xFF, sizeof(msg));
+    EXPECT_EQ(msg.headers.head.next, (LISTNODE*)0xFFFFFFFFFFFFFFFF);
+
+    // TODO: Split old test and bugfix.
+    //#ifdef OLD_TEST
+    std::cout << "  BUG! httpmsg_init: msg->urlbuf set to nullptr otherwise "
+                 "segfault with httpmsg_destroy.\n";
+    httpmsg_init(&msg);
+    EXPECT_NE(msg.urlbuf, nullptr);
+    //#else
+    // Fixed function
+    upnplib::httpmsg_init(&msg);
+    EXPECT_EQ(msg.urlbuf, nullptr);
+    //#endif
+    EXPECT_EQ(msg.initialized, 1);
+    EXPECT_EQ(msg.entity.buf, nullptr);
+    EXPECT_EQ(msg.entity.length, (size_t)0);
+    EXPECT_EQ(msg.headers.head.prev, nullptr);
+    EXPECT_NE(msg.headers.head.next, (LISTNODE*)0xFFFFFFFFFFFFFFFF);
+    EXPECT_EQ(msg.msg.buf, nullptr);
+    EXPECT_EQ(msg.msg.length, (size_t)0);
+    EXPECT_EQ(msg.msg.capacity, (size_t)0);
+    EXPECT_EQ(msg.status_msg.buf, nullptr);
+    EXPECT_EQ(msg.status_msg.length, (size_t)0);
+    EXPECT_EQ(msg.status_msg.capacity, (size_t)0);
+
+    httpmsg_destroy(&msg);
+    EXPECT_EQ(msg.initialized, 0);
+}
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

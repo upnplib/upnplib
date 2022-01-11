@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 
-namespace upnp {
+namespace upnplib {
 
 class Bstdio {
     // Base class to call the system functions.
@@ -25,8 +25,8 @@ class Bstdio {
 extern Bstdio* stdio_h;
 
 // In the production code you just prefix the old system call with
-// 'upnp::stdio_h->' so the new call looks like this:
-//  upnp::stdio_h->fopen(pathname, mode)
+// 'upnplib::stdio_h->' so the new call looks like this:
+//  upnplib::stdio_h->fopen(pathname, mode)
 
 /* clang-format off
  * The following class should be copied to the test source. You do not need to
@@ -57,6 +57,6 @@ class Mock_stdio : public Bstdio {
  * clang-format on
 */
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_STDIOIF_HPP

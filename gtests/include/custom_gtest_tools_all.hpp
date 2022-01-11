@@ -7,7 +7,7 @@
 #include "port.hpp"
 #include <string>
 
-namespace upnp {
+namespace upnplib {
 
 UPNP_API const char* UpnpGetErrorMessage(int rc);
 
@@ -50,6 +50,6 @@ class UPNP_API CCaptureStdOutErr {
     int m_saved_stdno{};
 };
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_GTEST_TOOLS_H

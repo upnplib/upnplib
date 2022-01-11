@@ -14,7 +14,7 @@ using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 
-namespace upnp {
+namespace upnplib {
 
 //
 // Interface for the uri module
@@ -1078,7 +1078,7 @@ TEST(UriIp4TestSuite, free_URL_list) {
            "created together with it.";
 }
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     // ::testing::InitGoogleTest(&argc, argv);

@@ -25,7 +25,7 @@
 #include "ThreadPool.cpp"
 #include "ThreadPool.hpp"
 
-namespace upnp {
+namespace upnplib {
 
 //
 //###############################
@@ -635,7 +635,7 @@ TEST(ThreadPoolNormalTestSuite, gettimeofday) {
     EXPECT_GT(tv.tv_sec, 1635672176); // that is about 2021-10-31T10:24
 }
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

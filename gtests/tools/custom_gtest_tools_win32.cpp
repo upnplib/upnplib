@@ -8,7 +8,7 @@
 #include <ws2tcpip.h>
 #include <string>
 
-namespace upnp {
+namespace upnplib {
 
 CNetIf4::CNetIf4() {
     // set ip4 unicast address structures
@@ -109,4 +109,4 @@ void CNetIf4::chain_next(::PIP_ADAPTER_ADDRESSES a_ptrNextAddr) {
     m_adapts.Next = a_ptrNextAddr;
 }
 
-} // namespace upnp
+} // namespace upnplib

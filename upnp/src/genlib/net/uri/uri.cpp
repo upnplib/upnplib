@@ -352,7 +352,7 @@ static int parse_hostport(
             hints.ai_family = AF_UNSPEC;
             hints.ai_socktype = SOCK_STREAM;
 
-            ret = upnp::netdb_h->getaddrinfo(srvname, NULL, &hints, &res0);
+            ret = upnplib::netdb_h->getaddrinfo(srvname, NULL, &hints, &res0);
             if (ret == 0) {
                 for (res = res0; res; res = res->ai_next) {
                     switch (res->ai_family) {
@@ -365,7 +365,7 @@ static int parse_hostport(
                     }
                 }
             found:
-                upnp::netdb_h->freeaddrinfo(res0);
+                upnplib::netdb_h->freeaddrinfo(res0);
                 if (res == NULL)
                     /* Didn't find an AF_INET or AF_INET6
                      * address. */

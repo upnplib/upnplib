@@ -6,7 +6,7 @@
 
 #include "genlib/util/membuffer.cpp"
 
-namespace upnp {
+namespace upnplib {
 
 // Interface for the uri module
 // ============================
@@ -996,7 +996,7 @@ TEST(MembufferTestSuite,
     mbObj.membuffer_destroy(&mbuf);
 }
 
-} // namespace upnp
+} // namespace upnplib
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

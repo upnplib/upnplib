@@ -18,7 +18,7 @@
 // clang-format on
 
 //
-namespace upnp {
+namespace upnplib {
 
 class Bunistd {
     // Real class to call the system functions
@@ -35,8 +35,8 @@ class Bunistd {
 extern Bunistd* unistd_h;
 
 // In the production code you just prefix the old system call with
-// 'upnp::unistd_h->' so the new call looks like this:
-//  upnp::unistd_h->close(fd);
+// 'upnplib::unistd_h->' so the new call looks like this:
+//  upnplib::unistd_h->close(fd);
 
 /* clang-format off
  * The following class should be copied to the test source. You do not need to
@@ -65,6 +65,6 @@ class Mock_unistd : public Bunistd {
  * clang-format on
 */
 
-} // namespace upnp
+} // namespace upnplib
 
 #endif // UPNP_UNISTDIF_HPP
