@@ -3,7 +3,7 @@
 
 #include "gtest/gtest.h"
 
-#include "upnp/src/genlib/net/http/httpparser.cpp"
+#include "pupnp/upnp/src/genlib/net/http/httpparser.cpp"
 #include "core/src/genlib/net/http/httpparser.cpp"
 
 //

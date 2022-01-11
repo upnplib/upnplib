@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNP_GTESTS VERSION 0020
+project(UPNP_GTESTS VERSION 0021
                     DESCRIPTION "Unit Tests using googletest"
                     HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -16,21 +16,28 @@ project(UPNP_GTESTS VERSION 0020
 enable_testing()
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}
-    ${CMAKE_SOURCE_DIR}/include
+    # Root project
+    ${UPnPlib_SOURCE_DIR}
+    ${UPnPlib_SOURCE_DIR}/include
+    ${UPnPlib_BINARY_DIR}
+    ${UPnPlib_BINARY_DIR}/upnp/inc
+    # Googletest
     ${googletest_SOURCE_DIR}/googletest/include/
     ${googletest_SOURCE_DIR}/googlemock/include/
+    # gtests
     ${PROJECT_SOURCE_DIR}/include
+    # upnplib core library project
     ${UPNPLIB_CORE_SOURCE_DIR}/include
+    # pupnp old code root project
+    ${PUPNP_SOURCE_DIR}
+    # pupnp core library project
     ${UPNP_CORE_SOURCE_DIR}/inc
     ${UPNP_CORE_SOURCE_DIR}/src
     ${UPNP_CORE_SOURCE_DIR}/src/inc
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil
-    ${UPNP_CORE_BINARY_DIR}/inc
-    ${UPnPlib_BINARY_DIR}
-    ${UPnPlib_BINARY_DIR}/upnp/inc
-    ${UPNP_IXML_SOURCE_DIR}/inc
-    ${UPNP_IXML_SOURCE_DIR}/src/inc
+    # pupnp ixml project
+    ${PUPNP_IXML_SOURCE_DIR}/inc
+    ${PUPNP_IXML_SOURCE_DIR}/src/inc
     # if pthreads4w isn't installed this path is empty. The linker
     # doesn't find "pthread.h" and falls back to look at <pthread.h>.
     ${pthreads4w_SOURCE_DIR}/
@@ -212,16 +219,16 @@ add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
 # upnpapi
 #--------
 set(UPNP_UPNPAPI_SOURCE_FILES
-    ${UPNP_IXML_SOURCE_DIR}/src/attr.c
-    ${UPNP_IXML_SOURCE_DIR}/src/document.c
-    ${UPNP_IXML_SOURCE_DIR}/src/element.c
-    ${UPNP_IXML_SOURCE_DIR}/src/ixml.c
-    ${UPNP_IXML_SOURCE_DIR}/src/ixmlmembuf.c
-    ${UPNP_IXML_SOURCE_DIR}/src/ixmlparser.c
-    ${UPNP_IXML_SOURCE_DIR}/src/namedNodeMap.c
-    ${UPNP_IXML_SOURCE_DIR}/src/node.c
-    ${UPNP_IXML_SOURCE_DIR}/src/nodeList.c
-    $<$<CONFIG:Debug>:${UPNP_IXML_SOURCE_DIR}/src/ixmldebug.c>
+    ${PUPNP_IXML_SOURCE_DIR}/src/attr.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/document.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/element.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/ixml.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/ixmlmembuf.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/ixmlparser.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/namedNodeMap.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/node.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/nodeList.c
+    $<$<CONFIG:Debug>:${PUPNP_IXML_SOURCE_DIR}/src/ixmldebug.c>
 
     ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
     $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/global_win32.cpp>

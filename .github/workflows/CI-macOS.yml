@@ -74,8 +74,8 @@ jobs:
         run: |
           # objdump does not work (this way?) on macOS
           #objdump [-a] -g upnp/build/lib/libupnplib.dylib | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
-          ls upnp/build/lib/libupnplib.dylib
-          ls upnp/build/lib/libupnplib.a
+          ls pupnp/upnp/build/lib/libupnplib.dylib
+          ls pupnp/upnp/build/lib/libupnplib.a
 
       - if: matrix.buildtype == 'Debug'
         name: Verify if Debug info
@@ -83,9 +83,9 @@ jobs:
         run: |
           # objdump does not work (this way?) on macOS
           #objdump [-a] -g upnp/build/lib/libupnplib.dylib | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
-          ls upnp/build/lib/libupnplib.dylib
-          ls upnp/build/lib/libupnplib.a
+          ls pupnp/upnp/build/lib/libupnplib.dylib
+          ls pupnp/upnp/build/lib/libupnplib.a
 
       - name: Run upnplib info program
         # This program is always built
-        run: ./upnp/build/upnplib
+        run: ./pupnp/upnp/build/upnplib

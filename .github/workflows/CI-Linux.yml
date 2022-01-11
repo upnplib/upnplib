@@ -85,16 +85,16 @@ jobs:
         name: Verify if NO Debug info
         # These two libraries are always built
         run: |
-          objdump -g upnp/build/lib/libupnplib.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
-          ls upnp/build/lib/libupnplib.a
+          objdump -g pupnp/upnp/build/lib/libupnplib.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          ls pupnp/upnp/build/lib/libupnplib.a
 
       - if: matrix.buildtype == 'Debug'
         name: Verify if Debug info
         # These two libraries are always built
         run: |
-          objdump -g upnp/build/lib/libupnplib.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
-          ls upnp/build/lib/libupnplib.a
+          objdump -g pupnp/upnp/build/lib/libupnplib.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          ls pupnp/upnp/build/lib/libupnplib.a
 
       - name: Run upnplib info program
         # This program is always built
-        run: ./upnp/build/upnplib
+        run: ./pupnp/upnp/build/upnplib

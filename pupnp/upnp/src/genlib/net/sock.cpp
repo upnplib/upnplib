@@ -131,7 +131,8 @@ int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
             info->ssl = NULL;
         }
 #endif
-        if (upnplib::sys_socket_h->shutdown(info->socket, ShutdownMethod) == -1) {
+        if (upnplib::sys_socket_h->shutdown(info->socket, ShutdownMethod) ==
+            -1) {
 // TODO: fix source code to only use POSIX versions, not GNU nonstandard
 #ifdef _GNU_SOURCE
             // BUG: errorBuffer is not used and uninitialized in this case.
@@ -205,10 +206,10 @@ static int sock_read_write(
         // errno = 0;
         if (*timeoutSecs < 0) {
             retCode = upnplib::sys_select_h->select(sockfd + 1, &readSet,
-                                                 &writeSet, NULL, NULL);
+                                                    &writeSet, NULL, NULL);
         } else {
             retCode = upnplib::sys_select_h->select(sockfd + 1, &readSet,
-                                                 &writeSet, NULL, &timeout);
+                                                    &writeSet, NULL, &timeout);
         }
         if (retCode == 0)
             return UPNP_E_TIMEDOUT;

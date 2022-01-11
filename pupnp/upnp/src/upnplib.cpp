@@ -215,7 +215,8 @@ int main() {
 
     pthread_t thread_upnpdebug;
 
-    rc = pthread_create(&thread_upnpdebug, NULL, &upnplib::check_upnpdebug, NULL);
+    rc = pthread_create(&thread_upnpdebug, NULL, &upnplib::check_upnpdebug,
+                        NULL);
     if (rc != 0) {
         std::cerr << "Error! unable to create thread_upnpdebug, " << rc
                   << std::endl;

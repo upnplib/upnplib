@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-01-01
+# Redistribution only with this Copyright remark. Last modified: 2022-01-11
 
 cmake_minimum_required(VERSION 3.18)
-include(../cmake/project-header.cmake)
+include(../../cmake/project-header.cmake)
 
-project(UPNP_CORE VERSION 0006
+project(UPNP_CORE VERSION 0007
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -13,32 +13,32 @@ project(UPNP_CORE VERSION 0006
 
 # Source files and compile settings
 #----------------------------------
-# TODO: Remove references to '${CMAKE_SOURCE_DIR}/ixml' if possible
+# TODO: Remove references to '${PUPNP_IXML_SOURCE_DIR}' if possible
 
 include_directories(
+    ${UPnPlib_BINARY_DIR}
+    ${UPnPlib_BINARY_DIR}/upnp/inc
     ${PROJECT_SOURCE_DIR}/inc
     ${PROJECT_SOURCE_DIR}/src/inc
     ${PROJECT_SOURCE_DIR}/src/threadutil
-    ${CMAKE_SOURCE_DIR}/ixml/inc
-    ${CMAKE_SOURCE_DIR}/ixml/src/inc
-    ${CMAKE_BINARY_DIR}
-    ${CMAKE_BINARY_DIR}/upnp/inc
+    ${PUPNP_IXML_SOURCE_DIR}/inc
+    ${PUPNP_IXML_SOURCE_DIR}/src/inc
     # if pthreads4w isn't installed this path is empty. The linker
     # doesn't find "pthread.h" and falls back to look at <pthread.h>.
     ${pthreads4w_SOURCE_DIR}/
 )
 
 set(UPNP_SOURCE_FILES
-    ${UPNP_IXML_SOURCE_DIR}/src/attr.c
-    ${UPNP_IXML_SOURCE_DIR}/src/document.c
-    ${UPNP_IXML_SOURCE_DIR}/src/element.c
-    ${UPNP_IXML_SOURCE_DIR}/src/ixml.c
-    ${UPNP_IXML_SOURCE_DIR}/src/ixmlmembuf.c
-    ${UPNP_IXML_SOURCE_DIR}/src/ixmlparser.c
-    ${UPNP_IXML_SOURCE_DIR}/src/namedNodeMap.c
-    ${UPNP_IXML_SOURCE_DIR}/src/node.c
-    ${UPNP_IXML_SOURCE_DIR}/src/nodeList.c
-    $<$<CONFIG:Debug>:${UPNP_IXML_SOURCE_DIR}/src/ixmldebug.c>
+    ${PUPNP_IXML_SOURCE_DIR}/src/attr.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/document.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/element.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/ixml.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/ixmlmembuf.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/ixmlparser.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/namedNodeMap.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/node.c
+    ${PUPNP_IXML_SOURCE_DIR}/src/nodeList.c
+    $<$<CONFIG:Debug>:${PUPNP_IXML_SOURCE_DIR}/src/ixmldebug.c>
 
     ${PROJECT_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${PROJECT_SOURCE_DIR}/src/threadutil/LinkedList.cpp

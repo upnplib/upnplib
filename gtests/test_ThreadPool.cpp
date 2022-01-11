@@ -19,10 +19,10 @@
 
 #include "gtest/gtest.h"
 
-#include "FreeList.cpp"
-#include "LinkedList.cpp"
+#include "pupnp/upnp/src/threadutil/FreeList.cpp"
+#include "pupnp/upnp/src/threadutil/LinkedList.cpp"
 
-#include "ThreadPool.cpp"
+#include "pupnp/upnp/src/threadutil/ThreadPool.cpp"
 #include "ThreadPool.hpp"
 
 namespace upnplib {

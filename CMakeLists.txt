@@ -295,8 +295,8 @@ endif(WIN32)
 # This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
 # e.g. UPNP_CORE_SOURCE_DIR and UPNP_CORE_BINARY_DIR
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/ixml ${PROJECT_SOURCE_DIR}/ixml/build)
-add_subdirectory(${PROJECT_SOURCE_DIR}/upnp ${PROJECT_SOURCE_DIR}/upnp/build)
+add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp/ixml ${PROJECT_SOURCE_DIR}/pupnp/ixml/build)
+add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp/upnp ${PROJECT_SOURCE_DIR}/pupnp/upnp/build)
 add_subdirectory(${PROJECT_SOURCE_DIR}/core ${PROJECT_SOURCE_DIR}/core/build)
 
 

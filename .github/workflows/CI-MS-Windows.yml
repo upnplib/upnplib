@@ -88,10 +88,10 @@ jobs:
         run: ./gtests/build/${{matrix.buildtype}}/test_simple.exe
 
       - name: Run static test program
-        run: ./upnp/build/${{matrix.buildtype}}/upnplibStatic.exe
+        run: ./pupnp/upnp/build/${{matrix.buildtype}}/upnplibStatic.exe
 
       - name: Run shared test program
-        run: ./upnp/build/${{matrix.buildtype}}/upnplib.exe
+        run: ./pupnp/upnp/build/${{matrix.buildtype}}/upnplib.exe
 
 
   # Job: Configure and build with NMake
@@ -175,7 +175,7 @@ jobs:
         run: ./gtests/build/test_simple.exe
 
       - name: Run static test program
-        run: ./upnp/build/upnplibStatic.exe
+        run: ./pupnp/upnp/build/upnplibStatic.exe
 
       - name: Run shared test program
-        run: ./upnp/build/upnplib.exe
+        run: ./pupnp/upnp/build/upnplib.exe
