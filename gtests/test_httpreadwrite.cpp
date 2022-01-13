@@ -2,6 +2,7 @@
 // Redistribution only with this Copyright remark. Last modified: 2021-12-13
 
 #include "gtest/gtest.h"
+#include "upnplib_gtest_tools.hpp"
 
 #include "genlib/net/http/httpreadwrite.cpp"
 
@@ -148,12 +149,34 @@ class Chttpreadwrite : Ihttpreadwrite {
 
 // testsuite for httpreadwrite
 //----------------------------
-TEST(HttpreadwriteTestSuite, open_close_http_connection) {
-    GTEST_SKIP() << "Test must be created.";
+TEST(HttpreadwriteTestSuite, open_http_connection_localhost) {
+    // The handle will be allocated on memory by the function and the pointer
+    // to it is returned here. As documented we must free it.
+    // We can use a generic pointer because the function needs it:
+    // void* phandle;
+    // But that is not good for type-save C++. So we use the correct type with
+    // type cast on the argument.
+    http_connection_handle_t* phandle;
 
-    // Chttpreadwrite httprwObj;
-    // EXPECT_EQ(httprwObj.http_OpenHttpConnection(url, handle, timeout),
-    // UPNP_E_SUCCESS);
+    Chttpreadwrite httprwObj;
+    int returned = httprwObj.http_OpenHttpConnection("http://127.0.0.1",
+                                                     (void**)&phandle, 3);
+// TODO: Check why failing is different
+#ifdef _WIN32
+    EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
+        << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
+        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
+        << ").";
+#else
+    EXPECT_EQ(returned, UPNP_E_SOCKET_CONNECT)
+        << "  # Should be UPNP_E_SOCKET_CONNECT(" << UPNP_E_SOCKET_CONNECT
+        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
+        << ").";
+#endif
+
+    // Doing as documented. It's unclear so far what to do if
+    // http_OpenHttpConnection() returns with an error.
+    ::free(phandle);
 }
 
 // testsuite for statcodes
@@ -170,5 +193,7 @@ TEST(StatcodesTestSuite, http_get_code_text) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    int rc = RUN_ALL_TESTS();
+    std::cout << "             Tested UPnPlib new=old code.\n";
+    return rc;
 }

@@ -4,7 +4,7 @@
 // Tools and helper classes to manage gtests
 // =========================================
 
-#include "custom_gtest_tools_unix.hpp"
+#include "upnplib_gtest_tools_unix.hpp"
 
 #include <arpa/inet.h>
 #include <net/if.h>

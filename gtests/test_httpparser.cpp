@@ -1,10 +1,13 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-11
+// Redistribution only with this Copyright remark. Last modified: 2022-01-13
 
 #include "gtest/gtest.h"
 
 #include "pupnp/upnp/src/genlib/net/http/httpparser.cpp"
 #include "core/src/genlib/net/http/httpparser.cpp"
+
+namespace upnplib {
+bool old_code{false};
 
 //
 // Interface for the httpparser module
@@ -66,9 +69,9 @@ class Ihttpparser {
     // virtual void print_http_headers(http_message_t* hmsg) = 0;
 };
 
-class Chttpparser : public Ihttpparser {
+class Chttpparser_old : public Ihttpparser {
   public:
-    virtual ~Chttpparser() {}
+    virtual ~Chttpparser_old() {}
 
     void httpmsg_init(http_message_t* msg) override {
         return ::httpmsg_init(msg); }
@@ -110,6 +113,15 @@ class Chttpparser : public Ihttpparser {
     // void print_http_headers(http_message_t* hmsg) override {
     //     return ::print_http_headers(hmsg); }
 };
+
+class Chttpparser : public Chttpparser_old {
+  public:
+    virtual ~Chttpparser() {}
+
+    void httpmsg_init(http_message_t* msg) override {
+        return upnplib::httpmsg_init(msg); }
+};
+
 // clang-format on
 
 //
@@ -127,25 +139,28 @@ TEST(HttpparserTestSuite, map_int_to_str) {
 
 TEST(HttpparserTestSuite, httpmsg_init_and_httpmsg_destroy) {
     http_message_t msg;
-    memset(&msg, 0xFF, sizeof(msg));
-    EXPECT_EQ(msg.headers.head.next, (LISTNODE*)0xFFFFFFFFFFFFFFFF);
+    memset(&msg, 0xff, sizeof(msg));
+    EXPECT_EQ(msg.headers.head.next, (LISTNODE*)0xffffffffffffffff);
 
-    // TODO: Split old test and bugfix.
-    //#ifdef OLD_TEST
-    std::cout << "  BUG! httpmsg_init: msg->urlbuf set to nullptr otherwise "
-                 "segfault with httpmsg_destroy.\n";
-    httpmsg_init(&msg);
-    EXPECT_NE(msg.urlbuf, nullptr);
-    //#else
-    // Fixed function
-    upnplib::httpmsg_init(&msg);
-    EXPECT_EQ(msg.urlbuf, nullptr);
-    //#endif
+    Chttpparser httparsObj;
+
+    if (old_code) {
+        std::cout
+            << "  BUG! httpmsg_init: msg->urlbuf set to nullptr otherwise "
+               "segfault with httpmsg_destroy.\n";
+        Chttpparser_old httparsObj;
+        httparsObj.httpmsg_init(&msg);
+        EXPECT_NE(msg.urlbuf, nullptr);
+    } else {
+        // Fixed function
+        httparsObj.httpmsg_init(&msg);
+        EXPECT_EQ(msg.urlbuf, nullptr);
+    }
     EXPECT_EQ(msg.initialized, 1);
     EXPECT_EQ(msg.entity.buf, nullptr);
     EXPECT_EQ(msg.entity.length, (size_t)0);
     EXPECT_EQ(msg.headers.head.prev, nullptr);
-    EXPECT_NE(msg.headers.head.next, (LISTNODE*)0xFFFFFFFFFFFFFFFF);
+    EXPECT_NE(msg.headers.head.next, (LISTNODE*)0xffffffffffffffff);
     EXPECT_EQ(msg.msg.buf, nullptr);
     EXPECT_EQ(msg.msg.length, (size_t)0);
     EXPECT_EQ(msg.msg.capacity, (size_t)0);
@@ -153,11 +168,60 @@ TEST(HttpparserTestSuite, httpmsg_init_and_httpmsg_destroy) {
     EXPECT_EQ(msg.status_msg.length, (size_t)0);
     EXPECT_EQ(msg.status_msg.capacity, (size_t)0);
 
-    httpmsg_destroy(&msg);
-    EXPECT_EQ(msg.initialized, 0);
+    if (old_code) {
+        std::cout << "       A buggy httpmsg_init() must not raise a segfault "
+                     "with httpmsg_destroy().\n";
+    } else {
+        httparsObj.httpmsg_destroy(&msg);
+        EXPECT_EQ(msg.initialized, 0);
+    }
 }
 
+TEST(HttpparserTestSuite, httpmsg_find_hdr_str) {
+    Chttpparser httparsObj;
+
+    http_message_t msg;
+    memset(&msg, 0xff, sizeof(msg));
+    ::httpmsg_init(&msg);
+
+    const char header_name[16]{"TestHeader"};
+
+    EXPECT_EQ(httparsObj.httpmsg_find_hdr_str(&msg, header_name), nullptr);
+}
+
+} // namespace upnplib
+
+//
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    // ::testing::InitGoogleMock(&argc, argv);
+
+    // Parse for upnplib arguments prefixed with '--upnplib'. InitGoogleTest()
+    // has removed its options prefixed with '--gtest' from the arguments and
+    // corrected argc accordingly.
+    if (argc > 2) {
+        std::cerr
+            << "Too many arguments supplied. Valid only:\n--upnplib_old_code"
+            << std::endl;
+        return EXIT_FAILURE;
+    }
+    if (argc == 2) {
+        if (strncmp(argv[1], "--upnplib_old_code", 18) == 0) {
+            upnplib::old_code = true;
+        } else {
+            std::cerr << "Unknown argument. Valid only:\n--upnplib_old_code"
+                      << std::endl;
+            return EXIT_FAILURE;
+        }
+    }
+
+    int rc = RUN_ALL_TESTS();
+
+    // At least some information what we have tested.
+    if (upnplib::old_code)
+        std::cout << "             Tested UPnPlib old code.\n";
+    else
+        std::cout << "             Tested UPnPlib new code.\n";
+
+    return rc;
 }

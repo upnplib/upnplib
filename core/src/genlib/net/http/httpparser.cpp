@@ -20,7 +20,7 @@ namespace upnplib {
 void httpmsg_init(http_message_t* msg) {
     msg->entity.buf = nullptr;
     msg->entity.length = (size_t)0;
-    // ListInit(&msg->headers, httpmsg_compare, httpheader_free);
+    ListInit(&msg->headers, httpmsg_compare, httpheader_free);
     membuffer_init(&msg->msg);
     membuffer_init(&msg->status_msg);
     msg->urlbuf = nullptr;

@@ -5,8 +5,8 @@
 // For further information look at https://stackoverflow.com/a/66498073/5014688
 
 #include "gmock/gmock.h"
-#include "custom_gtest_tools_all.hpp"
-#include "custom_gtest_tools_win32.hpp"
+#include "upnplib_gtest_tools.hpp"
+#include "upnplib_gtest_tools_win32.hpp"
 #include "port_unistd.hpp"
 
 #include "api/upnpapi.cpp"

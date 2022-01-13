@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-01-11
+# Redistribution only with this Copyright remark. Last modified: 2022-01-12
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNP_GTESTS VERSION 0021
+project(UPNP_GTESTS VERSION 0022
                     DESCRIPTION "Unit Tests using googletest"
                     HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -85,19 +85,19 @@ add_link_options($<$<AND:$<BOOL:${APPLE}>,$<BOOL:${BUILD_SHARED_LIBS}>>:LINKER:-
 #    )
 #endif()
 
-# Create custom helper tools library for gtests. We have version
-# custom_gtest_tools_all for all operating systems,
-# custom_gtest_tools_unix for Unix operating systems and
-# custom_gtest_tools_win32 for Microsoft Windows
-add_library(custom_gtest_tools SHARED
-        ${PROJECT_SOURCE_DIR}/tools/custom_gtest_tools_all.cpp
-        $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/custom_gtest_tools_win32.cpp>
-        $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/custom_gtest_tools_unix.cpp>)
-set_target_properties(custom_gtest_tools PROPERTIES
+# Create upnplib helper tools library for gtests. We have version
+# upnplib_gtest_tools for all operating systems,
+# upnplib_gtest_tools_unix for Unix operating systems and
+# upnplib_gtest_tools_win32 for Microsoft Windows
+add_library(upnplib_gtest_tools SHARED
+        ${PROJECT_SOURCE_DIR}/tools/upnplib_gtest_tools.cpp
+        $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/upnplib_gtest_tools_win32.cpp>
+        $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/upnplib_gtest_tools_unix.cpp>)
+set_target_properties(upnplib_gtest_tools PROPERTIES
         CXX_VISIBILITY_PRESET hidden
         VISIBILITY_INLINES_HIDDEN ON)
-target_compile_definitions(custom_gtest_tools PRIVATE UPNP_DLL UPNP_DLL_EXPORTS)
-add_dependencies(custom_gtest_tools gtest gtest_main gmock gmock_main)
+target_compile_definitions(upnplib_gtest_tools PRIVATE UPNP_DLL UPNP_DLL_EXPORTS)
+add_dependencies(upnplib_gtest_tools gtest gtest_main gmock gmock_main)
 
 
 #################################
@@ -113,7 +113,7 @@ add_executable(test_sock
     $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/global_unix.cpp>
     $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
     ${PROJECT_SOURCE_DIR}/test_sock.cpp)
-target_link_libraries(test_sock custom_gtest_tools)
+target_link_libraries(test_sock upnplib_gtest_tools)
 add_test(NAME ctest_sock COMMAND test_sock)
 
 # strintmap
@@ -195,6 +195,7 @@ add_executable(test_httpreadwrite
 )
 target_compile_definitions(test_httpreadwrite PRIVATE
                             $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+target_link_libraries(test_httpreadwrite upnplib_gtest_tools)
 add_test(NAME ctest_httpreadwrite COMMAND test_httpreadwrite)
 
 # UpnpString
@@ -212,7 +213,7 @@ add_executable(test_upnpdebug
 target_compile_options(test_upnpdebug PRIVATE
         # suppress warning C4311: 'type cast': pointer truncation
         $<$<CXX_COMPILER_ID:MSVC>:/wd4311>)
-target_link_libraries(test_upnpdebug custom_gtest_tools)
+target_link_libraries(test_upnpdebug upnplib_gtest_tools)
 add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
 
 
@@ -265,7 +266,7 @@ target_compile_options(test_upnpapi PRIVATE
                        # suppress warning C4311: 'type cast': pointer truncation
                        $<$<CXX_COMPILER_ID:MSVC>:/wd4311>)
 target_link_libraries(test_upnpapi
-                      custom_gtest_tools)
+                      upnplib_gtest_tools)
 add_test(NAME ctest_upnpapi COMMAND test_upnpapi
 )
 
@@ -303,14 +304,14 @@ target_compile_options(test_TimerThread PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:/wd4311>)
 add_test(NAME ctest_TimerThread COMMAND test_TimerThread)
 
-# test custom_gtest_tools
-#------------------------
-add_executable(test_custom_gtest_tools
+# test upnplib_gtest_tools
+#-------------------------
+add_executable(test_upnplib_gtest_tools
         $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/test_tools_win32.cpp>
         $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/test_tools_unix.cpp>)
-target_link_libraries(test_custom_gtest_tools
-        custom_gtest_tools)
-add_test(NAME ctest_custom_gtest_tools COMMAND test_custom_gtest_tools)
+target_link_libraries(test_upnplib_gtest_tools
+        upnplib_gtest_tools)
+add_test(NAME ctest_upnplib_gtest_tools COMMAND test_upnplib_gtest_tools)
 
 # simple test
 #------------

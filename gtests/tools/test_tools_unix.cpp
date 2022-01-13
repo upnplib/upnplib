@@ -1,8 +1,8 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2021-12-06
 
-#include "custom_gtest_tools_all.hpp"
-#include "custom_gtest_tools_unix.hpp"
+#include "upnplib_gtest_tools.hpp"
+#include "upnplib_gtest_tools_unix.hpp"
 #include "gtest/gtest.h"
 
 #include <net/if.h>

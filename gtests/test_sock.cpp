@@ -6,7 +6,7 @@
 
 #include "port.hpp"
 #include "gmock/gmock.h"
-#include "custom_gtest_tools_all.hpp"
+#include "upnplib_gtest_tools.hpp"
 #include "upnpmock/sys_socket.hpp"
 #include "upnpmock/sys_select.hpp"
 #include "upnpmock/unistd.hpp"
