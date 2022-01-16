@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-13
+// Redistribution only with this Copyright remark. Last modified: 2022-01-16
 
 // This test should always run, reporting no failure
 
@@ -100,36 +100,5 @@ TEST(EmptyTestSuite, empty_gtest) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     // ::testing::InitGoogleMock(&argc, argv);
-
-    // Parse for upnplib arguments prefixed with '--upnplib'. InitGoogleTest()
-    // has removed its options prefixed with '--gtest' from the arguments and
-    // corrected argc accordingly.
-    if (argc > 2) {
-        std::cerr
-            << "Too many arguments supplied. Valid only:\n--upnplib_old_code"
-            << std::endl;
-        return EXIT_FAILURE;
-    }
-    if (argc == 2) {
-        if (strncmp(argv[1], "--upnplib_old_code", 18) == 0) {
-            upnplib::old_code = true;
-        } else {
-            std::cerr << "Unknown argument. Valid only:\n--upnplib_old_code"
-                      << std::endl;
-            return EXIT_FAILURE;
-        }
-    }
-
-    int rc = RUN_ALL_TESTS();
-
-    // At least some information what we have tested.
-    if (upnplib::old_code)
-        std::cout << "             Tested UPnPlib old code.\n";
-    else
-        std::cout << "             Tested UPnPlib new code.\n";
-
-    // If we do not use option 'old_code':
-    // std::cout << "             Tested UPnPlib new=old code.\n";
-
-    return rc;
+#include "upnplib_gtest_main.inc"
 }

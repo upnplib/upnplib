@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-01
+ * Redistribution only with this Copyright remark. Last modified: 2022-01-16
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -76,6 +76,10 @@
 //#include <sys/wait.h>
 #endif /* _WIN32 */
 
+#include "upnpmock/sys_socket.hpp"
+#include "upnpmock/sys_select.hpp"
+#include "upnpmock/winsock2_win32.hpp"
+
 /*
  * Please, do not change these to const int while MSVC cannot understand
  * const int in array dimensions.
@@ -117,11 +121,12 @@ static int Check_Connect_And_Wait_Connection(
 
     if (connect_res < 0) {
 #ifdef _WIN32
-        if (WSAEWOULDBLOCK == WSAGetLastError()) {
+        if (WSAEWOULDBLOCK == upnplib::winsock2_h->WSAGetLastError()) {
 #else
         if (EINPROGRESS == errno) {
 #endif
-            result = select(sock + 1, NULL, &fdSet, NULL, &tmvTimeout);
+            result = upnplib::sys_select_h->select(sock + 1, NULL, &fdSet, NULL,
+                                                   &tmvTimeout);
             if (result < 0) {
 #ifdef _WIN32
                 /* WSAGetLastError(); */
@@ -136,8 +141,8 @@ static int Check_Connect_And_Wait_Connection(
             } else {
                 int valopt = 0;
                 socklen_t len = sizeof(valopt);
-                if (getsockopt(sock, SOL_SOCKET, SO_ERROR, (void*)&valopt,
-                               &len) < 0) {
+                if (upnplib::sys_socket_h->getsockopt(
+                        sock, SOL_SOCKET, SO_ERROR, (void*)&valopt, &len) < 0) {
                     /* failed to read delayed error */
                     return -1;
                 } else if (valopt) {

@@ -1,8 +1,11 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-04
+// Redistribution only with this Copyright remark. Last modified: 2022-01-17
 
-#ifndef UPNP_IPHLPAPIIF_HPP
-#define UPNP_IPHLPAPIIF_HPP
+// iphlpapi.h is a Microsoft Windows library.
+#ifdef _WIN32
+
+#ifndef UPNPLIB_IPHLPAPI_WIN32IF_HPP
+#define UPNPLIB_IPHLPAPI_WIN32IF_HPP
 
 #include <winsock2.h>
 #include <iphlpapi.h>
@@ -14,7 +17,6 @@ class Biphlpapi {
   public:
     virtual ~Biphlpapi() {}
 
-    // virtual char* strerror(int errnum) { return ::strerror(errnum); }
     virtual ULONG GetAdaptersAddresses(ULONG Family, ULONG Flags,
                                        PVOID Reserved,
                                        PIP_ADAPTER_ADDRESSES AdapterAddresses,
@@ -61,4 +63,5 @@ class Mock_iphlpapi : public Biphlpapi {
 
 } // namespace upnplib
 
-#endif // UPNP_IPHLPAPIIF_HPP
+#endif // UPNPLIB_IPHLPAPI_WIN32IF_HPP
+#endif // _WIN32

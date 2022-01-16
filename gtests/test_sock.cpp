@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-10
+// Redistribution only with this Copyright remark. Last modified: 2022-01-16
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -17,7 +17,6 @@ using ::testing::_;
 using ::testing::DoAll;
 using ::testing::NotNull;
 using ::testing::Return;
-using ::testing::SetArgPointee;
 using ::testing::SetArrayArgument;
 
 namespace upnplib {
@@ -92,9 +91,9 @@ class Mock_sys_socket : public Bsys_socket {
     }
     virtual ~Mock_sys_socket() override { sys_socket_h = m_oldptr; }
 
-    MOCK_METHOD(UPNP_SIZE_T_INT, recv,
+    MOCK_METHOD(UPNPLIB_SIZE_T_INT, recv,
                 (int sockfd, char* buf, size_t len, int flags), (override));
-    MOCK_METHOD(UPNP_SIZE_T_INT, send,
+    MOCK_METHOD(UPNPLIB_SIZE_T_INT, send,
                 (int sockfd, const char* buf, size_t len, int flags),
                 (override));
     MOCK_METHOD(int, shutdown, (int sockfd, int how), (override));
@@ -136,6 +135,36 @@ class Mock_unistd : public Bunistd {
 //
 // testsuite for the sock module
 //==============================
+#if false
+TEST(SockTestSuite, sock_connect_client)
+// This is for humans only to check on Unix operating systems how to 'connect()'
+// to a server exactly works so we can correct mock it. Don't set '#if true'
+// permanently because it connects to the real internet and may slow down this
+// gtest dramatically. You may change the ip address if google.com changed its
+// ip address.
+{
+    // Get a TCP socket
+    int sockfd;
+    ASSERT_NE(sockfd = ::socket(AF_INET, SOCK_STREAM, 0), -1);
+
+    // Fill an address structure
+    ::sockaddr_in saddrin{};
+    saddrin.sin_family = AF_INET;
+    saddrin.sin_port = htons(80);
+    // This was a valid ip address from google.com
+    saddrin.sin_addr.s_addr = inet_addr("172.217.18.110");
+
+    // Connect to the server
+    EXPECT_EQ(::connect(sockfd, (const sockaddr*)&saddrin,
+                        sizeof(struct sockaddr_in)),
+              0)
+        << ::strerror(errno);
+
+    EXPECT_EQ(::close(sockfd), 0);
+}
+#endif
+
+//
 class SockFTestSuite : public ::testing::Test {
   protected:
     // Instantiate socket object derived from the C++ interface

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-07
+// Redistribution only with this Copyright remark. Last modified: 2022-01-16
 
 #ifndef UPNP_SYS_SOCKETIF_HPP
 #define UPNP_SYS_SOCKETIF_HPP
@@ -13,9 +13,11 @@
 
 // Different return types for socket functions.
 #ifdef _WIN32
-#define UPNP_SIZE_T_INT int
+#define UPNPLIB_SIZE_T_INT int
+#define UPNPLIB_VOID_CHAR char
 #else
-#define UPNP_SIZE_T_INT size_t
+#define UPNPLIB_SIZE_T_INT size_t
+#define UPNPLIB_VOID_CHAR void
 #endif
 
 namespace upnplib {
@@ -42,13 +44,24 @@ class Bsys_socket {
         return ::accept(sockfd, addr, addrlen);
     }
 
-    virtual UPNP_SIZE_T_INT recv(int sockfd, char* buf, size_t len, int flags) {
+    virtual UPNPLIB_SIZE_T_INT recv(int sockfd, char* buf, size_t len,
+                                    int flags) {
         return ::recv(sockfd, buf, len, flags);
     }
 
-    virtual UPNP_SIZE_T_INT send(int sockfd, const char* buf, size_t len,
-                                 int flags) {
+    virtual UPNPLIB_SIZE_T_INT send(int sockfd, const char* buf, size_t len,
+                                    int flags) {
         return ::send(sockfd, buf, len, flags);
+    }
+
+    virtual int connect(int sockfd, const struct sockaddr* addr,
+                        socklen_t addrlen) {
+        return ::connect(sockfd, addr, addrlen);
+    }
+
+    virtual int getsockopt(int sockfd, int level, int optname,
+                           UPNPLIB_VOID_CHAR* optval, socklen_t* optlen) {
+        return ::getsockopt(sockfd, level, optname, optval, optlen);
     }
 
     virtual int setsockopt(int sockfd, int level, int optname,
@@ -90,20 +103,28 @@ class Mock_sys_socket : public Bsys_socket {
     MOCK_METHOD(int, bind,
                 (int sockfd, const struct sockaddr* addr, socklen_t addrlen),
                 (override));
-    MOCK_METHOD(int, listen, (int sockfd, int backlog), (override));
+    MOCK_METHOD(int, listen, (int sockfd, int backlog),
+                (override));
     MOCK_METHOD(int, accept,
                 (int sockfd, struct sockaddr* addr, socklen_t* addrlen),
                 (override));
-    MOCK_METHOD(UPNP_SIZE_T_INT, recv, (int sockfd, char* buf, size_t len, int flags),
+    MOCK_METHOD(UPNPLIB_SIZE_T_INT, recv,
+                (int sockfd, char* buf, size_t len, int flags),
                 (override));
-    MOCK_METHOD(UPNP_SIZE_T_INT, send,
+    MOCK_METHOD(UPNPLIB_SIZE_T_INT, send,
                 (int sockfd, const char* buf, size_t len, int flags),
                 (override));
-    MOCK_METHOD(int, setsockopt,
-                (int sockfd, int level, int optname, const char* optval,
-                 socklen_t optlen),
+    MOCK_METHOD(int, connect,
+                (int sockfd, const struct sockaddr* addr, socklen_t addrlen),
                 (override));
-    MOCK_METHOD(int, shutdown, (int sockfd, int how), (override));
+    MOCK_METHOD(int, getsockopt,
+                (int sockfd, int level, int optname, void* optval, socklen_t* optlen),
+                (override));
+    MOCK_METHOD(int, setsockopt,
+                (int sockfd, int level, int optname, const char* optval, socklen_t optlen),
+                (override));
+    MOCK_METHOD(int, shutdown, (int sockfd, int how),
+                (override));
 };
 
  * In a gtest you will instantiate the Mock class, prefered as protected member

@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2021-12-31
+# Redistribution only with this Copyright remark. Last modified: 2022-01-13
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -122,6 +122,7 @@ add_compile_options(
 # Large-file-sensitivity        #
 #################################
 # TODO: Check large-file-sensitivity
+# [Add LFS flags to pkg-config? #89](https://github.com/pupnp/pupnp/issues/89)
 # Check for what CMAKE_REQUIRED_DEFINITIONS is needed
 # In the changelog I found this:
 #
