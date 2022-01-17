@@ -79,6 +79,7 @@
 #include "upnpmock/sys_socket.hpp"
 #include "upnpmock/sys_select.hpp"
 #include "upnpmock/winsock2_win32.hpp"
+#include "upnpmock/pupnp.hpp"
 
 /*
  * Please, do not change these to const int while MSVC cannot understand
@@ -161,12 +162,12 @@ static int Check_Connect_And_Wait_Connection(
 static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
                            socklen_t addrlen) {
 #ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
-    int ret = sock_make_no_blocking(sockfd);
+    int ret = upnplib::pupnp->sock_make_no_blocking(sockfd);
     if (ret != -1) {
         ret = connect(sockfd, serv_addr, addrlen);
         ret = Check_Connect_And_Wait_Connection(sockfd, ret);
         if (ret != -1) {
-            ret = sock_make_blocking(sockfd);
+            ret = upnplib::pupnp->sock_make_blocking(sockfd);
         }
     }
 

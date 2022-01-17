@@ -1,8 +1,8 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-10
+// Redistribution only with this Copyright remark. Last modified: 2022-01-18
 
-#ifndef UPNP_NETDBIF_HPP
-#define UPNP_NETDBIF_HPP
+#ifndef UPNPLIB_NETDBIF_HPP
+#define UPNPLIB_NETDBIF_HPP
 
 #ifdef _WIN32
 #include <ws2tcpip.h>
@@ -29,7 +29,8 @@ class Bnetdb {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bnetdb* netdb_h;
+static Bnetdb netdbObj{};
+static Bnetdb* netdb_h = &netdbObj;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::netdb_h->' so the new call looks like this:
@@ -54,7 +55,7 @@ class Mock_netdb : public Bnetdb {
                 const struct addrinfo* hints, struct addrinfo** res), (override));
 };
 
- * In a gtest you will instantiate the Mock class, prefered as protected member
+ * In a gtest you will instantiate the Mock class, maybe as protected member
  * variable at the constructor of the testsuite:
 
     Mock_netdb m_mocked_netdb;
@@ -65,4 +66,4 @@ class Mock_netdb : public Bnetdb {
 
 } // namespace upnplib
 
-#endif // UPNP_NETDBIF_HPP
+#endif // UPNPLIB_NETDBIF_HPP

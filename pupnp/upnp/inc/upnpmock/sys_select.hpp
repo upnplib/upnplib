@@ -1,8 +1,8 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-04
+// Redistribution only with this Copyright remark. Last modified: 2022-01-18
 
-#ifndef UPNP_SYS_SELECTIF_HPP
-#define UPNP_SYS_SELECTIF_HPP
+#ifndef UPNPLIB_SYS_SELECTIF_HPP
+#define UPNPLIB_SYS_SELECTIF_HPP
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -25,7 +25,8 @@ class Bsys_select {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bsys_select* sys_select_h;
+static Bsys_select sys_selectObj{};
+static Bsys_select* sys_select_h = &sys_selectObj;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::sys_select_h->' so the new call looks like this:
@@ -52,7 +53,7 @@ class Mock_sys_select : public Bsys_select {
                 (override));
 };
 
- * In a gtest you will instantiate the Mock class, prefered as protected member
+ * In a gtest you will instantiate the Mock class, maybe as protected member
  * variable at the constructor of the testsuite:
 
     Mock_sys_select m_mocked_sys_select;
@@ -63,4 +64,4 @@ class Mock_sys_select : public Bsys_select {
 
 } // namespace upnplib
 
-#endif // UPNP_SYS_SELECTIF_HPP
+#endif // UPNPLIB_SYS_SELECTIF_HPP

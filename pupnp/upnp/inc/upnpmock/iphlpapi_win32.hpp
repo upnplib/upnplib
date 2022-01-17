@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-17
+// Redistribution only with this Copyright remark. Last modified: 2022-01-18
 
 // iphlpapi.h is a Microsoft Windows library.
 #ifdef _WIN32
@@ -28,7 +28,8 @@ class Biphlpapi {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Biphlpapi* iphlpapi_h;
+static Biphlpapi iphlpapiObj{};
+static Biphlpapi* iphlpapi_h = &iphlpapiObj;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::iphlpapi_h->' so the new call looks like this:
@@ -52,7 +53,7 @@ class Mock_iphlpapi : public Biphlpapi {
     MOCK_METHOD(ULONG, GetAdaptersAddresses, (ULONG Family, ULONG Flags, PVOID Reserved, PIP_ADAPTER_ADDRESSES AdapterAddresses, PULONG SizePointer), (override));
 };
 
- * In a gtest you will instantiate the Mock class, prefered as protected member
+ * In a gtest you will instantiate the Mock class, maybe as protected member
  * variable at the constructor of the testsuite:
 
     Mock_iphlpapi m_mocked_iphlpapi;

@@ -1,8 +1,8 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-07
+// Redistribution only with this Copyright remark. Last modified: 2022-01-18
 
-#ifndef UPNP_UNISTDIF_HPP
-#define UPNP_UNISTDIF_HPP
+#ifndef UPNPLIB_UNISTDIF_HPP
+#define UPNPLIB_UNISTDIF_HPP
 
 // clang-format off
 #ifdef _WIN32
@@ -32,7 +32,8 @@ class Bunistd {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bunistd* unistd_h;
+static Bunistd unistdObj{};
+static Bunistd* unistd_h = &unistdObj;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::unistd_h->' so the new call looks like this:
@@ -56,7 +57,7 @@ class Mock_unistd : public Bunistd {
     MOCK_METHOD(int, UPNP_CLOSE_SOCKET, (UPNP_SOCKET_TYPE fd), (override));
 };
 
- * In a gtest you will instantiate the Mock class, prefered as protected member
+ * In a gtest you will instantiate the Mock class, maybe as protected member
  * variable at the constructor of the testsuite:
 
     Mock_unistd m_mocked_unistd;
@@ -67,4 +68,4 @@ class Mock_unistd : public Bunistd {
 
 } // namespace upnplib
 
-#endif // UPNP_UNISTDIF_HPP
+#endif // UPNPLIB_UNISTDIF_HPP

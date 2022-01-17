@@ -1,8 +1,10 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-02
+// Redistribution only with this Copyright remark. Last modified: 2022-01-18
 
-#ifndef UPNP_NETIFIF_HPP
-#define UPNP_NETIFIF_HPP
+#ifndef _WIN32
+
+#ifndef UPNPLIB_NETIFIF_HPP
+#define UPNPLIB_NETIFIF_HPP
 
 #include <net/if.h>
 
@@ -24,7 +26,8 @@ class Bnet_if {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bnet_if* net_if_h;
+static Bnet_if net_ifObj{};
+static Bnet_if* net_if_h = &net_ifObj;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::net_if_h->' so the new call looks like this:
@@ -48,7 +51,7 @@ class Mock_net_if : public Bnet_if {
     MOCK_METHOD(unsigned int, if_nametoindex, (const char* ifname), (override));
 };
 
- * In a gtest you will instantiate the Mock class, prefered as protected member
+ * In a gtest you will instantiate the Mock class, maybe as protected member
  * variable at the constructor of the testsuite:
 
     Mock_net_if m_mocked_net_if;
@@ -59,4 +62,5 @@ class Mock_net_if : public Bnet_if {
 
 } // namespace upnplib
 
-#endif // UPNP_NETIFIF_HPP
+#endif // UPNPLIB_NETIFIF_HPP
+#endif // not _WIN32

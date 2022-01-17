@@ -76,7 +76,9 @@ class Bsys_socket {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bsys_socket* sys_socket_h;
+// extern Bsys_socket* sys_socket_h;
+static Bsys_socket sys_socketObj{};
+static Bsys_socket* sys_socket_h = &sys_socketObj;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::sys_socket_h->' so the new call looks like this:

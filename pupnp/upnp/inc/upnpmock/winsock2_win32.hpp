@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-16
+// Redistribution only with this Copyright remark. Last modified: 2022-01-18
 
 // winsock2.h is a Microsoft Windows library.
 #ifdef _WIN32
@@ -21,7 +21,8 @@ class Bwinsock2 {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bwinsock2* winsock2_h;
+static Bwinsock2 winsock2Obj{};
+static Bwinsock2* winsock2_h = &winsock2Obj;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::winsock2_h->' so the new call looks like this:

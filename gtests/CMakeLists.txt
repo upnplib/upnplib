@@ -108,9 +108,6 @@ add_dependencies(upnplib_gtest_tools gtest gtest_main gmock gmock_main)
 # sock
 #-----
 add_executable(test_sock
-    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-    $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/global_win32.cpp>
-    $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/global_unix.cpp>
     $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
     ${PROJECT_SOURCE_DIR}/test_sock.cpp)
 target_link_libraries(test_sock upnplib_gtest_tools)
@@ -170,8 +167,6 @@ add_test(NAME ctest_httpparser COMMAND test_httpparser)
 #------------------------------
 add_executable(test_httpreadwrite
     ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-    $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/global_win32.cpp>
-    $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/global_unix.cpp>
 
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
@@ -208,7 +203,6 @@ add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
 # upnpdebug
 #----------
 add_executable(test_upnpdebug
-    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
     ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
 target_compile_options(test_upnpdebug PRIVATE
         # suppress warning C4311: 'type cast': pointer truncation
@@ -232,8 +226,6 @@ set(UPNP_UPNPAPI_SOURCE_FILES
     $<$<CONFIG:Debug>:${PUPNP_IXML_SOURCE_DIR}/src/ixmldebug.c>
 
     ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-    $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/global_win32.cpp>
-    $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/global_unix.cpp>
 
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
@@ -273,21 +265,18 @@ add_test(NAME ctest_upnpapi COMMAND test_upnpapi
 # LinkedList
 #-----------
 add_executable(test_LinkedList
-        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
         ${PROJECT_SOURCE_DIR}/test_LinkedList.cpp)
 add_test(NAME ctest_LinkedList COMMAND test_LinkedList)
 
 # FreeList
 #---------
 add_executable(test_FreeList
-        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
         ${PROJECT_SOURCE_DIR}/test_FreeList.cpp)
 add_test(NAME ctest_FreeList COMMAND test_FreeList)
 
 # ThreadPool
 #-----------
 add_executable(test_ThreadPool
-        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
         ${PROJECT_SOURCE_DIR}/test_ThreadPool.cpp)
 target_compile_options(test_ThreadPool PRIVATE
         # suppress warning C4311: 'type cast': pointer truncation
@@ -297,7 +286,6 @@ add_test(NAME ctest_ThreadPool COMMAND test_ThreadPool)
 # TimerThread
 #------------
 add_executable(test_TimerThread
-        ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
         ${PROJECT_SOURCE_DIR}/test_TimerThread.cpp)
 target_compile_options(test_TimerThread PRIVATE
         # suppress warning C4311: 'type cast': pointer truncation

@@ -63,8 +63,8 @@ set(UPNP_SOURCE_FILES
     $<$<CONFIG:Debug>:${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
     ${PROJECT_SOURCE_DIR}/src/global.cpp
-    $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/global_win32.cpp>
-    $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/global_unix.cpp>
+    #$<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/global_win32.cpp>
+    #$<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/global_unix.cpp>
 )
 
 add_compile_options(
@@ -160,6 +160,7 @@ else() # WIN32
     )
     target_link_libraries(upnplib_static_win_exe
             upnplib_static_win
+            ws2_32
     )
 
 endif() # WIN32

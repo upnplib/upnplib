@@ -1,8 +1,10 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-02
+// Redistribution only with this Copyright remark. Last modified: 2022-01-18
 
-#ifndef UPNP_IFADDRSIF_HPP
-#define UPNP_IFADDRSIF_HPP
+#ifndef _WIN32
+
+#ifndef UPNPLIB_IFADDRSIF_HPP
+#define UPNPLIB_IFADDRSIF_HPP
 
 #include <ifaddrs.h>
 
@@ -19,7 +21,8 @@ class Bifaddrs {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bifaddrs* ifaddrs_h;
+static Bifaddrs ifaddrsObj{};
+static Bifaddrs* ifaddrs_h = &ifaddrsObj;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::ifaddrs_h->' so the new call looks like this:
@@ -43,7 +46,7 @@ class Mock_ifaddrs : public Bifaddrs {
     MOCK_METHOD(int, getifaddrs, (ifaddrs** ifapint errnum), (override));
 };
 
- * In a gtest you will instantiate the Mock class, prefered as protected member
+ * In a gtest you will instantiate the Mock class, maybe as protected member
  * variable at the constructor of the testsuite:
 
     Mock_ifaddrs m_mocked_ifaddrs;
@@ -54,4 +57,5 @@ class Mock_ifaddrs : public Bifaddrs {
 
 } // namespace upnplib
 
-#endif // UPNP_IFADDRSIF_HPP
+#endif // UPNPLIB_IFADDRSIF_HPP
+#endif // not _WIN32

@@ -1,8 +1,8 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-04
+// Redistribution only with this Copyright remark. Last modified: 2022-01-18
 
-#ifndef UPNP_STRINGIF_HPP
-#define UPNP_STRINGIF_HPP
+#ifndef UPNPLIB_STRINGIF_HPP
+#define UPNPLIB_STRINGIF_HPP
 
 #include <string.h>
 
@@ -18,7 +18,8 @@ class Bstring {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bstring* string_h;
+static Bstring stringObj{};
+static Bstring* string_h = &stringObj;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::string_h->' so the new call looks like this:
@@ -47,7 +48,7 @@ class Mock_string : public Bstring {
     MOCK_METHOD(char*, strerror, (int errnum), (override));
 };
 
- * In a gtest you will instantiate the Mock class, prefered as protected member
+ * In a gtest you will instantiate the Mock class, maybe as protected member
  * variable at the constructor of the testsuite:
 
     Mock_string m_mocked_string;
@@ -58,4 +59,4 @@ class Mock_string : public Bstring {
 
 } // namespace upnplib
 
-#endif // UPNP_STRINGIF_HPP
+#endif // UPNPLIB_STRINGIF_HPP

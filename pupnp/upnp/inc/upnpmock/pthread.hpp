@@ -1,8 +1,8 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-02
+// Redistribution only with this Copyright remark. Last modified: 2022-01-17
 
-#ifndef UPNP_PTHREADIF_HPP
-#define UPNP_PTHREADIF_HPP
+#ifndef UPNPLIB_PTHREADIF_HPP
+#define UPNPLIB_PTHREADIF_HPP
 
 #include <pthread.h>
 
@@ -53,7 +53,8 @@ class Bpthread {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bpthread* pthread_h;
+static Bpthread pthreadObj{};
+static Bpthread* pthread_h = &pthreadObj;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::pthread_h->' so the new call looks like this:
@@ -96,7 +97,7 @@ class Mock_pthread : public Bpthread {
     MOCK_METHOD(int, pthread_cond_destroy, (pthread_cond_t * cond), (override));
 };
 
- * In a gtest you will instantiate the Mock class, prefered as protected member
+ * In a gtest you will instantiate the Mock class, maybe as protected member
  * variable at the constructor of the testsuite:
 
     Mock_pthread m_mocked_pthread;
@@ -107,4 +108,4 @@ class Mock_pthread : public Bpthread {
 
 } // namespace upnplib
 
-#endif // UPNP_PTHREADIF_HPP
+#endif // UPNPLIB_PTHREADIF_HPP

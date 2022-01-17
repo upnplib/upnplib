@@ -213,40 +213,25 @@ class Mock_sys_select : public Bsys_select {
                 (override));
 };
 
+class Mock_pupnp : public Bpupnp {
+    // Class to mock the free system functions.
+    Bpupnp* m_oldptr;
+
+  public:
+    // Save and restore the old pointer to the production function
+    Mock_pupnp() {
+        m_oldptr = pupnp;
+        pupnp = this;
+    }
+    virtual ~Mock_pupnp() override { pupnp = m_oldptr; }
+
+    MOCK_METHOD(int, sock_make_no_blocking, (SOCKET sock), (override));
+    MOCK_METHOD(int, sock_make_blocking, (SOCKET sock), (override));
+};
+
 //
 // testsuite for Ip4 httpreadwrite
 //################################
-
-TEST(HttpreadwriteIp4TestSuite, open_http_connection_to_local_ip_address) {
-    // The handle will be allocated on memory by the function and the pointer
-    // to it is returned here. As documented we must free it.
-    // We can use a generic pointer because the function needs it:
-    // void* phandle;
-    // But that is bad for type-save C++. So we use the correct type with
-    // type cast on the argument.
-    http_connection_handle_t* phandle;
-
-    Chttpreadwrite_old httprw_oObj;
-    int returned = httprw_oObj.http_OpenHttpConnection("http://127.0.0.1",
-                                                       (void**)&phandle, 3);
-// TODO: Check why failing is different
-#ifdef _WIN32
-    EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
-        << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
-#else
-    EXPECT_EQ(returned, UPNP_E_SOCKET_CONNECT)
-        << "  # Should be UPNP_E_SOCKET_CONNECT(" << UPNP_E_SOCKET_CONNECT
-        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
-#endif
-
-    // Doing as documented. It's unclear so far what to do if
-    // http_OpenHttpConnection() returns with an error.
-    ::free(phandle);
-}
-
 #if false
 TEST(HttpreadwriteIp4TestSuite, Check_Connect_And_Wait_Connection_real)
 // This is for humans only to check on a Unix operating system how the Unit
@@ -302,6 +287,56 @@ TEST(HttpreadwriteIp4TestSuite, Check_Connect_And_Wait_Connection_real)
     EXPECT_EQ(::close(sockfd), 0);
 }
 #endif
+
+TEST(HttpreadwriteIp4TestSuite, private_connect) {
+    // This file descriptor is assumed to be valid.
+    int socketfd{513};
+
+    // Fill an address structure
+    ::sockaddr_in saddrin{};
+    saddrin.sin_family = AF_INET;
+    saddrin.sin_port = htons(80);
+    saddrin.sin_addr.s_addr = ::inet_addr("192.168.192.168");
+
+    Mock_pupnp mock_pupnp{};
+    EXPECT_CALL(mock_pupnp, sock_make_no_blocking(socketfd))
+        .WillOnce(Return(0));
+    EXPECT_CALL(mock_pupnp, sock_make_blocking(socketfd)).WillOnce(Return(0));
+
+    // Test the Unit
+    EXPECT_EQ(
+        private_connect(socketfd, (sockaddr*)&saddrin, sizeof(sockaddr_in)), 0);
+}
+
+TEST(HttpreadwriteIp4TestSuite, open_http_connection_to_local_ip_address) {
+    // The handle will be allocated on memory by the function and the pointer
+    // to it is returned here. As documented we must free it.
+    // We can use a generic pointer because the function needs it:
+    // void* phandle;
+    // But that is bad for type-save C++. So we use the correct type with
+    // type cast on the argument.
+    http_connection_handle_t* phandle;
+
+    Chttpreadwrite_old httprw_oObj;
+    int returned = httprw_oObj.http_OpenHttpConnection("http://127.0.0.1",
+                                                       (void**)&phandle, 3);
+// TODO: Check why failing is different
+#ifdef _WIN32
+    EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
+        << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
+        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
+        << ").";
+#else
+    EXPECT_EQ(returned, UPNP_E_SOCKET_CONNECT)
+        << "  # Should be UPNP_E_SOCKET_CONNECT(" << UPNP_E_SOCKET_CONNECT
+        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
+        << ").";
+#endif
+
+    // Doing as documented. It's unclear so far what to do if
+    // http_OpenHttpConnection() returns with an error.
+    ::free(phandle);
+}
 
 //
 // testsuite for Ip6 httpreadwrite
