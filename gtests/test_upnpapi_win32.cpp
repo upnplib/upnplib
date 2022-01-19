@@ -7,9 +7,8 @@
 #include "gmock/gmock.h"
 #include "upnplib_gtest_tools.hpp"
 #include "upnplib_gtest_tools_win32.hpp"
-#include "port_unistd.hpp"
 
-#include "api/upnpapi.cpp"
+#include "pupnp/upnp/src/api/upnpapi.cpp"
 
 using ::testing::_;
 using ::testing::DoAll;

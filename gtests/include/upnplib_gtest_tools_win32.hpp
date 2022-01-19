@@ -4,7 +4,7 @@
 #ifndef UPNP_TOOLS_WIN_HPP
 #define UPNP_TOOLS_WIN_HPP
 
-#include "port.hpp"
+#include "upnplib/port.hpp"
 #include <winsock2.h>
 #include <iphlpapi.h>
 #include <iostream>

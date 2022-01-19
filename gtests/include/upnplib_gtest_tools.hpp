@@ -4,7 +4,7 @@
 #ifndef UPNP_GTEST_TOOLS_H
 #define UPNP_GTEST_TOOLS_H
 
-#include "port.hpp"
+#include "upnplib/port.hpp"
 #include <string>
 
 namespace upnplib {

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-16
+ * Redistribution only with this Copyright remark. Last modified: 2022-01-19
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -164,8 +164,8 @@ static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
 #ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
     int ret = upnplib::pupnp->sock_make_no_blocking(sockfd);
     if (ret != -1) {
-        ret = connect(sockfd, serv_addr, addrlen);
-        ret = Check_Connect_And_Wait_Connection(sockfd, ret);
+        ret = upnplib::sys_socket_h->connect(sockfd, serv_addr, addrlen);
+        ret = upnplib::pupnp->Check_Connect_And_Wait_Connection(sockfd, ret);
         if (ret != -1) {
             ret = upnplib::pupnp->sock_make_blocking(sockfd);
         }

@@ -26,8 +26,6 @@ include_directories(
     ${googletest_SOURCE_DIR}/googlemock/include/
     # gtests
     ${PROJECT_SOURCE_DIR}/include
-    # upnplib core library project
-    ${UPNPLIB_CORE_SOURCE_DIR}/include
     # pupnp old code root project
     ${PUPNP_SOURCE_DIR}
     # pupnp core library project

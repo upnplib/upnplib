@@ -1,10 +1,12 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-17
+// Redistribution only with this Copyright remark. Last modified: 2022-01-19
 
 #ifndef UPNPLIB_PUPNPIF_HPP
 #define UPNPLIB_PUPNPIF_HPP
 
 #include "sock.hpp"
+
+static int Check_Connect_And_Wait_Connection(SOCKET sock, int connect_res);
 
 namespace upnplib {
 
@@ -19,6 +21,10 @@ class Bpupnp {
     }
     virtual int sock_make_blocking(SOCKET sock) {
         return ::sock_make_blocking(sock);
+    }
+    virtual int Check_Connect_And_Wait_Connection(SOCKET sock,
+                                                  int connect_res) {
+        return ::Check_Connect_And_Wait_Connection(sock, connect_res);
     }
 };
 
@@ -49,6 +55,7 @@ class Mock_pupnp : public Bpupnp {
 
     MOCK_METHOD(int, sock_make_no_blocking, (SOCKET sock), (override));
     MOCK_METHOD(int, sock_make_blocking, (SOCKET sock), (override));
+    MOCK_METHOD(int, Check_Connect_And_Wait_Connection, (SOCKET sock, int connect_res), (override);
 };
 
  * In a gtest you will instantiate the Mock class, maybe as protected member

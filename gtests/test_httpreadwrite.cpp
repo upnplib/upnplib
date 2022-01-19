@@ -1,11 +1,8 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-17
+// Redistribution only with this Copyright remark. Last modified: 2021-12-19
 
 #include "gmock/gmock.h"
 #include "upnplib_gtest_tools.hpp"
-#include "upnpmock/sys_socket.hpp"
-#include "upnpmock/sys_select.hpp"
-#include "upnpmock/winsock2_win32.hpp"
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -16,162 +13,15 @@ using ::testing::_;
 using ::testing::DoAll;
 using ::testing::NotNull;
 using ::testing::Return;
+using ::testing::SetErrnoAndReturn;
 
 namespace upnplib {
 bool old_code{false};
 
 //
-// Interface for the httpreadwrite module
 // ######################################
-// clang-format off
-// Only these functions are called exclusively by the upnpapi module.
-//
-// `http_CancelHttpGet(void*)'
-// `http_CloseHttpConnection(void*)'
-// `http_Download(char const*, int, char**, unsigned long*, char*)'
-// `http_EndHttpRequest(void*, int)'
-// `http_GetHttpResponse(void*, s_UpnpString*, char**, int*, int*, int)'
-// `http_HttpGetProgress(void*, unsigned long*, unsigned long*)'
-// `http_MakeHttpRequest(Upnp_HttpMethod_e, char const*, void*, s_UpnpString*, char const*, int, int)'
-// `http_OpenHttpConnection(char const*, void**, int)'
-// `http_OpenHttpGetEx(char const*, void**, char**, int*, int*, int, int, int)'
-// `http_ReadHttpResponse(void*, char*, unsigned long*, int)'
-
-class Ihttpreadwrite {
-  public:
-    virtual ~Ihttpreadwrite() {}
-
-    virtual struct tm* http_gmtime_r(
-            const time_t* clock, struct tm* result) = 0;
-    virtual int http_FixUrl(
-            uri_type* url, uri_type* fixed_url) = 0;
-    virtual int http_FixStrUrl(
-            const char* urlstr, size_t urlstrlen, uri_type* fixed_url) = 0;
-    virtual SOCKET http_Connect(
-            uri_type* destination_url, uri_type* url) = 0;
-    virtual int http_RecvMessage(
-            SOCKINFO* info, http_parser_t* parser, http_method_t request_method,
-            int* timeout_secs, int* http_error_code) = 0;
-    virtual int http_SendMessage(
-            SOCKINFO* info, int* TimeOut, const char* fmt, ...) = 0;
-    virtual int http_RequestAndResponse(
-            uri_type* destination, const char* request, size_t request_length,
-            http_method_t req_method, int timeout_secs, http_parser_t* response) = 0;
-    virtual int http_Download(
-            const char* url_str, int timeout_secs, char** document,
-            size_t* doc_length, char* content_type) = 0;
-    virtual int MakeGenericMessage(
-            http_method_t method, const char* url_str, membuffer* request, uri_type* url,
-            int contentLength, const char* contentType, const UpnpString* headers) = 0;
-    virtual int http_HttpGetProgress(
-            void* Handle, size_t* length, size_t* total) = 0;
-    virtual int http_CancelHttpGet(
-            void* Handle) = 0;
-    virtual int http_OpenHttpConnection(
-            const char* url_str, void** Handle, int timeout) = 0;
-    virtual int http_MakeHttpRequest(
-            Upnp_HttpMethod method, const char* url_str, void* Handle, UpnpString* headers,
-            const char* contentType, int contentLength, int timeout) = 0;
-    virtual int http_WriteHttpRequest(
-            void* Handle, char* buf, size_t* size, int timeout) = 0;
-    virtual int http_EndHttpRequest(
-            void* Handle, int timeout) = 0;
-    virtual int http_GetHttpResponse(
-            void* Handle, UpnpString* headers, char** contentType, int* contentLength,
-            int* httpStatus, int timeout) = 0;
-    virtual int http_ReadHttpResponse(
-            void* Handle, char* buf, size_t* size, int timeout) = 0;
-    virtual int http_CloseHttpConnection(
-            void* Handle) = 0;
-    virtual int http_SendStatusResponse(
-            SOCKINFO* info, int http_status_code, int request_major_version,
-            int request_minor_version) = 0;
-    virtual int http_MakeMessage(
-            membuffer* buf, int http_major_version, int http_minor_version,
-            const char* fmt, ...) = 0;
-    virtual void http_CalcResponseVersion(
-            int request_major_vers, int request_minor_vers, int* response_major_vers,
-            int* response_minor_vers) = 0;
-    virtual int MakeGetMessageEx(
-            const char* url_str, membuffer* request, uri_type* url,
-            struct SendInstruction* pRangeSpecifier) = 0;
-    virtual int http_OpenHttpGetEx(
-            const char* url_str, void** Handle, char** contentType, int* contentLength,
-            int* httpStatus, int lowRange, int highRange, int timeout) = 0;
-    virtual void get_sdk_info(
-            char* info, size_t infoSize) = 0;
-};
-
-class Chttpreadwrite_old : Ihttpreadwrite {
-  public:
-    virtual ~Chttpreadwrite_old() override {}
-
-    struct tm* http_gmtime_r(const time_t* clock, struct tm* result) override {
-        return ::http_gmtime_r(clock, result); }
-    int http_FixUrl(uri_type* url, uri_type* fixed_url) override {
-        return ::http_FixUrl(url, fixed_url); }
-    int http_FixStrUrl(const char* urlstr, size_t urlstrlen, uri_type* fixed_url) override {
-        return ::http_FixStrUrl(urlstr, urlstrlen, fixed_url); }
-    SOCKET http_Connect(uri_type* destination_url, uri_type* url) override {
-        return ::http_Connect(destination_url, url); }
-    int http_RecvMessage(SOCKINFO* info, http_parser_t* parser, http_method_t request_method, int* timeout_secs, int* http_error_code) override {
-        return ::http_RecvMessage(info, parser, request_method, timeout_secs, http_error_code); }
-    int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) override {
-    //    return ::http_SendMessage(info, TimeOut, fmt, ...); }
-        return UPNP_E_OUTOF_MEMORY; }
-    int http_RequestAndResponse(uri_type* destination, const char* request, size_t request_length, http_method_t req_method, int timeout_secs, http_parser_t* response) override {
-        return ::http_RequestAndResponse(destination, request, request_length, req_method, timeout_secs, response); }
-    int http_Download(const char* url_str, int timeout_secs, char** document, size_t* doc_length, char* content_type) override {
-        return ::http_Download(url_str, timeout_secs, document, doc_length, content_type); }
-    int MakeGenericMessage(http_method_t method, const char* url_str, membuffer* request, uri_type* url, int contentLength, const char* contentType, const UpnpString* headers) override {
-        return ::MakeGenericMessage(method, url_str, request, url, contentLength, contentType, headers); }
-    int http_HttpGetProgress(void* Handle, size_t* length, size_t* total) override {
-        return ::http_HttpGetProgress(Handle, length, total); }
-    int http_CancelHttpGet(void* Handle) override {
-        return ::http_CancelHttpGet(Handle); }
-    int http_OpenHttpConnection(const char* url_str, void** Handle, int timeout) override {
-        return ::http_OpenHttpConnection(url_str, Handle, timeout); }
-    int http_MakeHttpRequest(Upnp_HttpMethod method, const char* url_str, void* Handle, UpnpString* headers, const char* contentType, int contentLength, int timeout) override {
-        return ::http_MakeHttpRequest(method, url_str, Handle, headers, contentType, contentLength, timeout); }
-    int http_WriteHttpRequest(void* Handle, char* buf, size_t* size, int timeout) override {
-        return ::http_WriteHttpRequest(Handle, buf, size, timeout); }
-    int http_EndHttpRequest(void* Handle, int timeout) override {
-        return ::http_EndHttpRequest(Handle, timeout); }
-    int http_GetHttpResponse(void* Handle, UpnpString* headers, char** contentType, int* contentLength, int* httpStatus, int timeout) override {
-        return ::http_GetHttpResponse(Handle, headers, contentType, contentLength, httpStatus, timeout); }
-    int http_ReadHttpResponse(void* Handle, char* buf, size_t* size, int timeout) override {
-        return ::http_ReadHttpResponse(Handle, buf, size, timeout); }
-    int http_CloseHttpConnection(void* Handle) override {
-        return ::http_CloseHttpConnection(Handle); }
-    int http_SendStatusResponse(SOCKINFO* info, int http_status_code, int request_major_version, int request_minor_version) override {
-        return ::http_SendStatusResponse(info, http_status_code, request_major_version, request_minor_version); }
-    int http_MakeMessage(membuffer* buf, int http_major_version, int http_minor_version, const char* fmt, ...) override {
-        // return ::http_MakeMessage(buf, http_major_version, http_minor_version, fmt, ...); }
-        return UPNP_E_OUTOF_MEMORY; }
-    void http_CalcResponseVersion(int request_major_vers, int request_minor_vers, int* response_major_vers, int* response_minor_vers) override {
-        return ::http_CalcResponseVersion(request_major_vers, request_minor_vers, response_major_vers, response_minor_vers); }
-    int MakeGetMessageEx(const char* url_str, membuffer* request, uri_type* url, struct SendInstruction* pRangeSpecifier) override {
-        return ::MakeGetMessageEx(url_str, request, url, pRangeSpecifier); }
-    int http_OpenHttpGetEx(const char* url_str, void** Handle, char** contentType, int* contentLength, int* httpStatus, int lowRange, int highRange, int timeout) override {
-        return ::http_OpenHttpGetEx(url_str, Handle, contentType, contentLength, httpStatus, lowRange, highRange, timeout); }
-    void get_sdk_info(char* info, size_t infoSize) override {
-        return ::get_sdk_info(info, infoSize); }
-};
-
-class Chttpreadwrite: Chttpreadwrite_old {
-  public:
-    virtual ~Chttpreadwrite() override {}
-
-    int http_OpenHttpConnection(const char* url_str, void** Handle, int timeout) override {
-        // This is only prepaired so far and will be enabled if needed.
-        // return upnplib::http_OpenHttpConnection(url_str, Handle, timeout); }
-        return UPNP_E_INVALID_PARAM; }
-};
-// clang-format on
-
-//
 // Mocked system calls
-// ===================
+// ######################################
 // See the respective include files in upnp/include/upnpmock/
 
 class Mock_sys_socket : public Bsys_socket {
@@ -227,11 +77,14 @@ class Mock_pupnp : public Bpupnp {
 
     MOCK_METHOD(int, sock_make_no_blocking, (SOCKET sock), (override));
     MOCK_METHOD(int, sock_make_blocking, (SOCKET sock), (override));
+    MOCK_METHOD(int, Check_Connect_And_Wait_Connection,
+                (SOCKET sock, int connect_res), (override));
 };
 
 //
+// ######################################
 // testsuite for Ip4 httpreadwrite
-//################################
+// ######################################
 #if false
 TEST(HttpreadwriteIp4TestSuite, Check_Connect_And_Wait_Connection_real)
 // This is for humans only to check on a Unix operating system how the Unit
@@ -288,7 +141,7 @@ TEST(HttpreadwriteIp4TestSuite, Check_Connect_And_Wait_Connection_real)
 }
 #endif
 
-TEST(HttpreadwriteIp4TestSuite, private_connect) {
+TEST(ClientConnectionIp4TestSuite, private_connect_successful) {
     // This file descriptor is assumed to be valid.
     int socketfd{513};
 
@@ -298,15 +151,115 @@ TEST(HttpreadwriteIp4TestSuite, private_connect) {
     saddrin.sin_port = htons(80);
     saddrin.sin_addr.s_addr = ::inet_addr("192.168.192.168");
 
-    Mock_pupnp mock_pupnp{};
-    EXPECT_CALL(mock_pupnp, sock_make_no_blocking(socketfd))
+    // Steps as given by the Unit:
+    // 1. sock_make_no_blocking
+    // 2. try to connect
+    // 3. check connection an and wait until connected or timed out
+    // 4. sock_make_blocking
+
+    // Configure expected system calls:
+    // * make no blocking succeeds
+    // + starting connection (no wait) returns with -1, errno = EINPROGRESS;
+    // * connection succeeds
+    // * make blocking succeeds
+
+    Mock_pupnp mock_pupnpObj{};
+    // First unblock connection, means don't wait on connect and return
+    // immediately.
+    EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(socketfd))
         .WillOnce(Return(0));
-    EXPECT_CALL(mock_pupnp, sock_make_blocking(socketfd)).WillOnce(Return(0));
+
+    // Then connect to the given ip address. With unblocking this will return
+    // with an error condition and errno = EINPROGRESS
+    Mock_sys_socket mock_socketObj{};
+    EXPECT_CALL(mock_socketObj,
+                connect(socketfd, (sockaddr*)&saddrin, sizeof(saddrin)))
+        .WillOnce(Return(-1));
+
+    // Check the connection with a short timeout (default 5s) and return if
+    // ready to send. Arg1 (0 based) must return value of connect().
+    EXPECT_CALL(mock_pupnpObj, Check_Connect_And_Wait_Connection(socketfd, -1))
+        .WillOnce(Return(0));
+    // Set blocking mode
+    EXPECT_CALL(mock_pupnpObj, sock_make_blocking(socketfd))
+        .WillOnce(Return(0));
 
     // Test the Unit
+    errno = EINPROGRESS;
+    // errno = ENETUNREACH; // Network is unreachable.
     EXPECT_EQ(
         private_connect(socketfd, (sockaddr*)&saddrin, sizeof(sockaddr_in)), 0);
 }
+
+#if false
+TEST(ClientConnectionIp4TestSuite, private_connect_no_blocking_fails) {
+    // This file descriptor is assumed to be valid.
+    int socketfd{513};
+
+    // Fill an address structure
+    ::sockaddr_in saddrin{};
+    saddrin.sin_family = AF_INET;
+    saddrin.sin_port = htons(443);
+    saddrin.sin_addr.s_addr = ::inet_addr("192.168.192.168");
+
+    // Configure expected system calls:
+    // * make no blocking fails
+    // * errno preset with EINVAL
+    // * connect() (blocking) returns with 0, errno untouched
+    // * connection succeeds
+    // * make blocking succeeds
+
+    Mock_pupnp mock_pupnpObj{};
+    // First unblock connection, means don't wait on connect and return
+    // immediately. Returns with error, preset errno = EINVAL.
+    EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(socketfd))
+        .WillOnce(SetErrnoAndReturn(
+            EINVAL, 4698)); // On MS Windows are big error numbers
+
+    // Then connect to the given ip address. With unblocking this will return
+    // with an error condition and errno = EINPROGRESS. But in this case with
+    // failed unblock we expect a blocked but successful connection.
+    Mock_sys_socket mock_socketObj{};
+    if (old_code) {
+        EXPECT_CALL(mock_socketObj,
+                    connect(socketfd, (sockaddr*)&saddrin, sizeof(saddrin)))
+            .WillOnce(Return(0));
+    } else {
+        EXPECT_CALL(mock_socketObj,
+                    connect(socketfd, (sockaddr*)&saddrin, sizeof(saddrin)))
+            .Times(0);
+    }
+
+    // Check the connection with a short timeout (default 5s) and return if
+    // ready to send. Arg1 (0 based) must be set to the return value of
+    // connect().
+    if (old_code) {
+        EXPECT_CALL(mock_pupnpObj,
+                    Check_Connect_And_Wait_Connection(socketfd, 0))
+            .WillOnce(Return(0));
+    } else {
+        EXPECT_CALL(mock_pupnpObj,
+                    Check_Connect_And_Wait_Connection(socketfd, 0))
+            .Times(0);
+    }
+
+    // Set blocking mode
+    EXPECT_CALL(mock_pupnpObj, sock_make_blocking(socketfd))
+        .WillOnce(Return(0));
+
+    // Test the Unit
+    // errno = ENETUNREACH; // Network is unreachable.
+    if (old_code) {
+        EXPECT_EQ(
+            private_connect(socketfd, (sockaddr*)&saddrin, sizeof(sockaddr_in)),
+            0);
+    } else {
+        EXPECT_NE(
+            private_connect(socketfd, (sockaddr*)&saddrin, sizeof(sockaddr_in)),
+            0);
+    }
+}
+#endif
 
 TEST(HttpreadwriteIp4TestSuite, open_http_connection_to_local_ip_address) {
     // The handle will be allocated on memory by the function and the pointer
@@ -339,8 +292,9 @@ TEST(HttpreadwriteIp4TestSuite, open_http_connection_to_local_ip_address) {
 }
 
 //
+// ######################################
 // testsuite for Ip6 httpreadwrite
-//################################
+// ######################################
 TEST(HttpreadwriteIp6TestSuite, open_http_connection_with_ip_address) {
     // The handle will be allocated on memory by the function and the pointer
     // to it is returned here. As documented we must free it.
@@ -374,8 +328,9 @@ TEST(HttpreadwriteIp6TestSuite, open_http_connection_with_ip_address) {
     ::free(phandle);
 }
 
+// ######################################
 // testsuite for statcodes
-//########################
+// ######################################
 TEST(StatcodesTestSuite, http_get_code_text) {
     // const char* code_text = ::http_get_code_text(HTTP_NOT_FOUND);
     // ::std::cout << "code_text: " << code_text << ::std::endl;
@@ -385,9 +340,9 @@ TEST(StatcodesTestSuite, http_get_code_text) {
 }
 
 //
-//##############################
+// ######################################
 // Tests for Microsoft Windows #
-// #############################
+// ######################################
 #ifdef _WIN32
 
 // Mocked system calls on MS Windows
@@ -556,9 +511,9 @@ TEST(HttpreadwriteIp4TestSuite,
 }
 
 //
-//##############################
-// Tests for Unix              #
-// #############################
+// ######################################
+// Tests for Unix
+// ######################################
 #else  // _WIN32
 
 // Generate function to set value refered to by 3rd argument as needed for
@@ -769,3 +724,5 @@ int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
 #include "upnplib_gtest_main.inc"
 }
+
+// vim: nowrap

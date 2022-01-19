@@ -5,8 +5,6 @@
 // =========================================
 
 #include "upnplib_gtest_tools.hpp"
-#include "port.hpp"
-#include "port_unistd.hpp"
 #include "upnp.h" // for UPNP_E_* constants
 
 #include <iostream>

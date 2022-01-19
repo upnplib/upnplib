@@ -3,7 +3,7 @@
 
 #include "upnpmock/stdlib.hpp"
 
-#include "port.hpp"
+#include "upnplib/port.hpp"
 #include "gmock/gmock.h"
 
 #include "FreeList.cpp"

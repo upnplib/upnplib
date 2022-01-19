@@ -22,7 +22,7 @@
 #include "FreeList.cpp"
 #include "LinkedList.cpp"
 #include "ThreadPool.cpp"
-#include "ThreadPool.hpp"
+#include "upnplib/ThreadPool.hpp"
 
 #include <chrono>
 #include <thread>

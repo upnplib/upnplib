@@ -4,14 +4,13 @@
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
 
-#include "port.hpp"
 #include "gmock/gmock.h"
 #include "upnplib_gtest_tools.hpp"
 #include "upnpmock/sys_socket.hpp"
 #include "upnpmock/sys_select.hpp"
 #include "upnpmock/unistd.hpp"
 
-#include "genlib/net/sock.cpp"
+#include "pupnp/upnp/src/genlib/net/sock.cpp"
 
 using ::testing::_;
 using ::testing::DoAll;

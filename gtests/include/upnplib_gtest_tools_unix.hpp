@@ -4,7 +4,7 @@
 #ifndef UPNP_IFADDRS_UIX_HPP
 #define UPNP_IFADDRS_UIX_HPP
 
-#include "port.hpp"
+#include "upnplib/port.hpp"
 #include <ifaddrs.h>
 #include <netinet/in.h> // for sockaddr_in
 #include <string>

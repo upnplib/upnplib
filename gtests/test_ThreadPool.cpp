@@ -23,7 +23,7 @@
 #include "pupnp/upnp/src/threadutil/LinkedList.cpp"
 
 #include "pupnp/upnp/src/threadutil/ThreadPool.cpp"
-#include "ThreadPool.hpp"
+#include "upnplib/ThreadPool.hpp"
 
 namespace upnplib {
 
