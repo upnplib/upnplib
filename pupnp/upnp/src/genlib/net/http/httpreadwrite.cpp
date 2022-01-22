@@ -163,6 +163,8 @@ static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
                            socklen_t addrlen) {
 #ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
     int ret = upnplib::pupnp->sock_make_no_blocking(sockfd);
+    // BUG! On MS Windows sock_make_no_blocking() returns with positive error
+    // numbers.
     if (ret != -1) {
         ret = upnplib::sys_socket_h->connect(sockfd, serv_addr, addrlen);
         ret = upnplib::pupnp->Check_Connect_And_Wait_Connection(sockfd, ret);

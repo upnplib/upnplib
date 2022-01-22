@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-18
+// Redistribution only with this Copyright remark. Last modified: 2022-01-22
 
 #ifndef _WIN32
 
@@ -26,8 +26,7 @@ class Bnet_if {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-static Bnet_if net_ifObj{};
-static Bnet_if* net_if_h = &net_ifObj;
+extern Bnet_if* net_if_h;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::net_if_h->' so the new call looks like this:

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-16
+// Redistribution only with this Copyright remark. Last modified: 2022-01-22
 
 #ifndef UPNP_SYS_SOCKETIF_HPP
 #define UPNP_SYS_SOCKETIF_HPP
@@ -77,8 +77,7 @@ class Bsys_socket {
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
 // extern Bsys_socket* sys_socket_h;
-static Bsys_socket sys_socketObj{};
-static Bsys_socket* sys_socket_h = &sys_socketObj;
+extern Bsys_socket* sys_socket_h;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::sys_socket_h->' so the new call looks like this:

@@ -47,7 +47,7 @@ static int Check_Connect_And_Wait_Connection(
                 return -1;
             }
         }
-        // TODO: It should not return 0 if we have unexpected 'connect()' errno
+        // BUG! It should not return 0 if we have unexpected 'connect()' errno
     }
 
     return 0;
@@ -80,7 +80,7 @@ static int Check_Connect_And_Wait_Connection(
                 }
             }
         }
-        // TODO: It should not return 0 if we have unexpected 'connect()' errno
+        // BUG! It should not return 0 if we have unexpected 'connect()' errno
     }
 
     return 0;

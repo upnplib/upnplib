@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-18
+// Redistribution only with this Copyright remark. Last modified: 2022-01-22
 
 #ifndef UPNPLIB_UNISTDIF_HPP
 #define UPNPLIB_UNISTDIF_HPP
@@ -32,8 +32,7 @@ class Bunistd {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-static Bunistd unistdObj{};
-static Bunistd* unistd_h = &unistdObj;
+extern Bunistd* unistd_h;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::unistd_h->' so the new call looks like this:

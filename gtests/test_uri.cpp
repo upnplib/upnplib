@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-21
+// Redistribution only with this Copyright remark. Last modified: 2021-12-22
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -7,7 +7,9 @@
 #include "gmock/gmock.h"
 #include "upnpmock/netdb.hpp"
 
-#include "genlib/net/uri/uri.cpp"
+// Include source code for testing. So we have also direct access to static
+// functions which need to be tested.
+#include "pupnp/upnp/src/genlib/net/uri/uri.cpp"
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -630,7 +632,7 @@ TEST(UriIp4TestSuite, parse_uri_simple_call)
     uri_type out;
     Curi uriObj;
 
-    // Execute unit
+    // Test Unit
     EXPECT_EQ(uriObj.parse_uri(uri_str, 64, &out), HTTP_SUCCESS);
     ::std::cout << "DEBUG: out.scheme.buff = " << out.scheme.buff
                 << ::std::endl;
