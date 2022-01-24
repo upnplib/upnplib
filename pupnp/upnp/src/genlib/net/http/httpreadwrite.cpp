@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-19
+ * Redistribution only with this Copyright remark. Last modified: 2022-01-23
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1092,6 +1092,8 @@ int http_OpenHttpConnection(const char* url_str, void** Handle, int timeout) {
     http_connection_handle_t* handle = NULL;
     uri_type url;
     (void)timeout; /* Unused parameter */
+    // BUG! *Handle should be initialized here, otherwise possible segfault
+    // *Handle = handle;
     if (!url_str || !Handle)
         return UPNP_E_INVALID_PARAM;
     *Handle = handle;
@@ -1108,7 +1110,8 @@ int http_OpenHttpConnection(const char* url_str, void** Handle, int timeout) {
     handle->requestStarted = 0;
     memset(&handle->response, 0, sizeof(handle->response));
     /* connect to the server */
-    tcp_connection = socket(url.hostport.IPaddress.ss_family, SOCK_STREAM, 0);
+    tcp_connection = upnplib::sys_socket_h->socket(
+        url.hostport.IPaddress.ss_family, SOCK_STREAM, 0);
     if (tcp_connection == INVALID_SOCKET) {
         ret_code = UPNP_E_SOCKET_ERROR;
         goto errorHandler;
@@ -1121,9 +1124,9 @@ int http_OpenHttpConnection(const char* url_str, void** Handle, int timeout) {
     sockaddr_len = url.hostport.IPaddress.ss_family == AF_INET6
                        ? sizeof(struct sockaddr_in6)
                        : sizeof(struct sockaddr_in);
-    ret_code = private_connect(handle->sock_info.socket,
-                               (struct sockaddr*)&(url.hostport.IPaddress),
-                               (socklen_t)sockaddr_len);
+    ret_code = upnplib::pupnp->private_connect(
+        handle->sock_info.socket, (struct sockaddr*)&(url.hostport.IPaddress),
+        (socklen_t)sockaddr_len);
     if (ret_code == -1) {
         sock_destroy(&handle->sock_info, SD_BOTH);
         ret_code = UPNP_E_SOCKET_CONNECT;

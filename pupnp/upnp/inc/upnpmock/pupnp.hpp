@@ -7,6 +7,8 @@
 #include "sock.hpp"
 
 static int Check_Connect_And_Wait_Connection(SOCKET sock, int connect_res);
+static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
+                           socklen_t addrlen);
 
 namespace upnplib {
 
@@ -26,11 +28,14 @@ class Bpupnp {
                                                   int connect_res) {
         return ::Check_Connect_And_Wait_Connection(sock, connect_res);
     }
+    virtual int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
+                                socklen_t addrlen) {
+        return ::private_connect(sockfd, serv_addr, addrlen);
+    }
 };
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-// extern Bpupnp* pupnp;
 static upnplib::Bpupnp pupnpObj{};
 static upnplib::Bpupnp* pupnp = &pupnpObj;
 
@@ -55,7 +60,8 @@ class Mock_pupnp : public Bpupnp {
 
     MOCK_METHOD(int, sock_make_no_blocking, (SOCKET sock), (override));
     MOCK_METHOD(int, sock_make_blocking, (SOCKET sock), (override));
-    MOCK_METHOD(int, Check_Connect_And_Wait_Connection, (SOCKET sock, int connect_res), (override);
+    MOCK_METHOD(int, Check_Connect_And_Wait_Connection, (SOCKET sock, int connect_res), (override));
+    MOCK_METHOD(int, private_connect, (SOCKET sockfd, const struct sockaddr* serv_addr, socklen_t addrlen), (override));
 };
 
  * In a gtest you will instantiate the Mock class, maybe as protected member

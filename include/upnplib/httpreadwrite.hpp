@@ -29,7 +29,7 @@ class Ihttpreadwrite {
   public:
     virtual ~Ihttpreadwrite() {}
 
-    virtual struct tm* http_gmtime_r(
+    virtual struct tm* http_gmtime_r( // no gtest, only port wrapper for system call
             const time_t* clock, struct tm* result) = 0;
     virtual int http_FixUrl(
             uri_type* url, uri_type* fixed_url) = 0;
@@ -55,7 +55,7 @@ class Ihttpreadwrite {
             void* Handle, size_t* length, size_t* total) = 0;
     virtual int http_CancelHttpGet(
             void* Handle) = 0;
-    virtual int http_OpenHttpConnection(
+    virtual int http_OpenHttpConnection( // gtest available
             const char* url_str, void** Handle, int timeout) = 0;
     virtual int http_MakeHttpRequest(
             Upnp_HttpMethod method, const char* url_str, void* Handle, UpnpString* headers,
@@ -69,7 +69,7 @@ class Ihttpreadwrite {
             int* httpStatus, int timeout) = 0;
     virtual int http_ReadHttpResponse(
             void* Handle, char* buf, size_t* size, int timeout) = 0;
-    virtual int http_CloseHttpConnection(
+    virtual int http_CloseHttpConnection( // gtest available
             void* Handle) = 0;
     virtual int http_SendStatusResponse(
             SOCKINFO* info, int http_status_code, int request_major_version,

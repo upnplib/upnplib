@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-01-12
+# Redistribution only with this Copyright remark. Last modified: 2022-01-31
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -139,9 +139,18 @@ add_test(NAME ctest_membuffer COMMAND test_membuffer)
 add_executable(test_uri
     ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp
-    ${PROJECT_SOURCE_DIR}/test_uri.cpp
-)
+    ${PROJECT_SOURCE_DIR}/test_uri.cpp)
+target_link_libraries(test_uri upnplib_gtest_tools)
 add_test(NAME ctest_uri COMMAND test_uri)
+
+# uri: parse_uri
+#---------------
+add_executable(test_parse_uri
+    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
+    ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp
+    ${PROJECT_SOURCE_DIR}/test_uri.d/test_parse_uri.cpp)
+target_link_libraries(test_parse_uri upnplib_gtest_tools)
+add_test(NAME ctest_parse_uri COMMAND test_parse_uri)
 
 
 # httpparser

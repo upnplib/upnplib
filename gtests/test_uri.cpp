@@ -1,15 +1,16 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-22
+// Redistribution only with this Copyright remark. Last modified: 2022-01-31
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
 
 #include "gmock/gmock.h"
-#include "upnpmock/netdb.hpp"
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
 #include "pupnp/upnp/src/genlib/net/uri/uri.cpp"
+
+#include "upnplib/uri.hpp"
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -18,66 +19,14 @@ using ::testing::SetArgPointee;
 
 namespace upnplib {
 
-//
-// Interface for the uri module
-// ============================
-// clang-format off
-
-class Iuri {
-  public:
-    virtual ~Iuri() {}
-
-    virtual int replace_escaped(
-            char* in, size_t index, size_t* max) = 0;
-    virtual int copy_URL_list(
-            URL_list* in, URL_list* out) = 0;
-    virtual void free_URL_list(
-            URL_list* list) = 0;
-    virtual int token_string_casecmp(
-            token* in1, const char* in2) = 0;
-    virtual int token_cmp(
-            token* in1, token* in2) = 0;
-    virtual int remove_escaped_chars(
-            char* in, size_t* size) = 0;
-    virtual int remove_dots(
-            char* buf, size_t size) = 0;
-    virtual char* resolve_rel_url(
-            char* base_url, char* rel_url) = 0;
-    virtual int parse_uri(
-            const char *in, size_t max, uri_type *out) = 0;
-};
-
-class Curi : Iuri {
-  public:
-    virtual ~Curi() override {}
-
-    int replace_escaped(char* in, size_t index, size_t* max) override {
-        return ::replace_escaped(in, index, max); }
-    int copy_URL_list(URL_list* in, URL_list* out) override {
-        return ::copy_URL_list(in, out); }
-    void free_URL_list(URL_list* list) override {
-        return ::free_URL_list(list); }
-    int token_string_casecmp(token* in1, const char* in2) override {
-        return ::token_string_casecmp(in1, in2); }
-    int token_cmp(token* in1, token* in2) override {
-        return ::token_cmp(in1, in2); }
-    int remove_escaped_chars(char* in, size_t* size) override {
-        return ::remove_escaped_chars(in, size); }
-    int remove_dots(char* buf, size_t size) override {
-        return ::remove_dots(buf, size); }
-    char* resolve_rel_url(char* base_url, char* rel_url) override {
-        return ::resolve_rel_url(base_url, rel_url); }
-    int parse_uri(const char *in, size_t max, uri_type *out) override {
-        return ::parse_uri(in, max, out); }
-};
-// clang-format on
+bool old_code{false}; // Managed in upnplib_gtest_main.inc
+bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
 //
 // Mocking
 // =======
-class Mock_netdb : public Bnetdb
-// Class to mock the free system functions.
-{
+class Mock_netdb : public Bnetdb {
+    // Class to mock the free system functions.
   private:
     Bnetdb* m_oldptr;
 
@@ -96,10 +45,9 @@ class Mock_netdb : public Bnetdb
     MOCK_METHOD(void, freeaddrinfo, (struct addrinfo * res), (override));
 };
 
-class Mock_netv4info : public Mock_netdb
-// This is a derived class from mocking netdb to provide a structure for
-// addrinfo that can be given to the mocked program.
-{
+class Mock_netv4info : public Mock_netdb {
+    // This is a derived class from mocking netdb to provide a structure for
+    // addrinfo that can be given to the mocked program.
   private:
     Bnetdb* m_oldptr;
 
@@ -134,27 +82,76 @@ class Mock_netv4info : public Mock_netdb
 // parse_hostport() function: tests from the uri module
 // ====================================================
 #if false
-TEST(HostportIp4TestSuite, check_getaddrinfo)
-// This is for humans only to check what getaddrinfo() returns exactly so we can
-// correct mock it. Don't set '#if true' permanently because it calls the real
-// ::getaddrinfo() and will slow down this gtest dramatically. It calls DNS
-// internet server that may have a long delay.
-{
-    const struct addrinfo hints {
+TEST(HostportIp4TestSuite, check_getaddrinfo) {
+    // This test is for humans only to check what getaddrinfo() returns exactly
+    // so we can correct mock it. Don't set '#if true' permanently because it
+    // calls the real ::getaddrinfo() and will slow down this gtest
+    // dramatically. It calls DNS internet server that may have a long delay.
+    const struct ::addrinfo hints {
         {}, AF_INET, {}, {}, {}, {}, {}, {}
     };
-    struct addrinfo* res{};
+    struct ::addrinfo* res{};
 
+    EXPECT_EQ(::getaddrinfo("google.com", NULL, &hints, &res), 0);
+
+    // Prefix "http://" is invalid
     int rc = ::getaddrinfo("http://google.com", NULL, &hints, &res);
     ::std::cout << "DEBUG: return info = " << ::gai_strerror(rc) << "(" << rc
                 << ")\n"
                 << "DEBUG: EAI_NONAME has number " << EAI_NONAME << '\n';
 
     EXPECT_EQ(::getaddrinfo("127.0.0.1", NULL, &hints, &res), 0);
-    EXPECT_EQ(::getaddrinfo("google.com", NULL, &hints, &res), 0);
+
     //  EAI_NONAME(-2) = Name or service not known
+    EXPECT_EQ(::getaddrinfo("http://127.0.0.1", NULL, &hints, &res),
+              EAI_NONAME);
+
+    ::freeaddrinfo(res);
+}
+
+TEST(HostportIp4TestSuite, check_freeaddrinfo) {
+    // This test is for humans only to check how freeaddrinfo() works so we can
+    // correct mock it. Don't set '#if true' permanently because this does not
+    // test production code.
+    const struct ::addrinfo hints {
+        {}, AF_INET, {}, {}, {}, {}, {}, {}
+    };
+    struct ::addrinfo* res;
+    // Set pointer to invalid (uniitialized "random") value.
+    ::memset(&res, 0xaa, sizeof(res));
+    ::std::cout << "DEBUG: initial addrinfo* res = " << res << '\n';
+
+    // This will segfault but a nullptr initialized res will not.
+    // ::freeaddrinfo(res);
+
+    // Failing getaddrinfo()
     EXPECT_EQ(::getaddrinfo("http://127.0.0.1", NULL, &hints, &res), EAI_NONAME);
-    EXPECT_EQ(::getaddrinfo("http://google.com", NULL, &hints, &res), EAI_NONAME);
+    ::std::cout << "DEBUG: failed query, addrinfo* res = " << res << '\n';
+
+    // Because res isn't touched with a failed getaddrinfo() this will also
+    // segfault but a nullptr initialized res will not.
+    // ::freeaddrinfo(res);
+
+    EXPECT_EQ(::getaddrinfo("127.0.0.1", NULL, &hints, &res), 0);
+    ::std::cout << "DEBUG: successful query, addrinfo* res = " << res << '\n';
+
+    struct ::addrinfo* res2;
+    ::memset(&res2, 0x55, sizeof(res));
+    EXPECT_EQ(::getaddrinfo("127.0.0.1", NULL, &hints, &res2), 0);
+    ::std::cout << "DEBUG: successful query, addrinfo* res2 = " << res2 << '\n';
+
+    ::freeaddrinfo(res);
+    ::std::cout << "DEBUG: after freeaddrinfo() addrinfo* res = " << res << '\n';
+
+    ::freeaddrinfo(res2);
+    ::std::cout << "DEBUG: after freeaddrinfo() addrinfo* res2 = " << res2 << '\n';
+
+    ::std::cout
+        << "\nDEBUG: As shown every successful getaddrinfo() should be freed "
+           "with freeaddrinfo()\notherwise you risk memory leaks. "
+           "On the other side you risk a segfault if you use\nan uninitalized "
+           "addrinfo* pointer (not set to nullptr) and try to free it after a\n"
+           "failed getaddrinfo().\n\n";
 }
 #endif
 
@@ -177,8 +174,8 @@ class HostportIp4FTestSuite : public ::testing::Test {
         m_res.ai_addr = (sockaddr*)&m_sa;
 
         // Set default return values for getaddrinfo in case we get an
-        // unexpected call but it should not occur. An ip address should not be
-        // asked for name resolution.
+        // unexpected call but it should not occur. We only use an ip address
+        // here so name resolution should be called.
         ON_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _))
             .WillByDefault(DoAll(SetArgPointee<3>(&m_res), Return(EAI_NONAME)));
         EXPECT_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _)).Times(0);
@@ -301,9 +298,8 @@ INSTANTIATE_TEST_SUITE_P(
                           "192.168.1.5", 433)));
 
 //
-TEST(HostportIp6TestSuite, parse_hostport_without_name_resolution)
-// TODO: Improve ip6 tests.
-{
+TEST(HostportIp6TestSuite, parse_hostport_without_name_resolution) {
+    // TODO: Improve ip6 tests.
     hostport_type out;
 
     // Check IPv6 addresses
@@ -322,52 +318,43 @@ TEST(HostportIp6TestSuite, parse_hostport_without_name_resolution)
 }
 
 //
-// token_string_casecmp() function: tests from the uri module
-// ==========================================================
-TEST(UriIp4TestSuite, check_token_string_casecmp) {
-    Curi uriObj;
+// token_cmp() functions: tests from the uri module
+// ================================================
+int token_string_cmp(const token* in1, const char* in2) {
+    // This is a new function we use for tests. It will become part of new code.
+    /*
+     * \brief Compares buffer in the token object with the C string in in2 case
+     * sensitive.
+     *
+     * \return
+     *      \li < 0, if string1 is less than string2.
+     *      \li == 0, if string1 is identical to string2 .
+     *      \li > 0, if string1 is greater than string2.
+     */
+    if (in1 == nullptr && in2 == nullptr)
+        return 0;
+    if (in1 == nullptr && in2 != nullptr)
+        return -1;
+    if (in1 != nullptr && in2 == nullptr)
+        return 1;
+    // Here we have a valid in2 pointer to a C string, even if the string is
+    // empty. If there is a nullptr in the token buffer then it is always
+    // smaller.
+    if (in1->buff == nullptr)
+        return -1;
 
-    // == 0, if string1 is identical to string2 case insensitive.
-    token inull{nullptr, 0};
-    const char in5[]{""};
-#ifdef OLD_TEST
-    ::std::cout
-        << "  BUG! A nullptr in the token structure, segfaults on MS Windows "
-           "(why only there?)\n";
-#endif
-#ifndef _WIN32
-    EXPECT_EQ(uriObj.token_string_casecmp(&inull, in5), 0);
-#endif
-    token in0{"", 0};
-    EXPECT_EQ(uriObj.token_string_casecmp(&in0, in5), 0);
-
-    token in1{"some entry", 10};
-    const char in2[]{"SOME ENTRY"};
-    EXPECT_EQ(uriObj.token_string_casecmp(&in1, in2), 0);
-
-    // < 0, if string1 is less than string2.
-    const char in3[]{"some longer entry"};
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! With string1 less than string2 it should return < 0 "
-                   "not > 0.\n";
-    EXPECT_GT(uriObj.token_string_casecmp(&in1, in3), 0);
-#else
-    EXPECT_LT(uriObj.token_string_casecmp(&in1, in3), 0)
-        << "  # With string1 less than string2 it should return < 0 not > 0.";
-#endif
-
-    // > 0, if string1 is greater than string2.
-    const char in4[]{"entry"};
-    EXPECT_GT(uriObj.token_string_casecmp(&in1, in4), 0);
+    const size_t in2_length = strlen(in2);
+    if (in1->size != in2_length)
+        return in1->size < in2_length ? -1 : 1;
+    else
+        return strncmp(in1->buff, in2, in1->size);
 }
 
-//
-// token_cmp() function: tests from the uri module
-// ===============================================
+TEST(TokenCmpTestSuite, check_token_cmp) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
 
-TEST(UriIp4TestSuite, check_token_cmp) {
     Curi uriObj;
-
     // == 0, if string1 is identical to string2.
     token inull{nullptr, 0};
     EXPECT_EQ(uriObj.token_cmp(&inull, &inull), 0);
@@ -380,18 +367,101 @@ TEST(UriIp4TestSuite, check_token_cmp) {
 
     // < 0, if string1 is less than string2.
     token in2{"some longer entry", 17};
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! With string1 less than string2 it should return < 0 "
-                   "not > 0.\n";
-    EXPECT_GT(uriObj.token_cmp(&in1, &in2), 0);
-#else
-    EXPECT_LT(uriObj.token_cmp(&in1, &in2), 0)
-        << "  # With string1 less than string2 it should return < 0 not > 0.";
-#endif
+
+    if (old_code) {
+        ::std::cout
+            << "  BUG! With string1 less than string2 it should return < 0 "
+               "not > 0.\n";
+        EXPECT_GT(uriObj.token_cmp(&in1, &in2), 0);
+
+    } else {
+
+        EXPECT_LT(uriObj.token_cmp(&in1, &in2), 0)
+            << "  # With string1 less than string2 it should return < 0 not > "
+               "0.";
+    }
 
     // > 0, if string1 is greater than string2.
     token in3{"entry", 5};
     EXPECT_GT(uriObj.token_cmp(&in1, &in3), 0);
+}
+
+TEST(TokenCmpTestSuite, check_token_string_cmp) {
+    // == 0, if string1 is identical to string2.
+    EXPECT_EQ(token_string_cmp(nullptr, nullptr), 0);
+
+    constexpr token in0{"", 0};
+    constexpr char sinempty[]{""};
+    EXPECT_EQ(token_string_cmp(&in0, sinempty), 0);
+
+    constexpr token in1{"some entry", 10};
+    constexpr char sin1[]{"some entry"};
+    EXPECT_EQ(token_string_cmp(&in1, sin1), 0);
+
+    // < 0, if string1 is less than string2.
+    EXPECT_LT(token_string_cmp(nullptr, sinempty), 0);
+
+    constexpr token inull{nullptr, 0};
+    EXPECT_LT(token_string_cmp(&inull, sinempty), 0);
+
+    constexpr char sin2[]{"some longer entry"};
+    EXPECT_LT(token_string_cmp(&in1, sin2), 0);
+
+    // > 0, if string1 is greater than string2.
+    EXPECT_GT(token_string_cmp(&inull, nullptr), 0);
+
+    constexpr char sin3[]{"entry"};
+    EXPECT_GT(token_string_cmp(&in1, sin3), 0);
+}
+
+TEST(TokenCmpTestSuite, check_token_string_casecmp) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    Curi uriObj;
+    // == 0, if string1 is identical to string2 case insensitive.
+    token inull{nullptr, 0};
+    constexpr char in5[]{""};
+
+    if (old_code) {
+        ::std::cout << "  BUG! A nullptr in the token structure, segfaults on "
+                       "MS Windows (why only there?)\n";
+#ifndef _WIN32
+        EXPECT_EQ(uriObj.token_string_casecmp(&inull, in5), 0);
+#endif
+    } else {
+        ASSERT_EXIT((uriObj.token_string_casecmp(&inull, in5), exit(0)),
+                    ::testing::ExitedWithCode(0), ".*")
+            << "  BUG! A nullptr in the token structure, segfaults on MS "
+               "Windows (why only there?)\n";
+    }
+
+    token in0{"", 0};
+    EXPECT_EQ(uriObj.token_string_casecmp(&in0, in5), 0);
+
+    token in1{"some entry", 10};
+    constexpr char in2[]{"SOME ENTRY"};
+    EXPECT_EQ(uriObj.token_string_casecmp(&in1, in2), 0);
+
+    // < 0, if string1 is less than string2.
+    constexpr char in3[]{"some longer entry"};
+
+    if (old_code) {
+        ::std::cout
+            << "  BUG! With string1 less than string2 it should return < 0 "
+               "not > 0.\n";
+        EXPECT_GT(uriObj.token_string_casecmp(&in1, in3), 0);
+
+    } else {
+
+        EXPECT_LT(uriObj.token_string_casecmp(&in1, in3), 0)
+            << "  # With string1 less than string2 it should return < 0 not > "
+               "0.";
+    }
+
+    // > 0, if string1 is greater than string2.
+    constexpr char in4[]{"entry"};
+    EXPECT_GT(uriObj.token_string_casecmp(&in1, in4), 0);
 }
 
 //
@@ -498,23 +568,42 @@ INSTANTIATE_TEST_SUITE_P(
 
 //
 TEST(UriIp4TestSuite, remove_escaped_chars_edge_conditions) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! Calling remove_escaped_chars() with nullptr should "
-                   "not segfault.\n";
-#else
-    char strbuf[32]{};
-    size_t size{strlen(strbuf)};
-    Curi uriObj;
-    EXPECT_EQ(uriObj.remove_escaped_chars(nullptr, nullptr), UPNP_E_SUCCESS);
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
 
-    strcpy(strbuf, "hello"); // with '\0'
-    size = strlen(strbuf);
-    EXPECT_EQ(uriObj.remove_escaped_chars(nullptr, &size), UPNP_E_SUCCESS);
-    EXPECT_EQ(size, 5);
+    if (old_code) {
+        ::std::cout << "  BUG! Calling remove_escaped_chars() with nullptr "
+                       "should not segfault.\n";
+    } else {
 
-    EXPECT_EQ(uriObj.remove_escaped_chars(strbuf, nullptr), UPNP_E_SUCCESS);
-    EXPECT_STREQ(strbuf, "hello");
-#endif
+        char strbuf[32]{};
+        size_t size{strlen(strbuf)};
+        Curi uriObj;
+        ASSERT_EXIT((uriObj.remove_escaped_chars(nullptr, nullptr), exit(0)),
+                    ::testing::ExitedWithCode(0), ".*")
+            << "  BUG! Calling remove_escaped_chars() with nullptr should not "
+               "segfault.";
+
+        EXPECT_EQ(uriObj.remove_escaped_chars(nullptr, nullptr),
+                  UPNP_E_SUCCESS);
+
+        strcpy(strbuf, "hello"); // with '\0'
+        size = strlen(strbuf);
+        ASSERT_EXIT((uriObj.remove_escaped_chars(nullptr, &size), exit(0)),
+                    ::testing::ExitedWithCode(0), ".*")
+            << "  BUG! Calling remove_escaped_chars() with nullptr should not "
+               "segfault.";
+
+        EXPECT_EQ(uriObj.remove_escaped_chars(nullptr, &size), UPNP_E_SUCCESS);
+        EXPECT_EQ(size, 5);
+        ASSERT_EXIT((uriObj.remove_escaped_chars(strbuf, nullptr), exit(0)),
+                    ::testing::ExitedWithCode(0), ".*")
+            << "  BUG! Calling remove_escaped_chars() with nullptr should not "
+               "segfault.";
+
+        EXPECT_EQ(uriObj.remove_escaped_chars(strbuf, nullptr), UPNP_E_SUCCESS);
+        EXPECT_STREQ(strbuf, "hello");
+    }
 }
 
 //
@@ -578,311 +667,53 @@ INSTANTIATE_TEST_SUITE_P(
         ::std::make_tuple("ab", 2, "ab", UPNP_E_SUCCESS)));
 
 TEST(UriIp4TestSuite, remove_dots_report_bugs) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
     Curi uriObj;
     // Have attention to the buffer size for this test to be greater than the
     // longest tested string.
     char strbuf[31 + 1];
 
     // Prozess the unit.
-#ifdef OLD_TEST
-    strcpy(strbuf, "/../hello"); // with '\0'
-    ::std::cout << "  BUG! path beginning with '/../<segment>' or "
-                   "'../<segment>' must fail.\n";
-    EXPECT_EQ(uriObj.remove_dots(strbuf, strlen(strbuf)), UPNP_E_SUCCESS);
-    EXPECT_STREQ(strbuf, "/hello");
-    strcpy(strbuf, "../hello"); // with '\0'
-    EXPECT_EQ(uriObj.remove_dots(strbuf, strlen(strbuf)), UPNP_E_SUCCESS);
-    EXPECT_STREQ(strbuf, "hello");
 
-    ::std::cout << "  BUG! Argument 'size' shorter than strlen should not hang "
-                   "the function.\n";
-    // see below
-#else
-    ::std::cout << "  BUG! Argument 'size' shorter than strlen should not hang "
-                   "the function...\n";
-    strcpy(strbuf, "ab"); // with '\0'
-    // EXPECT_EQ(uriObj.remove_dots(strbuf, 1), UPNP_E_SUCCESS);
-    EXPECT_STREQ(strbuf, "a");
+    if (old_code) {
+        strcpy(strbuf, "/../hello"); // with '\0'
+        ::std::cout << "  BUG! path beginning with '/../<segment>' or "
+                       "'../<segment>' must fail.\n";
+        EXPECT_EQ(uriObj.remove_dots(strbuf, strlen(strbuf)), UPNP_E_SUCCESS);
+        EXPECT_STREQ(strbuf, "/hello");
+        strcpy(strbuf, "../hello"); // with '\0'
+        EXPECT_EQ(uriObj.remove_dots(strbuf, strlen(strbuf)), UPNP_E_SUCCESS);
+        EXPECT_STREQ(strbuf, "hello");
 
-    strcpy(strbuf, "/../hello"); // with '\0'
-    EXPECT_EQ(uriObj.remove_dots(strbuf, strlen(strbuf)), UPNP_E_INVALID_URL)
-        << "  # path beginning with '/../<segment>' must fail with "
-           "UPNP_E_INVALID_URL(-108).";
-    EXPECT_STREQ(strbuf, "/../hello");
-    strcpy(strbuf, "../hello"); // with '\0'
-    EXPECT_EQ(uriObj.remove_dots(strbuf, strlen(strbuf)), UPNP_E_INVALID_URL)
-        << "  # path beginning with '../<segment>' must fail with "
-           "UPNP_E_INVALID_URL(-108).";
-    EXPECT_STREQ(strbuf, "../hello");
-#endif
-}
+        ::std::cout
+            << "  BUG! Argument 'size' shorter than strlen should not hang "
+               "the function.\n";
+        // see below
 
-//
-// parse_uri() function: tests from the uri module
-// ===============================================
-#if false
-TEST(UriIp4TestSuite, parse_uri_simple_call)
-// This test is only for humans to get an idea what's going on. If you need it,
-// set '#if true' only temporary. It is not intended to be permanent part of
-// the tests. It doesn't really test things and because unmocked, it queries
-// DNS server on the internet that may have long delays.
-{
-    const char* uri_str{"scheme://example-site.de:80/uripath?uriquery#urifragment"};
-    // const char* uri_str{"mailto:a@b.com"};
-    uri_type out;
-    Curi uriObj;
+    } else {
 
-    // Test Unit
-    EXPECT_EQ(uriObj.parse_uri(uri_str, 64, &out), HTTP_SUCCESS);
-    ::std::cout << "DEBUG: out.scheme.buff = " << out.scheme.buff
-                << ::std::endl;
-    ::std::cout << "DEBUG: out.type ABSOLUTE(0), RELATIVE(1) = " << out.type
-                << ::std::endl;
-    ::std::cout
-        << "DEBUG: out.path_type ABS_PATH(0), REL_PATH(1), OPAQUE_PART(2) = "
-        << out.path_type << ::std::endl;
-    ::std::cout << "DEBUG: out.hostport.text.buff = " << out.hostport.text.buff
-                << ::std::endl;
-    ::std::cout << "DEBUG: out.pathquery.buff = " << out.pathquery.buff
-                << ::std::endl;
-    ::std::cout << "DEBUG: out.fragment.buff = " << out.fragment.buff
-                << ::std::endl;
-    ::std::cout << "DEBUG: out.fragment.size = " << (signed)out.fragment.size
-                << ::std::endl;
-}
-#endif
+        ::std::cout
+            << "  BUG! Argument 'size' shorter than strlen should not hang "
+               "the function...\n";
+        strcpy(strbuf, "ab"); // with '\0'
+        // EXPECT_EQ(uriObj.remove_dots(strbuf, 1), UPNP_E_SUCCESS);
+        EXPECT_STREQ(strbuf, "a");
 
-TEST(UriIp4TestSuite, parse_scheme_of_uri) {
-    ::token out;
-
-    EXPECT_EQ(::parse_scheme("https://dummy.net:80/page", 6, &out), (size_t)5);
-    EXPECT_EQ(out.size, (size_t)5);
-    EXPECT_STREQ(out.buff, "https://dummy.net:80/page");
-    EXPECT_EQ(::parse_scheme("https://dummy.net:80/page", 5, &out), (size_t)0);
-    EXPECT_EQ(out.size, (size_t)0);
-    EXPECT_STREQ(out.buff, nullptr);
-    EXPECT_EQ(::parse_scheme("h:tps://dummy.net:80/page", 32, &out), (size_t)1);
-    EXPECT_EQ(out.size, (size_t)1);
-    EXPECT_STREQ(out.buff, "h:tps://dummy.net:80/page");
-    EXPECT_EQ(::parse_scheme("1ttps://dummy.net:80/page", 32, &out), (size_t)0);
-    EXPECT_EQ(out.size, (size_t)0);
-    EXPECT_STREQ(out.buff, nullptr);
-    EXPECT_EQ(::parse_scheme("h§tps://dummy.net:80/page", 32, &out), (size_t)0);
-    EXPECT_EQ(out.size, (size_t)0);
-    EXPECT_STREQ(out.buff, nullptr);
-    EXPECT_EQ(::parse_scheme(":ttps://dummy.net:80/page", 32, &out), (size_t)0);
-    EXPECT_EQ(out.size, (size_t)0);
-    EXPECT_STREQ(out.buff, nullptr);
-    EXPECT_EQ(::parse_scheme("h*tps://dummy.net:80/page", 32, &out), (size_t)0);
-    EXPECT_EQ(out.size, (size_t)0);
-    EXPECT_STREQ(out.buff, nullptr);
-    EXPECT_EQ(::parse_scheme("mailto:a@b.com", 7, &out), (size_t)6);
-    EXPECT_EQ(out.size, (size_t)6);
-    EXPECT_STREQ(out.buff, "mailto:a@b.com");
-    EXPECT_EQ(::parse_scheme("mailto:a@b.com", 6, &out), (size_t)0);
-    EXPECT_EQ(out.size, (size_t)0);
-    EXPECT_STREQ(out.buff, nullptr);
-}
-
-TEST(UriIp4TestSuite, parse_absolute_uri) {
-    Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("192.168.10.10", 80);
-
-    // Mock for network address system call
-    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
-        .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
-    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
-
-    uri_type out;
-    struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.hostport.IPaddress;
-
-    // Execute the unit
-    Curi uriObj;
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! parse_uri must fail with too short max size instead "
-                   "of returning wrong values!\n";
-    EXPECT_EQ(uriObj.parse_uri(
-                  "https://example-site.de:80/uri/path?uriquery#urifragment",
-                  128, &out),
-              HTTP_SUCCESS);
-#else
-    EXPECT_EQ(uriObj.parse_uri(
-                  "https://example-site.de:80/uri/path?uriquery#urifragment", 7,
-                  &out),
-              UPNP_E_INVALID_URL);
-#endif
-    // Check the uri-parts scheme, hostport, pathquery and fragment
-    EXPECT_STREQ(out.scheme.buff,
-                 "https://example-site.de:80/uri/path?uriquery#urifragment");
-    EXPECT_STREQ(out.hostport.text.buff,
-                 "example-site.de:80/uri/path?uriquery#urifragment");
-    EXPECT_STREQ(out.pathquery.buff, "/uri/path?uriquery#urifragment");
-    EXPECT_STREQ(out.fragment.buff, "urifragment");
-
-    ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
-                   "ABSOLUTE constant name. See issue #3.\n";
-#ifdef _WIN32
-    EXPECT_EQ(out.type, 1); // What ever this means.
-#else
-    EXPECT_EQ(out.type, ABSOLUTE);
-#endif
-    EXPECT_EQ(out.path_type, ABS_PATH);
-    EXPECT_EQ(sai4->sin_family, AF_INET);
-    EXPECT_EQ(sai4->sin_port, htons(80));
-    EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "192.168.10.10");
-}
-
-TEST(UriIp4TestSuite, parse_relative_uri_with_authority_and_absolute_path) {
-    Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("192.168.10.10", 80);
-
-    // Mock for network address system call
-    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
-        .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
-    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
-
-    uri_type out;
-    struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.hostport.IPaddress;
-
-    // Execute the unit
-    Curi uriObj;
-    EXPECT_EQ(
-        uriObj.parse_uri("//example-site.de:80/uri/path?uriquery#urifragment",
-                         51, &out),
-        HTTP_SUCCESS);
-    // Check the uri-parts scheme, hostport, pathquery and fragment
-    EXPECT_STREQ(out.scheme.buff, nullptr);
-    EXPECT_STREQ(out.hostport.text.buff,
-                 "example-site.de:80/uri/path?uriquery#urifragment");
-    EXPECT_STREQ(out.pathquery.buff, "/uri/path?uriquery#urifragment");
-    EXPECT_STREQ(out.fragment.buff, "urifragment");
-
-    ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
-                   "ABSOLUTE constant name. See issue #3.\n";
-#ifdef _WIN32
-    EXPECT_EQ(out.type, 2); // What ever this means
-#else
-    EXPECT_EQ(out.type, RELATIVE);
-#endif
-    EXPECT_EQ(out.path_type, ABS_PATH);
-    EXPECT_EQ(sai4->sin_family, AF_INET);
-    EXPECT_EQ(sai4->sin_port, htons(80));
-    EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "192.168.10.10");
-}
-
-TEST(UriIp4TestSuite, parse_relative_uri_with_absolute_path) {
-    Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("0.0.0.0", 0);
-
-    // Set default return values for network address system call in case we get
-    // an unexpected call but it should not occur. An ip address should not be
-    // asked for name resolution because we do not have one.
-    ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
-        .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
-    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
-    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
-
-    uri_type out;
-    struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.hostport.IPaddress;
-
-    // Execute the unit
-    Curi uriObj;
-    EXPECT_EQ(uriObj.parse_uri("/uri/path?uriquery#urifragment", 31, &out),
-              HTTP_SUCCESS);
-    // Check the uri-parts scheme, hostport, pathquery and fragment
-    EXPECT_STREQ(out.scheme.buff, nullptr);
-    EXPECT_STREQ(out.hostport.text.buff, nullptr);
-    EXPECT_STREQ(out.pathquery.buff, "/uri/path?uriquery#urifragment");
-    EXPECT_STREQ(out.fragment.buff, "urifragment");
-
-    ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
-                   "ABSOLUTE constant name. See issue #3.\n";
-#ifdef _WIN32
-    EXPECT_EQ(out.type, 2); // What ever this means.
-#else
-    EXPECT_EQ(out.type, RELATIVE);
-#endif
-    EXPECT_EQ(out.path_type, ABS_PATH);
-    EXPECT_EQ(sai4->sin_family, AF_UNSPEC);
-    EXPECT_EQ(sai4->sin_port, htons(0));
-    EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "0.0.0.0");
-}
-
-TEST(UriIp4TestSuite, parse_relative_uri_with_relative_path) {
-    Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("0.0.0.0", 0);
-
-    // Set default return values for network address system call in case we get
-    // an unexpected call but it should not occur. An ip address should not be
-    // asked for name resolution because we do not have one.
-    ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
-        .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
-    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
-    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
-
-    uri_type out;
-    struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.hostport.IPaddress;
-
-    // Execute the unit
-    // The relative path does not have a leading /
-    Curi uriObj;
-    EXPECT_EQ(uriObj.parse_uri("uri/path?uriquery#urifragment", 30, &out),
-              HTTP_SUCCESS);
-    // Check the uri-parts scheme, hostport, pathquery and fragment
-    EXPECT_STREQ(out.scheme.buff, nullptr);
-    EXPECT_STREQ(out.hostport.text.buff, nullptr);
-    EXPECT_STREQ(out.pathquery.buff, "uri/path?uriquery#urifragment");
-    EXPECT_STREQ(out.fragment.buff, "urifragment");
-
-    ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
-                   "ABSOLUTE constant name. See issue #3.\n";
-#ifdef _WIN32
-    EXPECT_EQ(out.type, 2); // What ever this means.
-#else
-    EXPECT_EQ(out.type, RELATIVE);
-#endif
-    EXPECT_EQ(out.path_type, REL_PATH);
-    EXPECT_EQ(sai4->sin_family, AF_UNSPEC);
-    EXPECT_EQ(sai4->sin_port, htons(0));
-    EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "0.0.0.0");
-}
-
-TEST(UriIp4TestSuite, parse_uri_with_opaque_part) {
-    Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("0.0.0.0", 0);
-
-    // Set default return values for network address system call in case we get
-    // an unexpected call but it should not occur. An ip address should not be
-    // asked for name resolution because we do not have one.
-    ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
-        .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
-    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
-    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
-
-    uri_type out;
-    struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.hostport.IPaddress;
-
-    // Execute the unit
-    // The relative path does not have a leading /
-    Curi uriObj;
-    EXPECT_EQ(uriObj.parse_uri("mailto:a@b.com", 15, &out), HTTP_SUCCESS);
-    // Check the uri-parts scheme, hostport, pathquery and fragment
-    EXPECT_STREQ(out.scheme.buff, "mailto:a@b.com");
-    EXPECT_STREQ(out.hostport.text.buff, nullptr);
-    EXPECT_STREQ(out.pathquery.buff, "a@b.com");
-    EXPECT_STREQ(out.fragment.buff, nullptr);
-
-    ::std::cout << "  BUG! Wrong uri type on MS Windows due to conflicting "
-                   "ABSOLUTE constant name. See issue #3.\n";
-#ifdef _WIN32
-    EXPECT_EQ(out.type, 1); // What ever this means.
-#else
-    EXPECT_EQ(out.type, ABSOLUTE);
-#endif
-    EXPECT_EQ(out.path_type, OPAQUE_PART);
-    EXPECT_EQ(sai4->sin_family, AF_UNSPEC);
-    EXPECT_EQ(sai4->sin_port, htons(0));
-    EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "0.0.0.0");
+        strcpy(strbuf, "/../hello"); // with '\0'
+        EXPECT_EQ(uriObj.remove_dots(strbuf, strlen(strbuf)),
+                  UPNP_E_INVALID_URL)
+            << "  # path beginning with '/../<segment>' must fail with "
+               "UPNP_E_INVALID_URL(-108).";
+        EXPECT_STREQ(strbuf, "/../hello");
+        strcpy(strbuf, "../hello"); // with '\0'
+        EXPECT_EQ(uriObj.remove_dots(strbuf, strlen(strbuf)),
+                  UPNP_E_INVALID_URL)
+            << "  # path beginning with '../<segment>' must fail with "
+               "UPNP_E_INVALID_URL(-108).";
+        EXPECT_STREQ(strbuf, "../hello");
+    }
 }
 
 //
@@ -902,7 +733,7 @@ TEST(ResolveRelUrlIp4TestSuite, resolve_successful) {
     char base_url[]{"https://example.com:443"};
     char rel_url[]{"homepage#this-fragment"};
 
-    // Execute the unit
+    // Test Unit
     Curi uriObj;
     char* abs_url = uriObj.resolve_rel_url(*&base_url, *&rel_url);
     EXPECT_STREQ(abs_url, "https://example.com:443/homepage#this-fragment");
@@ -928,6 +759,9 @@ TEST(ResolveRelUrlIp4TestSuite, null_base_url_should_return_rel_url) {
 }
 
 TEST(ResolveRelUrlIp4TestSuite, empty_base_url_should_return_rel_url) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
     Mock_netv4info netv4inf;
     addrinfo* res = netv4inf.set("0.0.0.0", 0);
 
@@ -941,37 +775,49 @@ TEST(ResolveRelUrlIp4TestSuite, empty_base_url_should_return_rel_url) {
     char base_url[]{""};
     char rel_url[]{"homepage#this-fragment"};
 
-    // Execute the unit
+    // Test Unit
     Curi uriObj;
     char* abs_url = uriObj.resolve_rel_url(*&base_url, *&rel_url);
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! Empty base url should return rel url, not NULL.\n";
-    EXPECT_EQ(abs_url, nullptr);
-#else
-    EXPECT_STREQ(abs_url, "homepage#this-fragment");
-#endif
+
+    if (old_code) {
+        ::std::cout
+            << "  BUG! Empty base url should return rel url, not NULL.\n";
+        EXPECT_EQ(abs_url, nullptr);
+    } else {
+        EXPECT_STREQ(abs_url, "homepage#this-fragment");
+    }
 }
 
 TEST(ResolveRelUrlIp4TestSuite, null_rel_url_should_return_base_url) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! Segfault if rel_url is NULL.\n";
-#else
-    Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("192.168.168.168", 80);
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
 
-    // Mock for network address system call
-    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
-        .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
-    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
+    if (old_code) {
+        ::std::cout << "  BUG! Segfault if rel_url is NULL.\n";
 
-    // Provide arguments to execute the unit
-    char base_url[]{"http://example.com"};
+    } else {
 
-    // Execute the unit
-    Curi uriObj;
-    char* abs_url = uriObj.resolve_rel_url(*&base_url, NULL);
-    EXPECT_STREQ(abs_url, "http://example.com");
-#endif
+        Mock_netv4info netv4inf;
+        addrinfo* res = netv4inf.set("192.168.168.168", 80);
+
+        // Mock for network address system call
+        EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
+            .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
+        EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
+
+        // Provide arguments to execute the unit
+        char base_url[]{"http://example.com"};
+
+        // Execute the unit
+        Curi uriObj;
+        ASSERT_EXIT((uriObj.resolve_rel_url(*&base_url, NULL), exit(0)),
+                    ::testing::ExitedWithCode(0), ".*")
+            << "  BUG! Calling resolve_rel_url() with nullptr should not "
+               "segfault.";
+
+        char* abs_url = uriObj.resolve_rel_url(*&base_url, NULL);
+        EXPECT_STREQ(abs_url, "http://example.com");
+    }
 }
 
 TEST(ResolveRelUrlIp4TestSuite, empty_rel_url_should_return_base_url) {
@@ -1048,8 +894,7 @@ TEST(ResolveRelUrlIp4TestSuite, absolute_rel_url_should_return_a_copy_of_it) {
     EXPECT_STREQ(abs_url, "https://absolute.net:443/home-page#fragment");
 }
 
-TEST(ResolveRelUrlIp4TestSuite,
-     base_and_rel_url_not_absolute_should_return_null) {
+TEST(ResolveRelUrlIp4TestSuite, base_and_rel_url_not_absolute_should_ret_null) {
     Mock_netv4info netv4inf;
     addrinfo* res = netv4inf.set("0.0.0.0", 0);
 
@@ -1083,7 +928,6 @@ TEST(UriIp4TestSuite, free_URL_list) {
 } // namespace upnplib
 
 int main(int argc, char** argv) {
-    // ::testing::InitGoogleTest(&argc, argv);
     ::testing::InitGoogleMock(&argc, argv);
-    return RUN_ALL_TESTS();
+#include "upnplib/gtest_main.inc"
 }

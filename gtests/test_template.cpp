@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-16
+// Redistribution only with this Copyright remark. Last modified: 2022-01-23
 
 // This test should always run, reporting no failure
 
@@ -41,6 +41,9 @@ class EmptyFixtureTestSuite : public ::testing::Test {
 
     EmptyFixtureTestSuite() {
         // Constructor, you can do set-up work for each test here.
+        // In the body of a constructor (or destructor), it’s not possible to
+        // use the ASSERT_xx macros. More details at
+        // https://google.github.io/googletest/faq.html#CtorVsSetUp
 
         // set the global pointer to the mock objects
         // ptrMock_strerror = &mock_strerror;
@@ -100,5 +103,5 @@ TEST(EmptyTestSuite, empty_gtest) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     // ::testing::InitGoogleMock(&argc, argv);
-#include "upnplib_gtest_main.inc"
+#include "upnplib/gtest_main.inc"
 }

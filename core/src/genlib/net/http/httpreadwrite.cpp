@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-13
+// Redistribution only with this Copyright remark. Last modified: 2022-01-26
 
 #include "upnplib/httpreadwrite.hpp"
 
@@ -76,6 +76,10 @@ static int Check_Connect_And_Wait_Connection(
                     return -1;
                 } else if (valopt) {
                     /* delayed error = valopt */
+                    // TODO: Return more detailed error codes, e.g.
+                    // valopt == 111: ECONNREFUSED "Connection refused"
+                    // if there is a remote host but no server service
+                    // listening.
                     return -1;
                 }
             }

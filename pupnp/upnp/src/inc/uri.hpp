@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-19
+ * Redistribution only with this Copyright remark. Last modified: 2022-01-29.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -309,7 +309,8 @@ char* resolve_rel_url(
  *
  * Handles absolute, relative, and opaque uris. Parses into the following
  * pieces: scheme, hostport, pathquery, fragment (host with port and path with
- * query are treated as one token)
+ * query are treated as one token). Strings in output uri_type are treated as
+ * token with character chain and size. They are not null ('\0') terminated.
  *
  * Caller should check for the pieces they require.
  *
@@ -318,8 +319,7 @@ char* resolve_rel_url(
 int parse_uri(
     /*! [in] Character string containing uri information to be parsed. */
     const char* in,
-    /*! [in] Maximum limit on the number of characters without terminating null
-       byte ('\0'). */
+    /*! [in] Number of characters (strlen()) of the input string. */
     size_t max,
     /*! [out] Output parameter which will have the parsed uri information.
      */

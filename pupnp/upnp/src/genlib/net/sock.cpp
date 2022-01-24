@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-10
+ * Redistribution only with this Copyright remark. Last modified: 2022-01-26
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -135,7 +135,7 @@ int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
             -1) {
 // TODO: fix source code to only use POSIX versions, not GNU nonstandard
 #ifdef _GNU_SOURCE
-            // BUG: errorBuffer is not used and uninitialized in this case.
+            // BUG! errorBuffer is not used and uninitialized in this case.
             //      It will print garbage then.
             // errorBuffer[0] = '\0'; // DEBUG: uncomment if verifying
             char* retcode;
@@ -148,7 +148,7 @@ int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
             UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
                        "Error in shutdown: %s\n", errorBuffer);
         }
-        // BUG: closesocket on _WIN32 does not return -1 on error, but positive
+        // BUG! closesocket on _WIN32 does not return -1 on error, but positive
         // numbers. This must check != 0.
         if (sock_close(info->socket) == -1) {
             ret = UPNP_E_SOCKET_ERROR;
@@ -262,7 +262,7 @@ static int sock_read_write(
 #ifdef SO_NOSIGPIPE
                     setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &old, olen);
 #endif
-                    // BUG: Should return UPNP_E_SOCKET_ERROR
+                    // BUG! Should return UPNP_E_SOCKET_ERROR
                     return (int)num_written;
                 }
                 byte_left -= (size_t)num_written;

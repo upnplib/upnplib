@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-01
+ * Redistribution only with this Copyright remark. Last modified: 2022-01-23
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -265,7 +265,9 @@ EXPORT_SPEC int http_OpenHttpConnection(
     void** handle,
     /*! [in] The time out value sent with the request during which a
      * response is expected from the receiver, failing which, an error is
-     * reported. If value is negative, timeout is infinite. */
+     * reported. If value is negative, timeout is infinite.
+     * This parameter isn't used anymore and only available for downstream
+     * compatibility. It can be set to 0.*/
     int timeout);
 
 /*!

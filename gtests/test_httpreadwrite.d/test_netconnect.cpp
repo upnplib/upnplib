@@ -805,7 +805,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, getsockopt_error) {
 //
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-#include "upnplib_gtest_main.inc"
+#include "upnplib/gtest_main.inc"
 }
 
 // vim: nowrap
