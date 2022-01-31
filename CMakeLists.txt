@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-01-13
+# Redistribution only with this Copyright remark. Last modified: 2022-01-31
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -317,7 +317,8 @@ if(UPNP_GOOGLETEST)
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY    https://github.com/google/googletest.git
-        GIT_TAG           origin/main
+        #GIT_TAG           origin/main
+        GIT_TAG           release-1.11.0
         GIT_SHALLOW       ON
     )
     if(WIN32)

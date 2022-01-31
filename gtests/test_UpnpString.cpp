@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-10-02
+// Redistribution only with this Copyright remark. Last modified: 2022-01-31
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -308,7 +308,7 @@ int main(int argc, char** argv) {
     // symbol). By default it behaves much like the "threadsafe" mode on POSIX
     // by default.
     // See https://google.github.io/googletest/reference/assertions.html#death
-    GTEST_FLAG_SET(death_test_style, "threadsafe");
+    // GTEST_FLAG_SET(death_test_style, "threadsafe");
 #endif
     return RUN_ALL_TESTS();
 }
