@@ -821,9 +821,12 @@ TEST(MembufferTestSuite, membuffer_delete) {
 
     mbObj.membuffer_destroy(&mbuf);
 
+#ifdef NDEBUG
+    // This can only run with NDEBUG because we have an assert(m != NULL) there.
     ASSERT_EXIT((mbObj.membuffer_delete(nullptr, 0, 100), exit(0)),
                 ::testing::ExitedWithCode(0), ".*")
         << "  # A nullptr to a membuffer must not segfault.";
+#endif
 }
 
 TEST(MembufferTestSuite, membuffer_detach) {

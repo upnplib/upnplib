@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-31
+// Redistribution only with this Copyright remark. Last modified: 2022-02-02
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -69,7 +69,7 @@ class Mock_netv4info : public Mock_netdb {
 
     virtual ~Mock_netv4info() override { netdb_h = m_oldptr; }
 
-    addrinfo* set(const char* a_ipaddr, short int a_port) {
+    addrinfo* get(const char* a_ipaddr, short int a_port) {
         inet_pton(m_sa.sin_family, a_ipaddr, &m_sa.sin_addr);
         m_sa.sin_port = htons(a_port);
 
@@ -114,105 +114,6 @@ TEST(ParseUriIp4TestSuite, simple_call) {
     ::std::cout << "DEBUG: out.fragment.size = " << (signed)out.fragment.size
                 << ::std::endl;
 }
-
-class Curi_type_testurl {
-    // This is a fixed test uri structure. It is set exactly to the output of
-    // parse_uri() incl. possible bugs. This is mainly made to understand the
-    // structure and working of the parsed uri output.
-
-  private:
-    // The parts are only addressed by pointing to its position in the
-    // url_str. Its lengths are only given by the size stored in the token.
-    // They are not terminated by '\0'.
-
-    // url_str with 55 characters is terminated with '\0'
-    const char url_str[55 + 1]{
-        "http://www.upnplib.net:80/dest/path/?key=value#fragment"};
-    //   |      |                 |                     |      |
-    //   0     +7                +25                   +47    +54 zero based
-
-  public:
-    enum uriType type;
-    token scheme;
-    enum pathType path_type;
-    token pathquery;
-    token fragment;
-    hostport_type hostport;
-
-    Curi_type_testurl() {
-        type = ABSOLUTE;
-        path_type = ABS_PATH;
-
-        scheme.buff = url_str; // points to start of the scheme
-        scheme.size = 4;       // limits to "http"
-
-        hostport.text.buff = url_str + 7; // points to start of hostport
-        hostport.text.size = 18;          // limits to "www.upnplib.net:80"
-
-        pathquery.buff = url_str + 25; // points to start of pathquery
-        pathquery.size = 21;           // limits to "/dest/path/"
-
-        fragment.buff = url_str + 47; // points to start of fragment
-        fragment.size = 8;            // limits to "fragment"
-    }
-
-    const char* get_testurl() { return url_str; }
-};
-
-TEST(ParseUriIp4TestSuite, verify_testurl) {
-    // I have made a fixed test uri structure to understand it. This test is to
-    // check how gtest works on the structure. It does not test production code
-    // so it is not needed to always enable it with '#if true'.
-
-    Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("192.168.10.10", 80);
-
-    // Mock for network address system calls. parse_uri() ask DNS server.
-    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
-        .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
-    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
-
-    // Get the test url
-    Curi_type_testurl testurlObj;
-    const char* url_str = testurlObj.get_testurl();
-    EXPECT_STREQ(url_str,
-                 "http://www.upnplib.net:80/dest/path/?key=value#fragment");
-
-    // Provide output structure but set to garbage to emulate uninitialization.
-    uri_type out;
-    memset(&out, 0xaa, sizeof(out));
-
-    // Test Unit
-    Curi uriObj;
-    EXPECT_EQ(uriObj.parse_uri(url_str, strlen(url_str), &out), HTTP_SUCCESS);
-
-    EXPECT_EQ(out.type, ABSOLUTE);
-    EXPECT_EQ(out.path_type, ABS_PATH);
-    EXPECT_EQ(testurlObj.type, out.type);
-    EXPECT_EQ(testurlObj.path_type, out.path_type);
-
-    EXPECT_STREQ(out.scheme.buff,
-                 "http://www.upnplib.net:80/dest/path/?key=value#fragment");
-    EXPECT_EQ(out.scheme.size, 4);
-    EXPECT_STREQ(testurlObj.scheme.buff, out.scheme.buff);
-    EXPECT_EQ(testurlObj.scheme.size, out.scheme.size);
-
-    EXPECT_STREQ(out.hostport.text.buff,
-                 "www.upnplib.net:80/dest/path/?key=value#fragment");
-    EXPECT_EQ(out.hostport.text.size, 18);
-    EXPECT_STREQ(testurlObj.hostport.text.buff, out.hostport.text.buff);
-    EXPECT_EQ(testurlObj.hostport.text.size, out.hostport.text.size);
-
-    EXPECT_STREQ(out.pathquery.buff, "/dest/path/?key=value#fragment");
-    EXPECT_EQ(out.pathquery.size, 21);
-    EXPECT_STREQ(testurlObj.pathquery.buff, out.pathquery.buff);
-    EXPECT_EQ(testurlObj.pathquery.size, out.pathquery.size);
-
-    EXPECT_STREQ(out.fragment.buff, "fragment");
-    EXPECT_EQ(out.fragment.size, 8);
-    EXPECT_STREQ(testurlObj.fragment.buff, out.fragment.buff);
-    EXPECT_EQ(testurlObj.fragment.size, out.fragment.size);
-}
 #endif
 
 TEST(ParseUriIp4TestSuite, absolute_uri_successful) {
@@ -220,7 +121,7 @@ TEST(ParseUriIp4TestSuite, absolute_uri_successful) {
         GTEST_SKIP() << "             known failing test on Github Actions";
 
     Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("192.168.10.10", 80);
+    addrinfo* res = netv4inf.get("192.168.10.10", 80);
 
     // Mock for network address system calls. parse_uri() asks the DNS server.
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
@@ -279,12 +180,12 @@ TEST(ParseUriIp4TestSuite, absolute_uri_successful) {
     const sockaddr_in* sai4 = (struct sockaddr_in*)&out.hostport.IPaddress;
     EXPECT_EQ(sai4->sin_family, AF_INET);
     EXPECT_EQ(sai4->sin_port, htons(80));
-    EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "192.168.10.10");
+    EXPECT_STREQ(::inet_ntoa(sai4->sin_addr), "192.168.10.10");
 }
 
 TEST(ParseUriIp4TestSuite, absolute_uri_with_shorter_max_size) {
     Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("192.168.10.10", 80);
+    addrinfo* res = netv4inf.get("192.168.10.10", 80);
 
     // Mock for network address system calls. parse_uri() asks the DNS server.
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
@@ -590,7 +491,7 @@ TEST(ParseUriIp4TestSuite, parse_scheme_of_uri) {
 
 TEST(ParseUriIp4TestSuite, relative_uri_with_authority_and_absolute_path) {
     Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("192.168.10.10", 80);
+    addrinfo* res = netv4inf.get("192.168.10.10", 80);
 
     // Mock for network address system call
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
@@ -628,7 +529,7 @@ TEST(ParseUriIp4TestSuite, relative_uri_with_authority_and_absolute_path) {
 
 TEST(ParseUriIp4TestSuite, relative_uri_with_absolute_path) {
     Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("0.0.0.0", 0);
+    addrinfo* res = netv4inf.get("0.0.0.0", 0);
 
     // Set default return values for network address system call in case we get
     // an unexpected call but it should not occur. An ip address should not be
@@ -666,7 +567,7 @@ TEST(ParseUriIp4TestSuite, relative_uri_with_absolute_path) {
 
 TEST(ParseUriIp4TestSuite, relative_uri_with_relative_path) {
     Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("0.0.0.0", 0);
+    addrinfo* res = netv4inf.get("0.0.0.0", 0);
 
     // Set default return values for network address system call in case we get
     // an unexpected call but it should not occur. An ip address should not be
@@ -705,7 +606,7 @@ TEST(ParseUriIp4TestSuite, relative_uri_with_relative_path) {
 
 TEST(ParseUriIp4TestSuite, uri_with_opaque_part) {
     Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("0.0.0.0", 0);
+    addrinfo* res = netv4inf.get("0.0.0.0", 0);
 
     // Set default return values for network address system call in case we get
     // an unexpected call but it should not occur. An ip address should not be

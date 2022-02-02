@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-23
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -163,8 +163,8 @@ static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
                            socklen_t addrlen) {
 #ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
     int ret = upnplib::pupnp->sock_make_no_blocking(sockfd);
-    // BUG! On MS Windows sock_make_no_blocking() returns with positive error
-    // numbers.
+    // Ingo BUG! On MS Windows sock_make_no_blocking() returns with positive
+    // error numbers.
     if (ret != -1) {
         ret = upnplib::sys_socket_h->connect(sockfd, serv_addr, addrlen);
         ret = upnplib::pupnp->Check_Connect_And_Wait_Connection(sockfd, ret);
@@ -294,24 +294,26 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
     int ret_connect;
     char errorBuffer[ERROR_BUFFER_LEN];
 
+    // Ingo BUG! Must check return value
     http_FixUrl(destination_url, url);
 
-    connfd = socket((int)url->hostport.IPaddress.ss_family, SOCK_STREAM, 0);
+    connfd = upnplib::sys_socket_h->socket(
+        (int)url->hostport.IPaddress.ss_family, SOCK_STREAM, 0);
     if (connfd == INVALID_SOCKET) {
         return (SOCKET)(UPNP_E_OUTOF_SOCKET);
     }
     sockaddr_len = (socklen_t)(url->hostport.IPaddress.ss_family == AF_INET6
                                    ? sizeof(struct sockaddr_in6)
                                    : sizeof(struct sockaddr_in));
-    ret_connect = private_connect(
+    ret_connect = upnplib::pupnp->private_connect(
         connfd, (struct sockaddr*)&url->hostport.IPaddress, sockaddr_len);
     if (ret_connect == -1) {
 #ifdef _WIN32
         UpnpPrintf(UPNP_CRITICAL, HTTP, __FILE__, __LINE__,
                    "connect error: %d\n", WSAGetLastError());
 #endif
-        if (shutdown(connfd, SD_BOTH) == -1) {
-// TODO: fix source code to only use POSIX versions, not GNU nonstandard
+        if (upnplib::sys_socket_h->shutdown(connfd, SD_BOTH) == -1) {
+// Ingo TODO: fix source code to only use POSIX versions, not GNU nonstandard
 #ifdef _GNU_SOURCE
             char* retcode;
 #else // POSIX

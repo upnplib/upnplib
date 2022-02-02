@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-30
+// Redistribution only with this Copyright remark. Last modified: 2022-02-02
 
 #include "gmock/gmock.h"
 #include "upnplib_gtest_tools.hpp"
@@ -26,13 +26,11 @@ bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
 //
-// ######################################
 // Mocking
-// ######################################
+// =======
 
-class Mock_netdb : public Bnetdb
-// Class to mock the free system functions.
-{
+class Mock_netdb : public Bnetdb {
+    // Class to mock the free system functions.
   private:
     Bnetdb* m_oldptr;
 
@@ -51,10 +49,9 @@ class Mock_netdb : public Bnetdb
     MOCK_METHOD(void, freeaddrinfo, (struct addrinfo * res), (override));
 };
 
-class Mock_netv4info : public Mock_netdb
-// This is a derived class from mocking netdb to provide a structure for
-// addrinfo that can be given to the mocked program.
-{
+class Mock_netv4info : public Mock_netdb {
+    // This is a derived class from mocking netdb to provide a structure for
+    // addrinfo that can be given to the mocked program.
   private:
     Bnetdb* m_oldptr;
 
@@ -69,15 +66,15 @@ class Mock_netv4info : public Mock_netdb
         netdb_h = this;
 
         m_sa.sin_family = AF_INET;
+        m_res.ai_family = AF_INET;
     }
 
     virtual ~Mock_netv4info() override { netdb_h = m_oldptr; }
 
-    addrinfo* set(const char* a_ipaddr, short int a_port) {
+    addrinfo* get(const char* a_ipaddr, short int a_port) {
         inet_pton(m_sa.sin_family, a_ipaddr, &m_sa.sin_addr);
         m_sa.sin_port = htons(a_port);
 
-        m_res.ai_family = m_sa.sin_family;
         m_res.ai_addrlen = sizeof(struct sockaddr);
         m_res.ai_addr = (sockaddr*)&m_sa;
 
@@ -136,9 +133,8 @@ class Mock_unistd : public Bunistd {
 };
 
 //
-// ######################################
 // testsuites for Ip4 httpreadwrite
-// ######################################
+// ================================
 #if false
 TEST(OpenHttpConnectionTestSuite, open_http_connection_to_localhost) {
     // This test is more an integration test and needs the nc (or netcat, or
@@ -187,15 +183,174 @@ TEST(OpenHttpConnectionTestSuite, open_http_connection_to_localhost) {
 }
 #endif
 
-class OpenHttpConnectionIp4FTestSuite : public ::testing::Test {
-  private:
-    // Provide empty structures for mocking. Will be filled in the tests.
-    struct sockaddr_in m_sa {};
-    struct addrinfo m_res {};
+class Curi_type_testurl {
+    // This is a fixed test uri structure. It is set exactly to the output of
+    // parse_uri() incl. possible bugs. This is mainly made to understand the
+    // structure and to have a valid uri_type url structure for testing.
 
+  public:
+    // To have access to these properties by pointing to the object (like
+    // pointing to a C structure) they must be the first declarations. So we can
+    // cast a pointer to the instantiation to uri_type* and use it as C
+    // structure, for example:
+    //
+    // Curi_type_testurl testurlObj;
+    // uri_type* url = (uri_type*)&testurlObj;
+    // if (url->type == ABSOLUTE) {}; // C like usage
+    // const char* test_url = testurlObj.get_testurl();
+
+    enum uriType type;
+    token scheme;
+    enum pathType path_type;
+    token pathquery;
+    token fragment;
+    hostport_type hostport;
+
+  private:
+    // The parts are only addressed by pointing to its position in the
+    // m_url_str. Its lengths are only given by the size stored in the token.
+    // They are not terminated by '\0'.
+
+    // m_url_str with 55 characters is terminated with '\0'
+    const char m_url_str[55 + 1]{
+        "http://www.upnplib.net:80/dest/path/?key=value#fragment"};
+    //   |      |                 |                     |      |
+    //   0     +7                +25                   +47    +54 zero based
+
+  public:
+    Curi_type_testurl() {
+        // Fill the uri_type structure.
+        // TODO: Fix conflict with name ABSOLUTE
+        // Due to name conflicts on different operating systems we need these
+        // conditionals.
+
+#ifdef __APPLE__
+        // Seems here isn't our enum uriType used.
+        type = (uriType)ABSOLUTE;
+#else
+#ifdef _WIN32
+        // Unsuccessful attempt to fix the conflict.
+        type = absolute;
+#else
+        // The only one that works as expected.
+        type = ABSOLUTE;
+#endif
+#endif
+        path_type = ABS_PATH;
+
+        scheme.buff = m_url_str; // points to start of the scheme
+        scheme.size = 4;         // limits to "http"
+
+        hostport.text.buff = m_url_str + 7; // points to start of hostport
+        hostport.text.size = 18;            // limits to "www.upnplib.net:80"
+
+        // Fill ip address structure of the hostport property
+        sockaddr_in* sai4 = (sockaddr_in*)&hostport.IPaddress;
+        sai4->sin_family = AF_INET;
+        sai4->sin_port = htons(80);
+        sai4->sin_addr.s_addr = ::inet_addr("192.168.10.10");
+
+        pathquery.buff = m_url_str + 25; // points to start of pathquery
+        pathquery.size = 21;             // limits to "/dest/path/?key=value"
+
+        fragment.buff = m_url_str + 47; // points to start of fragment
+        fragment.size = 8;              // limits to "fragment"
+    }
+
+    // getter
+    const char* get_testurl() { return m_url_str; }
+};
+
+TEST(ParseUriIp4TestSuite, verify_testurl) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    // I have made a fixed uri structure 'Curi_type_testurl' for testing. This
+    // 'verify_testurl' is to check how gtest works on the structure and to
+    // verfiy that the fixed test structure still match the output of
+    // 'parse_uri()'.
+
+    Mock_netv4info netv4inf;
+    addrinfo* res = netv4inf.get("192.168.10.10", 80);
+
+    // Mock for network address system calls. parse_uri() ask DNS server.
+    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
+        .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
+    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
+
+    // Get the test url
+    Curi_type_testurl testurlObj;
+    uri_type* test_url = (uri_type*)&testurlObj;
+    const char* url_str = testurlObj.get_testurl();
+    EXPECT_STREQ(url_str,
+                 "http://www.upnplib.net:80/dest/path/?key=value#fragment");
+
+    // Provide output structure but set to garbage to emulate uninitialization.
+    uri_type out;
+    memset(&out, 0xaa, sizeof(out));
+
+    // Test Unit
+    Curi uriObj;
+    EXPECT_EQ(uriObj.parse_uri(url_str, strlen(url_str), &out), HTTP_SUCCESS);
+
+    EXPECT_EQ(out.type, ABSOLUTE);
+
+    if (old_code) {
+        ::std::cout << "[ BUG!     ] Type value on uri structure should be "
+                       "ABSOLUTE but not 1 on MS Windows.\n";
+#ifdef _WIN32
+        EXPECT_EQ(1, out.type);
+#else
+        EXPECT_EQ(test_url->type, out.type);
+#endif
+
+    } else {
+
+        ::std::cout << "[ BUG!     ] Type value on uri structure should be "
+                       "ABSOLUTE but not 1 on MS Windows.\n";
+        EXPECT_EQ(test_url->type, out.type);
+    }
+
+    EXPECT_EQ(out.path_type, ABS_PATH);
+    EXPECT_EQ(test_url->path_type, out.path_type);
+
+    EXPECT_STREQ(out.scheme.buff,
+                 "http://www.upnplib.net:80/dest/path/?key=value#fragment");
+    EXPECT_EQ(out.scheme.size, 4);
+    EXPECT_STREQ(test_url->scheme.buff, out.scheme.buff);
+    EXPECT_EQ(test_url->scheme.size, out.scheme.size);
+
+    EXPECT_STREQ(out.hostport.text.buff,
+                 "www.upnplib.net:80/dest/path/?key=value#fragment");
+    EXPECT_EQ(out.hostport.text.size, 18);
+    EXPECT_STREQ(test_url->hostport.text.buff, out.hostport.text.buff);
+    EXPECT_EQ(test_url->hostport.text.size, out.hostport.text.size);
+
+    const sockaddr_in* out_sai4 = (sockaddr_in*)&out.hostport.IPaddress;
+    const sockaddr_in* test_url_sai4 =
+        (sockaddr_in*)&test_url->hostport.IPaddress;
+    EXPECT_EQ(out_sai4->sin_family, AF_INET);
+    EXPECT_EQ(out_sai4->sin_family, test_url_sai4->sin_family);
+    EXPECT_EQ(out_sai4->sin_port, htons(80));
+    EXPECT_EQ(out_sai4->sin_port, test_url_sai4->sin_port);
+    EXPECT_STREQ(::inet_ntoa(out_sai4->sin_addr), "192.168.10.10");
+    EXPECT_EQ(out_sai4->sin_addr.s_addr, test_url_sai4->sin_addr.s_addr);
+
+    EXPECT_STREQ(out.pathquery.buff, "/dest/path/?key=value#fragment");
+    EXPECT_EQ(out.pathquery.size, 21);
+    EXPECT_STREQ(test_url->pathquery.buff, out.pathquery.buff);
+    EXPECT_EQ(test_url->pathquery.size, out.pathquery.size);
+
+    EXPECT_STREQ(out.fragment.buff, "fragment");
+    EXPECT_EQ(out.fragment.size, 8);
+    EXPECT_STREQ(test_url->fragment.buff, out.fragment.buff);
+    EXPECT_EQ(test_url->fragment.size, out.fragment.size);
+}
+
+class OpenHttpConnectionIp4FTestSuite : public ::testing::Test {
   protected:
     // Provide mocked objects
-    Mock_netdb m_mock_netdbObj;
+    Mock_netv4info m_mock_netdbObj;
     Mock_pupnp m_mock_pupnpObj;
     Mock_sys_socket m_mock_socketObj;
     Mock_unistd m_mock_unistdObj;
@@ -205,29 +360,13 @@ class OpenHttpConnectionIp4FTestSuite : public ::testing::Test {
     const ::SOCKET m_socketfd{514};
 
     OpenHttpConnectionIp4FTestSuite() {
-        // Complete the addrinfo structure
-        m_sa.sin_family = AF_INET;
-        m_res.ai_family = AF_INET;
-        m_res.ai_addrlen = sizeof(struct sockaddr);
-        m_res.ai_addr = (sockaddr*)&m_sa;
-
         // Set default return values for getaddrinfo in case we get an
         // unexpected call but it should not occur.
         ON_CALL(m_mock_netdbObj, getaddrinfo(_, _, _, _))
             .WillByDefault(
                 DoAll(SetArgPointee<3>(nullptr), Return(EAI_NONAME)));
     }
-
-    addrinfo* m_get_addrinfo(const char* a_ipaddr, short int a_port) {
-        if (inet_pton(m_sa.sin_family, a_ipaddr, &m_sa.sin_addr) != 1)
-            return nullptr;
-
-        m_sa.sin_port = htons(a_port);
-        return &m_res;
-    }
 };
-
-typedef OpenHttpConnectionIp4FTestSuite CloseHttpConnectionIp4FTestSuite;
 
 //
 TEST_F(OpenHttpConnectionIp4FTestSuite, open_close_connection_successful) {
@@ -248,7 +387,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_close_connection_successful) {
     http_connection_handle_t* phandle;
     memset(&phandle, 0xaa, sizeof(phandle));
 
-    addrinfo* res = m_get_addrinfo("192.168.10.10", 80);
+    addrinfo* res = m_mock_netdbObj.get("192.168.10.10", 80);
     const ::std::string servername{"upnplib.net"};
 
     // Mock to get network address info, means DNS name resolution.
@@ -412,7 +551,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_socket_fails) {
 
     // For details look at test "open_connection_successful".
 
-    addrinfo* res = m_get_addrinfo("192.168.10.10", 80);
+    addrinfo* res = m_mock_netdbObj.get("192.168.10.10", 80);
     const ::std::string servername{"upnplib.net"};
 
     // Mock to get network address info, means DNS name resolution.
@@ -469,7 +608,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, connect_to_server_fails) {
 
     // For details look at test "open_connection_successful".
 
-    addrinfo* res = m_get_addrinfo("192.168.10.10", 80);
+    addrinfo* res = m_mock_netdbObj.get("192.168.10.10", 80);
     const ::std::string servername{"upnplib.net"};
 
     // Mock to get network address info, means DNS name resolution.
@@ -571,6 +710,8 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_connection_with_ip_address) {
         << UpnpGetErrorMessage(returned) << '(' << returned << ").";
 }
 
+typedef OpenHttpConnectionIp4FTestSuite CloseHttpConnectionIp4FTestSuite;
+
 TEST_F(CloseHttpConnectionIp4FTestSuite, close_nullptr_handle) {
     if (github_actions && !old_code)
         GTEST_SKIP() << "             known failing test on Github Actions";
@@ -592,6 +733,85 @@ TEST_F(CloseHttpConnectionIp4FTestSuite, close_nullptr_handle) {
     }
 }
 
+typedef OpenHttpConnectionIp4FTestSuite HttpConnectIp4FTestSuite;
+
+TEST_F(HttpConnectIp4FTestSuite, successful_connect) {
+    // Expect socket allocation
+    EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+        .WillOnce(Return(m_socketfd));
+    EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
+    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(_)).Times(0);
+
+    // Mock for connection to a network server
+    EXPECT_CALL(m_mock_pupnpObj,
+                private_connect(m_socketfd, NotNull(), sizeof(sockaddr_in)))
+        .WillOnce(Return(0));
+
+    // provide url structures for the http connection
+    Curi_type_testurl testurlObj;
+    uri_type* dest_url = (uri_type*)&testurlObj;
+    uri_type fixed_url;
+    memset(&fixed_url, 0xaa, sizeof(uri_type));
+
+    // Test Unit
+    SOCKET sockfd;
+    ASSERT_GT(sockfd = http_Connect(dest_url, &fixed_url), 0)
+        << "  # Should be a valid socked file descriptor but not "
+        << UpnpGetErrorMessage(sockfd) << '(' << sockfd << ").";
+
+    EXPECT_STREQ(fixed_url.fragment.buff, "fragment");
+    EXPECT_EQ(fixed_url.fragment.size, 8);
+}
+
+TEST_F(HttpConnectIp4FTestSuite, socket_allocation_fails) {
+    // Expect no socket allocation
+    EXPECT_CALL(m_mock_socketObj, socket(_, SOCK_STREAM, 0))
+        .WillOnce(SetErrnoAndReturn(EACCES, -1));
+    EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
+    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(_)).Times(0);
+
+    // Mock for connection to a network server
+    EXPECT_CALL(m_mock_pupnpObj, private_connect(_, _, _)).Times(0);
+
+    // provide url structures for the http connection
+    Curi_type_testurl testurlObj;
+    uri_type* dest_url = (uri_type*)&testurlObj;
+    uri_type fixed_url;
+    memset(&fixed_url, 0xaa, sizeof(uri_type));
+
+    // Test Unit
+    SOCKET sockfd;
+    ASSERT_EQ(sockfd = http_Connect(dest_url, &fixed_url), UPNP_E_OUTOF_SOCKET)
+        << "  # Should be UPNP_E_OUTOF_SOCKET(" << UPNP_E_OUTOF_SOCKET
+        << ") but not " << UpnpGetErrorMessage(sockfd) << '(' << sockfd << ").";
+}
+
+TEST_F(HttpConnectIp4FTestSuite, low_level_net_connect_fails) {
+    // Expect no socket allocation
+    EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+        .WillOnce(Return(m_socketfd));
+    EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(1);
+    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(_)).Times(1);
+
+    // Connection to a network server will fail
+    EXPECT_CALL(m_mock_pupnpObj,
+                private_connect(m_socketfd, NotNull(), sizeof(sockaddr_in)))
+        .WillOnce(Return(-1));
+
+    // provide url structures for the http connection
+    Curi_type_testurl testurlObj;
+    uri_type* dest_url = (uri_type*)&testurlObj;
+    uri_type fixed_url;
+    memset(&fixed_url, 0xaa, sizeof(uri_type));
+
+    // Test Unit
+    SOCKET sockfd;
+    ASSERT_EQ(sockfd = http_Connect(dest_url, &fixed_url),
+              UPNP_E_SOCKET_CONNECT)
+        << "  # Should be UPNP_E_SOCKET_CONNECT(" << UPNP_E_SOCKET_CONNECT
+        << ") but not " << UpnpGetErrorMessage(sockfd) << '(' << sockfd << ").";
+}
+
 TEST(HttpFixUrl, empty_url_structure) {
     uri_type url{};
     uri_type fixed_url;
@@ -602,17 +822,16 @@ TEST(HttpFixUrl, empty_url_structure) {
     EXPECT_EQ(httprw_oObj.http_FixUrl(&url, &fixed_url), UPNP_E_INVALID_URL);
 
     // The input url structure isn't modified
-    uri_type ref_url;
-    memset(&ref_url, 0, sizeof(uri_type));
+    uri_type ref_url{};
     EXPECT_EQ(memcmp(&ref_url, &url, sizeof(uri_type)), 0);
     // The output url structure is modified
     memset(&ref_url, 0xaa, sizeof(uri_type));
     EXPECT_NE(memcmp(&ref_url, &fixed_url, sizeof(uri_type)), 0);
 }
 
-TEST(HttpFixUrl, check_url_structure_successful) {
+TEST(HttpFixUrl, fix_url_no_path_and_query_successful) {
     Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("192.168.10.10", 80);
+    addrinfo* res = netv4inf.get("192.168.10.10", 80);
 
     // Mock for network address system calls, parse_uri() asks the DNS server.
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
@@ -645,6 +864,50 @@ TEST(HttpFixUrl, check_url_structure_successful) {
     EXPECT_EQ(fixed_url.fragment.size, 8);
 }
 
+TEST(HttpFixUrl, nullptr_to_url) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    // Test Unit
+    uri_type fixed_url;
+
+    if (old_code) {
+        ::std::cout
+            << "[ BUG!     ] A nullptr to the input url must not segfault.\n";
+
+    } else {
+
+        Chttpreadwrite_old httprw_oObj;
+        ASSERT_EXIT((httprw_oObj.http_FixUrl(nullptr, &fixed_url), exit(0)),
+                    ::testing::ExitedWithCode(0), ".*")
+            << "  BUG! A nullptr to the input url must not segfault.";
+        EXPECT_EQ(httprw_oObj.http_FixUrl(nullptr, &fixed_url),
+                  UPNP_E_INVALID_URL);
+    }
+}
+
+TEST(HttpFixUrl, nullptr_to_fixed_url) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    // Test Unit
+    Curi_type_testurl testurlObj;
+    uri_type* url = (uri_type*)&testurlObj;
+
+    if (old_code) {
+        ::std::cout
+            << "[ BUG!     ] A nullptr to the fixed url must not segfault.\n";
+
+    } else {
+
+        Chttpreadwrite_old httprw_oObj;
+        ASSERT_EXIT((httprw_oObj.http_FixUrl(url, nullptr), exit(0)),
+                    ::testing::ExitedWithCode(0), ".*")
+            << "  BUG! A nullptr to the fixed url must not segfault.";
+        EXPECT_EQ(httprw_oObj.http_FixUrl(url, nullptr), UPNP_E_INVALID_URL);
+    }
+}
+
 TEST(HttpFixUrl, wrong_scheme_ftp) {
     // Get a uri structure with parse_uri()
     constexpr char url_str[] = "ftp://192.168.169.170:80#fragment";
@@ -668,42 +931,22 @@ TEST(HttpFixUrl, wrong_scheme_ftp) {
     EXPECT_EQ(fixed_url.pathquery.size, 0);
 }
 
-TEST(HttpFixUrl, no_host_and_port) {
-    // Mock for network address system calls, parse_uri() ask DNS server.
-    Mock_netv4info netv4inf;
-    EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).WillOnce(Return(EAI_NONAME));
-    EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
-
+TEST(HttpFixUrl, no_fragment) {
     // Get a uri structure with parse_uri()
-    constexpr char url_str[] = "http:///path/?key=value#fragment";
-    uri_type url{};
-    // memset(&url, 0xaa, sizeof(uri_type));
+    constexpr char url_str[] = "http://192.168.169.170:80/path/?key=value";
+    uri_type url;
     Curi uriObj;
-    int returned;
-    EXPECT_EQ(returned = uriObj.parse_uri(url_str, strlen(url_str), &url),
-              UPNP_E_INVALID_URL)
-        << "  # Should be UPNP_E_INVALID_URL(" << UPNP_E_INVALID_URL
-        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
-
-    EXPECT_STREQ(url.scheme.buff, "http:///path/?key=value#fragment");
-    EXPECT_EQ(url.scheme.size, 4);
-
-    EXPECT_STREQ(url.hostport.text.buff, nullptr);
-    EXPECT_EQ(url.hostport.text.size, 0);
-
-    EXPECT_STREQ(url.pathquery.buff, nullptr);
-    EXPECT_EQ(url.pathquery.size, 0);
+    EXPECT_EQ(uriObj.parse_uri(url_str, strlen(url_str), &url), HTTP_SUCCESS);
 
     // Test Unit
     uri_type fixed_url;
     Chttpreadwrite_old httprw_oObj;
-    EXPECT_EQ(httprw_oObj.http_FixUrl(&url, &fixed_url), UPNP_E_INVALID_URL);
+    EXPECT_EQ(httprw_oObj.http_FixUrl(&url, &fixed_url), UPNP_E_SUCCESS);
 
-    EXPECT_STREQ(fixed_url.scheme.buff, "http:///path/?key=value#fragment");
-    EXPECT_EQ(fixed_url.scheme.size, 4);
-    EXPECT_STREQ(fixed_url.pathquery.buff, nullptr);
-    EXPECT_EQ(fixed_url.pathquery.size, 0);
+    EXPECT_STREQ(url.scheme.buff, "http://192.168.169.170:80/path/?key=value");
+    EXPECT_EQ(url.scheme.size, 4);
+    EXPECT_EQ(url.fragment.buff, nullptr);
+    EXPECT_EQ(url.fragment.size, 0);
 }
 
 TEST(HttpFixUrl, check_http_FixStrUrl_successful) {
@@ -712,7 +955,7 @@ TEST(HttpFixUrl, check_http_FixStrUrl_successful) {
     memset(&fixed_url, 0xaa, sizeof(uri_type));
 
     Mock_netv4info netv4inf;
-    addrinfo* res = netv4inf.set("192.168.10.11", 80);
+    addrinfo* res = netv4inf.get("192.168.10.11", 80);
 
     // Mock for network address system calls, parse_uri() ask DNS server.
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
@@ -744,9 +987,8 @@ TEST(HttpFixUrl, check_http_FixStrUrl_successful) {
 }
 
 //
-// ######################################
 // testsuite for Ip6 httpreadwrite
-// ######################################
+// ===============================
 // TODO: Improve ip6 tests.
 TEST(HttpreadwriteIp6TestSuite, open_http_connection_with_ip_address) {
     // The handle will be allocated on memory by the function and the pointer
@@ -755,6 +997,9 @@ TEST(HttpreadwriteIp6TestSuite, open_http_connection_with_ip_address) {
     // void* phandle;
     // But that is bad for type-save C++. So we use the correct type with
     // type cast on the argument.
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
     http_connection_handle_t* phandle;
     memset(&phandle, 0xaa, sizeof(phandle));
 
@@ -772,9 +1017,6 @@ TEST(HttpreadwriteIp6TestSuite, open_http_connection_with_ip_address) {
             << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
             << ").";
 
-    } else if (github_actions) {
-        ::std::cout << "[  SKIPPED ] Test on Github Actions\n";
-        SUCCEED();
     } else {
 
         EXPECT_EQ(returned, UPNP_E_SUCCESS)
@@ -787,9 +1029,8 @@ TEST(HttpreadwriteIp6TestSuite, open_http_connection_with_ip_address) {
     ::free(phandle);
 }
 
-// ######################################
 // testsuite for statcodes
-// ######################################
+// =======================
 TEST(StatcodesTestSuite, http_get_code_text) {
     // const char* code_text = ::http_get_code_text(HTTP_NOT_FOUND);
     // ::std::cout << "code_text: " << code_text << ::std::endl;
@@ -805,5 +1046,3 @@ int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
 #include "upnplib/gtest_main.inc"
 }
-
-// vim: nowrap

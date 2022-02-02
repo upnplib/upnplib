@@ -254,7 +254,11 @@ TEST_F(FreeListTestSuite, put_free_node_to_freelist_with_maximal_0_items) {
 }
 
 TEST_F(FreeListTestSuite, initialize_not_existing_freelist) {
+#ifdef NDEBUG
+    // This can only run with NDEBUG because we have an
+    // assert(free_list != NULL) there.
     EXPECT_EQ(FreeListObj.FreeListInit(nullptr, 0, 0), EINVAL);
+#endif
 }
 
 } // namespace upnplib

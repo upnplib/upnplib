@@ -31,9 +31,9 @@ class Ihttpreadwrite {
 
     virtual struct tm* http_gmtime_r( // no gtest, only port wrapper for system call
             const time_t* clock, struct tm* result) = 0;
-    virtual int http_FixUrl(
+    virtual int http_FixUrl( // gtest available
             uri_type* url, uri_type* fixed_url) = 0;
-    virtual int http_FixStrUrl(
+    virtual int http_FixStrUrl( // gtest available
             const char* urlstr, size_t urlstrlen, uri_type* fixed_url) = 0;
     virtual SOCKET http_Connect(
             uri_type* destination_url, uri_type* url) = 0;

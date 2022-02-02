@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-20
+// Redistribution only with this Copyright remark. Last modified: 2022-02-02
 
 #include "gmock/gmock.h"
 #include "upnplib_gtest_tools.hpp"
@@ -88,16 +88,16 @@ class Mock_pupnp : public Bpupnp {
 // testsuite for Ip4 httpreadwrite
 // ######################################
 #if false
-TEST(CheckConnectAndWaitConnectionIp4TestSuite, real_connect)
-// This is for humans only to check on a Unix operating system how the Unit
-// works in realtime so we can correct mock it. Don't set '#if true' permanently
-// because it connects to the real internet and may slow down this gtest
-// dramatically, in particular with a bad or no connection. You may change the
-// ip address if google.com changed it.
-//
-// Helpful information: [Blocking vs. non-blocking sockets]
-// (https://www.scottklement.com/rpg/socktut/nonblocking.html)
-{
+TEST(CheckConnectAndWaitConnectionIp4TestSuite, real_connect) {
+    // This is for humans only to check on a Unix operating system how the Unit
+    // works in realtime so we can correct mock it. Don't set '#if true'
+    // permanently because it connects to the real internet and may slow down
+    // this gtest dramatically, in particular with a bad or no connection. You
+    // may change the ip address if google.com changed it.
+    //
+    // Helpful information: [Blocking vs. non-blocking sockets]
+    // (https://www.scottklement.com/rpg/socktut/nonblocking.html)
+
     // Get a TCP socket
     int sockfd;
     ASSERT_NE(sockfd = ::socket(AF_INET, SOCK_STREAM, 0), -1)
@@ -605,10 +605,13 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, getsockopt_error) {
 // There are corresponding tests for Microsoft Windows above. You may compare
 // them to look for differences.
 
-// Generate function to set value refered to by 3rd argument as needed for
-// getsockopt(). This allows us to mock functions that pass in a pointer,
-// expecting the result to be put into that location.
-ACTION_P(SetArg3IntValue, value) { *static_cast<int*>(arg3) = value; }
+ACTION_P(SetArg3IntValue, value) {
+    // Generate function to set value refered to by 3rd argument as needed for
+    // getsockopt(). This allows us to mock functions that pass in a pointer,
+    // expecting the result to be put into that location.
+
+    *static_cast<int*>(arg3) = value;
+}
 
 //
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, successful_connect) {
