@@ -1,13 +1,15 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-13
+// Redistribution only with this Copyright remark. Last modified: 2022-02-03
 
-#include "gtest/gtest.h"
+#include "gmock/gmock.h"
 
 #include "pupnp/upnp/src/genlib/net/http/httpparser.cpp"
 #include "core/src/genlib/net/http/httpparser.cpp"
 
 namespace upnplib {
-bool old_code{false};
+
+bool old_code{false}; // Managed in upnplib_gtest_main.inc
+bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
 //
 // Interface for the httpparser module
@@ -30,9 +32,9 @@ class Ihttpparser {
   public:
     virtual ~Ihttpparser() {}
 
-    virtual void httpmsg_init(
+    virtual void httpmsg_init( // gtest available
             http_message_t* msg) = 0;
-    virtual void httpmsg_destroy(
+    virtual void httpmsg_destroy( // gtest available
             http_message_t* msg) = 0;
     virtual http_header_t* httpmsg_find_hdr_str(
             http_message_t* msg, const char* header_name) = 0;
@@ -48,9 +50,9 @@ class Ihttpparser {
             http_parser_t* parser) = 0;
     virtual parse_status_t parser_parse_entity(
             http_parser_t* parser) = 0;
-    virtual void parser_request_init(
+    virtual void parser_request_init( // gtest available
             http_parser_t* parser) = 0;
-    virtual void parser_response_init(
+    virtual void parser_response_init( // gtest available
             http_parser_t* parser, http_method_t request_method) = 0;
     virtual parse_status_t parser_parse(
             http_parser_t* parser) = 0;
@@ -121,12 +123,11 @@ class Chttpparser : public Chttpparser_old {
     void httpmsg_init(http_message_t* msg) override {
         return upnplib::httpmsg_init(msg); }
 };
-
 // clang-format on
 
 //
 // testsuite for httpparser
-//-------------------------
+// ========================
 TEST(HttpparserTestSuite, map_str_to_int) {
     GTEST_SKIP() << "  # Move function map_str_to_int() to httpparser.cpp, "
                     "test it here and remove module strintmap.";
@@ -177,51 +178,151 @@ TEST(HttpparserTestSuite, httpmsg_init_and_httpmsg_destroy) {
     }
 }
 
+TEST(HttpparserTestSuite, httpmsg_init_a_nullptr) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    if (old_code) {
+        ::std::cout << "[ BUG!     ] A nullptr to a message structure must not "
+                       "segfault.\n";
+    } else {
+        // Test Unit
+        Chttpparser_old httparsObj;
+        ASSERT_EXIT((httparsObj.httpmsg_init(nullptr), exit(0)),
+                    ::testing::ExitedWithCode(0), ".*")
+            << "   BUG! A nullptr to a message structure must not segfault.";
+    }
+}
+
+TEST(HttpparserTestSuite, httpmsg_destroy_a_nullptr) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    if (old_code) {
+        ::std::cout << "[ BUG!     ] A nullptr to a message structure must not "
+                       "segfault.\n";
+    } else {
+        // Test Unit
+        Chttpparser_old httparsObj;
+        ASSERT_EXIT((httparsObj.httpmsg_destroy(nullptr), exit(0)),
+                    ::testing::ExitedWithCode(0), ".*")
+            << "   BUG! A nullptr to a message structure must not segfault.";
+    }
+}
+
 TEST(HttpparserTestSuite, httpmsg_find_hdr_str) {
     Chttpparser httparsObj;
 
     http_message_t msg;
-    memset(&msg, 0xff, sizeof(msg));
+    memset(&msg, 0xaa, sizeof(msg));
     ::httpmsg_init(&msg);
 
-    const char header_name[16]{"TestHeader"};
+    constexpr char header_name[16]{"TestHeader"};
 
     EXPECT_EQ(httparsObj.httpmsg_find_hdr_str(&msg, header_name), nullptr);
+}
+
+TEST(HttpparserTestSuite, parser_init) {
+    http_parser_t parser;
+    ::memset(&parser, 0xaa, sizeof(http_parser_t));
+
+    // Test Unit
+    ::parser_init(&parser);
+
+    EXPECT_EQ(parser.http_error_code, HTTP_BAD_REQUEST);
+    EXPECT_EQ(parser.ent_position, ENTREAD_DETERMINE_READ_METHOD);
+    EXPECT_EQ(parser.valid_ssdp_notify_hack, 0);
+    EXPECT_EQ(parser.msg.initialized, 1);
+    EXPECT_EQ(parser.scanner.cursor, (size_t)0);
+    EXPECT_EQ(parser.scanner.msg, &parser.msg.msg);
+    EXPECT_EQ(parser.scanner.entire_msg_loaded, 0);
+}
+
+TEST(HttpparserTestSuite, parser_init_a_nullptr) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    if (old_code) {
+        ::std::cout << "[ BUG!     ] A nullptr to a parser structure must not "
+                       "segfault.\n";
+    } else {
+        // Test Unit
+        ASSERT_EXIT((::parser_init(nullptr), exit(0)),
+                    ::testing::ExitedWithCode(0), ".*")
+            << "   BUG! A nullptr to a parser structure must not segfault.";
+    }
+}
+
+TEST(HttpparserTestSuite, parser_request_init) {
+    http_parser_t parser;
+    ::memset(&parser, 0xaa, sizeof(http_parser_t));
+
+    // Test Unit
+    Chttpparser_old httpars_oObj;
+    httpars_oObj.parser_request_init(&parser);
+
+    EXPECT_EQ(parser.msg.is_request, 1);
+    EXPECT_EQ(parser.position, POS_REQUEST_LINE);
+    // from parser_init()
+    EXPECT_EQ(parser.http_error_code, HTTP_BAD_REQUEST);
+    EXPECT_EQ(parser.msg.initialized, 1);
+}
+
+TEST(HttpparserTestSuite, parser_request_init_a_nullptr) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    if (old_code) {
+        ::std::cout << "[ BUG!     ] A nullptr to a parser structure must not "
+                       "segfault.\n";
+    } else {
+        // Test Unit
+        Chttpparser_old httpars_oObj;
+        ASSERT_EXIT((httpars_oObj.parser_request_init(nullptr), exit(0)),
+                    ::testing::ExitedWithCode(0), ".*")
+            << "   BUG! A nullptr to a parser structure must not segfault.";
+    }
+}
+
+TEST(HttpparserTestSuite, parser_response_init) {
+    http_parser_t parser;
+    ::memset(&parser, 0xaa, sizeof(http_parser_t));
+
+    // Test Unit
+    Chttpparser_old httpars_oObj;
+    httpars_oObj.parser_response_init(&parser, HTTPMETHOD_NOTIFY);
+
+    EXPECT_EQ(parser.msg.is_request, 0);
+    EXPECT_EQ(parser.msg.request_method, HTTPMETHOD_NOTIFY);
+    EXPECT_EQ(parser.msg.amount_discarded, (size_t)0);
+    EXPECT_EQ(parser.position, POS_RESPONSE_LINE);
+    // from parser_init()
+    EXPECT_EQ(parser.http_error_code, HTTP_BAD_REQUEST);
+    EXPECT_EQ(parser.msg.initialized, 1);
+}
+
+TEST(HttpparserTestSuite, parser_response_init_a_nullptr) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    if (old_code) {
+        ::std::cout << "[ BUG!     ] A nullptr to a parser structure must not "
+                       "segfault.\n";
+    } else {
+        // Test Unit
+        Chttpparser_old httpars_oObj;
+        ASSERT_EXIT(
+            (httpars_oObj.parser_response_init(nullptr, HTTPMETHOD_NOTIFY),
+             exit(0)),
+            ::testing::ExitedWithCode(0), ".*")
+            << "   BUG! A nullptr to a parser structure must not segfault.";
+    }
 }
 
 } // namespace upnplib
 
 //
 int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    // ::testing::InitGoogleMock(&argc, argv);
-
-    // Parse for upnplib arguments prefixed with '--upnplib'. InitGoogleTest()
-    // has removed its options prefixed with '--gtest' from the arguments and
-    // corrected argc accordingly.
-    if (argc > 2) {
-        std::cerr
-            << "Too many arguments supplied. Valid only:\n--upnplib_old_code"
-            << std::endl;
-        return EXIT_FAILURE;
-    }
-    if (argc == 2) {
-        if (strncmp(argv[1], "--upnplib_old_code", 18) == 0) {
-            upnplib::old_code = true;
-        } else {
-            std::cerr << "Unknown argument. Valid only:\n--upnplib_old_code"
-                      << std::endl;
-            return EXIT_FAILURE;
-        }
-    }
-
-    int rc = RUN_ALL_TESTS();
-
-    // At least some information what we have tested.
-    if (upnplib::old_code)
-        std::cout << "             Tested UPnPlib old code.\n";
-    else
-        std::cout << "             Tested UPnPlib new code.\n";
-
-    return rc;
+    ::testing::InitGoogleMock(&argc, argv);
+#include "upnplib/gtest_main.inc"
 }

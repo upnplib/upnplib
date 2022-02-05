@@ -35,7 +35,7 @@ In general we refere Bjarne Stroustrup [C++ Core Guidelines](https://isocpp.gith
 - [Pull methods outside of a class](https://www.fluentcpp.com/2017/06/20/interface-principle-cpp/), whenever it is possible.
 - Friend classes and friend functions are not used.
 - There is a rule saying "[Do not use underscores in test suite names and test names](https://google.github.io/googletest/faq.html#why-should-test-suite-names-and-test-names-not-contain-underscore)". Because we know the problems we are free to violate the rule for readability with the following restrictions: test suite names only written in "camel case", test names are written in "snake case" without leading and trailing underscore.
-- nullptr is a valid entry and should never cause a segmentation fault.
+- nullptr is a valid entry and should never cause a segmentation fault. Functions and methods return successful.
 
 ## Git Commit Messages
 The [Udacity Git Commit Message Style Guide](https://udacity.github.io/git-styleguide/) served as a template.
@@ -110,5 +110,5 @@ The footer is optional and is used to reference issue tracker IDs.
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2022-01-27
+// Redistribution only with this Copyright remark. Last modified: 2022-02-05
 </sup></sup>

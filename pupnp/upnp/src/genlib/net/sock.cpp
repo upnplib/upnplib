@@ -200,9 +200,9 @@ static int sock_read_write(
     timeout.tv_sec = *timeoutSecs;
     timeout.tv_usec = 0;
     while (1) {
-        // BUG! To get correct error messages from the system call for checking
-        //      signals EINTR (see below) the errno must be resetted. I have
-        //      seen an endless loop here with old setting of errno.
+        // Ingo: BUG! To get correct error messages from the system call for
+        // checking signals EINTR (see below) the errno must be resetted. I have
+        // seen an endless loop here with old contents of errno.
         // errno = 0;
         if (*timeoutSecs < 0) {
             retCode = upnplib::sys_select_h->select(sockfd + 1, &readSet,
@@ -262,7 +262,7 @@ static int sock_read_write(
 #ifdef SO_NOSIGPIPE
                     setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &old, olen);
 #endif
-                    // BUG! Should return UPNP_E_SOCKET_ERROR
+                    // Ingo: BUG! Should return UPNP_E_SOCKET_ERROR
                     return (int)num_written;
                 }
                 byte_left -= (size_t)num_written;

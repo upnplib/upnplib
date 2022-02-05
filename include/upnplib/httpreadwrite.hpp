@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-19
+// Redistribution only with this Copyright remark. Last modified: 2022-02-03
 
 #ifndef INCLUDE_UPNPLIB_HTTPREADWRITE_HPP
 #define INCLUDE_UPNPLIB_HTTPREADWRITE_HPP
@@ -35,7 +35,7 @@ class Ihttpreadwrite {
             uri_type* url, uri_type* fixed_url) = 0;
     virtual int http_FixStrUrl( // gtest available
             const char* urlstr, size_t urlstrlen, uri_type* fixed_url) = 0;
-    virtual SOCKET http_Connect(
+    virtual SOCKET http_Connect( // gtest available
             uri_type* destination_url, uri_type* url) = 0;
     virtual int http_RecvMessage(
             SOCKINFO* info, http_parser_t* parser, http_method_t request_method,

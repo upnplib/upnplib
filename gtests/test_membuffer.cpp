@@ -968,8 +968,7 @@ TEST(MembufferTestSuite, membuffer_attach_with_empty_string_buffer) {
     mbObj.membuffer_destroy(&mbuf);
 }
 
-TEST(MembufferTestSuite,
-     membuffer_attach_with_empty_string_buffer_but_buffer_length) {
+TEST(MembufferTestSuite, membuffer_attach_empty_str_buffer_but_buffer_length) {
     membuffer mbuf{};
 
     Cmembuffer mbObj{};
