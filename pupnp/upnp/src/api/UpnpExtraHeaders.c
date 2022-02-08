@@ -8,7 +8,7 @@
  *
  * \author Marcelo Roberto Jimenez
  */
-//#include "config.h"
+#include "config.h"
 
 #include "UpnpExtraHeaders.h"
 

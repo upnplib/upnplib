@@ -42,7 +42,7 @@
 #define _GNU_SOURCE /* For strcasestr() in string.h */
 #endif
 
-//#include "config.h"
+#include "config.h"
 
 #include "httpparser.hpp"
 

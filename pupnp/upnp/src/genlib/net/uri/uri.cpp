@@ -49,7 +49,7 @@
 #define snprintf _snprintf
 #endif
 #endif
-//#include "config.h"
+#include "config.h"
 
 #include "upnpapi.hpp"
 #include "uri.hpp"

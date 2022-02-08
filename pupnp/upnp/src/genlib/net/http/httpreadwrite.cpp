@@ -39,7 +39,7 @@
  * It defines functions to receive messages, process messages, send messages.
  */
 
-//#include "config.h"
+#include "config.h"
 
 #include "httpreadwrite.hpp"
 

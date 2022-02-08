@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-01-22
+# Redistribution only with this Copyright remark. Last modified: 2022-02-08
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(UPNP_CORE VERSION 0007
+project(UPNP_CORE VERSION 0008
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -14,6 +14,9 @@ project(UPNP_CORE VERSION 0007
 # Source files and compile settings
 #----------------------------------
 # TODO: Remove references to '${PUPNP_IXML_SOURCE_DIR}' if possible
+
+set(UPNPLIB_HAVE_TOOLS  YES)
+set(UPNPLIB_HAVE_CLIENT NO)
 
 include_directories(
     ${UPnPlib_BINARY_DIR}
@@ -59,6 +62,7 @@ set(UPNP_SOURCE_FILES
 
     ${PROJECT_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
     ${PROJECT_SOURCE_DIR}/src/api/UpnpString.cpp
+    $<$<BOOL:${UPNPLIB_HAVE_TOOLS}>:${PROJECT_SOURCE_DIR}/src/api/upnptools.cpp>
     ${PROJECT_SOURCE_DIR}/src/api/upnpapi.cpp
     $<$<CONFIG:Debug>:${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
@@ -66,6 +70,23 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/mockObj.cpp
     $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/mockObj_win32.cpp>
     $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/mockObj_unix.cpp>
+)
+
+add_compile_definitions(
+#    $<$<BOOL:${UPNPLIB_HAVE_DEBUG}>:UPNP_HAVE_DEBUG>
+    $<$<BOOL:${UPNPLIB_HAVE_TOOLS}>:UPNP_HAVE_TOOLS>
+    $<$<BOOL:${UPNPLIB_HAVE_CLIENT}>:UPNP_HAVE_CLIENT>
+#    $<$<BOOL:${UPNPLIB_HAVE_DEVICE}>:UPNP_HAVE_DEVICE>
+#    $<$<BOOL:${UPNPLIB_HAVE_WEBSERVER}>:UPNP_HAVE_WEBSERVER>
+#    $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:UPNP_HAVE_SSDP>
+#    $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:UPNP_HAVE_OPTSSDP>
+#    $<$<BOOL:${UPNPLIB_HAVE_SOAP}>:UPNP_HAVE_SOAP>
+#    $<$<BOOL:${UPNPLIB_HAVE_GENA}>:UPNP_HAVE_GENA>
+#    $<$<BOOL:${UPNPLIB_ENABLE_IPV6}>:UPNP_ENABLE_IPV6>
+#    $<$<BOOL:${UPNPLIB_ENABLE_OPEN_SSL}>:UPNP_ENABLE_OPEN_SSL>
+#    $<$<BOOL:${UPNPLIB_ENABLE_BLOCKING_TCP_CONNECTIONS}>:UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS>
+#    $<$<BOOL:${UPNPLIB_HAVE_DEBUG}>:UPNP_HAVE_DEBUG>
+#    $<$<BOOL:${IXML_HAVE_SCRIPTSUPPORT}>:IXML_HAVE_SCRIPTSUPPORT>
 )
 
 add_compile_options(
@@ -144,7 +165,7 @@ else() # WIN32
     #---------------
     add_library(upnplib_static_win STATIC ${UPNP_SOURCE_FILES})
     set_target_properties(upnplib_static_win PROPERTIES
-            OUTPUT_NAME upnplibStatic
+            OUTPUT_NAME upnplib_Static
     )
     target_compile_definitions(upnplib_static_win
             #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>

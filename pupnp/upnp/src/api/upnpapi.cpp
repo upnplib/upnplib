@@ -40,7 +40,7 @@
  * \file
  */
 
-//#include "config.h"
+#include "config.h"
 #include "upnpapi.hpp"
 
 #ifdef _WIN32

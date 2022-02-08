@@ -19,7 +19,7 @@
  * \brief UpnpString object implementation.
  */
 
-//#include "config.h"
+#include "config.h"
 #include "autoconfig.h"
 
 #include "UpnpString.h"

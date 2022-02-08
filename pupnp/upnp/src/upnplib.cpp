@@ -3,7 +3,7 @@
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-05
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,12 +32,12 @@
  *************************************************************************/
 
 #include "FreeList.hpp"
-#include "pthread.h"
-#include "upnpconfig.h"
 #include "upnpdebug.hpp"
+#include "upnptools.hpp"
 
 #include <iostream>
 #include <sstream>
+#include <string.h>
 
 namespace upnplib {
 
@@ -55,10 +55,26 @@ void* library_info(void*) {
 /*
  * Check library optional features
  */
+#if DEBUG
+    msg << "DEBUG \t\t\t= yes\n";
+#else
+    msg << "DEBUG \t\t\t= no\n";
+#endif
+
 #if UPNP_HAVE_DEBUG
     msg << "UPNP_HAVE_DEBUG \t= yes\n";
 #else
     msg << "UPNP_HAVE_DEBUG \t= no\n";
+#endif
+
+#if UPNP_HAVE_TOOLS
+    const char* errmsg = UpnpGetErrorMessage(UPNP_E_SUCCESS);
+    if (strcmp(errmsg, "UPNP_E_SUCCESS") == 0)
+        msg << "UPNP_HAVE_TOOLS \t= yes\n";
+    else
+        msg << "UPNP_HAVE_TOOLS \t= yes, but does not return UPNP_E_SUCCESS\n";
+#else
+    msg << "UPNP_HAVE_TOOLS \t= no\n";
 #endif
 
 #if UPNP_HAVE_CLIENT
@@ -77,12 +93,6 @@ void* library_info(void*) {
     msg << "UPNP_HAVE_WEBSERVER \t= yes\n";
 #else
     msg << "UPNP_HAVE_WEBSERVER \t= no\n";
-#endif
-
-#if UPNP_HAVE_TOOLS
-    msg << "UPNP_HAVE_TOOLS \t= yes\n";
-#else
-    msg << "UPNP_HAVE_TOOLS \t= no\n";
 #endif
 
     msg << "----------------------------------\n";
