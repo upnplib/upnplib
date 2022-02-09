@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-17
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-09
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -56,7 +56,6 @@
 #include "httpreadwrite.hpp"
 //#include "membuffer.h"
 //#include "soaplib.h"
-//#include "ssdplib.h"
 //#include "sysdep.h"
 //#include "uuid.h"
 
@@ -64,6 +63,10 @@
 //#include "gena.h"
 //#include "miniserver.h"
 //#include "service_table.h"
+
+//#ifdef UPNPLIB_HAVE_CLIENT
+#include "ssdplib.hpp"
+//#endif
 
 #ifdef INTERNAL_WEB_SERVER
 //#include "urlconfig.h"

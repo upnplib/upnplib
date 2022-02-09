@@ -7,10 +7,6 @@
 #include <cstddef>
 #include "config.h"
 
-#if defined __cplusplus && defined _WIN32
-extern "C" {
-#endif
-
 /*! Contains interface index. */
 unsigned int gIF_INDEX = (unsigned)-1;
 
@@ -18,7 +14,3 @@ unsigned int gIF_INDEX = (unsigned)-1;
  * packet. Content-Length exceeding this size will be not processed and
  * error 413 (HTTP Error Code) will be returned to the remote end point. */
 size_t g_maxContentLength = DEFAULT_SOAP_CONTENT_LENGTH;
-
-#if defined __cplusplus && defined _WIN32
-} // extern "C"
-#endif

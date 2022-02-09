@@ -6,6 +6,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-09
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -993,27 +995,27 @@ EXPORT_SPEC int UpnpFinish(void);
 //         /*! [out] Pointer to a variable to store the new control point handle.
 //          */
 //         UpnpClient_Handle *Hnd);
-// 
-// /*!
-//  * \brief Unregisters a control point application, unsubscribing all active
-//  * subscriptions.
-//  *
-//  * This function unregisters a client registered with UpnpRegisterClient. After
-//  * this call, the \b UpnpClient_Handle is no longer valid. The UPnP Library
-//  * generates no more callbacks after this function returns.
-//  *
-//  * \b UpnpUnRegisterClient is a synchronous call and generates no
-//  * callbacks.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control point
-//  * handle.
-//  */
-// EXPORT_SPEC int UpnpUnRegisterClient(
-//         /*! [in] The handle of the control point instance to unregister. */
-//         UpnpClient_Handle Hnd);
-// 
+
+/*!
+ * \brief Unregisters a control point application, unsubscribing all active
+ * subscriptions.
+ *
+ * This function unregisters a client registered with UpnpRegisterClient. After
+ * this call, the \b UpnpClient_Handle is no longer valid. The UPnP Library
+ * generates no more callbacks after this function returns.
+ *
+ * \b UpnpUnRegisterClient is a synchronous call and generates no
+ * callbacks.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control point
+ * handle.
+ */
+EXPORT_SPEC int UpnpUnRegisterClient(
+        /*! [in] The handle of the control point instance to unregister. */
+        UpnpClient_Handle Hnd);
+
 // /*!
 //  * \deprecated Use \b UpnpSetMaxContentLength instead.
 //  *

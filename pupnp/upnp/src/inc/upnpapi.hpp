@@ -32,20 +32,16 @@
  *
  ******************************************************************************/
 
-#ifndef UPNPAPI_H
-#define UPNPAPI_H
+#ifndef UPNPAPI_HPP
+#define UPNPAPI_HPP
 
 /*!
  * \file
  */
 
 #include "VirtualDir.h" /* for struct VirtualDirCallbacks */
-#include "client_table.h"
+#include "client_table.hpp"
 //#include "upnp.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #define MAX_INTERFACES 256
 
@@ -307,8 +303,4 @@ int PrintHandleInfo(
 
 extern WebServerState bWebServerState;
 
-#ifdef __cplusplus
-} // extern "C"
-#endif
-
-#endif /* UPNPAPI_H */
+#endif /* UPNPAPI_HPP */

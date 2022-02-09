@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-02-08
+# Redistribution only with this Copyright remark. Last modified: 2022-02-09
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -16,7 +16,7 @@ project(UPNP_CORE VERSION 0008
 # TODO: Remove references to '${PUPNP_IXML_SOURCE_DIR}' if possible
 
 set(UPNPLIB_HAVE_TOOLS  YES)
-set(UPNPLIB_HAVE_CLIENT NO)
+set(UPNPLIB_HAVE_CLIENT YES)
 
 include_directories(
     ${UPnPlib_BINARY_DIR}

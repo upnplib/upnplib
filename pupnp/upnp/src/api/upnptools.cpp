@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-07
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-09
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,7 +32,7 @@
  *
  **************************************************************************/
 
-#include "config.h"
+#include "config.h" // for EXCLUDE_DOM
 
 /*!
  * \file
@@ -51,11 +51,11 @@
 /*! Maximum action header buffer length. */
 #define HEADER_LENGTH 2000
 
-#ifdef _WIN32
-#if defined(_MSC_VER) && _MSC_VER < 1900
-#define snprintf _snprintf
-#endif
-#endif
+// #ifdef _WIN32
+// #if defined(_MSC_VER) && _MSC_VER < 1900
+// #define snprintf _snprintf
+// #endif
+// #endif
 
 /*!
  * \brief Structure to maintain a error code and string associated with the
