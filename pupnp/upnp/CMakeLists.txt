@@ -11,12 +11,18 @@ project(UPNP_CORE VERSION 0008
 # This contains all settings to compile the library dynamically and static.
 #==========================================================================
 
+# Options for this Subproject
+#----------------------------
+# These options are all handled only in this configuration file.
+
+set(UPNPLIB_HAVE_TOOLS  NO)
+set(UPNPLIB_HAVE_CLIENT NO)
+set(UPNPLIB_HAVE_DEVICE YES)
+
+
 # Source files and compile settings
 #----------------------------------
 # TODO: Remove references to '${PUPNP_IXML_SOURCE_DIR}' if possible
-
-set(UPNPLIB_HAVE_TOOLS  YES)
-set(UPNPLIB_HAVE_CLIENT YES)
 
 include_directories(
     ${UPnPlib_BINARY_DIR}
@@ -55,6 +61,7 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
+    $<$<BOOL:${UPNPLIB_HAVE_DEVICE}>:${PROJECT_SOURCE_DIR}/src/genlib/service-table/service_table.cpp>
 
     ${PROJECT_SOURCE_DIR}/src/genlib/util/list.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/util/membuffer.cpp
@@ -62,9 +69,9 @@ set(UPNP_SOURCE_FILES
 
     ${PROJECT_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
     ${PROJECT_SOURCE_DIR}/src/api/UpnpString.cpp
-    $<$<BOOL:${UPNPLIB_HAVE_TOOLS}>:${PROJECT_SOURCE_DIR}/src/api/upnptools.cpp>
     ${PROJECT_SOURCE_DIR}/src/api/upnpapi.cpp
     $<$<CONFIG:Debug>:${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp>
+    $<$<BOOL:${UPNPLIB_HAVE_TOOLS}>:${PROJECT_SOURCE_DIR}/src/api/upnptools.cpp>
 
     ${PROJECT_SOURCE_DIR}/src/global.cpp
     ${PROJECT_SOURCE_DIR}/src/mockObj.cpp
@@ -76,7 +83,7 @@ add_compile_definitions(
 #    $<$<BOOL:${UPNPLIB_HAVE_DEBUG}>:UPNP_HAVE_DEBUG>
     $<$<BOOL:${UPNPLIB_HAVE_TOOLS}>:UPNP_HAVE_TOOLS>
     $<$<BOOL:${UPNPLIB_HAVE_CLIENT}>:UPNP_HAVE_CLIENT>
-#    $<$<BOOL:${UPNPLIB_HAVE_DEVICE}>:UPNP_HAVE_DEVICE>
+    $<$<BOOL:${UPNPLIB_HAVE_DEVICE}>:UPNP_HAVE_DEVICE>
 #    $<$<BOOL:${UPNPLIB_HAVE_WEBSERVER}>:UPNP_HAVE_WEBSERVER>
 #    $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:UPNP_HAVE_SSDP>
 #    $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:UPNP_HAVE_OPTSSDP>

@@ -1,3 +1,6 @@
+// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-02-10
+
 #ifndef CLIENT_TABLE_HPP
 #define CLIENT_TABLE_HPP
 
@@ -5,14 +8,10 @@
  * \file
  */
 
-// #ifdef __cplusplus
-// extern "C" {
-// #endif
-
 #include "GenlibClientSubscription.hpp"
 #include "TimerThread.hpp"
 //#include "UpnpString.h"
-#include "service_table.h"
+#include "service_table.hpp"
 //#include "upnp.h"
 //#include "upnp_timeout.h"
 //#include "uri.h"
@@ -77,9 +76,5 @@ GenlibClientSubscription* GetClientSubActualSID(
     token* sid);
 
 #endif /* INCLUDE_CLIENT_APIS */
-
-// #ifdef __cplusplus
-// }
-// #endif /* __cplusplus */
 
 #endif /* CLIENT_TABLE_HPP */

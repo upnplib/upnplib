@@ -3486,7 +3486,7 @@ Upnp_Handle_Type GetDeviceHandleInfo(UpnpDevice_Handle start, int AddressFamily,
 Upnp_Handle_Type GetDeviceHandleInfoForPath(
     const char* path, int AddressFamily, UpnpDevice_Handle* device_handle_out,
     struct Handle_Info** HndInfo, service_info** serv_info) {
-#ifdef INCLUDE_DEVICE_APIS
+#if defined INCLUDE_DEVICE_APIS && EXCLUDE_SOAP == 0
     /* Check if we've got a registered device of the address family
      * specified. */
     if ((AddressFamily == AF_INET && UpnpSdkDeviceRegisteredV4 == 0) ||
