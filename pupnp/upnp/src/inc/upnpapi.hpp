@@ -301,6 +301,16 @@ int PrintHandleInfo(
     /*! [in] Handle index. */
     UpnpClient_Handle Hnd);
 
+/*! */
 extern WebServerState bWebServerState;
+
+/*! */
+extern WebCallback_HostValidate gWebCallback_HostValidate;
+
+/*! */
+extern void* gWebCallback_HostValidateCookie;
+
+/*! */
+extern int gAllowLiteralHostRedirection;
 
 #endif /* UPNPAPI_HPP */

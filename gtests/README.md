@@ -32,9 +32,13 @@ skip the test. An example for this conditional check you can find in the
 test_template.cpp. If you want to see what tests are skipped on Github Actions
 you can execute the test for example with:
 
-    GITHUB_ACTIONS="true" ./build/test_template.a
+    GITHUB_ACTIONS=true ./build/test_template.a
+
+To run all tests local from the projects root directory with GITHUB_ACTIONS I use:
+
+    (cd ./gtests/build && GITHUB_ACTIONS=true ctest -R 'test_.+' --output-on-failure)
 
 <br /><pre>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2021-08-22
+// Redistribution only with this Copyright remark. Last modified: 2022-02-12
 </pre>

@@ -1,5 +1,5 @@
-#ifndef UPNP_H
-#define UPNP_H
+#ifndef UPNPLIB_UPNP_H
+#define UPNPLIB_UPNP_H
 
 /*******************************************************************************
  *
@@ -7,7 +7,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-09
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-12
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -403,7 +403,7 @@
 //#include "UpnpDiscovery.h"
 //#include "UpnpEvent.h"
 //#include "UpnpEventSubscribe.h"
-#include "UpnpFileInfo.h"
+#include "UpnpFileInfo.hpp"
 //#include "UpnpStateVarComplete.h"
 //#include "UpnpStateVarRequest.h"
 //#include "UpnpSubscriptionRequest.h"
@@ -511,70 +511,72 @@ typedef enum Upnp_DescType_e Upnp_DescType;
  * @{
  */
 
-// /*!
-//  * \brief Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6).
-//  *
-//  * This function must be called before any other API function can be called.
-//  * It should be called only once. Subsequent calls to this API return a
-//  * \c UPNP_E_INIT error code.
-//  *
-//  * Optionally, the application can specify an interface name (in the
-//  * case of a multi-homed configuration) and a port number to use for
-//  * all UPnP operations.  Since a port number can be used only by one
-//  * process, multiple processes using the SDK must specify
-//  * different port numbers.
-//  *
-//  * If unspecified, the SDK will use the first suitable interface and an
-//  * arbitrary port.
-//  *
-//  * This call is synchronous.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist
-//  *             to initialize the SDK.
-//  *     \li \c UPNP_E_INIT: The SDK is already initialized.
-//  *     \li \c UPNP_E_INIT_FAILED: The SDK initialization
-//  *             failed for an unknown reason.
-//  *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
-//  *     \li \c UPNP_E_LISTEN: An error occurred listening to a socket.
-//  *     \li \c UPNP_E_OUTOF_SOCKET: An error ocurred creating a socket.
-//  *     \li \c UPNP_E_INTERNAL_ERROR: An internal error ocurred.
-//  *     \li \c UPNP_E_INVALID_INTERFACE: IfName is invalid or does not
-//  *             have a valid IPv4 or IPv6 addresss configured.
-//  */
-// EXPORT_SPEC int UpnpInit2(
-//         /*! The interface name to use by the UPnP SDK operations.
-//          * Examples: "eth0", "xl0", "Local Area Connection", \c NULL to
-//          * use the first suitable interface. */
-//         const char *IfName,
-//         /*!  Local Port to listen for incoming connections.
-//          * \c NULL will pick an arbitrary free port. */
-//         unsigned short DestPort);
-// 
-// /*!
-//  * \brief Initializes the OpenSSL library, and the OpenSSL context for use
-//  * with pupnp
-//  *
-//  * \note This method is only enabled if pupnp is compiled with open-ssl support.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INIT: The SDK is already initialized.
-//  *     \li \c UPNP_E_INIT_FAILED: The SDK initialization
-//  *             failed for an unknown reason.
-//  */
-// #ifdef UPNP_ENABLE_OPEN_SSL
-// EXPORT_SPEC int UpnpInitSslContext(
-//         /*! If set to 1 initializes the OpenSSL library. Otherwise the
-//          * application is responsible for initializing it. If set to 1, then
-//          * OpenSSL is intialized
-//          *  with all error strings, and all ciphers loaded. */
-//         int initOpenSslLib,
-//         /*! The SSL_METHOD to use to create the context. See OpenSSL docs
-//          * for more info */
-//         const SSL_METHOD *sslMethod);
-// #endif
+#if false
+/*!
+ * \brief Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6).
+ *
+ * This function must be called before any other API function can be called.
+ * It should be called only once. Subsequent calls to this API return a
+ * \c UPNP_E_INIT error code.
+ *
+ * Optionally, the application can specify an interface name (in the
+ * case of a multi-homed configuration) and a port number to use for
+ * all UPnP operations.  Since a port number can be used only by one
+ * process, multiple processes using the SDK must specify
+ * different port numbers.
+ *
+ * If unspecified, the SDK will use the first suitable interface and an
+ * arbitrary port.
+ *
+ * This call is synchronous.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist
+ *             to initialize the SDK.
+ *     \li \c UPNP_E_INIT: The SDK is already initialized.
+ *     \li \c UPNP_E_INIT_FAILED: The SDK initialization
+ *             failed for an unknown reason.
+ *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
+ *     \li \c UPNP_E_LISTEN: An error occurred listening to a socket.
+ *     \li \c UPNP_E_OUTOF_SOCKET: An error ocurred creating a socket.
+ *     \li \c UPNP_E_INTERNAL_ERROR: An internal error ocurred.
+ *     \li \c UPNP_E_INVALID_INTERFACE: IfName is invalid or does not
+ *             have a valid IPv4 or IPv6 addresss configured.
+ */
+EXPORT_SPEC int UpnpInit2(
+        /*! The interface name to use by the UPnP SDK operations.
+         * Examples: "eth0", "xl0", "Local Area Connection", \c NULL to
+         * use the first suitable interface. */
+        const char *IfName,
+        /*!  Local Port to listen for incoming connections.
+         * \c NULL will pick an arbitrary free port. */
+        unsigned short DestPort);
+
+/*!
+ * \brief Initializes the OpenSSL library, and the OpenSSL context for use
+ * with pupnp
+ *
+ * \note This method is only enabled if pupnp is compiled with open-ssl support.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INIT: The SDK is already initialized.
+ *     \li \c UPNP_E_INIT_FAILED: The SDK initialization
+ *             failed for an unknown reason.
+ */
+#ifdef UPNP_ENABLE_OPEN_SSL
+EXPORT_SPEC int UpnpInitSslContext(
+        /*! If set to 1 initializes the OpenSSL library. Otherwise the
+         * application is responsible for initializing it. If set to 1, then
+         * OpenSSL is intialized
+         *  with all error strings, and all ciphers loaded. */
+        int initOpenSslLib,
+        /*! The SSL_METHOD to use to create the context. See OpenSSL docs
+         * for more info */
+        const SSL_METHOD *sslMethod);
+#endif
+#endif // #if false
 
 /*!
  * \brief Terminates the Linux SDK for UPnP Devices.
@@ -597,272 +599,274 @@ typedef enum Upnp_DescType_e Upnp_DescType;
  */
 EXPORT_SPEC int UpnpFinish(void);
 
-// /*!
-//  * \brief Returns the internal server IPv4 UPnP listening port.
-//  *
-//  * If '0' is used as the port number in \b UpnpInit2, then this function can be
-//  * used to retrieve the actual port allocated to the SDK.
-//  *
-//  * \return
-//  * 	\li On success: The port on which an internal server is listening for
-//  *		IPv4 UPnP related requests.
-//  *	\li On error: 0 is returned if \b UpnpInit2 has not succeeded.
-//  */
-// EXPORT_SPEC unsigned short UpnpGetServerPort(void);
-// 
-// /*!
-//  * \brief Returns the internal server IPv6 link-local (LLA) UPnP listening port.
-//  *
-//  * If '0' is used as the port number in \b UpnpInit2, then this function can be
-//  * used to retrieve the actual port allocated to the SDK.
-//  *
-//  * \return
-//  * 	\li On success: The port on which an internal server is listening for
-//  *		IPv6 link-local (LLA) UPnP related requests.
-//  * 	\li On error: 0 is returned if \b UpnpInit2 has not succeeded.
-//  */
-// EXPORT_SPEC unsigned short UpnpGetServerPort6(void);
-// 
-// /*!
-//  * \brief Returns the internal server IPv6 ULA or GUA UPnP listening port.
-//  *
-//  * If '0' is used as the port number in \b UpnpInit2, then this function can be
-//  * used to retrieve the actual port allocated to the SDK.
-//  *
-//  * \return
-//  * 	\li On success: The port on which an internal server is listening for
-//  *		IPv6 ULA or GUA UPnP related requests.
-//  * 	\li On error: 0 is returned if \b UpnpInit2 has not succeeded.
-//  */
-// EXPORT_SPEC unsigned short UpnpGetServerUlaGuaPort6(void);
-// 
-// /*!
-//  * \brief Returns the local IPv4 listening ip address.
-//  *
-//  * If \c NULL is used as the interface in \b UpnpInit2, then this function can
-//  * be used to retrieve the actual interface address on which device is running.
-//  *
-//  * \return
-//  * 	\li On success: The IPv4 address on which an internal server is
-//  * 		listening for UPnP related requests.
-//  * 	\li On error: \c NULL is returned if \b UpnpInit2 has not succeeded.
-//  */
-// EXPORT_SPEC char *UpnpGetServerIpAddress(void);
-// 
-// /*!
-//  * \brief Returns the IPv6 link-local listening ip address.
-//  *
-//  * If \c NULL is used as the interface in \b UpnpInit2, then this function can
-//  * be used to retrieve the actual interface address on which device is running.
-//  *
-//  * \return
-//  * 	\li On success: The IPv6 link-local address (LLA) on which an internal
-//  * 		server is listening for UPnP related requests.
-//  * 	\li On error: \c NULL is returned if \b UpnpInit2 has not succeeded.
-//  */
-// EXPORT_SPEC char *UpnpGetServerIp6Address(void);
-// 
-// /*!
-//  * \brief Returns the IPv6 unique-local or globally-unique listening ip address.
-//  *
-//  * If \c NULL is used as the interface in \b UpnpInit2, then this function can
-//  * be used to retrieve the actual interface address on which device is running.
-//  *
-//  * \return
-//  * 	\li On success: The IPv6 unique-local or globally-unique address
-//  * 		(ULA or GUA) on which an internal server is listening for UPnP
-//  *		related requests.
-//  * 	\li On error: \c NULL is returned if \b UpnpInit2 has not succeeded.
-//  */
-// EXPORT_SPEC char *UpnpGetServerUlaGuaIp6Address(void);
-// /*!
-//  * \brief Registers a device application with the UPnP Library.
-//  *
-//  * A device application cannot make any other API calls until it registers
-//  * using this function.
-//  *
-//  * Device applications can also register as control points (see
-//  * \b UpnpRegisterClient to get a control point handle to perform control
-//  * point functionality).
-//  *
-//  * This is a synchronous call and does not generate any callbacks. Callbacks
-//  * can occur as soon as this function returns.
-//  *
-//  *  \return An integer representing one of the following:
-//  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *      \li \c UPNP_E_FINISH: The SDK is already terminated or is not
-//  *		initialized.
-//  *      \li \c UPNP_E_INVALID_DESC: The description document was not
-//  *		a valid device description.
-//  *      \li \c UPNP_E_INVALID_URL: The URL for the description document
-//  *              is not valid.
-//  *      \li \c UPNP_E_INVALID_PARAM: Either \b Callback or \b Hnd
-//  *              is not a valid pointer or \b DescURL is \c NULL.
-//  *      \li \c UPNP_E_NETWORK_ERROR: A network error occurred.
-//  *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *              to a socket.
-//  *      \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
-//  *              from a socket.
-//  *      \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
-//  *      \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting the
-//  *              socket.
-//  *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
-//  *              allocated.
-//  *      \li \c UPNP_E_OUTOF_MEMORY: There are insufficient resources to
-//  *              register this root device.
-//  */
-// EXPORT_SPEC int UpnpRegisterRootDevice(
-//         /*! [in] Pointer to a string containing the description URL for this
-//          * root device instance. */
-//         const char *DescUrl,
-//         /*! [in] Pointer to the callback function for receiving asynchronous
-//            events. */
-//         Upnp_FunPtr Callback,
-//         /*! [in] Pointer to user data returned with the callback function when
-//            invoked. */
-//         const void *Cookie,
-//         /*! [out] Pointer to a variable to store the new device handle. */
-//         UpnpDevice_Handle *Hnd);
-// 
-// /*!
-//  * \brief Registers a device application with the UPnP Library. Similar to
-//  * \b UpnpRegisterRootDevice, except that it also allows the description
-//  * document to be specified as a file or a memory buffer.
-//  *
-//  * The description can also be configured to have the correct IP and port
-//  * address.
-//  *
-//  * NOTE: For the configuration to be functional, the internal web server
-//  * MUST be present. In addition, the web server MUST be activated
-//  * (using \b UpnpSetWebServerRootDir) before calling this function.
-//  * The only condition where the web server can be absent is if the
-//  * description document is specified as a URL and no configuration is
-//  * required (i.e. <tt>config_baseURL = 0</tt>.)
-//  *
-//  * This is a synchronous call and does not generate any callbacks. Callbacks
-//  * can occur as soon as this function returns.
-//  *
-//  * Examples of using different types of description documents:
-//  * \verbatim
-//    1) Description specified as a URL:
-//          descriptionType == UPNPREG_URL_DESC
-//          description is the URL
-//          bufferLen = 0 (ignored)
-//    2) Description specified as a file:
-//          descriptionType == UPNPREG_FILENAME_DESC
-//          description is a filename
-//          bufferLen = 0 (ignored)
-//    3) Description specified as a memory buffer:
-//          descriptionType == UPNPREG_BUF_DESC
-//          description is pointer to a memory buffer
-//          bufferLen == length of memory buffer
-//    \endverbatim
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_FINISH: The SDK is already terminated or
-//  *                                is not initialized.
-//  *     \li \c UPNP_E_INVALID_DESC: The description document is not
-//  *             a valid device description.
-//  *     \li \c UPNP_E_INVALID_PARAM: Either \b Callback or \b Hnd
-//  *             is not a valid pointer or \b DescURL is \c NULL.
-//  *     \li \c UPNP_E_NETWORK_ERROR: A network error occurred.
-//  *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *             to a socket.
-//  *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
-//  *             from a socket.
-//  *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
-//  *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting the
-//  *             socket.
-//  *     \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
-//  *             allocated.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: There are insufficient resources to
-//  *             register this root device.
-//  *     \li \c UPNP_E_URL_TOO_BIG: Length of the URL is bigger than the
-//  *             internal buffer.
-//  *     \li \c UPNP_E_FILE_NOT_FOUND: The description file could not
-//  *             be found.
-//  *     \li \c UPNP_E_FILE_READ_ERROR: An error occurred reading the
-//  *             description file.
-//  *     \li \c UPNP_E_INVALID_URL: The URL to the description document
-//  *             is invalid.
-//  *     \li \c UPNP_E_EXT_NOT_XML: The URL to the description document
-//  *             or file should have a <tt>.xml</tt> extension.
-//  *     \li \c UPNP_E_NO_WEB_SERVER: The internal web server has been
-//  *             compiled out; the SDK cannot configure itself from the
-//  *             description document.
-//  */
-// EXPORT_SPEC int UpnpRegisterRootDevice2(
-//         /*! [in] The type of the description document. */
-//         Upnp_DescType descriptionType,
-//         /*! [in] Treated as a URL, file name or memory buffer depending on
-//          * description type. */
-//         const char *description,
-//         /*! [in] The length of memory buffer if passing a description in a
-//          * buffer, otherwise it is ignored. */
-//         size_t bufferLen,
-//         /*! [in] If nonzero, \c URLBase of description document is configured
-//          * and the description is served using the internal web server. */
-//         int config_baseURL,
-//         /*! [in] Pointer to the callback function for receiving asynchronous
-//            events. */
-//         Upnp_FunPtr Fun,
-//         /*! [in] Pointer to user data returned with the callback function when
-//          * invoked. */
-//         const void *Cookie,
-//         /*! [out] Pointer to a variable to store the new device handle. */
-//         UpnpDevice_Handle *Hnd);
-// 
-// /*!
-//  * \brief Registers a device application for a specific address family with
-//  * the UPnP library.
-//  *
-//  * A device application cannot make any other API calls until it registers
-//  * using this function. Device applications can also register as control
-//  * points (see \b UpnpRegisterClient to get a control point handle to perform
-//  * control point functionality).
-//  *
-//  * This is synchronous and does not generate any callbacks. Callbacks can occur
-//  * as soon as this function returns.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_FINISH: The SDK is already terminated or
-//  *                                is not initialized.
-//  *     \li \c UPNP_E_INVALID_DESC: The description document was not
-//  *             a valid device description.
-//  *     \li \c UPNP_E_INVALID_URL: The URL for the description document
-//  *             is not valid.
-//  *     \li \c UPNP_E_INVALID_PARAM: Either \b Callback or \b Hnd
-//  *             is not a valid pointer or \b DescURL is \c NULL.
-//  *     \li \c UPNP_E_NETWORK_ERROR: A network error occurred.
-//  *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *             to a socket.
-//  *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
-//  *             from a socket.
-//  *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
-//  *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting the
-//  *             socket.
-//  *     \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
-//  *             allocated.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: There are insufficient resources to
-//  *             register this root device.
-//  */
-// EXPORT_SPEC int UpnpRegisterRootDevice3(
-//         /*! [in] Pointer to a string containing the description URL for this
-//          * root device instance. */
-//         const char *DescUrl,
-//         /*! [in] Pointer to the callback function for receiving asynchronous
-//            events. */
-//         Upnp_FunPtr Callback,
-//         /*! [in] Pointer to user data returned with the callback function when
-//            invoked. */
-//         const void *Cookie,
-//         /*! [out] Pointer to a variable to store the new device handle. */
-//         UpnpDevice_Handle *Hnd,
-//         /*! [in] Address family of this device. Can be AF_INET for an IPv4
-//          * device, or AF_INET6 for an IPv6 device. Defaults to AF_INET. */
-//         int AddressFamily);
+#if false
+/*!
+ * \brief Returns the internal server IPv4 UPnP listening port.
+ *
+ * If '0' is used as the port number in \b UpnpInit2, then this function can be
+ * used to retrieve the actual port allocated to the SDK.
+ *
+ * \return
+ * 	\li On success: The port on which an internal server is listening for
+ *		IPv4 UPnP related requests.
+ *	\li On error: 0 is returned if \b UpnpInit2 has not succeeded.
+ */
+EXPORT_SPEC unsigned short UpnpGetServerPort(void);
+
+/*!
+ * \brief Returns the internal server IPv6 link-local (LLA) UPnP listening port.
+ *
+ * If '0' is used as the port number in \b UpnpInit2, then this function can be
+ * used to retrieve the actual port allocated to the SDK.
+ *
+ * \return
+ * 	\li On success: The port on which an internal server is listening for
+ *		IPv6 link-local (LLA) UPnP related requests.
+ * 	\li On error: 0 is returned if \b UpnpInit2 has not succeeded.
+ */
+EXPORT_SPEC unsigned short UpnpGetServerPort6(void);
+
+/*!
+ * \brief Returns the internal server IPv6 ULA or GUA UPnP listening port.
+ *
+ * If '0' is used as the port number in \b UpnpInit2, then this function can be
+ * used to retrieve the actual port allocated to the SDK.
+ *
+ * \return
+ * 	\li On success: The port on which an internal server is listening for
+ *		IPv6 ULA or GUA UPnP related requests.
+ * 	\li On error: 0 is returned if \b UpnpInit2 has not succeeded.
+ */
+EXPORT_SPEC unsigned short UpnpGetServerUlaGuaPort6(void);
+
+/*!
+ * \brief Returns the local IPv4 listening ip address.
+ *
+ * If \c NULL is used as the interface in \b UpnpInit2, then this function can
+ * be used to retrieve the actual interface address on which device is running.
+ *
+ * \return
+ * 	\li On success: The IPv4 address on which an internal server is
+ * 		listening for UPnP related requests.
+ * 	\li On error: \c NULL is returned if \b UpnpInit2 has not succeeded.
+ */
+EXPORT_SPEC char *UpnpGetServerIpAddress(void);
+
+/*!
+ * \brief Returns the IPv6 link-local listening ip address.
+ *
+ * If \c NULL is used as the interface in \b UpnpInit2, then this function can
+ * be used to retrieve the actual interface address on which device is running.
+ *
+ * \return
+ * 	\li On success: The IPv6 link-local address (LLA) on which an internal
+ * 		server is listening for UPnP related requests.
+ * 	\li On error: \c NULL is returned if \b UpnpInit2 has not succeeded.
+ */
+EXPORT_SPEC char *UpnpGetServerIp6Address(void);
+
+/*!
+ * \brief Returns the IPv6 unique-local or globally-unique listening ip address.
+ *
+ * If \c NULL is used as the interface in \b UpnpInit2, then this function can
+ * be used to retrieve the actual interface address on which device is running.
+ *
+ * \return
+ * 	\li On success: The IPv6 unique-local or globally-unique address
+ * 		(ULA or GUA) on which an internal server is listening for UPnP
+ *		related requests.
+ * 	\li On error: \c NULL is returned if \b UpnpInit2 has not succeeded.
+ */
+EXPORT_SPEC char *UpnpGetServerUlaGuaIp6Address(void);
+/*!
+ * \brief Registers a device application with the UPnP Library.
+ *
+ * A device application cannot make any other API calls until it registers
+ * using this function.
+ *
+ * Device applications can also register as control points (see
+ * \b UpnpRegisterClient to get a control point handle to perform control
+ * point functionality).
+ *
+ * This is a synchronous call and does not generate any callbacks. Callbacks
+ * can occur as soon as this function returns.
+ *
+ *  \return An integer representing one of the following:
+ *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *      \li \c UPNP_E_FINISH: The SDK is already terminated or is not
+ *		initialized.
+ *      \li \c UPNP_E_INVALID_DESC: The description document was not
+ *		a valid device description.
+ *      \li \c UPNP_E_INVALID_URL: The URL for the description document
+ *              is not valid.
+ *      \li \c UPNP_E_INVALID_PARAM: Either \b Callback or \b Hnd
+ *              is not a valid pointer or \b DescURL is \c NULL.
+ *      \li \c UPNP_E_NETWORK_ERROR: A network error occurred.
+ *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *              to a socket.
+ *      \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
+ *              from a socket.
+ *      \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
+ *      \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting the
+ *              socket.
+ *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
+ *              allocated.
+ *      \li \c UPNP_E_OUTOF_MEMORY: There are insufficient resources to
+ *              register this root device.
+ */
+EXPORT_SPEC int UpnpRegisterRootDevice(
+        /*! [in] Pointer to a string containing the description URL for this
+         * root device instance. */
+        const char *DescUrl,
+        /*! [in] Pointer to the callback function for receiving asynchronous
+           events. */
+        Upnp_FunPtr Callback,
+        /*! [in] Pointer to user data returned with the callback function when
+           invoked. */
+        const void *Cookie,
+        /*! [out] Pointer to a variable to store the new device handle. */
+        UpnpDevice_Handle *Hnd);
+
+/*!
+ * \brief Registers a device application with the UPnP Library. Similar to
+ * \b UpnpRegisterRootDevice, except that it also allows the description
+ * document to be specified as a file or a memory buffer.
+ *
+ * The description can also be configured to have the correct IP and port
+ * address.
+ *
+ * NOTE: For the configuration to be functional, the internal web server
+ * MUST be present. In addition, the web server MUST be activated
+ * (using \b UpnpSetWebServerRootDir) before calling this function.
+ * The only condition where the web server can be absent is if the
+ * description document is specified as a URL and no configuration is
+ * required (i.e. <tt>config_baseURL = 0</tt>.)
+ *
+ * This is a synchronous call and does not generate any callbacks. Callbacks
+ * can occur as soon as this function returns.
+ *
+ * Examples of using different types of description documents:
+ * \verbatim
+   1) Description specified as a URL:
+         descriptionType == UPNPREG_URL_DESC
+         description is the URL
+         bufferLen = 0 (ignored)
+   2) Description specified as a file:
+         descriptionType == UPNPREG_FILENAME_DESC
+         description is a filename
+         bufferLen = 0 (ignored)
+   3) Description specified as a memory buffer:
+         descriptionType == UPNPREG_BUF_DESC
+         description is pointer to a memory buffer
+         bufferLen == length of memory buffer
+   \endverbatim
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_FINISH: The SDK is already terminated or
+ *                                is not initialized.
+ *     \li \c UPNP_E_INVALID_DESC: The description document is not
+ *             a valid device description.
+ *     \li \c UPNP_E_INVALID_PARAM: Either \b Callback or \b Hnd
+ *             is not a valid pointer or \b DescURL is \c NULL.
+ *     \li \c UPNP_E_NETWORK_ERROR: A network error occurred.
+ *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *             to a socket.
+ *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
+ *             from a socket.
+ *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
+ *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting the
+ *             socket.
+ *     \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
+ *             allocated.
+ *     \li \c UPNP_E_OUTOF_MEMORY: There are insufficient resources to
+ *             register this root device.
+ *     \li \c UPNP_E_URL_TOO_BIG: Length of the URL is bigger than the
+ *             internal buffer.
+ *     \li \c UPNP_E_FILE_NOT_FOUND: The description file could not
+ *             be found.
+ *     \li \c UPNP_E_FILE_READ_ERROR: An error occurred reading the
+ *             description file.
+ *     \li \c UPNP_E_INVALID_URL: The URL to the description document
+ *             is invalid.
+ *     \li \c UPNP_E_EXT_NOT_XML: The URL to the description document
+ *             or file should have a <tt>.xml</tt> extension.
+ *     \li \c UPNP_E_NO_WEB_SERVER: The internal web server has been
+ *             compiled out; the SDK cannot configure itself from the
+ *             description document.
+ */
+EXPORT_SPEC int UpnpRegisterRootDevice2(
+        /*! [in] The type of the description document. */
+        Upnp_DescType descriptionType,
+        /*! [in] Treated as a URL, file name or memory buffer depending on
+         * description type. */
+        const char *description,
+        /*! [in] The length of memory buffer if passing a description in a
+         * buffer, otherwise it is ignored. */
+        size_t bufferLen,
+        /*! [in] If nonzero, \c URLBase of description document is configured
+         * and the description is served using the internal web server. */
+        int config_baseURL,
+        /*! [in] Pointer to the callback function for receiving asynchronous
+           events. */
+        Upnp_FunPtr Fun,
+        /*! [in] Pointer to user data returned with the callback function when
+         * invoked. */
+        const void *Cookie,
+        /*! [out] Pointer to a variable to store the new device handle. */
+        UpnpDevice_Handle *Hnd);
+
+/*!
+ * \brief Registers a device application for a specific address family with
+ * the UPnP library.
+ *
+ * A device application cannot make any other API calls until it registers
+ * using this function. Device applications can also register as control
+ * points (see \b UpnpRegisterClient to get a control point handle to perform
+ * control point functionality).
+ *
+ * This is synchronous and does not generate any callbacks. Callbacks can occur
+ * as soon as this function returns.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_FINISH: The SDK is already terminated or
+ *                                is not initialized.
+ *     \li \c UPNP_E_INVALID_DESC: The description document was not
+ *             a valid device description.
+ *     \li \c UPNP_E_INVALID_URL: The URL for the description document
+ *             is not valid.
+ *     \li \c UPNP_E_INVALID_PARAM: Either \b Callback or \b Hnd
+ *             is not a valid pointer or \b DescURL is \c NULL.
+ *     \li \c UPNP_E_NETWORK_ERROR: A network error occurred.
+ *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *             to a socket.
+ *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
+ *             from a socket.
+ *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
+ *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting the
+ *             socket.
+ *     \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
+ *             allocated.
+ *     \li \c UPNP_E_OUTOF_MEMORY: There are insufficient resources to
+ *             register this root device.
+ */
+EXPORT_SPEC int UpnpRegisterRootDevice3(
+        /*! [in] Pointer to a string containing the description URL for this
+         * root device instance. */
+        const char *DescUrl,
+        /*! [in] Pointer to the callback function for receiving asynchronous
+           events. */
+        Upnp_FunPtr Callback,
+        /*! [in] Pointer to user data returned with the callback function when
+           invoked. */
+        const void *Cookie,
+        /*! [out] Pointer to a variable to store the new device handle. */
+        UpnpDevice_Handle *Hnd,
+        /*! [in] Address family of this device. Can be AF_INET for an IPv4
+         * device, or AF_INET6 for an IPv6 device. Defaults to AF_INET. */
+        int AddressFamily);
+#endif // #if false
 
 /*!
  * \brief Registers a device application for a specific address family with
@@ -968,33 +972,35 @@ EXPORT_SPEC int UpnpUnRegisterRootDeviceLowPower(
         /*! RegistrationState as defined by UPnP Low Power. */
         int RegistrationState);
 
-// /*!
-//  * \brief Registers a control point application with the UPnP Library.
-//  *
-//  * A control point application cannot make any other API calls until it
-//  * registers using this function.
-//  *
-//  * \b UpnpRegisterClient is a synchronous call and generates no callbacks.
-//  * Callbacks can occur as soon as this function returns.
-//  *
-//  * \return An integer representing one of the following:
-//  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *      \li \c UPNP_E_FINISH: The SDK is already terminated or
-//  *                            is not initialized.
-//  *      \li \c UPNP_E_INVALID_PARAM: Either \b Callback or \b Hnd
-//  *              is not a valid pointer.
-//  *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *              register this control point.
-//  */
-// EXPORT_SPEC int UpnpRegisterClient(
-//         /*! [in] Pointer to a function for receiving asynchronous events. */
-//         Upnp_FunPtr Callback,
-//         /*! [in] Pointer to user data returned with the callback function when
-//            invoked. */
-//         const void *Cookie,
-//         /*! [out] Pointer to a variable to store the new control point handle.
-//          */
-//         UpnpClient_Handle *Hnd);
+#if false
+/*!
+ * \brief Registers a control point application with the UPnP Library.
+ *
+ * A control point application cannot make any other API calls until it
+ * registers using this function.
+ *
+ * \b UpnpRegisterClient is a synchronous call and generates no callbacks.
+ * Callbacks can occur as soon as this function returns.
+ *
+ * \return An integer representing one of the following:
+ *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *      \li \c UPNP_E_FINISH: The SDK is already terminated or
+ *                            is not initialized.
+ *      \li \c UPNP_E_INVALID_PARAM: Either \b Callback or \b Hnd
+ *              is not a valid pointer.
+ *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *              register this control point.
+ */
+EXPORT_SPEC int UpnpRegisterClient(
+        /*! [in] Pointer to a function for receiving asynchronous events. */
+        Upnp_FunPtr Callback,
+        /*! [in] Pointer to user data returned with the callback function when
+           invoked. */
+        const void *Cookie,
+        /*! [out] Pointer to a variable to store the new control point handle.
+         */
+        UpnpClient_Handle *Hnd);
+#endif // #if false
 
 /*!
  * \brief Unregisters a control point application, unsubscribing all active
@@ -1016,923 +1022,925 @@ EXPORT_SPEC int UpnpUnRegisterClient(
         /*! [in] The handle of the control point instance to unregister. */
         UpnpClient_Handle Hnd);
 
-// /*!
-//  * \deprecated Use \b UpnpSetMaxContentLength instead.
-//  *
-//  * Warning: the Handle argument provided here is not used, so the effect
-//  * of this function is global to the SDK (= same as \b UpnpSetMaxContentLength).
-//  */
-// EXPORT_SPEC int UpnpSetContentLength(
-//         /*! [in] The handle of the device instance for which the coincoming
-//          * content length needs to be set. */
-//         UpnpClient_Handle Hnd,
-//         /*! [in] Permissible content length */
-//         size_t contentLength);
-// 
-// /*!
-//  * \brief Sets the maximum content-length that the SDK will process on an
-//  * incoming SOAP requests or responses.
-//  *
-//  * This API allows devices that have memory constraints to exhibit consistent
-//  * behaviour if the size of the incoming SOAP message exceeds the memory that
-//  * device can allocate.
-//  *
-//  * If set to 0 then checking will be disabled.
-//  *
-//  * The default maximum content-length is \c DEFAULT_SOAP_CONTENT_LENGTH
-//  * = 16K bytes.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  */
-// EXPORT_SPEC int UpnpSetMaxContentLength(
-//         /*! [in] The maximum permissible content length for incoming SOAP
-//          * actions, in bytes. */
-//         size_t contentLength);
-// 
-// /* @} Initialization and Registration */
-// 
-// /******************************************************************************
-//  ******************************************************************************
-//  *                                                                            *
-//  *                        D I S C O V E R Y                                   *
-//  *                                                                            *
-//  ******************************************************************************
-//  ******************************************************************************/
-// 
-// /*!
-//  * \name Discovery
-//  *
-//  * @{
-//  */
-// 
-// /*!
-//  * \brief Searches for devices matching the given search target.
-//  *
-//  * The function returns immediately and the SDK calls the default callback
-//  * function, registered during the \b UpnpRegisterClient call, for each
-//  * matching root device, device, or service. The application specifies the
-//  * search type by the \b Target parameter.
-//  *
-//  * This function searches for the devices for the provided maximum time.
-//  * It is an asynchronous function. It schedules a search job and returns.
-//  * The client is notified about the search results after search timer.
-//  *
-//  * Note that there is no way for the SDK to distinguish which client
-//  * instance issued a particular search.  Therefore, the client can get
-//  * search callbacks that do not match the original criteria of the search.
-//  * Also, the application will receive multiple callbacks for each search.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
-//  *             point handle.
-//  *     \li \c UPNP_E_INVALID_PARAM: \b Target is \c NULL.
-//  */
-// EXPORT_SPEC int UpnpSearchAsync(
-//         /*! The handle of the client performing the search. */
-//         UpnpClient_Handle Hnd,
-//         /*! The time, in seconds, to wait for responses. If the time is greater
-//          * than \c MAX_SEARCH_TIME then the time is set to \c MAX_SEARCH_TIME.
-//          * If the time is less than \c MIN_SEARCH_TIME then the time is set to
-//          * \c MIN_SEARCH_TIME. */
-//         int Mx,
-//         /*! The search target as defined in the UPnP Device Architecture v1.0
-//          * specification. */
-//         const char *TTarget_constarget_const,
-//         /*! The user data to pass when the callback function is invoked. */
-//         const void *Cookie_const);
-// 
-// /*!
-//  * \brief Sends out the discovery announcements for all devices and services
-//  * for a device.
-//  *
-//  * Each announcement is made with the same expiration time.
-//  *
-//  * This is a synchronous call.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid
-//  *             device handle.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: There are insufficient resources to
-//  *             send future advertisements.
-//  */
-// EXPORT_SPEC int UpnpSendAdvertisement(
-//         /*! The device handle for which to send out the announcements. */
-//         UpnpDevice_Handle Hnd,
-//         /*! The expiration age, in seconds, of the announcements. If the
-//          * expiration age is less than 1 then the expiration age is set to
-//          * \c DEFAULT_MAXAGE. If the expiration age is less than or equal to
-//          * \c AUTO_ADVERTISEMENT_TIME * 2 then the expiration age is set to
-//          * ( \c AUTO_ADVERTISEMENT_TIME + 1 ) * 2. */
-//         int Exp);
-// 
-// /*!
-//  * \brief Sends out the discovery announcements for all devices and services
-//  * for a device.
-//  *
-//  * Each announcement is made with the same expiration time.
-//  *
-//  * This is a synchronous call.
-//  *
-//  * This function allow a device to specify the SSDP extensions defined by UPnP
-//  * Low Power.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid
-//  *             device handle.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: There are insufficient resources to
-//  *             send future advertisements.
-//  */
-// EXPORT_SPEC int UpnpSendAdvertisementLowPower(
-//         /*! The device handle for which to send out the announcements. */
-//         UpnpDevice_Handle Hnd,
-//         /*! The expiration age, in seconds, of the announcements. If the
-//          * expiration age is less than 1 then the expiration age is set to
-//          * \c DEFAULT_MAXAGE. If the expiration age is less than or equal to
-//          * \c AUTO_ADVERTISEMENT_TIME * 2 then the expiration age is set to
-//          * ( \c AUTO_ADVERTISEMENT_TIME + 1 ) * 2. */
-//         int Exp,
-//         /*! PowerState as defined by UPnP Low Power. */
-//         int PowerState,
-//         /*! SleepPeriod as defined by UPnP Low Power. */
-//         int SleepPeriod,
-//         /*! RegistrationState as defined by UPnP Low Power. */
-//         int RegistrationState);
-// 
-// /* @} Discovery */
-// 
-// /******************************************************************************
-//  ******************************************************************************
-//  *                                                                            *
-//  *                            C O N T R O L                                   *
-//  *                                                                            *
-//  ******************************************************************************
-//  ******************************************************************************/
-// 
-// /*!
-//  * \name Control
-//  *
-//  * @{
-//  */
-// 
-// /*!
-//  * \brief Queries the state of a state variable of a service on another device.
-//  *
-//  * \deprecated
-//  * <b>The use of this function is deprecated by the UPnP Forum</b>.
-//  *
-//  * This is a synchronous call.
-//  *
-//  * A positive return value indicates a SOAP error code, whereas a negative
-//  * return code indicates an SDK error code.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
-//  *             point handle.
-//  *     \li \c UPNP_E_INVALID_URL: \b ActionUrl is not a valid URL.
-//  *     \li \c UPNP_E_INVALID_DESC: The XML document was not
-//  *             found or it does not contain a valid XML description.
-//  *     \li \c UPNP_E_INVALID_PARAM: \b StVarVal is not a valid
-//  *             pointer or \b VarName or \b ActionUrl is \c NULL.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             complete this operation.
-//  *     \li \c UPNP_SOAP_E_INVALID_VAR: The given variable is invalid
-//  *             according to the device.
-//  */
-// EXPORT_SPEC int UpnpGetServiceVarStatus(
-//         /*! [in] The handle of the control point. */
-//         UpnpClient_Handle Hnd,
-//         /*! [in] The URL of the service. */
-//         const char *ActionURL,
-//         /*! [in] The name of the variable to query. */
-//         const char *VarName,
-//         /*! [out] The pointer to store the value for \b VarName. The SDK
-//          * allocates this string and the caller needs to free it using \b
-//          * ixmlFreeDOMString. */
-//         DOMString *StVarVal);
-// 
-// /*!
-//  * \brief Queries the state of a variable of a service, generating a callback
-//  * when the operation is complete.
-//  *
-//  * \deprecated
-//  * <b>The use of this function is deprecated by the UPnP Forum</b>.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
-//  *             point handle.
-//  *     \li \c UPNP_E_INVALID_URL: The \b ActionUrl is not a valid URL.
-//  *     \li \c UPNP_E_INVALID_PARAM: \b VarName, \b Fun or
-//  *             \b ActionUrl is not a valid pointer.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             complete this operation.
-//  */
-// EXPORT_SPEC int UpnpGetServiceVarStatusAsync(
-//         /*! [in] The handle of the control point. */
-//         UpnpClient_Handle Hnd,
-//         /*! [in] The URL of the service. */
-//         const char *ActionURL,
-//         /*! [in] The name of the variable to query. */
-//         const char *VarName,
-//         /*! [in] Pointer to a callback function to be invoked when the operation
-//          * is complete. */
-//         Upnp_FunPtr Fun,
-//         /*! [in] Pointer to user data to pass to the callback function when
-//            invoked. */
-//         const void *Cookie);
-// 
-// /*!
-//  * \brief Sends a message to change a state variable in a service.
-//  *
-//  * This is a synchronous call that does not return until the action is complete.
-//  *
-//  * Note that a positive return value indicates a SOAP-protocol error code.
-//  * In this case,  the error description can be retrieved from \b RespNode.
-//  * A negative return value indicates an SDK error.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
-//  *             point handle.
-//  *     \li \c UPNP_E_INVALID_URL: \b ActionUrl is not a valid URL.
-//  *     \li \c UPNP_E_INVALID_ACTION: This action is not valid.
-//  *     \li \c UPNP_E_INVALID_DEVICE: \b DevUDN is not a
-//  *             valid device.
-//  *     \li \c UPNP_E_INVALID_PARAM: \b ServiceType, \b Action,
-//  *             \b ActionUrl, or
-//  *             \b RespNode is not a valid pointer.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             complete this operation.
-//  */
-// EXPORT_SPEC int UpnpSendAction(
-//         /*! [in] The handle of the control point sending the action. */
-//         UpnpClient_Handle Hnd,
-//         /*! [in] The action URL of the service. */
-//         const char *ActionURL,
-//         /*! [in] The type of the service. */
-//         const char *ServiceType,
-//         /*! [in] This parameter is ignored and must be \c NULL. */
-//         const char *DevUDN,
-//         /*! [in] The DOM document for the action. */
-//         IXML_Document *Action,
-//         /*! [out] The DOM document for the response to the action. The SDK
-//          * allocates this document and the caller needs to free it. */
-//         IXML_Document **RespNode);
-// 
-// /*!
-//  * \brief Sends a message to change a state variable in a service.
-//  *
-//  * This is a synchronous call that does not return until the action is complete.
-//  *
-//  * Note that a positive return value indicates a SOAP-protocol error code.
-//  * In this case,  the error description can be retrieved from \b RespNode.
-//  * A negative return value indicates an SDK error.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
-//  *             point handle.
-//  *     \li \c UPNP_E_INVALID_URL: \b ActionUrl is not a valid URL.
-//  *     \li \c UPNP_E_INVALID_ACTION: This action is not valid.
-//  *     \li \c UPNP_E_INVALID_DEVICE: \b DevUDN is not a
-//  *             valid device.
-//  *     \li \c UPNP_E_INVALID_PARAM: \b ServiceType, \b Action,
-//  *             \b ActionUrl, or
-//  *             \b RespNode is not a valid pointer.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             complete this operation.
-//  */
-// EXPORT_SPEC int UpnpSendActionEx(
-//         /*! [in] The handle of the control point sending the action. */
-//         UpnpClient_Handle Hnd,
-//         /*! [in] The action URL of the service. */
-//         const char *ActionURL,
-//         /*! [in] The type of the service. */
-//         const char *ServiceType,
-//         /*! [in] This parameter is ignored and must be \c NULL. */
-//         const char *DevUDN,
-//         /*! [in] The DOM document for the SOAP header. This may be \c NULL if
-//          * the header is not required. */
-//         IXML_Document *Header,
-//         /*! [in] The DOM document for the action. */
-//         IXML_Document *Action,
-//         /*! [out] The DOM document for the response to the action. The SDK
-//          * allocates this document and the caller needs to free it. */
-//         IXML_Document **RespNode);
-// 
-// /*!
-//  * \brief Sends a message to change a state variable in a service, generating a
-//  * callback when the operation is complete.
-//  *
-//  * See \b UpnpSendAction for comments on positive return values. These
-//  * positive return values are sent in the event struct associated with the
-//  * \c UPNP_CONTROL_ACTION_COMPLETE event.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
-//  *             point handle.
-//  *     \li \c UPNP_E_INVALID_URL: \b ActionUrl is an invalid URL.
-//  *     \li \c UPNP_E_INVALID_DEVICE: \b DevUDN is an invalid device.
-//  *     \li \c UPNP_E_INVALID_PARAM: Either \b Fun is not a valid
-//  *             callback function or \b ServiceType, \b Act, or
-//  *             \b ActionUrl is \c NULL.
-//  *     \li \c UPNP_E_INVALID_ACTION: This action is not valid.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             complete this operation.
-//  */
-// EXPORT_SPEC int UpnpSendActionAsync(
-//         /*! [in] The handle of the control point sending the action. */
-//         UpnpClient_Handle Hnd,
-//         /*! [in] The action URL of the service. */
-//         const char *ActionURL,
-//         /*! [in] The type of the service. */
-//         const char *ServiceType,
-//         /*! [in] This parameter is ignored and must be \c NULL. */
-//         const char *DevUDN,
-//         /*! [in] The DOM document for the action to perform on this device. */
-//         IXML_Document *Action,
-//         /*! [in] Pointer to a callback function to be invoked when the operation
-//          * completes. */
-//         Upnp_FunPtr Fun,
-//         /*! [in] Pointer to user data that to be passed to the callback when
-//          * invoked. */
-//         const void *Cookie);
-// 
-// /*!
-//  * \brief Sends a message to change a state variable in a service, generating a
-//  * callback when the operation is complete.
-//  *
-//  * See \b UpnpSendAction for comments on positive return values. These
-//  * positive return values are sent in the event struct associated with the
-//  * \c UPNP_CONTROL_ACTION_COMPLETE event.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
-//  *             point handle.
-//  *     \li \c UPNP_E_INVALID_URL: \b ActionUrl is an invalid URL.
-//  *     \li \c UPNP_E_INVALID_DEVICE: \b DevUDN is an invalid device.
-//  *     \li \c UPNP_E_INVALID_PARAM: Either \b Fun is not a valid
-//  *             callback function or \b ServiceType, \b Act, or
-//  *             \b ActionUrl is \c NULL.
-//  *     \li \c UPNP_E_INVALID_ACTION: This action is not valid.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             complete this operation.
-//  */
-// EXPORT_SPEC int UpnpSendActionExAsync(
-//         /*! [in] The handle of the control point sending the action. */
-//         UpnpClient_Handle Hnd,
-//         /*! [in] The action URL of the service. */
-//         const char *ActionURL,
-//         /*! [in] The type of the service. */
-//         const char *ServiceType,
-//         /*! [in] This parameter is ignored and must be \c NULL. */
-//         const char *DevUDN,
-//         /*! [in] The DOM document for the SOAP header. This may be \c NULL if
-//          * the header is not required. */
-//         IXML_Document *Header,
-//         /*! [in] The DOM document for the action to perform on this device. */
-//         IXML_Document *Action,
-//         /*! [in] Pointer to a callback function to be invoked when the operation
-//          * completes. */
-//         Upnp_FunPtr Fun,
-//         /*! [in] Pointer to user data that to be passed to the callback when
-//          * invoked. */
-//         const void *Cookie);
-// 
-// /*! @} Control */
-// 
-// /******************************************************************************
-//  ******************************************************************************
-//  *                                                                            *
-//  *                        E V E N T I N G                                     *
-//  *                                                                            *
-//  ******************************************************************************
-//  ******************************************************************************/
-// 
-// /*!
-//  * \name Eventing
-//  *
-//  * @{
-//  */
-// 
-// /*!
-//  * \brief Accepts a subscription request and sends out the current state of the
-//  * eventable variables for a service.
-//  *
-//  * The device application should call this function when it receives a
-//  * \c UPNP_EVENT_SUBSCRIPTION_REQUEST callback.
-//  *
-//  * This function is synchronous and generates no callbacks.
-//  *
-//  * This function can be called during the execution of a callback function.
-//  *
-//  * \return An integer representing one of the following:
-//  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *      \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid device
-//  *              handle.
-//  *      \li \c UPNP_E_INVALID_SERVICE: The \b DevId/\b ServId
-//  *              pair refers to an invalid service.
-//  *      \li \c UPNP_E_INVALID_SID: The specified subscription ID is not
-//  *              valid.
-//  *      \li \c UPNP_E_INVALID_PARAM: Either \b VarName,
-//  *              \b NewVal, \b DevID, or \b ServID is not a valid
-//  *              pointer or \b cVariables is less than zero.
-//  *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *              complete this operation.
-//  */
-// EXPORT_SPEC int UpnpAcceptSubscription(
-//         /*! [in] The handle of the device. */
-//         UpnpDevice_Handle Hnd,
-//         /*! [in] The device ID of the subdevice of the service generating the
-//            event. */
-//         const char *DevID,
-//         /*! [in] The unique service identifier of the service generating the
-//            event. */
-//         const char *ServID,
-//         /*! [in] Pointer to an array of event variables. */
-//         const char **VarName,
-//         /*! [in] Pointer to an array of values for the event variables. */
-//         const char **NewVal,
-//         /*! [in] The number of event variables in \b VarName. */
-//         int cVariables,
-//         /*! [in] The subscription ID of the newly registered control point. */
-//         const Upnp_SID SubsId);
-// 
-// /*!
-//  * \brief Similar to \b UpnpAcceptSubscription() except that it takes a DOM
-//  * document for the variables to event rather than an array of strings.
-//  *
-//  * This function is sychronous and generates no callbacks.
-//  *
-//  * This function can be called during the execution of a callback function.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid device
-//  *             handle.
-//  *     \li \c UPNP_E_INVALID_SERVICE: The \b DevId/\b ServId
-//  *             pair refers to an invalid service.
-//  *     \li \c UPNP_E_INVALID_SID: The specified subscription ID is not
-//  *             valid.
-//  *     \li \c UPNP_E_INVALID_PARAM: Either \b VarName,
-//  *             \b NewVal, \b DevID, \b ServID, or \b PropSet
-//  *             is not a valid pointer.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             complete this operation.
-//  */
-// EXPORT_SPEC int UpnpAcceptSubscriptionExt(
-//         /*! [in] The handle of the device. */
-//         UpnpDevice_Handle Hnd,
-//         /*! [in] The device ID of the subdevice of the service generating the
-//            event. */
-//         const char *DevID,
-//         /*! [in] The unique service identifier of the service generating the
-//            event. */
-//         const char *ServID,
-//         /*! [in] The DOM document for the property set. Property set documents
-//          * must conform to the XML schema defined in section 4.3 of the
-//          * Universal Plug and Play Device Architecture specification. */
-//         IXML_Document *PropSet,
-//         /*! [in] The subscription ID of the newly registered control point. */
-//         const Upnp_SID SubsId);
-// 
-// /*!
-//  * \brief Sends out an event change notification to all control points
-//  * subscribed to a particular service.
-//  *
-//  * This function is synchronous and generates no callbacks.
-//  *
-//  * This function may be called during a callback function to send out a
-//  * notification.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid device
-//  *             handle.
-//  *     \li \c UPNP_E_INVALID_SERVICE: The \b DevId/\b ServId
-//  *             pair refers to an invalid service.
-//  *     \li \c UPNP_E_INVALID_PARAM: Either \b VarName, \b NewVal,
-//  *              \b DevID, or \b ServID is not a valid pointer or
-//  *              \b cVariables is less than zero.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             complete this operation.
-//  */
-// EXPORT_SPEC int UpnpNotify(
-//         /*! [in] The handle to the device sending the event. */
-//         UpnpDevice_Handle,
-//         /*! [in] The device ID of the subdevice of the service generating the
-//            event. */
-//         const char *DevID,
-//         /*! [in] The unique identifier of the service generating the event. */
-//         const char *ServID,
-//         /*! [in] Pointer to an array of variables that have changed. */
-//         const char **VarName,
-//         /*! [in] Pointer to an array of new values for those variables. */
-//         const char **NewVal,
-//         /*! [in] The count of variables included in this notification. */
-//         int cVariables);
-// 
-// /*!
-//  * \brief Similar to \b UpnpNotify except that it takes a DOM document for the
-//  * event rather than an array of strings.
-//  *
-//  * This function is synchronous and generates no callbacks.
-//  *
-//  * This function may be called during a callback function to send out a
-//  * notification.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid device
-//  *             handle.
-//  *     \li \c UPNP_E_INVALID_SERVICE: The \b DevId/\b ServId
-//  *             pair refers to an invalid service.
-//  *     \li \c UPNP_E_INVALID_PARAM: Either \b VarName, \b NewVal,
-//  *              \b DevID, \b ServID, or \b PropSet
-//  *              is not a valid pointer or \b cVariables is less than zero.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             complete this operation.
-//  */
-// EXPORT_SPEC int UpnpNotifyExt(
-//         /*! [in] The handle to the device sending the event. */
-//         UpnpDevice_Handle,
-//         /*! [in] The device ID of the subdevice of the service generating the
-//            event. */
-//         const char *DevID,
-//         /*! [in] The unique identifier of the service generating the event. */
-//         const char *ServID,
-//         /*! [in] The DOM document for the property set. Property set documents
-//          * must conform to the XML schema defined in section 4.3 of the
-//          * Universal Plug and Play Device Architecture specification. */
-//         IXML_Document *PropSet);
-// 
-// /*!
-//  * \brief Renews a subscription that is about to expire.
-//  *
-//  * This function is synchronous.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
-//  *             point handle.
-//  *     \li \c UPNP_E_INVALID_PARAM: \b Timeout is not a valid pointer.
-//  *     \li \c UPNP_E_INVALID_SID: The SID being passed to this function
-//  *             is not a valid subscription ID.
-//  *     \li \c UPNP_E_NETWORK_ERROR: A network error occured.
-//  *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *             to a socket.
-//  *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
-//  *             from a socket.
-//  *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
-//  *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting to
-//  *             \b PublisherUrl.
-//  *     \li \c UPNP_E_OUTOF_SOCKET: An error occurred creating a socket.
-//  *     \li \c UPNP_E_BAD_RESPONSE: An error occurred in response from
-//  *             the publisher.
-//  *     \li \c UPNP_E_SUBSCRIBE_UNACCEPTED: The publisher refused
-//  *             the subscription renew.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             complete this operation.
-//  */
-// EXPORT_SPEC int UpnpRenewSubscription(
-//         /*! [in] The handle of the control point that is renewing the
-//            subscription. */
-//         UpnpClient_Handle Hnd,
-//         /*! [in,out] Pointer to a variable containing the requested subscription
-//          * time. Upon return, it contains the actual renewal time. */
-//         int *TimeOut,
-//         /*! [in] The ID for the subscription to renew. */
-//         const Upnp_SID SubsId);
-// 
-// /*!
-//  * \brief Renews a subscription that is about to expire, generating a callback
-//  * when the operation is complete.
-//  *
-//  * Note that many of the error codes for this function are returned in
-//  * the \b UpnpEventSubscribe structure.  In those cases, the function
-//  * returns \c UPNP_E_SUCCESS and the appropriate error code will
-//  * be in the <b>UpnpEventSubscribe.ErrCode</b> field in the \b Event
-//  * structure passed to the callback.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
-//  *             point handle.
-//  *     \li \c UPNP_E_INVALID_SID: The \b SubsId is not a valid
-//  *             subscription ID.
-//  *     \li \c UPNP_E_INVALID_PARAM: Either \b Fun is not a valid
-//  *             callback function pointer or \b Timeout is less than zero
-//  *             but is not \c UPNP_INFINITE.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             complete this operation.
-//  *     \li \c UPNP_E_NETWORK_ERROR: A network error occured (returned in
-//  *             the <b>UpnpEventSubscribe.ErrCode</b> field as part of the
-//  *             callback).
-//  *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *             to a socket (returned in the <b>UpnpEventSubscribe.ErrCode</b>
-//  *             field as part of the callback).
-//  *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
-//  *             from a socket (returned in the
-//  *             <b>UpnpEventSubscribe.ErrCode</b> field as part of the
-//  *             callback).
-//  *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding the socket
-//  *             (returned in the <b>UpnpEventSubscribe.ErrCode</b> field as
-//  *             part of the callback).
-//  *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting to
-//  *             \b PublisherUrl (returned in the \b
-//  *             UpnpEventSubscribe.ErrCode field as part of the callback).
-//  *     \li \c UPNP_E_OUTOF_SOCKET: An error occurred creating socket (
-//  *             returned in the <b>UpnpEventSubscribe.ErrCode</b> field as
-//  *             part of the callback).
-//  *     \li \c UPNP_E_BAD_RESPONSE: An error occurred in response from
-//  *             the publisher (returned in the \b
-//  *             UpnpEventSubscribe.ErrCode field as part of the callback).
-//  *     \li \c UPNP_E_SUBSCRIBE_UNACCEPTED: The publisher refused
-//  *             the subscription request (returned in the \b
-//  *             UpnpEventSubscribe.ErrCode field as part of the callback).
-//  */
-// EXPORT_SPEC int UpnpRenewSubscriptionAsync(
-//         /*! [in] The handle of the control point that is renewing the
-//            subscription. */
-//         UpnpClient_Handle Hnd,
-//         /*! [in] The requested subscription time. The actual timeout value is
-//          * returned when the callback function is called. */
-//         int TimeOut,
-//         /*! [in] The ID for the subscription to renew. */
-//         Upnp_SID SubsId,
-//         /*! [in] Pointer to a callback function to be invoked when the renewal
-//          * is complete. */
-//         Upnp_FunPtr Fun,
-//         /*! [in] Pointer to user data passed to the callback function when
-//            invoked. */
-//         const void *Cookie);
-// 
-// /*!
-//  * \brief Sets the maximum number of subscriptions accepted per service.
-//  *
-//  * The default value accepts as many as system resources allow. If the number
-//  * of current subscriptions for a service is greater than the requested value,
-//  * the SDK accepts no new subscriptions or renewals, however, the SDK does not
-//  * remove any current subscriptions.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid device
-//  *             handle.
-//  */
-// EXPORT_SPEC int UpnpSetMaxSubscriptions(
-//         /*! The handle of the device for which the maximum number of
-//          * subscriptions is being set. */
-//         UpnpDevice_Handle Hnd,
-//         /*! The maximum number of subscriptions to be allowed per service. */
-//         int MaxSubscriptions);
-// 
-// /*!
-//  * \brief Sets the maximum time-out accepted for a subscription request or
-//  * renewal.
-//  *
-//  * The default value accepts the time-out set by the control point.
-//  * If a control point requests a subscription time-out less than or equal to
-//  * the maximum, the SDK grants the value requested by the control point. If the
-//  * time-out is greater, the SDK returns the maximum value.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid device
-//  *             handle.
-//  */
-// EXPORT_SPEC int UpnpSetMaxSubscriptionTimeOut(
-//         /*! The handle of the device for which the maximum subscription
-//          * time-out is being set. */
-//         UpnpDevice_Handle Hnd,
-//         /*! The maximum subscription time-out to be accepted. */
-//         int MaxSubscriptionTimeOut);
-// 
-// /*!
-//  * \brief Registers a control point to receive event notifications from another
-//  * device.
-//  *
-//  * This operation is synchronous.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
-//  *             point handle.
-//  *     \li \c UPNP_E_INVALID_URL: \b PublisherUrl is not a valid URL.
-//  *     \li \c UPNP_E_INVALID_PARAM: \b Timeout is not a valid pointer
-//  *             or \b SubsId or \b PublisherUrl is \c NULL.
-//  *     \li \c UPNP_E_NETWORK_ERROR: A network error occured.
-//  *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *             to a socket.
-//  *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
-//  *             from a socket.
-//  *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
-//  *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting to
-//  *             \b PublisherUrl.
-//  *     \li \c UPNP_E_OUTOF_SOCKET: An error occurred creating a socket.
-//  *     \li \c UPNP_E_BAD_RESPONSE: An error occurred in response from
-//  *             the publisher.
-//  *     \li \c UPNP_E_SUBSCRIBE_UNACCEPTED: The publisher refused
-//  *             the subscription request.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             complete this operation.
-//  */
-// EXPORT_SPEC int UpnpSubscribe(
-//         /*! [in] The handle of the control point. */
-//         UpnpClient_Handle Hnd,
-//         /*! [in] The URL of the service to subscribe to. */
-//         const char *PublisherUrl,
-//         /*! [in,out]Pointer to a variable containing the requested subscription
-//          * time. Upon return, it contains the actual subscription time returned
-//          * from the service. */
-//         int *TimeOut,
-//         /*! [out] Pointer to a variable to receive the subscription ID (SID). */
-//         Upnp_SID SubsId);
-// 
-// /*!
-//  * \brief Performs the same operation as \b UpnpSubscribe, but returns
-//  * immediately and calls the registered callback function when the operation
-//  * is complete.
-//  *
-//  * Note that many of the error codes for this function are returned in
-//  * the \b UpnpEventSubscribe structure. In those cases, the function
-//  * returns \c UPNP_E_SUCCESS and the appropriate error code will
-//  * be in the <b>UpnpEventSubscribe.ErrCode</b> field in the \b Event
-//  * structure passed to the callback.
-//  *
-//  *  \return An integer representing one of the following:
-//  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *      \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
-//  *              point handle.
-//  *      \li \c UPNP_E_INVALID_URL: The \b PublisherUrl is not a valid
-//  *              URL.
-//  *      \li \c UPNP_E_INVALID_PARAM: Either \b TimeOut or \b Fun or
-//  *              \b PublisherUrl is not a valid pointer.
-//  *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *              complete this operation.
-//  *      \li \c UPNP_E_NETWORK_ERROR: A network error occured (returned in
-//  *              the <b>UpnpEventSubscribe.ErrCode</b> field as part of the
-//  *              callback).
-//  *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *              to a socket (returned in the
-//  *              <b>UpnpEventSubscribe.ErrCode</b> field as part of the
-//  *              callback).
-//  *      \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
-//  *              from a socket (returned in the
-//  *              <b>UpnpEventSubscribe.ErrCode</b> field as part of the
-//  *              callback).
-//  *      \li \c UPNP_E_SOCKET_BIND: An error occurred binding the socket
-//  *              (returned in the <b>UpnpEventSubscribe.ErrCode</b> field as
-//  *              part of the callback).
-//  *      \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting to
-//  *              \b PublisherUrl (returned in the \b
-//  *              UpnpEventSubscribe.ErrCode field as part of the callback).
-//  *      \li \c UPNP_E_OUTOF_SOCKET: An error occurred creating  the
-//  *              socket (returned in the <b>UpnpEventSubscribe.ErrCode</b>
-//  *              field as part of the callback).
-//  *      \li \c UPNP_E_BAD_RESPONSE: An error occurred in response from
-//  *              the publisher (returned in the \b
-//  *              UpnpEventSubscribe.ErrCode field as part of the callback).
-//  *      \li \c UPNP_E_SUBSCRIBE_UNACCEPTED: The publisher refused
-//  *              the subscription request (returned in the \b
-//  *              UpnpEventSubscribe.ErrCode field as part of the callback).
-//  */
-// EXPORT_SPEC int UpnpSubscribeAsync(
-//         /*! The handle of the control point that is subscribing. */
-//         UpnpClient_Handle Hnd,
-//         /*! The URL of the service to subscribe to. */
-//         const char *PublisherUrl,
-//         /*! The requested subscription time. Upon return, it contains the actual
-//          * subscription time returned from the service. */
-//         int TimeOut,
-//         /*! Pointer to the callback function for this subscribe request. */
-//         Upnp_FunPtr Fun,
-//         /*! A user data value passed to the callback function when invoked. */
-//         const void *Cookie);
-// 
-// /*!
-//  * \brief Removes the subscription of a control point from a service previously
-//  * subscribed to using \b UpnpSubscribe or \b UpnpSubscribeAsync.
-//  *
-//  * This is a synchronous call.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
-//  *             point handle.
-//  *     \li \c UPNP_E_INVALID_SID: The \b SubsId is not a valid
-//  *             subscription ID.
-//  *     \li \c UPNP_E_NETWORK_ERROR: A network error occured.
-//  *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *             to a socket.
-//  *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
-//  *             from a socket.
-//  *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
-//  *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting to
-//  *             \b PublisherUrl.
-//  *     \li \c UPNP_E_OUTOF_SOCKET: An error ocurred creating a socket.
-//  *     \li \c UPNP_E_BAD_RESPONSE: An error occurred in response from
-//  *             the publisher.
-//  *     \li \c UPNP_E_UNSUBSCRIBE_UNACCEPTED: The publisher refused
-//  *             the unsubscribe request (the client is still unsubscribed and
-//  *             no longer receives events).
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             complete this operation.
-//  */
-// EXPORT_SPEC int UpnpUnSubscribe(
-//         /*! [in] The handle of the subscribed control point. */
-//         UpnpClient_Handle Hnd,
-//         /*! [in] The ID returned when the control point subscribed to the
-//            service. */
-//         const Upnp_SID SubsId);
-// 
-// /*!
-//  * \brief Removes a subscription of a control point from a service previously
-//  * subscribed to using \b UpnpSubscribe or \b UpnpSubscribeAsync, generating
-//  * a callback when the operation is complete.
-//  *
-//  * Note that many of the error codes for this function are returned in
-//  * the \b UpnpEventSubscribe structure.  In those cases, the function
-//  * returns \c UPNP_E_SUCCESS and the appropriate error code will
-//  * be in the <b>UpnpEventSubscribe.ErrCode</b> field in the \b Event
-//  * structure passed to the callback.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
-//  *             point handle.
-//  *     \li \c UPNP_E_INVALID_SID: The \b SubsId is not a valid SID.
-//  *     \li \c UPNP_E_INVALID_PARAM: \b Fun is not a valid callback
-//  *             function pointer.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             complete this operation.
-//  *     \li \c UPNP_E_NETWORK_ERROR: A network error occured (returned in
-//  *             the <b>UpnpEventSubscribe.ErrCode</b> field as part of the
-//  *             callback).
-//  *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *             to a socket (returned in the <b>UpnpEventSubscribe.ErrCode</b>
-//  *             field as part of the callback).
-//  *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
-//  *             from a socket (returned in the
-//  *             <b>UpnpEventSubscribe.ErrCode</b> field as part of the
-//  *             callback).
-//  *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding the socket
-//  *             (returned in the <b>UpnpEventSubscribe.ErrCode</b> field as
-//  *             part of the callback).
-//  *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting to
-//  *		\b PublisherUrl (returned in the
-//  *		<b>UpnpEventSubscribe.ErrCode</b> field as part of the
-//  *		callback).
-//  *	\li \c  UPNP_E_OUTOF_SOCKET: An error occurred creating a socket
-//  *		(returned in the <b>UpnpEventSubscribe.ErrCode</b> field as part
-//  *		of the callback).
-//  *	\li \c UPNP_E_BAD_RESPONSE: An error occurred in response from the
-//  *		publisher (returned in the <b>UpnpEventSubscribe.ErrCode</b>
-//  *		field as part of the callback).
-//  *	\li \c UPNP_E_UNSUBSCRIBE_UNACCEPTED: The publisher refused the
-//  *		subscription request (returned in the
-//  *		<b>UpnpEventSubscribe.ErrCode</b> field as part of the
-//  *		callback).
-//  */
-// EXPORT_SPEC int UpnpUnSubscribeAsync(
-//         /*! [in] The handle of the subscribed control point. */
-//         UpnpClient_Handle Hnd,
-//         /*! [in] The ID returned when the control point subscribed to the
-//            service. */
-//         Upnp_SID SubsId,
-//         /*! [in] Pointer to a callback function to be called when the operation
-//          * is complete. */
-//         Upnp_FunPtr Fun,
-//         /*! [in] Pointer to user data to pass to the callback function when
-//            invoked. */
-//         const void *Cookie);
-// 
-// /*! @} Eventing */
-// 
-// /******************************************************************************
-//  ******************************************************************************
-//  *                                                                            *
-//  *                        C L I E N T - A P I                                 *
-//  *                                                                            *
-//  ******************************************************************************
-//  ******************************************************************************/
-// 
-// /*!
-//  * \name Control Point HTTP API
-//  *
-//  * @{
-//  */
-// 
-// /*!
-//  * \brief Different HTTP methods.
-//  */
+#if false
+/*!
+ * \deprecated Use \b UpnpSetMaxContentLength instead.
+ *
+ * Warning: the Handle argument provided here is not used, so the effect
+ * of this function is global to the SDK (= same as \b UpnpSetMaxContentLength).
+ */
+EXPORT_SPEC int UpnpSetContentLength(
+        /*! [in] The handle of the device instance for which the coincoming
+         * content length needs to be set. */
+        UpnpClient_Handle Hnd,
+        /*! [in] Permissible content length */
+        size_t contentLength);
+
+/*!
+ * \brief Sets the maximum content-length that the SDK will process on an
+ * incoming SOAP requests or responses.
+ *
+ * This API allows devices that have memory constraints to exhibit consistent
+ * behaviour if the size of the incoming SOAP message exceeds the memory that
+ * device can allocate.
+ *
+ * If set to 0 then checking will be disabled.
+ *
+ * The default maximum content-length is \c DEFAULT_SOAP_CONTENT_LENGTH
+ * = 16K bytes.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ */
+EXPORT_SPEC int UpnpSetMaxContentLength(
+        /*! [in] The maximum permissible content length for incoming SOAP
+         * actions, in bytes. */
+        size_t contentLength);
+
+/* @} Initialization and Registration */
+
+/******************************************************************************
+ ******************************************************************************
+ *                                                                            *
+ *                        D I S C O V E R Y                                   *
+ *                                                                            *
+ ******************************************************************************
+ ******************************************************************************/
+
+/*!
+ * \name Discovery
+ *
+ * @{
+ */
+
+/*!
+ * \brief Searches for devices matching the given search target.
+ *
+ * The function returns immediately and the SDK calls the default callback
+ * function, registered during the \b UpnpRegisterClient call, for each
+ * matching root device, device, or service. The application specifies the
+ * search type by the \b Target parameter.
+ *
+ * This function searches for the devices for the provided maximum time.
+ * It is an asynchronous function. It schedules a search job and returns.
+ * The client is notified about the search results after search timer.
+ *
+ * Note that there is no way for the SDK to distinguish which client
+ * instance issued a particular search.  Therefore, the client can get
+ * search callbacks that do not match the original criteria of the search.
+ * Also, the application will receive multiple callbacks for each search.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
+ *             point handle.
+ *     \li \c UPNP_E_INVALID_PARAM: \b Target is \c NULL.
+ */
+EXPORT_SPEC int UpnpSearchAsync(
+        /*! The handle of the client performing the search. */
+        UpnpClient_Handle Hnd,
+        /*! The time, in seconds, to wait for responses. If the time is greater
+         * than \c MAX_SEARCH_TIME then the time is set to \c MAX_SEARCH_TIME.
+         * If the time is less than \c MIN_SEARCH_TIME then the time is set to
+         * \c MIN_SEARCH_TIME. */
+        int Mx,
+        /*! The search target as defined in the UPnP Device Architecture v1.0
+         * specification. */
+        const char *TTarget_constarget_const,
+        /*! The user data to pass when the callback function is invoked. */
+        const void *Cookie_const);
+
+/*!
+ * \brief Sends out the discovery announcements for all devices and services
+ * for a device.
+ *
+ * Each announcement is made with the same expiration time.
+ *
+ * This is a synchronous call.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid
+ *             device handle.
+ *     \li \c UPNP_E_OUTOF_MEMORY: There are insufficient resources to
+ *             send future advertisements.
+ */
+EXPORT_SPEC int UpnpSendAdvertisement(
+        /*! The device handle for which to send out the announcements. */
+        UpnpDevice_Handle Hnd,
+        /*! The expiration age, in seconds, of the announcements. If the
+         * expiration age is less than 1 then the expiration age is set to
+         * \c DEFAULT_MAXAGE. If the expiration age is less than or equal to
+         * \c AUTO_ADVERTISEMENT_TIME * 2 then the expiration age is set to
+         * ( \c AUTO_ADVERTISEMENT_TIME + 1 ) * 2. */
+        int Exp);
+
+/*!
+ * \brief Sends out the discovery announcements for all devices and services
+ * for a device.
+ *
+ * Each announcement is made with the same expiration time.
+ *
+ * This is a synchronous call.
+ *
+ * This function allow a device to specify the SSDP extensions defined by UPnP
+ * Low Power.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid
+ *             device handle.
+ *     \li \c UPNP_E_OUTOF_MEMORY: There are insufficient resources to
+ *             send future advertisements.
+ */
+EXPORT_SPEC int UpnpSendAdvertisementLowPower(
+        /*! The device handle for which to send out the announcements. */
+        UpnpDevice_Handle Hnd,
+        /*! The expiration age, in seconds, of the announcements. If the
+         * expiration age is less than 1 then the expiration age is set to
+         * \c DEFAULT_MAXAGE. If the expiration age is less than or equal to
+         * \c AUTO_ADVERTISEMENT_TIME * 2 then the expiration age is set to
+         * ( \c AUTO_ADVERTISEMENT_TIME + 1 ) * 2. */
+        int Exp,
+        /*! PowerState as defined by UPnP Low Power. */
+        int PowerState,
+        /*! SleepPeriod as defined by UPnP Low Power. */
+        int SleepPeriod,
+        /*! RegistrationState as defined by UPnP Low Power. */
+        int RegistrationState);
+
+/* @} Discovery */
+
+/******************************************************************************
+ ******************************************************************************
+ *                                                                            *
+ *                            C O N T R O L                                   *
+ *                                                                            *
+ ******************************************************************************
+ ******************************************************************************/
+
+/*!
+ * \name Control
+ *
+ * @{
+ */
+
+/*!
+ * \brief Queries the state of a state variable of a service on another device.
+ *
+ * \deprecated
+ * <b>The use of this function is deprecated by the UPnP Forum</b>.
+ *
+ * This is a synchronous call.
+ *
+ * A positive return value indicates a SOAP error code, whereas a negative
+ * return code indicates an SDK error code.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
+ *             point handle.
+ *     \li \c UPNP_E_INVALID_URL: \b ActionUrl is not a valid URL.
+ *     \li \c UPNP_E_INVALID_DESC: The XML document was not
+ *             found or it does not contain a valid XML description.
+ *     \li \c UPNP_E_INVALID_PARAM: \b StVarVal is not a valid
+ *             pointer or \b VarName or \b ActionUrl is \c NULL.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             complete this operation.
+ *     \li \c UPNP_SOAP_E_INVALID_VAR: The given variable is invalid
+ *             according to the device.
+ */
+EXPORT_SPEC int UpnpGetServiceVarStatus(
+        /*! [in] The handle of the control point. */
+        UpnpClient_Handle Hnd,
+        /*! [in] The URL of the service. */
+        const char *ActionURL,
+        /*! [in] The name of the variable to query. */
+        const char *VarName,
+        /*! [out] The pointer to store the value for \b VarName. The SDK
+         * allocates this string and the caller needs to free it using \b
+         * ixmlFreeDOMString. */
+        DOMString *StVarVal);
+
+/*!
+ * \brief Queries the state of a variable of a service, generating a callback
+ * when the operation is complete.
+ *
+ * \deprecated
+ * <b>The use of this function is deprecated by the UPnP Forum</b>.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
+ *             point handle.
+ *     \li \c UPNP_E_INVALID_URL: The \b ActionUrl is not a valid URL.
+ *     \li \c UPNP_E_INVALID_PARAM: \b VarName, \b Fun or
+ *             \b ActionUrl is not a valid pointer.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             complete this operation.
+ */
+EXPORT_SPEC int UpnpGetServiceVarStatusAsync(
+        /*! [in] The handle of the control point. */
+        UpnpClient_Handle Hnd,
+        /*! [in] The URL of the service. */
+        const char *ActionURL,
+        /*! [in] The name of the variable to query. */
+        const char *VarName,
+        /*! [in] Pointer to a callback function to be invoked when the operation
+         * is complete. */
+        Upnp_FunPtr Fun,
+        /*! [in] Pointer to user data to pass to the callback function when
+           invoked. */
+        const void *Cookie);
+
+/*!
+ * \brief Sends a message to change a state variable in a service.
+ *
+ * This is a synchronous call that does not return until the action is complete.
+ *
+ * Note that a positive return value indicates a SOAP-protocol error code.
+ * In this case,  the error description can be retrieved from \b RespNode.
+ * A negative return value indicates an SDK error.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
+ *             point handle.
+ *     \li \c UPNP_E_INVALID_URL: \b ActionUrl is not a valid URL.
+ *     \li \c UPNP_E_INVALID_ACTION: This action is not valid.
+ *     \li \c UPNP_E_INVALID_DEVICE: \b DevUDN is not a
+ *             valid device.
+ *     \li \c UPNP_E_INVALID_PARAM: \b ServiceType, \b Action,
+ *             \b ActionUrl, or
+ *             \b RespNode is not a valid pointer.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             complete this operation.
+ */
+EXPORT_SPEC int UpnpSendAction(
+        /*! [in] The handle of the control point sending the action. */
+        UpnpClient_Handle Hnd,
+        /*! [in] The action URL of the service. */
+        const char *ActionURL,
+        /*! [in] The type of the service. */
+        const char *ServiceType,
+        /*! [in] This parameter is ignored and must be \c NULL. */
+        const char *DevUDN,
+        /*! [in] The DOM document for the action. */
+        IXML_Document *Action,
+        /*! [out] The DOM document for the response to the action. The SDK
+         * allocates this document and the caller needs to free it. */
+        IXML_Document **RespNode);
+
+/*!
+ * \brief Sends a message to change a state variable in a service.
+ *
+ * This is a synchronous call that does not return until the action is complete.
+ *
+ * Note that a positive return value indicates a SOAP-protocol error code.
+ * In this case,  the error description can be retrieved from \b RespNode.
+ * A negative return value indicates an SDK error.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
+ *             point handle.
+ *     \li \c UPNP_E_INVALID_URL: \b ActionUrl is not a valid URL.
+ *     \li \c UPNP_E_INVALID_ACTION: This action is not valid.
+ *     \li \c UPNP_E_INVALID_DEVICE: \b DevUDN is not a
+ *             valid device.
+ *     \li \c UPNP_E_INVALID_PARAM: \b ServiceType, \b Action,
+ *             \b ActionUrl, or
+ *             \b RespNode is not a valid pointer.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             complete this operation.
+ */
+EXPORT_SPEC int UpnpSendActionEx(
+        /*! [in] The handle of the control point sending the action. */
+        UpnpClient_Handle Hnd,
+        /*! [in] The action URL of the service. */
+        const char *ActionURL,
+        /*! [in] The type of the service. */
+        const char *ServiceType,
+        /*! [in] This parameter is ignored and must be \c NULL. */
+        const char *DevUDN,
+        /*! [in] The DOM document for the SOAP header. This may be \c NULL if
+         * the header is not required. */
+        IXML_Document *Header,
+        /*! [in] The DOM document for the action. */
+        IXML_Document *Action,
+        /*! [out] The DOM document for the response to the action. The SDK
+         * allocates this document and the caller needs to free it. */
+        IXML_Document **RespNode);
+
+/*!
+ * \brief Sends a message to change a state variable in a service, generating a
+ * callback when the operation is complete.
+ *
+ * See \b UpnpSendAction for comments on positive return values. These
+ * positive return values are sent in the event struct associated with the
+ * \c UPNP_CONTROL_ACTION_COMPLETE event.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
+ *             point handle.
+ *     \li \c UPNP_E_INVALID_URL: \b ActionUrl is an invalid URL.
+ *     \li \c UPNP_E_INVALID_DEVICE: \b DevUDN is an invalid device.
+ *     \li \c UPNP_E_INVALID_PARAM: Either \b Fun is not a valid
+ *             callback function or \b ServiceType, \b Act, or
+ *             \b ActionUrl is \c NULL.
+ *     \li \c UPNP_E_INVALID_ACTION: This action is not valid.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             complete this operation.
+ */
+EXPORT_SPEC int UpnpSendActionAsync(
+        /*! [in] The handle of the control point sending the action. */
+        UpnpClient_Handle Hnd,
+        /*! [in] The action URL of the service. */
+        const char *ActionURL,
+        /*! [in] The type of the service. */
+        const char *ServiceType,
+        /*! [in] This parameter is ignored and must be \c NULL. */
+        const char *DevUDN,
+        /*! [in] The DOM document for the action to perform on this device. */
+        IXML_Document *Action,
+        /*! [in] Pointer to a callback function to be invoked when the operation
+         * completes. */
+        Upnp_FunPtr Fun,
+        /*! [in] Pointer to user data that to be passed to the callback when
+         * invoked. */
+        const void *Cookie);
+
+/*!
+ * \brief Sends a message to change a state variable in a service, generating a
+ * callback when the operation is complete.
+ *
+ * See \b UpnpSendAction for comments on positive return values. These
+ * positive return values are sent in the event struct associated with the
+ * \c UPNP_CONTROL_ACTION_COMPLETE event.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
+ *             point handle.
+ *     \li \c UPNP_E_INVALID_URL: \b ActionUrl is an invalid URL.
+ *     \li \c UPNP_E_INVALID_DEVICE: \b DevUDN is an invalid device.
+ *     \li \c UPNP_E_INVALID_PARAM: Either \b Fun is not a valid
+ *             callback function or \b ServiceType, \b Act, or
+ *             \b ActionUrl is \c NULL.
+ *     \li \c UPNP_E_INVALID_ACTION: This action is not valid.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             complete this operation.
+ */
+EXPORT_SPEC int UpnpSendActionExAsync(
+        /*! [in] The handle of the control point sending the action. */
+        UpnpClient_Handle Hnd,
+        /*! [in] The action URL of the service. */
+        const char *ActionURL,
+        /*! [in] The type of the service. */
+        const char *ServiceType,
+        /*! [in] This parameter is ignored and must be \c NULL. */
+        const char *DevUDN,
+        /*! [in] The DOM document for the SOAP header. This may be \c NULL if
+         * the header is not required. */
+        IXML_Document *Header,
+        /*! [in] The DOM document for the action to perform on this device. */
+        IXML_Document *Action,
+        /*! [in] Pointer to a callback function to be invoked when the operation
+         * completes. */
+        Upnp_FunPtr Fun,
+        /*! [in] Pointer to user data that to be passed to the callback when
+         * invoked. */
+        const void *Cookie);
+
+/*! @} Control */
+
+/******************************************************************************
+ ******************************************************************************
+ *                                                                            *
+ *                        E V E N T I N G                                     *
+ *                                                                            *
+ ******************************************************************************
+ ******************************************************************************/
+
+/*!
+ * \name Eventing
+ *
+ * @{
+ */
+
+/*!
+ * \brief Accepts a subscription request and sends out the current state of the
+ * eventable variables for a service.
+ *
+ * The device application should call this function when it receives a
+ * \c UPNP_EVENT_SUBSCRIPTION_REQUEST callback.
+ *
+ * This function is synchronous and generates no callbacks.
+ *
+ * This function can be called during the execution of a callback function.
+ *
+ * \return An integer representing one of the following:
+ *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *      \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid device
+ *              handle.
+ *      \li \c UPNP_E_INVALID_SERVICE: The \b DevId/\b ServId
+ *              pair refers to an invalid service.
+ *      \li \c UPNP_E_INVALID_SID: The specified subscription ID is not
+ *              valid.
+ *      \li \c UPNP_E_INVALID_PARAM: Either \b VarName,
+ *              \b NewVal, \b DevID, or \b ServID is not a valid
+ *              pointer or \b cVariables is less than zero.
+ *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *              complete this operation.
+ */
+EXPORT_SPEC int UpnpAcceptSubscription(
+        /*! [in] The handle of the device. */
+        UpnpDevice_Handle Hnd,
+        /*! [in] The device ID of the subdevice of the service generating the
+           event. */
+        const char *DevID,
+        /*! [in] The unique service identifier of the service generating the
+           event. */
+        const char *ServID,
+        /*! [in] Pointer to an array of event variables. */
+        const char **VarName,
+        /*! [in] Pointer to an array of values for the event variables. */
+        const char **NewVal,
+        /*! [in] The number of event variables in \b VarName. */
+        int cVariables,
+        /*! [in] The subscription ID of the newly registered control point. */
+        const Upnp_SID SubsId);
+
+/*!
+ * \brief Similar to \b UpnpAcceptSubscription() except that it takes a DOM
+ * document for the variables to event rather than an array of strings.
+ *
+ * This function is sychronous and generates no callbacks.
+ *
+ * This function can be called during the execution of a callback function.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid device
+ *             handle.
+ *     \li \c UPNP_E_INVALID_SERVICE: The \b DevId/\b ServId
+ *             pair refers to an invalid service.
+ *     \li \c UPNP_E_INVALID_SID: The specified subscription ID is not
+ *             valid.
+ *     \li \c UPNP_E_INVALID_PARAM: Either \b VarName,
+ *             \b NewVal, \b DevID, \b ServID, or \b PropSet
+ *             is not a valid pointer.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             complete this operation.
+ */
+EXPORT_SPEC int UpnpAcceptSubscriptionExt(
+        /*! [in] The handle of the device. */
+        UpnpDevice_Handle Hnd,
+        /*! [in] The device ID of the subdevice of the service generating the
+           event. */
+        const char *DevID,
+        /*! [in] The unique service identifier of the service generating the
+           event. */
+        const char *ServID,
+        /*! [in] The DOM document for the property set. Property set documents
+         * must conform to the XML schema defined in section 4.3 of the
+         * Universal Plug and Play Device Architecture specification. */
+        IXML_Document *PropSet,
+        /*! [in] The subscription ID of the newly registered control point. */
+        const Upnp_SID SubsId);
+
+/*!
+ * \brief Sends out an event change notification to all control points
+ * subscribed to a particular service.
+ *
+ * This function is synchronous and generates no callbacks.
+ *
+ * This function may be called during a callback function to send out a
+ * notification.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid device
+ *             handle.
+ *     \li \c UPNP_E_INVALID_SERVICE: The \b DevId/\b ServId
+ *             pair refers to an invalid service.
+ *     \li \c UPNP_E_INVALID_PARAM: Either \b VarName, \b NewVal,
+ *              \b DevID, or \b ServID is not a valid pointer or
+ *              \b cVariables is less than zero.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             complete this operation.
+ */
+EXPORT_SPEC int UpnpNotify(
+        /*! [in] The handle to the device sending the event. */
+        UpnpDevice_Handle,
+        /*! [in] The device ID of the subdevice of the service generating the
+           event. */
+        const char *DevID,
+        /*! [in] The unique identifier of the service generating the event. */
+        const char *ServID,
+        /*! [in] Pointer to an array of variables that have changed. */
+        const char **VarName,
+        /*! [in] Pointer to an array of new values for those variables. */
+        const char **NewVal,
+        /*! [in] The count of variables included in this notification. */
+        int cVariables);
+
+/*!
+ * \brief Similar to \b UpnpNotify except that it takes a DOM document for the
+ * event rather than an array of strings.
+ *
+ * This function is synchronous and generates no callbacks.
+ *
+ * This function may be called during a callback function to send out a
+ * notification.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid device
+ *             handle.
+ *     \li \c UPNP_E_INVALID_SERVICE: The \b DevId/\b ServId
+ *             pair refers to an invalid service.
+ *     \li \c UPNP_E_INVALID_PARAM: Either \b VarName, \b NewVal,
+ *              \b DevID, \b ServID, or \b PropSet
+ *              is not a valid pointer or \b cVariables is less than zero.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             complete this operation.
+ */
+EXPORT_SPEC int UpnpNotifyExt(
+        /*! [in] The handle to the device sending the event. */
+        UpnpDevice_Handle,
+        /*! [in] The device ID of the subdevice of the service generating the
+           event. */
+        const char *DevID,
+        /*! [in] The unique identifier of the service generating the event. */
+        const char *ServID,
+        /*! [in] The DOM document for the property set. Property set documents
+         * must conform to the XML schema defined in section 4.3 of the
+         * Universal Plug and Play Device Architecture specification. */
+        IXML_Document *PropSet);
+
+/*!
+ * \brief Renews a subscription that is about to expire.
+ *
+ * This function is synchronous.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
+ *             point handle.
+ *     \li \c UPNP_E_INVALID_PARAM: \b Timeout is not a valid pointer.
+ *     \li \c UPNP_E_INVALID_SID: The SID being passed to this function
+ *             is not a valid subscription ID.
+ *     \li \c UPNP_E_NETWORK_ERROR: A network error occured.
+ *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *             to a socket.
+ *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
+ *             from a socket.
+ *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
+ *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting to
+ *             \b PublisherUrl.
+ *     \li \c UPNP_E_OUTOF_SOCKET: An error occurred creating a socket.
+ *     \li \c UPNP_E_BAD_RESPONSE: An error occurred in response from
+ *             the publisher.
+ *     \li \c UPNP_E_SUBSCRIBE_UNACCEPTED: The publisher refused
+ *             the subscription renew.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             complete this operation.
+ */
+EXPORT_SPEC int UpnpRenewSubscription(
+        /*! [in] The handle of the control point that is renewing the
+           subscription. */
+        UpnpClient_Handle Hnd,
+        /*! [in,out] Pointer to a variable containing the requested subscription
+         * time. Upon return, it contains the actual renewal time. */
+        int *TimeOut,
+        /*! [in] The ID for the subscription to renew. */
+        const Upnp_SID SubsId);
+
+/*!
+ * \brief Renews a subscription that is about to expire, generating a callback
+ * when the operation is complete.
+ *
+ * Note that many of the error codes for this function are returned in
+ * the \b UpnpEventSubscribe structure.  In those cases, the function
+ * returns \c UPNP_E_SUCCESS and the appropriate error code will
+ * be in the <b>UpnpEventSubscribe.ErrCode</b> field in the \b Event
+ * structure passed to the callback.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
+ *             point handle.
+ *     \li \c UPNP_E_INVALID_SID: The \b SubsId is not a valid
+ *             subscription ID.
+ *     \li \c UPNP_E_INVALID_PARAM: Either \b Fun is not a valid
+ *             callback function pointer or \b Timeout is less than zero
+ *             but is not \c UPNP_INFINITE.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             complete this operation.
+ *     \li \c UPNP_E_NETWORK_ERROR: A network error occured (returned in
+ *             the <b>UpnpEventSubscribe.ErrCode</b> field as part of the
+ *             callback).
+ *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *             to a socket (returned in the <b>UpnpEventSubscribe.ErrCode</b>
+ *             field as part of the callback).
+ *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
+ *             from a socket (returned in the
+ *             <b>UpnpEventSubscribe.ErrCode</b> field as part of the
+ *             callback).
+ *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding the socket
+ *             (returned in the <b>UpnpEventSubscribe.ErrCode</b> field as
+ *             part of the callback).
+ *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting to
+ *             \b PublisherUrl (returned in the \b
+ *             UpnpEventSubscribe.ErrCode field as part of the callback).
+ *     \li \c UPNP_E_OUTOF_SOCKET: An error occurred creating socket (
+ *             returned in the <b>UpnpEventSubscribe.ErrCode</b> field as
+ *             part of the callback).
+ *     \li \c UPNP_E_BAD_RESPONSE: An error occurred in response from
+ *             the publisher (returned in the \b
+ *             UpnpEventSubscribe.ErrCode field as part of the callback).
+ *     \li \c UPNP_E_SUBSCRIBE_UNACCEPTED: The publisher refused
+ *             the subscription request (returned in the \b
+ *             UpnpEventSubscribe.ErrCode field as part of the callback).
+ */
+EXPORT_SPEC int UpnpRenewSubscriptionAsync(
+        /*! [in] The handle of the control point that is renewing the
+           subscription. */
+        UpnpClient_Handle Hnd,
+        /*! [in] The requested subscription time. The actual timeout value is
+         * returned when the callback function is called. */
+        int TimeOut,
+        /*! [in] The ID for the subscription to renew. */
+        Upnp_SID SubsId,
+        /*! [in] Pointer to a callback function to be invoked when the renewal
+         * is complete. */
+        Upnp_FunPtr Fun,
+        /*! [in] Pointer to user data passed to the callback function when
+           invoked. */
+        const void *Cookie);
+
+/*!
+ * \brief Sets the maximum number of subscriptions accepted per service.
+ *
+ * The default value accepts as many as system resources allow. If the number
+ * of current subscriptions for a service is greater than the requested value,
+ * the SDK accepts no new subscriptions or renewals, however, the SDK does not
+ * remove any current subscriptions.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid device
+ *             handle.
+ */
+EXPORT_SPEC int UpnpSetMaxSubscriptions(
+        /*! The handle of the device for which the maximum number of
+         * subscriptions is being set. */
+        UpnpDevice_Handle Hnd,
+        /*! The maximum number of subscriptions to be allowed per service. */
+        int MaxSubscriptions);
+
+/*!
+ * \brief Sets the maximum time-out accepted for a subscription request or
+ * renewal.
+ *
+ * The default value accepts the time-out set by the control point.
+ * If a control point requests a subscription time-out less than or equal to
+ * the maximum, the SDK grants the value requested by the control point. If the
+ * time-out is greater, the SDK returns the maximum value.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid device
+ *             handle.
+ */
+EXPORT_SPEC int UpnpSetMaxSubscriptionTimeOut(
+        /*! The handle of the device for which the maximum subscription
+         * time-out is being set. */
+        UpnpDevice_Handle Hnd,
+        /*! The maximum subscription time-out to be accepted. */
+        int MaxSubscriptionTimeOut);
+
+/*!
+ * \brief Registers a control point to receive event notifications from another
+ * device.
+ *
+ * This operation is synchronous.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
+ *             point handle.
+ *     \li \c UPNP_E_INVALID_URL: \b PublisherUrl is not a valid URL.
+ *     \li \c UPNP_E_INVALID_PARAM: \b Timeout is not a valid pointer
+ *             or \b SubsId or \b PublisherUrl is \c NULL.
+ *     \li \c UPNP_E_NETWORK_ERROR: A network error occured.
+ *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *             to a socket.
+ *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
+ *             from a socket.
+ *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
+ *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting to
+ *             \b PublisherUrl.
+ *     \li \c UPNP_E_OUTOF_SOCKET: An error occurred creating a socket.
+ *     \li \c UPNP_E_BAD_RESPONSE: An error occurred in response from
+ *             the publisher.
+ *     \li \c UPNP_E_SUBSCRIBE_UNACCEPTED: The publisher refused
+ *             the subscription request.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             complete this operation.
+ */
+EXPORT_SPEC int UpnpSubscribe(
+        /*! [in] The handle of the control point. */
+        UpnpClient_Handle Hnd,
+        /*! [in] The URL of the service to subscribe to. */
+        const char *PublisherUrl,
+        /*! [in,out]Pointer to a variable containing the requested subscription
+         * time. Upon return, it contains the actual subscription time returned
+         * from the service. */
+        int *TimeOut,
+        /*! [out] Pointer to a variable to receive the subscription ID (SID). */
+        Upnp_SID SubsId);
+
+/*!
+ * \brief Performs the same operation as \b UpnpSubscribe, but returns
+ * immediately and calls the registered callback function when the operation
+ * is complete.
+ *
+ * Note that many of the error codes for this function are returned in
+ * the \b UpnpEventSubscribe structure. In those cases, the function
+ * returns \c UPNP_E_SUCCESS and the appropriate error code will
+ * be in the <b>UpnpEventSubscribe.ErrCode</b> field in the \b Event
+ * structure passed to the callback.
+ *
+ *  \return An integer representing one of the following:
+ *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *      \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
+ *              point handle.
+ *      \li \c UPNP_E_INVALID_URL: The \b PublisherUrl is not a valid
+ *              URL.
+ *      \li \c UPNP_E_INVALID_PARAM: Either \b TimeOut or \b Fun or
+ *              \b PublisherUrl is not a valid pointer.
+ *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *              complete this operation.
+ *      \li \c UPNP_E_NETWORK_ERROR: A network error occured (returned in
+ *              the <b>UpnpEventSubscribe.ErrCode</b> field as part of the
+ *              callback).
+ *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *              to a socket (returned in the
+ *              <b>UpnpEventSubscribe.ErrCode</b> field as part of the
+ *              callback).
+ *      \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
+ *              from a socket (returned in the
+ *              <b>UpnpEventSubscribe.ErrCode</b> field as part of the
+ *              callback).
+ *      \li \c UPNP_E_SOCKET_BIND: An error occurred binding the socket
+ *              (returned in the <b>UpnpEventSubscribe.ErrCode</b> field as
+ *              part of the callback).
+ *      \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting to
+ *              \b PublisherUrl (returned in the \b
+ *              UpnpEventSubscribe.ErrCode field as part of the callback).
+ *      \li \c UPNP_E_OUTOF_SOCKET: An error occurred creating  the
+ *              socket (returned in the <b>UpnpEventSubscribe.ErrCode</b>
+ *              field as part of the callback).
+ *      \li \c UPNP_E_BAD_RESPONSE: An error occurred in response from
+ *              the publisher (returned in the \b
+ *              UpnpEventSubscribe.ErrCode field as part of the callback).
+ *      \li \c UPNP_E_SUBSCRIBE_UNACCEPTED: The publisher refused
+ *              the subscription request (returned in the \b
+ *              UpnpEventSubscribe.ErrCode field as part of the callback).
+ */
+EXPORT_SPEC int UpnpSubscribeAsync(
+        /*! The handle of the control point that is subscribing. */
+        UpnpClient_Handle Hnd,
+        /*! The URL of the service to subscribe to. */
+        const char *PublisherUrl,
+        /*! The requested subscription time. Upon return, it contains the actual
+         * subscription time returned from the service. */
+        int TimeOut,
+        /*! Pointer to the callback function for this subscribe request. */
+        Upnp_FunPtr Fun,
+        /*! A user data value passed to the callback function when invoked. */
+        const void *Cookie);
+
+/*!
+ * \brief Removes the subscription of a control point from a service previously
+ * subscribed to using \b UpnpSubscribe or \b UpnpSubscribeAsync.
+ *
+ * This is a synchronous call.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
+ *             point handle.
+ *     \li \c UPNP_E_INVALID_SID: The \b SubsId is not a valid
+ *             subscription ID.
+ *     \li \c UPNP_E_NETWORK_ERROR: A network error occured.
+ *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *             to a socket.
+ *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
+ *             from a socket.
+ *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
+ *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting to
+ *             \b PublisherUrl.
+ *     \li \c UPNP_E_OUTOF_SOCKET: An error ocurred creating a socket.
+ *     \li \c UPNP_E_BAD_RESPONSE: An error occurred in response from
+ *             the publisher.
+ *     \li \c UPNP_E_UNSUBSCRIBE_UNACCEPTED: The publisher refused
+ *             the unsubscribe request (the client is still unsubscribed and
+ *             no longer receives events).
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             complete this operation.
+ */
+EXPORT_SPEC int UpnpUnSubscribe(
+        /*! [in] The handle of the subscribed control point. */
+        UpnpClient_Handle Hnd,
+        /*! [in] The ID returned when the control point subscribed to the
+           service. */
+        const Upnp_SID SubsId);
+
+/*!
+ * \brief Removes a subscription of a control point from a service previously
+ * subscribed to using \b UpnpSubscribe or \b UpnpSubscribeAsync, generating
+ * a callback when the operation is complete.
+ *
+ * Note that many of the error codes for this function are returned in
+ * the \b UpnpEventSubscribe structure.  In those cases, the function
+ * returns \c UPNP_E_SUCCESS and the appropriate error code will
+ * be in the <b>UpnpEventSubscribe.ErrCode</b> field in the \b Event
+ * structure passed to the callback.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_HANDLE: The handle is not a valid control
+ *             point handle.
+ *     \li \c UPNP_E_INVALID_SID: The \b SubsId is not a valid SID.
+ *     \li \c UPNP_E_INVALID_PARAM: \b Fun is not a valid callback
+ *             function pointer.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             complete this operation.
+ *     \li \c UPNP_E_NETWORK_ERROR: A network error occured (returned in
+ *             the <b>UpnpEventSubscribe.ErrCode</b> field as part of the
+ *             callback).
+ *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *             to a socket (returned in the <b>UpnpEventSubscribe.ErrCode</b>
+ *             field as part of the callback).
+ *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
+ *             from a socket (returned in the
+ *             <b>UpnpEventSubscribe.ErrCode</b> field as part of the
+ *             callback).
+ *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding the socket
+ *             (returned in the <b>UpnpEventSubscribe.ErrCode</b> field as
+ *             part of the callback).
+ *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting to
+ *		\b PublisherUrl (returned in the
+ *		<b>UpnpEventSubscribe.ErrCode</b> field as part of the
+ *		callback).
+ *	\li \c  UPNP_E_OUTOF_SOCKET: An error occurred creating a socket
+ *		(returned in the <b>UpnpEventSubscribe.ErrCode</b> field as part
+ *		of the callback).
+ *	\li \c UPNP_E_BAD_RESPONSE: An error occurred in response from the
+ *		publisher (returned in the <b>UpnpEventSubscribe.ErrCode</b>
+ *		field as part of the callback).
+ *	\li \c UPNP_E_UNSUBSCRIBE_UNACCEPTED: The publisher refused the
+ *		subscription request (returned in the
+ *		<b>UpnpEventSubscribe.ErrCode</b> field as part of the
+ *		callback).
+ */
+EXPORT_SPEC int UpnpUnSubscribeAsync(
+        /*! [in] The handle of the subscribed control point. */
+        UpnpClient_Handle Hnd,
+        /*! [in] The ID returned when the control point subscribed to the
+           service. */
+        Upnp_SID SubsId,
+        /*! [in] Pointer to a callback function to be called when the operation
+         * is complete. */
+        Upnp_FunPtr Fun,
+        /*! [in] Pointer to user data to pass to the callback function when
+           invoked. */
+        const void *Cookie);
+
+/*! @} Eventing */
+
+/******************************************************************************
+ ******************************************************************************
+ *                                                                            *
+ *                        C L I E N T - A P I                                 *
+ *                                                                            *
+ ******************************************************************************
+ ******************************************************************************/
+
+/*!
+ * \name Control Point HTTP API
+ *
+ * @{
+ */
+
+/*!
+ * \brief Different HTTP methods.
+ */
+#endif // #if false
 enum Upnp_HttpMethod_e
 {
         UPNP_HTTPMETHOD_PUT = 0,
@@ -1944,353 +1952,355 @@ enum Upnp_HttpMethod_e
 
 typedef enum Upnp_HttpMethod_e Upnp_HttpMethod;
 
-// /*!
-//  * \brief Downloads a file specified in a URL.
-//  *
-//  * The SDK allocates the memory for \b outBuf and the application is
-//  * responsible for freeing this memory. Note that the item is passed as a
-//  * single buffer. Large items should not be transferred using this function.
-//  *
-//  *  \return An integer representing one of the following:
-//  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *      \li \c UPNP_E_INVALID_PARAM: Either \b url, \b outBuf
-//  *              or \b contentType is not a valid pointer.
-//  *      \li \c UPNP_E_INVALID_URL: The \b url is not a valid
-//  *              URL.
-//  *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *              download this file.
-//  *      \li \c UPNP_E_NETWORK_ERROR: A network error occurred.
-//  *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *              to a socket.
-//  *      \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
-//  *              from a socket.
-//  *      \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
-//  *      \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting a
-//  *              socket.
-//  *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
-//  *              allocated.
-//  */
-// EXPORT_SPEC int UpnpDownloadUrlItem(
-//         /*! [in] URL of an item to download. */
-//         const char *url,
-//         /*! [out] Buffer to store the downloaded item. */
-//         char **outBuf,
-//         /*! [out] HTTP header value content type if present. It should be at
-//          * least \c LINE_SIZE bytes in size. */
-//         char *contentType);
-// 
-// /*!
-//  * \brief Gets a file specified in a URL.
-//  *
-//  * The SDK allocates the memory for \b handle and \b contentType, the
-//  * application is responsible for freeing this memory.
-//  *
-//  * \note Memory for \b contentType is freed when freeing the memory
-//  *       for handle.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_PARAM: Either \b url, \b handle,
-//  *     	is not a valid pointer.
-//  *     \li \c UPNP_E_INVALID_URL: The \b url is not a valid
-//  *             URL.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             download this file.
-//  *     \li \c UPNP_E_NETWORK_ERROR: A network error occurred.
-//  *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *             to a socket.
-//  *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
-//  *             from a socket.
-//  *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
-//  *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting a
-//  *             socket.
-//  *     \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
-//  *             allocated.
-//  *     \li \c UPNP_E_BAD_RESPONSE: A bad response was received from the
-//  *             remote server.
-//  */
-// EXPORT_SPEC int UpnpOpenHttpGet(
-//         /*! [in] The URL of an item to get. */
-//         const char *url,
-//         /*! [in,out] A pointer to store the handle for this connection. */
-//         void **handle,
-//         /*! [in,out] A buffer to store the media type of the item. */
-//         char **contentType,
-//         /*! [in,out] A pointer to store the length of the item. */
-//         int *contentLength,
-//         /*! [in,out] The status returned on receiving a response message. */
-//         int *httpStatus,
-//         /*! [in] The time out value sent with the request during which a
-//          * response is expected from the server, failing which, an error is
-//          * reported
-//          * back to the user. If value is negative, timeout is infinite. */
-//         int timeout);
-// 
-// /*!
-//  * \brief Gets a file specified in a URL through the specified proxy.
-//  *
-//  * The SDK allocates the memory for \b handle and \b contentType, the
-//  * application is responsible for freeing this memory.
-//  *
-//  * \note Memory for \b contentType is freed when freeing the memory
-//  *       for handle.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_PARAM: Either \b url, \b handle,
-//  *     	is not a valid pointer.
-//  *     \li \c UPNP_E_INVALID_URL: The \b url is not a valid
-//  *             URL.
-//  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *             download this file.
-//  *     \li \c UPNP_E_NETWORK_ERROR: A network error occurred.
-//  *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *             to a socket.
-//  *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
-//  *             from a socket.
-//  *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
-//  *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting a
-//  *             socket.
-//  *     \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
-//  *             allocated.
-//  *     \li \c UPNP_E_BAD_RESPONSE: A bad response was received from the
-//  *	       remote server.
-//  */
-// EXPORT_SPEC int UpnpOpenHttpGetProxy(
-//         /*! [in] The URL of an item to get. */
-//         const char *url,
-//         /*! [in] The URL of the proxy. */
-//         const char *proxy_str,
-//         /*! [in,out] A pointer to store the handle for this connection. */
-//         void **handle,
-//         /*! [in,out] A buffer to store the media type of the item. */
-//         char **contentType,
-//         /*! [in,out] A pointer to store the length of the item. */
-//         int *contentLength,
-//         /*! [in,out] The status returned on receiving a response message. */
-//         int *httpStatus,
-//         /*! [in] The time out value sent with the request during which a
-//          * response is expected from the server, failing which, an error is
-//          * reported
-//          * back to the user. If value is negative, timeout is infinite. */
-//         int timeout);
-// 
-// /*!
-//  * \brief Gets specified number of bytes from a file specified in the URL.
-//  *
-//  * The number of bytes is specified through a low count and a high count which
-//  * are passed as a range of bytes for the request. The SDK allocates the memory
-//  * for \b handle and \b contentType, the application is responsible for freeing
-//  * this memory.
-//  *
-//  *  \return An integer representing one of the following:
-//  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *      \li \c UPNP_E_INVALID_PARAM: Either \b url, \b handle,
-//  *              \b contentType, \b contentLength or \b httpStatus
-//  *		is not a valid pointer.
-//  *      \li \c UPNP_E_INVALID_URL: The \b url is not a valid
-//  *              URL.
-//  *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *              download this file.
-//  *      \li \c UPNP_E_NETWORK_ERROR: A network error occurred.
-//  *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *              to a socket.
-//  *      \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
-//  *              from a socket.
-//  *      \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
-//  *      \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting a
-//  *              socket.
-//  *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
-//  *              allocated.
-//  *	\li \c UPNP_E_BAD_RESPONSE: A bad response was received from the
-//  *	        remote server.
-//  */
-// EXPORT_SPEC int UpnpOpenHttpGetEx(
-//         /*! [in] The URL of the item to get. */
-//         const char *url,
-//         /*! [in,out] A pointer to store the handle for this connection. */
-//         void **handle,
-//         /*! [in,out] A buffer to store the media type of the item. */
-//         char **contentType,
-//         /*! [in,out] A buffer to store the length of the item. */
-//         int *contentLength,
-//         /*! [in,out] The status returned on receiving a response message from
-//            the remote server. */
-//         int *httpStatus,
-//         /*! [in] An integer value representing the low end of a range to
-//            retrieve. */
-//         int lowRange,
-//         /*! [in] An integer value representing the high end of a range to
-//            retrieve. */
-//         int highRange,
-//         /*! [in] A time out value sent with the request during which a response
-//          * is expected from the server, failing which, an error is reported back
-//          * to the user. If value is negative, timeout is infinite. */
-//         int timeout);
-// 
-// /*!
-//  * \brief Gets specified number of bytes from a file specified in a URL.
-//  *
-//  *  \return An integer representing one of the following:
-//  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *      \li \c UPNP_E_INVALID_PARAM: Either \b handle, \b buf
-//  *              or \b size is not a valid pointer.
-//  *	    \li \c UPNP_E_BAD_RESPONSE: A bad response was received from the
-//  *	            remote server.
-//  *      \li \c UPNP_E_BAD_HTTPMSG: Either the request or response was in
-//  *              the incorrect format.
-//  *      \li \c UPNP_E_CANCELED: another thread called UpnpCancelHttpGet.
-//  *
-//  *  Note: In case of return values, the status code parameter of the passed
-//  *        in handle value may provide additional information on the return
-//  *        value.
-//  */
-// EXPORT_SPEC int UpnpReadHttpGet(
-//         /*! [in] The token created by the call to \b UpnpOpenHttpGet. */
-//         void *handle,
-//         /*! [in,out] The buffer to store the read item. */
-//         char *buf,
-//         /*! [in,out] The size of the buffer to be read. */
-//         size_t *size,
-//         /*! [in] The time out value sent with the request during which a
-//          * response is expected from the server, failing which, an error is
-//          * reported back to
-//          * the user. If value is negative, timeout is infinite. */
-//         int timeout);
-// 
-// /*!
-//  * \brief Retrieve progress information of a http-get transfer.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_PARAM: Either \b handle, \b length
-//  *		or \b total is not a valid pointer.
-//  */
-// EXPORT_SPEC int UpnpHttpGetProgress(
-//         /*! [in] The token created by the call to \b UpnpOpenHttpGet. */
-//         void *handle,
-//         /*! [out] The number of bytes received. */
-//         size_t *length,
-//         /*! [out] The content length. */
-//         size_t *total);
-// 
-// /*!
-//  * \brief Set the cancel flag of the \b handle parameter.
-//  *
-//  * \return An integer representing one of the following:
-//  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *      \li \c UPNP_E_INVALID_PARAM: \b handle is not a valid pointer.
-//  */
-// EXPORT_SPEC int UpnpCancelHttpGet(
-//         /*! [in] The handle of the connection created by the call to
-//          * \b UpnpOpenHttpGet. */
-//         void *handle);
-// 
-// /*!
-//  * \brief Closes the connection and frees memory that was allocated for the
-//  * \b handle parameter.
-//  *
-//  * \return An integer representing one of the following:
-//  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *      \li \c UPNP_E_INVALID_PARAM: \b handle is not a valid pointer.
-//  */
-// EXPORT_SPEC int UpnpCloseHttpGet(
-//         /*! [in] The handle of the connection created by the call to
-//          * \b UpnpOpenHttpGet. */
-//         void *handle);
-// 
-// /*!
-//  * \brief Makes an HTTP POST request message, opens a connection to the server
-//  * and sends the POST request to the server if the connection to the server
-//  * succeeds.
-//  *
-//  * The SDK allocates the memory for \b handle, the
-//  * application is responsible for freeing this memory.
-//  *
-//  *  \return An integer representing one of the following:
-//  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *      \li \c UPNP_E_INVALID_PARAM: Either \b url, \b handle
-//  *              or \b contentType is not a valid pointer.
-//  *      \li \c UPNP_E_INVALID_URL: The \b url is not a valid
-//  *              URL.
-//  *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
-//  *              download this file.
-//  *      \li \c UPNP_E_SOCKET_ERROR: Error occured allocating a socket and
-//  *		resources or an error occurred binding a socket.
-//  *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *              to a socket.
-//  *      \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting a
-//  *              socket.
-//  *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
-//  *              allocated.
-//  */
-// EXPORT_SPEC int UpnpOpenHttpPost(
-//         /*! [in] The URL in which to send the POST request. */
-//         const char *url,
-//         /*! [in,out] A pointer in which to store the handle for this connection.
-//          * This handle is required for futher operations over this connection.
-//          */
-//         void **handle,
-//         /*! [in] A buffer to store the media type of content being sent. Can be
-//            NULL. */
-//         const char *contentType,
-//         /*! [in] The length of the content, in bytes, being posted. */
-//         int contentLength,
-//         /*! [in] The time out value sent with the request during which a
-//          * response is expected from the receiver, failing which, an error is
-//          * reported. If value is negative, timeout is infinite. */
-//         int timeout);
-// 
-// /*!
-//  * \brief Sends a request to a server to copy the contents of a buffer to the
-//  * URI specified in the \b UpnpOpenHttpPost call.
-//  *
-//  *  \return An integer representing one of the following:
-//  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *      \li \c UPNP_E_INVALID_PARAM: Either \b handle, \b buf
-//  *              or \b size is not a valid pointer.
-//  *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *              to a socket.
-//  *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
-//  *              allocated.
-//  */
-// EXPORT_SPEC int UpnpWriteHttpPost(
-//         /*! [in] The handle of the connection created by the call to
-//          * \b UpnpOpenHttpPost. */
-//         void *handle,
-//         /*! [in] The buffer to be posted. */
-//         char *buf,
-//         /*! [in] The size, in bytes of \b buf. */
-//         size_t *size,
-//         /*! [in] A timeout value sent with the request during which a response
-//          * is expected from the server, failing which, an error is reported. If
-//          * value is negative, timeout is infinite. */
-//         int timeout);
-// 
-// /*!
-//  * \brief Sends and receives any pending data, closes the connection with the
-//  * server, and frees memory allocated during the \b UpnpOpenHttpPost call.
-//  *
-//  * \return An integer representing one of the following:
-//  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *     \li \c UPNP_E_INVALID_PARAM: Either \b handle, or
-//  *     			\b httpStatus is not a valid pointer.
-//  *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
-//  *             from a socket.
-//  *     \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
-//  *             allocated.
-//  */
-// EXPORT_SPEC int UpnpCloseHttpPost(
-//         /*! [in] The handle of the connection to close, created by the call to
-//          * \b UpnpOpenHttpPost. */
-//         void *handle,
-//         /*! [in,out] A pointer to a buffer to store the final status of the
-//            connection. */
-//         int *httpStatus,
-//         /*! [in] A time out value sent with the request during which a response
-//          * is expected from the server, failing which, an error is reported. If
-//          * value is negative, timeout is infinite. */
-//         int timeout);
+#if false
+/*!
+ * \brief Downloads a file specified in a URL.
+ *
+ * The SDK allocates the memory for \b outBuf and the application is
+ * responsible for freeing this memory. Note that the item is passed as a
+ * single buffer. Large items should not be transferred using this function.
+ *
+ *  \return An integer representing one of the following:
+ *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *      \li \c UPNP_E_INVALID_PARAM: Either \b url, \b outBuf
+ *              or \b contentType is not a valid pointer.
+ *      \li \c UPNP_E_INVALID_URL: The \b url is not a valid
+ *              URL.
+ *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *              download this file.
+ *      \li \c UPNP_E_NETWORK_ERROR: A network error occurred.
+ *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *              to a socket.
+ *      \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
+ *              from a socket.
+ *      \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
+ *      \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting a
+ *              socket.
+ *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
+ *              allocated.
+ */
+EXPORT_SPEC int UpnpDownloadUrlItem(
+        /*! [in] URL of an item to download. */
+        const char *url,
+        /*! [out] Buffer to store the downloaded item. */
+        char **outBuf,
+        /*! [out] HTTP header value content type if present. It should be at
+         * least \c LINE_SIZE bytes in size. */
+        char *contentType);
+
+/*!
+ * \brief Gets a file specified in a URL.
+ *
+ * The SDK allocates the memory for \b handle and \b contentType, the
+ * application is responsible for freeing this memory.
+ *
+ * \note Memory for \b contentType is freed when freeing the memory
+ *       for handle.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_PARAM: Either \b url, \b handle,
+ *     	is not a valid pointer.
+ *     \li \c UPNP_E_INVALID_URL: The \b url is not a valid
+ *             URL.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             download this file.
+ *     \li \c UPNP_E_NETWORK_ERROR: A network error occurred.
+ *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *             to a socket.
+ *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
+ *             from a socket.
+ *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
+ *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting a
+ *             socket.
+ *     \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
+ *             allocated.
+ *     \li \c UPNP_E_BAD_RESPONSE: A bad response was received from the
+ *             remote server.
+ */
+EXPORT_SPEC int UpnpOpenHttpGet(
+        /*! [in] The URL of an item to get. */
+        const char *url,
+        /*! [in,out] A pointer to store the handle for this connection. */
+        void **handle,
+        /*! [in,out] A buffer to store the media type of the item. */
+        char **contentType,
+        /*! [in,out] A pointer to store the length of the item. */
+        int *contentLength,
+        /*! [in,out] The status returned on receiving a response message. */
+        int *httpStatus,
+        /*! [in] The time out value sent with the request during which a
+         * response is expected from the server, failing which, an error is
+         * reported
+         * back to the user. If value is negative, timeout is infinite. */
+        int timeout);
+
+/*!
+ * \brief Gets a file specified in a URL through the specified proxy.
+ *
+ * The SDK allocates the memory for \b handle and \b contentType, the
+ * application is responsible for freeing this memory.
+ *
+ * \note Memory for \b contentType is freed when freeing the memory
+ *       for handle.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_PARAM: Either \b url, \b handle,
+ *     	is not a valid pointer.
+ *     \li \c UPNP_E_INVALID_URL: The \b url is not a valid
+ *             URL.
+ *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *             download this file.
+ *     \li \c UPNP_E_NETWORK_ERROR: A network error occurred.
+ *     \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *             to a socket.
+ *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
+ *             from a socket.
+ *     \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
+ *     \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting a
+ *             socket.
+ *     \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
+ *             allocated.
+ *     \li \c UPNP_E_BAD_RESPONSE: A bad response was received from the
+ *	       remote server.
+ */
+EXPORT_SPEC int UpnpOpenHttpGetProxy(
+        /*! [in] The URL of an item to get. */
+        const char *url,
+        /*! [in] The URL of the proxy. */
+        const char *proxy_str,
+        /*! [in,out] A pointer to store the handle for this connection. */
+        void **handle,
+        /*! [in,out] A buffer to store the media type of the item. */
+        char **contentType,
+        /*! [in,out] A pointer to store the length of the item. */
+        int *contentLength,
+        /*! [in,out] The status returned on receiving a response message. */
+        int *httpStatus,
+        /*! [in] The time out value sent with the request during which a
+         * response is expected from the server, failing which, an error is
+         * reported
+         * back to the user. If value is negative, timeout is infinite. */
+        int timeout);
+
+/*!
+ * \brief Gets specified number of bytes from a file specified in the URL.
+ *
+ * The number of bytes is specified through a low count and a high count which
+ * are passed as a range of bytes for the request. The SDK allocates the memory
+ * for \b handle and \b contentType, the application is responsible for freeing
+ * this memory.
+ *
+ *  \return An integer representing one of the following:
+ *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *      \li \c UPNP_E_INVALID_PARAM: Either \b url, \b handle,
+ *              \b contentType, \b contentLength or \b httpStatus
+ *		is not a valid pointer.
+ *      \li \c UPNP_E_INVALID_URL: The \b url is not a valid
+ *              URL.
+ *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *              download this file.
+ *      \li \c UPNP_E_NETWORK_ERROR: A network error occurred.
+ *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *              to a socket.
+ *      \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
+ *              from a socket.
+ *      \li \c UPNP_E_SOCKET_BIND: An error occurred binding a socket.
+ *      \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting a
+ *              socket.
+ *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
+ *              allocated.
+ *	\li \c UPNP_E_BAD_RESPONSE: A bad response was received from the
+ *	        remote server.
+ */
+EXPORT_SPEC int UpnpOpenHttpGetEx(
+        /*! [in] The URL of the item to get. */
+        const char *url,
+        /*! [in,out] A pointer to store the handle for this connection. */
+        void **handle,
+        /*! [in,out] A buffer to store the media type of the item. */
+        char **contentType,
+        /*! [in,out] A buffer to store the length of the item. */
+        int *contentLength,
+        /*! [in,out] The status returned on receiving a response message from
+           the remote server. */
+        int *httpStatus,
+        /*! [in] An integer value representing the low end of a range to
+           retrieve. */
+        int lowRange,
+        /*! [in] An integer value representing the high end of a range to
+           retrieve. */
+        int highRange,
+        /*! [in] A time out value sent with the request during which a response
+         * is expected from the server, failing which, an error is reported back
+         * to the user. If value is negative, timeout is infinite. */
+        int timeout);
+
+/*!
+ * \brief Gets specified number of bytes from a file specified in a URL.
+ *
+ *  \return An integer representing one of the following:
+ *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *      \li \c UPNP_E_INVALID_PARAM: Either \b handle, \b buf
+ *              or \b size is not a valid pointer.
+ *	    \li \c UPNP_E_BAD_RESPONSE: A bad response was received from the
+ *	            remote server.
+ *      \li \c UPNP_E_BAD_HTTPMSG: Either the request or response was in
+ *              the incorrect format.
+ *      \li \c UPNP_E_CANCELED: another thread called UpnpCancelHttpGet.
+ *
+ *  Note: In case of return values, the status code parameter of the passed
+ *        in handle value may provide additional information on the return
+ *        value.
+ */
+EXPORT_SPEC int UpnpReadHttpGet(
+        /*! [in] The token created by the call to \b UpnpOpenHttpGet. */
+        void *handle,
+        /*! [in,out] The buffer to store the read item. */
+        char *buf,
+        /*! [in,out] The size of the buffer to be read. */
+        size_t *size,
+        /*! [in] The time out value sent with the request during which a
+         * response is expected from the server, failing which, an error is
+         * reported back to
+         * the user. If value is negative, timeout is infinite. */
+        int timeout);
+
+/*!
+ * \brief Retrieve progress information of a http-get transfer.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_PARAM: Either \b handle, \b length
+ *		or \b total is not a valid pointer.
+ */
+EXPORT_SPEC int UpnpHttpGetProgress(
+        /*! [in] The token created by the call to \b UpnpOpenHttpGet. */
+        void *handle,
+        /*! [out] The number of bytes received. */
+        size_t *length,
+        /*! [out] The content length. */
+        size_t *total);
+
+/*!
+ * \brief Set the cancel flag of the \b handle parameter.
+ *
+ * \return An integer representing one of the following:
+ *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *      \li \c UPNP_E_INVALID_PARAM: \b handle is not a valid pointer.
+ */
+EXPORT_SPEC int UpnpCancelHttpGet(
+        /*! [in] The handle of the connection created by the call to
+         * \b UpnpOpenHttpGet. */
+        void *handle);
+
+/*!
+ * \brief Closes the connection and frees memory that was allocated for the
+ * \b handle parameter.
+ *
+ * \return An integer representing one of the following:
+ *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *      \li \c UPNP_E_INVALID_PARAM: \b handle is not a valid pointer.
+ */
+EXPORT_SPEC int UpnpCloseHttpGet(
+        /*! [in] The handle of the connection created by the call to
+         * \b UpnpOpenHttpGet. */
+        void *handle);
+
+/*!
+ * \brief Makes an HTTP POST request message, opens a connection to the server
+ * and sends the POST request to the server if the connection to the server
+ * succeeds.
+ *
+ * The SDK allocates the memory for \b handle, the
+ * application is responsible for freeing this memory.
+ *
+ *  \return An integer representing one of the following:
+ *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *      \li \c UPNP_E_INVALID_PARAM: Either \b url, \b handle
+ *              or \b contentType is not a valid pointer.
+ *      \li \c UPNP_E_INVALID_URL: The \b url is not a valid
+ *              URL.
+ *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
+ *              download this file.
+ *      \li \c UPNP_E_SOCKET_ERROR: Error occured allocating a socket and
+ *		resources or an error occurred binding a socket.
+ *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *              to a socket.
+ *      \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting a
+ *              socket.
+ *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
+ *              allocated.
+ */
+EXPORT_SPEC int UpnpOpenHttpPost(
+        /*! [in] The URL in which to send the POST request. */
+        const char *url,
+        /*! [in,out] A pointer in which to store the handle for this connection.
+         * This handle is required for futher operations over this connection.
+         */
+        void **handle,
+        /*! [in] A buffer to store the media type of content being sent. Can be
+           NULL. */
+        const char *contentType,
+        /*! [in] The length of the content, in bytes, being posted. */
+        int contentLength,
+        /*! [in] The time out value sent with the request during which a
+         * response is expected from the receiver, failing which, an error is
+         * reported. If value is negative, timeout is infinite. */
+        int timeout);
+
+/*!
+ * \brief Sends a request to a server to copy the contents of a buffer to the
+ * URI specified in the \b UpnpOpenHttpPost call.
+ *
+ *  \return An integer representing one of the following:
+ *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *      \li \c UPNP_E_INVALID_PARAM: Either \b handle, \b buf
+ *              or \b size is not a valid pointer.
+ *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *              to a socket.
+ *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
+ *              allocated.
+ */
+EXPORT_SPEC int UpnpWriteHttpPost(
+        /*! [in] The handle of the connection created by the call to
+         * \b UpnpOpenHttpPost. */
+        void *handle,
+        /*! [in] The buffer to be posted. */
+        char *buf,
+        /*! [in] The size, in bytes of \b buf. */
+        size_t *size,
+        /*! [in] A timeout value sent with the request during which a response
+         * is expected from the server, failing which, an error is reported. If
+         * value is negative, timeout is infinite. */
+        int timeout);
+
+/*!
+ * \brief Sends and receives any pending data, closes the connection with the
+ * server, and frees memory allocated during the \b UpnpOpenHttpPost call.
+ *
+ * \return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *     \li \c UPNP_E_INVALID_PARAM: Either \b handle, or
+ *     			\b httpStatus is not a valid pointer.
+ *     \li \c UPNP_E_SOCKET_READ: An error or timeout occurred reading
+ *             from a socket.
+ *     \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
+ *             allocated.
+ */
+EXPORT_SPEC int UpnpCloseHttpPost(
+        /*! [in] The handle of the connection to close, created by the call to
+         * \b UpnpOpenHttpPost. */
+        void *handle,
+        /*! [in,out] A pointer to a buffer to store the final status of the
+           connection. */
+        int *httpStatus,
+        /*! [in] A time out value sent with the request during which a response
+         * is expected from the server, failing which, an error is reported. If
+         * value is negative, timeout is infinite. */
+        int timeout);
+#endif // #if false
 
 /*!
  * \brief Opens a connection to the server.
@@ -2379,32 +2389,34 @@ EXPORT_SPEC int UpnpMakeHttpRequest(
          * reported. If value is negative, timeout is infinite. */
         int timeout);
 
-// /*!
-//  * \brief Writes the content of a HTTP request initiated by a \b
-//  * UpnpMakeHttpRequest call. The end of the content should be indicated by a
-//  * call to \b UpnpEndHttpRequest
-//  *
-//  *  \return An integer representing one of the following:
-//  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *      \li \c UPNP_E_INVALID_PARAM: Either \b handle, \b buf
-//  *              or \b size is not a valid pointer.
-//  *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
-//  *              to a socket.
-//  *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
-//  *              allocated.
-//  */
-// EXPORT_SPEC int UpnpWriteHttpRequest(
-//         /*! [in] The handle of the connection created by the call to
-//          * \b UpnpOpenHttpConnection. */
-//         void *handle,
-//         /*! [in] The buffer containing date to be written. */
-//         char *buf,
-//         /*! [in] The size, in bytes of \b buf. */
-//         size_t *size,
-//         /*! [in] A timeout value sent with the request during which a response
-//          * is expected from the server, failing which, an error is reported. If
-//          * value is negative, timeout is infinite. */
-//         int timeout);
+#if false
+/*!
+ * \brief Writes the content of a HTTP request initiated by a \b
+ * UpnpMakeHttpRequest call. The end of the content should be indicated by a
+ * call to \b UpnpEndHttpRequest
+ *
+ *  \return An integer representing one of the following:
+ *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *      \li \c UPNP_E_INVALID_PARAM: Either \b handle, \b buf
+ *              or \b size is not a valid pointer.
+ *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
+ *              to a socket.
+ *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
+ *              allocated.
+ */
+EXPORT_SPEC int UpnpWriteHttpRequest(
+        /*! [in] The handle of the connection created by the call to
+         * \b UpnpOpenHttpConnection. */
+        void *handle,
+        /*! [in] The buffer containing date to be written. */
+        char *buf,
+        /*! [in] The size, in bytes of \b buf. */
+        size_t *size,
+        /*! [in] A timeout value sent with the request during which a response
+         * is expected from the server, failing which, an error is reported. If
+         * value is negative, timeout is infinite. */
+        int timeout);
+#endif // #if false
 
 /*!
  * \brief Indicates the end of a HTTP request previously made by
@@ -2479,37 +2491,39 @@ EXPORT_SPEC int UpnpGetHttpResponse(
          * back to the user. If value is negative, timeout is infinite. */
         int timeout);
 
-// /*!
-//  * \brief Reads the content of a response using a connection previously created
-//  * by \b UpnpOpenHttpConnection.
-//  *
-//  *  \return An integer representing one of the following:
-//  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *      \li \c UPNP_E_INVALID_PARAM: Either \b handle, \b buf
-//  *              or \b size is not a valid pointer.
-//  *	    \li \c UPNP_E_BAD_RESPONSE: A bad response was received from the
-//  *	            remote server.
-//  *      \li \c UPNP_E_BAD_HTTPMSG: Either the request or response was in
-//  *              the incorrect format.
-//  *      \li \c UPNP_E_CANCELED: another thread called UpnpCancelHttpGet.
-//  *
-//  *  Note: In case of return values, the status code parameter of the passed
-//  *        in handle value may provide additional information on the return
-//  *        value.
-//  */
-// EXPORT_SPEC int UpnpReadHttpResponse(
-//         /*! [in] The handle of the connection created by the call to
-//          * \b UpnpOpenHttpConnection. */
-//         void *handle,
-//         /*! [in,out] The buffer to store the read item. */
-//         char *buf,
-//         /*! [in,out] The size of the buffer to be read. */
-//         size_t *size,
-//         /*! [in] The time out value sent with the request during which a
-//          * response is expected from the server, failing which, an error is
-//          * reported back to
-//          * the user. If value is negative, timeout is infinite. */
-//         int timeout);
+#if false
+/*!
+ * \brief Reads the content of a response using a connection previously created
+ * by \b UpnpOpenHttpConnection.
+ *
+ *  \return An integer representing one of the following:
+ *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *      \li \c UPNP_E_INVALID_PARAM: Either \b handle, \b buf
+ *              or \b size is not a valid pointer.
+ *	    \li \c UPNP_E_BAD_RESPONSE: A bad response was received from the
+ *	            remote server.
+ *      \li \c UPNP_E_BAD_HTTPMSG: Either the request or response was in
+ *              the incorrect format.
+ *      \li \c UPNP_E_CANCELED: another thread called UpnpCancelHttpGet.
+ *
+ *  Note: In case of return values, the status code parameter of the passed
+ *        in handle value may provide additional information on the return
+ *        value.
+ */
+EXPORT_SPEC int UpnpReadHttpResponse(
+        /*! [in] The handle of the connection created by the call to
+         * \b UpnpOpenHttpConnection. */
+        void *handle,
+        /*! [in,out] The buffer to store the read item. */
+        char *buf,
+        /*! [in,out] The size of the buffer to be read. */
+        size_t *size,
+        /*! [in] The time out value sent with the request during which a
+         * response is expected from the server, failing which, an error is
+         * reported back to
+         * the user. If value is negative, timeout is infinite. */
+        int timeout);
+#endif // #if false
 
 /*!
  * \brief Closes the connection created with \b UpnpOpenHttpConnection
@@ -2561,50 +2575,52 @@ EXPORT_SPEC int UpnpDownloadXmlDoc(
         /*! [out] A pointer in which to store the XML document. */
         IXML_Document **xmlDoc);
 
-// /*! @} Control Point HTTP API */
-// 
-// /******************************************************************************
-//  ******************************************************************************
-//  *                                                                            *
-//  *                    W E B  S E R V E R  A P I                               *
-//  *                                                                            *
-//  ******************************************************************************
-//  ******************************************************************************/
-// 
-// /*!
-//  * \name Web Server API
-//  *
-//  * @{
-//  */
-// 
-// /*!
-//  * \brief Sets the document root directory for the internal web server.
-//  *
-//  * This directory is considered the root directory (i.e. "/") of the web server.
-//  *
-//  * This function also activates or deactivates the web server. To disable the
-//  * web server, pass \c NULL for \b rootDir; to activate, pass a valid directory
-//  * string.
-//  *
-//  * \note This function is not available when the web server is not compiled
-//  * 	into the UPnP Library.
-//  *
-//  * \return An integer representing one of the following:
-//  *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *       \li \c UPNP_E_INVALID_ARGUMENT: \b rootDir is an invalid directory.
-//  */
-// EXPORT_SPEC int UpnpSetWebServerRootDir(
-//         /*! [in] Path of the root directory of the web server. */
-//         const char *rootDir);
-// 
-// /*!
-//  * \brief The type of handle returned by the web server for open requests.
-//  */
+/*! @} Control Point HTTP API */
+
+/******************************************************************************
+ ******************************************************************************
+ *                                                                            *
+ *                    W E B  S E R V E R  A P I                               *
+ *                                                                            *
+ ******************************************************************************
+ ******************************************************************************/
+
+/*!
+ * \name Web Server API
+ *
+ * @{
+ */
+
+/*!
+ * \brief Sets the document root directory for the internal web server.
+ *
+ * This directory is considered the root directory (i.e. "/") of the web server.
+ *
+ * This function also activates or deactivates the web server. To disable the
+ * web server, pass \c NULL for \b rootDir; to activate, pass a valid directory
+ * string.
+ *
+ * \note This function is not available when the web server is not compiled
+ * 	into the UPnP Library.
+ *
+ * \return An integer representing one of the following:
+ *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *       \li \c UPNP_E_INVALID_ARGUMENT: \b rootDir is an invalid directory.
+ */
+#if false
+EXPORT_SPEC int UpnpSetWebServerRootDir(
+        /*! [in] Path of the root directory of the web server. */
+        const char *rootDir);
+#endif // #if false
+
+/*!
+ * \brief The type of handle returned by the web server for open requests.
+ */
 typedef void *UpnpWebFileHandle;
 
-// /*!
-//  * \brief Get-info callback function prototype.
-//  */
+/*!
+ * \brief Get-info callback function prototype.
+ */
 typedef int (*VDCallback_GetInfo)(
         /*! [in] The name of the file to query. */
         const char *filename,
@@ -2616,19 +2632,21 @@ typedef int (*VDCallback_GetInfo)(
         /*! [out] The cookie associated with this request */
         const void **request_cookie);
 
-// /*!
-//  * \brief Sets the get_info callback function to be used to access a virtual
-//  * directory.
-//  *
-//  * \return An integer representing one of the following:
-//  *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *       \li \c UPNP_E_INVALID_ARGUMENT: \b callback is not a valid pointer.
-//  */
-// EXPORT_SPEC int UpnpVirtualDir_set_GetInfoCallback(VDCallback_GetInfo callback);
-// 
-// /*!
-//  * \brief Open callback function prototype.
-//  */
+/*!
+ * \brief Sets the get_info callback function to be used to access a virtual
+ * directory.
+ *
+ * \return An integer representing one of the following:
+ *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *       \li \c UPNP_E_INVALID_ARGUMENT: \b callback is not a valid pointer.
+ */
+#if false
+EXPORT_SPEC int UpnpVirtualDir_set_GetInfoCallback(VDCallback_GetInfo callback);
+#endif // #if false
+
+/*!
+ * \brief Open callback function prototype.
+ */
 typedef UpnpWebFileHandle (*VDCallback_Open)(
         /*! [in] The name of the file to open. */
         const char *filename,
@@ -2640,19 +2658,21 @@ typedef UpnpWebFileHandle (*VDCallback_Open)(
         /*! [in] The cookie associated with this request */
         const void *request_cookie);
 
-// /*!
-//  * \brief Sets the open callback function to be used to access a virtual
-//  * directory.
-//  *
-//  * \return An integer representing one of the following:
-//  *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *       \li \c UPNP_E_INVALID_ARGUMENT: \b callback is not a valid pointer.
-//  */
-// EXPORT_SPEC int UpnpVirtualDir_set_OpenCallback(VDCallback_Open callback);
-// 
-// /*!
-//  * \brief Read callback function prototype.
-//  */
+/*!
+ * \brief Sets the open callback function to be used to access a virtual
+ * directory.
+ *
+ * \return An integer representing one of the following:
+ *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *       \li \c UPNP_E_INVALID_ARGUMENT: \b callback is not a valid pointer.
+ */
+#if false
+EXPORT_SPEC int UpnpVirtualDir_set_OpenCallback(VDCallback_Open callback);
+#endif // #if false
+
+/*!
+ * \brief Read callback function prototype.
+ */
 typedef int (*VDCallback_Read)(
         /*! [in] The handle of the file to read. */
         UpnpWebFileHandle fileHnd,
@@ -2665,19 +2685,21 @@ typedef int (*VDCallback_Read)(
         /*! [in] The cookie associated with this request */
         const void *request_cookie);
 
-// /*!
-//  * \brief Sets the read callback function to be used to access a virtual
-//  * directory.
-//  *
-//  *  \return An integer representing one of the following:
-//  *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *       \li \c UPNP_E_INVALID_ARGUMENT: \b callback is not a valid pointer.
-//  */
-// EXPORT_SPEC int UpnpVirtualDir_set_ReadCallback(VDCallback_Read callback);
-// 
-// /*!
-//  * \brief Write callback function prototype.
-//  */
+/*!
+ * \brief Sets the read callback function to be used to access a virtual
+ * directory.
+ *
+ *  \return An integer representing one of the following:
+ *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *       \li \c UPNP_E_INVALID_ARGUMENT: \b callback is not a valid pointer.
+ */
+#if false
+EXPORT_SPEC int UpnpVirtualDir_set_ReadCallback(VDCallback_Read callback);
+#endif // #if false
+
+/*!
+ * \brief Write callback function prototype.
+ */
 typedef int (*VDCallback_Write)(
         /*! [in] The handle of the file to write. */
         UpnpWebFileHandle fileHnd,
@@ -2690,19 +2712,21 @@ typedef int (*VDCallback_Write)(
         /*! [in] The cookie associated with this request */
         const void *request_cookie);
 
-// /*!
-//  * \brief Sets the write callback function to be used to access a virtual
-//  * directory.
-//  *
-//  * \return An integer representing one of the following:
-//  *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *       \li \c UPNP_E_INVALID_ARGUMENT: \b callback is not a valid pointer.
-//  */
-// EXPORT_SPEC int UpnpVirtualDir_set_WriteCallback(VDCallback_Write callback);
-// 
-// /*!
-//  * \brief Seek callback function prototype.
-//  */
+/*!
+ * \brief Sets the write callback function to be used to access a virtual
+ * directory.
+ *
+ * \return An integer representing one of the following:
+ *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *       \li \c UPNP_E_INVALID_ARGUMENT: \b callback is not a valid pointer.
+ */
+#if false
+EXPORT_SPEC int UpnpVirtualDir_set_WriteCallback(VDCallback_Write callback);
+#endif // #if false
+
+/*!
+ * \brief Seek callback function prototype.
+ */
 typedef int (*VDCallback_Seek)(
         /*! [in] The handle of the file to move the file pointer. */
         UpnpWebFileHandle fileHnd,
@@ -2720,19 +2744,21 @@ typedef int (*VDCallback_Seek)(
         /*! [in] The cookie associated with this request */
         const void *request_cookie);
 
-// /*!
-//  * \brief Sets the seek callback function to be used to access a virtual
-//  * directory.
-//  *
-//  *  \return An integer representing one of the following:
-//  *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *       \li \c UPNP_E_INVALID_ARGUMENT: \b callback is not a valid pointer.
-//  */
-// EXPORT_SPEC int UpnpVirtualDir_set_SeekCallback(VDCallback_Seek callback);
-// 
-// /*!
-//  * \brief Close callback function prototype.
-//  */
+/*!
+ * \brief Sets the seek callback function to be used to access a virtual
+ * directory.
+ *
+ *  \return An integer representing one of the following:
+ *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *       \li \c UPNP_E_INVALID_ARGUMENT: \b callback is not a valid pointer.
+ */
+#if false
+EXPORT_SPEC int UpnpVirtualDir_set_SeekCallback(VDCallback_Seek callback);
+#endif // #if false
+
+/*!
+ * \brief Close callback function prototype.
+ */
 typedef int (*VDCallback_Close)(
         /*! [in] The handle of the file to close. */
         UpnpWebFileHandle fileHnd,
@@ -2741,79 +2767,112 @@ typedef int (*VDCallback_Close)(
         /*! [in] The cookie associated with this request */
         const void *request_cookie);
 
-// /*!
-//  * \brief Sets the close callback function to be used to access a virtual
-//  * directory.
-//  *
-//  * \return An integer representing one of the following:
-//  *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *       \li \c UPNP_E_INVALID_ARGUMENT: \b callback is not a valid pointer.
-//  */
-// EXPORT_SPEC int UpnpVirtualDir_set_CloseCallback(VDCallback_Close callback);
-// 
-// /*!
-//  * \brief Enables or disables the webserver.
-//  *
-//  * \return An integer representing one of the following:
-//  *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *       \li \c UPNP_E_OUTOF_MEMORY: The web server could not be started due to
-//  *		an out-of-memory condition.
-//  *		 \li \c UPNP_E_NO_WEB_SERVER: The internal web server has been
-//  *compiled out so it can't be enabled or disabled.
-//  */
-// EXPORT_SPEC int UpnpEnableWebserver(
-//         /*! [in] \c 1 to enable, \c 0 to disable. */
-//         int enable);
-// 
-// /*!
-//  * \brief Returns \c 1 if the webserver is enabled, or \c 0 if it is not.
-//  *
-//  *  \return An integer representing one of the following:
-//  *       \li \c 1: The webserver is enabled.
-//  *       \li \c 0: The webserver is not enabled
-//  */
-// EXPORT_SPEC int UpnpIsWebserverEnabled(void);
-// 
-// /*!
-//  * \brief Adds a virtual directory mapping.
-//  *
-//  * All webserver requests containing the given directory are read using
-//  * functions contained in a \b VirtualDirCallbacks structure registered
-//  * via \b UpnpSetVirtualDirCallbacks.
-//  *
-//  * \note This function is not available when the web server is not
-//  * 	compiled into the UPnP Library.
-//  *
-//  * \return An integer representing one of the following:
-//  *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *       \li \c UPNP_E_INVALID_ARGUMENT: \b dirName is not valid.
-//  */
-// EXPORT_SPEC int UpnpAddVirtualDir(
-//         /*! [in] The name of the new directory mapping to add. */
-//         const char *dirName,
-//         /*! [in] The cookie to associated with this virtual directory */
-//         const void *cookie,
-//         /*! [out] The cookie previously associated, if mapping is already
-//            present */
-//         const void **oldcookie);
-// 
-// /*!
-//  * \brief Removes a virtual directory mapping made with \b UpnpAddVirtualDir.
-//  *
-//  * \return An integer representing one of the following:
-//  *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
-//  *       \li \c UPNP_E_INVALID_ARGUMENT: \b dirName is not valid.
-//  */
-// EXPORT_SPEC int UpnpRemoveVirtualDir(
-//         /*! [in] The name of the virtual directory mapping to remove. */
-//         const char *dirName);
+#if false
+/*!
+ * \brief Sets the close callback function to be used to access a virtual
+ * directory.
+ *
+ * \return An integer representing one of the following:
+ *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *       \li \c UPNP_E_INVALID_ARGUMENT: \b callback is not a valid pointer.
+ */
+EXPORT_SPEC int UpnpVirtualDir_set_CloseCallback(VDCallback_Close callback);
+#endif
+
+/*!
+ * \brief Enables or disables the webserver.
+ *
+ * \return An integer representing one of the following:
+ *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *       \li \c UPNP_E_OUTOF_MEMORY: The web server could not be started due to
+ *		an out-of-memory condition.
+ *		 \li \c UPNP_E_NO_WEB_SERVER: The internal web server has been
+ *compiled out so it can't be enabled or disabled.
+ */
+EXPORT_SPEC int UpnpEnableWebserver(
+        /*! [in] \c 1 to enable, \c 0 to disable. */
+        int enable);
+
+#if false
+/*!
+ * \brief Returns \c 1 if the webserver is enabled, or \c 0 if it is not.
+ *
+ *  \return An integer representing one of the following:
+ *       \li \c 1: The webserver is enabled.
+ *       \li \c 0: The webserver is not enabled
+ */
+EXPORT_SPEC int UpnpIsWebserverEnabled(void);
+#endif // #if false
+
+/*
+ * \brief Callback for validating HTTP requests HOST header values.
+ *
+ * @param hostname the value in the request HOST header.
+ * @return An integer representing one of the following:
+ *     \li \c UPNP_E_SUCCESS: a request with the HOST header set to hostname
+ *                            should be processed.
+ *     \li \c UPNP_E_BAD_HTTPMSG the request should be rejected.
+ */
+typedef int (*WebCallback_HostValidate)(const char *hostname, void *cookie);
+
+/*
+ * \brief Set callback for validating HTTP requests HOST header values.
+ *
+ * @param callback the host validating callback function or NULL.
+ * @param cookie the chocolate you like.
+ */
+#if false
+EXPORT_SPEC void UpnpSetHostValidateCallback(
+	WebCallback_HostValidate callback, void *cookie);
+
+/*
+ * \brief Enable or disable literal IP redirection.
+ *
+ * @param enable Zero to disable (default) non-zero to enable.
+ */
+EXPORT_SPEC void UpnpSetAllowLiteralHostRedirection(int enable);
+
+/*!
+ * \brief Adds a virtual directory mapping.
+ *
+ * All webserver requests containing the given directory are read using
+ * functions contained in a \b VirtualDirCallbacks structure registered
+ * via \b UpnpSetVirtualDirCallbacks.
+ *
+ * \note This function is not available when the web server is not
+ * 	compiled into the UPnP Library.
+ *
+ * \return An integer representing one of the following:
+ *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *       \li \c UPNP_E_INVALID_ARGUMENT: \b dirName is not valid.
+ */
+EXPORT_SPEC int UpnpAddVirtualDir(
+        /*! [in] The name of the new directory mapping to add. */
+        const char *dirName,
+        /*! [in] The cookie to associated with this virtual directory */
+        const void *cookie,
+        /*! [out] The cookie previously associated, if mapping is already
+           present */
+        const void **oldcookie);
+
+/*!
+ * \brief Removes a virtual directory mapping made with \b UpnpAddVirtualDir.
+ *
+ * \return An integer representing one of the following:
+ *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
+ *       \li \c UPNP_E_INVALID_ARGUMENT: \b dirName is not valid.
+ */
+EXPORT_SPEC int UpnpRemoveVirtualDir(
+        /*! [in] The name of the virtual directory mapping to remove. */
+        const char *dirName);
+#endif // #if false
 
 /*!
  * \brief Removes all virtual directory mappings.
  */
 EXPORT_SPEC void UpnpRemoveAllVirtualDirs(void);
 
-// /* @} Web Server API */
+/* @} Web Server API */
 
 // #ifdef __cplusplus
 // }
@@ -2821,4 +2880,4 @@ EXPORT_SPEC void UpnpRemoveAllVirtualDirs(void);
 
 /* @} UPnPAPI UPnP API */
 
-#endif /* UPNP_H */
+#endif /* UPNPLIB_UPNP_H */

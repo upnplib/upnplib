@@ -1,5 +1,3 @@
-#ifdef UPNP_HAVE_CLIENT
-
 #ifndef SSDPLIB_HPP
 #define SSDPLIB_HPP
 
@@ -519,5 +517,3 @@ int DeviceShutdown(
 /* @} SSDPlib SSDP Library */
 
 #endif /* SSDPLIB_HPP */
-
-#endif // UPNP_HAVE_CLIENT

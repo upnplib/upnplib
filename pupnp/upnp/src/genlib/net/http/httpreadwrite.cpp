@@ -55,7 +55,7 @@
 //#include "upnp.h"
 #include "upnpapi.hpp"
 //#include "uri.h"
-#include "webserver.h"
+#include "webserver.hpp"
 
 #include <assert.h>
 #include <stdarg.h>
@@ -474,7 +474,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                 amount_to_be_read = (off_t)Data_Buf_Size;
             if (amount_to_be_read < (off_t)WEB_SERVER_BUF_SIZE)
                 Data_Buf_Size = (size_t)amount_to_be_read;
-            ChunkBuf = malloc(
+            ChunkBuf = (char*)malloc(
                 (size_t)(Data_Buf_Size + CHUNK_HEADER_SIZE + CHUNK_TAIL_SIZE));
             if (!ChunkBuf) {
                 RetVal = UPNP_E_OUTOF_MEMORY;
@@ -485,7 +485,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
             /* file name */
             filename = va_arg(argp, char*);
             if (Instr && Instr->IsVirtualFile)
-                Fp = (virtualDirCallback.open)(
+                Fp = (FILE*)(virtualDirCallback.open)(
                     filename, UPNP_READ, Instr->Cookie, Instr->RequestCookie);
             else
                 Fp = fopen(filename, "rb");

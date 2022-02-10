@@ -1,14 +1,12 @@
-#ifdef UPNP_HAVE_CLIENT
-
-#ifndef MINISERVER_HPP
-#define MINISERVER_HPP
+#ifndef UPNPLIB_MINISERVER_HPP
+#define UPNPLIB_MINISERVER_HPP
 
 /**************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-09
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,8 +38,8 @@
  * \file
  */
 
-//#include "sock.hpp"
-//#include "httpparser.hpp"
+#include "sock.hpp"
+#include "httpparser.hpp"
 //#include "UpnpStdInt.h"
 
 #ifdef _WIN32
@@ -150,6 +148,4 @@ int StartMiniServer(
  */
 int StopMiniServer();
 
-#endif /* MINISERVER_HPP */
-
-#endif // UPNP_HAVE_CLIENT
+#endif /* UPNPLIB_MINISERVER_HPP */
