@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-26
+// Redistribution only with this Copyright remark. Last modified: 2022-02-14
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -380,7 +380,7 @@ TEST_F(SockFTestSuite, sock_read_no_timeout) {
     // Also on _WIN32 select() returns SOCKET_ERROR (-1).
     int returned =
         m_sockObj.sock_read(&m_info, buffer, sizeof(buffer), &timeoutSecs);
-    EXPECT_EQ(returned, sizeof(received_msg))
+    EXPECT_EQ(returned, (int)sizeof(received_msg))
         << UpnpGetErrorMessage(returned) << '(' << returned << ')';
     EXPECT_STREQ(buffer, received_msg);
 }
@@ -404,7 +404,7 @@ TEST_F(SockFTestSuite, sock_read_within_timeout) {
     // Also on _WIN32 select() returns SOCKET_ERROR (-1).
     int returned =
         m_sockObj.sock_read(&m_info, buffer, sizeof(buffer), &timeoutSecs);
-    EXPECT_EQ(returned, sizeof(received_msg))
+    EXPECT_EQ(returned, (int)sizeof(received_msg))
         << UpnpGetErrorMessage(returned) << '(' << returned << ')';
     EXPECT_STREQ(buffer, received_msg);
 }
@@ -457,7 +457,7 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
     // Also on _WIN32 select() returns SOCKET_ERROR (-1).
     int returned =
         m_sockObj.sock_read(&m_info, buffer, sizeof(buffer), &timeoutSecs);
-    EXPECT_EQ(returned, sizeof(received_msg))
+    EXPECT_EQ(returned, (int)sizeof(received_msg))
         << UpnpGetErrorMessage(returned) << '(' << returned << ')';
     EXPECT_STREQ(buffer, received_msg);
 }
@@ -502,7 +502,7 @@ TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_socket_info) {
         EXPECT_CALL(m_mock_sys_socketObj, recv(_, _, _, _)).Times(0);
 
         // Process the Unit
-        int returned;
+        int returned{UPNP_E_INTERNAL_ERROR};
         char buffer[1]{};
         int timeoutSecs{-1}; // -1 Blocks indefinitely waiting for a socket
                              // descriptor to become ready.
@@ -716,7 +716,7 @@ TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_timeout_value)
                       Return(sizeof(received_msg))));
 
         // Process the Unit
-        int returned;
+        int returned{UPNP_E_INTERNAL_ERROR};
         char buffer[sizeof(received_msg)]{};
         // Also on _WIN32 select() returns SOCKET_ERROR (-1).
         ASSERT_EXIT((returned = m_sockObj.sock_read(&m_info, buffer,
@@ -724,7 +724,7 @@ TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_timeout_value)
                      exit(0)),
                     ::testing::ExitedWithCode(0), ".*")
             << "  # A nullptr to the timeout value must not segfault.";
-        EXPECT_EQ(returned, sizeof(received_msg))
+        EXPECT_EQ(returned, (int)sizeof(received_msg))
             << UpnpGetErrorMessage(returned) << '(' << returned << ')';
         EXPECT_STREQ(buffer, received_msg);
     }
@@ -746,7 +746,7 @@ TEST_F(SockFTestSuite, sock_write_no_timeout) {
                          // descriptor to become ready.
     int returned =
         m_sockObj.sock_write(&m_info, sent_msg, sizeof(sent_msg), &timeoutSecs);
-    EXPECT_EQ(returned, sizeof(sent_msg))
+    EXPECT_EQ(returned, (int)sizeof(sent_msg))
         << UpnpGetErrorMessage(returned) << '(' << returned << ')';
 }
 
@@ -765,7 +765,7 @@ TEST_F(SockFTestSuite, sock_write_within_timeout) {
     int timeoutSecs{10};
     int returned =
         m_sockObj.sock_write(&m_info, sent_msg, sizeof(sent_msg), &timeoutSecs);
-    EXPECT_EQ(returned, sizeof(sent_msg))
+    EXPECT_EQ(returned, (int)sizeof(sent_msg))
         << UpnpGetErrorMessage(returned) << '(' << returned << ')';
 }
 
@@ -842,7 +842,7 @@ TEST_F(SockFTestSuite, sock_write_with_nullptr_to_socket_info) {
         EXPECT_CALL(m_mock_sys_socketObj, send(_, _, _, _)).Times(0);
 
         // Process the Unit
-        int returned;
+        int returned{UPNP_E_INTERNAL_ERROR};
         char buffer[1]{};
         int timeoutSecs{-1}; // -1 Blocks indefinitely waiting for a socket
                              // descriptor to become ready.

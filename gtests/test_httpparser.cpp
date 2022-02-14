@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-03
+// Redistribution only with this Copyright remark. Last modified: 2022-02-14
 
 #include "gmock/gmock.h"
 
@@ -40,8 +40,8 @@ class Ihttpparser {
             http_message_t* msg, const char* header_name) = 0;
     virtual http_header_t* httpmsg_find_hdr(
             http_message_t* msg, int header_name_id, memptr* value) = 0;
-    virtual parse_status_t matchstr(
-            char* str, size_t slen, const char* fmt, ...) = 0;
+    // virtual parse_status_t matchstr(
+    //         char* str, size_t slen, const char* fmt, ...) = 0;
     virtual parse_status_t parser_parse_responseline(
             http_parser_t* parser) = 0;
     virtual parse_status_t parser_parse_headers(
@@ -83,9 +83,9 @@ class Chttpparser_old : public Ihttpparser {
         return ::httpmsg_find_hdr_str(msg, header_name); }
     http_header_t* httpmsg_find_hdr(http_message_t* msg, int header_name_id, memptr* value) override {
         return ::httpmsg_find_hdr(msg, header_name_id, value); }
-    parse_status_t matchstr(char* str, size_t slen, const char* fmt, ...) override {
-        // return ::matchstr(str, slen, fmt, ...); }
-        return PARSE_NO_MATCH; }
+    // parse_status_t matchstr(char* str, size_t slen, const char* fmt, ...) override {
+    //    return ::matchstr(str, slen, fmt, ...); }
+    //    return PARSE_NO_MATCH; }
     parse_status_t parser_parse_responseline(http_parser_t* parser) override {
         return ::parser_parse_responseline(parser); }
     parse_status_t parser_parse_headers(http_parser_t* parser) override {

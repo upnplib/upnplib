@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-06
+// Redistribution only with this Copyright remark. Last modified: 2022-02-14
 
 // Tools and helper classes to manage gtests
 // =========================================
@@ -133,14 +133,16 @@ void CCaptureStdOutErr::start() {
     // We always write a nullbyte to the pipe so read always returns
     // and does not wait endless if there is nothing captured.
     const char nullbyte[1] = {'\0'};
-    ssize_t rc = ::write(m_std_fileno, &nullbyte, 1);
+    if (::write(m_std_fileno, &nullbyte, 1) == -1)
+        return "";
 
     // read from pipe into chunk and append the chunk to a string
     char chunk[m_chunk_size];
-    ::std::string strbuffer;
+    ::std::string strbuffer{};
     while (::read(m_out_pipe[0], &chunk, m_chunk_size - 1) > 1) {
         strbuffer += chunk;
-        rc = ::write(m_std_fileno, &nullbyte, 1);
+        if (::write(m_std_fileno, &nullbyte, 1) == -1)
+            break;
     }
 
     // reconnect stdout/stderr

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-26
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-15
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,12 +49,13 @@
 
 #include <assert.h>
 #include <fcntl.h> /* for F_GETFL, F_SETFL, O_NONBLOCK */
-#include <string.h>
+#include <time.h>
+#include <cstring>
 
 #ifdef _WIN32
 #include "config.h"
 #include "UpnpStdInt.h" /* for ssize_t */
-#include "unixutil.h"   /* for socklen_t, EAFNOSUPPORT */
+#include "unixutil.hpp" /* for socklen_t, EAFNOSUPPORT */
 #include "upnp.h"
 #include <errno.h>
 #include <time.h>
@@ -121,7 +122,6 @@ int sock_ssl_connect(SOCKINFO* info) {
 
 int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
     int ret = UPNP_E_SUCCESS;
-    char errorBuffer[ERROR_BUFFER_LEN];
 
     if (info->socket != INVALID_SOCKET) {
 #ifdef UPNP_ENABLE_OPEN_SSL
@@ -133,20 +133,10 @@ int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
 #endif
         if (upnplib::sys_socket_h->shutdown(info->socket, ShutdownMethod) ==
             -1) {
-// TODO: fix source code to only use POSIX versions, not GNU nonstandard
-#ifdef _GNU_SOURCE
-            // BUG! errorBuffer is not used and uninitialized in this case.
-            //      It will print garbage then.
-            // errorBuffer[0] = '\0'; // DEBUG: uncomment if verifying
-            char* retcode;
-#else // POSIX
-            int retcode;
-#endif
-            retcode = strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
-            // ::std::cout << "DEBUG: shutdown retcode = '" << retcode
-            //             << "', errorBuffer = '" << errorBuffer << "'\n";
+            // TODO: Test this error message
+            char* errorStr = std::strerror(errno);
             UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                       "Error in shutdown: %s\n", errorBuffer);
+                       "Error in shutdown: %s\n", errorStr);
         }
         // BUG! closesocket on _WIN32 does not return -1 on error, but positive
         // numbers. This must check != 0.

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-05
+// Redistribution only with this Copyright remark. Last modified: 2022-02-14
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -138,7 +138,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
     EXPECT_STREQ(gIF_IPV6_ULA_GUA, "");
     EXPECT_EQ(gIF_IPV6_ULA_GUA_PREFIX_LENGTH, (unsigned)0);
     // index mocked with if_nametoindex above
-    EXPECT_EQ(gIF_INDEX, (const unsigned int)2);
+    EXPECT_EQ(gIF_INDEX, (unsigned int)2);
     EXPECT_EQ(LOCAL_PORT_V4, (unsigned short)0);
     EXPECT_EQ(LOCAL_PORT_V6, (unsigned short)0);
     EXPECT_EQ(LOCAL_PORT_V6_ULA_GUA, (unsigned short)0);

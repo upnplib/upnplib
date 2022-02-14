@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-12
+// Redistribution only with this Copyright remark. Last modified: 2022-02-15
 
 /*!
  * \file
@@ -8,13 +8,9 @@
  * \author Marcelo Roberto Jimenez
  */
 #include "config.h"
-
-#include <stdlib.h> /* for calloc(), free() */
-#include <string.h> /* for strlen(), strdup() */
-#include <sys/socket.h>
-
 #include "UpnpFileInfo.hpp"
-#include "UpnpString.h"
+
+#include <cstring> // for memset
 
 struct s_UpnpFileInfo {
     off_t m_FileLength;

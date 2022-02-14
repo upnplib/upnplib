@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-31
+// Redistribution only with this Copyright remark. Last modified: 2022-02-14
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -277,7 +277,7 @@ TEST_P(HostportIp4PTestSuite, parse_hostport_successful) {
     struct sockaddr_in* sai4 = (struct sockaddr_in*)&out.IPaddress;
 
     // Execute the unit
-    EXPECT_EQ((const size_t)parse_hostport(uristr, 80, &out), size);
+    EXPECT_EQ((size_t)parse_hostport(uristr, 80, &out), size);
     EXPECT_STREQ(out.text.buff, uristr);
     EXPECT_EQ(out.text.size, size);
     EXPECT_EQ(sai4->sin_family, AF_INET);
@@ -595,7 +595,7 @@ TEST(UriIp4TestSuite, remove_escaped_chars_edge_conditions) {
                "segfault.";
 
         EXPECT_EQ(uriObj.remove_escaped_chars(nullptr, &size), UPNP_E_SUCCESS);
-        EXPECT_EQ(size, 5);
+        EXPECT_EQ(size, (size_t)5);
         ASSERT_EXIT((uriObj.remove_escaped_chars(strbuf, nullptr), exit(0)),
                     ::testing::ExitedWithCode(0), ".*")
             << "  BUG! Calling remove_escaped_chars() with nullptr should not "

@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-02-12
+# Redistribution only with this Copyright remark. Last modified: 2022-02-13
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(UPNP_CORE VERSION 0008
+project(UPNP_CORE VERSION 0009
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -16,14 +16,19 @@ project(UPNP_CORE VERSION 0008
 # These switches are all handled only in this configuration file.
 
 # Options selectable by user configuration
-set(UPNPLIB_HAVE_TOOLS  NO)
-set(UPNPLIB_HAVE_CLIENT NO)
-set(UPNPLIB_HAVE_DEVICE NO)
+set(UPNPLIB_HAVE_TOOLS  YES)
+set(UPNPLIB_HAVE_CLIENT YES)
+set(UPNPLIB_HAVE_DEVICE YES)
 set(UPNPLIB_HAVE_WEBSERVER YES)
 
 # Internal switches for program options
 set(UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS YES)
 
+# Dependencies of options
+if(UPNPLIB_HAVE_WEBSERVER)
+    # No webserver without devices
+    #set(UPNPLIB_HAVE_DEVICE YES)
+endif()
 
 # Source files and compile settings
 #----------------------------------
@@ -80,6 +85,7 @@ set(UPNP_SOURCE_FILES
     $<$<BOOL:${UPNPLIB_HAVE_TOOLS}>:${PROJECT_SOURCE_DIR}/src/api/upnptools.cpp>
     $<$<BOOL:${UPNPLIB_HAVE_WEBSERVER}>:${PROJECT_SOURCE_DIR}/src/api/UpnpFileInfo.cpp>
     $<$<CONFIG:Debug>:${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_WEBSERVER}>>:${PROJECT_SOURCE_DIR}/src/urlconfig/urlconfig.cpp>
 
     ${PROJECT_SOURCE_DIR}/src/global.cpp
     ${PROJECT_SOURCE_DIR}/src/mockObj.cpp
@@ -106,6 +112,7 @@ add_compile_definitions(
 )
 
 add_compile_options(
+        $ENV{MY_CXXFLAG}
         # suppress warning 'type cast': pointer truncation
         $<$<CXX_COMPILER_ID:MSVC>:/wd4311>
 )

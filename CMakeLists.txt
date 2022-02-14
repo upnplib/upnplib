@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-01-31
+# Redistribution only with this Copyright remark. Last modified: 2022-02-15
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -96,15 +96,24 @@ add_compile_definitions(
 
 # Set general compile options
 #----------------------------
-# TODO: Increase error levels on compilers
 add_compile_options(
         # all warnings as errors
         $<$<CXX_COMPILER_ID:MSVC>:/WX>
+
+        # There are traditional min/max macros on MS Windows which conflict
+        # with the C++ std::min|max functions. Following switch disable the
+        # macros.
+        $<$<CXX_COMPILER_ID:MSVC>:/DNOMINMAX>
+
         # lots of warnings and all warnings as errors
-        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall>
-        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wextra>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wextra>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wpedantic>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Werror>
+        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-fanalyzer>
+        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wfatal-errors>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wno-unused-result>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wno-dangling-else>
         # Following is only valid for C++/ObjC++ but not for C
         #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wsuggest-override>
 )

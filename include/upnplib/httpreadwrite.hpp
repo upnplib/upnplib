@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-03
+// Redistribution only with this Copyright remark. Last modified: 2022-02-14
 
 #ifndef INCLUDE_UPNPLIB_HTTPREADWRITE_HPP
 #define INCLUDE_UPNPLIB_HTTPREADWRITE_HPP
@@ -40,8 +40,8 @@ class Ihttpreadwrite {
     virtual int http_RecvMessage(
             SOCKINFO* info, http_parser_t* parser, http_method_t request_method,
             int* timeout_secs, int* http_error_code) = 0;
-    virtual int http_SendMessage(
-            SOCKINFO* info, int* TimeOut, const char* fmt, ...) = 0;
+    // virtual int http_SendMessage(
+    //         SOCKINFO* info, int* TimeOut, const char* fmt, ...) = 0;
     virtual int http_RequestAndResponse(
             uri_type* destination, const char* request, size_t request_length,
             http_method_t req_method, int timeout_secs, http_parser_t* response) = 0;
@@ -74,9 +74,9 @@ class Ihttpreadwrite {
     virtual int http_SendStatusResponse(
             SOCKINFO* info, int http_status_code, int request_major_version,
             int request_minor_version) = 0;
-    virtual int http_MakeMessage(
-            membuffer* buf, int http_major_version, int http_minor_version,
-            const char* fmt, ...) = 0;
+    // virtual int http_MakeMessage(
+    //         membuffer* buf, int http_major_version, int http_minor_version,
+    //         const char* fmt, ...) = 0;
     virtual void http_CalcResponseVersion(
             int request_major_vers, int request_minor_vers, int* response_major_vers,
             int* response_minor_vers) = 0;
@@ -104,9 +104,9 @@ class Chttpreadwrite_old : Ihttpreadwrite {
         return ::http_Connect(destination_url, url); }
     int http_RecvMessage(SOCKINFO* info, http_parser_t* parser, http_method_t request_method, int* timeout_secs, int* http_error_code) override {
         return ::http_RecvMessage(info, parser, request_method, timeout_secs, http_error_code); }
-    int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) override {
+    // int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) override {
     //    return ::http_SendMessage(info, TimeOut, fmt, ...); }
-        return UPNP_E_OUTOF_MEMORY; }
+    //     return UPNP_E_OUTOF_MEMORY; }
     int http_RequestAndResponse(uri_type* destination, const char* request, size_t request_length, http_method_t req_method, int timeout_secs, http_parser_t* response) override {
         return ::http_RequestAndResponse(destination, request, request_length, req_method, timeout_secs, response); }
     int http_Download(const char* url_str, int timeout_secs, char** document, size_t* doc_length, char* content_type) override {
@@ -133,9 +133,9 @@ class Chttpreadwrite_old : Ihttpreadwrite {
         return ::http_CloseHttpConnection(Handle); }
     int http_SendStatusResponse(SOCKINFO* info, int http_status_code, int request_major_version, int request_minor_version) override {
         return ::http_SendStatusResponse(info, http_status_code, request_major_version, request_minor_version); }
-    int http_MakeMessage(membuffer* buf, int http_major_version, int http_minor_version, const char* fmt, ...) override {
-        // return ::http_MakeMessage(buf, http_major_version, http_minor_version, fmt, ...); }
-        return UPNP_E_OUTOF_MEMORY; }
+    // int http_MakeMessage(membuffer* buf, int http_major_version, int http_minor_version, const char* fmt, ...) override {
+    //     return ::http_MakeMessage(buf, http_major_version, http_minor_version, fmt, ...); }
+    //     return UPNP_E_OUTOF_MEMORY; }
     void http_CalcResponseVersion(int request_major_vers, int request_minor_vers, int* response_major_vers, int* response_minor_vers) override {
         return ::http_CalcResponseVersion(request_major_vers, request_minor_vers, response_major_vers, response_minor_vers); }
     int MakeGetMessageEx(const char* url_str, membuffer* request, uri_type* url, struct SendInstruction* pRangeSpecifier) override {
@@ -150,10 +150,10 @@ class Chttpreadwrite: Chttpreadwrite_old {
   public:
     virtual ~Chttpreadwrite() override {}
 
-    int http_OpenHttpConnection(const char* url_str, void** Handle, int timeout) override {
+    // int http_OpenHttpConnection(const char* url_str, void** Handle, int timeout) override {
         // This is only prepaired so far and will be enabled if needed.
         // return upnplib::http_OpenHttpConnection(url_str, Handle, timeout); }
-        return UPNP_E_INVALID_PARAM; }
+        // return UPNP_E_INVALID_PARAM; }
 };
 // clang-format on
 

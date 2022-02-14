@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-08
+// Redistribution only with this Copyright remark. Last modified: 2022-02-14
 
 #include "upnpmock/pthread.hpp"
 #include "upnpmock/stdio.hpp"
@@ -30,8 +30,8 @@ class Iupnpdebug {
     virtual void UpnpSetLogLevel(Upnp_LogLevel log_level) = 0;
     virtual void UpnpCloseLog(void) = 0;
     virtual void UpnpSetLogFileNames(const char* newFileName, const char* ignored) = 0;
-    virtual void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
-            const char* DbgFileName, int DbgLineNo, const char* FmtStr, ...) = 0;
+    // virtual void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
+    //         const char* DbgFileName, int DbgLineNo, const char* FmtStr, ...) = 0;
     virtual FILE* UpnpGetDebugFile(Upnp_LogLevel DLevel, Dbg_Module Module) = 0;
 };
 
@@ -47,9 +47,9 @@ class Cupnpdebug : public Iupnpdebug {
         return ::UpnpCloseLog(); }
     void UpnpSetLogFileNames( const char* newFileName, const char* ignored) override {
         return ::UpnpSetLogFileNames(newFileName, ignored); }
-    void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module, const char* DbgFileName,
-                    int DbgLineNo, const char* FmtStr, ...) override {
-        return; }
+    // void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module, const char* DbgFileName,
+    //                 int DbgLineNo, const char* FmtStr, ...) override {
+    //     return; }
     FILE* UpnpGetDebugFile( Upnp_LogLevel DLevel, Dbg_Module Module) override {
         return ::UpnpGetDebugFile(DLevel, Module); }
 };

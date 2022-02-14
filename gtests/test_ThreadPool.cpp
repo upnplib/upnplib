@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-07
+// Redistribution only with this Copyright remark. Last modified: 2022-02-14
 
 // Note
 // -------------
@@ -33,7 +33,7 @@ namespace upnplib {
 //###############################
 
 // This is a dummy start routine for a threadpool job
-start_routine start_function() { return 0; }
+void start_function([[maybe_unused]] void* arg) {}
 
 //
 TEST(ThreadPoolNormalTestSuite, init_and_shutdown_threadpool) {
@@ -71,7 +71,7 @@ TEST(ThreadPoolNormalTestSuite, add_and_remove_job_on_threadpool) {
 
     // Initialize threadpool and job
     EXPECT_EQ(tpObj.ThreadPoolInit(&tp, nullptr), 0);
-    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)start_function, nullptr),
+    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)&start_function, nullptr),
               0);
     // Add and remove job
     EXPECT_EQ(tpObj.ThreadPoolAdd(&tp, &TPJob, &jobId), 0);
@@ -102,11 +102,11 @@ TEST(ThreadPoolNormalTestSuite, add_and_remove_3_jobs_on_threadpool) {
 
     // Initialize threadpool and job
     EXPECT_EQ(tpObj.ThreadPoolInit(&tp, nullptr), 0);
-    EXPECT_EQ(tpObj.TPJobInit(&TPJob0, (start_routine)start_function, nullptr),
+    EXPECT_EQ(tpObj.TPJobInit(&TPJob0, (start_routine)&start_function, nullptr),
               0);
-    EXPECT_EQ(tpObj.TPJobInit(&TPJob1, (start_routine)start_function, nullptr),
+    EXPECT_EQ(tpObj.TPJobInit(&TPJob1, (start_routine)&start_function, nullptr),
               0);
-    EXPECT_EQ(tpObj.TPJobInit(&TPJob2, (start_routine)start_function, nullptr),
+    EXPECT_EQ(tpObj.TPJobInit(&TPJob2, (start_routine)&start_function, nullptr),
               0);
 
     // Add jobs
@@ -137,7 +137,7 @@ TEST(ThreadPoolErrorCondTestSuite, add_job_to_threadpool) {
 
     // Initialize threadpool and job
     EXPECT_EQ(tpObj.ThreadPoolInit(&tp, nullptr), 0);
-    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)start_function, nullptr),
+    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)&start_function, nullptr),
               0);
 
     EXPECT_EQ(tpObj.ThreadPoolAdd(nullptr, nullptr, nullptr), EINVAL);
@@ -174,7 +174,7 @@ TEST(ThreadPoolNormalTestSuite, init_job_and_set_job_priority) {
     CThreadPool tpObj{};   // ThreadPool Object
     ThreadPoolJob TPJob{}; // Structure for a threadpool job
 
-    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)start_function, nullptr),
+    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)&start_function, nullptr),
               0);
 
     EXPECT_EQ(tpObj.TPJobSetPriority(&TPJob, LOW_PRIORITY), 0);
@@ -186,7 +186,7 @@ TEST(ThreadPoolErrorCondTestSuite, init_job_and_set_job_priority) {
     CThreadPool tpObj{};   // ThreadPool Object
     ThreadPoolJob TPJob{}; // Structure for a threadpool job
 
-    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)start_function, nullptr),
+    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)&start_function, nullptr),
               0);
 
     EXPECT_EQ(tpObj.TPJobSetPriority(nullptr, (ThreadPriority)-1), EINVAL);
@@ -199,7 +199,7 @@ TEST(ThreadPoolNormalTestSuite, set_job_free_function) {
     CThreadPool tpObj{};   // ThreadPool Object
     ThreadPoolJob TPJob{}; // Structure for a threadpool job
 
-    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)start_function, nullptr),
+    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)&start_function, nullptr),
               0);
     EXPECT_EQ(tpObj.TPJobSetFreeFunction(&TPJob, DEFAULT_FREE_ROUTINE), 0);
 }
@@ -208,7 +208,7 @@ TEST(ThreadPoolErrorCondTestSuite, set_job_free_function) {
     CThreadPool tpObj{};   // ThreadPool Object
     ThreadPoolJob TPJob{}; // Structure for a threadpool job
 
-    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)start_function, nullptr),
+    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)&start_function, nullptr),
               0);
     EXPECT_EQ(tpObj.TPJobSetFreeFunction(nullptr, DEFAULT_FREE_ROUTINE),
               EINVAL);
@@ -457,7 +457,7 @@ TEST(ThreadPoolNormalTestSuite,
 
     // Initialize threadpool and job
     EXPECT_EQ(tpObj.ThreadPoolInit(&tp, nullptr), 0);
-    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)start_function, nullptr),
+    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)&start_function, nullptr),
               0);
     // Add persitent job
     EXPECT_EQ(tpObj.ThreadPoolAddPersistent(&tp, &TPJob, &jobId), 0);
@@ -475,7 +475,7 @@ TEST(ThreadPoolNormalTestSuite,
 
     // Initialize threadpool and job
     EXPECT_EQ(tpObj.ThreadPoolInit(&tp, nullptr), 0);
-    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)start_function, nullptr),
+    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)&start_function, nullptr),
               0);
     // Add persitent job
     EXPECT_EQ(tpObj.ThreadPoolAddPersistent(&tp, &TPJob, nullptr), 0);

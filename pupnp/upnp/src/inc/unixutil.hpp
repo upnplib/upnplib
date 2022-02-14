@@ -34,17 +34,20 @@
 
 /* Unix-specific network utilities */
 
-//#include "UpnpInet.h"
-//#include <sys/time.h>
-//#include <sys/wait.h>
+#include "UpnpInet.h"
 
 #ifdef _WIN32
+#include <UpnpStdInt.h>
 #include <errno.h>
 
 typedef int socklen_t;
+typedef uint16_t in_port_t;
 #ifndef EAFNOSUPPORT /* VS2010 has this defined */
 #define EAFNOSUPPORT 97
 #endif
-#endif // _WIN32
+#else
+#include <sys/time.h>
+#include <sys/wait.h>
+#endif
 
 #endif /* GENLIB_NET_UNIXUTIL_H */

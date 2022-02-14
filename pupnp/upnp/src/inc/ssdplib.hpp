@@ -7,7 +7,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-09
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -329,9 +329,9 @@ void ssdp_handle_device_request(
 #else  /* INCLUDE_DEVICE_APIS */
 static UPNP_INLINE void ssdp_handle_device_request(
     /* [in] . */
-    http_message_t* hmsg,
+    [[maybe_unused]] http_message_t* hmsg,
     /* [in] . */
-    struct sockaddr_storage* dest_addr) {}
+    [[maybe_unused]] struct sockaddr_storage* dest_addr) {}
 #endif /* INCLUDE_DEVICE_APIS */
 
 /*!

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-03
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -59,7 +59,7 @@
 
 #include <assert.h>
 #include <stdarg.h>
-//#include <string.h>
+#include <cstring>
 
 #ifdef _WIN32
 #include <malloc.h>
@@ -292,9 +292,8 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
     SOCKET connfd;
     socklen_t sockaddr_len;
     int ret_connect;
-    char errorBuffer[ERROR_BUFFER_LEN];
 
-    // Ingo BUG! Must check return value
+    // Ingo: BUG! Must check return value
     http_FixUrl(destination_url, url);
 
     connfd = upnplib::sys_socket_h->socket(
@@ -313,15 +312,10 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
                    "connect error: %d\n", WSAGetLastError());
 #endif
         if (upnplib::sys_socket_h->shutdown(connfd, SD_BOTH) == -1) {
-// Ingo TODO: fix source code to only use POSIX versions, not GNU nonstandard
-#ifdef _GNU_SOURCE
-            char* retcode;
-#else // POSIX
-            int retcode;
-#endif
-            retcode = strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
+            // TODO: Ingo: Test this error message
+            char* errorStr = std::strerror(errno);
             UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                       "Error in shutdown: %s\n", errorBuffer);
+                       "Error in shutdown: %s\n", errorStr);
         }
         UpnpCloseSocket(connfd);
         return (SOCKET)(UPNP_E_SOCKET_CONNECT);
@@ -546,7 +540,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                     /* Hex length for the chunk size. */
                     memset(Chunk_Header, 0, sizeof(Chunk_Header));
                     rc = snprintf(Chunk_Header, sizeof(Chunk_Header),
-                                  "%" PRIzx "\r\n", num_read);
+                                  "%zx" PRIzx "\r\n", num_read);
                     if (rc < 0 || (unsigned int)rc >= sizeof(Chunk_Header)) {
                         RetVal = UPNP_E_INTERNAL_ERROR;
                         goto Cleanup_File;
@@ -1483,15 +1477,17 @@ int http_MakeMessage(membuffer* buf, int http_major_version,
             /* list of extra headers */
             UpnpListIter pos;
             UpnpListHead* head;
-            UpnpExtraHeaders* extra;
             const DOMString resp;
             head = (UpnpListHead*)va_arg(argp, UpnpListHead*);
             if (head) {
                 for (pos = UpnpListBegin(head); pos != UpnpListEnd(head);
                      pos = UpnpListNext(head, pos)) {
-                    extra = (UpnpExtraHeaders*)pos;
-                    resp = 0; // DEBUG: temporary disabled;
-                              // UpnpExtraHeaders_get_resp(extra);
+#ifdef UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
+                    UpnpExtraHeaders* extra = (UpnpExtraHeaders*)pos;
+                    resp = UpnpExtraHeaders_get_resp(extra);
+#else
+                    resp = nullptr;
+#endif
                     if (resp) {
                         if (membuffer_append(buf, resp, strlen(resp)))
                             goto error_handler;

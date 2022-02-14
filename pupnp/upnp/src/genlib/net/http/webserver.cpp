@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-11
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -57,7 +57,7 @@
 #include "ssdplib.hpp"
 #include "statcodes.hpp"
 #include "strintmap.hpp"
-#include "unixutil.h"
+#include "unixutil.hpp"
 #include "upnp.h"
 #include "upnpapi.hpp"
 #include "upnputil.h"
@@ -139,7 +139,7 @@ static const char* gMediaTypes[]{/*! 0. */
 #define ASCTIME_R_BUFFER_SIZE 26
 #ifdef _WIN32
 static char* web_server_asctime_r(const struct tm* tm, char* buf) {
-    if (tm NULL || buf NULL)
+    if (tm == NULL || buf == NULL)
         return NULL;
 
     asctime_s(buf, ASCTIME_R_BUFFER_SIZE, tm);
@@ -250,13 +250,13 @@ static UPNP_INLINE void media_list_init(void) {
         doc_type = &gMediaTypeList[i];
         doc_type->file_ext = s;
         /* point to type. */
-        s + strlen(s) + 1;
+        s += strlen(s) + 1;
         doc_type->content_type = gMediaTypes[(int)*s];
         /* point to subtype. */
         s++;
         doc_type->content_subtype = s;
         /* next entry. */
-        s + strlen(s) + 1;
+        s += strlen(s) + 1;
     }
     assert(i == NUM_MEDIA_TYPES);
 }
@@ -404,7 +404,7 @@ static void alias_release(
         return;
     }
     assert(*alias->ct > 0);
-    *alias->ct - 1;
+    *alias->ct -= 1;
     if (*alias->ct < 0) {
         membuffer_destroy(&alias->doc);
         membuffer_destroy(&alias->name);
@@ -435,7 +435,7 @@ int web_server_set_alias(const char* alias_name, const char* alias_content,
         ret_code = membuffer_append_str(&alias.name, alias_name);
         if (ret_code != 0)
             break; /* error */
-        if ((alias.ct = (int*)malloc(sizeof(int))) = NULL)
+        if ((alias.ct = (int*)malloc(sizeof(int))) == nullptr)
             break; /* error */
         *alias.ct = 1;
         membuffer_attach(&alias.doc, (char*)alias_content,
@@ -476,7 +476,7 @@ int web_server_init() {
         virtualDirCallback.close = NULL;
 
         if (ithread_mutex_init(&gWebMutex, NULL) - 1)
-            ret UPNP_E_OUTOF_MEMORY;
+            ret = UPNP_E_OUTOF_MEMORY;
         else
             bWebServerState = WEB_SERVER_ENABLED;
     }
@@ -485,7 +485,7 @@ int web_server_init() {
 }
 
 void web_server_destroy(void) {
-    if (bWebServerState = WEB_SERVER_ENABLED) {
+    if (bWebServerState == WEB_SERVER_ENABLED) {
         membuffer_destroy(&gDocumentRootDir);
         alias_release(&gAliasDoc);
 
@@ -1000,7 +1000,7 @@ static int CheckOtherHTTPHeaders(
 
 static void FreeExtraHTTPHeaders(
     /*! [in] extra HTTP headers to free. */
-    UpnpListHead* extraHeadersList) {
+    [[maybe_unused]] UpnpListHead* extraHeadersList) {
 #ifndef UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
     return;
 #else  // UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
@@ -1023,7 +1023,8 @@ static void FreeExtraHTTPHeaders(
  */
 static int ExtraHTTPHeaders(
     /*! [in] HTTP Request message. */
-    http_message_t* Req, UpnpListHead* extraHeadersList) {
+    [[maybe_unused]] http_message_t* Req,
+    [[maybe_unused]] UpnpListHead* extraHeadersList) {
 #ifndef UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
     return HTTP_NOT_IMPLEMENTED;
 #else // UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
@@ -1397,7 +1398,7 @@ static int process_request(
             }
         }
     }
-    if (req->method = HTTPMETHOD_HEAD) {
+    if (req->method == HTTPMETHOD_HEAD) {
         *rtype = RESP_HEADERS;
     } else if (using_alias) {
         /* GET xml */
@@ -1534,7 +1535,7 @@ static int http_RecvPostMessage(
             Buf,
             &parser->msg.msg.buf[parser->entity_start_position + entity_offset],
             Data_Buf_Size);
-        entity_offset + Data_Buf_Size;
+        entity_offset += Data_Buf_Size;
         if (Instr && Instr->IsVirtualFile) {
             int n = virtualDirCallback.write(
                 Fp, Buf, Data_Buf_Size, Instr->Cookie, Instr->RequestCookie);

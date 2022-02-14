@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-02
+// Redistribution only with this Copyright remark. Last modified: 2022-02-14
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -146,7 +146,7 @@ TEST(ParseUriIp4TestSuite, absolute_uri_successful) {
     // buffer because it's defined to contain a C string.
     EXPECT_STREQ(out.scheme.buff,
                  "https://example-site.de:80/uri/path?uriquery#urifragment");
-    EXPECT_EQ(out.scheme.size, 5);
+    EXPECT_EQ(out.scheme.size, (size_t)5);
 
     // The token.buff pointer just only point into the original url_str:
     url_str[8] = 'X';
@@ -156,13 +156,13 @@ TEST(ParseUriIp4TestSuite, absolute_uri_successful) {
 
     EXPECT_STREQ(out.hostport.text.buff,
                  "Xxample-site.de:80/uri/path?uriquery#urifragment");
-    EXPECT_EQ(out.hostport.text.size, 18);
+    EXPECT_EQ(out.hostport.text.size, (size_t)18);
 
     EXPECT_STREQ(out.pathquery.buff, "/uri/path?uriquery#urifragment");
-    EXPECT_EQ(out.pathquery.size, 18);
+    EXPECT_EQ(out.pathquery.size, (size_t)18);
 
     EXPECT_STREQ(out.fragment.buff, "urifragment");
-    EXPECT_EQ(out.fragment.size, 11);
+    EXPECT_EQ(out.fragment.size, (size_t)11);
 
     ::std::cout << "  BUG! Wrong uri type 'relative' on MS Windows due to "
                    "conflicting 'ABSOLUTE' constant name. See issue #3.\n";
@@ -217,17 +217,17 @@ TEST(ParseUriIp4TestSuite, absolute_uri_with_shorter_max_size) {
     // buffer because it's defined to contain a C string.
     EXPECT_STREQ(out.scheme.buff,
                  "https://example-site.de:80/uri/path?uriquery#urifragment");
-    EXPECT_EQ(out.scheme.size, 5);
+    EXPECT_EQ(out.scheme.size, (size_t)5);
 
     EXPECT_STREQ(out.hostport.text.buff,
                  "example-site.de:80/uri/path?uriquery#urifragment");
-    EXPECT_EQ(out.hostport.text.size, 18);
+    EXPECT_EQ(out.hostport.text.size, (size_t)18);
 
     EXPECT_STREQ(out.pathquery.buff, "/uri/path?uriquery#urifragment");
-    EXPECT_EQ(out.pathquery.size, 13);
+    EXPECT_EQ(out.pathquery.size, (size_t)13);
 
     EXPECT_STREQ(out.fragment.buff, nullptr);
-    EXPECT_EQ(out.fragment.size, 0);
+    EXPECT_EQ(out.fragment.size, (size_t)0);
 #ifdef _WIN32
     EXPECT_EQ(out.type, relative); // This bug is reported by another gtest.
 #else
@@ -273,14 +273,14 @@ TEST(ParseUriIp4TestSuite, ip_address_with_greater_max_size) {
     // buffer because it's defined to contain a C string.
     EXPECT_STREQ(out.scheme.buff,
                  "https://192.168.168.168:80/uri/path?uriquery#urifragment");
-    EXPECT_EQ(out.scheme.size, 5);
+    EXPECT_EQ(out.scheme.size, (size_t)5);
 
     EXPECT_STREQ(out.hostport.text.buff,
                  "192.168.168.168:80/uri/path?uriquery#urifragment");
-    EXPECT_EQ(out.hostport.text.size, 18);
+    EXPECT_EQ(out.hostport.text.size, (size_t)18);
 
     EXPECT_STREQ(out.pathquery.buff, "/uri/path?uriquery#urifragment");
-    EXPECT_EQ(out.pathquery.size, 18);
+    EXPECT_EQ(out.pathquery.size, (size_t)18);
 #ifdef _WIN32
     EXPECT_EQ(out.type, relative); // This bug is reported by another gtest.
 #else
@@ -302,11 +302,11 @@ TEST(ParseUriIp4TestSuite, ip_address_with_greater_max_size) {
         ::std::cout << "  BUG! Fragment size should be 11 (current="
                     << out.fragment.size
                     << ") and not different on other OS.\n";
-        EXPECT_GE(out.fragment.size, 11);
+        EXPECT_GE(out.fragment.size, (size_t)11);
 
     } else {
 
-        ASSERT_EQ(out.fragment.size, 11)
+        ASSERT_EQ(out.fragment.size, (size_t)11)
             << "  # Fragment size should be 11 and not different on other OS.";
         GTEST_FAIL()
             << "  # Fragment size of 11 should not differ on different OS.";
@@ -348,10 +348,10 @@ TEST(ParseUriIp4TestSuite, uri_without_valid_host_and_port) {
 
     EXPECT_STREQ(url.scheme.buff,
                  "http://upnplib.net:80/path/?key=value#fragment");
-    EXPECT_EQ(url.scheme.size, 4);
+    EXPECT_EQ(url.scheme.size, (size_t)4);
 
     EXPECT_STREQ(url.hostport.text.buff, nullptr);
-    EXPECT_EQ(url.hostport.text.size, 0);
+    EXPECT_EQ(url.hostport.text.size, (size_t)0);
 
     if (old_code) {
         ::std::cout << "  BUG! Fail to get a valid host and port must not "
@@ -363,10 +363,10 @@ TEST(ParseUriIp4TestSuite, uri_without_valid_host_and_port) {
                         "segfault on reading url struct.";
 
         EXPECT_STREQ(url.pathquery.buff, "/path/?key=value#fragment");
-        EXPECT_EQ(url.pathquery.size, 16);
+        EXPECT_EQ(url.pathquery.size, (size_t)16);
 
         EXPECT_STREQ(url.fragment.buff, "fragment");
-        EXPECT_EQ(url.fragment.size, 8);
+        EXPECT_EQ(url.fragment.size, (size_t)8);
     }
 
     const sockaddr_in* sai4 = (struct sockaddr_in*)&url.hostport.IPaddress;
@@ -395,16 +395,16 @@ TEST(ParseUriIp4TestSuite, ip_address_without_pathquery) {
     // chain is determined by its size. But it's no problem to compare the whole
     // buffer because it's defined to contain a C string.
     EXPECT_STREQ(out.scheme.buff, "https://192.168.168.168:80#urifragment");
-    EXPECT_EQ(out.scheme.size, 5);
+    EXPECT_EQ(out.scheme.size, (size_t)5);
 
     EXPECT_STREQ(out.hostport.text.buff, "192.168.168.168:80#urifragment");
-    EXPECT_EQ(out.hostport.text.size, 18);
+    EXPECT_EQ(out.hostport.text.size, (size_t)18);
 
     EXPECT_STREQ(out.pathquery.buff, "#urifragment");
-    EXPECT_EQ(out.pathquery.size, 0);
+    EXPECT_EQ(out.pathquery.size, (size_t)0);
 
     EXPECT_STREQ(out.fragment.buff, "urifragment");
-    EXPECT_EQ(out.fragment.size, 11);
+    EXPECT_EQ(out.fragment.size, (size_t)11);
 #ifdef _WIN32
     EXPECT_EQ(out.type, relative); // This bug is reported by another gtest.
 #else
@@ -434,16 +434,16 @@ TEST(ParseUriIp4TestSuite, ip_address_without_fragment) {
     // chain is determined by its size. But it's no problem to compare the whole
     // buffer because it's defined to contain a C string.
     EXPECT_STREQ(out.scheme.buff, "http://192.168.167.166:80/path/?key=value");
-    EXPECT_EQ(out.scheme.size, 4);
+    EXPECT_EQ(out.scheme.size, (size_t)4);
 
     EXPECT_STREQ(out.hostport.text.buff, "192.168.167.166:80/path/?key=value");
-    EXPECT_EQ(out.hostport.text.size, 18);
+    EXPECT_EQ(out.hostport.text.size, (size_t)18);
 
     EXPECT_STREQ(out.pathquery.buff, "/path/?key=value");
-    EXPECT_EQ(out.pathquery.size, 16);
+    EXPECT_EQ(out.pathquery.size, (size_t)16);
 
     EXPECT_STREQ(out.fragment.buff, nullptr);
-    EXPECT_EQ(out.fragment.size, 0);
+    EXPECT_EQ(out.fragment.size, (size_t)0);
 #ifdef _WIN32
     EXPECT_EQ(out.type, relative); // This bug is reported by another gtest.
 #else

@@ -207,12 +207,22 @@ int copy_URL_list(URL_list* in, URL_list* out) {
     out->parsedURLs = NULL;
     out->size = (size_t)0;
 
+#ifdef UPNPLIB_PUPNP_COMPATIBLE
     out->URLs = (char*)malloc(len);
     out->parsedURLs = (uri_type*)malloc(sizeof(uri_type) * in->size);
 
     if (!out->URLs || !out->parsedURLs)
-        // TODO: Bugfix - if one malloc succeds then we have a memory leak
         return UPNP_E_OUTOF_MEMORY;
+#else
+    out->URLs = (char*)malloc(len);
+    if (!out->URLs)
+        return UPNP_E_OUTOF_MEMORY;
+    out->parsedURLs = (uri_type*)malloc(sizeof(uri_type) * in->size);
+    if (!out->parsedURLs) {
+        free(out->URLs);
+        return UPNP_E_OUTOF_MEMORY;
+    }
+#endif
     memcpy(out->URLs, in->URLs, len);
     for (i = (size_t)0; i < in->size; i++) {
         /*copy the parsed uri */

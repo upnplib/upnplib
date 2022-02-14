@@ -6,7 +6,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-10
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -106,7 +106,8 @@ void SetSoapCallback(
     /*! [in] SOAP Callback to be invoked . */
     MiniServerCallback callback);
 #else  /* INCLUDE_DEVICE_APIS */
-static UPNP_INLINE void SetSoapCallback(MiniServerCallback callback) {}
+static UPNP_INLINE void
+SetSoapCallback([[maybe_unused]] MiniServerCallback callback) {}
 #endif /* INCLUDE_DEVICE_APIS */
 /*!
  * \brief Set GENA Callback.

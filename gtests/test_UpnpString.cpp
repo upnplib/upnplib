@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-31
+// Redistribution only with this Copyright remark. Last modified: 2022-02-14
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -93,13 +93,13 @@ TEST_F(UpnpStringMockTestSuite, deleteUpnpString) {
 
     // Check edge condition
     UpnpString_delete((UpnpString*)nullptr);
-    EXPECT_EQ(upnpstr.m_length, 11);
+    EXPECT_EQ(upnpstr.m_length, (size_t)11);
     EXPECT_STREQ(upnpstr.m_string, "hello world");
 
     // call the unit
     EXPECT_CALL(mock_free, free(_)).Times(2);
     UpnpString_delete(p);
-    EXPECT_EQ(upnpstr.m_length, 0);
+    EXPECT_EQ(upnpstr.m_length, (size_t)0);
     EXPECT_EQ(upnpstr.m_string, (char*)NULL);
 }
 
@@ -112,7 +112,7 @@ TEST_F(UpnpStringMockTestSuite, setUpnpString) {
     // call the unit
     EXPECT_CALL(mock_free, free(_)).Times(1);
     EXPECT_PRED2(UpnpString_set_String, p, (const char*)"set string");
-    EXPECT_EQ(upnpstr.m_length, 10);
+    EXPECT_EQ(upnpstr.m_length, (size_t)10);
     EXPECT_STREQ(upnpstr.m_string, "set string");
 }
 
@@ -125,27 +125,27 @@ TEST_F(UpnpStringMockTestSuite, setUpnpStringN) {
     // call the unit
     EXPECT_CALL(mock_free, free(_)).Times(1);
     EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 0);
-    EXPECT_EQ(upnpstr.m_length, 0);
+    EXPECT_EQ(upnpstr.m_length, (size_t)0);
     EXPECT_STREQ(upnpstr.m_string, "");
 
     EXPECT_CALL(mock_free, free(_)).Times(1);
     EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 1);
-    EXPECT_EQ(upnpstr.m_length, 1);
+    EXPECT_EQ(upnpstr.m_length, (size_t)1);
     EXPECT_STREQ(upnpstr.m_string, "h");
 
     EXPECT_CALL(mock_free, free(_)).Times(1);
     EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 10);
-    EXPECT_EQ(upnpstr.m_length, 10);
+    EXPECT_EQ(upnpstr.m_length, (size_t)10);
     EXPECT_STREQ(upnpstr.m_string, "hello worl");
 
     EXPECT_CALL(mock_free, free(_)).Times(1);
     EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 11);
-    EXPECT_EQ(upnpstr.m_length, 11);
+    EXPECT_EQ(upnpstr.m_length, (size_t)11);
     EXPECT_STREQ(upnpstr.m_string, "hello world");
 
     EXPECT_CALL(mock_free, free(_)).Times(1);
     EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 12);
-    EXPECT_EQ(upnpstr.m_length, 11);
+    EXPECT_EQ(upnpstr.m_length, (size_t)11);
     EXPECT_STREQ(upnpstr.m_string, "hello world");
 }
 
@@ -155,18 +155,18 @@ TEST(UpnpStringTestSuite, strnlenCalledWithVariousParameter) {
     char str0[] = "";
     char str1[] = "123456789";
 
-    EXPECT_EQ(strnlen(str0, 0), 0);
-    EXPECT_EQ(strnlen(str0, 1), 0);
+    EXPECT_EQ(strnlen(str0, 0), (size_t)0);
+    EXPECT_EQ(strnlen(str0, 1), (size_t)0);
     EXPECT_EQ(str0[0], '\0'); // string terminator
 
-    EXPECT_EQ(strnlen(str1, 0), 0);
-    EXPECT_EQ(strnlen(str1, 1), 1);
+    EXPECT_EQ(strnlen(str1, 0), (size_t)0);
+    EXPECT_EQ(strnlen(str1, 1), (size_t)1);
     EXPECT_EQ(str1[1], '2');
-    EXPECT_EQ(strnlen(str1, 10), 9);
+    EXPECT_EQ(strnlen(str1, 10), (size_t)9);
     EXPECT_EQ(str1[9], '\0'); // string terminator
-    EXPECT_EQ(strnlen(str1, 11), 9);
+    EXPECT_EQ(strnlen(str1, 11), (size_t)9);
     str1[9] = 1; // destroy string terminator
-    EXPECT_EQ(strnlen(str1, 10), 10);
+    EXPECT_EQ(strnlen(str1, 10), (size_t)10);
 #ifndef OLD_TEST
     ADD_FAILURE() << "# strnlen isn't used in the UPnPlib core.";
 #endif
@@ -204,7 +204,7 @@ TEST(UpnpStringTestSuite, clearUpnpString) {
 
     // call the unit
     UpnpString_clear(p);
-    EXPECT_EQ(upnpstr.m_length, 0);
+    EXPECT_EQ(upnpstr.m_length, (size_t)0);
     EXPECT_STREQ(upnpstr.m_string, "");
 }
 
@@ -220,7 +220,7 @@ TEST(UpnpStringDeathTest, UpnpStringGetLength) {
     SUpnpString upnpstr = {11, *&mstring};
     UpnpString* p = (UpnpString*)&upnpstr;
 
-    EXPECT_EQ(UpnpString_get_Length(p), 11);
+    EXPECT_EQ(UpnpString_get_Length(p), (size_t)11);
 
 #ifdef OLD_TEST
     std::cout << "  BUG! Function 'UpnpString_get_Length()' will segfault if "
@@ -249,15 +249,15 @@ TEST(UpnpStringDeathTest, getUpnpString) {
 }
 
 TEST(UpnpStringDeathTest, setUpnpString) {
+#ifdef OLD_TEST
+    std::cout << "  BUG! Function 'UpnpString_set_String()' will segfault if "
+                 "called with nullptr.\n";
+#else
     // provide a UpnpString
     char mstring[] = "hello world";
     SUpnpString upnpstr = {11, *&mstring};
     UpnpString* p = (UpnpString*)&upnpstr;
 
-#ifdef OLD_TEST
-    std::cout << "  BUG! Function 'UpnpString_set_String()' will segfault if "
-                 "called with nullptr.\n";
-#else
     // call the unit with NULL pointer
     EXPECT_DEATH(UpnpString_set_String(nullptr, nullptr), "Segmentation fault");
     EXPECT_DEATH(UpnpString_set_String(nullptr, *&"another string"),
@@ -267,15 +267,15 @@ TEST(UpnpStringDeathTest, setUpnpString) {
 }
 
 TEST(UpnpStringDeathTest, setUpnpStringN) {
+#ifdef OLD_TEST
+    std::cout << "  BUG! Function 'UpnpString_set_StringN()' will segfault if "
+                 "called with nullptr.\n";
+#else
     // provide a UpnpString
     char mstring[] = "hello world";
     SUpnpString upnpstr = {11, *&mstring};
     UpnpString* p = (UpnpString*)&upnpstr;
 
-#ifdef OLD_TEST
-    std::cout << "  BUG! Function 'UpnpString_set_StringN()' will segfault if "
-                 "called with nullptr.\n";
-#else
     // call the unit with NULL pointer
     EXPECT_DEATH(UpnpString_set_StringN(nullptr, nullptr, 0),
                  "Segmentation fault");
@@ -286,11 +286,6 @@ TEST(UpnpStringDeathTest, setUpnpStringN) {
 }
 
 TEST(UpnpStringDeathTest, clearUpnpString) {
-    // provide a UpnpString
-    char mstring[] = "hello world";
-    SUpnpString upnpstr = {11, *&mstring};
-    UpnpString* p = (UpnpString*)&upnpstr;
-
 #ifdef OLD_TEST
     std::cout << "  BUG! Function 'UpnpString_clear()' will segfault if called "
                  "with nullptr.\n";

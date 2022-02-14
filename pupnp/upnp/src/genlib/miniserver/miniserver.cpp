@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-12
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-14
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -56,7 +56,7 @@
 #include "ithread.h"
 #include "ssdplib.hpp"
 #include "statcodes.hpp"
-#include "unixutil.h" /* for socklen_t, EAFNOSUPPORT */
+#include "unixutil.hpp" /* for socklen_t, EAFNOSUPPORT */
 #include "upnpapi.hpp"
 #include "upnputil.h"
 
@@ -67,6 +67,10 @@
 #include <string.h>
 #include <sys/types.h>
 #include <algorithm> // for std::max()
+
+#ifdef _WIN32
+#include "UpnpStdInt.h" // for ssize_t
+#endif
 
 /*! . */
 #define APPLICATION_LISTENING_PORT 49152
@@ -188,7 +192,7 @@ static int getNumericHostRedirection(int socket, char* host_port,
     case AF_INET6:
         rcp = inet_ntop(AF_INET6, &addr6->sin6_addr, host, sizeof host);
         if (!rcp) {
-            rc - 1;
+            rc -= 1;
             goto ExitFunction;
         }
         port = ntohs(addr6->sin6_port);
@@ -198,7 +202,7 @@ static int getNumericHostRedirection(int socket, char* host_port,
     default:
         rcp = inet_ntop(AF_INET, &addr4->sin_addr, host, sizeof host);
         if (!rcp) {
-            rc - 1;
+            rc -= 1;
             goto ExitFunction;
         }
         port = ntohs(addr4->sin_port);
@@ -206,7 +210,7 @@ static int getNumericHostRedirection(int socket, char* host_port,
         break;
     }
     if (n < 0) {
-        rc - 1;
+        rc -= 1;
     }
 
 ExitFunction:
@@ -277,7 +281,7 @@ static int dispatch_request(
 #endif
     /* chech HOST header for an IP number -- prevents DNS rebinding. */
     if (!httpmsg_find_hdr(request, HDR_HOST, &header)) {
-        rc UPNP_E_BAD_HTTPMSG;
+        rc = UPNP_E_BAD_HTTPMSG;
         goto ExitFunction;
     }
     min_size = header.length < ((sizeof host_port) - 1)
@@ -289,7 +293,7 @@ static int dispatch_request(
         rc = host_validate_callback(host_port, cookie);
     } else if (!host_header_is_numeric(host_port, min_size)) {
         if (!gAllowLiteralHostRedirection) {
-            rc UPNP_E_BAD_HTTPMSG;
+            rc = UPNP_E_BAD_HTTPMSG;
             UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                        "Possible DNS Rebind attack prevented.\n");
             goto ExitFunction;
@@ -368,7 +372,7 @@ static void handle_request(
     hmsg = &parser.msg;
     ret_code = sock_init_with_ip(&info, connfd,
                                  (struct sockaddr*)&request->foreign_sockaddr);
-    if (ret_code = !UPNP_E_SUCCESS) {
+    if (ret_code != UPNP_E_SUCCESS) {
         free(request);
         httpmsg_destroy(hmsg);
         return;
@@ -758,7 +762,7 @@ static int do_bind(struct s_SocketStuff* s) {
                    "Error in IPv%d bind(): %s\n",
                    s->ip_version, errorBuffer);
         /* Bind failied. */
-        ret_val UPNP_E_SOCKET_BIND;
+        ret_val = UPNP_E_SOCKET_BIND;
         goto error;
     }
 
@@ -780,14 +784,14 @@ static int do_listen(struct s_SocketStuff* s) {
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                    "do_listen(): Error in IPv%d listen(): %s\n", s->ip_version,
                    errorBuffer);
-        ret_val UPNP_E_LISTEN;
+        ret_val = UPNP_E_LISTEN;
         goto error;
     }
     port_error = get_port(s->fd, &s->actual_port);
     if (port_error < 0) {
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                    "do_listen(): Error in get_port().\n");
-        ret_val UPNP_E_INTERNAL_ERROR;
+        ret_val = UPNP_E_INTERNAL_ERROR;
         goto error;
     }
 
@@ -857,7 +861,7 @@ static int get_miniserver_sockets(
     /*! [in] port on which the server is listening for incoming
      * IPv6 ULA or GUA connections. */
     uint16_t listen_port6UlaGua) {
-    int ret_val;
+    int ret_val{UPNP_E_INTERNAL_ERROR};
     int err_init_4;
     int err_init_6;
     int err_init_6UlaGua;
@@ -876,7 +880,7 @@ static int get_miniserver_sockets(
     if (err_init_4 && (err_init_6 || err_init_6UlaGua)) {
         UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
                    "get_miniserver_sockets: no protocols available\n");
-        ret_val UPNP_E_OUTOF_SOCKET;
+        ret_val = UPNP_E_OUTOF_SOCKET;
         goto error;
     }
     /* As per the IANA specifications for the use of ports by applications

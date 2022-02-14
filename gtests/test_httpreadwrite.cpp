@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-02
+// Redistribution only with this Copyright remark. Last modified: 2022-02-14
 
 #include "gmock/gmock.h"
 #include "upnplib_gtest_tools.hpp"
@@ -316,13 +316,13 @@ TEST(ParseUriIp4TestSuite, verify_testurl) {
 
     EXPECT_STREQ(out.scheme.buff,
                  "http://www.upnplib.net:80/dest/path/?key=value#fragment");
-    EXPECT_EQ(out.scheme.size, 4);
+    EXPECT_EQ(out.scheme.size, (size_t)4);
     EXPECT_STREQ(test_url->scheme.buff, out.scheme.buff);
     EXPECT_EQ(test_url->scheme.size, out.scheme.size);
 
     EXPECT_STREQ(out.hostport.text.buff,
                  "www.upnplib.net:80/dest/path/?key=value#fragment");
-    EXPECT_EQ(out.hostport.text.size, 18);
+    EXPECT_EQ(out.hostport.text.size, (size_t)18);
     EXPECT_STREQ(test_url->hostport.text.buff, out.hostport.text.buff);
     EXPECT_EQ(test_url->hostport.text.size, out.hostport.text.size);
 
@@ -337,12 +337,12 @@ TEST(ParseUriIp4TestSuite, verify_testurl) {
     EXPECT_EQ(out_sai4->sin_addr.s_addr, test_url_sai4->sin_addr.s_addr);
 
     EXPECT_STREQ(out.pathquery.buff, "/dest/path/?key=value#fragment");
-    EXPECT_EQ(out.pathquery.size, 21);
+    EXPECT_EQ(out.pathquery.size, (size_t)21);
     EXPECT_STREQ(test_url->pathquery.buff, out.pathquery.buff);
     EXPECT_EQ(test_url->pathquery.size, out.pathquery.size);
 
     EXPECT_STREQ(out.fragment.buff, "fragment");
-    EXPECT_EQ(out.fragment.size, 8);
+    EXPECT_EQ(out.fragment.size, (size_t)8);
     EXPECT_STREQ(test_url->fragment.buff, out.fragment.buff);
     EXPECT_EQ(test_url->fragment.size, out.fragment.size);
 }
@@ -423,7 +423,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_close_connection_successful) {
     // The sockaddr_storage is only filled in incoming requests. As http client
     // we are connecting to a server.
     EXPECT_EQ(p_sa_in->sin_port, 0);
-    EXPECT_EQ(p_sa_in->sin_addr.s_addr, 0);
+    EXPECT_EQ(p_sa_in->sin_addr.s_addr, (unsigned int)0);
 
     // EXPECT_EQ(phandle->contentLength, 0); // Seems to be uninitialized
     // EXPECT_EQ(phandle->cancel, 0);        // Seems to be uninitialized
@@ -697,7 +697,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_connection_with_ip_address) {
     // The sockaddr_storage is only filled in incoming requests. As http client
     // we are connecting to a server.
     EXPECT_EQ(p_sa_in->sin_port, 0);
-    EXPECT_EQ(p_sa_in->sin_addr.s_addr, 0);
+    EXPECT_EQ(p_sa_in->sin_addr.s_addr, (unsigned int)0);
 
     // EXPECT_EQ(phandle->contentLength, 0);
     // EXPECT_EQ(phandle->cancel, 0);
@@ -760,7 +760,7 @@ TEST_F(HttpConnectIp4FTestSuite, successful_connect) {
         << UpnpGetErrorMessage(sockfd) << '(' << sockfd << ").";
 
     EXPECT_STREQ(fixed_url.fragment.buff, "fragment");
-    EXPECT_EQ(fixed_url.fragment.size, 8);
+    EXPECT_EQ(fixed_url.fragment.size, (size_t)8);
 }
 
 TEST_F(HttpConnectIp4FTestSuite, socket_allocation_fails) {
@@ -855,13 +855,13 @@ TEST(HttpFixUrl, fix_url_no_path_and_query_successful) {
     EXPECT_EQ(fixed_url.type, ABSOLUTE);
     EXPECT_EQ(fixed_url.path_type, OPAQUE_PART);
     EXPECT_STREQ(fixed_url.scheme.buff, "http://upnplib.net#fragment");
-    EXPECT_EQ(fixed_url.scheme.size, 4);
+    EXPECT_EQ(fixed_url.scheme.size, (size_t)4);
     EXPECT_STREQ(fixed_url.hostport.text.buff, "upnplib.net#fragment");
-    EXPECT_EQ(fixed_url.hostport.text.size, 11);
+    EXPECT_EQ(fixed_url.hostport.text.size, (size_t)11);
     EXPECT_STREQ(fixed_url.pathquery.buff, "/");
-    EXPECT_EQ(fixed_url.pathquery.size, 1);
+    EXPECT_EQ(fixed_url.pathquery.size, (size_t)1);
     EXPECT_STREQ(fixed_url.fragment.buff, "fragment");
-    EXPECT_EQ(fixed_url.fragment.size, 8);
+    EXPECT_EQ(fixed_url.fragment.size, (size_t)8);
 }
 
 TEST(HttpFixUrl, nullptr_to_url) {
@@ -916,9 +916,9 @@ TEST(HttpFixUrl, wrong_scheme_ftp) {
     EXPECT_EQ(uriObj.parse_uri(url_str, strlen(url_str), &url), HTTP_SUCCESS);
 
     EXPECT_STREQ(url.scheme.buff, "ftp://192.168.169.170:80#fragment");
-    EXPECT_EQ(url.scheme.size, 3);
+    EXPECT_EQ(url.scheme.size, (size_t)3);
     EXPECT_STREQ(url.pathquery.buff, "#fragment");
-    EXPECT_EQ(url.pathquery.size, 0);
+    EXPECT_EQ(url.pathquery.size, (size_t)0);
 
     // Test Unit
     uri_type fixed_url;
@@ -926,9 +926,9 @@ TEST(HttpFixUrl, wrong_scheme_ftp) {
     EXPECT_EQ(httprw_oObj.http_FixUrl(&url, &fixed_url), UPNP_E_INVALID_URL);
 
     EXPECT_STREQ(fixed_url.scheme.buff, "ftp://192.168.169.170:80#fragment");
-    EXPECT_EQ(fixed_url.scheme.size, 3);
+    EXPECT_EQ(fixed_url.scheme.size, (size_t)3);
     EXPECT_STREQ(fixed_url.pathquery.buff, "#fragment");
-    EXPECT_EQ(fixed_url.pathquery.size, 0);
+    EXPECT_EQ(fixed_url.pathquery.size, (size_t)0);
 }
 
 TEST(HttpFixUrl, no_fragment) {
@@ -944,9 +944,9 @@ TEST(HttpFixUrl, no_fragment) {
     EXPECT_EQ(httprw_oObj.http_FixUrl(&url, &fixed_url), UPNP_E_SUCCESS);
 
     EXPECT_STREQ(url.scheme.buff, "http://192.168.169.170:80/path/?key=value");
-    EXPECT_EQ(url.scheme.size, 4);
+    EXPECT_EQ(url.scheme.size, (size_t)4);
     EXPECT_EQ(url.fragment.buff, nullptr);
-    EXPECT_EQ(url.fragment.size, 0);
+    EXPECT_EQ(url.fragment.size, (size_t)0);
 }
 
 TEST(HttpFixUrl, check_http_FixStrUrl_successful) {
@@ -970,14 +970,14 @@ TEST(HttpFixUrl, check_http_FixStrUrl_successful) {
     EXPECT_EQ(fixed_url.path_type, ABS_PATH);
     EXPECT_STREQ(fixed_url.scheme.buff,
                  "http://upnplib.net:80/path/?key=value#fragment");
-    EXPECT_EQ(fixed_url.scheme.size, 4);
+    EXPECT_EQ(fixed_url.scheme.size, (size_t)4);
     EXPECT_STREQ(fixed_url.hostport.text.buff,
                  "upnplib.net:80/path/?key=value#fragment");
-    EXPECT_EQ(fixed_url.hostport.text.size, 14);
+    EXPECT_EQ(fixed_url.hostport.text.size, (size_t)14);
     EXPECT_STREQ(fixed_url.pathquery.buff, "/path/?key=value#fragment");
-    EXPECT_EQ(fixed_url.pathquery.size, 16);
+    EXPECT_EQ(fixed_url.pathquery.size, (size_t)16);
     EXPECT_STREQ(fixed_url.fragment.buff, "fragment");
-    EXPECT_EQ(fixed_url.fragment.size, 8);
+    EXPECT_EQ(fixed_url.fragment.size, (size_t)8);
 
     struct sockaddr_in* sai4 =
         (struct sockaddr_in*)&fixed_url.hostport.IPaddress;

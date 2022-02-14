@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-06
+// Redistribution only with this Copyright remark. Last modified: 2022-02-14
 
 #include "upnplib_gtest_tools.hpp"
 #include "upnplib_gtest_tools_unix.hpp"
@@ -26,13 +26,13 @@ TEST(ToolsTestSuite, initialize_interface_addresses) {
     // should be constructed with a loopback interface
     EXPECT_EQ(ifaddr->ifa_next, nullptr);
     EXPECT_STREQ(ifaddr->ifa_name, "lo");
-    EXPECT_EQ(ifaddr->ifa_flags, (const unsigned int)0 | IFF_LOOPBACK | IFF_UP);
+    EXPECT_EQ(ifaddr->ifa_flags, (unsigned int)0 | IFF_LOOPBACK | IFF_UP);
     EXPECT_EQ(ifa_addr_in->sin_family, AF_INET);
-    EXPECT_EQ(ifa_addr_in->sin_addr.s_addr, (const unsigned int)16777343);
+    EXPECT_EQ(ifa_addr_in->sin_addr.s_addr, (unsigned int)16777343);
     EXPECT_EQ(ifa_netmask_in->sin_family, AF_INET);
-    EXPECT_EQ(ifa_netmask_in->sin_addr.s_addr, (const unsigned int)255);
+    EXPECT_EQ(ifa_netmask_in->sin_addr.s_addr, (unsigned int)255);
     EXPECT_EQ(ifa_ifu_in->sin_family, AF_INET);
-    EXPECT_EQ(ifa_ifu_in->sin_addr.s_addr, (const unsigned int)0);
+    EXPECT_EQ(ifa_ifu_in->sin_addr.s_addr, (unsigned int)0);
     EXPECT_EQ(ifaddr->ifa_data, nullptr);
 
     // This throws a segfault by C++ and does not need to be tested
@@ -52,7 +52,7 @@ TEST(ToolsTestSuite, initialize_interface_addresses) {
     EXPECT_STREQ(addr4buf, "255.255.240.0")
         << "    addr4buf contains the netmask";
     EXPECT_EQ(ifaddr->ifa_flags,
-              (const unsigned int)0 | IFF_UP | IFF_BROADCAST | IFF_MULTICAST);
+              (unsigned int)0 | IFF_UP | IFF_BROADCAST | IFF_MULTICAST);
     inet_ntop(AF_INET, &ifa_ifu_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
     EXPECT_STREQ(addr4buf, "192.168.175.255")
         << "    addr4buf contains the broadcast address";
@@ -67,7 +67,7 @@ TEST(ToolsTestSuite, initialize_interface_addresses) {
     EXPECT_STREQ(addr4buf, "255.255.255.255")
         << "    addr4buf contains the netmask";
     EXPECT_EQ(ifaddr->ifa_flags,
-              (const unsigned int)0 | IFF_UP | IFF_BROADCAST | IFF_MULTICAST);
+              (unsigned int)0 | IFF_UP | IFF_BROADCAST | IFF_MULTICAST);
     inet_ntop(AF_INET, &ifa_ifu_in->sin_addr.s_addr, addr4buf, INET_ADDRSTRLEN);
     EXPECT_STREQ(addr4buf, "10.168.168.200")
         << "    addr4buf contains the broadcast address";

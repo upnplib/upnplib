@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-28
+// Redistribution only with this Copyright remark. Last modified: 2022-02-15
 
 #include "gtest/gtest.h"
 //#include "gmock/gmock.h"
@@ -89,14 +89,14 @@ TEST(MembufferTestSuite, init_and_destroy) {
 
     Cmembuffer mbObj{};
     mbObj.membuffer_init(&mbuf);
-    EXPECT_EQ(mbuf.length, 0);
-    EXPECT_EQ(mbuf.capacity, 0);
+    EXPECT_EQ(mbuf.length, (size_t)0);
+    EXPECT_EQ(mbuf.capacity, (size_t)0);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_EQ(mbuf.buf, nullptr);
 
     mbObj.membuffer_destroy(&mbuf);
-    EXPECT_EQ(mbuf.length, 0);
-    EXPECT_EQ(mbuf.capacity, 0);
+    EXPECT_EQ(mbuf.length, (size_t)0);
+    EXPECT_EQ(mbuf.capacity, (size_t)0);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_EQ(mbuf.buf, nullptr);
 }
@@ -386,8 +386,8 @@ TEST(MembufferTestSuite, membuffer_set_size_to_0_byte_new_length) {
     mbObj.membuffer_init(&mbuf);
 
     EXPECT_EQ(mbObj.membuffer_set_size(&mbuf, 0), UPNP_E_SUCCESS);
-    EXPECT_EQ(mbuf.length, 0);
-    EXPECT_EQ(mbuf.capacity, 0);
+    EXPECT_EQ(mbuf.length, (size_t)0);
+    EXPECT_EQ(mbuf.capacity, (size_t)0);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_EQ(mbuf.buf, nullptr);
 
@@ -401,8 +401,8 @@ TEST(MembufferTestSuite, membuffer_set_size_to_1_byte_new_length) {
     mbObj.membuffer_init(&mbuf);
 
     mbObj.membuffer_set_size(&mbuf, 1);
-    EXPECT_EQ(mbuf.length, 0);
-    EXPECT_EQ(mbuf.capacity, 5);
+    EXPECT_EQ(mbuf.length, (size_t)0);
+    EXPECT_EQ(mbuf.capacity, (size_t)5);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_NE(mbuf.buf, nullptr);
     // Don't check strlen because the string isn't initialized and may have
@@ -421,7 +421,7 @@ TEST(MembufferTestSuite, membuffer_set_size) {
 
     size_t new_length{2 * MEMBUF_DEF_SIZE_INC + 1};
     mbObj.membuffer_set_size(&mbuf, new_length);
-    EXPECT_EQ(mbuf.length, 0);
+    EXPECT_EQ(mbuf.length, (size_t)0);
     EXPECT_EQ(mbuf.capacity, new_length);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_NE(mbuf.buf, nullptr);
@@ -442,12 +442,12 @@ TEST(MembufferTestSuite, membuffer_assign) {
     const unsigned char buf1[2]{1, 2};
     EXPECT_EQ(mbObj.membuffer_assign(&mbuf, &buf1, sizeof(buf1)),
               UPNP_E_SUCCESS);
-    EXPECT_EQ(mbuf.length, 2);
-    EXPECT_EQ(mbuf.capacity, 5);
+    EXPECT_EQ(mbuf.length, (size_t)2);
+    EXPECT_EQ(mbuf.capacity, (size_t)5);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 2);
+        EXPECT_EQ((int)strlen(mbuf.buf), 2);
         EXPECT_EQ(mbuf.buf[0], 1);
         EXPECT_EQ(mbuf.buf[1], 2);
         EXPECT_EQ(mbuf.buf[2], 0);
@@ -456,12 +456,12 @@ TEST(MembufferTestSuite, membuffer_assign) {
     const unsigned char buf2[1]{3};
     EXPECT_EQ(mbObj.membuffer_assign(&mbuf, &buf2, sizeof(buf2)),
               UPNP_E_SUCCESS);
-    EXPECT_EQ(mbuf.length, 1);
-    EXPECT_EQ(mbuf.capacity, 5);
+    EXPECT_EQ(mbuf.length, (size_t)1);
+    EXPECT_EQ(mbuf.capacity, (size_t)5);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 1);
+        EXPECT_EQ((int)strlen(mbuf.buf), 1);
         EXPECT_EQ(mbuf.buf[0], 3);
         EXPECT_EQ(mbuf.buf[1], 0);
     }
@@ -491,8 +491,8 @@ TEST(MembufferTestSuite, membuffer_assign_with_nullptr_to_compare_buffer) {
     mbObj.membuffer_init(&mbuf);
 
     ASSERT_EQ(mbObj.membuffer_assign(&mbuf, nullptr, 10), UPNP_E_SUCCESS);
-    EXPECT_EQ(mbuf.length, 0);
-    EXPECT_EQ(mbuf.capacity, 0);
+    EXPECT_EQ(mbuf.length, (size_t)0);
+    EXPECT_EQ(mbuf.capacity, (size_t)0);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_EQ(mbuf.buf, nullptr);
 
@@ -507,8 +507,8 @@ TEST(MembufferTestSuite, membuffer_assign_with_0_byte_buffer_length) {
     mbObj.membuffer_init(&mbuf);
 
     EXPECT_EQ(mbObj.membuffer_assign(&mbuf, &buf, 0), UPNP_E_SUCCESS);
-    EXPECT_EQ(mbuf.length, 0);
-    EXPECT_EQ(mbuf.capacity, 0);
+    EXPECT_EQ(mbuf.length, (size_t)0);
+    EXPECT_EQ(mbuf.capacity, (size_t)0);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_EQ(mbuf.buf, nullptr);
 
@@ -525,8 +525,8 @@ TEST(MembufferTestSuite, membuffer_assign_str) {
 
     const char str[]{"Hello World"};
     EXPECT_EQ(mbObj.membuffer_assign_str(&mbuf, str), UPNP_E_SUCCESS);
-    EXPECT_EQ(mbuf.length, 11);
-    EXPECT_EQ(mbuf.capacity, 11);
+    EXPECT_EQ(mbuf.length, (size_t)11);
+    EXPECT_EQ(mbuf.capacity, (size_t)11);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_NE(mbuf.buf, nullptr);
     if (mbuf.buf)
@@ -545,35 +545,35 @@ TEST(MembufferTestSuite, membuffer_append) {
 
     const char buf1[1]{1};
     EXPECT_EQ(mbObj.membuffer_append(&mbuf, &buf1, sizeof(buf1)), 0);
-    EXPECT_EQ(mbuf.length, 1);
-    EXPECT_EQ(mbuf.capacity, 5);
+    EXPECT_EQ(mbuf.length, (size_t)1);
+    EXPECT_EQ(mbuf.capacity, (size_t)5);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 1);
+        EXPECT_EQ((int)strlen(mbuf.buf), 1);
         EXPECT_EQ(mbuf.buf[0], 1);
         EXPECT_EQ(mbuf.buf[1], 0);
     }
     const char buf2[1]{2};
     EXPECT_EQ(mbObj.membuffer_append(&mbuf, &buf2, sizeof(buf2)), 0);
-    EXPECT_EQ(mbuf.length, 2);
-    EXPECT_EQ(mbuf.capacity, 5);
+    EXPECT_EQ(mbuf.length, (size_t)2);
+    EXPECT_EQ(mbuf.capacity, (size_t)5);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 2);
+        EXPECT_EQ((int)strlen(mbuf.buf), 2);
         EXPECT_EQ(mbuf.buf[0], 1);
         EXPECT_EQ(mbuf.buf[1], 2);
         EXPECT_EQ(mbuf.buf[2], 0);
     }
     const char buf3[4]{3, 4, 5, 6};
     EXPECT_EQ(mbObj.membuffer_append(&mbuf, &buf3, sizeof(buf3)), 0);
-    EXPECT_EQ(mbuf.length, 6);
-    EXPECT_EQ(mbuf.capacity, 10);
+    EXPECT_EQ(mbuf.length, (size_t)6);
+    EXPECT_EQ(mbuf.capacity, (size_t)10);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 6);
+        EXPECT_EQ((int)strlen(mbuf.buf), 6);
         EXPECT_EQ(mbuf.buf[0], 1);
         EXPECT_EQ(mbuf.buf[1], 2);
         EXPECT_EQ(mbuf.buf[2], 3);
@@ -593,22 +593,22 @@ TEST(MembufferTestSuite, membuffer_append_str) {
 
     const char buf1[]{"Hello"};
     EXPECT_EQ(mbObj.membuffer_append_str(&mbuf, buf1), 0);
-    EXPECT_EQ(mbuf.length, 5);
-    EXPECT_EQ(mbuf.capacity, 5);
+    EXPECT_EQ(mbuf.length, (size_t)5);
+    EXPECT_EQ(mbuf.capacity, (size_t)5);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 5);
+        EXPECT_EQ((int)strlen(mbuf.buf), 5);
         EXPECT_STREQ(mbuf.buf, "Hello");
     }
     const char buf2[]{" World"};
     EXPECT_EQ(mbObj.membuffer_append_str(&mbuf, buf2), 0);
-    EXPECT_EQ(mbuf.length, 11);
-    EXPECT_EQ(mbuf.capacity, 11);
+    EXPECT_EQ(mbuf.length, (size_t)11);
+    EXPECT_EQ(mbuf.capacity, (size_t)11);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 11);
+        EXPECT_EQ((int)strlen(mbuf.buf), 11);
         EXPECT_STREQ(mbuf.buf, "Hello World");
     }
     mbObj.membuffer_destroy(&mbuf);
@@ -624,12 +624,12 @@ TEST(MembufferTestSuite, membuffer_insert) {
 
     const char buf[1]{1};
     EXPECT_EQ(mbObj.membuffer_insert(&mbuf, &buf, 1, mbuf.length), 0);
-    EXPECT_EQ(mbuf.length, 1);
-    EXPECT_EQ(mbuf.capacity, 5);
+    EXPECT_EQ(mbuf.length, (size_t)1);
+    EXPECT_EQ(mbuf.capacity, (size_t)5);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 1);
+        EXPECT_EQ((int)strlen(mbuf.buf), 1);
         EXPECT_EQ(mbuf.buf[0], 1);
         EXPECT_EQ(mbuf.buf[1], 0);
     }
@@ -662,8 +662,8 @@ TEST(MembufferTestSuite, membuffer_insert_with_nullptr_to_source_buffer) {
     mbObj.membuffer_init(&mbuf);
 
     EXPECT_EQ(mbObj.membuffer_insert(&mbuf, nullptr, 0, 0), 0);
-    EXPECT_EQ(mbuf.length, 0);
-    EXPECT_EQ(mbuf.capacity, 0);
+    EXPECT_EQ(mbuf.length, (size_t)0);
+    EXPECT_EQ(mbuf.capacity, (size_t)0);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_EQ(mbuf.buf, nullptr);
 
@@ -680,8 +680,8 @@ TEST(MembufferTestSuite, membuffer_insert_with_empty_source_buffer) {
 
     const char buf[1]{""};
     EXPECT_EQ(mbObj.membuffer_insert(&mbuf, &buf, 0, 0), 0);
-    EXPECT_EQ(mbuf.length, 0);
-    EXPECT_EQ(mbuf.capacity, 0);
+    EXPECT_EQ(mbuf.length, (size_t)0);
+    EXPECT_EQ(mbuf.capacity, (size_t)0);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_EQ(mbuf.buf, nullptr);
 
@@ -700,16 +700,16 @@ TEST(MembufferTestSuite, membuffer_insert_with_0_length) {
         const char filler[2];
         const char buf[1];
     };
-    Buf b = {1, '\xFF'};
+    Buf b{{1, '\xFF'}};
 
     // b.buf has only one char.
     EXPECT_EQ(mbObj.membuffer_insert(&mbuf, &b.buf, sizeof(b.buf) + 1, 0), 0);
-    EXPECT_EQ(mbuf.length, 2);
-    EXPECT_EQ(mbuf.capacity, 5);
+    EXPECT_EQ(mbuf.length, (size_t)2);
+    EXPECT_EQ(mbuf.capacity, (size_t)5);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 2);
+        EXPECT_EQ((int)strlen(mbuf.buf), 2);
         EXPECT_EQ(mbuf.buf[0], 1);
 #ifdef OLD_TEST
         ::std::cout << "  BUG! Length > sizeof source buffer should not give "
@@ -736,8 +736,8 @@ TEST(MembufferTestSuite, membuffer_insert_with_additional_capacity) {
     const char buf[1]{1};
     EXPECT_EQ(mbObj.membuffer_insert(&mbuf, &buf, sizeof(buf), 1),
               UPNP_E_OUTOF_BOUNDS);
-    EXPECT_EQ(mbuf.length, 0);
-    EXPECT_EQ(mbuf.capacity, 0);
+    EXPECT_EQ(mbuf.length, (size_t)0);
+    EXPECT_EQ(mbuf.capacity, (size_t)0);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     EXPECT_EQ(mbuf.buf, nullptr);
 
@@ -752,70 +752,70 @@ TEST(MembufferTestSuite, membuffer_delete) {
 
     const char buf[]{"Hello World"};
     EXPECT_EQ(mbObj.membuffer_insert(&mbuf, &buf, sizeof(buf), mbuf.length), 0);
-    EXPECT_EQ(mbuf.length, 12);
-    EXPECT_EQ(mbuf.capacity, 12);
+    EXPECT_EQ(mbuf.length, (size_t)12);
+    EXPECT_EQ(mbuf.capacity, (size_t)12);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 11);
+        EXPECT_EQ((int)strlen(mbuf.buf), 11);
         EXPECT_STREQ(mbuf.buf, "Hello World");
     }
 
     // void membuffer_delete(membuffer* mbuf, size_t index, size_t num_bytes)
     // num_bytes are the bytes to delete beginning at index + 1.
     mbObj.membuffer_delete(&mbuf, 5, 6);
-    EXPECT_EQ(mbuf.length, 6);
-    EXPECT_EQ(mbuf.capacity, 11);
+    EXPECT_EQ(mbuf.length, (size_t)6);
+    EXPECT_EQ(mbuf.capacity, (size_t)11);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 5);
+        EXPECT_EQ((int)strlen(mbuf.buf), 5);
         EXPECT_STREQ(mbuf.buf, "Hello");
     }
     mbObj.membuffer_delete(&mbuf, 4, 6);
-    EXPECT_EQ(mbuf.length, 4);
-    EXPECT_EQ(mbuf.capacity, 9);
+    EXPECT_EQ(mbuf.length, (size_t)4);
+    EXPECT_EQ(mbuf.capacity, (size_t)9);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 4);
+        EXPECT_EQ((int)strlen(mbuf.buf), 4);
         EXPECT_STREQ(mbuf.buf, "Hell");
     }
     mbObj.membuffer_delete(&mbuf, 0, 0);
-    EXPECT_EQ(mbuf.length, 4);
-    EXPECT_EQ(mbuf.capacity, 9);
+    EXPECT_EQ(mbuf.length, (size_t)4);
+    EXPECT_EQ(mbuf.capacity, (size_t)9);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 4);
+        EXPECT_EQ((int)strlen(mbuf.buf), 4);
         EXPECT_STREQ(mbuf.buf, "Hell");
     }
     mbObj.membuffer_delete(&mbuf, 1, 0);
-    EXPECT_EQ(mbuf.length, 4);
-    EXPECT_EQ(mbuf.capacity, 9);
+    EXPECT_EQ(mbuf.length, (size_t)4);
+    EXPECT_EQ(mbuf.capacity, (size_t)9);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 4);
+        EXPECT_EQ((int)strlen(mbuf.buf), 4);
         EXPECT_STREQ(mbuf.buf, "Hell");
     }
     mbObj.membuffer_delete(&mbuf, 0, 1);
-    EXPECT_EQ(mbuf.length, 3);
-    EXPECT_EQ(mbuf.capacity, 8);
+    EXPECT_EQ(mbuf.length, (size_t)3);
+    EXPECT_EQ(mbuf.capacity, (size_t)8);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 3);
+        EXPECT_EQ((int)strlen(mbuf.buf), 3);
         EXPECT_STREQ(mbuf.buf, "ell");
     }
     // This will empty the string in memory buffer
     mbObj.membuffer_delete(&mbuf, 0, 100);
-    EXPECT_EQ(mbuf.length, 0);
-    EXPECT_EQ(mbuf.capacity, 5);
+    EXPECT_EQ(mbuf.length, (size_t)0);
+    EXPECT_EQ(mbuf.capacity, (size_t)5);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 0);
+        EXPECT_EQ((int)strlen(mbuf.buf), 0);
         EXPECT_STREQ(mbuf.buf, "");
     }
 
@@ -842,8 +842,8 @@ TEST(MembufferTestSuite, membuffer_detach) {
     EXPECT_STREQ(detached, "Hello World");
     ::free(detached);
 
-    EXPECT_EQ(mbuf.length, 0);
-    EXPECT_EQ(mbuf.capacity, 0);
+    EXPECT_EQ(mbuf.length, (size_t)0);
+    EXPECT_EQ(mbuf.capacity, (size_t)0);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_EQ(mbuf.buf, nullptr);
 
@@ -877,12 +877,12 @@ TEST(MembufferTestSuite, membuffer_attach) {
 
     char* new_buf = mbObj.str_alloc("Hello World", 11);
     mbObj.membuffer_attach(&mbuf, new_buf, 11);
-    EXPECT_EQ(mbuf.length, 11);
-    EXPECT_EQ(mbuf.capacity, 11);
+    EXPECT_EQ(mbuf.length, (size_t)11);
+    EXPECT_EQ(mbuf.capacity, (size_t)11);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mbuf.buf, nullptr);
     if (mbuf.buf) {
-        EXPECT_EQ(strlen(mbuf.buf), 11);
+        EXPECT_EQ((int)strlen(mbuf.buf), 11);
         EXPECT_STREQ(mbuf.buf, "Hello World");
     }
     mbObj.membuffer_destroy(&mbuf);
@@ -910,8 +910,8 @@ TEST(MembufferTestSuite, membuffer_attach_with_nullptr_to_string_buffer) {
     // Create membuffer with a string
     const char old_buf[]{"Old buf"};
     EXPECT_EQ(mbObj.membuffer_append_str(&mbuf, old_buf), 0);
-    EXPECT_EQ(mbuf.length, 7);
-    EXPECT_EQ(mbuf.capacity, 7);
+    EXPECT_EQ(mbuf.length, (size_t)7);
+    EXPECT_EQ(mbuf.capacity, (size_t)7);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mbuf.buf, nullptr);
     if (mbuf.buf)
@@ -922,13 +922,14 @@ TEST(MembufferTestSuite, membuffer_attach_with_nullptr_to_string_buffer) {
 #ifdef OLD_TEST
     ::std::cout << "  BUG! A nullptr to a buffer that should be attached must "
                    "not segfault.\n";
-    EXPECT_EQ(mbuf.length, 11);
-    EXPECT_EQ(mbuf.capacity, 11);
+    EXPECT_EQ(mbuf.length, (size_t)11);
+    EXPECT_EQ(mbuf.capacity, (size_t)11);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_EQ(mbuf.buf, nullptr);
 #else
-    EXPECT_EQ(mbuf.length, 7) << "  # A nullptr to a buffer that should be "
-                                 "attached must not segfault.";
+    EXPECT_EQ(mbuf.length, (size_t)7)
+        << "  # A nullptr to a buffer that should be "
+           "attached must not segfault.";
     EXPECT_EQ(mbuf.capacity, 7);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mbuf.buf, nullptr);
@@ -947,8 +948,8 @@ TEST(MembufferTestSuite, membuffer_attach_with_empty_string_buffer) {
     // Create membuffer with a string
     const char old_buf[]{"Old buf"};
     EXPECT_EQ(mbObj.membuffer_append_str(&mbuf, old_buf), 0);
-    EXPECT_EQ(mbuf.length, 7);
-    EXPECT_EQ(mbuf.capacity, 7);
+    EXPECT_EQ(mbuf.length, (size_t)7);
+    EXPECT_EQ(mbuf.capacity, (size_t)7);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mbuf.buf, nullptr);
     if (mbuf.buf)
@@ -957,12 +958,12 @@ TEST(MembufferTestSuite, membuffer_attach_with_empty_string_buffer) {
     // Attach empty string to the membuffer
     char* new_buf = mbObj.str_alloc("", 0);
     mbObj.membuffer_attach(&mbuf, new_buf, 0);
-    EXPECT_EQ(mbuf.length, 0);
-    EXPECT_EQ(mbuf.capacity, 0);
+    EXPECT_EQ(mbuf.length, (size_t)0);
+    EXPECT_EQ(mbuf.capacity, (size_t)0);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mbuf.buf, nullptr);
     if (mbuf.buf)
-        EXPECT_EQ(strlen(mbuf.buf), 0);
+        EXPECT_EQ((int)strlen(mbuf.buf), 0);
     EXPECT_STREQ(mbuf.buf, "");
 
     mbObj.membuffer_destroy(&mbuf);
@@ -977,8 +978,8 @@ TEST(MembufferTestSuite, membuffer_attach_empty_str_buffer_but_buffer_length) {
     // Create membuffer with a string
     const char old_buf[]{"Old buf"};
     EXPECT_EQ(mbObj.membuffer_append_str(&mbuf, old_buf), 0);
-    EXPECT_EQ(mbuf.length, 7);
-    EXPECT_EQ(mbuf.capacity, 7);
+    EXPECT_EQ(mbuf.length, (size_t)7);
+    EXPECT_EQ(mbuf.capacity, (size_t)7);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mbuf.buf, nullptr);
     if (mbuf.buf)
@@ -987,12 +988,12 @@ TEST(MembufferTestSuite, membuffer_attach_empty_str_buffer_but_buffer_length) {
     char* new_buf = mbObj.str_alloc("", 0);
     // Attach empty string but with buffer length
     mbObj.membuffer_attach(&mbuf, new_buf, 11);
-    EXPECT_EQ(mbuf.length, 11);
-    EXPECT_EQ(mbuf.capacity, 11);
+    EXPECT_EQ(mbuf.length, (size_t)11);
+    EXPECT_EQ(mbuf.capacity, (size_t)11);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mbuf.buf, nullptr);
     if (mbuf.buf)
-        EXPECT_EQ(strlen(mbuf.buf), 0);
+        EXPECT_EQ((int)strlen(mbuf.buf), 0);
     EXPECT_STREQ(mbuf.buf, "");
 
     mbObj.membuffer_destroy(&mbuf);

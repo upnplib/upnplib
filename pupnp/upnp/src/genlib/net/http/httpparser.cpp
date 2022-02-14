@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-07
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-14
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -2126,8 +2126,6 @@ int parser_get_unknown_headers(http_message_t* req, UpnpListHead* list) {
     http_header_t* header;
     ListNode* node;
     int index;
-    UpnpExtraHeaders* extraHeader;
-    UpnpListHead* extraHeaderNode;
 
     node = ListHead(&req->headers);
     while (node != NULL) {
@@ -2137,20 +2135,23 @@ int parser_get_unknown_headers(http_message_t* req, UpnpListHead* list) {
             map_str_to_int((const char*)header->name.buf, header->name.length,
                            Http_Header_Names, NUM_HTTP_HEADER_NAMES, 0);
         if (index < 0) {
-            extraHeader = 0; // TODO: temporay disabled: UpnpExtraHeaders_new();
+#ifdef UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
+            UpnpExtraHeaders* extraHeader = UpnpExtraHeaders_new();
             if (!extraHeader) {
                 free_http_headers_list(list);
                 return HTTP_INTERNAL_SERVER_ERROR;
             }
-            /* TODO: temporary disabled
-             * extraHeaderNode =
-             *     (UpnpListHead*)UpnpExtraHeaders_get_node(extraHeader);
-             * UpnpListInsert(list, UpnpListEnd(list), extraHeaderNode);
-             * UpnpExtraHeaders_strncpy_name(extraHeader, header->name.buf,
-             *                               header->name.length);
-             * UpnpExtraHeaders_strncpy_value(extraHeader, header->value.buf,
+            UpnpListHead* extraHeaderNode =
+                (UpnpListHead*)UpnpExtraHeaders_get_node(extraHeader);
+            UpnpListInsert(list, UpnpListEnd(list), extraHeaderNode);
+            UpnpExtraHeaders_strncpy_name(extraHeader, header->name.buf,
+                                          header->name.length);
+            UpnpExtraHeaders_strncpy_value(extraHeader, header->value.buf,
                                            header->value.length);
-             */
+#else
+            free_http_headers_list(list);
+            return HTTP_INTERNAL_SERVER_ERROR;
+#endif
         }
         node = ListNext(&req->headers, node);
     }
@@ -2170,15 +2171,17 @@ int parser_get_unknown_headers(http_message_t* req, UpnpListHead* list) {
  *	HTTP_OK
  *	HTTP_INTERNAL_SERVER_ERROR
  ************************************************************************/
-void free_http_headers_list(UpnpListHead* list) {
+void free_http_headers_list([[maybe_unused]] UpnpListHead* list) {
+#ifdef UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
     UpnpListIter pos;
     UpnpExtraHeaders* extra;
 
     for (pos = UpnpListBegin(list); pos != UpnpListEnd(list);) {
         extra = (UpnpExtraHeaders*)pos;
         pos = UpnpListErase(list, pos);
-        // TODO: temporay disabled: UpnpExtraHeaders_delete(extra);
+        UpnpExtraHeaders_delete(extra);
     }
+#endif // UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
 }
 
 #ifdef DEBUG

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-11-03
+// Redistribution only with this Copyright remark. Last modified: 2022-02-14
 
 // Note
 // -------------
@@ -91,9 +91,8 @@ TEST(TimerThreadNormalTestSuite, init_and_shutdown_timerthread) {
 }
 
 // Start function for schedule_timer_thread
-start_routine start_function1() {
+void start_function1([[maybe_unused]] void* arg) {
     std::cout << "Executed start_function1.\n";
-    return 0;
 }
 
 TEST(TimerThreadNormalTestSuite, schedule_timer_thread) {
@@ -118,7 +117,7 @@ TEST(TimerThreadNormalTestSuite, schedule_timer_thread) {
     ThreadPoolStats stats{}; // Structure for the threadpool status
 
     ThreadPoolJob TPJob{}; // Structure for a threadpool job
-    ThreadPoolJob removedJob{};
+    // ThreadPoolJob removedJob{};
 
     CTimerThread tmObj{}; // TimerThread Object
     TimerThread timer{};
@@ -128,7 +127,7 @@ TEST(TimerThreadNormalTestSuite, schedule_timer_thread) {
     EXPECT_EQ(tpObj.ThreadPoolInit(&tp, nullptr), 0);
 
     // Initialize threadpool job
-    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)start_function1, nullptr),
+    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)&start_function1, nullptr),
               0);
 
     // Get status
@@ -162,7 +161,7 @@ TEST(TimerThreadNormalTestSuite, schedule_timer_thread) {
 }
 
 // Start function for remove_timer_thread
-start_routine start_function2() {
+void start_function2([[maybe_unused]] void* arg) {
     std::cerr << "Executed start_function2. This should never "
                  "occur.\nTestprogram exit.\n";
     exit(EXIT_FAILURE);
@@ -174,7 +173,7 @@ TEST(TimerThreadNormalTestSuite, remove_timer_thread) {
     ThreadPoolStats stats{}; // Structure for the threadpool status
 
     ThreadPoolJob TPJob{}; // Structure for a threadpool job
-    ThreadPoolJob removedJob{};
+    // ThreadPoolJob removedJob{};
 
     CTimerThread tmObj{}; // TimerThread Object
     TimerThread timer{};
@@ -183,7 +182,7 @@ TEST(TimerThreadNormalTestSuite, remove_timer_thread) {
     // Initialize threadpool
     EXPECT_EQ(tpObj.ThreadPoolInit(&tp, nullptr), 0);
     // Initialize threadpool job
-    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)start_function2, nullptr),
+    EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)&start_function2, nullptr),
               0);
 
     // Get status

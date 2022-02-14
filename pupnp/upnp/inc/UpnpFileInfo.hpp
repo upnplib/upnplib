@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-12
+// Redistribution only with this Copyright remark. Last modified: 2022-02-15
 
 #ifndef UPNPLIB_UPNPFILEINFO_HPP
 #define UPNPLIB_UPNPFILEINFO_HPP
@@ -10,17 +10,18 @@
  * \brief Header file for UpnpFileInfo methods.
  * \author Marcelo Roberto Jimenez
  */
-#include "UpnpGlobal.h" /* for EXPORT_SPEC */
+#include "UpnpGlobal.h" // for EXPORT_SPEC
 #include "ixml.h"
 #include "list.hpp"
 #include "UpnpString.h"
-#include <time.h>
+
+#include <sys/types.h> // needed for off_t
 
 #ifdef _WIN32
 #include "UpnpInet.h"
-
-#include <stdlib.h> /* for size_t */
-#include <sys/types.h>
+#include <stdlib.h> // for size_t
+#else
+#include <sys/socket.h>
 #endif // _WIN32
 
 /*!

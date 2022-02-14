@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-02
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -245,14 +245,12 @@ static void FreeThreadPoolJob(
  */
 static int SetPolicyType(
     /*! . */
-    PolicyType in) {
+    [[maybe_unused]] PolicyType in) {
     int retVal = 0;
 #ifdef __CYGWIN__
     /* TODO not currently working... */
-    (void)in;
     retVal = 0;
 #elif defined(__APPLE__) || defined(__NetBSD__)
-    (void)in;
     setpriority(PRIO_PROCESS, 0, 0);
     retVal = 0;
 #elif defined(__PTW32_DLLPORT)

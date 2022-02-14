@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-10
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-14
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -69,17 +69,18 @@
 //#endif
 
 #ifdef INTERNAL_WEB_SERVER
-//#include "urlconfig.h"
-
 //#include "VirtualDir.h"
 #include "webserver.hpp"
 #endif /* INTERNAL_WEB_SERVER */
 
-//#include <assert.h>
 //#include <signal.h>
 //#include <stdlib.h>
 //#include <string.h>
-//#include <sys/stat.h>
+#if defined INCLUDE_DEVICE_APIS && defined INTERNAL_WEB_SERVER
+#include "urlconfig.hpp"
+#include <assert.h>
+#include <sys/stat.h>
+#endif
 
 #ifdef _WIN32
 /* Do not include these files */
@@ -452,7 +453,7 @@ static int UpnpInitPreamble(void) {
  */
 static int UpnpInitStartServers(
     /*! [in] Local Port to listen for incoming connections. */
-    unsigned short DestPort) {
+    [[maybe_unused]] unsigned short DestPort) {
 #if EXCLUDE_MINISERVER == 0 || EXCLUDE_WEB_SERVER == 0
     int retVal = 0;
 #endif
@@ -1578,7 +1579,8 @@ static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
 #else /* INTERNAL_WEB_SERVER */ /* no web server */
 static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
                                  char* description, int config_baseURL,
-                                 int AddressFamily, IXML_Document** xmlDoc,
+                                 [[maybe_unused]] int AddressFamily,
+                                 IXML_Document** xmlDoc,
                                  char descURL[LINE_SIZE]) {
     int retVal = 0;
 
@@ -3339,13 +3341,12 @@ int UpnpGetIfInfo(const char* IfName) {
  */
 #ifdef INCLUDE_CLIENT_APIS
 void UpnpThreadDistribution(struct UpnpNonblockParam* Param) {
-    int errCode = 0;
-
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                "Inside UpnpThreadDistribution \n");
 
     switch (Param->FunName) {
 #if EXCLUDE_GENA == 0
+        int errCode = 0;
     case SUBSCRIBE: {
         UpnpEventSubscribe* evt = UpnpEventSubscribe_new();
         UpnpString* Sid = UpnpString_new();
@@ -3457,9 +3458,11 @@ Upnp_Handle_Type GetClientHandleInfo(UpnpClient_Handle* client_handle_out,
     return HND_INVALID;
 }
 
-Upnp_Handle_Type GetDeviceHandleInfo(UpnpDevice_Handle start, int AddressFamily,
-                                     UpnpDevice_Handle* device_handle_out,
-                                     struct Handle_Info** HndInfo) {
+Upnp_Handle_Type
+GetDeviceHandleInfo([[maybe_unused]] UpnpDevice_Handle start,
+                    [[maybe_unused]] int AddressFamily,
+                    UpnpDevice_Handle* device_handle_out,
+                    [[maybe_unused]] struct Handle_Info** HndInfo) {
 #ifdef INCLUDE_DEVICE_APIS
     /* Check if we've got a registered device of the address family
      * specified. */
@@ -3492,9 +3495,12 @@ Upnp_Handle_Type GetDeviceHandleInfo(UpnpDevice_Handle start, int AddressFamily,
     return HND_INVALID;
 }
 
-Upnp_Handle_Type GetDeviceHandleInfoForPath(
-    const char* path, int AddressFamily, UpnpDevice_Handle* device_handle_out,
-    struct Handle_Info** HndInfo, service_info** serv_info) {
+Upnp_Handle_Type
+GetDeviceHandleInfoForPath([[maybe_unused]] const char* path,
+                           [[maybe_unused]] int AddressFamily,
+                           UpnpDevice_Handle* device_handle_out,
+                           [[maybe_unused]] struct Handle_Info** HndInfo,
+                           [[maybe_unused]] service_info** serv_info) {
 #if defined INCLUDE_DEVICE_APIS && EXCLUDE_SOAP == 0
     /* Check if we've got a registered device of the address family
      * specified. */
@@ -3732,7 +3738,7 @@ void UpnpRemoveAllVirtualDirs(void) {
     pVirtualDirList = NULL;
 }
 
-int UpnpEnableWebserver(int enable) {
+int UpnpEnableWebserver([[maybe_unused]] int enable) {
     if (UpnpSdkInit != 1) {
         return UPNP_E_FINISH;
     }
