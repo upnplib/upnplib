@@ -7,7 +7,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-12
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1134,6 +1134,7 @@ EXPORT_SPEC int UpnpSendAdvertisement(
          * \c AUTO_ADVERTISEMENT_TIME * 2 then the expiration age is set to
          * ( \c AUTO_ADVERTISEMENT_TIME + 1 ) * 2. */
         int Exp);
+#endif
 
 /*!
  * \brief Sends out the discovery announcements for all devices and services
@@ -1170,6 +1171,7 @@ EXPORT_SPEC int UpnpSendAdvertisementLowPower(
         int RegistrationState);
 
 /* @} Discovery */
+#if false
 
 /******************************************************************************
  ******************************************************************************
@@ -1922,6 +1924,7 @@ EXPORT_SPEC int UpnpUnSubscribeAsync(
         const void *Cookie);
 
 /*! @} Eventing */
+#endif // #if false
 
 /******************************************************************************
  ******************************************************************************
@@ -1940,7 +1943,6 @@ EXPORT_SPEC int UpnpUnSubscribeAsync(
 /*!
  * \brief Different HTTP methods.
  */
-#endif // #if false
 enum Upnp_HttpMethod_e
 {
         UPNP_HTTPMETHOD_PUT = 0,

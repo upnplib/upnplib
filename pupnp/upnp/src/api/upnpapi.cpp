@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-14
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -112,6 +112,11 @@
     ((((__const uint32_t*)(a))[0] & htonl((uint32_t)0xfe000000)) ==            \
      htonl((uint32_t)0xfc000000))
 #endif /* IN6_IS_ADDR_ULA */
+
+#if EXCLUDE_SSDP == 0
+#include "upnp.h"
+#include "upnp_timeout.hpp"
+#endif
 
 /*! This structure is for virtual directory callbacks */
 struct VirtualDirCallbacks virtualDirCallback;

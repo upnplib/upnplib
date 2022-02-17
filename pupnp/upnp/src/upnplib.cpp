@@ -3,7 +3,7 @@
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-08
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -52,47 +52,70 @@ void* library_info(void*) {
         << "UPNP_VERSION_MINOR = " << UPNP_VERSION_MINOR << "\n"
         << "UPNP_VERSION_PATCH = " << UPNP_VERSION_PATCH << "\n"
         << "UPNP_VERSION = " << UPNP_VERSION << "\n";
-/*
- * Check library optional features
- */
-#if DEBUG
-    msg << "DEBUG \t\t\t= yes\n";
+    /*
+     * Check library optional features
+     */
+    msg << "---- user definable options ------\n";
+
+#ifdef DEBUG
+    msg << "DEBUG                 = yes\n";
 #else
-    msg << "DEBUG \t\t\t= no\n";
+    msg << "DEBUG                 = no\n";
 #endif
 
-#if UPNP_HAVE_DEBUG
-    msg << "UPNP_HAVE_DEBUG \t= yes\n";
+#ifdef UPNP_HAVE_DEBUG
+    msg << "UPNP_HAVE_DEBUG       = yes\n";
 #else
-    msg << "UPNP_HAVE_DEBUG \t= no\n";
+    msg << "UPNP_HAVE_DEBUG       = no\n";
 #endif
 
-#if UPNP_HAVE_TOOLS
+#ifdef UPNP_HAVE_TOOLS
     const char* errmsg = UpnpGetErrorMessage(UPNP_E_SUCCESS);
     if (strcmp(errmsg, "UPNP_E_SUCCESS") == 0)
-        msg << "UPNP_HAVE_TOOLS \t= yes\n";
+        msg << "UPNP_HAVE_TOOLS      = yes\n";
     else
-        msg << "UPNP_HAVE_TOOLS \t= yes, but does not return UPNP_E_SUCCESS\n";
+        msg << "UPNP_HAVE_TOOLS      = yes, but does not return "
+               "UPNP_E_SUCCESS\n";
 #else
-    msg << "UPNP_HAVE_TOOLS \t= no\n";
+    msg << "UPNP_HAVE_TOOLS       = no\n";
 #endif
 
-#if UPNP_HAVE_CLIENT
-    msg << "UPNP_HAVE_CLIENT \t= yes\n";
+#ifdef UPNP_HAVE_CLIENT
+    msg << "UPNP_HAVE_CLIENT      = yes\n";
 #else
-    msg << "UPNP_HAVE_CLIENT \t= no\n";
+    msg << "UPNP_HAVE_CLIENT      = no\n";
 #endif
 
-#if UPNP_HAVE_DEVICE
-    msg << "UPNP_HAVE_DEVICE \t= yes\n";
+#ifdef UPNP_HAVE_DEVICE
+    msg << "UPNP_HAVE_DEVICE      = yes\n";
 #else
-    msg << "UPNP_HAVE_DEVICE \t= no\n";
+    msg << "UPNP_HAVE_DEVICE      = no\n";
 #endif
 
-#if UPNP_HAVE_WEBSERVER
-    msg << "UPNP_HAVE_WEBSERVER \t= yes\n";
+#ifdef UPNP_HAVE_WEBSERVER
+    msg << "UPNP_HAVE_WEBSERVER   = yes\n";
 #else
-    msg << "UPNP_HAVE_WEBSERVER \t= no\n";
+    msg << "UPNP_HAVE_WEBSERVER   = no\n";
+#endif
+
+#ifdef UPNP_HAVE_SSDP
+    msg << "UPNP_HAVE_SSDP        = yes\n";
+#else
+    msg << "UPNP_HAVE_SSDP        = no\n";
+#endif
+
+    msg << "---- internal settings -----------\n";
+
+#ifdef UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
+    msg << "UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS   = yes\n";
+#else
+    msg << "UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS   = no\n";
+#endif
+
+#ifdef INTERNAL_WEB_SERVER
+    msg << "INTERNAL_WEB_SERVER                 = yes\n";
+#else
+    msg << "INTERNAL_WEB_SERVER                 = no\n";
 #endif
 
     msg << "----------------------------------\n";

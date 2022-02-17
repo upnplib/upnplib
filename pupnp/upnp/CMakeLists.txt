@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-02-13
+# Redistribution only with this Copyright remark. Last modified: 2022-02-17
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -20,6 +20,7 @@ set(UPNPLIB_HAVE_TOOLS  YES)
 set(UPNPLIB_HAVE_CLIENT YES)
 set(UPNPLIB_HAVE_DEVICE YES)
 set(UPNPLIB_HAVE_WEBSERVER YES)
+set(UPNPLIB_HAVE_SSDP YES)
 
 # Internal switches for program options
 set(UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS YES)
@@ -75,16 +76,25 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/genlib/util/list.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/util/membuffer.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/util/strintmap.cpp
+    $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/genlib/util/upnp_timeout.cpp>
 
     $<$<BOOL:${UPNPLIB_HAVE_DEVICE}>:${PROJECT_SOURCE_DIR}/src/genlib/service-table/service_table.cpp>
     ${PROJECT_SOURCE_DIR}/src/genlib/miniserver/miniserver.cpp
+
+    $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/ssdp_server.cpp>
+    $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/ssdp_device.cpp>
+    $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp>
+    $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/SSDPResultData.cpp>
+    $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/SSDPResultDataCallback.cpp>
 
     $<$<BOOL:${UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS}>:${PROJECT_SOURCE_DIR}/src/api/UpnpExtraHeaders.c>
     ${PROJECT_SOURCE_DIR}/src/api/UpnpString.cpp
     ${PROJECT_SOURCE_DIR}/src/api/upnpapi.cpp
     $<$<BOOL:${UPNPLIB_HAVE_TOOLS}>:${PROJECT_SOURCE_DIR}/src/api/upnptools.cpp>
     $<$<BOOL:${UPNPLIB_HAVE_WEBSERVER}>:${PROJECT_SOURCE_DIR}/src/api/UpnpFileInfo.cpp>
+    $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/api/UpnpDiscovery.cpp>
     $<$<CONFIG:Debug>:${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp>
+
     $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_WEBSERVER}>>:${PROJECT_SOURCE_DIR}/src/urlconfig/urlconfig.cpp>
 
     ${PROJECT_SOURCE_DIR}/src/global.cpp
@@ -99,7 +109,7 @@ add_compile_definitions(
     $<$<BOOL:${UPNPLIB_HAVE_CLIENT}>:UPNP_HAVE_CLIENT>
     $<$<BOOL:${UPNPLIB_HAVE_DEVICE}>:UPNP_HAVE_DEVICE>
     $<$<BOOL:${UPNPLIB_HAVE_WEBSERVER}>:UPNP_HAVE_WEBSERVER>
-#    $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:UPNP_HAVE_SSDP>
+    $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:UPNP_HAVE_SSDP>
 #    $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:UPNP_HAVE_OPTSSDP>
 #    $<$<BOOL:${UPNPLIB_HAVE_SOAP}>:UPNP_HAVE_SOAP>
 #    $<$<BOOL:${UPNPLIB_HAVE_GENA}>:UPNP_HAVE_GENA>
@@ -155,6 +165,16 @@ else() # WIN32
     # Pthreads are not supported by MS Windows. So we have installed the
     # third party library pthreads4w.
 
+    # General options
+    #----------------
+    add_compile_definitions(
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+        # There are traditional min/max macros on MS Windows which conflict
+        # with the C++ std::min|max functions. Following switch disable the
+        # macros.
+        $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
+    )
+
     # Shared library
     #---------------
     add_library(upnplib_shared_win SHARED ${UPNP_SOURCE_FILES})
@@ -163,7 +183,7 @@ else() # WIN32
     )
     target_compile_definitions(upnplib_shared_win
             #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-            PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+            PUBLIC $<$<CXX_COMPILER_ID:MSVC>:LIBUPNP_EXPORTS>
     )
     # In addition to pthreads we need some more system libraries here
     # ws2_32: winsock to support sockets
@@ -192,7 +212,7 @@ else() # WIN32
     )
     target_compile_definitions(upnplib_static_win
             #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-            PUBLIC $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+            PUBLIC $<$<CXX_COMPILER_ID:MSVC>:LIBUPNP_EXPORTS>
     )
     target_link_libraries(upnplib_static_win
             ${UPNP_PTHREADS_STATIC_LIBRARY}

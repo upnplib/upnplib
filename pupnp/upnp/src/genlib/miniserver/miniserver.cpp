@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-14
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -192,7 +192,7 @@ static int getNumericHostRedirection(int socket, char* host_port,
     case AF_INET6:
         rcp = inet_ntop(AF_INET6, &addr6->sin6_addr, host, sizeof host);
         if (!rcp) {
-            rc -= 1;
+            rc = -1;
             goto ExitFunction;
         }
         port = ntohs(addr6->sin6_port);
@@ -202,7 +202,7 @@ static int getNumericHostRedirection(int socket, char* host_port,
     default:
         rcp = inet_ntop(AF_INET, &addr4->sin_addr, host, sizeof host);
         if (!rcp) {
-            rc -= 1;
+            rc = -1;
             goto ExitFunction;
         }
         port = ntohs(addr4->sin_port);
@@ -210,7 +210,7 @@ static int getNumericHostRedirection(int socket, char* host_port,
         break;
     }
     if (n < 0) {
-        rc -= 1;
+        rc = -1;
     }
 
 ExitFunction:
@@ -234,7 +234,13 @@ static int dispatch_request(
     http_message_t* request;
     MiniServerCallback callback;
     WebCallback_HostValidate host_validate_callback = 0;
+#ifdef UPNPLIB_PUPNP_COMPATIBLE
+    // error: ‘cookie’ may be used uninitialized in this function
+    // [-Werror=maybe-uninitialized]
     void* cookie;
+#else
+    void* cookie{};
+#endif
     int rc{UPNP_E_SUCCESS};
     /* If it does not fit in here, it is likely invalid anyway. */
     char host_port[NAME_SIZE];
@@ -452,7 +458,8 @@ static UPNP_INLINE void fdset_if_valid(SOCKET sock, fd_set* set) {
     }
 }
 
-static void web_server_accept(SOCKET lsock, fd_set* set) {
+static void web_server_accept([[maybe_unused]] SOCKET lsock,
+                              [[maybe_unused]] fd_set* set) {
 #ifdef INTERNAL_WEB_SERVER
     SOCKET asock;
     socklen_t clientLen;
@@ -1018,15 +1025,18 @@ InitMiniServerSockArray(MiniServerSockArray* miniSocket) {
 }
 
 int StartMiniServer(
+    // The three parameter only used if the INTERNAL_WEB_SERVER is enabled.
+    // The miniserver does not need them.
+    //
     /*! [in,out] Port on which the server listens for incoming IPv4
      * connections. */
-    uint16_t* listen_port4,
+    [[maybe_unused]] uint16_t* listen_port4,
     /*! [in,out] Port on which the server listens for incoming IPv6
      * LLA connections. */
-    uint16_t* listen_port6,
+    [[maybe_unused]] uint16_t* listen_port6,
     /*! [in,out] Port on which the server listens for incoming
      * IPv6 ULA or GUA connections. */
-    uint16_t* listen_port6UlaGua) {
+    [[maybe_unused]] uint16_t* listen_port6UlaGua) {
     int ret_code;
     int count;
     int max_count{10000};
