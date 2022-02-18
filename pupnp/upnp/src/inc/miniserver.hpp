@@ -6,7 +6,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-13
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -128,8 +128,8 @@ void SetGenaCallback(
  * allowed delay aborts the attempt to launch the MiniServer.
  *
  * \return
- *      \li On success: UPNP_E_SUCCESS.
- *      \li On error: UPNP_E_XXX.
+ *  \li On success: UPNP_E_SUCCESS.
+ *  \li On error: UPNP_E_XXX.
  */
 int StartMiniServer(
     /*! [in,out] Port on which the server listens for incoming IPv4

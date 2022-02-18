@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-11
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,8 +31,8 @@
  *
  **************************************************************************/
 
-#ifndef GENLIB_NET_HTTP_WEBSERVER_HPP
-#define GENLIB_NET_HTTP_WEBSERVER_HPP
+#ifndef UPNPLIB_GENLIB_NET_HTTP_WEBSERVER_HPP
+#define UPNPLIB_GENLIB_NET_HTTP_WEBSERVER_HPP
 
 #include "httpparser.hpp"
 #include "sock.hpp"
@@ -99,8 +99,7 @@ int web_server_set_alias(
     const char* alias_content,
     /*! [in] Length of alias body in bytes. */
     size_t alias_content_length,
-    /*! [in] Time when the contents of alias were last changed (local time).
-     */
+    /*! [in] Time when the contents of alias were last changed (local time). */
     time_t last_modified);
 
 /*!
@@ -126,4 +125,4 @@ void web_server_callback(
     /*! [in,out] . */
     SOCKINFO* info);
 
-#endif /* GENLIB_NET_HTTP_WEBSERVER_HPP */
+#endif /* UPNPLIB_GENLIB_NET_HTTP_WEBSERVER_HPP */

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-13
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -104,18 +104,19 @@ struct xml_alias_t {
     int* ct;
 };
 
-static const char* gMediaTypes[]{/*! 0. */
-                                 NULL,
-                                 /*! 1. */
-                                 "audio",
-                                 /*! 2. */
-                                 "video",
-                                 /*! 3. */
-                                 "image",
-                                 /*! 4. */
-                                 "application",
-                                 /*! 5. */
-                                 "text"};
+static const char* gMediaTypes[] = {
+    /*! 0. */
+    NULL,
+    /*! 1. */
+    "audio",
+    /*! 2. */
+    "video",
+    /*! 3. */
+    "image",
+    /*! 4. */
+    "application",
+    /*! 5. */
+    "text"};
 
 /*
  * Defines.
@@ -150,78 +151,78 @@ static char* web_server_asctime_r(const struct tm* tm, char* buf) {
 #endif
 
 /* sorted by file extension; must have 'NUM_MEDIA_TYPES' extensions */
-static const char* gEncodedMediaTypes{"aif\0" AUDIO_STR "aiff\0"
-                                      "aifc\0" AUDIO_STR "aiff\0"
-                                      "aiff\0" AUDIO_STR "aiff\0"
-                                      "asf\0" VIDEO_STR "x-ms-asf\0"
-                                      "asx\0" VIDEO_STR "x-ms-asf\0"
-                                      "au\0" AUDIO_STR "basic\0"
-                                      "avi\0" VIDEO_STR "msvideo\0"
-                                      "bmp\0" IMAGE_STR "bmp\0"
-                                      "css\0" TEXT_STR "css\0"
-                                      "dcr\0" APPLICATION_STR "x-director\0"
-                                      "dib\0" IMAGE_STR "bmp\0"
-                                      "dir\0" APPLICATION_STR "x-director\0"
-                                      "dxr\0" APPLICATION_STR "x-director\0"
-                                      "gif\0" IMAGE_STR "gif\0"
-                                      "hta\0" TEXT_STR "hta\0"
-                                      "htm\0" TEXT_STR "html\0"
-                                      "html\0" TEXT_STR "html\0"
-                                      "jar\0" APPLICATION_STR "java-archive\0"
-                                      "jfif\0" IMAGE_STR "pjpeg\0"
-                                      "jpe\0" IMAGE_STR "jpeg\0"
-                                      "jpeg\0" IMAGE_STR "jpeg\0"
-                                      "jpg\0" IMAGE_STR "jpeg\0"
-                                      "js\0" APPLICATION_STR "x-javascript\0"
-                                      "kar\0" AUDIO_STR "midi\0"
-                                      "m3u\0" AUDIO_STR "mpegurl\0"
-                                      "mid\0" AUDIO_STR "midi\0"
-                                      "midi\0" AUDIO_STR "midi\0"
-                                      "mov\0" VIDEO_STR "quicktime\0"
-                                      "mp2v\0" VIDEO_STR "x-mpeg2\0"
-                                      "mp3\0" AUDIO_STR "mpeg\0"
-                                      "mpe\0" VIDEO_STR "mpeg\0"
-                                      "mpeg\0" VIDEO_STR "mpeg\0"
-                                      "mpg\0" VIDEO_STR "mpeg\0"
-                                      "mpv\0" VIDEO_STR "mpeg\0"
-                                      "mpv2\0" VIDEO_STR "x-mpeg2\0"
-                                      "pdf\0" APPLICATION_STR "pdf\0"
-                                      "pjp\0" IMAGE_STR "jpeg\0"
-                                      "pjpeg\0" IMAGE_STR "jpeg\0"
-                                      "plg\0" TEXT_STR "html\0"
-                                      "pls\0" AUDIO_STR "scpls\0"
-                                      "png\0" IMAGE_STR "png\0"
-                                      "qt\0" VIDEO_STR "quicktime\0"
-                                      "ram\0" AUDIO_STR "x-pn-realaudio\0"
-                                      "rmi\0" AUDIO_STR "mid\0"
-                                      "rmm\0" AUDIO_STR "x-pn-realaudio\0"
-                                      "rtf\0" APPLICATION_STR "rtf\0"
-                                      "shtml\0" TEXT_STR "html\0"
-                                      "smf\0" AUDIO_STR "midi\0"
-                                      "snd\0" AUDIO_STR "basic\0"
-                                      "spl\0" APPLICATION_STR "futuresplash\0"
-                                      "ssm\0" APPLICATION_STR "streamingmedia\0"
-                                      "swf\0" APPLICATION_STR
-                                      "x-shockwave-flash\0"
-                                      "tar\0" APPLICATION_STR "tar\0"
-                                      "tcl\0" APPLICATION_STR "x-tcl\0"
-                                      "text\0" TEXT_STR "plain\0"
-                                      "tif\0" IMAGE_STR "tiff\0"
-                                      "tiff\0" IMAGE_STR "tiff\0"
-                                      "txt\0" TEXT_STR "plain\0"
-                                      "ulw\0" AUDIO_STR "basic\0"
-                                      "wav\0" AUDIO_STR "wav\0"
-                                      "wax\0" AUDIO_STR "x-ms-wax\0"
-                                      "wm\0" VIDEO_STR "x-ms-wm\0"
-                                      "wma\0" AUDIO_STR "x-ms-wma\0"
-                                      "wmv\0" VIDEO_STR "x-ms-wmv\0"
-                                      "wvx\0" VIDEO_STR "x-ms-wvx\0"
-                                      "xbm\0" IMAGE_STR "x-xbitmap\0"
-                                      "xml\0" TEXT_STR "xml\0"
-                                      "xsl\0" TEXT_STR "xml\0"
-                                      "z\0" APPLICATION_STR "x-compress\0"
-                                      "zip\0" APPLICATION_STR "zip\0"
-                                      "\0"};
+static const char* gEncodedMediaTypes =
+    "aif\0" AUDIO_STR "aiff\0"
+    "aifc\0" AUDIO_STR "aiff\0"
+    "aiff\0" AUDIO_STR "aiff\0"
+    "asf\0" VIDEO_STR "x-ms-asf\0"
+    "asx\0" VIDEO_STR "x-ms-asf\0"
+    "au\0" AUDIO_STR "basic\0"
+    "avi\0" VIDEO_STR "msvideo\0"
+    "bmp\0" IMAGE_STR "bmp\0"
+    "css\0" TEXT_STR "css\0"
+    "dcr\0" APPLICATION_STR "x-director\0"
+    "dib\0" IMAGE_STR "bmp\0"
+    "dir\0" APPLICATION_STR "x-director\0"
+    "dxr\0" APPLICATION_STR "x-director\0"
+    "gif\0" IMAGE_STR "gif\0"
+    "hta\0" TEXT_STR "hta\0"
+    "htm\0" TEXT_STR "html\0"
+    "html\0" TEXT_STR "html\0"
+    "jar\0" APPLICATION_STR "java-archive\0"
+    "jfif\0" IMAGE_STR "pjpeg\0"
+    "jpe\0" IMAGE_STR "jpeg\0"
+    "jpeg\0" IMAGE_STR "jpeg\0"
+    "jpg\0" IMAGE_STR "jpeg\0"
+    "js\0" APPLICATION_STR "x-javascript\0"
+    "kar\0" AUDIO_STR "midi\0"
+    "m3u\0" AUDIO_STR "mpegurl\0"
+    "mid\0" AUDIO_STR "midi\0"
+    "midi\0" AUDIO_STR "midi\0"
+    "mov\0" VIDEO_STR "quicktime\0"
+    "mp2v\0" VIDEO_STR "x-mpeg2\0"
+    "mp3\0" AUDIO_STR "mpeg\0"
+    "mpe\0" VIDEO_STR "mpeg\0"
+    "mpeg\0" VIDEO_STR "mpeg\0"
+    "mpg\0" VIDEO_STR "mpeg\0"
+    "mpv\0" VIDEO_STR "mpeg\0"
+    "mpv2\0" VIDEO_STR "x-mpeg2\0"
+    "pdf\0" APPLICATION_STR "pdf\0"
+    "pjp\0" IMAGE_STR "jpeg\0"
+    "pjpeg\0" IMAGE_STR "jpeg\0"
+    "plg\0" TEXT_STR "html\0"
+    "pls\0" AUDIO_STR "scpls\0"
+    "png\0" IMAGE_STR "png\0"
+    "qt\0" VIDEO_STR "quicktime\0"
+    "ram\0" AUDIO_STR "x-pn-realaudio\0"
+    "rmi\0" AUDIO_STR "mid\0"
+    "rmm\0" AUDIO_STR "x-pn-realaudio\0"
+    "rtf\0" APPLICATION_STR "rtf\0"
+    "shtml\0" TEXT_STR "html\0"
+    "smf\0" AUDIO_STR "midi\0"
+    "snd\0" AUDIO_STR "basic\0"
+    "spl\0" APPLICATION_STR "futuresplash\0"
+    "ssm\0" APPLICATION_STR "streamingmedia\0"
+    "swf\0" APPLICATION_STR "x-shockwave-flash\0"
+    "tar\0" APPLICATION_STR "tar\0"
+    "tcl\0" APPLICATION_STR "x-tcl\0"
+    "text\0" TEXT_STR "plain\0"
+    "tif\0" IMAGE_STR "tiff\0"
+    "tiff\0" IMAGE_STR "tiff\0"
+    "txt\0" TEXT_STR "plain\0"
+    "ulw\0" AUDIO_STR "basic\0"
+    "wav\0" AUDIO_STR "wav\0"
+    "wax\0" AUDIO_STR "x-ms-wax\0"
+    "wm\0" VIDEO_STR "x-ms-wm\0"
+    "wma\0" AUDIO_STR "x-ms-wma\0"
+    "wmv\0" VIDEO_STR "x-ms-wmv\0"
+    "wvx\0" VIDEO_STR "x-ms-wvx\0"
+    "xbm\0" IMAGE_STR "x-xbitmap\0"
+    "xml\0" TEXT_STR "xml\0"
+    "xsl\0" TEXT_STR "xml\0"
+    "z\0" APPLICATION_STR "x-compress\0"
+    "zip\0" APPLICATION_STR "zip\0"
+    "\0";
 /* *** end *** */
 
 /*!
@@ -243,7 +244,7 @@ extern str_int_entry Http_Header_Names[NUM_HTTP_HEADER_NAMES];
  */
 static UPNP_INLINE void media_list_init(void) {
     int i;
-    const char* s{gEncodedMediaTypes};
+    const char* s = gEncodedMediaTypes;
     struct document_type_t* doc_type;
 
     for (i = 0; *s != '\0'; i++) {
@@ -282,7 +283,7 @@ static UPNP_INLINE int search_extension(
     top = 0;
     bot = NUM_MEDIA_TYPES - 1;
 
-    while (top < bot) {
+    while (top <= bot) {
         mid = (top + bot) / 2;
         cmp = strcasecmp(extension, gMediaTypeList[mid].file_ext);
         if (cmp > 0) {
@@ -292,7 +293,7 @@ static UPNP_INLINE int search_extension(
             /* look above mid. */
             bot = mid - 1;
         } else {
-            /* cmp       0 */
+            /* cmp == 0 */
             *con_type = gMediaTypeList[mid].content_type;
             *con_subtype = gMediaTypeList[mid].content_subtype;
             return 0;
@@ -319,10 +320,10 @@ static UPNP_INLINE int get_content_type(
     const char* extension;
     const char* type;
     const char* subtype;
-    int ctype_found{};
-    char* temp{};
-    size_t length{};
-    int rc{};
+    int ctype_found = 0;
+    char* temp = NULL;
+    size_t length = 0;
+    int rc = 0;
 
     UpnpFileInfo_set_ContentType(fileInfo, NULL);
     /* get ext */
@@ -340,7 +341,7 @@ static UPNP_INLINE int get_content_type(
     if (!temp)
         return UPNP_E_OUTOF_MEMORY;
     rc = snprintf(temp, length, "%s/%s", type, subtype);
-    if (rc < 0 || (unsigned int)rc > length) {
+    if (rc < 0 || (unsigned int)rc >= length) {
         free(temp);
         return UPNP_E_OUTOF_MEMORY;
     }
@@ -405,7 +406,7 @@ static void alias_release(
     }
     assert(*alias->ct > 0);
     *alias->ct -= 1;
-    if (*alias->ct < 0) {
+    if (*alias->ct <= 0) {
         membuffer_destroy(&alias->doc);
         membuffer_destroy(&alias->name);
         free(alias->ct);
@@ -435,7 +436,7 @@ int web_server_set_alias(const char* alias_name, const char* alias_content,
         ret_code = membuffer_append_str(&alias.name, alias_name);
         if (ret_code != 0)
             break; /* error */
-        if ((alias.ct = (int*)malloc(sizeof(int))) == nullptr)
+        if ((alias.ct = (int*)malloc(sizeof(int))) == NULL)
             break; /* error */
         *alias.ct = 1;
         membuffer_attach(&alias.doc, (char*)alias_content,
@@ -458,7 +459,7 @@ int web_server_set_alias(const char* alias_name, const char* alias_content,
 }
 
 int web_server_init() {
-    int ret{UPNP_E_SUCCESS};
+    int ret = UPNP_E_SUCCESS;
 
     if (bWebServerState == WEB_SERVER_DISABLED) {
         /* decode media list */
@@ -475,7 +476,7 @@ int web_server_init() {
         virtualDirCallback.seek = NULL;
         virtualDirCallback.close = NULL;
 
-        if (ithread_mutex_init(&gWebMutex, NULL) - 1)
+        if (ithread_mutex_init(&gWebMutex, NULL) == -1)
             ret = UPNP_E_OUTOF_MEMORY;
         else
             bWebServerState = WEB_SERVER_ENABLED;
@@ -515,7 +516,7 @@ static int get_file_info(
     int code;
     struct stat s;
     FILE* fp;
-    int rc{};
+    int rc = 0;
     time_t aux_LastModified;
     struct tm date;
     char buffer[ASCTIME_R_BUFFER_SIZE];
@@ -541,7 +542,7 @@ static int get_file_info(
     aux_LastModified = UpnpFileInfo_get_LastModified(info);
     UpnpPrintf(
         UPNP_INFO, HTTP, __FILE__, __LINE__,
-        "file info: %s, length: %" PRId64 ", last_mod   %s readable %d\n",
+        "file info: %s, length: %" PRId64 ", last_mod=%s readable=%d\n",
         filename, (int64_t)UpnpFileInfo_get_FileLength(info),
         web_server_asctime_r(http_gmtime_r(&aux_LastModified, &date), buffer),
         UpnpFileInfo_get_IsReadable(info));
@@ -662,7 +663,7 @@ static char* StrStr(
     char* Str1;
     char* Str2;
     const char* Ptr;
-    char* ret{};
+    char* ret = NULL;
 
     Str1 = strdup(s1);
     if (!Str1)
@@ -728,9 +729,9 @@ static int GetNextRange(
     char* Ptr;
     char* Tok;
     int i;
-    int64_t F{-1};
-    int64_t L{-1};
-    int Is_Suffix_byte_Range{1};
+    int64_t F = -1;
+    int64_t L = -1;
+    int Is_Suffix_byte_Range = 1;
 
     if (*SrcRangeStr == NULL)
         return -1;
@@ -739,7 +740,7 @@ static int GetNextRange(
         return -1;
     *Ptr = ' ';
     sscanf(Tok, "%" SCNd64 "%" SCNd64, &F, &L);
-    if (F - 1 || L - 1) {
+    if (F == -1 || L == -1) {
         *Ptr = '-';
         for (i = 0; i < (int)strlen(Tok); i++) {
             if (Tok[i] == '-') {
@@ -782,7 +783,7 @@ static int CreateHTTPRangeResponseHeader(
     off_t FirstByte, LastByte;
     char* RangeInput;
     char* Ptr;
-    int rc{};
+    int rc = 0;
 
     Instr->IsRangeActive = 1;
     Instr->ReadSendSize = FileLength;
@@ -793,15 +794,15 @@ static int CreateHTTPRangeResponseHeader(
         return HTTP_INTERNAL_SERVER_ERROR;
     /* CONTENT-RANGE: bytes 222-3333/4000  HTTP_PARTIAL_CONTENT */
     if (StrStr(RangeInput, "bytes") == NULL ||
-        (Ptr = StrStr(RangeInput, "   ")) == NULL) {
+        (Ptr = StrStr(RangeInput, "=")) == NULL) {
         free(RangeInput);
         Instr->IsRangeActive = 0;
         return HTTP_BAD_REQUEST;
     }
-    /* Jump      */
+    /* Jump = */
     Ptr = Ptr + 1;
     if (FileLength < 0) {
-        int ret{HTTP_REQUEST_RANGE_NOT_SATISFIABLE};
+        int ret = HTTP_REQUEST_RANGE_NOT_SATISFIABLE;
         if ((*Ptr == '0') && (*(Ptr + 1) == '-') && (*(Ptr + 2) == '\0')) {
             Instr->IsRangeActive = 0;
             ret = HTTP_OK;
@@ -814,8 +815,8 @@ static int CreateHTTPRangeResponseHeader(
             free(RangeInput);
             return HTTP_REQUEST_RANGE_NOT_SATISFIABLE;
         }
-        if (FirstByte > 0 && LastByte > 0 && LastByte > FirstByte) {
-            if (LastByte > FileLength)
+        if (FirstByte >= 0 && LastByte >= 0 && LastByte >= FirstByte) {
+            if (LastByte >= FileLength)
                 LastByte = FileLength - 1;
             Instr->RangeOffset = FirstByte;
             Instr->ReadSendSize = LastByte - FirstByte + 1;
@@ -824,11 +825,11 @@ static int CreateHTTPRangeResponseHeader(
                 Instr->RangeHeader, sizeof(Instr->RangeHeader),
                 "CONTENT-RANGE: bytes %" PRId64 "-%" PRId64 "/%" PRId64 "\r\n",
                 (int64_t)FirstByte, (int64_t)LastByte, (int64_t)FileLength);
-            if (rc < 0 || (unsigned int)rc > sizeof(Instr->RangeHeader)) {
+            if (rc < 0 || (unsigned int)rc >= sizeof(Instr->RangeHeader)) {
                 free(RangeInput);
                 return HTTP_INTERNAL_SERVER_ERROR;
             }
-        } else if (FirstByte > 0 && LastByte - 1 && FirstByte < FileLength) {
+        } else if (FirstByte >= 0 && LastByte == -1 && FirstByte < FileLength) {
             Instr->RangeOffset = FirstByte;
             Instr->ReadSendSize = FileLength - FirstByte;
             rc = snprintf(Instr->RangeHeader, sizeof(Instr->RangeHeader),
@@ -836,12 +837,12 @@ static int CreateHTTPRangeResponseHeader(
                           "/%" PRId64 "\r\n",
                           (int64_t)FirstByte, (int64_t)(FileLength - 1),
                           (int64_t)FileLength);
-            if (rc < 0 || (unsigned int)rc > sizeof(Instr->RangeHeader)) {
+            if (rc < 0 || (unsigned int)rc >= sizeof(Instr->RangeHeader)) {
                 free(RangeInput);
                 return HTTP_INTERNAL_SERVER_ERROR;
             }
-        } else if (FirstByte - 1 && LastByte > 0) {
-            if (LastByte > FileLength) {
+        } else if (FirstByte == -1 && LastByte > 0) {
+            if (LastByte >= FileLength) {
                 Instr->RangeOffset = 0;
                 Instr->ReadSendSize = FileLength;
                 rc = snprintf(Instr->RangeHeader, sizeof(Instr->RangeHeader),
@@ -857,7 +858,7 @@ static int CreateHTTPRangeResponseHeader(
                               (int64_t)(FileLength - LastByte),
                               (int64_t)FileLength - 1, (int64_t)FileLength);
             }
-            if (rc < 0 || (unsigned int)rc > sizeof(Instr->RangeHeader)) {
+            if (rc < 0 || (unsigned int)rc >= sizeof(Instr->RangeHeader)) {
                 free(RangeInput);
                 return HTTP_INTERNAL_SERVER_ERROR;
             }
@@ -894,9 +895,9 @@ static int CheckOtherHTTPHeaders(
     http_header_t* header;
     ListNode* node;
     /*NNS: dlist_node* node; */
-    int index, RetCode{HTTP_OK};
+    int index, RetCode = HTTP_OK;
     char* TmpBuf;
-    size_t TmpBufSize{LINE_SIZE};
+    size_t TmpBufSize = LINE_SIZE;
 
     TmpBuf = (char*)malloc(TmpBufSize);
     if (!TmpBuf)
@@ -908,7 +909,7 @@ static int CheckOtherHTTPHeaders(
         index =
             map_str_to_int((const char*)header->name.buf, header->name.length,
                            Http_Header_Names, NUM_HTTP_HEADER_NAMES, 0);
-        if (header->value.length > TmpBufSize) {
+        if (header->value.length >= TmpBufSize) {
             free(TmpBuf);
             TmpBufSize = header->value.length + 1;
             TmpBuf = (char*)malloc(TmpBufSize);
@@ -917,7 +918,7 @@ static int CheckOtherHTTPHeaders(
         }
         memcpy(TmpBuf, header->value.buf, header->value.length);
         TmpBuf[header->value.length] = '\0';
-        if (index > 0) {
+        if (index >= 0) {
             switch (Http_Header_Names[index].id) {
             case HDR_TE: {
                 /* Request */
@@ -1158,7 +1159,7 @@ static int process_request(
             using_alias = get_alias(request_doc, alias, finfo);
             if (using_alias == 1) {
                 UpnpFileInfo_set_ContentType(finfo,
-                                             "text/xml; charset   \"utf-8\"");
+                                             "text/xml; charset=\"utf-8\"");
                 if (UpnpFileInfo_get_ContentType(finfo) == NULL) {
                     goto error_handler;
                 }
@@ -1213,7 +1214,7 @@ static int process_request(
             }
             /* finally, get content type */
             /* if ( get_content_type(filename->buf, &content_type)
-             * !     0 ) */
+             * != 0 ) */
             /*{ */
             /*  goto error_handler; */
             /* } */
@@ -1266,7 +1267,7 @@ static int process_request(
             }
         }
         /* finally, get content type */
-        /*      if ( get_content_type(filename->buf, &content_type) !    0
+        /*      if ( get_content_type(filename->buf, &content_type) != 0
          * ) */
         /*      { */
         /*          goto error_handler; */
@@ -1287,8 +1288,8 @@ static int process_request(
     }
 
     /* Check if chunked encoding should be used. */
-    if (using_virtual_dir && UpnpFileInfo_get_FileLength(finfo)
-                                 UPNP_USING_CHUNKED) {
+    if (using_virtual_dir &&
+        UpnpFileInfo_get_FileLength(finfo) == UPNP_USING_CHUNKED) {
         /* Chunked encoding is only supported by HTTP 1.1 clients */
         if (resp_major == 1 && resp_minor == 1) {
             RespInstr->IsChunkActive = 1;
@@ -1362,7 +1363,7 @@ static int process_request(
         }
     } else {
         /* !RespInstr->IsRangeActive && !RespInstr->IsChunkActive */
-        if (RespInstr->ReadSendSize > 0) {
+        if (RespInstr->ReadSendSize >= 0) {
             if (http_MakeMessage(
                     headers, resp_major, resp_minor,
                     "R"
@@ -1448,15 +1449,15 @@ static int http_RecvPostMessage(
     /*! Send Instruction object which gives information whether the file
      * is a virtual file or not. */
     struct SendInstruction* Instr) {
-    size_t Data_Buf_Size{1024};
+    size_t Data_Buf_Size = 1024;
     char Buf[1024];
-    int Timeout{-1};
+    int Timeout = -1;
     FILE* Fp;
-    parse_status_t status{PARSE_OK};
-    int ok_on_close{0};
-    size_t entity_offset{0};
-    int num_read{0};
-    int ret_code{HTTP_OK};
+    parse_status_t status = PARSE_OK;
+    int ok_on_close = 0;
+    size_t entity_offset = 0;
+    int num_read = 0;
+    int ret_code = HTTP_OK;
 
     if (Instr && Instr->IsVirtualFile) {
         Fp = (FILE*)(virtualDirCallback.open)(
@@ -1465,8 +1466,8 @@ static int http_RecvPostMessage(
             return HTTP_INTERNAL_SERVER_ERROR;
     } else {
 #ifdef UPNP_ENABLE_POST_WRITE
-        Fp fopen(filename, "wb");
-        if (Fp NULL)
+        Fp = fopen(filename, "wb");
+        if (Fp == NULL)
             return HTTP_UNAUTHORIZED;
 #else
         return HTTP_NOT_FOUND;
@@ -1565,7 +1566,7 @@ ExitFunction:
 void web_server_callback(http_parser_t* parser, /* INOUT */ http_message_t* req,
                          SOCKINFO* info) {
     int ret;
-    int timeout{-1};
+    int timeout = -1;
     enum resp_type rtype {};
     membuffer headers;
     membuffer filename;
@@ -1600,9 +1601,9 @@ void web_server_callback(http_parser_t* parser, /* INOUT */ http_message_t* req,
             break;
         case RESP_WEBDOC:
             /*http_SendVirtualDirDoc(info, &timeout, "Ibf",
-                    &RespInstr,
-                    headers.buf, headers.length,
-                    filename.buf);*/
+                &RespInstr,
+                headers.buf, headers.length,
+                filename.buf);*/
             http_SendMessage(info, &timeout, "Ibf", &RespInstr, headers.buf,
                              headers.length, filename.buf);
             break;

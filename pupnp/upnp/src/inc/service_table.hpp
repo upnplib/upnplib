@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-09
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -320,7 +320,7 @@ int getServiceTable(
     /*! [in] Default base URL on which the URL will be returned. */
     const char* DefaultURLBase);
 
-/*      Misc helper functions   */
+/*  Misc helper functions   */
 
 /*!
  * \brief Returns the clone of the element value.
@@ -338,8 +338,8 @@ DOMString getElementValue(
  * known element name.
  *
  * \return
- *      \li 1 - On Success
- *      \li 0 - On Failure
+ *  \li 1 - On Success
+ *  \li 0 - On Failure
  */
 int getSubElement(
     /*! [in] Sub element name to be searched for. */

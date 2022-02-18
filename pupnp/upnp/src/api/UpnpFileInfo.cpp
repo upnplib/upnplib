@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-15
+// Redistribution only with this Copyright remark. Last modified: 2022-02-18
 
 /*!
  * \file
@@ -30,11 +30,11 @@ UpnpFileInfo* UpnpFileInfo_new() {
     if (!p)
         return 0;
 
-    /*p->m_FileLength    0;*/
-    /*p->m_LastModified      0;*/
-    /*p->m_IsDirectory   0;*/
-    /*p->m_IsReadable    0;*/
-    /*p->m_ContentType   0;*/
+    /*p->m_FileLength = 0;*/
+    /*p->m_LastModified = 0;*/
+    /*p->m_IsDirectory = 0;*/
+    /*p->m_IsReadable = 0;*/
+    /*p->m_ContentType = 0;*/
     UpnpListInit(&p->m_ExtraHeadersList);
     /* memset(&p->m_CtrlPtIPAddr, 0, sizeof (struct sockaddr_storage)); */
     p->m_Os = UpnpString_new();
@@ -63,7 +63,7 @@ void UpnpFileInfo_delete(UpnpFileInfo* q) {
 }
 
 int UpnpFileInfo_assign(UpnpFileInfo* p, const UpnpFileInfo* q) {
-    int ok{1};
+    int ok = 1;
 
     if (p != q) {
         ok = ok &&

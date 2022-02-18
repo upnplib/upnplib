@@ -1,8 +1,8 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-10
+// Redistribution only with this Copyright remark. Last modified: 2022-02-17
 
-#ifndef CLIENT_TABLE_HPP
-#define CLIENT_TABLE_HPP
+#ifndef UPNPLIB_CLIENT_TABLE_HPP
+#define UPNPLIB_CLIENT_TABLE_HPP
 
 /*!
  * \file
@@ -77,4 +77,4 @@ GenlibClientSubscription* GetClientSubActualSID(
 
 #endif /* INCLUDE_CLIENT_APIS */
 
-#endif /* CLIENT_TABLE_HPP */
+#endif /* UPNPLIB_CLIENT_TABLE_HPP */

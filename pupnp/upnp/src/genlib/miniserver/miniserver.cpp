@@ -98,24 +98,24 @@ uint16_t miniStopSockPort;
 /*!
  * module vars
  */
-static MiniServerState gMServState{MSERV_IDLE};
+static MiniServerState gMServState = MSERV_IDLE;
 #ifdef INTERNAL_WEB_SERVER
-static MiniServerCallback gGetCallback{NULL};
-static MiniServerCallback gSoapCallback{NULL};
-static MiniServerCallback gGenaCallback{NULL};
+static MiniServerCallback gGetCallback = NULL;
+static MiniServerCallback gSoapCallback = NULL;
+static MiniServerCallback gGenaCallback = NULL;
 
-static const int ENABLE_IPV6
+static const int ENABLE_IPV6 =
 #ifdef UPNP_ENABLE_IPV6
-    {1};
+    1;
 #else
-    {0};
+    0;
 #endif
 
-static const int MINISERVER_REUSEADDR
+static const int MINISERVER_REUSEADDR =
 #ifdef UPNP_MINISERVER_REUSEADDR
-    {1};
+    1;
 #else
-    {0};
+    0;
 #endif
 
 struct s_SocketStuff {
@@ -144,7 +144,7 @@ void SetSoapCallback(MiniServerCallback callback) { gSoapCallback = callback; }
 void SetGenaCallback(MiniServerCallback callback) { gGenaCallback = callback; }
 
 static int host_header_is_numeric(char* host_port, size_t host_port_size) {
-    int rc{0};
+    int rc = 0;
     struct in6_addr addr;
     char* s;
 
@@ -179,7 +179,7 @@ static int getNumericHostRedirection(int socket, char* host_port,
     struct sockaddr_storage addr;
     struct sockaddr_in* addr4 = (struct sockaddr_in*)&addr;
     struct sockaddr_in6* addr6 = (struct sockaddr_in6*)&addr;
-    socklen_t addr_len{sizeof addr};
+    socklen_t addr_len = sizeof addr;
     in_port_t port;
     char host[NAME_SIZE];
     int n;
@@ -214,8 +214,6 @@ static int getNumericHostRedirection(int socket, char* host_port,
     }
 
 ExitFunction:
-    // If used, check return code, was
-    // return rc 0;
     return rc == 0;
 }
 
@@ -241,7 +239,7 @@ static int dispatch_request(
 #else
     void* cookie{};
 #endif
-    int rc{UPNP_E_SUCCESS};
+    int rc = UPNP_E_SUCCESS;
     /* If it does not fit in here, it is likely invalid anyway. */
     char host_port[NAME_SIZE];
 
@@ -283,7 +281,7 @@ static int dispatch_request(
 #ifdef DEBUG_REDIRECT
     getNumericHostRedirection(info->socket, host_port, sizeof host_port);
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "DEBUG TEST: Redirect host_port      %s.\n", host_port);
+               "DEBUG TEST: Redirect host_port = %s.\n", host_port);
 #endif
     /* chech HOST header for an IP number -- prevents DNS rebinding. */
     if (!httpmsg_find_hdr(request, HDR_HOST, &header)) {
@@ -305,10 +303,10 @@ static int dispatch_request(
             goto ExitFunction;
         } else {
             membuffer redir_buf;
-            static const char* redir_fmt{"HTTP/1.1 307 Temporary Redirect\r\n"
-                                         "Location: http://%s\r\n\r\n"};
+            static const char* redir_fmt = "HTTP/1.1 307 Temporary Redirect\r\n"
+                                           "Location: http://%s\r\n\r\n";
             char redir_str[NAME_SIZE];
-            int timeout{HTTP_DEFAULT_TIMEOUT};
+            int timeout = HTTP_DEFAULT_TIMEOUT;
 
             getNumericHostRedirection(info->socket, host_port,
                                       sizeof host_port);
@@ -364,13 +362,13 @@ static void handle_request(
     SOCKINFO info;
     int http_error_code;
     int ret_code;
-    int major{1};
-    int minor{1};
+    int major = 1;
+    int minor = 1;
     http_parser_t parser;
-    http_message_t* hmsg{};
-    int timeout{HTTP_DEFAULT_TIMEOUT};
+    http_message_t* hmsg = NULL;
+    int timeout = HTTP_DEFAULT_TIMEOUT;
     struct mserv_request_t* request = (struct mserv_request_t*)args;
-    SOCKET connfd{request->connfd};
+    SOCKET connfd = request->connfd;
 
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__, "miniserver %d: READING\n",
                connfd);
@@ -429,7 +427,7 @@ static UPNP_INLINE void schedule_request_job(
     memset(&job, 0, sizeof(job));
 
     request = (struct mserv_request_t*)malloc(sizeof(struct mserv_request_t));
-    if (request == nullptr) {
+    if (request == NULL) {
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                    "mserv %d: out of memory\n", connfd);
         sock_close(connfd);
@@ -532,8 +530,8 @@ static void RunMiniServer(
     fd_set expSet;
     fd_set rdSet;
     SOCKET maxMiniSock;
-    int ret{};
-    int stopSock{};
+    int ret = 0;
+    int stopSock = 0;
 
     maxMiniSock = 0;
     maxMiniSock = std::max(maxMiniSock, miniSock->miniServerSock4);
@@ -626,7 +624,7 @@ static int get_port(
 
     len = sizeof(sockinfo);
     code = getsockname(sockfd, (struct sockaddr*)&sockinfo, &len);
-    if (code - 1) {
+    if (code == -1) {
         return -1;
     }
     if (sockinfo.ss_family == AF_INET) {
@@ -635,7 +633,7 @@ static int get_port(
         *port = ntohs(((struct sockaddr_in6*)&sockinfo)->sin6_port);
     }
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "sockfd      %d, .... port   %d\n", sockfd, (int)*port);
+               "sockfd = %d, .... port = %d\n", sockfd, (int)*port);
 
     return 0;
 }
@@ -647,7 +645,7 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
     int sockError;
     sa_family_t domain;
     void* addr;
-    int reuseaddr_on{MINISERVER_REUSEADDR};
+    int reuseaddr_on = MINISERVER_REUSEADDR;
 
     memset(s, 0, sizeof *s);
     s->fd = INVALID_SOCKET;
@@ -686,7 +684,7 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
                    ip_version, errorBuffer);
         goto error;
     } else if (ip_version == 6) {
-        int onOff{1};
+        int onOff = 1;
 
         sockError = setsockopt(s->fd, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&onOff,
                                sizeof(onOff));
@@ -733,9 +731,9 @@ error:
  * in case this function is called again.
  */
 static int do_bind(struct s_SocketStuff* s) {
-    int ret_val{UPNP_E_SUCCESS};
+    int ret_val = UPNP_E_SUCCESS;
     int bind_error;
-    int errCode{0};
+    int errCode = 0;
     char errorBuffer[ERROR_BUFFER_LEN];
     uint16_t original_listen_port = s->try_port;
 
@@ -761,7 +759,7 @@ static int do_bind(struct s_SocketStuff* s) {
         } else {
             errCode = 0;
         }
-    } while (errCode != 0 && s->try_port > original_listen_port);
+    } while (errCode != 0 && s->try_port >= original_listen_port);
     if (bind_error == SOCKET_ERROR) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
@@ -816,8 +814,8 @@ static int do_reinit(struct s_SocketStuff* s) {
 
 static int do_bind_listen(struct s_SocketStuff* s) {
     int ret_val;
-    int ok{0};
-    int original_port{s->try_port};
+    int ok = 0;
+    int original_port = s->try_port;
 
     while (!ok) {
         ret_val = do_bind(s);
@@ -832,7 +830,7 @@ static int do_bind_listen(struct s_SocketStuff* s) {
             }
             goto error;
         }
-        ok = s->try_port > original_port;
+        ok = s->try_port >= original_port;
     }
 
     return 0;
@@ -850,11 +848,11 @@ error:
  * returns the port allocated by the socket sub-system.
  *
  * \return
- *      \li UPNP_E_OUTOF_SOCKET: Failed to create a socket.
- *      \li UPNP_E_SOCKET_BIND: Bind() failed.
- *      \li UPNP_E_LISTEN: Listen() failed.
- *      \li UPNP_E_INTERNAL_ERROR: Port returned by the socket layer is < 0.
- *      \li UPNP_E_SUCCESS: Success.
+ *  \li UPNP_E_OUTOF_SOCKET: Failed to create a socket.
+ *  \li UPNP_E_SOCKET_BIND: Bind() failed.
+ *  \li UPNP_E_LISTEN: Listen() failed.
+ *  \li UPNP_E_INTERNAL_ERROR: Port returned by the socket layer is < 0.
+ *  \li UPNP_E_SUCCESS: Success.
  */
 static int get_miniserver_sockets(
     /*! [in] Socket Array. */
@@ -972,8 +970,8 @@ static int get_miniserver_stopsock(
     MiniServerSockArray* out) {
     char errorBuffer[ERROR_BUFFER_LEN];
     struct sockaddr_in stop_sockaddr;
-    SOCKET miniServerStopSock{};
-    int ret{};
+    SOCKET miniServerStopSock = 0;
+    int ret = 0;
 
     miniServerStopSock = socket(AF_INET, SOCK_DGRAM, 0);
     if (miniServerStopSock == INVALID_SOCKET) {
@@ -1039,7 +1037,7 @@ int StartMiniServer(
     [[maybe_unused]] uint16_t* listen_port6UlaGua) {
     int ret_code;
     int count;
-    int max_count{10000};
+    int max_count = 10000;
     MiniServerSockArray* miniSocket;
     ThreadPoolJob job;
 
@@ -1115,7 +1113,7 @@ int StartMiniServer(
         imillisleep(50);
         count++;
     }
-    if (count > max_count) {
+    if (count >= max_count) {
         /* Took it too long to start that thread. */
         sock_close(miniSocket->miniServerSock4);
         sock_close(miniSocket->miniServerSock6);
@@ -1144,7 +1142,7 @@ int StopMiniServer() {
     socklen_t socklen = sizeof(struct sockaddr_in);
     SOCKET sock;
     struct sockaddr_in ssdpAddr;
-    char buf[256]{"ShutDown"};
+    char buf[256] = "ShutDown";
     size_t bufLen = strlen(buf);
 
     switch (gMServState) {

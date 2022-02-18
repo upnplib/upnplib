@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-15
+// Redistribution only with this Copyright remark. Last modified: 2022-02-18
 
 #ifndef UPNPLIB_UPNPFILEINFO_HPP
 #define UPNPLIB_UPNPFILEINFO_HPP
@@ -34,9 +34,9 @@ EXPORT_SPEC UpnpFileInfo* UpnpFileInfo_new();
 /*! Destructor */
 EXPORT_SPEC void UpnpFileInfo_delete(UpnpFileInfo* p);
 // /*! Copy Constructor */
-// EXPORT_SPEC UpnpFileInfo *UpnpFileInfo_dup(const UpnpFileInfo *p);
+// EXPORT_SPEC UpnpFileInfo* UpnpFileInfo_dup(const UpnpFileInfo* p);
 // /*! Assignment operator */
-// EXPORT_SPEC int UpnpFileInfo_assign(UpnpFileInfo *p, const UpnpFileInfo *q);
+// EXPORT_SPEC int UpnpFileInfo_assign(UpnpFileInfo* p, const UpnpFileInfo* q);
 
 /*! UpnpFileInfo_get_FileLength */
 EXPORT_SPEC off_t UpnpFileInfo_get_FileLength(const UpnpFileInfo* p);
@@ -64,8 +64,8 @@ EXPORT_SPEC const DOMString UpnpFileInfo_get_ContentType(const UpnpFileInfo* p);
 EXPORT_SPEC int UpnpFileInfo_set_ContentType(UpnpFileInfo* p,
                                              const DOMString s);
 // /*! UpnpFileInfo_get_ContentType_cstr */
-// EXPORT_SPEC const char *UpnpFileInfo_get_ContentType_cstr(
-//         const UpnpFileInfo *p);
+// EXPORT_SPEC const char*
+// UpnpFileInfo_get_ContentType_cstr(const UpnpFileInfo* p);
 
 /*! UpnpFileInfo_get_ExtraHeadersList */
 EXPORT_SPEC const UpnpListHead*
@@ -75,32 +75,32 @@ EXPORT_SPEC int UpnpFileInfo_set_ExtraHeadersList(UpnpFileInfo* p,
                                                   const UpnpListHead* q);
 // /*! UpnpFileInfo_add_to_list_ExtraHeadersList */
 // EXPORT_SPEC void UpnpFileInfo_add_to_list_ExtraHeadersList(
-//         UpnpFileInfo *p, UpnpListHead *head);
+//         UpnpFileInfo* p, UpnpListHead* head);
 
 /*! UpnpFileInfo_get_CtrlPtIPAddr */
 EXPORT_SPEC const struct sockaddr_storage*
 UpnpFileInfo_get_CtrlPtIPAddr(const UpnpFileInfo* p);
-// /*! UpnpFileInfo_get_CtrlPtIPAddr */
+/*! UpnpFileInfo_get_CtrlPtIPAddr */
 EXPORT_SPEC int
 UpnpFileInfo_set_CtrlPtIPAddr(UpnpFileInfo* p,
                               const struct sockaddr_storage* buf);
 // /*! UpnpFileInfo_get_CtrlPtIPAddr */
-// EXPORT_SPEC void UpnpFileInfo_clear_CtrlPtIPAddr(UpnpFileInfo *p);
+// EXPORT_SPEC void UpnpFileInfo_clear_CtrlPtIPAddr(UpnpFileInfo* p);
 
 /*! UpnpFileInfo_get_Os */
 EXPORT_SPEC const UpnpString* UpnpFileInfo_get_Os(const UpnpFileInfo* p);
 /*! UpnpFileInfo_set_Os */
 EXPORT_SPEC int UpnpFileInfo_set_Os(UpnpFileInfo* p, const UpnpString* s);
 // /*! UpnpFileInfo_get_Os_Length */
-// EXPORT_SPEC size_t UpnpFileInfo_get_Os_Length(const UpnpFileInfo *p);
+// EXPORT_SPEC size_t UpnpFileInfo_get_Os_Length(const UpnpFileInfo* p);
 // /*! UpnpFileInfo_get_Os_cstr */
-// EXPORT_SPEC const char *UpnpFileInfo_get_Os_cstr(const UpnpFileInfo *p);
+// EXPORT_SPEC const char* UpnpFileInfo_get_Os_cstr(const UpnpFileInfo* p);
 // /*! UpnpFileInfo_strcpy_Os */
-// EXPORT_SPEC int UpnpFileInfo_strcpy_Os(UpnpFileInfo *p, const char *s);
-// /*! UpnpFileInfo_strncpy_Os */
+// EXPORT_SPEC int UpnpFileInfo_strcpy_Os(UpnpFileInfo* p, const char* s);
+/*! UpnpFileInfo_strncpy_Os */
 EXPORT_SPEC int UpnpFileInfo_strncpy_Os(UpnpFileInfo* p, const char* s,
                                         size_t n);
 // /*! UpnpFileInfo_clear_Os */
-// EXPORT_SPEC void UpnpFileInfo_clear_Os(UpnpFileInfo *p);
+// EXPORT_SPEC void UpnpFileInfo_clear_Os(UpnpFileInfo* p);
 
 #endif /* UPNPLIB_UPNPFILEINFO_HPP */

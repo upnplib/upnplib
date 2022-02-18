@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-08
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -48,18 +48,18 @@
  * @{
  */
 
+#include "ixml.h"       /* for IXML_Document */
+// #include "upnpconfig.h" /* for UPNP_HAVE_TOOLS */
+
 /* Function declarations only if tools compiled into the library */
 #if UPNP_HAVE_TOOLS
-
-#include "ixml.h" /* for IXML_Document */
-// #include "upnpconfig.h" /* for UPNP_HAVE_TOOLS no longer needed */
 
 /*!
  * \brief Converts an SDK error code into a string error message suitable for
  * display. The memory returned from this function should NOT be freed.
  *
  * \return An ASCII text string representation of the error message associated
- *      with the error code or the string "Unknown error code"
+ *  with the error code or the string "Unknown error code"
  */
 EXPORT_SPEC const char* UpnpGetErrorMessage(
     /*! [in] The SDK error code to convert. */
@@ -72,11 +72,11 @@ EXPORT_SPEC const char* UpnpGetErrorMessage(
  * be large enough to hold the \b BaseURL and \b RelURL combined.
  *
  * \return An integer representing one of the following:
- *      \li <tt>UPNP_E_SUCCESS</tt>: The operation completed successfully.
- *      \li <tt>UPNP_E_INVALID_PARAM</tt>: \b RelURL is <tt>NULL</tt>.
- *      \li <tt>UPNP_E_INVALID_URL</tt>: The \b BaseURL / \b RelURL
+ *  \li <tt>UPNP_E_SUCCESS</tt>: The operation completed successfully.
+ *  \li <tt>UPNP_E_INVALID_PARAM</tt>: \b RelURL is <tt>NULL</tt>.
+ *  \li <tt>UPNP_E_INVALID_URL</tt>: The \b BaseURL / \b RelURL
  *              combination does not form a valid URL.
- *      \li <tt>UPNP_E_OUTOF_MEMORY</tt>: Insufficient resources exist to
+ *  \li <tt>UPNP_E_OUTOF_MEMORY</tt>: Insufficient resources exist to
  *              complete this operation.
  */
 EXPORT_SPEC int UpnpResolveURL(
@@ -94,11 +94,11 @@ EXPORT_SPEC int UpnpResolveURL(
  * later.
  *
  * \return An integer representing one of the following:
- *      \li <tt>UPNP_E_SUCCESS</tt>: The operation completed successfully.
- *      \li <tt>UPNP_E_INVALID_PARAM</tt>: \b RelURL is <tt>NULL</tt>.
- *      \li <tt>UPNP_E_INVALID_URL</tt>: The \b BaseURL / \b RelURL
+ *  \li <tt>UPNP_E_SUCCESS</tt>: The operation completed successfully.
+ *  \li <tt>UPNP_E_INVALID_PARAM</tt>: \b RelURL is <tt>NULL</tt>.
+ *  \li <tt>UPNP_E_INVALID_URL</tt>: The \b BaseURL / \b RelURL
  *              combination does not form a valid URL.
- *      \li <tt>UPNP_E_OUTOF_MEMORY</tt>: Insufficient resources exist to
+ *  \li <tt>UPNP_E_OUTOF_MEMORY</tt>: Insufficient resources exist to
  *              complete this operation.
  */
 EXPORT_SPEC int UpnpResolveURL2(
@@ -121,7 +121,7 @@ EXPORT_SPEC int UpnpResolveURL2(
  * action request.
  *
  * \return The action node of \b Upnp_Document type or <tt>NULL</tt> if the
- *      operation failed.
+ *  operation failed.
  */
 EXPORT_SPEC IXML_Document* UpnpMakeAction(
     /*! [in] Name of the action request or response. */
@@ -146,7 +146,7 @@ EXPORT_SPEC IXML_Document* UpnpMakeAction(
  * action request.
  *
  * \return The action node of \b Upnp_Document type or <tt>NULL</tt> if the
- *      operation failed.
+ *  operation failed.
  */
 EXPORT_SPEC IXML_Document* UpnpMakeActionResponse(
     /*! [in] The action name. */
@@ -172,10 +172,10 @@ EXPORT_SPEC IXML_Document* UpnpMakeActionResponse(
  * argument in the action request.
  *
  * \return An integer representing one of the following:
- *      \li <tt>UPNP_E_SUCCESS</tt>: The operation completed successfully.
- *      \li <tt>UPNP_E_INVALID_PARAM</tt>: One or more of the parameters are
+ *  \li <tt>UPNP_E_SUCCESS</tt>: The operation completed successfully.
+ *  \li <tt>UPNP_E_INVALID_PARAM</tt>: One or more of the parameters are
  * invalid. \li <tt>UPNP_E_OUTOF_MEMORY</tt>: Insufficient resources exist to
- *              complete this operation.
+ *      complete this operation.
  */
 EXPORT_SPEC int UpnpAddToAction(
     /*! [in,out] A pointer to store the action document node. */
@@ -202,10 +202,10 @@ EXPORT_SPEC int UpnpAddToAction(
  * argument in the action request.
  *
  * \return An integer representing one of the following:
- *      \li <tt>UPNP_E_SUCCESS</tt>: The operation completed successfully.
- *      \li <tt>UPNP_E_INVALID_PARAM</tt>: One or more of the parameters are
+ *  \li <tt>UPNP_E_SUCCESS</tt>: The operation completed successfully.
+ *  \li <tt>UPNP_E_INVALID_PARAM</tt>: One or more of the parameters are
  * invalid. \li <tt>UPNP_E_OUTOF_MEMORY</tt>: Insufficient resources exist to
- *              complete this operation.
+ *      complete this operation.
  */
 EXPORT_SPEC int UpnpAddToActionResponse(
     /*! [in,out] Pointer to a document to store the action document node. */
@@ -245,10 +245,10 @@ EXPORT_SPEC IXML_Document* UpnpCreatePropertySet(
  * <tt>NULL</tt> and pass that as the first parameter.
  *
  * \return An integer representing one of the following:
- *      \li <tt>UPNP_E_SUCCESS</tt>: The operation completed successfully.
- *      \li <tt>UPNP_E_INVALID_PARAM</tt>: One or more of the parameters are
+ *  \li <tt>UPNP_E_SUCCESS</tt>: The operation completed successfully.
+ *  \li <tt>UPNP_E_INVALID_PARAM</tt>: One or more of the parameters are
  * invalid. \li <tt>UPNP_E_OUTOF_MEMORY</tt>: Insufficient resources exist to
- *              complete this operation.
+ *      complete this operation.
  */
 EXPORT_SPEC int UpnpAddToPropertySet(
     /*! [in,out] A pointer to the document containing the property set document

@@ -1,13 +1,13 @@
-#ifndef SSDPLIB_HPP
-#define SSDPLIB_HPP
+#ifndef UPNPLIB_SSDPLIB_HPP
+#define UPNPLIB_SSDPLIB_HPP
 
 /**************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-13
+ * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -89,7 +89,7 @@ typedef enum SsdpSearchType {
 /*! @name X_USER_AGENT
  *  The {\tt X_USER_AGENT} constant specifies the value of the X-User-Agent:
  *  HTTP header. The value "redsonic" is needed for the DSM-320. See
- *  https://sourceforge.net/forum/message.php?msg_id    3166856 for more
+ *  https://sourceforge.net/forum/message.php?msg_id=3166856 for more
  * information
  */
 #define X_USER_AGENT "redsonic"
@@ -179,7 +179,7 @@ typedef int (*ParserFun)(char*, SsdpEvent*);
  * \return UPNP_E_SUCCESS if successful else appropriate error.
  */
 int AdvertiseAndReply(
-    /* [in] -1   Send shutdown, 0    send reply, 1   Send Advertisement. */
+    /* [in] -1 = Send shutdown, 0 = send reply, 1 = Send Advertisement. */
     int AdFlag,
     /* [in] Device handle. */
     UpnpDevice_Handle Hnd,
@@ -516,4 +516,4 @@ int DeviceShutdown(
 
 /* @} SSDPlib SSDP Library */
 
-#endif /* SSDPLIB_HPP */
+#endif /* UPNPLIB_SSDPLIB_HPP */

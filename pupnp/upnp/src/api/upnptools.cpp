@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-09
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -71,51 +71,52 @@ struct ErrorString {
 /*!
  * \brief Array of error structures.
  */
-struct ErrorString ErrorMessages[] {
+struct ErrorString ErrorMessages[] = {
     {UPNP_E_SUCCESS, "UPNP_E_SUCCESS"},
-        {UPNP_E_INVALID_HANDLE, "UPNP_E_INVALID_HANDLE"},
-        {UPNP_E_INVALID_PARAM, "UPNP_E_INVALID_PARAM"},
-        {UPNP_E_OUTOF_HANDLE, "UPNP_E_OUTOF_HANDLE"},
-        {UPNP_E_OUTOF_CONTEXT, "UPNP_E_OUTOF_CONTEXT"},
-        {UPNP_E_OUTOF_MEMORY, "UPNP_E_OUTOF_MEMORY"},
-        {UPNP_E_INIT, "UPNP_E_INIT"},
-        {UPNP_E_BUFFER_TOO_SMALL, "UPNP_E_BUFFER_TOO_SMALL"},
-        {UPNP_E_INVALID_DESC, "UPNP_E_INVALID_DESC"},
-        {UPNP_E_INVALID_URL, "UPNP_E_INVALID_URL"},
-        {UPNP_E_INVALID_SID, "UPNP_E_INVALID_SID"},
-        {UPNP_E_INVALID_DEVICE, "UPNP_E_INVALID_DEVICE"},
-        {UPNP_E_INVALID_SERVICE, "UPNP_E_INVALID_SERVICE"},
-        {UPNP_E_BAD_RESPONSE, "UPNP_E_BAD_RESPONSE"},
-        {UPNP_E_BAD_REQUEST, "UPNP_E_BAD_REQUEST"},
-        {UPNP_E_INVALID_ACTION, "UPNP_E_INVALID_ACTION"},
-        {UPNP_E_FINISH, "UPNP_E_FINISH"},
-        {UPNP_E_INIT_FAILED, "UPNP_E_INIT_FAILED"},
-        {UPNP_E_URL_TOO_BIG, "UPNP_E_URL_TOO_BIG"},
-        {UPNP_E_BAD_HTTPMSG, "UPNP_E_BAD_HTTPMSG"},
-        {UPNP_E_ALREADY_REGISTERED, "UPNP_E_ALREADY_REGISTERED"},
-        {UPNP_E_INVALID_INTERFACE, "UPNP_E_INVALID_INTERFACE"},
-        {UPNP_E_NETWORK_ERROR, "UPNP_E_NETWORK_ERROR"},
-        {UPNP_E_SOCKET_WRITE, "UPNP_E_SOCKET_WRITE"},
-        {UPNP_E_SOCKET_READ, "UPNP_E_SOCKET_READ"},
-        {UPNP_E_SOCKET_BIND, "UPNP_E_SOCKET_BIND"},
-        {UPNP_E_SOCKET_CONNECT, "UPNP_E_SOCKET_CONNECT"},
-        {UPNP_E_OUTOF_SOCKET, "UPNP_E_OUTOF_SOCKET"},
-        {UPNP_E_LISTEN, "UPNP_E_LISTEN"}, {UPNP_E_TIMEDOUT, "UPNP_E_TIMEDOUT"},
-        {UPNP_E_SOCKET_ERROR, "UPNP_E_SOCKET_ERROR"},
-        {UPNP_E_FILE_WRITE_ERROR, "UPNP_E_FILE_WRITE_ERROR"},
-        {UPNP_E_CANCELED, "UPNP_E_CANCELED"},
-        {UPNP_E_EVENT_PROTOCOL, "UPNP_E_EVENT_PROTOCOL"},
-        {UPNP_E_SUBSCRIBE_UNACCEPTED, "UPNP_E_SUBSCRIBE_UNACCEPTED"},
-        {UPNP_E_UNSUBSCRIBE_UNACCEPTED, "UPNP_E_UNSUBSCRIBE_UNACCEPTED"},
-        {UPNP_E_NOTIFY_UNACCEPTED, "UPNP_E_NOTIFY_UNACCEPTED"},
-        {UPNP_E_INVALID_ARGUMENT, "UPNP_E_INVALID_ARGUMENT"},
-        {UPNP_E_FILE_NOT_FOUND, "UPNP_E_FILE_NOT_FOUND"},
-        {UPNP_E_FILE_READ_ERROR, "UPNP_E_FILE_READ_ERROR"},
-        {UPNP_E_EXT_NOT_XML, "UPNP_E_EXT_NOT_XML"},
-        {UPNP_E_NO_WEB_SERVER, "UPNP_E_NO_WEB_SERVER"},
-        {UPNP_E_OUTOF_BOUNDS, "UPNP_E_OUTOF_BOUNDS"},
-        {UPNP_E_NOT_FOUND, "UPNP_E_NOT_FOUND"},
-        {UPNP_E_INTERNAL_ERROR, "UPNP_E_INTERNAL_ERROR"},
+    {UPNP_E_INVALID_HANDLE, "UPNP_E_INVALID_HANDLE"},
+    {UPNP_E_INVALID_PARAM, "UPNP_E_INVALID_PARAM"},
+    {UPNP_E_OUTOF_HANDLE, "UPNP_E_OUTOF_HANDLE"},
+    {UPNP_E_OUTOF_CONTEXT, "UPNP_E_OUTOF_CONTEXT"},
+    {UPNP_E_OUTOF_MEMORY, "UPNP_E_OUTOF_MEMORY"},
+    {UPNP_E_INIT, "UPNP_E_INIT"},
+    {UPNP_E_BUFFER_TOO_SMALL, "UPNP_E_BUFFER_TOO_SMALL"},
+    {UPNP_E_INVALID_DESC, "UPNP_E_INVALID_DESC"},
+    {UPNP_E_INVALID_URL, "UPNP_E_INVALID_URL"},
+    {UPNP_E_INVALID_SID, "UPNP_E_INVALID_SID"},
+    {UPNP_E_INVALID_DEVICE, "UPNP_E_INVALID_DEVICE"},
+    {UPNP_E_INVALID_SERVICE, "UPNP_E_INVALID_SERVICE"},
+    {UPNP_E_BAD_RESPONSE, "UPNP_E_BAD_RESPONSE"},
+    {UPNP_E_BAD_REQUEST, "UPNP_E_BAD_REQUEST"},
+    {UPNP_E_INVALID_ACTION, "UPNP_E_INVALID_ACTION"},
+    {UPNP_E_FINISH, "UPNP_E_FINISH"},
+    {UPNP_E_INIT_FAILED, "UPNP_E_INIT_FAILED"},
+    {UPNP_E_URL_TOO_BIG, "UPNP_E_URL_TOO_BIG"},
+    {UPNP_E_BAD_HTTPMSG, "UPNP_E_BAD_HTTPMSG"},
+    {UPNP_E_ALREADY_REGISTERED, "UPNP_E_ALREADY_REGISTERED"},
+    {UPNP_E_INVALID_INTERFACE, "UPNP_E_INVALID_INTERFACE"},
+    {UPNP_E_NETWORK_ERROR, "UPNP_E_NETWORK_ERROR"},
+    {UPNP_E_SOCKET_WRITE, "UPNP_E_SOCKET_WRITE"},
+    {UPNP_E_SOCKET_READ, "UPNP_E_SOCKET_READ"},
+    {UPNP_E_SOCKET_BIND, "UPNP_E_SOCKET_BIND"},
+    {UPNP_E_SOCKET_CONNECT, "UPNP_E_SOCKET_CONNECT"},
+    {UPNP_E_OUTOF_SOCKET, "UPNP_E_OUTOF_SOCKET"},
+    {UPNP_E_LISTEN, "UPNP_E_LISTEN"},
+    {UPNP_E_TIMEDOUT, "UPNP_E_TIMEDOUT"},
+    {UPNP_E_SOCKET_ERROR, "UPNP_E_SOCKET_ERROR"},
+    {UPNP_E_FILE_WRITE_ERROR, "UPNP_E_FILE_WRITE_ERROR"},
+    {UPNP_E_CANCELED, "UPNP_E_CANCELED"},
+    {UPNP_E_EVENT_PROTOCOL, "UPNP_E_EVENT_PROTOCOL"},
+    {UPNP_E_SUBSCRIBE_UNACCEPTED, "UPNP_E_SUBSCRIBE_UNACCEPTED"},
+    {UPNP_E_UNSUBSCRIBE_UNACCEPTED, "UPNP_E_UNSUBSCRIBE_UNACCEPTED"},
+    {UPNP_E_NOTIFY_UNACCEPTED, "UPNP_E_NOTIFY_UNACCEPTED"},
+    {UPNP_E_INVALID_ARGUMENT, "UPNP_E_INVALID_ARGUMENT"},
+    {UPNP_E_FILE_NOT_FOUND, "UPNP_E_FILE_NOT_FOUND"},
+    {UPNP_E_FILE_READ_ERROR, "UPNP_E_FILE_READ_ERROR"},
+    {UPNP_E_EXT_NOT_XML, "UPNP_E_EXT_NOT_XML"},
+    {UPNP_E_NO_WEB_SERVER, "UPNP_E_NO_WEB_SERVER"},
+    {UPNP_E_OUTOF_BOUNDS, "UPNP_E_OUTOF_BOUNDS"},
+    {UPNP_E_NOT_FOUND, "UPNP_E_NOT_FOUND"},
+    {UPNP_E_INTERNAL_ERROR, "UPNP_E_INTERNAL_ERROR"},
 };
 
 const char* UpnpGetErrorMessage(int rc) {
@@ -136,8 +137,8 @@ const char* UpnpGetErrorMessage(int rc) {
  * future it would be nice to clean this up.
  */
 int UpnpResolveURL(const char* BaseURL, const char* RelURL, char* AbsURL) {
-    int ret{UPNP_E_SUCCESS};
-    char* tempRel{NULL};
+    int ret = UPNP_E_SUCCESS;
+    char* tempRel = NULL;
 
     if (!RelURL) {
         ret = UPNP_E_INVALID_PARAM;
@@ -155,7 +156,7 @@ ExitFunction:
 }
 
 int UpnpResolveURL2(const char* BaseURL, const char* RelURL, char** AbsURL) {
-    int ret{UPNP_E_SUCCESS};
+    int ret = UPNP_E_SUCCESS;
 
     if (!RelURL) {
         ret = UPNP_E_INVALID_PARAM;
@@ -190,11 +191,11 @@ static int addToAction(
     const char* ArgName,
     /*! [in] Value of the argument. */
     const char* ArgValue) {
-    char* ActBuff{};
-    IXML_Node* node{};
-    IXML_Element* Ele{};
-    IXML_Node* Txt{};
-    int rc{};
+    char* ActBuff = NULL;
+    IXML_Node* node = NULL;
+    IXML_Element* Ele = NULL;
+    IXML_Node* Txt = NULL;
+    int rc = 0;
 
     if (ActionName == NULL || ServType == NULL) {
         return UPNP_E_INVALID_PARAM;
@@ -208,14 +209,14 @@ static int addToAction(
 
         if (response) {
             rc = snprintf(ActBuff, HEADER_LENGTH,
-                          "<u:%sResponse xmlns:u  \"%s\">\r\n</u:%sResponse>",
+                          "<u:%sResponse xmlns:u=\"%s\">\r\n</u:%sResponse>",
                           ActionName, ServType, ActionName);
         } else {
             rc = snprintf(ActBuff, HEADER_LENGTH,
-                          "<u:%s xmlns:u  \"%s\">\r\n</u:%s>", ActionName,
+                          "<u:%s xmlns:u=\"%s\">\r\n</u:%s>", ActionName,
                           ServType, ActionName);
         }
-        if (rc < 0 || (unsigned int)rc > HEADER_LENGTH) {
+        if (rc < 0 || (unsigned int)rc >= HEADER_LENGTH) {
             free(ActBuff);
             return UPNP_E_OUTOF_MEMORY;
         }
@@ -231,7 +232,7 @@ static int addToAction(
         }
     }
 
-    if (ArgName != NULL /*&& ArgValue !    NULL */) {
+    if (ArgName != NULL /*&& ArgValue != NULL */) {
         node = ixmlNode_getFirstChild((IXML_Node*)*ActionDoc);
         Ele = ixmlDocument_createElement(*ActionDoc, ArgName);
         if (ArgValue) {
@@ -248,7 +249,7 @@ static int addToAction(
  * \brief Creates the action request or response from the argument list.
  *
  * \return Action request or response document if successful, otherwise
- *      returns NULL
+ *  returns NULL
  */
 static IXML_Document* makeAction(
     /*! [in] flag to tell if the ActionDoc is for response or request. */
@@ -266,12 +267,12 @@ static IXML_Document* makeAction(
     const char* ArgName;
     const char* ArgValue;
     char* ActBuff;
-    int Idx{};
+    int Idx = 0;
     IXML_Document* ActionDoc;
     IXML_Node* node;
     IXML_Element* Ele;
-    IXML_Node* Txt{};
-    int rc{};
+    IXML_Node* Txt = NULL;
+    int rc = 0;
 
     if (ActionName == NULL || ServType == NULL) {
         return NULL;
@@ -284,14 +285,14 @@ static IXML_Document* makeAction(
 
     if (response) {
         rc = snprintf(ActBuff, HEADER_LENGTH,
-                      "<u:%sResponse xmlns:u  \"%s\">\r\n</u:%sResponse>",
+                      "<u:%sResponse xmlns:u=\"%s\">\r\n</u:%sResponse>",
                       ActionName, ServType, ActionName);
     } else {
-        rc = snprintf(ActBuff, HEADER_LENGTH,
-                      "<u:%s xmlns:u  \"%s\">\r\n</u:%s>", ActionName, ServType,
-                      ActionName);
+        rc =
+            snprintf(ActBuff, HEADER_LENGTH, "<u:%s xmlns:u=\"%s\">\r\n</u:%s>",
+                     ActionName, ServType, ActionName);
     }
-    if (rc < 0 || (unsigned int)rc > HEADER_LENGTH ||
+    if (rc < 0 || (unsigned int)rc >= HEADER_LENGTH ||
         ixmlParseBufferEx(ActBuff, &ActionDoc) != IXML_SUCCESS) {
         free(ActBuff);
         return NULL;
@@ -331,7 +332,7 @@ static IXML_Document* makeAction(
 IXML_Document* UpnpMakeAction(const char* ActionName, const char* ServType,
                               int NumArg, const char* Arg, ...) {
     va_list ArgList;
-    IXML_Document* out{};
+    IXML_Document* out = NULL;
 
     va_start(ArgList, Arg);
     out = makeAction(0, ActionName, ServType, NumArg, Arg, ArgList);
@@ -344,7 +345,7 @@ IXML_Document* UpnpMakeActionResponse(const char* ActionName,
                                       const char* ServType, int NumArg,
                                       const char* Arg, ...) {
     va_list ArgList;
-    IXML_Document* out{};
+    IXML_Document* out = NULL;
 
     va_start(ArgList, Arg);
     out = makeAction(1, ActionName, ServType, NumArg, Arg, ArgList);
@@ -368,9 +369,9 @@ int UpnpAddToActionResponse(IXML_Document** ActionResponse,
 
 IXML_Document* UpnpCreatePropertySet(int NumArg, const char* Arg, ...) {
     va_list ArgList;
-    int Idx{};
+    int Idx = 0;
     char BlankDoc[] =
-        "<e:propertyset xmlns:e \"urn:schemas-upnp-org:event-1-0\">"
+        "<e:propertyset xmlns:e=\"urn:schemas-upnp-org:event-1-0\">"
         "</e:propertyset>";
     const char *ArgName, *ArgValue;
     IXML_Node* node;
@@ -391,7 +392,7 @@ IXML_Document* UpnpCreatePropertySet(int NumArg, const char* Arg, ...) {
     ArgName = Arg;
     while (Idx++ != NumArg) {
         ArgValue = va_arg(ArgList, const char*);
-        if (ArgName != NULL /*&& ArgValue !    NULL */) {
+        if (ArgName != NULL /*&& ArgValue != NULL */) {
             node = ixmlNode_getFirstChild((IXML_Node*)PropSet);
             Ele1 = ixmlDocument_createElement(PropSet, "e:property");
             Ele = ixmlDocument_createElement(PropSet, ArgName);
@@ -412,7 +413,7 @@ IXML_Document* UpnpCreatePropertySet(int NumArg, const char* Arg, ...) {
 int UpnpAddToPropertySet(IXML_Document** PropSet, const char* ArgName,
                          const char* ArgValue) {
     char BlankDoc[] =
-        "<e:propertyset xmlns:e \"urn:schemas-upnp-org:event-1-0\">"
+        "<e:propertyset xmlns:e=\"urn:schemas-upnp-org:event-1-0\">"
         "</e:propertyset>";
     IXML_Node* node;
     IXML_Element* Ele;
@@ -447,4 +448,4 @@ int UpnpAddToPropertySet(IXML_Document** PropSet, const char* ArgName,
     return UPNP_E_SUCCESS;
 }
 
-#endif /* EXCLUDE_DOM        0 */
+#endif /* EXCLUDE_DOM == 0 */
