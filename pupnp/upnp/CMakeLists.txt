@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-02-17
+# Redistribution only with this Copyright remark. Last modified: 2022-02-19
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -21,6 +21,7 @@ set(UPNPLIB_HAVE_CLIENT YES)
 set(UPNPLIB_HAVE_DEVICE YES)
 set(UPNPLIB_HAVE_WEBSERVER YES)
 set(UPNPLIB_HAVE_SSDP YES)
+set(UPNPLIB_HAVE_OPTSSDP YES)
 
 # Internal switches for program options
 set(UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS YES)
@@ -87,6 +88,10 @@ set(UPNP_SOURCE_FILES
     $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/SSDPResultData.cpp>
     $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/SSDPResultDataCallback.cpp>
 
+    $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:${PROJECT_SOURCE_DIR}/src/uuid/uuid.cpp>
+    $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:${PROJECT_SOURCE_DIR}/src/uuid/md5.cpp>
+    $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:${PROJECT_SOURCE_DIR}/src/uuid/sysdep.cpp>
+
     $<$<BOOL:${UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS}>:${PROJECT_SOURCE_DIR}/src/api/UpnpExtraHeaders.c>
     ${PROJECT_SOURCE_DIR}/src/api/UpnpString.cpp
     ${PROJECT_SOURCE_DIR}/src/api/upnpapi.cpp
@@ -110,7 +115,7 @@ add_compile_definitions(
     $<$<BOOL:${UPNPLIB_HAVE_DEVICE}>:UPNP_HAVE_DEVICE>
     $<$<BOOL:${UPNPLIB_HAVE_WEBSERVER}>:UPNP_HAVE_WEBSERVER>
     $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:UPNP_HAVE_SSDP>
-#    $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:UPNP_HAVE_OPTSSDP>
+    $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:UPNP_HAVE_OPTSSDP>
 #    $<$<BOOL:${UPNPLIB_HAVE_SOAP}>:UPNP_HAVE_SOAP>
 #    $<$<BOOL:${UPNPLIB_HAVE_GENA}>:UPNP_HAVE_GENA>
 #    $<$<BOOL:${UPNPLIB_ENABLE_IPV6}>:UPNP_ENABLE_IPV6>

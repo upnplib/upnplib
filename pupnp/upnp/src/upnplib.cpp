@@ -3,7 +3,7 @@
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-17
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -102,6 +102,12 @@ void* library_info(void*) {
     msg << "UPNP_HAVE_SSDP        = yes\n";
 #else
     msg << "UPNP_HAVE_SSDP        = no\n";
+#endif
+
+#ifdef UPNP_HAVE_OPTSSDP
+    msg << "UPNP_HAVE_OPTSSDP     = yes\n";
+#else
+    msg << "UPNP_HAVE_OPTSSDP     = no\n";
 #endif
 
     msg << "---- internal settings -----------\n";
