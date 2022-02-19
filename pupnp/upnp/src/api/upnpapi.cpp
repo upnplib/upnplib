@@ -55,7 +55,6 @@
 //#include "UpnpUniStd.h" /* for close() */
 #include "httpreadwrite.hpp"
 //#include "membuffer.h"
-//#include "soaplib.h"
 //#include "sysdep.h"
 #include "uuid.hpp"
 
@@ -76,10 +75,17 @@
 //#include <signal.h>
 //#include <stdlib.h>
 //#include <string.h>
+
 #if defined INCLUDE_DEVICE_APIS && defined INTERNAL_WEB_SERVER
 #include "urlconfig.hpp"
 #include <assert.h>
 #include <sys/stat.h>
+#endif
+
+#if defined INCLUDE_DEVICE_APIS && EXCLUDE_SOAP == 0
+#include "soaplib.hpp"
+#include "UpnpActionComplete.hpp"
+#include "UpnpStateVarComplete.hpp"
 #endif
 
 #ifdef _WIN32
@@ -425,7 +431,7 @@ static int UpnpInitPreamble(void) {
         return retVal;
     }
 
-#ifdef INCLUDE_DEVICE_APIS
+#if defined INCLUDE_DEVICE_APIS && defined INTERNAL_WEB_SERVER
 #if EXCLUDE_SOAP == 0
     SetSoapCallback(soap_device_callback);
 #endif

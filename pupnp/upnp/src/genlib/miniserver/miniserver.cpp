@@ -448,7 +448,7 @@ static UPNP_INLINE void schedule_request_job(
         return;
     }
 }
-#endif
+#endif // INTERNAL_WEB_SERVER
 
 static UPNP_INLINE void fdset_if_valid(SOCKET sock, fd_set* set) {
     if (sock != INVALID_SOCKET) {

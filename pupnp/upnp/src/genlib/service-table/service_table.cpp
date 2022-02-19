@@ -44,7 +44,8 @@
 
 #ifdef INCLUDE_DEVICE_APIS
 
-#if EXCLUDE_GENA == 0
+// Ingo TODO: Check if GENA is always neded here
+// #if EXCLUDE_GENA == 0
 /************************************************************************
  *  Function :  copy_subscription
  *
@@ -191,7 +192,10 @@ subscription* GetFirstSubscription(service_info* service) {
 void freeSubscription(subscription* sub) {
     if (sub) {
         free_URL_list(&sub->DeliveryURLs);
+#if EXCLUDE_GENA == 0
+        // Ingo TODO: Check if GENA is always neded or if it can disabled here
         freeSubscriptionQueuedEvents(sub);
+#endif
     }
 }
 
@@ -970,6 +974,6 @@ int getServiceTable(IXML_Node* node, service_table* out,
 
     return 0;
 }
-#endif /* EXCLUDE_GENA */
+// #endif /* EXCLUDE_GENA */
 
 #endif /* INCLUDE_DEVICE_APIS */

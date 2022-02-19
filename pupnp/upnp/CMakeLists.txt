@@ -16,15 +16,16 @@ project(UPNP_CORE VERSION 0009
 # These switches are all handled only in this configuration file.
 
 # Options selectable by user configuration
-set(UPNPLIB_HAVE_TOOLS  YES)
-set(UPNPLIB_HAVE_CLIENT YES)
+set(UPNPLIB_HAVE_TOOLS NO)
+set(UPNPLIB_HAVE_CLIENT NO)
 set(UPNPLIB_HAVE_DEVICE YES)
-set(UPNPLIB_HAVE_WEBSERVER YES)
-set(UPNPLIB_HAVE_SSDP YES)
-set(UPNPLIB_HAVE_OPTSSDP YES)
+set(UPNPLIB_HAVE_WEBSERVER YES) # only enabled with UPNPLIB_HAVE_DEVICE
+set(UPNPLIB_HAVE_SSDP NO)
+set(UPNPLIB_HAVE_OPTSSDP NO)
+set(UPNPLIB_HAVE_SOAP YES) # only enabled with UPNPLIB_HAVE_WEBSERVER
 
 # Internal switches for program options
-set(UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS YES)
+set(UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS NO)
 
 # Dependencies of options
 if(UPNPLIB_HAVE_WEBSERVER)
@@ -73,11 +74,13 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/webserver.cpp
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/genlib/net/http/parsetools.cpp>
 
     ${PROJECT_SOURCE_DIR}/src/genlib/util/list.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/util/membuffer.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/util/strintmap.cpp
     $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/genlib/util/upnp_timeout.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/genlib/util/util.cpp>
 
     $<$<BOOL:${UPNPLIB_HAVE_DEVICE}>:${PROJECT_SOURCE_DIR}/src/genlib/service-table/service_table.cpp>
     ${PROJECT_SOURCE_DIR}/src/genlib/miniserver/miniserver.cpp
@@ -87,6 +90,10 @@ set(UPNP_SOURCE_FILES
     $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp>
     $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/SSDPResultData.cpp>
     $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/SSDPResultDataCallback.cpp>
+
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/soap/soap_device.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/soap/soap_common.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/soap/soap_ctrlpt.cpp>
 
     $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:${PROJECT_SOURCE_DIR}/src/uuid/uuid.cpp>
     $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:${PROJECT_SOURCE_DIR}/src/uuid/md5.cpp>
@@ -98,6 +105,10 @@ set(UPNP_SOURCE_FILES
     $<$<BOOL:${UPNPLIB_HAVE_TOOLS}>:${PROJECT_SOURCE_DIR}/src/api/upnptools.cpp>
     $<$<BOOL:${UPNPLIB_HAVE_WEBSERVER}>:${PROJECT_SOURCE_DIR}/src/api/UpnpFileInfo.cpp>
     $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/api/UpnpDiscovery.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpActionRequest.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpStateVarRequest.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpActionComplete.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpStateVarComplete.cpp>
     $<$<CONFIG:Debug>:${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
     $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_WEBSERVER}>>:${PROJECT_SOURCE_DIR}/src/urlconfig/urlconfig.cpp>
@@ -116,7 +127,7 @@ add_compile_definitions(
     $<$<BOOL:${UPNPLIB_HAVE_WEBSERVER}>:UPNP_HAVE_WEBSERVER>
     $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:UPNP_HAVE_SSDP>
     $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:UPNP_HAVE_OPTSSDP>
-#    $<$<BOOL:${UPNPLIB_HAVE_SOAP}>:UPNP_HAVE_SOAP>
+    $<$<BOOL:${UPNPLIB_HAVE_SOAP}>:UPNP_HAVE_SOAP>
 #    $<$<BOOL:${UPNPLIB_HAVE_GENA}>:UPNP_HAVE_GENA>
 #    $<$<BOOL:${UPNPLIB_ENABLE_IPV6}>:UPNP_ENABLE_IPV6>
 #    $<$<BOOL:${UPNPLIB_ENABLE_OPEN_SSL}>:UPNP_ENABLE_OPEN_SSL>
@@ -146,7 +157,8 @@ if(NOT WIN32)
     )
 
     # Test executable linked with the shared library
-    add_executable(upnplib_shared_run ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
+    add_executable(upnplib_shared_run
+            ${PROJECT_SOURCE_DIR}/src/upnplib.cpp)
     set_target_properties(upnplib_shared_run PROPERTIES
             OUTPUT_NAME upnplib
     )

@@ -399,7 +399,7 @@
  * the API.
  */
 //#include "UpnpActionComplete.h"
-#include "UpnpActionRequest.h"
+#include "UpnpActionRequest.hpp"
 //#include "UpnpDiscovery.h"
 //#include "UpnpEvent.h"
 //#include "UpnpEventSubscribe.h"
