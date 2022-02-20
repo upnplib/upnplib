@@ -1,15 +1,14 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-09-01
+// Redistribution only with this Copyright remark. Last modified: 2022-02-20
 // Also Copyright by other contributor as noted below.
 
-#ifndef STRING_H
-#define STRING_H
+#ifndef UPNPLIB_STRING_HPP
+#define UPNPLIB_STRING_HPP
 
 /*!
  * \defgroup UpnpString The UpnpString Class
  *
  * \brief Implements string operations in the UPnP library.
- *
  * \author Marcelo Roberto Jimenez
  *
  * \version 1.0
@@ -60,11 +59,11 @@ EXPORT_SPEC void UpnpString_delete(
 /*!
  * \brief Assignment operator.
  */
-// EXPORT_SPEC void UpnpString_assign(
-//        /*! [in] The \em \b this pointer. */
-//        UpnpString *p,
-//        /*! [in] The \em \b that pointer. */
-//        const UpnpString *q);
+EXPORT_SPEC void UpnpString_assign(
+       /*! [in] The \em \b this pointer. */
+       UpnpString *p,
+       /*! [in] The \em \b that pointer. */
+       const UpnpString *q);
 
 /*!
  * \brief Returns the length of the string.
@@ -149,4 +148,4 @@ EXPORT_SPEC void UpnpString_clear(
 
 /* @} UpnpString The UpnpString API */
 
-#endif /* STRING_H */
+#endif /* UPNPLIB_STRING_HPP */

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-09-01
+// Redistribution only with this Copyright remark. Last modified: 2022-02-20
 // Also Copyright by other contributor who haven't made a note.
 
 /*!
@@ -138,11 +138,11 @@ void UpnpString_delete(UpnpString* p) {
 //    return NULL;
 //}
 
-// void UpnpString_assign(UpnpString* p, const UpnpString* q) {
-//    if (p != q) {
-//        UpnpString_set_String(p, UpnpString_get_String(q));
-//    }
-//}
+void UpnpString_assign(UpnpString* p, const UpnpString* q) {
+   if (p != q) {
+       UpnpString_set_String(p, UpnpString_get_String(q));
+   }
+}
 
 size_t UpnpString_get_Length(const UpnpString* p) {
     return ((struct SUpnpString*)p)->m_length;

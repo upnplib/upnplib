@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-02-19
+# Redistribution only with this Copyright remark. Last modified: 2022-02-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -17,12 +17,13 @@ project(UPNP_CORE VERSION 0009
 
 # Options selectable by user configuration
 set(UPNPLIB_HAVE_TOOLS NO)
-set(UPNPLIB_HAVE_CLIENT NO)
+set(UPNPLIB_HAVE_CLIENT YES)
 set(UPNPLIB_HAVE_DEVICE YES)
-set(UPNPLIB_HAVE_WEBSERVER YES) # only enabled with UPNPLIB_HAVE_DEVICE
+set(UPNPLIB_HAVE_WEBSERVER NO) # only enabled with UPNPLIB_HAVE_DEVICE
 set(UPNPLIB_HAVE_SSDP NO)
 set(UPNPLIB_HAVE_OPTSSDP NO)
-set(UPNPLIB_HAVE_SOAP YES) # only enabled with UPNPLIB_HAVE_WEBSERVER
+set(UPNPLIB_HAVE_SOAP NO) # only enabled with UPNPLIB_HAVE_WEBSERVER
+set(UPNPLIB_HAVE_GENA YES) # compiles only with UPNPLIB_HAVE_CLIENT and UPNPLIB_HAVE_DEVICE
 
 # Internal switches for program options
 set(UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS NO)
@@ -74,15 +75,17 @@ set(UPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/webserver.cpp
-    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/genlib/net/http/parsetools.cpp>
+    ${PROJECT_SOURCE_DIR}/src/genlib/net/http/parsetools.cpp
 
     ${PROJECT_SOURCE_DIR}/src/genlib/util/list.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/util/membuffer.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/util/strintmap.cpp
-    $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/genlib/util/upnp_timeout.cpp>
+    ${PROJECT_SOURCE_DIR}/src/genlib/util/upnp_timeout.cpp
     $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/genlib/util/util.cpp>
 
     $<$<BOOL:${UPNPLIB_HAVE_DEVICE}>:${PROJECT_SOURCE_DIR}/src/genlib/service-table/service_table.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_GENA}>>:${PROJECT_SOURCE_DIR}/src/genlib/client_table/GenlibClientSubscription.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_GENA}>>:${PROJECT_SOURCE_DIR}/src/genlib/client_table/client_table.cpp>
     ${PROJECT_SOURCE_DIR}/src/genlib/miniserver/miniserver.cpp
 
     $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/ssdp_server.cpp>
@@ -95,9 +98,13 @@ set(UPNP_SOURCE_FILES
     $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/soap/soap_common.cpp>
     $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/soap/soap_ctrlpt.cpp>
 
-    $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:${PROJECT_SOURCE_DIR}/src/uuid/uuid.cpp>
-    $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:${PROJECT_SOURCE_DIR}/src/uuid/md5.cpp>
-    $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:${PROJECT_SOURCE_DIR}/src/uuid/sysdep.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_GENA}>>:${PROJECT_SOURCE_DIR}/src/gena/gena_device.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_GENA}>>:${PROJECT_SOURCE_DIR}/src/gena/gena_callback2.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_GENA}>>:${PROJECT_SOURCE_DIR}/src/gena/gena_ctrlpt.cpp>
+
+    $<$<OR:$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_GENA}>>,$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>>:${PROJECT_SOURCE_DIR}/src/uuid/uuid.cpp>
+    $<$<OR:$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_GENA}>>,$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>>:${PROJECT_SOURCE_DIR}/src/uuid/md5.cpp>
+    $<$<OR:$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_GENA}>>,$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>>:${PROJECT_SOURCE_DIR}/src/uuid/sysdep.cpp>
 
     $<$<BOOL:${UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS}>:${PROJECT_SOURCE_DIR}/src/api/UpnpExtraHeaders.c>
     ${PROJECT_SOURCE_DIR}/src/api/UpnpString.cpp
@@ -109,6 +116,9 @@ set(UPNP_SOURCE_FILES
     $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpStateVarRequest.cpp>
     $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpActionComplete.cpp>
     $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_SOAP}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpStateVarComplete.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_GENA}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpSubscriptionRequest.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_GENA}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpEventSubscribe.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_GENA}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpEvent.cpp>
     $<$<CONFIG:Debug>:${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
     $<$<AND:$<BOOL:${UPNPLIB_HAVE_DEVICE}>,$<BOOL:${UPNPLIB_HAVE_WEBSERVER}>>:${PROJECT_SOURCE_DIR}/src/urlconfig/urlconfig.cpp>
@@ -128,7 +138,7 @@ add_compile_definitions(
     $<$<BOOL:${UPNPLIB_HAVE_SSDP}>:UPNP_HAVE_SSDP>
     $<$<BOOL:${UPNPLIB_HAVE_OPTSSDP}>:UPNP_HAVE_OPTSSDP>
     $<$<BOOL:${UPNPLIB_HAVE_SOAP}>:UPNP_HAVE_SOAP>
-#    $<$<BOOL:${UPNPLIB_HAVE_GENA}>:UPNP_HAVE_GENA>
+    $<$<BOOL:${UPNPLIB_HAVE_GENA}>:UPNP_HAVE_GENA>
 #    $<$<BOOL:${UPNPLIB_ENABLE_IPV6}>:UPNP_ENABLE_IPV6>
 #    $<$<BOOL:${UPNPLIB_ENABLE_OPEN_SSL}>:UPNP_ENABLE_OPEN_SSL>
 #    $<$<BOOL:${UPNPLIB_ENABLE_BLOCKING_TCP_CONNECTIONS}>:UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS>

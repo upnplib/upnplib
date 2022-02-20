@@ -688,11 +688,11 @@ service_info* getServiceList(IXML_Node* node, service_info** end,
                 current_service = ixmlNodeList_item(serviceNodeList, i);
                 fail = 0;
                 if (current) {
-                    current->next = malloc(sizeof(service_info));
+                    current->next = (SERVICE_INFO*)malloc(sizeof(service_info));
                     previous = current;
                     current = current->next;
                 } else {
-                    head = malloc(sizeof(service_info));
+                    head = (SERVICE_INFO*)malloc(sizeof(service_info));
                     current = head;
                 }
                 if (!current) {

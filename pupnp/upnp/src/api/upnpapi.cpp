@@ -59,7 +59,6 @@
 #include "uuid.hpp"
 
 /* Needed for GENA */
-//#include "gena.h"
 //#include "miniserver.h"
 //#include "service_table.h"
 
@@ -76,17 +75,24 @@
 //#include <stdlib.h>
 //#include <string.h>
 
-#if defined INCLUDE_DEVICE_APIS && defined INTERNAL_WEB_SERVER
+#ifdef INCLUDE_DEVICE_APIS
+#ifdef INTERNAL_WEB_SERVER
 #include "urlconfig.hpp"
 #include <assert.h>
 #include <sys/stat.h>
 #endif
 
-#if defined INCLUDE_DEVICE_APIS && EXCLUDE_SOAP == 0
+#if EXCLUDE_SOAP == 0
 #include "soaplib.hpp"
 #include "UpnpActionComplete.hpp"
 #include "UpnpStateVarComplete.hpp"
 #endif
+
+#if EXCLUDE_GENA == 0
+#include "gena.hpp"
+#include "UpnpEventSubscribe.hpp"
+#endif
+#endif // INCLUDE_DEVICE_APIS
 
 #ifdef _WIN32
 /* Do not include these files */
@@ -3357,13 +3363,12 @@ void UpnpThreadDistribution(struct UpnpNonblockParam* Param) {
 
     switch (Param->FunName) {
 #if EXCLUDE_GENA == 0
-        int errCode = 0;
     case SUBSCRIBE: {
         UpnpEventSubscribe* evt = UpnpEventSubscribe_new();
         UpnpString* Sid = UpnpString_new();
 
         UpnpEventSubscribe_strcpy_PublisherUrl(evt, Param->Url);
-        errCode = genaSubscribe(Param->Handle,
+        int errCode = genaSubscribe(Param->Handle,
                                 UpnpEventSubscribe_get_PublisherUrl(evt),
                                 (int*)&Param->TimeOut, Sid);
         UpnpEventSubscribe_set_ErrCode(evt, errCode);
@@ -3378,7 +3383,7 @@ void UpnpThreadDistribution(struct UpnpNonblockParam* Param) {
     case UNSUBSCRIBE: {
         UpnpEventSubscribe* evt = UpnpEventSubscribe_new();
         UpnpEventSubscribe_strcpy_SID(evt, Param->SubsId);
-        errCode =
+        int errCode =
             genaUnSubscribe(Param->Handle, UpnpEventSubscribe_get_SID(evt));
         UpnpEventSubscribe_set_ErrCode(evt, errCode);
         UpnpEventSubscribe_strcpy_PublisherUrl(evt, "");
@@ -3391,7 +3396,7 @@ void UpnpThreadDistribution(struct UpnpNonblockParam* Param) {
     case RENEW: {
         UpnpEventSubscribe* evt = UpnpEventSubscribe_new();
         UpnpEventSubscribe_strcpy_SID(evt, Param->SubsId);
-        errCode = genaRenewSubscription(
+        int errCode = genaRenewSubscription(
             Param->Handle, UpnpEventSubscribe_get_SID(evt), &Param->TimeOut);
         UpnpEventSubscribe_set_ErrCode(evt, errCode);
         UpnpEventSubscribe_set_TimeOut(evt, Param->TimeOut);
