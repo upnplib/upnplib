@@ -511,7 +511,6 @@ typedef enum Upnp_DescType_e Upnp_DescType;
  * @{
  */
 
-#if false
 /*!
  * \brief Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6).
  *
@@ -553,6 +552,7 @@ EXPORT_SPEC int UpnpInit2(
          * \c NULL will pick an arbitrary free port. */
         unsigned short DestPort);
 
+#if false
 /*!
  * \brief Initializes the OpenSSL library, and the OpenSSL context for use
  * with pupnp
@@ -599,7 +599,6 @@ EXPORT_SPEC int UpnpInitSslContext(
  */
 EXPORT_SPEC int UpnpFinish(void);
 
-#if false
 /*!
  * \brief Returns the internal server IPv4 UPnP listening port.
  *
@@ -678,6 +677,8 @@ EXPORT_SPEC char *UpnpGetServerIp6Address(void);
  * 	\li On error: \c NULL is returned if \b UpnpInit2 has not succeeded.
  */
 EXPORT_SPEC char *UpnpGetServerUlaGuaIp6Address(void);
+
+#if false
 /*!
  * \brief Registers a device application with the UPnP Library.
  *
@@ -851,6 +852,7 @@ EXPORT_SPEC int UpnpRegisterRootDevice2(
  *     \li \c UPNP_E_OUTOF_MEMORY: There are insufficient resources to
  *             register this root device.
  */
+#endif // #if false
 EXPORT_SPEC int UpnpRegisterRootDevice3(
         /*! [in] Pointer to a string containing the description URL for this
          * root device instance. */
@@ -866,7 +868,6 @@ EXPORT_SPEC int UpnpRegisterRootDevice3(
         /*! [in] Address family of this device. Can be AF_INET for an IPv4
          * device, or AF_INET6 for an IPv6 device. Defaults to AF_INET. */
         int AddressFamily);
-#endif // #if false
 
 /*!
  * \brief Registers a device application for a specific address family with
@@ -1125,6 +1126,7 @@ EXPORT_SPEC int UpnpSearchAsync(
  *     \li \c UPNP_E_OUTOF_MEMORY: There are insufficient resources to
  *             send future advertisements.
  */
+#endif // if false
 EXPORT_SPEC int UpnpSendAdvertisement(
         /*! The device handle for which to send out the announcements. */
         UpnpDevice_Handle Hnd,
@@ -1134,7 +1136,6 @@ EXPORT_SPEC int UpnpSendAdvertisement(
          * \c AUTO_ADVERTISEMENT_TIME * 2 then the expiration age is set to
          * ( \c AUTO_ADVERTISEMENT_TIME + 1 ) * 2. */
         int Exp);
-#endif
 
 /*!
  * \brief Sends out the discovery announcements for all devices and services
@@ -1456,6 +1457,7 @@ EXPORT_SPEC int UpnpSendActionExAsync(
  *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
  *              complete this operation.
  */
+#endif
 EXPORT_SPEC int UpnpAcceptSubscription(
         /*! [in] The handle of the device. */
         UpnpDevice_Handle Hnd,
@@ -1473,7 +1475,7 @@ EXPORT_SPEC int UpnpAcceptSubscription(
         int cVariables,
         /*! [in] The subscription ID of the newly registered control point. */
         const Upnp_SID SubsId);
-
+#if false
 /*!
  * \brief Similar to \b UpnpAcceptSubscription() except that it takes a DOM
  * document for the variables to event rather than an array of strings.
@@ -1533,6 +1535,7 @@ EXPORT_SPEC int UpnpAcceptSubscriptionExt(
  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
  *             complete this operation.
  */
+#endif
 EXPORT_SPEC int UpnpNotify(
         /*! [in] The handle to the device sending the event. */
         UpnpDevice_Handle,
@@ -1547,7 +1550,7 @@ EXPORT_SPEC int UpnpNotify(
         const char **NewVal,
         /*! [in] The count of variables included in this notification. */
         int cVariables);
-
+#if false
 /*!
  * \brief Similar to \b UpnpNotify except that it takes a DOM document for the
  * event rather than an array of strings.
@@ -2609,11 +2612,9 @@ EXPORT_SPEC int UpnpDownloadXmlDoc(
  *       \li \c UPNP_E_SUCCESS: The operation completed successfully.
  *       \li \c UPNP_E_INVALID_ARGUMENT: \b rootDir is an invalid directory.
  */
-#if false
 EXPORT_SPEC int UpnpSetWebServerRootDir(
         /*! [in] Path of the root directory of the web server. */
         const char *rootDir);
-#endif // #if false
 
 /*!
  * \brief The type of handle returned by the web server for open requests.

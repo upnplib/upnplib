@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-02-17
+# Redistribution only with this Copyright remark. Last modified: 2022-02-20
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -308,6 +308,7 @@ endif(WIN32)
 add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp/ixml ${PROJECT_SOURCE_DIR}/pupnp/ixml/build)
 add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp/upnp ${PROJECT_SOURCE_DIR}/pupnp/upnp/build)
 add_subdirectory(${PROJECT_SOURCE_DIR}/core ${PROJECT_SOURCE_DIR}/core/build)
+add_subdirectory(${PROJECT_SOURCE_DIR}/sample ${PROJECT_SOURCE_DIR}/sample/build)
 
 
 #################################

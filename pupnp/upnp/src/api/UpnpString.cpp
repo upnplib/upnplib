@@ -139,9 +139,9 @@ void UpnpString_delete(UpnpString* p) {
 //}
 
 void UpnpString_assign(UpnpString* p, const UpnpString* q) {
-   if (p != q) {
-       UpnpString_set_String(p, UpnpString_get_String(q));
-   }
+    if (p != q) {
+        UpnpString_set_String(p, UpnpString_get_String(q));
+    }
 }
 
 size_t UpnpString_get_Length(const UpnpString* p) {
