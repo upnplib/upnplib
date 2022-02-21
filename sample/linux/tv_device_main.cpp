@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-20
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,12 +36,11 @@
 int main(int argc, char* argv[]) {
     int rc;
     pthread_t cmdloop_thread;
-#ifdef _WIN32
-#else
+    int code;
+#ifndef _WIN32
     int sig;
     sigset_t sigs_to_catch;
 #endif
-    int code;
 
     rc = device_main(argc, argv);
     if (rc != UPNP_E_SUCCESS) {

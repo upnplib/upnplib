@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-20
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1249,10 +1249,10 @@ int TvDeviceCallbackEventHandler(Upnp_EventType EventType, const void* Event,
 int TvDeviceStart(char* iface, unsigned short port, const char* desc_doc_name,
                   const char* web_dir_path, int ip_mode, print_string pfun,
                   int combo) {
-    int ret = UPNP_E_SUCCESS;
+    int ret{UPNP_E_SUCCESS};
     char desc_doc_url[DESC_URL_SIZE];
-    char* ip_address = NULL;
-    int address_family = AF_INET;
+    char* ip_address{};
+    int address_family{AF_INET};
 
     pthread_mutex_init(&TVDevMutex, NULL);
     UpnpSetLogFileNames(NULL, NULL);
@@ -1264,7 +1264,8 @@ int TvDeviceStart(char* iface, unsigned short port, const char* desc_doc_name,
                      iface ? iface : "{NULL}", port);
     ret = UpnpInit2(iface, port);
     if (ret != UPNP_E_SUCCESS) {
-        SampleUtil_Print("Error with UpnpInit2 -- %d\n", ret);
+        SampleUtil_Print("Error with UpnpInit2 -- %s(%d)\n",
+                         UpnpGetErrorMessage(ret), ret);
         UpnpFinish();
 
         return ret;
@@ -1319,8 +1320,8 @@ int TvDeviceStart(char* iface, unsigned short port, const char* desc_doc_name,
     ret = UpnpSetWebServerRootDir(web_dir_path);
     if (ret != UPNP_E_SUCCESS) {
         SampleUtil_Print(
-            "Error specifying webserver root directory -- %s: %d\n",
-            web_dir_path, ret);
+            "Error specifying webserver root directory -- %s: %s(%d)\n",
+            web_dir_path, UpnpGetErrorMessage(ret), ret);
         UpnpFinish();
 
         return ret;
@@ -1396,13 +1397,13 @@ void* TvDeviceCommandLoop(void* args) {
 }
 
 int device_main(int argc, char* argv[]) {
-    unsigned int portTemp = 0;
-    char* iface = NULL;
-    char* desc_doc_name = NULL;
-    char* web_dir_path = NULL;
-    unsigned short port = 0;
+    unsigned int portTemp{};
+    char* iface{};
+    char* desc_doc_name{};
+    char* web_dir_path{};
+    unsigned short port{};
     int ip_mode = IP_MODE_IPV4;
-    int i = 0;
+    int i{};
 
     SampleUtil_Initialize(linux_print);
     /* Parse options */
@@ -1417,7 +1418,7 @@ int device_main(int argc, char* argv[]) {
             web_dir_path = argv[++i];
         } else if (strcmp(argv[i], "-m") == 0) {
             sscanf(argv[++i], "%d", &ip_mode);
-        } else if (strcmp(argv[i], "-help") == 0) {
+        } else {
             SampleUtil_Print("Usage: %s -i interface -port port"
                              " -desc desc_doc_name -webdir web_dir_path"
                              " -m ip_mode -help (this message)\n",
@@ -1439,7 +1440,7 @@ int device_main(int argc, char* argv[]) {
                              "\t\te.g.: /upnp/sample/tvdevice/web\n"
                              "\tip_mode:       set to 1 for IPv4 (default), "
                              "2 for IPv6 LLA and 3 for IPv6 ULA or GUA\n");
-            return 1;
+            return UPNP_E_INVALID_ARGUMENT;
         }
     }
     port = (unsigned short)portTemp;

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-13
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -194,7 +194,11 @@ static int get_hoststr(const char* url_str, char** hoststr, size_t* hostlen) {
     char* urlPath = (char*)alloca(strlen(url_str) + 1);
     char* temp;
     memset(urlPath, 0, strlen(url_str) + 1);
+#ifdef UPNPLIB_PUPNP_COMPATIBLE
     strncpy(urlPath, url_str, strlen(urlPath));
+#else // bugfix
+    strncpy(urlPath, url_str, strlen(url_str));
+#endif
     *hoststr = strstr(urlPath, "//");
     if (*hoststr == NULL)
         return UPNP_E_INVALID_URL;
@@ -732,7 +736,11 @@ int http_Download(const char* url_str, int timeout_secs, char** document,
     /* make msg */
     membuffer_init(&request);
     memset(urlPath, 0, strlen(url_str) + (size_t)1);
+#ifdef UPNPLIB_PUPNP_COMPATIBLE
     strncpy(urlPath, url_str, strlen(urlPath));
+#else // bugfix
+    strncpy(urlPath, url_str, strlen(url_str));
+#endif
     hoststr = strstr(urlPath, "//");
     if (hoststr == NULL)
         return UPNP_E_INVALID_URL;
@@ -1769,7 +1777,11 @@ int MakeGetMessageEx(const char* url_str, membuffer* request, uri_type* url,
             break;
         }
         memset(urlPath, 0, strlen(url_str) + (size_t)1);
+#ifdef UPNPLIB_PUPNP_COMPATIBLE
         strncpy(urlPath, url_str, strlen(urlPath));
+#else // bugfix
+        strncpy(urlPath, url_str, strlen(url_str));
+#endif
         hoststr = strstr(urlPath, "//");
         if (hoststr == NULL) {
             errCode = UPNP_E_INVALID_URL;

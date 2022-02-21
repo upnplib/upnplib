@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-02-20
+# Redistribution only with this Copyright remark. Last modified: 2022-02-21
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(UPNP_CORE VERSION 0009
+project(UPNP_CORE VERSION 0010
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -16,16 +16,16 @@ project(UPNP_CORE VERSION 0009
 # These switches are all handled only in this configuration file.
 
 # Options selectable by user configuration
-set(UPNPLIB_DEF_TOOLS YES)     # tools -> UPNP_ENABLE_HELPER_API_TOOLS
-set(UPNPLIB_DEF_CLIENT YES)    # client -> UPNP_ENABLE_CLIENT_API
-set(UPNPLIB_DEF_DEVICE YES)
-set(UPNPLIB_DEF_WEBSERVER YES) # webserver -> UPNP_ENABLE_WEBSERVER
+set(UPNPLIB_DEF_TOOLS  NO)     # tools -> UPNP_ENABLE_HELPER_API_TOOLS
+set(UPNPLIB_DEF_CLIENT  NO)    # client -> UPNP_ENABLE_CLIENT_API
+set(UPNPLIB_DEF_DEVICE  NO)
+set(UPNPLIB_DEF_WEBSERVER  NO) # webserver -> UPNP_ENABLE_WEBSERVER
                                #   only enabled with UPNPLIB_DEF_DEVICE
-set(UPNPLIB_DEF_SSDP YES)      # ssdp -> UPNP_ENABLE_SSDP
-set(UPNPLIB_DEF_OPTSSDP YES)   # optssdp -> UPNP_ENABLE_OPTIONAL_SSDP_HEADERS
-set(UPNPLIB_DEF_SOAP YES)      # soap -> UPNP_ENABLE_SOAP
+set(UPNPLIB_DEF_SSDP  NO)      # ssdp -> UPNP_ENABLE_SSDP
+set(UPNPLIB_DEF_OPTSSDP  NO)   # optssdp -> UPNP_ENABLE_OPTIONAL_SSDP_HEADERS
+set(UPNPLIB_DEF_SOAP  NO)      # soap -> UPNP_ENABLE_SOAP
                                #   only enabled with UPNPLIB_DEF_WEBSERVER
-set(UPNPLIB_DEF_GENA YES)      # gena -> UPNP_ENABLE_GENA
+set(UPNPLIB_DEF_GENA  NO)      # gena -> UPNP_ENABLE_GENA
                                #   compiles only with UPNPLIB_DEF_CLIENT and UPNPLIB_DEF_DEVICE
 #set(UPNPLIB_DEF_IPV6 NO)      # ipv6 -> UPNP_ENABLE_IPV6
 #set(UPNPLIB_DEF_OPENSSL NO)   # open_ssl -> UPNP_ENABLE_OPEN_SSL
@@ -37,7 +37,7 @@ set(UPNPLIB_DEF_GENA YES)      # gena -> UPNP_ENABLE_GENA
 set(UPNPLIB_DEF_SAMPLES YES)   # samples -> UPNP_BUILD_SAMPLES
 
 # Internal switches for program options
-set(UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS YES)
+set(UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS  NO)
 
 # Dependencies of options
 if(UPNPLIB_DEF_SAMPLES)
