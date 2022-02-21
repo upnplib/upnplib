@@ -5,7 +5,7 @@
 // =========================================
 
 #include "upnplib_gtest_tools.hpp"
-#include "upnp.h" // for UPNP_E_* constants
+#include "upnp.hpp" // for UPNP_E_* constants
 
 #include <iostream>
 #include <string.h>

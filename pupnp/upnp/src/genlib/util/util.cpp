@@ -40,7 +40,7 @@
  */
 
 #include "config.h"
-#include "upnp.h"
+#include "upnp.hpp"
 #include "upnputil.h"
 
 #include <string.h>

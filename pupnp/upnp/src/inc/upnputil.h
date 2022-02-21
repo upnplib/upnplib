@@ -37,7 +37,7 @@
  * \file
  */
 
-#include "upnp.h"
+#include "upnp.hpp"
 
 #include <errno.h>
 

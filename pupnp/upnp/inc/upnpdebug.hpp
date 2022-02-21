@@ -39,7 +39,7 @@
 
 #include "upnpconfig.h"
 //#include "UpnpGlobal.h" /* for UPNP_INLINE */
-#include "upnp.h" // for UPNP_E_SUCCESS
+#include "upnp.hpp" // for UPNP_E_SUCCESS
 #include <stdio.h>
 
 #ifdef __cplusplus

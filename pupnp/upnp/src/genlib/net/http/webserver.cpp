@@ -58,7 +58,7 @@
 #include "statcodes.hpp"
 #include "strintmap.hpp"
 #include "unixutil.hpp"
-#include "upnp.h"
+#include "upnp.hpp"
 #include "upnpapi.hpp"
 #include "upnputil.h"
 

@@ -49,7 +49,7 @@
 #include "service_table.hpp"
 #include "sock.hpp"
 #include "ThreadPool.hpp"
-#include "upnp.h"
+#include "upnp.hpp"
 #include "UpnpString.h"
 #include "uri.hpp"
 

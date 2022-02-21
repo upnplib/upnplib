@@ -52,7 +52,7 @@
 //#include "sock.h"
 #include "statcodes.hpp"
 //#include "unixutil.h"
-//#include "upnp.h"
+//#include "upnp.hpp"
 #include "upnpapi.hpp"
 //#include "uri.h"
 #include "webserver.hpp"

@@ -40,7 +40,7 @@
 
 #include "membuffer.hpp"
 #include "unixutil.hpp"
-#include "upnp.h"
+#include "upnp.hpp"
 #include "upnpdebug.hpp"
 #include "UpnpInet.h"
 #include "uri.hpp"

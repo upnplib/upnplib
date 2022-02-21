@@ -40,7 +40,7 @@
  */
 
 //#include "upnputil.h"
-#include "upnp.h"
+#include "upnp.hpp"
 
 //#include <stdlib.h>
 

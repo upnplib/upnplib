@@ -126,7 +126,7 @@
 #endif /* IN6_IS_ADDR_ULA */
 
 #if EXCLUDE_SSDP == 0
-#include "upnp.h"
+#include "upnp.hpp"
 #include "upnp_timeout.hpp"
 #endif
 

@@ -50,7 +50,7 @@
 #include "upnpapi.hpp"
 #include "soaplib.hpp"
 #include "uri.hpp"
-#include "upnp.h"
+#include "upnp.hpp"
 
 #include "unixutil.hpp"
 

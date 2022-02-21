@@ -44,7 +44,7 @@
 
 #include "ithread.h"
 //#include "ixml.h"
-#include "upnp.h"
+#include "upnp.hpp"
 
 #include <errno.h>
 #include <stdarg.h>

@@ -41,7 +41,7 @@
 
 #include "VirtualDir.h" /* for struct VirtualDirCallbacks */
 #include "client_table.hpp"
-//#include "upnp.h"
+//#include "upnp.hpp"
 #include "upnp_timeout.hpp"
 
 #define MAX_INTERFACES 256

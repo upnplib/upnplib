@@ -42,7 +42,7 @@
  * \file
  */
 
-#include "upnp.h" /* for Upnp_EventType */
+#include "upnp.hpp" /* for Upnp_EventType */
 #include "upnptools.hpp"
 
 #include <string.h>

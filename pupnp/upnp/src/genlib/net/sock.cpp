@@ -56,7 +56,7 @@
 #include "config.h"
 #include "UpnpStdInt.h" /* for ssize_t */
 #include "unixutil.hpp" /* for socklen_t, EAFNOSUPPORT */
-#include "upnp.h"
+#include "upnp.hpp"
 #include <errno.h>
 #include <time.h>
 #endif // _WIN32

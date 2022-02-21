@@ -40,7 +40,7 @@
 
 #if EXCLUDE_DOM == 0
 
-#include "upnp.h"
+#include "upnp.hpp"
 #include "upnptools.hpp"
 
 #include "uri.hpp"
