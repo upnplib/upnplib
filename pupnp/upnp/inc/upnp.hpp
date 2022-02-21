@@ -398,13 +398,13 @@
  * the internal implementation of these data structures without breaking
  * the API.
  */
-//#include "UpnpActionComplete.h"
+#include "UpnpActionComplete.hpp"
 #include "UpnpActionRequest.hpp"
-//#include "UpnpDiscovery.h"
-//#include "UpnpEvent.h"
-//#include "UpnpEventSubscribe.h"
+#include "UpnpDiscovery.hpp"
+#include "UpnpEvent.hpp"
+#include "UpnpEventSubscribe.hpp"
 #include "UpnpFileInfo.hpp"
-//#include "UpnpStateVarComplete.h"
+#include "UpnpStateVarComplete.hpp"
 //#include "UpnpStateVarRequest.h"
 //#include "UpnpSubscriptionRequest.h"
 
@@ -963,7 +963,6 @@ EXPORT_SPEC int UpnpUnRegisterRootDeviceLowPower(
     /*! RegistrationState as defined by UPnP Low Power. */
     int RegistrationState);
 
-#if false
 /*!
  * \brief Registers a control point application with the UPnP Library.
  *
@@ -983,15 +982,14 @@ EXPORT_SPEC int UpnpUnRegisterRootDeviceLowPower(
  *              register this control point.
  */
 EXPORT_SPEC int UpnpRegisterClient(
-        /*! [in] Pointer to a function for receiving asynchronous events. */
-        Upnp_FunPtr Callback,
-        /*! [in] Pointer to user data returned with the callback function when
-           invoked. */
-        const void *Cookie,
-        /*! [out] Pointer to a variable to store the new control point handle.
-         */
-        UpnpClient_Handle *Hnd);
-#endif // #if false
+    /*! [in] Pointer to a function for receiving asynchronous events. */
+    Upnp_FunPtr Callback,
+    /*! [in] Pointer to user data returned with the callback function when
+       invoked. */
+    const void* Cookie,
+    /*! [out] Pointer to a variable to store the new control point handle.
+     */
+    UpnpClient_Handle* Hnd);
 
 /*!
  * \brief Unregisters a control point application, unsubscribing all active
@@ -1087,19 +1085,20 @@ EXPORT_SPEC int UpnpSetMaxContentLength(
  *             point handle.
  *     \li \c UPNP_E_INVALID_PARAM: \b Target is \c NULL.
  */
+#endif // if false
 EXPORT_SPEC int UpnpSearchAsync(
-        /*! The handle of the client performing the search. */
-        UpnpClient_Handle Hnd,
-        /*! The time, in seconds, to wait for responses. If the time is greater
-         * than \c MAX_SEARCH_TIME then the time is set to \c MAX_SEARCH_TIME.
-         * If the time is less than \c MIN_SEARCH_TIME then the time is set to
-         * \c MIN_SEARCH_TIME. */
-        int Mx,
-        /*! The search target as defined in the UPnP Device Architecture v1.0
-         * specification. */
-        const char *TTarget_constarget_const,
-        /*! The user data to pass when the callback function is invoked. */
-        const void *Cookie_const);
+    /*! The handle of the client performing the search. */
+    UpnpClient_Handle Hnd,
+    /*! The time, in seconds, to wait for responses. If the time is greater
+     * than \c MAX_SEARCH_TIME then the time is set to \c MAX_SEARCH_TIME.
+     * If the time is less than \c MIN_SEARCH_TIME then the time is set to
+     * \c MIN_SEARCH_TIME. */
+    int Mx,
+    /*! The search target as defined in the UPnP Device Architecture v1.0
+     * specification. */
+    const char* TTarget_constarget_const,
+    /*! The user data to pass when the callback function is invoked. */
+    const void* Cookie_const);
 
 /*!
  * \brief Sends out the discovery announcements for all devices and services
@@ -1116,7 +1115,6 @@ EXPORT_SPEC int UpnpSearchAsync(
  *     \li \c UPNP_E_OUTOF_MEMORY: There are insufficient resources to
  *             send future advertisements.
  */
-#endif // if false
 EXPORT_SPEC int UpnpSendAdvertisement(
     /*! The device handle for which to send out the announcements. */
     UpnpDevice_Handle Hnd,
@@ -1232,20 +1230,22 @@ EXPORT_SPEC int UpnpGetServiceVarStatus(
  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
  *             complete this operation.
  */
+#endif // if false
 EXPORT_SPEC int UpnpGetServiceVarStatusAsync(
-        /*! [in] The handle of the control point. */
-        UpnpClient_Handle Hnd,
-        /*! [in] The URL of the service. */
-        const char *ActionURL,
-        /*! [in] The name of the variable to query. */
-        const char *VarName,
-        /*! [in] Pointer to a callback function to be invoked when the operation
-         * is complete. */
-        Upnp_FunPtr Fun,
-        /*! [in] Pointer to user data to pass to the callback function when
-           invoked. */
-        const void *Cookie);
+    /*! [in] The handle of the control point. */
+    UpnpClient_Handle Hnd,
+    /*! [in] The URL of the service. */
+    const char* ActionURL,
+    /*! [in] The name of the variable to query. */
+    const char* VarName,
+    /*! [in] Pointer to a callback function to be invoked when the operation
+     * is complete. */
+    Upnp_FunPtr Fun,
+    /*! [in] Pointer to user data to pass to the callback function when
+       invoked. */
+    const void* Cookie);
 
+#if false
 /*!
  * \brief Sends a message to change a state variable in a service.
  *
@@ -1346,24 +1346,26 @@ EXPORT_SPEC int UpnpSendActionEx(
  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
  *             complete this operation.
  */
+#endif // if false
 EXPORT_SPEC int UpnpSendActionAsync(
-        /*! [in] The handle of the control point sending the action. */
-        UpnpClient_Handle Hnd,
-        /*! [in] The action URL of the service. */
-        const char *ActionURL,
-        /*! [in] The type of the service. */
-        const char *ServiceType,
-        /*! [in] This parameter is ignored and must be \c NULL. */
-        const char *DevUDN,
-        /*! [in] The DOM document for the action to perform on this device. */
-        IXML_Document *Action,
-        /*! [in] Pointer to a callback function to be invoked when the operation
-         * completes. */
-        Upnp_FunPtr Fun,
-        /*! [in] Pointer to user data that to be passed to the callback when
-         * invoked. */
-        const void *Cookie);
+    /*! [in] The handle of the control point sending the action. */
+    UpnpClient_Handle Hnd,
+    /*! [in] The action URL of the service. */
+    const char* ActionURL,
+    /*! [in] The type of the service. */
+    const char* ServiceType,
+    /*! [in] This parameter is ignored and must be \c NULL. */
+    const char* DevUDN,
+    /*! [in] The DOM document for the action to perform on this device. */
+    IXML_Document* Action,
+    /*! [in] Pointer to a callback function to be invoked when the operation
+     * completes. */
+    Upnp_FunPtr Fun,
+    /*! [in] Pointer to user data that to be passed to the callback when
+     * invoked. */
+    const void* Cookie);
 
+#if false
 /*!
  * \brief Sends a message to change a state variable in a service, generating a
  * callback when the operation is complete.
@@ -1746,18 +1748,20 @@ EXPORT_SPEC int UpnpSetMaxSubscriptionTimeOut(
  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
  *             complete this operation.
  */
+#endif // if false
 EXPORT_SPEC int UpnpSubscribe(
-        /*! [in] The handle of the control point. */
-        UpnpClient_Handle Hnd,
-        /*! [in] The URL of the service to subscribe to. */
-        const char *PublisherUrl,
-        /*! [in,out]Pointer to a variable containing the requested subscription
-         * time. Upon return, it contains the actual subscription time returned
-         * from the service. */
-        int *TimeOut,
-        /*! [out] Pointer to a variable to receive the subscription ID (SID). */
-        Upnp_SID SubsId);
+    /*! [in] The handle of the control point. */
+    UpnpClient_Handle Hnd,
+    /*! [in] The URL of the service to subscribe to. */
+    const char* PublisherUrl,
+    /*! [in,out]Pointer to a variable containing the requested subscription
+     * time. Upon return, it contains the actual subscription time returned
+     * from the service. */
+    int* TimeOut,
+    /*! [out] Pointer to a variable to receive the subscription ID (SID). */
+    Upnp_SID SubsId);
 
+#if false
 /*!
  * \brief Performs the same operation as \b UpnpSubscribe, but returns
  * immediately and calls the registered callback function when the operation
@@ -1848,13 +1852,15 @@ EXPORT_SPEC int UpnpSubscribeAsync(
  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
  *             complete this operation.
  */
+#endif // if false
 EXPORT_SPEC int UpnpUnSubscribe(
-        /*! [in] The handle of the subscribed control point. */
-        UpnpClient_Handle Hnd,
-        /*! [in] The ID returned when the control point subscribed to the
-           service. */
-        const Upnp_SID SubsId);
+    /*! [in] The handle of the subscribed control point. */
+    UpnpClient_Handle Hnd,
+    /*! [in] The ID returned when the control point subscribed to the
+       service. */
+    const Upnp_SID SubsId);
 
+#if false
 /*!
  * \brief Removes a subscription of a control point from a service previously
  * subscribed to using \b UpnpSubscribe or \b UpnpSubscribeAsync, generating
