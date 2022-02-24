@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-14
+// Redistribution only with this Copyright remark. Last modified: 2022-02-24
 
 #include "gmock/gmock.h"
 #include "upnplib_gtest_tools.hpp"
@@ -986,6 +986,151 @@ TEST(HttpFixUrl, check_http_FixStrUrl_successful) {
     EXPECT_STREQ(inet_ntoa(sai4->sin_addr), "192.168.10.11");
 }
 
+TEST(GetHostaddr, valid_url_str) {
+    const char url_str[]{"https://www.sample.net:49152/tvdevicedesc.xml"};
+    const char* hoststr;
+    memset(&hoststr, 0xaa, sizeof(hoststr));
+    size_t hostlen{0xaa};
+
+    int returned = get_hoststr(url_str, &hoststr, &hostlen);
+    EXPECT_EQ(returned, UPNP_E_SUCCESS)
+        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << ") but not "
+        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_STREQ(hoststr, "www.sample.net:49152/tvdevicedesc.xml");
+    EXPECT_EQ(hostlen, (size_t)20);
+}
+
+TEST(GetHostaddr, wrong_url_str) {
+    const char url_str[]{"www.sample.net:49152"};
+    const char* hoststr;
+    memset(&hoststr, 0xaa, sizeof(hoststr));
+    size_t hostlen{0xaa};
+
+    int returned = get_hoststr(url_str, &hoststr, &hostlen);
+    EXPECT_EQ(returned, UPNP_E_INVALID_URL)
+        << "  # Should be UPNP_E_INVALID_URL(" << UPNP_E_INVALID_URL
+        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
+        << ").";
+    const char* refptr;
+    memset(&refptr, 0xaa, sizeof(refptr));
+    EXPECT_EQ(hoststr, refptr);
+    EXPECT_EQ(hostlen, (size_t)0xaa);
+}
+
+TEST(GetHostaddr, short_url_str) {
+    const char url_str[]{"https://"};
+    const char* hoststr;
+    memset(&hoststr, 0xaa, sizeof(hoststr));
+    size_t hostlen{0xaa};
+
+    int returned = get_hoststr(url_str, &hoststr, &hostlen);
+    EXPECT_EQ(returned, UPNP_E_SUCCESS)
+        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << ") but not "
+        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_STREQ(hoststr, "");
+    EXPECT_EQ(hostlen, (size_t)0);
+}
+
+TEST(GetHostaddr, empty_url_str) {
+    const char url_str[]{""};
+    const char* hoststr;
+    memset(&hoststr, 0xaa, sizeof(hoststr));
+    size_t hostlen{0xaa};
+
+    int retval = get_hoststr(url_str, &hoststr, &hostlen);
+    EXPECT_EQ(retval, UPNP_E_INVALID_URL)
+        << "  # Should be UPNP_E_INVALID_URL(" << UPNP_E_INVALID_URL
+        << ") but not " << UpnpGetErrorMessage(retval) << '(' << retval << ").";
+    const char* refptr;
+    memset(&refptr, 0xaa, sizeof(refptr));
+    EXPECT_EQ(hoststr, refptr);
+    EXPECT_EQ(hostlen, (size_t)0xaa);
+}
+
+TEST(GetHostaddr, nullptr_url_str) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    if (old_code) {
+        ::std::cout
+            << "[ BUG!     ] A nullptr to the url string must not segfault.\n";
+
+    } else {
+
+        const char* hoststr;
+        memset(&hoststr, 0xaa, sizeof(hoststr));
+        size_t hostlen{0xaa};
+
+        // Test Unit
+        int retval{UPNP_E_INVALID_URL};
+        ASSERT_EXIT(
+            (retval = ::get_hoststr(nullptr, &hoststr, &hostlen), exit(0)),
+            ::testing::ExitedWithCode(0), ".*")
+            << "[ BUG!     ] A nullptr to the url string must not segfault.\n";
+
+        EXPECT_EQ(retval, UPNP_E_INVALID_URL)
+            << "  # Should be UPNP_E_INVALID_URL(" << UPNP_E_INVALID_URL
+            << ") but not " << UpnpGetErrorMessage(retval) << '(' << retval
+            << ").";
+        const char* refptr;
+        memset(&refptr, 0xaa, sizeof(refptr));
+        EXPECT_EQ(hoststr, refptr);
+        EXPECT_EQ(hostlen, (size_t)0xaa);
+    }
+}
+
+TEST(CUri, construct_successful) {
+    CUri url("https://www.sample.net:49152/tvdevicedesc.xml");
+    EXPECT_EQ(url.url_str, "https://www.sample.net:49152/tvdevicedesc.xml");
+    EXPECT_EQ(url.hostport, "www.sample.net:49152");
+    EXPECT_EQ(url.hostport.size(), (std::string::size_type)20);
+}
+
+TEST(CUri, invalid_scheme_delimiter) {
+    EXPECT_THROW(CUri url("https//www.sample.net:49152/tvdevicedesc.xml"),
+                 std::invalid_argument);
+    // EXPECT_TRUE(url.url_str.empty());
+    // EXPECT_TRUE(url.hostport.empty());
+    // EXPECT_EQ(url.hostport.size(), (size_t)0);
+}
+
+TEST(CUri, no_hostport_delimiter) {
+    EXPECT_THROW(CUri url("https://www.sample.net:49152-tvdevicedesc.xml"),
+                 std::invalid_argument);
+}
+
+TEST(CUri, only_hostport_url) {
+    // This is syntactic the same as 'no_hostport_delimiter' but it's valid. It
+    // needs semantic analysis.
+    if (github_actions)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    CUri url("https://www.sample.net:49152");
+    EXPECT_EQ(url.url_str, "https://www.sample.net:49152");
+    EXPECT_EQ(url.hostport, "www.sample.net:49152");
+    EXPECT_EQ(url.hostport.size(), (size_t)20);
+}
+
+TEST(CUri, empty_hostport_in_url_str) {
+    if (github_actions)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    CUri url("https:///");
+    EXPECT_EQ(url.url_str, "https:///");
+    EXPECT_TRUE(url.hostport.empty());
+    EXPECT_EQ(url.hostport.size(), (size_t)0);
+}
+
+TEST(CUri, only_scheme) {
+    if (github_actions)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    CUri url("https://");
+    EXPECT_EQ(url.url_str, "https://");
+    EXPECT_TRUE(url.hostport.empty());
+    EXPECT_EQ(url.hostport.size(), (size_t)0);
+}
+
 //
 // testsuite for Ip6 httpreadwrite
 // ===============================
@@ -997,6 +1142,9 @@ TEST(HttpreadwriteIp6TestSuite, open_http_connection_with_ip_address) {
     // void* phandle;
     // But that is bad for type-save C++. So we use the correct type with
     // type cast on the argument.
+    GTEST_SKIP() << "This test need to be mocked because it queries internet "
+                    "DNS nameserver with long delay.";
+
     if (github_actions && !old_code)
         GTEST_SKIP() << "             known failing test on Github Actions";
 

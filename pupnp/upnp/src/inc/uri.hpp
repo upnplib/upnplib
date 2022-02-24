@@ -68,10 +68,6 @@
 /* Other systems have strncasecmp */
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define MARK "-_.!~*'()"
 
 /*! added {} for compatibility */
@@ -337,9 +333,5 @@ int parse_token(
     token* out,
     /*! [in] . */
     int max_size);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* GENLIB_NET_URI_H */

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-14
+// Redistribution only with this Copyright remark. Last modified: 2022-02-24
 
 #include "upnplib/httpreadwrite.hpp"
 
@@ -91,5 +91,37 @@ extern size_t g_maxContentLength;
 }
 #endif // _WIN32
 #endif /* UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS */
+
+//
+CUri::CUri(std::string a_url_str) : url_str(a_url_str), hostport{} {
+    // Exception: no
+    const auto start = this->url_str.find("://");
+    if (start == std::string::npos)
+        throw std::invalid_argument(std::string(
+            (std::string)__FILE__ + ":" + std::to_string(__LINE__) +
+            ", constructor " + __func__ + ". '://' not found in url."));
+
+    // Exception: no
+    const auto end = this->url_str.find_first_of("/", start + 3);
+    if (end == std::string::npos)
+        throw std::invalid_argument(
+            std::string((std::string)__FILE__ + ":" + std::to_string(__LINE__) +
+                        ", constructor " + __func__ +
+                        ". hostport delimiter '/' not found in url."));
+
+    const auto hostport_size = end - start - 3;
+    if (hostport_size == 0)
+        throw std::invalid_argument(std::string(
+            (std::string)__FILE__ + ":" + std::to_string(__LINE__) +
+            ", constructor " + __func__ + ". 'No hostport found in url."));
+
+    std::cout << "DEBUG: start = " << start << ", end = " << end
+              << ", hostport_size = " << hostport_size << '\n';
+
+    // Exception: std::out_of_range if pos > size()
+    this->hostport = this->url_str.substr(start + 3, hostport_size);
+
+    std::cout << "DEBUG: hostport = " << hostport << '\n';
+}
 
 } // namespace upnplib

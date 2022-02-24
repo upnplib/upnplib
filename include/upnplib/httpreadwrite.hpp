@@ -1,8 +1,8 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-14
+// Redistribution only with this Copyright remark. Last modified: 2022-02-24
 
-#ifndef INCLUDE_UPNPLIB_HTTPREADWRITE_HPP
-#define INCLUDE_UPNPLIB_HTTPREADWRITE_HPP
+#ifndef UPNPLIB_HTTPREADWRITE_HPP
+#define UPNPLIB_HTTPREADWRITE_HPP
 
 #include "httpreadwrite.hpp"
 
@@ -193,7 +193,16 @@ EXPORT_SPEC int http_OpenHttpConnection(
      * reported. If value is negative, timeout is infinite. */
     int timeout);
 
+//
+class CUri {
+  public:
+    const std::string url_str;
+    std::string hostport;
+
+    CUri(std::string a_url_str);
+};
+
 } // namespace upnplib
 
-#endif // INCLUDE_UPNPLIB_HTTPREADWRITE_HPP
+#endif // UPNPLIB_HTTPREADWRITE_HPP
 // vim: nowrap

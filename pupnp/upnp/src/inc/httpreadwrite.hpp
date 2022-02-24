@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-23
+ * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,22 +32,20 @@
  *
  ******************************************************************************/
 
-#ifndef GENLIB_NET_HTTP_HTTPREADWRITE_H
-#define GENLIB_NET_HTTP_HTTPREADWRITE_H
+#ifndef UPNPLIB_GENLIB_NET_HTTP_HTTPREADWRITE_HPP
+#define UPNPLIB_GENLIB_NET_HTTP_HTTPREADWRITE_HPP
 
 /*
  * \file
  */
-#include "httpparser.hpp"
-#include "sock.hpp"
+
+#include "config.h"
 //#include "upnputil.h"
+#include "sock.hpp"
+#include "httpparser.hpp"
 
 /*! timeout in secs. */
 #define HTTP_DEFAULT_TIMEOUT 30
-
-// #ifdef __cplusplus
-// extern "C" {
-// #endif
 
 #ifdef _WIN32
 struct tm* http_gmtime_r(const time_t* clock, struct tm* result);
@@ -61,8 +59,8 @@ int http_CancelHttpGet(/* IN */ void* Handle);
  * \brief Validates URL.
  *
  * \return
- * 	\li \c UPNP_E_INVALID_URL
- * 	\li \c UPNP_E_SUCCESS
+ *      \li \c UPNP_E_INVALID_URL
+ *      \li \c UPNP_E_SUCCESS
  */
 int http_FixUrl(
     /*! [in] URL to be validated and fixed. */
@@ -74,8 +72,8 @@ int http_FixUrl(
  * \brief Parses URL and then validates URL.
  *
  * \return
- * 	\li \c UPNP_E_INVALID_URL
- * 	\li \c UPNP_E_SUCCESS
+ *      \li \c UPNP_E_INVALID_URL
+ *      \li \c UPNP_E_SUCCESS
  */
 int http_FixStrUrl(
     /*! [in] Character string as a URL. */
@@ -90,8 +88,8 @@ int http_FixStrUrl(
  * remote end.
  *
  * \return Socket descriptor on success, or on error:
- * 	\li \c UPNP_E_OUTOF_SOCKET
- * 	\li \c UPNP_E_SOCKET_CONNECT
+ *      \li \c UPNP_E_OUTOF_SOCKET
+ *      \li \c UPNP_E_SOCKET_CONNECT
  */
 SOCKET http_Connect(
     /*! [in] URL containing destination information. */
@@ -103,21 +101,21 @@ SOCKET http_Connect(
  * Function: http_RecvMessage
  *
  * Parameters:
- *	IN SOCKINFO *info;			Socket information object
- *	OUT http_parser_t* parser;		HTTP parser object
- *	IN http_method_t request_method;	HTTP request method
- *	IN OUT int* timeout_secs;		time out
- *	OUT int* http_error_code;		HTTP error code returned
+ *      IN SOCKINFO *info;                      Socket information object
+ *      OUT http_parser_t* parser;              HTTP parser object
+ *      IN http_method_t request_method;        HTTP request method
+ *      IN OUT int* timeout_secs;               time out
+ *      OUT int* http_error_code;               HTTP error code returned
  *
  * Description:
- *	Get the data on the socket and take actions based on the read data
- *	to modify the parser objects buffer. If an error is reported while
- *	parsing the data, the error code is passed in the http_errr_code
- *	parameter
+ *      Get the data on the socket and take actions based on the read data
+ *      to modify the parser objects buffer. If an error is reported while
+ *      parsing the data, the error code is passed in the http_errr_code
+ *      parameter
  *
  * Returns:
- *	 UPNP_E_BAD_HTTPMSG
- * 	 UPNP_E_SUCCESS
+ *       UPNP_E_BAD_HTTPMSG
+ *       UPNP_E_SUCCESS
  ************************************************************************/
 int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
                      http_method_t request_method, int* timeout_secs,
@@ -136,8 +134,8 @@ int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
         char *buf = "POST /xyz.cgi http/1.1\r\n\r\n";
         char *filename = "foo.dat";
         int status = http_SendMessage(tcpsock, "bf",
-                buf, strlen(buf),	// args for memory buffer
-                filename);		// arg for file
+                buf, strlen(buf),       // args for memory buffer
+                filename);              // arg for file
  \endverbatim
  *
  * \return
@@ -159,23 +157,23 @@ int http_SendMessage(
  * Function: http_RequestAndResponse
  *
  * Parameters:
- *	IN uri_type* destination;	Destination URI object which contains
- *					remote IP address among other elements
- *	IN const char* request;		Request to be sent
- *	IN size_t request_length;	Length of the request
- *	IN http_method_t req_method;	HTTP Request method
- *	IN int timeout_secs;		time out value
- *	OUT http_parser_t* response;	Parser object to receive the repsonse
+ *      IN uri_type* destination;       Destination URI object which contains
+ *                                      remote IP address among other elements
+ *      IN const char* request;         Request to be sent
+ *      IN size_t request_length;       Length of the request
+ *      IN http_method_t req_method;    HTTP Request method
+ *      IN int timeout_secs;            time out value
+ *      OUT http_parser_t* response;    Parser object to receive the repsonse
  *
  * Description:
- *	Initiates socket, connects to the destination, sends a
- *	request and waits for the response from the remote end
+ *      Initiates socket, connects to the destination, sends a
+ *      request and waits for the response from the remote end
  *
  * Returns:
- *	UPNP_E_SOCKET_ERROR
- * 	UPNP_E_SOCKET_CONNECT
- *	Error Codes returned by http_SendMessage
- *	Error Codes returned by http_RecvMessage
+ *      UPNP_E_SOCKET_ERROR
+ *      UPNP_E_SOCKET_CONNECT
+ *      Error Codes returned by http_SendMessage
+ *      Error Codes returned by http_RecvMessage
  ************************************************************************/
 int http_RequestAndResponse(uri_type* destination, const char* request,
                             size_t request_length, http_method_t req_method,
@@ -183,34 +181,34 @@ int http_RequestAndResponse(uri_type* destination, const char* request,
 
 /************************************************************************
  * return codes:
- *	0 -- success
- *	UPNP_E_OUTOF_MEMORY
- *	UPNP_E_TIMEDOUT
- *	UPNP_E_BAD_REQUEST
- *	UPNP_E_BAD_RESPONSE
- *	UPNP_E_INVALID_URL
- *	UPNP_E_SOCKET_READ
- *	UPNP_E_SOCKET_WRITE
+ *      0 -- success
+ *      UPNP_E_OUTOF_MEMORY
+ *      UPNP_E_TIMEDOUT
+ *      UPNP_E_BAD_REQUEST
+ *      UPNP_E_BAD_RESPONSE
+ *      UPNP_E_INVALID_URL
+ *      UPNP_E_SOCKET_READ
+ *      UPNP_E_SOCKET_WRITE
  ************************************************************************/
 
 /************************************************************************
  * Function: http_Download
  *
  * Parameters:
- *	IN const char* url_str;	String as a URL
- *	IN int timeout_secs;	time out value
- *	OUT char** document;	buffer to store the document extracted
- *				from the donloaded message.
- *	OUT size_t* doc_length;	length of the extracted document
- *	OUT char* content_type;	Type of content
+ *      IN const char* url_str; String as a URL
+ *      IN int timeout_secs;    time out value
+ *      OUT char** document;    buffer to store the document extracted
+ *                              from the donloaded message.
+ *      OUT size_t* doc_length; length of the extracted document
+ *      OUT char* content_type; Type of content
  *
  * Description:
- *	Download the document message and extract the document
- *	from the message.
+ *      Download the document message and extract the document
+ *      from the message.
  *
  * Return: int
- *	UPNP_E_SUCCESS
- *	UPNP_E_INVALID_URL
+ *      UPNP_E_SUCCESS
+ *      UPNP_E_INVALID_URL
  ************************************************************************/
 int http_Download(const char* url, int timeout_secs, char** document,
                   size_t* doc_length, char* content_type);
@@ -219,16 +217,16 @@ int http_Download(const char* url, int timeout_secs, char** document,
  * Function: http_HttpGetProgress
  *
  * Parameters:
- *	IN void *Handle;	Handle to the HTTP get object
- *	OUT size_t *length;	Buffer to get the read and parsed data
- *	OUT size_t *total;	Size of tge buffer passed
+ *      IN void *Handle;        Handle to the HTTP get object
+ *      OUT size_t *length;     Buffer to get the read and parsed data
+ *      OUT size_t *total;      Size of tge buffer passed
  *
  * Description:
- *	Extracts information from the Handle to the HTTP get object.
+ *      Extracts information from the Handle to the HTTP get object.
  *
  * Return: int
- *	UPNP_E_SUCCESS		- On Sucess
- *	UPNP_E_INVALID_PARAM	- Invalid Parameter
+ *      UPNP_E_SUCCESS          - On Sucess
+ *      UPNP_E_INVALID_PARAM    - Invalid Parameter
  ************************************************************************/
 int http_HttpGetProgress(void* Handle, size_t* length, size_t* total);
 
@@ -247,7 +245,7 @@ int http_HttpGetProgress(void* Handle, size_t* length, size_t* total);
  *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
  *              download this file.
  *      \li \c UPNP_E_SOCKET_ERROR: Error occured allocating a socket and
- *		resources or an error occurred binding a socket.
+ *              resources or an error occurred binding a socket.
  *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
  *              to a socket.
  *      \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting a
@@ -260,12 +258,11 @@ EXPORT_SPEC int http_OpenHttpConnection(
        connection. */
     const char* url,
     /*! [in,out] A pointer in which to store the handle for this connection.
-     * This handle is required for futher operations over this connection.
-     */
+     * This handle is required for futher operations over this connection. */
     void** handle,
-    /*! [in] The time out value sent with the request during which a
-     * response is expected from the receiver, failing which, an error is
-     * reported. If value is negative, timeout is infinite.
+    /*! [in] The time out value sent with the request during which a response
+     * is expected from the receiver, failing which, an error is reported.
+     * If value is negative, timeout is infinite.
      * This parameter isn't used anymore and only available for downstream
      * compatibility. It can be set to 0.*/
     int timeout);
@@ -275,8 +272,8 @@ EXPORT_SPEC int http_OpenHttpConnection(
  * \b UpnpOpenHttpConnection.
  *
  * \note Trying to make another request while a request is already being
- *processed results in undefined behavior. It's up to the user to end a previous
- * request by calling \b UpnpEndHttpRequest.
+ * processed results in undefined behavior. It's up to the user to end a
+ * previous request by calling \b UpnpEndHttpRequest.
  *
  *  \return An integer representing one of the following:
  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
@@ -287,7 +284,7 @@ EXPORT_SPEC int http_OpenHttpConnection(
  *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
  *              download this file.
  *      \li \c UPNP_E_SOCKET_ERROR: Error occured allocating a socket and
- *		resources or an error occurred binding a socket.
+ *              resources or an error occurred binding a socket.
  *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
  *              to a socket.
  *      \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting a
@@ -315,9 +312,9 @@ EXPORT_SPEC int http_MakeHttpRequest(
      * avoid specifying the content length to the server. In this case the
      * request is considered unfinished until the connection is closed. */
     int contentLength,
-    /*! [in] The time out value sent with the request during which a
-     * response is expected from the receiver, failing which, an error is
-     * reported. If value is negative, timeout is infinite. */
+    /*! [in] The time out value sent with the request during which a response
+     * is expected from the receiver, failing which, an error is reported.
+     * If value is negative, timeout is infinite. */
     int timeout);
 
 /*!
@@ -342,8 +339,8 @@ EXPORT_SPEC int http_WriteHttpRequest(
     char* buf,
     /*! [in] The size, in bytes of \b buf. */
     size_t* size,
-    /*! [in] A timeout value sent with the request during which a response
-     * is expected from the server, failing which, an error is reported. If
+    /*! [in] A timeout value sent with the request during which a response is
+     * expected from the server, failing which, an error is reported. If
      * value is negative, timeout is infinite. */
     int timeout);
 
@@ -357,7 +354,7 @@ EXPORT_SPEC int http_WriteHttpRequest(
  *      \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
  *              download this file.
  *      \li \c UPNP_E_SOCKET_ERROR: Error occured allocating a socket and
- *		resources or an error occurred binding a socket.
+ *              resources or an error occurred binding a socket.
  *      \li \c UPNP_E_SOCKET_WRITE: An error or timeout occurred writing
  *              to a socket.
  *      \li \c UPNP_E_SOCKET_CONNECT: An error occurred connecting a
@@ -368,9 +365,9 @@ EXPORT_SPEC int http_WriteHttpRequest(
 EXPORT_SPEC int http_EndHttpRequest(
     /*! [in] The handle to the connection. */
     void* handle,
-    /*! [in] The time out value sent with the request during which a
-     * response is expected from the receiver, failing which, an error is
-     * reported. If value is negative, timeout is infinite. */
+    /*! [in] The time out value sent with the request during which a response
+     * is expected from the receiver, failing which, an error is reported.
+     * If value is negative, timeout is infinite. */
     int timeout);
 
 /*!
@@ -384,7 +381,7 @@ EXPORT_SPEC int http_EndHttpRequest(
  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
  *     \li \c UPNP_E_INVALID_PARAM: Either \b handle,
  *             \b contentType, \b contentLength or \b httpStatus
- *     	is not a valid pointer.
+ *      is not a valid pointer.
  *     \li \c UPNP_E_INVALID_URL: The \b url is not a valid
  *             URL.
  *     \li \c UPNP_E_OUTOF_MEMORY: Insufficient resources exist to
@@ -415,9 +412,8 @@ EXPORT_SPEC int http_GetHttpResponse(
     int* contentLength,
     /*! [out] The status returned on receiving a response message. */
     int* httpStatus,
-    /*! [in] The time out value sent with the request during which a
-     * response is expected from the server, failing which, an error is
-     * reported
+    /*! [in] The time out value sent with the request during which a response
+     * is expected from the server, failing which, an error is reported
      * back to the user. If value is negative, timeout is infinite. */
     int timeout);
 
@@ -429,8 +425,8 @@ EXPORT_SPEC int http_GetHttpResponse(
  *      \li \c UPNP_E_SUCCESS: The operation completed successfully.
  *      \li \c UPNP_E_INVALID_PARAM: Either \b handle, \b buf
  *              or \b size is not a valid pointer.
- *	    \li \c UPNP_E_BAD_RESPONSE: A bad response was received from the
- *	            remote server.
+ *          \li \c UPNP_E_BAD_RESPONSE: A bad response was received from the
+ *                  remote server.
  *      \li \c UPNP_E_BAD_HTTPMSG: Either the request or response was in
  *              the incorrect format.
  *      \li \c UPNP_E_CANCELED: another thread called UpnpCancelHttpGet.
@@ -447,9 +443,8 @@ EXPORT_SPEC int http_ReadHttpResponse(
     char* buf,
     /*! [in,out] The size of the buffer to be read. */
     size_t* size,
-    /*! [in] The time out value sent with the request during which a
-     * response is expected from the server, failing which, an error is
-     * reported back to
+    /*! [in] The time out value sent with the request during which a response is
+     * expected from the server, failing which, an error is reported back to
      * the user. If value is negative, timeout is infinite. */
     int timeout);
 
@@ -474,21 +469,21 @@ EXPORT_SPEC int http_CloseHttpConnection(
  * Function: http_SendStatusResponse
  *
  * Parameters:
- *	IN SOCKINFO *info;		Socket information object
- *	IN int http_status_code;	error code returned while making
- *					or sending the response message
- *	IN int request_major_version;	request major version
- *	IN int request_minor_version;	request minor version
+ *      IN SOCKINFO *info;              Socket information object
+ *      IN int http_status_code;        error code returned while making
+ *                                      or sending the response message
+ *      IN int request_major_version;   request major version
+ *      IN int request_minor_version;   request minor version
  *
  * Description:
- *	Generate a response message for the status query and send the
- *	status response.
+ *      Generate a response message for the status query and send the
+ *      status response.
  *
  * Return: int
- *	0 -- success
- *	UPNP_E_OUTOF_MEMORY
- *	UPNP_E_SOCKET_WRITE
- *	UPNP_E_TIMEDOUT
+ *      0 -- success
+ *      UPNP_E_OUTOF_MEMORY
+ *      UPNP_E_SOCKET_WRITE
+ *      UPNP_E_TIMEDOUT
  ************************************************************************/
 int http_SendStatusResponse(SOCKINFO* info, int http_status_code,
                             int request_major_version,
@@ -530,9 +525,9 @@ header
 X-User-Agent: useragent \endverbatim
  *
  * \return
- * 	\li \c 0 - On Success
- * 	\li \c UPNP_E_OUTOF_MEMORY
- * 	\li \c UPNP_E_INVALID_URL
+ *      \li \c 0 - On Success
+ *      \li \c UPNP_E_OUTOF_MEMORY
+ *      \li \c UPNP_E_INVALID_URL
  */
 int http_MakeMessage(
     /* [in,out] Buffer with the contents of the message. */
@@ -550,13 +545,13 @@ int http_MakeMessage(
  * Function: http_CalcResponseVersion
  *
  * Parameters:
- *	IN int request_major_vers;	Request major version
- *	IN int request_minor_vers;	Request minor version
- *	OUT int* response_major_vers;	Response mojor version
- *	OUT int* response_minor_vers;	Response minor version
+ *      IN int request_major_vers;      Request major version
+ *      IN int request_minor_vers;      Request minor version
+ *      OUT int* response_major_vers;   Response mojor version
+ *      OUT int* response_minor_vers;   Response minor version
  *
  * Description:
- *	Calculate HTTP response versions based on the request versions.
+ *      Calculate HTTP response versions based on the request versions.
  *
  * Return: void
  ************************************************************************/
@@ -568,26 +563,26 @@ void http_CalcResponseVersion(int request_major_vers, int request_minor_vers,
  * Function: http_OpenHttpGetEx
  *
  * Parameters:
- *	IN const char *url_str;		String as a URL
- *	IN OUT void **Handle;		Pointer to buffer to store HTTP
- *					post handle
- *	IN OUT char **contentType;	Type of content
- *	OUT int *contentLength;		length of content
- *	OUT int *httpStatus;		HTTP status returned on receiving a
- *					response message
- *	IN int timeout;			time out value
+ *      IN const char *url_str;         String as a URL
+ *      IN OUT void **Handle;           Pointer to buffer to store HTTP
+ *                                      post handle
+ *      IN OUT char **contentType;      Type of content
+ *      OUT int *contentLength;         length of content
+ *      OUT int *httpStatus;            HTTP status returned on receiving a
+ *                                      response message
+ *      IN int timeout;                 time out value
  *
  * Description:
- *	Makes the HTTP GET message, connects to the peer,
- *	sends the HTTP GET request, gets the response and parses the
- *	response.
+ *      Makes the HTTP GET message, connects to the peer,
+ *      sends the HTTP GET request, gets the response and parses the
+ *      response.
  *
  * Return: int
- *	UPNP_E_SUCCESS		- On Success
- *	UPNP_E_INVALID_PARAM	- Invalid Paramters
- *	UPNP_E_OUTOF_MEMORY
- *	UPNP_E_SOCKET_ERROR
- *	UPNP_E_BAD_RESPONSE
+ *      UPNP_E_SUCCESS          - On Success
+ *      UPNP_E_INVALID_PARAM    - Invalid Paramters
+ *      UPNP_E_OUTOF_MEMORY
+ *      UPNP_E_SOCKET_ERROR
+ *      UPNP_E_BAD_RESPONSE
  ************************************************************************/
 int http_OpenHttpGetEx(const char* url_str, void** Handle, char** contentType,
                        int* contentLength, int* httpStatus, int lowRange,
@@ -597,19 +592,15 @@ int http_OpenHttpGetEx(const char* url_str, void** Handle, char** contentType,
  * Function: get_sdk_info
  *
  * Parameters:
- *	OUT char *info;	buffer to store the operating system information
- *	IN size_t infoSize; size of buffer
+ *      OUT char *info; buffer to store the operating system information
+ *      IN size_t infoSize; size of buffer
  *
  * Description:
- *	Returns the server information for the operating system
+ *      Returns the server information for the operating system
  *
  * Return:
- *	UPNP_INLINE void
+ *      UPNP_INLINE void
  ************************************************************************/
 void get_sdk_info(char* info, size_t infoSize);
 
-// #ifdef __cplusplus
-// } /* #extern "C" */
-// #endif
-
-#endif /* GENLIB_NET_HTTP_HTTPREADWRITE_H */
+#endif /* UPNPLIB_GENLIB_NET_HTTP_HTTPREADWRITE_HPP */
