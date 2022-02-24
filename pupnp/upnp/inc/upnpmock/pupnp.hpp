@@ -6,7 +6,9 @@
 
 #include "sock.hpp"
 
+#ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
 static int Check_Connect_And_Wait_Connection(SOCKET sock, int connect_res);
+#endif
 static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
                            socklen_t addrlen);
 
@@ -24,10 +26,12 @@ class Bpupnp {
     virtual int sock_make_blocking(SOCKET sock) {
         return ::sock_make_blocking(sock);
     }
+#ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
     virtual int Check_Connect_And_Wait_Connection(SOCKET sock,
                                                   int connect_res) {
         return ::Check_Connect_And_Wait_Connection(sock, connect_res);
     }
+#endif
     virtual int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
                                 socklen_t addrlen) {
         return ::private_connect(sockfd, serv_addr, addrlen);

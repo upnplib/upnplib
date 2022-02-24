@@ -64,10 +64,6 @@ class Ihttpparser {
             memptr* raw_value, const char* str) = 0;
     virtual const char* method_to_str(
             http_method_t method) = 0;
-    virtual int parser_get_unknown_headers(
-            http_message_t* req, UpnpListHead* list) = 0;
-    virtual void free_http_headers_list(
-            UpnpListHead* list) = 0;
     // virtual void print_http_headers(http_message_t* hmsg) = 0;
 };
 
@@ -108,10 +104,6 @@ class Chttpparser_old : public Ihttpparser {
         return ::raw_find_str(raw_value, str); }
     const char* method_to_str(http_method_t method) override {
         return ::method_to_str(method); }
-    int parser_get_unknown_headers(http_message_t* req, UpnpListHead* list) override {
-        return ::parser_get_unknown_headers(req, list); }
-    void free_http_headers_list(UpnpListHead* list) override {
-        return ::free_http_headers_list(list); }
     // void print_http_headers(http_message_t* hmsg) override {
     //     return ::print_http_headers(hmsg); }
 };

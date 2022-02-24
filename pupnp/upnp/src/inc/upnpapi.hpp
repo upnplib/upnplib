@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-20
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,8 +32,8 @@
  *
  ******************************************************************************/
 
-#ifndef UPNPAPI_HPP
-#define UPNPAPI_HPP
+#ifndef UPNPLIB_UPNPAPI_HPP
+#define UPNPLIB_UPNPAPI_HPP
 
 /*!
  * \file
@@ -163,7 +163,7 @@ Upnp_Handle_Type GetClientHandleInfo(
     struct Handle_Info** HndInfo);
 /*!
  * \brief Retrieves the device handle and information of the first device of
- * 	the address family specified. The search begins at the 'start' index,
+ *  the address family specified. The search begins at the 'start' index,
  * which should be 0 for the first call, then the last successful value
  * returned. This allows listing all entries for the address family.
  *
@@ -181,8 +181,8 @@ Upnp_Handle_Type GetDeviceHandleInfo(
 
 /*!
  * \brief Retrieves the device handle and information of the first device of
- * 	the address family specified, with a service having a controlURL or
- * 	eventSubURL matching the path.
+ *  the address family specified, with a service having a controlURL or
+ *  eventSubURL matching the path.
  *
  * \return HND_DEVICE or HND_INVALID
  */
@@ -314,4 +314,4 @@ extern void* gWebCallback_HostValidateCookie;
 /*! */
 extern int gAllowLiteralHostRedirection;
 
-#endif /* UPNPAPI_HPP */
+#endif /* UPNPLIB_UPNPAPI_HPP */

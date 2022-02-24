@@ -115,13 +115,8 @@ CUri::CUri(std::string a_url_str) : url_str(a_url_str), hostport{} {
             (std::string)__FILE__ + ":" + std::to_string(__LINE__) +
             ", constructor " + __func__ + ". 'No hostport found in url."));
 
-    std::cout << "DEBUG: start = " << start << ", end = " << end
-              << ", hostport_size = " << hostport_size << '\n';
-
     // Exception: std::out_of_range if pos > size()
     this->hostport = this->url_str.substr(start + 3, hostport_size);
-
-    std::cout << "DEBUG: hostport = " << hostport << '\n';
 }
 
 } // namespace upnplib

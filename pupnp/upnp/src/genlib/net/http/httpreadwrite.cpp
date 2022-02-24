@@ -79,7 +79,6 @@
 #include "upnpmock/sys_select.hpp"
 #include "upnpmock/sys_socket.hpp"
 #include "upnpmock/winsock2_win32.hpp"
-#include <iostream>
 
 /*
  * Please, do not change these to const int while MSVC cannot understand
@@ -207,8 +206,6 @@ static int get_hoststr(const char* url_str, const char** hoststr,
     }
     *hoststr = start;
 
-    std::cout << "DEBUG: url_str = " << url_str << ", hoststr = " << *hoststr
-              << ", hostlen = " << *hostlen << "\n";
     ret_code = UPNP_E_SUCCESS;
 
 end_function:

@@ -640,7 +640,7 @@ int SearchByTarget(int Hnd, int Mx, char* St, void* Cookie) {
         setsockopt(gSsdpReqSocket6, IPPROTO_IPV6, IPV6_MULTICAST_IF,
                    (char*)&gIF_INDEX, sizeof(gIF_INDEX));
         FD_SET(gSsdpReqSocket6, &wrSet);
-        max_fd = max(max_fd, gSsdpReqSocket6);
+        max_fd = std::max(max_fd, gSsdpReqSocket6);
     }
 #endif
     ret = select(max_fd + 1, NULL, &wrSet, NULL, NULL);

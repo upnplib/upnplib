@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-02
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,8 +32,8 @@
  *
  ******************************************************************************/
 
-#ifndef GENLIB_NET_HTTP_HTTPPARSER_H
-#define GENLIB_NET_HTTP_HTTPPARSER_H
+#ifndef UPNPLIB_GENLIB_NET_HTTP_HTTPPARSER_HPP
+#define UPNPLIB_GENLIB_NET_HTTP_HTTPPARSER_HPP
 
 /*!
  * \file
@@ -227,10 +227,6 @@ typedef struct {
     scanner_t scanner;
 } http_parser_t;
 
-//#ifdef __cplusplus
-// extern "C" {
-//#endif /* __cplusplus */
-
 /************************************************************************
  *	Function :	httpmsg_init
  *
@@ -414,36 +410,6 @@ parse_status_t parser_append(http_parser_t* parser, const char* buf,
                              size_t buf_length);
 
 /************************************************************************
- * Function: parser_get_unknown_headers
- *
- * Parameters:
- *	IN http_message_t req ;		HTTP request
- *	INOUT UpnpListHead list ;   Extra headers list
- *
- * Description: Append unknown HTTP headers to the list.
- *
- * Returns:
- *	HTTP_OK
- *	HTTP_INTERNAL_SERVER_ERROR
- ************************************************************************/
-
-int parser_get_unknown_headers(http_message_t* req, UpnpListHead* list);
-
-/************************************************************************
- * Function: free_http_headers_list
- *
- * Parameters:
- *	IN UpnpListHead list ;   Extra headers list
- *
- * Description: Free all extra headers nodes in the given list.
- *
- * Returns:
- *	HTTP_OK
- *	HTTP_INTERNAL_SERVER_ERROR
- ************************************************************************/
-void free_http_headers_list(UpnpListHead* list);
-
-/************************************************************************
  * Function: matchstr
  *
  * Parameters:
@@ -520,8 +486,4 @@ void print_http_headers(
     } while (0)
 #endif
 
-//#ifdef __cplusplus
-//} /* extern "C" */
-//#endif /* __cplusplus */
-
-#endif /* GENLIB_NET_HTTP_HTTPPARSER_H */
+#endif /* UPNPLIB_GENLIB_NET_HTTP_HTTPPARSER_HPP */

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-14
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,13 +45,12 @@
 #include "config.h"
 
 #include "httpparser.hpp"
-
-#include "UpnpExtraHeaders.h"
-//#include "list.h"
 #include "statcodes.hpp"
 #include "strintmap.hpp"
 //#include "unixutil.h"
 #include "upnpdebug.hpp"
+
+#include "UpnpExtraHeaders.h"
 
 #include <assert.h>
 //#include <ctype.h>
@@ -121,13 +120,13 @@ str_int_entry Http_Header_Names[NUM_HTTP_HEADER_NAMES] = {
 #define TOKCHAR_LF 0xA
 
 /************************************************************************
- * Function :	scanner_init
+ * Function :   scanner_init
  *
  * Parameters :
- *	OUT scanner_t* scanner ; Scanner Object to be initialized
- *	IN membuffer* bufptr ;	 Buffer to be copied
+ *  OUT scanner_t* scanner ; Scanner Object to be initialized
+ *  IN membuffer* bufptr ;   Buffer to be copied
  *
- * Description :	Intialize scanner
+ * Description :    Intialize scanner
  *
  * Return : void ;
  *
@@ -140,12 +139,12 @@ static UPNP_INLINE void scanner_init(scanner_t* scanner, membuffer* bufptr) {
 }
 
 /************************************************************************
- * Function :	is_separator_char
+ * Function :   is_separator_char
  *
  * Parameters :
- *	IN char c ;	character to be tested against used separator values
+ *  IN char c ; character to be tested against used separator values
  *
- * Description :	Determines if the passed value is a separator
+ * Description :    Determines if the passed value is a separator
  *
  ************************************************************************/
 static UPNP_INLINE int is_separator_char(int c) {
@@ -153,12 +152,12 @@ static UPNP_INLINE int is_separator_char(int c) {
 }
 
 /************************************************************************
- * Function :	is_identifier_char
+ * Function :   is_identifier_char
  *
  * Parameters :
- *	IN char c ;	character to be tested for separator values
+ *  IN char c ; character to be tested for separator values
  *
- * Description :	Determines if the passed value is permissible in token
+ * Description :    Determines if the passed value is permissible in token
  *
  ************************************************************************/
 static UPNP_INLINE int is_identifier_char(int c) {
@@ -166,12 +165,12 @@ static UPNP_INLINE int is_identifier_char(int c) {
 }
 
 /************************************************************************
- * Function :	is_control_char
+ * Function :   is_control_char
  *
  * Parameters :
- *	IN char c ;	character to be tested for a control character
+ *  IN char c ; character to be tested for a control character
  *
- * Description :	Determines if the passed value is a control character
+ * Description :    Determines if the passed value is a control character
  *
  ************************************************************************/
 static UPNP_INLINE int is_control_char(int c) {
@@ -179,12 +178,12 @@ static UPNP_INLINE int is_control_char(int c) {
 }
 
 /************************************************************************
- * Function :	is_qdtext_char
+ * Function :   is_qdtext_char
  *
  * Parameters :
- *	IN char cc ; character to be tested for CR/LF
+ *  IN char cc ; character to be tested for CR/LF
  *
- * Description :	Determines if the passed value is permissible in qdtext
+ * Description :    Determines if the passed value is permissible in qdtext
  *
  ************************************************************************/
 static UPNP_INLINE int is_qdtext_char(int c) {
@@ -196,20 +195,20 @@ static UPNP_INLINE int is_qdtext_char(int c) {
 }
 
 /************************************************************************
- * Function :	scanner_get_token
+ * Function :   scanner_get_token
  *
  * Parameters :
- *	INOUT scanner_t* scanner ;	Scanner Object
- *	OUT memptr* token ;			Token
- *	OUT token_type_t* tok_type ; Type of token
+ *  INOUT scanner_t* scanner ;  Scanner Object
+ *  OUT memptr* token ;         Token
+ *  OUT token_type_t* tok_type ; Type of token
  *
- * Description :	reads next token from the input stream
- *	note: 0 and is used as a marker, and will not be valid in a quote
+ * Description :    reads next token from the input stream
+ *  note: 0 and is used as a marker, and will not be valid in a quote
  *
  * Return : parse_status_t ;
- *	PARSE_OK
- *	PARSE_INCOMPLETE		-- not enuf chars to get a token
- *	PARSE_FAILURE			-- bad msg format
+ *  PARSE_OK
+ *  PARSE_INCOMPLETE        -- not enuf chars to get a token
+ *  PARSE_FAILURE           -- bad msg format
  *
  * Note :
  ************************************************************************/
@@ -321,12 +320,12 @@ static parse_status_t scanner_get_token(scanner_t* scanner, memptr* token,
 }
 
 /************************************************************************
- * Function :	scanner_get_str
+ * Function :   scanner_get_str
  *
  * Parameters :
- *	IN scanner_t* scanner ;	Scanner Object
+ *  IN scanner_t* scanner ; Scanner Object
  *
- * Description :	returns ptr to next char in string
+ * Description :    returns ptr to next char in string
  *
  * Return : char* ;
  *
@@ -337,13 +336,13 @@ static UPNP_INLINE char* scanner_get_str(scanner_t* scanner) {
 }
 
 /************************************************************************
- * Function :	httpmsg_compare
+ * Function :   httpmsg_compare
  *
  * Parameters :
- *	void* param1 ;
- *	void* param2 ;
+ *  void* param1 ;
+ *  void* param2 ;
  *
- * Description :	Compares name id in the http headers.
+ * Description :    Compares name id in the http headers.
  *
  * Return : int ;
  *
@@ -358,12 +357,12 @@ static int httpmsg_compare(void* param1, void* param2) {
 }
 
 /************************************************************************
- * Function :	httpheader_free
+ * Function :   httpheader_free
  *
  * Parameters :
- *	void *msg ;
+ *  void *msg ;
  *
- * Description :	Free memory allocated for the http header
+ * Description :    Free memory allocated for the http header
  *
  * Return : void ;
  *
@@ -378,12 +377,12 @@ static void httpheader_free(void* msg) {
 }
 
 /************************************************************************
- * Function :	httpmsg_init
+ * Function :   httpmsg_init
  *
  * Parameters :
- *	INOUT http_message_t* msg ;	HTTP Message Object
+ *  INOUT http_message_t* msg ; HTTP Message Object
  *
- * Description :	Initialize and allocate memory for http message
+ * Description :    Initialize and allocate memory for http message
  *
  * Return : void ;
  *
@@ -399,12 +398,12 @@ void httpmsg_init(http_message_t* msg) {
 }
 
 /************************************************************************
- * Function :	httpmsg_destroy
+ * Function :   httpmsg_destroy
  *
  * Parameters :
- *	INOUT http_message_t* msg ;	HTTP Message Object
+ *  INOUT http_message_t* msg ; HTTP Message Object
  *
- * Description :	Free memory allocated for the http message
+ * Description :    Free memory allocated for the http message
  *
  * Return : void ;
  *
@@ -423,17 +422,17 @@ void httpmsg_destroy(http_message_t* msg) {
 }
 
 /************************************************************************
- * Function :	httpmsg_find_hdr_str
+ * Function :   httpmsg_find_hdr_str
  *
  * Parameters :
- *	IN http_message_t* msg ;	HTTP Message Object
- *	IN const char* header_name ; Header name to be compared with
+ *  IN http_message_t* msg ;    HTTP Message Object
+ *  IN const char* header_name ; Header name to be compared with
  *
- * Description :	Compares the header name with the header names stored
- *	in	the linked list of messages
+ * Description :    Compares the header name with the header names stored
+ *  in  the linked list of messages
  *
  * Return : http_header_t* - Pointer to a header on success;
- *		 NULL on failure
+ *       NULL on failure
  *
  * Note :
  ************************************************************************/
@@ -458,17 +457,17 @@ http_header_t* httpmsg_find_hdr_str(http_message_t* msg,
 }
 
 /************************************************************************
- * Function :	httpmsg_find_hdr
+ * Function :   httpmsg_find_hdr
  *
  * Parameters :
- *	IN http_message_t* msg ; HTTP Message Object
- *	IN int header_name_id ;	 Header Name ID to be compared with
- *	OUT memptr* value ;		 Buffer to get the ouput to.
+ *  IN http_message_t* msg ; HTTP Message Object
+ *  IN int header_name_id ;  Header Name ID to be compared with
+ *  OUT memptr* value ;      Buffer to get the ouput to.
  *
- * Description :	Finds header from a list, with the given 'name_id'.
+ * Description :    Finds header from a list, with the given 'name_id'.
  *
  * Return : http_header_t*  - Pointer to a header on success;
- *				NULL on failure
+ *              NULL on failure
  *
  * Note :
  ************************************************************************/
@@ -493,17 +492,17 @@ http_header_t* httpmsg_find_hdr(http_message_t* msg, int header_name_id,
 }
 
 /************************************************************************
- * Function :	skip_blank_lines
+ * Function :   skip_blank_lines
  *
  * Parameters :
- *	INOUT scanner_t* scanner ;	Scanner Object
+ *  INOUT scanner_t* scanner ;  Scanner Object
  *
- * Description :	skips blank lines at the start of a msg.
+ * Description :    skips blank lines at the start of a msg.
  *
  * Return : parse_status_t ;
- *	PARSE_OK
- *	PARSE_INCOMPLETE		-- not enuf chars to get a token
- *	PARSE_FAILURE			-- bad msg format
+ *  PARSE_OK
+ *  PARSE_INCOMPLETE        -- not enuf chars to get a token
+ *  PARSE_FAILURE           -- bad msg format
  ************************************************************************/
 static UPNP_INLINE parse_status_t skip_blank_lines(scanner_t* scanner) {
     memptr token;
@@ -525,17 +524,17 @@ static UPNP_INLINE parse_status_t skip_blank_lines(scanner_t* scanner) {
 }
 
 /************************************************************************
- * Function :	skip_lws
+ * Function :   skip_lws
  *
  * Parameters :
- *	INOUT scanner_t* scanner ;	Scanner Object
+ *  INOUT scanner_t* scanner ;  Scanner Object
  *
- * Description :	skip linear whitespace.
+ * Description :    skip linear whitespace.
  *
  * Return : int ;
- *	PARSE_OK: (LWS)* removed from input
- *	PARSE_FAILURE: bad input
- *	PARSE_INCOMPLETE: incomplete input
+ *  PARSE_OK: (LWS)* removed from input
+ *  PARSE_FAILURE: bad input
+ *  PARSE_INCOMPLETE: incomplete input
  *
  * Note :
  ************************************************************************/
@@ -578,19 +577,19 @@ static UPNP_INLINE parse_status_t skip_lws(scanner_t* scanner) {
 }
 
 /************************************************************************
- * Function :	match_non_ws_string
+ * Function :   match_non_ws_string
  *
  * Parameters :
- *	INOUT scanner_t* scanner ;	Scanner Object
- *	OUT memptr* str ;	Buffer to get the scanner buffer contents.
+ *  INOUT scanner_t* scanner ;  Scanner Object
+ *  OUT memptr* str ;   Buffer to get the scanner buffer contents.
  *
- * Description :	Match a string without whitespace or CRLF (%S)
+ * Description :    Match a string without whitespace or CRLF (%S)
  *
  * Return : UPNP_INLINE parse_status_t ;
- *	PARSE_OK
- *	PARSE_NO_MATCH
- *	PARSE_FAILURE
- *	PARSE_INCOMPLETE
+ *  PARSE_OK
+ *  PARSE_NO_MATCH
+ *  PARSE_FAILURE
+ *  PARSE_INCOMPLETE
  *
  * Note :
  ************************************************************************/
@@ -641,21 +640,21 @@ static UPNP_INLINE parse_status_t match_non_ws_string(scanner_t* scanner,
 }
 
 /************************************************************************
- * Function :	match_raw_value
+ * Function :   match_raw_value
  *
  * Parameters :
- *	INOUT scanner_t* scanner ;	Scanner Object
- *	OUT memptr* raw_value ;		Buffer to get the scanner buffer
- *					contents
+ *  INOUT scanner_t* scanner ;  Scanner Object
+ *  OUT memptr* raw_value ;     Buffer to get the scanner buffer
+ *                  contents
  *
- * Description :	Matches a raw value in a the input; value's length
- *	can	be 0 or more. Whitespace after value is trimmed. On success,
- *	scanner points the CRLF that ended the value
+ * Description :    Matches a raw value in a the input; value's length
+ *  can be 0 or more. Whitespace after value is trimmed. On success,
+ *  scanner points the CRLF that ended the value
  *
  * Return : parse_status_t ;
- *	PARSE_OK
- *	PARSE_INCOMPLETE
- *	PARSE_FAILURE
+ *  PARSE_OK
+ *  PARSE_INCOMPLETE
+ *  PARSE_FAILURE
  *
  * Note :
  ************************************************************************/
@@ -735,19 +734,19 @@ static UPNP_INLINE parse_status_t match_raw_value(scanner_t* scanner,
  * Function: match_int
  *
  * Parameters:
- *	INOUT scanner_t* scanner ;  Scanner Object
- *	IN int base :		Base of number in the string;
- *				valid values: 10 or 16
- *	OUT int* value ;	Number stored here
+ *  INOUT scanner_t* scanner ;  Scanner Object
+ *  IN int base :       Base of number in the string;
+ *              valid values: 10 or 16
+ *  OUT int* value ;    Number stored here
  *
  * Description: Matches an unsigned integer value in the input. The
- *	integer is returned in 'value'. Except for PARSE_OK result, the
- *	scanner's cursor is moved back to its original position on error.
+ *  integer is returned in 'value'. Except for PARSE_OK result, the
+ *  scanner's cursor is moved back to its original position on error.
  *
  * Returns:
  *   PARSE_OK
- *   PARSE_NO_MATCH		-- got different kind of token
- *   PARSE_FAILURE		-- bad input
+ *   PARSE_NO_MATCH     -- got different kind of token
+ *   PARSE_FAILURE      -- bad input
  *   PARSE_INCOMPLETE
  ************************************************************************/
 static UPNP_INLINE parse_status_t match_int(scanner_t* scanner, int base,
@@ -790,12 +789,12 @@ static UPNP_INLINE parse_status_t match_int(scanner_t* scanner, int base,
  * Function: read_until_crlf
  *
  * Parameters:
- *	INOUT scanner_t* scanner ;Scanner Object
- *	OUT memptr* str ;	Buffer to copy scanner buffer contents to
+ *  INOUT scanner_t* scanner ;Scanner Object
+ *  OUT memptr* str ;   Buffer to copy scanner buffer contents to
  *
  * Description: Reads data until end of line; the crlf at the end of
- *	line is not consumed. On error, scanner is not restored. On
- *	success, 'str' points to a string that runs until eol
+ *  line is not consumed. On error, scanner is not restored. On
+ *  success, 'str' points to a string that runs until eol
  *
  * Returns:
  *   PARSE_OK
@@ -833,13 +832,13 @@ static UPNP_INLINE parse_status_t read_until_crlf(scanner_t* scanner,
  * Function: match_char
  *
  * Parameters:
- *	INOUT scanner_t* scanner ;	Scanner Object
- *	IN char c ;			Character to be compared with
- *	IN int case_sensitive;	Flag indicating whether
- *					comparison should be case sensitive
+ *  INOUT scanner_t* scanner ;  Scanner Object
+ *  IN char c ;         Character to be compared with
+ *  IN int case_sensitive;  Flag indicating whether
+ *                  comparison should be case sensitive
  *
  * Description: Compares a character to the next char in the scanner;
- *	on error, scanner chars are not restored
+ *  on error, scanner chars are not restored
  *
  * Returns:
  *   PARSE_OK
@@ -903,19 +902,19 @@ static UPNP_INLINE parse_status_t match_char(scanner_t* scanner, char c,
  * Function : vfmatch
  *
  * Parameters :
- * 	INOUT scanner_t* scanner ;	Scanner Object
- * 	IN const char* fmt ;		Pattern Format
- * 	va_list argp ;			List of variable arguments
+ *  INOUT scanner_t* scanner ;  Scanner Object
+ *  IN const char* fmt ;        Pattern Format
+ *  va_list argp ;          List of variable arguments
  *
  * Description : Extracts variable parameters depending on the passed
- * 	in format parameter. Parses data also based on the passed in
- * 	format parameter.
+ *  in format parameter. Parses data also based on the passed in
+ *  format parameter.
  *
  * Return : int ;
- * 	PARSE_OK
- * 	PARSE_INCOMPLETE
- * 	PARSE_FAILURE		- bad input
- * 	PARSE_NO_MATCH		- input does not match pattern
+ *  PARSE_OK
+ *  PARSE_INCOMPLETE
+ *  PARSE_FAILURE       - bad input
+ *  PARSE_NO_MATCH      - input does not match pattern
  *
  * Note :
  ************************************************************************/
@@ -1015,7 +1014,7 @@ static parse_status_t vfmatch(scanner_t* scanner, const char* fmt,
                 if (status == (parse_status_t)PARSE_OK &&
                     tok_type != (token_type_t)TT_QUOTEDSTRING) {
                     status = PARSE_NO_MATCH; /* not a quoted
-                                                string */
+                                    string */
                 }
                 break;
             case 'w':
@@ -1080,18 +1079,18 @@ static parse_status_t vfmatch(scanner_t* scanner, const char* fmt,
  * Function: match
  *
  * Parameters:
- *	INOUT scanner_t* scanner ;	Scanner Object
- *	IN const char* fmt;		Pattern format
- *	...
+ *  INOUT scanner_t* scanner ;  Scanner Object
+ *  IN const char* fmt;     Pattern format
+ *  ...
  *
  * Description: matches a variable parameter list and takes necessary
- *	actions based on the data type specified.
+ *  actions based on the data type specified.
  *
  * Returns:
  *   PARSE_OK
  *   PARSE_NO_MATCH
  *   PARSE_INCOMPLETE
- *   PARSE_FAILURE		- bad input
+ *   PARSE_FAILURE      - bad input
  ************************************************************************/
 static parse_status_t match(scanner_t* scanner, const char* fmt, ...) {
     parse_status_t ret_code;
@@ -1108,18 +1107,18 @@ static parse_status_t match(scanner_t* scanner, const char* fmt, ...) {
  * Function: matchstr
  *
  * Parameters:
- *	IN char *str ;		String to be matched
- *	IN size_t slen ;	Length of the string
- *	IN const char* fmt ;	Pattern format
- *	...
+ *  IN char *str ;      String to be matched
+ *  IN size_t slen ;    Length of the string
+ *  IN const char* fmt ;    Pattern format
+ *  ...
  *
  * Description: Matches a variable parameter list with a string
- *	and takes actions based on the data type specified.
+ *  and takes actions based on the data type specified.
  *
  * Returns:
  *   PARSE_OK
  *   PARSE_NO_MATCH -- failure to match pattern 'fmt'
- *   PARSE_FAILURE	-- 'str' is bad input
+ *   PARSE_FAILURE  -- 'str' is bad input
  *   PARSE_INCOMPLETE
  ************************************************************************/
 parse_status_t matchstr(char* str, size_t slen, const char* fmt, ...) {
@@ -1159,12 +1158,12 @@ parse_status_t matchstr(char* str, size_t slen, const char* fmt, ...) {
  * Function: parser_init
  *
  * Parameters:
- *	OUT http_parser_t* parser ; HTTP Parser object
+ *  OUT http_parser_t* parser ; HTTP Parser object
  *
  * Description: Initializes the parser object.
  *
  * Returns:
- *	void
+ *  void
  ************************************************************************/
 static UPNP_INLINE void parser_init(http_parser_t* parser) {
     memset(parser, 0, sizeof(http_parser_t));
@@ -1181,16 +1180,16 @@ static UPNP_INLINE void parser_init(http_parser_t* parser) {
  * Function: parser_parse_requestline
  *
  * Parameters:
- *	INOUT http_parser_t* parser ; HTTP Parser  object
+ *  INOUT http_parser_t* parser ; HTTP Parser  object
  *
  * Description: Get HTTP Method, URL location and version information.
  *
  * Returns:
- *	PARSE_OK
- *	PARSE_SUCCESS
- *	PARSE_FAILURE
- *	PARSE_INCOMPLETE
- *	PARSE_NO_MATCH
+ *  PARSE_OK
+ *  PARSE_SUCCESS
+ *  PARSE_FAILURE
+ *  PARSE_INCOMPLETE
+ *  PARSE_NO_MATCH
  ************************************************************************/
 static parse_status_t parser_parse_requestline(http_parser_t* parser) {
     parse_status_t status;
@@ -1310,15 +1309,15 @@ static parse_status_t parser_parse_requestline(http_parser_t* parser) {
  * Function: parser_parse_responseline
  *
  * Parameters:
- *	INOUT http_parser_t* parser	; HTTP Parser object
+ *  INOUT http_parser_t* parser ; HTTP Parser object
  *
  * Description: Get HTTP version information, status code and status msg.
  *
  * Returns:
- *	PARSE_OK
- *	PARSE_FAILURE
- *	PARSE_INCOMPLETE
- *	PARSE_NO_MATCH
+ *  PARSE_OK
+ *  PARSE_FAILURE
+ *  PARSE_INCOMPLETE
+ *  PARSE_NO_MATCH
  ************************************************************************/
 parse_status_t parser_parse_responseline(http_parser_t* parser) {
     parse_status_t status;
@@ -1385,16 +1384,16 @@ parse_status_t parser_parse_responseline(http_parser_t* parser) {
  * Function: parser_parse_headers
  *
  * Parameters:
- *	INOUT http_parser_t* parser	; HTTP Parser object
+ *  INOUT http_parser_t* parser ; HTTP Parser object
  *
  * Description: Read HTTP header fields.
  *
  * Returns:
- *	PARSE_OK
- *	PARSE_SUCCESS
- *	PARSE_FAILURE
- *	PARSE_INCOMPLETE
- *	PARSE_NO_MATCH
+ *  PARSE_OK
+ *  PARSE_SUCCESS
+ *  PARSE_FAILURE
+ *  PARSE_INCOMPLETE
+ *  PARSE_NO_MATCH
  ************************************************************************/
 parse_status_t parser_parse_headers(http_parser_t* parser) {
     parse_status_t status;
@@ -1520,13 +1519,13 @@ parse_status_t parser_parse_headers(http_parser_t* parser) {
  * Function: parser_parse_entity_using_clen
  *
  * Parameters:
- *	INOUT http_parser_t* parser ; HTTP Parser object
+ *  INOUT http_parser_t* parser ; HTTP Parser object
  *
  * Description: reads entity using content-length
  *
  * Returns:
- *	 PARSE_INCOMPLETE
- *	 PARSE_SUCCESS
+ *   PARSE_INCOMPLETE
+ *   PARSE_SUCCESS
  ************************************************************************/
 static UPNP_INLINE parse_status_t
 parser_parse_entity_using_clen(http_parser_t* parser) {
@@ -1566,15 +1565,15 @@ parser_parse_entity_using_clen(http_parser_t* parser) {
  * Function: parser_parse_chunky_body
  *
  * Parameters:
- *	INOUT http_parser_t* parser	; HTTP Parser object
+ *  INOUT http_parser_t* parser ; HTTP Parser object
  *
  * Description: Read data in the chunks
  *
  * Returns:
- *	 PARSE_CONTINUE_1
- *	 PARSE_INCOMPLETE
- *	 PARSE_FAILURE
- *	 PARSE_NO_MATCH
+ *   PARSE_CONTINUE_1
+ *   PARSE_INCOMPLETE
+ *   PARSE_FAILURE
+ *   PARSE_NO_MATCH
  ************************************************************************/
 static UPNP_INLINE parse_status_t
 parser_parse_chunky_body(http_parser_t* parser) {
@@ -1611,15 +1610,15 @@ parser_parse_chunky_body(http_parser_t* parser) {
  * Function: parser_parse_chunky_headers
  *
  * Parameters:
- *	INOUT http_parser_t* parser	; HTTP Parser object
+ *  INOUT http_parser_t* parser ; HTTP Parser object
  *
  * Description: Read headers at the end of the chunked entity
  *
  * Returns:
- *	 PARSE_NO_MATCH
- *	 PARSE_INCOMPLETE
- *	 PARSE_FAILURE
- *	 PARSE_SUCCESS
+ *   PARSE_NO_MATCH
+ *   PARSE_INCOMPLETE
+ *   PARSE_FAILURE
+ *   PARSE_SUCCESS
  ************************************************************************/
 static UPNP_INLINE parse_status_t
 parser_parse_chunky_headers(http_parser_t* parser) {
@@ -1650,15 +1649,15 @@ parser_parse_chunky_headers(http_parser_t* parser) {
  * Function: parser_parse_chunky_entity
  *
  * Parameters:
- *	INOUT http_parser_t* parser	- HTTP Parser Object
+ *  INOUT http_parser_t* parser - HTTP Parser Object
  *
  * Description: Read entity using chunked transfer encoding
  *
  * Returns:
- *	 PARSE_INCOMPLETE
- *	 PARSE_FAILURE
- *	 PARSE_NO_MATCH
- *	 PARSE_CONTINUE_1
+ *   PARSE_INCOMPLETE
+ *   PARSE_FAILURE
+ *   PARSE_NO_MATCH
+ *   PARSE_CONTINUE_1
  ************************************************************************/
 static UPNP_INLINE parse_status_t
 parser_parse_chunky_entity(http_parser_t* parser) {
@@ -1703,12 +1702,12 @@ parser_parse_chunky_entity(http_parser_t* parser) {
  * Function: parser_parse_entity_until_close
  *
  * Parameters:
- *	INOUT http_parser_t* parser	; HTTP Parser object
+ *  INOUT http_parser_t* parser ; HTTP Parser object
  *
  * Description: Keep reading entity until the connection is closed.
  *
  * Returns:
- *	 PARSE_INCOMPLETE_ENTITY
+ *   PARSE_INCOMPLETE_ENTITY
  ************************************************************************/
 static UPNP_INLINE parse_status_t
 parser_parse_entity_until_close(http_parser_t* parser) {
@@ -1736,14 +1735,14 @@ parser_parse_entity_until_close(http_parser_t* parser) {
  * Function: parser_get_entity_read_method
  *
  * Parameters:
- *	INOUT http_parser_t* parser	; HTTP Parser object
+ *  INOUT http_parser_t* parser ; HTTP Parser object
  *
  * Description: Determines method to read entity
  *
  * Returns:
- *	 PARSE_CONTINUE_1
- * 	 PARSE_FAILURE
- *	 PARSE_SUCCESS	-- no more reading to do
+ *   PARSE_CONTINUE_1
+ *   PARSE_FAILURE
+ *   PARSE_SUCCESS  -- no more reading to do
  ************************************************************************/
 parse_status_t parser_get_entity_read_method(http_parser_t* parser) {
     http_message_t* hmsg = &parser->msg;
@@ -1833,16 +1832,16 @@ parse_status_t parser_get_entity_read_method(http_parser_t* parser) {
  * Function: parser_parse_entity
  *
  * Parameters:
- *	INOUT http_parser_t* parser	; HTTP Parser object
+ *  INOUT http_parser_t* parser ; HTTP Parser object
  *
  * Description: Read HTTP entity body
  *
  * Returns:
- * 	 PARSE_FAILURE
- * 	 PARSE_NO_MATCH
- * 	 PARSE_INCOMPLETE
- * 	 PARSE_INCOMPLETE_ENTITY
- *	 PARSE_SUCCESS	-- no more reading to do
+ *   PARSE_FAILURE
+ *   PARSE_NO_MATCH
+ *   PARSE_INCOMPLETE
+ *   PARSE_INCOMPLETE_ENTITY
+ *   PARSE_SUCCESS  -- no more reading to do
  ************************************************************************/
 parse_status_t parser_parse_entity(http_parser_t* parser) {
     parse_status_t status;
@@ -1889,12 +1888,12 @@ parse_status_t parser_parse_entity(http_parser_t* parser) {
  * Function: parser_request_init
  *
  * Parameters:
- *	OUT http_parser_t* parser ; HTTP Parser object
+ *  OUT http_parser_t* parser ; HTTP Parser object
  *
  * Description: Initializes parser object for a request
  *
  * Returns:
- *	 void
+ *   void
  ************************************************************************/
 void parser_request_init(http_parser_t* parser) {
     parser_init(parser);
@@ -1906,13 +1905,13 @@ void parser_request_init(http_parser_t* parser) {
  * Function: parser_response_init
  *
  * Parameters:
- *	OUT http_parser_t* parser	; HTTP Parser object
- *	IN http_method_t request_method	; Request method
+ *  OUT http_parser_t* parser   ; HTTP Parser object
+ *  IN http_method_t request_method ; Request method
  *
  * Description: Initializes parser object for a response
  *
  * Returns:
- *	 void
+ *   void
  ************************************************************************/
 void parser_response_init(http_parser_t* parser, http_method_t request_method) {
     parser_init(parser);
@@ -1926,17 +1925,17 @@ void parser_response_init(http_parser_t* parser, http_method_t request_method) {
  * Function: parser_parse
  *
  * Parameters:
- *	INOUT http_parser_t* parser ; HTTP Parser object
+ *  INOUT http_parser_t* parser ; HTTP Parser object
  *
  * Description: The parser function. Depending on the position of the
- *	parser object the actual parsing function is invoked
+ *  parser object the actual parsing function is invoked
  *
  * Returns:
- *	PARSE_SUCCESS
- *	PARSE_FAILURE
- *	PARSE_INCOMPLETE
- *	PARSE_INCOMPLETE_ENTITY
- *	PARSE_NO_MATCH
+ *  PARSE_SUCCESS
+ *  PARSE_FAILURE
+ *  PARSE_INCOMPLETE
+ *  PARSE_INCOMPLETE_ENTITY
+ *  PARSE_NO_MATCH
  ************************************************************************/
 parse_status_t parser_parse(http_parser_t* parser) {
     parse_status_t status;
@@ -1982,19 +1981,19 @@ parse_status_t parser_parse(http_parser_t* parser) {
  * Function: parser_append
  *
  * Parameters:
- *	INOUT http_parser_t* parser ;	HTTP Parser Object
- *	IN const char* buf	;	buffer to be appended to the parser
- *					buffer
- *	IN size_t buf_length ;		Size of the buffer
+ *  INOUT http_parser_t* parser ;   HTTP Parser Object
+ *  IN const char* buf  ;   buffer to be appended to the parser
+ *                  buffer
+ *  IN size_t buf_length ;      Size of the buffer
  *
  * Description: Append date to HTTP parser, and do the parsing.
  *
  * Returns:
- *	PARSE_SUCCESS
- *	PARSE_FAILURE
- *	PARSE_INCOMPLETE
- *	PARSE_INCOMPLETE_ENTITY
- *	PARSE_NO_MATCH
+ *  PARSE_SUCCESS
+ *  PARSE_FAILURE
+ *  PARSE_INCOMPLETE
+ *  PARSE_INCOMPLETE_ENTITY
+ *  PARSE_NO_MATCH
  ************************************************************************/
 parse_status_t parser_append(http_parser_t* parser, const char* buf,
                              size_t buf_length) {
@@ -2018,13 +2017,13 @@ parse_status_t parser_append(http_parser_t* parser, const char* buf,
  * Function: raw_to_int
  *
  * Parameters:
- *	IN memptr* raw_value ;	Buffer to be converted
- *	IN int base ;		Base  to use for conversion
+ *  IN memptr* raw_value ;  Buffer to be converted
+ *  IN int base ;       Base  to use for conversion
  *
  * Description: Converts raw character data to long-integer value
  *
  * Returns:
- *	 int
+ *   int
  ************************************************************************/
 int raw_to_int(memptr* raw_value, int base) {
     long num;
@@ -2047,15 +2046,15 @@ int raw_to_int(memptr* raw_value, int base) {
  * Function: raw_find_str
  *
  * Parameters:
- *	IN memptr* raw_value ; Buffer containg the string
- *	IN const char* str ;	Substring to be found
+ *  IN memptr* raw_value ; Buffer containg the string
+ *  IN const char* str ;    Substring to be found
  *
  * Description: Find a substring from raw character string buffer
  *
  * Side effects: raw_value is transformed to lowercase.
  *
  * Returns:
- *	 int - index at which the substring is found.
+ *   int - index at which the substring is found.
  ************************************************************************/
 int raw_find_str(memptr* raw_value, const char* str) {
     char c;
@@ -2094,10 +2093,10 @@ int raw_find_str(memptr* raw_value, const char* str) {
  * IN http_method_t method ; HTTP method
  *
  * Description: A wrapper function that maps a method id to a method
- *	nameConverts a http_method id stored in the HTTP Method
+ *  nameConverts a http_method id stored in the HTTP Method
  *
  * Returns:
- *	 const char* ptr - Ptr to the HTTP Method
+ *   const char* ptr - Ptr to the HTTP Method
  ************************************************************************/
 const char* method_to_str(http_method_t method) {
     int index;
@@ -2109,85 +2108,10 @@ const char* method_to_str(http_method_t method) {
     return index == -1 ? NULL : Http_Method_Table[index].name;
 }
 
-/************************************************************************
- * Function: parser_get_unknown_headers
- *
- * Parameters:
- *	IN http_message_t req ;		HTTP request
- *	INOUT UpnpListHead list ;   Extra headers list
- *
- * Description: Append unknown HTTP headers to the list.
- *
- * Returns:
- *	HTTP_OK
- *	HTTP_INTERNAL_SERVER_ERROR
- ************************************************************************/
-int parser_get_unknown_headers(http_message_t* req, UpnpListHead* list) {
-    http_header_t* header;
-    ListNode* node;
-    int index;
-
-    node = ListHead(&req->headers);
-    while (node != NULL) {
-        header = (http_header_t*)node->item;
-        /* find header type. */
-        index =
-            map_str_to_int((const char*)header->name.buf, header->name.length,
-                           Http_Header_Names, NUM_HTTP_HEADER_NAMES, 0);
-        if (index < 0) {
-#ifdef UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
-            UpnpExtraHeaders* extraHeader = UpnpExtraHeaders_new();
-            if (!extraHeader) {
-                free_http_headers_list(list);
-                return HTTP_INTERNAL_SERVER_ERROR;
-            }
-            UpnpListHead* extraHeaderNode =
-                (UpnpListHead*)UpnpExtraHeaders_get_node(extraHeader);
-            UpnpListInsert(list, UpnpListEnd(list), extraHeaderNode);
-            UpnpExtraHeaders_strncpy_name(extraHeader, header->name.buf,
-                                          header->name.length);
-            UpnpExtraHeaders_strncpy_value(extraHeader, header->value.buf,
-                                           header->value.length);
-#else
-            free_http_headers_list(list);
-            return HTTP_INTERNAL_SERVER_ERROR;
-#endif
-        }
-        node = ListNext(&req->headers, node);
-    }
-
-    return HTTP_OK;
-}
-
-/************************************************************************
- * Function: free_http_headers_list
- *
- * Parameters:
- *	IN UpnpListHead list ;   Extra headers list
- *
- * Description: Free all extra headers nodes in the given list.
- *
- * Returns:
- *	HTTP_OK
- *	HTTP_INTERNAL_SERVER_ERROR
- ************************************************************************/
-void free_http_headers_list([[maybe_unused]] UpnpListHead* list) {
-#ifdef UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
-    UpnpListIter pos;
-    UpnpExtraHeaders* extra;
-
-    for (pos = UpnpListBegin(list); pos != UpnpListEnd(list);) {
-        extra = (UpnpExtraHeaders*)pos;
-        pos = UpnpListErase(list, pos);
-        UpnpExtraHeaders_delete(extra);
-    }
-#endif // UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
-}
-
 #ifdef DEBUG
 void print_http_headers(http_message_t* hmsg) {
     ListNode* node;
-    /* NNS:	 dlist_node *node; */
+    /* NNS:  dlist_node *node; */
     http_header_t* header;
 
     /* print start line */
