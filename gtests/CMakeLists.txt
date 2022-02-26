@@ -259,16 +259,16 @@ add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
 # upnpapi
 #--------
 set(UPNP_UPNPAPI_SOURCE_FILES
-    ${PUPNP_IXML_SOURCE_DIR}/src/attr.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/document.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/element.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/ixml.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/ixmlmembuf.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/ixmlparser.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/namedNodeMap.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/node.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/nodeList.c
-    $<$<CONFIG:Debug>:${PUPNP_IXML_SOURCE_DIR}/src/ixmldebug.c>
+    ${PUPNP_IXML_SOURCE_DIR}/src/attr.cpp
+    ${PUPNP_IXML_SOURCE_DIR}/src/document.cpp
+    ${PUPNP_IXML_SOURCE_DIR}/src/element.cpp
+    ${PUPNP_IXML_SOURCE_DIR}/src/ixml.cpp
+    ${PUPNP_IXML_SOURCE_DIR}/src/ixmlmembuf.cpp
+    ${PUPNP_IXML_SOURCE_DIR}/src/ixmlparser.cpp
+    ${PUPNP_IXML_SOURCE_DIR}/src/namedNodeMap.cpp
+    ${PUPNP_IXML_SOURCE_DIR}/src/node.cpp
+    ${PUPNP_IXML_SOURCE_DIR}/src/nodeList.cpp
+    $<$<CONFIG:Debug>:${PUPNP_IXML_SOURCE_DIR}/src/ixmldebug.cpp>
 
     ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
     ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp

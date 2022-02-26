@@ -1,0 +1,6 @@
+Next steps to do in this order:
+* Convert all remaining source files to compile with C++.
+* Separate configuration and build for the pupnp library.
+* Compile build information into the executable info binary 'upnplib'.
+* Create integration test that compiles possible option combinations.
+* Improve CUri class using https://github.com/homer6/url

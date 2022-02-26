@@ -17,7 +17,7 @@
 
 #include "UpnpString.h"
 #include "UpnpInet.h"
-#include "ixml.h"
+#include "ixml.hpp"
 
 #ifdef __cplusplus
 extern "C" {

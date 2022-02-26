@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-02-20
+# Redistribution only with this Copyright remark. Last modified: 2022-02-26
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -36,11 +36,6 @@ option(UPNP_GOOGLETEST "Download and build Googletest" OFF)
 if(WIN32)
     cmake_dependent_option(gtest_disable_pthreads "Disable Googletest to use POSIX Threads" ON ${UPNP_GOOGLETEST} ON)
 endif()
-
-# TODO: Test this option to link statically
-# UPNP_STATIC_LIB - for creating a statically linkable UPnP-library
-# The option is contained in cmake/upnpconfig.h.cmake.
-option(UPNP_STATIC_LIB "Create a statically linkable UPnP-library" OFF)
 
 # TODO: Test this option to use the static pthreads4w
 # PTW32_STATIC_LIB - for using the static pthreads4W library
@@ -300,13 +295,12 @@ endif(WIN32)
 
 
 #################################
-# UPnP core library             #
+# UPnP subdirectories           #
 #################################
 # This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
 # e.g. UPNP_CORE_SOURCE_DIR and UPNP_CORE_BINARY_DIR
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp/ixml ${PROJECT_SOURCE_DIR}/pupnp/ixml/build)
-add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp/upnp ${PROJECT_SOURCE_DIR}/pupnp/upnp/build)
+add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp ${PROJECT_SOURCE_DIR}/pupnp/build)
 add_subdirectory(${PROJECT_SOURCE_DIR}/core ${PROJECT_SOURCE_DIR}/core/build)
 add_subdirectory(${PROJECT_SOURCE_DIR}/sample ${PROJECT_SOURCE_DIR}/sample/build)
 

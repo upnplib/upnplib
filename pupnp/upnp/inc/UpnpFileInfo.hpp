@@ -11,7 +11,7 @@
  * \author Marcelo Roberto Jimenez
  */
 #include "UpnpGlobal.h" // for EXPORT_SPEC
-#include "ixml.h"
+#include "ixml.hpp"
 #include "list.hpp"
 #include "UpnpString.h"
 

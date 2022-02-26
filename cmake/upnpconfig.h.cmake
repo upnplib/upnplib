@@ -109,9 +109,6 @@ UPNP_VERSION_PATCH)
 /* Defined to 1 if the library has IXML script support enabled */
 //#cmakedefine IXML_HAVE_SCRIPTSUPPORT 1
 
-/* Defined to ON if the library will be created statically linkable */
-#cmakedefine UPNP_STATIC_LIB ${UPNP_STATIC_LIB}
-
 /* Defined to ON if the library will use the static pthreads4W library */
 #cmakedefine PTW32_STATIC_LIB ${PTW32_STATIC_LIB}
 

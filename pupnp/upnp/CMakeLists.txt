@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-02-21
+# Redistribution only with this Copyright remark. Last modified: 2022-02-26
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(UPNP_CORE VERSION 0010
+project(UPNP_CORE VERSION 0012
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -16,25 +16,25 @@ project(UPNP_CORE VERSION 0010
 # These switches are all handled only in this configuration file.
 
 # Options selectable by user configuration
-set(UPNPLIB_DEF_TOOLS  NO)     # tools -> UPNP_ENABLE_HELPER_API_TOOLS
-set(UPNPLIB_DEF_CLIENT  NO)    # client -> UPNP_ENABLE_CLIENT_API
-set(UPNPLIB_DEF_DEVICE  NO)
+set(UPNPLIB_DEF_TOOLS      NO) # tools -> UPNP_ENABLE_HELPER_API_TOOLS
+set(UPNPLIB_DEF_CLIENT     NO) # client -> UPNP_ENABLE_CLIENT_API
+set(UPNPLIB_DEF_DEVICE     NO)
 set(UPNPLIB_DEF_WEBSERVER  NO) # webserver -> UPNP_ENABLE_WEBSERVER
                                #   only enabled with UPNPLIB_DEF_DEVICE
-set(UPNPLIB_DEF_SSDP  NO)      # ssdp -> UPNP_ENABLE_SSDP
-set(UPNPLIB_DEF_OPTSSDP  NO)   # optssdp -> UPNP_ENABLE_OPTIONAL_SSDP_HEADERS
-set(UPNPLIB_DEF_SOAP  NO)      # soap -> UPNP_ENABLE_SOAP
+set(UPNPLIB_DEF_SSDP       NO) # ssdp -> UPNP_ENABLE_SSDP
+set(UPNPLIB_DEF_OPTSSDP    NO) # optssdp -> UPNP_ENABLE_OPTIONAL_SSDP_HEADERS
+set(UPNPLIB_DEF_SOAP       NO) # soap -> UPNP_ENABLE_SOAP
                                #   only enabled with UPNPLIB_DEF_WEBSERVER
-set(UPNPLIB_DEF_GENA  NO)      # gena -> UPNP_ENABLE_GENA
+set(UPNPLIB_DEF_GENA       NO) # gena -> UPNP_ENABLE_GENA
                                #   compiles only with UPNPLIB_DEF_CLIENT and UPNPLIB_DEF_DEVICE
-set(UPNPLIB_DEF_IPV6 YES)      # ipv6 -> UPNP_ENABLE_IPV6
-#set(UPNPLIB_DEF_OPENSSL  NO)   # open_ssl -> UPNP_ENABLE_OPEN_SSL
-set(UPNPLIB_DEF_BLOCKTCP YES)  # blocking_tcp_connections -> UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
-set(UPNPLIB_DEF_DEBUG YES)
-set(UPNPLIB_DEF_IXML  NO)      # scriptsupport -> IXML_HAVE_SCRIPTSUPPORT
+set(UPNPLIB_DEF_IPV6       NO) # ipv6 -> UPNP_ENABLE_IPV6
+#set(UPNPLIB_DEF_OPENSSL   NO) # open_ssl -> UPNP_ENABLE_OPEN_SSL
+set(UPNPLIB_DEF_BLOCKTCP   NO) # blocking_tcp_connections -> UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
+set(UPNPLIB_DEF_DEBUG      NO)
+set(UPNPLIB_DEF_IXML      YES) # scriptsupport -> IXML_HAVE_SCRIPTSUPPORT
 #set(UPNPLIB_DEF_UNSPECSVR NO) # unspecified_server -> UPNP_ENABLE_UNSPECIFIED_SERVER
 #set(UPNPLIB_DEF_REUSEADDR NO) # reuseaddr -> UPNP_MINISERVER_REUSEADDR
-set(UPNPLIB_DEF_SAMPLES  NO)   # samples -> UPNP_BUILD_SAMPLES
+set(UPNPLIB_DEF_SAMPLES    NO) # samples -> UPNP_BUILD_SAMPLES
 
 # Internal switches for program options
 set(UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS  NO)
@@ -72,17 +72,6 @@ include_directories(
 )
 
 set(UPNP_SOURCE_FILES
-    ${PUPNP_IXML_SOURCE_DIR}/src/attr.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/document.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/element.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/ixml.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/ixmlmembuf.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/ixmlparser.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/namedNodeMap.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/node.c
-    ${PUPNP_IXML_SOURCE_DIR}/src/nodeList.c
-    $<$<CONFIG:Debug>:${PUPNP_IXML_SOURCE_DIR}/src/ixmldebug.c>
-
     ${PROJECT_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${PROJECT_SOURCE_DIR}/src/threadutil/LinkedList.cpp
     ${PROJECT_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
@@ -180,6 +169,7 @@ add_compile_options(
         $<$<CXX_COMPILER_ID:MSVC>:/wd4311>
 )
 
+
 # Create libraries and create test executable for information
 #============================================================
 if(NOT WIN32)
@@ -192,6 +182,9 @@ if(NOT WIN32)
             LIBRARY_OUTPUT_DIRECTORY lib  # used if not WIN32
     #       RUNTIME_OUTPUT_DIRECTORY lib  # used if WIN32
     )
+    target_link_libraries(upnplib_shared PRIVATE
+            ixml_shared
+    )
 
     # Test executable linked with the shared library
     add_executable(upnplib_shared_run
@@ -199,7 +192,7 @@ if(NOT WIN32)
     set_target_properties(upnplib_shared_run PROPERTIES
             OUTPUT_NAME upnplib
     )
-    target_link_libraries(upnplib_shared_run
+    target_link_libraries(upnplib_shared_run PRIVATE
             upnplib_shared
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
@@ -210,6 +203,12 @@ if(NOT WIN32)
     set_target_properties(upnplib_static PROPERTIES
             OUTPUT_NAME upnplib  # lib*.a will be added
             ARCHIVE_OUTPUT_DIRECTORY lib
+    )
+    target_compile_definitions(upnplib_static PRIVATE
+            UPNP_STATIC_LIB
+    )
+    target_link_libraries(upnplib_static PRIVATE
+            ixml_static
     )
 
 else() # WIN32
@@ -235,15 +234,18 @@ else() # WIN32
     set_target_properties(upnplib_shared_win PROPERTIES
             OUTPUT_NAME upnplib
     )
-    target_compile_definitions(upnplib_shared_win
-            #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-            PUBLIC $<$<CXX_COMPILER_ID:MSVC>:LIBUPNP_EXPORTS>
+    target_compile_definitions(upnplib_shared_win PRIVATE
+            $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
+            $<$<CXX_COMPILER_ID:MSVC>:LIBUPNP_EXPORTS>
     )
     # In addition to pthreads we need some more system libraries here
     # ws2_32: winsock to support sockets
     # iphlpapi: ip helper interface to get network management tools
-    target_link_libraries(upnplib_shared_win ws2_32 iphlpapi
-            ${UPNP_PTHREADS_STATIC_LIBRARY}
+    target_link_libraries(upnplib_shared_win
+            PRIVATE ws2_32
+            PRIVATE iphlpapi
+            PRIVATE ixml_static
+            PUBLIC ${UPNP_PTHREADS_STATIC_LIBRARY}
             # If you link with the shared pthreads4w library then its .dll file
             # must also be found.
             #${UPNP_PTHREADS_SHARED_LIBRARY}
@@ -254,7 +256,7 @@ else() # WIN32
     set_target_properties(upnplib_shared_win_exe PROPERTIES
             OUTPUT_NAME upnplib
     )
-    target_link_libraries(upnplib_shared_win_exe
+    target_link_libraries(upnplib_shared_win_exe PRIVATE
             upnplib_shared_win
     )
 
@@ -264,11 +266,12 @@ else() # WIN32
     set_target_properties(upnplib_static_win PROPERTIES
             OUTPUT_NAME upnplib_Static
     )
-    target_compile_definitions(upnplib_static_win
+    target_compile_definitions(upnplib_static_win PRIVATE
             #PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-            PUBLIC $<$<CXX_COMPILER_ID:MSVC>:LIBUPNP_EXPORTS>
+            #PUBLIC $<$<CXX_COMPILER_ID:MSVC>:LIBUPNP_EXPORTS>
+            UPNP_STATIC_LIB
     )
-    target_link_libraries(upnplib_static_win
+    target_link_libraries(upnplib_static_win PRIVATE
             ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
@@ -277,7 +280,7 @@ else() # WIN32
     set_target_properties(upnplib_static_win_exe PROPERTIES
             OUTPUT_NAME upnplibStatic
     )
-    target_link_libraries(upnplib_static_win_exe
+    target_link_libraries(upnplib_static_win_exe PRIVATE
             upnplib_static_win
             ws2_32
     )

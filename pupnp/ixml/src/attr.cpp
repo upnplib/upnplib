@@ -3,6 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
+ * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-25
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,20 +32,18 @@
  *
  ******************************************************************************/
 
-#include "ixmlparser.h"
+#include "ixmlparser.hpp"
 
 #include <string.h>
 
-void ixmlAttr_init(IXML_Attr *attr)
-{
-        if (attr != NULL) {
-                memset(attr, 0, sizeof(IXML_Attr));
-        }
+void ixmlAttr_init(IXML_Attr* attr) {
+    if (attr != NULL) {
+        memset(attr, 0, sizeof(IXML_Attr));
+    }
 }
 
-void ixmlAttr_free(IXML_Attr *attr)
-{
-        if (attr != NULL) {
-                ixmlNode_free((IXML_Node *)attr);
-        }
+void ixmlAttr_free(IXML_Attr* attr) {
+    if (attr != NULL) {
+        ixmlNode_free((IXML_Node*)attr);
+    }
 }

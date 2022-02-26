@@ -12,7 +12,7 @@
 //#include "UpnpGlobal.h" /* for EXPORT_SPEC */
 
 #include "UpnpString.h"
-#include "ixml.h"
+#include "ixml.hpp"
 #include "UpnpInet.h"
 //#include "list.hpp"
 

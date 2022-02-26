@@ -15,7 +15,7 @@
 
 #include "UpnpGlobal.h" /* for EXPORT_SPEC */
 
-#include "ixml.h"
+#include "ixml.hpp"
 #include "UpnpString.h"
 
 /*!

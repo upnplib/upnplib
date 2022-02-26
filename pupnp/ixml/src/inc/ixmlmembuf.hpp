@@ -3,6 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
+ * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-25
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,14 +32,14 @@
  *
  **************************************************************************/
 
-#ifndef IXML_MEMBUF_H
-#define IXML_MEMBUF_H
+#ifndef UPNPLIB_IXML_MEMBUF_HPP
+#define UPNPLIB_IXML_MEMBUF_HPP
 
 /*!
  * \file
  */
 
-#include "ixml.h"
+#include "ixml.hpp"
 
 #include <stdlib.h> /* for size_t */
 
@@ -49,20 +51,19 @@
 /*!
  * \brief The ixml_membuf type.
  */
-typedef struct
-{
-        char *buf;
-        size_t length;
-        size_t capacity;
-        size_t size_inc;
+typedef struct {
+    char* buf;
+    size_t length;
+    size_t capacity;
+    size_t size_inc;
 } ixml_membuf;
 
 /*!
  * \brief ixml_membuf initialization routine.
  */
 void ixml_membuf_init(
-        /*! [in,out] The memory buffer to initializa. */
-        ixml_membuf *m);
+    /*! [in,out] The memory buffer to initializa. */
+    ixml_membuf* m);
 
 /*!
  * \brief ixml_membuf clearing routine.
@@ -71,8 +72,8 @@ void ixml_membuf_init(
  * to reinitialize the buffer.
  */
 void ixml_membuf_destroy(
-        /*! [in,out] The memory buffer to clear. */
-        ixml_membuf *m);
+    /*! [in,out] The memory buffer to clear. */
+    ixml_membuf* m);
 
 /*!
  * \brief Copies the contents o a buffer to the designated ixml_membuf.
@@ -85,12 +86,12 @@ void ixml_membuf_destroy(
  * \sa ixml_membuf_assign_str().
  */
 int ixml_membuf_assign(
-        /*! [in,out] The memory buffer on which to operate. */
-        ixml_membuf *m,
-        /*! [in] The input buffer to copy from. */
-        const void *buf,
-        /*! [in] The number of bytes to copy from the input buffer. */
-        size_t buf_len);
+    /*! [in,out] The memory buffer on which to operate. */
+    ixml_membuf* m,
+    /*! [in] The input buffer to copy from. */
+    const void* buf,
+    /*! [in] The number of bytes to copy from the input buffer. */
+    size_t buf_len);
 
 /*!
  * \brief Copies a \b NULL terminated string to the ixml_buffer.
@@ -102,10 +103,10 @@ int ixml_membuf_assign(
  * \sa ixml_membuf_assign().
  */
 int ixml_membuf_assign_str(
-        /*! [in,out] The memory buffer on which to operate. */
-        ixml_membuf *m,
-        /*! [in] The input string to copy from. */
-        const char *c_str);
+    /*! [in,out] The memory buffer on which to operate. */
+    ixml_membuf* m,
+    /*! [in] The input string to copy from. */
+    const char* c_str);
 
 /*!
  * \brief Appends one byte to the designated ixml_membuffer.
@@ -117,10 +118,10 @@ int ixml_membuf_assign_str(
  * \sa ixml_membuf_insert()
  */
 int ixml_membuf_append(
-        /*! [in,out] The memory buffer on which to operate. */
-        ixml_membuf *m,
-        /*! [in] The pointer to the byte to append. */
-        const void *buf);
+    /*! [in,out] The memory buffer on which to operate. */
+    ixml_membuf* m,
+    /*! [in] The pointer to the byte to append. */
+    const void* buf);
 
 /*!
  * \brief Appends the contents of a \b NULL terminated string to the designated
@@ -133,30 +134,30 @@ int ixml_membuf_append(
  * \sa ixml_membuf_insert().
  */
 int ixml_membuf_append_str(
-        /*! [in,out] The memory buffer on which to operate. */
-        ixml_membuf *m,
-        /*! [in] The input string to copy from. */
-        const char *c_str);
+    /*! [in,out] The memory buffer on which to operate. */
+    ixml_membuf* m,
+    /*! [in] The input string to copy from. */
+    const char* c_str);
 
 /*!
  * \brief
  *
  * \return
- * 	\li 0 if successfull.
- * 	\li IXML_INDEX_SIZE_ERR if the index parameter is out of range.
- * 	\li Or the return code of ixml_membuf_set_size()
+ *  \li 0 if successfull.
+ *  \li IXML_INDEX_SIZE_ERR if the index parameter is out of range.
+ *  \li Or the return code of ixml_membuf_set_size()
  *
  * \sa ixml_membuf_set_size()
  */
 int ixml_membuf_insert(
-        /*! [in,out] The memory buffer on which to operate. */
-        ixml_membuf *m,
-        /*! [in] The pointer to the input buffer. */
-        const void *buf,
-        /*! [in] The buffer length. */
-        size_t buf_len,
-        /*! [in] The point of insertion relative to the beggining of the
-         * ixml_membuf internal buffer. */
-        size_t index);
+    /*! [in,out] The memory buffer on which to operate. */
+    ixml_membuf* m,
+    /*! [in] The pointer to the input buffer. */
+    const void* buf,
+    /*! [in] The buffer length. */
+    size_t buf_len,
+    /*! [in] The point of insertion relative to the beggining of the
+     * ixml_membuf internal buffer. */
+    size_t index);
 
-#endif /* IXML_MEMBUF_H */
+#endif /* UPNPLIB_IXML_MEMBUF_HPP */
