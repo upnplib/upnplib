@@ -38,11 +38,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef _WIN32
-#include "pthread.h"
-#else
-#include <pthread.h>
-#endif
+#include "pthread.h" // To find pthreads4w don't use <pthread.h>
 
 int main(int argc, char** argv) {
     (void)argc;
@@ -83,7 +79,7 @@ int main(int argc, char** argv) {
         return UPNP_E_INTERNAL_ERROR;
     }
 #ifdef _WIN32
-    ithread_join(cmdloop_thread, NULL);
+    pthread_join(cmdloop_thread, NULL);
 #else
     /* Catch Ctrl-C and properly shutdown */
     sigemptyset(&sigs_to_catch);

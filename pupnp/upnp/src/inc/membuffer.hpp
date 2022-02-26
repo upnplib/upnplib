@@ -39,7 +39,7 @@
  * \file
  */
 
-//#include "upnputil.h"
+//#include "upnputil.hpp"
 #include "upnp.hpp"
 
 //#include <stdlib.h>
@@ -69,10 +69,6 @@ typedef struct {
     /*! default value of size_inc. */
 #define MEMBUF_DEF_SIZE_INC (size_t)5
 } membuffer;
-
-// #ifdef __cplusplus
-// extern "C" {
-// #endif /* __cplusplus */
 
 /*!
  * \brief Allocate memory and copy information from the input string to the
@@ -266,9 +262,5 @@ void membuffer_attach(
     char* new_buf,
     /*! [in] Length of the source buffer. */
     size_t buf_len);
-
-// #ifdef __cplusplus
-// } /* extern "C" */
-// #endif /* __cplusplus */
 
 #endif /* GENLIB_UTIL_MEMBUFFER_H */

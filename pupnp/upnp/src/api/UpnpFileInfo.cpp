@@ -7,7 +7,7 @@
  * \brief Source file for UpnpFileInfo methods.
  * \author Marcelo Roberto Jimenez
  */
-#include "config.h"
+#include "config.hpp"
 #include "UpnpFileInfo.hpp"
 
 #include <cstring> // for memset

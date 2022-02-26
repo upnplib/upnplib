@@ -39,9 +39,9 @@
  * an http message and then matches the data with XML data.
  */
 
-#include "config.h"
+#include "config.hpp"
 #include <assert.h>
-//#include "upnputil.h"
+//#include "upnputil.hpp"
 //#include "membuffer.hpp"
 #include "httpparser.hpp"
 //#include "statcodes.hpp"

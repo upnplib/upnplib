@@ -9,7 +9,7 @@
  * client
  ************************************************************************/
 
-#include "config.h"
+#include "config.hpp"
 
 #include "client_table.hpp"
 

@@ -36,7 +36,7 @@
  * \file
  */
 
-#include "config.h"
+#include "config.hpp"
 
 #ifdef INCLUDE_DEVICE_APIS
 #if EXCLUDE_SOAP == 0

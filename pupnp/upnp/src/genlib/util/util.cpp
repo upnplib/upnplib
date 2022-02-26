@@ -39,9 +39,9 @@
  * different options.
  */
 
-#include "config.h"
+#include "config.hpp"
 #include "upnp.hpp"
-#include "upnputil.h"
+#include "upnputil.hpp"
 
 #include <string.h>
 

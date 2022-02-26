@@ -8,7 +8,7 @@
  * \brief Source file for UpnpEvent methods.
  * \author Marcelo Roberto Jimenez
  */
-#include "config.h"
+#include "config.hpp"
 
 #include <stdlib.h> /* for calloc(), free() */
 #include <string.h> /* for strlen(), strdup() */

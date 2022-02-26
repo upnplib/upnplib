@@ -32,7 +32,7 @@
  *
  **************************************************************************/
 
-#include "config.h" // for EXCLUDE_DOM
+#include "config.hpp" // for EXCLUDE_DOM
 
 /*!
  * \file

@@ -38,11 +38,11 @@
  **
  ************************************************************************/
 
-#include "config.h"
+#include "config.hpp"
 
 #include "statcodes.hpp"
 
-#include "upnputil.h"
+#include "upnputil.hpp"
 
 //#include <stdio.h>
 #include <string.h>

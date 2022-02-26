@@ -38,7 +38,7 @@
  * \file
  */
 
-#include "config.h"
+#include "config.hpp"
 
 #include <string.h>
 #include <time.h>
@@ -50,7 +50,7 @@
 #include "sock.hpp"
 #include "ThreadPool.hpp"
 #include "upnp.hpp"
-#include "UpnpString.h"
+#include "UpnpString.hpp"
 #include "uri.hpp"
 
 /*!

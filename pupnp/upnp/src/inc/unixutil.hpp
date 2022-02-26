@@ -34,10 +34,10 @@
 
 /* Unix-specific network utilities */
 
-#include "UpnpInet.h"
+#include "UpnpInet.hpp"
 
 #ifdef _WIN32
-#include <UpnpStdInt.h>
+#include <UpnpStdInt.hpp>
 #include <errno.h>
 
 typedef int socklen_t;

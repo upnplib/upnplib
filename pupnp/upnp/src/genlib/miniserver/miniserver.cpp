@@ -32,7 +32,7 @@
  *
  **************************************************************************/
 
-#include "config.h"
+#include "config.hpp"
 
 #if EXCLUDE_MINISERVER == 0
 
@@ -53,12 +53,12 @@
 
 #include "ThreadPool.hpp"
 #include "httpreadwrite.hpp"
-#include "ithread.h"
+#include "ithread.hpp"
 #include "ssdplib.hpp"
 #include "statcodes.hpp"
 #include "unixutil.hpp" /* for socklen_t, EAFNOSUPPORT */
 #include "upnpapi.hpp"
-#include "upnputil.h"
+#include "upnputil.hpp"
 
 #include <assert.h>
 #include <errno.h>
@@ -69,7 +69,7 @@
 #include <algorithm> // for std::max()
 
 #ifdef _WIN32
-#include "UpnpStdInt.h" // for ssize_t
+#include "UpnpStdInt.hpp" // for ssize_t
 #endif
 
 /*! . */

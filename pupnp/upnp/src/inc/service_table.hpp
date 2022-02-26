@@ -39,7 +39,7 @@
  * \file
  */
 
-#include "config.h"
+#include "config.hpp"
 
 #include "LinkedList.hpp"
 //#include "ixml.h"

@@ -40,7 +40,7 @@
  * \file
  */
 
-#include "config.h"
+#include "config.hpp"
 
 #ifdef INCLUDE_DEVICE_APIS
 #if EXCLUDE_SSDP == 0
@@ -52,7 +52,7 @@
 #include "ThreadPool.hpp"
 #include "unixutil.hpp"
 #include "upnpapi.hpp"
-#include "UpnpInet.h"
+#include "UpnpInet.hpp"
 
 #include <assert.h>
 #include <stdio.h>

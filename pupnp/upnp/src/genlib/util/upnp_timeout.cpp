@@ -38,7 +38,7 @@
  * time out event.
  */
 
-#include "config.h"
+#include "config.hpp"
 
 #include "upnp_timeout.hpp"
 

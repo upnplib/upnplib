@@ -13,15 +13,11 @@
  */
 #include <stdlib.h> /* for size_t */
 
-#include "UpnpGlobal.h" /* for EXPORT_SPEC */
+#include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
 
-#include "UpnpString.h"
-#include "UpnpInet.h"
+#include "UpnpString.hpp"
+#include "UpnpInet.hpp"
 #include "ixml.hpp"
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
 
 /*!
  * UpnpStateVarRequest
@@ -153,9 +149,5 @@ EXPORT_SPEC int UpnpStateVarRequest_set_CurrentVal(UpnpStateVarRequest* p,
 /*! UpnpStateVarRequest_get_CurrentVal_cstr */
 EXPORT_SPEC const char*
 UpnpStateVarRequest_get_CurrentVal_cstr(const UpnpStateVarRequest* p);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* UPNPSTATEVARREQUEST_H */

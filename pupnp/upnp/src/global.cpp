@@ -5,7 +5,7 @@
 // not have to compile additional sources only to access a global.
 
 #include <cstddef>
-#include "config.h"
+#include "config.hpp"
 
 /*! Contains interface index. */
 unsigned int gIF_INDEX = (unsigned)-1;

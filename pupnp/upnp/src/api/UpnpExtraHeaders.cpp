@@ -1,5 +1,6 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-21
+// Redistribution only with this Copyright remark. Last modified: 2022-02-27
+// Taken from authors who haven't made a note.
 
 /*!
  * \file
@@ -7,9 +8,9 @@
  * \brief Source file for UpnpExtraHeaders methods.
  * \author Marcelo Roberto Jimenez
  */
-#include "config.h"
+#include "config.hpp"
 
-#include "UpnpExtraHeaders.h"
+#include "UpnpExtraHeaders.hpp"
 
 //#include <stdlib.h> /* for calloc(), free() */
 //#include <string.h> /* for strlen(), strdup() */

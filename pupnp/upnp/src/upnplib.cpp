@@ -76,9 +76,9 @@ void* library_info(void*) {
 #ifdef UPNP_HAVE_TOOLS
     const char* errmsg = UpnpGetErrorMessage(UPNP_E_SUCCESS);
     if (strcmp(errmsg, "UPNP_E_SUCCESS") == 0)
-        msg << "UPNP_HAVE_TOOLS      = yes\n";
+        msg << "UPNP_HAVE_TOOLS       = yes\n";
     else
-        msg << "UPNP_HAVE_TOOLS      = yes, but does not return "
+        msg << "UPNP_HAVE_TOOLS       = yes, but does not return "
                "UPNP_E_SUCCESS\n";
 #else
     msg << "UPNP_HAVE_TOOLS       = no\n";

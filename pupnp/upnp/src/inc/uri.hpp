@@ -42,8 +42,8 @@
 //#include <sys/param.h>
 #endif
 
-//#include "UpnpGlobal.h" /* for */
-//#include "UpnpInet.h"
+//#include "UpnpGlobal.hpp" /* for */
+//#include "UpnpInet.hpp"
 
 #include <ctype.h>
 //#include <errno.h>

@@ -10,15 +10,15 @@
  * \brief Header file for UpnpFileInfo methods.
  * \author Marcelo Roberto Jimenez
  */
-#include "UpnpGlobal.h" // for EXPORT_SPEC
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #include "ixml.hpp"
 #include "list.hpp"
-#include "UpnpString.h"
+#include "UpnpString.hpp"
 
 #include <sys/types.h> // needed for off_t
 
 #ifdef _WIN32
-#include "UpnpInet.h"
+#include "UpnpInet.hpp"
 #include <stdlib.h> // for size_t
 #else
 #include <sys/socket.h>

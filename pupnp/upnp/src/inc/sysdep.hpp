@@ -26,13 +26,13 @@
  * \file
  */
 
-#include "ithread.h"
+#include "ithread.hpp"
 
 /* change to point to where MD5 .h's live */
 /* get MD5 sample implementation from RFC 1321 */
 #include "md5.hpp"
 
-#include "UpnpStdInt.h"
+#include "UpnpStdInt.hpp"
 
 #include <sys/types.h>
 

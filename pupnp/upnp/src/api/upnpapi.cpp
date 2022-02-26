@@ -40,7 +40,7 @@
  * \file
  */
 
-#include "config.h"
+#include "config.hpp"
 #include "upnpapi.hpp"
 
 #ifdef _WIN32
@@ -51,7 +51,7 @@
 #endif
 
 //#include "ThreadPool.hpp"
-//#include "UpnpStdInt.h"
+//#include "UpnpStdInt.hpp"
 //#include "UpnpUniStd.h" /* for close() */
 #include "httpreadwrite.hpp"
 //#include "membuffer.h"

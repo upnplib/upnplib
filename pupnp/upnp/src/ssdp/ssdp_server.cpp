@@ -43,13 +43,13 @@
 #ifndef _WIN32
 #include <sys/param.h>
 #else
-#include "UpnpStdInt.h" // for ssize_t
+#include "UpnpStdInt.hpp" // for ssize_t
 #if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf _snprintf
 #endif
 #endif /* _WIN32 */
 
-#include "config.h"
+#include "config.hpp"
 
 #if EXCLUDE_SSDP == 0
 

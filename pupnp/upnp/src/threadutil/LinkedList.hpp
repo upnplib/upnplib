@@ -40,10 +40,6 @@
 
 #include "FreeList.hpp"
 
-// #ifdef __cplusplus
-// extern "C" {
-// #endif
-
 #define EOUTOFMEM (-7 & 1 << 29)
 
 #define FREELISTSIZE 100
@@ -281,9 +277,5 @@ ListNode* ListFind(
 long ListSize(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list);
-
-// #ifdef __cplusplus
-// }
-// #endif
 
 #endif /* LINKED_LIST_H */

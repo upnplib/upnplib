@@ -41,7 +41,7 @@
 
 #include "LinkedList.hpp"
 #include "membuffer.hpp"
-#include "upnputil.h"
+#include "upnputil.hpp"
 #include "uri.hpp"
 
 /* private types */

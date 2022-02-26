@@ -1,8 +1,9 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-07
+// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-02-27
+// Taken from authors who haven't made a note.
 
-#ifndef UPNPINET_H
-#define UPNPINET_H
+#ifndef UPNPLIB_UPNPINET_HPP
+#define UPNPLIB_UPNPINET_HPP
 
 /*!
  * \addtogroup Sock
@@ -15,7 +16,7 @@
  * functions.
  */
 
-#include "UpnpUniStd.h" /* for close() */
+#include "UpnpUniStd.hpp" /* for close() */
 #include "upnpmock/unistd.hpp"
 
 #ifdef _WIN32
@@ -65,4 +66,4 @@ typedef int SOCKET;
 
 /* @} Sock */
 
-#endif /* UPNPINET_H */
+#endif /* UPNPLIB_UPNPINET_HPP */

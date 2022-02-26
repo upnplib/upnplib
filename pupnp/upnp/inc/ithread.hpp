@@ -1,11 +1,13 @@
-#ifndef ITHREAD_H
-#define ITHREAD_H
+#ifndef UPNPLIB_ITHREAD_HPP
+#define UPNPLIB_ITHREAD_HPP
 
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
+ * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-27
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,12 +43,8 @@
 //#include <sys/param.h>
 #endif
 
-#include "UpnpGlobal.h" /* For UPNP_INLINE, EXPORT_SPEC */
+#include "UpnpGlobal.hpp" /* For UPNP_INLINE, EXPORT_SPEC */
 //#include "UpnpUniStd.h" /* for close() */
-
-// #ifdef __cplusplus
-// extern "C" {
-// #endif
 
 #ifdef _WIN32
 #include "pthread.h"
@@ -107,7 +105,7 @@ typedef pthread_attr_t ithread_attr_t;
  *      Thread start routine
  *      Internal Use Only.
  ***************************************************************************/
-typedef void (*start_routine)(void *arg);
+typedef void (*start_routine)(void* arg);
 
 /****************************************************************************
  * Name: ithread_cond_t
@@ -188,11 +186,10 @@ typedef ithread_mutex_t ithread_rwlock_t;
  *  Returns:
  *      0 on success, Nonzero on failure.
  ***************************************************************************/
-static UPNP_INLINE int ithread_initialize_library(void)
-{
-        int ret = 0;
+static UPNP_INLINE int ithread_initialize_library(void) {
+    int ret = 0;
 
-        return ret;
+    return ret;
 }
 
 /****************************************************************************
@@ -206,11 +203,10 @@ static UPNP_INLINE int ithread_initialize_library(void)
  *  Returns:
  *      0 on success, Nonzero on failure.
  ***************************************************************************/
-static UPNP_INLINE int ithread_cleanup_library(void)
-{
-        int ret = 0;
+static UPNP_INLINE int ithread_cleanup_library(void) {
+    int ret = 0;
 
-        return ret;
+    return ret;
 }
 
 /****************************************************************************
@@ -224,15 +220,14 @@ static UPNP_INLINE int ithread_cleanup_library(void)
  *  Returns:
  *      0 on success, Nonzero on failure.
  ***************************************************************************/
-static UPNP_INLINE int ithread_initialize_thread(void)
-{
-        int ret = 0;
+static UPNP_INLINE int ithread_initialize_thread(void) {
+    int ret = 0;
 
 #if defined(_WIN32) && defined(PTW32_STATIC_LIB)
-        ret = !pthread_win32_thread_attach_np();
+    ret = !pthread_win32_thread_attach_np();
 #endif
 
-        return ret;
+    return ret;
 }
 
 /****************************************************************************
@@ -246,15 +241,14 @@ static UPNP_INLINE int ithread_initialize_thread(void)
  *  Returns:
  *      0 on success, Nonzero on failure.
  ***************************************************************************/
-static UPNP_INLINE int ithread_cleanup_thread(void)
-{
-        int ret = 0;
+static UPNP_INLINE int ithread_cleanup_thread(void) {
+    int ret = 0;
 
 #if defined(_WIN32) && defined(PTW32_STATIC_LIB)
-        ret = !pthread_win32_thread_detach_np();
+    ret = !pthread_win32_thread_detach_np();
 #endif
 
-        return ret;
+    return ret;
 }
 
 /****************************************************************************
@@ -398,8 +392,8 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  *
  *  Description:
  *      Releases any resources held by the mutex.
- *	Mutex can no longer be used after this call.
- *	Mutex is only destroyed when there are no longer any threads
+ *  Mutex can no longer be used after this call.
+ *  Mutex is only destroyed when there are no longer any threads
  *      waiting on it. Mutex cannot be destroyed if it is locked.
  * Parameters:
  *      ithread_mutex_t * mutex (must be valid non NULL pointer to
@@ -583,8 +577,8 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  *
  *  Description:
  *      Releases any resources held by the rwlock.
- *	rwlock can no longer be used after this call.
- *	rwlock is only destroyed when there are no longer any threads
+ *  rwlock can no longer be used after this call.
+ *  rwlock is only destroyed when there are no longer any threads
  *      waiting on it. rwlock cannot be destroyed if it is locked.
  *
  * Parameters:
@@ -675,8 +669,8 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  * Function: pthread_cond_timedwait
  *
  * Description:
- *	Atomically releases the associated mutex and waits on the condition.
- *	If the condition is not signaled in the specified time than the call
+ *  Atomically releases the associated mutex and waits on the condition.
+ *  If the condition is not signaled in the specified time than the call
  *      times out and returns. Associated mutex MUST be locked by thread before
  *      entering this call. Mutex is reacquired when call returns.
  * Parameters:
@@ -699,7 +693,7 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  *
  *  Description:
  *      Releases any resources held by the condition variable.
- *		Condition variable can no longer be used after this call.
+ *      Condition variable can no longer be used after this call.
  *  Parameters:
  *      ithread_cond_t *cond (must be valid non NULL pointer to
  *      ithread_cond_t)
@@ -774,7 +768,7 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  * Function: ithread_create
  *
  *  Description:
- *		Creates a thread with the given start routine
+ *      Creates a thread with the given start routine
  *      and argument.
  *  Parameters:
  *      ithread_t * thread (must be valid non NULL pointer to pthread_t)
@@ -783,7 +777,7 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  *      void * arg - argument.
  *  Returns:
  *      0 on success. Nonzero on failure.
- *	    Returns EAGAIN if a new thread can not be created.
+ *      Returns EAGAIN if a new thread can not be created.
  *      Returns EINVAL if there is a problem with the arguments.
  *      See man page fore pthread_create
  ***************************************************************************/
@@ -793,7 +787,7 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  * Function: ithread_cancel
  *
  *  Description:
- *		Cancels a thread.
+ *      Cancels a thread.
  *  Parameters:
  *      ithread_t * thread (must be valid non NULL pointer to ithread_t)
  *  Returns:
@@ -806,7 +800,7 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  * Function: ithread_exit
  *
  *  Description:
- *		Returns a return code from a thread.
+ *      Returns a return code from a thread.
  *      Implicitly called when the start routine returns.
  *  Parameters:
  *      void  * return_code return code to return
@@ -818,9 +812,9 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  * Function: ithread_get_current_thread_id
  *
  *  Description:
- *		Returns the handle of the currently running thread.
+ *      Returns the handle of the currently running thread.
  *  Returns:
- *		The handle of the currently running thread.
+ *      The handle of the currently running thread.
  *              See man page for pthread_self
  ***************************************************************************/
 #define ithread_get_current_thread_id pthread_self
@@ -829,9 +823,9 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  * Function: ithread_self
  *
  *  Description:
- *		Returns the handle of the currently running thread.
+ *      Returns the handle of the currently running thread.
  *  Returns:
- *		The handle of the currently running thread.
+ *      The handle of the currently running thread.
  *              See man page for pthread_self
  ***************************************************************************/
 #define ithread_self pthread_self
@@ -840,11 +834,11 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  * Function: ithread_detach
  *
  *  Description:
- *		Makes a thread's resources reclaimed immediately
+ *      Makes a thread's resources reclaimed immediately
  *            after it finishes
  *            execution.
  *  Returns:
- *		0 on success, Nonzero on failure.
+ *      0 on success, Nonzero on failure.
  *      See man page for pthread_detach
  ***************************************************************************/
 #define ithread_detach pthread_detach
@@ -853,7 +847,7 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  * Function: ithread_join
  *
  *  Description:
- *		Suspends the currently running thread until the
+ *      Suspends the currently running thread until the
  * specified thread
  *      has finished.
  *      Returns the return code of the thread, or ITHREAD_CANCELED
@@ -862,7 +856,7 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  *      ithread_t *thread (valid non null thread identifier)
  *      void ** return (space for return code)
  *  Returns:
- *		0 on success, Nonzero on failure.
+ *      0 on success, Nonzero on failure.
  *     See man page for pthread_join
  ***************************************************************************/
 #define ithread_join pthread_join
@@ -871,13 +865,13 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  * Function: isleep
  *
  *  Description:
- *		Suspends the currently running thread for the specified number
+ *      Suspends the currently running thread for the specified number
  *      of seconds
  *      Always returns 0.
  *  Parameters:
  *      unsigned int seconds - number of seconds to sleep.
  *  Returns:
- *		0 on success, Nonzero on failure.
+ *      0 on success, Nonzero on failure.
  *              See man page for sleep (man 3 sleep)
  *****************************************************************************/
 #ifdef _WIN32
@@ -890,13 +884,13 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
  * Function: isleep
  *
  *  Description:
- *		Suspends the currently running thread for the specified number
+ *      Suspends the currently running thread for the specified number
  *      of milliseconds
  *      Always returns 0.
  *  Parameters:
  *      unsigned int milliseconds - number of milliseconds to sleep.
  *  Returns:
- *		0 on success, Nonzero on failure.
+ *      0 on success, Nonzero on failure.
  *              See man page for sleep (man 3 sleep)
  *****************************************************************************/
 #ifdef _WIN32
@@ -905,16 +899,16 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
 #if _POSIX_C_SOURCE < 200809L
 #define imillisleep(x) usleep(1000 * x)
 #else
-#define imillisleep(x) \
-        do { \
-                const struct timespec req = {0, x * 1000 * 1000}; \
-                nanosleep(&req, NULL); \
-        } while (0)
+#define imillisleep(x)                                                         \
+    do {                                                                       \
+        const struct timespec req = {0, x * 1000 * 1000};                      \
+        nanosleep(&req, NULL);                                                 \
+    } while (0)
 #endif
 #endif
 
-#if !defined(PTHREAD_MUTEX_RECURSIVE) && !defined(__DragonFly__) && \
-        !defined(UPNP_USE_MSVCPP)
+#if !defined(PTHREAD_MUTEX_RECURSIVE) && !defined(__DragonFly__) &&            \
+    !defined(UPNP_USE_MSVCPP)
 /* !defined(UPNP_USE_MSVCPP) should probably also have pthreads version check -
  * but it's not clear if that is possible */
 /* NK: Added for satisfying the gcc compiler */
@@ -922,8 +916,4 @@ static UPNP_INLINE int ithread_cleanup_thread(void)
 //         pthread_mutexattr_t *attr, int kind);
 #endif
 
-// #ifdef __cplusplus
-// }
-// #endif
-
-#endif /* ITHREAD_H */
+#endif /* UPNPLIB_ITHREAD_HPP */

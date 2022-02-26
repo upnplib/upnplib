@@ -13,10 +13,10 @@
  */
 #include <stdlib.h> /* for size_t */
 
-#include "UpnpGlobal.h" /* for EXPORT_SPEC */
+#include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
 
-#include "UpnpString.h"
-#include "UpnpInet.h"
+#include "UpnpString.hpp"
+#include "UpnpInet.hpp"
 
 /*!
  * UpnpDiscovery

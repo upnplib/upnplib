@@ -17,7 +17,7 @@
  * will fill a supplied 16-byte array with the digest.
  */
 
-#include "config.h"
+#include "config.hpp"
 #include "md5.hpp"
 
 #include <string.h>

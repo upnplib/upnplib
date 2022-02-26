@@ -25,12 +25,12 @@
  * \file
  */
 
-#include "config.h"
+#include "config.hpp"
 
 #include "uuid.hpp"
 
-#include "UpnpInet.h"
-#include "UpnpStdInt.h"
+#include "UpnpInet.hpp"
+#include "UpnpStdInt.hpp"
 
 #include <stdio.h>
 #include <stdlib.h>

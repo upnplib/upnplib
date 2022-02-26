@@ -10,7 +10,7 @@
 
 #include "GenlibClientSubscription.hpp"
 #include "TimerThread.hpp"
-//#include "UpnpString.h"
+//#include "UpnpString.hpp"
 #include "service_table.hpp"
 //#include "upnp.h"
 //#include "upnp_timeout.h"

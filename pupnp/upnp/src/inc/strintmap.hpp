@@ -34,7 +34,7 @@
 #ifndef GENLIB_UTIL_STRINTMAP_HPP
 #define GENLIB_UTIL_STRINTMAP_HPP
 
-//#include "upnputil.h"
+//#include "upnputil.hpp"
 
 #include <stdlib.h>
 
@@ -45,10 +45,6 @@ typedef struct /* str_int_entry */
     const char* name; /* a value in string form */
     int id;           /* same value in integer form */
 } str_int_entry;
-
-// #ifdef __cplusplus
-// extern "C" {
-// #endif
 
 /************************************************************************
  *	Function :	map_str_to_int
@@ -95,9 +91,5 @@ int map_str_to_int(const char* name, size_t name_len, str_int_entry* table,
  *	Note :
  ************************************************************************/
 int map_int_to_str(int id, str_int_entry* table, int num_entries);
-
-// #ifdef __cplusplus
-// } /* extern C */
-// #endif
 
 #endif /* GENLIB_UTIL_STRINTMAP_HPP */

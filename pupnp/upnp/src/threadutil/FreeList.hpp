@@ -36,11 +36,7 @@
  * \file
  */
 
-//#ifdef __cplusplus
-// extern "C" {
-//#endif
-
-#include "ithread.h"
+#include "ithread.hpp"
 
 #include <errno.h>
 
@@ -120,9 +116,5 @@ int FreeListFree(
 int FreeListDestroy(
     /*! Must be valid, non null, pointer to a linked list. */
     FreeList* free_list);
-
-//#ifdef __cplusplus
-//}
-//#endif
 
 #endif /* FREE_LIST_H */

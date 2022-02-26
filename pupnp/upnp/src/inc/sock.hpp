@@ -43,10 +43,10 @@
  * \file
  */
 
-#include "config.h"
+#include "config.hpp"
 
-#include "UpnpGlobal.h" /* for UPNP_INLINE */
-#include "UpnpInet.h"   /* for SOCKET, netinet/in */
+#include "UpnpGlobal.hpp" /* for UPNP_INLINE */
+#include "UpnpInet.hpp"   /* for SOCKET, netinet/in */
 #ifdef UPNP_ENABLE_OPEN_SSL
 #include <openssl/ssl.h>
 #endif
@@ -70,10 +70,6 @@ typedef struct {
     SSL* ssl;
 #endif
 } SOCKINFO;
-
-// #ifdef __cplusplus
-// extern "C" {
-// #endif
 
 /*!
  * \brief Closes the socket if it is different from -1.
@@ -207,10 +203,6 @@ int sock_make_blocking(
 int sock_make_no_blocking(
     /* [in] socket. */
     SOCKET sock);
-
-// #ifdef __cplusplus
-// } /* #extern "C" */
-// #endif
 
 /* @} Sock Network Socket Library */
 

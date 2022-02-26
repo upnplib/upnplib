@@ -9,7 +9,7 @@
  * \author Marcelo Roberto Jimenez
  */
 
-#include "config.h"
+#include "config.hpp"
 
 #include "SSDPResultData.hpp"
 #include "SSDPResultDataCallback.hpp"

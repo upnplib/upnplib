@@ -40,7 +40,7 @@
  ************************************************************************/
 
 #include "service_table.hpp"
-#include "config.h"
+#include "config.hpp"
 
 #ifdef INCLUDE_DEVICE_APIS
 

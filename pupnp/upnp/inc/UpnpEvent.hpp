@@ -13,10 +13,10 @@
  */
 #include <stdlib.h> /* for size_t */
 
-#include "UpnpGlobal.h" /* for EXPORT_SPEC */
+#include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
 
 #include "ixml.hpp"
-#include "UpnpString.h"
+#include "UpnpString.hpp"
 
 /*!
  * UpnpEvent

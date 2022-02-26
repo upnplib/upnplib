@@ -38,13 +38,9 @@
  */
 
 #include "upnpconfig.h"
-//#include "UpnpGlobal.h" /* for UPNP_INLINE */
+//#include "UpnpGlobal.hpp" /* for UPNP_INLINE */
 #include "upnp.hpp" // for UPNP_E_SUCCESS
 #include <stdio.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*! \name Other debugging features
  *
@@ -232,9 +228,5 @@ static UPNP_INLINE void UpnpPrintf_Inlined(Upnp_LogLevel DLevel,
     return;
 }
 #endif /* DEBUG */
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* UPNP_DEBUG_H */

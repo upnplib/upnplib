@@ -46,7 +46,7 @@
 //#include "httpparser.hpp"
 //#include "httpreadwrite.hpp"
 #include "miniserver.hpp"
-//#include "UpnpInet.h"
+//#include "UpnpInet.hpp"
 
 //#include <sys/types.h>
 //#include <signal.h>

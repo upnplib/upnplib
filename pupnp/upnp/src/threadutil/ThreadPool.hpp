@@ -44,8 +44,8 @@
 #ifdef _WIN32
 #include <time.h>
 #include "FreeList.hpp"
-#include "UpnpInet.h"
-#include "ithread.h"
+#include "UpnpInet.hpp"
+#include "ithread.hpp"
 #include <errno.h>
 
 #ifndef _TIMEZONE_DEFINED
@@ -62,10 +62,6 @@ int gettimeofday(struct timeval* tv, struct timezone* tz);
 //#include <sys/resource.h> /* for setpriority() */
 #endif
 #endif // _WIN32
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*! Size of job free list */
 #define JOBFREELISTSIZE 100
@@ -522,10 +518,6 @@ void ThreadPoolPrintStats(
 static UPNP_INLINE void ThreadPoolPrintStats(
     /*! . */
     ThreadPoolStats* stats) {}
-#endif
-
-#ifdef __cplusplus
-}
 #endif
 
 #endif /* THREADPOOL_H */

@@ -39,10 +39,10 @@
  * allocation, re-allocation, and modification of the memory
  */
 
-#include "config.h"
+#include "config.hpp"
 
 #include "membuffer.hpp"
-#include "upnputil.h"
+#include "upnputil.hpp"
 
 //#include "unixutil.h"
 //#include "upnp.h"

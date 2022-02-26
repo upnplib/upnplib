@@ -8,10 +8,10 @@
  * \brief Source file for GenlibClientSubscription methods.
  * \author Marcelo Roberto Jimenez
  */
-#include "config.h"
+#include "config.hpp"
 
 #include "GenlibClientSubscription.hpp"
-#include "UpnpString.h"
+#include "UpnpString.hpp"
 
 #include <stdlib.h> /* for calloc(), free() */
 #include <string.h> /* for strlen(), strdup() */

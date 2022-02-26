@@ -34,7 +34,7 @@
 #ifndef UPNPLIB_URLCONFIG_HPP
 #define UPNPLIB_URLCONFIG_HPP
 
-#include "UpnpInet.h"
+#include "UpnpInet.hpp"
 
 /* functions available only if the web server is included */
 

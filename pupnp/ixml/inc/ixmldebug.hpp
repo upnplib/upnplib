@@ -5,7 +5,7 @@
 #ifndef UPNPLIB_IXMLDEBUG_HPP
 #define UPNPLIB_IXMLDEBUG_HPP
 
-#include "UpnpGlobal.h"
+#include "UpnpGlobal.hpp"
 #include "ixml.hpp"
 
 /*!

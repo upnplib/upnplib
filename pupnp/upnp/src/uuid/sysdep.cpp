@@ -21,7 +21,7 @@
  * \file
  */
 
-#include "config.h"
+#include "config.hpp"
 
 #ifdef _WIN32
 #define _CRT_RAND_S
@@ -29,7 +29,7 @@
 
 #include "sysdep.hpp"
 
-#include "UpnpInet.h"
+#include "UpnpInet.hpp"
 
 #include <stdio.h>
 #include <string.h>

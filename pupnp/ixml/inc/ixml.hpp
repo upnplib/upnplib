@@ -42,7 +42,7 @@
  * @{
  */
 
-#include "UpnpGlobal.h" /* For EXPORT_SPEC */
+#include "UpnpGlobal.hpp" /* For EXPORT_SPEC */
 
 /*!
  * \brief The type of DOM strings.
@@ -207,10 +207,6 @@ typedef struct _IXML_NamedNodeMap {
 } IXML_NamedNodeMap;
 
 /* @} DOM Interfaces */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*!
  * \name Interface Node
@@ -1717,10 +1713,6 @@ EXPORT_SPEC void ixmlFreeDOMString(
     DOMString buf);
 
 /* @} IXML API */
-
-#ifdef __cplusplus
-}
-#endif
 
 /* @} XMLAPI XML API */
 

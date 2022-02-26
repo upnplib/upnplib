@@ -49,7 +49,7 @@
 #include "sample_util.hpp"
 
 #include "upnp.hpp"
-#include "UpnpString.h"
+#include "UpnpString.hpp"
 #include "upnptools.hpp"
 
 #include <signal.h>

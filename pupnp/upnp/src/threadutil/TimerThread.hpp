@@ -41,11 +41,7 @@
 //#include "FreeList.h"
 //#include "LinkedList.h"
 #include "ThreadPool.hpp"
-//#include "ithread.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+//#include "ithread.hpp"
 
 #define INVALID_EVENT_ID (-10 & 1 << 29)
 
@@ -152,9 +148,5 @@ int TimerThreadRemove(
 int TimerThreadShutdown(
     /*! [in] Valid timer thread pointer. */
     TimerThread* timer);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* TIMER_THREAD_H */

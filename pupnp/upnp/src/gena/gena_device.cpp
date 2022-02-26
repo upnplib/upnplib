@@ -36,7 +36,7 @@
  * \file
  */
 
-#include "config.h"
+#include "config.hpp"
 
 //#include "gena_device.h"
 

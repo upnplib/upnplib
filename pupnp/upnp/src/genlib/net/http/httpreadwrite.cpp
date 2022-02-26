@@ -39,15 +39,15 @@
  * It defines functions to receive messages, process messages, send messages.
  */
 
-#include "config.h"
+#include "config.hpp"
 
 #include "httpreadwrite.hpp"
 
-#include "UpnpExtraHeaders.h"
+#include "UpnpExtraHeaders.hpp"
 //#include "UpnpFileInfo.h"
-//#include "UpnpInet.h"
-#include "UpnpIntTypes.h"
-//#include "UpnpStdInt.h"
+//#include "UpnpInet.hpp"
+#include "UpnpIntTypes.hpp"
+//#include "UpnpStdInt.hpp"
 //#include "membuffer.h"
 //#include "sock.h"
 #include "statcodes.hpp"

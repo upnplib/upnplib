@@ -36,16 +36,16 @@
  * \file
  */
 
-#include "config.h"
+#include "config.hpp"
 
 #include "membuffer.hpp"
 #include "unixutil.hpp"
 #include "upnp.hpp"
 #include "upnpdebug.hpp"
-#include "UpnpInet.h"
+#include "UpnpInet.hpp"
 #include "uri.hpp"
 #include "urlconfig.hpp"
-#include "upnputil.h"
+#include "upnputil.hpp"
 #include "webserver.hpp"
 
 #include <assert.h>

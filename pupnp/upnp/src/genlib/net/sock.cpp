@@ -45,7 +45,7 @@
 #include "sock.hpp"
 
 #include "upnpdebug.hpp"
-#include "upnputil.h"
+#include "upnputil.hpp"
 
 #include <assert.h>
 #include <fcntl.h> /* for F_GETFL, F_SETFL, O_NONBLOCK */
@@ -53,8 +53,8 @@
 #include <cstring>
 
 #ifdef _WIN32
-#include "config.h"
-#include "UpnpStdInt.h" /* for ssize_t */
+#include "config.hpp"
+#include "UpnpStdInt.hpp" /* for ssize_t */
 #include "unixutil.hpp" /* for socklen_t, EAFNOSUPPORT */
 #include "upnp.hpp"
 #include <errno.h>

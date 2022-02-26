@@ -31,7 +31,7 @@
  *
  ******************************************************************************/
 
-#include "config.h"
+#include "config.hpp"
 #if EXCLUDE_GENA == 0
 #include "gena.hpp"
 #include "gena_ctrlpt.hpp"

@@ -39,8 +39,8 @@
  * \file
  */
 
-#include "config.h"
-//#include "upnputil.h"
+#include "config.hpp"
+//#include "upnputil.hpp"
 #include "sock.hpp"
 #include "httpparser.hpp"
 

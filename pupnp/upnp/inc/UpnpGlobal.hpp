@@ -1,5 +1,9 @@
-#ifndef UPNPGLOBAL_H
-#define UPNPGLOBAL_H
+// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-02-27
+// Taken from authors who haven't made a note.
+
+#ifndef UPNPLIB_UPNPGLOBAL_HPP
+#define UPNPLIB_UPNPGLOBAL_HPP
 
 /*!
  * \file
@@ -34,7 +38,7 @@
 #define EXPORT_SPEC __declspec(dllimport)
 #endif /* LIBUPNP_EXPORTS */
 #endif /* UPNP_STATIC_LIB */
-#else /* _MSC_VER || __BORLANDC__ */
+#else  /* _MSC_VER || __BORLANDC__ */
 #define EXPORT_SPEC
 #endif /* _MSC_VER || __BORLANDC__ */
 
@@ -131,4 +135,4 @@ typedef __int64 int64_t;
  */
 /*#define inline*/
 
-#endif /* UPNPGLOBAL_H */
+#endif /* UPNPLIB_UPNPGLOBAL_HPP */

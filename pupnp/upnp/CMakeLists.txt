@@ -16,28 +16,28 @@ project(UPNP_CORE VERSION 0012
 # These switches are all handled only in this configuration file.
 
 # Options selectable by user configuration
-set(UPNPLIB_DEF_TOOLS      NO) # tools -> UPNP_ENABLE_HELPER_API_TOOLS
-set(UPNPLIB_DEF_CLIENT     NO) # client -> UPNP_ENABLE_CLIENT_API
-set(UPNPLIB_DEF_DEVICE     NO)
-set(UPNPLIB_DEF_WEBSERVER  NO) # webserver -> UPNP_ENABLE_WEBSERVER
+set(UPNPLIB_DEF_TOOLS     YES) # tools -> UPNP_ENABLE_HELPER_API_TOOLS
+set(UPNPLIB_DEF_CLIENT    YES) # client -> UPNP_ENABLE_CLIENT_API
+set(UPNPLIB_DEF_DEVICE    YES)
+set(UPNPLIB_DEF_WEBSERVER YES) # webserver -> UPNP_ENABLE_WEBSERVER
                                #   only enabled with UPNPLIB_DEF_DEVICE
-set(UPNPLIB_DEF_SSDP       NO) # ssdp -> UPNP_ENABLE_SSDP
-set(UPNPLIB_DEF_OPTSSDP    NO) # optssdp -> UPNP_ENABLE_OPTIONAL_SSDP_HEADERS
-set(UPNPLIB_DEF_SOAP       NO) # soap -> UPNP_ENABLE_SOAP
+set(UPNPLIB_DEF_SSDP      YES) # ssdp -> UPNP_ENABLE_SSDP
+set(UPNPLIB_DEF_OPTSSDP   YES) # optssdp -> UPNP_ENABLE_OPTIONAL_SSDP_HEADERS
+set(UPNPLIB_DEF_SOAP      YES) # soap -> UPNP_ENABLE_SOAP
                                #   only enabled with UPNPLIB_DEF_WEBSERVER
-set(UPNPLIB_DEF_GENA       NO) # gena -> UPNP_ENABLE_GENA
+set(UPNPLIB_DEF_GENA      YES) # gena -> UPNP_ENABLE_GENA
                                #   compiles only with UPNPLIB_DEF_CLIENT and UPNPLIB_DEF_DEVICE
-set(UPNPLIB_DEF_IPV6       NO) # ipv6 -> UPNP_ENABLE_IPV6
+set(UPNPLIB_DEF_IPV6      YES) # ipv6 -> UPNP_ENABLE_IPV6
 #set(UPNPLIB_DEF_OPENSSL   NO) # open_ssl -> UPNP_ENABLE_OPEN_SSL
-set(UPNPLIB_DEF_BLOCKTCP   NO) # blocking_tcp_connections -> UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
-set(UPNPLIB_DEF_DEBUG      NO)
+set(UPNPLIB_DEF_BLOCKTCP  YES) # blocking_tcp_connections -> UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
+set(UPNPLIB_DEF_DEBUG     YES)
 set(UPNPLIB_DEF_IXML      YES) # scriptsupport -> IXML_HAVE_SCRIPTSUPPORT
 #set(UPNPLIB_DEF_UNSPECSVR NO) # unspecified_server -> UPNP_ENABLE_UNSPECIFIED_SERVER
 #set(UPNPLIB_DEF_REUSEADDR NO) # reuseaddr -> UPNP_MINISERVER_REUSEADDR
-set(UPNPLIB_DEF_SAMPLES    NO) # samples -> UPNP_BUILD_SAMPLES
+set(UPNPLIB_DEF_SAMPLES   YES) # samples -> UPNP_BUILD_SAMPLES
 
 # Internal switches for program options
-set(UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS  NO)
+set(UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS YES)
 
 # Dependencies of options
 if(UPNPLIB_DEF_SAMPLES)
@@ -56,7 +56,6 @@ endif()
 
 # Source files and compile settings
 #----------------------------------
-# TODO: Remove references to '${PUPNP_IXML_SOURCE_DIR}' if possible
 
 include_directories(
     ${UPnPlib_BINARY_DIR}
@@ -280,9 +279,15 @@ else() # WIN32
     set_target_properties(upnplib_static_win_exe PROPERTIES
             OUTPUT_NAME upnplibStatic
     )
+    target_compile_definitions(upnplib_static_win_exe
+            PRIVATE $<$<CXX_COMPILER_ID:MSVC>:UPNP_STATIC_LIB>
+    )
     target_link_libraries(upnplib_static_win_exe PRIVATE
             upnplib_static_win
+            ixml_static
             ws2_32
     )
 
 endif() # WIN32
+
+# vim: nowrap

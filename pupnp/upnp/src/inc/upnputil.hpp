@@ -1,11 +1,13 @@
-#ifndef UTIL_H
-#define UTIL_H
+#ifndef UPNPLIB_UTIL_HPP
+#define UPNPLIB_UTIL_HPP
 
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
+ * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2022-02-27
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,29 +47,25 @@
 #define EVENT_TIMEDOUT -2
 #define EVENT_TERMINATE -3
 
-// #ifdef __cplusplus
-// extern "C" {
-// #endif
-
 /*!
  * \brief Copy no of bytes spcified by the LINE_SIZE constant, from the
  * source buffer. Null terminate the destination buffer.
  */
 void linecopy(
-        /*! [out] output buffer. */
-        char dest[LINE_SIZE],
-        /*! [in] input buffer. */
-        const char *src);
+    /*! [out] output buffer. */
+    char dest[LINE_SIZE],
+    /*! [in] input buffer. */
+    const char* src);
 
 /*!
  * \brief Copy no of bytes spcified by the NAME_SIZE constant, from the
  * source buffer. Null terminate the destination buffer
  */
 void namecopy(
-        /*! [out] output buffer. */
-        char dest[NAME_SIZE],
-        /*! [in] input buffer. */
-        const char *src);
+    /*! [out] output buffer. */
+    char dest[NAME_SIZE],
+    /*! [in] input buffer. */
+    const char* src);
 
 /*!
  * \brief Determine if the srclen passed in paramter is less than the
@@ -78,16 +76,12 @@ void namecopy(
  * buffer. Null terminate the destination buffer.
  */
 void linecopylen(
-        /*! [out] output buffer. */
-        char dest[LINE_SIZE],
-        /*! [in] input buffer. */
-        const char *src,
-        /*! [in] bytes to be copied. */
-        size_t srclen);
-
-// #ifdef __cplusplus
-// }
-// #endif
+    /*! [out] output buffer. */
+    char dest[LINE_SIZE],
+    /*! [in] input buffer. */
+    const char* src,
+    /*! [in] bytes to be copied. */
+    size_t srclen);
 
 /* Size of the errorBuffer variable, passed to the strerror_r() function */
 #define ERROR_BUFFER_LEN (size_t)256
@@ -116,4 +110,4 @@ void linecopylen(
 #endif /* _WIN32 */
 #endif /* !defined(__cplusplus) || defined(UPNP_USE_MSVCPP) */
 
-#endif /* UTIL_H */
+#endif /* UPNPLIB_UTIL_HPP */

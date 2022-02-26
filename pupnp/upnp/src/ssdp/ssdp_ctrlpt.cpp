@@ -39,9 +39,9 @@
  * \file
  */
 
-#include "config.h"
+#include "config.hpp"
 
-#include "upnputil.h"
+#include "upnputil.hpp"
 
 #ifdef INCLUDE_CLIENT_APIS
 #if EXCLUDE_SSDP == 0
@@ -49,7 +49,7 @@
 #include "SSDPResultData.hpp"
 #include "SSDPResultDataCallback.hpp"
 #include "ThreadPool.hpp"
-#include "UpnpInet.h"
+#include "UpnpInet.hpp"
 #include "httpparser.hpp"
 #include "httpreadwrite.hpp"
 #include "ssdplib.hpp"

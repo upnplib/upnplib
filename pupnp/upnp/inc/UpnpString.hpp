@@ -20,13 +20,9 @@
  * \brief UpnpString object declaration.
  */
 
-#include "UpnpGlobal.h" /* for EXPORT_SPEC */
+#include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
 
 #include <stdlib.h> /* for size_t */
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
 
 /*!
  * \brief Type of the string objects inside libupnp.
@@ -60,10 +56,10 @@ EXPORT_SPEC void UpnpString_delete(
  * \brief Assignment operator.
  */
 EXPORT_SPEC void UpnpString_assign(
-       /*! [in] The \em \b this pointer. */
-       UpnpString *p,
-       /*! [in] The \em \b that pointer. */
-       const UpnpString *q);
+    /*! [in] The \em \b this pointer. */
+    UpnpString* p,
+    /*! [in] The \em \b that pointer. */
+    const UpnpString* q);
 
 /*!
  * \brief Returns the length of the string.
@@ -141,10 +137,6 @@ EXPORT_SPEC void UpnpString_clear(
 //        UpnpString *p,
 //        /*! [in] The \em \b the second string. */
 //        UpnpString *q);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 /* @} UpnpString The UpnpString API */
 

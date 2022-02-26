@@ -45,6 +45,7 @@
 #include "upnp.hpp" /* for Upnp_EventType */
 #include "upnptools.hpp"
 
+#include "pthread.h" // To find pthreads4w don't use <pthread.h>
 #include <string.h>
 
 #ifdef SAMPLE_UTIL_C

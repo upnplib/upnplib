@@ -9,9 +9,9 @@ project(PUPNP_IXML_TEST VERSION 0001
                    HOMEPAGE_URL "https://github.com/upnplib")
 
 
-file (GLOB XML_FILES
-	${PROJECT_SOURCE_DIR}/testdata/*.xml
-)
+#file (GLOB XML_FILES
+#	${PROJECT_SOURCE_DIR}/testdata/*.xml
+#)
 
 include_directories (
         ${PUPNP_IXML_SOURCE_DIR}/inc

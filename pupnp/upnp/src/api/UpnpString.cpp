@@ -19,10 +19,10 @@
  * \brief UpnpString object implementation.
  */
 
-#include "config.h"
+#include "config.hpp"
 #include "autoconfig.h"
 
-#include "UpnpString.h"
+#include "UpnpString.hpp"
 
 //#include <stdlib.h> /* for calloc(), free() */
 #include <string.h> /* for strlen(), strdup() */
@@ -138,7 +138,7 @@ void UpnpString_delete(UpnpString* p) {
 //    return NULL;
 //}
 
-void UpnpString_assign(UpnpString* p, const UpnpString* q) {
+[[maybe_unused]] void UpnpString_assign(UpnpString* p, const UpnpString* q) {
     if (p != q) {
         UpnpString_set_String(p, UpnpString_get_String(q));
     }

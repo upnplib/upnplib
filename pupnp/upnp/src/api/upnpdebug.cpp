@@ -38,11 +38,11 @@
  * \file
  */
 #define UPNP_DEBUG_C
-#include "config.h"
+#include "config.hpp"
 
 #include "upnpdebug.hpp"
 
-#include "ithread.h"
+#include "ithread.hpp"
 //#include "ixml.h"
 #include "upnp.hpp"
 
