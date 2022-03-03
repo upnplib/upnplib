@@ -55,7 +55,7 @@
 #ifdef _WIN32
 #include "config.hpp"
 #include "UpnpStdInt.hpp" /* for ssize_t */
-#include "unixutil.hpp" /* for socklen_t, EAFNOSUPPORT */
+#include "unixutil.hpp"   /* for socklen_t, EAFNOSUPPORT */
 #include "upnp.hpp"
 #include <errno.h>
 #include <time.h>

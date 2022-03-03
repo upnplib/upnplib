@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-14
+// Redistribution only with this Copyright remark. Last modified: 2022-03-04
 
 #include "upnpmock/pthread.hpp"
 #include "upnpmock/stdio.hpp"
@@ -15,6 +15,7 @@
 using ::testing::_;
 using ::testing::MatchesRegex;
 using ::testing::Return;
+using ::testing::StrEq;
 
 namespace upnplib {
 
@@ -373,7 +374,7 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_to_file) {
 
     EXPECT_CALL(mocked_pthread, pthread_mutex_init(_, _)).Times(1);
     EXPECT_CALL(mocked_stdio, fclose(_)).Times(0);
-    EXPECT_CALL(mocked_stdio, fopen(_, "a"))
+    EXPECT_CALL(mocked_stdio, fopen(_, StrEq("a")))
         .WillOnce(Return((FILE*)0x123456abcdef));
 
     // Process unit
@@ -386,7 +387,7 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_to_file) {
 
     EXPECT_CALL(mocked_pthread, pthread_mutex_init(_, _)).Times(0);
     EXPECT_CALL(mocked_stdio, fclose(_)).Times(1);
-    EXPECT_CALL(mocked_stdio, fopen(_, "a"))
+    EXPECT_CALL(mocked_stdio, fopen(_, StrEq("a")))
         .WillOnce(Return((FILE*)0x5a5a5a5a5a5a));
 
     // Process unit
@@ -468,7 +469,7 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_using_file) {
         stderr);
 
     EXPECT_CALL(mocked_pthread, pthread_mutex_init(_, _)).Times(0);
-    EXPECT_CALL(mocked_stdio, fopen(_, "a"))
+    EXPECT_CALL(mocked_stdio, fopen(_, StrEq("a")))
         .WillOnce(Return((FILE*)0x123456abcdef));
     EXPECT_CALL(mocked_stdio, fclose(_)).Times(0);
     EXPECT_CALL(mocked_string, strerror(_)).Times(0);
