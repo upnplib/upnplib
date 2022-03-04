@@ -16,30 +16,33 @@ project(UPNP_CORE VERSION 0012
 # These switches are all handled only in this configuration file.
 
 # Options selectable by user configuration
-set(UPNPLIB_DEF_TOOLS     YES) # tools -> UPNP_ENABLE_HELPER_API_TOOLS
-set(UPNPLIB_DEF_CLIENT    YES) # client -> UPNP_ENABLE_CLIENT_API
-set(UPNPLIB_DEF_DEVICE    YES)
-set(UPNPLIB_DEF_WEBSERVER YES) # webserver -> UPNP_ENABLE_WEBSERVER
-                               #   only enabled with UPNPLIB_DEF_DEVICE
-set(UPNPLIB_DEF_SSDP      YES) # ssdp -> UPNP_ENABLE_SSDP
-set(UPNPLIB_DEF_OPTSSDP   YES) # optssdp -> UPNP_ENABLE_OPTIONAL_SSDP_HEADERS
-set(UPNPLIB_DEF_SOAP      YES) # soap -> UPNP_ENABLE_SOAP
-                               #   only enabled with UPNPLIB_DEF_WEBSERVER
-set(UPNPLIB_DEF_GENA      YES) # gena -> UPNP_ENABLE_GENA
-                               #   compiles only with UPNPLIB_DEF_CLIENT and UPNPLIB_DEF_DEVICE
-set(UPNPLIB_DEF_IPV6      YES) # ipv6 -> UPNP_ENABLE_IPV6
-#set(UPNPLIB_DEF_OPENSSL   NO) # open_ssl -> UPNP_ENABLE_OPEN_SSL
-set(UPNPLIB_DEF_BLOCKTCP  YES) # blocking_tcp_connections -> UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
-set(UPNPLIB_DEF_DEBUG     YES)
-set(UPNPLIB_DEF_IXML      YES) # scriptsupport -> IXML_HAVE_SCRIPTSUPPORT
-#set(UPNPLIB_DEF_UNSPECSVR NO) # unspecified_server -> UPNP_ENABLE_UNSPECIFIED_SERVER
-#set(UPNPLIB_DEF_REUSEADDR NO) # reuseaddr -> UPNP_MINISERVER_REUSEADDR
-set(UPNPLIB_DEF_SAMPLES   YES) # samples -> UPNP_BUILD_SAMPLES
+set(UPNPLIB_DEF_TOOLS ${UPNPLIB_WITH_TOOLS})         # tools -> UPNP_ENABLE_HELPER_API_TOOLS
+set(UPNPLIB_DEF_CLIENT ${UPNPLIB_WITH_CLIENT})       # client -> UPNP_ENABLE_CLIENT_API
+set(UPNPLIB_DEF_DEVICE ${UPNPLIB_WITH_DEVICE})
+set(UPNPLIB_DEF_WEBSERVER ${UPNPLIB_WITH_WEBSERVER}) # webserver -> UPNP_ENABLE_WEBSERVER
+                                                     #   only enabled with UPNPLIB_DEF_DEVICE
+set(UPNPLIB_DEF_SSDP ${UPNPLIB_WITH_SSDP})           # ssdp -> UPNP_ENABLE_SSDP
+set(UPNPLIB_DEF_OPTSSDP ${UPNPLIB_WITH_OPTSSDP})     # optssdp -> UPNP_ENABLE_OPTIONAL_SSDP_HEADERS
+set(UPNPLIB_DEF_SOAP ${UPNPLIB_WITH_SOAP})           # soap -> UPNP_ENABLE_SOAP
+                                                     #   only enabled with UPNPLIB_DEF_WEBSERVER
+set(UPNPLIB_DEF_GENA ${UPNPLIB_WITH_GENA})           # gena -> UPNP_ENABLE_GENA
+                                                     #   compiles only with UPNPLIB_DEF_CLIENT and UPNPLIB_DEF_DEVICE
+set(UPNPLIB_DEF_IPV6 ${UPNPLIB_WITH_IPV6})           # ipv6 -> UPNP_ENABLE_IPV6
+#set(UPNPLIB_DEF_OPENSSL   NO)                        # open_ssl -> UPNP_ENABLE_OPEN_SSL
+set(UPNPLIB_DEF_BLOCKTCP ${UPNPLIB_WITH_BLOCKTCP})   # blocking_tcp_connections -> UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
+set(UPNPLIB_DEF_IXML ${UPNPLIB_WITH_IXML})           # scriptsupport -> IXML_HAVE_SCRIPTSUPPORT
+#set(UPNPLIB_DEF_UNSPECSVR NO)                        # unspecified_server -> UPNP_ENABLE_UNSPECIFIED_SERVER
+#set(UPNPLIB_DEF_REUSEADDR NO)                        # reuseaddr -> UPNP_MINISERVER_REUSEADDR
+set(UPNPLIB_DEF_SAMPLES ${UPNPLIB_WITH_SAMPLES})     # samples -> UPNP_BUILD_SAMPLES
 
 # Internal switches for program options
 set(UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS YES)
 
 # Dependencies of options
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(UPNPLIB_DEF_DEBUG YES)
+endif()
+
 if(UPNPLIB_DEF_SAMPLES)
     set(UPNPLIB_DEF_TOOLS YES)
     set(UPNPLIB_DEF_CLIENT YES)

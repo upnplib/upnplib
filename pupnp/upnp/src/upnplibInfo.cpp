@@ -56,6 +56,7 @@ void* library_info(void*) {
     msg << "CMAKE_CXX_COMPILER_VERSION = " << CMAKE_CXX_COMPILER_VERSION
         << '\n';
     msg << "CMAKE_BUILD_TYPE = " << CMAKE_BUILD_TYPE << '\n';
+    msg << "CMAKE_GENERATOR = " << CMAKE_GENERATOR << '\n';
 
     msg << "---- library info ----------------\n"
         << "UPNP_VERSION_STRING = " << UPNP_VERSION_STRING << "\n"

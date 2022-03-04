@@ -36,7 +36,7 @@ jobs:
           arch: amd64
 
       - name: Configure
-        run: cmake -S . -B build -D UPNP_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=MinSizeRel
+        run: cmake -S . -B build -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=MinSizeRel
 
       - name: Build
         run: cmake --build build --config MinSizeRel

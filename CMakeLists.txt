@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-03-04
+# Redistribution only with this Copyright remark. Last modified: 2022-03-05
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -10,6 +10,7 @@ project(UPnPlib VERSION ${UPNP_VERSION_STRING}
                 DESCRIPTION "UPnP library"
                 HOMEPAGE_URL "https://github.com/upnplib")
 
+enable_testing()
 
 #################################
 # Paths                         #
@@ -25,16 +26,28 @@ set(UPNP_PTHREADS_STATIC_LIBRARY libpthread.a CACHE INTERNAL "Name of the linkab
 #################################
 include(CMakeDependentOption)
 
-option(PT4W_BUILD_TESTING "Build the time and space consuming test suite of pthreads4w" OFF)
+option(UPNPLIB_WITH_TOOLS "Make some not essential program features available like text for error numbers etc." OFF)
+option(UPNPLIB_WITH_CLIENT "Providing client functionality for e.g. a control point listening to a UPnP server." OFF)
+option(UPNPLIB_WITH_DEVICE "Providing device functionality so clients can connect to it." OFF)
+option(UPNPLIB_WITH_WEBSERVER "Provide a webserver." OFF)
+option(UPNPLIB_WITH_SSDP "Enable the Simple Service Discovery Protocol." OFF)
+option(UPNPLIB_WITH_OPTSSDP "Enable optional SSDP headers." OFF)
+option(UPNPLIB_WITH_SOAP "Enable the Simple Object Access Protocol." OFF)
+option(UPNPLIB_WITH_GENA "Enable the General Event Notification Architecture." OFF)
+option(UPNPLIB_WITH_IPV6 "Enable the IPv6 protocol stack." OFF)
+option(UPNPLIB_WITH_BLOCKTCP "Enable the TCP protocol stack to wait (blocking) until receiving an answer or timed out." OFF)
+option(UPNPLIB_WITH_IXML "Enable IXML script support." OFF)
+option(UPNPLIB_WITH_SAMPLES "Provide sample programs device and control point." OFF)
+option(UPNPLIB_WITH_GOOGLETEST "Download and build Googletest." OFF)
 
-option(UPNP_GOOGLETEST "Download and build Googletest" OFF)
+option(PT4W_BUILD_TESTING "Build the time and space consuming test suite of pthreads4w" OFF)
 # gtest_disable_pthreads is an option of the GoogleTest package set to OFF by
 # default so it always compiles with PThreads. This does not compiles on MS
 # Windows with pthreads4w. But we cannot disable pthreads by default because on
 # Linux mocked functions segfault without it. So we must disable PThreads only
 # on MS Windows. The user can set gtest_disable_pthreads as he like.
 if(WIN32)
-    cmake_dependent_option(gtest_disable_pthreads "Disable Googletest to use POSIX Threads" ON ${UPNP_GOOGLETEST} ON)
+    cmake_dependent_option(gtest_disable_pthreads "Disable Googletest to use POSIX Threads" ON ${UPNPLIB_WITH_GOOGLETEST} ON)
 endif()
 
 # TODO: Test this option to use the static pthreads4w
@@ -310,7 +323,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/sample ${PROJECT_SOURCE_DIR}/sample/build
 # Googletest                    #
 #################################
 # Download, configure and build
-if(UPNP_GOOGLETEST)
+if(UPNPLIB_WITH_GOOGLETEST)
 
     # It may already included to install pthreads4w on WIN32
     if(NOT WIN32)
@@ -396,7 +409,7 @@ if(UPNP_GOOGLETEST)
 
         endif(BUILD_SHARED_LIBS)
 
-    else(WIN32) # AND UPNP_GOOGLETEST
+    else(WIN32) # AND UPNPLIB_WITH_GOOGLETEST
 
         # This caches googletest_SOURCE_DIR, googletest_BINARY_DIR and googletest_POPULATED.
         FetchContent_MakeAvailable(googletest)
@@ -455,7 +468,7 @@ if(UPNP_GOOGLETEST)
     message(DEBUG "  DEBUG: googletest_SOURCE_DIR is: ${googletest_SOURCE_DIR}")
     message(DEBUG "  DEBUG: googletest_BINARY_DIR is: ${googletest_BINARY_DIR}")
 
-endif(UPNP_GOOGLETEST)
+endif(UPNPLIB_WITH_GOOGLETEST)
 
 #################################
 # Export cmake variables        #
@@ -487,3 +500,155 @@ message(DEBUG "  DEBUG: CMAKE_BUILD_WITH_INSTALL_RPATH is ..: ${CMAKE_BUILD_WITH
 message(DEBUG "  DEBUG: CMAKE_INSTALL_RPATH_USE_LINK_PATH is: ${CMAKE_INSTALL_RPATH_USE_LINK_PATH}")
 
 message(STATUS "Build type is ${CMAKE_BUILD_TYPE}")
+
+
+#################################
+# Configure and build tests     #
+#################################
+set(UPNPLIB_BUILD_COMMAND
+        COMMAND ${CMAKE_CTEST_COMMAND}
+        --build-and-test "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}/Build_tests"
+        --build-generator ${CMAKE_GENERATOR} --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+)
+
+add_test(NAME ctest_build_no_option ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_TOOLS=NO
+                        -DUPNPLIB_WITH_CLIENT=NO
+                        -DUPNPLIB_WITH_DEVICE=NO
+                        -DUPNPLIB_WITH_WEBSERVER=NO
+                        -DUPNPLIB_WITH_SSDP=NO
+                        -DUPNPLIB_WITH_OPTSSDP=NO
+                        -DUPNPLIB_WITH_SOAP=NO
+                        -DUPNPLIB_WITH_GENA=NO
+                        -DUPNPLIB_WITH_IPV6=NO
+                        -DUPNPLIB_WITH_BLOCKTCP=NO
+                        -DUPNPLIB_WITH_IXML=NO
+                        -DUPNPLIB_WITH_SAMPLES=NO
+                        -DUPNPLIB_WITH_GOOGLETEST=NO -DBUILD_SHARED_LIBS=YES
+)
+add_test(NAME ctest_build_no_option_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_tools ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_TOOLS=YES
+)
+add_test(NAME ctest_build_with_tools_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_client ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_TOOLS=NO
+                        -DUPNPLIB_WITH_CLIENT=YES
+)
+add_test(NAME ctest_build_with_client_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_device ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_CLIENT=NO
+                        -DUPNPLIB_WITH_DEVICE=YES
+)
+add_test(NAME ctest_build_with_device_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_webserver ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_DEVICE=NO
+                        -DUPNPLIB_WITH_WEBSERVER=YES
+)
+add_test(NAME ctest_build_with_webserver_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_ssdp ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_WEBSERVER=NO
+                        -DUPNPLIB_WITH_SSDP=YES
+)
+add_test(NAME ctest_build_with_ssdp_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_optssdp ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_SSDP=NO
+                        -DUPNPLIB_WITH_OPTSSDP=YES
+)
+add_test(NAME ctest_build_with_optssdp_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_soap ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_OPTSSDP=NO
+                        -DUPNPLIB_WITH_SOAP=YES
+)
+add_test(NAME ctest_build_with_soap_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_gena ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_SOAP=NO
+                        -DUPNPLIB_WITH_GENA=YES
+)
+add_test(NAME ctest_build_with_gena_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_ipv6 ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_GENA=NO
+                        -DUPNPLIB_WITH_IPV6=YES
+)
+add_test(NAME ctest_build_with_ipv6_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_blocktcp ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_IPV6=NO
+                        -DUPNPLIB_WITH_BLOCKTCP=YES
+)
+add_test(NAME ctest_build_with_blocktcp_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_ixml ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_BLOCKTCP=NO
+                        -DUPNPLIB_WITH_IXML=YES
+)
+add_test(NAME ctest_build_with_ixml_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_samples ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_IXML=NO
+                        -DUPNPLIB_WITH_SAMPLES=YES
+)
+add_test(NAME ctest_build_with_samples_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_googletest ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_SAMPLES=NO
+                        -DUPNPLIB_WITH_GOOGLETEST=YES -DBUILD_SHARED_LIBS=YES
+)
+add_test(NAME ctest_build_with_googletest_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_all_options ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_TOOLS=YES
+                        -DUPNPLIB_WITH_CLIENT=YES
+                        -DUPNPLIB_WITH_DEVICE=YES
+                        -DUPNPLIB_WITH_WEBSERVER=YES
+                        -DUPNPLIB_WITH_SSDP=YES
+                        -DUPNPLIB_WITH_OPTSSDP=YES
+                        -DUPNPLIB_WITH_SOAP=YES
+                        -DUPNPLIB_WITH_GENA=YES
+                        -DUPNPLIB_WITH_IPV6=YES
+                        -DUPNPLIB_WITH_BLOCKTCP=YES
+                        -DUPNPLIB_WITH_IXML=YES
+                        -DUPNPLIB_WITH_SAMPLES=YES
+                        -DUPNPLIB_WITH_GOOGLETEST=YES -DBUILD_SHARED_LIBS=YES
+)
+add_test(NAME ctest_build_all_options_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)

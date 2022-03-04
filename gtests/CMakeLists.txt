@@ -13,7 +13,6 @@ project(UPNP_GTESTS VERSION 0022
 #################################
 # Build the Unit Tests          #
 #################################
-enable_testing()
 
 include_directories(
     # Root project
@@ -44,7 +43,7 @@ include_directories(
 # I have found a vague hint about the flag GTEST_LINKED_AS_SHARED_LIBRARY at
 # build/_deps/googletest-src/googletest/README.md
 add_compile_definitions(PRIVATE
-    $<$<AND:$<BOOL:${UPNP_GOOGLETEST}>,$<BOOL:${BUILD_SHARED_LIBS}>>:GTEST_LINKED_AS_SHARED_LIBRARY>
+    $<$<AND:$<BOOL:${UPNPLIB_WITH_GOOGLETEST}>,$<BOOL:${BUILD_SHARED_LIBS}>>:GTEST_LINKED_AS_SHARED_LIBRARY>
     # Compile tests for the old (pupnp) source code.
     OLD_TEST
 )
