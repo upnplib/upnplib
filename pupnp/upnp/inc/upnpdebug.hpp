@@ -37,7 +37,7 @@
  * \file
  */
 
-#include "upnpconfig.h"
+//#include "upnpconfig.h"
 //#include "UpnpGlobal.hpp" /* for UPNP_INLINE */
 #include "upnp.hpp" // for UPNP_E_SUCCESS
 #include <stdio.h>

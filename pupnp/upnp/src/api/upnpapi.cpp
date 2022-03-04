@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-18
+ * Redistribution only with this Copyright remark. Last modified: 2022-03-04
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -3671,8 +3671,14 @@ int UpnpAddVirtualDir(const char* newDirName, const void* cookie,
         *oldcookie = NULL;
     pNewVirtualDir->cookie = cookie;
     memset(pNewVirtualDir->dirName, 0, sizeof(pNewVirtualDir->dirName));
+#ifdef UPNPLIB_PUPNP_COMPATIBLE
+    // output may be truncated copying 255 bytes from a string of length 255
+    // [-Werror=stringop-truncation]
     strncpy(pNewVirtualDir->dirName, dirName,
             sizeof(pNewVirtualDir->dirName) - 1);
+#else
+    strncpy(pNewVirtualDir->dirName, dirName, sizeof(pNewVirtualDir->dirName));
+#endif
     *(pNewVirtualDir->dirName + strlen(dirName)) = 0;
 
     if (pVirtualDirList == NULL) { /* first virtual dir */

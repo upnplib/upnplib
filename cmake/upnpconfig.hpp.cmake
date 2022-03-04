@@ -1,8 +1,9 @@
 /*******************************************************************************
  *
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
- * Copyright (c) 2021 Ingo Höft     <Ingo@Hoeft-online.de>
  * All rights reserved.
+ * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2022-03-04
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -123,5 +124,14 @@ UPNP_VERSION_PATCH)
 
 /* Defines if MSVC is used */
 #cmakedefine UPNP_USE_MSVCPP ${UPNP_USE_MSVCPP}
+
+/***************************************************************************
+ * CMake configuration settings
+ ***************************************************************************/
+
+#cmakedefine CMAKE_VERSION "${CMAKE_VERSION}"
+#cmakedefine CMAKE_CXX_COMPILER "${CMAKE_CXX_COMPILER}"
+#cmakedefine CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}"
+#cmakedefine CMAKE_CXX_COMPILER_VERSION "${CMAKE_CXX_COMPILER_VERSION}"
 
 #endif /* UPNP_CONFIG_H */

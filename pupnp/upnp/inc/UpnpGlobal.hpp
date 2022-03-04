@@ -11,8 +11,7 @@
  * \brief Defines constants that for some reason are not defined on some
  * systems.
  */
-// TODO: Check if this include is needed here
-#include "upnpconfig.h"
+#include "upnpconfig.hpp"
 
 #if defined UPNP_LARGEFILE_SENSITIVE && _FILE_OFFSET_BITS + 0 != 64
 #if defined __GNUC__

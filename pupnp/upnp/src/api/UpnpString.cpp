@@ -20,7 +20,7 @@
  */
 
 #include "config.hpp"
-#include "autoconfig.h"
+//#include "autoconfig.h"
 
 #include "UpnpString.hpp"
 

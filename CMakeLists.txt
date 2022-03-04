@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-02-26
+# Redistribution only with this Copyright remark. Last modified: 2022-03-04
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -39,7 +39,7 @@ endif()
 
 # TODO: Test this option to use the static pthreads4w
 # PTW32_STATIC_LIB - for using the static pthreads4W library
-# The option is contained in cmake/upnpconfig.h.cmake.
+# The option is contained in cmake/upnpconfig.hpp.cmake.
 option(PTW32_STATIC_LIB "For using the static pthreads4w library" OFF)
 
 
@@ -49,7 +49,7 @@ option(PTW32_STATIC_LIB "For using the static pthreads4w library" OFF)
 # Define custom cmake options for commandline and cmake-gui
 #------------------------------------------------------------------------
 # If you add or modify an option you should also have attention to a possible
-# corresponding flag in "${PROJECT_SOURCE_DIR}/cmake/upnpconfig.h.cmake". These
+# corresponding flag in "${PROJECT_SOURCE_DIR}/cmake/upnpconfig.hpp.cmake". These
 # variables are exported at the end. See below at section "Export cmake
 # variables".
 # Variablename and its value-placeholder must be the same, e.g.
@@ -66,14 +66,14 @@ endif()
 # Check available library functions. We need that for later configuration.
 include(CheckCXXSymbolExists)
 
-# The option is contained in cmake/upnpconfig.h.cmake.
+# The option is contained in cmake/upnpconfig.hpp.cmake.
 check_cxx_symbol_exists(strnlen "cstring" HAVE_STRNLEN)
 
-# The option is contained in cmake/upnpconfig.h.cmake.
+# The option is contained in cmake/upnpconfig.hpp.cmake.
 check_cxx_symbol_exists(strndup "cstring" HAVE_STRNDUP)
 
 # Set a compiler flag to respect specific features of the compiler.
-# The option is contained in cmake/upnpconfig.h.cmake.
+# The option is contained in cmake/upnpconfig.hpp.cmake.
 if(MSVC)
     set(UPNP_USE_MSVCPP 1)
 endif()
@@ -133,7 +133,7 @@ endif()
 #2011-01-16 Marcelo Roberto Jimenez <mroberto(at)users.sourceforge.net>
 #
 #    Define _FILE_OFFSET_BITS, _LARGEFILE_SOURCE and _LARGE_FILE_SOURCE in
-#    upnpconfig.h.
+#    upnpconfig.hpp.
 #
 #    Make these definitions available to programs using the library.
 #    Thanks to Chandra Penke for pointing the problem.
@@ -158,7 +158,8 @@ endif()
 #    AC_DEFINE([_LARGE_FILE_SOURCE], [], [Large files support])
 #    AC_DEFINE([_FILE_OFFSET_BITS], [64], [File Offset size])
 #
-#    Which in turn result in the following #defines in autoconfig.h:
+#    Which in turn result in the following #defines in autoconfig.h
+#    (now upnpconfig.hpp):
 #
 #    #define _LARGE_FILE_SOURCE /**/
 #    #define _FILE_OFFSET_BITS 64
@@ -462,19 +463,14 @@ endif(UPNP_GOOGLETEST)
 # This should be the last statement
 #----------------------------------
 # to compiler macros (#define ...) for conditions to the program source.
-# Hope we have all needed variables defined so we can write upnpconfig.h now.
+# Hope we have all needed variables defined so we can write upnpconfig.hpp now.
 # To meet all variables this should be the last statement.
 # Variablename and its value-placeholder must be the same, e.g.
 # #cmakedefine VAR1 ${VAR1}
 # #cmakedefine VAR1 ${VAR} does not work.
 # #cmakedefine VAR2 1  : VAR2 must be exist before even you set a constant.
-configure_file(${PROJECT_SOURCE_DIR}/cmake/upnpconfig.h.cmake
-               ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.h
-)
-# TODO: Remove symlink which is only for compatibility reasons
-file(CREATE_LINK ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.h
-                 ${PROJECT_BINARY_DIR}/autoconfig.h
-                 COPY_ON_ERROR SYMBOLIC
+configure_file(${PROJECT_SOURCE_DIR}/cmake/upnpconfig.hpp.cmake
+               ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.hpp
 )
 
 # RPATH settings to find shared libraries

@@ -97,4 +97,4 @@ jobs:
 
       - name: Run upnplib info program
         # This program is always built
-        run: ./pupnp/upnp/build/upnplib
+        run: ./pupnp/upnp/build/upnplibInfo
