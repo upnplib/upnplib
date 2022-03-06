@@ -18,7 +18,7 @@ jobs:
         os: [ macOS-10.15, macOS-latest ]
         googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
         shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
-        buildtype: [ 'MinSizeRel', 'Debug' ]
+        buildtype: [ 'Release', 'Debug' ]
       fail-fast: false
 
     steps:

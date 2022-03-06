@@ -32,6 +32,7 @@
  ******************************************************************************/
 
 #include "tv_device.hpp"
+#include <signal.h>
 
 int main(int argc, char* argv[]) {
     int rc;

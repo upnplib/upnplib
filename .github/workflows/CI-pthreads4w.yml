@@ -35,7 +35,7 @@ jobs:
           arch: amd64
 
       - name: Configure pthreads4w with tests
-        run: cmake -S . -B build -D PT4W_BUILD_TESTING=ON -D CMAKE_BUILD_TYPE=MinSizeRel
+        run: cmake -S . -B build -D PT4W_BUILD_TESTING=ON -D CMAKE_BUILD_TYPE=Release
 
       - name: Append build directory to path
         run: |
@@ -45,4 +45,4 @@ jobs:
       - name: Run pthreads4w testsuite
         run: |
           cd build\_deps\pthreads4w-build\tests
-          #ctest -C MinSizeRel -V
+          #ctest -C Release -V

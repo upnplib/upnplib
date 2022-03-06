@@ -96,8 +96,14 @@ int sock_init_with_ip(SOCKINFO* info, SOCKET sockfd,
         return ret;
     }
 
+#ifdef UPNPLIB_PUPNP_COMPATIBLE
+    // Forming offset [16, 127] is out of the bounds [0, 16] of object
+    // ‘foreign_sockaddr’ with type ‘sockaddr_in’ [-Werror=array-bounds]
     memcpy(&info->foreign_sockaddr, foreign_sockaddr,
            sizeof(info->foreign_sockaddr));
+#else
+    memcpy(&info->foreign_sockaddr, foreign_sockaddr, sizeof(sockaddr));
+#endif
 
     return UPNP_E_SUCCESS;
 }

@@ -19,19 +19,7 @@ jobs:
       matrix:
         googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
         shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
-        buildtype: [ 'MinSizeRel', 'Debug' ]
-          # Possible old options from pupnp
-          # -D CMAKE_BUILD_TYPE=MinSizeRel
-          # -D client=OFF
-          # -D device=OFF
-          # -D gena=OFF
-          # -D ipv6=OFF
-          # -D optssdp=OFF
-          # -D samples=OFF
-          # -D scriptsupport=OFF
-          # -D soap=OFF
-          # -D ssdp=OFF
-          # -D tools=OFF
+        buildtype: [ 'Release', 'Debug' ]
       fail-fast: false
 
     steps:

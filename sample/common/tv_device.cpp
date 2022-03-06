@@ -632,7 +632,7 @@ int IncrementChannel(int incr, IXML_Document* in, IXML_Document** out,
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the channel goes here. */
-    sprintf(value, "%d", newchannel);
+    sprintf(value, "%.4hd", (short)newchannel);
     if (TvDeviceSetServiceTableVar(TV_SERVICE_CONTROL, TV_CONTROL_CHANNEL,
                                    value)) {
         if (UpnpAddToActionResponse(out, actionName,
@@ -733,7 +733,7 @@ static int IncrementVolume(
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the volume goes here. */
-    sprintf(value, "%d", newvolume);
+    sprintf(value, "%.4hd", (short)newvolume);
     if (TvDeviceSetServiceTableVar(TV_SERVICE_CONTROL, TV_CONTROL_VOLUME,
                                    value)) {
         if (UpnpAddToActionResponse(out, actionName,
@@ -834,7 +834,7 @@ static int IncrementColor(
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the volume goes here. */
-    sprintf(value, "%d", newcolor);
+    sprintf(value, "%.4hd", (short)newcolor);
     if (TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_COLOR,
                                    value)) {
         if (UpnpAddToActionResponse(out, actionName,
@@ -938,7 +938,7 @@ int IncrementTint(int incr, IXML_Document* in, IXML_Document** out,
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the volume goes here. */
-    sprintf(value, "%d", newtint);
+    sprintf(value, "%.4hd", (short)newtint);
     if (TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_TINT,
                                    value)) {
         if (UpnpAddToActionResponse(out, actionName,
@@ -1081,7 +1081,7 @@ static int IncrementContrast(
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the channel goes here. */
-    sprintf(value, "%d", newcontrast);
+    sprintf(value, "%.4hd", (short)newcontrast);
     if (TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_CONTRAST,
                                    value)) {
         if (UpnpAddToActionResponse(out, actionName,
@@ -1183,7 +1183,7 @@ static int IncrementBrightness(
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the channel goes here. */
-    sprintf(value, "%d", newbrightness);
+    sprintf(value, "%.4hd", (short)newbrightness);
     if (TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_BRIGHTNESS,
                                    value)) {
         if (UpnpAddToActionResponse(out, actionName,

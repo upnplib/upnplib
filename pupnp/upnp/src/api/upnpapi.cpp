@@ -1008,8 +1008,14 @@ int UpnpRegisterRootDevice2(Upnp_DescType descriptionType,
         goto exit_function;
     }
 
+#ifdef UPNPLIB_PUPNP_COMPATIBLE
+    // output may be truncated copying 179 bytes from a string of length 179
+    // [-Werror=stringop-truncation]
     strncpy(HInfo->LowerDescURL, HInfo->DescURL,
             sizeof(HInfo->LowerDescURL) - 1);
+#else
+    strncpy(HInfo->LowerDescURL, HInfo->DescURL, sizeof(HInfo->LowerDescURL));
+#endif
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                "Following Root Device URL will be used when answering to "
                "legacy CPs %s\n",

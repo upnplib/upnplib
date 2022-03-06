@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-03-05
+# Redistribution only with this Copyright remark. Last modified: 2022-03-06
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -72,8 +72,8 @@ option(PTW32_STATIC_LIB "For using the static pthreads4w library" OFF)
 
 # Set the default build type
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "MinSizeRel" CACHE STRING "Choose the type of build, options are: None, Debug, Release, RelWithDebInfo, or MinSizeRel." FORCE)
-    message(STATUS "No build type specified, defaulting to MinSizeRel.")
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: None, Debug, Release, RelWithDebInfo, or Release." FORCE)
+    message(STATUS "No build type specified, defaulting to Release.")
 endif()
 
 # Check available library functions. We need that for later configuration.
@@ -525,6 +525,9 @@ add_test(NAME ctest_build_no_option ${UPNPLIB_BUILD_COMMAND}
                         -DUPNPLIB_WITH_BLOCKTCP=NO
                         -DUPNPLIB_WITH_IXML=NO
                         -DUPNPLIB_WITH_SAMPLES=NO
+                        -Ddevice=NO
+                        -Dclient=NO
+                        -Dcombo=NO
                         -DUPNPLIB_WITH_GOOGLETEST=NO -DBUILD_SHARED_LIBS=YES
 )
 add_test(NAME ctest_build_no_option_debug ${UPNPLIB_BUILD_COMMAND}
@@ -625,9 +628,33 @@ add_test(NAME ctest_build_with_samples ${UPNPLIB_BUILD_COMMAND}
 add_test(NAME ctest_build_with_samples_debug ${UPNPLIB_BUILD_COMMAND}
         --build-config Debug
 )
+add_test(NAME ctest_build_with_sample_device ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -Ddevice=YES
+)
+add_test(NAME ctest_build_with_sample_device_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_sample_client ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -Ddevice=NO
+                        -Dclient=YES
+)
+add_test(NAME ctest_build_with_sample_client_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
+add_test(NAME ctest_build_with_sample_combo ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -Dclient=NO
+                        -Dcombo=YES
+)
+add_test(NAME ctest_build_with_sample_combo_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
 add_test(NAME ctest_build_with_googletest ${UPNPLIB_BUILD_COMMAND}
         --build-config ${CMAKE_BUILD_TYPE}
-        --build-options -DUPNPLIB_WITH_SAMPLES=NO
+        --build-options -Dcombo=NO
+                        -DUPNPLIB_WITH_SAMPLES=NO
                         -DUPNPLIB_WITH_GOOGLETEST=YES -DBUILD_SHARED_LIBS=YES
 )
 add_test(NAME ctest_build_with_googletest_debug ${UPNPLIB_BUILD_COMMAND}
@@ -647,6 +674,9 @@ add_test(NAME ctest_build_all_options ${UPNPLIB_BUILD_COMMAND}
                         -DUPNPLIB_WITH_BLOCKTCP=YES
                         -DUPNPLIB_WITH_IXML=YES
                         -DUPNPLIB_WITH_SAMPLES=YES
+                        -Ddevice=YES
+                        -Dclient=YES
+                        -Dcombo=YES
                         -DUPNPLIB_WITH_GOOGLETEST=YES -DBUILD_SHARED_LIBS=YES
 )
 add_test(NAME ctest_build_all_options_debug ${UPNPLIB_BUILD_COMMAND}

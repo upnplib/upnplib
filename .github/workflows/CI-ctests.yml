@@ -41,10 +41,10 @@ jobs:
           arch: amd64
 
       - name: Configure
-        run: cmake -S . -B build -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=MinSizeRel
+        run: cmake -S . -B build -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release
 
       - name: Build
-        run: cmake --build build --config MinSizeRel
+        run: cmake --build build --config Release
 
       - if: runner.os != 'Windows'
         name: Run gtests not on MS Windows
@@ -56,7 +56,7 @@ jobs:
         name: Run gtests on MS Windows
         run: |
           cd ./gtests/build
-          ctest -C MinSizeRel --output-on-failure
+          ctest -C Release --output-on-failure
 
   # Job: Run build tests
   #---------------------
@@ -88,14 +88,14 @@ jobs:
           arch: amd64
 
       - name: Configure
-        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=MinSizeRel
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
 
       - name: Build
-        run: cmake --build build --config MinSizeRel
+        run: cmake --build build --config Release
 
       - name: Run build tests
         run: |
           cd ./build
           # --build-config is needed for MS Windows but ignored.
           # The settings within the test source are used.
-          ctest --build-config Release --output-on-failure --stop-on-failure
+          ctest --build-config Release --tests-regex ^ctest_build_ --output-on-failure --stop-on-failure

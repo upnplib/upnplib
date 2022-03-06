@@ -18,7 +18,7 @@ jobs:
         os: [ windows-2016, windows-latest ]
         googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
         shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
-        buildtype: [ 'MinSizeRel', 'Debug' ]
+        buildtype: [ 'Release', 'Debug' ]
       fail-fast: false
 
     steps:
@@ -105,7 +105,7 @@ jobs:
         os: [ windows-2016, windows-latest ]
         googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
         shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
-        buildtype: [ 'MinSizeRel', 'Debug' ]
+        buildtype: [ 'Release', 'Debug' ]
       fail-fast: false
 
     steps:
