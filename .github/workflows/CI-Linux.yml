@@ -67,22 +67,22 @@ jobs:
       - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
         name: Run simple gtest
         # This gtest is always built with GoogleTest
-        run: ./gtests/build/test_simple
+        run: ./build/gtests/test_simple
 
       - if: matrix.buildtype != 'Debug'
         name: Verify if NO Debug info
         # These two libraries are always built
         run: |
-          objdump -g pupnp/upnp/build/lib/libupnplib.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
-          ls pupnp/upnp/build/lib/libupnplib.a
+          objdump -g ./build/pupnp/upnp/lib/libupnplib.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          ls ./build/pupnp/upnp/lib/libupnplib.a
 
       - if: matrix.buildtype == 'Debug'
         name: Verify if Debug info
         # These two libraries are always built
         run: |
-          objdump -g pupnp/upnp/build/lib/libupnplib.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
-          ls pupnp/upnp/build/lib/libupnplib.a
+          objdump -g ./build/pupnp/upnp/lib/libupnplib.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          ls ./build/pupnp/upnp/lib/libupnplib.a
 
       - name: Run upnplib info program
         # This program is always built
-        run: ./pupnp/upnp/build/upnplibInfo
+        run: ./build/pupnp/upnp/upnplibInfo

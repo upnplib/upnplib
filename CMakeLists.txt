@@ -312,11 +312,12 @@ endif(WIN32)
 # UPnP subdirectories           #
 #################################
 # This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
-# e.g. UPNP_CORE_SOURCE_DIR and UPNP_CORE_BINARY_DIR
+# e.g. PUPNP_UPNP_SOURCE_DIR and PUPNP_UPNP_BINARY_DIR
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp ${PROJECT_SOURCE_DIR}/pupnp/build)
-add_subdirectory(${PROJECT_SOURCE_DIR}/core ${PROJECT_SOURCE_DIR}/core/build)
-add_subdirectory(${PROJECT_SOURCE_DIR}/sample ${PROJECT_SOURCE_DIR}/sample/build)
+add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp)
+add_subdirectory(${PROJECT_SOURCE_DIR}/core)
+add_subdirectory(${PROJECT_SOURCE_DIR}/ixml)
+add_subdirectory(${PROJECT_SOURCE_DIR}/sample)
 
 
 #################################
@@ -380,31 +381,31 @@ if(UPNPLIB_WITH_GOOGLETEST)
 
         message(CHECK_START "configuring Unit Tests")
 
-        # This caches UPNP_GTESTS_SOURCE_DIR and UPNP_GTESTS_BINARY_DIR
-        add_subdirectory(${PROJECT_SOURCE_DIR}/gtests ${PROJECT_SOURCE_DIR}/gtests/build)
+        # This caches UPNPLIB_GTESTS_SOURCE_DIR and UPNPLIB_GTESTS_BINARY_DIR
+        add_subdirectory(${PROJECT_SOURCE_DIR}/gtests)
 
         # Create symlinks for shared gtest .dlls so the Unit Tests can find them.
         if(BUILD_SHARED_LIBS)
             if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
                 # Make Directory is necessary because sub directory ${CMAKE_BUILD_TYPE} isn't available yet.
-                file(MAKE_DIRECTORY ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+                file(MAKE_DIRECTORY ${UPNPLIB_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE})
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gtest${UPNP_DEBUG_SUFFIX}.dll
-                                 ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gtest${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+                                 ${UPNPLIB_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gtest${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gmock${UPNP_DEBUG_SUFFIX}.dll
-                                 ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gmock${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+                                 ${UPNPLIB_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gmock${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gtest_main${UPNP_DEBUG_SUFFIX}.dll
-                                 ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gtest_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+                                 ${UPNPLIB_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gtest_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gmock_main${UPNP_DEBUG_SUFFIX}.dll
-                                 ${UPNP_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gmock_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+                                 ${UPNPLIB_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gmock_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
             else()
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gtest${UPNP_DEBUG_SUFFIX}.dll
-                                 ${UPNP_GTESTS_BINARY_DIR}/gtest${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+                                 ${UPNPLIB_GTESTS_BINARY_DIR}/gtest${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gmock${UPNP_DEBUG_SUFFIX}.dll
-                                 ${UPNP_GTESTS_BINARY_DIR}/gmock${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+                                 ${UPNPLIB_GTESTS_BINARY_DIR}/gmock${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gtest_main${UPNP_DEBUG_SUFFIX}.dll
-                                 ${UPNP_GTESTS_BINARY_DIR}/gtest_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+                                 ${UPNPLIB_GTESTS_BINARY_DIR}/gtest_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gmock_main${UPNP_DEBUG_SUFFIX}.dll
-                                 ${UPNP_GTESTS_BINARY_DIR}/gmock_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
+                                 ${UPNPLIB_GTESTS_BINARY_DIR}/gmock_main${UPNP_DEBUG_SUFFIX}.dll SYMBOLIC)
             endif()
 
         endif(BUILD_SHARED_LIBS)
@@ -457,8 +458,8 @@ if(UPNPLIB_WITH_GOOGLETEST)
 
         message(CHECK_START "configuring Unit Tests")
 
-        # This caches UPNP_GTESTS_SOURCE_DIR and UPNP_GTESTS_BINARY_DIR
-        add_subdirectory(${PROJECT_SOURCE_DIR}/gtests ${PROJECT_SOURCE_DIR}/gtests/build)
+        # This caches UPNPLIB_GTESTS_SOURCE_DIR and UPNPLIB_GTESTS_BINARY_DIR
+        add_subdirectory(${PROJECT_SOURCE_DIR}/gtests)
 
         message(CHECK_PASS "done")
 

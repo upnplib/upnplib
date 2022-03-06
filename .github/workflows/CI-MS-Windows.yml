@@ -66,10 +66,10 @@ jobs:
           ls ./build/bin/${{matrix.buildtype}}/gmock.dll
           ls ./build/bin/${{matrix.buildtype}}/gtest_main.dll
           ls ./build/bin/${{matrix.buildtype}}/gmock_main.dll
-          ls ./gtests/build/${{matrix.buildtype}}/gtest.dll
-          ls ./gtests/build/${{matrix.buildtype}}/gmock.dll
-          ls ./gtests/build/${{matrix.buildtype}}/gtest_main.dll
-          ls ./gtests/build/${{matrix.buildtype}}/gmock_main.dll
+          ls ./build/gtests/${{matrix.buildtype}}/gtest.dll
+          ls ./build/gtests/${{matrix.buildtype}}/gmock.dll
+          ls ./build/gtests/${{matrix.buildtype}}/gtest_main.dll
+          ls ./build/gtests/${{matrix.buildtype}}/gmock_main.dll
 
       - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D BUILD_SHARED_LIBS=ON') && (matrix.buildtype == 'Debug')
         name: GTest .dll libraries build with Visual Studio Debug
@@ -78,20 +78,20 @@ jobs:
           ls ./build/bin/${{matrix.buildtype}}/gmockd.dll
           ls ./build/bin/${{matrix.buildtype}}/gtest_maind.dll
           ls ./build/bin/${{matrix.buildtype}}/gmock_maind.dll
-          ls ./gtests/build/${{matrix.buildtype}}/gtestd.dll
-          ls ./gtests/build/${{matrix.buildtype}}/gmockd.dll
-          ls ./gtests/build/${{matrix.buildtype}}/gtest_maind.dll
-          ls ./gtests/build/${{matrix.buildtype}}/gmock_maind.dll
+          ls ./build/gtests/${{matrix.buildtype}}/gtestd.dll
+          ls ./build/gtests/${{matrix.buildtype}}/gmockd.dll
+          ls ./build/gtests/${{matrix.buildtype}}/gtest_maind.dll
+          ls ./build/gtests/${{matrix.buildtype}}/gmock_maind.dll
 
       - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
         name: Run simple gtest
-        run: ./gtests/build/${{matrix.buildtype}}/test_simple.exe
+        run: ./build/gtests/${{matrix.buildtype}}/test_simple.exe
 
       - name: Run static test program
-        run: ./pupnp/upnp/build/${{matrix.buildtype}}/upnplibInfo.exe
+        run: ./build/pupnp/upnp/${{matrix.buildtype}}/upnplibInfo.exe
 
       - name: Run shared test program
-        run: ./pupnp/upnp/build/${{matrix.buildtype}}/upnplibInfo_shared.exe
+        run: ./build/pupnp/upnp/${{matrix.buildtype}}/upnplibInfo_shared.exe
 
 
   # Job: Configure and build with NMake
@@ -153,10 +153,10 @@ jobs:
           ls ./build/bin/gmock.dll
           ls ./build/bin/gtest_main.dll
           ls ./build/bin/gmock_main.dll
-          ls ./gtests/build/gtest.dll
-          ls ./gtests/build/gmock.dll
-          ls ./gtests/build/gtest_main.dll
-          ls ./gtests/build/gmock_main.dll
+          ls ./build/gtests/gtest.dll
+          ls ./build/gtests/gmock.dll
+          ls ./build/gtests/gtest_main.dll
+          ls ./build/gtests/gmock_main.dll
 
       - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D BUILD_SHARED_LIBS=ON') && (matrix.buildtype == 'Debug')
         name: GTest .dll libraries build with NMake Debug
@@ -165,17 +165,17 @@ jobs:
           ls ./build/bin/gmockd.dll
           ls ./build/bin/gtest_maind.dll
           ls ./build/bin/gmock_maind.dll
-          ls ./gtests/build/gtestd.dll
-          ls ./gtests/build/gmockd.dll
-          ls ./gtests/build/gtest_maind.dll
-          ls ./gtests/build/gmock_maind.dll
+          ls ./build/gtests/gtestd.dll
+          ls ./build/gtests/gmockd.dll
+          ls ./build/gtests/gtest_maind.dll
+          ls ./build/gtests/gmock_maind.dll
 
       - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
         name: Run simple gtest
-        run: ./gtests/build/test_simple.exe
+        run: ./build/gtests/test_simple.exe
 
       - name: Run static test program
-        run: ./pupnp/upnp/build/upnplibInfo.exe
+        run: ./build/pupnp/upnp/upnplibInfo.exe
 
       - name: Run shared test program
-        run: ./pupnp/upnp/build/upnplibInfo_shared.exe
+        run: ./build/pupnp/upnp/upnplibInfo_shared.exe

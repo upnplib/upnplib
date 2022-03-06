@@ -4,15 +4,15 @@
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(SAMPLE VERSION 0002
-                  DESCRIPTION "Simple sample to use the library"
-                  HOMEPAGE_URL "https://github.com/upnplib")
+project(UPNPLIB_SAMPLE VERSION 0002
+                       DESCRIPTION "Simple sample to use the library"
+                       HOMEPAGE_URL "https://github.com/upnplib")
 
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/common
-        ${UPNP_CORE_SOURCE_DIR}/inc
-        ${UPNP_CORE_SOURCE_DIR}/src/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
         ${CMAKE_BINARY_DIR}/upnp/inc
         # if pthreads4w isn't installed this path is empty. The linker

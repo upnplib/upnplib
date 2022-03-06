@@ -4,7 +4,7 @@
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(UPNP_CORE VERSION 0012
+project(PUPNP_UPNP VERSION 0012
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -144,8 +144,8 @@ set(UPNP_SOURCE_FILES
 
     ${PROJECT_SOURCE_DIR}/src/global.cpp
     ${PROJECT_SOURCE_DIR}/src/mockObj.cpp
-    $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/mockObj_win32.cpp>
-    $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/mockObj_unix.cpp>
+    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
+    $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_unix.cpp>
 )
 
 add_compile_definitions(

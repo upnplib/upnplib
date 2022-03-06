@@ -49,13 +49,13 @@ jobs:
       - if: runner.os != 'Windows'
         name: Run gtests not on MS Windows
         run: |
-          cd ./gtests/build
+          cd ./build/gtests
           ctest --output-on-failure
 
       - if: runner.os == 'Windows'
         name: Run gtests on MS Windows
         run: |
-          cd ./gtests/build
+          cd ./build/gtests
           ctest -C Release --output-on-failure
 
   # Job: Run build tests

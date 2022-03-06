@@ -1,4 +1,3 @@
 Next steps to do in this order:
-* Create integration test that compiles possible option combinations.
 * Structure Cmake subprojects and its dependencies.
 * Improve CUri class using https://github.com/homer6/url.

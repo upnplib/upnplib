@@ -66,7 +66,7 @@ jobs:
       - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
         name: Run simple gtest
         # This gtest is always built with GoogleTest
-        run: ./gtests/build/test_simple
+        run: ./build/gtests/test_simple
 
       - if: matrix.buildtype != 'Debug'
         name: Verify if NO Debug info
@@ -74,8 +74,8 @@ jobs:
         run: |
           # objdump does not work (this way?) on macOS
           #objdump [-a] -g upnp/build/lib/libupnplib.dylib | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
-          ls pupnp/upnp/build/lib/libupnplib.dylib
-          ls pupnp/upnp/build/lib/libupnplib.a
+          ls ./build/pupnp/upnp/lib/libupnplib.dylib
+          ls ./build/pupnp/upnp/lib/libupnplib.a
 
       - if: matrix.buildtype == 'Debug'
         name: Verify if Debug info
@@ -83,9 +83,9 @@ jobs:
         run: |
           # objdump does not work (this way?) on macOS
           #objdump [-a] -g upnp/build/lib/libupnplib.dylib | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
-          ls pupnp/upnp/build/lib/libupnplib.dylib
-          ls pupnp/upnp/build/lib/libupnplib.a
+          ls ./build/pupnp/upnp/lib/libupnplib.dylib
+          ls ./build/pupnp/upnp/lib/libupnplib.a
 
       - name: Run upnplib info program
         # This program is always built
-        run: ./pupnp/upnp/build/upnplibInfo
+        run: ./build/pupnp/upnp/upnplibInfo

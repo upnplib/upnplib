@@ -1,13 +1,13 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-01-31
+# Redistribution only with this Copyright remark. Last modified: 2022-03-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNP_GTESTS VERSION 0022
-                    DESCRIPTION "Unit Tests using googletest"
-                    HOMEPAGE_URL "https://github.com/upnplib")
+project(UPNPLIB_GTESTS VERSION 0023
+                       DESCRIPTION "Unit Tests using googletest"
+                       HOMEPAGE_URL "https://github.com/upnplib")
 
 
 #################################
@@ -28,10 +28,10 @@ include_directories(
     # pupnp old code root project
     ${PUPNP_SOURCE_DIR}
     # pupnp core library project
-    ${UPNP_CORE_SOURCE_DIR}/inc
-    ${UPNP_CORE_SOURCE_DIR}/src
-    ${UPNP_CORE_SOURCE_DIR}/src/inc
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil
+    ${PUPNP_UPNP_SOURCE_DIR}/inc
+    ${PUPNP_UPNP_SOURCE_DIR}/src
+    ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
     # pupnp ixml project
     ${PUPNP_IXML_SOURCE_DIR}/inc
     ${PUPNP_IXML_SOURCE_DIR}/src/inc
@@ -105,8 +105,8 @@ add_dependencies(upnplib_gtest_tools gtest gtest_main gmock gmock_main)
 # sock
 #-----
 add_executable(test_sock
-    ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp
-    $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
+    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
     ${PROJECT_SOURCE_DIR}/test_sock.cpp)
 target_link_libraries(test_sock upnplib_gtest_tools)
 add_test(NAME ctest_sock COMMAND test_sock)
@@ -114,7 +114,7 @@ add_test(NAME ctest_sock COMMAND test_sock)
 # strintmap
 #----------
 add_executable(test_strintmap
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
     ${PROJECT_SOURCE_DIR}/test_strintmap.cpp)
 add_test(NAME ctest_strintmap COMMAND test_strintmap)
 
@@ -136,8 +136,8 @@ add_test(NAME ctest_membuffer COMMAND test_membuffer)
 # uri
 #----
 add_executable(test_uri
-    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
     ${PROJECT_SOURCE_DIR}/test_uri.cpp)
 target_link_libraries(test_uri upnplib_gtest_tools)
 add_test(NAME ctest_uri COMMAND test_uri)
@@ -145,8 +145,8 @@ add_test(NAME ctest_uri COMMAND test_uri)
 # uri: parse_uri
 #---------------
 add_executable(test_parse_uri
-    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
     ${PROJECT_SOURCE_DIR}/test_uri.d/test_parse_uri.cpp)
 target_link_libraries(test_parse_uri upnplib_gtest_tools)
 add_test(NAME ctest_parse_uri COMMAND test_parse_uri)
@@ -155,15 +155,15 @@ add_test(NAME ctest_parse_uri COMMAND test_parse_uri)
 # httpparser
 #-----------
 add_executable(test_httpparser
-    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.cpp
-    $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
+    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
+    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
     ${PROJECT_SOURCE_DIR}/test_httpparser.cpp
 )
@@ -175,27 +175,27 @@ add_test(NAME ctest_httpparser COMMAND test_httpparser)
 # httpreadwrite incl. statcodes
 #------------------------------
 add_executable(test_httpreadwrite
-    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp
-    $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/mockObj_win32.cpp>
+    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
 
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/sock.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/sock.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
 
-    # ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
-    ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.cpp
-    $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
+    # ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
+    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
     ${PROJECT_SOURCE_DIR}/test_httpreadwrite.cpp
 )
@@ -207,26 +207,26 @@ add_test(NAME ctest_httpreadwrite COMMAND test_httpreadwrite)
 # httpreadwrite: netconnect
 #--------------------------
 add_executable(test_netconnect
-    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp
-    $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/mockObj_win32.cpp>
+    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
 
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/sock.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/sock.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.cpp
-    $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
+    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
     ${PROJECT_SOURCE_DIR}/test_httpreadwrite.d/test_netconnect.cpp
 )
@@ -246,7 +246,7 @@ add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
 # upnpdebug
 #----------
 add_executable(test_upnpdebug
-    ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
     ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
 target_compile_options(test_upnpdebug PRIVATE
         # suppress warning C4311: 'type cast': pointer truncation
@@ -269,31 +269,31 @@ set(UPNP_UPNPAPI_SOURCE_FILES
     ${PUPNP_IXML_SOURCE_DIR}/src/nodeList.cpp
     $<$<CONFIG:Debug>:${PUPNP_IXML_SOURCE_DIR}/src/ixmldebug.cpp>
 
-    ${UPNP_CORE_SOURCE_DIR}/src/global.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp
-    $<$<BOOL:${WIN32}>:${UPNP_CORE_SOURCE_DIR}/src/mockObj_win32.cpp>
-    $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_CORE_SOURCE_DIR}/src/mockObj_unix.cpp>
+    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
+    $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_unix.cpp>
 
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/FreeList.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/LinkedList.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/threadutil/TimerThread.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/TimerThread.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/sock.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/sock.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/list.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-    ${UPNP_CORE_SOURCE_DIR}/src/genlib/util/strintmap.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
 
-    # ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
-    ${UPNP_CORE_SOURCE_DIR}/src/api/UpnpString.cpp
-    $<$<CONFIG:Debug>:${UPNP_CORE_SOURCE_DIR}/src/api/upnpdebug.cpp>
+    # ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
+    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 )
 
 add_executable(test_upnpapi ${UPNP_UPNPAPI_SOURCE_FILES}
@@ -312,21 +312,21 @@ add_test(NAME ctest_upnpapi COMMAND test_upnpapi
 # LinkedList
 #-----------
 add_executable(test_LinkedList
-        ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
         ${PROJECT_SOURCE_DIR}/test_LinkedList.cpp)
 add_test(NAME ctest_LinkedList COMMAND test_LinkedList)
 
 # FreeList
 #---------
 add_executable(test_FreeList
-        ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
         ${PROJECT_SOURCE_DIR}/test_FreeList.cpp)
 add_test(NAME ctest_FreeList COMMAND test_FreeList)
 
 # ThreadPool
 #-----------
 add_executable(test_ThreadPool
-        ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
         ${PROJECT_SOURCE_DIR}/test_ThreadPool.cpp)
 target_compile_options(test_ThreadPool PRIVATE
         # suppress warning C4311: 'type cast': pointer truncation
@@ -336,7 +336,7 @@ add_test(NAME ctest_ThreadPool COMMAND test_ThreadPool)
 # TimerThread
 #------------
 add_executable(test_TimerThread
-        ${UPNP_CORE_SOURCE_DIR}/src/mockObj.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
         ${PROJECT_SOURCE_DIR}/test_TimerThread.cpp)
 target_compile_options(test_TimerThread PRIVATE
         # suppress warning C4311: 'type cast': pointer truncation
