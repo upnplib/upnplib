@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-21
+ * Redistribution only with this Copyright remark. Last modified: 2022-03-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,6 +45,8 @@
 
 #include "tv_ctrlpt.hpp"
 #include "upnp.hpp"
+
+#include <iostream>
 
 #ifdef _WIN32
 #define isleep(x) Sleep((x)*1000)
@@ -594,19 +596,19 @@ int TvCtrlPointPrintDevice(int devnum) {
  ********************************************************************************/
 void TvCtrlPointAddDevice(IXML_Document* DescDoc, const char* location,
                           int expires) {
-    char* deviceType = NULL;
-    char* friendlyName = NULL;
-    char* presURL = NULL;
-    char* baseURL = NULL;
-    char* relURL = NULL;
-    char* UDN = NULL;
-    char* serviceId[TV_SERVICE_SERVCOUNT] = {NULL, NULL};
-    char* eventURL[TV_SERVICE_SERVCOUNT] = {NULL, NULL};
-    char* controlURL[TV_SERVICE_SERVCOUNT] = {NULL, NULL};
+    char* deviceType{};
+    char* friendlyName{};
+    char* presURL{};
+    char* baseURL{};
+    char* relURL{};
+    char* UDN{};
+    char* serviceId[TV_SERVICE_SERVCOUNT]{};
+    char* eventURL[TV_SERVICE_SERVCOUNT]{};
+    char* controlURL[TV_SERVICE_SERVCOUNT]{};
     Upnp_SID eventSID[TV_SERVICE_SERVCOUNT];
     int TimeOut[TV_SERVICE_SERVCOUNT];
-    struct TvDeviceNode* deviceNode;
-    struct TvDeviceNode* tmpdevnode;
+    struct TvDeviceNode* deviceNode{};
+    struct TvDeviceNode* tmpdevnode{};
     int ret = 1;
     int found = 0;
     int service;
@@ -626,8 +628,9 @@ void TvCtrlPointAddDevice(IXML_Document* DescDoc, const char* location,
     ret = UpnpResolveURL2((baseURL ? baseURL : location), relURL, &presURL);
 
     if (UPNP_E_SUCCESS != ret)
-        SampleUtil_Print("Error generating presURL from %s + %s\n", baseURL,
-                         relURL);
+        SampleUtil_Print(
+            "%s(%d): Error generating presURL from %s + %s, %s(%d)\n", __FILE__,
+            __LINE__, baseURL, relURL, UpnpGetErrorMessage(ret), ret);
 
     if (strcmp(deviceType, TvDeviceType) == 0) {
         SampleUtil_Print("Found Tv device\n");
@@ -680,7 +683,9 @@ void TvCtrlPointAddDevice(IXML_Document* DescDoc, const char* location,
             strcpy(deviceNode->device.UDN, UDN);
             strcpy(deviceNode->device.DescDocURL, location);
             strcpy(deviceNode->device.FriendlyName, friendlyName);
-            strcpy(deviceNode->device.PresURL, presURL);
+            // BUGFIX: Next could segfault
+            if (presURL)
+                strcpy(deviceNode->device.PresURL, presURL);
             deviceNode->device.AdvrTimeOut = expires;
             for (service = 0; service < TV_SERVICE_SERVCOUNT; service++) {
                 if (serviceId[service] == NULL) {
