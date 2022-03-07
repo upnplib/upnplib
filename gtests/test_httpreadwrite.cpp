@@ -1,8 +1,8 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-24
+// Redistribution only with this Copyright remark. Last modified: 2022-03-07
 
 #include "gmock/gmock.h"
-#include "upnplib_gtest_tools.hpp"
+#include "upnplib/upnptools.hpp"
 #include "upnpmock/netdb.hpp"
 
 // Include source code for testing. So we have also direct access to static

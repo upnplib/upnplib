@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-03-06
+# Redistribution only with this Copyright remark. Last modified: 2022-03-07
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -21,8 +21,8 @@ include_directories(
     ${UPnPlib_BINARY_DIR}
     ${UPnPlib_BINARY_DIR}/upnp/inc
     # Googletest
-    ${googletest_SOURCE_DIR}/googletest/include/
-    ${googletest_SOURCE_DIR}/googlemock/include/
+    ${googletest_SOURCE_DIR}/googletest/include
+    ${googletest_SOURCE_DIR}/googlemock/include
     # gtests
     ${PROJECT_SOURCE_DIR}/include
     # pupnp old code root project
@@ -87,7 +87,7 @@ add_link_options($<$<AND:$<BOOL:${APPLE}>,$<BOOL:${BUILD_SHARED_LIBS}>>:LINKER:-
 # upnplib_gtest_tools_unix for Unix operating systems and
 # upnplib_gtest_tools_win32 for Microsoft Windows
 add_library(upnplib_gtest_tools SHARED
-        ${PROJECT_SOURCE_DIR}/tools/upnplib_gtest_tools.cpp
+        tools/upnplib_gtest_tools.cpp
         $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/upnplib_gtest_tools_win32.cpp>
         $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/upnplib_gtest_tools_unix.cpp>)
 set_target_properties(upnplib_gtest_tools PROPERTIES
@@ -106,9 +106,11 @@ add_dependencies(upnplib_gtest_tools gtest gtest_main gmock gmock_main)
 #-----
 add_executable(test_sock
     ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+    ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
     $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
     ${PROJECT_SOURCE_DIR}/test_sock.cpp)
-target_link_libraries(test_sock upnplib_gtest_tools)
+target_compile_definitions(test_sock
+    PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 add_test(NAME ctest_sock COMMAND test_sock)
 
 # strintmap
@@ -147,8 +149,10 @@ add_test(NAME ctest_uri COMMAND test_uri)
 add_executable(test_parse_uri
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-    ${PROJECT_SOURCE_DIR}/test_uri.d/test_parse_uri.cpp)
-target_link_libraries(test_parse_uri upnplib_gtest_tools)
+    ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
+    test_uri.d/test_parse_uri.cpp)
+target_compile_definitions(test_parse_uri
+    PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 add_test(NAME ctest_parse_uri COMMAND test_parse_uri)
 
 
@@ -197,11 +201,11 @@ add_executable(test_httpreadwrite
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
     $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
-    ${PROJECT_SOURCE_DIR}/test_httpreadwrite.cpp
+    ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
+    test_httpreadwrite.cpp
 )
 target_compile_definitions(test_httpreadwrite PRIVATE
                             $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
-target_link_libraries(test_httpreadwrite upnplib_gtest_tools)
 add_test(NAME ctest_httpreadwrite COMMAND test_httpreadwrite)
 
 # httpreadwrite: netconnect
@@ -228,7 +232,7 @@ add_executable(test_netconnect
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
     $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
-    ${PROJECT_SOURCE_DIR}/test_httpreadwrite.d/test_netconnect.cpp
+    test_httpreadwrite.d/test_netconnect.cpp
 )
 target_compile_definitions(test_netconnect PRIVATE
                             $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
@@ -247,10 +251,13 @@ add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
 #----------
 add_executable(test_upnpdebug
     ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-    ${PROJECT_SOURCE_DIR}/test_upnpdebug.cpp)
-target_compile_options(test_upnpdebug PRIVATE
+    ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
+    test_upnpdebug.cpp)
+target_compile_definitions(test_upnpdebug
+               PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+target_compile_options(test_upnpdebug
         # suppress warning C4311: 'type cast': pointer truncation
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4311>)
+        PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/wd4311>)
 target_link_libraries(test_upnpdebug upnplib_gtest_tools)
 add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
 
@@ -294,13 +301,15 @@ set(UPNP_UPNPAPI_SOURCE_FILES
     # ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
     $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
+
+    ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
 )
 
 add_executable(test_upnpapi ${UPNP_UPNPAPI_SOURCE_FILES}
                $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/test_upnpapi_win32.cpp>
                $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/test_upnpapi_unix.cpp>)
-target_compile_definitions(test_upnpapi PRIVATE
-                           $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+target_compile_definitions(test_upnpapi
+               PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 target_compile_options(test_upnpapi PRIVATE
                        # suppress warning C4311: 'type cast': pointer truncation
                        $<$<CXX_COMPILER_ID:MSVC>:/wd4311>)
@@ -352,13 +361,26 @@ target_link_libraries(test_upnplib_gtest_tools
         upnplib_gtest_tools)
 add_test(NAME ctest_upnplib_gtest_tools COMMAND test_upnplib_gtest_tools)
 
+# upnptools
+#----------
+add_executable(test_upnptools test_upnptools.cpp)
+target_compile_definitions(test_upnptools
+        PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+add_test(NAME ctest_upnptools COMMAND test_upnptools
+)
+add_executable(test_upnptools_em test_upnptools.cpp)
+target_compile_definitions(test_upnptools_em
+        PRIVATE UPNPLIB_PUPNP_EMULATION
+        PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+add_test(NAME ctest_upnptools_em COMMAND test_upnptools_em)
+
 # simple test
 #------------
-add_executable(test_simple ${PROJECT_SOURCE_DIR}/test_simple.cpp)
+add_executable(test_simple test_simple.cpp)
 
 # template
 #---------
-add_executable(test_template ${PROJECT_SOURCE_DIR}/test_template.cpp)
+add_executable(test_template test_template.cpp)
 
 # set(ENV{GITHUB_ACTIONS} 1)
 # if(NOT APPLE)

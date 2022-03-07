@@ -51,9 +51,6 @@
 #include "ixml.hpp" /* for IXML_Document */
 // #include "upnpconfig.h" /* for UPNP_HAVE_TOOLS */
 
-/* Function declarations only if tools compiled into the library */
-#if UPNP_HAVE_TOOLS
-
 /*!
  * \brief Converts an SDK error code into a string error message suitable for
  * display. The memory returned from this function should NOT be freed.
@@ -64,6 +61,9 @@
 EXPORT_SPEC const char* UpnpGetErrorMessage(
     /*! [in] The SDK error code to convert. */
     int errorcode);
+
+/* Function declarations only if tools compiled into the library */
+#if UPNP_HAVE_TOOLS
 
 /*!
  * \brief Combines a base URL and a relative URL into a single absolute URL.

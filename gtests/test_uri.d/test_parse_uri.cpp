@@ -1,11 +1,11 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-14
+// Redistribution only with this Copyright remark. Last modified: 2022-03-07
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
 
 #include "gmock/gmock.h"
-#include "upnplib_gtest_tools.hpp"
+#include "upnplib/upnptools.hpp"
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.

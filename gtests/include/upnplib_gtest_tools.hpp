@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-06
+// Redistribution only with this Copyright remark. Last modified: 2022-03-07
 
 #ifndef UPNP_GTEST_TOOLS_H
 #define UPNP_GTEST_TOOLS_H
@@ -9,9 +9,6 @@
 
 namespace upnplib {
 
-UPNP_API const char* UpnpGetErrorMessage(int rc);
-
-//
 // Capture output to stdout or stderr
 // ----------------------------------
 // class CCaptureStdOutErr declaration
