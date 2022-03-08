@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-07
+// Redistribution only with this Copyright remark. Last modified: 2022-03-08
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -124,8 +124,8 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
     EXPECT_CALL(m_mocked_net_if, if_nametoindex(_)).WillOnce(Return(2));
 
     // call the unit
-    EXPECT_STREQ(UpnpGetErrorMessage(::UpnpGetIfInfo("if0v4")),
-                 "UPNP_E_SUCCESS");
+    int returned = ::UpnpGetIfInfo("if0v4");
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     // gIF_NAME mocked with getifaddrs above
     EXPECT_STREQ(gIF_NAME, "if0v4");
@@ -161,8 +161,9 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
 
     // call the unit
     // "ATTENTION! There is a wrong upper case 'O', not zero in 'ethO'";
-    EXPECT_STREQ(UpnpGetErrorMessage(UpnpGetIfInfo("ethO")),
-                 "UPNP_E_INVALID_INTERFACE");
+    int returned = UpnpGetIfInfo("ethO");
+    EXPECT_EQ(returned, UPNP_E_INVALID_INTERFACE)
+        << errStrEx(returned, UPNP_E_INVALID_INTERFACE);
 #ifdef OLD_TEST
     std::cout
         << "  BUG! Interface name (e.g. ethO with upper case O), ip "
@@ -216,7 +217,8 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
 
     // call the unit
     EXPECT_EQ(UpnpSdkInit, 0);
-    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInit2(NULL, 0)), "UPNP_E_SUCCESS");
+    int returned = UpnpInit2(NULL, 0);
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     // Get and check the captured data
     std::string capturedStderr = captureObj.get();
@@ -226,32 +228,28 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
     EXPECT_EQ(UpnpSdkInit, 1);
 
     // call the unit again
-    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInit2(NULL, 0)), "UPNP_E_INIT");
+    returned = UpnpInit2(NULL, 0);
+    EXPECT_EQ(returned, UPNP_E_INIT) << errStrEx(returned, UPNP_E_INIT);
     EXPECT_EQ(UpnpSdkInit, 1);
 }
 
 // TEST_F(UpnpapiIPv4MockTestSuite, UpnpInitMutexes) {
 // TODO
-//    EXPECT_STREQ(UpnpGetErrorMessage(UpnpInitMutexes()), "UPNP_E_SUCCESS");
+//    int returned = UpnpInitMutexes();
+//    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 // }
 
 // UpnpApi common Testsuite
 //-------------------------
 // TEST(UpnpapiTestSuite, WinsockInit) {
 // TODO
-//    EXPECT_STREQ(UpnpGetErrorMessage(UPNP_E_SUCCESS), "UPNP_E_SUCCESS");
+//    EXPECT_STREQ(errStr(UPNP_E_SUCCESS), "UPNP_E_SUCCESS(0)");
 // }
 
 TEST(UpnpapiTestSuite, get_handle_info) {
     Handle_Info** HndInfo = 0;
     EXPECT_EQ(GetHandleInfo(0, HndInfo), HND_INVALID);
     EXPECT_EQ(GetHandleInfo(1, HndInfo), HND_INVALID);
-}
-
-TEST(UpnpapiTestSuite, get_error_message) {
-    EXPECT_STREQ(UpnpGetErrorMessage(0), "UPNP_E_SUCCESS");
-    EXPECT_STREQ(UpnpGetErrorMessage(-121), "UPNP_E_INVALID_INTERFACE");
-    EXPECT_STREQ(UpnpGetErrorMessage(1), "Unknown error code");
 }
 
 } // namespace upnplib

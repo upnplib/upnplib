@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-07
+// Redistribution only with this Copyright remark. Last modified: 2022-03-08
 
 #include "upnpmock/pthread.hpp"
 #include "upnpmock/stdio.hpp"
@@ -140,7 +140,8 @@ TEST(UpnpdebugTestSuite, UpnpPrintf_normal_use) {
     // Enable and initialize logging
     ::UpnpSetLogLevel(UPNP_ALL);
 
-    EXPECT_STREQ(UpnpGetErrorMessage(::UpnpInitLog()), "UPNP_E_SUCCESS");
+    int returned = ::UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     EXPECT_EQ(::UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
               stderr);
 
@@ -192,8 +193,8 @@ TEST_F(UpnpdebugMockTestSuite, initlog_but_no_log_wanted)
 {
     EXPECT_CALL(mocked_pthread, pthread_mutex_init(_, _)).Times(1);
     // Process unit
-    EXPECT_STREQ(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    int returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     // Check if logging is enabled. It should not.
     EXPECT_EQ(
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
@@ -201,8 +202,8 @@ TEST_F(UpnpdebugMockTestSuite, initlog_but_no_log_wanted)
 
     EXPECT_CALL(mocked_pthread, pthread_mutex_init(_, _)).Times(0);
     // Process unit again
-    EXPECT_STREQ(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     // Check if logging is enabled. It should not.
     EXPECT_EQ(
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
@@ -219,8 +220,8 @@ TEST_F(UpnpdebugMockTestSuite, set_all_log_level) {
     // Set logging for all levels
     upnpdebugObj.UpnpSetLogLevel(UPNP_ALL);
     EXPECT_CALL(mocked_pthread, pthread_mutex_init(_, _)).Times(1);
-    EXPECT_STREQ(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    int returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_ALL, (Dbg_Module)NULL),
               stderr);
@@ -250,8 +251,8 @@ TEST_F(UpnpdebugMockTestSuite, set_log_level_info) {
 
     EXPECT_CALL(mocked_pthread, pthread_mutex_init(_, _)).Times(1);
     // Process unit
-    EXPECT_STREQ(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    int returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     // Check if logging to stderr with enabled log_level is now enabled.
     // Setting parameter to NULL returns if a filepointer is set for any of the
@@ -291,8 +292,8 @@ TEST_F(UpnpdebugMockTestSuite, set_log_level_error) {
     // Set logging
     upnpdebugObj.UpnpSetLogLevel(UPNP_ERROR);
     EXPECT_CALL(mocked_pthread, pthread_mutex_init(_, _)).Times(1);
-    EXPECT_STREQ(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    int returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_ALL, (Dbg_Module)NULL),
               nullptr);
@@ -314,8 +315,8 @@ TEST_F(UpnpdebugMockTestSuite, set_log_level_critical) {
     // Set logging
     upnpdebugObj.UpnpSetLogLevel(UPNP_CRITICAL);
     EXPECT_CALL(mocked_pthread, pthread_mutex_init(_, _)).Times(1);
-    EXPECT_STREQ(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    int returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_ALL, (Dbg_Module)NULL),
               nullptr);
@@ -347,8 +348,8 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_but_not_to_fIle) {
         nullptr);
 
     // Process unit
-    EXPECT_STREQ(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    int returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     // Check logging by log file pointer
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_CRITICAL, (Dbg_Module)NULL),
@@ -379,8 +380,8 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_to_file) {
         .WillOnce(Return((FILE*)0x123456abcdef));
 
     // Process unit
-    EXPECT_STREQ(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    int returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     // Get file pointer
     EXPECT_EQ(
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
@@ -392,8 +393,8 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_to_file) {
         .WillOnce(Return((FILE*)0x5a5a5a5a5a5a));
 
     // Process unit
-    EXPECT_STREQ(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     // Get file pointer
     EXPECT_EQ(
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
@@ -423,11 +424,11 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_opening_file_fails) {
     // Process unit
 #ifdef OLD_TEST
     std::cout << "  BUG! UpnpInitLog() should return with failure.\n";
-    EXPECT_STREQ(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    int returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 #else
-    EXPECT_STRNE(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 #endif
     free(errmsg);
 
@@ -456,8 +457,8 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_using_file) {
 
     // Process unit
     // No filename set, this should enable logging and log to stderr
-    EXPECT_STREQ(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    int returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     EXPECT_EQ(
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
         stderr);
@@ -476,8 +477,8 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_using_file) {
     EXPECT_CALL(mocked_string, strerror(_)).Times(0);
 
     // Process unit. This should open a filepointer to file with set filename.
-    EXPECT_STREQ(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_CRITICAL, (Dbg_Module)NULL),
               (FILE*)0x123456abcdef);
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, (Dbg_Module)NULL),
@@ -503,8 +504,8 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_to_file_with_wrong_filename) {
 
     // Process unit
     // No filename set, this should log to stderr
-    EXPECT_STREQ(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    int returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     // Log to stderr
     EXPECT_EQ(
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
@@ -519,8 +520,8 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_to_file_with_wrong_filename) {
     EXPECT_CALL(mocked_string, strerror(_)).Times(0);
 
     // Process unit
-    EXPECT_STREQ(UpnpGetErrorMessage(upnpdebugObj.UpnpInitLog()),
-                 "UPNP_E_SUCCESS");
+    returned = upnpdebugObj.UpnpInitLog();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     // Filepointer is still set to stderr, that seems to be ok so far ...
     EXPECT_EQ(
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-07
+// Redistribution only with this Copyright remark. Last modified: 2022-03-08
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -212,9 +212,7 @@ class SockFTestSuite : public ::testing::Test {
 TEST_F(SockFTestSuite, sock_init) {
     // Process the Unit
     int returned = m_sockObj.sock_init(&m_info, m_socketfd);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS)
-        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << "), but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     EXPECT_EQ(m_info.socket, m_socketfd);
 }
 
@@ -228,9 +226,7 @@ TEST_F(SockFTestSuite, sock_init_with_ip) {
     // Process the Unit
     int returned = m_sockObj.sock_init_with_ip(&m_info, m_socketfd,
                                                (sockaddr*)&foreign_sockaddr);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS)
-        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << "), but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     EXPECT_EQ(m_info.socket, m_socketfd);
     EXPECT_EQ(m_info_sa_in_ptr->sin_port, htons(80));
     EXPECT_EQ(m_info_sa_in_ptr->sin_addr.s_addr, inet_addr("192.168.192.168"));
@@ -247,9 +243,7 @@ TEST_F(SockFTestSuite, sock_destroy_valid_socket_descriptor) {
 
     // Process the Unit
     int returned = m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS)
-        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << "), but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 }
 
 TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_ok_close_fails_not_0) {
@@ -272,18 +266,14 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_ok_close_fails_not_0) {
         EXPECT_EQ(returned =
                       m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH),
                   UPNP_E_SUCCESS)
-            << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-            << "), but not " << UpnpGetErrorMessage(returned) << '(' << returned
-            << ").";
+            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
 
     } else {
 
         EXPECT_EQ(returned =
                       m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH),
                   UPNP_E_SOCKET_ERROR)
-            << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-            << "), but not " << UpnpGetErrorMessage(returned) << '(' << returned
-            << ").";
+            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
     }
 }
 
@@ -309,18 +299,14 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_fails_close_ok) {
         EXPECT_EQ(returned =
                       m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH),
                   UPNP_E_SUCCESS)
-            << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-            << "), but not " << UpnpGetErrorMessage(returned) << '(' << returned
-            << ").";
+            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
 
     } else {
 
         EXPECT_EQ(returned =
                       m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH),
                   UPNP_E_SOCKET_ERROR)
-            << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-            << "), but not " << UpnpGetErrorMessage(returned) << '(' << returned
-            << ").";
+            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
     }
 }
 
@@ -345,18 +331,14 @@ TEST_F(SockFTestSuite, sock_destroy_inval_fd_shutdown_fails_close_fails_not_0) {
         EXPECT_EQ(returned =
                       m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH),
                   UPNP_E_SUCCESS)
-            << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-            << "), but not " << UpnpGetErrorMessage(returned) << '(' << returned
-            << ").";
+            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
 
     } else {
 
         EXPECT_EQ(returned =
                       m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH),
                   UPNP_E_SOCKET_ERROR)
-            << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-            << "), but not " << UpnpGetErrorMessage(returned) << '(' << returned
-            << ").";
+            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
     }
 }
 
@@ -380,8 +362,7 @@ TEST_F(SockFTestSuite, sock_read_no_timeout) {
     // Also on _WIN32 select() returns SOCKET_ERROR (-1).
     int returned =
         m_sockObj.sock_read(&m_info, buffer, sizeof(buffer), &timeoutSecs);
-    EXPECT_EQ(returned, (int)sizeof(received_msg))
-        << UpnpGetErrorMessage(returned) << '(' << returned << ')';
+    EXPECT_EQ(returned, (int)sizeof(received_msg)) << errStr(returned);
     EXPECT_STREQ(buffer, received_msg);
 }
 
@@ -404,8 +385,7 @@ TEST_F(SockFTestSuite, sock_read_within_timeout) {
     // Also on _WIN32 select() returns SOCKET_ERROR (-1).
     int returned =
         m_sockObj.sock_read(&m_info, buffer, sizeof(buffer), &timeoutSecs);
-    EXPECT_EQ(returned, (int)sizeof(received_msg))
-        << UpnpGetErrorMessage(returned) << '(' << returned << ')';
+    EXPECT_EQ(returned, (int)sizeof(received_msg)) << errStr(returned);
     EXPECT_STREQ(buffer, received_msg);
 }
 
@@ -425,9 +405,7 @@ TEST_F(SockFTestSuite, sock_read_with_connection_error) {
     int returned =
         m_sockObj.sock_read(&m_info, buffer, sizeof(buffer), &timeoutSecs);
     EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
-        << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-        << "), but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
+        << errStrEx(returned, UPNP_E_SOCKET_ERROR);
     EXPECT_STREQ(buffer, "");
 }
 
@@ -457,8 +435,7 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
     // Also on _WIN32 select() returns SOCKET_ERROR (-1).
     int returned =
         m_sockObj.sock_read(&m_info, buffer, sizeof(buffer), &timeoutSecs);
-    EXPECT_EQ(returned, (int)sizeof(received_msg))
-        << UpnpGetErrorMessage(returned) << '(' << returned << ')';
+    EXPECT_EQ(returned, (int)sizeof(received_msg)) << errStr(returned);
     EXPECT_STREQ(buffer, received_msg);
 }
 
@@ -479,9 +456,7 @@ TEST_F(SockFTestSuite, sock_read_with_receiving_error) {
     int returned =
         m_sockObj.sock_read(&m_info, buffer, sizeof(buffer), &timeoutSecs);
     EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
-        << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-        << "), but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
+        << errStrEx(returned, UPNP_E_SOCKET_ERROR);
     EXPECT_STREQ(buffer, "");
 }
 
@@ -512,9 +487,7 @@ TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_socket_info) {
                     ::testing::ExitedWithCode(0), ".*")
             << "  # A nullptr to a socket info structure must not segfault.";
         EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
-            << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-            << "), but not " << UpnpGetErrorMessage(returned) << '(' << returned
-            << ").";
+            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
     }
 }
 
@@ -550,9 +523,7 @@ TEST_F(SockFTestSuite, sock_read_with_empty_socket_info) {
     int returned =
         m_sockObj.sock_read(&info, buffer, sizeof(buffer), &timeoutSecs);
     EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
-        << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
+        << errStrEx(returned, UPNP_E_SOCKET_ERROR);
     EXPECT_STREQ(buffer, "");
 }
 
@@ -588,8 +559,7 @@ TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_0_byte_length)
         int returned = m_sockObj.sock_read(&m_info, nullptr, 0, &timeoutSecs);
         EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR);
         ::std::cout << "  BUG! Should be received number of bytes = 0"
-                    << " but not " << UpnpGetErrorMessage(returned) << '('
-                    << returned << ").\n";
+                    << " but not " << errStr(returned) << ".\n";
 
     } else {
 
@@ -615,8 +585,7 @@ TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_0_byte_length)
                              // process's address space.
         int returned = m_sockObj.sock_read(&m_info, nullptr, 0, &timeoutSecs);
         EXPECT_EQ(returned, 0) << "  # Should be received number of bytes = 0"
-                               << " but not " << UpnpGetErrorMessage(returned)
-                               << '(' << returned << ").";
+                               << " but not " << errStr(returned) << ".";
     }
 }
 
@@ -652,8 +621,7 @@ TEST_F(SockFTestSuite, sock_read_with_valid_buffer_but_0_byte_length)
         int returned = m_sockObj.sock_read(&m_info, buffer, 0, &timeoutSecs);
         EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR);
         ::std::cout << "  BUG! Should be received number of bytes = 0"
-                    << " but not " << UpnpGetErrorMessage(returned) << '('
-                    << returned << ").\n";
+                    << " but not " << errStr(returned) << ".\n";
         EXPECT_STREQ(buffer, "");
 
     } else {
@@ -681,8 +649,7 @@ TEST_F(SockFTestSuite, sock_read_with_valid_buffer_but_0_byte_length)
         // Also on _WIN32 select() returns SOCKET_ERROR (-1).
         int returned = m_sockObj.sock_read(&m_info, buffer, 0, &timeoutSecs);
         EXPECT_EQ(returned, 0) << "  # Should be received number of bytes = 0"
-                               << " but not " << UpnpGetErrorMessage(returned)
-                               << '(' << returned << ").";
+                               << " but not " << errStr(returned) << ".";
         EXPECT_STREQ(buffer, "");
     }
 }
@@ -724,8 +691,7 @@ TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_timeout_value)
                      exit(0)),
                     ::testing::ExitedWithCode(0), ".*")
             << "  # A nullptr to the timeout value must not segfault.";
-        EXPECT_EQ(returned, (int)sizeof(received_msg))
-            << UpnpGetErrorMessage(returned) << '(' << returned << ')';
+        EXPECT_EQ(returned, (int)sizeof(received_msg)) << errStr(returned);
         EXPECT_STREQ(buffer, received_msg);
     }
 }
@@ -746,8 +712,7 @@ TEST_F(SockFTestSuite, sock_write_no_timeout) {
                          // descriptor to become ready.
     int returned =
         m_sockObj.sock_write(&m_info, sent_msg, sizeof(sent_msg), &timeoutSecs);
-    EXPECT_EQ(returned, (int)sizeof(sent_msg))
-        << UpnpGetErrorMessage(returned) << '(' << returned << ')';
+    EXPECT_EQ(returned, (int)sizeof(sent_msg)) << errStr(returned);
 }
 
 TEST_F(SockFTestSuite, sock_write_within_timeout) {
@@ -765,8 +730,7 @@ TEST_F(SockFTestSuite, sock_write_within_timeout) {
     int timeoutSecs{10};
     int returned =
         m_sockObj.sock_write(&m_info, sent_msg, sizeof(sent_msg), &timeoutSecs);
-    EXPECT_EQ(returned, (int)sizeof(sent_msg))
-        << UpnpGetErrorMessage(returned) << '(' << returned << ')';
+    EXPECT_EQ(returned, (int)sizeof(sent_msg)) << errStr(returned);
 }
 
 TEST_F(SockFTestSuite, sock_write_with_connection_error) {
@@ -784,9 +748,7 @@ TEST_F(SockFTestSuite, sock_write_with_connection_error) {
     int returned =
         m_sockObj.sock_write(&m_info, sent_msg, sizeof(sent_msg), &timeoutSecs);
     EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
-        << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-        << "), but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
+        << errStrEx(returned, UPNP_E_SOCKET_ERROR);
 }
 
 TEST_F(SockFTestSuite, sock_write_with_sending_error) {
@@ -811,17 +773,12 @@ TEST_F(SockFTestSuite, sock_write_with_sending_error) {
     if (old_code) {
         ::std::cout << "  BUG! Wrong error message 'Unknown error code(-1)', "
                        "should be 'UPNP_E_SOCKET_ERROR(-208)'.\n";
-        EXPECT_EQ(returned, -1)
-            << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-            << "), but not " << UpnpGetErrorMessage(returned) << '(' << returned
-            << ").";
+        EXPECT_EQ(returned, -1) << errStrEx(returned, UPNP_E_SOCKET_ERROR);
 
     } else {
 
         EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
-            << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-            << "), but not " << UpnpGetErrorMessage(returned) << '(' << returned
-            << ").";
+            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
     }
 }
 
@@ -852,9 +809,7 @@ TEST_F(SockFTestSuite, sock_write_with_nullptr_to_socket_info) {
                     ::testing::ExitedWithCode(0), ".*")
             << "  # A nullptr to a socket info structure must not segfault.";
         EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
-            << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-            << "), but not " << UpnpGetErrorMessage(returned) << '(' << returned
-            << ").";
+            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
     }
 }
 
@@ -892,9 +847,7 @@ TEST_F(SockFTestSuite, sock_write_with_empty_socket_info) {
     int returned =
         m_sockObj.sock_write(&info, sent_msg, sizeof(sent_msg), &timeoutSecs);
     EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
-        << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
+        << errStrEx(returned, UPNP_E_SOCKET_ERROR);
 }
 
 TEST_F(SockFTestSuite, sock_write_with_nullptr_to_buffer_0_byte_length)
@@ -929,8 +882,7 @@ TEST_F(SockFTestSuite, sock_write_with_nullptr_to_buffer_0_byte_length)
                          // descriptor to become ready.
     int returned = m_sockObj.sock_write(&m_info, nullptr, 0, &timeoutSecs);
     EXPECT_EQ(returned, 0) << "  # Should be sent number of bytes = 0"
-                           << " but not " << UpnpGetErrorMessage(returned)
-                           << '(' << returned << ").";
+                           << " but not " << errStr(returned) << ".";
 }
 
 TEST_F(SockFTestSuite, sock_write_with_valid_buffer_but_0_byte_length)
@@ -966,8 +918,7 @@ TEST_F(SockFTestSuite, sock_write_with_valid_buffer_but_0_byte_length)
     int timeoutSecs{10};
     int returned = m_sockObj.sock_write(&m_info, buffer, 0, &timeoutSecs);
     EXPECT_EQ(returned, 0) << "  # Should be sent number of bytes = 0"
-                           << " but not " << UpnpGetErrorMessage(returned)
-                           << '(' << returned << ").";
+                           << " but not " << errStr(returned) << ".";
 }
 
 TEST(SockTestSuite, sock_make_blocking_and_sock_make_no_blocking) {

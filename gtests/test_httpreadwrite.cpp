@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-07
+// Redistribution only with this Copyright remark. Last modified: 2022-03-08
 
 #include "gmock/gmock.h"
 #include "upnplib/upnptools.hpp"
@@ -171,15 +171,11 @@ TEST(OpenHttpConnectionTestSuite, open_http_connection_to_localhost) {
     int returned =
         httprw_oObj.http_OpenHttpConnection(serverurl, (void**)&phandle, 0);
 
-    EXPECT_EQ(returned, UPNP_E_SUCCESS)
-        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     // Close connection
     returned = httprw_oObj.http_CloseHttpConnection(phandle);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS)
-        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 }
 #endif
 
@@ -412,9 +408,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_close_connection_successful) {
     int returned = m_httprw_oObj.http_OpenHttpConnection(
         ("http://" + servername).c_str(), (void**)&phandle, 0);
 
-    EXPECT_EQ(returned, UPNP_E_SUCCESS)
-        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     // Check phandle content
     EXPECT_EQ(phandle->sock_info.socket, m_socketfd);
@@ -431,9 +425,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_close_connection_successful) {
     // Close connection
     // Will call socket_h->shutdown and unistd_h->close
     returned = m_httprw_oObj.http_CloseHttpConnection(phandle);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS)
-        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 }
 
 TEST_F(OpenHttpConnectionIp4FTestSuite, nullptr_to_url) {
@@ -457,9 +449,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, nullptr_to_url) {
         m_httprw_oObj.http_OpenHttpConnection(nullptr, (void**)&phandle, 0);
 
     EXPECT_EQ(returned, UPNP_E_INVALID_PARAM)
-        << "  # Should be UPNP_E_INVALID_PARAM(" << UPNP_E_INVALID_PARAM
-        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
+        << errStrEx(returned, UPNP_E_INVALID_PARAM);
 
     // phandle wasn't touched so it must not freed. Freeing the "uninitialized"
     // phandle would http_CloseHttpConnection() segfault.
@@ -487,9 +477,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, empty_url) {
         m_httprw_oObj.http_OpenHttpConnection("", (void**)&phandle, 0);
 
     EXPECT_EQ(returned, UPNP_E_INVALID_URL)
-        << "  # Should be UPNP_E_INVALID_URL(" << UPNP_E_INVALID_URL
-        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
+        << errStrEx(returned, UPNP_E_INVALID_URL);
 
     // A nullptr handle does not need to be freed.
     EXPECT_EQ(phandle, nullptr);
@@ -533,9 +521,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_address_info_fails) {
         ("http://" + servername).c_str(), (void**)&phandle, 0);
 
     EXPECT_EQ(returned, UPNP_E_INVALID_URL)
-        << "  # Should be UPNP_E_INVALID_URL(" << UPNP_E_INVALID_URL
-        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
+        << errStrEx(returned, UPNP_E_INVALID_URL);
 
     // A nullptr handle does not need to be freed.
     EXPECT_EQ(phandle, nullptr);
@@ -586,16 +572,12 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_socket_fails) {
         ("http://" + servername).c_str(), (void**)&phandle, 0);
 
     EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
-        << "  # Should be UPNP_E_SOCKET_ERROR(" << UPNP_E_SOCKET_ERROR
-        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
+        << errStrEx(returned, UPNP_E_SOCKET_ERROR);
 
     // Close connection
     // Will call socket_h->shutdown and unistd_h->close
     returned = m_httprw_oObj.http_CloseHttpConnection(phandle);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS)
-        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 }
 
 TEST_F(OpenHttpConnectionIp4FTestSuite, connect_to_server_fails) {
@@ -638,17 +620,13 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, connect_to_server_fails) {
         ("http://" + servername).c_str(), (void**)&phandle, 0);
 
     EXPECT_EQ(returned, UPNP_E_SOCKET_CONNECT)
-        << "  # Should be UPNP_E_SOCKET_CONNECT(" << UPNP_E_SOCKET_CONNECT
-        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
+        << errStrEx(returned, UPNP_E_SOCKET_CONNECT);
 
     // Close connection
     // This does not call socket_h->shutdown or unistd_h->close. Seems it is
     // already done before because both are called Times(1).
     returned = m_httprw_oObj.http_CloseHttpConnection(phandle);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS)
-        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 }
 
 TEST_F(OpenHttpConnectionIp4FTestSuite, open_connection_with_ip_address) {
@@ -686,9 +664,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_connection_with_ip_address) {
     int returned =
         m_httprw_oObj.http_OpenHttpConnection(serverip, (void**)&phandle, 0);
 
-    EXPECT_EQ(returned, UPNP_E_SUCCESS)
-        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     // Check phandle content
     EXPECT_EQ(phandle->sock_info.socket, m_socketfd);
@@ -705,9 +681,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_connection_with_ip_address) {
     // Close connection
     // Will call socket_h->shutdown and unistd_h->close
     returned = m_httprw_oObj.http_CloseHttpConnection(phandle);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS)
-        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 }
 
 typedef OpenHttpConnectionIp4FTestSuite CloseHttpConnectionIp4FTestSuite;
@@ -722,14 +696,10 @@ TEST_F(CloseHttpConnectionIp4FTestSuite, close_nullptr_handle) {
     int returned = m_httprw_oObj.http_CloseHttpConnection(phandle);
     if (old_code) {
         EXPECT_EQ(returned, UPNP_E_INVALID_PARAM)
-            << "  # Should be UPNP_E_INVALID_PARAM(" << UPNP_E_INVALID_PARAM
-            << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-            << ").";
+            << errStrEx(returned, UPNP_E_INVALID_PARAM);
     } else {
         EXPECT_EQ(returned, UPNP_E_SUCCESS)
-            << "  OPT: Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS
-            << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-            << ").";
+            << "  OPT:" << errStrEx(returned, UPNP_E_SUCCESS);
     }
 }
 
@@ -757,7 +727,7 @@ TEST_F(HttpConnectIp4FTestSuite, successful_connect) {
     SOCKET sockfd;
     ASSERT_GT(sockfd = http_Connect(dest_url, &fixed_url), 0)
         << "  # Should be a valid socked file descriptor but not "
-        << UpnpGetErrorMessage(sockfd) << '(' << sockfd << ").";
+        << errStr(sockfd);
 
     EXPECT_STREQ(fixed_url.fragment.buff, "fragment");
     EXPECT_EQ(fixed_url.fragment.size, (size_t)8);
@@ -783,7 +753,7 @@ TEST_F(HttpConnectIp4FTestSuite, socket_allocation_fails) {
     SOCKET sockfd;
     ASSERT_EQ(sockfd = http_Connect(dest_url, &fixed_url), UPNP_E_OUTOF_SOCKET)
         << "  # Should be UPNP_E_OUTOF_SOCKET(" << UPNP_E_OUTOF_SOCKET
-        << ") but not " << UpnpGetErrorMessage(sockfd) << '(' << sockfd << ").";
+        << ") but not " << errStr(sockfd);
 }
 
 TEST_F(HttpConnectIp4FTestSuite, low_level_net_connect_fails) {
@@ -809,7 +779,7 @@ TEST_F(HttpConnectIp4FTestSuite, low_level_net_connect_fails) {
     ASSERT_EQ(sockfd = http_Connect(dest_url, &fixed_url),
               UPNP_E_SOCKET_CONNECT)
         << "  # Should be UPNP_E_SOCKET_CONNECT(" << UPNP_E_SOCKET_CONNECT
-        << ") but not " << UpnpGetErrorMessage(sockfd) << '(' << sockfd << ").";
+        << ") but not " << errStr(sockfd);
 }
 
 TEST(HttpFixUrl, empty_url_structure) {
@@ -993,9 +963,7 @@ TEST(GetHostaddr, valid_url_str) {
     size_t hostlen{0xaa};
 
     int returned = get_hoststr(url_str, &hoststr, &hostlen);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS)
-        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     EXPECT_STREQ(hoststr, "www.sample.net:49152/tvdevicedesc.xml");
     EXPECT_EQ(hostlen, (size_t)20);
 }
@@ -1008,9 +976,7 @@ TEST(GetHostaddr, wrong_url_str) {
 
     int returned = get_hoststr(url_str, &hoststr, &hostlen);
     EXPECT_EQ(returned, UPNP_E_INVALID_URL)
-        << "  # Should be UPNP_E_INVALID_URL(" << UPNP_E_INVALID_URL
-        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
+        << errStrEx(returned, UPNP_E_INVALID_URL);
     const char* refptr;
     memset(&refptr, 0xaa, sizeof(refptr));
     EXPECT_EQ(hoststr, refptr);
@@ -1024,9 +990,7 @@ TEST(GetHostaddr, short_url_str) {
     size_t hostlen{0xaa};
 
     int returned = get_hoststr(url_str, &hoststr, &hostlen);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS)
-        << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     EXPECT_STREQ(hoststr, "");
     EXPECT_EQ(hostlen, (size_t)0);
 }
@@ -1039,8 +1003,7 @@ TEST(GetHostaddr, empty_url_str) {
 
     int retval = get_hoststr(url_str, &hoststr, &hostlen);
     EXPECT_EQ(retval, UPNP_E_INVALID_URL)
-        << "  # Should be UPNP_E_INVALID_URL(" << UPNP_E_INVALID_URL
-        << ") but not " << UpnpGetErrorMessage(retval) << '(' << retval << ").";
+        << errStrEx(retval, UPNP_E_INVALID_URL);
     const char* refptr;
     memset(&refptr, 0xaa, sizeof(refptr));
     EXPECT_EQ(hoststr, refptr);
@@ -1069,9 +1032,7 @@ TEST(GetHostaddr, nullptr_url_str) {
             << "[ BUG!     ] A nullptr to the url string must not segfault.\n";
 
         EXPECT_EQ(retval, UPNP_E_INVALID_URL)
-            << "  # Should be UPNP_E_INVALID_URL(" << UPNP_E_INVALID_URL
-            << ") but not " << UpnpGetErrorMessage(retval) << '(' << retval
-            << ").";
+            << errStrEx(retval, UPNP_E_INVALID_URL);
         const char* refptr;
         memset(&refptr, 0xaa, sizeof(refptr));
         EXPECT_EQ(hoststr, refptr);
@@ -1161,15 +1122,12 @@ TEST(HttpreadwriteIp6TestSuite, open_http_connection_with_ip_address) {
         ::std::cout << "[ BUG!     ] Connecting with an ip6 address should be "
                        "possible\n";
         EXPECT_EQ(returned, UPNP_E_INVALID_URL)
-            << "  # Should be UPNP_E_INVALID_URL(" << UPNP_E_INVALID_URL
-            << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-            << ").";
+            << errStrEx(returned, UPNP_E_INVALID_URL);
 
     } else {
 
         EXPECT_EQ(returned, UPNP_E_SUCCESS)
-            << "  # Should be UPNP_E_SUCCESS(" << UPNP_E_SUCCESS << ") but not "
-            << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+            << errStrEx(returned, UPNP_E_SUCCESS);
     }
 
     // Doing as documented. It's unclear so far what to do if

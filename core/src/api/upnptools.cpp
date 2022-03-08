@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-07
+// Redistribution only with this Copyright remark. Last modified: 2022-03-08
 
 #include "upnplib/upnptools.hpp"
 
@@ -9,7 +9,7 @@
 
 #include "upnp.hpp"
 
-const char* UpnpGetErrorMessage(int rc) { return upnplib::errCstr(rc); }
+const char* UpnpGetErrorMessage(int rc) { return upnplib::err_c_str(rc); }
 
 #endif // UPNPLIB_PUPNP_EMULATION
 
@@ -69,7 +69,7 @@ constexpr struct ErrorString ErrorMessages[] = {
     {UPNP_E_INTERNAL_ERROR, "UPNP_E_INTERNAL_ERROR"},
 };
 
-const char* errCstr(int rc) {
+const char* err_c_str(int rc) {
     size_t i;
 
     for (i = 0; i < sizeof(ErrorMessages) / sizeof(ErrorMessages[0]); ++i) {
@@ -80,16 +80,38 @@ const char* errCstr(int rc) {
     return "Unknown error code";
 }
 
-const std::string errStrEx(int rc) {
+const std::string errStr(const int error) {
     size_t i;
+    std::string error_msg = "UPNPLIB_E_UNKNOWN";
 
     for (i = 0; i < sizeof(ErrorMessages) / sizeof(ErrorMessages[0]); ++i) {
-        if (rc == ErrorMessages[i].rc) {
-            return (std::string)ErrorMessages[i].rcError + "(" +
-                   std::to_string(rc) + ")";
+        if (error == ErrorMessages[i].rc) {
+            error_msg = ErrorMessages[i].rcError;
+            break;
         }
     }
-    return "Unknown error code(" + std::to_string(rc) + ")";
+    return error_msg + "(" + std::to_string(error) + ")";
+}
+
+const std::string errStrEx(const int error, const int success) {
+    size_t i;
+    std::string error_msg = "UPNPLIB_E_UNKNOWN";
+    std::string success_msg = "UPNPLIB_E_UNKNOWN";
+
+    for (i = 0; i < sizeof(ErrorMessages) / sizeof(ErrorMessages[0]); ++i) {
+        if (error == ErrorMessages[i].rc) {
+            error_msg = ErrorMessages[i].rcError;
+            break;
+        }
+    }
+    for (i = 0; i < sizeof(ErrorMessages) / sizeof(ErrorMessages[0]); ++i) {
+        if (success == ErrorMessages[i].rc) {
+            success_msg = ErrorMessages[i].rcError;
+            break;
+        }
+    }
+    return "  # Should be " + success_msg + "(" + std::to_string(success) +
+           "), but not " + error_msg + "(" + std::to_string(error) + ").";
 }
 
 } // namespace upnplib

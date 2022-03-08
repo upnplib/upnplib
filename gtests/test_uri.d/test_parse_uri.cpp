@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-07
+// Redistribution only with this Copyright remark. Last modified: 2022-03-08
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -137,8 +137,7 @@ TEST(ParseUriIp4TestSuite, absolute_uri_successful) {
     int returned{UPNP_E_INTERNAL_ERROR};
     EXPECT_EQ(returned = uriObj.parse_uri(url_str, strlen(url_str), &out),
               HTTP_SUCCESS)
-        << "  # Should be HTTP_SUCCESS(" << HTTP_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+        << errStrEx(returned, HTTP_SUCCESS);
 
     // Check the uri-parts scheme, hostport, pathquery and fragment. Please note
     // that the last part of the buffer content is garbage. The valid character
@@ -208,8 +207,7 @@ TEST(ParseUriIp4TestSuite, absolute_uri_with_shorter_max_size) {
     int returned{UPNP_E_INTERNAL_ERROR};
     EXPECT_EQ(returned = uriObj.parse_uri(url_str, max_size, &out),
               HTTP_SUCCESS)
-        << "  # Should be HTTP_SUCCESS(" << HTTP_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+        << errStrEx(returned, HTTP_SUCCESS);
 
     // Check the uri-parts scheme, hostport, pathquery and fragment. Please note
     // that the last part of the buffer content is garbage. The valid character
@@ -264,8 +262,7 @@ TEST(ParseUriIp4TestSuite, ip_address_with_greater_max_size) {
     int returned{UPNP_E_INTERNAL_ERROR};
     EXPECT_EQ(returned = uriObj.parse_uri(url_str, max_size, &out),
               HTTP_SUCCESS)
-        << "  # Should be HTTP_SUCCESS(" << HTTP_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+        << errStrEx(returned, HTTP_SUCCESS);
 
     // Check the uri-parts scheme, hostport, pathquery and fragment. Please note
     // that the last part of the buffer content is garbage. The valid character
@@ -335,9 +332,7 @@ TEST(ParseUriIp4TestSuite, uri_without_valid_host_and_port) {
     int returned{UPNP_E_INTERNAL_ERROR};
     EXPECT_EQ(returned = uriObj.parse_uri(url_str, strlen(url_str), &url),
               UPNP_E_INVALID_URL)
-        << "  # Should be UPNP_E_INVALID_URL(" << UPNP_E_INVALID_URL
-        << ") but not " << UpnpGetErrorMessage(returned) << '(' << returned
-        << ").";
+        << errStrEx(returned, HTTP_SUCCESS);
 
 #ifdef _WIN32
     EXPECT_EQ(url.type, relative); // This bug is reported by another gtest.
@@ -387,8 +382,7 @@ TEST(ParseUriIp4TestSuite, ip_address_without_pathquery) {
     int returned{UPNP_E_INTERNAL_ERROR};
     EXPECT_EQ(returned = uriObj.parse_uri(url_str, strlen(url_str), &out),
               HTTP_SUCCESS)
-        << "  # Should be HTTP_SUCCESS(" << HTTP_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+        << errStrEx(returned, HTTP_SUCCESS);
 
     // Check the uri-parts scheme, hostport, pathquery and fragment. Please note
     // that the last part of the buffer content is garbage. The valid character
@@ -426,8 +420,7 @@ TEST(ParseUriIp4TestSuite, ip_address_without_fragment) {
     int returned{UPNP_E_INTERNAL_ERROR};
     EXPECT_EQ(returned = uriObj.parse_uri(url_str, strlen(url_str), &out),
               HTTP_SUCCESS)
-        << "  # Should be HTTP_SUCCESS(" << HTTP_SUCCESS << ") but not "
-        << UpnpGetErrorMessage(returned) << '(' << returned << ").";
+        << errStrEx(returned, HTTP_SUCCESS);
 
     // Check the uri-parts scheme, hostport, pathquery and fragment. Please note
     // that the last part of the buffer content is garbage. The valid character
