@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-29.
+ * Redistribution only with this Copyright remark. Last modified: 2022-03-11
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,8 +31,8 @@
  *
  ******************************************************************************/
 
-#ifndef GENLIB_NET_URI_H
-#define GENLIB_NET_URI_H
+#ifndef UPNPLIB_GENLIB_NET_URI_HPP
+#define UPNPLIB_GENLIB_NET_URI_HPP
 
 /*!
  * \file
@@ -44,6 +44,7 @@
 
 //#include "UpnpGlobal.hpp" /* for */
 //#include "UpnpInet.hpp"
+#include "winsock2.h" // For different platforms: don't use <winsock2.h>
 
 #include <ctype.h>
 //#include <errno.h>
@@ -334,4 +335,4 @@ int parse_token(
     /*! [in] . */
     int max_size);
 
-#endif /* GENLIB_NET_URI_H */
+#endif /* UPNPLIB_GENLIB_NET_URI_HPP */

@@ -68,9 +68,12 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/src/threadutil
     ${PUPNP_IXML_SOURCE_DIR}/inc
     ${PUPNP_IXML_SOURCE_DIR}/src/inc
+    # if we are not on WIN32 the linker finds empty "headers.h" and will
+    # not complain an error but will not use <headers.h> that isn't available.
+    $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/inc/not_win32>
     # if pthreads4w isn't installed this path is empty. The linker
     # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-    ${pthreads4w_SOURCE_DIR}/
+    ${pthreads4w_SOURCE_DIR}
 )
 
 set(UPNP_SOURCE_FILES
@@ -194,19 +197,6 @@ if(NOT WIN32)
             PRIVATE ixml_shared
     )
 
-    # Info executable linked with the shared library
-    #-----------------------------------------------
-    add_executable(upnplibInfo_shared
-            ./src/upnplibInfo.cpp
-    )
-    target_compile_definitions (upnplibInfo_shared
-            PRIVATE UPNPLIB_SHARED
-    )
-    target_link_libraries(upnplibInfo_shared
-            PRIVATE upnplib_shared
-            PRIVATE ${UPNP_PTHREADS_SHARED_LIBRARY}
-    )
-
     # Static library
     #---------------
     add_library(upnplib_static STATIC
@@ -218,22 +208,6 @@ if(NOT WIN32)
     )
     target_link_libraries(upnplib_static
             PRIVATE ixml_static
-    )
-
-    # Info executable linked with static libraries
-    #---------------------------------------------
-    add_executable(upnplibInfo_static
-            ./src/upnplibInfo.cpp
-    )
-    set_target_properties(upnplibInfo_static PROPERTIES
-            OUTPUT_NAME upnplibInfo
-    )
-    target_link_libraries(upnplibInfo_static
-            PRIVATE upnplib_static
-            # On Linux we cannot link with the static pthreads library
-            # because then we have also link with a static libc that's not
-            # available by default.
-            PRIVATE ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
 else() # WIN32
@@ -274,18 +248,6 @@ else() # WIN32
             #${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
-    # Info executable linked with the shared library
-    #-----------------------------------------------
-    add_executable(upnplibInfo_shared
-            ./src/upnplibInfo.cpp
-    )
-    target_compile_definitions (upnplibInfo_shared
-            PRIVATE UPNPLIB_SHARED
-    )
-    target_link_libraries(upnplibInfo_shared
-            PRIVATE upnplib_shared
-    )
-
     # Static library
     #---------------
     add_library(upnplib_static STATIC
@@ -296,20 +258,6 @@ else() # WIN32
     )
     target_link_libraries(upnplib_static
             PRIVATE ${UPNP_PTHREADS_STATIC_LIBRARY}
-    )
-
-    # Info executable linked with static libraries
-    #---------------------------------------------
-    add_executable(upnplibInfo_static
-            ./src/upnplibInfo.cpp
-    )
-    set_target_properties(upnplibInfo_static PROPERTIES
-            OUTPUT_NAME upnplibInfo
-    )
-    target_link_libraries(upnplibInfo_static
-            PRIVATE ws2_32   # winsock to support sockets
-            PRIVATE ixml_static
-            PRIVATE upnplib_static
     )
 
 endif() # WIN32

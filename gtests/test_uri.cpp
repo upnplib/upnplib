@@ -1,16 +1,16 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-14
+// Redistribution only with this Copyright remark. Last modified: 2022-03-09
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
 
 #include "gmock/gmock.h"
 
+#include "upnplib/uri.hpp"
+
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
-#include "pupnp/upnp/src/genlib/net/uri/uri.cpp"
-
-#include "upnplib/uri.hpp"
+#include "core/src/genlib/net/uri/uri.cpp"
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -923,6 +923,127 @@ TEST(UriIp4TestSuite, free_URL_list) {
     GTEST_SKIP()
         << "free_URL_list frees memory of copy_URL_list and test must be "
            "created together with it.";
+}
+
+TEST(UrlClassTestSuite, parse_valid_url) {
+    CUrl url{"https://fred:password@www.wikipedia.org/"
+             "what-me-worry?hello=there#wonder"};
+
+    EXPECT_EQ(url.getScheme(), "https");
+    EXPECT_EQ(url.getUsername(), "fred");
+    EXPECT_EQ(url.getPassword(), "password");
+    EXPECT_EQ(url.getHost(), "www.wikipedia.org");
+    EXPECT_EQ(url.getPort(), 443);
+    EXPECT_EQ(url.getPath(), "/what-me-worry");
+    EXPECT_EQ(url.getQuery(), "hello=there");
+    EXPECT_EQ(url.getFragment(), "wonder");
+    EXPECT_TRUE(url.isSecure());
+    EXPECT_FALSE(url.isIpv6());
+}
+
+TEST(UrlClassTestSuite, url_object_without_parameter) {
+    CUrl url;
+
+    EXPECT_EQ(url.getScheme(), "");
+    EXPECT_EQ(url.getUsername(), "");
+    EXPECT_EQ(url.getPassword(), "");
+    EXPECT_EQ(url.getHost(), "");
+    EXPECT_EQ(url.getPort(), 0);
+    EXPECT_EQ(url.getPath(), "");
+    EXPECT_EQ(url.getQuery(), "");
+    EXPECT_EQ(url.getFragment(), "");
+    EXPECT_FALSE(url.isSecure());
+    EXPECT_FALSE(url.isIpv6());
+}
+
+TEST(UrlClassTestSuite, url_object_with_empty_parameter) {
+    CUrl url{};
+
+    EXPECT_EQ(url.getScheme(), "");
+    EXPECT_EQ(url.getUsername(), "");
+    EXPECT_EQ(url.getPassword(), "");
+    EXPECT_EQ(url.getHost(), "");
+    EXPECT_EQ(url.getPort(), 0);
+    EXPECT_EQ(url.getPath(), "");
+    EXPECT_EQ(url.getQuery(), "");
+    EXPECT_EQ(url.getFragment(), "");
+    EXPECT_FALSE(url.isSecure());
+    EXPECT_FALSE(url.isIpv6());
+}
+
+TEST(UrlClassTestSuite, nullptr_as_url) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    if (!old_code) {
+        // This should be a valid parameter
+        CUrl url{nullptr};
+
+        EXPECT_EQ(url.getScheme(), "");
+        EXPECT_EQ(url.getUsername(), "");
+        EXPECT_EQ(url.getPassword(), "");
+        EXPECT_EQ(url.getHost(), "");
+        EXPECT_EQ(url.getPort(), 0);
+        EXPECT_EQ(url.getPath(), "");
+        EXPECT_EQ(url.getQuery(), "");
+        EXPECT_EQ(url.getFragment(), "");
+        EXPECT_FALSE(url.isSecure());
+        EXPECT_FALSE(url.isIpv6());
+    }
+}
+
+TEST(UrlClassTestSuite, empty_url) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    if (!old_code) {
+        // This should be a valid parameter
+        CUrl url{""};
+
+        EXPECT_EQ(url.getScheme(), "");
+        EXPECT_EQ(url.getUsername(), "");
+        EXPECT_EQ(url.getPassword(), "");
+        EXPECT_EQ(url.getHost(), "");
+        EXPECT_EQ(url.getPort(), 0);
+        EXPECT_EQ(url.getPath(), "");
+        EXPECT_EQ(url.getQuery(), "");
+        EXPECT_EQ(url.getFragment(), "");
+        EXPECT_FALSE(url.isSecure());
+        EXPECT_FALSE(url.isIpv6());
+    }
+}
+
+TEST(UrlClassTestSuite, url_with_only_colon) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    if (!old_code) {
+        EXPECT_THROW(CUrl url{":"}, std::invalid_argument);
+    }
+}
+
+TEST(UrlClassTestSuite, invalid_url) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    if (!old_code) {
+        EXPECT_THROW(CUrl url{"hello world"}, std::invalid_argument);
+    }
+}
+
+TEST(UrlClassTestSuite, url_only_with_scheme) {
+    CUrl url{"https:"};
+
+    EXPECT_EQ(url.getScheme(), "https");
+    EXPECT_EQ(url.getUsername(), "");
+    EXPECT_EQ(url.getPassword(), "");
+    EXPECT_EQ(url.getHost(), "");
+    EXPECT_EQ(url.getPort(), 443);
+    EXPECT_EQ(url.getPath(), "");
+    EXPECT_EQ(url.getQuery(), "");
+    EXPECT_EQ(url.getFragment(), "");
+    EXPECT_TRUE(url.isSecure());
+    EXPECT_FALSE(url.isIpv6());
 }
 
 } // namespace upnplib

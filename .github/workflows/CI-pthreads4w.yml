@@ -15,20 +15,20 @@ jobs:
 
     strategy:
       matrix:
-        os: [ windows-2016, windows-latest ]
+        os: [ windows-2019, windows-2022 ]
       fail-fast: false
 
     steps:
     # Step building the pthreads4w library
       - uses: actions/checkout@v2
 
-      - if: matrix.os == 'windows-2016'
+      - if: matrix.os == 'windows-2019'
         name: Use MS Windows 32 bit
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: win32
 
-      - if: matrix.os == 'windows-latest'
+      - if: matrix.os == 'windows-2022'
         name: Use MS Windows 64 bit
         uses: ilammy/msvc-dev-cmd@v1
         with:

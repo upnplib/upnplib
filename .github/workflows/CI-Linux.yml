@@ -85,4 +85,4 @@ jobs:
 
       - name: Run upnplib info program
         # This program is always built
-        run: ./build/pupnp/upnp/upnplibInfo
+        run: ./build/core/upnplibInfo

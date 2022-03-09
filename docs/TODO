@@ -1,5 +1,3 @@
 Next steps to do in this order:
-* Manage UPNPLIB_API resp. EXPORT_SPEC
-+ Move upnplibInfo from pupnp to upnplib
 * Improve CUri class using https://github.com/homer6/url.
 * Install doxygen

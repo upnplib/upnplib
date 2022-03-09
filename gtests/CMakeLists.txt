@@ -29,6 +29,9 @@ include_directories(
     ${PUPNP_SOURCE_DIR}
     # pupnp core library project
     ${PUPNP_UPNP_SOURCE_DIR}/inc
+    # if we are not on WIN32 the linker finds empty "headers.h" and will
+    # not complain an error but will not use <headers.h> that isn't available.
+    $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
     ${PUPNP_UPNP_SOURCE_DIR}/src
     ${PUPNP_UPNP_SOURCE_DIR}/src/inc
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
@@ -131,7 +134,7 @@ add_test(NAME ctest_list COMMAND test_list)
 # membuffer
 #----------
 add_executable(test_membuffer
-    ${PROJECT_SOURCE_DIR}/test_membuffer.cpp
+    test_membuffer.cpp
 )
 add_test(NAME ctest_membuffer COMMAND test_membuffer)
 
@@ -140,20 +143,18 @@ add_test(NAME ctest_membuffer COMMAND test_membuffer)
 add_executable(test_uri
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-    ${PROJECT_SOURCE_DIR}/test_uri.cpp)
+    test_uri.cpp)
 target_link_libraries(test_uri upnplib_gtest_tools)
 add_test(NAME ctest_uri COMMAND test_uri)
 
-# uri: parse_uri
+# uri: uri_parse
 #---------------
-add_executable(test_parse_uri
+add_executable(test_uri_parse
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
     ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
-    test_uri.d/test_parse_uri.cpp)
-target_compile_definitions(test_parse_uri
-    PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
-add_test(NAME ctest_parse_uri COMMAND test_parse_uri)
+    test_uri.d/test_uri_parse.cpp)
+add_test(NAME ctest_uri_parse COMMAND test_uri_parse)
 
 
 # httpparser

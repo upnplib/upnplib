@@ -45,12 +45,7 @@
 
 #include "UpnpGlobal.hpp" /* For UPNP_INLINE, EXPORT_SPEC */
 //#include "UpnpUniStd.h" /* for close() */
-
-#ifdef _WIN32
-#include "pthread.h"
-#else
-#include <pthread.h>
-#endif
+#include "pthread.h" // To find pthreads4w don't use <pthread.h>
 
 #if defined(BSD) && !defined(__GNU__)
 #define PTHREAD_MUTEX_RECURSIVE_NP PTHREAD_MUTEX_RECURSIVE

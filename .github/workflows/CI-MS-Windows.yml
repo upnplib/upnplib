@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ windows-2016, windows-latest ]
+        os: [ windows-2019, windows-2022 ]
         googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
         shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
         buildtype: [ 'Release', 'Debug' ]
@@ -25,19 +25,24 @@ jobs:
     # Step building the core upnplib
       - uses: actions/checkout@v2
 
-      - if: matrix.os == 'windows-2016'
+      - if: matrix.os == 'windows-2019'
         name: Use MS Windows 32 bit
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: win32
 
-      - if: matrix.os == 'windows-latest'
+      - if: matrix.os == 'windows-2022'
         name: Use MS Windows 64 bit
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: amd64
 
-      - name: Configure
+      - if: matrix.os == 'windows-2019'
+        name: Configure 32 bit
+        run: cmake -S . -B build -A Win32 ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+
+      - if: matrix.os == 'windows-2022'
+        name: Configure 64 bit
         run: cmake -S . -B build ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
 
       - name: Build
@@ -88,10 +93,10 @@ jobs:
         run: ./build/gtests/${{matrix.buildtype}}/test_simple.exe
 
       - name: Run static test program
-        run: ./build/pupnp/upnp/${{matrix.buildtype}}/upnplibInfo.exe
+        run: ./build/core/${{matrix.buildtype}}/upnplibInfo.exe
 
       - name: Run shared test program
-        run: ./build/pupnp/upnp/${{matrix.buildtype}}/upnplibInfo_shared.exe
+        run: ./build/core/${{matrix.buildtype}}/upnplibInfo_shared.exe
 
 
   # Job: Configure and build with NMake
@@ -102,7 +107,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ windows-2016, windows-latest ]
+        os: [ windows-2019, windows-2022 ]
         googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
         shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
         buildtype: [ 'Release', 'Debug' ]
@@ -112,13 +117,13 @@ jobs:
     # Step building the core upnplib
       - uses: actions/checkout@v2
 
-      - if: matrix.os == 'windows-2016'
+      - if: matrix.os == 'windows-2019'
         name: Use MS Windows 32 bit
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: win32
 
-      - if: matrix.os == 'windows-latest'
+      - if: matrix.os == 'windows-2022'
         name: Use MS Windows 64 bit
         uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -175,7 +180,7 @@ jobs:
         run: ./build/gtests/test_simple.exe
 
       - name: Run static test program
-        run: ./build/pupnp/upnp/upnplibInfo.exe
+        run: ./build/core/upnplibInfo.exe
 
       - name: Run shared test program
-        run: ./build/pupnp/upnp/upnplibInfo_shared.exe
+        run: ./build/core/upnplibInfo_shared.exe
