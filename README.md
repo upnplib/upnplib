@@ -73,6 +73,34 @@ Please note that option BUILD_SHARED_LIBS only effects Googletest. By default pr
     # On MS Windows
     # t.b.d.
 
+### 4.4 Visibility support
+C++ provides Visibility Support as powerful optimization. We use it as described at the [GCC Wiki - Visibility](https://gcc.gnu.org/wiki/Visibility). It only belongs to shared libraries. Here in short the needed steps configured for this library:
+- Enable Visibility Support on the whole project:
+    set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+    set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+  or only on a target:
+    set_target_properties(upnplib_shared PROPERTIES
+            CXX_VISIBILITY_PRESET hidden
+            VISIBILITY_INLINES_HIDDEN ON)
+- When building a shared library set its compile definitions to UPNPLIB_SHARED and UPNPLIB_EXPORTS
+    add_library(upnplib_shared SHARED
+            ${UPNPLIB_SOURCE_FILES})
+    target_compile_definitions(upnplib_shared
+            PRIVATE UPNPLIB_SHARED
+            PRIVATE UPNPLIB_EXPORTS)
+- On every executable that uses the shared library set its compile definition to UPNPLIB_SHARED
+    add_executable(upnplibInfo_shared
+            ./src/upnplibInfo.cpp)
+    target_compile_definitions(upnplibInfo_shared
+            PRIVATE UPNPLIB_SHARED)
+    target_link_libraries(upnplibInfo_shared
+            PRIVATE upnplib_shared)
+- In your header files, wherever you want an interface or API made public outside the current Dynamic Shared Object, place UPNPLIB_API in struct, class and function declarations you wish to make public. You don't need to specify it in the definition. You should not do it on templated or static functions because they are defined to be local.
+    UPNPLIB_API int PublicFunc()
+    class UPNPLIB_API PublicClass
+    struct UPNPLIB_API PublicStruct
+- For optimization with using UPNPLIB_LOCAL look at the [GCC Wiki - Visibility](https://gcc.gnu.org/wiki/Visibility).
+
 ## 5. Configure Options for cmake
 Option prefixed with -D | Default | Description
 -------|---------|---
@@ -88,5 +116,5 @@ No limits documented so far.
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2022-02-09
+// Redistribution only with this Copyright remark. Last modified: 2022-03-09
 </sup></sup>

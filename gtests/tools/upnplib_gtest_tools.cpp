@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-07
+// Redistribution only with this Copyright remark. Last modified: 2022-03-09
 
 // Tools and helper classes to manage gtests
 // =========================================
@@ -15,11 +15,11 @@ namespace upnplib {
 // ----------------------------------
 CCaptureStdOutErr::CCaptureStdOutErr(int a_fileno) {
     if (a_fileno != STDOUT_FILENO && a_fileno != STDERR_FILENO) {
-        throw ::std::invalid_argument(::std::string(
-            (::std::string)__FILE__ + ":" + ::std::to_string(__LINE__) +
-            ", constructor " + __func__ +
-            ". Only STDOUT_FILENO and STDERR_FILENO supported. "
-            "Nothing will be captured."));
+        throw std::invalid_argument(
+            std::string((std::string)__FILE__ + ":" + std::to_string(__LINE__) +
+                        ", constructor " + __func__ +
+                        ". Only STDOUT_FILENO and STDERR_FILENO supported. "
+                        "Nothing will be captured."));
     }
     // make a pipe
 #ifdef _WIN32
@@ -28,10 +28,10 @@ CCaptureStdOutErr::CCaptureStdOutErr(int a_fileno) {
     int rc = ::pipe(m_out_pipe);
 #endif
     if (rc != 0) {
-        throw ::std::runtime_error(::std::string(
-            (::std::string)__FILE__ + ":" + ::std::to_string(__LINE__) +
+        throw std::runtime_error(std::string(
+            (std::string)__FILE__ + ":" + std::to_string(__LINE__) +
             ", constructor " + __func__ + ". Creating a pipe failed. " +
-            (::std::string)strerror(errno) + '.'));
+            (std::string)strerror(errno) + '.'));
     }
     m_std_fileno = a_fileno;
     m_saved_stdno =
@@ -50,7 +50,7 @@ void CCaptureStdOutErr::start() {
 }
 
 //
-::std::string CCaptureStdOutErr::get() {
+std::string CCaptureStdOutErr::get() {
     // We always write a nullbyte to the pipe so read always returns
     // and does not wait endless if there is nothing captured.
     const char nullbyte[1] = {'\0'};
@@ -59,7 +59,7 @@ void CCaptureStdOutErr::start() {
 
     // read from pipe into chunk and append the chunk to a string
     char chunk[m_chunk_size];
-    ::std::string strbuffer{};
+    std::string strbuffer{};
     while (::read(m_out_pipe[0], &chunk, m_chunk_size - 1) > 1) {
         strbuffer += chunk;
         if (::write(m_std_fileno, &nullbyte, 1) == -1)

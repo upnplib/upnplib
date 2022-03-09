@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-04
+// Redistribution only with this Copyright remark. Last modified: 2022-03-09
 
 #ifndef UPNP_TOOLS_WIN_HPP
 #define UPNP_TOOLS_WIN_HPP
@@ -11,7 +11,7 @@
 
 namespace upnplib {
 
-class UPNP_API CNetIf4
+class UPNPLIB_API CNetIf4
 // Object to manage and fill a network adapter structure. This is needed for
 // mocked network interfaces. References:
 // [GetAdaptersAddresses_function_(iphlpapi.h)]
@@ -54,18 +54,19 @@ class UPNP_API CNetIf4
   private:
     // Structures needed to form the interface structure.
     // https://docs.microsoft.com/en-us/windows/win32/winsock/sockaddr-2
-    ::sockaddr_in m_inaddr{};
+    UPNPLIB_LOCAL ::sockaddr_in m_inaddr{};
     // https://docs.microsoft.com/en-us/windows/win32/api/ws2def/ns-ws2def-socket_address
-    ::SOCKET_ADDRESS m_saddr{};
+    UPNPLIB_LOCAL ::SOCKET_ADDRESS m_saddr{};
     // https://docs.microsoft.com/en-us/windows/win32/api/iptypes/ns-iptypes-ip_adapter_unicast_address_lh?redirectedfrom=MSDN
-    ::IP_ADAPTER_UNICAST_ADDRESS m_uniaddr{};
+    UPNPLIB_LOCAL ::IP_ADAPTER_UNICAST_ADDRESS m_uniaddr{};
     // https://docs.microsoft.com/en-us/windows/win32/api/iptypes/ns-iptypes-ip_adapter_addresses_lh#see-also
-    ::IP_ADAPTER_ADDRESSES m_adapts{};
+    UPNPLIB_LOCAL ::IP_ADAPTER_ADDRESSES m_adapts{};
 
     // On the adapter (net interface) structure we only have pointer to strings
     // so we need to save them here to be sure we do not get dangling pointer.
-    std::wstring m_Description{L"Mocked Adapter for Unit testing"};
-    std::wstring m_FriendlyName{L"Loopback Pseudo-Interface 1"};
+    UPNPLIB_LOCAL std::wstring m_Description{
+        L"Mocked Adapter for Unit testing"};
+    UPNPLIB_LOCAL std::wstring m_FriendlyName{L"Loopback Pseudo-Interface 1"};
 };
 
 } // namespace upnplib

@@ -3,6 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
+ * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2022-03-09
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,8 +32,8 @@
  *
  ******************************************************************************/
 
-#ifndef UPNP_DEBUG_H
-#define UPNP_DEBUG_H
+#ifndef UPNPLIB_DEBUG_HPP
+#define UPNPLIB_DEBUG_HPP
 
 /*!
  * \file
@@ -100,7 +102,7 @@ typedef enum Upnp_LogLevel_e {
  *
  * \return -1 if fails or UPNP_E_SUCCESS if succeeds.
  */
-int UpnpInitLog(void);
+UPNPLIB_API int UpnpInitLog(void);
 
 #if defined NDEBUG && !defined UPNP_DEBUG_C
 #define UpnpInitLog UpnpInitLog_Inlined
@@ -109,7 +111,7 @@ static UPNP_INLINE int UpnpInitLog_Inlined(void) { return UPNP_E_SUCCESS; }
 /*!
  * \brief Set the log level (see \c Upnp_LogLevel).
  */
-void UpnpSetLogLevel(
+UPNPLIB_API void UpnpSetLogLevel(
     /*! [in] Log level. */
     Upnp_LogLevel log_level);
 
@@ -124,7 +126,7 @@ static UPNP_INLINE void UpnpSetLogLevel_Inlined(Upnp_LogLevel log_level) {
 /*!
  * \brief Closes the log files.
  */
-void UpnpCloseLog(void);
+UPNPLIB_API void UpnpCloseLog(void);
 
 #if defined NDEBUG && !defined UPNP_DEBUG_C
 #define UpnpCloseLog UpnpCloseLog_Inlined
@@ -159,7 +161,7 @@ static UPNP_INLINE void UpnpSetLogFileNames_Inlined(const char* ErrFileName,
  * \return NULL if the module is turn off for debug otherwise returns the
  *	right FILE pointer.
  */
-FILE* UpnpGetDebugFile(
+UPNPLIB_API FILE* UpnpGetDebugFile(
     /*! [in] The level of the debug logging. It will decide whether debug
      * statement will go to standard output, or any of the log files. */
     Upnp_LogLevel level,
@@ -180,7 +182,7 @@ static UPNP_INLINE FILE* UpnpGetDebugFile_Inlined(Upnp_LogLevel level,
  * \brief Prints the debug statement either on the standard output or log file
  * along with the information from where this debug statement is coming.
  */
-void UpnpPrintf(
+UPNPLIB_API void UpnpPrintf(
     /*! [in] The level of the debug logging. It will decide whether debug
      * statement will go to standard output, or any of the log files. */
     Upnp_LogLevel DLevel,
@@ -229,4 +231,4 @@ static UPNP_INLINE void UpnpPrintf_Inlined(Upnp_LogLevel DLevel,
 }
 #endif /* DEBUG */
 
-#endif /* UPNP_DEBUG_H */
+#endif /* UPNPLIB_DEBUG_HPP */

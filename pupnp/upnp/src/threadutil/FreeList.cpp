@@ -2,6 +2,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2022-03-09
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,9 +29,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-10-21
- *
  **************************************************************************/
 
 #include "FreeList.hpp"
@@ -38,8 +37,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
-int FreeListInit(FreeList* free_list, size_t elementSize,
-                 int maxFreeListLength) {
+UPNPLIB_API int FreeListInit(FreeList* free_list, size_t elementSize,
+                             int maxFreeListLength) {
     assert(free_list != NULL);
 
     if (free_list == NULL)
@@ -52,7 +51,7 @@ int FreeListInit(FreeList* free_list, size_t elementSize,
     return 0;
 }
 
-void* FreeListAlloc(FreeList* free_list) {
+UPNPLIB_API void* FreeListAlloc(FreeList* free_list) {
     FreeListNode* ret = NULL;
 
     assert(free_list != NULL);
@@ -71,7 +70,7 @@ void* FreeListAlloc(FreeList* free_list) {
     return ret;
 }
 
-int FreeListFree(FreeList* free_list, void* element) {
+UPNPLIB_API int FreeListFree(FreeList* free_list, void* element) {
     FreeListNode* temp = NULL;
 
     assert(free_list != NULL);
@@ -91,7 +90,7 @@ int FreeListFree(FreeList* free_list, void* element) {
     return 0;
 }
 
-int FreeListDestroy(FreeList* free_list) {
+UPNPLIB_API int FreeListDestroy(FreeList* free_list) {
     FreeListNode* temp = NULL;
     int i = 0;
 

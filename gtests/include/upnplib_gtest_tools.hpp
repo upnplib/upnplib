@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-07
+// Redistribution only with this Copyright remark. Last modified: 2022-03-09
 
 #ifndef UPNP_GTEST_TOOLS_H
 #define UPNP_GTEST_TOOLS_H
@@ -33,7 +33,7 @@ namespace upnplib {
 //            Creating a pipe failed.
 // clang-format on
 
-class UPNP_API CCaptureStdOutErr {
+class UPNPLIB_API CCaptureStdOutErr {
   public:
     CCaptureStdOutErr(int a_fileno);
     virtual ~CCaptureStdOutErr();
@@ -41,7 +41,7 @@ class UPNP_API CCaptureStdOutErr {
     std::string get();
 
   private:
-    static constexpr int m_chunk_size{512};
+    UPNPLIB_LOCAL static constexpr int m_chunk_size{512};
     int m_out_pipe[2]{};
     int m_std_fileno{};
     int m_saved_stdno{};

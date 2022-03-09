@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-03-06
+# Redistribution only with this Copyright remark. Last modified: 2022-03-09
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -101,6 +101,11 @@ endif()
 add_compile_definitions(
     PRIVATE $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
 )
+
+# We have visibility support as described at https://gcc.gnu.org/wiki/Visibility
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+
 
 # Set general compile options
 #----------------------------

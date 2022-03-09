@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-27
+// Redistribution only with this Copyright remark. Last modified: 2022-03-09
 // Taken from authors who haven't made a note.
 
 #ifndef UPNPLIB_UPNPGLOBAL_HPP
@@ -25,21 +25,21 @@
 /*
  * EXPORT_SPEC
  */
-#if defined _MSC_VER || defined __BORLANDC__
-#ifdef UPNP_STATIC_LIB
-#define EXPORT_SPEC
-#else /* UPNP_STATIC_LIB */
-#ifdef LIBUPNP_EXPORTS
-/*! set up declspec for dll export to make
- * functions visible to library users */
-#define EXPORT_SPEC __declspec(dllexport)
-#else /* LIBUPNP_EXPORTS */
-#define EXPORT_SPEC __declspec(dllimport)
-#endif /* LIBUPNP_EXPORTS */
-#endif /* UPNP_STATIC_LIB */
-#else  /* _MSC_VER || __BORLANDC__ */
-#define EXPORT_SPEC
-#endif /* _MSC_VER || __BORLANDC__ */
+// #if defined _MSC_VER || defined __BORLANDC__
+// #ifdef UPNP_STATIC_LIB
+// #define EXPORT_SPEC
+// #else /* UPNP_STATIC_LIB */
+// #ifdef LIBUPNP_EXPORTS
+// /*! set up declspec for dll export to make
+//  * functions visible to library users */
+// #define EXPORT_SPEC __declspec(dllexport)
+// #else /* LIBUPNP_EXPORTS */
+// #define EXPORT_SPEC __declspec(dllimport)
+// #endif /* LIBUPNP_EXPORTS */
+// #endif /* UPNP_STATIC_LIB */
+// #else  /* _MSC_VER || __BORLANDC__ */
+// #define EXPORT_SPEC
+// #endif /* _MSC_VER || __BORLANDC__ */
 
 /*
  * UPNP_INLINE
@@ -93,7 +93,7 @@ typedef __int64 int64_t;
  * definition upon declaration or it will not be exported on WIN32
  * DLLs.
  */
-#define EXPORT_SPEC
+// #define EXPORT_SPEC
 
 /*!
  * \brief Declares an inline function.
@@ -133,5 +133,50 @@ typedef __int64 int64_t;
  * release.
  */
 /*#define inline*/
+
+//
+// clang-format off
+//
+// C++ visibility support
+//-----------------------
+// Reference: https://gcc.gnu.org/wiki/Visibility
+// Generic helper definitions for shared library support
+#if defined _WIN32 || defined __CYGWIN__
+  #define UPNP_HELPER_DLL_IMPORT __declspec(dllimport)
+  #define UPNP_HELPER_DLL_EXPORT __declspec(dllexport)
+  #define UPNP_HELPER_DLL_LOCAL
+#else
+  #if __GNUC__ >= 4
+    #define UPNP_HELPER_DLL_IMPORT __attribute__ ((visibility ("default")))
+    #define UPNP_HELPER_DLL_EXPORT __attribute__ ((visibility ("default")))
+    #define UPNP_HELPER_DLL_LOCAL  __attribute__ ((visibility ("hidden")))
+  #else
+    #define UPNP_HELPER_DLL_IMPORT
+    #define UPNP_HELPER_DLL_EXPORT
+    #define UPNP_HELPER_DLL_LOCAL
+  #endif
+#endif
+
+// Now we use the generic helper definitions above to define UPNPLIB_API and
+// UPNPLIB_LOCAL. UPNPLIB_API is used for the public API symbols. It either DLL imports
+// or DLL exports (or does nothing for static build) UPNPLIB_LOCAL is used for
+// non-api symbols.
+
+#ifdef UPNPLIB_SHARED // defined if UPNPLIB is compiled as a shared library
+  #ifdef UPNPLIB_EXPORTS // defined if we are building the UPNPLIB DLL (instead of using it)
+    #define UPNPLIB_API UPNP_HELPER_DLL_EXPORT
+  #else
+    #define UPNPLIB_API UPNP_HELPER_DLL_IMPORT
+  #endif // UPNPLIB_EXPORTS
+  #define UPNPLIB_LOCAL UPNP_HELPER_DLL_LOCAL
+#else // UPNPLIB_SHARED is not defined: this means UPNPLIB is a static lib.
+  #define UPNPLIB_API
+  #define UPNPLIB_LOCAL
+#endif // UPNPLIB_SHARED
+
+// Switch old pupnp definition to use new visibility support
+#define EXPORT_SPEC UPNPLIB_API
+
+// clang-format on
 
 #endif /* UPNPLIB_UPNPGLOBAL_HPP */

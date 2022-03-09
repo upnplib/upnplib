@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-03-07
+# Redistribution only with this Copyright remark. Last modified: 2022-03-09
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -93,7 +93,7 @@ add_library(upnplib_gtest_tools SHARED
 set_target_properties(upnplib_gtest_tools PROPERTIES
         CXX_VISIBILITY_PRESET hidden
         VISIBILITY_INLINES_HIDDEN ON)
-target_compile_definitions(upnplib_gtest_tools PRIVATE UPNP_DLL UPNP_DLL_EXPORTS)
+target_compile_definitions(upnplib_gtest_tools PRIVATE UPNPLIB_SHARED UPNPLIB_EXPORTS)
 add_dependencies(upnplib_gtest_tools gtest gtest_main gmock gmock_main)
 
 
@@ -357,6 +357,8 @@ add_test(NAME ctest_TimerThread COMMAND test_TimerThread)
 add_executable(test_upnplib_gtest_tools
         $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/test_tools_win32.cpp>
         $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/test_tools_unix.cpp>)
+target_compile_definitions(test_upnplib_gtest_tools
+        PRIVATE UPNPLIB_SHARED)
 target_link_libraries(test_upnplib_gtest_tools
         upnplib_gtest_tools)
 add_test(NAME ctest_upnplib_gtest_tools COMMAND test_upnplib_gtest_tools)

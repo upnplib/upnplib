@@ -40,22 +40,22 @@
   #endif
 #endif
 
-// Now we use the generic helper definitions above to define UPNP_API and
-// UPNP_LOCAL. UPNP_API is used for the public API symbols. It either DLL imports
-// or DLL exports (or does nothing for static build) UPNP_LOCAL is used for
+// Now we use the generic helper definitions above to define UPNPLIB_API and
+// UPNPLIB_LOCAL. UPNPLIB_API is used for the public API symbols. It either DLL imports
+// or DLL exports (or does nothing for static build) UPNPLIB_LOCAL is used for
 // non-api symbols.
 
-#ifdef UPNP_DLL // defined if UPNP is compiled as a DLL
-  #ifdef UPNP_DLL_EXPORTS // defined if we are building the UPNP DLL (instead of using it)
-    #define UPNP_API UPNP_HELPER_DLL_EXPORT
+#ifdef UPNPLIB_SHARED // defined if UPNPLIB is compiled as a shared library
+  #ifdef UPNPLIB_EXPORTS // defined if we are building the UPNPLIB DLL (instead of using it)
+    #define UPNPLIB_API UPNP_HELPER_DLL_EXPORT
   #else
-    #define UPNP_API UPNP_HELPER_DLL_IMPORT
-  #endif // UPNP_DLL_EXPORTS
-  #define UPNP_LOCAL UPNP_HELPER_DLL_LOCAL
-#else // UPNP_DLL is not defined: this means UPNP is a static lib.
-  #define UPNP_API
-  #define UPNP_LOCAL
-#endif // UPNP_DLL
+    #define UPNPLIB_API UPNP_HELPER_DLL_IMPORT
+  #endif // UPNPLIB_EXPORTS
+  #define UPNPLIB_LOCAL UPNP_HELPER_DLL_LOCAL
+#else // UPNPLIB_SHARED is not defined: this means UPNPLIB is a static lib.
+  #define UPNPLIB_API
+  #define UPNPLIB_LOCAL
+#endif // UPNPLIB_SHARED
 
 // clang-format on
 

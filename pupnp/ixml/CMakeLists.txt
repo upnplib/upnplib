@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-02-26
+# Redistribution only with this Copyright remark. Last modified: 2022-03-09
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -36,21 +36,19 @@ add_library (ixml_shared SHARED
     ${IXML_SOURCES}
 )
 
-target_compile_definitions (ixml_shared PRIVATE
-    $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-    $<$<CONFIG:Debug>:DEBUG>
-    #$<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
-    $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
-    $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>
+target_compile_definitions (ixml_shared
+    PRIVATE UPNPLIB_SHARED
+    PRIVATE UPNPLIB_EXPORTS
+    PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
+    PRIVATE $<$<CONFIG:Debug>:DEBUG>
+    PRIVATE $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
 )
 
 add_library (ixml_static STATIC
     ${IXML_SOURCES}
 )
-target_compile_definitions (ixml_static PRIVATE
-    $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-    $<$<CONFIG:Debug>:DEBUG>
-    #$<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
-    $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
-    UPNP_STATIC_LIB
+target_compile_definitions (ixml_static
+    PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
+    PRIVATE $<$<CONFIG:Debug>:DEBUG>
+    PRIVATE $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
 )

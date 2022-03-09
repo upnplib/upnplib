@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-05
+// Redistribution only with this Copyright remark. Last modified: 2022-03-09
 
 #ifndef UPNP_IFADDRS_UIX_HPP
 #define UPNP_IFADDRS_UIX_HPP
@@ -12,7 +12,7 @@
 
 namespace upnplib {
 
-class UPNP_API CIfaddr4
+class UPNPLIB_API CIfaddr4
 // Tool to manage and fill a socket address structure. This is needed
 // for mocked network interfaces.
 {
@@ -47,7 +47,7 @@ class UPNP_API CIfaddr4
 };
 
 //
-class UPNP_API CIfaddr4Container {
+class UPNPLIB_API CIfaddr4Container {
     // This is a Container for multiple network interface structures that are
     // chained by ifaddr.ifa_next as given by the low level struct ifaddrs.
     //

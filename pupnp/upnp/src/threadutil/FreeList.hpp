@@ -69,7 +69,7 @@ typedef struct FREELIST {
  *	\li \c 0 on success.
  *	\li \c EINVAL on failure.
  */
-int FreeListInit(
+UPNPLIB_API int FreeListInit(
     /*! Must be valid, non null, pointer to a linked list. */
     FreeList* free_list,
     /*! Size of elements to store in free list. */
@@ -86,7 +86,7 @@ int FreeListInit(
  *
  * \return Non NULL on success. NULL on failure.
  */
-void* FreeListAlloc(
+UPNPLIB_API void* FreeListAlloc(
     /*! Must be valid, non null, pointer to a linked list. */
     FreeList* free_list);
 
@@ -100,7 +100,7 @@ void* FreeListAlloc(
  *	\li \c 0 on success.
  *	\li \c EINVAL on failure.
  */
-int FreeListFree(
+UPNPLIB_API int FreeListFree(
     /*! Must be valid, non null, pointer to a free list. */
     FreeList* free_list,
     /*! Must be a pointer allocated by FreeListAlloc. */
@@ -113,7 +113,7 @@ int FreeListFree(
  *	\li \c 0 on success.
  *	\li \c EINVAL on failure.
  */
-int FreeListDestroy(
+UPNPLIB_API int FreeListDestroy(
     /*! Must be valid, non null, pointer to a linked list. */
     FreeList* free_list);
 
