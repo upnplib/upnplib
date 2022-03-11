@@ -1,12 +1,28 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-02-21
+# Redistribution only with this Copyright remark. Last modified: 2022-03-11
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNPLIB_SAMPLE VERSION 0002
+project(UPNPLIB_SAMPLE VERSION 0003
                        DESCRIPTION "Simple sample to use the library"
                        HOMEPAGE_URL "https://github.com/upnplib")
+
+
+# Switches for this Subproject
+#-----------------------------
+# These switches are all handled only in this configuration file.
+
+# Options selectable by user configuration
+# To build all samples by default then use:
+# cmake -S . -B build -D UPNPLIB_WITH_SAMPLES=YES
+# To build only a single sample for testing and internal use you can do e.g.:
+# cmake -S . -B build -D UPNPLIB_DEF_SAMPLES=YES -D UPNPLIB_DEF_SAMPLE_CLIENT=YES
+if(UPNPLIB_WITH_SAMPLES)
+    set(UPNPLIB_DEF_SAMPLE_DEVICE YES)
+    set(UPNPLIB_DEF_SAMPLE_CLIENT YES)
+    set(UPNPLIB_DEF_SAMPLE_COMBO YES)
+endif()
 
 
 include_directories(
@@ -36,7 +52,7 @@ link_libraries(${UPNP_GMOCK_LIBRARIES}
                $<$<BOOL:${WIN32}>:${UPNP_PTHREADS_STATIC_LIBRARY}>
 )
 
-IF (client)
+IF (UPNPLIB_DEF_SAMPLE_CLIENT)
 	add_executable (tv_ctrlpt
                 ${PROJECT_SOURCE_DIR}/common/sample_util.cpp
 		${PROJECT_SOURCE_DIR}/common/tv_ctrlpt.cpp
@@ -46,10 +62,10 @@ IF (client)
 	#INSTALL (TARGETS tv_ctrlpt
 	#	DESTINATION ${CMAKE_INSTALL_BINDIR}
 	#)
-ENDIF (client)
+ENDIF()
 
 # client and device
-IF (combo)
+IF (UPNPLIB_DEF_SAMPLE_COMBO)
 	add_executable (tv_combo
 		${PROJECT_SOURCE_DIR}/common/sample_util.cpp
 		${PROJECT_SOURCE_DIR}/common/tv_ctrlpt.cpp
@@ -65,9 +81,9 @@ IF (combo)
 	#INSTALL (TARGETS tv_combo
 	#	DESTINATION ${CMAKE_INSTALL_BINDIR}
 	#)
-ENDIF (combo)
+ENDIF()
 
-IF (device)
+IF(UPNPLIB_DEF_SAMPLE_DEVICE)
 	add_executable (tv_device
 		${PROJECT_SOURCE_DIR}/common/sample_util.cpp
 		${PROJECT_SOURCE_DIR}/common/tv_device.cpp
@@ -86,4 +102,4 @@ IF (device)
 	#install (DIRECTORY web/
 	#	DESTINATION ${CMAKE_INSTALL_DATADIR}/upnp
 	#)
-ENDIF (device)
+ENDIF()

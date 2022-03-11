@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-03-03
+# Redistribution only with this Copyright remark. Last modified: 2022-03-11
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(PUPNP_UPNP VERSION 0012
+project(PUPNP_UPNP VERSION 0013
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -33,7 +33,9 @@ set(UPNPLIB_DEF_BLOCKTCP ${UPNPLIB_WITH_BLOCKTCP})   # blocking_tcp_connections 
 set(UPNPLIB_DEF_IXML ${UPNPLIB_WITH_IXML})           # scriptsupport -> IXML_HAVE_SCRIPTSUPPORT
 #set(UPNPLIB_DEF_UNSPECSVR NO)                        # unspecified_server -> UPNP_ENABLE_UNSPECIFIED_SERVER
 #set(UPNPLIB_DEF_REUSEADDR NO)                        # reuseaddr -> UPNP_MINISERVER_REUSEADDR
-set(UPNPLIB_DEF_SAMPLES ${UPNPLIB_WITH_SAMPLES})     # samples -> UPNP_BUILD_SAMPLES
+if(UPNPLIB_WITH_SAMPLES)                             # all samples -> UPNP_BUILD_SAMPLES
+    set(UPNPLIB_DEF_SAMPLES YES) # To make it separate selectable don't set it direct
+endif()
 
 # Internal switches for program options
 set(UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS YES)

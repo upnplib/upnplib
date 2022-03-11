@@ -626,41 +626,43 @@ add_test(NAME ctest_build_with_ixml ${UPNPLIB_BUILD_COMMAND}
 add_test(NAME ctest_build_with_ixml_debug ${UPNPLIB_BUILD_COMMAND}
         --build-config Debug
 )
-add_test(NAME ctest_build_with_samples ${UPNPLIB_BUILD_COMMAND}
-        --build-config ${CMAKE_BUILD_TYPE}
-        --build-options -DUPNPLIB_WITH_IXML=NO
-                        -DUPNPLIB_WITH_SAMPLES=YES
-)
-add_test(NAME ctest_build_with_samples_debug ${UPNPLIB_BUILD_COMMAND}
-        --build-config Debug
-)
 add_test(NAME ctest_build_with_sample_device ${UPNPLIB_BUILD_COMMAND}
         --build-config ${CMAKE_BUILD_TYPE}
-        --build-options -Ddevice=YES
+        --build-options -DUPNPLIB_WITH_IXML=NO
+                        -DUPNPLIB_DEF_SAMPLES=YES
+                        -DUPNPLIB_DEF_DEVICE=YES
 )
 add_test(NAME ctest_build_with_sample_device_debug ${UPNPLIB_BUILD_COMMAND}
         --build-config Debug
 )
 add_test(NAME ctest_build_with_sample_client ${UPNPLIB_BUILD_COMMAND}
         --build-config ${CMAKE_BUILD_TYPE}
-        --build-options -Ddevice=NO
-                        -Dclient=YES
+        --build-options -DUPNPLIB_DEF_DEVICE=NO
+                        -DUPNPLIB_DEF_SAMPLES=YES
+                        -DUPNPLIB_DEF_CLIENT=YES
 )
 add_test(NAME ctest_build_with_sample_client_debug ${UPNPLIB_BUILD_COMMAND}
         --build-config Debug
 )
 add_test(NAME ctest_build_with_sample_combo ${UPNPLIB_BUILD_COMMAND}
         --build-config ${CMAKE_BUILD_TYPE}
-        --build-options -Dclient=NO
-                        -Dcombo=YES
+        --build-options -DUPNPLIB_DEF_CLIENT=NO
+                        -DUPNPLIB_DEF_SAMPLES=YES
+                        -DUPNPLIB_DEF_COMBO=YES
 )
 add_test(NAME ctest_build_with_sample_combo_debug ${UPNPLIB_BUILD_COMMAND}
         --build-config Debug
 )
+add_test(NAME ctest_build_with_samples ${UPNPLIB_BUILD_COMMAND}
+        --build-config ${CMAKE_BUILD_TYPE}
+        --build-options -DUPNPLIB_WITH_SAMPLES=YES
+)
+add_test(NAME ctest_build_with_samples_debug ${UPNPLIB_BUILD_COMMAND}
+        --build-config Debug
+)
 add_test(NAME ctest_build_with_googletest ${UPNPLIB_BUILD_COMMAND}
         --build-config ${CMAKE_BUILD_TYPE}
-        --build-options -Dcombo=NO
-                        -DUPNPLIB_WITH_SAMPLES=NO
+        --build-options -DUPNPLIB_WITH_SAMPLES=NO
                         -DUPNPLIB_WITH_GOOGLETEST=YES -DBUILD_SHARED_LIBS=YES
 )
 add_test(NAME ctest_build_with_googletest_debug ${UPNPLIB_BUILD_COMMAND}
