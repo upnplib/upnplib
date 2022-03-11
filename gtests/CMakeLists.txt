@@ -54,10 +54,10 @@ add_compile_definitions(PRIVATE
 # Due to issue https://github.com/google/googletest/issues/1325#issuecomment-903884914
 # it should only link with the gmock libraries on WIN32. On Unix it doesn't compile
 # without gtest libraries.
-link_libraries(${UPNP_GMOCK_LIBRARIES}
-               ${UPNP_GMOCK_MAIN_LIBRARIES}
-               $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_GTEST_LIBRARIES}>
-               $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_GTEST_MAIN_LIBRARIES}>
+link_libraries(gmock
+               gmock_main
+               $<$<NOT:$<BOOL:${WIN32}>>:gtest>
+               $<$<NOT:$<BOOL:${WIN32}>>:gtest_main>
                # On Linux we cannot link with the static pthreads library
                # because then we have also link with a static libc that's not
                # available by default.

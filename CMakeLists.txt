@@ -354,28 +354,8 @@ if(UPNPLIB_WITH_GOOGLETEST)
         # This caches googletest_SOURCE_DIR, googletest_BINARY_DIR and googletest_POPULATED.
         FetchContent_MakeAvailable(googletest)
 
-        # Cache the different GoogleTest library names for later use.
         # Due to issue https://github.com/google/googletest/issues/1325#issuecomment-903884914
         # it should only link with the gmock libraries. They contain also gtest.
-        if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
-            set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gtest${UPNP_DEBUG_SUFFIX}.lib
-                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock libraries")
-            set(UPNP_GMOCK_LIBRARIES ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gmock${UPNP_DEBUG_SUFFIX}.lib
-                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock libraries")
-            set(UPNP_GTEST_MAIN_LIBRARIES ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gtest_main${UPNP_DEBUG_SUFFIX}.lib
-                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock libraries")
-            set(UPNP_GMOCK_MAIN_LIBRARIES ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}/gmock_main${UPNP_DEBUG_SUFFIX}.lib
-                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock libraries")
-        else()
-            set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/gtest${UPNP_DEBUG_SUFFIX}.lib
-                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock libraries")
-            set(UPNP_GMOCK_LIBRARIES ${PROJECT_BINARY_DIR}/lib/gmock${UPNP_DEBUG_SUFFIX}.lib
-                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock libraries")
-            set(UPNP_GTEST_MAIN_LIBRARIES ${PROJECT_BINARY_DIR}/lib/gtest_main${UPNP_DEBUG_SUFFIX}.lib
-                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock libraries")
-            set(UPNP_GMOCK_MAIN_LIBRARIES ${PROJECT_BINARY_DIR}/lib/gmock_main${UPNP_DEBUG_SUFFIX}.lib
-                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock libraries")
-        endif()
 
         message(CHECK_PASS "done")
 
@@ -420,39 +400,8 @@ if(UPNPLIB_WITH_GOOGLETEST)
         # This caches googletest_SOURCE_DIR, googletest_BINARY_DIR and googletest_POPULATED.
         FetchContent_MakeAvailable(googletest)
 
-        # Cache the GoogleTest library names for later use.
         # Due to issue https://github.com/google/googletest/issues/1325#issuecomment-903884914
         # it should only link with the gmock libraries. They contain also gtest.
-        if(BUILD_SHARED_LIBS)
-            if(APPLE)
-                set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgtest${UPNP_DEBUG_SUFFIX}.dylib
-                                         CACHE INTERNAL "Names of the GoogleTest/GoogleMock shared libraries")
-                set(UPNP_GMOCK_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgmock${UPNP_DEBUG_SUFFIX}.dylib
-                                         CACHE INTERNAL "Names of the GoogleTest/GoogleMock shared libraries")
-                set(UPNP_GTEST_MAIN_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgtest_main${UPNP_DEBUG_SUFFIX}.dylib
-                                         CACHE INTERNAL "Names of the GoogleTest/GoogleMock shared libraries")
-                set(UPNP_GMOCK_MAIN_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgmock_main${UPNP_DEBUG_SUFFIX}.dylib
-                                         CACHE INTERNAL "Names of the GoogleTest/GoogleMock shared libraries")
-            else()
-                set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgtest${UPNP_DEBUG_SUFFIX}.so
-                                         CACHE INTERNAL "Names of the GoogleTest/GoogleMock shared libraries")
-                set(UPNP_GMOCK_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgmock${UPNP_DEBUG_SUFFIX}.so
-                                         CACHE INTERNAL "Names of the GoogleTest/GoogleMock shared libraries")
-                set(UPNP_GTEST_MAIN_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgtest_main${UPNP_DEBUG_SUFFIX}.so
-                                         CACHE INTERNAL "Names of the GoogleTest/GoogleMock shared libraries")
-                set(UPNP_GMOCK_MAIN_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgmock_main${UPNP_DEBUG_SUFFIX}.so
-                                         CACHE INTERNAL "Names of the GoogleTest/GoogleMock shared libraries")
-            endif()
-        else(BUILD_SHARED_LIBS)
-            set(UPNP_GTEST_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgtest${UPNP_DEBUG_SUFFIX}.a
-                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock static libraries")
-            set(UPNP_GMOCK_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgmock${UPNP_DEBUG_SUFFIX}.a
-                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock static libraries")
-            set(UPNP_GTEST_MAIN_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgtest_main${UPNP_DEBUG_SUFFIX}.a
-                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock static libraries")
-            set(UPNP_GMOCK_MAIN_LIBRARIES ${PROJECT_BINARY_DIR}/lib/libgmock_main${UPNP_DEBUG_SUFFIX}.a
-                                     CACHE INTERNAL "Names of the GoogleTest/GoogleMock static libraries")
-        endif(BUILD_SHARED_LIBS)
 
         message(CHECK_PASS "done")
 

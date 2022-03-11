@@ -40,8 +40,7 @@ add_compile_definitions(
         PRIVATE UPNP_HAVE_TOOLS
 )
 
-link_libraries(${UPNP_GMOCK_LIBRARIES}
-               ixml_shared
+link_libraries(ixml_shared
                upnplib_shared
                # On Linux we cannot link with the static pthreads library
                # because then we have also link with a static libc that's not
