@@ -156,6 +156,13 @@ add_executable(test_uri_parse
     test_uri.d/test_uri_parse.cpp)
 add_test(NAME ctest_uri_parse COMMAND test_uri_parse)
 
+# uri: url_class
+#---------------
+add_executable(test_url_class
+    ${UPNPLIB_CORE_SOURCE_DIR}/src/genlib/net/uri/url.cpp
+    test_uri.d/test_url_class.cpp)
+add_test(NAME ctest_url_class COMMAND test_url_class)
+
 
 # httpparser
 #-----------
