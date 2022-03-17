@@ -35,7 +35,9 @@ In general we refere Bjarne Stroustrup [C++ Core Guidelines](https://isocpp.gith
 - [Pull methods outside of a class](https://www.fluentcpp.com/2017/06/20/interface-principle-cpp/), whenever it is possible.
 - Friend classes and friend functions are not used.
 - There is a rule saying "[Do not use underscores in test suite names and test names](https://google.github.io/googletest/faq.html#why-should-test-suite-names-and-test-names-not-contain-underscore)". Because we know the problems we are free to violate the rule for readability with the following restrictions: test suite names only written in "camel case", test names are written in "snake case" without leading and trailing underscore.
-- nullptr is a valid entry and should never cause a segmentation fault. Functions and methods return successful.
+- If supported by C++ nullptr is a valid entry and should never cause a segmentation fault. Functions and methods return successful then.
+- Errors cannot be handled by the library and throw an exception.
+- Warnings are errors that can be fixed by the library. It will continue execution with the fixed error but a Warning is logged because the correction needs attention.
 
 ## Git Commit Messages
 The [Udacity Git Commit Message Style Guide](https://udacity.github.io/git-styleguide/) served as a template.
@@ -140,12 +142,13 @@ C++ provides Visibility Support as powerful optimization. We use it as described
 
 - For optimization with using `UPNPLIB_LOCAL` look at the [GCC Wiki - Visibility](https://gcc.gnu.org/wiki/Visibility).
 
-## Optimization
+## Some references and 0ptimization
 - [Optimize String Use](https://www.oreilly.com/library/view/optimized-c/9781491922057/ch04.html)
 - [ Move Objects](https://newbedev.com/is-std-vector-copying-the-objects-with-a-push-back) instead of coppying.
 - [Blocking vs. non-blocking sockets](https://www.scottklement.com/rpg/socktut/nonblocking.html)
+- [Operator Overloading](https://condor.depaul.edu/ntomuro/courses/262/notes/lecture3.html)
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2022-03-10
+// Redistribution only with this Copyright remark. Last modified: 2022-03-17
 </sup></sup>

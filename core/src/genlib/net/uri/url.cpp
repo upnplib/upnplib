@@ -1,473 +1,153 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-12
+// Redistribution only with this Copyright remark. Last modified: 2022-03-17
 
 #include "upnplib/url.hpp"
-#include <algorithm>
-#include <stdexcept>
+#include <memory>
+#include <cstring>
+#include <iostream>
 
 namespace upnplib {
 
-// homer::Url v0.3.0
-// =================
-// MIT License
-// https://github.com/homer6/url
+Url::operator std::string() const { return m_serialized_url; }
 
-std::string CUrl::getScheme() const { return this->scheme; }
-
-std::string CUrl::getUsername() const { return this->username; }
-
-std::string CUrl::getPassword() const { return this->password; }
-
-std::string CUrl::getHost() const { return this->host; }
-
-unsigned short CUrl::getPort() const {
-
-    if (this->port.size() > 0) {
-        return std::atoi(this->port.c_str());
-    }
-
-    if (this->scheme == "https")
-        return 443;
-    if (this->scheme == "http")
-        return 80;
-    if (this->scheme == "ssh")
-        return 22;
-    if (this->scheme == "ftp")
-        return 21;
-    if (this->scheme == "mysql")
-        return 3306;
-    if (this->scheme == "mongo")
-        return 27017;
-    if (this->scheme == "mongo+srv")
-        return 27017;
-    if (this->scheme == "kafka")
-        return 9092;
-    if (this->scheme == "postgres")
-        return 5432;
-    if (this->scheme == "postgresql")
-        return 5432;
-    if (this->scheme == "redis")
-        return 6379;
-    if (this->scheme == "zookeeper")
-        return 2181;
-    if (this->scheme == "ldap")
-        return 389;
-    if (this->scheme == "ldaps")
-        return 636;
-
-    return 0;
+void Url::clear() {
+    m_given_url = "";
+    this->clear_private();
 }
 
-std::string CUrl::getPath() const {
-
-    std::string tmp_path;
-    unescape_path(this->path, tmp_path);
-    return tmp_path;
+void Url::clear_private() {
+    // Clears all properties except m_given_url that may already be set to a new
+    // value.
+    m_input = "";
+    m_buffer = "";
+    m_serialized_url = "";
+    m_scheme = "";
+    m_authority = "";
+    m_userinfo = "";
+    m_host = "";
+    m_port = "";
+    m_port_num = 0;
+    m_path = "";
+    m_query = "";
+    m_fragment = "";
 }
 
-std::string CUrl::getQuery() const { return this->query; }
+std::string Url::scheme() const { return m_scheme; }
 
-std::string CUrl::getFragment() const { return this->fragment; }
+std::string Url::authority() const { return m_authority; }
 
-std::string CUrl::getFullPath() const {
+std::string Url::userinfo() const { return m_userinfo; }
 
-    std::string full_path;
+std::string Url::host() const { return m_host; }
 
-    if (this->getPath().size()) {
-        full_path += this->getPath();
-    }
+std::string Url::port() const { return m_port; }
 
-    if (this->getQuery().size()) {
-        full_path += "?" + this->getQuery();
-    }
+uint16_t Url::port_num() const { return m_port_num; }
 
-    if (this->getFragment().size()) {
-        full_path += "#" + this->getFragment();
-    }
+std::string Url::path() const { return m_path; }
 
-    return full_path;
-}
+std::string Url::query() const { return m_query; }
 
-bool CUrl::isIpv6() const { return this->ipv6_host; }
+std::string Url::fragment() const { return m_fragment; }
 
-void CUrl::setSecure(bool secure_) { this->secure = secure_; }
+void Url::operator=(const std::string& a_given_url) {
 
-bool CUrl::isSecure() const { return this->secure; }
+    m_given_url = a_given_url;
+    this->clear_private();
 
-std::string_view CUrl::captureUpTo(const std::string_view right_delimiter,
-                                   const std::string& error_message) {
+    // std::cout << "DEBUG: m_given_url.size() = " << m_given_url.size() <<
+    // '\n'; std::cout << "DEBUG: m_given_url = '" << m_given_url << "'\n";
 
-    this->right_position =
-        this->parse_target.find_first_of(right_delimiter, this->left_position);
-
-    if (right_position == std::string::npos && error_message.size()) {
-        throw std::runtime_error(error_message);
-    }
-
-    std::string_view captured = this->parse_target.substr(
-        this->left_position, this->right_position - this->left_position);
-
-    return captured;
-}
-
-bool CUrl::moveBefore(const std::string_view right_delimiter) {
-
-    size_t position =
-        this->parse_target.find_first_of(right_delimiter, this->left_position);
-
-    if (position != std::string::npos) {
-        this->left_position = position;
-        return true;
-    }
-
-    return false;
-}
-
-bool CUrl::existsForward(const std::string_view right_delimiter) {
-
-    size_t position =
-        this->parse_target.find_first_of(right_delimiter, this->left_position);
-
-    if (position != std::string::npos) {
-        return true;
-    }
-
-    return false;
-}
-
-void CUrl::set(const std::string& source_string) {
-
-    this->whole_url_storage = source_string; // copy
-    this->clearPrivate();
-
-    if (this->whole_url_storage == "") {
-        // This is a valid entry.
+    if (m_given_url == "")
         return;
-    }
 
-    // reset target
-    this->parse_target = this->whole_url_storage;
+    enum { STATE_NO_STATE, STATE_SCHEME_START, STATE_SCHEME, STATE_NO_SCHEME };
+    int current_state{STATE_NO_STATE};
 
-    // scheme
-    this->scheme = this->captureUpTo(":", "Expected : in CUrl");
-    std::transform(
-        this->scheme.begin(), this->scheme.end(), this->scheme.begin(),
-        [](std::string_view::value_type c) { return std::tolower(c); });
-    this->left_position += scheme.size() + 1;
+    // Following this [basic URL parser]
+    // (https://url.spec.whatwg.org/#concept-basic-url-parser)
+    // without optional parameter means we parse only the string input.
+    // To understand the parser below please refer this standard.
+    // I use the same variable names with additional prefix 'm_'.
 
-    // authority
+    // Remove any leading and trailing C0 control or space from input.
+    m_input = m_given_url;
+    this->fsm_cleanup_input();
 
-    if (this->moveBefore("//")) {
-        this->authority_present = true;
-        this->left_position += 2;
-    }
+    current_state = STATE_SCHEME_START;
+    m_buffer = "";
+    m_pointer = m_input.begin();
 
-    if (this->authority_present) {
-
-        this->authority = this->captureUpTo("/");
-
-        bool path_exists = false;
-
-        if (this->moveBefore("/")) {
-            path_exists = true;
-        }
-
-        if (this->existsForward("?")) {
-
-            this->path = this->captureUpTo("?");
-            this->moveBefore("?");
-            this->left_position++;
-
-            if (this->existsForward("#")) {
-                this->query = this->captureUpTo("#");
-                this->moveBefore("#");
-                this->left_position++;
-                this->fragment = this->captureUpTo("#");
-            } else {
-                // no fragment
-                this->query = this->captureUpTo("#");
-            }
-
-        } else {
-
-            // no query
-            if (this->existsForward("#")) {
-                this->path = this->captureUpTo("#");
-                this->moveBefore("#");
-                this->left_position++;
-                this->fragment = this->captureUpTo("#");
-            } else {
-                // no fragment
-                if (path_exists) {
-                    this->path = this->captureUpTo("#");
-                }
-            }
-        }
-
-    } else {
-
-        this->path = this->captureUpTo("#");
-    }
-
-    // parse authority
-
-    // reset target
-    this->parse_target = this->authority;
-    this->left_position = 0;
-    this->right_position = 0;
-
-    if (this->existsForward("@")) {
-
-        this->user_info = this->captureUpTo("@");
-        this->moveBefore("@");
-        this->left_position++;
-
-    } else {
-        // no user_info
-    }
-
-    // detect ipv6
-    if (this->existsForward("[")) {
-        this->left_position++;
-        this->host = this->captureUpTo("]", "Malformed ipv6");
-        this->left_position++;
-        this->ipv6_host = true;
-    } else {
-
-        if (this->existsForward(":")) {
-            this->host = this->captureUpTo(":");
-            this->moveBefore(":");
-            this->left_position++;
-            this->port = this->captureUpTo("#");
-        } else {
-            // no port
-            this->host = this->captureUpTo(":");
+    // Because there are no external events we can use this
+    // simple state machine:
+    std::cout << "DEBUG: *m_pointer = ";
+    for (; m_pointer < m_input.end(); m_pointer++) {
+        switch (current_state) {
+        case STATE_SCHEME_START:
+            this->fsm_scheme_start();
+            break;
+        case STATE_SCHEME:
+            // do something in the stop state
+            break;
+        case STATE_NO_SCHEME:
+            // do something in the stop state
+            break;
         }
     }
-
-    // parse user_info
-
-    // reset target
-    this->parse_target = this->user_info;
-    this->left_position = 0;
-    this->right_position = 0;
-
-    if (this->existsForward(":")) {
-
-        this->username = this->captureUpTo(":");
-        this->moveBefore(":");
-        this->left_position++;
-
-        this->password = this->captureUpTo("#");
-
-    } else {
-        // no password
-
-        this->username = this->captureUpTo(":");
-    }
-
-    // update secure
-    if (this->scheme == "ssh" || this->scheme == "https" ||
-        this->port == "443") {
-        this->secure = true;
-    }
-
-    if (this->scheme == "postgres" || this->scheme == "postgresql") {
-
-        // reset parse target to query
-        this->parse_target = this->query;
-        this->left_position = 0;
-        this->right_position = 0;
-
-        if (this->existsForward("ssl=true")) {
-            this->secure = true;
-        }
-    }
+    std::cout << std::endl;
 }
 
-void CUrl::clear() {
+//
+void Url::fsm_cleanup_input() {
 
-    this->whole_url_storage = "";
-    return this->clearPrivate();
-}
+    // Remove leading control or space
+    auto ptr = m_input.begin();
+    for (; ptr < m_input.end(); ptr++) {
+        if (*ptr > ' ')
+            break;
+    }
+    if (ptr > m_input.begin()) {
+        m_input.erase(m_input.begin(), ptr);
+        std::clog << "Warning: Leading control or space characters removed "
+                     "from URL. Using '"
+                  << m_input << "' now." << std::endl;
+    }
 
-void CUrl::clearPrivate() {
+    // std::cout << "DEBUG: m_input.size() = " << m_input.size() << '\n';
+    // std::cout << "DEBUG: m_input = '" << m_input << "'\n";
 
-    // clear all properties to valid empty values except whole_url_storage that
-    // should be initialized as very first statement.
-    this->scheme = "";
-    this->authority = "";
-    this->user_info = "";
-    this->username = "";
-    this->password = "";
-    this->host = "";
-    this->port = "";
-    this->path = "";
-    this->query = "";
-    this->fragment = "";
+    // Remove trailing control or space
+    ptr = m_input.end() - 1;
+    for (; ptr >= m_input.begin(); ptr--) {
+        if (*ptr > ' ')
+            break;
+    }
+    if (ptr < m_input.end() - 1) {
+        m_input.erase(ptr + 1, m_input.end());
+        std::clog << "Warning: Trailing control or space characters removed "
+                     "from URL. Using '"
+                  << m_input << "' now." << std::endl;
+    }
 
-    this->secure = false;
-    this->ipv6_host = false;
-    this->authority_present = false;
+    // std::cout << "DEBUG: m_input.size() = " << m_input.size() << '\n';
+    // std::cout << "DEBUG: m_input = '" << m_input << "'\n";
 
-    this->left_position = 0;
-    this->right_position = 0;
-    this->parse_target = "";
+    // Remove all ASCII tab or newline from input.
+    auto old_size = m_input.size();
+    m_input.erase(std::remove_if(m_input.begin(), m_input.end(),
+                                 [](char c) {
+                                     return c == '\t' || c == '\n' || c == '\r';
+                                 }),
+                  m_input.end());
+    if (m_input.size() != old_size)
+        std::clog << "Warning: Removed " << old_size - m_input.size()
+                  << " ASCII tab or newline character from URL. Using '"
+                  << m_input << "' now." << std::endl;
 
     return;
 }
 
-bool CUrl::unescape_path(const std::string& in, std::string& out) {
-
-    out.clear();
-    out.reserve(in.size());
-
-    for (std::size_t i = 0; i < in.size(); ++i) {
-
-        switch (in[i]) {
-
-        case '%':
-
-            if (i + 3 <= in.size()) {
-
-                unsigned int value = 0;
-
-                for (std::size_t j = i + 1; j < i + 3; ++j) {
-
-                    switch (in[j]) {
-
-                    case '0':
-                    case '1':
-                    case '2':
-                    case '3':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                    case '8':
-                    case '9':
-                        value += in[j] - '0';
-                        break;
-
-                    case 'a':
-                    case 'b':
-                    case 'c':
-                    case 'd':
-                    case 'e':
-                    case 'f':
-                        value += in[j] - 'a' + 10;
-                        break;
-
-                    case 'A':
-                    case 'B':
-                    case 'C':
-                    case 'D':
-                    case 'E':
-                    case 'F':
-                        value += in[j] - 'A' + 10;
-                        break;
-
-                    default:
-                        return false;
-                    }
-
-                    if (j == i + 1)
-                        value <<= 4;
-                }
-
-                out += static_cast<char>(value);
-                i += 2;
-
-            } else {
-
-                return false;
-            }
-
-            break;
-
-        case '-':
-        case '_':
-        case '.':
-        case '!':
-        case '~':
-        case '*':
-        case '\'':
-        case '(':
-        case ')':
-        case ':':
-        case '@':
-        case '&':
-        case '=':
-        case '+':
-        case '$':
-        case ',':
-        case '/':
-        case ';':
-            out += in[i];
-            break;
-
-        default:
-            if (!std::isalnum(in[i]))
-                return false;
-            out += in[i];
-            break;
-        }
-    }
-
-    return true;
-}
-
-bool operator==(const CUrl& a, const CUrl& b) {
-
-    return a.scheme == b.scheme && a.username == b.username &&
-           a.password == b.password && a.host == b.host && a.port == b.port &&
-           a.path == b.path && a.query == b.query && a.fragment == b.fragment;
-}
-
-bool operator!=(const CUrl& a, const CUrl& b) { return !(a == b); }
-
-bool operator<(const CUrl& a, const CUrl& b) {
-
-    if (a.scheme < b.scheme)
-        return true;
-    if (b.scheme < a.scheme)
-        return false;
-
-    if (a.username < b.username)
-        return true;
-    if (b.username < a.username)
-        return false;
-
-    if (a.password < b.password)
-        return true;
-    if (b.password < a.password)
-        return false;
-
-    if (a.host < b.host)
-        return true;
-    if (b.host < a.host)
-        return false;
-
-    if (a.port < b.port)
-        return true;
-    if (b.port < a.port)
-        return false;
-
-    if (a.path < b.path)
-        return true;
-    if (b.path < a.path)
-        return false;
-
-    if (a.query < b.query)
-        return true;
-    if (b.query < a.query)
-        return false;
-
-    return a.fragment < b.fragment;
-}
-
-std::string CUrl::toString() const { return this->whole_url_storage; }
-
-// CUrl::operator std::string() const { return this->toString(); }
+//
+void Url::fsm_scheme_start() { std::cout << *m_pointer; }
 
 } // namespace upnplib

@@ -1,149 +1,142 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-09
+// Redistribution only with this Copyright remark. Last modified: 2022-03-17
 
 #include "gtest/gtest.h"
 #include "upnplib/url.hpp"
 
 namespace upnplib {
+bool github_actions = std::getenv("GITHUB_ACTIONS");
 
-bool github_actions = ::std::getenv("GITHUB_ACTIONS");
+TEST(UrlClassTestSuite, empty_url_object) {
+    Url url;
 
-TEST(UrlClassTestSuite, parse_valid_url) {
-    CUrl url;
-    url.set("https://fred:password@www.wikipedia.org/"
-            "what-me-worry?hello=there#wonder");
-
-    EXPECT_EQ(url.getScheme(), "https");
-    EXPECT_EQ(url.getUsername(), "fred");
-    EXPECT_EQ(url.getPassword(), "password");
-    EXPECT_EQ(url.getHost(), "www.wikipedia.org");
-    EXPECT_EQ(url.getPort(), 443);
-    EXPECT_EQ(url.getPath(), "/what-me-worry");
-    EXPECT_EQ(url.getQuery(), "hello=there");
-    // Has been removed because of no functionality
-    // EXPECT_EQ(url.getQueryParameters().size(), 0);
-    EXPECT_EQ(url.getFragment(), "wonder");
-    EXPECT_EQ(url.getFullPath(), "/what-me-worry?hello=there#wonder");
-    EXPECT_FALSE(url.isIpv6());
-    EXPECT_TRUE(url.isSecure());
-    EXPECT_EQ(url.toString(), "https://fred:password@www.wikipedia.org/"
-                              "what-me-worry?hello=there#wonder");
-    // explicit operator std::string()
-    // EXPECT_EQ((std::string)url, "???");
+    EXPECT_EQ((std::string)url, "");
+    EXPECT_EQ(url.scheme(), "");
+    EXPECT_EQ(url.authority(), "");
+    EXPECT_EQ(url.userinfo(), "");
+    EXPECT_EQ(url.host(), "");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), 0);
+    EXPECT_EQ(url.path(), "");
+    EXPECT_EQ(url.query(), "");
+    EXPECT_EQ(url.fragment(), "");
 }
 
-TEST(UrlClassTestSuite, url_object_without_parameter) {
-    CUrl url;
+TEST(UrlClassTestSuite, empty_url_string) {
+    Url url;
+    url = "";
 
-    EXPECT_EQ(url.getScheme(), "");
-    EXPECT_EQ(url.getUsername(), "");
-    EXPECT_EQ(url.getPassword(), "");
-    EXPECT_EQ(url.getHost(), "");
-    EXPECT_EQ(url.getPort(), 0);
-    EXPECT_EQ(url.getPath(), "");
-    EXPECT_EQ(url.getQuery(), "");
-    EXPECT_EQ(url.getFragment(), "");
-    EXPECT_FALSE(url.isSecure());
-    EXPECT_FALSE(url.isIpv6());
+    EXPECT_EQ((std::string)url, "");
+    EXPECT_EQ(url.scheme(), "");
+    EXPECT_EQ(url.authority(), "");
+    EXPECT_EQ(url.userinfo(), "");
+    EXPECT_EQ(url.host(), "");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), 0);
+    EXPECT_EQ(url.path(), "");
+    EXPECT_EQ(url.query(), "");
+    EXPECT_EQ(url.fragment(), "");
 }
 
-TEST(UrlClassTestSuite, url_object_with_empty_parameter) {
-    CUrl url{};
+TEST(UrlClassTestSuite, one_space_url) {
+    Url url;
+    url = " ";
 
-    EXPECT_EQ(url.getScheme(), "");
-    EXPECT_EQ(url.getUsername(), "");
-    EXPECT_EQ(url.getPassword(), "");
-    EXPECT_EQ(url.getHost(), "");
-    EXPECT_EQ(url.getPort(), 0);
-    EXPECT_EQ(url.getPath(), "");
-    EXPECT_EQ(url.getQuery(), "");
-    EXPECT_EQ(url.getFragment(), "");
-    EXPECT_FALSE(url.isSecure());
-    EXPECT_FALSE(url.isIpv6());
+    EXPECT_EQ((std::string)url, "");
+    EXPECT_EQ(url.scheme(), "");
+    EXPECT_EQ(url.authority(), "");
+    EXPECT_EQ(url.userinfo(), "");
+    EXPECT_EQ(url.host(), "");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), 0);
+    EXPECT_EQ(url.path(), "");
+    EXPECT_EQ(url.query(), "");
+    EXPECT_EQ(url.fragment(), "");
 }
 
-TEST(UrlClassTestSuite, empty_url) {
-    // This should be a valid parameter
-    CUrl url;
-    url.set("");
+TEST(UrlClassTestSuite, url_with_leading_control_chars) {
+    Url url;
+    url = "\1 \2x\0https://www.example.com";
 
-    EXPECT_EQ(url.getScheme(), "");
-    EXPECT_EQ(url.getUsername(), "");
-    EXPECT_EQ(url.getPassword(), "");
-    EXPECT_EQ(url.getHost(), "");
-    EXPECT_EQ(url.getPort(), 0);
-    EXPECT_EQ(url.getPath(), "");
-    EXPECT_EQ(url.getQuery(), "");
-    EXPECT_EQ(url.getFragment(), "");
-    EXPECT_FALSE(url.isSecure());
-    EXPECT_FALSE(url.isIpv6());
+    EXPECT_EQ((std::string)url, "");
+    EXPECT_EQ(url.scheme(), "");
+    EXPECT_EQ(url.authority(), "");
+    EXPECT_EQ(url.userinfo(), "");
+    EXPECT_EQ(url.host(), "");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), 0);
+    EXPECT_EQ(url.path(), "");
+    EXPECT_EQ(url.query(), "");
+    EXPECT_EQ(url.fragment(), "");
 }
 
-TEST(UrlClassTestSuite, set_second_empty_url) {
-    CUrl url;
-    url.set("https://fred:password@www.wikipedia.org/"
-            "what-me-worry?hello=there#wonder");
-    // This should be a valid parameter
-    url.set("");
+TEST(UrlClassTestSuite, url_with_trailing_control_chars) {
+    Url url;
+    url = "https://www.example.com \3\4 ";
 
-    EXPECT_EQ(url.getScheme(), "");
-    EXPECT_EQ(url.getUsername(), "");
-    EXPECT_EQ(url.getPassword(), "");
-    EXPECT_EQ(url.getHost(), "");
-    EXPECT_EQ(url.getPort(), 0);
-    EXPECT_EQ(url.getPath(), "");
-    EXPECT_EQ(url.getQuery(), "");
-    EXPECT_EQ(url.getFragment(), "");
-    EXPECT_FALSE(url.isSecure());
-    EXPECT_FALSE(url.isIpv6());
+    EXPECT_EQ((std::string)url, "");
+    EXPECT_EQ(url.scheme(), "");
+    EXPECT_EQ(url.authority(), "");
+    EXPECT_EQ(url.userinfo(), "");
+    EXPECT_EQ(url.host(), "");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), 0);
+    EXPECT_EQ(url.path(), "");
+    EXPECT_EQ(url.query(), "");
+    EXPECT_EQ(url.fragment(), "");
 }
 
-TEST(UrlClassTestSuite, url_with_only_colon) {
+TEST(UrlClassTestSuite, url_with_leading_and_trailing_control_chars) {
+    Url url;
+    url = " \1\2https://www.example.com \3\4 ";
+
+    EXPECT_EQ((std::string)url, "");
+    EXPECT_EQ(url.scheme(), "");
+    EXPECT_EQ(url.authority(), "");
+    EXPECT_EQ(url.userinfo(), "");
+    EXPECT_EQ(url.host(), "");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), 0);
+    EXPECT_EQ(url.path(), "");
+    EXPECT_EQ(url.query(), "");
+    EXPECT_EQ(url.fragment(), "");
+}
+
+TEST(UrlClassTestSuite, url_with_tabs_and_newlines) {
+    Url url;
+    url = "https:\x0D//\x0Awww.example\x09.com";
+
+    EXPECT_EQ((std::string)url, "");
+    EXPECT_EQ(url.scheme(), "");
+    EXPECT_EQ(url.authority(), "");
+    EXPECT_EQ(url.userinfo(), "");
+    EXPECT_EQ(url.host(), "");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), 0);
+    EXPECT_EQ(url.path(), "");
+    EXPECT_EQ(url.query(), "");
+    EXPECT_EQ(url.fragment(), "");
+}
+
+TEST(UrlClassTestSuite, parse_full_url) {
     if (github_actions)
         GTEST_SKIP() << "             known failing test on Github Actions";
 
-    CUrl url;
-    EXPECT_THROW(url.set(":"), std::invalid_argument);
-}
+    Url url;
+    url = "https://john.doe@www.example.com:123/forum/questions/"
+          "?tag=networking&order=newest#top";
 
-TEST(UrlClassTestSuite, invalid_url) {
-    if (github_actions)
-        GTEST_SKIP() << "             known failing test on Github Actions";
-
-    CUrl url;
-    EXPECT_THROW(url.set("hello world"), std::invalid_argument);
-}
-
-TEST(UrlClassTestSuite, url_only_with_unsecure_scheme) {
-    CUrl url;
-    url.set("x---s:");
-
-    EXPECT_EQ(url.getScheme(), "x---s");
-    EXPECT_EQ(url.getUsername(), "");
-    EXPECT_EQ(url.getPassword(), "");
-    EXPECT_EQ(url.getHost(), "");
-    EXPECT_EQ(url.getPort(), 0);
-    EXPECT_EQ(url.getPath(), "");
-    EXPECT_EQ(url.getQuery(), "");
-    EXPECT_EQ(url.getFragment(), "");
-    EXPECT_FALSE(url.isSecure());
-    EXPECT_FALSE(url.isIpv6());
-}
-
-TEST(UrlClassTestSuite, url_only_with_secure_scheme) {
-    CUrl url;
-    url.set("https:");
-
-    EXPECT_EQ(url.getScheme(), "https");
-    EXPECT_EQ(url.getUsername(), "");
-    EXPECT_EQ(url.getPassword(), "");
-    EXPECT_EQ(url.getHost(), "");
-    EXPECT_EQ(url.getPort(), 443);
-    EXPECT_EQ(url.getPath(), "");
-    EXPECT_EQ(url.getQuery(), "");
-    EXPECT_EQ(url.getFragment(), "");
-    EXPECT_TRUE(url.isSecure());
-    EXPECT_FALSE(url.isIpv6());
+    EXPECT_EQ(url.scheme(), "https");
+#if false
+    EXPECT_EQ(url.authority, "john.doe@www.example.com:123");
+    EXPECT_EQ(url.auth.userinfo, "john.doe");
+    EXPECT_EQ(url.auth().host(), "www.example.com");
+    EXPECT_EQ(url.auth().port(), "123");
+    EXPECT_EQ(url.auth().port_num(), 123);
+    EXPECT_EQ(url.path(), "/forum/questions/");
+    EXPECT_EQ(url.query(), "tag=networking&order=newest");
+    EXPECT_EQ(url.fragment(), "top");
+#endif
 }
 
 } // namespace upnplib
