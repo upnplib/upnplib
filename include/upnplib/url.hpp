@@ -1,8 +1,25 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-22
+// Redistribution only with this Copyright remark. Last modified: 2022-03-23
 
-// As far as possible is this class based on
-// [URL - Living Standard](https://url.spec.whatwg.org/).
+// This class is based on the "URL Living Standard"
+// ================================================
+// At time the Url parser was coded this
+// Commit Snapshot — Last Updated 21 February 2022 of the URL standard:
+// https://url.spec.whatwg.org/commit-snapshots/9a83e251778046b20f4822f15ad4e2a469de2f57//
+// was used.
+//
+// To understand the parser follow there the [basic URL parser]
+// (https://url.spec.whatwg.org/#concept-basic-url-parse://url.spec.whatwg.org/commit-snapshots/9a83e251778046b20f4822f15ad4e2a469de2f57/#concept-basic-url-parser)
+//
+//  To have it available here:
+//  "A URI is opaque if, and only if, it is absolute and its scheme-specific
+//  part does not begin with a slash character ('/'). An opaque URI has a
+//  scheme, a scheme-specific part, and possibly a fragment; all other
+//  components are undefined." E.g.: mailto:a@b
+//  (http://docs.oracle.com/javase/8/docs/api/java/net/URI.html#isOpaque--)
+//
+// To manual verify URLs conforming to the standard you can use the
+// [Live URL Viewer](https://jsdom.github.io/whatwg-url/).
 
 #ifndef UPNPLIB_NET_URI_URL_HPP
 #define UPNPLIB_NET_URI_URL_HPP
@@ -68,10 +85,10 @@ class Url {
     int m_state{STATE_NO_STATE};
 
     std::string m_input; // cleaned up copy of m_given_url for the state machine
-    std::string::const_iterator m_pointer; // will hold a pointer to m_input
+    std::string::iterator m_pointer; // will hold a pointer to m_input
     std::string m_buffer;
 
-    void copy_url_clean_to_input();
+    void clean_and_copy_url_to_input();
     void fsm_scheme_start();
     void fsm_scheme();
     void fsm_no_scheme();

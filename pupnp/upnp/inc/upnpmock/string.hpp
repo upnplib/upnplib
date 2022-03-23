@@ -11,9 +11,9 @@ namespace upnplib {
 class Bstring {
     // Real class to call the system functions
   public:
-    virtual ~Bstring() {}
+    virtual ~Bstring(){};
 
-    virtual char* strerror(int errnum) { return ::strerror(errnum); }
+    virtual char* strerror(int errnum) { return ::strerror(errnum); };
 };
 
 // Global pointer to the current object (real or mocked), will be modified by

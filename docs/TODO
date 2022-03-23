@@ -1,3 +1,5 @@
 Next steps to do in this order:
-* Improve CUri class using https://github.com/homer6/url.
+* Create own Url class
++ Bugreport to Living URL Standard: add backspace to list of control chars
+* Bugreport to gtest: EXPECT_THAT THROW shouldn't call two times if no match
 * Install doxygen

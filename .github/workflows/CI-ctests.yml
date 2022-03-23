@@ -15,8 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        #os: [ ubuntu-latest, macOS-10.15, macOS-latest, windows-2016, windows-latest ]
-        os: [ ubuntu-latest, macOS-10.15, macOS-latest, windows-latest ]
+        os: [ ubuntu-latest, macOS-latest, windows-latest ]
         shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
       fail-fast: false
 
@@ -40,7 +39,17 @@ jobs:
         with:
           arch: amd64
 
-      - name: Configure
+      - if: runner.os == 'Linux'
+        name: Configure Linux
+        run: cmake -S . -B build -D CMAKE_C_COMPILER=/usr/bin/gcc-10 -D CMAKE_CXX_COMPILER=/usr/bin/g++-10 -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release
+
+      - if: runner.os == 'macOS'
+        name: Configure macOS
+        #run: cmake -S . -B build -D CMAKE_C_COMPILER=$(brew --prefix llvm)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm)/bin/clang -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release
+        run: cmake -S . -B build -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release
+
+      - if: runner.os == 'Windows'
+        name: Configure Windows
         run: cmake -S . -B build -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release
 
       - name: Build

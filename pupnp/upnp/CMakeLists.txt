@@ -89,6 +89,7 @@ set(UPNP_SOURCE_FILES
 
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
+    ${PROJECT_SOURCE_DIR}/src/mockObj.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/webserver.cpp
     ${PROJECT_SOURCE_DIR}/src/genlib/net/http/parsetools.cpp
@@ -148,7 +149,6 @@ set(UPNP_SOURCE_FILES
     $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_WEBSERVER}>>:${PROJECT_SOURCE_DIR}/src/urlconfig/urlconfig.cpp>
 
     ${PROJECT_SOURCE_DIR}/src/global.cpp
-    ${PROJECT_SOURCE_DIR}/src/mockObj.cpp
     $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
     $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_unix.cpp>
 )
@@ -198,6 +198,10 @@ if(NOT WIN32)
     target_link_libraries(upnplib_shared
             PRIVATE ixml_shared
     )
+    #target_link_options(upnplib_shared
+    #        PRIVATE -frtti
+    #        PRIVATE -fno-rtti
+    #)
 
     # Static library
     #---------------

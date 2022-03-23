@@ -1,29 +1,12 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-22
-
-// This class is based on the "URL Living Standard"
-// ================================================
-// At time the Url parser was coded this
-// Commit Snapshot — Last Updated 21 February 2022 of the URL standard:
-// https://url.spec.whatwg.org/commit-snapshots/9a83e251778046b20f4822f15ad4e2a469de2f57//
-// was used.
+// Redistribution only with this Copyright remark. Last modified: 2022-03-24
 //
-// To understand the parser follow there the [basic URL parser]
-// (https://url.spec.whatwg.org/#concept-basic-url-parse://url.spec.whatwg.org/commit-snapshots/9a83e251778046b20f4822f15ad4e2a469de2f57/#concept-basic-url-parser)
-//
-// without optional parameter, means we parse only the string input.
-//
-// To manual verify URLs conforming to the standard you can use the
-// [Live URL Viewer](https://jsdom.github.io/whatwg-url/).
-//
-// If you need more information how this class works you can temporary uncomment
-// #define DEBUG_URL and run the tests with
+// If you need more information on gtests how this class works you can temporary
+// uncomment #define DEBUG_URL and run the tests with
 // ./build/gtests/test_url_class --gtest_filter=UrlClassTestSuite.*
 #define DEBUG_URL
 
 #include "upnplib/url.hpp"
-#include <memory>
-#include <cstring>
 #include <iostream>
 //#include <fstream>
 
@@ -110,7 +93,7 @@ void Url::operator=(const std::string& a_given_url) {
     // char by char I use a predefined length on input to avoid additional
     // memory allocation for characters.
     m_input.reserve(m_given_url.size());
-    this->copy_url_clean_to_input();
+    this->clean_and_copy_url_to_input();
 
     m_state = STATE_SCHEME_START;
     m_buffer.reserve(m_input.size());
@@ -180,9 +163,9 @@ void Url::operator=(const std::string& a_given_url) {
 }
 
 //
-void Url::copy_url_clean_to_input() {
+void Url::clean_and_copy_url_to_input() {
 #ifdef DEBUG_URL
-    std::cout << "DEBUG: Being on copy_url_clean_to_input.\n";
+    std::clog << "DEBUG: Being on 'clean_and_copy_url_to_input'.\n";
 #endif
 
     // Copy given URL to input lowercase and remove all control chars and space.
@@ -200,8 +183,8 @@ void Url::copy_url_clean_to_input() {
 //
 void Url::fsm_scheme_start() {
 #ifdef DEBUG_URL
-    std::cout << "DEBUG: Being on state scheme_start with \""
-              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+    std::clog << "DEBUG: Being on 'scheme_start_state' with \""
+              << std::string(m_pointer, m_input.end()) << "\"\n";
 #endif
 
     // Check if first character is an lower ASCII alpha.
@@ -224,8 +207,8 @@ void Url::fsm_scheme_start() {
 //
 void Url::fsm_scheme() {
 #ifdef DEBUG_URL
-    std::cout << "DEBUG: Being on state scheme with \""
-              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+    std::clog << "DEBUG: Being on 'scheme state' with \""
+              << std::string(m_pointer, m_input.end()) << "\"\n";
 #endif
 
     // Check if character is an ASCII lower alphanumeric or U+002B (+), U+002D
@@ -275,7 +258,7 @@ void Url::fsm_scheme() {
 //
 void Url::fsm_no_scheme() {
 #ifdef DEBUG_URL
-    std::cout << "DEBUG: Being on state no_scheme with input \"" << m_input
+    std::clog << "DEBUG: Being on 'no_scheme_state' with input \"" << m_input
               << "\"\n";
 #endif
     std::clog << "Error: no valid scheme found." << std::endl;
@@ -287,8 +270,8 @@ void Url::fsm_no_scheme() {
 //
 void Url::fsm_special_relative_or_authority() {
 #ifdef DEBUG_URL
-    std::cout << "DEBUG: Being on state special_relative_or_authority with \""
-              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+    std::clog << "DEBUG: Being on 'special_relative_or_authority_state' with \""
+              << std::string(m_pointer, m_input.end()) << "\"\n";
 #endif
 
     m_state = STATE_NO_STATE;
@@ -297,8 +280,8 @@ void Url::fsm_special_relative_or_authority() {
 //
 void Url::fsm_path_or_authority() {
 #ifdef DEBUG_URL
-    std::cout << "DEBUG: Being on state path_or_authority with \""
-              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+    std::clog << "DEBUG: Being on 'path_or_authority_state' with \""
+              << std::string(m_pointer, m_input.end()) << "\"\n";
 #endif
 
     if (*m_pointer == '/') {
@@ -312,8 +295,8 @@ void Url::fsm_path_or_authority() {
 //
 void Url::fsm_special_authority_slashes() {
 #ifdef DEBUG_URL
-    std::cout << "DEBUG: Being on state special_authority_slashes with \""
-              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+    std::clog << "DEBUG: Being on 'special_authority_slashes_state' with \""
+              << std::string(m_pointer, m_input.end()) << "\"\n";
 #endif
 
     if (m_pointer + 1 < m_input.end() && *m_pointer == '/' &&
@@ -330,9 +313,9 @@ void Url::fsm_special_authority_slashes() {
 //
 void Url::fsm_special_authority_ignore_slashes() {
 #ifdef DEBUG_URL
-    std::cout
-        << "DEBUG: Being on state special_authority_ignore_slashes with \""
-        << std::string_view(m_pointer, m_input.end()) << "\"\n";
+    std::clog
+        << "DEBUG: Being on 'special_authority_ignore_slashes_state' with \""
+        << std::string(m_pointer, m_input.end()) << "\"\n";
 #endif
 
     if (*m_pointer != '/' && *m_pointer != '\\') {
@@ -347,8 +330,8 @@ void Url::fsm_special_authority_ignore_slashes() {
 //
 void Url::fsm_authority() {
 #ifdef DEBUG_URL
-    std::cout << "DEBUG: Being on state authority with \""
-              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+    std::clog << "DEBUG: Being on 'authority_state' with \""
+              << std::string(m_pointer, m_input.end()) << "\"\n";
 #endif
     m_state = STATE_NO_STATE;
 }
@@ -356,8 +339,8 @@ void Url::fsm_authority() {
 //
 void Url::fsm_file() {
 #ifdef DEBUG_URL
-    std::cout << "DEBUG: Being on state file with \""
-              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+    std::clog << "DEBUG: Being on 'file_state' with \""
+              << std::string(m_pointer, m_input.end()) << "\"\n";
 #endif
     m_state = STATE_NO_STATE;
 }
@@ -365,8 +348,8 @@ void Url::fsm_file() {
 //
 void Url::fsm_path() {
 #ifdef DEBUG_URL
-    std::cout << "DEBUG: Being on state path with \""
-              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+    std::clog << "DEBUG: Being on 'path_state' with \""
+              << std::string(m_pointer, m_input.end()) << "\"\n";
 #endif
     m_state = STATE_NO_STATE;
 }
@@ -374,8 +357,8 @@ void Url::fsm_path() {
 //
 void Url::fsm_opaque_path() {
 #ifdef DEBUG_URL
-    std::cout << "DEBUG: Being on state opaque_path with \""
-              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+    std::clog << "DEBUG: Being on 'opaque_path_state' with \""
+              << std::string(m_pointer, m_input.end()) << "\"\n";
 #endif
     m_state = STATE_NO_STATE;
 }
