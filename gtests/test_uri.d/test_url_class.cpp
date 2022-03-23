@@ -1,9 +1,14 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-17
+// Redistribution only with this Copyright remark. Last modified: 2022-03-22
 
-#include "gtest/gtest.h"
 #include "upnplib/url.hpp"
 
+#include "gmock/gmock.h"
+
+using ::testing::HasSubstr;
+using ::testing::ThrowsMessage;
+
+//
 namespace upnplib {
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
@@ -22,28 +27,32 @@ TEST(UrlClassTestSuite, empty_url_object) {
     EXPECT_EQ(url.fragment(), "");
 }
 
+// Tests for copy_url_clean_to_input
+// ---------------------------------
 TEST(UrlClassTestSuite, empty_url_string) {
-    Url url;
-    url = "";
-
-    EXPECT_EQ((std::string)url, "");
-    EXPECT_EQ(url.scheme(), "");
-    EXPECT_EQ(url.authority(), "");
-    EXPECT_EQ(url.userinfo(), "");
-    EXPECT_EQ(url.host(), "");
-    EXPECT_EQ(url.port(), "");
-    EXPECT_EQ(url.port_num(), 0);
-    EXPECT_EQ(url.path(), "");
-    EXPECT_EQ(url.query(), "");
-    EXPECT_EQ(url.fragment(), "");
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid URL: ''"));
 }
 
 TEST(UrlClassTestSuite, one_space_url) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = " ";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid URL: ''"));
+}
+
+TEST(UrlClassTestSuite, url_with_control_chars_and_spaces) {
     Url url;
-    url = " ";
+    url = "\1 \2a:\x0D/\3/\x0Ag. h\x09.i\x7F\x4 ";
 
     EXPECT_EQ((std::string)url, "");
-    EXPECT_EQ(url.scheme(), "");
+    EXPECT_EQ(url.scheme(), "a");
     EXPECT_EQ(url.authority(), "");
     EXPECT_EQ(url.userinfo(), "");
     EXPECT_EQ(url.host(), "");
@@ -54,12 +63,23 @@ TEST(UrlClassTestSuite, one_space_url) {
     EXPECT_EQ(url.fragment(), "");
 }
 
-TEST(UrlClassTestSuite, url_with_leading_control_chars) {
+TEST(UrlClassTestSuite, url_with_null_char) {
+    // This is a special case with null terminated strings in C++. It is by
+    // design and will end up in a truncated url.
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "\1 \2x\0https://www.example.com";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid URL: 'x'"));
+}
+
+TEST(UrlClassTestSuite, convert_url_chars_upper_to_lower) {
     Url url;
-    url = "\1 \2x\0https://www.example.com";
+    url = "HTTps://Example.COM";
 
     EXPECT_EQ((std::string)url, "");
-    EXPECT_EQ(url.scheme(), "");
+    EXPECT_EQ(url.scheme(), "https");
     EXPECT_EQ(url.authority(), "");
     EXPECT_EQ(url.userinfo(), "");
     EXPECT_EQ(url.host(), "");
@@ -70,12 +90,23 @@ TEST(UrlClassTestSuite, url_with_leading_control_chars) {
     EXPECT_EQ(url.fragment(), "");
 }
 
-TEST(UrlClassTestSuite, url_with_trailing_control_chars) {
+// Tests for scheme start state
+// ----------------------------
+TEST(UrlClassTestSuite, invalid_digit_at_first_pos_in_scheme) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "2ttp://a.b.c";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid URL: '2ttp://a.b.c'"));
+}
+
+TEST(UrlClassTestSuite, valid_digits_not_at_first_pos_in_scheme) {
     Url url;
-    url = "https://www.example.com \3\4 ";
+    url = "h9t6://a.b.c";
 
     EXPECT_EQ((std::string)url, "");
-    EXPECT_EQ(url.scheme(), "");
+    EXPECT_EQ(url.scheme(), "h9t6");
     EXPECT_EQ(url.authority(), "");
     EXPECT_EQ(url.userinfo(), "");
     EXPECT_EQ(url.host(), "");
@@ -86,12 +117,32 @@ TEST(UrlClassTestSuite, url_with_trailing_control_chars) {
     EXPECT_EQ(url.fragment(), "");
 }
 
-TEST(UrlClassTestSuite, url_with_leading_and_trailing_control_chars) {
+// Tests for scheme state
+// ----------------------
+TEST(UrlClassTestSuite, scheme_with_invalid_character) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "ftp@x:";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid URL: 'ftp@x:'"));
+}
+
+TEST(UrlClassTestSuite, invalid_scheme_without_colon) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "ftp";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid URL: 'ftp'"));
+}
+
+TEST(UrlClassTestSuite, file_scheme_without_slashes) {
     Url url;
-    url = " \1\2https://www.example.com \3\4 ";
+    url = "file:";
 
     EXPECT_EQ((std::string)url, "");
-    EXPECT_EQ(url.scheme(), "");
+    EXPECT_EQ(url.scheme(), "file");
     EXPECT_EQ(url.authority(), "");
     EXPECT_EQ(url.userinfo(), "");
     EXPECT_EQ(url.host(), "");
@@ -102,12 +153,12 @@ TEST(UrlClassTestSuite, url_with_leading_and_trailing_control_chars) {
     EXPECT_EQ(url.fragment(), "");
 }
 
-TEST(UrlClassTestSuite, url_with_tabs_and_newlines) {
+TEST(UrlClassTestSuite, file_scheme_with_slashes) {
     Url url;
-    url = "https:\x0D//\x0Awww.example\x09.com";
+    url = "file://";
 
     EXPECT_EQ((std::string)url, "");
-    EXPECT_EQ(url.scheme(), "");
+    EXPECT_EQ(url.scheme(), "file");
     EXPECT_EQ(url.authority(), "");
     EXPECT_EQ(url.userinfo(), "");
     EXPECT_EQ(url.host(), "");
@@ -119,11 +170,8 @@ TEST(UrlClassTestSuite, url_with_tabs_and_newlines) {
 }
 
 TEST(UrlClassTestSuite, parse_full_url) {
-    if (github_actions)
-        GTEST_SKIP() << "             known failing test on Github Actions";
-
     Url url;
-    url = "https://john.doe@www.example.com:123/forum/questions/"
+    url = "Https://John.Doe@www.Example.com:123/FORUM/questions/"
           "?tag=networking&order=newest#top";
 
     EXPECT_EQ(url.scheme(), "https");
@@ -142,6 +190,6 @@ TEST(UrlClassTestSuite, parse_full_url) {
 } // namespace upnplib
 
 int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
+    ::testing::InitGoogleMock(&argc, argv);
     return RUN_ALL_TESTS();
 }

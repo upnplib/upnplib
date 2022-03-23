@@ -1,13 +1,58 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-17
+// Redistribution only with this Copyright remark. Last modified: 2022-03-22
+
+// This class is based on the "URL Living Standard"
+// ================================================
+// At time the Url parser was coded this
+// Commit Snapshot — Last Updated 21 February 2022 of the URL standard:
+// https://url.spec.whatwg.org/commit-snapshots/9a83e251778046b20f4822f15ad4e2a469de2f57//
+// was used.
+//
+// To understand the parser follow there the [basic URL parser]
+// (https://url.spec.whatwg.org/#concept-basic-url-parse://url.spec.whatwg.org/commit-snapshots/9a83e251778046b20f4822f15ad4e2a469de2f57/#concept-basic-url-parser)
+//
+// without optional parameter, means we parse only the string input.
+//
+// To manual verify URLs conforming to the standard you can use the
+// [Live URL Viewer](https://jsdom.github.io/whatwg-url/).
+//
+// If you need more information how this class works you can temporary uncomment
+// #define DEBUG_URL and run the tests with
+// ./build/gtests/test_url_class --gtest_filter=UrlClassTestSuite.*
+#define DEBUG_URL
 
 #include "upnplib/url.hpp"
 #include <memory>
 #include <cstring>
 #include <iostream>
+//#include <fstream>
 
+//
 namespace upnplib {
 
+static bool url_is_special(std::string_view a_s) {
+    return a_s == "ftp" || a_s == "file" || a_s == "http" || a_s == "https" ||
+           a_s == "ws" || a_s == "wss";
+}
+
+//
+#if false
+Url::Url() {
+    // Proof to redirect clog to /dev/null, <fstream> is needed
+    // save clog stream buffer
+    std::streambuf* clog_old = std::clog.rdbuf();
+    // Redirect clog
+    std::ofstream clog_new("/dev/null");
+    std::clog.rdbuf(clog_new.rdbuf());
+}
+
+Url::~Url() {
+    // restore clog stream buffer
+    std::clog.rdbuf(clog_old);
+}
+#endif
+
+//
 Url::operator std::string() const { return m_serialized_url; }
 
 void Url::clear() {
@@ -21,6 +66,7 @@ void Url::clear_private() {
     m_input = "";
     m_buffer = "";
     m_serialized_url = "";
+    m_ser_base_url = "";
     m_scheme = "";
     m_authority = "";
     m_userinfo = "";
@@ -50,104 +96,288 @@ std::string Url::query() const { return m_query; }
 
 std::string Url::fragment() const { return m_fragment; }
 
+//
 void Url::operator=(const std::string& a_given_url) {
 
     m_given_url = a_given_url;
     this->clear_private();
 
-    // std::cout << "DEBUG: m_given_url.size() = " << m_given_url.size() <<
-    // '\n'; std::cout << "DEBUG: m_given_url = '" << m_given_url << "'\n";
+    // To understand the parser below please refer to the "URL Living Standard"
+    // as noted at the top. I use the same terms so you should be able to see
+    // the relations better that way.
 
-    if (m_given_url == "")
-        return;
+    // Remove control character and space and copy to input. Because we copy
+    // char by char I use a predefined length on input to avoid additional
+    // memory allocation for characters.
+    m_input.reserve(m_given_url.size());
+    this->copy_url_clean_to_input();
 
-    enum { STATE_NO_STATE, STATE_SCHEME_START, STATE_SCHEME, STATE_NO_SCHEME };
-    int current_state{STATE_NO_STATE};
-
-    // Following this [basic URL parser]
-    // (https://url.spec.whatwg.org/#concept-basic-url-parser)
-    // without optional parameter means we parse only the string input.
-    // To understand the parser below please refer this standard.
-    // I use the same variable names with additional prefix 'm_'.
-
-    // Remove any leading and trailing C0 control or space from input.
-    m_input = m_given_url;
-    this->fsm_cleanup_input();
-
-    current_state = STATE_SCHEME_START;
-    m_buffer = "";
+    m_state = STATE_SCHEME_START;
+    m_buffer.reserve(m_input.size());
     m_pointer = m_input.begin();
 
+    // On the URL standard there is a State Machine used. It parses the inpupt
+    // string with a pointer to the string so it should finish at the end of
+    // it. The loop of the State Machine finishes regular if state is set to
+    // STATE_NO_STATE within the Machine. We guard it to always finish
+    // independent from the Machines logic to be on the safe side. Because the
+    // m_pointer is decreased sometimes in the State Machine we just add 10 to
+    // guard.
+    int guard = m_input.size() + 10;
+
     // Because there are no external events we can use this
-    // simple state machine:
-    std::cout << "DEBUG: *m_pointer = ";
-    for (; m_pointer < m_input.end(); m_pointer++) {
-        switch (current_state) {
+    // simple Finite State Machine (fsm):
+    for (; guard > 0; m_pointer++, guard--) {
+        if (m_state == STATE_NO_STATE)
+            break;
+
+        switch (m_state) {
         case STATE_SCHEME_START:
             this->fsm_scheme_start();
             break;
         case STATE_SCHEME:
-            // do something in the stop state
+            this->fsm_scheme();
             break;
         case STATE_NO_SCHEME:
-            // do something in the stop state
+            this->fsm_no_scheme();
+            break;
+        case STATE_PATH_OR_AUTHORITY:
+            this->fsm_path_or_authority();
+            break;
+        case STATE_SPECIAL_AUTHORITY_SLASHES:
+            this->fsm_special_authority_slashes();
+            break;
+        case STATE_SPECIAL_AUTHORITY_IGNORE_SLASHES:
+            this->fsm_special_authority_ignore_slashes();
+            break;
+        case STATE_AUTHORITY:
+            this->fsm_authority();
+            break;
+        case STATE_FILE:
+            this->fsm_file();
+            break;
+        case STATE_SPECIAL_RELATIVE_OR_AUTHORITY:
+            this->fsm_special_relative_or_authority();
+            break;
+        case STATE_PATH:
+            this->fsm_path();
+            break;
+        case STATE_OPAQUE_PATH:
+            this->fsm_opaque_path();
+            break;
+        default:
+            guard = 0;
             break;
         }
     }
-    std::cout << std::endl;
+
+    if (guard <= 0) {
+        throw std::out_of_range(
+            std::string((std::string)__FILE__ + ":" + std::to_string(__LINE__) +
+                        ", Parsing URL " + __func__ +
+                        ". State Machine doesn't finish regular."));
+    }
 }
 
 //
-void Url::fsm_cleanup_input() {
+void Url::copy_url_clean_to_input() {
+#ifdef DEBUG_URL
+    std::cout << "DEBUG: Being on copy_url_clean_to_input.\n";
+#endif
 
-    // Remove leading control or space
-    auto ptr = m_input.begin();
-    for (; ptr < m_input.end(); ptr++) {
-        if (*ptr > ' ')
-            break;
+    // Copy given URL to input lowercase and remove all control chars and space.
+    for (auto it = m_given_url.begin(); it < m_given_url.end(); it++) {
+        // control chars are \x00 to \x1F, space = \x20, DEL (backspace) = \x7F
+        if (*it > ' ' && *it != '\x7F')
+            m_input.push_back(std::tolower(*it));
     }
-    if (ptr > m_input.begin()) {
-        m_input.erase(m_input.begin(), ptr);
-        std::clog << "Warning: Leading control or space characters removed "
-                     "from URL. Using '"
-                  << m_input << "' now." << std::endl;
-    }
-
-    // std::cout << "DEBUG: m_input.size() = " << m_input.size() << '\n';
-    // std::cout << "DEBUG: m_input = '" << m_input << "'\n";
-
-    // Remove trailing control or space
-    ptr = m_input.end() - 1;
-    for (; ptr >= m_input.begin(); ptr--) {
-        if (*ptr > ' ')
-            break;
-    }
-    if (ptr < m_input.end() - 1) {
-        m_input.erase(ptr + 1, m_input.end());
-        std::clog << "Warning: Trailing control or space characters removed "
-                     "from URL. Using '"
-                  << m_input << "' now." << std::endl;
-    }
-
-    // std::cout << "DEBUG: m_input.size() = " << m_input.size() << '\n';
-    // std::cout << "DEBUG: m_input = '" << m_input << "'\n";
-
-    // Remove all ASCII tab or newline from input.
-    auto old_size = m_input.size();
-    m_input.erase(std::remove_if(m_input.begin(), m_input.end(),
-                                 [](char c) {
-                                     return c == '\t' || c == '\n' || c == '\r';
-                                 }),
-                  m_input.end());
-    if (m_input.size() != old_size)
-        std::clog << "Warning: Removed " << old_size - m_input.size()
-                  << " ASCII tab or newline character from URL. Using '"
-                  << m_input << "' now." << std::endl;
-
-    return;
+    if (m_input.size() != m_given_url.size())
+        std::clog << "Warning: Removed " << m_given_url.size() - m_input.size()
+                  << " ASCII control character or spaces. Using \"" << m_input
+                  << "\" now." << std::endl;
 }
 
 //
-void Url::fsm_scheme_start() { std::cout << *m_pointer; }
+void Url::fsm_scheme_start() {
+#ifdef DEBUG_URL
+    std::cout << "DEBUG: Being on state scheme_start with \""
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+#endif
+
+    // Check if first character is an lower ASCII alpha.
+    // We should have already converted all chars to lower.
+    if (std::islower((unsigned char)*m_pointer)) { // needs type cast here
+
+        // Exception: if the operation would result in size() > max_size(),
+        // throws std::length_error.
+        m_buffer.push_back(std::tolower(*m_pointer));
+
+        m_state = STATE_SCHEME;
+
+    } else {
+
+        m_state = STATE_NO_SCHEME;
+        m_pointer--;
+    }
+}
+
+//
+void Url::fsm_scheme() {
+#ifdef DEBUG_URL
+    std::cout << "DEBUG: Being on state scheme with \""
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+#endif
+
+    // Check if character is an ASCII lower alphanumeric or U+002B (+), U+002D
+    // (-), or U+002E (.).
+    if (islower((unsigned char)*m_pointer) || // type cast is needed here
+        isdigit((unsigned char)*m_pointer) || *m_pointer == '+' ||
+        *m_pointer == '-' || *m_pointer == '.') //
+    {
+        // Exception: if the operation would result in size() > max_size(),
+        // throws std::length_error.
+        m_buffer.push_back(*m_pointer);
+
+    } else if (*m_pointer == ':') {
+
+        m_scheme = m_buffer;
+        m_buffer = "";
+
+        if (m_scheme == "file") {
+            if (m_pointer + 2 >= m_input.end() || *(m_pointer + 1) != '/' ||
+                *(m_pointer + 2) != '/')
+                std::clog << "Warning: 'file' scheme misses \"//\"."
+                          << std::endl;
+            m_state = STATE_FILE;
+
+        } else if (url_is_special(m_scheme) && m_ser_base_url != "") {
+            m_state = STATE_SPECIAL_RELATIVE_OR_AUTHORITY;
+
+        } else if (url_is_special(m_scheme)) {
+            m_state = STATE_SPECIAL_AUTHORITY_SLASHES;
+
+        } else if (m_pointer + 1 < m_input.end() && *(m_pointer + 1) == '/') {
+            m_state = STATE_PATH_OR_AUTHORITY;
+            m_pointer++;
+
+        } else {
+            m_path = "";
+            m_state = STATE_OPAQUE_PATH;
+        }
+
+    } else {
+
+        m_buffer = "";
+        m_state = STATE_NO_SCHEME;
+    }
+}
+
+//
+void Url::fsm_no_scheme() {
+#ifdef DEBUG_URL
+    std::cout << "DEBUG: Being on state no_scheme with input \"" << m_input
+              << "\"\n";
+#endif
+    std::clog << "Error: no valid scheme found." << std::endl;
+    throw std::invalid_argument("Invalid URL: '" + m_input + "'");
+
+    m_state = STATE_NO_STATE;
+}
+
+//
+void Url::fsm_special_relative_or_authority() {
+#ifdef DEBUG_URL
+    std::cout << "DEBUG: Being on state special_relative_or_authority with \""
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+#endif
+
+    m_state = STATE_NO_STATE;
+}
+
+//
+void Url::fsm_path_or_authority() {
+#ifdef DEBUG_URL
+    std::cout << "DEBUG: Being on state path_or_authority with \""
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+#endif
+
+    if (*m_pointer == '/') {
+        m_state = STATE_AUTHORITY;
+    } else {
+        m_state = STATE_PATH;
+        m_pointer--;
+    }
+}
+
+//
+void Url::fsm_special_authority_slashes() {
+#ifdef DEBUG_URL
+    std::cout << "DEBUG: Being on state special_authority_slashes with \""
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+#endif
+
+    if (m_pointer + 1 < m_input.end() && *m_pointer == '/' &&
+        *(m_pointer + 1) == '/') {
+        m_state = STATE_SPECIAL_AUTHORITY_IGNORE_SLASHES;
+        m_pointer++;
+    } else {
+        std::clog << "Warning: ignore slashes on authority." << std::endl;
+        m_state = STATE_SPECIAL_AUTHORITY_IGNORE_SLASHES;
+        m_pointer--;
+    }
+}
+
+//
+void Url::fsm_special_authority_ignore_slashes() {
+#ifdef DEBUG_URL
+    std::cout
+        << "DEBUG: Being on state special_authority_ignore_slashes with \""
+        << std::string_view(m_pointer, m_input.end()) << "\"\n";
+#endif
+
+    if (*m_pointer != '/' && *m_pointer != '\\') {
+        m_state = STATE_AUTHORITY;
+        m_pointer--;
+    } else {
+        std::clog << "Warning: '/' or '\\' not expected on authority."
+                  << std::endl;
+    }
+}
+
+//
+void Url::fsm_authority() {
+#ifdef DEBUG_URL
+    std::cout << "DEBUG: Being on state authority with \""
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+#endif
+    m_state = STATE_NO_STATE;
+}
+
+//
+void Url::fsm_file() {
+#ifdef DEBUG_URL
+    std::cout << "DEBUG: Being on state file with \""
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+#endif
+    m_state = STATE_NO_STATE;
+}
+
+//
+void Url::fsm_path() {
+#ifdef DEBUG_URL
+    std::cout << "DEBUG: Being on state path with \""
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+#endif
+    m_state = STATE_NO_STATE;
+}
+
+//
+void Url::fsm_opaque_path() {
+#ifdef DEBUG_URL
+    std::cout << "DEBUG: Being on state opaque_path with \""
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+#endif
+    m_state = STATE_NO_STATE;
+}
 
 } // namespace upnplib
