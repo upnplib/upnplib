@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-23
+// Redistribution only with this Copyright remark. Last modified: 2022-03-29
 
 // This class is based on the "URL Living Standard"
 // ================================================
@@ -42,7 +42,7 @@ class Url {
     // getter
     std::string scheme() const;
     std::string authority() const;
-    std::string userinfo() const;
+    std::string username() const;
     std::string host() const;
     std::string port() const;
     uint16_t port_num() const;
@@ -57,7 +57,8 @@ class Url {
     std::string m_ser_base_url;
     std::string m_scheme;
     std::string m_authority;
-    std::string m_userinfo;
+    std::string m_username;
+    std::string m_password;
     std::string m_host;
     std::string m_port;
     uint16_t m_port_num{0};
@@ -77,6 +78,7 @@ class Url {
         STATE_SPECIAL_AUTHORITY_SLASHES,
         STATE_SPECIAL_AUTHORITY_IGNORE_SLASHES,
         STATE_AUTHORITY,
+        STATE_HOST,
         STATE_FILE,
         STATE_PATH,
         STATE_OPAQUE_PATH,
@@ -87,6 +89,9 @@ class Url {
     std::string m_input; // cleaned up copy of m_given_url for the state machine
     std::string::iterator m_pointer; // will hold a pointer to m_input
     std::string m_buffer;
+    bool m_atSignSeen;
+    bool m_insideBrackets;
+    bool m_passwordTokenSeen;
 
     void clean_and_copy_url_to_input();
     void fsm_scheme_start();
@@ -96,6 +101,7 @@ class Url {
     void fsm_special_authority_slashes();
     void fsm_special_authority_ignore_slashes();
     void fsm_authority();
+    void fsm_host();
     void fsm_file();
     void fsm_path();
     void fsm_opaque_path();
