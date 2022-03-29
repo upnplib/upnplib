@@ -32,37 +32,21 @@ jobs:
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '') && (matrix.buildtype != 'Debug')
-        name: Check gtest library files, static, NOT Debug
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '')
+        name: Check gtest library files, static
         run: |
           ls ./build/lib/libgtest.a
           ls ./build/lib/libgmock.a
           ls ./build/lib/libgtest_main.a
           ls ./build/lib/libgmock_main.a
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '') && (matrix.buildtype == 'Debug')
-        name: Check gtest library files, static, Debug
-        run: |
-          ls ./build/lib/libgtestd.a
-          ls ./build/lib/libgmockd.a
-          ls ./build/lib/libgtest_maind.a
-          ls ./build/lib/libgmock_maind.a
-
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D BUILD_SHARED_LIBS=ON') && (matrix.buildtype != 'Debug')
-        name: Check gtest library files, shared, NOT Debug
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D BUILD_SHARED_LIBS=ON')
+        name: Check gtest library files, shared
         run: |
           ls ./build/lib/libgtest.so
           ls ./build/lib/libgmock.so
           ls ./build/lib/libgtest_main.so
           ls ./build/lib/libgmock_main.so
-
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D BUILD_SHARED_LIBS=ON') && (matrix.buildtype == 'Debug')
-        name: Check gtest library files, shared, Debug
-        run: |
-          ls ./build/lib/libgtestd.so
-          ls ./build/lib/libgmockd.so
-          ls ./build/lib/libgtest_maind.so
-          ls ./build/lib/libgmock_maind.so
 
       - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
         name: Run simple gtest
