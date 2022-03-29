@@ -140,7 +140,10 @@ ifaddrs* CIfaddr4Container::get_ifaddr(long unsigned int pIdx) {
     if (pIdx == 0)
         return nullptr;
 
-    // this throws an exception if vector.size() is violated
+    // This throws an exception if vector.size() is violated.
+    // Don't return direct, return the variable. Otherwise I found that the
+    // structure isn't correct returned on macOS.
+    // return m_ifaddr4Container.at(pIdx - 1).get();
     ifaddrs* ifaddr4 = m_ifaddr4Container.at(pIdx - 1).get();
     return ifaddr4;
 }

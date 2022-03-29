@@ -225,7 +225,7 @@ void Url::clean_and_copy_url_to_input() {
 void Url::fsm_scheme_start() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'scheme_start_state' with \""
-              << std::string(m_pointer, m_input.end()) << "\"\n";
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
 
     // Check if first character is an lower ASCII alpha.
@@ -249,7 +249,7 @@ void Url::fsm_scheme_start() {
 void Url::fsm_scheme() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'scheme state' with \""
-              << std::string(m_pointer, m_input.end()) << "\"\n";
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
 
     const unsigned char c = *m_pointer;
@@ -313,7 +313,7 @@ void Url::fsm_no_scheme() {
 void Url::fsm_special_relative_or_authority() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'special_relative_or_authority_state' with \""
-              << std::string(m_pointer, m_input.end()) << "\"\n";
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
 
     m_state = STATE_NO_STATE;
@@ -323,7 +323,7 @@ void Url::fsm_special_relative_or_authority() {
 void Url::fsm_path_or_authority() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'path_or_authority_state' with \""
-              << std::string(m_pointer, m_input.end()) << "\"\n";
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
 
     if (*m_pointer == '/') {
@@ -338,7 +338,7 @@ void Url::fsm_path_or_authority() {
 void Url::fsm_special_authority_slashes() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'special_authority_slashes_state' with \""
-              << std::string(m_pointer, m_input.end()) << "\"\n";
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
 
     if (m_pointer + 1 < m_input.end() && *m_pointer == '/' &&
@@ -358,7 +358,7 @@ void Url::fsm_special_authority_ignore_slashes() {
 #ifdef DEBUG_URL
     std::clog
         << "DEBUG: Being on 'special_authority_ignore_slashes_state' with \""
-        << std::string(m_pointer, m_input.end()) << "\"\n";
+        << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
 
     if (*m_pointer != '/' && *m_pointer != '\\') {
@@ -375,7 +375,7 @@ void Url::fsm_special_authority_ignore_slashes() {
 void Url::fsm_authority() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'authority_state' with \""
-              << std::string(m_pointer, m_input.end()) << "\"\n";
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
 
     const unsigned char c = *m_pointer;
@@ -422,7 +422,7 @@ void Url::fsm_authority() {
 void Url::fsm_host() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'host_state' with \""
-              << std::string(m_pointer, m_input.end()) << "\", "
+              << std::string_view(m_pointer, m_input.end()) << "\", "
               << "username = \"" << m_username << "\", password = \""
               << m_password << "\"\n";
 #endif
@@ -433,7 +433,7 @@ void Url::fsm_host() {
 void Url::fsm_file() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'file_state' with \""
-              << std::string(m_pointer, m_input.end()) << "\"\n";
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
     m_state = STATE_NO_STATE;
 }
@@ -442,7 +442,7 @@ void Url::fsm_file() {
 void Url::fsm_path() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'path_state' with \""
-              << std::string(m_pointer, m_input.end()) << "\"\n";
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
     m_state = STATE_NO_STATE;
 }
@@ -451,7 +451,7 @@ void Url::fsm_path() {
 void Url::fsm_opaque_path() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'opaque_path_state' with \""
-              << std::string(m_pointer, m_input.end()) << "\"\n";
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
     m_state = STATE_NO_STATE;
 }
