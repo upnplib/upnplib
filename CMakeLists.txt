@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-03-29
+# Redistribution only with this Copyright remark. Last modified: 2022-03-31
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -469,7 +469,8 @@ set(UPNPLIB_BUILD_COMMAND
 
 add_test(NAME ctest_build_no_option ${UPNPLIB_BUILD_COMMAND}
         --build-config ${CMAKE_BUILD_TYPE}
-        --build-options -DUPNPLIB_WITH_TOOLS=NO
+        --build-options -DCMAKE_CXX_COMPILER=g++-10
+                        -DUPNPLIB_WITH_TOOLS=NO
                         -DUPNPLIB_WITH_CLIENT=NO
                         -DUPNPLIB_WITH_DEVICE=NO
                         -DUPNPLIB_WITH_WEBSERVER=NO
@@ -481,9 +482,6 @@ add_test(NAME ctest_build_no_option ${UPNPLIB_BUILD_COMMAND}
                         -DUPNPLIB_WITH_BLOCKTCP=NO
                         -DUPNPLIB_WITH_IXML=NO
                         -DUPNPLIB_WITH_SAMPLES=NO
-                        -Ddevice=NO
-                        -Dclient=NO
-                        -Dcombo=NO
                         -DUPNPLIB_WITH_GOOGLETEST=NO -DBUILD_SHARED_LIBS=YES
 )
 add_test(NAME ctest_build_no_option_debug ${UPNPLIB_BUILD_COMMAND}
@@ -632,9 +630,6 @@ add_test(NAME ctest_build_all_options ${UPNPLIB_BUILD_COMMAND}
                         -DUPNPLIB_WITH_BLOCKTCP=YES
                         -DUPNPLIB_WITH_IXML=YES
                         -DUPNPLIB_WITH_SAMPLES=YES
-                        -Ddevice=YES
-                        -Dclient=YES
-                        -Dcombo=YES
                         -DUPNPLIB_WITH_GOOGLETEST=YES -DBUILD_SHARED_LIBS=YES
 )
 add_test(NAME ctest_build_all_options_debug ${UPNPLIB_BUILD_COMMAND}

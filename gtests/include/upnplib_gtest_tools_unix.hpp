@@ -46,22 +46,6 @@ class UPNPLIB_API CIfaddr4
     // clang-format on
 };
 
-//
-class UPNPLIB_API CIfaddr4Container {
-    // This is a Container for multiple network interface structures that are
-    // chained by ifaddr.ifa_next as given by the low level struct ifaddrs.
-    //
-    // It is IMPORTANT to know that the ifaddr.ifa_next address pointer chain
-    // changes when adding an interface address object. You MUST get_ifaddr(..)
-    // the new address pointer for ongoing work.
-  public:
-    bool add(std::string_view a_Ifname, std::string_view a_Ifaddress);
-    ifaddrs* get_ifaddr(long unsigned int pIdx);
-
-  private:
-    std::vector<CIfaddr4> m_ifaddr4Container;
-};
-
 } // namespace upnplib
 
 #endif // UPNP_IFADDRS_UIX_HPP

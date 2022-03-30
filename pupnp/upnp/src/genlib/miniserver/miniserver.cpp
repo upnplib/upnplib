@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-17
+ * Redistribution only with this Copyright remark. Last modified: 2022-03-31
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -740,10 +740,16 @@ static int do_bind(struct s_SocketStuff* s) {
     do {
         switch (s->ip_version) {
         case 4:
-            s->serverAddr4->sin_port = htons(s->try_port++);
+            // Ingo: BUGFIX need to be verified
+            // may be undefined [-Werror=sequence-point]
+            // s->serverAddr4->sin_port = htons(s->try_port++);
+            s->serverAddr4->sin_port = htons(s->try_port + 1);
             break;
         case 6:
-            s->serverAddr6->sin6_port = htons(s->try_port++);
+            // Ingo: BUGFIX need to be verified
+            // may be undefined [-Werror=sequence-point]
+            // s->serverAddr6->sin6_port = htons(s->try_port++);
+            s->serverAddr6->sin6_port = htons(s->try_port + 1);
             break;
         }
         bind_error = bind(s->fd, s->serverAddr, s->address_len);
