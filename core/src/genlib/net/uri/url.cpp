@@ -1,10 +1,7 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-29
+// Redistribution only with this Copyright remark. Last modified: 2022-04-01
 //
-// TODO: Provide url_is_special() as flag
-//       Use u8string
-//       Test urls with % encoded code points
-//       Initialize base url with about:blank
+// TODO: Provide url_is_special() as flag?
 //       Test complete authority (userinfo + host + port) using truth table
 
 #include "upnplib/url.hpp"
@@ -43,10 +40,24 @@ static std::string UTF8_percent_encode(const unsigned char a_chr) {
         std::ostringstream escaped;
         escaped.fill('0');
         escaped << std::uppercase << std::hex;
-        escaped << '%' << std::setw(2) << int((unsigned char)a_chr);
+        escaped << '%' << std::setw(2) << int(a_chr);
         return escaped.str();
     } else
         return std::string(sizeof(a_chr), a_chr);
+}
+
+static std::string esc_url(std::string_view a_str) {
+    std::ostringstream escaped;
+    escaped.fill('0');
+    escaped << std::uppercase << std::hex;
+
+    for (const unsigned char chr : a_str) {
+        if (chr <= '\x1F' || chr > '\x7E')
+            escaped << '%' << std::setw(2) << int(chr);
+        else
+            escaped << chr;
+    }
+    return escaped.str();
 }
 
 //
@@ -67,7 +78,7 @@ Url::~Url() {
 #endif
 
 //
-Url::operator std::string() const { return m_serialized_url; }
+Url::operator std::string() const { return m_ser_url; }
 
 void Url::clear() {
     m_given_url = "";
@@ -81,7 +92,7 @@ void Url::clear_private() {
     m_input = "";
     m_buffer.reserve(m_input.size() + 20);
     m_buffer = "";
-    m_serialized_url = "";
+    m_ser_url = "";
     m_ser_base_url = "";
     m_scheme = "";
     m_authority = "";
@@ -206,18 +217,49 @@ void Url::clean_and_copy_url_to_input() {
     std::clog << "DEBUG: Being on 'clean_and_copy_url_to_input'.\n";
 #endif
 
-    // Copy given URL to input lowercase and remove all control chars and space.
-    for (auto it = m_given_url.begin(); it < m_given_url.end(); it++) {
-        // control chars are \x00 to \x1F, space = \x20, DEL (backspace) = \x7F
-        if (*it > ' ' && *it != '\x7F')
-            // control chars are \x00 to \x1F and space = '\x20',
-            // but DEL (backspace) = '\x7F' ignored?
-            // if (*it > ' ')
-            m_input.push_back(std::tolower(*it));
+    // To remove any leading C0 control or space, point to first valid char.
+    // control chars are \x00 to \x1F, space = \x20, DEL (backspace) = \x7F.
+    // Due to the URL standard backspace is ignored here.
+    auto it_leading = m_given_url.begin();
+    auto str_end = m_given_url.end();
+    while (it_leading < str_end && (unsigned char)*it_leading <= ' ') {
+        if (it_leading >= str_end - 1)
+            break;
+        it_leading++;
     }
-    if (m_input.size() != m_given_url.size())
-        std::clog << "Warning: Removed " << m_given_url.size() - m_input.size()
-                  << " ASCII control character or spaces. Using \"" << m_input
+    std::clog << "  DEBUG: *it_leading = '" << *it_leading << "'\n";
+
+    // To remove any trailing C0 control or space, point to last valid char.
+    auto it_trailing = m_given_url.end() - 1;
+    auto str_begin = m_given_url.begin() - 1;
+    while (it_trailing > str_begin && (unsigned char)*it_trailing <= ' ') {
+        if (it_trailing <= str_begin + 1)
+            break;
+        it_trailing--;
+    }
+    std::clog << "  DEBUG: *it_trailing = '" << *it_trailing << "'\n";
+
+    // Copy given URL to input lowercase and remove all ASCII tab or newline.
+    int invalid_chars{};
+    if ((unsigned char)*it_leading > ' ') {
+
+        // it_leading points to the first valid character,
+        // it_trailing points to the last valid character.
+        while (it_leading <= it_trailing) {
+
+            unsigned char c = *it_leading;
+            if (c == '\x0D' || c == '\x0A' || c == '\x09')
+                invalid_chars++;
+            else
+                m_input.push_back(std::tolower(c));
+            it_leading++;
+        }
+    }
+    std::clog << "  DEBUG: m_input = '" << m_input << "'\n";
+
+    if (invalid_chars)
+        std::clog << "Warning: Removed " << invalid_chars
+                  << " ASCII tab or newline character. Using \"" << m_input
                   << "\" now." << std::endl;
 }
 
@@ -304,7 +346,7 @@ void Url::fsm_no_scheme() {
               << "\"\n";
 #endif
     std::clog << "Error: no valid scheme found." << std::endl;
-    throw std::invalid_argument("Invalid URL: '" + m_input + "'");
+    throw std::invalid_argument("Invalid URL: '" + esc_url(m_input) + "'");
 
     m_state = STATE_NO_STATE;
 }

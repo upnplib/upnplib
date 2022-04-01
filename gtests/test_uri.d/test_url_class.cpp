@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-29
+// Redistribution only with this Copyright remark. Last modified: 2022-04-01
 //
 // If you need more information how the Url class works you can temporary
 // uncomment #define DEBUG_URL and run the tests with
@@ -43,6 +43,13 @@ TEST(UrlClassTestSuite, percent_encode) {
     EXPECT_EQ(UTF8_percent_encode('%'), "%");
 }
 
+TEST(UrlClassTestSuite, percent_encode_string) {
+    EXPECT_EQ(esc_url(""), "");
+    EXPECT_EQ(esc_url(" "), " ");
+    EXPECT_EQ(esc_url("\x7F"), "%7F");
+    EXPECT_EQ(esc_url("\x1Fhttps:\x0D\x0A//p "), "%1Fhttps:%0D%0A//p ");
+}
+
 TEST(UrlClassTestSuite, empty_url_object) {
     Url url;
 
@@ -83,12 +90,12 @@ class UrlClassFTestSuite : public ::testing::Test {
 // -------------------
 TEST_F(UrlClassFTestSuite, parse_full_base_url) {
     Url url;
-    url = "Https://John.Doe:passwd@www.Example.com:123/FORUM/questions/"
-          "?tag=networking&order=newest#top";
+    url = "Https://John.Döe:Paßwd@www.Œ×ample.com:123/FƟŘŬM/questions/"
+          "?tag=Ñetworking&order=newest#tôƥ";
     std::cout << m_clogCapt.str();
 
     EXPECT_EQ(url.scheme(), "https");
-    EXPECT_EQ(url.username(), "john.doe");
+    EXPECT_EQ(url.username(), "john.d%C3%B6e");
 #if false
     EXPECT_EQ(url.authority, "john.doe@www.example.com:123");
     EXPECT_EQ(url.auth().host(), "www.example.com");
@@ -124,22 +131,58 @@ TEST_F(UrlClassFTestSuite, one_space_url) {
         ThrowsMessage<std::invalid_argument>("Invalid URL: ''"));
 
     std::cout << m_clogCapt.str();
-    EXPECT_NE(m_clogCapt.str().find("Warning: Removed 1 ASCII control "
-                                    "character or spaces. Using \"\" now.\n"),
+    EXPECT_NE(m_clogCapt.str().find("Error: no valid scheme found.\n"),
               std::string::npos);
+}
+
+TEST_F(UrlClassFTestSuite, only_del_char_on_url) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "\x7F";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid URL: '%7F'"));
+
+    std::cout << m_clogCapt.str();
+    EXPECT_NE(m_clogCapt.str().find("Error: no valid scheme found.\n"),
+              std::string::npos);
+}
+
+TEST_F(UrlClassFTestSuite, only_sharp_s_on_url) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "ß"; // Two bytes UTF-8 coding
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid URL: '%C3%9F'"));
+
+    std::cout << m_clogCapt.str();
+    EXPECT_NE(m_clogCapt.str().find("Error: no valid scheme found.\n"),
+              std::string::npos);
+}
+
+TEST_F(UrlClassFTestSuite, only_roman_numerical_ten_on_url) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "Ⅹ"; // Three bytes UTF-8 coding
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid URL: '%E2%85%A9'"));
+
+    std::cout << m_clogCapt.str();
     EXPECT_NE(m_clogCapt.str().find("Error: no valid scheme found.\n"),
               std::string::npos);
 }
 
 TEST_F(UrlClassFTestSuite, url_with_control_chars_and_spaces) {
     Url url;
-    url = "\1 \2a:\x0D/\3/\x0Ag. h\x09.i\x7F\x4 ";
+    // url = "\1 \2a:\x0D//\x0Ag. h\x09.i\x7F\x4 ";
+    url = "\1 \2a:\x0D//\x0Ag. h\x09.i\x7\x4 ";
 
     std::cout << m_clogCapt.str();
-    EXPECT_NE(
-        m_clogCapt.str().find("Warning: Removed 11 ASCII control character or "
-                              "spaces. Using \"a://g.h.i\" now.\n"),
-        std::string::npos);
+    EXPECT_NE(m_clogCapt.str().find("Removed 3 ASCII tab or newline character. "
+                                    "Using \"a://g. h.i\" now.\n"),
+              std::string::npos);
 
     EXPECT_EQ((std::string)url, "");
     EXPECT_EQ(url.scheme(), "a");
@@ -159,14 +202,11 @@ TEST_F(UrlClassFTestSuite, url_with_null_char) {
     EXPECT_THAT(
         []() {
             Url url;
-            url = "\1 \2x\0https://www.example.com";
+            url = "\1 \2h\0ttps://www.example.com";
         },
-        ThrowsMessage<std::invalid_argument>("Invalid URL: 'x'"));
+        ThrowsMessage<std::invalid_argument>("Invalid URL: 'h'"));
 
     std::cout << m_clogCapt.str();
-    EXPECT_NE(m_clogCapt.str().find("Warning: Removed 3 ASCII control "
-                                    "character or spaces. Using \"x\" now.\n"),
-              std::string::npos);
     EXPECT_NE(m_clogCapt.str().find("Error: no valid scheme found.\n"),
               std::string::npos);
 }
@@ -205,7 +245,7 @@ TEST_F(UrlClassFTestSuite, invalid_digit_at_first_pos_in_scheme) {
 
 TEST_F(UrlClassFTestSuite, valid_digits_not_at_first_pos_in_scheme) {
     Url url;
-    url = "h9t6://a.b.c";
+    url = "H9t6://a.b.c";
     std::cout << m_clogCapt.str();
 
     EXPECT_EQ((std::string)url, "");

@@ -53,7 +53,7 @@ class Url {
   private:
     // The strings are initialized to "" by its constructor.
     std::string m_given_url; // unmodified input to the object
-    std::string m_serialized_url;
+    std::string m_ser_url;
     std::string m_ser_base_url;
     std::string m_scheme;
     std::string m_authority;
