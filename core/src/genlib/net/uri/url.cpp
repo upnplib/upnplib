@@ -1,7 +1,7 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-04-01
 //
-// TODO: Provide url_is_special() as flag?
+// TODO: Provide url_is_special() as flag
 //       Test complete authority (userinfo + host + port) using truth table
 
 #include "upnplib/url.hpp"
@@ -12,6 +12,10 @@
 
 //
 namespace upnplib {
+
+static const std::map<const std::string, const uint16_t> special_scheme{
+    {"file", NULL}, {"ftp", 21}, {"http", 80},
+    {"https", 443}, {"ws", 80},  {"wss", 443}};
 
 static bool url_is_special(std::string_view a_str) {
     return a_str == "ftp" || a_str == "file" || a_str == "http" ||
@@ -100,7 +104,7 @@ void Url::clear_private() {
     m_password = "";
     m_host = "";
     m_port = "";
-    m_port_num = 0;
+    m_port_num = (uint16_t)NULL;
     m_path = "";
     m_query = "";
     m_fragment = "";
@@ -114,6 +118,8 @@ std::string Url::scheme() const { return m_scheme; }
 std::string Url::authority() const { return m_authority; }
 
 std::string Url::username() const { return m_username; }
+
+std::string Url::password() const { return m_password; }
 
 std::string Url::host() const { return m_host; }
 
@@ -150,9 +156,13 @@ void Url::operator=(const std::string& a_given_url) {
     // it. The loop of the State Machine finishes regular if state is set to
     // STATE_NO_STATE within the Machine. We guard it to always finish
     // independent from the Machines logic to be on the safe side. Because the
-    // m_pointer is decreased sometimes in the State Machine we just add 10 to
-    // guard.
-    int guard = m_input.size() + 10;
+    // m_pointer is decreased sometimes in the State Machine and maybe several
+    // code points are percent encoded (will increase m_input) we double guard.
+    // But we need at least two loops to regular finish an empty m_input.
+    int guard = m_input.size() * 2 + 2;
+#ifdef DEBUG_URL
+    std::clog << "DEBUG: guard = " << guard << std::endl;
+#endif
 
     // Because there are no external events we can use this
     // simple Finite State Machine (fsm):
@@ -185,11 +195,17 @@ void Url::operator=(const std::string& a_given_url) {
         case STATE_HOST:
             this->fsm_host();
             break;
+        case STATE_PORT:
+            this->fsm_port();
+            break;
         case STATE_FILE:
             this->fsm_file();
             break;
         case STATE_SPECIAL_RELATIVE_OR_AUTHORITY:
             this->fsm_special_relative_or_authority();
+            break;
+        case STATE_PATH_START:
+            this->fsm_path_start();
             break;
         case STATE_PATH:
             this->fsm_path();
@@ -227,7 +243,7 @@ void Url::clean_and_copy_url_to_input() {
             break;
         it_leading++;
     }
-    std::clog << "  DEBUG: *it_leading = '" << *it_leading << "'\n";
+    // std::clog << "  DEBUG: *it_leading = '" << *it_leading << "'\n";
 
     // To remove any trailing C0 control or space, point to last valid char.
     auto it_trailing = m_given_url.end() - 1;
@@ -237,7 +253,7 @@ void Url::clean_and_copy_url_to_input() {
             break;
         it_trailing--;
     }
-    std::clog << "  DEBUG: *it_trailing = '" << *it_trailing << "'\n";
+    // std::clog << "  DEBUG: *it_trailing = '" << *it_trailing << "'\n";
 
     // Copy given URL to input lowercase and remove all ASCII tab or newline.
     int invalid_chars{};
@@ -255,7 +271,7 @@ void Url::clean_and_copy_url_to_input() {
             it_leading++;
         }
     }
-    std::clog << "  DEBUG: m_input = '" << m_input << "'\n";
+    // std::clog << "  DEBUG: m_input = '" << m_input << "'\n";
 
     if (invalid_chars)
         std::clog << "Warning: Removed " << invalid_chars
@@ -294,7 +310,7 @@ void Url::fsm_scheme() {
               << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
 
-    const unsigned char c = *m_pointer;
+    const unsigned char c = m_pointer < m_input.end() ? *m_pointer : '\0';
 
     // Check if character is an ASCII lower alphanumeric or U+002B (+), U+002D
     // (-), or U+002E (.).
@@ -420,7 +436,7 @@ void Url::fsm_authority() {
               << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
 
-    const unsigned char c = *m_pointer;
+    const unsigned char c = m_pointer < m_input.end() ? *m_pointer : '\0';
 
     if (c == '@') {
 
@@ -468,13 +484,115 @@ void Url::fsm_host() {
               << "username = \"" << m_username << "\", password = \""
               << m_password << "\"\n";
 #endif
-    m_state = STATE_NO_STATE;
+
+    const unsigned char c = m_pointer < m_input.end() ? *m_pointer : '\0';
+
+    if (c == ':' && !m_insideBrackets) {
+
+        if (m_buffer.empty()) {
+            std::clog << "Error: no valid hostname found." << std::endl;
+            throw std::invalid_argument("Invalid hostname: '" +
+                                        esc_url(m_input) + "'");
+        }
+        // On failure host_parser throws an error that is catched call stack
+        // upwards. It doesn't modify m_host then.
+        // m_host = host_parser(m_buffer, /* isNotSpecial */ true);
+        m_host = "dummy1.host.state";
+        m_buffer.clear();
+        m_state = STATE_PORT;
+
+    } else if (c == '\0' || c == '/' || c == '?' || c == '#' ||
+               (url_is_special(m_scheme) && c == '\\')) {
+
+        m_pointer--;
+
+        if (url_is_special(m_scheme) && m_buffer.empty()) {
+            std::clog << "Error: no valid host found." << std::endl;
+            throw std::invalid_argument("Invalid hostname: '" +
+                                        esc_url(m_input) + "'");
+        }
+        // On failure host_parser throws an error that is catched call stack
+        // upwards. It doesn't modify m_host then.
+        // m_host = host_parser(m_buffer, /* isNotSpecial */ true);
+        m_host = "dummy2.host.state";
+        m_buffer.clear();
+        m_state = STATE_PATH_START;
+
+    } else {
+        if (c == '[')
+            m_insideBrackets = true;
+        else if (c == ']')
+            m_insideBrackets = false;
+
+        m_buffer.push_back(c);
+    }
+}
+
+//
+void Url::fsm_port() {
+#ifdef DEBUG_URL
+    std::clog << "DEBUG: Being on 'port_state' with \""
+              << std::string_view(m_pointer, m_input.end()) << "\", "
+              << "host = \"" << m_host << "\"\n";
+#endif
+
+    const unsigned char c = m_pointer < m_input.end() ? *m_pointer : '\0';
+
+    if (std::isdigit(c)) {
+        m_buffer.push_back(c);
+
+    } else if (c == '\0' || c == '/' || c == '?' || c == '#' ||
+               (url_is_special(m_scheme) && c == '\\')) {
+
+        if (!m_buffer.empty()) {
+            // uint16_t limits port number to max 65535
+            uint16_t port{(uint16_t)NULL};
+
+            // If port is greater than 2^16 − 1 (65535), validation error,
+            // return failure.
+            try {
+                port = std::stoul(m_buffer);
+                // } catch(std::invalid_argument& e) {} // not catched here
+            } catch (std::out_of_range& e) {
+                std::clog << "Error: Port number out of range." << std::endl;
+                throw;
+            }
+
+            // Set url’s port to null, if port is url’s scheme’s default port;
+            // otherwise to port.
+            auto it = special_scheme.find(m_scheme);
+            if (it != special_scheme.end() && it->second == port) {
+                m_port_num = (uint16_t)NULL;
+                m_port.clear();
+            } else {
+                m_port_num = port;
+                m_port = m_buffer;
+            }
+            m_buffer.clear();
+        }
+
+        m_state = STATE_PATH_START;
+        m_pointer--;
+
+    } else {
+        std::clog << "Error: no valid port found." << std::endl;
+        throw std::invalid_argument("Invalid port: '" + esc_url(m_input) + "'");
+    }
 }
 
 //
 void Url::fsm_file() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'file_state' with \""
+              << std::string_view(m_pointer, m_input.end()) << "\"\n";
+#endif
+    m_state = STATE_NO_STATE;
+}
+
+//
+void Url::fsm_path_start() {
+#ifdef DEBUG_URL
+    std::clog << "DEBUG: Being on 'path_start_state' with \""
               << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
     m_state = STATE_NO_STATE;

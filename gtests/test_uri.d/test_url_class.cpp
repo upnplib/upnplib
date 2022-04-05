@@ -6,6 +6,46 @@
 // ./build/gtests/test_url_class --gtest_filter=UrlClass*
 #define DEBUG_URL
 
+//
+// To have it available for tests: the following figure displays example URIs
+// and their component parts.
+// clang-format off
+// [syntax diagram](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Syntax)
+/*
+[Example URIs](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Example_URIs)
+
+             userinfo           host      port
+        ┌───────┴───────┐ ┌──────┴──────┐ ┌┴┐
+https://john.doe:password@www.example.com:123/forum/questions/?tag=networking&order=newest#top
+└─┬─┘   └──────────────────┬────────────────┘└───────┬───────┘ └───────────┬─────────────┘ └┬┘
+scheme                 authority                    path                 query           fragment
+
+ldap://[2001:db8::7]/c=GB?objectClass?one
+└┬─┘   └─────┬─────┘└─┬─┘ └──────┬──────┘
+scheme   authority   path      query
+
+mailto:John.Doe@example.com
+└─┬──┘ └────┬─────────────┘
+scheme     path
+
+news:comp.infosystems.www.servers.unix
+└┬─┘ └─────────────┬─────────────────┘
+scheme            path
+
+tel:+1-816-555-1212
+└┬┘ └──────┬──────┘
+scheme    path
+
+telnet://192.0.2.16:80/
+└─┬──┘   └─────┬─────┘│
+scheme     authority  path
+
+urn:oasis:names:specification:docbook:dtd:xml:4.1.2
+└┬┘ └──────────────────────┬──────────────────────┘
+scheme                    path
+
+clang-format on */
+
 #include "gmock/gmock.h"
 #include <sstream>
 
@@ -188,7 +228,7 @@ TEST_F(UrlClassFTestSuite, url_with_control_chars_and_spaces) {
     EXPECT_EQ(url.scheme(), "a");
     EXPECT_EQ(url.authority(), "");
     EXPECT_EQ(url.username(), "");
-    EXPECT_EQ(url.host(), "");
+    EXPECT_EQ(url.host(), "dummy2.host.state");
     EXPECT_EQ(url.port(), "");
     EXPECT_EQ(url.port_num(), 0);
     EXPECT_EQ(url.path(), "");
@@ -220,7 +260,7 @@ TEST_F(UrlClassFTestSuite, convert_url_chars_upper_to_lower) {
     EXPECT_EQ(url.scheme(), "https");
     EXPECT_EQ(url.authority(), "");
     EXPECT_EQ(url.username(), "");
-    EXPECT_EQ(url.host(), "");
+    EXPECT_EQ(url.host(), "dummy2.host.state");
     EXPECT_EQ(url.port(), "");
     EXPECT_EQ(url.port_num(), 0);
     EXPECT_EQ(url.path(), "");
@@ -252,7 +292,7 @@ TEST_F(UrlClassFTestSuite, valid_digits_not_at_first_pos_in_scheme) {
     EXPECT_EQ(url.scheme(), "h9t6");
     EXPECT_EQ(url.authority(), "");
     EXPECT_EQ(url.username(), "");
-    EXPECT_EQ(url.host(), "");
+    EXPECT_EQ(url.host(), "dummy2.host.state");
     EXPECT_EQ(url.port(), "");
     EXPECT_EQ(url.port_num(), 0);
     EXPECT_EQ(url.path(), "");
@@ -335,7 +375,12 @@ TEST(UrlClassTestSuite, scheme_with_preloaded_base_url) {
 
 TEST_F(UrlClassFTestSuite, special_but_not_file_scheme_without_slashes) {
     Url url;
-    url = "ws:";
+
+    EXPECT_THAT(
+        [&url] {
+            url = "ws:";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid hostname: 'ws:'"));
 
     std::cout << m_clogCapt.str();
     EXPECT_NE(
@@ -347,7 +392,12 @@ TEST_F(UrlClassFTestSuite, special_but_not_file_scheme_without_slashes) {
 
 TEST_F(UrlClassFTestSuite, special_but_not_file_scheme_with_one_slash) {
     Url url;
-    url = "http:/";
+
+    EXPECT_THAT(
+        [&url] {
+            url = "http:/";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid hostname: 'http:/'"));
 
     std::cout << m_clogCapt.str();
     EXPECT_NE(
@@ -355,17 +405,6 @@ TEST_F(UrlClassFTestSuite, special_but_not_file_scheme_with_one_slash) {
             "Warning: no \"//\" before authority: ignoring. Found \"/\"\n"),
         std::string::npos);
     EXPECT_EQ(url.scheme(), "http");
-}
-
-TEST_F(UrlClassFTestSuite, scheme_with_two_slashes) {
-    Url url;
-    url = "s://";
-
-    std::cout << m_clogCapt.str();
-    EXPECT_EQ(m_clogCapt.str().find("Warning: "), std::string::npos);
-    EXPECT_EQ(url.scheme(), "s");
-    EXPECT_EQ(url.username(), "");
-    GTEST_SKIP() << "Improve test with specific expectations.";
 }
 
 TEST_F(UrlClassFTestSuite, scheme_with_one_slash) {
@@ -390,49 +429,99 @@ TEST_F(UrlClassFTestSuite, scheme_with_no_slashes) {
 
 // Tests for authority state
 // -------------------------
-// Test with empty authority "s://" already done with 'scheme_with_two_slashes'
 
-TEST_F(UrlClassFTestSuite, authority_empty_userinfo) {
+/* Complete test table
+clang-format off
+User    Passw   Host    Port
+u       p       h       p      valid     s://u:p@h:1/  s://u:p@h:1
+u       p       h       -      valid     s://u:p@h:    s://u:p@h
+u       p       -       p      invalid   s://u:p@:1    s://u:p:1
+u       p       -       -      invalid   s://u:p@      s://u:p
+u       -       h       p      valid     s://u:@h:1    s://u@h:1
+u       -       h       -      valid     s://u:@h:     s://u:@h    s://u@h:  s://u@h
+u       -       -       p      invalid   s://u:@:1     s://u@:1
+u       -       -       -      invalid   s://u:@:      s://u:@     s://u@:   s://u@
+u       -       -       -      valid     s://u // This is interpreted as hostname only
+-       p       h       p      valid     s://:p@h:1
+-       p       h       -      valid     s://:p@h:     s://:p@h
+-       p       -       p      invalid   s://:p@:1
+-       p       -       -      invalid   s://:p@:      s://:p@     s://:p
+-       -       h       p      valid     s://:@h:1     s://@h:1
+-       -       h       -      valid     s://:@h:      s://:@h     s://@h:   s://@h
+-       -       -       p      invalid   s://:@:1      s://@:1
+-       -       -       -      invalid   s://:@:       s://:@      s://:     s://@    s://
+clang-format on */
+typedef UrlClassFTestSuite UrlClassAuthorityFTestSuite;
+
+TEST_F(UrlClassAuthorityFTestSuite, user_pw_host_port_1) {
+    Url url;
+    url = "s://u:p@h:1/";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "u");
+    EXPECT_EQ(url.password(), "p");
+    EXPECT_EQ(url.host(), "dummy1.host.state");
+    EXPECT_EQ(url.port(), "1");
+    EXPECT_EQ(url.port_num(), 1);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, user_pw_host_port_2) {
+    Url url;
+    url = "s://u:p@h:1";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "u");
+    EXPECT_EQ(url.password(), "p");
+    EXPECT_EQ(url.host(), "dummy1.host.state");
+    EXPECT_EQ(url.port(), "1");
+    EXPECT_EQ(url.port_num(), 1);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, user_pw_host_noPort_1) {
+    Url url;
+    url = "s://u:p@h:";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "u");
+    EXPECT_EQ(url.password(), "p");
+    EXPECT_EQ(url.host(), "dummy1.host.state");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), NULL);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, user_pw_host_noPort_2) {
+    Url url;
+    url = "s://u:p@h";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "u");
+    EXPECT_EQ(url.password(), "p");
+    EXPECT_EQ(url.host(), "dummy2.host.state");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), NULL);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, user_pw_noHost_port_1) {
     EXPECT_THAT(
         []() {
             Url url;
-            url = "s://@";
+            url = "s://u:p@:1";
         },
-        ThrowsMessage<std::invalid_argument>("Invalid authority: 's://@'"));
+        ThrowsMessage<std::invalid_argument>("Invalid hostname: 's://u:p@:1'"));
     std::cout << m_clogCapt.str();
 }
 
-TEST_F(UrlClassFTestSuite, authority_empty_username_and_password) {
+TEST_F(UrlClassAuthorityFTestSuite, user_pw_noHost_port_2) {
     EXPECT_THAT(
         []() {
             Url url;
-            url = "s://:@";
+            url = "s://u:p:1";
         },
-        ThrowsMessage<std::invalid_argument>("Invalid authority: 's://:@'"));
+        ThrowsMessage<std::invalid_argument>("Invalid port: 's://u:p:1'"));
     std::cout << m_clogCapt.str();
 }
 
-TEST_F(UrlClassFTestSuite, authority_username_but_empty_password) {
-    EXPECT_THAT(
-        []() {
-            Url url;
-            url = "s://u:@";
-        },
-        ThrowsMessage<std::invalid_argument>("Invalid authority: 's://u:@'"));
-    std::cout << m_clogCapt.str();
-}
-
-TEST_F(UrlClassFTestSuite, authority_empty_username_but_password) {
-    EXPECT_THAT(
-        []() {
-            Url url;
-            url = "s://:p@";
-        },
-        ThrowsMessage<std::invalid_argument>("Invalid authority: 's://:p@'"));
-    std::cout << m_clogCapt.str();
-}
-
-TEST_F(UrlClassFTestSuite, authority_username_and_password) {
+TEST_F(UrlClassAuthorityFTestSuite, user_pw_noHost_noPort_1) {
     EXPECT_THAT(
         []() {
             Url url;
@@ -442,56 +531,378 @@ TEST_F(UrlClassFTestSuite, authority_username_and_password) {
     std::cout << m_clogCapt.str();
 }
 
-// Tests for host state
-// --------------------
-TEST_F(UrlClassFTestSuite, host_empty_userinfo) {
-    Url url;
-    url = "s://@h";
+TEST_F(UrlClassAuthorityFTestSuite, user_pw_noHost_noPort_2) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://u:p";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid port: 's://u:p'"));
     std::cout << m_clogCapt.str();
-    EXPECT_EQ(url.scheme(), "s");
-    EXPECT_EQ(url.username(), "");
-    // EXPECT_EQ(url.host(), "h");
-    EXPECT_EQ(url.port_num(), 0);
 }
 
-TEST_F(UrlClassFTestSuite, host_empty_username_and_password) {
+TEST_F(UrlClassAuthorityFTestSuite, user_noPw_host_port_1) {
     Url url;
-    url = "s://:@h";
+    url = "s://u:@h:1";
     std::cout << m_clogCapt.str();
     EXPECT_EQ(url.scheme(), "s");
-    EXPECT_EQ(url.username(), "");
-    // EXPECT_EQ(url.host(), "h");
-    EXPECT_EQ(url.port_num(), 0);
+    EXPECT_EQ(url.username(), "u");
+    EXPECT_EQ(url.password(), "");
+    EXPECT_EQ(url.host(), "dummy1.host.state");
+    EXPECT_EQ(url.port(), "1");
+    EXPECT_EQ(url.port_num(), 1);
 }
 
-TEST_F(UrlClassFTestSuite, host_username_but_empty_password) {
+TEST_F(UrlClassAuthorityFTestSuite, user_noPw_host_port_2) {
+    Url url;
+    url = "s://u@h:1";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "u");
+    EXPECT_EQ(url.password(), "");
+    EXPECT_EQ(url.host(), "dummy1.host.state");
+    EXPECT_EQ(url.port(), "1");
+    EXPECT_EQ(url.port_num(), 1);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, user_noPw_host_noPort_1) {
+    Url url;
+    url = "s://u:@h:";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "u");
+    EXPECT_EQ(url.password(), "");
+    EXPECT_EQ(url.host(), "dummy1.host.state");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), NULL);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, user_noPw_host_noPort_2) {
     Url url;
     url = "s://u:@h";
     std::cout << m_clogCapt.str();
     EXPECT_EQ(url.scheme(), "s");
     EXPECT_EQ(url.username(), "u");
-    // EXPECT_EQ(url.host(), "h");
-    EXPECT_EQ(url.port_num(), 0);
+    EXPECT_EQ(url.password(), "");
+    EXPECT_EQ(url.host(), "dummy2.host.state");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), NULL);
 }
 
-TEST_F(UrlClassFTestSuite, host_empty_username_but_password) {
+TEST_F(UrlClassAuthorityFTestSuite, user_noPw_host_noPort_3) {
+    Url url;
+    url = "s://u@h:";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "u");
+    EXPECT_EQ(url.password(), "");
+    EXPECT_EQ(url.host(), "dummy1.host.state");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), NULL);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, user_noPw_host_noPort_4) {
+    Url url;
+    url = "s://u@h";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "u");
+    EXPECT_EQ(url.password(), "");
+    EXPECT_EQ(url.host(), "dummy2.host.state");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), NULL);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, user_noPw_noHost_Port_1) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://u:@:1";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid hostname: 's://u:@:1'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, user_noPw_noHost_Port_2) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://u@:1";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid hostname: 's://u@:1'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, user_noPw_noHost_noPort_1) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://u:@:";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid hostname: 's://u:@:'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, user_noPw_noHost_noPort_2) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://u:@";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid authority: 's://u:@'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, user_noPw_noHost_noPort_3) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://u@:";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid hostname: 's://u@:'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, user_noPw_noHost_noPort_4) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://u@";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid authority: 's://u@'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, user_noPw_noHost_noPort_valid) {
+    // This url is interpreted as hostname only
+    Url url;
+    url = "s://u";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "");
+    EXPECT_EQ(url.password(), "");
+    EXPECT_EQ(url.host(), "dummy2.host.state");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), NULL);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_pw_host_port_1) {
+    Url url;
+    url = "s://:p@h:1";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "");
+    EXPECT_EQ(url.password(), "p");
+    EXPECT_EQ(url.host(), "dummy1.host.state");
+    EXPECT_EQ(url.port(), "1");
+    EXPECT_EQ(url.port_num(), 1);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_pw_host_noPort_1) {
+    Url url;
+    url = "s://:p@h:";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "");
+    EXPECT_EQ(url.password(), "p");
+    EXPECT_EQ(url.host(), "dummy1.host.state");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), NULL);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_pw_host_noPort_2) {
     Url url;
     url = "s://:p@h";
     std::cout << m_clogCapt.str();
     EXPECT_EQ(url.scheme(), "s");
     EXPECT_EQ(url.username(), "");
-    // EXPECT_EQ(url.host(), "h");
-    EXPECT_EQ(url.port_num(), 0);
+    EXPECT_EQ(url.password(), "p");
+    EXPECT_EQ(url.host(), "dummy2.host.state");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), NULL);
 }
 
-TEST_F(UrlClassFTestSuite, host_username_and_password) {
+TEST_F(UrlClassAuthorityFTestSuite, noUser_pw_noHost_port_1) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://:p@:1";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid hostname: 's://:p@:1'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_pw_noHost_noPort_1) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://:p@:";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid hostname: 's://:p@:'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_pw_noHost_noPort_2) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://:p@";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid authority: 's://:p@'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_pw_noHost_noPort_3) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://:p";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid hostname: 's://:p'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_host_port_1) {
     Url url;
-    url = "s://u:p@h";
+    url = "s://:@h:1";
     std::cout << m_clogCapt.str();
     EXPECT_EQ(url.scheme(), "s");
-    EXPECT_EQ(url.username(), "u");
-    // EXPECT_EQ(url.host(), "h");
-    EXPECT_EQ(url.port_num(), 0);
+    EXPECT_EQ(url.username(), "");
+    EXPECT_EQ(url.password(), "");
+    EXPECT_EQ(url.host(), "dummy1.host.state");
+    EXPECT_EQ(url.port(), "1");
+    EXPECT_EQ(url.port_num(), 1);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_host_port_2) {
+    Url url;
+    url = "s://@h:1";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "");
+    EXPECT_EQ(url.password(), "");
+    EXPECT_EQ(url.host(), "dummy1.host.state");
+    EXPECT_EQ(url.port(), "1");
+    EXPECT_EQ(url.port_num(), 1);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_host_noPort_1) {
+    Url url;
+    url = "s://:@h:";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "");
+    EXPECT_EQ(url.password(), "");
+    EXPECT_EQ(url.host(), "dummy1.host.state");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), NULL);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_host_noPort_2) {
+    Url url;
+    url = "s://:@h";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "");
+    EXPECT_EQ(url.password(), "");
+    EXPECT_EQ(url.host(), "dummy2.host.state");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), NULL);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_host_noPort_3) {
+    Url url;
+    url = "s://@h:";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "");
+    EXPECT_EQ(url.password(), "");
+    EXPECT_EQ(url.host(), "dummy1.host.state");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), NULL);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_host_noPort_4) {
+    Url url;
+    url = "s://@h";
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "");
+    EXPECT_EQ(url.password(), "");
+    EXPECT_EQ(url.host(), "dummy2.host.state");
+    EXPECT_EQ(url.port(), "");
+    EXPECT_EQ(url.port_num(), NULL);
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_noHost_port_1) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://:@:1";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid hostname: 's://:@:1'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_noHost_port_2) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://@:1";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid hostname: 's://@:1'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_noHost_noPort_1) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://:@:";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid hostname: 's://:@:'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_noHost_noPort_2) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://:@";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid authority: 's://:@'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_noHost_noPort_3) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://:";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid hostname: 's://:'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_noHost_noPort_4) {
+    EXPECT_THAT(
+        []() {
+            Url url;
+            url = "s://@";
+        },
+        ThrowsMessage<std::invalid_argument>("Invalid authority: 's://@'"));
+    std::cout << m_clogCapt.str();
+}
+
+TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_noHost_noPort_5) {
+    Url url;
+    url = "s://";
+
+    std::cout << m_clogCapt.str();
+    EXPECT_EQ(m_clogCapt.str().find("Warning: "), std::string::npos);
+    EXPECT_EQ(url.scheme(), "s");
+    EXPECT_EQ(url.username(), "");
+    GTEST_SKIP() << "Improve test with specific expectations.";
 }
 
 } // namespace upnplib

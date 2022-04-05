@@ -43,6 +43,7 @@ class Url {
     std::string scheme() const;
     std::string authority() const;
     std::string username() const;
+    std::string password() const;
     std::string host() const;
     std::string port() const;
     uint16_t port_num() const;
@@ -60,8 +61,8 @@ class Url {
     std::string m_username;
     std::string m_password;
     std::string m_host;
-    std::string m_port;
-    uint16_t m_port_num{0};
+    std::string m_port;        // Always set to the current port
+    uint16_t m_port_num{NULL}; // Only set if not default port of the scheme
     std::string m_path;
     std::string m_query;
     std::string m_fragment;
@@ -79,7 +80,9 @@ class Url {
         STATE_SPECIAL_AUTHORITY_IGNORE_SLASHES,
         STATE_AUTHORITY,
         STATE_HOST,
+        STATE_PORT,
         STATE_FILE,
+        STATE_PATH_START,
         STATE_PATH,
         STATE_OPAQUE_PATH,
         STATE_SPECIAL_RELATIVE_OR_AUTHORITY,
@@ -102,7 +105,9 @@ class Url {
     void fsm_special_authority_ignore_slashes();
     void fsm_authority();
     void fsm_host();
+    void fsm_port();
     void fsm_file();
+    void fsm_path_start();
     void fsm_path();
     void fsm_opaque_path();
     void fsm_special_relative_or_authority();
