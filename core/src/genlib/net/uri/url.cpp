@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-04-01
+// Redistribution only with this Copyright remark. Last modified: 2022-04-27
 //
 // TODO: Provide url_is_special() as flag
 //       Test complete authority (userinfo + host + port) using truth table
@@ -8,7 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
-//#include <fstream>
+#include <array>
 
 //
 namespace upnplib {
@@ -24,7 +24,7 @@ static bool url_is_special(std::string_view a_str) {
 
 static bool is_in_userinfo_percent_encode_set(const unsigned char a_chr) {
     return // C0 controls
-        (a_chr <= '\x1F') ||
+        a_chr <= '\x1F' ||
         // C0 control percent-encode set
         a_chr > '\x7E' ||
         // query percent-encode set
@@ -65,6 +65,204 @@ static std::string esc_url(std::string_view a_str) {
 }
 
 //
+// IPv6 parser
+// ===========
+auto ipv6_parser(const std::string& a_input) {
+    std::array<unsigned short, 8> address{0, 0, 0, 0, 0, 0, 0, 0};
+    int pieceIndex{0};
+    int compress{-1};
+    std::string::const_iterator pointer{a_input.begin()};
+    int failure_line{0};
+
+    unsigned char c = pointer < a_input.end() ? *pointer : '\0';
+
+    if (c == ':') {
+        if (pointer + 1 >= a_input.end() ||
+            *(pointer + 1) != (unsigned char)':') {
+            failure_line = __LINE__;
+            goto throw_failure;
+        }
+
+        pointer = pointer + 2;
+        pieceIndex++;
+        compress = pieceIndex;
+    }
+
+    while (pointer < a_input.end()) {
+        std::cout << "DEBUG: *pointer = " << *pointer << "\n";
+        if (pieceIndex >= 8) {
+            failure_line = __LINE__;
+            goto throw_failure;
+        }
+
+        if (*pointer == (unsigned char)':') {
+            if (compress >= 0) {
+                failure_line = __LINE__;
+                goto throw_failure;
+            }
+
+            pointer++;
+            pieceIndex++;
+            compress = pieceIndex;
+
+            continue;
+        }
+
+        int value{0};
+        int length{0};
+        while (length < 4 && isxdigit((unsigned char)*pointer)) {
+            std::cout << "DEBUG: Tracepoint 1\n";
+            value = value * 0x10 + (unsigned char)*pointer;
+            pointer++;
+            length++;
+        }
+
+        if (*pointer == (unsigned char)'.') {
+            if (length == 0) {
+                failure_line = __LINE__;
+                goto throw_failure;
+            }
+
+            pointer = pointer - length;
+
+            if (pieceIndex > 6) {
+                failure_line = __LINE__;
+                goto throw_failure;
+            }
+
+            int numbersSeen{0};
+            while (pointer < a_input.end()) {
+
+                int ipv4Piece{-1};
+                if (numbersSeen > 0) {
+                    if (*pointer == (unsigned char)'.' && numbersSeen < 4) {
+                        pointer++;
+                    } else {
+                        failure_line = __LINE__;
+                        goto throw_failure;
+                    }
+                }
+
+                if (!std::isdigit((unsigned char)*pointer)) {
+                    failure_line = __LINE__;
+                    goto throw_failure;
+                }
+
+                while (std::isdigit((unsigned char)*pointer)) {
+                    // interpreted as decimal number
+                    unsigned char number = *pointer;
+                    switch (ipv4Piece) {
+                    case -1:
+                        ipv4Piece = number;
+                        break;
+                    case 0:
+                        failure_line = __LINE__;
+                        goto throw_failure;
+                    default:
+                        ipv4Piece = ipv4Piece * 10 + number;
+                    }
+
+                    if (ipv4Piece > 255) {
+                        failure_line = __LINE__;
+                        goto throw_failure;
+                    }
+
+                    pointer++;
+                }
+
+                address[pieceIndex] = address[pieceIndex] * 0x100 + ipv4Piece;
+                numbersSeen++;
+                if (numbersSeen == 2 || numbersSeen == 4)
+                    pieceIndex++;
+            }
+
+            if (numbersSeen != 4) {
+                failure_line = __LINE__;
+                goto throw_failure;
+            }
+
+            break;
+
+        } else if (*pointer == (unsigned char)':') {
+            pointer++;
+            if (pointer >= a_input.end()) {
+                failure_line = __LINE__;
+                goto throw_failure;
+            }
+
+        } else if (pointer < a_input.end()) {
+            failure_line = __LINE__;
+            goto throw_failure;
+        }
+
+        address[pieceIndex] = value;
+        pieceIndex++;
+    }
+
+    if (compress >= 0) {
+        std::cout << "DEBUG: Tracepoint 2\n";
+        int swaps{pieceIndex - compress};
+        pieceIndex = 7;
+
+        while (pieceIndex != 0 && swaps > 0) {
+            std::cout << "DEBUG: Tracepoint 3\n";
+            // swap address[pieceIndex] with address[compress + swaps - 1]
+            int swapIndex = compress + swaps - 1;
+            unsigned char chr = address[pieceIndex];
+            address[pieceIndex] = address[swapIndex];
+            address[swapIndex] = chr;
+            pieceIndex--;
+            swaps--;
+        }
+
+    } else if (compress < 0 && pieceIndex != 8) {
+        failure_line = __LINE__;
+        goto throw_failure;
+    }
+
+    return address;
+
+throw_failure:
+    std::string errormsg = (std::string) __func__ + "(\"" + a_input +
+                           "\"):" + std::to_string(failure_line) +
+                           " - Invalid IPv6 address.";
+    std::clog << errormsg << std::endl;
+    throw std::invalid_argument(errormsg);
+}
+
+//
+// Host parser
+// ===========
+std::string host_parser(const std::string& a_input,
+                        bool a_isNotSpecial = false) //
+{
+    if (a_input.front() == '[') {
+        if (a_input.back() != ']') {
+            std::clog << "Error: missing closing ']'." << std::endl;
+            throw std::invalid_argument("Missing closing ']': '" + a_input +
+                                        "'");
+        }
+        // Return the result of IPv6 parsing a_input with its leading U+005B ([)
+        // and trailing U+005D (]) removed.
+        return "2001:DB8:1234:5678:9ABC:DEF0:1234:5678";
+    }
+
+    if (a_isNotSpecial) {
+        // If isNotSpecial is true, then return the result of opaque-host
+        // parsing a_input.
+        return "";
+    }
+
+    if (a_input.empty())
+        throw std::invalid_argument("Host string must not be empty.");
+
+    return "dummy.final.parsed.host";
+}
+
+//
+// Url class methods
+// =================
+
 #if false
 Url::Url() {
     // Proof to redirect clog to /dev/null, <fstream> is needed
@@ -214,6 +412,8 @@ void Url::operator=(const std::string& a_given_url) {
             this->fsm_opaque_path();
             break;
         default:
+            // Undefined state, stop the State Machine irregular. This is a
+            // program bug.
             guard = 0;
             break;
         }
