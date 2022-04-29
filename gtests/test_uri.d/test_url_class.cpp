@@ -54,6 +54,7 @@ scheme                    path
 using ::testing::ElementsAre;
 using ::testing::HasSubstr;
 using ::testing::ThrowsMessage;
+using ::testing::MatchesRegex;
 
 //
 namespace upnplib {
@@ -883,35 +884,27 @@ TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_noHost_noPort_5) {
 // ---------------------
 typedef UrlClassFTestSuite UrlClassIpv6ParserFTestSuite;
 
-TEST_F(UrlClassIpv6ParserFTestSuite, empty_address) {
-    EXPECT_THROW(ipv6_parser(""), std::invalid_argument);
+TEST_F(UrlClassIpv6ParserFTestSuite, loopback_address) {
+    in6_addr in6 = ipv6_parser("::1");
+
+    unsigned char addrc = in6.s6_addr[15];
+    EXPECT_EQ(addrc, 1);
+    EXPECT_EQ(ipv6_parser("::1").s6_addr[15], 1);
+
+    unsigned short addrs = in6.s6_addr16[7];
+    EXPECT_EQ(htons(addrs), 1);
+    EXPECT_EQ(htons(ipv6_parser("::1").s6_addr16[7]), 1);
+
+    EXPECT_THAT(in6.s6_addr,
+                ElementsAre(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
+}
+
+TEST_F(UrlClassIpv6ParserFTestSuite, invalid_address) {
+    EXPECT_THAT(
+        []() { ipv6_parser(":1"); },
+        ThrowsMessage<std::invalid_argument>(MatchesRegex(
+            "ipv6_parser\\(\":1\"\\):.+ - Invalid IPv6 address\\. .+")));
     std::cout << m_clogCapt.str();
-}
-
-TEST_F(UrlClassIpv6ParserFTestSuite, single_colon_address) {
-    EXPECT_THROW(ipv6_parser(":"), std::invalid_argument);
-    std::cout << m_clogCapt.str();
-}
-
-TEST_F(UrlClassIpv6ParserFTestSuite, double_colon_address) {
-    EXPECT_THAT(ipv6_parser("::"), ElementsAre(0, 0, 0, 0, 0, 0, 0, 0));
-}
-
-TEST_F(UrlClassIpv6ParserFTestSuite, single_colon_with_digit_address) {
-    EXPECT_THROW(ipv6_parser(":1"), std::invalid_argument);
-    std::cout << m_clogCapt.str();
-}
-
-TEST_F(UrlClassIpv6ParserFTestSuite, three_colon_address) {
-    EXPECT_THROW(ipv6_parser(":::"), std::invalid_argument);
-    std::cout << m_clogCapt.str();
-}
-
-TEST_F(UrlClassIpv6ParserFTestSuite, double_colon_with_digit_address) {
-    if (github_actions)
-        GTEST_SKIP() << "             known failing test on Github Actions";
-
-    EXPECT_THAT(ipv6_parser("::1"), ElementsAre(0, 0, 0, 0, 0, 0, 0, 1));
 }
 
 // Tests for host parser

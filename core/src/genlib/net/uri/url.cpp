@@ -2,15 +2,10 @@
 // Redistribution only with this Copyright remark. Last modified: 2022-04-27
 //
 // TODO: Provide url_is_special() as flag
-//       Test complete authority (userinfo + host + port) using truth table
 
 #include "upnplib/url.hpp"
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-#include <array>
+#include <netdb.h>
 
-//
 namespace upnplib {
 
 static const std::map<const std::string, const uint16_t> special_scheme{
@@ -67,167 +62,49 @@ static std::string esc_url(std::string_view a_str) {
 //
 // IPv6 parser
 // ===========
-auto ipv6_parser(const std::string& a_input) {
-    std::array<unsigned short, 8> address{0, 0, 0, 0, 0, 0, 0, 0};
-    int pieceIndex{0};
-    int compress{-1};
-    std::string::const_iterator pointer{a_input.begin()};
-    int failure_line{0};
+//CIpv6Parser::CIpv6Parser()
+//    : m_hints(new addrinfo), m_result(nullptr, &freeaddrinfo) {}
 
-    unsigned char c = pointer < a_input.end() ? *pointer : '\0';
+//in6_addr CIpv6Parser::get(const std::string& a_input) {
+in6_addr ipv6_parser(const std::string& a_input) {
+    struct addrinfo* res{};
+    struct addrinfo hints{};
+    hints.ai_family = AF_INET6;
+    hints.ai_flags =
+        AI_V4MAPPED | AI_NUMERICHOST | AI_NUMERICSERV;
 
-    if (c == ':') {
-        if (pointer + 1 >= a_input.end() ||
-            *(pointer + 1) != (unsigned char)':') {
-            failure_line = __LINE__;
-            goto throw_failure;
+    errno = 0;
+    int rc = getaddrinfo(a_input.c_str(), NULL, &hints, &res);
+
+    if (rc != 0) {
+        freeaddrinfo(res);
+
+        std::string errormsg;
+        if (rc != EAI_SYSTEM) {
+            errormsg = std::string(__func__) + "(\"" + a_input +
+                       "\"):" + std::to_string(__LINE__) +
+                       " - Invalid IPv6 address. " + gai_strerror(rc) + " (" +
+                       std::to_string(rc) + ")";
+        } else {
+            errormsg = std::string(__func__) + "(\"" + a_input +
+                       "\"):" + std::to_string(__LINE__) +
+                       " - Invalid IPv6 address. " + strerror(errno) + " (" +
+                       std::to_string(errno) + ")";
         }
-
-        pointer = pointer + 2;
-        pieceIndex++;
-        compress = pieceIndex;
+        std::clog << "Error: " << errormsg << std::endl;
+        throw std::invalid_argument(errormsg);
     }
 
-    while (pointer < a_input.end()) {
-        std::cout << "DEBUG: *pointer = " << *pointer << "\n";
-        if (pieceIndex >= 8) {
-            failure_line = __LINE__;
-            goto throw_failure;
-        }
+    // We use the first returned entry
+    struct sockaddr_in6* sa6 = (struct sockaddr_in6*)res->ai_addr;
+    struct in6_addr addr6 = sa6->sin6_addr;
+    // addr6.s6_addr[0];   // This is a first byte of the IPv6
+    // addr6.s6_addr[15];  // This is a last byte of the IPv6
+    // addr6.s6_addr16[0]; // This is a first word of the IPv6 (needs htons)
+    // addr6.s6_addr16[7]; // This is a last word of the IPv6 (needs htons)
 
-        if (*pointer == (unsigned char)':') {
-            if (compress >= 0) {
-                failure_line = __LINE__;
-                goto throw_failure;
-            }
-
-            pointer++;
-            pieceIndex++;
-            compress = pieceIndex;
-
-            continue;
-        }
-
-        int value{0};
-        int length{0};
-        while (length < 4 && isxdigit((unsigned char)*pointer)) {
-            std::cout << "DEBUG: Tracepoint 1\n";
-            value = value * 0x10 + (unsigned char)*pointer;
-            pointer++;
-            length++;
-        }
-
-        if (*pointer == (unsigned char)'.') {
-            if (length == 0) {
-                failure_line = __LINE__;
-                goto throw_failure;
-            }
-
-            pointer = pointer - length;
-
-            if (pieceIndex > 6) {
-                failure_line = __LINE__;
-                goto throw_failure;
-            }
-
-            int numbersSeen{0};
-            while (pointer < a_input.end()) {
-
-                int ipv4Piece{-1};
-                if (numbersSeen > 0) {
-                    if (*pointer == (unsigned char)'.' && numbersSeen < 4) {
-                        pointer++;
-                    } else {
-                        failure_line = __LINE__;
-                        goto throw_failure;
-                    }
-                }
-
-                if (!std::isdigit((unsigned char)*pointer)) {
-                    failure_line = __LINE__;
-                    goto throw_failure;
-                }
-
-                while (std::isdigit((unsigned char)*pointer)) {
-                    // interpreted as decimal number
-                    unsigned char number = *pointer;
-                    switch (ipv4Piece) {
-                    case -1:
-                        ipv4Piece = number;
-                        break;
-                    case 0:
-                        failure_line = __LINE__;
-                        goto throw_failure;
-                    default:
-                        ipv4Piece = ipv4Piece * 10 + number;
-                    }
-
-                    if (ipv4Piece > 255) {
-                        failure_line = __LINE__;
-                        goto throw_failure;
-                    }
-
-                    pointer++;
-                }
-
-                address[pieceIndex] = address[pieceIndex] * 0x100 + ipv4Piece;
-                numbersSeen++;
-                if (numbersSeen == 2 || numbersSeen == 4)
-                    pieceIndex++;
-            }
-
-            if (numbersSeen != 4) {
-                failure_line = __LINE__;
-                goto throw_failure;
-            }
-
-            break;
-
-        } else if (*pointer == (unsigned char)':') {
-            pointer++;
-            if (pointer >= a_input.end()) {
-                failure_line = __LINE__;
-                goto throw_failure;
-            }
-
-        } else if (pointer < a_input.end()) {
-            failure_line = __LINE__;
-            goto throw_failure;
-        }
-
-        address[pieceIndex] = value;
-        pieceIndex++;
-    }
-
-    if (compress >= 0) {
-        std::cout << "DEBUG: Tracepoint 2\n";
-        int swaps{pieceIndex - compress};
-        pieceIndex = 7;
-
-        while (pieceIndex != 0 && swaps > 0) {
-            std::cout << "DEBUG: Tracepoint 3\n";
-            // swap address[pieceIndex] with address[compress + swaps - 1]
-            int swapIndex = compress + swaps - 1;
-            unsigned char chr = address[pieceIndex];
-            address[pieceIndex] = address[swapIndex];
-            address[swapIndex] = chr;
-            pieceIndex--;
-            swaps--;
-        }
-
-    } else if (compress < 0 && pieceIndex != 8) {
-        failure_line = __LINE__;
-        goto throw_failure;
-    }
-
-    return address;
-
-throw_failure:
-    std::string errormsg = (std::string) __func__ + "(\"" + a_input +
-                           "\"):" + std::to_string(failure_line) +
-                           " - Invalid IPv6 address.";
-    std::clog << errormsg << std::endl;
-    throw std::invalid_argument(errormsg);
+    freeaddrinfo(res);
+    return addr6;
 }
 
 //
