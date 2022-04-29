@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-04-27
+// Redistribution only with this Copyright remark. Last modified: 2022-04-29
 //
 // If you need more information how the Url class works you can temporary
 // uncomment #define DEBUG_URL and run the tests with
@@ -53,8 +53,8 @@ scheme                    path
 
 using ::testing::ElementsAre;
 using ::testing::HasSubstr;
-using ::testing::ThrowsMessage;
 using ::testing::MatchesRegex;
+using ::testing::ThrowsMessage;
 
 //
 namespace upnplib {
@@ -884,16 +884,17 @@ TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_noHost_noPort_5) {
 // ---------------------
 typedef UrlClassFTestSuite UrlClassIpv6ParserFTestSuite;
 
-TEST_F(UrlClassIpv6ParserFTestSuite, loopback_address) {
-    in6_addr in6 = ipv6_parser("::1");
+TEST_F(UrlClassIpv6ParserFTestSuite, valid_addresses) {
+    CIpv6Parser ipv6_parser;
+    in6_addr in6 = ipv6_parser.get("::1");
 
     unsigned char addrc = in6.s6_addr[15];
     EXPECT_EQ(addrc, 1);
-    EXPECT_EQ(ipv6_parser("::1").s6_addr[15], 1);
+    EXPECT_EQ(ipv6_parser.get("::2").s6_addr[15], 2);
 
     unsigned short addrs = in6.s6_addr16[7];
     EXPECT_EQ(htons(addrs), 1);
-    EXPECT_EQ(htons(ipv6_parser("::1").s6_addr16[7]), 1);
+    EXPECT_EQ(htons(ipv6_parser.get("::3").s6_addr16[7]), 3);
 
     EXPECT_THAT(in6.s6_addr,
                 ElementsAre(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
@@ -901,7 +902,10 @@ TEST_F(UrlClassIpv6ParserFTestSuite, loopback_address) {
 
 TEST_F(UrlClassIpv6ParserFTestSuite, invalid_address) {
     EXPECT_THAT(
-        []() { ipv6_parser(":1"); },
+        []() {
+            CIpv6Parser ipv6_parser;
+            ipv6_parser.get(":1");
+        },
         ThrowsMessage<std::invalid_argument>(MatchesRegex(
             "ipv6_parser\\(\":1\"\\):.+ - Invalid IPv6 address\\. .+")));
     std::cout << m_clogCapt.str();

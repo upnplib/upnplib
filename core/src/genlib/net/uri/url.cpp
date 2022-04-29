@@ -1,10 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-04-27
+// Redistribution only with this Copyright remark. Last modified: 2022-04-29
 //
 // TODO: Provide url_is_special() as flag
 
 #include "upnplib/url.hpp"
-#include <netdb.h>
 
 namespace upnplib {
 
@@ -62,23 +61,29 @@ static std::string esc_url(std::string_view a_str) {
 //
 // IPv6 parser
 // ===========
-//CIpv6Parser::CIpv6Parser()
-//    : m_hints(new addrinfo), m_result(nullptr, &freeaddrinfo) {}
+CIpv6Parser::CIpv6Parser() : m_result(nullptr, &freeaddrinfo) {}
 
-//in6_addr CIpv6Parser::get(const std::string& a_input) {
-in6_addr ipv6_parser(const std::string& a_input) {
-    struct addrinfo* res{};
-    struct addrinfo hints{};
+in6_addr CIpv6Parser::get(const std::string& a_input) {
+    // Thanks to Remy Lebeau for his useful answer at
+    // https://stackoverflow.com/a/21942389/5014688.
+    // We use smartpointer for addrinfo allocated memory so we do not need to
+    // use freeaddrinfo(). Freeing memory is managed by the smartpointer.
+
+    addrinfo hints{};
     hints.ai_family = AF_INET6;
-    hints.ai_flags =
-        AI_V4MAPPED | AI_NUMERICHOST | AI_NUMERICSERV;
+    hints.ai_flags = AI_V4MAPPED | AI_NUMERICHOST | AI_NUMERICSERV;
 
     errno = 0;
-    int rc = getaddrinfo(a_input.c_str(), NULL, &hints, &res);
+    // std::unique_ptr does not override the & operator so we cannot use
+    // int rc = getaddrinfo(..., &m_result);
+    // We need a temporary addrinfo
+    addrinfo* temp;
+    int rc = getaddrinfo(a_input.c_str(), NULL, &hints, &temp);
+    // Reset smartpointer to the new addrinfo
+    // but between these two statements is a risk of a memroy leak
+    m_result.reset(temp);
 
     if (rc != 0) {
-        freeaddrinfo(res);
-
         std::string errormsg;
         if (rc != EAI_SYSTEM) {
             errormsg = std::string(__func__) + "(\"" + a_input +
@@ -96,14 +101,13 @@ in6_addr ipv6_parser(const std::string& a_input) {
     }
 
     // We use the first returned entry
-    struct sockaddr_in6* sa6 = (struct sockaddr_in6*)res->ai_addr;
+    struct sockaddr_in6* sa6 = (struct sockaddr_in6*)m_result->ai_addr;
     struct in6_addr addr6 = sa6->sin6_addr;
     // addr6.s6_addr[0];   // This is a first byte of the IPv6
     // addr6.s6_addr[15];  // This is a last byte of the IPv6
     // addr6.s6_addr16[0]; // This is a first word of the IPv6 (needs htons)
     // addr6.s6_addr16[7]; // This is a last word of the IPv6 (needs htons)
 
-    freeaddrinfo(res);
     return addr6;
 }
 

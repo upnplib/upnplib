@@ -24,19 +24,18 @@
 #ifndef UPNPLIB_NET_URI_URL_HPP
 #define UPNPLIB_NET_URI_URL_HPP
 
+#include <netdb.h>
+
 namespace upnplib {
 
-#if false
 class CIpv6Parser {
   public:
-    CIpv6Parser() : m_hints(new addrinfo), m_result(nullptr, &freeaddrinfo);
+    CIpv6Parser();
     in6_addr get(const std::string& a_input);
 
   private:
-    std::unique_ptr<addrinfo> m_hints;
     std::unique_ptr<addrinfo, decltype(&freeaddrinfo)> m_result;
 };
-#endif
 
 //
 class Url {
