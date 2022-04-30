@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-04-29
+// Redistribution only with this Copyright remark. Last modified: 2022-04-30
 //
 // If you need more information how the Url class works you can temporary
 // uncomment #define DEBUG_URL and run the tests with
@@ -884,30 +884,49 @@ TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_noHost_noPort_5) {
 // ---------------------
 typedef UrlClassFTestSuite UrlClassIpv6ParserFTestSuite;
 
-TEST_F(UrlClassIpv6ParserFTestSuite, valid_addresses) {
-    CIpv6Parser ipv6_parser;
-    in6_addr in6 = ipv6_parser.get("::1");
-
-    unsigned char addrc = in6.s6_addr[15];
-    EXPECT_EQ(addrc, 1);
-    EXPECT_EQ(ipv6_parser.get("::2").s6_addr[15], 2);
-
-    unsigned short addrs = in6.s6_addr16[7];
-    EXPECT_EQ(htons(addrs), 1);
-    EXPECT_EQ(htons(ipv6_parser.get("::3").s6_addr16[7]), 3);
+TEST(UrlClassIpv6ParserTestSuite, loopback_address) {
+    CIpv6Parser ipv6Obj("::1");
+    struct in6_addr in6 = ipv6Obj;
 
     EXPECT_THAT(in6.s6_addr,
                 ElementsAre(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
+
+    unsigned char addrc = in6.s6_addr[15];
+    EXPECT_EQ(addrc, 1);
+
+#ifndef __APPLE__
+    unsigned short addrs = in6.s6_addr16[7];
+    EXPECT_EQ(htons(addrs), 1);
+#endif
+}
+
+TEST(UrlClassIpv6ParserTestSuite, valid_address2) {
+    CIpv6Parser ipv6Obj("::2");
+    EXPECT_EQ(((in6_addr)ipv6Obj).s6_addr[15], 2);
+}
+
+TEST(UrlClassIpv6ParserTestSuite, valid_address) {
+    CIpv6Parser ipv6Obj("2001:DB8:1234:5678:9ABC:DEF0:1234:5678");
+    EXPECT_THAT(((in6_addr)ipv6Obj).s6_addr,
+                ElementsAre(0x20, 0x01, 0x0D, 0xB8, 0x12, 0x34, 0x56, 0x78,
+                            0x9A, 0xBC, 0xDE, 0xF0, 0x12, 0x34, 0x56, 0x78));
+}
+
+TEST(UrlClassIpv6ParserTestSuite, ipv4_mapped_address) {
+    CIpv6Parser ipv6Obj("::ffff:192.0.2.128");
+    EXPECT_THAT(((in6_addr)ipv6Obj).s6_addr,
+                ElementsAre(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xFF, 0xFF, 0xC0, 0,
+                            0x02, 0x80));
 }
 
 TEST_F(UrlClassIpv6ParserFTestSuite, invalid_address) {
     EXPECT_THAT(
         []() {
-            CIpv6Parser ipv6_parser;
-            ipv6_parser.get(":1");
+            CIpv6Parser ipv6Obj(":1");
+            [[maybe_unused]] struct in6_addr in6 = ipv6Obj;
         },
         ThrowsMessage<std::invalid_argument>(MatchesRegex(
-            "ipv6_parser\\(\":1\"\\):.+ - Invalid IPv6 address\\. .+")));
+            "operator in6_addr\\(\":1\"\\):.+ - Invalid IPv6 address\\. .+")));
     std::cout << m_clogCapt.str();
 }
 

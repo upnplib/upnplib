@@ -1,9 +1,12 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-04-29
+// Redistribution only with this Copyright remark. Last modified: 2022-04-30
 //
 // TODO: Provide url_is_special() as flag
 
 #include "upnplib/url.hpp"
+#ifdef _WIN32
+#include <ws2tcpip.h>
+#endif
 
 namespace upnplib {
 
@@ -61,54 +64,69 @@ static std::string esc_url(std::string_view a_str) {
 //
 // IPv6 parser
 // ===========
-CIpv6Parser::CIpv6Parser() : m_result(nullptr, &freeaddrinfo) {}
+CIpv6Parser::CIpv6Parser(std::string_view a_input) : m_input(a_input) {
+    // getaddrinfo() allocates memory for the result so we must free it with
+    // freeaddrinfo(). To follow RAII to be exception safe we must do it with a
+    // destructor (see below).
 
-in6_addr CIpv6Parser::get(const std::string& a_input) {
-    // Thanks to Remy Lebeau for his useful answer at
-    // https://stackoverflow.com/a/21942389/5014688.
-    // We use smartpointer for addrinfo allocated memory so we do not need to
-    // use freeaddrinfo(). Freeing memory is managed by the smartpointer.
-
-    addrinfo hints{};
+    struct addrinfo hints {};
     hints.ai_family = AF_INET6;
+    hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_V4MAPPED | AI_NUMERICHOST | AI_NUMERICSERV;
 
     errno = 0;
-    // std::unique_ptr does not override the & operator so we cannot use
-    // int rc = getaddrinfo(..., &m_result);
-    // We need a temporary addrinfo
-    addrinfo* temp;
-    int rc = getaddrinfo(a_input.c_str(), NULL, &hints, &temp);
-    // Reset smartpointer to the new addrinfo
-    // but between these two statements is a risk of a memroy leak
-    m_result.reset(temp);
+    m_gai_retcode = getaddrinfo(m_input.c_str(), NULL, &hints, &m_result);
+    m_errno = errno;
+}
 
-    if (rc != 0) {
-        std::string errormsg;
-        if (rc != EAI_SYSTEM) {
-            errormsg = std::string(__func__) + "(\"" + a_input +
-                       "\"):" + std::to_string(__LINE__) +
-                       " - Invalid IPv6 address. " + gai_strerror(rc) + " (" +
-                       std::to_string(rc) + ")";
+CIpv6Parser::~CIpv6Parser() {
+#ifdef DEBUG_URL
+    std::clog << "DEBUG: " << std::string(__func__) << ":"
+              << std::to_string(__LINE__) << " - destructor executed.\n";
+#endif
+    freeaddrinfo(m_result);
+}
+
+CIpv6Parser::operator in6_addr() const {
+    // Return the binary IPv6 address in network order.
+
+    if (m_gai_retcode != 0 || m_result->ai_next != nullptr) {
+        std::string errormsg = std::string(__func__) + "(\"" + m_input + "\"):";
+
+        if (m_gai_retcode != 0) {
+            if (m_gai_retcode != EAI_SYSTEM) {
+                // This is an error from getaddrinfo().
+                errormsg += std::to_string(__LINE__) +
+                            " - Invalid IPv6 address. " +
+                            gai_strerror(m_gai_retcode) + " (" +
+                            std::to_string(m_gai_retcode) + ")";
+            } else {
+                // This is a general system error passed by getaddrinfo().
+                errormsg += std::to_string(__LINE__) +
+                            " - Invalid IPv6 address. " + strerror(m_errno) +
+                            " (errno " + std::to_string(m_errno) + ")";
+            }
+
         } else {
-            errormsg = std::string(__func__) + "(\"" + a_input +
-                       "\"):" + std::to_string(__LINE__) +
-                       " - Invalid IPv6 address. " + strerror(errno) + " (" +
-                       std::to_string(errno) + ")";
+            // Here we have more than one IPv6 address that is concidered to be
+            // ambiguous.
+            errormsg += std::to_string(__LINE__) +
+                        " - more than one possible IPv6 address.";
         }
+
         std::clog << "Error: " << errormsg << std::endl;
         throw std::invalid_argument(errormsg);
     }
 
     // We use the first returned entry
     struct sockaddr_in6* sa6 = (struct sockaddr_in6*)m_result->ai_addr;
-    struct in6_addr addr6 = sa6->sin6_addr;
+    // struct in6_addr addr6 = sa6->sin6_addr;
     // addr6.s6_addr[0];   // This is a first byte of the IPv6
     // addr6.s6_addr[15];  // This is a last byte of the IPv6
     // addr6.s6_addr16[0]; // This is a first word of the IPv6 (needs htons)
     // addr6.s6_addr16[7]; // This is a last word of the IPv6 (needs htons)
 
-    return addr6;
+    return sa6->sin6_addr;
 }
 
 //
