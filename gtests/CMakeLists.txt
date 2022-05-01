@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-03-09
+# Redistribution only with this Copyright remark. Last modified: 2022-05-01
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -155,6 +155,12 @@ add_executable(test_uri_parse
     ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
     test_uri.d/test_uri_parse.cpp)
 add_test(NAME ctest_uri_parse COMMAND test_uri_parse)
+
+# uri: urlparser
+#---------------
+add_executable(test_urlparser
+    test_uri.d/test_urlparser.cpp)
+add_test(NAME ctest_urlparser COMMAND test_urlparser)
 
 # uri: url_class
 #---------------
