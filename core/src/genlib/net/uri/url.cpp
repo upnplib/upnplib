@@ -1,12 +1,15 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-04-30
+// Redistribution only with this Copyright remark. Last modified: 2022-05-01
 //
 // TODO: Provide url_is_special() as flag
 
 #include "upnplib/url.hpp"
-#ifdef _WIN32
-#include <ws2tcpip.h>
-#endif
+
+#include <map>
+#include <sstream>
+#include <iomanip>
+#include <iostream>
+#include <array>
 
 namespace upnplib {
 
@@ -64,69 +67,171 @@ static std::string esc_url(std::string_view a_str) {
 //
 // IPv6 parser
 // ===========
-CIpv6Parser::CIpv6Parser(std::string_view a_input) : m_input(a_input) {
-    // getaddrinfo() allocates memory for the result so we must free it with
-    // freeaddrinfo(). To follow RAII to be exception safe we must do it with a
-    // destructor (see below).
+std::array<unsigned short, 8> ipv6_parser(std::string_view a_input) {
+    std::array<unsigned short, 8> address{0, 0, 0, 0, 0, 0, 0, 0};
 
-    struct addrinfo hints {};
-    hints.ai_family = AF_INET6;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_V4MAPPED | AI_NUMERICHOST | AI_NUMERICSERV;
+    int pieceIndex{0};
+    int compress{-1};
+    std::string_view::const_iterator pointer{a_input.begin()};
+    int failure_line{0};
 
-    errno = 0;
-    m_gai_retcode = getaddrinfo(m_input.c_str(), NULL, &hints, &m_result);
-    m_errno = errno;
-}
+    unsigned char c = pointer < a_input.end() ? *pointer : '\0';
 
-CIpv6Parser::~CIpv6Parser() {
-#ifdef DEBUG_URL
-    std::clog << "DEBUG: " << std::string(__func__) << ":"
-              << std::to_string(__LINE__) << " - destructor executed.\n";
-#endif
-    freeaddrinfo(m_result);
-}
-
-CIpv6Parser::operator in6_addr() const {
-    // Return the binary IPv6 address in network order.
-
-    if (m_gai_retcode != 0 || m_result->ai_next != nullptr) {
-        std::string errormsg = std::string(__func__) + "(\"" + m_input + "\"):";
-
-        if (m_gai_retcode != 0) {
-            if (m_gai_retcode != EAI_SYSTEM) {
-                // This is an error from getaddrinfo().
-                errormsg += std::to_string(__LINE__) +
-                            " - Invalid IPv6 address. " +
-                            gai_strerror(m_gai_retcode) + " (" +
-                            std::to_string(m_gai_retcode) + ")";
-            } else {
-                // This is a general system error passed by getaddrinfo().
-                errormsg += std::to_string(__LINE__) +
-                            " - Invalid IPv6 address. " + strerror(m_errno) +
-                            " (errno " + std::to_string(m_errno) + ")";
-            }
-
-        } else {
-            // Here we have more than one IPv6 address that is concidered to be
-            // ambiguous.
-            errormsg += std::to_string(__LINE__) +
-                        " - more than one possible IPv6 address.";
+    if (c == ':') {
+        if (pointer + 1 >= a_input.end() ||
+            *(pointer + 1) != (unsigned char)':') {
+            failure_line = __LINE__;
+            goto throw_failure;
         }
 
-        std::clog << "Error: " << errormsg << std::endl;
-        throw std::invalid_argument(errormsg);
+        pointer = pointer + 2;
+        pieceIndex++;
+        compress = pieceIndex;
     }
 
-    // We use the first returned entry
-    struct sockaddr_in6* sa6 = (struct sockaddr_in6*)m_result->ai_addr;
-    // struct in6_addr addr6 = sa6->sin6_addr;
-    // addr6.s6_addr[0];   // This is a first byte of the IPv6
-    // addr6.s6_addr[15];  // This is a last byte of the IPv6
-    // addr6.s6_addr16[0]; // This is a first word of the IPv6 (needs htons)
-    // addr6.s6_addr16[7]; // This is a last word of the IPv6 (needs htons)
+    while (pointer < a_input.end()) {
+        if (pieceIndex >= 8) {
+            failure_line = __LINE__;
+            goto throw_failure;
+        }
 
-    return sa6->sin6_addr;
+        if (*pointer == (unsigned char)':') {
+            if (compress >= 0) {
+                failure_line = __LINE__;
+                goto throw_failure;
+            }
+
+            pointer++;
+            pieceIndex++;
+            compress = pieceIndex;
+
+            continue;
+        }
+
+        unsigned short value{};
+        int length{};
+        while (length < 4 && isxdigit((unsigned char)*pointer)) {
+            unsigned char c = (unsigned char)*pointer;
+            // c interpreted as hexadecimal number
+            unsigned short v =
+                (c >= 'A') ? (c >= 'a') ? (c - 'a' + 10) : (c - 'A' + 10)
+                           : (c - '0');
+            value = value * 0x10 + v;
+            pointer++;
+            length++;
+        }
+
+        if (*pointer == (unsigned char)'.') {
+            if (length == 0) {
+                failure_line = __LINE__;
+                goto throw_failure;
+            }
+
+            pointer = pointer - length;
+
+            if (pieceIndex > 6) {
+                failure_line = __LINE__;
+                goto throw_failure;
+            }
+
+            int numbersSeen{};
+            while (pointer < a_input.end()) {
+
+                // Valid values for ipv4Piece are 0 - 255
+                // 65535 (signed -1) means uninitialized (NULL)
+                unsigned short ipv4Piece{65535};
+                if (numbersSeen > 0) {
+                    if (*pointer == (unsigned char)'.' && numbersSeen < 4) {
+                        pointer++;
+                    } else {
+                        failure_line = __LINE__;
+                        goto throw_failure;
+                    }
+                }
+
+                if (!std::isdigit((unsigned char)*pointer)) {
+                    failure_line = __LINE__;
+                    goto throw_failure;
+                }
+
+                while (std::isdigit((unsigned char)*pointer)) {
+                    // interpreted as decimal number
+                    unsigned short number = *pointer - '0';
+                    switch (ipv4Piece) {
+                    case 65535: // means uninitialized (NULL)
+                        ipv4Piece = number;
+                        break;
+                    case 0:
+                        failure_line = __LINE__;
+                        goto throw_failure;
+                    default:
+                        ipv4Piece = ipv4Piece * 10 + number;
+                    }
+
+                    if (ipv4Piece > 255) {
+                        failure_line = __LINE__;
+                        goto throw_failure;
+                    }
+
+                    pointer++;
+                }
+
+                address[pieceIndex] = address[pieceIndex] * 0x100 + ipv4Piece;
+                numbersSeen++;
+                if (numbersSeen == 2 || numbersSeen == 4)
+                    pieceIndex++;
+            }
+
+            if (numbersSeen != 4) {
+                failure_line = __LINE__;
+                goto throw_failure;
+            }
+
+            break;
+
+        } else if (*pointer == (unsigned char)':') {
+            pointer++;
+            if (pointer >= a_input.end()) {
+                failure_line = __LINE__;
+                goto throw_failure;
+            }
+
+        } else if (pointer < a_input.end()) {
+            failure_line = __LINE__;
+            goto throw_failure;
+        }
+
+        address[pieceIndex] = value;
+        pieceIndex++;
+    }
+
+    if (compress >= 0) {
+        int swaps{pieceIndex - compress};
+        pieceIndex = 7;
+
+        while (pieceIndex != 0 && swaps > 0) {
+            // swap address[pieceIndex] with address[compress + swaps - 1]
+            int swapIndex = compress + swaps - 1;
+            unsigned short piece = address[pieceIndex];
+            address[pieceIndex] = address[swapIndex];
+            address[swapIndex] = piece;
+            pieceIndex--;
+            swaps--;
+        }
+
+    } else if (compress < 0 && pieceIndex != 8) {
+        failure_line = __LINE__;
+        goto throw_failure;
+    }
+
+    return address;
+
+throw_failure:
+    std::string errormsg =
+        "Error: " + (std::string) __func__ + "(\"" + (std::string)a_input +
+        "\"):" + std::to_string(failure_line) + " - Invalid IPv6 address.";
+    std::clog << errormsg << std::endl;
+    throw std::invalid_argument(errormsg);
 }
 
 //
@@ -231,7 +336,7 @@ std::string Url::query() const { return m_query; }
 std::string Url::fragment() const { return m_fragment; }
 
 //
-void Url::operator=(const std::string& a_given_url) {
+void Url::operator=(std::string_view a_given_url) {
 
     m_given_url = a_given_url;
     this->clear_private();

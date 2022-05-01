@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-30
+// Redistribution only with this Copyright remark. Last modified: 2022-05-01
 
 // This class is based on the "URL Living Standard"
 // ================================================
@@ -24,36 +24,15 @@
 #ifndef UPNPLIB_NET_URI_URL_HPP
 #define UPNPLIB_NET_URI_URL_HPP
 
-#ifdef _WIN32
-#include <winsock2.h>
-#include <in6addr.h>
-#else
-#include <netdb.h>
-#endif
+#include <string>
 
 namespace upnplib {
 
-class CIpv6Parser {
-  public:
-    CIpv6Parser(std::string_view a_input);
-    virtual ~CIpv6Parser();
-
-    // Get IPv6 address, e.g.: in6_addr addr6 = ip6Obj;
-    operator in6_addr() const;
-
-  private:
-    const std::string m_input;
-    struct addrinfo* m_result{};
-    int m_gai_retcode;
-    int m_errno;
-};
-
-//
 class Url {
 
   public:
     // Set url, e.g.: Url url; url = "http://example.com"
-    void operator=(const std::string& a_url);
+    void operator=(std::string_view a_url);
 
     // Get serialized url, e.g.: ser_url = (std::string)url
     operator std::string() const;
