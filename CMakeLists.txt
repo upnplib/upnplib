@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-03-31
+# Redistribution only with this Copyright remark. Last modified: 2022-05-05
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -376,24 +376,23 @@ if(UPNPLIB_WITH_GOOGLETEST)
                 # Make Directory is necessary because sub directory ${CMAKE_BUILD_TYPE} isn't available yet.
                 file(MAKE_DIRECTORY ${UPNPLIB_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE})
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gtest.dll
-                                 ${UPNPLIB_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gtest.dll SYMBOLIC)
+                                 $ENV{SystemRoot}/System32/gtest.dll SYMBOLIC)
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gmock.dll
-                                 ${UPNPLIB_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gmock.dll SYMBOLIC)
+                                 $ENV{SystemRoot}/System32/gmock.dll SYMBOLIC)
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gtest_main.dll
-                                 ${UPNPLIB_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gtest_main.dll SYMBOLIC)
+                                 $ENV{SystemRoot}/System32/gtest_main.dll SYMBOLIC)
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gmock_main.dll
-                                 ${UPNPLIB_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/gmock_main.dll SYMBOLIC)
+                                 $ENV{SystemRoot}/System32/gmock_main.dll SYMBOLIC)
             else()
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gtest.dll
-                                 ${UPNPLIB_GTESTS_BINARY_DIR}/gtest.dll SYMBOLIC)
+                                 $ENV{SystemRoot}/System32/gtest.dll SYMBOLIC)
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gmock.dll
-                                 ${UPNPLIB_GTESTS_BINARY_DIR}/gmock.dll SYMBOLIC)
+                                 $ENV{SystemRoot}/System32/gmock.dll SYMBOLIC)
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gtest_main.dll
-                                 ${UPNPLIB_GTESTS_BINARY_DIR}/gtest_main.dll SYMBOLIC)
+                                 $ENV{SystemRoot}/System32/gtest_main.dll SYMBOLIC)
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/gmock_main.dll
-                                 ${UPNPLIB_GTESTS_BINARY_DIR}/gmock_main.dll SYMBOLIC)
+                                 $ENV{SystemRoot}/System32/gmock_main.dll SYMBOLIC)
             endif()
-
         endif(BUILD_SHARED_LIBS)
 
     else(WIN32) # AND UPNPLIB_WITH_GOOGLETEST
@@ -461,6 +460,10 @@ message(STATUS "Build type is ${CMAKE_BUILD_TYPE}")
 #################################
 # Configure and build tests     #
 #################################
+# Run with:
+# cd ./build
+# ctest --build-config Release --tests-regex ^ctest_build_ --output-on-failure --stop-on-failure
+
 set(UPNPLIB_BUILD_COMMAND
         COMMAND ${CMAKE_CTEST_COMMAND}
         --build-and-test "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}/Build_tests"

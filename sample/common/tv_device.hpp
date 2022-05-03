@@ -1,12 +1,11 @@
 #ifndef UPNPLIB_TV_DEVICE_HPP
 #define UPNPLIB_TV_DEVICE_HPP
-
 /**************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-20
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -50,11 +49,7 @@
 #include "UpnpSubscriptionRequest.hpp"
 #include "UpnpStateVarRequest.hpp"
 
-#ifdef _WIN32
-#include "pthread.h"
-#else
-#include <pthread.h>
-#endif
+#include "pthread.h" // To find pthreads4w don't use <pthread.h>
 
 /*! Color constants */
 #define MAX_COLOR 10

@@ -35,22 +35,19 @@
 #include <signal.h>
 
 int main(int argc, char* argv[]) {
-    int rc;
     pthread_t cmdloop_thread;
-    int code;
 #ifndef _WIN32
     int sig;
     sigset_t sigs_to_catch;
 #endif
 
-    rc = device_main(argc, argv);
+    int rc = device_main(argc, argv);
     if (rc != UPNP_E_SUCCESS) {
         return rc;
     }
 
     /* start a command loop thread */
-    code = pthread_create(&cmdloop_thread, NULL, TvDeviceCommandLoop, NULL);
-    if (code != 0) {
+    if (pthread_create(&cmdloop_thread, NULL, TvDeviceCommandLoop, NULL) != 0) {
         return UPNP_E_INTERNAL_ERROR;
     }
 #ifdef _WIN32
@@ -64,7 +61,6 @@ int main(int argc, char* argv[]) {
     sigwait(&sigs_to_catch, &sig);
     SampleUtil_Print("Shutting down on signal %d...\n", sig);
 #endif
-    rc = TvDeviceStop();
 
-    return rc;
+    return TvDeviceStop();
 }

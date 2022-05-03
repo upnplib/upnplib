@@ -4,6 +4,7 @@
     <major>1</major>
     <minor>0</minor>
   </specVersion>
+  <!-- URLBase>http://192.168.24.85:49153</URLBase> -->
   <device>
     <deviceType>urn:schemas-upnp-org:device:tvdevice:1</deviceType>
     <friendlyName>UPnP Television Emulator</friendlyName>

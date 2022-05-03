@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-03-04
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-04
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -50,57 +50,41 @@
 #include "upnpmock/net_if.hpp"
 #endif
 
-//#include "ThreadPool.hpp"
-//#include "UpnpStdInt.hpp"
-//#include "UpnpUniStd.h" /* for close() */
+#include "ThreadPool.hpp"
+#include "UpnpStdInt.hpp"
+#include "UpnpUniStd.hpp" /* for close() */
 #include "httpreadwrite.hpp"
-//#include "membuffer.h"
-//#include "sysdep.h"
+#include "membuffer.hpp"
+#include "soaplib.hpp"
+#include "ssdplib.hpp"
+#include "sysdep.hpp"
 #include "uuid.hpp"
 
 /* Needed for GENA */
-//#include "miniserver.h"
-//#include "service_table.h"
-
-//#ifdef UPNPLIB_HAVE_CLIENT
-#include "ssdplib.hpp"
-//#endif
+#include "gena.hpp"
+#include "miniserver.hpp"
+#include "service_table.hpp"
 
 #ifdef INTERNAL_WEB_SERVER
-//#include "VirtualDir.h"
+#include "VirtualDir.hpp"
+#include "urlconfig.hpp"
 #include "webserver.hpp"
 #endif /* INTERNAL_WEB_SERVER */
 
-//#include <signal.h>
-//#include <stdlib.h>
-//#include <string.h>
-
-#ifdef INCLUDE_DEVICE_APIS
-#ifdef INTERNAL_WEB_SERVER
-#include "urlconfig.hpp"
-#include <assert.h>
 #include <sys/stat.h>
-#endif
 
-#if EXCLUDE_SOAP == 0
-#include "soaplib.hpp"
-#include "UpnpActionComplete.hpp"
-#include "UpnpStateVarComplete.hpp"
-#endif
-
-#if EXCLUDE_GENA == 0
-#include "gena.hpp"
-#include "UpnpEventSubscribe.hpp"
-#endif
-#endif // INCLUDE_DEVICE_APIS
+#include <assert.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef _WIN32
 /* Do not include these files */
 #else
 #include <ifaddrs.h>
-//#include <sys/ioctl.h>
-//#include <sys/param.h>
-//#include <sys/types.h>
+#include <sys/ioctl.h>
+#include <sys/param.h>
+#include <sys/types.h>
 #endif
 
 // ifr_netmask is not defined on eg OmniOS/Solaris, but since
@@ -110,7 +94,7 @@
 #endif
 
 #ifdef UPNP_ENABLE_OPEN_SSL
-//#include <openssl/ssl.h>
+#include <openssl/ssl.hpp>
 #endif
 
 #ifndef IN6_IS_ADDR_GLOBAL
@@ -124,11 +108,6 @@
     ((((__const uint32_t*)(a))[0] & htonl((uint32_t)0xfe000000)) ==            \
      htonl((uint32_t)0xfc000000))
 #endif /* IN6_IS_ADDR_ULA */
-
-#if EXCLUDE_SSDP == 0
-#include "upnp.hpp"
-#include "upnp_timeout.hpp"
-#endif
 
 /*! This structure is for virtual directory callbacks */
 struct VirtualDirCallbacks virtualDirCallback;
@@ -197,7 +176,7 @@ char gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN] = {'\0'};
 /*! IPv6 ULA or GUA prefix length. (extern'ed in upnp.h) */
 unsigned gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
 
-/* ! Contains interface index. (extern'ed in upnp.h) */
+/*! Contains interface index. (extern'ed in upnp.h) */
 // moved to global.cpp
 extern unsigned gIF_INDEX;
 // unsigned gIF_INDEX = (unsigned)-1;
@@ -217,7 +196,7 @@ static Handle_Info* HandleTable[NUM_HANDLE];
 /*! a local dir which serves as webserver root */
 extern membuffer gDocumentRootDir;
 
-/* ! Maximum content-length (in bytes) that the SDK will process on an incoming
+/*! Maximum content-length (in bytes) that the SDK will process on an incoming
  * packet. Content-Length exceeding this size will be not processed and
  * error 413 (HTTP Error Code) will be returned to the remote end point. */
 // moved to global.cpp
@@ -256,10 +235,10 @@ int UpnpSdkDeviceRegisteredV4 = 0;
  * == 0 if unregistered, == 1 if registered. */
 int UpnpSdkDeviceregisteredV6 = 0;
 
-//#ifdef UPNP_HAVE_OPTSSDP
+#ifdef UPNP_HAVE_OPTSSDP
 /*! Global variable used in discovery notifications. */
 Upnp_SID gUpnpSdkNLSuuid;
-//#endif /* UPNP_HAVE_OPTSSDP */
+#endif /* UPNP_HAVE_OPTSSDP */
 
 /*! Global variable used as to store the OpenSSL context object
  * to be used for all SSL/TLS connections
@@ -311,7 +290,7 @@ exit_function:
  * \brief Initializes the global mutexes used by the UPnP SDK.
  *
  * \return UPNP_E_SUCCESS on success or UPNP_E_INIT_FAILED if a mutex could not
- *      be initialized.
+ *  be initialized.
  */
 static int UpnpInitMutexes(void) {
 #ifdef __CYGWIN__
@@ -339,7 +318,7 @@ static int UpnpInitMutexes(void) {
  * \brief Initializes the global threadm pools used by the UPnP SDK.
  *
  * \return UPNP_E_SUCCESS on success or UPNP_E_INIT_FAILED if a mutex could not
- *      be initialized.
+ *  be initialized.
  */
 static int UpnpInitThreadPools(void) {
     int ret = UPNP_E_SUCCESS;
@@ -437,7 +416,7 @@ static int UpnpInitPreamble(void) {
         return retVal;
     }
 
-#if defined INCLUDE_DEVICE_APIS && defined INTERNAL_WEB_SERVER
+#ifdef INCLUDE_DEVICE_APIS
 #if EXCLUDE_SOAP == 0
     SetSoapCallback(soap_device_callback);
 #endif
@@ -462,11 +441,11 @@ static int UpnpInitPreamble(void) {
 
 /*!
  * \brief Finishes initializing the UPnP SDK.
- *      \li The MiniServer is started, if enabled.
- *      \li The WebServer is started, if enabled.
+ *  \li The MiniServer is started, if enabled.
+ *  \li The WebServer is started, if enabled.
  *
  * \return UPNP_E_SUCCESS on success or  UPNP_E_INIT_FAILED if a mutex could not
- *      be initialized.
+ *  be initialized.
  */
 static int UpnpInitStartServers(
     /*! [in] Local Port to listen for incoming connections. */
@@ -622,9 +601,7 @@ int UpnpFinish(void) {
 #ifdef INCLUDE_CLIENT_APIS
     UpnpClient_Handle client_handle;
 #endif
-#if defined(INCLUDE_DEVICE_APIS) || defined(INCLUDE_CLIENT_APIS)
-    struct Handle_Info* temp;
-#endif
+    [[maybe_unused]] struct Handle_Info* temp;
 #ifdef UPNP_ENABLE_OPEN_SSL
     if (gSslCtx) {
         SSL_CTX_free(gSslCtx);
@@ -754,10 +731,9 @@ char* UpnpGetServerUlaGuaIp6Address(void) {
  * \brief Get a free handle.
  *
  * \return On success, an integer greater than zero or UPNP_E_OUTOF_HANDLE on
- *      failure.
+ *  failure.
  */
-#if defined(INCLUDE_DEVICE_APIS) || defined(INCLUDE_CLIENT_APIS)
-static int GetFreeHandle() {
+[[maybe_unused]] static int GetFreeHandle() {
     /* Handle 0 is not used as NULL translates to 0 when passed as a handle
      */
     int i = 1;
@@ -775,7 +751,7 @@ static int GetFreeHandle() {
  *
  * \return UPNP_E_SUCCESS if successful or UPNP_E_INVALID_HANDLE if not
  */
-static int FreeHandle(
+[[maybe_unused]] static int FreeHandle(
     /*! [in] Handle index. */
     int Upnp_Handle) {
     int ret = UPNP_E_INVALID_HANDLE;
@@ -798,7 +774,6 @@ static int FreeHandle(
 
     return ret;
 }
-#endif /* INCLUDE_DEVICE_APIS || INCLUDE_CLIENT_APIS */
 
 #ifdef INCLUDE_DEVICE_APIS
 int UpnpRegisterRootDevice(const char* DescUrl, Upnp_FunPtr Fun,
@@ -937,10 +912,10 @@ exit_function:
 }
 #endif /* INCLUDE_DEVICE_APIS */
 
+#ifdef INCLUDE_DEVICE_APIS
 /*!
  * \brief Fills the sockadr_in with miniserver information.
  */
-#ifdef INCLUDE_DEVICE_APIS
 static int GetDescDocumentAndURL(
     /* [in] pointer to server address structure. */
     Upnp_DescType descriptionType,
@@ -954,7 +929,9 @@ static int GetDescDocumentAndURL(
     IXML_Document** xmlDoc,
     /* [out] . */
     char descURL[LINE_SIZE]);
+#endif /* INCLUDE_DEVICE_APIS */
 
+#ifdef INCLUDE_DEVICE_APIS
 int UpnpRegisterRootDevice2(Upnp_DescType descriptionType,
                             const char* description_const,
                             size_t bufferLen, /* ignored */
@@ -2367,12 +2344,12 @@ int UpnpAcceptSubscription(UpnpDevice_Handle Hnd, const char* DevID_const,
 /* Now accepts an empty state list, so the code below is
  * commented out */
 #if 0
-        if (VarName == NULL || NewVal == NULL || cVariables < 0) {
-                HandleUnlock();
-                line = __LINE__;
-                ret = UPNP_E_INVALID_PARAM;
-                goto exit_function;
-        }
+    if (VarName == NULL || NewVal == NULL || cVariables < 0) {
+        HandleUnlock();
+        line = __LINE__;
+        ret = UPNP_E_INVALID_PARAM;
+        goto exit_function;
+    }
 #endif
 
     HandleUnlock();
@@ -2438,12 +2415,12 @@ int UpnpAcceptSubscriptionExt(UpnpDevice_Handle Hnd, const char* DevID_const,
 /* Now accepts an empty state list, so the code below is
  * commented out */
 #if 0
-        if (PropSet == NULL) {
-                HandleUnlock();
-                line = __LINE__;
-                ret = UPNP_E_INVALID_PARAM;
-                goto exit_function;
-        }
+    if (PropSet == NULL) {
+        HandleUnlock();
+        line = __LINE__;
+        ret = UPNP_E_INVALID_PARAM;
+        goto exit_function;
+    }
 #endif
 
     HandleUnlock();
@@ -3025,8 +3002,8 @@ int UpnpDownloadXmlDoc(const char* url, IXML_Document** xmlDoc) {
          * will fail and the function will return UPNP_E_INVALID_DESC
          * too. */
 #if 0
-                free(xml_buf);
-                return UPNP_E_INVALID_DESC;
+        free(xml_buf);
+        return UPNP_E_INVALID_DESC;
 #endif
     }
 
@@ -3549,7 +3526,7 @@ GetDeviceHandleInfoForPath([[maybe_unused]] const char* path,
             break;
         }
     }
-#endif /* INCLUDE_DEVICE_APIS */
+#endif /* defined INCLUDE_DEVICE_APIS && EXCLUDE_SOAP == 0 */
 
     *device_handle_out = -1;
     return HND_INVALID;

@@ -1405,6 +1405,9 @@ int device_main(int argc, char* argv[]) {
     int ip_mode = IP_MODE_IPV4;
     int i{};
 
+    if (!argc)
+        return UPNP_E_INVALID_ARGUMENT;
+
     SampleUtil_Initialize(linux_print);
     /* Parse options */
     for (i = 1; i < argc; i++) {
