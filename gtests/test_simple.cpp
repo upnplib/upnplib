@@ -1,10 +1,9 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-09-25
+// Redistribution only with this Copyright remark. Last modified: 2022-05-05
 
 #include "gmock/gmock.h"
-#include "gtest/gtest.h"
 
-#include <pthread.h>
+#include "pthread.h" // To find pthreads4w don't use <pthread.h>
 
 // simple mocked class
 // -------------------
@@ -40,6 +39,6 @@ TEST(simpleTestSuite, simplePthreadsTest) {
 // main entry
 // ----------
 int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
+    ::testing::InitGoogleMock(&argc, argv);
     return RUN_ALL_TESTS();
 }
