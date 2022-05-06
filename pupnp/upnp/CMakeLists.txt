@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-03-11
+# Redistribution only with this Copyright remark. Last modified: 2022-05-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -63,6 +63,7 @@ endif()
 #----------------------------------
 
 include_directories(
+    ${UPnPlib_SOURCE_DIR}/include
     ${UPnPlib_BINARY_DIR}
     ${UPnPlib_BINARY_DIR}/upnp/inc
     ${PROJECT_SOURCE_DIR}/inc
@@ -177,8 +178,8 @@ add_compile_options(
 )
 
 
-# Create libraries and create test executable for information
-#============================================================
+# Create libraries
+#=================
 if(NOT WIN32)
 
     # Shared library

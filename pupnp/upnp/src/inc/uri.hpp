@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-03-11
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,7 +42,7 @@
 //#include <sys/param.h>
 #endif
 
-//#include "UpnpGlobal.hpp" /* for */
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 //#include "UpnpInet.hpp"
 #include "winsock2.h" // For different platforms: don't use <winsock2.h>
 
@@ -217,7 +217,7 @@ void print_token(
  * 	\li == 0, if string1 is identical to string2 .
  * 	\li > 0, if string1 is greater than string2.
  */
-int token_string_casecmp(
+EXPORT_SPEC int token_string_casecmp(
     /*! [in] Token object whose buffer is to be compared. */
     token* in1,
     /*! [in] String of characters to compare with. */
@@ -313,7 +313,7 @@ char* resolve_rel_url(
  *
  * \return HTTP_SUCCESS or UPNP_E_INVALID_URL
  */
-int parse_uri(
+EXPORT_SPEC int parse_uri(
     /*! [in] Character string containing uri information to be parsed. */
     const char* in,
     /*! [in] Number of characters (strlen()) of the input string. */

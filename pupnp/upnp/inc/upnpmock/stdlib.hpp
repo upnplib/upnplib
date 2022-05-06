@@ -1,10 +1,11 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-22
+// Redistribution only with this Copyright remark. Last modified: 2022-05-06
 
 #ifndef UPNPLIB_STDLIBIF_HPP
 #define UPNPLIB_STDLIBIF_HPP
 
 #include <stdlib.h>
+#include "upnplib/port.hpp"
 
 namespace upnplib {
 
@@ -19,7 +20,7 @@ class Bstdlib {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bstdlib* stdlib_h;
+UPNPLIB_API extern Bstdlib* stdlib_h;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::stdlib_h->' so the new call looks like this:

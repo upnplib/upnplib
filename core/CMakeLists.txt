@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-03-11
+# Redistribution only with this Copyright remark. Last modified: 2022-05-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -10,6 +10,7 @@ project(UPNPLIB_CORE VERSION 0002
 
 
 include_directories(
+    ${UPnPlib_SOURCE_DIR}/include
     ${UPnPlib_BINARY_DIR}/upnp/inc
     ${PUPNP_UPNP_SOURCE_DIR}/inc
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
