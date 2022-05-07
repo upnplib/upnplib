@@ -42,8 +42,12 @@ option(UPNPLIB_WITH_GOOGLETEST "Download and build Googletest." OFF)
 
 if(UPNPLIB_WITH_GOOGLETEST)
     set (UPNPLIB_WITH_SAMPLES ON CACHE BOOL "Provide sample programs device and control point." FORCE)
+    message(STATUS "UPNPLIB_WITH_GOOGLETEST has also enabled UPNPLIB_WITH_SAMPLES")
+endif()
+
+if(UPNPLIB_WITH_SAMPLES)
     set (UPNPLIB_WITH_TOOLS ON CACHE BOOL "Make some not essential program features available like text for error numbers etc." FORCE)
-    message(STATUS "UPNPLIB_WITH_GOOGLETEST has also enabled UPNPLIB_WITH_SAMPLES and UPNPLIB_WITH_TOOLS")
+    message(STATUS "UPNPLIB_WITH_SAMPLES has also enabled UPNPLIB_WITH_TOOLS")
 endif()
 
 option(PT4W_BUILD_TESTING "Build the time and space consuming test suite of pthreads4w" OFF)
