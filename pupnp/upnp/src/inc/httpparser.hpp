@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-06
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -478,7 +478,7 @@ EXPORT_SPEC const char* method_to_str(http_method_t method);
  */
 
 #ifdef DEBUG
-void print_http_headers(
+EXPORT_SPEC void print_http_headers(
     /*! [in] HTTP Message object. */
     http_message_t* hmsg);
 #else
