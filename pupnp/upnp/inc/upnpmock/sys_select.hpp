@@ -4,7 +4,7 @@
 #ifndef UPNPLIB_SYS_SELECTIF_HPP
 #define UPNPLIB_SYS_SELECTIF_HPP
 
-#include "upnplib/port.hpp"
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #ifdef _WIN32
 #include <winsock2.h>
 #else
@@ -26,7 +26,7 @@ class Bsys_select {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-UPNPLIB_API extern Bsys_select* sys_select_h;
+EXPORT_SPEC extern Bsys_select* sys_select_h;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::sys_select_h->' so the new call looks like this:

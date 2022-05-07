@@ -53,7 +53,7 @@ struct tm* http_gmtime_r(const time_t* clock, struct tm* result);
 #define http_gmtime_r gmtime_r
 #endif
 
-int http_CancelHttpGet(/* IN */ void* Handle);
+EXPORT_SPEC int http_CancelHttpGet(/* IN */ void* Handle);
 
 /*!
  * \brief Validates URL.
@@ -229,7 +229,8 @@ EXPORT_SPEC int http_Download(const char* url, int timeout_secs,
  *      UPNP_E_SUCCESS          - On Sucess
  *      UPNP_E_INVALID_PARAM    - Invalid Parameter
  ************************************************************************/
-int http_HttpGetProgress(void* Handle, size_t* length, size_t* total);
+EXPORT_SPEC int http_HttpGetProgress(void* Handle, size_t* length,
+                                     size_t* total);
 
 /*!
  * \brief Opens a connection to the server.
@@ -585,9 +586,10 @@ void http_CalcResponseVersion(int request_major_vers, int request_minor_vers,
  *      UPNP_E_SOCKET_ERROR
  *      UPNP_E_BAD_RESPONSE
  ************************************************************************/
-int http_OpenHttpGetEx(const char* url_str, void** Handle, char** contentType,
-                       int* contentLength, int* httpStatus, int lowRange,
-                       int highRange, int timeout);
+EXPORT_SPEC int http_OpenHttpGetEx(const char* url_str, void** Handle,
+                                   char** contentType, int* contentLength,
+                                   int* httpStatus, int lowRange, int highRange,
+                                   int timeout);
 
 /************************************************************************
  * Function: get_sdk_info

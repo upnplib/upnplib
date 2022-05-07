@@ -4,6 +4,7 @@
 #ifndef UPNPLIB_STDIOIF_HPP
 #define UPNPLIB_STDIOIF_HPP
 
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #include <stdio.h>
 
 namespace upnplib {
@@ -22,7 +23,7 @@ class Bstdio {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bstdio* stdio_h;
+EXPORT_SPEC extern Bstdio* stdio_h;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::stdio_h->' so the new call looks like this:

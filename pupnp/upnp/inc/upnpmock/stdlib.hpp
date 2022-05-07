@@ -4,8 +4,8 @@
 #ifndef UPNPLIB_STDLIBIF_HPP
 #define UPNPLIB_STDLIBIF_HPP
 
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #include <stdlib.h>
-#include "upnplib/port.hpp"
 
 namespace upnplib {
 
@@ -20,7 +20,7 @@ class Bstdlib {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-UPNPLIB_API extern Bstdlib* stdlib_h;
+EXPORT_SPEC extern Bstdlib* stdlib_h;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::stdlib_h->' so the new call looks like this:

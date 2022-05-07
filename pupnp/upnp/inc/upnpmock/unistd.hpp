@@ -5,7 +5,7 @@
 #define UPNPLIB_UNISTDIF_HPP
 
 // clang-format off
-#include "upnplib/port.hpp"
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #ifdef _WIN32
   #include <fcntl.h>
   #include <winsock2.h>
@@ -33,7 +33,7 @@ class Bunistd {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-UPNPLIB_API extern Bunistd* unistd_h;
+EXPORT_SPEC extern Bunistd* unistd_h;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::unistd_h->' so the new call looks like this:

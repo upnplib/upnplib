@@ -4,6 +4,7 @@
 #ifndef UPNPLIB_STRINGIF_HPP
 #define UPNPLIB_STRINGIF_HPP
 
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #include <string.h>
 
 namespace upnplib {
@@ -18,7 +19,7 @@ class Bstring {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bstring* string_h;
+EXPORT_SPEC extern Bstring* string_h;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::string_h->' so the new call looks like this:

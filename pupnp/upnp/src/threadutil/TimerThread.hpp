@@ -92,7 +92,7 @@ typedef struct TIMEREVENT {
  * \return 0 on success, nonzero on failure. Returns error from
  * 	ThreadPoolAddPersistent on failure.
  */
-int TimerThreadInit(
+EXPORT_SPEC int TimerThreadInit(
     /*! [in] Valid timer thread pointer. */
     TimerThread* timer,
     /*! [in] Valid thread pool to use. Must be started. Must be valid for
@@ -145,7 +145,7 @@ int TimerThreadRemove(
  *
  * \return 0 if succesfull, nonzero otherwise. Always returns 0.
  */
-int TimerThreadShutdown(
+EXPORT_SPEC int TimerThreadShutdown(
     /*! [in] Valid timer thread pointer. */
     TimerThread* timer);
 

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-02
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -246,7 +246,7 @@ typedef struct THREADPOOL {
  * \li \c INVALID_POLICY if schedPolicy can't be set.
  * \li \c EMAXTHREADS if minimum threads is greater than maximum threads.
  */
-int ThreadPoolInit(
+EXPORT_SPEC int ThreadPoolInit(
     /*! Must be valid, non null, pointer to ThreadPool. */
     ThreadPool* tp,
     /*! Can be null. if not null then attr contains the following fields:
@@ -347,7 +347,7 @@ int ThreadPoolRemove(
  *
  * \return 0 on success, nonzero on failure
  */
-int ThreadPoolShutdown(
+EXPORT_SPEC int ThreadPoolShutdown(
     /*! must be valid tp. */
     ThreadPool* tp);
 
@@ -394,7 +394,7 @@ int TPJobSetFreeFunction(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-int TPAttrInit(
+EXPORT_SPEC int TPAttrInit(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr);
 
@@ -403,7 +403,7 @@ int TPAttrInit(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-int TPAttrSetMaxThreads(
+EXPORT_SPEC int TPAttrSetMaxThreads(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr,
     /*! value to set. */
@@ -414,7 +414,7 @@ int TPAttrSetMaxThreads(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-int TPAttrSetMinThreads(
+EXPORT_SPEC int TPAttrSetMinThreads(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr,
     /*! value to set. */
@@ -425,7 +425,7 @@ int TPAttrSetMinThreads(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-int TPAttrSetStackSize(
+EXPORT_SPEC int TPAttrSetStackSize(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr,
     /*! value to set. */
@@ -436,7 +436,7 @@ int TPAttrSetStackSize(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-int TPAttrSetIdleTime(
+EXPORT_SPEC int TPAttrSetIdleTime(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr,
     /*! . */
@@ -447,7 +447,7 @@ int TPAttrSetIdleTime(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-int TPAttrSetJobsPerThread(
+EXPORT_SPEC int TPAttrSetJobsPerThread(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr,
     /*! number of jobs per thread to maintain. */
@@ -480,7 +480,7 @@ int TPAttrSetSchedPolicy(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-int TPAttrSetMaxJobsTotal(
+EXPORT_SPEC int TPAttrSetMaxJobsTotal(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr,
     /*! maximum number of jobs. */

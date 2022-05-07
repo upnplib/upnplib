@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-06
+# Redistribution only with this Copyright remark. Last modified: 2022-05-07
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -230,7 +230,8 @@ add_executable(test_httpreadwrite
 #    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
     ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
-    test_httpreadwrite.cpp)
+    test_httpreadwrite.cpp
+)
 target_compile_definitions(test_httpreadwrite
 	PRIVATE UPNPLIB_SHARED)
 target_link_libraries(test_httpreadwrite
@@ -240,126 +241,144 @@ add_test(NAME ctest_httpreadwrite COMMAND test_httpreadwrite)
 # httpreadwrite: netconnect
 #--------------------------
 add_executable(test_netconnect
-    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+#    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
 
-    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
 
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/sock.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/sock.cpp
 
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
 
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
 
-    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
-    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
+#    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
-    test_httpreadwrite.d/test_netconnect.cpp
+    ./test_httpreadwrite.d/test_netconnect.cpp
 )
-target_compile_definitions(test_netconnect PRIVATE
-                            $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
-target_link_libraries(test_netconnect upnplib_gtest_tools)
+target_compile_definitions(test_netconnect
+	PRIVATE UPNPLIB_SHARED)
+target_link_libraries(test_netconnect
+        PRIVATE upnplib_gtest_tools
+	PRIVATE upnplib_shared)
 add_test(NAME ctest_netconnect COMMAND test_netconnect)
 
 
 # UpnpString
 #-----------
-add_executable(test_UpnpString ${PROJECT_SOURCE_DIR}/test_UpnpString.cpp)
-target_compile_definitions(test_UpnpString PRIVATE
-                            $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+add_executable(test_UpnpString
+        ./test_UpnpString.cpp)
+target_compile_definitions(test_UpnpString
+	PRIVATE UPNPLIB_SHARED)
+target_link_libraries(test_UpnpString
+	PRIVATE upnplib_shared)
 add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
 
 # upnpdebug
 #----------
 add_executable(test_upnpdebug
-    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
     ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
-    test_upnpdebug.cpp)
+    ./test_upnpdebug.cpp)
 target_compile_definitions(test_upnpdebug
-               PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
-target_link_libraries(test_upnpdebug upnplib_gtest_tools)
+	PRIVATE UPNPLIB_SHARED)
+target_link_libraries(test_upnpdebug
+        PRIVATE upnplib_gtest_tools
+	PRIVATE upnplib_shared)
 add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
 
 
 # upnpapi
 #--------
-set(UPNP_UPNPAPI_SOURCE_FILES
-    ${PUPNP_IXML_SOURCE_DIR}/src/attr.cpp
-    ${PUPNP_IXML_SOURCE_DIR}/src/document.cpp
-    ${PUPNP_IXML_SOURCE_DIR}/src/element.cpp
-    ${PUPNP_IXML_SOURCE_DIR}/src/ixml.cpp
-    ${PUPNP_IXML_SOURCE_DIR}/src/ixmlmembuf.cpp
-    ${PUPNP_IXML_SOURCE_DIR}/src/ixmlparser.cpp
-    ${PUPNP_IXML_SOURCE_DIR}/src/namedNodeMap.cpp
-    ${PUPNP_IXML_SOURCE_DIR}/src/node.cpp
-    ${PUPNP_IXML_SOURCE_DIR}/src/nodeList.cpp
-    $<$<CONFIG:Debug>:${PUPNP_IXML_SOURCE_DIR}/src/ixmldebug.cpp>
+#set(UPNP_UPNPAPI_SOURCE_FILES
+#    ${PUPNP_IXML_SOURCE_DIR}/src/attr.cpp
+#    ${PUPNP_IXML_SOURCE_DIR}/src/document.cpp
+#    ${PUPNP_IXML_SOURCE_DIR}/src/element.cpp
+#    ${PUPNP_IXML_SOURCE_DIR}/src/ixml.cpp
+#    ${PUPNP_IXML_SOURCE_DIR}/src/ixmlmembuf.cpp
+#    ${PUPNP_IXML_SOURCE_DIR}/src/ixmlparser.cpp
+#    ${PUPNP_IXML_SOURCE_DIR}/src/namedNodeMap.cpp
+#    ${PUPNP_IXML_SOURCE_DIR}/src/node.cpp
+#    ${PUPNP_IXML_SOURCE_DIR}/src/nodeList.cpp
+#    $<$<CONFIG:Debug>:${PUPNP_IXML_SOURCE_DIR}/src/ixmldebug.cpp>
 
-    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
-    $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_unix.cpp>
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+#    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
+#    $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_unix.cpp>
 
-    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/TimerThread.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/TimerThread.cpp
 
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/sock.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/sock.cpp
 
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
 
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
 
-    # ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
-    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
-    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
+#    # ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
+#    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
+#)
 
-    ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
-)
-
-add_executable(test_upnpapi ${UPNP_UPNPAPI_SOURCE_FILES}
-               $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/test_upnpapi_win32.cpp>
-               $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/test_upnpapi_unix.cpp>)
+add_executable(test_upnpapi
+        ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
+        $<$<BOOL:${WIN32}>:./test_upnpapi_win32.cpp>
+        $<$<NOT:$<BOOL:${WIN32}>>:./test_upnpapi_unix.cpp>)
 target_compile_definitions(test_upnpapi
-               PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+	PRIVATE UPNPLIB_SHARED)
 target_link_libraries(test_upnpapi
-                      upnplib_gtest_tools)
-add_test(NAME ctest_upnpapi COMMAND test_upnpapi
-)
+        PRIVATE upnplib_gtest_tools
+	PRIVATE upnplib_shared)
+add_test(NAME ctest_upnpapi COMMAND test_upnpapi)
 
 # LinkedList
 #-----------
 add_executable(test_LinkedList
-        ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-        ${PROJECT_SOURCE_DIR}/test_LinkedList.cpp)
+#        ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+        ./test_LinkedList.cpp)
+target_compile_definitions(test_LinkedList
+	PRIVATE UPNPLIB_SHARED)
+target_link_libraries(test_LinkedList
+	PRIVATE upnplib_shared)
 add_test(NAME ctest_LinkedList COMMAND test_LinkedList)
 
 # FreeList
 #---------
 add_executable(test_FreeList
-        ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-        ${PROJECT_SOURCE_DIR}/test_FreeList.cpp)
+#        ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+        ./test_FreeList.cpp)
+target_compile_definitions(test_FreeList
+	PRIVATE UPNPLIB_SHARED)
+target_link_libraries(test_FreeList
+	PRIVATE upnplib_shared)
 add_test(NAME ctest_FreeList COMMAND test_FreeList)
 
 # ThreadPool
 #-----------
 add_executable(test_ThreadPool
-        ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-        ${PROJECT_SOURCE_DIR}/test_ThreadPool.cpp)
+#        ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+        ./test_ThreadPool.cpp)
+target_compile_definitions(test_ThreadPool
+	PRIVATE UPNPLIB_SHARED)
+target_link_libraries(test_ThreadPool
+	PRIVATE upnplib_shared)
 add_test(NAME ctest_ThreadPool COMMAND test_ThreadPool)
 
 # TimerThread
@@ -376,25 +395,32 @@ add_test(NAME ctest_TimerThread COMMAND test_TimerThread)
 # test upnplib_gtest_tools
 #-------------------------
 add_executable(test_upnplib_gtest_tools
-        $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/tools/test_tools_win32.cpp>
-        $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/tools/test_tools_unix.cpp>)
+        $<$<BOOL:${WIN32}>:./tools/test_tools_win32.cpp>
+        $<$<NOT:$<BOOL:${WIN32}>>:./tools/test_tools_unix.cpp>)
 target_compile_definitions(test_upnplib_gtest_tools
         PRIVATE UPNPLIB_SHARED)
 target_link_libraries(test_upnplib_gtest_tools
-        PRIVATE upnplib_gtest_tools)
+        PRIVATE upnplib_gtest_tools
+	PRIVATE upnplib_shared)
 add_test(NAME ctest_upnplib_gtest_tools COMMAND test_upnplib_gtest_tools)
 
 # upnptools
 #----------
-add_executable(test_upnptools test_upnptools.cpp)
+add_executable(test_upnptools
+        ./test_upnptools.cpp)
 target_compile_definitions(test_upnptools
-        PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
-add_test(NAME ctest_upnptools COMMAND test_upnptools
-)
-add_executable(test_upnptools_em test_upnptools.cpp)
+	PRIVATE UPNPLIB_SHARED)
+target_link_libraries(test_upnptools
+	PRIVATE upnplib_shared)
+add_test(NAME ctest_upnptools COMMAND test_upnptools)
+
+add_executable(test_upnptools_em
+        ./test_upnptools.cpp)
 target_compile_definitions(test_upnptools_em
         PRIVATE UPNPLIB_PUPNP_EMULATION
-        PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+	PRIVATE UPNPLIB_SHARED)
+target_link_libraries(test_upnptools_em
+	PRIVATE upnplib_shared)
 add_test(NAME ctest_upnptools_em COMMAND test_upnptools_em)
 
 # simple test

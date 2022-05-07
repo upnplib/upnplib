@@ -36,19 +36,19 @@ add_library (ixml_shared SHARED
     ${IXML_SOURCES}
 )
 
-target_compile_definitions (ixml_shared
-    PRIVATE UPNPLIB_SHARED
-    PRIVATE UPNPLIB_EXPORTS
-    PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-    PRIVATE $<$<CONFIG:Debug>:DEBUG>
-    PRIVATE $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
+target_compile_definitions (ixml_shared PUBLIC
+    UPNPLIB_SHARED
+    UPNPLIB_EXPORTS
+    $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
+    $<$<CONFIG:Debug>:DEBUG>
+    $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
 )
 
 add_library (ixml_static STATIC
     ${IXML_SOURCES}
 )
-target_compile_definitions (ixml_static
-    PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-    PRIVATE $<$<CONFIG:Debug>:DEBUG>
-    PRIVATE $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
+target_compile_definitions (ixml_static PUBLIC
+    $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
+    $<$<CONFIG:Debug>:DEBUG>
+    $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
 )

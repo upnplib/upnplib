@@ -1,15 +1,14 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-05
+# Redistribution only with this Copyright remark. Last modified: 2022-05-07
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(GTESTS_SAMPLE VERSION 0001
+project(GTESTS_SAMPLE VERSION 0002
                   DESCRIPTION "Tests for upnplib sample programs"
                   HOMEPAGE_URL "https://github.com/upnplib")
 
-
-add_executable(test_tv_device
+set(UPNPLIB_TV_DEVICE_SOURCE_FILES
     ${PUPNP_IXML_SOURCE_DIR}/src/node.cpp
     ${PUPNP_IXML_SOURCE_DIR}/src/document.cpp
     ${PUPNP_IXML_SOURCE_DIR}/src/nodeList.cpp
@@ -83,11 +82,16 @@ add_executable(test_tv_device
     ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
     $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
     $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_unix.cpp>
-
-    ./test_tv_device.cpp
 )
 
-target_compile_definitions (test_tv_device PRIVATE
+add_executable(test_tv_device
+#    ${UPNPLIB_TV_DEVICE_SOURCE_FILES}
+#    ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
+#    ${UPNPLIB_SAMPLE_SOURCE_DIR}/common/sample_util.cpp
+    ./test_tv_device.cpp
+)
+target_compile_definitions(test_tv_device PUBLIC
+    UPNPLIB_SHARED
     UPNP_HAVE_TOOLS
     UPNP_HAVE_CLIENT
     UPNP_HAVE_WEBSERVER
@@ -96,12 +100,10 @@ target_compile_definitions (test_tv_device PRIVATE
     UPNP_HAVE_GENA
     INCLUDE_DEVICE_APIS
     $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
-    # There are traditional min/max macros on MS Windows which conflict
-    # with the C++ std::min|max functions. Following switch disable the
-    # macros.
-    $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
 )
-
+target_link_libraries(test_tv_device
+    PUBLIC upnplib_shared
+)
 add_test(NAME ctest_tv_device COMMAND test_tv_device)
 #set_tests_properties( ctest_tv_device PROPERTIES
 #    ENVIRONMENT "PATH=$ENV{PATH};${UPnPlib_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}" )

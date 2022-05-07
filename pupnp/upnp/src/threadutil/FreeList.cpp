@@ -37,7 +37,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-UPNPLIB_API int FreeListInit(FreeList* free_list, size_t elementSize,
+EXPORT_SPEC int FreeListInit(FreeList* free_list, size_t elementSize,
                              int maxFreeListLength) {
     assert(free_list != NULL);
 
@@ -51,7 +51,7 @@ UPNPLIB_API int FreeListInit(FreeList* free_list, size_t elementSize,
     return 0;
 }
 
-UPNPLIB_API void* FreeListAlloc(FreeList* free_list) {
+EXPORT_SPEC void* FreeListAlloc(FreeList* free_list) {
     FreeListNode* ret = NULL;
 
     assert(free_list != NULL);
@@ -70,7 +70,7 @@ UPNPLIB_API void* FreeListAlloc(FreeList* free_list) {
     return ret;
 }
 
-UPNPLIB_API int FreeListFree(FreeList* free_list, void* element) {
+EXPORT_SPEC int FreeListFree(FreeList* free_list, void* element) {
     FreeListNode* temp = NULL;
 
     assert(free_list != NULL);
@@ -90,7 +90,7 @@ UPNPLIB_API int FreeListFree(FreeList* free_list, void* element) {
     return 0;
 }
 
-UPNPLIB_API int FreeListDestroy(FreeList* free_list) {
+EXPORT_SPEC int FreeListDestroy(FreeList* free_list) {
     FreeListNode* temp = NULL;
     int i = 0;
 

@@ -4,6 +4,7 @@
 #ifndef UPNPLIB_PTHREADIF_HPP
 #define UPNPLIB_PTHREADIF_HPP
 
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #include <pthread.h>
 
 namespace upnplib {
@@ -53,7 +54,7 @@ class Bpthread {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Bpthread* pthread_h;
+EXPORT_SPEC extern Bpthread* pthread_h;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::pthread_h->' so the new call looks like this:

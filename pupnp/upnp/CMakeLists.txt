@@ -197,7 +197,7 @@ if(NOT WIN32)
     #       RUNTIME_OUTPUT_DIRECTORY lib  # used if WIN32
     )
     target_link_libraries(upnplib_shared
-            PRIVATE ixml_shared
+            PUBLIC ixml_shared
     )
     #target_link_options(upnplib_shared
     #        PRIVATE -frtti
@@ -228,10 +228,6 @@ else() # WIN32
     #----------------
     add_compile_definitions(
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
-        # There are traditional min/max macros on MS Windows which conflict
-        # with the C++ std::min|max functions. Following switch disable the
-        # macros.
-        $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
     )
 
     # Shared library

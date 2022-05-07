@@ -4,7 +4,7 @@
 #ifndef UPNPLIB_NETDBIF_HPP
 #define UPNPLIB_NETDBIF_HPP
 
-#include "upnplib/port.hpp" // for UPNPLIB_API
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #ifdef _WIN32
 #include <ws2tcpip.h>
 #else
@@ -30,7 +30,7 @@ class Bnetdb {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-UPNPLIB_API extern Bnetdb* netdb_h;
+EXPORT_SPEC extern Bnetdb* netdb_h;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::netdb_h->' so the new call looks like this:

@@ -96,10 +96,14 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(UPNP_DEBUG_SUFFIX "d")
 endif()
 
-# General define DEBUG if configuration is Debug, otherwise define NDEBUG.
-# TODO: manage setting NDEBUG is done by cmake by default. Check against it.
 add_compile_definitions(
+    # General define DEBUG if configuration is Debug, otherwise define NDEBUG.
+    # TODO: manage setting NDEBUG is done by cmake by default. Check against it.
     PRIVATE $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
+    # There are traditional min/max macros on MS Windows which conflict
+    # with the C++ std::min|max functions. Following switch disable the
+    # macros.
+    PRIVATE $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
 )
 
 # We have visibility support as described at https://gcc.gnu.org/wiki/Visibility

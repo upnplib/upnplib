@@ -36,6 +36,7 @@
  * \file
  */
 
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #include "ithread.hpp"
 
 #include <errno.h>
@@ -69,7 +70,7 @@ typedef struct FREELIST {
  *	\li \c 0 on success.
  *	\li \c EINVAL on failure.
  */
-UPNPLIB_API int FreeListInit(
+EXPORT_SPEC int FreeListInit(
     /*! Must be valid, non null, pointer to a linked list. */
     FreeList* free_list,
     /*! Size of elements to store in free list. */
@@ -86,7 +87,7 @@ UPNPLIB_API int FreeListInit(
  *
  * \return Non NULL on success. NULL on failure.
  */
-UPNPLIB_API void* FreeListAlloc(
+EXPORT_SPEC void* FreeListAlloc(
     /*! Must be valid, non null, pointer to a linked list. */
     FreeList* free_list);
 
@@ -100,7 +101,7 @@ UPNPLIB_API void* FreeListAlloc(
  *	\li \c 0 on success.
  *	\li \c EINVAL on failure.
  */
-UPNPLIB_API int FreeListFree(
+EXPORT_SPEC int FreeListFree(
     /*! Must be valid, non null, pointer to a free list. */
     FreeList* free_list,
     /*! Must be a pointer allocated by FreeListAlloc. */
@@ -113,7 +114,7 @@ UPNPLIB_API int FreeListFree(
  *	\li \c 0 on success.
  *	\li \c EINVAL on failure.
  */
-UPNPLIB_API int FreeListDestroy(
+EXPORT_SPEC int FreeListDestroy(
     /*! Must be valid, non null, pointer to a linked list. */
     FreeList* free_list);
 
