@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-05
+# Redistribution only with this Copyright remark. Last modified: 2022-05-07
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -54,6 +54,11 @@ endif()
 # PTW32_STATIC_LIB - for using the static pthreads4W library
 # The option is contained in cmake/upnpconfig.hpp.cmake.
 option(PTW32_STATIC_LIB "For using the static pthreads4w library" OFF)
+
+# General settings given to the program
+add_compile_definitions(
+    $<$<BOOL:${UPNPLIB_WITH_TOOLS}>:UPNP_HAVE_TOOLS>
+)
 
 
 #################################

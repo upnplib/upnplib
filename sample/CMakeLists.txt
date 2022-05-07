@@ -1,10 +1,10 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-03-11
+# Redistribution only with this Copyright remark. Last modified: 2022-05-07
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNPLIB_SAMPLE VERSION 0003
+project(UPNPLIB_SAMPLE VERSION 0004
                        DESCRIPTION "Simple sample to use the library"
                        HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -34,10 +34,6 @@ include_directories(
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}
-)
-
-add_compile_definitions(
-        PRIVATE UPNP_HAVE_TOOLS
 )
 
 link_libraries(ixml_shared

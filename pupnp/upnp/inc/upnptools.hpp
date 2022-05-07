@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-17
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -63,7 +63,7 @@ EXPORT_SPEC const char* UpnpGetErrorMessage(
     int errorcode);
 
 /* Function declarations only if tools compiled into the library */
-#if UPNP_HAVE_TOOLS
+#ifdef UPNP_HAVE_TOOLS
 
 /*!
  * \brief Combines a base URL and a relative URL into a single absolute URL.

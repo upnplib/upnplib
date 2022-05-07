@@ -8,6 +8,9 @@ project(GTESTS_SAMPLE VERSION 0002
                   DESCRIPTION "Tests for upnplib sample programs"
                   HOMEPAGE_URL "https://github.com/upnplib")
 
+if(FALSE)
+# Currently not used but having available for reference.
+# We link against the upnplib library (see below).
 set(UPNPLIB_TV_DEVICE_SOURCE_FILES
     ${PUPNP_IXML_SOURCE_DIR}/src/node.cpp
     ${PUPNP_IXML_SOURCE_DIR}/src/document.cpp
@@ -76,30 +79,28 @@ set(UPNPLIB_TV_DEVICE_SOURCE_FILES
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
 
-    ${UPNPLIB_SAMPLE_SOURCE_DIR}/common/sample_util.cpp
-
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
     $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
     $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_unix.cpp>
 )
+endif()
 
 add_executable(test_tv_device
 #    ${UPNPLIB_TV_DEVICE_SOURCE_FILES}
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
-#    ${UPNPLIB_SAMPLE_SOURCE_DIR}/common/sample_util.cpp
+    ${UPNPLIB_SAMPLE_SOURCE_DIR}/common/sample_util.cpp
     ./test_tv_device.cpp
 )
 target_compile_definitions(test_tv_device PUBLIC
     UPNPLIB_SHARED
-    UPNP_HAVE_TOOLS
-    UPNP_HAVE_CLIENT
-    UPNP_HAVE_WEBSERVER
-    UPNP_HAVE_SSDP
-    UPNP_HAVE_SOAP
-    UPNP_HAVE_GENA
-    INCLUDE_DEVICE_APIS
     $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+#    UPNP_HAVE_TOOLS
+#    UPNP_HAVE_CLIENT
+#    UPNP_HAVE_WEBSERVER
+#    UPNP_HAVE_SSDP
+#    UPNP_HAVE_SOAP
+#    UPNP_HAVE_GENA
+#    INCLUDE_DEVICE_APIS
 )
 target_link_libraries(test_tv_device
     PUBLIC upnplib_shared
