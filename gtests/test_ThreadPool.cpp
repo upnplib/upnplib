@@ -17,13 +17,14 @@
 // ./gtests/build/test_ThreadPool_old  --gtest_brief=1 --gtest_repeat=10000
 // --gtest_filter=ThreadPoolNormalTestSuite.init_and_shutdown_threadpool
 
-#include "gtest/gtest.h"
+//#include "pupnp/upnp/src/threadutil/FreeList.cpp"
+//#include "pupnp/upnp/src/threadutil/LinkedList.cpp"
 
-#include "pupnp/upnp/src/threadutil/FreeList.cpp"
-#include "pupnp/upnp/src/threadutil/LinkedList.cpp"
-
-#include "pupnp/upnp/src/threadutil/ThreadPool.cpp"
+#include "ThreadPool.hpp"
 #include "upnplib/ThreadPool.hpp"
+//#include "pupnp/upnp/src/threadutil/ThreadPool.cpp"
+
+#include "gtest/gtest.h"
 
 namespace upnplib {
 

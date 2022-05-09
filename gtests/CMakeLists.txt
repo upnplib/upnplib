@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-07
+# Redistribution only with this Copyright remark. Last modified: 2022-05-08
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -108,14 +108,16 @@ add_dependencies(upnplib_gtest_tools gtest gtest_main gmock gmock_main)
 # sock
 #-----
 add_executable(test_sock
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-#    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
-    ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
-        ./test_sock.cpp)
-target_compile_definitions(test_sock
-	PRIVATE UPNPLIB_SHARED)
-target_link_libraries(test_sock
-	PRIVATE upnplib_shared)
+        ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+        $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
+        ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
+        ./test_sock.cpp
+)
+target_link_libraries(test_sock PRIVATE
+        $<IF:$<BOOL:${WIN32}>,ixml_static,ixml_shared>
+)
 add_test(NAME ctest_sock COMMAND test_sock)
 
 # strintmap
@@ -186,89 +188,88 @@ add_test(NAME ctest_url_class COMMAND test_url_class)
 
 # httpparser
 #-----------
+# Not using the library and compiling direct from needed sources because I
+# include the source file httpparser.cpp into the gtest so we can use static
+# functions.
 add_executable(test_httpparser
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
-#    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
+    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
+    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
     ./test_httpparser.cpp)
-target_compile_definitions(test_httpparser
-	PRIVATE UPNPLIB_SHARED)
-target_link_libraries(test_httpparser
-	PRIVATE upnplib_shared)
 add_test(NAME ctest_httpparser COMMAND test_httpparser)
 
 
 # httpreadwrite incl. statcodes
 #------------------------------
+# Not using the library and compiling direct from needed sources because I
+# include the source file httpreadwrite.cpp into the gtest so we can use static
+# functions.
 add_executable(test_httpreadwrite
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-#    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
+    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
 
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
 
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/sock.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/sock.cpp
 
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
 
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
 
-#    # ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
-#    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
+    # ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
+    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
     ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
     test_httpreadwrite.cpp
 )
-target_compile_definitions(test_httpreadwrite
-	PRIVATE UPNPLIB_SHARED)
-target_link_libraries(test_httpreadwrite
-	PRIVATE upnplib_shared)
+target_link_libraries(test_httpreadwrite PRIVATE
+    $<IF:$<BOOL:${WIN32}>,ixml_static,ixml_shared>
+)
 add_test(NAME ctest_httpreadwrite COMMAND test_httpreadwrite)
 
 # httpreadwrite: netconnect
 #--------------------------
+# Not using the library and compiling direct from needed sources because I
+# include the source file httpreadwrite.cpp into the gtest so we can use static
+# functions.
 add_executable(test_netconnect
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-#    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
+    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
 
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
 
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/sock.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/sock.cpp
 
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
 
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
 
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
 
-#    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
-#    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
+    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
     ./test_httpreadwrite.d/test_netconnect.cpp
 )
-target_compile_definitions(test_netconnect
-	PRIVATE UPNPLIB_SHARED)
-target_link_libraries(test_netconnect
-        PRIVATE upnplib_gtest_tools
-	PRIVATE upnplib_shared)
 add_test(NAME ctest_netconnect COMMAND test_netconnect)
 
 
@@ -276,10 +277,6 @@ add_test(NAME ctest_netconnect COMMAND test_netconnect)
 #-----------
 add_executable(test_UpnpString
         ./test_UpnpString.cpp)
-target_compile_definitions(test_UpnpString
-	PRIVATE UPNPLIB_SHARED)
-target_link_libraries(test_UpnpString
-	PRIVATE upnplib_shared)
 add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
 
 # upnpdebug

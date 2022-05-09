@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-03-09
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,7 +37,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-EXPORT_SPEC int FreeListInit(FreeList* free_list, size_t elementSize,
+int FreeListInit(FreeList* free_list, size_t elementSize,
                              int maxFreeListLength) {
     assert(free_list != NULL);
 
@@ -51,7 +51,7 @@ EXPORT_SPEC int FreeListInit(FreeList* free_list, size_t elementSize,
     return 0;
 }
 
-EXPORT_SPEC void* FreeListAlloc(FreeList* free_list) {
+void* FreeListAlloc(FreeList* free_list) {
     FreeListNode* ret = NULL;
 
     assert(free_list != NULL);
@@ -70,7 +70,7 @@ EXPORT_SPEC void* FreeListAlloc(FreeList* free_list) {
     return ret;
 }
 
-EXPORT_SPEC int FreeListFree(FreeList* free_list, void* element) {
+int FreeListFree(FreeList* free_list, void* element) {
     FreeListNode* temp = NULL;
 
     assert(free_list != NULL);
@@ -90,7 +90,7 @@ EXPORT_SPEC int FreeListFree(FreeList* free_list, void* element) {
     return 0;
 }
 
-EXPORT_SPEC int FreeListDestroy(FreeList* free_list) {
+int FreeListDestroy(FreeList* free_list) {
     FreeListNode* temp = NULL;
     int i = 0;
 

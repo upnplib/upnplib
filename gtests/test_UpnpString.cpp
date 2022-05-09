@@ -1,8 +1,7 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-14
+// Redistribution only with this Copyright remark. Last modified: 2022-05-08
 
 #include "gmock/gmock.h"
-#include "gtest/gtest.h"
 
 #undef HAVE_STRNLEN
 #undef HAVE_STRNDUP
@@ -36,7 +35,7 @@ void* calloc(size_t nmemb, size_t size) {
 }
 void free(void* ptr) { return ptrMock_free->free(ptr); }
 
-#include "api/UpnpString.cpp"
+#include "pupnp/upnp/src/api/UpnpString.cpp"
 
 } // namespace
 
@@ -296,7 +295,7 @@ TEST(UpnpStringDeathTest, clearUpnpString) {
 }
 
 int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
+    ::testing::InitGoogleMock(&argc, argv);
     // https://google.github.io/googletest/advanced.html#death-test-styles
 #ifndef _WIN32
     // On MS Windows this flag isn't defined (error LNK2019: unresolved external

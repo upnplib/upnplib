@@ -1,16 +1,17 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-08
+// Redistribution only with this Copyright remark. Last modified: 2022-05-08
 
-#include "gmock/gmock.h"
 #include "upnplib/upnptools.hpp"
-#include "upnpmock/netdb.hpp"
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
 #include "pupnp/upnp/src/genlib/net/http/httpreadwrite.cpp"
 #include "core/src/genlib/net/http/httpreadwrite.cpp"
 
+#include "upnpmock/netdb.hpp"
 #include "upnplib/uri.hpp"
+
+#include "gmock/gmock.h"
 
 using ::testing::_;
 using ::testing::DoAll;

@@ -2,6 +2,7 @@
 // Redistribution only with this Copyright remark. Last modified: 2022-02-24
 
 #include "upnplib/httpreadwrite.hpp"
+#include <stdexcept>
 
 namespace upnplib {
 

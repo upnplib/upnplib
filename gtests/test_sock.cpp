@@ -5,6 +5,7 @@
 // https://stackoverflow.com/a/16010670/5014688
 
 #include "gmock/gmock.h"
+#include "uri.hpp"
 #include "upnplib/upnptools.hpp"
 #include "upnpmock/sys_socket.hpp"
 #include "upnpmock/sys_select.hpp"

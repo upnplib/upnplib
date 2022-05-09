@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-02
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,8 +38,6 @@
  * \file
  */
 
-//#include "FreeList.h"
-//#include "LinkedList.h"
 #include "ThreadPool.hpp"
 //#include "ithread.hpp"
 
@@ -105,7 +103,7 @@ EXPORT_SPEC int TimerThreadInit(
  * \return 0 on success, nonzero on failure, EOUTOFMEM if not enough memory
  * 	to schedule job.
  */
-int TimerThreadSchedule(
+EXPORT_SPEC int TimerThreadSchedule(
     /*! [in] Valid timer thread pointer. */
     TimerThread* timer,
     /*! [in] time of event. Either in absolute seconds, or relative
@@ -128,7 +126,7 @@ int TimerThreadSchedule(
  *
  * \return 0 on success, INVALID_EVENT_ID on failure.
  */
-int TimerThreadRemove(
+EXPORT_SPEC int TimerThreadRemove(
     /*! [in] Valid timer thread pointer. */
     TimerThread* timer,
     /*! [in] Id of event to remove. */

@@ -1,10 +1,9 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-01
+// Redistribution only with this Copyright remark. Last modified: 2022-05-08
 
 #include "gtest/gtest.h"
-//#include "gmock/gmock.h"
 
-#include "genlib/util/strintmap.cpp"
+#include "strintmap.hpp"
 #include "httpparser.hpp" // for HTTPMETHOD* constants
 
 namespace upnplib {
