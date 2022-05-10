@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-03-11
+# Redistribution only with this Copyright remark. Last modified: 2022-05-12
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(PUPNP_UPNP VERSION 0013
+project(PUPNP_UPNP VERSION 0016
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -78,7 +78,7 @@ include_directories(
     ${pthreads4w_SOURCE_DIR}
 )
 
-set(UPNP_SOURCE_FILES
+set(PUPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${PROJECT_SOURCE_DIR}/src/threadutil/LinkedList.cpp
     ${PROJECT_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
@@ -154,7 +154,6 @@ set(UPNP_SOURCE_FILES
 )
 
 add_compile_definitions(
-    $<$<BOOL:${UPNPLIB_DEF_TOOLS}>:UPNP_HAVE_TOOLS>
     $<$<BOOL:${UPNPLIB_DEF_CLIENT}>:UPNP_HAVE_CLIENT>
     $<$<BOOL:${UPNPLIB_DEF_DEVICE}>:UPNP_HAVE_DEVICE>
     $<$<BOOL:${UPNPLIB_DEF_WEBSERVER}>:UPNP_HAVE_WEBSERVER>
@@ -177,43 +176,50 @@ add_compile_options(
 )
 
 
-# Create libraries and create test executable for information
-#============================================================
+# Create libraries
+#=================
 if(NOT WIN32)
 
-    # Shared library
-    #---------------
-    add_library(upnplib_shared SHARED
-            ${UPNP_SOURCE_FILES}
+    # pupnp native shared library
+    #----------------------------
+    add_library(pupnp_native_shared SHARED
+            ${PUPNP_SOURCE_FILES}
     )
-    target_compile_definitions (upnplib_shared
-            PRIVATE UPNPLIB_SHARED
-            PRIVATE UPNPLIB_EXPORTS
-    )
-    set_target_properties(upnplib_shared PROPERTIES
-            OUTPUT_NAME upnplib  # lib*.so will be added
+    set_target_properties(pupnp_native_shared PROPERTIES
             LIBRARY_OUTPUT_DIRECTORY lib  # used if not WIN32
     #       RUNTIME_OUTPUT_DIRECTORY lib  # used if WIN32
+            OUTPUT_NAME pupnp_native  # lib*.so will be added
     )
-    target_link_libraries(upnplib_shared
-            PRIVATE ixml_shared
+    target_compile_definitions(pupnp_native_shared
+            PRIVATE UPNPLIB_SHARED
+            PRIVATE UPNPLIB_EXPORTS
+            PRIVATE UPNPLIB_WITH_NATIVE_PUPNP
     )
-    #target_link_options(upnplib_shared
+    target_link_options(pupnp_native_shared
+        PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/upnp/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
+    )
+    target_link_libraries(pupnp_native_shared
+            PUBLIC ixml_shared
+    )
+    #target_link_options(pupnp_native_shared
     #        PRIVATE -frtti
     #        PRIVATE -fno-rtti
     #)
 
-    # Static library
-    #---------------
-    add_library(upnplib_static STATIC
-            ${UPNP_SOURCE_FILES}
+    # pupnp native static library
+    #----------------------------
+    add_library(pupnp_native_static STATIC
+            ${PUPNP_SOURCE_FILES}
     )
-    set_target_properties(upnplib_static PROPERTIES
-            OUTPUT_NAME upnplib  # lib*.a will be added
+    set_target_properties(pupnp_native_static PROPERTIES
             ARCHIVE_OUTPUT_DIRECTORY lib
+            OUTPUT_NAME pupnp_native  # lib*.a will be added
     )
-    target_link_libraries(upnplib_static
-            PRIVATE ixml_static
+    target_compile_definitions(pupnp_native_static
+            PRIVATE UPNPLIB_WITH_NATIVE_PUPNP
+    )
+    target_link_libraries(pupnp_native_static
+            INTERFACE ixml_static
     )
 
 else() # WIN32
@@ -227,24 +233,20 @@ else() # WIN32
     #----------------
     add_compile_definitions(
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
-        # There are traditional min/max macros on MS Windows which conflict
-        # with the C++ std::min|max functions. Following switch disable the
-        # macros.
-        $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
     )
 
     # Shared library
     #---------------
-    add_library(upnplib_shared SHARED
-            ${UPNP_SOURCE_FILES}
+    add_library(pupnp_native_shared SHARED
+            ${PUPNP_SOURCE_FILES}
     )
-    target_compile_definitions(upnplib_shared
+    target_compile_definitions(pupnp_native_shared
             PRIVATE UPNPLIB_SHARED
             PRIVATE UPNPLIB_EXPORTS
             PRIVATE $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     # In addition to pthreads we need some more system libraries here
-    target_link_libraries(upnplib_shared
+    target_link_libraries(pupnp_native_shared
             PRIVATE ws2_32   # winsock to support sockets
             PRIVATE iphlpapi # ip helper interface to get network management tools
             PRIVATE ixml_static
@@ -256,13 +258,13 @@ else() # WIN32
 
     # Static library
     #---------------
-    add_library(upnplib_static STATIC
-            ${UPNP_SOURCE_FILES}
+    add_library(pupnp_native_static STATIC
+            ${PUPNP_SOURCE_FILES}
     )
-    target_compile_definitions(upnplib_static
+    target_compile_definitions(pupnp_native_static
             PRIVATE $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
-    target_link_libraries(upnplib_static
+    target_link_libraries(pupnp_native_static
             PRIVATE ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 

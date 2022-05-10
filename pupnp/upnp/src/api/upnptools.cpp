@@ -119,6 +119,7 @@ struct ErrorString ErrorMessages[] = {
     {UPNP_E_INTERNAL_ERROR, "UPNP_E_INTERNAL_ERROR"},
 };
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
 const char* UpnpGetErrorMessage(int rc) {
     size_t i;
 
@@ -130,6 +131,7 @@ const char* UpnpGetErrorMessage(int rc) {
 
     return "Unknown error code";
 }
+#endif
 
 /* Function declarations only if tools compiled into the library */
 #if UPNP_HAVE_TOOLS

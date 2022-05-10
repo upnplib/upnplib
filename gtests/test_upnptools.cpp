@@ -1,8 +1,10 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-08
+// Redistribution only with this Copyright remark. Last modified: 2022-05-10
+
+#include "upnplib/upnptools.hpp"
+#include "upnp.hpp"
 
 #include "gtest/gtest.h"
-#include "core/src/api/upnptools.cpp"
 
 //
 namespace upnplib {

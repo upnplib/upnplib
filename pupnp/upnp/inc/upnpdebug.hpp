@@ -102,7 +102,7 @@ typedef enum Upnp_LogLevel_e {
  *
  * \return -1 if fails or UPNP_E_SUCCESS if succeeds.
  */
-UPNPLIB_API int UpnpInitLog(void);
+EXPORT_SPEC int UpnpInitLog(void);
 
 #if defined NDEBUG && !defined UPNP_DEBUG_C
 #define UpnpInitLog UpnpInitLog_Inlined
@@ -111,7 +111,7 @@ static UPNP_INLINE int UpnpInitLog_Inlined(void) { return UPNP_E_SUCCESS; }
 /*!
  * \brief Set the log level (see \c Upnp_LogLevel).
  */
-UPNPLIB_API void UpnpSetLogLevel(
+EXPORT_SPEC void UpnpSetLogLevel(
     /*! [in] Log level. */
     Upnp_LogLevel log_level);
 
@@ -126,7 +126,7 @@ static UPNP_INLINE void UpnpSetLogLevel_Inlined(Upnp_LogLevel log_level) {
 /*!
  * \brief Closes the log files.
  */
-UPNPLIB_API void UpnpCloseLog(void);
+EXPORT_SPEC void UpnpCloseLog(void);
 
 #if defined NDEBUG && !defined UPNP_DEBUG_C
 #define UpnpCloseLog UpnpCloseLog_Inlined
@@ -138,7 +138,7 @@ static UPNP_INLINE void UpnpCloseLog_Inlined(void) {}
  * second parameter has been kept for compatibility but is ignored.
  * Use a NULL file name for logging to stderr.
  */
-void UpnpSetLogFileNames(
+EXPORT_SPEC void UpnpSetLogFileNames(
     /*! [in] Name of the log file. */
     const char* fileName,
     /*! [in] Ignored. */
@@ -161,7 +161,7 @@ static UPNP_INLINE void UpnpSetLogFileNames_Inlined(const char* ErrFileName,
  * \return NULL if the module is turn off for debug otherwise returns the
  *	right FILE pointer.
  */
-UPNPLIB_API FILE* UpnpGetDebugFile(
+EXPORT_SPEC FILE* UpnpGetDebugFile(
     /*! [in] The level of the debug logging. It will decide whether debug
      * statement will go to standard output, or any of the log files. */
     Upnp_LogLevel level,
@@ -182,7 +182,7 @@ static UPNP_INLINE FILE* UpnpGetDebugFile_Inlined(Upnp_LogLevel level,
  * \brief Prints the debug statement either on the standard output or log file
  * along with the information from where this debug statement is coming.
  */
-UPNPLIB_API void UpnpPrintf(
+EXPORT_SPEC void UpnpPrintf(
     /*! [in] The level of the debug logging. It will decide whether debug
      * statement will go to standard output, or any of the log files. */
     Upnp_LogLevel DLevel,

@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-05
+# Redistribution only with this Copyright remark. Last modified: 2022-05-10
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -38,7 +38,24 @@ option(UPNPLIB_WITH_IPV6 "Enable the IPv6 protocol stack." OFF)
 option(UPNPLIB_WITH_BLOCKTCP "Enable the TCP protocol stack to wait (blocking) until receiving an answer or timed out." OFF)
 option(UPNPLIB_WITH_IXML "Enable IXML script support." OFF)
 option(UPNPLIB_WITH_SAMPLES "Provide sample programs device and control point." OFF)
+option(UPNPLIB_WITH_NATIVE_PUPNP "Build the library with old native PUPNP code." OFF)
 option(UPNPLIB_WITH_GOOGLETEST "Download and build Googletest." OFF)
+option(GTESTS_WITH_SHARED_LIBS "Build GOOGLETEST libraries shared instead of default static." OFF)
+
+if(UPNPLIB_WITH_GOOGLETEST)
+    set (UPNPLIB_WITH_SAMPLES ON CACHE BOOL "Provide sample programs device and control point." FORCE)
+    message(STATUS "UPNPLIB_WITH_GOOGLETEST has also enabled UPNPLIB_WITH_SAMPLES")
+endif()
+
+if(UPNPLIB_WITH_SAMPLES)
+    set (UPNPLIB_WITH_TOOLS ON CACHE BOOL "Make some not essential program features available like text for error numbers etc." FORCE)
+    message(STATUS "UPNPLIB_WITH_SAMPLES has also enabled UPNPLIB_WITH_TOOLS")
+endif()
+
+if(GTESTS_WITH_SHARED_LIBS)
+    set (BUILD_SHARED_LIBS ON CACHE INTERNAL
+        "This option belongs only to GOOGLETEST and build its libraries shared.")  # Implies FORCE
+endif()
 
 option(PT4W_BUILD_TESTING "Build the time and space consuming test suite of pthreads4w" OFF)
 # gtest_disable_pthreads is an option of the GoogleTest package set to OFF by
@@ -55,6 +72,10 @@ endif()
 # The option is contained in cmake/upnpconfig.hpp.cmake.
 option(PTW32_STATIC_LIB "For using the static pthreads4w library" OFF)
 
+# General settings given to the program
+add_compile_definitions(
+    $<$<BOOL:${UPNPLIB_WITH_TOOLS}>:UPNP_HAVE_TOOLS>
+)
 
 #################################
 # Compiling                     #
@@ -96,10 +117,14 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(UPNP_DEBUG_SUFFIX "d")
 endif()
 
-# General define DEBUG if configuration is Debug, otherwise define NDEBUG.
-# TODO: manage setting NDEBUG is done by cmake by default. Check against it.
 add_compile_definitions(
+    # General define DEBUG if configuration is Debug, otherwise define NDEBUG.
+    # TODO: manage setting NDEBUG is done by cmake by default. Check against it.
     PRIVATE $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
+    # There are traditional min/max macros on MS Windows which conflict
+    # with the C++ std::min|max functions. Following switch disable the
+    # macros.
+    PRIVATE $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
 )
 
 # We have visibility support as described at https://gcc.gnu.org/wiki/Visibility
@@ -485,7 +510,7 @@ add_test(NAME ctest_build_no_option ${UPNPLIB_BUILD_COMMAND}
                         -DUPNPLIB_WITH_BLOCKTCP=NO
                         -DUPNPLIB_WITH_IXML=NO
                         -DUPNPLIB_WITH_SAMPLES=NO
-                        -DUPNPLIB_WITH_GOOGLETEST=NO -DBUILD_SHARED_LIBS=YES
+                        -DUPNPLIB_WITH_GOOGLETEST=NO -DGTESTS_WITH_SHARED_LIBS=YES
 )
 add_test(NAME ctest_build_no_option_debug ${UPNPLIB_BUILD_COMMAND}
         --build-config Debug
@@ -614,7 +639,7 @@ add_test(NAME ctest_build_with_samples_debug ${UPNPLIB_BUILD_COMMAND}
 add_test(NAME ctest_build_with_googletest ${UPNPLIB_BUILD_COMMAND}
         --build-config ${CMAKE_BUILD_TYPE}
         --build-options -DUPNPLIB_WITH_SAMPLES=NO
-                        -DUPNPLIB_WITH_GOOGLETEST=YES -DBUILD_SHARED_LIBS=YES
+                        -DUPNPLIB_WITH_GOOGLETEST=YES -DGTESTS_WITH_SHARED_LIBS=YES
 )
 add_test(NAME ctest_build_with_googletest_debug ${UPNPLIB_BUILD_COMMAND}
         --build-config Debug
@@ -633,7 +658,7 @@ add_test(NAME ctest_build_all_options ${UPNPLIB_BUILD_COMMAND}
                         -DUPNPLIB_WITH_BLOCKTCP=YES
                         -DUPNPLIB_WITH_IXML=YES
                         -DUPNPLIB_WITH_SAMPLES=YES
-                        -DUPNPLIB_WITH_GOOGLETEST=YES -DBUILD_SHARED_LIBS=YES
+                        -DUPNPLIB_WITH_GOOGLETEST=YES -DGTESTS_WITH_SHARED_LIBS=YES
 )
 add_test(NAME ctest_build_all_options_debug ${UPNPLIB_BUILD_COMMAND}
         --build-config Debug

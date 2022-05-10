@@ -1,10 +1,10 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-03-11
+# Redistribution only with this Copyright remark. Last modified: 2022-05-10
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNPLIB_SAMPLE VERSION 0003
+project(UPNPLIB_SAMPLE VERSION 0004
                        DESCRIPTION "Simple sample to use the library"
                        HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -36,12 +36,8 @@ include_directories(
         ${pthreads4w_SOURCE_DIR}
 )
 
-add_compile_definitions(
-        PRIVATE UPNP_HAVE_TOOLS
-)
-
 link_libraries(ixml_shared
-               upnplib_shared
+               pupnp_native_shared
                # On Linux we cannot link with the static pthreads library
                # because then we have also link with a static libc that's not
                # available by default.

@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-05
+# Redistribution only with this Copyright remark. Last modified: 2022-05-10
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNPLIB_GTESTS VERSION 0023
+project(UPNPLIB_GTESTS VERSION 0024
                        DESCRIPTION "Unit Tests using googletest"
                        HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -107,6 +107,7 @@ add_dependencies(upnplib_gtest_tools gtest gtest_main gmock gmock_main)
 
 # sock
 #-----
+if(FALSE) # Disabled due to rework of upnptools
 add_executable(test_sock
     ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
     ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
@@ -114,7 +115,13 @@ add_executable(test_sock
     ${PROJECT_SOURCE_DIR}/test_sock.cpp)
 target_compile_definitions(test_sock
     PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+target_link_options(test_sock
+    PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/upnp/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
+)
+target_link_libraries(test_sock PRIVATE
+    $<IF:$<BOOL:${WIN32}>,ixml_static,ixml_shared>)
 add_test(NAME ctest_sock COMMAND test_sock)
+endif()
 
 # strintmap
 #----------
@@ -154,6 +161,12 @@ add_executable(test_uri_parse
     ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
     ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
     test_uri.d/test_uri_parse.cpp)
+target_link_options(test_uri_parse
+    PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/upnp/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
+)
+target_link_libraries(test_uri_parse PRIVATE
+    upnplib_native_static
+    $<IF:$<BOOL:${WIN32}>,ixml_static,ixml_shared>)
 add_test(NAME ctest_uri_parse COMMAND test_uri_parse)
 
 # uri: urlparser
@@ -191,6 +204,9 @@ add_test(NAME ctest_httpparser COMMAND test_httpparser)
 
 # httpreadwrite incl. statcodes
 #------------------------------
+# Not using the library and compiling direct from needed sources because I
+# include the source file httpreadwrite.cpp into the gtest so we can use static
+# functions.
 add_executable(test_httpreadwrite
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
@@ -217,8 +233,13 @@ add_executable(test_httpreadwrite
     ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
     test_httpreadwrite.cpp
 )
-target_compile_definitions(test_httpreadwrite PRIVATE
-                            $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+target_link_options(test_httpreadwrite
+    PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/upnp/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
+)
+target_link_libraries(test_httpreadwrite PRIVATE
+    upnplib_native_static
+    $<IF:$<BOOL:${WIN32}>,ixml_static,ixml_shared>
+)
 add_test(NAME ctest_httpreadwrite COMMAND test_httpreadwrite)
 
 # httpreadwrite: netconnect
@@ -262,6 +283,7 @@ add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
 
 # upnpdebug
 #----------
+if(FALSE) # Disabled due to rework of upnptools
 add_executable(test_upnpdebug
     ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
     ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
@@ -271,8 +293,14 @@ target_compile_definitions(test_upnpdebug
 target_compile_options(test_upnpdebug
         # suppress warning C4311: 'type cast': pointer truncation
         PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/wd4311>)
-target_link_libraries(test_upnpdebug upnplib_gtest_tools)
+target_link_options(test_upnpdebug
+    PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/upnp/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
+)
+target_link_libraries(test_upnpdebug PRIVATE
+	upnplib_gtest_tools
+	$<IF:$<BOOL:${WIN32}>,ixml_static,ixml_shared>)
 add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
+endif()
 
 
 # upnpapi
@@ -319,15 +347,16 @@ set(UPNP_UPNPAPI_SOURCE_FILES
 )
 
 add_executable(test_upnpapi ${UPNP_UPNPAPI_SOURCE_FILES}
-               $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/test_upnpapi_win32.cpp>
-               $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/test_upnpapi_unix.cpp>)
+        $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/test_upnpapi_win32.cpp>
+        $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/test_upnpapi_unix.cpp>)
 target_compile_definitions(test_upnpapi
-               PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+        PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 target_compile_options(test_upnpapi PRIVATE
-                       # suppress warning C4311: 'type cast': pointer truncation
-                       $<$<CXX_COMPILER_ID:MSVC>:/wd4311>)
+        # suppress warning C4311: 'type cast': pointer truncation
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4311>)
 target_link_libraries(test_upnpapi
-                      upnplib_gtest_tools)
+        upnplib_native_static
+        upnplib_gtest_tools)
 add_test(NAME ctest_upnpapi COMMAND test_upnpapi
 )
 
@@ -379,15 +408,19 @@ add_test(NAME ctest_upnplib_gtest_tools COMMAND test_upnplib_gtest_tools)
 # upnptools
 #----------
 add_executable(test_upnptools test_upnptools.cpp)
-target_compile_definitions(test_upnptools
-        PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
-add_test(NAME ctest_upnptools COMMAND test_upnptools
+target_link_libraries(test_upnptools
+        PRIVATE pupnp_native_static
+        PRIVATE upnplib_native_static
+	#$<IF:$<BOOL:${WIN32}>,ixml_static,ixml_shared>
 )
-add_executable(test_upnptools_em test_upnptools.cpp)
-target_compile_definitions(test_upnptools_em
-        PRIVATE UPNPLIB_PUPNP_EMULATION
-        PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
-add_test(NAME ctest_upnptools_em COMMAND test_upnptools_em)
+add_test(NAME ctest_upnptools COMMAND test_upnptools)
+
+add_executable(test_upnptools_compa test_upnptools.cpp)
+target_link_libraries(test_upnptools_compa
+        PRIVATE upnplib_compa_static
+        PRIVATE upnplib_native_static
+)
+add_test(NAME ctest_upnptools_compa COMMAND test_upnptools_compa)
 
 # simple test
 #------------

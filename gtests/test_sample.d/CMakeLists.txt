@@ -1,15 +1,17 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-05
+# Redistribution only with this Copyright remark. Last modified: 2022-05-11
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(GTESTS_SAMPLE VERSION 0001
+project(GTESTS_SAMPLE VERSION 0003
                   DESCRIPTION "Tests for upnplib sample programs"
                   HOMEPAGE_URL "https://github.com/upnplib")
 
-
-add_executable(test_tv_device
+if(FALSE)
+# Currently not used but having available for reference.
+# We link against the upnplib library (see below).
+set(UPNPLIB_TV_DEVICE_SOURCE_FILES
     ${PUPNP_IXML_SOURCE_DIR}/src/node.cpp
     ${PUPNP_IXML_SOURCE_DIR}/src/document.cpp
     ${PUPNP_IXML_SOURCE_DIR}/src/nodeList.cpp
@@ -77,29 +79,35 @@ add_executable(test_tv_device
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
 
-    ${UPNPLIB_SAMPLE_SOURCE_DIR}/common/sample_util.cpp
-
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
     $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
     $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_unix.cpp>
+)
+endif()
 
+add_executable(test_tv_device
+#    ${UPNPLIB_TV_DEVICE_SOURCE_FILES}
+    ${UPNPLIB_SAMPLE_SOURCE_DIR}/common/sample_util.cpp
     ./test_tv_device.cpp
 )
 
-target_compile_definitions (test_tv_device PRIVATE
-    UPNP_HAVE_TOOLS
-    UPNP_HAVE_CLIENT
-    UPNP_HAVE_WEBSERVER
-    UPNP_HAVE_SSDP
-    UPNP_HAVE_SOAP
-    UPNP_HAVE_GENA
-    INCLUDE_DEVICE_APIS
-    $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
-    # There are traditional min/max macros on MS Windows which conflict
-    # with the C++ std::min|max functions. Following switch disable the
-    # macros.
-    $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
+target_compile_definitions (test_tv_device
+#    UPNP_HAVE_TOOLS
+#    UPNP_HAVE_CLIENT
+#    UPNP_HAVE_WEBSERVER
+#    UPNP_HAVE_SSDP
+#    UPNP_HAVE_SOAP
+#    UPNP_HAVE_GENA
+#    INCLUDE_DEVICE_APIS
+    PRIVATE UPNPLIB_SHARED
+    PRIVATE $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+)
+target_link_options(upnplibInfo_shared
+    PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/upnp/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
+)
+target_link_libraries(test_tv_device
+    PRIVATE pupnp_native_shared
 )
 
 add_test(NAME ctest_tv_device COMMAND test_tv_device)

@@ -42,7 +42,7 @@
 //#include <sys/param.h>
 #endif
 
-//#include "UpnpGlobal.hpp" /* for */
+#include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
 //#include "UpnpInet.hpp"
 #include "winsock2.h" // For different platforms: don't use <winsock2.h>
 
@@ -294,7 +294,7 @@ int remove_dots(
  *
  * \return
  */
-char* resolve_rel_url(
+EXPORT_SPEC char* resolve_rel_url(
     /*! [in] Base URL. */
     char* base_url,
     /*! [in] Relative URL. */
