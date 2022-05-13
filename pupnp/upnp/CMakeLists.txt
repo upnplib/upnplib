@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-12
+# Redistribution only with this Copyright remark. Last modified: 2022-05-13
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(PUPNP_UPNP VERSION 0016
+project(PUPNP_UPNP VERSION 0017
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -186,8 +186,9 @@ if(NOT WIN32)
             ${PUPNP_SOURCE_FILES}
     )
     set_target_properties(pupnp_native_shared PROPERTIES
-            LIBRARY_OUTPUT_DIRECTORY lib  # used if not WIN32
-    #       RUNTIME_OUTPUT_DIRECTORY lib  # used if WIN32
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
             OUTPUT_NAME pupnp_native  # lib*.so will be added
     )
     target_compile_definitions(pupnp_native_shared
@@ -201,10 +202,6 @@ if(NOT WIN32)
     target_link_libraries(pupnp_native_shared
             PUBLIC ixml_shared
     )
-    #target_link_options(pupnp_native_shared
-    #        PRIVATE -frtti
-    #        PRIVATE -fno-rtti
-    #)
 
     # pupnp native static library
     #----------------------------
@@ -212,14 +209,16 @@ if(NOT WIN32)
             ${PUPNP_SOURCE_FILES}
     )
     set_target_properties(pupnp_native_static PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY lib
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
             OUTPUT_NAME pupnp_native  # lib*.a will be added
     )
     target_compile_definitions(pupnp_native_static
             PRIVATE UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(pupnp_native_static
-            INTERFACE ixml_static
+            PUBLIC ixml_static
     )
 
 else() # WIN32
@@ -235,37 +234,50 @@ else() # WIN32
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
     )
 
-    # Shared library
-    #---------------
+    # pupnp native shared library
+    #----------------------------
     add_library(pupnp_native_shared SHARED
             ${PUPNP_SOURCE_FILES}
+    )
+    set_target_properties(pupnp_native_shared PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
     )
     target_compile_definitions(pupnp_native_shared
             PRIVATE UPNPLIB_SHARED
             PRIVATE UPNPLIB_EXPORTS
+            PRIVATE UPNPLIB_WITH_NATIVE_PUPNP
             PRIVATE $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     # In addition to pthreads we need some more system libraries here
     target_link_libraries(pupnp_native_shared
             PRIVATE ws2_32   # winsock to support sockets
             PRIVATE iphlpapi # ip helper interface to get network management tools
-            PRIVATE ixml_static
+            PUBLIC ixml_shared
             PUBLIC ${UPNP_PTHREADS_STATIC_LIBRARY}
             # If you link with the shared pthreads4w library then its .dll file
             # must also be found.
             #${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
-    # Static library
-    #---------------
+    # pupnp native static library
+    #----------------------------
     add_library(pupnp_native_static STATIC
             ${PUPNP_SOURCE_FILES}
     )
+    set_target_properties(pupnp_native_static PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
+    )
     target_compile_definitions(pupnp_native_static
+            PRIVATE UPNPLIB_WITH_NATIVE_PUPNP
             PRIVATE $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(pupnp_native_static
-            PRIVATE ${UPNP_PTHREADS_STATIC_LIBRARY}
+            PUBLIC ixml_static
+            PUBLIC ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
 endif() # WIN32

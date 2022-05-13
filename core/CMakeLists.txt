@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-11
+# Redistribution only with this Copyright remark. Last modified: 2022-05-13
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNPLIB_CORE VERSION 0003
+project(UPNPLIB_CORE VERSION 0004
                      DESCRIPTION "UPnP library core program"
                      HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -27,21 +27,21 @@ if(NOT WIN32)
             ./src/api/upnptools.cpp
     )
     set_target_properties(upnplib_compa_shared PROPERTIES
-            LIBRARY_OUTPUT_DIRECTORY lib
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
             OUTPUT_NAME upnplib_compa
     )
     target_include_directories(upnplib_compa_shared
             PRIVATE ${UPnPlib_SOURCE_DIR}
             PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-            $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
+            PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32
     )
     target_compile_definitions(upnplib_compa_shared
             PRIVATE UPNPLIB_SHARED
             PRIVATE UPNPLIB_EXPORTS
     )
-    target_link_options(upnplib_compa_shared
-        PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/upnp/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
-    )
+    # If we do not have compatible code we use the old native pupnp code
     target_link_libraries(upnplib_compa_shared
             PUBLIC pupnp_native_shared
     )
@@ -52,16 +52,19 @@ if(NOT WIN32)
             ./src/api/upnptools.cpp
     )
     set_target_properties(upnplib_compa_static PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY lib
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
             OUTPUT_NAME upnplib_compa
     )
     target_include_directories(upnplib_compa_static
             PRIVATE ${UPnPlib_SOURCE_DIR}
             PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-            $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
+            PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32
     )
+    # If we do not have compatible code we use the old native pupnp code
     target_link_libraries(upnplib_compa_static
-            PRIVATE pupnp_native_static
+            PUBLIC pupnp_native_static
     )
 
     # upnplib native shared library
@@ -70,7 +73,9 @@ if(NOT WIN32)
             ./src/api/upnplib/upnptools.cpp
     )
     set_target_properties(upnplib_native_shared PROPERTIES
-            LIBRARY_OUTPUT_DIRECTORY lib
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
             OUTPUT_NAME upnplib_native
     )
     target_include_directories(upnplib_native_shared
@@ -80,9 +85,6 @@ if(NOT WIN32)
             PRIVATE UPNPLIB_SHARED
             PRIVATE UPNPLIB_EXPORTS
     )
-    target_link_options(upnplib_native_shared
-        PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
-    )
 
     # upnplib native static library
     #------------------------------
@@ -90,7 +92,9 @@ if(NOT WIN32)
             ./src/api/upnplib/upnptools.cpp
     )
     set_target_properties(upnplib_native_static PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY lib
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
             OUTPUT_NAME upnplib_native
     )
     target_include_directories(upnplib_native_static
@@ -101,6 +105,11 @@ if(NOT WIN32)
     #------------------------------------------------------------
     add_executable(upnplibInfo_shared
             ./src/upnplibInfo.cpp
+    )
+    set_target_properties(upnplibInfo_shared PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
     )
     target_compile_definitions (upnplibInfo_shared
             PRIVATE UPNPLIB_SHARED
@@ -120,7 +129,9 @@ if(NOT WIN32)
             ./src/upnplibInfo.cpp
     )
     set_target_properties(upnplibInfo_static PROPERTIES
-            OUTPUT_NAME upnplibInfo
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
     )
     target_link_libraries(upnplibInfo_static
             PRIVATE upnplib_compa_static
@@ -132,30 +143,131 @@ if(NOT WIN32)
 
 else() # WIN32
 
-    # Info executable linked with the shared library
-    #-----------------------------------------------
+    # upnplib compatible shared library
+    #----------------------------------
+    add_library(upnplib_compa_shared SHARED
+            ./src/api/upnptools.cpp
+    )
+    set_target_properties(upnplib_compa_shared PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
+    )
+    target_include_directories(upnplib_compa_shared
+            PRIVATE ${UPnPlib_SOURCE_DIR}
+            PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+    )
+    target_compile_definitions(upnplib_compa_shared
+            PRIVATE UPNPLIB_SHARED
+            PRIVATE UPNPLIB_EXPORTS
+            PRIVATE $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
+    )
+    # If we do not have compatible code we use the old native pupnp code
+    target_link_libraries(upnplib_compa_shared
+            PUBLIC pupnp_native_shared
+    )
+
+    # upnplib compatible static library
+    #----------------------------------
+    add_library(upnplib_compa_static STATIC
+            ./src/api/upnptools.cpp
+    )
+    set_target_properties(upnplib_compa_static PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
+    )
+    target_include_directories(upnplib_compa_static
+            PRIVATE ${UPnPlib_SOURCE_DIR}
+            PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+    )
+    target_compile_definitions(upnplib_compa_static
+            PRIVATE $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
+    )
+    # If we do not have compatible code we use the old native pupnp code
+    target_link_libraries(upnplib_compa_static
+            PUBLIC pupnp_native_static
+    )
+
+    # upnplib native shared library
+    #------------------------------
+    add_library(upnplib_native_shared SHARED
+            ./src/api/upnplib/upnptools.cpp
+    )
+    set_target_properties(upnplib_native_shared PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
+    )
+    target_include_directories(upnplib_native_shared
+            PRIVATE ${UPnPlib_SOURCE_DIR}/include
+    )
+    target_compile_definitions(upnplib_native_shared
+            PRIVATE UPNPLIB_SHARED
+            PRIVATE UPNPLIB_EXPORTS
+            PRIVATE $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
+    )
+    # In addition to pthreads we need some more system libraries here
+    target_link_libraries(upnplib_native_shared
+            #PRIVATE ws2_32   # winsock to support sockets
+            #PRIVATE iphlpapi # ip helper interface to get network management tools
+            #PUBLIC ixml_shared
+            PUBLIC ${UPNP_PTHREADS_STATIC_LIBRARY}
+            # If you link with the shared pthreads4w library then its .dll file
+            # must also be found.
+            #${UPNP_PTHREADS_SHARED_LIBRARY}
+    )
+
+    # upnplib native static library
+    #------------------------------
+    add_library(upnplib_native_static STATIC
+            ./src/api/upnplib/upnptools.cpp
+    )
+    set_target_properties(upnplib_native_static PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
+    )
+    target_include_directories(upnplib_native_static
+            PRIVATE ${UPnPlib_SOURCE_DIR}/include
+    )
+    target_compile_definitions(upnplib_native_static
+            PRIVATE $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
+    )
+
+    # Info executable linked with the pupnp native shared library
+    #------------------------------------------------------------
     add_executable(upnplibInfo_shared
-            ${UPNPLIB_CORE_SOURCE_DIR}/src/upnplibInfo.cpp
+            ./src/upnplibInfo.cpp
+    )
+    set_target_properties(upnplibInfo_shared PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
     )
     target_compile_definitions (upnplibInfo_shared
             PRIVATE UPNPLIB_SHARED
+            PRIVATE UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(upnplibInfo_shared
             PRIVATE pupnp_native_shared
+            PRIVATE ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
-    # Info executable linked with static libraries
-    #---------------------------------------------
+    # Info executable linked with the upnplib compatible static library
+    #------------------------------------------------------------------
     add_executable(upnplibInfo_static
-            ${UPNPLIB_CORE_SOURCE_DIR}/src/upnplibInfo.cpp
+            ./src/upnplibInfo.cpp
     )
     set_target_properties(upnplibInfo_static PROPERTIES
-            OUTPUT_NAME upnplibInfo
+            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
     )
     target_link_libraries(upnplibInfo_static
             PRIVATE ws2_32   # winsock to support sockets
             PRIVATE ixml_static
-            PRIVATE pupnp_native_static
+            PRIVATE upnplib_compa_static
     )
 
 endif() # WIN32

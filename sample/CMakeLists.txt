@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-10
+# Redistribution only with this Copyright remark. Last modified: 2022-05-13
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -36,23 +36,29 @@ include_directories(
         ${pthreads4w_SOURCE_DIR}
 )
 
-link_libraries(ixml_shared
-               pupnp_native_shared
-               # On Linux we cannot link with the static pthreads library
-               # because then we have also link with a static libc that's not
-               # available by default.
-               $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_PTHREADS_SHARED_LIBRARY}>
-               # On MS Windows we link with the static pthreads4w library to
-               # avoid error prone managing access to its .dll file.
-               $<$<BOOL:${WIN32}>:${UPNP_PTHREADS_STATIC_LIBRARY}>
+link_libraries(
+        ixml_shared
+        pupnp_native_shared
+        # On Linux we cannot link with the static pthreads library
+        # because then we have also link with a static libc that's not
+        # available by default.
+        $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_PTHREADS_SHARED_LIBRARY}>
+        # On MS Windows we link with the static pthreads4w library to
+        # avoid error prone managing access to its .dll file.
+        $<$<BOOL:${WIN32}>:${UPNP_PTHREADS_STATIC_LIBRARY}>
 )
 
 IF (UPNPLIB_DEF_SAMPLE_CLIENT)
 	add_executable (tv_ctrlpt
-                ${PROJECT_SOURCE_DIR}/common/sample_util.cpp
-		${PROJECT_SOURCE_DIR}/common/tv_ctrlpt.cpp
-		${PROJECT_SOURCE_DIR}/linux/tv_ctrlpt_main.cpp
+                ./common/sample_util.cpp
+		./common/tv_ctrlpt.cpp
+		./linux/tv_ctrlpt_main.cpp
 	)
+        set_target_properties(tv_ctrlpt PROPERTIES
+                ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+                LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+                RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
+        )
 
 	#INSTALL (TARGETS tv_ctrlpt
 	#	DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -62,11 +68,16 @@ ENDIF()
 # client and device
 IF (UPNPLIB_DEF_SAMPLE_COMBO)
 	add_executable (tv_combo
-		${PROJECT_SOURCE_DIR}/common/sample_util.cpp
-		${PROJECT_SOURCE_DIR}/common/tv_ctrlpt.cpp
-		${PROJECT_SOURCE_DIR}/common/tv_device.cpp
-		${PROJECT_SOURCE_DIR}/linux/tv_combo_main.cpp
+		./common/sample_util.cpp
+		./common/tv_ctrlpt.cpp
+		./common/tv_device.cpp
+		./linux/tv_combo_main.cpp
 	)
+        set_target_properties(tv_combo PROPERTIES
+                ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+                LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+                RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
+        )
         target_compile_definitions(tv_combo
                 # This is to avoid to compile in 'upnpdebug' that has many
                 # dependencies into the libary and would pull many other sources
@@ -80,10 +91,15 @@ ENDIF()
 
 IF(UPNPLIB_DEF_SAMPLE_DEVICE)
 	add_executable (tv_device
-		${PROJECT_SOURCE_DIR}/common/sample_util.cpp
-		${PROJECT_SOURCE_DIR}/common/tv_device.cpp
-		${PROJECT_SOURCE_DIR}/linux/tv_device_main.cpp
-	)
+                ./common/sample_util.cpp
+                ./common/tv_device.cpp
+                ./linux/tv_device_main.cpp
+        )
+        set_target_properties(tv_device PROPERTIES
+                ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+                LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+                RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
+        )
         target_compile_definitions(tv_device
                 # This is to avoid to compile in 'upnpdebug' that has many
                 # dependencies into the libary and would pull many other sources

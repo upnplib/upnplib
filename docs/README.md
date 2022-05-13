@@ -134,7 +134,7 @@ C++ provides Visibility Support as powerful optimization. We use it as described
     target_link_libraries(upnplibInfo_shared
             PRIVATE upnplib_shared)
 
-- In your header files, wherever you want an interface or API made public outside the current Dynamic Shared Object, place `UPNPLIB_API` in struct, class and function declarations you wish to make public. You don't need to specify it in the definition in your source files. You should not do it on templated or static functions because they are defined to be local.
+- In your header files, wherever you want an interface or API made public outside the current Dynamic Shared Object, place `UPNPLIB_API` in struct, class and function declarations you wish to make public. You should not specify it in the definition of your source files. On Microsoft Windows Visual Studio it does not compile with an error. You should never do it on templated or static functions because they are defined to be local.
 
     UPNPLIB_API int PublicFunc()
     class UPNPLIB_API PublicClass
@@ -149,8 +149,9 @@ C++ provides Visibility Support as powerful optimization. We use it as described
 - [Operator Overloading](https://condor.depaul.edu/ntomuro/courses/262/notes/lecture3.html)
 - [Unicode in C and C++: What You Can Do About It Today](https://www.cprogramming.com/tutorial/unicode.html)
 - [How to use UTF-8 and Unicode in C++?](https://stackoverflow.com/questions/61977664/how-to-use-utf-8-and-unicode-in-c-how-big-is-c20-char8-t)
+- [CMake target_link_libraries PUBLIC, PRIVATE and INTERFACE keywords](https://stackoverflow.com/q/26037954/5014688)
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2022-04-04
+// Redistribution only with this Copyright remark. Last modified: 2022-05-12
 </sup></sup>

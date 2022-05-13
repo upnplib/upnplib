@@ -1,10 +1,10 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-02-26
+# Redistribution only with this Copyright remark. Last modified: 2022-05-13
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
 
-project(PUPNP_IXML_TEST VERSION 0001
+project(PUPNP_IXML_TEST VERSION 0002
                    DESCRIPTION "IXML library tests"
                    HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -22,12 +22,16 @@ include_directories (
 add_executable (test_ixml_shared
 	test_document.cpp
 )
+set_target_properties(test_ixml_shared PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+        LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+        RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
+)
 target_compile_definitions (test_ixml_shared PRIVATE
         $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
         $<$<CONFIG:Debug>:DEBUG>
         $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
 )
-
 target_link_libraries (test_ixml_shared PRIVATE
         ixml_shared
 )
@@ -42,6 +46,11 @@ target_link_libraries (test_ixml_shared PRIVATE
 
 add_executable (test_ixml_static
 	test_document.cpp
+)
+set_target_properties(test_ixml_static PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+        LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
+        RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
 )
 target_compile_definitions (test_ixml_static PRIVATE
         $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
