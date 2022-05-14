@@ -17,7 +17,7 @@ jobs:
       matrix:
         os: [ windows-2019, windows-2022 ]
         googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
-        shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
+        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
         buildtype: [ 'Release', 'Debug' ]
       fail-fast: false
 
@@ -56,7 +56,7 @@ jobs:
           ls ./build/lib/${{matrix.buildtype}}/gtest_main.lib
           ls ./build/lib/${{matrix.buildtype}}/gmock_main.lib
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D BUILD_SHARED_LIBS=ON')
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON')
         name: GTest .dll libraries build with Visual Studio
         run: |
           ls ./build/bin/${{matrix.buildtype}}/gtest.dll
@@ -67,25 +67,21 @@ jobs:
           ls $env:SYSTEMROOT/System32/gmock.dll
           ls $env:SYSTEMROOT/System32/gtest_main.dll
           ls $env:SYSTEMROOT/System32/gmock_main.dll
-          #ls ./build/gtests/${{matrix.buildtype}}/gtest.dll
-          #ls ./build/gtests/${{matrix.buildtype}}/gmock.dll
-          #ls ./build/gtests/${{matrix.buildtype}}/gtest_main.dll
-          #ls ./build/gtests/${{matrix.buildtype}}/gmock_main.dll
 
       # On MS Windows 2019 gtests with shared libraries fail with a vague
       # system error "Exit code 0xc0000135", so we exlude this test. On
       # 'windows-2022' this bug is fixed and the test runs.
       # - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && !((matrix.os == 'windows-2019') && (matrix.shared == '-D BUILD_SHARED_LIBS=ON'))
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && !((matrix.os == 'windows-2019') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON'))
         name: Run simple gtest
         #run: ./build/gtests/${{matrix.buildtype}}/test_simple.exe
-        run: cd .\build\gtests\; ctest -C ${{matrix.buildtype}} -R 'ctest_simple'
+        run: cd ./build/gtests/; ctest -C ${{matrix.buildtype}} -R 'ctest_simple'
 
       - name: Run static test program
-        run: ./build/core/${{matrix.buildtype}}/upnplibInfo.exe
+        run: ./build/bin/${{matrix.buildtype}}/upnplibInfo_static.exe
 
       - name: Run shared test program
-        run: ./build/core/${{matrix.buildtype}}/upnplibInfo_shared.exe
+        run: ./build/bin/${{matrix.buildtype}}/upnplibInfo_shared.exe
 
 
   # Job: Configure and build with NMake
@@ -98,7 +94,7 @@ jobs:
       matrix:
         os: [ windows-2019, windows-2022 ]
         googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
-        shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
+        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
         buildtype: [ 'Release', 'Debug' ]
       fail-fast: false
 
@@ -132,7 +128,7 @@ jobs:
           ls ./build/lib/gtest_main.lib
           ls ./build/lib/gmock_main.lib
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D BUILD_SHARED_LIBS=ON')
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON')
         name: GTest .dll libraries build with NMake
         run: |
           ls ./build/bin/gtest.dll
@@ -143,22 +139,18 @@ jobs:
           ls $env:SYSTEMROOT/System32/gmock.dll
           ls $env:SYSTEMROOT/System32/gtest_main.dll
           ls $env:SYSTEMROOT/System32/gmock_main.dll
-          #ls ./build/gtests/gtest.dll
-          #ls ./build/gtests/gmock.dll
-          #ls ./build/gtests/gtest_main.dll
-          #ls ./build/gtests/gmock_main.dll
 
       # On MS Windows 2019 gtests with shared libraries fail with a vague
       # system error "Exit code 0xc0000135", so we exlude this test. On
       # 'windows-2022' this bug is fixed and the test runs.
       # - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && !((matrix.os == 'windows-2019') && (matrix.shared == '-D BUILD_SHARED_LIBS=ON'))
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && !((matrix.os == 'windows-2019') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON'))
         name: Run simple gtest
         #run: ./build/gtests/test_simple.exe
-        run: cd .\build\gtests\; ctest -R 'ctest_simple'
+        run: cd ./build/gtests/; ctest -R 'ctest_simple'
 
       - name: Run static test program
-        run: ./build/core/upnplibInfo.exe
+        run: ./build/bin/upnplibInfo_static.exe
 
       - name: Run shared test program
-        run: ./build/core/upnplibInfo_shared.exe
+        run: ./build/bin/upnplibInfo_shared.exe

@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, macOS-latest, windows-latest ]
-        shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
+        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
       fail-fast: false
 
     steps:
@@ -66,7 +66,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, macOS-latest, windows-latest ]
-        shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
+        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
       fail-fast: false
 
     steps:

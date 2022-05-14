@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
-        shared: [ '', '-D BUILD_SHARED_LIBS=ON' ]
+        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
         buildtype: [ 'Release', 'Debug' ]
       fail-fast: false
 
@@ -40,7 +40,7 @@ jobs:
           ls ./build/lib/libgtest_main.a
           ls ./build/lib/libgmock_main.a
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D BUILD_SHARED_LIBS=ON')
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON')
         name: Check gtest library files, shared
         run: |
           ls ./build/lib/libgtest.so
@@ -57,16 +57,24 @@ jobs:
         name: Verify if NO Debug info
         # These two libraries are always built
         run: |
-          objdump -g ./build/pupnp/upnp/lib/libupnplib.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
-          ls ./build/pupnp/upnp/lib/libupnplib.a
+          objdump -g ./build/lib/libpupnp_native.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          objdump -g ./build/lib/libupnplib_compa.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          objdump -g ./build/lib/libupnplib_native.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          ls ./build/lib/libpupnp_native.a
+          ls ./build/lib/libupnplib_compa.a
+          ls ./build/lib/libupnplib_native.a
 
       - if: matrix.buildtype == 'Debug'
         name: Verify if Debug info
         # These two libraries are always built
         run: |
-          objdump -g ./build/pupnp/upnp/lib/libupnplib.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
-          ls ./build/pupnp/upnp/lib/libupnplib.a
+          objdump -g ./build/lib/libpupnp_native.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          objdump -g ./build/lib/libupnplib_compa.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          objdump -g ./build/lib/libupnplib_native.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          ls ./build/lib/libpupnp_native.a
+          ls ./build/lib/libupnplib_compa.a
+          ls ./build/lib/libupnplib_native.a
 
       - name: Run upnplib info program
         # This program is always built
-        run: ./build/core/upnplibInfo
+        run: ./build/bin/upnplibInfo_shared

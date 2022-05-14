@@ -251,7 +251,6 @@ else() # WIN32
     )
     target_link_libraries(upnplibInfo_shared
             PRIVATE pupnp_native_shared
-            PRIVATE ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
     # Info executable linked with the upnplib compatible static library
@@ -266,7 +265,6 @@ else() # WIN32
     )
     target_link_libraries(upnplibInfo_static
             PRIVATE ws2_32   # winsock to support sockets
-            PRIVATE ixml_static
             PRIVATE upnplib_compa_static
     )
 
