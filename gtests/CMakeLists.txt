@@ -45,8 +45,8 @@ include_directories(
 # If linking with shared build gtest libs we need to tell it the compiler.
 # I have found a vague hint about the flag GTEST_LINKED_AS_SHARED_LIBRARY at
 # build/_deps/googletest-src/googletest/README.md
-add_compile_definitions(PRIVATE
-    $<$<AND:$<BOOL:${UPNPLIB_WITH_GOOGLETEST}>,$<BOOL:${BUILD_SHARED_LIBS}>>:GTEST_LINKED_AS_SHARED_LIBRARY>
+add_compile_definitions(
+    PRIVATE $<$<AND:$<BOOL:${UPNPLIB_WITH_GOOGLETEST}>,$<BOOL:${BUILD_SHARED_LIBS}>>:GTEST_LINKED_AS_SHARED_LIBRARY>
     # Compile tests for the old (pupnp) source code.
     OLD_TEST
 )
@@ -73,6 +73,7 @@ link_libraries(gmock
 # This is linked into the executable. Alternative or additional you can also
 # set the environment variable DYLD_LIBRARY_PATH.
 add_link_options($<$<AND:$<BOOL:${APPLE}>,$<BOOL:${BUILD_SHARED_LIBS}>>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/lib>)
+    #$<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
 
 # Maybe we need this on MS Windows, or with /MD[d].
 # Reference: https://gitlab.kitware.com/cmake/cmake/-/issues/18390#note_462068
@@ -115,9 +116,6 @@ add_executable(test_sock
     ${PROJECT_SOURCE_DIR}/test_sock.cpp)
 target_compile_definitions(test_sock
     PRIVATE $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
-target_link_options(test_sock
-    PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/upnp/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
-)
 target_link_libraries(test_sock PRIVATE
     $<IF:$<BOOL:${WIN32}>,ixml_static,ixml_shared>)
 add_test(NAME ctest_sock COMMAND test_sock)
@@ -161,9 +159,6 @@ add_executable(test_uri_parse
     ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
     ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
     test_uri.d/test_uri_parse.cpp)
-target_link_options(test_uri_parse
-    PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/upnp/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
-)
 target_link_libraries(test_uri_parse PRIVATE
     upnplib_native_static
     $<IF:$<BOOL:${WIN32}>,ixml_static,ixml_shared>)
@@ -233,9 +228,6 @@ add_executable(test_httpreadwrite
     ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
     test_httpreadwrite.cpp
 )
-target_link_options(test_httpreadwrite
-    PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/upnp/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
-)
 target_link_libraries(test_httpreadwrite PRIVATE
     upnplib_native_static
     $<IF:$<BOOL:${WIN32}>,ixml_static,ixml_shared>
@@ -293,9 +285,6 @@ target_compile_definitions(test_upnpdebug
 target_compile_options(test_upnpdebug
         # suppress warning C4311: 'type cast': pointer truncation
         PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/wd4311>)
-target_link_options(test_upnpdebug
-    PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/upnp/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
-)
 target_link_libraries(test_upnpdebug PRIVATE
 	upnplib_gtest_tools
 	$<IF:$<BOOL:${WIN32}>,ixml_static,ixml_shared>)

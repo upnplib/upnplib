@@ -115,9 +115,6 @@ if(NOT WIN32)
             PRIVATE UPNPLIB_SHARED
             PRIVATE UPNPLIB_WITH_NATIVE_PUPNP
     )
-    target_link_options(upnplibInfo_shared
-        PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
-    )
     target_link_libraries(upnplibInfo_shared
             PRIVATE pupnp_native_shared
             PRIVATE ${UPNP_PTHREADS_SHARED_LIBRARY}

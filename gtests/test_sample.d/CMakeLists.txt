@@ -106,9 +106,6 @@ add_executable(test_tv_device_pupnp_shared
 target_compile_definitions (test_tv_device_pupnp_shared
     PRIVATE UPNPLIB_SHARED
 )
-target_link_options(upnplibInfo_shared
-    PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/upnp/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
-)
 target_link_libraries(test_tv_device_pupnp_shared
     PRIVATE pupnp_native_shared
 )
@@ -135,9 +132,6 @@ add_executable(test_tv_device_upnplib_shared
 )
 target_compile_definitions (test_tv_device_upnplib_shared
     PRIVATE UPNPLIB_SHARED
-)
-target_link_options(upnplibInfo_shared
-    PRIVATE $<$<BOOL:${APPLE}>:LINKER:-rpath,${UPnPlib_BINARY_DIR}/core/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/upnp/lib,-rpath,${UPnPlib_BINARY_DIR}/pupnp/ixml>
 )
 target_link_libraries(test_tv_device_upnplib_shared
     PRIVATE upnplib_compa_shared
