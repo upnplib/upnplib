@@ -1,0 +1,417 @@
+name: Integration tests
+
+on:
+  push:
+    branches: [ dev, main, workflow_dispatch ]
+  pull_request:
+    branches: [ dev, main, workflow_dispatch ]
+
+jobs:
+  # Job: Check clang format
+  # -----------------------
+  clang:
+    name: Check clang format
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: DoozyX/clang-format-lint-action@v0.13
+      with:
+        source: './pupnp ./core ./include ./gtests'
+        extensions: 'cpp,hpp'
+        clangFormatVersion: 11.1.0
+
+
+  # Job: Run gtests
+  #----------------
+  run_gtests:
+    name: Run gtests
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macOS-latest, windows-latest ]
+        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
+      fail-fast: false
+
+    steps:
+    # Step building gtests
+      - uses: actions/checkout@v2
+
+      - if: matrix.os == 'windows-latest'
+        name: Use MS Windows 64 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - if: runner.os == 'Linux'
+        name: Configure Linux
+        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release
+
+      - if: runner.os == 'macOS'
+        name: Configure macOS
+        #run: cmake -S . -B build -D CMAKE_C_COMPILER=$(brew --prefix llvm)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm)/bin/clang++ -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release
+        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release
+
+      - if: runner.os == 'Windows'
+        name: Configure Windows
+        run: cmake -S . -B build -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - if: runner.os != 'Windows'
+        name: Run gtests not on MS Windows
+        run: |
+          cd ./build/gtests
+          ctest --output-on-failure
+
+      - if: runner.os == 'Windows'
+        name: Run gtests on MS Windows
+        run: |
+          cd ./build/gtests
+          ctest -C Release --output-on-failure
+
+
+  # Job: Run build tests
+  #---------------------
+  run_build_tests:
+    name: Run build tests
+    needs: run_gtests
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macOS-latest, windows-latest ]
+        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
+      fail-fast: false
+
+    steps:
+    # Step building tests
+      - uses: actions/checkout@v2
+
+      - if: matrix.os == 'windows-latest'
+        name: Use MS Windows 64 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - if: runner.os == 'Linux'
+        name: Configure Linux
+        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D CMAKE_BUILD_TYPE=Release
+
+      - if: runner.os == 'macOS'
+        name: Configure macOS
+        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D CMAKE_BUILD_TYPE=Release
+
+      - if: runner.os == 'Windows'
+        name: Configure Windows
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
+
+      - name: Run build tests
+        run: |
+          cd ./build
+          # --build-config is needed for MS Windows but ignored.
+          # The settings within the test source are used.
+          ctest --build-config Release --tests-regex ^ctest_build_ --output-on-failure --stop-on-failure
+
+
+  # Job: Configure and build Ubuntu
+  #--------------------------------
+  # ubuntu-18.04 isn't used for tests because it doesn't support open standard
+  # ISO C++20 that we declared to use for UPnPlib.
+  Build_Ubuntu:
+    name: Build Ubuntu
+    needs: run_build_tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
+        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
+        buildtype: [ 'Release', 'Debug' ]
+      fail-fast: false
+
+    steps:
+    # Step building the core upnplib
+      - uses: actions/checkout@v2
+
+      - name: Configure
+        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+
+      - name: Build
+        run: cmake --build build --config ${{matrix.buildtype}}
+
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '')
+        name: Check gtest library files, static
+        run: |
+          ls ./build/lib/libgtest.a
+          ls ./build/lib/libgmock.a
+          ls ./build/lib/libgtest_main.a
+          ls ./build/lib/libgmock_main.a
+
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON')
+        name: Check gtest library files, shared
+        run: |
+          ls ./build/lib/libgtest.so
+          ls ./build/lib/libgmock.so
+          ls ./build/lib/libgtest_main.so
+          ls ./build/lib/libgmock_main.so
+
+      - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
+        name: Run simple gtest
+        # This gtest is always built with GoogleTest
+        run: ./build/gtests/test_simple
+
+      - if: matrix.buildtype != 'Debug'
+        name: Verify if NO Debug info
+        # These two libraries are always built
+        run: |
+          objdump -g ./build/lib/libpupnp_native.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          objdump -g ./build/lib/libupnplib_compa.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          objdump -g ./build/lib/libupnplib_native.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          ls ./build/lib/libpupnp_native.a
+          ls ./build/lib/libupnplib_compa.a
+          ls ./build/lib/libupnplib_native.a
+
+      - if: matrix.buildtype == 'Debug'
+        name: Verify if Debug info
+        # These two libraries are always built
+        run: |
+          objdump -g ./build/lib/libpupnp_native.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          objdump -g ./build/lib/libupnplib_compa.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          objdump -g ./build/lib/libupnplib_native.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          ls ./build/lib/libpupnp_native.a
+          ls ./build/lib/libupnplib_compa.a
+          ls ./build/lib/libupnplib_native.a
+
+      - name: Run upnplib info program
+        # This program is always built
+        run: ./build/bin/upnplibInfo_shared
+
+
+  # Job: Configure and build MacOS
+  #-------------------------------
+  Build_MacOS:
+    name: Build MacOS
+    needs: run_build_tests
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ macOS-10.15, macOS-latest ]
+        googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
+        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
+        buildtype: [ 'Release', 'Debug' ]
+      fail-fast: false
+
+    steps:
+    # Steps to build and test the core upnplib
+      - uses: actions/checkout@v2
+
+      - name: Configure
+        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} --log-level=DEBUG
+
+      - name: Build
+        run: cmake --build build --config ${{matrix.buildtype}}
+
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '')
+        name: Check gtest library files, static
+        run: |
+          ls ./build/lib/libgtest.a
+          ls ./build/lib/libgmock.a
+          ls ./build/lib/libgtest_main.a
+          ls ./build/lib/libgmock_main.a
+
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON')
+        name: Check gtest library files, shared
+        run: |
+          ls ./build/lib/libgtest.dylib
+          ls ./build/lib/libgmock.dylib
+          ls ./build/lib/libgtest_main.dylib
+          ls ./build/lib/libgmock_main.dylib
+
+      - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
+        name: Run simple gtest
+        # This gtest is always built with GoogleTest
+        run: ./build/gtests/test_simple
+
+      - if: matrix.buildtype != 'Debug'
+        name: Verify if NO Debug info
+        # These two libraries are always built
+        run: |
+          # objdump does not work (this way?) on macOS
+          #objdump [-a] -g upnp/build/lib/libupnplib.dylib | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          ls ./build/lib/libpupnp_native.dylib
+          ls ./build/lib/libupnplib_compa.dylib
+          ls ./build/lib/libupnplib_native.dylib
+          ls ./build/lib/libpupnp_native.a
+          ls ./build/lib/libupnplib_compa.a
+          ls ./build/lib/libupnplib_native.a
+
+      - if: matrix.buildtype == 'Debug'
+        name: Verify if Debug info
+        # These two libraries are always built
+        run: |
+          # objdump does not work (this way?) on macOS
+          #objdump [-a] -g upnp/build/lib/libupnplib.dylib | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          ls ./build/lib/libpupnp_native.dylib
+          ls ./build/lib/libupnplib_compa.dylib
+          ls ./build/lib/libupnplib_native.dylib
+          ls ./build/lib/libpupnp_native.a
+          ls ./build/lib/libupnplib_compa.a
+          ls ./build/lib/libupnplib_native.a
+
+      - name: Run upnplib info program
+        # This program is always built
+        run: ./build/bin/upnplibInfo_shared
+
+
+  # Job: Configure and build with Visual Studio
+  #--------------------------------------------
+  Build_with_Visual_Studio:
+    name: Build with Visual Studio
+    needs: run_build_tests
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ windows-2019, windows-2022 ]
+        googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
+        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
+        buildtype: [ 'Release', 'Debug' ]
+      fail-fast: false
+
+    steps:
+    # Step building the core upnplib
+      - uses: actions/checkout@v2
+
+      - if: matrix.os == 'windows-2019'
+        name: Use MS Windows 32 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: win32
+
+      - if: matrix.os == 'windows-2022'
+        name: Use MS Windows 64 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - if: matrix.os == 'windows-2019'
+        name: Configure 32 bit
+        run: cmake -S . -B build -A Win32 ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+
+      - if: matrix.os == 'windows-2022'
+        name: Configure 64 bit
+        run: cmake -S . -B build ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+
+      - name: Build
+        run: cmake --build build --config ${{matrix.buildtype}}
+
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON')
+        name: GTest link libraries build with Visual Studio
+        run: |
+          ls ./build/lib/${{matrix.buildtype}}/gtest.lib
+          ls ./build/lib/${{matrix.buildtype}}/gmock.lib
+          ls ./build/lib/${{matrix.buildtype}}/gtest_main.lib
+          ls ./build/lib/${{matrix.buildtype}}/gmock_main.lib
+
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON')
+        name: GTest .dll libraries build with Visual Studio
+        run: |
+          ls ./build/bin/${{matrix.buildtype}}/gtest.dll
+          ls ./build/bin/${{matrix.buildtype}}/gmock.dll
+          ls ./build/bin/${{matrix.buildtype}}/gtest_main.dll
+          ls ./build/bin/${{matrix.buildtype}}/gmock_main.dll
+          ls $env:SYSTEMROOT/System32/gtest.dll
+          ls $env:SYSTEMROOT/System32/gmock.dll
+          ls $env:SYSTEMROOT/System32/gtest_main.dll
+          ls $env:SYSTEMROOT/System32/gmock_main.dll
+
+      # On MS Windows 2019 gtests with shared libraries fail with a vague
+      # system error "Exit code 0xc0000135", so we exlude this test. On
+      # 'windows-2022' this bug is fixed and the test runs.
+      # - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && !((matrix.os == 'windows-2019') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON'))
+        name: Run simple gtest
+        #run: ./build/gtests/${{matrix.buildtype}}/test_simple.exe
+        run: cd ./build/gtests/; ctest -C ${{matrix.buildtype}} -R 'ctest_simple'
+
+      - name: Run static test program
+        run: ./build/bin/${{matrix.buildtype}}/upnplibInfo_static.exe
+
+      - name: Run shared test program
+        run: ./build/bin/${{matrix.buildtype}}/upnplibInfo_shared.exe
+
+
+  # Job: Configure and build with NMake
+  #------------------------------------
+  Build_with_NMake:
+    name: Build with NMake
+    needs: run_build_tests
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ windows-2019, windows-2022 ]
+        googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
+        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
+        buildtype: [ 'Release', 'Debug' ]
+      fail-fast: false
+
+    steps:
+    # Step building the core upnplib
+      - uses: actions/checkout@v2
+
+      - if: matrix.os == 'windows-2019'
+        name: Use MS Windows 32 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: win32
+
+      - if: matrix.os == 'windows-2022'
+        name: Use MS Windows 64 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - name: Configure
+        run: cmake -S . -B build -G "NMake Makefiles" ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+
+      - name: Build
+        run: cmake --build build --config ${{matrix.buildtype}}
+
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON')
+        name: GTest link libraries build with NMake
+        run: |
+          ls ./build/lib/gtest.lib
+          ls ./build/lib/gmock.lib
+          ls ./build/lib/gtest_main.lib
+          ls ./build/lib/gmock_main.lib
+
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON')
+        name: GTest .dll libraries build with NMake
+        run: |
+          ls ./build/bin/gtest.dll
+          ls ./build/bin/gmock.dll
+          ls ./build/bin/gtest_main.dll
+          ls ./build/bin/gmock_main.dll
+          ls $env:SYSTEMROOT/System32/gtest.dll
+          ls $env:SYSTEMROOT/System32/gmock.dll
+          ls $env:SYSTEMROOT/System32/gtest_main.dll
+          ls $env:SYSTEMROOT/System32/gmock_main.dll
+
+      # On MS Windows 2019 gtests with shared libraries fail with a vague
+      # system error "Exit code 0xc0000135", so we exlude this test. On
+      # 'windows-2022' this bug is fixed and the test runs.
+      # - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && !((matrix.os == 'windows-2019') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON'))
+        name: Run simple gtest
+        #run: ./build/gtests/test_simple.exe
+        run: cd ./build/gtests/; ctest -R 'ctest_simple'
+
+      - name: Run static test program
+        run: ./build/bin/upnplibInfo_static.exe
+
+      - name: Run shared test program
+        run: ./build/bin/upnplibInfo_shared.exe
