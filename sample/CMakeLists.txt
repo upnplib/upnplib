@@ -1,10 +1,10 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-13
+# Redistribution only with this Copyright remark. Last modified: 2022-05-16
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNPLIB_SAMPLE VERSION 0004
+project(UPNPLIB_SAMPLE VERSION 0006
                        DESCRIPTION "Simple sample to use the library"
                        HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -24,17 +24,6 @@ if(UPNPLIB_WITH_SAMPLES)
     set(UPNPLIB_DEF_SAMPLE_COMBO YES)
 endif()
 
-
-include_directories(
-        ${PROJECT_SOURCE_DIR}/common
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-        ${CMAKE_BINARY_DIR}/upnp/inc
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}
-)
 
 link_libraries(
         ixml_shared
@@ -59,6 +48,15 @@ IF (UPNPLIB_DEF_SAMPLE_CLIENT)
                 LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
                 RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
         )
+        target_include_directories(tv_ctrlpt
+                PRIVATE ./common
+                PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
+                PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
+                PRIVATE ${PUPNP_BINARY_DIR}/inc
+                # if pthreads4w isn't installed this path is empty. The linker
+                # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+                ${pthreads4w_SOURCE_DIR}
+        )
 
 	#INSTALL (TARGETS tv_ctrlpt
 	#	DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -77,6 +75,15 @@ IF (UPNPLIB_DEF_SAMPLE_COMBO)
                 ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
                 LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
                 RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
+        )
+        target_include_directories(tv_combo
+                PRIVATE ./common
+                PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
+                PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
+                PRIVATE ${PUPNP_BINARY_DIR}/inc
+                # if pthreads4w isn't installed this path is empty. The linker
+                # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+                ${pthreads4w_SOURCE_DIR}
         )
         target_compile_definitions(tv_combo
                 # This is to avoid to compile in 'upnpdebug' that has many
@@ -99,6 +106,15 @@ IF(UPNPLIB_DEF_SAMPLE_DEVICE)
                 ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
                 LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
                 RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
+        )
+        target_include_directories(tv_device
+                PRIVATE ./common
+                PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
+                PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
+                PRIVATE ${PUPNP_BINARY_DIR}/inc
+                # if pthreads4w isn't installed this path is empty. The linker
+                # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+                ${pthreads4w_SOURCE_DIR}
         )
         target_compile_definitions(tv_device
                 # This is to avoid to compile in 'upnpdebug' that has many

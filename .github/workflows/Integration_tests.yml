@@ -76,13 +76,12 @@ jobs:
   #---------------------
   run_build_tests:
     name: Run build tests
-    needs: run_gtests
+    #needs: run_gtests
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         os: [ ubuntu-latest, macOS-latest, windows-latest ]
-        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
       fail-fast: false
 
     steps:
@@ -121,7 +120,7 @@ jobs:
   # ISO C++20 that we declared to use for UPnPlib.
   Build_Ubuntu:
     name: Build Ubuntu
-    needs: run_build_tests
+    #needs: run_build_tests
     runs-on: ubuntu-latest
 
     strategy:
@@ -193,7 +192,7 @@ jobs:
   #-------------------------------
   Build_MacOS:
     name: Build MacOS
-    needs: run_build_tests
+    #needs: run_build_tests
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -270,7 +269,7 @@ jobs:
   #--------------------------------------------
   Build_with_Visual_Studio:
     name: Build with Visual Studio
-    needs: run_build_tests
+    #needs: run_build_tests
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -348,7 +347,7 @@ jobs:
   #------------------------------------
   Build_with_NMake:
     name: Build with NMake
-    needs: run_build_tests
+    #needs: run_build_tests
     runs-on: ${{ matrix.os }}
 
     strategy:

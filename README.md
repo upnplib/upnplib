@@ -36,6 +36,8 @@ Because we will use CMake to manage the code it can be seen as integral part of 
        UPNPLIB_CORE    UPNPLIB_IXML    PUPNP    UPNPLIB_GTESTS    UPNPLIB_SAMPLE
                                        /   \
                               PUPNP_UPNP   PUPNP_IXML
+                                              \
+                                             PUPNP_IXML_TEST
 
 These names are also the names of the CMake subprojects.
 
@@ -99,5 +101,5 @@ No limits documented so far.
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2022-03-10
+// Redistribution only with this Copyright remark. Last modified: 2022-05-16
 </sup></sup>

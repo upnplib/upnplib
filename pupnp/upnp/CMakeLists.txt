@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-13
+# Redistribution only with this Copyright remark. Last modified: 2022-05-15
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(PUPNP_UPNP VERSION 0017
+project(PUPNP_UPNP VERSION 0018
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -61,22 +61,6 @@ endif()
 
 # Source files and compile settings
 #----------------------------------
-
-include_directories(
-    ${UPnPlib_BINARY_DIR}
-    ${UPnPlib_BINARY_DIR}/upnp/inc
-    ${PROJECT_SOURCE_DIR}/inc
-    ${PROJECT_SOURCE_DIR}/src/inc
-    ${PROJECT_SOURCE_DIR}/src/threadutil
-    ${PUPNP_IXML_SOURCE_DIR}/inc
-    ${PUPNP_IXML_SOURCE_DIR}/src/inc
-    # if we are not on WIN32 the linker finds empty "headers.h" and will
-    # not complain an error but will not use <headers.h> that isn't available.
-    $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/inc/not_win32>
-    # if pthreads4w isn't installed this path is empty. The linker
-    # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-    ${pthreads4w_SOURCE_DIR}
-)
 
 set(PUPNP_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/threadutil/FreeList.cpp
@@ -169,12 +153,6 @@ add_compile_definitions(
     $<$<BOOL:${UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS}>:UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS>
 )
 
-add_compile_options(
-        $ENV{MY_CXXFLAG}
-        # suppress warning 'type cast': pointer truncation
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4311>
-)
-
 
 # Create libraries
 #=================
@@ -190,6 +168,17 @@ if(NOT WIN32)
             LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
             RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
             OUTPUT_NAME pupnp_native  # lib*.so will be added
+    )
+    target_include_directories(pupnp_native_shared
+            PRIVATE ${PUPNP_BINARY_DIR}/inc
+            PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
+            PRIVATE ./inc
+            PRIVATE ./src/inc
+            PRIVATE ./src/threadutil
+            # if we are not on WIN32 the linker finds empty "headers.h" and will
+            # not complain an error but will not use <headers.h> that isn't available.
+            #$<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/inc/not_win32>
+            PRIVATE ./inc/not_win32
     )
     target_compile_definitions(pupnp_native_shared
             PRIVATE UPNPLIB_SHARED
@@ -210,6 +199,17 @@ if(NOT WIN32)
             LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
             RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
             OUTPUT_NAME pupnp_native  # lib*.a will be added
+    )
+    target_include_directories(pupnp_native_static
+            PRIVATE ${PUPNP_BINARY_DIR}/inc
+            PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
+            PRIVATE ./inc
+            PRIVATE ./src/inc
+            PRIVATE ./src/threadutil
+            # if we are not on WIN32 the linker finds empty "headers.h" and will
+            # not complain an error but will not use <headers.h> that isn't available.
+            #$<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/inc/not_win32>
+            PRIVATE ./inc/not_win32
     )
     target_compile_definitions(pupnp_native_static
             PRIVATE UPNPLIB_WITH_NATIVE_PUPNP
@@ -241,6 +241,19 @@ else() # WIN32
             LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
             RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
     )
+    target_include_directories(pupnp_native_shared
+            PRIVATE ${PUPNP_BINARY_DIR}/inc
+            PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
+            PRIVATE ./inc
+            PRIVATE ./src/inc
+            PRIVATE ./src/threadutil
+            # if we are not on WIN32 the linker finds empty "headers.h" and will
+            # not complain an error but will not use <headers.h> that isn't available.
+            #$<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/inc/not_win32>
+            # if pthreads4w isn't installed this path is empty. The linker
+            # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+            PRIVATE ${pthreads4w_SOURCE_DIR}
+    )
     target_compile_definitions(pupnp_native_shared
             PRIVATE UPNPLIB_SHARED
             PRIVATE UPNPLIB_EXPORTS
@@ -267,6 +280,19 @@ else() # WIN32
             ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
             LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
             RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
+    )
+    target_include_directories(pupnp_native_static
+            PRIVATE ${PUPNP_BINARY_DIR}/inc
+            PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
+            PRIVATE ./inc
+            PRIVATE ./src/inc
+            PRIVATE ./src/threadutil
+            # if we are not on WIN32 the linker finds empty "headers.h" and will
+            # not complain an error but will not use <headers.h> that isn't available.
+            #$<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/inc/not_win32>
+            # if pthreads4w isn't installed this path is empty. The linker
+            # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+            PRIVATE ${pthreads4w_SOURCE_DIR}
     )
     target_compile_definitions(pupnp_native_static
             PRIVATE UPNPLIB_WITH_NATIVE_PUPNP

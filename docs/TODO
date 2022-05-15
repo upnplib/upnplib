@@ -1,5 +1,11 @@
-Next steps to do in this order:
-* Create own Url class
-+ Bugreport to Living URL Standard: add backspace to list of control chars
-* Bugreport to gtest: EXPECT_THAT THROW shouldn't call two times if no match
-* Install doxygen
+Next steps to do:
+* Make include directories target specific, means to use
+    'target_include_directories'.
+* Remove dependency of upnplib from 'upnpconfig.hpp'.
+* Rework and optimize CMake configuration and build.
+* Remove 'upnp.hpp' dependeny from 'core/src/api/upnplib/upnptools.cpp'
+* Some gtests fail on MS Windows with system error 135 using
+    Build Type Debug. Fix it.
+* Bugreport to gtest: EXPECT_THAT THROW shouldn't call two times if no match.
+* Install doxygen.
+* Create own Url class.

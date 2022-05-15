@@ -3,7 +3,7 @@
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-03-04
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-16
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,19 +51,20 @@ void* library_info(void*) {
     std::stringstream msg;
 
     msg << "---- configuration and build -----\n";
-    msg << "CMAKE_VERSION = " << CMAKE_VERSION << '\n';
-    msg << "CMAKE_CXX_COMPILER = " << CMAKE_CXX_COMPILER << '\n';
+    msg << "CMAKE_VERSION              = " << CMAKE_VERSION << '\n';
+    msg << "CMAKE_CXX_COMPILER         = " << CMAKE_CXX_COMPILER << '\n';
     msg << "CMAKE_CXX_COMPILER_VERSION = " << CMAKE_CXX_COMPILER_VERSION
         << '\n';
-    msg << "CMAKE_BUILD_TYPE = " << CMAKE_BUILD_TYPE << '\n';
-    msg << "CMAKE_GENERATOR = " << CMAKE_GENERATOR << '\n';
+    msg << "CMAKE_BUILD_TYPE           = " << CMAKE_BUILD_TYPE << '\n';
+    msg << "CMAKE_GENERATOR            = " << CMAKE_GENERATOR << '\n';
 
-    msg << "---- library info ----------------\n"
-        << "UPNP_VERSION_STRING = " << UPNP_VERSION_STRING << "\n"
-        << "UPNP_VERSION_MAJOR = " << UPNP_VERSION_MAJOR << "\n"
-        << "UPNP_VERSION_MINOR = " << UPNP_VERSION_MINOR << "\n"
-        << "UPNP_VERSION_PATCH = " << UPNP_VERSION_PATCH << "\n"
-        << "UPNP_VERSION = " << UPNP_VERSION << "\n";
+    msg << "---- library information ---------\n"
+        << "UPNP_VERSION_STRING   = " << UPNP_VERSION_STRING << "\n"
+        << "UPNP_VERSION_MAJOR    = " << UPNP_VERSION_MAJOR << "\n"
+        << "UPNP_VERSION_MINOR    = " << UPNP_VERSION_MINOR << "\n"
+        << "UPNP_VERSION_PATCH    = " << UPNP_VERSION_PATCH << "\n"
+        << "UPNP_VERSION          = " << UPNP_VERSION << "\n"
+        << "COMPATIBILITY         = pupnp 1.14.12\n";
     /*
      * Check library optional features
      */

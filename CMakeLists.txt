@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-10
+# Redistribution only with this Copyright remark. Last modified: 2022-05-15
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -463,7 +463,7 @@ endif(UPNPLIB_WITH_GOOGLETEST)
 # #cmakedefine VAR1 ${VAR} does not work.
 # #cmakedefine VAR2 1  : VAR2 must be exist before even you set a constant.
 configure_file(${PROJECT_SOURCE_DIR}/cmake/upnpconfig.hpp.cmake
-               ${PROJECT_BINARY_DIR}/upnp/inc/upnpconfig.hpp
+               ${PUPNP_BINARY_DIR}/inc/upnpconfig.hpp
 )
 
 # RPATH settings to find shared libraries

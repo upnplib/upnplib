@@ -19,7 +19,7 @@ include_directories(
     ${UPnPlib_SOURCE_DIR}
     ${UPnPlib_SOURCE_DIR}/include
     ${UPnPlib_BINARY_DIR}
-    ${UPnPlib_BINARY_DIR}/upnp/inc
+    ${PUPNP_BINARY_DIR}/inc
     # Googletest
     ${googletest_SOURCE_DIR}/googletest/include
     ${googletest_SOURCE_DIR}/googlemock/include
