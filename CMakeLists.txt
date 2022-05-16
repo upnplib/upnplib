@@ -166,6 +166,15 @@ endif()
 
 
 #################################
+# Targets                       #
+#################################
+# Set target output directories
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${UPnPlib_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${UPnPlib_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${UPnPlib_BINARY_DIR}/bin)
+
+
+#################################
 # Large-file-sensitivity        #
 #################################
 # TODO: Check large-file-sensitivity

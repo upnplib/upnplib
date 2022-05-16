@@ -16,9 +16,6 @@ if(NOT WIN32)
             ./src/api/upnptools.cpp
     )
     set_target_properties(upnplib_compa_shared PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
             OUTPUT_NAME upnplib_compa
     )
     target_include_directories(upnplib_compa_shared
@@ -44,9 +41,6 @@ if(NOT WIN32)
             ./src/api/upnptools.cpp
     )
     set_target_properties(upnplib_compa_static PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
             OUTPUT_NAME upnplib_compa
     )
     target_include_directories(upnplib_compa_static
@@ -68,9 +62,6 @@ if(NOT WIN32)
             ./src/api/upnplib/upnptools.cpp
     )
     set_target_properties(upnplib_native_shared PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
             OUTPUT_NAME upnplib_native
     )
     target_include_directories(upnplib_native_shared
@@ -90,9 +81,6 @@ if(NOT WIN32)
             ./src/api/upnplib/upnptools.cpp
     )
     set_target_properties(upnplib_native_static PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
             OUTPUT_NAME upnplib_native
     )
     target_include_directories(upnplib_native_static
@@ -106,11 +94,6 @@ if(NOT WIN32)
     #------------------------------------------------------------
     add_executable(upnplibInfo_shared
             ./src/upnplibInfo.cpp
-    )
-    set_target_properties(upnplibInfo_shared PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
     )
     target_include_directories(upnplibInfo_shared
             PRIVATE ${PUPNP_BINARY_DIR}/inc
@@ -131,11 +114,6 @@ if(NOT WIN32)
     #------------------------------------------------------------------
     add_executable(upnplibInfo_static
             ./src/upnplibInfo.cpp
-    )
-    set_target_properties(upnplibInfo_static PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
     )
     target_include_directories(upnplibInfo_static
             PRIVATE ${PUPNP_BINARY_DIR}/inc
@@ -158,11 +136,6 @@ else() # WIN32
     add_library(upnplib_compa_shared SHARED
             ./src/api/upnptools.cpp
     )
-    set_target_properties(upnplib_compa_shared PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
-    )
     target_include_directories(upnplib_compa_shared
             PRIVATE ${UPnPlib_SOURCE_DIR}
             PRIVATE ${PUPNP_BINARY_DIR}/inc
@@ -185,11 +158,6 @@ else() # WIN32
     add_library(upnplib_compa_static STATIC
             ./src/api/upnptools.cpp
     )
-    set_target_properties(upnplib_compa_static PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
-    )
     target_include_directories(upnplib_compa_static
             PRIVATE ${UPnPlib_SOURCE_DIR}
             PRIVATE ${PUPNP_BINARY_DIR}/inc
@@ -209,11 +177,6 @@ else() # WIN32
     #------------------------------
     add_library(upnplib_native_shared SHARED
             ./src/api/upnplib/upnptools.cpp
-    )
-    set_target_properties(upnplib_native_shared PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
     )
     target_include_directories(upnplib_native_shared
             PRIVATE ${UPnPlib_SOURCE_DIR}/include
@@ -242,11 +205,6 @@ else() # WIN32
     add_library(upnplib_native_static STATIC
             ./src/api/upnplib/upnptools.cpp
     )
-    set_target_properties(upnplib_native_static PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
-    )
     target_include_directories(upnplib_native_static
             PRIVATE ${UPnPlib_SOURCE_DIR}/include
             PRIVATE ${PUPNP_BINARY_DIR}/inc
@@ -261,11 +219,6 @@ else() # WIN32
     #------------------------------------------------------------
     add_executable(upnplibInfo_shared
             ./src/upnplibInfo.cpp
-    )
-    set_target_properties(upnplibInfo_shared PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
     )
     target_include_directories(upnplibInfo_shared
             PRIVATE ${PUPNP_BINARY_DIR}/inc   # needed for upnpconfig.hpp
@@ -288,11 +241,6 @@ else() # WIN32
     #------------------------------------------------------------------
     add_executable(upnplibInfo_static
             ./src/upnplibInfo.cpp
-    )
-    set_target_properties(upnplibInfo_static PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
     )
     target_include_directories(upnplibInfo_static
             PRIVATE ${PUPNP_BINARY_DIR}/inc   # needed for upnpconfig.hpp

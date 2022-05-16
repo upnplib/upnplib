@@ -18,11 +18,6 @@ project(PUPNP_IXML_TEST VERSION 0004
 add_executable (test_ixml_shared
 	test_document.cpp
 )
-set_target_properties(test_ixml_shared PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-        LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-        RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
-)
 target_include_directories(test_ixml_shared
         PRIVATE ${PUPNP_SOURCE_DIR}/upnp/inc
         PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -51,11 +46,6 @@ target_link_libraries (test_ixml_shared
 #------------------------------------------------
 add_executable (test_ixml_static
 	test_document.cpp
-)
-set_target_properties(test_ixml_static PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-        LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-        RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
 )
 target_compile_definitions (test_ixml_static PRIVATE
         $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>

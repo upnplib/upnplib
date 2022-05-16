@@ -26,11 +26,6 @@ set (IXML_SOURCES
 add_library (ixml_shared SHARED
         ${IXML_SOURCES}
 )
-set_target_properties(ixml_shared PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-        LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-        RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
-)
 target_include_directories(ixml_shared
         PRIVATE ./inc
         PRIVATE ./src/inc
@@ -49,11 +44,6 @@ target_compile_definitions(ixml_shared
 #--------------------
 add_library (ixml_static STATIC
     ${IXML_SOURCES}
-)
-set_target_properties(ixml_static PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-        LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-        RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
 )
 target_include_directories(ixml_static
         PRIVATE ./inc

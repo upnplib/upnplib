@@ -14,6 +14,11 @@ project(UPNPLIB_GTESTS VERSION 0024
 # Build the Unit Tests          #
 #################################
 
+# Reset output directories to default means to use the subprojects directories.
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "")
+
 include_directories(
     # Root project
     ${UPnPlib_SOURCE_DIR}

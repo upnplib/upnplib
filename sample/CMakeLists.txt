@@ -43,11 +43,6 @@ IF (UPNPLIB_DEF_SAMPLE_CLIENT)
 		./common/tv_ctrlpt.cpp
 		./linux/tv_ctrlpt_main.cpp
 	)
-        set_target_properties(tv_ctrlpt PROPERTIES
-                ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-                LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-                RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
-        )
         target_include_directories(tv_ctrlpt
                 PRIVATE ./common
                 PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
@@ -71,11 +66,6 @@ IF (UPNPLIB_DEF_SAMPLE_COMBO)
 		./common/tv_device.cpp
 		./linux/tv_combo_main.cpp
 	)
-        set_target_properties(tv_combo PROPERTIES
-                ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-                LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-                RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
-        )
         target_include_directories(tv_combo
                 PRIVATE ./common
                 PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
@@ -101,11 +91,6 @@ IF(UPNPLIB_DEF_SAMPLE_DEVICE)
                 ./common/sample_util.cpp
                 ./common/tv_device.cpp
                 ./linux/tv_device_main.cpp
-        )
-        set_target_properties(tv_device PROPERTIES
-                ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-                LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-                RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
         )
         target_include_directories(tv_device
                 PRIVATE ./common

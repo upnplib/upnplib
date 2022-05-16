@@ -164,9 +164,6 @@ if(NOT WIN32)
             ${PUPNP_SOURCE_FILES}
     )
     set_target_properties(pupnp_native_shared PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
             OUTPUT_NAME pupnp_native  # lib*.so will be added
     )
     target_include_directories(pupnp_native_shared
@@ -195,9 +192,6 @@ if(NOT WIN32)
             ${PUPNP_SOURCE_FILES}
     )
     set_target_properties(pupnp_native_static PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
             OUTPUT_NAME pupnp_native  # lib*.a will be added
     )
     target_include_directories(pupnp_native_static
@@ -236,11 +230,6 @@ else() # WIN32
     add_library(pupnp_native_shared SHARED
             ${PUPNP_SOURCE_FILES}
     )
-    set_target_properties(pupnp_native_shared PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
-    )
     target_include_directories(pupnp_native_shared
             PRIVATE ${PUPNP_BINARY_DIR}/inc
             PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -275,11 +264,6 @@ else() # WIN32
     #----------------------------
     add_library(pupnp_native_static STATIC
             ${PUPNP_SOURCE_FILES}
-    )
-    set_target_properties(pupnp_native_static PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            LIBRARY_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/lib"
-            RUNTIME_OUTPUT_DIRECTORY "${UPnPlib_BINARY_DIR}/bin"
     )
     target_include_directories(pupnp_native_static
             PRIVATE ${PUPNP_BINARY_DIR}/inc
