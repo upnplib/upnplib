@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-14
+// Redistribution only with this Copyright remark. Last modified: 2022-05-18
 
 // Note
 // -------------
@@ -17,13 +17,12 @@
 // ./gtests/build/test_ThreadPool_old  --gtest_brief=1 --gtest_repeat=10000
 // --gtest_filter=ThreadPoolNormalTestSuite.init_and_shutdown_threadpool
 
-#include "gtest/gtest.h"
-
-#include "pupnp/upnp/src/threadutil/FreeList.cpp"
-#include "pupnp/upnp/src/threadutil/LinkedList.cpp"
-
-#include "pupnp/upnp/src/threadutil/ThreadPool.cpp"
+#include "FreeList.hpp"
+#include "LinkedList.hpp"
+#include "ThreadPool.hpp"
 #include "upnplib/ThreadPool.hpp"
+
+#include "gtest/gtest.h"
 
 namespace upnplib {
 

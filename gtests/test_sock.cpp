@@ -1,16 +1,21 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-08
+// Redistribution only with this Copyright remark. Last modified: 2022-05-18
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
 
-#include "gmock/gmock.h"
+#include "sock.hpp"
+
 #include "upnplib/upnptools.hpp"
 #include "upnpmock/sys_socket.hpp"
 #include "upnpmock/sys_select.hpp"
 #include "upnpmock/unistd.hpp"
+#include "upnp.hpp"
 
-#include "pupnp/upnp/src/genlib/net/sock.cpp"
+#include "gmock/gmock.h"
+#ifndef _WIN32
+#include <fcntl.h>
+#endif
 
 using ::testing::_;
 using ::testing::DoAll;

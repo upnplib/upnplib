@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-15
+# Redistribution only with this Copyright remark. Last modified: 2022-05-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -167,23 +167,30 @@ if(NOT WIN32)
             OUTPUT_NAME pupnp_native  # lib*.so will be added
     )
     target_include_directories(pupnp_native_shared
-            PRIVATE ${PUPNP_BINARY_DIR}/inc
-            PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-            PRIVATE ./inc
-            PRIVATE ./src/inc
-            PRIVATE ./src/threadutil
+        PRIVATE
+            ${PUPNP_BINARY_DIR}/inc
+            ${PUPNP_IXML_SOURCE_DIR}/inc
+            ./inc
+            ./src/inc
+            ./src/threadutil
             # if we are not on WIN32 the linker finds empty "headers.h" and will
             # not complain an error but will not use <headers.h> that isn't available.
             #$<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/inc/not_win32>
-            PRIVATE ./inc/not_win32
+            ./inc/not_win32
     )
     target_compile_definitions(pupnp_native_shared
-            PRIVATE UPNPLIB_SHARED
-            PRIVATE UPNPLIB_EXPORTS
-            PRIVATE UPNPLIB_WITH_NATIVE_PUPNP
+        PRIVATE
+            UPNPLIB_SHARED
+            UPNPLIB_EXPORTS
+            UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(pupnp_native_shared
-            PUBLIC ixml_shared
+        PUBLIC
+            ixml_shared
+        INTERFACE
+            # On Linux we cannot link with the static pthreads library because then
+            # we have also link with a static libc that's not available by default.
+            ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
     # pupnp native static library
@@ -195,21 +202,28 @@ if(NOT WIN32)
             OUTPUT_NAME pupnp_native  # lib*.a will be added
     )
     target_include_directories(pupnp_native_static
-            PRIVATE ${PUPNP_BINARY_DIR}/inc
-            PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-            PRIVATE ./inc
-            PRIVATE ./src/inc
-            PRIVATE ./src/threadutil
+        PRIVATE
+            ${PUPNP_BINARY_DIR}/inc
+            ${PUPNP_IXML_SOURCE_DIR}/inc
+            ./inc
+            ./src/inc
+            ./src/threadutil
             # if we are not on WIN32 the linker finds empty "headers.h" and will
             # not complain an error but will not use <headers.h> that isn't available.
             #$<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/inc/not_win32>
-            PRIVATE ./inc/not_win32
+            ./inc/not_win32
     )
     target_compile_definitions(pupnp_native_static
-            PRIVATE UPNPLIB_WITH_NATIVE_PUPNP
+        PRIVATE
+            UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(pupnp_native_static
-            PUBLIC ixml_static
+        PUBLIC
+            ixml_static
+        INTERFACE
+            # On Linux we cannot link with the static pthreads library because then
+            # we have also link with a static libc that's not available by default.
+            ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
 else() # WIN32
@@ -231,33 +245,35 @@ else() # WIN32
             ${PUPNP_SOURCE_FILES}
     )
     target_include_directories(pupnp_native_shared
-            PRIVATE ${PUPNP_BINARY_DIR}/inc
-            PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-            PRIVATE ./inc
-            PRIVATE ./src/inc
-            PRIVATE ./src/threadutil
+        PRIVATE
+            ${PUPNP_BINARY_DIR}/inc
+            ${PUPNP_IXML_SOURCE_DIR}/inc
+            ./inc
+            ./src/inc
+            ./src/threadutil
             # if we are not on WIN32 the linker finds empty "headers.h" and will
             # not complain an error but will not use <headers.h> that isn't available.
             #$<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/inc/not_win32>
             # if pthreads4w isn't installed this path is empty. The linker
             # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-            PRIVATE ${pthreads4w_SOURCE_DIR}
+            ${pthreads4w_SOURCE_DIR}
     )
     target_compile_definitions(pupnp_native_shared
-            PRIVATE UPNPLIB_SHARED
-            PRIVATE UPNPLIB_EXPORTS
-            PRIVATE UPNPLIB_WITH_NATIVE_PUPNP
-            PRIVATE $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
+        PRIVATE
+            UPNPLIB_SHARED
+            UPNPLIB_EXPORTS
+            UPNPLIB_WITH_NATIVE_PUPNP
+            $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     # In addition to pthreads we need some more system libraries here
     target_link_libraries(pupnp_native_shared
-            PRIVATE ws2_32   # winsock to support sockets
-            PRIVATE iphlpapi # ip helper interface to get network management tools
-            PUBLIC ixml_shared
-            PUBLIC ${UPNP_PTHREADS_STATIC_LIBRARY}
-            # If you link with the shared pthreads4w library then its .dll file
-            # must also be found.
-            #${UPNP_PTHREADS_SHARED_LIBRARY}
+        PUBLIC
+            ixml_shared
+            ws2_32   # winsock to support sockets
+            iphlpapi # ip helper interface to get network management tools
+            # On MS Windows we link with the static pthreads4w library to
+            # avoid error prone managing access to its .dll file.
+            ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
     # pupnp native static library
@@ -266,25 +282,32 @@ else() # WIN32
             ${PUPNP_SOURCE_FILES}
     )
     target_include_directories(pupnp_native_static
-            PRIVATE ${PUPNP_BINARY_DIR}/inc
-            PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-            PRIVATE ./inc
-            PRIVATE ./src/inc
-            PRIVATE ./src/threadutil
+        PRIVATE
+            ${PUPNP_BINARY_DIR}/inc
+            ${PUPNP_IXML_SOURCE_DIR}/inc
+            ./inc
+            ./src/inc
+            ./src/threadutil
             # if we are not on WIN32 the linker finds empty "headers.h" and will
             # not complain an error but will not use <headers.h> that isn't available.
             #$<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/inc/not_win32>
             # if pthreads4w isn't installed this path is empty. The linker
             # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-            PRIVATE ${pthreads4w_SOURCE_DIR}
+            ${pthreads4w_SOURCE_DIR}
     )
     target_compile_definitions(pupnp_native_static
-            PRIVATE UPNPLIB_WITH_NATIVE_PUPNP
-            PRIVATE $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
+        PRIVATE
+            UPNPLIB_WITH_NATIVE_PUPNP
+            $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(pupnp_native_static
-            PUBLIC ixml_static
-            PUBLIC ${UPNP_PTHREADS_STATIC_LIBRARY}
+        PUBLIC
+            ixml_static
+        INTERFACE
+            ws2_32   # winsock to support sockets
+            # On MS Windows we link with the static pthreads4w library to
+            # avoid error prone managing access to its .dll file.
+            ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
 endif() # WIN32

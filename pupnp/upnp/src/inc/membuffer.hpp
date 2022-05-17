@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-31
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -77,7 +77,7 @@ typedef struct {
  * \return Pointer to the newly allocated memory.
  * NULL if memory cannot be allocated.
  */
-char* str_alloc(
+EXPORT_SPEC char* str_alloc(
     /*! [in] Input string object. */
     const char* str,
     /*! [in] Input string length. */
@@ -97,7 +97,7 @@ char* str_alloc(
  * \li "abC" compared with "abc": < 0
  * \li "abc" compared with "abC": > 0
  */
-int memptr_cmp(
+EXPORT_SPEC int memptr_cmp(
     /*! [in] Input memory object. */
     memptr* m,
     /*! [in] Constatnt string for the memory object to be compared with. */
@@ -115,7 +115,7 @@ int memptr_cmp(
  * \li == 0 string1 substring identical to string2 substring
  * \li >  0 string1 substring greater than string2 substring
  */
-int memptr_cmp_nocase(
+EXPORT_SPEC int memptr_cmp_nocase(
     /*! [in] Input memory object. */
     memptr* m,
     /*! [in] Constant string for the memory object to be compared with. */
@@ -141,14 +141,14 @@ int membuffer_set_size(
  * Set the size of the buffer to MEMBUF_DEF_SIZE_INC and Initializes
  * m->buf to NULL, length = 0.
  */
-void membuffer_init(
+EXPORT_SPEC void membuffer_init(
     /*! [in,out] Buffer to be initialized. */
     membuffer* m);
 
 /*!
  * \brief Free's memory allocated for membuffer* m.
  */
-void membuffer_destroy(
+EXPORT_SPEC void membuffer_destroy(
     /*! [in,out] Buffer to be destroyed. */
     membuffer* m);
 
@@ -160,7 +160,7 @@ void membuffer_destroy(
  * \li UPNP_E_SUCCESS
  * \li UPNP_E_OUTOF_MEMORY
  */
-int membuffer_assign(
+EXPORT_SPEC int membuffer_assign(
     /*! [in,out] Buffer whose memory is to be allocated and assigned. */
     membuffer* m,
     /*! [in] Source buffer whose contents will be copied. */
@@ -186,7 +186,7 @@ int membuffer_assign_str(
  *
  * \return int.
  */
-int membuffer_append(
+EXPORT_SPEC int membuffer_append(
     /*! [in,out] Buffer whose memory is to be appended. */
     membuffer* m,
     /*! [in] Source buffer whose contents will be copied. */
@@ -199,7 +199,7 @@ int membuffer_append(
  *
  * \return int.
  */
-int membuffer_append_str(
+EXPORT_SPEC int membuffer_append_str(
     /*! [in,out] Buffer whose memory is to be appended. */
     membuffer* m,
     /*! [in] Source buffer whose contents will be copied. */
@@ -228,7 +228,7 @@ int membuffer_insert(
  * buffer and the input parameters. Move contents from the old buffer to the
  * new sized buffer.
  */
-void membuffer_delete(
+EXPORT_SPEC void membuffer_delete(
     /*! [in,out] Buffer whose memory size is to be decreased and copied
      * to the modified location. */
     membuffer* m,
@@ -243,7 +243,7 @@ void membuffer_delete(
  *
  * \return A pointer to the current buffer.
  */
-char* membuffer_detach(
+EXPORT_SPEC char* membuffer_detach(
     /*! [in,out] Buffer to be returned and updated. */
     membuffer* m);
 
@@ -254,7 +254,7 @@ char* membuffer_detach(
  * \note 'new_buf' must be allocted using malloc or realloc so that it can be
  * freed using free().
  */
-void membuffer_attach(
+EXPORT_SPEC void membuffer_attach(
     /*! [in,out] Buffer to be updated. */
     membuffer* m,
     /*! [in] Source buffer which will be assigned to the buffer to be

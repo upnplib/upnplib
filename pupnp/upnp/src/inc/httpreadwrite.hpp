@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-22
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -53,7 +53,7 @@ struct tm* http_gmtime_r(const time_t* clock, struct tm* result);
 #define http_gmtime_r gmtime_r
 #endif
 
-int http_CancelHttpGet(/* IN */ void* Handle);
+EXPORT_SPEC int http_CancelHttpGet(/* IN */ void* Handle);
 
 /*!
  * \brief Validates URL.
@@ -210,8 +210,9 @@ int http_RequestAndResponse(uri_type* destination, const char* request,
  *      UPNP_E_SUCCESS
  *      UPNP_E_INVALID_URL
  ************************************************************************/
-int http_Download(const char* url, int timeout_secs, char** document,
-                  size_t* doc_length, char* content_type);
+EXPORT_SPEC int http_Download(const char* url, int timeout_secs,
+                              char** document, size_t* doc_length,
+                              char* content_type);
 
 /************************************************************************
  * Function: http_HttpGetProgress
@@ -228,7 +229,8 @@ int http_Download(const char* url, int timeout_secs, char** document,
  *      UPNP_E_SUCCESS          - On Sucess
  *      UPNP_E_INVALID_PARAM    - Invalid Parameter
  ************************************************************************/
-int http_HttpGetProgress(void* Handle, size_t* length, size_t* total);
+EXPORT_SPEC int http_HttpGetProgress(void* Handle, size_t* length,
+                                     size_t* total);
 
 /*!
  * \brief Opens a connection to the server.
@@ -584,9 +586,10 @@ void http_CalcResponseVersion(int request_major_vers, int request_minor_vers,
  *      UPNP_E_SOCKET_ERROR
  *      UPNP_E_BAD_RESPONSE
  ************************************************************************/
-int http_OpenHttpGetEx(const char* url_str, void** Handle, char** contentType,
-                       int* contentLength, int* httpStatus, int lowRange,
-                       int highRange, int timeout);
+EXPORT_SPEC int http_OpenHttpGetEx(const char* url_str, void** Handle,
+                                   char** contentType, int* contentLength,
+                                   int* httpStatus, int lowRange, int highRange,
+                                   int timeout);
 
 /************************************************************************
  * Function: get_sdk_info

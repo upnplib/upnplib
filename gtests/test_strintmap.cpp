@@ -1,11 +1,10 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-01
+// Redistribution only with this Copyright remark. Last modified: 2022-05-18
+
+#include "strintmap.hpp"
+#include "httpparser.hpp" // for HTTPMETHOD* constants
 
 #include "gtest/gtest.h"
-//#include "gmock/gmock.h"
-
-#include "genlib/util/strintmap.cpp"
-#include "httpparser.hpp" // for HTTPMETHOD* constants
 
 namespace upnplib {
 
@@ -165,6 +164,5 @@ TEST_F(StrintmapTestSuite, map_int_to_str_with_oversized_table_entiries) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    // ::testing::InitGoogleMock(&argc, argv);
     return RUN_ALL_TESTS();
 }

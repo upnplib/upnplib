@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-22
+// Redistribution only with this Copyright remark. Last modified: 2022-05-18
 
 // iphlpapi.h is a Microsoft Windows library.
 #ifdef _WIN32
@@ -7,6 +7,7 @@
 #ifndef UPNPLIB_IPHLPAPI_WIN32IF_HPP
 #define UPNPLIB_IPHLPAPI_WIN32IF_HPP
 
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #include <winsock2.h>
 #include <iphlpapi.h>
 
@@ -28,7 +29,7 @@ class Biphlpapi {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-extern Biphlpapi* iphlpapi_h;
+EXPORT_SPEC extern Biphlpapi* iphlpapi_h;
 
 // In the production code you just prefix the old system call with
 // 'upnplib::iphlpapi_h->' so the new call looks like this:

@@ -4,13 +4,13 @@
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
 
-#include "gmock/gmock.h"
-
-#include "upnplib/uri.hpp"
-
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
 #include "core/src/genlib/net/uri/uri.cpp"
+
+#include "upnplib/uri.hpp"
+
+#include "gmock/gmock.h"
 
 using ::testing::_;
 using ::testing::DoAll;

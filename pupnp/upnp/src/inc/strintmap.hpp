@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-01
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 #ifndef GENLIB_UTIL_STRINTMAP_HPP
 #define GENLIB_UTIL_STRINTMAP_HPP
 
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 //#include "upnputil.hpp"
-
 #include <stdlib.h>
 
 /* Util to map from a string to an integer and vice versa */
@@ -68,8 +68,9 @@ typedef struct /* str_int_entry */
  *
  *	Note :
  ************************************************************************/
-int map_str_to_int(const char* name, size_t name_len, str_int_entry* table,
-                   int num_entries, int case_sensitive);
+EXPORT_SPEC int map_str_to_int(const char* name, size_t name_len,
+                               str_int_entry* table, int num_entries,
+                               int case_sensitive);
 
 /************************************************************************
  *	Function :	map_int_to_str
@@ -90,6 +91,6 @@ int map_str_to_int(const char* name, size_t name_len, str_int_entry* table,
  *
  *	Note :
  ************************************************************************/
-int map_int_to_str(int id, str_int_entry* table, int num_entries);
+EXPORT_SPEC int map_int_to_str(int id, str_int_entry* table, int num_entries);
 
 #endif /* GENLIB_UTIL_STRINTMAP_HPP */

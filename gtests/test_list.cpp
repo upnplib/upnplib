@@ -1,10 +1,9 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2021-12-31
 
-#include "gtest/gtest.h"
-//#include "gmock/gmock.h"
+#include "pupnp/upnp/src/genlib/util/list.cpp"
 
-#include "genlib/util/list.cpp"
+#include "gtest/gtest.h"
 
 namespace upnplib {
 
@@ -355,6 +354,5 @@ TEST(ListTestSuite, UpnpListErase_with_position_to_end) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    // ::testing::InitGoogleMock(&argc, argv);
     return RUN_ALL_TESTS();
 }

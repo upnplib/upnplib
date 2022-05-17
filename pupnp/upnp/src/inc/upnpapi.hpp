@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-24
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -57,7 +57,7 @@
 
 #define NUM_HANDLE 200
 
-extern size_t g_maxContentLength;
+EXPORT_SPEC extern size_t g_maxContentLength;
 extern int g_UpnpSdkEQMaxLen;
 extern int g_UpnpSdkEQMaxAge;
 
@@ -126,7 +126,7 @@ extern ithread_rwlock_t GlobalHndRWLock;
  *
  * \return HND_DEVICE, UPNP_E_INVALID_HANDLE
  */
-Upnp_Handle_Type GetHandleInfo(
+EXPORT_SPEC Upnp_Handle_Type GetHandleInfo(
     /*! handle pointer (key for the client handle structure). */
     int Hnd,
     /*! handle structure passed by this function. */
@@ -198,20 +198,20 @@ Upnp_Handle_Type GetDeviceHandleInfoForPath(
     /*! [out] Service info for found path. */
     service_info** serv_info);
 
-extern char gIF_NAME[LINE_SIZE];
-extern char gIF_IPV4[INET_ADDRSTRLEN];
-extern char gIF_IPV4_NETMASK[INET_ADDRSTRLEN];
-extern char gIF_IPV6[INET6_ADDRSTRLEN];
-extern unsigned gIF_IPV6_PREFIX_LENGTH;
+EXPORT_SPEC extern char gIF_NAME[LINE_SIZE];
+EXPORT_SPEC extern char gIF_IPV4[INET_ADDRSTRLEN];
+EXPORT_SPEC extern char gIF_IPV4_NETMASK[INET_ADDRSTRLEN];
+EXPORT_SPEC extern char gIF_IPV6[INET6_ADDRSTRLEN];
+EXPORT_SPEC extern unsigned gIF_IPV6_PREFIX_LENGTH;
 
-extern char gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN];
-extern unsigned gIF_IPV6_ULA_GUA_PREFIX_LENGTH;
+EXPORT_SPEC extern char gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN];
+EXPORT_SPEC extern unsigned gIF_IPV6_ULA_GUA_PREFIX_LENGTH;
 
-extern unsigned gIF_INDEX;
+EXPORT_SPEC extern unsigned gIF_INDEX;
 
-extern unsigned short LOCAL_PORT_V4;
-extern unsigned short LOCAL_PORT_V6;
-extern unsigned short LOCAL_PORT_V6_ULA_GUA;
+EXPORT_SPEC extern unsigned short LOCAL_PORT_V4;
+EXPORT_SPEC extern unsigned short LOCAL_PORT_V6;
+EXPORT_SPEC extern unsigned short LOCAL_PORT_V6_ULA_GUA;
 
 /*! NLS uuid. */
 extern Upnp_SID gUpnpSdkNLSuuid;
@@ -279,7 +279,7 @@ typedef enum { WEB_SERVER_DISABLED, WEB_SERVER_ENABLED } WebServerState;
  *
  * \return UPNP_E_SUCCESS on success.
  */
-int UpnpGetIfInfo(
+EXPORT_SPEC int UpnpGetIfInfo(
     /*! [in] Interface name (can be NULL). */
     const char* IfName);
 

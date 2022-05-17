@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-03-11
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -146,7 +146,7 @@ typedef struct URL_LIST {
  *
  * \return 1 if an escaped character was converted, otherwise return 0.
  */
-int replace_escaped(
+EXPORT_SPEC int replace_escaped(
     /*! [in,out] String of characters. */
     char* in,
     /*! [in] Index at which to start checking the characters. */
@@ -166,7 +166,7 @@ int replace_escaped(
  * 	\li HTTP_SUCCESS - On Success.
  * 	\li UPNP_E_OUTOF_MEMORY - On Failure to allocate memory.
  */
-int copy_URL_list(
+EXPORT_SPEC int copy_URL_list(
     /*! [in] Source URL list. */
     URL_list* in,
     /*! [out] Destination URL list. */
@@ -178,7 +178,7 @@ int copy_URL_list(
  * Frees the dynamically allocated members of of list. Does NOT free the
  * pointer to the list itself ( i.e. does NOT free(list)).
  */
-void free_URL_list(
+EXPORT_SPEC void free_URL_list(
     /*! [in] URL list object. */
     URL_list* list);
 
@@ -217,7 +217,7 @@ void print_token(
  * 	\li == 0, if string1 is identical to string2 .
  * 	\li > 0, if string1 is greater than string2.
  */
-int token_string_casecmp(
+EXPORT_SPEC int token_string_casecmp(
     /*! [in] Token object whose buffer is to be compared. */
     token* in1,
     /*! [in] String of characters to compare with. */
@@ -231,7 +231,7 @@ int token_string_casecmp(
  * 	\li == 0, if string1 is identical to string2 .
  * 	\li > 0, if string1 is greater than string2.
  */
-int token_cmp(
+EXPORT_SPEC int token_cmp(
     /*! [in] First token object whose buffer is to be compared. */
     token* in1,
     /*! [in] Second token object used for the comparison. */
@@ -246,7 +246,7 @@ int token_cmp(
  *
  * \return UPNP_E_SUCCESS.
  */
-int remove_escaped_chars(
+EXPORT_SPEC int remove_escaped_chars(
     /*! [in,out] String of characters to be modified. */
     char* in,
     /*! [in,out] Size limit for the number of characters. */
@@ -274,7 +274,7 @@ int remove_escaped_chars(
  * 	\li UPNP_E_OUTOF_MEMORY - On failure to allocate memory.
  * 	\li UPNP_E_INVALID_URL - Failure to resolve URL.
  */
-int remove_dots(
+EXPORT_SPEC int remove_dots(
     /*! [in] String of characters from which "dots" have to be removed. */
     char* in,
     /*! [in] Size limit for the number of characters. */
@@ -313,7 +313,7 @@ EXPORT_SPEC char* resolve_rel_url(
  *
  * \return HTTP_SUCCESS or UPNP_E_INVALID_URL
  */
-int parse_uri(
+EXPORT_SPEC int parse_uri(
     /*! [in] Character string containing uri information to be parsed. */
     const char* in,
     /*! [in] Number of characters (strlen()) of the input string. */

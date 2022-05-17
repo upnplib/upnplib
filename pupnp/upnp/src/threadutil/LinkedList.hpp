@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-10-22
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -99,7 +99,7 @@ typedef struct LINKEDLIST {
  *	\li \c 0 on success.
  *	\li \c EOUTOFMEM on failure.
  */
-int ListInit(
+EXPORT_SPEC int ListInit(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Function used to compare items. (May be NULL). */
@@ -116,7 +116,7 @@ int ListInit(
  *
  * \return The pointer to the ListNode on success, NULL on failure.
  */
-ListNode* ListAddHead(
+EXPORT_SPEC ListNode* ListAddHead(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Item to be added. */
@@ -130,7 +130,7 @@ ListNode* ListAddHead(
  *
  * \return The pointer to the ListNode on success, NULL on failure.
  */
-ListNode* ListAddTail(
+EXPORT_SPEC ListNode* ListAddTail(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Item to be added. */
@@ -144,7 +144,7 @@ ListNode* ListAddTail(
  *
  * \return The pointer to the ListNode on success, NULL on failure.
  */
-ListNode* ListAddAfter(
+EXPORT_SPEC ListNode* ListAddAfter(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Item to be added. */
@@ -160,7 +160,7 @@ ListNode* ListAddAfter(
  *
  * \return The pointer to the ListNode on success, NULL on failure.
  */
-ListNode* ListAddBefore(
+EXPORT_SPEC ListNode* ListAddBefore(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Item to be added. */
@@ -176,7 +176,7 @@ ListNode* ListAddBefore(
  * \return The pointer to the item stored in the node or NULL if the item
  * is freed.
  */
-void* ListDelNode(
+EXPORT_SPEC void* ListDelNode(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Node to delete. */
@@ -193,7 +193,7 @@ void* ListDelNode(
  *
  * \return 0 on success, EINVAL on failure.
  */
-int ListDestroy(
+EXPORT_SPEC int ListDestroy(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! if !0 then item is freed using free function. If 0 (or free
@@ -207,7 +207,7 @@ int ListDestroy(
  *
  * \return The head of the list. NULL if list is empty.
  */
-ListNode* ListHead(
+EXPORT_SPEC ListNode* ListHead(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list);
 
@@ -218,7 +218,7 @@ ListNode* ListHead(
  *
  * \return The tail of the list. NULL if list is empty.
  */
-ListNode* ListTail(
+EXPORT_SPEC ListNode* ListTail(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list);
 
@@ -229,7 +229,7 @@ ListNode* ListTail(
  *
  * \return The next item in the list. NULL if there are no more items in list.
  */
-ListNode* ListNext(
+EXPORT_SPEC ListNode* ListNext(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Node from the list. */
@@ -243,7 +243,7 @@ ListNode* ListNext(
  * \return The previous item in the list. NULL if there are no more items in
  * list.
  */
-ListNode* ListPrev(
+EXPORT_SPEC ListNode* ListPrev(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Node from the list. */
@@ -259,7 +259,7 @@ ListNode* ListPrev(
  *
  * \return The node containing the item. NULL if no node contains the item.
  */
-ListNode* ListFind(
+EXPORT_SPEC ListNode* ListFind(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! The node to start from, NULL if to start from beginning. */
@@ -274,7 +274,7 @@ ListNode* ListFind(
  *
  * \return The number of items in the list.
  */
-long ListSize(
+EXPORT_SPEC long ListSize(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list);
 

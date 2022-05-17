@@ -7,7 +7,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-07
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -96,7 +96,7 @@ static UPNP_INLINE int sock_close(
  * \li \c UPNP_E_OUTOF_MEMORY
  * \li \c UPNP_E_SOCKET_ERROR
  */
-int sock_init(
+EXPORT_SPEC int sock_init(
     /*! [out] Socket Information Object. */
     SOCKINFO* info,
     /*! [in] Socket Descriptor. */
@@ -111,7 +111,7 @@ int sock_init(
  * \li \c UPNP_E_OUTOF_MEMORY
  * \li \c UPNP_E_SOCKET_ERROR
  */
-int sock_init_with_ip(
+EXPORT_SPEC int sock_init_with_ip(
     /*! [out] Socket Information Object. */
     SOCKINFO* info,
     /*! [in] Socket Descriptor. */
@@ -144,7 +144,7 @@ int sock_ssl_connect(
  * \li \c UPNP_E_SOCKET_ERROR on failure.
  * \li \c UPNP_E_SUCCESS on success.
  */
-int sock_destroy(
+EXPORT_SPEC int sock_destroy(
     /*! [in,out] Socket Information Object. */
     SOCKINFO* info,
     /*! [in] How to shutdown the socket. Used by sockets's shutdown(). */
@@ -158,7 +158,7 @@ int sock_destroy(
  * \li \c UPNP_E_TIMEDOUT - Timeout.
  * \li \c UPNP_E_SOCKET_ERROR - Error on socket calls.
  */
-int sock_read(
+EXPORT_SPEC int sock_read(
     /*! [in] Socket Information Object. */
     SOCKINFO* info,
     /*! [out] Buffer to get data to. */
@@ -176,7 +176,7 @@ int sock_read(
  * \li \c UPNP_E_TIMEDOUT - Timeout.
  * \li \c UPNP_E_SOCKET_ERROR - Error on socket calls.
  */
-int sock_write(
+EXPORT_SPEC int sock_write(
     /*! [in] Socket Information Object. */
     SOCKINFO* info,
     /*! [in] Buffer to send data from. */
@@ -191,7 +191,7 @@ int sock_write(
  *
  * \return 0 if successful, -1 otherwise.
  */
-int sock_make_blocking(
+EXPORT_SPEC int sock_make_blocking(
     /* [in] socket. */
     SOCKET sock);
 
@@ -200,7 +200,7 @@ int sock_make_blocking(
  *
  * \return 0 if successful, -1 otherwise.
  */
-int sock_make_no_blocking(
+EXPORT_SPEC int sock_make_no_blocking(
     /* [in] socket. */
     SOCKET sock);
 

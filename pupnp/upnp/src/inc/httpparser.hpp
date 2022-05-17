@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-24
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -253,7 +253,7 @@ void httpmsg_init(http_message_t* msg);
  *
  *	Note :
  ************************************************************************/
-void httpmsg_destroy(http_message_t* msg);
+EXPORT_SPEC void httpmsg_destroy(http_message_t* msg);
 
 /************************************************************************
  *	Function :	httpmsg_find_hdr_str
@@ -269,8 +269,8 @@ void httpmsg_destroy(http_message_t* msg);
  *			 NULL on failure
  *	Note :
  ************************************************************************/
-http_header_t* httpmsg_find_hdr_str(http_message_t* msg,
-                                    const char* header_name);
+EXPORT_SPEC http_header_t* httpmsg_find_hdr_str(http_message_t* msg,
+                                                const char* header_name);
 
 /************************************************************************
  *	Function :	httpmsg_find_hdr
@@ -287,8 +287,8 @@ http_header_t* httpmsg_find_hdr_str(http_message_t* msg,
  *
  *	Note :
  ************************************************************************/
-http_header_t* httpmsg_find_hdr(http_message_t* msg, int header_name_id,
-                                memptr* value);
+EXPORT_SPEC http_header_t* httpmsg_find_hdr(http_message_t* msg,
+                                            int header_name_id, memptr* value);
 
 /************************************************************************
  * Function: parser_request_init
@@ -301,7 +301,7 @@ http_header_t* httpmsg_find_hdr(http_message_t* msg, int header_name_id,
  * Returns:
  *	 void
  ************************************************************************/
-void parser_request_init(http_parser_t* parser);
+EXPORT_SPEC void parser_request_init(http_parser_t* parser);
 
 /************************************************************************
  * Function: parser_response_init
@@ -315,7 +315,8 @@ void parser_request_init(http_parser_t* parser);
  * Returns:
  *	 void
  ************************************************************************/
-void parser_response_init(http_parser_t* parser, http_method_t request_method);
+EXPORT_SPEC void parser_response_init(http_parser_t* parser,
+                                      http_method_t request_method);
 
 /************************************************************************
  * Function: parser_parse
@@ -344,7 +345,7 @@ parse_status_t parser_parse(http_parser_t* parser);
  *	PARSE_SUCCESS
  *	PARSE_FAILURE
  ************************************************************************/
-parse_status_t parser_parse_responseline(http_parser_t* parser);
+EXPORT_SPEC parse_status_t parser_parse_responseline(http_parser_t* parser);
 
 /************************************************************************
  * Function: parser_parse_headers
@@ -359,7 +360,7 @@ parse_status_t parser_parse_responseline(http_parser_t* parser);
  *	PARSE_SUCCESS
  *	PARSE_FAILURE
  ************************************************************************/
-parse_status_t parser_parse_headers(http_parser_t* parser);
+EXPORT_SPEC parse_status_t parser_parse_headers(http_parser_t* parser);
 
 /************************************************************************
  * Function: parser_parse_entity
@@ -374,7 +375,7 @@ parse_status_t parser_parse_headers(http_parser_t* parser);
  * 	 PARSE_FAILURE
  *	 PARSE_COMPLETE	-- no more reading to do
  ************************************************************************/
-parse_status_t parser_parse_entity(http_parser_t* parser);
+EXPORT_SPEC parse_status_t parser_parse_entity(http_parser_t* parser);
 
 /************************************************************************
  * Function: parser_get_entity_read_method
@@ -389,7 +390,7 @@ parse_status_t parser_parse_entity(http_parser_t* parser);
  * 	 PARSE_FAILURE
  *	 PARSE_COMPLETE	-- no more reading to do
  ************************************************************************/
-parse_status_t parser_get_entity_read_method(http_parser_t* parser);
+EXPORT_SPEC parse_status_t parser_get_entity_read_method(http_parser_t* parser);
 
 /************************************************************************
  * Function: parser_append
@@ -406,8 +407,8 @@ parse_status_t parser_get_entity_read_method(http_parser_t* parser);
  * Returns:
  *	 void
  ************************************************************************/
-parse_status_t parser_append(http_parser_t* parser, const char* buf,
-                             size_t buf_length);
+EXPORT_SPEC parse_status_t parser_append(http_parser_t* parser, const char* buf,
+                                         size_t buf_length);
 
 /************************************************************************
  * Function: matchstr
@@ -470,14 +471,14 @@ int raw_find_str(memptr* raw_value, const char* str);
  * Returns:
  *	 const char* ptr - Ptr to the HTTP Method
  ************************************************************************/
-const char* method_to_str(http_method_t method);
+EXPORT_SPEC const char* method_to_str(http_method_t method);
 
 /*!
  * \brief Print the HTTP headers.
  */
 
 #ifdef DEBUG
-void print_http_headers(
+EXPORT_SPEC void print_http_headers(
     /*! [in] HTTP Message object. */
     http_message_t* hmsg);
 #else

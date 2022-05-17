@@ -2,6 +2,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
+ * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -69,7 +71,7 @@ typedef struct FREELIST {
  *	\li \c 0 on success.
  *	\li \c EINVAL on failure.
  */
-UPNPLIB_API int FreeListInit(
+EXPORT_SPEC int FreeListInit(
     /*! Must be valid, non null, pointer to a linked list. */
     FreeList* free_list,
     /*! Size of elements to store in free list. */
@@ -86,7 +88,7 @@ UPNPLIB_API int FreeListInit(
  *
  * \return Non NULL on success. NULL on failure.
  */
-UPNPLIB_API void* FreeListAlloc(
+EXPORT_SPEC void* FreeListAlloc(
     /*! Must be valid, non null, pointer to a linked list. */
     FreeList* free_list);
 
@@ -100,7 +102,7 @@ UPNPLIB_API void* FreeListAlloc(
  *	\li \c 0 on success.
  *	\li \c EINVAL on failure.
  */
-UPNPLIB_API int FreeListFree(
+EXPORT_SPEC int FreeListFree(
     /*! Must be valid, non null, pointer to a free list. */
     FreeList* free_list,
     /*! Must be a pointer allocated by FreeListAlloc. */
@@ -113,7 +115,7 @@ UPNPLIB_API int FreeListFree(
  *	\li \c 0 on success.
  *	\li \c EINVAL on failure.
  */
-UPNPLIB_API int FreeListDestroy(
+EXPORT_SPEC int FreeListDestroy(
     /*! Must be valid, non null, pointer to a linked list. */
     FreeList* free_list);
 

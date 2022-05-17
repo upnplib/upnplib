@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-02
+ * Redistribution only with this Copyright remark. Last modified: 2022-05-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -92,7 +92,7 @@ typedef struct TIMEREVENT {
  * \return 0 on success, nonzero on failure. Returns error from
  * 	ThreadPoolAddPersistent on failure.
  */
-int TimerThreadInit(
+EXPORT_SPEC int TimerThreadInit(
     /*! [in] Valid timer thread pointer. */
     TimerThread* timer,
     /*! [in] Valid thread pool to use. Must be started. Must be valid for
@@ -105,7 +105,7 @@ int TimerThreadInit(
  * \return 0 on success, nonzero on failure, EOUTOFMEM if not enough memory
  * 	to schedule job.
  */
-int TimerThreadSchedule(
+EXPORT_SPEC int TimerThreadSchedule(
     /*! [in] Valid timer thread pointer. */
     TimerThread* timer,
     /*! [in] time of event. Either in absolute seconds, or relative
@@ -128,7 +128,7 @@ int TimerThreadSchedule(
  *
  * \return 0 on success, INVALID_EVENT_ID on failure.
  */
-int TimerThreadRemove(
+EXPORT_SPEC int TimerThreadRemove(
     /*! [in] Valid timer thread pointer. */
     TimerThread* timer,
     /*! [in] Id of event to remove. */
@@ -145,7 +145,7 @@ int TimerThreadRemove(
  *
  * \return 0 if succesfull, nonzero otherwise. Always returns 0.
  */
-int TimerThreadShutdown(
+EXPORT_SPEC int TimerThreadShutdown(
     /*! [in] Valid timer thread pointer. */
     TimerThread* timer);
 

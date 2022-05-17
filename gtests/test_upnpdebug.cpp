@@ -1,5 +1,7 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-08
+// Redistribution only with this Copyright remark. Last modified: 2022-05-18
+
+#include "upnpdebug.hpp"
 
 #include "upnpmock/pthread.hpp"
 #include "upnpmock/stdio.hpp"
@@ -10,8 +12,6 @@
 #include "upnplib/upnptools.hpp"
 #include "upnplib/port.hpp"
 #include <string>
-
-#include "api/upnpdebug.cpp"
 
 using ::testing::_;
 using ::testing::MatchesRegex;
@@ -176,6 +176,9 @@ class UpnpdebugMockTestSuite : public ::testing::Test {
     Mock_string mocked_string;
 
     // constructor
+    // We cannot use this anymore because we link with libraries instead of
+    // including the source file 'upnpdebug.cpp'.
+#if (false)
     UpnpdebugMockTestSuite() {
         // Clear the static variables of the unit
         g_log_level = UPNP_DEFAULT_LOG_LEVEL;
@@ -185,6 +188,7 @@ class UpnpdebugMockTestSuite : public ::testing::Test {
         initwascalled = 0;
         fileName = nullptr;
     }
+#endif
 };
 
 TEST_F(UpnpdebugMockTestSuite, initlog_but_no_log_wanted)

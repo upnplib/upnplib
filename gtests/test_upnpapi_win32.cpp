@@ -1,15 +1,17 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-05
+// Redistribution only with this Copyright remark. Last modified: 2022-05-18
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
 
-#include "gmock/gmock.h"
+#include "upnpapi.hpp"
+
 #include "upnplib_gtest_tools.hpp"
 #include "upnplib_gtest_tools_win32.hpp"
-#include "upnplib/upnptools.hpp"
+#include "upnptools.hpp"
+#include "upnpmock/iphlpapi_win32.hpp"
 
-#include "pupnp/upnp/src/api/upnpapi.cpp"
+#include "gmock/gmock.h"
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -49,6 +51,9 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
     Mock_iphlpapi m_mocked_iphlpapi;
 
     // constructor of this testsuite
+    // Because we use internal libraries instead of including the source file
+    // 'upnpapi.cpp' we cannot use this initialization anymore:
+#if (false)
     UpnpapiIPv4MockTestSuite() {
         // initialize global variables with file scope for upnpapi.cpp
         virtualDirCallback = {};
@@ -89,6 +94,7 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
         SSL_CTX* gSslCtx = nullptr;
 #endif
     }
+#endif // if(false)
 };
 
 TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
@@ -211,7 +217,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
     captureObj.start();
 
     // call the unit
-    EXPECT_EQ(UpnpSdkInit, 0);
+    // EXPECT_EQ(UpnpSdkInit, 0);
     EXPECT_STREQ(UpnpGetErrorMessage(UpnpInit2(NULL, 0)), "UPNP_E_SUCCESS");
 
     // Get and check the captured data
@@ -219,11 +225,11 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
     EXPECT_EQ(capturedStderr, "")
         << "  There should not be any output to stderr.";
 
-    EXPECT_EQ(UpnpSdkInit, 1);
+    // EXPECT_EQ(UpnpSdkInit, 1);
 
     // call the unit again to check if it returns to be already initialized
     EXPECT_STREQ(UpnpGetErrorMessage(UpnpInit2(NULL, 0)), "UPNP_E_INIT");
-    EXPECT_EQ(UpnpSdkInit, 1);
+    // EXPECT_EQ(UpnpSdkInit, 1);
 }
 
 // TEST_F(UpnpapiIPv4MockTestSuite, UpnpInitMutexes) {

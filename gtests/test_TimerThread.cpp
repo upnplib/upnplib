@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-14
+// Redistribution only with this Copyright remark. Last modified: 2022-05-18
 
 // Note
 // -------------
@@ -17,17 +17,13 @@
 // ./gtests/build/test_TimerThread_old  --gtest_brief=1 --gtest_repeat=10000
 // --gtest_filter=TimerThreadNormalTestSuite.init_and_shutdown_timerthread
 
-#include "gtest/gtest.h"
-
-#include "FreeList.cpp"
-#include "LinkedList.cpp"
-#include "ThreadPool.cpp"
+#include "TimerThread.hpp"
 #include "upnplib/ThreadPool.hpp"
 
 #include <chrono>
 #include <thread>
 
-#include "TimerThread.cpp"
+#include "gtest/gtest.h"
 
 namespace upnplib {
 

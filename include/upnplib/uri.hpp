@@ -1,9 +1,11 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-12
+// Redistribution only with this Copyright remark. Last modified: 2022-05-17
 
 #ifndef UPNPLIB_NET_URI_HPP
 #define UPNPLIB_NET_URI_HPP
 
+// use "full" path for include otherwise the linker will first use the heder
+// file in the current directory. That is in this cawe 'include/upnplib/uri.hpp'
 #include "pupnp/upnp/src/inc/uri.hpp"
 
 namespace upnplib {

@@ -1,9 +1,8 @@
 Next steps to do:
-* Make include directories target specific, means to use
-    'target_include_directories'.
+* Build gtests with libraries
 * Remove dependency of upnplib from 'upnpconfig.hpp'.
-* Rework and optimize CMake configuration and build.
-* Remove 'upnp.hpp' dependeny from 'core/src/api/upnplib/upnptools.cpp'
+* Remove 'upnp.hpp' dependeny from './core/src/api/upnplib/upnptools.cpp'
+* Remove 'uri.hpp' dependeny from './include/upnplib/uri.hpp'
 * Some gtests fail on MS Windows with system error 135 using
     Build Type Debug. Fix it.
 * Bugreport to gtest: EXPECT_THAT THROW shouldn't call two times if no match.

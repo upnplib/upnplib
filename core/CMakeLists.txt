@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-15
+# Redistribution only with this Copyright remark. Last modified: 2022-05-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -74,6 +74,13 @@ if(NOT WIN32)
             PRIVATE UPNPLIB_SHARED
             PRIVATE UPNPLIB_EXPORTS
     )
+    target_link_libraries(upnplib_native_shared
+        INTERFACE
+            ixml_shared
+            # On Linux we cannot link with the static pthreads library because then
+            # we have also link with a static libc that's not available by default.
+            ${UPNP_PTHREADS_SHARED_LIBRARY}
+    )
 
     # upnplib native static library
     #------------------------------
@@ -88,6 +95,13 @@ if(NOT WIN32)
             PRIVATE ${PUPNP_BINARY_DIR}/inc
             PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
             PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
+    )
+    target_link_libraries(upnplib_native_static
+        INTERFACE
+            ixml_static
+            # On Linux we cannot link with the static pthreads library because then
+            # we have also link with a static libc that's not available by default.
+            ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
     # Info executable linked with the pupnp native shared library
@@ -142,6 +156,11 @@ else() # WIN32
             PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
             PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
             PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
+            # if pthreads4w isn't installed this path is empty. The linker
+            # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+            # (Only for general use. It doesn't matter here because we are
+            # already on WIN32).
+            INTERFACE ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
     )
     target_compile_definitions(upnplib_compa_shared
             PRIVATE UPNPLIB_SHARED
@@ -191,13 +210,11 @@ else() # WIN32
     )
     # In addition to pthreads we need some more system libraries here
     target_link_libraries(upnplib_native_shared
-            #PRIVATE ws2_32   # winsock to support sockets
-            #PRIVATE iphlpapi # ip helper interface to get network management tools
-            #PUBLIC ixml_shared
-            PUBLIC ${UPNP_PTHREADS_STATIC_LIBRARY}
-            # If you link with the shared pthreads4w library then its .dll file
-            # must also be found.
-            #${UPNP_PTHREADS_SHARED_LIBRARY}
+        PUBLIC
+            ws2_32   # winsock to support sockets
+            # On MS Windows we link with the static pthreads4w library to
+            # avoid error prone managing access to its .dll file.
+            ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
     # upnplib native static library
@@ -214,6 +231,12 @@ else() # WIN32
     target_compile_definitions(upnplib_native_static
             PRIVATE $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
+    target_link_libraries(upnplib_native_static
+        INTERFACE
+            # On MS Windows we link with the static pthreads4w library to
+            # avoid error prone managing access to its .dll file.
+            ${UPNP_PTHREADS_STATIC_LIBRARY}
+    )
 
     # Info executable linked with the pupnp native shared library
     #------------------------------------------------------------
@@ -225,8 +248,6 @@ else() # WIN32
             PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
             PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc   # needed for ithread.hpp
-            # if pthreads4w isn't installed this path is empty. The linker
-            # doesn't find "pthread.h" and falls back to look at <pthread.h>.
             PRIVATE ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
     )
     target_compile_definitions (upnplibInfo_shared
@@ -247,8 +268,6 @@ else() # WIN32
             PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
             PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc  # needed for ithread.hpp
-            # if pthreads4w isn't installed this path is empty. The linker
-            # doesn't find "pthread.h" and falls back to look at <pthread.h>.
             PRIVATE ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
     )
     target_link_libraries(upnplibInfo_static
