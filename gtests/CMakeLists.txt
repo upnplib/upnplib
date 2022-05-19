@@ -16,23 +16,23 @@ project(UPNPLIB_GTESTS VERSION 0024
 # For old builds with direct build from source files look at git commit:
 # git show 741a85fbc88:gtests/CMakeLists.txt
 
-# To link googletest we need of course its libraries.
-# gmock libraries also contain gtest libraries.
-link_libraries(gmock gmock_main
-)
-
 # Reset output directories to default means to use the subprojects directories.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "")
 
+# To link googletest we need of course its libraries.
+# gmock libraries also contain gtest libraries.
+link_libraries(gmock gmock_main
+)
 # If linking with shared build gtest libs we need to tell it the compiler.
 # I have found a vague hint about the flag GTEST_LINKED_AS_SHARED_LIBRARY at
 # build/_deps/googletest-src/googletest/README.md
 add_compile_definitions(
-    PRIVATE $<$<AND:$<BOOL:${UPNPLIB_WITH_GOOGLETEST}>,$<BOOL:${BUILD_SHARED_LIBS}>>:GTEST_LINKED_AS_SHARED_LIBRARY>
-    # Compile tests for the old (pupnp) source code.
-    OLD_TEST
+    PRIVATE
+        $<$<AND:$<BOOL:${UPNPLIB_WITH_GOOGLETEST}>,$<BOOL:${BUILD_SHARED_LIBS}>>:GTEST_LINKED_AS_SHARED_LIBRARY>
+        # Compile tests for the old (pupnp) source code.
+        OLD_TEST
 )
 
 # Create upnplib helper tools library for gtests. We have version
@@ -41,8 +41,8 @@ add_compile_definitions(
 # upnplib_gtest_tools_win32 for Microsoft Windows
 add_library(upnplib_gtest_tools SHARED
         ./tools/upnplib_gtest_tools.cpp
-        $<$<BOOL:${WIN32}>:./tools/upnplib_gtest_tools_win32.cpp>
-        $<$<NOT:$<BOOL:${WIN32}>>:./tools/upnplib_gtest_tools_unix.cpp>
+        $<$<PLATFORM_ID:Windows>:./tools/upnplib_gtest_tools_win32.cpp>
+        $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/upnplib_gtest_tools_unix.cpp>
 )
 target_include_directories(upnplib_gtest_tools
     PRIVATE
@@ -55,10 +55,8 @@ target_compile_definitions(upnplib_gtest_tools
         UPNPLIB_EXPORTS
 )
 target_link_libraries(upnplib_gtest_tools
-    PUBLIC
+    PRIVATE
         $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
-    INTERFACE
-        $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network management tools
 )
 
 #################################
@@ -66,6 +64,7 @@ target_link_libraries(upnplib_gtest_tools
 #################################
 # The tests are build in reverse order. test_template.cpp will be build first.
 
+if(FALSE)
 # sock
 #-----
 add_executable(test_sock
@@ -170,7 +169,6 @@ target_link_libraries(test_uri
 )
 add_test(NAME ctest_uri COMMAND test_uri)
 
-if(FALSE)
 # Link with internal libraries.
 add_executable(test_uri
     ./test_uri.cpp
@@ -195,7 +193,6 @@ target_link_libraries(test_uri
 )
 add_test(NAME ctest_uri COMMAND test_uri
 )
-endif()
 
 # uri: uri_parse
 #---------------
@@ -225,7 +222,6 @@ target_link_libraries(test_uri_parse
 )
 add_test(NAME ctest_uri_parse COMMAND test_uri_parse)
 
-if(FALSE)
 # Link with internal libraries.
 add_executable(test_uri_parse
     ./test_uri.d/test_uri_parse.cpp
@@ -251,7 +247,6 @@ target_link_libraries(test_uri_parse
 )
 add_test(NAME ctest_uri_parse COMMAND test_uri_parse
 )
-endif()
 
 # uri: urlparser
 #---------------
@@ -279,7 +274,6 @@ add_test(NAME ctest_url_class COMMAND test_url_class
 
 # httpparser
 #-----------
-if(FALSE)
 # Temporary disabled. Include files and directories must be checked.
 
 # Direct linking with source files currently not used but having available for
@@ -297,7 +291,6 @@ add_executable(test_httpparser
 
     ./test_httpparser.cpp
 )
-#endif()
 
 add_executable(test_httpparser
     ./test_httpparser.cpp
@@ -322,11 +315,9 @@ target_link_libraries(test_httpparser
 )
 add_test(NAME ctest_httpparser COMMAND test_httpparser
 )
-endif()
 
 # httpreadwrite incl. statcodes
 #------------------------------
-if(FALSE)
 # Temporary disabled. Include files and directories must be checked.
 
 # Direct linking with source files currently not used but having available for
@@ -357,7 +348,6 @@ add_executable(test_httpreadwrite
     ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
     ./test_httpreadwrite.cpp
 )
-#endif()
 
 add_executable(test_httpreadwrite
         ./test_httpreadwrite.cpp
@@ -384,11 +374,9 @@ target_link_libraries(test_httpreadwrite
 )
 add_test(NAME ctest_httpreadwrite COMMAND test_httpreadwrite
 )
-endif()
 
 # httpreadwrite: netconnect
 #--------------------------
-if(FALSE)
 # Temporary disabled. Include files and directories must be checked.
 
 # Direct linking with source files currently not used but having available for
@@ -417,7 +405,6 @@ add_executable(test_netconnect
 
     test_httpreadwrite.d/test_netconnect.cpp
 )
-#endif()
 
 add_executable(test_netconnect
         test_httpreadwrite.d/test_netconnect.cpp
@@ -442,7 +429,6 @@ target_link_libraries(test_netconnect
 )
 add_test(NAME ctest_netconnect COMMAND test_netconnect
 )
-endif()
 
 # UpnpString
 #-----------
@@ -482,7 +468,6 @@ add_test(NAME ctest_upnpdebug COMMAND test_upnpdebug)
 
 # upnpapi
 #--------
-if(FALSE)
 # Direct linking with source files currently not used but having available for
 # reference. We link against the upnplib libraries (see below).
 set(UPNP_UPNPAPI_SOURCE_FILES
@@ -525,7 +510,6 @@ set(UPNP_UPNPAPI_SOURCE_FILES
 
     ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
 )
-endif()
 
 add_executable(test_upnpapi
         $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/test_upnpapi_win32.cpp>
@@ -551,7 +535,6 @@ target_link_libraries(test_upnpapi
 add_test(NAME ctest_upnpapi COMMAND test_upnpapi
 )
 
-if(FALSE)
 # LinkedList
 #-----------
 # Compile direct with sources because including source file under test into
@@ -561,7 +544,6 @@ add_executable(test_LinkedList
         ./test_LinkedList.cpp)
 add_test(NAME ctest_LinkedList COMMAND test_LinkedList
 )
-endif()
 
 # LinkedList
 #-----------
@@ -667,8 +649,9 @@ add_test(NAME ctest_upnplib_gtest_tools COMMAND test_upnplib_gtest_tools
 )
 
 # upnptools
-#----------
+#==========
 add_executable(test_upnptools
+#----------------------------
         test_upnptools.cpp
 )
 target_include_directories(test_upnptools
@@ -686,6 +669,7 @@ add_test(NAME ctest_upnptools COMMAND test_upnptools
 )
 
 add_executable(test_upnptools_compa
+#----------------------------------
         ./test_upnptools.cpp
 )
 target_include_directories(test_upnptools_compa
@@ -701,30 +685,108 @@ target_link_libraries(test_upnptools_compa
 )
 add_test(NAME ctest_upnptools_compa COMMAND test_upnptools_compa
 )
+endif()
 
 # simple test
-#------------
-add_executable(test_simple
+#============
+add_executable(test_simple-pnsh
+#------------------------------
         ./test_simple.cpp
 )
-target_include_directories(test_simple
+target_include_directories(test_simple-pnsh
     PRIVATE
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h on MS Windows
 )
-target_link_libraries(test_simple
+target_link_libraries(test_simple-pnsh
     PRIVATE
-        upnplib_compa_static
+        pupnp_native_shared # prefix -pnsh
 )
-add_test(NAME ctest_simple COMMAND test_simple)
+add_test(NAME ctest_simple-pnsh COMMAND test_simple-pnsh
+)
+
+add_executable(test_simple-pnst
+#------------------------------
+        ./test_simple.cpp
+)
+target_include_directories(test_simple-pnst
+    PRIVATE
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h on MS Windows
+)
+target_link_libraries(test_simple-pnst
+    PRIVATE
+        pupnp_native_static # prefix -pnst
+)
+add_test(NAME ctest_simple-pnst COMMAND test_simple-pnst
+)
+
+add_executable(test_simple-ucsh
+#------------------------------
+        ./test_simple.cpp
+)
+target_include_directories(test_simple-ucsh
+    PRIVATE
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h on MS Windows
+)
+target_link_libraries(test_simple-ucsh
+    PRIVATE
+        upnplib_compa_shared # prefix -ucsh
+)
+add_test(NAME ctest_simple-ucsh COMMAND test_simple-ucsh
+)
+
+add_executable(test_simple-ucst
+#------------------------------
+        ./test_simple.cpp
+)
+target_include_directories(test_simple-ucst
+    PRIVATE
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h on MS Windows
+)
+target_link_libraries(test_simple-ucst
+    PRIVATE
+        upnplib_compa_static # prefix -ucst
+)
+add_test(NAME ctest_simple-ucst COMMAND test_simple-ucst
+)
+
+add_executable(test_simple-unsh
+#------------------------------
+        ./test_simple.cpp
+)
+target_include_directories(test_simple-unsh
+    PRIVATE
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h on MS Windows
+)
+target_link_libraries(test_simple-unsh
+    PRIVATE
+        upnplib_native_shared # prefix -unsh
+)
+add_test(NAME ctest_simple-unsh COMMAND test_simple-unsh
+)
+
+add_executable(test_simple-unst
+        ./test_simple.cpp
+)
+target_include_directories(test_simple-unst
+    PRIVATE
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h on MS Windows
+)
+target_link_libraries(test_simple-unst
+    PRIVATE
+        upnplib_native_static # prefix -unst
+)
+add_test(NAME ctest_simple-unst COMMAND test_simple-unst
+)
 
 # template
-#---------
+#=========
 add_executable(test_template
         test_template.cpp)
 target_include_directories(test_template
-        PRIVATE ./include)
+    PRIVATE
+        ./include)
 add_test(NAME ctest_template COMMAND test_template)
 
 

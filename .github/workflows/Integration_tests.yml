@@ -159,7 +159,13 @@ jobs:
       - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
         name: Run simple gtest
         # This gtest is always built with GoogleTest
-        run: ./build/gtests/test_simple
+        run: |
+          ./build/gtests/test_simple-pnsh
+          ./build/gtests/test_simple-pnst
+          ./build/gtests/test_simple-ucsh
+          ./build/gtests/test_simple-ucst
+          ./build/gtests/test_simple-unsh
+          ./build/gtests/test_simple-unst
 
       - if: matrix.buildtype != 'Debug'
         name: Verify if NO Debug info
@@ -232,7 +238,13 @@ jobs:
       - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
         name: Run simple gtest
         # This gtest is always built with GoogleTest
-        run: ./build/gtests/test_simple
+        run: |
+          ./build/gtests/test_simple-pnsh
+          ./build/gtests/test_simple-pnst
+          ./build/gtests/test_simple-ucsh
+          ./build/gtests/test_simple-ucst
+          ./build/gtests/test_simple-unsh
+          ./build/gtests/test_simple-unst
 
       - if: matrix.buildtype != 'Debug'
         name: Verify if NO Debug info

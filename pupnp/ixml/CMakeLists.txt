@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-16
+# Redistribution only with this Copyright remark. Last modified: 2022-05-19
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(PUPNP_IXML VERSION 0006
+project(PUPNP_IXML VERSION 0007
                    DESCRIPTION "IXML library"
                    HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -27,36 +27,40 @@ add_library (ixml_shared SHARED
         ${IXML_SOURCES}
 )
 target_include_directories(ixml_shared
-        PRIVATE ./inc
-        PRIVATE ./src/inc
-        PRIVATE ${PUPNP_SOURCE_DIR}/upnp/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
+    PRIVATE
+        ./inc
+        ./src/inc
+        ${PUPNP_SOURCE_DIR}/upnp/inc
+        ${PUPNP_BINARY_DIR}/inc
 )
 target_compile_definitions(ixml_shared
-        PRIVATE UPNPLIB_SHARED
-        PRIVATE UPNPLIB_EXPORTS
-        PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-        PRIVATE $<$<CONFIG:Debug>:DEBUG>
-        PRIVATE $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
+    PRIVATE
+        UPNPLIB_SHARED
+        UPNPLIB_EXPORTS
+        $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
+        $<$<CONFIG:Debug>:DEBUG>
+        $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
 )
 
 # ixml static library
 #--------------------
 add_library (ixml_static STATIC
-    ${IXML_SOURCES}
+        ${IXML_SOURCES}
 )
 target_include_directories(ixml_static
-        PRIVATE ./inc
-        PRIVATE ./src/inc
-        PRIVATE ${PUPNP_SOURCE_DIR}/upnp/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
+    PRIVATE
+        ./inc
+        ./src/inc
+        ${PUPNP_SOURCE_DIR}/upnp/inc
+        ${PUPNP_BINARY_DIR}/inc
 )
 target_compile_definitions(ixml_static
-        PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-        PRIVATE $<$<CONFIG:Debug>:DEBUG>
-        PRIVATE $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
+    PRIVATE
+        $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
+        $<$<CONFIG:Debug>:DEBUG>
+        $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
 )
 
 #if (BUILD_TESTING)
-    add_subdirectory(./test)
+#    add_subdirectory(./test)
 #endif()

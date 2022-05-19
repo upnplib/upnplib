@@ -160,7 +160,7 @@ if(NOT WIN32)
 
     # pupnp native shared library
     #----------------------------
-    add_library(pupnp_native_shared SHARED
+    add_library(pupnp_native_shared SHARED   # prefix -pnsh
             ${PUPNP_SOURCE_FILES}
     )
     set_target_properties(pupnp_native_shared PROPERTIES
@@ -195,7 +195,7 @@ if(NOT WIN32)
 
     # pupnp native static library
     #----------------------------
-    add_library(pupnp_native_static STATIC
+    add_library(pupnp_native_static STATIC   # prefix -pnst
             ${PUPNP_SOURCE_FILES}
     )
     set_target_properties(pupnp_native_static PROPERTIES
@@ -218,9 +218,10 @@ if(NOT WIN32)
             UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(pupnp_native_static
-        PUBLIC
-            ixml_static
+        # Static always link needed object files, no matter to use PRIVATE or PUBLIC.
+        # For propagation only INTERFACE is needed.
         INTERFACE
+            ixml_static
             # On Linux we cannot link with the static pthreads library because then
             # we have also link with a static libc that's not available by default.
             ${UPNP_PTHREADS_SHARED_LIBRARY}
@@ -241,7 +242,7 @@ else() # WIN32
 
     # pupnp native shared library
     #----------------------------
-    add_library(pupnp_native_shared SHARED
+    add_library(pupnp_native_shared SHARED   # prefix -pnsh
             ${PUPNP_SOURCE_FILES}
     )
     target_include_directories(pupnp_native_shared
@@ -278,7 +279,7 @@ else() # WIN32
 
     # pupnp native static library
     #----------------------------
-    add_library(pupnp_native_static STATIC
+    add_library(pupnp_native_static STATIC   # prefix -pnst
             ${PUPNP_SOURCE_FILES}
     )
     target_include_directories(pupnp_native_static
@@ -301,10 +302,12 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(pupnp_native_static
-        PUBLIC
-            ixml_static
+        # Static always link needed object files, no matter to use PRIVATE or PUBLIC.
+        # For propagation only INTERFACE is needed.
         INTERFACE
+            ixml_static
             ws2_32   # winsock to support sockets
+            iphlpapi # ip helper interface to get network management tools
             # On MS Windows we link with the static pthreads4w library to
             # avoid error prone managing access to its .dll file.
             ${UPNP_PTHREADS_STATIC_LIBRARY}
