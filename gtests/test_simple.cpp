@@ -1,8 +1,9 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-05
+// Redistribution only with this Copyright remark. Last modified: 2022-05-21
 
 #include "pthread.h" // To find pthreads4w don't use <pthread.h>
 #include "gmock/gmock.h"
+#include "upnplib/upnptools.hpp"
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -75,6 +76,10 @@ TEST(simpleTestSuite, simple_winsock_test) {
     EXPECT_EQ(close(sockfd), 0);
 }
 #endif
+
+TEST(simpleTestSuite, simple_upnplib_native_test) {
+    EXPECT_EQ(errStr(0), "UPNP_E_SUCCESS(0)");
+}
 
 } // namespace upnplib
 

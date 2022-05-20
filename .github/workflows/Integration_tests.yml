@@ -38,6 +38,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - if: matrix.os == 'windows-latest'
+        # need developer command prompt
         name: Use MS Windows 64 bit
         uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -45,16 +46,16 @@ jobs:
 
       - if: runner.os == 'Linux'
         name: Configure Linux
-        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release
+        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release -D UPNPLIB_WITH_TOOLS=YES
 
       - if: runner.os == 'macOS'
         name: Configure macOS
         #run: cmake -S . -B build -D CMAKE_C_COMPILER=$(brew --prefix llvm)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm)/bin/clang++ -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release
-        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release
+        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release -D UPNPLIB_WITH_TOOLS=YES
 
       - if: runner.os == 'Windows'
         name: Configure Windows
-        run: cmake -S . -B build -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release
+        run: cmake -S . -B build -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release -D UPNPLIB_WITH_TOOLS=YES
 
       - name: Build
         run: cmake --build build --config Release
@@ -89,6 +90,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - if: matrix.os == 'windows-latest'
+        # need developer command prompt
         name: Use MS Windows 64 bit
         uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -135,7 +137,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Configure
-        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} -D UPNPLIB_WITH_TOOLS=YES
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -158,13 +160,22 @@ jobs:
 
       - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
         name: Run simple gtest
-        # This gtest is always built with GoogleTest
+        # This gtests are always built with GoogleTest
         run: |
+          set -e
+          echo -e "\n./build/gtests/test_template"
+          ./build/gtests/test_template
+          echo -e "\n./build/gtests/test_simple-pnsh"
           ./build/gtests/test_simple-pnsh
+          echo -e "\n./build/gtests/test_simple-pnst"
           ./build/gtests/test_simple-pnst
+          echo -e "\n./build/gtests/test_simple-ucsh"
           ./build/gtests/test_simple-ucsh
+          echo -e "\n./build/gtests/test_simple-ucst"
           ./build/gtests/test_simple-ucst
+          echo -e "\n./build/gtests/test_simple-unsh"
           ./build/gtests/test_simple-unsh
+          echo -e "\n./build/gtests/test_simple-unst"
           ./build/gtests/test_simple-unst
 
       - if: matrix.buildtype != 'Debug'
@@ -214,7 +225,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Configure
-        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} --log-level=DEBUG
+        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} -D UPNPLIB_WITH_TOOLS=YES --log-level=DEBUG
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -237,13 +248,22 @@ jobs:
 
       - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
         name: Run simple gtest
-        # This gtest is always built with GoogleTest
+        # These gtests are always built with GoogleTest
         run: |
+          set -e
+          echo -e "\n./build/gtests/test_template"
+          ./build/gtests/test_template
+          echo -e "\n./build/gtests/test_simple-pnsh"
           ./build/gtests/test_simple-pnsh
+          echo -e "\n./build/gtests/test_simple-pnst"
           ./build/gtests/test_simple-pnst
+          echo -e "\n./build/gtests/test_simple-ucsh"
           ./build/gtests/test_simple-ucsh
+          echo -e "\n./build/gtests/test_simple-ucst"
           ./build/gtests/test_simple-ucst
+          echo -e "\n./build/gtests/test_simple-unsh"
           ./build/gtests/test_simple-unsh
+          echo -e "\n./build/gtests/test_simple-unst"
           ./build/gtests/test_simple-unst
 
       - if: matrix.buildtype != 'Debug'
@@ -297,12 +317,14 @@ jobs:
       - uses: actions/checkout@v2
 
       - if: matrix.os == 'windows-2019'
+        # need developer command prompt
         name: Use MS Windows 32 bit
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: win32
 
       - if: matrix.os == 'windows-2022'
+        # need developer command prompt
         name: Use MS Windows 64 bit
         uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -310,11 +332,11 @@ jobs:
 
       - if: matrix.os == 'windows-2019'
         name: Configure 32 bit
-        run: cmake -S . -B build -A Win32 ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+        run: cmake -S . -B build -A Win32 ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} -D UPNPLIB_WITH_TOOLS=YES
 
       - if: matrix.os == 'windows-2022'
         name: Configure 64 bit
-        run: cmake -S . -B build ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+        run: cmake -S . -B build ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} -D UPNPLIB_WITH_TOOLS=YES
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -339,14 +361,31 @@ jobs:
           ls $env:SYSTEMROOT/System32/gtest_main.dll
           ls $env:SYSTEMROOT/System32/gmock_main.dll
 
-      # On MS Windows 2019 gtests with shared libraries fail with a vague
-      # system error "Exit code 0xc0000135", so we exlude this test. On
-      # 'windows-2022' this bug is fixed and the test runs.
-      # - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && !((matrix.os == 'windows-2019') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON'))
+      - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
         name: Run simple gtest
-        #run: ./build/gtests/${{matrix.buildtype}}/test_simple.exe
-        run: cd ./build/gtests/; ctest -C ${{matrix.buildtype}} -R 'ctest_simple'
+        run: |
+          $env:path += ";./build/bin/${{matrix.buildtype}}"
+          echo "`n./build/gtests/${{matrix.buildtype}}/test_template.exe"
+          ./build/gtests/${{matrix.buildtype}}/test_template.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-pnsh.exe"
+          ./build/gtests/${{matrix.buildtype}}/test_simple-pnsh.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-pnst.exe"
+          ./build/gtests/${{matrix.buildtype}}/test_simple-pnst.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-ucsh.exe"
+          ./build/gtests/${{matrix.buildtype}}/test_simple-ucsh.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-ucst.exe"
+          ./build/gtests/${{matrix.buildtype}}/test_simple-ucst.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-unsh.exe"
+          ./build/gtests/${{matrix.buildtype}}/test_simple-unsh.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-unst.exe"
+          ./build/gtests/${{matrix.buildtype}}/test_simple-unst.exe
+          if(-not $?) {exit 1}
 
       - name: Run static test program
         run: ./build/bin/${{matrix.buildtype}}/upnplibInfo_static.exe
@@ -375,19 +414,21 @@ jobs:
       - uses: actions/checkout@v2
 
       - if: matrix.os == 'windows-2019'
+        # need developer command prompt
         name: Use MS Windows 32 bit
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: win32
 
       - if: matrix.os == 'windows-2022'
+        # need developer command prompt
         name: Use MS Windows 64 bit
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: amd64
 
       - name: Configure
-        run: cmake -S . -B build -G "NMake Makefiles" ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+        run: cmake -S . -B build -G "NMake Makefiles" ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} -D UPNPLIB_WITH_TOOLS=YES
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -412,14 +453,31 @@ jobs:
           ls $env:SYSTEMROOT/System32/gtest_main.dll
           ls $env:SYSTEMROOT/System32/gmock_main.dll
 
-      # On MS Windows 2019 gtests with shared libraries fail with a vague
-      # system error "Exit code 0xc0000135", so we exlude this test. On
-      # 'windows-2022' this bug is fixed and the test runs.
-      # - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && !((matrix.os == 'windows-2019') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON'))
+      - if: matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON'
         name: Run simple gtest
-        #run: ./build/gtests/test_simple.exe
-        run: cd ./build/gtests/; ctest -R 'ctest_simple'
+        run: |
+          $env:path += ";./build/bin"
+          echo "`n./build/gtests/test_template.exe"
+          ./build/gtests/test_template.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/test_simple-pnsh.exe"
+          ./build/gtests/test_simple-pnsh.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/test_simple-pnst.exe"
+          ./build/gtests/test_simple-pnst.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/test_simple-ucsh.exe"
+          ./build/gtests/test_simple-ucsh.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/test_simple-ucst.exe"
+          ./build/gtests/test_simple-ucst.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/test_simple-unsh.exe"
+          ./build/gtests/test_simple-unsh.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/test_simple-unst.exe"
+          ./build/gtests/test_simple-unst.exe
+          if(-not $?) {exit 1}
 
       - name: Run static test program
         run: ./build/bin/upnplibInfo_static.exe

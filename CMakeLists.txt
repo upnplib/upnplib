@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-15
+# Redistribution only with this Copyright remark. Last modified: 2022-05-21
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -172,6 +172,13 @@ endif()
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${UPnPlib_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${UPnPlib_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${UPnPlib_BINARY_DIR}/bin)
+if(WIN32)
+    set(UPNPLIB_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE})
+else()
+    set(UPNPLIB_RUNTIME_OUTPUT_DIRECTORY "")
+endif()
+# Output with cmake option --log-level=DEBUG
+message(DEBUG "  DEBUG: UPNPLIB_RUNTIME_OUTPUT_DIRECTORY is: ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}")
 
 
 #################################

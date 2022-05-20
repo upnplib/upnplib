@@ -1,0 +1,65 @@
+name: single test
+
+on:
+  push:
+    branches: [ workflow_dispatch ]
+
+jobs:
+  # Job: single test
+  # ----------------
+  single_test:
+    name: single test
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+
+        # need developer command prompt
+      - name: Use MS Windows 64 bit
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - name: Configure
+        #run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D UPNPLIB_WITH_GOOGLETEST=YES -D CMAKE_BUILD_TYPE=Release -D UPNPLIB_WITH_TOOLS=YES # -D GTESTS_WITH_SHARED_LIBS=YES -D UPNPLIB_WITH_SAMPLES=YES -D UPNPLIB_WITH_IXML=YES
+        run: cmake -S . -B build -D UPNPLIB_WITH_GOOGLETEST=ON -D CMAKE_BUILD_TYPE=Release -D UPNPLIB_WITH_TOOLS=YES
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Run simple gtest
+        run: |
+          $env:path += ";./build/bin/Release"
+          echo "`n./build/gtests/Release/test_template.exe"
+          ./build/gtests/Release/test_template.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/Release/test_simple-pnsh.exe"
+          ./build/gtests/Release/test_simple-pnsh.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/Release/test_simple-pnst.exe"
+          ./build/gtests/Release/test_simple-pnst.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/Release/test_simple-ucsh.exe"
+          ./build/gtests/Release/test_simple-ucsh.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/Release/test_simple-ucst.exe"
+          ./build/gtests/Release/test_simple-ucst.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/Release/test_simple-unsh.exe"
+          ./build/gtests/Release/test_simple-unsh.exe
+          if(-not $?) {exit 1}
+          echo "`n./build/gtests/Release/test_simple-unst.exe"
+          ./build/gtests/Release/test_simple-unst.exe
+          if(-not $?) {exit 1}
+
+      - name: Run upnplib info program
+        # This program is always built
+        run: ./build/bin/Release/upnplibInfo_static.exe
+
+      - name: Run gtests on MS Windows
+        run: |
+          cd ./build/gtests
+          ctest -C Release --output-on-failure
