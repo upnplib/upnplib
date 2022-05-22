@@ -5,61 +5,56 @@ on:
     branches: [ workflow_dispatch ]
 
 jobs:
-  # Job: single test
-  # ----------------
-  single_test:
-    name: single test
-    runs-on: windows-latest
+  # Job: Run build tests
+  # --------------------
+  build_tests:
+    name: "build tests"
+    runs-on: ${{ matrix.os }}
 
     strategy:
+      matrix:
+        os: [ ubuntu-latest, macOS-latest, windows-latest ]
+        buildtype: [ 'Release', 'Debug' ]
+        option: [ '',
+          '-DUPNPLIB_WITH_TOOLS=ON',
+          '-DUPNPLIB_WITH_CLIENT=ON',
+          '-DUPNPLIB_WITH_DEVICE=ON',
+          '-DUPNPLIB_WITH_WEBSERVER=ON',
+          '-DUPNPLIB_WITH_SSDP=ON',
+          '-DUPNPLIB_WITH_OPTSSDP=ON',
+          '-DUPNPLIB_WITH_SOAP=ON',
+          '-DUPNPLIB_WITH_GENA=ON',
+          '-DUPNPLIB_WITH_IPV6=ON',
+          '-DUPNPLIB_WITH_BLOCKTCP=ON',
+          '-DUPNPLIB_WITH_IXML=ON',
+          '-DUPNPLIB_DEF_SAMPLES=ON -DUPNPLIB_DEF_DEVICE=ON',
+          '-DUPNPLIB_DEF_SAMPLES=ON -DUPNPLIB_DEF_CLIENT=ON',
+          '-DUPNPLIB_DEF_SAMPLES=ON -DUPNPLIB_DEF_COMBO=ON',
+          '-DUPNPLIB_WITH_SAMPLES=ON',
+          '-DUPNPLIB_WITH_TOOLS=ON -DUPNPLIB_WITH_CLIENT=ON -DUPNPLIB_WITH_DEVICE=ON -DUPNPLIB_WITH_WEBSERVER=ON -DUPNPLIB_WITH_SSDP=ON -DUPNPLIB_WITH_OPTSSDP=ON -DUPNPLIB_WITH_SOAP=ON -DUPNPLIB_WITH_GENA=ON -DUPNPLIB_WITH_IPV6=ON -DUPNPLIB_WITH_BLOCKTCP=ON -DUPNPLIB_WITH_IXML=ON -DUPNPLIB_WITH_SAMPLES=ON -DUPNPLIB_WITH_GOOGLETEST=ON -DGTESTS_WITH_SHARED_LIBS=ON' ] 
       fail-fast: false
 
     steps:
       - uses: actions/checkout@v2
 
+      - if: matrix.os == 'windows-latest'
         # need developer command prompt
-      - name: Use MS Windows 64 bit
+        name: Use MS Windows 64 bit
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: amd64
 
-      - name: Configure
-        #run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D UPNPLIB_WITH_GOOGLETEST=YES -D CMAKE_BUILD_TYPE=Release -D UPNPLIB_WITH_TOOLS=YES # -D GTESTS_WITH_SHARED_LIBS=YES -D UPNPLIB_WITH_SAMPLES=YES -D UPNPLIB_WITH_IXML=YES
-        run: cmake -S . -B build -D UPNPLIB_WITH_GOOGLETEST=ON -D CMAKE_BUILD_TYPE=Release -D UPNPLIB_WITH_TOOLS=YES
+      - if: runner.os == 'Linux'
+        name: Configure Linux
+        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
+
+      - if: runner.os == 'macOS'
+        name: Configure macOS
+        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
+
+      - if: runner.os == 'Windows'
+        name: Configure Windows
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
 
       - name: Build
-        run: cmake --build build --config Release
-
-      - name: Run simple gtest
-        run: |
-          $env:path += ";./build/bin/Release"
-          echo "`n./build/gtests/Release/test_template.exe"
-          ./build/gtests/Release/test_template.exe
-          if(-not $?) {exit 1}
-          echo "`n./build/gtests/Release/test_simple-pnsh.exe"
-          ./build/gtests/Release/test_simple-pnsh.exe
-          if(-not $?) {exit 1}
-          echo "`n./build/gtests/Release/test_simple-pnst.exe"
-          ./build/gtests/Release/test_simple-pnst.exe
-          if(-not $?) {exit 1}
-          echo "`n./build/gtests/Release/test_simple-ucsh.exe"
-          ./build/gtests/Release/test_simple-ucsh.exe
-          if(-not $?) {exit 1}
-          echo "`n./build/gtests/Release/test_simple-ucst.exe"
-          ./build/gtests/Release/test_simple-ucst.exe
-          if(-not $?) {exit 1}
-          echo "`n./build/gtests/Release/test_simple-unsh.exe"
-          ./build/gtests/Release/test_simple-unsh.exe
-          if(-not $?) {exit 1}
-          echo "`n./build/gtests/Release/test_simple-unst.exe"
-          ./build/gtests/Release/test_simple-unst.exe
-          if(-not $?) {exit 1}
-
-      - name: Run upnplib info program
-        # This program is always built
-        run: ./build/bin/Release/upnplibInfo_static.exe
-
-      - name: Run gtests on MS Windows
-        run: |
-          cd ./build/gtests
-          ctest -C Release --output-on-failure
+        run: cmake --build build --config ${{matrix.buildtype}}
