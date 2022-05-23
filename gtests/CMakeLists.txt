@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-21
+# Redistribution only with this Copyright remark. Last modified: 2022-05-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -651,6 +651,7 @@ add_test(NAME ctest_upnplib_gtest_tools COMMAND test_upnplib_gtest_tools
 )
 endif()
 
+
 # upnptools
 #==========
 set(TEST_UPNPTOOLS_INCLUDE_DIRECTORIES
@@ -735,6 +736,8 @@ add_test(NAME ctest_upnptools-ucst COMMAND test_upnptools-ucst
 set(TEST_SIMPLE_INCLUDE_DIRECTORIES
     PRIVATE
         ${UPnPlib_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_BINARY_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h on MS Windows
@@ -742,12 +745,16 @@ set(TEST_SIMPLE_INCLUDE_DIRECTORIES
 
 add_executable(test_simple-pnsh
 #------------------------------
-        ./test_simple.cpp
+        ./test_simple_compa.cpp
 )
 target_include_directories(test_simple-pnsh
     ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
 )
-target_compile_definitions(test_simple-pnsh PRIVATE UPNPLIB_SHARED)
+target_compile_definitions(test_simple-pnsh
+    PRIVATE
+        UPNPLIB_WITH_NATIVE_PUPNP
+        UPNPLIB_SHARED
+)
 target_link_libraries(test_simple-pnsh
     PRIVATE
         pupnp_native_shared # prefix -pnsh
@@ -759,10 +766,14 @@ add_test(NAME ctest_simple-pnsh COMMAND test_simple-pnsh
 
 add_executable(test_simple-pnst
 #------------------------------
-        ./test_simple.cpp
+        ./test_simple_compa.cpp
 )
 target_include_directories(test_simple-pnst
     ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
+)
+target_compile_definitions(test_simple-pnst
+    PRIVATE
+        UPNPLIB_WITH_NATIVE_PUPNP
 )
 target_link_libraries(test_simple-pnst
     PRIVATE
@@ -774,7 +785,7 @@ add_test(NAME ctest_simple-pnst COMMAND test_simple-pnst
 
 add_executable(test_simple-ucsh
 #------------------------------
-        ./test_simple.cpp
+        ./test_simple_compa.cpp
 )
 target_include_directories(test_simple-ucsh
     ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
@@ -791,7 +802,7 @@ add_test(NAME ctest_simple-ucsh COMMAND test_simple-ucsh
 
 add_executable(test_simple-ucst
 #------------------------------
-        ./test_simple.cpp
+        ./test_simple_compa.cpp
 )
 target_include_directories(test_simple-ucst
     ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
@@ -832,6 +843,7 @@ target_link_libraries(test_simple-unst
 )
 add_test(NAME ctest_simple-unst COMMAND test_simple-unst
 )
+
 
 # template
 #=========

@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-18
+# Redistribution only with this Copyright remark. Last modified: 2022-05-22
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -13,7 +13,8 @@ if(NOT WIN32)
     # upnplib compatible shared library
     #----------------------------------
     add_library(upnplib_compa_shared SHARED   # prefix -ucsh
-            ./src/api/upnptools.cpp
+            ./compa/src/global.cpp
+            ./compa/src/api/upnptools.cpp
     )
     set_target_properties(upnplib_compa_shared PROPERTIES
             OUTPUT_NAME upnplib_compa
@@ -21,6 +22,7 @@ if(NOT WIN32)
     target_include_directories(upnplib_compa_shared
         PRIVATE
             ${UPnPlib_SOURCE_DIR}
+            ${UPnPlib_SOURCE_DIR}/include
             ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/inc
@@ -41,7 +43,8 @@ if(NOT WIN32)
     # upnplib compatible static library
     #----------------------------------
     add_library(upnplib_compa_static STATIC   # prefix -ucst
-            ./src/api/upnptools.cpp
+            ./compa/src/global.cpp
+            ./compa/src/api/upnptools.cpp
     )
     set_target_properties(upnplib_compa_static PROPERTIES
             OUTPUT_NAME upnplib_compa
@@ -49,6 +52,7 @@ if(NOT WIN32)
     target_include_directories(upnplib_compa_static
         PRIVATE
             ${UPnPlib_SOURCE_DIR}
+            ${UPnPlib_SOURCE_DIR}/include
             ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/inc
@@ -66,7 +70,8 @@ if(NOT WIN32)
     # upnplib native shared library
     #------------------------------
     add_library(upnplib_native_shared SHARED   # prefix -unsh
-            ./src/api/upnplib/upnptools.cpp
+            ./src/global.cpp
+            ./src/api/upnptools.cpp
     )
     set_target_properties(upnplib_native_shared PROPERTIES
             OUTPUT_NAME upnplib_native
@@ -94,7 +99,8 @@ if(NOT WIN32)
     # upnplib native static library
     #------------------------------
     add_library(upnplib_native_static STATIC   # prefix -unst
-            ./src/api/upnplib/upnptools.cpp
+            ./src/global.cpp
+            ./src/api/upnptools.cpp
     )
     set_target_properties(upnplib_native_static PROPERTIES
             OUTPUT_NAME upnplib_native
@@ -165,11 +171,13 @@ else() # WIN32
     # upnplib compatible shared library
     #----------------------------------
     add_library(upnplib_compa_shared SHARED   # prefix -ucsh
-            ./src/api/upnptools.cpp
+            ./compa/src/global.cpp
+            ./compa/src/api/upnptools.cpp
     )
     target_include_directories(upnplib_compa_shared
         PRIVATE
             ${UPnPlib_SOURCE_DIR}
+            ${UPnPlib_SOURCE_DIR}/include
             ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/inc
@@ -196,11 +204,13 @@ else() # WIN32
     # upnplib compatible static library
     #----------------------------------
     add_library(upnplib_compa_static STATIC   # prefix -ucst
-            ./src/api/upnptools.cpp
+            ./compa/src/global.cpp
+            ./compa/src/api/upnptools.cpp
     )
     target_include_directories(upnplib_compa_static
         PRIVATE
             ${UPnPlib_SOURCE_DIR}
+            ${UPnPlib_SOURCE_DIR}/include
             ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/inc
@@ -221,7 +231,8 @@ else() # WIN32
     # upnplib native shared library
     #------------------------------
     add_library(upnplib_native_shared SHARED   # prefix -unsh
-            ./src/api/upnplib/upnptools.cpp
+            ./src/global.cpp
+            ./src/api/upnptools.cpp
     )
     target_include_directories(upnplib_native_shared
         PRIVATE
@@ -249,7 +260,8 @@ else() # WIN32
     # upnplib native static library
     #------------------------------
     add_library(upnplib_native_static STATIC   # prefix unst
-            ./src/api/upnplib/upnptools.cpp
+            ./src/global.cpp
+            ./src/api/upnptools.cpp
     )
     target_include_directories(upnplib_native_static
         PRIVATE
