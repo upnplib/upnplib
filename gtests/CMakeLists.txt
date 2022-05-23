@@ -50,8 +50,10 @@ target_compile_definitions(upnplib_gtest_tools
         UPNPLIB_EXPORTS
 )
 target_link_libraries(upnplib_gtest_tools
-    PRIVATE
+    PUBLIC
         $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
+    INTERFACE
+        $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network management tools
 )
 
 # Reset output directories to default means to use the subprojects directories.
@@ -630,12 +632,13 @@ target_link_libraries(test_TimerThread
 )
 add_test(NAME ctest_TimerThread COMMAND test_TimerThread
 )
+endif()
 
-# test upnplib_gtest_tools
-#-------------------------
+# upnplib_gtest_tools
+#====================
 add_executable(test_upnplib_gtest_tools
-        $<$<BOOL:${WIN32}>:./tools/test_tools_win32.cpp>
-        $<$<NOT:$<BOOL:${WIN32}>>:./tools/test_tools_unix.cpp>
+        $<$<PLATFORM_ID:Windows>:./tools/test_tools_win32.cpp>
+        $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/test_tools_unix.cpp>
 )
 target_include_directories(test_upnplib_gtest_tools
         PRIVATE ./include
@@ -648,9 +651,8 @@ target_link_libraries(test_upnplib_gtest_tools
         PRIVATE upnplib_gtest_tools
 )
 add_test(NAME ctest_upnplib_gtest_tools COMMAND test_upnplib_gtest_tools
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
-endif()
-
 
 # upnptools
 #==========
@@ -665,7 +667,7 @@ set(TEST_UPNPTOOLS_INCLUDE_DIRECTORIES
 
 add_executable(test_upnptools-pnsh
 #---------------------------------
-        ./test_upnptools.cpp
+        ./test_upnptools_compa.cpp
 )
 target_include_directories(test_upnptools-pnsh
         ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
@@ -683,7 +685,7 @@ add_test(NAME ctest_upnptools-pnsh COMMAND test_upnptools-pnsh
 
 add_executable(test_upnptools-ucsh
 #----------------------------------
-        ./test_upnptools.cpp
+        ./test_upnptools_compa.cpp
 )
 target_include_directories(test_upnptools-ucsh
         ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
@@ -701,7 +703,7 @@ add_test(NAME ctest_upnptools-ucsh COMMAND test_upnptools-ucsh
 
 add_executable(test_upnptools-pnst
 #---------------------------------
-        ./test_upnptools.cpp
+        ./test_upnptools_compa.cpp
 )
 target_include_directories(test_upnptools-pnst
         ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
@@ -717,7 +719,7 @@ add_test(NAME ctest_upnptools-pnst COMMAND test_upnptools-pnst
 
 add_executable(test_upnptools-ucst
 #---------------------------------
-        ./test_upnptools.cpp
+        ./test_upnptools_compa.cpp
 )
 target_include_directories(test_upnptools-ucst
         ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
@@ -729,6 +731,36 @@ target_link_libraries(test_upnptools-ucst
         upnplib_native_static
 )
 add_test(NAME ctest_upnptools-ucst COMMAND test_upnptools-ucst
+)
+
+add_executable(test_upnptools-unsh
+#---------------------------------
+        ./test_upnptools.cpp
+)
+target_include_directories(test_upnptools-unsh
+        ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
+)
+target_compile_definitions(test_upnptools-unsh PRIVATE UPNPLIB_SHARED)
+target_link_libraries(test_upnptools-unsh
+    PRIVATE
+        upnplib_native_shared # prefix -unsh
+)
+add_test(NAME ctest_upnptools-unsh COMMAND test_upnptools-unsh
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
+add_executable(test_upnptools-unst
+#---------------------------------
+        ./test_upnptools.cpp
+)
+target_include_directories(test_upnptools-unst
+        ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
+)
+target_link_libraries(test_upnptools-unst
+    PRIVATE
+        upnplib_native_static # prefix -unst
+)
+add_test(NAME ctest_upnptools-unst COMMAND test_upnptools-unst
 )
 
 # simple test

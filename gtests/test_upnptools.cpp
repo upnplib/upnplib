@@ -1,7 +1,6 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-17
+// Redistribution only with this Copyright remark. Last modified: 2022-05-23
 
-#include "upnptools.hpp"
 #include "upnplib/upnptools.hpp"
 #include "upnp.hpp"
 
@@ -9,51 +8,41 @@
 
 //
 namespace upnplib {
-bool old_code{false};
 
 TEST(UpnptoolsTestSuite, get_error_string) {
-    if (old_code) {
 
-        EXPECT_STREQ(::UpnpGetErrorMessage(UPNP_E_INVALID_PARAM),
-                     "UPNP_E_INVALID_PARAM");
-        EXPECT_STREQ(::UpnpGetErrorMessage(480895), "Unknown error code");
+    EXPECT_STREQ(err_c_str(UPNP_E_INVALID_PARAM), "UPNP_E_INVALID_PARAM");
+    EXPECT_STREQ(err_c_str(481895), "Unknown error code");
 
-    } else {
-
-        EXPECT_EQ(errStr(0), "UPNP_E_SUCCESS(0)");
-        EXPECT_EQ(errStr(UPNP_E_INTERNAL_ERROR), "UPNP_E_INTERNAL_ERROR(-911)");
-        EXPECT_EQ(errStr(480895), "UPNPLIB_E_UNKNOWN(480895)");
-    }
+    EXPECT_EQ(errStr(0), "UPNP_E_SUCCESS(0)");
+    EXPECT_EQ(errStr(UPNP_E_INTERNAL_ERROR), "UPNP_E_INTERNAL_ERROR(-911)");
+    EXPECT_EQ(errStr(480895), "UPNPLIB_E_UNKNOWN(480895)");
 }
 
 TEST(UpnptoolsTestSuite, get_extended_error_string) {
-    if (!old_code) {
 
-        EXPECT_STREQ(err_c_str(UPNP_E_INVALID_PARAM), "UPNP_E_INVALID_PARAM");
-        EXPECT_STREQ(err_c_str(481895), "Unknown error code");
+    EXPECT_EQ(errStrEx(UPNP_E_INVALID_PARAM, UPNP_E_SUCCESS),
+              "  # Should be UPNP_E_SUCCESS(0), but not "
+              "UPNP_E_INVALID_PARAM(-101).");
 
-        EXPECT_EQ(errStrEx(UPNP_E_INVALID_PARAM, UPNP_E_SUCCESS),
-                  "  # Should be UPNP_E_SUCCESS(0), but not "
-                  "UPNP_E_INVALID_PARAM(-101).");
+    EXPECT_EQ(errStrEx(489895, UPNP_E_INTERNAL_ERROR),
+              "  # Should be UPNP_E_INTERNAL_ERROR(-911), but not "
+              "UPNPLIB_E_UNKNOWN(489895).");
 
-        EXPECT_EQ(errStrEx(489895, UPNP_E_INTERNAL_ERROR),
-                  "  # Should be UPNP_E_INTERNAL_ERROR(-911), but not "
-                  "UPNPLIB_E_UNKNOWN(489895).");
+    EXPECT_EQ(errStrEx(UPNP_E_INTERNAL_ERROR, -168494),
+              "  # Should be UPNPLIB_E_UNKNOWN(-168494), but not "
+              "UPNP_E_INTERNAL_ERROR(-911).");
 
-        EXPECT_EQ(errStrEx(UPNP_E_INTERNAL_ERROR, -168494),
-                  "  # Should be UPNPLIB_E_UNKNOWN(-168494), but not "
-                  "UPNP_E_INTERNAL_ERROR(-911).");
-
-        EXPECT_EQ(errStrEx(99328, -168494),
-                  "  # Should be UPNPLIB_E_UNKNOWN(-168494), but not "
-                  "UPNPLIB_E_UNKNOWN(99328).");
-    }
+    EXPECT_EQ(errStrEx(99328, -168494),
+              "  # Should be UPNPLIB_E_UNKNOWN(-168494), but not "
+              "UPNPLIB_E_UNKNOWN(99328).");
 }
 
 } // namespace upnplib
 
-//
+// main entry
+// ----------
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-#include "upnplib/gtest_main.inc"
+    return RUN_ALL_TESTS();
 }
