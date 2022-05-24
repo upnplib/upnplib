@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-23
+// Redistribution only with this Copyright remark. Last modified: 2022-05-24
 // Taken from authors who haven't made a note.
 
 #ifndef UPNPLIB_UPNPGLOBAL_HPP
@@ -11,7 +11,7 @@
  * \brief Defines constants that for some reason are not defined on some
  * systems.
  */
-#include "upnpconfig.hpp"
+#include <cstddef>
 
 #if defined UPNP_LARGEFILE_SENSITIVE && _FILE_OFFSET_BITS + 0 != 64
 #if defined __GNUC__
@@ -180,5 +180,13 @@ typedef __int64 int64_t;
 // clang-format on
 
 EXPORT_SPEC extern char library_version[];
+
+/*! Contains interface index. */
+EXPORT_SPEC extern unsigned int gIF_INDEX;
+
+/*! Maximum content-length (in bytes) that the SDK will process on an incoming
+ * packet. Content-Length exceeding this size will be not processed and
+ * error 413 (HTTP Error Code) will be returned to the remote end point. */
+EXPORT_SPEC extern size_t g_maxContentLength;
 
 #endif /* UPNPLIB_UPNPGLOBAL_HPP */

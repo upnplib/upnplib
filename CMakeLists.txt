@@ -478,8 +478,8 @@ endif(UPNPLIB_WITH_GOOGLETEST)
 # #cmakedefine VAR1 ${VAR1}
 # #cmakedefine VAR1 ${VAR} does not work.
 # #cmakedefine VAR2 1  : VAR2 must be exist before even you set a constant.
-configure_file(${PROJECT_SOURCE_DIR}/cmake/upnpconfig.hpp.cmake
-               ${PUPNP_BINARY_DIR}/inc/upnpconfig.hpp
+configure_file(${PROJECT_SOURCE_DIR}/cmake/cmake_vars.hpp.cmake
+               ${PROJECT_BINARY_DIR}/include/upnplib/cmake_vars.hpp
 )
 
 # RPATH settings to find shared libraries

@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-16
+# Redistribution only with this Copyright remark. Last modified: 2022-05-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -44,10 +44,10 @@ IF (UPNPLIB_DEF_SAMPLE_CLIENT)
 		./linux/tv_ctrlpt_main.cpp
 	)
         target_include_directories(tv_ctrlpt
-                PRIVATE ./common
-                PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
-                PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-                PRIVATE ${PUPNP_BINARY_DIR}/inc
+            PRIVATE
+                ./common
+                ${PUPNP_UPNP_SOURCE_DIR}/inc
+                ${PUPNP_IXML_SOURCE_DIR}/inc
                 # if pthreads4w isn't installed this path is empty. The linker
                 # doesn't find "pthread.h" and falls back to look at <pthread.h>.
                 ${pthreads4w_SOURCE_DIR}
@@ -67,18 +67,20 @@ IF (UPNPLIB_DEF_SAMPLE_COMBO)
 		./linux/tv_combo_main.cpp
 	)
         target_include_directories(tv_combo
-                PRIVATE ./common
-                PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
-                PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-                PRIVATE ${PUPNP_BINARY_DIR}/inc
+            PRIVATE
+                ./common
+                ${PUPNP_UPNP_SOURCE_DIR}/inc
+                ${PUPNP_IXML_SOURCE_DIR}/inc
                 # if pthreads4w isn't installed this path is empty. The linker
                 # doesn't find "pthread.h" and falls back to look at <pthread.h>.
                 ${pthreads4w_SOURCE_DIR}
         )
         target_compile_definitions(tv_combo
+            PRIVATE
+                $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
                 # This is to avoid to compile in 'upnpdebug' that has many
                 # dependencies into the libary and would pull many other sources
-                PRIVATE NDEBUG
+                NDEBUG
         )
 
 	#INSTALL (TARGETS tv_combo
@@ -93,18 +95,20 @@ IF(UPNPLIB_DEF_SAMPLE_DEVICE)
                 ./linux/tv_device_main.cpp
         )
         target_include_directories(tv_device
-                PRIVATE ./common
-                PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
-                PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-                PRIVATE ${PUPNP_BINARY_DIR}/inc
+            PRIVATE
+                ./common
+                ${PUPNP_UPNP_SOURCE_DIR}/inc
+                ${PUPNP_IXML_SOURCE_DIR}/inc
                 # if pthreads4w isn't installed this path is empty. The linker
                 # doesn't find "pthread.h" and falls back to look at <pthread.h>.
                 ${pthreads4w_SOURCE_DIR}
         )
         target_compile_definitions(tv_device
+            PRIVATE
+                $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
                 # This is to avoid to compile in 'upnpdebug' that has many
                 # dependencies into the libary and would pull many other sources
-                PRIVATE NDEBUG
+                NDEBUG
         )
 
 	#install (TARGETS tv_device

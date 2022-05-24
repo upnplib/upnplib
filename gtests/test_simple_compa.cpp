@@ -1,12 +1,8 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-23
+// Redistribution only with this Copyright remark. Last modified: 2022-05-24
 //
 
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-#include "UpnpGlobal.hpp"
-#else
 #include "compa/global.hpp"
-#endif
 #include "upnplib/upnptools.hpp"
 
 #include "gtest/gtest.h"

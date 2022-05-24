@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-18
+# Redistribution only with this Copyright remark. Last modified: 2022-05-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -168,7 +168,6 @@ if(NOT WIN32)
     )
     target_include_directories(pupnp_native_shared
         PRIVATE
-            ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
             ./inc
             ./src/inc
@@ -183,6 +182,8 @@ if(NOT WIN32)
             UPNPLIB_SHARED
             UPNPLIB_EXPORTS
             UPNPLIB_WITH_NATIVE_PUPNP
+            HAVE_STRNLEN
+            HAVE_STRNDUP
     )
     target_link_libraries(pupnp_native_shared
         PUBLIC
@@ -203,7 +204,6 @@ if(NOT WIN32)
     )
     target_include_directories(pupnp_native_static
         PRIVATE
-            ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
             ./inc
             ./src/inc
@@ -216,6 +216,8 @@ if(NOT WIN32)
     target_compile_definitions(pupnp_native_static
         PRIVATE
             UPNPLIB_WITH_NATIVE_PUPNP
+            HAVE_STRNLEN
+            HAVE_STRNDUP
     )
     target_link_libraries(pupnp_native_static
         # Static always link needed object files, no matter to use PRIVATE or PUBLIC.
@@ -234,12 +236,6 @@ else() # WIN32
     # Pthreads are not supported by MS Windows. So we have installed the
     # third party library pthreads4w.
 
-    # General options
-    #----------------
-    add_compile_definitions(
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
-    )
-
     # pupnp native shared library
     #----------------------------
     add_library(pupnp_native_shared SHARED   # prefix -pnsh
@@ -247,7 +243,6 @@ else() # WIN32
     )
     target_include_directories(pupnp_native_shared
         PRIVATE
-            ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
             ./inc
             ./src/inc
@@ -264,6 +259,9 @@ else() # WIN32
             UPNPLIB_SHARED
             UPNPLIB_EXPORTS
             UPNPLIB_WITH_NATIVE_PUPNP
+            HAVE_STRNLEN
+            HAVE_STRNDUP
+            $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     # In addition to pthreads we need some more system libraries here
@@ -284,7 +282,6 @@ else() # WIN32
     )
     target_include_directories(pupnp_native_static
         PRIVATE
-            ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
             ./inc
             ./src/inc
@@ -298,7 +295,10 @@ else() # WIN32
     )
     target_compile_definitions(pupnp_native_static
         PRIVATE
+            HAVE_STRNLEN
+            HAVE_STRNDUP
             UPNPLIB_WITH_NATIVE_PUPNP
+            $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(pupnp_native_static

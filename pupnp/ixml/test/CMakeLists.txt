@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-16
+# Redistribution only with this Copyright remark. Last modified: 2022-05-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -19,18 +19,20 @@ add_executable (test_ixml_shared
 	test_document.cpp
 )
 target_include_directories(test_ixml_shared
-        PRIVATE ${PUPNP_SOURCE_DIR}/upnp/inc
-        PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
+    PRIVATE
+        ${PUPNP_SOURCE_DIR}/upnp/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 target_compile_definitions (test_ixml_shared
-        PRIVATE $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
-        PRIVATE $<$<CONFIG:Debug>:DEBUG>
-        PRIVATE $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
-        PRIVATE UPNPLIB_SHARED
+    PRIVATE
+        $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
+        $<$<CONFIG:Debug>:DEBUG>
+        $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
+        UPNPLIB_SHARED
 )
 target_link_libraries (test_ixml_shared
-        PRIVATE ixml_shared
+    PRIVATE
+        ixml_shared
 )
 
 #add_test (NAME test_ixml
@@ -47,18 +49,20 @@ target_link_libraries (test_ixml_shared
 add_executable (test_ixml_static
 	test_document.cpp
 )
-target_compile_definitions (test_ixml_static PRIVATE
+target_compile_definitions (test_ixml_static
+    PRIVATE
         $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
         $<$<CONFIG:Debug>:DEBUG>
         $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
 )
 target_include_directories(test_ixml_static
-        PRIVATE ${PUPNP_SOURCE_DIR}/upnp/inc
-        PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
+    PRIVATE
+        ${PUPNP_SOURCE_DIR}/upnp/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 target_link_libraries(test_ixml_static
-        PRIVATE ixml_static
+    PRIVATE
+        ixml_static
 )
 
 #add_test (NAME test_ixml_static

@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-22
+# Redistribution only with this Copyright remark. Last modified: 2022-05-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -23,7 +23,6 @@ if(NOT WIN32)
         PRIVATE
             ${UPnPlib_SOURCE_DIR}
             ${UPnPlib_SOURCE_DIR}/include
-            ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32
@@ -53,7 +52,6 @@ if(NOT WIN32)
         PRIVATE
             ${UPnPlib_SOURCE_DIR}
             ${UPnPlib_SOURCE_DIR}/include
-            ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32
@@ -79,7 +77,6 @@ if(NOT WIN32)
     target_include_directories(upnplib_native_shared
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
-            ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
     )
@@ -108,7 +105,6 @@ if(NOT WIN32)
     target_include_directories(upnplib_native_static
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
-            ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
     )
@@ -129,7 +125,7 @@ if(NOT WIN32)
     )
     target_include_directories(upnplibInfo_shared
         PRIVATE
-            ${PUPNP_BINARY_DIR}/inc
+            ${UPnPlib_BINARY_DIR}/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -152,7 +148,7 @@ if(NOT WIN32)
     )
     target_include_directories(upnplibInfo_static
         PRIVATE
-            ${PUPNP_BINARY_DIR}/inc
+            ${UPnPlib_BINARY_DIR}/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -178,7 +174,6 @@ else() # WIN32
         PRIVATE
             ${UPnPlib_SOURCE_DIR}
             ${UPnPlib_SOURCE_DIR}/include
-            ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -211,7 +206,6 @@ else() # WIN32
         PRIVATE
             ${UPnPlib_SOURCE_DIR}
             ${UPnPlib_SOURCE_DIR}/include
-            ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -237,7 +231,6 @@ else() # WIN32
     target_include_directories(upnplib_native_shared
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
-            ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
     )
@@ -266,7 +259,6 @@ else() # WIN32
     target_include_directories(upnplib_native_static
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
-            ${PUPNP_BINARY_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
     )
@@ -292,7 +284,7 @@ else() # WIN32
     )
     target_include_directories(upnplibInfo_shared
         PRIVATE
-            ${PUPNP_BINARY_DIR}/inc   # needed for upnpconfig.hpp
+            ${UPnPlib_BINARY_DIR}/include
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc   # needed for ithread.hpp
@@ -302,6 +294,7 @@ else() # WIN32
         PRIVATE
             UPNPLIB_SHARED
             UPNPLIB_WITH_NATIVE_PUPNP
+            $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
     )
     target_link_libraries(upnplibInfo_shared
         PRIVATE
@@ -315,11 +308,15 @@ else() # WIN32
     )
     target_include_directories(upnplibInfo_static
         PRIVATE
-            ${PUPNP_BINARY_DIR}/inc   # needed for upnpconfig.hpp
+            ${UPnPlib_BINARY_DIR}/include
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc  # needed for ithread.hpp
             ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+    )
+    target_compile_definitions (upnplibInfo_static
+        PRIVATE
+            $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
     )
     target_link_libraries(upnplibInfo_static
         PRIVATE

@@ -1,9 +1,4 @@
 Next steps to do:
-+ Declare global variables in ./pupnp/upnp/src/global.cpp in UpnpGlobal.hpp
-+ Move UPNPLIB_API from upnplib/port.hpp to upnplib/global.hpp
-* Remove dependency of upnplib from 'upnpconfig.hpp'.
-* Remove 'upnp.hpp' dependeny from './core/src/api/upnplib/upnptools.cpp'
-* Remove 'uri.hpp' dependeny from './include/upnplib/uri.hpp'
 * Bugreport to gtest: EXPECT_THAT THROW shouldn't call two times if no match.
 * Install doxygen.
 * Create own Url class.

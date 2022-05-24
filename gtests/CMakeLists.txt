@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-23
+# Redistribution only with this Copyright remark. Last modified: 2022-05-24
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -82,7 +82,6 @@ target_include_directories(test_sock
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
-        ${PUPNP_BINARY_DIR}/inc
 )
 target_compile_definitions(test_sock PRIVATE UPNPLIB_SHARED)
 target_link_libraries(test_sock
@@ -105,7 +104,6 @@ target_include_directories(test_strintmap
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         PRIVATE ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
@@ -125,7 +123,6 @@ add_executable(test_list
 target_include_directories(test_list
         PRIVATE ${UPnPlib_SOURCE_DIR}
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
 )
 add_test(NAME ctest_list COMMAND test_list
 )
@@ -140,7 +137,6 @@ target_include_directories(test_membuffer
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
 )
 add_test(NAME ctest_membuffer COMMAND test_membuffer
 )
@@ -164,7 +160,6 @@ target_include_directories(test_uri
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         ${PUPNP_IXML_SOURCE_DIR}/inc
-        ${PUPNP_BINARY_DIR}/inc
 )
 target_link_libraries(test_uri
     PRIVATE
@@ -186,7 +181,6 @@ target_include_directories(test_uri
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         PRIVATE ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
@@ -218,7 +212,6 @@ target_include_directories(test_uri_parse
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
-        ${PUPNP_BINARY_DIR}/inc
 )
 target_link_libraries(test_uri_parse
     PRIVATE
@@ -239,7 +232,6 @@ target_include_directories(test_uri_parse
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         PRIVATE ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
@@ -308,7 +300,6 @@ target_include_directories(test_httpparser
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         PRIVATE ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
@@ -365,7 +356,6 @@ target_include_directories(test_httpreadwrite
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         PRIVATE ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
@@ -422,7 +412,6 @@ target_include_directories(test_netconnect
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         PRIVATE ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
@@ -443,7 +432,6 @@ target_include_directories(test_UpnpString
         PRIVATE ${UPnPlib_SOURCE_DIR}
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
 )
 add_test(NAME ctest_UpnpString COMMAND test_UpnpString)
 
@@ -458,7 +446,6 @@ target_include_directories(test_upnpdebug
         PRIVATE ${UPnPlib_SOURCE_DIR}/include
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
         PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 target_compile_definitions(test_upnpdebug PRIVATE UPNPLIB_SHARED)
@@ -525,7 +512,6 @@ target_include_directories(test_upnpapi
         PRIVATE ${UPnPlib_SOURCE_DIR}/include
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
         PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         PRIVATE $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
@@ -558,7 +544,6 @@ target_include_directories(test_LinkedList
         PRIVATE ${UPnPlib_SOURCE_DIR}/include
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         PRIVATE ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
@@ -579,7 +564,6 @@ target_include_directories(test_FreeList
         PRIVATE ${UPnPlib_SOURCE_DIR}/include
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         PRIVATE ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
@@ -600,7 +584,6 @@ target_include_directories(test_ThreadPool
         PRIVATE ${UPnPlib_SOURCE_DIR}/include
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         PRIVATE ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
@@ -620,7 +603,6 @@ add_executable(test_TimerThread
 target_include_directories(test_TimerThread
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
-        PRIVATE ${PUPNP_BINARY_DIR}/inc
         PRIVATE ${UPnPlib_SOURCE_DIR}/include
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
@@ -661,7 +643,6 @@ set(TEST_UPNPTOOLS_INCLUDE_DIRECTORIES
         ./include
         ${UPnPlib_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_BINARY_DIR}/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 
@@ -769,7 +750,6 @@ set(TEST_SIMPLE_INCLUDE_DIRECTORIES
     PRIVATE
         ${UPnPlib_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_BINARY_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h on MS Windows

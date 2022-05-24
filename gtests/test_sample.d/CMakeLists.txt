@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-13
+# Redistribution only with this Copyright remark. Last modified: 2022-05-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -90,12 +90,6 @@ endif()
 set(UPNPLIB_TV_DEVICE_SOURCE_FILES
     ${UPNPLIB_SAMPLE_SOURCE_DIR}/common/sample_util.cpp
     ./test_tv_device.cpp
-)
-
-# General options
-#----------------
-add_compile_definitions(
-    $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 
 # tv_device build with pupnp native shared library
