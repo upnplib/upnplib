@@ -120,7 +120,7 @@ TEST_F(FreeListTestSuite, init_alocate_free_destroy) {
 
     // Put an unused node to the freelist. It should increase the freelist.
     FreeListNode anynode3{};
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     // The freelist is initialized with maxFreeListLength = 3 so it should add a
     // node to the list and not freeing its resource. The comparison of
     // freeListLength with maxFreeListLength is wrong by 1 node.
@@ -194,7 +194,7 @@ TEST_F(FreeListTestSuite, freelist_for_0_size_nodes) {
     EXPECT_EQ(FreeListObj.FreeListFree(&m_free_list, &anynode1), 0);
     EXPECT_EQ(m_free_list.maxFreeListLength, 3);
     EXPECT_EQ(m_free_list.element_size, (size_t)0);
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     // It isn't possible to allocate a 0-sized memory block. malloc() returns a
     // nullptr. So it should also be impossible to add a 0-sized node to the
     // freelist to be available for later use.

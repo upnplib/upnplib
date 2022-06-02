@@ -1,11 +1,11 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-17
+// Redistribution only with this Copyright remark. Last modified: 2022-06-02
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-#undef HAVE_STRNLEN
-#undef HAVE_STRNDUP
+//#undef HAVE_STRNLEN
+//#undef HAVE_STRNDUP
 
 using ::testing::_;
 using ::testing::Eq;
@@ -167,7 +167,7 @@ TEST(UpnpStringTestSuite, strnlenCalledWithVariousParameter) {
     EXPECT_EQ(strnlen(str1, 11), (size_t)9);
     str1[9] = 1; // destroy string terminator
     EXPECT_EQ(strnlen(str1, 10), (size_t)10);
-#ifndef OLD_TEST
+#ifndef UPNPLIB_WITH_NATIVE_PUPNP
     ADD_FAILURE() << "# strnlen isn't used in the UPnPlib core.";
 #endif
 }
@@ -191,7 +191,7 @@ TEST(UpnpStringTestSuite, strndupCalledWithVariousParameter) {
     cpystr = strndup(str1, 11);
     EXPECT_EQ(cpystr, "123456789");
     EXPECT_EQ(cpystr[9], '\0'); // check string terminator
-#ifndef OLD_TEST
+#ifndef UPNPLIB_WITH_NATIVE_PUPNP
     ADD_FAILURE() << "# strndup isn't used in the UPnPlib core.";
 #endif
 }
@@ -222,7 +222,7 @@ TEST(UpnpStringDeathTest, UpnpStringGetLength) {
 
     EXPECT_EQ(UpnpString_get_Length(p), (size_t)11);
 
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! Function 'UpnpString_get_Length()' will segfault if "
                  "called with nullptr.\n";
 #else
@@ -239,7 +239,7 @@ TEST(UpnpStringDeathTest, getUpnpString) {
 
     EXPECT_STREQ(UpnpString_get_String(p), "hello world");
 
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! Function 'UpnpString_get_String()' will segfault if "
                  "called with nullptr.\n";
 #else
@@ -249,7 +249,7 @@ TEST(UpnpStringDeathTest, getUpnpString) {
 }
 
 TEST(UpnpStringDeathTest, setUpnpString) {
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! Function 'UpnpString_set_String()' will segfault if "
                  "called with nullptr.\n";
 #else
@@ -267,7 +267,7 @@ TEST(UpnpStringDeathTest, setUpnpString) {
 }
 
 TEST(UpnpStringDeathTest, setUpnpStringN) {
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! Function 'UpnpString_set_StringN()' will segfault if "
                  "called with nullptr.\n";
 #else
@@ -286,7 +286,7 @@ TEST(UpnpStringDeathTest, setUpnpStringN) {
 }
 
 TEST(UpnpStringDeathTest, clearUpnpString) {
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! Function 'UpnpString_clear()' will segfault if called "
                  "with nullptr.\n";
 #else

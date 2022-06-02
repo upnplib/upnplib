@@ -1,16 +1,17 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-18
+// Redistribution only with this Copyright remark. Last modified: 2022-06-02
 
-#include "upnpdebug.hpp"
+#include "pupnp/upnp/src/api/upnpdebug.cpp"
 
 #include "upnpmock/pthread.hpp"
 #include "upnpmock/stdio.hpp"
 #include "upnpmock/string.hpp"
-#include "gmock/gmock.h"
 
 #include "upnplib_gtest_tools.hpp"
 #include "upnplib/upnptools.hpp"
 #include "upnplib/port.hpp"
+
+#include "gmock/gmock.h"
 #include <string>
 
 using ::testing::_;
@@ -176,9 +177,6 @@ class UpnpdebugMockTestSuite : public ::testing::Test {
     Mock_string mocked_string;
 
     // constructor
-    // We cannot use this anymore because we link with libraries instead of
-    // including the source file 'upnpdebug.cpp'.
-#if (false)
     UpnpdebugMockTestSuite() {
         // Clear the static variables of the unit
         g_log_level = UPNP_DEFAULT_LOG_LEVEL;
@@ -188,7 +186,6 @@ class UpnpdebugMockTestSuite : public ::testing::Test {
         initwascalled = 0;
         fileName = nullptr;
     }
-#endif
 };
 
 TEST_F(UpnpdebugMockTestSuite, initlog_but_no_log_wanted)
@@ -272,7 +269,7 @@ TEST_F(UpnpdebugMockTestSuite, set_log_level_info) {
               stderr);
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_CRITICAL, (Dbg_Module)NULL),
               stderr);
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     // It seems that option Dbg_Module is ignored. It cannot be set with
     // UpnpSetLogLevel().
     std::cout << "  BUG! Parameter Dbg_Module should not be ignored.\n";
@@ -426,7 +423,7 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_opening_file_fails) {
     EXPECT_CALL(mocked_stdio, fclose(_)).Times(0);
 
     // Process unit
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! UpnpInitLog() should return with failure.\n";
     int returned = upnpdebugObj.UpnpInitLog();
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
@@ -532,7 +529,7 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_to_file_with_wrong_filename) {
         stderr);
 
     // ... but it should not try to close stderr.
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! UpnpCloseLog() tries to close stderr.\n";
     EXPECT_CALL(mocked_stdio, fclose(_)).Times(1);
 #else

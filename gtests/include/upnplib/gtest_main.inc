@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-16
+// Redistribution only with this Copyright remark. Last modified: 2022-06-03
 
 // Because this part of the main entry function uses gtest macros we have to
 // include it directly into the source of the test. These macros need to have
@@ -30,7 +30,12 @@ if (argc > 2) {
             return EXIT_FAILURE;
         }
     } else { // There is no --upnplib* argument
-        both = true;
+        // both = true;
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+        upnplib::old_code = true;
+#else
+        upnplib::old_code = false;
+#endif
     }
 
     if (both) {

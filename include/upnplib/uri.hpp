@@ -1,8 +1,13 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-24
+// Redistribution only with this Copyright remark. Last modified: 2022-06-03
 
 #ifndef UPNPLIB_NET_URI_HPP
 #define UPNPLIB_NET_URI_HPP
+
+// This header file is included by '#include "upnplib/uri.hpp"' so its current
+// directory is 'upnplib/'. The preprocessor looks fist at the currrent
+// directory and finds the wrong uri.hpp. So we have to use the full path.
+#include "pupnp/upnp/src/inc/uri.hpp"
 
 namespace upnplib {
 

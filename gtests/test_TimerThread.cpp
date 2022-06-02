@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-18
+// Redistribution only with this Copyright remark. Last modified: 2022-06-01
 
 // Note
 // -------------
@@ -98,7 +98,7 @@ TEST(TimerThreadNormalTestSuite, schedule_timer_thread) {
     // test suite but it shows how to schedule a timer thread. Testing this in
     // the production environment will be done with the upnplib info program.
 
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! Return value of the thread start routine should not "
                  "be ignored.\n";
 #else

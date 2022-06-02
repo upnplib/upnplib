@@ -25,7 +25,7 @@
 #define UPNP_VERSION_PATCH 0
 /** The library version (numeric) e.g. 10300 means version 1.3.0 */
 #define UPNP_VERSION \
-((UPNP_VERSION_MAJOR * 100 + UPNP_VERSION_MINOR) * 100 + \
+((UPNP_VERSION_MAJOR * 10000 + UPNP_VERSION_MINOR) * 100 + \
 UPNP_VERSION_PATCH)
 
 /***************************************************************************

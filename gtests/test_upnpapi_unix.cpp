@@ -1,14 +1,16 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-18
+// Redistribution only with this Copyright remark. Last modified: 2022-06-01
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
 
-#include "gmock/gmock.h"
+#include "pupnp/upnp/src/api/upnpapi.cpp"
+
 #include "upnplib_gtest_tools.hpp"
 #include "upnplib/upnptools.hpp"
 #include "upnplib_gtest_tools_unix.hpp"
-#include "pupnp/upnp/src/api/upnpapi.cpp"
+
+#include "gmock/gmock.h"
 
 using ::testing::_;
 using ::testing::AtLeast;
@@ -64,9 +66,6 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
     Mock_net_if m_mocked_net_if;
 
     // constructor of this testsuite
-    // Because we use internal libraries instead of including the source file
-    // 'upnpapi.cpp' we cannot use this initialization anymore:
-#if (false)
     UpnpapiIPv4MockTestSuite() {
         // initialize global variables with file scope for upnpapi.cpp
         virtualDirCallback = {};
@@ -110,7 +109,6 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
         SSL_CTX* gSslCtx = nullptr;
 #endif
     }
-#endif // if(false)
 };
 
 TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
@@ -168,7 +166,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     int returned = UpnpGetIfInfo("ethO");
     EXPECT_EQ(returned, UPNP_E_INVALID_INTERFACE)
         << errStrEx(returned, UPNP_E_INVALID_INTERFACE);
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout
         << "  BUG! Interface name (e.g. ethO with upper case O), ip "
         << "address and netmask should not be modified on wrong entries.\n";

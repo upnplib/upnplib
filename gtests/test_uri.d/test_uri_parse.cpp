@@ -1,16 +1,17 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-09
+// Redistribution only with this Copyright remark. Last modified: 2022-06-03
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
 
-#include "gmock/gmock.h"
+// Include source code for testing. So we have also direct access to static
+// functions which need to be tested.
+#include "pupnp/upnp/src/genlib/net/uri/uri.cpp"
+
 #include "upnplib/upnptools.hpp"
 #include "upnplib/uri.hpp"
 
-// Include source code for testing. So we have also direct access to static
-// functions which need to be tested.
-#include "core/src/genlib/net/uri/uri.cpp"
+#include "gmock/gmock.h"
 
 using ::testing::_;
 using ::testing::AnyOf;

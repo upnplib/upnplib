@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-18
+// Redistribution only with this Copyright remark. Last modified: 2022-06-01
 
 // Note
 // -------------
@@ -41,7 +41,7 @@ TEST(ThreadPoolNormalTestSuite, init_and_shutdown_threadpool) {
 
     EXPECT_EQ(tpObj.ThreadPoolInit(&tp, nullptr), 0);
     EXPECT_EQ(tpObj.ThreadPoolShutdown(&tp), 0);
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! Finish a test without threadpool shutdown should be "
                  "possible without random segfaults.\n";
 #else
@@ -237,7 +237,7 @@ TEST(ThreadPoolNormalTestSuite, set_maximal_threads_to_attribute) {
     EXPECT_EQ(tpObj.TPAttrSetMaxThreads(&TPAttr, 1), 0);
     EXPECT_EQ(TPAttr.minThreads, 0);
     EXPECT_EQ(TPAttr.maxThreads, 1);
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! It should not be possible to set maxThreads < 0"
               << " or < minThreads.\n";
     EXPECT_EQ(tpObj.TPAttrSetMaxThreads(&TPAttr, -1), 0);
@@ -272,7 +272,7 @@ TEST(ThreadPoolNormalTestSuite, set_minimal_threads_to_attribute) {
     EXPECT_EQ(tpObj.TPAttrSetMinThreads(&TPAttr, 1), 0);
     EXPECT_EQ(TPAttr.minThreads, 1);
     EXPECT_EQ(TPAttr.maxThreads, 2);
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! It should not be possible to set minThreads < 0"
               << " or > maxThreads.\n";
     EXPECT_EQ(tpObj.TPAttrSetMinThreads(&TPAttr, -1), 0);
@@ -301,7 +301,7 @@ TEST(ThreadPoolNormalTestSuite, set_stack_size_to_attribute) {
 
     EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, 0), 0);
     EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, 1), 0);
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! It should not be possible to set StackSize < 0.\n";
     EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, -1), 0);
     EXPECT_EQ(TPAttr.stackSize, (size_t)-1);
@@ -325,7 +325,7 @@ TEST(ThreadPoolNormalTestSuite, set_idle_time_to_attribute) {
 
     EXPECT_EQ(tpObj.TPAttrSetIdleTime(&TPAttr, 0), 0);
     EXPECT_EQ(tpObj.TPAttrSetIdleTime(&TPAttr, 1), 0);
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! It should not be possible to set IdleTime < 0.\n";
     EXPECT_EQ(tpObj.TPAttrSetIdleTime(&TPAttr, -1), 0);
     EXPECT_EQ(TPAttr.maxIdleTime, -1);
@@ -349,7 +349,7 @@ TEST(ThreadPoolNormalTestSuite, set_jobs_per_thread_to_attribute) {
 
     EXPECT_EQ(tpObj.TPAttrSetJobsPerThread(&TPAttr, 0), 0);
     EXPECT_EQ(tpObj.TPAttrSetJobsPerThread(&TPAttr, 1), 0);
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! It should not be possible to set JobsPerThread < 0.\n";
     EXPECT_EQ(tpObj.TPAttrSetJobsPerThread(&TPAttr, -1), 0);
     EXPECT_EQ(TPAttr.jobsPerThread, -1);
@@ -373,7 +373,7 @@ TEST(ThreadPoolNormalTestSuite, set_starvation_time_to_attribute) {
 
     EXPECT_EQ(tpObj.TPAttrSetStarvationTime(&TPAttr, 0), 0);
     EXPECT_EQ(tpObj.TPAttrSetStarvationTime(&TPAttr, 1), 0);
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout
         << "  BUG! It should not be possible to set StarvationTime < 0.\n";
     EXPECT_EQ(tpObj.TPAttrSetStarvationTime(&TPAttr, -1), 0);
@@ -403,7 +403,7 @@ TEST(ThreadPoolNormalTestSuite, set_scheduling_policy_to_attribute) {
     ThreadPoolAttr TPAttr{}; // Structure for a threadpool attribute
 
     EXPECT_EQ(tpObj.TPAttrSetSchedPolicy(&TPAttr, SCHED_OTHER), 0);
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! Only SCHED_OTHER, SCHED_IDLE, SCHED_BATCH, SCHED_FIFO,"
               << " SCHED_RR or SCHED_DEADLINE should be valid.\n";
     EXPECT_EQ(tpObj.TPAttrSetSchedPolicy(&TPAttr, 0x5a5a), 0);
@@ -429,7 +429,7 @@ TEST(ThreadPoolNormalTestSuite, set_max_jobs_qeued_totally_to_attribute) {
 
     EXPECT_EQ(tpObj.TPAttrSetMaxJobsTotal(&TPAttr, 0), 0);
     EXPECT_EQ(tpObj.TPAttrSetMaxJobsTotal(&TPAttr, 1), 0);
-#ifdef OLD_TEST
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     std::cout << "  BUG! It should not be possible to set MaxJobsTotal < 0.\n";
     EXPECT_EQ(tpObj.TPAttrSetMaxJobsTotal(&TPAttr, -1), 0);
     EXPECT_EQ(TPAttr.maxJobsTotal, -1);
