@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-25
+# Redistribution only with this Copyright remark. Last modified: 2022-06-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(GTESTS_SAMPLE VERSION 0004
+project(GTESTS_SAMPLE VERSION 0005
                   DESCRIPTION "Tests for upnplib sample programs"
                   HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -87,58 +87,34 @@ set(UPNPLIB_TV_DEVICE_SOURCE_FILES
 endif()
 
 
-set(UPNPLIB_TV_DEVICE_SOURCE_FILES
+# test tv_device build with pupnp native shared library
+#------------------------------------------------------
+add_executable(test_tv_device-pnsh
     ${UPNPLIB_SAMPLE_SOURCE_DIR}/common/sample_util.cpp
     ./test_tv_device.cpp
 )
-
-# tv_device build with pupnp native shared library
-#-------------------------------------------------
-add_executable(test_tv_device_pupnp_shared
-    ${UPNPLIB_TV_DEVICE_SOURCE_FILES}
+target_include_directories(test_tv_device-pnsh
+    PRIVATE
+        ${UPnPlib_SOURCE_DIR}
+        ${UPnPlib_SOURCE_DIR}/include
+        ${UPnPlib_BINARY_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+        # if pthreads4w isn't installed this path is empty. The linker
+        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions (test_tv_device_pupnp_shared
-    PRIVATE UPNPLIB_SHARED
+target_compile_definitions (test_tv_device-pnsh
+    PRIVATE
+        UPNPLIB_SHARED
+        UPNPLIB_WITH_NATIVE_PUPNP
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_tv_device_pupnp_shared
-    PRIVATE pupnp_native_shared
+target_link_libraries(test_tv_device-pnsh
+    PRIVATE
+        pupnp_native_shared
+        upnplib_native_shared
 )
-add_test(NAME ctest_tv_device_pupnp_shared COMMAND test_tv_device_pupnp_shared)
-#set_tests_properties( ctest_tv_device PROPERTIES
-#    ENVIRONMENT "PATH=$ENV{PATH};${UPnPlib_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}" )
-
-
-# tv_device build with pupnp native static library
-#-------------------------------------------------
-add_executable(test_tv_device_pupnp_static
-    ${UPNPLIB_TV_DEVICE_SOURCE_FILES}
+add_test(NAME ctest_tv_device-pnsh COMMAND test_tv_device-pnsh
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
-target_link_libraries(test_tv_device_pupnp_static
-    PRIVATE pupnp_native_static
-)
-add_test(NAME ctest_tv_device_pupnp_static COMMAND test_tv_device_pupnp_static)
-
-
-# tv_device build with upnplib compatible shared library
-#-------------------------------------------------------
-add_executable(test_tv_device_upnplib_shared
-    ${UPNPLIB_TV_DEVICE_SOURCE_FILES}
-)
-target_compile_definitions (test_tv_device_upnplib_shared
-    PRIVATE UPNPLIB_SHARED
-)
-target_link_libraries(test_tv_device_upnplib_shared
-    PRIVATE upnplib_compa_shared
-)
-add_test(NAME ctest_tv_device_upnplib_shared COMMAND test_tv_device_upnplib_shared)
-
-
-# tv_device build with upnplib compatible static library
-#-------------------------------------------------------
-add_executable(test_tv_device_upnplib_static
-    ${UPNPLIB_TV_DEVICE_SOURCE_FILES}
-)
-target_link_libraries(test_tv_device_upnplib_static
-    PRIVATE upnplib_compa_static
-)
-add_test(NAME ctest_tv_device_upnplib_static COMMAND test_tv_device_upnplib_static)

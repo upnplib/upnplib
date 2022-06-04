@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_CMAKE_VARS_HPP
 #define UPNPLIB_CMAKE_VARS_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-25
+// Redistribution only with this Copyright remark. Last modified: 2022-06-05
 
 /***************************************************************************
  * Large file support
@@ -13,7 +13,6 @@
 /***************************************************************************
  * Library version
  ***************************************************************************/
-
 // TODO: Check the version handling
 /** The library version (string) e.g. "1.3.0" */
 #cmakedefine UPNP_VERSION_STRING "${UPNP_VERSION_STRING}"
@@ -37,7 +36,18 @@ UPNP_VERSION_PATCH)
 #cmakedefine CMAKE_CXX_COMPILER_VERSION "${CMAKE_CXX_COMPILER_VERSION}"
 #cmakedefine CMAKE_GENERATOR "${CMAKE_GENERATOR}"
 
-/* Defined to ON if the library will use the static pthreads4W library */
+/***************************************************************************
+ * Needed paths of the project
+ ***************************************************************************/
+// Path to the build directory of the project
+#cmakedefine UPnPlib_BINARY_DIR "${UPnPlib_BINARY_DIR}"
+// Path to sample source directory to access web subdirectory
+#cmakedefine UPNPLIB_SAMPLE_SOURCE_DIR "${UPNPLIB_SAMPLE_SOURCE_DIR}"
+
+/***************************************************************************
+ * Other settings
+ ***************************************************************************/
+// Defined to ON if the library will use the static pthreads4W library
 #cmakedefine PTW32_STATIC_LIB ${PTW32_STATIC_LIB}
 
 #endif // UPNPLIB_CMAKE_VARS_HPP

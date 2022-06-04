@@ -1396,7 +1396,7 @@ void* TvDeviceCommandLoop(void* args) {
     return NULL;
 }
 
-int device_main(int argc, char* argv[]) {
+int device_main(const int argc, char* argv[]) {
     unsigned int portTemp{};
     char* iface{};
     char* desc_doc_name{};

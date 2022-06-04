@@ -986,10 +986,16 @@ target_include_directories(test_template
 add_test(NAME ctest_template COMMAND test_template)
 
 
-#add_subdirectory(${PROJECT_SOURCE_DIR}/test_sample.d)
+if(UPNPLIB_WITH_SAMPLES)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/test_sample.d)
+endif()
+
 
 # set(ENV{GITHUB_ACTIONS} 1)
 # if(NOT APPLE)
 # if(NOT DEFINED ENV{GITHUB_ACTIONS})
 # target_compile_definitions(test_httpparser PRIVATE
 #                            $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
+
+# set_tests_properties( ctest_tv_device PROPERTIES
+#     ENVIRONMENT "PATH=$ENV{PATH};${UPnPlib_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}" )
