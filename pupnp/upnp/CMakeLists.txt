@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-25
+# Redistribution only with this Copyright remark. Last modified: 2022-06-07
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(PUPNP_UPNP VERSION 0018
+project(PUPNP_UPNP VERSION 0020
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -16,6 +16,7 @@ project(PUPNP_UPNP VERSION 0018
 # These switches are all handled only in this configuration file.
 
 # Options selectable by user configuration
+set(UPNPLIB_DEF_GOOGLETEST ${UPNPLIB_WITH_GOOGLETEST})
 set(UPNPLIB_DEF_TOOLS ${UPNPLIB_WITH_TOOLS})         # tools -> UPNP_ENABLE_HELPER_API_TOOLS
 set(UPNPLIB_DEF_CLIENT ${UPNPLIB_WITH_CLIENT})       # client -> UPNP_ENABLE_CLIENT_API
 set(UPNPLIB_DEF_DEVICE ${UPNPLIB_WITH_DEVICE})
@@ -45,17 +46,23 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(UPNPLIB_DEF_DEBUG YES)
 endif()
 
+if(UPNPLIB_DEF_GOOGLETEST)
+    set(UPNPLIB_DEF_CLIENT YES)
+    set(UPNPLIB_DEF_WEBSERVER YES)
+    set(UPNPLIB_DEF_OPTSSDP YES)
+endif()
+
 if(UPNPLIB_DEF_SAMPLES)
     set(UPNPLIB_DEF_TOOLS YES)
     set(UPNPLIB_DEF_CLIENT YES)
     set(UPNPLIB_DEF_WEBSERVER YES)
-    set(UPNPLIB_DEF_SSDP YES)
     set(UPNPLIB_DEF_SOAP YES)
     set(UPNPLIB_DEF_GENA YES)
 endif()
 
 if(UPNPLIB_DEF_WEBSERVER)
     set(UPNPLIB_DEF_DEVICE YES)
+    set(UPNPLIB_DEF_SSDP YES)
 endif()
 
 

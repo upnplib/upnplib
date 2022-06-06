@@ -3,7 +3,7 @@
 
 /*
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-18
+ * Redistribution only with this Copyright remark. Last modified: 2022-06-07
  * Copyright (c) 1990- 1993, 1996 Open Software Foundation, Inc.
  * Copyright (c) 1989 by Hewlett-Packard Company, Palo Alto, Ca. &
  * Digital Equipment Corporation, Maynard, Mass.
@@ -27,6 +27,7 @@
  */
 
 #include "ithread.hpp"
+#include "upnpapi.hpp"
 
 /* change to point to where MD5 .h's live */
 /* get MD5 sample implementation from RFC 1321 */
@@ -45,9 +46,6 @@
 /*! set the following to the number of 100ns ticks of the actual resolution of
  * your system's clock */
 #define UUIDS_PER_TICK 1024
-
-/*! Set the following to a call to acquire a system wide global lock. */
-extern ithread_mutex_t gUUIDMutex;
 
 #define UUIDLock() ithread_mutex_lock(&gUUIDMutex)
 #define UUIDUnlock() ithread_mutex_unlock(&gUUIDMutex)

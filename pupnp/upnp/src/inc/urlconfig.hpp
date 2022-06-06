@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-13
+ * Redistribution only with this Copyright remark. Last modified: 2022-06-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -60,8 +60,9 @@
  *      UPNP_E_SUCCESS - On Success
  *      UPNP_E_OUTOF_MEMORY - Default Error
  ****************************************************************************/
-int configure_urlbase(IXML_Document* doc, const struct sockaddr* serverAddr,
-                      const char* alias, time_t last_modified,
-                      char docURL[LINE_SIZE]);
+EXPORT_SPEC int configure_urlbase(IXML_Document* doc,
+                                  const struct sockaddr* serverAddr,
+                                  const char* alias, time_t last_modified,
+                                  char docURL[LINE_SIZE]);
 
 #endif /* UPNPLIB_URLCONFIG_HPP */

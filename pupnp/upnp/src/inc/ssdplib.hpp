@@ -7,7 +7,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-18
+ * Redistribution only with this Copyright remark. Last modified: 2022-06-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -178,7 +178,7 @@ typedef int (*ParserFun)(char*, SsdpEvent*);
  *
  * \return UPNP_E_SUCCESS if successful else appropriate error.
  */
-int AdvertiseAndReply(
+EXPORT_SPEC int AdvertiseAndReply(
     /* [in] -1 = Send shutdown, 0 = send reply, 1 = Send Advertisement. */
     int AdFlag,
     /* [in] Device handle. */
@@ -288,7 +288,7 @@ void ssdp_handle_ctrlpt_msg(
  *
  * \return 1 if successful else appropriate error.
  */
-int SearchByTarget(
+EXPORT_SPEC int SearchByTarget(
     /* [in] The handle of the client performing the search. */
     int Hnd,
     /* [in] Number of seconds to wait, to collect all the responses. */

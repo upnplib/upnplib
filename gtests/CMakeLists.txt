@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-06-04
+# Redistribution only with this Copyright remark. Last modified: 2022-06-10
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -544,6 +544,9 @@ add_test(NAME ctest_upnpdebug-pnst COMMAND test_upnpdebug-pnst
 
 # upnpapi
 #========
+# Because we want to include the source file into the test to also test static
+# functions, we cannot use shared libraries due to symbol import/export
+# conflicts. We must use static libraries.
 if(FALSE)
 # Direct linking with source files currently not used but having available for
 # reference. We link against the internal upnplib libraries (see below).
@@ -589,11 +592,11 @@ set(UPNP_UPNPAPI_SOURCE_FILES
 )
 endif()
 
-add_executable(test_upnpapi-pnsh
-        $<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/test_upnpapi_win32.cpp>
-        $<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/test_upnpapi_unix.cpp>
+add_executable(test_upnpapi-pnst
+#-------------------------------
+        ./test_upnpapi.cpp
 )
-target_include_directories(test_upnpapi-pnsh
+target_include_directories(test_upnpapi-pnst
     PRIVATE
         ./include
         ${UPnPlib_SOURCE_DIR}
@@ -607,19 +610,56 @@ target_include_directories(test_upnpapi-pnsh
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_upnpapi-pnsh
+target_compile_definitions(test_upnpapi-pnst
+    PRIVATE
+        UPNPLIB_WITH_NATIVE_PUPNP
+        UPNP_HAVE_CLIENT
+        UPNP_HAVE_DEVICE
+        UPNP_HAVE_WEBSERVER
+        UPNP_HAVE_SSDP
+        UPNP_HAVE_OPTSSDP
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+)
+target_link_libraries(test_upnpapi-pnst
+    PRIVATE
+        pupnp_native_static
+        upnplib_native_static
+)
+add_test(NAME ctest_upnpapi-pnst COMMAND test_upnpapi-pnst
+)
+
+add_executable(test_upnpapi_platform-pnsh
+#----------------------------------------
+        $<$<PLATFORM_ID:Windows>:./test_upnpapi_win32.cpp>
+        $<$<NOT:$<PLATFORM_ID:Windows>>:./test_upnpapi_unix.cpp>
+)
+target_include_directories(test_upnpapi_platform-pnsh
+    PRIVATE
+        ./include
+        ${UPnPlib_SOURCE_DIR}
+        ${UPnPlib_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
+        # if pthreads4w isn't installed this path is empty. The linker
+        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+)
+target_compile_definitions(test_upnpapi_platform-pnsh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_upnpapi-pnsh
+target_link_libraries(test_upnpapi_platform-pnsh
     PRIVATE
         upnplib_gtest_tools_shared
         pupnp_native_shared
         upnplib_native_shared
 )
-add_test(NAME ctest_upnpapi-pnsh COMMAND test_upnpapi-pnsh
+add_test(NAME ctest_upnpapi_platform-pnsh COMMAND test_upnpapi_platform-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -765,6 +805,7 @@ set(TEST_UPNPTOOLS_INCLUDE_DIRECTORIES
         ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 
+if(UPNPLIB_WITH_TOOLS)
 add_executable(test_upnptools-pnsh
 #---------------------------------
         ./test_upnptools_compa.cpp
@@ -783,6 +824,23 @@ add_test(NAME ctest_upnptools-pnsh COMMAND test_upnptools-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
+add_executable(test_upnptools-pnst
+#---------------------------------
+        ./test_upnptools_compa.cpp
+)
+target_include_directories(test_upnptools-pnst
+        ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
+)
+target_link_libraries(test_upnptools-pnst
+    PRIVATE
+        # pupnp native static: prefix -pnst
+        pupnp_native_static
+        upnplib_native_static
+)
+add_test(NAME ctest_upnptools-pnst COMMAND test_upnptools-pnst
+)
+endif()
+
 add_executable(test_upnptools-ucsh
 #----------------------------------
         ./test_upnptools_compa.cpp
@@ -799,22 +857,6 @@ target_link_libraries(test_upnptools-ucsh
 )
 add_test(NAME ctest_upnptools-ucsh COMMAND test_upnptools-ucsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-)
-
-add_executable(test_upnptools-pnst
-#---------------------------------
-        ./test_upnptools_compa.cpp
-)
-target_include_directories(test_upnptools-pnst
-        ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
-)
-target_link_libraries(test_upnptools-pnst
-    PRIVATE
-        # pupnp native static: prefix -pnst
-        pupnp_native_static
-        upnplib_native_static
-)
-add_test(NAME ctest_upnptools-pnst COMMAND test_upnptools-pnst
 )
 
 add_executable(test_upnptools-ucst

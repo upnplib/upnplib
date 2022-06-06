@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-04
+ * Redistribution only with this Copyright remark. Last modified: 2022-06-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,6 +42,7 @@
 
 #include "config.hpp"
 #include "upnpapi.hpp"
+#include <iostream> // DEBUG:
 
 #ifdef _WIN32
 #include "upnpmock/iphlpapi_win32.hpp"
@@ -115,16 +116,16 @@ struct VirtualDirCallbacks virtualDirCallback;
 /*! Pointer to the virtual directory list. */
 virtualDirList* pVirtualDirList;
 
-#ifdef INCLUDE_CLIENT_APIS
-/*! Mutex to synchronize the subscription handling at the client side. */
-ithread_mutex_t GlobalClientSubscribeMutex;
-#endif /* INCLUDE_CLIENT_APIS */
-
 /*! rwlock to synchronize handles (root device or control point handle). */
 ithread_rwlock_t GlobalHndRWLock;
 
 /*! Mutex to synchronize the uuid creation process. */
 ithread_mutex_t gUUIDMutex;
+
+#ifdef INCLUDE_CLIENT_APIS
+/*! Mutex to synchronize the subscription handling at the client side. */
+ithread_mutex_t GlobalClientSubscribeMutex;
+#endif /* INCLUDE_CLIENT_APIS */
 
 /*! Initialization mutex. */
 ithread_mutex_t gSDKInitMutex = PTHREAD_MUTEX_INITIALIZER;
@@ -192,9 +193,6 @@ unsigned short LOCAL_PORT_V6_ULA_GUA;
 
 /*! UPnP device and control point handle table  */
 static Handle_Info* HandleTable[NUM_HANDLE];
-
-/*! a local dir which serves as webserver root */
-extern membuffer gDocumentRootDir;
 
 /*! Maximum content-length (in bytes) that the SDK will process on an incoming
  * packet. Content-Length exceeding this size will be not processed and

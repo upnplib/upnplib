@@ -52,9 +52,9 @@ TEST(SampleTvDeviceTestSuite, TvDeviceStart) {
     constexpr int ip_mode = IP_MODE_IPV4;
 
     // Start the TV Device with default settings as far as possible
-    int rc = TvDeviceStart(iface, port, desc_doc_name, web_dir_path, ip_mode,
-                           linux_print, 0);
-    EXPECT_EQ(rc, UPNP_E_SUCCESS) << errStrEx(rc, UPNP_E_SUCCESS);
+    int returned = TvDeviceStart(iface, port, desc_doc_name, web_dir_path,
+                                 ip_mode, linux_print, 0);
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     // Stop device
     EXPECT_EQ(TvDeviceStop(), UPNP_E_SUCCESS);
@@ -62,11 +62,12 @@ TEST(SampleTvDeviceTestSuite, TvDeviceStart) {
 
 TEST(SampleTvDeviceTestSuite, UpnpInit2) {
     // Initialize the library
-    int rc = UpnpInit2(nullptr /*iface*/, 0 /*port*/);
-    EXPECT_EQ(rc, UPNP_E_SUCCESS) << errStrEx(rc, UPNP_E_SUCCESS);
+    int returned = UpnpInit2(nullptr /*iface*/, 0 /*port*/);
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     // Finish library
-    UpnpFinish();
+    returned = UpnpFinish();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 }
 
 } // namespace upnplib

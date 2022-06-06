@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-01
+// Redistribution only with this Copyright remark. Last modified: 2022-06-10
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -200,7 +200,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     EXPECT_EQ(LOCAL_PORT_V6_ULA_GUA, (unsigned short)0);
 }
 
-TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
+TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_default_initialization) {
     // provide a network interface
     CIfaddr4 ifaddr4Obj;
     ifaddr4Obj.set("if0v4", "192.168.99.3/20");
@@ -219,7 +219,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
 
     // call the unit
     // EXPECT_EQ(UpnpSdkInit, 0);
-    int returned = UpnpInit2(NULL, 0);
+    int returned = UpnpInit2(nullptr, 0);
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     // Get and check the captured data
@@ -230,28 +230,17 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
     // EXPECT_EQ(UpnpSdkInit, 1);
 
     // call the unit again
-    returned = UpnpInit2(NULL, 0);
+    returned = UpnpInit2(nullptr, 0);
     EXPECT_EQ(returned, UPNP_E_INIT) << errStrEx(returned, UPNP_E_INIT);
     // EXPECT_EQ(UpnpSdkInit, 1);
-}
 
-// TEST_F(UpnpapiIPv4MockTestSuite, UpnpInitMutexes) {
-// TODO
-//    int returned = UpnpInitMutexes();
-//    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
-// }
+    // Finish library
+    returned = UpnpFinish();
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
-// UpnpApi common Testsuite
-//-------------------------
-// TEST(UpnpapiTestSuite, WinsockInit) {
-// TODO
-//    EXPECT_STREQ(errStr(UPNP_E_SUCCESS), "UPNP_E_SUCCESS(0)");
-// }
-
-TEST(UpnpapiTestSuite, get_handle_info) {
-    Handle_Info** HndInfo = 0;
-    EXPECT_EQ(GetHandleInfo(0, HndInfo), HND_INVALID);
-    EXPECT_EQ(GetHandleInfo(1, HndInfo), HND_INVALID);
+    // Finish library again
+    returned = UpnpFinish();
+    EXPECT_EQ(returned, UPNP_E_FINISH) << errStrEx(returned, UPNP_E_FINISH);
 }
 
 } // namespace upnplib

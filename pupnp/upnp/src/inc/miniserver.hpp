@@ -6,7 +6,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-17
+ * Redistribution only with this Copyright remark. Last modified: 2022-06-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -94,7 +94,7 @@ typedef void (*MiniServerCallback)(
 /*!
  * \brief Set HTTP Get Callback.
  */
-void SetHTTPGetCallback(
+EXPORT_SPEC void SetHTTPGetCallback(
     /*! [in] HTTP Callback to be invoked . */
     MiniServerCallback callback);
 
@@ -131,7 +131,7 @@ void SetGenaCallback(
  *  \li On success: UPNP_E_SUCCESS.
  *  \li On error: UPNP_E_XXX.
  */
-int StartMiniServer(
+EXPORT_SPEC int StartMiniServer(
     /*! [in,out] Port on which the server listens for incoming IPv4
      * connections. */
     uint16_t* listen_port4,
@@ -147,6 +147,6 @@ int StartMiniServer(
  *
  * \return Always returns 0.
  */
-int StopMiniServer();
+EXPORT_SPEC int StopMiniServer();
 
 #endif /* UPNPLIB_MINISERVER_HPP */

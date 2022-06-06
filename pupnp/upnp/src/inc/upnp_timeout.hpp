@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-17
+ * Redistribution only with this Copyright remark. Last modified: 2022-06-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,6 +38,8 @@
  * \file
  */
 
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
+
 /*!
  * The upnp_timeout structure definition.
  */
@@ -51,7 +53,7 @@ typedef struct UPNP_TIMEOUT {
 /*!
  * \brief Free memory associated with event and memory for any sub-elements.
  */
-void free_upnp_timeout(
+EXPORT_SPEC void free_upnp_timeout(
     /*! [in] Event which needs to be freed. */
     upnp_timeout* event);
 

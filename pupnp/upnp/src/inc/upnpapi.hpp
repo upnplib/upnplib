@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-18
+ * Redistribution only with this Copyright remark. Last modified: 2022-06-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -119,7 +119,16 @@ struct Handle_Info {
 #endif
 };
 
+/*! rwlock to synchronize handles (root device or control point handle). */
 extern ithread_rwlock_t GlobalHndRWLock;
+
+/*! Mutex to synchronize the uuid creation process. */
+extern ithread_mutex_t gUUIDMutex;
+
+#ifdef INCLUDE_CLIENT_APIS
+/*! Mutex to synchronize the subscription handling at the client side. */
+extern ithread_mutex_t GlobalClientSubscribeMutex;
+#endif /* INCLUDE_CLIENT_APIS */
 
 /*!
  * \brief Get handle information.
@@ -214,12 +223,12 @@ EXPORT_SPEC extern unsigned short LOCAL_PORT_V6;
 EXPORT_SPEC extern unsigned short LOCAL_PORT_V6_ULA_GUA;
 
 /*! NLS uuid. */
-extern Upnp_SID gUpnpSdkNLSuuid;
+EXPORT_SPEC extern Upnp_SID gUpnpSdkNLSuuid;
 
-extern TimerThread gTimerThread;
-extern ThreadPool gRecvThreadPool;
-extern ThreadPool gSendThreadPool;
-extern ThreadPool gMiniServerThreadPool;
+EXPORT_SPEC extern TimerThread gTimerThread;
+EXPORT_SPEC extern ThreadPool gRecvThreadPool;
+EXPORT_SPEC extern ThreadPool gSendThreadPool;
+EXPORT_SPEC extern ThreadPool gMiniServerThreadPool;
 
 typedef enum {
     SUBSCRIBE,

@@ -15,6 +15,7 @@
 
 #ifdef INCLUDE_CLIENT_APIS
 
+#include "upnpapi.hpp"
 #include "upnp_timeout.hpp"
 #include <stdlib.h> /* for calloc(), free() */
 

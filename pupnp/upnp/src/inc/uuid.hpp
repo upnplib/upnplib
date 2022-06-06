@@ -7,7 +7,7 @@
  * Digital Equipment Corporation, Maynard, Mass.
  * Copyright (c) 1998 Microsoft.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-18
+ * Redistribution only with this Copyright remark. Last modified: 2022-06-07
  *
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty: permission to use, copy,
@@ -44,14 +44,14 @@ typedef struct _uuid_upnp {
 /*!
  * \brief Generate a UUID.
  */
-int uuid_create(
+EXPORT_SPEC int uuid_create(
     /*! . */
     uuid_upnp* id);
 
 /*!
  * \brief Out will be xxxx-xx-xx-xx-xxxxxx format.
  */
-void upnp_uuid_unpack(
+EXPORT_SPEC void upnp_uuid_unpack(
     /*! . */
     uuid_upnp* u,
     /*! . */
