@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-06-10
+# Redistribution only with this Copyright remark. Last modified: 2022-06-12
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -84,6 +84,47 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "")
 # Unit Tests                    #
 #################################
 # The tests are build in reverse order. test_template.cpp will be build first.
+
+# miniserver
+#===========
+# Because we want to include the source file into the test to also test static
+# functions, we cannot use shared libraries due to symbol import/export
+# conflicts. We must use static libraries.
+add_executable(test_miniserver-pnst
+#----------------------------------
+        ./test_miniserver.cpp
+)
+target_include_directories(test_miniserver-pnst
+    PRIVATE
+        ./include
+        ${UPnPlib_SOURCE_DIR}
+        ${UPnPlib_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
+        # if pthreads4w isn't installed this path is empty. The linker
+        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+)
+target_compile_definitions(test_miniserver-pnst
+    PRIVATE
+        UPNPLIB_WITH_NATIVE_PUPNP
+         UPNP_HAVE_CLIENT
+        #UPNP_HAVE_DEVICE
+        UPNP_HAVE_WEBSERVER
+         UPNP_HAVE_SSDP
+         UPNP_HAVE_OPTSSDP
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+)
+target_link_libraries(test_miniserver-pnst
+    PRIVATE
+        pupnp_native_static
+        upnplib_native_static
+)
+add_test(NAME ctest_miniserver-pnst COMMAND test_miniserver-pnst
+)
 
 # sock
 #=====

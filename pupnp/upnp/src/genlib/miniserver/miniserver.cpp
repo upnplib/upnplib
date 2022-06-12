@@ -111,7 +111,7 @@ static const int ENABLE_IPV6 =
     0;
 #endif
 
-static const int MINISERVER_REUSEADDR =
+static int MINISERVER_REUSEADDR =
 #ifdef UPNP_MINISERVER_REUSEADDR
     1;
 #else
@@ -644,7 +644,7 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
     char errorBuffer[ERROR_BUFFER_LEN];
     int sockError;
     sa_family_t domain;
-    void* addr;
+    void* addr; // This holds a pointer to sin_addr, not a value
     int reuseaddr_on = MINISERVER_REUSEADDR;
 
     memset(s, 0, sizeof *s);
@@ -674,6 +674,8 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
         goto error;
         break;
     }
+    // BUG! Ingo: here we should test if we have a valid ip address
+    // if (inet_pton(domain, text_addr, addr) == 0) { ...; goto error;}
     inet_pton(domain, text_addr, addr);
     s->fd = socket(domain, SOCK_STREAM, 0);
     if (s->fd == INVALID_SOCKET) {

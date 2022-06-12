@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-10
+// Redistribution only with this Copyright remark. Last modified: 2022-06-12
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -7,7 +7,7 @@
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 
 #include "upnplib_gtest_tools.hpp"
-#include "upnplib/upnptools.hpp"
+#include "upnplib/upnptools.hpp" // For upnplib_native only
 #include "upnplib_gtest_tools_unix.hpp"
 
 #include "gmock/gmock.h"
@@ -68,26 +68,25 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
     // constructor of this testsuite
     UpnpapiIPv4MockTestSuite() {
         // initialize global variables with file scope for upnpapi.cpp
-        virtualDirCallback = {};
+        memset(&virtualDirCallback, 0, sizeof(virtualDirCallback));
         pVirtualDirList = nullptr;
         // GlobalClientSubscribeMutex = {}; // mutex, must be initialized,
         // only used with gena.h
         GlobalHndRWLock = {}; // mutex, must be initialzed
-        // gTimerThread             // must be initialized
+        memset(&gTimerThread, 0xFF, sizeof(gTimerThread));
         gSDKInitMutex = PTHREAD_MUTEX_INITIALIZER;
         gUUIDMutex = {}; // mutex, must be initialzed
         // gSendThreadPool          // type ThreadPool must be initialized
         // gRecvThreadPool;         // type ThreadPool must be initialized
         // gMiniServerThreadPool;   // type ThreadPool must be initialized
         bWebServerState = WEB_SERVER_DISABLED;
-        // Due to a bug there is annoying warning with initializing gIF_*:
-        // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=99578
-        // gIF_NAME[LINE_SIZE] = {'\0'};
-        // gIF_IPV4[INET_ADDRSTRLEN] = {'\0'};
-        // gIF_IPV4_NETMASK[INET_ADDRSTRLEN] = {'\0'};
-        // gIF_IPV6[INET6_ADDRSTRLEN] = {'\0'};
+        std::fill(std::begin(gIF_NAME), std::end(gIF_NAME), 0);
+        // std::fill(std::begin(gIF_IPV4), std::end(gIF_IPV4), 0);
+        // std::fill(std::begin(gIF_IPV4_NETMASK), std::end(gIF_IPV4_NETMASK),
+        // 0);
+        std::fill(std::begin(gIF_IPV6), std::end(gIF_IPV6), 0);
         gIF_IPV6_PREFIX_LENGTH = 0;
-        // gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN] = {'\0'};
+        std::fill(std::begin(gIF_IPV6_ULA_GUA), std::end(gIF_IPV6_ULA_GUA), 0);
         gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
         gIF_INDEX = (unsigned)-1;
         LOCAL_PORT_V4 = 0;
@@ -103,7 +102,7 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
         UpnpSdkDeviceRegisteredV4 = 0;
         UpnpSdkDeviceregisteredV6 = 0;
 #ifdef UPNP_HAVE_OPTSSDP
-        gUpnpSdkNLSuuid = {};
+        strcpy(gUpnpSdkNLSuuid, "");
 #endif /* UPNP_HAVE_OPTSSDP */
 #ifdef UPNP_ENABLE_OPEN_SSL
         SSL_CTX* gSslCtx = nullptr;

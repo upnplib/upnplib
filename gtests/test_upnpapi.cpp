@@ -1,8 +1,10 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-08
+// Redistribution only with this Copyright remark. Last modified: 2022-06-11
 
 #include "pupnp/upnp/src/api/upnpapi.cpp"
-#include "upnptools.hpp"         // For pupnp_native or upnplib_compa
+#ifdef UPNP_HAVE_TOOLS
+#include "upnptools.hpp" // For pupnp_native and upnplib_compa
+#endif
 #include "upnplib/upnptools.hpp" // For upnplib_native only
 
 #include "gmock/gmock.h"
@@ -139,39 +141,6 @@ TEST(UpnpapiTestSuite, UpnpFinish_without_initialization) {
             << "[ BUG!     ] UpnpFinish should never segfault, even "
                "without initialization.\n";
     }
-}
-
-TEST(UpnpapiTestSuite, StartMiniServer) {
-    // Perform initialization preamble.
-    int ret_UpnpInitPreamble = UpnpInitPreamble();
-    ASSERT_EQ(ret_UpnpInitPreamble, UPNP_E_SUCCESS)
-        << errStrEx(ret_UpnpInitPreamble, UPNP_E_SUCCESS);
-
-    // Retrieve interface information (Addresses, index, etc).
-    int ret_UpnpGetIfInfo = UpnpGetIfInfo(nullptr);
-    ASSERT_EQ(ret_UpnpGetIfInfo, UPNP_E_SUCCESS)
-        << errStrEx(ret_UpnpGetIfInfo, UPNP_E_SUCCESS);
-
-    // Due to initialization by components it should not have flagged to be
-    // initialized. That will we do now.
-    ASSERT_EQ(UpnpSdkInit, 0);
-    UpnpSdkInit = 1;
-
-    // Test Unit
-    int ret_StartMiniServer =
-        StartMiniServer(&LOCAL_PORT_V4, &LOCAL_PORT_V6, &LOCAL_PORT_V6_ULA_GUA);
-    EXPECT_EQ(ret_StartMiniServer, UPNP_E_SUCCESS)
-        << errStrEx(ret_StartMiniServer, UPNP_E_SUCCESS);
-
-    EXPECT_EQ(UpnpSdkInit, 1);
-
-    StopMiniServer(); // Always returns 0
-
-    int ret_UpnpFinish = UpnpFinish();
-    EXPECT_EQ(ret_UpnpFinish, UPNP_E_SUCCESS)
-        << errStrEx(ret_UpnpFinish, UPNP_E_SUCCESS);
-
-    EXPECT_EQ(UpnpSdkInit, 0);
 }
 
 TEST(UpnpapiTestSuite, UpnpEnableWebserver) { //

@@ -1,4 +1,4 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-06-10
 
 // This test should always run, reporting no failure
@@ -16,7 +16,8 @@
     ASSERT_LE((VAL), (MAX))
 
 namespace upnplib {
-bool old_code{false};
+bool old_code{false}; // Managed in upnplib_gtest_main.inc
+bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 // testsuite with fixtures
 //------------------------
@@ -103,5 +104,6 @@ TEST(EmptyTestSuite, empty_gtest) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     // ::testing::InitGoogleMock(&argc, argv);
+    // return RUN_ALL_TESTS();
 #include "upnplib/gtest_main.inc"
 }
