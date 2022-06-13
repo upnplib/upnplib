@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-06-04
+ * Redistribution only with this Copyright remark. Last modified: 2022-06-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -677,7 +677,9 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
     // BUG! Ingo: here we should test if we have a valid ip address
     // if (inet_pton(domain, text_addr, addr) == 0) { ...; goto error;}
     inet_pton(domain, text_addr, addr);
+
     s->fd = socket(domain, SOCK_STREAM, 0);
+
     if (s->fd == INVALID_SOCKET) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
@@ -746,16 +748,16 @@ static int do_bind(struct s_SocketStuff* s) {
             // operation on 's->s_SocketStuff::try_port'
             // may be undefined [-Werror=sequence-point]
             // s->serverAddr4->sin_port = htons(s->try_port++);
-            s->try_port = s->try_port + 1;
             s->serverAddr4->sin_port = htons(s->try_port);
+            s->try_port = s->try_port + 1;
             break;
         case 6:
             // Ingo: Compilation Error on macOS:
             // operation on 's->s_SocketStuff::try_port'
             // may be undefined [-Werror=sequence-point]
             // s->serverAddr6->sin6_port = htons(s->try_port++);
-            s->try_port = s->try_port + 1;
             s->serverAddr6->sin6_port = htons(s->try_port);
+            s->try_port = s->try_port + 1;
             break;
         }
         bind_error = bind(s->fd, s->serverAddr, s->address_len);
@@ -765,6 +767,8 @@ static int do_bind(struct s_SocketStuff* s) {
 #else
             errCode = errno;
 #endif
+            // BUG! Ingo: what is errno on _WIN32? Why to query
+            // WSAGetLastError() before?
             if (errno == EADDRINUSE) {
                 errCode = 1;
             }

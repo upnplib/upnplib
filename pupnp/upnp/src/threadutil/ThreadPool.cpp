@@ -47,6 +47,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> /* for memset()*/
+//#include <iostream> // DEBUG:
 
 /*!
  * \brief Returns the difference in milliseconds between two timeval structures.
@@ -953,6 +954,7 @@ int ThreadPoolSetAttr(ThreadPool* tp, ThreadPoolAttr* attr) {
 }
 
 int ThreadPoolShutdown(ThreadPool* tp) {
+    // std::cout << "DEBUG: Tracepoint 1\n";
     ListNode* head = NULL;
     ThreadPoolJob* temp = NULL;
 
@@ -972,6 +974,7 @@ int ThreadPoolShutdown(ThreadPool* tp) {
         FreeThreadPoolJob(tp, temp);
         ListDelNode(&tp->highJobQ, head, 0);
     }
+    // std::cout << "DEBUG: Tracepoint 2\n";
     ListDestroy(&tp->highJobQ, 0);
     /* clean up med priority jobs */
     while (tp->medJobQ.size) {
@@ -986,6 +989,7 @@ int ThreadPoolShutdown(ThreadPool* tp) {
         FreeThreadPoolJob(tp, temp);
         ListDelNode(&tp->medJobQ, head, 0);
     }
+    // std::cout << "DEBUG: Tracepoint 3\n";
     ListDestroy(&tp->medJobQ, 0);
     /* clean up low priority jobs */
     while (tp->lowJobQ.size) {
@@ -1000,6 +1004,7 @@ int ThreadPoolShutdown(ThreadPool* tp) {
         FreeThreadPoolJob(tp, temp);
         ListDelNode(&tp->lowJobQ, head, 0);
     }
+    // std::cout << "DEBUG: Tracepoint 4\n";
     ListDestroy(&tp->lowJobQ, 0);
     /* clean up long term job */
     if (tp->persistentJob) {
@@ -1009,17 +1014,22 @@ int ThreadPoolShutdown(ThreadPool* tp) {
         FreeThreadPoolJob(tp, temp);
         tp->persistentJob = NULL;
     }
+    // std::cout << "DEBUG: Tracepoint 5\n";
     /* signal shutdown */
     tp->shutdown = 1;
     ithread_cond_broadcast(&tp->condition);
+    // std::cout << "DEBUG: Tracepoint 6\n";
     /* wait for all threads to finish */
     while (tp->totalThreads > 0)
         ithread_cond_wait(&tp->start_and_shutdown, &tp->mutex);
+    // std::cout << "DEBUG: Tracepoint 7\n";
     /* destroy condition */
     while (ithread_cond_destroy(&tp->condition) != 0) {
     }
+    // std::cout << "DEBUG: Tracepoint 8\n";
     while (ithread_cond_destroy(&tp->start_and_shutdown) != 0) {
     }
+    // std::cout << "DEBUG: Tracepoint 9\n";
     FreeListDestroy(&tp->jobFreeList);
 
     ithread_mutex_unlock(&tp->mutex);

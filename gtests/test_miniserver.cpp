@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-12
+// Redistribution only with this Copyright remark. Last modified: 2022-06-13
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #include "pupnp/upnp/src/api/upnpapi.cpp"
@@ -17,6 +17,9 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
 //----------------------------------
 TEST(MiniserverTestSuite, StartMiniServer_in_context) {
     MINISERVER_REUSEADDR = false;
+    LOCAL_PORT_V4 = 0;
+    LOCAL_PORT_V6 = 0;
+    LOCAL_PORT_V6_ULA_GUA = 0;
 
     // Perform initialization preamble.
     int ret_UpnpInitPreamble = UpnpInitPreamble();
@@ -33,10 +36,6 @@ TEST(MiniserverTestSuite, StartMiniServer_in_context) {
     ASSERT_EQ(UpnpSdkInit, 0);
     UpnpSdkInit = 1;
 
-    EXPECT_EQ(LOCAL_PORT_V4, 0);
-    EXPECT_EQ(LOCAL_PORT_V6, 0);
-    EXPECT_EQ(LOCAL_PORT_V6_ULA_GUA, 0);
-
     // Test Unit
     int ret_StartMiniServer =
         StartMiniServer(&LOCAL_PORT_V4, &LOCAL_PORT_V6, &LOCAL_PORT_V6_ULA_GUA);
@@ -45,7 +44,7 @@ TEST(MiniserverTestSuite, StartMiniServer_in_context) {
 
     EXPECT_EQ(UpnpSdkInit, 1);
 
-    EXPECT_EQ(LOCAL_PORT_V4, 49153);
+    EXPECT_EQ(LOCAL_PORT_V4, 49152);
     EXPECT_EQ(LOCAL_PORT_V6, 0);
     EXPECT_EQ(LOCAL_PORT_V6_ULA_GUA, 0);
 

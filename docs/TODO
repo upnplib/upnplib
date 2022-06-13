@@ -1,5 +1,7 @@
 Next steps to do:
 * Mock ip address in test_miniserver.cpp
+* Move ./build/_deps/pthreads4w-build/pthread*.` etc. to default build directories.
+* Rework README.md
 * Bugreport to gtest: EXPECT_THAT THROW shouldn't call two times if no match.
 * Install doxygen.
 * Create own Url class.

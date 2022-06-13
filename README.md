@@ -60,9 +60,9 @@ The developement of this UPnP Library has started on Linux. So for historical re
     upnplib$ cmake -S . -B build
     upnplib$ cmake --build build --config Release
 
-After build don't forget to copy the needed `pthreads4w\build\lib\pthread*.dll` library file to a location where your program can find it. Copying it to your programs directory or to the system directory `Windows\System32` will always do.
+After build don't forget to copy the needed `./build/_deps/pthreads4w-build/pthread*.dll` library file to a location where your program can find it. Copying it to your programs directory or to the system directory `Windows\System32` will always do. Within the project developement directory tree (default root ./upnplib/) built programs and libraries find its dll files. There is nothing to do.
 
-As noted by cmake to clean up a build you will have to delete all build directories on the main project and all subprojects.
+As noted by cmake to clean up a build you will have to delete the ./build/ directory on the main project.
 
 If you need more details about installation of POSIX threads on Microsoft Windows I have made an example at [github pthreadsWinLin](https://github.com/upnplib/pthreadsWinLin.git).
 
@@ -85,6 +85,10 @@ Please note that option BUILD_SHARED_LIBS only effects Googletest. By default pr
 
     # On MS Windows
     # t.b.d.
+    # To find the dll files for the test executables add its directory to the path. For example on PowerShell I use:
+    PS> $env:path_orig = $env:path
+    PS> $env:Path += ';C:\Users\ingo\devel\upnplib\build\bin\Release'
+    PS> .\build\gtests\Release\test_template.exe
 
 ## 6. Configure Options for cmake
 Option prefixed with -D | Default | Description
