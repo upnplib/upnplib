@@ -62,8 +62,10 @@
 #include "miniserver.hpp"
 #include "sock.hpp"
 #include "upnpapi.hpp"
+#include "upnpmock/sys_socket.hpp"
 
 #include <stdio.h>
+#include <iostream> // DEBUG:
 
 #define MAX_TIME_TOREAD 45
 
@@ -811,8 +813,9 @@ static int create_ssdp_sock_v4(
     memset((void*)&ssdpMcastAddr, 0, sizeof(struct ip_mreq));
     ssdpMcastAddr.imr_interface.s_addr = inet_addr(gIF_IPV4);
     ssdpMcastAddr.imr_multiaddr.s_addr = inet_addr(SSDP_IP);
-    ret = setsockopt(*ssdpSock, IPPROTO_IP, IP_ADD_MEMBERSHIP,
-                     (char*)&ssdpMcastAddr, sizeof(struct ip_mreq));
+    ret = upnplib::sys_socket_h->setsockopt(
+        *ssdpSock, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*)&ssdpMcastAddr,
+        sizeof(struct ip_mreq));
     if (ret == -1) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
@@ -825,8 +828,8 @@ static int create_ssdp_sock_v4(
     /* Set multicast interface. */
     memset((void*)&addr, 0, sizeof(struct in_addr));
     addr.s_addr = inet_addr(gIF_IPV4);
-    ret = setsockopt(*ssdpSock, IPPROTO_IP, IP_MULTICAST_IF, (char*)&addr,
-                     sizeof addr);
+    ret = upnplib::sys_socket_h->setsockopt(
+        *ssdpSock, IPPROTO_IP, IP_MULTICAST_IF, (char*)&addr, sizeof addr);
     if (ret == -1) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,

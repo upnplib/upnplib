@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-19
+// Redistribution only with this Copyright remark. Last modified: 2022-06-16
 
 // Header file for portable definitions
 // ====================================
@@ -57,31 +57,38 @@
   #define UPNPLIB_LOCAL
 #endif // UPNPLIB_SHARED
 
-// clang-format on
-
 // Header file for portable <unistd.h>
 // -----------------------------------
 // On MS Windows <unistd.h> isn't availabe. We can use <io.h> instead for most
-// functions but it's not 100% compatible.
-
+// functions but it's not 100% compatible. We also need <winsock2.h> for
+// closesocket instead of <unistd.h> for close that also closes a socket on
+// unix.
 #if _WIN32
-#include <fcntl.h>
-#include <io.h>
-#define STDIN_FILENO 0
-#define STDOUT_FILENO 1
-#define STDERR_FILENO 2
+  #include <fcntl.h>
+  #include <io.h>
+  #define STDIN_FILENO 0
+  #define STDOUT_FILENO 1
+  #define STDERR_FILENO 2
+
+  #include <winsock2.h>
+  #define UPNPLIB_CLOSE_SOCKET closesocket
+  #define UPNPLIB_SOCKET_TYPE SOCKET
 #else // WIN32
-#include <unistd.h>
+  #include <unistd.h>
+  #define UPNPLIB_CLOSE_SOCKET close
+  #define UPNPLIB_SOCKET_TYPE int
 #endif // WIN32
 
 #ifdef _MSC_VER
-// no ssize_t defined for VC
-#include <stdint.h>
-#ifdef _WIN64
-typedef int64_t ssize_t;
-#else
-typedef int32_t ssize_t;
+  // no ssize_t defined for VC
+  #include <stdint.h>
+  #ifdef _WIN64
+    typedef int64_t ssize_t;
+  #else
+    typedef int32_t ssize_t;
+  #endif
 #endif
-#endif
+
+// clang-format on
 
 #endif // UPNPLIB_INCLUDE_PORT_HPP

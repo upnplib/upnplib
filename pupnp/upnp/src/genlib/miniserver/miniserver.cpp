@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-06-13
+ * Redistribution only with this Copyright remark. Last modified: 2022-06-15
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,6 +33,9 @@
  **************************************************************************/
 
 #include "config.hpp"
+#include "upnpmock/sys_socket.hpp"
+#include "upnpmock/sys_select.hpp"
+#include "upnpmock/stdlib.hpp"
 
 #if EXCLUDE_MINISERVER == 0
 
@@ -466,7 +469,8 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
 
     if (lsock != INVALID_SOCKET && FD_ISSET(lsock, set)) {
         clientLen = sizeof(clientAddr);
-        asock = accept(lsock, (struct sockaddr*)&clientAddr, &clientLen);
+        asock = upnplib::sys_socket_h->accept(
+            lsock, (struct sockaddr*)&clientAddr, &clientLen);
         if (asock == INVALID_SOCKET) {
             strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
             UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
@@ -496,8 +500,9 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
     if (FD_ISSET(ssock, set)) {
         clientLen = sizeof(clientAddr);
         memset((char*)&clientAddr, 0, sizeof(clientAddr));
-        byteReceived = recvfrom(ssock, requestBuf, (size_t)25, 0,
-                                (struct sockaddr*)&clientAddr, &clientLen);
+        byteReceived = upnplib::sys_socket_h->recvfrom(
+            ssock, requestBuf, (size_t)25, 0, (struct sockaddr*)&clientAddr,
+            &clientLen);
         if (byteReceived > 0) {
             requestBuf[byteReceived] = '\0';
             inet_ntop(AF_INET, &((struct sockaddr_in*)&clientAddr)->sin_addr,
@@ -565,7 +570,8 @@ static void RunMiniServer(
         fdset_if_valid(miniSock->ssdpReqSock6, &rdSet);
 #endif /* INCLUDE_CLIENT_APIS */
         /* select() */
-        ret = select((int)maxMiniSock, &rdSet, NULL, &expSet, NULL);
+        ret = upnplib::sys_select_h->select((int)maxMiniSock, &rdSet, NULL,
+                                            &expSet, NULL);
         if (ret == SOCKET_ERROR && errno == EINTR) {
             continue;
         }
@@ -602,7 +608,7 @@ static void RunMiniServer(
     sock_close(miniSock->ssdpReqSock6);
 #endif /* INCLUDE_CLIENT_APIS */
     /* Free minisock. */
-    free(miniSock);
+    upnplib::stdlib_h->free(miniSock);
     gMServState = MSERV_IDLE;
 
     return;
@@ -623,7 +629,8 @@ static int get_port(
     int code;
 
     len = sizeof(sockinfo);
-    code = getsockname(sockfd, (struct sockaddr*)&sockinfo, &len);
+    code = upnplib::sys_socket_h->getsockname(
+        sockfd, (struct sockaddr*)&sockinfo, &len);
     if (code == -1) {
         return -1;
     }
@@ -760,7 +767,8 @@ static int do_bind(struct s_SocketStuff* s) {
             s->try_port = s->try_port + 1;
             break;
         }
-        bind_error = bind(s->fd, s->serverAddr, s->address_len);
+        bind_error =
+            upnplib::sys_socket_h->bind(s->fd, s->serverAddr, s->address_len);
         if (bind_error == SOCKET_ERROR) {
 #ifdef _WIN32
             errCode = WSAGetLastError();
@@ -799,7 +807,7 @@ static int do_listen(struct s_SocketStuff* s) {
     int port_error;
     char errorBuffer[ERROR_BUFFER_LEN];
 
-    listen_error = listen(s->fd, SOMAXCONN);
+    listen_error = upnplib::sys_socket_h->listen(s->fd, SOMAXCONN);
     if (listen_error == SOCKET_ERROR) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,

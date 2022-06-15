@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-17
+// Redistribution only with this Copyright remark. Last modified: 2022-06-15
 
 #ifndef UPNP_SYS_SOCKETIF_HPP
 #define UPNP_SYS_SOCKETIF_HPP
@@ -50,6 +50,12 @@ class Bsys_socket {
         return ::recv(sockfd, buf, len, flags);
     }
 
+    virtual UPNPLIB_SIZE_T_INT recvfrom(int sockfd, char* buf, size_t len,
+                                        int flags, struct sockaddr* src_addr,
+                                        socklen_t* addrlen) {
+        return ::recvfrom(sockfd, buf, len, flags, src_addr, addrlen);
+    }
+
     virtual UPNPLIB_SIZE_T_INT send(int sockfd, const char* buf, size_t len,
                                     int flags) {
         return ::send(sockfd, buf, len, flags);
@@ -70,6 +76,11 @@ class Bsys_socket {
         return ::setsockopt(sockfd, level, optname, optval, optlen);
     }
 
+    virtual int getsockname(int sockfd, struct sockaddr* addr,
+                            socklen_t* addrlen) {
+        return ::getsockname(sockfd, addr, addrlen);
+    }
+
     virtual int shutdown(int sockfd, int how) {
         return ::shutdown(sockfd, how);
     }
@@ -77,7 +88,6 @@ class Bsys_socket {
 
 // Global pointer to the current object (real or mocked), will be modified by
 // the constructor of the mock object.
-// extern Bsys_socket* sys_socket_h;
 EXPORT_SPEC extern Bsys_socket* sys_socket_h;
 
 // In the production code you just prefix the old system call with
@@ -113,6 +123,9 @@ class Mock_sys_socket : public Bsys_socket {
     MOCK_METHOD(UPNPLIB_SIZE_T_INT, recv,
                 (int sockfd, char* buf, size_t len, int flags),
                 (override));
+    MOCK_METHOD(UPNPLIB_SIZE_T_INT, recvfrom,
+                (int sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen),
+                (override));
     MOCK_METHOD(UPNPLIB_SIZE_T_INT, send,
                 (int sockfd, const char* buf, size_t len, int flags),
                 (override));
@@ -124,6 +137,9 @@ class Mock_sys_socket : public Bsys_socket {
                 (override));
     MOCK_METHOD(int, setsockopt,
                 (int sockfd, int level, int optname, const char* optval, socklen_t optlen),
+                (override));
+    MOCK_METHOD(int, getsockname,
+                (int sockfd, struct sockaddr* addr, socklen_t* addrlen),
                 (override));
     MOCK_METHOD(int, shutdown, (int sockfd, int how),
                 (override));

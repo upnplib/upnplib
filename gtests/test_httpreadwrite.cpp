@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-03
+// Redistribution only with this Copyright remark. Last modified: 2022-06-16
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -129,7 +129,7 @@ class Mock_unistd : public Bunistd {
     }
     virtual ~Mock_unistd() override { unistd_h = m_oldptr; }
 
-    MOCK_METHOD(int, UPNP_CLOSE_SOCKET, (UPNP_SOCKET_TYPE fd), (override));
+    MOCK_METHOD(int, PUPNP_CLOSE_SOCKET, (PUPNP_SOCKET_TYPE fd), (override));
 };
 
 //
@@ -397,7 +397,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_close_connection_successful) {
     EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(1);
-    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(_)).Times(1);
+    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(1);
 
     // Mock for connection to a network server
     EXPECT_CALL(m_mock_pupnpObj,
@@ -437,7 +437,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, nullptr_to_url) {
     EXPECT_CALL(m_mock_netdbObj, freeaddrinfo(_)).Times(0);
     EXPECT_CALL(m_mock_socketObj, socket(_, _, _)).Times(0);
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(_)).Times(0);
+    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(0);
     EXPECT_CALL(m_mock_pupnpObj, private_connect(_, _, _)).Times(0);
 
     http_connection_handle_t* phandle;
@@ -465,7 +465,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, empty_url) {
     EXPECT_CALL(m_mock_netdbObj, freeaddrinfo(_)).Times(0);
     EXPECT_CALL(m_mock_socketObj, socket(_, _, _)).Times(0);
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(_)).Times(0);
+    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(0);
     EXPECT_CALL(m_mock_pupnpObj, private_connect(_, _, _)).Times(0);
 
     // Connection handle must be freed.
@@ -507,7 +507,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_address_info_fails) {
     // Don't expect socket allocation.
     EXPECT_CALL(m_mock_socketObj, socket(_, _, _)).Times(0);
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(_)).Times(0);
+    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(0);
 
     // Don't expect a connection to a network server
     EXPECT_CALL(m_mock_pupnpObj, private_connect(_, _, _)).Times(0);
@@ -557,7 +557,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_socket_fails) {
         .WillOnce(SetErrnoAndReturn(ENOTSOCK, -1));
 
     // Close socket will fail with "fd isn't a valid open file descriptor."
-    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(_))
+    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_))
         .WillOnce(SetErrnoAndReturn(EBADF, -1));
 
     // Don't expect a connection to a network server
@@ -604,7 +604,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, connect_to_server_fails) {
     EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(1);
-    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(_)).Times(1);
+    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(1);
 
     // Connection to a network server will fail
     EXPECT_CALL(m_mock_pupnpObj,
@@ -649,7 +649,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_connection_with_ip_address) {
     EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(1);
-    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(_)).Times(1);
+    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(1);
 
     // Mock for connection to a network server
     EXPECT_CALL(m_mock_pupnpObj,
@@ -710,7 +710,7 @@ TEST_F(HttpConnectIp4FTestSuite, successful_connect) {
     EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(_)).Times(0);
+    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(0);
 
     // Mock for connection to a network server
     EXPECT_CALL(m_mock_pupnpObj,
@@ -738,7 +738,7 @@ TEST_F(HttpConnectIp4FTestSuite, socket_allocation_fails) {
     EXPECT_CALL(m_mock_socketObj, socket(_, SOCK_STREAM, 0))
         .WillOnce(SetErrnoAndReturn(EACCES, -1));
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(_)).Times(0);
+    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(0);
 
     // Mock for connection to a network server
     EXPECT_CALL(m_mock_pupnpObj, private_connect(_, _, _)).Times(0);
@@ -761,7 +761,7 @@ TEST_F(HttpConnectIp4FTestSuite, low_level_net_connect_fails) {
     EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(1);
-    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(_)).Times(1);
+    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(1);
 
     // Connection to a network server will fail
     EXPECT_CALL(m_mock_pupnpObj,

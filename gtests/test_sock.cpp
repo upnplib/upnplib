@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-18
+// Redistribution only with this Copyright remark. Last modified: 2022-06-16
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -137,7 +137,7 @@ class Mock_unistd : public Bunistd {
     }
     virtual ~Mock_unistd() override { unistd_h = m_oldptr; }
 
-    MOCK_METHOD(int, UPNP_CLOSE_SOCKET, (UPNP_SOCKET_TYPE fd), (override));
+    MOCK_METHOD(int, PUPNP_CLOSE_SOCKET, (PUPNP_SOCKET_TYPE fd), (override));
 };
 
 //
@@ -243,7 +243,7 @@ TEST_F(SockFTestSuite, sock_destroy_valid_socket_descriptor) {
                 shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
         .WillOnce(Return(0));
     // close is successful
-    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(m_socketfd))
+    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(m_socketfd))
         .WillOnce(Return(0));
 
     // Process the Unit
@@ -260,7 +260,7 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_ok_close_fails_not_0) {
                 shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
         .WillOnce(Return(0));
     // close fails on _WIN32 with positive error number
-    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(m_socketfd))
+    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(m_socketfd))
         .WillOnce(Return(10093 /*WSANOTINITIALISED*/));
 
     // Process the Unit
@@ -291,7 +291,7 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_fails_close_ok) {
                 shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
         .WillOnce(Return(-1));
     // close is successful
-    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(m_socketfd))
+    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(m_socketfd))
         .WillOnce(Return(0));
 
     // Process the Unit
@@ -324,7 +324,7 @@ TEST_F(SockFTestSuite, sock_destroy_inval_fd_shutdown_fails_close_fails_not_0) {
                 shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
         .WillOnce(Return(-1));
     // close fails on _WIN32 with positive error number
-    EXPECT_CALL(m_mock_unistdObj, UPNP_CLOSE_SOCKET(m_socketfd))
+    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(m_socketfd))
         .WillOnce(Return(10093 /*WSANOTINITIALISED*/));
 
     // Process the Unit

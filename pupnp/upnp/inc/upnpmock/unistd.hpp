@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-18
+// Redistribution only with this Copyright remark. Last modified: 2022-06-16
 
 #ifndef UPNPLIB_UNISTDIF_HPP
 #define UPNPLIB_UNISTDIF_HPP
@@ -8,12 +8,12 @@
 #ifdef _WIN32
   #include <fcntl.h>
   #include <winsock2.h>
-  #define UPNP_CLOSE_SOCKET closesocket
-  #define UPNP_SOCKET_TYPE SOCKET
+  #define PUPNP_CLOSE_SOCKET closesocket
+  #define PUPNP_SOCKET_TYPE SOCKET
 #else
   #include <unistd.h>
-  #define UPNP_CLOSE_SOCKET close
-  #define UPNP_SOCKET_TYPE int
+  #define PUPNP_CLOSE_SOCKET close
+  #define PUPNP_SOCKET_TYPE int
 #endif
 // clang-format on
 
@@ -21,12 +21,12 @@
 namespace upnplib {
 
 class Bunistd {
-    // Real classEXPORT_SPEC  to call the system functions
+    // Real class to call the system functions
   public:
     virtual ~Bunistd() {}
 
-    virtual int UPNP_CLOSE_SOCKET(UPNP_SOCKET_TYPE fd) {
-        return ::UPNP_CLOSE_SOCKET(fd);
+    virtual int PUPNP_CLOSE_SOCKET(PUPNP_SOCKET_TYPE fd) {
+        return ::PUPNP_CLOSE_SOCKET(fd);
     }
 };
 
@@ -53,7 +53,7 @@ class Mock_unistd : public Bunistd {
     Mock_unistd() { m_oldptr = unistd_h; unistd_h = this; }
     virtual ~Mock_unistd() override { unistd_h = m_oldptr; }
 
-    MOCK_METHOD(int, UPNP_CLOSE_SOCKET, (UPNP_SOCKET_TYPE fd), (override));
+    MOCK_METHOD(int, PUPNP_CLOSE_SOCKET, (PUPNP_SOCKET_TYPE fd), (override));
 };
 
  * In a gtest you will instantiate the Mock class, maybe as protected member
