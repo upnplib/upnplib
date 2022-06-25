@@ -65,7 +65,6 @@
 #include "upnpmock/sys_socket.hpp"
 
 #include <stdio.h>
-#include <iostream> // DEBUG:
 
 #define MAX_TIME_TOREAD 45
 

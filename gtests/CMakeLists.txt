@@ -1069,8 +1069,10 @@ target_include_directories(test_template
 add_test(NAME ctest_template COMMAND test_template)
 
 
+add_subdirectory(./upnplib)
+
 if(UPNPLIB_WITH_SAMPLES)
-    add_subdirectory(${PROJECT_SOURCE_DIR}/test_sample.d)
+    add_subdirectory(./test_sample.d)
 endif()
 
 

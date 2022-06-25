@@ -4,7 +4,7 @@
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
 #include "pupnp/upnp/src/genlib/net/http/httpreadwrite.cpp"
-#include "core/src/genlib/net/http/httpreadwrite.cpp"
+#include "core/src/net/http/httpreadwrite.cpp"
 
 #include "gmock/gmock.h"
 #include "upnplib/upnptools.hpp"

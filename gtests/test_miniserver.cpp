@@ -5,6 +5,7 @@
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 
 #include "upnplib/upnptools.hpp" // For upnplib_native only
+#include "upnplib/sock.hpp"
 
 #include "gmock/gmock.h"
 
@@ -128,88 +129,6 @@ class Mock_stdlib : public Bstdlib {
     MOCK_METHOD(void, free, (void* ptr), (override));
 };
 // clang-format on
-
-// Wrapper for a sockaddr structure
-// --------------------------------
-struct SockAddr {
-    struct sockaddr_storage addr_ss {};
-    union { // the union is initialized by the constructor
-        struct sockaddr* addr{};
-        struct sockaddr_in* addr_in;
-        // struct sockaddr_in6* addr_in6;
-    };
-
-    SockAddr() {
-        this->addr_ss.ss_family = AF_INET;
-        this->addr = (struct sockaddr*)&this->addr_ss;
-    }
-
-    void addr_set(const std::string& a_text_addr, unsigned short a_port = 0) {
-        int ret = inet_pton(this->addr_ss.ss_family, a_text_addr.c_str(),
-                            &this->addr_in->sin_addr);
-        if (ret == 0) {
-            throw std::invalid_argument(std::string("Invalid ip address ") +
-                                        a_text_addr);
-        }
-        this->addr_in->sin_port = htons(a_port);
-    }
-
-    std::string addr_get() {
-        const char* text_addr =
-            inet_ntop(this->addr_ss.ss_family, &this->addr_in->sin_addr,
-                      this->buf_ntop, sizeof(this->buf_ntop));
-        if (text_addr == nullptr) {
-            throw std::runtime_error(std::string("Got invalid ip address"));
-        }
-        return std::string(buf_ntop);
-    }
-
-    unsigned short addr_get_port() { return ntohs(this->addr_in->sin_port); }
-
-  private:
-    char buf_ntop[INET6_ADDRSTRLEN]{};
-};
-
-TEST(SockAddrTestSuite, successful_execution) {
-    struct SockAddr sock;
-    EXPECT_EQ(sock.addr_in->sin_family, AF_INET);
-
-    EXPECT_EQ(sock.addr_get(), "0.0.0.0");
-    EXPECT_EQ(sock.addr_get_port(), 0);
-
-    sock.addr_set("192.168.169.170", 4711);
-    EXPECT_EQ(sock.addr_get(), "192.168.169.170");
-    EXPECT_EQ(sock.addr_get_port(), 4711);
-
-    char buf_ntop[INET6_ADDRSTRLEN]{};
-    EXPECT_NE(
-        inet_ntop(AF_INET, &sock.addr_in->sin_addr, buf_ntop, sizeof(buf_ntop)),
-        nullptr);
-    EXPECT_STREQ(buf_ntop, "192.168.169.170");
-
-    EXPECT_EQ(ntohs(sock.addr_in->sin_port), 4711);
-}
-
-TEST(SockAddrTestSuite, set_wrong_address) {
-    struct SockAddr sock;
-
-    // sock.addr_in->sin_addr.s_addr = 0xFFFFFFFF;
-
-    EXPECT_THAT([&sock] { sock.addr_set("192.168.169.999", 4711); },
-                ThrowsMessage<std::invalid_argument>(
-                    "Invalid ip address 192.168.169.999"));
-}
-
-TEST(SockAddrTestSuite, get_wrong_address) {
-    struct SockAddr sock;
-
-    // This is a wrong family entry that should trigger an error on getting an
-    // ip address
-    sock.addr_ss.ss_family = -1;
-
-    EXPECT_THAT([&sock] { sock.addr_get(); },
-                ThrowsMessage<std::runtime_error>("Got invalid ip address"));
-}
 
 //
 // Custom action to return a string literal
@@ -345,7 +264,7 @@ TEST(StartMiniServerTestSuite, StartMiniServer_isolated) {
     EXPECT_EQ(ret_StartMiniServer, UPNP_E_SUCCESS)
         << errStrEx(ret_StartMiniServer, UPNP_E_SUCCESS);
 
-    EXPECT_EQ(local_port_V4, 49152);
+    EXPECT_EQ(local_port_V4, APPLICATION_LISTENING_PORT);
     EXPECT_EQ(local_port_V6, 0);
     EXPECT_EQ(local_port_V6_ULA_GUA, 0);
 
@@ -372,7 +291,7 @@ TEST(StartMiniServerTestSuite, StartMiniServer_isolated) {
     EXPECT_EQ(ret_StartMiniServer, UPNP_E_SUCCESS)
         << errStrEx(ret_StartMiniServer, UPNP_E_SUCCESS);
 
-    EXPECT_EQ(local_port_V4, 49152);
+    EXPECT_EQ(local_port_V4, APPLICATION_LISTENING_PORT);
     EXPECT_EQ(local_port_V6, 0);
     EXPECT_EQ(local_port_V6_ULA_GUA, 0);
 
@@ -412,7 +331,8 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets) {
     EXPECT_EQ(miniSocket.ssdpSock6UlaGua, INVALID_SOCKET);
     EXPECT_EQ(miniSocket.stopPort, 0u);
 
-    EXPECT_EQ(miniSocket.miniServerPort4, 49152);
+    // BUG! This fails on MS Windows with 49252 instead of 49152
+    EXPECT_EQ(miniSocket.miniServerPort4, APPLICATION_LISTENING_PORT);
 
     EXPECT_EQ(miniSocket.miniServerPort6, 0u);
     EXPECT_EQ(miniSocket.miniServerPort6UlaGua, 0u);

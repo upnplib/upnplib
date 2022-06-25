@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-25
+# Redistribution only with this Copyright remark. Last modified: 2022-06-26
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNPLIB_CORE VERSION 0005
+project(UPNPLIB_CORE VERSION 0006
                      DESCRIPTION "UPnP library core program"
                      HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -70,6 +70,7 @@ if(NOT WIN32)
     add_library(upnplib_native_shared SHARED   # prefix -unsh
             ./src/global.cpp
             ./src/api/upnptools.cpp
+            ./src/net/sock.cpp
     )
     set_target_properties(upnplib_native_shared PROPERTIES
             OUTPUT_NAME upnplib_native
@@ -98,6 +99,7 @@ if(NOT WIN32)
     add_library(upnplib_native_static STATIC   # prefix -unst
             ./src/global.cpp
             ./src/api/upnptools.cpp
+            ./src/net/sock.cpp
     )
     set_target_properties(upnplib_native_static PROPERTIES
             OUTPUT_NAME upnplib_native
@@ -227,6 +229,7 @@ else() # WIN32
     add_library(upnplib_native_shared SHARED   # prefix -unsh
             ./src/global.cpp
             ./src/api/upnptools.cpp
+            ./src/net/sock.cpp
     )
     target_include_directories(upnplib_native_shared
         PRIVATE
@@ -242,7 +245,7 @@ else() # WIN32
     )
     # In addition to pthreads we need some more system libraries here
     target_link_libraries(upnplib_native_shared
-        INTERFACE
+        PUBLIC
             ws2_32   # winsock to support sockets
             iphlpapi # ip helper interface to get network management tools
             # On MS Windows we link with the static pthreads4w library to
@@ -255,6 +258,7 @@ else() # WIN32
     add_library(upnplib_native_static STATIC   # prefix unst
             ./src/global.cpp
             ./src/api/upnptools.cpp
+            ./src/net/sock.cpp
     )
     target_include_directories(upnplib_native_static
         PRIVATE
@@ -269,7 +273,7 @@ else() # WIN32
     target_link_libraries(upnplib_native_static
         # Static always link needed object files, no matter to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
-        INTERFACE
+        PUBLIC
             ws2_32   # winsock to support sockets
             iphlpapi # ip helper interface to get network management tools
             # On MS Windows we link with the static pthreads4w library to

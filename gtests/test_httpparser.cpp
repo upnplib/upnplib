@@ -2,7 +2,7 @@
 // Redistribution only with this Copyright remark. Last modified: 2022-06-03
 
 #include "pupnp/upnp/src/genlib/net/http/httpparser.cpp"
-#include "core/src/genlib/net/http/httpparser.cpp"
+#include "core/src/net/http/httpparser.cpp"
 
 #include "gmock/gmock.h"
 

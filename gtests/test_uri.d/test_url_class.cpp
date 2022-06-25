@@ -46,7 +46,7 @@ scheme                    path
 */
 // clang-format on
 
-#include "core/src/genlib/net/uri/url.cpp"
+#include "core/src/net/uri/url.cpp"
 
 #include "gmock/gmock.h"
 
