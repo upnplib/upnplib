@@ -2,6 +2,7 @@
 // Redistribution only with this Copyright remark. Last modified: 2022-06-26
 
 #include "upnplib/sock.hpp"
+#include <filesystem>
 
 namespace upnplib {
 
@@ -16,8 +17,10 @@ void SockAddr::addr_set(const std::string& a_text_addr, unsigned short a_port) {
     int ret = inet_pton(this->addr_ss.ss_family, a_text_addr.c_str(),
                         &this->addr_in->sin_addr);
     if (ret == 0) {
-        throw std::invalid_argument(std::string("Invalid ip address ") +
-                                    a_text_addr);
+        throw std::invalid_argument(
+            "at */" + std::filesystem::path(__FILE__).filename().string() +
+            "[" + std::to_string(__LINE__) + "]: Invalid ip address '" +
+            a_text_addr + "'");
     }
     this->addr_in->sin_port = htons(a_port);
 }
@@ -27,7 +30,9 @@ std::string SockAddr::addr_get() {
         inet_ntop(this->addr_ss.ss_family, &this->addr_in->sin_addr,
                   this->buf_ntop, sizeof(this->buf_ntop));
     if (text_addr == nullptr) {
-        throw std::runtime_error(std::string("Got invalid ip address"));
+        throw std::runtime_error(
+            "at */" + std::filesystem::path(__FILE__).filename().string() +
+            "[" + std::to_string(__LINE__) + "]: Got invalid ip address");
     }
     return std::string(buf_ntop);
 }

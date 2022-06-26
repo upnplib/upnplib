@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-06-15
+ * Redistribution only with this Copyright remark. Last modified: 2022-06-27
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -685,7 +685,7 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
     // if (inet_pton(domain, text_addr, addr) == 0) { ...; goto error;}
     inet_pton(domain, text_addr, addr);
 
-    s->fd = socket(domain, SOCK_STREAM, 0);
+    s->fd = upnplib::sys_socket_h->socket(domain, SOCK_STREAM, 0);
 
     if (s->fd == INVALID_SOCKET) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
@@ -997,7 +997,7 @@ static int get_miniserver_stopsock(
     SOCKET miniServerStopSock = 0;
     int ret = 0;
 
-    miniServerStopSock = socket(AF_INET, SOCK_DGRAM, 0);
+    miniServerStopSock = upnplib::sys_socket_h->socket(AF_INET, SOCK_DGRAM, 0);
     if (miniServerStopSock == INVALID_SOCKET) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
@@ -1008,8 +1008,9 @@ static int get_miniserver_stopsock(
     memset(&stop_sockaddr, 0, sizeof(stop_sockaddr));
     stop_sockaddr.sin_family = (sa_family_t)AF_INET;
     stop_sockaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    ret = bind(miniServerStopSock, (struct sockaddr*)&stop_sockaddr,
-               sizeof(stop_sockaddr));
+    ret = upnplib::sys_socket_h->bind(miniServerStopSock,
+                                      (struct sockaddr*)&stop_sockaddr,
+                                      sizeof(stop_sockaddr));
     if (ret == SOCKET_ERROR) {
         UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
                    "Error in binding localhost!!!\n");

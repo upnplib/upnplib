@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-25
+// Redistribution only with this Copyright remark. Last modified: 2022-07-04
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #include "pupnp/upnp/src/api/upnpapi.cpp"
@@ -15,6 +15,7 @@ using ::testing::Gt;
 using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
+using ::testing::SetErrnoAndReturn;
 using ::testing::ThrowsMessage;
 
 namespace upnplib {
@@ -31,6 +32,7 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
    |__ InitMiniServerSockArray()                   ]
    |__ get_miniserver_sockets()                    ]
    |   |__ init_socket_suff()                      ] create sockets
+   |   |   |__ get a socket()                      ]
    |   |   |__ setsockopt() - MINISERVER_REUSEADDR |
    |   |                                           V
    |   |__ do_bind_listen()
@@ -38,11 +40,14 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
    |       |__ do_bind()              ] bind socket to ip address
    |       |   |__ bind()             ]
    |       |
-   |       |__ do_listen()            ] listen on a port,
-   |           |__ listen()           ] and wait for a connection
-   |           |
-   |           |__ get_port()         ] get the current port
-   |               |__ getsockname()  ]
+   |       |__ do_listen()            ]
+   |       |   |__ listen()           ] listen on a port,
+   |       |                          ] and wait for a connection
+   |       |__ if EADDRINUSE          ]
+   |       |      init_socket_suff()  ]
+   |       |
+   |       |__ get_port()             ] get the current port
+   |           |__ getsockname()      ]
    |                                               A
    |__ get_miniserver_stopsock()                   | create sockets
    |__ get_ssdp_sockets()                          ]
@@ -78,6 +83,9 @@ class Mock_sys_socket : public Bsys_socket {
     }
     virtual ~Mock_sys_socket() override { sys_socket_h = m_oldptr; }
 
+    MOCK_METHOD(int, socket,
+                (int domain, int type, int protocol),
+                (override));
     MOCK_METHOD(int, bind,
                 (int sockfd, const struct sockaddr* addr, socklen_t addrlen),
                 (override));
@@ -139,10 +147,10 @@ ACTION_TEMPLATE(StrCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
     strcpy(std::get<k>(args), str);
 }
 
-#if false
 // This test uses real connections and isn't portable. It is only for humans to
 // see how it works and should not always enabled.
-TEST(StartMiniServerTestSuite, StartMiniServer_in_context) {
+TEST(StartMiniServerTestSuite, DISABLED_StartMiniServer_in_context) {
+    // Debug logging only works if compiled with build type DEBUG
     UpnpSetLogLevel(UPNP_INFO);
     int ret_UpnpInitLog = UpnpInitLog();
     EXPECT_EQ(ret_UpnpInitLog, UPNP_E_SUCCESS)
@@ -168,7 +176,7 @@ TEST(StartMiniServerTestSuite, StartMiniServer_in_context) {
     // initialized. That will we do now.
     ASSERT_FALSE(MINISERVER_REUSEADDR);
     ASSERT_EQ(UpnpSdkInit, 0);
-    ASSERT_STREQ(gIF_IPV4, "192.168.24.85");
+    ASSERT_STRNE(gIF_IPV4, "");
     UpnpSdkInit = 1;
 
     // Test Unit
@@ -190,116 +198,19 @@ TEST(StartMiniServerTestSuite, StartMiniServer_in_context) {
         << errStrEx(ret_UpnpFinish, UPNP_E_SUCCESS);
 
     EXPECT_EQ(UpnpSdkInit, 0);
+
+    UpnpCloseLog();
 }
-#endif
 
-TEST(StartMiniServerTestSuite, StartMiniServer_isolated) {
-    GTEST_SKIP() << "  # <sys/socket.h> accept() must be mocked.";
-
-    // This only works if compiled with build type DEBUG
-    UpnpSetLogLevel(UPNP_INFO);
-    int ret_UpnpInitLog = UpnpInitLog();
-    EXPECT_EQ(ret_UpnpInitLog, UPNP_E_SUCCESS)
-        << errStrEx(ret_UpnpInitLog, UPNP_E_SUCCESS);
-
-    // Initialize needed variables
+TEST(StartMiniServerTestSuite, start_miniserver_already_running) {
     MINISERVER_REUSEADDR = false;
-    strncpy(gIF_IPV4, "192.168.44.85", INET_ADDRSTRLEN);
-
-    std::fill(std::begin(gIF_NAME), std::end(gIF_NAME), 0);
-    std::fill(std::begin(gIF_IPV4_NETMASK), std::end(gIF_IPV4_NETMASK), 0);
-    std::fill(std::begin(gIF_IPV6), std::end(gIF_IPV6), 0);
-    gIF_IPV6_PREFIX_LENGTH = 0;
-    std::fill(std::begin(gIF_IPV6_ULA_GUA), std::end(gIF_IPV6_ULA_GUA), 0);
-    gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
-    gIF_INDEX = (unsigned)-1;
-
-    uint16_t local_port_V4 = 0;
-    uint16_t local_port_V6 = 0;
-    uint16_t local_port_V6_ULA_GUA = 0;
-
-    // srand((unsigned int)time(NULL));
-
-    /* Initialize SDK global mutexes. */
-    // ASSERT_EQ(ithread_rwlock_init(&GlobalHndRWLock, NULL), 0);
-    // ASSERT_EQ(ithread_mutex_init(&gUUIDMutex, NULL), 0);
-    // ASSERT_EQ(ithread_mutex_init(&GlobalClientSubscribeMutex, NULL), 0);
-
-    /* Initializes the handle list. */
-    // HandleLock();
-    // for (int i = 0; i < NUM_HANDLE; ++i) {
-    //    HandleTable[i] = NULL;
-    //}
-    // HandleUnlock();
-
-    /* Initialize SDK global thread pools. */
-    ASSERT_EQ(UpnpInitThreadPools(), UPNP_E_SUCCESS);
-
-    /* Initialize the SDK timer thread. */
-    // ASSERT_EQ(TimerThreadInit(&gTimerThread, &gSendThreadPool),
-    // UPNP_E_SUCCESS);
-
-    // Provide a sockaddr structure that will be returned by mocked
-    // getsockname().
-    struct sockaddr_storage ss;
-    memset(&ss, 0, sizeof(ss));
-    struct sockaddr* sa{(sockaddr*)&ss};
-    struct sockaddr_in* sa_in{(sockaddr_in*)&ss};
-    sa_in->sin_family = AF_INET;
-    sa_in->sin_port = htons(54321);
-    inet_pton(AF_INET, gIF_IPV4, &sa_in->sin_addr);
-
-    Mock_sys_socket mocked_sys_socketObj;
-    EXPECT_CALL(mocked_sys_socketObj, bind(_, _, _)).Times(2);
-    EXPECT_CALL(mocked_sys_socketObj, listen(_, SOMAXCONN)).Times(2);
-    EXPECT_CALL(mocked_sys_socketObj, setsockopt(_, _, _, _, _)).Times(2);
-    EXPECT_CALL(mocked_sys_socketObj, accept(_, _, _)).Times(2);
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(_, _, Pointee(sizeof(ss))))
-        .Times(2)
-        .WillRepeatedly(DoAll(SetArgPointee<1>(*sa), Return(0)));
+    gMServState = MSERV_RUNNING;
 
     // Test Unit
     int ret_StartMiniServer =
-        StartMiniServer(&local_port_V4, &local_port_V6, &local_port_V6_ULA_GUA);
-    EXPECT_EQ(ret_StartMiniServer, UPNP_E_SUCCESS)
-        << errStrEx(ret_StartMiniServer, UPNP_E_SUCCESS);
-
-    EXPECT_EQ(local_port_V4, APPLICATION_LISTENING_PORT);
-    EXPECT_EQ(local_port_V6, 0);
-    EXPECT_EQ(local_port_V6_ULA_GUA, 0);
-
-    // Try again
-    local_port_V4 = 0;
-    ret_StartMiniServer =
-        StartMiniServer(&local_port_V4, &local_port_V6, &local_port_V6_ULA_GUA);
-    // This means miniserver is running
+        StartMiniServer(&LOCAL_PORT_V4, &LOCAL_PORT_V6, &LOCAL_PORT_V6_ULA_GUA);
     EXPECT_EQ(ret_StartMiniServer, UPNP_E_INTERNAL_ERROR)
         << errStrEx(ret_StartMiniServer, UPNP_E_INTERNAL_ERROR);
-
-    EXPECT_EQ(local_port_V4, 0);
-    EXPECT_EQ(local_port_V6, 0);
-    EXPECT_EQ(local_port_V6_ULA_GUA, 0);
-
-    // Stop miniserver
-    // Does not finish yet with mocked getsockname
-    // EXPECT_EQ(StopMiniServer(), 0);
-
-    // Start again after stopped
-    local_port_V4 = 0;
-    ret_StartMiniServer =
-        StartMiniServer(&local_port_V4, &local_port_V6, &local_port_V6_ULA_GUA);
-    EXPECT_EQ(ret_StartMiniServer, UPNP_E_SUCCESS)
-        << errStrEx(ret_StartMiniServer, UPNP_E_SUCCESS);
-
-    EXPECT_EQ(local_port_V4, APPLICATION_LISTENING_PORT);
-    EXPECT_EQ(local_port_V6, 0);
-    EXPECT_EQ(local_port_V6_ULA_GUA, 0);
-
-    // Finaly stop miniserver
-    // Does not finish yet with mocked getsockname
-    // EXPECT_EQ(StopMiniServer(), 0);
-
-    UpnpCloseLog();
 }
 
 TEST(StartMiniServerTestSuite, get_miniserver_sockets) {
@@ -331,7 +242,6 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets) {
     EXPECT_EQ(miniSocket.ssdpSock6UlaGua, INVALID_SOCKET);
     EXPECT_EQ(miniSocket.stopPort, 0u);
 
-    // BUG! This fails on MS Windows with 49252 instead of 49152
     EXPECT_EQ(miniSocket.miniServerPort4, APPLICATION_LISTENING_PORT);
 
     EXPECT_EQ(miniSocket.miniServerPort6, 0u);
@@ -341,6 +251,51 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets) {
 
     // Close socket
     EXPECT_EQ(UPNPLIB_CLOSE_SOCKET(miniSocket.miniServerSock4), 0);
+}
+
+TEST(StartMiniServerTestSuite, get_miniserver_sockets_with_invalid_socket) {
+    MINISERVER_REUSEADDR = false;
+
+    // Initialize needed structure
+    MiniServerSockArray miniSocket{};
+    InitMiniServerSockArray(&miniSocket);
+
+#ifdef _WIN32
+    // Initialize sockets
+    WSADATA wsaData;
+    ASSERT_EQ(WSAStartup(MAKEWORD(2, 2), &wsaData), NO_ERROR);
+#endif
+
+    // Mock to get an invalid socket id
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+        .WillOnce(Return(INVALID_SOCKET));
+
+    // Test Unit, needs initialized sockets on MS Windows
+    int ret_get_miniserver_sockets =
+        get_miniserver_sockets(&miniSocket, 0, 0, 0);
+    EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
+        << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS);
+
+    EXPECT_EQ(miniSocket.miniServerSock4, INVALID_SOCKET);
+
+    EXPECT_EQ(miniSocket.miniServerSock6, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.miniServerSock6UlaGua, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.miniServerStopSock, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.ssdpSock4, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.ssdpSock6, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.ssdpSock6UlaGua, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.stopPort, 0u);
+
+    EXPECT_EQ(miniSocket.miniServerPort4, 0);
+
+    EXPECT_EQ(miniSocket.miniServerPort6, 0u);
+    EXPECT_EQ(miniSocket.miniServerPort6UlaGua, 0u);
+    EXPECT_EQ(miniSocket.ssdpReqSock4, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.ssdpReqSock6, INVALID_SOCKET);
+
+    // Close socket
+    EXPECT_EQ(UPNPLIB_CLOSE_SOCKET(miniSocket.miniServerSock4), -1);
 }
 
 TEST(StartMiniServerTestSuite, init_socket_suff) {
@@ -384,7 +339,7 @@ TEST(StartMiniServerTestSuite, init_socket_suff_reuseaddr) {
     MINISERVER_REUSEADDR = true;
 
     // Set ip address and needed structure
-    constexpr char text_addr[]{"192.168.24.85"};
+    const char text_addr[]{"192.168.24.85"};
     struct s_SocketStuff ss4;
 
 #ifdef _WIN32
@@ -401,6 +356,29 @@ TEST(StartMiniServerTestSuite, init_socket_suff_reuseaddr) {
     EXPECT_EQ(getsockopt(ss4.fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, &optlen),
               0);
     EXPECT_TRUE(reuseaddr);
+}
+
+TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_socket) {
+    MINISERVER_REUSEADDR = false;
+
+    // Set ip address and needed structure
+    const char text_addr[]{"192.168.99.85"};
+    struct s_SocketStuff ss4;
+
+    // Mock to get an invalid socket id
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+        .WillOnce(Return(INVALID_SOCKET));
+
+    // Test Unit
+    EXPECT_EQ(init_socket_suff(&ss4, text_addr, 4), 1);
+
+    EXPECT_EQ(ss4.fd, INVALID_SOCKET);
+    EXPECT_EQ(ss4.ip_version, 4);
+    EXPECT_STREQ(ss4.text_addr, text_addr);
+    EXPECT_EQ(ss4.serverAddr4->sin_family, AF_INET);
+    EXPECT_EQ(ss4.address_len, 16);
+    EXPECT_STREQ(inet_ntoa(ss4.serverAddr4->sin_addr), "192.168.99.85");
 }
 
 TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_ip_address) {
@@ -442,7 +420,7 @@ TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_ip_address) {
 
 TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_ip_version) {
     // Set ip address and needed structure
-    constexpr char text_addr[]{"192.168.24.85"};
+    const char text_addr[]{"192.168.24.85"};
     struct s_SocketStuff ss4;
 
     // Test Unit
@@ -454,13 +432,13 @@ TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_ip_version) {
     EXPECT_EQ(ss4.serverAddr4->sin_family, 0);
     EXPECT_EQ(ss4.address_len, 0);
     EXPECT_STREQ(inet_ntoa(ss4.serverAddr4->sin_addr), "0.0.0.0");
-    EXPECT_EQ(ss4.fd, INVALID_SOCKET);
 }
 
 TEST(StartMiniServerTestSuite, do_bind_listen) {
     // Configure expected system calls:
     // * Use fictive socket file descriptor 600
     // * Mocked bind() returns successful
+    // * Mocked listen() returns successful
     // * Mocked getsockname() returns a sockaddr with current ip address and
     //   port
 
@@ -487,7 +465,7 @@ TEST(StartMiniServerTestSuite, do_bind_listen) {
     inet_pton(AF_INET, text_addr, &sa_in->sin_addr);
 
     // Mock system functions
-    Mock_sys_socket mocked_sys_socketObj;
+    class Mock_sys_socket mocked_sys_socketObj;
     EXPECT_CALL(mocked_sys_socketObj, bind(600, _, _)).Times(1);
     EXPECT_CALL(mocked_sys_socketObj, listen(600, SOMAXCONN)).Times(1);
     EXPECT_CALL(mocked_sys_socketObj, getsockname(600, _, Pointee(sizeof(ss))))
@@ -496,17 +474,113 @@ TEST(StartMiniServerTestSuite, do_bind_listen) {
     // Test Unit
     EXPECT_EQ(do_bind_listen(&s), 0);
 
+    // Check all fields of struct s_SocketStuff
     EXPECT_EQ(s.ip_version, 4);
     EXPECT_STREQ(s.text_addr, text_addr);
     EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
     EXPECT_STREQ(inet_ntoa(s.serverAddr4->sin_addr), text_addr);
+    EXPECT_EQ(ntohs(s.serverAddr4->sin_port), APPLICATION_LISTENING_PORT);
     EXPECT_EQ(s.fd, 600);
     EXPECT_EQ(s.try_port, APPLICATION_LISTENING_PORT + 1);
     EXPECT_EQ(s.actual_port, APPLICATION_LISTENING_PORT);
     EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
 }
 
-TEST(StartMiniServerTestSuite, do_bind) {
+TEST(StartMiniServerTestSuite, do_bind_listen_with_wrong_socket) {
+    MINISERVER_REUSEADDR = false;
+    const char text_addr[]{"0.0.0.0"};
+
+    struct s_SocketStuff s;
+    EXPECT_EQ(init_socket_suff(&s, text_addr, 4), 0);
+    // The socket id wasn't got from a socket() call and should trigger an
+    // error.
+    s.fd = 32000;
+    s.try_port = 65534;
+
+    // Test Unit
+    int ret_get_do_bind_listen = do_bind_listen(&s);
+    EXPECT_EQ(ret_get_do_bind_listen, UPNP_E_SOCKET_BIND)
+        << errStrEx(ret_get_do_bind_listen, UPNP_E_SOCKET_BIND);
+}
+
+TEST(StartMiniServerTestSuite, do_bind_listen_with_failed_listen) {
+    // Configure expected system calls:
+    // * Use fictive socket file descriptor 600
+    // * Mocked bind() returns successful
+    // * Mocked listen() returns error
+
+    MINISERVER_REUSEADDR = false;
+    const char text_addr[]{"192.168.54.188"};
+
+    struct s_SocketStuff s;
+    EXPECT_EQ(init_socket_suff(&s, text_addr, 4), 0);
+    s.fd = 600;
+    s.try_port = APPLICATION_LISTENING_PORT;
+
+    // Mock system functions
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, bind(600, _, _)).Times(1);
+    EXPECT_CALL(mocked_sys_socketObj, listen(600, SOMAXCONN))
+        .WillOnce(Return(SOCKET_ERROR));
+
+    // Test Unit
+    int ret_get_do_bind_listen = do_bind_listen(&s);
+    EXPECT_EQ(ret_get_do_bind_listen, UPNP_E_LISTEN)
+        << errStrEx(ret_get_do_bind_listen, UPNP_E_LISTEN);
+}
+
+TEST(StartMiniServerTestSuite, do_bind_listen_address_in_use) {
+    // Configure expected system calls:
+    // * Use fictive socket file descriptor 600
+    // * Mocked bind() returns successful
+    // * Mocked listen() returns error with errno EADDRINUSE
+
+    GTEST_SKIP() << "  # Test needs rework when do_listen() is improved.";
+
+    MINISERVER_REUSEADDR = false;
+    const char text_addr[]{"192.168.54.188"};
+
+    struct SockAddr sock;
+    sock.addr_set(text_addr, APPLICATION_LISTENING_PORT);
+
+    // Mock system functions
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+        .WillOnce(Return(600))  // This socket is already listening
+        .WillOnce(Return(601)); // This socket is free
+    // First attempt to listen to a socket will fail
+    EXPECT_CALL(mocked_sys_socketObj, bind(600, _, _)).Times(1);
+    EXPECT_CALL(mocked_sys_socketObj, listen(600, SOMAXCONN))
+        .WillOnce(SetErrnoAndReturn(EADDRINUSE, SOCKET_ERROR));
+    // Second attempt to listen to another socket will succeed
+    EXPECT_CALL(mocked_sys_socketObj, bind(601, _, _)).Times(1);
+    EXPECT_CALL(mocked_sys_socketObj, listen(601, SOMAXCONN)).Times(1);
+    EXPECT_CALL(mocked_sys_socketObj,
+                getsockname(601, _, Pointee(sizeof(sock.addr_ss))))
+        .WillOnce(DoAll(SetArgPointee<1>(*sock.addr), Return(0)));
+
+    struct s_SocketStuff s;
+    EXPECT_EQ(init_socket_suff(&s, text_addr, 4), 0);
+    s.try_port = APPLICATION_LISTENING_PORT + 1;
+
+    // Test Unit
+    int ret_get_do_bind_listen = do_bind_listen(&s);
+    EXPECT_EQ(ret_get_do_bind_listen, UPNP_E_SUCCESS)
+        << errStrEx(ret_get_do_bind_listen, UPNP_E_SUCCESS);
+
+    // Check all fields of struct s_SocketStuff
+    EXPECT_EQ(s.ip_version, 4);
+    EXPECT_STREQ(s.text_addr, text_addr);
+    EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
+    EXPECT_STREQ(inet_ntoa(s.serverAddr4->sin_addr), text_addr);
+    EXPECT_EQ(ntohs(s.serverAddr4->sin_port), 65535);
+    EXPECT_EQ(s.fd, 601);
+    EXPECT_EQ(s.try_port, APPLICATION_LISTENING_PORT + 2);
+    EXPECT_EQ(s.actual_port, APPLICATION_LISTENING_PORT);
+    EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
+}
+
+TEST(DoBindTestSuite, bind_successful) {
     // Configure expected system calls:
     // * Use fictive socket file descriptor 511
     // * Actual used port is 56789
@@ -514,28 +588,219 @@ TEST(StartMiniServerTestSuite, do_bind) {
     // * Mocked bind() returns successful
 
     // Provide needed data for the Unit
-    const char text_addr[] = "192.168.101.233";
+    const int sockfd{511};
+    const char text_addr[]{"192.168.101.233"};
     struct s_SocketStuff s;
 
+    // Fill all fields of struct s_SocketStuff
     s.serverAddr = (struct sockaddr*)&s.ss;
     s.ip_version = 4;
     s.text_addr = text_addr;
     s.serverAddr4->sin_family = AF_INET;
     s.serverAddr4->sin_port = htons(56789);
     inet_pton(AF_INET, text_addr, &s.serverAddr4->sin_addr);
-    s.fd = 511;
+    s.fd = sockfd;
     s.try_port = 56790;
     s.actual_port = 56789;
-    s.address_len = sizeof(s);
+    s.address_len = sizeof(*s.serverAddr4);
 
     // Mock system functions
-    Mock_sys_socket mocked_sys_socketObj;
-    EXPECT_CALL(mocked_sys_socketObj, bind(511, _, _)).Times(1);
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _)).Times(1);
+
+    // Test Unit
+    errno = EINVAL; // Check if this has an impact.
+    int ret_do_bind = do_bind(&s);
+    EXPECT_EQ(ret_do_bind, UPNP_E_SUCCESS)
+        << errStrEx(ret_do_bind, UPNP_E_SUCCESS);
+}
+
+TEST(DoBindTestSuite, bind_with_try_port_overrun) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+#ifdef _WIN32
+    if (old_code)
+        GTEST_SKIP() << "  # BUG! This test fails on MS Windows due to "
+                        "checking wrong error conditions.";
+#endif
+
+    // Configure expected system calls:
+    // * Use fictive socket file descriptor 511
+    // * Actual used port is 56789
+    // * Next port to try is 65533
+    // * Mocked bind() returns always failure with errno EINVAL
+    //
+    // This setup will 'try_port' overrun after 65535 to 0. The overrun should
+    // finish the search for a free port to bind.
+
+    // Provide needed data for the Unit
+    const int sockfd{511};
+    const char text_addr[]{"192.168.101.233"};
+    struct s_SocketStuff s;
+
+    // Fill all fields of struct s_SocketStuff
+    s.serverAddr = (struct sockaddr*)&s.ss;
+    s.ip_version = 4;
+    s.text_addr = text_addr;
+    s.serverAddr4->sin_family = AF_INET;
+    s.serverAddr4->sin_port = htons(56789);
+    inet_pton(AF_INET, text_addr, &s.serverAddr4->sin_addr);
+    s.fd = sockfd;
+    s.try_port = 65533;
+    s.actual_port = 56789;
+    s.address_len = sizeof(*s.serverAddr4);
+
+    // Mock system function, must also set errno
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _))
+        .Times(3)
+        .WillRepeatedly(SetErrnoAndReturn(EINVAL, -1));
+
+    // Test Unit
+    int ret_do_bind = do_bind(&s);
+    EXPECT_EQ(ret_do_bind, UPNP_E_SOCKET_BIND)
+        << errStrEx(ret_do_bind, UPNP_E_SOCKET_BIND);
+
+    // Check all fields of struct s_SocketStuff
+    EXPECT_EQ(s.ip_version, 4);
+    EXPECT_STREQ(s.text_addr, text_addr);
+    EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
+    EXPECT_STREQ(inet_ntoa(s.serverAddr4->sin_addr), text_addr);
+    EXPECT_EQ(ntohs(s.serverAddr4->sin_port), 65535);
+    EXPECT_EQ(s.fd, sockfd);
+    EXPECT_EQ(s.actual_port, 56789);
+    EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
+
+    if (old_code) {
+        std::cout << "  BUG! Next try to bind a port should start with "
+                     "APPLICATION_LISTENING_PORT but not with port 0.\n";
+        EXPECT_EQ(s.try_port, 0);
+
+    } else {
+
+        EXPECT_EQ(s.try_port, APPLICATION_LISTENING_PORT);
+    }
+}
+
+TEST(DoBindTestSuite, bind_successful_with_two_tries) {
+    // Configure expected system calls:
+    // * Use fictive socket file descriptor 511
+    // * Actual used port is 56789
+    // * Next port to try is 65533
+    // * Mocked bind() fails with two tries errno EADDRINUSE, then successful.
+
+    // Provide needed data for the Unit
+    const int sockfd{511};
+    const char text_addr[]{"192.168.101.233"};
+    struct s_SocketStuff s;
+
+    // Fill all fields of struct s_SocketStuff
+    s.serverAddr = (struct sockaddr*)&s.ss;
+    s.ip_version = 4;
+    s.text_addr = text_addr;
+    s.serverAddr4->sin_family = AF_INET;
+    s.serverAddr4->sin_port = htons(56789);
+    inet_pton(AF_INET, text_addr, &s.serverAddr4->sin_addr);
+    s.fd = sockfd;
+    s.try_port = 65533;
+    s.actual_port = 56789;
+    s.address_len = sizeof(*s.serverAddr4);
+
+    // Mock system function, must also set errno
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _))
+        .WillOnce(SetErrnoAndReturn(EADDRINUSE, -1))
+        .WillOnce(SetErrnoAndReturn(EADDRINUSE, -1))
+        // The system library never reset errno so don't do it here.
+        // .WillOnce(SetErrnoAndReturn(0, 0));
+        .WillOnce(Return(0));
 
     // Test Unit
     int ret_do_bind = do_bind(&s);
     EXPECT_EQ(ret_do_bind, UPNP_E_SUCCESS)
         << errStrEx(ret_do_bind, UPNP_E_SUCCESS);
+
+    // Check all fields of struct s_SocketStuff
+    EXPECT_EQ(s.ip_version, 4);
+    EXPECT_STREQ(s.text_addr, text_addr);
+    EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
+    EXPECT_STREQ(inet_ntoa(s.serverAddr4->sin_addr), text_addr);
+    EXPECT_EQ(ntohs(s.serverAddr4->sin_port), 65535);
+    EXPECT_EQ(s.fd, sockfd);
+    EXPECT_EQ(s.try_port, 0);
+    EXPECT_EQ(s.actual_port, 56789);
+    EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
+}
+
+TEST(DoBindTestSuite, bind_with_empty_parameter) {
+    // With this test we have an initialized ip_version = 0, instead of valid 4
+    // or 6. Switching for this value will never find an end.
+    if (old_code)
+        GTEST_SKIP()
+            << "  # BUG! This test stuck the program in an endless loop.";
+
+    struct s_SocketStuff s {};
+    s.serverAddr = (struct sockaddr*)&s.ss;
+
+    // Test Unit
+    int ret_do_bind = do_bind(&s);
+    EXPECT_EQ(ret_do_bind, UPNP_E_INVALID_PARAM)
+        << errStrEx(ret_do_bind, UPNP_E_INVALID_PARAM);
+}
+
+TEST(DoBindTestSuite, bind_with_wrong_ip_version_assignment) {
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    // Setting ip_version = 6 and sin_family = AF_INET and vise versa does not
+    // fit. Provide needed data for the Unit.
+    const int sockfd{511};
+    const char text_addr[]{"192.168.101.233"};
+    struct s_SocketStuff s;
+
+    // Fill all fields of struct s_SocketStuff
+    s.serverAddr = (struct sockaddr*)&s.ss;
+    s.ip_version = 6;
+    s.text_addr = text_addr;
+    s.serverAddr4->sin_family = AF_INET;
+    s.serverAddr4->sin_port = htons(56789);
+    inet_pton(AF_INET, text_addr, &s.serverAddr4->sin_addr);
+    s.fd = sockfd;
+    s.try_port = 65535;
+    s.actual_port = 56789;
+    s.address_len = sizeof(*s.serverAddr4);
+
+    // Test Unit
+    int ret_do_bind = do_bind(&s);
+
+    if (old_code) {
+        std::cout << "  BUG! Should be UPNP_E_INVALID_PARAM(-101), but not "
+                     "UPNP_E_SOCKET_BIND(-203).\n";
+        EXPECT_EQ(ret_do_bind, UPNP_E_SOCKET_BIND)
+            << errStrEx(ret_do_bind, UPNP_E_INVALID_PARAM);
+
+    } else {
+
+        EXPECT_EQ(ret_do_bind, UPNP_E_INVALID_PARAM)
+            << errStrEx(ret_do_bind, UPNP_E_INVALID_PARAM);
+    }
+
+    s.ip_version = 4;
+    s.serverAddr4->sin_family = AF_INET6;
+    s.try_port = 65535;
+
+    // Test Unit
+    ret_do_bind = do_bind(&s);
+
+    if (old_code) {
+        EXPECT_EQ(ret_do_bind, UPNP_E_SOCKET_BIND)
+            << errStrEx(ret_do_bind, UPNP_E_INVALID_PARAM);
+
+    } else {
+
+        EXPECT_EQ(ret_do_bind, UPNP_E_INVALID_PARAM)
+            << errStrEx(ret_do_bind, UPNP_E_INVALID_PARAM);
+    }
 }
 
 TEST(StartMiniServerTestSuite, do_listen) {
@@ -549,7 +814,6 @@ TEST(StartMiniServerTestSuite, do_listen) {
     // Provide needed data for the Unit
     const char text_addr[] = "192.168.202.233";
     struct s_SocketStuff s;
-
     s.serverAddr = (struct sockaddr*)&s.ss;
     s.ip_version = 4;
     s.text_addr = text_addr;
@@ -559,10 +823,10 @@ TEST(StartMiniServerTestSuite, do_listen) {
     s.fd = 512;
     s.try_port = 60001;
     s.actual_port = 60000;
-    s.address_len = sizeof(s);
+    s.address_len = sizeof(*s.serverAddr4);
 
     // Mock system functions
-    Mock_sys_socket mocked_sys_socketObj;
+    class Mock_sys_socket mocked_sys_socketObj;
     EXPECT_CALL(mocked_sys_socketObj, listen(512, SOMAXCONN)).Times(1);
     EXPECT_CALL(mocked_sys_socketObj, getsockname(512, _, _)).Times(1);
 
@@ -591,7 +855,7 @@ TEST(StartMiniServerTestSuite, get_port) {
     inet_pton(AF_INET, "192.168.154.188", &sa_in->sin_addr);
 
     // Mock system functions
-    Mock_sys_socket mocked_sys_socketObj;
+    class Mock_sys_socket mocked_sys_socketObj;
     EXPECT_CALL(mocked_sys_socketObj, getsockname(1000, _, _))
         .WillOnce(DoAll(SetArgPointee<1>(sa), Return(0)));
 
@@ -639,48 +903,6 @@ TEST(StartMiniServerTestSuite, get_miniserver_stopsock) {
     EXPECT_STREQ(text_addr, "127.0.0.1");
 }
 
-TEST(RunMiniServerTestSuite, run_and_stop_miniserver) {
-    GTEST_SKIP()
-        << "  # Test runs unstable repeatedly. Mocking must be more specific.";
-
-    MiniServerSockArray miniSock;
-    InitMiniServerSockArray(&miniSock);
-
-    // Mock system calls
-    Mock_sys_socket mocked_sys_socketObj;
-    EXPECT_CALL(mocked_sys_socketObj, bind(_, _, _)).Times(1);
-    EXPECT_CALL(mocked_sys_socketObj, listen(_, SOMAXCONN)).Times(1);
-    EXPECT_CALL(mocked_sys_socketObj, accept(_, _, _)).Times(1);
-    EXPECT_CALL(mocked_sys_socketObj,
-                getsockname(_, _, Pointee(sizeof(sockaddr_storage))))
-        .Times(2);
-    EXPECT_CALL(mocked_sys_socketObj,
-                recvfrom(Gt(2), _, 25, 0, _, Pointee(sizeof(sockaddr_storage))))
-        .WillOnce(DoAll(StrCpyToArg<1>("ShutDown"), Return(8)));
-
-    Mock_sys_select mocked_sys_selectObj;
-    EXPECT_CALL(mocked_sys_selectObj, select(_, _, _, _, _))
-        .WillRepeatedly(Return(1));
-
-    Mock_stdlib mocked_stdlibObj;
-    EXPECT_CALL(mocked_stdlibObj, free(_)).Times(1);
-
-    // Initialize needed values
-    int ret_get_miniserver_sockets = get_miniserver_sockets(&miniSock, 0, 0, 0);
-    ASSERT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
-        << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS);
-
-    int ret_get_miniserver_stopsock = get_miniserver_stopsock(&miniSock);
-    ASSERT_EQ(ret_get_miniserver_stopsock, UPNP_E_SUCCESS)
-        << errStrEx(ret_get_miniserver_stopsock, UPNP_E_SUCCESS);
-
-    /* Initialize SDK global thread pools. */
-    ASSERT_EQ(UpnpInitThreadPools(), UPNP_E_SUCCESS);
-
-    // Test Unit
-    RunMiniServer(&miniSock);
-}
-
 TEST(RunMiniServerTestSuite, receive_from_stopSock) {
     MiniServerSockArray serverSockArray;
     InitMiniServerSockArray(&serverSockArray);
@@ -701,7 +923,7 @@ TEST(RunMiniServerTestSuite, receive_from_stopSock) {
     FD_SET(serverSockArray.miniServerStopSock, &rdSet);
 
     // Mock system functions
-    Mock_sys_socket mocked_sys_socketObj;
+    class Mock_sys_socket mocked_sys_socketObj;
     struct SockAddr sock;
     sock.addr_set("192.168.167.166", 54321);
 

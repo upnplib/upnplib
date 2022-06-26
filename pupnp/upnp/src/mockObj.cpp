@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-01-22
+// Redistribution only with this Copyright remark. Last modified: 2022-07-04
 
 // Yes, we have this global varibles in namespace ::upnplib, but they are only
 // needed as long as the old C sources not re-engeneered to C++ objects. We need
@@ -21,28 +21,28 @@
 
 namespace upnplib {
 
-Bpthread pthreadObj{};
+class Bpthread pthreadObj {};
 Bpthread* pthread_h = &pthreadObj;
 
-Bstdio stdioObj{};
+class Bstdio stdioObj {};
 Bstdio* stdio_h = &stdioObj;
 
-Bstdlib stdlibObj{};
+class Bstdlib stdlibObj {};
 Bstdlib* stdlib_h = &stdlibObj;
 
-Bstring stringObj{};
+class Bstring stringObj {};
 Bstring* string_h = &stringObj;
 
-Bnetdb netdbObj{};
+class Bnetdb netdbObj {};
 Bnetdb* netdb_h = &netdbObj;
 
-Bsys_socket sys_socketObj{};
+class Bsys_socket sys_socketObj {};
 Bsys_socket* sys_socket_h = &sys_socketObj;
 
-Bsys_select sys_selectObj{};
+class Bsys_select sys_selectObj {};
 Bsys_select* sys_select_h = &sys_selectObj;
 
-Bunistd unistdObj{};
+class Bunistd unistdObj {};
 Bunistd* unistd_h = &unistdObj;
 
 } // namespace upnplib

@@ -38,7 +38,7 @@ TEST(SockAddrTestSuite, set_wrong_address) {
 
     EXPECT_THAT([&sock] { sock.addr_set("192.168.169.999", 4711); },
                 ThrowsMessage<std::invalid_argument>(
-                    "Invalid ip address 192.168.169.999"));
+                    "at */sock.cpp[22]: Invalid ip address '192.168.169.999'"));
 }
 
 TEST(SockAddrTestSuite, get_wrong_address) {
@@ -49,7 +49,8 @@ TEST(SockAddrTestSuite, get_wrong_address) {
     sock.addr_ss.ss_family = -1;
 
     EXPECT_THAT([&sock] { sock.addr_get(); },
-                ThrowsMessage<std::runtime_error>("Got invalid ip address"));
+                ThrowsMessage<std::runtime_error>(
+                    "at */sock.cpp[35]: Got invalid ip address"));
 }
 
 } // namespace upnplib

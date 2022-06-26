@@ -42,7 +42,6 @@
 
 #include "config.hpp"
 #include "upnpapi.hpp"
-#include <iostream> // DEBUG:
 
 #ifdef _WIN32
 #include "upnpmock/iphlpapi_win32.hpp"
