@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-05
+// Redistribution only with this Copyright remark. Last modified: 2022-07-15
 
 // -----------------------------------------------------------------------------
 // This testsuite starts the sample TV Device with general command line
@@ -31,6 +31,9 @@ TEST(SampleTvDeviceTestSuite, invalid_commandline_argument) {
 }
 
 TEST(SampleTvDeviceTestSuite, valid_arguments) {
+    GTEST_SKIP() << "  # With using real sockets this test has side effects on "
+                    "other tests. It should be mocked.";
+
     constexpr int argc{3};
     constexpr int argsize = sizeof(UPnPlib_BINARY_DIR "/bin/tv_device");
     char arg[argc][argsize]{UPnPlib_BINARY_DIR "/bin/tv_device", "-webdir",
@@ -45,6 +48,9 @@ TEST(SampleTvDeviceTestSuite, valid_arguments) {
 }
 
 TEST(SampleTvDeviceTestSuite, TvDeviceStart) {
+    GTEST_SKIP() << "  # With using real sockets this test has side effects on "
+                    "other tests. It should be mocked.";
+
     constexpr char* iface{};
     constexpr unsigned short port{};
     constexpr char* desc_doc_name{};

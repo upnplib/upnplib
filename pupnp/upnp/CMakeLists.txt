@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-06-07
+# Redistribution only with this Copyright remark. Last modified: 2022-07-15
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -70,76 +70,78 @@ endif()
 #----------------------------------
 
 set(PUPNP_SOURCE_FILES
-    ${PROJECT_SOURCE_DIR}/src/threadutil/FreeList.cpp
-    ${PROJECT_SOURCE_DIR}/src/threadutil/LinkedList.cpp
-    ${PROJECT_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
-    ${PROJECT_SOURCE_DIR}/src/threadutil/TimerThread.cpp
+    ./src/init.cpp
 
-    ${PROJECT_SOURCE_DIR}/src/genlib/net/sock.cpp
-    ${PROJECT_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
+    ./src/threadutil/FreeList.cpp
+    ./src/threadutil/LinkedList.cpp
+    ./src/threadutil/ThreadPool.cpp
+    ./src/threadutil/TimerThread.cpp
 
-    ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
-    ${PROJECT_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
-    ${PROJECT_SOURCE_DIR}/src/mockObj.cpp
-    ${PROJECT_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
-    ${PROJECT_SOURCE_DIR}/src/genlib/net/http/webserver.cpp
-    ${PROJECT_SOURCE_DIR}/src/genlib/net/http/parsetools.cpp
+    ./src/genlib/net/sock.cpp
+    ./src/genlib/net/uri/uri.cpp
 
-    ${PROJECT_SOURCE_DIR}/src/genlib/util/list.cpp
-    ${PROJECT_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-    ${PROJECT_SOURCE_DIR}/src/genlib/util/strintmap.cpp
-    ${PROJECT_SOURCE_DIR}/src/genlib/util/upnp_timeout.cpp
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:${PROJECT_SOURCE_DIR}/src/genlib/util/util.cpp>
+    ./src/genlib/net/http/httpparser.cpp
+    ./src/genlib/net/http/httpreadwrite.cpp
+    ./src/mockObj.cpp
+    ./src/genlib/net/http/statcodes.cpp
+    ./src/genlib/net/http/webserver.cpp
+    ./src/genlib/net/http/parsetools.cpp
 
-    $<$<BOOL:${UPNPLIB_DEF_DEVICE}>:${PROJECT_SOURCE_DIR}/src/genlib/service-table/service_table.cpp>
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:${PROJECT_SOURCE_DIR}/src/genlib/client_table/GenlibClientSubscription.cpp>
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:${PROJECT_SOURCE_DIR}/src/genlib/client_table/client_table.cpp>
-    ${PROJECT_SOURCE_DIR}/src/genlib/miniserver/miniserver.cpp
+    ./src/genlib/util/list.cpp
+    ./src/genlib/util/membuffer.cpp
+    ./src/genlib/util/strintmap.cpp
+    ./src/genlib/util/upnp_timeout.cpp
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:./src/genlib/util/util.cpp>
 
-    $<$<BOOL:${UPNPLIB_DEF_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/ssdp_server.cpp>
-    $<$<BOOL:${UPNPLIB_DEF_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/ssdp_device.cpp>
-    $<$<BOOL:${UPNPLIB_DEF_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp>
-    $<$<BOOL:${UPNPLIB_DEF_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/SSDPResultData.cpp>
-    $<$<BOOL:${UPNPLIB_DEF_SSDP}>:${PROJECT_SOURCE_DIR}/src/ssdp/SSDPResultDataCallback.cpp>
+    $<$<BOOL:${UPNPLIB_DEF_DEVICE}>:./src/genlib/service-table/service_table.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:./src/genlib/client_table/GenlibClientSubscription.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:./src/genlib/client_table/client_table.cpp>
+    ./src/genlib/miniserver/miniserver.cpp
 
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:${PROJECT_SOURCE_DIR}/src/soap/soap_device.cpp>
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:${PROJECT_SOURCE_DIR}/src/soap/soap_common.cpp>
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:${PROJECT_SOURCE_DIR}/src/soap/soap_ctrlpt.cpp>
+    $<$<BOOL:${UPNPLIB_DEF_SSDP}>:./src/ssdp/ssdp_server.cpp>
+    $<$<BOOL:${UPNPLIB_DEF_SSDP}>:./src/ssdp/ssdp_device.cpp>
+    $<$<BOOL:${UPNPLIB_DEF_SSDP}>:./src/ssdp/ssdp_ctrlpt.cpp>
+    $<$<BOOL:${UPNPLIB_DEF_SSDP}>:./src/ssdp/SSDPResultData.cpp>
+    $<$<BOOL:${UPNPLIB_DEF_SSDP}>:./src/ssdp/SSDPResultDataCallback.cpp>
 
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:${PROJECT_SOURCE_DIR}/src/gena/gena_device.cpp>
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:${PROJECT_SOURCE_DIR}/src/gena/gena_callback2.cpp>
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:${PROJECT_SOURCE_DIR}/src/gena/gena_ctrlpt.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:./src/soap/soap_device.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:./src/soap/soap_common.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:./src/soap/soap_ctrlpt.cpp>
 
-    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>,$<BOOL:${UPNPLIB_DEF_OPTSSDP}>>:${PROJECT_SOURCE_DIR}/src/uuid/uuid.cpp>
-    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>,$<BOOL:${UPNPLIB_DEF_OPTSSDP}>>:${PROJECT_SOURCE_DIR}/src/uuid/md5.cpp>
-    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>,$<BOOL:${UPNPLIB_DEF_OPTSSDP}>>:${PROJECT_SOURCE_DIR}/src/uuid/sysdep.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:./src/gena/gena_device.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:./src/gena/gena_callback2.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:./src/gena/gena_ctrlpt.cpp>
 
-    $<$<BOOL:${UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS}>:${PROJECT_SOURCE_DIR}/src/api/UpnpExtraHeaders.cpp>
-    ${PROJECT_SOURCE_DIR}/src/api/UpnpString.cpp
-    ${PROJECT_SOURCE_DIR}/src/api/upnpapi.cpp
-    $<$<OR:$<BOOL:${UPNPLIB_DEF_TOOLS}>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:${PROJECT_SOURCE_DIR}/src/api/upnptools.cpp>
-    $<$<BOOL:${UPNPLIB_DEF_WEBSERVER}>:${PROJECT_SOURCE_DIR}/src/api/UpnpFileInfo.cpp>
-    #$<$<BOOL:${UPNPLIB_DEF_SSDP}>:${PROJECT_SOURCE_DIR}/src/api/UpnpDiscovery.cpp>
-    $<$<OR:$<BOOL:${UPNPLIB_DEF_SSDP}>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpDiscovery.cpp>
+    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>,$<BOOL:${UPNPLIB_DEF_OPTSSDP}>>:./src/uuid/uuid.cpp>
+    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>,$<BOOL:${UPNPLIB_DEF_OPTSSDP}>>:./src/uuid/md5.cpp>
+    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>,$<BOOL:${UPNPLIB_DEF_OPTSSDP}>>:./src/uuid/sysdep.cpp>
 
-    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpActionRequest.cpp>
-    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpActionComplete.cpp>
-    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpStateVarRequest.cpp>
-    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpStateVarComplete.cpp>
-    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpSubscriptionRequest.cpp>
-    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpEvent.cpp>
-    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpEventSubscribe.cpp>
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpStateVarRequest.cpp>
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpActionComplete.cpp>
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpStateVarComplete.cpp>
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpSubscriptionRequest.cpp>
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpEventSubscribe.cpp>
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:${PROJECT_SOURCE_DIR}/src/api/UpnpEvent.cpp>
-    $<$<CONFIG:Debug>:${PROJECT_SOURCE_DIR}/src/api/upnpdebug.cpp>
+    $<$<BOOL:${UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS}>:./src/api/UpnpExtraHeaders.cpp>
+    ./src/api/UpnpString.cpp
+    ./src/api/upnpapi.cpp
+    $<$<OR:$<BOOL:${UPNPLIB_DEF_TOOLS}>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:./src/api/upnptools.cpp>
+    $<$<BOOL:${UPNPLIB_DEF_WEBSERVER}>:./src/api/UpnpFileInfo.cpp>
+    #$<$<BOOL:${UPNPLIB_DEF_SSDP}>:./src/api/UpnpDiscovery.cpp>
+    $<$<OR:$<BOOL:${UPNPLIB_DEF_SSDP}>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:./src/api/UpnpDiscovery.cpp>
 
-    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_WEBSERVER}>>:${PROJECT_SOURCE_DIR}/src/urlconfig/urlconfig.cpp>
+    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:./src/api/UpnpActionRequest.cpp>
+    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:./src/api/UpnpActionComplete.cpp>
+    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:./src/api/UpnpStateVarRequest.cpp>
+    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:./src/api/UpnpStateVarComplete.cpp>
+    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:./src/api/UpnpSubscriptionRequest.cpp>
+    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:./src/api/UpnpEvent.cpp>
+    $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:./src/api/UpnpEventSubscribe.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:./src/api/UpnpStateVarRequest.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:./src/api/UpnpActionComplete.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:./src/api/UpnpStateVarComplete.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:./src/api/UpnpSubscriptionRequest.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:./src/api/UpnpEventSubscribe.cpp>
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:./src/api/UpnpEvent.cpp>
+    $<$<CONFIG:Debug>:./src/api/upnpdebug.cpp>
 
-    ${PROJECT_SOURCE_DIR}/src/global.cpp
+    $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_WEBSERVER}>>:./src/urlconfig/urlconfig.cpp>
+
+    ./src/global.cpp
     $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
     $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_unix.cpp>
 )
@@ -181,7 +183,7 @@ if(NOT WIN32)
             ./src/threadutil
             # if we are not on WIN32 the linker finds empty "headers.h" and will
             # not complain an error but will not use <headers.h> that isn't available.
-            #$<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/inc/not_win32>
+            #$<$<NOT:$<BOOL:${WIN32}>>:./inc/not_win32>
             ./inc/not_win32
     )
     target_compile_definitions(pupnp_native_shared
@@ -189,8 +191,6 @@ if(NOT WIN32)
             UPNPLIB_SHARED
             UPNPLIB_EXPORTS
             UPNPLIB_WITH_NATIVE_PUPNP
-            HAVE_STRNLEN
-            HAVE_STRNDUP
     )
     target_link_libraries(pupnp_native_shared
         PUBLIC
@@ -217,14 +217,12 @@ if(NOT WIN32)
             ./src/threadutil
             # if we are not on WIN32 the linker finds empty "headers.h" and will
             # not complain an error but will not use <headers.h> that isn't available.
-            #$<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/inc/not_win32>
+            #$<$<NOT:$<BOOL:${WIN32}>>:./inc/not_win32>
             ./inc/not_win32
     )
     target_compile_definitions(pupnp_native_static
         PRIVATE
             UPNPLIB_WITH_NATIVE_PUPNP
-            HAVE_STRNLEN
-            HAVE_STRNDUP
     )
     target_link_libraries(pupnp_native_static
         # Static always link needed object files, no matter to use PRIVATE or PUBLIC.
@@ -256,7 +254,7 @@ else() # WIN32
             ./src/threadutil
             # if we are not on WIN32 the linker finds empty "headers.h" and will
             # not complain an error but will not use <headers.h> that isn't available.
-            #$<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/inc/not_win32>
+            #$<$<NOT:$<BOOL:${WIN32}>>:./inc/not_win32>
             # if pthreads4w isn't installed this path is empty. The linker
             # doesn't find "pthread.h" and falls back to look at <pthread.h>.
             ${pthreads4w_SOURCE_DIR}
@@ -266,8 +264,6 @@ else() # WIN32
             UPNPLIB_SHARED
             UPNPLIB_EXPORTS
             UPNPLIB_WITH_NATIVE_PUPNP
-            HAVE_STRNLEN
-            HAVE_STRNDUP
             $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
@@ -295,15 +291,13 @@ else() # WIN32
             ./src/threadutil
             # if we are not on WIN32 the linker finds empty "headers.h" and will
             # not complain an error but will not use <headers.h> that isn't available.
-            #$<$<NOT:$<BOOL:${WIN32}>>:${PROJECT_SOURCE_DIR}/inc/not_win32>
+            #$<$<NOT:$<BOOL:${WIN32}>>:./inc/not_win32>
             # if pthreads4w isn't installed this path is empty. The linker
             # doesn't find "pthread.h" and falls back to look at <pthread.h>.
             ${pthreads4w_SOURCE_DIR}
     )
     target_compile_definitions(pupnp_native_static
         PRIVATE
-            HAVE_STRNLEN
-            HAVE_STRNDUP
             UPNPLIB_WITH_NATIVE_PUPNP
             $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>

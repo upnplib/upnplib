@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-06-26
+# Redistribution only with this Copyright remark. Last modified: 2022-07-15
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -15,6 +15,8 @@ if(NOT WIN32)
     add_library(upnplib_compa_shared SHARED   # prefix -ucsh
             ./compa/src/global.cpp
             ./compa/src/api/upnptools.cpp
+            ./src/net/miniserver.cpp
+            ./src/init.cpp
     )
     set_target_properties(upnplib_compa_shared PROPERTIES
             OUTPUT_NAME upnplib_compa
@@ -44,6 +46,8 @@ if(NOT WIN32)
     add_library(upnplib_compa_static STATIC   # prefix -ucst
             ./compa/src/global.cpp
             ./compa/src/api/upnptools.cpp
+            ./src/net/miniserver.cpp
+            ./src/init.cpp
     )
     set_target_properties(upnplib_compa_static PROPERTIES
             OUTPUT_NAME upnplib_compa
@@ -120,13 +124,14 @@ if(NOT WIN32)
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
-    # Info executable linked with the pupnp native shared library
-    #------------------------------------------------------------
+    # Info executable linked with the upnplib compatible shared library
+    #------------------------------------------------------------------
     add_executable(upnplibInfo_shared
             ./src/upnplibInfo.cpp
     )
     target_include_directories(upnplibInfo_shared
         PRIVATE
+            ${UPnPlib_SOURCE_DIR}/include
             ${UPnPlib_BINARY_DIR}/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
@@ -135,29 +140,33 @@ if(NOT WIN32)
     target_compile_definitions (upnplibInfo_shared
         PRIVATE
             UPNPLIB_SHARED
-            UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(upnplibInfo_shared
         PRIVATE
-            pupnp_native_shared
+            upnplib_compa_shared
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
-    # Info executable linked with the upnplib compatible static library
-    #------------------------------------------------------------------
+    # Info executable linked with the pupnp static library
+    #-----------------------------------------------------
     add_executable(upnplibInfo_static
             ./src/upnplibInfo.cpp
     )
     target_include_directories(upnplibInfo_static
         PRIVATE
+            ${UPnPlib_SOURCE_DIR}/include
             ${UPnPlib_BINARY_DIR}/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
     )
+    target_compile_definitions (upnplibInfo_static
+        PRIVATE
+            UPNPLIB_WITH_NATIVE_PUPNP
+    )
     target_link_libraries(upnplibInfo_static
         PRIVATE
-            upnplib_compa_static
+            pupnp_native_static
             # On Linux we cannot link with the static pthreads library
             # because then we have also link with a static libc that's not
             # available by default.
@@ -166,11 +175,12 @@ if(NOT WIN32)
 
 else() # WIN32
 
-    # upnplib compatible shared library
-    #----------------------------------
+    # WIN32 upnplib compatible shared library
+    #----------------------------------------
     add_library(upnplib_compa_shared SHARED   # prefix -ucsh
             ./compa/src/global.cpp
             ./compa/src/api/upnptools.cpp
+            ./src/init.cpp
     )
     target_include_directories(upnplib_compa_shared
         PRIVATE
@@ -198,11 +208,12 @@ else() # WIN32
             pupnp_native_shared
     )
 
-    # upnplib compatible static library
-    #----------------------------------
+    # WIN32 upnplib compatible static library
+    #----------------------------------------
     add_library(upnplib_compa_static STATIC   # prefix -ucst
             ./compa/src/global.cpp
             ./compa/src/api/upnptools.cpp
+            ./src/init.cpp
     )
     target_include_directories(upnplib_compa_static
         PRIVATE
@@ -224,8 +235,8 @@ else() # WIN32
             pupnp_native_static
     )
 
-    # upnplib native shared library
-    #------------------------------
+    # WIN32 upnplib native shared library
+    #------------------------------------
     add_library(upnplib_native_shared SHARED   # prefix -unsh
             ./src/global.cpp
             ./src/api/upnptools.cpp
@@ -253,8 +264,8 @@ else() # WIN32
             ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
-    # upnplib native static library
-    #------------------------------
+    # WIN32 upnplib native static library
+    #------------------------------------
     add_library(upnplib_native_static STATIC   # prefix unst
             ./src/global.cpp
             ./src/api/upnptools.cpp
@@ -281,50 +292,52 @@ else() # WIN32
             ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
-    # Info executable linked with the pupnp native shared library
-    #------------------------------------------------------------
+    # WIN32 Info executable linked with the upnplib compatible shared library
+    #------------------------------------------------------------------------
     add_executable(upnplibInfo_shared
             ./src/upnplibInfo.cpp
     )
     target_include_directories(upnplibInfo_shared
         PRIVATE
+            ${UPnPlib_SOURCE_DIR}/include
             ${UPnPlib_BINARY_DIR}/include
+            ${PUPNP_UPNP_SOURCE_DIR}/inc   # needed for ithread.hpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
-            ${PUPNP_UPNP_SOURCE_DIR}/inc   # needed for ithread.hpp
             ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
     )
     target_compile_definitions (upnplibInfo_shared
         PRIVATE
             UPNPLIB_SHARED
-            UPNPLIB_WITH_NATIVE_PUPNP
             $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
     )
     target_link_libraries(upnplibInfo_shared
         PRIVATE
-            pupnp_native_shared
+            upnplib_compa_shared
     )
 
-    # Info executable linked with the upnplib compatible static library
-    #------------------------------------------------------------------
+    # WIN32 Info executable linked with the pupnp static library
+    #-----------------------------------------------------------
     add_executable(upnplibInfo_static
             ./src/upnplibInfo.cpp
     )
     target_include_directories(upnplibInfo_static
         PRIVATE
+            ${UPnPlib_SOURCE_DIR}/include
             ${UPnPlib_BINARY_DIR}/include
+            ${PUPNP_UPNP_SOURCE_DIR}/inc  # needed for ithread.hpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
-            ${PUPNP_UPNP_SOURCE_DIR}/inc  # needed for ithread.hpp
             ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
     )
     target_compile_definitions (upnplibInfo_static
         PRIVATE
+            UPNPLIB_WITH_NATIVE_PUPNP
             $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
     )
     target_link_libraries(upnplibInfo_static
         PRIVATE
-            upnplib_compa_static
+            pupnp_native_static
     )
 
 endif() # WIN32

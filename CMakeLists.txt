@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-22
+# Redistribution only with this Copyright remark. Last modified: 2022-07-15
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -101,10 +101,10 @@ endif()
 include(CheckCXXSymbolExists)
 
 # The option is contained in cmake/upnpconfig.hpp.cmake.
-check_cxx_symbol_exists(strnlen "cstring" HAVE_STRNLEN)
+check_cxx_symbol_exists(strnlen "cstring" UPNPLIB_HAVE_STRNLEN)
 
 # The option is contained in cmake/upnpconfig.hpp.cmake.
-check_cxx_symbol_exists(strndup "cstring" HAVE_STRNDUP)
+check_cxx_symbol_exists(strndup "cstring" UPNPLIB_HAVE_STRNDUP)
 
 # Set a compiler flag to respect specific features of the compiler.
 # The option is contained in cmake/upnpconfig.hpp.cmake.
@@ -117,23 +117,26 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(UPNP_DEBUG_SUFFIX "d")
 endif()
 
-add_compile_definitions(
-    # General define DEBUG if configuration is Debug, otherwise define NDEBUG.
-    # TODO: manage setting NDEBUG is done by cmake by default. Check against it.
-    PRIVATE $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
-    # There are traditional min/max macros on MS Windows which conflict
-    # with the C++ std::min|max functions. Following switch disable the
-    # macros.
-    PRIVATE $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
-)
-
 # We have visibility support as described at https://gcc.gnu.org/wiki/Visibility
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
 
-# Set general compile options
-#----------------------------
+# Set general compile definitions and options
+#--------------------------------------------
+add_compile_definitions(
+    PRIVATE
+        # Having STRNLEN and STRNDUP are validated above. Give it to the program.
+        $<$<BOOL:${UPNPLIB_HAVE_STRNLEN}>:HAVE_STRNLEN>
+        $<$<BOOL:${UPNPLIB_HAVE_STRNDUP}>:HAVE_STRNDUP>
+        # General define DEBUG if configuration is Debug, otherwise define NDEBUG.
+        # TODO: manage setting NDEBUG is done by cmake by default. Check against it.
+        $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
+        # There are traditional min/max macros on MS Windows which conflict
+        # with the C++ std::min|max functions. Following switch disable the
+        # macros.
+        $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
+)
 add_compile_options(
         # all warnings as errors
         $<$<CXX_COMPILER_ID:MSVC>:/WX>

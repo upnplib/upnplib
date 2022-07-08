@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-07-07
+# Redistribution only with this Copyright remark. Last modified: 2022-07-16
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -84,46 +84,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "")
 # Unit Tests                    #
 #################################
 # The tests are build in reverse order. test_template.cpp will be build first.
-
-# miniserver
-#===========
-# Because we want to include the source file into the test to also test static
-# functions, we cannot use shared libraries due to symbol import/export
-# conflicts. We must use static libraries.
-add_executable(test_miniserver-pnst
-#----------------------------------
-        ./test_miniserver.cpp
-)
-target_include_directories(test_miniserver-pnst
-    PRIVATE
-        ./include
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
-)
-target_compile_definitions(test_miniserver-pnst
-    PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
-        UPNP_HAVE_CLIENT
-        UPNP_HAVE_WEBSERVER
-         UPNP_HAVE_SSDP
-         UPNP_HAVE_OPTSSDP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
-)
-target_link_libraries(test_miniserver-pnst
-    PRIVATE
-        pupnp_native_static
-        upnplib_native_static
-)
-add_test(NAME ctest_miniserver-pnst COMMAND test_miniserver-pnst
-)
 
 # sock
 #=====
@@ -539,8 +499,6 @@ target_include_directories(test_UpnpString-pnst
 target_compile_definitions(test_UpnpString-pnst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
-        HAVE_STRNLEN
-        HAVE_STRNDUP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 add_test(NAME ctest_UpnpString-pnst COMMAND test_UpnpString-pnst
@@ -1066,6 +1024,134 @@ target_include_directories(test_template
     PRIVATE
         ./include)
 add_test(NAME ctest_template COMMAND test_template)
+
+
+# miniserver
+#===========
+# Because we want to include the source file into the test to also test static
+# functions, we get definition conflicts if we use the libraries (function
+# already defined). That's why we have to compile from sources.
+#-----------------------------------------------------------------------------
+set(MINISERVER_SOURCE_FILES
+    ./test_miniserver.cpp
+
+    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+    $<$<PLATFORM_ID:Windows>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
+    $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_unix.cpp>
+
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/TimerThread.cpp
+
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/sock.cpp
+
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
+
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/parsetools.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/webserver.cpp
+
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
+
+    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_server.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/SSDPResultData.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/SSDPResultDataCallback.cpp
+
+    ${PUPNP_UPNP_SOURCE_DIR}/src/soap/soap_common.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/soap/soap_ctrlpt.cpp
+
+    ${PUPNP_UPNP_SOURCE_DIR}/src/uuid/uuid.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/uuid/sysdep.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/uuid/md5.cpp
+
+#    # ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpFileInfo.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpDiscovery.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpActionComplete.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpStateVarComplete.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
+#    ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
+    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
+)
+
+add_executable(test_miniserver-pnst
+#----------------------------------
+    ${MINISERVER_SOURCE_FILES}
+)
+target_include_directories(test_miniserver-pnst
+    PRIVATE
+        ./include
+        ${UPnPlib_SOURCE_DIR}
+        ${UPnPlib_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
+        # if pthreads4w isn't installed this path is empty. The linker
+        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+)
+target_compile_definitions(test_miniserver-pnst
+    PRIVATE
+        UPNPLIB_WITH_NATIVE_PUPNP
+        UPNP_HAVE_CLIENT
+        UPNP_HAVE_WEBSERVER
+         UPNP_HAVE_SSDP
+         UPNP_HAVE_OPTSSDP
+         UPNP_HAVE_SOAP
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+)
+target_link_libraries(test_miniserver-pnst
+    PRIVATE
+        $<$<PLATFORM_ID:Windows>:ixml_static>
+        upnplib_native_static
+)
+add_test(NAME ctest_miniserver-pnst COMMAND test_miniserver-pnst
+)
+
+add_executable(test_miniserver-ucst
+#----------------------------------
+        ${MINISERVER_SOURCE_FILES}
+)
+target_include_directories(test_miniserver-ucst
+    PRIVATE
+        ./include
+        ${UPnPlib_SOURCE_DIR}
+        ${UPnPlib_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
+        # if pthreads4w isn't installed this path is empty. The linker
+        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+)
+target_compile_definitions(test_miniserver-ucst
+    PRIVATE
+        UPNP_HAVE_CLIENT
+        UPNP_HAVE_WEBSERVER
+         UPNP_HAVE_SSDP
+         UPNP_HAVE_OPTSSDP
+         UPNP_HAVE_SOAP
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+)
+target_link_libraries(test_miniserver-ucst
+    PRIVATE
+        $<$<PLATFORM_ID:Windows>:ixml_static>
+        upnplib_native_static
+)
+add_test(NAME ctest_miniserver-ucst COMMAND test_miniserver-ucst
+)
 
 
 add_subdirectory(./upnplib)
