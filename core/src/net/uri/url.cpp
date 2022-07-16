@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-01
+// Redistribution only with this Copyright remark. Last modified: 2022-07-16
 //
 // TODO: Provide url_is_special() as flag
 
@@ -252,11 +252,12 @@ void Url::clean_and_copy_url_to_input() {
 
     // To remove any trailing C0 control or space, point to last valid char.
     auto it_trailing = m_given_url.end() - 1;
-    auto str_begin = m_given_url.begin() - 1;
-    while (it_trailing > str_begin && (unsigned char)*it_trailing <= ' ') {
-        if (it_trailing <= str_begin + 1)
+    auto str_begin = m_given_url.begin();
+    while (it_trailing >= str_begin && (unsigned char)*it_trailing <= ' ') {
+        if (it_trailing <= str_begin)
             break;
-        it_trailing--;
+        else
+            it_trailing--;
     }
     // std::clog << "  DEBUG: *it_trailing = '" << *it_trailing << "'\n";
 

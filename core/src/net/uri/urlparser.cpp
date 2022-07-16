@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-01
+// Redistribution only with this Copyright remark. Last modified: 2022-07-16
 
 #include "upnplib/urlparser.hpp"
 
@@ -54,7 +54,8 @@ std::array<unsigned short, 8> ipv6_parser(std::string_view a_input) {
 
         unsigned short value{};
         int length{};
-        while (length < 4 && std::isxdigit((unsigned char)*pointer)) {
+        while (length < 4 && pointer < a_input.end() &&
+               std::isxdigit((unsigned char)*pointer)) {
             unsigned char c = (unsigned char)*pointer;
             // c interpreted as hexadecimal number
             unsigned short v =
@@ -65,7 +66,7 @@ std::array<unsigned short, 8> ipv6_parser(std::string_view a_input) {
             length++;
         }
 
-        if (*pointer == (unsigned char)'.') {
+        if (pointer < a_input.end() && *pointer == (unsigned char)'.') {
             if (length == 0) {
                 failure_line = __LINE__;
                 goto throw_failure;
@@ -93,12 +94,14 @@ std::array<unsigned short, 8> ipv6_parser(std::string_view a_input) {
                     }
                 }
 
-                if (!std::isdigit((unsigned char)*pointer)) {
+                if (pointer < a_input.end() &&
+                    !std::isdigit((unsigned char)*pointer)) {
                     failure_line = __LINE__;
                     goto throw_failure;
                 }
 
-                while (std::isdigit((unsigned char)*pointer)) {
+                while (pointer < a_input.end() &&
+                       std::isdigit((unsigned char)*pointer)) {
                     // interpreted as decimal number
                     unsigned short number = *pointer - '0';
                     switch (ipv4Piece) {
@@ -133,7 +136,7 @@ std::array<unsigned short, 8> ipv6_parser(std::string_view a_input) {
 
             break;
 
-        } else if (*pointer == (unsigned char)':') {
+        } else if (pointer < a_input.end() && *pointer == (unsigned char)':') {
             pointer++;
             if (pointer >= a_input.end()) {
                 failure_line = __LINE__;
@@ -184,7 +187,7 @@ throw_failure:
 std::string host_parser(std::string_view a_input,
                         bool a_isNotSpecial = false) //
 {
-    if (a_input.front() == '[') {
+    if (!a_input.empty() && a_input.front() == '[') {
         if (a_input.back() != ']') {
             std::clog << "Error: missing closing ']'." << std::endl;
             throw std::invalid_argument("Missing closing ']': '" +

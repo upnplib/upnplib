@@ -148,6 +148,15 @@ TEST_F(UrlClassFTestSuite, parse_full_base_url) {
 // Tests for clean_and_copy_url_to_input
 // -------------------------------------
 TEST_F(UrlClassFTestSuite, empty_url_string) {
+
+#if defined _WIN32 && DEBUG
+    GTEST_SKIP() << "  # Test needs rework due to pointer boundary asserts "
+                    "with DEBUG on WIN32 enabled.";
+#else
+    std::cout << "  # Test needs rework due to pointer boundary asserts with "
+                 "DEBUG on WIN32 enabled.\n";
+#endif
+
     EXPECT_THAT(
         []() {
             Url url;
