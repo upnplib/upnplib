@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-16
+// Redistribution only with this Copyright remark. Last modified: 2022-07-20
 
 // Header file for portable definitions
 // ====================================
@@ -65,18 +65,13 @@
 // unix.
 #if _WIN32
   #include <fcntl.h>
+  #include <winsock2.h>
   #include <io.h>
   #define STDIN_FILENO 0
   #define STDOUT_FILENO 1
   #define STDERR_FILENO 2
-
-  #include <winsock2.h>
-  #define UPNPLIB_CLOSE_SOCKET closesocket
-  #define UPNPLIB_SOCKET_TYPE SOCKET
 #else // WIN32
   #include <unistd.h>
-  #define UPNPLIB_CLOSE_SOCKET close
-  #define UPNPLIB_SOCKET_TYPE int
 #endif // WIN32
 
 #ifdef _MSC_VER

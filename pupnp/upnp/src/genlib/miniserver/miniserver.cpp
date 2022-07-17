@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-06-27
+ * Redistribution only with this Copyright remark. Last modified: 2022-07-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -70,7 +70,6 @@
 #include <string.h>
 #include <sys/types.h>
 #include <algorithm> // for std::max()
-#include <iostream>  // DEBUG!
 
 #ifdef _WIN32
 #include "UpnpStdInt.hpp" // for ssize_t
@@ -649,7 +648,6 @@ static int get_port(
 #ifdef INTERNAL_WEB_SERVER
 static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
                             int ip_version) {
-    std::cerr << "DEBUG! executing pupnp::init_socket_suff()\n";
     char errorBuffer[ERROR_BUFFER_LEN];
     int sockError;
     sa_family_t domain;
@@ -750,7 +748,6 @@ static int do_bind(struct s_SocketStuff* s) {
     char errorBuffer[ERROR_BUFFER_LEN];
     uint16_t original_listen_port = s->try_port;
 
-    std::cerr << "DEBUG! executing pupnp::do_bind()\n";
     do {
         switch (s->ip_version) {
         case 4:
@@ -778,8 +775,6 @@ static int do_bind(struct s_SocketStuff* s) {
 #else
             errCode = errno;
 #endif
-            // BUG! Ingo: what is errno on _WIN32? Why to query
-            // WSAGetLastError() before?
             if (errno == EADDRINUSE) {
                 errCode = 1;
             }
@@ -893,7 +888,6 @@ static int get_miniserver_sockets(
     /*! [in] port on which the server is listening for incoming
      * IPv6 ULA or GUA connections. */
     uint16_t listen_port6UlaGua) {
-    std::cerr << "DEBUG! executing pupnp::get_miniserver_sockets()\n";
     int ret_val{UPNP_E_INTERNAL_ERROR};
     int err_init_4;
     int err_init_6;
@@ -1064,7 +1058,6 @@ int StartMiniServer(
     /*! [in,out] Port on which the server listens for incoming
      * IPv6 ULA or GUA connections. */
     [[maybe_unused]] uint16_t* listen_port6UlaGua) {
-    std::cerr << "DEBUG! executing pupnp::StartMiniServer()\n";
     int ret_code;
     int count;
     int max_count = 10000;

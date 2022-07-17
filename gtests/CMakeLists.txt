@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-07-17
+# Redistribution only with this Copyright remark. Last modified: 2022-07-28
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -790,7 +790,8 @@ target_include_directories(test_upnplib_gtest_tools
         PRIVATE ${UPnPlib_SOURCE_DIR}/include
 )
 target_compile_definitions(test_upnplib_gtest_tools
-        PRIVATE UPNPLIB_SHARED
+        PRIVATE
+            UPNPLIB_SHARED
 )
 target_link_libraries(test_upnplib_gtest_tools
         PRIVATE upnplib_gtest_tools_shared
@@ -817,7 +818,10 @@ add_executable(test_upnptools-pnsh
 target_include_directories(test_upnptools-pnsh
         ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
 )
-target_compile_definitions(test_upnptools-pnsh PRIVATE UPNPLIB_SHARED)
+target_compile_definitions(test_upnptools-pnsh
+    PRIVATE
+        UPNPLIB_SHARED
+)
 target_link_libraries(test_upnptools-pnsh
     PRIVATE
         # pupnp native shared: prefix -pnsh
@@ -852,7 +856,10 @@ add_executable(test_upnptools-ucsh
 target_include_directories(test_upnptools-ucsh
         ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
 )
-target_compile_definitions(test_upnptools-ucsh PRIVATE UPNPLIB_SHARED)
+target_compile_definitions(test_upnptools-ucsh
+    PRIVATE
+        UPNPLIB_SHARED
+)
 target_link_libraries(test_upnptools-ucsh
     PRIVATE
         # upnplib compatible shared: prefix -ucsh
@@ -886,7 +893,10 @@ add_executable(test_upnptools-unsh
 target_include_directories(test_upnptools-unsh
         ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
 )
-target_compile_definitions(test_upnptools-unsh PRIVATE UPNPLIB_SHARED)
+target_compile_definitions(test_upnptools-unsh
+    PRIVATE
+        UPNPLIB_SHARED
+)
 target_link_libraries(test_upnptools-unsh
     PRIVATE
         upnplib_native_shared # prefix -unsh
@@ -929,8 +939,8 @@ target_include_directories(test_simple-pnsh
 )
 target_compile_definitions(test_simple-pnsh
     PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
         UPNPLIB_SHARED
+        UPNPLIB_WITH_NATIVE_PUPNP
 )
 target_link_libraries(test_simple-pnsh
     PRIVATE
@@ -967,7 +977,10 @@ add_executable(test_simple-ucsh
 target_include_directories(test_simple-ucsh
     ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
 )
-target_compile_definitions(test_simple-ucsh PRIVATE UPNPLIB_SHARED)
+target_compile_definitions(test_simple-ucsh
+    PRIVATE
+        UPNPLIB_SHARED
+)
 target_link_libraries(test_simple-ucsh
     PRIVATE
         upnplib_compa_shared # prefix -ucsh
@@ -999,7 +1012,10 @@ add_executable(test_simple-unsh
 target_include_directories(test_simple-unsh
     ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
 )
-target_compile_definitions(test_simple-unsh PRIVATE UPNPLIB_SHARED)
+target_compile_definitions(test_simple-unsh
+    PRIVATE
+        UPNPLIB_SHARED
+)
 target_link_libraries(test_simple-unsh
     PRIVATE
         upnplib_native_shared # prefix -unsh
@@ -1115,7 +1131,7 @@ target_compile_definitions(test_miniserver-pnsh
 )
 target_link_libraries(test_miniserver-pnsh
     PRIVATE
-        $<$<PLATFORM_ID:Windows>:ixml_static>
+        $<$<PLATFORM_ID:Windows>:ixml_shared>
         upnplib_native_shared
 )
 add_test(NAME ctest_miniserver-pnsh COMMAND test_miniserver-pnsh
@@ -1148,7 +1164,7 @@ target_compile_definitions(test_miniserver-ucsh
 )
 target_link_libraries(test_miniserver-ucsh
     PRIVATE
-        $<$<PLATFORM_ID:Windows>:ixml_static>
+        $<$<PLATFORM_ID:Windows>:ixml_shared>
         upnplib_native_shared
 )
 add_test(NAME ctest_miniserver-ucsh COMMAND test_miniserver-ucsh

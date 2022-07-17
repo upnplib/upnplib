@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-10
+// Redistribution only with this Copyright remark. Last modified: 2022-07-24
 
 // This test should always run, reporting no failure
 
@@ -16,7 +16,7 @@
     ASSERT_LE((VAL), (MAX))
 
 namespace upnplib {
-bool old_code{false}; // Managed in upnplib_gtest_main.inc
+bool old_code{true}; // Managed in upnplib_gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 // testsuite with fixtures
@@ -78,24 +78,26 @@ TEST_F(EmptyFixtureTestSuite, empty_gtest_with_fixture) {}
 // simple testsuite without fixtures
 //----------------------------------
 TEST(EmptyTestSuite, empty_gtest) {
+    // SKIP on Github Actions
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
     // GTEST_SKIP_("to show this feature");
     // GTEST_SKIP() << "to show this feature\n";
 
-    // SKIP on Github Actions
-    // char* github_action = std::getenv("GITHUB_ACTIONS");
-    // if(github_action) { GTEST_SKIP()
-    //    << "  to show this feature";
-    //}
-
-#ifdef OLD_TEST
-    // Place tests for old code here
-    std::cout << "  BUG! Compiling tests compatible for OLD PUPNP library.\n";
-    // or
-    std::cout << "  OPT: Optimization or Option to improve the program.\n";
-#else
-    // Place tests for current code here
-    std::cout << "  # Compiling tests for curent code base.";
-#endif
+    if (old_code) {
+        // Place tests for old_code here
+        std::cout << "\x1b[38;5;226m[ BUG      ]\x1b[38;5;255m "
+                     "This old_code bug must be fixed in new_code.\n";
+        std::cout << "\x1b[38;5;226m[ BUGFIX   ]\x1b[38;5;255m "
+                     "This old_code bug is fixed in new_code.\n";
+        // or
+        std::cout << "\x1b[38;5;226m[ OPT      ]\x1b[38;5;255m "
+                     "Optimization or Option needed to improve the program.\n";
+    } else {
+        // Place tests for new_code here
+        std::cout << "  # Compiling tests for new_code.\n";
+    }
 }
 
 } // namespace upnplib
@@ -104,6 +106,6 @@ TEST(EmptyTestSuite, empty_gtest) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     // ::testing::InitGoogleMock(&argc, argv);
-    // return RUN_ALL_TESTS();
-#include "upnplib/gtest_main.inc"
+    return RUN_ALL_TESTS();
+    // #include "upnplib/gtest_main.inc"
 }

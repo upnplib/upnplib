@@ -7,7 +7,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-27
+ * Redistribution only with this Copyright remark. Last modified: 2022-07-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,6 +42,7 @@
 #include "upnp.hpp"
 
 #include <errno.h>
+#include <string.h>
 
 #define GEMD_OUT_OF_MEMORY -1
 #define EVENT_TIMEDOUT -2
@@ -108,6 +109,10 @@ void linecopylen(
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #endif /* _WIN32 */
+#else  /* !defined(__cplusplus) || defined(UPNP_USE_MSVCPP) */
+#define strerror_r(a, b, c)                                                    \
+    strncpy((b), strerror((a)), (c));                                          \
+    (b)[(c)-1] = '\0'
 #endif /* !defined(__cplusplus) || defined(UPNP_USE_MSVCPP) */
 
 #endif /* UPNPLIB_UTIL_HPP */

@@ -1,0 +1,6 @@
+// Some some little helper code snippets
+//--------------------------------------
+
+    // Output text error message of errno
+    std::cerr << "DEBUG! bind() errno " << errno << " = ";
+    perror(nullptr);

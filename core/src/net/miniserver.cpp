@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-07-14
+ * Redistribution only with this Copyright remark. Last modified: 2022-07-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -67,10 +67,8 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/types.h>
 #include <algorithm> // for std::max()
-#include <iostream>  // DEBUG!
 
 #ifdef _WIN32
 #include "UpnpStdInt.hpp" // for ssize_t
@@ -534,6 +532,9 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
 static void RunMiniServer(
     /*! [in] Socket Array. */
     MiniServerSockArray* miniSock) {
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+               "Inside upnplib::RunMiniServer()\n");
+
     char errorBuffer[ERROR_BUFFER_LEN];
     fd_set expSet;
     fd_set rdSet;
@@ -627,6 +628,9 @@ static int get_port(
     SOCKET sockfd,
     /*! [out] The port value if successful, otherwise, untouched. */
     uint16_t* port) {
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+               "Inside upnplib::get_port()\n");
+
     struct sockaddr_storage sockinfo;
     socklen_t len;
     int code;
@@ -648,15 +652,25 @@ static int get_port(
     return 0;
 }
 
+/*!
+ * \brief Get valid sockets.
+ *
+ * An empty text_addr will be translated to a valid sock addr = 0 that
+ * binds to all local ip addresses.
+ * \return 1 or WSANOTINITIALISED on error, 0 if successful.
+ */
 #ifdef INTERNAL_WEB_SERVER
 static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
                             int ip_version) {
-    std::cerr << "DEBUG! executing upnplib::init_socket_suff()\n";
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+               "Inside upnplib::init_socket_suff() for IPv%d.\n", ip_version);
+
     char errorBuffer[ERROR_BUFFER_LEN];
     int sockError;
     sa_family_t domain;
     void* addr; // This holds a pointer to sin_addr, not a value
     int reuseaddr_on = MINISERVER_REUSEADDR;
+    int errval{1};
 
     memset(s, 0, sizeof *s);
     s->fd = INVALID_SOCKET;
@@ -685,17 +699,29 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
         goto error;
         break;
     }
-    if (inet_pton(domain, text_addr, addr) != 1) {
-        UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+    // An empty text_addr will be translated to a valid sock addr = 0 that
+    // binds to all local ip addresses.
+    if (text_addr[0] != '\0' && inet_pton(domain, text_addr, addr) != 1) {
+        UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
                    "init_socket_suff(): Invalid ip address: %s.\n", text_addr);
         goto error;
     }
     s->fd = upnplib::sys_socket_h->socket(domain, SOCK_STREAM, 0);
 
     if (s->fd == INVALID_SOCKET) {
+#ifdef _WIN32
+        // check if MS Windows sockets are initialized
+        if (WSAGetLastError() == WSANOTINITIALISED) {
+            UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
+                       "init_socket_suff(): WSAStartup() wasn't called to "
+                       "initialize use of sockets\n");
+            errval = WSANOTINITIALISED;
+            goto error;
+        }
+#endif
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-                   "init_socket_suff(): IPv%c socket not available: "
+                   "init_socket_suff(): IPv%d socket not available: "
                    "%s\n",
                    ip_version, errorBuffer);
         goto error;
@@ -739,21 +765,24 @@ error:
     }
     s->fd = INVALID_SOCKET;
 
-    return 1;
+    return errval;
 }
 
 /*
  * s->port will be one more than the used port in the end. This is important,
  * in case this function is called again.
+ * It is expected to have a prechecked valid parameter.
  */
 static int do_bind(struct s_SocketStuff* s) {
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+               "Inside upnplib::do_bind()\n");
+
     int ret_val = UPNP_E_SUCCESS;
     int bind_error;
-    int errCode = 0;
+    int repeat = 0;
     char errorBuffer[ERROR_BUFFER_LEN];
     uint16_t original_listen_port = s->try_port;
 
-    std::cerr << "DEBUG! executing upnplib::do_bind()\n";
     do {
         switch (s->ip_version) {
         case 4:
@@ -762,6 +791,7 @@ static int do_bind(struct s_SocketStuff* s) {
             // may be undefined [-Werror=sequence-point]
             // s->serverAddr4->sin_port = htons(s->try_port++);
             s->serverAddr4->sin_port = htons(s->try_port);
+            s->actual_port = s->try_port;
             s->try_port = s->try_port + 1;
             break;
         case 6:
@@ -770,6 +800,7 @@ static int do_bind(struct s_SocketStuff* s) {
             // may be undefined [-Werror=sequence-point]
             // s->serverAddr6->sin6_port = htons(s->try_port++);
             s->serverAddr6->sin6_port = htons(s->try_port);
+            s->actual_port = s->try_port;
             s->try_port = s->try_port + 1;
             break;
         default:
@@ -781,26 +812,16 @@ static int do_bind(struct s_SocketStuff* s) {
 
         bind_error =
             upnplib::sys_socket_h->bind(s->fd, s->serverAddr, s->address_len);
-        if (bind_error == -1) {
-#ifdef _WIN32
-            errCode = WSAGetLastError();
-#else
-            errCode = errno;
-#endif
-            // BUG! Ingo: what is errno on _WIN32? Why to query
-            // WSAGetLastError() before?
-            if (errno == EADDRINUSE) {
-                errCode = 1;
-            }
-        } else {
-            errCode = 0;
-        }
-    } while (errCode != 0 && s->try_port >= original_listen_port);
-    if (bind_error == SOCKET_ERROR) {
+        if (bind_error == -1)
+            repeat = (errno == EADDRINUSE) ? 1 : 0;
+
+    } while (repeat != 0 && s->try_port >= original_listen_port);
+
+    if (bind_error == -1) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-                   "get_miniserver_sockets: "
-                   "Error in IPv%d bind(): %s\n",
+                   "do_bind(): "
+                   "Error with IPv%d returned from ::bind() = %s.\n",
                    s->ip_version, errorBuffer);
         /* Bind failed. */
         ret_val = UPNP_E_SOCKET_BIND;
@@ -814,24 +835,29 @@ error:
 }
 
 static int do_listen(struct s_SocketStuff* s) {
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+               "Inside upnplib::do_listen()\n");
+
     int ret_val;
     int listen_error;
     int port_error;
     char errorBuffer[ERROR_BUFFER_LEN];
 
     listen_error = upnplib::sys_socket_h->listen(s->fd, SOMAXCONN);
-    if (listen_error == SOCKET_ERROR) {
+    if (listen_error == -1) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-                   "do_listen(): Error in IPv%d listen(): %s\n", s->ip_version,
+                   "do_listen(): Error in IPv%d listen(): %s.\n", s->ip_version,
                    errorBuffer);
         ret_val = UPNP_E_LISTEN;
         goto error;
     }
     port_error = get_port(s->fd, &s->actual_port);
     if (port_error < 0) {
+        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-                   "do_listen(): Error in get_port().\n");
+                   "do_listen(): Error in IPv%d get_port(): %s.\n",
+                   s->ip_version, errorBuffer);
         ret_val = UPNP_E_INTERNAL_ERROR;
         goto error;
     }
@@ -843,12 +869,18 @@ error:
 }
 
 static int do_reinit(struct s_SocketStuff* s) {
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+               "Inside upnplib::do_reinit()\n");
+
     sock_close(s->fd);
 
     return init_socket_suff(s, s->text_addr, s->ip_version);
 }
 
 static int do_bind_listen(struct s_SocketStuff* s) {
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+               "Inside upnplib::do_bind_listen()\n");
+
     int ret_val;
     int ok = 0;
     int original_port = s->try_port;
@@ -862,6 +894,7 @@ static int do_bind_listen(struct s_SocketStuff* s) {
         if (ret_val) {
             if (errno == EADDRINUSE) {
                 do_reinit(s);
+                s->try_port = original_port;
                 continue;
             }
             goto error;
@@ -902,7 +935,9 @@ static int get_miniserver_sockets(
     /*! [in] port on which the server is listening for incoming
      * IPv6 ULA or GUA connections. */
     uint16_t listen_port6UlaGua) {
-    std::cerr << "DEBUG! executing upnplib::get_miniserver_sockets()\n";
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+               "Inside upnplib::get_miniserver_sockets()\n");
+
     int ret_val{UPNP_E_INTERNAL_ERROR};
     int err_init_4;
     int err_init_6;
@@ -919,6 +954,12 @@ static int get_miniserver_sockets(
     err_init_6UlaGua = init_socket_suff(&ss6UlaGua, gIF_IPV6_ULA_GUA, 6);
     ss6.serverAddr6->sin6_scope_id = gIF_INDEX;
     /* Check what happened. */
+#ifdef _WIN32
+    if (err_init_4 == WSANOTINITIALISED) {
+        ret_val = UPNP_E_INIT_FAILED;
+        goto error;
+    }
+#endif
     if (err_init_4 && (err_init_6 || err_init_6UlaGua)) {
         UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
                    "get_miniserver_sockets: no protocols available\n");
@@ -966,8 +1007,11 @@ static int get_miniserver_sockets(
             goto error;
         }
     }
+    // BUG! Ingo: the following condition may be wrong, e.g. with ss4.fd ==
+    // INVALID_SOCKET and ENABLE_IPV6 disabled but also others.
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "get_miniserver_sockets: bind successful\n");
+               // "get_miniserver_sockets: bind successful\n");
+               "get_miniserver_sockets: finished\n");
     out->miniServerPort4 = ss4.actual_port;
     out->miniServerPort6 = ss6.actual_port;
     out->miniServerPort6UlaGua = ss6UlaGua.actual_port;
@@ -1005,6 +1049,9 @@ error:
 static int get_miniserver_stopsock(
     /*! [in] Miniserver Socket Array. */
     MiniServerSockArray* out) {
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+               "Inside upnplib::get_miniserver_stopsock()\n");
+
     char errorBuffer[ERROR_BUFFER_LEN];
     struct sockaddr_in stop_sockaddr;
     SOCKET miniServerStopSock = 0;
@@ -1073,7 +1120,9 @@ int StartMiniServer(
     /*! [in,out] Port on which the server listens for incoming
      * IPv6 ULA or GUA connections. */
     [[maybe_unused]] uint16_t* listen_port6UlaGua) {
-    std::cerr << "DEBUG! executing upnplib::StartMiniServer()\n";
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+               "Inside upnplib::StartMiniServer()\n");
+
     int ret_code;
     int count;
     int max_count = 10000;
@@ -1177,6 +1226,9 @@ int StartMiniServer(
 }
 
 int StopMiniServer() {
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+               "Inside upnplib::StopMiniServer()\n");
+
     char errorBuffer[ERROR_BUFFER_LEN];
     socklen_t socklen = sizeof(struct sockaddr_in);
     SOCKET sock;
@@ -1191,7 +1243,7 @@ int StopMiniServer() {
     default:
         return 0;
     }
-    sock = socket(AF_INET, SOCK_DGRAM, 0);
+    sock = upnplib::sys_socket_h->socket(AF_INET, SOCK_DGRAM, 0);
     if (sock == INVALID_SOCKET) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,

@@ -1,4 +1,5 @@
 Next steps to do:
+* Check usage of fields in struct s_SocketStuff.serverAddr4
 * Remove core/src/genlib subdirectory and move 'struct SockAddr'
 * Move ./build/_deps/pthreads4w-build/pthread* etc. to default build directories.
 * Make UpnpPrintf() usable without build type DEBUG.
