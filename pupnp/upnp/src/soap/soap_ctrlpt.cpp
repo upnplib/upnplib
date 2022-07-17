@@ -783,7 +783,8 @@ error_handler:
  ****************************************************************************/
 int SoapGetServiceVarStatus(char* action_url, char* var_name,
                             char** var_value) {
-#ifdef UPNPLIB_PUPNP_COMPATIBLE
+#ifdef UPNPLIB_PUPNP_BUG
+    // Ingo - Error old code: uninitialized 'const host|path' [-fpermissive].
     const memptr host; /* value for HOST header */
     const memptr path; /* ctrl path in first line in msg */
 #else

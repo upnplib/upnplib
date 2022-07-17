@@ -238,9 +238,9 @@ static int dispatch_request(
     http_message_t* request;
     MiniServerCallback callback;
     WebCallback_HostValidate host_validate_callback = 0;
-#ifdef UPNPLIB_PUPNP_COMPATIBLE
-    // error: ‘cookie’ may be used uninitialized in this function
-    // [-Werror=maybe-uninitialized]
+#ifdef UPNPLIB_PUPNP_BUG
+    // Ingo - Error old code: 'cookie' may be used uninitialized in this
+    // function [-Werror=maybe-uninitialized].
     void* cookie;
 #else
     void* cookie{};

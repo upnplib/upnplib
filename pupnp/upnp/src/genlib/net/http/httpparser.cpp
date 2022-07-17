@@ -1166,14 +1166,17 @@ parse_status_t matchstr(char* str, size_t slen, const char* fmt, ...) {
  *  void
  ************************************************************************/
 static UPNP_INLINE void parser_init(http_parser_t* parser) {
-#ifdef UPNPLIB_PUPNP_COMPATIBLE
-    // argument 1 null where non-null expected [-Werror=nonnull]
+    // clang-format off
+// #ifdef UPNPLIB_PUPNP_BUG
+    // Ingo - Error old code: argument 1 null where non-null expected
+    // [-Werror=nonnull]
     memset(parser, 0, sizeof(http_parser_t));
-#else
-    if (parser == nullptr)
-        return;
-    memset(parser, 0, sizeof(http_parser_t));
-#endif
+// #else
+    //    if (parser == nullptr)
+    //        return;
+    //    memset(parser, 0, sizeof(http_parser_t));
+// #endif
+    // clang-format on
     parser->http_error_code = HTTP_BAD_REQUEST; /* err msg by default */
     parser->ent_position = ENTREAD_DETERMINE_READ_METHOD;
     parser->valid_ssdp_notify_hack = 0;

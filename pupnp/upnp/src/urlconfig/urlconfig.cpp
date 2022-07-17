@@ -361,11 +361,16 @@ int configure_urlbase(IXML_Document* doc, const struct sockaddr* serverAddr,
     char* new_alias{};
     char* xml_str{};
     int err_code;
-#ifdef UPNPLIB_PUPNP_COMPATIBLE
+    // clang-format off
+// #ifdef UPNPLIB_PUPNP_BUG
+    // Ingo - Error old code: LINE_SIZE may have wrong length. We have to add
+    // the string length of the port that is strlen(".65535") == 6. Don't fixed
+    // it due to compatibility.
     char ipaddr_port[LINE_SIZE];
-#else
-    char ipaddr_port[INET6_ADDRSTRLEN + 6]; // + port: strlen(".65535") == 6
-#endif
+// #else
+//     char ipaddr_port[INET6_ADDRSTRLEN + 6];
+// #endif
+    // clang-format on
     /* get IP address and port */
     err_code = addrToString(serverAddr, ipaddr_port, sizeof(ipaddr_port));
     if (err_code != UPNP_E_SUCCESS) {

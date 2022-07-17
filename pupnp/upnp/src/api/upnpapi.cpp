@@ -982,9 +982,9 @@ int UpnpRegisterRootDevice2(Upnp_DescType descriptionType,
         goto exit_function;
     }
 
-#ifdef UPNPLIB_PUPNP_COMPATIBLE
-    // output may be truncated copying 179 bytes from a string of length 179
-    // [-Werror=stringop-truncation]
+#ifdef UPNPLIB_PUPNP_BUG
+    // Ingo - Error old code: output may be truncated copying 179 bytes from a
+    // string of length 179 [-Werror=stringop-truncation].
     strncpy(HInfo->LowerDescURL, HInfo->DescURL,
             sizeof(HInfo->LowerDescURL) - 1);
 #else
@@ -3651,9 +3651,9 @@ int UpnpAddVirtualDir(const char* newDirName, const void* cookie,
         *oldcookie = NULL;
     pNewVirtualDir->cookie = cookie;
     memset(pNewVirtualDir->dirName, 0, sizeof(pNewVirtualDir->dirName));
-#ifdef UPNPLIB_PUPNP_COMPATIBLE
-    // output may be truncated copying 255 bytes from a string of length 255
-    // [-Werror=stringop-truncation]
+#ifdef UPNPLIB_PUPNP_BUG
+    // Ingo - Error old code: output may be truncated copying 255 bytes from a
+    // string of length 255 [-Werror=stringop-truncation].
     strncpy(pNewVirtualDir->dirName, dirName,
             sizeof(pNewVirtualDir->dirName) - 1);
 #else

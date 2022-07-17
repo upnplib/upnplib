@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-07-16
+# Redistribution only with this Copyright remark. Last modified: 2022-07-17
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -1088,11 +1088,11 @@ set(MINISERVER_SOURCE_FILES
     $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 )
 
-add_executable(test_miniserver-pnst
+add_executable(test_miniserver-pnsh
 #----------------------------------
     ${MINISERVER_SOURCE_FILES}
 )
-target_include_directories(test_miniserver-pnst
+target_include_directories(test_miniserver-pnsh
     PRIVATE
         ./include
         ${UPnPlib_SOURCE_DIR}
@@ -1106,29 +1106,27 @@ target_include_directories(test_miniserver-pnst
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_miniserver-pnst
+target_compile_definitions(test_miniserver-pnsh
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
         UPNP_HAVE_CLIENT
         UPNP_HAVE_WEBSERVER
-         UPNP_HAVE_SSDP
-         UPNP_HAVE_OPTSSDP
-         UPNP_HAVE_SOAP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_miniserver-pnst
+target_link_libraries(test_miniserver-pnsh
     PRIVATE
         $<$<PLATFORM_ID:Windows>:ixml_static>
-        upnplib_native_static
+        upnplib_native_shared
 )
-add_test(NAME ctest_miniserver-pnst COMMAND test_miniserver-pnst
+add_test(NAME ctest_miniserver-pnsh COMMAND test_miniserver-pnsh
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
-add_executable(test_miniserver-ucst
+add_executable(test_miniserver-ucsh
 #----------------------------------
         ${MINISERVER_SOURCE_FILES}
 )
-target_include_directories(test_miniserver-ucst
+target_include_directories(test_miniserver-ucsh
     PRIVATE
         ./include
         ${UPnPlib_SOURCE_DIR}
@@ -1142,21 +1140,19 @@ target_include_directories(test_miniserver-ucst
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_miniserver-ucst
+target_compile_definitions(test_miniserver-ucsh
     PRIVATE
         UPNP_HAVE_CLIENT
         UPNP_HAVE_WEBSERVER
-         UPNP_HAVE_SSDP
-         UPNP_HAVE_OPTSSDP
-         UPNP_HAVE_SOAP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_miniserver-ucst
+target_link_libraries(test_miniserver-ucsh
     PRIVATE
         $<$<PLATFORM_ID:Windows>:ixml_static>
-        upnplib_native_static
+        upnplib_native_shared
 )
-add_test(NAME ctest_miniserver-ucst COMMAND test_miniserver-ucst
+add_test(NAME ctest_miniserver-ucsh COMMAND test_miniserver-ucsh
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 
