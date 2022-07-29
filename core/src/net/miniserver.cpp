@@ -69,6 +69,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <algorithm> // for std::max()
+#include <cstring>
 
 #ifdef _WIN32
 #include "UpnpStdInt.hpp" // for ssize_t
@@ -466,16 +467,15 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
     SOCKET asock;
     socklen_t clientLen;
     struct sockaddr_storage clientAddr;
-    char errorBuffer[ERROR_BUFFER_LEN];
 
     if (lsock != INVALID_SOCKET && FD_ISSET(lsock, set)) {
         clientLen = sizeof(clientAddr);
         asock = upnplib::sys_socket_h->accept(
             lsock, (struct sockaddr*)&clientAddr, &clientLen);
         if (asock == INVALID_SOCKET) {
-            strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
             UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-                       "miniserver: Error in accept(): %s\n", errorBuffer);
+                       "miniserver: Error in accept(): %s\n",
+                       std::strerror(errno));
         } else {
             upnplib::schedule_request_job(asock, (struct sockaddr*)&clientAddr);
         }
@@ -535,7 +535,6 @@ static void RunMiniServer(
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "Inside upnplib::RunMiniServer()\n");
 
-    char errorBuffer[ERROR_BUFFER_LEN];
     fd_set expSet;
     fd_set rdSet;
     SOCKET maxMiniSock;
@@ -580,9 +579,8 @@ static void RunMiniServer(
             continue;
         }
         if (ret == SOCKET_ERROR) {
-            strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
             UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
-                       "Error in select(): %s\n", errorBuffer);
+                       "Error in select(): %s\n", std::strerror(errno));
             continue;
         } else {
             upnplib::web_server_accept(miniSock->miniServerSock4, &rdSet);
@@ -665,7 +663,6 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "Inside upnplib::init_socket_suff() for IPv%d.\n", ip_version);
 
-    char errorBuffer[ERROR_BUFFER_LEN];
     int sockError;
     sa_family_t domain;
     void* addr; // This holds a pointer to sin_addr, not a value
@@ -719,11 +716,10 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
             goto error;
         }
 #endif
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                    "init_socket_suff(): IPv%d socket not available: "
                    "%s\n",
-                   ip_version, errorBuffer);
+                   ip_version, std::strerror(errno));
         goto error;
     } else if (ip_version == 6) {
         int onOff = 1;
@@ -731,11 +727,10 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
         sockError = setsockopt(s->fd, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&onOff,
                                sizeof(onOff));
         if (sockError == SOCKET_ERROR) {
-            strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
             UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                        "init_socket_suff(): unable to set IPv6 "
                        "socket protocol: %s\n",
-                       errorBuffer);
+                       std::strerror(errno));
             goto error;
         }
     }
@@ -748,11 +743,10 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
         sockError = setsockopt(s->fd, SOL_SOCKET, SO_REUSEADDR,
                                (const char*)&reuseaddr_on, sizeof(int));
         if (sockError == SOCKET_ERROR) {
-            strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
             UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                        "init_socket_suff(): unable to set "
                        "SO_REUSEADDR: %s\n",
-                       errorBuffer);
+                       std::strerror(errno));
             goto error;
         }
     }
@@ -780,7 +774,6 @@ static int do_bind(struct s_SocketStuff* s) {
     int ret_val = UPNP_E_SUCCESS;
     int bind_error;
     int repeat = 0;
-    char errorBuffer[ERROR_BUFFER_LEN];
     uint16_t original_listen_port = s->try_port;
 
     do {
@@ -818,11 +811,10 @@ static int do_bind(struct s_SocketStuff* s) {
     } while (repeat != 0 && s->try_port >= original_listen_port);
 
     if (bind_error == -1) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                    "do_bind(): "
                    "Error with IPv%d returned from ::bind() = %s.\n",
-                   s->ip_version, errorBuffer);
+                   s->ip_version, std::strerror(errno));
         /* Bind failed. */
         ret_val = UPNP_E_SOCKET_BIND;
         goto error;
@@ -841,23 +833,20 @@ static int do_listen(struct s_SocketStuff* s) {
     int ret_val;
     int listen_error;
     int port_error;
-    char errorBuffer[ERROR_BUFFER_LEN];
 
     listen_error = upnplib::sys_socket_h->listen(s->fd, SOMAXCONN);
     if (listen_error == -1) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                    "do_listen(): Error in IPv%d listen(): %s.\n", s->ip_version,
-                   errorBuffer);
+                   std::strerror(errno));
         ret_val = UPNP_E_LISTEN;
         goto error;
     }
     port_error = get_port(s->fd, &s->actual_port);
     if (port_error < 0) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                    "do_listen(): Error in IPv%d get_port(): %s.\n",
-                   s->ip_version, errorBuffer);
+                   s->ip_version, std::strerror(errno));
         ret_val = UPNP_E_INTERNAL_ERROR;
         goto error;
     }
@@ -1052,16 +1041,14 @@ static int get_miniserver_stopsock(
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "Inside upnplib::get_miniserver_stopsock()\n");
 
-    char errorBuffer[ERROR_BUFFER_LEN];
     struct sockaddr_in stop_sockaddr;
     SOCKET miniServerStopSock = 0;
     int ret = 0;
 
     miniServerStopSock = upnplib::sys_socket_h->socket(AF_INET, SOCK_DGRAM, 0);
     if (miniServerStopSock == INVALID_SOCKET) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
-                   "Error in socket(): %s\n", errorBuffer);
+                   "Error in socket(): %s\n", std::strerror(errno));
         return UPNP_E_OUTOF_SOCKET;
     }
     /* Bind to local socket. */
@@ -1229,7 +1216,6 @@ int StopMiniServer() {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "Inside upnplib::StopMiniServer()\n");
 
-    char errorBuffer[ERROR_BUFFER_LEN];
     socklen_t socklen = sizeof(struct sockaddr_in);
     SOCKET sock;
     struct sockaddr_in ssdpAddr;
@@ -1245,10 +1231,9 @@ int StopMiniServer() {
     }
     sock = upnplib::sys_socket_h->socket(AF_INET, SOCK_DGRAM, 0);
     if (sock == INVALID_SOCKET) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,
                    "SSDP_SERVER: StopSSDPServer: Error in socket() %s\n",
-                   errorBuffer);
+                   std::strerror(errno));
         return 0;
     }
     while (gMServState != (MiniServerState)MSERV_IDLE) {

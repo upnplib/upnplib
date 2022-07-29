@@ -110,9 +110,9 @@ void linecopylen(
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #endif /* _WIN32 */
 #else  /* !defined(__cplusplus) || defined(UPNP_USE_MSVCPP) */
-#define strerror_r(a, b, c)                                                    \
-    strncpy((b), strerror((a)), (c));                                          \
-    (b)[(c)-1] = '\0'
+// clang-format off
+#define strerror_r(a, b, c) strncpy((b), strerror((a)), (c)); (b)[(c)-1] = '\0'
+// clang-format on
 #endif /* !defined(__cplusplus) || defined(UPNP_USE_MSVCPP) */
 
 #endif /* UPNPLIB_UTIL_HPP */
