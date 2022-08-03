@@ -93,7 +93,7 @@ TEST(EmptyTestSuite, empty_gtest) {
 
     if (old_code) {
         // Place tests for old_code here
-        std::cout << CRED "[ BUG      ]" CRES
+        std::cout << CYEL "[ BUG      ]" CRES
                   << " This old_code bug must be fixed in new_code.\n";
         std::cout << CYEL "[ BUGFIX   ]" CRES
                   << " This old_code bug is fixed in new_code.\n";

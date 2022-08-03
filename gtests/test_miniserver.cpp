@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-02
+// Redistribution only with this Copyright remark. Last modified: 2022-08-03
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
@@ -223,6 +223,7 @@ class MiniServerFTestSuite : public ::testing::Test {
 typedef MiniServerFTestSuite StartMiniServerFTestSuite;
 typedef MiniServerFTestSuite DoBindFTestSuite;
 typedef MiniServerFTestSuite StopMiniServerFTestSuite;
+typedef MiniServerFTestSuite RunMiniServerFTestSuite;
 
 //
 // This test uses real connections and isn't portable. It is only for humans to
@@ -1594,7 +1595,7 @@ TEST(RunMiniServerTestSuite, receive_from_stopSock_nothing_todo) {
         EXPECT_EQ(NS::receive_from_stopSock(sockfd, &rdSet), 1);
 }
 
-TEST(RunMiniServerTestSuite, RunMiniServer) {
+TEST_F(RunMiniServerFTestSuite, RunMiniServer) {
     // This would start some other threads. We run into dynamic problems with
     // parallel running threads here. For example running the miniserver with
     // schedule_request_job() in a new thread cannot be finished before the
@@ -1662,7 +1663,7 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
                                 Return(8)));
         }
 
-        std::cout << CRED "[ BUG      ]" CRES
+        std::cout << CYEL "[ BUG      ]" CRES
                   << " Unit must not expect its argument MiniServerSockArray* "
                      "to be on the heap and free it.\n";
 
