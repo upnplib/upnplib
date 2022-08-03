@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-07-28
+// Redistribution only with this Copyright remark. Last modified: 2022-08-02
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
@@ -96,7 +96,15 @@ miniserver stopsock(). RunMiniServer() polls receive_from_stopSock() for an
 incomming message "ShutDown" send to stopsock bound to "127.0.0.1".
 
    RunMiniServer()
-   |__ block until receive_from_stopSock()
+   |__ while(receive_from_stopSock() not "ShutDown")
+   |   |__ select()
+   |   |__ web_server_accept()
+   |   |   |__ accept()
+   |   |   |__ schedule_request_job()
+   |   |
+   |   |__ ssdp_read()
+   |   |__ block until receive_from_stopSock()
+   |
    |__ sock_close()
    |__ free()
 */
@@ -192,17 +200,45 @@ ACTION_TEMPLATE(StrCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
     strcpy(std::get<k>(args), str);
 }
 
+//
+// Miniserver TestSuite
+// ====================
+class MiniServerFTestSuite : public ::testing::Test {
+#ifdef _WIN32
+    // Initialize and cleanup Windows sochets
+  protected:
+    MiniServerFTestSuite() {
+        WSADATA wsaData;
+        int rc = WSAStartup(MAKEWORD(2, 2), &wsaData);
+        if (rc != NO_ERROR) {
+            throw std::runtime_error(
+                std::string("Failed to start Windows sockets (WSAStartup)."));
+        }
+    }
+
+    ~MiniServerFTestSuite() override { WSACleanup(); }
+#endif
+};
+
+typedef MiniServerFTestSuite StartMiniServerFTestSuite;
+typedef MiniServerFTestSuite DoBindFTestSuite;
+typedef MiniServerFTestSuite StopMiniServerFTestSuite;
+
+//
 // This test uses real connections and isn't portable. It is only for humans to
 // see how it works and should not always enabled.
 #if 0
 TEST(StartMiniServerTestSuite, StartMiniServer_in_context) {
-    class CLogging loggingObj; // only if compiled with build type DEBUG.
-
     // MINISERVER_REUSEADDR = false;
     // gIF_IPV4 = "";
     // LOCAL_PORT_V4 = 0;
     // LOCAL_PORT_V6 = 0;
     // LOCAL_PORT_V6_ULA_GUA = 0;
+
+    // class Mock_sys_socket mocked_sys_socketObj;
+    // class Mock_sys_select mocked_sys_selectObj;
+    // class Mock_stdlib  mocked_stdlibObj;
+    // class Mock_unistd mocked_unistdObj;
 
     // Perform initialization preamble.
     int ret_UpnpInitPreamble = UpnpInitPreamble();
@@ -240,34 +276,8 @@ TEST(StartMiniServerTestSuite, StartMiniServer_in_context) {
         << errStrEx(ret_UpnpFinish, UPNP_E_SUCCESS);
 
     EXPECT_EQ(UpnpSdkInit, 0);
-
-    UpnpCloseLog();
 }
 #endif
-
-//
-// Miniserver TestSuite
-// ====================
-class MiniServerFTestSuite : public ::testing::Test {
-#ifdef _WIN32
-    // Initialize and cleanup Windows sochets
-  protected:
-    MiniServerFTestSuite() {
-        WSADATA wsaData;
-        int rc = WSAStartup(MAKEWORD(2, 2), &wsaData);
-        if (rc != NO_ERROR) {
-            throw std::runtime_error(
-                std::string("Failed to start Windows sockets (WSAStartup)."));
-        }
-    }
-
-    ~MiniServerFTestSuite() override { WSACleanup(); }
-#endif
-};
-
-typedef MiniServerFTestSuite StartMiniServerFTestSuite;
-typedef MiniServerFTestSuite DoBindFTestSuite;
-typedef MiniServerFTestSuite RunMiniServerFTestSuite;
 
 //
 TEST(StartMiniServerTestSuite, start_miniserver_already_running) {
@@ -646,7 +656,7 @@ TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_ip_version) {
     EXPECT_STREQ(inet_ntoa(ss4.serverAddr4->sin_addr), "0.0.0.0");
 }
 
-TEST(StartMiniServerTestSuite, do_bind_listen) {
+TEST(StartMiniServerTestSuite, do_bind_listen_successful) {
     // Configure expected system calls:
     // * Use fictive socket file descriptor 600
     // * Mocked bind() returns successful
@@ -720,6 +730,8 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_with_wrong_socket) {
     int ret_get_do_bind_listen = do_bind_listen(&s);
     EXPECT_EQ(ret_get_do_bind_listen, UPNP_E_SOCKET_BIND)
         << errStrEx(ret_get_do_bind_listen, UPNP_E_SOCKET_BIND);
+
+    // sock_close() is not needed because there is no socket called.
 }
 
 TEST_F(StartMiniServerFTestSuite, do_bind_listen_with_failed_listen) {
@@ -757,6 +769,8 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_with_failed_listen) {
     int ret_get_do_bind_listen = do_bind_listen(&s);
     EXPECT_EQ(ret_get_do_bind_listen, UPNP_E_LISTEN)
         << errStrEx(ret_get_do_bind_listen, UPNP_E_LISTEN);
+
+    // sock_close() is not needed because there is no socket called.
 }
 
 TEST(StartMiniServerTestSuite, do_bind_listen_address_in_use) {
@@ -857,6 +871,7 @@ TEST_F(DoBindFTestSuite, bind_successful) {
 
     // Mock system functions
     class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
     EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
 
     // Test Unit
@@ -885,6 +900,8 @@ TEST_F(DoBindFTestSuite, bind_successful) {
 
         EXPECT_EQ(s.actual_port, actual_port + 1);
     }
+
+    // sock_close() is not needed because there is no socket called.
 }
 
 TEST_F(DoBindFTestSuite, bind_with_invalid_argument) {
@@ -1171,7 +1188,7 @@ TEST_F(DoBindFTestSuite, bind_with_wrong_ip_version_assignment) {
         << errStrEx(ret_do_bind, UPNP_E_SOCKET_BIND);
 }
 
-TEST(StartMiniServerTestSuite, do_listen) {
+TEST(StartMiniServerTestSuite, do_listen_successful) {
     // Configure expected system calls:
     // * Use fictive socket file descriptor 512
     // * Actual used port 60000 will be set
@@ -1279,7 +1296,7 @@ TEST(StartMiniServerTestSuite, do_listen_not_supported) {
 
 TEST(StartMiniServerTestSuite, do_listen_insufficient_resources) {
     // Configure expected system calls:
-    // * Use fictive socket file descriptor 712
+    // * Use fictive socket file descriptor 512
     // * Actual used port will not be set
     // * Next port to try is 0 because not used here
     // * Mocked listen() returns successful
@@ -1326,40 +1343,70 @@ TEST(StartMiniServerTestSuite, do_listen_insufficient_resources) {
     EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
 }
 
-TEST(StartMiniServerTestSuite, get_port) {
+TEST(StartMiniServerTestSuite, get_port_successful) {
     // Configure expected system calls:
     // * Use fictive socket file descriptor 1000
-    // * Actual used port is 55555
+    // * Actual socket used port is 55555
     // * Mocked getsockname() returns successful
 
+    // Provide needed data for the Unit
+    const int sockfd{1000};
+    const char text_addr[] = "192.168.154.188";
+    uint16_t actual_port{55555};
     // This is for the returned port number
-    uint16_t port{0};
+    uint16_t port{0xAAAA};
 
     // Provide a sockaddr structure that will be returned by mocked
     // getsockname().
-    struct sockaddr sa;
-    memset(&sa, 0, sizeof(sa));
-    struct sockaddr_in* sa_in{(sockaddr_in*)&sa};
-    sa_in->sin_family = AF_INET;
-    sa_in->sin_port = htons(55555);
-    inet_pton(AF_INET, "192.168.154.188", &sa_in->sin_addr);
+    struct SockAddr sock;
+    sock.addr_set(text_addr, actual_port);
 
     // Mock system functions
     class Mock_sys_socket mocked_sys_socketObj;
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(1000, _, _))
-        .WillOnce(DoAll(SetArgPointee<1>(sa), Return(0)));
+    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+        .WillOnce(DoAll(SetArgPointee<1>(*sock.addr), Return(0)));
 
     // Test Unit
-    EXPECT_EQ(get_port(1000, &port), 0);
+    EXPECT_EQ(get_port(sockfd, &port), 0);
 
-    EXPECT_EQ(port, 55555);
+    EXPECT_EQ(port, actual_port);
+}
+
+TEST(StartMiniServerTestSuite, get_port_fails) {
+    // Configure expected system calls:
+    // * Use fictive socket file descriptor 900
+    // * Mocked getsockname() fails with insufficient resources (ENOBUFS).
+
+    // Provide needed data for the Unit
+    const int sockfd{900};
+    // This is for the returned port number
+    uint16_t port{0xAAAA};
+
+    // Provide a sockaddr structure that will be returned by mocked
+    // getsockname(). It will be empty.
+    struct SockAddr sock;
+
+    // Mock system functions
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+        .WillOnce(DoAll(SetArgPointee<1>(*sock.addr),
+                        SetErrnoAndReturn(ENOBUFS, -1)));
+
+    // Test Unit
+    EXPECT_EQ(get_port(sockfd, &port), -1);
+
+    EXPECT_EQ(errno, ENOBUFS);
+    EXPECT_EQ(port, 0xAAAA);
 }
 
 TEST_F(StartMiniServerFTestSuite, get_miniserver_stopsock) {
-    MiniServerSockArray out{};
+    // Here we test a real connection to the loopback device. This needs
+    // initialization of sockets on MS Windows which is done with the fixture.
+    // We also have to close the socket.
+    MiniServerSockArray out;
     NS::InitMiniServerSockArray(&out);
 
-    // Get stop socket, needs initialized sockets on MS Windows
+    // Test Unit, needs initialized sockets on MS Windows
     int ret_get_miniserver_stopsock = NS::get_miniserver_stopsock(&out);
     EXPECT_EQ(ret_get_miniserver_stopsock, UPNP_E_SUCCESS)
         << errStrEx(ret_get_miniserver_stopsock, UPNP_E_SUCCESS);
@@ -1369,58 +1416,319 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_stopsock) {
     EXPECT_EQ(out.stopPort, miniStopSockPort);
 
     // Provide a sockaddr structure to getsockname().
-    struct sockaddr_storage ss;
-    socklen_t sslen = sizeof(ss);
-    memset(&ss, 0, sslen);
-    struct sockaddr* sa{(sockaddr*)&ss};
-    struct sockaddr_in* sa_in{(sockaddr_in*)&ss};
+    struct SockAddr sock;
+    socklen_t sslen = sizeof(sock.addr_ss);
 
-    // Get address information direct from the bind socket
-    ASSERT_EQ(getsockname(out.miniServerStopSock, sa, &sslen), 0);
+    // Get address information direct from the bound socket
+    ASSERT_EQ(getsockname(out.miniServerStopSock, sock.addr, &sslen), 0);
     // and verify its settings
-    EXPECT_EQ(sa_in->sin_family, AF_INET);
-    char text_addr[INET_ADDRSTRLEN];
-    EXPECT_EQ(ntohs(sa_in->sin_port), miniStopSockPort);
-    ASSERT_NE(
-        inet_ntop(AF_INET, &sa_in->sin_addr, text_addr, sizeof(text_addr)),
-        nullptr);
-    EXPECT_STREQ(text_addr, "127.0.0.1");
+    EXPECT_EQ(sock.addr_in->sin_family, AF_INET);
+    EXPECT_EQ(sock.addr_get_port(), miniStopSockPort);
+    EXPECT_EQ(sock.addr_get(), "127.0.0.1");
+
+    // Close socket
+    EXPECT_EQ(sock_close(out.miniServerStopSock), 0);
 }
 
-TEST_F(RunMiniServerFTestSuite, receive_from_stopSock) {
-    MiniServerSockArray serverSockArray;
-    NS::InitMiniServerSockArray(&serverSockArray);
+TEST(StartMiniServerTestSuite, get_miniserver_stopsock_fails) {
+    // Configure expected system calls:
+    // * Get a socket() fails with EACCES (Permission denied).
+    // * bind() is not called.
+    // * getsockname() is not called.
 
-    // Get stop socket, needs initialized sockets on MS Windows
-    int ret_get_miniserver_stopsock =
-        NS::get_miniserver_stopsock(&serverSockArray);
-    ASSERT_EQ(ret_get_miniserver_stopsock, UPNP_E_SUCCESS)
-        << errStrEx(ret_get_miniserver_stopsock, UPNP_E_SUCCESS);
-
-    fd_set rdSet;
-    FD_ZERO(&rdSet);
-    FD_SET(serverSockArray.miniServerStopSock, &rdSet);
+    // Provide needed data for the Unit
+    MiniServerSockArray out;
+    NS::InitMiniServerSockArray(&out);
 
     // Mock system functions
     class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+        .WillOnce(SetErrnoAndReturn(EACCES, -1));
+    EXPECT_CALL(mocked_sys_socketObj, bind(_, _, _)).Times(0);
+    EXPECT_CALL(mocked_sys_socketObj, getsockname(_, _, _)).Times(0);
+
+    // Test Unit
+    int ret_get_miniserver_stopsock = NS::get_miniserver_stopsock(&out);
+    EXPECT_EQ(ret_get_miniserver_stopsock, UPNP_E_OUTOF_SOCKET)
+        << errStrEx(ret_get_miniserver_stopsock, UPNP_E_OUTOF_SOCKET);
+
+    // Close socket; we don't need to close a mocked socket
+}
+
+TEST(StartMiniServerTestSuite, get_miniserver_stopsock_bind_fails) {
+    // Configure expected system calls:
+    // * socket() returns file descriptor 890.
+    // * bind() fails with ENOMEM.
+    // * getsockname() is not called.
+
+    // Provide needed data for the Unit
+    MiniServerSockArray out;
+    NS::InitMiniServerSockArray(&out);
+    const int sockfd{890};
+
+    // Mock system functions
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+        .WillOnce(Return(sockfd));
+    EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _))
+        .WillOnce(SetErrnoAndReturn(ENOMEM, -1));
+    EXPECT_CALL(mocked_sys_socketObj, getsockname(_, _, _)).Times(0);
+
+    // Test Unit
+    int ret_get_miniserver_stopsock = NS::get_miniserver_stopsock(&out);
+    EXPECT_EQ(ret_get_miniserver_stopsock, UPNP_E_SOCKET_BIND)
+        << errStrEx(ret_get_miniserver_stopsock, UPNP_E_SOCKET_BIND);
+
+    // Close socket; we don't need to close a mocked socket
+}
+
+TEST(StartMiniServerTestSuite, get_miniserver_stopsock_getsockname_fails) {
+    // Configure expected system calls:
+    // * socket() returns file descriptor 888.
+    // * bind() returns successful.
+    // * getsockname() fails with ENOBUFS (Cannot allocate memory).
+
+    // Provide needed data for the Unit
+    MiniServerSockArray out;
+    NS::InitMiniServerSockArray(&out);
+    const int sockfd{888};
+
+    // Mock system functions
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+        .WillOnce(Return(sockfd));
+    EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
+    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+        .WillOnce(SetErrnoAndReturn(ENOBUFS, -1));
+
+    // Test Unit
+    int ret_get_miniserver_stopsock = NS::get_miniserver_stopsock(&out);
+    EXPECT_EQ(ret_get_miniserver_stopsock, UPNP_E_INTERNAL_ERROR)
+        << errStrEx(ret_get_miniserver_stopsock, UPNP_E_INTERNAL_ERROR);
+
+    // Close socket; we don't need to close a mocked socket
+}
+
+TEST(RunMiniServerTestSuite, receive_from_stopSock) {
+    const int sockfd{401};
     struct SockAddr sock;
     sock.addr_set("192.168.167.166", 54321);
 
-    EXPECT_CALL(mocked_sys_socketObj,
-                recvfrom(serverSockArray.miniServerStopSock, _, 25, 0, _,
-                         Pointee(sizeof(sockaddr_storage))))
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+    FD_SET(sockfd, &rdSet);
+
+    // Mock system functions
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(
+        mocked_sys_socketObj,
+        recvfrom(sockfd, _, 25, 0, _, Pointee(sizeof(sockaddr_storage))))
         .WillOnce(DoAll(StrCpyToArg<1>("ShutDown"),
                         SetArgPointee<4>(*sock.addr), Return(8)));
 
     // Test Unit
     // Returns 1 (true) if successfully received "ShutDown" from stopSock
-    EXPECT_TRUE(
-        NS::receive_from_stopSock(serverSockArray.miniServerStopSock, &rdSet));
+    EXPECT_EQ(NS::receive_from_stopSock(sockfd, &rdSet), 1);
 }
 
-TEST(StopMiniserverTestSuite, close_socket) {
-    // Check different situations to close a socket
-    GTEST_SKIP() << "To be done.";
+TEST(RunMiniServerTestSuite, receive_from_stopSock_not_selected) {
+    const int sockfd{402};
+
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+    // Socket not selected to be received
+    // FD_SET(sockfd, &rdSet);
+
+    // Mock system functions
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, recvfrom(_, _, _, _, _, _)).Times(0);
+
+    // Test Unit
+    EXPECT_EQ(NS::receive_from_stopSock(sockfd, &rdSet), 0);
+}
+
+TEST(RunMiniServerTestSuite, receive_from_stopSock_no_bytes) {
+    const int sockfd{403};
+    struct SockAddr sock;
+    sock.addr_set("192.168.167.168", 54323);
+
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+    FD_SET(sockfd, &rdSet);
+
+    // Mock system functions
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(
+        mocked_sys_socketObj,
+        recvfrom(sockfd, _, 25, 0, _, Pointee(sizeof(sockaddr_storage))))
+        .WillOnce(
+            DoAll(StrCpyToArg<1>(""), SetArgPointee<4>(*sock.addr), Return(0)));
+
+    // Test Unit
+    // Returns 1 (true) if successfully received "ShutDown" from stopSock
+    EXPECT_EQ(NS::receive_from_stopSock(sockfd, &rdSet), 0);
+}
+
+TEST(RunMiniServerTestSuite, receive_from_stopSock_nothing_todo) {
+    SOCKET sockfd{404};
+    struct SockAddr sock;
+    sock.addr_set("192.168.167.169", 54324);
+
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+    FD_SET(sockfd, &rdSet);
+
+    // Mock system functions
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(
+        mocked_sys_socketObj,
+        recvfrom(sockfd, _, 25, 0, _, Pointee(sizeof(sockaddr_storage))))
+        .WillOnce(DoAll(StrCpyToArg<1>("NothingToDo"),
+                        SetArgPointee<4>(*sock.addr), Return(11)));
+
+    // Test Unit
+    // Returns 1 (true) if successfully received "ShutDown" from stopSock
+    if (old_code)
+        EXPECT_EQ(NS::receive_from_stopSock(sockfd, &rdSet), 0);
+    else
+        EXPECT_EQ(NS::receive_from_stopSock(sockfd, &rdSet), 1);
+}
+
+TEST(RunMiniServerTestSuite, RunMiniServer) {
+    // This would start some other threads. We run into dynamic problems with
+    // parallel running threads here. For example running the miniserver with
+    // schedule_request_job() in a new thread cannot be finished before the
+    // mocked miniserver shutdown in the calling thread has been executed at
+    // Unit end. This is why I do not initialize the threadpool here so starting
+    // other threads will fail. We only test initialize running the miniserver
+    // and stopping it.
+
+    // Don't initialize the threadpool to fail starting other threads. If you do
+    // anyway don't forget to shutdown the threadpool at the end. nullptr means
+    // to use default attributes.
+    // EXPECT_EQ(ThreadPoolInit(&gMiniServerThreadPool, nullptr), 0);
+
+    // Initialize needed data
+    SOCKET listen_sockfd = 201;
+    uint16_t listen_port = 301;
+    SOCKET connected_sockfd = 202;
+    uint16_t connected_port = 302;
+    SOCKET stop_sockfd = 203;
+    uint16_t stop_port = 303;
+
+    MiniServerSockArray* minisock =
+        (MiniServerSockArray*)malloc(sizeof(MiniServerSockArray));
+    NS::InitMiniServerSockArray(minisock);
+    minisock->miniServerSock4 = listen_sockfd;
+    minisock->miniServerStopSock = stop_sockfd;
+    minisock->stopPort = stop_port;
+    minisock->miniServerPort4 = listen_port;
+
+    { // Scope of mocking only within this block
+
+        // Mock functions from standard system library
+        class Mock_sys_select mocked_sys_selectObj;
+        EXPECT_CALL(mocked_sys_selectObj, select(_, _, _, _, _))
+            .WillOnce(Return(1));
+
+        class Mock_sys_socket mocked_sys_socketObj;
+        struct SockAddr connected_sock;
+        connected_sock.addr_set("192.168.200.201", connected_port);
+        EXPECT_CALL(mocked_sys_socketObj, accept(listen_sockfd, _, _))
+            .WillOnce(DoAll(SetArgPointee<1>(*connected_sock.addr),
+                            Return(connected_sockfd)));
+
+        struct SockAddr localhost_sock;
+        localhost_sock.addr_set("127.0.0.1", stop_port);
+
+        if (old_code) {
+            std::cout << CYEL "[ BUGFIX   ]" CRES
+                      << " Unit must not endless loop with wrong \"shutdown\" "
+                         "message instead of \"ShutDown\".\n";
+            EXPECT_CALL(mocked_sys_socketObj,
+                        recvfrom(stop_sockfd, _, 25, 0, _,
+                                 Pointee(sizeof(sockaddr_storage))))
+                .WillOnce(DoAll(StrCpyToArg<1>("ShutDown"),
+                                SetArgPointee<4>(*localhost_sock.addr),
+                                Return(8)));
+
+        } else {
+
+            EXPECT_CALL(mocked_sys_socketObj,
+                        recvfrom(stop_sockfd, _, 25, 0, _,
+                                 Pointee(sizeof(sockaddr_storage))))
+                .WillOnce(DoAll(StrCpyToArg<1>("shutdown"),
+                                SetArgPointee<4>(*localhost_sock.addr),
+                                Return(8)));
+        }
+
+        std::cout << CRED "[ BUG      ]" CRES
+                  << " Unit must not expect its argument MiniServerSockArray* "
+                     "to be on the heap and free it.\n";
+
+        // Test Unit
+        NS::RunMiniServer(minisock);
+
+    } // End scope of mocking
+
+    // Shutdown the threadpool if initialized.
+    // EXPECT_EQ(ThreadPoolShutdown(&gMiniServerThreadPool), 0);
+}
+
+TEST(RunMiniServerTestSuite, RunMiniServer_and_stop_it_after_no_connection) {
+    GTEST_SKIP() << " # Still needs to be done.";
+}
+
+TEST(RunMiniServerTestSuite, ssdp_read) {
+    GTEST_SKIP() << " # Still needs to be done.";
+}
+
+TEST(RunMiniServerTestSuite, web_server_accept) {
+    GTEST_SKIP() << " # Still needs to be done.";
+}
+
+TEST(RunMiniServerTestSuite, fdset_if_valid) {
+    GTEST_SKIP() << " # Still needs to be done.";
+}
+
+TEST(RunMiniServerTestSuite, schedule_request_job) {
+    GTEST_SKIP() << " # Still needs to be done.";
+}
+
+TEST(RunMiniServerTestSuite, handle_request) {
+    GTEST_SKIP() << " # Still needs to be done.";
+}
+
+TEST(RunMiniServerTestSuite, free_handle_request_args) {
+    GTEST_SKIP() << " # Still needs to be done.";
+}
+
+TEST(RunMiniServerTestSuite, handle_error) {
+    GTEST_SKIP() << " # Still needs to be done.";
+}
+
+TEST(RunMiniServerTestSuite, dispatch_request) {
+    GTEST_SKIP() << " # Still needs to be done.";
+}
+
+TEST(RunMiniServerTestSuite, getNumericHostRedirection) {
+    GTEST_SKIP() << " # Still needs to be done.";
+}
+
+TEST(RunMiniServerTestSuite, host_header_is_numeric) {
+    GTEST_SKIP() << " # Still needs to be done.";
+}
+
+TEST_F(StopMiniServerFTestSuite, sock_close) {
+    // Close invalid sockets
+    EXPECT_EQ(sock_close(INVALID_SOCKET), -1);
+    EXPECT_EQ(sock_close(1234), -1);
+
+    // Get a valid socket, needs initialized sockets on MS Windows with fixture.
+    SOCKET sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    ASSERT_NE(sockfd, -1);
+    // Close a valid socket.
+    EXPECT_EQ(sock_close(sockfd), 0);
 }
 
 } // namespace upnplib
@@ -1428,6 +1736,6 @@ TEST(StopMiniserverTestSuite, close_socket) {
 //
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-    class CLogging loggingObj; // only with build type DEBUG.
+    // class CLogging loggingObj; // only with build type DEBUG.
 #include "upnplib/gtest_main.inc"
 }

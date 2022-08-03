@@ -34,7 +34,7 @@ std::string SockAddr::addr_get() {
             "at */" + std::filesystem::path(__FILE__).filename().string() +
             "[" + std::to_string(__LINE__) + "]: Got invalid ip address");
     }
-    return std::string(buf_ntop);
+    return std::string(this->buf_ntop);
 }
 
 unsigned short SockAddr::addr_get_port() {
