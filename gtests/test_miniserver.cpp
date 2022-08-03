@@ -1595,19 +1595,21 @@ TEST(RunMiniServerTestSuite, receive_from_stopSock_nothing_todo) {
         EXPECT_EQ(NS::receive_from_stopSock(sockfd, &rdSet), 1);
 }
 
-TEST_F(RunMiniServerFTestSuite, RunMiniServer) {
+TEST(RunMiniServerTestSuite, RunMiniServer) {
     // This would start some other threads. We run into dynamic problems with
     // parallel running threads here. For example running the miniserver with
     // schedule_request_job() in a new thread cannot be finished before the
     // mocked miniserver shutdown in the calling thread has been executed at
-    // Unit end. This is why I do not initialize the threadpool here so starting
-    // other threads will fail. We only test initialize running the miniserver
-    // and stopping it.
+    // Unit end. This is why I prevent starting other threads. We only test
+    // initialize running the miniserver and stopping it.
 
-    // Don't initialize the threadpool to fail starting other threads. If you do
-    // anyway don't forget to shutdown the threadpool at the end. nullptr means
-    // to use default attributes.
-    // EXPECT_EQ(ThreadPoolInit(&gMiniServerThreadPool, nullptr), 0);
+    // Initialize the threadpool. Don't forget to shutdown the threadpool at the
+    // end. nullptr means to use default attributes.
+    EXPECT_EQ(ThreadPoolInit(&gMiniServerThreadPool, nullptr), 0);
+    // Setting next flag is because with this test the shutdown follows
+    // immediately after starting the threadpool. The flag prevents starting any
+    // new thread.
+    gMiniServerThreadPool.shutdown = 1;
 
     // Initialize needed data
     SOCKET listen_sockfd = 201;
@@ -1670,10 +1672,10 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer) {
         // Test Unit
         NS::RunMiniServer(minisock);
 
-    } // End scope of mocking
+    } // End scope of mocking, objects within the block will be destructed.
 
     // Shutdown the threadpool if initialized.
-    // EXPECT_EQ(ThreadPoolShutdown(&gMiniServerThreadPool), 0);
+    EXPECT_EQ(ThreadPoolShutdown(&gMiniServerThreadPool), 0);
 }
 
 TEST(RunMiniServerTestSuite, RunMiniServer_and_stop_it_after_no_connection) {
