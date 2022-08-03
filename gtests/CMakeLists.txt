@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-07-28
+# Redistribution only with this Copyright remark. Last modified: 2022-08-09
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -782,8 +782,8 @@ add_test(NAME ctest_TimerThread-pnsh COMMAND test_TimerThread-pnsh
 # upnplib_gtest_tools
 #====================
 add_executable(test_upnplib_gtest_tools
-        $<$<PLATFORM_ID:Windows>:./tools/test_tools_win32.cpp>
-        $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/test_tools_unix.cpp>
+#--------------------------------------
+        ./tools/test_tools.cpp
 )
 target_include_directories(test_upnplib_gtest_tools
         PRIVATE ./include
@@ -797,6 +797,27 @@ target_link_libraries(test_upnplib_gtest_tools
         PRIVATE upnplib_gtest_tools_shared
 )
 add_test(NAME ctest_upnplib_gtest_tools COMMAND test_upnplib_gtest_tools
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
+
+add_executable(test_upnplib_gtest_tools_platform
+#-----------------------------------------------
+        $<$<PLATFORM_ID:Windows>:./tools/test_tools_win32.cpp>
+        $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/test_tools_unix.cpp>
+)
+target_include_directories(test_upnplib_gtest_tools_platform
+        PRIVATE ./include
+        PRIVATE ${UPnPlib_SOURCE_DIR}/include
+)
+target_compile_definitions(test_upnplib_gtest_tools_platform
+        PRIVATE
+            UPNPLIB_SHARED
+)
+target_link_libraries(test_upnplib_gtest_tools_platform
+        PRIVATE upnplib_gtest_tools_shared
+)
+add_test(NAME ctest_upnplib_gtest_tools_platform COMMAND test_upnplib_gtest_tools_platform
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -1127,12 +1148,14 @@ target_compile_definitions(test_miniserver-pnsh
         UPNPLIB_WITH_NATIVE_PUPNP
         UPNP_HAVE_CLIENT
         UPNP_HAVE_WEBSERVER
+        UPNP_HAVE_SSDP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 target_link_libraries(test_miniserver-pnsh
     PRIVATE
         $<$<PLATFORM_ID:Windows>:ixml_shared>
         upnplib_native_shared
+        upnplib_gtest_tools_shared
 )
 add_test(NAME ctest_miniserver-pnsh COMMAND test_miniserver-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -1160,12 +1183,14 @@ target_compile_definitions(test_miniserver-ucsh
     PRIVATE
         UPNP_HAVE_CLIENT
         UPNP_HAVE_WEBSERVER
+        UPNP_HAVE_SSDP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 target_link_libraries(test_miniserver-ucsh
     PRIVATE
         $<$<PLATFORM_ID:Windows>:ixml_shared>
         upnplib_native_shared
+        upnplib_gtest_tools_shared
 )
 add_test(NAME ctest_miniserver-ucsh COMMAND test_miniserver-ucsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

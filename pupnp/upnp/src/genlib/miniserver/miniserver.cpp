@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-07-28
+ * Redistribution only with this Copyright remark. Last modified: 2022-08-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -538,6 +538,10 @@ static void RunMiniServer(
     int ret = 0;
     int stopSock = 0;
 
+    // BUG! - Ingo: On MS Windows INVALID_SOCKET is unsigned -1 =
+    // 18446744073709551615 so we get maxMiniSock with this big number even if
+    // there is only one INVALID_SOCKET. Incrementing it at the end results in
+    // 0. To be compatible we must not assume INVALID_SOCKET to be -1.
     maxMiniSock = 0;
     maxMiniSock = std::max(maxMiniSock, miniSock->miniServerSock4);
     maxMiniSock = std::max(maxMiniSock, miniSock->miniServerSock6);

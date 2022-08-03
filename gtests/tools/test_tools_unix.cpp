@@ -1,7 +1,6 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-03-30
 
-#include "upnplib_gtest_tools.hpp"
 #include "upnplib_gtest_tools_unix.hpp"
 #include "gtest/gtest.h"
 
@@ -73,41 +72,6 @@ TEST(ToolsTestSuite, initialize_interface_addresses) {
         << "    addr4buf contains the broadcast address";
 
     EXPECT_ANY_THROW(ifaddr4Obj.set("if2v4", "10.168.168.47/"));
-}
-
-TEST(ToolsTestSuite, capture_output_with_pipe) {
-    CCaptureStdOutErr captOutObj(STDOUT_FILENO);
-    CCaptureStdOutErr captErrObj(STDERR_FILENO);
-
-    captErrObj.start();
-    captOutObj.start();
-    std::cerr << "err: First output ";
-    std::cout << "out: First output ";
-    std::cerr << "to StdErr" << std::endl;
-    std::cout << "to StdOut" << std::endl;
-    std::string captured_err = captErrObj.get();
-    std::string captured_out = captOutObj.get();
-
-    EXPECT_STREQ(captured_err.c_str(), "err: First output to StdErr\n");
-    EXPECT_STREQ(captured_out.c_str(), "out: First output to StdOut\n");
-    // std::cout << "First capture " << captured_err;
-    // std::cout << "First capture " << captured_out;
-
-    captErrObj.start();
-    captOutObj.start();
-    std::cerr << "err: Second output to StdErr" << std::endl;
-    std::cout << "out: Second output to StdOut" << std::endl;
-    captured_err = captErrObj.get();
-    captured_out = captOutObj.get();
-
-    EXPECT_STREQ(captured_err.c_str(), "err: Second output to StdErr\n");
-    EXPECT_STREQ(captured_out.c_str(), "out: Second output to StdOut\n");
-    // std::cout << "Second start " << captured_err;
-    // std::cout << "Second start " << captured_out;
-}
-
-TEST(ToolsTestSuite, throw_exception) {
-    EXPECT_THROW(CCaptureStdOutErr capttureObj(-1), ::std::invalid_argument);
 }
 
 } // namespace upnplib

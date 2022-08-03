@@ -1,8 +1,8 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-09
+// Redistribution only with this Copyright remark. Last modified: 2022-08-07
 
-#ifndef UPNP_GTEST_TOOLS_H
-#define UPNP_GTEST_TOOLS_H
+#ifndef UPNPLIB_GTEST_TOOLS_HPP
+#define UPNPLIB_GTEST_TOOLS_HPP
 
 #include "upnplib/port.hpp"
 #include <string>
@@ -14,8 +14,16 @@ namespace upnplib {
 // class CCaptureStdOutErr declaration
 //
 // Helper class to capture output to stdout or stderr into a buffer so we can
-// compare it. Previous version with capturing to a temporary disk file can be
-// found at git commit 884a040.
+// compare it. We use a pipe that is opened non blocking if not on Microsoft
+// Windows. That does not support unblocking on its _pipe(). I workaround it
+// with always writing a '\0' to the pipe just before reading it. So it will
+// never block. But we risk a deadlock when the internal pipe buffer is to small
+// to capture all data. Write to a full buffer will be blocked. Then we do not
+// have any chance to read the pipe to free the buffer. Maybe it could be
+// managed with asynchronous mode on a pipe but that is far away from Posix
+// compatible handling. This deadlock is only a problem on MS Windows.
+//
+// If you run into a deadlock on MS Windows then increase the 'pipebuffer'.
 // clang-format off
 //
 // Typical usage is:
@@ -28,9 +36,12 @@ namespace upnplib {
 */
 // Exception: Strong guarantee (no modifications)
 //    throws: [std::logic_error] <- std::invalid_argument
-//            Only stdout or stderr can be redirected.
+//              Only stdout or stderr can be redirected.
 //    throws: runtime_error
-//            Creating a pipe failed.
+//              Failed to create a pipe.
+//              Failed to duplicate a file descriptor.
+//              Failed to read from pipe.
+//              Read 0 byte from pipe.
 // clang-format on
 
 class UPNPLIB_API CCaptureStdOutErr {
@@ -41,12 +52,23 @@ class UPNPLIB_API CCaptureStdOutErr {
     std::string get();
 
   private:
-    UPNPLIB_LOCAL static constexpr int m_chunk_size{512};
-    int m_out_pipe[2]{};
-    int m_std_fileno{};
-    int m_saved_stdno{};
+    int out_pipe[2]{};
+    static constexpr int pipebuffer{8192};
+    static constexpr int chunk_size{512};
+
+    // The original file descriptor STDOUT_FILENO or STDERR_FILENO that is
+    // captured.
+    int stdOutErrFd{};
+
+    // This is the current stdout/stderr file descriptor that either points to
+    // the system output or to the pipes write end.
+    int current_stdOutErrFd;
+
+    // This is a dup of the original system stdout/stderr file descriptor so we
+    // can restore it to the current_stdOutErrFd.
+    int orig_stdOutErrFd{};
 };
 
 } // namespace upnplib
 
-#endif // UPNP_GTEST_TOOLS_H
+#endif // UPNPLIB_GTEST_TOOLS_HPP

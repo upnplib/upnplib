@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-07-24
+// Redistribution only with this Copyright remark. Last modified: 2022-08-02
 
 // This test should always run, reporting no failure
 
@@ -14,6 +14,12 @@
 #define ASSERT_IN_RANGE(VAL, MIN, MAX)                                         \
     ASSERT_GE((VAL), (MIN));                                                   \
     ASSERT_LE((VAL), (MAX))
+
+// ANSI console colors
+#define CRED "\033[38;5;203m" // red
+#define CYEL "\033[38;5;227m" // yellow
+#define CGRN "\033[38;5;83m"  // green
+#define CRES "\033[0m"        // reset
 
 namespace upnplib {
 bool old_code{true}; // Managed in upnplib_gtest_main.inc
@@ -87,13 +93,13 @@ TEST(EmptyTestSuite, empty_gtest) {
 
     if (old_code) {
         // Place tests for old_code here
-        std::cout << "\x1b[38;5;226m[ BUG      ]\x1b[38;5;255m "
-                     "This old_code bug must be fixed in new_code.\n";
-        std::cout << "\x1b[38;5;226m[ BUGFIX   ]\x1b[38;5;255m "
-                     "This old_code bug is fixed in new_code.\n";
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " This old_code bug must be fixed in new_code.\n";
+        std::cout << CYEL "[ BUGFIX   ]" CRES
+                  << " This old_code bug is fixed in new_code.\n";
         // or
-        std::cout << "\x1b[38;5;226m[ OPT      ]\x1b[38;5;255m "
-                     "Optimization or Option needed to improve the program.\n";
+        std::cout << CYEL "[ OPT      ]" CRES
+                  << " Optimization or Option needed to improve the program.\n";
     } else {
         // Place tests for new_code here
         std::cout << "  # Compiling tests for new_code.\n";

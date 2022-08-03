@@ -238,10 +238,12 @@ TEST(HttpparserTestSuite, parser_init_a_nullptr) {
         ::std::cout << "[ BUG!     ] A nullptr to a parser structure must not "
                        "segfault.\n";
     } else {
+#ifdef DEBUG
         // Test Unit
         ASSERT_EXIT((::parser_init(nullptr), exit(0)),
                     ::testing::ExitedWithCode(0), ".*")
             << "   BUG! A nullptr to a parser structure must not segfault.";
+#endif
     }
 }
 
@@ -268,11 +270,13 @@ TEST(HttpparserTestSuite, parser_request_init_a_nullptr) {
         ::std::cout << "[ BUG!     ] A nullptr to a parser structure must not "
                        "segfault.\n";
     } else {
+#ifdef DEBUG
         // Test Unit
         Chttpparser_old httpars_oObj;
         ASSERT_EXIT((httpars_oObj.parser_request_init(nullptr), exit(0)),
                     ::testing::ExitedWithCode(0), ".*")
             << "   BUG! A nullptr to a parser structure must not segfault.";
+#endif
     }
 }
 
@@ -301,6 +305,7 @@ TEST(HttpparserTestSuite, parser_response_init_a_nullptr) {
         ::std::cout << "[ BUG!     ] A nullptr to a parser structure must not "
                        "segfault.\n";
     } else {
+#ifdef DEBUG
         // Test Unit
         Chttpparser_old httpars_oObj;
         ASSERT_EXIT(
@@ -308,6 +313,7 @@ TEST(HttpparserTestSuite, parser_response_init_a_nullptr) {
              exit(0)),
             ::testing::ExitedWithCode(0), ".*")
             << "   BUG! A nullptr to a parser structure must not segfault.";
+#endif
     }
 }
 
