@@ -8,18 +8,20 @@
 
 #include "upnplib/upnptools.hpp" // For upnplib_native only
 #include "upnplib/sock.hpp"
-#include "upnplib_gtest_tools.hpp"
 
 #include "gmock/gmock.h"
+#include "upnplib/gtest.hpp"
 
 using ::testing::_;
-using ::testing::ContainsRegex;
 using ::testing::DoAll;
 using ::testing::NotNull;
 using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
+
+using ::upnplib::testing::CCaptureStdOutErr;
+using ::upnplib::testing::ContainsStdRegex;
 
 // ANSI console colors
 #define CRED "\033[38;5;203m" // red
@@ -1751,12 +1753,12 @@ TEST(RunMiniServerTestSuite, web_server_accept) {
 #ifdef DEBUG
         if (old_code)
             EXPECT_THAT(capturedStderr,
-                        ContainsRegex(" UPNP-MSER-2: .* mserv 206: cannot "
-                                      "schedule request\n"));
+                        ContainsStdRegex(" UPNP-MSER-2: .* mserv 206: cannot "
+                                         "schedule request\n"));
         else
             EXPECT_THAT(
                 capturedStderr,
-                ContainsRegex(
+                ContainsStdRegex(
                     " connected to host 192.168.201.202:306 with socket "
                     "206\n.*\n.*\n.* "
                     "UPNP-MSER-1: .* mserv 206: cannot schedule request\n"));
@@ -1764,11 +1766,11 @@ TEST(RunMiniServerTestSuite, web_server_accept) {
         if (old_code)
             EXPECT_THAT(
                 capturedStderr,
-                ContainsRegex("libupnp ThreadPoolAdd too many jobs: 0\n"));
+                ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0\n"));
         else
             EXPECT_THAT(
                 capturedStderr,
-                ContainsRegex("libupnp ThreadPoolAdd too many jobs: 0\n"));
+                ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0\n"));
 #endif
     } // End scope of mocking, objects within the block will be destructed.
 
@@ -1798,8 +1800,8 @@ TEST(RunMiniServerTestSuite, web_server_accept_with_invalid_socket) {
     else
 #ifdef DEBUG
         EXPECT_THAT(capturedStderr,
-                    ContainsRegex(" UPNP-MSER-1: .* invalid socket\\(-1\\) "
-                                  "or set\\(.*\\)\\.\n"));
+                    ContainsStdRegex(" UPNP-MSER-1: .* invalid socket\\(-1\\) "
+                                     "or set\\(.*\\)\\.\n"));
 #else
         EXPECT_TRUE(capturedStderr.empty());
 #endif
@@ -1829,8 +1831,8 @@ TEST(RunMiniServerTestSuite, web_server_accept_with_empty_set) {
     else
 #ifdef DEBUG
         EXPECT_THAT(capturedStderr,
-                    ContainsRegex(" UPNP-MSER-1: .* invalid socket\\(207\\) "
-                                  "or set\\(.*\\)\\.\n"));
+                    ContainsStdRegex(" UPNP-MSER-1: .* invalid socket\\(207\\) "
+                                     "or set\\(.*\\)\\.\n"));
 #else
         EXPECT_TRUE(capturedStderr.empty());
 #endif
@@ -1868,10 +1870,10 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
 #ifdef DEBUG
     EXPECT_THAT(
         capturedStderr,
-        ContainsRegex(" UPNP-MSER-.: .* 202: cannot schedule request\n"));
+        ContainsStdRegex(" UPNP-MSER-.: .* 202: cannot schedule request\n"));
 #else
     EXPECT_THAT(capturedStderr,
-                ContainsRegex("libupnp ThreadPoolAdd too many jobs: 0\n"));
+                ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0\n"));
 #endif
     // Shutdown the threadpool.
     EXPECT_EQ(ThreadPoolShutdown(&gMiniServerThreadPool), 0);

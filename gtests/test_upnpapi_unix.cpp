@@ -6,17 +6,19 @@
 
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 
-#include "upnplib_gtest_tools.hpp"
 #include "upnplib/upnptools.hpp" // For upnplib_native only
 #include "upnplib_gtest_tools_unix.hpp"
 
 #include "gmock/gmock.h"
+#include "upnplib/gtest.hpp"
 
 using ::testing::_;
 using ::testing::AtLeast;
 using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SetArgPointee;
+
+using ::upnplib::testing::CCaptureStdOutErr;
 
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc

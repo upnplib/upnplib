@@ -7,17 +7,19 @@
 #include "upnpmock/stdio.hpp"
 #include "upnpmock/string.hpp"
 
-#include "upnplib_gtest_tools.hpp"
 #include "upnplib/upnptools.hpp"
 #include "upnplib/port.hpp"
 
-#include "gmock/gmock.h"
 #include <string>
+#include "gmock/gmock.h"
+#include "upnplib/gtest.hpp"
 
 using ::testing::_;
-using ::testing::MatchesRegex;
 using ::testing::Return;
 using ::testing::StrEq;
+
+using ::upnplib::testing::CCaptureStdOutErr;
+using ::upnplib::testing::MatchesStdRegex;
 
 namespace upnplib {
 
@@ -156,11 +158,11 @@ TEST(UpnpdebugTestSuite, UpnpPrintf_normal_use) {
     // Example: "2021-10-17 21:09:01 UPNP-API_-2: Thread:0x7F1366618740
     // [/home/ingo/devel/upnplib-dev/upnplib/gtests/test_upnpdebug.cpp:535]:
     // Unit Test for UpnpPrintf on line 536.\n"
-    EXPECT_THAT(
-        captured,
-        MatchesRegex("....-..-.. ..:..:.. UPNP-API_-2: "
-                     "Thread:0x.+ \\[.+\\]: Unit Test for UpnpPrintf on line "
-                     ".+\\.\n"));
+    EXPECT_THAT(captured,
+                MatchesStdRegex(
+                    "\\d{4}-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d UPNP-API_-2: "
+                    "Thread:0x.+ \\[.+\\]: Unit Test for UpnpPrintf on line "
+                    ".+\\.\n"));
 }
 
 //

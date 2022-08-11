@@ -1,8 +1,10 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-08-09
 
-#include "upnplib_gtest_tools.hpp"
+#include "upnplib/gtest.hpp"
 #include "gtest/gtest.h"
+
+using ::upnplib::testing::CCaptureStdOutErr;
 
 namespace upnplib {
 

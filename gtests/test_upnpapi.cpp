@@ -8,8 +8,9 @@
 #include "upnplib/upnptools.hpp" // For upnplib_native only
 
 #include "gmock/gmock.h"
+#include "upnplib/gtest.hpp"
 
-using ::testing::MatchesRegex;
+using ::upnplib::testing::MatchesStdRegex;
 
 namespace upnplib {
 
@@ -59,7 +60,8 @@ TEST(UpnpapiTestSuite, initialization_preamble) {
 
     // Check creation of a uuid
     EXPECT_THAT(gUpnpSdkNLSuuid,
-                MatchesRegex("........-....-....-....-............"));
+                MatchesStdRegex("[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{"
+                                "4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}"));
 
     // Check initialization of the UPnP device and client (control point) handle
     // table

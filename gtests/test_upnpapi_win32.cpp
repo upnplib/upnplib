@@ -6,17 +6,19 @@
 
 #include "upnpapi.hpp"
 
-#include "upnplib_gtest_tools.hpp"
 #include "upnplib_gtest_tools_win32.hpp"
 #include "upnplib/upnptools.hpp" // For upnplib_native only
 #include "upnpmock/iphlpapi_win32.hpp"
 
+#include "upnplib/gtest.hpp"
 #include "gmock/gmock.h"
 
 using ::testing::_;
 using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SetArgPointee;
+
+using ::upnplib::testing::CCaptureStdOutErr;
 
 namespace upnplib {
 

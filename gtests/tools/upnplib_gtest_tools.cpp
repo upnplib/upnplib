@@ -4,13 +4,13 @@
 // Tools and helper classes to manage gtests
 // =========================================
 
-#include "upnplib_gtest_tools.hpp"
+#include "upnplib/gtest.hpp"
 
 #include <iostream>
 #include <cstring>
 #include <fcntl.h> // Obtain O_* constant definitions
 
-namespace upnplib {
+namespace upnplib::testing {
 
 // class CCaptureStdOutErr definition
 // ----------------------------------
@@ -166,4 +166,4 @@ std::string CCaptureStdOutErr::get() {
     return strbuffer;
 }
 
-} // namespace upnplib
+} // namespace upnplib::testing

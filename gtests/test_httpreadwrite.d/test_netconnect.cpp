@@ -7,7 +7,6 @@
 #include "core/src/net/http/httpreadwrite.cpp"
 
 #include "gmock/gmock.h"
-#include "upnplib_gtest_tools.hpp"
 
 using ::testing::_;
 using ::testing::DoAll;

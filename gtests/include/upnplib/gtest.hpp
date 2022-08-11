@@ -1,13 +1,15 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-07
+// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-08-10
 
-#ifndef UPNPLIB_GTEST_TOOLS_HPP
-#define UPNPLIB_GTEST_TOOLS_HPP
+#ifndef UPNPLIB_GTEST_HPP
+#define UPNPLIB_GTEST_HPP
 
 #include "upnplib/port.hpp"
 #include <string>
+#include <regex>
+#include "gmock/gmock.h"
 
-namespace upnplib {
+namespace upnplib::testing {
 
 // Capture output to stdout or stderr
 // ----------------------------------
@@ -69,6 +71,26 @@ class UPNPLIB_API CCaptureStdOutErr {
     int orig_stdOutErrFd{};
 };
 
-} // namespace upnplib
+//
+// Matcher to use portable Regex from the C++ standard library
+//------------------------------------------------------------
+// This overcomes the mixed internal MatchesRegex() and ContainsRegex() from
+// Googlemock. On Unix it uses Posix regex but on MS Windows it uses a limited
+// gmock custom implementation. If using that to be portable we are limited to
+// the gmock cripple regex for MS Windows.
+// Reference: https://github.com/google/googletest/issues/1208
+//
+// ECMAScript syntax: https://cplusplus.com/reference/regex/ECMAScript/
 
-#endif // UPNPLIB_GTEST_TOOLS_HPP
+MATCHER_P(MatchesStdRegex, pattern, "") {
+    std::regex regex(pattern);
+    return std::regex_match(arg, regex);
+}
+MATCHER_P(ContainsStdRegex, pattern, "") {
+    std::regex regex(pattern);
+    return std::regex_search(arg, regex);
+}
+
+} // namespace upnplib::testing
+
+#endif // UPNPLIB_GTEST_HPP
