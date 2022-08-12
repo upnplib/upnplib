@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-13
+// Redistribution only with this Copyright remark. Last modified: 2022-08-12
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -7,7 +7,7 @@
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 
 #include "upnplib/upnptools.hpp" // For upnplib_native only
-#include "upnplib_gtest_tools_unix.hpp"
+#include "upnplib/gtest_tools_unix.hpp"
 
 #include "gmock/gmock.h"
 #include "upnplib/gtest.hpp"

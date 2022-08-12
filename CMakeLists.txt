@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-07-15
+# Redistribution only with this Copyright remark. Last modified: 2022-08-16
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -147,6 +147,8 @@ add_compile_options(
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Werror>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wno-dangling-else>
         $<$<CXX_COMPILER_ID:GNU>:-Wno-format-truncation>
+        $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:GNU>>:-fstack-protector-all>
+        $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:GNU>>:-fstack-protector-strong>
 
         #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-fanalyzer>
         #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wfatal-errors>

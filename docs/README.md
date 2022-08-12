@@ -105,6 +105,20 @@ The footer is optional and is used to reference issue tracker IDs.
     Resolves: #123
     See also: #456, #789
 
+## Template for a TEST header
+Example:
+    // Steps as given by the Unit:
+    // 1. sock_make_no_blocking
+    // 2. try to connect
+    // 3. check connection an and wait until connected or timed out
+    // 4. sock_make_blocking
+
+    // Configure expected system calls:
+    // * make no blocking succeeds
+    // + starting connection (no wait) returns with -1, errno = EINPROGRESS;
+    // * connection succeeds
+    // * make blocking succeeds
+
 ## Visibility support
 C++ provides Visibility Support as powerful optimization. We use it as described at the [GCC Wiki - Visibility](https://gcc.gnu.org/wiki/Visibility). It only belongs to shared libraries. Here in short the needed steps configured for this library:
 - Enable Visibility Support on the whole project:

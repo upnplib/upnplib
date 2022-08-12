@@ -4,7 +4,7 @@
 // Implementation of the NetIf classes
 // ===================================
 
-#include "upnplib_gtest_tools_win32.hpp"
+#include "upnplib/gtest_tools_win32.hpp"
 #include <ws2tcpip.h>
 #include <string>
 

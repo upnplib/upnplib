@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-08-10
+ * Redistribution only with this Copyright remark. Last modified: 2022-08-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -376,8 +376,8 @@ static void handle_request(
     struct mserv_request_t* request = (struct mserv_request_t*)args;
     SOCKET connfd = request->connfd;
 
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__, "miniserver %d: READING\n",
-               connfd);
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+               "miniserver socket %d: READING\n", connfd);
     /* parser_request_init( &parser ); */ /* LEAK_FIX_MK */
     hmsg = &parser.msg;
     ret_code = sock_init_with_ip(&info, connfd,
@@ -459,7 +459,19 @@ static UPNP_INLINE void schedule_request_job(
 #endif // INTERNAL_WEB_SERVER
 
 static UPNP_INLINE void fdset_if_valid(SOCKET sock, fd_set* set) {
-    if (sock != INVALID_SOCKET) {
+    // For select() and its macros FD_* POSIX requires fd to be a valid file
+    // descriptor so we will check carefully. Otherwise you risk to run into
+    // undefined behavior.
+    char sock_error[64];
+    socklen_t sockerrlen = sizeof(sock_error);
+
+    if (upnplib::sys_socket_h->getsockopt(sock, SOL_SOCKET, SO_ERROR,
+                                          &sock_error[0],
+                                          &sockerrlen) == SOCKET_ERROR) {
+        UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+                   "FD_SET for select() failed with socket %d. (%d) %s.\n",
+                   sock, errno, std::strerror(errno));
+    } else {
         FD_SET(sock, set);
     }
 }

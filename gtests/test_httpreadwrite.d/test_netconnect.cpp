@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-02
+// Redistribution only with this Copyright remark. Last modified: 2022-08-17
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -41,7 +41,7 @@ class Mock_sys_socket : public Bsys_socket {
                 (int sockfd, const struct sockaddr* addr, socklen_t addrlen),
                 (override));
     MOCK_METHOD(int, getsockopt,
-                (int sockfd, int level, int optname, UPNPLIB_VOID_CHAR* optval,
+                (int sockfd, int level, int optname, void* optval,
                  socklen_t* optlen),
                 (override));
 };

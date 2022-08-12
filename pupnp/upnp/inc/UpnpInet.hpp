@@ -1,9 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-27
+// Redistribution only with this Copyright remark. Last modified: 2022-08-13
 // Taken from authors who haven't made a note.
 
-#ifndef UPNPLIB_UPNPINET_HPP
-#define UPNPLIB_UPNPINET_HPP
+#ifndef PUPNP_UPNPINET_HPP
+#define PUPNP_UPNPINET_HPP
 
 /*!
  * \addtogroup Sock
@@ -66,4 +66,4 @@ typedef int SOCKET;
 
 /* @} Sock */
 
-#endif /* UPNPLIB_UPNPINET_HPP */
+#endif /* PUPNP_UPNPINET_HPP */

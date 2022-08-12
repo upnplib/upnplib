@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-10
+// Redistribution only with this Copyright remark. Last modified: 2022-08-17
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
@@ -38,6 +38,7 @@ using ::upnplib::testing::ContainsStdRegex;
 class CLogging { /*
  * Use it for example with:
     class CLogging loggingObj; // only with build type DEBUG.
+* or
     class CLogging loggingObj(UPNP_ALL); // only with build type DEBUG.
  * or other loglevel.
  */
@@ -142,8 +143,11 @@ class Mock_sys_socket : public Bsys_socket {
     MOCK_METHOD(int, accept,
                 (int sockfd, struct sockaddr* addr, socklen_t* addrlen),
                 (override));
-    MOCK_METHOD(UPNPLIB_SIZE_T_INT, recvfrom,
+    MOCK_METHOD(size_t, recvfrom,
                 (int sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen),
+                (override));
+    MOCK_METHOD(int, getsockopt,
+                (int sockfd, int level, int optname, void* optval, socklen_t* optlen),
                 (override));
     MOCK_METHOD(int, setsockopt,
                 (int sockfd, int level, int optname, const char* optval,
@@ -592,6 +596,10 @@ TEST_F(StartMiniServerFTestSuite, init_socket_suff_reuseaddr) {
     EXPECT_EQ(getsockopt(ss4.fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, &optlen),
               0);
     EXPECT_TRUE(reuseaddr);
+
+    // Important! Otherwise repeated tests will fail later because all file
+    // descriptors for the process are consumed.
+    EXPECT_EQ(PUPNP_CLOSE_SOCKET(ss4.fd), 0) << std::strerror(errno);
 }
 
 TEST_F(StartMiniServerFTestSuite, init_socket_suff_with_invalid_socket) {
@@ -632,6 +640,7 @@ TEST_F(StartMiniServerFTestSuite, init_socket_suff_with_invalid_ip_address) {
         EXPECT_EQ(init_socket_suff(&ss4, text_addr, 4), 0);
         EXPECT_STREQ(ss4.text_addr, text_addr);
         EXPECT_GE(ss4.fd, 3);
+        EXPECT_EQ(PUPNP_CLOSE_SOCKET(ss4.fd), 0) << std::strerror(errno);
 
     } else {
 
@@ -728,7 +737,8 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_with_wrong_socket) {
 
     struct s_SocketStuff s;
     EXPECT_EQ(init_socket_suff(&s, text_addr, 4), 0);
-    // The socket id wasn't got from a socket() call and should trigger an
+    EXPECT_EQ(PUPNP_CLOSE_SOCKET(s.fd), 0) << std::strerror(errno);
+    // The socket id wasn't got from a socket() call now and should trigger an
     // error.
     s.fd = 32000;
     s.try_port = 65534;
@@ -737,8 +747,6 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_with_wrong_socket) {
     int ret_get_do_bind_listen = do_bind_listen(&s);
     EXPECT_EQ(ret_get_do_bind_listen, UPNP_E_SOCKET_BIND)
         << errStrEx(ret_get_do_bind_listen, UPNP_E_SOCKET_BIND);
-
-    // sock_close() is not needed because there is no socket called.
 }
 
 TEST_F(StartMiniServerFTestSuite, do_bind_listen_with_failed_listen) {
@@ -1602,8 +1610,6 @@ TEST(RunMiniServerTestSuite, receive_from_stopSock_nothing_todo) {
 }
 
 TEST(RunMiniServerTestSuite, RunMiniServer) {
-    // class CLogging loggingObj; // only with build type DEBUG.
-
     // This would start some other threads. We run into dynamic problems with
     // parallel running threads here. For example running the miniserver with
     // schedule_request_job() in a new thread cannot be finished before the
@@ -1687,6 +1693,14 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
                 .WillOnce(DoAll(StrCpyToArg<1>("shutdown"),
                                 SetArgPointee<4>(*localhost_sock.addr),
                                 Return(8)));
+
+            EXPECT_CALL(mocked_sys_socketObj,
+                        getsockopt(listen_sockfd, SOL_SOCKET, SO_ERROR, _, _))
+                .WillOnce(Return(0));
+            EXPECT_CALL(mocked_sys_socketObj,
+                        getsockopt(INVALID_SOCKET, SOL_SOCKET, SO_ERROR, _, _))
+                .Times(7)
+                .WillRepeatedly(SetErrnoAndReturn(EBADF, -1));
         }
 
         std::cout << CYEL "[ BUG      ]" CRES
@@ -1703,7 +1717,7 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
 }
 
 TEST(RunMiniServerTestSuite, ssdp_read) {
-    SOCKET ssdp_sockfd = 204;
+    SOCKET ssdp_sockfd = 208;
     fd_set rdSet;
     FD_ZERO(&rdSet);
     FD_SET(ssdp_sockfd, &rdSet);
@@ -1838,8 +1852,59 @@ TEST(RunMiniServerTestSuite, web_server_accept_with_empty_set) {
 #endif
 }
 
-TEST(RunMiniServerTestSuite, fdset_if_valid) {
-    GTEST_SKIP() << " # Still needs to be done.";
+TEST_F(RunMiniServerFTestSuite, fdset_if_valid) {
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+
+    SOCKET sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    EXPECT_NE(sockfd, INVALID_SOCKET) << std::strerror(errno);
+
+    // Test Unit
+    NS::fdset_if_valid(sockfd, &rdSet);
+
+    EXPECT_NE(FD_ISSET(sockfd, &rdSet), 0);
+
+    EXPECT_EQ(PUPNP_CLOSE_SOCKET(sockfd), 0) << std::strerror(errno);
+}
+
+TEST_F(RunMiniServerFTestSuite, fdset_if_valid_with_closed_socket) {
+    if (old_code) {
+        std::cout
+            << CYEL "[ BUGFIX   ]" CRES
+            << " Due to undefined behavior of FD_SET with invalid fd "
+               "this randomly terminated with 'stack smashing detected'.\n";
+    } else {
+
+#ifndef DEBUG
+        GTEST_SKIP()
+            << "             This test only runs with build type DEBUG.";
+#else
+        class CLogging loggingObj; // only with build type DEBUG.
+
+        constexpr SOCKET sockfd{1111};
+        fd_set rdSet;
+        FD_ZERO(&rdSet);
+
+        // Capture output to stderr
+        CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+        captureObj.start();
+
+        // Test Unit
+        NS::fdset_if_valid(sockfd, &rdSet);
+
+        // We cannot verify with FD_ISSET due to undefined behavior with invalid
+        // socket.
+        // EXPECT_EQ(FD_ISSET(sockfd, &rdSet), 0);
+
+        // Get captured output
+        std::string capturedStderr = captureObj.get();
+        EXPECT_THAT(
+            capturedStderr,
+            ContainsStdRegex(
+                " UPNP-MSER-2: .* FD_SET for select\\(\\) "
+                "failed with socket 1111. \\(9\\) Bad file descriptor"));
+#endif
+    }
 }
 
 TEST(RunMiniServerTestSuite, schedule_request_job) {
@@ -1880,6 +1945,17 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
 }
 
 TEST(RunMiniServerTestSuite, handle_request) {
+    GTEST_SKIP() << " # Work in progress.";
+    class CLogging loggingObj; // only with build type DEBUG.
+
+    struct mserv_request_t request;
+    request.connfd = 999;
+
+    // Test Unit
+    handle_request(&request);
+}
+
+TEST(RunMiniServerTestSuite, handle_request_with_invalid_socket) {
     GTEST_SKIP() << " # Still needs to be done.";
 }
 

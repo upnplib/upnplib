@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-07-28
+// Redistribution only with this Copyright remark. Last modified: 2022-08-17
 
 #ifndef UPNP_SYS_SOCKETIF_HPP
 #define UPNP_SYS_SOCKETIF_HPP
@@ -20,15 +20,10 @@
 #endif
 
 // Different return types for socket functions.
-#ifdef _WIN32
-#define UPNPLIB_SIZE_T_INT int
-#define UPNPLIB_VOID_CHAR char
-#else
-#define UPNPLIB_SIZE_T_INT size_t
-#define UPNPLIB_VOID_CHAR void
-#endif
 
 namespace upnplib {
+
+// clang-format off
 
 class Bsys_socket {
     // Real class to call the system functions
@@ -43,94 +38,76 @@ class Bsys_socket {
         return ::socket(domain, type, protocol);
     }
 
-    virtual int bind(int sockfd, const struct sockaddr* addr,
-                     socklen_t addrlen) {
+    virtual int bind(int sockfd, const struct sockaddr* addr, socklen_t addrlen) {
 #ifdef UPNPLIB_DEBUG_MOCK
-        std::cerr << "DEBUG: call bind(" << sockfd << ", " << addr << ", "
-                  << addrlen << ")\n";
+        std::cerr << "DEBUG: call bind(" << sockfd << ", " << addr << ", " << addrlen << ")\n";
 #endif
         return ::bind(sockfd, addr, addrlen);
     }
 
     virtual int listen(int sockfd, int backlog) {
 #ifdef UPNPLIB_DEBUG_MOCK
-        std::cerr << "DEBUG: call listen(" << sockfd << ", " << backlog
-                  << ")\n";
+        std::cerr << "DEBUG: call listen(" << sockfd << ", " << backlog << ")\n";
 #endif
         return ::listen(sockfd, backlog);
     }
 
     virtual int accept(int sockfd, struct sockaddr* addr, socklen_t* addrlen) {
 #ifdef UPNPLIB_DEBUG_MOCK
-        std::cerr << "DEBUG: call accept(" << sockfd << ", " << addr << ", "
-                  << addrlen << ")\n";
+        std::cerr << "DEBUG: call accept(" << sockfd << ", " << addr << ", " << addrlen << ")\n";
 #endif
         return ::accept(sockfd, addr, addrlen);
     }
 
-    virtual UPNPLIB_SIZE_T_INT recv(int sockfd, char* buf, size_t len,
-                                    int flags) {
+    virtual size_t recv(int sockfd, char* buf, size_t len, int flags) {
 #ifdef UPNPLIB_DEBUG_MOCK
-        std::cerr << "DEBUG: call recv(" << sockfd << ", " << buf << ", " << len
-                  << ", " << flags << ")\n";
+        std::cerr << "DEBUG: call recv(" << sockfd << ", " << buf << ", " << len << ", " << flags << ")\n";
 #endif
         return ::recv(sockfd, buf, len, flags);
     }
 
-    virtual UPNPLIB_SIZE_T_INT recvfrom(int sockfd, char* buf, size_t len,
-                                        int flags, struct sockaddr* src_addr,
-                                        socklen_t* addrlen) {
+    virtual size_t recvfrom(int sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen) {
 #ifdef UPNPLIB_DEBUG_MOCK
-        std::cerr << "DEBUG: call recvfrom(" << sockfd << ", " << buf << ", "
-                  << len << ", " << flags << ", " << src_addr << ", " << addrlen
-                  << ")\n";
+        std::cerr << "DEBUG: call recvfrom(" << sockfd << ", " << buf << ", " << len << ", " << flags << ", " << src_addr << ", " << addrlen << ")\n";
 #endif
         return ::recvfrom(sockfd, buf, len, flags, src_addr, addrlen);
     }
 
-    virtual UPNPLIB_SIZE_T_INT send(int sockfd, const char* buf, size_t len,
-                                    int flags) {
+    virtual size_t send(int sockfd, const char* buf, size_t len, int flags) {
 #ifdef UPNPLIB_DEBUG_MOCK
-        std::cerr << "DEBUG: call send(" << sockfd << ", " << buf << ", " << len
-                  << ", " << flags << ")\n";
+        std::cerr << "DEBUG: call send(" << sockfd << ", " << buf << ", " << len << ", " << flags << ")\n";
 #endif
         return ::send(sockfd, buf, len, flags);
     }
 
-    virtual int connect(int sockfd, const struct sockaddr* addr,
-                        socklen_t addrlen) {
+    virtual int connect(int sockfd, const struct sockaddr* addr, socklen_t addrlen) {
 #ifdef UPNPLIB_DEBUG_MOCK
-        std::cerr << "DEBUG: call recv(" << sockfd << ", " << addr << ", "
-                  << addrlen << ")\n";
+        std::cerr << "DEBUG: call recv(" << sockfd << ", " << addr << ", " << addrlen << ")\n";
 #endif
         return ::connect(sockfd, addr, addrlen);
     }
 
-    virtual int getsockopt(int sockfd, int level, int optname,
-                           UPNPLIB_VOID_CHAR* optval, socklen_t* optlen) {
+    virtual int getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* optlen) {
 #ifdef UPNPLIB_DEBUG_MOCK
-        std::cerr << "DEBUG: call getsockopt(" << sockfd << ", " << level
-                  << ", " << optname << ", " << optval << ", " << optlen
-                  << ")\n";
+        std::cerr << "DEBUG: call getsockopt(" << sockfd << ", " << level << ", " << optname << ", " << optval << ", " << optlen << ")\n";
 #endif
+#ifdef _WIN32
+        return ::getsockopt(sockfd, level, optname, (char*)optval, optlen);
+#else
         return ::getsockopt(sockfd, level, optname, optval, optlen);
+#endif
     }
 
-    virtual int setsockopt(int sockfd, int level, int optname,
-                           const char* optval, socklen_t optlen) {
+    virtual int setsockopt(int sockfd, int level, int optname, const char* optval, socklen_t optlen) {
 #ifdef UPNPLIB_DEBUG_MOCK
-        std::cerr << "DEBUG: call setsockopt(" << sockfd << ", " << level
-                  << ", " << optname << ", " << optval << ", " << optlen
-                  << ")\n";
+        std::cerr << "DEBUG: call setsockopt(" << sockfd << ", " << level << ", " << optname << ", " << optval << ", " << optlen << ")\n";
 #endif
         return ::setsockopt(sockfd, level, optname, optval, optlen);
     }
 
-    virtual int getsockname(int sockfd, struct sockaddr* addr,
-                            socklen_t* addrlen) {
+    virtual int getsockname(int sockfd, struct sockaddr* addr, socklen_t* addrlen) {
 #ifdef UPNPLIB_DEBUG_MOCK
-        std::cerr << "DEBUG: call getsockname(" << sockfd << ", " << addr
-                  << ", " << addrlen << ")\n";
+        std::cerr << "DEBUG: call getsockname(" << sockfd << ", " << addr << ", " << addrlen << ")\n";
 #endif
         return ::getsockname(sockfd, addr, addrlen);
     }
@@ -151,8 +128,7 @@ EXPORT_SPEC extern Bsys_socket* sys_socket_h;
 // 'upnplib::sys_socket_h->' so the new call looks like this:
 //  upnplib::sys_socket_h->bind(..)
 
-/* clang-format off
- * The following class should be copied to the test source. You do not need to
+/* The following class should be copied to the test source. You do not need to
  * copy all MOCK_METHOD, only that are acually used. It is not a good
  * idea to move it here to the header. It uses googletest macros and you always
  * have to compile the code with googletest even for production and not used.
@@ -177,13 +153,13 @@ class Mock_sys_socket : public Bsys_socket {
     MOCK_METHOD(int, accept,
                 (int sockfd, struct sockaddr* addr, socklen_t* addrlen),
                 (override));
-    MOCK_METHOD(UPNPLIB_SIZE_T_INT, recv,
+    MOCK_METHOD(size_t, recv,
                 (int sockfd, char* buf, size_t len, int flags),
                 (override));
-    MOCK_METHOD(UPNPLIB_SIZE_T_INT, recvfrom,
+    MOCK_METHOD(size_t, recvfrom,
                 (int sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen),
                 (override));
-    MOCK_METHOD(UPNPLIB_SIZE_T_INT, send,
+    MOCK_METHOD(size_t, send,
                 (int sockfd, const char* buf, size_t len, int flags),
                 (override));
     MOCK_METHOD(int, connect,
@@ -208,9 +184,11 @@ class Mock_sys_socket : public Bsys_socket {
     Mock_sys_socket m_mocked_sys_socket;
 
  *  and call it with: m_mocked_sys_socket.bind(..)
- * clang-format on
 */
+// clang-format on
 
 } // namespace upnplib
 
 #endif // UPNP_SYS_SOCKETIF_HPP
+
+// vim: nowrap

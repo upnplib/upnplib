@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-16
+// Redistribution only with this Copyright remark. Last modified: 2022-08-17
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -99,9 +99,9 @@ class Mock_sys_socket : public Bsys_socket {
     }
     virtual ~Mock_sys_socket() override { sys_socket_h = m_oldptr; }
 
-    MOCK_METHOD(UPNPLIB_SIZE_T_INT, recv,
-                (int sockfd, char* buf, size_t len, int flags), (override));
-    MOCK_METHOD(UPNPLIB_SIZE_T_INT, send,
+    MOCK_METHOD(size_t, recv, (int sockfd, char* buf, size_t len, int flags),
+                (override));
+    MOCK_METHOD(size_t, send,
                 (int sockfd, const char* buf, size_t len, int flags),
                 (override));
     MOCK_METHOD(int, shutdown, (int sockfd, int how), (override));

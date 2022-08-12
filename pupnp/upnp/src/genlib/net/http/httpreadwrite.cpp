@@ -83,6 +83,7 @@
 #include "upnpmock/sys_select.hpp"
 #include "upnpmock/sys_socket.hpp"
 #include "upnpmock/winsock2_win32.hpp"
+#include <iostream> // DEBUG!
 
 /*
  * Please, do not change these to const int while MSVC cannot understand
@@ -374,6 +375,7 @@ int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
     }
 
     while (1) {
+        std::cout << "DEBUG! Tracepoint 3\n";
         /* Double the bet */
         free(buf);
         buf_len = 2 * buf_len;
@@ -382,7 +384,9 @@ int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
             ret = UPNP_E_OUTOF_MEMORY;
             goto ExitFunction;
         }
+        std::cout << "DEBUG! Tracepoint 4\n";
         num_read = sock_read(info, buf, buf_len, timeout_secs);
+        std::cout << "DEBUG! Tracepoint 5\n";
         if (num_read > 0) {
             /* got data */
             status = parser_append(parser, buf, (size_t)num_read);
@@ -445,6 +449,7 @@ int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
             goto ExitFunction;
         }
     }
+    std::cout << "DEBUG! Tracepoint 4\n";
 
 ExitFunction:
     free(buf);
