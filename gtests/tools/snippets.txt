@@ -4,15 +4,3 @@
     // Output text error message of errno
     std::cerr << "DEBUG! errno " << errno << " = ";
     perror(nullptr);
-
-
-// Reference: https://github.com/google/googletest/issues/1208
-#include <regex>
-MATCHER_P(MatchesStdRegex, pattern, "") {
-    std::regex regex(pattern);
-    return std::regex_match(arg, regex);
-}
-MATCHER_P(ContainsStdRegex, pattern, "") {
-  std::regex regex(pattern);
-  return std::regex_search(arg, regex);
-}

@@ -22,6 +22,7 @@ using ::testing::SetErrnoAndReturn;
 
 using ::upnplib::testing::CCaptureStdOutErr;
 using ::upnplib::testing::ContainsStdRegex;
+using ::upnplib::testing::StrCpyToArg;
 
 // ANSI console colors
 #define CRED "\033[38;5;203m" // red
@@ -200,15 +201,6 @@ class Mock_unistd : public Bunistd {
     MOCK_METHOD(int, PUPNP_CLOSE_SOCKET, (PUPNP_SOCKET_TYPE fd), (override));
 };
 // clang-format on
-
-//
-// Custom action to return a string literal
-// Source: https://groups.google.com/g/googlemock/c/lQqCMW1ANQA
-// simple version: ACTION_P(StrCpyToArg0, str) { strcpy(arg0, str); }
-ACTION_TEMPLATE(StrCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
-                AND_1_VALUE_PARAMS(str)) {
-    strcpy(std::get<k>(args), str);
-}
 
 //
 // Miniserver TestSuite

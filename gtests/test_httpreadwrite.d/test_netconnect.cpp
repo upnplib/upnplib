@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-17
+// Redistribution only with this Copyright remark. Last modified: 2022-08-18
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -7,12 +7,15 @@
 #include "core/src/net/http/httpreadwrite.cpp"
 
 #include "gmock/gmock.h"
+#include "upnplib/gtest.hpp"
 
 using ::testing::_;
 using ::testing::DoAll;
 using ::testing::NotNull;
 using ::testing::Return;
 using ::testing::SetErrnoAndReturn;
+
+using ::upnplib::testing::SetArgPtrIntValue;
 
 namespace upnplib {
 
@@ -604,15 +607,6 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, getsockopt_error) {
 // There are corresponding tests for Microsoft Windows above. You may compare
 // them to look for differences.
 
-ACTION_P(SetArg3IntValue, value) {
-    // Generate function to set value refered to by 3rd argument as needed for
-    // getsockopt(). This allows us to mock functions that pass in a pointer,
-    // expecting the result to be put into that location.
-
-    *static_cast<int*>(arg3) = value;
-}
-
-//
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, successful_connect) {
     // This file descriptor is assumed to be valid.
     int socketfd{258};
@@ -627,7 +621,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, successful_connect) {
     Mock_sys_socket mock_sys_socketObj;
     EXPECT_CALL(mock_sys_socketObj, getsockopt(socketfd, SOL_SOCKET, SO_ERROR,
                                                NotNull(), NotNull()))
-        .WillOnce(DoAll(SetArg3IntValue(0), Return(0)));
+        .WillOnce(DoAll(SetArgPtrIntValue<3>(0), Return(0)));
 
     // Test the unit
     int connect_retval{-1};
@@ -755,11 +749,11 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, sockoption_error) {
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1));
-    // getsockopt(), the error is returned with SetArg3IntValue(1)
+    // getsockopt(), the error is returned with SetArgPtrIntValue<3>(1)
     Mock_sys_socket mock_sys_socketObj;
     EXPECT_CALL(mock_sys_socketObj, getsockopt(socketfd, SOL_SOCKET, SO_ERROR,
                                                NotNull(), NotNull()))
-        .WillOnce(DoAll(SetArg3IntValue(1), Return(0)));
+        .WillOnce(DoAll(SetArgPtrIntValue<3>(1), Return(0)));
 
     // Test the unit
     int connect_retval{-1};

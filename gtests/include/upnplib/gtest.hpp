@@ -1,15 +1,19 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-10
+// Redistribution only with this Copyright remark. Last modified: 2022-08-18
 
 #ifndef UPNPLIB_GTEST_HPP
 #define UPNPLIB_GTEST_HPP
 
 #include "upnplib/port.hpp"
-#include <string>
+#include <cstring>
 #include <regex>
 #include "gmock/gmock.h"
 
 namespace upnplib::testing {
+
+//###############################
+//           Helper             #
+//###############################
 
 // Capture output to stdout or stderr
 // ----------------------------------
@@ -72,6 +76,10 @@ class UPNPLIB_API CCaptureStdOutErr {
 };
 
 //
+//###############################
+//       Custom Matcher         #
+//###############################
+
 // Matcher to use portable Regex from the C++ standard library
 //------------------------------------------------------------
 // This overcomes the mixed internal MatchesRegex() and ContainsRegex() from
@@ -79,9 +87,14 @@ class UPNPLIB_API CCaptureStdOutErr {
 // gmock custom implementation. If using that to be portable we are limited to
 // the gmock cripple regex for MS Windows.
 // Reference: https://github.com/google/googletest/issues/1208
-//
 // ECMAScript syntax: https://cplusplus.com/reference/regex/ECMAScript/
+//
+/* Example:
+    using ::upnplib::testing::ContainsStdRegex;
 
+    EXPECT_THAT(capturedStderr,
+                ContainsStdRegex(" UPNP-MSER-1: .* invalid socket\\(-1\\) "));
+*/
 MATCHER_P(MatchesStdRegex, pattern, "") {
     std::regex regex(pattern);
     return std::regex_match(arg, regex);
@@ -89,6 +102,48 @@ MATCHER_P(MatchesStdRegex, pattern, "") {
 MATCHER_P(ContainsStdRegex, pattern, "") {
     std::regex regex(pattern);
     return std::regex_search(arg, regex);
+}
+
+//
+//###############################
+//       Custom Actions         #
+//###############################
+
+// Action for side effect to place a value at a location
+// -----------------------------------------------------
+// Generate function to set value refered to by n-th argument getsockopt(). This
+// allows us to mock functions that pass in a pointer, expecting the result to
+// be put into that location.
+// Simple version:
+// ACTION_P(SetArg3PtrIntValue, value) { *static_cast<int*>(arg3) = value; }
+//
+/* Example:
+    using ::upnplib::testing::SetArgPtrIntValue
+
+    EXPECT_CALL(mock_sys_socketObj, getsockopt(sockfd, _, _, _, _))
+        .WillOnce(DoAll(SetArgPtrIntValue<3>(1), Return(0)));
+*/
+ACTION_TEMPLATE(SetArgPtrIntValue, HAS_1_TEMPLATE_PARAMS(int, k),
+                AND_1_VALUE_PARAMS(value)) {
+    *static_cast<int*>(std::get<k>(args)) = value;
+}
+
+//
+// Action to return a string literal
+// ---------------------------------
+// Reference: https://groups.google.com/g/googlemock/c/lQqCMW1ANQA
+// simple version: ACTION_P(StrCpyToArg0, str) { strcpy(arg0, str); }
+//
+/* Example:
+    using ::upnplib::testing::StrCpyToArg
+
+    EXPECT_CALL( mocked_sys_socketObj,
+        recvfrom(sockfd, _, _, _, _, _))
+        .WillOnce(DoAll(StrCpyToArg<1>("ShutDown"), Return(8)));
+*/
+ACTION_TEMPLATE(StrCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
+                AND_1_VALUE_PARAMS(str)) {
+    std::strcpy(std::get<k>(args), str);
 }
 
 } // namespace upnplib::testing
