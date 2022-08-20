@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-07-20
+// Redistribution only with this Copyright remark. Last modified: 2022-08-20
 
 // Header file for portable definitions
 // ====================================
@@ -63,15 +63,26 @@
 // functions but it's not 100% compatible. We also need <winsock2.h> for
 // closesocket instead of <unistd.h> for close that also closes a socket on
 // unix.
-#if _WIN32
+#ifdef _WIN32
   #include <fcntl.h>
   #include <winsock2.h>
   #include <io.h>
   #define STDIN_FILENO 0
   #define STDOUT_FILENO 1
   #define STDERR_FILENO 2
+  #define stat _stat
+
 #else // WIN32
+
   #include <unistd.h>
+
+/*! This typedef makes the code slightly more WIN32 tolerant.
+ * On WIN32 systems, SOCKET is unsigned and is not a file
+ * descriptor. */
+  typedef int SOCKET;
+
+/*! socket() returns INVALID_SOCKET on win32 and is unsigned. */
+  #define INVALID_SOCKET (-1)
 #endif // WIN32
 
 #ifdef _MSC_VER

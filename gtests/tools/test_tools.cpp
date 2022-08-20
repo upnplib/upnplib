@@ -1,10 +1,24 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-09
+// Redistribution only with this Copyright remark. Last modified: 2022-08-21
+
+#include "upnplib/port.hpp"
+
+#ifdef _WIN32
+#include <winsock2.h>
+#include <ws2tcpip.h> // for socklen_t etc.
+#else
+#include <sys/socket.h>
+#endif
 
 #include "upnplib/gtest.hpp"
 #include "gtest/gtest.h"
 
+using ::testing::ThrowsMessage;
+
 using ::upnplib::testing::CCaptureStdOutErr;
+using ::upnplib::testing::check_closed_fds;
+using ::upnplib::testing::file_mod_time;
+using ::upnplib::testing::MatchesStdRegex;
 
 namespace upnplib {
 
@@ -138,6 +152,76 @@ TEST(CaptureStdOutErrTestSuite, capture_output_with_pipe) {
     EXPECT_EQ(captured_out, "out: Second output to StdOut\n");
     // std::cout << "Second start " << captured_err;
     // std::cout << "Second start " << captured_out;
+}
+
+TEST(FileModTimeTestSuite, get_modification_time) {
+    // Compare with the time when this test was created. It must always be
+    // greater.
+    EXPECT_GT(file_mod_time(__FILE__), 1660851000);
+}
+
+TEST(FileModTimeTestSuite, get_modification_time_from_empty_filename) {
+    EXPECT_THROW(file_mod_time(""), std::invalid_argument);
+}
+
+TEST(FileModTimeTestSuite, get_modification_time_from_invalid_filename) {
+    EXPECT_THROW(file_mod_time("unknown.file"), std::invalid_argument);
+}
+
+TEST(FileModTimeTestSuite, get_modification_time_from_nullptr) {
+#ifdef _WIN32
+    GTEST_SKIP() << "Will fail with SEH exception with code 0xc0000005 "
+                    "that cannot be catched.";
+#else
+    EXPECT_THROW(file_mod_time(nullptr), std::logic_error);
+#endif
+}
+
+TEST(DISABLED_ClosedFdsTestSuite, check_closed_fds) {
+    // Note: Disabled because on different environments (Github Actions, Linux,
+    // macOS, MS Windows etc.) we have different numbers of open file
+    // descriptors so we will not always find e valid match. Use this test only
+    // if modifying check_closed_fds().
+    //
+    // This test excludes file descriptor 0, 1, 2 that is stdin, stdout and
+    // stderr. They are always open. It also exludes fd 3 that is used by ctest
+    // when running it to execute this test.
+    EXPECT_NO_THROW(check_closed_fds(4, 1025));
+}
+
+TEST(DISABLED_ClosedFdsTestSuite, check_closed_fds_with_open_socket) {
+    // For disabling see not at TEST(DISABLED_ClosedFdsTestSuite,
+    // check_closed_fds).
+    //
+    // This should find an open file descriptor 5 or 6 for a socket. Besides fd
+    // 0 to 2 it is possible that fd 3 is also used if executing the test with
+    // ctest that uses one fd. That's the reason why we start searching with
+    // fd 4.
+    SOCKET sock3 = socket(AF_INET, SOCK_DGRAM, 0);
+    SOCKET sock4 = socket(AF_INET, SOCK_DGRAM, 0);
+    SOCKET sock5 = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sock3 != INVALID_SOCKET)
+        close(sock3);
+    if (sock4 != INVALID_SOCKET)
+        close(sock4);
+
+    EXPECT_THAT([]() { check_closed_fds(4, 16); },
+                ThrowsMessage<std::runtime_error>(MatchesStdRegex(
+                    "Found open file descriptor [56]\\. \\(0\\) Success")));
+
+    if (sock5 != INVALID_SOCKET)
+        close(sock5);
+}
+
+TEST(DISABLED_ClosedFdsTestSuite, check_closed_fds_with_open_file) {
+    // For disabling see not at TEST(DISABLED_ClosedFdsTestSuite,
+    // check_closed_fds).
+    //
+    // This test includes open file descriptor 2 (stderr).
+    EXPECT_THAT([]() { check_closed_fds(2, 16); },
+                ThrowsMessage<std::runtime_error>(
+                    "Found open file descriptor 2. (88) Socket operation on "
+                    "non-socket"));
 }
 
 } // namespace upnplib

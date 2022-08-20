@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-18
+// Redistribution only with this Copyright remark. Last modified: 2022-08-21
 
 #ifndef UPNPLIB_GTEST_HPP
 #define UPNPLIB_GTEST_HPP
@@ -74,6 +74,18 @@ class UPNPLIB_API CCaptureStdOutErr {
     // can restore it to the current_stdOutErrFd.
     int orig_stdOutErrFd{};
 };
+
+//
+// function to get the modification time of a file
+// -----------------------------------------------
+//     using ::upnplib::testing::file_mod_time;
+UPNPLIB_API time_t file_mod_time(const std::string& a_pathname);
+
+//
+// function to test if file descriptors are closed
+// -----------------------------------------------
+//     using ::upnplib::testing::check_closed_fds;
+UPNPLIB_API void check_closed_fds(int a_from_fd, int a_to_fd);
 
 //
 //###############################

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-07-13
+// Redistribution only with this Copyright remark. Last modified: 2022-08-16
 
 // Because this part of the main entry function uses gtest macros we have to
 // include it directly into the source of the test. These macros need to have
@@ -38,6 +38,7 @@ if (argc > 2) {
 #endif
     }
 
+    int rc{EXIT_FAILURE};
     if (both) {
         upnplib::old_code = true;
         int rc1 = RUN_ALL_TESTS();
@@ -57,24 +58,16 @@ if (argc > 2) {
             ::std::cout << "[  PASSED  ] Tests for UPnPlib new code.\n";
         ::std::cout << ::std::endl;
 
-        return rc1 | rc2; // Binary OR is intended
-    }
+        rc = rc1 | rc2; // Binary OR is intended
 
-    if (upnplib::old_code) {
-        int rc1 = RUN_ALL_TESTS();
+    } else if (upnplib::old_code) {
+        rc = RUN_ALL_TESTS();
         std::cout << "[----------] Tested UPnPlib old code.\n\n";
 
-        return rc1;
-
     } else {
-        int rc2 = RUN_ALL_TESTS();
+        rc = RUN_ALL_TESTS();
         std::cout << "[----------] Tested UPnPlib new code.\n\n";
-
-        return rc2;
     }
 
+    return rc;
 } // (argc > 2)
-
-::std::cerr << "ERROR! " << __FILE__ << ':' << __LINE__
-            << " - Program bug, invalid exit point." << ::std::endl;
-return EXIT_FAILURE;
