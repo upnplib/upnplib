@@ -1,7 +1,7 @@
-#ifndef UPNPLIB_NET_SOCK_HPP
-#define UPNPLIB_NET_SOCK_HPP
+#ifndef UPNPLIB_NET_SOCKET_HPP
+#define UPNPLIB_NET_SOCKET_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-26
+// Redistribution only with this Copyright remark. Last modified: 2022-08-21
 
 #include "upnplib/port.hpp" // for UPNPLIB_API
 #include <string>
@@ -9,7 +9,8 @@
 
 #ifdef _WIN32
 #include <winsock2.h>
-#include <ws2tcpip.h>
+#include <iphlpapi.h> // must be after <winsock2.h>
+#include <ws2tcpip.h> // for socklen_t etc.
 // #include <ws2ipdef.h>
 #else
 #include <sys/socket.h>
@@ -46,4 +47,4 @@ struct UPNPLIB_API SockAddr {
 
 } // namespace upnplib
 
-#endif // UPNPLIB_NET_SOCK_HPP
+#endif // UPNPLIB_NET_SOCKET_HPP

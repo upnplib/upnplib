@@ -2,13 +2,7 @@
 // Redistribution only with this Copyright remark. Last modified: 2022-08-21
 
 #include "upnplib/port.hpp"
-
-#ifdef _WIN32
-#include <winsock2.h>
-#include <ws2tcpip.h> // for socklen_t etc.
-#else
-#include <sys/socket.h>
-#endif
+#include "upnplib/socket.hpp"
 
 #include "upnplib/gtest.hpp"
 #include "gtest/gtest.h"

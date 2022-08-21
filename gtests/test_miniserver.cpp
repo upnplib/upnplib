@@ -7,10 +7,10 @@
 #endif
 
 #include "upnplib/upnptools.hpp" // For upnplib_native only
-#include "upnplib/sock.hpp"
+#include "upnplib/socket.hpp"
+#include "upnplib/gtest.hpp"
 
 #include "gmock/gmock.h"
-#include "upnplib/gtest.hpp"
 
 using ::testing::_;
 using ::testing::DoAll;

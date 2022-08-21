@@ -6,17 +6,11 @@
 
 #include "upnplib/port.hpp"
 #include "upnplib/gtest.hpp"
+#include "upnplib/socket.hpp"
 
 #include <iostream>
 #include <cstring>
 #include <fcntl.h> // Obtain O_* constant definitions
-
-#ifdef _WIN32
-#include <winsock2.h>
-#include <ws2tcpip.h> // for socklen_t
-#else
-#include <sys/socket.h>
-#endif
 
 namespace upnplib::testing {
 
