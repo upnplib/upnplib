@@ -1,10 +1,9 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-03-09
-
 #ifndef UPNP_IFADDRS_UIX_HPP
 #define UPNP_IFADDRS_UIX_HPP
+// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-08-21
 
-#include "upnplib/port.hpp"
+#include "upnplib/visibility.hpp"
 #include <ifaddrs.h>
 #include <netinet/in.h> // for sockaddr_in
 #include <string>

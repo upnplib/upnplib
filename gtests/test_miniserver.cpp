@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-17
+// Redistribution only with this Copyright remark. Last modified: 2022-08-22
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
@@ -7,6 +7,7 @@
 #endif
 
 #include "upnplib/upnptools.hpp" // For upnplib_native only
+#include "upnplib/port.hpp"
 #include "upnplib/socket.hpp"
 #include "upnplib/gtest.hpp"
 

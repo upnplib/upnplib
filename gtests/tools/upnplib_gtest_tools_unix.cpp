@@ -1,10 +1,12 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-12
+// Redistribution only with this Copyright remark. Last modified: 2022-08-21
 
 // Tools and helper classes to manage gtests
 // =========================================
 
 #include "upnplib/gtest_tools_unix.hpp"
+
+#include "upnplib/visibility.hpp"
 
 #include <arpa/inet.h>
 #include <net/if.h>

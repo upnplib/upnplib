@@ -3,7 +3,7 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-08-21
 
-#include "upnplib/port.hpp" // for UPNPLIB_API
+#include "upnplib/visibility.hpp" // for UPNPLIB_API
 #include <string>
 #include <stdexcept>
 
@@ -12,10 +12,21 @@
 #include <iphlpapi.h> // must be after <winsock2.h>
 #include <ws2tcpip.h> // for socklen_t etc.
 // #include <ws2ipdef.h>
-#else
+
+#else // _WIN32
+
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#endif
+
+/*! This typedef makes the code slightly more WIN32 tolerant.
+ * On WIN32 systems, SOCKET is unsigned and is not a file
+ * descriptor. */
+typedef int SOCKET;
+
+/*! socket() returns INVALID_SOCKET on win32 and is unsigned. */
+#define INVALID_SOCKET (-1)
+
+#endif // _WIN32
 
 namespace upnplib {
 
