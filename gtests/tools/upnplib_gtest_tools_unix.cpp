@@ -75,7 +75,7 @@ bool CIfaddr4::set(std::string_view a_Ifname, std::string_view a_Ifaddress)
         address = m_Ifaddress.substr(0, slashpos);
         bitmask = m_Ifaddress.substr(slashpos + 1);
     }
-    // std::cout << "DEBUG! set ifa_name: " << m_ifaddr.ifa_name << ",
+    // std::cout << "DEBUG: set ifa_name: " << m_ifaddr.ifa_name << ",
     // address: '" << address << "', bitmask: '" << bitmask << "', netmask: " <<
     // netmasks[std::stoi(bitmask)] << ", slashpos: " << slashpos << "\n";
 

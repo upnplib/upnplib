@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-08-10
+ * Redistribution only with this Copyright remark. Last modified: 2022-08-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -187,7 +187,8 @@ static int getNumericHostRedirection(int socket, char* host_port,
     char host[NAME_SIZE];
     int n;
 
-    rc = getsockname(socket, (struct sockaddr*)&addr, &addr_len);
+    rc = upnplib::sys_socket_h->getsockname(socket, (struct sockaddr*)&addr,
+                                            &addr_len);
     if (rc) {
         goto ExitFunction;
     }

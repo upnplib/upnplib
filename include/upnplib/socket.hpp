@@ -1,7 +1,10 @@
 #ifndef UPNPLIB_NET_SOCKET_HPP
 #define UPNPLIB_NET_SOCKET_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-21
+// Redistribution only with this Copyright remark. Last modified: 2022-08-24
+
+// Helpful link for ip address structures:
+// https://stackoverflow.com/a/16010670/5014688
 
 #include "upnplib/visibility.hpp" // for UPNPLIB_API
 #include <string>
@@ -33,12 +36,12 @@ namespace upnplib {
 // Wrapper for a sockaddr structure
 // --------------------------------
 // This structure simplifies the handling and setting of the different sockaddr
-// structures. For example:
-// SockAddr sock;
-// sock.addr_set("192.168.1.2", 52345)
-// net_order_addr = sock.addr_in->sin_addr.s_addr
-// some_net_func(sock.addr);
-
+/* structures. For example:
+    SockAddr sock;
+    sock.addr_set("192.168.1.2", 52345);
+    net_order_addr = sock.addr_in->sin_addr.s_addr;
+    some_net_func(sock.addr);
+*/
 struct UPNPLIB_API SockAddr {
     struct sockaddr_storage addr_ss {};
     union { // the union is initialized by the constructor

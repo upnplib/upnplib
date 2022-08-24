@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-08-17
+ * Redistribution only with this Copyright remark. Last modified: 2022-08-25
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -70,7 +70,6 @@
 #include <sys/types.h>
 #include <algorithm> // for std::max()
 #include <cstring>
-#include <iostream> // DEBUG!
 
 #ifdef _WIN32
 #include "UpnpStdInt.hpp" // for ssize_t
@@ -190,14 +189,21 @@ static int getNumericHostRedirection(int socket, char* host_port,
     char host[NAME_SIZE];
     int n;
 
-    rc = getsockname(socket, (struct sockaddr*)&addr, &addr_len);
+    rc = upnplib::sys_socket_h->getsockname(socket, (struct sockaddr*)&addr,
+                                            &addr_len);
     if (rc) {
+        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
+                   "Error with systemcall getsockname(). %s.\n",
+                   std::strerror(errno));
         goto ExitFunction;
     }
     switch (addr.ss_family) {
     case AF_INET6:
         rcp = inet_ntop(AF_INET6, &addr6->sin6_addr, host, sizeof host);
         if (!rcp) {
+            UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
+                       "Error when getting text ip address. %s.\n",
+                       std::strerror(errno));
             rc = -1;
             goto ExitFunction;
         }
@@ -205,15 +211,22 @@ static int getNumericHostRedirection(int socket, char* host_port,
         n = snprintf(host_port, hp_size, "[%s]:%d", host, port);
         break;
     case AF_INET:
-    default:
         rcp = inet_ntop(AF_INET, &addr4->sin_addr, host, sizeof host);
         if (!rcp) {
+            UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
+                       "Error when getting text ip address. %s.\n",
+                       std::strerror(errno));
             rc = -1;
             goto ExitFunction;
         }
         port = ntohs(addr4->sin_port);
         n = snprintf(host_port, hp_size, "%s:%d", host, port);
         break;
+    default:
+        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
+                   "Invalid address family %d.\n", addr.ss_family);
+        rc = -1;
+        goto ExitFunction;
     }
     if (n < 0) {
         rc = -1;
@@ -353,6 +366,8 @@ static UPNP_INLINE void handle_error(
 static void free_handle_request_arg(
     /*! [in] Request Message to be freed. */
     void* args) {
+    if (args == nullptr)
+        return;
     struct mserv_request_t* request = (struct mserv_request_t*)args;
 
     sock_close(request->connfd);
@@ -462,9 +477,10 @@ static UPNP_INLINE void fdset_if_valid(SOCKET sock, fd_set* set) {
     // For select() and its macros FD_* POSIX requires fd to be a valid file
     // descriptor so we will check carefully. Otherwise you risk to run into
     // undefined behavior.
-    char sock_error[64];
+    char sock_error[64]{"<no message>"};
     socklen_t sockerrlen = sizeof(sock_error);
 
+    errno = EINVAL;
     if (upnplib::sys_socket_h->getsockopt(sock, SOL_SOCKET, SO_ERROR,
                                           &sock_error[0],
                                           &sockerrlen) == SOCKET_ERROR) {

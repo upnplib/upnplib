@@ -97,6 +97,7 @@ UPNPLIB_API void check_closed_fds(int a_from_fd, int a_to_fd);
 // gmock custom implementation. If using that to be portable we are limited to
 // the gmock cripple regex for MS Windows.
 // Reference: https://github.com/google/googletest/issues/1208
+//
 // ECMAScript syntax: https://cplusplus.com/reference/regex/ECMAScript/
 //
 /* Example:

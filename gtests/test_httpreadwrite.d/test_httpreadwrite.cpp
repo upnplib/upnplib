@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-16
+// Redistribution only with this Copyright remark. Last modified: 2022-08-22
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -1075,7 +1075,6 @@ TEST(CUri, only_hostport_url) {
 TEST(CUri, empty_hostport_in_url_str) {
     if (github_actions)
         GTEST_SKIP() << "             known failing test on Github Actions";
-
     CUri url("https:///");
     EXPECT_EQ(url.url_str, "https:///");
     EXPECT_TRUE(url.hostport.empty());
@@ -1090,6 +1089,20 @@ TEST(CUri, only_scheme) {
     EXPECT_EQ(url.url_str, "https://");
     EXPECT_TRUE(url.hostport.empty());
     EXPECT_EQ(url.hostport.size(), (size_t)0);
+}
+
+TEST(HttpReadWriteIp4TestSuite, http_RecvMessage) {
+    // This test will be created when we have understood the message formats.
+    // When we have this test then TEST(RunMiniServerTestSuite, handle_request)
+    // in gtests/test_miniserver.cpp should also be completed.
+    GTEST_SKIP() << "Still needs to be done.";
+}
+
+TEST(HttpReadWriteIp4TestSuite, http_SendStatusResponse) {
+    // This test will be created when we have understood the message formats.
+    // When we have this test then TEST(RunMiniServerTestSuite, handle_error)
+    // in gtests/test_miniserver.cpp should also be completed.
+    GTEST_SKIP() << "Still needs to be done.";
 }
 
 //

@@ -1,4 +1,5 @@
-// Copyright (c) 2021 Ingo Höft, last modified: 2021-04-06
+// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-08-24
 
 // You cannot mock glibc mutex functions because they are also used by
 // googletest. Googlemock will use a mocked function by itself. The test crashes
@@ -19,7 +20,7 @@ TEST(MutexTestSuite, lock_and_unlock_mutex) {
     // pthread_mutex_init(&init_mutex, NULL);
 
     EXPECT_EQ(fastmutex.__data.__lock, 0);
-    std::cout << "DEBUG! init:   fastmutex.__data.__lock: "
+    std::cout << "DEBUG: init:   fastmutex.__data.__lock: "
               << fastmutex.__data.__lock
               << ", fastmutex.__data.__owner: " << fastmutex.__data.__owner
               << ", fastmutex.__data.__kind: " << fastmutex.__data.__kind
@@ -27,14 +28,14 @@ TEST(MutexTestSuite, lock_and_unlock_mutex) {
 
     EXPECT_EQ(pthread_mutex_lock(&fastmutex), 0);
     EXPECT_EQ(pthread_mutex_destroy(&fastmutex), EBUSY);
-    std::cout << "DEBUG! lock:   fastmutex.__data.__lock: "
+    std::cout << "DEBUG: lock:   fastmutex.__data.__lock: "
               << fastmutex.__data.__lock
               << ", fastmutex.__data.__owner: " << fastmutex.__data.__owner
               << ", fastmutex.__data.__kind: " << fastmutex.__data.__kind
               << "\n";
 
     EXPECT_EQ(pthread_mutex_unlock(&fastmutex), 0);
-    std::cout << "DEBUG! unlock: fastmutex.__data.__lock: "
+    std::cout << "DEBUG: unlock: fastmutex.__data.__lock: "
               << fastmutex.__data.__lock
               << ", fastmutex.__data.__owner: " << fastmutex.__data.__owner
               << ", fastmutex.__data.__kind: " << fastmutex.__data.__kind

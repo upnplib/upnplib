@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-22
+// Redistribution only with this Copyright remark. Last modified: 2022-08-25
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
@@ -39,13 +39,13 @@ using ::upnplib::testing::StrCpyToArg;
 
 class CLogging { /*
  * Use it for example with:
-    class CLogging loggingObj; // only with build type DEBUG.
+    class CLogging loggingObj; // Output only with build type DEBUG.
 * or
-    class CLogging loggingObj(UPNP_ALL); // only with build type DEBUG.
+    class CLogging loggingObj(UPNP_ALL); // Output only with build type DEBUG.
  * or other loglevel.
  */
   public:
-    CLogging(Upnp_LogLevel a_loglevel = UPNP_INFO) {
+    CLogging(Upnp_LogLevel a_loglevel = UPNP_ALL) {
         UpnpSetLogLevel(a_loglevel);
         if (UpnpInitLog() != UPNP_E_SUCCESS) {
             throw std::runtime_error(std::string(
@@ -104,18 +104,22 @@ another thread. This thread polls receive_from_stopSock() for an incomming
 message "ShutDown" send to stopsock bound to "127.0.0.1". This will be recieved
 by select() so it will always enable a blocked (waiting) select().
 
-   RunMiniServer()
+   RunMiniServer() as thread, started by StartMiniServer()
    |__ while(receive_from_stopSock() not "ShutDown")
    |   |__ select()
    |   |__ web_server_accept()
    |   |   |__ accept()
    |   |   |__ schedule_request_job()
+   |   |       |__ TPJobInit() to handle_request()
    |   |
    |   |__ ssdp_read()
    |   |__ block until receive_from_stopSock()
    |
    |__ sock_close()
    |__ free()
+
+   handle_request() as thread, started by schedule_request_job()
+   |__ http_RecvMessage()
 */
 
 //
@@ -1647,6 +1651,10 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
 #ifdef _WIN32
             EXPECT_CALL(mocked_sys_selectObj, select(0, _, nullptr, _, nullptr))
                 .WillOnce(Return(1));
+#else
+            EXPECT_CALL(mocked_sys_selectObj,
+                        select(select_nfds, _, nullptr, _, nullptr))
+                .WillOnce(Return(1));
 #endif
         } else {
 
@@ -1720,7 +1728,7 @@ TEST(RunMiniServerTestSuite, ssdp_read) {
 }
 
 TEST(RunMiniServerTestSuite, web_server_accept) {
-    class CLogging loggingObj; // only with build type DEBUG.
+    class CLogging loggingObj; // Output only with build type DEBUG.
 
     SOCKET listen_sockfd = 205;
     SOCKET connected_sockfd = 206;
@@ -1749,7 +1757,7 @@ TEST(RunMiniServerTestSuite, web_server_accept) {
                             Return(connected_sockfd)));
 
         // Capture output to stderr
-        CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+        class CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
         captureObj.start();
 
         // Test Unit
@@ -1786,7 +1794,7 @@ TEST(RunMiniServerTestSuite, web_server_accept) {
 }
 
 TEST(RunMiniServerTestSuite, web_server_accept_with_invalid_socket) {
-    class CLogging loggingObj; // only with build type DEBUG.
+    class CLogging loggingObj; // Output only with build type DEBUG.
 
     SOCKET listen_sockfd = INVALID_SOCKET;
 
@@ -1794,7 +1802,7 @@ TEST(RunMiniServerTestSuite, web_server_accept_with_invalid_socket) {
     EXPECT_CALL(mocked_sys_socketObj, accept(_, _, _)).Times(0);
 
     // Capture output to stderr
-    CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    class CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
     // Test Unit
@@ -1815,7 +1823,7 @@ TEST(RunMiniServerTestSuite, web_server_accept_with_invalid_socket) {
 }
 
 TEST(RunMiniServerTestSuite, web_server_accept_with_empty_set) {
-    class CLogging loggingObj; // only with build type DEBUG.
+    class CLogging loggingObj; // Output only with build type DEBUG.
 
     SOCKET listen_sockfd = 207;
     fd_set set;
@@ -1825,7 +1833,7 @@ TEST(RunMiniServerTestSuite, web_server_accept_with_empty_set) {
     EXPECT_CALL(mocked_sys_socketObj, accept(_, _, _)).Times(0);
 
     // Capture output to stderr
-    CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    class CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
     // Test Unit
@@ -1872,14 +1880,14 @@ TEST_F(RunMiniServerFTestSuite, fdset_if_valid_with_closed_socket) {
         GTEST_SKIP()
             << "             This test only runs with build type DEBUG.";
 #else
-        class CLogging loggingObj; // only with build type DEBUG.
+        class CLogging loggingObj; // Output only with build type DEBUG.
 
         constexpr SOCKET sockfd{1111};
         fd_set rdSet;
         FD_ZERO(&rdSet);
 
         // Capture output to stderr
-        CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+        class CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
         captureObj.start();
 
         // Test Unit
@@ -1891,17 +1899,15 @@ TEST_F(RunMiniServerFTestSuite, fdset_if_valid_with_closed_socket) {
 
         // Get captured output
         std::string capturedStderr = captureObj.get();
-        EXPECT_THAT(
-            capturedStderr,
-            ContainsStdRegex(
-                " UPNP-MSER-2: .* FD_SET for select\\(\\) "
-                "failed with socket 1111. \\(9\\) Bad file descriptor"));
+        EXPECT_THAT(capturedStderr,
+                    ContainsStdRegex(" UPNP-MSER-2: .* FD_SET for select\\(\\) "
+                                     "failed with socket 1111."));
 #endif
     }
 }
 
 TEST(RunMiniServerTestSuite, schedule_request_job) {
-    class CLogging loggingObj; // only with build type DEBUG.
+    class CLogging loggingObj; // Output only with build type DEBUG.
 
     SOCKET connected_sockfd = 202;
     uint16_t connected_port = 302;
@@ -1917,7 +1923,7 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
     EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 0), 0);
 
     // Capture output to stderr
-    CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    class CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
     // Test Unit
@@ -1928,7 +1934,7 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
 #ifdef DEBUG
     EXPECT_THAT(
         capturedStderr,
-        ContainsStdRegex(" UPNP-MSER-.: .* 202: cannot schedule request\n"));
+        ContainsStdRegex(" UPNP-MSER-\\d: .* 202: cannot schedule request\n"));
 #else
     EXPECT_THAT(capturedStderr,
                 ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0\n"));
@@ -1938,38 +1944,212 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
 }
 
 TEST(RunMiniServerTestSuite, handle_request) {
-    GTEST_SKIP() << " # Work in progress.";
-    class CLogging loggingObj; // only with build type DEBUG.
+    GTEST_SKIP()
+        << "Still needs to be done when I have understood http_RecvMessage().";
+}
 
-    struct mserv_request_t request;
+TEST(RunMiniServerTestSuite, handle_request_with_invalid_socket) {
+    GTEST_SKIP()
+        << "Still needs to be done when I have understood http_RecvMessage().";
+
+    class CLogging loggingObj; // Output only with build type DEBUG.
+
+    struct mserv_request_t request {};
     request.connfd = 999;
 
     // Test Unit
     handle_request(&request);
 }
 
-TEST(RunMiniServerTestSuite, handle_request_with_invalid_socket) {
-    GTEST_SKIP() << " # Still needs to be done.";
+TEST_F(RunMiniServerFTestSuite, free_handle_request_arg) {
+    // Provide request structure
+    struct mserv_request_t* request =
+        (struct mserv_request_t*)malloc(sizeof(*request));
+    memset(request, 0, sizeof *request);
+    // and set a socket
+    request->connfd = socket(AF_INET, SOCK_STREAM, 0);
+
+    // Test Unit
+    free_handle_request_arg(request);
 }
 
-TEST(RunMiniServerTestSuite, free_handle_request_args) {
-    GTEST_SKIP() << " # Still needs to be done.";
+TEST_F(RunMiniServerFTestSuite, free_handle_request_arg_with_invalid_socket) {
+    // Provide request structure
+    struct mserv_request_t* request =
+        (struct mserv_request_t*)malloc(sizeof(*request));
+    memset(request, 0, sizeof *request);
+    // and set an invalid socket
+    request->connfd = INVALID_SOCKET;
+
+    // Test Unit
+    free_handle_request_arg(request);
+}
+
+TEST(RunMiniServerDeathTest, free_handle_request_arg_with_nullptr_to_struct) {
+    // Provide request structure
+    struct mserv_request_t* request{nullptr};
+
+    // Test Unit
+    if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ]" CRES
+                  << " free_handle_re4quest with nullptr must not segfault.\n";
+        EXPECT_DEATH(free_handle_request_arg(request), "");
+
+    } else {
+
+        free_handle_request_arg(request);
+    }
 }
 
 TEST(RunMiniServerTestSuite, handle_error) {
-    GTEST_SKIP() << " # Still needs to be done.";
+    GTEST_SKIP() << "Still needs to be done when I have made the test to "
+                    "http_SendStatusResponse.";
 }
 
 TEST(RunMiniServerTestSuite, dispatch_request) {
-    GTEST_SKIP() << " # Still needs to be done.";
+    GTEST_SKIP() << "Still needs to be done when we have complete tests for "
+                    "httpreadwrite.";
 }
 
 TEST(RunMiniServerTestSuite, getNumericHostRedirection) {
-    GTEST_SKIP() << " # Still needs to be done.";
+    // getNumericHostRedirection() returns the ip address with port as text
+    // (e.g. "192.168.1.2:54321") that is bound to a socket.
+
+    class CLogging loggingObj; // Output only with build type DEBUG.
+
+    SOCKET sockfd{405};
+    char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
+
+    // Provide a sockaddr structure that will be returned by mocked
+    // getsockname().
+    struct SockAddr sock;
+    sock.addr_set("192.168.123.122", 54321);
+
+    // Mock system functions
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+        .WillOnce(DoAll(SetArgPointee<1>(*sock.addr), Return(0)));
+
+    // Test Unit
+    EXPECT_TRUE(
+        getNumericHostRedirection(sockfd, host_port, sizeof(host_port)));
+
+    EXPECT_STREQ(host_port, "192.168.123.122:54321");
+}
+
+TEST(RunMiniServerTestSuite,
+     getNumericHostRedirection_with_insufficient_resources) {
+    class CLogging loggingObj; // Output only with build type DEBUG.
+
+    SOCKET sockfd{406};
+    char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
+
+    // Mock system functions
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+        .WillOnce(SetErrnoAndReturn(ENOBUFS, -1));
+
+    // Capture output to stderr
+    class CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    captureObj.start();
+
+    // Test Unit
+    EXPECT_FALSE(
+        getNumericHostRedirection(sockfd, host_port, sizeof(host_port)));
+
+    // Get captured output
+    std::string capturedStderr = captureObj.get();
+    if (old_code)
+        EXPECT_TRUE(capturedStderr.empty());
+    else
+#ifdef DEBUG
+        EXPECT_THAT(
+            capturedStderr,
+            ContainsStdRegex(
+                " UPNP-MSER-1: .*Error with systemcall getsockname\\(\\)\\. "
+                "[Nn]o buffer space"));
+#else
+        EXPECT_TRUE(capturedStderr.empty());
+#endif
+    EXPECT_STREQ(host_port, "<no message>");
+}
+
+TEST(RunMiniServerTestSuite,
+     getNumericHostRedirection_with_wrong_address_family) {
+    class CLogging loggingObj; // Output only with build type DEBUG.
+
+    SOCKET sockfd{407};
+    char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
+
+    // Provide a sockaddr structure that will be returned by mocked
+    // getsockname().
+    struct SockAddr sock;
+    sock.addr->sa_family = AF_UNIX;
+
+    // Mock system functions
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+        .WillOnce(DoAll(SetArgPointee<1>(*sock.addr), Return(0)));
+
+    // Capture output to stderr
+    class CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    captureObj.start();
+
+    // Test Unit
+    bool ret_getNumericHostRedirection =
+        getNumericHostRedirection(sockfd, host_port, sizeof(host_port));
+
+    // Get captured output
+    std::string capturedStderr = captureObj.get();
+
+    if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ]" CRES
+                  << " A wrong but accepted address family AF_UNIX should "
+                     "return an error.\n";
+        EXPECT_TRUE(ret_getNumericHostRedirection); // wrong
+        EXPECT_TRUE(capturedStderr.empty());
+        EXPECT_STREQ(host_port, "0.0.0.0:0"); // wrong
+
+    } else {
+
+        EXPECT_FALSE(ret_getNumericHostRedirection);
+#ifdef DEBUG
+        EXPECT_THAT(
+            capturedStderr,
+            ContainsStdRegex(" UPNP-MSER-1: .*Invalid address family 1\\.\n"));
+#else
+        EXPECT_TRUE(capturedStderr.empty());
+#endif
+        EXPECT_STREQ(host_port, "<no message>");
+    }
 }
 
 TEST(RunMiniServerTestSuite, host_header_is_numeric) {
-    GTEST_SKIP() << " # Still needs to be done.";
+    char host_port[INET_ADDRSTRLEN + 1 + 5]{"192.168.88.99:59876"};
+
+    EXPECT_TRUE(host_header_is_numeric(host_port, sizeof(host_port)));
+}
+
+TEST(RunMiniServerTestSuite, host_header_is_numeric_with_invalid_ip_address) {
+    char host_port[INET_ADDRSTRLEN + 1 + 5]{"192.168.88.256:59877"};
+
+    EXPECT_FALSE(host_header_is_numeric(host_port, sizeof(host_port)));
+}
+
+TEST(RunMiniServerTestSuite, host_header_is_numeric_with_empty_port) {
+    char host_port[INET_ADDRSTRLEN + 1 + 5]{"192.168.88.99:"};
+
+    EXPECT_TRUE(host_header_is_numeric(host_port, sizeof(host_port)));
+}
+
+TEST(RunMiniServerTestSuite, host_header_is_numeric_without_port) {
+    char host_port[INET_ADDRSTRLEN + 1 + 5]{"192.168.88.99"};
+
+    std::cout << CYEL "[ BUG      ]" CRES
+              << " Because host_header with an empty port is valid then "
+                 "without port it should also be valid.\n";
+    // wrong
+    EXPECT_FALSE(host_header_is_numeric(host_port, sizeof(host_port)));
 }
 
 TEST_F(StopMiniServerFTestSuite, sock_close) {
@@ -1989,6 +2169,6 @@ TEST_F(StopMiniServerFTestSuite, sock_close) {
 //
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-    // class CLogging loggingObj; // only with build type DEBUG.
+    // class CLogging loggingObj; // Output only with build type DEBUG.
 #include "upnplib/gtest_main.inc"
 }
