@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-05
+// Redistribution only with this Copyright remark. Last modified: 2022-08-26
 
 #include "upnplib/global.hpp"
 #include "upnplib/upnptools.hpp"
@@ -58,17 +58,6 @@ constexpr struct ErrorString ErrorMessages[] = {
     {UPNP_E_NOT_FOUND, "UPNP_E_NOT_FOUND"},
     {UPNP_E_INTERNAL_ERROR, "UPNP_E_INTERNAL_ERROR"},
 };
-
-const char* err_c_str(int rc) {
-    size_t i;
-
-    for (i = 0; i < sizeof(ErrorMessages) / sizeof(ErrorMessages[0]); ++i) {
-        if (rc == ErrorMessages[i].rc) {
-            return ErrorMessages[i].rcError;
-        }
-    }
-    return "Unknown error code";
-}
 
 const std::string errStr(const int error) {
     size_t i;

@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-07-15
+# Redistribution only with this Copyright remark. Last modified: 2022-08-26
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -13,8 +13,6 @@ if(NOT WIN32)
     # upnplib compatible shared library
     #----------------------------------
     add_library(upnplib_compa_shared SHARED   # prefix -ucsh
-            ./compa/src/global.cpp
-            ./compa/src/api/upnptools.cpp
             ./src/net/miniserver.cpp
             ./src/init.cpp
     )
@@ -44,8 +42,6 @@ if(NOT WIN32)
     # upnplib compatible static library
     #----------------------------------
     add_library(upnplib_compa_static STATIC   # prefix -ucst
-            ./compa/src/global.cpp
-            ./compa/src/api/upnptools.cpp
             ./src/net/miniserver.cpp
             ./src/init.cpp
     )
@@ -178,8 +174,6 @@ else() # WIN32
     # WIN32 upnplib compatible shared library
     #----------------------------------------
     add_library(upnplib_compa_shared SHARED   # prefix -ucsh
-            ./compa/src/global.cpp
-            ./compa/src/api/upnptools.cpp
             ./src/init.cpp
     )
     target_include_directories(upnplib_compa_shared
@@ -211,8 +205,6 @@ else() # WIN32
     # WIN32 upnplib compatible static library
     #----------------------------------------
     add_library(upnplib_compa_static STATIC   # prefix -ucst
-            ./compa/src/global.cpp
-            ./compa/src/api/upnptools.cpp
             ./src/init.cpp
     )
     target_include_directories(upnplib_compa_static

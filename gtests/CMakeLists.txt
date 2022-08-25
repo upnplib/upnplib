@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-08-09
+# Redistribution only with this Copyright remark. Last modified: 2022-08-26
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -577,7 +577,7 @@ set(TEST_UPNPTOOLS_INCLUDE_DIRECTORIES
 if(UPNPLIB_WITH_TOOLS)
 add_executable(test_upnptools-pnsh
 #---------------------------------
-        ./test_upnptools_compa.cpp
+        ./test_upnptools.cpp
 )
 target_include_directories(test_upnptools-pnsh
         ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
@@ -585,12 +585,12 @@ target_include_directories(test_upnptools-pnsh
 target_compile_definitions(test_upnptools-pnsh
     PRIVATE
         UPNPLIB_SHARED
+        UPNPLIB_WITH_NATIVE_PUPNP
 )
 target_link_libraries(test_upnptools-pnsh
     PRIVATE
         # pupnp native shared: prefix -pnsh
         pupnp_native_shared
-        upnplib_native_shared
 )
 add_test(NAME ctest_upnptools-pnsh COMMAND test_upnptools-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -598,90 +598,24 @@ add_test(NAME ctest_upnptools-pnsh COMMAND test_upnptools-pnsh
 
 add_executable(test_upnptools-pnst
 #---------------------------------
-        ./test_upnptools_compa.cpp
+        ./test_upnptools.cpp
 )
 target_include_directories(test_upnptools-pnst
         ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
+)
+target_compile_definitions(test_upnptools-pnst
+    PRIVATE
+        UPNPLIB_WITH_NATIVE_PUPNP
 )
 target_link_libraries(test_upnptools-pnst
     PRIVATE
         # pupnp native static: prefix -pnst
         pupnp_native_static
-        upnplib_native_static
 )
 add_test(NAME ctest_upnptools-pnst COMMAND test_upnptools-pnst
 )
 endif()
 
-add_executable(test_upnptools-ucsh
-#----------------------------------
-        ./test_upnptools_compa.cpp
-)
-target_include_directories(test_upnptools-ucsh
-        ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
-)
-target_compile_definitions(test_upnptools-ucsh
-    PRIVATE
-        UPNPLIB_SHARED
-)
-target_link_libraries(test_upnptools-ucsh
-    PRIVATE
-        # upnplib compatible shared: prefix -ucsh
-        upnplib_compa_shared
-        upnplib_native_shared
-)
-add_test(NAME ctest_upnptools-ucsh COMMAND test_upnptools-ucsh
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-)
-
-add_executable(test_upnptools-ucst
-#---------------------------------
-        ./test_upnptools_compa.cpp
-)
-target_include_directories(test_upnptools-ucst
-        ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
-)
-target_link_libraries(test_upnptools-ucst
-    PRIVATE
-        # upnplib compatibe static: prefix -ucst
-        upnplib_compa_static
-        upnplib_native_static
-)
-add_test(NAME ctest_upnptools-ucst COMMAND test_upnptools-ucst
-)
-
-add_executable(test_upnptools-unsh
-#---------------------------------
-        ./test_upnptools.cpp
-)
-target_include_directories(test_upnptools-unsh
-        ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
-)
-target_compile_definitions(test_upnptools-unsh
-    PRIVATE
-        UPNPLIB_SHARED
-)
-target_link_libraries(test_upnptools-unsh
-    PRIVATE
-        upnplib_native_shared # prefix -unsh
-)
-add_test(NAME ctest_upnptools-unsh COMMAND test_upnptools-unsh
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-)
-
-add_executable(test_upnptools-unst
-#---------------------------------
-        ./test_upnptools.cpp
-)
-target_include_directories(test_upnptools-unst
-        ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
-)
-target_link_libraries(test_upnptools-unst
-    PRIVATE
-        upnplib_native_static # prefix -unst
-)
-add_test(NAME ctest_upnptools-unst COMMAND test_upnptools-unst
-)
 
 # simple test
 #============
@@ -692,81 +626,6 @@ set(TEST_SIMPLE_INCLUDE_DIRECTORIES
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h on MS Windows
-)
-
-add_executable(test_simple-pnsh
-#------------------------------
-        ./test_simple_compa.cpp
-)
-target_include_directories(test_simple-pnsh
-    ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
-)
-target_compile_definitions(test_simple-pnsh
-    PRIVATE
-        UPNPLIB_SHARED
-        UPNPLIB_WITH_NATIVE_PUPNP
-)
-target_link_libraries(test_simple-pnsh
-    PRIVATE
-        pupnp_native_shared # prefix -pnsh
-        upnplib_native_shared
-)
-add_test(NAME ctest_simple-pnsh COMMAND test_simple-pnsh
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-)
-
-add_executable(test_simple-pnst
-#------------------------------
-        ./test_simple_compa.cpp
-)
-target_include_directories(test_simple-pnst
-    ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
-)
-target_compile_definitions(test_simple-pnst
-    PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
-)
-target_link_libraries(test_simple-pnst
-    PRIVATE
-        pupnp_native_static # prefix -pnst
-        upnplib_native_static
-)
-add_test(NAME ctest_simple-pnst COMMAND test_simple-pnst
-)
-
-add_executable(test_simple-ucsh
-#------------------------------
-        ./test_simple_compa.cpp
-)
-target_include_directories(test_simple-ucsh
-    ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
-)
-target_compile_definitions(test_simple-ucsh
-    PRIVATE
-        UPNPLIB_SHARED
-)
-target_link_libraries(test_simple-ucsh
-    PRIVATE
-        upnplib_compa_shared # prefix -ucsh
-        upnplib_native_shared
-)
-add_test(NAME ctest_simple-ucsh COMMAND test_simple-ucsh
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-)
-
-add_executable(test_simple-ucst
-#------------------------------
-        ./test_simple_compa.cpp
-)
-target_include_directories(test_simple-ucst
-    ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
-)
-target_link_libraries(test_simple-ucst
-    PRIVATE
-        upnplib_compa_static # prefix -ucst
-        upnplib_native_static
-)
-add_test(NAME ctest_simple-ucst COMMAND test_simple-ucst
 )
 
 add_executable(test_simple-unsh

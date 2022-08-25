@@ -159,6 +159,7 @@ C++ provides Visibility Support as powerful optimization. We use it as described
 ## Some references and 0ptimization
 - [Optimize String Use](https://www.oreilly.com/library/view/optimized-c/9781491922057/ch04.html)
 - [ Move Objects](https://newbedev.com/is-std-vector-copying-the-objects-with-a-push-back) instead of coppying.
+- [Sockets - Server & Client](https://www.bogotobogo.com/cplusplus/sockets_server_client.php)
 - [Blocking vs. non-blocking sockets](https://www.scottklement.com/rpg/socktut/nonblocking.html)
 - [Operator Overloading](https://condor.depaul.edu/ntomuro/courses/262/notes/lecture3.html)
 - [Unicode in C and C++: What You Can Do About It Today](https://www.cprogramming.com/tutorial/unicode.html)
@@ -167,5 +168,5 @@ C++ provides Visibility Support as powerful optimization. We use it as described
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2022-05-12
+// Redistribution only with this Copyright remark. Last modified: 2022-08-25
 </sup></sup>

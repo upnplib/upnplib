@@ -121,14 +121,6 @@ jobs:
           set -e
           echo -e "\n./build/gtests/test_template"
           ./build/gtests/test_template
-          echo -e "\n./build/gtests/test_simple-pnsh"
-          ./build/gtests/test_simple-pnsh
-          echo -e "\n./build/gtests/test_simple-pnst"
-          ./build/gtests/test_simple-pnst
-          echo -e "\n./build/gtests/test_simple-ucsh"
-          ./build/gtests/test_simple-ucsh
-          echo -e "\n./build/gtests/test_simple-ucst"
-          ./build/gtests/test_simple-ucst
           echo -e "\n./build/gtests/test_simple-unsh"
           ./build/gtests/test_simple-unsh
           echo -e "\n./build/gtests/test_simple-unst"
@@ -209,14 +201,6 @@ jobs:
           set -e
           echo -e "\n./build/gtests/test_template"
           ./build/gtests/test_template
-          echo -e "\n./build/gtests/test_simple-pnsh"
-          ./build/gtests/test_simple-pnsh
-          echo -e "\n./build/gtests/test_simple-pnst"
-          ./build/gtests/test_simple-pnst
-          echo -e "\n./build/gtests/test_simple-ucsh"
-          ./build/gtests/test_simple-ucsh
-          echo -e "\n./build/gtests/test_simple-ucst"
-          ./build/gtests/test_simple-ucst
           echo -e "\n./build/gtests/test_simple-unsh"
           ./build/gtests/test_simple-unsh
           echo -e "\n./build/gtests/test_simple-unst"
@@ -324,18 +308,6 @@ jobs:
           echo "`n./build/gtests/${{matrix.buildtype}}/test_template.exe"
           ./build/gtests/${{matrix.buildtype}}/test_template.exe
           if(-not $?) {exit 1}
-          echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-pnsh.exe"
-          ./build/gtests/${{matrix.buildtype}}/test_simple-pnsh.exe
-          if(-not $?) {exit 1}
-          echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-pnst.exe"
-          ./build/gtests/${{matrix.buildtype}}/test_simple-pnst.exe
-          if(-not $?) {exit 1}
-          echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-ucsh.exe"
-          ./build/gtests/${{matrix.buildtype}}/test_simple-ucsh.exe
-          if(-not $?) {exit 1}
-          echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-ucst.exe"
-          ./build/gtests/${{matrix.buildtype}}/test_simple-ucst.exe
-          if(-not $?) {exit 1}
           echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-unsh.exe"
           ./build/gtests/${{matrix.buildtype}}/test_simple-unsh.exe
           if(-not $?) {exit 1}
@@ -415,18 +387,6 @@ jobs:
           $env:path += ";./build/bin"
           echo "`n./build/gtests/test_template.exe"
           ./build/gtests/test_template.exe
-          if(-not $?) {exit 1}
-          echo "`n./build/gtests/test_simple-pnsh.exe"
-          ./build/gtests/test_simple-pnsh.exe
-          if(-not $?) {exit 1}
-          echo "`n./build/gtests/test_simple-pnst.exe"
-          ./build/gtests/test_simple-pnst.exe
-          if(-not $?) {exit 1}
-          echo "`n./build/gtests/test_simple-ucsh.exe"
-          ./build/gtests/test_simple-ucsh.exe
-          if(-not $?) {exit 1}
-          echo "`n./build/gtests/test_simple-ucst.exe"
-          ./build/gtests/test_simple-ucst.exe
           if(-not $?) {exit 1}
           echo "`n./build/gtests/test_simple-unsh.exe"
           ./build/gtests/test_simple-unsh.exe

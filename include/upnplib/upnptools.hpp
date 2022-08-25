@@ -8,7 +8,6 @@
 
 namespace upnplib {
 
-UPNPLIB_API const char* err_c_str(int rc);
 UPNPLIB_API const std::string errStr(int error);
 UPNPLIB_API const std::string errStrEx(const int error, const int success);
 
