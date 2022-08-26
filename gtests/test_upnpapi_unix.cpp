@@ -18,7 +18,7 @@ using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 
-using ::upnplib::testing::CCaptureStdOutErr;
+using ::upnplib::testing::CaptureStdOutErr;
 
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
@@ -195,7 +195,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_default_initialization) {
     EXPECT_CALL(m_mocked_net_if, if_nametoindex(_)).Times(1);
 
     // Initialize capturing of the stderr output
-    CCaptureStdOutErr captureObj(STDERR_FILENO);
+    CaptureStdOutErr captureObj(STDERR_FILENO);
     captureObj.start();
 
     // call the unit

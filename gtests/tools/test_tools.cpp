@@ -9,7 +9,7 @@
 
 using ::testing::ThrowsMessage;
 
-using ::upnplib::testing::CCaptureStdOutErr;
+using ::upnplib::testing::CaptureStdOutErr;
 using ::upnplib::testing::check_closed_fds;
 using ::upnplib::testing::file_mod_time;
 using ::upnplib::testing::MatchesStdRegex;
@@ -17,7 +17,7 @@ using ::upnplib::testing::MatchesStdRegex;
 namespace upnplib {
 
 TEST(CaptureStdOutErrTestSuite, capture_stderr_message) {
-    CCaptureStdOutErr captErrObj(STDERR_FILENO);
+    CaptureStdOutErr captErrObj(STDERR_FILENO);
     captErrObj.start();
 
     std::cerr << "Testing error message\n";
@@ -28,7 +28,7 @@ TEST(CaptureStdOutErrTestSuite, capture_stderr_message) {
 }
 
 TEST(CaptureStdOutErrTestSuite, capture_stdout_message) {
-    CCaptureStdOutErr captOutObj(STDOUT_FILENO);
+    CaptureStdOutErr captOutObj(STDOUT_FILENO);
     captOutObj.start();
 
     std::cout << "Testing error message\n";
@@ -39,7 +39,7 @@ TEST(CaptureStdOutErrTestSuite, capture_stdout_message) {
 }
 
 TEST(CaptureStdOutErrTestSuite, capture_stderr_empty) {
-    CCaptureStdOutErr captErrObj(STDERR_FILENO);
+    CaptureStdOutErr captErrObj(STDERR_FILENO);
     captErrObj.start();
     std::string captured_err = captErrObj.get();
 
@@ -47,7 +47,7 @@ TEST(CaptureStdOutErrTestSuite, capture_stderr_empty) {
 }
 
 TEST(CaptureStdOutErrTestSuite, capture_stdout_empty) {
-    CCaptureStdOutErr captOutObj(STDOUT_FILENO);
+    CaptureStdOutErr captOutObj(STDOUT_FILENO);
     captOutObj.start();
     std::string captured_out = captOutObj.get();
 
@@ -65,7 +65,7 @@ std::string message512{
     ".............................................................512"};
 
 TEST(CaptureStdOutErrTestSuite, capture_stderr_with_one_chunk) {
-    CCaptureStdOutErr captErrObj(STDERR_FILENO);
+    CaptureStdOutErr captErrObj(STDERR_FILENO);
     captErrObj.start();
 
     // Makes the message 512 bytes long like a chunk. stderr is unbufferd so we
@@ -78,7 +78,7 @@ TEST(CaptureStdOutErrTestSuite, capture_stderr_with_one_chunk) {
 }
 
 TEST(CaptureStdOutErrTestSuite, capture_stdout_with_one_chunk) {
-    CCaptureStdOutErr captOutObj(STDOUT_FILENO);
+    CaptureStdOutErr captOutObj(STDOUT_FILENO);
     captOutObj.start();
 
     // Makes the message 512 bytes long like a chunk.
@@ -90,7 +90,7 @@ TEST(CaptureStdOutErrTestSuite, capture_stdout_with_one_chunk) {
 }
 
 TEST(CaptureStdOutErrTestSuite, capture_stderr_with_two_chunks) {
-    CCaptureStdOutErr captErrObj(STDERR_FILENO);
+    CaptureStdOutErr captErrObj(STDERR_FILENO);
     captErrObj.start();
 
     // Makes the message 513 bytes long like one chunk plus one byte.
@@ -102,7 +102,7 @@ TEST(CaptureStdOutErrTestSuite, capture_stderr_with_two_chunks) {
 }
 
 TEST(CaptureStdOutErrTestSuite, capture_stdout_with_two_chunks) {
-    CCaptureStdOutErr captOutObj(STDOUT_FILENO);
+    CaptureStdOutErr captOutObj(STDOUT_FILENO);
     captOutObj.start();
 
     // Makes the message 513 bytes long like one chunk plus one byte.
@@ -114,12 +114,12 @@ TEST(CaptureStdOutErrTestSuite, capture_stdout_with_two_chunks) {
 }
 
 TEST(CaptureStdOutErrTestSuite, capture_stderr_with_invalid_fd) {
-    EXPECT_THROW(CCaptureStdOutErr captOutObj(1023), std::invalid_argument);
+    EXPECT_THROW(CaptureStdOutErr captOutObj(1023), std::invalid_argument);
 }
 
 TEST(CaptureStdOutErrTestSuite, capture_output_with_pipe) {
-    CCaptureStdOutErr captOutObj(STDOUT_FILENO);
-    CCaptureStdOutErr captErrObj(STDERR_FILENO);
+    CaptureStdOutErr captOutObj(STDOUT_FILENO);
+    CaptureStdOutErr captErrObj(STDERR_FILENO);
 
     captErrObj.start();
     captOutObj.start();
@@ -184,7 +184,7 @@ TEST(DISABLED_ClosedFdsTestSuite, check_closed_fds) {
 }
 
 TEST(DISABLED_ClosedFdsTestSuite, check_closed_fds_with_open_socket) {
-    // For disabling see not at TEST(DISABLED_ClosedFdsTestSuite,
+    // For disabling see note at TEST(DISABLED_ClosedFdsTestSuite,
     // check_closed_fds).
     //
     // This should find an open file descriptor 5 or 6 for a socket. Besides fd
@@ -208,7 +208,7 @@ TEST(DISABLED_ClosedFdsTestSuite, check_closed_fds_with_open_socket) {
 }
 
 TEST(DISABLED_ClosedFdsTestSuite, check_closed_fds_with_open_file) {
-    // For disabling see not at TEST(DISABLED_ClosedFdsTestSuite,
+    // For disabling see note at TEST(DISABLED_ClosedFdsTestSuite,
     // check_closed_fds).
     //
     // This test includes open file descriptor 2 (stderr).

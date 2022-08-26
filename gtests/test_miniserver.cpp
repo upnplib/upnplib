@@ -21,15 +21,9 @@ using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
 
-using ::upnplib::testing::CCaptureStdOutErr;
+using ::upnplib::testing::CaptureStdOutErr;
 using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::StrCpyToArg;
-
-// ANSI console colors
-#define CRED "\033[38;5;203m" // red
-#define CYEL "\033[38;5;227m" // yellow
-#define CGRN "\033[38;5;83m"  // green
-#define CRES "\033[0m"        // reset
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #define NS
@@ -1757,7 +1751,7 @@ TEST(RunMiniServerTestSuite, web_server_accept) {
                             Return(connected_sockfd)));
 
         // Capture output to stderr
-        class CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+        class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
         captureObj.start();
 
         // Test Unit
@@ -1802,7 +1796,7 @@ TEST(RunMiniServerTestSuite, web_server_accept_with_invalid_socket) {
     EXPECT_CALL(mocked_sys_socketObj, accept(_, _, _)).Times(0);
 
     // Capture output to stderr
-    class CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
     // Test Unit
@@ -1833,7 +1827,7 @@ TEST(RunMiniServerTestSuite, web_server_accept_with_empty_set) {
     EXPECT_CALL(mocked_sys_socketObj, accept(_, _, _)).Times(0);
 
     // Capture output to stderr
-    class CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
     // Test Unit
@@ -1887,7 +1881,7 @@ TEST_F(RunMiniServerFTestSuite, fdset_if_valid_with_closed_socket) {
         FD_ZERO(&rdSet);
 
         // Capture output to stderr
-        class CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+        class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
         captureObj.start();
 
         // Test Unit
@@ -1923,7 +1917,7 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
     EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 0), 0);
 
     // Capture output to stderr
-    class CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
     // Test Unit
@@ -2050,7 +2044,7 @@ TEST(RunMiniServerTestSuite,
         .WillOnce(SetErrnoAndReturn(ENOBUFS, -1));
 
     // Capture output to stderr
-    class CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
     // Test Unit
@@ -2092,7 +2086,7 @@ TEST(RunMiniServerTestSuite,
         .WillOnce(DoAll(SetArgPointee<1>(*sock.addr), Return(0)));
 
     // Capture output to stderr
-    class CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
     // Test Unit

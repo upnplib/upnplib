@@ -7,6 +7,13 @@
 #include <regex>
 #include "gmock/gmock.h"
 
+// ANSI console colors
+#define CRED "\033[38;5;203m" // red
+#define CYEL "\033[38;5;227m" // yellow
+#define CGRN "\033[38;5;83m"  // green
+#define CRES "\033[0m"        // reset
+
+//
 namespace upnplib::testing {
 
 //###############################
@@ -15,7 +22,7 @@ namespace upnplib::testing {
 
 // Capture output to stdout or stderr
 // ----------------------------------
-// class CCaptureStdOutErr declaration
+// class CaptureStdOutErr declaration
 //
 // Helper class to capture output to stdout or stderr into a buffer so we can
 // compare it. We use a pipe that is opened non blocking if not on Microsoft
@@ -32,7 +39,7 @@ namespace upnplib::testing {
 //
 // Typical usage is:
 /*
-    CCaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
     std::cerr << "Hello World"; // or any other output from within functions
     std::string capturedStderr = captureObj.get();
@@ -48,10 +55,10 @@ namespace upnplib::testing {
 //              Read 0 byte from pipe.
 // clang-format on
 
-class UPNPLIB_API CCaptureStdOutErr {
+class UPNPLIB_API CaptureStdOutErr {
   public:
-    CCaptureStdOutErr(int a_fileno);
-    virtual ~CCaptureStdOutErr();
+    CaptureStdOutErr(int a_fileno);
+    virtual ~CaptureStdOutErr();
     void start();
     std::string get();
 

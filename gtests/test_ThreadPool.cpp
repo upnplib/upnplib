@@ -22,9 +22,12 @@
 #include "ThreadPool.hpp"
 #include "upnplib/ThreadPool.hpp"
 
+#include "upnplib/gtest.hpp"
 #include "gtest/gtest.h"
 
 namespace upnplib {
+bool old_code{false}; // Managed in upnplib_gtest_main.inc
+bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 //
 //###############################
@@ -41,13 +44,13 @@ TEST(ThreadPoolNormalTestSuite, init_and_shutdown_threadpool) {
 
     EXPECT_EQ(tpObj.ThreadPoolInit(&tp, nullptr), 0);
     EXPECT_EQ(tpObj.ThreadPoolShutdown(&tp), 0);
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! Finish a test without threadpool shutdown should be "
-                 "possible without random segfaults.\n";
-#else
-    GTEST_FAIL() << "# Finish a test without threadpool shutdown should be "
-                    "possible without random segfaults.";
-#endif
+    if (old_code)
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " Finish a test without threadpool shutdown should be "
+                     "possible without random segfaults.\n";
+    else
+        GTEST_FAIL() << "# Finish a test without threadpool shutdown should be "
+                        "possible without random segfaults.";
 }
 
 TEST(ThreadPoolErrorCondTestSuite, init_and_shutdown_threadpool) {
@@ -237,19 +240,24 @@ TEST(ThreadPoolNormalTestSuite, set_maximal_threads_to_attribute) {
     EXPECT_EQ(tpObj.TPAttrSetMaxThreads(&TPAttr, 1), 0);
     EXPECT_EQ(TPAttr.minThreads, 0);
     EXPECT_EQ(TPAttr.maxThreads, 1);
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! It should not be possible to set maxThreads < 0"
-              << " or < minThreads.\n";
-    EXPECT_EQ(tpObj.TPAttrSetMaxThreads(&TPAttr, -1), 0);
-    TPAttr.minThreads = 2;
-    EXPECT_EQ(tpObj.TPAttrSetMaxThreads(&TPAttr, 1), 0);
-#else
-    EXPECT_EQ(tpObj.TPAttrSetMaxThreads(&TPAttr, -1), EINVAL)
-        << "# It should not be possible to set maxThreads < 0.";
-    TPAttr.minThreads = 2;
-    EXPECT_EQ(tpObj.TPAttrSetMaxThreads(&TPAttr, 1), EINVAL)
-        << "# It should not be possible to set maxThreads < minThreads.";
-#endif
+
+    if (old_code) {
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " It should not be possible to set maxThreads < 0 or < "
+                     "minThreads.\n";
+        EXPECT_EQ(tpObj.TPAttrSetMaxThreads(&TPAttr, -1), 0);
+        TPAttr.minThreads = 2;
+        EXPECT_EQ(tpObj.TPAttrSetMaxThreads(&TPAttr, 1), 0);
+
+    } else {
+
+        EXPECT_EQ(tpObj.TPAttrSetMaxThreads(&TPAttr, -1), EINVAL)
+            << "# It should not be possible to set maxThreads < 0.";
+        TPAttr.minThreads = 2;
+        EXPECT_EQ(tpObj.TPAttrSetMaxThreads(&TPAttr, 1), EINVAL)
+            << "# It should not be possible to set maxThreads < minThreads.";
+    }
+
     EXPECT_EQ(TPAttr.minThreads, 2);
     EXPECT_EQ(TPAttr.maxThreads, 1);
 }
@@ -272,20 +280,24 @@ TEST(ThreadPoolNormalTestSuite, set_minimal_threads_to_attribute) {
     EXPECT_EQ(tpObj.TPAttrSetMinThreads(&TPAttr, 1), 0);
     EXPECT_EQ(TPAttr.minThreads, 1);
     EXPECT_EQ(TPAttr.maxThreads, 2);
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! It should not be possible to set minThreads < 0"
-              << " or > maxThreads.\n";
-    EXPECT_EQ(tpObj.TPAttrSetMinThreads(&TPAttr, -1), 0);
-    EXPECT_EQ(tpObj.TPAttrSetMinThreads(&TPAttr, 3), 0);
-    EXPECT_EQ(TPAttr.minThreads, 3);
-#else
-    EXPECT_EQ(tpObj.TPAttrSetMinThreads(&TPAttr, -1), EINVAL)
-        << "# It should not be possible to set minThreads < 0.";
-    EXPECT_EQ(tpObj.TPAttrSetMinThreads(&TPAttr, 3), EINVAL)
-        << "# It should not be possible to set minThreads > maxThreads.";
-    EXPECT_EQ(TPAttr.minThreads, 1)
-        << "# Wrong settings should not modify old minThreads value.";
-#endif
+
+    if (old_code) {
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " It should not be possible to set minThreads < 0 or > "
+                     "maxThreads.\n";
+        EXPECT_EQ(tpObj.TPAttrSetMinThreads(&TPAttr, -1), 0);
+        EXPECT_EQ(tpObj.TPAttrSetMinThreads(&TPAttr, 3), 0);
+        EXPECT_EQ(TPAttr.minThreads, 3);
+
+    } else {
+
+        EXPECT_EQ(tpObj.TPAttrSetMinThreads(&TPAttr, -1), EINVAL)
+            << "# It should not be possible to set minThreads < 0.";
+        EXPECT_EQ(tpObj.TPAttrSetMinThreads(&TPAttr, 3), EINVAL)
+            << "# It should not be possible to set minThreads > maxThreads.";
+        EXPECT_EQ(TPAttr.minThreads, 1)
+            << "# Wrong settings should not modify old minThreads value.";
+    }
     EXPECT_EQ(TPAttr.maxThreads, 2);
 }
 
@@ -301,16 +313,20 @@ TEST(ThreadPoolNormalTestSuite, set_stack_size_to_attribute) {
 
     EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, 0), 0);
     EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, 1), 0);
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! It should not be possible to set StackSize < 0.\n";
-    EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, -1), 0);
-    EXPECT_EQ(TPAttr.stackSize, (size_t)-1);
-#else
-    EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, -1), EINVAL)
-        << "# It should not be possible to set StackSize < 0.";
-    EXPECT_EQ(TPAttr.stackSize, (size_t)1)
-        << "# Wrong settings should not modify old stackSize value.";
-#endif
+
+    if (old_code) {
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " It should not be possible to set StackSize < 0.\n";
+        EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, -1), 0);
+        EXPECT_EQ(TPAttr.stackSize, (size_t)-1);
+
+    } else {
+
+        EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, -1), EINVAL)
+            << "# It should not be possible to set StackSize < 0.";
+        EXPECT_EQ(TPAttr.stackSize, (size_t)1)
+            << "# Wrong settings should not modify old stackSize value.";
+    }
 }
 
 TEST(ThreadPoolErrorCondTestSuite, set_stack_size_to_attribute) {
@@ -325,16 +341,20 @@ TEST(ThreadPoolNormalTestSuite, set_idle_time_to_attribute) {
 
     EXPECT_EQ(tpObj.TPAttrSetIdleTime(&TPAttr, 0), 0);
     EXPECT_EQ(tpObj.TPAttrSetIdleTime(&TPAttr, 1), 0);
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! It should not be possible to set IdleTime < 0.\n";
-    EXPECT_EQ(tpObj.TPAttrSetIdleTime(&TPAttr, -1), 0);
-    EXPECT_EQ(TPAttr.maxIdleTime, -1);
-#else
-    EXPECT_EQ(tpObj.TPAttrSetIdleTime(&TPAttr, -1), EINVAL)
-        << "# It should not be possible to set IdleTime < 0.";
-    EXPECT_EQ(TPAttr.maxIdleTime, 1)
-        << "# Wrong settings should not modify old maxIdleTime value.";
-#endif
+
+    if (old_code) {
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " It should not be possible to set IdleTime < 0.\n";
+        EXPECT_EQ(tpObj.TPAttrSetIdleTime(&TPAttr, -1), 0);
+        EXPECT_EQ(TPAttr.maxIdleTime, -1);
+
+    } else {
+
+        EXPECT_EQ(tpObj.TPAttrSetIdleTime(&TPAttr, -1), EINVAL)
+            << "# It should not be possible to set IdleTime < 0.";
+        EXPECT_EQ(TPAttr.maxIdleTime, 1)
+            << "# Wrong settings should not modify old maxIdleTime value.";
+    }
 }
 
 TEST(ThreadPoolErrorCondTestSuite, set_idle_time_to_attribute) {
@@ -349,16 +369,20 @@ TEST(ThreadPoolNormalTestSuite, set_jobs_per_thread_to_attribute) {
 
     EXPECT_EQ(tpObj.TPAttrSetJobsPerThread(&TPAttr, 0), 0);
     EXPECT_EQ(tpObj.TPAttrSetJobsPerThread(&TPAttr, 1), 0);
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! It should not be possible to set JobsPerThread < 0.\n";
-    EXPECT_EQ(tpObj.TPAttrSetJobsPerThread(&TPAttr, -1), 0);
-    EXPECT_EQ(TPAttr.jobsPerThread, -1);
-#else
-    EXPECT_EQ(tpObj.TPAttrSetJobsPerThread(&TPAttr, -1), EINVAL)
-        << "# It should not be possible to set JobsPerThread < 0.";
-    EXPECT_EQ(TPAttr.jobsPerThread, 1)
-        << "# Wrong settings should not modify old JobsPerThread value.";
-#endif
+
+    if (old_code) {
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " It should not be possible to set JobsPerThread < 0.\n";
+        EXPECT_EQ(tpObj.TPAttrSetJobsPerThread(&TPAttr, -1), 0);
+        EXPECT_EQ(TPAttr.jobsPerThread, -1);
+
+    } else {
+
+        EXPECT_EQ(tpObj.TPAttrSetJobsPerThread(&TPAttr, -1), EINVAL)
+            << "# It should not be possible to set JobsPerThread < 0.";
+        EXPECT_EQ(TPAttr.jobsPerThread, 1)
+            << "# Wrong settings should not modify old JobsPerThread value.";
+    }
 }
 
 TEST(ThreadPoolErrorCondTestSuite, set_jobs_per_thread_to_attribute) {
@@ -373,17 +397,20 @@ TEST(ThreadPoolNormalTestSuite, set_starvation_time_to_attribute) {
 
     EXPECT_EQ(tpObj.TPAttrSetStarvationTime(&TPAttr, 0), 0);
     EXPECT_EQ(tpObj.TPAttrSetStarvationTime(&TPAttr, 1), 0);
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout
-        << "  BUG! It should not be possible to set StarvationTime < 0.\n";
-    EXPECT_EQ(tpObj.TPAttrSetStarvationTime(&TPAttr, -1), 0);
-    EXPECT_EQ(TPAttr.starvationTime, -1);
-#else
-    EXPECT_EQ(tpObj.TPAttrSetStarvationTime(&TPAttr, -1), EINVAL)
-        << "# It should not be possible to set StarvationTime < 0.";
-    EXPECT_EQ(TPAttr.starvationTime, 1)
-        << "# Wrong settings should not modify old starvationTime value.";
-#endif
+
+    if (old_code) {
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " It should not be possible to set StarvationTime < 0.\n";
+        EXPECT_EQ(tpObj.TPAttrSetStarvationTime(&TPAttr, -1), 0);
+        EXPECT_EQ(TPAttr.starvationTime, -1);
+
+    } else {
+
+        EXPECT_EQ(tpObj.TPAttrSetStarvationTime(&TPAttr, -1), EINVAL)
+            << "# It should not be possible to set StarvationTime < 0.";
+        EXPECT_EQ(TPAttr.starvationTime, 1)
+            << "# Wrong settings should not modify old starvationTime value.";
+    }
 }
 
 TEST(ThreadPoolErrorCondTestSuite, set_starvation_time_to_attribute) {
@@ -403,18 +430,22 @@ TEST(ThreadPoolNormalTestSuite, set_scheduling_policy_to_attribute) {
     ThreadPoolAttr TPAttr{}; // Structure for a threadpool attribute
 
     EXPECT_EQ(tpObj.TPAttrSetSchedPolicy(&TPAttr, SCHED_OTHER), 0);
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! Only SCHED_OTHER, SCHED_IDLE, SCHED_BATCH, SCHED_FIFO,"
-              << " SCHED_RR or SCHED_DEADLINE should be valid.\n";
-    EXPECT_EQ(tpObj.TPAttrSetSchedPolicy(&TPAttr, 0x5a5a), 0);
-    EXPECT_EQ(TPAttr.schedPolicy, 0x5a5a);
-#else
-    EXPECT_EQ(tpObj.TPAttrSetSchedPolicy(&TPAttr, 0x5a5a), EINVAL)
-        << "# Only SCHED_OTHER, SCHED_IDLE, SCHED_BATCH, SCHED_FIFO,"
-        << " SCHED_RR or SCHED_DEADLINE should be valid.";
-    EXPECT_EQ(TPAttr.schedPolicy, SCHED_OTHER)
-        << "# Wrong settings should not modify old schedPolicy value.";
-#endif
+
+    if (old_code) {
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " Only SCHED_OTHER, SCHED_IDLE, SCHED_BATCH, SCHED_FIFO, "
+                     "SCHED_RR or SCHED_DEADLINE should be valid.\n";
+        EXPECT_EQ(tpObj.TPAttrSetSchedPolicy(&TPAttr, 0x5a5a), 0);
+        EXPECT_EQ(TPAttr.schedPolicy, 0x5a5a);
+
+    } else {
+
+        EXPECT_EQ(tpObj.TPAttrSetSchedPolicy(&TPAttr, 0x5a5a), EINVAL)
+            << "# Only SCHED_OTHER, SCHED_IDLE, SCHED_BATCH, SCHED_FIFO,"
+            << " SCHED_RR or SCHED_DEADLINE should be valid.";
+        EXPECT_EQ(TPAttr.schedPolicy, SCHED_OTHER)
+            << "# Wrong settings should not modify old schedPolicy value.";
+    }
 }
 
 TEST(ThreadPoolErrorCondTestSuite, set_scheduling_policy_to_attribute) {
@@ -429,16 +460,20 @@ TEST(ThreadPoolNormalTestSuite, set_max_jobs_qeued_totally_to_attribute) {
 
     EXPECT_EQ(tpObj.TPAttrSetMaxJobsTotal(&TPAttr, 0), 0);
     EXPECT_EQ(tpObj.TPAttrSetMaxJobsTotal(&TPAttr, 1), 0);
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! It should not be possible to set MaxJobsTotal < 0.\n";
-    EXPECT_EQ(tpObj.TPAttrSetMaxJobsTotal(&TPAttr, -1), 0);
-    EXPECT_EQ(TPAttr.maxJobsTotal, -1);
-#else
-    EXPECT_EQ(tpObj.TPAttrSetMaxJobsTotal(&TPAttr, -1), EINVAL)
-        << "# It should not be possible to set MaxJobsTotal < 0.";
-    EXPECT_EQ(TPAttr.maxJobsTotal, 1)
-        << "# Wrong settings should not modify old maxJobsTotal value.";
-#endif
+
+    if (old_code) {
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " It should not be possible to set MaxJobsTotal < 0.\n";
+        EXPECT_EQ(tpObj.TPAttrSetMaxJobsTotal(&TPAttr, -1), 0);
+        EXPECT_EQ(TPAttr.maxJobsTotal, -1);
+
+    } else {
+
+        EXPECT_EQ(tpObj.TPAttrSetMaxJobsTotal(&TPAttr, -1), EINVAL)
+            << "# It should not be possible to set MaxJobsTotal < 0.";
+        EXPECT_EQ(TPAttr.maxJobsTotal, 1)
+            << "# Wrong settings should not modify old maxJobsTotal value.";
+    }
 }
 
 TEST(ThreadPoolErrorCondTestSuite, set_max_jobs_qeued_totally_to_attribute) {
@@ -638,5 +673,5 @@ TEST(ThreadPoolNormalTestSuite, gettimeofday) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+#include "upnplib/gtest_main.inc"
 }

@@ -15,11 +15,11 @@
 
 namespace upnplib::testing {
 
-// class CCaptureStdOutErr definition
+// class CaptureStdOutErr definition
 // ----------------------------------
 // We use a pipe that is opened non blocking.
 
-CCaptureStdOutErr::CCaptureStdOutErr(int a_stdOutErrFd)
+CaptureStdOutErr::CaptureStdOutErr(int a_stdOutErrFd)
     : stdOutErrFd(a_stdOutErrFd), current_stdOutErrFd(a_stdOutErrFd) {
 
     if (this->stdOutErrFd != STDOUT_FILENO &&
@@ -65,7 +65,7 @@ CCaptureStdOutErr::CCaptureStdOutErr(int a_stdOutErrFd)
 }
 
 //
-CCaptureStdOutErr::~CCaptureStdOutErr() {
+CaptureStdOutErr::~CaptureStdOutErr() {
     // Always restore original stdout/stderr file descriptor and close its
     // private duplicate.
     ::dup2(this->orig_stdOutErrFd, this->current_stdOutErrFd);
@@ -77,7 +77,7 @@ CCaptureStdOutErr::~CCaptureStdOutErr() {
 }
 
 //
-void CCaptureStdOutErr::start() {
+void CaptureStdOutErr::start() {
     // redirect stdout/stderr to the pipe. The pipes write end now points to
     // stdout/stderr if using current_stdOutErrFd.
     if (::dup2(this->out_pipe[1], this->current_stdOutErrFd) == -1)
@@ -89,7 +89,7 @@ void CCaptureStdOutErr::start() {
 }
 
 //
-std::string CCaptureStdOutErr::get() {
+std::string CaptureStdOutErr::get() {
     // read from pipe into chunk and append the chunk to a string
     char chunk[this->chunk_size + 1];
     std::string strbuffer{};

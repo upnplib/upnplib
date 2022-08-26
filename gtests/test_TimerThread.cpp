@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-01
+// Redistribution only with this Copyright remark. Last modified: 2022-08-26
 
 // Note
 // -------------
@@ -23,9 +23,12 @@
 #include <chrono>
 #include <thread>
 
+#include "upnplib/gtest.hpp"
 #include "gtest/gtest.h"
 
 namespace upnplib {
+bool old_code{false}; // Managed in upnplib_gtest_main.inc
+bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 //###############################
 // TimerThread Interface        #
@@ -98,13 +101,15 @@ TEST(TimerThreadNormalTestSuite, schedule_timer_thread) {
     // test suite but it shows how to schedule a timer thread. Testing this in
     // the production environment will be done with the upnplib info program.
 
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! Return value of the thread start routine should not "
-                 "be ignored.\n";
-#else
-    GTEST_FAIL() << "  # Return value of the thread start routine should not "
-                    "be ignored.";
-#endif
+    if (old_code)
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " Return value of the thread start routine should not be "
+                     "ignored.\n";
+    else
+        GTEST_FAIL()
+            << "  # Return value of the thread start routine should not "
+               "be ignored.";
+
     GTEST_SKIP() << "This test is skipped because it is very expensive and "
                     "difficult to completely test.";
 
@@ -219,5 +224,5 @@ TEST(TimerThreadNormalTestSuite, remove_timer_thread) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+#include "upnplib/gtest_main.inc"
 }

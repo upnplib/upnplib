@@ -2,6 +2,7 @@
 // Redistribution only with this Copyright remark. Last modified: 2022-08-21
 
 #include "upnpmock/stdlib.hpp"
+#include "upnplib/gtest.hpp"
 #include "gmock/gmock.h"
 
 #include "FreeList.hpp"
@@ -10,6 +11,8 @@ using ::testing::_;
 using ::testing::Return;
 
 namespace upnplib {
+bool old_code{false}; // Managed in upnplib_gtest_main.inc
+bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 //
 // Mocked system calls
@@ -119,26 +122,32 @@ TEST_F(FreeListTestSuite, init_alocate_free_destroy) {
 
     // Put an unused node to the freelist. It should increase the freelist.
     FreeListNode anynode3{};
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    // The freelist is initialized with maxFreeListLength = 3 so it should add a
-    // node to the list and not freeing its resource. The comparison of
-    // freeListLength with maxFreeListLength is wrong by 1 node.
-    EXPECT_EQ(m_free_list.freeListLength, 2);
-    EXPECT_EQ(m_free_list.maxFreeListLength, 3);
-    // freeing the resource is wrong.
-    EXPECT_CALL(mocked_stdlib, free(&anynode3)).Times(1);
-    EXPECT_EQ(FreeListObj.FreeListFree(&m_free_list, &anynode3), 0);
-    std::cout << "  BUG! The resource of the node should not be freed but "
-                 "instead added to the freelist.\n";
-    // We will find the previous anynode2 not anynode3 in the freelist.
-    EXPECT_EQ(m_free_list.head, &anynode2);
-#else
-    EXPECT_EQ(FreeListObj.FreeListFree(&m_free_list, &anynode3), 0);
-    EXPECT_EQ(m_free_list.head, &anynode3);
-    EXPECT_EQ(m_free_list.freeListLength, 3)
-        << "  # The resource of the node should not be freed but instead added "
-           "to the freelist.";
-#endif
+
+    // clang-format off
+//    if (old_code) {
+        // The freelist is initialized with maxFreeListLength = 3 so it should
+        // add a node to the list and not freeing its resource. The comparison
+        // of freeListLength with maxFreeListLength is wrong by 1 node.
+        EXPECT_EQ(m_free_list.freeListLength, 2);
+        EXPECT_EQ(m_free_list.maxFreeListLength, 3);
+        // freeing the resource is wrong.
+        EXPECT_CALL(mocked_stdlib, free(&anynode3)).Times(1);
+        EXPECT_EQ(FreeListObj.FreeListFree(&m_free_list, &anynode3), 0);
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " The resource of the node should not be freed but "
+                     "instead added to the freelist.\n";
+        // We will find the previous anynode2 not anynode3 in the freelist.
+        EXPECT_EQ(m_free_list.head, &anynode2);
+
+//    } else {
+
+//        EXPECT_EQ(FreeListObj.FreeListFree(&m_free_list, &anynode3), 0);
+//        EXPECT_EQ(m_free_list.head, &anynode3);
+//        EXPECT_EQ(m_free_list.freeListLength, 3)
+//            << "  # The resource of the node should not be freed but instead "
+//               "added to the freelist.";
+//    }
+    // clang-format on
 
     // Getting a free node from the freelist should decrease its length
     newnode = (FreeListNode*)FreeListObj.FreeListAlloc(&m_free_list);
@@ -193,19 +202,26 @@ TEST_F(FreeListTestSuite, freelist_for_0_size_nodes) {
     EXPECT_EQ(FreeListObj.FreeListFree(&m_free_list, &anynode1), 0);
     EXPECT_EQ(m_free_list.maxFreeListLength, 3);
     EXPECT_EQ(m_free_list.element_size, (size_t)0);
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    // It isn't possible to allocate a 0-sized memory block. malloc() returns a
-    // nullptr. So it should also be impossible to add a 0-sized node to the
-    // freelist to be available for later use.
-    std::cout << "  BUG! Adding a 0-sized node to the freelist should not be "
-                 "possible.\n";
-    EXPECT_NE(m_free_list.head, nullptr);
-    EXPECT_EQ(m_free_list.freeListLength, 1);
-#else
-    EXPECT_EQ(m_free_list.head, nullptr);
-    EXPECT_EQ(m_free_list.freeListLength, 0)
-        << "  # Adding a 0-sized node to the freelist should not be possible.";
-#endif
+
+    // clang-format off
+//    if (old_code) {
+        // It isn't possible to allocate a 0-sized memory block. malloc()
+        // returns a nullptr. So it should also be impossible to add a 0-sized
+        // node to the freelist to be available for later use.
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " Adding a 0-sized node to the freelist should not be "
+                     "possible.\n";
+        EXPECT_NE(m_free_list.head, nullptr);
+        EXPECT_EQ(m_free_list.freeListLength, 1);
+
+//    } else {
+
+//        EXPECT_EQ(m_free_list.head, nullptr);
+//        EXPECT_EQ(m_free_list.freeListLength, 0)
+//            << "  # Adding a 0-sized node to the freelist should not be "
+//               "possible.";
+//    }
+    // clang-format on
 }
 
 TEST_F(FreeListTestSuite, destroy_freelist_for_0_size_nodes) {
@@ -263,5 +279,5 @@ TEST_F(FreeListTestSuite, initialize_not_existing_freelist) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-    return RUN_ALL_TESTS();
+#include "upnplib/gtest_main.inc"
 }

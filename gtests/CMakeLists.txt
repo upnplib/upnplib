@@ -441,11 +441,12 @@ add_test(NAME ctest_LinkedList-pnsh COMMAND test_LinkedList-pnsh
 # FreeList
 #=========
 add_executable(test_FreeList-pnsh
+#--------------------------------
         ./test_FreeList.cpp
 )
 target_include_directories(test_FreeList-pnsh
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}/include
+        ./include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         # if pthreads4w isn't installed this path is empty. The linker
@@ -461,9 +462,37 @@ target_compile_definitions(test_FreeList-pnsh
 target_link_libraries(test_FreeList-pnsh
     PRIVATE
         pupnp_native_shared
+        upnplib_gtest_tools_shared
 )
 add_test(NAME ctest_FreeList-pnsh COMMAND test_FreeList-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
+add_executable(test_FreeList-ucsh
+#--------------------------------
+    ./test_FreeList.cpp
+)
+target_include_directories(test_FreeList-ucsh
+    PRIVATE
+        ./include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        # if pthreads4w isn't installed this path is empty. The linker
+        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+)
+target_compile_definitions(test_FreeList-ucsh
+    PRIVATE
+        UPNPLIB_SHARED
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+)
+target_link_libraries(test_FreeList-ucsh
+    PRIVATE
+        upnplib_compa_shared
+        upnplib_gtest_tools_shared
+)
+add_test(NAME ctest_FreeList-ucsh COMMAND test_FreeList-ucsh
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 # ThreadPool
@@ -473,6 +502,7 @@ add_executable(test_ThreadPool-pnsh
 )
 target_include_directories(test_ThreadPool-pnsh
     PRIVATE
+        ./include
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${UPnPlib_SOURCE_DIR}/include
@@ -501,6 +531,7 @@ add_executable(test_TimerThread-pnsh
 )
 target_include_directories(test_TimerThread-pnsh
     PRIVATE
+        ./include
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${UPnPlib_SOURCE_DIR}/include

@@ -1,27 +1,23 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-21
+// Redistribution only with this Copyright remark. Last modified: 2022-08-27
 
 #include "pupnp/upnp/src/api/upnpdebug.cpp"
 
-#include "upnpmock/pthread.hpp"
-#include "upnpmock/stdio.hpp"
-#include "upnpmock/string.hpp"
-
-#include "upnplib/upnptools.hpp"
 #include "upnplib/port.hpp"
-
-#include <string>
-#include "gmock/gmock.h"
+#include "upnplib/upnptools.hpp"
 #include "upnplib/gtest.hpp"
+#include "gmock/gmock.h"
 
 using ::testing::_;
 using ::testing::Return;
 using ::testing::StrEq;
 
-using ::upnplib::testing::CCaptureStdOutErr;
+using ::upnplib::testing::CaptureStdOutErr;
 using ::upnplib::testing::MatchesStdRegex;
 
 namespace upnplib {
+bool old_code{false}; // Managed in upnplib_gtest_main.inc
+bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 //
 // Interface for the upnpdebug module
@@ -138,7 +134,7 @@ TEST(UpnpdebugTestSuite, UpnpPrintf_without_init) {
 }
 
 TEST(UpnpdebugTestSuite, UpnpPrintf_normal_use) {
-    CCaptureStdOutErr captureObj(STDERR_FILENO);
+    CaptureStdOutErr captureObj(STDERR_FILENO);
 
     // Enable and initialize logging
     ::UpnpSetLogLevel(UPNP_ALL);
@@ -271,18 +267,22 @@ TEST_F(UpnpdebugMockTestSuite, set_log_level_info) {
               stderr);
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_CRITICAL, (Dbg_Module)NULL),
               stderr);
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    // It seems that option Dbg_Module is ignored. It cannot be set with
-    // UpnpSetLogLevel().
-    std::cout << "  BUG! Parameter Dbg_Module should not be ignored.\n";
-    EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, API), stderr);
-    EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, DOM), stderr);
-#else
-    // Only one Dbg_Module should be used.
-    EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, API), stderr);
-    EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, DOM), nullptr)
-        << "  # Parameter Dbg_Module should not be ignored.";
-#endif
+
+    if (old_code) {
+        // It seems that option Dbg_Module is ignored. It cannot be set with
+        // UpnpSetLogLevel().
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " Parameter Dbg_Module should not be ignored.\n";
+        EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, API), stderr);
+        EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, DOM), stderr);
+
+    } else {
+
+        // Only one Dbg_Module should be used.
+        EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, API), stderr);
+        EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, DOM), nullptr)
+            << "  # Parameter Dbg_Module should not be ignored.";
+    }
 
     EXPECT_CALL(mocked_stdio, fclose(_)).Times(0);
     EXPECT_CALL(mocked_pthread, pthread_mutex_lock(_)).Times(1);
@@ -425,14 +425,20 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_opening_file_fails) {
     EXPECT_CALL(mocked_stdio, fclose(_)).Times(0);
 
     // Process unit
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! UpnpInitLog() should return with failure.\n";
-    int returned = upnpdebugObj.UpnpInitLog();
-    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
-#else
-    returned = upnpdebugObj.UpnpInitLog();
-    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
-#endif
+    if (old_code) {
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " UpnpInitLog() should return with failure.\n";
+        int returned = upnpdebugObj.UpnpInitLog();
+        EXPECT_EQ(returned, UPNP_E_SUCCESS)
+            << errStrEx(returned, UPNP_E_SUCCESS);
+
+    } else {
+
+        int returned = upnpdebugObj.UpnpInitLog();
+        EXPECT_EQ(returned, UPNP_E_SUCCESS)
+            << errStrEx(returned, UPNP_E_SUCCESS);
+    }
+
     free(errmsg);
 
     // Will be set to stderr if failed to log to a file
@@ -531,13 +537,17 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_to_file_with_wrong_filename) {
         stderr);
 
     // ... but it should not try to close stderr.
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! UpnpCloseLog() tries to close stderr.\n";
-    EXPECT_CALL(mocked_stdio, fclose(_)).Times(1);
-#else
-    std::cout << "  # UpnpCloseLog() tries to close stderr.\n";
-    EXPECT_CALL(mocked_stdio, fclose(_)).Times(0);
-#endif
+    if (old_code) {
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " UpnpCloseLog() tries to close stderr.\n";
+        EXPECT_CALL(mocked_stdio, fclose(_)).Times(1);
+
+    } else {
+
+        std::cout << "  # UpnpCloseLog() tries to close stderr.\n";
+        EXPECT_CALL(mocked_stdio, fclose(_)).Times(0);
+    }
+
     EXPECT_CALL(mocked_pthread, pthread_mutex_lock(_)).Times(1);
     EXPECT_CALL(mocked_pthread, pthread_mutex_unlock(_)).Times(1);
     EXPECT_CALL(mocked_pthread, pthread_mutex_destroy(_)).Times(1);
@@ -557,5 +567,5 @@ TEST_F(UpnpdebugMockTestSuite, close_log_without_init_log) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+#include "upnplib/gtest_main.inc"
 }

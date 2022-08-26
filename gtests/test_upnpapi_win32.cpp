@@ -19,7 +19,7 @@ using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 
-using ::upnplib::testing::CCaptureStdOutErr;
+using ::upnplib::testing::CaptureStdOutErr;
 
 namespace upnplib {
 
@@ -206,7 +206,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
         .WillOnce(DoAll(SetArgPointee<3>(*adapts), Return(ERROR_SUCCESS)));
 
     // Initialize capturing of the stderr output
-    CCaptureStdOutErr captureObj(STDERR_FILENO);
+    CaptureStdOutErr captureObj(STDERR_FILENO);
     captureObj.start();
 
     // Test Unit
