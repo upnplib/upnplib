@@ -1,5 +1,4 @@
 Next steps to do:
-* Check symbol UPNPLIB_WITH_NATIVE_PUPNP.
 * Rework test_UpnpString.cpp
 * Move pupnp/upnp/src/inc/sock.hpp:79:static UPNP_INLINE int sock_close() to miniserver.cpp and rework.
 * Emulate ::getNumericHostRedirection() with class upnplib::SockAddr.

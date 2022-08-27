@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-16
+// Redistribution only with this Copyright remark. Last modified: 2022-08-27
 
 #ifndef UPNPLIB_STDLIBIF_HPP
 #define UPNPLIB_STDLIBIF_HPP
@@ -16,6 +16,9 @@ class Bstdlib {
 
     virtual void* malloc(size_t size) { return ::malloc(size); }
     virtual void free(void* ptr) { return ::free(ptr); }
+    virtual void* calloc(size_t nmemb, size_t size) {
+        return ::calloc(nmemb, size);
+    }
 };
 
 // Global pointer to the current object (real or mocked), will be modified by
@@ -43,6 +46,7 @@ class Mock_stdlib : public Bstdlib {
 
     MOCK_METHOD(void*, malloc, (size_t size), (override));
     MOCK_METHOD(void, free, (void* ptr), (override));
+    MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));
 };
 
  * In a gtest you will instantiate the Mock class, prefered as protected member

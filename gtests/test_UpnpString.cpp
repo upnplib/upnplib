@@ -1,8 +1,10 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-02
+// Redistribution only with this Copyright remark. Last modified: 2022-08-27
 
+#include "pupnp/upnp/src/api/UpnpString.cpp"
+
+#include "upnplib/gtest.hpp"
 #include "gmock/gmock.h"
-#include "gtest/gtest.h"
 
 //#undef HAVE_STRNLEN
 //#undef HAVE_STRNDUP
@@ -11,49 +13,33 @@ using ::testing::_;
 using ::testing::Eq;
 using ::testing::Return;
 
-// --- mock calloc ---------------------------------------
-class CMock_calloc {
+namespace upnplib {
+bool old_code{false}; // Managed in upnplib_gtest_main.inc
+bool github_actions = std::getenv("GITHUB_ACTIONS");
+
+// Mocked system calls
+//--------------------
+class MockStdlib : public Bstdlib {
+    // Class to mock the free system functions.
+    Bstdlib* m_oldptr;
+
   public:
-    MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size));
+    // Save and restore the old pointer to the production function
+    MockStdlib() {
+        m_oldptr = stdlib_h;
+        stdlib_h = this;
+    }
+    virtual ~MockStdlib() { stdlib_h = m_oldptr; }
+
+    MOCK_METHOD(void, free, (void* ptr), (override));
+    MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));
 };
-CMock_calloc* ptrMock_calloc = nullptr;
-
-// --- mock free -----------------------------------------
-class CMock_free {
-  public:
-    MOCK_METHOD(void, free, (void* ptr));
-};
-CMock_free* ptrMock_free = nullptr;
-
-namespace { // No name for file scope. This is the C++ way for decorator STATIC.
-
-// The following functions overwrite the functions from the system library.
-// This is only possible with a local (file) scope of these functions. Also they
-// must be defined before the included program that is tested.
-
-void* calloc(size_t nmemb, size_t size) {
-    return ptrMock_calloc->calloc(nmemb, size);
-}
-void free(void* ptr) { return ptrMock_free->free(ptr); }
-
-#include "pupnp/upnp/src/api/UpnpString.cpp"
-
-} // namespace
 
 // testsuite with fixtures
 //------------------------
 class UpnpStringMockTestSuite : public ::testing::Test {
   protected:
-    // Instantiate the mock objects.
-    // The global pointer to them are set in the constructor below.
-    CMock_calloc mock_calloc;
-    CMock_free mock_free;
-
-    UpnpStringMockTestSuite() {
-        // set the global pointer to the mock objects
-        ptrMock_calloc = &mock_calloc;
-        ptrMock_free = &mock_free;
-    }
+    class MockStdlib mock_stdlibObj;
 };
 
 TEST_F(UpnpStringMockTestSuite, createNewUpnpString) {
@@ -63,24 +49,25 @@ TEST_F(UpnpStringMockTestSuite, createNewUpnpString) {
     UpnpString* p = (UpnpString*)&upnpstr;
     UpnpString* str;
 
-    EXPECT_CALL(mock_calloc, calloc(_, _))
+    EXPECT_CALL(this->mock_stdlibObj, calloc(_, _))
         .WillOnce(Return(p))
         .WillOnce(Return(*&mstring));
-    // call the unit
+    // Test Unit
     str = UpnpString_new();
     EXPECT_THAT(str, Eq(p));
 
     // test edge conditions
-    EXPECT_CALL(mock_calloc, calloc(_, _)).WillOnce(Return((UpnpString*)NULL));
-    // call the unit
+    EXPECT_CALL(this->mock_stdlibObj, calloc(_, _))
+        .WillOnce(Return((UpnpString*)NULL));
+    // Test Unit
     str = UpnpString_new();
     EXPECT_EQ(str, (UpnpString*)NULL);
 
-    EXPECT_CALL(mock_calloc, calloc(_, _))
+    EXPECT_CALL(this->mock_stdlibObj, calloc(_, _))
         .WillOnce(Return(p))
         .WillOnce(Return((char*)NULL));
-    EXPECT_CALL(mock_free, free(_)).Times(1);
-    // call the unit
+    EXPECT_CALL(this->mock_stdlibObj, free(_)).Times(1);
+    // Test Unit
     str = UpnpString_new();
     EXPECT_EQ(str, (UpnpString*)NULL);
 }
@@ -97,7 +84,7 @@ TEST_F(UpnpStringMockTestSuite, deleteUpnpString) {
     EXPECT_STREQ(upnpstr.m_string, "hello world");
 
     // call the unit
-    EXPECT_CALL(mock_free, free(_)).Times(2);
+    EXPECT_CALL(this->mock_stdlibObj, free(_)).Times(2);
     UpnpString_delete(p);
     EXPECT_EQ(upnpstr.m_length, (size_t)0);
     EXPECT_EQ(upnpstr.m_string, (char*)NULL);
@@ -110,7 +97,7 @@ TEST_F(UpnpStringMockTestSuite, setUpnpString) {
     UpnpString* p = (UpnpString*)&upnpstr;
 
     // call the unit
-    EXPECT_CALL(mock_free, free(_)).Times(1);
+    EXPECT_CALL(this->mock_stdlibObj, free(_)).Times(1);
     EXPECT_PRED2(UpnpString_set_String, p, (const char*)"set string");
     EXPECT_EQ(upnpstr.m_length, (size_t)10);
     EXPECT_STREQ(upnpstr.m_string, "set string");
@@ -123,27 +110,27 @@ TEST_F(UpnpStringMockTestSuite, setUpnpStringN) {
     UpnpString* p = (UpnpString*)&upnpstr;
 
     // call the unit
-    EXPECT_CALL(mock_free, free(_)).Times(1);
+    EXPECT_CALL(this->mock_stdlibObj, free(_)).Times(1);
     EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 0);
     EXPECT_EQ(upnpstr.m_length, (size_t)0);
     EXPECT_STREQ(upnpstr.m_string, "");
 
-    EXPECT_CALL(mock_free, free(_)).Times(1);
+    EXPECT_CALL(this->mock_stdlibObj, free(_)).Times(1);
     EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 1);
     EXPECT_EQ(upnpstr.m_length, (size_t)1);
     EXPECT_STREQ(upnpstr.m_string, "h");
 
-    EXPECT_CALL(mock_free, free(_)).Times(1);
+    EXPECT_CALL(this->mock_stdlibObj, free(_)).Times(1);
     EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 10);
     EXPECT_EQ(upnpstr.m_length, (size_t)10);
     EXPECT_STREQ(upnpstr.m_string, "hello worl");
 
-    EXPECT_CALL(mock_free, free(_)).Times(1);
+    EXPECT_CALL(this->mock_stdlibObj, free(_)).Times(1);
     EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 11);
     EXPECT_EQ(upnpstr.m_length, (size_t)11);
     EXPECT_STREQ(upnpstr.m_string, "hello world");
 
-    EXPECT_CALL(mock_free, free(_)).Times(1);
+    EXPECT_CALL(this->mock_stdlibObj, free(_)).Times(1);
     EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 12);
     EXPECT_EQ(upnpstr.m_length, (size_t)11);
     EXPECT_STREQ(upnpstr.m_string, "hello world");
@@ -167,9 +154,8 @@ TEST(UpnpStringTestSuite, strnlenCalledWithVariousParameter) {
     EXPECT_EQ(strnlen(str1, 11), (size_t)9);
     str1[9] = 1; // destroy string terminator
     EXPECT_EQ(strnlen(str1, 10), (size_t)10);
-#ifndef UPNPLIB_WITH_NATIVE_PUPNP
-    ADD_FAILURE() << "# strnlen isn't used in the UPnPlib core.";
-#endif
+    if (!old_code)
+        ADD_FAILURE() << "# strnlen isn't used in the UPnPlib core.";
 }
 
 TEST(UpnpStringTestSuite, strndupCalledWithVariousParameter) {
@@ -191,9 +177,8 @@ TEST(UpnpStringTestSuite, strndupCalledWithVariousParameter) {
     cpystr = strndup(str1, 11);
     EXPECT_EQ(cpystr, "123456789");
     EXPECT_EQ(cpystr[9], '\0'); // check string terminator
-#ifndef UPNPLIB_WITH_NATIVE_PUPNP
-    ADD_FAILURE() << "# strndup isn't used in the UPnPlib core.";
-#endif
+    if (!old_code)
+        ADD_FAILURE() << "# strndup isn't used in the UPnPlib core.";
 }
 
 TEST(UpnpStringTestSuite, clearUpnpString) {
@@ -222,13 +207,13 @@ TEST(UpnpStringDeathTest, UpnpStringGetLength) {
 
     EXPECT_EQ(UpnpString_get_Length(p), (size_t)11);
 
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! Function 'UpnpString_get_Length()' will segfault if "
-                 "called with nullptr.\n";
-#else
-    // call the unit with NULL pointer
-    EXPECT_DEATH(UpnpString_get_Length(nullptr), "");
-#endif
+    if (old_code)
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " Function 'UpnpString_get_Length()' will segfault if "
+                     "called with nullptr.\n";
+    else
+        // call the unit with NULL pointer
+        EXPECT_DEATH(UpnpString_get_Length(nullptr), "");
 }
 
 TEST(UpnpStringDeathTest, getUpnpString) {
@@ -239,64 +224,74 @@ TEST(UpnpStringDeathTest, getUpnpString) {
 
     EXPECT_STREQ(UpnpString_get_String(p), "hello world");
 
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! Function 'UpnpString_get_String()' will segfault if "
-                 "called with nullptr.\n";
-#else
-    // call the unit with NULL pointer
-    EXPECT_DEATH(UpnpString_get_String((UpnpString*)nullptr), "");
-#endif
+    if (old_code)
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " Function 'UpnpString_get_String()' will segfault if "
+                     "called with nullptr.\n";
+    else
+        // call the unit with NULL pointer
+        EXPECT_DEATH(UpnpString_get_String((UpnpString*)nullptr), "");
 }
 
 TEST(UpnpStringDeathTest, setUpnpString) {
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! Function 'UpnpString_set_String()' will segfault if "
-                 "called with nullptr.\n";
-#else
-    // provide a UpnpString
-    char mstring[] = "hello world";
-    SUpnpString upnpstr = {11, *&mstring};
-    UpnpString* p = (UpnpString*)&upnpstr;
+    if (old_code) {
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " Function 'UpnpString_set_String()' will segfault if "
+                     "called with nullptr.\n";
 
-    // call the unit with NULL pointer
-    EXPECT_DEATH(UpnpString_set_String(nullptr, nullptr), "Segmentation fault");
-    EXPECT_DEATH(UpnpString_set_String(nullptr, *&"another string"),
-                 "Segmentation fault");
-    EXPECT_DEATH(UpnpString_set_String(p, nullptr), "Segmentation fault");
-#endif
+    } else {
+
+        // provide a UpnpString
+        char mstring[] = "hello world";
+        SUpnpString upnpstr = {11, *&mstring};
+        UpnpString* p = (UpnpString*)&upnpstr;
+
+        // call the unit with NULL pointer
+        EXPECT_DEATH(UpnpString_set_String(nullptr, nullptr),
+                     "Segmentation fault");
+        EXPECT_DEATH(UpnpString_set_String(nullptr, *&"another string"),
+                     "Segmentation fault");
+        EXPECT_DEATH(UpnpString_set_String(p, nullptr), "Segmentation fault");
+    }
 }
 
 TEST(UpnpStringDeathTest, setUpnpStringN) {
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! Function 'UpnpString_set_StringN()' will segfault if "
-                 "called with nullptr.\n";
-#else
-    // provide a UpnpString
-    char mstring[] = "hello world";
-    SUpnpString upnpstr = {11, *&mstring};
-    UpnpString* p = (UpnpString*)&upnpstr;
+    if (old_code) {
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " Function 'UpnpString_set_StringN()' will segfault "
+                     "if called with nullptr.\n";
 
-    // call the unit with NULL pointer
-    EXPECT_DEATH(UpnpString_set_StringN(nullptr, nullptr, 0),
-                 "Segmentation fault");
-    EXPECT_DEATH(UpnpString_set_StringN(nullptr, *&"another string", 0),
-                 "Segmentation fault");
-    EXPECT_DEATH(UpnpString_set_StringN(p, nullptr, 0), "Segmentation fault");
-#endif
+    } else {
+
+        // provide a UpnpString
+        char mstring[] = "hello world";
+        SUpnpString upnpstr = {11, *&mstring};
+        UpnpString* p = (UpnpString*)&upnpstr;
+
+        // call the unit with NULL pointer
+        EXPECT_DEATH(UpnpString_set_StringN(nullptr, nullptr, 0),
+                     "Segmentation fault");
+        EXPECT_DEATH(UpnpString_set_StringN(nullptr, *&"another string", 0),
+                     "Segmentation fault");
+        EXPECT_DEATH(UpnpString_set_StringN(p, nullptr, 0),
+                     "Segmentation fault");
+    }
 }
 
 TEST(UpnpStringDeathTest, clearUpnpString) {
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << "  BUG! Function 'UpnpString_clear()' will segfault if called "
-                 "with nullptr.\n";
-#else
-    // call the unit with NULL pointer
-    EXPECT_DEATH(UpnpString_clear(nullptr), "Segmentation fault");
-#endif
+    if (old_code)
+        std::cout << CYEL "[ BUG      ]" CRES
+                  << " Function 'UpnpString_clear()' will segfault if called "
+                     "with nullptr.\n";
+    else
+        // call the unit with NULL pointer
+        EXPECT_DEATH(UpnpString_clear(nullptr), "Segmentation fault");
 }
 
+} // namespace upnplib
+
 int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
+    ::testing::InitGoogleMock(&argc, argv);
     // https://google.github.io/googletest/advanced.html#death-test-styles
 #ifndef _WIN32
     // On MS Windows this flag isn't defined (error LNK2019: unresolved external
@@ -305,5 +300,5 @@ int main(int argc, char** argv) {
     // See https://google.github.io/googletest/reference/assertions.html#death
     // GTEST_FLAG_SET(death_test_style, "threadsafe");
 #endif
-    return RUN_ALL_TESTS();
+#include "upnplib/gtest_main.inc"
 }

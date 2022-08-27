@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-25
+// Redistribution only with this Copyright remark. Last modified: 2022-08-27
 // Also Copyright by other contributor who haven't made a note.
 
 /*!
@@ -23,6 +23,7 @@
 //#include "autoconfig.h"
 
 #include "UpnpString.hpp"
+#include "upnpmock/stdlib.hpp"
 
 //#include <stdlib.h> /* for calloc(), free() */
 #include <string.h> /* for strlen(), strdup() */
@@ -79,8 +80,8 @@ struct SUpnpString {
 
 UpnpString* UpnpString_new() {
     /* All bytes are zero, and so is the length of the string. */
-    struct SUpnpString* p =
-        (SUpnpString*)calloc((size_t)1, sizeof(struct SUpnpString));
+    struct SUpnpString* p = (SUpnpString*)upnplib::stdlib_h->calloc(
+        (size_t)1, sizeof(struct SUpnpString));
     if (p == NULL) {
         goto error_handler1;
     }
@@ -89,7 +90,7 @@ UpnpString* UpnpString_new() {
 #endif
 
     /* This byte is zero, calloc does initialize it. */
-    p->m_string = (char*)calloc((size_t)1, (size_t)1);
+    p->m_string = (char*)upnplib::stdlib_h->calloc((size_t)1, (size_t)1);
     if (p->m_string == NULL) {
         goto error_handler2;
     }
@@ -98,7 +99,7 @@ UpnpString* UpnpString_new() {
 
     /*free(p->m_string); */
 error_handler2:
-    free(p);
+    upnplib::stdlib_h->free(p);
 error_handler1:
     return NULL;
 }
@@ -111,15 +112,16 @@ void UpnpString_delete(UpnpString* p) {
 
     q->m_length = (size_t)0;
 
-    free(q->m_string);
+    upnplib::stdlib_h->free(q->m_string);
     q->m_string = NULL;
 
-    free(p);
+    upnplib::stdlib_h->free(p);
 }
 
 // UpnpString* UpnpString_dup(const UpnpString* p) {
 //    struct SUpnpString* q =
-//        (SUpnpString*)calloc((size_t)1, sizeof(struct SUpnpString));
+//        (SUpnpString*)upnplib::stdlib_h->calloc((size_t)1, sizeof(struct
+//        SUpnpString));
 //    if (q == NULL) {
 //        goto error_handler1;
 //    }
@@ -133,7 +135,7 @@ void UpnpString_delete(UpnpString* p) {
 //
 //    /*free(q->m_string); */
 // error_handler2:
-//    free(q);
+//    upnplib::stdlib_h->free(q);
 // error_handler1:
 //    return NULL;
 //}
@@ -164,7 +166,7 @@ int UpnpString_set_String(UpnpString* p, const char* s) {
     char* q = strdup(s);
     if (!q)
         goto error_handler1;
-    free(((struct SUpnpString*)p)->m_string);
+    upnplib::stdlib_h->free(((struct SUpnpString*)p)->m_string);
     ((struct SUpnpString*)p)->m_length = strlen(q);
     ((struct SUpnpString*)p)->m_string = q;
 
@@ -176,7 +178,7 @@ int UpnpString_set_StringN(UpnpString* p, const char* s, size_t n) {
     char* q = strndup(s, n);
     if (!q)
         goto error_handler1;
-    free(((struct SUpnpString*)p)->m_string);
+    upnplib::stdlib_h->free(((struct SUpnpString*)p)->m_string);
     ((struct SUpnpString*)p)->m_length = strlen(q);
     ((struct SUpnpString*)p)->m_string = q;
 
