@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-08-27
+# Redistribution only with this Copyright remark. Last modified: 2022-08-31
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -245,6 +245,7 @@ target_include_directories(test_UpnpString-pnst
         ${UPnPlib_SOURCE_DIR}
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+        ${UPnPlib_SOURCE_DIR}/include
 )
 target_compile_definitions(test_UpnpString-pnst
     PRIVATE
@@ -454,6 +455,7 @@ target_include_directories(test_FreeList-pnsh
         ./include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        ${UPnPlib_SOURCE_DIR}/include
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
@@ -482,6 +484,7 @@ target_include_directories(test_FreeList-ucsh
         ./include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        ${UPnPlib_SOURCE_DIR}/include
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h

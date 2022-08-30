@@ -1,9 +1,11 @@
 #ifndef UPNP_TOOLS_WIN_HPP
 #define UPNP_TOOLS_WIN_HPP
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-21
+// Redistribution only with this Copyright remark. Last modified: 2022-08-31
 
-#include "upnplib/socket.hpp"
+#include "upnplib/visibility.hpp" // for UPNPLIB_API
+#include <winsock2.h>
+#include <iphlpapi.h> // must be after <winsock2.h>
 #include <iostream>
 
 namespace upnplib {

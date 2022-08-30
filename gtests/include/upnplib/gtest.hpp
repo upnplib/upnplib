@@ -1,8 +1,9 @@
 #ifndef UPNPLIB_GTEST_HPP
 #define UPNPLIB_GTEST_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-21
+// Redistribution only with this Copyright remark. Last modified: 2022-08-31
 
+#include "upnplib/visibility.hpp"
 #include <cstring>
 #include <regex>
 #include "gmock/gmock.h"

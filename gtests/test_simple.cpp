@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-21
+// Redistribution only with this Copyright remark. Last modified: 2022-08-29
 
 // This tests only upnplib native code without using pupnp native code or
 // upnplib compatible code. The only used 'upnplib_native' library does not
@@ -8,7 +8,7 @@
 
 #include "upnplib/global.hpp"
 #include "upnplib/upnptools.hpp"
-#include "upnplib/socket.hpp"
+#include "upnplib/sock.hpp"
 
 #include "pthread.h" // To find pthreads4w don't use <pthread.h>
 #include "gmock/gmock.h"
