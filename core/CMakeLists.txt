@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-08-26
+# Redistribution only with this Copyright remark. Last modified: 2022-08-31
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -71,6 +71,7 @@ if(NOT WIN32)
             ./src/global.cpp
             ./src/api/upnptools.cpp
             ./src/net/sock.cpp
+            ./src/mockObj.cpp
     )
     set_target_properties(upnplib_native_shared PROPERTIES
             OUTPUT_NAME upnplib_native
@@ -233,6 +234,7 @@ else() # WIN32
             ./src/global.cpp
             ./src/api/upnptools.cpp
             ./src/net/sock.cpp
+            ./src/mockObj.cpp
     )
     target_include_directories(upnplib_native_shared
         PRIVATE

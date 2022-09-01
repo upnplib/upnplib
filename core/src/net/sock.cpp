@@ -2,6 +2,7 @@
 // Redistribution only with this Copyright remark. Last modified: 2022-08-30
 
 #include "upnplib/sock.hpp"
+#include "upnpmock/sys_socket.hpp"
 #include <filesystem>
 #include <cstring>
 
@@ -43,13 +44,14 @@ std::string SockAddr::addr_get() {
     return std::string(buf_ntop);
 }
 
-SocketAddr::SocketAddr(ISysSocket* a_sys_socketObj)
-    : m_sys_socketObj(a_sys_socketObj) {}
+unsigned short SockAddr::addr_get_port() {
+    return ntohs(this->addr_in->sin_port);
+}
 
 std::string SocketAddr::addr_get() { return SockAddr::addr_get(); }
 
 std::string SocketAddr::addr_get(SOCKET a_sockfd) {
-    int rc = m_sys_socketObj->getsockname(
+    int rc = upnplib::sys_socket_h->getsockname(
         a_sockfd, (struct sockaddr*)this->addr, &this->addr_len);
 
     if (rc == -1)
@@ -60,10 +62,6 @@ std::string SocketAddr::addr_get(SOCKET a_sockfd) {
             ". " + std::strerror(errno));
 
     return SockAddr::addr_get();
-}
-
-unsigned short SockAddr::addr_get_port() {
-    return ntohs(this->addr_in->sin_port);
 }
 
 } // namespace upnplib

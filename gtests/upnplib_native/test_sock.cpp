@@ -2,6 +2,7 @@
 // Redistribution only with this Copyright remark. Last modified: 2022-08-31
 
 #include "upnplib/sock.hpp"
+#include "upnpmock/sys_socket.hpp"
 
 #include "upnplib/gtest.hpp"
 #include "gmock/gmock.h"
@@ -22,12 +23,24 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
 //
 // Mocked system calls
 // ===================
-class MockSysSocket : public ISysSocket {
+// clang-format off
+class Mock_sys_socket : public Bsys_socket {
+    // Class to mock the free system functions.
+    Bsys_socket* m_oldptr;
+
   public:
+    // Save and restore the old pointer to the production function
+    Mock_sys_socket() {
+        m_oldptr = sys_socket_h;
+        sys_socket_h = this;
+    }
+    virtual ~Mock_sys_socket() override { sys_socket_h = m_oldptr; }
+
     MOCK_METHOD(int, getsockname,
                 (int sockfd, struct sockaddr* addr, socklen_t* addrlen),
                 (override));
 };
+// clang-format on
 
 //
 // struct SockAddr and struct SocketAddr TestSuite
@@ -50,6 +63,25 @@ TEST(SocketAddrTestSuite, successful_execution) {
         nullptr);
     EXPECT_STREQ(buf_ntop, "192.168.169.170");
     EXPECT_EQ(ntohs(sock.addr_in->sin_port), 4711);
+}
+
+TEST(SocketAddrTestSuite, get_address_from_socket) {
+    SOCKET sockfd{1102};
+
+    // Provide a sockaddr structure that will be returned by mocked
+    // getsockname().
+    struct SockAddr ret_sock;
+    ret_sock.addr_set("192.168.111.222", 54444);
+
+    // Mock system functions
+    class Mock_sys_socket mocked_sys_socketObj;
+    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+        .WillOnce(DoAll(SetArgPointee<1>(*ret_sock.addr), Return(0)));
+
+    // Test Unit
+    struct SocketAddr sock;
+    EXPECT_EQ(sock.addr_get(sockfd), "192.168.111.222");
+    EXPECT_EQ(sock.addr_get_port(), 54444);
 }
 
 TEST(SocketAddrTestSuite, set_wrong_address) {
@@ -84,37 +116,6 @@ TEST(SocketAddrTestSuite, get_address_from_invalid_socket) {
                 ThrowsMessage<std::runtime_error>(ContainsStdRegex(
                     "at \\*/.+\\[\\d+\\]: Got invalid ip address from fd " +
                     std::to_string(sockfd) + "\\. .+")));
-}
-
-TEST(SocketAddrTestSuite, get_address_from_mocked_socket) {
-    // First create a socket address structure that will be returned by the
-    // mocked getsockname() system call:
-    struct SocketAddr ret_sock;
-    ret_sock.addr_set("192.168.5.6", 59876);
-
-    // Now fill a socket structure with the address from a (mocked) socket
-    // query.
-    SOCKET sockfd{1102};
-    class MockSysSocket mocked_sys_socketObj;
-    // Inject mocked sys_socket object
-    struct SocketAddr sock(&mocked_sys_socketObj);
-
-    // This is the expectation that returns the address from the socket
-    // (provided with ret_sock above).
-    EXPECT_CALL(mocked_sys_socketObj,
-                getsockname(sockfd, _, Pointee(sizeof(ret_sock.addr_ss))))
-        .WillOnce(DoAll(SetArgPointee<1>(*ret_sock.addr), Return(0)));
-
-    // Test Unit
-    EXPECT_EQ(sock.addr_get(sockfd), "192.168.5.6");
-    EXPECT_EQ(sock.addr_get_port(), 59876);
-
-    char buf_ntop[INET6_ADDRSTRLEN]{};
-    EXPECT_NE(
-        inet_ntop(AF_INET, &sock.addr_in->sin_addr, buf_ntop, sizeof(buf_ntop)),
-        nullptr);
-    EXPECT_STREQ(buf_ntop, "192.168.5.6");
-    EXPECT_EQ(ntohs(sock.addr_in->sin_port), 59876);
 }
 
 } // namespace upnplib

@@ -33,23 +33,6 @@ typedef int SOCKET;
 
 namespace upnplib {
 
-// Wrapper for mocking sys/socket.h standard library calls
-// -------------------------------------------------------
-class ISysSocket {
-  public:
-    virtual ~ISysSocket() = default;
-    virtual int getsockname(int sockfd, struct sockaddr* addr,
-                            socklen_t* addrlen) = 0;
-};
-
-class SysSocket : public ISysSocket {
-  public:
-    int getsockname(int sockfd, struct sockaddr* addr,
-                    socklen_t* addrlen) override {
-        return ::getsockname(sockfd, addr, addrlen);
-    }
-};
-
 // Wrapper for a sockaddr structure
 // --------------------------------
 // This structure simplifies the handling and setting of the different sockaddr
@@ -91,13 +74,8 @@ struct UPNPLIB_API SockAddr {
 */
 struct UPNPLIB_API SocketAddr : public SockAddr {
     SocketAddr() = default;
-    SocketAddr(ISysSocket* a_sys_socketObj);
     std::string addr_get();
     std::string addr_get(SOCKET sockfd);
-
-  private:
-    class SysSocket sys_socketObj;
-    class ISysSocket* m_sys_socketObj{&sys_socketObj};
 };
 
 } // namespace upnplib

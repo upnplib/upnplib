@@ -1,8 +1,9 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-17
-
 #ifndef UPNPLIB_SYS_SELECTIF_HPP
 #define UPNPLIB_SYS_SELECTIF_HPP
+// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-09-01
+
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 
 #ifdef _WIN32
 #include <winsock2.h>
