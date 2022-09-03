@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-07-15
+# Redistribution only with this Copyright remark. Last modified: 2022-09-03
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -82,7 +82,6 @@ set(PUPNP_SOURCE_FILES
 
     ./src/genlib/net/http/httpparser.cpp
     ./src/genlib/net/http/httpreadwrite.cpp
-    ./src/mockObj.cpp
     ./src/genlib/net/http/statcodes.cpp
     ./src/genlib/net/http/webserver.cpp
     ./src/genlib/net/http/parsetools.cpp
@@ -142,8 +141,9 @@ set(PUPNP_SOURCE_FILES
     $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_WEBSERVER}>>:./src/urlconfig/urlconfig.cpp>
 
     ./src/global.cpp
-    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
-    $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_unix.cpp>
+    ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp
+    $<$<BOOL:${WIN32}>:${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj_win32.cpp>
+    $<$<NOT:$<BOOL:${WIN32}>>:${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj_unix.cpp>
 )
 
 add_compile_definitions(
@@ -178,6 +178,8 @@ if(NOT WIN32)
     target_include_directories(pupnp_native_shared
         PRIVATE
             ${PUPNP_IXML_SOURCE_DIR}/inc
+            ${UPnPlib_SOURCE_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ./inc
             ./src/inc
             ./src/threadutil
@@ -212,6 +214,8 @@ if(NOT WIN32)
     target_include_directories(pupnp_native_static
         PRIVATE
             ${PUPNP_IXML_SOURCE_DIR}/inc
+            ${UPnPlib_SOURCE_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ./inc
             ./src/inc
             ./src/threadutil
@@ -241,14 +245,16 @@ else() # WIN32
     # Pthreads are not supported by MS Windows. So we have installed the
     # third party library pthreads4w.
 
-    # pupnp native shared library
-    #----------------------------
+    # WIN32 pupnp native shared library
+    #----------------------------------
     add_library(pupnp_native_shared SHARED   # prefix -pnsh
             ${PUPNP_SOURCE_FILES}
     )
     target_include_directories(pupnp_native_shared
         PRIVATE
             ${PUPNP_IXML_SOURCE_DIR}/inc
+            ${UPnPlib_SOURCE_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ./inc
             ./src/inc
             ./src/threadutil
@@ -278,14 +284,16 @@ else() # WIN32
             ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
-    # pupnp native static library
-    #----------------------------
+    # WIN32 pupnp native static library
+    #----------------------------------
     add_library(pupnp_native_static STATIC   # prefix -pnst
             ${PUPNP_SOURCE_FILES}
     )
     target_include_directories(pupnp_native_static
         PRIVATE
             ${PUPNP_IXML_SOURCE_DIR}/inc
+            ${UPnPlib_SOURCE_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ./inc
             ./src/inc
             ./src/threadutil

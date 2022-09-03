@@ -61,14 +61,14 @@ struct UPNPLIB_API SockAddr {
 
 // Derived socketaddr structure
 // ----------------------------
-// In addition to the properties and methods of the base class SockAddr we can
-// get the socket address from a socket file descriptor and store it in the
-// structure. The system call to get the information can be mocked by injection
-// of the mock object with the second constructor. With the default constructor
-// we use the initialized object pointer to the real library function.
+// In addition to the properties and methods of the base structure SockAddr we
+// can get the socket address from a socket file descriptor and store it in the
+// structure. The system call to get the information can be mocked. If you do
+// not need information from the socket then it's better to use the base
+// structure SockAddr because it does not need to compile in mocking that isn't
+// used.
 /* Typical calls:
     struct SocketAddr sock;             // For productive system call
-    struct SocketAddr sock(&mockedObj); // For mocking injection
     std::string text_addr = sock.addr_get();       // Get stored ip address
     std::string text_addr = sock.addr_get(sockfd); // Get ip address from socket
 */

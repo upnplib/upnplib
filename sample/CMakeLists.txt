@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-25
+# Redistribution only with this Copyright remark. Last modified: 2022-09-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -46,6 +46,7 @@ IF (UPNPLIB_DEF_SAMPLE_CLIENT)
         target_include_directories(tv_ctrlpt
             PRIVATE
                 ./common
+                ${UPnPlib_SOURCE_DIR}/gtests/include
                 ${PUPNP_UPNP_SOURCE_DIR}/inc
                 ${PUPNP_IXML_SOURCE_DIR}/inc
                 # if pthreads4w isn't installed this path is empty. The linker
@@ -69,6 +70,7 @@ IF (UPNPLIB_DEF_SAMPLE_COMBO)
         target_include_directories(tv_combo
             PRIVATE
                 ./common
+                ${UPnPlib_SOURCE_DIR}/gtests/include
                 ${PUPNP_UPNP_SOURCE_DIR}/inc
                 ${PUPNP_IXML_SOURCE_DIR}/inc
                 # if pthreads4w isn't installed this path is empty. The linker
@@ -97,6 +99,7 @@ IF(UPNPLIB_DEF_SAMPLE_DEVICE)
         target_include_directories(tv_device
             PRIVATE
                 ./common
+                ${UPnPlib_SOURCE_DIR}/gtests/include
                 ${PUPNP_UPNP_SOURCE_DIR}/inc
                 ${PUPNP_IXML_SOURCE_DIR}/inc
                 # if pthreads4w isn't installed this path is empty. The linker

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-08-25
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,9 +33,6 @@
  **************************************************************************/
 
 #include "config.hpp"
-#include "upnpmock/sys_socket.hpp"
-#include "upnpmock/sys_select.hpp"
-#include "upnpmock/stdlib.hpp"
 
 #if EXCLUDE_MINISERVER == 0
 
@@ -63,6 +60,12 @@
 #include "upnpapi.hpp"
 #include "upnputil.hpp"
 
+#include "upnplib/sock.hpp"
+
+#include "upnpmock/sys_socket.hpp"
+#include "upnpmock/sys_select.hpp"
+#include "upnpmock/stdlib.hpp"
+
 #include <assert.h>
 #include <errno.h>
 #include <stdio.h>
@@ -70,6 +73,7 @@
 #include <sys/types.h>
 #include <algorithm> // for std::max()
 #include <cstring>
+#include <iostream>
 
 #ifdef _WIN32
 #include "UpnpStdInt.hpp" // for ssize_t
@@ -179,61 +183,22 @@ ExitFunction:
 
 static int getNumericHostRedirection(int socket, char* host_port,
                                      size_t hp_size) {
-    int rc;
-    const char* rcp;
-    struct sockaddr_storage addr;
-    struct sockaddr_in* addr4 = (struct sockaddr_in*)&addr;
-    struct sockaddr_in6* addr6 = (struct sockaddr_in6*)&addr;
-    socklen_t addr_len = sizeof addr;
-    in_port_t port;
-    char host[NAME_SIZE];
-    int n;
-
-    rc = upnplib::sys_socket_h->getsockname(socket, (struct sockaddr*)&addr,
-                                            &addr_len);
-    if (rc) {
-        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                   "Error with systemcall getsockname(). %s.\n",
-                   std::strerror(errno));
-        goto ExitFunction;
-    }
-    switch (addr.ss_family) {
-    case AF_INET6:
-        rcp = inet_ntop(AF_INET6, &addr6->sin6_addr, host, sizeof host);
-        if (!rcp) {
-            UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                       "Error when getting text ip address. %s.\n",
-                       std::strerror(errno));
-            rc = -1;
-            goto ExitFunction;
-        }
-        port = ntohs(addr6->sin6_port);
-        n = snprintf(host_port, hp_size, "[%s]:%d", host, port);
-        break;
-    case AF_INET:
-        rcp = inet_ntop(AF_INET, &addr4->sin_addr, host, sizeof host);
-        if (!rcp) {
-            UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                       "Error when getting text ip address. %s.\n",
-                       std::strerror(errno));
-            rc = -1;
-            goto ExitFunction;
-        }
-        port = ntohs(addr4->sin_port);
-        n = snprintf(host_port, hp_size, "%s:%d", host, port);
-        break;
-    default:
-        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                   "Invalid address family %d.\n", addr.ss_family);
-        rc = -1;
-        goto ExitFunction;
-    }
-    if (n < 0) {
-        rc = -1;
+    struct SocketAddr sock;
+    std::string text_addr;
+    try {
+        text_addr = sock.addr_get(socket);
+    } catch (const std::invalid_argument& e) {
+        std::cerr << e.what();
+        return false;
+    } catch (const std::runtime_error& e) {
+        std::cerr << e.what();
+        return false;
     }
 
-ExitFunction:
-    return rc == 0;
+    int port = sock.addr_get_port();
+    text_addr.append(":" + std::to_string(port));
+    memcpy(host_port, text_addr.c_str(), hp_size);
+    return true;
 }
 
 /*!

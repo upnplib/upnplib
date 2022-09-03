@@ -1,7 +1,7 @@
-#ifndef UPNP_SYS_SOCKETIF_HPP
-#define UPNP_SYS_SOCKETIF_HPP
+#ifndef UPNPLIB_SYS_SOCKETIF_HPP
+#define UPNPLIB_SYS_SOCKETIF_HPP
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-17
+// Redistribution only with this Copyright remark. Last modified: 2022-09-03
 
 // Next should be defined with CMake target_compile_definitions().
 // It is intended only to compile with gtests.
@@ -188,6 +188,6 @@ class Mock_sys_socket : public Bsys_socket {
 
 } // namespace upnplib
 
-#endif // UPNP_SYS_SOCKETIF_HPP
+#endif // UPNPLIB_SYS_SOCKETIF_HPP
 
 // vim: nowrap

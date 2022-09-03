@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-08-12
+# Redistribution only with this Copyright remark. Last modified: 2022-09-02
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -19,8 +19,8 @@ if(FALSE)
 # reference. We link against the internal upnplib libraries (see below).
 add_executable(test_httpreadwrite
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
+    ${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj.cpp
+    $<$<BOOL:${WIN32}>:${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj_win32.cpp>
 
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
@@ -86,8 +86,8 @@ if(FALSE)
 # reference. We link against the upnplib libraries (see below).
 add_executable(test_netconnect
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
+    ${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj.cpp
+    $<$<BOOL:${WIN32}>:${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj_win32.cpp>
 
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp

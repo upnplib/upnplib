@@ -1,11 +1,10 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-17
-
 #ifndef UPNPLIB_PTHREADIF_HPP
 #define UPNPLIB_PTHREADIF_HPP
+// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-09-03
 
 #include "UpnpGlobal.hpp" // for EXPORT_SPEC
-#include <pthread.h>
+#include "pthread.h"      // To find pthreads4w don't use <pthread.h>
 
 namespace upnplib {
 

@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-08-12
+# Redistribution only with this Copyright remark. Last modified: 2022-09-02
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -18,9 +18,9 @@ if(FALSE)
 # Direct linking with source files currently not used but having available for
 # reference. We link against the internal upnplib libraries (see below).
 add_executable(test_uri-pnst
-	${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-	${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-	./test_uri.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj.cpp
+        ./test_uri.cpp
 )
 endif()
 
@@ -64,7 +64,7 @@ if(FALSE)
 # reference. We link against the internal upnplib libraries (see below).
 add_executable(test_uri_parse-pnst
         ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-        ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj.cpp
         ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
         ./test_uri_parse.cpp
 )

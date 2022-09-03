@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-08-31
+# Redistribution only with this Copyright remark. Last modified: 2022-09-03
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -122,6 +122,7 @@ add_executable(test_strintmap-pnsh
 )
 target_include_directories(test_strintmap-pnsh
     PRIVATE
+        ./include
         ${UPnPlib_SOURCE_DIR}
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
@@ -168,6 +169,7 @@ add_executable(test_membuffer
 )
 target_include_directories(test_membuffer
     PRIVATE
+        ./include
         ${UPnPlib_SOURCE_DIR}
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
@@ -191,7 +193,7 @@ if(FALSE)
 # reference. We link against the internal upnplib libraries (see below).
 add_executable(test_httpparser-pnst
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
+    ./tools/mockObj.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
@@ -316,9 +318,9 @@ set(UPNP_UPNPAPI_SOURCE_FILES
     $<$<CONFIG:Debug>:${PUPNP_IXML_SOURCE_DIR}/src/ixmldebug.cpp>
 
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-    $<$<BOOL:${WIN32}>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
-    $<$<NOT:$<BOOL:${WIN32}>>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_unix.cpp>
+    ./tools/mockObj.cpp
+    $<$<BOOL:${WIN32}>:./tools/mockObj_win32.cpp>
+    $<$<NOT:$<BOOL:${WIN32}>>:./tools/mockObj_unix.cpp>
 
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
@@ -423,6 +425,7 @@ add_executable(test_LinkedList-pnsh
 )
 target_include_directories(test_LinkedList-pnsh
     PRIVATE
+        ./include
         ${UPnPlib_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
@@ -720,9 +723,9 @@ set(MINISERVER_SOURCE_FILES
     ./test_miniserver.cpp
 
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/mockObj.cpp
-    $<$<PLATFORM_ID:Windows>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_win32.cpp>
-    $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/src/mockObj_unix.cpp>
+    ./tools/mockObj.cpp
+    $<$<PLATFORM_ID:Windows>:./tools/mockObj_win32.cpp>
+    $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/mockObj_unix.cpp>
 
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
@@ -805,6 +808,7 @@ add_test(NAME ctest_miniserver-pnsh COMMAND test_miniserver-pnsh
 add_executable(test_miniserver-ucsh
 #----------------------------------
         ${MINISERVER_SOURCE_FILES}
+        ${UPnPlib_SOURCE_DIR}/core/src/net/sock.cpp
 )
 target_include_directories(test_miniserver-ucsh
     PRIVATE

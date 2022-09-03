@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-29
+// Redistribution only with this Copyright remark. Last modified: 2022-09-03
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
@@ -23,6 +23,7 @@ using ::testing::SetErrnoAndReturn;
 
 using ::upnplib::testing::CaptureStdOutErr;
 using ::upnplib::testing::ContainsStdRegex;
+using ::upnplib::testing::MatchesStdRegex;
 using ::upnplib::testing::StrCpyToArg;
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
@@ -2059,9 +2060,11 @@ TEST(RunMiniServerTestSuite,
 #ifdef DEBUG
         EXPECT_THAT(
             capturedStderr,
-            ContainsStdRegex(
-                " UPNP-MSER-1: .*Error with systemcall getsockname\\(\\)\\. "
-                "[Nn]o buffer space"));
+            MatchesStdRegex(
+                "UPNPLIB ERR\\. at \\*/.+\\.cpp\\[\\d+\\], "
+                ".*addr_get\\(\\d+\\), "
+                "errid=\\d+: systemcall getsockname\\(\\d+\\), [Nn]o buffer "
+                "space.*"));
 #else
         EXPECT_TRUE(capturedStderr.empty());
 #endif
@@ -2108,9 +2111,9 @@ TEST(RunMiniServerTestSuite,
 
         EXPECT_FALSE(ret_getNumericHostRedirection);
 #ifdef DEBUG
-        EXPECT_THAT(
-            capturedStderr,
-            ContainsStdRegex(" UPNP-MSER-1: .*Invalid address family 1\\.\n"));
+        EXPECT_THAT(capturedStderr,
+                    MatchesStdRegex("UPNPLIB ERR\\. at \\*/.+\\.cpp\\[\\d+\\], "
+                                    ".*addr_get\\(\\), errid=\\d+: .+"));
 #else
         EXPECT_TRUE(capturedStderr.empty());
 #endif

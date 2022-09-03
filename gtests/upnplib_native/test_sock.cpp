@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-31
+// Redistribution only with this Copyright remark. Last modified: 2022-09-03
 
 #include "upnplib/sock.hpp"
 #include "upnpmock/sys_socket.hpp"
@@ -15,6 +15,7 @@ using ::testing::SetArgPointee;
 using ::testing::ThrowsMessage;
 
 using ::upnplib::testing::ContainsStdRegex;
+using ::upnplib::testing::MatchesStdRegex;
 
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
@@ -103,8 +104,9 @@ TEST(SocketAddrTestSuite, get_wrong_address) {
 
     // Test Unit
     EXPECT_THAT([&sock] { sock.addr_get(); },
-                ThrowsMessage<std::runtime_error>(ContainsStdRegex(
-                    "at \\*/.+\\[\\d+\\]: Got invalid ip address")));
+                ThrowsMessage<std::invalid_argument>(
+                    MatchesStdRegex("UPNPLIB ERR\\. at \\*/.+\\.cpp\\[\\d+\\], "
+                                    ".*addr_get\\(\\), errid=\\d+: .+")));
 }
 
 TEST(SocketAddrTestSuite, get_address_from_invalid_socket) {
@@ -113,9 +115,9 @@ TEST(SocketAddrTestSuite, get_address_from_invalid_socket) {
 
     // Test Unit
     EXPECT_THAT(([&sock, sockfd] { sock.addr_get(sockfd); }),
-                ThrowsMessage<std::runtime_error>(ContainsStdRegex(
-                    "at \\*/.+\\[\\d+\\]: Got invalid ip address from fd " +
-                    std::to_string(sockfd) + "\\. .+")));
+                ThrowsMessage<std::runtime_error>(
+                    MatchesStdRegex("UPNPLIB ERR\\. at \\*/.+\\.cpp\\[\\d+\\], "
+                                    ".*addr_get\\(1101\\), errid=\\d+: .*")));
 }
 
 } // namespace upnplib

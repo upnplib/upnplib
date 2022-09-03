@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-08-31
+# Redistribution only with this Copyright remark. Last modified: 2022-09-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -23,6 +23,7 @@ if(NOT WIN32)
         PRIVATE
             ${UPnPlib_SOURCE_DIR}
             ${UPnPlib_SOURCE_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32
@@ -52,6 +53,7 @@ if(NOT WIN32)
         PRIVATE
             ${UPnPlib_SOURCE_DIR}
             ${UPnPlib_SOURCE_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/inc
             ${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32
@@ -71,7 +73,7 @@ if(NOT WIN32)
             ./src/global.cpp
             ./src/api/upnptools.cpp
             ./src/net/sock.cpp
-            ./src/mockObj.cpp
+            ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp
     )
     set_target_properties(upnplib_native_shared PROPERTIES
             OUTPUT_NAME upnplib_native
@@ -79,6 +81,7 @@ if(NOT WIN32)
     target_include_directories(upnplib_native_shared
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
     )
@@ -108,7 +111,7 @@ if(NOT WIN32)
     target_include_directories(upnplib_native_static
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
-            ${PUPNP_UPNP_SOURCE_DIR}/inc
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_IXML_SOURCE_DIR}/inc
     )
     target_link_libraries(upnplib_native_static
@@ -130,6 +133,7 @@ if(NOT WIN32)
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
             ${UPnPlib_BINARY_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -153,6 +157,7 @@ if(NOT WIN32)
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
             ${UPnPlib_BINARY_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -181,6 +186,7 @@ else() # WIN32
         PRIVATE
             ${UPnPlib_SOURCE_DIR}
             ${UPnPlib_SOURCE_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -212,6 +218,7 @@ else() # WIN32
         PRIVATE
             ${UPnPlib_SOURCE_DIR}
             ${UPnPlib_SOURCE_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -234,13 +241,17 @@ else() # WIN32
             ./src/global.cpp
             ./src/api/upnptools.cpp
             ./src/net/sock.cpp
-            ./src/mockObj.cpp
+            ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp
     )
     target_include_directories(upnplib_native_shared
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
+            # if pthreads4w isn't installed this path is empty. The linker
+            # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+            ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
     )
     target_compile_definitions(upnplib_native_shared
         PRIVATE
@@ -268,6 +279,7 @@ else() # WIN32
     target_include_directories(upnplib_native_static
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
     )
@@ -295,6 +307,7 @@ else() # WIN32
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
             ${UPnPlib_BINARY_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc   # needed for ithread.hpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -319,6 +332,7 @@ else() # WIN32
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
             ${UPnPlib_BINARY_DIR}/include
+            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc  # needed for ithread.hpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
