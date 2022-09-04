@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-20
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,7 +46,6 @@
 #include <assert.h>
 
 #include "gena.hpp"
-#include "UpnpSubscriptionRequest.hpp"
 #include "httpreadwrite.hpp"
 #include "parsetools.hpp"
 #include "ssdplib.hpp"
@@ -55,12 +54,8 @@
 #include "unixutil.hpp"
 #include "upnpapi.hpp"
 #include "uuid.hpp"
-
-#ifdef _WIN32
-#if defined(_MSC_VER) && _MSC_VER < 1900
-#define snprintf _snprintf
-#endif
-#endif
+#include "posix_overwrites.hpp"
+#include "UpnpSubscriptionRequest.hpp"
 
 #define STALE_JOBID (INVALID_JOB_ID - 1)
 
@@ -415,8 +410,8 @@ static char* AllocGenaHeaders(
         line = __LINE__;
         goto ExitFunction;
     }
-    rc = snprintf(headers, headers_size, "%s%s%zu" PRIzu "%s%s%s",
-                  HEADER_LINE_1, HEADER_LINE_2A, strlen(propertySet) + 2,
+    rc = snprintf(headers, headers_size, "%s%s%" PRIzu "%s%s%s", HEADER_LINE_1,
+                  HEADER_LINE_2A, (unsigned long)strlen(propertySet) + 2,
                   HEADER_LINE_2B, HEADER_LINE_3, HEADER_LINE_4);
 
 ExitFunction:

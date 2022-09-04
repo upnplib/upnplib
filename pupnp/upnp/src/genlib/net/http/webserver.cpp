@@ -66,11 +66,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#ifdef _WIN32
-#if defined(_MSC_VER) && _MSC_VER < 1900
-#define snprintf _snprintf
-#endif
-#endif
+#include "posix_overwrites.hpp"
 
 /*!
  * Response Types.
@@ -516,26 +512,44 @@ static int get_file_info(
     int code;
     struct stat s;
     FILE* fp;
+    int fd;
     int rc = 0;
     time_t aux_LastModified;
     struct tm date;
     char buffer[ASCTIME_R_BUFFER_SIZE];
 
     UpnpFileInfo_set_ContentType(info, NULL);
-    code = stat(filename, &s);
-    if (code == -1)
-        return -1;
-    if (S_ISDIR(s.st_mode))
-        UpnpFileInfo_set_IsDirectory(info, 1);
-    else if (S_ISREG(s.st_mode))
-        UpnpFileInfo_set_IsDirectory(info, 0);
-    else
-        return -1;
-    /* check readable */
+#ifdef _WIN32
+    fopen_s(&fp, filename, "r");
+#else
     fp = fopen(filename, "r");
+#endif
+    /* check readable */
     UpnpFileInfo_set_IsReadable(info, fp != NULL);
-    if (fp)
-        fclose(fp);
+    if (!fp) {
+        rc = -1;
+        goto exit_function;
+    }
+    fd = fileno(fp);
+    if (fd == -1) {
+        rc = -1;
+        goto exit_function;
+    }
+    code = fstat(fd, &s);
+    if (code == -1) {
+        rc = -1;
+        goto exit_function;
+    }
+    fclose(fp);
+    fp = NULL;
+    if (S_ISDIR(s.st_mode)) {
+        UpnpFileInfo_set_IsDirectory(info, 1);
+    } else if (S_ISREG(s.st_mode)) {
+        UpnpFileInfo_set_IsDirectory(info, 0);
+    } else {
+        rc = -1;
+        goto exit_function;
+    }
     UpnpFileInfo_set_FileLength(info, s.st_size);
     UpnpFileInfo_set_LastModified(info, s.st_mtime);
     rc = get_content_type(filename, info);
@@ -547,6 +561,10 @@ static int get_file_info(
         web_server_asctime_r(http_gmtime_r(&aux_LastModified, &date), buffer),
         UpnpFileInfo_get_IsReadable(info));
 
+exit_function:
+    if (fp) {
+        fclose(fp);
+    }
     return rc;
 }
 
@@ -739,7 +757,11 @@ static int GetNextRange(
     if ((Ptr = strstr(Tok, "-")) == NULL)
         return -1;
     *Ptr = ' ';
+#ifdef _WIN32
+    sscanf_s(Tok, "%" SCNd64 "%" SCNd64, &F, &L);
+#else
     sscanf(Tok, "%" SCNd64 "%" SCNd64, &F, &L);
+#endif
     if (F == -1 || L == -1) {
         *Ptr = '-';
         for (i = 0; i < (int)strlen(Tok); i++) {
@@ -1002,9 +1024,6 @@ static int CheckOtherHTTPHeaders(
 static void FreeExtraHTTPHeaders(
     /*! [in] extra HTTP headers to free. */
     [[maybe_unused]] UpnpListHead* extraHeadersList) {
-#ifndef UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
-    return;
-#else  // UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
     UpnpListIter pos;
     UpnpExtraHeaders* extra;
 
@@ -1014,7 +1033,6 @@ static void FreeExtraHTTPHeaders(
         pos = UpnpListErase(extraHeadersList, pos);
         UpnpExtraHeaders_delete(extra);
     }
-#endif // UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
 }
 
 /*!
@@ -1026,9 +1044,6 @@ static int ExtraHTTPHeaders(
     /*! [in] HTTP Request message. */
     [[maybe_unused]] http_message_t* Req,
     [[maybe_unused]] UpnpListHead* extraHeadersList) {
-#ifndef UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
-    return HTTP_NOT_IMPLEMENTED;
-#else // UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
     http_header_t* header;
     ListNode* node;
     int index;
@@ -1061,8 +1076,6 @@ static int ExtraHTTPHeaders(
     }
 
     return HTTP_OK;
-
-#endif // UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
 }
 
 /*!
@@ -1578,9 +1591,8 @@ void web_server_callback(http_parser_t* parser, /* INOUT */ http_message_t* req,
     membuffer_init(&headers);
     membuffer_init(&filename);
 
-    /*Process request should create the different kind of header depending
-     * on the */
-    /*the type of request. */
+    /* Process request should create the different kind of header depending
+     * on the type of request. */
     ret = process_request(info, req, &rtype, &headers, &filename, &xmldoc,
                           &RespInstr);
     if (ret != HTTP_OK) {

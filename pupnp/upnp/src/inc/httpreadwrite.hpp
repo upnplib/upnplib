@@ -40,9 +40,9 @@
  */
 
 #include "config.hpp"
-//#include "upnputil.hpp"
-#include "sock.hpp"
 #include "httpparser.hpp"
+#include "sock.hpp"
+//#include "upnputil.hpp"
 
 /*! timeout in secs. */
 #define HTTP_DEFAULT_TIMEOUT 30
@@ -260,7 +260,8 @@ EXPORT_SPEC int http_OpenHttpConnection(
        connection. */
     const char* url,
     /*! [in,out] A pointer in which to store the handle for this connection.
-     * This handle is required for futher operations over this connection. */
+     * This handle is required for futher operations over this connection.
+     */
     void** handle,
     /*! [in] The time out value sent with the request during which a response
      * is expected from the receiver, failing which, an error is reported.

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-25
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,6 +41,8 @@
 #include <assert.h>
 #include <stdlib.h> /* for free() */
 #include <string.h>
+
+#include "posix_overwrites.hpp"
 
 void ixmlElement_init(IXML_Element* element) {
     if (element != NULL) {
@@ -287,7 +289,8 @@ static IXML_Node* ixmlElement_findAttributeNode(
 
     attrNode = element->n.firstAttr;
     while (attrNode != NULL) {
-        /* parentNode, prevSib, nextSib and ownerDocument doesn't matter */
+        /* parentNode, prevSib, nextSib and ownerDocument doesn't matter
+         */
         if (ixmlNode_compare(attrNode, oldAttrNode) == 1) {
             /* Found it */
             break;

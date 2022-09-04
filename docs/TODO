@@ -1,7 +1,6 @@
 Next steps to do:
 * Rework test_UpnpString.cpp
 * Move pupnp/upnp/src/inc/sock.hpp:79:static UPNP_INLINE int sock_close() to miniserver.cpp and rework.
-* Emulate ::getNumericHostRedirection() with class upnplib::SockAddr.
 * Check usage of fields in struct s_SocketStuff.serverAddr4.
 * Make UpnpPrintf() usable without build type DEBUG.
 * Create gtests for get_ssdp_sockets (needed for miniserver).

@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-21
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,9 +44,12 @@
  */
 
 #include "tv_device.hpp"
+
 #include "upnpdebug.hpp"
 
 #include <assert.h>
+
+#include "posix_overwrites.hpp"
 
 #define DEFAULT_WEB_DIR "./web"
 
@@ -1381,7 +1384,11 @@ void* TvDeviceCommandLoop(void* args) {
         s = fgets(cmdline, 100, stdin);
         if (!s)
             break;
+#ifdef _WIN32
+        sscanf_s(cmdline, "%s", cmd, (unsigned)_countof(cmd));
+#else
         sscanf(cmdline, "%s", cmd);
+#endif
         if (strcasecmp(cmd, "exit") == 0) {
             SampleUtil_Print("Shutting down...\n");
             TvDeviceStop();
@@ -1414,14 +1421,22 @@ int device_main(const int argc, char* argv[]) {
         if (strcmp(argv[i], "-i") == 0) {
             iface = argv[++i];
         } else if (strcmp(argv[i], "-port") == 0) {
+#ifdef WIN32
+            sscanf_s(argv[++i], "%u", &portTemp);
+#else
             sscanf(argv[++i], "%u", &portTemp);
+#endif
         } else if (strcmp(argv[i], "-desc") == 0) {
             desc_doc_name = argv[++i];
         } else if (strcmp(argv[i], "-webdir") == 0) {
             web_dir_path = argv[++i];
         } else if (strcmp(argv[i], "-m") == 0) {
+#ifdef _WIN32
+            sscanf_s(argv[++i], "%d", &ip_mode);
+#else
             sscanf(argv[++i], "%d", &ip_mode);
-        } else {
+#endif
+        } else if (strcmp(argv[i], "-help") == 0) {
             SampleUtil_Print("Usage: %s -i interface -port port"
                              " -desc desc_doc_name -webdir web_dir_path"
                              " -m ip_mode -help (this message)\n",

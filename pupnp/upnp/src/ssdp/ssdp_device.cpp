@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-17
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,24 +45,20 @@
 #ifdef INCLUDE_DEVICE_APIS
 #if EXCLUDE_SSDP == 0
 
+#include "ThreadPool.hpp"
+#include "UpnpInet.hpp"
 #include "httpparser.hpp"
 #include "httpreadwrite.hpp"
 #include "ssdplib.hpp"
 #include "statcodes.hpp"
-#include "ThreadPool.hpp"
 #include "unixutil.hpp"
 #include "upnpapi.hpp"
-#include "UpnpInet.hpp"
 
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
 
-#ifdef _WIN32
-#if defined(_MSC_VER) && _MSC_VER < 1900
-#define snprintf _snprintf
-#endif
-#endif
+#include "posix_overwrites.hpp"
 
 #define MSGTYPE_SHUTDOWN 0
 #define MSGTYPE_ADVERTISEMENT 1
@@ -242,8 +238,8 @@ static int NewRequestHandler(
         UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,
                    ">>> SSDP SEND to %s >>>\n%s\n", buf_ntop,
                    *(RqPacket + Index));
-        rc = sendto(ReplySock, *(RqPacket + Index), strlen(*(RqPacket + Index)),
-                    0, DestAddr, socklen);
+        rc = sendto(ReplySock, *(RqPacket + Index),
+                    (int)strlen(*(RqPacket + Index)), 0, DestAddr, socklen);
         if (rc == -1) {
             strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
             UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,
@@ -444,7 +440,8 @@ static void CreateServicePacket(
         else
             /* shutdown */
             nts = "ssdp:byebye";
-        /* NOTE: The CACHE-CONTROL and LOCATION headers are not present in
+        /* NOTE: The CACHE-CONTROL and LOCATION headers are not present
+         * in
          * a shutdown msg, but are present here for MS WinMe interop. */
         switch (AddressFamily) {
         case AF_INET:

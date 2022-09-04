@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-15
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -66,7 +66,7 @@
 #include "upnpmock/unistd.hpp"
 
 #ifdef UPNP_ENABLE_OPEN_SSL
-//#include <openssl/ssl.h>
+#include <openssl/ssl.h>
 #endif
 
 #ifndef MSG_NOSIGNAL
@@ -98,7 +98,7 @@ int sock_init_with_ip(SOCKINFO* info, SOCKET sockfd,
 
     // clang-format off
 // #ifdef UPNPLIB_PUPNP_BUG
-    // Forming offset [16, 127] is out of the bounds [0, 16] of object
+    // Ingo: Forming offset [16, 127] is out of the bounds [0, 16] of object
     // ‘foreign_sockaddr’ with type ‘sockaddr_in’ [-Werror=array-bounds]
     memcpy(&info->foreign_sockaddr, foreign_sockaddr,
            sizeof(info->foreign_sockaddr));
@@ -235,7 +235,7 @@ static int sock_read_write(
 #endif
                 /* read data. */
                 numBytes = (long)upnplib::sys_socket_h->recv(
-                    sockfd, buffer, bufsize, MSG_NOSIGNAL);
+                    sockfd, buffer, (int)bufsize, MSG_NOSIGNAL);
 #ifdef UPNP_ENABLE_OPEN_SSL
             }
 #endif
@@ -251,7 +251,7 @@ static int sock_read_write(
 #endif
                     /* write data. */
                     num_written = upnplib::sys_socket_h->send(
-                        sockfd, buffer + bytes_sent, byte_left,
+                        sockfd, buffer + bytes_sent, (int)byte_left,
                         MSG_DONTROUTE | MSG_NOSIGNAL);
 #ifdef UPNP_ENABLE_OPEN_SSL
                 }
@@ -264,7 +264,7 @@ static int sock_read_write(
                     return (int)num_written;
                 }
                 byte_left -= (size_t)num_written;
-                bytes_sent += num_written;
+                bytes_sent += (long)num_written;
             }
             numBytes = bytes_sent;
         }

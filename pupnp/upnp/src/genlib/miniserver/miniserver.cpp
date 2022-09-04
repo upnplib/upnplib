@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-08-24
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,9 +33,6 @@
  **************************************************************************/
 
 #include "config.hpp"
-#include "upnpmock/sys_socket.hpp"
-#include "upnpmock/sys_select.hpp"
-#include "upnpmock/stdlib.hpp"
 
 #if EXCLUDE_MINISERVER == 0
 
@@ -71,9 +68,9 @@
 #include <sys/types.h>
 #include <algorithm> // for std::max()
 
-#ifdef _WIN32
-#include "UpnpStdInt.hpp" // for ssize_t
-#endif
+#include "upnpmock/sys_socket.hpp"
+#include "upnpmock/sys_select.hpp"
+#include "upnpmock/stdlib.hpp"
 
 /*! . */
 #define APPLICATION_LISTENING_PORT 49152
@@ -114,6 +111,7 @@ static const int ENABLE_IPV6 =
     0;
 #endif
 
+// Don't define 'const' so we can modify it for testing
 static int MINISERVER_REUSEADDR =
 #ifdef UPNP_MINISERVER_REUSEADDR
     1;
@@ -153,10 +151,15 @@ static int host_header_is_numeric(char* host_port, size_t host_port_size) {
 
     /* Remove the port part. */
     s = host_port + host_port_size - 1;
-    while (s != host_port && *s != ':') {
+    while (s != host_port && *s != ']' && *s != ':') {
         --s;
     }
-    *s = 0;
+    if (*s == ':') {
+        *s = 0;
+    } else {
+        s = host_port + host_port_size;
+    }
+
     /* Try IPV4 */
     rc = inet_pton(AF_INET, host_port, &addr);
     if (rc == 1) {
@@ -299,6 +302,9 @@ static int dispatch_request(
     host_port[min_size] = 0;
     if (host_validate_callback) {
         rc = host_validate_callback(host_port, cookie);
+        if (rc == UPNP_E_BAD_HTTPMSG) {
+            goto ExitFunction;
+        }
     } else if (!host_header_is_numeric(host_port, min_size)) {
         if (!gAllowLiteralHostRedirection) {
             rc = UPNP_E_BAD_HTTPMSG;
@@ -312,7 +318,7 @@ static int dispatch_request(
             char redir_str[NAME_SIZE];
             int timeout = HTTP_DEFAULT_TIMEOUT;
 
-            getNumericHostRedirection(info->socket, host_port,
+            getNumericHostRedirection((int)info->socket, host_port,
                                       sizeof host_port);
             membuffer_init(&redir_buf);
             snprintf(redir_str, NAME_SIZE, redir_fmt, host_port);
@@ -485,9 +491,7 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
 
 static void ssdp_read(SOCKET rsock, fd_set* set) {
     if (rsock != INVALID_SOCKET && FD_ISSET(rsock, set)) {
-#if EXCLUDE_SSDP == 0
         readFromSSDPSocket(rsock);
-#endif
     }
 }
 
@@ -686,9 +690,9 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
         goto error;
         break;
     }
-    // BUG! Ingo: here we should test if we have a valid ip address
-    // if (inet_pton(domain, text_addr, addr) == 0) { ...; goto error;}
-    inet_pton(domain, text_addr, addr);
+
+    if (inet_pton(domain, text_addr, addr) <= 0)
+        goto error;
 
     s->fd = upnplib::sys_socket_h->socket(domain, SOCK_STREAM, 0);
 
@@ -893,7 +897,8 @@ static int get_miniserver_sockets(
     /*! [in] port on which the server is listening for incoming
      * IPv6 ULA or GUA connections. */
     uint16_t listen_port6UlaGua) {
-    int ret_val{UPNP_E_INTERNAL_ERROR};
+    // int ret_val{UPNP_E_INTERNAL_ERROR}; // Ingo: possible bugfix?
+    int ret_val;
     int err_init_4;
     int err_init_6;
     int err_init_6UlaGua;
@@ -1010,7 +1015,11 @@ static int get_miniserver_stopsock(
     /* Bind to local socket. */
     memset(&stop_sockaddr, 0, sizeof(stop_sockaddr));
     stop_sockaddr.sin_family = (sa_family_t)AF_INET;
+#ifdef _WIN32
+    inet_pton(AF_INET, "127.0.0.1", &stop_sockaddr.sin_addr);
+#else
     stop_sockaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+#endif
     ret = upnplib::sys_socket_h->bind(miniServerStopSock,
                                       (struct sockaddr*)&stop_sockaddr,
                                       sizeof(stop_sockaddr));
@@ -1051,8 +1060,8 @@ InitMiniServerSockArray(MiniServerSockArray* miniSocket) {
 }
 
 int StartMiniServer(
-    // The three parameter only used if the INTERNAL_WEB_SERVER is enabled.
-    // The miniserver does not need them.
+    // Ingo: The three parameter only used if the INTERNAL_WEB_SERVER is
+    // enabled. The miniserver does not need them.
     //
     /*! [in,out] Port on which the server listens for incoming IPv4
      * connections. */
@@ -1102,11 +1111,7 @@ int StartMiniServer(
         return ret_code;
     }
     /* SSDP socket for discovery/advertising. */
-#if EXCLUDE_SSDP == 0
     ret_code = get_ssdp_sockets(miniSocket);
-#else
-    ret_code = UPNP_E_INTERNAL_ERROR;
-#endif
     if (ret_code != UPNP_E_SUCCESS) {
         sock_close(miniSocket->miniServerSock4);
         sock_close(miniSocket->miniServerSock6);
@@ -1190,9 +1195,13 @@ int StopMiniServer() {
     }
     while (gMServState != (MiniServerState)MSERV_IDLE) {
         ssdpAddr.sin_family = (sa_family_t)AF_INET;
+#ifdef _WIN32
+        inet_pton(AF_INET, "127.0.0.1", &ssdpAddr.sin_addr);
+#else
         ssdpAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+#endif
         ssdpAddr.sin_port = htons(miniStopSockPort);
-        sendto(sock, buf, bufLen, 0, (struct sockaddr*)&ssdpAddr, socklen);
+        sendto(sock, buf, (int)bufLen, 0, (struct sockaddr*)&ssdpAddr, socklen);
         imillisleep(1);
         if (gMServState == (MiniServerState)MSERV_IDLE) {
             break;

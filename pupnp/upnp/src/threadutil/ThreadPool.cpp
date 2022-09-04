@@ -40,8 +40,9 @@
 //#include <sys/param.h>
 #endif
 
-//#include "FreeList.h"
 #include "ThreadPool.hpp"
+
+//#include "FreeList.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -249,8 +250,10 @@ static int SetPolicyType(
     int retVal = 0;
 #ifdef __CYGWIN__
     /* TODO not currently working... */
+    (void)in;
     retVal = 0;
 #elif defined(__APPLE__) || defined(__NetBSD__)
+    (void)in;
     setpriority(PRIO_PROCESS, 0, 0);
     retVal = 0;
 #elif defined(__PTW32_DLLPORT)
@@ -1170,10 +1173,8 @@ void ThreadPoolPrintStats(ThreadPoolStats* stats) {
     fprintf(stderr, "Total Time spent Idle in seconds : %f\n",
             stats->totalIdleTime);
 }
-#endif /* STATS */
 
 int ThreadPoolGetStats(ThreadPool* tp, ThreadPoolStats* stats) {
-#ifdef STATS
     if (tp == NULL || stats == NULL)
         return EINVAL;
     /* if not shutdown then acquire mutex */
@@ -1202,10 +1203,10 @@ int ThreadPoolGetStats(ThreadPool* tp, ThreadPoolStats* stats) {
     /* if not shutdown then release mutex */
     if (!tp->shutdown)
         ithread_mutex_unlock(&tp->mutex);
-#endif /* STATS */
 
     return 0;
 }
+#endif /* STATS */
 
 #ifdef _WIN32
 #if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
@@ -1237,8 +1238,10 @@ int gettimeofday(struct timeval* tv, struct timezone* tz) {
             _tzset();
             tzflag++;
         }
-        tz->tz_minuteswest = _timezone / 60;
-        tz->tz_dsttime = _daylight;
+        long itz = 0;
+        _get_timezone(&itz);
+        tz->tz_minuteswest = (int)(itz / 60);
+        _get_daylight(&tz->tz_dsttime);
     }
 
     return 0;

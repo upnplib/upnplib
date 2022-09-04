@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-03
+# Redistribution only with this Copyright remark. Last modified: 2022-09-08
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(PUPNP_UPNP VERSION 0020
+project(PUPNP_UPNP VERSION 0022
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -38,9 +38,6 @@ if(UPNPLIB_WITH_SAMPLES)                             # all samples -> UPNP_BUILD
     set(UPNPLIB_DEF_SAMPLES YES) # To make it separate selectable don't set it direct
 endif()
 
-# Internal switches for program options
-set(UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS YES)
-
 # Dependencies of options
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(UPNPLIB_DEF_DEBUG YES)
@@ -48,7 +45,6 @@ endif()
 
 if(UPNPLIB_DEF_GOOGLETEST)
     set(UPNPLIB_DEF_CLIENT YES)
-    set(UPNPLIB_DEF_WEBSERVER YES)
     set(UPNPLIB_DEF_OPTSSDP YES)
 endif()
 
@@ -60,8 +56,20 @@ if(UPNPLIB_DEF_SAMPLES)
     set(UPNPLIB_DEF_GENA YES)
 endif()
 
+if(UPNPLIB_DEF_DEVICE)
+    set(UPNPLIB_DEF_WEBSERVER YES)
+endif()
+
 if(UPNPLIB_DEF_WEBSERVER)
     set(UPNPLIB_DEF_DEVICE YES)
+    set(UPNPLIB_DEF_SOAP YES)
+endif()
+
+if(UPNPLIB_DEF_SOAP)
+    set(UPNPLIB_DEF_SSDP YES)
+endif()
+
+if(UPNPLIB_DEF_GENA)
     set(UPNPLIB_DEF_SSDP YES)
 endif()
 
@@ -115,7 +123,7 @@ set(PUPNP_SOURCE_FILES
     $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>,$<BOOL:${UPNPLIB_DEF_OPTSSDP}>>:./src/uuid/md5.cpp>
     $<$<OR:$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>,$<BOOL:${UPNPLIB_DEF_OPTSSDP}>>:./src/uuid/sysdep.cpp>
 
-    $<$<BOOL:${UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS}>:./src/api/UpnpExtraHeaders.cpp>
+    ./src/api/UpnpExtraHeaders.cpp
     ./src/api/UpnpString.cpp
     ./src/api/upnpapi.cpp
     $<$<OR:$<BOOL:${UPNPLIB_DEF_TOOLS}>,$<BOOL:${UPNPLIB_DEF_DEBUG}>>:./src/api/upnptools.cpp>
@@ -159,7 +167,6 @@ add_compile_definitions(
     $<$<BOOL:${UPNPLIB_DEF_BLOCKTCP}>:UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS>
     $<$<BOOL:${UPNPLIB_DEF_DEBUG}>:UPNP_HAVE_DEBUG>
     $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
-    $<$<BOOL:${UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS}>:UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS>
 )
 
 

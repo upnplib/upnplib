@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-01
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,9 +39,9 @@
  */
 
 #ifdef __FreeBSD__
-//#include <osreldate.h>
+// #include <osreldate.h>
 #if __FreeBSD_version < 601103
-//#include <lwres/netdb.h>
+// #include <lwres/netdb.h>
 #endif
 #endif
 #ifdef _WIN32
@@ -49,12 +49,14 @@
 #define snprintf _snprintf
 #endif
 #endif
-#include "config.hpp"
+#include <assert.h>
 
+#include "config.hpp"
 #include "upnpapi.hpp"
 #include "uri.hpp"
 
-#include <assert.h>
+#include "posix_overwrites.hpp"
+
 #include "upnpmock/netdb.hpp"
 
 extern unsigned int gIF_INDEX;
@@ -136,8 +138,12 @@ int replace_escaped(char* in, size_t index, size_t* max) {
         isxdigit(in[index + (size_t)2])) {
         /* Note the "%2x", makes sure that we convert a maximum of two
          * characters. */
-        if (sscanf(&in[index + (size_t)1], "%2x", (unsigned int*)&tempInt) !=
-            1) {
+#ifdef _WIN32
+        if (sscanf_s(&in[index + (size_t)1],
+#else
+        if (sscanf(&in[index + (size_t)1],
+#endif
+                     "%2x", (unsigned int*)&tempInt) != 1) {
             return 0;
         }
         tempChar = (char)tempInt;
@@ -707,6 +713,7 @@ int parse_uri(const char* in, size_t max, uri_type* out) {
     size_t begin_hostport = (size_t)0;
     size_t begin_fragment = (size_t)0;
     unsigned short int defaultPort = 80;
+
     begin_hostport = parse_scheme(in, max, &out->scheme);
     if (begin_hostport) {
         out->type = (enum uriType)ABSOLUTE;

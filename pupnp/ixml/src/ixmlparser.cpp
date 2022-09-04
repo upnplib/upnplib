@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-25
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,7 +36,7 @@
  * \file
  */
 
-//#include "upnpconfig.h"
+// #include "autoconfig.h"
 
 #include "ixmlparser.hpp"
 
@@ -48,9 +48,7 @@
 #include <stdlib.h> /* for free(), malloc() */
 #include <string.h>
 
-#ifdef _WIN32
-#define strncasecmp strnicmp
-#endif
+#include "posix_overwrites.hpp"
 
 static char g_error_char = '\0';
 #ifdef IXML_HAVE_SCRIPTSUPPORT
@@ -545,7 +543,8 @@ static void Parser_clearTokenBuf(
 static int Parser_UTF8ToInt(
     /*! [in] The pointer to the character to encode. */
     const char* ss,
-    /*! [out] The number of octets of the UTF-8 encoding of this character. */
+    /*! [out] The number of octets of the UTF-8 encoding of this character.
+     */
     ptrdiff_t* len) {
     const unsigned char* s = (const unsigned char*)ss;
     int c = *s;
@@ -572,15 +571,16 @@ static int Parser_UTF8ToInt(
     } else if ((c & 0xfc) == 0xf8 && (s[1] & 0xc0) == 0x80 &&
                (s[2] & 0xc0) == 0x80 && (s[3] & 0xc0) == 0x80 &&
                (s[4] & 0xc0) == 0x80) {
-        /* a sequence of 111110xx,10xxxxxx,10xxxxxx,10xxxxxx,10xxxxxx ? */
+        /* a sequence of 111110xx,10xxxxxx,10xxxxxx,10xxxxxx,10xxxxxx ?
+         */
         *len = 5;
         return ((c & 0x03) << 24) | ((s[1] & 0x3f) << 18) |
                ((s[2] & 0x3f) << 12) | ((s[3] & 0x3f) << 6) | (s[4] & 0x3f);
     } else if ((c & 0xfe) == 0xfc && (s[1] & 0xc0) == 0x80 &&
                (s[2] & 0xc0) == 0x80 && (s[3] & 0xc0) == 0x80 &&
                (s[4] & 0xc0) == 0x80 && (s[5] & 0xc0) == 0x80) {
-        /* a sequence of 1111110x,10xxxxxx,10xxxxxx,10xxxxxx,10xxxxxx and
-         * 10xxxxxx ? */
+        /* a sequence of 1111110x,10xxxxxx,10xxxxxx,10xxxxxx,10xxxxxx
+         * and 10xxxxxx ? */
         *len = 6;
         return ((c & 0x01) << 30) | ((s[1] & 0x3f) << 24) |
                ((s[2] & 0x3f) << 18) | ((s[3] & 0x3f) << 12) |
@@ -722,8 +722,8 @@ static int Parser_getChar(
         ret = '&';
         goto ExitFunction;
     } else if (strncasecmp(src, ESC_HEX, strlen(ESC_HEX)) == 0) {
-        /* Read in escape characters of type &#xnn where nn is a hexadecimal
-         * value */
+        /* Read in escape characters of type &#xnn where nn is a
+         *  hexadecimal value */
         pnum = src + strlen(ESC_HEX);
         sum = 0;
         while (strchr(HEX_NUMBERS, (int)*pnum) != 0) {
@@ -745,7 +745,8 @@ static int Parser_getChar(
         ret = sum;
         goto ExitFunction;
     } else if (strncasecmp(src, ESC_DEC, strlen(ESC_DEC)) == 0) {
-        /* Read in escape characters of type &#nn where nn is a decimal value */
+        /* Read in escape characters of type &#nn where nn is a decimal
+         * value */
         pnum = src + strlen(ESC_DEC);
         sum = 0;
         while (strchr(DEC_NUMBERS, (int)*pnum) != 0) {
@@ -958,8 +959,8 @@ static ptrdiff_t Parser_getNextToken(
     if (rc != IXML_SUCCESS) {
         return 0;
     }
-    /* Attribute value logic must come first, since all text untokenized until
-     * end-quote */
+    /* Attribute value logic must come first, since all text untokenized
+     * until end-quote */
     if (*(xmlParser->curPtr) == QUOTE) {
         tokenLength = 1;
     } else if (*(xmlParser->curPtr) == SINGLEQUOTE) {
@@ -992,7 +993,8 @@ static ptrdiff_t Parser_getNextToken(
         tokenLength = 1;
     } else if (Parser_isNameChar(Parser_UTF8ToInt(xmlParser->curPtr, &tlen),
                                  0)) {
-        /* Check for name tokens, name found, so find out how long it is */
+        /* Check for name tokens, name found, so find out how long it is
+         */
         ptrdiff_t iIndex = tlen;
 
         while (Parser_isNameChar(
@@ -1164,8 +1166,8 @@ static int Parser_processCDSect(
 
         node->nodeName = safe_strdup(CDATANODENAME);
         if (node->nodeName == NULL) {
-            /* no need to free node->nodeValue at all, bacause node contents
-             * will be freed by the main loop. */
+            /* no need to free node->nodeValue at all, bacause node
+             * contents will be freed by the main loop. */
             return IXML_INSUFFICIENT_MEMORY;
         }
 
@@ -2094,7 +2096,8 @@ static int Parser_processElementName(
     if (newNode->prefix) {
         /* element has namespace prefix */
         if (!Parser_ElementPrefixDefined(xmlParser, newNode, &nsURI)) {
-            /* read next node to see whether it includes namespace definition */
+            /* read next node to see whether it includes namespace
+             * definition */
             xmlParser->pNeedPrefixNode = (IXML_Node*)newElement;
         } else {
             /* fill in the namespace */
@@ -2247,7 +2250,8 @@ static int Parser_parseDocument(
     while (bETag == 0) {
         /* clear the newNode contents. Redundant on the first iteration,
          * but nonetheless, necessary due to the possible calls to
-         * ErrorHandler above. Currently, this is just a memset to zero. */
+         * ErrorHandler above. Currently, this is just a memset to zero.
+         */
         ixmlNode_init(&newNode);
 
         if (Parser_getNextNode(xmlParser, &newNode, &bETag) == IXML_SUCCESS) {
@@ -2407,7 +2411,11 @@ static int Parser_readFileOrBuffer(
     FILE* xmlFilePtr = NULL;
 
     if (file) {
+#ifdef _WIN32
+        fopen_s(&xmlFilePtr, xmlFileName, "rb");
+#else
         xmlFilePtr = fopen(xmlFileName, "rb");
+#endif
         if (xmlFilePtr == NULL) {
             return IXML_NO_SUCH_FILE;
         } else {

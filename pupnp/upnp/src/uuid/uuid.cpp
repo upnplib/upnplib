@@ -1,7 +1,7 @@
 /**************************************************************************
  *
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-18
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-10
  * Copyright (c) 1990- 1993, 1996 Open Software Foundation, Inc.
  * Copyright (c) 1989 by Hewlett-Packard Company, Palo Alto, Ca. &
  * Digital Equipment Corporation, Maynard, Mass.
@@ -83,10 +83,18 @@ int uuid_create(uuid_upnp* uid) {
 }
 
 void upnp_uuid_unpack(uuid_upnp* u, char* out) {
+#ifdef _WIN32
+    sprintf_s(out, 44,
+              "%8.8x-%4.4x-%4.4x-%2.2x%2.2x-%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x",
+              (unsigned int)u->time_low, u->time_mid, u->time_hi_and_version,
+              u->clock_seq_hi_and_reserved, u->clock_seq_low, u->node[0],
+              u->node[1], u->node[2], u->node[3], u->node[4], u->node[5]);
+#else
     sprintf(out, "%8.8x-%4.4x-%4.4x-%2.2x%2.2x-%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x",
             (unsigned int)u->time_low, u->time_mid, u->time_hi_and_version,
             u->clock_seq_hi_and_reserved, u->clock_seq_low, u->node[0],
             u->node[1], u->node[2], u->node[3], u->node[4], u->node[5]);
+#endif
 }
 
 /*!

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-27
+// Redistribution only with this Copyright remark. Last modified: 2022-09-05
 // Also Copyright by other contributor who haven't made a note.
 
 /*!
@@ -20,19 +20,14 @@
  */
 
 #include "config.hpp"
-//#include "autoconfig.h"
 
 #include "UpnpString.hpp"
 #include "upnpmock/stdlib.hpp"
 
-//#include <stdlib.h> /* for calloc(), free() */
+// #include <stdlib.h> /* for calloc(), free() */
 #include <string.h> /* for strlen(), strdup() */
 
-#ifdef _WIN32
-#define strcasecmp stricmp
-#else
-/* Other systems have strncasecmp */
-#endif
+#include "posix_overwrites.hpp"
 
 #ifndef UPNP_USE_MSVCPP
 #ifdef UPNP_USE_BCBPP
@@ -118,27 +113,26 @@ void UpnpString_delete(UpnpString* p) {
     upnplib::stdlib_h->free(p);
 }
 
-// UpnpString* UpnpString_dup(const UpnpString* p) {
-//    struct SUpnpString* q =
-//        (SUpnpString*)upnplib::stdlib_h->calloc((size_t)1, sizeof(struct
-//        SUpnpString));
-//    if (q == NULL) {
-//        goto error_handler1;
-//    }
-//    q->m_length = ((struct SUpnpString*)p)->m_length;
-//    q->m_string = strdup(((struct SUpnpString*)p)->m_string);
-//    if (q->m_string == NULL) {
-//        goto error_handler2;
-//    }
-//
-//    return (UpnpString*)q;
-//
-//    /*free(q->m_string); */
-// error_handler2:
-//    upnplib::stdlib_h->free(q);
-// error_handler1:
-//    return NULL;
-//}
+UpnpString* UpnpString_dup(const UpnpString* p) {
+    struct SUpnpString* q = (SUpnpString*)upnplib::stdlib_h->calloc(
+        (size_t)1, sizeof(struct SUpnpString));
+    if (q == NULL) {
+        goto error_handler1;
+    }
+    q->m_length = ((struct SUpnpString*)p)->m_length;
+    q->m_string = strdup(((struct SUpnpString*)p)->m_string);
+    if (q->m_string == NULL) {
+        goto error_handler2;
+    }
+
+    return (UpnpString*)q;
+
+    /*free(q->m_string); */
+error_handler2:
+    upnplib::stdlib_h->free(q);
+error_handler1:
+    return NULL;
+}
 
 [[maybe_unused]] void UpnpString_assign(UpnpString* p, const UpnpString* q) {
     if (p != q) {
@@ -150,13 +144,13 @@ size_t UpnpString_get_Length(const UpnpString* p) {
     return ((struct SUpnpString*)p)->m_length;
 }
 
-// void UpnpString_set_Length(UpnpString* p, size_t n) {
-//    if (((struct SUpnpString*)p)->m_length > n) {
-//        ((struct SUpnpString*)p)->m_length = n;
-//        /* No need to realloc now, will do later when needed. */
-//        ((struct SUpnpString*)p)->m_string[n] = 0;
-//    }
-//}
+void UpnpString_set_Length(UpnpString* p, size_t n) {
+    if (((struct SUpnpString*)p)->m_length > n) {
+        ((struct SUpnpString*)p)->m_length = n;
+        /* No need to realloc now, will do later when needed. */
+        ((struct SUpnpString*)p)->m_string[n] = 0;
+    }
+}
 
 const char* UpnpString_get_String(const UpnpString* p) {
     return ((struct SUpnpString*)p)->m_string;
@@ -192,18 +186,18 @@ void UpnpString_clear(UpnpString* p) {
     ((struct SUpnpString*)p)->m_string[0] = 0;
 }
 
-// int UpnpString_cmp(UpnpString* p, UpnpString* q) {
-//    const char* cp = UpnpString_get_String(p);
-//    const char* cq = UpnpString_get_String(q);
-//
-//    return strcmp(cp, cq);
-//}
+int UpnpString_cmp(UpnpString* p, UpnpString* q) {
+    const char* cp = UpnpString_get_String(p);
+    const char* cq = UpnpString_get_String(q);
 
-// int UpnpString_casecmp(UpnpString* p, UpnpString* q) {
-//    const char* cp = UpnpString_get_String(p);
-//    const char* cq = UpnpString_get_String(q);
-//
-//    return strcasecmp(cp, cq);
-//}
+    return strcmp(cp, cq);
+}
+
+int UpnpString_casecmp(UpnpString* p, UpnpString* q) {
+    const char* cp = UpnpString_get_String(p);
+    const char* cq = UpnpString_get_String(q);
+
+    return strcasecmp(cp, cq);
+}
 
 /* @} UpnpString */

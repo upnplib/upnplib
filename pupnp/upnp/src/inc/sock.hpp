@@ -43,8 +43,6 @@
  * \file
  */
 
-#include "config.hpp"
-
 #include "UpnpGlobal.hpp" /* for UPNP_INLINE */
 #include "UpnpInet.hpp"   /* for SOCKET, netinet/in */
 #ifdef UPNP_ENABLE_OPEN_SSL
@@ -52,7 +50,7 @@
 #endif
 
 /* The following are not defined under winsock.h */
-// TODO: Cleanup constants: In <sys/socket.h> are defined
+// Ingo TODO: Cleanup constants: In <sys/socket.h> are defined
 // SHUT_RD, SHUT_WR, SHUT_RDWR with 0, 1, 2, according to man 2 shutdown.
 #ifndef SD_RECEIVE
 #define SD_RECEIVE 0x00

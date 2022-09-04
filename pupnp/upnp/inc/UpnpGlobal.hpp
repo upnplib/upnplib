@@ -1,9 +1,8 @@
+#ifndef UPNPLIB_UPNPGLOBAL_HPP
+#define UPNPLIB_UPNPGLOBAL_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-05-24
 // Taken from authors who haven't made a note.
-
-#ifndef UPNPLIB_UPNPGLOBAL_HPP
-#define UPNPLIB_UPNPGLOBAL_HPP
 
 /*!
  * \file
@@ -52,7 +51,6 @@
 /* define some things the M$ VC++ doesn't know */
 #define UPNP_INLINE _inline
 typedef __int64 int64_t;
-//#define PRId64 "I64d"
 #define PRIzd "ld"
 #define PRIzu "lu"
 #define PRIzx "lx"

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-23
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,17 +39,18 @@
  * allocation, re-allocation, and modification of the memory
  */
 
-#include "config.hpp"
-
 #include "membuffer.hpp"
-#include "upnputil.hpp"
-
-//#include "unixutil.h"
-//#include "upnp.h"
+#include "config.hpp"
+// #include "unixutil.h"
+// #include "upnp.h"
 
 #include <assert.h>
-//#include <stdlib.h>
+// #include <stdlib.h>
 #include <string.h>
+
+#include "posix_overwrites.hpp"
+
+#include "upnputil.hpp"
 
 char* str_alloc(const char* str, size_t str_len) {
     char* s;

@@ -7,7 +7,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-07-28
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,7 +40,6 @@
  */
 
 #include "upnp.hpp"
-
 #include <errno.h>
 #include <string.h>
 
@@ -100,8 +99,6 @@ void linecopylen(
 #ifndef EADDRINUSE /* VS2010 has this defined */
 #define EADDRINUSE WSAEADDRINUSE
 #endif
-#define strcasecmp stricmp
-#define strncasecmp strnicmp
 #define sleep(a) Sleep((a)*1000)
 #define usleep(a) Sleep((a) / 1000)
 #define strerror_r(a, b, c) (strerror_s((b), (c), (a)))
@@ -109,10 +106,6 @@ void linecopylen(
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #endif /* _WIN32 */
-#else  /* !defined(__cplusplus) || defined(UPNP_USE_MSVCPP) */
-// clang-format off
-#define strerror_r(a, b, c) strncpy((b), strerror((a)), (c)); (b)[(c)-1] = '\0'
-// clang-format on
 #endif /* !defined(__cplusplus) || defined(UPNP_USE_MSVCPP) */
 
 #endif /* UPNPLIB_UTIL_HPP */

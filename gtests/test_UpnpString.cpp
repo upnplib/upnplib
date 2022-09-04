@@ -105,7 +105,7 @@ TEST_F(UpnpStringMockTestSuite, setUpnpString) {
 
 TEST_F(UpnpStringMockTestSuite, setUpnpStringN) {
     // provide an empty UpnpString
-    char mstring[] = {0};
+    char mstring[]{""};
     SUpnpString upnpstr = {0, *&mstring};
     UpnpString* p = (UpnpString*)&upnpstr;
 

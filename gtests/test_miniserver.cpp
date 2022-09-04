@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-03
+// Redistribution only with this Copyright remark. Last modified: 2022-09-08
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
@@ -345,11 +345,9 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets) {
 
 TEST_F(StartMiniServerFTestSuite,
        get_miniserver_sockets_with_empty_ip_address) {
-    // Binding to an empty text ip address gIF_IPV4 == "" will bind to socket
-    // address 0, that is to bind successful to all local ip addresses.
-    // TODO: This is also accepted for compatible upnplib code. For native
-    // upnplib code this should be a failure. To bind to all local ip addresses
-    // gIF_IPV4 should be set to "0.0.0.0".
+    // Using an empty text ip address gIF_IPV4 == "" will not bind to a valid
+    // socket. TODO: With address 0, it would successful bind to all local ip
+    // addresses. If this is intended then gIF_IPV4 should be set to "0.0.0.0".
     gIF_IPV4[0] = '\0'; // Empty ip address
     MINISERVER_REUSEADDR = false;
 
@@ -370,10 +368,10 @@ TEST_F(StartMiniServerFTestSuite,
 
     EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
         << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS);
-    // It should return a valid socket (expect not equal invalid).
-    EXPECT_NE(miniSocket.miniServerSock4, INVALID_SOCKET);
-    // It should return a valid port number.
-    EXPECT_EQ(miniSocket.miniServerPort4, APPLICATION_LISTENING_PORT);
+    // We do not get a valid socket with an empty text ip address.
+    EXPECT_EQ(miniSocket.miniServerSock4, INVALID_SOCKET);
+    // It should return the 0 port.
+    EXPECT_EQ(miniSocket.miniServerPort4, 0);
 
     EXPECT_EQ(miniSocket.miniServerSock6, INVALID_SOCKET);
     EXPECT_EQ(miniSocket.miniServerSock6UlaGua, INVALID_SOCKET);
@@ -387,8 +385,8 @@ TEST_F(StartMiniServerFTestSuite,
     EXPECT_EQ(miniSocket.ssdpReqSock4, INVALID_SOCKET);
     EXPECT_EQ(miniSocket.ssdpReqSock6, INVALID_SOCKET);
 
-    // Close socket
-    EXPECT_EQ(PUPNP_CLOSE_SOCKET(miniSocket.miniServerSock4), 0);
+    // Close socket should fail, there is no valid socket.
+    EXPECT_EQ(PUPNP_CLOSE_SOCKET(miniSocket.miniServerSock4), -1);
 }
 
 TEST_F(StartMiniServerFTestSuite,
@@ -411,22 +409,8 @@ TEST_F(StartMiniServerFTestSuite,
     EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
         << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS);
 
-    if (old_code) {
-        // This is a bug because we do not have a valid ip address. It is fixed
-        // in new_code. The Unit should return INVALID_SOCKET.
-        EXPECT_NE(miniSocket.miniServerSock4, INVALID_SOCKET);
-        // The Unit should not return a valid port number.
-        EXPECT_EQ(miniSocket.miniServerPort4, APPLICATION_LISTENING_PORT);
-        std::cout
-            << CYEL "[ BUGFIX   ]" CRES
-            << " Function should not return a valid socket and port number.\n";
-
-    } else {
-
-        EXPECT_EQ(miniSocket.miniServerSock4, INVALID_SOCKET);
-        EXPECT_EQ(miniSocket.miniServerPort4, 0);
-    }
-
+    EXPECT_EQ(miniSocket.miniServerSock4, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.miniServerPort4, 0);
     EXPECT_EQ(miniSocket.miniServerSock6, INVALID_SOCKET);
     EXPECT_EQ(miniSocket.miniServerSock6UlaGua, INVALID_SOCKET);
     EXPECT_EQ(miniSocket.miniServerStopSock, INVALID_SOCKET);
@@ -439,13 +423,8 @@ TEST_F(StartMiniServerFTestSuite,
     EXPECT_EQ(miniSocket.ssdpReqSock4, INVALID_SOCKET);
     EXPECT_EQ(miniSocket.ssdpReqSock6, INVALID_SOCKET);
 
-    // Close socket
-    if (old_code)
-        // This is a bug. Due to a wrong ip address there shouldn't be an open
-        // socket that can be closed. This is fixed in new_code.
-        EXPECT_EQ(PUPNP_CLOSE_SOCKET(miniSocket.miniServerSock4), 0);
-    else
-        EXPECT_EQ(PUPNP_CLOSE_SOCKET(miniSocket.miniServerSock4), -1);
+    // Close socket should fail because there is no socket to close.
+    EXPECT_EQ(PUPNP_CLOSE_SOCKET(miniSocket.miniServerSock4), -1);
 }
 
 TEST(StartMiniServerTestSuite, get_miniserver_sockets_uninitialized) {
@@ -625,22 +604,9 @@ TEST_F(StartMiniServerFTestSuite, init_socket_suff_with_invalid_ip_address) {
     struct s_SocketStuff ss4;
 
     // Test Unit, needs initialized sockets on MS Windows
-    if (old_code) {
-        std::cout
-            << CYEL "[ BUGFIX   ]" CRES
-            << " With an invalid ip address the function call should fail.\n";
-        EXPECT_EQ(init_socket_suff(&ss4, text_addr, 4), 0);
-        EXPECT_STREQ(ss4.text_addr, text_addr);
-        EXPECT_GE(ss4.fd, 3);
-        EXPECT_EQ(PUPNP_CLOSE_SOCKET(ss4.fd), 0) << std::strerror(errno);
-
-    } else {
-
-        EXPECT_EQ(init_socket_suff(&ss4, text_addr, 4), 1);
-        EXPECT_STREQ(ss4.text_addr, text_addr);
-        EXPECT_EQ(ss4.fd, INVALID_SOCKET);
-    }
-
+    EXPECT_EQ(init_socket_suff(&ss4, text_addr, 4), 1);
+    EXPECT_STREQ(ss4.text_addr, text_addr);
+    EXPECT_EQ(ss4.fd, INVALID_SOCKET);
     EXPECT_EQ(ss4.ip_version, 4);
     EXPECT_EQ(ss4.serverAddr4->sin_family, AF_INET);
     EXPECT_EQ(ss4.address_len, 16);
@@ -1760,27 +1726,28 @@ TEST(RunMiniServerTestSuite, web_server_accept) {
 
         // Get captured output
         std::string capturedStderr = captureObj.get();
+        // '\n' is not matched by regex . wildcard so we just replace it.
+        std::replace(capturedStderr.begin(), capturedStderr.end(), '\n', '@');
 #ifdef DEBUG
         if (old_code)
             EXPECT_THAT(capturedStderr,
                         ContainsStdRegex(" UPNP-MSER-2: .* mserv 206: cannot "
-                                         "schedule request\n"));
+                                         "schedule request"));
         else
             EXPECT_THAT(
                 capturedStderr,
-                ContainsStdRegex(
-                    " connected to host 192.168.201.202:306 with socket "
-                    "206\n.*\n.*\n.* "
-                    "UPNP-MSER-1: .* mserv 206: cannot schedule request\n"));
+                ContainsStdRegex(" connected to host 192\\.168\\.201\\.202:306 "
+                                 "with socket 206.* UPNP-MSER-1: .* mserv 206: "
+                                 "cannot schedule request"));
 #else
         if (old_code)
             EXPECT_THAT(
                 capturedStderr,
-                ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0\n"));
+                ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0"));
         else
             EXPECT_THAT(
                 capturedStderr,
-                ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0\n"));
+                ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0"));
 #endif
     } // End scope of mocking, objects within the block will be destructed.
 
@@ -2142,11 +2109,7 @@ TEST(RunMiniServerTestSuite, host_header_is_numeric_with_empty_port) {
 TEST(RunMiniServerTestSuite, host_header_is_numeric_without_port) {
     char host_port[INET_ADDRSTRLEN + 1 + 5]{"192.168.88.99"};
 
-    std::cout << CYEL "[ BUG      ]" CRES
-              << " Because host_header with an empty port is valid then "
-                 "without port it should also be valid.\n";
-    // wrong
-    EXPECT_FALSE(host_header_is_numeric(host_port, sizeof(host_port)));
+    EXPECT_TRUE(host_header_is_numeric(host_port, sizeof(host_port)));
 }
 
 TEST_F(StopMiniServerFTestSuite, sock_close) {

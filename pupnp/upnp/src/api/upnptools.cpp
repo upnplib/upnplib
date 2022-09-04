@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-03-07
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -48,14 +48,9 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#include "posix_overwrites.hpp"
 /*! Maximum action header buffer length. */
 #define HEADER_LENGTH 2000
-
-// #ifdef _WIN32
-// #if defined(_MSC_VER) && _MSC_VER < 1900
-// #define snprintf _snprintf
-// #endif
-// #endif
 
 /*!
  * \brief Structure to maintain a error code and string associated with the
@@ -130,9 +125,6 @@ const char* UpnpGetErrorMessage(int rc) {
 
     return "Unknown error code";
 }
-
-/* Function declarations only if tools compiled into the library */
-#if UPNP_HAVE_TOOLS
 
 /*!
  * \todo There is some unnecessary allocation and deallocation going on here
@@ -212,7 +204,8 @@ static int addToAction(
 
         if (response) {
             rc = snprintf(ActBuff, HEADER_LENGTH,
-                          "<u:%sResponse xmlns:u=\"%s\">\r\n</u:%sResponse>",
+                          "<u:%sResponse "
+                          "xmlns:u=\"%s\">\r\n</u:%sResponse>",
                           ActionName, ServType, ActionName);
         } else {
             rc = snprintf(ActBuff, HEADER_LENGTH,
@@ -450,7 +443,5 @@ int UpnpAddToPropertySet(IXML_Document** PropSet, const char* ArgName,
 
     return UPNP_E_SUCCESS;
 }
-
-#endif /* UPNP_HAVE_TOOLS */
 
 #endif /* EXCLUDE_DOM == 0 */

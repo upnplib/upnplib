@@ -3,7 +3,7 @@
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-07-15
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -118,12 +118,6 @@ void* library_info(void*) {
 #endif
 
     msg << "---- internal settings -----------\n";
-
-#ifdef UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
-    msg << "UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS   = yes\n";
-#else
-    msg << "UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS   = no\n";
-#endif
 
 #ifdef INTERNAL_WEB_SERVER
     msg << "INTERNAL_WEB_SERVER                 = yes\n";

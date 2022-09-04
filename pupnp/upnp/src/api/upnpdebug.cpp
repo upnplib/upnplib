@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-22
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,9 +29,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-10-21
- *
  ******************************************************************************/
 
 /*!
@@ -40,21 +37,23 @@
 #define UPNP_DEBUG_C
 #include "config.hpp"
 
-#include "upnpdebug.hpp"
-
 #include "ithread.hpp"
-//#include "ixml.h"
+// #include "ixml.h"
 #include "upnp.hpp"
+#include "upnpdebug.hpp"
 
 #include <errno.h>
 #include <stdarg.h>
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include <string.h>
+
+#include "posix_overwrites.hpp"
 
 #include "upnpmock/pthread.hpp"
 #include "upnpmock/stdio.hpp"
 #include "upnpmock/string.hpp"
+#include <cstring>
 
 /*! Mutex to synchronize all the log file operations in the debug mode */
 static ithread_mutex_t GlobalDebugMutex;
@@ -93,12 +92,42 @@ int UpnpInitLog(void) {
         }
     }
     is_stderr = 0;
+    // Ingo: Below immediate BUGFIX on pupnp 1.14.13 to have a running test
+    // environment on upnplib. The err_buff is freed but not allocated. We get a
+    // segfault here.
+#if 0
     if (fileName) {
-        if ((fp = upnplib::stdio_h->fopen(fileName, "a")) == NULL) {
+        char* err_buff = NULL;
+#ifdef _WIN32
+        fopen_s(&fp, fileName, "a");
+        if (fp == NULL) {
+            strerror_s(err_buff, 80, errno);
+#else
+        if ((fp = fopen(fileName, "a")) == NULL) {
+            err_buff = strerror(errno);
+#endif
             fprintf(stderr, "Failed to open fileName (%s): %s\n", fileName,
-                    upnplib::string_h->strerror(errno));
+                    err_buff);
         }
-    }
+
+        free(err_buff);
+    } // if (fileName)
+#endif // #if 0
+
+    if (fileName) {
+        // #ifdef _WIN32
+        // Ingo: TODO Use fopen_s on MS Windows when I can mock it
+        //         upnplib::stdio_h->fopen_s(&fp, fileName, "a");
+        // #else
+        fp = upnplib::stdio_h->fopen(fileName, "a");
+        // #endif
+        if (fp == NULL) {
+            fprintf(stderr, "Failed to open fileName (%s): %s\n", fileName,
+                    std::strerror(errno));
+        }
+    } // if (fileName)
+      // end BUGFIX
+
     if (fp == NULL) {
         fp = stderr;
         is_stderr = 1;
@@ -161,7 +190,6 @@ static void UpnpDisplayFileAndLine(FILE* fp, const char* DbgFileName,
                                    Dbg_Module Module) {
     char timebuf[26];
     time_t now = time(NULL);
-    struct tm* timeinfo;
     const char* smod;
 #if 0
 	char *slev;
@@ -209,12 +237,27 @@ static void UpnpDisplayFileAndLine(FILE* fp, const char* DbgFileName,
         break;
     }
 
+#ifdef _WIN32
+    struct tm timeinfo = {.tm_sec = 0,
+                          .tm_min = 0,
+                          .tm_hour = 0,
+                          .tm_mday = 0,
+                          .tm_mon = 0,
+                          .tm_year = 0,
+                          .tm_wday = 0,
+                          .tm_yday = 0,
+                          .tm_isdst = 0};
+    localtime_s(&timeinfo, &now);
+    strftime(timebuf, 26, "%Y-%m-%d %H:%M:%S", &timeinfo);
+#else
+    struct tm* timeinfo;
     timeinfo = localtime(&now);
     strftime(timebuf, 26, "%Y-%m-%d %H:%M:%S", timeinfo);
+#endif
 
     fprintf(fp, "%s UPNP-%s-%s: Thread:0x%llX [%s:%d]: ", timebuf, smod, slev,
 #ifdef __PTW32_DLLPORT
-            (unsigned long long int)ithread_self().p
+            *(unsigned long long int*)ithread_self().p
 #else
             (unsigned long long int)ithread_self()
 #endif

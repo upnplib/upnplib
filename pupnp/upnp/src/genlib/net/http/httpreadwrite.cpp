@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-08-22
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -61,6 +61,8 @@
 #include <stdarg.h>
 #include <cstring>
 
+#include "posix_overwrites.hpp"
+
 #ifdef _WIN32
 #include <malloc.h>
 #define fseeko fseek
@@ -77,7 +79,7 @@
 
 // The version string is only used here and will not change much on upgrading to
 // upnplib. To reduce complexity by including upnpconfig.hpp I just set it here.
-#define UPNP_VERSION_STRING "1.14.12"
+#define UPNP_VERSION_STRING "1.14.13"
 
 #include "upnpmock/pupnp.hpp"
 #include "upnpmock/sys_select.hpp"
@@ -186,7 +188,7 @@ struct tm* http_gmtime_r(const time_t* clock, struct tm* result) {
         return NULL;
 
     /* gmtime in VC runtime is thread safe. */
-    *result = *gmtime(clock);
+    gmtime_s(result, clock);
     return result;
 }
 #endif
@@ -320,10 +322,8 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
                    "connect error: %d\n", WSAGetLastError());
 #endif
         if (upnplib::sys_socket_h->shutdown(connfd, SD_BOTH) == -1) {
-            // TODO: Ingo: Test this error message
-            char* errorStr = std::strerror(errno);
             UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                       "Error in shutdown: %s\n", errorStr);
+                       "Error in shutdown: %s\n", std::strerror(errno));
         }
         UpnpCloseSocket(connfd);
         return (SOCKET)(UPNP_E_SOCKET_CONNECT);
@@ -356,7 +356,7 @@ int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
     int ret = UPNP_E_SUCCESS;
     int line = 0;
     parse_status_t status;
-    int num_read;
+    int num_read{};
     int ok_on_close = 0;
     char* buf;
     size_t buf_len = 1024;
@@ -374,13 +374,17 @@ int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
     }
 
     while (1) {
-        /* Double the bet */
-        free(buf);
-        buf_len = 2 * buf_len;
-        buf = (char*)malloc(buf_len);
-        if (!buf) {
-            ret = UPNP_E_OUTOF_MEMORY;
-            goto ExitFunction;
+        /* Double the bet if needed */
+        /* We should have already exited the loop if the value was <= 0
+         * so the cast is safe */
+        if ((size_t)num_read >= buf_len) {
+            free(buf);
+            buf_len = 2 * buf_len;
+            buf = (char*)malloc(buf_len);
+            if (!buf) {
+                ret = UPNP_E_OUTOF_MEMORY;
+                goto ExitFunction;
+            }
         }
         num_read = sock_read(info, buf, buf_len, timeout_secs);
         if (num_read > 0) {
@@ -477,9 +481,9 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
     int RetVal = 0;
     size_t buf_length;
     size_t num_written;
+    [[maybe_unused]] int I_fmt_processed = 0;
 
 #if EXCLUDE_WEB_SERVER == 0
-    int I_fmt_processed = 0;
     memset(Chunk_Header, 0, sizeof(Chunk_Header));
 #endif /* EXCLUDE_WEB_SERVER */
     va_start(argp, fmt);
@@ -508,7 +512,11 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                 Fp = (FILE*)(virtualDirCallback.open)(
                     filename, UPNP_READ, Instr->Cookie, Instr->RequestCookie);
             else
+#ifdef _WIN32
+                fopen_s(&Fp, filename, "rb");
+#else
                 Fp = fopen(filename, "rb");
+#endif
             if (Fp == NULL) {
                 RetVal = UPNP_E_FILE_READ_ERROR;
                 goto ExitFunction;
@@ -566,7 +574,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                     /* Hex length for the chunk size. */
                     memset(Chunk_Header, 0, sizeof(Chunk_Header));
                     rc = snprintf(Chunk_Header, sizeof(Chunk_Header),
-                                  "%zx" PRIzx "\r\n", num_read);
+                                  "%" PRIzx "\r\n", (unsigned long)num_read);
                     if (rc < 0 || (unsigned int)rc >= sizeof(Chunk_Header)) {
                         RetVal = UPNP_E_INTERNAL_ERROR;
                         goto Cleanup_File;
@@ -867,7 +875,7 @@ int MakeGenericMessage(http_method_t method, const char* url_str,
                        membuffer* request, uri_type* url, int contentLength,
                        const char* contentType, const UpnpString* headers) {
     int ret_code = 0;
-    size_t hostlen = (size_t)0;
+    size_t hostlen{};
     const char* hoststr;
 
     UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__, "URL: %s method: %d\n",
@@ -1494,17 +1502,14 @@ int http_MakeMessage(membuffer* buf, int http_major_version,
             /* list of extra headers */
             UpnpListIter pos;
             UpnpListHead* head;
+            UpnpExtraHeaders* extra;
             const DOMString resp;
             head = (UpnpListHead*)va_arg(argp, UpnpListHead*);
             if (head) {
                 for (pos = UpnpListBegin(head); pos != UpnpListEnd(head);
                      pos = UpnpListNext(head, pos)) {
-#ifdef UPNPLIB_ENABLE_EXTRA_HTTP_HEADERS
-                    UpnpExtraHeaders* extra = (UpnpExtraHeaders*)pos;
+                    extra = (UpnpExtraHeaders*)pos;
                     resp = UpnpExtraHeaders_get_resp(extra);
-#else
-                    resp = nullptr;
-#endif
                     if (resp) {
                         if (membuffer_append(buf, resp, strlen(resp)))
                             goto error_handler;
@@ -1977,18 +1982,9 @@ void get_sdk_info(char* info, size_t infoSize) {
     snprintf(info, infoSize, "Unspecified, UPnP/1.0, Unspecified\r\n");
 #else /* UPNP_ENABLE_UNSPECIFIED_SERVER */
 #ifdef _WIN32
-    OSVERSIONINFO versioninfo;
-    versioninfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-
-    if (GetVersionEx(&versioninfo) != 0)
-        snprintf(info, infoSize,
-                 "%d.%d.%d %d/%s, UPnP/1.0, Portable SDK for UPnP "
-                 "devices/" UPNP_VERSION_STRING "\r\n",
-                 versioninfo.dwMajorVersion, versioninfo.dwMinorVersion,
-                 versioninfo.dwBuildNumber, versioninfo.dwPlatformId,
-                 versioninfo.szCSDVersion);
-    else
-        *info = '\0';
+    snprintf(info, infoSize,
+             "UPnP/1.0, Portable SDK for UPnP devices/" UPNP_VERSION_STRING
+             "on windows\r\n");
 #else
     int ret_code;
     struct utsname sys_info;

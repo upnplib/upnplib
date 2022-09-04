@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-03-07
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,9 +44,10 @@
  */
 
 #include "tv_ctrlpt.hpp"
+
 #include "upnp.hpp"
 
-#include <iostream>
+#include "posix_overwrites.hpp"
 
 #ifdef _WIN32
 #define isleep(x) Sleep((x)*1000)
@@ -1422,7 +1423,12 @@ int TvCtrlPointProcessCommand(char* cmdline) {
     int invalidargs = 0;
     int validargs;
 
+#ifdef _WIN32
+    validargs = sscanf_s(cmdline, "%s %d %d", cmd, (unsigned)_countof(cmd),
+                         &arg1, &arg2);
+#else
     validargs = sscanf(cmdline, "%s %d %d", cmd, &arg1, &arg2);
+#endif
     for (i = 0; i < numofcmds; ++i) {
         if (strcasecmp(cmd, cmdloop_cmdlist[i].str) == 0) {
             cmdnum = cmdloop_cmdlist[i].cmdnum;
@@ -1473,7 +1479,12 @@ int TvCtrlPointProcessCommand(char* cmdline) {
         break;
     case CTRLACTION:
         /* re-parse commandline since second arg is string. */
+#ifdef _WIN32
+        validargs = sscanf_s(cmdline, "%s %d %s", cmd, (unsigned)_countof(cmd),
+                             &arg1, strarg, (unsigned)_countof(strarg));
+#else
         validargs = sscanf(cmdline, "%s %d %s", cmd, &arg1, strarg);
+#endif
         if (validargs == 3)
             TvCtrlPointSendAction(TV_SERVICE_CONTROL, arg1, strarg, NULL, NULL,
                                   0);
@@ -1482,7 +1493,12 @@ int TvCtrlPointProcessCommand(char* cmdline) {
         break;
     case PICTACTION:
         /* re-parse commandline since second arg is string. */
+#ifdef _WIN32
+        validargs = sscanf_s(cmdline, "%s %d %s", cmd, (unsigned)_countof(cmd),
+                             &arg1, strarg, (unsigned)_countof(strarg));
+#else
         validargs = sscanf(cmdline, "%s %d %s", cmd, &arg1, strarg);
+#endif
         if (validargs == 3)
             TvCtrlPointSendAction(TV_SERVICE_PICTURE, arg1, strarg, NULL, NULL,
                                   0);
@@ -1491,7 +1507,12 @@ int TvCtrlPointProcessCommand(char* cmdline) {
         break;
     case CTRLGETVAR:
         /* re-parse commandline since second arg is string. */
+#ifdef _WIN32
+        validargs = sscanf_s(cmdline, "%s %d %s", cmd, (unsigned)_countof(cmd),
+                             &arg1, strarg, (unsigned)_countof(strarg));
+#else
         validargs = sscanf(cmdline, "%s %d %s", cmd, &arg1, strarg);
+#endif
         if (validargs == 3)
             TvCtrlPointGetVar(TV_SERVICE_CONTROL, arg1, strarg);
         else
@@ -1499,7 +1520,12 @@ int TvCtrlPointProcessCommand(char* cmdline) {
         break;
     case PICTGETVAR:
         /* re-parse commandline since second arg is string. */
+#ifdef _WIN32
+        validargs = sscanf_s(cmdline, "%s %d %s", cmd, (unsigned)_countof(cmd),
+                             &arg1, strarg, (unsigned)_countof(strarg));
+#else
         validargs = sscanf(cmdline, "%s %d %s", cmd, &arg1, strarg);
+#endif
         if (validargs == 3)
             TvCtrlPointGetVar(TV_SERVICE_PICTURE, arg1, strarg);
         else

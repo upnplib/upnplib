@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-27
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,8 +49,6 @@
 #include "strintmap.hpp"
 //#include "unixutil.h"
 #include "upnpdebug.hpp"
-
-#include "UpnpExtraHeaders.hpp"
 
 #include <assert.h>
 //#include <ctype.h>
@@ -1294,8 +1292,13 @@ static parse_status_t parser_parse_requestline(http_parser_t* parser) {
     /* scan version */
     save_char = version_str.buf[version_str.length];
     version_str.buf[version_str.length] = '\0'; /* null-terminate */
-    num_scanned = sscanf(version_str.buf, "%d . %d", &hmsg->major_version,
-                         &hmsg->minor_version);
+#ifdef _WIN32
+    num_scanned =
+        sscanf_s(version_str.buf,
+#else
+    num_scanned = sscanf(version_str.buf,
+#endif
+                 "%d . %d", &hmsg->major_version, &hmsg->minor_version);
     version_str.buf[version_str.length] = save_char; /* restore */
     if (num_scanned != 2 ||
         /* HTTP version equals to 1.0 should fail for MSEARCH as
@@ -1353,8 +1356,13 @@ parse_status_t parser_parse_responseline(http_parser_t* parser) {
     save_char = line.buf[line.length];
     line.buf[line.length] = '\0'; /* null-terminate */
     /* scan http version and ret code */
-    num_scanned = sscanf(line.buf, "%d . %d %d", &hmsg->major_version,
-                         &hmsg->minor_version, &hmsg->status_code);
+#ifdef _WIN32
+    num_scanned = sscanf_s(line.buf,
+#else
+    num_scanned = sscanf(line.buf,
+#endif
+                           "%d . %d %d", &hmsg->major_version,
+                           &hmsg->minor_version, &hmsg->status_code);
     line.buf[line.length] = save_char; /* restore */
     if (num_scanned != 3 || hmsg->major_version < 0 ||
         hmsg->minor_version < 0 || hmsg->status_code < 0)

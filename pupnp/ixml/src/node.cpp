@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-25
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,6 +41,8 @@
 #include <assert.h>
 #include <stdlib.h> /* for free(), malloc() */
 #include <string.h>
+
+#include "posix_overwrites.hpp"
 
 void ixmlNode_init(IXML_Node* nodeptr) {
     assert(nodeptr != NULL);
@@ -559,8 +561,9 @@ int ixmlNode_replaceChild(IXML_Node* nodeptr, IXML_Node* newChild,
     if (nodeptr == NULL || newChild == NULL || oldChild == NULL) {
         return IXML_INVALID_PARAMETER;
     }
-    /* if nodetype of nodeptr does not allow children of the type of newChild
-     * needs to add later or if newChild is one of nodeptr's ancestors */
+    /* if nodetype of nodeptr does not allow children of the type of
+     * newChild needs to add later or if newChild is one of nodeptr's
+     * ancestors */
     if (ixmlNode_isAncestor(newChild, nodeptr)) {
         return IXML_HIERARCHY_REQUEST_ERR;
     }
@@ -851,8 +854,8 @@ static IXML_Attr* ixmlNode_cloneAttr(
         return NULL;
     }
 
-    /* Check to see whether we need to split prefix and localname for attribute
-     */
+    /* Check to see whether we need to split prefix and localname for
+     * attribute */
     rc = ixmlNode_setNamespaceURI(attrNode, srcNode->namespaceURI);
     if (rc != IXML_SUCCESS) {
         ixmlAttr_free(newAttr);

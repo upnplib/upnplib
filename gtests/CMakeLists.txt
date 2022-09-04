@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-03
+# Redistribution only with this Copyright remark. Last modified: 2022-09-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNPLIB_GTESTS VERSION 0028
+project(UPNPLIB_GTESTS VERSION 0029
                        DESCRIPTION "Unit Tests using googletest"
                        HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -245,6 +245,7 @@ target_include_directories(test_UpnpString-pnst
     PRIVATE
         ./include
         ${UPnPlib_SOURCE_DIR}
+        ${PUPNP_IXML_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${UPnPlib_SOURCE_DIR}/include
@@ -368,12 +369,9 @@ target_include_directories(test_upnpapi-pnst
 target_compile_definitions(test_upnpapi-pnst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
-        UPNP_HAVE_CLIENT
-        UPNP_HAVE_DEVICE
-        UPNP_HAVE_WEBSERVER
-        UPNP_HAVE_SSDP
-        UPNP_HAVE_OPTSSDP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+        UPNP_HAVE_CLIENT
+        UPNP_HAVE_OPTSSDP
 )
 target_link_libraries(test_upnpapi-pnst
     PRIVATE
@@ -758,7 +756,7 @@ set(MINISERVER_SOURCE_FILES
     ${PUPNP_UPNP_SOURCE_DIR}/src/uuid/sysdep.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/uuid/md5.cpp
 
-#    # ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpExtraHeaders.c
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpExtraHeaders.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpFileInfo.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpDiscovery.cpp

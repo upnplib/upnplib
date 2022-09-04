@@ -6,7 +6,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-21
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-09
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -48,19 +48,14 @@
 
 #include "sample_util.hpp"
 
-#include "upnp.hpp"
 #include "UpnpString.hpp"
+#include "upnp.hpp"
 #include "upnptools.hpp"
+#include "pthread.h" // To find pthreads4w don't use <pthread.h>
 
 #include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
-
-#ifdef _WIN32
-#include "pthread.h"
-#else
-#include <pthread.h>
-#endif
 
 #define TV_SERVICE_SERVCOUNT 2
 #define TV_SERVICE_CONTROL 0

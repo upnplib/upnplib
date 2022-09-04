@@ -1,0 +1,1272 @@
+commit 17a9e4bcbd865367bbebaa6292117fef44302cf1 (HEAD, tag: release-1.14.13)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Aug 3 11:05:12 2022 -0300
+
+    Homekeeping for the next release
+
+:100644 100644 8dfe9e24 39c696f2 M	ChangeLog
+:100644 100644 edb31654 a3d3472d M	README.md
+:100644 100644 c46f9e2a 8a6b4738 M	configure.ac
+:100644 100644 09f95109 a601a04c M	docs/Doxyfile
+:100644 100644 7c875ab9 1450fdcf M	libupnp.spec
+
+commit ddc6af9e65de4205923ad77ed397fcaf1e3415dd
+Author: Hugo Beauzée-Luyssen <hugo@beauzee.fr>
+Date:   Tue Aug 2 15:48:03 2022 +0200
+
+    http: RecvMessage: Fix potential allocation failure
+    
+    If for whatever reason the server replies without maxing out the buffer,
+    the code would end up doubling the buffer size nonetheless, which can
+    quickly cause malloc to fail, once we try to allocate 2^30 or more bytes
+    This was especially noticeable for large results.
+    Reported as https://code.videolan.org/videolan/vlc/-/issues/27173
+
+:100644 100644 91c6c541 27e9c3a5 M	upnp/src/genlib/net/http/httpreadwrite.c updated
+
+commit 0afa2b7dce6533b906aeff8f6de8a3db352725fc
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sun Jun 19 01:24:42 2022 -0300
+
+    Comment on Multicast initialization
+
+:100644 100644 a6753f95 728f543d M	upnp/src/ssdp/ssdp_server.c updated
+
+commit c5a568e87d3b2f021f2100c9da52e927de72db3d
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sun Jun 19 01:23:55 2022 -0300
+
+    Fixes the autotools build
+
+:100644 100644 1de75cce 7988d308 M	Makefile.am
+:100644 100644 fd67addf 831377ed M	ixml/Makefile.am
+
+commit 235223c4220c89dc56de648f5928f67ed3ad0ffb
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sat Jun 18 16:41:18 2022 -0300
+
+    Add missing Makefile
+
+:000000 100644 00000000 7f363be2 A	upnp/generator/Makefile
+
+commit 61cdb66b12f75e335986f2f928856926bb36d315
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sat Jun 18 02:00:24 2022 -0300
+
+    Update README.md
+    
+    Those links were actually correct.
+
+:100644 100644 5f1b27a3 edb31654 M	README.md
+
+commit 412b0198c0697cd7fd816372d9fec9b632eaf427
+Author: Alaric Senat <dev.asenat@posteo.net>
+Date:   Thu Jun 9 15:19:23 2022 +0200
+
+    miniserver: Don't initialize sockets for invalid IPs
+    
+    `init_socket_stuff` was ignoring `inet_pton`'s return value causing
+    invalid IPs being seen as valid which caused bad calls to `bind` and
+    `listen` further in the code path.
+    
+    Invalid `bind`s were frequents for interfaces providing only one IP
+    protocol version (IPv4 or v6). In those cases, `gIF_IPV4` or `gIF_IPV4`
+    were left to their default values (an empty string) causing `inet_pton`
+    to fail silently without aborting the socket opening and binding...
+    
+    Refs #195
+    
+    (cherry picked from commit 447de4e5efdbbd8c1d51cf9ba7207d4e5310e901)
+
+:100644 100644 80d2877f 8b228a0d M	upnp/src/genlib/miniserver/miniserver.c updated
+
+commit 662154149e1f67c5fad2b76a8ef25f900f679234
+Author: nishy2000 <github@nishy-software.com>
+Date:   Fri Jun 3 00:43:26 2022 +0900
+
+    Fix #342: accept port number omission
+
+:100644 100644 58e68055 80d2877f M	upnp/src/genlib/miniserver/miniserver.c updated
+
+commit 7e4c1d836e0b0518e05a5bcb03877b0c8138f817
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Jun 15 11:32:51 2022 -0300
+
+    Add missing "site" folder
+
+:000000 120000 00000000 22ec9b8a A	site/ChangeLog
+:000000 100644 00000000 79c5f7bc A	site/HTML5_Logo_32.png
+:000000 100644 00000000 d0d55c30 A	site/LICENSE
+:000000 100644 00000000 32d9c169 A	site/app.js
+:000000 100644 00000000 31e60e00 A	site/index.css
+:000000 100644 00000000 11db2b2f A	site/index.html
+:000000 100644 00000000 75d4d217 A	site/jetbrains.svg
+:000000 100644 00000000 1e53705b A	site/vcss.png
+
+commit b57516c9a9d36ddf29b2bf5fab69c2924e661005
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Jun 15 11:27:16 2022 -0300
+
+    Update README.md
+
+:100644 100644 f8d67509 5f1b27a3 M	README.md
+
+commit 2304fc59209e729189d729f9093a903f5774db75
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Jun 15 11:21:23 2022 -0300
+
+    Set theme jekyll-theme-hacker
+
+:000000 100644 00000000 fc24e7a6 A	_config.yml
+
+commit 24108f3d493ad8a2ab85d3d9758869b2d3b8ee4f
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Apr 29 19:22:40 2022 -0300
+
+    Remove windows-2016 build
+
+:100644 100644 69a6dbb4 6878576e M	.github/workflows/ccpp.yml
+
+commit 314169956ab07c50b30bd9010270cef1cc2d0f14
+Author: Martin Storsjö <martin@martin.st>
+Date:   Fri Apr 22 00:25:24 2022 +0300
+
+    windows: Avoid implicit declarations of gettimeofday()
+    
+    This adjusts the ifdefs added in 421d5d2875a639b7c037ceadb8eec75d70d5346e.
+    
+    In mingw headers, both time.h and sys/time.h define
+    struct timezone and _TIMEZONE_DEFINED - however only one of them,
+    sys/time.h, define gettimeofday. Thus, if time.h had been included
+    before, we'd have _TIMEZONE_DEFINED defined, and we'd omit our own
+    declaration of the gettimeofday function too, leading to calls to
+    an undeclared function.
+    
+    (If the actual sys/time.h header is included, its declaration of
+    the gettimeofday function does conflict with both the declaration
+    and the definition of upnp's gettimeofday, due to details like missing
+    the restrict attribute on pointers. But that issue already existed
+    and is unaffected by this patch.)
+    
+    Since Clang 15 (which still is under development, so this may
+    still change before it's released) [1], implicit function
+    declarations are a hard error by default, when building code
+    in C99 mode (or newer).
+    
+    [1] https://github.com/llvm/llvm-project/commit/7d644e1215b376ec5e915df9ea2eeb56e2d94626
+    
+    (cherry picked from commit 2205f05b915982c318575bdc54e51a5401d534ad)
+
+:100644 100644 0abf9db7 25f8febf M	upnp/src/threadutil/ThreadPool.h updated
+
+commit fe6215d7446f3cbd453168a4104e49b06d24ef7b
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Apr 29 16:53:05 2022 -0300
+
+    Adjust ChangeLog and THANKS
+    
+    (cherry picked from commit c81ecd16f9ec2526c6d6f3b552defa2e810d34f9)
+
+:100644 100644 ca5d6f38 8dfe9e24 M	ChangeLog
+:100644 100644 4fc44fe6 075d8642 M	THANKS
+
+commit 57bc1d2ea251c9a6043569189708de17e640277f
+Author: Stephen Anthony Jones <frobones@gmail.com>
+Date:   Thu Apr 28 14:46:37 2022 -0700
+
+    Fixes double free caused by closing a file pointer twice
+    
+    (cherry picked from commit fc060cd47f8bb5b5d49ccbc43e663200e1332e17)
+
+:100644 100644 f9a0ea1f ca5d6f38 M	ChangeLog
+:100644 100644 51dfedc5 38968eb5 M	upnp/src/genlib/net/http/webserver.c updated
+
+commit ec5ce781dac43413f026b3a070c7400aeb8e0116
+Author: Vollstrecker <github@vollstreckernet.de>
+Date:   Sun Mar 27 11:12:58 2022 +0200
+
+    Fixes #384
+
+:100644 100644 1e43ab7f 411ab9af M	upnp/CMakeLists.txt
+
+commit 90768d2f867a97294693578fc9c4e31ccea50459
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sun Feb 27 23:56:47 2022 +0100
+
+    Turn up the noise
+
+:100644 100644 89e6b5ae 69a6dbb4 M	.github/workflows/ccpp.yml
+
+commit 97131c4ec452c1e54b838a66a078f54f7fa95782
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sun Feb 27 10:56:55 2022 +0100
+
+    localtime -> localtime_s (Finally all warnings eliminated)
+
+:100644 100644 8b1503e2 2be121b2 M	upnp/src/api/upnpdebug.c updated
+
+commit 5f9514483c72362c41977e6632fcf19d936baee9
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 24 23:14:04 2022 +0100
+
+    Version-String change.
+
+:100644 100644 c8db1cce 91c6c541 M	upnp/src/genlib/net/http/httpreadwrite.c updated
+
+commit 9e7e764035e9ce4b503df88da48d91cdbdc686ce
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 24 12:22:27 2022 +0100
+
+    Explicit void* to uint* (4 to go)
+
+:100644 100644 2e7ee690 49fa8486 M	upnp/src/threadutil/ThreadPool.c updated
+
+commit 0ceeaa3f40bae8cc32848faed0174cdccee22105
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 24 11:51:03 2022 +0100
+
+    _timezone -> _get_timezone (6 to go)
+
+:100644 100644 87d18477 2e7ee690 M	upnp/src/threadutil/ThreadPool.c updated
+
+commit 39e297a4edfda5437f45e27c1f878ae10b28482e
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 24 11:32:09 2022 +0100
+Updated in upnplib
+
+    _daylight -> _get_daylight (8 to go)
+
+:100644 100644 f8f1e1e0 87d18477 M	upnp/src/threadutil/ThreadPool.c updated
+
+###################################################################
+
+commit 6039f134b4868f6c806ecac382cede1557de2893
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 24 10:40:37 2022 +0100
+
+    inet_addr -> inet_pton (10 to go)
+
+:100644 100644 a11e357e 58e68055 M	upnp/src/genlib/miniserver/miniserver.c updated
+:100644 100644 51d5410f a6753f95 M	upnp/src/ssdp/ssdp_server.c updated
+
+commit 6855f24b96bd1bed471a17f1bafc7e7de0f866ba
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 23 13:56:41 2022 +0100
+
+    std::getenv -> _dupenv_s (20 to go)
+
+:100644 100644 d1d2147b 55d6db87 M	gtest/test_template.cpp
+
+commit 0d0c33706dd09f04674b2d1a8e5b307a76fb3532
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Tue Feb 22 23:49:24 2022 +0100
+Updated in upnplib
+
+    Missed some strncpy -> strncpy_s (22 to go)
+
+:100644 100644 eb38f229 434cd359 M	upnp/src/gena/gena_ctrlpt.c updated
+:100644 100644 99f96de8 688ee48d M	upnp/src/genlib/util/util.c updated
+:100644 100644 36067466 f0485eda M	upnp/src/ssdp/ssdp_device.c updated
+
+
+commit d4f63ba510448d5921af2b5c67a3e7b966af5d7b
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Tue Feb 22 23:36:53 2022 +0100
+
+    strcat -> strcat_s (32 to go)
+
+:100644 100644 8ddbd665 a9c49e3f M	ixml/inc/posix_overwrites.h updated
+
+commit b15b50ee3bdcc4c0475cf0f8139559571f1b5d24
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Tue Feb 22 23:26:26 2022 +0100
+Updated in upnplib
+
+    strcpy -> strcpy_s (56 to go)
+
+:100644 100644 793091c2 8ddbd665 M	ixml/inc/posix_overwrites.h updated
+:100644 100644 35976cf7 5358eeba M	upnp/src/api/upnptools.c updated
+
+commit 85b2be69ce736570332e3757b890f36920829082
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Tue Feb 22 22:54:20 2022 +0100
+
+    gmtime -> gmtime_s (102 to go)
+
+:100644 100644 88025a9c c8db1cce M	upnp/src/genlib/net/http/httpreadwrite.c updated
+
+commit e73595be10298a02c0fa8b2498f4baa3320ea0e4
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Tue Feb 22 22:44:25 2022 +0100
+Updated in upnplib
+
+    PRId64 redefinitionn (104 to go)
+    exists there since 2013
+
+:100644 100644 6a46bf7c 36845f9f M	upnp/inc/UpnpGlobal.h updated
+
+commit 0cb28b235d3b58a494a13d32c8a1d90645f68a66
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Tue Feb 22 21:57:21 2022 +0100
+Updated in upnplib
+
+    sprintf -> sprintf_s (108 to go)
+
+:100644 100644 b862a870 793091c2 M	ixml/inc/posix_overwrites.h updated
+:100644 100644 026c0508 88025a9c M	upnp/src/genlib/net/http/httpreadwrite.c updated
+:100644 100644 ef6d4e1c 0ef1d017 M	upnp/src/uuid/uuid.c updated
+
+commit 5f833172725a69c4e4647c4c9e1a727d5d00ff82
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Mon Feb 21 23:06:29 2022 +0100
+Updated in upnplib
+
+    sscanf -> sscanf_s (138 to go)
+
+:100644 100644 04b49591 23fd9719 M	upnp/sample/common/tv_ctrlpt.c updated
+:100644 100644 fffcb701 acf579df M	upnp/sample/common/tv_device.c updated
+:100644 100644 4ff4c2eb 3e8ae4ee M	upnp/src/genlib/net/http/httpparser.c updated
+:100644 100644 877c649a 51dfedc5 M	upnp/src/genlib/net/http/webserver.c updated
+:100644 100644 b436aded 556c9e56 M	upnp/src/genlib/net/uri/uri.c updated
+:100644 100644 d58de2e9 3fc7ce9b M	upnp/test/test_init.c not_used
+
+commit fb1fbe2df4af0c525e25f60b5f64ed48f5a05486
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Mon Feb 21 18:59:57 2022 +0100
+Updated in upnplib
+
+    More explicit casting (164 to go)
+
+:100644 100644 fe1ceba9 032e02da M	upnp/src/gena/gena_device.c updated
+:100644 100644 458e8e79 a11e357e M	upnp/src/genlib/miniserver/miniserver.c updated
+:100644 100644 a109c7ec 026c0508 M	upnp/src/genlib/net/http/httpreadwrite.c updated
+:100644 100644 511253ae f72a0184 M	upnp/src/genlib/net/sock.c updated
+:100644 100644 8644c746 cad8365b M	upnp/src/ssdp/ssdp_ctrlpt.c updated
+:100644 100644 a9168bdf 36067466 M	upnp/src/ssdp/ssdp_device.c updated
+
+commit ffe2d2bb504af40c8ddec741e9f0fde4c8ef774f
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Mon Feb 21 14:22:47 2022 +0100
+Updated in upnplib
+
+    Explicit cast SOCKET to int
+
+:100644 100644 4bb413fa 458e8e79 M	upnp/src/genlib/miniserver/miniserver.c updated
+:100644 100644 ab5fea6c a109c7ec M	upnp/src/genlib/net/http/httpreadwrite.c updated
+:100644 100644 7354b85b 511253ae M	upnp/src/genlib/net/sock.c updated
+:100644 100644 2a6f19c5 8644c746 M	upnp/src/ssdp/ssdp_ctrlpt.c updated
+
+commit 5aa44df73b380b1691ee4157593f6890d0ff515d
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 17 18:53:19 2022 +0100
+
+    Win doesn't like void* to ulint.
+
+:100644 100644 125339e9 8b1503e2 M	upnp/src/api/upnpdebug.c updated
+
+commit 9dc81922a8614a069c6a32dc272064f56f9009ff
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 17 18:38:02 2022 +0100
+
+    strerror -> strerror_s
+
+:100644 100644 5d17061d 125339e9 M	upnp/src/api/upnpdebug.c updated
+
+commit f5f6783fbf4d3e1c215d4977c2cc48bfe7325d94
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 17 18:12:01 2022 +0100
+
+    wcstombs -> wcstombs_s
+
+:100644 100644 70802fc6 b862a870 M	ixml/inc/posix_overwrites.h updated
+:100644 100644 6a594b78 a65dde69 M	upnp/src/api/upnpapi.c updated
+:100644 100644 13c394d9 ab5fea6c M	upnp/src/genlib/net/http/httpreadwrite.c updated
+:100644 100644 a9369015 877c649a M	upnp/src/genlib/net/http/webserver.c updated
+
+commit f2a9dff6d3e684f4c3d56ac838a55b065c0e2ddd
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 17 15:47:45 2022 +0100
+Updated in upnplib
+
+    fopen -> fopen_s
+
+:100644 100644 b5a8a69c b274af47 M	ixml/src/ixmlparser.c updated
+:100644 100644 ceaafaa6 6a594b78 M	upnp/src/api/upnpapi.c updated
+:100644 100644 3a6b18ab 5d17061d M	upnp/src/api/upnpdebug.c updated
+:100644 100644 1d4c144c 13c394d9 M	upnp/src/genlib/net/http/httpreadwrite.c updated
+:100644 100644 65576af1 a9369015 M	upnp/src/genlib/net/http/webserver.c updated
+
+commit 6d3757549b9a8b938e9c1e5339d7e188a3c57911
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 17 15:46:48 2022 +0100
+
+    Add section description and fix for strncpy
+
+:100644 100644 5d0e1fbb 70802fc6 M	ixml/inc/posix_overwrites.h updated
+
+commit 744c1c7e1585508abc45bcac142be935f8576451
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sun Mar 6 15:16:10 2022 -0300
+
+    Include SourceForge badges
+
+:100644 100644 7d00b729 f8d67509 M	README.md
+
+commit 0acfe1b7049fcd0e45f0cb1f6ef56af86258783a
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 16 23:26:28 2022 +0100
+Updated in upnplib
+
+    A little space too much
+
+:100644 100644 524b4c46 5d0e1fbb M	ixml/inc/posix_overwrites.h updated
+
+commit 77f1d86276a3b1d86e64df46e95e1fa05f481d0c
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 16 23:24:50 2022 +0100
+Updated in upnplib
+
+    The missing files. Now these warnings should be gone also.
+
+:100644 100644 5d1f88ef 524b4c46 M	ixml/inc/posix_overwrites.h updated
+:100644 100644 6cab95d8 7a202e51 M	upnp/sample/common/sample_util.c updated
+:100644 100644 8ba631b5 c357a91f M	upnp/sample/common/sample_util.h updated
+:100644 100644 989b1d3a 04b49591 M	upnp/sample/common/tv_ctrlpt.c updated
+:100644 100644 f80e12c8 fffcb701 M	upnp/sample/common/tv_device.c updated
+:100644 100644 6b478ead fe1ceba9 M	upnp/src/gena/gena_device.c updated
+:100644 100644 f8465b92 65576af1 M	upnp/src/genlib/net/http/webserver.c updated
+:100644 100644 b7d4d698 2f18422b M	upnp/src/inc/upnputil.h updated
+:100644 100644 a0385978 2a6f19c5 M	upnp/src/ssdp/ssdp_ctrlpt.c updated
+:100644 100644 19922396 d58de2e9 M	upnp/test/test_init.c unused
+
+commit a817ef207159d5b0acf0960cef0e5a9574725e19
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 16 23:08:41 2022 +0100
+Updated in upnplib
+
+    No need to work around problems in a product from 2003
+
+:100644 100644 58839a8d 6b478ead M	upnp/src/gena/gena_device.c updated
+:100644 100644 559cbd66 f8465b92 M	upnp/src/genlib/net/http/webserver.c updated
+:100644 100644 e2427c67 a0385978 M	upnp/src/ssdp/ssdp_ctrlpt.c updated
+:100644 100644 d7edb307 51d5410f M	upnp/src/ssdp/ssdp_server.c updated
+
+commit dcc89e8a5b4f35cc90ea3e1a45a328b0cf767a19
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 16 23:07:41 2022 +0100
+Updated in upnplib
+
+    Make Doozy happy.
+
+:100644 100644 824baac8 5d1f88ef M	ixml/inc/posix_overwrites.h updated
+:100644 100644 7c79cd72 b436aded M	upnp/src/genlib/net/uri/uri.c updated
+:100644 100644 969fc516 d7edb307 M	upnp/src/ssdp/ssdp_server.c updated
+
+commit c2ee279709593500994bcde27cb47766d5d5ed93
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 16 19:30:35 2022 +0100
+Updated in upnplib
+
+    Moved all defines for Win-POSIX-Names warnings into one file and add some more.
+
+:000000 100644 00000000 824baac8 A	ixml/inc/posix_overwrites.h updated
+:100644 100644 b47dbb34 7d99e8d9 M	ixml/src/document.c updated
+:100644 100644 ffd18a1a 967eb29c M	ixml/src/element.c updated
+:100644 100644 a240dcf3 426aec8e M	ixml/src/ixml.c updated
+:100644 100644 f902d86f b5a8a69c M	ixml/src/ixmlparser.c updated
+:100644 100644 163b3ba8 3549a2b5 M	ixml/src/node.c updated
+:100644 100644 b94240b2 5e532008 M	upnp/src/api/UpnpString.c updated
+:100644 100644 03a60a4d ceaafaa6 M	upnp/src/api/upnpapi.c updated
+:100644 100644 df358ffb 3a6b18ab M	upnp/src/api/upnpdebug.c updated
+:100644 100644 b6eea2f4 7c79cd72 M	upnp/src/genlib/net/uri/uri.c updated
+:100644 100644 0afd7324 c05ad7cd M	upnp/src/genlib/util/membuffer.c updated
+
+commit becad76f0c5f45f80287b90bbd5058051efbae21
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 16 18:12:00 2022 +0100
+
+    Forgot to change the samples to the new option names.
+
+:100644 100644 d59e6506 11343680 M	upnp/sample/CMakeLists.txt
+
+commit 18fa3226b11223d19f846501852aae0af5392fe1
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sun Feb 13 14:10:57 2022 +0100
+
+    CYGWIN also needs a path
+
+:100644 100644 efeeaada c016d805 M	cmake/test-functions.cmake
+
+commit b74513c5df3a453e1bd1388986e1a7e84049376f
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sun Feb 13 09:21:57 2022 +0100
+
+    I don't know why this worked in the past, didn't change anything there.
+
+:100644 100644 79e21c5c 89e6b5ae M	.github/workflows/ccpp.yml
+
+commit b27de1172807ccfa2b64dfc050f3d6dcd1c218a4
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sun Feb 13 09:13:59 2022 +0100
+
+    GITHUB.WORKSPACE not GITHUB_WORKSPACE
+
+:100644 100644 cc7131a8 79e21c5c M	.github/workflows/ccpp.yml
+
+commit f43c2e9e5519c314edbd487b1b39ef6e00953ff4
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sun Feb 13 08:39:39 2022 +0100
+
+    Set path for installation
+
+:100644 100644 878acc50 cc7131a8 M	.github/workflows/ccpp.yml
+
+commit 5a0387c51edc80ee53023fb8ac320f2d62ad95cc
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sun Feb 13 08:21:28 2022 +0100
+
+    Working dir is reset for every step.
+
+:100644 100644 384e3c57 878acc50 M	.github/workflows/ccpp.yml
+
+commit f60ae5d18624c1a3d834a8628ea1c38a37e033ae
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sun Feb 13 08:04:45 2022 +0100
+
+    --config, not -C
+    Renamed MSys to Build MSys
+
+:100644 100644 980ee276 384e3c57 M	.github/workflows/ccpp.yml
+
+commit 67b52a24e955dde6801541abd1bf6fed5d5c3089
+Author: Vollstrecker <github@vollstreckernet.de>
+Date:   Sat Feb 12 23:45:35 2022 +0100
+
+    Also remove UpnpLog.h
+
+:100644 100644 de4b68ec 1e43ab7f M	upnp/CMakeLists.txt
+
+commit 9397ea1c572ac13bed5848d92ea0dc474b945f26
+Author: Vollstrecker <github@vollstreckernet.de>
+Date:   Sat Feb 12 23:44:10 2022 +0100
+
+    Update ccpp.yml
+    
+    Test all flavours of mingw
+    Build GTest on mingw
+    Dont' use ninja
+    Also test install-step
+
+:100644 100644 32373476 980ee276 M	.github/workflows/ccpp.yml
+
+commit 9e29e71fc0f4f5344dbc66512e2c7577de5a3099
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sat Feb 12 12:12:52 2022 +0100
+
+    Don't use deprecated options in tests
+
+:100644 100644 245cabab 32373476 M	.github/workflows/ccpp.yml
+
+commit 968b9606e653ad6af0388d1ea459a9f68671b154
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sat Feb 12 11:27:17 2022 +0100
+
+    HAVE_MACRO_PREFIX_MAP is a var.
+
+:100644 100644 7e42c002 de4b68ec M	upnp/CMakeLists.txt
+
+commit 6bb19182e5914f55d91fa76ec5d0779c40194059
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sat Feb 12 11:24:23 2022 +0100
+
+    Not FindOpenSSL for find_package
+
+:100644 100644 476f1d92 f3c57a00 M	CMakeLists.txt
+
+commit eaa211a910d8a679b8f71a5626ad5430a6378f01
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sat Feb 12 11:04:18 2022 +0100
+
+    Little resort.
+
+:100644 100644 cad19d5f 76047b81 M	ixml/CMakeLists.txt
+
+commit a2443c3211cf58c6a171cd9e7ca5cd45f4250fa8
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sat Feb 12 11:03:27 2022 +0100
+
+    Tell also ixml-static about the public headers.
+
+:100644 100644 9e02f18f cad19d5f M	ixml/CMakeLists.txt
+
+commit c909316db7d72dbab7ab464702c850f028d2df50
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sat Feb 12 11:01:42 2022 +0100
+
+    No need for ixml to build everything if only shared or static upnp is built.
+
+:100644 100644 70fcd738 9e02f18f M	ixml/CMakeLists.txt
+
+commit 54fe8d7023d0e6aab8ff88621b760517875314db
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sat Feb 12 10:59:14 2022 +0100
+
+    Tell installation also about ixml components.
+
+:100644 100644 233d57fd 70fcd738 M	ixml/CMakeLists.txt
+
+commit d2b92c25544741c04d40aa188fb2a8e407742993
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sat Feb 12 10:56:51 2022 +0100
+
+    Remove many if's and use generator-expressions.
+
+:100644 100644 39b54f96 233d57fd M	ixml/CMakeLists.txt
+:100644 100644 f2c49fe1 7e42c002 M	upnp/CMakeLists.txt
+
+commit eb027fea4ec3c64d4744d8a9e9561ea0e87ede09
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 11 21:08:32 2022 +0100
+
+    No need for checking 2 times.
+
+:100644 100644 f6256108 f2c49fe1 M	upnp/CMakeLists.txt
+
+commit bfe241b6c1e7dabb807a9d59d73c494775056555
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 11 18:10:47 2022 +0100
+
+    Removed empty line
+
+:100644 100644 ca0d2b5a 476f1d92 M	CMakeLists.txt
+
+commit 9ceeb7564c0b7b2a26939f8c198404427bc2ba80
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 11 18:10:01 2022 +0100
+
+    Same for GTest
+
+:100644 100644 a7e8a042 ca0d2b5a M	CMakeLists.txt
+
+commit 485ef2f2a86d971993b325eba7ab785ce66fd955
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 11 18:09:19 2022 +0100
+
+    Pthreads installation should be handled by CmDaB, no need to do this here.
+
+:100644 100644 838019df a7e8a042 M	CMakeLists.txt
+
+commit 5d4d93c43a8b079b5f4dfd16113fda11a92153ac
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 11 18:08:26 2022 +0100
+
+    Don't guess where to find pthreads4w
+
+:100644 100644 91d0bab8 838019df M	CMakeLists.txt
+
+commit 659d2ae71bcc39bcb95dfab54116519e094bb8d0
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 11 18:07:03 2022 +0100
+
+    CmDaB creates the option for us.
+
+:100644 100644 fabdca40 91d0bab8 M	CMakeLists.txt
+
+commit cec382eab23abfc7c6fe4439c654223cf4cce9c8
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 11 18:06:31 2022 +0100
+
+    Use find_package and let this fail if not found instead of replicating that.
+
+:100644 100644 624c71b3 fabdca40 M	CMakeLists.txt
+
+commit 201d60d0cd3a8e7f4893e1a202aa75a2c66db58c
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 11 18:05:25 2022 +0100
+
+    Removed doubled search for openssl.
+
+:100644 100644 3a94e1cc 624c71b3 M	CMakeLists.txt
+
+commit 8505211f6c05d84198bbe582724a00794a5b6c1e
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 11 18:04:31 2022 +0100
+
+    Renamed the options and gave them a deprection notice
+    to get them closer to the name used in the config.
+
+:100644 100644 c48242d0 3a94e1cc M	CMakeLists.txt
+:100644 100644 dbe933b2 16a30c8e M	cmake/options.cmake
+:100644 100644 0d589e48 39b54f96 M	ixml/CMakeLists.txt
+:100644 100644 ce0865ce f6256108 M	upnp/CMakeLists.txt
+
+commit e4fb7d57cded89412f4ccda4325c0df29a0b45a6
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 10 21:00:33 2022 +0100
+
+    Moved options into separate file
+
+:100644 100644 83c8a2e5 c48242d0 M	CMakeLists.txt
+:000000 100644 00000000 dbe933b2 A	cmake/options.cmake
+
+commit f8e1e57d9d85d62d7015d0d1c1763f85ab243613
+Author: Vollstrecker <github@vollstreckernet.de>
+Date:   Sat Feb 12 19:16:47 2022 +0100
+
+    UpnpHttpHeaders.h does not exist
+
+:100644 100644 f38080b5 ce0865ce M	upnp/CMakeLists.txt
+
+commit 45c1fbad13135ccb84558bf920700ca088e94a8d
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Feb 9 17:21:43 2022 -0300
+
+    Clang-format fixes
+
+:100644 100644 04f77212 6f4afa4a M	upnp/generator/TestClass.h
+:100644 100644 88d40431 0a75ac4d M	upnp/inc/UpnpActionComplete.h
+:100644 100644 1d36e9cb b816d7d6 M	upnp/inc/UpnpActionRequest.h
+:100644 100644 fe0e43a8 84bc9949 M	upnp/inc/UpnpDiscovery.h
+:100644 100644 5261efa8 4292411f M	upnp/inc/UpnpEvent.h
+:100644 100644 417c46e9 ead28955 M	upnp/inc/UpnpEventSubscribe.h
+:100644 100644 7a380325 bb6974c9 M	upnp/inc/UpnpExtraHeaders.h
+:100644 100644 0c3d0681 c62aa2a0 M	upnp/inc/UpnpFileInfo.h
+:100644 100644 3bd89cf4 6a46bf7c M	upnp/inc/UpnpGlobal.h updated
+:100644 100644 9b59a7b0 f918258d M	upnp/inc/UpnpStateVarComplete.h
+:100644 100644 3e9c0f9e a2cec355 M	upnp/inc/UpnpStateVarRequest.h
+:100644 100644 3ef0bcb0 275183c7 M	upnp/inc/UpnpSubscriptionRequest.h
+:100644 100644 cd46d3ef 2cb42a23 M	upnp/inc/list.h
+:100644 100644 d0c9581f 5faedc81 M	upnp/inc/upnp.h
+:100644 100644 c6fcde66 5f75910c M	upnp/src/inc/GenlibClientSubscription.h
+
+commit 0d4f726857de605983852566d13f5f0f90faba9a
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 9 19:46:23 2022 +0100
+
+    The comment in UpnpGlobal.h implies that Win has LFS. So no need to check that.
+
+:100644 100644 69bf3974 83c8a2e5 M	CMakeLists.txt
+
+commit 543f5b6296b239f4d3ae19da460a81ff68a2a32a
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 9 19:44:38 2022 +0100
+
+    Not needed to export all symbols on Win anymore
+
+:100644 100644 30c40f35 f38080b5 M	upnp/CMakeLists.txt
+
+commit 6035bdb0c7048b82d2d84582a88837b0b5b406be
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 9 19:44:12 2022 +0100
+
+    Resort properties
+
+:100644 100644 9b0e97e0 0d589e48 M	ixml/CMakeLists.txt
+:100644 100644 afa6990d 30c40f35 M	upnp/CMakeLists.txt
+
+commit e5adebdfa1dba371a90a845e1caa0453e3ee23d5
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 9 19:41:54 2022 +0100
+
+    UpnpInitLog, UpnpSetLogLevel and UpnpSetLogFileNames need also to be exported.
+
+:100644 100644 a6ee5388 50be60f7 M	upnp/inc/upnpdebug.h
+
+commit da699587b966f18c94223839157b9d4c9339756b
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 9 19:41:07 2022 +0100
+
+    Made symbols visibile on non-win again
+
+:100644 100644 89eea17a 3bd89cf4 M	upnp/inc/UpnpGlobal.h updated
+
+commit 9a215df2d9a8173163ffafe79b1bec7dd19cfedc
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 9 19:40:29 2022 +0100
+
+    If not win means no dll's
+
+:100644 100644 edcd6f7e 89eea17a M	upnp/inc/UpnpGlobal.h updated
+
+commit 2f99af26731ec7d5677e5576c006a35128b59d55
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 9 19:40:07 2022 +0100
+
+    Renamed EXPORT_SPEC to UPNP_EXPORT_SPEC
+
+:100644 100644 1ab7ee26 ff11adf7 M	ixml/inc/ixml.h
+:100644 100644 21d6ce1c 04f77212 M	upnp/generator/TestClass.h
+:100644 100644 27dc3802 7f1953ec M	upnp/generator/generator.c
+:100644 100644 eabffe99 88d40431 M	upnp/inc/UpnpActionComplete.h
+:100644 100644 e313b850 1d36e9cb M	upnp/inc/UpnpActionRequest.h
+:100644 100644 e3750e81 fe0e43a8 M	upnp/inc/UpnpDiscovery.h
+:100644 100644 5b27f8ce 5261efa8 M	upnp/inc/UpnpEvent.h
+:100644 100644 e770c495 417c46e9 M	upnp/inc/UpnpEventSubscribe.h
+:100644 100644 81b5bb4d 7a380325 M	upnp/inc/UpnpExtraHeaders.h
+:100644 100644 9ddaed99 0c3d0681 M	upnp/inc/UpnpFileInfo.h
+:100644 100644 0708acc2 edcd6f7e M	upnp/inc/UpnpGlobal.h updated
+:100644 100644 6cc549b0 9b59a7b0 M	upnp/inc/UpnpStateVarComplete.h
+:100644 100644 ec694d22 3e9c0f9e M	upnp/inc/UpnpStateVarRequest.h
+:100644 100644 91cb6079 25b8abc3 M	upnp/inc/UpnpString.h
+:100644 100644 778eea58 3ef0bcb0 M	upnp/inc/UpnpSubscriptionRequest.h
+:100644 100644 2087466b b6d2efa6 M	upnp/inc/ithread.h
+:100644 100644 5cbcc49a cd46d3ef M	upnp/inc/list.h
+:100644 100644 8b919a5e d0c9581f M	upnp/inc/upnp.h
+:100644 100644 8acccc28 12953a54 M	upnp/inc/upnptools.h
+:100644 100644 16bfa529 c6fcde66 M	upnp/src/inc/GenlibClientSubscription.h
+:100644 100644 f7f693a9 d1444323 M	upnp/src/inc/httpreadwrite.h updated
+:100644 100644 7e6d1583 1cd96714 M	upnp/src/ssdp/SSDPResultData.h
+:100644 100644 7994a4cc 0abf9db7 M	upnp/src/threadutil/ThreadPool.h
+
+commit 9b2e435d9f86afe2ef94311e564133eb1d6f8865
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Wed Feb 9 19:22:56 2022 +0100
+
+    Add visibility options to the targets.
+
+:100644 100644 a2098244 9b0e97e0 M	ixml/CMakeLists.txt
+:100644 100644 7596e386 afa6990d M	upnp/CMakeLists.txt
+
+commit 9777b2958ba7726e1306f539fa3dd1c13fd4c0bf
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sat Feb 5 11:15:55 2022 +0100
+
+    Spaces -> Tab
+    .. and removed some doubled empty lines.
+
+:100644 100644 6baae4ee d1d2147b M	gtest/test_template.cpp
+:100644 100644 82cf5095 e85ed9fb M	gtest/tools/test_tools.cpp
+:100644 100644 86cb11d2 e212260f M	gtest/tools/tools.cpp
+
+commit 52f27d4ddb87ced0a40e009b31e435e42225f10a
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sat Feb 5 09:36:46 2022 +0100
+
+    gtest_add_tests is not our function
+
+:100644 100644 fc2d35f7 efeeaada M	cmake/test-functions.cmake
+
+commit 2f04cd0b3d747f5f60e0765b3b02d8c536e6e013
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Sat Feb 5 09:36:21 2022 +0100
+
+    Readd gtests
+
+:100644 100644 cc83efa0 69bf3974 M	CMakeLists.txt
+:000000 100644 00000000 e7f2a81a A	gtest/CMakeLists.txt
+:000000 100644 00000000 c247ad35 A	gtest/README.md
+:000000 100644 00000000 1981e6e8 A	gtest/TODO
+:000000 100644 00000000 b1accf3e A	gtest/test_UpnpHttpHeaderList.cpp
+:000000 100644 00000000 6baae4ee A	gtest/test_template.cpp
+:000000 100644 00000000 9ddfda34 A	gtest/test_upnpapi.cpp updated
+:000000 100644 00000000 86e8280d A	gtest/tools/README
+:000000 100755 00000000 f4ff2a7e A	gtest/tools/compile.sh
+:000000 100644 00000000 82cf5095 A	gtest/tools/test_tools.cpp
+:000000 100644 00000000 86cb11d2 A	gtest/tools/tools.cpp
+
+commit 9e1e24e9a2f15ce25b4b29d5330acab4ebec4068
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 4 13:04:02 2022 +0100
+
+    Remove forgotten debug message
+
+:100644 100644 c7ac126c fc2d35f7 M	cmake/test-functions.cmake
+
+commit 8dfcfe8b6ede99f719ef76774a688fda263ab0b9
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 4 13:03:34 2022 +0100
+
+    As $ENV works always, no need to make a difference here.
+
+:100644 100644 b5053181 c7ac126c M	cmake/test-functions.cmake
+
+commit 1e531ec5fe93bb8d2a22e71901d1b1b8590861bb
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 4 12:37:53 2022 +0100
+
+    MinGW uses also ; as PATH-separator
+
+:100644 100644 3fb0b47c b5053181 M	cmake/test-functions.cmake
+
+commit bd3ab8e2cfe96dd6266d65abd1e3672c200fe204
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 4 12:29:38 2022 +0100
+
+    Added MinGW to check.
+
+:100644 100644 5e8e672a 3fb0b47c M	cmake/test-functions.cmake
+
+commit 7c559a96912c7b3c35e43f32c90c1c83f4b05644
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 4 12:21:48 2022 +0100
+
+    MSYS needs a path, too. We can't expect the users to set it.
+
+:100644 100644 a968fbb9 245cabab M	.github/workflows/ccpp.yml
+:100644 100644 71b77b13 5e8e672a M	cmake/test-functions.cmake
+
+commit ab44f887def8c1420a583c35f46fc52916d9e7cd
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 4 10:42:30 2022 +0100
+
+    It's sys/socket.h OR ws2tcpip.h, not MAYBE AND.
+
+:100644 100644 ba0a71e5 cc83efa0 M	CMakeLists.txt
+
+commit d17d32d46b74fb8f92758a3c25ad6d516447bccd
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Fri Feb 4 10:41:40 2022 +0100
+
+    Don't search 2 times for sys/socket.h
+
+:100644 100644 04b73d86 ba0a71e5 M	CMakeLists.txt
+
+commit dc953831e8da4bc1136e862aba1c12f635fbee7d
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 3 15:33:41 2022 +0100
+
+    Reenabled debug output
+
+:100644 100644 95108363 a968fbb9 M	.github/workflows/ccpp.yml
+:000000 100644 00000000 6d0e278d A	cmake/post-test.cmake
+
+commit 3f913788f8255617b34e292b88393b1eb85e4027
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 3 15:27:45 2022 +0100
+
+    More don't yell commands.
+
+:100644 100644 7dea06eb 2a8b19cc M	ixml/test/CMakeLists.txt
+:100644 100644 6b478e35 d59e6506 M	upnp/sample/CMakeLists.txt
+
+commit 4dcfdba8470485d7b54a99c993808316b0d0b3cf
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 3 15:27:11 2022 +0100
+
+    Bakported all cmake fixes.
+
+:100644 100644 b7afcca3 04b73d86 M	CMakeLists.txt
+:000000 100644 00000000 df616225 A	cmake/autoheader.cmake
+:000000 100644 00000000 71b77b13 A	cmake/test-functions.cmake
+:100644 100644 f94c626e 7596e386 M	upnp/CMakeLists.txt
+:100644 100644 88d416bf 00aaa45e M	upnp/inc/upnpconfig.h.cm
+:100644 100644 d6282c4b 6b478e35 M	upnp/sample/CMakeLists.txt
+:100644 100644 3d76dbb3 2a96cd55 M	upnp/test/CMakeLists.txt
+
+commit 09615f7ab162f6887c2c0a1faed4bf427940af99
+Author: Vollstrecker <werner@vollstreckernet.de>
+Date:   Thu Feb 3 13:40:29 2022 +0100
+
+    Moved CmDaB.cmake into cmake subdir.
+
+:100644 100644 30ea3429 b7afcca3 M	CMakeLists.txt
+:100644 100644 557bc449 557bc449 R100	CmDaB.cmake	cmake/CmDaB.cmake
+
+commit e29a3ef2bb917f7ba766fd99585e6c63edf6c006
+Author: Ian Whyman <ian@gerbera.io>
+Date:   Sat Jan 22 12:48:57 2022 +0000
+Updated in upnplib
+
+    Missing sock.h include
+
+:100644 100644 8e38a87b 97c3e74a M	upnp/src/inc/soaplib.h updated
+
+commit 243b42f8b7a2eff723785da16f3d968fb6d9bf35
+Author: Ian Whyman <ian@gerbera.io>
+Date:   Sat Jan 22 12:44:44 2022 +0000
+
+    CI: backport clang-format and codeql from master
+
+:000000 100644 00000000 5ba30bad A	.github/workflows/clang-format.yml
+:000000 100644 00000000 5cd69f18 A	.github/workflows/codeql-analysis.yml
+
+commit 07f5ab0e64d2c1b99fd67f95c3b1d3a70118ff6f
+Author: Ian Whyman <ian@gerbera.io>
+Date:   Sat Jan 22 12:42:21 2022 +0000
+
+    Format: Use tabs always
+
+:100644 100644 5a258116 6301da09 M	.clang-format
+:100644 100644 b8136d43 bdd2a596 M	ixml/inc/ixmldebug.h
+:100644 100644 3c4bb278 f4936fdf M	ixml/src/attr.c
+:100644 100644 c2d8a1d5 b47dbb34 M	ixml/src/document.c
+:100644 100644 aaec176d ffd18a1a M	ixml/src/element.c updated
+:100644 100644 b0261bd2 35faf140 M	ixml/src/inc/ixmlmembuf.h
+:100644 100644 f911e92a a240dcf3 M	ixml/src/ixml.c updated
+:100644 100644 f27973a7 e35aa701 M	ixml/src/ixmldebug.c
+:100644 100644 c323d3f9 c6e2c0f4 M	ixml/src/ixmlmembuf.c
+:100644 100644 ebe302ad f902d86f M	ixml/src/ixmlparser.c updated
+:100644 100644 ea4fece1 8b4444b0 M	ixml/src/namedNodeMap.c
+:100644 100644 81372bf8 163b3ba8 M	ixml/src/node.c updated
+:100644 100644 2dd50522 dc2d8aba M	ixml/src/nodeList.c
+:100644 100644 ca309155 49dcb4ba M	ixml/test/test_document.c
+:100644 100644 fb9613cd 756981e1 M	upnp/generator/TestClass.c
+:100644 100644 b6bbf425 21d6ce1c M	upnp/generator/TestClass.h
+:100644 100644 87c2c770 c9cdbc81 M	upnp/generator/TheStruct.h
+:100644 100644 1c8ab301 d658f23b M	upnp/inc/Callback.h
+:100644 100644 97018aab eabffe99 M	upnp/inc/UpnpActionComplete.h
+:100644 100644 55baa05b e313b850 M	upnp/inc/UpnpActionRequest.h
+:100644 100644 5c2f7b1a e3750e81 M	upnp/inc/UpnpDiscovery.h
+:100644 100644 55638112 5b27f8ce M	upnp/inc/UpnpEvent.h
+:100644 100644 506a1c1f e770c495 M	upnp/inc/UpnpEventSubscribe.h
+:100644 100644 9001b7d2 81b5bb4d M	upnp/inc/UpnpExtraHeaders.h
+:100644 100644 f9c24613 9ddaed99 M	upnp/inc/UpnpFileInfo.h
+:100644 100644 a0dfb1a7 0708acc2 M	upnp/inc/UpnpGlobal.h updated
+:100644 100644 5fe43b96 8a7d456c M	upnp/inc/UpnpInet.h
+:100644 100644 4575960b 225673e1 M	upnp/inc/UpnpIntTypes.h
+:100644 100644 1d76224d 6cc549b0 M	upnp/inc/UpnpStateVarComplete.h
+:100644 100644 6486caf3 ec694d22 M	upnp/inc/UpnpStateVarRequest.h
+:100644 100644 2adf8cc8 bb3dd331 M	upnp/inc/UpnpStdInt.h
+:100644 100644 d7c9b8bd 91cb6079 M	upnp/inc/UpnpString.h
+:100644 100644 3f9b62ad 778eea58 M	upnp/inc/UpnpSubscriptionRequest.h
+:100644 100644 95e8dd38 4561feea M	upnp/inc/UpnpUniStd.h
+:100644 100644 0fbe7efc 5cbcc49a M	upnp/inc/list.h
+:100644 100644 61deb8dc a6ee5388 M	upnp/inc/upnpdebug.h
+:100644 100644 383536f0 8acccc28 M	upnp/inc/upnptools.h
+:100644 100644 1606ffbd 6cab95d8 M	upnp/sample/common/sample_util.c updated
+:100644 100644 fc7660c5 8ba631b5 M	upnp/sample/common/sample_util.h updated
+:100644 100644 5ec73d53 989b1d3a M	upnp/sample/common/tv_ctrlpt.c updated
+:100644 100644 9e366ec7 1a4d2dbd M	upnp/sample/common/tv_ctrlpt.h updated
+:100644 100644 8b82611a 53303013 M	upnp/sample/common/tv_device.h updated
+:100644 100644 3efa5828 a374f8b9 M	upnp/sample/linux/tv_combo_main.c
+:100644 100644 e477c681 4c4e9610 M	upnp/sample/linux/tv_ctrlpt_main.c
+:100644 100644 fecf979f bc155ea6 M	upnp/sample/linux/tv_device_main.c
+:100644 100644 b0c2bbe4 68d9e059 M	upnp/src/api/UpnpActionComplete.c
+:100644 100644 4afa4e35 9c7af396 M	upnp/src/api/UpnpActionRequest.c
+:100644 100644 eec4c02a 108d469a M	upnp/src/api/UpnpDiscovery.c
+:100644 100644 d0e24eb3 0652f5be M	upnp/src/api/UpnpEvent.c
+:100644 100644 1abe5ed1 4df7b5c1 M	upnp/src/api/UpnpEventSubscribe.c
+:100644 100644 6e1bb4df d4f99078 M	upnp/src/api/UpnpExtraHeaders.c
+:100644 100644 7d26011c acd41def M	upnp/src/api/UpnpFileInfo.c
+:100644 100644 4b1a0d0d 6472e8bb M	upnp/src/api/UpnpStateVarComplete.c
+:100644 100644 f7dd1db3 30cc481d M	upnp/src/api/UpnpStateVarRequest.c
+:100644 100644 346b866d b94240b2 M	upnp/src/api/UpnpString.c updated
+:100644 100644 1f6e3148 e8e2b9d6 M	upnp/src/api/UpnpSubscriptionRequest.c
+:100644 100644 dcfea52a 03a60a4d M	upnp/src/api/upnpapi.c updated
+:100644 100644 e6afccfe df358ffb M	upnp/src/api/upnpdebug.c updated
+:100644 100644 68ec3260 35976cf7 M	upnp/src/api/upnptools.c updated
+:100644 100644 45086f61 eb38f229 M	upnp/src/gena/gena_ctrlpt.c
+:100644 100644 439e34c7 58839a8d M	upnp/src/gena/gena_device.c updated
+:100644 100644 4e79486d 0d8d3629 M	upnp/src/genlib/client_table/GenlibClientSubscription.c
+:100644 100644 75fe65b7 3deb5b62 M	upnp/src/genlib/client_table/client_table.c
+:100644 100644 d394a45d 1d4c144c M	upnp/src/genlib/net/http/httpreadwrite.c updated
+:100644 100644 b0f5f82a 0ab2000a M	upnp/src/genlib/net/http/parsetools.c
+:100644 100644 2e46c761 39ce5634 M	upnp/src/genlib/net/http/statcodes.c
+:100644 100644 d4f75ec4 559cbd66 M	upnp/src/genlib/net/http/webserver.c updated
+:100644 100644 edc60e55 7354b85b M	upnp/src/genlib/net/sock.c updated
+:100644 100644 7675c022 20c4b3d8 M	upnp/src/genlib/util/list.c
+:100644 100644 be26981e 0afd7324 M	upnp/src/genlib/util/membuffer.c updated
+:100644 100644 d7a9ec89 2ab9f977 M	upnp/src/genlib/util/strintmap.c
+:100644 100644 e6320e48 1570fc37 M	upnp/src/genlib/util/upnp_timeout.c
+:100644 100644 dce06edb 99f96de8 M	upnp/src/genlib/util/util.c updated
+:100644 100644 5e0fc615 16bfa529 M	upnp/src/inc/GenlibClientSubscription.h
+:100644 100644 8dc8cdb0 ea4473fe M	upnp/src/inc/config.h
+:100644 100644 8f0e5ac8 81a14210 M	upnp/src/inc/gena.h
+:100644 100644 ea2d630d 69395a3a M	upnp/src/inc/gena_ctrlpt.h
+:100644 100644 1a9aae8b 99c3f2e8 M	upnp/src/inc/httpparser.h
+:100644 100644 4af925f7 f7f693a9 M	upnp/src/inc/httpreadwrite.h updated
+:100644 100644 3418a5fd fba17112 M	upnp/src/inc/inet_pton.h
+:100644 100644 b74e6bc4 5dda0f5b M	upnp/src/inc/md5.h
+:100644 100644 560d9429 893bb7ee M	upnp/src/inc/membuffer.h
+:100644 100644 1d7ad4ca f5f9536f M	upnp/src/inc/miniserver.h updated
+:100644 100644 d1ea4f0b 99626c34 M	upnp/src/inc/netall.h
+:100644 100644 97d89cb1 b42b5fb1 M	upnp/src/inc/parsetools.h
+:100644 100644 022ab5b2 8e38a87b M	upnp/src/inc/soaplib.h updated
+:100644 100644 9f83db7e b8d01e6c M	upnp/src/inc/sock.h updated
+:100644 100644 fc6e747b 64f500c8 M	upnp/src/inc/ssdplib.h
+:100644 100644 91af94ad 8e08f3bd M	upnp/src/inc/statcodes.h
+:100644 100644 cbd665c4 509b1e38 M	upnp/src/inc/strintmap.h
+:100644 100644 7404fe78 6f8d032c M	upnp/src/inc/sysdep.h
+:100644 100644 807c6d3f cbc6e979 M	upnp/src/inc/upnp_timeout.h
+:100644 100644 4e9338c2 b7d4d698 M	upnp/src/inc/upnputil.h
+:100644 100644 584ecd17 f6c18f19 M	upnp/src/inc/uri.h
+:100644 100644 18a5bca0 37fbf75a M	upnp/src/inc/urlconfig.h
+:100644 100644 73716ec2 c0c4b7b2 M	upnp/src/inc/uuid.h
+:100644 100644 e755ded6 13818590 M	upnp/src/inc/webserver.h
+:100644 100644 6d96e20b 0f813c85 M	upnp/src/inet_pton.c
+:100644 100644 b3d5b065 d3732a84 M	upnp/src/soap/soap_common.c
+:100644 100644 c3c739b2 826ad811 M	upnp/src/soap/soap_ctrlpt.c
+:100644 100644 bd954bc7 63de2f91 M	upnp/src/soap/soap_device.c
+:100644 100644 17c1f7ea 823f50bc M	upnp/src/ssdp/SSDPResultData.c
+:100644 100644 bb2c497d 7e6d1583 M	upnp/src/ssdp/SSDPResultData.h
+:100644 100644 dc786bdd e2427c67 M	upnp/src/ssdp/ssdp_ctrlpt.c updated
+:100644 100644 04e39b29 a9168bdf M	upnp/src/ssdp/ssdp_device.c updated
+:100644 100644 78109c6b 969fc516 M	upnp/src/ssdp/ssdp_server.c updated
+:100644 100644 2c6f3f1a 41c51e91 M	upnp/src/threadutil/FreeList.c
+:100644 100644 aaf1e0fe 86815150 M	upnp/src/threadutil/FreeList.h
+:100644 100644 4c00d63e 3a7b9614 M	upnp/src/threadutil/LinkedList.c
+:100644 100644 89f01ca3 7922c0e8 M	upnp/src/threadutil/LinkedList.h
+:100644 100644 8c098be3 f8f1e1e0 M	upnp/src/threadutil/ThreadPool.c updated
+:100644 100644 5654a505 7994a4cc M	upnp/src/threadutil/ThreadPool.h
+:100644 100644 c154bfae c042f3d0 M	upnp/src/threadutil/TimerThread.c
+:100644 100644 bdbd7075 c0f1ad6d M	upnp/src/threadutil/TimerThread.h
+:100644 100644 56ca3b4f 674172c5 M	upnp/src/urlconfig/urlconfig.c
+:100644 100644 7ccc8d6f 8a8cc16b M	upnp/src/uuid/md5.c
+:100644 100644 3ce77391 305d7daa M	upnp/src/win_dll.c
+:100644 100644 1211c3fe bdc3931c M	upnp/test/test_list.c
+
+commit ba386634d8fd6730f0095d1d0596c58c84e5dac7
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sat Jan 15 21:32:01 2022 -0300
+
+    Drop duplicate statuscodes.h
+    
+    statcodes.h seems to be the used one
+
+:100644 100644 1def8c57 06885cd3 M	ide/qtcreator/pupnp/pupnp-creator.files
+:100644 100644 0356a43a 6a7219be M	upnp/Makefile.am
+:100644 000000 0793141a 00000000 D	upnp/src/inc/statuscodes.h
+
+commit 777c9e23e4ff70f83b63d9071e2b98046c1e9af6
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sat Jan 15 21:14:15 2022 -0300
+Updated in upnplib
+
+    White spaces
+
+:100644 100644 6e4d2f84 d4f75ec4 M	upnp/src/genlib/net/http/webserver.c updated
+
+commit fadbb7f1d9d4c0dcb7c5b3dcc9891007a1c8bc80
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sat Jan 15 20:57:38 2022 -0300
+Updated in upnplib
+
+    Fix CWE-367: Time-of-check time-of-use filesystem race condition
+
+:100644 100644 2e95bbfc dcfea52a M	upnp/src/api/upnpapi.c updated
+:100644 100644 86e81b6e 6e4d2f84 M	upnp/src/genlib/net/http/webserver.c updated
+
+commit 75770df7152c1044d0d605c18280d4c37a741d8d
+Author: Biswapriyo Nath <nathbappai@gmail.com>
+Date:   Sat Jan 15 11:25:01 2022 +0530
+
+    CI: Add tests in msys2/mingw builds
+
+:100644 100644 685f6311 95108363 M	.github/workflows/ccpp.yml
+
+commit 78f16db5394debeb30cbe2c4fd331518e45a3952
+Author: Vollstrecker <github@vollstreckernet.de>
+Date:   Thu Jan 13 23:43:58 2022 +0100
+
+    rough-guess
+
+:100644 100644 741f9a57 3d76dbb3 M	upnp/test/CMakeLists.txt
+
+commit 0e2f4124b3fc6600d401715980d6fea4aa45663a
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Jan 12 22:24:46 2022 -0300
+
+    Use a workflow closer to the one used in master
+
+:100644 100644 6dd75a0b 685f6311 M	.github/workflows/ccpp.yml
+
+commit 3151e30897d4a68d0fce79b8e2176d31ddf7d9cf
+Author: Vollstrecker <github@vollstreckernet.de>
+Date:   Wed Jan 12 21:24:20 2022 +0100
+
+    Update upnpconfig.h.cm
+    
+    Fix redefinition warning for LARGEFILE_SENSITIVE
+
+:100644 100644 7908dc17 88d416bf M	upnp/inc/upnpconfig.h.cm
+
+commit 2bc264af0b09855d5c2b26692f04ce890ded909a
+Author: Biswapriyo Nath <nathbappai@gmail.com>
+Date:   Wed Jan 12 15:57:44 2022 -0300
+
+    cmake: Allow to link with pthread in mingw
+    
+    Signed-off-by: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+
+:100644 100644 46bf38b6 30ea3429 M	CMakeLists.txt
+
+commit f7ca14f37208cd48f546cb386e00b975d22e64c2
+Author: Biswapriyo Nath <nathbappai@gmail.com>
+Date:   Wed Jan 12 15:52:22 2022 -0300
+
+    cmake: Fix library names in mingw
+    
+    Do not add prefix or postfix to DLL names.
+    
+    Signed-off-by: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+
+:100644 100644 8c04d72f 46bf38b6 M	CMakeLists.txt
+:100644 100644 d10336f9 f94c626e M	upnp/CMakeLists.txt
+
+commit 3a0ff9acbeca04c53a7f5e8a83b0addb92d07f76
+Author: Ian Whyman <v00d00@v00d00.net>
+Date:   Wed Jan 12 11:53:14 2022 -0300
+
+    Dont call miniserver callbacks for failed hosts
+    
+    When we implemented validation in Gerbera[0], I noticed that even if our
+    callback returns UPNP_E_BAD_HTTPMSG the request still get processed and
+    not dropped as expected.
+    
+    Practically that means all hosts are valid if you have a validation
+    callback set :(
+    
+    0. https://github.com/gerbera/gerbera/pull/2365
+
+:100644 100644 1a313a36 4bb413fa M	upnp/src/genlib/miniserver/miniserver.c updated
+
+commit 366651a32c91aecc5db5041002d3876cfbd8d710
+Author: Vollstrecker <github@vollstreckernet.de>
+Date:   Sat Jan 8 14:30:41 2022 +0100
+
+    1.14 lfs fix (#353)
+    
+    * Changed control var for lfs-test and added -D
+    
+    * LARGE_FILE_SENSITIVE is just a hint, _LARGE_FILES shows us what is needed.
+    
+    Co-authored-by: Vollstrecker <werner@vollstreckernet.de>
+
+:100644 100644 55653f12 8c04d72f M	CMakeLists.txt
+:100644 100644 4aad58da a2098244 M	ixml/CMakeLists.txt
+
+commit 9a77abb2c3babf04b4c6061a5facbf4fd5347724
+Author: Vollstrecker <github@vollstreckernet.de>
+Date:   Thu Jan 6 17:49:58 2022 +0100
+
+    Backported LFS-Fix (2/2)
+
+:100644 100644 e33a561e 4aad58da M	ixml/CMakeLists.txt
+
+commit f9c8f5d4d817f58dfc81b05a575c70ce2afe3bdc
+Author: Vollstrecker <github@vollstreckernet.de>
+Date:   Thu Jan 6 17:48:44 2022 +0100
+
+    Backport LFS-Fix (1/2)
+
+:100644 100644 6ac63b68 3d45031c M	UPNP.cmake.in
+
+commit 3f58a6479e8100c83b8df2b45e4718c78213ec90
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Oct 8 15:18:42 2021 -0300
+
+    Removing dead link (thanks to ClassicOldSong)
+
+:100644 100644 030e8eca 7d00b729 M	README.md
+
+commit 6d092df208431144a43474e3f292fbf878b52657
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Tue Sep 28 04:51:51 2021 -0300
+
+    Ubuntu 16.04 lts virtual environment has been removed
+    
+    https://github.blog/changelog/2021-04-29-github-actions-ubuntu-16-04-lts-virtual-environment-will-be-removed-on-september-20-2021/
+
+:100644 100644 feaf5113 6dd75a0b M	.github/workflows/ccpp.yml
+
+commit e10a92687ca36e27247492023c211cc00a3bd066 (tag: release-1.14.12, Release-1.14.12)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sun Sep 26 15:19:47 2021 -0300
+
+    Homekeeping for the next release
+
+:100644 100644 bb8251a3 f9a0ea1f M	ChangeLog
+:100644 100644 ae44df26 030e8eca M	README.md
+:100644 100644 35c060cc c46f9e2a M	configure.ac
+:100644 100644 35e15018 09f95109 M	docs/Doxyfile
+:100644 100644 8cf0f8f8 7c875ab9 M	libupnp.spec

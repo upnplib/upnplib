@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-03
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-04
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -159,10 +159,15 @@ static int host_header_is_numeric(char* host_port, size_t host_port_size) {
 
     /* Remove the port part. */
     s = host_port + host_port_size - 1;
-    while (s != host_port && *s != ':') {
+    while (s != host_port && *s != ']' && *s != ':') {
         --s;
     }
-    *s = 0;
+    if (*s == ':') {
+        *s = 0;
+    } else {
+        s = host_port + host_port_size;
+    }
+
     /* Try IPV4 */
     rc = inet_pton(AF_INET, host_port, &addr);
     if (rc == 1) {
@@ -745,9 +750,8 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
         goto error;
         break;
     }
-    // An empty text_addr will be translated to a valid sock addr = 0 that
-    // binds to all local ip addresses.
-    if (text_addr[0] != '\0' && inet_pton(domain, text_addr, addr) != 1) {
+
+    if (inet_pton(domain, text_addr, addr) <= 0) {
         UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
                    "init_socket_suff(): Invalid ip address: %s.\n", text_addr);
         goto error;

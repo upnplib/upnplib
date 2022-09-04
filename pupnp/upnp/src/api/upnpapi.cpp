@@ -41,14 +41,8 @@
  */
 
 #include "config.hpp"
-#include "upnpapi.hpp"
 
-#ifdef _WIN32
-#include "upnpmock/iphlpapi_win32.hpp"
-#else
-#include "upnpmock/ifaddrs.hpp"
-#include "upnpmock/net_if.hpp"
-#endif
+#include "upnpapi.hpp"
 
 #include "ThreadPool.hpp"
 #include "UpnpStdInt.hpp"
@@ -59,6 +53,13 @@
 #include "ssdplib.hpp"
 #include "sysdep.hpp"
 #include "uuid.hpp"
+
+#ifdef _WIN32
+#include "upnpmock/iphlpapi_win32.hpp"
+#else
+#include "upnpmock/ifaddrs.hpp"
+#include "upnpmock/net_if.hpp"
+#endif
 
 /* Needed for GENA */
 #include "gena.hpp"
@@ -77,6 +78,8 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "posix_overwrites.hpp"
 
 #ifdef _WIN32
 /* Do not include these files */
@@ -115,16 +118,16 @@ struct VirtualDirCallbacks virtualDirCallback;
 /*! Pointer to the virtual directory list. */
 virtualDirList* pVirtualDirList;
 
+#ifdef INCLUDE_CLIENT_APIS
+/*! Mutex to synchronize the subscription handling at the client side. */
+ithread_mutex_t GlobalClientSubscribeMutex;
+#endif /* INCLUDE_CLIENT_APIS */
+
 /*! rwlock to synchronize handles (root device or control point handle). */
 ithread_rwlock_t GlobalHndRWLock;
 
 /*! Mutex to synchronize the uuid creation process. */
 ithread_mutex_t gUUIDMutex;
-
-#ifdef INCLUDE_CLIENT_APIS
-/*! Mutex to synchronize the subscription handling at the client side. */
-ithread_mutex_t GlobalClientSubscribeMutex;
-#endif /* INCLUDE_CLIENT_APIS */
 
 /*! Initialization mutex. */
 ithread_mutex_t gSDKInitMutex = PTHREAD_MUTEX_INITIALIZER;
@@ -192,6 +195,9 @@ unsigned short LOCAL_PORT_V6_ULA_GUA;
 
 /*! UPnP device and control point handle table  */
 static Handle_Info* HandleTable[NUM_HANDLE];
+
+/*! a local dir which serves as webserver root */
+extern membuffer gDocumentRootDir;
 
 /*! Maximum content-length (in bytes) that the SDK will process on an incoming
  * packet. Content-Length exceeding this size will be not processed and
@@ -907,9 +913,8 @@ exit_function:
 
     return retVal;
 }
-#endif /* INCLUDE_DEVICE_APIS */
+// #endif /* INCLUDE_DEVICE_APIS */ // Ingo: bugfix for compiling
 
-#ifdef INCLUDE_DEVICE_APIS
 /*!
  * \brief Fills the sockadr_in with miniserver information.
  */
@@ -926,9 +931,8 @@ static int GetDescDocumentAndURL(
     IXML_Document** xmlDoc,
     /* [out] . */
     char descURL[LINE_SIZE]);
-#endif /* INCLUDE_DEVICE_APIS */
 
-#ifdef INCLUDE_DEVICE_APIS
+// #ifdef INCLUDE_DEVICE_APIS // Ingo: bugfix for compiling
 int UpnpRegisterRootDevice2(Upnp_DescType descriptionType,
                             const char* description_const,
                             size_t bufferLen, /* ignored */
@@ -983,7 +987,7 @@ int UpnpRegisterRootDevice2(Upnp_DescType descriptionType,
     }
 
 #ifdef UPNPLIB_PUPNP_BUG
-    // Ingo - Error old code: output may be truncated copying 179 bytes from a
+    // Ingo: Error old code: output may be truncated copying 179 bytes from a
     // string of length 179 [-Werror=stringop-truncation].
     strncpy(HInfo->LowerDescURL, HInfo->DescURL,
             sizeof(HInfo->LowerDescURL) - 1);
@@ -1470,6 +1474,7 @@ static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
     char aliasStr[LINE_SIZE];
     char* temp_str = NULL;
     FILE* fp = NULL;
+    int fd;
     size_t fileLen;
     size_t num_read;
     time_t last_modified;
@@ -1491,29 +1496,57 @@ static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
             return retVal;
         last_modified = time(NULL);
     } else if (descriptionType == (enum Upnp_DescType_e)UPNPREG_FILENAME_DESC) {
-        retVal = stat(description, &file_info);
-        if (retVal == -1)
-            return UPNP_E_FILE_NOT_FOUND;
+        int ret = 0;
+
+#ifdef _WIN32
+        fopen_s(&fp, description, "rb");
+#else
+        fp = fopen(description, "rb");
+#endif
+        if (!fp) {
+            rc = UPNP_E_FILE_NOT_FOUND;
+            ret = 1;
+            goto exit_function1;
+        }
+        fd = fileno(fp);
+        if (fd == -1) {
+            rc = UPNP_E_FILE_NOT_FOUND;
+            ret = 1;
+            goto exit_function1;
+        }
+        retVal = fstat(fd, &file_info);
+        if (retVal == -1) {
+            rc = UPNP_E_FILE_NOT_FOUND;
+            ret = 1;
+            goto exit_function1;
+        }
         fileLen = (size_t)file_info.st_size;
         last_modified = file_info.st_mtime;
-        fp = fopen(description, "rb");
-        if (fp == NULL)
-            return UPNP_E_FILE_NOT_FOUND;
         membuf = (char*)malloc(fileLen + (size_t)1);
-        if (membuf == NULL) {
-            fclose(fp);
-            return UPNP_E_OUTOF_MEMORY;
+        if (!membuf) {
+            rc = UPNP_E_OUTOF_MEMORY;
+            ret = 1;
+            goto exit_function1;
         }
         num_read = fread(membuf, (size_t)1, fileLen, fp);
         if (num_read != fileLen) {
-            fclose(fp);
-            free(membuf);
-            return UPNP_E_FILE_READ_ERROR;
+            rc = UPNP_E_FILE_READ_ERROR;
+            ret = 1;
+            goto exit_function2;
         }
         membuf[fileLen] = 0;
-        fclose(fp);
         rc = ixmlParseBufferEx(membuf, xmlDoc);
-        free(membuf);
+    exit_function2:
+        if (membuf) {
+            free(membuf);
+        }
+    exit_function1:
+        if (fp) {
+            fclose(fp);
+        }
+        if (ret) {
+            return rc;
+        }
     } else if (descriptionType == (enum Upnp_DescType_e)UPNPREG_BUF_DESC) {
         last_modified = time(NULL);
         rc = ixmlParseBufferEx(description, xmlDoc);
@@ -3123,7 +3156,11 @@ int UpnpGetIfInfo(const char* IfName) {
              * not all) adapters. A full fix would require a lot of
              * big changes (gIF_NAME to wchar string?).
              */
-            wcstombs(gIF_NAME, adapts_item->FriendlyName, sizeof(gIF_NAME));
+            size_t* s = NULL;
+            wcstombs_s(s, gIF_NAME, sizeof(gIF_NAME), adapts_item->FriendlyName,
+                       sizeof(gIF_NAME));
+            free(s);
+
             ifname_found = 1;
         } else {
             /*
@@ -3134,7 +3171,12 @@ int UpnpGetIfInfo(const char* IfName) {
              * big changes (gIF_NAME to wchar string?).
              */
             char tmpIfName[LINE_SIZE] = {0};
-            wcstombs(tmpIfName, adapts_item->FriendlyName, sizeof(tmpIfName));
+            size_t* s = NULL;
+
+            wcstombs_s(s, tmpIfName, sizeof(tmpIfName),
+                       adapts_item->FriendlyName, sizeof(tmpIfName));
+            free(s);
+
             if (strncmp(gIF_NAME, tmpIfName, sizeof(gIF_NAME)) != 0) {
                 /* This is not the interface we're looking for.
                  */
@@ -3338,6 +3380,8 @@ int UpnpGetIfInfo(const char* IfName) {
  */
 #ifdef INCLUDE_CLIENT_APIS
 void UpnpThreadDistribution(struct UpnpNonblockParam* Param) {
+    // int errCode = 0; // Ingo: bugfix to compile
+
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                "Inside UpnpThreadDistribution \n");
 
@@ -3497,7 +3541,7 @@ GetDeviceHandleInfoForPath([[maybe_unused]] const char* path,
                            UpnpDevice_Handle* device_handle_out,
                            [[maybe_unused]] struct Handle_Info** HndInfo,
                            [[maybe_unused]] service_info** serv_info) {
-#if defined INCLUDE_DEVICE_APIS && EXCLUDE_SOAP == 0
+#ifdef INCLUDE_DEVICE_APIS
     /* Check if we've got a registered device of the address family
      * specified. */
     if ((AddressFamily == AF_INET && UpnpSdkDeviceRegisteredV4 == 0) ||
@@ -3523,7 +3567,7 @@ GetDeviceHandleInfoForPath([[maybe_unused]] const char* path,
             break;
         }
     }
-#endif /* defined INCLUDE_DEVICE_APIS && EXCLUDE_SOAP == 0 */
+#endif /* INCLUDE_DEVICE_APIS */
 
     *device_handle_out = -1;
     return HND_INVALID;
@@ -3652,7 +3696,7 @@ int UpnpAddVirtualDir(const char* newDirName, const void* cookie,
     pNewVirtualDir->cookie = cookie;
     memset(pNewVirtualDir->dirName, 0, sizeof(pNewVirtualDir->dirName));
 #ifdef UPNPLIB_PUPNP_BUG
-    // Ingo - Error old code: output may be truncated copying 255 bytes from a
+    // Ingo: Error old code: output may be truncated copying 255 bytes from a
     // string of length 255 [-Werror=stringop-truncation].
     strncpy(pNewVirtualDir->dirName, dirName,
             sizeof(pNewVirtualDir->dirName) - 1);

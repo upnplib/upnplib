@@ -46,16 +46,35 @@ jobs:
 
       - if: runner.os == 'Linux'
         name: Configure Linux
-        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Debug
+        run: >
+          cmake
+          -S .
+          -B build
+          -D CMAKE_C_COMPILER=gcc-10
+          -D CMAKE_CXX_COMPILER=g++-10
+          -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}}
+          -D CMAKE_BUILD_TYPE=Debug
 
       - if: runner.os == 'macOS'
         name: Configure macOS
         #run: cmake -S . -B build -D CMAKE_C_COMPILER=$(brew --prefix llvm)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm)/bin/clang++ -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Release
-        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Debug
+        run: >
+          cmake
+          -S .
+          -B build
+          -D CMAKE_C_COMPILER=gcc-10
+          -D CMAKE_CXX_COMPILER=g++-10
+          -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}}
+          -D CMAKE_BUILD_TYPE=Debug
 
       - if: runner.os == 'Windows'
         name: Configure Windows
-        run: cmake -S . -B build -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}} -D CMAKE_BUILD_TYPE=Debug
+        run: >
+          cmake
+          -S .
+          -B build
+          -D UPNPLIB_WITH_GOOGLETEST=ON ${{matrix.shared}}
+          -D CMAKE_BUILD_TYPE=Debug
 
       - name: Build
         run: cmake --build build --config Debug
@@ -93,7 +112,14 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Configure
-        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} -D UPNPLIB_WITH_TOOLS=YES
+        run: >
+          cmake
+          -S .
+          -B build
+          -D CMAKE_C_COMPILER=gcc-10
+          -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}} ${{matrix.shared}}
+          -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+          -D UPNPLIB_WITH_TOOLS=YES
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -173,7 +199,14 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Configure
-        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} -D UPNPLIB_WITH_TOOLS=YES --log-level=DEBUG
+        run: >
+          cmake
+          -S .
+          -B build
+          -D CMAKE_C_COMPILER=gcc-10
+          -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}} ${{matrix.shared}}
+          -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+          -D UPNPLIB_WITH_TOOLS=YES --log-level=DEBUG
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -272,11 +305,22 @@ jobs:
 
       - if: matrix.os == 'windows-2019'
         name: Configure 32 bit
-        run: cmake -S . -B build -A Win32 ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} -D UPNPLIB_WITH_TOOLS=YES
+        run: >
+          cmake
+          -S .
+          -B build
+          -A Win32 ${{matrix.googletest}} ${{matrix.shared}}
+          -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+          -D UPNPLIB_WITH_TOOLS=YES
 
       - if: matrix.os == 'windows-2022'
         name: Configure 64 bit
-        run: cmake -S . -B build ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} -D UPNPLIB_WITH_TOOLS=YES
+        run: >
+          cmake
+          -S .
+          -B build ${{matrix.googletest}} ${{matrix.shared}}
+          -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+          -D UPNPLIB_WITH_TOOLS=YES
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -356,7 +400,13 @@ jobs:
           arch: amd64
 
       - name: Configure
-        run: cmake -S . -B build -G "NMake Makefiles" ${{matrix.googletest}} ${{matrix.shared}} -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} -D UPNPLIB_WITH_TOOLS=YES
+        run: >
+          cmake
+          -S .
+          -B build
+          -G "NMake Makefiles" ${{matrix.googletest}} ${{matrix.shared}}
+          -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+          -D UPNPLIB_WITH_TOOLS=YES
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -444,15 +494,31 @@ jobs:
 
       - if: runner.os == 'Linux'
         name: Configure Linux
-        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
+        run: >
+          cmake
+          -S .
+          -B build
+          -D CMAKE_C_COMPILER=gcc-10
+          -D CMAKE_CXX_COMPILER=g++-10
+          -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
 
       - if: runner.os == 'macOS'
         name: Configure macOS
-        run: cmake -S . -B build -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
+        run: >
+          cmake
+          -S .
+          -B build
+          -D CMAKE_C_COMPILER=gcc-10
+          -D CMAKE_CXX_COMPILER=g++-10
+          -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
 
       - if: runner.os == 'Windows'
         name: Configure Windows
-        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
+        run: >
+          cmake
+          -S .
+          -B build
+          -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
