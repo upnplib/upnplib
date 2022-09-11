@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-11
+// Redistribution only with this Copyright remark. Last modified: 2022-09-11
 
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 #ifdef UPNP_HAVE_TOOLS
@@ -18,7 +18,50 @@ bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
 //
-TEST(UpnpapiTestSuite, initialization_preamble) {
+// The UpnpInit2() call stack to initialize the pupnp library
+//===========================================================
+/*
+clang-format off
+
+     UpnpInit2()
+     |__ ithread_mutex_lock()
+03)  |__ UpnpInitPreamble()
+04)  |   |__ WinsockInit() - only on _WIN32
+05)  |   |__ UpnpInitLog()
+     |   |__ UpnpInitMutexes()
+     |   |__ Initialize_handle_list
+08)  |   |__ UpnpInitThreadPools()
+     |   |__ SetSoapCallback() - if enabled
+     |   |__ SetGenaCallback() - if enabled
+11)  |   |__ TimerThreadInit()
+     |
+     |__ UpnpGetIfInfo()
+     |#ifdef _WIN32
+13)  |   |__ GetAdaptersAddresses() and interface info
+     |#else
+14)  |   |__ getifaddrs() and interface info
+     |   |__ freeifaddrs()
+     |#endif
+     |
+     |__ UpnpInitStartServers()
+17)  |   |__ StartMiniServer() - if enabled
+     |   |__ UpnpEnableWebserver() - if enabled
+     |
+     |__ ithread_mutex_unlock()
+clang-format on
+
+03) TEST(UpnpapiTestSuite, UpnpInitPreamble)
+04) TEST(UpnpapiTestSuite, WinsockInit)
+05) Tested with ./test_upnpdebug.cpp
+08) Tested with ./test_ThreadPool.cpp
+11) Tested with ./test_TimerThread.cpp
+13) Tested with ./test_upnpapi_win32.cpp
+14) Tested with ./test_upnpapi_unix.cpp
+17) Tested with ./test_miniserver.cpp
+*/
+
+//
+TEST(UpnpapiTestSuite, UpnpInitPreamble) {
     // Unset tested variables
     // ----------------------
     memset(&GlobalHndRWLock, 0xFF, sizeof(GlobalHndRWLock));
