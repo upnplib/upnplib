@@ -24,16 +24,16 @@ bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 clang-format off
 
      UpnpInit2()
-     |__ ithread_mutex_lock()
+03)  |__ ithread_mutex_lock()
 03)  |__ UpnpInitPreamble()
 04)  |   |__ WinsockInit() - only on _WIN32
 05)  |   |__ UpnpInitLog()
      |   |__ UpnpInitMutexes()
-     |   |__ Initialize_handle_list
-08)  |   |__ UpnpInitThreadPools()
+03)  |   |__ Initialize_handle_list
+03)  |   |__ UpnpInitThreadPools()
      |   |__ SetSoapCallback() - if enabled
      |   |__ SetGenaCallback() - if enabled
-11)  |   |__ TimerThreadInit()
+03)  |   |__ TimerThreadInit()
      |
      |__ UpnpGetIfInfo()
      |#ifdef _WIN32
@@ -53,7 +53,6 @@ clang-format on
 03) TEST(UpnpapiTestSuite, UpnpInitPreamble)
 04) TEST(UpnpapiTestSuite, WinsockInit)
 05) Tested with ./test_upnpdebug.cpp
-08) Tested with ./test_ThreadPool.cpp
 11) Tested with ./test_TimerThread.cpp
 13) Tested with ./test_upnpapi_win32.cpp
 14) Tested with ./test_upnpapi_unix.cpp
