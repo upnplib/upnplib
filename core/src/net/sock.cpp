@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-03
+// Redistribution only with this Copyright remark. Last modified: 2022-09-12
 
 #include "upnplib/sock.hpp"
 #include "upnpmock/sys_socket.hpp"
@@ -37,7 +37,7 @@ std::string SockAddr::addr_get() {
                   sizeof(buf_ntop));
     if (text_addr == nullptr)
         throw std::invalid_argument(
-            "UPNPLIB ERR. at */" +                                //
+            "UPnPlib ERR. at */" +                                //
             std::filesystem::path(__FILE__).filename().string() + //
             "[" + std::to_string(__LINE__) + "], " + __FUNCTION__ +
             "(), errid=" + std::to_string(errno) + ": " + std::strerror(errno));
@@ -57,7 +57,7 @@ std::string SocketAddr::addr_get(SOCKET a_sockfd) {
 
     if (rc == -1)
         throw std::runtime_error(
-            "UPNPLIB ERR. at */" +
+            "UPnPlib ERR. at */" +
             std::filesystem::path(__FILE__).filename().string() + "[" +
             std::to_string(__LINE__) + "], " + __FUNCTION__ + "(" +
             std::to_string(a_sockfd) + "), errid=" + std::to_string(errno) +

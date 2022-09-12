@@ -105,7 +105,7 @@ TEST(SocketAddrTestSuite, get_wrong_address) {
     // Test Unit
     EXPECT_THAT([&sock] { sock.addr_get(); },
                 ThrowsMessage<std::invalid_argument>(
-                    MatchesStdRegex("UPNPLIB ERR\\. at \\*/.+\\.cpp\\[\\d+\\], "
+                    MatchesStdRegex("UPnPlib ERR\\. at \\*/.+\\.cpp\\[\\d+\\], "
                                     ".*addr_get\\(\\), errid=\\d+: .+")));
 }
 
@@ -116,7 +116,7 @@ TEST(SocketAddrTestSuite, get_address_from_invalid_socket) {
     // Test Unit
     EXPECT_THAT(([&sock, sockfd] { sock.addr_get(sockfd); }),
                 ThrowsMessage<std::runtime_error>(
-                    MatchesStdRegex("UPNPLIB ERR\\. at \\*/.+\\.cpp\\[\\d+\\], "
+                    MatchesStdRegex("UPnPlib ERR\\. at \\*/.+\\.cpp\\[\\d+\\], "
                                     ".*addr_get\\(1101\\), errid=\\d+: .*")));
 }
 

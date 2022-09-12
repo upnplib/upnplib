@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-08
+// Redistribution only with this Copyright remark. Last modified: 2022-09-12
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
@@ -2021,20 +2021,20 @@ TEST(RunMiniServerTestSuite,
 
     // Get captured output
     std::string capturedStderr = captureObj.get();
-    if (old_code)
+    if (old_code) {
         EXPECT_TRUE(capturedStderr.empty());
-    else
-#ifdef DEBUG
+
+    } else {
+
         EXPECT_THAT(
             capturedStderr,
             MatchesStdRegex(
-                "UPNPLIB ERR\\. at \\*/.+\\.cpp\\[\\d+\\], "
+                "UPnPlib ERR\\. at \\*/.+\\.cpp\\[\\d+\\], "
                 ".*addr_get\\(\\d+\\), "
                 "errid=\\d+: systemcall getsockname\\(\\d+\\), [Nn]o buffer "
                 "space.*"));
-#else
-        EXPECT_TRUE(capturedStderr.empty());
-#endif
+    }
+
     EXPECT_STREQ(host_port, "<no message>");
 }
 
@@ -2077,13 +2077,9 @@ TEST(RunMiniServerTestSuite,
     } else {
 
         EXPECT_FALSE(ret_getNumericHostRedirection);
-#ifdef DEBUG
         EXPECT_THAT(capturedStderr,
-                    MatchesStdRegex("UPNPLIB ERR\\. at \\*/.+\\.cpp\\[\\d+\\], "
+                    MatchesStdRegex("UPnPlib ERR\\. at \\*/.+\\.cpp\\[\\d+\\], "
                                     ".*addr_get\\(\\), errid=\\d+: .+"));
-#else
-        EXPECT_TRUE(capturedStderr.empty());
-#endif
         EXPECT_STREQ(host_port, "<no message>");
     }
 }

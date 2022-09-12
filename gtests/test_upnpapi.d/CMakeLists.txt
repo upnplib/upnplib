@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-11
+# Redistribution only with this Copyright remark. Last modified: 2022-09-13
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -7,7 +7,6 @@ include(../../cmake/project-header.cmake)
 project(GTESTS_UPNPAPI VERSION 0001
                   DESCRIPTION "Tests for the upnpapi module"
                   HOMEPAGE_URL "https://github.com/upnplib")
-
 
 # upnpapi
 #========
