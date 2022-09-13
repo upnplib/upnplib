@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-11
+# Redistribution only with this Copyright remark. Last modified: 2022-09-14
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -449,10 +449,13 @@ add_test(NAME ctest_template COMMAND test_template)
 # miniserver
 #===========
 # Because we want to include the source file into the test to also test static
-# functions, we get definition conflicts if we use the libraries (function
-# already defined). That's why we have to compile from sources.
-#-----------------------------------------------------------------------------
+# functions, we cannot use shared libraries due to symbol import/export
+# conflicts. We must use static libraries.
+#if(FALSE)
+# Direct linking with source files currently not used but having available for
+# reference. We link against the internal upnplib libraries (see below).
 set(MINISERVER_SOURCE_FILES
+#--------------------------
     ./test_miniserver.cpp
 
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
@@ -501,12 +504,22 @@ set(MINISERVER_SOURCE_FILES
 #    ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
     $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 )
+#endif()
 
-add_executable(test_miniserver-pnsh
+add_executable(test_miniserver-pnst
 #----------------------------------
-    ${MINISERVER_SOURCE_FILES}
+# Needed to also compile additional sources instead of using that from the
+# internal library. Otherwise the compiler complains 'multiple definition' of
+# several symbols. I don't know why, don't understand the inscrutable
+# conditional compiling directives in the source code.
+    ./test_miniserver.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_server.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
+#ifdef UPNP_ENABLE_IPV6
+    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp
+#endif
 )
-target_include_directories(test_miniserver-pnsh
+target_include_directories(test_miniserver-pnst
     PRIVATE
         ./include
         ${UPnPlib_SOURCE_DIR}
@@ -520,7 +533,7 @@ target_include_directories(test_miniserver-pnsh
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_miniserver-pnsh
+target_compile_definitions(test_miniserver-pnst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
         UPNP_HAVE_CLIENT
@@ -528,22 +541,29 @@ target_compile_definitions(test_miniserver-pnsh
         UPNP_HAVE_SSDP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_miniserver-pnsh
+target_link_libraries(test_miniserver-pnst
     PRIVATE
-        $<$<PLATFORM_ID:Windows>:ixml_shared>
-        upnplib_native_shared
-        upnplib_gtest_tools_shared
+        pupnp_native_static
+        upnplib_native_static
+        upnplib_gtest_tools_static
 )
-add_test(NAME ctest_miniserver-pnsh COMMAND test_miniserver-pnsh
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+add_test(NAME ctest_miniserver-pnst COMMAND test_miniserver-pnst
 )
 
-add_executable(test_miniserver-ucsh
+add_executable(test_miniserver-ucst
 #----------------------------------
-        ${MINISERVER_SOURCE_FILES}
-        ${UPnPlib_SOURCE_DIR}/core/src/net/sock.cpp
+# Needed to also compile additional sources instead of using that from the
+# internal library. Otherwise the compiler complains 'multiple definition' of
+# several symbols. I don't know why, don't understand the inscrutable
+# conditional compiling directives in the source code.
+    ./test_miniserver.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_server.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
+#ifdef UPNP_ENABLE_IPV6
+    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp
+#endif
 )
-target_include_directories(test_miniserver-ucsh
+target_include_directories(test_miniserver-ucst
     PRIVATE
         ./include
         ${UPnPlib_SOURCE_DIR}
@@ -557,21 +577,20 @@ target_include_directories(test_miniserver-ucsh
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_miniserver-ucsh
+target_compile_definitions(test_miniserver-ucst
     PRIVATE
         UPNP_HAVE_CLIENT
         UPNP_HAVE_WEBSERVER
         UPNP_HAVE_SSDP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_miniserver-ucsh
+target_link_libraries(test_miniserver-ucst
     PRIVATE
-        $<$<PLATFORM_ID:Windows>:ixml_shared>
-        upnplib_native_shared
-        upnplib_gtest_tools_shared
+        upnplib_compa_static
+        upnplib_native_static
+        upnplib_gtest_tools_static
 )
-add_test(NAME ctest_miniserver-ucsh COMMAND test_miniserver-ucsh
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+add_test(NAME ctest_miniserver-ucst COMMAND test_miniserver-ucst
 )
 
 
