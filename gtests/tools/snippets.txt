@@ -1,6 +1,6 @@
-// Some some little helper code snippets
-//--------------------------------------
+// Some little helper code snippets
+//---------------------------------
 
     // Output text error message of errno
-    std::cerr << "DEBUG! errno " << errno << " = ";
+    std::clog << "DEBUG! errno " << errno << " = ";
     perror(nullptr);

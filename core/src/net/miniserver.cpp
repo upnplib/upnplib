@@ -193,10 +193,10 @@ static int getNumericHostRedirection(int socket, char* host_port,
     try {
         text_addr = sock.addr_get(socket);
     } catch (const std::invalid_argument& e) {
-        std::cerr << e.what();
+        std::clog << e.what();
         return false;
     } catch (const std::runtime_error& e) {
-        std::cerr << e.what();
+        std::clog << e.what();
         return false;
     }
 

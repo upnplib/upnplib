@@ -163,7 +163,7 @@ TEST(TimerThreadNormalTestSuite, schedule_timer_thread) {
 
 // Start function for remove_timer_thread
 void start_function2([[maybe_unused]] void* arg) {
-    std::cerr << "Executed start_function2. This should never "
+    std::cout << "Executed start_function2. This should never "
                  "occur.\nTestprogram exit.\n";
     exit(EXIT_FAILURE);
 }

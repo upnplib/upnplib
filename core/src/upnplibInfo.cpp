@@ -204,13 +204,13 @@ void* check_upnpdebug(void*) {
 
     int rc = ::UpnpInitLog();
     if (rc != UPNP_E_SUCCESS) {
-        std::cerr << "Error: UpnpInitLog() failed with return code = " << rc
+        std::clog << "Error: UpnpInitLog() failed with return code = " << rc
                   << std::endl;
         return (void*)1;
     }
     FILE* fd = ::UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL);
     if (fd != stderr) {
-        std::cerr << "Error! UpnpGetDebugFile(..) does not return \'stderr\' "
+        std::clog << "Error! UpnpGetDebugFile(..) does not return \'stderr\' "
                      "for output.\n";
         return (void*)2;
     }
@@ -254,7 +254,7 @@ int main() {
 
     rc = pthread_create(&thread_info, NULL, &upnplib::library_info, NULL);
     if (rc != 0) {
-        std::cerr << "Error! unable to create thread_info, " << rc << std::endl;
+        std::clog << "Error! unable to create thread_info, " << rc << std::endl;
         exit(1);
     }
 
@@ -262,7 +262,7 @@ int main() {
 
     rc = pthread_create(&thread_freelist, NULL, &upnplib::check_freelist, NULL);
     if (rc != 0) {
-        std::cerr << "Error! unable to create thread_freelist, " << rc
+        std::clog << "Error! unable to create thread_freelist, " << rc
                   << std::endl;
         exit(1);
     }
@@ -272,7 +272,7 @@ int main() {
     rc = pthread_create(&thread_upnpdebug, NULL, &upnplib::check_upnpdebug,
                         NULL);
     if (rc != 0) {
-        std::cerr << "Error! unable to create thread_upnpdebug, " << rc
+        std::clog << "Error! unable to create thread_upnpdebug, " << rc
                   << std::endl;
         exit(1);
     }
@@ -281,12 +281,12 @@ int main() {
     // -----------------------------
     rc = pthread_join(thread_info, &retval);
     if (rc != 0) {
-        std::cerr << "Error! Unable to join thread_info with rc=" << rc
+        std::clog << "Error! Unable to join thread_info with rc=" << rc
                   << std::endl;
         exit(1);
     }
     if (retval != NULL) {
-        std::cerr << "Error! Thread_info failed with retval="
+        std::clog << "Error! Thread_info failed with retval="
                   << ((int)(intptr_t)retval) << std::endl;
         exit((int)(intptr_t)retval);
     }
@@ -294,12 +294,12 @@ int main() {
 
     rc = pthread_join(thread_freelist, &retval);
     if (rc != 0) {
-        std::cerr << "Error! Unable to join thread_freelist with rc=" << rc
+        std::clog << "Error! Unable to join thread_freelist with rc=" << rc
                   << std::endl;
         exit(1);
     }
     if (retval != NULL) {
-        std::cerr << "Error! Thread_info failed with retval="
+        std::clog << "Error! Thread_info failed with retval="
                   << ((int)(intptr_t)retval) << std::endl;
         exit((int)(intptr_t)retval);
     }
@@ -307,12 +307,12 @@ int main() {
 
     rc = pthread_join(thread_upnpdebug, &retval);
     if (rc != 0) {
-        std::cerr << "Error! Unable to join thread_upnpdebug with rc=" << rc
+        std::clog << "Error! Unable to join thread_upnpdebug with rc=" << rc
                   << std::endl;
         exit(1);
     }
     if (retval != NULL) {
-        std::cerr << "Error! Thread_upnpdebug failed with retval="
+        std::clog << "Error! Thread_upnpdebug failed with retval="
                   << ((int)(intptr_t)retval) << std::endl;
         exit((int)(intptr_t)retval);
     }

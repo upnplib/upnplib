@@ -102,7 +102,7 @@ The footer is optional and is used to reference issue tracker IDs.
 
     Put references to an issue at the bottom, like this:
 
-    Resolves: #123
+    Resolves issue: #123
     See also: #456, #789
 
 ## Template for a TEST header
@@ -168,5 +168,5 @@ C++ provides Visibility Support as powerful optimization. We use it as described
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2022-08-25
+// Redistribution only with this Copyright remark. Last modified: 2022-09-14
 </sup></sup>
