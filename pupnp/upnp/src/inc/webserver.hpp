@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-06-06
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-15
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,9 +36,7 @@
 
 #include "httpparser.hpp"
 #include "sock.hpp"
-
 //#include <time.h>
-#include <sys/types.h> // needed for off_t
 
 struct SendInstruction {
     int IsVirtualFile;
@@ -60,9 +58,6 @@ struct SendInstruction {
      * on the requirement.*/
 };
 
-/*! Global variable. A local dir which serves as webserver root. */
-EXPORT_SPEC extern membuffer gDocumentRootDir;
-
 /*!
  * \brief Initilialize the different documents. Initialize the memory
  * for root directory for web server. Call to initialize global XML
@@ -71,7 +66,7 @@ EXPORT_SPEC extern membuffer gDocumentRootDir;
  * \note alias_content is not freed here
  *
  * \return
- * \li \c 0 - OK
+ * \li \c UPNP_E_SUCCESS
  * \li \c UPNP_E_OUTOF_MEMORY
  */
 EXPORT_SPEC int web_server_init(void);
@@ -102,7 +97,8 @@ EXPORT_SPEC int web_server_set_alias(
     const char* alias_content,
     /*! [in] Length of alias body in bytes. */
     size_t alias_content_length,
-    /*! [in] Time when the contents of alias were last changed (local time). */
+    /*! [in] Time when the contents of alias were last changed (local time).
+     */
     time_t last_modified);
 
 /*!

@@ -1,10 +1,10 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-02
+# Redistribution only with this Copyright remark. Last modified: 2022-09-16
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(GTESTS_HTTPREADWRITE VERSION 0001
+project(GTESTS_HTTPREADWRITE VERSION 0002
                   DESCRIPTION "Tests for the upnplib httpreadwrite module"
                   HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -78,6 +78,10 @@ add_test(NAME ctest_httpreadwrite-pnst COMMAND test_httpreadwrite-pnst
 
 # httpreadwrite: netconnect
 #==========================
+# This is also part of httpreadwrite but splitted to have a better overview.
+# It's intended to make netconnect a separate modul because it seems to be a
+# general base function.
+#
 # Because we want to include the source file into the test to also test static
 # functions, we cannot use shared libraries due to symbol import/export
 # conflicts. We must use static libraries.
@@ -137,4 +141,95 @@ target_link_libraries(test_netconnect-pnst
         pupnp_native_static
 )
 add_test(NAME ctest_netconnect-pnst COMMAND test_netconnect-pnst
+)
+
+
+# httpparser
+#===========
+# Because we want to include the source file into the test to also test static
+# functions, we cannot use shared libraries due to symbol import/export
+# conflicts. We must use static libraries.
+if(FALSE)
+# Direct linking with source files currently not used but having available for
+# reference. We link against the internal upnplib libraries (see below).
+add_executable(test_httpparser-pnst
+    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+    ./tools/mockObj.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
+    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
+
+    ./test_httpparser.cpp
+)
+endif()
+
+add_executable(test_httpparser-pnst
+    ./test_httpparser.cpp
+)
+target_include_directories(test_httpparser-pnst
+    PRIVATE
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${UPnPlib_SOURCE_DIR}
+        ${UPnPlib_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
+        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+        # if pthreads4w isn't installed this path is empty. The linker
+        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+)
+target_compile_definitions(test_httpparser-pnst
+    PRIVATE
+        UPNPLIB_WITH_NATIVE_PUPNP
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+)
+target_link_libraries(test_httpparser-pnst
+        PRIVATE
+            pupnp_native_static
+)
+add_test(NAME ctest_httpparser-pnst COMMAND test_httpparser-pnst
+)
+
+
+# webserver
+#==========
+# Because we want to include the source file into the test to also test static
+# functions, we cannot use shared libraries due to symbol import/export
+# conflicts. We must use static libraries.
+add_executable(test_webserver-pnst
+    ./test_webserver.cpp
+)
+target_include_directories(test_webserver-pnst
+    PRIVATE
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${UPnPlib_SOURCE_DIR}
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
+        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+        # if pthreads4w isn't installed this path is empty. The linker
+        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+)
+target_compile_definitions(test_webserver-pnst
+    PRIVATE
+        UPNPLIB_WITH_NATIVE_PUPNP
+        UPNP_HAVE_WEBSERVER
+        UPNP_HAVE_DEVICE
+        UPNP_HAVE_SOAP
+        UPNP_HAVE_SSDP
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+)
+target_link_libraries(test_webserver-pnst
+        PRIVATE
+            pupnp_native_static
+)
+add_test(NAME ctest_webserver-pnst COMMAND test_webserver-pnst
 )

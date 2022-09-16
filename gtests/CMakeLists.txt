@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-14
+# Redistribution only with this Copyright remark. Last modified: 2022-09-15
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -180,59 +180,6 @@ target_compile_definitions(test_membuffer
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 add_test(NAME ctest_membuffer COMMAND test_membuffer
-)
-
-
-# httpparser
-#===========
-# Because we want to include the source file into the test to also test static
-# functions, we cannot use shared libraries due to symbol import/export
-# conflicts. We must use static libraries.
-if(FALSE)
-# Direct linking with source files currently not used but having available for
-# reference. We link against the internal upnplib libraries (see below).
-add_executable(test_httpparser-pnst
-    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-    ./tools/mockObj.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
-    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
-
-    ./test_httpparser.cpp
-)
-endif()
-
-add_executable(test_httpparser-pnst
-    ./test_httpparser.cpp
-)
-target_include_directories(test_httpparser-pnst
-    PRIVATE
-        ./include
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
-        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
-)
-target_compile_definitions(test_httpparser-pnst
-    PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
-)
-target_link_libraries(test_httpparser-pnst
-        PRIVATE
-            pupnp_native_static
-)
-add_test(NAME ctest_httpparser-pnst COMMAND test_httpparser-pnst
 )
 
 
@@ -595,7 +542,7 @@ add_test(NAME ctest_miniserver-ucst COMMAND test_miniserver-ucst
 
 
 add_subdirectory(./test_uri.d)
-add_subdirectory(./test_httpreadwrite.d)
+add_subdirectory(./test_http.d)
 add_subdirectory(./test_upnpapi.d)
 add_subdirectory(./test_threadutil.d)
 add_subdirectory(./upnplib_native)

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-11
+// Redistribution only with this Copyright remark. Last modified: 2022-09-16
 
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 #ifdef UPNP_HAVE_TOOLS
@@ -13,7 +13,6 @@
 using ::upnplib::testing::MatchesStdRegex;
 
 namespace upnplib {
-
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
@@ -46,6 +45,10 @@ clang-format off
      |__ UpnpInitStartServers()
 17)  |   |__ StartMiniServer() - if enabled
      |   |__ UpnpEnableWebserver() - if enabled
+     |       |__ if WEB_SERVER_ENABLED
+     |              web_server_init()
+     |           else
+     |              web_server_destroy()
      |
      |__ ithread_mutex_unlock()
 clang-format on
@@ -60,6 +63,8 @@ clang-format on
 */
 
 //
+// upnpapi TestSuites
+// ==================
 TEST(UpnpapiTestSuite, UpnpInitPreamble) {
     // Unset tested variables
     // ----------------------
@@ -187,8 +192,38 @@ TEST(UpnpapiTestSuite, UpnpFinish_without_initialization) {
     }
 }
 
-TEST(UpnpapiTestSuite, UpnpEnableWebserver) { //
-    GTEST_SKIP() << "  # Next TODO";
+TEST(UpnpEnableWebserverTestSuite, successful_call) {
+    UpnpSdkInit = 1;
+    bWebServerState = WEB_SERVER_DISABLED;
+
+    // Test Unit
+    int ret_UpnpEnableWebserver = UpnpEnableWebserver(WEB_SERVER_ENABLED);
+    EXPECT_EQ(ret_UpnpEnableWebserver, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpEnableWebserver, UPNP_E_SUCCESS);
+
+    EXPECT_EQ(bWebServerState, WEB_SERVER_ENABLED);
+}
+
+TEST(UpnpEnableWebserverTestSuite, sdk_not_initialized) {
+    UpnpSdkInit = 0;
+    bWebServerState = WEB_SERVER_DISABLED;
+
+    // Test Unit
+    int ret_UpnpEnableWebserver = UpnpEnableWebserver(WEB_SERVER_ENABLED);
+    EXPECT_EQ(ret_UpnpEnableWebserver, UPNP_E_FINISH)
+        << errStrEx(ret_UpnpEnableWebserver, UPNP_E_FINISH);
+}
+
+TEST(UpnpEnableWebserverTestSuite, web_server_disabled) {
+    UpnpSdkInit = 1;
+    bWebServerState = WEB_SERVER_ENABLED;
+
+    // Test Unit
+    int ret_UpnpEnableWebserver = UpnpEnableWebserver(WEB_SERVER_DISABLED);
+    EXPECT_EQ(ret_UpnpEnableWebserver, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpEnableWebserver, UPNP_E_SUCCESS);
+
+    EXPECT_EQ(bWebServerState, WEB_SERVER_DISABLED);
 }
 
 } // namespace upnplib
