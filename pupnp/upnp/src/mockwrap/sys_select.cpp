@@ -30,7 +30,8 @@ int Sys_select::select(int nfds, fd_set* readfds, fd_set* writefds,
     return m_ptr_workerObj->select(nfds, readfds, writefds, exceptfds, timeout);
 }
 
-// On program start inject pointer to the real function.
+// On program start create an object and inject pointer to the real function.
+// This will exist until program end.
 Sys_selectReal sys_select_realObj;
 Sys_select sys_select_h(&sys_select_realObj);
 

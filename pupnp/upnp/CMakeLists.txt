@@ -151,6 +151,7 @@ set(PUPNP_SOURCE_FILES
 
     ./src/global.cpp
     ./src/mockwrap/sys_select.cpp
+    $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mockwrap/ifaddrs.cpp>
     ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp
     $<$<BOOL:${WIN32}>:${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj_win32.cpp>
     $<$<NOT:$<BOOL:${WIN32}>>:${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj_unix.cpp>

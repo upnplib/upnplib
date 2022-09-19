@@ -8,6 +8,7 @@
 
 #include "upnplib/upnptools.hpp" // For upnplib_native only
 #include "upnplib/gtest_tools_unix.hpp"
+#include "mockwrap/ifaddrs.hpp"
 
 #include "gmock/gmock.h"
 #include "upnplib/gtest.hpp"
@@ -20,23 +21,17 @@ using ::testing::SetArgPointee;
 
 using ::upnplib::testing::CaptureStdOutErr;
 
+using ::mockwrap::Ifaddrs;
+using ::mockwrap::IfaddrsInterface;
+
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 //
-class Mock_ifaddrs : public Bifaddrs {
-    // Class to mock the free system functions.
-    Bifaddrs* m_oldptr;
-
+class IfaddrsMock : public IfaddrsInterface {
   public:
-    // Save and restore the old pointer to the production function
-    Mock_ifaddrs() {
-        m_oldptr = ifaddrs_h;
-        ifaddrs_h = this;
-    }
-    virtual ~Mock_ifaddrs() override { ifaddrs_h = m_oldptr; }
-
+    virtual ~IfaddrsMock() override {}
     MOCK_METHOD(int, getifaddrs, (struct ifaddrs**), (override));
     MOCK_METHOD(void, freeifaddrs, (struct ifaddrs*), (override));
 };
@@ -67,7 +62,7 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
 {
   protected:
     // Provide mocked functions
-    Mock_ifaddrs m_mocked_ifaddrs;
+    IfaddrsMock m_mocked_ifaddrs;
     Mock_net_if m_mocked_net_if;
 
     // constructor of this testsuite
@@ -93,6 +88,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
     ifaddr = ifaddr4Obj.get();
     EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
 
+    Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
     EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
     EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);
@@ -132,6 +128,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     ifaddr = ifaddr4Obj.get();
     EXPECT_STREQ(ifaddr->ifa_name, "eth0");
 
+    Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
     EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
     EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);
@@ -189,6 +186,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_default_initialization) {
     EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
 
     // expect calls to system functions (which are mocked)
+    Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
     EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
     EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);

@@ -57,7 +57,7 @@
 #ifdef _WIN32
 #include "upnpmock/iphlpapi_win32.hpp"
 #else
-#include "upnpmock/ifaddrs.hpp"
+#include "mockwrap/ifaddrs.hpp"
 #include "upnpmock/net_if.hpp"
 #endif
 
@@ -3258,7 +3258,7 @@ int UpnpGetIfInfo(const char* IfName) {
         ifname_found = 1;
     }
     /* Get system interface addresses. */
-    if (upnplib::ifaddrs_h->getifaddrs(&ifap) != 0) {
+    if (mockwrap::ifaddrs_h.getifaddrs(&ifap) != 0) {
         UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
                    "getifaddrs failed to find list of addresses\n");
         return UPNP_E_INIT;
@@ -3340,7 +3340,7 @@ int UpnpGetIfInfo(const char* IfName) {
             break;
         }
     }
-    upnplib::ifaddrs_h->freeifaddrs(ifap);
+    mockwrap::ifaddrs_h.freeifaddrs(ifap);
     /* Failed to find a valid interface, or valid address. */
     if (ifname_found == 0 ||
         (valid_v4_addr_found == 0 && valid_v6_addr_found == 0 &&

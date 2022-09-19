@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_UPNPGLOBAL_HPP
 #define UPNPLIB_UPNPGLOBAL_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-24
+// Redistribution only with this Copyright remark. Last modified: 2022-09-19
 // Taken from authors who haven't made a note.
 
 /*!
@@ -174,6 +174,7 @@ typedef __int64 int64_t;
 
 // Switch old pupnp definition to use new visibility support
 #define EXPORT_SPEC UPNPLIB_API
+#define EXPORT_SPEC_LOCAL UPNPLIB_LOCAL
 
 // clang-format on
 

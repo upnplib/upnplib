@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-19
+# Redistribution only with this Copyright remark. Last modified: 2022-09-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -16,6 +16,7 @@ if(NOT WIN32)
             ./src/net/miniserver.cpp
             ./src/init.cpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/mockwrap/sys_select.cpp
+            ${PUPNP_UPNP_SOURCE_DIR}/src/mockwrap/ifaddrs.cpp
     )
     set_target_properties(upnplib_compa_shared PROPERTIES
             OUTPUT_NAME upnplib_compa
@@ -47,6 +48,7 @@ if(NOT WIN32)
             ./src/net/miniserver.cpp
             ./src/init.cpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/mockwrap/sys_select.cpp
+            ${PUPNP_UPNP_SOURCE_DIR}/src/mockwrap/ifaddrs.cpp
     )
     set_target_properties(upnplib_compa_static PROPERTIES
             OUTPUT_NAME upnplib_compa

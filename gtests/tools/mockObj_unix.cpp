@@ -10,13 +10,9 @@
 //
 // For further information look at the header files in upnp/include/upnpmock/.
 
-#include "upnpmock/ifaddrs.hpp"
 #include "upnpmock/net_if.hpp"
 
 namespace upnplib {
-
-Bifaddrs ifaddrsObj{};
-Bifaddrs* ifaddrs_h = &ifaddrsObj;
 
 Bnet_if net_ifObj{};
 Bnet_if* net_if_h = &net_ifObj;

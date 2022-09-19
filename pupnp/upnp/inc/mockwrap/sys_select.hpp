@@ -1,5 +1,5 @@
-#ifndef UPNPLIB_SYS_SELECTIF_HPP
-#define UPNPLIB_SYS_SELECTIF_HPP
+#ifndef MOCKWRAP_SYS_SELECT_HPP
+#define MOCKWRAP_SYS_SELECT_HPP
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-09-19
 
@@ -70,4 +70,4 @@ extern Sys_select UPNPLIB_API sys_select_h;
 
 } // namespace mockwrap
 
-#endif // UPNPLIB_SYS_SELECTIF_HPP
+#endif // MOCKWRAP_SYS_SELECT_HPP
