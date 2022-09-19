@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-10
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -203,11 +203,11 @@ static int sock_read_write(
         // seen an endless loop here with old contents of errno.
         // errno = 0;
         if (*timeoutSecs < 0) {
-            retCode = upnplib::sys_select_h->select(sockfd + 1, &readSet,
-                                                    &writeSet, NULL, NULL);
+            retCode = upnplib::sys_select_h.select(sockfd + 1, &readSet,
+                                                   &writeSet, NULL, NULL);
         } else {
-            retCode = upnplib::sys_select_h->select(sockfd + 1, &readSet,
-                                                    &writeSet, NULL, &timeout);
+            retCode = upnplib::sys_select_h.select(sockfd + 1, &readSet,
+                                                   &writeSet, NULL, &timeout);
         }
         if (retCode == 0)
             return UPNP_E_TIMEDOUT;

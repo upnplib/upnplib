@@ -1,9 +1,9 @@
 #ifndef UPNPLIB_SYS_SELECTIF_HPP
 #define UPNPLIB_SYS_SELECTIF_HPP
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-01
+// Redistribution only with this Copyright remark. Last modified: 2022-09-19
 
-#include "UpnpGlobal.hpp" // for EXPORT_SPEC
+#include "upnplib/visibility.hpp"
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -13,54 +13,60 @@
 
 namespace upnplib {
 
-class Bsys_select {
-    // Real class to call the system functions
+class Sys_selectInterface {
   public:
-    virtual ~Bsys_select() {}
-
+    virtual ~Sys_selectInterface() {}
     virtual int select(int nfds, fd_set* readfds, fd_set* writefds,
-                       fd_set* exceptfds, struct timeval* timeout) {
-        return ::select(nfds, readfds, writefds, exceptfds, timeout);
-    }
+                       fd_set* exceptfds, struct timeval* timeout) = 0;
 };
 
-// Global pointer to the current object (real or mocked), will be modified by
-// the constructor of the mock object.
-EXPORT_SPEC extern Bsys_select* sys_select_h;
-
-// In the production code you just prefix the old system call with
-// 'upnplib::sys_select_h->' so the new call looks like this:
-//  upnplib::sys_select_h->select(..)
-
-/* clang-format off
- * The following class should be copied to the test source. You do not need to
- * copy all MOCK_METHOD, only that are acually used. It is not a good
- * idea to move it here to the header. It uses googletest macros and you always
- * have to compile the code with googletest even for production and not used.
-
-class Mock_sys_select : public Bsys_select {
-    // Class to mock the free system functions.
-    Bsys_select* m_oldptr;
-
+//
+// This is the wrapper class for the real (library?) function
+// ----------------------------------------------------------
+class Sys_selectReal : public Sys_selectInterface {
   public:
-    // Save and restore the old pointer to the production function
-    Mock_sys_select() { m_oldptr = sys_select_h; sys_select_h = this; }
-    virtual ~Mock_sys_select() override { sys_select_h = m_oldptr; }
-
-    MOCK_METHOD(int, select,
-                (int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds,
-                 struct timeval* timeout),
-                (override));
+    virtual ~Sys_selectReal() override {}
+    virtual int select(int nfds, fd_set* readfds, fd_set* writefds,
+                       fd_set* exceptfds, struct timeval* timeout) override;
 };
 
- * In a gtest you will instantiate the Mock class, maybe as protected member
- * variable at the constructor of the testsuite:
+//
+// This is the caller or injector class that injects the class (worker) to be
+// used, real or mocked functions.
+/* Example:
+    Sys_selectReal sys_select_realObj;
+    Sys_select(&sys_select_realObj;
+    { // Other scope, e.g. within a gtest
+        class Sys_selectMock { ...; MOCK_METHOD(...) };
+        Sys_selectMock sys_select_mockObj;
+        Sys_select(&sys_select_mockObj);
+    } // End scope, mock objects are destructed, worker restored to default.
+*///------------------------------------------------------------------------
+class UPNPLIB_API Sys_select {
+  public:
+    // This constructor is used to inject the pointer to the real function. It
+    // sets the default used class, that is the real function.
+    Sys_select(Sys_selectReal* a_ptr_mockObj);
 
-    Mock_sys_select m_mocked_sys_select;
+    // This constructor is used to inject the pointer to the mocking function.
+    Sys_select(Sys_selectInterface* a_ptr_mockObj);
 
- *  and call it with: m_mocked_sys_select.select(..)
- * clang-format on
-*/
+    // The destructor is ussed to restore the default pointer.
+    virtual ~Sys_select();
+
+    int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds,
+               struct timeval* timeout);
+
+  private:
+    // Must be static to be also available on a new constructed object.
+    // With inline we do not need an extra definition line outside the class.
+    // I also make the symbol hidden so the variable cannot be accessed globaly
+    // with Sys_select::m_ptr_workerObj.
+    UPNPLIB_LOCAL static inline Sys_selectInterface* m_ptr_workerObj;
+    Sys_selectInterface* m_ptr_oldObj{};
+};
+
+extern Sys_select UPNPLIB_API sys_select_h;
 
 } // namespace upnplib
 

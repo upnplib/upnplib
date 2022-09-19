@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-24
+// Redistribution only with this Copyright remark. Last modified: 2022-09-19
 
 #include "upnplib/httpreadwrite.hpp"
 
@@ -38,8 +38,8 @@ extern size_t g_maxContentLength;
 
     if (connect_res < 0) {
         if (WSAEWOULDBLOCK == upnplib::winsock2_h->WSAGetLastError()) {
-            result = upnplib::sys_select_h->select(sock + 1, NULL, &fdSet, NULL,
-                                                   &tmvTimeout);
+            result = upnplib::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
+                                                  &tmvTimeout);
             if (result < 0) {
                 return -1;
             } else if (result == 0) {
@@ -60,8 +60,8 @@ extern size_t g_maxContentLength;
 
     if (connect_res < 0) {
         if (EINPROGRESS == errno) {
-            result = upnplib::sys_select_h->select(sock + 1, NULL, &fdSet, NULL,
-                                                   &tmvTimeout);
+            result = upnplib::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
+                                                  &tmvTimeout);
             if (result < 0) {
                 return -1;
             } else if (result == 0) {

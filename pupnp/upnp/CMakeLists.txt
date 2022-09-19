@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-15
+# Redistribution only with this Copyright remark. Last modified: 2022-09-19
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -150,6 +150,7 @@ set(PUPNP_SOURCE_FILES
     $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_WEBSERVER}>>:./src/urlconfig/urlconfig.cpp>
 
     ./src/global.cpp
+    ${UPnPlib_SOURCE_DIR}/gtests/upnpmock/sys_select.cpp
     ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp
     $<$<BOOL:${WIN32}>:${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj_win32.cpp>
     $<$<NOT:$<BOOL:${WIN32}>>:${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj_unix.cpp>

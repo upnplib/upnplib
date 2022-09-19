@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-18
+// Redistribution only with this Copyright remark. Last modified: 2022-09-19
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -49,23 +49,16 @@ class Mock_sys_socket : public Bsys_socket {
                 (override));
 };
 
-class Mock_sys_select : public Bsys_select {
-    // Class to mock the free system functions.
-    Bsys_select* m_oldptr;
-
+class Sys_selectMock : public Sys_selectInterface {
   public:
-    // Save and restore the old pointer to the production function
-    Mock_sys_select() {
-        m_oldptr = sys_select_h;
-        sys_select_h = this;
-    }
-    virtual ~Mock_sys_select() override { sys_select_h = m_oldptr; }
-
+    virtual ~Sys_selectMock() override {}
     MOCK_METHOD(int, select,
                 (int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds,
                  struct timeval* timeout),
                 (override));
 };
+// Create global mocking object, valid for all tests in this file.
+class Sys_selectMock mock_sys_selectObj;
 
 class Mock_pupnp : public Bpupnp {
     // Class to mock the free system functions.
@@ -465,7 +458,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, successful_connect) {
 
     // Configure expected system calls.
     // select()
-    Mock_sys_select mock_sys_selectObj;
+    Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1));
@@ -491,7 +484,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, wrong_connect_retval) {
 
     // Configure expected system calls.
     // select()
-    Mock_sys_select mock_sys_selectObj;
+    Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
     // WSAGetLastError
     Mock_winsock2 mock_winsock2Obj;
@@ -514,7 +507,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, connect_error) {
 
     // Configure expected system calls.
     // select()
-    Mock_sys_select mock_sys_selectObj;
+    Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
     // WSAGetLastError WSAEBADF = "File handle is not valid."
     Mock_winsock2 mock_winsock2Obj;
@@ -537,7 +530,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_times_out) {
 
     // Configure expected system calls.
     // select() returns 0, that is timeout
-    Mock_sys_select mock_sys_selectObj;
+    Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(0));
@@ -563,7 +556,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_error) {
 
     // Configure expected system calls.
     // select() returns -1, that is failure
-    Mock_sys_select mock_sys_selectObj;
+    Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(-1));
@@ -613,7 +606,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, successful_connect) {
 
     // Configure expected system calls.
     // select()
-    Mock_sys_select mock_sys_selectObj;
+    Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1));
@@ -641,7 +634,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, wrong_connect_retval) {
 
     // Configure expected system calls.
     // select()
-    Mock_sys_select mock_sys_selectObj;
+    Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
     // getsockopt
     Mock_sys_socket mock_sys_socketObj;
@@ -665,7 +658,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, connect_error) {
 
     // Configure expected system calls.
     // select()
-    Mock_sys_select mock_sys_selectObj;
+    Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
     // getsockopt
     Mock_sys_socket mock_sys_socketObj;
@@ -689,7 +682,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_times_out) {
 
     // Configure expected system calls.
     // select()
-    Mock_sys_select mock_sys_selectObj;
+    Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(0));
@@ -717,7 +710,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_error) {
 
     // Configure expected system calls.
     // select() returns -1, that is failure
-    Mock_sys_select mock_sys_selectObj;
+    Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(-1));
@@ -745,7 +738,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, sockoption_error) {
 
     // Configure expected system calls.
     // select() returns 1, that means one socket is ready for writing
-    Mock_sys_select mock_sys_selectObj;
+    Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1));
@@ -773,7 +766,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, getsockopt_error) {
 
     // Configure expected system calls.
     // select()
-    Mock_sys_select mock_sys_selectObj;
+    Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1));

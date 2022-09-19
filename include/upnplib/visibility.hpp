@@ -1,11 +1,13 @@
 #ifndef UPNPLIB_INCLUDE_VISIBILITY_HPP
 #define UPNPLIB_INCLUDE_VISIBILITY_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-21
+// Redistribution only with this Copyright remark. Last modified: 2022-09-19
 
 // C++ visibility support
 //-----------------------
 // Reference: https://gcc.gnu.org/wiki/Visibility
+// List all exported symbols with: nm -C -D <library>.so
+
 // Generic helper definitions for shared library support
 // clang-format off
 #if defined _WIN32 || defined __CYGWIN__

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-17
+// Redistribution only with this Copyright remark. Last modified: 2022-08-19
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -107,18 +107,9 @@ class Mock_sys_socket : public Bsys_socket {
     MOCK_METHOD(int, shutdown, (int sockfd, int how), (override));
 };
 
-class Mock_sys_select : public Bsys_select {
-    // Class to mock the free system functions.
-    Bsys_select* m_oldptr;
-
+class Sys_selectMock : public Sys_selectInterface {
   public:
-    // Save and restore the old pointer to the production function
-    Mock_sys_select() {
-        m_oldptr = sys_select_h;
-        sys_select_h = this;
-    }
-    virtual ~Mock_sys_select() override { sys_select_h = m_oldptr; }
-
+    virtual ~Sys_selectMock() override {}
     MOCK_METHOD(int, select,
                 (int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds,
                  struct timeval* timeout),
@@ -180,8 +171,8 @@ class SockFTestSuite : public ::testing::Test {
 
     // Instantiate mock objects
     Mock_sys_socket m_mock_sys_socketObj;
-    Mock_sys_select m_mock_sys_selectObj;
     Mock_unistd m_mock_unistdObj;
+    Sys_selectMock m_mock_sys_selectObj;
 
     // Dummy socket, if we do not need a real one due to mocking
     const ::SOCKET m_socketfd{147};
@@ -350,6 +341,7 @@ TEST_F(SockFTestSuite, sock_destroy_inval_fd_shutdown_fails_close_fails_not_0) {
 TEST_F(SockFTestSuite, sock_read_no_timeout) {
     // Configure expected system calls that will return a received message.
     // select()
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     EXPECT_CALL(m_mock_sys_selectObj,
                 select(m_socketfd + 1, NotNull(), _, NULL, NULL))
         .WillOnce(Return(1));
@@ -360,7 +352,7 @@ TEST_F(SockFTestSuite, sock_read_no_timeout) {
                             received_msg, received_msg + sizeof(received_msg)),
                         Return(sizeof(received_msg))));
 
-    // Process the Unit
+    // Test Unit
     char buffer[sizeof(received_msg)]{};
     int timeoutSecs{-1}; // -1 Blocks indefinitely waiting for a socket
                          // descriptor to become ready.
@@ -374,6 +366,7 @@ TEST_F(SockFTestSuite, sock_read_no_timeout) {
 TEST_F(SockFTestSuite, sock_read_within_timeout) {
     // Configure expected system calls that will return a received message.
     // select()
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     EXPECT_CALL(m_mock_sys_selectObj,
                 select(m_socketfd + 1, NotNull(), _, NULL, NotNull()))
         .WillOnce(Return(1));
@@ -397,6 +390,7 @@ TEST_F(SockFTestSuite, sock_read_within_timeout) {
 TEST_F(SockFTestSuite, sock_read_with_connection_error) {
     // Configure expected system calls.
     // select()
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     EXPECT_CALL(m_mock_sys_selectObj,
                 select(m_socketfd + 1, NotNull(), _, NULL, NotNull()))
         .WillOnce(Return(-1));
@@ -422,6 +416,7 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
                    "(Search 'BUG!')\n";
 
     // Configure expected system calls. select()
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     EXPECT_CALL(m_mock_sys_selectObj,
                 select(m_socketfd + 1, NotNull(), _, NULL, NotNull()))
         .WillOnce(Return(-1)) // Signal catched
@@ -447,6 +442,7 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
 TEST_F(SockFTestSuite, sock_read_with_receiving_error) {
     // Configure expected system calls that will return a received message.
     // select()
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     EXPECT_CALL(m_mock_sys_selectObj,
                 select(m_socketfd + 1, NotNull(), _, NULL, NotNull()))
         .WillOnce(Return(1));
@@ -477,6 +473,7 @@ TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_socket_info) {
 
         // Configure expected system calls should never called.
         // select()
+        Sys_select mock_this_Obj(&m_mock_sys_selectObj);
         EXPECT_CALL(m_mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
         // recv()
         EXPECT_CALL(m_mock_sys_socketObj, recv(_, _, _, _)).Times(0);
@@ -501,6 +498,7 @@ TEST_F(SockFTestSuite, sock_read_with_empty_socket_info) {
         GTEST_SKIP() << "             known failing test on Github Actions";
 
     // Configure expected system calls that will return a received message.
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     if (old_code) {
         // select()
         ::std::cout << "  BUG! System function 'select()' must not be called. "
@@ -539,6 +537,7 @@ TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_0_byte_length)
     if (github_actions && !old_code)
         GTEST_SKIP() << "             known failing test on Github Actions";
 
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     if (old_code) {
         // Configure expected system calls should never called.
         // select()
@@ -601,6 +600,7 @@ TEST_F(SockFTestSuite, sock_read_with_valid_buffer_but_0_byte_length)
     if (github_actions && !old_code)
         GTEST_SKIP() << "             known failing test on Github Actions";
 
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     if (old_code) {
         // Configure expected system calls that will return a received message.
         // select()
@@ -675,6 +675,7 @@ TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_timeout_value)
 
         // Configure expected system calls that will return a received message.
         // select()
+        Sys_select mock_this_Obj(&m_mock_sys_selectObj);
         EXPECT_CALL(m_mock_sys_selectObj,
                     select(m_socketfd + 1, NotNull(), _, NULL, NULL))
             .WillOnce(Return(1));
@@ -703,6 +704,7 @@ TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_timeout_value)
 
 TEST_F(SockFTestSuite, sock_write_no_timeout) {
     // select()
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     EXPECT_CALL(m_mock_sys_selectObj,
                 select(m_socketfd + 1, _, NotNull(), NULL, NULL))
         .WillOnce(Return(1));
@@ -722,6 +724,7 @@ TEST_F(SockFTestSuite, sock_write_no_timeout) {
 
 TEST_F(SockFTestSuite, sock_write_within_timeout) {
     // select()
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     EXPECT_CALL(m_mock_sys_selectObj,
                 select(m_socketfd + 1, _, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1));
@@ -740,6 +743,7 @@ TEST_F(SockFTestSuite, sock_write_within_timeout) {
 
 TEST_F(SockFTestSuite, sock_write_with_connection_error) {
     // select()
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     EXPECT_CALL(m_mock_sys_selectObj,
                 select(m_socketfd + 1, _, NotNull(), NULL, NotNull()))
         .WillOnce(Return(-1));
@@ -761,6 +765,7 @@ TEST_F(SockFTestSuite, sock_write_with_sending_error) {
         GTEST_SKIP() << "             known failing test on Github Actions";
 
     // select()
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     EXPECT_CALL(m_mock_sys_selectObj,
                 select(m_socketfd + 1, _, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1));
@@ -799,6 +804,7 @@ TEST_F(SockFTestSuite, sock_write_with_nullptr_to_socket_info) {
 
         // Configure expected system calls should never called.
         // select()
+        Sys_select mock_this_Obj(&m_mock_sys_selectObj);
         EXPECT_CALL(m_mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
         // send()
         EXPECT_CALL(m_mock_sys_socketObj, send(_, _, _, _)).Times(0);
@@ -823,6 +829,7 @@ TEST_F(SockFTestSuite, sock_write_with_empty_socket_info) {
         GTEST_SKIP() << "             known failing test on Github Actions";
 
     // Configure expected system calls.
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     if (old_code) {
         // select()
         ::std::cout << "  BUG! System function 'select()' must not be called. "
@@ -867,6 +874,7 @@ TEST_F(SockFTestSuite, sock_write_with_nullptr_to_buffer_0_byte_length)
     ::std::cout << "  OPT: It is not needed to call system function 'select()' "
                    "in this case.\n";
 
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     if (old_code) {
         EXPECT_CALL(m_mock_sys_selectObj,
                     select(m_socketfd + 1, _, NotNull(), NULL, NULL))
@@ -898,6 +906,7 @@ TEST_F(SockFTestSuite, sock_write_with_valid_buffer_but_0_byte_length)
         GTEST_SKIP() << "             known failing test on Github Actions";
 
     // Configure expected system calls.
+    Sys_select mock_this_Obj(&m_mock_sys_selectObj);
     if (old_code) {
         // select()
         EXPECT_CALL(m_mock_sys_selectObj,

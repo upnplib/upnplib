@@ -1,11 +1,12 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-07
+// Redistribution only with this Copyright remark. Last modified: 2022-09-18
 
 #include "pupnp/upnp/src/api/upnpdebug.cpp"
 
 #include "upnplib/port.hpp"
 #include "upnplib/upnptools.hpp"
 #include "upnplib/gtest.hpp"
+
 #include "gmock/gmock.h"
 
 using ::testing::_;
@@ -61,21 +62,6 @@ class Cupnpdebug : public Iupnpdebug {
 // Mocked system calls
 // -------------------
 // See the respective include files in upnp/include/upnpmock/
-class Mock_string : public Bstring {
-    // Class to mock the free system functions.
-    Bstring* m_oldptr;
-
-  public:
-    // Save and restore the old pointer to the production function
-    Mock_string() {
-        m_oldptr = string_h;
-        string_h = this;
-    }
-    virtual ~Mock_string() { string_h = m_oldptr; }
-
-    MOCK_METHOD(char*, strerror, (int errnum), (override));
-};
-
 class Mock_stdio : public Bstdio {
     // Class to mock the free system functions.
     Bstdio* m_oldptr;
@@ -179,7 +165,6 @@ class UpnpdebugMockTestSuite : public ::testing::Test {
     // instantiate the mock objects.
     Mock_pthread mocked_pthread;
     Mock_stdio mocked_stdio;
-    Mock_string mocked_string;
 
     // constructor
     UpnpdebugMockTestSuite() {
@@ -495,7 +480,6 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_using_file) {
     EXPECT_CALL(this->mocked_stdio, fopen(_, StrEq("a")))
         .WillOnce(Return((FILE*)0x123456abcdef));
     EXPECT_CALL(this->mocked_stdio, fclose(_)).Times(0);
-    EXPECT_CALL(this->mocked_string, strerror(_)).Times(0);
 
     // Process unit. This should open a filepointer to file with set filename.
     returned = upnpdebugObj.UpnpInitLog();
@@ -538,7 +522,6 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_to_file_with_wrong_filename) {
     EXPECT_CALL(this->mocked_pthread, pthread_mutex_init(_, _)).Times(0);
     EXPECT_CALL(this->mocked_stdio, fopen(_, _)).Times(0);
     EXPECT_CALL(this->mocked_stdio, fclose(_)).Times(0);
-    EXPECT_CALL(this->mocked_string, strerror(_)).Times(0);
 
     // Process unit
     returned = upnpdebugObj.UpnpInitLog();

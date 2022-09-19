@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-12
+// Redistribution only with this Copyright remark. Last modified: 2022-09-19
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
@@ -159,18 +159,9 @@ class Mock_sys_socket : public Bsys_socket {
                 (override));
 };
 
-class Mock_sys_select : public Bsys_select {
-    // Class to mock the free system functions.
-    Bsys_select* m_oldptr;
-
+class Sys_selectMock : public Sys_selectInterface {
   public:
-    // Save and restore the old pointer to the production function
-    Mock_sys_select() {
-        m_oldptr = sys_select_h;
-        sys_select_h = this;
-    }
-    virtual ~Mock_sys_select() override { sys_select_h = m_oldptr; }
-
+    virtual ~Sys_selectMock() override {}
     MOCK_METHOD(int, select,
                 (int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds,
                  struct timeval* timeout),
@@ -1603,23 +1594,24 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
     { // Scope of mocking only within this block
 
         // Mock functions from standard system library
-        class Mock_sys_select mocked_sys_selectObj;
+        Sys_selectMock sys_select_mockObj;
+        Sys_select sys_select_injectObj(&sys_select_mockObj);
 
         if (old_code) {
             std::cout << CYEL "[ BUGFIX   ]" CRES
                       << " Max socket fd for select() not setting to 0 if "
                          "INVALID_SOCKET in MiniServerSockArray on WIN32.\n";
 #ifdef _WIN32
-            EXPECT_CALL(mocked_sys_selectObj, select(0, _, nullptr, _, nullptr))
+            EXPECT_CALL(sys_select_mockObj, select(0, _, nullptr, _, nullptr))
                 .WillOnce(Return(1));
 #else
-            EXPECT_CALL(mocked_sys_selectObj,
+            EXPECT_CALL(sys_select_mockObj,
                         select(select_nfds, _, nullptr, _, nullptr))
                 .WillOnce(Return(1));
 #endif
         } else {
 
-            EXPECT_CALL(mocked_sys_selectObj,
+            EXPECT_CALL(sys_select_mockObj,
                         select(select_nfds, _, nullptr, _, nullptr))
                 .WillOnce(Return(1));
         }

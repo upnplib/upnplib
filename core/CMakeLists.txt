@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-04
+# Redistribution only with this Copyright remark. Last modified: 2022-09-19
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -15,6 +15,7 @@ if(NOT WIN32)
     add_library(upnplib_compa_shared SHARED   # prefix -ucsh
             ./src/net/miniserver.cpp
             ./src/init.cpp
+            ${UPnPlib_SOURCE_DIR}/gtests/upnpmock/sys_select.cpp
     )
     set_target_properties(upnplib_compa_shared PROPERTIES
             OUTPUT_NAME upnplib_compa
@@ -45,6 +46,7 @@ if(NOT WIN32)
     add_library(upnplib_compa_static STATIC   # prefix -ucst
             ./src/net/miniserver.cpp
             ./src/init.cpp
+            ${UPnPlib_SOURCE_DIR}/gtests/upnpmock/sys_select.cpp
     )
     set_target_properties(upnplib_compa_static PROPERTIES
             OUTPUT_NAME upnplib_compa
@@ -128,6 +130,7 @@ if(NOT WIN32)
     #------------------------------------------------------------------
     add_executable(upnplibInfo_shared
             ./src/upnplibInfo.cpp
+            ${UPnPlib_SOURCE_DIR}/gtests/upnpmock/sys_select.cpp
     )
     target_include_directories(upnplibInfo_shared
         PRIVATE
