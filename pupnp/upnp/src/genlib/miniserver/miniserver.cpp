@@ -69,7 +69,7 @@
 #include <algorithm> // for std::max()
 
 #include "upnpmock/sys_socket.hpp"
-#include "upnpmock/sys_select.hpp"
+#include "mockwrap/sys_select.hpp"
 #include "upnpmock/stdlib.hpp"
 
 /*! . */
@@ -579,8 +579,8 @@ static void RunMiniServer(
         fdset_if_valid(miniSock->ssdpReqSock6, &rdSet);
 #endif /* INCLUDE_CLIENT_APIS */
         /* select() */
-        ret = upnplib::sys_select_h.select((int)maxMiniSock, &rdSet, NULL,
-                                           &expSet, NULL);
+        ret = mockwrap::sys_select_h.select((int)maxMiniSock, &rdSet, NULL,
+                                            &expSet, NULL);
         if (ret == SOCKET_ERROR && errno == EINTR) {
             continue;
         }

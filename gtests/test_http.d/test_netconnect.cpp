@@ -17,6 +17,9 @@ using ::testing::SetErrnoAndReturn;
 
 using ::upnplib::testing::SetArgPtrIntValue;
 
+using ::mockwrap::Sys_select;
+using ::mockwrap::Sys_selectInterface;
+
 namespace upnplib {
 
 bool old_code{false}; // Managed in upnplib_gtest_main.inc

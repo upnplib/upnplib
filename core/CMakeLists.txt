@@ -15,7 +15,7 @@ if(NOT WIN32)
     add_library(upnplib_compa_shared SHARED   # prefix -ucsh
             ./src/net/miniserver.cpp
             ./src/init.cpp
-            ${UPnPlib_SOURCE_DIR}/gtests/upnpmock/sys_select.cpp
+            ${PUPNP_UPNP_SOURCE_DIR}/src/mockwrap/sys_select.cpp
     )
     set_target_properties(upnplib_compa_shared PROPERTIES
             OUTPUT_NAME upnplib_compa
@@ -46,7 +46,7 @@ if(NOT WIN32)
     add_library(upnplib_compa_static STATIC   # prefix -ucst
             ./src/net/miniserver.cpp
             ./src/init.cpp
-            ${UPnPlib_SOURCE_DIR}/gtests/upnpmock/sys_select.cpp
+            ${PUPNP_UPNP_SOURCE_DIR}/src/mockwrap/sys_select.cpp
     )
     set_target_properties(upnplib_compa_static PROPERTIES
             OUTPUT_NAME upnplib_compa
@@ -130,7 +130,7 @@ if(NOT WIN32)
     #------------------------------------------------------------------
     add_executable(upnplibInfo_shared
             ./src/upnplibInfo.cpp
-            ${UPnPlib_SOURCE_DIR}/gtests/upnpmock/sys_select.cpp
+            ${PUPNP_UPNP_SOURCE_DIR}/src/mockwrap/sys_select.cpp
     )
     target_include_directories(upnplibInfo_shared
         PRIVATE

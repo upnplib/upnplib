@@ -11,7 +11,7 @@
 #include <sys/select.h>
 #endif
 
-namespace upnplib {
+namespace mockwrap {
 
 class Sys_selectInterface {
   public:
@@ -58,16 +58,16 @@ class UPNPLIB_API Sys_select {
                struct timeval* timeout);
 
   private:
-    // Must be static to be also available on a new constructed object.
-    // With inline we do not need an extra definition line outside the class.
-    // I also make the symbol hidden so the variable cannot be accessed globaly
-    // with Sys_select::m_ptr_workerObj.
+    // Must be static to be persistent also available on a new constructed
+    // object. With inline we do not need an extra definition line outside the
+    // class. I also make the symbol hidden so the variable cannot be accessed
+    // globaly with Sys_select::m_ptr_workerObj.
     UPNPLIB_LOCAL static inline Sys_selectInterface* m_ptr_workerObj;
     Sys_selectInterface* m_ptr_oldObj{};
 };
 
 extern Sys_select UPNPLIB_API sys_select_h;
 
-} // namespace upnplib
+} // namespace mockwrap
 
 #endif // UPNPLIB_SYS_SELECTIF_HPP

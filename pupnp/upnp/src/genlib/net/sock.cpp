@@ -62,7 +62,7 @@
 #endif // _WIN32
 
 #include "upnpmock/sys_socket.hpp"
-#include "upnpmock/sys_select.hpp"
+#include "mockwrap/sys_select.hpp"
 #include "upnpmock/unistd.hpp"
 
 #ifdef UPNP_ENABLE_OPEN_SSL
@@ -203,11 +203,11 @@ static int sock_read_write(
         // seen an endless loop here with old contents of errno.
         // errno = 0;
         if (*timeoutSecs < 0) {
-            retCode = upnplib::sys_select_h.select(sockfd + 1, &readSet,
-                                                   &writeSet, NULL, NULL);
+            retCode = mockwrap::sys_select_h.select(sockfd + 1, &readSet,
+                                                    &writeSet, NULL, NULL);
         } else {
-            retCode = upnplib::sys_select_h.select(sockfd + 1, &readSet,
-                                                   &writeSet, NULL, &timeout);
+            retCode = mockwrap::sys_select_h.select(sockfd + 1, &readSet,
+                                                    &writeSet, NULL, &timeout);
         }
         if (retCode == 0)
             return UPNP_E_TIMEDOUT;

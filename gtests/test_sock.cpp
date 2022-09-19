@@ -8,7 +8,7 @@
 
 #include "upnplib/upnptools.hpp"
 #include "upnpmock/sys_socket.hpp"
-#include "upnpmock/sys_select.hpp"
+#include "mockwrap/sys_select.hpp"
 #include "upnpmock/unistd.hpp"
 #include "upnp.hpp"
 
@@ -22,6 +22,9 @@ using ::testing::DoAll;
 using ::testing::NotNull;
 using ::testing::Return;
 using ::testing::SetArrayArgument;
+
+using ::mockwrap::Sys_select;
+using ::mockwrap::Sys_selectInterface;
 
 namespace upnplib {
 
