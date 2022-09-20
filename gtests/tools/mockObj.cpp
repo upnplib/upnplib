@@ -8,7 +8,8 @@
 //
 // For further information look at the header files in upnp/include/upnpmock/.
 
-#include "upnpmock/pthread.hpp"
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
+
 #include "upnpmock/stdio.hpp"
 #include "upnpmock/stdlib.hpp"
 #include "upnpmock/string.hpp"
@@ -16,9 +17,6 @@
 #include "upnpmock/unistd.hpp"
 
 namespace upnplib {
-
-class Bpthread pthreadObj {};
-Bpthread* pthread_h = &pthreadObj;
 
 class Bstdio stdioObj {};
 Bstdio* stdio_h = &stdioObj;
