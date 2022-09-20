@@ -38,8 +38,8 @@ extern size_t g_maxContentLength;
 
     if (connect_res < 0) {
         if (WSAEWOULDBLOCK == upnplib::winsock2_h->WSAGetLastError()) {
-            result = mockwrap::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
-                                                   &tmvTimeout);
+            result = mocking::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
+                                                  &tmvTimeout);
             if (result < 0) {
                 return -1;
             } else if (result == 0) {
@@ -60,8 +60,8 @@ extern size_t g_maxContentLength;
 
     if (connect_res < 0) {
         if (EINPROGRESS == errno) {
-            result = mockwrap::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
-                                                   &tmvTimeout);
+            result = mocking::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
+                                                  &tmvTimeout);
             if (result < 0) {
                 return -1;
             } else if (result == 0) {

@@ -1,12 +1,12 @@
-#ifndef MOCKWRAP_IFADDRS_HPP
-#define MOCKWRAP_IFADDRS_HPP
+#ifndef MOCKING_IFADDRS_HPP
+#define MOCKING_IFADDRS_HPP
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-09-19
 
 #include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #include <ifaddrs.h>
 
-namespace mockwrap {
+namespace mocking {
 
 class IfaddrsInterface {
   public:
@@ -65,6 +65,6 @@ class EXPORT_SPEC Ifaddrs {
 
 extern Ifaddrs EXPORT_SPEC ifaddrs_h;
 
-} // namespace mockwrap
+} // namespace mocking
 
-#endif // MOCKWRAP_IFADDRS_HPP
+#endif // MOCKING_IFADDRS_HPP

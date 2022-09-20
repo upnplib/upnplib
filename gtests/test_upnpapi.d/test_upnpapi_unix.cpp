@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-12
+// Redistribution only with this Copyright remark. Last modified: 2022-09-20
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -8,7 +8,8 @@
 
 #include "upnplib/upnptools.hpp" // For upnplib_native only
 #include "upnplib/gtest_tools_unix.hpp"
-#include "mockwrap/ifaddrs.hpp"
+#include "mocking/ifaddrs.hpp"
+#include "mocking/net_if.hpp"
 
 #include "gmock/gmock.h"
 #include "upnplib/gtest.hpp"
@@ -19,10 +20,12 @@ using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 
-using ::upnplib::testing::CaptureStdOutErr;
+using ::mocking::Ifaddrs;
+using ::mocking::IfaddrsInterface;
+using ::mocking::Net_if;
+using ::mocking::Net_ifInterface;
 
-using ::mockwrap::Ifaddrs;
-using ::mockwrap::IfaddrsInterface;
+using ::upnplib::testing::CaptureStdOutErr;
 
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
@@ -36,18 +39,9 @@ class IfaddrsMock : public IfaddrsInterface {
     MOCK_METHOD(void, freeifaddrs, (struct ifaddrs*), (override));
 };
 
-class Mock_net_if : public Bnet_if {
-    // Class to mock the free system functions.
-    Bnet_if* m_oldptr;
-
+class Net_ifMock : public Net_ifInterface {
   public:
-    // Save and restore the old pointer to the production function
-    Mock_net_if() {
-        m_oldptr = net_if_h;
-        net_if_h = this;
-    }
-    virtual ~Mock_net_if() { net_if_h = m_oldptr; }
-
+    virtual ~Net_ifMock() override {}
     MOCK_METHOD(unsigned int, if_nametoindex, (const char* ifname), (override));
 };
 
@@ -63,7 +57,7 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
   protected:
     // Provide mocked functions
     IfaddrsMock m_mocked_ifaddrs;
-    Mock_net_if m_mocked_net_if;
+    Net_ifMock m_mocked_net_if;
 
     // constructor of this testsuite
     UpnpapiIPv4MockTestSuite() {
@@ -89,6 +83,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
     EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
 
     Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
+    Net_if net_if_injectObj(&m_mocked_net_if);
     EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
     EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);
@@ -129,6 +124,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     EXPECT_STREQ(ifaddr->ifa_name, "eth0");
 
     Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
+    Net_if net_if_injectObj(&m_mocked_net_if);
     EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
     EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);
@@ -187,6 +183,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_default_initialization) {
 
     // expect calls to system functions (which are mocked)
     Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
+    Net_if net_if_injectObj(&m_mocked_net_if);
     EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
     EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);

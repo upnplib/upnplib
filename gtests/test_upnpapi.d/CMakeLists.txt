@@ -31,7 +31,6 @@ set(UPNP_UPNPAPI_SOURCE_FILES
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
     ./tools/mockObj.cpp
     $<$<BOOL:${WIN32}>:./tools/mockObj_win32.cpp>
-    $<$<NOT:$<BOOL:${WIN32}>>:./tools/mockObj_unix.cpp>
 
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp

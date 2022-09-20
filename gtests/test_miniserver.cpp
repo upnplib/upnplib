@@ -26,8 +26,8 @@ using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::MatchesStdRegex;
 using ::upnplib::testing::StrCpyToArg;
 
-using ::mockwrap::Sys_select;
-using ::mockwrap::Sys_selectInterface;
+using ::mocking::Sys_select;
+using ::mocking::Sys_selectInterface;
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #define NS

@@ -82,7 +82,6 @@ set(UPNPLIB_TV_DEVICE_SOURCE_FILES
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
     ${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj.cpp
     $<$<BOOL:${WIN32}>:${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj_win32.cpp>
-    $<$<NOT:$<BOOL:${WIN32}>>:${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj_unix.cpp>
 )
 endif()
 

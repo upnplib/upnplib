@@ -82,7 +82,7 @@
 #define UPNP_VERSION_STRING "1.14.13"
 
 #include "upnpmock/pupnp.hpp"
-#include "mockwrap/sys_select.hpp"
+#include "mocking/sys_select.hpp"
 #include "upnpmock/sys_socket.hpp"
 #include "upnpmock/winsock2_win32.hpp"
 
@@ -129,8 +129,8 @@ static int Check_Connect_And_Wait_Connection(
 #else
         if (EINPROGRESS == errno) {
 #endif
-            result = mockwrap::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
-                                                   &tmvTimeout);
+            result = mocking::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
+                                                  &tmvTimeout);
             if (result < 0) {
 #ifdef _WIN32
                 /* WSAGetLastError(); */

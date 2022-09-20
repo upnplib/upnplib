@@ -408,7 +408,6 @@ set(MINISERVER_SOURCE_FILES
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
     ./tools/mockObj.cpp
     $<$<PLATFORM_ID:Windows>:./tools/mockObj_win32.cpp>
-    $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/mockObj_unix.cpp>
 
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp

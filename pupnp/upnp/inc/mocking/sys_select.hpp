@@ -1,5 +1,5 @@
-#ifndef MOCKWRAP_SYS_SELECT_HPP
-#define MOCKWRAP_SYS_SELECT_HPP
+#ifndef MOCKING_SYS_SELECT_HPP
+#define MOCKING_SYS_SELECT_HPP
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-09-19
 
@@ -11,7 +11,7 @@
 #include <sys/select.h>
 #endif
 
-namespace mockwrap {
+namespace mocking {
 
 class Sys_selectInterface {
   public:
@@ -68,6 +68,6 @@ class UPNPLIB_API Sys_select {
 
 extern Sys_select UPNPLIB_API sys_select_h;
 
-} // namespace mockwrap
+} // namespace mocking
 
-#endif // MOCKWRAP_SYS_SELECT_HPP
+#endif // MOCKING_SYS_SELECT_HPP

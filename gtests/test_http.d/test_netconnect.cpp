@@ -17,8 +17,8 @@ using ::testing::SetErrnoAndReturn;
 
 using ::upnplib::testing::SetArgPtrIntValue;
 
-using ::mockwrap::Sys_select;
-using ::mockwrap::Sys_selectInterface;
+using ::mocking::Sys_select;
+using ::mocking::Sys_selectInterface;
 
 namespace upnplib {
 
