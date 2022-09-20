@@ -151,6 +151,7 @@ set(PUPNP_SOURCE_FILES
     $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_WEBSERVER}>>:./src/urlconfig/urlconfig.cpp>
 
     ./src/mocking/sys_select.cpp
+    ./src/mocking/netdb.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/net_if.cpp>
     ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp

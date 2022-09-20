@@ -17,6 +17,7 @@ if(NOT WIN32)
             ./src/init.cpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/sys_select.cpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/ifaddrs.cpp
+            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/netdb.cpp
     )
     set_target_properties(upnplib_compa_shared PROPERTIES
             OUTPUT_NAME upnplib_compa

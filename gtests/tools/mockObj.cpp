@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-18
+// Redistribution only with this Copyright remark. Last modified: 2022-09-20
 
 // Yes, we have this global varibles in namespace ::upnplib. We need them to
 // mock calls independent from the call stack of a mocked Unit. In the
@@ -12,7 +12,6 @@
 #include "upnpmock/stdio.hpp"
 #include "upnpmock/stdlib.hpp"
 #include "upnpmock/string.hpp"
-#include "upnpmock/netdb.hpp"
 #include "upnpmock/sys_socket.hpp"
 #include "upnpmock/unistd.hpp"
 
@@ -29,9 +28,6 @@ Bstdlib* stdlib_h = &stdlibObj;
 
 class Bstring stringObj {};
 Bstring* string_h = &stringObj;
-
-class Bnetdb netdbObj {};
-Bnetdb* netdb_h = &netdbObj;
 
 class Bsys_socket sys_socketObj {};
 Bsys_socket* sys_socket_h = &sys_socketObj;

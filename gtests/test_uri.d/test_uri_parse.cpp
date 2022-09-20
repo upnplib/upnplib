@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-03
+// Redistribution only with this Copyright remark. Last modified: 2022-09-20
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -10,6 +10,7 @@
 
 #include "upnplib/upnptools.hpp"
 #include "upnplib/uri.hpp"
+#include "mocking/netdb.hpp"
 
 #include "gmock/gmock.h"
 
@@ -20,6 +21,9 @@ using ::testing::Eq;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 
+using ::mocking::Netdb;
+using ::mocking::NetdbInterface;
+
 namespace upnplib {
 
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
@@ -28,19 +32,9 @@ bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 //
 // Mocking
 // =======
-class Mock_netdb : public Bnetdb {
-    // Class to mock the free system functions.
-  private:
-    Bnetdb* m_oldptr;
-
+class NetdbMock : public NetdbInterface {
   public:
-    // Save and restore the old pointer to the production function
-    Mock_netdb() {
-        m_oldptr = netdb_h;
-        netdb_h = this;
-    }
-    virtual ~Mock_netdb() override { netdb_h = m_oldptr; }
-
+    virtual ~NetdbMock() override {}
     MOCK_METHOD(int, getaddrinfo,
                 (const char* node, const char* service,
                  const struct addrinfo* hints, struct addrinfo** res),
@@ -48,26 +42,16 @@ class Mock_netdb : public Bnetdb {
     MOCK_METHOD(void, freeaddrinfo, (struct addrinfo * res), (override));
 };
 
-class Mock_netv4info : public Mock_netdb {
+class Mock_netv4info : public NetdbMock {
     // This is a derived class from mocking netdb to provide a structure for
     // addrinfo that can be given to the mocked program.
   private:
-    Bnetdb* m_oldptr;
-
     // Provide structures to mock system call for network address
     struct sockaddr_in m_sa {};
     struct addrinfo m_res {};
 
   public:
-    // Save and restore the old pointer to the production function
-    Mock_netv4info() {
-        m_oldptr = netdb_h;
-        netdb_h = this;
-
-        m_sa.sin_family = AF_INET;
-    }
-
-    virtual ~Mock_netv4info() override { netdb_h = m_oldptr; }
+    Mock_netv4info() { m_sa.sin_family = AF_INET; }
 
     addrinfo* get(const char* a_ipaddr, short int a_port) {
         inet_pton(m_sa.sin_family, a_ipaddr, &m_sa.sin_addr);
@@ -84,7 +68,7 @@ class Mock_netv4info : public Mock_netdb {
 //
 // parse_uri() function: tests from the uri module
 // ===============================================
-#if false
+#if 0
 TEST(ParseUriIp4TestSuite, simple_call) {
     // This test is only for humans to get an idea what's going on. If you need
     // it, set '#if true' only temporary. It is not intended to be permanent
@@ -124,6 +108,7 @@ TEST(ParseUriIp4TestSuite, absolute_uri_successful) {
     addrinfo* res = netv4inf.get("192.168.10.10", 80);
 
     // Mock for network address system calls. parse_uri() asks the DNS server.
+    Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
@@ -187,6 +172,7 @@ TEST(ParseUriIp4TestSuite, absolute_uri_with_shorter_max_size) {
     addrinfo* res = netv4inf.get("192.168.10.10", 80);
 
     // Mock for network address system calls. parse_uri() asks the DNS server.
+    Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
@@ -244,6 +230,7 @@ TEST(ParseUriIp4TestSuite, ip_address_with_greater_max_size) {
     // Mock for network address system calls. Url with ip address does not need
     // to query for a network address.
     Mock_netv4info netv4inf;
+    Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
 
@@ -323,6 +310,7 @@ TEST(ParseUriIp4TestSuite, uri_without_valid_host_and_port) {
 
     // Mock for network address system calls, parse_uri() ask DNS server.
     Mock_netv4info netv4inf;
+    Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).WillOnce(Return(EAI_NONAME));
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
 
@@ -487,6 +475,7 @@ TEST(ParseUriIp4TestSuite, relative_uri_with_authority_and_absolute_path) {
     addrinfo* res = netv4inf.get("192.168.10.10", 80);
 
     // Mock for network address system call
+    Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
@@ -527,6 +516,7 @@ TEST(ParseUriIp4TestSuite, relative_uri_with_absolute_path) {
     // Set default return values for network address system call in case we get
     // an unexpected call but it should not occur. An ip address should not be
     // asked for name resolution because we do not have one.
+    Netdb netdb_injectObj(&netv4inf);
     ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
@@ -565,6 +555,7 @@ TEST(ParseUriIp4TestSuite, relative_uri_with_relative_path) {
     // Set default return values for network address system call in case we get
     // an unexpected call but it should not occur. An ip address should not be
     // asked for name resolution because we do not have one.
+    Netdb netdb_injectObj(&netv4inf);
     ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
@@ -604,6 +595,7 @@ TEST(ParseUriIp4TestSuite, uri_with_opaque_part) {
     // Set default return values for network address system call in case we get
     // an unexpected call but it should not occur. An ip address should not be
     // asked for name resolution because we do not have one.
+    Netdb netdb_injectObj(&netv4inf);
     ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);

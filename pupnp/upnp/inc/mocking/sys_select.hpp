@@ -1,9 +1,9 @@
 #ifndef MOCKING_SYS_SELECT_HPP
 #define MOCKING_SYS_SELECT_HPP
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-19
+// Redistribution only with this Copyright remark. Last modified: 2022-09-20
 
-#include "upnplib/visibility.hpp"
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -42,7 +42,7 @@ class Sys_selectReal : public Sys_selectInterface {
         Sys_select(&sys_select_mockObj);
     } // End scope, mock objects are destructed, worker restored to default.
 *///------------------------------------------------------------------------
-class UPNPLIB_API Sys_select {
+class EXPORT_SPEC Sys_select {
   public:
     // This constructor is used to inject the pointer to the real function. It
     // sets the default used class, that is the real function.
@@ -62,11 +62,11 @@ class UPNPLIB_API Sys_select {
     // object. With inline we do not need an extra definition line outside the
     // class. I also make the symbol hidden so the variable cannot be accessed
     // globaly with Sys_select::m_ptr_workerObj.
-    UPNPLIB_LOCAL static inline Sys_selectInterface* m_ptr_workerObj;
+    EXPORT_SPEC_LOCAL static inline Sys_selectInterface* m_ptr_workerObj;
     Sys_selectInterface* m_ptr_oldObj{};
 };
 
-extern Sys_select UPNPLIB_API sys_select_h;
+extern Sys_select EXPORT_SPEC sys_select_h;
 
 } // namespace mocking
 
