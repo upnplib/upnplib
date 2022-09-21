@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-18
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -70,7 +70,7 @@
 
 #include "upnpmock/sys_socket.hpp"
 #include "mocking/sys_select.hpp"
-#include "upnpmock/stdlib.hpp"
+#include "mocking/stdlib.hpp"
 
 /*! . */
 #define APPLICATION_LISTENING_PORT 49152
@@ -617,7 +617,7 @@ static void RunMiniServer(
     sock_close(miniSock->ssdpReqSock6);
 #endif /* INCLUDE_CLIENT_APIS */
     /* Free minisock. */
-    upnplib::stdlib_h->free(miniSock);
+    mocking::stdlib_h.free(miniSock);
     gMServState = MSERV_IDLE;
 
     return;

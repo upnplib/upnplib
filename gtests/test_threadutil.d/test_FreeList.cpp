@@ -1,7 +1,7 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-08-21
 
-#include "upnpmock/stdlib.hpp"
+#include "mocking/stdlib.hpp"
 #include "upnplib/gtest.hpp"
 #include "gmock/gmock.h"
 
@@ -10,6 +10,9 @@
 using ::testing::_;
 using ::testing::Return;
 
+using ::mocking::Stdlib;
+using ::mocking::StdlibInterface;
+
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
@@ -17,22 +20,12 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
 //
 // Mocked system calls
 // -------------------
-// See the respective include files in upnp/include/upnpmock/
-
-class Mock_stdlib : public Bstdlib {
-    // Class to mock the free system functions.
-    Bstdlib* m_oldptr;
-
+class StdlibMock : public StdlibInterface {
   public:
-    // Save and restore the old pointer to the production function
-    Mock_stdlib() {
-        m_oldptr = stdlib_h;
-        stdlib_h = this;
-    }
-    virtual ~Mock_stdlib() { stdlib_h = m_oldptr; }
-
+    virtual ~StdlibMock() override {}
     MOCK_METHOD(void*, malloc, (size_t size), (override));
     MOCK_METHOD(void, free, (void* ptr), (override));
+    MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));
 };
 
 //
@@ -85,7 +78,7 @@ class FreeListTestSuite : public ::testing::Test {
     FreeList m_free_list{};
 
     // instantiate the mock objects.
-    Mock_stdlib mocked_stdlib{};
+    StdlibMock mocked_stdlib;
 };
 
 TEST_F(FreeListTestSuite, init_alocate_free_destroy) {
@@ -99,6 +92,7 @@ TEST_F(FreeListTestSuite, init_alocate_free_destroy) {
     // Get a new node. Because the freelist is empty it should be allocated from
     // memory.
     FreeListNode anynode0{};
+    Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, malloc(sizeof(int))).WillOnce(Return(&anynode0));
 
     FreeListNode* newnode =
@@ -190,6 +184,7 @@ TEST_F(FreeListTestSuite, freelist_for_0_size_nodes) {
     EXPECT_EQ(FreeListObj.FreeListInit(&m_free_list, 0, 3), 0);
 
     // Get node from freelist
+    Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, malloc(0)).WillOnce(Return(nullptr));
     EXPECT_EQ(FreeListObj.FreeListAlloc(&m_free_list), nullptr);
     EXPECT_EQ(m_free_list.head, nullptr);
@@ -245,6 +240,7 @@ TEST_F(FreeListTestSuite, allocate_node_from_freelist_with_maximal_0_items) {
     // Get node from freelist. This should be possible but never from the
     // freelist, only allocated from memory.
     FreeListNode anynode1{};
+    Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, malloc(4)).WillOnce(Return(&anynode1));
     EXPECT_EQ(FreeListObj.FreeListAlloc(&m_free_list), &anynode1);
     EXPECT_EQ(m_free_list.head, nullptr);
@@ -259,6 +255,7 @@ TEST_F(FreeListTestSuite, put_free_node_to_freelist_with_maximal_0_items) {
     // Put free node to freelist. This should be possible but never to the
     // freelist, only freeing the memory block.
     FreeListNode anynode1{};
+    Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, free(&anynode1)).Times(1);
     EXPECT_EQ(FreeListObj.FreeListFree(&m_free_list, &anynode1), 0);
     EXPECT_EQ(m_free_list.head, nullptr);

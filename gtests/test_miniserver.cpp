@@ -26,6 +26,8 @@ using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::MatchesStdRegex;
 using ::upnplib::testing::StrCpyToArg;
 
+using ::mocking::Stdlib;
+using ::mocking::StdlibInterface;
 using ::mocking::Sys_select;
 using ::mocking::Sys_selectInterface;
 
@@ -171,16 +173,12 @@ class Sys_selectMock : public Sys_selectInterface {
                 (override));
 };
 
-class Mock_stdlib : public Bstdlib {
-    // Class to mock the free system functions.
-    Bstdlib* m_oldptr;
-
+class StdlibMock : public StdlibInterface {
   public:
-    // Save and restore the old pointer to the production function
-    Mock_stdlib() { m_oldptr = stdlib_h; stdlib_h = this; }
-    virtual ~Mock_stdlib() { stdlib_h = m_oldptr; }
-
+    virtual ~StdlibMock() override {}
+    MOCK_METHOD(void*, malloc, (size_t size), (override));
     MOCK_METHOD(void, free, (void* ptr), (override));
+    MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));
 };
 
 class Mock_unistd : public Bunistd {

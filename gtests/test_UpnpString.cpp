@@ -13,24 +13,20 @@ using ::testing::_;
 using ::testing::Eq;
 using ::testing::Return;
 
+using ::mocking::Stdlib;
+using ::mocking::StdlibInterface;
+
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
+//
 // Mocked system calls
 //--------------------
-class MockStdlib : public Bstdlib {
-    // Class to mock the free system functions.
-    Bstdlib* m_oldptr;
-
+class StdlibMock : public StdlibInterface {
   public:
-    // Save and restore the old pointer to the production function
-    MockStdlib() {
-        m_oldptr = stdlib_h;
-        stdlib_h = this;
-    }
-    virtual ~MockStdlib() { stdlib_h = m_oldptr; }
-
+    virtual ~StdlibMock() override {}
+    MOCK_METHOD(void*, malloc, (size_t size), (override));
     MOCK_METHOD(void, free, (void* ptr), (override));
     MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));
 };
@@ -39,7 +35,7 @@ class MockStdlib : public Bstdlib {
 //------------------------
 class UpnpStringMockTestSuite : public ::testing::Test {
   protected:
-    class MockStdlib mock_stdlibObj;
+    StdlibMock mock_stdlibObj;
 };
 
 TEST_F(UpnpStringMockTestSuite, createNewUpnpString) {
@@ -49,6 +45,7 @@ TEST_F(UpnpStringMockTestSuite, createNewUpnpString) {
     UpnpString* p = (UpnpString*)&upnpstr;
     UpnpString* str;
 
+    Stdlib stdlib_injectObj(&mock_stdlibObj);
     EXPECT_CALL(this->mock_stdlibObj, calloc(_, _))
         .WillOnce(Return(p))
         .WillOnce(Return(*&mstring));
@@ -84,6 +81,7 @@ TEST_F(UpnpStringMockTestSuite, deleteUpnpString) {
     EXPECT_STREQ(upnpstr.m_string, "hello world");
 
     // call the unit
+    Stdlib stdlib_injectObj(&mock_stdlibObj);
     EXPECT_CALL(this->mock_stdlibObj, free(_)).Times(2);
     UpnpString_delete(p);
     EXPECT_EQ(upnpstr.m_length, (size_t)0);
@@ -97,6 +95,7 @@ TEST_F(UpnpStringMockTestSuite, setUpnpString) {
     UpnpString* p = (UpnpString*)&upnpstr;
 
     // call the unit
+    Stdlib stdlib_injectObj(&mock_stdlibObj);
     EXPECT_CALL(this->mock_stdlibObj, free(_)).Times(1);
     EXPECT_PRED2(UpnpString_set_String, p, (const char*)"set string");
     EXPECT_EQ(upnpstr.m_length, (size_t)10);
@@ -110,6 +109,7 @@ TEST_F(UpnpStringMockTestSuite, setUpnpStringN) {
     UpnpString* p = (UpnpString*)&upnpstr;
 
     // call the unit
+    Stdlib stdlib_injectObj(&mock_stdlibObj);
     EXPECT_CALL(this->mock_stdlibObj, free(_)).Times(1);
     EXPECT_PRED3(UpnpString_set_StringN, p, (const char*)"hello world", 0);
     EXPECT_EQ(upnpstr.m_length, (size_t)0);

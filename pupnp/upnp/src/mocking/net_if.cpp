@@ -28,7 +28,7 @@ unsigned int Net_if::if_nametoindex(const char* ifname) {
     return m_ptr_workerObj->if_nametoindex(ifname);
 }
 
-// On program start create an object and inject pointer to the real function.
+// On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
 Net_ifReal net_if_realObj;
 Net_if net_if_h(&net_if_realObj);

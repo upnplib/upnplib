@@ -64,7 +64,7 @@
 
 #include "upnpmock/sys_socket.hpp"
 #include "mocking/sys_select.hpp"
-#include "upnpmock/stdlib.hpp"
+#include "mocking/stdlib.hpp"
 
 #include <assert.h>
 #include <errno.h>
@@ -664,7 +664,7 @@ static void RunMiniServer(
     sock_close(miniSock->ssdpReqSock6);
 #endif /* INCLUDE_CLIENT_APIS */
     /* Free minisock. */
-    upnplib::stdlib_h->free(miniSock);
+    mocking::stdlib_h.free(miniSock);
     gMServState = MSERV_IDLE;
 
     return;

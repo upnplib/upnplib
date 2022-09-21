@@ -154,6 +154,7 @@ set(PUPNP_SOURCE_FILES
     ./src/mocking/netdb.cpp
     ./src/mocking/pthread.cpp
     ./src/mocking/stdio.cpp
+    ./src/mocking/stdlib.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/net_if.cpp>
     ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp

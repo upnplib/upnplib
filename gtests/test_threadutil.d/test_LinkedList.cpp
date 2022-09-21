@@ -1,7 +1,7 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-08-21
 
-#include "upnpmock/stdlib.hpp"
+#include "mocking/stdlib.hpp"
 
 #include "gmock/gmock.h"
 
@@ -11,27 +11,20 @@
 using ::testing::_;
 using ::testing::Return;
 
+using ::mocking::Stdlib;
+using ::mocking::StdlibInterface;
+
 namespace upnplib {
 
 //
 // Mocked system calls
 // -------------------
-// See the respective include files in upnp/include/upnpmock/
-
-class Mock_stdlib : public Bstdlib {
-    // Class to mock the free system functions.
-    Bstdlib* m_oldptr;
-
+class StdlibMock : public StdlibInterface {
   public:
-    // Save and restore the old pointer to the production function
-    Mock_stdlib() {
-        m_oldptr = stdlib_h;
-        stdlib_h = this;
-    }
-    virtual ~Mock_stdlib() { stdlib_h = m_oldptr; }
-
+    virtual ~StdlibMock() override {}
     MOCK_METHOD(void*, malloc, (size_t size), (override));
     MOCK_METHOD(void, free, (void* ptr), (override));
+    MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));
 };
 
 //
@@ -124,11 +117,12 @@ class LinkedListTestSuite : public ::testing::Test {
     LinkedList m_linked_list{};
 
     // instantiate the mock objects.
-    Mock_stdlib mocked_stdlib{};
+    StdlibMock mocked_stdlib{};
 };
 
 TEST_F(LinkedListTestSuite, ListInit_ListDestroy_empty_list) {
     // Expectations: nothing should happen with malloc() and free()
+    Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, malloc(_)).Times(0);
     EXPECT_CALL(mocked_stdlib, free(_)).Times(0);
 
@@ -146,6 +140,7 @@ TEST_F(LinkedListTestSuite, ListAddTail_with_item) {
     std::string item1 = "item1";
 
     // Expectations
+    Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, malloc(sizeof(ListNode)))
         // malloc() is expected to be called by ListAddTail.
         .WillOnce(Return(&node1));
@@ -172,6 +167,7 @@ TEST_F(LinkedListTestSuite, ListDelNode_from_list_with_one_node) {
     std::string item1 = "item1";
 
     // Expectations
+    Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, malloc(sizeof(ListNode)))
         .WillOnce(Return(&node1));
     // We do not expect that free() is called because the deleted node is added
@@ -214,6 +210,7 @@ TEST_F(LinkedListTestSuite, use_all_functions_on_one_initialized_list) {
     std::string item5 = "item5";
 
     // Expectations
+    Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, malloc(sizeof(ListNode)))
         .WillOnce(Return(&node1))
         .WillOnce(Return(&node2))
@@ -300,13 +297,14 @@ TEST_F(LinkedListTestSuite, use_all_functions_on_one_initialized_list) {
 // the address of the member function to have the same signature than
 // free_function so we could call it direct. See also
 // https://stackoverflow.com/a/8865807/5014688
-void free_func(void* t_free_func) { upnplib::stdlib_h->free(t_free_func); }
+void free_func(void* t_free_func) { mocking::stdlib_h.free(t_free_func); }
 
 TEST_F(LinkedListTestSuite, ListDelNode_with_free_function) {
     ListNode node1{};
     std::string item1 = "item1";
 
     // Expectations
+    Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, malloc(sizeof(ListNode)))
         .WillOnce(Return(&node1));
     // This will free the item on node1 when the node is deleted.
@@ -354,6 +352,7 @@ TEST_F(LinkedListTestSuite, ListFind_with_comparing_items) {
     EXPECT_EQ(cmp_func(&item1, &item1), 1);
 
     // Expectations
+    Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, malloc(sizeof(ListNode)))
         .WillOnce(Return(&node1))
         .WillOnce(Return(&node2))

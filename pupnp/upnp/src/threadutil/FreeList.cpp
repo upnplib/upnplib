@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-18
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,7 +32,7 @@
  **************************************************************************/
 
 #include "FreeList.hpp"
-#include "upnpmock/stdlib.hpp"
+#include "mocking/stdlib.hpp"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -64,7 +64,7 @@ void* FreeListAlloc(FreeList* free_list) {
         free_list->head = free_list->head->next;
         free_list->freeListLength--;
     } else {
-        ret = (FreeListNode*)upnplib::stdlib_h->malloc(free_list->element_size);
+        ret = (FreeListNode*)mocking::stdlib_h.malloc(free_list->element_size);
     }
 
     return ret;
@@ -84,7 +84,7 @@ int FreeListFree(FreeList* free_list, void* element) {
         temp->next = free_list->head;
         free_list->head = temp;
     } else {
-        upnplib::stdlib_h->free(element);
+        mocking::stdlib_h.free(element);
     }
 
     return 0;
@@ -101,7 +101,7 @@ int FreeListDestroy(FreeList* free_list) {
     while (free_list->head) {
         i++;
         temp = free_list->head->next;
-        upnplib::stdlib_h->free(free_list->head);
+        mocking::stdlib_h.free(free_list->head);
         free_list->head = temp;
     }
     free_list->freeListLength = 0;
