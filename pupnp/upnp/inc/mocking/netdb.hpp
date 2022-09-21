@@ -27,10 +27,10 @@ class NetdbInterface {
 class NetdbReal : public NetdbInterface {
   public:
     virtual ~NetdbReal() override {}
-    virtual int getaddrinfo(const char* node, const char* service,
-                            const struct addrinfo* hints,
-                            struct addrinfo** res) override;
-    virtual void freeaddrinfo(struct addrinfo* res) override;
+    int getaddrinfo(const char* node, const char* service,
+                    const struct addrinfo* hints,
+                    struct addrinfo** res) override;
+    void freeaddrinfo(struct addrinfo* res) override;
 };
 
 //
@@ -57,9 +57,10 @@ class EXPORT_SPEC Netdb {
     // The destructor is ussed to restore the default pointer.
     virtual ~Netdb();
 
-    int getaddrinfo(const char* node, const char* service,
-                    const struct addrinfo* hints, struct addrinfo** res);
-    void freeaddrinfo(struct addrinfo* res);
+    virtual int getaddrinfo(const char* node, const char* service,
+                            const struct addrinfo* hints,
+                            struct addrinfo** res);
+    virtual void freeaddrinfo(struct addrinfo* res);
 
   private:
     // Must be static to be persistent also available on a new constructed

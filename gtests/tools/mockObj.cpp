@@ -10,16 +10,12 @@
 
 #include "UpnpGlobal.hpp" // for EXPORT_SPEC
 
-#include "upnpmock/stdio.hpp"
 #include "upnpmock/stdlib.hpp"
 #include "upnpmock/string.hpp"
 #include "upnpmock/sys_socket.hpp"
 #include "upnpmock/unistd.hpp"
 
 namespace upnplib {
-
-class Bstdio stdioObj {};
-Bstdio* stdio_h = &stdioObj;
 
 class Bstdlib stdlibObj {};
 Bstdlib* stdlib_h = &stdlibObj;

@@ -26,8 +26,8 @@ class Sys_selectInterface {
 class Sys_selectReal : public Sys_selectInterface {
   public:
     virtual ~Sys_selectReal() override {}
-    virtual int select(int nfds, fd_set* readfds, fd_set* writefds,
-                       fd_set* exceptfds, struct timeval* timeout) override;
+    int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds,
+               struct timeval* timeout) override;
 };
 
 //
@@ -54,8 +54,8 @@ class EXPORT_SPEC Sys_select {
     // The destructor is ussed to restore the default pointer.
     virtual ~Sys_select();
 
-    int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds,
-               struct timeval* timeout);
+    virtual int select(int nfds, fd_set* readfds, fd_set* writefds,
+                       fd_set* exceptfds, struct timeval* timeout);
 
   private:
     // Must be static to be persistent also available on a new constructed

@@ -19,7 +19,7 @@ class Net_ifInterface {
 class Net_ifReal : public Net_ifInterface {
   public:
     virtual ~Net_ifReal() override {}
-    virtual unsigned int if_nametoindex(const char* ifname) override;
+    unsigned int if_nametoindex(const char* ifname) override;
 };
 
 //

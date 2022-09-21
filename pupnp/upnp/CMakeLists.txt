@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-20
+# Redistribution only with this Copyright remark. Last modified: 2022-09-21
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(PUPNP_UPNP VERSION 0024
+project(PUPNP_UPNP VERSION 0025
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -153,6 +153,7 @@ set(PUPNP_SOURCE_FILES
     ./src/mocking/sys_select.cpp
     ./src/mocking/netdb.cpp
     ./src/mocking/pthread.cpp
+    ./src/mocking/stdio.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/net_if.cpp>
     ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp

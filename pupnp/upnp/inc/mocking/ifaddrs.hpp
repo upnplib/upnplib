@@ -23,8 +23,8 @@ class IfaddrsReal : public IfaddrsInterface {
   public:
     virtual ~IfaddrsReal() override {}
 
-    virtual int getifaddrs(struct ifaddrs** ifap) override;
-    virtual void freeifaddrs(struct ifaddrs* ifa) override;
+    int getifaddrs(struct ifaddrs** ifap) override;
+    void freeifaddrs(struct ifaddrs* ifa) override;
 };
 
 //
@@ -51,8 +51,8 @@ class EXPORT_SPEC Ifaddrs {
     // The destructor is ussed to restore the default pointer.
     virtual ~Ifaddrs();
 
-    int getifaddrs(struct ifaddrs** ifap);
-    void freeifaddrs(struct ifaddrs* ifa);
+    virtual int getifaddrs(struct ifaddrs** ifap);
+    virtual void freeifaddrs(struct ifaddrs* ifa);
 
   private:
     // Must be static to be persistent also available on a new constructed

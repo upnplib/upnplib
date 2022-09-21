@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-20
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,7 +51,7 @@
 #include "posix_overwrites.hpp"
 
 #include "mocking/pthread.hpp"
-#include "upnpmock/stdio.hpp"
+#include "mocking/stdio.hpp"
 #include <cstring>
 
 /*! Mutex to synchronize all the log file operations in the debug mode */
@@ -86,7 +86,7 @@ int UpnpInitLog(void) {
 
     if (fp) {
         if (is_stderr == 0) {
-            upnplib::stdio_h->fclose(fp);
+            mocking::stdio_h.fclose(fp);
             fp = NULL;
         }
     }
@@ -116,9 +116,9 @@ int UpnpInitLog(void) {
     if (fileName) {
         // #ifdef _WIN32
         // Ingo: TODO Use fopen_s on MS Windows when I can mock it
-        //         upnplib::stdio_h->fopen_s(&fp, fileName, "a");
+        //         mocking::stdio_h.fopen_s(&fp, fileName, "a");
         // #else
-        fp = upnplib::stdio_h->fopen(fileName, "a");
+        fp = mocking::stdio_h.fopen(fileName, "a");
         // #endif
         if (fp == NULL) {
             fprintf(stderr, "Failed to open fileName (%s): %s\n", fileName,
@@ -150,7 +150,7 @@ void UpnpCloseLog(void) {
     mocking::pthread_h.pthread_mutex_lock(&GlobalDebugMutex);
 
     if (fp != NULL && is_stderr == 0) {
-        upnplib::stdio_h->fclose(fp);
+        mocking::stdio_h.fclose(fp);
     }
     fp = NULL;
     is_stderr = 0;
@@ -288,7 +288,7 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
     if (DbgFileName) {
         UpnpDisplayFileAndLine(fp, DbgFileName, DbgLineNo, DLevel, Module);
         vfprintf(fp, FmtStr, ArgList);
-        upnplib::stdio_h->fflush(fp);
+        mocking::stdio_h.fflush(fp);
     }
     va_end(ArgList);
     mocking::pthread_h.pthread_mutex_unlock(&GlobalDebugMutex);
