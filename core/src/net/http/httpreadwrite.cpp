@@ -70,7 +70,7 @@ extern size_t g_maxContentLength;
             } else {
                 int valopt = 0;
                 socklen_t len = sizeof(valopt);
-                if (upnplib::sys_socket_h->getsockopt(
+                if (mocking::sys_socket_h.getsockopt(
                         sock, SOL_SOCKET, SO_ERROR, (void*)&valopt, &len) < 0) {
                     /* failed to read delayed error */
                     return -1;

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-18
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -61,7 +61,7 @@
 #include <time.h>
 #endif // _WIN32
 
-#include "upnpmock/sys_socket.hpp"
+#include "mocking/sys_socket.hpp"
 #include "mocking/sys_select.hpp"
 #include "upnpmock/unistd.hpp"
 
@@ -139,7 +139,7 @@ int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
             info->ssl = NULL;
         }
 #endif
-        if (upnplib::sys_socket_h->shutdown(info->socket, ShutdownMethod) ==
+        if (mocking::sys_socket_h.shutdown(info->socket, ShutdownMethod) ==
             -1) {
             // TODO: Test this error message
             char* errorStr = std::strerror(errno);
@@ -234,7 +234,7 @@ static int sock_read_write(
             } else {
 #endif
                 /* read data. */
-                numBytes = (long)upnplib::sys_socket_h->recv(
+                numBytes = (long)mocking::sys_socket_h.recv(
                     sockfd, buffer, (int)bufsize, MSG_NOSIGNAL);
 #ifdef UPNP_ENABLE_OPEN_SSL
             }
@@ -250,7 +250,7 @@ static int sock_read_write(
                 } else {
 #endif
                     /* write data. */
-                    num_written = upnplib::sys_socket_h->send(
+                    num_written = mocking::sys_socket_h.send(
                         sockfd, buffer + bytes_sent, (int)byte_left,
                         MSG_DONTROUTE | MSG_NOSIGNAL);
 #ifdef UPNP_ENABLE_OPEN_SSL

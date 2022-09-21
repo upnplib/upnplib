@@ -1,8 +1,8 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-03
+// Redistribution only with this Copyright remark. Last modified: 2022-09-21
 
 #include "upnplib/sock.hpp"
-#include "upnpmock/sys_socket.hpp"
+#include "mocking/sys_socket.hpp"
 
 #include "upnplib/gtest.hpp"
 #include "gmock/gmock.h"
@@ -17,6 +17,9 @@ using ::testing::ThrowsMessage;
 using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::MatchesStdRegex;
 
+using ::mocking::Sys_socket;
+using ::mocking::Sys_socketInterface;
+
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
@@ -24,6 +27,26 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
 //
 // Mocked system calls
 // ===================
+class Sys_socketMock : public Sys_socketInterface {
+  public:
+    virtual ~Sys_socketMock() override {}
+    // clang-format off
+    MOCK_METHOD(int, socket, (int domain, int type, int protocol), (override));
+    MOCK_METHOD(int, bind, (int sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, listen, (int sockfd, int backlog), (override));
+    MOCK_METHOD(int, accept, (int sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(size_t, recvfrom, (int sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(int, getsockopt, (int sockfd, int level, int optname, void* optval, socklen_t* optlen), (override));
+    MOCK_METHOD(int, setsockopt, (int sockfd, int level, int optname, const char* optval, socklen_t optlen), (override));
+    MOCK_METHOD(int, getsockname, (int sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(size_t, recv, (int sockfd, char* buf, size_t len, int flags), (override));
+    MOCK_METHOD(size_t, send, (int sockfd, const char* buf, size_t len, int flags), (override));
+    MOCK_METHOD(int, connect, (int sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, shutdown, (int sockfd, int how), (override));
+    // clang-format on
+};
+
+#if false
 // clang-format off
 class Mock_sys_socket : public Bsys_socket {
     // Class to mock the free system functions.
@@ -42,6 +65,7 @@ class Mock_sys_socket : public Bsys_socket {
                 (override));
 };
 // clang-format on
+#endif
 
 //
 // struct SockAddr and struct SocketAddr TestSuite
@@ -75,7 +99,8 @@ TEST(SocketAddrTestSuite, get_address_from_socket) {
     ret_sock.addr_set("192.168.111.222", 54444);
 
     // Mock system functions
-    class Mock_sys_socket mocked_sys_socketObj;
+    Sys_socketMock mocked_sys_socketObj;
+    Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
     EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
         .WillOnce(DoAll(SetArgPointee<1>(*ret_sock.addr), Return(0)));
 

@@ -1,8 +1,8 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-12
+// Redistribution only with this Copyright remark. Last modified: 2022-09-21
 
 #include "upnplib/sock.hpp"
-#include "upnpmock/sys_socket.hpp"
+#include "mocking/sys_socket.hpp"
 #include <filesystem>
 #include <cstring>
 
@@ -52,7 +52,7 @@ unsigned short SockAddr::addr_get_port() {
 std::string SocketAddr::addr_get() { return SockAddr::addr_get(); }
 
 std::string SocketAddr::addr_get(SOCKET a_sockfd) {
-    int rc = upnplib::sys_socket_h->getsockname(
+    int rc = mocking::sys_socket_h.getsockname(
         a_sockfd, (struct sockaddr*)this->addr, &this->addr_len);
 
     if (rc == -1)

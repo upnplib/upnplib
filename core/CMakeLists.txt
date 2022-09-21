@@ -19,6 +19,7 @@ if(NOT WIN32)
             ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/ifaddrs.cpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/netdb.cpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/stdio.cpp
+            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/sys_socket.cpp
     )
     set_target_properties(upnplib_compa_shared PROPERTIES
             OUTPUT_NAME upnplib_compa
@@ -52,6 +53,7 @@ if(NOT WIN32)
             ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/sys_select.cpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/ifaddrs.cpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/net_if.cpp
+            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/sys_socket.cpp
     )
     set_target_properties(upnplib_compa_static PROPERTIES
             OUTPUT_NAME upnplib_compa
@@ -81,6 +83,7 @@ if(NOT WIN32)
             ./src/api/upnptools.cpp
             ./src/net/sock.cpp
             ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp
+            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/sys_socket.cpp
     )
     set_target_properties(upnplib_native_shared PROPERTIES
             OUTPUT_NAME upnplib_native
@@ -111,6 +114,7 @@ if(NOT WIN32)
             ./src/global.cpp
             ./src/api/upnptools.cpp
             ./src/net/sock.cpp
+            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/sys_socket.cpp
     )
     set_target_properties(upnplib_native_static PROPERTIES
             OUTPUT_NAME upnplib_native
@@ -119,6 +123,7 @@ if(NOT WIN32)
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
             ${UPnPlib_SOURCE_DIR}/gtests/include
+            ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_IXML_SOURCE_DIR}/inc
     )
     target_link_libraries(upnplib_native_static
@@ -249,6 +254,7 @@ else() # WIN32
             ./src/api/upnptools.cpp
             ./src/net/sock.cpp
             ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp
+            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/sys_socket.cpp
     )
     target_include_directories(upnplib_native_shared
         PRIVATE

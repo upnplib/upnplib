@@ -68,7 +68,7 @@
 #include <sys/types.h>
 #include <algorithm> // for std::max()
 
-#include "upnpmock/sys_socket.hpp"
+#include "mocking/sys_socket.hpp"
 #include "mocking/sys_select.hpp"
 #include "mocking/stdlib.hpp"
 
@@ -190,8 +190,8 @@ static int getNumericHostRedirection(int socket, char* host_port,
     char host[NAME_SIZE];
     int n;
 
-    rc = upnplib::sys_socket_h->getsockname(socket, (struct sockaddr*)&addr,
-                                            &addr_len);
+    rc = mocking::sys_socket_h.getsockname(socket, (struct sockaddr*)&addr,
+                                           &addr_len);
     if (rc) {
         goto ExitFunction;
     }
@@ -476,7 +476,7 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
 
     if (lsock != INVALID_SOCKET && FD_ISSET(lsock, set)) {
         clientLen = sizeof(clientAddr);
-        asock = upnplib::sys_socket_h->accept(
+        asock = mocking::sys_socket_h.accept(
             lsock, (struct sockaddr*)&clientAddr, &clientLen);
         if (asock == INVALID_SOCKET) {
             strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
@@ -505,7 +505,7 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
     if (FD_ISSET(ssock, set)) {
         clientLen = sizeof(clientAddr);
         memset((char*)&clientAddr, 0, sizeof(clientAddr));
-        byteReceived = upnplib::sys_socket_h->recvfrom(
+        byteReceived = mocking::sys_socket_h.recvfrom(
             ssock, requestBuf, (size_t)25, 0, (struct sockaddr*)&clientAddr,
             &clientLen);
         if (byteReceived > 0) {
@@ -638,8 +638,8 @@ static int get_port(
     int code;
 
     len = sizeof(sockinfo);
-    code = upnplib::sys_socket_h->getsockname(
-        sockfd, (struct sockaddr*)&sockinfo, &len);
+    code = mocking::sys_socket_h.getsockname(sockfd,
+                                             (struct sockaddr*)&sockinfo, &len);
     if (code == -1) {
         return -1;
     }
@@ -694,7 +694,7 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
     if (inet_pton(domain, text_addr, addr) <= 0)
         goto error;
 
-    s->fd = upnplib::sys_socket_h->socket(domain, SOCK_STREAM, 0);
+    s->fd = mocking::sys_socket_h.socket(domain, SOCK_STREAM, 0);
 
     if (s->fd == INVALID_SOCKET) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
@@ -777,7 +777,7 @@ static int do_bind(struct s_SocketStuff* s) {
             break;
         }
         bind_error =
-            upnplib::sys_socket_h->bind(s->fd, s->serverAddr, s->address_len);
+            mocking::sys_socket_h.bind(s->fd, s->serverAddr, s->address_len);
         if (bind_error == SOCKET_ERROR) {
 #ifdef _WIN32
             errCode = WSAGetLastError();
@@ -814,7 +814,7 @@ static int do_listen(struct s_SocketStuff* s) {
     int port_error;
     char errorBuffer[ERROR_BUFFER_LEN];
 
-    listen_error = upnplib::sys_socket_h->listen(s->fd, SOMAXCONN);
+    listen_error = mocking::sys_socket_h.listen(s->fd, SOMAXCONN);
     if (listen_error == SOCKET_ERROR) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
@@ -1005,7 +1005,7 @@ static int get_miniserver_stopsock(
     SOCKET miniServerStopSock = 0;
     int ret = 0;
 
-    miniServerStopSock = upnplib::sys_socket_h->socket(AF_INET, SOCK_DGRAM, 0);
+    miniServerStopSock = mocking::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (miniServerStopSock == INVALID_SOCKET) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
@@ -1020,9 +1020,9 @@ static int get_miniserver_stopsock(
 #else
     stop_sockaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 #endif
-    ret = upnplib::sys_socket_h->bind(miniServerStopSock,
-                                      (struct sockaddr*)&stop_sockaddr,
-                                      sizeof(stop_sockaddr));
+    ret = mocking::sys_socket_h.bind(miniServerStopSock,
+                                     (struct sockaddr*)&stop_sockaddr,
+                                     sizeof(stop_sockaddr));
     if (ret == SOCKET_ERROR) {
         UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
                    "Error in binding localhost!!!\n");
