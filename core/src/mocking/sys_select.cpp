@@ -1,8 +1,9 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-19
+// Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
-#include "mocking/sys_select.hpp"
+#include "upnplib/mocking/sys_select.hpp"
 
+namespace upnplib {
 namespace mocking {
 
 int Sys_selectReal::select(int nfds, fd_set* readfds, fd_set* writefds,
@@ -36,3 +37,4 @@ Sys_selectReal sys_select_realObj;
 Sys_select sys_select_h(&sys_select_realObj);
 
 } // namespace mocking
+} // namespace upnplib

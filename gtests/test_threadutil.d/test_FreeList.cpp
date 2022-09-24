@@ -1,7 +1,7 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-21
+// Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
-#include "mocking/stdlib.hpp"
+#include "upnplib/mocking/stdlib.hpp"
 #include "upnplib/gtest.hpp"
 #include "gmock/gmock.h"
 
@@ -10,8 +10,8 @@
 using ::testing::_;
 using ::testing::Return;
 
-using ::mocking::Stdlib;
-using ::mocking::StdlibInterface;
+using ::upnplib::mocking::Stdlib;
+using ::upnplib::mocking::StdlibInterface;
 
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc

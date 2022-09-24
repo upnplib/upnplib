@@ -13,8 +13,8 @@ using ::testing::_;
 using ::testing::Eq;
 using ::testing::Return;
 
-using ::mocking::Stdlib;
-using ::mocking::StdlibInterface;
+using ::upnplib::mocking::Stdlib;
+using ::upnplib::mocking::StdlibInterface;
 
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc

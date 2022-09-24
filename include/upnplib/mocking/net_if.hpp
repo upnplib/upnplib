@@ -5,6 +5,7 @@
 
 #include "UpnpGlobal.hpp" // for EXPORT_SPEC
 
+namespace upnplib {
 namespace mocking {
 
 class Net_ifInterface {
@@ -60,5 +61,6 @@ class EXPORT_SPEC Net_if {
 extern Net_if EXPORT_SPEC net_if_h;
 
 } // namespace mocking
+} // namespace upnplib
 
 #endif // MOCKING_NET_IF_HPP

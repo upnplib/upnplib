@@ -1,9 +1,9 @@
-#ifndef MOCKING_SYS_SOCKET_HPP
-#define MOCKING_SYS_SOCKET_HPP
+#ifndef UPNPLIB_MOCKING_SYS_SOCKET_HPP
+#define UPNPLIB_MOCKING_SYS_SOCKET_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-21
+// Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
-#include "UpnpGlobal.hpp" // for EXPORT_SPEC
+#include "upnplib/visibility.hpp"
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -12,11 +12,12 @@
 #include <sys/socket.h>
 #endif
 
+namespace upnplib {
 namespace mocking {
 
 class Sys_socketInterface {
   public:
-    virtual ~Sys_socketInterface() {}
+    virtual ~Sys_socketInterface() = default;
     // clang-format off
     virtual int socket(int domain, int type, int protocol) = 0;
     virtual int bind(int sockfd, const struct sockaddr* addr, socklen_t addrlen) = 0;
@@ -38,7 +39,7 @@ class Sys_socketInterface {
 // ----------------------------------------------------------
 class Sys_socketReal : public Sys_socketInterface {
   public:
-    virtual ~Sys_socketReal() override {}
+    virtual ~Sys_socketReal() override = default;
     // clang-format off
     int socket(int domain, int type, int protocol) override;
     int bind(int sockfd, const struct sockaddr* addr, socklen_t addrlen) override;
@@ -67,7 +68,7 @@ class Sys_socketReal : public Sys_socketInterface {
         Sys_socket(&sys_socket_mockObj);
     } // End scope, mock objects are destructed, worker restored to default.
 *///------------------------------------------------------------------------
-class EXPORT_SPEC Sys_socket {
+class UPNPLIB_API Sys_socket {
   public:
     // This constructor is used to inject the pointer to the real function. It
     // sets the default used class, that is the real function.
@@ -99,12 +100,13 @@ class EXPORT_SPEC Sys_socket {
     // object. With inline we do not need an extra definition line outside the
     // class. I also make the symbol hidden so the variable cannot be accessed
     // globaly with Sys_socket::m_ptr_workerObj.
-    EXPORT_SPEC_LOCAL static inline Sys_socketInterface* m_ptr_workerObj;
+    UPNPLIB_LOCAL static inline Sys_socketInterface* m_ptr_workerObj;
     Sys_socketInterface* m_ptr_oldObj{};
 };
 
-extern Sys_socket EXPORT_SPEC sys_socket_h;
+extern Sys_socket UPNPLIB_API sys_socket_h;
 
 } // namespace mocking
+} // namespace upnplib
 
-#endif // MOCKING_SYS_SOCKET_HPP
+#endif // UPNPLIB_MOCKING_SYS_SOCKET_HPP

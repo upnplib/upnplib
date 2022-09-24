@@ -6,6 +6,7 @@
 #include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #include "pthread.h"      // To find pthreads4w don't use <pthread.h>
 
+namespace upnplib {
 namespace mocking {
 
 // clang-format off
@@ -95,5 +96,6 @@ class EXPORT_SPEC Pthread {
 extern Pthread EXPORT_SPEC pthread_h;
 
 } // namespace mocking
+} // namespace upnplib
 
 #endif // MOCKING_PTHREAD_HPP

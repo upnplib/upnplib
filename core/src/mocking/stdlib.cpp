@@ -1,8 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-21
+// Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
-#include "mocking/stdlib.hpp"
+#include "upnplib/mocking/stdlib.hpp"
 
+namespace upnplib {
 namespace mocking {
 
 void* StdlibReal::malloc(size_t size) { return ::malloc(size); }
@@ -42,3 +43,4 @@ StdlibReal stdlib_realObj;
 Stdlib stdlib_h(&stdlib_realObj);
 
 } // namespace mocking
+} // namespace upnplib

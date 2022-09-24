@@ -1,8 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-21
+// Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
-#include "mocking/stdio.hpp"
+#include "upnplib/mocking/stdio.hpp"
 
+namespace upnplib {
 namespace mocking {
 
 #ifdef _WIN32
@@ -57,3 +58,4 @@ StdioReal stdio_realObj;
 Stdio stdio_h(&stdio_realObj);
 
 } // namespace mocking
+} // namespace upnplib

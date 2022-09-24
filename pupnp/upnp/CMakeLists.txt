@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-21
+# Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -150,14 +150,14 @@ set(PUPNP_SOURCE_FILES
 
     $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_WEBSERVER}>>:./src/urlconfig/urlconfig.cpp>
 
-    ./src/mocking/sys_select.cpp
-    ./src/mocking/netdb.cpp
-    ./src/mocking/pthread.cpp
-    ./src/mocking/stdio.cpp
-    ./src/mocking/stdlib.cpp
-    ./src/mocking/sys_socket.cpp
-    $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/ifaddrs.cpp>
-    $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/net_if.cpp>
+    ${UPnPlib_SOURCE_DIR}/core/src/mocking/sys_select.cpp
+    ${UPnPlib_SOURCE_DIR}/core/src/mocking/netdb.cpp
+    ${UPnPlib_SOURCE_DIR}/core/src/mocking/pthread.cpp
+    ${UPnPlib_SOURCE_DIR}/core/src/mocking/stdio.cpp
+    ${UPnPlib_SOURCE_DIR}/core/src/mocking/stdlib.cpp
+    ${UPnPlib_SOURCE_DIR}/core/src/mocking/sys_socket.cpp
+    $<$<NOT:$<PLATFORM_ID:Windows>>:${UPnPlib_SOURCE_DIR}/core/src/mocking/ifaddrs.cpp>
+    $<$<NOT:$<PLATFORM_ID:Windows>>:${UPnPlib_SOURCE_DIR}/core/src/mocking/net_if.cpp>
     ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp
     $<$<BOOL:${WIN32}>:${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj_win32.cpp>
 )
@@ -182,9 +182,9 @@ add_compile_definitions(
 #=================
 if(NOT WIN32)
 
-    # pupnp native shared library
-    #----------------------------
-    add_library(pupnp_native_shared SHARED   # prefix -pnsh
+    # Pupnp Native SHared library: prefix -pnsh
+    #------------------------------------------
+    add_library(pupnp_native_shared SHARED
             ${PUPNP_SOURCE_FILES}
     )
     set_target_properties(pupnp_native_shared PROPERTIES
@@ -218,9 +218,9 @@ if(NOT WIN32)
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
-    # pupnp native static library
-    #----------------------------
-    add_library(pupnp_native_static STATIC   # prefix -pnst
+    # Pupnp Native STatic library: prefix -pnst
+    #------------------------------------------
+    add_library(pupnp_native_static STATIC
             ${PUPNP_SOURCE_FILES}
     )
     set_target_properties(pupnp_native_static PROPERTIES
@@ -260,9 +260,9 @@ else() # WIN32
     # Pthreads are not supported by MS Windows. So we have installed the
     # third party library pthreads4w.
 
-    # WIN32 pupnp native shared library
-    #----------------------------------
-    add_library(pupnp_native_shared SHARED   # prefix -pnsh
+    # WIN32 Pupnp Native SHared library: -pnsh
+    #-----------------------------------------
+    add_library(pupnp_native_shared SHARED
             ${PUPNP_SOURCE_FILES}
     )
     target_include_directories(pupnp_native_shared
@@ -299,8 +299,8 @@ else() # WIN32
             ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
-    # WIN32 pupnp native static library
-    #----------------------------------
+    # WIN32 Pupnp Native STatic library: prefix -pnst
+    #------------------------------------------------
     add_library(pupnp_native_static STATIC   # prefix -pnst
             ${PUPNP_SOURCE_FILES}
     )

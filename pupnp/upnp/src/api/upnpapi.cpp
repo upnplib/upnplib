@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-20
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-25
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -57,8 +57,8 @@
 #ifdef _WIN32
 #include "upnpmock/iphlpapi_win32.hpp"
 #else
-#include "mocking/ifaddrs.hpp"
-#include "mocking/net_if.hpp"
+#include "upnplib/mocking/ifaddrs.hpp"
+#include "upnplib/mocking/net_if.hpp"
 #endif
 
 /* Needed for GENA */
@@ -3258,7 +3258,7 @@ int UpnpGetIfInfo(const char* IfName) {
         ifname_found = 1;
     }
     /* Get system interface addresses. */
-    if (mocking::ifaddrs_h.getifaddrs(&ifap) != 0) {
+    if (upnplib::mocking::ifaddrs_h.getifaddrs(&ifap) != 0) {
         UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
                    "getifaddrs failed to find list of addresses\n");
         return UPNP_E_INIT;
@@ -3340,7 +3340,7 @@ int UpnpGetIfInfo(const char* IfName) {
             break;
         }
     }
-    mocking::ifaddrs_h.freeifaddrs(ifap);
+    upnplib::mocking::ifaddrs_h.freeifaddrs(ifap);
     /* Failed to find a valid interface, or valid address. */
     if (ifname_found == 0 ||
         (valid_v4_addr_found == 0 && valid_v6_addr_found == 0 &&
@@ -3355,7 +3355,7 @@ int UpnpGetIfInfo(const char* IfName) {
         inet_ntop(AF_INET, &v4_netmask, gIF_IPV4_NETMASK,
                   sizeof(gIF_IPV4_NETMASK));
     }
-    gIF_INDEX = mocking::net_if_h.if_nametoindex(gIF_NAME);
+    gIF_INDEX = upnplib::mocking::net_if_h.if_nametoindex(gIF_NAME);
     if (!IN6_IS_ADDR_UNSPECIFIED(&v6_addr)) {
         if (valid_v6_addr_found) {
             inet_ntop(AF_INET6, &v6_addr, gIF_IPV6, sizeof(gIF_IPV6));

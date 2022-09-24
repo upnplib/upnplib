@@ -6,6 +6,7 @@
 #include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #include <stdlib.h>
 
+namespace upnplib {
 namespace mocking {
 
 class StdlibInterface {
@@ -69,5 +70,6 @@ class EXPORT_SPEC Stdlib {
 extern Stdlib EXPORT_SPEC stdlib_h;
 
 } // namespace mocking
+} // namespace upnplib
 
 #endif // MOCKING_STDLIB_HPP

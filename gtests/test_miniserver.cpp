@@ -26,12 +26,12 @@ using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::MatchesStdRegex;
 using ::upnplib::testing::StrCpyToArg;
 
-using ::mocking::Stdlib;
-using ::mocking::StdlibInterface;
-using ::mocking::Sys_select;
-using ::mocking::Sys_selectInterface;
-using ::mocking::Sys_socket;
-using ::mocking::Sys_socketInterface;
+using ::upnplib::mocking::Stdlib;
+using ::upnplib::mocking::StdlibInterface;
+using ::upnplib::mocking::Sys_select;
+using ::upnplib::mocking::Sys_selectInterface;
+using ::upnplib::mocking::Sys_socket;
+using ::upnplib::mocking::Sys_socketInterface;
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #define NS

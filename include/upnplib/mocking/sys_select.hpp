@@ -11,6 +11,7 @@
 #include <sys/select.h>
 #endif
 
+namespace upnplib {
 namespace mocking {
 
 class Sys_selectInterface {
@@ -69,5 +70,6 @@ class EXPORT_SPEC Sys_select {
 extern Sys_select EXPORT_SPEC sys_select_h;
 
 } // namespace mocking
+} // namespace upnplib
 
 #endif // MOCKING_SYS_SELECT_HPP

@@ -38,8 +38,8 @@ extern size_t g_maxContentLength;
 
     if (connect_res < 0) {
         if (WSAEWOULDBLOCK == upnplib::winsock2_h->WSAGetLastError()) {
-            result = mocking::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
-                                                  &tmvTimeout);
+            result = upnplib::mocking::sys_select_h.select(
+                sock + 1, NULL, &fdSet, NULL, &tmvTimeout);
             if (result < 0) {
                 return -1;
             } else if (result == 0) {
@@ -60,8 +60,8 @@ extern size_t g_maxContentLength;
 
     if (connect_res < 0) {
         if (EINPROGRESS == errno) {
-            result = mocking::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
-                                                  &tmvTimeout);
+            result = upnplib::mocking::sys_select_h.select(
+                sock + 1, NULL, &fdSet, NULL, &tmvTimeout);
             if (result < 0) {
                 return -1;
             } else if (result == 0) {
@@ -70,7 +70,7 @@ extern size_t g_maxContentLength;
             } else {
                 int valopt = 0;
                 socklen_t len = sizeof(valopt);
-                if (mocking::sys_socket_h.getsockopt(
+                if (upnplib::mocking::sys_socket_h.getsockopt(
                         sock, SOL_SOCKET, SO_ERROR, (void*)&valopt, &len) < 0) {
                     /* failed to read delayed error */
                     return -1;

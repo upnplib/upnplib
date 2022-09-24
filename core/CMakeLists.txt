@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-21
+# Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -10,29 +10,39 @@ project(UPNPLIB_CORE VERSION 0007
 
 if(NOT WIN32)
 
-    # upnplib compatible shared library
-    #----------------------------------
-    add_library(upnplib_compa_shared SHARED   # prefix -ucsh
-            ./src/net/miniserver.cpp
-            ./src/init.cpp
-            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/sys_select.cpp
-            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/ifaddrs.cpp
-            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/netdb.cpp
-            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/stdio.cpp
-            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/sys_socket.cpp
+    # upnplib compatible libraries
+    #=============================
+
+    set(UPNPLIB_COMPATIBLE_SOURCE_FILES
+        ./src/net/miniserver.cpp
+        ./src/init.cpp
+        ./src/mocking/sys_select.cpp
+        ./src/mocking/ifaddrs.cpp
+        ./src/mocking/net_if.cpp
+        ./src/mocking/netdb.cpp
+        ./src/mocking/stdio.cpp
+        ./src/mocking/sys_socket.cpp
+    )
+    set(UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES
+        ${UPnPlib_SOURCE_DIR}/include
+        ${UPnPlib_SOURCE_DIR}/gtests/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+    )
+
+    # Upnplib Compatible SHared library: prefix -ucsh
+    #------------------------------------------------
+    add_library(upnplib_compa_shared SHARED
+            ${UPNPLIB_COMPATIBLE_SOURCE_FILES}
     )
     set_target_properties(upnplib_compa_shared PROPERTIES
             OUTPUT_NAME upnplib_compa
     )
     target_include_directories(upnplib_compa_shared
         PRIVATE
-            ${UPnPlib_SOURCE_DIR}
-            ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
-            ${PUPNP_UPNP_SOURCE_DIR}/inc
-            ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-            ${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32
-            ${PUPNP_IXML_SOURCE_DIR}/inc
+            ${UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(upnplib_compa_shared
         PRIVATE
@@ -45,28 +55,17 @@ if(NOT WIN32)
             pupnp_native_shared
     )
 
-    # upnplib compatible static library
-    #----------------------------------
-    add_library(upnplib_compa_static STATIC   # prefix -ucst
-            ./src/net/miniserver.cpp
-            ./src/init.cpp
-            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/sys_select.cpp
-            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/ifaddrs.cpp
-            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/net_if.cpp
-            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/sys_socket.cpp
+    # Upnplib Compatible STatic library: prefix -ucst
+    #------------------------------------------------
+    add_library(upnplib_compa_static STATIC
+            ${UPNPLIB_COMPATIBLE_SOURCE_FILES}
     )
     set_target_properties(upnplib_compa_static PROPERTIES
             OUTPUT_NAME upnplib_compa
     )
     target_include_directories(upnplib_compa_static
         PRIVATE
-            ${UPnPlib_SOURCE_DIR}
-            ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
-            ${PUPNP_UPNP_SOURCE_DIR}/inc
-            ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-            ${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32
-            ${PUPNP_IXML_SOURCE_DIR}/inc
+            ${UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES}
     )
     # If we do not have compatible code we use the old native pupnp code
     target_link_libraries(upnplib_compa_static
@@ -76,24 +75,34 @@ if(NOT WIN32)
             pupnp_native_static
     )
 
-    # upnplib native shared library
-    #------------------------------
-    add_library(upnplib_native_shared SHARED   # prefix -unsh
-            ./src/global.cpp
-            ./src/api/upnptools.cpp
-            ./src/net/sock.cpp
-            ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp
-            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/sys_socket.cpp
+    # upnplib native libraries
+    #=========================
+
+    set(UPNPLIB_NATIVE_SOURCE_FILES
+        ./src/global.cpp
+        ./src/api/upnptools.cpp
+        ./src/net/sock.cpp
+        ./src/mocking/sys_socket.cpp
+        ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp
+    )
+    set(UPNPLIB_NATIVE_INCLUDE_DIRECTORIES
+        ${UPnPlib_SOURCE_DIR}/include
+        ${UPnPlib_SOURCE_DIR}/gtests/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+    )
+
+    # Upnplib Native SHared library: prefix -unsh
+    #--------------------------------------------
+    add_library(upnplib_native_shared SHARED
+            ${UPNPLIB_NATIVE_SOURCE_FILES}
     )
     set_target_properties(upnplib_native_shared PROPERTIES
             OUTPUT_NAME upnplib_native
     )
     target_include_directories(upnplib_native_shared
         PRIVATE
-            ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
-            ${PUPNP_UPNP_SOURCE_DIR}/inc
-            ${PUPNP_IXML_SOURCE_DIR}/inc
+            ${UPNPLIB_NATIVE_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(upnplib_native_shared
         PRIVATE
@@ -108,23 +117,17 @@ if(NOT WIN32)
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
-    # upnplib native static library
-    #------------------------------
-    add_library(upnplib_native_static STATIC   # prefix -unst
-            ./src/global.cpp
-            ./src/api/upnptools.cpp
-            ./src/net/sock.cpp
-            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/sys_socket.cpp
+    # Upnplib Native STatic library: - prefix -unst
+    #----------------------------------------------
+    add_library(upnplib_native_static STATIC
+            ${UPNPLIB_NATIVE_SOURCE_FILES}
     )
     set_target_properties(upnplib_native_static PROPERTIES
             OUTPUT_NAME upnplib_native
     )
     target_include_directories(upnplib_native_static
         PRIVATE
-            ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
-            ${PUPNP_UPNP_SOURCE_DIR}/inc
-            ${PUPNP_IXML_SOURCE_DIR}/inc
+            ${UPNPLIB_NATIVE_INCLUDE_DIRECTORIES}
     )
     target_link_libraries(upnplib_native_static
         # Static always link needed object files, no matter to use PRIVATE or PUBLIC.
@@ -254,7 +257,7 @@ else() # WIN32
             ./src/api/upnptools.cpp
             ./src/net/sock.cpp
             ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp
-            ${PUPNP_UPNP_SOURCE_DIR}/src/mocking/sys_socket.cpp
+            ./src/mocking/sys_socket.cpp
     )
     target_include_directories(upnplib_native_shared
         PRIVATE

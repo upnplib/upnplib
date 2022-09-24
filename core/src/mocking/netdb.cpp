@@ -1,8 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-20
+// Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
-#include "mocking/netdb.hpp"
+#include "upnplib/mocking/netdb.hpp"
 
+namespace upnplib {
 namespace mocking {
 
 int NetdbReal::getaddrinfo(const char* node, const char* service,
@@ -44,3 +45,4 @@ NetdbReal netdb_realObj;
 Netdb netdb_h(&netdb_realObj);
 
 } // namespace mocking
+} // namespace upnplib

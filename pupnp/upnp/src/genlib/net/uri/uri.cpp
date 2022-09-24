@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-20
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-25
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -57,7 +57,7 @@
 
 #include "posix_overwrites.hpp"
 
-#include "mocking/netdb.hpp"
+#include "upnplib/mocking/netdb.hpp"
 
 extern unsigned int gIF_INDEX;
 
@@ -371,7 +371,8 @@ static int parse_hostport(
             hints.ai_family = AF_UNSPEC;
             hints.ai_socktype = SOCK_STREAM;
 
-            ret = mocking::netdb_h.getaddrinfo(srvname, NULL, &hints, &res0);
+            ret = upnplib::mocking::netdb_h.getaddrinfo(srvname, NULL, &hints,
+                                                        &res0);
             if (ret == 0) {
                 for (res = res0; res; res = res->ai_next) {
                     switch (res->ai_family) {
@@ -384,7 +385,7 @@ static int parse_hostport(
                     }
                 }
             found:
-                mocking::netdb_h.freeaddrinfo(res0);
+                upnplib::mocking::netdb_h.freeaddrinfo(res0);
                 if (res == NULL)
                     /* Didn't find an AF_INET or AF_INET6
                      * address. */

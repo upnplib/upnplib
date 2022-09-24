@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-21
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-25
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -61,8 +61,8 @@
 #include <time.h>
 #endif // _WIN32
 
-#include "mocking/sys_socket.hpp"
-#include "mocking/sys_select.hpp"
+#include "upnplib/mocking/sys_socket.hpp"
+#include "upnplib/mocking/sys_select.hpp"
 #include "upnpmock/unistd.hpp"
 
 #ifdef UPNP_ENABLE_OPEN_SSL
@@ -139,8 +139,8 @@ int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
             info->ssl = NULL;
         }
 #endif
-        if (mocking::sys_socket_h.shutdown(info->socket, ShutdownMethod) ==
-            -1) {
+        if (upnplib::mocking::sys_socket_h.shutdown(info->socket,
+                                                    ShutdownMethod) == -1) {
             // TODO: Test this error message
             char* errorStr = std::strerror(errno);
             UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
@@ -203,11 +203,11 @@ static int sock_read_write(
         // seen an endless loop here with old contents of errno.
         // errno = 0;
         if (*timeoutSecs < 0) {
-            retCode = mocking::sys_select_h.select(sockfd + 1, &readSet,
-                                                   &writeSet, NULL, NULL);
+            retCode = upnplib::mocking::sys_select_h.select(
+                sockfd + 1, &readSet, &writeSet, NULL, NULL);
         } else {
-            retCode = mocking::sys_select_h.select(sockfd + 1, &readSet,
-                                                   &writeSet, NULL, &timeout);
+            retCode = upnplib::mocking::sys_select_h.select(
+                sockfd + 1, &readSet, &writeSet, NULL, &timeout);
         }
         if (retCode == 0)
             return UPNP_E_TIMEDOUT;
@@ -234,7 +234,7 @@ static int sock_read_write(
             } else {
 #endif
                 /* read data. */
-                numBytes = (long)mocking::sys_socket_h.recv(
+                numBytes = (long)upnplib::mocking::sys_socket_h.recv(
                     sockfd, buffer, (int)bufsize, MSG_NOSIGNAL);
 #ifdef UPNP_ENABLE_OPEN_SSL
             }
@@ -250,7 +250,7 @@ static int sock_read_write(
                 } else {
 #endif
                     /* write data. */
-                    num_written = mocking::sys_socket_h.send(
+                    num_written = upnplib::mocking::sys_socket_h.send(
                         sockfd, buffer + bytes_sent, (int)byte_left,
                         MSG_DONTROUTE | MSG_NOSIGNAL);
 #ifdef UPNP_ENABLE_OPEN_SSL

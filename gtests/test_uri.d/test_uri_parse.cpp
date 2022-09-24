@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-20
+// Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -10,7 +10,7 @@
 
 #include "upnplib/upnptools.hpp"
 #include "upnplib/uri.hpp"
-#include "mocking/netdb.hpp"
+#include "upnplib/mocking/netdb.hpp"
 
 #include "gmock/gmock.h"
 
@@ -21,8 +21,8 @@ using ::testing::Eq;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 
-using ::mocking::Netdb;
-using ::mocking::NetdbInterface;
+using ::upnplib::mocking::Netdb;
+using ::upnplib::mocking::NetdbInterface;
 
 namespace upnplib {
 

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-21
+// Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -7,8 +7,8 @@
 #include "sock.hpp"
 
 #include "upnplib/upnptools.hpp"
-#include "mocking/sys_socket.hpp"
-#include "mocking/sys_select.hpp"
+#include "upnplib/mocking/sys_socket.hpp"
+#include "upnplib/mocking/sys_select.hpp"
 #include "upnpmock/unistd.hpp"
 #include "upnp.hpp"
 
@@ -23,10 +23,10 @@ using ::testing::NotNull;
 using ::testing::Return;
 using ::testing::SetArrayArgument;
 
-using ::mocking::Sys_select;
-using ::mocking::Sys_selectInterface;
-using ::mocking::Sys_socket;
-using ::mocking::Sys_socketInterface;
+using ::upnplib::mocking::Sys_select;
+using ::upnplib::mocking::Sys_selectInterface;
+using ::upnplib::mocking::Sys_socket;
+using ::upnplib::mocking::Sys_socketInterface;
 
 namespace upnplib {
 

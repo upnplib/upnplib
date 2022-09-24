@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-21
+// Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -8,7 +8,7 @@
 
 #include "gmock/gmock.h"
 #include "upnplib/upnptools.hpp"
-#include "mocking/netdb.hpp"
+#include "upnplib/mocking/netdb.hpp"
 
 #include "upnplib/uri.hpp"
 
@@ -20,10 +20,10 @@ using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
 using ::testing::StrEq;
 
-using ::mocking::Netdb;
-using ::mocking::NetdbInterface;
-using ::mocking::Sys_socket;
-using ::mocking::Sys_socketInterface;
+using ::upnplib::mocking::Netdb;
+using ::upnplib::mocking::NetdbInterface;
+using ::upnplib::mocking::Sys_socket;
+using ::upnplib::mocking::Sys_socketInterface;
 
 namespace upnplib {
 

@@ -17,10 +17,10 @@ using ::testing::SetErrnoAndReturn;
 
 using ::upnplib::testing::SetArgPtrIntValue;
 
-using ::mocking::Sys_select;
-using ::mocking::Sys_selectInterface;
-using ::mocking::Sys_socket;
-using ::mocking::Sys_socketInterface;
+using ::upnplib::mocking::Sys_select;
+using ::upnplib::mocking::Sys_selectInterface;
+using ::upnplib::mocking::Sys_socket;
+using ::upnplib::mocking::Sys_socketInterface;
 
 namespace upnplib {
 

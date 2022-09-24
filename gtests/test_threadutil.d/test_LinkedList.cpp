@@ -1,7 +1,7 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-21
+// Redistribution only with this Copyright remark. Last modified: 2022-08-25
 
-#include "mocking/stdlib.hpp"
+#include "upnplib/mocking/stdlib.hpp"
 
 #include "gmock/gmock.h"
 
@@ -11,8 +11,8 @@
 using ::testing::_;
 using ::testing::Return;
 
-using ::mocking::Stdlib;
-using ::mocking::StdlibInterface;
+using ::upnplib::mocking::Stdlib;
+using ::upnplib::mocking::StdlibInterface;
 
 namespace upnplib {
 
@@ -297,7 +297,9 @@ TEST_F(LinkedListTestSuite, use_all_functions_on_one_initialized_list) {
 // the address of the member function to have the same signature than
 // free_function so we could call it direct. See also
 // https://stackoverflow.com/a/8865807/5014688
-void free_func(void* t_free_func) { mocking::stdlib_h.free(t_free_func); }
+void free_func(void* t_free_func) {
+    upnplib::mocking::stdlib_h.free(t_free_func);
+}
 
 TEST_F(LinkedListTestSuite, ListDelNode_with_free_function) {
     ListNode node1{};

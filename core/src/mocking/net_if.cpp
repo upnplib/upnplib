@@ -1,9 +1,10 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-20
+// Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
-#include "mocking/net_if.hpp"
+#include "upnplib/mocking/net_if.hpp"
 #include <net/if.h>
 
+namespace upnplib {
 namespace mocking {
 
 unsigned int Net_ifReal::if_nametoindex(const char* ifname) {
@@ -34,3 +35,4 @@ Net_ifReal net_if_realObj;
 Net_if net_if_h(&net_if_realObj);
 
 } // namespace mocking
+} // namespace upnplib

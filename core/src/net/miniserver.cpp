@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-21
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -62,9 +62,9 @@
 
 #include "upnplib/sock.hpp"
 
-#include "mocking/sys_socket.hpp"
-#include "mocking/sys_select.hpp"
-#include "mocking/stdlib.hpp"
+#include "upnplib/mocking/sys_socket.hpp"
+#include "upnplib/mocking/sys_select.hpp"
+#include "upnplib/mocking/stdlib.hpp"
 
 #include <assert.h>
 #include <errno.h>
@@ -451,9 +451,9 @@ static UPNP_INLINE void fdset_if_valid(SOCKET sock, fd_set* set) {
     socklen_t sockerrlen = sizeof(sock_error);
 
     errno = EINVAL;
-    if (mocking::sys_socket_h.getsockopt(sock, SOL_SOCKET, SO_ERROR,
-                                         &sock_error[0],
-                                         &sockerrlen) == SOCKET_ERROR) {
+    if (upnplib::mocking::sys_socket_h.getsockopt(
+            sock, SOL_SOCKET, SO_ERROR, &sock_error[0], &sockerrlen) ==
+        SOCKET_ERROR) {
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                    "FD_SET for select() failed with socket %d. (%d) %s.\n",
                    sock, errno, std::strerror(errno));
@@ -476,7 +476,7 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
     if (lsock != INVALID_SOCKET && FD_ISSET(lsock, set)) {
         clientLen = sizeof(clientAddr);
 
-        asock = mocking::sys_socket_h.accept(
+        asock = upnplib::mocking::sys_socket_h.accept(
             lsock, (struct sockaddr*)&clientAddr, &clientLen);
 
         if (asock == INVALID_SOCKET) {
@@ -521,7 +521,7 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
     if (FD_ISSET(ssock, set)) {
         clientLen = sizeof(clientAddr);
         memset((char*)&clientAddr, 0, sizeof(clientAddr));
-        byteReceived = mocking::sys_socket_h.recvfrom(
+        byteReceived = upnplib::mocking::sys_socket_h.recvfrom(
             ssock, requestBuf, (size_t)25, 0, (struct sockaddr*)&clientAddr,
             &clientLen);
         if (byteReceived > 0) {
@@ -622,8 +622,8 @@ static void RunMiniServer(
         upnplib::fdset_if_valid(miniSock->ssdpReqSock6, &rdSet);
 #endif /* INCLUDE_CLIENT_APIS */
         /* select() */
-        ret = mocking::sys_select_h.select((int)maxMiniSock, &rdSet, NULL,
-                                           &expSet, NULL);
+        ret = upnplib::mocking::sys_select_h.select((int)maxMiniSock, &rdSet,
+                                                    NULL, &expSet, NULL);
         if (ret == SOCKET_ERROR && errno == EINTR) {
             continue;
         }
@@ -664,7 +664,7 @@ static void RunMiniServer(
     sock_close(miniSock->ssdpReqSock6);
 #endif /* INCLUDE_CLIENT_APIS */
     /* Free minisock. */
-    mocking::stdlib_h.free(miniSock);
+    upnplib::mocking::stdlib_h.free(miniSock);
     gMServState = MSERV_IDLE;
 
     return;
@@ -688,8 +688,8 @@ static int get_port(
     int code;
 
     len = sizeof(sockinfo);
-    code = mocking::sys_socket_h.getsockname(sockfd,
-                                             (struct sockaddr*)&sockinfo, &len);
+    code = upnplib::mocking::sys_socket_h.getsockname(
+        sockfd, (struct sockaddr*)&sockinfo, &len);
     if (code == -1) {
         return -1;
     }
@@ -756,7 +756,7 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
                    "init_socket_suff(): Invalid ip address: %s.\n", text_addr);
         goto error;
     }
-    s->fd = mocking::sys_socket_h.socket(domain, SOCK_STREAM, 0);
+    s->fd = upnplib::mocking::sys_socket_h.socket(domain, SOCK_STREAM, 0);
 
     if (s->fd == INVALID_SOCKET) {
 #ifdef _WIN32
@@ -856,8 +856,8 @@ static int do_bind(struct s_SocketStuff* s) {
         if (s->try_port == 0)
             s->try_port = APPLICATION_LISTENING_PORT;
 
-        bind_error =
-            mocking::sys_socket_h.bind(s->fd, s->serverAddr, s->address_len);
+        bind_error = upnplib::mocking::sys_socket_h.bind(s->fd, s->serverAddr,
+                                                         s->address_len);
         if (bind_error == -1)
             repeat = (errno == EADDRINUSE) ? 1 : 0;
 
@@ -887,7 +887,7 @@ static int do_listen(struct s_SocketStuff* s) {
     int listen_error;
     int port_error;
 
-    listen_error = mocking::sys_socket_h.listen(s->fd, SOMAXCONN);
+    listen_error = upnplib::mocking::sys_socket_h.listen(s->fd, SOMAXCONN);
     if (listen_error == -1) {
         UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
                    "do_listen(): Error in IPv%d listen(): %s.\n", s->ip_version,
@@ -1098,7 +1098,8 @@ static int get_miniserver_stopsock(
     SOCKET miniServerStopSock = 0;
     int ret = 0;
 
-    miniServerStopSock = mocking::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
+    miniServerStopSock =
+        upnplib::mocking::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (miniServerStopSock == INVALID_SOCKET) {
         UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
                    "Error in socket(): %s\n", std::strerror(errno));
@@ -1108,9 +1109,9 @@ static int get_miniserver_stopsock(
     memset(&stop_sockaddr, 0, sizeof(stop_sockaddr));
     stop_sockaddr.sin_family = (sa_family_t)AF_INET;
     stop_sockaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    ret = mocking::sys_socket_h.bind(miniServerStopSock,
-                                     (struct sockaddr*)&stop_sockaddr,
-                                     sizeof(stop_sockaddr));
+    ret = upnplib::mocking::sys_socket_h.bind(miniServerStopSock,
+                                              (struct sockaddr*)&stop_sockaddr,
+                                              sizeof(stop_sockaddr));
     if (ret == SOCKET_ERROR) {
         UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
                    "Error in binding localhost: %s.\n,", std::strerror(errno));
@@ -1282,7 +1283,7 @@ int StopMiniServer() {
     default:
         return 0;
     }
-    sock = mocking::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
+    sock = upnplib::mocking::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (sock == INVALID_SOCKET) {
         UpnpPrintf(UPNP_ERROR, SSDP, __FILE__, __LINE__,
                    "SSDP_SERVER: StopSSDPServer: Error in socket() %s\n",

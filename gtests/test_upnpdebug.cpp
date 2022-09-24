@@ -17,10 +17,10 @@ using ::testing::StrEq;
 using ::upnplib::testing::CaptureStdOutErr;
 using ::upnplib::testing::MatchesStdRegex;
 
-using ::mocking::Pthread;
-using ::mocking::PthreadInterface;
-using ::mocking::Stdio;
-using ::mocking::StdioInterface;
+using ::upnplib::mocking::Pthread;
+using ::upnplib::mocking::PthreadInterface;
+using ::upnplib::mocking::Stdio;
+using ::upnplib::mocking::StdioInterface;
 
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc

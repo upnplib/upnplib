@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-20
+// Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -8,8 +8,8 @@
 
 #include "upnplib/upnptools.hpp" // For upnplib_native only
 #include "upnplib/gtest_tools_unix.hpp"
-#include "mocking/ifaddrs.hpp"
-#include "mocking/net_if.hpp"
+#include "upnplib/mocking/ifaddrs.hpp"
+#include "upnplib/mocking/net_if.hpp"
 
 #include "gmock/gmock.h"
 #include "upnplib/gtest.hpp"
@@ -20,10 +20,10 @@ using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 
-using ::mocking::Ifaddrs;
-using ::mocking::IfaddrsInterface;
-using ::mocking::Net_if;
-using ::mocking::Net_ifInterface;
+using ::upnplib::mocking::Ifaddrs;
+using ::upnplib::mocking::IfaddrsInterface;
+using ::upnplib::mocking::Net_if;
+using ::upnplib::mocking::Net_ifInterface;
 
 using ::upnplib::testing::CaptureStdOutErr;
 

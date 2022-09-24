@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-21
+ * Redistribution only with this Copyright remark. Last modified: 2022-09-25
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -82,8 +82,8 @@
 #define UPNP_VERSION_STRING "1.14.13"
 
 #include "upnpmock/pupnp.hpp"
-#include "mocking/sys_select.hpp"
-#include "mocking/sys_socket.hpp"
+#include "upnplib/mocking/sys_select.hpp"
+#include "upnplib/mocking/sys_socket.hpp"
 #include "upnpmock/winsock2_win32.hpp"
 
 /*
@@ -129,8 +129,8 @@ static int Check_Connect_And_Wait_Connection(
 #else
         if (EINPROGRESS == errno) {
 #endif
-            result = mocking::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
-                                                  &tmvTimeout);
+            result = upnplib::mocking::sys_select_h.select(
+                sock + 1, NULL, &fdSet, NULL, &tmvTimeout);
             if (result < 0) {
 #ifdef _WIN32
                 /* WSAGetLastError(); */
@@ -145,7 +145,7 @@ static int Check_Connect_And_Wait_Connection(
             } else {
                 int valopt = 0;
                 socklen_t len = sizeof(valopt);
-                if (mocking::sys_socket_h.getsockopt(
+                if (upnplib::mocking::sys_socket_h.getsockopt(
                         sock, SOL_SOCKET, SO_ERROR, (void*)&valopt, &len) < 0) {
                     /* failed to read delayed error */
                     return -1;
@@ -169,7 +169,8 @@ static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
     // Ingo BUG! On MS Windows sock_make_no_blocking() returns with positive
     // error numbers.
     if (ret != -1) {
-        ret = mocking::sys_socket_h.connect(sockfd, serv_addr, addrlen);
+        ret =
+            upnplib::mocking::sys_socket_h.connect(sockfd, serv_addr, addrlen);
         ret = upnplib::pupnp->Check_Connect_And_Wait_Connection(sockfd, ret);
         if (ret != -1) {
             ret = upnplib::pupnp->sock_make_blocking(sockfd);
@@ -178,7 +179,7 @@ static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
 
     return ret;
 #else
-    return mocking::sys_socket_h.connect(sockfd, serv_addr, addrlen);
+    return upnplib::mocking::sys_socket_h.connect(sockfd, serv_addr, addrlen);
 #endif /* UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS */
 }
 
@@ -306,7 +307,7 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
     // Ingo: BUG! Must check return value
     http_FixUrl(destination_url, url);
 
-    connfd = mocking::sys_socket_h.socket(
+    connfd = upnplib::mocking::sys_socket_h.socket(
         (int)url->hostport.IPaddress.ss_family, SOCK_STREAM, 0);
     if (connfd == INVALID_SOCKET) {
         return (SOCKET)(UPNP_E_OUTOF_SOCKET);
@@ -321,7 +322,7 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
         UpnpPrintf(UPNP_CRITICAL, HTTP, __FILE__, __LINE__,
                    "connect error: %d\n", WSAGetLastError());
 #endif
-        if (mocking::sys_socket_h.shutdown(connfd, SD_BOTH) == -1) {
+        if (upnplib::mocking::sys_socket_h.shutdown(connfd, SD_BOTH) == -1) {
             UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
                        "Error in shutdown: %s\n", std::strerror(errno));
         }
@@ -1131,7 +1132,7 @@ int http_OpenHttpConnection(const char* url_str, void** Handle, int timeout) {
     handle->requestStarted = 0;
     memset(&handle->response, 0, sizeof(handle->response));
     /* connect to the server */
-    tcp_connection = mocking::sys_socket_h.socket(
+    tcp_connection = upnplib::mocking::sys_socket_h.socket(
         url.hostport.IPaddress.ss_family, SOCK_STREAM, 0);
     if (tcp_connection == INVALID_SOCKET) {
         ret_code = UPNP_E_SOCKET_ERROR;

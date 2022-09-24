@@ -10,6 +10,7 @@
 #include <netdb.h> // important for struct addrinfo
 #endif
 
+namespace upnplib {
 namespace mocking {
 
 class NetdbInterface {
@@ -74,5 +75,6 @@ class EXPORT_SPEC Netdb {
 extern Netdb EXPORT_SPEC netdb_h;
 
 } // namespace mocking
+} // namespace upnplib
 
 #endif // MOCKING_NETDB_HPP

@@ -6,6 +6,7 @@
 #include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #include <ifaddrs.h>
 
+namespace upnplib {
 namespace mocking {
 
 class IfaddrsInterface {
@@ -66,5 +67,6 @@ class EXPORT_SPEC Ifaddrs {
 extern Ifaddrs EXPORT_SPEC ifaddrs_h;
 
 } // namespace mocking
+} // namespace upnplib
 
 #endif // MOCKING_IFADDRS_HPP

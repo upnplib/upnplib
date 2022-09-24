@@ -6,6 +6,7 @@
 #include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #include <stdio.h>
 
+namespace upnplib {
 namespace mocking {
 
 class StdioInterface {
@@ -85,5 +86,6 @@ class EXPORT_SPEC Stdio {
 extern Stdio EXPORT_SPEC stdio_h;
 
 } // namespace mocking
+} // namespace upnplib
 
 #endif // MOCKING_NETIO_HPP

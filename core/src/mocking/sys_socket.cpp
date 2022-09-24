@@ -1,8 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-21
+// Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
-#include "mocking/sys_socket.hpp"
+#include "upnplib/mocking/sys_socket.hpp"
 
+namespace upnplib {
 namespace mocking {
 
 // clang-format off
@@ -134,3 +135,4 @@ Sys_socketReal sys_socket_realObj;
 Sys_socket sys_socket_h(&sys_socket_realObj);
 
 } // namespace mocking
+} // namespace upnplib

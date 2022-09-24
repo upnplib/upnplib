@@ -1,8 +1,8 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-21
+// Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
 #include "upnplib/sock.hpp"
-#include "mocking/sys_socket.hpp"
+#include "upnplib/mocking/sys_socket.hpp"
 
 #include "upnplib/gtest.hpp"
 #include "gmock/gmock.h"
@@ -17,8 +17,8 @@ using ::testing::ThrowsMessage;
 using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::MatchesStdRegex;
 
-using ::mocking::Sys_socket;
-using ::mocking::Sys_socketInterface;
+using ::upnplib::mocking::Sys_socket;
+using ::upnplib::mocking::Sys_socketInterface;
 
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
