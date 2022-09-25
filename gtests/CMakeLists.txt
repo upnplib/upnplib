@@ -122,7 +122,7 @@ add_executable(test_strintmap-pnsh
 )
 target_include_directories(test_strintmap-pnsh
     PRIVATE
-        ./include
+        ${UPnPlib_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
@@ -169,7 +169,7 @@ add_executable(test_membuffer
 )
 target_include_directories(test_membuffer
     PRIVATE
-        ./include
+        ${UPnPlib_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc

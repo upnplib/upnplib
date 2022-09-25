@@ -17,7 +17,7 @@
  */
 
 #include "UpnpUniStd.hpp" /* for close() */
-#include "upnpmock/unistd.hpp"
+#include "upnplib/mocking/unistd.hpp"
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -26,7 +26,7 @@
 #include <stdarg.h>
 #include <ws2tcpip.h>
 
-#define UpnpCloseSocket upnplib::unistd_h->closesocket
+#define UpnpCloseSocket upnplib::mocking::unistd_h.closesocket
 
 #if (_WIN32_WINNT < 0x0600)
 typedef short sa_family_t;
@@ -61,7 +61,7 @@ typedef int SOCKET;
 #define SOCKET_ERROR (-1)
 
 /*! Alias to close() to make code more WIN32 tolerant. */
-#define UpnpCloseSocket upnplib::unistd_h->close
+#define UpnpCloseSocket upnplib::mocking::unistd_h.close
 #endif /* _WIN32 */
 
 /* @} Sock */

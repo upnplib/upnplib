@@ -156,9 +156,9 @@ set(PUPNP_SOURCE_FILES
     ${UPnPlib_SOURCE_DIR}/core/src/mocking/stdio.cpp
     ${UPnPlib_SOURCE_DIR}/core/src/mocking/stdlib.cpp
     ${UPnPlib_SOURCE_DIR}/core/src/mocking/sys_socket.cpp
+    ${UPnPlib_SOURCE_DIR}/core/src/mocking/unistd.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:${UPnPlib_SOURCE_DIR}/core/src/mocking/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:${UPnPlib_SOURCE_DIR}/core/src/mocking/net_if.cpp>
-    ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp
     $<$<BOOL:${WIN32}>:${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj_win32.cpp>
 )
 

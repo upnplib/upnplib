@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-16
+# Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -208,6 +208,7 @@ add_executable(test_webserver-pnst
 target_include_directories(test_webserver-pnst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${UPnPlib_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>

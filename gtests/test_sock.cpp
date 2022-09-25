@@ -9,7 +9,7 @@
 #include "upnplib/upnptools.hpp"
 #include "upnplib/mocking/sys_socket.hpp"
 #include "upnplib/mocking/sys_select.hpp"
-#include "upnpmock/unistd.hpp"
+#include "upnplib/mocking/unistd.hpp"
 #include "upnp.hpp"
 
 #include "gmock/gmock.h"
@@ -27,6 +27,8 @@ using ::upnplib::mocking::Sys_select;
 using ::upnplib::mocking::Sys_selectInterface;
 using ::upnplib::mocking::Sys_socket;
 using ::upnplib::mocking::Sys_socketInterface;
+using ::upnplib::mocking::Unistd;
+using ::upnplib::mocking::UnistdInterface;
 
 namespace upnplib {
 
@@ -116,19 +118,11 @@ class Sys_selectMock : public Sys_selectInterface {
                 (override));
 };
 
-class Mock_unistd : public Bunistd {
-    // Class to mock the free system functions.
-    Bunistd* m_oldptr;
-
+class UnistdMock : public UnistdInterface {
   public:
-    // Save and restore the old pointer to the production function
-    Mock_unistd() {
-        m_oldptr = unistd_h;
-        unistd_h = this;
-    }
-    virtual ~Mock_unistd() override { unistd_h = m_oldptr; }
-
-    MOCK_METHOD(int, PUPNP_CLOSE_SOCKET, (PUPNP_SOCKET_TYPE fd), (override));
+    virtual ~UnistdMock() override = default;
+    MOCK_METHOD(int, UPNPLIB_CLOSE_SOCKET, (UPNPLIB_SOCKET_TYPE fd),
+                (override));
 };
 
 //
@@ -171,7 +165,7 @@ class SockFTestSuite : public ::testing::Test {
 
     // Instantiate mock objects
     Sys_socketMock m_mock_sys_socketObj;
-    Mock_unistd m_mock_unistdObj;
+    UnistdMock m_mock_unistdObj;
     Sys_selectMock m_mock_sys_selectObj;
 
     // Dummy socket, if we do not need a real one due to mocking
@@ -235,7 +229,8 @@ TEST_F(SockFTestSuite, sock_destroy_valid_socket_descriptor) {
                 shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
         .WillOnce(Return(0));
     // close is successful
-    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(m_socketfd))
+    Unistd unistd_injectObj(&m_mock_unistdObj);
+    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(m_socketfd))
         .WillOnce(Return(0));
 
     // Process the Unit
@@ -253,7 +248,8 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_ok_close_fails_not_0) {
                 shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
         .WillOnce(Return(0));
     // close fails on _WIN32 with positive error number
-    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(m_socketfd))
+    Unistd unistd_injectObj(&m_mock_unistdObj);
+    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(m_socketfd))
         .WillOnce(Return(10093 /*WSANOTINITIALISED*/));
 
     // Process the Unit
@@ -285,7 +281,8 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_fails_close_ok) {
                 shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
         .WillOnce(Return(-1));
     // close is successful
-    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(m_socketfd))
+    Unistd unistd_injectObj(&m_mock_unistdObj);
+    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(m_socketfd))
         .WillOnce(Return(0));
 
     // Process the Unit
@@ -319,7 +316,8 @@ TEST_F(SockFTestSuite, sock_destroy_inval_fd_shutdown_fails_close_fails_not_0) {
                 shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
         .WillOnce(Return(-1));
     // close fails on _WIN32 with positive error number
-    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(m_socketfd))
+    Unistd unistd_injectObj(&m_mock_unistdObj);
+    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(m_socketfd))
         .WillOnce(Return(10093 /*WSANOTINITIALISED*/));
 
     // Process the Unit

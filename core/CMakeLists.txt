@@ -83,7 +83,7 @@ if(NOT WIN32)
         ./src/api/upnptools.cpp
         ./src/net/sock.cpp
         ./src/mocking/sys_socket.cpp
-        ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp
+        ./src/mocking/unistd.cpp
     )
     set(UPNPLIB_NATIVE_INCLUDE_DIRECTORIES
         ${UPnPlib_SOURCE_DIR}/include
@@ -256,8 +256,8 @@ else() # WIN32
             ./src/global.cpp
             ./src/api/upnptools.cpp
             ./src/net/sock.cpp
-            ${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj.cpp
             ./src/mocking/sys_socket.cpp
+            ./src/mocking/unistd.cpp
     )
     target_include_directories(upnplib_native_shared
         PRIVATE

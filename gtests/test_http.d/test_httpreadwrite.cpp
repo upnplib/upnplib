@@ -24,6 +24,8 @@ using ::upnplib::mocking::Netdb;
 using ::upnplib::mocking::NetdbInterface;
 using ::upnplib::mocking::Sys_socket;
 using ::upnplib::mocking::Sys_socketInterface;
+using ::upnplib::mocking::Unistd;
+using ::upnplib::mocking::UnistdInterface;
 
 namespace upnplib {
 
@@ -107,19 +109,11 @@ class Sys_socketMock : public Sys_socketInterface {
     // clang-format on
 };
 
-class Mock_unistd : public Bunistd {
-    // Class to mock the free system functions.
-    Bunistd* m_oldptr;
-
+class UnistdMock : public UnistdInterface {
   public:
-    // Save and restore the old pointer to the production function
-    Mock_unistd() {
-        m_oldptr = unistd_h;
-        unistd_h = this;
-    }
-    virtual ~Mock_unistd() override { unistd_h = m_oldptr; }
-
-    MOCK_METHOD(int, PUPNP_CLOSE_SOCKET, (PUPNP_SOCKET_TYPE fd), (override));
+    virtual ~UnistdMock() override = default;
+    MOCK_METHOD(int, UPNPLIB_CLOSE_SOCKET, (UPNPLIB_SOCKET_TYPE fd),
+                (override));
 };
 
 //
@@ -340,7 +334,7 @@ class OpenHttpConnectionIp4FTestSuite : public ::testing::Test {
     Mock_netv4info m_mock_netdbObj;
     Mock_pupnp m_mock_pupnpObj;
     Sys_socketMock m_mock_socketObj;
-    Mock_unistd m_mock_unistdObj;
+    UnistdMock m_mock_unistdObj;
     Chttpreadwrite_old m_httprw_oObj;
 
     // Dummy socket, if we do not need a real one due to mocking
@@ -390,7 +384,8 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_close_connection_successful) {
     EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(1);
-    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(1);
+    Unistd unistd_injectObj(&m_mock_unistdObj);
+    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(_)).Times(1);
 
     // Mock for connection to a network server
     EXPECT_CALL(m_mock_pupnpObj,
@@ -432,7 +427,8 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, nullptr_to_url) {
     Sys_socket sys_socket_injectObj(&m_mock_socketObj);
     EXPECT_CALL(m_mock_socketObj, socket(_, _, _)).Times(0);
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(0);
+    Unistd unistd_injectObj(&m_mock_unistdObj);
+    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(_)).Times(0);
     EXPECT_CALL(m_mock_pupnpObj, private_connect(_, _, _)).Times(0);
 
     http_connection_handle_t* phandle;
@@ -462,7 +458,8 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, empty_url) {
     Sys_socket sys_socket_injectObj(&m_mock_socketObj);
     EXPECT_CALL(m_mock_socketObj, socket(_, _, _)).Times(0);
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(0);
+    Unistd unistd_injectObj(&m_mock_unistdObj);
+    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(_)).Times(0);
     EXPECT_CALL(m_mock_pupnpObj, private_connect(_, _, _)).Times(0);
 
     // Connection handle must be freed.
@@ -506,7 +503,8 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_address_info_fails) {
     Sys_socket sys_socket_injectObj(&m_mock_socketObj);
     EXPECT_CALL(m_mock_socketObj, socket(_, _, _)).Times(0);
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(0);
+    Unistd unistd_injectObj(&m_mock_unistdObj);
+    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(_)).Times(0);
 
     // Don't expect a connection to a network server
     EXPECT_CALL(m_mock_pupnpObj, private_connect(_, _, _)).Times(0);
@@ -558,7 +556,8 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_socket_fails) {
         .WillOnce(SetErrnoAndReturn(ENOTSOCK, -1));
 
     // Close socket will fail with "fd isn't a valid open file descriptor."
-    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_))
+    Unistd unistd_injectObj(&m_mock_unistdObj);
+    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(_))
         .WillOnce(SetErrnoAndReturn(EBADF, -1));
 
     // Don't expect a connection to a network server
@@ -607,7 +606,8 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, connect_to_server_fails) {
     EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(1);
-    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(1);
+    Unistd unistd_injectObj(&m_mock_unistdObj);
+    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(_)).Times(1);
 
     // Connection to a network server will fail
     EXPECT_CALL(m_mock_pupnpObj,
@@ -654,7 +654,8 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_connection_with_ip_address) {
     EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(1);
-    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(1);
+    Unistd unistd_injectObj(&m_mock_unistdObj);
+    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(_)).Times(1);
 
     // Mock for connection to a network server
     EXPECT_CALL(m_mock_pupnpObj,
@@ -716,7 +717,8 @@ TEST_F(HttpConnectIp4FTestSuite, successful_connect) {
     EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(0);
+    Unistd unistd_injectObj(&m_mock_unistdObj);
+    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(_)).Times(0);
 
     // Mock for connection to a network server
     EXPECT_CALL(m_mock_pupnpObj,
@@ -745,7 +747,8 @@ TEST_F(HttpConnectIp4FTestSuite, socket_allocation_fails) {
     EXPECT_CALL(m_mock_socketObj, socket(_, SOCK_STREAM, 0))
         .WillOnce(SetErrnoAndReturn(EACCES, -1));
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(0);
+    Unistd unistd_injectObj(&m_mock_unistdObj);
+    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(_)).Times(0);
 
     // Mock for connection to a network server
     EXPECT_CALL(m_mock_pupnpObj, private_connect(_, _, _)).Times(0);
@@ -769,7 +772,8 @@ TEST_F(HttpConnectIp4FTestSuite, low_level_net_connect_fails) {
     EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(1);
-    EXPECT_CALL(m_mock_unistdObj, PUPNP_CLOSE_SOCKET(_)).Times(1);
+    Unistd unistd_injectObj(&m_mock_unistdObj);
+    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(_)).Times(1);
 
     // Connection to a network server will fail
     EXPECT_CALL(m_mock_pupnpObj,

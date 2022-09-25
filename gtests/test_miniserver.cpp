@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-19
+// Redistribution only with this Copyright remark. Last modified: 2022-09-25
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
@@ -158,18 +158,6 @@ class StdlibMock : public StdlibInterface {
     MOCK_METHOD(void*, malloc, (size_t size), (override));
     MOCK_METHOD(void, free, (void* ptr), (override));
     MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));
-};
-
-class Mock_unistd : public Bunistd {
-    // Class to mock the free system functions.
-    Bunistd* m_oldptr;
-
-  public:
-    // Save and restore the old pointer to the production function
-    Mock_unistd() { m_oldptr = unistd_h; unistd_h = this; }
-    virtual ~Mock_unistd() override { unistd_h = m_oldptr; }
-
-    MOCK_METHOD(int, PUPNP_CLOSE_SOCKET, (PUPNP_SOCKET_TYPE fd), (override));
 };
 // clang-format on
 
@@ -357,7 +345,7 @@ TEST_F(StartMiniServerFTestSuite,
     EXPECT_EQ(miniSocket.ssdpReqSock6, INVALID_SOCKET);
 
     // Close socket should fail, there is no valid socket.
-    EXPECT_EQ(PUPNP_CLOSE_SOCKET(miniSocket.miniServerSock4), -1);
+    EXPECT_EQ(UPNPLIB_CLOSE_SOCKET(miniSocket.miniServerSock4), -1);
 }
 
 TEST_F(StartMiniServerFTestSuite,
@@ -395,7 +383,7 @@ TEST_F(StartMiniServerFTestSuite,
     EXPECT_EQ(miniSocket.ssdpReqSock6, INVALID_SOCKET);
 
     // Close socket should fail because there is no socket to close.
-    EXPECT_EQ(PUPNP_CLOSE_SOCKET(miniSocket.miniServerSock4), -1);
+    EXPECT_EQ(UPNPLIB_CLOSE_SOCKET(miniSocket.miniServerSock4), -1);
 }
 
 TEST(StartMiniServerTestSuite, get_miniserver_sockets_uninitialized) {
@@ -451,7 +439,7 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_uninitialized) {
     EXPECT_EQ(miniSocket.ssdpReqSock6, INVALID_SOCKET);
 
     // Close socket
-    EXPECT_EQ(PUPNP_CLOSE_SOCKET(miniSocket.miniServerSock4), -1);
+    EXPECT_EQ(UPNPLIB_CLOSE_SOCKET(miniSocket.miniServerSock4), -1);
 #endif // _WIN32
 }
 
@@ -520,7 +508,7 @@ TEST_F(StartMiniServerFTestSuite, init_socket_suff) {
     EXPECT_FALSE(reuseaddr);
 
     // Close real socket
-    EXPECT_EQ(PUPNP_CLOSE_SOCKET(ss4.fd), 0);
+    EXPECT_EQ(UPNPLIB_CLOSE_SOCKET(ss4.fd), 0);
 }
 
 TEST_F(StartMiniServerFTestSuite, init_socket_suff_reuseaddr) {
@@ -541,7 +529,7 @@ TEST_F(StartMiniServerFTestSuite, init_socket_suff_reuseaddr) {
 
     // Important! Otherwise repeated tests will fail later because all file
     // descriptors for the process are consumed.
-    EXPECT_EQ(PUPNP_CLOSE_SOCKET(ss4.fd), 0) << std::strerror(errno);
+    EXPECT_EQ(UPNPLIB_CLOSE_SOCKET(ss4.fd), 0) << std::strerror(errno);
 }
 
 TEST_F(StartMiniServerFTestSuite, init_socket_suff_with_invalid_socket) {
@@ -666,7 +654,7 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_with_wrong_socket) {
 
     struct s_SocketStuff s;
     EXPECT_EQ(init_socket_suff(&s, text_addr, 4), 0);
-    EXPECT_EQ(PUPNP_CLOSE_SOCKET(s.fd), 0) << std::strerror(errno);
+    EXPECT_EQ(UPNPLIB_CLOSE_SOCKET(s.fd), 0) << std::strerror(errno);
     // The socket id wasn't got from a socket() call now and should trigger an
     // error.
     s.fd = 32000;
@@ -1799,7 +1787,7 @@ TEST_F(RunMiniServerFTestSuite, fdset_if_valid) {
 
     EXPECT_NE(FD_ISSET(sockfd, &rdSet), 0);
 
-    EXPECT_EQ(PUPNP_CLOSE_SOCKET(sockfd), 0) << std::strerror(errno);
+    EXPECT_EQ(UPNPLIB_CLOSE_SOCKET(sockfd), 0) << std::strerror(errno);
 }
 
 TEST_F(RunMiniServerFTestSuite, fdset_if_valid_with_closed_socket) {
