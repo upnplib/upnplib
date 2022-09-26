@@ -21,6 +21,8 @@ using ::upnplib::mocking::Sys_select;
 using ::upnplib::mocking::Sys_selectInterface;
 using ::upnplib::mocking::Sys_socket;
 using ::upnplib::mocking::Sys_socketInterface;
+using ::upnplib::mocking::Winsock2;
+using ::upnplib::mocking::Winsock2Interface;
 
 namespace upnplib {
 
@@ -440,18 +442,9 @@ TEST_F(PrivateConnectIp4FTestSuite, sock_make_blocking_fails) {
 
 // Mocked system calls on MS Windows
 // ---------------------------------
-class Mock_winsock2 : public Bwinsock2 {
-    // Class to mock the free system functions.
-    Bwinsock2* m_oldptr;
-
+class Winsock2Mock : public Winsock2Interface {
   public:
-    // Save and restore the old pointer to the production function
-    Mock_winsock2() {
-        m_oldptr = winsock2_h;
-        winsock2_h = this;
-    }
-    virtual ~Mock_winsock2() override { winsock2_h = m_oldptr; }
-
+    virtual ~Winsock2Mock() override = default;
     MOCK_METHOD(int, WSAGetLastError, (), (override));
 };
 
@@ -466,7 +459,8 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, successful_connect) {
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1));
     // WSAGetLastError
-    Mock_winsock2 mock_winsock2Obj;
+    Winsock2Mock mock_winsock2Obj;
+    Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError())
         .WillOnce(Return(WSAEWOULDBLOCK));
 
@@ -490,7 +484,8 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, wrong_connect_retval) {
     Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
     // WSAGetLastError
-    Mock_winsock2 mock_winsock2Obj;
+    Winsock2Mock mock_winsock2Obj;
+    Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError()).Times(0);
 
     // Test the unit
@@ -513,7 +508,8 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, connect_error) {
     Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
     // WSAGetLastError WSAEBADF = "File handle is not valid."
-    Mock_winsock2 mock_winsock2Obj;
+    Winsock2Mock mock_winsock2Obj;
+    Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError()).WillOnce(Return(WSAEBADF));
 
     // Test the unit
@@ -538,7 +534,8 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_times_out) {
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(0));
     // WSAGetLastError
-    Mock_winsock2 mock_winsock2Obj;
+    Winsock2Mock mock_winsock2Obj;
+    Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError())
         .WillOnce(Return(WSAEWOULDBLOCK));
 
@@ -564,7 +561,8 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_error) {
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(-1));
     // WSAGetLastError
-    Mock_winsock2 mock_winsock2Obj;
+    Winsock2Mock mock_winsock2Obj;
+    Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError())
         .WillOnce(Return(WSAEWOULDBLOCK));
 
