@@ -159,6 +159,7 @@ set(PUPNP_SOURCE_FILES
     ${UPnPlib_SOURCE_DIR}/core/src/mocking/unistd.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:${UPnPlib_SOURCE_DIR}/core/src/mocking/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:${UPnPlib_SOURCE_DIR}/core/src/mocking/net_if.cpp>
+    $<$<PLATFORM_ID:Windows>:${UPnPlib_SOURCE_DIR}/core/src/mocking/iphlpapi.cpp>
     $<$<BOOL:${WIN32}>:${UPnPlib_SOURCE_DIR}/gtests/tools/mockObj_win32.cpp>
 )
 

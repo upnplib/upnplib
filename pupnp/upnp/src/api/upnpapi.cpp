@@ -55,7 +55,7 @@
 #include "uuid.hpp"
 
 #ifdef _WIN32
-#include "upnpmock/iphlpapi_win32.hpp"
+#include "upnplib/mocking/iphlpapi.hpp"
 #else
 #include "upnplib/mocking/ifaddrs.hpp"
 #include "upnplib/mocking/net_if.hpp"
@@ -3105,7 +3105,7 @@ int UpnpGetIfInfo(const char* IfName) {
     int valid_addr_found = 0;
 
     /* Get Adapters addresses required size. */
-    ret = upnplib::iphlpapi_h->GetAdaptersAddresses(
+    ret = upnplib::mocking::iphlpapi_h.GetAdaptersAddresses(
         AF_UNSPEC, GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_DNS_SERVER, NULL,
         adapts, &adapts_sz);
     if (ret != ERROR_BUFFER_OVERFLOW) {
@@ -3120,7 +3120,7 @@ int UpnpGetIfInfo(const char* IfName) {
         return UPNP_E_OUTOF_MEMORY;
     }
     /* Do the call that will actually return the info. */
-    ret = upnplib::iphlpapi_h->GetAdaptersAddresses(
+    ret = upnplib::mocking::iphlpapi_h.GetAdaptersAddresses(
         AF_UNSPEC, GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_DNS_SERVER, NULL,
         adapts, &adapts_sz);
     if (ret != ERROR_SUCCESS) {

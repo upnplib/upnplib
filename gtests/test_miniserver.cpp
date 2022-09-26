@@ -129,7 +129,7 @@ by select() so it will always enable a blocked (waiting) select().
 // ===================
 class Sys_socketMock : public Sys_socketInterface {
   public:
-    virtual ~Sys_socketMock() override {}
+    virtual ~Sys_socketMock() override = default;
     MOCK_METHOD(int, socket, (int domain, int type, int protocol), (override));
     MOCK_METHOD(int, bind, (int sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
     MOCK_METHOD(int, listen, (int sockfd, int backlog), (override));
@@ -148,13 +148,13 @@ Sys_socketMock mocked_sys_socketObj;
 
 class Sys_selectMock : public Sys_selectInterface {
   public:
-    virtual ~Sys_selectMock() override {}
+    virtual ~Sys_selectMock() override = default;
     MOCK_METHOD(int, select, (int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout), (override));
 };
 
 class StdlibMock : public StdlibInterface {
   public:
-    virtual ~StdlibMock() override {}
+    virtual ~StdlibMock() override = default;
     MOCK_METHOD(void*, malloc, (size_t size), (override));
     MOCK_METHOD(void, free, (void* ptr), (override));
     MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));

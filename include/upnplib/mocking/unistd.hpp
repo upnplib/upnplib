@@ -33,7 +33,7 @@ class UnistdInterface {
 class UnistdReal : public UnistdInterface {
   public:
     virtual ~UnistdReal() override = default;
-    virtual int UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd) override;
+    int UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd) override;
 };
 
 //
