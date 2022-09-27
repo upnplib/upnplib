@@ -1,10 +1,10 @@
 #ifndef MOCKING_PTHREAD_HPP
 #define MOCKING_PTHREAD_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-20
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
-#include "UpnpGlobal.hpp" // for EXPORT_SPEC
-#include "pthread.h"      // To find pthreads4w don't use <pthread.h>
+#include "upnplib/visibility.hpp"
+#include "pthread.h" // To find pthreads4w don't use <pthread.h>
 
 namespace upnplib {
 namespace mocking {
@@ -51,15 +51,16 @@ class PthreadReal : public PthreadInterface {
 // This is the caller or injector class that injects the class (worker) to be
 // used, real or mocked functions.
 /* Example:
-    PthreadReal pthread_realObj;
-    Pthread(&pthread_realObj;
+    PthreadReal pthread_realObj; // already done below
+    Pthread(&pthread_realObj);   // already done below
     { // Other scope, e.g. within a gtest
-        class PthreadMock { ...; MOCK_METHOD(...) };
+        class PthreadMock : public PthreadInterface { ...; MOCK_METHOD(...) };
         PthreadMock pthread_mockObj;
-        Pthread(&pthread_mockObj);
+        Pthread pthread_injectObj(&pthread_mockObj); // obj. name doesn't matter
+        EXPECT_CALL(pthread_mockObj, ...);
     } // End scope, mock objects are destructed, worker restored to default.
 *///------------------------------------------------------------------------
-class EXPORT_SPEC Pthread {
+class UPNPLIB_API Pthread {
   public:
     // This constructor is used to inject the pointer to the real function. It
     // sets the default used class, that is the real function.
@@ -68,9 +69,10 @@ class EXPORT_SPEC Pthread {
     // This constructor is used to inject the pointer to the mocking function.
     Pthread(PthreadInterface* a_ptr_mockObj);
 
-    // The destructor is ussed to restore the default pointer.
+    // The destructor is ussed to restore the old pointer.
     virtual ~Pthread();
 
+    // Methods
     virtual int pthread_mutex_init(pthread_mutex_t* mutex, const pthread_mutexattr_t* mutexattr);
     virtual int pthread_mutex_lock(pthread_mutex_t* mutex);
     virtual int pthread_mutex_unlock(pthread_mutex_t* mutex);
@@ -85,15 +87,17 @@ class EXPORT_SPEC Pthread {
     // clang-format on
 
   private:
-    // Must be static to be persistent also available on a new constructed
-    // object. With inline we do not need an extra definition line outside the
-    // class. I also make the symbol hidden so the variable cannot be accessed
-    // globaly with Pthread::m_ptr_workerObj.
-    EXPORT_SPEC_LOCAL static inline PthreadInterface* m_ptr_workerObj;
+    // Next variable must be static. Please note that a static member variable
+    // belongs to the class, but not to the instantiated object. This is
+    // important here for mocking because the pointer is also valid on all
+    // objects of this class. With inline we do not need an extra definition
+    // line outside the class. I also make the symbol hidden so the variable
+    // cannot be accessed globaly with Pthread::m_ptr_workerObj.
+    UPNPLIB_LOCAL static inline PthreadInterface* m_ptr_workerObj;
     PthreadInterface* m_ptr_oldObj{};
 };
 
-extern Pthread EXPORT_SPEC pthread_h;
+extern Pthread UPNPLIB_API pthread_h;
 
 } // namespace mocking
 } // namespace upnplib

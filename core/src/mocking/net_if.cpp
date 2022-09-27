@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-25
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 #include "upnplib/mocking/net_if.hpp"
 
@@ -24,6 +24,7 @@ Net_if::Net_if(Net_ifInterface* a_ptr_mockObj) {
 // The destructor is ussed to restore the old pointer.
 Net_if::~Net_if() { m_ptr_workerObj = m_ptr_oldObj; }
 
+// Methods
 unsigned int Net_if::if_nametoindex(const char* ifname) {
     return m_ptr_workerObj->if_nametoindex(ifname);
 }

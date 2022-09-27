@@ -56,7 +56,16 @@ class PupnpReal : public PupnpInterface {
 //
 // This is the caller or injector class that injects the class (worker) to be
 // used, real or mocked functions.
-// --------------------------------------------------------------------------
+/* Example:
+    PupnpReal pupnp_realObj; // already done below
+    Pupnp(&pupnp_realObj);   // already done below
+    { // Other scope, e.g. within a gtest
+        class PupnpMock : public PupnpInterface { ...; MOCK_METHOD(...) };
+        PupnpMock pupnp_mockObj;
+        Pupnp pupnp_injectObj(&pupnp_mockObj); // obj. name doesn't matter
+        EXPECT_CALL(pupnp_mockObj, ...);
+    } // End scope, mock objects are destructed, worker restored to default.
+*///----------------------------------------------------------------------------
 class Pupnp {
   public:
     // This constructor is used to inject the pointer to the real function. It
@@ -98,10 +107,9 @@ class Pupnp {
   private:
     // Next variable must be static. Please note that a static member variable
     // belongs to the class, but not to the instantiated object. This is
-    // important here for mocking because the pointer is also valid on other
+    // important here for mocking because the pointer is also valid on all
     // objects of the class. With inline we do not need an extra definition line
-    // outside the class. I also make the symbol hidden so the variable cannot
-    // be accessed globaly with Pupnp::m_ptr_workerObj.
+    // outside the class.
     static inline PupnpInterface* m_ptr_workerObj;
     PupnpInterface* m_ptr_oldObj{};
 };

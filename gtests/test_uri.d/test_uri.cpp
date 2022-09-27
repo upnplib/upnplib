@@ -1,5 +1,5 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-25
+// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -18,9 +18,6 @@ using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 
-using ::upnplib::mocking::Netdb;
-using ::upnplib::mocking::NetdbInterface;
-
 namespace upnplib {
 
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
@@ -29,7 +26,7 @@ bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 //
 // Mocking
 // =======
-class NetdbMock : public NetdbInterface {
+class NetdbMock : public mocking::NetdbInterface {
   public:
     virtual ~NetdbMock() override {}
     MOCK_METHOD(int, getaddrinfo,
@@ -206,7 +203,7 @@ TEST_P(HostportFailIp4PTestSuite, parse_name_with_scheme) {
     addrinfo* res = netv4inf.set(ipaddr, port);
 
     // Mock for network address system call
-    Netdb netdb_injectObj(&netv4inf);
+    mocking::Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillOnce(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
@@ -253,7 +250,7 @@ TEST_P(HostportIp4PTestSuite, parse_hostport_successful) {
     addrinfo* res = netv4inf.set(ipaddr, port);
 
     // Mock for network address system call
-    Netdb netdb_injectObj(&netv4inf);
+    mocking::Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
@@ -711,7 +708,7 @@ TEST(ResolveRelUrlIp4TestSuite, resolve_successful) {
     addrinfo* res = netv4inf.set("192.168.186.186", 443);
 
     // Mock for network address system call
-    Netdb netdb_injectObj(&netv4inf);
+    mocking::Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
@@ -731,7 +728,7 @@ TEST(ResolveRelUrlIp4TestSuite, null_base_url_should_return_rel_url) {
     addrinfo* res = netv4inf.set("0.0.0.0", 0);
 
     // Mock for network address system call
-    Netdb netdb_injectObj(&netv4inf);
+    mocking::Netdb netdb_injectObj(&netv4inf);
     ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
@@ -754,7 +751,7 @@ TEST(ResolveRelUrlIp4TestSuite, empty_base_url_should_return_rel_url) {
     addrinfo* res = netv4inf.set("0.0.0.0", 0);
 
     // Mock for network address system call
-    Netdb netdb_injectObj(&netv4inf);
+    mocking::Netdb netdb_injectObj(&netv4inf);
     ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
@@ -790,7 +787,7 @@ TEST(ResolveRelUrlIp4TestSuite, null_rel_url_should_return_base_url) {
         addrinfo* res = netv4inf.set("192.168.168.168", 80);
 
         // Mock for network address system call
-        Netdb netdb_injectObj(&netv4inf);
+        mocking::Netdb netdb_injectObj(&netv4inf);
         EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
             .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
         EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
@@ -815,7 +812,7 @@ TEST(ResolveRelUrlIp4TestSuite, empty_rel_url_should_return_base_url) {
     addrinfo* res = netv4inf.set("192.168.168.168", 80);
 
     // Mock for network address system call
-    Netdb netdb_injectObj(&netv4inf);
+    mocking::Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
@@ -835,7 +832,7 @@ TEST(ResolveRelUrlIp4TestSuite, null_base_and_rel_url_should_return_null) {
     addrinfo* res = netv4inf.set("0.0.0.0", 0);
 
     // Mock for network address system call
-    Netdb netdb_injectObj(&netv4inf);
+    mocking::Netdb netdb_injectObj(&netv4inf);
     ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
@@ -852,7 +849,7 @@ TEST(ResolveRelUrlIp4TestSuite, empty_base_and_rel_url_should_return_null) {
     addrinfo* res = netv4inf.set("0.0.0.0", 0);
 
     // Mock for network address system call
-    Netdb netdb_injectObj(&netv4inf);
+    mocking::Netdb netdb_injectObj(&netv4inf);
     ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
@@ -873,7 +870,7 @@ TEST(ResolveRelUrlIp4TestSuite, absolute_rel_url_should_return_a_copy_of_it) {
     addrinfo* res = netv4inf.set("192.168.168.168", 443);
 
     // Mock for network address system call
-    Netdb netdb_injectObj(&netv4inf);
+    mocking::Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
@@ -893,7 +890,7 @@ TEST(ResolveRelUrlIp4TestSuite, base_and_rel_url_not_absolute_should_ret_null) {
     addrinfo* res = netv4inf.set("0.0.0.0", 0);
 
     // Mock for network address system call
-    Netdb netdb_injectObj(&netv4inf);
+    mocking::Netdb netdb_injectObj(&netv4inf);
     ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);

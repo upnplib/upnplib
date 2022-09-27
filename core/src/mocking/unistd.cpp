@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-25
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 #include "upnplib/mocking/unistd.hpp"
 
@@ -24,6 +24,7 @@ Unistd::Unistd(UnistdInterface* a_ptr_mockObj) {
 // The destructor is ussed to restore the old pointer.
 Unistd::~Unistd() { m_ptr_workerObj = m_ptr_oldObj; }
 
+// Methods
 int Unistd::UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd) {
     return m_ptr_workerObj->UPNPLIB_CLOSE_SOCKET(fd);
 }

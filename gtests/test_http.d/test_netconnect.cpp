@@ -1,5 +1,5 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-21
+// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -17,13 +17,6 @@ using ::testing::SetErrnoAndReturn;
 
 using ::upnplib::testing::SetArgPtrIntValue;
 
-using ::upnplib::mocking::Sys_select;
-using ::upnplib::mocking::Sys_selectInterface;
-using ::upnplib::mocking::Sys_socket;
-using ::upnplib::mocking::Sys_socketInterface;
-using ::upnplib::mocking::Winsock2;
-using ::upnplib::mocking::Winsock2Interface;
-
 namespace upnplib {
 
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
@@ -33,7 +26,7 @@ bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 // ######################################
 // Mocked system calls
 // ######################################
-class Sys_socketMock : public Sys_socketInterface {
+class Sys_socketMock : public mocking::Sys_socketInterface {
   public:
     virtual ~Sys_socketMock() override {}
     // clang-format off
@@ -54,7 +47,7 @@ class Sys_socketMock : public Sys_socketInterface {
 // Create mocking socket object for all tests in this file.
 Sys_socketMock mock_socketObj;
 
-class Sys_selectMock : public Sys_selectInterface {
+class Sys_selectMock : public mocking::Sys_selectInterface {
   public:
     virtual ~Sys_selectMock() override {}
     MOCK_METHOD(int, select,
@@ -178,7 +171,7 @@ TEST_F(PrivateConnectIp4FTestSuite, successful_connect) {
 
     // Then connect to the given ip address. With unblocking this will return
     // with an error condition and errno = EINPROGRESS
-    Sys_socket sys_socket_injectObj(&mock_socketObj);
+    mocking::Sys_socket sys_socket_injectObj(&mock_socketObj);
     EXPECT_CALL(mock_socketObj,
                 connect(m_socketfd, (sockaddr*)&m_saddrin, sizeof(m_saddrin)))
         .WillOnce(Return(-1));
@@ -220,7 +213,7 @@ TEST_F(PrivateConnectIp4FTestSuite, set_no_blocking_fails) {
         // Then connect to the given ip address. With unblocked this will return
         // with an error condition and errno = EINPROGRESS. But in this case
         // with failed unblock we expect a blocked but successful connection.
-        Sys_socket sys_socket_injectObj(&mock_socketObj);
+        mocking::Sys_socket sys_socket_injectObj(&mock_socketObj);
         ::std::cout << "  BUG! Disable blocking has failed so it should not "
                        "try to connect.\n";
         EXPECT_CALL(mock_socketObj, connect(m_socketfd, (sockaddr*)&m_saddrin,
@@ -259,7 +252,7 @@ TEST_F(PrivateConnectIp4FTestSuite, set_no_blocking_fails) {
                 EINVAL, 10098)); // On MS Windows are big error numbers
 
         // Don't try to connect to the given ip address.
-        Sys_socket sys_socket_injectObj(&mock_socketObj);
+        mocking::Sys_socket sys_socket_injectObj(&mock_socketObj);
         EXPECT_CALL(mock_socketObj, connect(m_socketfd, (sockaddr*)&m_saddrin,
                                             sizeof(m_saddrin)))
             .Times(0);
@@ -299,7 +292,7 @@ TEST_F(PrivateConnectIp4FTestSuite, connect_fails) {
 
     // Then connect to the given ip address. We expect that it fails with
     // errno = ENETUNREACH (Network is unreachable).
-    Sys_socket sys_socket_injectObj(&mock_socketObj);
+    mocking::Sys_socket sys_socket_injectObj(&mock_socketObj);
     EXPECT_CALL(mock_socketObj,
                 connect(m_socketfd, (sockaddr*)&m_saddrin, sizeof(m_saddrin)))
         .WillOnce(SetErrnoAndReturn(ENETUNREACH, -1));
@@ -350,7 +343,7 @@ TEST_F(PrivateConnectIp4FTestSuite, Check_Connect_And_Wait_Connection_fails) {
 
     // Then connect to the given ip address. returns with -1 and errno =
     // EINPROGRESS.
-    Sys_socket sys_socket_injectObj(&mock_socketObj);
+    mocking::Sys_socket sys_socket_injectObj(&mock_socketObj);
     EXPECT_CALL(mock_socketObj,
                 connect(m_socketfd, (sockaddr*)&m_saddrin, sizeof(m_saddrin)))
         .WillOnce(SetErrnoAndReturn(EINPROGRESS, -1));
@@ -401,7 +394,7 @@ TEST_F(PrivateConnectIp4FTestSuite, sock_make_blocking_fails) {
 
     // Then connect to the given ip address. Returns with -1 and errno =
     // EINPROGRESS.
-    Sys_socket sys_socket_injectObj(&mock_socketObj);
+    mocking::Sys_socket sys_socket_injectObj(&mock_socketObj);
     EXPECT_CALL(mock_socketObj,
                 connect(m_socketfd, (sockaddr*)&m_saddrin, sizeof(m_saddrin)))
         .WillOnce(SetErrnoAndReturn(EINPROGRESS, -1));
@@ -446,7 +439,7 @@ TEST_F(PrivateConnectIp4FTestSuite, sock_make_blocking_fails) {
 
 // Mocked system calls on MS Windows
 // ---------------------------------
-class Winsock2Mock : public Winsock2Interface {
+class Winsock2Mock : public mocking::Winsock2Interface {
   public:
     virtual ~Winsock2Mock() override = default;
     MOCK_METHOD(int, WSAGetLastError, (), (override));
@@ -458,13 +451,13 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, successful_connect) {
 
     // Configure expected system calls.
     // select()
-    Sys_select sys_select_injectObj(&mock_sys_selectObj);
+    mocking::Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1));
     // WSAGetLastError
     Winsock2Mock mock_winsock2Obj;
-    Winsock2 winsock2_injectObj(&mock_winsock2Obj);
+    mocking::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError())
         .WillOnce(Return(WSAEWOULDBLOCK));
 
@@ -485,11 +478,11 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, wrong_connect_retval) {
 
     // Configure expected system calls.
     // select()
-    Sys_select sys_select_injectObj(&mock_sys_selectObj);
+    mocking::Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
     // WSAGetLastError
     Winsock2Mock mock_winsock2Obj;
-    Winsock2 winsock2_injectObj(&mock_winsock2Obj);
+    mocking::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError()).Times(0);
 
     // Test the unit
@@ -509,11 +502,11 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, connect_error) {
 
     // Configure expected system calls.
     // select()
-    Sys_select sys_select_injectObj(&mock_sys_selectObj);
+    mocking::Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
     // WSAGetLastError WSAEBADF = "File handle is not valid."
     Winsock2Mock mock_winsock2Obj;
-    Winsock2 winsock2_injectObj(&mock_winsock2Obj);
+    mocking::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError()).WillOnce(Return(WSAEBADF));
 
     // Test the unit
@@ -533,13 +526,13 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_times_out) {
 
     // Configure expected system calls.
     // select() returns 0, that is timeout
-    Sys_select sys_select_injectObj(&mock_sys_selectObj);
+    mocking::Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(0));
     // WSAGetLastError
     Winsock2Mock mock_winsock2Obj;
-    Winsock2 winsock2_injectObj(&mock_winsock2Obj);
+    mocking::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError())
         .WillOnce(Return(WSAEWOULDBLOCK));
 
@@ -560,13 +553,13 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_error) {
 
     // Configure expected system calls.
     // select() returns -1, that is failure
-    Sys_select sys_select_injectObj(&mock_sys_selectObj);
+    mocking::Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(-1));
     // WSAGetLastError
     Winsock2Mock mock_winsock2Obj;
-    Winsock2 winsock2_injectObj(&mock_winsock2Obj);
+    mocking::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError())
         .WillOnce(Return(WSAEWOULDBLOCK));
 
@@ -611,12 +604,12 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, successful_connect) {
 
     // Configure expected system calls.
     // select()
-    Sys_select sys_select_injectObj(&mock_sys_selectObj);
+    mocking::Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1));
     // getsockopt
-    Sys_socket sys_socket_injectObj(&mock_socketObj);
+    mocking::Sys_socket sys_socket_injectObj(&mock_socketObj);
     EXPECT_CALL(mock_socketObj, getsockopt(socketfd, SOL_SOCKET, SO_ERROR,
                                            NotNull(), NotNull()))
         .WillOnce(DoAll(SetArgPtrIntValue<3>(0), Return(0)));
@@ -639,10 +632,10 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, wrong_connect_retval) {
 
     // Configure expected system calls.
     // select()
-    Sys_select sys_select_injectObj(&mock_sys_selectObj);
+    mocking::Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
     // getsockopt
-    Sys_socket sys_socket_injectObj(&mock_socketObj);
+    mocking::Sys_socket sys_socket_injectObj(&mock_socketObj);
     EXPECT_CALL(mock_socketObj, getsockopt(_, _, _, _, _)).Times(0);
 
     // Test the unit
@@ -663,10 +656,10 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, connect_error) {
 
     // Configure expected system calls.
     // select()
-    Sys_select sys_select_injectObj(&mock_sys_selectObj);
+    mocking::Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
     // getsockopt
-    Sys_socket sys_socket_injectObj(&mock_socketObj);
+    mocking::Sys_socket sys_socket_injectObj(&mock_socketObj);
     EXPECT_CALL(mock_socketObj, getsockopt(_, _, _, _, _)).Times(0);
 
     // Test the unit
@@ -687,12 +680,12 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_times_out) {
 
     // Configure expected system calls.
     // select()
-    Sys_select sys_select_injectObj(&mock_sys_selectObj);
+    mocking::Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(0));
     // getsockopt
-    Sys_socket sys_socket_injectObj(&mock_socketObj);
+    mocking::Sys_socket sys_socket_injectObj(&mock_socketObj);
     EXPECT_CALL(mock_socketObj, getsockopt(socketfd, SOL_SOCKET, SO_ERROR,
                                            NotNull(), NotNull()))
         .Times(0);
@@ -715,12 +708,12 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_error) {
 
     // Configure expected system calls.
     // select() returns -1, that is failure
-    Sys_select sys_select_injectObj(&mock_sys_selectObj);
+    mocking::Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(-1));
     // getsockopt
-    Sys_socket sys_socket_injectObj(&mock_socketObj);
+    mocking::Sys_socket sys_socket_injectObj(&mock_socketObj);
     EXPECT_CALL(mock_socketObj, getsockopt(socketfd, SOL_SOCKET, SO_ERROR,
                                            NotNull(), NotNull()))
         .Times(0);
@@ -743,12 +736,12 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, sockoption_error) {
 
     // Configure expected system calls.
     // select() returns 1, that means one socket is ready for writing
-    Sys_select sys_select_injectObj(&mock_sys_selectObj);
+    mocking::Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1));
     // getsockopt(), the error is returned with SetArgPtrIntValue<3>(1)
-    Sys_socket sys_socket_injectObj(&mock_socketObj);
+    mocking::Sys_socket sys_socket_injectObj(&mock_socketObj);
     EXPECT_CALL(mock_socketObj, getsockopt(socketfd, SOL_SOCKET, SO_ERROR,
                                            NotNull(), NotNull()))
         .WillOnce(DoAll(SetArgPtrIntValue<3>(1), Return(0)));
@@ -771,12 +764,12 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, getsockopt_error) {
 
     // Configure expected system calls.
     // select()
-    Sys_select sys_select_injectObj(&mock_sys_selectObj);
+    mocking::Sys_select sys_select_injectObj(&mock_sys_selectObj);
     EXPECT_CALL(mock_sys_selectObj,
                 select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1));
     // getsockopt() fails with returning -1
-    Sys_socket sys_socket_injectObj(&mock_socketObj);
+    mocking::Sys_socket sys_socket_injectObj(&mock_socketObj);
     EXPECT_CALL(mock_socketObj, getsockopt(socketfd, SOL_SOCKET, SO_ERROR,
                                            NotNull(), NotNull()))
         .WillOnce(Return(-1));

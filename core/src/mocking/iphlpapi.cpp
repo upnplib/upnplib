@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-25
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 #include "upnplib/mocking/iphlpapi.hpp"
 
@@ -28,6 +28,7 @@ Iphlpapi::Iphlpapi(IphlpapiInterface* a_ptr_mockObj) {
 // The destructor is ussed to restore the old pointer.
 Iphlpapi::~Iphlpapi() { m_ptr_workerObj = m_ptr_oldObj; }
 
+// Methods
 ULONG Iphlpapi::GetAdaptersAddresses(ULONG Family, ULONG Flags, PVOID Reserved,
                                      PIP_ADAPTER_ADDRESSES AdapterAddresses,
                                      PULONG SizePointer) {

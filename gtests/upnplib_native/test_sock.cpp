@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-25
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 #include "upnplib/sock.hpp"
 #include "upnplib/mocking/sys_socket.hpp"
@@ -17,9 +17,6 @@ using ::testing::ThrowsMessage;
 using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::MatchesStdRegex;
 
-using ::upnplib::mocking::Sys_socket;
-using ::upnplib::mocking::Sys_socketInterface;
-
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
@@ -27,7 +24,7 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
 //
 // Mocked system calls
 // ===================
-class Sys_socketMock : public Sys_socketInterface {
+class Sys_socketMock : public mocking::Sys_socketInterface {
   public:
     virtual ~Sys_socketMock() override {}
     // clang-format off
@@ -100,7 +97,7 @@ TEST(SocketAddrTestSuite, get_address_from_socket) {
 
     // Mock system functions
     Sys_socketMock mocked_sys_socketObj;
-    Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    mocking::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
     EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
         .WillOnce(DoAll(SetArgPointee<1>(*ret_sock.addr), Return(0)));
 

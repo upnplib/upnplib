@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_MOCKING_WINSOCK2_HPP
 #define UPNPLIB_MOCKING_WINSOCK2_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-26
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 // winsock2.h is a Microsoft Windows library.
 
@@ -29,15 +29,18 @@ class Winsock2Real : public Winsock2Interface {
 //
 // This is the caller or injector class that injects the class (worker) to be
 // used, real or mocked functions.
+// clang-format off
 /* Example:
-    Winsock2Real Winsock2_realObj;
-    Winsock2(&net_if_realObj;
+    Winsock2Real winsock2_realObj; // already done below
+    Winsock2(&winsock2_realObj);   // already done below
     { // Other scope, e.g. within a gtest
-        class Winsock2Mock { ...; MOCK_METHOD(...) };
-        Winsock2Mock net_if_mockObj;
-        Winsock2(&winsock2_mockObj);
+        class Winsock2Mock : public Winsock2Interface { ...; MOCK_METHOD(...) };
+        Winsock2Mock winsock2_mockObj;
+        Winsock2 winsock2_injectObj(&winsock2_mockObj); // obj. name doesn't matter
+        EXPECT_CALL(winsock2_mockObj, ...);
     } // End scope, mock objects are destructed, worker restored to default.
 *///------------------------------------------------------------------------
+// clang-format on
 class UPNPLIB_API Winsock2 {
   public:
     // This constructor is used to inject the pointer to the real function. It
@@ -47,16 +50,19 @@ class UPNPLIB_API Winsock2 {
     // This constructor is used to inject the pointer to the mocking function.
     Winsock2(Winsock2Interface* a_ptr_mockObj);
 
-    // The destructor is ussed to restore the default pointer.
+    // The destructor is ussed to restore the old pointer.
     virtual ~Winsock2();
 
+    // Methods
     virtual int WSAGetLastError();
 
   private:
-    // Must be static to be persistent also available on a new constructed
-    // object. With inline we do not need an extra definition line outside the
-    // class. I also make the symbol hidden so the variable cannot be accessed
-    // globaly with Winsock2::m_ptr_workerObj.
+    // Next variable must be static. Please note that a static member variable
+    // belongs to the class, but not to the instantiated object. This is
+    // important here for mocking because the pointer is also valid on all
+    // objects of this class. With inline we do not need an extra definition
+    // line outside the class. I also make the symbol hidden so the variable
+    // cannot be accessed globaly with Winsock2::m_ptr_workerObj.
     UPNPLIB_LOCAL static inline Winsock2Interface* m_ptr_workerObj;
     Winsock2Interface* m_ptr_oldObj{};
 };

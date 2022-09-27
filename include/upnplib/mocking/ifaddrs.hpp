@@ -1,9 +1,9 @@
 #ifndef MOCKING_IFADDRS_HPP
 #define MOCKING_IFADDRS_HPP
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-19
+// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
-#include "UpnpGlobal.hpp" // for EXPORT_SPEC
+#include "upnplib/visibility.hpp"
 #include <ifaddrs.h>
 
 namespace upnplib {
@@ -11,7 +11,7 @@ namespace mocking {
 
 class IfaddrsInterface {
   public:
-    virtual ~IfaddrsInterface() {}
+    virtual ~IfaddrsInterface() = default;
 
     virtual int getifaddrs(struct ifaddrs** ifap) = 0;
     virtual void freeifaddrs(struct ifaddrs* ifa) = 0;
@@ -22,7 +22,7 @@ class IfaddrsInterface {
 // ----------------------------------------------------------
 class IfaddrsReal : public IfaddrsInterface {
   public:
-    virtual ~IfaddrsReal() override {}
+    virtual ~IfaddrsReal() override = default;
 
     int getifaddrs(struct ifaddrs** ifap) override;
     void freeifaddrs(struct ifaddrs* ifa) override;
@@ -31,16 +31,19 @@ class IfaddrsReal : public IfaddrsInterface {
 //
 // This is the caller or injector class that injects the class (worker) to be
 // used, real or mocked functions.
+// clang-format off
 /* Example:
-    IfaddrsReal ifaddrs_realObj;
-    Ifaddrs(&ifaddrs_realObj;
+    IfaddrsReal ifaddrs_realObj; // already done below
+    Ifaddrs(&ifaddrs_realObj);   // already done below
     { // Other scope, e.g. within a gtest
-        class IfaddrsMock { ...; MOCK_METHOD(...) };
+        class IfaddrsMock : public IfaddrsInterface { ...; MOCK_METHOD(...) };
         IfaddrsMock ifaddrs_mockObj;
-        Ifaddrs(&ifaddrs_mockObj);
+        Ifaddrs ifaddrs_injectObj(&ifaddrs_mockObj); // obj. name doesn't matter
+        EXPECT_CALL(ifaddrs_mockObj, ...);
     } // End scope, mock objects are destructed, worker restored to default.
-*///------------------------------------------------------------------------
-class EXPORT_SPEC Ifaddrs {
+*///----------------------------------------------------------------------------
+// clang-format on
+class UPNPLIB_API Ifaddrs {
   public:
     // This constructor is used to inject the pointer to the real function. It
     // sets the default used class, that is the real function.
@@ -49,22 +52,25 @@ class EXPORT_SPEC Ifaddrs {
     // This constructor is used to inject the pointer to the mocking function.
     Ifaddrs(IfaddrsInterface* a_ptr_mockObj);
 
-    // The destructor is ussed to restore the default pointer.
+    // The destructor is ussed to restore the old pointer.
     virtual ~Ifaddrs();
 
+    // Methods
     virtual int getifaddrs(struct ifaddrs** ifap);
     virtual void freeifaddrs(struct ifaddrs* ifa);
 
   private:
-    // Must be static to be persistent also available on a new constructed
-    // object. With inline we do not need an extra definition line outside the
-    // class. I also make the symbol hidden so the variable cannot be accessed
-    // globaly with Ifaddrs::m_ptr_workerObj.
-    EXPORT_SPEC_LOCAL static inline IfaddrsInterface* m_ptr_workerObj;
+    // Next variable must be static. Please note that a static member variable
+    // belongs to the class, but not to the instantiated object. This is
+    // important here for mocking because the pointer is also valid on all
+    // objects of this class. With inline we do not need an extra definition
+    // line outside the class. I also make the symbol hidden so the variable
+    // cannot be accessed globaly with Ifaddrs::m_ptr_workerObj.
+    UPNPLIB_LOCAL static inline IfaddrsInterface* m_ptr_workerObj;
     IfaddrsInterface* m_ptr_oldObj{};
 };
 
-extern Ifaddrs EXPORT_SPEC ifaddrs_h;
+extern Ifaddrs UPNPLIB_API ifaddrs_h;
 
 } // namespace mocking
 } // namespace upnplib

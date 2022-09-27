@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-25
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 #include "upnplib/mocking/netdb.hpp"
 
@@ -30,6 +30,7 @@ Netdb::Netdb(NetdbInterface* a_ptr_mockObj) {
 // The destructor is ussed to restore the old pointer.
 Netdb::~Netdb() { m_ptr_workerObj = m_ptr_oldObj; }
 
+// Methods
 int Netdb::getaddrinfo(const char* node, const char* service,
                        const struct addrinfo* hints, struct addrinfo** res) {
     return m_ptr_workerObj->getaddrinfo(node, service, hints, res);

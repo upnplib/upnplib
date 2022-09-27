@@ -1,5 +1,5 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-25
+// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 #include "upnplib/mocking/sys_select.hpp"
 
@@ -26,6 +26,7 @@ Sys_select::Sys_select(Sys_selectInterface* a_ptr_mockObj) {
 // The destructor is ussed to restore the old pointer.
 Sys_select::~Sys_select() { m_ptr_workerObj = m_ptr_oldObj; }
 
+// Methods
 int Sys_select::select(int nfds, fd_set* readfds, fd_set* writefds,
                        fd_set* exceptfds, struct timeval* timeout) {
     return m_ptr_workerObj->select(nfds, readfds, writefds, exceptfds, timeout);

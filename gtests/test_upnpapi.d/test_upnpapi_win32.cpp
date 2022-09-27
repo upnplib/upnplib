@@ -1,5 +1,5 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-22
+// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-08-27
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -21,15 +21,12 @@ using ::testing::SetArgPointee;
 
 using ::upnplib::testing::CaptureStdOutErr;
 
-using ::upnplib::mocking::Iphlpapi;
-using ::upnplib::mocking::IphlpapiInterface;
-
 namespace upnplib {
 
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
-class IphlpapiMock : public IphlpapiInterface {
+class IphlpapiMock : public mocking::IphlpapiInterface {
   public:
     virtual ~IphlpapiMock() override = default;
     MOCK_METHOD(ULONG, GetAdaptersAddresses,
@@ -75,7 +72,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
     EXPECT_STREQ(adapts->FriendlyName, L"if0v4");
     ::ULONG Size = 16383;
 
-    Iphlpapi iphlpapi_injectObj(&m_mocked_iphlpapi);
+    mocking::Iphlpapi iphlpapi_injectObj(&m_mocked_iphlpapi);
     EXPECT_CALL(m_mocked_iphlpapi, GetAdaptersAddresses(_, _, _, _, _))
         .Times(2)
         .WillOnce(
@@ -125,7 +122,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     EXPECT_STREQ(adapts->FriendlyName, L"eth0");
     ::ULONG Size = 16383;
 
-    Iphlpapi iphlpapi_injectObj(&m_mocked_iphlpapi);
+    mocking::Iphlpapi iphlpapi_injectObj(&m_mocked_iphlpapi);
     EXPECT_CALL(m_mocked_iphlpapi, GetAdaptersAddresses(_, _, _, _, _))
         .Times(4)
         .WillOnce(
@@ -194,7 +191,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
     EXPECT_STREQ(adapts->FriendlyName, L"if0v4");
     ::ULONG Size = 16383;
 
-    Iphlpapi iphlpapi_injectObj(&m_mocked_iphlpapi);
+    mocking::Iphlpapi iphlpapi_injectObj(&m_mocked_iphlpapi);
     EXPECT_CALL(m_mocked_iphlpapi, GetAdaptersAddresses(_, _, _, _, _))
         .Times(2)
         .WillOnce(

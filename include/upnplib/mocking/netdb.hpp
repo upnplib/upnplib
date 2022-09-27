@@ -1,9 +1,9 @@
 #ifndef MOCKING_NETDB_HPP
 #define MOCKING_NETDB_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-20
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
-#include "UpnpGlobal.hpp" // for EXPORT_SPEC
+#include "upnplib/visibility.hpp"
 #ifdef _WIN32
 #include <ws2tcpip.h>
 #else
@@ -38,15 +38,16 @@ class NetdbReal : public NetdbInterface {
 // This is the caller or injector class that injects the class (worker) to be
 // used, real or mocked functions.
 /* Example:
-    NetdbReal netdb_realObj;
-    Netdb(&netdb_realObj;
+    NetdbReal netdb_realObj; // already done below
+    Netdb(&netdb_realObj);   // already done below
     { // Other scope, e.g. within a gtest
-        class NetdbMock { ...; MOCK_METHOD(...) };
+        class NetdbMock : public NetdbInterface { ...; MOCK_METHOD(...) };
         NetdbMock netdb_mockObj;
-        Netdb(&netdb_mockObj);
+        Netdb netdb_injectObj(&netdb_mockObj); // obj. name doesn't matter
+        EXPECT_CALL(netdb_mockObj, ...);
     } // End scope, mock objects are destructed, worker restored to default.
 *///------------------------------------------------------------------------
-class EXPORT_SPEC Netdb {
+class UPNPLIB_API Netdb {
   public:
     // This constructor is used to inject the pointer to the real function. It
     // sets the default used class, that is the real function.
@@ -55,7 +56,7 @@ class EXPORT_SPEC Netdb {
     // This constructor is used to inject the pointer to the mocking function.
     Netdb(NetdbInterface* a_ptr_mockObj);
 
-    // The destructor is ussed to restore the default pointer.
+    // The destructor is ussed to restore the old pointer.
     virtual ~Netdb();
 
     virtual int getaddrinfo(const char* node, const char* service,
@@ -64,15 +65,17 @@ class EXPORT_SPEC Netdb {
     virtual void freeaddrinfo(struct addrinfo* res);
 
   private:
-    // Must be static to be persistent also available on a new constructed
-    // object. With inline we do not need an extra definition line outside the
-    // class. I also make the symbol hidden so the variable cannot be accessed
-    // globaly with Netdb::m_ptr_workerObj.
-    EXPORT_SPEC_LOCAL static inline NetdbInterface* m_ptr_workerObj;
+    // Next variable must be static. Please note that a static member variable
+    // belongs to the class, but not to the instantiated object. This is
+    // important here for mocking because the pointer is also valid on all
+    // objects of this class. With inline we do not need an extra definition
+    // line outside the class. I also make the symbol hidden so the variable
+    // cannot be accessed globaly with Netdb::m_ptr_workerObj.
+    UPNPLIB_LOCAL static inline NetdbInterface* m_ptr_workerObj;
     NetdbInterface* m_ptr_oldObj{};
 };
 
-extern Netdb EXPORT_SPEC netdb_h;
+extern Netdb UPNPLIB_API netdb_h;
 
 } // namespace mocking
 } // namespace upnplib

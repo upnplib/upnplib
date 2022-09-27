@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-26
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 #include "upnplib/mocking/winsock2.hpp"
 
@@ -22,6 +22,7 @@ Winsock2::Winsock2(Winsock2Interface* a_ptr_mockObj) {
 // The destructor is ussed to restore the old pointer.
 Winsock2::~Winsock2() { m_ptr_workerObj = m_ptr_oldObj; }
 
+// Methods
 int Winsock2::WSAGetLastError() { return m_ptr_workerObj->WSAGetLastError(); }
 
 // On program start create an object and inject pointer to the real functions.

@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-25
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 #include "upnplib/mocking/sys_socket.hpp"
 
@@ -75,6 +75,7 @@ Sys_socket::Sys_socket(Sys_socketInterface* a_ptr_mockObj) {
 // The destructor is ussed to restore the old pointer.
 Sys_socket::~Sys_socket() { m_ptr_workerObj = m_ptr_oldObj; }
 
+// Methods
 // clang-format off
 int Sys_socket::socket(int domain, int type, int protocol) {
     return m_ptr_workerObj->socket(domain, type, protocol);

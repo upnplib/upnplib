@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-25
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 #include "upnplib/mocking/ifaddrs.hpp"
 
@@ -28,6 +28,7 @@ Ifaddrs::Ifaddrs(IfaddrsInterface* a_ptr_mockObj) {
 // The destructor is ussed to restore the old pointer.
 Ifaddrs::~Ifaddrs() { m_ptr_workerObj = m_ptr_oldObj; }
 
+// Methods
 int Ifaddrs::getifaddrs(struct ifaddrs** ifap) {
     return m_ptr_workerObj->getifaddrs(ifap);
 }

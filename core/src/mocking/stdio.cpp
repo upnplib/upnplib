@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-25
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 #include "upnplib/mocking/stdio.hpp"
 
@@ -37,6 +37,7 @@ Stdio::Stdio(StdioInterface* a_ptr_mockObj) {
 // The destructor is ussed to restore the old pointer.
 Stdio::~Stdio() { m_ptr_workerObj = m_ptr_oldObj; }
 
+// Methods
 #ifdef _WIN32
 // Secure function only on MS Windows
 errno_t Stdio::fopen_s(FILE** pFile, const char* pathname, const char* mode) {

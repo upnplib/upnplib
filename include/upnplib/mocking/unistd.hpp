@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_MOCKING_UNISTD_HPP
 #define UPNPLIB_MOCKING_UNISTD_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-25
+// Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 #include "upnplib/visibility.hpp"
 
@@ -40,12 +40,13 @@ class UnistdReal : public UnistdInterface {
 // This is the caller or injector class that injects the class (worker) to be
 // used, real or mocked functions.
 /* Example:
-    UnistdReal unistd_realObj;
-    Unistd(&unistd_realObj;
+    UnistdReal unistd_realObj; // already done below
+    Unistd(&unistd_realObj);   // already done below
     { // Other scope, e.g. within a gtest
-        class UnistdMock { ...; MOCK_METHOD(...) };
+        class UnistdMock : public UnistdInterface { ...; MOCK_METHOD(...) };
         UnistdMock unistd_mockObj;
-        Unistd(&unistd_mockObj);
+        Unistd unistd_injectObj(&unistd_mockObj); // obj. name doesn't matter
+        EXPECT_CALL(unistd_mockObj, ...);
     } // End scope, mock objects are destructed, worker restored to default.
 *///------------------------------------------------------------------------
 class UPNPLIB_API Unistd {
@@ -57,16 +58,19 @@ class UPNPLIB_API Unistd {
     // This constructor is used to inject the pointer to the mocking function.
     Unistd(UnistdInterface* a_ptr_mockObj);
 
-    // The destructor is ussed to restore the default pointer.
+    // The destructor is ussed to restore the old pointer.
     virtual ~Unistd();
 
+    // Methods
     virtual int UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd);
 
   private:
-    // Must be static to be persistent also available on a new constructed
-    // object. With inline we do not need an extra definition line outside the
-    // class. I also make the symbol hidden so the variable cannot be accessed
-    // globaly with Unistd::m_ptr_workerObj.
+    // Next variable must be static. Please note that a static member variable
+    // belongs to the class, but not to the instantiated object. This is
+    // important here for mocking because the pointer is also valid on all
+    // objects of this class. With inline we do not need an extra definition
+    // line outside the class. I also make the symbol hidden so the variable
+    // cannot be accessed globaly with Unistd::m_ptr_workerObj.
     UPNPLIB_LOCAL static inline UnistdInterface* m_ptr_workerObj;
     UnistdInterface* m_ptr_oldObj{};
 };
