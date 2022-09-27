@@ -65,22 +65,20 @@ class Sys_selectMock : public Sys_selectInterface {
 // Create global mocking object, valid for all tests in this file.
 class Sys_selectMock mock_sys_selectObj;
 
-class Mock_pupnp : public Bpupnp {
-    // Class to mock the free system functions.
-    Bpupnp* m_oldptr;
-
+//
+class PupnpMock : public mocking::PupnpInterface {
   public:
-    // Save and restore the old pointer to the production function
-    Mock_pupnp() {
-        m_oldptr = pupnp;
-        pupnp = this;
-    }
-    virtual ~Mock_pupnp() override { pupnp = m_oldptr; }
-
-    MOCK_METHOD(int, sock_make_no_blocking, (SOCKET sock), (override));
+    virtual ~PupnpMock() override = default;
     MOCK_METHOD(int, sock_make_blocking, (SOCKET sock), (override));
+    MOCK_METHOD(int, sock_make_no_blocking, (SOCKET sock), (override));
     MOCK_METHOD(int, Check_Connect_And_Wait_Connection,
                 (SOCKET sock, int connect_res), (override));
+    // Not used here but non virtual dummy method for the interface needed.
+    int private_connect([[maybe_unused]] SOCKET sockfd,
+                        [[maybe_unused]] const struct sockaddr* serv_addr,
+                        [[maybe_unused]] socklen_t addrlen) {
+        return -1;
+    }
 };
 
 //
@@ -171,9 +169,10 @@ TEST_F(PrivateConnectIp4FTestSuite, successful_connect) {
     // * connection succeeds
     // * make blocking succeeds
 
-    Mock_pupnp mock_pupnpObj{};
+    PupnpMock mock_pupnpObj;
     // First unblock connection, means don't wait on connect and return
     // immediately.
+    mocking::Pupnp pupnp_injectObj(&mock_pupnpObj);
     EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
         .WillOnce(Return(0));
 
@@ -210,9 +209,10 @@ TEST_F(PrivateConnectIp4FTestSuite, set_no_blocking_fails) {
     // * make blocking succeeds
 
     if (old_code) {
-        Mock_pupnp mock_pupnpObj{};
+        PupnpMock mock_pupnpObj;
         // First unblock connection, means don't wait on connect and return
         // immediately. Returns with error, preset errno = EINVAL.
+        mocking::Pupnp pupnp_injectObj(&mock_pupnpObj);
         EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
             .WillOnce(SetErrnoAndReturn(
                 EINVAL, 10098)); // On MS Windows are big error numbers
@@ -251,8 +251,9 @@ TEST_F(PrivateConnectIp4FTestSuite, set_no_blocking_fails) {
         SUCCEED();
     } else {
 
-        Mock_pupnp mock_pupnpObj{};
+        PupnpMock mock_pupnpObj;
         // Unblock connection. Returns with error, preset errno = EINVAL.
+        mocking::Pupnp pupnp_injectObj(&mock_pupnpObj);
         EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
             .WillOnce(SetErrnoAndReturn(
                 EINVAL, 10098)); // On MS Windows are big error numbers
@@ -289,9 +290,10 @@ TEST_F(PrivateConnectIp4FTestSuite, connect_fails) {
     // * check connection must also fail if connect() fails
     // * make blocking succeeds
 
-    Mock_pupnp mock_pupnpObj{};
+    PupnpMock mock_pupnpObj;
     // First unblock connection, means don't wait on connect and return
     // immediately. Returns successful, preset errno = EINVAL.
+    mocking::Pupnp pupnp_injectObj(&mock_pupnpObj);
     EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
         .WillOnce(SetErrnoAndReturn(EINVAL, 0));
 
@@ -339,9 +341,10 @@ TEST_F(PrivateConnectIp4FTestSuite, Check_Connect_And_Wait_Connection_fails) {
     // * check connection fails
     // * make blocking succeeds
 
-    Mock_pupnp mock_pupnpObj{};
+    PupnpMock mock_pupnpObj;
     // First unblock connection, means don't wait on connect and return
     // immediately. Returns successful, preset errno = EINVAL.
+    mocking::Pupnp pupnp_injectObj(&mock_pupnpObj);
     EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
         .WillOnce(SetErrnoAndReturn(EINVAL, 0));
 
@@ -389,9 +392,10 @@ TEST_F(PrivateConnectIp4FTestSuite, sock_make_blocking_fails) {
     // * check connection succeeds
     // * make blocking fails
 
-    Mock_pupnp mock_pupnpObj{};
+    PupnpMock mock_pupnpObj;
     // First unblock connection, means don't wait on connect and return
     // immediately. Returns successful, preset errno = EINVAL.
+    mocking::Pupnp pupnp_injectObj(&mock_pupnpObj);
     EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
         .WillOnce(SetErrnoAndReturn(EINVAL, 0));
 
