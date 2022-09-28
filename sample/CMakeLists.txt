@@ -1,10 +1,10 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-04
+# Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNPLIB_SAMPLE VERSION 0006
+project(UPNPLIB_SAMPLE VERSION 0007
                        DESCRIPTION "Simple sample to use the library"
                        HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -26,15 +26,7 @@ endif()
 
 
 link_libraries(
-        ixml_shared
         pupnp_native_shared
-        # On Linux we cannot link with the static pthreads library
-        # because then we have also link with a static libc that's not
-        # available by default.
-        $<$<NOT:$<BOOL:${WIN32}>>:${UPNP_PTHREADS_SHARED_LIBRARY}>
-        # On MS Windows we link with the static pthreads4w library to
-        # avoid error prone managing access to its .dll file.
-        $<$<BOOL:${WIN32}>:${UPNP_PTHREADS_STATIC_LIBRARY}>
 )
 
 IF (UPNPLIB_DEF_SAMPLE_CLIENT)
@@ -53,10 +45,6 @@ IF (UPNPLIB_DEF_SAMPLE_CLIENT)
                 # doesn't find "pthread.h" and falls back to look at <pthread.h>.
                 ${pthreads4w_SOURCE_DIR}
         )
-
-	#INSTALL (TARGETS tv_ctrlpt
-	#	DESTINATION ${CMAKE_INSTALL_BINDIR}
-	#)
 ENDIF()
 
 # client and device
@@ -85,9 +73,6 @@ IF (UPNPLIB_DEF_SAMPLE_COMBO)
                 NDEBUG
         )
 
-	#INSTALL (TARGETS tv_combo
-	#	DESTINATION ${CMAKE_INSTALL_BINDIR}
-	#)
 ENDIF()
 
 IF(UPNPLIB_DEF_SAMPLE_DEVICE)
@@ -113,12 +98,4 @@ IF(UPNPLIB_DEF_SAMPLE_DEVICE)
                 # dependencies into the libary and would pull many other sources
                 NDEBUG
         )
-
-	#install (TARGETS tv_device
-        #      DESTINATION ${CMAKE_INSTALL_BINDIR}
-	#)
-
-	#install (DIRECTORY web/
-	#	DESTINATION ${CMAKE_INSTALL_DATADIR}/upnp
-	#)
 ENDIF()

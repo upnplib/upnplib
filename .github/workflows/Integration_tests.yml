@@ -105,8 +105,7 @@ jobs:
 
     strategy:
       matrix:
-        googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
-        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
+        googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON', '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON' ]
         buildtype: [ 'Release', 'Debug' ]
       fail-fast: false
 
@@ -120,14 +119,14 @@ jobs:
           -S .
           -B build
           -D CMAKE_C_COMPILER=gcc-10
-          -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}} ${{matrix.shared}}
+          -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
           -D UPNPLIB_WITH_TOOLS=YES
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '')
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON')
         name: Check gtest library files, static
         run: |
           ls ./build/lib/libgtest.a
@@ -135,7 +134,7 @@ jobs:
           ls ./build/lib/libgtest_main.a
           ls ./build/lib/libgmock_main.a
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON')
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON')
         name: Check gtest library files, shared
         run: |
           ls ./build/lib/libgtest.so
@@ -187,13 +186,11 @@ jobs:
   Build_MacOS:
     name: Build MacOS
     needs: run_gtests
-    runs-on: ${{ matrix.os }}
+    runs-on: macOS-latest
 
     strategy:
       matrix:
-        os: [ macOS-latest ]
-        googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
-        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
+        googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON', '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON' ]
         buildtype: [ 'Release', 'Debug' ]
       fail-fast: false
 
@@ -207,14 +204,14 @@ jobs:
           -S .
           -B build
           -D CMAKE_C_COMPILER=gcc-10
-          -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}} ${{matrix.shared}}
+          -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
-          -D UPNPLIB_WITH_TOOLS=YES --log-level=DEBUG
+          -D UPNPLIB_WITH_TOOLS=YES
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '')
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON')
         name: Check gtest library files, static
         run: |
           ls ./build/lib/libgtest.a
@@ -222,7 +219,7 @@ jobs:
           ls ./build/lib/libgtest_main.a
           ls ./build/lib/libgmock_main.a
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON')
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON')
         name: Check gtest library files, shared
         run: |
           ls ./build/lib/libgtest.dylib
@@ -283,8 +280,7 @@ jobs:
     strategy:
       matrix:
         os: [ windows-2019, windows-2022 ]
-        googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
-        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
+        googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON', '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON' ]
         buildtype: [ 'Release', 'Debug' ]
       fail-fast: false
 
@@ -312,7 +308,7 @@ jobs:
           cmake
           -S .
           -B build
-          -A Win32 ${{matrix.googletest}} ${{matrix.shared}}
+          -A Win32 ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
           -D UPNPLIB_WITH_TOOLS=YES
 
@@ -321,7 +317,7 @@ jobs:
         run: >
           cmake
           -S .
-          -B build ${{matrix.googletest}} ${{matrix.shared}}
+          -B build ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
           -D UPNPLIB_WITH_TOOLS=YES
 
@@ -336,7 +332,7 @@ jobs:
           ls ./build/lib/${{matrix.buildtype}}/gtest_main.lib
           ls ./build/lib/${{matrix.buildtype}}/gmock_main.lib
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON')
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON')
         name: GTest .dll libraries build with Visual Studio
         run: |
           ls ./build/bin/${{matrix.buildtype}}/gtest.dll
@@ -379,8 +375,7 @@ jobs:
     strategy:
       matrix:
         os: [ windows-2019, windows-2022 ]
-        googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON' ]
-        shared: [ '', '-D GTESTS_WITH_SHARED_LIBS=ON' ]
+        googletest: [ '', '-D UPNPLIB_WITH_GOOGLETEST=ON', '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON' ]
         buildtype: [ 'Release', 'Debug' ]
       fail-fast: false
 
@@ -407,7 +402,7 @@ jobs:
           cmake
           -S .
           -B build
-          -G "NMake Makefiles" ${{matrix.googletest}} ${{matrix.shared}}
+          -G "NMake Makefiles" ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
           -D UPNPLIB_WITH_TOOLS=YES
 
@@ -422,7 +417,7 @@ jobs:
           ls ./build/lib/gtest_main.lib
           ls ./build/lib/gmock_main.lib
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON') && (matrix.shared == '-D GTESTS_WITH_SHARED_LIBS=ON')
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON')
         name: GTest .dll libraries build with NMake
         run: |
           ls ./build/bin/gtest.dll

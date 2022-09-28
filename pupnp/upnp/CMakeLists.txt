@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-26
+# Redistribution only with this Copyright remark. Last modified: 2022-09-28
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(PUPNP_UPNP VERSION 0025
+project(PUPNP_UPNP VERSION 0026
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -183,6 +183,18 @@ add_compile_definitions(
 #=================
 if(NOT WIN32)
 
+    set(PUPNP_NATIVE_INCLUDE_DIRECTORIES
+            ${PUPNP_IXML_SOURCE_DIR}/inc
+            ${UPnPlib_SOURCE_DIR}/include
+            ./inc
+            ./src/inc
+            ./src/threadutil
+            # if we are not on WIN32 the linker finds empty "headers.h" and will
+            # not complain an error but will not use <headers.h> that isn't available.
+            #$<$<NOT:$<BOOL:${WIN32}>>:./inc/not_win32>
+            ./inc/not_win32
+    )
+
     # Pupnp Native SHared library: prefix -pnsh
     #------------------------------------------
     add_library(pupnp_native_shared SHARED
@@ -193,16 +205,7 @@ if(NOT WIN32)
     )
     target_include_directories(pupnp_native_shared
         PRIVATE
-            ${PUPNP_IXML_SOURCE_DIR}/inc
-            ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
-            ./inc
-            ./src/inc
-            ./src/threadutil
-            # if we are not on WIN32 the linker finds empty "headers.h" and will
-            # not complain an error but will not use <headers.h> that isn't available.
-            #$<$<NOT:$<BOOL:${WIN32}>>:./inc/not_win32>
-            ./inc/not_win32
+            ${PUPNP_NATIVE_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(pupnp_native_shared
         PRIVATE
@@ -229,16 +232,7 @@ if(NOT WIN32)
     )
     target_include_directories(pupnp_native_static
         PRIVATE
-            ${PUPNP_IXML_SOURCE_DIR}/inc
-            ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
-            ./inc
-            ./src/inc
-            ./src/threadutil
-            # if we are not on WIN32 the linker finds empty "headers.h" and will
-            # not complain an error but will not use <headers.h> that isn't available.
-            #$<$<NOT:$<BOOL:${WIN32}>>:./inc/not_win32>
-            ./inc/not_win32
+            ${PUPNP_NATIVE_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(pupnp_native_static
         PRIVATE
@@ -270,7 +264,6 @@ else() # WIN32
         PRIVATE
             ${PUPNP_IXML_SOURCE_DIR}/inc
             ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
             ./inc
             ./src/inc
             ./src/threadutil
@@ -309,7 +302,6 @@ else() # WIN32
         PRIVATE
             ${PUPNP_IXML_SOURCE_DIR}/inc
             ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
             ./inc
             ./src/inc
             ./src/threadutil

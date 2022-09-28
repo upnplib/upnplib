@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-25
+# Redistribution only with this Copyright remark. Last modified: 2022-05-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(PUPNP_IXML VERSION 0007
+project(PUPNP_IXML VERSION 0008
                    DESCRIPTION "IXML library"
                    HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -21,6 +21,12 @@ set (IXML_SOURCES
     ./src/nodeList.cpp
 )
 
+set (IXML_INCLUDE_DIRECTORIES
+        ./inc
+        ./src/inc
+        ${PUPNP_SOURCE_DIR}/upnp/inc
+)
+
 # ixml shared library
 #--------------------
 add_library (ixml_shared SHARED
@@ -28,9 +34,7 @@ add_library (ixml_shared SHARED
 )
 target_include_directories(ixml_shared
     PRIVATE
-        ./inc
-        ./src/inc
-        ${PUPNP_SOURCE_DIR}/upnp/inc
+        ${IXML_INCLUDE_DIRECTORIES}
 )
 target_compile_definitions(ixml_shared
     PRIVATE
@@ -38,7 +42,7 @@ target_compile_definitions(ixml_shared
         UPNPLIB_EXPORTS
         $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
         $<$<CONFIG:Debug>:DEBUG>
-        $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 
 # ixml static library
@@ -48,15 +52,13 @@ add_library (ixml_static STATIC
 )
 target_include_directories(ixml_static
     PRIVATE
-        ./inc
-        ./src/inc
-        ${PUPNP_SOURCE_DIR}/upnp/inc
+        ${IXML_INCLUDE_DIRECTORIES}
 )
 target_compile_definitions(ixml_static
     PRIVATE
         $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
         $<$<CONFIG:Debug>:DEBUG>
-        $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 
 #if (BUILD_TESTING)

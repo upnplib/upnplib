@@ -1,10 +1,10 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-05-25
+# Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
 
-project(PUPNP_IXML_TEST VERSION 0004
+project(PUPNP_IXML_TEST VERSION 0005
                    DESCRIPTION "IXML library tests"
                    HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -27,7 +27,7 @@ target_compile_definitions (test_ixml_shared
     PRIVATE
         $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
         $<$<CONFIG:Debug>:DEBUG>
-        $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
         UPNPLIB_SHARED
 )
 target_link_libraries (test_ixml_shared
@@ -53,7 +53,7 @@ target_compile_definitions (test_ixml_static
     PRIVATE
         $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
         $<$<CONFIG:Debug>:DEBUG>
-        $<$<BOOL:${MSVC}>:UPNP_USE_MSVCPP>
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 target_include_directories(test_ixml_static
     PRIVATE

@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-04
+# Redistribution only with this Copyright remark. Last modified: 2022-09-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(GTESTS_SAMPLE VERSION 0005
+project(GTESTS_SAMPLE VERSION 0006
                   DESCRIPTION "Tests for upnplib sample programs"
                   HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -97,7 +97,6 @@ target_include_directories(test_tv_device-pnsh
         ${UPnPlib_SOURCE_DIR}
         ${UPnPlib_SOURCE_DIR}/include
         ${UPnPlib_BINARY_DIR}/include
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker

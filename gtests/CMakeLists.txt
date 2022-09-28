@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-15
+# Redistribution only with this Copyright remark. Last modified: 2022-09-28
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNPLIB_GTESTS VERSION 0030
+project(UPNPLIB_GTESTS VERSION 0031
                        DESCRIPTION "Unit Tests using googletest"
                        HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -93,7 +93,6 @@ add_executable(test_sock-pnsh
 target_include_directories(test_sock-pnsh
     PRIVATE
         ./include
-        ${UPnPlib_SOURCE_DIR}
         ${UPnPlib_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
@@ -123,7 +122,6 @@ add_executable(test_strintmap-pnsh
 target_include_directories(test_strintmap-pnsh
     PRIVATE
         ${UPnPlib_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
@@ -169,8 +167,8 @@ add_executable(test_membuffer
 )
 target_include_directories(test_membuffer
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}
+        ${UPnPlib_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -192,10 +190,10 @@ target_include_directories(test_UpnpString-pnst
     PRIVATE
         ./include
         ${UPnPlib_SOURCE_DIR}
-        ${PUPNP_IXML_SOURCE_DIR}/inc
+        ${UPnPlib_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${UPnPlib_SOURCE_DIR}/include
+        ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 target_compile_definitions(test_UpnpString-pnst
     PRIVATE
@@ -237,9 +235,9 @@ target_compile_definitions(test_upnpdebug-pnst
 )
 target_link_libraries(test_upnpdebug-pnst
     PRIVATE
-        upnplib_gtest_tools_static
         pupnp_native_static
         upnplib_native_static
+        upnplib_gtest_tools_static
 )
 add_test(NAME ctest_upnpdebug-pnst COMMAND test_upnpdebug-pnst
 )
@@ -251,15 +249,17 @@ add_executable(test_upnplib_gtest_tools
         ./tools/test_tools.cpp
 )
 target_include_directories(test_upnplib_gtest_tools
-        PRIVATE ./include
-        PRIVATE ${UPnPlib_SOURCE_DIR}/include
+    PRIVATE
+        ./include
+        ${UPnPlib_SOURCE_DIR}/include
 )
 target_compile_definitions(test_upnplib_gtest_tools
         PRIVATE
             UPNPLIB_SHARED
 )
 target_link_libraries(test_upnplib_gtest_tools
-        PRIVATE upnplib_gtest_tools_shared
+    PRIVATE
+        upnplib_gtest_tools_shared
 )
 add_test(NAME ctest_upnplib_gtest_tools COMMAND test_upnplib_gtest_tools
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -272,15 +272,17 @@ add_executable(test_upnplib_gtest_tools_platform
         $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/test_tools_unix.cpp>
 )
 target_include_directories(test_upnplib_gtest_tools_platform
-        PRIVATE ./include
-        PRIVATE ${UPnPlib_SOURCE_DIR}/include
+    PRIVATE
+        ./include
+        ${UPnPlib_SOURCE_DIR}/include
 )
 target_compile_definitions(test_upnplib_gtest_tools_platform
-        PRIVATE
-            UPNPLIB_SHARED
+    PRIVATE
+        UPNPLIB_SHARED
 )
 target_link_libraries(test_upnplib_gtest_tools_platform
-        PRIVATE upnplib_gtest_tools_shared
+    PRIVATE
+        upnplib_gtest_tools_shared
 )
 add_test(NAME ctest_upnplib_gtest_tools_platform COMMAND test_upnplib_gtest_tools_platform
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -288,21 +290,16 @@ add_test(NAME ctest_upnplib_gtest_tools_platform COMMAND test_upnplib_gtest_tool
 
 # upnptools
 #==========
-set(TEST_UPNPTOOLS_INCLUDE_DIRECTORIES
-    PRIVATE
-        ./include
-        ${UPnPlib_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-)
-
 if(UPNPLIB_WITH_TOOLS)
 add_executable(test_upnptools-pnsh
 #---------------------------------
         ./test_upnptools.cpp
 )
 target_include_directories(test_upnptools-pnsh
-        ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
+    PRIVATE
+        ${UPnPlib_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 target_compile_definitions(test_upnptools-pnsh
     PRIVATE
@@ -316,25 +313,6 @@ target_link_libraries(test_upnptools-pnsh
 )
 add_test(NAME ctest_upnptools-pnsh COMMAND test_upnptools-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-)
-
-add_executable(test_upnptools-pnst
-#---------------------------------
-        ./test_upnptools.cpp
-)
-target_include_directories(test_upnptools-pnst
-        ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
-)
-target_compile_definitions(test_upnptools-pnst
-    PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
-)
-target_link_libraries(test_upnptools-pnst
-    PRIVATE
-        # pupnp native static: prefix -pnst
-        pupnp_native_static
-)
-add_test(NAME ctest_upnptools-pnst COMMAND test_upnptools-pnst
 )
 endif()
 
@@ -369,6 +347,7 @@ add_test(NAME ctest_simple-unsh COMMAND test_simple-unsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
+# Check also static build for this simple test
 add_executable(test_simple-unst
         ./test_simple.cpp
 )
@@ -387,9 +366,6 @@ add_test(NAME ctest_simple-unst COMMAND test_simple-unst
 #=========
 add_executable(test_template
         test_template.cpp)
-target_include_directories(test_template
-    PRIVATE
-        ./include)
 add_test(NAME ctest_template COMMAND test_template)
 
 
@@ -398,7 +374,7 @@ add_test(NAME ctest_template COMMAND test_template)
 # Because we want to include the source file into the test to also test static
 # functions, we cannot use shared libraries due to symbol import/export
 # conflicts. We must use static libraries.
-#if(FALSE)
+if(FALSE)
 # Direct linking with source files currently not used but having available for
 # reference. We link against the internal upnplib libraries (see below).
 set(MINISERVER_SOURCE_FILES
@@ -450,7 +426,7 @@ set(MINISERVER_SOURCE_FILES
 #    ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
     $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 )
-#endif()
+endif()
 
 add_executable(test_miniserver-pnst
 #----------------------------------
@@ -472,8 +448,8 @@ target_include_directories(test_miniserver-pnst
         ${UPnPlib_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        ${PUPNP_IXML_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
@@ -516,8 +492,8 @@ target_include_directories(test_miniserver-ucst
         ${UPnPlib_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        ${PUPNP_IXML_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.

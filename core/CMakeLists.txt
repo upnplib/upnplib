@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-25
+# Redistribution only with this Copyright remark. Last modified: 2022-09-28
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNPLIB_CORE VERSION 0007
+project(UPNPLIB_CORE VERSION 0008
                      DESCRIPTION "UPnP library core program"
                      HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -25,11 +25,7 @@ if(NOT WIN32)
     )
     set(UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES
         ${UPnPlib_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}/gtests/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32
-        ${PUPNP_IXML_SOURCE_DIR}/inc
     )
 
     # Upnplib Compatible SHared library: prefix -ucsh
@@ -83,13 +79,9 @@ if(NOT WIN32)
         ./src/api/upnptools.cpp
         ./src/net/sock.cpp
         ./src/mocking/sys_socket.cpp
-        ./src/mocking/unistd.cpp
     )
     set(UPNPLIB_NATIVE_INCLUDE_DIRECTORIES
         ${UPnPlib_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}/gtests/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
     )
 
     # Upnplib Native SHared library: prefix -unsh
@@ -148,7 +140,6 @@ if(NOT WIN32)
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
             ${UPnPlib_BINARY_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -172,7 +163,6 @@ if(NOT WIN32)
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
             ${UPnPlib_BINARY_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -192,19 +182,18 @@ if(NOT WIN32)
 
 else() # WIN32
 
+    set(UPNPLB_COMPATIBLE_INCLUDE_DIRECTORIES
+        PRIVATE
+            ${UPnPlib_SOURCE_DIR}/include
+    )
+
     # WIN32 upnplib compatible shared library
     #----------------------------------------
     add_library(upnplib_compa_shared SHARED   # prefix -ucsh
             ./src/init.cpp
     )
     target_include_directories(upnplib_compa_shared
-        PRIVATE
-            ${UPnPlib_SOURCE_DIR}
-            ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
-            ${PUPNP_UPNP_SOURCE_DIR}/inc
-            ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-            ${PUPNP_IXML_SOURCE_DIR}/inc
+            ${UPNPLB_COMPATIBLE_INCLUDE_DIRECTORIES}
             # if pthreads4w isn't installed this path is empty. The linker
             # doesn't find "pthread.h" and falls back to look at <pthread.h>.
             # (Only for general use. It doesn't matter here because we are
@@ -230,13 +219,7 @@ else() # WIN32
             ./src/init.cpp
     )
     target_include_directories(upnplib_compa_static
-        PRIVATE
-            ${UPnPlib_SOURCE_DIR}
-            ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
-            ${PUPNP_UPNP_SOURCE_DIR}/inc
-            ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-            ${PUPNP_IXML_SOURCE_DIR}/inc
+            ${UPNPLB_COMPATIBLE_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(upnplib_compa_static
         PRIVATE
@@ -250,21 +233,28 @@ else() # WIN32
             pupnp_native_static
     )
 
-    # WIN32 upnplib native shared library
-    #------------------------------------
-    add_library(upnplib_native_shared SHARED   # prefix -unsh
+
+    set(UPNPLIB_NATIVE_SOURCE_FILES
             ./src/global.cpp
             ./src/api/upnptools.cpp
             ./src/net/sock.cpp
             ./src/mocking/sys_socket.cpp
             ./src/mocking/unistd.cpp
     )
-    target_include_directories(upnplib_native_shared
+
+    set(UPNPLIB_NATIVE_INCLUDE_DIRECTORIES
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
-            ${PUPNP_UPNP_SOURCE_DIR}/inc
-            ${PUPNP_IXML_SOURCE_DIR}/inc
+    )
+
+    # WIN32 upnplib native shared library
+    #------------------------------------
+    add_library(upnplib_native_shared SHARED   # prefix -unsh
+            ${UPNPLIB_NATIVE_SOURCE_FILES}
+    )
+    target_include_directories(upnplib_native_shared
+            ${UPNPLIB_NATIVE_INCLUDE_DIRECTORIES}
+        PRIVATE
             # if pthreads4w isn't installed this path is empty. The linker
             # doesn't find "pthread.h" and falls back to look at <pthread.h>.
             ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
@@ -288,16 +278,10 @@ else() # WIN32
     # WIN32 upnplib native static library
     #------------------------------------
     add_library(upnplib_native_static STATIC   # prefix unst
-            ./src/global.cpp
-            ./src/api/upnptools.cpp
-            ./src/net/sock.cpp
+            ${UPNPLIB_NATIVE_SOURCE_FILES}
     )
     target_include_directories(upnplib_native_static
-        PRIVATE
-            ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
-            ${PUPNP_UPNP_SOURCE_DIR}/inc
-            ${PUPNP_IXML_SOURCE_DIR}/inc
+            ${UPNPLIB_NATIVE_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(upnplib_native_static
         PRIVATE
@@ -323,7 +307,6 @@ else() # WIN32
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
             ${UPnPlib_BINARY_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc   # needed for ithread.hpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -348,7 +331,6 @@ else() # WIN32
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
             ${UPnPlib_BINARY_DIR}/include
-            ${UPnPlib_SOURCE_DIR}/gtests/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc  # needed for ithread.hpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc

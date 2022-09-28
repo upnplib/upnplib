@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-15
+# Redistribution only with this Copyright remark. Last modified: 2022-09-28
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -103,8 +103,8 @@ target_include_directories(test_upnpapi_platform-pnsh
         ${UPnPlib_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        ${PUPNP_IXML_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
