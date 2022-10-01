@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-27
+# Redistribution only with this Copyright remark. Last modified: 2022-10-01
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -69,5 +69,29 @@ target_link_libraries(test_sock-unsh
         upnplib_native_shared
 )
 add_test(NAME ctest_sock-unsh COMMAND test_sock-unsh
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
+
+# webserver
+# =========
+add_executable(test_webserver-unsh
+        ./test_webserver.cpp
+)
+target_include_directories(test_webserver-unsh
+    PRIVATE
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${UPnPlib_SOURCE_DIR}
+        ${UPnPlib_SOURCE_DIR}/include
+)
+target_compile_definitions(test_webserver-unsh
+    PRIVATE
+        UPNPLIB_SHARED
+)
+target_link_libraries(test_webserver-unsh
+    PRIVATE
+        upnplib_native_shared
+)
+add_test(NAME ctest_webserver-unsh COMMAND test_webserver-unsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )

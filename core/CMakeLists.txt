@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-28
+# Redistribution only with this Copyright remark. Last modified: 2022-09-30
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -14,8 +14,9 @@ if(NOT WIN32)
     #=============================
 
     set(UPNPLIB_COMPATIBLE_SOURCE_FILES
-        ./src/net/miniserver.cpp
         ./src/init.cpp
+        $<$<BOOL:${UPNPLIB_WITH_WEBSERVER}>:./src/net/miniserver.cpp>
+        ./compa/src/genlib/net/http/webserver.cpp
         ./src/mocking/sys_select.cpp
         ./src/mocking/ifaddrs.cpp
         ./src/mocking/net_if.cpp
@@ -28,8 +29,8 @@ if(NOT WIN32)
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
     )
 
-    # Upnplib Compatible SHared library: prefix -ucsh
-    #------------------------------------------------
+    # Upnplib Compatible SHared library: postfix -ucsh
+    #-------------------------------------------------
     add_library(upnplib_compa_shared SHARED
             ${UPNPLIB_COMPATIBLE_SOURCE_FILES}
     )
@@ -51,8 +52,8 @@ if(NOT WIN32)
             pupnp_native_shared
     )
 
-    # Upnplib Compatible STatic library: prefix -ucst
-    #------------------------------------------------
+    # Upnplib Compatible STatic library: postfix -ucst
+    #-------------------------------------------------
     add_library(upnplib_compa_static STATIC
             ${UPNPLIB_COMPATIBLE_SOURCE_FILES}
     )
@@ -78,14 +79,15 @@ if(NOT WIN32)
         ./src/global.cpp
         ./src/api/upnptools.cpp
         ./src/net/sock.cpp
+        ./src/net/http/webserver.cpp
         ./src/mocking/sys_socket.cpp
     )
     set(UPNPLIB_NATIVE_INCLUDE_DIRECTORIES
         ${UPnPlib_SOURCE_DIR}/include
     )
 
-    # Upnplib Native SHared library: prefix -unsh
-    #--------------------------------------------
+    # Upnplib Native SHared library: postfix -unsh
+    #---------------------------------------------
     add_library(upnplib_native_shared SHARED
             ${UPNPLIB_NATIVE_SOURCE_FILES}
     )
@@ -109,8 +111,8 @@ if(NOT WIN32)
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
-    # Upnplib Native STatic library: - prefix -unst
-    #----------------------------------------------
+    # Upnplib Native STatic library: - postfix -unst
+    #-----------------------------------------------
     add_library(upnplib_native_static STATIC
             ${UPNPLIB_NATIVE_SOURCE_FILES}
     )
@@ -182,14 +184,17 @@ if(NOT WIN32)
 
 else() # WIN32
 
+    # WIN32 upnplib compatible libraries
+    #===================================
+
     set(UPNPLB_COMPATIBLE_INCLUDE_DIRECTORIES
         PRIVATE
             ${UPnPlib_SOURCE_DIR}/include
     )
 
-    # WIN32 upnplib compatible shared library
-    #----------------------------------------
-    add_library(upnplib_compa_shared SHARED   # prefix -ucsh
+    # WIN32 Upnplib Compatible SHared library: postfix -ucsh
+    #-------------------------------------------------------
+    add_library(upnplib_compa_shared SHARED
             ./src/init.cpp
     )
     target_include_directories(upnplib_compa_shared
@@ -213,9 +218,9 @@ else() # WIN32
             pupnp_native_shared
     )
 
-    # WIN32 upnplib compatible static library
-    #----------------------------------------
-    add_library(upnplib_compa_static STATIC   # prefix -ucst
+    # WIN32 Upnplib Compatible STatic library: postfix -ucst
+    #-------------------------------------------------------
+    add_library(upnplib_compa_static STATIC
             ./src/init.cpp
     )
     target_include_directories(upnplib_compa_static
@@ -234,12 +239,16 @@ else() # WIN32
     )
 
 
+    # WIN32 upnplib native libraries
+    #===============================
+
     set(UPNPLIB_NATIVE_SOURCE_FILES
-            ./src/global.cpp
-            ./src/api/upnptools.cpp
-            ./src/net/sock.cpp
-            ./src/mocking/sys_socket.cpp
-            ./src/mocking/unistd.cpp
+        ./src/global.cpp
+        ./src/api/upnptools.cpp
+        ./src/net/sock.cpp
+        ./src/net/http/webserver.cpp
+        ./src/mocking/sys_socket.cpp
+        ./src/mocking/unistd.cpp
     )
 
     set(UPNPLIB_NATIVE_INCLUDE_DIRECTORIES
@@ -247,9 +256,9 @@ else() # WIN32
             ${UPnPlib_SOURCE_DIR}/include
     )
 
-    # WIN32 upnplib native shared library
-    #------------------------------------
-    add_library(upnplib_native_shared SHARED   # prefix -unsh
+    # WIN32 Upnplib Native SHared library: postfix -unsh
+    #---------------------------------------------------
+    add_library(upnplib_native_shared SHARED
             ${UPNPLIB_NATIVE_SOURCE_FILES}
     )
     target_include_directories(upnplib_native_shared
@@ -275,9 +284,9 @@ else() # WIN32
             ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
-    # WIN32 upnplib native static library
-    #------------------------------------
-    add_library(upnplib_native_static STATIC   # prefix unst
+    # WIN32 Upnplib Native STatic library: postfix -unst
+    #---------------------------------------------------
+    add_library(upnplib_native_static STATIC
             ${UPNPLIB_NATIVE_SOURCE_FILES}
     )
     target_include_directories(upnplib_native_static

@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-21
+// Redistribution only with this Copyright remark. Last modified: 2022-09-29
 
 // Header file for portable definitions
 // ====================================
@@ -46,6 +46,19 @@
   #else
     typedef int32_t ssize_t;
   #endif
+#endif
+
+/*!
+ * \brief Declares an inline function.
+ *
+ * Surprisingly, there are some compilers that do not understand the
+ * inline keyword. This definition makes the use of this keyword
+ * portable to these systems.
+ */
+#ifdef __STRICT_ANSI__
+#define UPNPLIB_INLINE __inline__
+#else
+#define UPNPLIB_INLINE inline
 #endif
 
 // clang-format on

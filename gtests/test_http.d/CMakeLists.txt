@@ -203,6 +203,7 @@ add_test(NAME ctest_httpparser-pnst COMMAND test_httpparser-pnst
 # functions, we cannot use shared libraries due to symbol import/export
 # conflicts. We must use static libraries.
 add_executable(test_webserver-pnst
+#---------------------------------
     ./test_webserver.cpp
 )
 target_include_directories(test_webserver-pnst
@@ -233,4 +234,39 @@ target_link_libraries(test_webserver-pnst
             pupnp_native_static
 )
 add_test(NAME ctest_webserver-pnst COMMAND test_webserver-pnst
+)
+
+add_executable(test_webserver-ucst
+#---------------------------------
+    ./test_webserver.cpp
+    ${UPNPLIB_CORE_SOURCE_DIR}/src/net/http/webserver.cpp
+
+)
+target_include_directories(test_webserver-ucst
+    PRIVATE
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${UPnPlib_SOURCE_DIR}/include
+        ${UPnPlib_SOURCE_DIR}
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
+        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+        # if pthreads4w isn't installed this path is empty. The linker
+        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+)
+target_compile_definitions(test_webserver-ucst
+    PRIVATE
+        UPNP_HAVE_WEBSERVER
+        UPNP_HAVE_DEVICE
+        UPNP_HAVE_SOAP
+        UPNP_HAVE_SSDP
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+)
+target_link_libraries(test_webserver-ucst
+        PRIVATE
+            upnplib_compa_static
+)
+add_test(NAME ctest_webserver-ucst COMMAND test_webserver-ucst
 )

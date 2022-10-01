@@ -195,8 +195,8 @@ if(NOT WIN32)
             ./inc/not_win32
     )
 
-    # Pupnp Native SHared library: prefix -pnsh
-    #------------------------------------------
+    # Pupnp Native SHared library: postfix -pnsh
+    #-------------------------------------------
     add_library(pupnp_native_shared SHARED
             ${PUPNP_SOURCE_FILES}
     )
@@ -222,8 +222,8 @@ if(NOT WIN32)
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
-    # Pupnp Native STatic library: prefix -pnst
-    #------------------------------------------
+    # Pupnp Native STatic library: postfix -pnst
+    #-------------------------------------------
     add_library(pupnp_native_static STATIC
             ${PUPNP_SOURCE_FILES}
     )
@@ -293,9 +293,9 @@ else() # WIN32
             ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
-    # WIN32 Pupnp Native STatic library: prefix -pnst
-    #------------------------------------------------
-    add_library(pupnp_native_static STATIC   # prefix -pnst
+    # WIN32 Pupnp Native STatic library: postfix -pnst
+    #-------------------------------------------------
+    add_library(pupnp_native_static STATIC
             ${PUPNP_SOURCE_FILES}
     )
     target_include_directories(pupnp_native_static
