@@ -1,4 +1,9 @@
 Next steps to do:
+* Update pupnp native to 1.14.14.
+* Rework gtests for UpnpString.
+* Create upnplib native UpnpFileMeta class for old UpnpFileInfo.
+* Create compatible layer for the UpnpFileMeta class.
+* Continue creating gtests for webserver.
 * Move pupnp/upnp/src/inc/sock.hpp:79:static UPNP_INLINE int sock_close() to miniserver.cpp and rework.
 * Check usage of fields in struct s_SocketStuff.serverAddr4.
 * Make UpnpPrintf() usable without build type DEBUG.

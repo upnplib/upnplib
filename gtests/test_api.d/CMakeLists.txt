@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-28
+# Redistribution only with this Copyright remark. Last modified: 2022-10-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -123,5 +123,33 @@ target_link_libraries(test_upnpapi_platform-pnsh
         upnplib_native_shared
 )
 add_test(NAME ctest_upnpapi_platform-pnsh COMMAND test_upnpapi_platform-pnsh
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
+
+# UpnpFileInfo
+#=============
+add_executable(test_UpnpFileInfo-pnsh
+#----------------------------------------
+    ./test_UpnpFileInfo.cpp
+)
+target_include_directories(test_UpnpFileInfo-pnsh
+    PRIVATE
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${UPnPlib_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+)
+target_compile_definitions(test_UpnpFileInfo-pnsh
+    PRIVATE
+        UPNPLIB_SHARED
+        UPNPLIB_WITH_NATIVE_PUPNP
+)
+target_link_libraries(test_UpnpFileInfo-pnsh
+    PRIVATE
+        pupnp_native_shared
+        upnplib_native_shared
+)
+add_test(NAME ctest_UpnpFileInfo-pnsh COMMAND test_UpnpFileInfo-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )

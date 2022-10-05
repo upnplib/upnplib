@@ -1,5 +1,6 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-18
+// Redistribution only with this Copyright remark. Last modified: 2022-10-05
+// Also Copyright by other contributor as noted below.
 
 /*!
  * \file

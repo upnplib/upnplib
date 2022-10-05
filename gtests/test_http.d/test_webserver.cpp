@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-02
+// Redistribution only with this Copyright remark. Last modified: 2022-10-03
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -9,6 +9,7 @@
 #include "core/compa/src/genlib/net/http/webserver.cpp"
 #endif
 
+#include "UpnpFileInfo.hpp"
 #include "gmock/gmock.h"
 
 //
@@ -80,6 +81,15 @@ TEST(WebserverTestSuite, search_extension) {
     EXPECT_EQ(search_extension("", &con_type, &con_subtype), -1);
     EXPECT_STREQ(con_type, "<unused>");
     EXPECT_STREQ(con_subtype, "<unused>");
+}
+
+TEST(WebserverTestSuite, get_content_type) {
+    GTEST_SKIP() << "To be done";
+    [[maybe_unused]] UpnpFileInfo* finfo = UpnpFileInfo_new();
+
+    // Continue here with creating tests for the webserver module. Because of
+    // extended use of UpnpFileInfo I continued first with testing module
+    // UpnpFileInfo.
 }
 
 TEST(WebserverTestSuite, web_server_init_successful) {

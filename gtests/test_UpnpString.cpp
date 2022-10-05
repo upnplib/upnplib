@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-06
 
 #include "pupnp/upnp/src/api/UpnpString.cpp"
 
@@ -235,6 +235,7 @@ TEST(UpnpStringDeathTest, setUpnpString) {
         std::cout << CYEL "[ BUG      ]" CRES
                   << " Function 'UpnpString_set_String()' will segfault if "
                      "called with nullptr.\n";
+        EXPECT_DEATH(UpnpString_set_String(nullptr, "hello world"), ".*");
 
     } else {
 
