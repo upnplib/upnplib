@@ -238,8 +238,8 @@ static int NewRequestHandler(
         UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,
                    ">>> SSDP SEND to %s >>>\n%s\n", buf_ntop,
                    *(RqPacket + Index));
-        rc = sendto(ReplySock, *(RqPacket + Index),
-                    (int)strlen(*(RqPacket + Index)), 0, DestAddr, socklen);
+        rc = sendto(ReplySock, *(RqPacket + Index), strlen(*(RqPacket + Index)),
+                    0, DestAddr, socklen);
         if (rc == -1) {
             strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
             UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,

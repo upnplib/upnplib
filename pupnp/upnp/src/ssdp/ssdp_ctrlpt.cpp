@@ -6,7 +6,7 @@
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-08
+ * Redistribution only with this Copyright remark. Last modified: 2022-10-06
  *
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
@@ -657,8 +657,8 @@ int SearchByTarget(int Hnd, int Mx, char* St, void* Cookie) {
         while (NumCopy < NUM_SSDP_COPY) {
             UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,
                        ">>> SSDP SEND M-SEARCH >>>\n%s\n", ReqBufv6UlaGua);
-            sendto(gSsdpReqSocket6, ReqBufv6UlaGua, (int)strlen(ReqBufv6UlaGua),
-                   0, (struct sockaddr*)&__ss_v6, sizeof(struct sockaddr_in6));
+            sendto(gSsdpReqSocket6, ReqBufv6UlaGua, strlen(ReqBufv6UlaGua), 0,
+                   (struct sockaddr*)&__ss_v6, sizeof(struct sockaddr_in6));
             NumCopy++;
             imillisleep(SSDP_PAUSE);
         }
@@ -667,7 +667,7 @@ int SearchByTarget(int Hnd, int Mx, char* St, void* Cookie) {
         while (NumCopy < NUM_SSDP_COPY) {
             UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,
                        ">>> SSDP SEND M-SEARCH >>>\n%s\n", ReqBufv6);
-            sendto(gSsdpReqSocket6, ReqBufv6, (int)strlen(ReqBufv6), 0,
+            sendto(gSsdpReqSocket6, ReqBufv6, strlen(ReqBufv6), 0,
                    (struct sockaddr*)&__ss_v6, sizeof(struct sockaddr_in6));
             NumCopy++;
             imillisleep(SSDP_PAUSE);
@@ -680,7 +680,7 @@ int SearchByTarget(int Hnd, int Mx, char* St, void* Cookie) {
         while (NumCopy < NUM_SSDP_COPY) {
             UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,
                        ">>> SSDP SEND M-SEARCH >>>\n%s\n", ReqBufv4);
-            sendto(gSsdpReqSocket4, ReqBufv4, (int)strlen(ReqBufv4), 0,
+            sendto(gSsdpReqSocket4, ReqBufv4, strlen(ReqBufv4), 0,
                    (struct sockaddr*)&__ss_v4, sizeof(struct sockaddr_in));
             NumCopy++;
             imillisleep(SSDP_PAUSE);

@@ -1,4 +1,9 @@
 commit 17a9e4bcbd865367bbebaa6292117fef44302cf1 (HEAD, tag: release-1.14.13)
+
+The updates in upnplib are marked with the word "updated".
+==========================================================
+
+commit 17a9e4bcbd865367bbebaa6292117fef44302cf1 (HEAD, tag: release-1.14.13)
 Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
 Date:   Wed Aug 3 11:05:12 2022 -0300
 

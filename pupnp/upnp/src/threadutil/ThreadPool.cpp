@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-13
+ * Redistribution only with this Copyright remark. Last modified: 2022-10-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1238,10 +1238,15 @@ int gettimeofday(struct timeval* tv, struct timezone* tz) {
             _tzset();
             tzflag++;
         }
+#ifdef _UCRT
         long itz = 0;
         _get_timezone(&itz);
         tz->tz_minuteswest = (int)(itz / 60);
         _get_daylight(&tz->tz_dsttime);
+#else
+        tz->tz_minuteswest = _timezone / 60;
+        tz->tz_dsttime = _daylight;
+#endif
     }
 
     return 0;

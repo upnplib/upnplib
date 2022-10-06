@@ -79,7 +79,8 @@
 
 // The version string is only used here and will not change much on upgrading to
 // upnplib. To reduce complexity by including upnpconfig.hpp I just set it here.
-#define UPNP_VERSION_STRING "1.14.13"
+// --Ingo
+#define UPNP_VERSION_STRING "1.14.14"
 
 #include "upnplib/mocking/pupnp.hpp"
 #include "upnplib/mocking/sys_select.hpp"

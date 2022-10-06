@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-25
+ * Redistribution only with this Copyright remark. Last modified: 2022-10-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,24 +42,22 @@
  * \brief Implements the sockets functionality.
  */
 
+#include "config.hpp"
+
 #include "sock.hpp"
+
+#include "UpnpStdInt.hpp" /* for ssize_t */
+#include "unixutil.hpp"   /* for socklen_t, EAFNOSUPPORT */
+#include "upnp.hpp"
 
 #include "upnpdebug.hpp"
 #include "upnputil.hpp"
 
 #include <assert.h>
-#include <fcntl.h> /* for F_GETFL, F_SETFL, O_NONBLOCK */
-#include <time.h>
-#include <cstring>
-
-#ifdef _WIN32
-#include "config.hpp"
-#include "UpnpStdInt.hpp" /* for ssize_t */
-#include "unixutil.hpp"   /* for socklen_t, EAFNOSUPPORT */
-#include "upnp.hpp"
 #include <errno.h>
+#include <fcntl.h> /* for F_GETFL, F_SETFL, O_NONBLOCK */
+#include <cstring>
 #include <time.h>
-#endif // _WIN32
 
 #include "upnplib/mocking/sys_socket.hpp"
 #include "upnplib/mocking/sys_select.hpp"
@@ -98,8 +96,8 @@ int sock_init_with_ip(SOCKINFO* info, SOCKET sockfd,
 
     // clang-format off
 // #ifdef UPNPLIB_PUPNP_BUG
-    // Ingo: Forming offset [16, 127] is out of the bounds [0, 16] of object
-    // ‘foreign_sockaddr’ with type ‘sockaddr_in’ [-Werror=array-bounds]
+    // Forming offset [16, 127] is out of the bounds [0, 16] of object
+    // ‘foreign_sockaddr’ with type ‘sockaddr_in’ [-Werror=array-bounds] --Ingo
     memcpy(&info->foreign_sockaddr, foreign_sockaddr,
            sizeof(info->foreign_sockaddr));
 // #else
@@ -147,7 +145,7 @@ int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
                        "Error in shutdown: %s\n", errorStr);
         }
         // BUG! closesocket on _WIN32 does not return -1 on error, but positive
-        // numbers. This must check != 0.
+        // numbers. This must check != 0. --Ingo
         if (sock_close(info->socket) == -1) {
             ret = UPNP_E_SOCKET_ERROR;
         }
@@ -186,7 +184,7 @@ static int sock_read_write(
     time_t start_time = time(NULL);
     SOCKET sockfd = info->socket;
     long bytes_sent = 0;
-    size_t byte_left = (size_t)0;
+    size_t byte_left = 0;
     ssize_t num_written;
 
     FD_ZERO(&readSet);
@@ -198,10 +196,9 @@ static int sock_read_write(
     timeout.tv_sec = *timeoutSecs;
     timeout.tv_usec = 0;
     while (1) {
-        // Ingo: BUG! To get correct error messages from the system call for
-        // checking signals EINTR (see below) the errno must be resetted. I have
-        // seen an endless loop here with old contents of errno.
-        // errno = 0;
+        // BUG! To get correct error messages from the system call for checking
+        // signals EINTR (see below) the errno must be resetted. I have seen an
+        // endless loop here with old contents of errno.  errno = 0; --Ingo
         if (*timeoutSecs < 0) {
             retCode = upnplib::mocking::sys_select_h.select(
                 sockfd + 1, &readSet, &writeSet, NULL, NULL);
@@ -235,7 +232,7 @@ static int sock_read_write(
 #endif
                 /* read data. */
                 numBytes = (long)upnplib::mocking::sys_socket_h.recv(
-                    sockfd, buffer, (int)bufsize, MSG_NOSIGNAL);
+                    sockfd, buffer, bufsize, MSG_NOSIGNAL);
 #ifdef UPNP_ENABLE_OPEN_SSL
             }
 #endif
@@ -251,7 +248,7 @@ static int sock_read_write(
 #endif
                     /* write data. */
                     num_written = upnplib::mocking::sys_socket_h.send(
-                        sockfd, buffer + bytes_sent, (int)byte_left,
+                        sockfd, buffer + bytes_sent, byte_left,
                         MSG_DONTROUTE | MSG_NOSIGNAL);
 #ifdef UPNP_ENABLE_OPEN_SSL
                 }
@@ -260,7 +257,7 @@ static int sock_read_write(
 #ifdef SO_NOSIGPIPE
                     setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &old, olen);
 #endif
-                    // Ingo: BUG! Should return UPNP_E_SOCKET_ERROR
+                    // BUG! Should return UPNP_E_SOCKET_ERROR --Ingo
                     return (int)num_written;
                 }
                 byte_left -= (size_t)num_written;

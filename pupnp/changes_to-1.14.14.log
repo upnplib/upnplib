@@ -1,0 +1,442 @@
+commit b25d2b556f19d33dbcf7589b0336f0c97d15c4da (tag: release-1.14.14)
+
+git whatchanged ddc6af9e65d..b25d2b556f
+updated files are marked with the word "updated" at the line end.
+=================================================================
+
+commit b25d2b556f19d33dbcf7589b0336f0c97d15c4da (tag: release-1.14.14)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Oct 5 14:27:45 2022 -0300
+
+    README.md
+
+:100644 100644 fc613351 1b26e3d7 M	README.md
+
+commit 8473b9a9f1bda723d93624a2dfbd60e7ae1dc639
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Oct 5 14:23:59 2022 -0300
+
+    ChangeLog and THANKS
+
+:100644 100644 a40b3851 66474269 M	ChangeLog
+:100644 100644 075d8642 bdcb5bfa M	THANKS
+
+commit d2f66892b6f27b14e62dee10a6e02805c0d155d3
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Oct 5 14:21:49 2022 -0300
+
+    [miniserver] Initialize cookie to null to stop compiler warning
+
+:100644 100644 db0d52f0 cffe7984 M	upnp/src/genlib/miniserver/miniserver.c updated
+
+commit 2dd004413e510bbc21a5ecb5c559a1eccda4d2bf
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Sep 30 17:27:25 2022 -0300
+
+    [str-xxx] Explicitly disable warnings
+
+:100644 100644 09630937 db0aa2c4 M	ixml/inc/posix_overwrites.h updated
+
+commit a8dceb42cd2b03549f697d4256c0da8fa11c4345
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Thu Sep 29 10:01:45 2022 -0300
+
+    Add a summary of the problem with the naive defines of "_s" functions
+
+:100644 100644 17eca1f5 09630937 M	ixml/inc/posix_overwrites.h updated
+
+commit 1092a2d1a3960643b7c7a3ff25f5a0805aaeea29
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Sep 28 15:15:06 2022 -0300
+
+    Fixes lint-clang-format workflow test
+
+:100644 100644 0f53ec4e 17eca1f5 M	ixml/inc/posix_overwrites.h updated
+
+commit d86f4159e13d00a9eb59ac812560a964142f9896
+Author: philippe44 <philippe44@users.noreply.github.com>
+Date:   Tue Sep 27 17:32:00 2022 -0700
+
+    don't use strxxx_s on Windows
+    
+    The use of these fails as 2nd argument is the same as 4th argument. Reading the cpp_reference defintions of these, it can't be right
+
+:100644 100644 a9c49e3f 0f53ec4e M	ixml/inc/posix_overwrites.h updated
+
+commit e7eafae6db6df1e38022de8d460e3cac62990403
+Author: Rex Cheung <93339127+rexcheung21@users.noreply.github.com>
+Date:   Tue Sep 20 12:23:42 2022 +0800
+
+    Fix #412
+    
+    Skip leading UTF-8 BOM in XML document
+
+:100644 100644 b274af47 ab902c3b M	ixml/src/ixmlparser.c updated
+
+commit 62be3b272c5bc69913e2b07cd5ccc90d13d3a36c
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Thu Aug 4 19:31:23 2022 -0300
+
+    Fixes unnecessary casts to int
+
+:100644 100644 8b228a0d db0d52f0 M	upnp/src/genlib/miniserver/miniserver.c updated
+:100644 100644 f72a0184 396c692a M	upnp/src/genlib/net/sock.c updated
+:100644 100644 cad8365b 8644c746 M	upnp/src/ssdp/ssdp_ctrlpt.c updated
+:100644 100644 f0485eda 095f9cb9 M	upnp/src/ssdp/ssdp_device.c updated
+
+commit d4cfec4674c6877bad35044e1d2c006b6aafc30a
+Author: Hugo Beauzée-Luyssen <hugo@beauzee.fr>
+Date:   Thu Aug 4 16:09:05 2022 +0200
+
+    ThreadPool: Fix non UCRT builds
+
+:100644 100644 49fa8486 b66ee93e M	upnp/src/threadutil/ThreadPool.c updated
+
+commit 6f440bac06fbb55055f89c03930e31bbed63d3e4
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Aug 3 11:09:57 2022 -0300
+
+    Homekeeping for the next release
+
+:100644 100644 39c696f2 a40b3851 M	ChangeLog
+:100644 100644 a3d3472d fc613351 M	README.md
+:100644 100644 8a6b4738 e576f36f M	configure.ac
+:100644 100644 a601a04c 4000fb10 M	docs/Doxyfile
+:100644 100644 1450fdcf 05b10897 M	libupnp.spec
+
+commit 17a9e4bcbd865367bbebaa6292117fef44302cf1 (tag: release-1.14.13)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Aug 3 11:05:12 2022 -0300
+
+    Homekeeping for the next release
+
+:100644 100644 8dfe9e24 39c696f2 M	ChangeLog
+:100644 100644 edb31654 a3d3472d M	README.md
+:100644 100644 c46f9e2a 8a6b4738 M	configure.ac
+:100644 100644 09f95109 a601a04c M	docs/Doxyfile
+:100644 100644 7c875ab9 1450fdcf M	libupnp.spec
+
+
+################################################################################
+git diff release-1.14.13 release-1.14.14
+----------------------------------------
+
+diff --git a/ChangeLog b/ChangeLog
+index 39c696f2..66474269 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -8,6 +8,27 @@ Version 1.16.0
+ 
+         Aborted.
+ 
++*******************************************************************************
++Version 1.14.14
++*******************************************************************************
++
++2022-09-27 philippe44 <philippe44@users.noreply.github.com>
++
++        don't use strxxx_s on Windows
++
++        The use of these fails as 2nd argument is the same as 4th argument.
++        Reading the cpp_reference defintions of these, it can't be right.
++
++2022-09-20 Rex Cheung <93339127+rexcheung21(at)users.noreply.github.com>
++
++        Fix #412
++
++        Skip leading UTF-8 BOM in XML document
++
++2022-08-04 Hugo Beauzée-Luyssen <hugo(at)beauzee.fr>
++
++        ThreadPool: Fix non UCRT builds
++
+ *******************************************************************************
+ Version 1.14.13
+ *******************************************************************************
+diff --git a/README.md b/README.md
+index a3d3472d..1b26e3d7 100644
+--- a/README.md
++++ b/README.md
+@@ -102,6 +102,8 @@ The Portable SDK for UPnP&trade; Devices is distributed under the BSD (Berkeley
+ | -------------- | ---------- | ---------------------------------------- |
+ | 1.18.0         | TBA ?      | [Portable UPnP SDK][Portable UPnP SDK]   |
+ | 1.16.0         | aborted    | [Portable UPnP SDK][Portable UPnP SDK]   |
++| 1.14.15        | TBA        | [Portable UPnP SDK][Portable UPnP SDK]   |
++| 1.14.14        | 2022-10-05 | [Portable UPnP SDK][Portable UPnP SDK]   |
+ | 1.14.13        | 2022-08-03 | [Portable UPnP SDK][Portable UPnP SDK]   |
+ | 1.14.12        | 2021-09-26 | [Portable UPnP SDK][Portable UPnP SDK]   |
+ | 1.14.11        | 2021-08-20 | [Portable UPnP SDK][Portable UPnP SDK]   |
+diff --git a/THANKS b/THANKS
+index 075d8642..bdcb5bfa 100644
+--- a/THANKS
++++ b/THANKS
+@@ -77,6 +77,7 @@ exempt of errors.
+ - Pino Toscano (pinotree)
+ - Rene Hexel
+ - Rene Nielsen
++- Rex Cheung
+ - Robert Buckley (rbuckley)
+ - Robert Gingher (robsbox)
+ - Ronan Menard
+diff --git a/configure.ac b/configure.ac
+index 8a6b4738..e576f36f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -9,7 +9,7 @@
+ 
+ AC_PREREQ(2.60)
+ 
+-AC_INIT([libupnp], [1.14.13], [mroberto@users.sourceforge.net])
++AC_INIT([libupnp], [1.14.14], [mroberto@users.sourceforge.net])
+ dnl ############################################################################
+ dnl # *Independently* of the above libupnp package version, the libtool version
+ dnl # of the 3 libraries need to be updated whenever there is a change released:
+@@ -189,8 +189,18 @@ dnl #AC_SUBST([LT_VERSION_IXML],       [12:2:1])
+ dnl #AC_SUBST([LT_VERSION_UPNP],       [18:4:1])
+ dnl #
+ dnl ############################################################################
++dnl # Release 1.14.14
++dnl # "current:revision:age"
++dnl #
++dnl # - Code has changed in upnp
++dnl #   revision: 4 -> 5
++dnl #
++dnl #AC_SUBST([LT_VERSION_IXML],       [12:2:1])
++dnl #AC_SUBST([LT_VERSION_UPNP],       [18:5:1])
++dnl #
++dnl ############################################################################
+ AC_SUBST([LT_VERSION_IXML],       [12:2:1])
+-AC_SUBST([LT_VERSION_UPNP],       [18:4:1])
++AC_SUBST([LT_VERSION_UPNP],       [18:5:1])
+ dnl ############################################################################
+ dnl # Repeating the algorithm to place it closer to the modificatin place:
+ dnl # 	- library code modified:		revision++
+diff --git a/docs/Doxyfile b/docs/Doxyfile
+index a601a04c..4000fb10 100644
+--- a/docs/Doxyfile
++++ b/docs/Doxyfile
+@@ -38,7 +38,7 @@ PROJECT_NAME           = libUPnP
+ # could be handy for archiving the generated documentation or if some version
+ # control system is used.
+ 
+-PROJECT_NUMBER         = 1.14.13
++PROJECT_NUMBER         = 1.14.14
+ 
+ # Using the PROJECT_BRIEF tag one can provide an optional one line description
+ # for a project that appears at the top of each page and should give viewer a
+diff --git a/ixml/inc/posix_overwrites.h b/ixml/inc/posix_overwrites.h
+index a9c49e3f..db0aa2c4 100644
+--- a/ixml/inc/posix_overwrites.h
++++ b/ixml/inc/posix_overwrites.h
+@@ -12,10 +12,36 @@
+ 	#define strnicmp _strnicmp
+ 
+ 	/* Secure versions of functions */
+-	#define strcat(arg1, arg2) strcat_s(arg1, sizeof(arg1), arg2)
+-	#define strcpy(arg1, arg2) strcpy_s(arg1, _countof(arg1), arg2)
+-	#define strncpy(arg1, arg2, arg3) strncpy_s(arg1, arg3, arg2, arg3)
+-	#define sprintf(arg1, ...) sprintf_s(arg1, sizeof(arg1), __VA_ARGS__)
++	/* Explicitly disable warnings by pragma/define, see:
++	 * https://www.codegrepper.com/code-examples/c/crt+secure+no+warnings */
++	#pragma warning(disable : 4996)
++	#define _CRT_SECURE_NO_WARNINGS
++	#if 0
++		/*
++		 * The current issues with those 4 defines:
++		 * - strncpy redefinition is wrong
++		 * - Theses functions assume they are being called on C arrays
++		 * only. Using `countof` on a heap allocated pointer is
++		 * undefined behavior and `sizeof` will only return the byte
++		 * size of the pointer.
++		 *
++		 * The reason we can't pin-point the places where it fails is
++		 * because *_s functions have a significantly different
++		 * behaviour than the replaced functions and have actual error
++		 * returns values that are simply ignored here, leading to
++		 * numerous unseen regressions.
++		 *
++		 * A first step could be to actually crash or log on _s failures
++		 * to detect the potentials overflows or bad usages of the
++		 * wrappers.
++		 */
++		#define strcat(arg1, arg2) strcat_s(arg1, sizeof(arg1), arg2)
++		#define strcpy(arg1, arg2) strcpy_s(arg1, _countof(arg1), arg2)
++		#define strncpy(arg1, arg2, arg3) \
++			strncpy_s(arg1, arg3, arg2, arg3)
++		#define sprintf(arg1, ...) \
++			sprintf_s(arg1, sizeof(arg1), __VA_ARGS__)
++	#endif
+ 
+ #endif /* _WIN32 */
+ #endif /* POSIX_OVERWRTIES_H */
+diff --git a/ixml/src/ixmlparser.c b/ixml/src/ixmlparser.c
+index b274af47..ab902c3b 100644
+--- a/ixml/src/ixmlparser.c
++++ b/ixml/src/ixmlparser.c
+@@ -74,6 +74,7 @@ static const char *CDSTART = "<![CDATA[";
+ static const char *CDEND = "]]>";
+ static const char *DEC_NUMBERS = "0123456789";
+ static const char *HEX_NUMBERS = "0123456789ABCDEFabcdef";
++static const char *UTF8_BOM = "\xef\xbb\xbf";
+ 
+ typedef struct char_info
+ {
+@@ -591,6 +592,19 @@ static int Parser_skipString(
+ 	return IXML_SUCCESS;
+ }
+ 
++/*!
++ * \brief Skip UTF-8 byte order mark
++ */
++static void Parser_skipBom(
++	/*! [in] The XML parser. */
++	Parser *xmlParser)
++{
++	size_t bom_len = strlen(UTF8_BOM);
++
++	if (strncmp(xmlParser->curPtr, UTF8_BOM, bom_len) == 0)
++		xmlParser->curPtr += bom_len;
++}
++
+ /*!
+  * \brief Skip white spaces.
+  */
+@@ -702,6 +716,7 @@ static int Parser_skipProlog(
+ 		return IXML_FAILED;
+ 	}
+ 
++	Parser_skipBom(xmlParser);
+ 	Parser_skipWhiteSpaces(xmlParser);
+ 
+ 	if (strncmp(xmlParser->curPtr, (char *)XMLDECL, strlen(XMLDECL)) == 0) {
+diff --git a/libupnp.spec b/libupnp.spec
+index 1450fdcf..05b10897 100644
+--- a/libupnp.spec
++++ b/libupnp.spec
+@@ -1,4 +1,4 @@
+-Version: 1.14.13
++Version: 1.14.14
+ Summary: Universal Plug and Play (UPnP) SDK
+ Name: libupnp-1.14
+ Release: 1%{?dist}
+diff --git a/upnp/src/genlib/miniserver/miniserver.c b/upnp/src/genlib/miniserver/miniserver.c
+index 8b228a0d..cffe7984 100644
+--- a/upnp/src/genlib/miniserver/miniserver.c
++++ b/upnp/src/genlib/miniserver/miniserver.c
+@@ -238,7 +238,7 @@ static int dispatch_request(
+ 	http_message_t *request;
+ 	MiniServerCallback callback;
+ 	WebCallback_HostValidate host_validate_callback = 0;
+-	void *cookie;
++	void *cookie = 0;
+ 	int rc = UPNP_E_SUCCESS;
+ 	/* If it does not fit in here, it is likely invalid anyway. */
+ 	char host_port[NAME_SIZE];
+@@ -1316,7 +1316,7 @@ int StopMiniServer()
+ 		ssdpAddr.sin_port = htons(miniStopSockPort);
+ 		sendto(sock,
+ 			buf,
+-			(int)bufLen,
++			bufLen,
+ 			0,
+ 			(struct sockaddr *)&ssdpAddr,
+ 			socklen);
+diff --git a/upnp/src/genlib/net/sock.c b/upnp/src/genlib/net/sock.c
+index f72a0184..396c692a 100644
+--- a/upnp/src/genlib/net/sock.c
++++ b/upnp/src/genlib/net/sock.c
+@@ -176,7 +176,7 @@ static int sock_read_write(
+ 	time_t start_time = time(NULL);
+ 	SOCKET sockfd = info->socket;
+ 	long bytes_sent = 0;
+-	size_t byte_left = (size_t)0;
++	size_t byte_left = 0;
+ 	ssize_t num_written;
+ 
+ 	FD_ZERO(&readSet);
+@@ -226,10 +226,8 @@ static int sock_read_write(
+ 			} else {
+ #endif
+ 				/* read data. */
+-				numBytes = (long)recv(sockfd,
+-					buffer,
+-					(int)bufsize,
+-					MSG_NOSIGNAL);
++				numBytes = (long)recv(
++					sockfd, buffer, bufsize, MSG_NOSIGNAL);
+ #ifdef UPNP_ENABLE_OPEN_SSL
+ 			}
+ #endif
+@@ -247,7 +245,7 @@ static int sock_read_write(
+ 					/* write data. */
+ 					num_written = send(sockfd,
+ 						buffer + bytes_sent,
+-						(int)byte_left,
++						byte_left,
+ 						MSG_DONTROUTE | MSG_NOSIGNAL);
+ #ifdef UPNP_ENABLE_OPEN_SSL
+ 				}
+diff --git a/upnp/src/ssdp/ssdp_ctrlpt.c b/upnp/src/ssdp/ssdp_ctrlpt.c
+index cad8365b..8644c746 100644
+--- a/upnp/src/ssdp/ssdp_ctrlpt.c
++++ b/upnp/src/ssdp/ssdp_ctrlpt.c
+@@ -724,7 +724,7 @@ int SearchByTarget(int Hnd, int Mx, char *St, void *Cookie)
+ 				ReqBufv6UlaGua);
+ 			sendto(gSsdpReqSocket6,
+ 				ReqBufv6UlaGua,
+-				(int)strlen(ReqBufv6UlaGua),
++				strlen(ReqBufv6UlaGua),
+ 				0,
+ 				(struct sockaddr *)&__ss_v6,
+ 				sizeof(struct sockaddr_in6));
+@@ -742,7 +742,7 @@ int SearchByTarget(int Hnd, int Mx, char *St, void *Cookie)
+ 				ReqBufv6);
+ 			sendto(gSsdpReqSocket6,
+ 				ReqBufv6,
+-				(int)strlen(ReqBufv6),
++				strlen(ReqBufv6),
+ 				0,
+ 				(struct sockaddr *)&__ss_v6,
+ 				sizeof(struct sockaddr_in6));
+@@ -763,7 +763,7 @@ int SearchByTarget(int Hnd, int Mx, char *St, void *Cookie)
+ 				ReqBufv4);
+ 			sendto(gSsdpReqSocket4,
+ 				ReqBufv4,
+-				(int)strlen(ReqBufv4),
++				strlen(ReqBufv4),
+ 				0,
+ 				(struct sockaddr *)&__ss_v4,
+ 				sizeof(struct sockaddr_in));
+diff --git a/upnp/src/ssdp/ssdp_device.c b/upnp/src/ssdp/ssdp_device.c
+index f0485eda..095f9cb9 100644
+--- a/upnp/src/ssdp/ssdp_device.c
++++ b/upnp/src/ssdp/ssdp_device.c
+@@ -298,7 +298,7 @@ static int NewRequestHandler(
+ 			*(RqPacket + Index));
+ 		rc = sendto(ReplySock,
+ 			*(RqPacket + Index),
+-			(int)strlen(*(RqPacket + Index)),
++			strlen(*(RqPacket + Index)),
+ 			0,
+ 			DestAddr,
+ 			socklen);
+diff --git a/upnp/src/threadutil/ThreadPool.c b/upnp/src/threadutil/ThreadPool.c
+index 49fa8486..b66ee93e 100644
+--- a/upnp/src/threadutil/ThreadPool.c
++++ b/upnp/src/threadutil/ThreadPool.c
+@@ -1297,10 +1297,15 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
+ 			_tzset();
+ 			tzflag++;
+ 		}
++	#ifdef _UCRT
+ 		long itz = 0;
+ 		_get_timezone(&itz);
+ 		tz->tz_minuteswest = (int)(itz / 60);
+ 		_get_daylight(&tz->tz_dsttime);
++	#else
++		tz->tz_minuteswest = _timezone / 60;
++		tz->tz_dsttime = _daylight;
++	#endif
+ 	}
+ 
+ 	return 0;

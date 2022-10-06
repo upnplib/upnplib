@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-25
+ * Redistribution only with this Copyright remark. Last modified: 2022-10-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -91,9 +91,8 @@ int UpnpInitLog(void) {
         }
     }
     is_stderr = 0;
-    // Ingo: Below immediate BUGFIX on pupnp 1.14.13 to have a running test
-    // environment on upnplib. The err_buff is freed but not allocated. We get a
-    // segfault here.
+    // Below immediate BUGFIX to have a running test environment on upnplib. The
+    // err_buff is freed but not allocated. We get a segfault here. --Ingo
 #if 0
     if (fileName) {
         char* err_buff = NULL;
@@ -114,12 +113,7 @@ int UpnpInitLog(void) {
 #endif // #if 0
 
     if (fileName) {
-        // #ifdef _WIN32
-        // Ingo: TODO Use fopen_s on MS Windows when I can mock it
-        //         upnplib::mocking::stdio_h.fopen_s(&fp, fileName, "a");
-        // #else
         fp = upnplib::mocking::stdio_h.fopen(fileName, "a");
-        // #endif
         if (fp == NULL) {
             fprintf(stderr, "Failed to open fileName (%s): %s\n", fileName,
                     std::strerror(errno));

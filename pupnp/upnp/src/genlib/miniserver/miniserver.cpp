@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-25
+ * Redistribution only with this Copyright remark. Last modified: 2022-10-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -239,13 +239,7 @@ static int dispatch_request(
     http_message_t* request;
     MiniServerCallback callback;
     WebCallback_HostValidate host_validate_callback = 0;
-#ifdef UPNPLIB_PUPNP_BUG
-    // Ingo - Error old code: 'cookie' may be used uninitialized in this
-    // function [-Werror=maybe-uninitialized].
-    void* cookie;
-#else
-    void* cookie{};
-#endif
+    void* cookie = 0;
     int rc = UPNP_E_SUCCESS;
     /* If it does not fit in here, it is likely invalid anyway. */
     char host_port[NAME_SIZE];
@@ -543,10 +537,10 @@ static void RunMiniServer(
     int ret = 0;
     int stopSock = 0;
 
-    // BUG! - Ingo: On MS Windows INVALID_SOCKET is unsigned -1 =
-    // 18446744073709551615 so we get maxMiniSock with this big number even if
-    // there is only one INVALID_SOCKET. Incrementing it at the end results in
-    // 0. To be compatible we must not assume INVALID_SOCKET to be -1.
+    // BUG! On MS Windows INVALID_SOCKET is unsigned -1 = 18446744073709551615
+    // so we get maxMiniSock with this big number even if there is only one
+    // INVALID_SOCKET. Incrementing it at the end results in 0. To be compatible
+    // we must not assume INVALID_SOCKET to be -1. --Ingo
     maxMiniSock = 0;
     maxMiniSock = std::max(maxMiniSock, miniSock->miniServerSock4);
     maxMiniSock = std::max(maxMiniSock, miniSock->miniServerSock6);
@@ -760,18 +754,18 @@ static int do_bind(struct s_SocketStuff* s) {
     do {
         switch (s->ip_version) {
         case 4:
-            // Ingo: Compilation Error on macOS:
-            // operation on 's->s_SocketStuff::try_port'
-            // may be undefined [-Werror=sequence-point]
-            // s->serverAddr4->sin_port = htons(s->try_port++);
+            // Compilation Error on macOS:
+            // operation on 's->s_SocketStuff::try_port' may be undefined
+            // [-Werror=sequence-point] s->serverAddr4->sin_port =
+            // htons(s->try_port++); --Ingo
             s->serverAddr4->sin_port = htons(s->try_port);
             s->try_port = s->try_port + 1;
             break;
         case 6:
-            // Ingo: Compilation Error on macOS:
-            // operation on 's->s_SocketStuff::try_port'
-            // may be undefined [-Werror=sequence-point]
-            // s->serverAddr6->sin6_port = htons(s->try_port++);
+            // Compilation Error on macOS:
+            // operation on 's->s_SocketStuff::try_port' may be undefined
+            // [-Werror=sequence-point] s->serverAddr6->sin6_port =
+            // htons(s->try_port++); --Ingo
             s->serverAddr6->sin6_port = htons(s->try_port);
             s->try_port = s->try_port + 1;
             break;
@@ -1061,8 +1055,8 @@ InitMiniServerSockArray(MiniServerSockArray* miniSocket) {
 }
 
 int StartMiniServer(
-    // Ingo: The three parameter only used if the INTERNAL_WEB_SERVER is
-    // enabled. The miniserver does not need them.
+    // The three parameter only used if the INTERNAL_WEB_SERVER is enabled. The
+    // miniserver does not need them. --Ingo
     //
     /*! [in,out] Port on which the server listens for incoming IPv4
      * connections. */
@@ -1202,7 +1196,7 @@ int StopMiniServer() {
         ssdpAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 #endif
         ssdpAddr.sin_port = htons(miniStopSockPort);
-        sendto(sock, buf, (int)bufLen, 0, (struct sockaddr*)&ssdpAddr, socklen);
+        sendto(sock, buf, bufLen, 0, (struct sockaddr*)&ssdpAddr, socklen);
         imillisleep(1);
         if (gMServState == (MiniServerState)MSERV_IDLE) {
             break;
