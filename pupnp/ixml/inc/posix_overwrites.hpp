@@ -8,7 +8,7 @@
 #define fileno _fileno
 #define unlink _unlink
 #define strcasecmp _stricmp
-#define strdup _strdup
+// #define strdup _strdup
 #define stricmp _stricmp
 #define strncasecmp strnicmp
 #define strnicmp _strnicmp

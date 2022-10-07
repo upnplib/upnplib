@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-30
+# Redistribution only with this Copyright remark. Last modified: 2022-10-07
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -23,6 +23,7 @@ if(NOT WIN32)
         ./src/mocking/netdb.cpp
         ./src/mocking/stdio.cpp
         ./src/mocking/sys_socket.cpp
+        ./src/mocking/string.cpp
     )
     set(UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES
         ${UPnPlib_SOURCE_DIR}/include

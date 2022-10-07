@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_MOCKING_NET_IF_HPP
 #define UPNPLIB_MOCKING_NET_IF_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-07
 
 #include "upnplib/visibility.hpp"
 #include <net/if.h>
@@ -16,8 +16,8 @@ class Net_ifInterface {
 };
 
 //
-// This is the wrapper class for the real (library?) function
-// ----------------------------------------------------------
+// This is the wrapper class (worker) for the real (library?) function
+// -------------------------------------------------------------------
 class Net_ifReal : public Net_ifInterface {
   public:
     virtual ~Net_ifReal() override = default;
@@ -58,7 +58,7 @@ class UPNPLIB_API Net_if {
     // important here for mocking because the pointer is also valid on all
     // objects of this class. With inline we do not need an extra definition
     // line outside the class. I also make the symbol hidden so the variable
-    // cannot be accessed globaly with Net_if::m_ptr_workerObj.
+    // cannot be accessed globaly with Net_if::m_ptr_workerObj. --Ingo
     UPNPLIB_LOCAL static inline Net_ifInterface* m_ptr_workerObj;
     Net_ifInterface* m_ptr_oldObj{};
 };

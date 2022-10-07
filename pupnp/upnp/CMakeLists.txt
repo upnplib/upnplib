@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-28
+# Redistribution only with this Copyright remark. Last modified: 2022-10-07
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -157,6 +157,7 @@ set(PUPNP_SOURCE_FILES
     ${UPnPlib_SOURCE_DIR}/core/src/mocking/stdlib.cpp
     ${UPnPlib_SOURCE_DIR}/core/src/mocking/sys_socket.cpp
     ${UPnPlib_SOURCE_DIR}/core/src/mocking/unistd.cpp
+    ${UPnPlib_SOURCE_DIR}/core/src/mocking/string.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:${UPnPlib_SOURCE_DIR}/core/src/mocking/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:${UPnPlib_SOURCE_DIR}/core/src/mocking/net_if.cpp>
     $<$<PLATFORM_ID:Windows>:${UPnPlib_SOURCE_DIR}/core/src/mocking/iphlpapi.cpp>

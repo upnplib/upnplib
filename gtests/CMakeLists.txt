@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-03
+# Redistribution only with this Copyright remark. Last modified: 2022-10-07
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -178,33 +178,6 @@ target_compile_definitions(test_membuffer
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 add_test(NAME ctest_membuffer COMMAND test_membuffer
-)
-
-
-# UpnpString
-#===========
-add_executable(test_UpnpString-pnst
-        ./test_UpnpString.cpp
-)
-target_include_directories(test_UpnpString-pnst
-    PRIVATE
-        ./include
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-)
-target_compile_definitions(test_UpnpString-pnst
-    PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
-)
-target_link_libraries(test_UpnpString-pnst
-    PRIVATE
-        pupnp_native_static
-)
-add_test(NAME ctest_UpnpString-pnst COMMAND test_UpnpString-pnst
 )
 
 
@@ -516,6 +489,7 @@ add_test(NAME ctest_miniserver-ucst COMMAND test_miniserver-ucst
 )
 
 
+add_subdirectory(./pupnp)
 add_subdirectory(./test_uri.d)
 add_subdirectory(./test_http.d)
 add_subdirectory(./test_api.d)
