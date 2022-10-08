@@ -3,6 +3,13 @@
 
 #include "UpnpString.hpp"
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+#define NS
+#else
+#define NS compa
+#include "compa/UpnpString.hpp"
+#endif
+
 #include "upnplib/gtest.hpp"
 #include "upnplib/mocking/stdlib.hpp"
 #include "upnplib/mocking/string.hpp"
@@ -29,7 +36,7 @@ struct s_UpnpString {
     char* m_string;
 };
 
-namespace pupnp {
+namespace compa {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
@@ -288,19 +295,19 @@ TEST(UpnpStringDeathTest, upnp_string_get_length) {
     UpnpString upnpstr{11, mstring};
     UpnpString* p = &upnpstr;
 
-    EXPECT_EQ(UpnpString_get_Length(p), 11);
+    EXPECT_EQ(NS::UpnpString_get_Length(p), 11);
 
     if (old_code) {
         std::cout << CYEL "[ BUG      ]" CRES
                   << " Function 'UpnpString_get_Length()' will segfault if "
                      "called with nullptr.\n";
         // This expects segfault.
-        EXPECT_DEATH(UpnpString_get_Length(nullptr), ".*");
+        EXPECT_DEATH(NS::UpnpString_get_Length(nullptr), ".*");
 
     } else {
 
         // This expects NO segfault.
-        EXPECT_EXIT((UpnpString_get_Length(nullptr), exit(0)),
+        EXPECT_EXIT((NS::UpnpString_get_Length(nullptr), exit(0)),
                     ExitedWithCode(0), ".*");
         // There should not be any changes on the UpnpString
         EXPECT_EQ(upnpstr.m_length, 11);
@@ -437,7 +444,7 @@ TEST(UpnpStringDeathTest, clearUpnpString) {
     }
 }
 
-} // namespace pupnp
+} // namespace compa
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
@@ -449,5 +456,5 @@ int main(int argc, char** argv) {
     // See https://google.github.io/googletest/reference/assertions.html#death
     // GTEST_FLAG_SET(death_test_style, "threadsafe");
 #endif
-#include "pupnp/gtest_main.inc"
+#include "compa/gtest_main.inc"
 }

@@ -489,7 +489,7 @@ add_test(NAME ctest_miniserver-ucst COMMAND test_miniserver-ucst
 )
 
 
-add_subdirectory(./pupnp)
+add_subdirectory(./compa)
 add_subdirectory(./test_uri.d)
 add_subdirectory(./test_http.d)
 add_subdirectory(./test_api.d)

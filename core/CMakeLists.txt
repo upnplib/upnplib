@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-07
+# Redistribution only with this Copyright remark. Last modified: 2022-10-08
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -15,7 +15,7 @@ if(NOT WIN32)
 
     set(UPNPLIB_COMPATIBLE_SOURCE_FILES
         ./src/init.cpp
-        $<$<BOOL:${UPNPLIB_WITH_WEBSERVER}>:./src/net/miniserver.cpp>
+        ./compa/src/api/UpnpString.cpp
         ./compa/src/genlib/net/http/webserver.cpp
         ./src/mocking/sys_select.cpp
         ./src/mocking/ifaddrs.cpp
@@ -24,8 +24,10 @@ if(NOT WIN32)
         ./src/mocking/stdio.cpp
         ./src/mocking/sys_socket.cpp
         ./src/mocking/string.cpp
+        $<$<BOOL:${UPNPLIB_WITH_WEBSERVER}>:./src/net/miniserver.cpp>
     )
     set(UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES
+        ./compa/inc
         ${UPnPlib_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
     )

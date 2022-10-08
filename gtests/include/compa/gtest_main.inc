@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-06
+// Redistribution only with this Copyright remark. Last modified: 2022-10-08
 
 // Because this part of the main entry function uses gtest macros we have to
 // include it directly into the source of the test. These macros need to have
@@ -19,10 +19,10 @@ if (argc > 2) {
     if (argc == 2) {
         if ((strncmp(argv[1], "--pupnp_old_code", 16) == 0) &&
             (strlen(argv[1]) == 16)) {
-            pupnp::old_code = true;
+            compa::old_code = true;
         } else if ((strncmp(argv[1], "--pupnp_new_code", 16) == 0) &&
                    (strlen(argv[1]) == 16)) {
-            pupnp::old_code = false;
+            compa::old_code = false;
         } else {
             std::cerr << "Unknown argument. Valid pupnp options "
                          "only:\n--pupnp_old_code\n--pupnp_new_code"
@@ -32,19 +32,19 @@ if (argc > 2) {
     } else { // There is no --pupnp* argument
         // both = true;
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
-        pupnp::old_code = true;
+        compa::old_code = true;
 #else
-        pupnp::old_code = false;
+        compa::old_code = false;
 #endif
     }
 
     int rc{EXIT_FAILURE};
     if (both) {
-        pupnp::old_code = true;
+        compa::old_code = true;
         int rc1 = RUN_ALL_TESTS();
         std::cout << "[----------] Tested pupnp old code.\n\n";
 
-        pupnp::old_code = false;
+        compa::old_code = false;
         int rc2 = RUN_ALL_TESTS();
         std::cout << "[----------] Tested pupnp new code.\n";
 
@@ -60,7 +60,7 @@ if (argc > 2) {
 
         rc = rc1 | rc2; // Binary OR is intended
 
-    } else if (pupnp::old_code) {
+    } else if (compa::old_code) {
         rc = RUN_ALL_TESTS();
         std::cout << "[----------] Tested pupnp old code.\n\n";
 
