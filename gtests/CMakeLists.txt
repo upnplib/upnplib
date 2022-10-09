@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-07
+# Redistribution only with this Copyright remark. Last modified: 2022-10-11
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNPLIB_GTESTS VERSION 0031
+project(UPNPLIB_GTESTS VERSION 0032
                        DESCRIPTION "Unit Tests using googletest"
                        HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -140,6 +140,7 @@ target_compile_definitions(test_strintmap-pnsh
 target_link_libraries(test_strintmap-pnsh
     PRIVATE
         pupnp_native_shared
+        upnplib_native_shared
 )
 add_test(NAME ctest_strintmap-pnsh COMMAND test_strintmap-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -283,6 +284,7 @@ target_link_libraries(test_upnptools-pnsh
     PRIVATE
         # pupnp native shared: prefix -pnsh
         pupnp_native_shared
+        upnplib_native_shared
 )
 add_test(NAME ctest_upnptools-pnsh COMMAND test_upnptools-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -451,7 +453,11 @@ add_executable(test_miniserver-ucst
 # internal library. Otherwise the compiler complains 'multiple definition' of
 # several symbols. I don't know why, don't understand the inscrutable
 # conditional compiling directives in the source code.
+# TODO: check why upnplib_native_static isn't effective and I have to add
+#       mocking sources here.
     ./test_miniserver.cpp
+    ${UPNPLIB_CORE_SOURCE_DIR}/src/mocking/stdio.cpp
+    ${UPNPLIB_CORE_SOURCE_DIR}/src/mocking/string.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_server.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
 #ifdef UPNP_ENABLE_IPV6

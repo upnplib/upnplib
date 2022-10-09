@@ -1,10 +1,10 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-27
+# Redistribution only with this Copyright remark. Last modified: 2022-10-09
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNPLIB_SAMPLE VERSION 0007
+project(UPNPLIB_SAMPLE VERSION 0008
                        DESCRIPTION "Simple sample to use the library"
                        HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -27,6 +27,7 @@ endif()
 
 link_libraries(
         pupnp_native_shared
+        upnplib_native_shared
 )
 
 IF (UPNPLIB_DEF_SAMPLE_CLIENT)

@@ -1,6 +1,6 @@
 Next steps to do:
-* Create upnplib native UpnpFileMeta class for old UpnpFileInfo.
-* Create compatible layer for the UpnpFileMeta class.
++ Use UpnpString to make mocking work on linking with two libraries.
+* Move ./gtests/test_threadutil.d/test_FreeList.cpp to namespace compa and rework.
 * Continue creating gtests for webserver.
 * Move pupnp/upnp/src/inc/sock.hpp:79:static UPNP_INLINE int sock_close() to miniserver.cpp and rework.
 * Check usage of fields in struct s_SocketStuff.serverAddr4.

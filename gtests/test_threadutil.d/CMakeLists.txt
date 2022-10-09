@@ -1,10 +1,10 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-28
+# Redistribution only with this Copyright remark. Last modified: 2022-10-09
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(GTESTS_THREADUTIL VERSION 0002
+project(GTESTS_THREADUTIL VERSION 0003
                   DESCRIPTION "Tests for the upnpapi module"
                   HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -32,6 +32,7 @@ target_compile_definitions(test_LinkedList-pnsh
 target_link_libraries(test_LinkedList-pnsh
     PRIVATE
         pupnp_native_shared
+        upnplib_native_shared
 )
 add_test(NAME ctest_LinkedList-pnsh COMMAND test_LinkedList-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -62,11 +63,13 @@ target_compile_definitions(test_FreeList-pnsh
 target_link_libraries(test_FreeList-pnsh
     PRIVATE
         pupnp_native_shared
+        upnplib_native_shared
 )
 add_test(NAME ctest_FreeList-pnsh COMMAND test_FreeList-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
+if(FALSE)
 add_executable(test_FreeList-ucsh
 #--------------------------------
     ./test_FreeList.cpp
@@ -93,6 +96,7 @@ target_link_libraries(test_FreeList-ucsh
 add_test(NAME ctest_FreeList-ucsh COMMAND test_FreeList-ucsh
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
+endif()
 
 # ThreadPool
 #===========
@@ -118,6 +122,7 @@ target_compile_definitions(test_ThreadPool-pnsh
 target_link_libraries(test_ThreadPool-pnsh
     PRIVATE
         pupnp_native_shared
+        upnplib_native_shared
 )
 add_test(NAME ctest_ThreadPool-pnsh COMMAND test_ThreadPool-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -147,6 +152,7 @@ target_compile_definitions(test_TimerThread-pnsh
 target_link_libraries(test_TimerThread-pnsh
     PRIVATE
         pupnp_native_shared
+        upnplib_native_shared
 )
 add_test(NAME ctest_TimerThread-pnsh COMMAND test_TimerThread-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

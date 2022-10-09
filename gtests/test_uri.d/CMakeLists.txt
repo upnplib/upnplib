@@ -1,10 +1,10 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-02
+# Redistribution only with this Copyright remark. Last modified: 2022-09-09
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(GTESTS_URI VERSION 0001
+project(GTESTS_URI VERSION 0002
                   DESCRIPTION "Tests for the uri module and url class"
                   HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -49,6 +49,7 @@ target_compile_definitions(test_uri-pnst
 target_link_libraries(test_uri-pnst
     PRIVATE
         pupnp_native_static
+        upnplib_native_static
 )
 add_test(NAME ctest_uri-pnst COMMAND test_uri-pnst
 )

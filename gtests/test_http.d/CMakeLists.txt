@@ -1,10 +1,10 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-25
+# Redistribution only with this Copyright remark. Last modified: 2022-10-09
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(GTESTS_HTTPREADWRITE VERSION 0002
+project(GTESTS_HTTPREADWRITE VERSION 0003
                   DESCRIPTION "Tests for the upnplib httpreadwrite module"
                   HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -139,6 +139,7 @@ target_compile_definitions(test_netconnect-pnst
 target_link_libraries(test_netconnect-pnst
     PRIVATE
         pupnp_native_static
+        upnplib_native_static
 )
 add_test(NAME ctest_netconnect-pnst COMMAND test_netconnect-pnst
 )
@@ -192,6 +193,7 @@ target_compile_definitions(test_httpparser-pnst
 target_link_libraries(test_httpparser-pnst
         PRIVATE
             pupnp_native_static
+            upnplib_native_static
 )
 add_test(NAME ctest_httpparser-pnst COMMAND test_httpparser-pnst
 )
@@ -232,6 +234,7 @@ target_compile_definitions(test_webserver-pnst
 target_link_libraries(test_webserver-pnst
         PRIVATE
             pupnp_native_static
+            upnplib_native_static
 )
 add_test(NAME ctest_webserver-pnst COMMAND test_webserver-pnst
 )
