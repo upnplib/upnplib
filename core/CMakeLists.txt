@@ -16,15 +16,9 @@ if(NOT WIN32)
     set(UPNPLIB_COMPATIBLE_SOURCE_FILES
         ./src/init.cpp
         ./compa/src/api/UpnpString.cpp
-        ./compa/src/genlib/net/http/webserver.cpp
-        ./src/mocking/sys_select.cpp
-        ./src/mocking/ifaddrs.cpp
-        ./src/mocking/net_if.cpp
-        ./src/mocking/netdb.cpp
-        ./src/mocking/stdio.cpp
-        ./src/mocking/sys_socket.cpp
-        ./src/mocking/string.cpp
-        $<$<BOOL:${UPNPLIB_WITH_WEBSERVER}>:./src/net/miniserver.cpp>
+        #./src/mocking/string.cpp
+        #./compa/src/genlib/net/http/webserver.cpp
+        #$<$<BOOL:${UPNPLIB_WITH_WEBSERVER}>:./src/net/miniserver.cpp>
     )
     set(UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES
         ./compa/inc

@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-08
+// Redistribution only with this Copyright remark. Last modified: 2022-10-09
 
 #include "UpnpString.hpp"
 
@@ -14,7 +14,6 @@
 #include "upnplib/mocking/stdlib.hpp"
 #include "upnplib/mocking/string.hpp"
 #include "gmock/gmock.h"
-#include <iostream> // DEBUG!
 
 using ::testing::_;
 using ::testing::Eq;
@@ -107,7 +106,7 @@ TEST_F(UpnpStringMockTestSuite, create_new_upnp_string) {
 }
 
 TEST_F(UpnpStringMockTestSuite, delete_upnp_string) {
-    // provide a UpnpString
+    // provide an UpnpString
     char mstring[] = "hello world";
     UpnpString upnpstr = {11, mstring};
     UpnpString* p = &upnpstr;
@@ -244,8 +243,6 @@ TEST(UpnpStringTestSuite, strnlen_called_with_various_parameter) {
     EXPECT_EQ(strnlen(str1, 11), (size_t)9);
     str1[9] = 1; // destroy string terminator
     EXPECT_EQ(strnlen(str1, 10), (size_t)10);
-    if (!old_code)
-        ADD_FAILURE() << "# strnlen isn't used in the UPnPlib core.";
 }
 
 TEST(UpnpStringTestSuite, strndup_called_with_various_parameter) {
@@ -267,18 +264,16 @@ TEST(UpnpStringTestSuite, strndup_called_with_various_parameter) {
     cpystr = strndup(str1, 11);
     EXPECT_EQ(cpystr, "123456789");
     EXPECT_EQ(cpystr[9], '\0'); // check string terminator
-    if (!old_code)
-        ADD_FAILURE() << "# strndup isn't used in the UPnPlib core.";
 }
 
 TEST(UpnpStringTestSuite, clear_upnp_string) {
-    // provide a UpnpString
+    // provide an UpnpString
     char mstring[]{"hello world"};
     UpnpString upnpstr{11, mstring};
     UpnpString* p = &upnpstr;
 
     // call the unit
-    UpnpString_clear(p);
+    NS::UpnpString_clear(p);
     EXPECT_EQ(upnpstr.m_length, 0);
     EXPECT_STREQ(upnpstr.m_string, "");
 }
@@ -290,7 +285,7 @@ TEST(UpnpStringTestSuite, clear_upnp_string) {
 // This tests are general set in main() to be threadsafe (look at the end).
 
 TEST(UpnpStringDeathTest, upnp_string_get_length) {
-    // provide a UpnpString
+    // provide an UpnpString
     char mstring[] = "hello world";
     UpnpString upnpstr{11, mstring};
     UpnpString* p = &upnpstr;
@@ -298,7 +293,7 @@ TEST(UpnpStringDeathTest, upnp_string_get_length) {
     EXPECT_EQ(NS::UpnpString_get_Length(p), 11);
 
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CYEL "[ BUGFIX   ]" CRES
                   << " Function 'UpnpString_get_Length()' will segfault if "
                      "called with nullptr.\n";
         // This expects segfault.
@@ -306,36 +301,33 @@ TEST(UpnpStringDeathTest, upnp_string_get_length) {
 
     } else {
 
-        // This expects NO segfault.
-        EXPECT_EXIT((NS::UpnpString_get_Length(nullptr), exit(0)),
-                    ExitedWithCode(0), ".*");
-        // There should not be any changes on the UpnpString
+        // No segfault but there should not be any changes on the UpnpString.
+        EXPECT_EQ(NS::UpnpString_get_Length(nullptr), 0);
+
         EXPECT_EQ(upnpstr.m_length, 11);
         EXPECT_EQ(upnpstr.m_string, mstring);
     }
 }
 
 TEST(UpnpStringDeathTest, get_upnp_string) {
-    // provide a UpnpString
+    // provide an UpnpString
     char mstring[] = "hello world";
     UpnpString upnpstr = {11, mstring};
     UpnpString* p = &upnpstr;
 
-    EXPECT_STREQ(UpnpString_get_String(p), "hello world");
+    EXPECT_STREQ(NS::UpnpString_get_String(p), "hello world");
 
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CYEL "[ BUGFIX   ]" CRES
                   << " Function 'UpnpString_get_String()' will segfault if "
                      "called with nullptr.\n";
         // This expects segfault.
-        EXPECT_DEATH(UpnpString_get_String(nullptr), ".*");
+        EXPECT_DEATH(NS::UpnpString_get_String(nullptr), ".*");
 
     } else {
 
-        // This expects NO segfault.
-        EXPECT_EXIT((UpnpString_get_String(nullptr), exit(0)),
-                    ExitedWithCode(0), ".*");
-        // There should not be any changes on the UpnpString
+        // No segfault but there should not be any changes on the UpnpString.
+        EXPECT_EQ(NS::UpnpString_get_String(nullptr), nullptr);
         EXPECT_EQ(upnpstr.m_length, 11);
         EXPECT_EQ(upnpstr.m_string, mstring);
     }
@@ -343,22 +335,21 @@ TEST(UpnpStringDeathTest, get_upnp_string) {
 
 TEST(UpnpStringDeathTest, set_upnp_string_with_nullptr) {
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CYEL "[ BUGFIX   ]" CRES
                   << " Function 'UpnpString_set_String()' will segfault if "
                      "called with nullptr.\n";
         // This expects segfault.
-        EXPECT_DEATH(UpnpString_set_String(nullptr, "hello world"), ".*");
+        EXPECT_DEATH(NS::UpnpString_set_String(nullptr, "hello world"), ".*");
 
     } else {
 
         // This expects NO segfault.
-        EXPECT_EXIT((UpnpString_set_String(nullptr, "hello world"), exit(0)),
-                    ExitedWithCode(0), ".*");
+        EXPECT_EQ(NS::UpnpString_set_String(nullptr, "hello world"), 0);
     }
 }
 
 TEST(UpnpStringDeathTest, set_upnp_string_with_nullptr_to_string) {
-    // provide a UpnpString
+    // provide an UpnpString
     char mstring[]{"hello world"};
     UpnpString upnpstr{11, mstring};
     UpnpString* p{&upnpstr};
@@ -367,22 +358,20 @@ TEST(UpnpStringDeathTest, set_upnp_string_with_nullptr_to_string) {
         // UpnpString_set_String() uses strdup() that segfaults on Unix
         // platforms but not on MS Windows if called with a nullptr.
 #ifndef _WIN32
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CYEL "[ BUGFIX   ]" CRES
                   << " Function 'UpnpString_set_String()' will segfault if "
                      "called with nullptr to string.\n";
         // This expects segfault.
-        EXPECT_DEATH(UpnpString_set_String(p, nullptr), ".*");
+        EXPECT_DEATH(NS::UpnpString_set_String(p, nullptr), ".*");
 #else
         // This expects NO segfault.
-        EXPECT_EXIT((UpnpString_set_String(p, nullptr), exit(0)),
+        EXPECT_EXIT((NS::UpnpString_set_String(p, nullptr), exit(0)),
                     ExitedWithCode(0), ".*");
 #endif
     } else {
 
-        // This expects NO segfault.
-        EXPECT_EXIT((UpnpString_set_String(p, nullptr), exit(0)),
-                    ExitedWithCode(0), ".*");
-        // There should not be any changes on the UpnpString
+        // No segfault but there should not be any changes on the UpnpString.
+        EXPECT_EQ(NS::UpnpString_set_String(p, nullptr), 0);
         EXPECT_EQ(upnpstr.m_length, 11);
         EXPECT_EQ(upnpstr.m_string, mstring);
     }
@@ -390,39 +379,36 @@ TEST(UpnpStringDeathTest, set_upnp_string_with_nullptr_to_string) {
 
 TEST(UpnpStringDeathTest, set_upnp_string_n_with_nullptr) {
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CYEL "[ BUGFIX   ]" CRES
                   << " Function 'UpnpString_set_StringN()' will segfault "
                      "if called with nullptr.\n";
         // This expects segfault.
-        EXPECT_DEATH(UpnpString_set_StringN(nullptr, "?", 1), ".*");
+        EXPECT_DEATH(NS::UpnpString_set_StringN(nullptr, "?", 1), ".*");
 
     } else {
 
         // This expects NO segfault.
-        EXPECT_EXIT((UpnpString_set_StringN(nullptr, "?", 1), exit(0)),
-                    ExitedWithCode(0), ".*");
+        EXPECT_EQ(NS::UpnpString_set_StringN(nullptr, "?", 1), 0);
     }
 }
 
 TEST(UpnpStringDeathTest, set_upnp_string_n_with_nullptr_to_string) {
-    // provide a UpnpString
+    // provide an UpnpString
     char mstring[]{"hello world"};
     UpnpString upnpstr{11, mstring};
     UpnpString* p{&upnpstr};
 
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CYEL "[ BUGFIX   ]" CRES
                   << " Function 'UpnpString_set_StringN()' will segfault "
                      "if called with nullptr to string.\n";
         // This expects segfault.
-        EXPECT_DEATH(UpnpString_set_StringN(p, nullptr, 1), ".*");
+        EXPECT_DEATH(NS::UpnpString_set_StringN(p, nullptr, 1), ".*");
 
     } else {
 
-        // This expects NO segfault.
-        EXPECT_EXIT((UpnpString_set_StringN(p, nullptr, 1), exit(0)),
-                    ExitedWithCode(0), ".*");
-        // There should not be any changes on the UpnpString
+        // No segfault but there should not be any changes on the UpnpString.
+        EXPECT_EQ(NS::UpnpString_set_StringN(p, nullptr, 1), 0);
         EXPECT_EQ(upnpstr.m_length, 11);
         EXPECT_EQ(upnpstr.m_string, mstring);
     }
@@ -430,16 +416,16 @@ TEST(UpnpStringDeathTest, set_upnp_string_n_with_nullptr_to_string) {
 
 TEST(UpnpStringDeathTest, clearUpnpString) {
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CYEL "[ BUGFIX   ]" CRES
                   << " Function 'UpnpString_clear()' will segfault if called "
                      "with nullptr.\n";
         // This expects segfault.
-        EXPECT_DEATH(UpnpString_clear(nullptr), ".*");
+        EXPECT_DEATH(NS::UpnpString_clear(nullptr), ".*");
 
     } else {
 
         // This expects NO segfault.
-        EXPECT_EXIT((UpnpString_clear(nullptr), exit(0)), ExitedWithCode(0),
+        EXPECT_EXIT((NS::UpnpString_clear(nullptr), exit(0)), ExitedWithCode(0),
                     ".*");
     }
 }

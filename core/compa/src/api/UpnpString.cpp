@@ -2,7 +2,8 @@
 // Redistribution only with this Copyright remark. Last modified: 2022-10-08
 
 #include "compa/UpnpString.hpp"
-#include <iostream> // DEBUG!
+#include "upnplib/mocking/string.hpp"
+#include "upnplib/mocking/stdlib.hpp"
 
 namespace compa {
 
@@ -20,8 +21,51 @@ struct SUpnpString {
 };
 
 size_t UpnpString_get_Length(const UpnpString* p) {
-    std::cout << "DEBUG! Tracepoint current\n";
+    if (!p)
+        return 0;
     return ((struct SUpnpString*)p)->m_length;
+}
+
+const char* UpnpString_get_String(const UpnpString* p) {
+    if (!p)
+        return nullptr;
+    return ((struct SUpnpString*)p)->m_string;
+}
+
+int UpnpString_set_String(UpnpString* p, const char* s) {
+    if (!p || !s)
+        return 0;
+    char* q = upnplib::mocking::string_h.strdup(s);
+    if (!q)
+        goto error_handler1;
+    upnplib::mocking::stdlib_h.free(((struct SUpnpString*)p)->m_string);
+    ((struct SUpnpString*)p)->m_length = strlen(q);
+    ((struct SUpnpString*)p)->m_string = q;
+
+error_handler1:
+    return q != NULL;
+}
+
+int UpnpString_set_StringN(UpnpString* p, const char* s, size_t n) {
+    if (!p || !s)
+        return 0;
+    char* q = upnplib::mocking::string_h.strndup(s, n);
+    if (!q)
+        goto error_handler1;
+    upnplib::mocking::stdlib_h.free(((struct SUpnpString*)p)->m_string);
+    ((struct SUpnpString*)p)->m_length = strlen(q);
+    ((struct SUpnpString*)p)->m_string = q;
+
+error_handler1:
+    return q != NULL;
+}
+
+void UpnpString_clear(UpnpString* p) {
+    if (!p)
+        return;
+    ((struct SUpnpString*)p)->m_length = (size_t)0;
+    /* No need to realloc now, will do later when needed. */
+    ((struct SUpnpString*)p)->m_string[0] = 0;
 }
 
 } // namespace compa
