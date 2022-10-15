@@ -1,12 +1,11 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-11
+// Redistribution only with this Copyright remark. Last modified: 2022-10-16
 
-#include "upnplib/mocking/string.hpp"
+#include "upnplib/mocking/string.inc"
 #include <cstdlib> // for malloc
 
 //
-namespace upnplib {
-namespace mocking {
+namespace upnplib::mocking {
 
 char* StringReal::strdup(const char* s) { return ::strdup(s); }
 char* StringReal::strndup(const char* s, size_t n) { return ::strndup(s, n); }
@@ -34,7 +33,6 @@ char* String::strndup(const char* s, size_t n) {
 // On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
 StringReal string_realObj;
-String string_h(&string_realObj);
+UPNPLIB_API String string_h(&string_realObj);
 
-} // namespace mocking
-} // namespace upnplib
+} // namespace upnplib::mocking

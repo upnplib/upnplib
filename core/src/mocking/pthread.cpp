@@ -1,10 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-25
+// Redistribution only with this Copyright remark. Last modified: 2022-10-16
 
-#include "upnplib/mocking/pthread.hpp"
+#include "upnplib/mocking/pthread.inc"
 
-namespace upnplib {
-namespace mocking {
+namespace upnplib::mocking {
 
 int PthreadReal::pthread_mutex_init(pthread_mutex_t* mutex,
                                     const pthread_mutexattr_t* mutexattr) {
@@ -97,7 +96,6 @@ int Pthread::pthread_cond_destroy(pthread_cond_t* cond) {
 // On program start create an object and inject pointer to the real function.
 // This will exist until program end.
 PthreadReal pthread_realObj;
-Pthread pthread_h(&pthread_realObj);
+UPNPLIB_API Pthread pthread_h(&pthread_realObj);
 
-} // namespace mocking
-} // namespace upnplib
+} // namespace upnplib::mocking

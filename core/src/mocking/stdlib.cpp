@@ -1,10 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-15
 
-#include "upnplib/mocking/stdlib.hpp"
+#include "upnplib/mocking/stdlib.inc"
 
-namespace upnplib {
-namespace mocking {
+namespace upnplib::mocking {
 
 void* StdlibReal::malloc(size_t size) { return ::malloc(size); }
 
@@ -41,7 +40,6 @@ void* Stdlib::calloc(size_t nmemb, size_t size) {
 // On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
 StdlibReal stdlib_realObj;
-Stdlib stdlib_h(&stdlib_realObj);
+UPNPLIB_API Stdlib stdlib_h(&stdlib_realObj);
 
-} // namespace mocking
-} // namespace upnplib
+} // namespace upnplib::mocking

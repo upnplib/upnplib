@@ -69,7 +69,6 @@ add_test(NAME ctest_FreeList-pnsh COMMAND test_FreeList-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
-if(FALSE)
 add_executable(test_FreeList-ucsh
 #--------------------------------
     ./test_FreeList.cpp
@@ -92,11 +91,11 @@ target_compile_definitions(test_FreeList-ucsh
 target_link_libraries(test_FreeList-ucsh
     PRIVATE
         upnplib_compa_shared
+        upnplib_native_shared
 )
 add_test(NAME ctest_FreeList-ucsh COMMAND test_FreeList-ucsh
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
-endif()
 
 # ThreadPool
 #===========

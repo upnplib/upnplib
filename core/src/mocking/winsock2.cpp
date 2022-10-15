@@ -1,10 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-16
 
-#include "upnplib/mocking/winsock2.hpp"
+#include "upnplib/mocking/winsock2.inc"
 
-namespace upnplib {
-namespace mocking {
+namespace upnplib::mocking {
 
 int Winsock2Real::WSAGetLastError() { return ::WSAGetLastError(); }
 
@@ -28,7 +27,6 @@ int Winsock2::WSAGetLastError() { return m_ptr_workerObj->WSAGetLastError(); }
 // On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
 Winsock2Real winsock2_realObj;
-Winsock2 winsock2_h(&winsock2_realObj);
+UPNPLIB_API Winsock2 winsock2_h(&winsock2_realObj);
 
-} // namespace mocking
-} // namespace upnplib
+} // namespace upnplib::mocking

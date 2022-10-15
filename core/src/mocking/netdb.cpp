@@ -1,10 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-16
 
-#include "upnplib/mocking/netdb.hpp"
+#include "upnplib/mocking/netdb.inc"
 
-namespace upnplib {
-namespace mocking {
+namespace upnplib::mocking {
 
 int NetdbReal::getaddrinfo(const char* node, const char* service,
                            const struct addrinfo* hints,
@@ -43,7 +42,6 @@ void Netdb::freeaddrinfo(struct addrinfo* res) {
 // On program start create an object and inject pointer to the real function.
 // This will exist until program end.
 NetdbReal netdb_realObj;
-Netdb netdb_h(&netdb_realObj);
+UPNPLIB_API Netdb netdb_h(&netdb_realObj);
 
-} // namespace mocking
-} // namespace upnplib
+} // namespace upnplib::mocking

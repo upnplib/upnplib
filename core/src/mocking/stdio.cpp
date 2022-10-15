@@ -1,10 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-16
 
-#include "upnplib/mocking/stdio.hpp"
+#include "upnplib/mocking/stdio.inc"
 
-namespace upnplib {
-namespace mocking {
+namespace upnplib::mocking {
 
 #ifdef _WIN32
 // Secure function only on MS Windows
@@ -56,7 +55,6 @@ int Stdio::fflush(FILE* stream) { return m_ptr_workerObj->fflush(stream); }
 // On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
 StdioReal stdio_realObj;
-Stdio stdio_h(&stdio_realObj);
+UPNPLIB_API Stdio stdio_h(&stdio_realObj);
 
-} // namespace mocking
-} // namespace upnplib
+} // namespace upnplib::mocking

@@ -1,10 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-16
 
-#include "upnplib/mocking/unistd.hpp"
+#include "upnplib/mocking/unistd.inc"
 
-namespace upnplib {
-namespace mocking {
+namespace upnplib::mocking {
 
 int UnistdReal::UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd) {
     return ::UPNPLIB_CLOSE_SOCKET(fd);
@@ -32,7 +31,6 @@ int Unistd::UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd) {
 // On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
 UnistdReal unistd_realObj;
-Unistd unistd_h(&unistd_realObj);
+UPNPLIB_API Unistd unistd_h(&unistd_realObj);
 
-} // namespace mocking
-} // namespace upnplib
+} // namespace upnplib::mocking

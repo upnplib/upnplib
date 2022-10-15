@@ -1,10 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-16
 
-#include "upnplib/mocking/sys_socket.hpp"
+#include "upnplib/mocking/sys_socket.inc"
 
-namespace upnplib {
-namespace mocking {
+namespace upnplib::mocking {
 
 // clang-format off
 int Sys_socketReal::socket(int domain, int type, int protocol) {
@@ -133,7 +132,6 @@ int Sys_socket::shutdown(int sockfd, int how) {
 // On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
 Sys_socketReal sys_socket_realObj;
-Sys_socket sys_socket_h(&sys_socket_realObj);
+UPNPLIB_API Sys_socket sys_socket_h(&sys_socket_realObj);
 
-} // namespace mocking
-} // namespace upnplib
+} // namespace upnplib::mocking

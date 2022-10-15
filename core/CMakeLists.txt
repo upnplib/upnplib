@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-12
+# Redistribution only with this Copyright remark. Last modified: 2022-10-16
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -20,14 +20,15 @@ set(UPNPLIB_NATIVE_SOURCE_FILES
     ./src/api/upnptools.cpp
     ./src/net/sock.cpp
     ./src/net/http/webserver.cpp
-    ./src/mocking/sys_socket.cpp
-    ./src/mocking/string.cpp
-    ./src/mocking/unistd.cpp
-    ./src/mocking/stdlib.cpp
-    ./src/mocking/stdio.cpp
-    ./src/mocking/pthread.cpp
-    ./src/mocking/netdb.cpp
+
     ./src/mocking/sys_select.cpp
+    ./src/mocking/netdb.cpp
+    ./src/mocking/pthread.cpp
+    ./src/mocking/stdio.cpp
+    ./src/mocking/stdlib.cpp
+    ./src/mocking/sys_socket.cpp
+    ./src/mocking/unistd.cpp
+    ./src/mocking/string.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/net_if.cpp>
     $<$<PLATFORM_ID:Windows>:./src/mocking/iphlpapi.cpp>
@@ -59,8 +60,6 @@ if(NOT WIN32)
     add_library(upnplib_compa_shared SHARED
         ${UPNPLIB_COMPATIBLE_SOURCE_FILES}
         ./src/strndup.cpp
-        ./src/mocking/stdlib.cpp
-        ./src/mocking/string.cpp
     )
     set_target_properties(upnplib_compa_shared PROPERTIES
             OUTPUT_NAME upnplib_compa
@@ -77,6 +76,8 @@ if(NOT WIN32)
     target_link_libraries(upnplib_compa_shared
         INTERFACE
             pupnp_native_shared
+        PRIVATE
+            upnplib_native_shared
     )
 
     # Upnplib Compatible STatic library: postfix -ucst
@@ -206,8 +207,6 @@ else() # WIN32
     add_library(upnplib_compa_shared SHARED
         ${UPNPLIB_COMPATIBLE_SOURCE_FILES}
         ./src/strndup.cpp
-        ./src/mocking/stdlib.cpp
-        ./src/mocking/string.cpp
     )
     target_include_directories(upnplib_compa_shared
             ${UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES}
@@ -228,6 +227,8 @@ else() # WIN32
     target_link_libraries(upnplib_compa_shared
         INTERFACE
             pupnp_native_shared
+        PRIVATE
+            upnplib_native_shared
     )
 
     # WIN32 Upnplib Compatible STatic library: postfix -ucst

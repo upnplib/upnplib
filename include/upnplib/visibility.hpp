@@ -42,6 +42,12 @@
   #define UPNPLIB_API
   #define UPNPLIB_LOCAL
 #endif // UPNPLIB_SHARED
+
+#if (defined _WIN32 || defined __CYGWIN__) && defined UPNPLIB_SHARED
+  #define UPNPLIB_EXTERN __declspec(dllimport) extern
+#else
+  #define UPNPLIB_EXTERN UPNPLIB_API extern
+#endif
 // clang-format on
 
 #endif // UPNPLIB_INCLUDE_VISIBILITY_HPP

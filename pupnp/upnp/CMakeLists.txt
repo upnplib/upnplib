@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-10
+# Redistribution only with this Copyright remark. Last modified: 2022-10-16
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -149,19 +149,6 @@ set(PUPNP_SOURCE_FILES
     $<$<CONFIG:Debug>:./src/api/upnpdebug.cpp>
 
     $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_WEBSERVER}>>:./src/urlconfig/urlconfig.cpp>
-
-    ${UPnPlib_SOURCE_DIR}/core/src/mocking/sys_select.cpp
-    ${UPnPlib_SOURCE_DIR}/core/src/mocking/netdb.cpp
-    ${UPnPlib_SOURCE_DIR}/core/src/mocking/pthread.cpp
-    ${UPnPlib_SOURCE_DIR}/core/src/mocking/stdio.cpp
-    ${UPnPlib_SOURCE_DIR}/core/src/mocking/stdlib.cpp
-    ${UPnPlib_SOURCE_DIR}/core/src/mocking/sys_socket.cpp
-    ${UPnPlib_SOURCE_DIR}/core/src/mocking/unistd.cpp
-    ${UPnPlib_SOURCE_DIR}/core/src/mocking/string.cpp
-    $<$<NOT:$<PLATFORM_ID:Windows>>:${UPnPlib_SOURCE_DIR}/core/src/mocking/ifaddrs.cpp>
-    $<$<NOT:$<PLATFORM_ID:Windows>>:${UPnPlib_SOURCE_DIR}/core/src/mocking/net_if.cpp>
-    $<$<PLATFORM_ID:Windows>:${UPnPlib_SOURCE_DIR}/core/src/mocking/iphlpapi.cpp>
-    $<$<PLATFORM_ID:Windows>:${UPnPlib_SOURCE_DIR}/core/src/mocking/winsock2.cpp>
 )
 
 add_compile_definitions(
@@ -215,6 +202,8 @@ if(NOT WIN32)
             UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(pupnp_native_shared
+        PRIVATE
+            upnplib_native_shared # only needed for mocking classes
         PUBLIC
             ixml_shared
         INTERFACE
@@ -240,8 +229,8 @@ if(NOT WIN32)
             UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(pupnp_native_static
-        # Static always link needed object files, no matter to use PRIVATE or PUBLIC.
-        # For propagation only INTERFACE is needed.
+        PRIVATE
+            upnplib_native_static # only needed for mocking classes
         INTERFACE
             ixml_static
             # On Linux we cannot link with the static pthreads library because then
@@ -285,6 +274,8 @@ else() # WIN32
     )
     # In addition to pthreads we need some more system libraries here
     target_link_libraries(pupnp_native_shared
+        PRIVATE
+            upnplib_native_shared # only needed for mocking classes
         PUBLIC
             ixml_shared
             ws2_32   # winsock to support sockets
@@ -320,8 +311,8 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(pupnp_native_static
-        # Static always link needed object files, no matter to use PRIVATE or PUBLIC.
-        # For propagation only INTERFACE is needed.
+        PRIVATE
+            upnplib_native_static # only needed for mocking classes
         INTERFACE
             ixml_static
             ws2_32   # winsock to support sockets

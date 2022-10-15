@@ -65,10 +65,6 @@ class UpnpStringMockTestSuite : public ::testing::Test {
 };
 
 TEST_F(UpnpStringMockTestSuite, create_new_upnp_string) {
-    if (!old_code)
-        GTEST_SKIP() << CYEL "[ TODO     ]" CRES
-                     << " Make mocking work on linking two libraries.";
-
     // provide a structure of a UpnpString
     char mstring[]{""};
     UpnpString upnpstr{};
@@ -110,10 +106,6 @@ TEST_F(UpnpStringMockTestSuite, create_new_upnp_string) {
 }
 
 TEST_F(UpnpStringMockTestSuite, delete_upnp_string) {
-    if (!old_code)
-        GTEST_SKIP() << CYEL "[ TODO     ]" CRES
-                     << " Make mocking work on linking two libraries.";
-
     // provide an UpnpString
     char mstring[] = "hello world";
     UpnpString upnpstr = {11, mstring};

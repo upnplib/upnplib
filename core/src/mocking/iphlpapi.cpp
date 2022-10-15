@@ -1,10 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-16
 
-#include "upnplib/mocking/iphlpapi.hpp"
+#include "upnplib/mocking/iphlpapi.inc"
 
-namespace upnplib {
-namespace mocking {
+namespace upnplib::mocking {
 
 ULONG IphlpapiReal::GetAdaptersAddresses(ULONG Family, ULONG Flags,
                                          PVOID Reserved,
@@ -39,7 +38,6 @@ ULONG Iphlpapi::GetAdaptersAddresses(ULONG Family, ULONG Flags, PVOID Reserved,
 // On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
 IphlpapiReal iphlpapi_realObj;
-Iphlpapi iphlpapi_h(&iphlpapi_realObj);
+UPNPLIB_API Iphlpapi iphlpapi_h(&iphlpapi_realObj);
 
-} // namespace mocking
-} // namespace upnplib
+} // namespace upnplib::mocking

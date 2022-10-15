@@ -1,10 +1,9 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-16
 
-#include "upnplib/mocking/ifaddrs.hpp"
+#include "upnplib/mocking/ifaddrs.inc"
 
-namespace upnplib {
-namespace mocking {
+namespace upnplib::mocking {
 
 int IfaddrsReal::getifaddrs(struct ifaddrs** ifap) {
     return ::getifaddrs(ifap);
@@ -40,7 +39,6 @@ void Ifaddrs::freeifaddrs(struct ifaddrs* ifa) {
 // On program start create an object and inject pointer to the real function.
 // This will exist until program end.
 IfaddrsReal ifaddrs_realObj;
-Ifaddrs ifaddrs_h(&ifaddrs_realObj);
+UPNPLIB_API Ifaddrs ifaddrs_h(&ifaddrs_realObj);
 
-} // namespace mocking
-} // namespace upnplib
+} // namespace upnplib::mocking
