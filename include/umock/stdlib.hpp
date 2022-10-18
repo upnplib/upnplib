@@ -1,9 +1,9 @@
 #ifndef MOCKING_STDLIB_HPP
 #define MOCKING_STDLIB_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-15
+// Redistribution only with this Copyright remark. Last modified: 2022-10-18
 
-#include "upnplib/mocking/stdlib.inc"
+#include "umock/stdlib.inc"
 
 namespace upnplib::mocking {
 

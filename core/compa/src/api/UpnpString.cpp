@@ -1,9 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-08
+// Redistribution only with this Copyright remark. Last modified: 2022-10-18
 
 #include "compa/UpnpString.hpp"
-#include "upnplib/mocking/string.hpp"
-#include "upnplib/mocking/stdlib.hpp"
+#include "umock/string.hpp"
+#include "umock/stdlib.hpp"
 
 namespace compa {
 
@@ -35,7 +35,7 @@ const char* UpnpString_get_String(const UpnpString* p) {
 int UpnpString_set_String(UpnpString* p, const char* s) {
     if (!p || !s)
         return 0;
-    char* q = upnplib::mocking::string_h.strdup(s);
+    char* q = umock::string_h.strdup(s);
     if (!q)
         goto error_handler1;
     upnplib::mocking::stdlib_h.free(((struct SUpnpString*)p)->m_string);
@@ -49,7 +49,7 @@ error_handler1:
 int UpnpString_set_StringN(UpnpString* p, const char* s, size_t n) {
     if (!p || !s)
         return 0;
-    char* q = upnplib::mocking::string_h.strndup(s, n);
+    char* q = umock::string_h.strndup(s, n);
     if (!q)
         goto error_handler1;
     upnplib::mocking::stdlib_h.free(((struct SUpnpString*)p)->m_string);

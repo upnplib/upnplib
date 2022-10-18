@@ -1,7 +1,7 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-10
+// Redistribution only with this Copyright remark. Last modified: 2022-10-20
 
-#include "upnplib/mocking/string.hpp"
+#include <cstring>
 #include <cstdlib> // for malloc
 
 /* strndup() is a GNU extension. */

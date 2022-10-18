@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-16
+# Redistribution only with this Copyright remark. Last modified: 2022-10-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -204,6 +204,7 @@ if(NOT WIN32)
     target_link_libraries(pupnp_native_shared
         PRIVATE
             upnplib_native_shared # only needed for mocking classes
+            umock_shared
         PUBLIC
             ixml_shared
         INTERFACE
@@ -276,6 +277,7 @@ else() # WIN32
     target_link_libraries(pupnp_native_shared
         PRIVATE
             upnplib_native_shared # only needed for mocking classes
+            umock_shared
         PUBLIC
             ixml_shared
             ws2_32   # winsock to support sockets

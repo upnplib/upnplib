@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-24
+ * Redistribution only with this Copyright remark. Last modified: 2022-10-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -64,7 +64,7 @@
 
 #include "upnplib/mocking/sys_socket.hpp"
 #include "upnplib/mocking/sys_select.hpp"
-#include "upnplib/mocking/stdlib.hpp"
+#include "umock/stdlib.hpp"
 
 #include <assert.h>
 #include <errno.h>

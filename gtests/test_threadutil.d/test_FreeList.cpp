@@ -1,7 +1,7 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-18
 
-#include "upnplib/mocking/stdlib.hpp"
+#include "umock/stdlib.hpp"
 #include "upnplib/gtest.hpp"
 #include "gmock/gmock.h"
 

@@ -1,0 +1,73 @@
+# Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2022-10-20
+
+cmake_minimum_required(VERSION 3.18)
+include(../cmake/project-header.cmake)
+
+project(UMOCK VERSION 0001
+        DESCRIPTION "UPnP library mocking subproject"
+        HOMEPAGE_URL "https://github.com/upnplib"
+)
+
+set(UMOCK_SOURCE_FILES
+    #./src/stdlib.cpp
+    #./src/sys_select.cpp
+    #./src/netdb.cpp
+    #./src/pthread.cpp
+    #./src/stdio.cpp
+    #./src/sys_socket.cpp
+    #./src/unistd.cpp
+    ./src/string.cpp
+    #$<$<NOT:$<PLATFORM_ID:Windows>>:./src/ifaddrs.cpp>
+    #$<$<NOT:$<PLATFORM_ID:Windows>>:./src/net_if.cpp>
+    #$<$<PLATFORM_ID:Windows>:./src/iphlpapi.cpp>
+    #$<$<PLATFORM_ID:Windows>:./src/winsock2.cpp>
+)
+
+add_library(umock_shared SHARED
+        ${UMOCK_SOURCE_FILES}
+        ${UPnPlib_SOURCE_DIR}/core/src/strndup.cpp
+)
+target_include_directories(umock_shared
+    PRIVATE
+        ${UPnPlib_SOURCE_DIR}/include
+        # if pthreads4w isn't installed this path is empty. The linker
+        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+        $<$<PLATFORM_ID:Windows>:${pthreads4w_SOURCE_DIR}> # needed for pthread.h
+)
+target_compile_definitions(umock_shared
+    PRIVATE
+        UPNPLIB_SHARED
+        UPNPLIB_EXPORTS
+)
+target_link_libraries(umock_shared
+    PUBLIC
+        #ixml_shared
+        # On Linux we cannot link with the static pthreads library because then
+        # we have also to link with a static libc that's not available by default.
+        $<$<NOT:$<PLATFORM_ID:Windows>>:${UPNP_PTHREADS_SHARED_LIBRARY}>
+        # On MS Windows we link with the static pthreads4w library to
+        # avoid error prone managing access to its .dll file.
+        $<$<PLATFORM_ID:Windows>:${UPNP_PTHREADS_STATIC_LIBRARY}>
+)
+
+# UMock STatic library: postfix -umst
+#------------------------------------
+add_library(umock_static STATIC
+        ${UMOCK_SOURCE_FILES}
+)
+target_include_directories(umock_static
+    PRIVATE
+        ${UPnPlib_SOURCE_DIR}/include
+        $<$<PLATFORM_ID:Windows>:${pthreads4w_SOURCE_DIR}> # needed for pthread.h
+)
+target_link_libraries(umock_static
+    INTERFACE
+        #ixml_static
+        # On Linux we cannot link with the static pthreads library because then
+        # we have also to link with a static libc that's not available by default.
+        $<$<NOT:$<PLATFORM_ID:Windows>>:${UPNP_PTHREADS_SHARED_LIBRARY}>
+        # On MS Windows we link with the static pthreads4w library to
+        # avoid error prone managing access to its .dll file.
+        $<$<PLATFORM_ID:Windows>:${UPNP_PTHREADS_STATIC_LIBRARY}>
+)

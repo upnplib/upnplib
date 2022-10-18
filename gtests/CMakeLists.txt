@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-11
+# Redistribution only with this Copyright remark. Last modified: 2022-10-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -108,6 +108,7 @@ target_link_libraries(test_sock-pnsh
     PRIVATE
         pupnp_native_shared
         upnplib_native_shared
+        umock_shared
 )
 add_test(NAME ctest_sock-pnsh COMMAND test_sock-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -140,7 +141,7 @@ target_compile_definitions(test_strintmap-pnsh
 target_link_libraries(test_strintmap-pnsh
     PRIVATE
         pupnp_native_shared
-        upnplib_native_shared
+        umock_shared
 )
 add_test(NAME ctest_strintmap-pnsh COMMAND test_strintmap-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -441,8 +442,8 @@ target_compile_definitions(test_miniserver-pnst
 target_link_libraries(test_miniserver-pnst
     PRIVATE
         pupnp_native_static
-        upnplib_native_static
         upnplib_gtest_tools_static
+        umock_static
 )
 add_test(NAME ctest_miniserver-pnst COMMAND test_miniserver-pnst
 )
@@ -457,7 +458,7 @@ add_executable(test_miniserver-ucst
 #       mocking sources here.
     ./test_miniserver.cpp
     ${UPNPLIB_CORE_SOURCE_DIR}/src/mocking/stdio.cpp
-    ${UPNPLIB_CORE_SOURCE_DIR}/src/mocking/string.cpp
+    ${UPnPlib_SOURCE_DIR}/umock/src/string.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_server.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
 #ifdef UPNP_ENABLE_IPV6

@@ -1,11 +1,11 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-18
 
-#include "upnplib/mocking/string.inc"
+#include "umock/string.inc"
 #include <cstdlib> // for malloc
 
 //
-namespace upnplib::mocking {
+namespace umock {
 
 char* StringReal::strdup(const char* s) { return ::strdup(s); }
 char* StringReal::strndup(const char* s, size_t n) { return ::strndup(s, n); }
@@ -35,4 +35,4 @@ char* String::strndup(const char* s, size_t n) {
 StringReal string_realObj;
 UPNPLIB_API String string_h(&string_realObj);
 
-} // namespace upnplib::mocking
+} // namespace umock

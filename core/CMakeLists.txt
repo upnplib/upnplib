@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-16
+# Redistribution only with this Copyright remark. Last modified: 2022-10-21
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -25,10 +25,10 @@ set(UPNPLIB_NATIVE_SOURCE_FILES
     ./src/mocking/netdb.cpp
     ./src/mocking/pthread.cpp
     ./src/mocking/stdio.cpp
-    ./src/mocking/stdlib.cpp
+    ${UPnPlib_SOURCE_DIR}/umock/src/stdlib.cpp
     ./src/mocking/sys_socket.cpp
     ./src/mocking/unistd.cpp
-    ./src/mocking/string.cpp
+    #${UPnPlib_SOURCE_DIR}/umock/src/string.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/net_if.cpp>
     $<$<PLATFORM_ID:Windows>:./src/mocking/iphlpapi.cpp>
@@ -71,13 +71,15 @@ if(NOT WIN32)
         PRIVATE
             UPNPLIB_SHARED
             UPNPLIB_EXPORTS
+            $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
-    # If we do not have compatible code we use the old native pupnp code.
     target_link_libraries(upnplib_compa_shared
-        INTERFACE
-            pupnp_native_shared
         PRIVATE
             upnplib_native_shared
+            umock_shared
+        INTERFACE
+            # If we do not have compatible code we use the old native pupnp code.
+            pupnp_native_shared
     )
 
     # Upnplib Compatible STatic library: postfix -ucst
@@ -91,9 +93,13 @@ if(NOT WIN32)
     target_include_directories(upnplib_compa_static
             ${UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES}
     )
-    # If we do not have compatible code we use the old native pupnp code.
+    target_compile_definitions(upnplib_compa_static
+        PRIVATE
+            $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
+    )
     target_link_libraries(upnplib_compa_static
         INTERFACE
+            # If we do not have compatible code we use the old native pupnp code.
             pupnp_native_static
     )
 
@@ -116,12 +122,13 @@ if(NOT WIN32)
         PRIVATE
             UPNPLIB_SHARED
             UPNPLIB_EXPORTS
+            $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_native_shared
         INTERFACE
             ixml_shared
             # On Linux we cannot link with the static pthreads library because then
-            # we have also link with a static libc that's not available by default.
+            # we have also to link with a static libc that's not available by default.
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
@@ -136,13 +143,17 @@ if(NOT WIN32)
     target_include_directories(upnplib_native_static
             ${UPNPLIB_NATIVE_INCLUDE_DIRECTORIES}
     )
+    target_compile_definitions(upnplib_native_static
+        PRIVATE
+            $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
+    )
     target_link_libraries(upnplib_native_static
         # Static always link needed object files, no matter to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         INTERFACE
             ixml_static
             # On Linux we cannot link with the static pthreads library because then
-            # we have also link with a static libc that's not available by default.
+            # we have also to link with a static libc that's not available by default.
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
@@ -166,7 +177,7 @@ if(NOT WIN32)
     target_link_libraries(upnplibInfo_shared
         PRIVATE
             upnplib_compa_shared
-            upnplib_native_shared
+            umock_shared
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
@@ -223,12 +234,13 @@ else() # WIN32
             UPNPLIB_EXPORTS
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
-    # If we do not have compatible code we use the old native pupnp code.
     target_link_libraries(upnplib_compa_shared
-        INTERFACE
-            pupnp_native_shared
         PRIVATE
             upnplib_native_shared
+            umock_shared
+        INTERFACE
+            # If we do not have compatible code we use the old native pupnp code.
+            pupnp_native_shared
     )
 
     # WIN32 Upnplib Compatible STatic library: postfix -ucst
@@ -243,11 +255,11 @@ else() # WIN32
         PRIVATE
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
-    # If we do not have compatible code we use the old native pupnp code.
     target_link_libraries(upnplib_compa_static
         # Static always link needed object files, no matter to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         INTERFACE
+            # If we do not have compatible code we use the old native pupnp code.
             pupnp_native_static
     )
 
@@ -270,9 +282,9 @@ else() # WIN32
             UPNPLIB_EXPORTS
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
-    # In addition to pthreads we need some more system libraries here
     target_link_libraries(upnplib_native_shared
         PUBLIC
+            # In addition to pthreads we need some more system libraries here
             ws2_32   # winsock to support sockets
             iphlpapi # ip helper interface to get network management tools
             # On MS Windows we link with the static pthreads4w library to

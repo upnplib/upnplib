@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-13
+// Redistribution only with this Copyright remark. Last modified: 2022-10-18
 
 #include "UpnpString.hpp"
 
@@ -11,8 +11,8 @@
 #endif
 
 #include "upnplib/gtest.hpp"
-#include "upnplib/mocking/stdlib.hpp"
-#include "upnplib/mocking/string.hpp"
+#include "umock/stdlib.hpp"
+#include "umock/string.hpp"
 #include "gmock/gmock.h"
 
 using ::testing::_;
@@ -50,7 +50,7 @@ class StdlibMock : public mock::StdlibInterface {
     MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));
 };
 
-class StringMock : public mock::StringInterface {
+class StringMock : public umock::StringInterface {
   public:
     virtual ~StringMock() override {}
     MOCK_METHOD(char*, strdup, (const char* s), (override));
@@ -133,13 +133,13 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string) {
     UpnpString upnpstr{0, mstring1};
     UpnpString* p = &upnpstr;
 
-    char mstring2[]{"set string"}; // This string will set to the UpnpString.
+    char mstring2[]{"set string"}; // This string will be set to the UpnpString.
     // Next is the "allocated" (duplicated) string and addressed in the
     // UpnpString.
     char mstring3[]{"set string"};
 
     StringMock mock_stringObj;
-    mock::String string_injectObj(&mock_stringObj);
+    umock::String string_injectObj(&mock_stringObj);
     EXPECT_CALL(mock_stringObj, strdup(mstring2)).WillOnce(Return(mstring3));
 
     mock::Stdlib stdlib_injectObj(&mock_stdlibObj);
@@ -167,7 +167,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string_n) {
     char mstring3[]{"hello world"};
 
     StringMock mock_stringObj;
-    mock::String string_injectObj(&mock_stringObj);
+    umock::String string_injectObj(&mock_stringObj);
     EXPECT_CALL(mock_stringObj, strndup(mstring2, 11))
         .WillOnce(Return(mstring3));
 

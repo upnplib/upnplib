@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-08
+// Redistribution only with this Copyright remark. Last modified: 2022-10-18
 // Also Copyright by other contributor who haven't made a note.
 
 /*!
@@ -22,8 +22,8 @@
 #include "config.hpp"
 
 #include "UpnpString.hpp"
-#include "upnplib/mocking/stdlib.hpp"
-#include "upnplib/mocking/string.hpp"
+#include "umock/stdlib.hpp"
+#include "umock/string.hpp"
 
 // #include <stdlib.h> /* for calloc(), free() */
 #include <string.h> /* for strlen(), strdup() */
@@ -122,8 +122,7 @@ UpnpString* UpnpString_dup(const UpnpString* p) {
         goto error_handler1;
     }
     q->m_length = ((struct SUpnpString*)p)->m_length;
-    q->m_string =
-        upnplib::mocking::string_h.strdup(((struct SUpnpString*)p)->m_string);
+    q->m_string = umock::string_h.strdup(((struct SUpnpString*)p)->m_string);
     if (q->m_string == NULL) {
         goto error_handler2;
     }
@@ -160,7 +159,7 @@ const char* UpnpString_get_String(const UpnpString* p) {
 }
 
 int UpnpString_set_String(UpnpString* p, const char* s) {
-    char* q = upnplib::mocking::string_h.strdup(s);
+    char* q = umock::string_h.strdup(s);
     if (!q)
         goto error_handler1;
     upnplib::mocking::stdlib_h.free(((struct SUpnpString*)p)->m_string);
@@ -172,7 +171,7 @@ error_handler1:
 }
 
 int UpnpString_set_StringN(UpnpString* p, const char* s, size_t n) {
-    char* q = upnplib::mocking::string_h.strndup(s, n);
+    char* q = umock::string_h.strndup(s, n);
     if (!q)
         goto error_handler1;
     upnplib::mocking::stdlib_h.free(((struct SUpnpString*)p)->m_string);

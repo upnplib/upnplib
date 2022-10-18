@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-16
+# Redistribution only with this Copyright remark. Last modified: 2022-10-21
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -178,7 +178,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${UPnPlib_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${UPnPlib_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${UPnPlib_BINARY_DIR}/bin)
 if(WIN32)
-    set(UPNPLIB_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE})
+    if(CMAKE_GENERATOR STREQUAL "NMake Makefiles")
+        set(UPNPLIB_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    else()
+        set(UPNPLIB_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE})
+    endif()
 else()
     set(UPNPLIB_RUNTIME_OUTPUT_DIRECTORY "")
 endif()
@@ -365,6 +369,7 @@ endif(WIN32)
 # This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
 # e.g. PUPNP_UPNP_SOURCE_DIR and PUPNP_UPNP_BINARY_DIR
 
+add_subdirectory(${PROJECT_SOURCE_DIR}/umock)
 add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp)
 add_subdirectory(${PROJECT_SOURCE_DIR}/core)
 add_subdirectory(${PROJECT_SOURCE_DIR}/ixml)
