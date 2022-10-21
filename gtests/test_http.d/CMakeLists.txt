@@ -193,7 +193,7 @@ target_compile_definitions(test_httpparser-pnst
 target_link_libraries(test_httpparser-pnst
         PRIVATE
             pupnp_native_static
-            upnplib_native_static
+            umock_static
 )
 add_test(NAME ctest_httpparser-pnst COMMAND test_httpparser-pnst
 )

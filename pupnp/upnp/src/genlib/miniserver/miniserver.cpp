@@ -611,7 +611,7 @@ static void RunMiniServer(
     sock_close(miniSock->ssdpReqSock6);
 #endif /* INCLUDE_CLIENT_APIS */
     /* Free minisock. */
-    upnplib::mocking::stdlib_h.free(miniSock);
+    umock::stdlib_h.free(miniSock);
     gMServState = MSERV_IDLE;
 
     return;

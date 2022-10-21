@@ -489,8 +489,8 @@ target_compile_definitions(test_miniserver-ucst
 target_link_libraries(test_miniserver-ucst
     PRIVATE
         upnplib_compa_static
-        upnplib_native_static
         upnplib_gtest_tools_static
+        umock_static
 )
 add_test(NAME ctest_miniserver-ucst COMMAND test_miniserver-ucst
 )

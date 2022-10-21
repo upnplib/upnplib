@@ -32,7 +32,7 @@ target_compile_definitions(test_LinkedList-pnsh
 target_link_libraries(test_LinkedList-pnsh
     PRIVATE
         pupnp_native_shared
-        upnplib_native_shared
+        umock_shared
 )
 add_test(NAME ctest_LinkedList-pnsh COMMAND test_LinkedList-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -63,7 +63,7 @@ target_compile_definitions(test_FreeList-pnsh
 target_link_libraries(test_FreeList-pnsh
     PRIVATE
         pupnp_native_shared
-        upnplib_native_shared
+        umock_shared
 )
 add_test(NAME ctest_FreeList-pnsh COMMAND test_FreeList-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

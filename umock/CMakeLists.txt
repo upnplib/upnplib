@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-20
+# Redistribution only with this Copyright remark. Last modified: 2022-10-21
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -10,7 +10,7 @@ project(UMOCK VERSION 0001
 )
 
 set(UMOCK_SOURCE_FILES
-    #./src/stdlib.cpp
+    ./src/stdlib.cpp
     #./src/sys_select.cpp
     #./src/netdb.cpp
     #./src/pthread.cpp
@@ -43,12 +43,12 @@ target_compile_definitions(umock_shared
 target_link_libraries(umock_shared
     PUBLIC
         #ixml_shared
-        # On Linux we cannot link with the static pthreads library because then
-        # we have also to link with a static libc that's not available by default.
-        $<$<NOT:$<PLATFORM_ID:Windows>>:${UPNP_PTHREADS_SHARED_LIBRARY}>
         # On MS Windows we link with the static pthreads4w library to
         # avoid error prone managing access to its .dll file.
-        $<$<PLATFORM_ID:Windows>:${UPNP_PTHREADS_STATIC_LIBRARY}>
+        # On Unix platforms we cannot link with the static pthreads library because
+        # then we have also to link with a static libc that's not available by default.
+        $<IF:$<PLATFORM_ID:Windows>,${UPNP_PTHREADS_STATIC_LIBRARY},${UPNP_PTHREADS_SHARED_LIBRARY}>
+
 )
 
 # UMock STatic library: postfix -umst
@@ -64,10 +64,9 @@ target_include_directories(umock_static
 target_link_libraries(umock_static
     INTERFACE
         #ixml_static
-        # On Linux we cannot link with the static pthreads library because then
-        # we have also to link with a static libc that's not available by default.
-        $<$<NOT:$<PLATFORM_ID:Windows>>:${UPNP_PTHREADS_SHARED_LIBRARY}>
         # On MS Windows we link with the static pthreads4w library to
         # avoid error prone managing access to its .dll file.
-        $<$<PLATFORM_ID:Windows>:${UPNP_PTHREADS_STATIC_LIBRARY}>
+        # On Unix platforms we cannot link with the static pthreads library because
+        # then we have also to link with a static libc that's not available by default.
+        $<IF:$<PLATFORM_ID:Windows>,${UPNP_PTHREADS_STATIC_LIBRARY},${UPNP_PTHREADS_SHARED_LIBRARY}>
 )

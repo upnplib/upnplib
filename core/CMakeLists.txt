@@ -25,7 +25,7 @@ set(UPNPLIB_NATIVE_SOURCE_FILES
     ./src/mocking/netdb.cpp
     ./src/mocking/pthread.cpp
     ./src/mocking/stdio.cpp
-    ${UPnPlib_SOURCE_DIR}/umock/src/stdlib.cpp
+    #${UPnPlib_SOURCE_DIR}/umock/src/stdlib.cpp
     ./src/mocking/sys_socket.cpp
     ./src/mocking/unistd.cpp
     #${UPnPlib_SOURCE_DIR}/umock/src/string.cpp
@@ -201,7 +201,7 @@ if(NOT WIN32)
     target_link_libraries(upnplibInfo_static
         PRIVATE
             pupnp_native_static
-            upnplib_native_static
+            umock_static
             # On Linux we cannot link with the static pthreads library
             # because then we have also link with a static libc that's not
             # available by default.

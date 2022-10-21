@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-15
+// Redistribution only with this Copyright remark. Last modified: 2022-10-18
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
@@ -7,7 +7,7 @@
 #include "upnplib/visibility.hpp"
 #include <stdlib.h>
 
-namespace upnplib::mocking {
+namespace umock {
 
 class StdlibInterface {
   public:
@@ -71,4 +71,4 @@ class UPNPLIB_API Stdlib {
     StdlibInterface* m_ptr_oldObj{};
 };
 
-} // namespace upnplib::mocking
+} // namespace umock

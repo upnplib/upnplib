@@ -38,7 +38,7 @@ int UpnpString_set_String(UpnpString* p, const char* s) {
     char* q = umock::string_h.strdup(s);
     if (!q)
         goto error_handler1;
-    upnplib::mocking::stdlib_h.free(((struct SUpnpString*)p)->m_string);
+    umock::stdlib_h.free(((struct SUpnpString*)p)->m_string);
     ((struct SUpnpString*)p)->m_length = strlen(q);
     ((struct SUpnpString*)p)->m_string = q;
 
@@ -52,7 +52,7 @@ int UpnpString_set_StringN(UpnpString* p, const char* s, size_t n) {
     char* q = umock::string_h.strndup(s, n);
     if (!q)
         goto error_handler1;
-    upnplib::mocking::stdlib_h.free(((struct SUpnpString*)p)->m_string);
+    umock::stdlib_h.free(((struct SUpnpString*)p)->m_string);
     ((struct SUpnpString*)p)->m_length = strlen(q);
     ((struct SUpnpString*)p)->m_string = q;
 

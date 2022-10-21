@@ -9,15 +9,13 @@
 using ::testing::_;
 using ::testing::Return;
 
-namespace mock = upnplib::mocking;
-
 namespace compa {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 
 //
 // Mocked system calls
 // -------------------
-class StdlibMock : public mock::StdlibInterface {
+class StdlibMock : public umock::StdlibInterface {
   public:
     virtual ~StdlibMock() override {}
     MOCK_METHOD(void*, malloc, (size_t size), (override));
@@ -49,7 +47,7 @@ TEST(FreeListTestSuite, allocate_memory) {
 
     // Mocking
     StdlibMock mocked_stdlib;
-    mock::Stdlib stdlib_injectObj(&mocked_stdlib);
+    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, malloc(free_list.element_size))
         .WillOnce(Return(&newnode));
 

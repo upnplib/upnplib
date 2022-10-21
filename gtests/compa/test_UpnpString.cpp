@@ -20,8 +20,6 @@ using ::testing::Eq;
 using ::testing::ExitedWithCode;
 using ::testing::Return;
 
-namespace mock = upnplib::mocking;
-
 //
 // Since the following struct is completely invisible outside of pupnp (because
 // of some template macro magic) I have duplicated it for testing here. The
@@ -42,7 +40,7 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
 //
 // Mocked system calls
 //--------------------
-class StdlibMock : public mock::StdlibInterface {
+class StdlibMock : public umock::StdlibInterface {
   public:
     virtual ~StdlibMock() override {}
     MOCK_METHOD(void*, malloc, (size_t size), (override));
@@ -71,7 +69,7 @@ TEST_F(UpnpStringMockTestSuite, create_new_upnp_string) {
     UpnpString* p = &upnpstr;
     UpnpString* str{};
 
-    mock::Stdlib stdlib_injectObj(&this->mock_stdlibObj);
+    umock::Stdlib stdlib_injectObj(&this->mock_stdlibObj);
     EXPECT_CALL(this->mock_stdlibObj, calloc(_, _))
         .WillOnce(Return(p))
         .WillOnce(Return(mstring));
@@ -117,7 +115,7 @@ TEST_F(UpnpStringMockTestSuite, delete_upnp_string) {
     EXPECT_EQ(upnpstr.m_length, 11);
     EXPECT_STREQ(upnpstr.m_string, "hello world");
 
-    mock::Stdlib stdlib_injectObj(&mock_stdlibObj);
+    umock::Stdlib stdlib_injectObj(&mock_stdlibObj);
     EXPECT_CALL(this->mock_stdlibObj, free(_)).Times(2);
 
     // Test Unit
@@ -142,7 +140,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string) {
     umock::String string_injectObj(&mock_stringObj);
     EXPECT_CALL(mock_stringObj, strdup(mstring2)).WillOnce(Return(mstring3));
 
-    mock::Stdlib stdlib_injectObj(&mock_stdlibObj);
+    umock::Stdlib stdlib_injectObj(&mock_stdlibObj);
     // The previous 'mstring1' should be freed before setting the new one.
     EXPECT_CALL(this->mock_stdlibObj, free(mstring1)).Times(1);
 
@@ -171,7 +169,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string_n) {
     EXPECT_CALL(mock_stringObj, strndup(mstring2, 11))
         .WillOnce(Return(mstring3));
 
-    mock::Stdlib stdlib_injectObj(&mock_stdlibObj);
+    umock::Stdlib stdlib_injectObj(&mock_stdlibObj);
     EXPECT_CALL(this->mock_stdlibObj, free(mstring_empty)).Times(1);
 
     // Test Unit

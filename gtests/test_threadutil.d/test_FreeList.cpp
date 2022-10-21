@@ -17,7 +17,7 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
 //
 // Mocked system calls
 // -------------------
-class StdlibMock : public mocking::StdlibInterface {
+class StdlibMock : public umock::StdlibInterface {
   public:
     virtual ~StdlibMock() override {}
     MOCK_METHOD(void*, malloc, (size_t size), (override));
@@ -89,7 +89,7 @@ TEST_F(FreeListTestSuite, init_alocate_free_destroy) {
     // Get a new node. Because the freelist is empty it should be allocated from
     // memory.
     FreeListNode anynode0{};
-    mocking::Stdlib stdlib_injectObj(&mocked_stdlib);
+    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, malloc(sizeof(int))).WillOnce(Return(&anynode0));
 
     FreeListNode* newnode =
@@ -181,7 +181,7 @@ TEST_F(FreeListTestSuite, freelist_for_0_size_nodes) {
     EXPECT_EQ(FreeListObj.FreeListInit(&m_free_list, 0, 3), 0);
 
     // Get node from freelist
-    mocking::Stdlib stdlib_injectObj(&mocked_stdlib);
+    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, malloc(0)).WillOnce(Return(nullptr));
     EXPECT_EQ(FreeListObj.FreeListAlloc(&m_free_list), nullptr);
     EXPECT_EQ(m_free_list.head, nullptr);
@@ -237,7 +237,7 @@ TEST_F(FreeListTestSuite, allocate_node_from_freelist_with_maximal_0_items) {
     // Get node from freelist. This should be possible but never from the
     // freelist, only allocated from memory.
     FreeListNode anynode1{};
-    mocking::Stdlib stdlib_injectObj(&mocked_stdlib);
+    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, malloc(4)).WillOnce(Return(&anynode1));
     EXPECT_EQ(FreeListObj.FreeListAlloc(&m_free_list), &anynode1);
     EXPECT_EQ(m_free_list.head, nullptr);
@@ -252,7 +252,7 @@ TEST_F(FreeListTestSuite, put_free_node_to_freelist_with_maximal_0_items) {
     // Put free node to freelist. This should be possible but never to the
     // freelist, only freeing the memory block.
     FreeListNode anynode1{};
-    mocking::Stdlib stdlib_injectObj(&mocked_stdlib);
+    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
     EXPECT_CALL(mocked_stdlib, free(&anynode1)).Times(1);
     EXPECT_EQ(FreeListObj.FreeListFree(&m_free_list, &anynode1), 0);
     EXPECT_EQ(m_free_list.head, nullptr);

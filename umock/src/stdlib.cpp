@@ -3,7 +3,7 @@
 
 #include "umock/stdlib.inc"
 
-namespace upnplib::mocking {
+namespace umock {
 
 void* StdlibReal::malloc(size_t size) { return ::malloc(size); }
 
@@ -42,4 +42,4 @@ void* Stdlib::calloc(size_t nmemb, size_t size) {
 StdlibReal stdlib_realObj;
 UPNPLIB_API Stdlib stdlib_h(&stdlib_realObj);
 
-} // namespace upnplib::mocking
+} // namespace umock

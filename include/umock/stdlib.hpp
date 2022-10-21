@@ -5,10 +5,10 @@
 
 #include "umock/stdlib.inc"
 
-namespace upnplib::mocking {
+namespace umock {
 
 UPNPLIB_EXTERN Stdlib stdlib_h;
 
-} // namespace upnplib::mocking
+} // namespace umock
 
 #endif // MOCKING_STDLIB_HPP
