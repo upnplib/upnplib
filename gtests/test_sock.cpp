@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-21
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -7,7 +7,7 @@
 #include "sock.hpp"
 
 #include "upnplib/upnptools.hpp"
-#include "upnplib/mocking/sys_socket.hpp"
+#include "umock/sys_socket.hpp"
 #include "upnplib/mocking/sys_select.hpp"
 #include "upnplib/mocking/unistd.hpp"
 #include "upnp.hpp"
@@ -84,7 +84,7 @@ class Csock : Isock {
 //
 // Mocked system calls
 // ===================
-class Sys_socketMock : public mocking::Sys_socketInterface {
+class Sys_socketMock : public umock::Sys_socketInterface {
   public:
     virtual ~Sys_socketMock() override {}
     MOCK_METHOD(int, socket, (int domain, int type, int protocol), (override));
@@ -217,7 +217,7 @@ TEST_F(SockFTestSuite, sock_init_with_ip) {
 
 TEST_F(SockFTestSuite, sock_destroy_valid_socket_descriptor) {
     // shutdown is successful
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj,
                 shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
         .WillOnce(Return(0));
@@ -236,7 +236,7 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_ok_close_fails_not_0) {
         GTEST_SKIP() << "             known failing test on Github Actions";
 
     // shutdown is successful
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj,
                 shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
         .WillOnce(Return(0));
@@ -269,7 +269,7 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_fails_close_ok) {
         GTEST_SKIP() << "             known failing test on Github Actions";
 
     // shutdown fails
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj,
                 shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
         .WillOnce(Return(-1));
@@ -304,7 +304,7 @@ TEST_F(SockFTestSuite, sock_destroy_inval_fd_shutdown_fails_close_fails_not_0) {
         GTEST_SKIP() << "             known failing test on Github Actions";
 
     // shutdown fails
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj,
                 shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
         .WillOnce(Return(-1));
@@ -342,7 +342,7 @@ TEST_F(SockFTestSuite, sock_read_no_timeout) {
         .WillOnce(Return(1));
     // recv()
     char received_msg[]{"Mocked received TCP message no timeout."};
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj, recv(m_socketfd, NotNull(), _, _))
         .WillOnce(DoAll(SetArrayArgument<1>(
                             received_msg, received_msg + sizeof(received_msg)),
@@ -368,7 +368,7 @@ TEST_F(SockFTestSuite, sock_read_within_timeout) {
         .WillOnce(Return(1));
     // recv()
     char received_msg[]{"Mocked received TCP message within timeout."};
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj, recv(m_socketfd, NotNull(), _, _))
         .WillOnce(DoAll(SetArrayArgument<1>(
                             received_msg, received_msg + sizeof(received_msg)),
@@ -392,7 +392,7 @@ TEST_F(SockFTestSuite, sock_read_with_connection_error) {
                 select(m_socketfd + 1, NotNull(), _, NULL, NotNull()))
         .WillOnce(Return(-1));
     // recv()
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj, recv(_, _, _, _)).Times(0);
 
     // Process the Unit
@@ -421,7 +421,7 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
         .WillOnce(Return(1)); // Message received
     // recv()
     char received_msg[]{"Mocked received TCP message after signal catched."};
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj, recv(m_socketfd, NotNull(), _, _))
         .WillOnce(DoAll(SetArrayArgument<1>(
                             received_msg, received_msg + sizeof(received_msg)),
@@ -446,7 +446,7 @@ TEST_F(SockFTestSuite, sock_read_with_receiving_error) {
                 select(m_socketfd + 1, NotNull(), _, NULL, NotNull()))
         .WillOnce(Return(1));
     // recv()
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj, recv(m_socketfd, NotNull(), _, _))
         .WillOnce(Return(-1));
 
@@ -476,7 +476,7 @@ TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_socket_info) {
         mocking::Sys_select sys_select_injectObj(&m_mock_sys_selectObj);
         EXPECT_CALL(m_mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
         // recv()
-        mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+        umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
         EXPECT_CALL(m_mock_sys_socketObj, recv(_, _, _, _)).Times(0);
 
         // Process the Unit
@@ -516,7 +516,7 @@ TEST_F(SockFTestSuite, sock_read_with_empty_socket_info) {
         EXPECT_CALL(m_mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
     }
     // recv()
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj, recv(_, _, _, _)).Times(0);
 
     // Process the Unit
@@ -540,7 +540,7 @@ TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_0_byte_length)
         GTEST_SKIP() << "             known failing test on Github Actions";
 
     mocking::Sys_select sys_select_injectObj(&m_mock_sys_selectObj);
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     if (old_code) {
         // Configure expected system calls should never called.
         // select()
@@ -604,7 +604,7 @@ TEST_F(SockFTestSuite, sock_read_with_valid_buffer_but_0_byte_length)
         GTEST_SKIP() << "             known failing test on Github Actions";
 
     mocking::Sys_select sys_select_injectObj(&m_mock_sys_selectObj);
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     if (old_code) {
         // Configure expected system calls that will return a received message.
         // select()
@@ -686,7 +686,7 @@ TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_timeout_value)
         // recv()
         char received_msg[]{
             "Mocked received TCP message with nullptr to timeout value."};
-        mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+        umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
         EXPECT_CALL(m_mock_sys_socketObj, recv(m_socketfd, NotNull(), _, _))
             .WillOnce(
                 DoAll(SetArrayArgument<1>(received_msg,
@@ -715,7 +715,7 @@ TEST_F(SockFTestSuite, sock_write_no_timeout) {
         .WillOnce(Return(1));
     // send()
     char sent_msg[]{"Mocked sent TCP message no timeout."};
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj,
                 send(m_socketfd, sent_msg, sizeof(sent_msg), _))
         .WillOnce(Return(sizeof(sent_msg)));
@@ -736,7 +736,7 @@ TEST_F(SockFTestSuite, sock_write_within_timeout) {
         .WillOnce(Return(1));
     // send()
     char sent_msg[]{"Mocked sent TCP message within timeout."};
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj,
                 send(m_socketfd, sent_msg, sizeof(sent_msg), _))
         .WillOnce(Return(sizeof(sent_msg)));
@@ -755,7 +755,7 @@ TEST_F(SockFTestSuite, sock_write_with_connection_error) {
                 select(m_socketfd + 1, _, NotNull(), NULL, NotNull()))
         .WillOnce(Return(-1));
     // send()
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj, send(_, _, _, _)).Times(0);
 
     // Process the Unit
@@ -779,7 +779,7 @@ TEST_F(SockFTestSuite, sock_write_with_sending_error) {
         .WillOnce(Return(1));
     // send()
     char sent_msg[]{"Mocked sent TCP message within timeout."};
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj,
                 send(m_socketfd, sent_msg, sizeof(sent_msg), _))
         .WillOnce(Return(-1));
@@ -816,7 +816,7 @@ TEST_F(SockFTestSuite, sock_write_with_nullptr_to_socket_info) {
         mocking::Sys_select sys_select_injectObj(&m_mock_sys_selectObj);
         EXPECT_CALL(m_mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
         // send()
-        mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+        umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
         EXPECT_CALL(m_mock_sys_socketObj, send(_, _, _, _)).Times(0);
 
         // Process the Unit
@@ -857,7 +857,7 @@ TEST_F(SockFTestSuite, sock_write_with_empty_socket_info) {
     }
 
     // send()
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj, send(_, _, _, _)).Times(0);
 
     // Process the Unit
@@ -899,7 +899,7 @@ TEST_F(SockFTestSuite, sock_write_with_nullptr_to_buffer_0_byte_length)
     }
 
     // send()
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj, send(m_socketfd, _, _, _)).Times(0);
 
     // Process the Unit
@@ -937,7 +937,7 @@ TEST_F(SockFTestSuite, sock_write_with_valid_buffer_but_0_byte_length)
                    "in this case.\n";
 
     // send()
-    mocking::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj, send(m_socketfd, _, _, _)).Times(0);
 
     // Process the Unit

@@ -1,8 +1,8 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-21
 
 #include "upnplib/sock.hpp"
-#include "upnplib/mocking/sys_socket.hpp"
+#include "umock/sys_socket.hpp"
 
 #include "upnplib/gtest.hpp"
 #include "gmock/gmock.h"
@@ -24,7 +24,7 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
 //
 // Mocked system calls
 // ===================
-class Sys_socketMock : public mocking::Sys_socketInterface {
+class Sys_socketMock : public umock::Sys_socketInterface {
   public:
     virtual ~Sys_socketMock() override {}
     // clang-format off
@@ -97,7 +97,7 @@ TEST(SocketAddrTestSuite, get_address_from_socket) {
 
     // Mock system functions
     Sys_socketMock mocked_sys_socketObj;
-    mocking::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
     EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
         .WillOnce(DoAll(SetArgPointee<1>(*ret_sock.addr), Return(0)));
 

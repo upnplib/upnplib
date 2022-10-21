@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-18
+# Redistribution only with this Copyright remark. Last modified: 2022-10-22
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -318,6 +318,7 @@ target_compile_definitions(test_simple-unsh
 target_link_libraries(test_simple-unsh
     PRIVATE
         upnplib_native_shared # prefix -unsh
+        umock_shared
 )
 add_test(NAME ctest_simple-unsh COMMAND test_simple-unsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

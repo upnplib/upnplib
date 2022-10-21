@@ -10,14 +10,14 @@ project(UMOCK VERSION 0001
 )
 
 set(UMOCK_SOURCE_FILES
+    ./src/string.cpp
     ./src/stdlib.cpp
+    ./src/sys_socket.cpp
     #./src/sys_select.cpp
     #./src/netdb.cpp
     #./src/pthread.cpp
     #./src/stdio.cpp
-    #./src/sys_socket.cpp
     #./src/unistd.cpp
-    ./src/string.cpp
     #$<$<NOT:$<PLATFORM_ID:Windows>>:./src/ifaddrs.cpp>
     #$<$<NOT:$<PLATFORM_ID:Windows>>:./src/net_if.cpp>
     #$<$<PLATFORM_ID:Windows>:./src/iphlpapi.cpp>
@@ -43,6 +43,9 @@ target_compile_definitions(umock_shared
 target_link_libraries(umock_shared
     PUBLIC
         #ixml_shared
+        # In addition to pthreads we need some more system libraries on WIN32
+        $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
+        $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network management tools
         # On MS Windows we link with the static pthreads4w library to
         # avoid error prone managing access to its .dll file.
         # On Unix platforms we cannot link with the static pthreads library because
@@ -62,6 +65,10 @@ target_include_directories(umock_static
         $<$<PLATFORM_ID:Windows>:${pthreads4w_SOURCE_DIR}> # needed for pthread.h
 )
 target_link_libraries(umock_static
+    PUBLIC
+        # In addition to pthreads we need some more system libraries on WIN32
+        $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
+        $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network management tools
     INTERFACE
         #ixml_static
         # On MS Windows we link with the static pthreads4w library to

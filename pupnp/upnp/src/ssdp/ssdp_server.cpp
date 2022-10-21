@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-25
+ * Redistribution only with this Copyright remark. Last modified: 2022-10-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -53,7 +53,7 @@
 #include "miniserver.hpp"
 #include "sock.hpp"
 #include "upnpapi.hpp"
-#include "upnplib/mocking/sys_socket.hpp"
+#include "umock/sys_socket.hpp"
 
 #include <stdio.h>
 
@@ -821,7 +821,7 @@ static int create_ssdp_sock_v4(
     /* ssdpMcastAddr.imr_address.s_addr = inet_addr(gIF_IPV4); */
     ssdpMcastAddr.imr_multiaddr.s_addr = inet_addr(SSDP_IP);
 #endif
-    ret = upnplib::mocking::sys_socket_h.setsockopt(
+    ret = umock::sys_socket_h.setsockopt(
         *ssdpSock, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*)&ssdpMcastAddr,
         sizeof(struct ip_mreq));
     if (ret == -1) {
@@ -840,8 +840,8 @@ static int create_ssdp_sock_v4(
 #else
     addr.s_addr = inet_addr(gIF_IPV4);
 #endif
-    ret = upnplib::mocking::sys_socket_h.setsockopt(
-        *ssdpSock, IPPROTO_IP, IP_MULTICAST_IF, (char*)&addr, sizeof addr);
+    ret = umock::sys_socket_h.setsockopt(*ssdpSock, IPPROTO_IP, IP_MULTICAST_IF,
+                                         (char*)&addr, sizeof addr);
     if (ret == -1) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,

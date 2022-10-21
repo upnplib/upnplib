@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-21
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
@@ -13,7 +13,7 @@
 #include <sys/socket.h>
 #endif
 
-namespace upnplib::mocking {
+namespace umock {
 
 class Sys_socketInterface {
   public:
@@ -110,4 +110,5 @@ class UPNPLIB_API Sys_socket {
     Sys_socketInterface* m_ptr_oldObj{};
 };
 
-} // namespace upnplib::mocking
+} // namespace umock
+// vim: syntax=cpp

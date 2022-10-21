@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-26
+// Redistribution only with this Copyright remark. Last modified: 2022-10-22
 
 #include "upnplib/httpreadwrite.hpp"
 
@@ -70,8 +70,8 @@ extern size_t g_maxContentLength;
             } else {
                 int valopt = 0;
                 socklen_t len = sizeof(valopt);
-                if (upnplib::mocking::sys_socket_h.getsockopt(
-                        sock, SOL_SOCKET, SO_ERROR, (void*)&valopt, &len) < 0) {
+                if (umock::sys_socket_h.getsockopt(sock, SOL_SOCKET, SO_ERROR,
+                                                   (void*)&valopt, &len) < 0) {
                     /* failed to read delayed error */
                     return -1;
                 } else if (valopt) {

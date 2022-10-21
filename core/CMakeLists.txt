@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-21
+# Redistribution only with this Copyright remark. Last modified: 2022-10-22
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -21,14 +21,14 @@ set(UPNPLIB_NATIVE_SOURCE_FILES
     ./src/net/sock.cpp
     ./src/net/http/webserver.cpp
 
+    #${UPnPlib_SOURCE_DIR}/umock/src/string.cpp
+    #${UPnPlib_SOURCE_DIR}/umock/src/stdlib.cpp
+    #${UPnPlib_SOURCE_DIR}/umock/src/sys_socket.cpp
     ./src/mocking/sys_select.cpp
     ./src/mocking/netdb.cpp
     ./src/mocking/pthread.cpp
     ./src/mocking/stdio.cpp
-    #${UPnPlib_SOURCE_DIR}/umock/src/stdlib.cpp
-    ./src/mocking/sys_socket.cpp
     ./src/mocking/unistd.cpp
-    #${UPnPlib_SOURCE_DIR}/umock/src/string.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/net_if.cpp>
     $<$<PLATFORM_ID:Windows>:./src/mocking/iphlpapi.cpp>
@@ -75,8 +75,7 @@ if(NOT WIN32)
     )
     target_link_libraries(upnplib_compa_shared
         PRIVATE
-            upnplib_native_shared
-            umock_shared
+            $<$<PLATFORM_ID:Darwin>:umock_shared>
         INTERFACE
             # If we do not have compatible code we use the old native pupnp code.
             pupnp_native_shared
@@ -125,6 +124,8 @@ if(NOT WIN32)
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_native_shared
+        PRIVATE
+            $<$<PLATFORM_ID:Darwin>:umock_shared>
         INTERFACE
             ixml_shared
             # On Linux we cannot link with the static pthreads library because then
@@ -236,7 +237,6 @@ else() # WIN32
     )
     target_link_libraries(upnplib_compa_shared
         PRIVATE
-            upnplib_native_shared
             umock_shared
         INTERFACE
             # If we do not have compatible code we use the old native pupnp code.
@@ -283,6 +283,8 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_native_shared
+        PRIVATE
+            umock_shared
         PUBLIC
             # In addition to pthreads we need some more system libraries here
             ws2_32   # winsock to support sockets
