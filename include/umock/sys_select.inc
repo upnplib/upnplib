@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-22
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
@@ -12,7 +12,7 @@
 #include <sys/select.h>
 #endif
 
-namespace upnplib::mocking {
+namespace umock {
 
 class Sys_selectInterface {
   public:
@@ -73,4 +73,5 @@ class UPNPLIB_API Sys_select {
     Sys_selectInterface* m_ptr_oldObj{};
 };
 
-} // namespace upnplib::mocking
+} // namespace umock
+// vim: syntax=cpp

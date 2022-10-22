@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-21
+// Redistribution only with this Copyright remark. Last modified: 2022-10-22
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
@@ -139,7 +139,7 @@ class Sys_socketMock : public umock::Sys_socketInterface {
 // Create a mocking socket object to be usable for all tests in this file.
 Sys_socketMock mocked_sys_socketObj;
 
-class Sys_selectMock : public mocking::Sys_selectInterface {
+class Sys_selectMock : public umock::Sys_selectInterface {
   public:
     virtual ~Sys_selectMock() override = default;
     MOCK_METHOD(int, select, (int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout), (override));
@@ -1548,7 +1548,7 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
 
         // Mock functions from standard system library
         Sys_selectMock sys_select_mockObj;
-        mocking::Sys_select sys_select_injectObj(&sys_select_mockObj);
+        umock::Sys_select sys_select_injectObj(&sys_select_mockObj);
 
         if (old_code) {
             std::cout << CYEL "[ BUGFIX   ]" CRES

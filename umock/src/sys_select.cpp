@@ -1,9 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-22
 
-#include "upnplib/mocking/sys_select.inc"
+#include "umock/sys_select.inc"
 
-namespace upnplib::mocking {
+namespace umock {
 
 int Sys_selectReal::select(int nfds, fd_set* readfds, fd_set* writefds,
                            fd_set* exceptfds, struct timeval* timeout) {
@@ -36,4 +36,4 @@ int Sys_select::select(int nfds, fd_set* readfds, fd_set* writefds,
 Sys_selectReal sys_select_realObj;
 UPNPLIB_API Sys_select sys_select_h(&sys_select_realObj);
 
-} // namespace upnplib::mocking
+} // namespace umock

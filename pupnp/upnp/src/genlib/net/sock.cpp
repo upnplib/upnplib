@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-10-21
+ * Redistribution only with this Copyright remark. Last modified: 2022-10-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -60,7 +60,7 @@
 #include <time.h>
 
 #include "umock/sys_socket.hpp"
-#include "upnplib/mocking/sys_select.hpp"
+#include "umock/sys_select.hpp"
 #include "upnplib/mocking/unistd.hpp"
 
 #ifdef UPNP_ENABLE_OPEN_SSL
@@ -199,11 +199,11 @@ static int sock_read_write(
         // signals EINTR (see below) the errno must be resetted. I have seen an
         // endless loop here with old contents of errno.  errno = 0; --Ingo
         if (*timeoutSecs < 0) {
-            retCode = upnplib::mocking::sys_select_h.select(
-                sockfd + 1, &readSet, &writeSet, NULL, NULL);
+            retCode = umock::sys_select_h.select(sockfd + 1, &readSet,
+                                                 &writeSet, NULL, NULL);
         } else {
-            retCode = upnplib::mocking::sys_select_h.select(
-                sockfd + 1, &readSet, &writeSet, NULL, &timeout);
+            retCode = umock::sys_select_h.select(sockfd + 1, &readSet,
+                                                 &writeSet, NULL, &timeout);
         }
         if (retCode == 0)
             return UPNP_E_TIMEDOUT;
