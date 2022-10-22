@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-22
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -10,7 +10,7 @@
 
 #include "upnplib/upnptools.hpp"
 #include "upnplib/uri.hpp"
-#include "upnplib/mocking/netdb.hpp"
+#include "umock/netdb.hpp"
 
 #include "gmock/gmock.h"
 
@@ -29,7 +29,7 @@ bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 //
 // Mocking
 // =======
-class NetdbMock : public mocking::NetdbInterface {
+class NetdbMock : public umock::NetdbInterface {
   public:
     virtual ~NetdbMock() override {}
     MOCK_METHOD(int, getaddrinfo,
@@ -105,7 +105,7 @@ TEST(ParseUriIp4TestSuite, absolute_uri_successful) {
     addrinfo* res = netv4inf.get("192.168.10.10", 80);
 
     // Mock for network address system calls. parse_uri() asks the DNS server.
-    mocking::Netdb netdb_injectObj(&netv4inf);
+    umock::Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
@@ -169,7 +169,7 @@ TEST(ParseUriIp4TestSuite, absolute_uri_with_shorter_max_size) {
     addrinfo* res = netv4inf.get("192.168.10.10", 80);
 
     // Mock for network address system calls. parse_uri() asks the DNS server.
-    mocking::Netdb netdb_injectObj(&netv4inf);
+    umock::Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
@@ -227,7 +227,7 @@ TEST(ParseUriIp4TestSuite, ip_address_with_greater_max_size) {
     // Mock for network address system calls. Url with ip address does not need
     // to query for a network address.
     Mock_netv4info netv4inf;
-    mocking::Netdb netdb_injectObj(&netv4inf);
+    umock::Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
 
@@ -307,7 +307,7 @@ TEST(ParseUriIp4TestSuite, uri_without_valid_host_and_port) {
 
     // Mock for network address system calls, parse_uri() ask DNS server.
     Mock_netv4info netv4inf;
-    mocking::Netdb netdb_injectObj(&netv4inf);
+    umock::Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).WillOnce(Return(EAI_NONAME));
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(0);
 
@@ -472,7 +472,7 @@ TEST(ParseUriIp4TestSuite, relative_uri_with_authority_and_absolute_path) {
     addrinfo* res = netv4inf.get("192.168.10.10", 80);
 
     // Mock for network address system call
-    mocking::Netdb netdb_injectObj(&netv4inf);
+    umock::Netdb netdb_injectObj(&netv4inf);
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillOnce(DoAll(SetArgPointee<3>(res), Return(0)));
     EXPECT_CALL(netv4inf, freeaddrinfo(_)).Times(1);
@@ -513,7 +513,7 @@ TEST(ParseUriIp4TestSuite, relative_uri_with_absolute_path) {
     // Set default return values for network address system call in case we get
     // an unexpected call but it should not occur. An ip address should not be
     // asked for name resolution because we do not have one.
-    mocking::Netdb netdb_injectObj(&netv4inf);
+    umock::Netdb netdb_injectObj(&netv4inf);
     ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
@@ -552,7 +552,7 @@ TEST(ParseUriIp4TestSuite, relative_uri_with_relative_path) {
     // Set default return values for network address system call in case we get
     // an unexpected call but it should not occur. An ip address should not be
     // asked for name resolution because we do not have one.
-    mocking::Netdb netdb_injectObj(&netv4inf);
+    umock::Netdb netdb_injectObj(&netv4inf);
     ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);
@@ -592,7 +592,7 @@ TEST(ParseUriIp4TestSuite, uri_with_opaque_part) {
     // Set default return values for network address system call in case we get
     // an unexpected call but it should not occur. An ip address should not be
     // asked for name resolution because we do not have one.
-    mocking::Netdb netdb_injectObj(&netv4inf);
+    umock::Netdb netdb_injectObj(&netv4inf);
     ON_CALL(netv4inf, getaddrinfo(_, _, _, _))
         .WillByDefault(DoAll(SetArgPointee<3>(res), Return(EAI_NONAME)));
     EXPECT_CALL(netv4inf, getaddrinfo(_, _, _, _)).Times(0);

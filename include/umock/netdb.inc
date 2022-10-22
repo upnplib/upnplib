@@ -12,7 +12,7 @@
 #include <netdb.h> // important for struct addrinfo
 #endif
 
-namespace upnplib::mocking {
+namespace umock {
 
 class NetdbInterface {
   public:
@@ -76,4 +76,4 @@ class UPNPLIB_API Netdb {
     NetdbInterface* m_ptr_oldObj{};
 };
 
-} // namespace upnplib::mocking
+} // namespace umock

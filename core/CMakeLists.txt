@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-22
+# Redistribution only with this Copyright remark. Last modified: 2022-10-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -25,7 +25,7 @@ set(UPNPLIB_NATIVE_SOURCE_FILES
     #${UPnPlib_SOURCE_DIR}/umock/src/stdlib.cpp
     #${UPnPlib_SOURCE_DIR}/umock/src/sys_socket.cpp
     #${UPnPlib_SOURCE_DIR}/umock/src/sys_select.cpp
-    ./src/mocking/netdb.cpp
+    #${UPnPlib_SOURCE_DIR}/umock/src/netdb.cpp
     ./src/mocking/pthread.cpp
     ./src/mocking/stdio.cpp
     ./src/mocking/unistd.cpp
@@ -363,6 +363,7 @@ else() # WIN32
     target_link_libraries(upnplibInfo_static
         PRIVATE
             pupnp_native_static
+            umock_static
     )
 
 endif() # WIN32

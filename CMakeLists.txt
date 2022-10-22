@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-21
+# Redistribution only with this Copyright remark. Last modified: 2022-10-22
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -138,7 +138,7 @@ add_compile_definitions(
         $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
 )
 add_compile_options(
-        # all warnings as errors
+        # all compiler warnings as errors
         $<$<CXX_COMPILER_ID:MSVC>:/WX>
         # lots of warnings and all warnings as errors
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall>
@@ -159,6 +159,11 @@ if(DEFINED ENV{GITHUB_ACTIONS})
     add_compile_options(
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wno-unused-result>)
 endif()
+
+add_link_options(
+        # all linker warnings as errors
+        $<$<CXX_COMPILER_ID:MSVC>:/WX>
+)
 
 # Some compiler options for MSVC:
 # Reports the compiler warning that is specified by nnnn only once.

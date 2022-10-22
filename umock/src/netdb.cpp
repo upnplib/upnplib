@@ -1,9 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-22
 
-#include "upnplib/mocking/netdb.inc"
+#include "umock/netdb.inc"
 
-namespace upnplib::mocking {
+namespace umock {
 
 int NetdbReal::getaddrinfo(const char* node, const char* service,
                            const struct addrinfo* hints,
@@ -44,4 +44,4 @@ void Netdb::freeaddrinfo(struct addrinfo* res) {
 NetdbReal netdb_realObj;
 UPNPLIB_API Netdb netdb_h(&netdb_realObj);
 
-} // namespace upnplib::mocking
+} // namespace umock

@@ -14,7 +14,7 @@ set(UMOCK_SOURCE_FILES
     ./src/stdlib.cpp
     ./src/sys_socket.cpp
     ./src/sys_select.cpp
-    #./src/netdb.cpp
+    ./src/netdb.cpp
     #./src/pthread.cpp
     #./src/stdio.cpp
     #./src/unistd.cpp

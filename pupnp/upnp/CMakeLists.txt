@@ -232,6 +232,7 @@ if(NOT WIN32)
     target_link_libraries(pupnp_native_static
         PRIVATE
             upnplib_native_static # only needed for mocking classes
+            umock_static
         INTERFACE
             ixml_static
             # On Linux we cannot link with the static pthreads library because then
