@@ -459,7 +459,7 @@ add_executable(test_miniserver-ucst
 # TODO: check why upnplib_native_static isn't effective and I have to add
 #       mocking sources here.
     ./test_miniserver.cpp
-    ${UPNPLIB_CORE_SOURCE_DIR}/src/mocking/stdio.cpp
+    ${UPnPlib_SOURCE_DIR}/umock/src/stdio.cpp
     ${UPnPlib_SOURCE_DIR}/umock/src/string.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_server.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp

@@ -16,7 +16,7 @@ set(UMOCK_SOURCE_FILES
     ./src/sys_select.cpp
     ./src/netdb.cpp
     ./src/pthread.cpp
-    #./src/stdio.cpp
+    ./src/stdio.cpp
     #./src/unistd.cpp
     #$<$<NOT:$<PLATFORM_ID:Windows>>:./src/ifaddrs.cpp>
     #$<$<NOT:$<PLATFORM_ID:Windows>>:./src/net_if.cpp>

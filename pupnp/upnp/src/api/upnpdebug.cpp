@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-10-06
+ * Redistribution only with this Copyright remark. Last modified: 2022-10-23
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,7 +51,7 @@
 #include "posix_overwrites.hpp"
 
 #include "umock/pthread.hpp"
-#include "upnplib/mocking/stdio.hpp"
+#include "umock/stdio.hpp"
 #include <cstring>
 
 /*! Mutex to synchronize all the log file operations in the debug mode */
@@ -86,7 +86,7 @@ int UpnpInitLog(void) {
 
     if (fp) {
         if (is_stderr == 0) {
-            upnplib::mocking::stdio_h.fclose(fp);
+            umock::stdio_h.fclose(fp);
             fp = NULL;
         }
     }
@@ -113,7 +113,7 @@ int UpnpInitLog(void) {
 #endif // #if 0
 
     if (fileName) {
-        fp = upnplib::mocking::stdio_h.fopen(fileName, "a");
+        fp = umock::stdio_h.fopen(fileName, "a");
         if (fp == NULL) {
             fprintf(stderr, "Failed to open fileName (%s): %s\n", fileName,
                     std::strerror(errno));
@@ -144,7 +144,7 @@ void UpnpCloseLog(void) {
     umock::pthread_h.pthread_mutex_lock(&GlobalDebugMutex);
 
     if (fp != NULL && is_stderr == 0) {
-        upnplib::mocking::stdio_h.fclose(fp);
+        umock::stdio_h.fclose(fp);
     }
     fp = NULL;
     is_stderr = 0;
@@ -282,7 +282,7 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
     if (DbgFileName) {
         UpnpDisplayFileAndLine(fp, DbgFileName, DbgLineNo, DLevel, Module);
         vfprintf(fp, FmtStr, ArgList);
-        upnplib::mocking::stdio_h.fflush(fp);
+        umock::stdio_h.fflush(fp);
     }
     va_end(ArgList);
     umock::pthread_h.pthread_mutex_unlock(&GlobalDebugMutex);

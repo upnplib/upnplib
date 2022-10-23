@@ -1,9 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-23
 
-#include "upnplib/mocking/stdio.inc"
+#include "umock/stdio.inc"
 
-namespace upnplib::mocking {
+namespace umock {
 
 #ifdef _WIN32
 // Secure function only on MS Windows
@@ -57,4 +57,4 @@ int Stdio::fflush(FILE* stream) { return m_ptr_workerObj->fflush(stream); }
 StdioReal stdio_realObj;
 UPNPLIB_API Stdio stdio_h(&stdio_realObj);
 
-} // namespace upnplib::mocking
+} // namespace umock
