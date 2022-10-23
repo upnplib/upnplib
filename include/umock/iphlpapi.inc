@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-23
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
@@ -10,7 +10,7 @@
 #include <winsock2.h>
 #include <iphlpapi.h>
 
-namespace upnplib::mocking {
+namespace umock {
 
 class IphlpapiInterface {
   public:
@@ -74,4 +74,5 @@ class UPNPLIB_API Iphlpapi {
     IphlpapiInterface* m_ptr_oldObj{};
 };
 
-} // namespace upnplib::mocking
+} // namespace umock
+// vim: syntax=cpp

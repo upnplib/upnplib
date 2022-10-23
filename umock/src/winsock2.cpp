@@ -1,9 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-23
 
-#include "upnplib/mocking/winsock2.inc"
+#include "umock/winsock2.inc"
 
-namespace upnplib::mocking {
+namespace umock {
 
 int Winsock2Real::WSAGetLastError() { return ::WSAGetLastError(); }
 
@@ -29,4 +29,4 @@ int Winsock2::WSAGetLastError() { return m_ptr_workerObj->WSAGetLastError(); }
 Winsock2Real winsock2_realObj;
 UPNPLIB_API Winsock2 winsock2_h(&winsock2_realObj);
 
-} // namespace upnplib::mocking
+} // namespace umock

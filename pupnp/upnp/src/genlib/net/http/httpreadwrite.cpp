@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-10-22
+ * Redistribution only with this Copyright remark. Last modified: 2022-10-23
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -85,7 +85,7 @@
 #include "upnplib/mocking/pupnp.hpp"
 #include "umock/sys_select.hpp"
 #include "umock/sys_socket.hpp"
-#include "upnplib/mocking/winsock2.hpp"
+#include "umock/winsock2.hpp"
 
 /*
  * Please, do not change these to const int while MSVC cannot understand
@@ -126,7 +126,7 @@ static int Check_Connect_And_Wait_Connection(
 
     if (connect_res < 0) {
 #ifdef _WIN32
-        if (WSAEWOULDBLOCK == upnplib::mocking::winsock2_h.WSAGetLastError()) {
+        if (WSAEWOULDBLOCK == umock::winsock2_h.WSAGetLastError()) {
 #else
         if (EINPROGRESS == errno) {
 #endif

@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-21
+// Redistribution only with this Copyright remark. Last modified: 2022-10-23
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -439,7 +439,7 @@ TEST_F(PrivateConnectIp4FTestSuite, sock_make_blocking_fails) {
 
 // Mocked system calls on MS Windows
 // ---------------------------------
-class Winsock2Mock : public mocking::Winsock2Interface {
+class Winsock2Mock : public umock::Winsock2Interface {
   public:
     virtual ~Winsock2Mock() override = default;
     MOCK_METHOD(int, WSAGetLastError, (), (override));
@@ -457,7 +457,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, successful_connect) {
         .WillOnce(Return(1));
     // WSAGetLastError
     Winsock2Mock mock_winsock2Obj;
-    mocking::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
+    umock::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError())
         .WillOnce(Return(WSAEWOULDBLOCK));
 
@@ -482,7 +482,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, wrong_connect_retval) {
     EXPECT_CALL(mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
     // WSAGetLastError
     Winsock2Mock mock_winsock2Obj;
-    mocking::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
+    umock::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError()).Times(0);
 
     // Test the unit
@@ -506,7 +506,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, connect_error) {
     EXPECT_CALL(mock_sys_selectObj, select(_, _, _, _, _)).Times(0);
     // WSAGetLastError WSAEBADF = "File handle is not valid."
     Winsock2Mock mock_winsock2Obj;
-    mocking::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
+    umock::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError()).WillOnce(Return(WSAEBADF));
 
     // Test the unit
@@ -532,7 +532,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_times_out) {
         .WillOnce(Return(0));
     // WSAGetLastError
     Winsock2Mock mock_winsock2Obj;
-    mocking::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
+    umock::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError())
         .WillOnce(Return(WSAEWOULDBLOCK));
 
@@ -559,7 +559,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_error) {
         .WillOnce(Return(-1));
     // WSAGetLastError
     Winsock2Mock mock_winsock2Obj;
-    mocking::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
+    umock::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
     EXPECT_CALL(mock_winsock2Obj, WSAGetLastError())
         .WillOnce(Return(WSAEWOULDBLOCK));
 

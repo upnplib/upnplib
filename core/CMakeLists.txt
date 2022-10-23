@@ -31,8 +31,8 @@ set(UPNPLIB_NATIVE_SOURCE_FILES
     #${UPnPlib_SOURCE_DIR}/umock/src/unistd.cpp
     #$<$<NOT:$<PLATFORM_ID:Windows>>:${UPnPlib_SOURCE_DIR}/umock/src/ifaddrs.cpp>
     #$<$<NOT:$<PLATFORM_ID:Windows>>:${UPnPlib_SOURCE_DIR}/umock/src/net_if.cpp>
-    $<$<PLATFORM_ID:Windows>:./src/mocking/iphlpapi.cpp>
-    $<$<PLATFORM_ID:Windows>:./src/mocking/winsock2.cpp>
+    #$<$<PLATFORM_ID:Windows>:${UPnPlib_SOURCE_DIR}/umock/src/iphlpapi.cpp>
+    #$<$<PLATFORM_ID:Windows>:${UPnPlib_SOURCE_DIR}/umock/src/winsock2.cpp>
 )
 
 

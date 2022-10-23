@@ -20,8 +20,8 @@ set(UMOCK_SOURCE_FILES
     ./src/unistd.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/net_if.cpp>
-    #$<$<PLATFORM_ID:Windows>:./src/iphlpapi.cpp>
-    #$<$<PLATFORM_ID:Windows>:./src/winsock2.cpp>
+    $<$<PLATFORM_ID:Windows>:./src/iphlpapi.cpp>
+    $<$<PLATFORM_ID:Windows>:./src/winsock2.cpp>
 )
 
 add_library(umock_shared SHARED

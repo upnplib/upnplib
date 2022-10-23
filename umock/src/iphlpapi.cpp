@@ -1,9 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-23
 
-#include "upnplib/mocking/iphlpapi.inc"
+#include "umock/iphlpapi.inc"
 
-namespace upnplib::mocking {
+namespace umock {
 
 ULONG IphlpapiReal::GetAdaptersAddresses(ULONG Family, ULONG Flags,
                                          PVOID Reserved,
@@ -40,4 +40,4 @@ ULONG Iphlpapi::GetAdaptersAddresses(ULONG Family, ULONG Flags, PVOID Reserved,
 IphlpapiReal iphlpapi_realObj;
 UPNPLIB_API Iphlpapi iphlpapi_h(&iphlpapi_realObj);
 
-} // namespace upnplib::mocking
+} // namespace umock

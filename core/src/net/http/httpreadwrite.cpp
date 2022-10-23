@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-22
+// Redistribution only with this Copyright remark. Last modified: 2022-10-23
 
 #include "upnplib/httpreadwrite.hpp"
 
@@ -37,7 +37,7 @@ extern size_t g_maxContentLength;
     FD_SET(sock, &fdSet);
 
     if (connect_res < 0) {
-        if (WSAEWOULDBLOCK == upnplib::mocking::winsock2_h.WSAGetLastError()) {
+        if (WSAEWOULDBLOCK == umock::winsock2_h.WSAGetLastError()) {
             result = umock::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
                                                 &tmvTimeout);
             if (result < 0) {
