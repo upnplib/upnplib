@@ -58,7 +58,7 @@
 #include "upnplib/mocking/iphlpapi.hpp"
 #else
 #include "umock/ifaddrs.hpp"
-#include "upnplib/mocking/net_if.hpp"
+#include "umock/net_if.hpp"
 #endif
 
 /* Needed for GENA */
@@ -3355,7 +3355,7 @@ int UpnpGetIfInfo(const char* IfName) {
         inet_ntop(AF_INET, &v4_netmask, gIF_IPV4_NETMASK,
                   sizeof(gIF_IPV4_NETMASK));
     }
-    gIF_INDEX = upnplib::mocking::net_if_h.if_nametoindex(gIF_NAME);
+    gIF_INDEX = umock::net_if_h.if_nametoindex(gIF_NAME);
     if (!IN6_IS_ADDR_UNSPECIFIED(&v6_addr)) {
         if (valid_v6_addr_found) {
             inet_ntop(AF_INET6, &v6_addr, gIF_IPV6, sizeof(gIF_IPV6));

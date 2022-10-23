@@ -9,7 +9,7 @@
 #include "upnplib/upnptools.hpp" // For upnplib_native only
 #include "upnplib/gtest_tools_unix.hpp"
 #include "umock/ifaddrs.hpp"
-#include "upnplib/mocking/net_if.hpp"
+#include "umock/net_if.hpp"
 
 #include "gmock/gmock.h"
 #include "upnplib/gtest.hpp"
@@ -34,7 +34,7 @@ class IfaddrsMock : public umock::IfaddrsInterface {
     MOCK_METHOD(void, freeifaddrs, (struct ifaddrs*), (override));
 };
 
-class Net_ifMock : public mocking::Net_ifInterface {
+class Net_ifMock : public umock::Net_ifInterface {
   public:
     virtual ~Net_ifMock() override {}
     MOCK_METHOD(unsigned int, if_nametoindex, (const char* ifname), (override));
@@ -78,7 +78,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
     EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
 
     umock::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
-    mocking::Net_if net_if_injectObj(&m_mocked_net_if);
+    umock::Net_if net_if_injectObj(&m_mocked_net_if);
     EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
     EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);
@@ -119,7 +119,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     EXPECT_STREQ(ifaddr->ifa_name, "eth0");
 
     umock::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
-    mocking::Net_if net_if_injectObj(&m_mocked_net_if);
+    umock::Net_if net_if_injectObj(&m_mocked_net_if);
     EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
     EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);
@@ -178,7 +178,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_default_initialization) {
 
     // expect calls to system functions (which are mocked)
     umock::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
-    mocking::Net_if net_if_injectObj(&m_mocked_net_if);
+    umock::Net_if net_if_injectObj(&m_mocked_net_if);
     EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
     EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);

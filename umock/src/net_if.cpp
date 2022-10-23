@@ -1,9 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-23
 
-#include "upnplib/mocking/net_if.inc"
+#include "umock/net_if.inc"
 
-namespace upnplib::mocking {
+namespace umock {
 
 unsigned int Net_ifReal::if_nametoindex(const char* ifname) {
     return ::if_nametoindex(ifname);
@@ -33,4 +33,4 @@ unsigned int Net_if::if_nametoindex(const char* ifname) {
 Net_ifReal net_if_realObj;
 UPNPLIB_API Net_if net_if_h(&net_if_realObj);
 
-} // namespace upnplib::mocking
+} // namespace umock
