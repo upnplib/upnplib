@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+// Redistribution only with this Copyright remark. Last modified: 2022-10-23
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -8,7 +8,7 @@
 
 #include "upnplib/upnptools.hpp" // For upnplib_native only
 #include "upnplib/gtest_tools_unix.hpp"
-#include "upnplib/mocking/ifaddrs.hpp"
+#include "umock/ifaddrs.hpp"
 #include "upnplib/mocking/net_if.hpp"
 
 #include "gmock/gmock.h"
@@ -27,7 +27,7 @@ bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 //
-class IfaddrsMock : public mocking::IfaddrsInterface {
+class IfaddrsMock : public umock::IfaddrsInterface {
   public:
     virtual ~IfaddrsMock() override {}
     MOCK_METHOD(int, getifaddrs, (struct ifaddrs**), (override));
@@ -77,7 +77,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
     ifaddr = ifaddr4Obj.get();
     EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
 
-    mocking::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
+    umock::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
     mocking::Net_if net_if_injectObj(&m_mocked_net_if);
     EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
@@ -118,7 +118,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     ifaddr = ifaddr4Obj.get();
     EXPECT_STREQ(ifaddr->ifa_name, "eth0");
 
-    mocking::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
+    umock::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
     mocking::Net_if net_if_injectObj(&m_mocked_net_if);
     EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
@@ -177,7 +177,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_default_initialization) {
     EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
 
     // expect calls to system functions (which are mocked)
-    mocking::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
+    umock::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
     mocking::Net_if net_if_injectObj(&m_mocked_net_if);
     EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));

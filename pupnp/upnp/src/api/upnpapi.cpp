@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-25
+ * Redistribution only with this Copyright remark. Last modified: 2022-10-23
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -57,7 +57,7 @@
 #ifdef _WIN32
 #include "upnplib/mocking/iphlpapi.hpp"
 #else
-#include "upnplib/mocking/ifaddrs.hpp"
+#include "umock/ifaddrs.hpp"
 #include "upnplib/mocking/net_if.hpp"
 #endif
 
@@ -3258,7 +3258,7 @@ int UpnpGetIfInfo(const char* IfName) {
         ifname_found = 1;
     }
     /* Get system interface addresses. */
-    if (upnplib::mocking::ifaddrs_h.getifaddrs(&ifap) != 0) {
+    if (umock::ifaddrs_h.getifaddrs(&ifap) != 0) {
         UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
                    "getifaddrs failed to find list of addresses\n");
         return UPNP_E_INIT;
@@ -3340,7 +3340,7 @@ int UpnpGetIfInfo(const char* IfName) {
             break;
         }
     }
-    upnplib::mocking::ifaddrs_h.freeifaddrs(ifap);
+    umock::ifaddrs_h.freeifaddrs(ifap);
     /* Failed to find a valid interface, or valid address. */
     if (ifname_found == 0 ||
         (valid_v4_addr_found == 0 && valid_v6_addr_found == 0 &&

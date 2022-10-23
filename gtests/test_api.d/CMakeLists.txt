@@ -121,6 +121,7 @@ target_link_libraries(test_upnpapi_platform-pnsh
         upnplib_gtest_tools_shared
         pupnp_native_shared
         upnplib_native_shared
+        $<$<NOT:$<PLATFORM_ID:Windows>>:umock_shared>
 )
 add_test(NAME ctest_upnpapi_platform-pnsh COMMAND test_upnpapi_platform-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

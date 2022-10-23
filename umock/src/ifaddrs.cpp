@@ -1,9 +1,9 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-23
 
-#include "upnplib/mocking/ifaddrs.inc"
+#include "umock/ifaddrs.inc"
 
-namespace upnplib::mocking {
+namespace umock {
 
 int IfaddrsReal::getifaddrs(struct ifaddrs** ifap) {
     return ::getifaddrs(ifap);
@@ -41,4 +41,4 @@ void Ifaddrs::freeifaddrs(struct ifaddrs* ifa) {
 IfaddrsReal ifaddrs_realObj;
 UPNPLIB_API Ifaddrs ifaddrs_h(&ifaddrs_realObj);
 
-} // namespace upnplib::mocking
+} // namespace umock
