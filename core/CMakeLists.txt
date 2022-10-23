@@ -28,7 +28,7 @@ set(UPNPLIB_NATIVE_SOURCE_FILES
     #${UPnPlib_SOURCE_DIR}/umock/src/netdb.cpp
     #${UPnPlib_SOURCE_DIR}/umock/src/pthread.cpp
     #${UPnPlib_SOURCE_DIR}/umock/src/stdio.cpp
-    ./src/mocking/unistd.cpp
+    #${UPnPlib_SOURCE_DIR}/umock/src/unistd.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/mocking/net_if.cpp>
     $<$<PLATFORM_ID:Windows>:./src/mocking/iphlpapi.cpp>

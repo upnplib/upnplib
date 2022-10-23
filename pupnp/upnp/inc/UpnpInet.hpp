@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-13
+// Redistribution only with this Copyright remark. Last modified: 2022-10-23
 // Taken from authors who haven't made a note.
 
 #ifndef PUPNP_UPNPINET_HPP
@@ -17,7 +17,7 @@
  */
 
 #include "UpnpUniStd.hpp" /* for close() */
-#include "upnplib/mocking/unistd.hpp"
+#include "umock/unistd.hpp"
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -26,7 +26,7 @@
 #include <stdarg.h>
 #include <ws2tcpip.h>
 
-#define UpnpCloseSocket upnplib::mocking::unistd_h.closesocket
+#define UpnpCloseSocket umock::unistd_h.closesocket
 
 #if (_WIN32_WINNT < 0x0600)
 typedef short sa_family_t;
@@ -61,7 +61,7 @@ typedef int SOCKET;
 #define SOCKET_ERROR (-1)
 
 /*! Alias to close() to make code more WIN32 tolerant. */
-#define UpnpCloseSocket upnplib::mocking::unistd_h.close
+#define UpnpCloseSocket umock::unistd_h.close
 #endif /* _WIN32 */
 
 /* @} Sock */

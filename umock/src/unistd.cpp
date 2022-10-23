@@ -1,9 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-23
 
-#include "upnplib/mocking/unistd.inc"
+#include "umock/unistd.inc"
 
-namespace upnplib::mocking {
+namespace umock {
 
 int UnistdReal::UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd) {
     return ::UPNPLIB_CLOSE_SOCKET(fd);
@@ -33,4 +33,4 @@ int Unistd::UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd) {
 UnistdReal unistd_realObj;
 UPNPLIB_API Unistd unistd_h(&unistd_realObj);
 
-} // namespace upnplib::mocking
+} // namespace umock
