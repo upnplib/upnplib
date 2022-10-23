@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-22
+# Redistribution only with this Copyright remark. Last modified: 2022-10-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -213,6 +213,7 @@ target_link_libraries(test_upnpdebug-pnst
         pupnp_native_static
         upnplib_native_static
         upnplib_gtest_tools_static
+        $<$<PLATFORM_ID:Windows>:umock_static>
 )
 add_test(NAME ctest_upnpdebug-pnst COMMAND test_upnpdebug-pnst
 )

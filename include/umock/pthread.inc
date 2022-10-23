@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-22
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
@@ -7,7 +7,7 @@
 #include "upnplib/visibility.hpp"
 #include "pthread.h" // To find pthreads4w don't use <pthread.h>
 
-namespace upnplib::mocking {
+namespace umock {
 
 // clang-format off
 class PthreadInterface {
@@ -97,4 +97,5 @@ class UPNPLIB_API Pthread {
     PthreadInterface* m_ptr_oldObj{};
 };
 
-} // namespace upnplib::mocking
+} // namespace umock
+// vim: syntax=cpp

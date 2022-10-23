@@ -1,9 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-22
 
-#include "upnplib/mocking/pthread.inc"
+#include "umock/pthread.inc"
 
-namespace upnplib::mocking {
+namespace umock {
 
 int PthreadReal::pthread_mutex_init(pthread_mutex_t* mutex,
                                     const pthread_mutexattr_t* mutexattr) {
@@ -98,4 +98,4 @@ int Pthread::pthread_cond_destroy(pthread_cond_t* cond) {
 PthreadReal pthread_realObj;
 UPNPLIB_API Pthread pthread_h(&pthread_realObj);
 
-} // namespace upnplib::mocking
+} // namespace umock

@@ -50,7 +50,7 @@
 
 #include "posix_overwrites.hpp"
 
-#include "upnplib/mocking/pthread.hpp"
+#include "umock/pthread.hpp"
 #include "upnplib/mocking/stdio.hpp"
 #include <cstring>
 
@@ -76,7 +76,7 @@ static char* fileName;
  * risk of race, probably not a problem, and not worth fixing. */
 int UpnpInitLog(void) {
     if (!initwascalled) {
-        upnplib::mocking::pthread_h.pthread_mutex_init(&GlobalDebugMutex, NULL);
+        umock::pthread_h.pthread_mutex_init(&GlobalDebugMutex, NULL);
         initwascalled = 1;
     }
     /* If the user did not ask for logging do nothing */
@@ -141,7 +141,7 @@ void UpnpCloseLog(void) {
     /* Calling lock() assumes that someone called UpnpInitLog(), but
      * this is reasonable as it is called from UpnpInit2(). We risk a
      * crash if we do this without a lock.*/
-    upnplib::mocking::pthread_h.pthread_mutex_lock(&GlobalDebugMutex);
+    umock::pthread_h.pthread_mutex_lock(&GlobalDebugMutex);
 
     if (fp != NULL && is_stderr == 0) {
         upnplib::mocking::stdio_h.fclose(fp);
@@ -149,8 +149,8 @@ void UpnpCloseLog(void) {
     fp = NULL;
     is_stderr = 0;
     initwascalled = 0;
-    upnplib::mocking::pthread_h.pthread_mutex_unlock(&GlobalDebugMutex);
-    upnplib::mocking::pthread_h.pthread_mutex_destroy(&GlobalDebugMutex);
+    umock::pthread_h.pthread_mutex_unlock(&GlobalDebugMutex);
+    umock::pthread_h.pthread_mutex_destroy(&GlobalDebugMutex);
 }
 
 void UpnpSetLogFileNames(const char* newFileName, const char* ignored) {
@@ -272,9 +272,9 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
 
     if (!DebugAtThisLevel(DLevel, Module))
         return;
-    upnplib::mocking::pthread_h.pthread_mutex_lock(&GlobalDebugMutex);
+    umock::pthread_h.pthread_mutex_lock(&GlobalDebugMutex);
     if (fp == NULL) {
-        upnplib::mocking::pthread_h.pthread_mutex_unlock(&GlobalDebugMutex);
+        umock::pthread_h.pthread_mutex_unlock(&GlobalDebugMutex);
         return;
     }
 
@@ -285,7 +285,7 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
         upnplib::mocking::stdio_h.fflush(fp);
     }
     va_end(ArgList);
-    upnplib::mocking::pthread_h.pthread_mutex_unlock(&GlobalDebugMutex);
+    umock::pthread_h.pthread_mutex_unlock(&GlobalDebugMutex);
 }
 
 /* No locking here, the app should be careful about not calling
