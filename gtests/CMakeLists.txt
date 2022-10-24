@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-23
+# Redistribution only with this Copyright remark. Last modified: 2022-10-24
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -108,7 +108,6 @@ target_link_libraries(test_sock-pnsh
     PRIVATE
         pupnp_native_shared
         upnplib_native_shared
-        umock_shared
 )
 add_test(NAME ctest_sock-pnsh COMMAND test_sock-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -141,7 +140,6 @@ target_compile_definitions(test_strintmap-pnsh
 target_link_libraries(test_strintmap-pnsh
     PRIVATE
         pupnp_native_shared
-        umock_shared
 )
 add_test(NAME ctest_strintmap-pnsh COMMAND test_strintmap-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -213,7 +211,6 @@ target_link_libraries(test_upnpdebug-pnst
         pupnp_native_static
         upnplib_native_static
         upnplib_gtest_tools_static
-        $<$<PLATFORM_ID:Windows>:umock_static>
 )
 add_test(NAME ctest_upnpdebug-pnst COMMAND test_upnpdebug-pnst
 )
@@ -319,7 +316,6 @@ target_compile_definitions(test_simple-unsh
 target_link_libraries(test_simple-unsh
     PRIVATE
         upnplib_native_shared # prefix -unsh
-        umock_shared
 )
 add_test(NAME ctest_simple-unsh COMMAND test_simple-unsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -410,14 +406,14 @@ add_executable(test_miniserver-pnst
 #----------------------------------
 # Needed to also compile additional sources instead of using that from the
 # internal library. Otherwise the compiler complains 'multiple definition' of
-# several symbols. I don't know why, don't understand the inscrutable
-# conditional compiling directives in the source code.
+# several symbols. This is because the compiler find symbols two times, one
+# time with the included source file and one time from the library. If we use the
+# source file here, the compiler doesn't look at the library. On static compiling
+# the linker isn't used.
     ./test_miniserver.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_server.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
-#ifdef UPNP_ENABLE_IPV6
-    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp
-#endif
+    $<$<BOOL:${UPNPLIB_WITH_IPV6}>:${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp>
 )
 target_include_directories(test_miniserver-pnst
     PRIVATE
@@ -444,8 +440,8 @@ target_compile_definitions(test_miniserver-pnst
 target_link_libraries(test_miniserver-pnst
     PRIVATE
         pupnp_native_static
+        upnplib_native_static
         upnplib_gtest_tools_static
-        umock_static
 )
 add_test(NAME ctest_miniserver-pnst COMMAND test_miniserver-pnst
 )
@@ -454,18 +450,14 @@ add_executable(test_miniserver-ucst
 #----------------------------------
 # Needed to also compile additional sources instead of using that from the
 # internal library. Otherwise the compiler complains 'multiple definition' of
-# several symbols. I don't know why, don't understand the inscrutable
-# conditional compiling directives in the source code.
-# TODO: check why upnplib_native_static isn't effective and I have to add
-#       mocking sources here.
+# several symbols. This is because the compiler find symbols two times, one
+# time with the included source file and one time from the library. If we use the
+# source file here, the compiler doesn't look at the library. On static compiling
+# the linker isn't used.
     ./test_miniserver.cpp
-    ${UPnPlib_SOURCE_DIR}/umock/src/stdio.cpp
-    ${UPnPlib_SOURCE_DIR}/umock/src/string.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_server.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
-#ifdef UPNP_ENABLE_IPV6
-    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp
-#endif
+    $<$<BOOL:${UPNPLIB_WITH_IPV6}>:${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp>
 )
 target_include_directories(test_miniserver-ucst
     PRIVATE
@@ -491,8 +483,8 @@ target_compile_definitions(test_miniserver-ucst
 target_link_libraries(test_miniserver-ucst
     PRIVATE
         upnplib_compa_static
+        upnplib_native_static
         upnplib_gtest_tools_static
-        umock_static
 )
 add_test(NAME ctest_miniserver-ucst COMMAND test_miniserver-ucst
 )

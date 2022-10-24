@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-18
+# Redistribution only with this Copyright remark. Last modified: 2022-10-24
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -32,7 +32,6 @@ target_compile_definitions(test_LinkedList-pnsh
 target_link_libraries(test_LinkedList-pnsh
     PRIVATE
         pupnp_native_shared
-        umock_shared
 )
 add_test(NAME ctest_LinkedList-pnsh COMMAND test_LinkedList-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -63,7 +62,6 @@ target_compile_definitions(test_FreeList-pnsh
 target_link_libraries(test_FreeList-pnsh
     PRIVATE
         pupnp_native_shared
-        umock_shared
 )
 add_test(NAME ctest_FreeList-pnsh COMMAND test_FreeList-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -92,7 +90,6 @@ target_link_libraries(test_FreeList-ucsh
     PRIVATE
         upnplib_compa_shared
         upnplib_native_shared
-        umock_shared
 )
 add_test(NAME ctest_FreeList-ucsh COMMAND test_FreeList-ucsh
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -122,7 +119,6 @@ target_compile_definitions(test_ThreadPool-pnsh
 target_link_libraries(test_ThreadPool-pnsh
     PRIVATE
         pupnp_native_shared
-        umock_shared
 )
 add_test(NAME ctest_ThreadPool-pnsh COMMAND test_ThreadPool-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -152,7 +148,6 @@ target_compile_definitions(test_TimerThread-pnsh
 target_link_libraries(test_TimerThread-pnsh
     PRIVATE
         pupnp_native_shared
-        umock_shared
 )
 add_test(NAME ctest_TimerThread-pnsh COMMAND test_TimerThread-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

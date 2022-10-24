@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-23
+# Redistribution only with this Copyright remark. Last modified: 2022-10-24
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -50,7 +50,6 @@ target_link_libraries(test_uri-pnst
     PRIVATE
         pupnp_native_static
         upnplib_native_static
-        $<$<PLATFORM_ID:Windows>:umock_static>
 )
 add_test(NAME ctest_uri-pnst COMMAND test_uri-pnst
 )
@@ -98,7 +97,6 @@ target_link_libraries(test_uri_parse-pnst
     PRIVATE
         pupnp_native_static
         upnplib_native_static
-        $<$<PLATFORM_ID:Windows>:umock_static>
 )
 add_test(NAME ctest_uri_parse-pnst COMMAND test_uri_parse-pnst
 )

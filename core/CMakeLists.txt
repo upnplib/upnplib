@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-23
+# Redistribution only with this Copyright remark. Last modified: 2022-10-24
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -20,19 +20,6 @@ set(UPNPLIB_NATIVE_SOURCE_FILES
     ./src/api/upnptools.cpp
     ./src/net/sock.cpp
     ./src/net/http/webserver.cpp
-
-    #${UPnPlib_SOURCE_DIR}/umock/src/string.cpp
-    #${UPnPlib_SOURCE_DIR}/umock/src/stdlib.cpp
-    #${UPnPlib_SOURCE_DIR}/umock/src/sys_socket.cpp
-    #${UPnPlib_SOURCE_DIR}/umock/src/sys_select.cpp
-    #${UPnPlib_SOURCE_DIR}/umock/src/netdb.cpp
-    #${UPnPlib_SOURCE_DIR}/umock/src/pthread.cpp
-    #${UPnPlib_SOURCE_DIR}/umock/src/stdio.cpp
-    #${UPnPlib_SOURCE_DIR}/umock/src/unistd.cpp
-    #$<$<NOT:$<PLATFORM_ID:Windows>>:${UPnPlib_SOURCE_DIR}/umock/src/ifaddrs.cpp>
-    #$<$<NOT:$<PLATFORM_ID:Windows>>:${UPnPlib_SOURCE_DIR}/umock/src/net_if.cpp>
-    #$<$<PLATFORM_ID:Windows>:${UPnPlib_SOURCE_DIR}/umock/src/iphlpapi.cpp>
-    #$<$<PLATFORM_ID:Windows>:${UPnPlib_SOURCE_DIR}/umock/src/winsock2.cpp>
 )
 
 
@@ -97,6 +84,8 @@ if(NOT WIN32)
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_compa_static
+        # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
+        # For propagation only INTERFACE is needed.
         INTERFACE
             # If we do not have compatible code we use the old native pupnp code.
             pupnp_native_static
@@ -124,8 +113,8 @@ if(NOT WIN32)
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_native_shared
-        PRIVATE
-            $<$<PLATFORM_ID:Darwin>:umock_shared>
+        PUBLIC
+            umock_shared
         INTERFACE
             ixml_shared
             # On Linux we cannot link with the static pthreads library because then
@@ -149,7 +138,7 @@ if(NOT WIN32)
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_native_static
-        # Static always link needed object files, no matter to use PRIVATE or PUBLIC.
+        # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         INTERFACE
             ixml_static
@@ -178,8 +167,6 @@ if(NOT WIN32)
     target_link_libraries(upnplibInfo_shared
         PRIVATE
             upnplib_compa_shared
-            umock_shared
-            ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
     # Info executable linked with the pupnp static library
@@ -202,7 +189,6 @@ if(NOT WIN32)
     target_link_libraries(upnplibInfo_static
         PRIVATE
             pupnp_native_static
-            umock_static
             # On Linux we cannot link with the static pthreads library
             # because then we have also link with a static libc that's not
             # available by default.
@@ -256,7 +242,7 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_compa_static
-        # Static always link needed object files, no matter to use PRIVATE or PUBLIC.
+        # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         INTERFACE
             # If we do not have compatible code we use the old native pupnp code.
@@ -283,9 +269,8 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_native_shared
-        PRIVATE
-            umock_shared
         PUBLIC
+            umock_shared
             # In addition to pthreads we need some more system libraries here
             ws2_32   # winsock to support sockets
             iphlpapi # ip helper interface to get network management tools
@@ -307,9 +292,10 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_native_static
-        # Static always link needed object files, no matter to use PRIVATE or PUBLIC.
+        # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         INTERFACE
+            umock_static
             ws2_32   # winsock to support sockets
             iphlpapi # ip helper interface to get network management tools
             # On MS Windows we link with the static pthreads4w library to
@@ -363,7 +349,6 @@ else() # WIN32
     target_link_libraries(upnplibInfo_static
         PRIVATE
             pupnp_native_static
-            umock_static
     )
 
 endif() # WIN32

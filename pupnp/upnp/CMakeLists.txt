@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-20
+# Redistribution only with this Copyright remark. Last modified: 2022-10-24
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -202,10 +202,8 @@ if(NOT WIN32)
             UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(pupnp_native_shared
-        PRIVATE
-            upnplib_native_shared # only needed for mocking classes
-            umock_shared
         PUBLIC
+            umock_shared
             ixml_shared
         INTERFACE
             # On Linux we cannot link with the static pthreads library because then
@@ -230,8 +228,9 @@ if(NOT WIN32)
             UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(pupnp_native_static
+        # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
+        # For propagation only INTERFACE is needed.
         PRIVATE
-            upnplib_native_static # only needed for mocking classes
             umock_static
         INTERFACE
             ixml_static
@@ -276,10 +275,8 @@ else() # WIN32
     )
     # In addition to pthreads we need some more system libraries here
     target_link_libraries(pupnp_native_shared
-        PRIVATE
-            upnplib_native_shared # only needed for mocking classes
-            umock_shared
         PUBLIC
+            umock_shared
             ixml_shared
             ws2_32   # winsock to support sockets
             iphlpapi # ip helper interface to get network management tools
@@ -314,9 +311,10 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(pupnp_native_static
-        PRIVATE
-            upnplib_native_static # only needed for mocking classes
+        # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
+        # For propagation only INTERFACE is needed.
         INTERFACE
+            umock_static
             ixml_static
             ws2_32   # winsock to support sockets
             iphlpapi # ip helper interface to get network management tools
