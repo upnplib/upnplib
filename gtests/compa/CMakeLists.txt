@@ -36,27 +36,27 @@ add_test(NAME ctest_UpnpString-pnsh COMMAND test_UpnpString-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
-add_executable(test_UpnpString-ucsh
-#----------------------------------
+add_executable(test_UpnpString-csh
+#---------------------------------
         ./test_UpnpString.cpp
 )
-target_include_directories(test_UpnpString-ucsh
+target_include_directories(test_UpnpString-csh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}/include
-        ${UPNPLIB_CORE_SOURCE_DIR}/compa/inc
+        ${UPnPlib_SOURCE_DIR}/compa/inc
         ${PUPNP_UPNP_SOURCE_DIR}/inc
 )
-target_compile_definitions(test_UpnpString-ucsh
+target_compile_definitions(test_UpnpString-csh
     PRIVATE
         UPNPLIB_SHARED
 )
-target_link_libraries(test_UpnpString-ucsh
+target_link_libraries(test_UpnpString-csh
     PRIVATE
-        upnplib_compa_shared
+        compa_shared
         upnplib_native_shared
 )
-add_test(NAME ctest_UpnpString-ucsh COMMAND test_UpnpString-ucsh
+add_test(NAME ctest_UpnpString-csh COMMAND test_UpnpString-csh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -93,11 +93,11 @@ add_test(NAME ctest_FreeList_compa-pnsh COMMAND test_FreeList_compa-pnsh
 )
 
 if(FALSE) # TODO: There is already another test for FreeList
-add_executable(test_FreeList_compa-ucsh
-#--------------------------------------
+add_executable(test_FreeList_compa-csh
+#-------------------------------------
     ./test_threadutil.d/test_FreeList.cpp
 )
-target_include_directories(test_FreeList_compa-ucsh
+target_include_directories(test_FreeList_compa-csh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
@@ -107,17 +107,17 @@ target_include_directories(test_FreeList_compa-ucsh
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_FreeList_compa-ucsh
+target_compile_definitions(test_FreeList_compa-csh
     PRIVATE
         UPNPLIB_SHARED
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_FreeList_compa-ucsh
+target_link_libraries(test_FreeList_compa-csh
     PRIVATE
-        upnplib_compa_shared
+        compa_shared
         upnplib_native_static
 )
-add_test(NAME ctest_FreeList_compa-ucsh COMMAND test_FreeList_compa-ucsh
+add_test(NAME ctest_FreeList_compa-csh COMMAND test_FreeList_compa-csh
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 endif()

@@ -237,13 +237,13 @@ add_test(NAME ctest_webserver-pnst COMMAND test_webserver-pnst
 )
 
 if(FALSE) # TODO: make this test running
-add_executable(test_webserver-ucst
-#---------------------------------
+add_executable(test_webserver-cst
+#--------------------------------
     ./test_webserver.cpp
     ${UPNPLIB_CORE_SOURCE_DIR}/src/net/http/webserver.cpp
 
 )
-target_include_directories(test_webserver-ucst
+target_include_directories(test_webserver-cst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}/include
@@ -257,7 +257,7 @@ target_include_directories(test_webserver-ucst
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_webserver-ucst
+target_compile_definitions(test_webserver-cst
     PRIVATE
         UPNP_HAVE_WEBSERVER
         UPNP_HAVE_DEVICE
@@ -265,11 +265,11 @@ target_compile_definitions(test_webserver-ucst
         UPNP_HAVE_SSDP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_webserver-ucst
+target_link_libraries(test_webserver-cst
         PRIVATE
-            upnplib_compa_static
+            compa_static
             upnplib_native_static
 )
-add_test(NAME ctest_webserver-ucst COMMAND test_webserver-ucst
+add_test(NAME ctest_webserver-cst COMMAND test_webserver-cst
 )
 endif()

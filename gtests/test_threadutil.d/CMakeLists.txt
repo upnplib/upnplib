@@ -67,11 +67,11 @@ add_test(NAME ctest_FreeList-pnsh COMMAND test_FreeList-pnsh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
-add_executable(test_FreeList-ucsh
-#--------------------------------
+add_executable(test_FreeList-csh
+#-------------------------------
     ./test_FreeList.cpp
 )
-target_include_directories(test_FreeList-ucsh
+target_include_directories(test_FreeList-csh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
@@ -81,17 +81,17 @@ target_include_directories(test_FreeList-ucsh
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_FreeList-ucsh
+target_compile_definitions(test_FreeList-csh
     PRIVATE
         UPNPLIB_SHARED
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_FreeList-ucsh
+target_link_libraries(test_FreeList-csh
     PRIVATE
-        upnplib_compa_shared
+        compa_shared
         upnplib_native_shared
 )
-add_test(NAME ctest_FreeList-ucsh COMMAND test_FreeList-ucsh
+add_test(NAME ctest_FreeList-csh COMMAND test_FreeList-csh
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 

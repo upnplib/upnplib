@@ -3,7 +3,7 @@
 
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 #ifdef UPNP_HAVE_TOOLS
-#include "upnptools.hpp" // For pupnp_native and upnplib_compa
+#include "upnptools.hpp" // For pupnp_native and compa
 #endif
 #include "upnplib/upnptools.hpp" // For upnplib_native only
 

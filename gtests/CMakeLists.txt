@@ -446,8 +446,8 @@ target_link_libraries(test_miniserver-pnst
 add_test(NAME ctest_miniserver-pnst COMMAND test_miniserver-pnst
 )
 
-add_executable(test_miniserver-ucst
-#----------------------------------
+add_executable(test_miniserver-cst
+#---------------------------------
 # Needed to also compile additional sources instead of using that from the
 # internal library. Otherwise the compiler complains 'multiple definition' of
 # several symbols. This is because the compiler find symbols two times, one
@@ -459,7 +459,7 @@ add_executable(test_miniserver-ucst
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
     $<$<BOOL:${UPNPLIB_WITH_IPV6}>:${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp>
 )
-target_include_directories(test_miniserver-ucst
+target_include_directories(test_miniserver-cst
     PRIVATE
         ./include
         ${UPnPlib_SOURCE_DIR}
@@ -473,20 +473,20 @@ target_include_directories(test_miniserver-ucst
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_miniserver-ucst
+target_compile_definitions(test_miniserver-cst
     PRIVATE
         UPNP_HAVE_CLIENT
         UPNP_HAVE_WEBSERVER
         UPNP_HAVE_SSDP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_miniserver-ucst
+target_link_libraries(test_miniserver-cst
     PRIVATE
-        upnplib_compa_static
+        compa_static
         upnplib_native_static
         upnplib_gtest_tools_static
 )
-add_test(NAME ctest_miniserver-ucst COMMAND test_miniserver-ucst
+add_test(NAME ctest_miniserver-cst COMMAND test_miniserver-cst
 )
 
 
