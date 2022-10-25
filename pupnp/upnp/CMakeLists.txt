@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-24
+# Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -171,7 +171,7 @@ add_compile_definitions(
 #=================
 if(NOT WIN32)
 
-    set(PUPNP_NATIVE_INCLUDE_DIRECTORIES
+    set(PUPNP_INCLUDE_DIRECTORIES
             ${PUPNP_IXML_SOURCE_DIR}/inc
             ${UPnPlib_SOURCE_DIR}/include
             ./inc
@@ -183,25 +183,22 @@ if(NOT WIN32)
             ./inc/not_win32
     )
 
-    # Pupnp Native SHared library: postfix -pnsh
-    #-------------------------------------------
-    add_library(pupnp_native_shared SHARED
+    # Pupnp SHared library: postfix -psh
+    #-----------------------------------
+    add_library(pupnp_shared SHARED
             ${PUPNP_SOURCE_FILES}
     )
-    set_target_properties(pupnp_native_shared PROPERTIES
-            OUTPUT_NAME pupnp_native  # lib*.so will be added
-    )
-    target_include_directories(pupnp_native_shared
+    target_include_directories(pupnp_shared
         PRIVATE
-            ${PUPNP_NATIVE_INCLUDE_DIRECTORIES}
+            ${PUPNP_INCLUDE_DIRECTORIES}
     )
-    target_compile_definitions(pupnp_native_shared
+    target_compile_definitions(pupnp_shared
         PRIVATE
             UPNPLIB_SHARED
             UPNPLIB_EXPORTS
             UPNPLIB_WITH_NATIVE_PUPNP
     )
-    target_link_libraries(pupnp_native_shared
+    target_link_libraries(pupnp_shared
         PUBLIC
             umock_shared
             ixml_shared
@@ -211,23 +208,20 @@ if(NOT WIN32)
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
-    # Pupnp Native STatic library: postfix -pnst
-    #-------------------------------------------
-    add_library(pupnp_native_static STATIC
+    # Pupnp STatic library: postfix -pst
+    #-----------------------------------
+    add_library(pupnp_static STATIC
             ${PUPNP_SOURCE_FILES}
     )
-    set_target_properties(pupnp_native_static PROPERTIES
-            OUTPUT_NAME pupnp_native  # lib*.a will be added
-    )
-    target_include_directories(pupnp_native_static
+    target_include_directories(pupnp_static
         PRIVATE
-            ${PUPNP_NATIVE_INCLUDE_DIRECTORIES}
+            ${PUPNP_INCLUDE_DIRECTORIES}
     )
-    target_compile_definitions(pupnp_native_static
+    target_compile_definitions(pupnp_static
         PRIVATE
             UPNPLIB_WITH_NATIVE_PUPNP
     )
-    target_link_libraries(pupnp_native_static
+    target_link_libraries(pupnp_static
         # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         PRIVATE
@@ -246,12 +240,12 @@ else() # WIN32
     # Pthreads are not supported by MS Windows. So we have installed the
     # third party library pthreads4w.
 
-    # WIN32 Pupnp Native SHared library: -pnsh
-    #-----------------------------------------
-    add_library(pupnp_native_shared SHARED
+    # WIN32 Pupnp SHared library: -psh
+    #---------------------------------
+    add_library(pupnp_shared SHARED
             ${PUPNP_SOURCE_FILES}
     )
-    target_include_directories(pupnp_native_shared
+    target_include_directories(pupnp_shared
         PRIVATE
             ${PUPNP_IXML_SOURCE_DIR}/inc
             ${UPnPlib_SOURCE_DIR}/include
@@ -265,7 +259,7 @@ else() # WIN32
             # doesn't find "pthread.h" and falls back to look at <pthread.h>.
             ${pthreads4w_SOURCE_DIR}
     )
-    target_compile_definitions(pupnp_native_shared
+    target_compile_definitions(pupnp_shared
         PRIVATE
             UPNPLIB_SHARED
             UPNPLIB_EXPORTS
@@ -274,7 +268,7 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     # In addition to pthreads we need some more system libraries here
-    target_link_libraries(pupnp_native_shared
+    target_link_libraries(pupnp_shared
         PUBLIC
             umock_shared
             ixml_shared
@@ -285,12 +279,12 @@ else() # WIN32
             ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
-    # WIN32 Pupnp Native STatic library: postfix -pnst
-    #-------------------------------------------------
-    add_library(pupnp_native_static STATIC
+    # WIN32 Pupnp STatic library: postfix -pst
+    #-----------------------------------------
+    add_library(pupnp_static STATIC
             ${PUPNP_SOURCE_FILES}
     )
-    target_include_directories(pupnp_native_static
+    target_include_directories(pupnp_static
         PRIVATE
             ${PUPNP_IXML_SOURCE_DIR}/inc
             ${UPnPlib_SOURCE_DIR}/include
@@ -304,13 +298,13 @@ else() # WIN32
             # doesn't find "pthread.h" and falls back to look at <pthread.h>.
             ${pthreads4w_SOURCE_DIR}
     )
-    target_compile_definitions(pupnp_native_static
+    target_compile_definitions(pupnp_static
         PRIVATE
             UPNPLIB_WITH_NATIVE_PUPNP
             $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
-    target_link_libraries(pupnp_native_static
+    target_link_libraries(pupnp_static
         # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         INTERFACE

@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-24
+# Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -87,10 +87,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "")
 
 # sock
 #=====
-add_executable(test_sock-pnsh
+add_executable(test_sock-psh
         ./test_sock.cpp
 )
-target_include_directories(test_sock-pnsh
+target_include_directories(test_sock-psh
     PRIVATE
         ./include
         ${UPnPlib_SOURCE_DIR}/include
@@ -98,28 +98,28 @@ target_include_directories(test_sock-pnsh
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
 )
-target_compile_definitions(test_sock-pnsh
+target_compile_definitions(test_sock-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_sock-pnsh
+target_link_libraries(test_sock-psh
     PRIVATE
-        pupnp_native_shared
+        pupnp_shared
         upnplib_native_shared
 )
-add_test(NAME ctest_sock-pnsh COMMAND test_sock-pnsh
+add_test(NAME ctest_sock-psh COMMAND test_sock-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 
 # strintmap
 #==========
-add_executable(test_strintmap-pnsh
+add_executable(test_strintmap-psh
         ./test_strintmap.cpp
 )
-target_include_directories(test_strintmap-pnsh
+target_include_directories(test_strintmap-psh
     PRIVATE
         ${UPnPlib_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
@@ -131,17 +131,17 @@ target_include_directories(test_strintmap-pnsh
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_strintmap-pnsh
+target_compile_definitions(test_strintmap-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_strintmap-pnsh
+target_link_libraries(test_strintmap-psh
     PRIVATE
-        pupnp_native_shared
+        pupnp_shared
 )
-add_test(NAME ctest_strintmap-pnsh COMMAND test_strintmap-pnsh
+add_test(NAME ctest_strintmap-psh COMMAND test_strintmap-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -186,10 +186,10 @@ add_test(NAME ctest_membuffer COMMAND test_membuffer
 # Because we want to include the source file into the test to also test static
 # functions, we cannot use shared libraries due to symbol import/export
 # conflicts. We must use static libraries.
-add_executable(test_upnpdebug-pnst
+add_executable(test_upnpdebug-pst
         ./test_upnpdebug.cpp
 )
-target_include_directories(test_upnpdebug-pnst
+target_include_directories(test_upnpdebug-pst
     PRIVATE
         ./include
         ${UPnPlib_SOURCE_DIR}
@@ -201,18 +201,18 @@ target_include_directories(test_upnpdebug-pnst
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_upnpdebug-pnst
+target_compile_definitions(test_upnpdebug-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_upnpdebug-pnst
+target_link_libraries(test_upnpdebug-pst
     PRIVATE
-        pupnp_native_static
+        pupnp_static
         upnplib_native_static
         upnplib_gtest_tools_static
 )
-add_test(NAME ctest_upnpdebug-pnst COMMAND test_upnpdebug-pnst
+add_test(NAME ctest_upnpdebug-pst COMMAND test_upnpdebug-pst
 )
 
 # upnplib_gtest_tools
@@ -264,28 +264,28 @@ add_test(NAME ctest_upnplib_gtest_tools_platform COMMAND test_upnplib_gtest_tool
 # upnptools
 #==========
 if(UPNPLIB_WITH_TOOLS)
-add_executable(test_upnptools-pnsh
-#---------------------------------
+add_executable(test_upnptools-psh
+#--------------------------------
         ./test_upnptools.cpp
 )
-target_include_directories(test_upnptools-pnsh
+target_include_directories(test_upnptools-psh
     PRIVATE
         ${UPnPlib_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
 )
-target_compile_definitions(test_upnptools-pnsh
+target_compile_definitions(test_upnptools-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
 )
-target_link_libraries(test_upnptools-pnsh
+target_link_libraries(test_upnptools-psh
     PRIVATE
-        # pupnp native shared: prefix -pnsh
-        pupnp_native_shared
+        # pupnp native shared: prefix -psh
+        pupnp_shared
         upnplib_native_shared
 )
-add_test(NAME ctest_upnptools-pnsh COMMAND test_upnptools-pnsh
+add_test(NAME ctest_upnptools-psh COMMAND test_upnptools-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 endif()
@@ -402,8 +402,8 @@ set(MINISERVER_SOURCE_FILES
 )
 endif()
 
-add_executable(test_miniserver-pnst
-#----------------------------------
+add_executable(test_miniserver-pst
+#---------------------------------
 # Needed to also compile additional sources instead of using that from the
 # internal library. Otherwise the compiler complains 'multiple definition' of
 # several symbols. This is because the compiler find symbols two times, one
@@ -415,7 +415,7 @@ add_executable(test_miniserver-pnst
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
     $<$<BOOL:${UPNPLIB_WITH_IPV6}>:${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp>
 )
-target_include_directories(test_miniserver-pnst
+target_include_directories(test_miniserver-pst
     PRIVATE
         ./include
         ${UPnPlib_SOURCE_DIR}
@@ -429,7 +429,7 @@ target_include_directories(test_miniserver-pnst
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_miniserver-pnst
+target_compile_definitions(test_miniserver-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
         UPNP_HAVE_CLIENT
@@ -437,13 +437,13 @@ target_compile_definitions(test_miniserver-pnst
         UPNP_HAVE_SSDP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_miniserver-pnst
+target_link_libraries(test_miniserver-pst
     PRIVATE
-        pupnp_native_static
+        pupnp_static
         upnplib_native_static
         upnplib_gtest_tools_static
 )
-add_test(NAME ctest_miniserver-pnst COMMAND test_miniserver-pnst
+add_test(NAME ctest_miniserver-pst COMMAND test_miniserver-pst
 )
 
 add_executable(test_miniserver-cst

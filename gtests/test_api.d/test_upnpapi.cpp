@@ -1,9 +1,9 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-16
+// Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 #ifdef UPNP_HAVE_TOOLS
-#include "upnptools.hpp" // For pupnp_native and compa
+#include "upnptools.hpp" // For pupnp and compa
 #endif
 #include "upnplib/upnptools.hpp" // For upnplib_native only
 

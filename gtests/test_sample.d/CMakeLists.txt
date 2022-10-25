@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-09-27
+# Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -88,11 +88,11 @@ endif()
 
 # test tv_device build with pupnp native shared library
 #------------------------------------------------------
-add_executable(test_tv_device-pnsh
+add_executable(test_tv_device-psh
     ${UPNPLIB_SAMPLE_SOURCE_DIR}/common/sample_util.cpp
     ./test_tv_device.cpp
 )
-target_include_directories(test_tv_device-pnsh
+target_include_directories(test_tv_device-psh
     PRIVATE
         ${UPnPlib_SOURCE_DIR}
         ${UPnPlib_SOURCE_DIR}/include
@@ -103,17 +103,17 @@ target_include_directories(test_tv_device-pnsh
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions (test_tv_device-pnsh
+target_compile_definitions (test_tv_device-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_tv_device-pnsh
+target_link_libraries(test_tv_device-psh
     PRIVATE
-        pupnp_native_shared
+        pupnp_shared
         upnplib_native_shared
 )
-add_test(NAME ctest_tv_device-pnsh COMMAND test_tv_device-pnsh
+add_test(NAME ctest_tv_device-psh COMMAND test_tv_device-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )

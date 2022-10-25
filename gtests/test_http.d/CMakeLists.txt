@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-24
+# Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -45,10 +45,10 @@ add_executable(test_httpreadwrite
 )
 endif()
 
-add_executable(test_httpreadwrite-pnst
+add_executable(test_httpreadwrite-pst
         ./test_httpreadwrite.cpp
 )
-target_include_directories(test_httpreadwrite-pnst
+target_include_directories(test_httpreadwrite-pst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}
@@ -62,17 +62,17 @@ target_include_directories(test_httpreadwrite-pnst
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_httpreadwrite-pnst
+target_compile_definitions(test_httpreadwrite-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_httpreadwrite-pnst
+target_link_libraries(test_httpreadwrite-pst
     PRIVATE
-        pupnp_native_static
+        pupnp_static
         upnplib_native_static
 )
-add_test(NAME ctest_httpreadwrite-pnst COMMAND test_httpreadwrite-pnst
+add_test(NAME ctest_httpreadwrite-pst COMMAND test_httpreadwrite-pst
 )
 
 
@@ -114,10 +114,10 @@ add_executable(test_netconnect
 )
 endif()
 
-add_executable(test_netconnect-pnst
+add_executable(test_netconnect-pst
         ./test_netconnect.cpp
 )
-target_include_directories(test_netconnect-pnst
+target_include_directories(test_netconnect-pst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}
@@ -131,16 +131,16 @@ target_include_directories(test_netconnect-pnst
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_netconnect-pnst
+target_compile_definitions(test_netconnect-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_netconnect-pnst
+target_link_libraries(test_netconnect-pst
     PRIVATE
-        pupnp_native_static
+        pupnp_static
 )
-add_test(NAME ctest_netconnect-pnst COMMAND test_netconnect-pnst
+add_test(NAME ctest_netconnect-pst COMMAND test_netconnect-pst
 )
 
 
@@ -152,7 +152,7 @@ add_test(NAME ctest_netconnect-pnst COMMAND test_netconnect-pnst
 if(FALSE)
 # Direct linking with source files currently not used but having available for
 # reference. We link against the internal upnplib libraries (see below).
-add_executable(test_httpparser-pnst
+add_executable(test_httpparser-pst
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
     ./tools/mockObj.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
@@ -167,10 +167,10 @@ add_executable(test_httpparser-pnst
 )
 endif()
 
-add_executable(test_httpparser-pnst
+add_executable(test_httpparser-pst
     ./test_httpparser.cpp
 )
-target_include_directories(test_httpparser-pnst
+target_include_directories(test_httpparser-pst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}
@@ -184,16 +184,16 @@ target_include_directories(test_httpparser-pnst
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_httpparser-pnst
+target_compile_definitions(test_httpparser-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_httpparser-pnst
+target_link_libraries(test_httpparser-pst
         PRIVATE
-            pupnp_native_static
+            pupnp_static
 )
-add_test(NAME ctest_httpparser-pnst COMMAND test_httpparser-pnst
+add_test(NAME ctest_httpparser-pst COMMAND test_httpparser-pst
 )
 
 
@@ -202,11 +202,11 @@ add_test(NAME ctest_httpparser-pnst COMMAND test_httpparser-pnst
 # Because we want to include the source file into the test to also test static
 # functions, we cannot use shared libraries due to symbol import/export
 # conflicts. We must use static libraries.
-add_executable(test_webserver-pnst
-#---------------------------------
+add_executable(test_webserver-pst
+#--------------------------------
     ./test_webserver.cpp
 )
-target_include_directories(test_webserver-pnst
+target_include_directories(test_webserver-pst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}/include
@@ -220,7 +220,7 @@ target_include_directories(test_webserver-pnst
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_webserver-pnst
+target_compile_definitions(test_webserver-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
         UPNP_HAVE_WEBSERVER
@@ -229,11 +229,11 @@ target_compile_definitions(test_webserver-pnst
         UPNP_HAVE_SSDP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_webserver-pnst
+target_link_libraries(test_webserver-pst
         PRIVATE
-            pupnp_native_static
+            pupnp_static
 )
-add_test(NAME ctest_webserver-pnst COMMAND test_webserver-pnst
+add_test(NAME ctest_webserver-pst COMMAND test_webserver-pst
 )
 
 if(FALSE) # TODO: make this test running

@@ -46,7 +46,7 @@ if(NOT WIN32)
             $<$<PLATFORM_ID:Darwin>:umock_shared>
         INTERFACE
             # If we do not have compatible code we use the old native pupnp code.
-            pupnp_native_shared
+            pupnp_shared
     )
 
     # pupnp Compatible STatic library: postfix -cst
@@ -66,7 +66,7 @@ if(NOT WIN32)
         # For propagation only INTERFACE is needed.
         INTERFACE
             # If we do not have compatible code we use the old native pupnp code.
-            pupnp_native_static
+            pupnp_static
     )
 
 else() # WIN32
@@ -100,7 +100,7 @@ else() # WIN32
             umock_shared
         INTERFACE
             # If we do not have compatible code we use the old native pupnp code.
-            pupnp_native_shared
+            pupnp_shared
     )
 
     # WIN32 pupnp Compatible STatic library: postfix -cst
@@ -120,7 +120,7 @@ else() # WIN32
         # For propagation only INTERFACE is needed.
         INTERFACE
             # If we do not have compatible code we use the old native pupnp code.
-            pupnp_native_static
+            pupnp_static
     )
 
 endif() # WIN32

@@ -158,10 +158,10 @@ jobs:
         name: Verify if NO Debug info
         # These two libraries are always built
         run: |
-          objdump -g ./build/lib/libpupnp_native.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          objdump -g ./build/lib/libpupnp_shared.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
           objdump -g ./build/lib/libcompa_shared.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
           objdump -g ./build/lib/libupnplib_native.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
-          ls ./build/lib/libpupnp_native.a
+          ls ./build/lib/libpupnp_static.a
           ls ./build/lib/libcompa_static.a
           ls ./build/lib/libupnplib_native.a
 
@@ -169,10 +169,10 @@ jobs:
         name: Verify if Debug info
         # These two libraries are always built
         run: |
-          objdump -g ./build/lib/libpupnp_native.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          objdump -g ./build/lib/libpupnp_shared.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
           objdump -g ./build/lib/libcompa_shared.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
           objdump -g ./build/lib/libupnplib_native.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
-          ls ./build/lib/libpupnp_native.a
+          ls ./build/lib/libpupnp_static.a
           ls ./build/lib/libcompa_static.a
           ls ./build/lib/libupnplib_native.a
 
@@ -245,10 +245,10 @@ jobs:
         run: |
           # objdump does not work (this way?) on macOS
           #objdump [-a] -g upnp/build/lib/libupnplib.dylib | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
-          ls ./build/lib/libpupnp_native.dylib
+          ls ./build/lib/libpupnp_shared.dylib
           ls ./build/lib/libcompa_shared.dylib
           ls ./build/lib/libupnplib_native.dylib
-          ls ./build/lib/libpupnp_native.a
+          ls ./build/lib/libpupnp_static.a
           ls ./build/lib/libcompa_static.a
           ls ./build/lib/libupnplib_native.a
 
@@ -258,10 +258,10 @@ jobs:
         run: |
           # objdump does not work (this way?) on macOS
           #objdump [-a] -g upnp/build/lib/libupnplib.dylib | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
-          ls ./build/lib/libpupnp_native.dylib
+          ls ./build/lib/libpupnp_shared.dylib
           ls ./build/lib/libcompa_shared.dylib
           ls ./build/lib/libupnplib_native.dylib
-          ls ./build/lib/libpupnp_native.a
+          ls ./build/lib/libpupnp_static.a
           ls ./build/lib/libcompa_static.a
           ls ./build/lib/libupnplib_native.a
 

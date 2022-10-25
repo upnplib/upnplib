@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-24
+# Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -57,11 +57,11 @@ set(UPNP_UPNPAPI_SOURCE_FILES
 )
 endif()
 
-add_executable(test_upnpapi-pnst
-#-------------------------------
+add_executable(test_upnpapi-pst
+#------------------------------
         ./test_upnpapi.cpp
 )
-target_include_directories(test_upnpapi-pnst
+target_include_directories(test_upnpapi-pst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}
@@ -75,7 +75,7 @@ target_include_directories(test_upnpapi-pnst
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_upnpapi-pnst
+target_compile_definitions(test_upnpapi-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
@@ -83,20 +83,20 @@ target_compile_definitions(test_upnpapi-pnst
         UPNP_HAVE_CLIENT
         UPNP_HAVE_OPTSSDP
 )
-target_link_libraries(test_upnpapi-pnst
+target_link_libraries(test_upnpapi-pst
     PRIVATE
-        pupnp_native_static
+        pupnp_static
         upnplib_native_static
 )
-add_test(NAME ctest_upnpapi-pnst COMMAND test_upnpapi-pnst
+add_test(NAME ctest_upnpapi-pst COMMAND test_upnpapi-pst
 )
 
-add_executable(test_upnpapi_platform-pnsh
-#----------------------------------------
+add_executable(test_upnpapi_platform-psh
+#---------------------------------------
         $<$<PLATFORM_ID:Windows>:./test_upnpapi_win32.cpp>
         $<$<NOT:$<PLATFORM_ID:Windows>>:./test_upnpapi_unix.cpp>
 )
-target_include_directories(test_upnpapi_platform-pnsh
+target_include_directories(test_upnpapi_platform-psh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}
@@ -110,46 +110,46 @@ target_include_directories(test_upnpapi_platform-pnsh
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_upnpapi_platform-pnsh
+target_compile_definitions(test_upnpapi_platform-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_upnpapi_platform-pnsh
+target_link_libraries(test_upnpapi_platform-psh
     PRIVATE
         upnplib_gtest_tools_shared
-        pupnp_native_shared
+        pupnp_shared
         upnplib_native_shared
 )
-add_test(NAME ctest_upnpapi_platform-pnsh COMMAND test_upnpapi_platform-pnsh
+add_test(NAME ctest_upnpapi_platform-psh COMMAND test_upnpapi_platform-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 
 # UpnpFileInfo
 #=============
-add_executable(test_UpnpFileInfo-pnsh
-#----------------------------------------
+add_executable(test_UpnpFileInfo-psh
+#-----------------------------------
     ./test_UpnpFileInfo.cpp
 )
-target_include_directories(test_UpnpFileInfo-pnsh
+target_include_directories(test_UpnpFileInfo-psh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
 )
-target_compile_definitions(test_UpnpFileInfo-pnsh
+target_compile_definitions(test_UpnpFileInfo-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
 )
-target_link_libraries(test_UpnpFileInfo-pnsh
+target_link_libraries(test_UpnpFileInfo-psh
     PRIVATE
-        pupnp_native_shared
+        pupnp_shared
         upnplib_native_shared
 )
-add_test(NAME ctest_UpnpFileInfo-pnsh COMMAND test_UpnpFileInfo-pnsh
+add_test(NAME ctest_UpnpFileInfo-psh COMMAND test_UpnpFileInfo-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )

@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-24
+# Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -11,10 +11,10 @@ project(GTESTS_THREADUTIL VERSION 0003
 
 # LinkedList
 #===========
-add_executable(test_LinkedList-pnsh
+add_executable(test_LinkedList-psh
         ./test_LinkedList.cpp
 )
-target_include_directories(test_LinkedList-pnsh
+target_include_directories(test_LinkedList-psh
     PRIVATE
         ${UPnPlib_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
@@ -23,27 +23,27 @@ target_include_directories(test_LinkedList-pnsh
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_LinkedList-pnsh
+target_compile_definitions(test_LinkedList-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_LinkedList-pnsh
+target_link_libraries(test_LinkedList-psh
     PRIVATE
-        pupnp_native_shared
+        pupnp_shared
 )
-add_test(NAME ctest_LinkedList-pnsh COMMAND test_LinkedList-pnsh
+add_test(NAME ctest_LinkedList-psh COMMAND test_LinkedList-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 # FreeList
 #=========
-add_executable(test_FreeList-pnsh
-#--------------------------------
+add_executable(test_FreeList-psh
+#-------------------------------
         ./test_FreeList.cpp
 )
-target_include_directories(test_FreeList-pnsh
+target_include_directories(test_FreeList-psh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
@@ -53,17 +53,17 @@ target_include_directories(test_FreeList-pnsh
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_FreeList-pnsh
+target_compile_definitions(test_FreeList-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_FreeList-pnsh
+target_link_libraries(test_FreeList-psh
     PRIVATE
-        pupnp_native_shared
+        pupnp_shared
 )
-add_test(NAME ctest_FreeList-pnsh COMMAND test_FreeList-pnsh
+add_test(NAME ctest_FreeList-psh COMMAND test_FreeList-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -97,10 +97,10 @@ add_test(NAME ctest_FreeList-csh COMMAND test_FreeList-csh
 
 # ThreadPool
 #===========
-add_executable(test_ThreadPool-pnsh
+add_executable(test_ThreadPool-psh
         ./test_ThreadPool.cpp
 )
-target_include_directories(test_ThreadPool-pnsh
+target_include_directories(test_ThreadPool-psh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}/include
@@ -110,26 +110,26 @@ target_include_directories(test_ThreadPool-pnsh
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_ThreadPool-pnsh
+target_compile_definitions(test_ThreadPool-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_ThreadPool-pnsh
+target_link_libraries(test_ThreadPool-psh
     PRIVATE
-        pupnp_native_shared
+        pupnp_shared
 )
-add_test(NAME ctest_ThreadPool-pnsh COMMAND test_ThreadPool-pnsh
+add_test(NAME ctest_ThreadPool-psh COMMAND test_ThreadPool-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 # TimerThread
 #============
-add_executable(test_TimerThread-pnsh
+add_executable(test_TimerThread-psh
         ./test_TimerThread.cpp
 )
-target_include_directories(test_TimerThread-pnsh
+target_include_directories(test_TimerThread-psh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${UPnPlib_SOURCE_DIR}/include
@@ -139,16 +139,16 @@ target_include_directories(test_TimerThread-pnsh
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions(test_TimerThread-pnsh
+target_compile_definitions(test_TimerThread-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_TimerThread-pnsh
+target_link_libraries(test_TimerThread-psh
     PRIVATE
-        pupnp_native_shared
+        pupnp_shared
 )
-add_test(NAME ctest_TimerThread-pnsh COMMAND test_TimerThread-pnsh
+add_test(NAME ctest_TimerThread-psh COMMAND test_TimerThread-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )

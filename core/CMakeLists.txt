@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-24
+# Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -123,7 +123,7 @@ if(NOT WIN32)
     )
     target_link_libraries(upnplibInfo_static
         PRIVATE
-            pupnp_native_static
+            pupnp_static
             # On Linux we cannot link with the static pthreads library
             # because then we have also link with a static libc that's not
             # available by default.
@@ -230,7 +230,7 @@ else() # WIN32
     )
     target_link_libraries(upnplibInfo_static
         PRIVATE
-            pupnp_native_static
+            pupnp_static
     )
 
 endif() # WIN32
