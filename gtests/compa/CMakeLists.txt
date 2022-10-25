@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
 project(GTESTS_COMPA VERSION 0008
-                  DESCRIPTION "Tests for pupnp native and compatible code"
+                  DESCRIPTION "Tests for pupnp and compatible code"
                   HOMEPAGE_URL "https://github.com/upnplib")
 
 
@@ -30,7 +30,7 @@ target_compile_definitions(test_UpnpString-psh
 target_link_libraries(test_UpnpString-psh
     PRIVATE
         pupnp_shared
-        upnplib_native_shared
+        upnplib_shared
 )
 add_test(NAME ctest_UpnpString-psh COMMAND test_UpnpString-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -54,7 +54,7 @@ target_compile_definitions(test_UpnpString-csh
 target_link_libraries(test_UpnpString-csh
     PRIVATE
         compa_shared
-        upnplib_native_shared
+        upnplib_shared
 )
 add_test(NAME ctest_UpnpString-csh COMMAND test_UpnpString-csh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -86,7 +86,7 @@ target_compile_definitions(test_FreeList_compa-psh
 target_link_libraries(test_FreeList_compa-psh
     PRIVATE
         pupnp_shared
-        upnplib_native_shared
+        upnplib_shared
 )
 add_test(NAME ctest_FreeList_compa-psh COMMAND test_FreeList_compa-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -115,7 +115,7 @@ target_compile_definitions(test_FreeList_compa-csh
 target_link_libraries(test_FreeList_compa-csh
     PRIVATE
         compa_shared
-        upnplib_native_static
+        upnplib_static
 )
 add_test(NAME ctest_FreeList_compa-csh COMMAND test_FreeList_compa-csh
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

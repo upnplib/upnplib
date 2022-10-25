@@ -1,9 +1,9 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-29
+// Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
-// This tests only upnplib native code without using pupnp native code or
-// upnplib compatible code. The only used 'upnplib_native' library does not
-// provide it. So these tests belong to namespace upnplib.
+// This tests only upnplib code without using pupnp code or compa code. The only
+// used 'upnplib' library does not provide it. So these tests belong to
+// namespace upnplib.
 //
 
 #include "upnplib/global.hpp"
@@ -78,11 +78,11 @@ TEST(simpleTestSuite, simple_winsock_test) {
 }
 #endif
 
-TEST(simpleTestSuite, version_of_upnplib_native_library) {
-    EXPECT_STREQ(library_version, "upnplib_native 1.14.0");
+TEST(simpleTestSuite, version_of_upnplib_library) {
+    EXPECT_STREQ(library_version, "upnplib 1.14.0");
 }
 
-TEST(simpleTestSuite, simple_upnplib_native_test) {
+TEST(simpleTestSuite, simple_upnplib_test) {
     EXPECT_EQ(errStr(0), "UPNP_E_SUCCESS(0)");
 }
 

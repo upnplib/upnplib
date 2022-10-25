@@ -70,7 +70,7 @@ target_compile_definitions(test_httpreadwrite-pst
 target_link_libraries(test_httpreadwrite-pst
     PRIVATE
         pupnp_static
-        upnplib_native_static
+        upnplib_static
 )
 add_test(NAME ctest_httpreadwrite-pst COMMAND test_httpreadwrite-pst
 )
@@ -267,7 +267,7 @@ target_compile_definitions(test_webserver-cst
 target_link_libraries(test_webserver-cst
         PRIVATE
             compa_static
-            upnplib_native_static
+            upnplib_static
 )
 add_test(NAME ctest_webserver-cst COMMAND test_webserver-cst
 )

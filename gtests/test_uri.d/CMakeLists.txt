@@ -49,7 +49,7 @@ target_compile_definitions(test_uri-pst
 target_link_libraries(test_uri-pst
     PRIVATE
         pupnp_static
-        upnplib_native_static
+        upnplib_static
 )
 add_test(NAME ctest_uri-pst COMMAND test_uri-pst
 )
@@ -96,7 +96,7 @@ target_compile_definitions(test_uri_parse-pst
 target_link_libraries(test_uri_parse-pst
     PRIVATE
         pupnp_static
-        upnplib_native_static
+        upnplib_static
 )
 add_test(NAME ctest_uri_parse-pst COMMAND test_uri_parse-pst
 )

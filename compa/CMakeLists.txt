@@ -45,7 +45,7 @@ if(NOT WIN32)
         PRIVATE
             $<$<PLATFORM_ID:Darwin>:umock_shared>
         INTERFACE
-            # If we do not have compatible code we use the old native pupnp code.
+            # If we do not have compatible code we use the old pupnp code.
             pupnp_shared
     )
 
@@ -65,7 +65,7 @@ if(NOT WIN32)
         # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         INTERFACE
-            # If we do not have compatible code we use the old native pupnp code.
+            # If we do not have compatible code we use the old pupnp code.
             pupnp_static
     )
 
@@ -99,7 +99,7 @@ else() # WIN32
         PRIVATE
             umock_shared
         INTERFACE
-            # If we do not have compatible code we use the old native pupnp code.
+            # If we do not have compatible code we use the old pupnp code.
             pupnp_shared
     )
 
@@ -119,7 +119,7 @@ else() # WIN32
         # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         INTERFACE
-            # If we do not have compatible code we use the old native pupnp code.
+            # If we do not have compatible code we use the old pupnp code.
             pupnp_static
     )
 

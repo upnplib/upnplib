@@ -86,8 +86,8 @@ set(UPNPLIB_TV_DEVICE_SOURCE_FILES
 endif()
 
 
-# test tv_device build with pupnp native shared library
-#------------------------------------------------------
+# test tv_device build with pupnp shared library
+#-----------------------------------------------
 add_executable(test_tv_device-psh
     ${UPNPLIB_SAMPLE_SOURCE_DIR}/common/sample_util.cpp
     ./test_tv_device.cpp
@@ -112,7 +112,7 @@ target_compile_definitions (test_tv_device-psh
 target_link_libraries(test_tv_device-psh
     PRIVATE
         pupnp_shared
-        upnplib_native_shared
+        upnplib_shared
 )
 add_test(NAME ctest_tv_device-psh COMMAND test_tv_device-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

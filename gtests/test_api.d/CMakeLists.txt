@@ -86,7 +86,7 @@ target_compile_definitions(test_upnpapi-pst
 target_link_libraries(test_upnpapi-pst
     PRIVATE
         pupnp_static
-        upnplib_native_static
+        upnplib_static
 )
 add_test(NAME ctest_upnpapi-pst COMMAND test_upnpapi-pst
 )
@@ -120,7 +120,7 @@ target_link_libraries(test_upnpapi_platform-psh
     PRIVATE
         upnplib_gtest_tools_shared
         pupnp_shared
-        upnplib_native_shared
+        upnplib_shared
 )
 add_test(NAME ctest_upnpapi_platform-psh COMMAND test_upnpapi_platform-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -148,7 +148,7 @@ target_compile_definitions(test_UpnpFileInfo-psh
 target_link_libraries(test_UpnpFileInfo-psh
     PRIVATE
         pupnp_shared
-        upnplib_native_shared
+        upnplib_shared
 )
 add_test(NAME ctest_UpnpFileInfo-psh COMMAND test_UpnpFileInfo-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

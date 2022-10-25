@@ -9,14 +9,14 @@ project(UPNPLIB VERSION 0010
                 HOMEPAGE_URL "https://github.com/upnplib")
 
 
-set(UPNPLIB_NATIVE_SOURCE_FILES
+set(UPNPLIB_SOURCE_FILES
     ./src/global.cpp
     ./src/api/upnptools.cpp
     ./src/net/sock.cpp
     ./src/net/http/webserver.cpp
 )
 
-set(UPNPLIB_NATIVE_INCLUDE_DIRECTORIES
+set(UPNPLIB_INCLUDE_DIRECTORIES
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         # if pthreads4w isn't installed this path is empty. The linker
@@ -26,28 +26,25 @@ set(UPNPLIB_NATIVE_INCLUDE_DIRECTORIES
 
 if(NOT WIN32)
 
-    # upnplib native libraries
-    #=========================
+    # upnplib libraries
+    #==================
 
-    # Upnplib Native SHared library: postfix -unsh
-    #---------------------------------------------
-    add_library(upnplib_native_shared SHARED
-            ${UPNPLIB_NATIVE_SOURCE_FILES}
+    # Upnplib SHared library: postfix -ush
+    #-------------------------------------
+    add_library(upnplib_shared SHARED
+            ${UPNPLIB_SOURCE_FILES}
             ./src/strndup.cpp
     )
-    set_target_properties(upnplib_native_shared PROPERTIES
-            OUTPUT_NAME upnplib_native
+    target_include_directories(upnplib_shared
+            ${UPNPLIB_INCLUDE_DIRECTORIES}
     )
-    target_include_directories(upnplib_native_shared
-            ${UPNPLIB_NATIVE_INCLUDE_DIRECTORIES}
-    )
-    target_compile_definitions(upnplib_native_shared
+    target_compile_definitions(upnplib_shared
         PRIVATE
             UPNPLIB_SHARED
             UPNPLIB_EXPORTS
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
-    target_link_libraries(upnplib_native_shared
+    target_link_libraries(upnplib_shared
         PUBLIC
             umock_shared
         INTERFACE
@@ -57,22 +54,19 @@ if(NOT WIN32)
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
-    # Upnplib Native STatic library: postfix -unst
-    #---------------------------------------------
-    add_library(upnplib_native_static STATIC
-            ${UPNPLIB_NATIVE_SOURCE_FILES}
+    # Upnplib STatic library: postfix -ust
+    #-------------------------------------
+    add_library(upnplib_static STATIC
+            ${UPNPLIB_SOURCE_FILES}
     )
-    set_target_properties(upnplib_native_static PROPERTIES
-            OUTPUT_NAME upnplib_native
+    target_include_directories(upnplib_static
+            ${UPNPLIB_INCLUDE_DIRECTORIES}
     )
-    target_include_directories(upnplib_native_static
-            ${UPNPLIB_NATIVE_INCLUDE_DIRECTORIES}
-    )
-    target_compile_definitions(upnplib_native_static
+    target_compile_definitions(upnplib_static
         PRIVATE
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
-    target_link_libraries(upnplib_native_static
+    target_link_libraries(upnplib_static
         # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         INTERFACE
@@ -132,25 +126,25 @@ if(NOT WIN32)
 
 else() # WIN32
 
-    # WIN32 upnplib native libraries
-    #===============================
+    # WIN32 upnplib libraries
+    #========================
 
-    # WIN32 Upnplib Native SHared library: postfix -unsh
-    #---------------------------------------------------
-    add_library(upnplib_native_shared SHARED
-            ${UPNPLIB_NATIVE_SOURCE_FILES}
+    # WIN32 Upnplib SHared library: postfix -ush
+    #-------------------------------------------
+    add_library(upnplib_shared SHARED
+            ${UPNPLIB_SOURCE_FILES}
             ./src/strndup.cpp
     )
-    target_include_directories(upnplib_native_shared
-            ${UPNPLIB_NATIVE_INCLUDE_DIRECTORIES}
+    target_include_directories(upnplib_shared
+            ${UPNPLIB_INCLUDE_DIRECTORIES}
     )
-    target_compile_definitions(upnplib_native_shared
+    target_compile_definitions(upnplib_shared
         PRIVATE
             UPNPLIB_SHARED
             UPNPLIB_EXPORTS
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
-    target_link_libraries(upnplib_native_shared
+    target_link_libraries(upnplib_shared
         PUBLIC
             umock_shared
             # In addition to pthreads we need some more system libraries here
@@ -161,19 +155,19 @@ else() # WIN32
             ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
-    # WIN32 Upnplib Native STatic library: postfix -unst
-    #---------------------------------------------------
-    add_library(upnplib_native_static STATIC
-            ${UPNPLIB_NATIVE_SOURCE_FILES}
+    # WIN32 Upnplib STatic library: postfix -ust
+    #-------------------------------------------
+    add_library(upnplib_static STATIC
+            ${UPNPLIB_SOURCE_FILES}
     )
-    target_include_directories(upnplib_native_static
-            ${UPNPLIB_NATIVE_INCLUDE_DIRECTORIES}
+    target_include_directories(upnplib_static
+            ${UPNPLIB_INCLUDE_DIRECTORIES}
     )
-    target_compile_definitions(upnplib_native_static
+    target_compile_definitions(upnplib_static
         PRIVATE
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
-    target_link_libraries(upnplib_native_static
+    target_link_libraries(upnplib_static
         # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         INTERFACE

@@ -149,10 +149,10 @@ jobs:
           set -e
           echo -e "\n./build/gtests/test_template"
           ./build/gtests/test_template
-          echo -e "\n./build/gtests/test_simple-unsh"
-          ./build/gtests/test_simple-unsh
-          echo -e "\n./build/gtests/test_simple-unst"
-          ./build/gtests/test_simple-unst
+          echo -e "\n./build/gtests/test_simple-ush"
+          ./build/gtests/test_simple-ush
+          echo -e "\n./build/gtests/test_simple-ust"
+          ./build/gtests/test_simple-ust
 
       - if: matrix.buildtype != 'Debug'
         name: Verify if NO Debug info
@@ -160,10 +160,10 @@ jobs:
         run: |
           objdump -g ./build/lib/libpupnp_shared.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
           objdump -g ./build/lib/libcompa_shared.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
-          objdump -g ./build/lib/libupnplib_native.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          objdump -g ./build/lib/libupnplib_shared.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
           ls ./build/lib/libpupnp_static.a
           ls ./build/lib/libcompa_static.a
-          ls ./build/lib/libupnplib_native.a
+          ls ./build/lib/libupnplib_static.a
 
       - if: matrix.buildtype == 'Debug'
         name: Verify if Debug info
@@ -171,10 +171,10 @@ jobs:
         run: |
           objdump -g ./build/lib/libpupnp_shared.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
           objdump -g ./build/lib/libcompa_shared.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
-          objdump -g ./build/lib/libupnplib_native.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          objdump -g ./build/lib/libupnplib_shared.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
           ls ./build/lib/libpupnp_static.a
           ls ./build/lib/libcompa_static.a
-          ls ./build/lib/libupnplib_native.a
+          ls ./build/lib/libupnplib_static.a
 
       - name: Run upnplib info program
         # This program is always built
@@ -234,10 +234,10 @@ jobs:
           set -e
           echo -e "\n./build/gtests/test_template"
           ./build/gtests/test_template
-          echo -e "\n./build/gtests/test_simple-unsh"
-          ./build/gtests/test_simple-unsh
-          echo -e "\n./build/gtests/test_simple-unst"
-          ./build/gtests/test_simple-unst
+          echo -e "\n./build/gtests/test_simple-ush"
+          ./build/gtests/test_simple-ush
+          echo -e "\n./build/gtests/test_simple-ust"
+          ./build/gtests/test_simple-ust
 
       - if: matrix.buildtype != 'Debug'
         name: Verify if NO Debug info
@@ -247,10 +247,10 @@ jobs:
           #objdump [-a] -g upnp/build/lib/libupnplib.dylib | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
           ls ./build/lib/libpupnp_shared.dylib
           ls ./build/lib/libcompa_shared.dylib
-          ls ./build/lib/libupnplib_native.dylib
+          ls ./build/lib/libupnplib_shared.dylib
           ls ./build/lib/libpupnp_static.a
           ls ./build/lib/libcompa_static.a
-          ls ./build/lib/libupnplib_native.a
+          ls ./build/lib/libupnplib_static.a
 
       - if: matrix.buildtype == 'Debug'
         name: Verify if Debug info
@@ -260,10 +260,10 @@ jobs:
           #objdump [-a] -g upnp/build/lib/libupnplib.dylib | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
           ls ./build/lib/libpupnp_shared.dylib
           ls ./build/lib/libcompa_shared.dylib
-          ls ./build/lib/libupnplib_native.dylib
+          ls ./build/lib/libupnplib_shared.dylib
           ls ./build/lib/libpupnp_static.a
           ls ./build/lib/libcompa_static.a
-          ls ./build/lib/libupnplib_native.a
+          ls ./build/lib/libupnplib_static.a
 
       - name: Run upnplib info program
         # This program is always built
@@ -351,11 +351,11 @@ jobs:
           echo "`n./build/gtests/${{matrix.buildtype}}/test_template.exe"
           ./build/gtests/${{matrix.buildtype}}/test_template.exe
           if(-not $?) {exit 1}
-          echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-unsh.exe"
-          ./build/gtests/${{matrix.buildtype}}/test_simple-unsh.exe
+          echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-ush.exe"
+          ./build/gtests/${{matrix.buildtype}}/test_simple-ush.exe
           if(-not $?) {exit 1}
-          echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-unst.exe"
-          ./build/gtests/${{matrix.buildtype}}/test_simple-unst.exe
+          echo "`n./build/gtests/${{matrix.buildtype}}/test_simple-ust.exe"
+          ./build/gtests/${{matrix.buildtype}}/test_simple-ust.exe
           if(-not $?) {exit 1}
 
       - name: Run static test program
@@ -436,11 +436,11 @@ jobs:
           echo "`n./build/gtests/test_template.exe"
           ./build/gtests/test_template.exe
           if(-not $?) {exit 1}
-          echo "`n./build/gtests/test_simple-unsh.exe"
-          ./build/gtests/test_simple-unsh.exe
+          echo "`n./build/gtests/test_simple-ush.exe"
+          ./build/gtests/test_simple-ush.exe
           if(-not $?) {exit 1}
-          echo "`n./build/gtests/test_simple-unst.exe"
-          ./build/gtests/test_simple-unst.exe
+          echo "`n./build/gtests/test_simple-ust.exe"
+          ./build/gtests/test_simple-ust.exe
           if(-not $?) {exit 1}
 
       - name: Run static test program

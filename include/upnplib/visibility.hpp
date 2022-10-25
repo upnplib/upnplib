@@ -1,14 +1,14 @@
 #ifndef UPNPLIB_INCLUDE_VISIBILITY_HPP
 #define UPNPLIB_INCLUDE_VISIBILITY_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-20
+// Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
 // C++ visibility support
 //-----------------------
 // Reference: https://gcc.gnu.org/wiki/Visibility
 // List all exported symbols on Linux with: nm -C -D <library>.so
 // on Microsoft Windows with e.g.:
-// dumpbin.exe /EXPORTS .\build\lib\Release\upnplib_native_shared.lib
+// dumpbin.exe /EXPORTS .\build\lib\Release\upnplib_shared.lib
 
 // Generic helper definitions for shared library support
 // clang-format off

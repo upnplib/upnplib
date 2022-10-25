@@ -107,7 +107,7 @@ target_compile_definitions(test_sock-psh
 target_link_libraries(test_sock-psh
     PRIVATE
         pupnp_shared
-        upnplib_native_shared
+        upnplib_shared
 )
 add_test(NAME ctest_sock-psh COMMAND test_sock-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -209,7 +209,7 @@ target_compile_definitions(test_upnpdebug-pst
 target_link_libraries(test_upnpdebug-pst
     PRIVATE
         pupnp_static
-        upnplib_native_static
+        upnplib_static
         upnplib_gtest_tools_static
 )
 add_test(NAME ctest_upnpdebug-pst COMMAND test_upnpdebug-pst
@@ -281,9 +281,8 @@ target_compile_definitions(test_upnptools-psh
 )
 target_link_libraries(test_upnptools-psh
     PRIVATE
-        # pupnp native shared: prefix -psh
         pupnp_shared
-        upnplib_native_shared
+        upnplib_shared
 )
 add_test(NAME ctest_upnptools-psh COMMAND test_upnptools-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -302,37 +301,37 @@ set(TEST_SIMPLE_INCLUDE_DIRECTORIES
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h on MS Windows
 )
 
-add_executable(test_simple-unsh
-#------------------------------
+add_executable(test_simple-ush
+#-----------------------------
         ./test_simple.cpp
 )
-target_include_directories(test_simple-unsh
+target_include_directories(test_simple-ush
     ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
 )
-target_compile_definitions(test_simple-unsh
+target_compile_definitions(test_simple-ush
     PRIVATE
         UPNPLIB_SHARED
 )
-target_link_libraries(test_simple-unsh
+target_link_libraries(test_simple-ush
     PRIVATE
-        upnplib_native_shared # prefix -unsh
+        upnplib_shared
 )
-add_test(NAME ctest_simple-unsh COMMAND test_simple-unsh
+add_test(NAME ctest_simple-ush COMMAND test_simple-ush
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 # Check also static build for this simple test
-add_executable(test_simple-unst
+add_executable(test_simple-ust
         ./test_simple.cpp
 )
-target_include_directories(test_simple-unst
+target_include_directories(test_simple-ust
     ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
 )
-target_link_libraries(test_simple-unst
+target_link_libraries(test_simple-ust
     PRIVATE
-        upnplib_native_static # prefix -unst
+        upnplib_static
 )
-add_test(NAME ctest_simple-unst COMMAND test_simple-unst
+add_test(NAME ctest_simple-ust COMMAND test_simple-ust
 )
 
 
@@ -440,7 +439,7 @@ target_compile_definitions(test_miniserver-pst
 target_link_libraries(test_miniserver-pst
     PRIVATE
         pupnp_static
-        upnplib_native_static
+        upnplib_static
         upnplib_gtest_tools_static
 )
 add_test(NAME ctest_miniserver-pst COMMAND test_miniserver-pst
@@ -483,7 +482,7 @@ target_compile_definitions(test_miniserver-cst
 target_link_libraries(test_miniserver-cst
     PRIVATE
         compa_static
-        upnplib_native_static
+        upnplib_static
         upnplib_gtest_tools_static
 )
 add_test(NAME ctest_miniserver-cst COMMAND test_miniserver-cst
@@ -495,7 +494,7 @@ add_subdirectory(./test_uri.d)
 add_subdirectory(./test_http.d)
 add_subdirectory(./test_api.d)
 add_subdirectory(./test_threadutil.d)
-add_subdirectory(./upnplib_native)
+add_subdirectory(./upnplib)
 
 if(UPNPLIB_WITH_SAMPLES)
     add_subdirectory(./test_sample.d)

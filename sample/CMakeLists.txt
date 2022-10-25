@@ -27,7 +27,7 @@ endif()
 
 link_libraries(
         pupnp_shared
-        upnplib_native_shared
+        upnplib_shared
 )
 
 IF (UPNPLIB_DEF_SAMPLE_CLIENT)

@@ -5,7 +5,7 @@
 #ifdef UPNP_HAVE_TOOLS
 #include "upnptools.hpp" // For pupnp and compa
 #endif
-#include "upnplib/upnptools.hpp" // For upnplib_native only
+#include "upnplib/upnptools.hpp" // For upnplib only
 
 #include "gmock/gmock.h"
 #include "upnplib/gtest.hpp"

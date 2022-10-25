@@ -6,7 +6,7 @@
 #include "upnplib/src/net/miniserver.cpp"
 #endif
 
-#include "upnplib/upnptools.hpp" // For upnplib_native only
+#include "upnplib/upnptools.hpp" // For upnplib only
 #include "upnplib/port.hpp"
 #include "upnplib/sock.hpp"
 #include "upnplib/gtest.hpp"

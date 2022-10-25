@@ -89,7 +89,7 @@ target_compile_definitions(test_FreeList-csh
 target_link_libraries(test_FreeList-csh
     PRIVATE
         compa_shared
-        upnplib_native_shared
+        upnplib_shared
 )
 add_test(NAME ctest_FreeList-csh COMMAND test_FreeList-csh
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
