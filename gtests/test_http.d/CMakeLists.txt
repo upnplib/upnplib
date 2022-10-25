@@ -51,8 +51,8 @@ add_executable(test_httpreadwrite-pst
 target_include_directories(test_httpreadwrite-pst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
@@ -120,8 +120,8 @@ add_executable(test_netconnect-pst
 target_include_directories(test_netconnect-pst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
@@ -173,8 +173,8 @@ add_executable(test_httpparser-pst
 target_include_directories(test_httpparser-pst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
@@ -209,8 +209,8 @@ add_executable(test_webserver-pst
 target_include_directories(test_webserver-pst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
@@ -246,8 +246,8 @@ add_executable(test_webserver-cst
 target_include_directories(test_webserver-cst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc

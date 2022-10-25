@@ -18,7 +18,7 @@ add_executable(test_UpnpString-psh
 target_include_directories(test_UpnpString-psh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
 )
 target_compile_definitions(test_UpnpString-psh
@@ -43,8 +43,8 @@ add_executable(test_UpnpString-csh
 target_include_directories(test_UpnpString-csh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}/compa/inc
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/compa/inc
         ${PUPNP_UPNP_SOURCE_DIR}/inc
 )
 target_compile_definitions(test_UpnpString-csh
@@ -72,7 +72,7 @@ target_include_directories(test_FreeList_compa-psh
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
@@ -102,7 +102,7 @@ target_include_directories(test_FreeList_compa-csh
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h

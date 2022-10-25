@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_CMAKE_VARS_HPP
 #define UPNPLIB_CMAKE_VARS_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-07-15
+// Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
 /***************************************************************************
  * CMake configuration settings
@@ -16,7 +16,7 @@
  * Needed paths of the project
  ***************************************************************************/
 // Path to the build directory of the project
-#cmakedefine UPnPlib_BINARY_DIR "${UPnPlib_BINARY_DIR}"
+#cmakedefine UPNPLIB_PROJECT_BINARY_DIR "${UPNPLIB_PROJECT_BINARY_DIR}"
 // Path to sample source directory to access web subdirectory
 #cmakedefine UPNPLIB_SAMPLE_SOURCE_DIR "${UPNPLIB_SAMPLE_SOURCE_DIR}"
 
@@ -38,7 +38,7 @@
 UPNP_VERSION_PATCH)
 
 /***************************************************************************
- * UPnPlib configuration settings
+ * UPNPLIB_PROJECT configuration settings
  ***************************************************************************/
 /* Large file support
  * whether the system defaults to 32bit off_t but can do 64bit when requested

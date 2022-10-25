@@ -30,8 +30,8 @@ add_executable(test_uri-pst
 target_include_directories(test_uri-pst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
@@ -77,8 +77,8 @@ add_executable(test_uri_parse-pst
 target_include_directories(test_uri_parse-pst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
@@ -109,8 +109,8 @@ add_executable(test_urlparser
 )
 target_include_directories(test_urlparser
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 add_test(NAME ctest_urlparser COMMAND test_urlparser
 )
@@ -128,8 +128,8 @@ add_executable(test_url_class
 )
 target_include_directories(test_url_class
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 add_test(NAME ctest_url_class COMMAND test_url_class
 )

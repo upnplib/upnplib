@@ -42,7 +42,7 @@ add_library(upnplib_gtest_tools_shared SHARED
 target_include_directories(upnplib_gtest_tools_shared
     PRIVATE
         ./include
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 target_compile_definitions(upnplib_gtest_tools_shared
     PRIVATE
@@ -64,7 +64,7 @@ add_library(upnplib_gtest_tools_static STATIC
 target_include_directories(upnplib_gtest_tools_static
     PRIVATE
         ./include
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 target_link_libraries(upnplib_gtest_tools_static
     PUBLIC
@@ -93,7 +93,7 @@ add_executable(test_sock-psh
 target_include_directories(test_sock-psh
     PRIVATE
         ./include
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -121,7 +121,7 @@ add_executable(test_strintmap-psh
 )
 target_include_directories(test_strintmap-psh
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
@@ -153,7 +153,7 @@ add_executable(test_list
 )
 target_include_directories(test_list
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${PUPNP_UPNP_SOURCE_DIR}/inc
 )
 add_test(NAME ctest_list COMMAND test_list
@@ -167,8 +167,8 @@ add_executable(test_membuffer
 )
 target_include_directories(test_membuffer
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -192,8 +192,8 @@ add_executable(test_upnpdebug-pst
 target_include_directories(test_upnpdebug-pst
     PRIVATE
         ./include
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -224,7 +224,7 @@ add_executable(test_upnplib_gtest_tools
 target_include_directories(test_upnplib_gtest_tools
     PRIVATE
         ./include
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 target_compile_definitions(test_upnplib_gtest_tools
         PRIVATE
@@ -247,7 +247,7 @@ add_executable(test_upnplib_gtest_tools_platform
 target_include_directories(test_upnplib_gtest_tools_platform
     PRIVATE
         ./include
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 target_compile_definitions(test_upnplib_gtest_tools_platform
     PRIVATE
@@ -270,7 +270,7 @@ add_executable(test_upnptools-psh
 )
 target_include_directories(test_upnptools-psh
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
 )
@@ -295,7 +295,7 @@ endif()
 #============
 set(TEST_SIMPLE_INCLUDE_DIRECTORIES
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
@@ -418,8 +418,8 @@ add_executable(test_miniserver-pst
 target_include_directories(test_miniserver-pst
     PRIVATE
         ./include
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
@@ -462,8 +462,8 @@ add_executable(test_miniserver-cst
 target_include_directories(test_miniserver-cst
     PRIVATE
         ./include
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
@@ -509,4 +509,4 @@ endif()
 #                            $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 
 # set_tests_properties( ctest_tv_device PROPERTIES
-#     ENVIRONMENT "PATH=$ENV{PATH};${UPnPlib_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}" )
+#     ENVIRONMENT "PATH=$ENV{PATH};${UPNPLIB_PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}" )

@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-23
+# Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -26,11 +26,11 @@ set(UMOCK_SOURCE_FILES
 
 add_library(umock_shared SHARED
         ${UMOCK_SOURCE_FILES}
-        ${UPnPlib_SOURCE_DIR}/core/src/strndup.cpp
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/core/src/strndup.cpp
 )
 target_include_directories(umock_shared
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         $<$<PLATFORM_ID:Windows>:${pthreads4w_SOURCE_DIR}> # needed for pthread.h
@@ -61,7 +61,7 @@ add_library(umock_static STATIC
 )
 target_include_directories(umock_static
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         $<$<PLATFORM_ID:Windows>:${pthreads4w_SOURCE_DIR}> # needed for pthread.h
 )
 target_link_libraries(umock_static

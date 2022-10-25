@@ -173,7 +173,7 @@ if(NOT WIN32)
 
     set(PUPNP_INCLUDE_DIRECTORIES
             ${PUPNP_IXML_SOURCE_DIR}/inc
-            ${UPnPlib_SOURCE_DIR}/include
+            ${UPNPLIB_PROJECT_SOURCE_DIR}/include
             ./inc
             ./src/inc
             ./src/threadutil
@@ -248,7 +248,7 @@ else() # WIN32
     target_include_directories(pupnp_shared
         PRIVATE
             ${PUPNP_IXML_SOURCE_DIR}/inc
-            ${UPnPlib_SOURCE_DIR}/include
+            ${UPNPLIB_PROJECT_SOURCE_DIR}/include
             ./inc
             ./src/inc
             ./src/threadutil
@@ -287,7 +287,7 @@ else() # WIN32
     target_include_directories(pupnp_static
         PRIVATE
             ${PUPNP_IXML_SOURCE_DIR}/inc
-            ${UPnPlib_SOURCE_DIR}/include
+            ${UPNPLIB_PROJECT_SOURCE_DIR}/include
             ./inc
             ./src/inc
             ./src/threadutil

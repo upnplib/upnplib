@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-07-15
+// Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
 // -----------------------------------------------------------------------------
 // This testsuite starts the sample TV Device with general command line
@@ -35,9 +35,9 @@ TEST(SampleTvDeviceTestSuite, valid_arguments) {
                     "other tests. It should be mocked.";
 
     constexpr int argc{3};
-    constexpr int argsize = sizeof(UPnPlib_BINARY_DIR "/bin/tv_device");
-    char arg[argc][argsize]{UPnPlib_BINARY_DIR "/bin/tv_device", "-webdir",
-                            UPNPLIB_SAMPLE_SOURCE_DIR "/web"};
+    constexpr int argsize = sizeof(UPNPLIB_PROJECT_BINARY_DIR "/bin/tv_device");
+    char arg[argc][argsize]{UPNPLIB_PROJECT_BINARY_DIR "/bin/tv_device",
+                            "-webdir", UPNPLIB_SAMPLE_SOURCE_DIR "/web"};
     char* argv[argc]{arg[0], arg[1], arg[2]};
 
     // argc is valid with valid arguments

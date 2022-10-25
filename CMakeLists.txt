@@ -1,12 +1,12 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-24
+# Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
 
 set (UPNP_VERSION_STRING "1.14.0")
 set (UPNP_VERSION_MAJOR 1)
-project(UPnPlib VERSION ${UPNP_VERSION_STRING}
+project(UPNPLIB_PROJECT VERSION ${UPNP_VERSION_STRING}
                 DESCRIPTION "UPnP library"
                 HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -179,9 +179,9 @@ add_link_options(
 # Targets                       #
 #################################
 # Set target output directories
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${UPnPlib_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${UPnPlib_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${UPnPlib_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${UPNPLIB_PROJECT_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${UPNPLIB_PROJECT_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${UPNPLIB_PROJECT_BINARY_DIR}/bin)
 if(WIN32)
     if(CMAKE_GENERATOR STREQUAL "NMake Makefiles")
         set(UPNPLIB_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

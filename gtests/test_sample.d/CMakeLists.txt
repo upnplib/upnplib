@@ -94,9 +94,9 @@ add_executable(test_tv_device-psh
 )
 target_include_directories(test_tv_device-psh
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
-        ${UPnPlib_BINARY_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_BINARY_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker

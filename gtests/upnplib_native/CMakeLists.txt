@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-24
+# Redistribution only with this Copyright remark. Last modified: 2022-10-25
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -13,7 +13,7 @@ project(UPNPLIB_NATIVE_GTEST5 VERSION 0003
 #==========
 set(TEST_UPNPTOOLS_INCLUDE_DIRECTORIES
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 
 add_executable(test_upnptools-unsh
@@ -58,7 +58,7 @@ add_executable(test_sock-unsh
 target_include_directories(test_sock-unsh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 target_compile_definitions(test_sock-unsh
     PRIVATE
@@ -81,8 +81,8 @@ add_executable(test_webserver-unsh
 target_include_directories(test_webserver-unsh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 target_compile_definitions(test_webserver-unsh
     PRIVATE

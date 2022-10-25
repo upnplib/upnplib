@@ -64,8 +64,8 @@ add_executable(test_upnpapi-pst
 target_include_directories(test_upnpapi-pst
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -99,8 +99,8 @@ add_executable(test_upnpapi_platform-psh
 target_include_directories(test_upnpapi_platform-psh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
@@ -136,7 +136,7 @@ add_executable(test_UpnpFileInfo-psh
 target_include_directories(test_UpnpFileInfo-psh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
 )

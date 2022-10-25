@@ -39,7 +39,7 @@ IF (UPNPLIB_DEF_SAMPLE_CLIENT)
         target_include_directories(tv_ctrlpt
             PRIVATE
                 ./common
-                ${UPnPlib_SOURCE_DIR}/include
+                ${UPNPLIB_PROJECT_SOURCE_DIR}/include
                 ${PUPNP_UPNP_SOURCE_DIR}/inc
                 ${PUPNP_IXML_SOURCE_DIR}/inc
                 # if pthreads4w isn't installed this path is empty. The linker
@@ -59,7 +59,7 @@ IF (UPNPLIB_DEF_SAMPLE_COMBO)
         target_include_directories(tv_combo
             PRIVATE
                 ./common
-                ${UPnPlib_SOURCE_DIR}/include
+                ${UPNPLIB_PROJECT_SOURCE_DIR}/include
                 ${PUPNP_UPNP_SOURCE_DIR}/inc
                 ${PUPNP_IXML_SOURCE_DIR}/inc
                 # if pthreads4w isn't installed this path is empty. The linker
@@ -85,7 +85,7 @@ IF(UPNPLIB_DEF_SAMPLE_DEVICE)
         target_include_directories(tv_device
             PRIVATE
                 ./common
-                ${UPnPlib_SOURCE_DIR}/include
+                ${UPNPLIB_PROJECT_SOURCE_DIR}/include
                 ${PUPNP_UPNP_SOURCE_DIR}/inc
                 ${PUPNP_IXML_SOURCE_DIR}/inc
                 # if pthreads4w isn't installed this path is empty. The linker

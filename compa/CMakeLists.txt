@@ -12,13 +12,13 @@ project(COMPA VERSION 0001
 set(COMPATIBLE_SOURCE_FILES
 # There are additional source files at different add_library() statements.
     ${UPNPLIB_CORE_SOURCE_DIR}/src/init.cpp
-    ${UPnPlib_SOURCE_DIR}/compa/src/api/UpnpString.cpp
+    ${UPNPLIB_PROJECT_SOURCE_DIR}/compa/src/api/UpnpString.cpp
 )
 
 set(UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}/compa/inc
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/compa/inc
 )
 
 if(NOT WIN32)

@@ -18,7 +18,7 @@ set(UPNPLIB_NATIVE_SOURCE_FILES
 
 set(UPNPLIB_NATIVE_INCLUDE_DIRECTORIES
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         $<$<PLATFORM_ID:Windows>:${pthreads4w_SOURCE_DIR}> # needed for pthread.h
@@ -89,8 +89,8 @@ if(NOT WIN32)
     )
     target_include_directories(upnplibInfo_shared
         PRIVATE
-            ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_BINARY_DIR}/include
+            ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+            ${UPNPLIB_PROJECT_BINARY_DIR}/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -111,8 +111,8 @@ if(NOT WIN32)
     )
     target_include_directories(upnplibInfo_static
         PRIVATE
-            ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_BINARY_DIR}/include
+            ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+            ${UPNPLIB_PROJECT_BINARY_DIR}/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -192,8 +192,8 @@ else() # WIN32
     )
     target_include_directories(upnplibInfo_shared
         PRIVATE
-            ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_BINARY_DIR}/include
+            ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+            ${UPNPLIB_PROJECT_BINARY_DIR}/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc   # needed for ithread.hpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -216,8 +216,8 @@ else() # WIN32
     )
     target_include_directories(upnplibInfo_static
         PRIVATE
-            ${UPnPlib_SOURCE_DIR}/include
-            ${UPnPlib_BINARY_DIR}/include
+            ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+            ${UPNPLIB_PROJECT_BINARY_DIR}/include
             ${PUPNP_UPNP_SOURCE_DIR}/inc  # needed for ithread.hpp
             ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
             ${PUPNP_IXML_SOURCE_DIR}/inc

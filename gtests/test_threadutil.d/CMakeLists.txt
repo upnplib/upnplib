@@ -16,7 +16,7 @@ add_executable(test_LinkedList-psh
 )
 target_include_directories(test_LinkedList-psh
     PRIVATE
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         # if pthreads4w isn't installed this path is empty. The linker
@@ -48,7 +48,7 @@ target_include_directories(test_FreeList-psh
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
@@ -76,7 +76,7 @@ target_include_directories(test_FreeList-csh
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
@@ -103,7 +103,7 @@ add_executable(test_ThreadPool-psh
 target_include_directories(test_ThreadPool-psh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         # if pthreads4w isn't installed this path is empty. The linker
@@ -132,7 +132,7 @@ add_executable(test_TimerThread-psh
 target_include_directories(test_TimerThread-psh
     PRIVATE
         ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPnPlib_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         # if pthreads4w isn't installed this path is empty. The linker
