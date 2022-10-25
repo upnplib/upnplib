@@ -397,7 +397,7 @@ set(MINISERVER_SOURCE_FILES
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpActionComplete.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpStateVarComplete.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
-#    ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
+#    ${UPNPLIB_SOURCE_DIR}/src/api/upnptools.cpp
     $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 )
 endif()

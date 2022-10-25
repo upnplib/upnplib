@@ -66,7 +66,7 @@ if(FALSE)
 add_executable(test_uri_parse-pst
         ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
         ${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj.cpp
-        ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
+        ${UPNPLIB_SOURCE_DIR}/src/api/upnptools.cpp
         ./test_uri_parse.cpp
 )
 endif()

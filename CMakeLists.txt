@@ -376,7 +376,7 @@ endif(WIN32)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/umock)
 add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp)
-add_subdirectory(${PROJECT_SOURCE_DIR}/core)
+add_subdirectory(${PROJECT_SOURCE_DIR}/upnplib)
 add_subdirectory(${PROJECT_SOURCE_DIR}/ixml)
 add_subdirectory(${PROJECT_SOURCE_DIR}/compa)
 add_subdirectory(${PROJECT_SOURCE_DIR}/sample)

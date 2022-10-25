@@ -11,7 +11,7 @@ project(COMPA VERSION 0001
 
 set(COMPATIBLE_SOURCE_FILES
 # There are additional source files at different add_library() statements.
-    ${UPNPLIB_CORE_SOURCE_DIR}/src/init.cpp
+    ${UPNPLIB_SOURCE_DIR}/src/init.cpp
     ${UPNPLIB_PROJECT_SOURCE_DIR}/compa/src/api/UpnpString.cpp
 )
 
@@ -30,7 +30,7 @@ if(NOT WIN32)
     #----------------------------------------------
     add_library(compa_shared SHARED
         ${COMPATIBLE_SOURCE_FILES}
-        ${UPNPLIB_CORE_SOURCE_DIR}/src/strndup.cpp
+        ${UPNPLIB_SOURCE_DIR}/src/strndup.cpp
     )
     target_include_directories(compa_shared
             ${UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES}
@@ -78,7 +78,7 @@ else() # WIN32
     #----------------------------------------------------
     add_library(compa_shared SHARED
         ${COMPATIBLE_SOURCE_FILES}
-        ${UPNPLIB_CORE_SOURCE_DIR}/src/strndup.cpp
+        ${UPNPLIB_SOURCE_DIR}/src/strndup.cpp
     )
     target_include_directories(compa_shared
             ${UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES}

@@ -40,7 +40,7 @@ add_executable(test_httpreadwrite
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
     $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
-    ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
+    ${UPNPLIB_SOURCE_DIR}/src/api/upnptools.cpp
     ./test_httpreadwrite.cpp
 )
 endif()
@@ -202,6 +202,7 @@ add_test(NAME ctest_httpparser-pst COMMAND test_httpparser-pst
 # Because we want to include the source file into the test to also test static
 # functions, we cannot use shared libraries due to symbol import/export
 # conflicts. We must use static libraries.
+
 add_executable(test_webserver-pst
 #--------------------------------
     ./test_webserver.cpp
@@ -236,12 +237,10 @@ target_link_libraries(test_webserver-pst
 add_test(NAME ctest_webserver-pst COMMAND test_webserver-pst
 )
 
-if(FALSE) # TODO: make this test running
 add_executable(test_webserver-cst
 #--------------------------------
     ./test_webserver.cpp
-    ${UPNPLIB_CORE_SOURCE_DIR}/src/net/http/webserver.cpp
-
+    ${UPNPLIB_SOURCE_DIR}/src/net/http/webserver.cpp
 )
 target_include_directories(test_webserver-cst
     PRIVATE
@@ -272,4 +271,3 @@ target_link_libraries(test_webserver-cst
 )
 add_test(NAME ctest_webserver-cst COMMAND test_webserver-cst
 )
-endif()

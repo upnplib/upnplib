@@ -53,7 +53,7 @@ set(UPNP_UPNPAPI_SOURCE_FILES
     ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
     $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
 
-    ${UPNPLIB_CORE_SOURCE_DIR}/src/api/upnptools.cpp
+    ${UPNPLIB_SOURCE_DIR}/src/api/upnptools.cpp
 )
 endif()
 

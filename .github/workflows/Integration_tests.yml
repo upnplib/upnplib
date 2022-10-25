@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: DoozyX/clang-format-lint-action@v0.13
       with:
-        source: './pupnp ./core ./include ./gtests'
+        source: './pupnp ./upnplib ./compa ./include ./gtests ./sample ./umock'
         extensions: 'cpp,hpp'
         clangFormatVersion: 11.1.0
 
@@ -110,7 +110,7 @@ jobs:
       fail-fast: false
 
     steps:
-    # Step building the core upnplib
+    # Step building upnplib
       - uses: actions/checkout@v2
 
       - name: Configure
@@ -195,7 +195,7 @@ jobs:
       fail-fast: false
 
     steps:
-    # Steps to build and test the core upnplib
+    # Steps to build and test upnplib
       - uses: actions/checkout@v2
 
       - name: Configure
@@ -285,7 +285,7 @@ jobs:
       fail-fast: false
 
     steps:
-    # Step building the core upnplib
+    # Step building upnplib
       - uses: actions/checkout@v2
 
       - if: matrix.os == 'windows-2019'
@@ -380,7 +380,7 @@ jobs:
       fail-fast: false
 
     steps:
-    # Step building the core upnplib
+    # Step building upnplib
       - uses: actions/checkout@v2
 
       - if: matrix.os == 'windows-2019'

@@ -26,7 +26,7 @@ set(UMOCK_SOURCE_FILES
 
 add_library(umock_shared SHARED
         ${UMOCK_SOURCE_FILES}
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/core/src/strndup.cpp
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/upnplib/src/strndup.cpp
 )
 target_include_directories(umock_shared
     PRIVATE
