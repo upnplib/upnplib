@@ -3,9 +3,9 @@
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+
 #include "pupnp/upnp/src/genlib/net/http/webserver.cpp"
-#else
+#ifndef UPNPLIB_WITH_NATIVE_PUPNP
 #include "compa/src/genlib/net/http/webserver.cpp"
 #endif
 
@@ -32,13 +32,13 @@
     pointers into C-string 'gEncodedMediaTypes' which contains the media types.
 */
 
-namespace upnplib {
+namespace compa {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 // With new code there is no media list to initialize. We have a constant array
-// there, once setup on startup.
+// there, once initialized by the compiler on startup.
 TEST(WebserverTestSuite, media_list_init) {
     // Test Unit
     memset(&gMediaTypeList, 0xA5, sizeof(gMediaTypeList));
@@ -56,7 +56,7 @@ TEST(WebserverTestSuite, media_list_init) {
 #endif
 
 TEST(WebserverTestSuite, search_extension) {
-    media_list_init(); // Dummy call just returns
+    media_list_init();
 
     const char* con_unused{"<unused>"};
     const char* con_type{con_unused};
@@ -96,10 +96,10 @@ TEST(WebserverTestSuite, web_server_init_successful) {
     GTEST_SKIP() << "To be done";
 }
 
-} // namespace upnplib
+} // namespace compa
 
 //
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-#include "upnplib/gtest_main.inc"
+#include "compa/gtest_main.inc"
 }

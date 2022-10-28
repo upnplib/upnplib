@@ -153,3 +153,28 @@ target_link_libraries(test_UpnpFileInfo-psh
 add_test(NAME ctest_UpnpFileInfo-psh COMMAND test_UpnpFileInfo-psh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
+
+add_executable(test_UpnpFileInfo-csh
+#-----------------------------------
+    ./test_UpnpFileInfo.cpp
+)
+target_include_directories(test_UpnpFileInfo-csh
+    PRIVATE
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+        ${COMPA_SOURCE_DIR}/inc
+)
+target_compile_definitions(test_UpnpFileInfo-csh
+    PRIVATE
+        UPNPLIB_SHARED
+)
+target_link_libraries(test_UpnpFileInfo-csh
+    PRIVATE
+        compa_shared
+        upnplib_shared
+)
+add_test(NAME ctest_UpnpFileInfo-csh COMMAND test_UpnpFileInfo-csh
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)

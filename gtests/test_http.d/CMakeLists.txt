@@ -240,7 +240,6 @@ add_test(NAME ctest_webserver-pst COMMAND test_webserver-pst
 add_executable(test_webserver-cst
 #--------------------------------
     ./test_webserver.cpp
-    ${UPNPLIB_SOURCE_DIR}/src/net/http/webserver.cpp
 )
 target_include_directories(test_webserver-cst
     PRIVATE
@@ -267,7 +266,6 @@ target_compile_definitions(test_webserver-cst
 target_link_libraries(test_webserver-cst
         PRIVATE
             compa_static
-            upnplib_static
 )
 add_test(NAME ctest_webserver-cst COMMAND test_webserver-cst
 )

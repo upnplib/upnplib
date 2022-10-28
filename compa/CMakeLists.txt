@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-25
+# Redistribution only with this Copyright remark. Last modified: 2022-10-30
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -11,14 +11,17 @@ project(COMPA VERSION 0001
 
 set(COMPATIBLE_SOURCE_FILES
 # There are additional source files at different add_library() statements.
+    ./src/api/UpnpString.cpp
+    ./src/api/UpnpFileInfo.cpp
     ${UPNPLIB_SOURCE_DIR}/src/init.cpp
-    ${UPNPLIB_PROJECT_SOURCE_DIR}/compa/src/api/UpnpString.cpp
+    ${UPNPLIB_SOURCE_DIR}/src/net/http/webserver.cpp
 )
 
 set(UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES
     PRIVATE
+        ./inc
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/compa/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
 )
 
 if(NOT WIN32)
@@ -44,7 +47,7 @@ if(NOT WIN32)
     target_link_libraries(compa_shared
         PRIVATE
             $<$<PLATFORM_ID:Darwin>:umock_shared>
-        INTERFACE
+        PUBLIC   # needed on macOS
             # If we do not have compatible code we use the old pupnp code.
             pupnp_shared
     )
@@ -98,7 +101,7 @@ else() # WIN32
     target_link_libraries(compa_shared
         PRIVATE
             umock_shared
-        INTERFACE
+        PUBLIC   # needed on macOS
             # If we do not have compatible code we use the old pupnp code.
             pupnp_shared
     )

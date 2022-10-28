@@ -1,5 +1,5 @@
-#ifndef UPNPLIB_COMPA_UPNPSTRING_HPP
-#define UPNPLIB_COMPA_UPNPSTRING_HPP
+#ifndef COMPA_UPNPSTRING_HPP
+#define COMPA_UPNPSTRING_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-10-08
 
@@ -57,4 +57,4 @@ UPNPLIB_API void UpnpString_clear(
 
 } // namespace compa
 
-#endif // UPNPLIB_COMPA_UPNPSTRING_HPP
+#endif // COMPA_UPNPSTRING_HPP
