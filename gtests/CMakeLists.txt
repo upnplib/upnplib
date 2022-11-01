@@ -491,7 +491,6 @@ add_test(NAME ctest_miniserver-cst COMMAND test_miniserver-cst
 
 add_subdirectory(./compa)
 add_subdirectory(./test_uri.d)
-add_subdirectory(./test_http.d)
 add_subdirectory(./test_threadutil.d)
 add_subdirectory(./upnplib)
 
