@@ -1,65 +1,14 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-31
+# Redistribution only with this Copyright remark. Last modified: 2022-11-01
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(GTESTS_COMPA VERSION 0008
+project(GTESTS_COMPA VERSION 0009
                   DESCRIPTION "Tests for pupnp and compatible code"
                   HOMEPAGE_URL "https://github.com/upnplib")
 
 
-# UpnpString
-#===========
-add_executable(test_UpnpString-psh
-#---------------------------------
-        ./test_UpnpString.cpp
-)
-target_include_directories(test_UpnpString-psh
-    PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-)
-target_compile_definitions(test_UpnpString-psh
-    PRIVATE
-        UPNPLIB_SHARED
-        UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
-)
-target_link_libraries(test_UpnpString-psh
-    PRIVATE
-        pupnp_shared
-        upnplib_shared
-)
-add_test(NAME ctest_UpnpString-psh COMMAND test_UpnpString-psh
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-)
-
-add_executable(test_UpnpString-csh
-#---------------------------------
-        ./test_UpnpString.cpp
-)
-target_include_directories(test_UpnpString-csh
-    PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/compa/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-)
-target_compile_definitions(test_UpnpString-csh
-    PRIVATE
-        UPNPLIB_SHARED
-)
-target_link_libraries(test_UpnpString-csh
-    PRIVATE
-        compa_shared
-        upnplib_shared
-)
-add_test(NAME ctest_UpnpString-csh COMMAND test_UpnpString-csh
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-)
-
-
+add_subdirectory(./test_api.d)
 add_subdirectory(./test_http.d)
 add_subdirectory(./test_threadutil.d)

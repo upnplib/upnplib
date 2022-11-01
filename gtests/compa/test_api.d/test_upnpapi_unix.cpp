@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-25
+// Redistribution only with this Copyright remark. Last modified: 2022-11-01
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -22,7 +22,10 @@ using ::testing::SetArgPointee;
 
 using ::upnplib::testing::CaptureStdOutErr;
 
-namespace upnplib {
+using ::upnplib::CIfaddr4;
+using ::upnplib::errStrEx;
+
+namespace compa {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
@@ -214,9 +217,9 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_default_initialization) {
     EXPECT_EQ(returned, UPNP_E_FINISH) << errStrEx(returned, UPNP_E_FINISH);
 }
 
-} // namespace upnplib
+} // namespace compa
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-#include "upnplib/gtest_main.inc"
+#include "compa/gtest_main.inc"
 }

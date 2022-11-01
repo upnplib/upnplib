@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-25
+// Redistribution only with this Copyright remark. Last modified: 2022-11-01
 
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 #ifdef UPNP_HAVE_TOOLS
@@ -12,7 +12,9 @@
 
 using ::upnplib::testing::MatchesStdRegex;
 
-namespace upnplib {
+using ::upnplib::errStrEx;
+
+namespace compa {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
@@ -226,9 +228,9 @@ TEST(UpnpEnableWebserverTestSuite, web_server_disabled) {
     EXPECT_EQ(bWebServerState, WEB_SERVER_DISABLED);
 }
 
-} // namespace upnplib
+} // namespace compa
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-#include "upnplib/gtest_main.inc"
+#include "compa/gtest_main.inc"
 }

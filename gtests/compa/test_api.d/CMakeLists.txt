@@ -1,12 +1,117 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-25
+# Redistribution only with this Copyright remark. Last modified: 2022-11-01
 
 cmake_minimum_required(VERSION 3.18)
-include(../../cmake/project-header.cmake)
+include(../../../cmake/project-header.cmake)
 
-project(GTESTS_UPNPAPI VERSION 0001
-                  DESCRIPTION "Tests for the upnpapi module"
+project(GTESTS_COMPA_API VERSION 0001
+                  DESCRIPTION "Tests for api module and compatible code"
                   HOMEPAGE_URL "https://github.com/upnplib")
+
+# UpnpString
+#===========
+add_executable(test_UpnpString-psh
+#---------------------------------
+        ./test_UpnpString.cpp
+)
+target_include_directories(test_UpnpString-psh
+    PRIVATE
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+)
+target_compile_definitions(test_UpnpString-psh
+    PRIVATE
+        UPNPLIB_SHARED
+        UPNPLIB_WITH_NATIVE_PUPNP
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+)
+target_link_libraries(test_UpnpString-psh
+    PRIVATE
+        pupnp_shared
+        upnplib_shared
+)
+add_test(NAME ctest_UpnpString-psh COMMAND test_UpnpString-psh
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
+add_executable(test_UpnpString-csh
+#---------------------------------
+        ./test_UpnpString.cpp
+)
+target_include_directories(test_UpnpString-csh
+    PRIVATE
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${COMPA_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+)
+target_compile_definitions(test_UpnpString-csh
+    PRIVATE
+        UPNPLIB_SHARED
+)
+target_link_libraries(test_UpnpString-csh
+    PRIVATE
+        compa_shared
+        upnplib_shared
+)
+add_test(NAME ctest_UpnpString-csh COMMAND test_UpnpString-csh
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
+
+# UpnpFileInfo
+#=============
+add_executable(test_UpnpFileInfo-psh
+#-----------------------------------
+    ./test_UpnpFileInfo.cpp
+)
+target_include_directories(test_UpnpFileInfo-psh
+    PRIVATE
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+)
+target_compile_definitions(test_UpnpFileInfo-psh
+    PRIVATE
+        UPNPLIB_SHARED
+        UPNPLIB_WITH_NATIVE_PUPNP
+)
+target_link_libraries(test_UpnpFileInfo-psh
+    PRIVATE
+        pupnp_shared
+        upnplib_shared
+)
+add_test(NAME ctest_UpnpFileInfo-psh COMMAND test_UpnpFileInfo-psh
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
+add_executable(test_UpnpFileInfo-csh
+#-----------------------------------
+    ./test_UpnpFileInfo.cpp
+)
+target_include_directories(test_UpnpFileInfo-csh
+    PRIVATE
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+        ${COMPA_SOURCE_DIR}/inc
+)
+target_compile_definitions(test_UpnpFileInfo-csh
+    PRIVATE
+        UPNPLIB_SHARED
+)
+target_link_libraries(test_UpnpFileInfo-csh
+    PRIVATE
+        compa_shared
+        upnplib_shared
+)
+add_test(NAME ctest_UpnpFileInfo-csh COMMAND test_UpnpFileInfo-csh
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
 
 # upnpapi
 #========
@@ -123,58 +228,5 @@ target_link_libraries(test_upnpapi_platform-psh
         upnplib_shared
 )
 add_test(NAME ctest_upnpapi_platform-psh COMMAND test_upnpapi_platform-psh
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-)
-
-
-# UpnpFileInfo
-#=============
-add_executable(test_UpnpFileInfo-psh
-#-----------------------------------
-    ./test_UpnpFileInfo.cpp
-)
-target_include_directories(test_UpnpFileInfo-psh
-    PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-)
-target_compile_definitions(test_UpnpFileInfo-psh
-    PRIVATE
-        UPNPLIB_SHARED
-        UPNPLIB_WITH_NATIVE_PUPNP
-)
-target_link_libraries(test_UpnpFileInfo-psh
-    PRIVATE
-        pupnp_shared
-        upnplib_shared
-)
-add_test(NAME ctest_UpnpFileInfo-psh COMMAND test_UpnpFileInfo-psh
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-)
-
-add_executable(test_UpnpFileInfo-csh
-#-----------------------------------
-    ./test_UpnpFileInfo.cpp
-)
-target_include_directories(test_UpnpFileInfo-csh
-    PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-        ${COMPA_SOURCE_DIR}/inc
-)
-target_compile_definitions(test_UpnpFileInfo-csh
-    PRIVATE
-        UPNPLIB_SHARED
-)
-target_link_libraries(test_UpnpFileInfo-csh
-    PRIVATE
-        compa_shared
-        upnplib_shared
-)
-add_test(NAME ctest_UpnpFileInfo-csh COMMAND test_UpnpFileInfo-csh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )

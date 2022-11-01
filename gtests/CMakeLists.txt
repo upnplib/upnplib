@@ -1,11 +1,11 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-25
+# Redistribution only with this Copyright remark. Last modified: 2022-11-01
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNPLIB_GTESTS VERSION 0032
+project(UPNPLIB_GTESTS VERSION 0033
                        DESCRIPTION "Unit Tests using googletest"
                        HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -492,7 +492,6 @@ add_test(NAME ctest_miniserver-cst COMMAND test_miniserver-cst
 add_subdirectory(./compa)
 add_subdirectory(./test_uri.d)
 add_subdirectory(./test_http.d)
-add_subdirectory(./test_api.d)
 add_subdirectory(./test_threadutil.d)
 add_subdirectory(./upnplib)
 
