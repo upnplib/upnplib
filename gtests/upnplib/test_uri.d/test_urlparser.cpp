@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-25
+// Redistribution only with this Copyright remark. Last modified: 2022-11-02
 
 #include "upnplib/src/net/uri/urlparser.cpp"
 
@@ -10,7 +10,6 @@ using ::testing::ThrowsMessage;
 
 //
 namespace upnplib {
-bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 //
 class UrlClassFTestSuite : public ::testing::Test {

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-25
+// Redistribution only with this Copyright remark. Last modified: 2022-11-02
 //
 // If you need more information how the Url class works you can temporary
 // uncomment #define DEBUG_URL and run the tests with
@@ -54,7 +54,6 @@ using ::testing::ThrowsMessage;
 
 //
 namespace upnplib {
-bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 //
 TEST(UrlClassTestSuite, is_in_percent_encode_set) {

@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-01
+# Redistribution only with this Copyright remark. Last modified: 2022-11-02
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -12,3 +12,4 @@ project(GTESTS_COMPA VERSION 0009
 add_subdirectory(./test_api.d)
 add_subdirectory(./test_http.d)
 add_subdirectory(./test_threadutil.d)
+add_subdirectory(./test_uri.d)

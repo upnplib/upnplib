@@ -97,6 +97,7 @@ add_test(NAME ctest_webserver-ush COMMAND test_webserver-ush
 )
 
 
+add_subdirectory(./test_uri.d)
 if(UPNPLIB_WITH_SAMPLES)
     add_subdirectory(./test_sample.d)
 endif()

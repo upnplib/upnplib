@@ -1,10 +1,10 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-25
+# Redistribution only with this Copyright remark. Last modified: 2022-11-02
 
 cmake_minimum_required(VERSION 3.18)
-include(../../cmake/project-header.cmake)
+include(../../../cmake/project-header.cmake)
 
-project(GTESTS_URI VERSION 0002
+project(GTESTS_COMPA_URI VERSION 0003
                   DESCRIPTION "Tests for the uri module and url class"
                   HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -29,13 +29,13 @@ add_executable(test_uri-pst
 )
 target_include_directories(test_uri-pst
     PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
-        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_IXML_SOURCE_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
@@ -49,7 +49,6 @@ target_compile_definitions(test_uri-pst
 target_link_libraries(test_uri-pst
     PRIVATE
         pupnp_static
-        upnplib_static
 )
 add_test(NAME ctest_uri-pst COMMAND test_uri-pst
 )
@@ -76,13 +75,13 @@ add_executable(test_uri_parse-pst
 )
 target_include_directories(test_uri_parse-pst
     PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
-        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_IXML_SOURCE_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
@@ -100,37 +99,3 @@ target_link_libraries(test_uri_parse-pst
 )
 add_test(NAME ctest_uri_parse-pst COMMAND test_uri_parse-pst
 )
-
-
-# uri: urlparser
-#===============
-add_executable(test_urlparser
-    ./test_urlparser.cpp
-)
-target_include_directories(test_urlparser
-    PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-)
-add_test(NAME ctest_urlparser COMMAND test_urlparser
-)
-
-
-# uri: url_class
-#===============
-# These tests need rework because on MS Windows with Debug enabled the compiler
-# asserts boundary errors of the string pointer (iterator). With no Debug flag
-# set the tests also run on MS Windows.
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND WIN32)
-else()
-add_executable(test_url_class
-    ./test_url_class.cpp
-)
-target_include_directories(test_url_class
-    PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-)
-add_test(NAME ctest_url_class COMMAND test_url_class
-)
-endif()
