@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-26
+// Redistribution only with this Copyright remark. Last modified: 2022-11-02
 
 // Note
 // -------------
@@ -26,8 +26,10 @@
 #include "upnplib/gtest.hpp"
 #include "gtest/gtest.h"
 
-namespace upnplib {
-bool old_code{false}; // Managed in upnplib_gtest_main.inc
+using ::upnplib::CThreadPool;
+
+namespace compa {
+bool old_code{false}; // Managed in compa/gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 //###############################
@@ -220,9 +222,9 @@ TEST(TimerThreadNormalTestSuite, remove_timer_thread) {
     EXPECT_EQ(tpObj.ThreadPoolShutdown(&tp), 0);
 }
 
-} // namespace upnplib
+} // namespace compa
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-#include "upnplib/gtest_main.inc"
+#include "compa/gtest_main.inc"
 }

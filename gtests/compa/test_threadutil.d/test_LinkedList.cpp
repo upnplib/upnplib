@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-18
+// Redistribution only with this Copyright remark. Last modified: 2022-11-02
 
 #include "umock/stdlib.hpp"
 #include "gmock/gmock.h"
@@ -10,7 +10,7 @@
 using ::testing::_;
 using ::testing::Return;
 
-namespace upnplib {
+namespace compa {
 
 //
 // Mocked system calls
@@ -382,7 +382,7 @@ TEST_F(LinkedListTestSuite, ListFind_with_comparing_items) {
     EXPECT_EQ(LinkedListObj.ListDestroy(&m_linked_list, 0), 0);
 }
 
-} // namespace upnplib
+} // namespace compa
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

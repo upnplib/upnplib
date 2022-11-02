@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-01
+// Redistribution only with this Copyright remark. Last modified: 2022-11-02
 
 // Note
 // -------------
@@ -25,8 +25,10 @@
 #include "upnplib/gtest.hpp"
 #include "gtest/gtest.h"
 
-namespace upnplib {
-bool old_code{false}; // Managed in upnplib_gtest_main.inc
+using ::upnplib::CThreadPool;
+
+namespace compa {
+bool old_code{false}; // Managed in compa/gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 //
@@ -669,9 +671,9 @@ TEST(ThreadPoolNormalTestSuite, gettimeofday) {
     EXPECT_GT(tv.tv_sec, 1635672176); // that is about 2021-10-31T10:24
 }
 
-} // namespace upnplib
+} // namespace compa
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-#include "upnplib/gtest_main.inc"
+#include "compa/gtest_main.inc"
 }

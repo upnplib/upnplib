@@ -1,10 +1,10 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-25
+# Redistribution only with this Copyright remark. Last modified: 2022-11-02
 
 cmake_minimum_required(VERSION 3.18)
-include(../../cmake/project-header.cmake)
+include(../../../cmake/project-header.cmake)
 
-project(GTESTS_SAMPLE VERSION 0006
+project(GTESTS_UPNPLIB_SAMPLE VERSION 0006
                   DESCRIPTION "Tests for upnplib sample programs"
                   HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -88,11 +88,11 @@ endif()
 
 # test tv_device build with pupnp shared library
 #-----------------------------------------------
-add_executable(test_tv_device-psh
+add_executable(test_tv_device-csh
     ${UPNPLIB_SAMPLE_SOURCE_DIR}/common/sample_util.cpp
     ./test_tv_device.cpp
 )
-target_include_directories(test_tv_device-psh
+target_include_directories(test_tv_device-csh
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
@@ -103,17 +103,17 @@ target_include_directories(test_tv_device-psh
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
-target_compile_definitions (test_tv_device-psh
+target_compile_definitions (test_tv_device-csh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
-target_link_libraries(test_tv_device-psh
+target_link_libraries(test_tv_device-csh
     PRIVATE
-        pupnp_shared
+        compa_shared
         upnplib_shared
 )
-add_test(NAME ctest_tv_device-psh COMMAND test_tv_device-psh
+add_test(NAME ctest_tv_device-csh COMMAND test_tv_device-csh
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
