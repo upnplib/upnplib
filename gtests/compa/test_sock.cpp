@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-23
+// Redistribution only with this Copyright remark. Last modified: 2022-11-03
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -23,7 +23,10 @@ using ::testing::NotNull;
 using ::testing::Return;
 using ::testing::SetArrayArgument;
 
-namespace upnplib {
+using ::upnplib::errStr;
+using ::upnplib::errStrEx;
+
+namespace compa {
 
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
@@ -999,9 +1002,9 @@ TEST(SockTestSuite, sock_ssl_connect) {
 }
 #endif
 
-} // namespace upnplib
+} // namespace compa
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-#include "upnplib/gtest_main.inc"
+#include "compa/gtest_main.inc"
 }

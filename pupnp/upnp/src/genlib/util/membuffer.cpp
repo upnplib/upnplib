@@ -40,17 +40,15 @@
  */
 
 #include "membuffer.hpp"
-#include "config.hpp"
+// #include "config.hpp"
 // #include "unixutil.h"
-// #include "upnp.h"
+#include "upnp.hpp"
 
-#include <assert.h>
-// #include <stdlib.h>
-#include <string.h>
+#include <cassert>
+#include <cstdlib>
+#include <cstring>
 
 #include "posix_overwrites.hpp"
-
-#include "upnputil.hpp"
 
 char* str_alloc(const char* str, size_t str_len) {
     char* s;

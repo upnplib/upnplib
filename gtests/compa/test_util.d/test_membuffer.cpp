@@ -1,11 +1,11 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-04
+// Redistribution only with this Copyright remark. Last modified: 2022-11-03
 
 #include "pupnp/upnp/src/genlib/util/membuffer.cpp"
 
 #include "gtest/gtest.h"
 
-namespace upnplib {
+namespace compa {
 
 // Interface for the uri module
 // ============================
@@ -998,7 +998,7 @@ TEST(MembufferTestSuite, membuffer_attach_empty_str_buffer_but_buffer_length) {
     mbObj.membuffer_destroy(&mbuf);
 }
 
-} // namespace upnplib
+} // namespace compa
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

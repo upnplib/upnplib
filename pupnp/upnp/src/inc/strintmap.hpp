@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-17
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,9 +34,9 @@
 #ifndef GENLIB_UTIL_STRINTMAP_HPP
 #define GENLIB_UTIL_STRINTMAP_HPP
 
-#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 //#include "upnputil.hpp"
-#include <stdlib.h>
+//#include <stdlib.h>
+#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 
 /* Util to map from a string to an integer and vice versa */
 

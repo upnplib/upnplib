@@ -22,7 +22,7 @@
 #define CRES "\033[0m"        // reset
 
 namespace upnplib {
-bool old_code{true}; // Managed in upnplib_gtest_main.inc
+bool old_code{true}; // Managed in upnplib/gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 // testsuite with fixtures

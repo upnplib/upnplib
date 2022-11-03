@@ -36,10 +36,8 @@
  *	conversion functions
  ************************************************************************/
 
-#include "config.hpp"
-
 #include "strintmap.hpp"
-
+#include "config.hpp"
 #include "membuffer.hpp"
 
 /************************************************************************

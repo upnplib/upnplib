@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-01
+# Redistribution only with this Copyright remark. Last modified: 2022-11-03
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -7,6 +7,70 @@ include(../../../cmake/project-header.cmake)
 project(GTESTS_COMPA_API VERSION 0001
                   DESCRIPTION "Tests for api module and compatible code"
                   HOMEPAGE_URL "https://github.com/upnplib")
+
+
+# upnpdebug
+#==========
+# Because we want to include the source file into the test to also test static
+# functions, we cannot use shared libraries due to symbol import/export
+# conflicts. We must use static libraries.
+add_executable(test_upnpdebug-pst
+        ./test_upnpdebug.cpp
+)
+target_include_directories(test_upnpdebug-pst
+    PRIVATE
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+        # if pthreads4w isn't installed this path is empty. The linker
+        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+)
+target_compile_definitions(test_upnpdebug-pst
+    PRIVATE
+        UPNPLIB_WITH_NATIVE_PUPNP
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+)
+target_link_libraries(test_upnpdebug-pst
+    PRIVATE
+        pupnp_static
+        upnplib_static
+        upnplib_gtest_tools_static
+)
+add_test(NAME ctest_upnpdebug-pst COMMAND test_upnpdebug-pst
+)
+
+
+# upnptools
+#==========
+if(UPNPLIB_WITH_TOOLS)
+add_executable(test_upnptools-psh
+#--------------------------------
+        ./test_upnptools.cpp
+)
+target_include_directories(test_upnptools-psh
+    PRIVATE
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+)
+target_compile_definitions(test_upnptools-psh
+    PRIVATE
+        UPNPLIB_SHARED
+        UPNPLIB_WITH_NATIVE_PUPNP
+)
+target_link_libraries(test_upnptools-psh
+    PRIVATE
+        pupnp_shared
+)
+add_test(NAME ctest_upnptools-psh COMMAND test_upnptools-psh
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+endif()
+
 
 # UpnpString
 #===========

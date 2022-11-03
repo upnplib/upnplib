@@ -1,12 +1,12 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-18
+// Redistribution only with this Copyright remark. Last modified: 2022-11-03
 
 #include "strintmap.hpp"
 #include "httpparser.hpp" // for HTTPMETHOD* constants
 
 #include "gtest/gtest.h"
 
-namespace upnplib {
+namespace compa {
 
 // Interface for the strintmap module
 // ==================================
@@ -160,7 +160,7 @@ TEST_F(StrintmapTestSuite, map_int_to_str_with_oversized_table_entiries) {
     EXPECT_EQ(idx, -1);
 }
 
-} // namespace upnplib
+} // namespace compa
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

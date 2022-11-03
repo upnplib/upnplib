@@ -1,12 +1,12 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-26
+// Redistribution only with this Copyright remark. Last modified: 2022-11-03
 
 #include "upnptools.hpp"
 #include "upnp.hpp"
 
 #include "gtest/gtest.h"
 
-namespace upnplib {
+namespace compa {
 
 TEST(UpnptoolsTestSuite, get_error_string) {
     EXPECT_STREQ(::UpnpGetErrorMessage(UPNP_E_INVALID_PARAM),
@@ -14,7 +14,7 @@ TEST(UpnptoolsTestSuite, get_error_string) {
     EXPECT_STREQ(::UpnpGetErrorMessage(480895), "Unknown error code");
 }
 
-} // namespace upnplib
+} // namespace compa
 
 //
 // main entry

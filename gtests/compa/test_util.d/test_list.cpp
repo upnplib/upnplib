@@ -1,11 +1,15 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-31
+// Redistribution only with this Copyright remark. Last modified: 2022-11-02
 
-#include "pupnp/upnp/src/genlib/util/list.cpp"
+#include "list.hpp"
 
+#include "upnplib/gtest.hpp"
 #include "gtest/gtest.h"
 
-namespace upnplib {
+using ::testing::ExitedWithCode;
+
+namespace compa {
+bool old_code{false}; // Managed in compa/gtest_main.inc
 
 // Interface for the list module
 // =============================
@@ -149,32 +153,45 @@ TEST(ListTestSuite, UpnpList_init_insert_erase)
     EXPECT_EQ(list.prev, &list);
 }
 
-TEST(ListTestSuite, UpnpListInit_with_nullptr_to_list) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a list must not segfault.\n";
-#else
+TEST(ListDeathTest, UpnpListInit_with_nullptr_to_list) {
     Clist listObj{};
-    ASSERT_EXIT((listObj.UpnpListInit(nullptr), exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to a list must not segfault.";
-#endif
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ]" CRES
+                  << " A nullptr to a list must not segfault.\n";
+        // This expects segfault.
+        EXPECT_DEATH(listObj.UpnpListInit(nullptr), ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT((listObj.UpnpListInit(nullptr), exit(0)), ExitedWithCode(0),
+                    ".*");
+    }
 }
 
-TEST(ListTestSuite, UpnpListBegin_with_nullptr_to_list) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a list must not segfault.\n";
-#else
+TEST(ListDeathTest, UpnpListBegin_with_nullptr_to_list) {
     UpnpListHead list{};
 
     Clist listObj{};
     listObj.UpnpListInit(&list);
 
-    UpnpListIter ret{};
-    ASSERT_EXIT((ret = listObj.UpnpListBegin(nullptr), exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to a list must not segfault.";
-    EXPECT_EQ(ret, nullptr);
-#endif
+    if (old_code) {
+        std::cout << CRED "[ BUG      ]" CRES
+                  << " A nullptr to a list must not segfault.\n";
+        // This expects segfault.
+        EXPECT_DEATH(listObj.UpnpListBegin(nullptr), ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT((listObj.UpnpListBegin(nullptr), exit(0)),
+                    ExitedWithCode(0), ".*");
+        UpnpListIter ret_UpnpListBegin;
+        memset(&ret_UpnpListBegin, 0xAA, sizeof(ret_UpnpListBegin));
+        ret_UpnpListBegin = listObj.UpnpListBegin(nullptr);
+        EXPECT_EQ(ret_UpnpListBegin, nullptr);
+    }
 }
 
 TEST(ListTestSuite, UpnpListEnd) {
@@ -230,21 +247,28 @@ TEST(ListTestSuite, UpnpListNext_with_nullptr_to_list) {
     EXPECT_EQ(list_next_ptr, list_end_ptr);
 }
 
-TEST(ListTestSuite, UpnpListNext_with_nullptr_to_position) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a position must not segfault.\n";
-#else
+TEST(ListDeathTest, UpnpListNext_with_nullptr_to_position) {
     UpnpListHead list{};
 
     Clist listObj{};
     listObj.UpnpListInit(&list);
 
-    UpnpListIter list_next_ptr{(UpnpListIter)0xFF};
-    ASSERT_EXIT((list_next_ptr = listObj.UpnpListNext(&list, nullptr), exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to a position must not segfault.";
-    EXPECT_EQ(list_next_ptr, nullptr);
-#endif
+    if (old_code) {
+        std::cout << CRED "[ BUG      ]" CRES
+                  << " A nullptr to a position must not segfault.\n";
+        // This expects segfault.
+        EXPECT_DEATH(listObj.UpnpListNext(&list, nullptr), ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT((listObj.UpnpListNext(&list, nullptr), exit(0)),
+                    ExitedWithCode(0), ".*");
+        UpnpListIter ret_UpnpListNext;
+        memset(&ret_UpnpListNext, 0xAA, sizeof(ret_UpnpListNext));
+        ret_UpnpListNext = listObj.UpnpListNext(&list, nullptr);
+        EXPECT_EQ(ret_UpnpListNext, nullptr);
+    }
 }
 
 TEST(ListTestSuite, UpnpListNext_with_begin_pos_on_initialized_list) {
@@ -288,25 +312,32 @@ TEST(ListTestSuite, UpnpListInsert_with_nullptr_to_list) {
     EXPECT_NE(list_inserted_ptr, nullptr);
 }
 
-TEST(ListTestSuite, UpnpListInsert_with_nullptr_to_position) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a position must not segfault.\n";
-#else
+TEST(ListDeathTest, UpnpListInsert_with_nullptr_to_position) {
     UpnpListHead list{};
     UpnpListHead list_inserted{};
 
     Clist listObj{};
     listObj.UpnpListInit(&list);
 
-    // The first argument is ignored.
-    UpnpListIter list_inserted_ptr{(UpnpListIter)0xFF};
-    ASSERT_EXIT((list_inserted_ptr =
-                     listObj.UpnpListInsert(nullptr, nullptr, &list_inserted),
-                 exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to a position must not segfault.";
-    EXPECT_EQ(list_inserted_ptr, nullptr);
-#endif
+    if (old_code) {
+        std::cout << CRED "[ BUG      ]" CRES
+                  << " A nullptr to a position must not segfault.\n";
+        // This expects segfault.
+        EXPECT_DEATH(listObj.UpnpListInsert(nullptr, nullptr, &list_inserted),
+                     ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT(
+            (listObj.UpnpListInsert(nullptr, nullptr, &list_inserted), exit(0)),
+            ExitedWithCode(0), ".*");
+        UpnpListIter ret_UpnpListInsert;
+        memset(&ret_UpnpListInsert, 0xAA, sizeof(ret_UpnpListInsert));
+        ret_UpnpListInsert =
+            listObj.UpnpListInsert(nullptr, nullptr, &list_inserted);
+        EXPECT_EQ(ret_UpnpListInsert, nullptr);
+    }
 }
 
 TEST(ListTestSuite, UpnpListInsert_with_pos_on_list_begin) {
@@ -350,9 +381,9 @@ TEST(ListTestSuite, UpnpListErase_with_position_to_end) {
     EXPECT_EQ(list_next_ptr, list_end_ptr);
 }
 
-} // namespace upnplib
+} // namespace compa
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+#include "compa/gtest_main.inc"
 }

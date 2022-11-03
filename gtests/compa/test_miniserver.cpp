@@ -1,9 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-25
+// Redistribution only with this Copyright remark. Last modified: 2022-11-03
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
-#include "upnplib/src/net/miniserver.cpp"
+#include "compa/src/genlib/miniserver/miniserver.cpp"
 #endif
 
 #include "upnplib/upnptools.hpp" // For upnplib only
@@ -21,6 +21,9 @@ using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
 
+using ::upnplib::errStrEx;
+using ::upnplib::SockAddr;
+
 using ::upnplib::testing::CaptureStdOutErr;
 using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::MatchesStdRegex;
@@ -29,7 +32,7 @@ using ::upnplib::testing::StrCpyToArg;
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #define NS
 #else
-#define NS upnplib
+#define NS compa
 #endif
 
 class CLogging { /*
@@ -52,8 +55,8 @@ class CLogging { /*
 };
 
 //
-namespace upnplib {
-bool old_code{false}; // Managed in upnplib_gtest_main.inc
+namespace compa {
+bool old_code{false}; // Managed in compa/gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 //
@@ -1610,7 +1613,7 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
                 .WillRepeatedly(SetErrnoAndReturn(EBADF, -1));
         }
 
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CRED "[ BUG      ]" CRES
                   << " Unit must not expect its argument MiniServerSockArray* "
                      "to be on the heap and free it.\n";
 
@@ -2065,11 +2068,11 @@ TEST_F(StopMiniServerFTestSuite, sock_close) {
     EXPECT_EQ(sock_close(sockfd), 0);
 }
 
-} // namespace upnplib
+} // namespace compa
 
 //
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
     // class CLogging loggingObj; // Output only with build type DEBUG.
-#include "upnplib/gtest_main.inc"
+#include "compa/gtest_main.inc"
 }

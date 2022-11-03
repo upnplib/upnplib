@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-10-22
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -79,7 +79,9 @@
 #include "UpnpStdInt.hpp" // for ssize_t
 #endif
 
-namespace upnplib {
+using ::upnplib::SocketAddr;
+
+namespace compa {
 
 /*! . */
 #define APPLICATION_LISTENING_PORT 49152
@@ -381,7 +383,7 @@ static void handle_request(
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "miniserver %d: PROCESSING...\n", connfd);
     /* dispatch */
-    http_error_code = upnplib::dispatch_request(&info, &parser);
+    http_error_code = compa::dispatch_request(&info, &parser);
     if (http_error_code != 0) {
         goto error_handler;
     }
@@ -393,7 +395,7 @@ error_handler:
             major = hmsg->major_version;
             minor = hmsg->minor_version;
         }
-        upnplib::handle_error(&info, http_error_code, major, minor);
+        compa::handle_error(&info, http_error_code, major, minor);
     }
     sock_destroy(&info, SD_BOTH);
     httpmsg_destroy(hmsg);
@@ -413,7 +415,7 @@ static UPNP_INLINE void schedule_request_job(
     /*! [in] Clients Address information. */
     struct sockaddr* clientAddr) {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Executing upnplib::schedule_request_job(%d, %p)\n", connfd,
+               "Executing compa::schedule_request_job(%d, %p)\n", connfd,
                (void*)clientAddr);
 
     struct mserv_request_t* request;
@@ -466,7 +468,7 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
                               [[maybe_unused]] fd_set* set) {
 #ifdef INTERNAL_WEB_SERVER
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Executing upnplib::web_server_accept(%d, %p)\n", lsock,
+               "Executing compa::web_server_accept(%d, %p)\n", lsock,
                (void*)set);
     SOCKET asock;
     socklen_t clientLen;
@@ -481,21 +483,21 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
 
         if (asock == INVALID_SOCKET) {
             UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                       "upnplib::web_server_accept(): Error in accept(): %s\n",
+                       "compa::web_server_accept(): Error in accept(): %s\n",
                        std::strerror(errno));
         } else {
             char buf_ntop[INET6_ADDRSTRLEN + 7];
             inet_ntop(AF_INET, &sa_in->sin_addr, buf_ntop, sizeof(buf_ntop));
             UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-                       "upnplib::web_server_accept(): connected to host %s:%d "
+                       "compa::web_server_accept(): connected to host %s:%d "
                        "with socket %d\n",
                        buf_ntop, ntohs(sa_in->sin_port), asock);
-            upnplib::schedule_request_job(asock, (struct sockaddr*)&clientAddr);
+            compa::schedule_request_job(asock, (struct sockaddr*)&clientAddr);
         }
     } else {
         UpnpPrintf(
             UPNP_ERROR, MSERV, __FILE__, __LINE__,
-            "upnplib::web_server_accept(): invalid socket(%d) or set(%p).\n",
+            "compa::web_server_accept(): invalid socket(%d) or set(%p).\n",
             lsock, (void*)set);
     }
 #endif /* INTERNAL_WEB_SERVER */
@@ -555,7 +557,7 @@ static void RunMiniServer(
     /*! [in] Socket Array. */
     MiniServerSockArray* miniSock) {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Executing upnplib::RunMiniServer(%p)\n", (void*)miniSock);
+               "Executing compa::RunMiniServer(%p)\n", (void*)miniSock);
 
     fd_set expSet;
     fd_set rdSet;
@@ -611,15 +613,15 @@ static void RunMiniServer(
         /* FD_SET()'s */
         FD_SET(miniSock->miniServerStopSock, &expSet);
         FD_SET(miniSock->miniServerStopSock, &rdSet);
-        upnplib::fdset_if_valid(miniSock->miniServerSock4, &rdSet);
-        upnplib::fdset_if_valid(miniSock->miniServerSock6, &rdSet);
-        upnplib::fdset_if_valid(miniSock->miniServerSock6UlaGua, &rdSet);
-        upnplib::fdset_if_valid(miniSock->ssdpSock4, &rdSet);
-        upnplib::fdset_if_valid(miniSock->ssdpSock6, &rdSet);
-        upnplib::fdset_if_valid(miniSock->ssdpSock6UlaGua, &rdSet);
+        compa::fdset_if_valid(miniSock->miniServerSock4, &rdSet);
+        compa::fdset_if_valid(miniSock->miniServerSock6, &rdSet);
+        compa::fdset_if_valid(miniSock->miniServerSock6UlaGua, &rdSet);
+        compa::fdset_if_valid(miniSock->ssdpSock4, &rdSet);
+        compa::fdset_if_valid(miniSock->ssdpSock6, &rdSet);
+        compa::fdset_if_valid(miniSock->ssdpSock6UlaGua, &rdSet);
 #ifdef INCLUDE_CLIENT_APIS
-        upnplib::fdset_if_valid(miniSock->ssdpReqSock4, &rdSet);
-        upnplib::fdset_if_valid(miniSock->ssdpReqSock6, &rdSet);
+        compa::fdset_if_valid(miniSock->ssdpReqSock4, &rdSet);
+        compa::fdset_if_valid(miniSock->ssdpReqSock6, &rdSet);
 #endif /* INCLUDE_CLIENT_APIS */
         /* select() */
         ret = umock::sys_select_h.select((int)maxMiniSock, &rdSet, NULL,
@@ -634,20 +636,20 @@ static void RunMiniServer(
         } else {
             // Accept requested connection from a remote client and run the
             // connection in a new thread.
-            upnplib::web_server_accept(miniSock->miniServerSock4, &rdSet);
-            upnplib::web_server_accept(miniSock->miniServerSock6, &rdSet);
-            upnplib::web_server_accept(miniSock->miniServerSock6UlaGua, &rdSet);
+            compa::web_server_accept(miniSock->miniServerSock4, &rdSet);
+            compa::web_server_accept(miniSock->miniServerSock6, &rdSet);
+            compa::web_server_accept(miniSock->miniServerSock6UlaGua, &rdSet);
 #ifdef INCLUDE_CLIENT_APIS
-            upnplib::ssdp_read(miniSock->ssdpReqSock4, &rdSet);
-            upnplib::ssdp_read(miniSock->ssdpReqSock6, &rdSet);
+            compa::ssdp_read(miniSock->ssdpReqSock4, &rdSet);
+            compa::ssdp_read(miniSock->ssdpReqSock6, &rdSet);
 #endif /* INCLUDE_CLIENT_APIS */
-            upnplib::ssdp_read(miniSock->ssdpSock4, &rdSet);
-            upnplib::ssdp_read(miniSock->ssdpSock6, &rdSet);
-            upnplib::ssdp_read(miniSock->ssdpSock6UlaGua, &rdSet);
+            compa::ssdp_read(miniSock->ssdpSock4, &rdSet);
+            compa::ssdp_read(miniSock->ssdpSock6, &rdSet);
+            compa::ssdp_read(miniSock->ssdpSock6UlaGua, &rdSet);
 
             // Block execution and wait to receive a packet from
             // localhost(127.0.0.1) that will stop the miniserver.
-            stopSock = upnplib::receive_from_stopSock(
+            stopSock = compa::receive_from_stopSock(
                 miniSock->miniServerStopSock, &rdSet);
         }
     }
@@ -681,7 +683,7 @@ static int get_port(
     /*! [out] The port value if successful, otherwise, untouched. */
     uint16_t* port) {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside upnplib::get_port()\n");
+               "Inside compa::get_port()\n");
 
     struct sockaddr_storage sockinfo;
     socklen_t len;
@@ -715,7 +717,7 @@ static int get_port(
 static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
                             int ip_version) {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside upnplib::init_socket_suff() for IPv%d.\n", ip_version);
+               "Inside compa::init_socket_suff() for IPv%d.\n", ip_version);
 
     int sockError;
     sa_family_t domain;
@@ -822,7 +824,7 @@ error:
  */
 static int do_bind(struct s_SocketStuff* s) {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside upnplib::do_bind()\n");
+               "Inside compa::do_bind()\n");
 
     int ret_val = UPNP_E_SUCCESS;
     int bind_error;
@@ -881,7 +883,7 @@ error:
 
 static int do_listen(struct s_SocketStuff* s) {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside upnplib::do_listen()\n");
+               "Inside compa::do_listen()\n");
 
     int ret_val;
     int listen_error;
@@ -912,7 +914,7 @@ error:
 
 static int do_reinit(struct s_SocketStuff* s) {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside upnplib::do_reinit()\n");
+               "Inside compa::do_reinit()\n");
 
     sock_close(s->fd);
 
@@ -921,7 +923,7 @@ static int do_reinit(struct s_SocketStuff* s) {
 
 static int do_bind_listen(struct s_SocketStuff* s) {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside upnplib::do_bind_listen()\n");
+               "Inside compa::do_bind_listen()\n");
 
     int ret_val;
     int ok = 0;
@@ -978,7 +980,7 @@ static int get_miniserver_sockets(
      * IPv6 ULA or GUA connections. */
     uint16_t listen_port6UlaGua) {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside upnplib::get_miniserver_sockets()\n");
+               "Inside compa::get_miniserver_sockets()\n");
 
     int ret_val{UPNP_E_INTERNAL_ERROR};
     int err_init_4;
@@ -1092,7 +1094,7 @@ static int get_miniserver_stopsock(
     /*! [in] Miniserver Socket Array. */
     MiniServerSockArray* out) {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside upnplib::get_miniserver_stopsock()\n");
+               "Inside compa::get_miniserver_stopsock()\n");
 
     struct sockaddr_in stop_sockaddr;
     SOCKET miniServerStopSock = 0;
@@ -1161,7 +1163,7 @@ int StartMiniServer(
      * IPv6 ULA or GUA connections. */
     [[maybe_unused]] uint16_t* listen_port6UlaGua) {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside upnplib::StartMiniServer()\n");
+               "Inside compa::StartMiniServer()\n");
 
     int ret_code;
     int count;
@@ -1182,10 +1184,10 @@ int StartMiniServer(
     if (!miniSocket) {
         return UPNP_E_OUTOF_MEMORY;
     }
-    upnplib::InitMiniServerSockArray(miniSocket);
+    compa::InitMiniServerSockArray(miniSocket);
 #ifdef INTERNAL_WEB_SERVER
     /* V4 and V6 http listeners. */
-    ret_code = upnplib::get_miniserver_sockets(
+    ret_code = compa::get_miniserver_sockets(
         miniSocket, *listen_port4, *listen_port6, *listen_port6UlaGua);
     if (ret_code != UPNP_E_SUCCESS) {
         free(miniSocket);
@@ -1193,7 +1195,7 @@ int StartMiniServer(
     }
 #endif
     /* Stop socket (To end miniserver processing). */
-    ret_code = upnplib::get_miniserver_stopsock(miniSocket);
+    ret_code = compa::get_miniserver_stopsock(miniSocket);
     if (ret_code != UPNP_E_SUCCESS) {
         sock_close(miniSocket->miniServerSock4);
         sock_close(miniSocket->miniServerSock6);
@@ -1267,7 +1269,7 @@ int StartMiniServer(
 
 int StopMiniServer() {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside upnplib::StopMiniServer()\n");
+               "Inside compa::StopMiniServer()\n");
 
     socklen_t socklen = sizeof(struct sockaddr_in);
     SOCKET sock;
@@ -1305,6 +1307,6 @@ int StopMiniServer() {
     return 0;
 }
 
-} // namespace upnplib
+} // namespace compa
 
 #endif /* EXCLUDE_MINISERVER */

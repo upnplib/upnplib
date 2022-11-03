@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-23
+// Redistribution only with this Copyright remark. Last modified: 2022-11-03
 
 #include "pupnp/upnp/src/api/upnpdebug.cpp"
 
@@ -14,11 +14,13 @@ using ::testing::Return;
 using ::testing::SetErrnoAndReturn;
 using ::testing::StrEq;
 
+using ::upnplib::errStrEx;
+
 using ::upnplib::testing::CaptureStdOutErr;
 using ::upnplib::testing::MatchesStdRegex;
 
-namespace upnplib {
-bool old_code{false}; // Managed in upnplib_gtest_main.inc
+namespace compa {
+bool old_code{false}; // Managed in compa/gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 //
@@ -576,9 +578,9 @@ TEST_F(UpnpdebugMockTestSuite, close_log_without_init_log) {
     upnpdebugObj.UpnpCloseLog();
 }
 
-} // namespace upnplib
+} // namespace compa
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-#include "upnplib/gtest_main.inc"
+#include "compa/gtest_main.inc"
 }
