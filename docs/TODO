@@ -1,6 +1,4 @@
 Next steps to do:
-* Rearrange mocking/pupnp.hpp.
-* Rework test_membuffer.
 * Check upnplib httpreadwrite.cpp.
 * Remove macro OLD_TEST.
 * Continue creating gtests for webserver.

@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-03
+# Redistribution only with this Copyright remark. Last modified: 2022-11-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -32,7 +32,6 @@ target_include_directories(test_upnpdebug-pst
 target_compile_definitions(test_upnpdebug-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 target_link_libraries(test_upnpdebug-pst
     PRIVATE
@@ -88,7 +87,6 @@ target_compile_definitions(test_UpnpString-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 target_link_libraries(test_UpnpString-psh
     PRIVATE
@@ -247,7 +245,6 @@ target_include_directories(test_upnpapi-pst
 target_compile_definitions(test_upnpapi-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
         UPNP_HAVE_WEBSERVER
         UPNP_HAVE_CLIENT
         UPNP_HAVE_OPTSSDP
@@ -283,7 +280,6 @@ target_compile_definitions(test_upnpapi_platform-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 target_link_libraries(test_upnpapi_platform-psh
     PRIVATE

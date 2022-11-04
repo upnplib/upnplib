@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-02
+# Redistribution only with this Copyright remark. Last modified: 2022-11-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -44,7 +44,6 @@ target_include_directories(test_uri-pst
 target_compile_definitions(test_uri-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 target_link_libraries(test_uri-pst
     PRIVATE
@@ -90,7 +89,6 @@ target_include_directories(test_uri_parse-pst
 target_compile_definitions(test_uri_parse-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 target_link_libraries(test_uri_parse-pst
     PRIVATE

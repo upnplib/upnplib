@@ -47,10 +47,6 @@ target_include_directories(test_membuffer
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
 )
-target_compile_definitions(test_membuffer
-    PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
-)
 add_test(NAME ctest_membuffer COMMAND test_membuffer
 )
 
@@ -76,7 +72,6 @@ target_compile_definitions(test_strintmap-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 target_link_libraries(test_strintmap-psh
     PRIVATE

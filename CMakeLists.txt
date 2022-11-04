@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-25
+# Redistribution only with this Copyright remark. Last modified: 2022-11-04
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -106,12 +106,6 @@ check_cxx_symbol_exists(strnlen "cstring" UPNPLIB_HAVE_STRNLEN)
 # The option is contained in cmake/upnpconfig.hpp.cmake.
 check_cxx_symbol_exists(strndup "cstring" UPNPLIB_HAVE_STRNDUP)
 
-# Set a compiler flag to respect specific features of the compiler.
-# The option is contained in cmake/upnpconfig.hpp.cmake.
-if(MSVC)
-    set(UPNP_USE_MSVCPP 1)
-endif()
-
 # Suffix on libraries having built with Debug information
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(UPNP_DEBUG_SUFFIX "d")
@@ -136,6 +130,7 @@ add_compile_definitions(
         # with the C++ std::min|max functions. Following switch disable the
         # macros.
         $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
+        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 add_compile_options(
         # all compiler warnings as errors

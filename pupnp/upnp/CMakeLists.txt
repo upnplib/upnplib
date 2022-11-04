@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-25
+# Redistribution only with this Copyright remark. Last modified: 2022-11-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -264,7 +264,6 @@ else() # WIN32
             UPNPLIB_SHARED
             UPNPLIB_EXPORTS
             UPNPLIB_WITH_NATIVE_PUPNP
-            $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     # In addition to pthreads we need some more system libraries here
@@ -301,7 +300,6 @@ else() # WIN32
     target_compile_definitions(pupnp_static
         PRIVATE
             UPNPLIB_WITH_NATIVE_PUPNP
-            $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(pupnp_static

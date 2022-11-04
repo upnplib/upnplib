@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-25
+# Redistribution only with this Copyright remark. Last modified: 2022-11-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -196,7 +196,6 @@ else() # WIN32
     target_compile_definitions (upnplibInfo_shared
         PRIVATE
             UPNPLIB_SHARED
-            $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
     )
     target_link_libraries(upnplibInfo_shared
         PRIVATE
@@ -220,7 +219,6 @@ else() # WIN32
     target_compile_definitions (upnplibInfo_static
         PRIVATE
             UPNPLIB_WITH_NATIVE_PUPNP
-            $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
     )
     target_link_libraries(upnplibInfo_static
         PRIVATE

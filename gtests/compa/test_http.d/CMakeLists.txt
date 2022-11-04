@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-01
+# Redistribution only with this Copyright remark. Last modified: 2022-11-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -40,7 +40,6 @@ target_compile_definitions(test_webserver-pst
         UPNP_HAVE_DEVICE
         UPNP_HAVE_SOAP
         UPNP_HAVE_SSDP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 target_link_libraries(test_webserver-pst
         PRIVATE
@@ -73,7 +72,6 @@ target_compile_definitions(test_webserver-cst
         UPNP_HAVE_DEVICE
         UPNP_HAVE_SOAP
         UPNP_HAVE_SSDP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 target_link_libraries(test_webserver-cst
         PRIVATE
@@ -139,7 +137,6 @@ target_include_directories(test_httpreadwrite-pst
 target_compile_definitions(test_httpreadwrite-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 target_link_libraries(test_httpreadwrite-pst
     PRIVATE
@@ -208,7 +205,6 @@ target_include_directories(test_netconnect-pst
 target_compile_definitions(test_netconnect-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 target_link_libraries(test_netconnect-pst
     PRIVATE
@@ -261,7 +257,6 @@ target_include_directories(test_httpparser-pst
 target_compile_definitions(test_httpparser-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 target_link_libraries(test_httpparser-pst
         PRIVATE
