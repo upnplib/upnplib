@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-01
+// Redistribution only with this Copyright remark. Last modified: 2022-11-04
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -14,6 +14,8 @@ using ::testing::DoAll;
 using ::testing::NotNull;
 using ::testing::Return;
 using ::testing::SetErrnoAndReturn;
+
+using ::umock::Pupnp;
 
 using ::upnplib::testing::SetArgPtrIntValue;
 
@@ -59,7 +61,7 @@ class Sys_selectMock : public umock::Sys_selectInterface {
 class Sys_selectMock mock_sys_selectObj;
 
 //
-class PupnpMock : public upnplib::mocking::PupnpInterface {
+class PupnpMock : public umock::PupnpInterface {
   public:
     virtual ~PupnpMock() override = default;
     MOCK_METHOD(int, sock_make_blocking, (SOCKET sock), (override));
@@ -165,7 +167,7 @@ TEST_F(PrivateConnectIp4FTestSuite, successful_connect) {
     PupnpMock mock_pupnpObj;
     // First unblock connection, means don't wait on connect and return
     // immediately.
-    upnplib::mocking::Pupnp pupnp_injectObj(&mock_pupnpObj);
+    Pupnp pupnp_injectObj(&mock_pupnpObj);
     EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
         .WillOnce(Return(0));
 
@@ -205,7 +207,7 @@ TEST_F(PrivateConnectIp4FTestSuite, set_no_blocking_fails) {
         PupnpMock mock_pupnpObj;
         // First unblock connection, means don't wait on connect and return
         // immediately. Returns with error, preset errno = EINVAL.
-        upnplib::mocking::Pupnp pupnp_injectObj(&mock_pupnpObj);
+        Pupnp pupnp_injectObj(&mock_pupnpObj);
         EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
             .WillOnce(SetErrnoAndReturn(
                 EINVAL, 10098)); // On MS Windows are big error numbers
@@ -246,7 +248,7 @@ TEST_F(PrivateConnectIp4FTestSuite, set_no_blocking_fails) {
 
         PupnpMock mock_pupnpObj;
         // Unblock connection. Returns with error, preset errno = EINVAL.
-        upnplib::mocking::Pupnp pupnp_injectObj(&mock_pupnpObj);
+        Pupnp pupnp_injectObj(&mock_pupnpObj);
         EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
             .WillOnce(SetErrnoAndReturn(
                 EINVAL, 10098)); // On MS Windows are big error numbers
@@ -286,7 +288,7 @@ TEST_F(PrivateConnectIp4FTestSuite, connect_fails) {
     PupnpMock mock_pupnpObj;
     // First unblock connection, means don't wait on connect and return
     // immediately. Returns successful, preset errno = EINVAL.
-    upnplib::mocking::Pupnp pupnp_injectObj(&mock_pupnpObj);
+    Pupnp pupnp_injectObj(&mock_pupnpObj);
     EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
         .WillOnce(SetErrnoAndReturn(EINVAL, 0));
 
@@ -337,7 +339,7 @@ TEST_F(PrivateConnectIp4FTestSuite, Check_Connect_And_Wait_Connection_fails) {
     PupnpMock mock_pupnpObj;
     // First unblock connection, means don't wait on connect and return
     // immediately. Returns successful, preset errno = EINVAL.
-    upnplib::mocking::Pupnp pupnp_injectObj(&mock_pupnpObj);
+    Pupnp pupnp_injectObj(&mock_pupnpObj);
     EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
         .WillOnce(SetErrnoAndReturn(EINVAL, 0));
 
@@ -388,7 +390,7 @@ TEST_F(PrivateConnectIp4FTestSuite, sock_make_blocking_fails) {
     PupnpMock mock_pupnpObj;
     // First unblock connection, means don't wait on connect and return
     // immediately. Returns successful, preset errno = EINVAL.
-    upnplib::mocking::Pupnp pupnp_injectObj(&mock_pupnpObj);
+    Pupnp pupnp_injectObj(&mock_pupnpObj);
     EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
         .WillOnce(SetErrnoAndReturn(EINVAL, 0));
 

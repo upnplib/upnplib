@@ -16,8 +16,7 @@ static int Check_Connect_And_Wait_Connection(SOCKET sock, int connect_res);
 static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
                            socklen_t addrlen);
 
-namespace upnplib {
-namespace mocking {
+namespace umock {
 
 class PupnpInterface {
   public:
@@ -119,7 +118,6 @@ class Pupnp {
 PupnpReal pupnp_realObj;
 Pupnp pupnp(&pupnp_realObj);
 
-} // namespace mocking
-} // namespace upnplib
+} // namespace umock
 
 #endif // UPNPLIB_PUPNP_HPP
