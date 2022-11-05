@@ -1,11 +1,15 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-03
+// Redistribution only with this Copyright remark. Last modified: 2022-11-06
 
 #include "pupnp/upnp/src/genlib/util/membuffer.cpp"
 
+#include "upnplib/gtest.hpp"
 #include "gtest/gtest.h"
 
+using ::testing::ExitedWithCode;
+
 namespace compa {
+bool old_code{false}; // Managed in compa/gtest_main.inc
 
 // Interface for the uri module
 // ============================
@@ -100,18 +104,24 @@ TEST(MembufferTestSuite, init_and_destroy) {
     ASSERT_EQ(mbuf.buf, nullptr);
 }
 
-TEST(MembufferTestSuite, init_with_nullptr_to_membuf) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a membuffer must not segfault.\n";
-#else
+TEST(MembufferDeathTest, init_with_nullptr_to_membuf) {
     Cmembuffer mbObj{};
-    ASSERT_EXIT((mbObj.membuffer_init(nullptr), exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to a membuffer must not segfault.";
-#endif
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to a membuffer must not segfault.\n";
+        // This expects segfault.
+        EXPECT_DEATH(mbObj.membuffer_init(nullptr), ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT((mbObj.membuffer_init(nullptr), exit(0)), ExitedWithCode(0),
+                    ".*");
+    }
 }
 
-TEST(MembufferTestSuite, destroy_with_nullptr_to_membuf) {
+TEST(MembufferDeathTest, destroy_with_nullptr_to_membuf) {
     Cmembuffer mbObj{};
     // destroying a nullptr should not segfault.
     ASSERT_EXIT((mbObj.membuffer_destroy(nullptr), exit(0)),
@@ -122,29 +132,45 @@ TEST(MembufferTestSuite, str_alloc_nullptr) {
     Cmembuffer mbObj{};
     char* strclone{};
     strclone = mbObj.str_alloc(nullptr, 0);
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a string with 0 size should never "
-                   "allocate memory.\n";
-    EXPECT_NE(strclone, nullptr);
-    ::free(strclone);
-#else
-    EXPECT_EQ(strclone, nullptr) << "  # A nullptr to a string with 0 size "
-                                    "should never allocate memory.";
-#endif
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to a string with 0 size should never "
+                     "allocate memory.\n";
+        EXPECT_NE(strclone, nullptr);
+        ::free(strclone);
+
+    } else {
+
+        EXPECT_EQ(strclone, nullptr);
+    }
 }
 
-TEST(MembufferTestSuite, str_alloc_nullptr_with_string_size) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a string but with given size must not "
-                   "segfault.\n";
-#else
+TEST(MembufferDeathTest, str_alloc_nullptr_with_string_size) {
     Cmembuffer mbObj{};
-    char* strclone{};
-    ASSERT_EXIT((strclone = mbObj.str_alloc(nullptr, 10), exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to a string but with given size must not segfault.";
-    EXPECT_EQ(strclone, nullptr);
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to a string but with given size must not "
+                     "segfault.\n";
+        // This expects segfault only with DEBUG build (seems there is an
+        // assert in the used system function).
+#ifndef NDEBUG
+        EXPECT_DEATH(mbObj.str_alloc(nullptr, 10), ".*");
 #endif
+
+    } else {
+
+        char* ret_str_alloc;
+        memset(&ret_str_alloc, 0xAA, sizeof(ret_str_alloc));
+        // This expects NO segfault.
+#ifndef NDEBUG
+        ASSERT_EXIT((mbObj.str_alloc(nullptr, 10), exit(0)), ExitedWithCode(0),
+                    ".*");
+        ret_str_alloc = mbObj.str_alloc(nullptr, 10);
+#endif
+        EXPECT_EQ(ret_str_alloc, nullptr);
+    }
 }
 
 TEST(MembufferTestSuite, str_alloc_empty_string_with_0_size) {
@@ -217,35 +243,54 @@ TEST(MembufferTestSuite, memptr_cmp_with_empty_memory_pointer) {
     EXPECT_LT(ret, 0);
 }
 
-TEST(MembufferTestSuite, memptr_cmp_with_nullptr_to_mem_pointer) {
-#ifdef OLD_TEST
-    ::std::cout
-        << "  BUG! A nullptr to the memory pointer must not segfault.\n";
-#else
+TEST(MembufferDeathTest, memptr_cmp_with_nullptr_to_mem_pointer) {
     Cmembuffer mbObj{};
-    int ret{};
-    ASSERT_EXIT((ret = mbObj.memptr_cmp(nullptr, "Test string"), exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to the memory pointer must not segfault.";
-    EXPECT_LT(ret, 0);
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to the memory pointer must not segfault.\n";
+        // This expects segfault only with DEBUG build (seems there is an
+        // assert in the used system function).
+#ifndef NDEBUG
+        EXPECT_DEATH(mbObj.memptr_cmp(nullptr, "Test string"), ".*");
 #endif
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT((mbObj.memptr_cmp(nullptr, "Test string"), exit(0)),
+                    ExitedWithCode(0), ".*");
+        int ret_memptr_cmp{0xAAAA};
+        ret_memptr_cmp = mbObj.memptr_cmp(nullptr, "Test string");
+        EXPECT_LT(ret_memptr_cmp, 0);
+    }
 }
 
-TEST(MembufferTestSuite, memptr_cmp_with_nullptr_to_compare_string) {
-#ifdef OLD_TEST
-    ::std::cout
-        << "  BUG! A nullptr to the compared string must not segfault.\n";
-#else
+TEST(MembufferDeathTest, memptr_cmp_with_nullptr_to_compare_string) {
     Cmembuffer mbObj{};
-    char strbuf[32]{};
-    ::memcpy(strbuf, "Test string", 12);
+    char strbuf[32]{"Test string"};
     memptr mbuf{strbuf, 12};
-    int ret{};
-    ASSERT_EXIT((ret = mbObj.memptr_cmp(&mbuf, nullptr), exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to the compared string must not segfault.";
-    EXPECT_GT(ret, 0);
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to the compared string must not segfault.\n";
+        // This expects segfault only with DEBUG build (seems there is an
+        // assert in the used system function).
+#ifndef NDEBUG
+        EXPECT_DEATH(mbObj.memptr_cmp(&mbuf, nullptr), ".*");
 #endif
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT((mbObj.memptr_cmp(&mbuf, nullptr), exit(0)),
+                    ExitedWithCode(0), ".*");
+        int ret_memptr_cmp{};
+#ifndef NDEBUG
+        ret_memptr_cmp = mbObj.memptr_cmp(&mbuf, nullptr);
+#endif
+        EXPECT_GT(ret_memptr_cmp, 0);
+    }
 }
 
 TEST(MembufferTestSuite, memptr_cmp_with_empty_compare_string) {
@@ -293,67 +338,100 @@ TEST(MembufferTestSuite, memptr_cmp_nocase_different_strings) {
     EXPECT_LT(ret, 0);
 }
 
-TEST(MembufferTestSuite, memptr_cmp_nocase_with_empty_memory_pointer) {
+TEST(MembufferDeathTest, memptr_cmp_nocase_with_empty_memory_pointer) {
     Cmembuffer mbObj{};
     // mbuf.buf is set to nullptr.
     memptr mbuf{};
-    int ret{1};
 
 #ifdef _WIN32
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr in memptr.buf of the memptr structure "
-                   "must not crash on MS Windows.\n";
-#else
-    ASSERT_EXIT((ret = mbObj.memptr_cmp_nocase(&mbuf, "Test string"), exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr in memptr.buf of the memptr structure must not crash "
-           "on MS Windows.";
-    EXPECT_NE(ret, 0) << "  # A nullptr in memptr.buf of the memptr struct "
-                         "should be invalid, not returning 0.";
-#endif
-#else // _WIN32
-    ret = mbObj.memptr_cmp_nocase(&mbuf, "Test string");
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr in memptr.buf of the memptr struct should "
-                   "be invalid, not returning -1.\n";
-    EXPECT_EQ(ret, -1);
-#else
-    EXPECT_NE(ret, -1) << "  # A nullptr in memptr.buf of the memptr struct "
-                          "should be invalid, not returning -1.";
-#endif
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr in memptr.buf of the memptr structure "
+                     "must not crash on MS Windows.\n";
+        // This expects segfault.
+        EXPECT_DEATH(mbObj.memptr_cmp_nocase(&mbuf, "Test string"), ".*");
+
+    } else {
+
+        // This expects NO segfault.
+
+        ASSERT_EXIT((mbObj.memptr_cmp_nocase(&mbuf, "Test string"), exit(0)),
+                    ExitedWithCode(0), ".*");
+        int ret_memptr_cmp_nocase{};
+        ret_memptr_cmp_nocase = mbObj.memptr_cmp_nocase(&mbuf, "Test string");
+        EXPECT_NE(ret_memptr_cmp_nocase, 0)
+            << "  # A nullptr in memptr.buf of the memptr struct "
+               "should be invalid, not returning 0.";
+    }
+
+#else  // _WIN32
+
+    int ret_memptr_cmp_nocase{0xAAAA};
+    ret_memptr_cmp_nocase = mbObj.memptr_cmp_nocase(&mbuf, "Test string");
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr in memptr.buf of the memptr struct should "
+                     "be invalid, not returning -1.\n";
+        EXPECT_EQ(ret_memptr_cmp_nocase, -1);
+
+    } else {
+
+        EXPECT_NE(ret_memptr_cmp_nocase, -1)
+            << "  # A nullptr in memptr.buf of the memptr struct "
+               "should be invalid, not returning -1.";
+    }
 #endif // _WIN32
 }
 
-TEST(MembufferTestSuite, memptr_cmp_nocase_with_nullptr_to_mem_pointer) {
-#ifdef OLD_TEST
-    ::std::cout
-        << "  BUG! A nullptr to the memory pointer must not segfault.\n";
-#else
+TEST(MembufferDeathTest, memptr_cmp_nocase_with_nullptr_to_mem_pointer) {
     Cmembuffer mbObj{};
-    int ret{};
-    ASSERT_EXIT(
-        (ret = mbObj.memptr_cmp_nocase(nullptr, "Test string"), exit(0)),
-        ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to the memory pointer must not segfault.";
-    EXPECT_LT(ret, 0);
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to the memory pointer must not segfault.\n";
+        // This expects segfault only with DEBUG build (seems there is an
+        // assert in the used system function).
+#ifndef NDEBUG
+        EXPECT_DEATH(mbObj.memptr_cmp_nocase(nullptr, "Test string"), ".*");
 #endif
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT((mbObj.memptr_cmp_nocase(nullptr, "Test string"), exit(0)),
+                    ExitedWithCode(0), ".*");
+        int ret_membuffer_init{};
+        ret_membuffer_init = mbObj.memptr_cmp_nocase(nullptr, "Test string");
+        EXPECT_LT(ret_membuffer_init, 0);
+    }
 }
 
-TEST(MembufferTestSuite, memptr_cmp_nocase_with_nullptr_to_compare_string) {
-#ifdef OLD_TEST
-    ::std::cout
-        << "  BUG! A nullptr to the compared string must not segfault.\n";
-#else
+TEST(MembufferDeathTest, memptr_cmp_nocase_with_nullptr_to_compare_string) {
     Cmembuffer mbObj{};
-    char strbuf[32]{};
-    ::memcpy(strbuf, "Test string", 12);
-    memptr mbuf{strbuf, 12};
-    int ret{};
-    ASSERT_EXIT((ret = mbObj.memptr_cmp_nocase(&mbuf, nullptr), exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to the compared string must not segfault.";
-    EXPECT_GT(ret, 0);
+    char strbuf[32]{"Test string"};
+    [[maybe_unused]] memptr mbuf{strbuf, 12};
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to the compared string must not segfault.\n";
+        // This expects segfault only with DEBUG build (seems there is an
+        // assert in the used system function).
+#ifndef NDEBUG
+        EXPECT_DEATH(mbObj.memptr_cmp_nocase(&mbuf, nullptr), ".*");
 #endif
+
+    } else {
+
+        int ret_memptr_cmp_nocase{};
+#ifndef NDEBUG
+        // This expects NO segfault.
+        ASSERT_EXIT((mbObj.memptr_cmp_nocase(&mbuf, nullptr), exit(0)),
+                    ExitedWithCode(0), ".*");
+        ret_memptr_cmp_nocase = mbObj.memptr_cmp_nocase(&mbuf, nullptr);
+#endif
+        EXPECT_GT(ret_memptr_cmp_nocase, 0);
+    }
 }
 
 TEST(MembufferTestSuite, memptr_cmp_nocase_with_empty_compare_string) {
@@ -365,17 +443,24 @@ TEST(MembufferTestSuite, memptr_cmp_nocase_with_empty_compare_string) {
     EXPECT_GT(ret, 0);
 }
 
-TEST(MembufferTestSuite, membuffer_set_size_with_nullptr_to_membuf) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a membuffer must not segfault.\n";
-#else
+TEST(MembufferDeathTest, membuffer_set_size_with_nullptr_to_membuf) {
     Cmembuffer mbObj{};
-    int ret{UPNP_E_INVALID_PARAM};
-    ASSERT_EXIT((ret = mbObj.membuffer_set_size(nullptr, 1), exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to a membuffer must not segfault.";
-    EXPECT_EQ(ret, UPNP_E_OUTOF_MEMORY);
-#endif
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to a membuffer must not segfault.\n";
+        // This expects segfault.
+        EXPECT_DEATH(mbObj.membuffer_set_size(nullptr, 1), ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT((mbObj.membuffer_set_size(nullptr, 1), exit(0)),
+                    ExitedWithCode(0), ".*");
+        int ret_membuffer_set_size{UPNP_E_INTERNAL_ERROR};
+        ret_membuffer_set_size = mbObj.membuffer_set_size(nullptr, 1);
+        EXPECT_EQ(ret_membuffer_set_size, UPNP_E_OUTOF_MEMORY);
+    }
 }
 
 TEST(MembufferTestSuite, membuffer_set_size_to_0_byte_new_length) {
@@ -468,19 +553,27 @@ TEST(MembufferTestSuite, membuffer_assign) {
     mbObj.membuffer_destroy(&mbuf);
 }
 
-TEST(MembufferTestSuite, membuffer_assign_with_nullptr_to_membufer) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a membuffer must not segfault.\n";
-#else
+TEST(MembufferDeathTest, membuffer_assign_with_nullptr_to_membufer) {
     Cmembuffer mbObj{};
     const unsigned char buf[1]{0xFF};
-    int ret{UPNP_E_INVALID_PARAM};
-    ASSERT_EXIT(
-        (ret = mbObj.membuffer_assign(nullptr, &buf, sizeof(buf)), exit(0)),
-        ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to a membuffer must not segfault.";
-    EXPECT_EQ(ret, UPNP_E_OUTOF_MEMORY);
-#endif
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to a membuffer must not segfault.\n";
+        // This expects segfault.
+        EXPECT_DEATH(mbObj.membuffer_assign(nullptr, &buf, sizeof(buf)), ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT(
+            (mbObj.membuffer_assign(nullptr, &buf, sizeof(buf)), exit(0)),
+            ExitedWithCode(0), ".*");
+        int ret_membuffer_assign{UPNP_E_INTERNAL_ERROR};
+        ret_membuffer_assign =
+            mbObj.membuffer_assign(nullptr, &buf, sizeof(buf));
+        EXPECT_EQ(ret_membuffer_assign, UPNP_E_OUTOF_MEMORY);
+    }
 }
 
 TEST(MembufferTestSuite, membuffer_assign_with_nullptr_to_compare_buffer) {
@@ -635,21 +728,30 @@ TEST(MembufferTestSuite, membuffer_insert) {
     mbObj.membuffer_destroy(&mbuf);
 }
 
-TEST(MembufferTestSuite, membuffer_insert_with_nullptr_to_membuf) {
+TEST(MembufferDeathTest, membuffer_insert_with_nullptr_to_membuf) {
     // For successful tests see tests to membuffer_append and
     // membuffer_append_str.
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a membuffer must not segfault.\n";
-#else
     Cmembuffer mbObj{};
     const char buf[1]{1};
-    int ret{UPNP_E_INVALID_PARAM};
-    ASSERT_EXIT(
-        (ret = mbObj.membuffer_insert(nullptr, &buf, sizeof(buf), 0), exit(0)),
-        ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to a membuffer must not segfault.";
-    EXPECT_EQ(ret, UPNP_E_OUTOF_MEMORY);
-#endif
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to a membuffer must not segfault.\n";
+        // This expects segfault.
+        EXPECT_DEATH(mbObj.membuffer_insert(nullptr, &buf, sizeof(buf), 0),
+                     ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT(
+            (mbObj.membuffer_insert(nullptr, &buf, sizeof(buf), 0), exit(0)),
+            ExitedWithCode(0), ".*");
+        int ret_membuffer_insert{UPNP_E_INTERNAL_ERROR};
+        ret_membuffer_insert =
+            mbObj.membuffer_insert(nullptr, &buf, sizeof(buf), 0);
+        EXPECT_EQ(ret_membuffer_insert, UPNP_E_OUTOF_MEMORY);
+    }
 }
 
 TEST(MembufferTestSuite, membuffer_insert_with_nullptr_to_source_buffer) {
@@ -701,8 +803,9 @@ TEST(MembufferTestSuite, membuffer_insert_with_0_length) {
     };
     Buf b{{1, '\xFF'}};
 
-    // b.buf has only one char.
+    // Test Unit, b.buf has only one char.
     EXPECT_EQ(mbObj.membuffer_insert(&mbuf, &b.buf, sizeof(b.buf) + 1, 0), 0);
+
     EXPECT_EQ(mbuf.length, (size_t)2);
     EXPECT_EQ(mbuf.capacity, (size_t)5);
     EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
@@ -710,15 +813,20 @@ TEST(MembufferTestSuite, membuffer_insert_with_0_length) {
     if (mbuf.buf) {
         EXPECT_EQ((int)strlen(mbuf.buf), 2);
         EXPECT_EQ(mbuf.buf[0], 1);
-#ifdef OLD_TEST
-        ::std::cout << "  BUG! Length > sizeof source buffer should not give "
-                       "uninitialized content.\n";
-        EXPECT_EQ(mbuf.buf[1], '\xFF');
-#else
-        EXPECT_EQ(mbuf.buf[1], 0)
-            << "  # Length > sizeof source buffer should not give "
-               "uninitialized content.";
-#endif
+
+        if (old_code) {
+            std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                      << ": Length > sizeof source buffer should not give "
+                         "uninitialized content.\n";
+            EXPECT_EQ(mbuf.buf[1], '\xFF');
+
+        } else {
+
+            EXPECT_EQ(mbuf.buf[1], 0)
+                << "  # Length > sizeof source buffer should not give "
+                   "uninitialized content.";
+        }
+
         EXPECT_EQ(mbuf.buf[2], 0);
     }
     mbObj.membuffer_destroy(&mbuf);
@@ -743,7 +851,7 @@ TEST(MembufferTestSuite, membuffer_insert_with_additional_capacity) {
     mbObj.membuffer_destroy(&mbuf);
 }
 
-TEST(MembufferTestSuite, membuffer_delete) {
+TEST(MembufferDeathTest, membuffer_delete) {
     membuffer mbuf{};
 
     Cmembuffer mbObj{};
@@ -849,17 +957,25 @@ TEST(MembufferTestSuite, membuffer_detach) {
     mbObj.membuffer_destroy(&mbuf);
 }
 
-TEST(MembufferTestSuite, membuffer_detach_with_nullptr_to_membuffer) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a membuffer must not segfault.\n";
-#else
+TEST(MembufferDeathTest, membuffer_detach_with_nullptr_to_membuffer) {
     Cmembuffer mbObj{};
-    char* detached{nullptr};
-    ASSERT_EXIT((detached = mbObj.membuffer_detach(nullptr), exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to a membuffer must not segfault.";
-    EXPECT_EQ(detached, nullptr);
-#endif
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to a membuffer must not segfault.\n";
+        // This expects segfault.
+        EXPECT_DEATH(mbObj.membuffer_detach(nullptr), ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT((mbObj.membuffer_detach(nullptr), exit(0)),
+                    ExitedWithCode(0), ".*");
+        char* ret_membuffer_detach;
+        memset(&ret_membuffer_detach, 0xAA, sizeof(ret_membuffer_detach));
+        ret_membuffer_detach = mbObj.membuffer_detach(nullptr);
+        EXPECT_EQ(ret_membuffer_detach, nullptr);
+    }
 }
 
 TEST(MembufferTestSuite, membuffer_attach) {
@@ -887,17 +1003,23 @@ TEST(MembufferTestSuite, membuffer_attach) {
     mbObj.membuffer_destroy(&mbuf);
 }
 
-TEST(MembufferTestSuite, membuffer_attach_with_nullptr_to_membuffer) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a membuffer must not segfault.\n";
-#else
+TEST(MembufferDeathTest, membuffer_attach_with_nullptr_to_membuffer) {
     Cmembuffer mbObj{};
     char* new_buf = mbObj.str_alloc("Hello World", 11);
-    EXPECT_EXIT((mbObj.membuffer_attach(nullptr, new_buf, 11), exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to a membuffer must not segfault.";
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to a membuffer must not segfault.\n";
+        // This expects segfault.
+        EXPECT_DEATH(mbObj.membuffer_attach(nullptr, new_buf, 11), ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        EXPECT_EXIT((mbObj.membuffer_attach(nullptr, new_buf, 11), exit(0)),
+                    ExitedWithCode(0), ".*");
+    }
     ::free(new_buf);
-#endif
 }
 
 TEST(MembufferTestSuite, membuffer_attach_with_nullptr_to_string_buffer) {
@@ -918,23 +1040,27 @@ TEST(MembufferTestSuite, membuffer_attach_with_nullptr_to_string_buffer) {
 
     // Try to attach a nullptr
     mbObj.membuffer_attach(&mbuf, nullptr, 11);
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a buffer that should be attached must "
-                   "not segfault.\n";
-    EXPECT_EQ(mbuf.length, (size_t)11);
-    EXPECT_EQ(mbuf.capacity, (size_t)11);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_EQ(mbuf.buf, nullptr);
-#else
-    EXPECT_EQ(mbuf.length, (size_t)7)
-        << "  # A nullptr to a buffer that should be "
-           "attached must not segfault.";
-    EXPECT_EQ(mbuf.capacity, 7);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf)
-        EXPECT_STREQ(mbuf.buf, "Old buf");
-#endif
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to a buffer that should be attached must "
+                     "not segfault.\n";
+        EXPECT_EQ(mbuf.length, (size_t)11);
+        EXPECT_EQ(mbuf.capacity, (size_t)11);
+        EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
+        ASSERT_EQ(mbuf.buf, nullptr);
+
+    } else {
+
+        EXPECT_EQ(mbuf.length, (size_t)7)
+            << "  # A nullptr to a buffer that should be "
+               "attached must not segfault.";
+        EXPECT_EQ(mbuf.capacity, 7);
+        EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
+        ASSERT_NE(mbuf.buf, nullptr);
+        if (mbuf.buf)
+            EXPECT_STREQ(mbuf.buf, "Old buf");
+    }
     mbObj.membuffer_destroy(&mbuf);
 }
 
@@ -1002,5 +1128,5 @@ TEST(MembufferTestSuite, membuffer_attach_empty_str_buffer_but_buffer_length) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+#include "compa/gtest_main.inc"
 }

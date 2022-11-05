@@ -1,12 +1,16 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-03
+// Redistribution only with this Copyright remark. Last modified: 2022-11-05
 
 #include "strintmap.hpp"
 #include "httpparser.hpp" // for HTTPMETHOD* constants
 
+#include "upnplib/gtest.hpp"
 #include "gtest/gtest.h"
 
+using ::testing::ExitedWithCode;
+
 namespace compa {
+bool old_code{false}; // Managed in compa/gtest_main.inc
 
 // Interface for the strintmap module
 // ==================================
@@ -71,18 +75,29 @@ TEST_F(StrintmapTestSuite, map_str_to_int) {
     // HTTPMETHOD_NOTIFY << ::std::endl;
 }
 
-TEST_F(StrintmapTestSuite, map_str_to_int_with_nullptr_to_namestring) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to the namestring must not segfault.\n";
-#else
-    int idx{0};
-    ASSERT_EXIT((idx = m_mapObj.map_str_to_int(nullptr, 6, Http_Method_Table,
-                                               NUM_HTTP_METHODS, 1),
-                 exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to the namestring must not segfault.";
-    EXPECT_EQ(idx, -1);
-#endif
+TEST(StrintmapDeathTest, map_str_to_int_with_nullptr_to_namestring) {
+    Cstrintmap mapObj;
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ]" CRES
+                  << " A nullptr to the namestring must not segfault.\n";
+        // This expects segfault.
+        EXPECT_DEATH(mapObj.map_str_to_int(nullptr, 6, Http_Method_Table,
+                                           NUM_HTTP_METHODS, 1),
+                     ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT((mapObj.map_str_to_int(nullptr, 6, Http_Method_Table,
+                                           NUM_HTTP_METHODS, 1),
+                     exit(0)),
+                    ExitedWithCode(0), ".*");
+        int idx{};
+        idx = mapObj.map_str_to_int(nullptr, 6, Http_Method_Table,
+                                    NUM_HTTP_METHODS, 1);
+        EXPECT_EQ(idx, -1);
+    }
 }
 
 TEST_F(StrintmapTestSuite, map_str_to_int_with_zero_namestring_length) {
@@ -91,18 +106,28 @@ TEST_F(StrintmapTestSuite, map_str_to_int_with_zero_namestring_length) {
               -1);
 }
 
-TEST_F(StrintmapTestSuite, map_str_to_int_with_nullptr_to_table) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a table must not segfault.\n";
-#else
-    int idx{};
-    ASSERT_EXIT((idx = m_mapObj.map_str_to_int("NOTIFY", 6, nullptr,
-                                               NUM_HTTP_METHODS, 1),
-                 exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to a table must not segfault.";
-    EXPECT_EQ(idx, -1);
-#endif
+TEST(StrintmapDeathTest, map_str_to_int_with_nullptr_to_table) {
+    Cstrintmap mapObj;
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ]" CRES
+                  << " A nullptr to a table must not segfault.\n";
+        // This expects segfault.
+        EXPECT_DEATH(
+            mapObj.map_str_to_int("NOTIFY", 6, nullptr, NUM_HTTP_METHODS, 1),
+            ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT(
+            (mapObj.map_str_to_int("NOTIFY", 6, nullptr, NUM_HTTP_METHODS, 1),
+             exit(0)),
+            ExitedWithCode(0), ".*");
+        int idx{};
+        idx = mapObj.map_str_to_int("NOTIFY", 6, nullptr, NUM_HTTP_METHODS, 1);
+        EXPECT_EQ(idx, -1);
+    }
 }
 
 TEST_F(StrintmapTestSuite, map_str_to_int_with_zero_table_entries) {
@@ -133,18 +158,29 @@ TEST_F(StrintmapTestSuite, map_int_to_str_with_invalid_id) {
     EXPECT_EQ(idx, -1);
 }
 
-TEST_F(StrintmapTestSuite, map_int_to_str_with_nullptr_to_table) {
-#ifdef OLD_TEST
-    ::std::cout << "  BUG! A nullptr to a table must not segfault.\n";
-#else
-    int idx{};
-    ASSERT_EXIT((idx = m_mapObj.map_int_to_str(::HTTPMETHOD_NOTIFY, nullptr,
-                                               NUM_HTTP_METHODS),
-                 exit(0)),
-                ::testing::ExitedWithCode(0), ".*")
-        << "  # A nullptr to a table must not segfault.";
-    EXPECT_EQ(idx, -1);
-#endif
+TEST(StrintmapDeathTest, map_int_to_str_with_nullptr_to_table) {
+    Cstrintmap mapObj;
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ]" CRES
+                  << " A nullptr to a table must not segfault.\n";
+        // This expects segfault.
+        EXPECT_DEATH(mapObj.map_int_to_str(::HTTPMETHOD_NOTIFY, nullptr,
+                                           NUM_HTTP_METHODS),
+                     ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT((mapObj.map_int_to_str(::HTTPMETHOD_NOTIFY, nullptr,
+                                           NUM_HTTP_METHODS),
+                     exit(0)),
+                    ExitedWithCode(0), ".*");
+        int idx{};
+        idx = mapObj.map_int_to_str(::HTTPMETHOD_NOTIFY, nullptr,
+                                    NUM_HTTP_METHODS);
+        EXPECT_EQ(idx, -1);
+    }
 }
 
 TEST_F(StrintmapTestSuite, map_int_to_str_with_zero_table_entiries) {
@@ -164,5 +200,5 @@ TEST_F(StrintmapTestSuite, map_int_to_str_with_oversized_table_entiries) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+#include "compa/gtest_main.inc"
 }

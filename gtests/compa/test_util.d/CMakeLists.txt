@@ -43,9 +43,14 @@ target_include_directories(test_membuffer
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
+)
+target_compile_definitions(test_membuffer
+    PRIVATE
+        UPNPLIB_WITH_NATIVE_PUPNP
 )
 add_test(NAME ctest_membuffer COMMAND test_membuffer
 )
@@ -59,6 +64,7 @@ add_executable(test_strintmap-psh
 target_include_directories(test_strintmap-psh
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc

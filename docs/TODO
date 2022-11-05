@@ -1,6 +1,4 @@
 Next steps to do:
-* Check upnplib httpreadwrite.cpp.
-* Remove macro OLD_TEST.
 * Continue creating gtests for webserver.
 * Move pupnp/upnp/src/inc/sock.hpp:79:static UPNP_INLINE int sock_close() to miniserver.cpp and rework.
 * Check usage of fields in struct s_SocketStuff.serverAddr4.

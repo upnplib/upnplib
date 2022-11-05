@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-02
+// Redistribution only with this Copyright remark. Last modified: 2022-11-05
 
 #include "list.hpp"
 
@@ -203,7 +203,7 @@ TEST(ListTestSuite, UpnpListEnd) {
     EXPECT_EQ(listObj.UpnpListEnd(&list), list.prev);
 }
 
-TEST(ListTestSuite, UpnpListEnd_with_nullptr_to_list) {
+TEST(ListDeathTest, UpnpListEnd_with_nullptr_to_list) {
     UpnpListHead list{};
 
     Clist listObj{};
