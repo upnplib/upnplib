@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-04
+# Redistribution only with this Copyright remark. Last modified: 2022-11-05
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -419,14 +419,14 @@ if(UPNPLIB_WITH_GOOGLETEST)
 
         message(CHECK_START "configuring Unit Tests")
 
-        # This caches UPNPLIB_GTESTS_SOURCE_DIR and UPNPLIB_GTESTS_BINARY_DIR
+        # This caches GTESTS_SOURCE_DIR and GTESTS_BINARY_DIR
         add_subdirectory(${PROJECT_SOURCE_DIR}/gtests)
 
         # Create symlinks for shared gtest .dlls so the Unit Tests can find them.
         if(BUILD_SHARED_LIBS)
             if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
                 # Make Directory is necessary because sub directory ${CMAKE_BUILD_TYPE} isn't available yet.
-                file(MAKE_DIRECTORY ${UPNPLIB_GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+                file(MAKE_DIRECTORY ${GTESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE})
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gtest.dll
                                  $ENV{SystemRoot}/System32/gtest.dll SYMBOLIC)
                 file(CREATE_LINK ${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/gmock.dll
@@ -464,7 +464,7 @@ if(UPNPLIB_WITH_GOOGLETEST)
 
         message(CHECK_START "configuring Unit Tests")
 
-        # This caches UPNPLIB_GTESTS_SOURCE_DIR and UPNPLIB_GTESTS_BINARY_DIR
+        # This caches GTESTS_SOURCE_DIR and GTESTS_BINARY_DIR
         add_subdirectory(${PROJECT_SOURCE_DIR}/gtests)
 
         message(CHECK_PASS "done")

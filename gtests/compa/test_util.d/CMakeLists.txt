@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-04
+# Redistribution only with this Copyright remark. Last modified: 2022-11-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -17,7 +17,7 @@ add_executable(test_list-psh
 target_include_directories(test_list-psh
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
 )
 target_compile_definitions(test_list-psh
@@ -43,7 +43,7 @@ target_include_directories(test_membuffer
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -64,7 +64,7 @@ add_executable(test_strintmap-psh
 target_include_directories(test_strintmap-psh
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc

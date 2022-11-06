@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-04
+# Redistribution only with this Copyright remark. Last modified: 2022-11-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -80,8 +80,8 @@ set(UPNPLIB_TV_DEVICE_SOURCE_FILES
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
 
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-    ${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj.cpp
-    $<$<BOOL:${WIN32}>:${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj_win32.cpp>
+    ${GTESTS_SOURCE_DIR}/tools/mockObj.cpp
+    $<$<BOOL:${WIN32}>:${GTESTS_SOURCE_DIR}/tools/mockObj_win32.cpp>
 )
 endif()
 

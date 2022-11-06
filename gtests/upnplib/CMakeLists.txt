@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-02
+# Redistribution only with this Copyright remark. Last modified: 2022-11-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -57,7 +57,7 @@ add_executable(test_sock-ush
 )
 target_include_directories(test_sock-ush
     PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 target_compile_definitions(test_sock-ush
@@ -80,7 +80,7 @@ add_executable(test_webserver-ush
 )
 target_include_directories(test_webserver-ush
     PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )

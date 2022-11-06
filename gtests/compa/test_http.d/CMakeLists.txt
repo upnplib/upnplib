@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-04
+# Redistribution only with this Copyright remark. Last modified: 2022-11-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -21,7 +21,7 @@ add_executable(test_webserver-pst
 )
 target_include_directories(test_webserver-pst
     PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${PUPNP_UPNP_SOURCE_DIR}/inc
@@ -54,7 +54,7 @@ add_executable(test_webserver-cst
 )
 target_include_directories(test_webserver-cst
     PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${PUPNP_UPNP_SOURCE_DIR}/inc
@@ -91,8 +91,8 @@ if(FALSE)
 # reference. We link against the internal upnplib libraries (see below).
 add_executable(test_httpreadwrite
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-    ${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj.cpp
-    $<$<BOOL:${WIN32}>:${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj_win32.cpp>
+    ${GTESTS_SOURCE_DIR}/tools/mockObj.cpp
+    $<$<BOOL:${WIN32}>:${GTESTS_SOURCE_DIR}/tools/mockObj_win32.cpp>
 
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
@@ -122,7 +122,7 @@ add_executable(test_httpreadwrite-pst
 )
 target_include_directories(test_httpreadwrite-pst
     PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
@@ -161,8 +161,8 @@ if(FALSE)
 # reference. We link against the upnplib libraries (see below).
 add_executable(test_netconnect
     ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-    ${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj.cpp
-    $<$<BOOL:${WIN32}>:${UPNPLIB_GTESTS_SOURCE_DIR}/tools/mockObj_win32.cpp>
+    ${GTESTS_SOURCE_DIR}/tools/mockObj.cpp
+    $<$<BOOL:${WIN32}>:${GTESTS_SOURCE_DIR}/tools/mockObj_win32.cpp>
 
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
     ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
@@ -190,7 +190,7 @@ add_executable(test_netconnect-pst
 )
 target_include_directories(test_netconnect-pst
     PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
@@ -242,7 +242,7 @@ add_executable(test_httpparser-pst
 )
 target_include_directories(test_httpparser-pst
     PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc

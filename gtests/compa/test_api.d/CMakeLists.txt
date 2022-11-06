@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-04
+# Redistribution only with this Copyright remark. Last modified: 2022-11-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -19,7 +19,7 @@ add_executable(test_upnpdebug-pst
 )
 target_include_directories(test_upnpdebug-pst
     PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
@@ -80,7 +80,7 @@ add_executable(test_UpnpString-psh
 target_include_directories(test_UpnpString-psh
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
 )
 target_compile_definitions(test_UpnpString-psh
@@ -104,7 +104,7 @@ add_executable(test_UpnpString-csh
 target_include_directories(test_UpnpString-csh
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${COMPA_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/inc
 )
@@ -130,7 +130,7 @@ add_executable(test_UpnpFileInfo-psh
 )
 target_include_directories(test_UpnpFileInfo-psh
     PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -155,7 +155,7 @@ add_executable(test_UpnpFileInfo-csh
 )
 target_include_directories(test_UpnpFileInfo-csh
     PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
@@ -230,7 +230,7 @@ add_executable(test_upnpapi-pst
 )
 target_include_directories(test_upnpapi-pst
     PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
@@ -264,7 +264,7 @@ add_executable(test_upnpapi_platform-psh
 )
 target_include_directories(test_upnpapi_platform-psh
     PRIVATE
-        ${UPNPLIB_GTESTS_SOURCE_DIR}/include
+        ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc

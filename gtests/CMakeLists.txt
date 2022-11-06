@@ -5,9 +5,9 @@ cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(UPNPLIB_GTESTS VERSION 0033
-                       DESCRIPTION "Unit Tests using googletest"
-                       HOMEPAGE_URL "https://github.com/upnplib")
+project(GTESTS VERSION 0033
+               DESCRIPTION "Unit Tests using googletest"
+               HOMEPAGE_URL "https://github.com/upnplib")
 
 
 #################################
