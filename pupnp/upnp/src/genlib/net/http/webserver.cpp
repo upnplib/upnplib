@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-04
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-12
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -62,11 +62,20 @@
 #include "upnpapi.hpp"
 #include "upnputil.hpp"
 
+#include "umock/stdlib.hpp"
+
 #include <assert.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 
 #include "posix_overwrites.hpp"
+
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+#define NS
+#else
+#define NS ::compa
+#include "compa/webserver.hpp"
+#endif
 
 /*!
  * Response Types.
@@ -338,11 +347,11 @@ static UPNP_INLINE int get_content_type(
         return UPNP_E_OUTOF_MEMORY;
     rc = snprintf(temp, length, "%s/%s", type, subtype);
     if (rc < 0 || (unsigned int)rc >= length) {
-        free(temp);
+        umock::stdlib_h.free(temp);
         return UPNP_E_OUTOF_MEMORY;
     }
     UpnpFileInfo_set_ContentType(fileInfo, temp);
-    free(temp);
+    umock::stdlib_h.free(temp);
     if (!UpnpFileInfo_get_ContentType(fileInfo))
         return UPNP_E_OUTOF_MEMORY;
 
@@ -391,7 +400,7 @@ static void alias_grab(
  * \brief Release the XML document referred to by the input parameter. Free
  * the allocated buffers associated with this object.
  */
-static void alias_release(
+[[maybe_unused]] static void alias_release(
     /*! [in] XML alias object. */
     struct xml_alias_t* alias) {
     ithread_mutex_lock(&gWebMutex);
@@ -405,7 +414,7 @@ static void alias_release(
     if (*alias->ct <= 0) {
         membuffer_destroy(&alias->doc);
         membuffer_destroy(&alias->name);
-        free(alias->ct);
+        umock::stdlib_h.free(alias->ct);
     }
     ithread_mutex_unlock(&gWebMutex);
 }
@@ -415,7 +424,7 @@ int web_server_set_alias(const char* alias_name, const char* alias_content,
     int ret_code;
     struct xml_alias_t alias;
 
-    alias_release(&gAliasDoc);
+    NS::alias_release(&gAliasDoc);
     if (alias_name == NULL) {
         /* don't serve aliased doc anymore */
         return 0;
@@ -449,7 +458,7 @@ int web_server_set_alias(const char* alias_name, const char* alias_content,
     /* free temp alias */
     membuffer_destroy(&alias.name);
     membuffer_destroy(&alias.doc);
-    free(alias.ct);
+    umock::stdlib_h.free(alias.ct);
 
     return UPNP_E_OUTOF_MEMORY;
 }
@@ -484,7 +493,7 @@ int web_server_init() {
 void web_server_destroy(void) {
     if (bWebServerState == WEB_SERVER_ENABLED) {
         membuffer_destroy(&gDocumentRootDir);
-        alias_release(&gAliasDoc);
+        NS::alias_release(&gAliasDoc);
 
         ithread_mutex_lock(&gWebMutex);
         memset(&gAliasDoc, 0, sizeof(struct xml_alias_t));
@@ -697,9 +706,9 @@ static char* StrStr(
     else
         ret = s1 + (Ptr - Str1);
 
-    free(Str2);
+    umock::stdlib_h.free(Str2);
 error2:
-    free(Str1);
+    umock::stdlib_h.free(Str1);
 error1:
     return ret;
 }
@@ -817,7 +826,7 @@ static int CreateHTTPRangeResponseHeader(
     /* CONTENT-RANGE: bytes 222-3333/4000  HTTP_PARTIAL_CONTENT */
     if (StrStr(RangeInput, "bytes") == NULL ||
         (Ptr = StrStr(RangeInput, "=")) == NULL) {
-        free(RangeInput);
+        umock::stdlib_h.free(RangeInput);
         Instr->IsRangeActive = 0;
         return HTTP_BAD_REQUEST;
     }
@@ -829,12 +838,12 @@ static int CreateHTTPRangeResponseHeader(
             Instr->IsRangeActive = 0;
             ret = HTTP_OK;
         }
-        free(RangeInput);
+        umock::stdlib_h.free(RangeInput);
         return ret;
     }
     if (GetNextRange(&Ptr, &FirstByte, &LastByte) != -1) {
         if (FileLength < FirstByte) {
-            free(RangeInput);
+            umock::stdlib_h.free(RangeInput);
             return HTTP_REQUEST_RANGE_NOT_SATISFIABLE;
         }
         if (FirstByte >= 0 && LastByte >= 0 && LastByte >= FirstByte) {
@@ -848,7 +857,7 @@ static int CreateHTTPRangeResponseHeader(
                 "CONTENT-RANGE: bytes %" PRId64 "-%" PRId64 "/%" PRId64 "\r\n",
                 (int64_t)FirstByte, (int64_t)LastByte, (int64_t)FileLength);
             if (rc < 0 || (unsigned int)rc >= sizeof(Instr->RangeHeader)) {
-                free(RangeInput);
+                umock::stdlib_h.free(RangeInput);
                 return HTTP_INTERNAL_SERVER_ERROR;
             }
         } else if (FirstByte >= 0 && LastByte == -1 && FirstByte < FileLength) {
@@ -860,7 +869,7 @@ static int CreateHTTPRangeResponseHeader(
                           (int64_t)FirstByte, (int64_t)(FileLength - 1),
                           (int64_t)FileLength);
             if (rc < 0 || (unsigned int)rc >= sizeof(Instr->RangeHeader)) {
-                free(RangeInput);
+                umock::stdlib_h.free(RangeInput);
                 return HTTP_INTERNAL_SERVER_ERROR;
             }
         } else if (FirstByte == -1 && LastByte > 0) {
@@ -881,19 +890,19 @@ static int CreateHTTPRangeResponseHeader(
                               (int64_t)FileLength - 1, (int64_t)FileLength);
             }
             if (rc < 0 || (unsigned int)rc >= sizeof(Instr->RangeHeader)) {
-                free(RangeInput);
+                umock::stdlib_h.free(RangeInput);
                 return HTTP_INTERNAL_SERVER_ERROR;
             }
         } else {
-            free(RangeInput);
+            umock::stdlib_h.free(RangeInput);
             return HTTP_REQUEST_RANGE_NOT_SATISFIABLE;
         }
     } else {
-        free(RangeInput);
+        umock::stdlib_h.free(RangeInput);
         return HTTP_REQUEST_RANGE_NOT_SATISFIABLE;
     }
 
-    free(RangeInput);
+    umock::stdlib_h.free(RangeInput);
     return HTTP_OK;
 }
 
@@ -932,7 +941,7 @@ static int CheckOtherHTTPHeaders(
             map_str_to_int((const char*)header->name.buf, header->name.length,
                            Http_Header_Names, NUM_HTTP_HEADER_NAMES, 0);
         if (header->value.length >= TmpBufSize) {
-            free(TmpBuf);
+            umock::stdlib_h.free(TmpBuf);
             TmpBufSize = header->value.length + 1;
             TmpBuf = (char*)malloc(TmpBufSize);
             if (!TmpBuf)
@@ -961,7 +970,7 @@ static int CheckOtherHTTPHeaders(
                 RetCode =
                     CreateHTTPRangeResponseHeader(TmpBuf, FileSize, RespInstr);
                 if (RetCode != HTTP_OK) {
-                    free(TmpBuf);
+                    umock::stdlib_h.free(TmpBuf);
                     return RetCode;
                 }
                 break;
@@ -1016,7 +1025,7 @@ static int CheckOtherHTTPHeaders(
         }
         node = ListNext(&Req->headers, node);
     }
-    free(TmpBuf);
+    umock::stdlib_h.free(TmpBuf);
 
     return RetCode;
 }
@@ -1431,12 +1440,12 @@ static int process_request(
     err_code = HTTP_OK;
 
 error_handler:
-    free(request_doc);
+    umock::stdlib_h.free(request_doc);
     FreeExtraHTTPHeaders(
         (UpnpListHead*)UpnpFileInfo_get_ExtraHeadersList(finfo));
     UpnpFileInfo_delete(finfo);
     if (err_code != HTTP_OK && alias_grabbed) {
-        alias_release(alias);
+        NS::alias_release(alias);
     }
 
     return err_code;
@@ -1609,7 +1618,7 @@ void web_server_callback(http_parser_t* parser, /* INOUT */ http_message_t* req,
         case RESP_XMLDOC:
             http_SendMessage(info, &timeout, "Ibb", &RespInstr, headers.buf,
                              headers.length, xmldoc.doc.buf, xmldoc.doc.length);
-            alias_release(&xmldoc);
+            NS::alias_release(&xmldoc);
             break;
         case RESP_WEBDOC:
             /*http_SendVirtualDirDoc(info, &timeout, "Ibf",

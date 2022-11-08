@@ -1,12 +1,15 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-03
+// Redistribution only with this Copyright remark. Last modified: 2022-11-08
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
-#ifndef UPNPLIB_WITH_NATIVE_PUPNP
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+#define NS
+#else
+#define NS compa
 #include "compa/src/genlib/miniserver/miniserver.cpp"
 #endif
 
-#include "upnplib/upnptools.hpp" // For upnplib only
+#include "upnplib/upnptools.hpp"
 #include "upnplib/port.hpp"
 #include "upnplib/sock.hpp"
 #include "upnplib/gtest.hpp"
@@ -28,12 +31,6 @@ using ::upnplib::testing::CaptureStdOutErr;
 using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::MatchesStdRegex;
 using ::upnplib::testing::StrCpyToArg;
-
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-#define NS
-#else
-#define NS compa
-#endif
 
 class CLogging { /*
  * Use it for example with:

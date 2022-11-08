@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-08
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1420,15 +1420,15 @@ int device_main(const int argc, char* argv[]) {
     for (i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-i") == 0) {
             iface = argv[++i];
-        } else if (strcmp(argv[i], "-port") == 0) {
+        } else if (strcmp(argv[i], "--port") == 0) {
 #ifdef WIN32
             sscanf_s(argv[++i], "%u", &portTemp);
 #else
             sscanf(argv[++i], "%u", &portTemp);
 #endif
-        } else if (strcmp(argv[i], "-desc") == 0) {
+        } else if (strcmp(argv[i], "--desc") == 0) {
             desc_doc_name = argv[++i];
-        } else if (strcmp(argv[i], "-webdir") == 0) {
+        } else if (strcmp(argv[i], "--webdir") == 0) {
             web_dir_path = argv[++i];
         } else if (strcmp(argv[i], "-m") == 0) {
 #ifdef _WIN32
@@ -1436,10 +1436,10 @@ int device_main(const int argc, char* argv[]) {
 #else
             sscanf(argv[++i], "%d", &ip_mode);
 #endif
-        } else if (strcmp(argv[i], "-help") == 0) {
-            SampleUtil_Print("Usage: %s -i interface -port port"
-                             " -desc desc_doc_name -webdir web_dir_path"
-                             " -m ip_mode -help (this message)\n",
+        } else if (strcmp(argv[i], "--help") == 0) {
+            SampleUtil_Print("Usage: %s -i interface --port port"
+                             " --desc desc_doc_name --webdir web_dir_path"
+                             " -m ip_mode --help (this message)\n",
                              argv[0]);
             SampleUtil_Print("\tinterface:     interface address of the "
                              "device"

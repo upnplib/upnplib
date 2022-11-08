@@ -1,4 +1,7 @@
 Next steps to do:
+* Check membuffer settings of length and capacity.
+* Check bugfix in pupnp/upnp/src/urlconfig/urlconfig.cpp with a gtest.
+* [set EXPECT_CALL to redirect the call to the original method](https://stackoverflow.com/questions/25556601/set-expect-call-to-redirect-the-call-to-the-original-method)
 * Continue creating gtests for webserver.
 * Move pupnp/upnp/src/inc/sock.hpp:79:static UPNP_INLINE int sock_close() to miniserver.cpp and rework.
 * Check usage of fields in struct s_SocketStuff.serverAddr4.

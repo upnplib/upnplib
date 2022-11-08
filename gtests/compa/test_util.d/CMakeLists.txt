@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-05
+# Redistribution only with this Copyright remark. Last modified: 2022-11-10
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -36,10 +36,10 @@ add_test(NAME ctest_list-psh COMMAND test_list-psh
 
 # membuffer
 #==========
-add_executable(test_membuffer
+add_executable(test_membuffer-psh
         ./test_membuffer.cpp
 )
-target_include_directories(test_membuffer
+target_include_directories(test_membuffer-psh
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
@@ -48,11 +48,17 @@ target_include_directories(test_membuffer
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
 )
-target_compile_definitions(test_membuffer
+target_compile_definitions(test_membuffer-psh
     PRIVATE
+        UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
 )
-add_test(NAME ctest_membuffer COMMAND test_membuffer
+target_link_libraries(test_membuffer-psh
+        PRIVATE
+            umock_shared
+)
+add_test(NAME ctest_membuffer-psh COMMAND test_membuffer-psh
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 
