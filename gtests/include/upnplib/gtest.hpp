@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_GTEST_HPP
 #define UPNPLIB_GTEST_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-31
+// Redistribution only with this Copyright remark. Last modified: 2022-11-16
 
 #include "upnplib/visibility.hpp"
 #include <cstring>
@@ -65,8 +65,8 @@ class UPNPLIB_API CaptureStdOutErr {
 
   private:
     int out_pipe[2]{};
-    static constexpr int pipebuffer{8192};
-    static constexpr int chunk_size{512};
+    static constexpr int m_pipebuffer{8192};
+    static constexpr int m_chunk_size{512};
 
     // The original file descriptor STDOUT_FILENO or STDERR_FILENO that is
     // captured.

@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-12
+// Redistribution only with this Copyright remark. Last modified: 2022-11-13
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -50,7 +50,7 @@ bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
 //
 // Little helper
-// -------------
+// =============
 class CgWebMutex {
     // There are some Units with mutex locks and unlocks that will throw
     // exceptions on WIN32 if not initialized. I need this class in conjunction
@@ -83,18 +83,19 @@ class Cxml_alias {
 
 //
 // Mocked system calls
-//--------------------
+//====================
 class StdlibMock : public umock::StdlibInterface {
   public:
     virtual ~StdlibMock() override {}
     MOCK_METHOD(void*, malloc, (size_t size), (override));
-    MOCK_METHOD(void, free, (void* ptr), (override));
     MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));
+    MOCK_METHOD(void*, realloc, (void* ptr, size_t size), (override));
+    MOCK_METHOD(void, free, (void* ptr), (override));
 };
 
 //
 // Testsuites
-// ----------
+// ==========
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 // With new code there is no media list to initialize. We have a constant array
 // there, once initialized by the compiler on startup.

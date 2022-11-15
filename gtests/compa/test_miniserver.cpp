@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-08
+// Redistribution only with this Copyright remark. Last modified: 2022-11-16
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
@@ -1898,10 +1898,12 @@ TEST(RunMiniServerDeathTest, free_handle_request_arg_with_nullptr_to_struct) {
 
     // Test Unit
     if (old_code) {
+#if defined __APPLE__ && !DEBUG
+#else
         std::cout << CYEL "[ BUGFIX   ]" CRES
                   << " free_handle_re4quest with nullptr must not segfault.\n";
         EXPECT_DEATH(free_handle_request_arg(request), "");
-
+#endif
     } else {
 
         free_handle_request_arg(request);

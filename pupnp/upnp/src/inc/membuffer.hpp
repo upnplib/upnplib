@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-17
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-14
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,9 +31,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+// Last compare with pupnp original source file on 2022-11-12
 
-#ifndef GENLIB_UTIL_MEMBUFFER_H
-#define GENLIB_UTIL_MEMBUFFER_H
+#ifndef GENLIB_UTIL_MEMBUFFER_HPP
+#define GENLIB_UTIL_MEMBUFFER_HPP
 
 /*!
  * \file
@@ -55,13 +56,15 @@ typedef struct {
 } memptr;
 
 /*! Maintains a block of dynamically allocated memory
- * note: Total length/capacity should not exceed MAX_INT */
+ * note: Total length/capacity should not exceed MAX_INT. It is always a
+ * terminating null byte ('\0') appended but not reflected in length and
+ * capacity */
 typedef struct {
     /*! mem buffer; must not write beyond buf[length-1] (read/write). */
     char* buf;
-    /*! length of buffer (read-only). */
+    /*! length of buffer without terminating null byte (read-only). */
     size_t length;
-    /*! total allocated memory (read-only). */
+    /*! total allocated memory without terminating null byte (read-only). */
     size_t capacity;
     /*! used to increase size; MUST be > 0; (read/write). */
     size_t size_inc;
@@ -262,4 +265,4 @@ void membuffer_attach(
     /*! [in] Length of the source buffer. */
     size_t buf_len);
 
-#endif /* GENLIB_UTIL_MEMBUFFER_H */
+#endif /* GENLIB_UTIL_MEMBUFFER_HPP */

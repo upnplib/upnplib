@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-31
+// Redistribution only with this Copyright remark. Last modified: 2022-11-16
 
 // Tools and helper classes to manage gtests
 // =========================================
@@ -35,7 +35,7 @@ CaptureStdOutErr::CaptureStdOutErr(int a_stdOutErrFd)
     }
     // make a pipe
 #ifdef _WIN32
-    int rc = ::_pipe(this->out_pipe, this->pipebuffer, _O_TEXT);
+    int rc = ::_pipe(this->out_pipe, m_pipebuffer, _O_TEXT);
 #else
     int rc = ::pipe(this->out_pipe);
 #endif
@@ -95,7 +95,7 @@ void CaptureStdOutErr::start() {
 //
 std::string CaptureStdOutErr::get() {
     // read from pipe into chunk and append the chunk to a string
-    char chunk[this->chunk_size + 1];
+    char chunk[m_chunk_size + 1];
     std::string strbuffer{};
 
     // Stdout is buffered. We need to flush it to the pipe. Otherwise it is
@@ -119,7 +119,7 @@ std::string CaptureStdOutErr::get() {
 
         // Read from the pipe
         memset(&chunk, 0, sizeof(chunk));
-        count = ::read(this->out_pipe[0], &chunk, this->chunk_size);
+        count = ::read(this->out_pipe[0], &chunk, m_chunk_size);
 
         switch (count) {
         case 1:
@@ -177,6 +177,7 @@ std::string CaptureStdOutErr::get() {
 // function to get the modification time of a file
 // -----------------------------------------------
 time_t file_mod_time(const std::string& a_pathname) {
+    std::cout << "DEBUG! Tracepoint 2\n";
     struct stat result;
 
     if (stat(a_pathname.c_str(), &result) == -1)

@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-04
+// Redistribution only with this Copyright remark. Last modified: 2022-11-16
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -71,7 +71,7 @@ class PupnpMock : public umock::PupnpInterface {
     // Not used here but non virtual dummy method for the interface needed.
     int private_connect([[maybe_unused]] SOCKET sockfd,
                         [[maybe_unused]] const struct sockaddr* serv_addr,
-                        [[maybe_unused]] socklen_t addrlen) {
+                        [[maybe_unused]] socklen_t addrlen) override {
         return -1;
     }
 };

@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-01
+// Redistribution only with this Copyright remark. Last modified: 2022-11-16
 
 // This class is based on the "URL Living Standard"
 // ================================================
@@ -61,8 +61,8 @@ class Url {
     std::string m_username;
     std::string m_password;
     std::string m_host;
-    std::string m_port;        // Always set to the current port
-    uint16_t m_port_num{NULL}; // Only set if not default port of the scheme
+    std::string m_port;    // Always set to the current port
+    uint16_t m_port_num{}; // Only set if not default port of the scheme
     std::string m_path;
     std::string m_query;
     std::string m_fragment;

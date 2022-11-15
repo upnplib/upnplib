@@ -37,17 +37,20 @@ class PupnpInterface {
 class PupnpReal : public PupnpInterface {
   public:
     virtual ~PupnpReal() override = default;
-    int sock_make_no_blocking(SOCKET sock) {
+    int sock_make_no_blocking(SOCKET sock) override {
         return ::sock_make_no_blocking(sock);
     }
-    int sock_make_blocking(SOCKET sock) { return ::sock_make_blocking(sock); }
+    int sock_make_blocking(SOCKET sock) override {
+        return ::sock_make_blocking(sock);
+    }
 #ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
-    int Check_Connect_And_Wait_Connection(SOCKET sock, int connect_res) {
+    int Check_Connect_And_Wait_Connection(SOCKET sock,
+                                          int connect_res) override {
         return ::Check_Connect_And_Wait_Connection(sock, connect_res);
     }
 #endif
     int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
-                        socklen_t addrlen) {
+                        socklen_t addrlen) override {
         return ::private_connect(sockfd, serv_addr, addrlen);
     }
 };

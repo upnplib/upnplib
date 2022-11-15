@@ -31,6 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+// Last compare with pupnp original source file on 2022-11-12
 
 /*
  * \file
@@ -44,13 +45,13 @@
 // #include "unixutil.h"
 #include "upnp.hpp"
 
-#include "umock/stdlib.hpp"
-
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
 
 #include "posix_overwrites.hpp"
+
+#include "umock/stdlib.hpp"
 
 char* str_alloc(const char* str, size_t str_len) {
     char* s;
@@ -131,15 +132,16 @@ int membuffer_set_size(membuffer* m, size_t new_length) {
 
     assert(alloc_len >= new_length);
 
-    temp_buf = (char*)realloc(m->buf, alloc_len + (size_t)1); /*LEAK_FIX_MK */
+    temp_buf = (char*)umock::stdlib_h.realloc(
+        m->buf, alloc_len + (size_t)1); /*LEAK_FIX_MK */
 
     /*temp_buf = Realloc( m->buf,m->length, alloc_len + 1 );LEAK_FIX_MK */
 
     if (temp_buf == NULL) {
         /* try smaller size */
         alloc_len = new_length;
-        temp_buf =
-            (char*)realloc(m->buf, alloc_len + (size_t)1); /*LEAK_FIX_MK */
+        temp_buf = (char*)umock::stdlib_h.realloc(
+            m->buf, alloc_len + (size_t)1); /*LEAK_FIX_MK */
         /*temp_buf = Realloc( m->buf,m->length, alloc_len + 1
          * );LEAK_FIX_MK */
 

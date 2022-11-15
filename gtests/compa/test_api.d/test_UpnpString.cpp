@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-18
+// Redistribution only with this Copyright remark. Last modified: 2022-11-13
 
 #include "UpnpString.hpp"
 
@@ -44,8 +44,9 @@ class StdlibMock : public umock::StdlibInterface {
   public:
     virtual ~StdlibMock() override {}
     MOCK_METHOD(void*, malloc, (size_t size), (override));
-    MOCK_METHOD(void, free, (void* ptr), (override));
     MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));
+    MOCK_METHOD(void*, realloc, (void* ptr, size_t size), (override));
+    MOCK_METHOD(void, free, (void* ptr), (override));
 };
 
 class StringMock : public umock::StringInterface {

@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-18
+// Redistribution only with this Copyright remark. Last modified: 2022-11-13
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
@@ -14,8 +14,9 @@ class StdlibInterface {
     virtual ~StdlibInterface() {}
 
     virtual void* malloc(size_t size) = 0;
-    virtual void free(void* ptr) = 0;
     virtual void* calloc(size_t nmemb, size_t size) = 0;
+    virtual void* realloc(void* ptr, size_t size) = 0;
+    virtual void free(void* ptr) = 0;
 };
 
 //
@@ -26,8 +27,9 @@ class StdlibReal : public StdlibInterface {
     virtual ~StdlibReal() override {}
 
     void* malloc(size_t size) override;
-    void free(void* ptr) override;
     void* calloc(size_t nmemb, size_t size) override;
+    void* realloc(void* ptr, size_t size) override;
+    void free(void* ptr) override;
 };
 
 //
@@ -57,8 +59,9 @@ class UPNPLIB_API Stdlib {
 
     // Methods
     virtual void* malloc(size_t size);
-    virtual void free(void* ptr);
     virtual void* calloc(size_t nmemb, size_t size);
+    virtual void* realloc(void* ptr, size_t size);
+    virtual void free(void* ptr);
 
   private:
     // Next variable must be static. Please note that a static member variable

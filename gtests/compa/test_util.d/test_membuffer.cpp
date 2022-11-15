@@ -1,18 +1,21 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-06
+// Redistribution only with this Copyright remark. Last modified: 2022-11-16
 
 #include "pupnp/upnp/src/genlib/util/membuffer.cpp"
 
 #include "upnplib/gtest.hpp"
-#include "gtest/gtest.h"
+#include "umock/stdlib.hpp"
+#include "gmock/gmock.h"
 
+using ::testing::_;
 using ::testing::ExitedWithCode;
+using ::testing::Return;
 
 namespace compa {
 bool old_code{false}; // Managed in compa/gtest_main.inc
 
-// Interface for the uri module
-// ============================
+// Interface for the membuffer module
+// ==================================
 // clang-format off
 
 class Imembuffer {
@@ -51,7 +54,9 @@ class Imembuffer {
 
 class Cmembuffer : Imembuffer {
   public:
-    virtual ~Cmembuffer() override {}
+    membuffer buffer{};
+
+    virtual ~Cmembuffer() override { this->membuffer_destroy(&this->buffer); }
 
     char* str_alloc(const char* str, size_t str_len) override {
         return ::str_alloc(str, str_len); }
@@ -83,6 +88,18 @@ class Cmembuffer : Imembuffer {
         return ::membuffer_attach(m, new_buf, buf_len); }
 };
 // clang-format on
+
+//
+// Mocked system calls
+// ===================
+class StdlibMock : public umock::StdlibInterface {
+  public:
+    virtual ~StdlibMock() override {}
+    MOCK_METHOD(void*, malloc, (size_t size), (override));
+    MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));
+    MOCK_METHOD(void*, realloc, (void* ptr, size_t size), (override));
+    MOCK_METHOD(void, free, (void* ptr), (override));
+};
 
 //
 // Testsuite for the membuffer module
@@ -447,11 +464,16 @@ TEST(MembufferDeathTest, membuffer_set_size_with_nullptr_to_membuf) {
     Cmembuffer mbObj{};
 
     if (old_code) {
+#if defined __APPLE__ && !DEBUG
+        int return_membuffer_set_size{UPNP_E_INTERNAL_ERROR};
+        return_membuffer_set_size = mbObj.membuffer_set_size(nullptr, 1);
+        EXPECT_EQ(return_membuffer_set_size, 0);
+#else
         std::cout << CRED "[ BUG      ] " CRES << __LINE__
                   << ": A nullptr to a membuffer must not segfault.\n";
         // This expects segfault.
         EXPECT_DEATH(mbObj.membuffer_set_size(nullptr, 1), ".*");
-
+#endif
     } else {
 
         // This expects NO segfault.
@@ -459,98 +481,200 @@ TEST(MembufferDeathTest, membuffer_set_size_with_nullptr_to_membuf) {
                     ExitedWithCode(0), ".*");
         int ret_membuffer_set_size{UPNP_E_INTERNAL_ERROR};
         ret_membuffer_set_size = mbObj.membuffer_set_size(nullptr, 1);
-        EXPECT_EQ(ret_membuffer_set_size, UPNP_E_OUTOF_MEMORY);
+        EXPECT_EQ(ret_membuffer_set_size, UPNP_E_INVALID_ARGUMENT);
     }
+}
+
+TEST(MembufferTestSuite, empty_membuffer_set_size_to_0_byte_new_length) {
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
+
+    // Test Unit
+    EXPECT_EQ(mem.membuffer_set_size(&mem.buffer, 0), UPNP_E_SUCCESS);
+
+    EXPECT_EQ(mem.buffer.length, (size_t)0);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)0);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    EXPECT_EQ(mem.buffer.buf, nullptr);
+}
+
+TEST(MembufferTestSuite, empty_membuffer_set_size_to_1_byte_new_length) {
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
+
+    // Test Unit
+    mem.membuffer_set_size(&mem.buffer, 1);
+
+    EXPECT_EQ(mem.buffer.length, (size_t)0);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)5);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    // Don't check strlen because the string isn't initialized and may have
+    // varying strlen.
+    // EXPECT_EQ(strlen(mem.buffer.buf), 0);
+}
+
+TEST(MembufferTestSuite, empty_membuffer_set_size) {
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
+
+    size_t new_length{2 * MEMBUF_DEF_SIZE_INC + 1};
+    mem.membuffer_set_size(&mem.buffer, new_length);
+    EXPECT_EQ(mem.buffer.length, (size_t)0);
+    EXPECT_EQ(mem.buffer.capacity, new_length);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    // Don't check strlen because the string isn't initialized and may have
+    // varying strlen.
+    // EXPECT_EQ(strlen(mem.buffer.buf), 0);
 }
 
 TEST(MembufferTestSuite, membuffer_set_size_to_0_byte_new_length) {
-    membuffer mbuf{};
+    char buf1[]{'\xAA', '\xAA'};
+    size_t new_length{0};
 
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    // Provide a filled buffer
+    Cmembuffer mem;
+    ASSERT_EQ(mem.membuffer_assign(&mem.buffer, &buf1, sizeof(buf1)),
+              UPNP_E_SUCCESS);
 
-    EXPECT_EQ(mbObj.membuffer_set_size(&mbuf, 0), UPNP_E_SUCCESS);
-    EXPECT_EQ(mbuf.length, (size_t)0);
-    EXPECT_EQ(mbuf.capacity, (size_t)0);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_EQ(mbuf.buf, nullptr);
+    EXPECT_EQ(mem.buffer.length, (size_t)2);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)2);
+    EXPECT_EQ(mem.buffer.size_inc, 0);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ(mem.buffer.buf[0], '\xAA');
+    EXPECT_EQ(mem.buffer.buf[1], '\xAA');
+    EXPECT_EQ(mem.buffer.buf[2], '\0');
 
-    mbObj.membuffer_destroy(&mbuf);
+    // Test Unit
+    EXPECT_EQ(mem.membuffer_set_size(&mem.buffer, new_length), UPNP_E_SUCCESS);
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Setting new length to 0 should return a null "
+                     "terminated empty buffer.\n";
+        EXPECT_EQ(mem.buffer.length, (size_t)2); // This is wrong
+        EXPECT_EQ(mem.buffer.capacity, (size_t)0);
+        EXPECT_EQ(mem.buffer.size_inc, 0);
+        ASSERT_NE(mem.buffer.buf, nullptr);
+        EXPECT_EQ(mem.buffer.buf[0], '\xAA'); // Should be '\0'
+
+    } else {
+
+        EXPECT_EQ(mem.buffer.length, (size_t)0);
+        EXPECT_EQ(mem.buffer.capacity, (size_t)0);
+        EXPECT_EQ(mem.buffer.size_inc, 0);
+        ASSERT_NE(mem.buffer.buf, nullptr);
+        EXPECT_EQ(mem.buffer.buf[0], '\0');
+    }
 }
 
-TEST(MembufferTestSuite, membuffer_set_size_to_1_byte_new_length) {
-    membuffer mbuf{};
+TEST(MembufferTestSuite, membuffer_set_size_reduce) {
+    char buf1[]{'\x5A', '\x5A'};
+    size_t new_length{1};
 
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    // Provide a filled buffer
+    Cmembuffer mem;
+    ASSERT_EQ(mem.membuffer_assign(&mem.buffer, &buf1, sizeof(buf1)),
+              UPNP_E_SUCCESS);
 
-    mbObj.membuffer_set_size(&mbuf, 1);
-    EXPECT_EQ(mbuf.length, (size_t)0);
-    EXPECT_EQ(mbuf.capacity, (size_t)5);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_NE(mbuf.buf, nullptr);
-    // Don't check strlen because the string isn't initialized and may have
-    // varying strlen.
-    // if (mbuf.buf != nullptr)
-    //     EXPECT_EQ(strlen(mbuf.buf), 6);
+    // Test Unit
+    EXPECT_EQ(mem.membuffer_set_size(&mem.buffer, new_length), UPNP_E_SUCCESS);
 
-    mbObj.membuffer_destroy(&mbuf);
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Reducing new length should also reduce the old buffer "
+                     "content.\n";
+        EXPECT_EQ(mem.buffer.length, (size_t)2); // This is wrong
+        EXPECT_EQ(mem.buffer.capacity, (size_t)1);
+        EXPECT_EQ(mem.buffer.size_inc, 0);
+        ASSERT_NE(mem.buffer.buf, nullptr);
+        EXPECT_EQ(mem.buffer.buf[0], '\x5A');
+        EXPECT_EQ(mem.buffer.buf[1], '\x5A'); // Should be '\0'
+
+    } else {
+
+        EXPECT_EQ(mem.buffer.length, (size_t)1);
+        EXPECT_EQ(mem.buffer.capacity, (size_t)1);
+        EXPECT_EQ(mem.buffer.size_inc, 0);
+        ASSERT_NE(mem.buffer.buf, nullptr);
+        EXPECT_EQ(mem.buffer.buf[0], '\x5A');
+        EXPECT_EQ(mem.buffer.buf[1], '\0');
+    }
 }
 
-TEST(MembufferTestSuite, membuffer_set_size) {
-    membuffer mbuf{};
+TEST(MembufferTestSuite, membuffer_set_size_increase) {
+    char buf1[]{'\xA5', '\xA5'};
+    size_t new_length{3};
 
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    // Provide a filled buffer
+    Cmembuffer mem;
+    ASSERT_EQ(mem.membuffer_assign(&mem.buffer, &buf1, sizeof(buf1)),
+              UPNP_E_SUCCESS);
 
-    size_t new_length{2 * MEMBUF_DEF_SIZE_INC + 1};
-    mbObj.membuffer_set_size(&mbuf, new_length);
-    EXPECT_EQ(mbuf.length, (size_t)0);
-    EXPECT_EQ(mbuf.capacity, new_length);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_NE(mbuf.buf, nullptr);
-    // Don't check strlen because the string isn't initialized and may have
-    // varying strlen.
-    // if (mbuf.buf != nullptr)
-    //     EXPECT_EQ(strlen(mbuf.buf), 6);
+    // Test Unit
+    EXPECT_EQ(mem.membuffer_set_size(&mem.buffer, new_length), UPNP_E_SUCCESS);
 
-    mbObj.membuffer_destroy(&mbuf);
+    EXPECT_EQ(mem.buffer.length, (size_t)2);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)3);
+    EXPECT_EQ(mem.buffer.size_inc, 0);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ(mem.buffer.buf[0], '\xA5');
+    EXPECT_EQ(mem.buffer.buf[1], '\xA5');
+    EXPECT_EQ(mem.buffer.buf[2], '\0');
 }
 
 TEST(MembufferTestSuite, membuffer_assign) {
-    membuffer mbuf{};
-
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
     const unsigned char buf1[2]{1, 2};
-    EXPECT_EQ(mbObj.membuffer_assign(&mbuf, &buf1, sizeof(buf1)),
+    EXPECT_EQ(mem.membuffer_assign(&mem.buffer, &buf1, sizeof(buf1)),
               UPNP_E_SUCCESS);
-    EXPECT_EQ(mbuf.length, (size_t)2);
-    EXPECT_EQ(mbuf.capacity, (size_t)5);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 2);
-        EXPECT_EQ(mbuf.buf[0], 1);
-        EXPECT_EQ(mbuf.buf[1], 2);
-        EXPECT_EQ(mbuf.buf[2], 0);
-    }
+    EXPECT_EQ(mem.buffer.length, (size_t)2);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)5);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 2);
+    EXPECT_EQ(mem.buffer.buf[0], 1);
+    EXPECT_EQ(mem.buffer.buf[1], 2);
+    EXPECT_EQ(mem.buffer.buf[2], 0);
 
     const unsigned char buf2[1]{3};
-    EXPECT_EQ(mbObj.membuffer_assign(&mbuf, &buf2, sizeof(buf2)),
+    EXPECT_EQ(mem.membuffer_assign(&mem.buffer, &buf2, sizeof(buf2)),
               UPNP_E_SUCCESS);
-    EXPECT_EQ(mbuf.length, (size_t)1);
-    EXPECT_EQ(mbuf.capacity, (size_t)5);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 1);
-        EXPECT_EQ(mbuf.buf[0], 3);
-        EXPECT_EQ(mbuf.buf[1], 0);
-    }
+    EXPECT_EQ(mem.buffer.length, (size_t)1);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)5);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 1);
+    EXPECT_EQ(mem.buffer.buf[0], 3);
+    EXPECT_EQ(mem.buffer.buf[1], 0);
+}
 
-    mbObj.membuffer_destroy(&mbuf);
+TEST(MembufferTestSuite, membuffer_assign_check_boundaries) {
+    // There is always a null byte appended.
+    char alloc_buf[]{'\x55', '\x55', '\x55'};
+    char buf1[]{'\xAA', '\xAA'};
+
+    StdlibMock mock_stdlibObj;
+    umock::Stdlib stdlib_injectObj(&mock_stdlibObj);
+    EXPECT_CALL(mock_stdlibObj, realloc(nullptr, sizeof(alloc_buf)))
+        .WillOnce(Return(&alloc_buf));
+    // Freeing is from the Cmembuffer destructor.
+    EXPECT_CALL(mock_stdlibObj, free(_)).Times(1);
+
+    // Test Unit membuffer_assign()
+    Cmembuffer mem;
+    ASSERT_EQ(mem.membuffer_assign(&mem.buffer, &buf1, sizeof(buf1)),
+              UPNP_E_SUCCESS);
+
+    EXPECT_EQ(mem.buffer.length, (size_t)2);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)2);
+    ASSERT_EQ(mem.buffer.buf, alloc_buf);
+    EXPECT_EQ(alloc_buf[0], '\xAA');
+    EXPECT_EQ(alloc_buf[1], '\xAA');
+    EXPECT_EQ(alloc_buf[2], '\0');
 }
 
 TEST(MembufferDeathTest, membuffer_assign_with_nullptr_to_membufer) {
@@ -558,11 +682,13 @@ TEST(MembufferDeathTest, membuffer_assign_with_nullptr_to_membufer) {
     const unsigned char buf[1]{0xFF};
 
     if (old_code) {
+#if defined __APPLE__ && !DEBUG
+#else
         std::cout << CRED "[ BUG      ] " CRES << __LINE__
                   << ": A nullptr to a membuffer must not segfault.\n";
         // This expects segfault.
         EXPECT_DEATH(mbObj.membuffer_assign(nullptr, &buf, sizeof(buf)), ".*");
-
+#endif
     } else {
 
         // This expects NO segfault.
@@ -577,155 +703,125 @@ TEST(MembufferDeathTest, membuffer_assign_with_nullptr_to_membufer) {
 }
 
 TEST(MembufferTestSuite, membuffer_assign_with_nullptr_to_compare_buffer) {
-    membuffer mbuf{};
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
-
-    ASSERT_EQ(mbObj.membuffer_assign(&mbuf, nullptr, 10), UPNP_E_SUCCESS);
-    EXPECT_EQ(mbuf.length, (size_t)0);
-    EXPECT_EQ(mbuf.capacity, (size_t)0);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_EQ(mbuf.buf, nullptr);
-
-    mbObj.membuffer_destroy(&mbuf);
+    ASSERT_EQ(mem.membuffer_assign(&mem.buffer, nullptr, 10), UPNP_E_SUCCESS);
+    EXPECT_EQ(mem.buffer.length, (size_t)0);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)0);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    EXPECT_EQ(mem.buffer.buf, nullptr);
 }
 
 TEST(MembufferTestSuite, membuffer_assign_with_0_byte_buffer_length) {
-    membuffer mbuf{};
     const unsigned char buf[2]{1, 2};
 
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
-    EXPECT_EQ(mbObj.membuffer_assign(&mbuf, &buf, 0), UPNP_E_SUCCESS);
-    EXPECT_EQ(mbuf.length, (size_t)0);
-    EXPECT_EQ(mbuf.capacity, (size_t)0);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_EQ(mbuf.buf, nullptr);
-
-    mbObj.membuffer_destroy(&mbuf);
+    EXPECT_EQ(mem.membuffer_assign(&mem.buffer, &buf, 0), UPNP_E_SUCCESS);
+    EXPECT_EQ(mem.buffer.length, (size_t)0);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)0);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    EXPECT_EQ(mem.buffer.buf, nullptr);
 }
 
 TEST(MembufferTestSuite, membuffer_assign_str) {
     // membuffer_assign_str() just calls membuffer_assign() so that tests also
-    // cover membuffer_assign_str().
-    membuffer mbuf{};
-
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    // cover membuffer_assign().
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
     const char str[]{"Hello World"};
-    EXPECT_EQ(mbObj.membuffer_assign_str(&mbuf, str), UPNP_E_SUCCESS);
-    EXPECT_EQ(mbuf.length, (size_t)11);
-    EXPECT_EQ(mbuf.capacity, (size_t)11);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf)
-        EXPECT_STREQ(mbuf.buf, "Hello World");
-
-    mbObj.membuffer_destroy(&mbuf);
+    EXPECT_EQ(mem.membuffer_assign_str(&mem.buffer, str), UPNP_E_SUCCESS);
+    EXPECT_EQ(mem.buffer.length, (size_t)11);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)11);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_STREQ(mem.buffer.buf, "Hello World");
 }
 
 TEST(MembufferTestSuite, membuffer_append) {
     // membuffer_append() just calls membuffer_insert() so that tests also
     // cover membuffer_append().
-    membuffer mbuf{};
-
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
     const char buf1[1]{1};
-    EXPECT_EQ(mbObj.membuffer_append(&mbuf, &buf1, sizeof(buf1)), 0);
-    EXPECT_EQ(mbuf.length, (size_t)1);
-    EXPECT_EQ(mbuf.capacity, (size_t)5);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 1);
-        EXPECT_EQ(mbuf.buf[0], 1);
-        EXPECT_EQ(mbuf.buf[1], 0);
-    }
+    EXPECT_EQ(mem.membuffer_append(&mem.buffer, &buf1, sizeof(buf1)), 0);
+    EXPECT_EQ(mem.buffer.length, (size_t)1);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)5);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 1);
+    EXPECT_EQ(mem.buffer.buf[0], 1);
+    EXPECT_EQ(mem.buffer.buf[1], 0);
+
     const char buf2[1]{2};
-    EXPECT_EQ(mbObj.membuffer_append(&mbuf, &buf2, sizeof(buf2)), 0);
-    EXPECT_EQ(mbuf.length, (size_t)2);
-    EXPECT_EQ(mbuf.capacity, (size_t)5);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 2);
-        EXPECT_EQ(mbuf.buf[0], 1);
-        EXPECT_EQ(mbuf.buf[1], 2);
-        EXPECT_EQ(mbuf.buf[2], 0);
-    }
+    EXPECT_EQ(mem.membuffer_append(&mem.buffer, &buf2, sizeof(buf2)), 0);
+    EXPECT_EQ(mem.buffer.length, (size_t)2);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)5);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 2);
+    EXPECT_EQ(mem.buffer.buf[0], 1);
+    EXPECT_EQ(mem.buffer.buf[1], 2);
+    EXPECT_EQ(mem.buffer.buf[2], 0);
+
     const char buf3[4]{3, 4, 5, 6};
-    EXPECT_EQ(mbObj.membuffer_append(&mbuf, &buf3, sizeof(buf3)), 0);
-    EXPECT_EQ(mbuf.length, (size_t)6);
-    EXPECT_EQ(mbuf.capacity, (size_t)10);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 6);
-        EXPECT_EQ(mbuf.buf[0], 1);
-        EXPECT_EQ(mbuf.buf[1], 2);
-        EXPECT_EQ(mbuf.buf[2], 3);
-        EXPECT_EQ(mbuf.buf[5], 6);
-        EXPECT_EQ(mbuf.buf[6], 0);
-    }
-    mbObj.membuffer_destroy(&mbuf);
+    EXPECT_EQ(mem.membuffer_append(&mem.buffer, &buf3, sizeof(buf3)), 0);
+    EXPECT_EQ(mem.buffer.length, (size_t)6);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)10);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 6);
+    EXPECT_EQ(mem.buffer.buf[0], 1);
+    EXPECT_EQ(mem.buffer.buf[1], 2);
+    EXPECT_EQ(mem.buffer.buf[2], 3);
+    EXPECT_EQ(mem.buffer.buf[5], 6);
+    EXPECT_EQ(mem.buffer.buf[6], 0);
 }
 
 TEST(MembufferTestSuite, membuffer_append_str) {
     // membuffer_append_str() just calls membuffer_insert() so that tests also
     // cover membuffer_append_str().
-    membuffer mbuf{};
-
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
     const char buf1[]{"Hello"};
-    EXPECT_EQ(mbObj.membuffer_append_str(&mbuf, buf1), 0);
-    EXPECT_EQ(mbuf.length, (size_t)5);
-    EXPECT_EQ(mbuf.capacity, (size_t)5);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 5);
-        EXPECT_STREQ(mbuf.buf, "Hello");
-    }
+    EXPECT_EQ(mem.membuffer_append_str(&mem.buffer, buf1), 0);
+    EXPECT_EQ(mem.buffer.length, (size_t)5);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)5);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 5);
+    EXPECT_STREQ(mem.buffer.buf, "Hello");
+
     const char buf2[]{" World"};
-    EXPECT_EQ(mbObj.membuffer_append_str(&mbuf, buf2), 0);
-    EXPECT_EQ(mbuf.length, (size_t)11);
-    EXPECT_EQ(mbuf.capacity, (size_t)11);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 11);
-        EXPECT_STREQ(mbuf.buf, "Hello World");
-    }
-    mbObj.membuffer_destroy(&mbuf);
+    EXPECT_EQ(mem.membuffer_append_str(&mem.buffer, buf2), 0);
+    EXPECT_EQ(mem.buffer.length, (size_t)11);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)11);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 11);
+    EXPECT_STREQ(mem.buffer.buf, "Hello World");
 }
 
 TEST(MembufferTestSuite, membuffer_insert) {
     // For other successful tests see tests to membuffer_append and
     // membuffer_append_str.
-    membuffer mbuf{};
-
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
     const char buf[1]{1};
-    EXPECT_EQ(mbObj.membuffer_insert(&mbuf, &buf, 1, mbuf.length), 0);
-    EXPECT_EQ(mbuf.length, (size_t)1);
-    EXPECT_EQ(mbuf.capacity, (size_t)5);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 1);
-        EXPECT_EQ(mbuf.buf[0], 1);
-        EXPECT_EQ(mbuf.buf[1], 0);
-    }
-    mbObj.membuffer_destroy(&mbuf);
+    EXPECT_EQ(mem.membuffer_insert(&mem.buffer, &buf, 1, mem.buffer.length), 0);
+    EXPECT_EQ(mem.buffer.length, (size_t)1);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)5);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 1);
+    EXPECT_EQ(mem.buffer.buf[0], 1);
+    EXPECT_EQ(mem.buffer.buf[1], 0);
 }
 
 TEST(MembufferDeathTest, membuffer_insert_with_nullptr_to_membuf) {
@@ -735,12 +831,14 @@ TEST(MembufferDeathTest, membuffer_insert_with_nullptr_to_membuf) {
     const char buf[1]{1};
 
     if (old_code) {
+#if defined __APPLE__ && !DEBUG
+#else
         std::cout << CRED "[ BUG      ] " CRES << __LINE__
                   << ": A nullptr to a membuffer must not segfault.\n";
         // This expects segfault.
         EXPECT_DEATH(mbObj.membuffer_insert(nullptr, &buf, sizeof(buf), 0),
                      ".*");
-
+#endif
     } else {
 
         // This expects NO segfault.
@@ -757,45 +855,35 @@ TEST(MembufferDeathTest, membuffer_insert_with_nullptr_to_membuf) {
 TEST(MembufferTestSuite, membuffer_insert_with_nullptr_to_source_buffer) {
     // For other successful tests see tests to membuffer_append and
     // membuffer_append_str.
-    membuffer mbuf{};
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
-
-    EXPECT_EQ(mbObj.membuffer_insert(&mbuf, nullptr, 0, 0), 0);
-    EXPECT_EQ(mbuf.length, (size_t)0);
-    EXPECT_EQ(mbuf.capacity, (size_t)0);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_EQ(mbuf.buf, nullptr);
-
-    mbObj.membuffer_destroy(&mbuf);
+    EXPECT_EQ(mem.membuffer_insert(&mem.buffer, nullptr, 0, 0), 0);
+    EXPECT_EQ(mem.buffer.length, (size_t)0);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)0);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    EXPECT_EQ(mem.buffer.buf, nullptr);
 }
 
 TEST(MembufferTestSuite, membuffer_insert_with_empty_source_buffer) {
     // For other successful tests see tests to membuffer_append and
     // membuffer_append_str.
-    membuffer mbuf{};
-
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
     const char buf[1]{""};
-    EXPECT_EQ(mbObj.membuffer_insert(&mbuf, &buf, 0, 0), 0);
-    EXPECT_EQ(mbuf.length, (size_t)0);
-    EXPECT_EQ(mbuf.capacity, (size_t)0);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_EQ(mbuf.buf, nullptr);
-
-    mbObj.membuffer_destroy(&mbuf);
+    EXPECT_EQ(mem.membuffer_insert(&mem.buffer, &buf, 0, 0), 0);
+    EXPECT_EQ(mem.buffer.length, (size_t)0);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)0);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    EXPECT_EQ(mem.buffer.buf, nullptr);
 }
 
 TEST(MembufferTestSuite, membuffer_insert_with_0_length) {
     // For other successful tests see tests to membuffer_append and
     // membuffer_append_str.
-    membuffer mbuf{};
-
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
     union Buf {
         const char filler[2];
@@ -804,157 +892,140 @@ TEST(MembufferTestSuite, membuffer_insert_with_0_length) {
     Buf b{{1, '\xFF'}};
 
     // Test Unit, b.buf has only one char.
-    EXPECT_EQ(mbObj.membuffer_insert(&mbuf, &b.buf, sizeof(b.buf) + 1, 0), 0);
+    EXPECT_EQ(mem.membuffer_insert(&mem.buffer, &b.buf, sizeof(b.buf) + 1, 0),
+              0);
 
-    EXPECT_EQ(mbuf.length, (size_t)2);
-    EXPECT_EQ(mbuf.capacity, (size_t)5);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 2);
-        EXPECT_EQ(mbuf.buf[0], 1);
+    EXPECT_EQ(mem.buffer.length, (size_t)2);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)5);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    EXPECT_NE(mem.buffer.buf, nullptr);
+    if (mem.buffer.buf) {
+        EXPECT_EQ((int)strlen(mem.buffer.buf), 2);
+        EXPECT_EQ(mem.buffer.buf[0], 1);
 
         if (old_code) {
             std::cout << CRED "[ BUG      ] " CRES << __LINE__
                       << ": Length > sizeof source buffer should not give "
                          "uninitialized content.\n";
-            EXPECT_EQ(mbuf.buf[1], '\xFF');
+            EXPECT_EQ(mem.buffer.buf[1], '\xFF');
 
         } else {
 
-            EXPECT_EQ(mbuf.buf[1], 0)
+            EXPECT_EQ(mem.buffer.buf[1], 0)
                 << "  # Length > sizeof source buffer should not give "
                    "uninitialized content.";
         }
 
-        EXPECT_EQ(mbuf.buf[2], 0);
+        EXPECT_EQ(mem.buffer.buf[2], 0);
     }
-    mbObj.membuffer_destroy(&mbuf);
 }
 
 TEST(MembufferTestSuite, membuffer_insert_with_additional_capacity) {
     // For other successful tests see tests to membuffer_append and
     // membuffer_append_str.
-    membuffer mbuf{};
-
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
     const char buf[1]{1};
-    EXPECT_EQ(mbObj.membuffer_insert(&mbuf, &buf, sizeof(buf), 1),
+    EXPECT_EQ(mem.membuffer_insert(&mem.buffer, &buf, sizeof(buf), 1),
               UPNP_E_OUTOF_BOUNDS);
-    EXPECT_EQ(mbuf.length, (size_t)0);
-    EXPECT_EQ(mbuf.capacity, (size_t)0);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    EXPECT_EQ(mbuf.buf, nullptr);
-
-    mbObj.membuffer_destroy(&mbuf);
+    EXPECT_EQ(mem.buffer.length, (size_t)0);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)0);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    EXPECT_EQ(mem.buffer.buf, nullptr);
 }
 
 TEST(MembufferDeathTest, membuffer_delete) {
-    membuffer mbuf{};
-
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
     const char buf[]{"Hello World"};
-    EXPECT_EQ(mbObj.membuffer_insert(&mbuf, &buf, sizeof(buf), mbuf.length), 0);
-    EXPECT_EQ(mbuf.length, (size_t)12);
-    EXPECT_EQ(mbuf.capacity, (size_t)12);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 11);
-        EXPECT_STREQ(mbuf.buf, "Hello World");
-    }
+    EXPECT_EQ(
+        mem.membuffer_insert(&mem.buffer, &buf, sizeof(buf), mem.buffer.length),
+        0);
+    EXPECT_EQ(mem.buffer.length, (size_t)12);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)12);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 11);
+    EXPECT_STREQ(mem.buffer.buf, "Hello World");
 
-    // void membuffer_delete(membuffer* mbuf, size_t index, size_t num_bytes)
-    // num_bytes are the bytes to delete beginning at index + 1.
-    mbObj.membuffer_delete(&mbuf, 5, 6);
-    EXPECT_EQ(mbuf.length, (size_t)6);
-    EXPECT_EQ(mbuf.capacity, (size_t)11);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 5);
-        EXPECT_STREQ(mbuf.buf, "Hello");
-    }
-    mbObj.membuffer_delete(&mbuf, 4, 6);
-    EXPECT_EQ(mbuf.length, (size_t)4);
-    EXPECT_EQ(mbuf.capacity, (size_t)9);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 4);
-        EXPECT_STREQ(mbuf.buf, "Hell");
-    }
-    mbObj.membuffer_delete(&mbuf, 0, 0);
-    EXPECT_EQ(mbuf.length, (size_t)4);
-    EXPECT_EQ(mbuf.capacity, (size_t)9);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 4);
-        EXPECT_STREQ(mbuf.buf, "Hell");
-    }
-    mbObj.membuffer_delete(&mbuf, 1, 0);
-    EXPECT_EQ(mbuf.length, (size_t)4);
-    EXPECT_EQ(mbuf.capacity, (size_t)9);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 4);
-        EXPECT_STREQ(mbuf.buf, "Hell");
-    }
-    mbObj.membuffer_delete(&mbuf, 0, 1);
-    EXPECT_EQ(mbuf.length, (size_t)3);
-    EXPECT_EQ(mbuf.capacity, (size_t)8);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 3);
-        EXPECT_STREQ(mbuf.buf, "ell");
-    }
+    // void membuffer_delete(membuffer* mem.buffer, size_t index, size_t
+    // num_bytes) num_bytes are the bytes to delete beginning at index + 1.
+    mem.membuffer_delete(&mem.buffer, 5, 6);
+    EXPECT_EQ(mem.buffer.length, (size_t)6);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)11);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 5);
+    EXPECT_STREQ(mem.buffer.buf, "Hello");
+
+    mem.membuffer_delete(&mem.buffer, 4, 6);
+    EXPECT_EQ(mem.buffer.length, (size_t)4);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)9);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 4);
+    EXPECT_STREQ(mem.buffer.buf, "Hell");
+
+    mem.membuffer_delete(&mem.buffer, 0, 0);
+    EXPECT_EQ(mem.buffer.length, (size_t)4);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)9);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 4);
+    EXPECT_STREQ(mem.buffer.buf, "Hell");
+
+    mem.membuffer_delete(&mem.buffer, 1, 0);
+    EXPECT_EQ(mem.buffer.length, (size_t)4);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)9);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 4);
+    EXPECT_STREQ(mem.buffer.buf, "Hell");
+
+    mem.membuffer_delete(&mem.buffer, 0, 1);
+    EXPECT_EQ(mem.buffer.length, (size_t)3);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)8);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 3);
+    EXPECT_STREQ(mem.buffer.buf, "ell");
+
     // This will empty the string in memory buffer
-    mbObj.membuffer_delete(&mbuf, 0, 100);
-    EXPECT_EQ(mbuf.length, (size_t)0);
-    EXPECT_EQ(mbuf.capacity, (size_t)5);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 0);
-        EXPECT_STREQ(mbuf.buf, "");
-    }
-
-    mbObj.membuffer_destroy(&mbuf);
+    mem.membuffer_delete(&mem.buffer, 0, 100);
+    EXPECT_EQ(mem.buffer.length, (size_t)0);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)5);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 0);
+    EXPECT_STREQ(mem.buffer.buf, "");
 
 #ifdef NDEBUG
     // This can only run with NDEBUG because we have an assert(m != NULL) there.
-    ASSERT_EXIT((mbObj.membuffer_delete(nullptr, 0, 100), exit(0)),
+    ASSERT_EXIT((mem.membuffer_delete(nullptr, 0, 100), exit(0)),
                 ::testing::ExitedWithCode(0), ".*")
         << "  # A nullptr to a membuffer must not segfault.";
 #endif
 }
 
 TEST(MembufferTestSuite, membuffer_detach) {
-    membuffer mbuf{};
-
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
     const char buf[]{"Hello World"};
-    EXPECT_EQ(mbObj.membuffer_insert(&mbuf, &buf, sizeof(buf), mbuf.length), 0);
+    EXPECT_EQ(
+        mem.membuffer_insert(&mem.buffer, &buf, sizeof(buf), mem.buffer.length),
+        0);
 
-    char* detached = mbObj.membuffer_detach(&mbuf);
+    char* detached = mem.membuffer_detach(&mem.buffer);
     EXPECT_STREQ(detached, "Hello World");
     ::free(detached);
 
-    EXPECT_EQ(mbuf.length, (size_t)0);
-    EXPECT_EQ(mbuf.capacity, (size_t)0);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_EQ(mbuf.buf, nullptr);
-
-    mbObj.membuffer_destroy(&mbuf);
+    EXPECT_EQ(mem.buffer.length, (size_t)0);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)0);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_EQ(mem.buffer.buf, nullptr);
 }
 
 TEST(MembufferDeathTest, membuffer_detach_with_nullptr_to_membuffer) {
@@ -979,28 +1050,23 @@ TEST(MembufferDeathTest, membuffer_detach_with_nullptr_to_membuffer) {
 }
 
 TEST(MembufferTestSuite, membuffer_attach) {
-    membuffer mbuf{};
-
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
     const char old_buf[]{"Old buf"};
-    EXPECT_EQ(mbObj.membuffer_append_str(&mbuf, old_buf), 0);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf)
-        EXPECT_STREQ(mbuf.buf, "Old buf");
+    EXPECT_EQ(mem.membuffer_append_str(&mem.buffer, old_buf), 0);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    if (mem.buffer.buf)
+        EXPECT_STREQ(mem.buffer.buf, "Old buf");
 
-    char* new_buf = mbObj.str_alloc("Hello World", 11);
-    mbObj.membuffer_attach(&mbuf, new_buf, 11);
-    EXPECT_EQ(mbuf.length, (size_t)11);
-    EXPECT_EQ(mbuf.capacity, (size_t)11);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf) {
-        EXPECT_EQ((int)strlen(mbuf.buf), 11);
-        EXPECT_STREQ(mbuf.buf, "Hello World");
-    }
-    mbObj.membuffer_destroy(&mbuf);
+    char* new_buf = mem.str_alloc("Hello World", 11);
+    mem.membuffer_attach(&mem.buffer, new_buf, 11);
+    EXPECT_EQ(mem.buffer.length, (size_t)11);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)11);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 11);
+    EXPECT_STREQ(mem.buffer.buf, "Hello World");
 }
 
 TEST(MembufferDeathTest, membuffer_attach_with_nullptr_to_membuffer) {
@@ -1008,11 +1074,13 @@ TEST(MembufferDeathTest, membuffer_attach_with_nullptr_to_membuffer) {
     char* new_buf = mbObj.str_alloc("Hello World", 11);
 
     if (old_code) {
+#if defined __APPLE__ && !DEBUG
+#else
         std::cout << CRED "[ BUG      ] " CRES << __LINE__
                   << ": A nullptr to a membuffer must not segfault.\n";
         // This expects segfault.
         EXPECT_DEATH(mbObj.membuffer_attach(nullptr, new_buf, 11), ".*");
-
+#endif
     } else {
 
         // This expects NO segfault.
@@ -1023,110 +1091,93 @@ TEST(MembufferDeathTest, membuffer_attach_with_nullptr_to_membuffer) {
 }
 
 TEST(MembufferTestSuite, membuffer_attach_with_nullptr_to_string_buffer) {
-    membuffer mbuf{};
-
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
     // Create membuffer with a string
     const char old_buf[]{"Old buf"};
-    EXPECT_EQ(mbObj.membuffer_append_str(&mbuf, old_buf), 0);
-    EXPECT_EQ(mbuf.length, (size_t)7);
-    EXPECT_EQ(mbuf.capacity, (size_t)7);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf)
-        EXPECT_STREQ(mbuf.buf, "Old buf");
+    EXPECT_EQ(mem.membuffer_append_str(&mem.buffer, old_buf), 0);
+    EXPECT_EQ(mem.buffer.length, (size_t)7);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)7);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_STREQ(mem.buffer.buf, "Old buf");
 
     // Try to attach a nullptr
-    mbObj.membuffer_attach(&mbuf, nullptr, 11);
+    mem.membuffer_attach(&mem.buffer, nullptr, 11);
 
     if (old_code) {
         std::cout << CRED "[ BUG      ] " CRES << __LINE__
                   << ": A nullptr to a buffer that should be attached must "
                      "not segfault.\n";
-        EXPECT_EQ(mbuf.length, (size_t)11);
-        EXPECT_EQ(mbuf.capacity, (size_t)11);
-        EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-        ASSERT_EQ(mbuf.buf, nullptr);
+        EXPECT_EQ(mem.buffer.length, (size_t)11);
+        EXPECT_EQ(mem.buffer.capacity, (size_t)11);
+        EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+        ASSERT_EQ(mem.buffer.buf, nullptr);
 
     } else {
 
-        EXPECT_EQ(mbuf.length, (size_t)7)
+        EXPECT_EQ(mem.buffer.length, (size_t)7)
             << "  # A nullptr to a buffer that should be "
                "attached must not segfault.";
-        EXPECT_EQ(mbuf.capacity, 7);
-        EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-        ASSERT_NE(mbuf.buf, nullptr);
-        if (mbuf.buf)
-            EXPECT_STREQ(mbuf.buf, "Old buf");
+        EXPECT_EQ(mem.buffer.capacity, 7);
+        EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+        ASSERT_NE(mem.buffer.buf, nullptr);
+        EXPECT_STREQ(mem.buffer.buf, "Old buf");
     }
-    mbObj.membuffer_destroy(&mbuf);
 }
 
 TEST(MembufferTestSuite, membuffer_attach_with_empty_string_buffer) {
-    membuffer mbuf{};
-
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
     // Create membuffer with a string
     const char old_buf[]{"Old buf"};
-    EXPECT_EQ(mbObj.membuffer_append_str(&mbuf, old_buf), 0);
-    EXPECT_EQ(mbuf.length, (size_t)7);
-    EXPECT_EQ(mbuf.capacity, (size_t)7);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf)
-        EXPECT_STREQ(mbuf.buf, "Old buf");
+    EXPECT_EQ(mem.membuffer_append_str(&mem.buffer, old_buf), 0);
+    EXPECT_EQ(mem.buffer.length, (size_t)7);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)7);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_STREQ(mem.buffer.buf, "Old buf");
 
     // Attach empty string to the membuffer
-    char* new_buf = mbObj.str_alloc("", 0);
-    mbObj.membuffer_attach(&mbuf, new_buf, 0);
-    EXPECT_EQ(mbuf.length, (size_t)0);
-    EXPECT_EQ(mbuf.capacity, (size_t)0);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf)
-        EXPECT_EQ((int)strlen(mbuf.buf), 0);
-    EXPECT_STREQ(mbuf.buf, "");
-
-    mbObj.membuffer_destroy(&mbuf);
+    char* new_buf = mem.str_alloc("", 0);
+    mem.membuffer_attach(&mem.buffer, new_buf, 0);
+    EXPECT_EQ(mem.buffer.length, (size_t)0);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)0);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 0);
+    EXPECT_STREQ(mem.buffer.buf, "");
 }
 
 TEST(MembufferTestSuite, membuffer_attach_empty_str_buffer_but_buffer_length) {
-    membuffer mbuf{};
-
-    Cmembuffer mbObj{};
-    mbObj.membuffer_init(&mbuf);
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
 
     // Create membuffer with a string
     const char old_buf[]{"Old buf"};
-    EXPECT_EQ(mbObj.membuffer_append_str(&mbuf, old_buf), 0);
-    EXPECT_EQ(mbuf.length, (size_t)7);
-    EXPECT_EQ(mbuf.capacity, (size_t)7);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf)
-        EXPECT_STREQ(mbuf.buf, "Old buf");
+    EXPECT_EQ(mem.membuffer_append_str(&mem.buffer, old_buf), 0);
+    EXPECT_EQ(mem.buffer.length, (size_t)7);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)7);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_STREQ(mem.buffer.buf, "Old buf");
 
-    char* new_buf = mbObj.str_alloc("", 0);
+    char* new_buf = mem.str_alloc("", 0);
     // Attach empty string but with buffer length
-    mbObj.membuffer_attach(&mbuf, new_buf, 11);
-    EXPECT_EQ(mbuf.length, (size_t)11);
-    EXPECT_EQ(mbuf.capacity, (size_t)11);
-    EXPECT_EQ(mbuf.size_inc, MEMBUF_DEF_SIZE_INC);
-    ASSERT_NE(mbuf.buf, nullptr);
-    if (mbuf.buf)
-        EXPECT_EQ((int)strlen(mbuf.buf), 0);
-    EXPECT_STREQ(mbuf.buf, "");
-
-    mbObj.membuffer_destroy(&mbuf);
+    mem.membuffer_attach(&mem.buffer, new_buf, 11);
+    EXPECT_EQ(mem.buffer.length, (size_t)11);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)11);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    ASSERT_NE(mem.buffer.buf, nullptr);
+    EXPECT_EQ((int)strlen(mem.buffer.buf), 0);
+    EXPECT_STREQ(mem.buffer.buf, "");
 }
 
 } // namespace compa
 
 int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
+    ::testing::InitGoogleMock(&argc, argv);
 #include "compa/gtest_main.inc"
 }

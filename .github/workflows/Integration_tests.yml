@@ -63,8 +63,6 @@ jobs:
           cmake
           -S .
           -B build
-          -D CMAKE_C_COMPILER=gcc-10
-          -D CMAKE_CXX_COMPILER=g++-10
           -D UPNPLIB_WITH_GOOGLETEST=ON
           -D GTESTS_WITH_SHARED_LIBS=ON
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
@@ -202,9 +200,7 @@ jobs:
         run: >
           cmake
           -S .
-          -B build
-          -D CMAKE_C_COMPILER=gcc-10
-          -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}}
+          -B build ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
           -D UPNPLIB_WITH_TOOLS=YES
 
@@ -506,8 +502,6 @@ jobs:
           cmake
           -S .
           -B build
-          -D CMAKE_C_COMPILER=gcc-10
-          -D CMAKE_CXX_COMPILER=g++-10
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
 
       - if: runner.os == 'Windows'

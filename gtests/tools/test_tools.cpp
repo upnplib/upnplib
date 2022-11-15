@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-29
+// Redistribution only with this Copyright remark. Last modified: 2022-11-16
 
 #include "upnplib/port.hpp"
 #include "upnplib/sock.hpp"
@@ -163,11 +163,11 @@ TEST(FileModTimeTestSuite, get_modification_time_from_invalid_filename) {
 }
 
 TEST(FileModTimeTestSuite, get_modification_time_from_nullptr) {
-#ifdef _WIN32
-    GTEST_SKIP() << "Will fail with SEH exception with code 0xc0000005 "
-                    "that cannot be catched.";
-#else
+#ifdef __unix__
     EXPECT_THROW(file_mod_time(nullptr), std::logic_error);
+#else
+    // This expects segfault from the std::string object of the argument.
+    EXPECT_DEATH(file_mod_time(nullptr), ".*");
 #endif
 }
 
