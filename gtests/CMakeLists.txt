@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-05
+# Redistribution only with this Copyright remark. Last modified: 2022-11-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -20,12 +20,19 @@ project(GTESTS VERSION 0033
 # gmock libraries also contain gtest libraries.
 link_libraries(gmock gmock_main
 )
-# If linking with shared build gtest libs we need to tell it the compiler.
-# I have found a vague hint about the flag GTEST_LINKED_AS_SHARED_LIBRARY at
-# build/_deps/googletest-src/googletest/README.md
 add_compile_definitions(
-    PRIVATE
-        $<$<AND:$<BOOL:${UPNPLIB_WITH_GOOGLETEST}>,$<BOOL:${BUILD_SHARED_LIBS}>>:GTEST_LINKED_AS_SHARED_LIBRARY>
+    # If linking with shared build gtest libs we need to tell it the compiler.
+    # I have found a vague hint about the flag GTEST_LINKED_AS_SHARED_LIBRARY at
+    # build/_deps/googletest-src/googletest/README.md
+    $<$<AND:$<BOOL:${UPNPLIB_WITH_GOOGLETEST}>,$<BOOL:${BUILD_SHARED_LIBS}>>:GTEST_LINKED_AS_SHARED_LIBRARY>
+    $<$<PLATFORM_ID:Windows>:_CRT_NONSTDC_NO_DEPRECATE>
+)
+add_compile_options(
+    $<$<CXX_COMPILER_ID:MSVC>:/W4>
+    # disable warning C4702: unreachable code
+    $<$<CXX_COMPILER_ID:MSVC>:/wd4702>
+    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wconversion>
+    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wsign-conversion>
 )
 
 # Create upnplib helper tools library for gtests. We have version
@@ -46,6 +53,14 @@ target_compile_definitions(upnplib_gtest_tools_shared
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_EXPORTS
+        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(upnplib_gtest_tools_shared
+    PRIVATE
+        # disable warning C4251: 'upnplib::CNetIf4::m_Description': class 'std::basic_string<wchar_t,std::char_traits<wchar_t>,std::allocator<wchar_t>>' needs to have dll-interface to be used by clients of class 'upnplib::CNetIf4'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+        # disable  warning C4211: nonstandard extension used: redefined extern to static
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4211>
 )
 target_link_libraries(upnplib_gtest_tools_shared
     PUBLIC
@@ -63,6 +78,15 @@ target_include_directories(upnplib_gtest_tools_static
     PRIVATE
         ./include
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+)
+target_compile_definitions(upnplib_gtest_tools_static
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(upnplib_gtest_tools_static
+    PRIVATE
+        # disable warning C4211: nonstandard extension used: redefined extern to static
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4211>
 )
 target_link_libraries(upnplib_gtest_tools_static
     PUBLIC
@@ -98,6 +122,13 @@ target_compile_definitions(test_upnplib_gtest_tools
         PRIVATE
             UPNPLIB_SHARED
 )
+target_compile_options(test_upnplib_gtest_tools
+    PRIVATE
+        # disable warning C4211: nonstandard extension used: redefined extern to static
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4211>
+        # disable warning C4100: 'result_listener': unreferenced formal parameter
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
+)
 target_link_libraries(test_upnplib_gtest_tools
     PRIVATE
         upnplib_gtest_tools_shared
@@ -120,6 +151,15 @@ target_include_directories(test_upnplib_gtest_tools_platform
 target_compile_definitions(test_upnplib_gtest_tools_platform
     PRIVATE
         UPNPLIB_SHARED
+)
+target_compile_options(test_upnplib_gtest_tools_platform
+    PRIVATE
+        # disable warning C4251: 'upnplib::CNetIf4::m_Description': class 'std::basic_string<wchar_t,std::char_traits<wchar_t>,std::allocator<wchar_t>>' needs to have dll-interface to be used by clients of class 'upnplib::CNetIf4'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+        # disable warning C4389: '==': signed/unsigned mismatch
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4389>
+        # disable warning C4244: 'argument': conversion from 'const M' to 'const Element', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
 )
 target_link_libraries(test_upnplib_gtest_tools_platform
     PRIVATE
@@ -152,6 +192,10 @@ target_compile_definitions(test_simple-ush
     PRIVATE
         UPNPLIB_SHARED
 )
+target_compile_options(test_simple-ush
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W1>
+)
 target_link_libraries(test_simple-ush
     PRIVATE
         upnplib_shared
@@ -167,6 +211,10 @@ add_executable(test_simple-ust
 target_include_directories(test_simple-ust
     ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
 )
+target_compile_options(test_simple-ust
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W1>
+)
 target_link_libraries(test_simple-ust
     PRIVATE
         upnplib_static
@@ -178,8 +226,14 @@ add_test(NAME ctest_simple-ust COMMAND test_simple-ust
 # template
 #=========
 add_executable(test_template
-        test_template.cpp)
-add_test(NAME ctest_template COMMAND test_template)
+        test_template.cpp
+)
+target_compile_definitions(test_template
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+add_test(NAME ctest_template COMMAND test_template
+)
 
 
 add_subdirectory(./compa)

@@ -1,6 +1,7 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-21
+// Redistribution only with this Copyright remark. Last modified: 2022-11-22
 
+#include "upnplib/port.hpp"
 #include "upnplib/sock.hpp"
 #include "umock/sys_socket.hpp"
 
@@ -29,21 +30,22 @@ class Sys_socketMock : public umock::Sys_socketInterface {
     virtual ~Sys_socketMock() override {}
     // clang-format off
     MOCK_METHOD(int, socket, (int domain, int type, int protocol), (override));
-    MOCK_METHOD(int, bind, (int sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
-    MOCK_METHOD(int, listen, (int sockfd, int backlog), (override));
-    MOCK_METHOD(int, accept, (int sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(size_t, recvfrom, (int sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(int, getsockopt, (int sockfd, int level, int optname, void* optval, socklen_t* optlen), (override));
-    MOCK_METHOD(int, setsockopt, (int sockfd, int level, int optname, const char* optval, socklen_t optlen), (override));
-    MOCK_METHOD(int, getsockname, (int sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(size_t, recv, (int sockfd, char* buf, size_t len, int flags), (override));
-    MOCK_METHOD(size_t, send, (int sockfd, const char* buf, size_t len, int flags), (override));
-    MOCK_METHOD(int, connect, (int sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
-    MOCK_METHOD(int, shutdown, (int sockfd, int how), (override));
+    MOCK_METHOD(int, bind, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, listen, (SOCKET sockfd, int backlog), (override));
+    MOCK_METHOD(SOCKET, accept, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(size_t, recvfrom, (SOCKET sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(int, getsockopt, (SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen), (override));
+    MOCK_METHOD(int, setsockopt, (SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen), (override));
+    MOCK_METHOD(int, getsockname, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(size_t, recv, (SOCKET sockfd, char* buf, size_t len, int flags), (override));
+    MOCK_METHOD(size_t, send, (SOCKET sockfd, const char* buf, size_t len, int flags), (override));
+    MOCK_METHOD(size_t, sendto, (SOCKET sockfd, const char* buf, sendto_buflen_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, connect, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, shutdown, (SOCKET sockfd, int how), (override));
     // clang-format on
 };
 
-#if false
+#if 0
 // clang-format off
 class Mock_sys_socket : public Bsys_socket {
     // Class to mock the free system functions.
@@ -58,7 +60,7 @@ class Mock_sys_socket : public Bsys_socket {
     virtual ~Mock_sys_socket() override { sys_socket_h = m_oldptr; }
 
     MOCK_METHOD(int, getsockname,
-                (int sockfd, struct sockaddr* addr, socklen_t* addrlen),
+                (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen),
                 (override));
 };
 // clang-format on
@@ -122,7 +124,7 @@ TEST(SocketAddrTestSuite, get_wrong_address) {
 
     // This is a wrong family entry that should trigger an error on getting an
     // ip address
-    sock.addr_ss.ss_family = -1;
+    sock.addr_ss.ss_family = (sa_family_t)-1;
 
     // Test Unit
     EXPECT_THAT([&sock] { sock.addr_get(); },

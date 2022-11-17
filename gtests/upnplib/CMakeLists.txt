@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-05
+# Redistribution only with this Copyright remark. Last modified: 2022-11-21
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -63,6 +63,14 @@ target_include_directories(test_sock-ush
 target_compile_definitions(test_sock-ush
     PRIVATE
         UPNPLIB_SHARED
+        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(test_sock-ush
+    PRIVATE
+        # disable warning C4211: nonstandard extension used: redefined extern to static
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4211>
+        # disable warning C4100: 'result_listener': unreferenced formal parameter
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
 )
 target_link_libraries(test_sock-ush
     PRIVATE
@@ -87,6 +95,7 @@ target_include_directories(test_webserver-ush
 target_compile_definitions(test_webserver-ush
     PRIVATE
         UPNPLIB_SHARED
+        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_link_libraries(test_webserver-ush
     PRIVATE

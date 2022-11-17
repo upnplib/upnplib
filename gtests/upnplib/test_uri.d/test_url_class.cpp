@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-02
+// Redistribution only with this Copyright remark. Last modified: 2022-11-18
 //
 // If you need more information how the Url class works you can temporary
 // uncomment #define DEBUG_URL and run the tests with
@@ -59,7 +59,7 @@ namespace upnplib {
 TEST(UrlClassTestSuite, is_in_percent_encode_set) {
     EXPECT_TRUE(is_in_userinfo_percent_encode_set('\0'));
     EXPECT_TRUE(is_in_userinfo_percent_encode_set('|'));
-    EXPECT_TRUE(is_in_userinfo_percent_encode_set(-1));
+    EXPECT_TRUE(is_in_userinfo_percent_encode_set((unsigned char)-1)); // 255
     EXPECT_TRUE(is_in_userinfo_percent_encode_set('\x1E'));
     EXPECT_TRUE(is_in_userinfo_percent_encode_set('\x1F'));
     EXPECT_TRUE(is_in_userinfo_percent_encode_set('\x20')); // space
@@ -71,7 +71,7 @@ TEST(UrlClassTestSuite, percent_encode) {
     EXPECT_EQ(UTF8_percent_encode('\0'), "%00");
     EXPECT_EQ(UTF8_percent_encode('\xa'), "%0A");
     EXPECT_EQ(UTF8_percent_encode('|'), "%7C");
-    EXPECT_EQ(UTF8_percent_encode(-1), "%FF");
+    EXPECT_EQ(UTF8_percent_encode((unsigned char)-1), "%FF");
     EXPECT_EQ(UTF8_percent_encode('\x1e'), "%1E");
     EXPECT_EQ(UTF8_percent_encode('\x1f'), "%1F");
     EXPECT_EQ(UTF8_percent_encode(' '), "%20");

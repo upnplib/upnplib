@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-29
+// Redistribution only with this Copyright remark. Last modified: 2022-11-23
 
 #include "UpnpFileInfo.hpp"
 
@@ -67,7 +67,7 @@ TEST(UpnpFileInfoTestSuite, new_and_verify_struct_and_delete) {
     // An empty list with next == prev pointers seems to be initialized
     EXPECT_EQ(f.info->m_ExtraHeadersList.next, f.info->m_ExtraHeadersList.prev);
     EXPECT_EQ(f.info->m_CtrlPtIPAddr.ss_family, 0);
-    EXPECT_EQ(NS::UpnpString_get_Length(f.info->m_Os), 0);
+    EXPECT_EQ(NS::UpnpString_get_Length(f.info->m_Os), (size_t)0);
     EXPECT_STREQ(NS::UpnpString_get_String(f.info->m_Os), "");
 }
 
@@ -84,13 +84,13 @@ TEST(UpnpFileInfoDeathTest, set_get_file_length) {
 
     // Test Unit
     EXPECT_EQ(NS::UpnpFileInfo_set_FileLength(f.info, 0), 1);
-    EXPECT_EQ(NS::UpnpFileInfo_get_FileLength(f.info), 0);
+    EXPECT_EQ(NS::UpnpFileInfo_get_FileLength(f.info), (off_t)0);
 
     EXPECT_EQ(NS::UpnpFileInfo_set_FileLength(f.info, -1), 1);
-    EXPECT_EQ(NS::UpnpFileInfo_get_FileLength(f.info), -1);
+    EXPECT_EQ(NS::UpnpFileInfo_get_FileLength(f.info), (off_t)-1);
 
     EXPECT_EQ(NS::UpnpFileInfo_set_FileLength(f.info, 65536), 1);
-    EXPECT_EQ(NS::UpnpFileInfo_get_FileLength(f.info), 65536);
+    EXPECT_EQ(NS::UpnpFileInfo_get_FileLength(f.info), (off_t)65536);
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ]" CRES
@@ -109,7 +109,7 @@ TEST(UpnpFileInfoDeathTest, set_get_file_length) {
         EXPECT_EQ(ret_file_length, 0);
     }
 
-    EXPECT_EQ(NS::UpnpFileInfo_get_FileLength(f.info), 65536);
+    EXPECT_EQ(NS::UpnpFileInfo_get_FileLength(f.info), (off_t)65536);
 }
 
 TEST(UpnpFileInfoDeathTest, get_file_length_with_nullptr) {
@@ -128,7 +128,7 @@ TEST(UpnpFileInfoDeathTest, get_file_length_with_nullptr) {
                     ExitedWithCode(0), ".*");
         off_t file_length{(off_t)0xAA5555AA};
         file_length = NS::UpnpFileInfo_get_FileLength(nullptr);
-        EXPECT_EQ(file_length, 0);
+        EXPECT_EQ(file_length, (off_t)0);
     }
 }
 
@@ -138,13 +138,13 @@ TEST(UpnpFileInfoDeathTest, set_get_last_modified) {
     // Test Unit
     // Parameter 2 is time_t, time in seconds.
     EXPECT_EQ(NS::UpnpFileInfo_set_LastModified(f.info, 0), 1);
-    EXPECT_EQ(NS::UpnpFileInfo_get_LastModified(f.info), 0);
+    EXPECT_EQ(NS::UpnpFileInfo_get_LastModified(f.info), (time_t)0);
 
     EXPECT_EQ(NS::UpnpFileInfo_set_LastModified(f.info, -1), 1);
-    EXPECT_EQ(NS::UpnpFileInfo_get_LastModified(f.info), -1);
+    EXPECT_EQ(NS::UpnpFileInfo_get_LastModified(f.info), (time_t)-1);
 
     EXPECT_EQ(NS::UpnpFileInfo_set_LastModified(f.info, 75904), 1);
-    EXPECT_EQ(NS::UpnpFileInfo_get_LastModified(f.info), 75904);
+    EXPECT_EQ(NS::UpnpFileInfo_get_LastModified(f.info), (time_t)75904);
 
     if (old_code) {
         std::cout
@@ -164,7 +164,7 @@ TEST(UpnpFileInfoDeathTest, set_get_last_modified) {
         EXPECT_EQ(ret_set_last_modified, 0);
     }
 
-    EXPECT_EQ(NS::UpnpFileInfo_get_LastModified(f.info), 75904);
+    EXPECT_EQ(NS::UpnpFileInfo_get_LastModified(f.info), (time_t)75904);
 }
 
 TEST(UpnpFileInfoDeathTest, get_last_modified_with_nullptr) {
@@ -184,7 +184,7 @@ TEST(UpnpFileInfoDeathTest, get_last_modified_with_nullptr) {
                     ExitedWithCode(0), ".*");
         time_t ret_last_modified{0xAAAA};
         ret_last_modified = NS::UpnpFileInfo_get_LastModified(nullptr);
-        EXPECT_EQ(ret_last_modified, 0);
+        EXPECT_EQ(ret_last_modified, (time_t)0);
     }
 }
 
@@ -536,6 +536,7 @@ TEST(UpnpFileInfoDeathTest, add_to_list_extra_headers_list_with_nullptr) {
 
 TEST(UpnpFileInfoDeathTest, UpnpFileInfo_set_get_CtrlPtIPAddr) {
     CUpnpFileInfo f;
+    char addr4buf[16];
 
     SockAddr sock;
     sock.addr_set("192.168.1.2", 52345);
@@ -545,7 +546,9 @@ TEST(UpnpFileInfoDeathTest, UpnpFileInfo_set_get_CtrlPtIPAddr) {
     const sockaddr_storage* sa_ss = NS::UpnpFileInfo_get_CtrlPtIPAddr(f.info);
 
     ASSERT_EQ(sa_ss->ss_family, AF_INET);
-    EXPECT_STREQ(inet_ntoa(((sockaddr_in*)sa_ss)->sin_addr), "192.168.1.2");
+    EXPECT_STREQ(inet_ntop(AF_INET, &((sockaddr_in*)sa_ss)->sin_addr, addr4buf,
+                           sizeof(addr4buf)),
+                 "192.168.1.2");
 
     // Set to an invalid UpnpFileInfo with nullptr
     if (old_code) {
@@ -615,6 +618,8 @@ TEST(UpnpFileInfoTestSuite, UpnpFileInfo_get_CtrlPtIPAddr_with_nullptr) {
 TEST(UpnpFileInfoTestSuite, UpnpFileInfo_clear_CtrlPtIPAddr) {
     // Provide settings with a valid sockaddr
     CUpnpFileInfo f;
+    char addr4buf[16];
+
     SockAddr sock;
     sock.addr_set("192.168.1.3", 52346);
     ASSERT_EQ(NS::UpnpFileInfo_set_CtrlPtIPAddr(f.info, &sock.addr_ss), 1);
@@ -624,7 +629,9 @@ TEST(UpnpFileInfoTestSuite, UpnpFileInfo_clear_CtrlPtIPAddr) {
 
     const sockaddr_storage* sa_ss = NS::UpnpFileInfo_get_CtrlPtIPAddr(f.info);
     ASSERT_EQ(sa_ss->ss_family, 0);
-    EXPECT_STREQ(inet_ntoa(((sockaddr_in*)sa_ss)->sin_addr), "0.0.0.0");
+    EXPECT_STREQ(inet_ntop(AF_INET, &((sockaddr_in*)sa_ss)->sin_addr, addr4buf,
+                           sizeof(addr4buf)),
+                 "0.0.0.0");
 }
 
 TEST(UpnpFileInfoDeathTest, UpnpFileInfo_clear_CtrlPtIPAddr_with_nullptr) {
@@ -731,7 +738,7 @@ TEST(UpnpFileInfoDeathTest, UpnpFileInfo_get_Os_Length) {
     EXPECT_TRUE(NS::UpnpFileInfo_set_Os(f.info, upnp.str));
 
     // Test Unit
-    EXPECT_EQ(NS::UpnpFileInfo_get_Os_Length(f.info), 11);
+    EXPECT_EQ(NS::UpnpFileInfo_get_Os_Length(f.info), (size_t)11);
 
     // Use invalid file info
     if (old_code) {
@@ -751,7 +758,7 @@ TEST(UpnpFileInfoDeathTest, UpnpFileInfo_get_Os_Length) {
         size_t ret_get_Os_Length{4508046};
         ret_get_Os_Length =
             NS::UpnpFileInfo_get_Os_Length((UpnpFileInfo*)nullptr);
-        EXPECT_EQ(ret_get_Os_Length, 0);
+        EXPECT_EQ(ret_get_Os_Length, (size_t)0);
     }
 }
 
@@ -865,8 +872,8 @@ TEST(UpnpFileInfoDeathTest, UpnpFileInfo_strncpy_Os) {
     EXPECT_TRUE(NS::UpnpFileInfo_strncpy_Os(f.info, str, 0));
     EXPECT_STREQ(NS::UpnpFileInfo_get_Os_cstr(f.info), "");
 
-    // size_t is unsigned int
-    EXPECT_TRUE(NS::UpnpFileInfo_strncpy_Os(f.info, str, -1));
+    // (size_t)-1 = 18446744073709551615
+    EXPECT_TRUE(NS::UpnpFileInfo_strncpy_Os(f.info, str, (size_t)-1));
     EXPECT_STREQ(NS::UpnpFileInfo_get_Os_cstr(f.info), "Hello world");
 
     // Use invalid file info

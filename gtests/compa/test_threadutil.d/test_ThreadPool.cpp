@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-02
+// Redistribution only with this Copyright remark. Last modified: 2022-11-18
 
 // Note
 // -------------
@@ -193,9 +193,8 @@ TEST(ThreadPoolErrorCondTestSuite, init_job_and_set_job_priority) {
     EXPECT_EQ(tpObj.TPJobInit(&TPJob, (start_routine)&start_function, nullptr),
               0);
 
-    EXPECT_EQ(tpObj.TPJobSetPriority(nullptr, (ThreadPriority)-1), EINVAL);
+    EXPECT_EQ(tpObj.TPJobSetPriority(nullptr, (ThreadPriority)3), EINVAL);
     EXPECT_EQ(tpObj.TPJobSetPriority(nullptr, LOW_PRIORITY), EINVAL);
-    EXPECT_EQ(tpObj.TPJobSetPriority(&TPJob, (ThreadPriority)-1), EINVAL);
     EXPECT_EQ(tpObj.TPJobSetPriority(&TPJob, (ThreadPriority)3), EINVAL);
 }
 
@@ -319,12 +318,12 @@ TEST(ThreadPoolNormalTestSuite, set_stack_size_to_attribute) {
     if (old_code) {
         std::cout << CYEL "[ BUG      ]" CRES
                   << " It should not be possible to set StackSize < 0.\n";
-        EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, -1), 0);
+        EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, (size_t)-1), 0);
         EXPECT_EQ(TPAttr.stackSize, (size_t)-1);
 
     } else {
 
-        EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, -1), EINVAL)
+        EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, (size_t)-1), EINVAL)
             << "# It should not be possible to set StackSize < 0.";
         EXPECT_EQ(TPAttr.stackSize, (size_t)1)
             << "# Wrong settings should not modify old stackSize value.";

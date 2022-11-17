@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2021-12-06
+// Redistribution only with this Copyright remark. Last modified: 2022-11-19
 
 // Implementation of the NetIf classes
 // ===================================
@@ -45,7 +45,7 @@ CNetIf4::CNetIf4() {
     // m_adapts.PhysicalAddress is initialized to {0}
     // m_adapts.PhysicalAddressLength is initialized to 0
     m_adapts.Flags = IP_ADAPTER_IPV4_ENABLED;
-    m_adapts.Mtu = -1;
+    m_adapts.Mtu = (unsigned long)-1;
     m_adapts.IfType = IF_TYPE_SOFTWARE_LOOPBACK;
     m_adapts.OperStatus = IfOperStatusUp;
     m_adapts.Ipv6IfIndex = 0;
@@ -85,7 +85,7 @@ void CNetIf4::set(::std::wstring_view a_ifname,
 
     // Convert bitmask string to number
     ::std::size_t pos{};
-    int nbitmsk = ::std::stoi(bitmask, &pos);
+    uint8_t nbitmsk = (uint8_t)::std::stoi(bitmask, &pos);
     if (pos < bitmask.size()) {
         throw ::std::invalid_argument(
             ::std::string("Not a valid bitmask: " + bitmask));

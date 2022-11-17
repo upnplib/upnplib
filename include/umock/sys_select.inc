@@ -1,9 +1,10 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-22
+// Redistribution only with this Copyright remark. Last modified: 2022-11-21
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
 
+#include "upnplib/port.hpp"
 #include "upnplib/visibility.hpp"
 
 #ifdef _WIN32
@@ -17,7 +18,7 @@ namespace umock {
 class Sys_selectInterface {
   public:
     virtual ~Sys_selectInterface() {}
-    virtual int select(int nfds, fd_set* readfds, fd_set* writefds,
+    virtual int select(SOCKET nfds, fd_set* readfds, fd_set* writefds,
                        fd_set* exceptfds, struct timeval* timeout) = 0;
 };
 
@@ -27,8 +28,8 @@ class Sys_selectInterface {
 class Sys_selectReal : public Sys_selectInterface {
   public:
     virtual ~Sys_selectReal() override {}
-    int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds,
-               struct timeval* timeout) override;
+    int select(SOCKET nfds, fd_set* readfds, fd_set* writefds,
+               fd_set* exceptfds, struct timeval* timeout) override;
 };
 
 //
@@ -59,7 +60,7 @@ class UPNPLIB_API Sys_select {
     virtual ~Sys_select();
 
     // Methods
-    virtual int select(int nfds, fd_set* readfds, fd_set* writefds,
+    virtual int select(SOCKET nfds, fd_set* readfds, fd_set* writefds,
                        fd_set* exceptfds, struct timeval* timeout);
 
   private:

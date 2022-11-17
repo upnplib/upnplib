@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-10-30
+# Redistribution only with this Copyright remark. Last modified: 2022-11-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -22,6 +22,17 @@ set(UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES
         ./inc
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
+)
+
+add_compile_definitions(
+    # Disable warnings to use e.g. strncpy_s instead of strncpy
+    $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+
+add_compile_options(
+    $<$<CXX_COMPILER_ID:MSVC>:/W4>
+    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wconversion>
+    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wsign-conversion>
 )
 
 if(NOT WIN32)

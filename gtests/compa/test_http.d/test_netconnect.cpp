@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-16
+// Redistribution only with this Copyright remark. Last modified: 2022-11-22
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -33,17 +33,18 @@ class Sys_socketMock : public umock::Sys_socketInterface {
     virtual ~Sys_socketMock() override {}
     // clang-format off
     MOCK_METHOD(int, socket, (int domain, int type, int protocol), (override));
-    MOCK_METHOD(int, bind, (int sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
-    MOCK_METHOD(int, listen, (int sockfd, int backlog), (override));
-    MOCK_METHOD(int, accept, (int sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(size_t, recvfrom, (int sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(int, getsockopt, (int sockfd, int level, int optname, void* optval, socklen_t* optlen), (override));
-    MOCK_METHOD(int, setsockopt, (int sockfd, int level, int optname, const char* optval, socklen_t optlen), (override));
-    MOCK_METHOD(int, getsockname, (int sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(size_t, recv, (int sockfd, char* buf, size_t len, int flags), (override));
-    MOCK_METHOD(size_t, send, (int sockfd, const char* buf, size_t len, int flags), (override));
-    MOCK_METHOD(int, connect, (int sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
-    MOCK_METHOD(int, shutdown, (int sockfd, int how), (override));
+    MOCK_METHOD(int, bind, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, listen, (SOCKET sockfd, int backlog), (override));
+    MOCK_METHOD(SOCKET, accept, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(size_t, recvfrom, (SOCKET sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(int, getsockopt, (SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen), (override));
+    MOCK_METHOD(int, setsockopt, (SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen), (override));
+    MOCK_METHOD(int, getsockname, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(size_t, recv, (SOCKET sockfd, char* buf, size_t len, int flags), (override));
+    MOCK_METHOD(size_t, send, (SOCKET sockfd, const char* buf, size_t len, int flags), (override));
+    MOCK_METHOD(size_t, sendto, (SOCKET sockfd, const char* buf, sendto_buflen_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, connect, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, shutdown, (SOCKET sockfd, int how), (override));
     // clang-format on
 };
 // Create mocking socket object for all tests in this file.
@@ -53,8 +54,8 @@ class Sys_selectMock : public umock::Sys_selectInterface {
   public:
     virtual ~Sys_selectMock() override {}
     MOCK_METHOD(int, select,
-                (int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds,
-                 struct timeval* timeout),
+                (SOCKET nfds, fd_set* readfds, fd_set* writefds,
+                 fd_set* exceptfds, struct timeval* timeout),
                 (override));
 };
 // Create global mocking object, valid for all tests in this file.
@@ -449,7 +450,7 @@ class Winsock2Mock : public umock::Winsock2Interface {
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, successful_connect) {
     // This file descriptor is assumed to be valid.
-    int socketfd{258};
+    SOCKET socketfd{258};
 
     // Configure expected system calls.
     // select()
@@ -524,7 +525,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, connect_error) {
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_times_out) {
     // This file descriptor is assumed to be valid.
-    int socketfd{258};
+    SOCKET socketfd{258};
 
     // Configure expected system calls.
     // select() returns 0, that is timeout
@@ -551,7 +552,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_times_out) {
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_error) {
     // This file descriptor is assumed to be valid.
-    int socketfd{258};
+    SOCKET socketfd{258};
 
     // Configure expected system calls.
     // select() returns -1, that is failure
@@ -602,7 +603,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, getsockopt_error) {
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, successful_connect) {
     // This file descriptor is assumed to be valid.
-    int socketfd{258};
+    SOCKET socketfd{258};
 
     // Configure expected system calls.
     // select()
@@ -630,7 +631,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, successful_connect) {
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, wrong_connect_retval) {
     // This file descriptor is assumed to be valid.
-    int socketfd{258};
+    SOCKET socketfd{258};
 
     // Configure expected system calls.
     // select()
@@ -654,7 +655,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, wrong_connect_retval) {
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, connect_error) {
     // This file descriptor is assumed to be valid.
-    int socketfd{258};
+    SOCKET socketfd{258};
 
     // Configure expected system calls.
     // select()
@@ -678,7 +679,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, connect_error) {
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_times_out) {
     // This file descriptor is assumed to be valid.
-    int socketfd{258};
+    SOCKET socketfd{258};
 
     // Configure expected system calls.
     // select()
@@ -706,7 +707,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_times_out) {
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_error) {
     // This file descriptor is assumed to be valid.
-    int socketfd{258};
+    SOCKET socketfd{258};
 
     // Configure expected system calls.
     // select() returns -1, that is failure
@@ -734,7 +735,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_error) {
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, sockoption_error) {
     // This file descriptor is assumed to be valid.
-    int socketfd{258};
+    SOCKET socketfd{258};
 
     // Configure expected system calls.
     // select() returns 1, that means one socket is ready for writing
@@ -762,7 +763,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, sockoption_error) {
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, getsockopt_error) {
     // This file descriptor is assumed to be valid.
-    int socketfd{258};
+    SOCKET socketfd{258};
 
     // Configure expected system calls.
     // select()

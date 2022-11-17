@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-02
+# Redistribution only with this Copyright remark. Last modified: 2022-11-21
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -19,6 +19,13 @@ target_include_directories(test_urlparser
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
+target_compile_options(test_urlparser
+    PRIVATE
+        # disable warning C4456: declaration of 'c' hides previous local declaration
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4456>
+        # disable warning C4244: 'argument': conversion from 'const M' to 'const Element', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
+)
 add_test(NAME ctest_urlparser COMMAND test_urlparser
 )
 
@@ -37,6 +44,11 @@ target_include_directories(test_url_class
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+)
+target_compile_options(test_url_class
+    PRIVATE
+        # disable warning C4244: 'initializing': conversion from '_Ty' to '_Ty2', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
 )
 add_test(NAME ctest_url_class COMMAND test_url_class
 )

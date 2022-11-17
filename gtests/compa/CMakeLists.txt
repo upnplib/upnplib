@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-05
+# Redistribution only with this Copyright remark. Last modified: 2022-11-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -26,6 +26,12 @@ target_compile_definitions(test_sock-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
+        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(test_sock-psh
+    PRIVATE
+        # disable warning C4211: nonstandard extension used: redefined extern to static
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4211>
 )
 target_link_libraries(test_sock-psh
     PRIVATE
@@ -129,6 +135,23 @@ target_compile_definitions(test_miniserver-pst
         UPNP_HAVE_CLIENT
         UPNP_HAVE_WEBSERVER
         UPNP_HAVE_SSDP
+        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(test_miniserver-pst
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W1>
+        # disable warning C4065: switch statement contains 'default' but no 'case' labels
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4065>
+        # disable warning C4505: 'UpnpComputeIpv6PrefixLength': unreferenced local function has been removed
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
+        # disable warning C4005: '_CRT_SECURE_NO_WARNINGS': macro redefinition
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4005>
+        # disable warning C4244: 'argument': conversion from 'unsigned __int64' to 'To', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
+        # disable warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4267>
+        # disable warning C4100: 'result_listener': unreferenced formal parameter
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
 )
 target_link_libraries(test_miniserver-pst
     PRIVATE
@@ -171,6 +194,23 @@ target_compile_definitions(test_miniserver-cst
         UPNP_HAVE_CLIENT
         UPNP_HAVE_WEBSERVER
         UPNP_HAVE_SSDP
+        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(test_miniserver-cst
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W1>
+        # disable warning C4065: switch statement contains 'default' but no 'case' labels
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4065>
+        # disable warning C4505: 'UpnpComputeIpv6PrefixLength': unreferenced local function has been removed
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
+        # disable warning C4005: '_CRT_SECURE_NO_WARNINGS': macro redefinition
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4005>
+        # disable warning C4244: 'argument': conversion from 'unsigned __int64' to 'To', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
+        # disable warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4267>
+        # disable warning C4100: 'result_listener': unreferenced formal parameter
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
 )
 target_link_libraries(test_miniserver-cst
     PRIVATE

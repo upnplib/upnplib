@@ -6,7 +6,7 @@
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-10-06
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-21
  *
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
@@ -61,6 +61,8 @@
 #include <algorithm> // for std::min()|max()
 
 #include "posix_overwrites.hpp"
+
+#include "umock/sys_socket.hpp"
 
 /*!
  * \brief Sends a callback to the control point application with a SEARCH
@@ -680,8 +682,9 @@ int SearchByTarget(int Hnd, int Mx, char* St, void* Cookie) {
         while (NumCopy < NUM_SSDP_COPY) {
             UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,
                        ">>> SSDP SEND M-SEARCH >>>\n%s\n", ReqBufv4);
-            sendto(gSsdpReqSocket4, ReqBufv4, strlen(ReqBufv4), 0,
-                   (struct sockaddr*)&__ss_v4, sizeof(struct sockaddr_in));
+            umock::sys_socket_h.sendto(
+                gSsdpReqSocket4, ReqBufv4, strlen(ReqBufv4), 0,
+                (struct sockaddr*)&__ss_v4, sizeof(struct sockaddr_in));
             NumCopy++;
             imillisleep(SSDP_PAUSE);
         }

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-17
+// Redistribution only with this Copyright remark. Last modified: 2022-11-21
 
 #include "upnplib/gtest_tools_win32.hpp"
 #include <ws2tcpip.h>
@@ -89,6 +89,7 @@ TEST(Ifaddr4TestSuite, show_real_loopback_interface) {
 
             PIP_ADAPTER_UNICAST_ADDRESS uni_addr =
                 adapts_item->FirstUnicastAddress;
+            char ipstr[INET6_ADDRSTRLEN];
             while (uni_addr) {
                 SOCKADDR* ip_addr = uni_addr->Address.lpSockaddr;
                 // ip_addr->sa_family = 1;
@@ -97,15 +98,16 @@ TEST(Ifaddr4TestSuite, show_real_loopback_interface) {
                 case 2:
                     af_str = "AF_INET";
                     in_addr sin_addr = ((::sockaddr_in*)ip_addr)->sin_addr;
+                    EXPECT_NE(
+                        ::inet_ntop(AF_INET, &sin_addr, ipstr, sizeof(ipstr)),
+                        nullptr);
                     std::cout << "sin_family = " << af_str
-                              << ",  ip address = " << ::inet_ntoa(sin_addr)
-                              << "/";
+                              << ",  ip address = " << ipstr << "/";
                     std::wcout << uni_addr->OnLinkPrefixLength << '\n';
                     // std::cout << sin_addr.s_addr << "\n";
                     break;
                 case 23:
                     af_str = "AF_INET6";
-                    char ipstr[INET6_ADDRSTRLEN];
                     in6_addr sin6_addr = ((::sockaddr_in6*)ip_addr)->sin6_addr;
                     EXPECT_NE(
                         ::inet_ntop(AF_INET6, &sin6_addr, ipstr, sizeof(ipstr)),

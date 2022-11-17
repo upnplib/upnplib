@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-16
+// Redistribution only with this Copyright remark. Last modified: 2022-11-22
 
 #include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
@@ -124,17 +124,18 @@ class Sys_socketMock : public umock::Sys_socketInterface {
   public:
     virtual ~Sys_socketMock() override = default;
     MOCK_METHOD(int, socket, (int domain, int type, int protocol), (override));
-    MOCK_METHOD(int, bind, (int sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
-    MOCK_METHOD(int, listen, (int sockfd, int backlog), (override));
-    MOCK_METHOD(int, accept, (int sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(size_t, recvfrom, (int sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(int, getsockopt, (int sockfd, int level, int optname, void* optval, socklen_t* optlen), (override));
-    MOCK_METHOD(int, setsockopt, (int sockfd, int level, int optname, const char* optval, socklen_t optlen), (override));
-    MOCK_METHOD(int, getsockname, (int sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(size_t, recv, (int sockfd, char* buf, size_t len, int flags), (override));
-    MOCK_METHOD(size_t, send, (int sockfd, const char* buf, size_t len, int flags), (override));
-    MOCK_METHOD(int, connect, (int sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
-    MOCK_METHOD(int, shutdown, (int sockfd, int how), (override));
+    MOCK_METHOD(int, bind, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, listen, (SOCKET sockfd, int backlog), (override));
+    MOCK_METHOD(SOCKET, accept, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(size_t, recvfrom, (SOCKET sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(int, getsockopt, (SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen), (override));
+    MOCK_METHOD(int, setsockopt, (SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen), (override));
+    MOCK_METHOD(int, getsockname, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(size_t, recv, (SOCKET sockfd, char* buf, size_t len, int flags), (override));
+    MOCK_METHOD(size_t, send, (SOCKET sockfd, const char* buf, size_t len, int flags), (override));
+    MOCK_METHOD(size_t, sendto, (SOCKET sockfd, const char* buf, sendto_buflen_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, connect, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, shutdown, (SOCKET sockfd, int how), (override));
 };
 // Create a mocking socket object to be usable for all tests in this file.
 Sys_socketMock mocked_sys_socketObj;
@@ -142,7 +143,7 @@ Sys_socketMock mocked_sys_socketObj;
 class Sys_selectMock : public umock::Sys_selectInterface {
   public:
     virtual ~Sys_selectMock() override = default;
-    MOCK_METHOD(int, select, (int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout), (override));
+    MOCK_METHOD(int, select, (SOCKET nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout), (override));
 };
 // clang-format on
 
@@ -470,6 +471,7 @@ TEST_F(StartMiniServerFTestSuite, init_socket_suff) {
 
     // Set ip address and needed structure
     const char text_addr[]{"192.168.54.85"};
+    char addrbuf[16];
     struct s_SocketStuff ss4;
     memset(&ss4, 0xAA, sizeof(ss4));
 
@@ -479,7 +481,9 @@ TEST_F(StartMiniServerFTestSuite, init_socket_suff) {
     EXPECT_EQ(ss4.ip_version, 4);
     EXPECT_STREQ(ss4.text_addr, text_addr);
     EXPECT_EQ(ss4.serverAddr4->sin_family, AF_INET);
-    EXPECT_STREQ(inet_ntoa(ss4.serverAddr4->sin_addr), text_addr);
+    EXPECT_STREQ(inet_ntop(AF_INET, &ss4.serverAddr4->sin_addr, addrbuf,
+                           sizeof(addrbuf)),
+                 text_addr);
     // Valid real socket
     EXPECT_NE(ss4.fd, INVALID_SOCKET);
     EXPECT_EQ(ss4.try_port, 0);
@@ -522,6 +526,7 @@ TEST_F(StartMiniServerFTestSuite, init_socket_suff_with_invalid_socket) {
 
     // Set ip address and needed structure
     const char text_addr[]{"192.168.99.85"};
+    char addrbuf[16];
     struct s_SocketStuff ss4;
 
     // Mock to get an invalid socket id
@@ -537,7 +542,9 @@ TEST_F(StartMiniServerFTestSuite, init_socket_suff_with_invalid_socket) {
     EXPECT_STREQ(ss4.text_addr, text_addr);
     EXPECT_EQ(ss4.serverAddr4->sin_family, AF_INET);
     EXPECT_EQ(ss4.address_len, 16);
-    EXPECT_STREQ(inet_ntoa(ss4.serverAddr4->sin_addr), "192.168.99.85");
+    EXPECT_STREQ(inet_ntop(AF_INET, &ss4.serverAddr4->sin_addr, addrbuf,
+                           sizeof(addrbuf)),
+                 "192.168.99.85");
 }
 
 TEST_F(StartMiniServerFTestSuite, init_socket_suff_with_invalid_ip_address) {
@@ -545,6 +552,7 @@ TEST_F(StartMiniServerFTestSuite, init_socket_suff_with_invalid_ip_address) {
 
     // Set ip address and needed structure
     const char text_addr[]{"192.168.255.256"}; // invalid ip address with .256
+    char addrbuf[16];
     struct s_SocketStuff ss4;
 
     // Test Unit, needs initialized sockets on MS Windows
@@ -554,13 +562,16 @@ TEST_F(StartMiniServerFTestSuite, init_socket_suff_with_invalid_ip_address) {
     EXPECT_EQ(ss4.ip_version, 4);
     EXPECT_EQ(ss4.serverAddr4->sin_family, AF_INET);
     EXPECT_EQ(ss4.address_len, 16);
-    EXPECT_STREQ(inet_ntoa(ss4.serverAddr4->sin_addr), "0.0.0.0");
+    EXPECT_STREQ(inet_ntop(AF_INET, &ss4.serverAddr4->sin_addr, addrbuf,
+                           sizeof(addrbuf)),
+                 "0.0.0.0");
 }
 
 TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_ip_version) {
     // Set ip address and needed structure. There is no real network adapter on
     // this host with this ip address.
     const char text_addr[]{"192.168.24.85"};
+    char addrbuf[16];
     struct s_SocketStuff ss4;
 
     // Test Unit
@@ -571,7 +582,9 @@ TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_ip_version) {
     EXPECT_STREQ(ss4.text_addr, text_addr);
     EXPECT_EQ(ss4.serverAddr4->sin_family, 0);
     EXPECT_EQ(ss4.address_len, 0);
-    EXPECT_STREQ(inet_ntoa(ss4.serverAddr4->sin_addr), "0.0.0.0");
+    EXPECT_STREQ(inet_ntop(AF_INET, &ss4.serverAddr4->sin_addr, addrbuf,
+                           sizeof(addrbuf)),
+                 "0.0.0.0");
 }
 
 TEST(StartMiniServerTestSuite, do_bind_listen_successful) {
@@ -584,6 +597,7 @@ TEST(StartMiniServerTestSuite, do_bind_listen_successful) {
 
     MINISERVER_REUSEADDR = false;
     const char text_addr[]{"192.168.54.188"};
+    char addrbuf[16];
     int sockfd{600};
 
     struct s_SocketStuff s;
@@ -625,7 +639,9 @@ TEST(StartMiniServerTestSuite, do_bind_listen_successful) {
     EXPECT_EQ(s.ip_version, 4);
     EXPECT_STREQ(s.text_addr, text_addr);
     EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
-    EXPECT_STREQ(inet_ntoa(s.serverAddr4->sin_addr), text_addr);
+    EXPECT_STREQ(
+        inet_ntop(AF_INET, &s.serverAddr4->sin_addr, addrbuf, sizeof(addrbuf)),
+        text_addr);
     EXPECT_EQ(ntohs(s.serverAddr4->sin_port), APPLICATION_LISTENING_PORT);
     EXPECT_EQ(s.fd, sockfd);
     EXPECT_EQ(s.try_port, APPLICATION_LISTENING_PORT + 1);
@@ -705,6 +721,7 @@ TEST(StartMiniServerTestSuite, do_bind_listen_address_in_use) {
 
     MINISERVER_REUSEADDR = false;
     const char text_addr[]{"192.168.54.188"};
+    char addrbuf[16];
     const int actual_port{52534};
     const int sockfd_inuse{600};
     const int sockfd_free{601};
@@ -752,7 +769,9 @@ TEST(StartMiniServerTestSuite, do_bind_listen_address_in_use) {
     EXPECT_EQ(s.ip_version, 4);
     EXPECT_STREQ(s.text_addr, text_addr);
     EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
-    EXPECT_STREQ(inet_ntoa(s.serverAddr4->sin_addr), text_addr);
+    EXPECT_STREQ(
+        inet_ntop(AF_INET, &s.serverAddr4->sin_addr, addrbuf, sizeof(addrbuf)),
+        text_addr);
     EXPECT_EQ(ntohs(s.serverAddr4->sin_port), actual_port + 1);
     EXPECT_EQ(s.fd, sockfd_free);
     EXPECT_EQ(s.try_port, actual_port + 2);
@@ -770,6 +789,7 @@ TEST_F(DoBindFTestSuite, bind_successful) {
     // Provide needed data for the Unit
     const int sockfd{511};
     const char text_addr[]{"192.168.101.233"};
+    char addrbuf[16];
     uint16_t actual_port{56789};
     uint16_t try_port{56790};
 
@@ -802,7 +822,9 @@ TEST_F(DoBindFTestSuite, bind_successful) {
     EXPECT_STREQ(s.text_addr, text_addr);
     EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
     EXPECT_EQ(ntohs(s.serverAddr4->sin_port), actual_port + 1);
-    EXPECT_STREQ(inet_ntoa(s.serverAddr4->sin_addr), text_addr);
+    EXPECT_STREQ(
+        inet_ntop(AF_INET, &s.serverAddr4->sin_addr, addrbuf, sizeof(addrbuf)),
+        text_addr);
     EXPECT_EQ(s.fd, sockfd);
     EXPECT_EQ(s.try_port, try_port + 1);
     EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
@@ -831,6 +853,7 @@ TEST_F(DoBindFTestSuite, bind_with_invalid_argument) {
     // Provide needed data for the Unit
     const int sockfd{512};
     const char text_addr[]{"192.168.202.233"};
+    char addrbuf[16];
     uint16_t actual_port{56890};
     uint16_t try_port{56891};
 
@@ -884,7 +907,9 @@ TEST_F(DoBindFTestSuite, bind_with_invalid_argument) {
     EXPECT_EQ(s.ip_version, 4);
     EXPECT_STREQ(s.text_addr, text_addr);
     EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
-    EXPECT_STREQ(inet_ntoa(s.serverAddr4->sin_addr), text_addr);
+    EXPECT_STREQ(
+        inet_ntop(AF_INET, &s.serverAddr4->sin_addr, addrbuf, sizeof(addrbuf)),
+        text_addr);
     EXPECT_EQ(s.fd, sockfd);
     EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
 
@@ -919,6 +944,7 @@ TEST(DoBindTestSuite, bind_with_try_port_overrun) {
     // Provide needed data for the Unit
     const int sockfd{511};
     const char text_addr[]{"192.168.101.233"};
+    char addrbuf[16];
 
     struct s_SocketStuff s;
     // Fill all fields of struct s_SocketStuff
@@ -950,7 +976,9 @@ TEST(DoBindTestSuite, bind_with_try_port_overrun) {
     EXPECT_EQ(s.ip_version, 4);
     EXPECT_STREQ(s.text_addr, text_addr);
     EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
-    EXPECT_STREQ(inet_ntoa(s.serverAddr4->sin_addr), text_addr);
+    EXPECT_STREQ(
+        inet_ntop(AF_INET, &s.serverAddr4->sin_addr, addrbuf, sizeof(addrbuf)),
+        text_addr);
     EXPECT_EQ(ntohs(s.serverAddr4->sin_port), 65535);
     EXPECT_EQ(s.fd, sockfd);
     EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
@@ -982,6 +1010,7 @@ TEST(DoBindTestSuite, bind_successful_with_two_tries) {
     // Provide needed data for the Unit
     const int sockfd{511};
     const char text_addr[]{"192.168.101.233"};
+    char addrbuf[16];
     struct s_SocketStuff s;
 
     // Fill all fields of struct s_SocketStuff
@@ -1024,7 +1053,9 @@ TEST(DoBindTestSuite, bind_successful_with_two_tries) {
     EXPECT_EQ(s.ip_version, 4);
     EXPECT_STREQ(s.text_addr, text_addr);
     EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
-    EXPECT_STREQ(inet_ntoa(s.serverAddr4->sin_addr), text_addr);
+    EXPECT_STREQ(
+        inet_ntop(AF_INET, &s.serverAddr4->sin_addr, addrbuf, sizeof(addrbuf)),
+        text_addr);
     EXPECT_EQ(ntohs(s.serverAddr4->sin_port), 65535);
     EXPECT_EQ(s.fd, sockfd);
     EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
@@ -1116,6 +1147,7 @@ TEST(StartMiniServerTestSuite, do_listen_successful) {
     // Provide needed data for the Unit
     const int sockfd{512};
     const char text_addr[] = "192.168.202.233";
+    char addrbuf[16];
     uint16_t actual_port{60000};
     uint16_t try_port{0}; // not used
 
@@ -1155,7 +1187,9 @@ TEST(StartMiniServerTestSuite, do_listen_successful) {
     EXPECT_STREQ(s.text_addr, text_addr);
     EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
     EXPECT_EQ(ntohs(s.serverAddr4->sin_port), 0); // not used
-    EXPECT_STREQ(inet_ntoa(s.serverAddr4->sin_addr), text_addr);
+    EXPECT_STREQ(
+        inet_ntop(AF_INET, &s.serverAddr4->sin_addr, addrbuf, sizeof(addrbuf)),
+        text_addr);
     EXPECT_EQ(s.fd, sockfd);
     EXPECT_EQ(s.actual_port, actual_port);
     EXPECT_EQ(s.try_port, try_port); // not used
@@ -1173,6 +1207,7 @@ TEST(StartMiniServerTestSuite, do_listen_not_supported) {
     // Provide needed data for the Unit
     const int sockfd{512};
     const char text_addr[] = "192.168.101.203";
+    char addrbuf[16];
 
     struct s_SocketStuff s;
     // Fill all fields of struct s_SocketStuff
@@ -1204,7 +1239,9 @@ TEST(StartMiniServerTestSuite, do_listen_not_supported) {
     EXPECT_STREQ(s.text_addr, text_addr);
     EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
     EXPECT_EQ(ntohs(s.serverAddr4->sin_port), 0); // not used
-    EXPECT_STREQ(inet_ntoa(s.serverAddr4->sin_addr), text_addr);
+    EXPECT_STREQ(
+        inet_ntop(AF_INET, &s.serverAddr4->sin_addr, addrbuf, sizeof(addrbuf)),
+        text_addr);
     EXPECT_EQ(s.fd, sockfd);
     EXPECT_EQ(s.actual_port, 0);
     EXPECT_EQ(s.try_port, 0); // not used
@@ -1222,6 +1259,7 @@ TEST(StartMiniServerTestSuite, do_listen_insufficient_resources) {
     // Provide needed data for the Unit
     const int sockfd{512};
     const char text_addr[] = "192.168.101.203";
+    char addrbuf[16];
 
     struct s_SocketStuff s;
     // Fill all fields of struct s_SocketStuff
@@ -1253,7 +1291,9 @@ TEST(StartMiniServerTestSuite, do_listen_insufficient_resources) {
     EXPECT_STREQ(s.text_addr, text_addr);
     EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
     EXPECT_EQ(ntohs(s.serverAddr4->sin_port), 0); // not used
-    EXPECT_STREQ(inet_ntoa(s.serverAddr4->sin_addr), text_addr);
+    EXPECT_STREQ(
+        inet_ntop(AF_INET, &s.serverAddr4->sin_addr, addrbuf, sizeof(addrbuf)),
+        text_addr);
     EXPECT_EQ(s.fd, sockfd);
     EXPECT_EQ(s.actual_port, 0);
     EXPECT_EQ(s.try_port, 0); // not used
@@ -1517,7 +1557,7 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
     // schedule_request_job() in a new thread cannot be finished before the
     // mocked miniserver shutdown in the calling thread has been executed at
     // Unit end. This is why I prevent starting other threads. We only test
-    // initialize running the miniserver and stopping it.
+    // initialize running the miniserver and stopping it. --Ingo
 
     // Initialize the threadpool. Don't forget to shutdown the threadpool at the
     // end. nullptr means to use default attributes.
@@ -1533,7 +1573,7 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
     uint16_t connected_port = 302;
     SOCKET stop_sockfd = 203;
     uint16_t stop_port = 303;
-    int select_nfds = stop_sockfd + 1; // See man select
+    SOCKET select_nfds = stop_sockfd + 1; // See man select
 
     MiniServerSockArray* minisock =
         (MiniServerSockArray*)malloc(sizeof(MiniServerSockArray));

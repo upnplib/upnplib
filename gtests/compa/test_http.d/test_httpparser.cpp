@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-01
+// Redistribution only with this Copyright remark. Last modified: 2022-11-18
 
 #include "pupnp/upnp/src/genlib/net/http/httpparser.cpp"
 #include "upnplib/src/net/http/httpparser.cpp"
@@ -141,8 +141,8 @@ TEST(HttpparserTestSuite, httpmsg_init_and_httpmsg_destroy) {
         std::cout
             << "  BUG! httpmsg_init: msg->urlbuf set to nullptr otherwise "
                "segfault with httpmsg_destroy.\n";
-        Chttpparser_old httparsObj;
-        httparsObj.httpmsg_init(&msg);
+        Chttpparser_old httpars_oldObj;
+        httpars_oldObj.httpmsg_init(&msg);
         EXPECT_NE(msg.urlbuf, nullptr);
     } else {
         // Fixed function

@@ -1,11 +1,12 @@
 #ifndef UPNPLIB_NET_SOCK_HPP
 #define UPNPLIB_NET_SOCK_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-30
+// Redistribution only with this Copyright remark. Last modified: 2022-11-21
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
 
+#include "upnplib/port.hpp"
 #include "upnplib/visibility.hpp" // for UPNPLIB_API
 #include <string>
 #include <stdexcept>
@@ -20,11 +21,6 @@
 
 #include <sys/socket.h>
 #include <arpa/inet.h>
-
-/*! This typedef makes the code slightly more WIN32 tolerant.
- * On WIN32 systems, SOCKET is unsigned and is not a file
- * descriptor. */
-typedef int SOCKET;
 
 /*! socket() returns INVALID_SOCKET on win32 and is unsigned. */
 #define INVALID_SOCKET (-1)

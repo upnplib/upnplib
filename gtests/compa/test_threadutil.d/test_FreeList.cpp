@@ -209,7 +209,7 @@ TEST(FreeListDeathTest, freelist_init_is_nullptr) {
 TEST(FreeListTestSuite, freelist_init_with_zero_element_size) {
     FreeList free_list{};
     EXPECT_EQ(FreeListInit(&free_list, 0, 3), 0);
-    EXPECT_EQ(free_list.element_size, 0);
+    EXPECT_EQ(free_list.element_size, (size_t)0);
 
     FreeListNode* freenode1 = (FreeListNode*)FreeListAlloc(&free_list);
     EXPECT_NE(freenode1, nullptr);

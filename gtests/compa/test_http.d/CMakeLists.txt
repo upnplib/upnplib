@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-08
+# Redistribution only with this Copyright remark. Last modified: 2022-11-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -41,6 +41,14 @@ target_compile_definitions(test_webserver-pst
         UPNP_HAVE_SOAP
         UPNP_HAVE_SSDP
 )
+target_compile_options(test_webserver-pst
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W1>
+        # disable warning C4701: potentially uninitialized local variable 'subtype' used
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
+        # disable warning C4703: potentially uninitialized local pointer variable 'subtype' used
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4703>
+)
 target_link_libraries(test_webserver-pst
         PRIVATE
             pupnp_static
@@ -73,6 +81,16 @@ target_compile_definitions(test_webserver-cst
         UPNP_HAVE_DEVICE
         UPNP_HAVE_SOAP
         UPNP_HAVE_SSDP
+)
+target_compile_options(test_webserver-cst
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W1>
+        # disable warning C4505: 'alias_release': unreferenced local function has been removed
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
+        # disable warning C4701: potentially uninitialized local variable 'subtype' used
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
+        # disable warning C4703: potentially uninitialized local pointer variable 'subtype' used
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4703>
 )
 target_link_libraries(test_webserver-cst
         PRIVATE
@@ -139,6 +157,21 @@ target_include_directories(test_httpreadwrite-pst
 target_compile_definitions(test_httpreadwrite-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
+        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(test_httpreadwrite-pst
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W1>
+        # disable warning C4005: '_CRT_SECURE_NO_WARNINGS': macro redefinition
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4005>
+        # disable warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
+        # disable warning C4505: 'upnplib::Check_Connect_And_Wait_Connection': unreferenced local function has been removed
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
+        # disable warning C4706: assignment within conditional expression
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
+        # disable warning C4211: nonstandard extension used: redefined extern to static
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4211>
 )
 target_link_libraries(test_httpreadwrite-pst
     PRIVATE
@@ -208,6 +241,15 @@ target_compile_definitions(test_netconnect-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
 )
+target_compile_options(test_netconnect-pst
+    PRIVATE
+        # disable warning C4244: 'argument': conversion from 'xxx' to 'yyy', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
+        # disable warning C4706: assignment within conditional expression
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
+        # disable warning C4211: nonstandard extension used: redefined extern to static
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4211>
+)
 target_link_libraries(test_netconnect-pst
     PRIVATE
         pupnp_static
@@ -259,6 +301,14 @@ target_include_directories(test_httpparser-pst
 target_compile_definitions(test_httpparser-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
+        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(test_httpparser-pst
+    PRIVATE
+        # disable warning C4706: assignment within conditional expression
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
+        # disable warning C4701: potentially uninitialized local variable 'status' used
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
 )
 target_link_libraries(test_httpparser-pst
         PRIVATE

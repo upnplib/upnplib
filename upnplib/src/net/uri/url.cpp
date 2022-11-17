@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-07-16
+// Redistribution only with this Copyright remark. Last modified: 2022-11-21
 //
 // TODO: Provide url_is_special() as flag
 
@@ -47,7 +47,7 @@ static std::string UTF8_percent_encode(const unsigned char a_chr) {
         escaped << '%' << std::setw(2) << int(a_chr);
         return escaped.str();
     } else
-        return std::string(sizeof(a_chr), a_chr);
+        return std::string(sizeof(a_chr), (char)a_chr);
 }
 
 static std::string esc_url(std::string_view a_str) {
@@ -55,11 +55,11 @@ static std::string esc_url(std::string_view a_str) {
     escaped.fill('0');
     escaped << std::uppercase << std::hex;
 
-    for (const unsigned char chr : a_str) {
-        if (chr <= '\x1F' || chr > '\x7E')
-            escaped << '%' << std::setw(2) << int(chr);
+    for (const char chr : a_str) {
+        if ((unsigned char)chr <= '\x1F' || (unsigned char)chr > '\x7E')
+            escaped << '%' << std::setw(2) << int((unsigned char)chr);
         else
-            escaped << chr;
+            escaped << (unsigned char)chr;
     }
     return escaped.str();
 }
@@ -162,7 +162,7 @@ void Url::operator=(std::string_view a_given_url) {
     // m_pointer is decreased sometimes in the State Machine and maybe several
     // code points are percent encoded (will increase m_input) we double guard.
     // But we need at least two loops to regular finish an empty m_input.
-    int guard = m_input.size() * 2 + 2;
+    size_t guard = m_input.size() * 2 + 2;
 #ifdef DEBUG_URL
     std::clog << "DEBUG: guard = " << guard << std::endl;
 #endif
@@ -269,11 +269,11 @@ void Url::clean_and_copy_url_to_input() {
         // it_trailing points to the last valid character.
         while (it_leading <= it_trailing) {
 
-            unsigned char c = *it_leading;
+            unsigned char c = (unsigned char)*it_leading;
             if (c == '\x0D' || c == '\x0A' || c == '\x09')
                 invalid_chars++;
             else
-                m_input.push_back(std::tolower(c));
+                m_input.push_back((char)std::tolower(c));
             it_leading++;
         }
     }
@@ -298,7 +298,7 @@ void Url::fsm_scheme_start() {
 
         // Exception: if the operation would result in size() > max_size(),
         // throws std::length_error.
-        m_buffer.push_back(std::tolower(*m_pointer));
+        m_buffer.push_back((char)std::tolower(*m_pointer));
 
         m_state = STATE_SCHEME;
 
@@ -316,7 +316,8 @@ void Url::fsm_scheme() {
               << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
 
-    const unsigned char c = m_pointer < m_input.end() ? *m_pointer : '\0';
+    const unsigned char c =
+        m_pointer < m_input.end() ? (unsigned char)*m_pointer : '\0';
 
     // Check if character is an ASCII lower alphanumeric or U+002B (+), U+002D
     // (-), or U+002E (.).
@@ -325,7 +326,7 @@ void Url::fsm_scheme() {
     {
         // Exception: if the operation would result in size() > max_size(),
         // throws std::length_error.
-        m_buffer.push_back(c);
+        m_buffer.push_back((char)c);
 
     } else if (c == ':') {
 
@@ -442,7 +443,8 @@ void Url::fsm_authority() {
               << std::string_view(m_pointer, m_input.end()) << "\"\n";
 #endif
 
-    const unsigned char c = m_pointer < m_input.end() ? *m_pointer : '\0';
+    const unsigned char c =
+        m_pointer < m_input.end() ? (unsigned char)*m_pointer : '\0';
 
     if (c == '@') {
 
@@ -457,7 +459,8 @@ void Url::fsm_authority() {
                 m_passwordTokenSeen = true;
                 continue;
             }
-            std::string encodedCodePoints = UTF8_percent_encode(cp);
+            std::string encodedCodePoints =
+                UTF8_percent_encode((unsigned char)cp);
             if (m_passwordTokenSeen)
                 m_password += encodedCodePoints;
             else
@@ -472,13 +475,13 @@ void Url::fsm_authority() {
             std::clog << "Error: no valid authority." << std::endl;
             throw std::invalid_argument("Invalid authority: '" + m_input + "'");
         } else {
-            m_pointer = m_pointer - m_buffer.length() - 1;
+            m_pointer = m_pointer - (long int)m_buffer.length() - 1;
             m_buffer = "";
             m_state = STATE_HOST;
         }
 
     } else {
-        m_buffer.push_back(c);
+        m_buffer.push_back((char)c);
     }
 }
 
@@ -491,7 +494,8 @@ void Url::fsm_host() {
               << m_password << "\"\n";
 #endif
 
-    const unsigned char c = m_pointer < m_input.end() ? *m_pointer : '\0';
+    const unsigned char c =
+        m_pointer < m_input.end() ? (unsigned char)*m_pointer : '\0';
 
     if (c == ':' && !m_insideBrackets) {
 
@@ -530,7 +534,7 @@ void Url::fsm_host() {
         else if (c == ']')
             m_insideBrackets = false;
 
-        m_buffer.push_back(c);
+        m_buffer.push_back((char)c);
     }
 }
 
@@ -542,27 +546,37 @@ void Url::fsm_port() {
               << "host = \"" << m_host << "\"\n";
 #endif
 
-    const unsigned char c = m_pointer < m_input.end() ? *m_pointer : '\0';
+    const unsigned char c =
+        m_pointer < m_input.end() ? (unsigned char)*m_pointer : '\0';
 
     if (std::isdigit(c)) {
-        m_buffer.push_back(c);
+        m_buffer.push_back((char)c);
 
     } else if (c == '\0' || c == '/' || c == '?' || c == '#' ||
                (url_is_special(m_scheme) && c == '\\')) {
 
         if (!m_buffer.empty()) {
             // uint16_t limits port number to max 65535
-            uint16_t port{(uint16_t)NULL};
+            uint16_t port{};
+            long unsigned int port_tmp{};
 
             // If port is greater than 2^16 − 1 (65535), validation error,
             // return failure.
             try {
-                port = std::stoul(m_buffer);
+                port_tmp = std::stoul(m_buffer);
                 // } catch(std::invalid_argument& e) {} // not catched here
             } catch (std::out_of_range& e) {
-                std::clog << "Error: Port number out of range." << std::endl;
+                std::clog << "Error: " << e.what()
+                          << ". Port number out of range." << std::endl;
                 throw;
             }
+            if (port_tmp > 65535) {
+                throw std::out_of_range(std::string(
+                    (std::string)__FILE__ + ":" + std::to_string(__LINE__) +
+                    ", Parsing port " + __func__ + ". Error: Port number " +
+                    std::to_string(port_tmp) + " is out of range."));
+            }
+            port = (uint16_t)port_tmp; // type cast is checked
 
             // Set url’s port to null, if port is url’s scheme’s default port;
             // otherwise to port.

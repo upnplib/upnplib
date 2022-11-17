@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-21
+// Redistribution only with this Copyright remark. Last modified: 2022-11-22
 
 #include "umock/sys_socket.inc"
 
@@ -10,35 +10,39 @@ int Sys_socketReal::socket(int domain, int type, int protocol) {
     return ::socket(domain, type, protocol);
 }
 
-int Sys_socketReal::bind(int sockfd, const struct sockaddr* addr, socklen_t addrlen) {
+int Sys_socketReal::bind(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) {
     return ::bind(sockfd, addr, addrlen);
 }
 
-int Sys_socketReal::listen(int sockfd, int backlog) {
+int Sys_socketReal::listen(SOCKET sockfd, int backlog) {
     return ::listen(sockfd, backlog);
 }
 
-int Sys_socketReal::accept(int sockfd, struct sockaddr* addr, socklen_t* addrlen) {
+SOCKET Sys_socketReal::accept(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) {
     return ::accept(sockfd, addr, addrlen);
 }
 
-size_t Sys_socketReal::recv(int sockfd, char* buf, size_t len, int flags) {
+size_t Sys_socketReal::recv(SOCKET sockfd, char* buf, size_t len, int flags) {
     return ::recv(sockfd, buf, len, flags);
 }
 
-size_t Sys_socketReal::recvfrom(int sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen) {
+size_t Sys_socketReal::recvfrom(SOCKET sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen) {
     return ::recvfrom(sockfd, buf, len, flags, src_addr, addrlen);
 }
 
-size_t Sys_socketReal::send(int sockfd, const char* buf, size_t len, int flags) {
+size_t Sys_socketReal::send(SOCKET sockfd, const char* buf, size_t len, int flags) {
     return ::send(sockfd, buf, len, flags);
 }
 
-int Sys_socketReal::connect(int sockfd, const struct sockaddr* addr, socklen_t addrlen) {
+size_t Sys_socketReal::sendto(SOCKET sockfd, const char* buf, sendto_buflen_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen) {
+    return ::sendto(sockfd, buf, len, flags, dest_addr, addrlen);
+}
+
+int Sys_socketReal::connect(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) {
     return ::connect(sockfd, addr, addrlen);
 }
 
-int Sys_socketReal::getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* optlen) {
+int Sys_socketReal::getsockopt(SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen) {
 #ifdef _WIN32
     return ::getsockopt(sockfd, level, optname, (char*)optval, optlen);
 #else
@@ -46,15 +50,15 @@ int Sys_socketReal::getsockopt(int sockfd, int level, int optname, void* optval,
 #endif
 }
 
-int Sys_socketReal::setsockopt(int sockfd, int level, int optname, const char* optval, socklen_t optlen) {
+int Sys_socketReal::setsockopt(SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen) {
     return ::setsockopt(sockfd, level, optname, optval, optlen);
 }
 
-int Sys_socketReal::getsockname(int sockfd, struct sockaddr* addr, socklen_t* addrlen) {
+int Sys_socketReal::getsockname(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) {
     return ::getsockname(sockfd, addr, addrlen);
 }
 
-int Sys_socketReal::shutdown(int sockfd, int how) {
+int Sys_socketReal::shutdown(SOCKET sockfd, int how) {
     return ::shutdown(sockfd, how);
 }
 // clang-format on
@@ -80,35 +84,39 @@ int Sys_socket::socket(int domain, int type, int protocol) {
     return m_ptr_workerObj->socket(domain, type, protocol);
 }
 
-int Sys_socket::bind(int sockfd, const struct sockaddr* addr, socklen_t addrlen) {
+int Sys_socket::bind(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) {
     return m_ptr_workerObj->bind(sockfd, addr, addrlen);
 }
 
-int Sys_socket::listen(int sockfd, int backlog) {
+int Sys_socket::listen(SOCKET sockfd, int backlog) {
     return m_ptr_workerObj->listen(sockfd, backlog);
 }
 
-int Sys_socket::accept(int sockfd, struct sockaddr* addr, socklen_t* addrlen) {
+SOCKET Sys_socket::accept(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) {
     return m_ptr_workerObj->accept(sockfd, addr, addrlen);
 }
 
-size_t Sys_socket::recv(int sockfd, char* buf, size_t len, int flags) {
+size_t Sys_socket::recv(SOCKET sockfd, char* buf, size_t len, int flags) {
     return m_ptr_workerObj->recv(sockfd, buf, len, flags);
 }
 
-size_t Sys_socket::recvfrom(int sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen) {
+size_t Sys_socket::recvfrom(SOCKET sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen) {
     return m_ptr_workerObj->recvfrom(sockfd, buf, len, flags, src_addr, addrlen);
 }
 
-size_t Sys_socket::send(int sockfd, const char* buf, size_t len, int flags) {
+size_t Sys_socket::send(SOCKET sockfd, const char* buf, size_t len, int flags) {
     return m_ptr_workerObj->send(sockfd, buf, len, flags);
 }
 
-int Sys_socket::connect(int sockfd, const struct sockaddr* addr, socklen_t addrlen) {
+size_t Sys_socket::sendto(SOCKET sockfd, const char* buf, sendto_buflen_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen) {
+    return m_ptr_workerObj->sendto(sockfd, buf, len, flags, dest_addr, addrlen);
+}
+
+int Sys_socket::connect(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) {
     return m_ptr_workerObj->connect(sockfd, addr, addrlen);
 }
 
-int Sys_socket::getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* optlen) {
+int Sys_socket::getsockopt(SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen) {
 #ifdef _WIN32
     return m_ptr_workerObj->getsockopt(sockfd, level, optname, (char*)optval, optlen);
 #else
@@ -116,15 +124,15 @@ int Sys_socket::getsockopt(int sockfd, int level, int optname, void* optval, soc
 #endif
 }
 
-int Sys_socket::setsockopt(int sockfd, int level, int optname, const char* optval, socklen_t optlen) {
+int Sys_socket::setsockopt(SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen) {
     return m_ptr_workerObj->setsockopt(sockfd, level, optname, optval, optlen);
 }
 
-int Sys_socket::getsockname(int sockfd, struct sockaddr* addr, socklen_t* addrlen) {
+int Sys_socket::getsockname(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) {
     return m_ptr_workerObj->getsockname(sockfd, addr, addrlen);
 }
 
-int Sys_socket::shutdown(int sockfd, int how) {
+int Sys_socket::shutdown(SOCKET sockfd, int how) {
     return m_ptr_workerObj->shutdown(sockfd, how);
 }
 // clang-format on

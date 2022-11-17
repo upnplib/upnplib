@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-04
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -987,8 +987,10 @@ int UpnpRegisterRootDevice2(Upnp_DescType descriptionType,
     }
 
 #ifdef UPNPLIB_PUPNP_BUG
-    // Ingo: Error old code: output may be truncated copying 179 bytes from a
-    // string of length 179 [-Werror=stringop-truncation].
+    // Error if compiling old code with build type Release: output may be
+    // truncated copying 179 bytes from a string of length 179
+    // [-Werror=stringop-truncation]. We have to fix it here otherwise it won't
+    // compile. --Ingo
     strncpy(HInfo->LowerDescURL, HInfo->DescURL,
             sizeof(HInfo->LowerDescURL) - 1);
 #else
@@ -3696,8 +3698,10 @@ int UpnpAddVirtualDir(const char* newDirName, const void* cookie,
     pNewVirtualDir->cookie = cookie;
     memset(pNewVirtualDir->dirName, 0, sizeof(pNewVirtualDir->dirName));
 #ifdef UPNPLIB_PUPNP_BUG
-    // Ingo: Error old code: output may be truncated copying 255 bytes from a
-    // string of length 255 [-Werror=stringop-truncation].
+    // Error if compiling old code with build type Release: output may be
+    // truncated copying 255 bytes from a string of length 255
+    // [-Werror=stringop-truncation]. We have to fix it here otherwise it won't
+    // compile. --Ingo
     strncpy(pNewVirtualDir->dirName, dirName,
             sizeof(pNewVirtualDir->dirName) - 1);
 #else

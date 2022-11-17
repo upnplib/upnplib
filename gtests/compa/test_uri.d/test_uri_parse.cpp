@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-02
+// Redistribution only with this Copyright remark. Last modified: 2022-11-18
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -53,7 +53,7 @@ class Mock_netv4info : public NetdbMock {
   public:
     Mock_netv4info() { m_sa.sin_family = AF_INET; }
 
-    addrinfo* get(const char* a_ipaddr, short int a_port) {
+    addrinfo* get(const char* a_ipaddr, uint16_t a_port) {
         inet_pton(m_sa.sin_family, a_ipaddr, &m_sa.sin_addr);
         m_sa.sin_port = htons(a_port);
 

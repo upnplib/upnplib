@@ -1,7 +1,8 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-01
+// Redistribution only with this Copyright remark. Last modified: 2022-11-18
 
 #include "upnplib/webserver.hpp"
+#include "upnplib/port.hpp"
 #include <array>
 
 namespace upnplib {
@@ -86,13 +87,15 @@ const Document_meta* select_filetype(
     /*! [in] . */
     std::string_view a_extension) {
 
-    int top = 0;
-    int bot = mediatype_list.size() - 1;
+    ssize_t top = 0;
+    ssize_t bot = mediatype_list.size() - 1;
 
     // Using effective binary search on the sorted list.
     while (top <= bot) {
-        int mid = (top + bot) / 2;
-        int cmp = a_extension.compare(mediatype_list[mid].extension);
+        ssize_t mid = (top + bot) / 2;
+        int cmp = a_extension.compare(
+            // need type cast: mid cannot become negative
+            mediatype_list[(size_t)mid].extension);
         if (cmp > 0) {
             /* look below mid. */
             top = mid + 1;
@@ -101,7 +104,8 @@ const Document_meta* select_filetype(
             bot = mid - 1;
         } else {
             /* cmp == 0 */
-            return &mediatype_list[mid];
+            // need type cast: mid cannot become negative
+            return &mediatype_list[(size_t)mid];
         }
     }
     return nullptr;

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-10
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-16
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -366,16 +366,8 @@ int configure_urlbase(IXML_Document* doc, const struct sockaddr* serverAddr,
     char* new_alias = NULL;
     char* xml_str = NULL;
     int err_code;
-    // clang-format off
-// #ifdef UPNPLIB_PUPNP_BUG
-    // Error old code: LINE_SIZE may have wrong length. We have to add
-    // the string length of the port that is strlen(".65535") == 6. Don't fixed
-    // it due to compatibility. --Ingo
     char ipaddr_port[LINE_SIZE];
-// #else
-//     char ipaddr_port[INET6_ADDRSTRLEN + 6];
-// #endif
-    // clang-format on
+
     /* get IP address and port */
     err_code = addrToString(serverAddr, ipaddr_port, sizeof(ipaddr_port));
     if (err_code != UPNP_E_SUCCESS) {

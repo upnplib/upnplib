@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-03
+// Redistribution only with this Copyright remark. Last modified: 2022-11-22
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -91,35 +91,32 @@ class Sys_socketMock : public umock::Sys_socketInterface {
   public:
     virtual ~Sys_socketMock() override {}
     MOCK_METHOD(int, socket, (int domain, int type, int protocol), (override));
-    MOCK_METHOD(int, bind, (int sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
-    MOCK_METHOD(int, listen, (int sockfd, int backlog), (override));
-    MOCK_METHOD(int, accept, (int sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(size_t, recvfrom, (int sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(int, getsockopt, (int sockfd, int level, int optname, void* optval, socklen_t* optlen), (override));
-    MOCK_METHOD(int, setsockopt, (int sockfd, int level, int optname, const char* optval, socklen_t optlen), (override));
-    MOCK_METHOD(int, getsockname, (int sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(size_t, recv, (int sockfd, char* buf, size_t len, int flags), (override));
-    MOCK_METHOD(size_t, send, (int sockfd, const char* buf, size_t len, int flags), (override));
-    MOCK_METHOD(int, connect, (int sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
-    MOCK_METHOD(int, shutdown, (int sockfd, int how), (override));
+    MOCK_METHOD(int, bind, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, listen, (SOCKET sockfd, int backlog), (override));
+    MOCK_METHOD(SOCKET, accept, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(size_t, recvfrom, (SOCKET sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(int, getsockopt, (SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen), (override));
+    MOCK_METHOD(int, setsockopt, (SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen), (override));
+    MOCK_METHOD(int, getsockname, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(size_t, recv, (SOCKET sockfd, char* buf, size_t len, int flags), (override));
+    MOCK_METHOD(size_t, send, (SOCKET sockfd, const char* buf, size_t len, int flags), (override));
+    MOCK_METHOD(size_t, sendto, (SOCKET sockfd, const char* buf, sendto_buflen_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, connect, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, shutdown, (SOCKET sockfd, int how), (override));
 };
-// clang-format on
 
 class Sys_selectMock : public umock::Sys_selectInterface {
   public:
     virtual ~Sys_selectMock() override {}
-    MOCK_METHOD(int, select,
-                (int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds,
-                 struct timeval* timeout),
-                (override));
+    MOCK_METHOD(int, select, (SOCKET nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout), (override));
 };
 
 class UnistdMock : public umock::UnistdInterface {
   public:
     virtual ~UnistdMock() override = default;
-    MOCK_METHOD(int, UPNPLIB_CLOSE_SOCKET, (UPNPLIB_SOCKET_TYPE fd),
-                (override));
+    MOCK_METHOD(int, UPNPLIB_CLOSE_SOCKET, (UPNPLIB_SOCKET_TYPE fd), (override));
 };
+// clang-format on
 
 //
 // testsuite for the sock module
@@ -183,7 +180,7 @@ class SockFTestSuite : public ::testing::Test {
         m_info.socket = m_socketfd;
         m_info_sa_in_ptr->sin_family = AF_INET;
         m_info_sa_in_ptr->sin_port = htons(443);
-        m_info_sa_in_ptr->sin_addr.s_addr = inet_addr("192.168.24.128");
+        inet_pton(AF_INET, "192.168.24.128", &m_info_sa_in_ptr->sin_addr);
 
         // Set defaut return values of mocked system functions. They will fail.
         ON_CALL(m_mock_sys_selectObj, select(_, _, _, _, _))
@@ -207,7 +204,8 @@ TEST_F(SockFTestSuite, sock_init_with_ip) {
     ::sockaddr_in foreign_sockaddr{};
     foreign_sockaddr.sin_family = AF_INET;
     foreign_sockaddr.sin_port = htons(80);
-    foreign_sockaddr.sin_addr.s_addr = inet_addr("192.168.192.168");
+    EXPECT_EQ(inet_pton(AF_INET, "192.168.192.168", &foreign_sockaddr.sin_addr),
+              1);
 
     // Process the Unit
     int returned = m_sockObj.sock_init_with_ip(&m_info, m_socketfd,
@@ -215,7 +213,8 @@ TEST_F(SockFTestSuite, sock_init_with_ip) {
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     EXPECT_EQ(m_info.socket, m_socketfd);
     EXPECT_EQ(m_info_sa_in_ptr->sin_port, htons(80));
-    EXPECT_EQ(m_info_sa_in_ptr->sin_addr.s_addr, inet_addr("192.168.192.168"));
+    EXPECT_EQ(m_info_sa_in_ptr->sin_addr.s_addr,
+              foreign_sockaddr.sin_addr.s_addr);
 }
 
 TEST_F(SockFTestSuite, sock_destroy_valid_socket_descriptor) {
@@ -972,8 +971,8 @@ TEST(SockTestSuite, sock_make_blocking_and_sock_make_no_blocking) {
     EXPECT_EQ(sock_make_blocking(sock), 0);
 
     // But an invalid socket should fail.
-    EXPECT_EQ(sock_make_blocking(-2), -1);
-    EXPECT_EQ(sock_make_no_blocking(-2), -1);
+    EXPECT_EQ(sock_make_blocking((SOCKET)-2), -1);
+    EXPECT_EQ(sock_make_no_blocking((SOCKET)-2), -1);
 
     WSACleanup();
 #else

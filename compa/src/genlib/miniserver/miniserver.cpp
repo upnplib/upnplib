@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-03
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -188,7 +188,7 @@ ExitFunction:
     return rc;
 }
 
-static int getNumericHostRedirection(int socket, char* host_port,
+static int getNumericHostRedirection(SOCKET socket, char* host_port,
                                      size_t hp_size) {
     struct SocketAddr sock;
     std::string text_addr;
@@ -513,7 +513,7 @@ static void ssdp_read([[maybe_unused]] SOCKET rsock,
 }
 
 static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
-    ssize_t byteReceived;
+    size_t byteReceived;
     socklen_t clientLen;
     struct sockaddr_storage clientAddr;
     struct sockaddr_in* sa_in{(sockaddr_in*)&clientAddr};
@@ -927,7 +927,7 @@ static int do_bind_listen(struct s_SocketStuff* s) {
 
     int ret_val;
     int ok = 0;
-    int original_port = s->try_port;
+    uint16_t original_port = s->try_port;
 
     while (!ok) {
         ret_val = do_bind(s);
@@ -1109,7 +1109,7 @@ static int get_miniserver_stopsock(
     /* Bind to local socket. */
     memset(&stop_sockaddr, 0, sizeof(stop_sockaddr));
     stop_sockaddr.sin_family = (sa_family_t)AF_INET;
-    stop_sockaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    inet_pton(AF_INET, "127.0.0.1", &stop_sockaddr.sin_addr);
     ret = umock::sys_socket_h.bind(miniServerStopSock,
                                    (struct sockaddr*)&stop_sockaddr,
                                    sizeof(stop_sockaddr));
@@ -1275,6 +1275,7 @@ int StopMiniServer() {
     SOCKET sock;
     struct sockaddr_in ssdpAddr;
     char buf[256] = "ShutDown";
+    // due to required type cast for 'sendto' on WIN32 bufLen must fit to an int
     size_t bufLen = strlen(buf);
 
     switch (gMServState) {
@@ -1293,9 +1294,10 @@ int StopMiniServer() {
     }
     while (gMServState != (MiniServerState)MSERV_IDLE) {
         ssdpAddr.sin_family = (sa_family_t)AF_INET;
-        ssdpAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+        inet_pton(AF_INET, "127.0.0.1", &ssdpAddr.sin_addr);
         ssdpAddr.sin_port = htons(miniStopSockPort);
-        sendto(sock, buf, bufLen, 0, (struct sockaddr*)&ssdpAddr, socklen);
+        umock::sys_socket_h.sendto(sock, buf, bufLen, 0,
+                                   (struct sockaddr*)&ssdpAddr, socklen);
         imillisleep(1);
         if (gMServState == (MiniServerState)MSERV_IDLE) {
             break;

@@ -1,7 +1,9 @@
 Next steps to do:
-* Check membuffer settings of length and capacity.
+* Rework pthreads4w build to compile with 32 bit.
+* Rework Github Actions to detect gtest fails on 32 bit MS Windows.
 * Check bugfix in pupnp/upnp/src/urlconfig/urlconfig.cpp with a gtest.
 * [set EXPECT_CALL to redirect the call to the original method](https://stackoverflow.com/questions/25556601/set-expect-call-to-redirect-the-call-to-the-original-method)
+* Rework miniserver GTest including sources like webserver.
 * Continue creating gtests for webserver.
 * Move pupnp/upnp/src/inc/sock.hpp:79:static UPNP_INLINE int sock_close() to miniserver.cpp and rework.
 * Check usage of fields in struct s_SocketStuff.serverAddr4.

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-10-22
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -499,7 +499,7 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
     if (FD_ISSET(ssock, set)) {
         clientLen = sizeof(clientAddr);
         memset((char*)&clientAddr, 0, sizeof(clientAddr));
-        byteReceived = umock::sys_socket_h.recvfrom(
+        byteReceived = (ssize_t)umock::sys_socket_h.recvfrom(
             ssock, requestBuf, (size_t)25, 0, (struct sockaddr*)&clientAddr,
             &clientLen);
         if (byteReceived > 0) {
@@ -1170,6 +1170,8 @@ int StopMiniServer() {
     SOCKET sock;
     struct sockaddr_in ssdpAddr;
     char buf[256] = "ShutDown";
+    // Due to required type cast for 'sendto' on WIN32 bufLen must fit to an
+    // int, no problem here.
     size_t bufLen = strlen(buf);
 
     switch (gMServState) {
@@ -1195,7 +1197,8 @@ int StopMiniServer() {
         ssdpAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 #endif
         ssdpAddr.sin_port = htons(miniStopSockPort);
-        sendto(sock, buf, bufLen, 0, (struct sockaddr*)&ssdpAddr, socklen);
+        umock::sys_socket_h.sendto(sock, buf, bufLen, 0,
+                                   (struct sockaddr*)&ssdpAddr, socklen);
         imillisleep(1);
         if (gMServState == (MiniServerState)MSERV_IDLE) {
             break;

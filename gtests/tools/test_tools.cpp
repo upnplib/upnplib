@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-16
+// Redistribution only with this Copyright remark. Last modified: 2022-11-21
 
 #include "upnplib/port.hpp"
 #include "upnplib/sock.hpp"
@@ -195,16 +195,16 @@ TEST(DISABLED_ClosedFdsTestSuite, check_closed_fds_with_open_socket) {
     SOCKET sock4 = socket(AF_INET, SOCK_DGRAM, 0);
     SOCKET sock5 = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock3 != INVALID_SOCKET)
-        close(sock3);
+        close((int)sock3);
     if (sock4 != INVALID_SOCKET)
-        close(sock4);
+        close((int)sock4);
 
     EXPECT_THAT([]() { check_closed_fds(4, 16); },
                 ThrowsMessage<std::runtime_error>(MatchesStdRegex(
                     "Found open file descriptor [56]\\. \\(0\\) Success")));
 
     if (sock5 != INVALID_SOCKET)
-        close(sock5);
+        close((int)sock5);
 }
 
 TEST(DISABLED_ClosedFdsTestSuite, check_closed_fds_with_open_file) {

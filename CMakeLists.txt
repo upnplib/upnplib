@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-16
+# Redistribution only with this Copyright remark. Last modified: 2022-11-23
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -135,12 +135,13 @@ add_compile_definitions(
 add_compile_options(
         # all compiler warnings as errors
         $<$<CXX_COMPILER_ID:MSVC>:/WX>
-        #$<$<CXX_COMPILER_ID:MSVC>:/W4>
         # lots of warnings and all warnings as errors
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wextra>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wpedantic>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Werror>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wuninitialized>
+        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wdeprecated>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wno-dangling-else>
         $<$<CXX_COMPILER_ID:GNU>:-Wno-format-truncation>
         $<$<CXX_COMPILER_ID:GNU>:-Wsuggest-override> # Only valid for C++/ObjC++ but not for C
@@ -159,15 +160,6 @@ add_link_options(
         # all linker warnings as errors
         $<$<CXX_COMPILER_ID:MSVC>:/WX>
 )
-
-# Some compiler options for MSVC:
-# Reports the compiler warning that is specified by nnnn only once.
-#add_compile_options(/wo4273)
-# suppress all warnings for development to see only errors
-#add_compile_options(/W0)
-# warning level 4 and all warnings as errors
-# but suppress 'type cast': pointer truncation
-#add_compile_options(/W4 /wd4311 /WX)
 
 
 #################################

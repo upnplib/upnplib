@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-10
+# Redistribution only with this Copyright remark. Last modified: 2022-11-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -52,6 +52,10 @@ target_compile_definitions(test_membuffer-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
+)
+target_compile_options(test_membuffer-psh
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W1>
 )
 target_link_libraries(test_membuffer-psh
         PRIVATE

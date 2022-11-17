@@ -1,9 +1,10 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-21
+// Redistribution only with this Copyright remark. Last modified: 2022-11-22
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
 
+#include "upnplib/port.hpp"
 #include "upnplib/visibility.hpp"
 
 #ifdef _WIN32
@@ -13,6 +14,12 @@
 #include <sys/socket.h>
 #endif
 
+#ifdef _MSC_VER
+#define sendto_buflen_t int
+#else
+#define sendto_buflen_t size_t
+#endif
+
 namespace umock {
 
 class Sys_socketInterface {
@@ -20,17 +27,18 @@ class Sys_socketInterface {
     virtual ~Sys_socketInterface() = default;
     // clang-format off
     virtual int socket(int domain, int type, int protocol) = 0;
-    virtual int bind(int sockfd, const struct sockaddr* addr, socklen_t addrlen) = 0;
-    virtual int listen(int sockfd, int backlog) = 0;
-    virtual int accept(int sockfd, struct sockaddr* addr, socklen_t* addrlen) = 0;
-    virtual size_t recv(int sockfd, char* buf, size_t len, int flags) = 0;
-    virtual size_t recvfrom(int sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen) = 0;
-    virtual size_t send(int sockfd, const char* buf, size_t len, int flags) = 0;
-    virtual int connect(int sockfd, const struct sockaddr* addr, socklen_t addrlen) = 0;
-    virtual int getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* optlen) = 0;
-    virtual int setsockopt(int sockfd, int level, int optname, const char* optval, socklen_t optlen) = 0;
-    virtual int getsockname(int sockfd, struct sockaddr* addr, socklen_t* addrlen) = 0;
-    virtual int shutdown(int sockfd, int how) = 0;
+    virtual int bind(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) = 0;
+    virtual int listen(SOCKET sockfd, int backlog) = 0;
+    virtual SOCKET accept(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) = 0;
+    virtual size_t recv(SOCKET sockfd, char* buf, size_t len, int flags) = 0;
+    virtual size_t recvfrom(SOCKET sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen) = 0;
+    virtual size_t send(SOCKET sockfd, const char* buf, size_t len, int flags) = 0;
+    virtual size_t sendto(SOCKET sockfd, const char* buf, sendto_buflen_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen) = 0;
+    virtual int connect(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) = 0;
+    virtual int getsockopt(SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen) = 0;
+    virtual int setsockopt(SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen) = 0;
+    virtual int getsockname(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) = 0;
+    virtual int shutdown(SOCKET sockfd, int how) = 0;
     // clang-format on
 };
 
@@ -42,17 +50,18 @@ class Sys_socketReal : public Sys_socketInterface {
     virtual ~Sys_socketReal() override = default;
     // clang-format off
     int socket(int domain, int type, int protocol) override;
-    int bind(int sockfd, const struct sockaddr* addr, socklen_t addrlen) override;
-    int listen(int sockfd, int backlog) override;
-    int accept(int sockfd, struct sockaddr* addr, socklen_t* addrlen) override;
-    size_t recv(int sockfd, char* buf, size_t len, int flags) override;
-    size_t recvfrom(int sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen) override;
-    size_t send(int sockfd, const char* buf, size_t len, int flags) override;
-    int connect(int sockfd, const struct sockaddr* addr, socklen_t addrlen) override;
-    int getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* optlen) override;
-    int setsockopt(int sockfd, int level, int optname, const char* optval, socklen_t optlen) override;
-    int getsockname(int sockfd, struct sockaddr* addr, socklen_t* addrlen) override;
-    int shutdown(int sockfd, int how) override;
+    int bind(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) override;
+    int listen(SOCKET sockfd, int backlog) override;
+    SOCKET accept(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) override;
+    size_t recv(SOCKET sockfd, char* buf, size_t len, int flags) override;
+    size_t recvfrom(SOCKET sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen) override;
+    size_t send(SOCKET sockfd, const char* buf, size_t len, int flags) override;
+    virtual size_t sendto(SOCKET sockfd, const char* buf, sendto_buflen_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen) override;
+    int connect(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) override;
+    int getsockopt(SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen) override;
+    int setsockopt(SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen) override;
+    int getsockname(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) override;
+    int shutdown(SOCKET sockfd, int how) override;
     // clang-format on
 };
 
@@ -86,17 +95,18 @@ class UPNPLIB_API Sys_socket {
     // Methods
     // clang-format off
     virtual int socket(int domain, int type, int protocol);
-    virtual int bind(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
-    virtual int listen(int sockfd, int backlog);
-    virtual int accept(int sockfd, struct sockaddr* addr, socklen_t* addrlen);
-    virtual size_t recv(int sockfd, char* buf, size_t len, int flags);
-    virtual size_t recvfrom(int sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen);
-    virtual size_t send(int sockfd, const char* buf, size_t len, int flags);
-    virtual int connect(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
-    virtual int getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* optlen);
-    virtual int setsockopt(int sockfd, int level, int optname, const char* optval, socklen_t optlen);
-    virtual int getsockname(int sockfd, struct sockaddr* addr, socklen_t* addrlen);
-    virtual int shutdown(int sockfd, int how);
+    virtual int bind(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen);
+    virtual int listen(SOCKET sockfd, int backlog);
+    virtual SOCKET accept(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen);
+    virtual size_t recv(SOCKET sockfd, char* buf, size_t len, int flags);
+    virtual size_t recvfrom(SOCKET sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen);
+    virtual size_t send(SOCKET sockfd, const char* buf, size_t len, int flags);
+    virtual size_t sendto(SOCKET sockfd, const char* buf, sendto_buflen_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen);
+    virtual int connect(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen);
+    virtual int getsockopt(SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen);
+    virtual int setsockopt(SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen);
+    virtual int getsockname(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen);
+    virtual int shutdown(SOCKET sockfd, int how);
     // clang-format on
 
   private:

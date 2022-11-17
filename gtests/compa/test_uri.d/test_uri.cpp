@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-02
+// Redistribution only with this Copyright remark. Last modified: 2022-11-18
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -49,7 +49,7 @@ class Mock_netv4info : public NetdbMock {
   public:
     Mock_netv4info() { m_sa.sin_family = AF_INET; }
 
-    addrinfo* set(const char* a_ipaddr, short int a_port) {
+    addrinfo* set(const char* a_ipaddr, uint16_t a_port) {
         inet_pton(m_sa.sin_family, a_ipaddr, &m_sa.sin_addr);
         m_sa.sin_port = htons(a_port);
 
@@ -192,14 +192,14 @@ TEST_F(HostportIp4FTestSuite, parse_ip_address_with_port) {
 class HostportFailIp4PTestSuite
     : public ::testing::TestWithParam<
           //           uristr,      ipaddr,      port
-          ::std::tuple<const char*, const char*, int>> {};
+          ::std::tuple<const char*, const char*, uint16_t>> {};
 
 TEST_P(HostportFailIp4PTestSuite, parse_name_with_scheme) {
     // Get parameter
     ::std::tuple params = GetParam();
     const char* uristr = ::std::get<0>(params);
     const char* ipaddr = ::std::get<1>(params);
-    const int port = ::std::get<2>(params);
+    const uint16_t port = ::std::get<2>(params);
 
     Mock_netv4info netv4inf;
     addrinfo* res = netv4inf.set(ipaddr, port);
@@ -235,17 +235,17 @@ INSTANTIATE_TEST_SUITE_P(
 //
 // parse_hostport() calls should be successful
 // -------------------------------------------
-class HostportIp4PTestSuite : public ::testing::TestWithParam<
-                                  //           uristr,      ipaddr,      port
-                                  ::std::tuple<const char*, const char*, int>> {
-};
+class HostportIp4PTestSuite
+    : public ::testing::TestWithParam<
+          //           uristr,      ipaddr,      port
+          ::std::tuple<const char*, const char*, uint16_t>> {};
 
 TEST_P(HostportIp4PTestSuite, parse_hostport_successful) {
     // Get parameter
     ::std::tuple params = GetParam();
     const char* uristr = ::std::get<0>(params);
     const char* ipaddr = ::std::get<1>(params);
-    const int port = ::std::get<2>(params);
+    const uint16_t port = ::std::get<2>(params);
     const size_t size = ::strcspn(uristr, "/");
 
     Mock_netv4info netv4inf;

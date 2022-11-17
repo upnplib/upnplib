@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-04
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -784,7 +784,8 @@ error_handler:
 int SoapGetServiceVarStatus(char* action_url, char* var_name,
                             char** var_value) {
 #ifdef UPNPLIB_PUPNP_BUG
-    // Ingo - Error old code: uninitialized 'const host|path' [-fpermissive].
+    // Error old code: uninitialized 'const host|path' [-fpermissive]. Need to
+    // fix it here otherwise it will not compile. --Ingo
     const memptr host; /* value for HOST header */
     const memptr path; /* ctrl path in first line in msg */
 #else

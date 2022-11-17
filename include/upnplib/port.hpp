@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-29
+// Redistribution only with this Copyright remark. Last modified: 2022-11-22
 
 // Header file for portable definitions
 // ====================================
@@ -36,16 +36,19 @@
 #else // WIN32
 
   #include <unistd.h>
+
+/*! This typedef makes the code slightly more WIN32 tolerant.
+ * On WIN32 systems, SOCKET is unsigned and is not a file
+ * descriptor. */
+typedef int SOCKET;
+
 #endif // WIN32
 
 #ifdef _MSC_VER
   // no ssize_t defined for VC
-  #include <stdint.h>
-  #ifdef _WIN64
-    typedef int64_t ssize_t;
-  #else
-    typedef int32_t ssize_t;
-  #endif
+  #include <BaseTsd.h> // for SSIZE_T
+  #define ssize_t SSIZE_T
+  #define sa_family_t ADDRESS_FAMILY
 #endif
 
 /*!

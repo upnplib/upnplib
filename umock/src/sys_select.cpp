@@ -1,11 +1,11 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-22
+// Redistribution only with this Copyright remark. Last modified: 2022-11-19
 
 #include "umock/sys_select.inc"
 
 namespace umock {
 
-int Sys_selectReal::select(int nfds, fd_set* readfds, fd_set* writefds,
+int Sys_selectReal::select(SOCKET nfds, fd_set* readfds, fd_set* writefds,
                            fd_set* exceptfds, struct timeval* timeout) {
     // Call real standard library function
     return ::select(nfds, readfds, writefds, exceptfds, timeout);
@@ -26,7 +26,7 @@ Sys_select::Sys_select(Sys_selectInterface* a_ptr_mockObj) {
 Sys_select::~Sys_select() { m_ptr_workerObj = m_ptr_oldObj; }
 
 // Methods
-int Sys_select::select(int nfds, fd_set* readfds, fd_set* writefds,
+int Sys_select::select(SOCKET nfds, fd_set* readfds, fd_set* writefds,
                        fd_set* exceptfds, struct timeval* timeout) {
     return m_ptr_workerObj->select(nfds, readfds, writefds, exceptfds, timeout);
 }

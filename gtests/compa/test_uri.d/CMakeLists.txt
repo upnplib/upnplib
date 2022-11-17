@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-05
+# Redistribution only with this Copyright remark. Last modified: 2022-11-21
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -44,6 +44,11 @@ target_include_directories(test_uri-pst
 target_compile_definitions(test_uri-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
+)
+target_compile_options(test_uri-pst
+    PRIVATE
+        # disable warning C4244: 'initializing': conversion from 'const int' to '_Ty', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
 )
 target_link_libraries(test_uri-pst
     PRIVATE

@@ -14,12 +14,12 @@ namespace upnplib {
 std::array<unsigned short, 8> ipv6_parser(std::string_view a_input) {
     std::array<unsigned short, 8> address{0, 0, 0, 0, 0, 0, 0, 0};
 
-    int pieceIndex{0};
+    unsigned short pieceIndex{0};
     int compress{-1};
     std::string_view::const_iterator pointer{a_input.begin()};
     int failure_line{0};
 
-    unsigned char c = pointer < a_input.end() ? *pointer : '\0';
+    unsigned char c = pointer < a_input.end() ? (unsigned char)*pointer : '\0';
 
     if (c == ':') {
         if (pointer + 1 >= a_input.end() ||
@@ -61,7 +61,8 @@ std::array<unsigned short, 8> ipv6_parser(std::string_view a_input) {
             unsigned short v =
                 (c >= 'A') ? (c >= 'a') ? (c - 'a' + 10) : (c - 'A' + 10)
                            : (c - '0');
-            value = value * 0x10 + v;
+            // Arithmetic with implicit type cast to int, type cast is checked
+            value = (unsigned short)(value * 0x10 + v);
             pointer++;
             length++;
         }
@@ -102,8 +103,8 @@ std::array<unsigned short, 8> ipv6_parser(std::string_view a_input) {
 
                 while (pointer < a_input.end() &&
                        std::isdigit((unsigned char)*pointer)) {
-                    // interpreted as decimal number
-                    unsigned short number = *pointer - '0';
+                    // interpreted as decimal number, type cast is checked
+                    unsigned short number = (unsigned short)(*pointer - '0');
                     switch (ipv4Piece) {
                     case 65535: // means uninitialized (NULL)
                         ipv4Piece = number;
@@ -112,7 +113,9 @@ std::array<unsigned short, 8> ipv6_parser(std::string_view a_input) {
                         failure_line = __LINE__;
                         goto throw_failure;
                     default:
-                        ipv4Piece = ipv4Piece * 10 + number;
+                        // Arithmetic with implicit type cast to int, type cast
+                        // is checked
+                        ipv4Piece = (unsigned short)(ipv4Piece * 10 + number);
                     }
 
                     if (ipv4Piece > 255) {
@@ -123,7 +126,9 @@ std::array<unsigned short, 8> ipv6_parser(std::string_view a_input) {
                     pointer++;
                 }
 
-                address[pieceIndex] = address[pieceIndex] * 0x100 + ipv4Piece;
+                // Arithmetic with implicit type cast to int
+                address[pieceIndex] =
+                    (unsigned short)(address[pieceIndex] * 0x100 + ipv4Piece);
                 numbersSeen++;
                 if (numbersSeen == 2 || numbersSeen == 4)
                     pieceIndex++;
@@ -158,7 +163,7 @@ std::array<unsigned short, 8> ipv6_parser(std::string_view a_input) {
 
         while (pieceIndex != 0 && swaps > 0) {
             // swap address[pieceIndex] with address[compress + swaps - 1]
-            int swapIndex = compress + swaps - 1;
+            unsigned short swapIndex = (unsigned short)(compress + swaps - 1);
             unsigned short piece = address[pieceIndex];
             address[pieceIndex] = address[swapIndex];
             address[swapIndex] = piece;
