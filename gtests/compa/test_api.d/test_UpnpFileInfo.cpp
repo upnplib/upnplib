@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-23
+// Redistribution only with this Copyright remark. Last modified: 2022-11-24
 
 #include "UpnpFileInfo.hpp"
 
@@ -607,7 +607,7 @@ TEST(UpnpFileInfoTestSuite, UpnpFileInfo_get_CtrlPtIPAddr_with_nullptr) {
         std::cout << CYEL "[ BUGFIX   ]" CRES
                   << " UpnpFileInfo_get_CtrlPtIPAddr() called with a nullptr "
                      "should return a nullptr.\n";
-        EXPECT_EQ(sa_ss, (sockaddr_storage*)0x30);
+        EXPECT_NE(sa_ss, nullptr);
 
     } else {
 

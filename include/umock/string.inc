@@ -1,7 +1,7 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-18
+// Redistribution only with this Copyright remark. Last modified: 2022-11-24
 
-// There is no include guard '#ifndef ...' because this file shouln't be
+// There is no include guard '#ifndef ...' because this file shouldn't be
 // included more than two times as given.
 
 #include "upnplib/visibility.hpp"
@@ -17,6 +17,7 @@ namespace umock {
 class StringInterface {
   public:
     virtual ~StringInterface() = default;
+    virtual char* strerror(int errnum) = 0;
     virtual char* strdup(const char* s) = 0;
     virtual char* strndup(const char* s, size_t n) = 0;
 };
@@ -27,6 +28,7 @@ class StringInterface {
 class StringReal : public StringInterface {
   public:
     virtual ~StringReal() override = default;
+    char* strerror(int errnum) override;
     char* strdup(const char* s) override;
     char* strndup(const char* s, size_t n) override;
 };
@@ -57,6 +59,7 @@ class UPNPLIB_API String {
     virtual ~String();
 
     // Methods
+    virtual char* strerror(int errnum);
     virtual char* strdup(const char* s);
     virtual char* strndup(const char* s, size_t n);
 

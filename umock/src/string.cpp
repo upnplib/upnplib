@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-18
+// Redistribution only with this Copyright remark. Last modified: 2022-11-24
 
 #include "umock/string.inc"
 #include <cstdlib> // for malloc
@@ -7,6 +7,7 @@
 //
 namespace umock {
 
+char* StringReal::strerror(int errnum) { return ::strerror(errnum); }
 char* StringReal::strdup(const char* s) { return ::strdup(s); }
 char* StringReal::strndup(const char* s, size_t n) { return ::strndup(s, n); }
 
@@ -25,6 +26,7 @@ String::String(StringInterface* a_ptr_mockObj) {
 String::~String() { m_ptr_workerObj = m_ptr_oldObj; }
 
 // Methods
+char* String::strerror(int errnum) { return m_ptr_workerObj->strerror(errnum); }
 char* String::strdup(const char* s) { return m_ptr_workerObj->strdup(s); }
 char* String::strndup(const char* s, size_t n) {
     return m_ptr_workerObj->strndup(s, n);

@@ -1,8 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-21
+// Redistribution only with this Copyright remark. Last modified: 2022-11-24
 
 #include "upnplib/sock.hpp"
 #include "umock/sys_socket.hpp"
+#include "umock/string.hpp"
 #include <filesystem>
 #include <cstring>
 
@@ -40,7 +41,8 @@ std::string SockAddr::addr_get() {
             "UPnPlib ERR. at */" +                                //
             std::filesystem::path(__FILE__).filename().string() + //
             "[" + std::to_string(__LINE__) + "], " + __FUNCTION__ +
-            "(), errid=" + std::to_string(errno) + ": " + std::strerror(errno));
+            "(), errid=" + std::to_string(errno) + ": " +
+            umock::string_h.strerror(errno));
 
     return std::string(buf_ntop);
 }
@@ -62,7 +64,7 @@ std::string SocketAddr::addr_get(SOCKET a_sockfd) {
             std::to_string(__LINE__) + "], " + __FUNCTION__ + "(" +
             std::to_string(a_sockfd) + "), errid=" + std::to_string(errno) +
             ": systemcall getsockname(" + std::to_string(a_sockfd) + "), " +
-            std::strerror(errno));
+            umock::string_h.strerror(errno));
 
     return SockAddr::addr_get();
 }
