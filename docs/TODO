@@ -1,6 +1,5 @@
 Next steps to do:
-* Rework Github Actions to detect gtest fails on 32 bit MS Windows.
-+ Rename mocked string.h to ustring to avoid conflicts.
++ Rename mocked string.h to stringh to avoid conflicts.
 * Update pupnp to version 1.14.15
 * Check bugfix in pupnp/upnp/src/urlconfig/urlconfig.cpp with a gtest.
 * [set EXPECT_CALL to redirect the call to the original method](https://stackoverflow.com/questions/25556601/set-expect-call-to-redirect-the-call-to-the-original-method)

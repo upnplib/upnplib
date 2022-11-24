@@ -14,7 +14,7 @@
 #include "upnplib/sock.hpp"
 #include "upnplib/gtest.hpp"
 
-#include "umock/string.hpp"
+#include "umock/stringh.hpp"
 
 #include "gmock/gmock.h"
 
@@ -146,9 +146,9 @@ class Sys_selectMock : public umock::Sys_selectInterface {
     MOCK_METHOD(int, select, (SOCKET nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout), (override));
 };
 
-class StringMock : public umock::StringInterface {
+class StringhMock : public umock::StringhInterface {
   public:
-    virtual ~StringMock() override {}
+    virtual ~StringhMock() override {}
     MOCK_METHOD(char*, strerror, (int errnum), (override));
     MOCK_METHOD(char*, strdup, (const char* s), (override));
     MOCK_METHOD(char*, strndup, (const char* s, size_t n), (override));
@@ -2039,12 +2039,12 @@ TEST(RunMiniServerTestSuite,
     // ENOBUFS, e.g. "[Nn]o buffer space" or "Unknown error", we mock it to be
     // independent.
     char errstr[]{"No buffer space"};
-    StringMock mocked_stringObj;
-    umock::String string_injectObj(&mocked_stringObj);
+    StringhMock mocked_stringhObj;
+    umock::Stringh stringh_injectObj(&mocked_stringhObj);
     if (old_code)
-        EXPECT_CALL(mocked_stringObj, strerror(ENOBUFS)).Times(0);
+        EXPECT_CALL(mocked_stringhObj, strerror(ENOBUFS)).Times(0);
     else
-        EXPECT_CALL(mocked_stringObj, strerror(ENOBUFS))
+        EXPECT_CALL(mocked_stringhObj, strerror(ENOBUFS))
             .WillOnce(Return(errstr));
 
     // Capture output to stderr

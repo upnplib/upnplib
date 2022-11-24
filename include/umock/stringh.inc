@@ -14,9 +14,9 @@ UPNPLIB_API char* strndup(const char* __string, size_t __n);
 
 namespace umock {
 
-class StringInterface {
+class StringhInterface {
   public:
-    virtual ~StringInterface() = default;
+    virtual ~StringhInterface() = default;
     virtual char* strerror(int errnum) = 0;
     virtual char* strdup(const char* s) = 0;
     virtual char* strndup(const char* s, size_t n) = 0;
@@ -25,9 +25,9 @@ class StringInterface {
 //
 // This is the wrapper class (worker) for the real (library?) function
 // -------------------------------------------------------------------
-class StringReal : public StringInterface {
+class StringhReal : public StringhInterface {
   public:
-    virtual ~StringReal() override = default;
+    virtual ~StringhReal() override = default;
     char* strerror(int errnum) override;
     char* strdup(const char* s) override;
     char* strndup(const char* s, size_t n) override;
@@ -37,26 +37,26 @@ class StringReal : public StringInterface {
 // This is the caller or injector class that injects the class (worker) to be
 // used, real or mocked functions.
 /* Example:
-    StringReal string_realObj; // already done below
-    String(&string_realObj);   // already done below
+    StringhReal stringh_realObj; // already done below
+    Stringh(&stringh_realObj);   // already done below
     { // Other scope, e.g. within a gtest
-        class StringMock : public StringInterface { ...; MOCK_METHOD(...) };
-        StringMock string_mockObj;
-        String string_injectObj(&string_mockObj); // obj. name doesn't matter
-        EXPECT_CALL(string_mockObj, ...);
+        class StringhMock : public StringhInterface { ...; MOCK_METHOD(...) };
+        StringhMock stringh_mockObj;
+        Stringh stringh_injectObj(&string_mockObj); // obj. name doesn't matter
+        EXPECT_CALL(stringh_mockObj, ...);
     } // End scope, mock objects are destructed, worker restored to default.
 */ //------------------------------------------------------------------------
-class UPNPLIB_API String {
+class UPNPLIB_API Stringh {
   public:
     // This constructor is used to inject the pointer to the real function. It
     // sets the default used class, that is the real function.
-    String(StringReal* a_ptr_realObj);
+    Stringh(StringhReal* a_ptr_realObj);
 
     // This constructor is used to inject the pointer to the mocking function.
-    String(StringInterface* a_ptr_mockObj);
+    Stringh(StringhInterface* a_ptr_mockObj);
 
     // The destructor is ussed to restore the old pointer.
-    virtual ~String();
+    virtual ~Stringh();
 
     // Methods
     virtual char* strerror(int errnum);
@@ -69,9 +69,9 @@ class UPNPLIB_API String {
     // important here for mocking because the pointer is also valid on all
     // objects of this class. With inline we do not need an extra definition
     // line outside the class. I also make the symbol hidden so the variable
-    // cannot be accessed globaly with String::m_ptr_workerObj. --Ingo
-    UPNPLIB_LOCAL static inline StringInterface* m_ptr_workerObj;
-    StringInterface* m_ptr_oldObj{};
+    // cannot be accessed globaly with Stringh::m_ptr_workerObj. --Ingo
+    UPNPLIB_LOCAL static inline StringhInterface* m_ptr_workerObj;
+    StringhInterface* m_ptr_oldObj{};
 };
 
 } // namespace umock

@@ -12,7 +12,7 @@
 
 #include "upnplib/gtest.hpp"
 #include "umock/stdlib.hpp"
-#include "umock/string.hpp"
+#include "umock/stringh.hpp"
 #include "gmock/gmock.h"
 
 using ::testing::_;
@@ -49,9 +49,9 @@ class StdlibMock : public umock::StdlibInterface {
     MOCK_METHOD(void, free, (void* ptr), (override));
 };
 
-class StringMock : public umock::StringInterface {
+class StringhMock : public umock::StringhInterface {
   public:
-    virtual ~StringMock() override {}
+    virtual ~StringhMock() override {}
     MOCK_METHOD(char*, strerror, (int errnum), (override));
     MOCK_METHOD(char*, strdup, (const char* s), (override));
     MOCK_METHOD(char*, strndup, (const char* s, size_t n), (override));
@@ -138,9 +138,9 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string) {
     // UpnpString.
     char mstring3[]{"set string"};
 
-    StringMock mock_stringObj;
-    umock::String string_injectObj(&mock_stringObj);
-    EXPECT_CALL(mock_stringObj, strdup(mstring2)).WillOnce(Return(mstring3));
+    StringhMock mock_stringhObj;
+    umock::Stringh stringh_injectObj(&mock_stringhObj);
+    EXPECT_CALL(mock_stringhObj, strdup(mstring2)).WillOnce(Return(mstring3));
 
     umock::Stdlib stdlib_injectObj(&mock_stdlibObj);
     // The previous 'mstring1' should be freed before setting the new one.
@@ -166,9 +166,9 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string_n) {
     // UpnpString.
     char mstring3[]{"hello world"};
 
-    StringMock mock_stringObj;
-    umock::String string_injectObj(&mock_stringObj);
-    EXPECT_CALL(mock_stringObj, strndup(mstring2, 11))
+    StringhMock mock_stringhObj;
+    umock::Stringh stringh_injectObj(&mock_stringhObj);
+    EXPECT_CALL(mock_stringhObj, strndup(mstring2, 11))
         .WillOnce(Return(mstring3));
 
     umock::Stdlib stdlib_injectObj(&mock_stdlibObj);
@@ -183,7 +183,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string_n) {
     EXPECT_STREQ(p->m_string, "hello world");
 
     // Empty string with lenth 0 should set an empty UpnpString.
-    EXPECT_CALL(mock_stringObj, strndup(mstring_empty, 0))
+    EXPECT_CALL(mock_stringhObj, strndup(mstring_empty, 0))
         .WillOnce(Return(mstring_empty));
     EXPECT_CALL(this->mock_stdlibObj, free(mstring3)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring_empty, 0);
@@ -191,7 +191,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string_n) {
     EXPECT_STREQ(upnpstr.m_string, "");
 
     // longer string but length 0 should set an empty UpnpString.
-    EXPECT_CALL(mock_stringObj, strndup(mstring2, 0))
+    EXPECT_CALL(mock_stringhObj, strndup(mstring2, 0))
         .WillOnce(Return(mstring_empty));
     EXPECT_CALL(this->mock_stdlibObj, free(mstring_empty)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring2, 0);
@@ -200,7 +200,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string_n) {
 
     // longer string but length 1
     char mstring4[]{"h"};
-    EXPECT_CALL(mock_stringObj, strndup(mstring2, 1))
+    EXPECT_CALL(mock_stringhObj, strndup(mstring2, 1))
         .WillOnce(Return(mstring4));
     EXPECT_CALL(this->mock_stdlibObj, free(mstring_empty)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring2, 1);
@@ -209,7 +209,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string_n) {
 
     // Length = 10 is one character shorter than string length
     char mstring5[]{"hello worl"};
-    EXPECT_CALL(mock_stringObj, strndup(mstring2, 10))
+    EXPECT_CALL(mock_stringhObj, strndup(mstring2, 10))
         .WillOnce(Return(mstring5));
     EXPECT_CALL(this->mock_stdlibObj, free(mstring4)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring2, 10);
@@ -217,7 +217,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string_n) {
     EXPECT_EQ(upnpstr.m_string, mstring5);
 
     // Length = 12 is one character longer than string length
-    EXPECT_CALL(mock_stringObj, strndup(mstring2, 12))
+    EXPECT_CALL(mock_stringhObj, strndup(mstring2, 12))
         .WillOnce(Return(mstring3));
     EXPECT_CALL(this->mock_stdlibObj, free(mstring5)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring2, 12);

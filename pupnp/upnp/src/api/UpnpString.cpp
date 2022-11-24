@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-04
+// Redistribution only with this Copyright remark. Last modified: 2022-11-24
 // Also Copyright by other contributor who haven't made a note.
 
 /*!
@@ -23,7 +23,7 @@
 
 #include "UpnpString.hpp"
 #include "umock/stdlib.hpp"
-#include "umock/string.hpp"
+#include "umock/stringh.hpp"
 
 // #include <stdlib.h> /* for calloc(), free() */
 #include <string.h> /* for strlen(), strdup() */

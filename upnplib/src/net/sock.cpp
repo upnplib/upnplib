@@ -3,7 +3,7 @@
 
 #include "upnplib/sock.hpp"
 #include "umock/sys_socket.hpp"
-#include "umock/string.hpp"
+#include "umock/stringh.hpp"
 #include <filesystem>
 #include <cstring>
 

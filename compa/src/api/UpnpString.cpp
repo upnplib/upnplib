@@ -1,8 +1,8 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-18
+// Redistribution only with this Copyright remark. Last modified: 2022-11-24
 
 #include "compa/UpnpString.hpp"
-#include "umock/string.hpp"
+#include "umock/stringh.hpp"
 #include "umock/stdlib.hpp"
 
 namespace compa {
