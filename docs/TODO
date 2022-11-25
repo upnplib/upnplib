@@ -1,6 +1,4 @@
 Next steps to do:
-+ Rename mocked string.h to stringh to avoid conflicts.
-* Update pupnp to version 1.14.15
 * Check bugfix in pupnp/upnp/src/urlconfig/urlconfig.cpp with a gtest.
 * [set EXPECT_CALL to redirect the call to the original method](https://stackoverflow.com/questions/25556601/set-expect-call-to-redirect-the-call-to-the-original-method)
 * Rework miniserver GTest including sources like webserver.

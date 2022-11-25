@@ -1,5 +1,3 @@
-commit b25d2b556f19d33dbcf7589b0336f0c97d15c4da (tag: release-1.14.14)
-
 git whatchanged ddc6af9e65d..b25d2b556f
 updated files are marked with the word "updated" at the line end.
 =================================================================

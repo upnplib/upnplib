@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-25
+// Redistribution only with this Copyright remark. Last modified: 2022-11-25
 
 // Here we only define global variables. There are no other references so we do
 // not have to compile additional sources only to access a global.
@@ -9,7 +9,7 @@
 #include "UpnpGlobal.hpp" // for EXPORT_SPEC
 
 // Version of this library
-char library_version[]{"pupnp 1.14.14"};
+char library_version[]{"pupnp 1.14.15"};
 
 /*! Contains interface index. */
 unsigned int gIF_INDEX = (unsigned)-1;

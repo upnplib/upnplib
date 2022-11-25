@@ -1,0 +1,559 @@
+git whatchanged release-1.14.14^..release-1.14.15
+There has nothing changed to the source code.
+=================================================================
+
+commit 2f02a7e341c69314d93c73c6edc3199ba46c5f2f (tag: release-1.14.15)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Nov 18 23:25:37 2022 -0300
+
+    Missed that line in configure.ac
+
+:100644 100644 2b6ded96 f3c4eeff M	configure.ac
+
+commit 9743eacecdf37335e9b5d8614c722c91f65b3f6c
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Nov 18 23:21:50 2022 -0300
+
+    Changelog and Readme.md
+
+:100644 100644 c066ed38 83a8d8e9 M	ChangeLog
+:100644 100644 9fe251e5 81a38ff8 M	README.md
+
+commit 300e433ad886c9ace77c4fcdbb2d001aa2817e27
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Nov 18 23:15:16 2022 -0300
+
+    [autotools] Fix for CMake missing files in the autotools distribution
+
+:100644 100644 7988d308 e63f2de9 M	Makefile.am
+
+commit 990d9a2d0108de4a0c0fc3c1c26a8b4eca10f025
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Nov 18 23:12:33 2022 -0300
+
+    [cmake] Better error message
+
+:100644 100644 b723c62d de7f4525 M	CMakeLists.txt
+
+commit d1771540a062d3531b8861dc61fdf537d4410c4c
+Author: David Korczynski <david@adalogics.com>
+Date:   Fri Nov 18 15:48:55 2022 -0800
+
+    CI: Add CIFuzz action
+    
+    Signed-off-by: David Korczynski <david@adalogics.com>
+
+:000000 100644 00000000 042cf92d A	.github/workflows/cifuzz.yml
+
+commit a3f40ec03898260433449c9d02ae6898cb4f449f
+Author: 0x34d <ajsinghyadav00@gmail.com>
+Date:   Thu Oct 6 15:23:44 2022 +0530
+
+    oss-fuzz files
+    
+    Signed-off-by: 0x34d <ajsinghyadav00@gmail.com>
+
+:100644 100644 f3c57a00 b723c62d M	CMakeLists.txt
+:000000 100644 00000000 79aeac52 A	fuzzer/CMakeLists.txt
+:000000 100644 00000000 7838a220 A	fuzzer/FuzzIxml.c
+:000000 100644 00000000 8ec4c58d A	fuzzer/build.sh
+
+commit de34e560bbcd666f48b5b21c456a11c45a9a4b20
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Oct 5 13:42:45 2022 -0300
+
+    Fix windows build documentation
+
+:100644 100644 1b26e3d7 9fe251e5 M	README.md
+
+commit a0c33bc26bba437dc237cfe426c0d58113d6a518
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Oct 5 15:23:26 2022 -0300
+
+    Ubuntu 22.04 action is deprecated
+
+:100644 100644 6878576e b2c9e60e M	.github/workflows/ccpp.yml
+
+commit 903b3458495cb45bdc71054ed8734672f170219a
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Oct 5 14:44:11 2022 -0300
+
+    Homekeeping for the next release
+
+:100644 100644 66474269 c066ed38 M	ChangeLog
+:100644 100644 e576f36f 2b6ded96 M	configure.ac
+:100644 100644 4000fb10 bc2cd8ac M	docs/Doxyfile
+:100644 100644 05b10897 3bada10c M	libupnp.spec
+
+commit b25d2b556f19d33dbcf7589b0336f0c97d15c4da (tag: release-1.14.14)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Oct 5 14:27:45 2022 -0300
+
+    README.md
+
+:100644 100644 fc613351 1b26e3d7 M	README.md
+
+
+################################################################################
+git log --stat -p release-1.14.14^..release-1.14.15
+---------------------------------------------------
+
+commit 2f02a7e341c69314d93c73c6edc3199ba46c5f2f (tag: release-1.14.15)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Nov 18 23:25:37 2022 -0300
+
+    Missed that line in configure.ac
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 2b6ded96..f3c4eeff 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -9,7 +9,7 @@
+ 
+ AC_PREREQ(2.60)
+ 
+-AC_INIT([libupnp], [1.14.14], [mroberto@users.sourceforge.net])
++AC_INIT([libupnp], [1.14.15], [mroberto@users.sourceforge.net])
+ dnl ############################################################################
+ dnl # *Independently* of the above libupnp package version, the libtool version
+ dnl # of the 3 libraries need to be updated whenever there is a change released:
+
+commit 9743eacecdf37335e9b5d8614c722c91f65b3f6c
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Nov 18 23:21:50 2022 -0300
+
+    Changelog and Readme.md
+---
+ ChangeLog | 4 ++++
+ README.md | 3 ++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/ChangeLog b/ChangeLog
+index c066ed38..83a8d8e9 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -12,6 +12,10 @@ Version 1.16.0
+ Version 1.14.15
+ *******************************************************************************
+ 
++2022-11-18 Marcelo Roberto Jimenez <mroberto(at)users.sourceforge.net>
++
++        Fix for missing CMake files in the autotools distro.
++
+ *******************************************************************************
+ Version 1.14.14
+ *******************************************************************************
+diff --git a/README.md b/README.md
+index 9fe251e5..81a38ff8 100644
+--- a/README.md
++++ b/README.md
+@@ -102,7 +102,8 @@ The Portable SDK for UPnP&trade; Devices is distributed under the BSD (Berkeley
+ | -------------- | ---------- | ---------------------------------------- |
+ | 1.18.0         | TBA ?      | [Portable UPnP SDK][Portable UPnP SDK]   |
+ | 1.16.0         | aborted    | [Portable UPnP SDK][Portable UPnP SDK]   |
+-| 1.14.15        | TBA        | [Portable UPnP SDK][Portable UPnP SDK]   |
++| 1.14.16        | TBA        | [Portable UPnP SDK][Portable UPnP SDK]   |
++| 1.14.15        | 2022-11-18 | [Portable UPnP SDK][Portable UPnP SDK]   |
+ | 1.14.14        | 2022-10-05 | [Portable UPnP SDK][Portable UPnP SDK]   |
+ | 1.14.13        | 2022-08-03 | [Portable UPnP SDK][Portable UPnP SDK]   |
+ | 1.14.12        | 2021-09-26 | [Portable UPnP SDK][Portable UPnP SDK]   |
+
+commit 300e433ad886c9ace77c4fcdbb2d001aa2817e27
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Nov 18 23:15:16 2022 -0300
+
+    [autotools] Fix for CMake missing files in the autotools distribution
+---
+ Makefile.am | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Makefile.am b/Makefile.am
+index 7988d308..e63f2de9 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -16,6 +16,10 @@ SUBDIRS = \
+ EXTRA_DIST = \
+ 	CMakeLists.txt \
+ 	cmake/CmDaB.cmake \
++	cmake/autoheader.cmake \
++	cmake/options.cmake \
++	cmake/post-test.cmake \
++	cmake/test-functions.cmake \
+ 	IXML.cmake.in \
+ 	UPNP.cmake.in \
+ 	ixml/CMakeLists.txt \
+
+commit 990d9a2d0108de4a0c0fc3c1c26a8b4eca10f025
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Nov 18 23:12:33 2022 -0300
+
+    [cmake] Better error message
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b723c62d..de7f4525 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -318,7 +318,7 @@ endif()
+ 
+ if(FUZZER)
+ 	if (NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
+-		message(FATAL_ERROR "clang is require for libFuzzer")
++		message(FATAL_ERROR "Compiling with clang is required for libFuzzer")
+ 	endif()
+ 	add_subdirectory(fuzzer)
+ 
+
+commit d1771540a062d3531b8861dc61fdf537d4410c4c
+Author: David Korczynski <david@adalogics.com>
+Date:   Fri Nov 18 15:48:55 2022 -0800
+
+    CI: Add CIFuzz action
+    
+    Signed-off-by: David Korczynski <david@adalogics.com>
+---
+ .github/workflows/cifuzz.yml | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/.github/workflows/cifuzz.yml b/.github/workflows/cifuzz.yml
+new file mode 100644
+index 00000000..042cf92d
+--- /dev/null
++++ b/.github/workflows/cifuzz.yml
+@@ -0,0 +1,24 @@
++name: CIFuzz
++on: [pull_request]
++jobs:
++  Fuzzing:
++    runs-on: ubuntu-latest
++    steps:
++    - name: Build Fuzzers
++      id: build
++      uses: google/oss-fuzz/infra/cifuzz/actions/build_fuzzers@master
++      with:
++        oss-fuzz-project-name: 'pupnp'
++        dry-run: false
++    - name: Run Fuzzers
++      uses: google/oss-fuzz/infra/cifuzz/actions/run_fuzzers@master
++      with:
++        oss-fuzz-project-name: 'pupnp'
++        fuzz-seconds: 300
++        dry-run: false
++    - name: Upload Crash
++      uses: actions/upload-artifact@v3
++      if: failure() && steps.build.outcome == 'success'
++      with:
++        name: artifacts
++        path: ./out/artifacts
+
+commit a3f40ec03898260433449c9d02ae6898cb4f449f
+Author: 0x34d <ajsinghyadav00@gmail.com>
+Date:   Thu Oct 6 15:23:44 2022 +0530
+
+    oss-fuzz files
+    
+    Signed-off-by: 0x34d <ajsinghyadav00@gmail.com>
+---
+ CMakeLists.txt        |  8 ++++++++
+ fuzzer/CMakeLists.txt |  2 ++
+ fuzzer/FuzzIxml.c     | 56 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ fuzzer/build.sh       | 39 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 105 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f3c57a00..b723c62d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -315,3 +315,11 @@ if (BUILD_TESTING)
+ 		add_subdirectory (gtest)
+ 	endif()
+ endif()
++
++if(FUZZER)
++	if (NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
++		message(FATAL_ERROR "clang is require for libFuzzer")
++	endif()
++	add_subdirectory(fuzzer)
++
++endif()
+diff --git a/fuzzer/CMakeLists.txt b/fuzzer/CMakeLists.txt
+new file mode 100644
+index 00000000..79aeac52
+--- /dev/null
++++ b/fuzzer/CMakeLists.txt
+@@ -0,0 +1,2 @@
++add_executable(FuzzIxml FuzzIxml.c)
++target_link_libraries(FuzzIxml ixml_static ${LIB_FUZZING_ENGINE})
+diff --git a/fuzzer/FuzzIxml.c b/fuzzer/FuzzIxml.c
+new file mode 100644
+index 00000000..7838a220
+--- /dev/null
++++ b/fuzzer/FuzzIxml.c
+@@ -0,0 +1,56 @@
++#include <stdio.h>
++#include <unistd.h>
++#include <stdint.h>
++#include <stdlib.h>
++#include <string.h>
++#include "ixml.h"
++
++#define kMinInputLength 10
++#define kMaxInputLength 5120
++
++int CheckXML(char *filename){
++
++    int rc;
++    DOMString s;
++    IXML_Document *doc = NULL;
++
++    rc = ixmlLoadDocumentEx(filename, &doc);
++    if (rc != IXML_SUCCESS) {
++        return rc;
++    }
++
++    s = ixmlPrintDocument(doc);
++    if (s == NULL || s[0] == '\0') {
++        ixmlDocument_free(doc);
++        return 1;
++    }
++
++    ixmlFreeDOMString(s);
++    ixmlDocument_free(doc);
++
++    return 0;
++}
++
++extern int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
++
++    if (Size < kMinInputLength || Size > kMaxInputLength){
++        return 1;
++    }
++    
++    int ret;
++    char filename[256];
++
++    sprintf(filename, "/tmp/libfuzzer.%d", getpid());
++    FILE *fp = fopen(filename, "wb");
++    if (!fp) {
++        return 0;
++    }
++
++    fwrite(Data, Size, 1, fp);
++    fclose(fp);
++
++    ret = CheckXML(filename);
++    unlink(filename);
++    return ret;
++}
++
+diff --git a/fuzzer/build.sh b/fuzzer/build.sh
+new file mode 100644
+index 00000000..8ec4c58d
+--- /dev/null
++++ b/fuzzer/build.sh
+@@ -0,0 +1,39 @@
++#!/bin/bash -eu
++
++build(){
++    export CFLAGS="$1"
++    export CXXFLAGS="$1"
++    export LIB_FUZZING_ENGINE=-fsanitize=fuzzer
++
++    mkdir build && cd build/
++    cmake -DFUZZER=ON -DLIB_FUZZING_ENGINE="$LIB_FUZZING_ENGINE" ../../.
++    make -j$(nproc)
++
++    cd fuzzer/
++
++    mkdir FuzzIxml_corpus
++    mkdir FuzzIxml_seed_corpus
++
++    cp ../../../ixml/test/testdata/empty_attribute.xml FuzzIxml_seed_corpus/
++}
++
++run(){
++    DIR=build/fuzzer
++    ./$DIR/FuzzIxml   $DIR/FuzzIxml_corpus/   $DIR/FuzzIxml_seed_corpus/
++}
++
++if [ $1 == "ASan" ]
++then
++   build "-O1 -fno-omit-frame-pointer -gline-tables-only -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -fsanitize=address -fsanitize-address-use-after-scope -fsanitize=fuzzer-no-link"
++elif [ "$1" == "UBSan" ]
++then
++   build "-O1 -fno-omit-frame-pointer -gline-tables-only -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -fsanitize=array-bounds,bool,builtin,enum,float-divide-by-zero,function,integer-divide-by-zero,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,unsigned-integer-overflow,unreachable,vla-bound,vptr -fno-sanitize-recover=array-bounds,bool,builtin,enum,float-divide-by-zero,function,integer-divide-by-zero,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,unreachable,vla-bound,vptr -fsanitize=fuzzer-no-link"
++elif [ "$1" == "MSan" ]
++then
++   build "-O1 -fno-omit-frame-pointer -gline-tables-only -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -fsanitize=memory -fsanitize-memory-track-origins -fsanitize=fuzzer-no-link"
++elif [ "$1" == "Run" ]
++then
++   run
++else
++  echo "use: ./$0 ASan | UBSan | MSan | Run"
++fi
+
+commit de34e560bbcd666f48b5b21c456a11c45a9a4b20
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Oct 5 13:42:45 2022 -0300
+
+    Fix windows build documentation
+---
+ README.md | 18 +-----------------
+ 1 file changed, 1 insertion(+), 17 deletions(-)
+
+diff --git a/README.md b/README.md
+index 1b26e3d7..9fe251e5 100644
+--- a/README.md
++++ b/README.md
+@@ -385,23 +385,7 @@ can be called as described above.
+ 
+ ### 10.6. Windows Build
+ 
+-In order to build libupnp under Windows the pthreads-w32 package is required. You can download a self-extracting ZIP file from the following location:
+-
+-<ftp://sources.redhat.com/pub/pthreads-win32/pthreads-w32-2-7-0-release.exe>
+-
+-or possibly newer versions if available.
+-
+-- Execute the self-extracting archive and copy the Pre-build.2 folder to the top level source folder.
+-- Rename Pre-build.2 to pthreads.
+-- Open the provided workspace build\libupnp.dsw with Visual C++ 6.0 and select Build->Build libupnp.dll (F7)
+-- In the build directory there are also VC8, VC9 and VC10 folders containing solution files for Visual Studio 2005/2008/2010 respectively.
+-
+-If you use newer versions to build libupnp, eg Visual Studio 2003 or later, then you need to rebuild the pthreads package so it uses the same VC runtime as libupnp to prevent cross boundary runtime problems (see <http://msdn.microsoft.com/en-us/library/ms235460%28v=VS.100%29.aspx>). Just replace the files in the Pre-build.2 folder (renamed to pthreads as mentioned above) with the newly build versions. If you also use a newer version of pthreads-win32 then you should also replace the header files in that directory structure (obviously).
+-
+-For building a static library instead of a DLL and for using the static pthreads-w32 library following switches need to be defined additionally:
+-
+-UPNP_STATIC_LIB - for creating a statically linkable UPnP-library
+-PTW32_STATIC_LIB - for using the static pthreads32 library
++See the section `CMake Build`
+ 
+ ### 10.7. CMake Build
+ 
+
+commit a0c33bc26bba437dc237cfe426c0d58113d6a518
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Oct 5 15:23:26 2022 -0300
+
+    Ubuntu 22.04 action is deprecated
+---
+ .github/workflows/ccpp.yml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/.github/workflows/ccpp.yml b/.github/workflows/ccpp.yml
+index 6878576e..b2c9e60e 100644
+--- a/.github/workflows/ccpp.yml
++++ b/.github/workflows/ccpp.yml
+@@ -26,7 +26,7 @@ jobs:
+     runs-on: ${{ matrix.os }}
+     strategy:
+       matrix:
+-        os: [ubuntu-18.04, ubuntu-20.04]
++        os: [ubuntu-20.04, ubuntu-22.04]
+         conf: [Debug, Release]
+       fail-fast: false
+     steps:
+
+commit 903b3458495cb45bdc71054ed8734672f170219a
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Oct 5 14:44:11 2022 -0300
+
+    Homekeeping for the next release
+---
+ ChangeLog     |  4 ++++
+ configure.ac  | 12 +++++++++++-
+ docs/Doxyfile |  2 +-
+ libupnp.spec  |  2 +-
+ 4 files changed, 17 insertions(+), 3 deletions(-)
+
+diff --git a/ChangeLog b/ChangeLog
+index 66474269..c066ed38 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -8,6 +8,10 @@ Version 1.16.0
+ 
+         Aborted.
+ 
++*******************************************************************************
++Version 1.14.15
++*******************************************************************************
++
+ *******************************************************************************
+ Version 1.14.14
+ *******************************************************************************
+diff --git a/configure.ac b/configure.ac
+index e576f36f..2b6ded96 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -199,8 +199,18 @@ dnl #AC_SUBST([LT_VERSION_IXML],       [12:2:1])
+ dnl #AC_SUBST([LT_VERSION_UPNP],       [18:5:1])
+ dnl #
+ dnl ############################################################################
++dnl # Release 1.14.15
++dnl # "current:revision:age"
++dnl #
++dnl # - Code has changed in upnp
++dnl #   revision: 5 -> 6
++dnl #
++dnl #AC_SUBST([LT_VERSION_IXML],       [12:2:1])
++dnl #AC_SUBST([LT_VERSION_UPNP],       [18:6:1])
++dnl #
++dnl ############################################################################
+ AC_SUBST([LT_VERSION_IXML],       [12:2:1])
+-AC_SUBST([LT_VERSION_UPNP],       [18:5:1])
++AC_SUBST([LT_VERSION_UPNP],       [18:6:1])
+ dnl ############################################################################
+ dnl # Repeating the algorithm to place it closer to the modificatin place:
+ dnl # 	- library code modified:		revision++
+diff --git a/docs/Doxyfile b/docs/Doxyfile
+index 4000fb10..bc2cd8ac 100644
+--- a/docs/Doxyfile
++++ b/docs/Doxyfile
+@@ -38,7 +38,7 @@ PROJECT_NAME           = libUPnP
+ # could be handy for archiving the generated documentation or if some version
+ # control system is used.
+ 
+-PROJECT_NUMBER         = 1.14.14
++PROJECT_NUMBER         = 1.14.15
+ 
+ # Using the PROJECT_BRIEF tag one can provide an optional one line description
+ # for a project that appears at the top of each page and should give viewer a
+diff --git a/libupnp.spec b/libupnp.spec
+index 05b10897..3bada10c 100644
+--- a/libupnp.spec
++++ b/libupnp.spec
+@@ -1,4 +1,4 @@
+-Version: 1.14.14
++Version: 1.14.15
+ Summary: Universal Plug and Play (UPnP) SDK
+ Name: libupnp-1.14
+ Release: 1%{?dist}
+
+commit b25d2b556f19d33dbcf7589b0336f0c97d15c4da (tag: release-1.14.14)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Wed Oct 5 14:27:45 2022 -0300
+
+    README.md
+---
+ README.md | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/README.md b/README.md
+index fc613351..1b26e3d7 100644
+--- a/README.md
++++ b/README.md
+@@ -102,7 +102,8 @@ The Portable SDK for UPnP&trade; Devices is distributed under the BSD (Berkeley
+ | -------------- | ---------- | ---------------------------------------- |
+ | 1.18.0         | TBA ?      | [Portable UPnP SDK][Portable UPnP SDK]   |
+ | 1.16.0         | aborted    | [Portable UPnP SDK][Portable UPnP SDK]   |
+-| 1.14.14        | TBA        | [Portable UPnP SDK][Portable UPnP SDK]   |
++| 1.14.15        | TBA        | [Portable UPnP SDK][Portable UPnP SDK]   |
++| 1.14.14        | 2022-10-05 | [Portable UPnP SDK][Portable UPnP SDK]   |
+ | 1.14.13        | 2022-08-03 | [Portable UPnP SDK][Portable UPnP SDK]   |
+ | 1.14.12        | 2021-09-26 | [Portable UPnP SDK][Portable UPnP SDK]   |
+ | 1.14.11        | 2021-08-20 | [Portable UPnP SDK][Portable UPnP SDK]   |
