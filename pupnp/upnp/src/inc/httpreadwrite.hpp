@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-17
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-27
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -117,9 +117,9 @@ SOCKET http_Connect(
  *       UPNP_E_BAD_HTTPMSG
  *       UPNP_E_SUCCESS
  ************************************************************************/
-int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
-                     http_method_t request_method, int* timeout_secs,
-                     int* http_error_code);
+EXPORT_SPEC int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
+                                 http_method_t request_method,
+                                 int* timeout_secs, int* http_error_code);
 
 /*!
  * \brief Sends a message to the destination based on the format parameter.
@@ -143,7 +143,7 @@ int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
  * \li \c UPNP_E_FILE_READ_ERROR
  * \li \c UPNP_E_SUCCESS
  */
-int http_SendMessage(
+EXPORT_SPEC int http_SendMessage(
     /* [in] Socket information object. */
     SOCKINFO* info,
     /* [in,out] Time out value. */
@@ -488,9 +488,9 @@ EXPORT_SPEC int http_CloseHttpConnection(
  *      UPNP_E_SOCKET_WRITE
  *      UPNP_E_TIMEDOUT
  ************************************************************************/
-int http_SendStatusResponse(SOCKINFO* info, int http_status_code,
-                            int request_major_version,
-                            int request_minor_version);
+EXPORT_SPEC int http_SendStatusResponse(SOCKINFO* info, int http_status_code,
+                                        int request_major_version,
+                                        int request_minor_version);
 
 /*!
  * \brief Generate an HTTP message based on the format that is specified in

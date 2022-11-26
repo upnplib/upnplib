@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-23
+# Redistribution only with this Copyright remark. Last modified: 2022-11-29
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -36,10 +36,13 @@ add_test(NAME ctest_list-psh COMMAND test_list-psh
 
 # membuffer
 #==========
-add_executable(test_membuffer-psh
+# Because we want to include the source file into the test to also test static
+# functions, we cannot use shared libraries due to symbol import/export
+# conflicts. We must use static libraries.
+add_executable(test_membuffer-pst
         ./test_membuffer.cpp
 )
-target_include_directories(test_membuffer-psh
+target_include_directories(test_membuffer-pst
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
@@ -48,21 +51,19 @@ target_include_directories(test_membuffer-psh
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc
         ${PUPNP_IXML_SOURCE_DIR}/inc
 )
-target_compile_definitions(test_membuffer-psh
+target_compile_definitions(test_membuffer-pst
     PRIVATE
-        UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
 )
-target_compile_options(test_membuffer-psh
+target_compile_options(test_membuffer-pst
     PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:/W1>
 )
-target_link_libraries(test_membuffer-psh
+target_link_libraries(test_membuffer-pst
         PRIVATE
-            umock_shared
+            umock_static
 )
-add_test(NAME ctest_membuffer-psh COMMAND test_membuffer-psh
-    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+add_test(NAME ctest_membuffer-pst COMMAND test_membuffer-pst
 )
 
 

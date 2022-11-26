@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-04
+# Redistribution only with this Copyright remark. Last modified: 2022-11-29
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -14,6 +14,7 @@ set(UPNPLIB_SOURCE_FILES
     ./src/api/upnptools.cpp
     ./src/net/sock.cpp
     ./src/net/http/webserver.cpp
+    ./src/init.cpp
 )
 
 set(UPNPLIB_INCLUDE_DIRECTORIES
@@ -96,6 +97,7 @@ if(NOT WIN32)
     target_link_libraries(upnplibInfo_shared
         PRIVATE
             compa_shared
+            upnplib_shared
     )
 
     # Info executable linked with the pupnp static library
@@ -200,6 +202,7 @@ else() # WIN32
     target_link_libraries(upnplibInfo_shared
         PRIVATE
             compa_shared
+            upnplib_shared
     )
 
     # WIN32 Info executable linked with the pupnp static library

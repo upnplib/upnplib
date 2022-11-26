@@ -1,10 +1,10 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-20
+# Redistribution only with this Copyright remark. Last modified: 2022-11-29
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(COMPA VERSION 0001
+project(COMPA VERSION 0002
               DESCRIPTION "UPnPlib compatible library subproject"
               HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -13,18 +13,22 @@ set(COMPATIBLE_SOURCE_FILES
 # There are additional source files at different add_library() statements.
     ./src/api/UpnpString.cpp
     ./src/api/UpnpFileInfo.cpp
-    ${UPNPLIB_SOURCE_DIR}/src/init.cpp
-    ${UPNPLIB_SOURCE_DIR}/src/net/http/webserver.cpp
+    ./src/genlib/miniserver/miniserver.cpp
 )
 
-set(UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES
+set(COMPATIBLE_INCLUDE_DIRECTORIES
     PRIVATE
         ./inc
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
 )
 
 add_compile_definitions(
+    UPNP_HAVE_WEBSERVER   # Needed to have it always available in the library
     # Disable warnings to use e.g. strncpy_s instead of strncpy
     $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
@@ -47,7 +51,7 @@ if(NOT WIN32)
         ${UPNPLIB_SOURCE_DIR}/src/strndup.cpp
     )
     target_include_directories(compa_shared
-            ${UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES}
+            ${COMPATIBLE_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(compa_shared
         PRIVATE
@@ -58,6 +62,7 @@ if(NOT WIN32)
     target_link_libraries(compa_shared
         PRIVATE
             $<$<PLATFORM_ID:Darwin>:umock_shared>
+            $<$<PLATFORM_ID:Darwin>:upnplib_shared>
         PUBLIC   # needed on macOS
             # If we do not have compatible code we use the old pupnp code.
             pupnp_shared
@@ -69,7 +74,7 @@ if(NOT WIN32)
             ${COMPATIBLE_SOURCE_FILES}
     )
     target_include_directories(compa_static
-            ${UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES}
+            ${COMPATIBLE_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(compa_static
         PRIVATE
@@ -95,12 +100,10 @@ else() # WIN32
         ${UPNPLIB_SOURCE_DIR}/src/strndup.cpp
     )
     target_include_directories(compa_shared
-            ${UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES}
+            ${COMPATIBLE_INCLUDE_DIRECTORIES}
+        PRIVATE
             # if pthreads4w isn't installed this path is empty. The linker
             # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-            # (Only for general use. It doesn't matter here because we are
-            # already on WIN32).
-        INTERFACE
             ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
     )
     target_compile_definitions(compa_shared
@@ -112,6 +115,7 @@ else() # WIN32
     target_link_libraries(compa_shared
         PRIVATE
             umock_shared
+            upnplib_shared
         PUBLIC   # needed on macOS
             # If we do not have compatible code we use the old pupnp code.
             pupnp_shared
@@ -123,7 +127,11 @@ else() # WIN32
         ${COMPATIBLE_SOURCE_FILES}
     )
     target_include_directories(compa_static
-            ${UPNPLIB_COMPATIBLE_INCLUDE_DIRECTORIES}
+            ${COMPATIBLE_INCLUDE_DIRECTORIES}
+        PRIVATE
+            # if pthreads4w isn't installed this path is empty. The linker
+            # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+            ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
     )
     target_compile_definitions(compa_static
         PRIVATE

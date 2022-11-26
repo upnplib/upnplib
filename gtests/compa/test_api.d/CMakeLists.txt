@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-23
+# Redistribution only with this Copyright remark. Last modified: 2022-11-28
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -268,7 +268,9 @@ target_compile_definitions(test_upnpapi-pst
         UPNPLIB_WITH_NATIVE_PUPNP
         UPNP_HAVE_WEBSERVER
         UPNP_HAVE_CLIENT
+        UPNP_HAVE_SSDP
         UPNP_HAVE_OPTSSDP
+        UPNP_HAVE_GENA
 )
 target_compile_options(test_upnpapi-pst
     PRIVATE
@@ -285,6 +287,47 @@ target_link_libraries(test_upnpapi-pst
         upnplib_static
 )
 add_test(NAME ctest_upnpapi-pst COMMAND test_upnpapi-pst
+)
+
+add_executable(test_upnpapi-cst
+#------------------------------
+    ./test_upnpapi.cpp
+)
+target_include_directories(test_upnpapi-cst
+    PRIVATE
+        ${GTESTS_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
+        # if pthreads4w isn't installed this path is empty. The linker
+        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+)
+target_compile_definitions(test_upnpapi-cst
+    PRIVATE
+        UPNP_HAVE_WEBSERVER
+        UPNP_HAVE_CLIENT
+        UPNP_HAVE_OPTSSDP
+)
+target_compile_options(test_upnpapi-cst
+    PRIVATE
+        # disable warning C4065: switch statement contains 'default' but no 'case' labels
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4065>
+        # disable warning C4100: 'result_listener': unreferenced formal parameter
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
+        # disable warning C4505: 'UpnpComputeIpv6PrefixLength': unreferenced local function has been removed
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
+)
+target_link_libraries(test_upnpapi-cst
+    PRIVATE
+        compa_static
+        upnplib_static
+)
+add_test(NAME ctest_upnpapi-cst COMMAND test_upnpapi-cst
 )
 
 add_executable(test_upnpapi_platform-psh

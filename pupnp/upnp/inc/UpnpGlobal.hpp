@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_UPNPGLOBAL_HPP
 #define UPNPLIB_UPNPGLOBAL_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-19
+// Redistribution only with this Copyright remark. Last modified: 2022-11-29
 // Taken from authors who haven't made a note.
 
 /*!
@@ -172,20 +172,19 @@ typedef __int64 int64_t;
   #define UPNPLIB_LOCAL
 #endif // UPNPLIB_SHARED
 
+#if (defined _WIN32 || defined __CYGWIN__) && defined UPNPLIB_SHARED
+  #define UPNPLIB_EXTERN __declspec(dllimport) extern
+#else
+  #define UPNPLIB_EXTERN UPNPLIB_API extern
+#endif
+
 // Switch old pupnp definition to use new visibility support
 #define EXPORT_SPEC UPNPLIB_API
 #define EXPORT_SPEC_LOCAL UPNPLIB_LOCAL
+#define EXPORT_SPEC_EXTERN UPNPLIB_EXTERN
 
 // clang-format on
 
 EXPORT_SPEC extern char library_version[];
-
-/*! Contains interface index. */
-EXPORT_SPEC extern unsigned int gIF_INDEX;
-
-/*! Maximum content-length (in bytes) that the SDK will process on an incoming
- * packet. Content-Length exceeding this size will be not processed and
- * error 413 (HTTP Error Code) will be returned to the remote end point. */
-EXPORT_SPEC extern size_t g_maxContentLength;
 
 #endif /* UPNPLIB_UPNPGLOBAL_HPP */

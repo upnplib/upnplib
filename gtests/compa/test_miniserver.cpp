@@ -1,11 +1,13 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-24
+// Redistribution only with this Copyright remark. Last modified: 2022-11-26
 
-#include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
+// Include source code for testing. So we have also direct access to static
+// functions which need to be tested.
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #define NS
+#include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #else
-#define NS compa
+#define NS ::compa
 #include "compa/src/genlib/miniserver/miniserver.cpp"
 #endif
 
@@ -728,11 +730,13 @@ TEST(StartMiniServerTestSuite, do_bind_listen_address_in_use) {
     // * Mocked getsockname() returns a sockaddr with current ip address and
     //   port
 
-    if (old_code)
+    if (old_code) {
         GTEST_SKIP() << CYEL "[ BUGFIX   ]" CRES
                      << " Unit should not loop through about 50000 ports to "
                         "find one free port.";
-
+        // This very expensive behavior is skiped here and fixed in function
+        // do_bind().
+    }
     MINISERVER_REUSEADDR = false;
     const char text_addr[]{"192.168.54.188"};
     char addrbuf[16];

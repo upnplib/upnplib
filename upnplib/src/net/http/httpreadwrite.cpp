@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-23
+// Redistribution only with this Copyright remark. Last modified: 2022-11-29
 
 #include "upnplib/httpreadwrite.hpp"
 
@@ -9,8 +9,6 @@ namespace upnplib {
 
 /* in seconds */
 #define DEFAULT_TCP_CONNECT_TIMEOUT 5
-
-extern size_t g_maxContentLength;
 
 /*!
  * \brief Checks socket connection and wait if it is not connected.

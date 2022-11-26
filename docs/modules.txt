@@ -1,0 +1,48 @@
+UPnPlib program modules
+=======================
+A program module is an encapsulated program unit consisting of three compile
+units and two test collections. A compile unit is a source file with its header
+file. A test collection is a collection of gtests to test a program unit.
+
+* One compile unit for original pUPnP source code of the progam module.
+* One compile unit for compatible UPnPlib source code of the program module.
+* One test colletion is for testing the original pUPnP code together with the
+  compatible UPnPlib code to ensure compatilbility.
+
+* One compile unit is for the native UPnPlib source code with no dependencies
+  to the other compile units.
+* One test collection is for testing the native UPnPlib code.
+
+webserver: find \! -path './build/*' -type f -iname '*webserver*'
+----------
+pUPnP compile unit
+    ./pupnp/upnp/src/inc/webserver.hpp
+    ./pupnp/upnp/src/genlib/net/http/webserver.cpp
+UPnPlib compatible compile unit
+    ./include/compa/webserver.hpp
+    ./compa/src/genlib/net/http/webserver.cpp
+Test collection for both
+    ./gtests/compa/test_http.d/test_webserver.cpp
+
+UPnPlib native compile unit
+    ./include/upnplib/webserver.hpp
+    ./upnplib/src/net/http/webserver.cpp
+Test collection for this
+    ./gtests/upnplib/test_webserver.cpp
+
+
+miniserver: find \! -path './build/*' -type f -iname '*miniserver*'
+-----------
+pUPnP
+    ./pupnp/upnp/src/inc/miniserver.hpp
+    ./pupnp/upnp/src/genlib/miniserver/miniserver.cpp
+UPnPlib compa
+    ./include/compa/miniserver.hpp
+    ./compa/src/genlib/miniserver/miniserver.cpp
+Test collection for both
+    ./gtests/compa/test_miniserver.cpp
+
+UPnPlib native
+    t.b.d.
+Test collection
+    t.b.d.

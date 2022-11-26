@@ -1,4 +1,7 @@
 Next steps to do:
+* Rename upnplibInfo executable.
+* Try to inherit includes for pthreads4w from pupnp library.
+* Remove pupnp/upnp/src/global.cpp and *.hpp.
 * Check bugfix in pupnp/upnp/src/urlconfig/urlconfig.cpp with a gtest.
 * [set EXPECT_CALL to redirect the call to the original method](https://stackoverflow.com/questions/25556601/set-expect-call-to-redirect-the-call-to-the-original-method)
 * Rework miniserver GTest including sources like webserver.

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-21
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-26
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,6 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
+// Last compare with pupnp original source file on 2022-11-26, ver 1.14.15
 
 #include "config.hpp"
 
@@ -891,7 +892,7 @@ static int get_miniserver_sockets(
     /*! [in] port on which the server is listening for incoming
      * IPv6 ULA or GUA connections. */
     uint16_t listen_port6UlaGua) {
-    // int ret_val{UPNP_E_INTERNAL_ERROR}; // Ingo: possible bugfix?
+    // int ret_val{UPNP_E_INTERNAL_ERROR}; // possible bugfix? --Ingo
     int ret_val;
     int err_init_4;
     int err_init_6;

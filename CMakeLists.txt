@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-23
+# Redistribution only with this Copyright remark. Last modified: 2022-11-29
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -42,10 +42,10 @@ option(UPNPLIB_WITH_NATIVE_PUPNP "Build the library with old native PUPNP code."
 option(UPNPLIB_WITH_GOOGLETEST "Download and build Googletest." OFF)
 option(GTESTS_WITH_SHARED_LIBS "Build GOOGLETEST libraries shared instead of default static." OFF)
 
-#if(UPNPLIB_WITH_GOOGLETEST)
-#    set (UPNPLIB_WITH_SAMPLES ON CACHE BOOL "Provide sample programs device and control point." FORCE)
-#    message(STATUS "UPNPLIB_WITH_GOOGLETEST has also enabled UPNPLIB_WITH_SAMPLES")
-#endif()
+if(UPNPLIB_WITH_GOOGLETEST)
+    set (UPNPLIB_WITH_GENA ON CACHE BOOL "Enable the General Event Notification Architecture." FORCE)
+    message(STATUS "UPNPLIB_WITH_GOOGLETEST has also enabled UPNPLIB_WITH_GENA")
+endif()
 
 if(UPNPLIB_WITH_SAMPLES)
     set (UPNPLIB_WITH_TOOLS ON CACHE BOOL "Make some not essential program features available like text for error numbers etc." FORCE)

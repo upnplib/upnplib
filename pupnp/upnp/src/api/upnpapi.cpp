@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-17
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-29
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,6 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+// Last compare with pupnp original source file on 2022-11-26, ver 1.14.15
 
 /*!
  * \addtogroup UPnPAPI
@@ -63,7 +64,14 @@
 
 /* Needed for GENA */
 #include "gena.hpp"
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include "miniserver.hpp"
+#else
+#include "compa/miniserver.hpp"
+using compa::SetHTTPGetCallback;
+using compa::StartMiniServer;
+using compa::StopMiniServer;
+#endif
 #include "service_table.hpp"
 
 #ifdef INTERNAL_WEB_SERVER
@@ -143,24 +151,33 @@ ThreadPool gRecvThreadPool;
 
 /*! Mini server thread pool. */
 ThreadPool gMiniServerThreadPool;
+ThreadPool& get_gMiniServerThreadPool() { return gMiniServerThreadPool; }
 
 /*! Flag to indicate the state of web server */
 WebServerState bWebServerState = WEB_SERVER_DISABLED;
 
 /*! webCallback for HOST validation. */
 WebCallback_HostValidate gWebCallback_HostValidate = 0;
+WebCallback_HostValidate get_gWebCallback_HostValidate() {
+    return gWebCallback_HostValidate;
+}
 
 /*! Cookie to the webCallback for HOST validation. */
 void* gWebCallback_HostValidateCookie = 0;
+void* get_gWebCallback_HostValidateCookie() {
+    return &gWebCallback_HostValidateCookie;
+}
 
 /*! Allow literal host names redirection to numeric host names. */
 int gAllowLiteralHostRedirection = 0;
+int get_gAllowLiteralHostRedirection() { return gAllowLiteralHostRedirection; }
 
 /*! Static buffer to contain interface name. (extern'ed in upnp.h) */
 char gIF_NAME[LINE_SIZE] = {'\0'};
 
 /*! Static buffer to contain interface IPv4 address. (extern'ed in upnp.h) */
 char gIF_IPV4[INET_ADDRSTRLEN] = {'\0'};
+char* get_gIF_IPV4() { return gIF_IPV4; }
 
 /*! Static buffer to contain interface IPv4 netmask. (extern'ed in upnp.h) */
 char gIF_IPV4_NETMASK[INET_ADDRSTRLEN] = {'\0'};
@@ -168,6 +185,7 @@ char gIF_IPV4_NETMASK[INET_ADDRSTRLEN] = {'\0'};
 /*! Static buffer to contain interface IPv6 link-local address (LLA).
  * (extern'ed in upnp.h) */
 char gIF_IPV6[INET6_ADDRSTRLEN] = {'\0'};
+char* get_gIF_IPV6() { return gIF_IPV6; }
 
 /*! IPv6 LLA prefix length. (extern'ed in upnp.h) */
 unsigned gIF_IPV6_PREFIX_LENGTH = 0;
@@ -175,14 +193,14 @@ unsigned gIF_IPV6_PREFIX_LENGTH = 0;
 /*! Static buffer to contain interface IPv6 unique-local or globally-unique
  * address (ULA or GUA). (extern'ed in upnp.h) */
 char gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN] = {'\0'};
+char* get_gIF_IPV6_ULA_GUA() { return gIF_IPV6_ULA_GUA; }
 
 /*! IPv6 ULA or GUA prefix length. (extern'ed in upnp.h) */
 unsigned gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
 
 /*! Contains interface index. (extern'ed in upnp.h) */
-// moved to global.cpp
-extern unsigned gIF_INDEX;
-// unsigned gIF_INDEX = (unsigned)-1;
+unsigned gIF_INDEX = (unsigned)-1;
+unsigned get_gIF_INDEX() { return gIF_INDEX; }
 
 /*! local IPv4 port for the mini-server */
 unsigned short LOCAL_PORT_V4;
@@ -202,9 +220,7 @@ extern membuffer gDocumentRootDir;
 /*! Maximum content-length (in bytes) that the SDK will process on an incoming
  * packet. Content-Length exceeding this size will be not processed and
  * error 413 (HTTP Error Code) will be returned to the remote end point. */
-// moved to global.cpp
-extern size_t g_maxContentLength;
-// size_t g_maxContentLength = DEFAULT_SOAP_CONTENT_LENGTH;
+size_t g_maxContentLength = DEFAULT_SOAP_CONTENT_LENGTH;
 
 /*! Global variable to determines the maximum number of
  *  events which can be queued for a given subscription before events begin
@@ -913,7 +929,7 @@ exit_function:
 
     return retVal;
 }
-// #endif /* INCLUDE_DEVICE_APIS */ // Ingo: bugfix for compiling
+// #endif /* INCLUDE_DEVICE_APIS */ // bugfix for compiling --Ingo
 
 /*!
  * \brief Fills the sockadr_in with miniserver information.
@@ -932,7 +948,7 @@ static int GetDescDocumentAndURL(
     /* [out] . */
     char descURL[LINE_SIZE]);
 
-// #ifdef INCLUDE_DEVICE_APIS // Ingo: bugfix for compiling
+// #ifdef INCLUDE_DEVICE_APIS // bugfix for compiling --Ingo
 int UpnpRegisterRootDevice2(Upnp_DescType descriptionType,
                             const char* description_const,
                             size_t bufferLen, /* ignored */
@@ -3382,7 +3398,7 @@ int UpnpGetIfInfo(const char* IfName) {
  */
 #ifdef INCLUDE_CLIENT_APIS
 void UpnpThreadDistribution(struct UpnpNonblockParam* Param) {
-    // int errCode = 0; // Ingo: bugfix to compile
+    // int errCode = 0; // bugfix to compile --Ingo
 
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                "Inside UpnpThreadDistribution \n");

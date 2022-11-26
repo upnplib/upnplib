@@ -174,7 +174,7 @@ TEST(UpnpapiTestSuite, get_error_message) {
 #endif
 }
 
-TEST(UpnpapiTestSuite, UpnpFinish_without_initialization) {
+TEST(UpnpapiDeathTest, UpnpFinish_without_initialization) {
     if (github_actions && !old_code)
         GTEST_SKIP() << "             known failing test on Github Actions";
 

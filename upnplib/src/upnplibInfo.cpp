@@ -3,7 +3,7 @@
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-05
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-29
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,7 +43,7 @@
 #include <string.h>
 
 #if defined INCLUDE_DEVICE_APIS && EXCLUDE_SOAP == 0
-#include "miniserver.hpp"
+//#include "miniserver.hpp"
 #endif
 
 namespace upnplib {
@@ -237,8 +237,7 @@ int main() {
     std::cout << "---- library information ---------\n"
               << ::libinfo() << std::endl; // Info from pupnp
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
-    using upnplib::libinfo;
-    std::cout << libinfo() << std::endl; // Info from upnplib
+    std::cout << upnplib::libinfo() << std::endl; // Info from upnplib
 #endif
     std::cout << "UPNP_VERSION_STRING     = " << UPNP_VERSION_STRING << "\n"
               << "UPNP_VERSION_MAJOR      = " << UPNP_VERSION_MAJOR << "\n"

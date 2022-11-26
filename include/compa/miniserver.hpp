@@ -1,6 +1,5 @@
-#ifndef PUPNP_MINISERVER_HPP
-#define PUPNP_MINISERVER_HPP
-
+#ifndef UPNPLIB_MINISERVER_HPP
+#define UPNPLIB_MINISERVER_HPP
 /**************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
@@ -33,15 +32,19 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-// Last compare with pupnp original source file on 2022-11-26, ver 1.14.15
 
 /*!
  * \file
  */
 
-#include "UpnpStdInt.hpp"
+#include "config.hpp"
+
 #include "httpparser.hpp"
 #include "sock.hpp"
+
+#include <cstdint> // for uint16_t
+
+namespace compa {
 
 extern SOCKET gMiniServerStopSock;
 
@@ -92,7 +95,7 @@ typedef void (*MiniServerCallback)(
 /*!
  * \brief Set HTTP Get Callback.
  */
-EXPORT_SPEC void SetHTTPGetCallback(
+UPNPLIB_API void SetHTTPGetCallback(
     /*! [in] HTTP Callback to be invoked . */
     MiniServerCallback callback);
 
@@ -129,7 +132,7 @@ void SetGenaCallback(
  *  \li On success: UPNP_E_SUCCESS.
  *  \li On error: UPNP_E_XXX.
  */
-EXPORT_SPEC int StartMiniServer(
+UPNPLIB_API int StartMiniServer(
     /*! [in,out] Port on which the server listens for incoming IPv4
      * connections. */
     uint16_t* listen_port4,
@@ -145,6 +148,8 @@ EXPORT_SPEC int StartMiniServer(
  *
  * \return Always returns 0.
  */
-EXPORT_SPEC int StopMiniServer();
+UPNPLIB_API int StopMiniServer();
 
-#endif /* PUPNP_MINISERVER_HPP */
+} // namespace compa
+
+#endif /* UPNPLIB_MINISERVER_HPP */

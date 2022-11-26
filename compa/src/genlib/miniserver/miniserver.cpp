@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-21
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-29
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,8 +34,6 @@
 
 #include "config.hpp"
 
-#if EXCLUDE_MINISERVER == 0
-
 /*!
  * \file
  *
@@ -49,35 +47,35 @@
  *
  */
 
-#include "miniserver.hpp"
+#include "compa/miniserver.hpp"
 
-#include "ThreadPool.hpp"
+// #include "ThreadPool.hpp"
 #include "httpreadwrite.hpp"
-#include "ithread.hpp"
+// #include "ithread.hpp"
 #include "ssdplib.hpp"
 #include "statcodes.hpp"
-#include "unixutil.hpp" /* for socklen_t, EAFNOSUPPORT */
+// #include "unixutil.hpp" /* for socklen_t, EAFNOSUPPORT */
 #include "upnpapi.hpp"
-#include "upnputil.hpp"
+// #include "upnputil.hpp"
+
+// #include <assert.h>
+// #include <errno.h>
+// #include <stdio.h>
+// #include <stdlib.h>
+#include <cstring>
+// #include <sys/types.h>
+// #include <algorithm> // for std::max()
+#include <iostream>
 
 #include "upnplib/sock.hpp"
-
-#include "umock/sys_socket.hpp"
-#include "umock/sys_select.hpp"
-#include "umock/stdlib.hpp"
-
-#include <assert.h>
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <algorithm> // for std::max()
-#include <cstring>
-#include <iostream>
 
 #ifdef _WIN32
 #include "UpnpStdInt.hpp" // for ssize_t
 #endif
+
+#include "umock/sys_socket.hpp"
+#include "umock/sys_select.hpp"
+#include "umock/stdlib.hpp"
 
 using ::upnplib::SocketAddr;
 
@@ -223,13 +221,7 @@ static int dispatch_request(
     http_message_t* request;
     MiniServerCallback callback;
     WebCallback_HostValidate host_validate_callback = 0;
-#ifdef UPNPLIB_PUPNP_BUG
-    // Ingo - Error old code: 'cookie' may be used uninitialized in this
-    // function [-Werror=maybe-uninitialized].
-    void* cookie;
-#else
     void* cookie{};
-#endif
     int rc = UPNP_E_SUCCESS;
     /* If it does not fit in here, it is likely invalid anyway. */
     char host_port[NAME_SIZE];
@@ -256,8 +248,8 @@ static int dispatch_request(
     case HTTPMETHOD_HEAD:
     case HTTPMETHOD_SIMPLEGET:
         callback = gGetCallback;
-        host_validate_callback = gWebCallback_HostValidate;
-        cookie = gWebCallback_HostValidateCookie;
+        host_validate_callback = get_gWebCallback_HostValidate();
+        cookie = get_gWebCallback_HostValidateCookie();
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                    "miniserver %d: got WEB server msg\n", info->socket);
         break;
@@ -286,8 +278,11 @@ static int dispatch_request(
     host_port[min_size] = 0;
     if (host_validate_callback) {
         rc = host_validate_callback(host_port, cookie);
+        if (rc == UPNP_E_BAD_HTTPMSG) {
+            goto ExitFunction;
+        }
     } else if (!host_header_is_numeric(host_port, min_size)) {
-        if (!gAllowLiteralHostRedirection) {
+        if (!get_gAllowLiteralHostRedirection()) {
             rc = UPNP_E_BAD_HTTPMSG;
             UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                        "Possible DNS Rebind attack prevented.\n");
@@ -435,7 +430,7 @@ static UPNP_INLINE void schedule_request_job(
     TPJobInit(&job, (start_routine)handle_request, (void*)request);
     TPJobSetFreeFunction(&job, free_handle_request_arg);
     TPJobSetPriority(&job, MED_PRIORITY);
-    if (ThreadPoolAdd(&gMiniServerThreadPool, &job, NULL) != 0) {
+    if (ThreadPoolAdd(&get_gMiniServerThreadPool(), &job, NULL) != 0) {
         UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
                    "mserv %d: cannot schedule request\n", connfd);
         free(request);
@@ -477,10 +472,8 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
 
     if (lsock != INVALID_SOCKET && FD_ISSET(lsock, set)) {
         clientLen = sizeof(clientAddr);
-
         asock = umock::sys_socket_h.accept(lsock, (struct sockaddr*)&clientAddr,
                                            &clientLen);
-
         if (asock == INVALID_SOCKET) {
             UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
                        "compa::web_server_accept(): Error in accept(): %s\n",
@@ -828,25 +821,25 @@ static int do_bind(struct s_SocketStuff* s) {
 
     int ret_val = UPNP_E_SUCCESS;
     int bind_error;
-    int repeat = 0;
     uint16_t original_listen_port = s->try_port;
 
+    int repeat_do = 0;
     do {
         switch (s->ip_version) {
         case 4:
-            // Ingo: Compilation Error on macOS:
-            // operation on 's->s_SocketStuff::try_port'
-            // may be undefined [-Werror=sequence-point]
-            // s->serverAddr4->sin_port = htons(s->try_port++);
+            // Compilation Error on macOS:
+            // operation on 's->s_SocketStuff::try_port' may be undefined
+            // [-Werror=sequence-point] s->serverAddr4->sin_port =
+            // htons(s->try_port++); --Ingo
             s->serverAddr4->sin_port = htons(s->try_port);
             s->actual_port = s->try_port;
             s->try_port = s->try_port + 1;
             break;
         case 6:
-            // Ingo: Compilation Error on macOS:
-            // operation on 's->s_SocketStuff::try_port'
-            // may be undefined [-Werror=sequence-point]
-            // s->serverAddr6->sin6_port = htons(s->try_port++);
+            // Compilation Error on macOS:
+            // operation on 's->s_SocketStuff::try_port' may be undefined
+            // [-Werror=sequence-point] s->serverAddr6->sin6_port =
+            // htons(s->try_port++); --Ingo
             s->serverAddr6->sin6_port = htons(s->try_port);
             s->actual_port = s->try_port;
             s->try_port = s->try_port + 1;
@@ -861,9 +854,9 @@ static int do_bind(struct s_SocketStuff* s) {
         bind_error =
             umock::sys_socket_h.bind(s->fd, s->serverAddr, s->address_len);
         if (bind_error == -1)
-            repeat = (errno == EADDRINUSE) ? 1 : 0;
+            repeat_do = (errno == EADDRINUSE) ? 1 : 0;
 
-    } while (repeat != 0 && s->try_port >= original_listen_port);
+    } while (repeat_do != 0 && s->try_port >= original_listen_port);
 
     if (bind_error == -1) {
         UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
@@ -993,10 +986,10 @@ static int get_miniserver_sockets(
 
     /* Create listen socket for IPv4/IPv6. An error here may indicate
      * that we don't have an IPv4/IPv6 stack. */
-    err_init_4 = init_socket_suff(&ss4, gIF_IPV4, 4);
-    err_init_6 = init_socket_suff(&ss6, gIF_IPV6, 6);
-    err_init_6UlaGua = init_socket_suff(&ss6UlaGua, gIF_IPV6_ULA_GUA, 6);
-    ss6.serverAddr6->sin6_scope_id = gIF_INDEX;
+    err_init_4 = init_socket_suff(&ss4, get_gIF_IPV4(), 4);
+    err_init_6 = init_socket_suff(&ss6, get_gIF_IPV6(), 6);
+    err_init_6UlaGua = init_socket_suff(&ss6UlaGua, get_gIF_IPV6_ULA_GUA(), 6);
+    ss6.serverAddr6->sin6_scope_id = get_gIF_INDEX();
     /* Check what happened. */
 #ifdef _WIN32
     if (err_init_4 == WSANOTINITIALISED) {
@@ -1205,7 +1198,7 @@ int StartMiniServer(
     }
     /* SSDP socket for discovery/advertising. */
 #if EXCLUDE_SSDP == 0
-    ret_code = get_ssdp_sockets((MiniServerSockArray*)miniSocket);
+    ret_code = get_ssdp_sockets((::MiniServerSockArray*)miniSocket);
 #else
     ret_code = UPNP_E_INTERNAL_ERROR;
 #endif
@@ -1220,7 +1213,8 @@ int StartMiniServer(
     TPJobInit(&job, (start_routine)RunMiniServer, (void*)miniSocket);
     TPJobSetPriority(&job, MED_PRIORITY);
     TPJobSetFreeFunction(&job, (free_routine)free);
-    ret_code = ThreadPoolAddPersistent(&gMiniServerThreadPool, &job, NULL);
+    ret_code =
+        ThreadPoolAddPersistent(&get_gMiniServerThreadPool(), &job, NULL);
     if (ret_code < 0) {
         sock_close(miniSocket->miniServerSock4);
         sock_close(miniSocket->miniServerSock6);
@@ -1296,7 +1290,7 @@ int StopMiniServer() {
         ssdpAddr.sin_family = (sa_family_t)AF_INET;
         inet_pton(AF_INET, "127.0.0.1", &ssdpAddr.sin_addr);
         ssdpAddr.sin_port = htons(miniStopSockPort);
-        umock::sys_socket_h.sendto(sock, buf, bufLen, 0,
+        umock::sys_socket_h.sendto(sock, buf, (sendto_buflen_t)bufLen, 0,
                                    (struct sockaddr*)&ssdpAddr, socklen);
         imillisleep(1);
         if (gMServState == (MiniServerState)MSERV_IDLE) {
@@ -1310,5 +1304,3 @@ int StopMiniServer() {
 }
 
 } // namespace compa
-
-#endif /* EXCLUDE_MINISERVER */
