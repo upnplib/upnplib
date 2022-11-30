@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-04
+# Redistribution only with this Copyright remark. Last modified: 2022-12-01
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -151,6 +151,15 @@ set(PUPNP_SOURCE_FILES
     $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_WEBSERVER}>>:./src/urlconfig/urlconfig.cpp>
 )
 
+set(PUPNP_INCLUDE_DIRECTORIES
+    PUBLIC
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+        ./inc
+        ./src/inc
+        ./src/threadutil
+)
+
 add_compile_definitions(
     $<$<BOOL:${UPNPLIB_DEF_CLIENT}>:UPNP_HAVE_CLIENT>
     $<$<BOOL:${UPNPLIB_DEF_DEVICE}>:UPNP_HAVE_DEVICE>
@@ -171,26 +180,17 @@ add_compile_definitions(
 #=================
 if(NOT WIN32)
 
-    set(PUPNP_INCLUDE_DIRECTORIES
-            ${PUPNP_IXML_SOURCE_DIR}/inc
-            ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-            ./inc
-            ./src/inc
-            ./src/threadutil
-            # if we are not on WIN32 the linker finds empty "headers.h" and will
-            # not complain an error but will not use <headers.h> that isn't available.
-            #$<$<NOT:$<BOOL:${WIN32}>>:./inc/not_win32>
-            ./inc/not_win32
-    )
-
-    # Pupnp SHared library: postfix -psh
-    #-----------------------------------
+    # Pupnp SHared library: suffix -psh
+    #----------------------------------
     add_library(pupnp_shared SHARED
             ${PUPNP_SOURCE_FILES}
     )
     target_include_directories(pupnp_shared
-        PRIVATE
-            ${PUPNP_INCLUDE_DIRECTORIES}
+        ${PUPNP_INCLUDE_DIRECTORIES}
+        PUBLIC
+            # if we are not on WIN32 the linker finds empty "headers.h" and will
+            # not complain an error but will not use <headers.h> that isn't available.
+            ./inc/not_win32
     )
     target_compile_definitions(pupnp_shared
         PRIVATE
@@ -208,21 +208,24 @@ if(NOT WIN32)
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
-    # Pupnp STatic library: postfix -pst
-    #-----------------------------------
+    # Pupnp STatic library: suffix -pst
+    #----------------------------------
     add_library(pupnp_static STATIC
             ${PUPNP_SOURCE_FILES}
     )
     target_include_directories(pupnp_static
-        PRIVATE
-            ${PUPNP_INCLUDE_DIRECTORIES}
+        ${PUPNP_INCLUDE_DIRECTORIES}
+        PUBLIC
+            # if we are not on WIN32 the linker finds empty "headers.h" and will
+            # not complain an error but will not use <headers.h> that isn't available.
+            ./inc/not_win32
     )
     target_compile_definitions(pupnp_static
         PRIVATE
             UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(pupnp_static
-        # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
+        # With static linking there is no reason to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         PRIVATE
             umock_static
@@ -246,15 +249,8 @@ else() # WIN32
             ${PUPNP_SOURCE_FILES}
     )
     target_include_directories(pupnp_shared
-        PRIVATE
-            ${PUPNP_IXML_SOURCE_DIR}/inc
-            ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-            ./inc
-            ./src/inc
-            ./src/threadutil
-            # if we are not on WIN32 the linker finds empty "headers.h" and will
-            # not complain an error but will not use <headers.h> that isn't available.
-            #$<$<NOT:$<BOOL:${WIN32}>>:./inc/not_win32>
+        ${PUPNP_INCLUDE_DIRECTORIES}
+        PUBLIC
             # if pthreads4w isn't installed this path is empty. The linker
             # doesn't find "pthread.h" and falls back to look at <pthread.h>.
             ${pthreads4w_SOURCE_DIR}
@@ -278,21 +274,14 @@ else() # WIN32
             ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
-    # WIN32 Pupnp STatic library: postfix -pst
-    #-----------------------------------------
+    # WIN32 Pupnp STatic library: suffix -pst
+    #----------------------------------------
     add_library(pupnp_static STATIC
             ${PUPNP_SOURCE_FILES}
     )
     target_include_directories(pupnp_static
-        PRIVATE
-            ${PUPNP_IXML_SOURCE_DIR}/inc
-            ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-            ./inc
-            ./src/inc
-            ./src/threadutil
-            # if we are not on WIN32 the linker finds empty "headers.h" and will
-            # not complain an error but will not use <headers.h> that isn't available.
-            #$<$<NOT:$<BOOL:${WIN32}>>:./inc/not_win32>
+        ${PUPNP_INCLUDE_DIRECTORIES}
+        PUBLIC
             # if pthreads4w isn't installed this path is empty. The linker
             # doesn't find "pthread.h" and falls back to look at <pthread.h>.
             ${pthreads4w_SOURCE_DIR}
@@ -303,7 +292,7 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(pupnp_static
-        # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
+        # With static linking there is no reason to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         INTERFACE
             umock_static

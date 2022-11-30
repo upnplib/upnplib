@@ -24,6 +24,8 @@ set(UMOCK_SOURCE_FILES
     $<$<PLATFORM_ID:Windows>:./src/winsock2.cpp>
 )
 
+# uMock SHared library: suffix -mst
+#----------------------------------
 add_library(umock_shared SHARED
         ${UMOCK_SOURCE_FILES}
         ${UPNPLIB_PROJECT_SOURCE_DIR}/upnplib/src/strndup.cpp
@@ -54,8 +56,8 @@ target_link_libraries(umock_shared
 
 )
 
-# UMock STatic library: postfix -umst
-#------------------------------------
+# UMock STatic library: suffix -mst
+#----------------------------------
 add_library(umock_static STATIC
         ${UMOCK_SOURCE_FILES}
 )

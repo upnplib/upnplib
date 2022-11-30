@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-21
+# Redistribution only with this Copyright remark. Last modified: 2022-12-01
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -30,16 +30,7 @@ add_executable(test_uri-pst
 target_include_directories(test_uri-pst
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${GTESTS_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
 target_compile_definitions(test_uri-pst
     PRIVATE
@@ -80,16 +71,7 @@ add_executable(test_uri_parse-pst
 target_include_directories(test_uri_parse-pst
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${GTESTS_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
 target_compile_definitions(test_uri_parse-pst
     PRIVATE

@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-28
+# Redistribution only with this Copyright remark. Last modified: 2022-12-01
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -21,13 +21,6 @@ target_include_directories(test_upnpdebug-pst
     PRIVATE
         ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
 target_compile_definitions(test_upnpdebug-pst
     PRIVATE
@@ -59,12 +52,6 @@ add_executable(test_upnptools-psh
 #--------------------------------
         ./test_upnptools.cpp
 )
-target_include_directories(test_upnptools-psh
-    PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-)
 target_compile_definitions(test_upnptools-psh
     PRIVATE
         UPNPLIB_SHARED
@@ -88,9 +75,7 @@ add_executable(test_UpnpString-psh
 )
 target_include_directories(test_UpnpString-psh
     PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${GTESTS_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
 )
 target_compile_definitions(test_UpnpString-psh
     PRIVATE
@@ -150,9 +135,6 @@ add_executable(test_UpnpFileInfo-psh
 target_include_directories(test_UpnpFileInfo-psh
     PRIVATE
         ${GTESTS_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 target_compile_definitions(test_UpnpFileInfo-psh
     PRIVATE
@@ -253,15 +235,6 @@ target_include_directories(test_upnpapi-pst
     PRIVATE
         ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
 target_compile_definitions(test_upnpapi-pst
     PRIVATE
@@ -295,17 +268,8 @@ add_executable(test_upnpapi-cst
 )
 target_include_directories(test_upnpapi-cst
     PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+        ${GTESTS_SOURCE_DIR}/include
 )
 target_compile_definitions(test_upnpapi-cst
     PRIVATE
@@ -339,15 +303,6 @@ target_include_directories(test_upnpapi_platform-psh
     PRIVATE
         ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
 target_compile_definitions(test_upnpapi_platform-psh
     PRIVATE

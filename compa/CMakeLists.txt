@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-30
+# Redistribution only with this Copyright remark. Last modified: 2022-12-02
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -19,13 +19,9 @@ set(COMPATIBLE_SOURCE_FILES
 
 set(COMPATIBLE_INCLUDE_DIRECTORIES
     PRIVATE
-        ./inc
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        $<$<NOT:$<PLATFORM_ID:Windows>>:${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32>
+    # This empty list is a placeholder for needed include directories in the
+    # future for the compa library. Other include directory entries are
+    # inherited from the pupnp library.
 )
 
 add_compile_definitions(
@@ -45,14 +41,14 @@ if(NOT WIN32)
     # pupnp compatible libraries
     #===========================
 
-    # pupnp Compatible SHared library: postfix -csh
-    #----------------------------------------------
+    # pupnp Compatible SHared library: suffix -csh
+    #---------------------------------------------
     add_library(compa_shared SHARED
         ${COMPATIBLE_SOURCE_FILES}
         ${UPNPLIB_SOURCE_DIR}/src/strndup.cpp
     )
     target_include_directories(compa_shared
-            ${COMPATIBLE_INCLUDE_DIRECTORIES}
+        ${COMPATIBLE_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(compa_shared
         PRIVATE
@@ -64,27 +60,25 @@ if(NOT WIN32)
         PRIVATE
             upnplib_shared
             $<$<PLATFORM_ID:Darwin>:umock_shared>
-        PUBLIC   # needed on macOS
+        PUBLIC
             # If we do not have compatible code we use the old pupnp code.
             pupnp_shared
     )
 
-    # pupnp Compatible STatic library: postfix -cst
-    #----------------------------------------------
+    # pupnp Compatible STatic library: suffix -cst
+    #---------------------------------------------
     add_library(compa_static STATIC
             ${COMPATIBLE_SOURCE_FILES}
     )
     target_include_directories(compa_static
-            ${COMPATIBLE_INCLUDE_DIRECTORIES}
+        ${COMPATIBLE_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(compa_static
         PRIVATE
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(compa_static
-        # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
-        # For propagation only INTERFACE is needed.
-        INTERFACE
+        PUBLIC
             # If we do not have compatible code we use the old pupnp code.
             pupnp_static
     )
@@ -94,14 +88,14 @@ else() # WIN32
     # WIN32 pupnp compatible libraries
     #=================================
 
-    # WIN32 pupnp Compatible SHared library: postfix -csh
-    #----------------------------------------------------
+    # WIN32 pupnp Compatible SHared library: suffix -csh
+    #---------------------------------------------------
     add_library(compa_shared SHARED
         ${COMPATIBLE_SOURCE_FILES}
         ${UPNPLIB_SOURCE_DIR}/src/strndup.cpp
     )
     target_include_directories(compa_shared
-            ${COMPATIBLE_INCLUDE_DIRECTORIES}
+        ${COMPATIBLE_INCLUDE_DIRECTORIES}
         PRIVATE
             # if pthreads4w isn't installed this path is empty. The linker
             # doesn't find "pthread.h" and falls back to look at <pthread.h>.
@@ -117,18 +111,18 @@ else() # WIN32
         PRIVATE
             umock_shared
             upnplib_shared
-        PUBLIC   # needed on macOS
+        PUBLIC
             # If we do not have compatible code we use the old pupnp code.
             pupnp_shared
     )
 
-    # WIN32 pupnp Compatible STatic library: postfix -cst
-    #----------------------------------------------------
+    # WIN32 pupnp Compatible STatic library: suffix -cst
+    #---------------------------------------------------
     add_library(compa_static STATIC
         ${COMPATIBLE_SOURCE_FILES}
     )
     target_include_directories(compa_static
-            ${COMPATIBLE_INCLUDE_DIRECTORIES}
+        ${COMPATIBLE_INCLUDE_DIRECTORIES}
         PRIVATE
             # if pthreads4w isn't installed this path is empty. The linker
             # doesn't find "pthread.h" and falls back to look at <pthread.h>.
@@ -139,9 +133,7 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(compa_static
-        # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
-        # For propagation only INTERFACE is needed.
-        INTERFACE
+        PUBLIC
             # If we do not have compatible code we use the old pupnp code.
             pupnp_static
     )

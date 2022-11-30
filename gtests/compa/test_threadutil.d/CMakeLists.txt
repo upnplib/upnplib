@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-19
+# Redistribution only with this Copyright remark. Last modified: 2022-12-01
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -20,13 +20,7 @@ add_executable(test_FreeList-psh
 )
 target_include_directories(test_FreeList-psh
     PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${GTESTS_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
 target_compile_definitions(test_FreeList-psh
     PRIVATE
@@ -46,15 +40,6 @@ add_test(NAME ctest_FreeList-psh COMMAND test_FreeList-psh
 #===========
 add_executable(test_LinkedList-psh
         ./test_LinkedList.cpp
-)
-target_include_directories(test_LinkedList-psh
-    PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
 target_compile_definitions(test_LinkedList-psh
     PRIVATE
@@ -77,13 +62,7 @@ add_executable(test_ThreadPool-psh
 )
 target_include_directories(test_ThreadPool-psh
     PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${GTESTS_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
 target_compile_definitions(test_ThreadPool-psh
     PRIVATE
@@ -107,13 +86,7 @@ add_executable(test_TimerThread-psh
 )
 target_include_directories(test_TimerThread-psh
     PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${GTESTS_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
 )
 target_compile_definitions(test_TimerThread-psh
     PRIVATE

@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-30
+# Redistribution only with this Copyright remark. Last modified: 2022-12-01
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -27,11 +27,7 @@ set(UPNPLIB_INCLUDE_DIRECTORIES
 
 set(UPNPLIBEXE_INCLUDE_DIRECTORIES
     PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_BINARY_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc  # needed for ithread.hpp
-        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-        ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 
 if(NOT WIN32)
@@ -39,8 +35,8 @@ if(NOT WIN32)
     # upnplib libraries
     # =================
 
-    # Upnplib SHared library: postfix -ush
-    #-------------------------------------
+    # Upnplib SHared library: suffix -ush
+    #------------------------------------
     add_library(upnplib_shared SHARED
             ${UPNPLIB_SOURCE_FILES}
             ./src/strndup.cpp
@@ -64,8 +60,8 @@ if(NOT WIN32)
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
-    # Upnplib STatic library: postfix -ust
-    #-------------------------------------
+    # Upnplib STatic library: suffix -ust
+    #------------------------------------
     add_library(upnplib_static STATIC
             ${UPNPLIB_SOURCE_FILES}
     )
@@ -77,7 +73,7 @@ if(NOT WIN32)
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_static
-        # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
+        # With static linking there is no reason to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         INTERFACE
             ixml_static
@@ -164,8 +160,8 @@ else() # WIN32
     # WIN32 upnplib libraries
     #========================
 
-    # WIN32 Upnplib SHared library: postfix -ush
-    #-------------------------------------------
+    # WIN32 Upnplib SHared library: suffix -ush
+    #------------------------------------------
     add_library(upnplib_shared SHARED
             ${UPNPLIB_SOURCE_FILES}
             ./src/strndup.cpp
@@ -190,8 +186,8 @@ else() # WIN32
             ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
-    # WIN32 Upnplib STatic library: postfix -ust
-    #-------------------------------------------
+    # WIN32 Upnplib STatic library: suffix -ust
+    #------------------------------------------
     add_library(upnplib_static STATIC
             ${UPNPLIB_SOURCE_FILES}
     )
@@ -203,7 +199,7 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_static
-        # Static does not use a linker, no matter to use PRIVATE or PUBLIC.
+        # With static linking there is no reason to use PRIVATE or PUBLIC.
         # For propagation only INTERFACE is needed.
         INTERFACE
             umock_static
