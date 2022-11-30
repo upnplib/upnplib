@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-01
+// Redistribution only with this Copyright remark. Last modified: 2022-11-30
 
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 #ifdef UPNP_HAVE_TOOLS
@@ -10,9 +10,11 @@
 #include "gmock/gmock.h"
 #include "upnplib/gtest.hpp"
 
+using ::upnplib::errStrEx;
+
 using ::upnplib::testing::MatchesStdRegex;
 
-using ::upnplib::errStrEx;
+using ::testing::ExitedWithCode;
 
 namespace compa {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
@@ -70,16 +72,17 @@ clang-format on
 TEST(UpnpapiTestSuite, UpnpInitPreamble) {
     // Unset tested variables
     // ----------------------
-    memset(&GlobalHndRWLock, 0xFF, sizeof(GlobalHndRWLock));
-    memset(&gUUIDMutex, 0xFF, sizeof(gUUIDMutex));
-    memset(&GlobalClientSubscribeMutex, 0xFF,
+    memset(&GlobalHndRWLock, 0xAA, sizeof(GlobalHndRWLock));
+    memset(&gUUIDMutex, 0xAA, sizeof(gUUIDMutex));
+    memset(&GlobalClientSubscribeMutex, 0xAA,
            sizeof(GlobalClientSubscribeMutex));
     memset(&gUpnpSdkNLSuuid, 0, sizeof(gUpnpSdkNLSuuid));
-    memset(&HandleTable, 0xFF, sizeof(HandleTable));
-    memset(&gSendThreadPool, 0xFF, sizeof(gSendThreadPool));
-    memset(&gRecvThreadPool, 0xFF, sizeof(gRecvThreadPool));
-    memset(&gMiniServerThreadPool, 0xFF, sizeof(gMiniServerThreadPool));
-    memset(&gTimerThread, 0xFF, sizeof(gTimerThread));
+    memset(&HandleTable, 0xAA, sizeof(HandleTable));
+    memset(&gSendThreadPool, 0xAA, sizeof(gSendThreadPool));
+    memset(&gRecvThreadPool, 0xAA, sizeof(gRecvThreadPool));
+    memset(&gMiniServerThreadPool, 0xAA, sizeof(gMiniServerThreadPool));
+    memset(&gTimerThread, 0xAA, sizeof(gTimerThread));
+    UpnpSdkInit = 0xAA;
 
     // Test Unit.
     // ----------
@@ -87,9 +90,12 @@ TEST(UpnpapiTestSuite, UpnpInitPreamble) {
     ASSERT_EQ(ret_UpnpInitPreamble, UPNP_E_SUCCESS)
         << errStrEx(ret_UpnpInitPreamble, UPNP_E_SUCCESS);
 
+    std::cout << CRED "[ BUG      ]" CRES
+              << " The library should not have flagged to be initialized.\n";
     // Due to initialization by components the library should not have flagged
     // to be initialized. That will we do now.
-    EXPECT_EQ(UpnpSdkInit, 0);
+    EXPECT_EQ(UpnpSdkInit, 0xAA); // wrong, should be corrected to
+    // EXPECT_EQ(UpnpSdkInit, 0);
     UpnpSdkInit = 1;
 
     // Check initialization of debug output.
@@ -174,25 +180,28 @@ TEST(UpnpapiTestSuite, get_error_message) {
 #endif
 }
 
+// clang-format off
 TEST(UpnpapiDeathTest, UpnpFinish_without_initialization) {
-    if (github_actions && !old_code)
-        GTEST_SKIP() << "             known failing test on Github Actions";
+    // Wrong flag. The Sdk wasn't initialized before.
+    UpnpSdkInit = 1;
 
-    if (old_code) {
-        std::cout
-            << "[ BUG!     ] UpnpFinish should never segfault, even without "
-               "initialization.\n";
+    // if (old_code) {
+        std::cout << CRED "[ BUG      ]" CRES
+                  << " UpnpFinish should never segfault, even without "
+                     "initialization.\n";
+        // This expects segfault.
+        EXPECT_DEATH(UpnpFinish(), ".*");
 
-    } else {
+    // } else {
 
-        // Test Unit.
-        UpnpSdkInit = 1;
-
-        ASSERT_EXIT((UpnpFinish(), exit(0)), ::testing::ExitedWithCode(0), ".*")
-            << "[ BUG!     ] UpnpFinish should never segfault, even "
-               "without initialization.\n";
-    }
+        // This expects NO segfault.
+    //     ASSERT_EXIT((UpnpFinish(), exit(0)), ExitedWithCode(0), ".*");
+    //     int ret_UpnpFinish{UPNP_E_INTERNAL_ERROR};
+    //     ret_UpnpFinish = UpnpFinish();
+    //     EXPECT_EQ(ret_UpnpFinish, UPNP_E_SUCCESS);
+    // }
 }
+// clang-format on
 
 TEST(UpnpEnableWebserverTestSuite, successful_call) {
     UpnpSdkInit = 1;

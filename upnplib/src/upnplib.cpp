@@ -36,7 +36,7 @@
 #include "upnptools.hpp"
 #include "upnplib/cmake_vars.hpp"
 #include "init.hpp"
-#include "upnplib/init.hpp"
+#include "compa/init.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -237,7 +237,7 @@ int main() {
     std::cout << "---- library information ---------\n"
               << ::libinfo() << std::endl; // Info from pupnp
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
-    std::cout << upnplib::libinfo() << std::endl; // Info from upnplib
+    std::cout << compa::libinfo() << std::endl; // Info from upnplib
 #endif
     std::cout << "UPNP_VERSION_STRING     = " << UPNP_VERSION_STRING << "\n"
               << "UPNP_VERSION_MAJOR      = " << UPNP_VERSION_MAJOR << "\n"

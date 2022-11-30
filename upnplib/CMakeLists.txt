@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-29
+# Redistribution only with this Copyright remark. Last modified: 2022-11-30
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -25,10 +25,19 @@ set(UPNPLIB_INCLUDE_DIRECTORIES
         $<$<PLATFORM_ID:Windows>:${pthreads4w_SOURCE_DIR}> # needed for pthread.h
 )
 
+set(UPNPLIBEXE_INCLUDE_DIRECTORIES
+    PRIVATE
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_BINARY_DIR}/include
+        ${PUPNP_UPNP_SOURCE_DIR}/inc  # needed for ithread.hpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+        ${PUPNP_IXML_SOURCE_DIR}/inc
+)
+
 if(NOT WIN32)
 
     # upnplib libraries
-    #==================
+    # =================
 
     # Upnplib SHared library: postfix -ush
     #-------------------------------------
@@ -77,49 +86,73 @@ if(NOT WIN32)
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
-    # Info executable linked with the upnplib compatible shared library
-    #------------------------------------------------------------------
-    add_executable(upnplibInfo_shared
-            ./src/upnplibInfo.cpp
+    # Info executable linked with the pupnp shared library
+    # ----------------------------------------------------
+    add_executable(upnplib-psh
+            ./src/upnplib.cpp
     )
-    target_include_directories(upnplibInfo_shared
-        PRIVATE
-            ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-            ${UPNPLIB_PROJECT_BINARY_DIR}/include
-            ${PUPNP_UPNP_SOURCE_DIR}/inc
-            ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-            ${PUPNP_IXML_SOURCE_DIR}/inc
+    target_include_directories(upnplib-psh
+        ${UPNPLIBEXE_INCLUDE_DIRECTORIES}
     )
-    target_compile_definitions (upnplibInfo_shared
+    target_compile_definitions (upnplib-psh
         PRIVATE
+            UPNPLIB_WITH_NATIVE_PUPNP
             UPNPLIB_SHARED
     )
-    target_link_libraries(upnplibInfo_shared
+    target_link_libraries(upnplib-psh
         PRIVATE
-            compa_shared
-            upnplib_shared
+            pupnp_shared
     )
 
     # Info executable linked with the pupnp static library
     #-----------------------------------------------------
-    add_executable(upnplibInfo_static
-            ./src/upnplibInfo.cpp
+    add_executable(upnplib-pst
+            ./src/upnplib.cpp
     )
-    target_include_directories(upnplibInfo_static
-        PRIVATE
-            ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-            ${UPNPLIB_PROJECT_BINARY_DIR}/include
-            ${PUPNP_UPNP_SOURCE_DIR}/inc
-            ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-            ${PUPNP_IXML_SOURCE_DIR}/inc
+    target_include_directories(upnplib-pst
+        ${UPNPLIBEXE_INCLUDE_DIRECTORIES}
     )
-    target_compile_definitions (upnplibInfo_static
+    target_compile_definitions (upnplib-pst
         PRIVATE
             UPNPLIB_WITH_NATIVE_PUPNP
     )
-    target_link_libraries(upnplibInfo_static
+    target_link_libraries(upnplib-pst
         PRIVATE
             pupnp_static
+            # On Linux we cannot link with the static pthreads library
+            # because then we have also link with a static libc that's not
+            # available by default.
+            ${UPNP_PTHREADS_SHARED_LIBRARY}
+    )
+
+    # Info executable linked with the compatible shared library
+    # ---------------------------------------------------------
+    add_executable(upnplib-csh
+            ./src/upnplib.cpp
+    )
+    target_include_directories(upnplib-csh
+        ${UPNPLIBEXE_INCLUDE_DIRECTORIES}
+    )
+    target_compile_definitions (upnplib-csh
+        PRIVATE
+            UPNPLIB_SHARED
+    )
+    target_link_libraries(upnplib-csh
+        PRIVATE
+            compa_shared
+    )
+
+    # Info executable linked with the compatible static library
+    #----------------------------------------------------------
+    add_executable(upnplib-cst
+            ./src/upnplib.cpp
+    )
+    target_include_directories(upnplib-cst
+        ${UPNPLIBEXE_INCLUDE_DIRECTORIES}
+    )
+    target_link_libraries(upnplib-cst
+        PRIVATE
+            compa_static
             # On Linux we cannot link with the static pthreads library
             # because then we have also link with a static libc that's not
             # available by default.
@@ -181,51 +214,77 @@ else() # WIN32
             ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
-    # WIN32 Info executable linked with the upnplib compatible shared library
-    #------------------------------------------------------------------------
-    add_executable(upnplibInfo_shared
-            ./src/upnplibInfo.cpp
+    # WIN32 Info executable linked with the pupnp shared library
+    #-----------------------------------------------------------
+    add_executable(upnplib-psh
+            ./src/upnplib.cpp
     )
-    target_include_directories(upnplibInfo_shared
+    target_include_directories(upnplib-psh
+        ${UPNPLIBEXE_INCLUDE_DIRECTORIES}
         PRIVATE
-            ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-            ${UPNPLIB_PROJECT_BINARY_DIR}/include
-            ${PUPNP_UPNP_SOURCE_DIR}/inc   # needed for ithread.hpp
-            ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-            ${PUPNP_IXML_SOURCE_DIR}/inc
             ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
     )
-    target_compile_definitions (upnplibInfo_shared
+    target_compile_definitions (upnplib-psh
         PRIVATE
+            UPNPLIB_WITH_NATIVE_PUPNP
             UPNPLIB_SHARED
     )
-    target_link_libraries(upnplibInfo_shared
+    target_link_libraries(upnplib-psh
         PRIVATE
-            compa_shared
-            upnplib_shared
+            pupnp_shared
     )
 
     # WIN32 Info executable linked with the pupnp static library
     #-----------------------------------------------------------
-    add_executable(upnplibInfo_static
-            ./src/upnplibInfo.cpp
+    add_executable(upnplib-pst
+            ./src/upnplib.cpp
     )
-    target_include_directories(upnplibInfo_static
+    target_include_directories(upnplib-pst
+        ${UPNPLIBEXE_INCLUDE_DIRECTORIES}
         PRIVATE
-            ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-            ${UPNPLIB_PROJECT_BINARY_DIR}/include
-            ${PUPNP_UPNP_SOURCE_DIR}/inc  # needed for ithread.hpp
-            ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
-            ${PUPNP_IXML_SOURCE_DIR}/inc
             ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
     )
-    target_compile_definitions (upnplibInfo_static
+    target_compile_definitions (upnplib-pst
         PRIVATE
             UPNPLIB_WITH_NATIVE_PUPNP
     )
-    target_link_libraries(upnplibInfo_static
+    target_link_libraries(upnplib-pst
         PRIVATE
             pupnp_static
+    )
+
+    # WIN32 Info executable linked with the compatible shared library
+    #----------------------------------------------------------------
+    add_executable(upnplib-csh
+            ./src/upnplib.cpp
+    )
+    target_include_directories(upnplib-csh
+        ${UPNPLIBEXE_INCLUDE_DIRECTORIES}
+        PRIVATE
+            ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+    )
+    target_compile_definitions (upnplib-csh
+        PRIVATE
+            UPNPLIB_SHARED
+    )
+    target_link_libraries(upnplib-csh
+        PRIVATE
+            compa_shared
+    )
+
+    # WIN32 Info executable linked with the compatible static library
+    #----------------------------------------------------------------
+    add_executable(upnplib-cst
+            ./src/upnplib.cpp
+    )
+    target_include_directories(upnplib-cst
+        ${UPNPLIBEXE_INCLUDE_DIRECTORIES}
+        PRIVATE
+            ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
+    )
+    target_link_libraries(upnplib-cst
+        PRIVATE
+            compa_static
     )
 
 endif() # WIN32

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-10-22
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-30
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -58,8 +58,6 @@
 #include "posix_overwrites.hpp"
 
 #include "umock/netdb.hpp"
-
-extern unsigned int gIF_INDEX;
 
 /*!
  * \brief Returns a 1 if a char is a RESERVED char as defined in

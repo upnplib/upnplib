@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-29
+# Redistribution only with this Copyright remark. Last modified: 2022-11-30
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -11,6 +11,7 @@ project(COMPA VERSION 0002
 
 set(COMPATIBLE_SOURCE_FILES
 # There are additional source files at different add_library() statements.
+    ./src/init.cpp
     ./src/api/UpnpString.cpp
     ./src/api/UpnpFileInfo.cpp
     ./src/genlib/miniserver/miniserver.cpp
@@ -61,8 +62,8 @@ if(NOT WIN32)
     )
     target_link_libraries(compa_shared
         PRIVATE
+            upnplib_shared
             $<$<PLATFORM_ID:Darwin>:umock_shared>
-            $<$<PLATFORM_ID:Darwin>:upnplib_shared>
         PUBLIC   # needed on macOS
             # If we do not have compatible code we use the old pupnp code.
             pupnp_shared

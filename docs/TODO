@@ -1,5 +1,4 @@
 Next steps to do:
-* Rename upnplibInfo executable.
 * Try to inherit includes for pthreads4w from pupnp library.
 * Remove pupnp/upnp/src/global.cpp and *.hpp.
 * Check bugfix in pupnp/upnp/src/urlconfig/urlconfig.cpp with a gtest.
