@@ -1,12 +1,12 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-19
+// Redistribution only with this Copyright remark. Last modified: 2022-12-03
 
 // This tests only upnplib code without using pupnp code or compa code. The only
 // used 'upnplib' library does not provide it. So these tests belong to
 // namespace upnplib.
 //
 
-#include "upnplib/global.hpp"
+#include "upnplib/messages.hpp"
 #include "upnplib/upnptools.hpp"
 #include "upnplib/sock.hpp"
 

@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-23
+# Redistribution only with this Copyright remark. Last modified: 2022-12-03
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -47,7 +47,8 @@ add_library(upnplib_gtest_tools_shared SHARED
 target_include_directories(upnplib_gtest_tools_shared
     PRIVATE
         ./include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+    PUBLIC
+        ${UPNPLIB_SOURCE_DIR}/include
 )
 target_compile_definitions(upnplib_gtest_tools_shared
     PRIVATE
@@ -77,7 +78,7 @@ add_library(upnplib_gtest_tools_static STATIC
 target_include_directories(upnplib_gtest_tools_static
     PRIVATE
         ./include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ${UPNPLIB_SOURCE_DIR}/include
 )
 target_compile_definitions(upnplib_gtest_tools_static
     PRIVATE
@@ -116,7 +117,6 @@ add_executable(test_upnplib_gtest_tools
 target_include_directories(test_upnplib_gtest_tools
     PRIVATE
         ./include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 target_compile_definitions(test_upnplib_gtest_tools
         PRIVATE
@@ -146,7 +146,6 @@ add_executable(test_upnplib_gtest_tools_platform
 target_include_directories(test_upnplib_gtest_tools_platform
     PRIVATE
         ./include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 target_compile_definitions(test_upnplib_gtest_tools_platform
     PRIVATE
@@ -174,8 +173,6 @@ add_test(NAME ctest_upnplib_gtest_tools_platform COMMAND test_upnplib_gtest_tool
 #============
 set(TEST_SIMPLE_INCLUDE_DIRECTORIES
     PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         ${pthreads4w_SOURCE_DIR}   # needed for pthread.h on MS Windows

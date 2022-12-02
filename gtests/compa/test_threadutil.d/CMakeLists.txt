@@ -63,6 +63,7 @@ add_executable(test_ThreadPool-psh
 target_include_directories(test_ThreadPool-psh
     PRIVATE
         ${GTESTS_SOURCE_DIR}/include
+        ${COMPA_SOURCE_DIR}/include
 )
 target_compile_definitions(test_ThreadPool-psh
     PRIVATE
@@ -87,6 +88,7 @@ add_executable(test_TimerThread-psh
 target_include_directories(test_TimerThread-psh
     PRIVATE
         ${GTESTS_SOURCE_DIR}/include
+        ${COMPA_SOURCE_DIR}/include
 )
 target_compile_definitions(test_TimerThread-psh
     PRIVATE

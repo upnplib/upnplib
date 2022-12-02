@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-02
+// Redistribution only with this Copyright remark. Last modified: 2022-12-02
 
 // Note
 // -------------
@@ -18,7 +18,7 @@
 // --gtest_filter=TimerThreadNormalTestSuite.init_and_shutdown_timerthread
 
 #include "TimerThread.hpp"
-#include "upnplib/ThreadPool.hpp"
+#include "compa/ThreadPool.hpp"
 
 #include <chrono>
 #include <thread>

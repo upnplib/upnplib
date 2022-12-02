@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-29
+# Redistribution only with this Copyright remark. Last modified: 2022-12-03
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -360,10 +360,11 @@ endif(WIN32)
 #################################
 # This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
 # e.g. PUPNP_UPNP_SOURCE_DIR and PUPNP_UPNP_BINARY_DIR
+# For a successful one step build the order is important.
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/umock)
-add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp)
 add_subdirectory(${PROJECT_SOURCE_DIR}/upnplib)
+add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp)
+add_subdirectory(${PROJECT_SOURCE_DIR}/umock)
 add_subdirectory(${PROJECT_SOURCE_DIR}/ixml)
 add_subdirectory(${PROJECT_SOURCE_DIR}/compa)
 add_subdirectory(${PROJECT_SOURCE_DIR}/sample)

@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCK_HPP
 #define UPNPLIB_NET_SOCK_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-21
+// Redistribution only with this Copyright remark. Last modified: 2022-12-03
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688

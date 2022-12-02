@@ -156,7 +156,7 @@ jobs:
       - name: Run gtests
         run: |
           cd ./build/gtests
-          ctest --timeout 4 --output-on-failure
+          ctest --timeout 5 --output-on-failure
 
 
   # Job: Configure, build and test with Visual Studio
@@ -243,7 +243,7 @@ jobs:
         run: |
           $env:path += ";./build/bin/${{matrix.buildtype}}"
           cd ./build/gtests
-          ctest -C ${{matrix.buildtype}} --timeout 4 --output-on-failure
+          ctest -C ${{matrix.buildtype}} --timeout 2 --output-on-failure
 
 
   # Job: Configure, build and test with NMake
@@ -322,7 +322,7 @@ jobs:
         run: |
           $env:path += ";./build/bin"
           cd ./build/gtests
-          ctest -C ${{matrix.buildtype}} --timeout 4 --output-on-failure
+          ctest -C ${{matrix.buildtype}} --timeout 2 --output-on-failure
 
 
   # Job: Run build tests
@@ -405,6 +405,6 @@ jobs:
     - uses: actions/checkout@v2
     - uses: DoozyX/clang-format-lint-action@v0.13
       with:
-        source: './pupnp ./upnplib ./compa ./include ./gtests ./sample ./umock'
+        source: './pupnp ./upnplib ./compa ./gtests ./sample ./umock ./ixml'
         extensions: 'cpp,hpp'
         clangFormatVersion: 11.1.0

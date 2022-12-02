@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-21
+# Redistribution only with this Copyright remark. Last modified: 2022-12-03
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -13,7 +13,6 @@ project(UPNPLIB_GTEST5 VERSION 0003
 #==========
 set(TEST_UPNPTOOLS_INCLUDE_DIRECTORIES
     PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 
 add_executable(test_upnptools-ush
@@ -21,7 +20,7 @@ add_executable(test_upnptools-ush
         ./test_upnptools.cpp
 )
 target_include_directories(test_upnptools-ush
-        ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
+    ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
 )
 target_compile_definitions(test_upnptools-ush
     PRIVATE
@@ -40,7 +39,7 @@ add_executable(test_upnptools-ust
         ./test_upnptools.cpp
 )
 target_include_directories(test_upnptools-ust
-        ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
+    ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
 )
 target_link_libraries(test_upnptools-ust
     PRIVATE
@@ -58,7 +57,6 @@ add_executable(test_sock-ush
 target_include_directories(test_sock-ush
     PRIVATE
         ${GTESTS_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 target_compile_definitions(test_sock-ush
     PRIVATE
@@ -90,7 +88,6 @@ target_include_directories(test_webserver-ush
     PRIVATE
         ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 target_compile_definitions(test_webserver-ush
     PRIVATE

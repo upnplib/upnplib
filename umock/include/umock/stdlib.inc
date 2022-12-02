@@ -1,68 +1,67 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-23
+// Redistribution only with this Copyright remark. Last modified: 2022-12-03
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
 
 #include "upnplib/visibility.hpp"
-
-// clang-format off
-#ifdef _WIN32
-  #include <fcntl.h>
-  #include <winsock2.h>
-  #define UPNPLIB_CLOSE_SOCKET closesocket
-  #define UPNPLIB_SOCKET_TYPE SOCKET
-#else
-  #include <unistd.h>
-  #define UPNPLIB_CLOSE_SOCKET close
-  #define UPNPLIB_SOCKET_TYPE int
-#endif
-// clang-format on
+#include <stdlib.h>
 
 namespace umock {
 
-class UnistdInterface {
+class StdlibInterface {
   public:
-    virtual ~UnistdInterface() = default;
-    virtual int UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd) = 0;
+    virtual ~StdlibInterface() {}
+
+    virtual void* malloc(size_t size) = 0;
+    virtual void* calloc(size_t nmemb, size_t size) = 0;
+    virtual void* realloc(void* ptr, size_t size) = 0;
+    virtual void free(void* ptr) = 0;
 };
 
 //
 // This is the wrapper class for the real (library?) function
 // ----------------------------------------------------------
-class UnistdReal : public UnistdInterface {
+class StdlibReal : public StdlibInterface {
   public:
-    virtual ~UnistdReal() override = default;
-    int UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd) override;
+    virtual ~StdlibReal() override {}
+
+    void* malloc(size_t size) override;
+    void* calloc(size_t nmemb, size_t size) override;
+    void* realloc(void* ptr, size_t size) override;
+    void free(void* ptr) override;
 };
 
 //
 // This is the caller or injector class that injects the class (worker) to be
 // used, real or mocked functions.
 /* Example:
-    UnistdReal unistd_realObj; // already done below
-    Unistd(&unistd_realObj);   // already done below
+    StdlibReal stdlib_realObj; // already done below
+    Stdlib(&stdlib_realObj);   // already done below
     { // Other scope, e.g. within a gtest
-        class UnistdMock : public UnistdInterface { ...; MOCK_METHOD(...) };
-        UnistdMock unistd_mockObj;
-        Unistd unistd_injectObj(&unistd_mockObj); // obj. name doesn't matter
-        EXPECT_CALL(unistd_mockObj, ...);
+        class StdlibMock : public StdlibInterface { ...; MOCK_METHOD(...) };
+        StdlibMock stdlib_mockObj;
+        Stdlib stdlib_injectObj(&stdlib_mockObj); // obj. name doesn't matter
+        EXPECT_CALL(stdlib_mockObj, ...);
     } // End scope, mock objects are destructed, worker restored to default.
 */ //------------------------------------------------------------------------
-class UPNPLIB_API Unistd {
+class UPNPLIB_API Stdlib {
   public:
     // This constructor is used to inject the pointer to the real function. It
     // sets the default used class, that is the real function.
-    Unistd(UnistdReal* a_ptr_realObj);
+    Stdlib(StdlibReal* a_ptr_realObj);
 
     // This constructor is used to inject the pointer to the mocking function.
-    Unistd(UnistdInterface* a_ptr_mockObj);
+    Stdlib(StdlibInterface* a_ptr_mockObj);
 
     // The destructor is ussed to restore the old pointer.
-    virtual ~Unistd();
+    virtual ~Stdlib();
 
     // Methods
-    virtual int UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd);
+    virtual void* malloc(size_t size);
+    virtual void* calloc(size_t nmemb, size_t size);
+    virtual void* realloc(void* ptr, size_t size);
+    virtual void free(void* ptr);
 
   private:
     // Next variable must be static. Please note that a static member variable
@@ -70,10 +69,9 @@ class UPNPLIB_API Unistd {
     // important here for mocking because the pointer is also valid on all
     // objects of this class. With inline we do not need an extra definition
     // line outside the class. I also make the symbol hidden so the variable
-    // cannot be accessed globaly with Unistd::m_ptr_workerObj.
-    UPNPLIB_LOCAL static inline UnistdInterface* m_ptr_workerObj;
-    UnistdInterface* m_ptr_oldObj{};
+    // cannot be accessed globaly with Stdlib::m_ptr_workerObj.
+    UPNPLIB_LOCAL static inline StdlibInterface* m_ptr_workerObj;
+    StdlibInterface* m_ptr_oldObj{};
 };
 
 } // namespace umock
-// vim: syntax=cpp

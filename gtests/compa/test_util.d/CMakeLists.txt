@@ -43,7 +43,6 @@ add_executable(test_membuffer-pst
 target_include_directories(test_membuffer-pst
     PRIVATE
         ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${GTESTS_SOURCE_DIR}/include
         ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_UPNP_SOURCE_DIR}/src/inc

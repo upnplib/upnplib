@@ -1,7 +1,7 @@
 #ifndef COMPA_UPNPFILEINFO_HPP
 #define COMPA_UPNPFILEINFO_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-30
+// Redistribution only with this Copyright remark. Last modified: 2022-12-03
 
 /*!
  * \file

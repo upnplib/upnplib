@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-28
+// Redistribution only with this Copyright remark. Last modified: 2022-12-02
 // Also Copyright by other contributor as noted below.
 
 /*!
@@ -9,7 +9,14 @@
  * \author Marcelo Roberto Jimenez
  */
 #include "compa/UpnpFileInfo.hpp"
+#include "compa/UpnpString.hpp"
 #include <cstring> // for memset
+
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+#define NS
+#else
+#define NS ::compa
+#endif
 
 namespace compa {
 
@@ -150,41 +157,41 @@ const UpnpString* UpnpFileInfo_get_Os(const UpnpFileInfo* p) {
 }
 
 int UpnpFileInfo_set_Os(UpnpFileInfo* p, const UpnpString* s) {
-    if (!p)
+    if (!p || !s)
         return 0;
 
-    const char* q = UpnpString_get_String(s);
+    const char* q = NS::UpnpString_get_String(s);
 
-    return UpnpString_set_String(p->m_Os, q);
+    return NS::UpnpString_set_String(p->m_Os, q);
 }
 
 size_t UpnpFileInfo_get_Os_Length(const UpnpFileInfo* p) {
-    return UpnpString_get_Length(UpnpFileInfo_get_Os(p));
+    return NS::UpnpString_get_Length(UpnpFileInfo_get_Os(p));
 }
 
 const char* UpnpFileInfo_get_Os_cstr(const UpnpFileInfo* p) {
-    return UpnpString_get_String(UpnpFileInfo_get_Os(p));
+    return NS::UpnpString_get_String(UpnpFileInfo_get_Os(p));
 }
 
 int UpnpFileInfo_strcpy_Os(UpnpFileInfo* p, const char* s) {
     if (!p)
         return 0;
 
-    return UpnpString_set_String(p->m_Os, s);
+    return NS::UpnpString_set_String(p->m_Os, s);
 }
 
 int UpnpFileInfo_strncpy_Os(UpnpFileInfo* p, const char* s, size_t n) {
     if (!p)
         return 0;
 
-    return UpnpString_set_StringN(p->m_Os, s, n);
+    return NS::UpnpString_set_StringN(p->m_Os, s, n);
 }
 
 void UpnpFileInfo_clear_Os(UpnpFileInfo* p) {
     if (!p)
         return;
 
-    UpnpString_clear(p->m_Os);
+    NS::UpnpString_clear(p->m_Os);
 }
 
 } // namespace compa

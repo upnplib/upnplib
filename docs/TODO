@@ -1,4 +1,7 @@
 Next steps to do:
+* Reduce pthreads4w includes
+* Cleanup messages.hpp
+* Activate pupnp/ixml/test
 * Remove pupnp/upnp/src/global.cpp and *.hpp.
 * Check bugfix in pupnp/upnp/src/urlconfig/urlconfig.cpp with a gtest.
 * [set EXPECT_CALL to redirect the call to the original method](https://stackoverflow.com/questions/25556601/set-expect-call-to-redirect-the-call-to-the-original-method)

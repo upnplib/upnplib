@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-11-04
+# Redistribution only with this Copyright remark. Last modified: 2022-12-03
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -22,8 +22,11 @@ set (IXML_SOURCES
 )
 
 set (IXML_INCLUDE_DIRECTORIES
+    PRIVATE
         ./inc
         ./src/inc
+        # Next variable is needed for one step build. Don't use
+        # ${PUPNP_UPNP_SOURCE_DIR}/inc
         ${PUPNP_SOURCE_DIR}/upnp/inc
 )
 
@@ -33,8 +36,7 @@ add_library (ixml_shared SHARED
         ${IXML_SOURCES}
 )
 target_include_directories(ixml_shared
-    PRIVATE
-        ${IXML_INCLUDE_DIRECTORIES}
+    ${IXML_INCLUDE_DIRECTORIES}
 )
 target_compile_definitions(ixml_shared
     PRIVATE
@@ -50,8 +52,7 @@ add_library (ixml_static STATIC
         ${IXML_SOURCES}
 )
 target_include_directories(ixml_static
-    PRIVATE
-        ${IXML_INCLUDE_DIRECTORIES}
+    ${IXML_INCLUDE_DIRECTORIES}
 )
 target_compile_definitions(ixml_static
     PRIVATE

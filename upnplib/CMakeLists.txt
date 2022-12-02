@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-01
+# Redistribution only with this Copyright remark. Last modified: 2022-12-03
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -19,7 +19,7 @@ set(UPNPLIB_SOURCE_FILES
 
 set(UPNPLIB_INCLUDE_DIRECTORIES
     PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+        ./include
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
         $<$<PLATFORM_ID:Windows>:${pthreads4w_SOURCE_DIR}> # needed for pthread.h
@@ -27,6 +27,9 @@ set(UPNPLIB_INCLUDE_DIRECTORIES
 
 set(UPNPLIBEXE_INCLUDE_DIRECTORIES
     PRIVATE
+        # Next variable is needed for one step build. Don't use
+        # ${COMPA_SOURCE_DIR}/include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/compa/include
         ${UPNPLIB_PROJECT_BINARY_DIR}/include
 )
 
@@ -73,8 +76,8 @@ if(NOT WIN32)
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_static
-        # With static linking there is no reason to use PRIVATE or PUBLIC.
-        # For propagation only INTERFACE is needed.
+        PUBLIC
+            umock_static
         INTERFACE
             ixml_static
             # On Linux we cannot link with the static pthreads library because then
@@ -199,10 +202,9 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_static
-        # With static linking there is no reason to use PRIVATE or PUBLIC.
-        # For propagation only INTERFACE is needed.
-        INTERFACE
+        PUBLIC
             umock_static
+        INTERFACE
             ws2_32   # winsock to support sockets
             iphlpapi # ip helper interface to get network management tools
             # On MS Windows we link with the static pthreads4w library to

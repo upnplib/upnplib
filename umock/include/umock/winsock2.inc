@@ -1,31 +1,29 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-23
+// Redistribution only with this Copyright remark. Last modified: 2022-12-03
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
 
+// winsock2.h is a Microsoft Windows library.
+
 #include "upnplib/visibility.hpp"
-#include <ifaddrs.h>
+#include <winsock2.h>
 
 namespace umock {
 
-class IfaddrsInterface {
+class Winsock2Interface {
   public:
-    virtual ~IfaddrsInterface() = default;
-
-    virtual int getifaddrs(struct ifaddrs** ifap) = 0;
-    virtual void freeifaddrs(struct ifaddrs* ifa) = 0;
+    virtual ~Winsock2Interface() = default;
+    virtual int WSAGetLastError() = 0;
 };
 
 //
 // This is the wrapper class for the real (library?) function
 // ----------------------------------------------------------
-class IfaddrsReal : public IfaddrsInterface {
+class Winsock2Real : public Winsock2Interface {
   public:
-    virtual ~IfaddrsReal() override = default;
-
-    int getifaddrs(struct ifaddrs** ifap) override;
-    void freeifaddrs(struct ifaddrs* ifa) override;
+    virtual ~Winsock2Real() override = default;
+    int WSAGetLastError() override;
 };
 
 //
@@ -33,31 +31,30 @@ class IfaddrsReal : public IfaddrsInterface {
 // used, real or mocked functions.
 // clang-format off
 /* Example:
-    IfaddrsReal ifaddrs_realObj; // already done below
-    Ifaddrs(&ifaddrs_realObj);   // already done below
+    Winsock2Real winsock2_realObj; // already done below
+    Winsock2(&winsock2_realObj);   // already done below
     { // Other scope, e.g. within a gtest
-        class IfaddrsMock : public IfaddrsInterface { ...; MOCK_METHOD(...) };
-        IfaddrsMock ifaddrs_mockObj;
-        Ifaddrs ifaddrs_injectObj(&ifaddrs_mockObj); // obj. name doesn't matter
-        EXPECT_CALL(ifaddrs_mockObj, ...);
+        class Winsock2Mock : public Winsock2Interface { ...; MOCK_METHOD(...) };
+        Winsock2Mock winsock2_mockObj;
+        Winsock2 winsock2_injectObj(&winsock2_mockObj); // obj. name doesn't matter
+        EXPECT_CALL(winsock2_mockObj, ...);
     } // End scope, mock objects are destructed, worker restored to default.
-*/ //----------------------------------------------------------------------------
+*/ //------------------------------------------------------------------------
 // clang-format on
-class UPNPLIB_API Ifaddrs {
+class UPNPLIB_API Winsock2 {
   public:
     // This constructor is used to inject the pointer to the real function. It
     // sets the default used class, that is the real function.
-    Ifaddrs(IfaddrsReal* a_ptr_mockObj);
+    Winsock2(Winsock2Real* a_ptr_realObj);
 
     // This constructor is used to inject the pointer to the mocking function.
-    Ifaddrs(IfaddrsInterface* a_ptr_mockObj);
+    Winsock2(Winsock2Interface* a_ptr_mockObj);
 
     // The destructor is ussed to restore the old pointer.
-    virtual ~Ifaddrs();
+    virtual ~Winsock2();
 
     // Methods
-    virtual int getifaddrs(struct ifaddrs** ifap);
-    virtual void freeifaddrs(struct ifaddrs* ifa);
+    virtual int WSAGetLastError();
 
   private:
     // Next variable must be static. Please note that a static member variable
@@ -65,9 +62,9 @@ class UPNPLIB_API Ifaddrs {
     // important here for mocking because the pointer is also valid on all
     // objects of this class. With inline we do not need an extra definition
     // line outside the class. I also make the symbol hidden so the variable
-    // cannot be accessed globaly with Ifaddrs::m_ptr_workerObj.
-    UPNPLIB_LOCAL static inline IfaddrsInterface* m_ptr_workerObj;
-    IfaddrsInterface* m_ptr_oldObj{};
+    // cannot be accessed globaly with Winsock2::m_ptr_workerObj.
+    UPNPLIB_LOCAL static inline Winsock2Interface* m_ptr_workerObj;
+    Winsock2Interface* m_ptr_oldObj{};
 };
 
 } // namespace umock

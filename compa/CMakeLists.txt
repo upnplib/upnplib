@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-02
+# Redistribution only with this Copyright remark. Last modified: 2022-12-03
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -18,10 +18,12 @@ set(COMPATIBLE_SOURCE_FILES
 )
 
 set(COMPATIBLE_INCLUDE_DIRECTORIES
-    PRIVATE
     # This empty list is a placeholder for needed include directories in the
     # future for the compa library. Other include directory entries are
     # inherited from the pupnp library.
+    PUBLIC
+        ./include
+        ${IXML_SOURCE_DIR}/include
 )
 
 add_compile_definitions(

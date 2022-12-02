@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-18
+// Redistribution only with this Copyright remark. Last modified: 2022-12-02
 
 // Note
 // -------------
@@ -15,12 +15,12 @@
 // random segfaults after several successful program executions (after about 200
 // to 6000 times). You can provoke this with test repetition, e.g.:
 // ./gtests/build/test_ThreadPool_old  --gtest_brief=1 --gtest_repeat=10000
-// --gtest_filter=ThreadPoolNormalTestSuite.init_and_shutdown_threadpool
+// --gtest_filter=ThreadPoolNormalTestSuite.init_and_shutdown_threadpool --Ingo
 
 #include "FreeList.hpp"
 #include "LinkedList.hpp"
 #include "ThreadPool.hpp"
-#include "upnplib/ThreadPool.hpp"
+#include "compa/ThreadPool.hpp"
 
 #include "upnplib/gtest.hpp"
 #include "gtest/gtest.h"

@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-01
+# Redistribution only with this Copyright remark. Last modified: 2022-12-03
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -153,11 +153,10 @@ set(PUPNP_SOURCE_FILES
 
 set(PUPNP_INCLUDE_DIRECTORIES
     PUBLIC
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${PUPNP_IXML_SOURCE_DIR}/inc
         ./inc
         ./src/inc
         ./src/threadutil
+        ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 
 add_compile_definitions(
@@ -225,9 +224,7 @@ if(NOT WIN32)
             UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(pupnp_static
-        # With static linking there is no reason to use PRIVATE or PUBLIC.
-        # For propagation only INTERFACE is needed.
-        PRIVATE
+        PUBLIC
             umock_static
         INTERFACE
             ixml_static
@@ -292,10 +289,9 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(pupnp_static
-        # With static linking there is no reason to use PRIVATE or PUBLIC.
-        # For propagation only INTERFACE is needed.
-        INTERFACE
+        PUBLIC
             umock_static
+        INTERFACE
             ixml_static
             ws2_32   # winsock to support sockets
             iphlpapi # ip helper interface to get network management tools
