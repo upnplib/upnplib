@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-03
+# Redistribution only with this Copyright remark. Last modified: 2022-12-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -33,11 +33,12 @@ add_library(umock_shared SHARED
 target_include_directories(umock_shared
     PUBLIC
         ./include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${UPNPLIB_SOURCE_DIR}/include
     PRIVATE
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        $<$<PLATFORM_ID:Windows>:${pthreads4w_SOURCE_DIR}> # needed for pthread.h
+        ${pthreads4w_SOURCE_DIR} # needed for pthread.h
 )
 target_compile_definitions(umock_shared
     PRIVATE
@@ -64,9 +65,12 @@ add_library(umock_static STATIC
 target_include_directories(umock_static
     PUBLIC
         ./include
+        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
         ${UPNPLIB_SOURCE_DIR}/include
     PRIVATE
-        $<$<PLATFORM_ID:Windows>:${pthreads4w_SOURCE_DIR}> # needed for pthread.h
+        # if pthreads4w isn't installed this path is empty. The linker
+        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+        ${pthreads4w_SOURCE_DIR} # needed for pthread.h
 )
 target_link_libraries(umock_static
     PUBLIC

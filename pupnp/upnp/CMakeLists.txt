@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-03
+# Redistribution only with this Copyright remark. Last modified: 2022-12-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -157,6 +157,9 @@ set(PUPNP_INCLUDE_DIRECTORIES
         ./src/inc
         ./src/threadutil
         ${PUPNP_IXML_SOURCE_DIR}/inc
+        # if pthreads4w isn't installed this path is empty. The linker
+        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+        ${pthreads4w_SOURCE_DIR}
 )
 
 add_compile_definitions(
@@ -247,10 +250,6 @@ else() # WIN32
     )
     target_include_directories(pupnp_shared
         ${PUPNP_INCLUDE_DIRECTORIES}
-        PUBLIC
-            # if pthreads4w isn't installed this path is empty. The linker
-            # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-            ${pthreads4w_SOURCE_DIR}
     )
     target_compile_definitions(pupnp_shared
         PRIVATE
@@ -278,10 +277,6 @@ else() # WIN32
     )
     target_include_directories(pupnp_static
         ${PUPNP_INCLUDE_DIRECTORIES}
-        PUBLIC
-            # if pthreads4w isn't installed this path is empty. The linker
-            # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-            ${pthreads4w_SOURCE_DIR}
     )
     target_compile_definitions(pupnp_static
         PRIVATE

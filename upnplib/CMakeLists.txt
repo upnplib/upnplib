@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-03
+# Redistribution only with this Copyright remark. Last modified: 2022-12-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -18,17 +18,13 @@ set(UPNPLIB_SOURCE_FILES
 )
 
 set(UPNPLIB_INCLUDE_DIRECTORIES
-    PRIVATE
+    PUBLIC
         ./include
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        $<$<PLATFORM_ID:Windows>:${pthreads4w_SOURCE_DIR}> # needed for pthread.h
 )
 
 set(UPNPLIBEXE_INCLUDE_DIRECTORIES
     PRIVATE
         # Next variable is needed for one step build. Don't use
-        # ${COMPA_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}/compa/include
         ${UPNPLIB_PROJECT_BINARY_DIR}/include
 )
@@ -170,7 +166,11 @@ else() # WIN32
             ./src/strndup.cpp
     )
     target_include_directories(upnplib_shared
-            ${UPNPLIB_INCLUDE_DIRECTORIES}
+        ${UPNPLIB_INCLUDE_DIRECTORIES}
+        INTERFACE
+            # if pthreads4w isn't installed this path is empty. The linker
+            # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+            ${pthreads4w_SOURCE_DIR} # needed for pthread.h
     )
     target_compile_definitions(upnplib_shared
         PRIVATE
@@ -195,7 +195,11 @@ else() # WIN32
             ${UPNPLIB_SOURCE_FILES}
     )
     target_include_directories(upnplib_static
-            ${UPNPLIB_INCLUDE_DIRECTORIES}
+        ${UPNPLIB_INCLUDE_DIRECTORIES}
+        INTERFACE
+            # if pthreads4w isn't installed this path is empty. The linker
+            # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+            ${pthreads4w_SOURCE_DIR} # needed for pthread.h
     )
     target_compile_definitions(upnplib_static
         PRIVATE
@@ -219,8 +223,6 @@ else() # WIN32
     )
     target_include_directories(upnplib-psh
         ${UPNPLIBEXE_INCLUDE_DIRECTORIES}
-        PRIVATE
-            ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
     )
     target_compile_definitions (upnplib-psh
         PRIVATE
@@ -239,8 +241,6 @@ else() # WIN32
     )
     target_include_directories(upnplib-pst
         ${UPNPLIBEXE_INCLUDE_DIRECTORIES}
-        PRIVATE
-            ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
     )
     target_compile_definitions (upnplib-pst
         PRIVATE
@@ -258,8 +258,6 @@ else() # WIN32
     )
     target_include_directories(upnplib-csh
         ${UPNPLIBEXE_INCLUDE_DIRECTORIES}
-        PRIVATE
-            ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
     )
     target_compile_definitions (upnplib-csh
         PRIVATE
@@ -277,8 +275,6 @@ else() # WIN32
     )
     target_include_directories(upnplib-cst
         ${UPNPLIBEXE_INCLUDE_DIRECTORIES}
-        PRIVATE
-            ${pthreads4w_SOURCE_DIR}   # needed for pthread.h
     )
     target_link_libraries(upnplib-cst
         PRIVATE
