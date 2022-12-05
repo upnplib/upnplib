@@ -1,11 +1,12 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Redistribution only with this Copyright remark. Last modified: 2022-12-05
 
 // This tests only upnplib code without using pupnp code or compa code. The only
 // used 'upnplib' library does not provide it. So these tests belong to
 // namespace upnplib.
 //
 
+#include "upnplib/init.hpp"
 #include "upnplib/messages.hpp"
 #include "upnplib/upnptools.hpp"
 #include "upnplib/sock.hpp"
@@ -79,7 +80,7 @@ TEST(simpleTestSuite, simple_winsock_test) {
 #endif
 
 TEST(simpleTestSuite, version_of_upnplib_library) {
-    EXPECT_STREQ(library_version, "upnplib 1.14.0");
+    EXPECT_EQ(libinfo(), "upnplib library version = under developement");
 }
 
 TEST(simpleTestSuite, simple_upnplib_test) {

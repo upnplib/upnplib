@@ -10,7 +10,6 @@ project(UPNPLIB VERSION 0010
 
 
 set(UPNPLIB_SOURCE_FILES
-    ./src/global.cpp
     ./src/api/upnptools.cpp
     ./src/net/sock.cpp
     ./src/net/http/webserver.cpp

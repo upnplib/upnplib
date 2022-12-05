@@ -70,13 +70,6 @@
 
 #include "posix_overwrites.hpp"
 
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-#define NS
-#else
-#define NS ::compa
-#include "compa/webserver.hpp"
-#endif
-
 /*!
  * Response Types.
  */
@@ -424,7 +417,7 @@ int web_server_set_alias(const char* alias_name, const char* alias_content,
     int ret_code;
     struct xml_alias_t alias;
 
-    NS::alias_release(&gAliasDoc);
+    alias_release(&gAliasDoc);
     if (alias_name == NULL) {
         /* don't serve aliased doc anymore */
         return 0;
@@ -493,7 +486,7 @@ int web_server_init() {
 void web_server_destroy(void) {
     if (bWebServerState == WEB_SERVER_ENABLED) {
         membuffer_destroy(&gDocumentRootDir);
-        NS::alias_release(&gAliasDoc);
+        alias_release(&gAliasDoc);
 
         ithread_mutex_lock(&gWebMutex);
         memset(&gAliasDoc, 0, sizeof(struct xml_alias_t));
@@ -1445,7 +1438,7 @@ error_handler:
         (UpnpListHead*)UpnpFileInfo_get_ExtraHeadersList(finfo));
     UpnpFileInfo_delete(finfo);
     if (err_code != HTTP_OK && alias_grabbed) {
-        NS::alias_release(alias);
+        alias_release(alias);
     }
 
     return err_code;
@@ -1618,7 +1611,7 @@ void web_server_callback(http_parser_t* parser, /* INOUT */ http_message_t* req,
         case RESP_XMLDOC:
             http_SendMessage(info, &timeout, "Ibb", &RespInstr, headers.buf,
                              headers.length, xmldoc.doc.buf, xmldoc.doc.length);
-            NS::alias_release(&xmldoc);
+            alias_release(&xmldoc);
             break;
         case RESP_WEBDOC:
             /*http_SendVirtualDirDoc(info, &timeout, "Ibf",

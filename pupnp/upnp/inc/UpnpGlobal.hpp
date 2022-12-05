@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_UPNPGLOBAL_HPP
 #define UPNPLIB_UPNPGLOBAL_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-29
+// Redistribution only with this Copyright remark. Last modified: 2022-12-05
 // Taken from authors who haven't made a note.
 
 /*!
@@ -184,7 +184,5 @@ typedef __int64 int64_t;
 #define EXPORT_SPEC_EXTERN UPNPLIB_EXTERN
 
 // clang-format on
-
-EXPORT_SPEC extern char library_version[];
 
 #endif /* UPNPLIB_UPNPGLOBAL_HPP */

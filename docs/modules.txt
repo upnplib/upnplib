@@ -19,13 +19,13 @@ pUPnP compile unit
     ./pupnp/upnp/src/inc/webserver.hpp
     ./pupnp/upnp/src/genlib/net/http/webserver.cpp
 UPnPlib compatible compile unit
-    ./include/compa/webserver.hpp
+    ./compa/include/compa/webserver.hpp
     ./compa/src/genlib/net/http/webserver.cpp
 Test collection for both
     ./gtests/compa/test_http.d/test_webserver.cpp
 
 UPnPlib native compile unit
-    ./include/upnplib/webserver.hpp
+    ./upnplib/include/upnplib/webserver.hpp
     ./upnplib/src/net/http/webserver.cpp
 Test collection for this
     ./gtests/upnplib/test_webserver.cpp

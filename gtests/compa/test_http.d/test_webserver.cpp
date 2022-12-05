@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-13
+// Redistribution only with this Copyright remark. Last modified: 2022-12-09
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -8,8 +8,8 @@
 #define NS
 #else
 #define NS ::compa
-#include "compa/src/genlib/net/http/webserver.cpp"
 #endif
+#include "compa/src/genlib/net/http/webserver.cpp"
 
 #include "UpnpFileInfo.hpp"
 
@@ -78,7 +78,7 @@ class Cxml_alias {
     xml_alias_t* alias{&gAliasDoc};
 
     Cxml_alias() { glob_alias_init(); }
-    ~Cxml_alias() { NS::alias_release(this->alias); }
+    ~Cxml_alias() { compa::alias_release(this->alias); }
 };
 
 //
@@ -102,7 +102,7 @@ class StdlibMock : public umock::StdlibInterface {
 TEST(WebserverTestSuite, media_list_init) {
     // Test Unit
     memset(&gMediaTypeList, 0xA5, sizeof(gMediaTypeList));
-    media_list_init();
+    ::media_list_init();
 
     EXPECT_STREQ(gMediaTypeList[0].file_ext, "aif");
     EXPECT_STREQ(gMediaTypeList[0].content_type, "audio");
@@ -116,7 +116,7 @@ TEST(WebserverTestSuite, media_list_init) {
 #endif
 
 TEST(WebserverTestSuite, search_extension) {
-    media_list_init();
+    NS::media_list_init();
 
     const char* con_unused{"<unused>"};
     const char* con_type{con_unused};
@@ -145,7 +145,7 @@ TEST(WebserverTestSuite, search_extension) {
 
 TEST(WebserverTestSuite, get_content_type) {
     CUpnpFileInfo f;
-    media_list_init();
+    NS::media_list_init();
 
     EXPECT_EQ(NS::get_content_type("tvdevicedesc.xml", f.info), 0);
     EXPECT_STREQ((DOMString)UpnpFileInfo_get_ContentType(f.info), "text/xml");
@@ -197,7 +197,7 @@ TEST(WebserverDeathTest, get_content_type_with_no_filename) {
 }
 
 TEST(WebserverDeathTest, get_content_type_with_no_fileinfo) {
-    media_list_init();
+    NS::media_list_init();
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
@@ -219,7 +219,8 @@ TEST(WebserverDeathTest, get_content_type_with_no_fileinfo) {
 }
 
 TEST(WebserverTestSuite, glob_alias_init_and_release) {
-    // There are some mutex locks and unlocks.
+    // There are some mutex locks and unlocks. This object must be the first
+    // object in scope.
     CgWebMutex global_web_mutex;
 
     struct xml_alias_t* alias = &gAliasDoc;
@@ -264,19 +265,21 @@ TEST(WebserverTestSuite, glob_alias_init_and_release) {
 }
 
 TEST(WebserverDeathTest, alias_release_nullptr) {
-    // There are some mutex locks and unlocks.
+    // There are some mutex locks and unlocks. This object must be the first
+    // object in scope.
     CgWebMutex global_web_mutex;
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": alias_release a nullptr must not segfault.\n";
         // This expects segfault.
-        EXPECT_DEATH(alias_release(nullptr), ".*");
+        EXPECT_DEATH(NS::alias_release(nullptr), ".*");
 
     } else {
 
         // This expects NO segfault.
-        ASSERT_EXIT((alias_release(nullptr), exit(0)), ExitedWithCode(0), ".*");
+        ASSERT_EXIT((NS::alias_release(nullptr), exit(0)), ExitedWithCode(0),
+                    ".*");
     }
 }
 
@@ -287,22 +290,23 @@ TEST(WebserverDeathTest, is_valid_alias_nullptr) {
         // This expects segfault only with DEBUG build (seems there is an
         // assert in the used system function).
 #ifndef NDEBUG
-        EXPECT_DEATH(is_valid_alias(nullptr), ".*");
+        EXPECT_DEATH(NS::is_valid_alias(nullptr), ".*");
 #endif
 
     } else {
 
         // This expects NO segfault.
-        ASSERT_EXIT((is_valid_alias(nullptr), exit(0)), ExitedWithCode(0),
+        ASSERT_EXIT((NS::is_valid_alias(nullptr), exit(0)), ExitedWithCode(0),
                     ".*");
         bool ret_is_valid_alias{true};
-        ret_is_valid_alias = is_valid_alias(nullptr);
+        ret_is_valid_alias = NS::is_valid_alias(nullptr);
         EXPECT_FALSE(ret_is_valid_alias);
     }
 }
 
 TEST(WebserverTestSuite, is_valid_alias_empty_structure) {
-    // There are some mutex locks and unlocks.
+    // There are some mutex locks and unlocks. This object must be the first
+    // object in scope.
     CgWebMutex global_web_mutex;
 
     // Provide an empty alias.
@@ -326,7 +330,8 @@ TEST(WebserverTestSuite, is_valid_alias_uninitialized_structure) {
 }
 
 TEST(WebserverTestSuite, set_and_is_valid_and_release_global_alias) {
-    // There are some mutex locks and unlocks.
+    // There are some mutex locks and unlocks. This object must be the first
+    // object in scope.
     CgWebMutex global_web_mutex;
 
     char alias_name[]{"is_valid_alias"};
@@ -349,10 +354,8 @@ TEST(WebserverTestSuite, set_and_is_valid_and_release_global_alias) {
 
     EXPECT_STREQ(gAliasDoc.name.buf, "/is_valid_alias");
     EXPECT_EQ(strlen(gAliasDoc.name.buf), 15);
-
-    if (!github_actions)
-        EXPECT_EQ(gAliasDoc.name.length, sizeof('/') + sizeof(alias_name));
-
+    // *.length is without NULL byte, sizeof with NULL byte
+    EXPECT_EQ(gAliasDoc.name.length, sizeof('/') + sizeof(alias_name) - 1);
     EXPECT_EQ(gAliasDoc.name.capacity, 19);
     EXPECT_EQ(gAliasDoc.name.size_inc, 5);
 
@@ -393,7 +396,8 @@ TEST(WebserverTestSuite, set_and_is_valid_and_release_global_alias) {
 }
 
 TEST(WebserverTestSuite, set_and_remove_alias) {
-    // There are some mutex locks and unlocks.
+    // There are some mutex locks and unlocks. This object must be the first
+    // object in scope.
     CgWebMutex global_web_mutex;
 
     char alias_name[]{"alias_name"};
@@ -405,14 +409,14 @@ TEST(WebserverTestSuite, set_and_remove_alias) {
 
     // Test Unit set_alias
     // time_t 1668095500 sec is 2022-11-10T16:51:40
-    EXPECT_EQ(web_server_set_alias(alias_name, alias_content, sizeof(content),
-                                   1668095500),
+    EXPECT_EQ(NS::web_server_set_alias(alias_name, alias_content,
+                                       sizeof(content), 1668095500),
               0);
 
     // Test Unit remove alias
     // time_t 1668095500 sec is 2022-11-10T16:51:40
-    EXPECT_EQ(web_server_set_alias(nullptr, alias_content, sizeof(content),
-                                   1668095500),
+    EXPECT_EQ(NS::web_server_set_alias(nullptr, alias_content, sizeof(content),
+                                       1668095500),
               0);
 
     EXPECT_STREQ(gAliasDoc.doc.buf, nullptr);
@@ -439,11 +443,193 @@ TEST(WebserverTestSuite, set_and_remove_alias) {
     }
 }
 
-// Continue here with improving gtests for the webserver module. First create
-// single tests for the individual parameters.
-// TEST(WebserverTestSuite, set_alias_to_remove_alias) {
-//     EXPECT_EQ(web_server_set_alias(alias_name, nullptr, 0, 0), 0);
-// }
+TEST(WebserverDeathTest, set_alias_with_nullptr_to_alias_content) {
+    char alias_name[]{"alias_name"};
+
+    if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": web_server_set_alias() called with nullptr to "
+                     "alias_content must not abort with failed assertion.\n";
+        // This expects an abort with failed assertion only with DEBUG build.
+        // There is an assert used in the function.
+#ifndef NDEBUG
+        ASSERT_DEATH(::web_server_set_alias(alias_name, nullptr, 0, 0), ".*");
+#endif
+
+    } else {
+
+#ifdef _WIN32
+        // This expects WIN32 SEH exception due to invalid argument.
+        ASSERT_DEATH(compa::web_server_set_alias(alias_name, nullptr, 0, 0),
+                     ".*");
+#else
+        // This expects NO abort with failed assertion.
+        ASSERT_EXIT(
+            (compa::web_server_set_alias(alias_name, nullptr, 0, 0), exit(0)),
+            ExitedWithCode(0), ".*");
+        int ret_set_alias{UPNP_E_INTERNAL_ERROR};
+        ret_set_alias = compa::web_server_set_alias(alias_name, nullptr, 0, 0);
+        EXPECT_EQ(ret_set_alias, UPNP_E_INVALID_ARGUMENT)
+            << errStrEx(ret_set_alias, UPNP_E_INVALID_ARGUMENT);
+#endif
+    }
+}
+
+TEST(WebserverTestSuite, set_alias_with_content_null_length) {
+    // Provide needed resources.
+    // There are some mutex locks and unlocks. This object must be the first
+    // object in scope.
+    CgWebMutex global_web_mutex;
+
+    // Provide an empty alias. This initializes gAliasDoc.
+    Cxml_alias g_alias_doc;
+
+    char alias_name[]{"valid_alias_name"};
+    // The content string must be allocated on the heap because it is freed by
+    // the unit.
+    char content[]{"Some unused content"};
+    // Destroy terminating '\0' to test length argument.
+    // content[sizeof(content)-1] = '\xAA';
+    char* alias_content = (char*)malloc(sizeof(content));
+    strcpy(alias_content, content);
+
+    // Test Unit
+    // time_t 1668095500 sec is 2022-11-10T16:51:40
+    EXPECT_EQ(
+        NS::web_server_set_alias(alias_name, alias_content, 0, 1668095500), 0);
+
+    EXPECT_STREQ(gAliasDoc.name.buf, "/valid_alias_name");
+    EXPECT_EQ(strlen(gAliasDoc.name.buf), 17);
+    // *.length is without NULL byte, sizeof with NULL byte
+    EXPECT_EQ(gAliasDoc.name.length, sizeof('/') + sizeof(alias_name) - 1);
+    EXPECT_EQ(gAliasDoc.name.capacity, 21); // Don't know why this isn't 18.
+    EXPECT_EQ(gAliasDoc.name.size_inc, 5);
+
+    EXPECT_EQ(*gAliasDoc.ct, 1);
+    EXPECT_EQ(gAliasDoc.last_modified, 1668095500);
+
+    EXPECT_EQ(gAliasDoc.doc.length, 0);
+    EXPECT_EQ(gAliasDoc.doc.capacity, 0);
+    EXPECT_EQ(gAliasDoc.doc.size_inc, 5);
+
+    if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": web_server_set_alias() must never copy a null length "
+                     "random string.\n";
+        EXPECT_STREQ(gAliasDoc.doc.buf, "Some unused content"); // This is wrong
+
+    } else {
+
+        EXPECT_EQ(gAliasDoc.doc.buf, nullptr);
+    }
+}
+
+TEST(WebserverTestSuite, set_alias_with_zero_modified_date) {
+    // Provide needed resources.
+    // There are some mutex locks and unlocks. This object must be the first
+    // object in scope.
+    CgWebMutex global_web_mutex;
+
+    // Provide an empty alias. This initializes gAliasDoc.
+    Cxml_alias g_alias_doc;
+
+    const char alias_name[]{"valid_alias_name"};
+    // The content string must be allocated on the heap because it is freed by
+    // the unit.
+    const char content[]{"Some valid content"};
+    char* alias_content = (char*)malloc(sizeof(content));
+    strcpy(alias_content, content);
+
+    // Preset modifired date to 2022-11-10T16:51:41
+    gAliasDoc.last_modified = 1668095501;
+
+    // Test Unit
+    EXPECT_EQ(NS::web_server_set_alias(alias_name, alias_content,
+                                       sizeof(alias_content), 0),
+              0);
+
+    EXPECT_EQ(gAliasDoc.last_modified, 0);
+}
+
+TEST(WebserverTestSuite, set_alias_with_negative_modified_date) {
+    // Provide needed resources.
+    // There are some mutex locks and unlocks. This object must be the first
+    // object in scope.
+    CgWebMutex global_web_mutex;
+
+    // Provide an empty alias. This initializes gAliasDoc.
+    Cxml_alias g_alias_doc;
+
+    const char alias_name[]{"valid_alias_name"};
+    // The content string must be allocated on the heap because it is freed by
+    // the unit.
+    const char content[]{"Some valid content"};
+    char* alias_content = (char*)malloc(sizeof(content));
+    strcpy(alias_content, content);
+
+    // Preset modifired date to 2022-11-10T16:51:42
+    gAliasDoc.last_modified = 1668095502;
+
+    // Test Unit
+    EXPECT_EQ(NS::web_server_set_alias(alias_name, alias_content,
+                                       sizeof(alias_content), -1),
+              0);
+
+    EXPECT_EQ(gAliasDoc.last_modified, -1);
+}
+
+TEST(WebserverTestSuite, set_alias_two_times) {
+    // SKIP on Github Actions
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    // Provide needed resources.
+    // There are some mutex locks and unlocks. This object must be the first
+    // object in scope.
+    CgWebMutex global_web_mutex;
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Using an initialized and destroyed gAliasDoc structure "
+                     "must not abort the program.\n";
+    }
+
+// We cannot have the instantiation of the helper class within an if() else
+// block due to its limited scope.
+#ifndef UPNPLIB_WITH_NATIVE_PUPNP
+    // Using the Cxml_alias results in message
+    // free(): double free detected in tcache 2
+    // Aborted
+    // This is because is_valid_alias() does not work prolberly and the
+    // helper object tries to free an already freed part of gAliasDoc. To
+    // fix it this needs a complete re-engeneering of handling the gAliasDoc
+    // structure.
+
+    // Provide an empty alias. This initializes gAliasDoc.
+    Cxml_alias g_alias_doc;
+#endif
+
+    const char alias_name[]{"valid_alias_name"};
+    // The content string must be allocated on the heap because it is freed by
+    // the unit.
+    const char content[]{"Some valid content"};
+    char* alias_content = (char*)malloc(sizeof(content));
+    strcpy(alias_content, content);
+
+    // Preset modifired date to 2022-11-10T16:51:43
+    gAliasDoc.last_modified = 1668095503;
+
+    // Test Unit
+    EXPECT_EQ(NS::web_server_set_alias(alias_name, alias_content,
+                                       sizeof(alias_content), 0),
+              0);
+    EXPECT_EQ(gAliasDoc.last_modified, 0);
+
+    EXPECT_EQ(NS::web_server_set_alias(alias_name, alias_content,
+                                       sizeof(alias_content), -1),
+              0);
+    EXPECT_EQ(gAliasDoc.last_modified, -1);
+}
 
 } // namespace compa
 

@@ -1,11 +1,11 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Redistribution only with this Copyright remark. Last modified: 2022-12-05
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
+#include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #define NS
-#include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
 #else
 #define NS ::compa
 #include "compa/src/genlib/miniserver/miniserver.cpp"

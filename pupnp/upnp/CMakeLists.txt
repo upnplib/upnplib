@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-04
+# Redistribution only with this Copyright remark. Last modified: 2022-12-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -80,7 +80,6 @@ endif()
 
 set(PUPNP_SOURCE_FILES
     ./src/init.cpp
-    ./src/global.cpp
 
     ./src/threadutil/FreeList.cpp
     ./src/threadutil/LinkedList.cpp

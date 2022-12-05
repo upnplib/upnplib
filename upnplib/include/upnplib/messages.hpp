@@ -5,11 +5,6 @@
 
 #include "upnplib/visibility.hpp" // for UPNPLIB_API
 
-namespace upnplib {
-
-// Version of the upnplib library
-UPNPLIB_API extern char library_version[];
-
 /*!
  * \name Error codes
  *
@@ -321,7 +316,5 @@ UPNPLIB_API extern char library_version[];
 #define UPNP_SOAP_E_ACTION_FAILED 501
 
 /* @} ErrorCodes */
-
-} // namespace upnplib
 
 #endif // UPNPLIB_GLOBAL_HPP

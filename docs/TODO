@@ -1,14 +1,12 @@
 Next steps to do:
-* Activate pupnp/ixml/test
-* Remove pupnp/upnp/src/global.cpp and *.hpp.
+* Continue creating gtests for webserver.
+* Manage miniserver compa like webserver.
+* Create gtests for ssdp/*, start with get_ssdp_sockets (needed for miniserver).
 * Check bugfix in pupnp/upnp/src/urlconfig/urlconfig.cpp with a gtest.
 * [set EXPECT_CALL to redirect the call to the original method](https://stackoverflow.com/questions/25556601/set-expect-call-to-redirect-the-call-to-the-original-method)
-* Rework miniserver GTest including sources like webserver.
-* Continue creating gtests for webserver.
 * Move pupnp/upnp/src/inc/sock.hpp:79:static UPNP_INLINE int sock_close() to miniserver.cpp and rework.
-* Check usage of fields in struct s_SocketStuff.serverAddr4.
+* Check if all fields in struct s_SocketStuff.serverAddr4 are used.
 * Make UpnpPrintf() usable without build type DEBUG.
-* Create gtests for get_ssdp_sockets (needed for miniserver).
 * Rework README.md.
 * Bugreport to gtest: EXPECT_THAT THROW shouldn't call two times if no match.
 * Install doxygen.
