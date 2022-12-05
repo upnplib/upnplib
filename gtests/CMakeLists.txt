@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-04
+# Redistribution only with this Copyright remark. Last modified: 2022-12-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -16,6 +16,8 @@ project(GTESTS VERSION 0033
 # For old builds with direct build from source files look at git commit:
 # git show 741a85fbc88:gtests/CMakeLists.txt
 
+include_directories(${GTESTS_SOURCE_DIR}/include
+)
 # To link googletest we need of course its libraries.
 # gmock libraries also contain gtest libraries.
 link_libraries(gmock gmock_main
@@ -45,11 +47,8 @@ add_library(upnplib_gtest_tools_shared SHARED
         $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/upnplib_gtest_tools_unix.cpp>
 )
 target_include_directories(upnplib_gtest_tools_shared
-    PRIVATE
-        ./include
-    PUBLIC
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${UPNPLIB_SOURCE_DIR}/include
+    PRIVATE ./include
+    PUBLIC ${UPNPLIB_PROJECT_SOURCE_DIR}/include
 )
 target_compile_definitions(upnplib_gtest_tools_shared
     PRIVATE
@@ -116,8 +115,8 @@ add_executable(test_upnplib_gtest_tools
         ./tools/test_tools.cpp
 )
 target_include_directories(test_upnplib_gtest_tools
-    PRIVATE
-        ./include
+    PRIVATE ./include
+    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 target_compile_definitions(test_upnplib_gtest_tools
         PRIVATE

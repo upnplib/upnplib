@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-03
+# Redistribution only with this Copyright remark. Last modified: 2022-12-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -13,10 +13,6 @@ project(GTESTS_COMPA VERSION 0009
 #=====
 add_executable(test_sock-psh
         ./test_sock.cpp
-)
-target_include_directories(test_sock-psh
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
 )
 target_compile_definitions(test_sock-psh
     PRIVATE
@@ -111,9 +107,7 @@ add_executable(test_miniserver-pst
     $<$<BOOL:${UPNPLIB_WITH_IPV6}>:${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp>
 )
 target_include_directories(test_miniserver-pst
-    PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${GTESTS_SOURCE_DIR}/include
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
 target_compile_definitions(test_miniserver-pst
     PRIVATE
@@ -161,9 +155,7 @@ add_executable(test_miniserver-cst
     $<$<BOOL:${UPNPLIB_WITH_IPV6}>:${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp>
 )
 target_include_directories(test_miniserver-cst
-    PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${GTESTS_SOURCE_DIR}/include
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
 target_compile_definitions(test_miniserver-cst
     PRIVATE

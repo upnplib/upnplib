@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-02
+# Redistribution only with this Copyright remark. Last modified: 2022-12-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -19,7 +19,6 @@ add_executable(test_upnpdebug-pst
 )
 target_include_directories(test_upnpdebug-pst
     PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
         ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
 target_compile_definitions(test_upnpdebug-pst
@@ -73,10 +72,6 @@ add_executable(test_UpnpString-psh
 #---------------------------------
         ./test_UpnpString.cpp
 )
-target_include_directories(test_UpnpString-psh
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
-)
 target_compile_definitions(test_UpnpString-psh
     PRIVATE
         UPNPLIB_SHARED
@@ -99,10 +94,6 @@ add_test(NAME ctest_UpnpString-psh COMMAND test_UpnpString-psh
 add_executable(test_UpnpString-csh
 #---------------------------------
         ./test_UpnpString.cpp
-)
-target_include_directories(test_UpnpString-csh
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
 )
 target_compile_definitions(test_UpnpString-csh
     PRIVATE
@@ -129,10 +120,6 @@ add_executable(test_UpnpFileInfo-psh
 #-----------------------------------
     ./test_UpnpFileInfo.cpp
 )
-target_include_directories(test_UpnpFileInfo-psh
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
-)
 target_compile_definitions(test_UpnpFileInfo-psh
     PRIVATE
         UPNPLIB_SHARED
@@ -151,10 +138,6 @@ add_test(NAME ctest_UpnpFileInfo-psh COMMAND test_UpnpFileInfo-psh
 add_executable(test_UpnpFileInfo-csh
 #-----------------------------------
     ./test_UpnpFileInfo.cpp
-)
-target_include_directories(test_UpnpFileInfo-csh
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
 )
 target_compile_definitions(test_UpnpFileInfo-csh
     PRIVATE
@@ -225,9 +208,7 @@ add_executable(test_upnpapi-pst
         ./test_upnpapi.cpp
 )
 target_include_directories(test_upnpapi-pst
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
 target_compile_definitions(test_upnpapi-pst
     PRIVATE
@@ -260,9 +241,7 @@ add_executable(test_upnpapi-cst
     ./test_upnpapi.cpp
 )
 target_include_directories(test_upnpapi-cst
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
 target_compile_definitions(test_upnpapi-cst
     PRIVATE
@@ -293,9 +272,7 @@ add_executable(test_upnpapi_platform-psh
         $<$<NOT:$<PLATFORM_ID:Windows>>:./test_upnpapi_unix.cpp>
 )
 target_include_directories(test_upnpapi_platform-psh
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
 target_compile_definitions(test_upnpapi_platform-psh
     PRIVATE

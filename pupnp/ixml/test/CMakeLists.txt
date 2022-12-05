@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-03
+# Redistribution only with this Copyright remark. Last modified: 2022-12-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -19,9 +19,9 @@ add_executable (test_ixml_shared
 	test_document.cpp
 )
 target_include_directories(test_ixml_shared
-    PRIVATE
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
+    # Next variable is needed for one step configure. Don't use
+    # PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}/pupnp/upnp/inc
 )
 target_compile_definitions (test_ixml_shared
     PRIVATE
@@ -49,9 +49,9 @@ add_executable (test_ixml_static
 	test_document.cpp
 )
 target_include_directories(test_ixml_static
-    PRIVATE
-        ${PUPNP_UPNP_SOURCE_DIR}/inc
-        ${PUPNP_IXML_SOURCE_DIR}/inc
+    # Next variable is needed for one step configure. Don't use
+    # PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}/pupnp/upnp/inc
 )
 target_compile_definitions (test_ixml_static
     PRIVATE

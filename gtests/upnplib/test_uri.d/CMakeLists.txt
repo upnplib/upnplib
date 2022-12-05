@@ -15,10 +15,9 @@ add_executable(test_urlparser
     ./test_urlparser.cpp
 )
 target_include_directories(test_urlparser
-    PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${UPNPLIB_SOURCE_DIR}/include
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 target_compile_options(test_urlparser
     PRIVATE
@@ -42,10 +41,9 @@ add_executable(test_url_class
     ./test_url_class.cpp
 )
 target_include_directories(test_url_class
-    PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${UPNPLIB_SOURCE_DIR}/include
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 target_compile_options(test_url_class
     PRIVATE

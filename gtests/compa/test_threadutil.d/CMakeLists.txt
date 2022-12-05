@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-01
+# Redistribution only with this Copyright remark. Last modified: 2022-12-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -17,10 +17,6 @@ project(GTESTS_COMPA_THREADUTIL VERSION 0001
 add_executable(test_FreeList-psh
 #-------------------------------
         ./test_FreeList.cpp
-)
-target_include_directories(test_FreeList-psh
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
 )
 target_compile_definitions(test_FreeList-psh
     PRIVATE
@@ -61,9 +57,7 @@ add_executable(test_ThreadPool-psh
         ./test_ThreadPool.cpp
 )
 target_include_directories(test_ThreadPool-psh
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
-        ${COMPA_SOURCE_DIR}/include
+    PRIVATE ${COMPA_SOURCE_DIR}/include
 )
 target_compile_definitions(test_ThreadPool-psh
     PRIVATE
@@ -86,9 +80,7 @@ add_executable(test_TimerThread-psh
         ./test_TimerThread.cpp
 )
 target_include_directories(test_TimerThread-psh
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
-        ${COMPA_SOURCE_DIR}/include
+    PRIVATE ${COMPA_SOURCE_DIR}/include
 )
 target_compile_definitions(test_TimerThread-psh
     PRIVATE

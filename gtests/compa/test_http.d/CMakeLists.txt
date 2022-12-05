@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-01
+# Redistribution only with this Copyright remark. Last modified: 2022-12-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -20,9 +20,7 @@ add_executable(test_webserver-pst
     ./test_webserver.cpp
 )
 target_include_directories(test_webserver-pst
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
 target_compile_definitions(test_webserver-pst
     PRIVATE
@@ -53,9 +51,7 @@ add_executable(test_webserver-cst
     ./test_webserver.cpp
 )
 target_include_directories(test_webserver-cst
-    PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${GTESTS_SOURCE_DIR}/include
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
 target_compile_definitions(test_webserver-cst
     PRIVATE
@@ -120,12 +116,12 @@ add_executable(test_httpreadwrite
 endif()
 
 add_executable(test_httpreadwrite-pst
+#------------------------------------
         ./test_httpreadwrite.cpp
 )
 target_include_directories(test_httpreadwrite-pst
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 target_compile_definitions(test_httpreadwrite-pst
     PRIVATE
@@ -194,12 +190,12 @@ add_executable(test_netconnect
 endif()
 
 add_executable(test_netconnect-pst
+#---------------------------------
         ./test_netconnect.cpp
 )
 target_include_directories(test_netconnect-pst
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 target_compile_definitions(test_netconnect-pst
     PRIVATE
@@ -246,12 +242,11 @@ add_executable(test_httpparser-pst
 endif()
 
 add_executable(test_httpparser-pst
+#---------------------------------
     ./test_httpparser.cpp
 )
 target_include_directories(test_httpparser-pst
-    PRIVATE
-        ${GTESTS_SOURCE_DIR}/include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
 target_compile_definitions(test_httpparser-pst
     PRIVATE
@@ -270,4 +265,30 @@ target_link_libraries(test_httpparser-pst
             pupnp_static
 )
 add_test(NAME ctest_httpparser-pst COMMAND test_httpparser-pst
+)
+
+add_executable(test_httpparser-cst
+#---------------------------------
+    ./test_httpparser.cpp
+)
+target_include_directories(test_httpparser-cst
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
+)
+target_compile_definitions(test_httpparser-cst
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(test_httpparser-cst
+    PRIVATE
+        # disable warning C4706: assignment within conditional expression
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
+        # disable warning C4701: potentially uninitialized local variable 'status' used
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
+)
+target_link_libraries(test_httpparser-cst
+        PRIVATE
+            compa_static
+)
+add_test(NAME ctest_httpparser-cst COMMAND test_httpparser-cst
 )

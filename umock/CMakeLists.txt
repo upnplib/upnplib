@@ -34,7 +34,6 @@ target_include_directories(umock_shared
     PUBLIC
         ./include
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${UPNPLIB_SOURCE_DIR}/include
     PRIVATE
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.
@@ -66,7 +65,6 @@ target_include_directories(umock_static
     PUBLIC
         ./include
         ${UPNPLIB_PROJECT_SOURCE_DIR}/include
-        ${UPNPLIB_SOURCE_DIR}/include
     PRIVATE
         # if pthreads4w isn't installed this path is empty. The linker
         # doesn't find "pthread.h" and falls back to look at <pthread.h>.

@@ -21,8 +21,7 @@ set(COMPATIBLE_INCLUDE_DIRECTORIES
     PUBLIC
         ./include
         ${IXML_SOURCE_DIR}/include
-    PRIVATE
-        ${UPNPLIB_SOURCE_DIR}/include
+    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 
 add_compile_definitions(

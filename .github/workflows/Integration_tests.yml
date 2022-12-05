@@ -322,7 +322,7 @@ jobs:
         run: |
           $env:path += ";./build/bin"
           cd ./build/gtests
-          ctest -C ${{matrix.buildtype}} --timeout 2 --output-on-failure
+          ctest -C ${{matrix.buildtype}} --timeout 3 --output-on-failure
 
 
   # Job: Run build tests

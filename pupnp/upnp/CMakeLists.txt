@@ -152,14 +152,13 @@ set(PUPNP_SOURCE_FILES
 )
 
 set(PUPNP_INCLUDE_DIRECTORIES
-    PUBLIC
-        ./inc
-        ./src/inc
-        ./src/threadutil
-        ${PUPNP_IXML_SOURCE_DIR}/inc
-        # if pthreads4w isn't installed this path is empty. The linker
-        # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-        ${pthreads4w_SOURCE_DIR}
+    PUBLIC ./inc
+    PUBLIC ./src/inc
+    PUBLIC ./src/threadutil
+    # if pthreads4w isn't installed this path is empty. The linker
+    # doesn't find "pthread.h" and falls back to look at <pthread.h>.
+    PUBLIC ${pthreads4w_SOURCE_DIR}
+    PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 
 add_compile_definitions(

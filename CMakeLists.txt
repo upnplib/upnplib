@@ -360,7 +360,7 @@ endif(WIN32)
 #################################
 # This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
 # e.g. PUPNP_UPNP_SOURCE_DIR and PUPNP_UPNP_BINARY_DIR
-# For a successful one step build the order is important.
+# For a successful one step configure the order is important.
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/upnplib)
 add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp)

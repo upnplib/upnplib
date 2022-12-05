@@ -1,8 +1,13 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-18
+// Redistribution only with this Copyright remark. Last modified: 2022-12-04
 
 #include "pupnp/upnp/src/genlib/net/http/httpparser.cpp"
+#ifndef UPNPLIB_WITH_NATIVE_PUPNP
+#define NS ::upnplib
 #include "upnplib/src/net/http/httpparser.cpp"
+#else
+#define NS
+#endif
 
 #include "gmock/gmock.h"
 
@@ -113,7 +118,7 @@ class Chttpparser : public Chttpparser_old {
     virtual ~Chttpparser() {}
 
     void httpmsg_init(http_message_t* msg) override {
-        return upnplib::httpmsg_init(msg); }
+        return NS::httpmsg_init(msg); }
 };
 // clang-format on
 
