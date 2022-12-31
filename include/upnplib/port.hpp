@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-22
+// Redistribution only with this Copyright remark. Last modified: 2022-12-12
 
 // Header file for portable definitions
 // ====================================
@@ -62,6 +62,18 @@ typedef int SOCKET;
 #define UPNPLIB_INLINE __inline__
 #else
 #define UPNPLIB_INLINE inline
+#endif
+
+// This compiles tracing into the source code. Once compiled in you can
+// disable TRACE with
+// std::clog.setstate(std::ios_base::failbit);
+// and enable with
+// std::clog.clear();
+#ifdef UPNPLIB_WITH_TRACE
+  #include <iostream>
+  #define TRACE(s) std::clog<<"TRACE: "<<(s)
+#else
+  #define TRACE(s)
 #endif
 
 // clang-format on

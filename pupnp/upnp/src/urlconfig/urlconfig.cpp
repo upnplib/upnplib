@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-// Last compare with pupnp original source file on 2022-11-10
+// Last compare with pupnp original source file on 2022-11-10, ver 1.14.14
 
 /*!
  * \file

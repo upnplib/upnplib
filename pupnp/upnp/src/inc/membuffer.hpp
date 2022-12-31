@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-// Last compare with pupnp original source file on 2022-11-12
+// Last compare with pupnp original source file on 2022-11-12, ver 1.14.14
 
 #ifndef GENLIB_UTIL_MEMBUFFER_HPP
 #define GENLIB_UTIL_MEMBUFFER_HPP

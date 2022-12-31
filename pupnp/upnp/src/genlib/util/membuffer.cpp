@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-// Last compare with pupnp original source file on 2022-11-12
+// Last compare with pupnp original source file on 2022-11-12, ver 1.14.14
 
 /*
  * \file
@@ -167,7 +167,9 @@ void membuffer_destroy(membuffer* m) {
         return;
     }
 
-    umock::stdlib_h.free(m->buf);
+    if (m->buf != nullptr) {
+        umock::stdlib_h.free(m->buf);
+    }
     membuffer_init(m);
 }
 

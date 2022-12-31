@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-05
+# Redistribution only with this Copyright remark. Last modified: 2022-12-12
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -29,6 +29,7 @@ target_compile_definitions(test_webserver-pst
         UPNP_HAVE_DEVICE
         UPNP_HAVE_SOAP
         UPNP_HAVE_SSDP
+        UPNPLIB_WITH_TRACE
 )
 target_compile_options(test_webserver-pst
     PRIVATE
@@ -59,6 +60,7 @@ target_compile_definitions(test_webserver-cst
         UPNP_HAVE_DEVICE
         UPNP_HAVE_SOAP
         UPNP_HAVE_SSDP
+        UPNPLIB_WITH_TRACE
 )
 target_compile_options(test_webserver-cst
     PRIVATE

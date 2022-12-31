@@ -14,7 +14,7 @@ namespace compa {
  * \note alias_content is not freed here
  *
  * \return
- * \li \c 0 - OK
+ * \li \c UPNP_E_SUCCESS
  * \li \c UPNP_E_OUTOF_MEMORY
  */
 UPNPLIB_API int web_server_set_alias(
@@ -45,23 +45,6 @@ static UPNP_INLINE int search_extension(
     const char** a_con_type,
     /*! [out] . */
     const char** a_con_subtype);
-
-/*!
- * \brief Check for the validity of the XML object buffer.
- *
- * \return int.
- */
-static UPNP_INLINE bool is_valid_alias(
-    /*! [in] XML alias object. */
-    const struct xml_alias_t* alias);
-
-/*!
- * \brief Release the XML document referred to by the input parameter. Free
- * the allocated buffers associated with this object.
- */
-static void alias_release(
-    /*! [in] XML alias object. */
-    struct xml_alias_t* alias);
 
 } // namespace compa
 

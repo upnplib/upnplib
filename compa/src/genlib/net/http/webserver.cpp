@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-08
+// Redistribution only with this Copyright remark. Last modified: 2022-12-12
 
 /*!
  * \file
@@ -10,15 +10,166 @@
 
 #include "NS/webserver.hpp"
 #include "upnplib/webserver.hpp"
+#include "upnplib/port.hpp"
 
 namespace compa {
 
+struct xml_alias_t {
+  public:
+    /*! name of DOC from root; e.g.: /foo/bar/mydesc.xml */
+    membuffer name{};
+    /*! the XML document contents */
+    membuffer doc{};
+    /*! . */
+    time_t last_modified{};
+    /*! . */
+    int* ct{nullptr};
+
+    // Constructor
+    xml_alias_t() {
+        TRACE("construct compa::xml_alias_t\n");
+        this->name.size_inc = 5;
+        this->doc.size_inc = 5;
+    }
+
+    // Destructor
+    ~xml_alias_t() {
+        TRACE("destruct compa::xml_alias_t\n");
+        // Free possible allocated membuffer.
+        // this->clear(); // TODO: This will segfault.
+    }
+
+    // Methods
+    int set(const char* a_alias_name, const char* a_alias_content,
+            size_t a_alias_content_length,
+            time_t a_last_modified = time(nullptr)) {
+        TRACE("executing compa::xml_alias_t::set()\n");
+
+        this->release();
+        if (a_alias_name == nullptr) {
+            /* don't serve aliased doc anymore */
+            return UPNP_E_SUCCESS;
+        }
+        if (a_alias_content == nullptr) {
+            TRACE("return compa::xml_alias_t::set() with "
+                  "UPNP_E_INVALID_ARGUMENT\n");
+            return UPNP_E_INVALID_ARGUMENT;
+        }
+
+        membuffer tmp_name{};
+        tmp_name.size_inc = MEMBUF_DEF_SIZE_INC;
+        membuffer tmp_doc{};
+        tmp_doc.size_inc = MEMBUF_DEF_SIZE_INC;
+
+        do {
+            /* insert leading /, if missing */
+            TRACE("... allocate membuffer\n");
+            if (*a_alias_name != '/')
+                if (membuffer_assign_str(&tmp_name, "/") != 0)
+                    break; /* error; out of mem */
+            if (membuffer_append_str(&tmp_name, a_alias_name) != 0)
+                break; /* error */
+            if (a_alias_content_length) {
+                membuffer_attach(&tmp_doc, (char*)a_alias_content,
+                                 a_alias_content_length);
+            }
+            // No errors, set properties
+            this->name = tmp_name;
+            this->doc = tmp_doc;
+            this->last_modified = a_last_modified;
+            m_requested = 1;
+            ct = &m_requested;
+
+            return UPNP_E_SUCCESS;
+        } while (0);
+        /* error handler */
+        /* free temp vars */
+        TRACE("already allocated membuffer freed due to error\n");
+        membuffer_destroy(&tmp_name);
+        membuffer_destroy(&tmp_doc);
+
+        TRACE("return compa::xml_alias_t::set() with "
+              "UPNP_E_OUTOF_MEMORY\n");
+        return UPNP_E_OUTOF_MEMORY;
+    }
+
+    bool is_valid() const { return m_requested > 0; }
+
+    void release() {
+        TRACE("executing compa::xml_alias_t::release()\n");
+        int mutex_err = pthread_mutex_trylock(&gWebMutex);
+        /* ignore invalid alias */
+        if (m_requested > 0) {
+            m_requested--;
+            if (m_requested <= 0) {
+                this->clear();
+            }
+        }
+        if (mutex_err == 0) {
+            pthread_mutex_unlock(&gWebMutex);
+        }
+    }
+
+    void clear() {
+        TRACE("executing compa::xml_alias_t::clear()\n");
+        int mutex_err = pthread_mutex_trylock(&gWebMutex);
+        if (this->name.buf != nullptr) {
+            TRACE("... destroy membuffer name\n");
+            membuffer_destroy(&this->name);
+        }
+        if (this->doc.buf != nullptr) {
+            TRACE("... destroy membuffer doc\n");
+            membuffer_destroy(&this->doc);
+        }
+        this->last_modified = 0;
+        this->ct = nullptr;
+        m_requested = 0;
+        if (mutex_err == 0) {
+            pthread_mutex_unlock(&gWebMutex);
+        }
+    }
+
+  private:
+    int m_requested{};
+};
+
+static xml_alias_t gAliasDoc;
+
+static UPNP_INLINE void glob_alias_init() {
+    // This do nothing, Initialization is done by the constructor of gAliasDoc.
+    // It's only available to emulate old code.
+    TRACE("executing compa::glob_alias_init()\n");
+}
+
+/*!
+ * \brief Check for the validity of the XML object buffer.
+ *
+ * \return bool.
+ */
 static UPNP_INLINE bool is_valid_alias(
     /*! [in] XML alias object. */
-    const struct xml_alias_t* alias) {
+    const xml_alias_t* alias) {
+    TRACE("executing compa::is_valid_alias()\n");
     if (alias == nullptr)
         return false;
-    return alias->ct != nullptr;
+    return alias->is_valid();
+}
+
+/*!
+ * \brief Copy the contents of the global XML document into the local output
+ * parameter.
+ */
+[[maybe_unused]] static void alias_grab(
+    /*! [out] XML alias object. */
+    xml_alias_t* a_alias) {
+    TRACE("executing compa::alias_grab()\n");
+    if (a_alias == nullptr)
+        return;
+    pthread_mutex_lock(&gWebMutex);
+    *a_alias = gAliasDoc;
+    if (a_alias->ct != nullptr)
+        *a_alias->ct = *a_alias->ct + 1;
+    pthread_mutex_unlock(&gWebMutex);
 }
 
 /*!
@@ -27,72 +178,18 @@ static UPNP_INLINE bool is_valid_alias(
  */
 [[maybe_unused]] static void alias_release(
     /*! [in] XML alias object. */
-    struct xml_alias_t* alias) {
-    ithread_mutex_lock(&gWebMutex);
-    /* ignore invalid alias */
-    if (!compa::is_valid_alias(alias)) {
-        ithread_mutex_unlock(&gWebMutex);
-        return;
-    }
-    assert(*alias->ct > 0);
-    *alias->ct -= 1;
-    if (*alias->ct <= 0) {
-        membuffer_destroy(&alias->doc);
-        membuffer_destroy(&alias->name);
-        umock::stdlib_h.free(alias->ct);
-        alias->ct = nullptr;
-        alias->last_modified = 0;
-    }
-    ithread_mutex_unlock(&gWebMutex);
+    xml_alias_t* a_alias) {
+    TRACE("executing compa::alias_release()\n");
+    if (a_alias != nullptr)
+        a_alias->release();
 }
 
 //
 int web_server_set_alias(const char* alias_name, const char* alias_content,
                          size_t alias_content_length, time_t last_modified) {
-    int ret_code;
-    struct xml_alias_t alias;
-
-    compa::alias_release(&gAliasDoc);
-    if (alias_name == nullptr) {
-        /* don't serve aliased doc anymore */
-        return 0;
-    }
-    if (alias_content == nullptr) {
-        return UPNP_E_INVALID_ARGUMENT;
-    }
-    membuffer_init(&alias.doc);
-    membuffer_init(&alias.name);
-    alias.ct = nullptr;
-    do {
-        /* insert leading /, if missing */
-        if (*alias_name != '/')
-            if (membuffer_assign_str(&alias.name, "/") != 0)
-                break; /* error; out of mem */
-        ret_code = membuffer_append_str(&alias.name, alias_name);
-        if (ret_code != 0)
-            break; /* error */
-        if ((alias.ct = (int*)malloc(sizeof(int))) == NULL)
-            break; /* error */
-        *alias.ct = 1;
-        if (alias_content_length) {
-            membuffer_attach(&alias.doc, (char*)alias_content,
-                             alias_content_length);
-        }
-        alias.last_modified = last_modified;
-        /* save in module var */
-        ithread_mutex_lock(&gWebMutex);
-        gAliasDoc = alias;
-        ithread_mutex_unlock(&gWebMutex);
-
-        return 0;
-    } while (0);
-    /* error handler */
-    /* free temp alias */
-    membuffer_destroy(&alias.name);
-    membuffer_destroy(&alias.doc);
-    umock::stdlib_h.free(alias.ct);
-
-    return UPNP_E_OUTOF_MEMORY;
+    TRACE("executing compa::web_server_set_alias()\n");
+    return gAliasDoc.set(alias_name, alias_content, alias_content_length,
+                         last_modified);
 }
 
 // This function do nothing. There is no media_list to initialize anymore with
