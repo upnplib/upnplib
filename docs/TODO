@@ -1,4 +1,5 @@
 Next steps to do:
+* Look for a portable death test (see test_webserver).
 * Continue creating gtests for webserver.
 * Manage miniserver compa like webserver.
 * Create gtests for ssdp/*, start with get_ssdp_sockets (needed for miniserver).

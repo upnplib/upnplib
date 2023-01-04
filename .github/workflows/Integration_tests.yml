@@ -243,7 +243,7 @@ jobs:
         run: |
           $env:path += ";./build/bin/${{matrix.buildtype}}"
           cd ./build/gtests
-          ctest -C ${{matrix.buildtype}} --timeout 4 --output-on-failure
+          ctest -C ${{matrix.buildtype}} --timeout 5 --output-on-failure
 
 
   # Job: Configure, build and test with NMake
@@ -322,7 +322,7 @@ jobs:
         run: |
           $env:path += ";./build/bin"
           cd ./build/gtests
-          ctest -C ${{matrix.buildtype}} --timeout 3 --output-on-failure
+          ctest -C ${{matrix.buildtype}} --timeout 4 --output-on-failure
 
 
   # Job: Run build tests

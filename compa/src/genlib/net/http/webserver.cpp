@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-12
+// Redistribution only with this Copyright remark. Last modified: 2023-01-04
 
 /*!
  * \file
@@ -194,7 +194,9 @@ int web_server_set_alias(const char* alias_name, const char* alias_content,
 
 // This function do nothing. There is no media_list to initialize anymore with
 // compatible code. It is only callable for compatibility.
-static UPNP_INLINE void media_list_init() {}
+static UPNP_INLINE void media_list_init() {
+    TRACE("executing compa::media_list_init()\n");
+}
 
 //
 static UPNP_INLINE int search_extension(

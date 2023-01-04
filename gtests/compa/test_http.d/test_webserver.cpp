@@ -1,28 +1,44 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-02
+// Redistribution only with this Copyright remark. Last modified: 2023-01-05
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
 #include "pupnp/upnp/src/genlib/net/http/webserver.cpp"
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-#define NS
-#else
-#define NS ::compa
+
+#ifdef UPNPLIB_WITH_TRACE
+// Disable TRACE if it is compiled in. We need to do it with instantiation of a
+// class to have it disabled before other classes with TRACE in its constructor
+// are instantiated. Enable on single tests with 'CEnableTrace' or for all tests
+// just comment the 'disable_trace' object below.
+#include <iostream>
+class CDisableTrace {
+  public:
+    CDisableTrace() { std::clog.setstate(std::ios_base::failbit); }
+    ~CDisableTrace() { std::clog.clear(); }
+};
+CDisableTrace disable_trace;
 #endif
+
 #include "compa/src/genlib/net/http/webserver.cpp"
 
-#include "UpnpFileInfo.hpp"
+// #include "UpnpFileInfo.hpp"
 
 #include "upnplib/upnptools.hpp" // for errStrEx
 #include "upnplib/gtest.hpp"
 
-#include "umock/stdlib.hpp"
+// #include "umock/stdlib.hpp"
 #include "gmock/gmock.h"
 
 using ::testing::_;
 using ::testing::ExitedWithCode;
 
 using ::upnplib::errStrEx;
+
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+#define NS
+#else
+#define NS ::compa
+#endif
 
 #if false
 // The web_server functions call stack
@@ -39,6 +55,7 @@ using ::upnplib::errStrEx;
     document types (document_type_t), that maps a file extension to the content
     type and content subtype of a document. 'gMediaTypeList' is initialized with
     pointers into C-string 'gEncodedMediaTypes' which contains the media types.
+    Understood ;-) ? I simplify it on the compatible code. --Ingo
 
 Functions to manage the pupnp global XML alias structure 'gAliasDoc'.
 ---------------------------------------------------------------------
@@ -58,9 +75,27 @@ namespace compa {
 bool old_code{false}; // Managed in compa/gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
+class CEnableTrace {
+#ifdef UPNPLIB_WITH_TRACE
+  public:
+    CEnableTrace() { std::clog.clear(); }
+    ~CEnableTrace() { std::clog.setstate(std::ios_base::failbit); }
+#endif
+};
+
 //
 // Little helper
 // =============
+class CUpnpFileInfo {
+    // Use this simple helper class to ensure to always free an allocated
+    // UpnpFileInfo.
+  public:
+    UpnpFileInfo* info{};
+
+    CUpnpFileInfo() { this->info = UpnpFileInfo_new(); }
+    ~CUpnpFileInfo() { UpnpFileInfo_delete(this->info); }
+};
+
 class CgWebMutex {
     // There are some Units with mutex locks and unlocks that will throw
     // exceptions on WIN32 if not initialized. I need this class in conjunction
@@ -69,32 +104,6 @@ class CgWebMutex {
   public:
     CgWebMutex() { pthread_mutex_init(&gWebMutex, NULL); }
     ~CgWebMutex() { pthread_mutex_destroy(&gWebMutex); }
-};
-
-class CUpnpFileInfo {
-    // I use this simple helper class to ensure that we always free an allocated
-    // UpnpFileInfo. --Ingo
-  public:
-    UpnpFileInfo* info{};
-
-    CUpnpFileInfo() { this->info = UpnpFileInfo_new(); }
-    ~CUpnpFileInfo() { UpnpFileInfo_delete(this->info); }
-};
-
-class Cxml_alias_helper {
-    // I use this simple helper class to ensure that we always free an
-    // initialized global XML alias structure. It needs mutexes. --Ingo
-  public:
-    NS::xml_alias_t* alias{&NS::gAliasDoc};
-
-    Cxml_alias_helper() { NS::glob_alias_init(); }
-    ~Cxml_alias_helper() { NS::alias_release(this->alias); }
-};
-
-class CEnableTrace {
-  public:
-    CEnableTrace() { std::clog.clear(); }
-    ~CEnableTrace() { std::clog.setstate(std::ios_base::failbit); }
 };
 
 //
@@ -112,26 +121,36 @@ class StdlibMock : public umock::StdlibInterface {
 //
 // Testsuites
 // ==========
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
 // With new code there is no media list to initialize. We have a constant array
 // there, once initialized by the compiler on startup.
-TEST(WebserverTestSuite, media_list_init) {
-    // Test Unit
-    memset(&gMediaTypeList, 0xA5, sizeof(gMediaTypeList));
-    ::media_list_init();
+TEST(MediaListTestSuite, init) {
+    if (old_code) {
+        // Destroy gMediaTypeList to avoid side effects from other tests.
+        memset(&gMediaTypeList, 0xAA, sizeof(gMediaTypeList));
 
-    EXPECT_STREQ(gMediaTypeList[0].file_ext, "aif");
-    EXPECT_STREQ(gMediaTypeList[0].content_type, "audio");
-    EXPECT_STREQ(gMediaTypeList[0].content_subtype, "aiff");
+        // Test Unit
+        ::media_list_init();
 
-    EXPECT_STREQ(gMediaTypeList[NUM_MEDIA_TYPES - 1].file_ext, "zip");
-    EXPECT_STREQ(gMediaTypeList[NUM_MEDIA_TYPES - 1].content_type,
-                 "application");
-    EXPECT_STREQ(gMediaTypeList[NUM_MEDIA_TYPES - 1].content_subtype, "zip");
+        EXPECT_STREQ(gMediaTypeList[0].file_ext, "aif");
+        EXPECT_STREQ(gMediaTypeList[0].content_type, "audio");
+        EXPECT_STREQ(gMediaTypeList[0].content_subtype, "aiff");
+
+        EXPECT_STREQ(gMediaTypeList[NUM_MEDIA_TYPES - 1].file_ext, "zip");
+        EXPECT_STREQ(gMediaTypeList[NUM_MEDIA_TYPES - 1].content_type,
+                     "application");
+        EXPECT_STREQ(gMediaTypeList[NUM_MEDIA_TYPES - 1].content_subtype,
+                     "zip");
+
+    } else {
+
+        compa::media_list_init();
+    }
 }
-#endif
 
-TEST(WebserverTestSuite, search_extension) {
+TEST(MediaListTestSuite, search_extension) {
+    // Destroy gMediaTypeList to avoid side effects from other tests.
+    memset(&gMediaTypeList, 0xAA, sizeof(gMediaTypeList));
+
     NS::media_list_init();
 
     const char* con_unused{"<unused>"};
@@ -159,7 +178,10 @@ TEST(WebserverTestSuite, search_extension) {
     EXPECT_STREQ(con_subtype, "<unused>");
 }
 
-TEST(WebserverTestSuite, get_content_type) {
+TEST(MediaListTestSuite, get_content_type) {
+    // Destroy gMediaTypeList to avoid side effects from other tests.
+    memset(&gMediaTypeList, 0xAA, sizeof(gMediaTypeList));
+
     CUpnpFileInfo f;
     NS::media_list_init();
 
@@ -190,86 +212,111 @@ TEST(WebserverTestSuite, get_content_type) {
                  "application/tar");
 }
 
-TEST(WebserverDeathTest, get_content_type_with_no_filename) {
+TEST(MediaListDeathTest, get_content_type_with_no_filename) {
+    // Destroy gMediaTypeList to avoid side effects from other tests.
+    memset(&gMediaTypeList, 0xAA, sizeof(gMediaTypeList));
+
     CUpnpFileInfo f;
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": get_content_type called with nullptr to filename must "
                      "not segfault.\n";
-        // This expects segfault.
-        EXPECT_DEATH(NS::get_content_type(nullptr, f.info), ".*");
-
+#ifdef _WIN32
+        EXPECT_ANY_THROW(::get_content_type(nullptr, f.info));
+#else
+        EXPECT_DEATH(::get_content_type(nullptr, f.info), ".*");
+#endif
     } else {
 
         // This expects NO segfault.
-        ASSERT_EXIT((NS::get_content_type(nullptr, f.info), exit(0)),
+        ASSERT_EXIT((compa::get_content_type(nullptr, f.info), exit(0)),
                     ExitedWithCode(0), ".*");
         int ret_get_content_type{UPNP_E_INTERNAL_ERROR};
-        ret_get_content_type = NS::get_content_type(nullptr, f.info);
+        ret_get_content_type = compa::get_content_type(nullptr, f.info);
         EXPECT_EQ(ret_get_content_type, UPNP_E_FILE_NOT_FOUND)
             << errStrEx(ret_get_content_type, UPNP_E_FILE_NOT_FOUND);
     }
 }
 
-TEST(WebserverDeathTest, get_content_type_with_no_fileinfo) {
+TEST(MediaListDeathTest, get_content_type_with_no_fileinfo) {
+    // Destroy gMediaTypeList to avoid side effects from other tests.
+    memset(&gMediaTypeList, 0xAA, sizeof(gMediaTypeList));
+
     NS::media_list_init();
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": get_content_type called with nullptr to fileinfo must "
                      "not segfault.\n";
-        // This expects segfault.
-        EXPECT_DEATH(NS::get_content_type("filename.txt", nullptr), ".*");
-
+#ifdef _WIN32
+        EXPECT_ANY_THROW(::get_content_type("filename.txt", nullptr));
+#else
+        EXPECT_DEATH(::get_content_type("filename.txt", nullptr), ".*");
+#endif
     } else {
 
         // This expects NO segfault.
-        ASSERT_EXIT((NS::get_content_type("filename.txt", nullptr), exit(0)),
+        ASSERT_EXIT((compa::get_content_type("filename.txt", nullptr), exit(0)),
                     ExitedWithCode(0), ".*");
         int ret_get_content_type{UPNP_E_INTERNAL_ERROR};
-        ret_get_content_type = NS::get_content_type("filename.txt", nullptr);
+        ret_get_content_type = compa::get_content_type("filename.txt", nullptr);
         EXPECT_EQ(ret_get_content_type, UPNP_E_INVALID_ARGUMENT)
             << errStrEx(ret_get_content_type, UPNP_E_INVALID_ARGUMENT);
     }
 }
 
-TEST(XMLaliasTestSuite, glob_alias_init_and_release) {
-    // SKIP on Github Actions
-    if (github_actions && !old_code)
-        GTEST_SKIP() << "             known failing test on Github Actions";
+class XMLaliasFTestSuite : public ::testing::Test {
+  protected:
+    XMLaliasFTestSuite() {
+        // There are mutexes used, so we have to initialize it.
+        pthread_mutex_init(&gWebMutex, NULL);
 
+        // There is a problem with the global structure ::gAliasDoc due to side
+        // effects on other tests. So we always provide a fresh initialized and
+        // unused ::gAliasDoc for every test on old_code. With compatible code
+        // (!old_code) the compa::gAliasDoc structure is initialized by its
+        // constructor.
+        if (old_code) {
+            memset(&::gAliasDoc, 0xAA, sizeof(::gAliasDoc));
+            ::glob_alias_init();
+        }
+    }
+
+    ~XMLaliasFTestSuite() {
+        // We always have to free a possible used global structure ::gAliasDoc
+        // so we can initialize it again without memory leak for another test.
+        if (old_code) {
+            ::alias_release(&::gAliasDoc);
+        }
+
+        pthread_mutex_destroy(&gWebMutex);
+    }
+};
+typedef XMLaliasFTestSuite XMLaliasFDeathTest;
+
+//
+TEST(XMLaliasTestSuite, glob_alias_init_and_release) {
     // There are some mutex locks and unlocks. This must be first in scope.
     CgWebMutex global_web_mutex;
 
-    NS::xml_alias_t* alias = &NS::gAliasDoc;
-    ASSERT_TRUE(NS::is_valid_alias(alias));
-
     // With the old code we may see uninitialized but plausible values on
     // preused global variables so we overwrite them with unwanted values.
+    // With new code the structure is initialized with its constructor, no
+    // need to call an initialization function but we do it also for
+    // compatibility.
     if (old_code) {
-        alias->doc.buf = (char*)0xAAAA;
-        alias->doc.length = 0xAAAA;
-        alias->doc.capacity = 0xAAAA;
-        alias->doc.size_inc = 0xAAAA;
-
-        alias->name.buf = (char*)0xAAAA;
-        alias->name.length = 0xAAAA;
-        alias->name.capacity = 0xAAAA;
-        alias->name.size_inc = 0xAAAA;
-
-        alias->ct = (int*)0xAAAA;
-        alias->last_modified = 0xAAAA;
-        std::clog << "DEBUG! Tracepoint 1\n";
+        memset(&::gAliasDoc, 0xAA, sizeof(::gAliasDoc));
     }
 
     // Test Unit init.
-    std::clog << "DEBUG! Tracepoint 2\n";
     NS::glob_alias_init();
-    std::clog << "DEBUG! Tracepoint 3\n";
 
-    // With new code the structure is initialized with its instantiation, no
-    // need to call an initialization function.
+    NS::xml_alias_t* alias = &NS::gAliasDoc;
+    // An initialized empty structure does not contain a valid alias.
+    ASSERT_FALSE(NS::is_valid_alias(alias));
+
+    // Check the empty alias.
     EXPECT_EQ(alias->doc.buf, nullptr);
     EXPECT_EQ(alias->doc.length, 0);
     EXPECT_EQ(alias->doc.capacity, 0);
@@ -290,7 +337,7 @@ TEST(XMLaliasTestSuite, glob_alias_init_and_release) {
     EXPECT_CALL(mock_stdlibObj, free(_)).Times(0);
 
     // Test Unit release
-    NS::alias_release((NS::xml_alias_t*)alias);
+    NS::alias_release(alias);
 
     EXPECT_EQ(alias->doc.buf, nullptr);
     EXPECT_EQ(alias->doc.length, 0);
@@ -306,16 +353,15 @@ TEST(XMLaliasTestSuite, glob_alias_init_and_release) {
     EXPECT_EQ(alias->last_modified, 0);
 }
 
-TEST(WebserverDeathTest, alias_release_nullptr) {
-    // There are some mutex locks and unlocks.
-    CgWebMutex global_web_mutex;
-
+TEST(XMLaliasDeathTest, alias_release_nullptr) {
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": alias_release a nullptr must not segfault.\n";
-        // This expects segfault.
+#ifdef _WIN32
+        EXPECT_ANY_THROW(::alias_release(nullptr));
+#else
         EXPECT_DEATH(::alias_release(nullptr), ".*");
-
+#endif
     } else {
 
         // This expects NO segfault.
@@ -324,27 +370,58 @@ TEST(WebserverDeathTest, alias_release_nullptr) {
     }
 }
 
-TEST(XMLaliasDeathTest, is_valid_alias_nullptr) {
+TEST_F(XMLaliasFDeathTest, is_valid_alias_nullptr) {
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": is_valid_alias(nullptr) must not segfault.\n";
-        // This expects segfault only with DEBUG build (seems there is an
-        // assert in the used system function).
-#ifndef NDEBUG
-        EXPECT_DEATH(NS::is_valid_alias((NS::xml_alias_t*)nullptr), ".*");
+#ifdef _WIN32
+        int ret_is_valid_alias{-2};
+        EXPECT_ANY_THROW(ret_is_valid_alias =
+                             ::is_valid_alias((::xml_alias_t*)nullptr));
+        // Due to exception, return code wasn't changed. Next statement is
+        // needed to force compiling the return code (suppress optimization).
+        EXPECT_EQ(ret_is_valid_alias, -2);
+#else
+        ASSERT_DEATH(
+            {
+                int rc = ::is_valid_alias((::xml_alias_t*)nullptr);
+                // Next statement is only executed if there was no segfault but
+                // it's needed to suppress optimization to remove unneeded
+                // return code.
+                std::cout << "No segfault with rc = " << rc << "\n";
+            },
+            ".*");
 #endif
-
     } else {
 
         // This expects NO segfault.
-        ASSERT_EXIT((NS::is_valid_alias((NS::xml_alias_t*)nullptr), exit(0)),
-                    ExitedWithCode(0), ".*");
+        ASSERT_EXIT(
+            (compa::is_valid_alias((compa::xml_alias_t*)nullptr), exit(0)),
+            ExitedWithCode(0), ".*");
         bool ret_is_valid_alias{true};
-        ret_is_valid_alias = NS::is_valid_alias((NS::xml_alias_t*)nullptr);
+        ret_is_valid_alias =
+            compa::is_valid_alias((compa::xml_alias_t*)nullptr);
         EXPECT_FALSE(ret_is_valid_alias);
     }
 }
 
+#if false
+//
+// Little helper
+// =============
+class Cxml_alias_helper {
+    // I use this simple helper class to ensure that we always free an
+    // initialized global XML alias structure. It needs mutexes. --Ingo
+  public:
+    NS::xml_alias_t* alias{&NS::gAliasDoc};
+
+    Cxml_alias_helper() { NS::glob_alias_init(); }
+    ~Cxml_alias_helper() { NS::alias_release(this->alias); }
+};
+
+//
+// Testsuites
+// ==========
 TEST(XMLaliasTestSuite, is_valid_alias_empty_structure) {
     // SKIP on Github Actions
     if (github_actions && !old_code)
@@ -792,13 +869,12 @@ TEST(WebserverDeathTest, alias_grab_nullptr) {
         compa::alias_grab(nullptr);
     }
 }
+#endif
 
 } // namespace compa
 
 //
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-    // Disable TRACE for the tests. Enable on tests with 'CEnableTrace'.
-    std::clog.setstate(std::ios_base::failbit);
 #include "compa/gtest_main.inc"
 }
