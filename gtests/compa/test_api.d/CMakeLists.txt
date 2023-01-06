@@ -266,21 +266,19 @@ target_link_libraries(test_upnpapi-cst
 add_test(NAME ctest_upnpapi-cst COMMAND test_upnpapi-cst
 )
 
-add_executable(test_upnpapi_platform-psh
+add_executable(test_upnpapi_platform-pst
 #---------------------------------------
         $<$<PLATFORM_ID:Windows>:./test_upnpapi_win32.cpp>
         $<$<NOT:$<PLATFORM_ID:Windows>>:./test_upnpapi_unix.cpp>
 )
-target_include_directories(test_upnpapi_platform-psh
+target_include_directories(test_upnpapi_platform-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
-target_compile_definitions(test_upnpapi_platform-psh
+target_compile_definitions(test_upnpapi_platform-pst
     PRIVATE
-        UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
-target_compile_options(test_upnpapi_platform-psh
+target_compile_options(test_upnpapi_platform-pst
     PRIVATE
         # disable warning C4251: 'upnplib::CNetIf4::m_Description': class 'std::basic_string<wchar_t,std::char_traits<wchar_t>,std::allocator<wchar_t>>' needs to have dll-interface to be used by cli nts of class 'upnplib::CNetIf4'
         $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
@@ -288,13 +286,14 @@ target_compile_options(test_upnpapi_platform-psh
         $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
         # disable warning C4389: '==': signed/unsigned mismatch
         $<$<CXX_COMPILER_ID:MSVC>:/wd4389>
+        # disable warning C4505: 'GetFreeHandle': unreferenced local function has been removed
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
 )
-target_link_libraries(test_upnpapi_platform-psh
+target_link_libraries(test_upnpapi_platform-pst
     PRIVATE
-        upnplib_gtest_tools_shared
-        pupnp_shared
-        upnplib_shared
+        upnplib_gtest_tools_static
+        pupnp_static
+        upnplib_static
 )
-add_test(NAME ctest_upnpapi_platform-psh COMMAND test_upnpapi_platform-psh
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+add_test(NAME ctest_upnpapi_platform-pst COMMAND test_upnpapi_platform-pst
 )

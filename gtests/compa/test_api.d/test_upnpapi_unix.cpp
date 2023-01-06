@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-01
+// Redistribution only with this Copyright remark. Last modified: 2023-01-06
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -11,8 +11,8 @@
 #include "umock/ifaddrs.hpp"
 #include "umock/net_if.hpp"
 
-#include "gmock/gmock.h"
 #include "upnplib/gtest.hpp"
+#include "gmock/gmock.h"
 
 using ::testing::_;
 using ::testing::AtLeast;
@@ -68,6 +68,7 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
         std::fill(std::begin(gIF_IPV6_ULA_GUA), std::end(gIF_IPV6_ULA_GUA), 0);
         gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
         gIF_INDEX = (unsigned)-1;
+        UpnpSdkInit = 0xAA; // This should not be used and modified here
     }
 };
 
@@ -80,6 +81,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
     ifaddr = ifaddr4Obj.get();
     EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
 
+    // Mock system functions
     umock::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
     umock::Net_if net_if_injectObj(&m_mocked_net_if);
     EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
@@ -87,9 +89,13 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
     EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);
     EXPECT_CALL(m_mocked_net_if, if_nametoindex(_)).WillOnce(Return(2));
 
-    // call the unit
-    int returned = ::UpnpGetIfInfo("if0v4");
-    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
+    // Test Unit
+    int ret_UpnpGetIfInfo = ::UpnpGetIfInfo("if0v4");
+    EXPECT_EQ(ret_UpnpGetIfInfo, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpGetIfInfo, UPNP_E_SUCCESS);
+
+    // Check if UpnpSdkInit has been modified
+    EXPECT_EQ(UpnpSdkInit, 0xAA);
 
     // gIF_NAME mocked with getifaddrs above
     EXPECT_STREQ(gIF_NAME, "if0v4");
@@ -110,9 +116,6 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
 }
 
 TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
-    if (github_actions && !old_code)
-        GTEST_SKIP() << "             known failing test on Github Actions";
-
     // provide a network interface
     struct ifaddrs* ifaddr = nullptr;
 
@@ -130,13 +133,17 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
 
     // Test Unit
     // "ATTENTION! There is a wrong upper case 'O', not zero in 'ethO'";
-    int returned = UpnpGetIfInfo("ethO");
-    EXPECT_EQ(returned, UPNP_E_INVALID_INTERFACE)
-        << errStrEx(returned, UPNP_E_INVALID_INTERFACE);
+    int ret_UpnpGetIfInfo = UpnpGetIfInfo("ethO");
+    EXPECT_EQ(ret_UpnpGetIfInfo, UPNP_E_INVALID_INTERFACE)
+        << errStrEx(ret_UpnpGetIfInfo, UPNP_E_INVALID_INTERFACE);
+
+    // Check if UpnpSdkInit has been modified
+    EXPECT_EQ(UpnpSdkInit, 0xAA);
 
     if (old_code) {
         std::cout
-            << "  BUG! Interface name (e.g. ethO with upper case O), ip "
+            << CRED "[ BUG      ] " CRES << __LINE__
+            << ": interface name (e.g. ethO with upper case O), ip "
             << "address and netmask should not be modified on wrong entries.\n";
         // gIF_NAME mocked with getifaddrs above
         // ATTENTION! There is a wrong upper case 'O', not zero in "ethO";
@@ -176,7 +183,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_default_initialization) {
     // provide a network interface
     CIfaddr4 ifaddr4Obj;
     ifaddr4Obj.set("if0v4", "192.168.99.3/20");
-    struct ifaddrs* ifaddr = ifaddr4Obj.get();
+    ifaddrs* ifaddr = ifaddr4Obj.get();
     EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
 
     // expect calls to system functions (which are mocked)
@@ -191,30 +198,36 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_default_initialization) {
     CaptureStdOutErr captureObj(STDERR_FILENO);
     captureObj.start();
 
-    // call the unit
-    // EXPECT_EQ(UpnpSdkInit, 0);
-    int returned = UpnpInit2(nullptr, 0);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
+    // Test Unit
+    UpnpSdkInit = 0;
+    int ret_UpnpInit2 = UpnpInit2(nullptr, 0);
+    EXPECT_EQ(ret_UpnpInit2, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpInit2, UPNP_E_SUCCESS);
 
     // Get and check the captured data
     std::string capturedStderr = captureObj.get();
     EXPECT_EQ(capturedStderr, "")
         << "  There should not be any output to stderr.";
 
-    // EXPECT_EQ(UpnpSdkInit, 1);
+    EXPECT_EQ(UpnpSdkInit, 1);
 
-    // call the unit again
-    returned = UpnpInit2(nullptr, 0);
-    EXPECT_EQ(returned, UPNP_E_INIT) << errStrEx(returned, UPNP_E_INIT);
-    // EXPECT_EQ(UpnpSdkInit, 1);
+    // call the unit again to check if it returns to be already initialized
+    ret_UpnpInit2 = UpnpInit2(nullptr, 0);
+    EXPECT_EQ(ret_UpnpInit2, UPNP_E_INIT)
+        << errStrEx(ret_UpnpInit2, UPNP_E_INIT);
+    EXPECT_EQ(UpnpSdkInit, 1);
 
     // Finish library
-    returned = UpnpFinish();
-    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
+    int ret_UpnpFinish = UpnpFinish();
+    EXPECT_EQ(ret_UpnpFinish, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpFinish, UPNP_E_SUCCESS);
+    EXPECT_EQ(UpnpSdkInit, 0);
 
     // Finish library again
-    returned = UpnpFinish();
-    EXPECT_EQ(returned, UPNP_E_FINISH) << errStrEx(returned, UPNP_E_FINISH);
+    ret_UpnpFinish = UpnpFinish();
+    EXPECT_EQ(ret_UpnpFinish, UPNP_E_FINISH)
+        << errStrEx(ret_UpnpFinish, UPNP_E_FINISH);
+    EXPECT_EQ(UpnpSdkInit, 0);
 }
 
 } // namespace compa

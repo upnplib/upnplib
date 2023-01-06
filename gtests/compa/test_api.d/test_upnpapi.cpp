@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-30
+// Redistribution only with this Copyright remark. Last modified: 2023-01-05
 
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 #ifdef UPNP_HAVE_TOOLS
@@ -86,17 +86,10 @@ TEST(UpnpapiTestSuite, UpnpInitPreamble) {
 
     // Test Unit.
     // ----------
+    // UpnpInitPreamble() should not use and modify the UpnpSdkInit flag.
     int ret_UpnpInitPreamble = UpnpInitPreamble();
     ASSERT_EQ(ret_UpnpInitPreamble, UPNP_E_SUCCESS)
         << errStrEx(ret_UpnpInitPreamble, UPNP_E_SUCCESS);
-
-    std::cout << CRED "[ BUG      ]" CRES
-              << " The library should not have flagged to be initialized.\n";
-    // Due to initialization by components the library should not have flagged
-    // to be initialized. That will we do now.
-    EXPECT_EQ(UpnpSdkInit, 0xAA); // wrong, should be corrected to
-    // EXPECT_EQ(UpnpSdkInit, 0);
-    UpnpSdkInit = 1;
 
     // Check initialization of debug output.
     int ret_UpnpInitLog = UpnpInitLog();
@@ -152,9 +145,13 @@ TEST(UpnpapiTestSuite, UpnpInitPreamble) {
     EXPECT_EQ(gTimerThread.shutdown, 0);
     EXPECT_EQ(gTimerThread.tp, &gSendThreadPool);
 
+    // Check if UpnpSdkInit has been modified
+    EXPECT_EQ(UpnpSdkInit, 0xAA);
+
     // TODO
     // Check if all this is cleaned up successfully
     // --------------------------------------------
+    UpnpSdkInit = 1;
     int ret_UpnpFinish = UpnpFinish();
     EXPECT_EQ(ret_UpnpFinish, UPNP_E_SUCCESS)
         << errStrEx(ret_UpnpFinish, UPNP_E_SUCCESS);

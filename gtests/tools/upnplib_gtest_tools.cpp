@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Redistribution only with this Copyright remark. Last modified: 2023-01-06
 
 // Tools and helper classes to manage gtests
 // =========================================
@@ -13,7 +13,6 @@
 #include <sys/socket.h>
 #endif
 
-#include <iostream>
 #include <cstring>
 #include <fcntl.h> // Obtain O_* constant definitions
 
@@ -177,7 +176,6 @@ std::string CaptureStdOutErr::get() {
 // function to get the modification time of a file
 // -----------------------------------------------
 time_t file_mod_time(const std::string& a_pathname) {
-    std::cout << "DEBUG! Tracepoint 2\n";
     struct stat result;
 
     if (stat(a_pathname.c_str(), &result) == -1)

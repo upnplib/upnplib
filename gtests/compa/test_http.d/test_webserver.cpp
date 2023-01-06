@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-05
+// Redistribution only with this Copyright remark. Last modified: 2023-01-06
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -278,20 +278,16 @@ class XMLaliasFTestSuite : public ::testing::Test {
         // (!old_code) the compa::gAliasDoc structure is initialized by its
         // constructor.
         if (old_code) {
+            if (gAliasDoc.doc.buf != nullptr)
+                ::alias_release(&::gAliasDoc);
             memset(&::gAliasDoc, 0xAA, sizeof(::gAliasDoc));
+            // Next does not allocate memory, it only nullify pointer so we do
+            // not have to release it.
             ::glob_alias_init();
         }
     }
 
-    ~XMLaliasFTestSuite() {
-        // We always have to free a possible used global structure ::gAliasDoc
-        // so we can initialize it again without memory leak for another test.
-        if (old_code) {
-            ::alias_release(&::gAliasDoc);
-        }
-
-        pthread_mutex_destroy(&gWebMutex);
-    }
+    ~XMLaliasFTestSuite() { pthread_mutex_destroy(&gWebMutex); }
 };
 typedef XMLaliasFTestSuite XMLaliasFDeathTest;
 
@@ -353,7 +349,7 @@ TEST(XMLaliasTestSuite, glob_alias_init_and_release) {
     EXPECT_EQ(alias->last_modified, 0);
 }
 
-TEST(XMLaliasDeathTest, alias_release_nullptr) {
+TEST_F(XMLaliasFDeathTest, alias_release_nullptr) {
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": alias_release a nullptr must not segfault.\n";
