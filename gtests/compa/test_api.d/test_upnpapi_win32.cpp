@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-06
+// Redistribution only with this Copyright remark. Last modified: 2023-01-07
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -185,9 +185,6 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
 }
 
 TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
-    if (github_actions && !old_code)
-        GTEST_SKIP() << "             known failing test on Github Actions";
-
     // provide a network interface
     CNetIf4 ifaddr4Obj{};
     ifaddr4Obj.set(L"if0v4", "192.168.99.3/20");

@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-05
+# Redistribution only with this Copyright remark. Last modified: 2023-01-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -34,8 +34,6 @@ target_compile_definitions(test_webserver-pst
 target_compile_options(test_webserver-pst
     PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:/W1>
-        # Enable win32 specific SEH exceptions to be also detected by C++ exceptions
-        $<$<CXX_COMPILER_ID:MSVC>:/EHa>
         # disable warning C4701: potentially uninitialized local variable 'subtype' used
         $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
         # disable warning C4703: potentially uninitialized local pointer variable 'subtype' used

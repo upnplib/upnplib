@@ -222,11 +222,9 @@ TEST(MediaListDeathTest, get_content_type_with_no_filename) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": get_content_type called with nullptr to filename must "
                      "not segfault.\n";
-#ifdef _WIN32
-        EXPECT_ANY_THROW(::get_content_type(nullptr, f.info));
-#else
+        // This expects segfault.
         EXPECT_DEATH(::get_content_type(nullptr, f.info), ".*");
-#endif
+
     } else {
 
         // This expects NO segfault.
@@ -249,11 +247,9 @@ TEST(MediaListDeathTest, get_content_type_with_no_fileinfo) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": get_content_type called with nullptr to fileinfo must "
                      "not segfault.\n";
-#ifdef _WIN32
-        EXPECT_ANY_THROW(::get_content_type("filename.txt", nullptr));
-#else
+        // This expects segfault.
         EXPECT_DEATH(::get_content_type("filename.txt", nullptr), ".*");
-#endif
+
     } else {
 
         // This expects NO segfault.
@@ -353,11 +349,9 @@ TEST_F(XMLaliasFDeathTest, alias_release_nullptr) {
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": alias_release a nullptr must not segfault.\n";
-#ifdef _WIN32
-        EXPECT_ANY_THROW(::alias_release(nullptr));
-#else
+        // This expects segfault.
         EXPECT_DEATH(::alias_release(nullptr), ".*");
-#endif
+
     } else {
 
         // This expects NO segfault.
@@ -370,15 +364,8 @@ TEST_F(XMLaliasFDeathTest, is_valid_alias_nullptr) {
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": is_valid_alias(nullptr) must not segfault.\n";
-#ifdef _WIN32
-        int ret_is_valid_alias{-2};
-        EXPECT_ANY_THROW(ret_is_valid_alias =
-                             ::is_valid_alias((::xml_alias_t*)nullptr));
-        // Due to exception, return code wasn't changed. Next statement is
-        // needed to force compiling the return code (suppress optimization).
-        EXPECT_EQ(ret_is_valid_alias, -2);
-#else
-        ASSERT_DEATH(
+        // This expects segfault.
+        EXPECT_DEATH(
             {
                 int rc = ::is_valid_alias((::xml_alias_t*)nullptr);
                 // Next statement is only executed if there was no segfault but
@@ -387,7 +374,7 @@ TEST_F(XMLaliasFDeathTest, is_valid_alias_nullptr) {
                 std::cout << "No segfault with rc = " << rc << "\n";
             },
             ".*");
-#endif
+
     } else {
 
         // This expects NO segfault.
