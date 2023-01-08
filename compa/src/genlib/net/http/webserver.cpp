@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-04
+// Redistribution only with this Copyright remark. Last modified: 2023-01-10
 
 /*!
  * \file
@@ -45,15 +45,18 @@ struct xml_alias_t {
             time_t a_last_modified = time(nullptr)) {
         TRACE("executing compa::xml_alias_t::set()\n");
 
-        this->release();
-        if (a_alias_name == nullptr) {
-            /* don't serve aliased doc anymore */
-            return UPNP_E_SUCCESS;
-        }
-        if (a_alias_content == nullptr) {
+        if (a_alias_content == nullptr ||
+            (a_alias_name != nullptr && a_alias_content == this->doc.buf)) {
             TRACE("return compa::xml_alias_t::set() with "
                   "UPNP_E_INVALID_ARGUMENT\n");
             return UPNP_E_INVALID_ARGUMENT;
+        }
+
+        this->release();
+
+        if (a_alias_name == nullptr) {
+            /* don't serve aliased doc anymore */
+            return UPNP_E_SUCCESS;
         }
 
         membuffer tmp_name{};
@@ -63,18 +66,23 @@ struct xml_alias_t {
 
         do {
             /* insert leading /, if missing */
-            TRACE("... allocate membuffer\n");
             if (*a_alias_name != '/')
                 if (membuffer_assign_str(&tmp_name, "/") != 0)
                     break; /* error; out of mem */
             if (membuffer_append_str(&tmp_name, a_alias_name) != 0)
                 break; /* error */
-            if (a_alias_content_length) {
-                membuffer_attach(&tmp_doc, (char*)a_alias_content,
-                                 a_alias_content_length);
-            }
+            // a_alias_content_length must never exceed length of
+            // a_alias_content.
+            size_t content_len = strlen(a_alias_content);
+            size_t doc_len = a_alias_content_length < content_len
+                                 ? a_alias_content_length
+                                 : content_len;
+            membuffer_attach(&tmp_doc, (char*)a_alias_content, doc_len);
+            tmp_doc.buf[doc_len] = '\0';
             // No errors, set properties
+            TRACE("  set: allocate membuffer name\n");
             this->name = tmp_name;
+            TRACE("  set: allocate membuffer doc\n");
             this->doc = tmp_doc;
             this->last_modified = a_last_modified;
             m_requested = 1;
@@ -84,8 +92,9 @@ struct xml_alias_t {
         } while (0);
         /* error handler */
         /* free temp vars */
-        TRACE("already allocated membuffer freed due to error\n");
+        TRACE("  set: already allocated membuffer name freed due to error\n");
         membuffer_destroy(&tmp_name);
+        TRACE("  set: already allocated membuffer doc freed due to error\n");
         membuffer_destroy(&tmp_doc);
 
         TRACE("return compa::xml_alias_t::set() with "
@@ -103,7 +112,12 @@ struct xml_alias_t {
             m_requested--;
             if (m_requested <= 0) {
                 this->clear();
+            } else {
+                TRACE("  release: nothing released, more than one time "
+                      "requested\n");
             }
+        } else {
+            TRACE("  release: nothing to release\n");
         }
         if (mutex_err == 0) {
             pthread_mutex_unlock(&gWebMutex);
@@ -114,11 +128,11 @@ struct xml_alias_t {
         TRACE("executing compa::xml_alias_t::clear()\n");
         int mutex_err = pthread_mutex_trylock(&gWebMutex);
         if (this->name.buf != nullptr) {
-            TRACE("... destroy membuffer name\n");
+            TRACE("  clear: destroy membuffer name\n");
             membuffer_destroy(&this->name);
         }
         if (this->doc.buf != nullptr) {
-            TRACE("... destroy membuffer doc\n");
+            TRACE("  clear: destroy membuffer doc\n");
             membuffer_destroy(&this->doc);
         }
         this->last_modified = 0;
@@ -163,13 +177,17 @@ static UPNP_INLINE bool is_valid_alias(
     /*! [out] XML alias object. */
     xml_alias_t* a_alias) {
     TRACE("executing compa::alias_grab()\n");
-    if (a_alias == nullptr)
-        return;
-    pthread_mutex_lock(&gWebMutex);
-    *a_alias = gAliasDoc;
-    if (a_alias->ct != nullptr)
-        *a_alias->ct = *a_alias->ct + 1;
-    pthread_mutex_unlock(&gWebMutex);
+    int mutex_err = pthread_mutex_trylock(&gWebMutex);
+    if (a_alias != nullptr) {
+        TRACE("  alias_grab: copy struct gAliasDoc\n");
+        *a_alias = gAliasDoc;
+        if (a_alias->ct != nullptr)
+            *a_alias->ct = *a_alias->ct + 1;
+    } else {
+        TRACE("  alias_grab: nothing copied to nullptr\n");
+    }
+    if (mutex_err == 0)
+        pthread_mutex_unlock(&gWebMutex);
 }
 
 /*!

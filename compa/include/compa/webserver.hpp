@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_COMPA_WEBSERVER_HPP
 #define UPNPLIB_COMPA_WEBSERVER_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-11
+// Redistribution only with this Copyright remark. Last modified: 2023-01-08
 
 struct xml_alias_t;
 
@@ -24,7 +24,7 @@ UPNPLIB_API int web_server_set_alias(
     /*! [in] The xml doc; this is allocated by the caller; and freed by
      * the web server. */
     const char* alias_content,
-    /*! [in] Length of alias body in bytes. */
+    /*! [in] Length of alias body in bytes without terminating '\0'. */
     size_t alias_content_length,
     /*! [in] Time when the contents of alias were last changed (local time).
      */
