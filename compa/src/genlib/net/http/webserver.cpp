@@ -224,11 +224,13 @@ static UPNP_INLINE int search_extension(
     const char** a_con_type,
     /*! [out] . */
     const char** a_con_subtype) {
+    TRACE("executing compa::search_extension()\n");
 
     const upnplib::Document_meta* filetype =
         upnplib::select_filetype(std::string_view(a_extension));
 
     if (filetype == nullptr) {
+        TRACE("  search_extension: return with -1\n");
         return -1;
     }
     *a_con_type = filetype->type.c_str();

@@ -1,6 +1,6 @@
 Next steps to do:
-* Continue creating gtests for webserver.
 * Run gtests with shuffle option.
+* Create gtests for web_server_callback.
 * Manage miniserver compa like webserver.
 * Create gtests for ssdp/*, start with get_ssdp_sockets (needed for miniserver).
 * Check bugfix in pupnp/upnp/src/urlconfig/urlconfig.cpp with a gtest.

@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-10
+// Redistribution only with this Copyright remark. Last modified: 2023-01-11
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -23,7 +23,8 @@ class CDisableTrace {
 
 // #include "UpnpFileInfo.hpp"
 
-#include "upnplib/upnptools.hpp" // for errStrEx
+#include "upnplib/upnptools.hpp"  // for errStrEx
+#include "upnplib/cmake_vars.hpp" // for UPNPLIB_SAMPLE_SOURCE_DIR
 #include "upnplib/gtest.hpp"
 
 // #include "umock/stdlib.hpp"
@@ -46,16 +47,21 @@ using ::upnplib::errStrEx;
 /*
      web_server_init()
 01)  |__ media_list_init()
-     |__ membuffer_init()
-     |__ glob_alias_init()
-     |__ Initialize callbacks
-     |__ ithread_mutex_init()
+02)  |__ membuffer_init()
+03)  |__ glob_alias_init()
+04)  |__ Initialize callbacks
+05)  |__ ithread_mutex_init()
 
-01) On old code we have a vector 'gMediaTypeList' that contains members of
+01) Tested with MediaListTestSuite.
+    On old code we have a vector 'gMediaTypeList' that contains members of
     document types (document_type_t), that maps a file extension to the content
     type and content subtype of a document. 'gMediaTypeList' is initialized with
     pointers into C-string 'gEncodedMediaTypes' which contains the media types.
     Understood ;-) ? I simplify it on the compatible code. --Ingo
+02) Tested with ./test_membuffer.cpp
+03) Tested with testsuites XMLalias*
+04) Nothing to test. There are only pointers set to nullptr.
+05) Nothing to test. This uses pthreads.
 
 Functions to manage the pupnp global XML alias structure 'gAliasDoc'.
 ---------------------------------------------------------------------
@@ -121,8 +127,123 @@ class StdlibMock : public umock::StdlibInterface {
 //
 // Testsuites
 // ==========
-// With new code there is no media list to initialize. We have a constant array
-// there, once initialized by the compiler on startup.
+TEST(WebServerTestSuite, init_and_destroy) {
+    // Initialize needed global variable.
+    bWebServerState = WEB_SERVER_DISABLED;
+
+    // Test Unit init
+    EXPECT_EQ(web_server_init(), UPNP_E_SUCCESS);
+
+    EXPECT_EQ(bWebServerState, WEB_SERVER_ENABLED);
+
+    // Check if MediaList is initialized
+    const char* con_type{};
+    const char* con_subtype{};
+    EXPECT_EQ(NS::search_extension("aif", &con_type, &con_subtype), 0);
+    EXPECT_STREQ(con_type, "audio");
+    EXPECT_STREQ(con_subtype, "aiff");
+
+    // Check if gDocumentRootDir is initialized
+    EXPECT_EQ(gDocumentRootDir.buf, nullptr);
+    EXPECT_EQ(gDocumentRootDir.length, 0);
+    EXPECT_EQ(gDocumentRootDir.capacity, 0);
+    EXPECT_EQ(gDocumentRootDir.size_inc, 5);
+
+    // Check if the global alias document is initialized
+    EXPECT_EQ(NS::gAliasDoc.doc.buf, nullptr);
+    EXPECT_EQ(NS::gAliasDoc.name.buf, nullptr);
+    EXPECT_EQ(NS::gAliasDoc.ct, nullptr);
+    EXPECT_EQ(NS::gAliasDoc.last_modified, 0);
+
+    // Check if the virtual directory callback list is initialized
+    EXPECT_EQ(pVirtualDirList, nullptr);
+    EXPECT_EQ(virtualDirCallback.get_info, nullptr);
+    EXPECT_EQ(virtualDirCallback.open, nullptr);
+    EXPECT_EQ(virtualDirCallback.read, nullptr);
+    EXPECT_EQ(virtualDirCallback.write, nullptr);
+    EXPECT_EQ(virtualDirCallback.seek, nullptr);
+    EXPECT_EQ(virtualDirCallback.close, nullptr);
+
+    // Test Unit destroy
+    EXPECT_EQ(bWebServerState, WEB_SERVER_ENABLED);
+    web_server_destroy();
+
+    EXPECT_EQ(bWebServerState, WEB_SERVER_DISABLED);
+}
+
+TEST(WebServerTestSuite, set_root_dir) {
+    // Initialize global variable to avoid side effects
+    membuffer_init(&gDocumentRootDir);
+
+    // Test Unit
+    EXPECT_EQ(web_server_set_root_dir(UPNPLIB_SAMPLE_SOURCE_DIR "/web"), 0);
+    EXPECT_STREQ(gDocumentRootDir.buf, UPNPLIB_SAMPLE_SOURCE_DIR "/web");
+}
+
+TEST(WebServerTestSuite, set_root_dir_with_trailing_slash) {
+    // Initialize global variable to avoid side effects
+    membuffer_init(&gDocumentRootDir);
+
+    // Test Unit
+    EXPECT_EQ(web_server_set_root_dir(UPNPLIB_SAMPLE_SOURCE_DIR "/web/"), 0);
+    EXPECT_STREQ(gDocumentRootDir.buf, UPNPLIB_SAMPLE_SOURCE_DIR "/web");
+}
+
+TEST(WebServerTestSuite, set_root_dir_empty_string) {
+    // SKIP on Github Actions
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    // Initialize global variable to avoid side effects
+    membuffer_init(&gDocumentRootDir);
+
+    // Test Unit
+    EXPECT_EQ(web_server_set_root_dir(""), 0);
+
+    if (old_code) {
+        // This must be fixed within membuffer. Look at
+        // TEST(MembufferTestSuite, membuffer_assign_str_empty_string)
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Assign an empty string must point to an empty string "
+                     "but not having a nullptr.\n";
+        EXPECT_EQ(gDocumentRootDir.buf, nullptr); // Wrong
+
+    } else {
+
+        EXPECT_STREQ(gDocumentRootDir.buf, "");
+    }
+}
+
+TEST(WebServerDeathTest, set_root_dir_nullptr) {
+    // SKIP on Github Actions
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             known failing test on Github Actions";
+
+    // Test Unit
+    if (old_code) {
+        // This must be fixed within membuffer.
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": web_server_set_root_dir called with nullptr must not "
+                     "segfault.\n";
+        // This expects segfault.
+        ASSERT_DEATH(web_server_set_root_dir(nullptr), ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT(
+            {
+                web_server_set_root_dir(nullptr);
+                exit(0);
+            },
+            ExitedWithCode(0), ".*");
+        int ret_set_root_dir{UPNP_E_INTERNAL_ERROR};
+        ret_set_root_dir = web_server_set_root_dir(nullptr);
+        EXPECT_EQ(ret_set_root_dir, UPNP_E_INVALID_ARGUMENT)
+            << errStrEx(ret_set_root_dir, UPNP_E_INVALID_ARGUMENT);
+    }
+}
+
 TEST(MediaListTestSuite, init) {
     if (old_code) {
         // Destroy gMediaTypeList to avoid side effects from other tests.
@@ -143,6 +264,9 @@ TEST(MediaListTestSuite, init) {
 
     } else {
 
+        // With new code there is no media list to initialize. We have a
+        // constant array there, once initialized by the compiler on startup.
+        // This is only a dummy function for compatibility.
         compa::media_list_init();
     }
 }
@@ -158,22 +282,22 @@ TEST(MediaListTestSuite, search_extension) {
     const char* con_subtype{con_unused};
 
     // Test Unit, first entry
-    EXPECT_EQ(search_extension("aif", &con_type, &con_subtype), 0);
+    EXPECT_EQ(NS::search_extension("aif", &con_type, &con_subtype), 0);
     EXPECT_STREQ(con_type, "audio");
     EXPECT_STREQ(con_subtype, "aiff");
     // Last entry
-    EXPECT_EQ(search_extension("zip", &con_type, &con_subtype), 0);
+    EXPECT_EQ(NS::search_extension("zip", &con_type, &con_subtype), 0);
     EXPECT_STREQ(con_type, "application");
     EXPECT_STREQ(con_subtype, "zip");
 
     // Looking for non existing entries.
     con_type = con_unused;
     con_subtype = con_unused;
-    EXPECT_EQ(search_extension("@%§&", &con_type, &con_subtype), -1);
+    EXPECT_EQ(NS::search_extension("@%§&", &con_type, &con_subtype), -1);
     EXPECT_STREQ(con_type, "<unused>");
     EXPECT_STREQ(con_subtype, "<unused>");
 
-    EXPECT_EQ(search_extension("", &con_type, &con_subtype), -1);
+    EXPECT_EQ(NS::search_extension("", &con_type, &con_subtype), -1);
     EXPECT_STREQ(con_type, "<unused>");
     EXPECT_STREQ(con_subtype, "<unused>");
 }

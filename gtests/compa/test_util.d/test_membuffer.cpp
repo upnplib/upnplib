@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-16
+// Redistribution only with this Copyright remark. Last modified: 2023-01-11
 
 #include "pupnp/upnp/src/genlib/util/membuffer.cpp"
 
@@ -739,6 +739,30 @@ TEST(MembufferTestSuite, membuffer_assign_str) {
     EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
     ASSERT_NE(mem.buffer.buf, nullptr);
     EXPECT_STREQ(mem.buffer.buf, "Hello World");
+}
+
+TEST(MembufferTestSuite, membuffer_assign_str_empty_string) {
+    // membuffer_assign_str() just calls membuffer_assign() so that tests also
+    // cover membuffer_assign().
+    Cmembuffer mem;
+    mem.membuffer_init(&mem.buffer);
+
+    const char str[]{""};
+    EXPECT_EQ(mem.membuffer_assign_str(&mem.buffer, str), UPNP_E_SUCCESS);
+    EXPECT_EQ(mem.buffer.length, (size_t)0);
+    EXPECT_EQ(mem.buffer.capacity, (size_t)0);
+    EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Assign an empty string must point to an empty string "
+                     "but not having a nullptr.\n";
+        EXPECT_EQ(mem.buffer.buf, nullptr); // Wrong
+
+    } else {
+
+        ASSERT_NE(mem.buffer.buf, nullptr);
+        EXPECT_STREQ(mem.buffer.buf, "");
+    }
 }
 
 TEST(MembufferTestSuite, membuffer_append) {
