@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-05
+# Redistribution only with this Copyright remark. Last modified: 2023-01-11
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -133,7 +133,7 @@ target_link_libraries(test_upnplib_gtest_tools
     PRIVATE
         upnplib_gtest_tools_shared
 )
-add_test(NAME ctest_upnplib_gtest_tools COMMAND test_upnplib_gtest_tools
+add_test(NAME ctest_upnplib_gtest_tools COMMAND test_upnplib_gtest_tools --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -164,7 +164,7 @@ target_link_libraries(test_upnplib_gtest_tools_platform
     PRIVATE
         upnplib_gtest_tools_shared
 )
-add_test(NAME ctest_upnplib_gtest_tools_platform COMMAND test_upnplib_gtest_tools_platform
+add_test(NAME ctest_upnplib_gtest_tools_platform COMMAND test_upnplib_gtest_tools_platform --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -194,7 +194,7 @@ target_link_libraries(test_simple-ush
     PRIVATE
         upnplib_shared
 )
-add_test(NAME ctest_simple-ush COMMAND test_simple-ush
+add_test(NAME ctest_simple-ush COMMAND test_simple-ush --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -213,7 +213,7 @@ target_link_libraries(test_simple-ust
     PRIVATE
         upnplib_static
 )
-add_test(NAME ctest_simple-ust COMMAND test_simple-ust
+add_test(NAME ctest_simple-ust COMMAND test_simple-ust --gtest_shuffle
 )
 
 
@@ -226,7 +226,7 @@ target_compile_definitions(test_template
     PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
-add_test(NAME ctest_template COMMAND test_template
+add_test(NAME ctest_template COMMAND test_template --gtest_shuffle
 )
 
 

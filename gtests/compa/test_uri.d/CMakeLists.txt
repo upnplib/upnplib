@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-05
+# Redistribution only with this Copyright remark. Last modified: 2023-01-11
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -44,7 +44,7 @@ target_link_libraries(test_uri-pst
     PRIVATE
         pupnp_static
 )
-add_test(NAME ctest_uri-pst COMMAND test_uri-pst
+add_test(NAME ctest_uri-pst COMMAND test_uri-pst --gtest_shuffle
 )
 
 
@@ -80,5 +80,5 @@ target_link_libraries(test_uri_parse-pst
         pupnp_static
         upnplib_static
 )
-add_test(NAME ctest_uri_parse-pst COMMAND test_uri_parse-pst
+add_test(NAME ctest_uri_parse-pst COMMAND test_uri_parse-pst --gtest_shuffle
 )

@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-05
+# Redistribution only with this Copyright remark. Last modified: 2023-01-11
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -27,7 +27,7 @@ target_link_libraries(test_FreeList-psh
     PRIVATE
         pupnp_shared
 )
-add_test(NAME ctest_FreeList-psh COMMAND test_FreeList-psh
+add_test(NAME ctest_FreeList-psh COMMAND test_FreeList-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -46,7 +46,7 @@ target_link_libraries(test_LinkedList-psh
     PRIVATE
         pupnp_shared
 )
-add_test(NAME ctest_LinkedList-psh COMMAND test_LinkedList-psh
+add_test(NAME ctest_LinkedList-psh COMMAND test_LinkedList-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -69,7 +69,7 @@ target_link_libraries(test_ThreadPool-psh
     PRIVATE
         pupnp_shared
 )
-add_test(NAME ctest_ThreadPool-psh COMMAND test_ThreadPool-psh
+add_test(NAME ctest_ThreadPool-psh COMMAND test_ThreadPool-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -92,6 +92,6 @@ target_link_libraries(test_TimerThread-psh
     PRIVATE
         pupnp_shared
 )
-add_test(NAME ctest_TimerThread-psh COMMAND test_TimerThread-psh
+add_test(NAME ctest_TimerThread-psh COMMAND test_TimerThread-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )

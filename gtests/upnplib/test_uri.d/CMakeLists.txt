@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-04
+# Redistribution only with this Copyright remark. Last modified: 2023-01-11
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -26,7 +26,7 @@ target_compile_options(test_urlparser
         # disable warning C4244: 'argument': conversion from 'const M' to 'const Element', possible loss of data
         $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
 )
-add_test(NAME ctest_urlparser COMMAND test_urlparser
+add_test(NAME ctest_urlparser COMMAND test_urlparser --gtest_shuffle
 )
 
 
@@ -50,6 +50,6 @@ target_compile_options(test_url_class
         # disable warning C4244: 'initializing': conversion from '_Ty' to '_Ty2', possible loss of data
         $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
 )
-add_test(NAME ctest_url_class COMMAND test_url_class
+add_test(NAME ctest_url_class COMMAND test_url_class --gtest_shuffle
 )
 endif()

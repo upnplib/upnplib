@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Redistribution only with this Copyright remark. Last modified: 2023-01-11
 
 #include "pupnp/upnp/src/api/upnpdebug.cpp"
 
@@ -108,8 +108,6 @@ class PthreadMock : public umock::PthreadInterface {
 
 //
 // Test class for the debugging and logging module without fixtures.
-// IMPORTANT! Due to the global mocking pointer this testsuite must
-// run first.
 //------------------------------------------------------------------
 TEST(UpnpdebugTestSuite, UpnpPrintf_without_init) {
     // Process unit
@@ -127,11 +125,16 @@ TEST(UpnpdebugTestSuite, UpnpPrintf_without_init) {
 TEST(UpnpdebugTestSuite, UpnpPrintf_normal_use) {
     CaptureStdOutErr captureObj(STDERR_FILENO);
 
-    // Enable and initialize logging
+    // Enable logging
     ::UpnpSetLogLevel(UPNP_ALL);
+    // Set output to default stderr, second parameter is unused but defined
+    ::UpnpSetLogFileNames(nullptr, nullptr);
+    // Initialize logging, opens output file
+    int ret_UpnpInitLog = ::UpnpInitLog();
+    EXPECT_EQ(ret_UpnpInitLog, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpInitLog, UPNP_E_SUCCESS);
 
-    int returned = ::UpnpInitLog();
-    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
+    // Check if output is set to stderr
     EXPECT_EQ(::UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
               stderr);
 
@@ -150,6 +153,10 @@ TEST(UpnpdebugTestSuite, UpnpPrintf_normal_use) {
                     "\\d{4}-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d UPNP-API_-2: "
                     "Thread:0x.+ \\[.+\\]: Unit Test for UpnpPrintf on line "
                     ".+\\.\n"));
+
+    // IMPORTANT! A single run succeeds. The test only fails after 3 repetitions
+    // when not closed.
+    ::UpnpCloseLog();
 }
 
 //
@@ -419,7 +426,7 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_opening_file_fails) {
         GTEST_SKIP() << "             known failing test on Github Actions";
 
     // Set the filename, second parameter is unused but defined
-    constexpr char filename[]{"upnpdebug.log"};
+    const char filename[]{"upnpdebug.log"};
     upnpdebugObj.UpnpSetLogFileNames(filename, nullptr);
     EXPECT_EQ(
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
@@ -438,7 +445,7 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_opening_file_fails) {
     // #endif
     EXPECT_CALL(this->mocked_stdio, fclose(_)).Times(0);
 
-    // Process unit
+    // Test Unit
     int returned = upnpdebugObj.UpnpInitLog();
     if (old_code) {
         std::cout << CYEL "[ BUG      ]" CRES

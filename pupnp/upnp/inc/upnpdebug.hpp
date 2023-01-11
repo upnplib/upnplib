@@ -31,6 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+// Last compare with pupnp original source file on 2023-01-11, ver 1.14.15
 
 #ifndef UPNPLIB_DEBUG_HPP
 #define UPNPLIB_DEBUG_HPP

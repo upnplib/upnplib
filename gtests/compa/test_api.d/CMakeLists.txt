@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-05
+# Redistribution only with this Copyright remark. Last modified: 2023-01-11
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -40,7 +40,7 @@ target_link_libraries(test_upnpdebug-pst
         upnplib_static
         upnplib_gtest_tools_static
 )
-add_test(NAME ctest_upnpdebug-pst COMMAND test_upnpdebug-pst
+add_test(NAME ctest_upnpdebug-pst COMMAND test_upnpdebug-pst --gtest_shuffle
 )
 
 
@@ -60,7 +60,7 @@ target_link_libraries(test_upnptools-psh
     PRIVATE
         pupnp_shared
 )
-add_test(NAME ctest_upnptools-psh COMMAND test_upnptools-psh
+add_test(NAME ctest_upnptools-psh COMMAND test_upnptools-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 endif()
@@ -87,7 +87,7 @@ target_link_libraries(test_UpnpString-psh
         pupnp_shared
         upnplib_shared
 )
-add_test(NAME ctest_UpnpString-psh COMMAND test_UpnpString-psh
+add_test(NAME ctest_UpnpString-psh COMMAND test_UpnpString-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -109,7 +109,7 @@ target_link_libraries(test_UpnpString-csh
         compa_shared
         upnplib_shared
 )
-add_test(NAME ctest_UpnpString-csh COMMAND test_UpnpString-csh
+add_test(NAME ctest_UpnpString-csh COMMAND test_UpnpString-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -131,7 +131,7 @@ target_link_libraries(test_UpnpFileInfo-psh
         pupnp_shared
         upnplib_shared
 )
-add_test(NAME ctest_UpnpFileInfo-psh COMMAND test_UpnpFileInfo-psh
+add_test(NAME ctest_UpnpFileInfo-psh COMMAND test_UpnpFileInfo-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -149,7 +149,7 @@ target_link_libraries(test_UpnpFileInfo-csh
         compa_shared
         upnplib_shared
 )
-add_test(NAME ctest_UpnpFileInfo-csh COMMAND test_UpnpFileInfo-csh
+add_test(NAME ctest_UpnpFileInfo-csh COMMAND test_UpnpFileInfo-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -233,7 +233,7 @@ target_link_libraries(test_upnpapi-pst
         pupnp_static
         upnplib_static
 )
-add_test(NAME ctest_upnpapi-pst COMMAND test_upnpapi-pst
+add_test(NAME ctest_upnpapi-pst COMMAND test_upnpapi-pst --gtest_shuffle
 )
 
 add_executable(test_upnpapi-cst
@@ -263,7 +263,7 @@ target_link_libraries(test_upnpapi-cst
         compa_static
         upnplib_static
 )
-add_test(NAME ctest_upnpapi-cst COMMAND test_upnpapi-cst
+add_test(NAME ctest_upnpapi-cst COMMAND test_upnpapi-cst --gtest_shuffle
 )
 
 add_executable(test_upnpapi_platform-pst
@@ -295,5 +295,5 @@ target_link_libraries(test_upnpapi_platform-pst
         pupnp_static
         upnplib_static
 )
-add_test(NAME ctest_upnpapi_platform-pst COMMAND test_upnpapi_platform-pst
+add_test(NAME ctest_upnpapi_platform-pst COMMAND test_upnpapi_platform-pst --gtest_shuffle
 )

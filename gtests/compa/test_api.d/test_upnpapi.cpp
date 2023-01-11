@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-05
+// Redistribution only with this Copyright remark. Last modified: 2023-01-12
 
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 #ifdef UPNP_HAVE_TOOLS
@@ -69,23 +69,28 @@ clang-format on
 //
 // upnpapi TestSuites
 // ==================
-TEST(UpnpapiTestSuite, UpnpInitPreamble) {
-    // Unset tested variables
-    // ----------------------
-    memset(&GlobalHndRWLock, 0xAA, sizeof(GlobalHndRWLock));
-    memset(&gUUIDMutex, 0xAA, sizeof(gUUIDMutex));
-    memset(&GlobalClientSubscribeMutex, 0xAA,
-           sizeof(GlobalClientSubscribeMutex));
-    memset(&gUpnpSdkNLSuuid, 0, sizeof(gUpnpSdkNLSuuid));
-    memset(&HandleTable, 0xAA, sizeof(HandleTable));
-    memset(&gSendThreadPool, 0xAA, sizeof(gSendThreadPool));
-    memset(&gRecvThreadPool, 0xAA, sizeof(gRecvThreadPool));
-    memset(&gMiniServerThreadPool, 0xAA, sizeof(gMiniServerThreadPool));
-    memset(&gTimerThread, 0xAA, sizeof(gTimerThread));
-    UpnpSdkInit = 0xAA;
+class UpnpapiFTestSuite : public ::testing::Test {
+  protected:
+    UpnpapiFTestSuite() {
+        // Destroy global variables to avoid side effects.
+        memset(&GlobalHndRWLock, 0xAA, sizeof(GlobalHndRWLock));
+        memset(&gUUIDMutex, 0xAA, sizeof(gUUIDMutex));
+        memset(&GlobalClientSubscribeMutex, 0xAA,
+               sizeof(GlobalClientSubscribeMutex));
+        memset(&gUpnpSdkNLSuuid, 0, sizeof(gUpnpSdkNLSuuid));
+        memset(&HandleTable, 0xAA, sizeof(HandleTable));
+        memset(&gSendThreadPool, 0xAA, sizeof(gSendThreadPool));
+        memset(&gRecvThreadPool, 0xAA, sizeof(gRecvThreadPool));
+        memset(&gMiniServerThreadPool, 0xAA, sizeof(gMiniServerThreadPool));
+        memset(&gTimerThread, 0xAA, sizeof(gTimerThread));
+        UpnpSdkInit = 0xAA;
+    }
+};
+typedef UpnpapiFTestSuite UpnpEnableWebserverFTestSuite;
 
-    // Test Unit.
-    // ----------
+TEST_F(UpnpapiFTestSuite, UpnpInitPreamble) {
+    // Test Unit
+    // ---------
     // UpnpInitPreamble() should not use and modify the UpnpSdkInit flag.
     int ret_UpnpInitPreamble = UpnpInitPreamble();
     ASSERT_EQ(ret_UpnpInitPreamble, UPNP_E_SUCCESS)
@@ -159,7 +164,7 @@ TEST(UpnpapiTestSuite, UpnpInitPreamble) {
     EXPECT_EQ(UpnpSdkInit, 0);
 }
 
-TEST(UpnpapiTestSuite, WinsockInit) {
+TEST_F(UpnpapiFTestSuite, WinsockInit) {
     // This Unit only aplies to Microsoft Windows but does not do anything on
     // Unix and should always return UPNP_E_SUCCESS on Unix.
     int ret_WinsockInit = WinsockInit();
@@ -167,7 +172,7 @@ TEST(UpnpapiTestSuite, WinsockInit) {
         << errStrEx(ret_WinsockInit, UPNP_E_SUCCESS);
 }
 
-TEST(UpnpapiTestSuite, get_error_message) {
+TEST_F(UpnpapiFTestSuite, get_error_message) {
 #ifndef UPNP_HAVE_TOOLS
     GTEST_SKIP() << "  # Option UPNPLIB_WITH_TOOLS not available.";
 #else
@@ -177,42 +182,38 @@ TEST(UpnpapiTestSuite, get_error_message) {
 #endif
 }
 
-// clang-format off
-TEST(UpnpapiDeathTest, UpnpFinish_without_initialization) {
-    // Wrong flag. The Sdk wasn't initialized before.
-    UpnpSdkInit = 1;
+TEST_F(UpnpapiFTestSuite, UpnpFinish_without_initialization) {
+    UpnpSdkInit = 0;
 
-    // if (old_code) {
-        std::cout << CRED "[ BUG      ]" CRES
-                  << " UpnpFinish should never segfault, even without "
-                     "initialization.\n";
-        // This expects segfault.
-        EXPECT_DEATH(UpnpFinish(), ".*");
+    // Test Unit
+    int ret_UpnpFinish{UPNP_E_INTERNAL_ERROR};
+    ret_UpnpFinish = UpnpFinish();
+    EXPECT_EQ(ret_UpnpFinish, UPNP_E_FINISH)
+        << errStrEx(ret_UpnpFinish, UPNP_E_FINISH);
 
-    // } else {
-
-        // This expects NO segfault.
-    //     ASSERT_EXIT((UpnpFinish(), exit(0)), ExitedWithCode(0), ".*");
-    //     int ret_UpnpFinish{UPNP_E_INTERNAL_ERROR};
-    //     ret_UpnpFinish = UpnpFinish();
-    //     EXPECT_EQ(ret_UpnpFinish, UPNP_E_SUCCESS);
-    // }
+    EXPECT_EQ(UpnpSdkInit, 0);
 }
-// clang-format on
 
-TEST(UpnpEnableWebserverTestSuite, successful_call) {
+TEST_F(UpnpEnableWebserverFTestSuite, enable_and_disable) {
     UpnpSdkInit = 1;
     bWebServerState = WEB_SERVER_DISABLED;
 
-    // Test Unit
+    // Test Unit enable
     int ret_UpnpEnableWebserver = UpnpEnableWebserver(WEB_SERVER_ENABLED);
     EXPECT_EQ(ret_UpnpEnableWebserver, UPNP_E_SUCCESS)
         << errStrEx(ret_UpnpEnableWebserver, UPNP_E_SUCCESS);
 
     EXPECT_EQ(bWebServerState, WEB_SERVER_ENABLED);
+
+    // Test Unit disable
+    ret_UpnpEnableWebserver = UpnpEnableWebserver(WEB_SERVER_DISABLED);
+    EXPECT_EQ(ret_UpnpEnableWebserver, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpEnableWebserver, UPNP_E_SUCCESS);
+
+    EXPECT_EQ(bWebServerState, WEB_SERVER_DISABLED);
 }
 
-TEST(UpnpEnableWebserverTestSuite, sdk_not_initialized) {
+TEST_F(UpnpEnableWebserverFTestSuite, sdk_not_initialized) {
     UpnpSdkInit = 0;
     bWebServerState = WEB_SERVER_DISABLED;
 
@@ -220,16 +221,6 @@ TEST(UpnpEnableWebserverTestSuite, sdk_not_initialized) {
     int ret_UpnpEnableWebserver = UpnpEnableWebserver(WEB_SERVER_ENABLED);
     EXPECT_EQ(ret_UpnpEnableWebserver, UPNP_E_FINISH)
         << errStrEx(ret_UpnpEnableWebserver, UPNP_E_FINISH);
-}
-
-TEST(UpnpEnableWebserverTestSuite, web_server_disabled) {
-    UpnpSdkInit = 1;
-    bWebServerState = WEB_SERVER_ENABLED;
-
-    // Test Unit
-    int ret_UpnpEnableWebserver = UpnpEnableWebserver(WEB_SERVER_DISABLED);
-    EXPECT_EQ(ret_UpnpEnableWebserver, UPNP_E_SUCCESS)
-        << errStrEx(ret_UpnpEnableWebserver, UPNP_E_SUCCESS);
 
     EXPECT_EQ(bWebServerState, WEB_SERVER_DISABLED);
 }

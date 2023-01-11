@@ -46,7 +46,7 @@ target_link_libraries(test_webserver-pst
             pupnp_static
             upnplib_static
 )
-add_test(NAME ctest_webserver-pst COMMAND test_webserver-pst
+add_test(NAME ctest_webserver-pst COMMAND test_webserver-pst --gtest_shuffle
 )
 
 add_executable(test_webserver-cst
@@ -81,7 +81,7 @@ target_link_libraries(test_webserver-cst
             compa_static
             upnplib_static
 )
-add_test(NAME ctest_webserver-cst COMMAND test_webserver-cst
+add_test(NAME ctest_webserver-cst COMMAND test_webserver-cst --gtest_shuffle
 )
 
 
@@ -153,7 +153,7 @@ target_link_libraries(test_httpreadwrite-pst
         pupnp_static
         upnplib_static
 )
-add_test(NAME ctest_httpreadwrite-pst COMMAND test_httpreadwrite-pst
+add_test(NAME ctest_httpreadwrite-pst COMMAND test_httpreadwrite-pst --gtest_shuffle
 )
 
 
@@ -220,7 +220,7 @@ target_link_libraries(test_netconnect-pst
     PRIVATE
         pupnp_static
 )
-add_test(NAME ctest_netconnect-pst COMMAND test_netconnect-pst
+add_test(NAME ctest_netconnect-pst COMMAND test_netconnect-pst --gtest_shuffle
 )
 
 
@@ -270,7 +270,7 @@ target_link_libraries(test_httpparser-pst
         PRIVATE
             pupnp_static
 )
-add_test(NAME ctest_httpparser-pst COMMAND test_httpparser-pst
+add_test(NAME ctest_httpparser-pst COMMAND test_httpparser-pst --gtest_shuffle
 )
 
 add_executable(test_httpparser-cst
@@ -296,5 +296,5 @@ target_link_libraries(test_httpparser-cst
         PRIVATE
             compa_static
 )
-add_test(NAME ctest_httpparser-cst COMMAND test_httpparser-cst
+add_test(NAME ctest_httpparser-cst COMMAND test_httpparser-cst --gtest_shuffle
 )
