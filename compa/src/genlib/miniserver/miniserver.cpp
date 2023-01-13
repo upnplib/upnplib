@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-29
+ * Redistribution only with this Copyright remark. Last modified: 2023-01-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -143,14 +143,21 @@ struct s_SocketStuff {
 };
 
 void SetHTTPGetCallback(MiniServerCallback callback) {
+    TRACE("executing compa::SetHTTPGetCallback()\n");
     gGetCallback = callback;
 }
 
 #ifdef INCLUDE_DEVICE_APIS
-void SetSoapCallback(MiniServerCallback callback) { gSoapCallback = callback; }
+void SetSoapCallback(MiniServerCallback callback) {
+    TRACE("executing compa::SetSoapCallback()\n");
+    gSoapCallback = callback;
+}
 #endif /* INCLUDE_DEVICE_APIS */
 
-void SetGenaCallback(MiniServerCallback callback) { gGenaCallback = callback; }
+void SetGenaCallback(MiniServerCallback callback) {
+    TRACE("executing compa::SetGenaCallback()\n");
+    gGenaCallback = callback;
+}
 
 static int host_header_is_numeric(char* host_port, size_t host_port_size) {
     int rc = 0;
@@ -906,6 +913,7 @@ error:
 }
 
 static int do_reinit(struct s_SocketStuff* s) {
+    TRACE("executing compa::do_reinit()\n");
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "Inside compa::do_reinit()\n");
 

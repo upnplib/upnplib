@@ -1,5 +1,9 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-05
+// Redistribution only with this Copyright remark. Last modified: 2023-01-14
+
+// All functions of the miniserver module have been covered by a gtest. Some
+// tests are skipped and must be completed when failing information is
+// available.
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -10,6 +14,8 @@
 #define NS ::compa
 #include "compa/src/genlib/miniserver/miniserver.cpp"
 #endif
+
+#include "webserver.hpp"
 
 #include "upnplib/upnptools.hpp"
 #include "upnplib/port.hpp"
@@ -393,8 +399,8 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_uninitialized) {
 
     if (old_code) {
         std::cout
-            << CYEL "[ BUGFIX   ]" CRES
-            << " Function should fail with win32 uninitialized sockets.\n";
+            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << ": Function should fail with win32 uninitialized sockets.\n";
     }
 
 #ifdef _WIN32
@@ -411,8 +417,8 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_uninitialized) {
 
     if (old_code) {
         // This is a bug and fixed in new_code.
-        // std::cout << CYEL "[ BUGFIX   ]" CRES
-        // << " Function should fail with win32 uninitialized sockets.\n";
+        // std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+        // << ": Function should fail with win32 uninitialized sockets.\n";
         EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
             << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS);
 
@@ -731,71 +737,75 @@ TEST(StartMiniServerTestSuite, do_bind_listen_address_in_use) {
     //   port
 
     if (old_code) {
-        GTEST_SKIP() << CYEL "[ BUGFIX   ]" CRES
-                     << " Unit should not loop through about 50000 ports to "
-                        "find one free port.";
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": Unit should not loop through about 50000 ports to "
+                     "find one free port.\n";
         // This very expensive behavior is skiped here and fixed in function
         // do_bind().
+
+    } else {
+
+        MINISERVER_REUSEADDR = false;
+        const char text_addr[]{"192.168.54.188"};
+        char addrbuf[16];
+        const int actual_port{52534};
+        const int sockfd_inuse{600};
+        const int sockfd_free{601};
+
+        struct s_SocketStuff s;
+        // Fill all fields of struct s_SocketStuff
+        s.serverAddr = (struct sockaddr*)&s.ss;
+        s.ip_version = 4;
+        s.text_addr = text_addr;
+        s.serverAddr4->sin_family = AF_INET;
+        s.actual_port = actual_port;
+        s.serverAddr4->sin_port = htons(s.actual_port);
+        inet_pton(AF_INET, text_addr, &s.serverAddr4->sin_addr);
+        s.fd = sockfd_inuse;
+        s.try_port = actual_port + 1;
+        s.address_len = sizeof(*s.serverAddr4);
+
+        // Provide a sockaddr structure that will be returned by mocked
+        // getsockname().
+        struct SockAddr sock;
+        sock.addr_set(text_addr, actual_port + 1);
+
+        // Mock system functions
+        Sys_socketMock mocked_sys_socketObj;
+        umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+        // A successful bind is expected but listen should fail with "address in
+        // use"
+        EXPECT_CALL(mocked_sys_socketObj, bind(sockfd_inuse, _, _)).Times(1);
+        EXPECT_CALL(mocked_sys_socketObj, listen(sockfd_inuse, SOMAXCONN))
+            .WillOnce(SetErrnoAndReturn(EADDRINUSE, SOCKET_ERROR));
+        // A second attempt will call init_socket_suff() to get a new socket.
+        EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+            .WillOnce(Return(sockfd_free));
+        EXPECT_CALL(mocked_sys_socketObj, bind(sockfd_free, _, _)).Times(1);
+        EXPECT_CALL(mocked_sys_socketObj, listen(sockfd_free, SOMAXCONN))
+            .Times(1);
+        EXPECT_CALL(mocked_sys_socketObj,
+                    getsockname(sockfd_free, _, Pointee(sizeof(sock.addr_ss))))
+            .WillOnce(DoAll(SetArgPointee<1>(*sock.addr), Return(0)));
+
+        // Test Unit
+        int ret_get_do_bind_listen = do_bind_listen(&s);
+        EXPECT_EQ(ret_get_do_bind_listen, UPNP_E_SUCCESS)
+            << errStrEx(ret_get_do_bind_listen, UPNP_E_SUCCESS);
+
+        // Check all fields of struct s_SocketStuff
+        EXPECT_EQ(s.ip_version, 4);
+        EXPECT_STREQ(s.text_addr, text_addr);
+        EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
+        EXPECT_STREQ(inet_ntop(AF_INET, &s.serverAddr4->sin_addr, addrbuf,
+                               sizeof(addrbuf)),
+                     text_addr);
+        EXPECT_EQ(ntohs(s.serverAddr4->sin_port), actual_port + 1);
+        EXPECT_EQ(s.fd, sockfd_free);
+        EXPECT_EQ(s.try_port, actual_port + 2);
+        EXPECT_EQ(s.actual_port, actual_port + 1);
+        EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
     }
-    MINISERVER_REUSEADDR = false;
-    const char text_addr[]{"192.168.54.188"};
-    char addrbuf[16];
-    const int actual_port{52534};
-    const int sockfd_inuse{600};
-    const int sockfd_free{601};
-
-    struct s_SocketStuff s;
-    // Fill all fields of struct s_SocketStuff
-    s.serverAddr = (struct sockaddr*)&s.ss;
-    s.ip_version = 4;
-    s.text_addr = text_addr;
-    s.serverAddr4->sin_family = AF_INET;
-    s.actual_port = actual_port;
-    s.serverAddr4->sin_port = htons(s.actual_port);
-    inet_pton(AF_INET, text_addr, &s.serverAddr4->sin_addr);
-    s.fd = sockfd_inuse;
-    s.try_port = actual_port + 1;
-    s.address_len = sizeof(*s.serverAddr4);
-
-    // Provide a sockaddr structure that will be returned by mocked
-    // getsockname().
-    struct SockAddr sock;
-    sock.addr_set(text_addr, actual_port + 1);
-
-    // Mock system functions
-    Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    // A successful bind is expected but listen should fail with "address in
-    // use"
-    EXPECT_CALL(mocked_sys_socketObj, bind(sockfd_inuse, _, _)).Times(1);
-    EXPECT_CALL(mocked_sys_socketObj, listen(sockfd_inuse, SOMAXCONN))
-        .WillOnce(SetErrnoAndReturn(EADDRINUSE, SOCKET_ERROR));
-    // A second attempt will call init_socket_suff() to get a new socket.
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
-        .WillOnce(Return(sockfd_free));
-    EXPECT_CALL(mocked_sys_socketObj, bind(sockfd_free, _, _)).Times(1);
-    EXPECT_CALL(mocked_sys_socketObj, listen(sockfd_free, SOMAXCONN)).Times(1);
-    EXPECT_CALL(mocked_sys_socketObj,
-                getsockname(sockfd_free, _, Pointee(sizeof(sock.addr_ss))))
-        .WillOnce(DoAll(SetArgPointee<1>(*sock.addr), Return(0)));
-
-    // Test Unit
-    int ret_get_do_bind_listen = do_bind_listen(&s);
-    EXPECT_EQ(ret_get_do_bind_listen, UPNP_E_SUCCESS)
-        << errStrEx(ret_get_do_bind_listen, UPNP_E_SUCCESS);
-
-    // Check all fields of struct s_SocketStuff
-    EXPECT_EQ(s.ip_version, 4);
-    EXPECT_STREQ(s.text_addr, text_addr);
-    EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
-    EXPECT_STREQ(
-        inet_ntop(AF_INET, &s.serverAddr4->sin_addr, addrbuf, sizeof(addrbuf)),
-        text_addr);
-    EXPECT_EQ(ntohs(s.serverAddr4->sin_port), actual_port + 1);
-    EXPECT_EQ(s.fd, sockfd_free);
-    EXPECT_EQ(s.try_port, actual_port + 2);
-    EXPECT_EQ(s.actual_port, actual_port + 1);
-    EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
 }
 
 TEST_F(DoBindFTestSuite, bind_successful) {
@@ -851,8 +861,8 @@ TEST_F(DoBindFTestSuite, bind_successful) {
 
     if (old_code) {
         std::cout
-            << CYEL "[ BUGFIX   ]" CRES
-            << " The actual_port number should be set to the new number.\n";
+            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << ": The actual_port number should be set to the new number.\n";
         EXPECT_EQ(s.actual_port, actual_port);
 
     } else {
@@ -937,9 +947,10 @@ TEST_F(DoBindFTestSuite, bind_with_invalid_argument) {
     if (old_code) {
         // See notes above about the endless loop. Expected values here are
         // meaningless and only tested to watch code changes.
-        std::cout << CYEL "[ BUGFIX   ]" CRES
-                  << " do_bind() should never hung with testing all free ports "
-                     "before failing.\n";
+        std::cout
+            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << ": do_bind() should never hung with testing all free ports "
+               "before failing.\n";
         EXPECT_EQ(s.actual_port, actual_port);
         EXPECT_EQ(ntohs(s.serverAddr4->sin_port), actual_port + 3);
         EXPECT_EQ(s.try_port, try_port + 3);
@@ -1006,13 +1017,13 @@ TEST(DoBindTestSuite, bind_with_try_port_overrun) {
     EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
 
     if (old_code) {
-        std::cout << CYEL "[ BUGFIX   ]" CRES
-                  << " Next try to bind a port should start with "
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": Next try to bind a port should start with "
                      "APPLICATION_LISTENING_PORT but not with port 0.\n";
         EXPECT_EQ(s.try_port, 0);
         std::cout
-            << CYEL "[ BUGFIX   ]" CRES
-            << " The actual_port number should be set to the new number.\n";
+            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << ": The actual_port number should be set to the new number.\n";
         EXPECT_EQ(s.actual_port, 56789);
 
     } else {
@@ -1085,8 +1096,8 @@ TEST(DoBindTestSuite, bind_successful_with_two_tries) {
 
     if (old_code) {
         std::cout
-            << CYEL "[ BUGFIX   ]" CRES
-            << " The actual_port number should be set to the new number.\n";
+            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << ": The actual_port number should be set to the new number.\n";
         EXPECT_EQ(s.actual_port, 56789);
 
     } else {
@@ -1098,19 +1109,22 @@ TEST(DoBindTestSuite, bind_successful_with_two_tries) {
 TEST(DoBindTestSuite, bind_with_empty_parameter) {
     // With this test we have an initialized ip_version = 0, instead of valid 4
     // or 6. Switching for this value will never find an end.
-    if (old_code)
-        GTEST_SKIP() << CYEL "[ BUGFIX   ]" CRES
-                     << " This test stuck the program in an endless loop.";
+    if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": This test stuck the program in an endless loop.\n";
 
-    struct s_SocketStuff s {};
-    s.serverAddr = (struct sockaddr*)&s.ss;
+    } else {
 
-    // Test Unit
-    int ret_do_bind;
-    ret_do_bind = do_bind((s_SocketStuff*)&s);
+        struct s_SocketStuff s {};
+        s.serverAddr = (struct sockaddr*)&s.ss;
 
-    EXPECT_EQ(ret_do_bind, UPNP_E_INVALID_PARAM)
-        << errStrEx(ret_do_bind, UPNP_E_INVALID_PARAM);
+        // Test Unit
+        int ret_do_bind;
+        ret_do_bind = do_bind((s_SocketStuff*)&s);
+
+        EXPECT_EQ(ret_do_bind, UPNP_E_INVALID_PARAM)
+            << errStrEx(ret_do_bind, UPNP_E_INVALID_PARAM);
+    }
 }
 
 TEST_F(DoBindFTestSuite, bind_with_wrong_ip_version_assignment) {
@@ -1138,8 +1152,8 @@ TEST_F(DoBindFTestSuite, bind_with_wrong_ip_version_assignment) {
         // Starting from try_port this will loop until 65535 with always the
         // same error. The short running test here is only given because we
         // start with try_port = 65533 so we have only three attempts here.
-        std::cout << CYEL "[ BUGFIX   ]" CRES
-                  << " This should not loop through all free port numbers. It "
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": This should not loop through all free port numbers. It "
                      "will always fail.\n";
     }
 
@@ -1174,9 +1188,9 @@ TEST(StartMiniServerTestSuite, do_listen_successful) {
     uint16_t actual_port{60000};
     uint16_t try_port{0}; // not used
 
-    struct s_SocketStuff s;
+    s_SocketStuff s;
     // Fill all fields of struct s_SocketStuff
-    s.serverAddr = (struct sockaddr*)&s.ss;
+    s.serverAddr = (sockaddr*)&s.ss;
     s.ip_version = 4;
     s.text_addr = text_addr;
     s.serverAddr4->sin_family = AF_INET;
@@ -1626,8 +1640,8 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
         umock::Sys_select sys_select_injectObj(&sys_select_mockObj);
 
         if (old_code) {
-            std::cout << CYEL "[ BUGFIX   ]" CRES
-                      << " Max socket fd for select() not setting to 0 if "
+            std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                      << ": Max socket fd for select() not setting to 0 if "
                          "INVALID_SOCKET in MiniServerSockArray on WIN32.\n";
 #ifdef _WIN32
             EXPECT_CALL(sys_select_mockObj, select(0, _, nullptr, _, nullptr))
@@ -1658,8 +1672,8 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
         localhost_sock.addr_set("127.0.0.1", stop_port);
 
         if (old_code) {
-            std::cout << CYEL "[ BUGFIX   ]" CRES
-                      << " Unit must not endless loop with wrong \"shutdown\" "
+            std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                      << ": Unit must not endless loop with wrong \"shutdown\" "
                          "message instead of \"ShutDown\".\n";
             EXPECT_CALL(mocked_sys_socketObj,
                         recvfrom(stop_sockfd, _, 25, 0, _,
@@ -1686,8 +1700,8 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
                 .WillRepeatedly(SetErrnoAndReturn(EBADF, -1));
         }
 
-        std::cout << CRED "[ BUG      ]" CRES
-                  << " Unit must not expect its argument MiniServerSockArray* "
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Unit must not expect its argument MiniServerSockArray* "
                      "to be on the heap and free it.\n";
 
         // Test Unit
@@ -1857,8 +1871,8 @@ TEST_F(RunMiniServerFTestSuite, fdset_if_valid) {
 TEST_F(RunMiniServerFTestSuite, fdset_if_valid_with_closed_socket) {
     if (old_code) {
         std::cout
-            << CYEL "[ BUGFIX   ]" CRES
-            << " Due to undefined behavior of FD_SET with invalid fd "
+            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << ": Due to undefined behavior of FD_SET with invalid fd "
                "this randomly terminated with 'stack smashing detected'.\n";
     } else {
 
@@ -1929,6 +1943,31 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
     EXPECT_EQ(ThreadPoolShutdown(&gMiniServerThreadPool), 0);
 }
 
+TEST(RunMiniServerDeathTest, free_handle_request_arg_with_nullptr_to_struct) {
+    // Provide request structure
+    struct mserv_request_t* request{nullptr};
+
+    // Test Unit
+    if (old_code) {
+#if defined __APPLE__ && !DEBUG
+#else
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": free_handle_re4quest with nullptr must not segfault.\n";
+        // There is a multithreading test running before with
+        // TEST(RunMiniServerTestSuite, schedule_request_job). Due to problems
+        // running this together with death tests as noted in the gtest docu the
+        // GTEST_FLAG has to be set. If having more death tests it should be
+        // considered to run multithreading tests with an own test file without
+        // death tests.
+        GTEST_FLAG_SET(death_test_style, "threadsafe");
+        EXPECT_DEATH(free_handle_request_arg(request), "");
+#endif
+    } else {
+
+        free_handle_request_arg(request);
+    }
+}
+
 TEST(RunMiniServerTestSuite, handle_request) {
     GTEST_SKIP()
         << "Still needs to be done when I have understood http_RecvMessage().";
@@ -1969,24 +2008,6 @@ TEST_F(RunMiniServerFTestSuite, free_handle_request_arg_with_invalid_socket) {
 
     // Test Unit
     free_handle_request_arg(request);
-}
-
-TEST(RunMiniServerDeathTest, free_handle_request_arg_with_nullptr_to_struct) {
-    // Provide request structure
-    struct mserv_request_t* request{nullptr};
-
-    // Test Unit
-    if (old_code) {
-#if defined __APPLE__ && !DEBUG
-#else
-        std::cout << CYEL "[ BUGFIX   ]" CRES
-                  << " free_handle_re4quest with nullptr must not segfault.\n";
-        EXPECT_DEATH(free_handle_request_arg(request), "");
-#endif
-    } else {
-
-        free_handle_request_arg(request);
-    }
 }
 
 TEST(RunMiniServerTestSuite, handle_error) {
@@ -2110,8 +2131,8 @@ TEST(RunMiniServerTestSuite,
     std::string capturedStderr = captureObj.get();
 
     if (old_code) {
-        std::cout << CYEL "[ BUGFIX   ]" CRES
-                  << " A wrong but accepted address family AF_UNIX should "
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": A wrong but accepted address family AF_UNIX should "
                      "return an error.\n";
         EXPECT_TRUE(ret_getNumericHostRedirection); // wrong
         EXPECT_TRUE(capturedStderr.empty());
@@ -2149,6 +2170,64 @@ TEST(RunMiniServerTestSuite, host_header_is_numeric_without_port) {
     char host_port[INET_ADDRSTRLEN + 1 + 5]{"192.168.88.99"};
 
     EXPECT_TRUE(host_header_is_numeric(host_port, sizeof(host_port)));
+}
+
+TEST(RunMiniServerTestSuite, set_http_get_callback) {
+    memset(&NS::gGetCallback, 0xAA, sizeof(NS::gGetCallback));
+    NS::SetHTTPGetCallback(web_server_callback);
+    EXPECT_EQ(NS::gGetCallback, (MiniServerCallback)web_server_callback);
+}
+
+TEST(RunMiniServerTestSuite, set_soap_callback) {
+    memset(&NS::gSoapCallback, 0xAA, sizeof(NS::gSoapCallback));
+    NS::SetSoapCallback(nullptr);
+    EXPECT_EQ(NS::gSoapCallback, (MiniServerCallback) nullptr);
+}
+
+TEST(RunMiniServerTestSuite, set_gena_callback) {
+    memset(&NS::gGenaCallback, 0xAA, sizeof(NS::gGenaCallback));
+    NS::SetGenaCallback(nullptr);
+    EXPECT_EQ(NS::gGenaCallback, (MiniServerCallback) nullptr);
+}
+
+TEST_F(RunMiniServerFTestSuite, do_reinit) {
+    MINISERVER_REUSEADDR = false;
+    const char text_addr[] = "192.168.202.244";
+    char addrbuf[16];
+
+    // Get a valid socket, needs initialized sockets on MS Windows with fixture.
+    SOCKET sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    ASSERT_NE(sockfd, -1);
+
+    NS::s_SocketStuff s;
+    // Fill all fields of struct s_SocketStuff
+    s.serverAddr = (sockaddr*)&s.ss;
+    s.ip_version = 4;
+    s.text_addr = text_addr;
+    s.serverAddr4->sin_family = AF_INET;
+    s.serverAddr4->sin_port = 0; // not used
+    inet_pton(AF_INET, text_addr, &s.serverAddr4->sin_addr);
+    s.fd = sockfd;
+    s.try_port = 0; // not used
+    s.actual_port = 0;
+    s.address_len = sizeof(*s.serverAddr4);
+
+    // Test Unit
+    EXPECT_EQ(NS::do_reinit(&s), 0);
+
+    EXPECT_STREQ(s.text_addr, text_addr);
+    EXPECT_STREQ(
+        inet_ntop(AF_INET, &s.serverAddr4->sin_addr, addrbuf, sizeof(addrbuf)),
+        text_addr);
+    // Valid real socket
+    EXPECT_NE(s.fd, INVALID_SOCKET);
+    EXPECT_EQ(s.fd, sockfd);
+    EXPECT_EQ(s.try_port, 0);
+    EXPECT_EQ(s.actual_port, 0);
+    EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
+
+    // Close real socket
+    EXPECT_EQ(UPNPLIB_CLOSE_SOCKET(s.fd), 0);
 }
 
 TEST_F(StopMiniServerFTestSuite, sock_close) {

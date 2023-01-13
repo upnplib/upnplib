@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-11
+# Redistribution only with this Copyright remark. Last modified: 2023-01-13
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -96,15 +96,7 @@ endif()
 
 add_executable(test_miniserver-pst
 #---------------------------------
-# Needed to also compile additional sources instead of using that from the
-# internal library. Otherwise the compiler complains 'multiple definition' of
-# several symbols. This is because the compiler find symbols two times, one
-# time with the included source file and one time from the library. If we use the
-# source file here, the compiler doesn't look at the library.
     ./test_miniserver.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_server.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
-    $<$<BOOL:${UPNPLIB_WITH_IPV6}>:${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp>
 )
 target_include_directories(test_miniserver-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -113,9 +105,11 @@ target_compile_definitions(test_miniserver-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
         UPNP_HAVE_CLIENT
+        UPNP_HAVE_DEVICE
         UPNP_HAVE_WEBSERVER
         UPNP_HAVE_SSDP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+        #UPNPLIB_WITH_TRACE
 )
 target_compile_options(test_miniserver-pst
     PRIVATE
@@ -144,15 +138,7 @@ add_test(NAME ctest_miniserver-pst COMMAND test_miniserver-pst --gtest_shuffle
 
 add_executable(test_miniserver-cst
 #---------------------------------
-# Needed to also compile additional sources instead of using that from the
-# internal library. Otherwise the compiler complains 'multiple definition' of
-# several symbols. This is because the compiler find symbols two times, one
-# time with the included source file and one time from the library. If we use the
-# source file here, the compiler doesn't look at the library.
     ./test_miniserver.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_server.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
-    $<$<BOOL:${UPNPLIB_WITH_IPV6}>:${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp>
 )
 target_include_directories(test_miniserver-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -160,9 +146,11 @@ target_include_directories(test_miniserver-cst
 target_compile_definitions(test_miniserver-cst
     PRIVATE
         UPNP_HAVE_CLIENT
+        UPNP_HAVE_DEVICE
         UPNP_HAVE_WEBSERVER
         UPNP_HAVE_SSDP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+        #UPNPLIB_WITH_TRACE
 )
 target_compile_options(test_miniserver-cst
     PRIVATE

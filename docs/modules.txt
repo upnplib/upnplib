@@ -13,6 +13,47 @@ file. A test collection is a collection of gtests to test a program unit.
   to the other compile units.
 * One test collection is for testing the native UPnPlib code.
 
+
+miniserver: find \! -path './build/*' -type f -iname '*miniserver*'
+-----------
+The miniserver is a central point for processing all network requests. It
+implements the functionality and utility functions used by the Miniserver
+module.
+It is made of:
+  - The SSDP sockets for discovery.
+  - The HTTP listeners for description / control / eventing.
+
+pUPnP compile unit
+    ./pupnp/upnp/src/inc/miniserver.hpp
+    ./pupnp/upnp/src/genlib/miniserver/miniserver.cpp
+UPnPlib compatible compile unit
+    ./include/compa/miniserver.hpp
+    ./compa/src/genlib/miniserver/miniserver.cpp
+Test collection for both
+    ./gtests/compa/test_miniserver.cpp
+
+UPnPlib native compile unit
+    t.b.d.
+Test collection for this
+    t.b.d.
+
+
+ssdp_server: find \! -path './build/*' -type f -iregex '.*ssdplib.*\|.*ssdp_server.*'
+------------
+pUPnP compile unit
+    ./pupnp/upnp/src/inc/ssdplib.hpp
+    ./pupnp/upnp/src/ssdp/ssdp_server.cpp
+UPnPlib compatible compile unit
+    t.b.d.
+Test collection for both
+    t.b.d.
+
+UPnPlib native compile unit
+    t.b.d.
+Test collection for this
+    t.b.d.
+
+
 webserver: find \! -path './build/*' -type f -iname '*webserver*'
 ----------
 pUPnP compile unit
@@ -29,20 +70,3 @@ UPnPlib native compile unit
     ./upnplib/src/net/http/webserver.cpp
 Test collection for this
     ./gtests/upnplib/test_webserver.cpp
-
-
-miniserver: find \! -path './build/*' -type f -iname '*miniserver*'
------------
-pUPnP
-    ./pupnp/upnp/src/inc/miniserver.hpp
-    ./pupnp/upnp/src/genlib/miniserver/miniserver.cpp
-UPnPlib compa
-    ./include/compa/miniserver.hpp
-    ./compa/src/genlib/miniserver/miniserver.cpp
-Test collection for both
-    ./gtests/compa/test_miniserver.cpp
-
-UPnPlib native
-    t.b.d.
-Test collection
-    t.b.d.

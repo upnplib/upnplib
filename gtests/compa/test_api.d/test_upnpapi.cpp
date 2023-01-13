@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-12
+// Redistribution only with this Copyright remark. Last modified: 2023-01-13
 
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 #ifdef UPNP_HAVE_TOOLS
@@ -142,7 +142,7 @@ TEST_F(UpnpapiFTestSuite, UpnpInitPreamble) {
 
     // Check settings of MiniServer callback functions SetSoapCallback() and
     // SetGenaCallback() aren't possible wihout access to static gSoapCallback
-    // and gGenaCallback variables in miniserver.cpp. May be tested with
+    // and gGenaCallback variables in miniserver.cpp. This is tested with
     // MiniServer module.
 
     // Check timer thread initialization

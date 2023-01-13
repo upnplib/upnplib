@@ -21,13 +21,10 @@ class CDisableTrace {
 
 #include "compa/src/genlib/net/http/webserver.cpp"
 
-// #include "UpnpFileInfo.hpp"
-
 #include "upnplib/upnptools.hpp"  // for errStrEx
 #include "upnplib/cmake_vars.hpp" // for UPNPLIB_SAMPLE_SOURCE_DIR
 #include "upnplib/gtest.hpp"
 
-// #include "umock/stdlib.hpp"
 #include "gmock/gmock.h"
 
 using ::testing::_;
