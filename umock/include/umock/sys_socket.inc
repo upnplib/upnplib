@@ -1,5 +1,5 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-01-15
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
@@ -26,7 +26,7 @@ class Sys_socketInterface {
   public:
     virtual ~Sys_socketInterface() = default;
     // clang-format off
-    virtual int socket(int domain, int type, int protocol) = 0;
+    virtual SOCKET socket(int domain, int type, int protocol) = 0;
     virtual int bind(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) = 0;
     virtual int listen(SOCKET sockfd, int backlog) = 0;
     virtual SOCKET accept(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) = 0;
@@ -49,7 +49,7 @@ class Sys_socketReal : public Sys_socketInterface {
   public:
     virtual ~Sys_socketReal() override = default;
     // clang-format off
-    int socket(int domain, int type, int protocol) override;
+    SOCKET socket(int domain, int type, int protocol) override;
     int bind(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) override;
     int listen(SOCKET sockfd, int backlog) override;
     SOCKET accept(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) override;
@@ -94,7 +94,7 @@ class UPNPLIB_API Sys_socket {
 
     // Methods
     // clang-format off
-    virtual int socket(int domain, int type, int protocol);
+    virtual SOCKET socket(int domain, int type, int protocol);
     virtual int bind(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen);
     virtual int listen(SOCKET sockfd, int backlog);
     virtual SOCKET accept(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen);

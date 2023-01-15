@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-26
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-01-15
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1173,8 +1173,11 @@ int StopMiniServer() {
     char buf[256] = "ShutDown";
     // Due to required type cast for 'sendto' on WIN32 bufLen must fit to an
     // int, no problem here.
+#ifdef _WIN32
+    int bufLen = (int)strlen(buf);
+#else
     size_t bufLen = strlen(buf);
-
+#endif
     switch (gMServState) {
     case MSERV_RUNNING:
         gMServState = MSERV_STOPPING;

@@ -27,7 +27,7 @@ pUPnP compile unit
     ./pupnp/upnp/src/inc/miniserver.hpp
     ./pupnp/upnp/src/genlib/miniserver/miniserver.cpp
 UPnPlib compatible compile unit
-    ./include/compa/miniserver.hpp
+    ./compa/include/compa/miniserver.hpp
     ./compa/src/genlib/miniserver/miniserver.cpp
 Test collection for both
     ./gtests/compa/test_miniserver.cpp
@@ -46,7 +46,7 @@ pUPnP compile unit
 UPnPlib compatible compile unit
     t.b.d.
 Test collection for both
-    t.b.d.
+    ./gtests/compa/test_ssdp.d/test_ssdp_server.cpp
 
 UPnPlib native compile unit
     t.b.d.

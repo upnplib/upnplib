@@ -1,12 +1,12 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-22
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-01-15
 
 #include "umock/sys_socket.inc"
 
 namespace umock {
 
 // clang-format off
-int Sys_socketReal::socket(int domain, int type, int protocol) {
+SOCKET Sys_socketReal::socket(int domain, int type, int protocol) {
     return ::socket(domain, type, protocol);
 }
 
@@ -80,7 +80,7 @@ Sys_socket::~Sys_socket() { m_ptr_workerObj = m_ptr_oldObj; }
 
 // Methods
 // clang-format off
-int Sys_socket::socket(int domain, int type, int protocol) {
+SOCKET Sys_socket::socket(int domain, int type, int protocol) {
     return m_ptr_workerObj->socket(domain, type, protocol);
 }
 

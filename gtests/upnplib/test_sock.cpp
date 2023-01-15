@@ -1,5 +1,5 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-01-15
 
 #include "upnplib/port.hpp"
 #include "upnplib/sock.hpp"
@@ -29,7 +29,7 @@ class Sys_socketMock : public umock::Sys_socketInterface {
   public:
     virtual ~Sys_socketMock() override {}
     // clang-format off
-    MOCK_METHOD(int, socket, (int domain, int type, int protocol), (override));
+    MOCK_METHOD(SOCKET, socket, (int domain, int type, int protocol), (override));
     MOCK_METHOD(int, bind, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
     MOCK_METHOD(int, listen, (SOCKET sockfd, int backlog), (override));
     MOCK_METHOD(SOCKET, accept, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));

@@ -1,5 +1,5 @@
 # Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-11
+# Redistribution only with this Copyright remark. Last modified: 2023-01-15
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -20,17 +20,13 @@ add_executable(test_webserver-pst
     ./test_webserver.cpp
 )
 target_include_directories(test_webserver-pst
-    PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${UPNPLIB_PROJECT_BINARY_DIR}/include
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
 )
 target_compile_definitions(test_webserver-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
         UPNP_HAVE_WEBSERVER
-        UPNP_HAVE_DEVICE
-        UPNP_HAVE_SOAP
-        UPNP_HAVE_SSDP
         #UPNPLIB_WITH_TRACE
 )
 target_compile_options(test_webserver-pst
@@ -54,16 +50,12 @@ add_executable(test_webserver-cst
     ./test_webserver.cpp
 )
 target_include_directories(test_webserver-cst
-    PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
-        ${UPNPLIB_PROJECT_BINARY_DIR}/include
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
 )
 target_compile_definitions(test_webserver-cst
     PRIVATE
         UPNP_HAVE_WEBSERVER
-        UPNP_HAVE_DEVICE
-        UPNP_HAVE_SOAP
-        UPNP_HAVE_SSDP
         #UPNPLIB_WITH_TRACE
 )
 target_compile_options(test_webserver-cst
@@ -132,13 +124,10 @@ target_include_directories(test_httpreadwrite-pst
 target_compile_definitions(test_httpreadwrite-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_compile_options(test_httpreadwrite-pst
     PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:/W1>
-        # disable warning C4005: '_CRT_SECURE_NO_WARNINGS': macro redefinition
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4005>
         # disable warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
         $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
         # disable warning C4505: 'upnplib::Check_Connect_And_Wait_Connection': unreferenced local function has been removed
