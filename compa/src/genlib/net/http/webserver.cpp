@@ -261,8 +261,8 @@ static UPNP_INLINE int get_content_type(
         return UPNP_E_INVALID_ARGUMENT;
 
     const char* extension;
-    const char* type;
-    const char* subtype;
+    const char* type{};
+    const char* subtype{};
     int ctype_found = 0;
     char* temp = NULL;
     size_t length = 0;

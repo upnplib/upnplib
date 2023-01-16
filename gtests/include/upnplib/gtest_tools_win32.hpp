@@ -1,7 +1,7 @@
 #ifndef UPNP_TOOLS_WIN_HPP
 #define UPNP_TOOLS_WIN_HPP
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Redistribution only with this Copyright remark. Last modified: 2023-01-17
 
 #include "upnplib/visibility.hpp" // for UPNPLIB_API
 #include <winsock2.h>
@@ -23,6 +23,8 @@ class UPNPLIB_API CNetIf4
     // With constructing the object you get a loopback device by default.
     // Properties are set to an ipv4 UP interface, supporting broadcast and
     // multicast.
+
+    virtual ~CNetIf4() = default;
 
     ::PIP_ADAPTER_ADDRESSES get();
     // Return the pointer to a network interface structure.
@@ -63,9 +65,17 @@ class UPNPLIB_API CNetIf4
 
     // On the adapter (net interface) structure we only have pointer to strings
     // so we need to save them here to be sure we do not get dangling pointer.
-    UPNPLIB_LOCAL std::wstring m_Description{
+    // Due to warning C4251: "'m_FriendlyName' needs to have dll-interface" I
+    // don't use a STL class (std::string).
+    // https://stackoverflow.com/q/5661738/5014688
+    // FriendlyName is same as IfAlias[DisplayString] (RFC 2863). Cannot find
+    // include file for DisplayString but may not exceed 255 character
+    // (http://www.net-snmp.org/docs/mibs/ucdavis.html#DisplayString). --Ingo
+#define DisplayString 255
+    UPNPLIB_LOCAL WCHAR m_FriendlyName[DisplayString]{
+        L"Loopback Pseudo-Interface 1"};
+    UPNPLIB_LOCAL WCHAR m_Description[DisplayString]{
         L"Mocked Adapter for Unit testing"};
-    UPNPLIB_LOCAL std::wstring m_FriendlyName{L"Loopback Pseudo-Interface 1"};
 };
 
 } // namespace upnplib

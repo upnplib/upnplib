@@ -1,5 +1,5 @@
-# Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-11
+# Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2023-01-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -56,13 +56,6 @@ target_compile_definitions(upnplib_gtest_tools_shared
         UPNPLIB_EXPORTS
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
-target_compile_options(upnplib_gtest_tools_shared
-    PRIVATE
-        # disable warning C4251: 'upnplib::CNetIf4::m_Description': class 'std::basic_string<wchar_t,std::char_traits<wchar_t>,std::allocator<wchar_t>>' needs to have dll-interface to be used by clients of class 'upnplib::CNetIf4'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
-        # disable  warning C4211: nonstandard extension used: redefined extern to static
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4211>
-)
 target_link_libraries(upnplib_gtest_tools_shared
     PUBLIC
         $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
@@ -83,11 +76,6 @@ target_include_directories(upnplib_gtest_tools_static
 target_compile_definitions(upnplib_gtest_tools_static
     PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
-)
-target_compile_options(upnplib_gtest_tools_static
-    PRIVATE
-        # disable warning C4211: nonstandard extension used: redefined extern to static
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4211>
 )
 target_link_libraries(upnplib_gtest_tools_static
     PUBLIC
@@ -124,9 +112,9 @@ target_compile_definitions(test_upnplib_gtest_tools
 )
 target_compile_options(test_upnplib_gtest_tools
     PRIVATE
-        # disable warning C4211: nonstandard extension used: redefined extern to static
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4211>
         # disable warning C4100: 'result_listener': unreferenced formal parameter
+        # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
+        # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
 )
 target_link_libraries(test_upnplib_gtest_tools
@@ -150,15 +138,6 @@ target_include_directories(test_upnplib_gtest_tools_platform
 target_compile_definitions(test_upnplib_gtest_tools_platform
     PRIVATE
         UPNPLIB_SHARED
-)
-target_compile_options(test_upnplib_gtest_tools_platform
-    PRIVATE
-        # disable warning C4251: 'upnplib::CNetIf4::m_Description': class 'std::basic_string<wchar_t,std::char_traits<wchar_t>,std::allocator<wchar_t>>' needs to have dll-interface to be used by clients of class 'upnplib::CNetIf4'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
-        # disable warning C4389: '==': signed/unsigned mismatch
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4389>
-        # disable warning C4244: 'argument': conversion from 'const M' to 'const Element', possible loss of data
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
 )
 target_link_libraries(test_upnplib_gtest_tools_platform
     PRIVATE
@@ -186,10 +165,6 @@ target_compile_definitions(test_simple-ush
     PRIVATE
         UPNPLIB_SHARED
 )
-target_compile_options(test_simple-ush
-    PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W1>
-)
 target_link_libraries(test_simple-ush
     PRIVATE
         upnplib_shared
@@ -204,10 +179,6 @@ add_executable(test_simple-ust
 )
 target_include_directories(test_simple-ust
     ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
-)
-target_compile_options(test_simple-ust
-    PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W1>
 )
 target_link_libraries(test_simple-ust
     PRIVATE

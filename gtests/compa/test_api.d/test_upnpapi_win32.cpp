@@ -1,5 +1,5 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-07
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-01-18
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -52,12 +52,12 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
 
     UpnpapiIPv4MockTestSuite() {
         // initialize needed global variables
-        std::fill(std::begin(gIF_NAME), std::end(gIF_NAME), 0);
-        std::fill(std::begin(gIF_IPV4), std::end(gIF_IPV4), 0);
-        std::fill(std::begin(gIF_IPV4_NETMASK), std::end(gIF_IPV4_NETMASK), 0);
-        std::fill(std::begin(gIF_IPV6), std::end(gIF_IPV6), 0);
+        memset(&gIF_NAME, 0, sizeof(gIF_NAME));
+        memset(&gIF_IPV4, 0, sizeof(gIF_IPV4));
+        memset(&gIF_IPV4_NETMASK, 0, sizeof(gIF_IPV4_NETMASK));
+        memset(&gIF_IPV6, 0, sizeof(gIF_IPV6));
         gIF_IPV6_PREFIX_LENGTH = 0;
-        std::fill(std::begin(gIF_IPV6_ULA_GUA), std::end(gIF_IPV6_ULA_GUA), 0);
+        memset(&gIF_IPV6_ULA_GUA, 0, sizeof(gIF_IPV6_ULA_GUA));
         gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
         gIF_INDEX = (unsigned)-1;
         UpnpSdkInit = 0xAA; // This should not be used and modified here
@@ -108,10 +108,10 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
         EXPECT_STREQ(gIF_IPV6, "");
     }
 
-    EXPECT_EQ(gIF_IPV6_PREFIX_LENGTH, (unsigned)0);
+    EXPECT_EQ(gIF_IPV6_PREFIX_LENGTH, 0U);
     EXPECT_STREQ(gIF_IPV6_ULA_GUA, "");
-    EXPECT_EQ(gIF_IPV6_ULA_GUA_PREFIX_LENGTH, (unsigned)0);
-    EXPECT_EQ(gIF_INDEX, (const unsigned int)2);
+    EXPECT_EQ(gIF_IPV6_ULA_GUA_PREFIX_LENGTH, 0U);
+    EXPECT_EQ(gIF_INDEX, 2U);
     EXPECT_EQ(LOCAL_PORT_V4, (unsigned short)0);
     EXPECT_EQ(LOCAL_PORT_V6, (unsigned short)0);
     EXPECT_EQ(LOCAL_PORT_V6_ULA_GUA, (unsigned short)0);
@@ -175,10 +175,10 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     }
 
     EXPECT_STREQ(gIF_IPV4, "192.168.77.48"); // OK
-    EXPECT_EQ(gIF_IPV6_PREFIX_LENGTH, (unsigned)0);
+    EXPECT_EQ(gIF_IPV6_PREFIX_LENGTH, 0U);
     EXPECT_STREQ(gIF_IPV6_ULA_GUA, "");
-    EXPECT_EQ(gIF_IPV6_ULA_GUA_PREFIX_LENGTH, (unsigned)0);
-    EXPECT_EQ(gIF_INDEX, 2);
+    EXPECT_EQ(gIF_IPV6_ULA_GUA_PREFIX_LENGTH, 0U);
+    EXPECT_EQ(gIF_INDEX, 2U);
     EXPECT_EQ(LOCAL_PORT_V4, (unsigned short)0);
     EXPECT_EQ(LOCAL_PORT_V6, (unsigned short)0);
     EXPECT_EQ(LOCAL_PORT_V6_ULA_GUA, (unsigned short)0);

@@ -747,10 +747,10 @@ TEST_F(HttpConnectIp4FTestSuite, successful_connect) {
     memset(&fixed_url, 0xaa, sizeof(uri_type));
 
     // Test Unit
-    SOCKET sockfd;
-    ASSERT_GT(sockfd = http_Connect(dest_url, &fixed_url), 0)
+    SOCKET sockfd; // Returned value should be a valid socket.
+    ASSERT_GT(sockfd = http_Connect(dest_url, &fixed_url), (SOCKET)0)
         << "  # Should be a valid socked file descriptor but not "
-        << errStr(sockfd);
+        << errStr((int)sockfd);
 
     EXPECT_STREQ(fixed_url.fragment.buff, "fragment");
     EXPECT_EQ(fixed_url.fragment.size, (size_t)8);
@@ -777,9 +777,10 @@ TEST_F(HttpConnectIp4FTestSuite, socket_allocation_fails) {
 
     // Test Unit
     SOCKET sockfd;
-    ASSERT_EQ(sockfd = http_Connect(dest_url, &fixed_url), UPNP_E_OUTOF_SOCKET)
+    ASSERT_EQ(sockfd = http_Connect(dest_url, &fixed_url),
+              (SOCKET)UPNP_E_OUTOF_SOCKET)
         << "  # Should be UPNP_E_OUTOF_SOCKET(" << UPNP_E_OUTOF_SOCKET
-        << ") but not " << errStr(sockfd);
+        << ") but not " << errStr((int)sockfd);
 }
 
 TEST_F(HttpConnectIp4FTestSuite, low_level_net_connect_fails) {
@@ -806,9 +807,9 @@ TEST_F(HttpConnectIp4FTestSuite, low_level_net_connect_fails) {
     // Test Unit
     SOCKET sockfd;
     ASSERT_EQ(sockfd = http_Connect(dest_url, &fixed_url),
-              UPNP_E_SOCKET_CONNECT)
+              (SOCKET)UPNP_E_SOCKET_CONNECT)
         << "  # Should be UPNP_E_SOCKET_CONNECT(" << UPNP_E_SOCKET_CONNECT
-        << ") but not " << errStr(sockfd);
+        << ") but not " << errStr((int)sockfd);
 }
 
 TEST(HttpFixUrl, empty_url_structure) {

@@ -1,5 +1,5 @@
-# Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-11
+# Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2023-01-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -61,9 +61,9 @@ target_compile_definitions(test_sock-ush
 )
 target_compile_options(test_sock-ush
     PRIVATE
-        # disable warning C4211: nonstandard extension used: redefined extern to static
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4211>
         # disable warning C4100: 'result_listener': unreferenced formal parameter
+        # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
+        # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
 )
 target_link_libraries(test_sock-ush

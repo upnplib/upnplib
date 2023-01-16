@@ -1,5 +1,5 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-11
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-01-18
 
 #include "pupnp/upnp/src/genlib/util/membuffer.cpp"
 
@@ -540,7 +540,7 @@ TEST(MembufferTestSuite, membuffer_set_size_to_0_byte_new_length) {
 
     EXPECT_EQ(mem.buffer.length, (size_t)2);
     EXPECT_EQ(mem.buffer.capacity, (size_t)2);
-    EXPECT_EQ(mem.buffer.size_inc, 0);
+    EXPECT_EQ(mem.buffer.size_inc, (size_t)0);
     ASSERT_NE(mem.buffer.buf, nullptr);
     EXPECT_EQ(mem.buffer.buf[0], '\xAA');
     EXPECT_EQ(mem.buffer.buf[1], '\xAA');
@@ -555,7 +555,7 @@ TEST(MembufferTestSuite, membuffer_set_size_to_0_byte_new_length) {
                      "terminated empty buffer.\n";
         EXPECT_EQ(mem.buffer.length, (size_t)2); // This is wrong
         EXPECT_EQ(mem.buffer.capacity, (size_t)0);
-        EXPECT_EQ(mem.buffer.size_inc, 0);
+        EXPECT_EQ(mem.buffer.size_inc, (size_t)0);
         ASSERT_NE(mem.buffer.buf, nullptr);
         EXPECT_EQ(mem.buffer.buf[0], '\xAA'); // Should be '\0'
 
@@ -563,7 +563,7 @@ TEST(MembufferTestSuite, membuffer_set_size_to_0_byte_new_length) {
 
         EXPECT_EQ(mem.buffer.length, (size_t)0);
         EXPECT_EQ(mem.buffer.capacity, (size_t)0);
-        EXPECT_EQ(mem.buffer.size_inc, 0);
+        EXPECT_EQ(mem.buffer.size_inc, (size_t)0);
         ASSERT_NE(mem.buffer.buf, nullptr);
         EXPECT_EQ(mem.buffer.buf[0], '\0');
     }
@@ -587,7 +587,7 @@ TEST(MembufferTestSuite, membuffer_set_size_reduce) {
                      "content.\n";
         EXPECT_EQ(mem.buffer.length, (size_t)2); // This is wrong
         EXPECT_EQ(mem.buffer.capacity, (size_t)1);
-        EXPECT_EQ(mem.buffer.size_inc, 0);
+        EXPECT_EQ(mem.buffer.size_inc, (size_t)0);
         ASSERT_NE(mem.buffer.buf, nullptr);
         EXPECT_EQ(mem.buffer.buf[0], '\x5A');
         EXPECT_EQ(mem.buffer.buf[1], '\x5A'); // Should be '\0'
@@ -596,7 +596,7 @@ TEST(MembufferTestSuite, membuffer_set_size_reduce) {
 
         EXPECT_EQ(mem.buffer.length, (size_t)1);
         EXPECT_EQ(mem.buffer.capacity, (size_t)1);
-        EXPECT_EQ(mem.buffer.size_inc, 0);
+        EXPECT_EQ(mem.buffer.size_inc, (size_t)0);
         ASSERT_NE(mem.buffer.buf, nullptr);
         EXPECT_EQ(mem.buffer.buf[0], '\x5A');
         EXPECT_EQ(mem.buffer.buf[1], '\0');
@@ -617,7 +617,7 @@ TEST(MembufferTestSuite, membuffer_set_size_increase) {
 
     EXPECT_EQ(mem.buffer.length, (size_t)2);
     EXPECT_EQ(mem.buffer.capacity, (size_t)3);
-    EXPECT_EQ(mem.buffer.size_inc, 0);
+    EXPECT_EQ(mem.buffer.size_inc, (size_t)0);
     ASSERT_NE(mem.buffer.buf, nullptr);
     EXPECT_EQ(mem.buffer.buf[0], '\xA5');
     EXPECT_EQ(mem.buffer.buf[1], '\xA5');
@@ -1144,7 +1144,7 @@ TEST(MembufferTestSuite, membuffer_attach_with_nullptr_to_string_buffer) {
         EXPECT_EQ(mem.buffer.length, (size_t)7)
             << "  # A nullptr to a buffer that should be "
                "attached must not segfault.";
-        EXPECT_EQ(mem.buffer.capacity, 7);
+        EXPECT_EQ(mem.buffer.capacity, (size_t)7);
         EXPECT_EQ(mem.buffer.size_inc, MEMBUF_DEF_SIZE_INC);
         ASSERT_NE(mem.buffer.buf, nullptr);
         EXPECT_STREQ(mem.buffer.buf, "Old buf");

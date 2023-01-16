@@ -1,5 +1,5 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-07-16
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-01-18
 
 #include "upnplib/urlparser.hpp"
 
@@ -56,11 +56,11 @@ std::array<unsigned short, 8> ipv6_parser(std::string_view a_input) {
         int length{};
         while (length < 4 && pointer < a_input.end() &&
                std::isxdigit((unsigned char)*pointer)) {
-            unsigned char c = (unsigned char)*pointer;
-            // c interpreted as hexadecimal number
+            unsigned char hx = (unsigned char)*pointer;
+            // hx interpreted as hexadecimal number
             unsigned short v =
-                (c >= 'A') ? (c >= 'a') ? (c - 'a' + 10) : (c - 'A' + 10)
-                           : (c - '0');
+                (hx >= 'A') ? (hx >= 'a') ? (hx - 'a' + 10) : (hx - 'A' + 10)
+                            : (hx - '0');
             // Arithmetic with implicit type cast to int, type cast is checked
             value = (unsigned short)(value * 0x10 + v);
             pointer++;

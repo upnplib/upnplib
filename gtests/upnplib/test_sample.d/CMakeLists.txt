@@ -1,5 +1,5 @@
-# Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-11
+# Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2023-01-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -105,6 +105,7 @@ target_compile_definitions (test_tv_device-csh
 target_compile_options(test_tv_device-csh
     PRIVATE
         # disable warning C4706: assignment within conditional expression
+        # This is intended but bad practice. I won't modify pupnp code.
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
 )
 target_link_libraries(test_tv_device-csh

@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-19
+// Redistribution only with this Copyright remark. Last modified: 2023-01-17
 
 // Implementation of the NetIf classes
 // ===================================
@@ -40,8 +40,10 @@ CNetIf4::CNetIf4() {
     m_adapts.FirstMulticastAddress = nullptr;
     m_adapts.FirstDnsServerAddress = nullptr;
     m_adapts.DnsSuffix = (::PWCHAR)L"";
-    m_adapts.Description = (::PWCHAR)m_Description.c_str();
-    m_adapts.FriendlyName = (::PWCHAR)m_FriendlyName.c_str();
+    // Copy pointer to the adapter structure. Modifying m_Description and
+    // m_FriendlyName will be reflected to the adapter structure.
+    m_adapts.Description = m_Description;
+    m_adapts.FriendlyName = m_FriendlyName;
     // m_adapts.PhysicalAddress is initialized to {0}
     // m_adapts.PhysicalAddressLength is initialized to 0
     m_adapts.Flags = IP_ADAPTER_IPV4_ENABLED;
@@ -96,7 +98,10 @@ void CNetIf4::set(::std::wstring_view a_ifname,
     }
 
     // No errors so far, modify the interface structure
-    m_FriendlyName = a_ifname;
+    size_t ifname_length =
+        a_ifname.length() < DisplayString ? a_ifname.length() : DisplayString;
+    wcsncpy(m_FriendlyName, a_ifname.data(), ifname_length);
+    m_FriendlyName[ifname_length] = L'\0';
     m_inaddr.sin_addr.s_addr = nipaddr;
     m_uniaddr.OnLinkPrefixLength = nbitmsk;
     m_adapts.Mtu = 1500;

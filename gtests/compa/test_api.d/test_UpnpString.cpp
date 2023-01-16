@@ -1,5 +1,5 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-24
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-01-18
 
 #include "UpnpString.hpp"
 
@@ -81,7 +81,7 @@ TEST_F(UpnpStringMockTestSuite, create_new_upnp_string) {
 
     // str should point to the upnpstr structure
     EXPECT_EQ(str, &upnpstr);
-    EXPECT_EQ(str->m_length, 0);
+    EXPECT_EQ(str->m_length, (size_t)0);
     // and its member 'm_string' should point to an empty string (mstring) that
     // is also allocated on the heap (if not mocked like here).
     EXPECT_EQ(str->m_string, mstring);
@@ -114,7 +114,7 @@ TEST_F(UpnpStringMockTestSuite, delete_upnp_string) {
     // Test Unit, check edge condition
     UpnpString_delete(nullptr);
 
-    EXPECT_EQ(upnpstr.m_length, 11);
+    EXPECT_EQ(upnpstr.m_length, (size_t)11);
     EXPECT_STREQ(upnpstr.m_string, "hello world");
 
     umock::Stdlib stdlib_injectObj(&mock_stdlibObj);
@@ -123,7 +123,7 @@ TEST_F(UpnpStringMockTestSuite, delete_upnp_string) {
     // Test Unit
     UpnpString_delete(p);
 
-    EXPECT_EQ(upnpstr.m_length, 0);
+    EXPECT_EQ(upnpstr.m_length, (size_t)0);
     EXPECT_EQ(upnpstr.m_string, nullptr);
 }
 
@@ -149,7 +149,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string) {
     // Test Unit
     EXPECT_PRED2(NS::UpnpString_set_String, p, mstring2);
 
-    EXPECT_EQ(upnpstr.m_length, 10);
+    EXPECT_EQ(upnpstr.m_length, (size_t)10);
     EXPECT_EQ(upnpstr.m_string, mstring3);
     EXPECT_STREQ(upnpstr.m_string, "set string");
     EXPECT_STREQ(p->m_string, "set string");
@@ -177,7 +177,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string_n) {
     // Test Unit
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring2, 11);
 
-    EXPECT_EQ(upnpstr.m_length, 11);
+    EXPECT_EQ(upnpstr.m_length, (size_t)11);
     EXPECT_EQ(upnpstr.m_string, mstring3);
     EXPECT_STREQ(upnpstr.m_string, "hello world");
     EXPECT_STREQ(p->m_string, "hello world");
@@ -187,7 +187,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string_n) {
         .WillOnce(Return(mstring_empty));
     EXPECT_CALL(this->mock_stdlibObj, free(mstring3)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring_empty, 0);
-    EXPECT_EQ(upnpstr.m_length, 0);
+    EXPECT_EQ(upnpstr.m_length, (size_t)0);
     EXPECT_STREQ(upnpstr.m_string, "");
 
     // longer string but length 0 should set an empty UpnpString.
@@ -195,7 +195,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string_n) {
         .WillOnce(Return(mstring_empty));
     EXPECT_CALL(this->mock_stdlibObj, free(mstring_empty)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring2, 0);
-    EXPECT_EQ(upnpstr.m_length, 0);
+    EXPECT_EQ(upnpstr.m_length, (size_t)0);
     EXPECT_STREQ(upnpstr.m_string, "");
 
     // longer string but length 1
@@ -204,7 +204,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string_n) {
         .WillOnce(Return(mstring4));
     EXPECT_CALL(this->mock_stdlibObj, free(mstring_empty)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring2, 1);
-    EXPECT_EQ(upnpstr.m_length, 1);
+    EXPECT_EQ(upnpstr.m_length, (size_t)1);
     EXPECT_EQ(upnpstr.m_string, mstring4);
 
     // Length = 10 is one character shorter than string length
@@ -213,7 +213,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string_n) {
         .WillOnce(Return(mstring5));
     EXPECT_CALL(this->mock_stdlibObj, free(mstring4)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring2, 10);
-    EXPECT_EQ(upnpstr.m_length, 10);
+    EXPECT_EQ(upnpstr.m_length, (size_t)10);
     EXPECT_EQ(upnpstr.m_string, mstring5);
 
     // Length = 12 is one character longer than string length
@@ -221,7 +221,7 @@ TEST_F(UpnpStringMockTestSuite, set_upnp_string_n) {
         .WillOnce(Return(mstring3));
     EXPECT_CALL(this->mock_stdlibObj, free(mstring5)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring2, 12);
-    EXPECT_EQ(upnpstr.m_length, 11);
+    EXPECT_EQ(upnpstr.m_length, (size_t)11);
     EXPECT_EQ(upnpstr.m_string, mstring3);
 }
 
@@ -274,7 +274,7 @@ TEST(UpnpStringTestSuite, clear_upnp_string) {
 
     // call the unit
     NS::UpnpString_clear(p);
-    EXPECT_EQ(upnpstr.m_length, 0);
+    EXPECT_EQ(upnpstr.m_length, (size_t)0);
     EXPECT_STREQ(upnpstr.m_string, "");
 }
 
@@ -290,7 +290,7 @@ TEST(UpnpStringDeathTest, upnp_string_get_length) {
     UpnpString upnpstr{11, mstring};
     UpnpString* p = &upnpstr;
 
-    EXPECT_EQ(NS::UpnpString_get_Length(p), 11);
+    EXPECT_EQ(NS::UpnpString_get_Length(p), (size_t)11);
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ]" CRES
@@ -302,9 +302,9 @@ TEST(UpnpStringDeathTest, upnp_string_get_length) {
     } else {
 
         // No segfault but there should not be any changes on the UpnpString.
-        EXPECT_EQ(NS::UpnpString_get_Length(nullptr), 0);
+        EXPECT_EQ(NS::UpnpString_get_Length(nullptr), (size_t)0);
 
-        EXPECT_EQ(upnpstr.m_length, 11);
+        EXPECT_EQ(upnpstr.m_length, (size_t)11);
         EXPECT_EQ(upnpstr.m_string, mstring);
     }
 }
@@ -328,7 +328,7 @@ TEST(UpnpStringDeathTest, get_upnp_string) {
 
         // No segfault but there should not be any changes on the UpnpString.
         EXPECT_EQ(NS::UpnpString_get_String(nullptr), nullptr);
-        EXPECT_EQ(upnpstr.m_length, 11);
+        EXPECT_EQ(upnpstr.m_length, (size_t)11);
         EXPECT_EQ(upnpstr.m_string, mstring);
     }
 }
@@ -372,7 +372,7 @@ TEST(UpnpStringDeathTest, set_upnp_string_with_nullptr_to_string) {
 
         // No segfault but there should not be any changes on the UpnpString.
         EXPECT_EQ(NS::UpnpString_set_String(p, nullptr), 0);
-        EXPECT_EQ(upnpstr.m_length, 11);
+        EXPECT_EQ(upnpstr.m_length, (size_t)11);
         EXPECT_EQ(upnpstr.m_string, mstring);
     }
 }
@@ -409,7 +409,7 @@ TEST(UpnpStringDeathTest, set_upnp_string_n_with_nullptr_to_string) {
 
         // No segfault but there should not be any changes on the UpnpString.
         EXPECT_EQ(NS::UpnpString_set_StringN(p, nullptr, 1), 0);
-        EXPECT_EQ(upnpstr.m_length, 11);
+        EXPECT_EQ(upnpstr.m_length, (size_t)11);
         EXPECT_EQ(upnpstr.m_string, mstring);
     }
 }

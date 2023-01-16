@@ -1,5 +1,5 @@
-# Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-11
+# Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2023-01-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -28,10 +28,11 @@ target_compile_definitions(test_upnpdebug-pst
 target_compile_options(test_upnpdebug-pst
     PRIVATE
         # disable warning C4459: declaration of 'fp' hides global declaration
+        # This is intended and don't fixed it because we won't modify pupnp code.
         $<$<CXX_COMPILER_ID:MSVC>:/wd4459>
-        # disable warning C4211: nonstandard extension used: redefined extern to static
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4211>
         # disable warning C4100: 'result_listener': unreferenced formal parameter
+        # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
+        # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
 )
 target_link_libraries(test_upnpdebug-pst
@@ -78,10 +79,6 @@ target_compile_definitions(test_UpnpString-psh
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
-target_compile_options(test_UpnpString-psh
-    PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W1>
-)
 target_link_libraries(test_UpnpString-psh
     PRIVATE
         pupnp_shared
@@ -99,10 +96,6 @@ target_compile_definitions(test_UpnpString-csh
     PRIVATE
         UPNPLIB_SHARED
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
-)
-target_compile_options(test_UpnpString-csh
-    PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/W1>
 )
 target_link_libraries(test_UpnpString-csh
     PRIVATE
@@ -221,11 +214,12 @@ target_compile_definitions(test_upnpapi-pst
 )
 target_compile_options(test_upnpapi-pst
     PRIVATE
-        # disable warning C4065: switch statement contains 'default' but no 'case' labels
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4065>
         # disable warning C4100: 'result_listener': unreferenced formal parameter
+        # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
+        # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
         # disable warning C4505: 'UpnpComputeIpv6PrefixLength': unreferenced local function has been removed
+        # This isn't used with WIN32 but on other platforms. I won't modify pupnp.
         $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
 )
 target_link_libraries(test_upnpapi-pst
@@ -252,10 +246,14 @@ target_compile_definitions(test_upnpapi-cst
 target_compile_options(test_upnpapi-cst
     PRIVATE
         # disable warning C4065: switch statement contains 'default' but no 'case' labels
+        # Bad practice but I won't modify pupnp code.
         $<$<CXX_COMPILER_ID:MSVC>:/wd4065>
         # disable warning C4100: 'result_listener': unreferenced formal parameter
+        # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
+        # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
         # disable warning C4505: 'UpnpComputeIpv6PrefixLength': unreferenced local function has been removed
+        # This isn't used with WIN32 but on other platforms. I won't modify pupnp code.
         $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
 )
 target_link_libraries(test_upnpapi-cst
@@ -280,13 +278,8 @@ target_compile_definitions(test_upnpapi_platform-pst
 )
 target_compile_options(test_upnpapi_platform-pst
     PRIVATE
-        # disable warning C4251: 'upnplib::CNetIf4::m_Description': class 'std::basic_string<wchar_t,std::char_traits<wchar_t>,std::allocator<wchar_t>>' needs to have dll-interface to be used by cli nts of class 'upnplib::CNetIf4'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
-        # disable warning C4244: '=': conversion from 'const _Ty' to '_Ty', possible loss of data
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
-        # disable warning C4389: '==': signed/unsigned mismatch
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4389>
         # disable warning C4505: 'GetFreeHandle': unreferenced local function has been removed
+        # This isn't used with WIN32 but on other platforms. I won't modify pupnp code.
         $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
 )
 target_link_libraries(test_upnpapi_platform-pst

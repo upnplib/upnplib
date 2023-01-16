@@ -1,5 +1,5 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-05
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-01-18
 
 // This tests only upnplib code without using pupnp code or compa code. The only
 // used 'upnplib' library does not provide it. So these tests belong to
@@ -57,7 +57,7 @@ TEST(simpleTestSuite, simple_winsock_test) {
 
     // Just create and close a socket
     SOCKET sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    EXPECT_NE(sockfd, -1);
+    EXPECT_NE(sockfd, (SOCKET)-1);
     EXPECT_EQ(closesocket(sockfd), 0);
 }
 
@@ -74,7 +74,7 @@ TEST(simpleTestSuite, simple_iphlpapi_test) {
 TEST(simpleTestSuite, simple_winsock_test) {
     // Just create and close a socket
     SOCKET sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    EXPECT_NE(sockfd, -1);
+    EXPECT_NE(sockfd, (SOCKET)-1);
     EXPECT_EQ(close(sockfd), 0);
 }
 #endif

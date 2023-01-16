@@ -1,4 +1,4 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-11-18
 
 // Helpful link for ip address structures:
@@ -227,10 +227,12 @@ INSTANTIATE_TEST_SUITE_P(
     uri, HostportFailIp4PTestSuite,
     ::testing::Values(
         //                 uristr,      ipaddr,     port
-        ::std::make_tuple("http://192.168.1.3", "192.168.1.3", 80),
-        ::std::make_tuple("/192.168.1.4:433", "192.168.1.4", 433),
-        ::std::make_tuple("http://example.com/site", "192.168.1.5", 80),
-        ::std::make_tuple(":example.com:443/site", "192.168.1.6", 433)));
+        ::std::make_tuple("http://192.168.1.3", "192.168.1.3", (uint16_t)80),
+        ::std::make_tuple("/192.168.1.4:433", "192.168.1.4", (uint16_t)433),
+        ::std::make_tuple("http://example.com/site", "192.168.1.5",
+                          (uint16_t)80),
+        ::std::make_tuple(":example.com:443/site", "192.168.1.6",
+                          (uint16_t)433)));
 
 //
 // parse_hostport() calls should be successful
@@ -274,13 +276,13 @@ INSTANTIATE_TEST_SUITE_P(
     uri, HostportIp4PTestSuite,
     ::testing::Values(
         //                 uristr,      ipaddr,     port
-        ::std::make_tuple("localhost", "127.0.0.1", 80),
-        ::std::make_tuple("example.com", "192.168.1.3", 80),
-        ::std::make_tuple("example.com:433", "192.168.1.4", 433),
+        ::std::make_tuple("localhost", "127.0.0.1", (uint16_t)80),
+        ::std::make_tuple("example.com", "192.168.1.3", (uint16_t)80),
+        ::std::make_tuple("example.com:433", "192.168.1.4", (uint16_t)433),
         ::std::make_tuple("example-site.de/path?query#fragment", "192.168.1.5",
-                          80),
+                          (uint16_t)80),
         ::std::make_tuple("example-site.de:433/path?query#fragment",
-                          "192.168.1.5", 433)));
+                          "192.168.1.5", (uint16_t)433)));
 
 //
 TEST(HostportIp6TestSuite, parse_hostport_without_name_resolution) {

@@ -1,5 +1,5 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-02
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-01-18
 
 #include "upnplib/src/net/uri/urlparser.cpp"
 
@@ -48,7 +48,11 @@ TEST_F(UrlClassIpv6ParserFTestSuite, single_colon_address) {
 }
 
 TEST(UrlClassIpv6ParserTestSuite, double_colon_address) {
-    EXPECT_THAT(ipv6_parser("::"), ElementsAre(0, 0, 0, 0, 0, 0, 0, 0));
+    EXPECT_THAT(ipv6_parser("::"),
+                ElementsAre((unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0));
 }
 
 TEST_F(UrlClassIpv6ParserFTestSuite, single_colon_with_digit_address) {
@@ -62,61 +66,107 @@ TEST_F(UrlClassIpv6ParserFTestSuite, three_colon_address) {
 }
 
 TEST(UrlClassIpv6ParserTestSuite, valid_address_0) {
-    EXPECT_THAT(ipv6_parser("::0"), ElementsAre(0, 0, 0, 0, 0, 0, 0, 0));
+    EXPECT_THAT(ipv6_parser("::0"),
+                ElementsAre((unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0));
 }
 
 TEST(UrlClassIpv6ParserTestSuite, valid_address_1) {
-    EXPECT_THAT(ipv6_parser("::1"), ElementsAre(0, 0, 0, 0, 0, 0, 0, 1));
+    EXPECT_THAT(ipv6_parser("::1"),
+                ElementsAre((unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0x1));
 }
 
 TEST(UrlClassIpv6ParserTestSuite, valid_address_9) {
-    EXPECT_THAT(ipv6_parser("::9"), ElementsAre(0, 0, 0, 0, 0, 0, 0, 9));
+    EXPECT_THAT(ipv6_parser("::9"),
+                ElementsAre((unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)9));
 }
 
 TEST(UrlClassIpv6ParserTestSuite, valid_address_A) {
-    EXPECT_THAT(ipv6_parser("::A"), ElementsAre(0, 0, 0, 0, 0, 0, 0, 0x000A));
+    EXPECT_THAT(ipv6_parser("::A"),
+                ElementsAre((unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0xA));
 }
 
 TEST(UrlClassIpv6ParserTestSuite, valid_address_F) {
-    EXPECT_THAT(ipv6_parser("::F"), ElementsAre(0, 0, 0, 0, 0, 0, 0, 0x000F));
+    EXPECT_THAT(ipv6_parser("::F"),
+                ElementsAre((unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0xF));
 }
 
 TEST(UrlClassIpv6ParserTestSuite, valid_address_a) {
-    EXPECT_THAT(ipv6_parser("::a00"), ElementsAre(0, 0, 0, 0, 0, 0, 0, 0x0A00));
+    EXPECT_THAT(ipv6_parser("::a00"),
+                ElementsAre((unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0x0A00));
 }
 
 TEST(UrlClassIpv6ParserTestSuite, valid_address_f) {
-    EXPECT_THAT(ipv6_parser("::f"), ElementsAre(0, 0, 0, 0, 0, 0, 0, 0x000F));
+    EXPECT_THAT(ipv6_parser("::f"),
+                ElementsAre((unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0xF));
 }
 
 TEST(UrlClassIpv6ParserTestSuite, valid_address_B) {
-    EXPECT_THAT(ipv6_parser("B::"), ElementsAre(0x000B, 0, 0, 0, 0, 0, 0, 0));
+    EXPECT_THAT(ipv6_parser("B::"),
+                ElementsAre((unsigned short)0xB, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0));
 }
 
 TEST(UrlClassIpv6ParserTestSuite, valid_address_c) {
     EXPECT_THAT(ipv6_parser("0:0:c000::"),
-                ElementsAre(0, 0, 0xC000, 0, 0, 0, 0, 0));
+                ElementsAre((unsigned short)0, (unsigned short)0,
+                            (unsigned short)0xC000, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0));
 }
 
 TEST(UrlClassIpv6ParserTestSuite, valid_address_double_colon) {
     EXPECT_THAT(ipv6_parser("2001:0DB8::F000"),
-                ElementsAre(0x2001, 0x0DB8, 0, 0, 0, 0, 0, 0xF000));
+                ElementsAre((unsigned short)0x2001, (unsigned short)0x0DB8,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0xF000));
 }
 
 TEST(UrlClassIpv6ParserTestSuite, valid_address) {
     EXPECT_THAT(ipv6_parser("2001:Db8:1234:5678:9abC:DeF0:1234:5678"),
-                ElementsAre(0x2001, 0x0DB8, 0x1234, 0x5678, 0x9ABC, 0xDEF0,
-                            0x1234, 0x5678));
+                ElementsAre((unsigned short)0x2001, (unsigned short)0x0DB8,
+                            (unsigned short)0x1234, (unsigned short)0x5678,
+                            (unsigned short)0x9ABC, (unsigned short)0xDEF0,
+                            (unsigned short)0x1234, (unsigned short)0x5678));
 }
 
 TEST(UrlClassIpv6ParserTestSuite, ipv4_mapped_address_with_dots_2) {
     EXPECT_THAT(ipv6_parser("2001:DB8::ffff:192.0.2.128"),
-                ElementsAre(0x2001, 0x0DB8, 0, 0, 0, 0xFFFF, 0xC000, 0x0280));
+                ElementsAre((unsigned short)0x2001, (unsigned short)0x0DB8,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0xFFFF,
+                            (unsigned short)0xC000, (unsigned short)0x0280));
 }
 
 TEST(UrlClassIpv6ParserTestSuite, ipv4_mapped_address_with_dots_1) {
     EXPECT_THAT(ipv6_parser("::ffff:192.0.2.128"),
-                ElementsAre(0, 0, 0, 0, 0, 0xFFFF, 0xC000, 0x0280));
+                ElementsAre((unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0,
+                            (unsigned short)0, (unsigned short)0xFFFF,
+                            (unsigned short)0xC000, (unsigned short)0x0280));
 }
 
 TEST_F(UrlClassIpv6ParserFTestSuite, ipv4_mapped_address_with_wrong_dots) {

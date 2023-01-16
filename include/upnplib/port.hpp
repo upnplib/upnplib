@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-12
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-01-18
 
 // Header file for portable definitions
 // ====================================
@@ -31,7 +31,6 @@
   #define STDIN_FILENO 0
   #define STDOUT_FILENO 1
   #define STDERR_FILENO 2
-  #define stat _stat
 
 #else // WIN32
 

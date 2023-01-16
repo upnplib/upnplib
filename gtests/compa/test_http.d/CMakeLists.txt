@@ -1,5 +1,5 @@
-# Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-15
+# Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2023-01-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -31,7 +31,8 @@ target_compile_definitions(test_webserver-pst
 )
 target_compile_options(test_webserver-pst
     PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W1>
+        # To fix these warnigs we have to modify the original pupnp code but
+        # that isn't intended. So the warnings are suppressed.
         # disable warning C4701: potentially uninitialized local variable 'subtype' used
         $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
         # disable warning C4703: potentially uninitialized local pointer variable 'subtype' used
@@ -60,9 +61,8 @@ target_compile_definitions(test_webserver-cst
 )
 target_compile_options(test_webserver-cst
     PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W1>
-        # disable warning C4505: 'alias_release': unreferenced local function has been removed
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
+        # To fix these warnigs we have to modify the original pupnp code but
+        # that isn't intended. So the warnings are suppressed.
         # disable warning C4701: potentially uninitialized local variable 'subtype' used
         $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
         # disable warning C4703: potentially uninitialized local pointer variable 'subtype' used
@@ -127,15 +127,12 @@ target_compile_definitions(test_httpreadwrite-pst
 )
 target_compile_options(test_httpreadwrite-pst
     PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W1>
-        # disable warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
+        # To fix these warnigs we have to modify the original pupnp code but
+        # that isn't intended. So the warnings are suppressed.
         # disable warning C4505: 'upnplib::Check_Connect_And_Wait_Connection': unreferenced local function has been removed
         $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
         # disable warning C4706: assignment within conditional expression
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
-        # disable warning C4211: nonstandard extension used: redefined extern to static
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4211>
 )
 target_link_libraries(test_httpreadwrite-pst
     PRIVATE
@@ -198,12 +195,10 @@ target_compile_definitions(test_netconnect-pst
 )
 target_compile_options(test_netconnect-pst
     PRIVATE
-        # disable warning C4244: 'argument': conversion from 'xxx' to 'yyy', possible loss of data
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
+        # To fix these warnigs we have to modify the original pupnp code but
+        # that isn't intended. So the warnings are suppressed.
         # disable warning C4706: assignment within conditional expression
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
-        # disable warning C4211: nonstandard extension used: redefined extern to static
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4211>
 )
 target_link_libraries(test_netconnect-pst
     PRIVATE
@@ -250,6 +245,8 @@ target_compile_definitions(test_httpparser-pst
 )
 target_compile_options(test_httpparser-pst
     PRIVATE
+        # To fix these warnigs we have to modify the original pupnp code but
+        # that isn't intended. So the warnings are suppressed.
         # disable warning C4706: assignment within conditional expression
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
         # disable warning C4701: potentially uninitialized local variable 'status' used
@@ -276,6 +273,8 @@ target_compile_definitions(test_httpparser-cst
 )
 target_compile_options(test_httpparser-cst
     PRIVATE
+        # To fix these warnigs we have to modify the original pupnp code but
+        # that isn't intended. So the warnings are suppressed.
         # disable warning C4706: assignment within conditional expression
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
         # disable warning C4701: potentially uninitialized local variable 'status' used

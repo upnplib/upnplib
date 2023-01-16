@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-12-05
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-01-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -3088,7 +3088,8 @@ int UpnpDownloadXmlDoc(const char* url, IXML_Document** xmlDoc) {
  *
  * \return The IPv6 prefix length.
  */
-static unsigned UpnpComputeIpv6PrefixLength(struct sockaddr_in6* Netmask) {
+[[maybe_unused]] static unsigned
+UpnpComputeIpv6PrefixLength(struct sockaddr_in6* Netmask) {
     unsigned prefix_length = 0;
     size_t i = 0;
 

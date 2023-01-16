@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-11
+// Redistribution only with this Copyright remark. Last modified: 2023-01-16
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -142,9 +142,9 @@ TEST(WebServerTestSuite, init_and_destroy) {
 
     // Check if gDocumentRootDir is initialized
     EXPECT_EQ(gDocumentRootDir.buf, nullptr);
-    EXPECT_EQ(gDocumentRootDir.length, 0);
-    EXPECT_EQ(gDocumentRootDir.capacity, 0);
-    EXPECT_EQ(gDocumentRootDir.size_inc, 5);
+    EXPECT_EQ(gDocumentRootDir.length, (size_t)0);
+    EXPECT_EQ(gDocumentRootDir.capacity, (size_t)0);
+    EXPECT_EQ(gDocumentRootDir.size_inc, (size_t)5);
 
     // Check if the global alias document is initialized
     EXPECT_EQ(NS::gAliasDoc.doc.buf, nullptr);
@@ -445,14 +445,14 @@ TEST(XMLaliasTestSuite, glob_alias_init_and_release) {
 
     // Check the empty alias.
     EXPECT_EQ(alias->doc.buf, nullptr);
-    EXPECT_EQ(alias->doc.length, 0);
-    EXPECT_EQ(alias->doc.capacity, 0);
-    EXPECT_EQ(alias->doc.size_inc, 5);
+    EXPECT_EQ(alias->doc.length, (size_t)0);
+    EXPECT_EQ(alias->doc.capacity, (size_t)0);
+    EXPECT_EQ(alias->doc.size_inc, (size_t)5);
 
     EXPECT_EQ(alias->name.buf, nullptr);
-    EXPECT_EQ(alias->name.length, 0);
-    EXPECT_EQ(alias->name.capacity, 0);
-    EXPECT_EQ(alias->name.size_inc, 5);
+    EXPECT_EQ(alias->name.length, (size_t)0);
+    EXPECT_EQ(alias->name.capacity, (size_t)0);
+    EXPECT_EQ(alias->name.size_inc, (size_t)5);
 
     EXPECT_EQ(alias->ct, nullptr);
     EXPECT_EQ(alias->last_modified, 0);
@@ -467,14 +467,14 @@ TEST(XMLaliasTestSuite, glob_alias_init_and_release) {
     NS::alias_release(alias);
 
     EXPECT_EQ(alias->doc.buf, nullptr);
-    EXPECT_EQ(alias->doc.length, 0);
-    EXPECT_EQ(alias->doc.capacity, 0);
-    EXPECT_EQ(alias->doc.size_inc, 5);
+    EXPECT_EQ(alias->doc.length, (size_t)0);
+    EXPECT_EQ(alias->doc.capacity, (size_t)0);
+    EXPECT_EQ(alias->doc.size_inc, (size_t)5);
 
     EXPECT_EQ(alias->name.buf, nullptr);
-    EXPECT_EQ(alias->name.length, 0);
-    EXPECT_EQ(alias->name.capacity, 0);
-    EXPECT_EQ(alias->name.size_inc, 5);
+    EXPECT_EQ(alias->name.length, (size_t)0);
+    EXPECT_EQ(alias->name.capacity, (size_t)0);
+    EXPECT_EQ(alias->name.size_inc, (size_t)5);
 
     EXPECT_EQ(alias->ct, nullptr);
     EXPECT_EQ(alias->last_modified, 0);
@@ -580,15 +580,15 @@ TEST_F(XMLaliasFTestSuite, set_and_is_valid_and_release_global_alias) {
     EXPECT_STREQ(NS::gAliasDoc.doc.buf, "Test for a valid alias");
     EXPECT_EQ(NS::gAliasDoc.doc.length, strlen(NS::gAliasDoc.doc.buf));
     EXPECT_EQ(NS::gAliasDoc.doc.length, sizeof(content) - 1);
-    EXPECT_EQ(NS::gAliasDoc.doc.capacity, 22);
-    EXPECT_EQ(NS::gAliasDoc.doc.size_inc, 5);
+    EXPECT_EQ(NS::gAliasDoc.doc.capacity, (size_t)22);
+    EXPECT_EQ(NS::gAliasDoc.doc.size_inc, (size_t)5);
 
     EXPECT_STREQ(NS::gAliasDoc.name.buf, "/is_valid_alias");
-    EXPECT_EQ(strlen(NS::gAliasDoc.name.buf), 15); // with added '/'
+    EXPECT_EQ(strlen(NS::gAliasDoc.name.buf), (size_t)15); // with added '/'
     // *.length is without NULL byte, sizeof with NULL byte
     EXPECT_EQ(NS::gAliasDoc.name.length, sizeof('/') + sizeof(alias_name) - 1);
-    EXPECT_EQ(NS::gAliasDoc.name.capacity, 19);
-    EXPECT_EQ(NS::gAliasDoc.name.size_inc, 5);
+    EXPECT_EQ(NS::gAliasDoc.name.capacity, (size_t)19);
+    EXPECT_EQ(NS::gAliasDoc.name.size_inc, (size_t)5);
 
     EXPECT_EQ(*NS::gAliasDoc.ct, 1);
     EXPECT_EQ(NS::gAliasDoc.last_modified, 1668095500);
@@ -600,14 +600,14 @@ TEST_F(XMLaliasFTestSuite, set_and_is_valid_and_release_global_alias) {
     NS::alias_release((NS::xml_alias_t*)&NS::gAliasDoc);
 
     EXPECT_STREQ(NS::gAliasDoc.doc.buf, nullptr);
-    EXPECT_EQ(NS::gAliasDoc.doc.length, 0);
-    EXPECT_EQ(NS::gAliasDoc.doc.capacity, 0);
-    EXPECT_EQ(NS::gAliasDoc.doc.size_inc, 5);
+    EXPECT_EQ(NS::gAliasDoc.doc.length, (size_t)0);
+    EXPECT_EQ(NS::gAliasDoc.doc.capacity, (size_t)0);
+    EXPECT_EQ(NS::gAliasDoc.doc.size_inc, (size_t)5);
 
     EXPECT_STREQ(NS::gAliasDoc.name.buf, nullptr);
-    EXPECT_EQ(NS::gAliasDoc.name.length, 0);
-    EXPECT_EQ(NS::gAliasDoc.name.capacity, 0);
-    EXPECT_EQ(NS::gAliasDoc.name.size_inc, 5);
+    EXPECT_EQ(NS::gAliasDoc.name.length, (size_t)0);
+    EXPECT_EQ(NS::gAliasDoc.name.capacity, (size_t)0);
+    EXPECT_EQ(NS::gAliasDoc.name.size_inc, (size_t)5);
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
@@ -648,14 +648,14 @@ TEST_F(XMLaliasFTestSuite, set_and_remove_alias) {
               0);
 
     EXPECT_STREQ(NS::gAliasDoc.doc.buf, nullptr);
-    EXPECT_EQ(NS::gAliasDoc.doc.length, 0);
-    EXPECT_EQ(NS::gAliasDoc.doc.capacity, 0);
-    EXPECT_EQ(NS::gAliasDoc.doc.size_inc, 5);
+    EXPECT_EQ(NS::gAliasDoc.doc.length, (size_t)0);
+    EXPECT_EQ(NS::gAliasDoc.doc.capacity, (size_t)0);
+    EXPECT_EQ(NS::gAliasDoc.doc.size_inc, (size_t)5);
 
     EXPECT_STREQ(NS::gAliasDoc.name.buf, nullptr);
-    EXPECT_EQ(NS::gAliasDoc.name.length, 0);
-    EXPECT_EQ(NS::gAliasDoc.name.capacity, 0);
-    EXPECT_EQ(NS::gAliasDoc.name.size_inc, 5);
+    EXPECT_EQ(NS::gAliasDoc.name.length, (size_t)0);
+    EXPECT_EQ(NS::gAliasDoc.name.capacity, (size_t)0);
+    EXPECT_EQ(NS::gAliasDoc.name.size_inc, (size_t)5);
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
@@ -690,14 +690,14 @@ TEST_F(XMLaliasFDeathTest, set_alias_with_nullptr_to_alias_content) {
 
         // This is an invalid alias with name but no pointer to its document.
         EXPECT_EQ(::gAliasDoc.doc.buf, nullptr);
-        EXPECT_EQ(::gAliasDoc.doc.length, 0);
-        EXPECT_EQ(::gAliasDoc.doc.capacity, 0);
-        EXPECT_EQ(::gAliasDoc.doc.size_inc, 5);
+        EXPECT_EQ(::gAliasDoc.doc.length, (size_t)0);
+        EXPECT_EQ(::gAliasDoc.doc.capacity, (size_t)0);
+        EXPECT_EQ(::gAliasDoc.doc.size_inc, (size_t)5);
 
         EXPECT_STREQ(::gAliasDoc.name.buf, "/alias_Name");
         EXPECT_EQ(::gAliasDoc.name.length, sizeof(alias_name));
-        EXPECT_EQ(::gAliasDoc.name.capacity, 15);
-        EXPECT_EQ(::gAliasDoc.name.size_inc, 5);
+        EXPECT_EQ(::gAliasDoc.name.capacity, (size_t)15);
+        EXPECT_EQ(::gAliasDoc.name.size_inc, (size_t)5);
 #endif
 
     } else {
@@ -734,14 +734,14 @@ TEST_F(XMLaliasFDeathTest, set_alias_with_nullptr_but_length_to_alias_content) {
         // This is an invalid alias with name and doc length but no pointer to
         // its document.
         EXPECT_EQ(::gAliasDoc.doc.buf, nullptr);
-        EXPECT_EQ(::gAliasDoc.doc.length, 1);
-        EXPECT_EQ(::gAliasDoc.doc.capacity, 1);
-        EXPECT_EQ(::gAliasDoc.doc.size_inc, 5);
+        EXPECT_EQ(::gAliasDoc.doc.length, (size_t)1);
+        EXPECT_EQ(::gAliasDoc.doc.capacity, (size_t)1);
+        EXPECT_EQ(::gAliasDoc.doc.size_inc, (size_t)5);
 
         EXPECT_STREQ(::gAliasDoc.name.buf, "/alias_with_length");
         EXPECT_EQ(::gAliasDoc.name.length, sizeof(alias_name));
-        EXPECT_EQ(::gAliasDoc.name.capacity, 22);
-        EXPECT_EQ(::gAliasDoc.name.size_inc, 5);
+        EXPECT_EQ(::gAliasDoc.name.capacity, (size_t)22);
+        EXPECT_EQ(::gAliasDoc.name.size_inc, (size_t)5);
 #endif
 
     } else {
@@ -775,18 +775,18 @@ TEST_F(XMLaliasFTestSuite, set_alias_with_content_length_zero) {
     EXPECT_EQ(NS::web_server_set_alias(alias_name, alias_content, 0, 0), 0);
 
     EXPECT_STREQ(NS::gAliasDoc.name.buf, "/valid_alias_name");
-    EXPECT_EQ(strlen(NS::gAliasDoc.name.buf), 17);
+    EXPECT_EQ(strlen(NS::gAliasDoc.name.buf), (size_t)17);
     // *.length is without NULL byte, sizeof with NULL byte
     EXPECT_EQ(NS::gAliasDoc.name.length, sizeof('/') + sizeof(alias_name) - 1);
-    EXPECT_EQ(NS::gAliasDoc.name.capacity, 21); // Don't know why this isn't 18.
-    EXPECT_EQ(NS::gAliasDoc.name.size_inc, 5);
+    EXPECT_EQ(NS::gAliasDoc.name.capacity, (size_t)21);
+    EXPECT_EQ(NS::gAliasDoc.name.size_inc, (size_t)5);
 
     EXPECT_EQ(*NS::gAliasDoc.ct, 1);
     EXPECT_EQ(NS::gAliasDoc.last_modified, 0);
 
-    EXPECT_EQ(NS::gAliasDoc.doc.length, 0);
-    EXPECT_EQ(NS::gAliasDoc.doc.capacity, 0);
-    EXPECT_EQ(NS::gAliasDoc.doc.size_inc, 5);
+    EXPECT_EQ(NS::gAliasDoc.doc.length, (size_t)0);
+    EXPECT_EQ(NS::gAliasDoc.doc.capacity, (size_t)0);
+    EXPECT_EQ(NS::gAliasDoc.doc.size_inc, (size_t)5);
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
@@ -812,8 +812,8 @@ TEST_F(XMLaliasFTestSuite, set_alias_with_content_length_one) {
     EXPECT_EQ(NS::web_server_set_alias(alias_name, alias_content, 1, 0), 0);
 
     EXPECT_EQ(*NS::gAliasDoc.ct, 1);
-    EXPECT_EQ(NS::gAliasDoc.doc.length, 1);
-    EXPECT_EQ(NS::gAliasDoc.doc.capacity, 1);
+    EXPECT_EQ(NS::gAliasDoc.doc.length, (size_t)1);
+    EXPECT_EQ(NS::gAliasDoc.doc.capacity, (size_t)1);
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
@@ -839,8 +839,8 @@ TEST_F(XMLaliasFTestSuite, set_alias_with_content_length) {
     EXPECT_EQ(NS::web_server_set_alias(alias_name, alias_content, 19, 0), 0);
 
     EXPECT_EQ(*NS::gAliasDoc.ct, 1);
-    EXPECT_EQ(NS::gAliasDoc.doc.length, 19);
-    EXPECT_EQ(NS::gAliasDoc.doc.capacity, 19);
+    EXPECT_EQ(NS::gAliasDoc.doc.length, (size_t)19);
+    EXPECT_EQ(NS::gAliasDoc.doc.capacity, (size_t)19);
     EXPECT_STREQ(NS::gAliasDoc.doc.buf, "XML Dokument string");
 }
 
@@ -862,13 +862,13 @@ TEST_F(XMLaliasFTestSuite, set_alias_with_content_length_greater) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": web_server_set_alias() must never set wrong content "
                      "length of alias document.\n";
-        EXPECT_EQ(::gAliasDoc.doc.length, 20);   // Wrong
-        EXPECT_EQ(::gAliasDoc.doc.capacity, 20); // Wrong
+        EXPECT_EQ(::gAliasDoc.doc.length, (size_t)20);   // Wrong
+        EXPECT_EQ(::gAliasDoc.doc.capacity, (size_t)20); // Wrong
 
     } else {
 
-        EXPECT_EQ(compa::gAliasDoc.doc.length, 19);
-        EXPECT_EQ(compa::gAliasDoc.doc.capacity, 19);
+        EXPECT_EQ(compa::gAliasDoc.doc.length, (size_t)19);
+        EXPECT_EQ(compa::gAliasDoc.doc.capacity, (size_t)19);
     }
 }
 
@@ -1043,15 +1043,15 @@ TEST_F(XMLaliasFTestSuite, alias_grab_valid_structure) {
 
     EXPECT_STREQ(gAliasDoc_dup.doc.buf, "Test for a valid alias");
     EXPECT_EQ(gAliasDoc_dup.doc.length, sizeof(content) - 1);
-    EXPECT_EQ(gAliasDoc_dup.doc.capacity, 22);
-    EXPECT_EQ(gAliasDoc_dup.doc.size_inc, 5);
+    EXPECT_EQ(gAliasDoc_dup.doc.capacity, (size_t)22);
+    EXPECT_EQ(gAliasDoc_dup.doc.size_inc, (size_t)5);
 
     EXPECT_STREQ(gAliasDoc_dup.name.buf, "/is_valid_alias");
-    EXPECT_EQ(strlen(gAliasDoc_dup.name.buf), 15);
+    EXPECT_EQ(strlen(gAliasDoc_dup.name.buf), (size_t)15);
     // *.length is without NULL byte, sizeof with NULL byte
     EXPECT_EQ(gAliasDoc_dup.name.length, sizeof('/') + sizeof(alias_name) - 1);
-    EXPECT_EQ(gAliasDoc_dup.name.capacity, 19);
-    EXPECT_EQ(gAliasDoc_dup.name.size_inc, 5);
+    EXPECT_EQ(gAliasDoc_dup.name.capacity, (size_t)19);
+    EXPECT_EQ(gAliasDoc_dup.name.size_inc, (size_t)5);
 
     EXPECT_EQ(*gAliasDoc_dup.ct, 2);
     EXPECT_EQ(gAliasDoc_dup.last_modified, 1668095500);
@@ -1086,14 +1086,14 @@ TEST_F(XMLaliasFDeathTest, alias_grab_empty_structure) {
 
         compa::alias_grab(&gAliasDoc_dup);
         EXPECT_STREQ(gAliasDoc_dup.doc.buf, nullptr);
-        EXPECT_EQ(gAliasDoc_dup.doc.length, 0);
-        EXPECT_EQ(gAliasDoc_dup.doc.capacity, 0);
-        EXPECT_EQ(gAliasDoc_dup.doc.size_inc, 5);
+        EXPECT_EQ(gAliasDoc_dup.doc.length, (size_t)0);
+        EXPECT_EQ(gAliasDoc_dup.doc.capacity, (size_t)0);
+        EXPECT_EQ(gAliasDoc_dup.doc.size_inc, (size_t)5);
 
         EXPECT_STREQ(gAliasDoc_dup.name.buf, nullptr);
-        EXPECT_EQ(gAliasDoc_dup.name.length, 0);
-        EXPECT_EQ(gAliasDoc_dup.name.capacity, 0);
-        EXPECT_EQ(gAliasDoc_dup.name.size_inc, 5);
+        EXPECT_EQ(gAliasDoc_dup.name.length, (size_t)0);
+        EXPECT_EQ(gAliasDoc_dup.name.capacity, (size_t)0);
+        EXPECT_EQ(gAliasDoc_dup.name.size_inc, (size_t)5);
 
         EXPECT_EQ(gAliasDoc_dup.last_modified, 0);
         EXPECT_EQ(gAliasDoc_dup.ct, nullptr);
