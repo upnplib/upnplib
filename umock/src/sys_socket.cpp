@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-15
+// Redistribution only with this Copyright remark. Last modified: 2023-01-19
 
 #include "umock/sys_socket.inc"
 
@@ -23,18 +23,18 @@ SOCKET Sys_socketReal::accept(SOCKET sockfd, struct sockaddr* addr, socklen_t* a
 }
 
 size_t Sys_socketReal::recv(SOCKET sockfd, char* buf, size_t len, int flags) {
-    return ::recv(sockfd, buf, len, flags);
+    return ::recv(sockfd, buf, (SIZEP_T)len, flags);
 }
 
 size_t Sys_socketReal::recvfrom(SOCKET sockfd, char* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen) {
-    return ::recvfrom(sockfd, buf, len, flags, src_addr, addrlen);
+    return ::recvfrom(sockfd, buf, (SIZEP_T)len, flags, src_addr, addrlen);
 }
 
 size_t Sys_socketReal::send(SOCKET sockfd, const char* buf, size_t len, int flags) {
-    return ::send(sockfd, buf, len, flags);
+    return ::send(sockfd, buf, (SIZEP_T)len, flags);
 }
 
-size_t Sys_socketReal::sendto(SOCKET sockfd, const char* buf, sendto_buflen_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen) {
+size_t Sys_socketReal::sendto(SOCKET sockfd, const char* buf, SIZEP_T len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen) {
     return ::sendto(sockfd, buf, len, flags, dest_addr, addrlen);
 }
 
@@ -108,7 +108,7 @@ size_t Sys_socket::send(SOCKET sockfd, const char* buf, size_t len, int flags) {
     return m_ptr_workerObj->send(sockfd, buf, len, flags);
 }
 
-size_t Sys_socket::sendto(SOCKET sockfd, const char* buf, sendto_buflen_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen) {
+size_t Sys_socket::sendto(SOCKET sockfd, const char* buf, SIZEP_T len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen) {
     return m_ptr_workerObj->sendto(sockfd, buf, len, flags, dest_addr, addrlen);
 }
 

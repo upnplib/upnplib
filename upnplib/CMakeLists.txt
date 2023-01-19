@@ -1,13 +1,25 @@
-# Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-05
+# Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2023-01-19
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNPLIB VERSION 0010
-                DESCRIPTION "UPnP library program"
-                HOMEPAGE_URL "https://github.com/upnplib")
+project(UPNPLIB VERSION 0011
+        DESCRIPTION "UPnP library program"
+        HOMEPAGE_URL "https://github.com/upnplib")
 
+
+add_compile_definitions(
+    # Disable warnings to use e.g. strncpy_s instead of strncpy
+    $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+
+add_compile_options(
+    # Most compiler warnings enabled
+    $<$<CXX_COMPILER_ID:MSVC>:/W4>
+    # all compiler warnings as errors
+    $<$<CXX_COMPILER_ID:MSVC>:/WX>
+)
 
 set(UPNPLIB_SOURCE_FILES
     ./src/api/upnptools.cpp

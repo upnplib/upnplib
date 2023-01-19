@@ -2,8 +2,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-08
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-01-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -518,7 +518,7 @@ static int TvDeviceSetPower(
 
     /* Vendor-specific code to turn the power on/off goes here. */
 
-    sprintf(value, "%d", on);
+    snprintf(value, sizeof(value), "%d", on);
     ret =
         TvDeviceSetServiceTableVar(TV_SERVICE_CONTROL, TV_CONTROL_POWER, value);
 
@@ -635,7 +635,7 @@ int IncrementChannel(int incr, IXML_Document* in, IXML_Document** out,
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the channel goes here. */
-    sprintf(value, "%.4hd", (short)newchannel);
+    snprintf(value, sizeof(value), "%.4hd", (short)newchannel);
     if (TvDeviceSetServiceTableVar(TV_SERVICE_CONTROL, TV_CONTROL_CHANNEL,
                                    value)) {
         if (UpnpAddToActionResponse(out, actionName,
@@ -736,7 +736,7 @@ static int IncrementVolume(
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the volume goes here. */
-    sprintf(value, "%.4hd", (short)newvolume);
+    snprintf(value, sizeof(value), "%.4hd", (short)newvolume);
     if (TvDeviceSetServiceTableVar(TV_SERVICE_CONTROL, TV_CONTROL_VOLUME,
                                    value)) {
         if (UpnpAddToActionResponse(out, actionName,
@@ -837,7 +837,7 @@ static int IncrementColor(
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the volume goes here. */
-    sprintf(value, "%.4hd", (short)newcolor);
+    snprintf(value, sizeof(value), "%.4hd", (short)newcolor);
     if (TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_COLOR,
                                    value)) {
         if (UpnpAddToActionResponse(out, actionName,
@@ -941,7 +941,7 @@ int IncrementTint(int incr, IXML_Document* in, IXML_Document** out,
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the volume goes here. */
-    sprintf(value, "%.4hd", (short)newtint);
+    snprintf(value, sizeof(value), "%.4hd", (short)newtint);
     if (TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_TINT,
                                    value)) {
         if (UpnpAddToActionResponse(out, actionName,
@@ -1084,7 +1084,7 @@ static int IncrementContrast(
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the channel goes here. */
-    sprintf(value, "%.4hd", (short)newcontrast);
+    snprintf(value, sizeof(value), "%.4hd", (short)newcontrast);
     if (TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_CONTRAST,
                                    value)) {
         if (UpnpAddToActionResponse(out, actionName,
@@ -1186,7 +1186,7 @@ static int IncrementBrightness(
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the channel goes here. */
-    sprintf(value, "%.4hd", (short)newbrightness);
+    snprintf(value, sizeof(value), "%.4hd", (short)newbrightness);
     if (TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_BRIGHTNESS,
                                    value)) {
         if (UpnpAddToActionResponse(out, actionName,
@@ -1377,8 +1377,8 @@ void* TvDeviceCommandLoop(void* args) {
     (void)args;
 
     while (!stoploop) {
-        sprintf(cmdline, " ");
-        sprintf(cmd, " ");
+        snprintf(cmdline, sizeof(cmdline), " ");
+        snprintf(cmd, sizeof(cmd), " ");
         SampleUtil_Print("\n>> ");
         /* Get a command line */
         s = fgets(cmdline, 100, stdin);

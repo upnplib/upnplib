@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-18
+# Redistribution only with this Copyright remark. Last modified: 2023-01-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -129,7 +129,12 @@ target_compile_options(test_httpreadwrite-pst
     PRIVATE
         # To fix these warnigs we have to modify the original pupnp code but
         # that isn't intended. So the warnings are suppressed.
-        # disable warning C4505: 'upnplib::Check_Connect_And_Wait_Connection': unreferenced local function has been removed
+        #
+        # disable warning: 'sprintf' (and others) is deprecated: This function is
+        # provided for compatibility reasons only.
+        $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-declarations>
+        # disable warning C4505: 'upnplib::Check_Connect_And_Wait_Connection':
+        # unreferenced local function has been removed
         $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
         # disable warning C4706: assignment within conditional expression
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
@@ -197,6 +202,10 @@ target_compile_options(test_netconnect-pst
     PRIVATE
         # To fix these warnigs we have to modify the original pupnp code but
         # that isn't intended. So the warnings are suppressed.
+        #
+        # disable warning: 'sprintf' (and others) is deprecated: This function is
+        # provided for compatibility reasons only.
+        $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-declarations>
         # disable warning C4706: assignment within conditional expression
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
 )

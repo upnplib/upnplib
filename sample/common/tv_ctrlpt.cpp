@@ -2,8 +2,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-08
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-01-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -392,7 +392,7 @@ int TvCtrlPointSendActionNumericArg(int devnum, int service,
     char param_val_a[50];
     char* param_val = param_val_a;
 
-    sprintf(param_val_a, "%d", paramValue);
+    snprintf(param_val_a, sizeof(param_val_a), "%d", paramValue);
     return TvCtrlPointSendAction(service, devnum, actionName, &paramName,
                                  &param_val, 1);
 }
@@ -551,9 +551,9 @@ int TvCtrlPointPrintDevice(int devnum) {
             tmpdevnode->device.AdvrTimeOut);
         for (service = 0; service < TV_SERVICE_SERVCOUNT; service++) {
             if (service < TV_SERVICE_SERVCOUNT - 1)
-                sprintf(spacer, "    |    ");
+                snprintf(spacer, sizeof(spacer), "    |    ");
             else
-                sprintf(spacer, "         ");
+                snprintf(spacer, sizeof(spacer), "         ");
             SampleUtil_Print(
                 "    |                  \n"
                 "    +- Tv %s Service\n"

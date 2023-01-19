@@ -1,5 +1,5 @@
-# Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-03
+# Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2023-01-19
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -119,7 +119,6 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 # Set general compile definitions and options
 #--------------------------------------------
 add_compile_definitions(
-    PRIVATE
         # Having STRNLEN and STRNDUP are validated above. Give it to the program.
         $<$<BOOL:${UPNPLIB_HAVE_STRNLEN}>:HAVE_STRNLEN>
         $<$<BOOL:${UPNPLIB_HAVE_STRNDUP}>:HAVE_STRNDUP>
@@ -133,8 +132,11 @@ add_compile_definitions(
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 add_compile_options(
-        # all compiler warnings as errors
-        $<$<CXX_COMPILER_ID:MSVC>:/WX>
+        # disable warning C4996: 'strdup'(or others): The POSIX name for this
+        # item is deprecated. Instead, use the ISO C and C++ conformant name:
+        # _strdup. See online help for details. (This is Microsoft specific, no
+        # need to fix).
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4996>
         # lots of warnings and all warnings as errors
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wextra>
@@ -157,8 +159,7 @@ if(DEFINED ENV{GITHUB_ACTIONS})
 endif()
 
 add_link_options(
-        # all linker warnings as errors
-        $<$<CXX_COMPILER_ID:MSVC>:/WX>
+        $<$<CXX_COMPILER_ID:MSVC>:/WX>   # all linker warnings as errors
 )
 
 

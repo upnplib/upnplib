@@ -1,5 +1,5 @@
-# Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-05
+# Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2023-01-19
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -25,14 +25,21 @@ if(UPNPLIB_WITH_SAMPLES)
 endif()
 
 
-set(SAMPLE_INCLUDE_DIRECTORIES
-    PRIVATE ./common
+add_compile_options(
+    # Default warning level
+    $<$<CXX_COMPILER_ID:MSVC>:/W1>
+    # all compiler warnings as errors
+    $<$<CXX_COMPILER_ID:MSVC>:/WX>
 )
-
 
 link_libraries(
         pupnp_shared
         upnplib_shared
+)
+
+
+set(SAMPLE_INCLUDE_DIRECTORIES
+    PRIVATE ./common
 )
 
 IF (UPNPLIB_DEF_SAMPLE_CLIENT)

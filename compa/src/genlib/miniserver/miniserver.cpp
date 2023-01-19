@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-01-13
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-01-19
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1299,7 +1299,7 @@ int StopMiniServer() {
         ssdpAddr.sin_family = (sa_family_t)AF_INET;
         inet_pton(AF_INET, "127.0.0.1", &ssdpAddr.sin_addr);
         ssdpAddr.sin_port = htons(miniStopSockPort);
-        umock::sys_socket_h.sendto(sock, buf, (sendto_buflen_t)bufLen, 0,
+        umock::sys_socket_h.sendto(sock, buf, (SIZEP_T)bufLen, 0,
                                    (struct sockaddr*)&ssdpAddr, socklen);
         imillisleep(1);
         if (gMServState == (MiniServerState)MSERV_IDLE) {

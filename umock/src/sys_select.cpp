@@ -1,4 +1,4 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-11-19
 
 #include "umock/sys_select.inc"
@@ -7,8 +7,9 @@ namespace umock {
 
 int Sys_selectReal::select(SOCKET nfds, fd_set* readfds, fd_set* writefds,
                            fd_set* exceptfds, struct timeval* timeout) {
-    // Call real standard library function
-    return ::select(nfds, readfds, writefds, exceptfds, timeout);
+    // Call real standard library function. On MS Windows nfds is only provided
+    // for compatibility but ignored so the type cast doesn't matter.
+    return ::select((int)nfds, readfds, writefds, exceptfds, timeout);
 }
 
 // This constructor is used to inject the pointer to the real function.
