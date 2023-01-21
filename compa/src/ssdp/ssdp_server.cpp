@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-01-15
+ * Redistribution only with this Copyright remark. Last modified: 2023-01-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-// Last compare with pupnp original source file on 2023-01-15, ver 1.14.15
 
 /*!
  * \addtogroup SSDPlib
@@ -56,10 +55,14 @@
 #include "upnpapi.hpp"
 #include "umock/sys_socket.hpp"
 
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
 
 #include "posix_overwrites.hpp"
 #define MAX_TIME_TOREAD 45
+
+//
+namespace compa {
 
 #ifdef INCLUDE_CLIENT_APIS
 SOCKET gSsdpReqSocket4 = INVALID_SOCKET;
@@ -220,9 +223,10 @@ int AdvertiseAndReply(int AdFlag, UpnpDevice_Handle Hnd,
                     break;
                 case SSDP_ROOTDEVICE:
                     if (i == 0lu) {
-                        SendReply(DestAddr, devType, 1, UDNstr, SInfo->DescURL,
-                                  defaultExp, 0, SInfo->PowerState,
-                                  SInfo->SleepPeriod, SInfo->RegistrationState);
+                        ::SendReply(DestAddr, devType, 1, UDNstr,
+                                    SInfo->DescURL, defaultExp, 0,
+                                    SInfo->PowerState, SInfo->SleepPeriod,
+                                    SInfo->RegistrationState);
                     }
                     break;
                 case SSDP_DEVICEUDN: {
@@ -236,7 +240,7 @@ int AdvertiseAndReply(int AdFlag, UpnpDevice_Handle Hnd,
                             UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
                                 "DeviceUDN=%s and search UDN=%s MATCH\n",
                                 UDNstr, DeviceUDN);
-                            SendReply(DestAddr, devType, 0, UDNstr, SInfo->DescURL, defaultExp, 0,
+                            ::SendReply(DestAddr, devType, 0, UDNstr, SInfo->DescURL, defaultExp, 0,
                                 SInfo->PowerState,
                                 SInfo->SleepPeriod,
                                 SInfo->RegistrationState);
@@ -256,7 +260,7 @@ int AdvertiseAndReply(int AdFlag, UpnpDevice_Handle Hnd,
                             UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
                                    "DeviceType=%s and search devType=%s MATCH\n",
                                    devType, DeviceType);
-                            SendReply(DestAddr, DeviceType, 0, UDNstr, SInfo->LowerDescURL,
+                            ::SendReply(DestAddr, DeviceType, 0, UDNstr, SInfo->LowerDescURL,
                                   defaultExp, 1,
                                   SInfo->PowerState,
                                   SInfo->SleepPeriod,
@@ -266,7 +270,7 @@ int AdvertiseAndReply(int AdFlag, UpnpDevice_Handle Hnd,
                             UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
                                    "DeviceType=%s and search devType=%s MATCH\n",
                                    devType, DeviceType);
-                            SendReply(DestAddr, DeviceType, 0, UDNstr, SInfo->DescURL,
+                            ::SendReply(DestAddr, DeviceType, 0, UDNstr, SInfo->DescURL,
                                   defaultExp, 1,
                                   SInfo->PowerState,
                                   SInfo->SleepPeriod,
@@ -376,7 +380,7 @@ int AdvertiseAndReply(int AdFlag, UpnpDevice_Handle Hnd,
                                     UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
                                            "ServiceType=%s and search servType=%s MATCH\n",
                                            ServiceType, servType);
-                                    SendReply(DestAddr, ServiceType, 0, UDNstr, SInfo->LowerDescURL,
+                                    ::SendReply(DestAddr, ServiceType, 0, UDNstr, SInfo->LowerDescURL,
                                           defaultExp, 1,
                                           SInfo->PowerState,
                                           SInfo->SleepPeriod,
@@ -386,7 +390,7 @@ int AdvertiseAndReply(int AdFlag, UpnpDevice_Handle Hnd,
                                     UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
                                            "ServiceType=%s and search servType=%s MATCH\n",
                                            ServiceType, servType);
-                                    SendReply(DestAddr, ServiceType, 0, UDNstr, SInfo->DescURL,
+                                    ::SendReply(DestAddr, ServiceType, 0, UDNstr, SInfo->DescURL,
                                           defaultExp, 1,
                                           SInfo->PowerState,
                                           SInfo->SleepPeriod,
@@ -526,7 +530,7 @@ enum SsdpSearchType ssdp_request_type1(char* cmd) {
 int ssdp_request_type(char* cmd, SsdpEvent* Evt) {
     /* clear event */
     memset(Evt, 0, sizeof(SsdpEvent));
-    unique_service_name(cmd, Evt);
+    compa::unique_service_name(cmd, Evt);
     Evt->ErrCode = NO_ERROR_FOUND;
     if ((Evt->RequestType = ssdp_request_type1(cmd)) == SSDP_SERROR) {
         Evt->ErrCode = E_HTTP_SYNTEX;
@@ -626,14 +630,14 @@ static UPNP_INLINE int start_event_handler(
         goto error_handler;
     }
     /* check msg */
-    if (valid_ssdp_msg(&parser->msg) != 1) {
+    if (compa::valid_ssdp_msg(&parser->msg) != 1) {
         goto error_handler;
     }
     /* done; thread will free 'data' */
     return 0;
 
 error_handler:
-    free_ssdp_event_handler_data(data);
+    compa::free_ssdp_event_handler_data(data);
     return -1;
 }
 
@@ -660,7 +664,7 @@ static void ssdp_event_handler_thread(
     }
 
     /* free data */
-    free_ssdp_event_handler_data(data);
+    compa::free_ssdp_event_handler_data(data);
 }
 
 void readFromSSDPSocket(SOCKET socket) {
@@ -735,13 +739,13 @@ void readFromSSDPSocket(SOCKET socket) {
             data->parser.msg.msg.buf[byteReceived] = 0;
             memcpy(&data->dest_addr, &__ss, sizeof(__ss));
             TPJobInit(&job, (start_routine)ssdp_event_handler_thread, data);
-            TPJobSetFreeFunction(&job, free_ssdp_event_handler_data);
+            TPJobSetFreeFunction(&job, compa::free_ssdp_event_handler_data);
             TPJobSetPriority(&job, MED_PRIORITY);
             if (ThreadPoolAdd(&gRecvThreadPool, &job, NULL) != 0)
-                free_ssdp_event_handler_data(data);
+                compa::free_ssdp_event_handler_data(data);
         }
     } else
-        free_ssdp_event_handler_data(data);
+        compa::free_ssdp_event_handler_data(data);
 }
 
 /*!
@@ -750,7 +754,7 @@ void readFromSSDPSocket(SOCKET socket) {
 static int create_ssdp_sock_v4(
     /*! [] SSDP IPv4 socket to be created. */
     SOCKET* ssdpSock) {
-    char errorBuffer[ERROR_BUFFER_LEN];
+    TRACE("executing compa::create_ssdp_sock_v4()\n");
     int onOff;
     u_char ttl = (u_char)4;
     struct ip_mreq ssdpMcastAddr;
@@ -759,32 +763,31 @@ static int create_ssdp_sock_v4(
     int ret = 0;
     struct in_addr addr;
 
-    *ssdpSock = socket(AF_INET, SOCK_DGRAM, 0);
+    *ssdpSock = umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (*ssdpSock == INVALID_SOCKET) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
-                   "Error in socket(): %s\n", errorBuffer);
+                   "Error in socket(): %s\n", std::strerror(errno));
 
         return UPNP_E_OUTOF_SOCKET;
     }
     onOff = 1;
-    ret = setsockopt(*ssdpSock, SOL_SOCKET, SO_REUSEADDR, (char*)&onOff,
-                     sizeof(onOff));
+    ret = umock::sys_socket_h.setsockopt(*ssdpSock, SOL_SOCKET, SO_REUSEADDR,
+                                         (char*)&onOff, sizeof(onOff));
     if (ret == -1) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
-                   "Error in setsockopt() SO_REUSEADDR: %s\n", errorBuffer);
+                   "Error in setsockopt() SO_REUSEADDR: %s\n",
+                   std::strerror(errno));
         ret = UPNP_E_SOCKET_ERROR;
         goto error_handler;
     }
 #if (defined(BSD) && !defined(__GNU__)) || defined(__APPLE__)
     onOff = 1;
-    ret = setsockopt(*ssdpSock, SOL_SOCKET, SO_REUSEPORT, (char*)&onOff,
-                     sizeof(onOff));
+    ret = umock::sys_socket_h.setsockopt(*ssdpSock, SOL_SOCKET, SO_REUSEPORT,
+                                         (char*)&onOff, sizeof(onOff));
     if (ret == -1) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
-                   "Error in setsockopt() SO_REUSEPORT: %s\n", errorBuffer);
+                   "Error in setsockopt() SO_REUSEPORT: %s\n",
+                   std::strerror(errno));
         ret = UPNP_E_SOCKET_ERROR;
         goto error_handler;
     }
@@ -793,12 +796,12 @@ static int create_ssdp_sock_v4(
     ssdpAddr4->sin_family = (sa_family_t)AF_INET;
     ssdpAddr4->sin_addr.s_addr = htonl(INADDR_ANY);
     ssdpAddr4->sin_port = htons(SSDP_PORT);
-    ret = bind(*ssdpSock, (struct sockaddr*)ssdpAddr4, sizeof(*ssdpAddr4));
+    ret = umock::sys_socket_h.bind(*ssdpSock, (struct sockaddr*)ssdpAddr4,
+                                   sizeof(*ssdpAddr4));
     if (ret == -1) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
                    "Error in bind(), addr=0x%08X, port=%d: %s\n", INADDR_ANY,
-                   SSDP_PORT, errorBuffer);
+                   SSDP_PORT, std::strerror(errno));
         ret = UPNP_E_SOCKET_BIND;
         goto error_handler;
     }
@@ -826,11 +829,10 @@ static int create_ssdp_sock_v4(
         *ssdpSock, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*)&ssdpMcastAddr,
         sizeof(struct ip_mreq));
     if (ret == -1) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
                    "Error in setsockopt() IP_ADD_MEMBERSHIP (join "
                    "multicast group): %s\n",
-                   errorBuffer);
+                   std::strerror(errno));
         ret = UPNP_E_SOCKET_ERROR;
         goto error_handler;
     }
@@ -844,25 +846,23 @@ static int create_ssdp_sock_v4(
     ret = umock::sys_socket_h.setsockopt(*ssdpSock, IPPROTO_IP, IP_MULTICAST_IF,
                                          (char*)&addr, sizeof addr);
     if (ret == -1) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,
                    "Error in setsockopt() IP_MULTICAST_IF (set multicast "
                    "interface): %s\n",
-                   errorBuffer);
+                   std::strerror(errno));
         /* This is probably not a critical error, so let's continue. */
     }
     /* result is not checked becuase it will fail in WinMe and Win9x. */
-    setsockopt(*ssdpSock, IPPROTO_IP, IP_MULTICAST_TTL, (const char*)&ttl,
-               sizeof(ttl));
+    umock::sys_socket_h.setsockopt(*ssdpSock, IPPROTO_IP, IP_MULTICAST_TTL,
+                                   (const char*)&ttl, sizeof(ttl));
     onOff = 1;
-    ret = setsockopt(*ssdpSock, SOL_SOCKET, SO_BROADCAST, (char*)&onOff,
-                     sizeof(onOff));
+    ret = umock::sys_socket_h.setsockopt(*ssdpSock, SOL_SOCKET, SO_BROADCAST,
+                                         (char*)&onOff, sizeof(onOff));
     if (ret == -1) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
                    "Error in setsockopt() SO_BROADCAST (set broadcast): "
                    "%s\n",
-                   errorBuffer);
+                   std::strerror(errno));
         ret = UPNP_E_NETWORK_ERROR;
         goto error_handler;
     }
@@ -885,14 +885,13 @@ error_handler:
 static int create_ssdp_sock_reqv4(
     /*! [out] SSDP IPv4 request socket to be created. */
     SOCKET* ssdpReqSock) {
-    char errorBuffer[ERROR_BUFFER_LEN];
+    TRACE("executing compa::create_ssdp_sock_reqv4()\n");
     u_char ttl = 4;
 
     *ssdpReqSock = umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (*ssdpReqSock == INVALID_SOCKET) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
-                   "Error in socket(): %s\n", errorBuffer);
+                   "Error in socket(): %s\n", std::strerror(errno));
         return UPNP_E_OUTOF_SOCKET;
     }
     umock::sys_socket_h.setsockopt(*ssdpReqSock, IPPROTO_IP, IP_MULTICAST_TTL,
@@ -1146,7 +1145,7 @@ static int create_ssdp_sock_reqv6(
     char errorBuffer[ERROR_BUFFER_LEN];
     char hops = 1;
 
-    *ssdpReqSock = umock::sys_socket_h.socket(AF_INET6, SOCK_DGRAM, 0);
+    *ssdpReqSock = socket(AF_INET6, SOCK_DGRAM, 0);
     if (*ssdpReqSock == INVALID_SOCKET) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
@@ -1156,8 +1155,8 @@ static int create_ssdp_sock_reqv6(
     /* MUST use scoping of IPv6 addresses to control the propagation os SSDP
      * messages instead of relying on the Hop Limit (Equivalent to the TTL
      * limit in IPv4). */
-    umock::sys_socket_h.setsockopt(*ssdpReqSock, IPPROTO_IPV6,
-                                   IPV6_MULTICAST_HOPS, &hops, sizeof(hops));
+    setsockopt(*ssdpReqSock, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, &hops,
+               sizeof(hops));
     /* just do it, regardless if fails or not. */
     sock_make_no_blocking(*ssdpReqSock);
 
@@ -1167,6 +1166,7 @@ static int create_ssdp_sock_reqv6(
 #endif /* INCLUDE_CLIENT_APIS */
 
 int get_ssdp_sockets(MiniServerSockArray* out) {
+    TRACE("executing compa::get_ssdp_sockets()\n");
     int retVal;
 
 #ifdef INCLUDE_CLIENT_APIS
@@ -1238,6 +1238,9 @@ int get_ssdp_sockets(MiniServerSockArray* out) {
 
     return UPNP_E_SUCCESS;
 }
+
+} // namespace compa
+
 #endif /* EXCLUDE_SSDP */
 
 /* @} SSDPlib */

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-19
+// Redistribution only with this Copyright remark. Last modified: 2023-01-20
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -17,7 +17,7 @@
 
 #include "webserver.hpp"
 
-#include "upnplib/upnptools.hpp"
+#include "upnplib/upnptools.hpp" // for errStrEx
 #include "upnplib/port.hpp"
 #include "upnplib/sock.hpp"
 #include "upnplib/gtest.hpp"
@@ -41,25 +41,6 @@ using ::upnplib::testing::CaptureStdOutErr;
 using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::MatchesStdRegex;
 using ::upnplib::testing::StrCpyToArg;
-
-class CLogging { /*
- * Use it for example with:
-    class CLogging loggingObj; // Output only with build type DEBUG.
-* or
-    class CLogging loggingObj(UPNP_ALL); // Output only with build type DEBUG.
- * or other loglevel.
- */
-  public:
-    CLogging(Upnp_LogLevel a_loglevel = UPNP_ALL) {
-        UpnpSetLogLevel(a_loglevel);
-        if (UpnpInitLog() != UPNP_E_SUCCESS) {
-            throw std::runtime_error(std::string(
-                "UpnpInitLog(): failed to initialize pupnp logging."));
-        }
-    }
-
-    ~CLogging() { UpnpCloseLog(); }
-};
 
 //
 namespace compa {
@@ -126,6 +107,28 @@ by select() so it will always enable a blocked (waiting) select().
    handle_request() as thread, started by schedule_request_job()
    |__ http_RecvMessage()
 */
+
+//
+// Helper class
+// ============
+class CLogging { /*
+ * Use it for example with:
+    class CLogging loggingObj; // Output only with build type DEBUG.
+* or
+    class CLogging loggingObj(UPNP_ALL); // Output only with build type DEBUG.
+ * or other loglevel.
+ */
+  public:
+    CLogging(Upnp_LogLevel a_loglevel = UPNP_ALL) {
+        UpnpSetLogLevel(a_loglevel);
+        if (UpnpInitLog() != UPNP_E_SUCCESS) {
+            throw std::runtime_error(std::string(
+                "UpnpInitLog(): failed to initialize pupnp logging."));
+        }
+    }
+
+    ~CLogging() { UpnpCloseLog(); }
+};
 
 //
 // Mocked system calls
@@ -2264,6 +2267,6 @@ TEST_F(StopMiniServerFTestSuite, sock_close) {
 //
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-    // class CLogging loggingObj; // Output only with build type DEBUG.
+    // compa::CLogging loggingObj; // Output only with build type DEBUG.
 #include "compa/gtest_main.inc"
 }

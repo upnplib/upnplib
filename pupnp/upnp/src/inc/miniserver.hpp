@@ -1,6 +1,5 @@
 #ifndef PUPNP_MINISERVER_HPP
 #define PUPNP_MINISERVER_HPP
-
 /**************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation

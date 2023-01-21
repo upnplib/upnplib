@@ -44,7 +44,8 @@ pUPnP compile unit
     ./pupnp/upnp/src/inc/ssdplib.hpp
     ./pupnp/upnp/src/ssdp/ssdp_server.cpp
 UPnPlib compatible compile unit
-    t.b.d.
+    ./compa/include/compa/ssdp_server.hpp
+    ./compa/src/ssdp/ssdp_server.cpp
 Test collection for both
     ./gtests/compa/test_ssdp.d/test_ssdp_server.cpp
 

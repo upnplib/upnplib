@@ -1,6 +1,5 @@
-#ifndef UPNPLIB_SSDPLIB_HPP
-#define UPNPLIB_SSDPLIB_HPP
-
+#ifndef PUPNP_SSDPLIB_HPP
+#define PUPNP_SSDPLIB_HPP
 /**************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
@@ -517,4 +516,4 @@ int DeviceShutdown(
 
 /* @} SSDPlib SSDP Library */
 
-#endif /* UPNPLIB_SSDPLIB_HPP */
+#endif /* PUPNP_SSDPLIB_HPP */
