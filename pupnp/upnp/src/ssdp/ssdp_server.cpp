@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-01-15
+ * Redistribution only with this Copyright remark. Last modified: 2023-01-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -55,6 +55,7 @@
 #include "sock.hpp"
 #include "upnpapi.hpp"
 #include "umock/sys_socket.hpp"
+#include "umock/pupnp_sock.hpp"
 
 #include <stdio.h>
 
@@ -898,7 +899,7 @@ static int create_ssdp_sock_reqv4(
     umock::sys_socket_h.setsockopt(*ssdpReqSock, IPPROTO_IP, IP_MULTICAST_TTL,
                                    (const char*)&ttl, sizeof(ttl));
     /* just do it, regardless if fails or not. */
-    sock_make_no_blocking(*ssdpReqSock);
+    umock::pupnp_sock.sock_make_no_blocking(*ssdpReqSock);
 
     return UPNP_E_SUCCESS;
 }
@@ -1159,7 +1160,7 @@ static int create_ssdp_sock_reqv6(
     umock::sys_socket_h.setsockopt(*ssdpReqSock, IPPROTO_IPV6,
                                    IPV6_MULTICAST_HOPS, &hops, sizeof(hops));
     /* just do it, regardless if fails or not. */
-    sock_make_no_blocking(*ssdpReqSock);
+    umock::pupnp_sock.sock_make_no_blocking(*ssdpReqSock);
 
     return UPNP_E_SUCCESS;
 }

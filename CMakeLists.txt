@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-19
+# Redistribution only with this Copyright remark. Last modified: 2023-01-24
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -363,9 +363,9 @@ endif(WIN32)
 # e.g. PUPNP_UPNP_SOURCE_DIR and PUPNP_UPNP_BINARY_DIR
 # For a successful one step configure the order is important.
 
+add_subdirectory(${PROJECT_SOURCE_DIR}/umock)
 add_subdirectory(${PROJECT_SOURCE_DIR}/upnplib)
 add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp)
-add_subdirectory(${PROJECT_SOURCE_DIR}/umock)
 add_subdirectory(${PROJECT_SOURCE_DIR}/ixml)
 add_subdirectory(${PROJECT_SOURCE_DIR}/compa)
 add_subdirectory(${PROJECT_SOURCE_DIR}/sample)

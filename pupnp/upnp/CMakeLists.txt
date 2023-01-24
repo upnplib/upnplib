@@ -1,5 +1,5 @@
 # Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-05
+# Redistribution only with this Copyright remark. Last modified: 2023-01-26
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)

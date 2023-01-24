@@ -1,8 +1,9 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-21
+// Redistribution only with this Copyright remark. Last modified: 2023-01-24
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
+
 #include "pupnp/upnp/src/ssdp/ssdp_server.cpp"
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #define NS
@@ -134,6 +135,13 @@ class Sys_socketMock : public umock::Sys_socketInterface {
     MOCK_METHOD(int, shutdown, (SOCKET sockfd, int how), (override));
 };
 
+class PupnpSockMock : public umock::PupnpSockInterface {
+  public:
+    virtual ~PupnpSockMock() override = default;
+    MOCK_METHOD(int, sock_make_blocking, (SOCKET sock), (override));
+    MOCK_METHOD(int, sock_make_no_blocking, (SOCKET sock), (override));
+};
+
 //
 // ssdp_server TestSuite
 // =====================
@@ -160,7 +168,7 @@ class SSDPserverFTestSuite : public ::testing::Test {
         memset(&gIF_IPV6_ULA_GUA, 0, sizeof(gIF_IPV6_ULA_GUA));
         gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
         gIF_INDEX = (unsigned)-1;
-        errno = 0xAA;
+        memset(&errno, 0xAA, sizeof(errno));
     }
 
     ~SSDPserverFTestSuite() override {
@@ -205,14 +213,14 @@ TEST_F(CreateSSDPsockReqV4FTestSuite, create_successful) {
         .WillOnce(Return(0));
     // Unblock connection, means don't wait on connect and return
     // immediately.
-    // PupnpMock mock_pupnpObj;
-    // umock::Pupnp pupnp_injectObj(&mock_pupnpObj);
-    // EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(sockfd))
-    //    .WillOnce(Return(0));
+    PupnpSockMock mock_pupnpSockObj;
+    umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
+    EXPECT_CALL(mock_pupnpSockObj, sock_make_no_blocking(_))
+        .WillOnce(Return(0));
 
     int ret_create_ssdp_sock_reqv4{UPNP_E_INTERNAL_ERROR};
-    ret_create_ssdp_sock_reqv4 = create_ssdp_sock_reqv4(&ssdpSock);
-    EXPECT_EQ(ret_create_ssdp_sock_reqv4, UPNP_E_SUCCESS)
+    EXPECT_EQ(ret_create_ssdp_sock_reqv4 = create_ssdp_sock_reqv4(&ssdpSock),
+              UPNP_E_SUCCESS)
         << errStrEx(ret_create_ssdp_sock_reqv4, UPNP_E_SUCCESS);
     EXPECT_EQ(ssdpSock, sockfd);
 }

@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_PUPNP_SOCK_HPP
 #define UPNPLIB_PUPNP_SOCK_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-24
+// Redistribution only with this Copyright remark. Last modified: 2023-01-26
 
 // This is a header only mocking include file. When included it is present
 // direct in the source code and can be used to mock static functions that are
@@ -9,6 +9,11 @@
 // include does not consume many resources. But still, it's better for the
 // global context with exported symbols to use a header + sorce file compile
 // unit as shown in other mocking files.
+
+#include "upnplib/port.hpp"
+
+int sock_make_no_blocking(SOCKET sock);
+int sock_make_blocking(SOCKET socks);
 
 namespace umock {
 
@@ -80,16 +85,16 @@ class PupnpSock {
     // Next variable must be static. Please note that a static member variable
     // belongs to the class, but not to the instantiated object. This is
     // important here for mocking because the pointer is also valid on all
-    // objects of the class. With inline we do not need an extra definition line
-    // outside the class.
+    // objects of this class. With inline we do not need an extra definition
+    // line outside the class.
     static inline PupnpSockInterface* m_ptr_workerObj;
     PupnpSockInterface* m_ptr_oldObj{};
 };
 
 // On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
-PupnpSockReal pupnp_sock_realObj;
-PupnpSock pupnp_sock(&pupnp_sock_realObj);
+static PupnpSockReal pupnp_sock_realObj;
+static PupnpSock pupnp_sock(&pupnp_sock_realObj);
 
 } // namespace umock
 
