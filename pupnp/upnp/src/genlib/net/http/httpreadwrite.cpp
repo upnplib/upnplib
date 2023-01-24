@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-25
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2022-11-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -82,7 +82,8 @@
 // --Ingo
 #define UPNP_VERSION_STRING "1.14.15"
 
-#include "umock/pupnp.hpp"
+#include "umock/pupnp_sock.hpp"
+#include "umock/pupnp_httprw.hpp"
 #include "umock/sys_select.hpp"
 #include "umock/sys_socket.hpp"
 #include "umock/winsock2.hpp"
@@ -166,14 +167,15 @@ static int Check_Connect_And_Wait_Connection(
 static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
                            socklen_t addrlen) {
 #ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
-    int ret = umock::pupnp.sock_make_no_blocking(sockfd);
+    int ret = umock::pupnp_sock.sock_make_no_blocking(sockfd);
     // Ingo BUG! On MS Windows sock_make_no_blocking() returns with positive
     // error numbers.
     if (ret != -1) {
         ret = umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
-        ret = umock::pupnp.Check_Connect_And_Wait_Connection(sockfd, ret);
+        ret =
+            umock::pupnp_httprw.Check_Connect_And_Wait_Connection(sockfd, ret);
         if (ret != -1) {
-            ret = umock::pupnp.sock_make_blocking(sockfd);
+            ret = umock::pupnp_sock.sock_make_blocking(sockfd);
         }
     }
 
@@ -315,7 +317,7 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
     sockaddr_len = (socklen_t)(url->hostport.IPaddress.ss_family == AF_INET6
                                    ? sizeof(struct sockaddr_in6)
                                    : sizeof(struct sockaddr_in));
-    ret_connect = umock::pupnp.private_connect(
+    ret_connect = umock::pupnp_httprw.private_connect(
         connfd, (struct sockaddr*)&url->hostport.IPaddress, sockaddr_len);
     if (ret_connect == -1) {
 #ifdef _WIN32
@@ -697,7 +699,7 @@ int http_RequestAndResponse(uri_type* destination, const char* request,
     sockaddr_len = destination->hostport.IPaddress.ss_family == AF_INET6
                        ? sizeof(struct sockaddr_in6)
                        : sizeof(struct sockaddr_in);
-    ret_code = umock::pupnp.private_connect(
+    ret_code = umock::pupnp_httprw.private_connect(
         info.socket, (struct sockaddr*)&(destination->hostport.IPaddress),
         (socklen_t)sockaddr_len);
     if (ret_code == -1) {
@@ -1146,7 +1148,7 @@ int http_OpenHttpConnection(const char* url_str, void** Handle, int timeout) {
     sockaddr_len = url.hostport.IPaddress.ss_family == AF_INET6
                        ? sizeof(struct sockaddr_in6)
                        : sizeof(struct sockaddr_in);
-    ret_code = umock::pupnp.private_connect(
+    ret_code = umock::pupnp_httprw.private_connect(
         handle->sock_info.socket, (struct sockaddr*)&(url.hostport.IPaddress),
         (socklen_t)sockaddr_len);
     if (ret_code == -1) {
@@ -1909,7 +1911,7 @@ int http_OpenHttpGetEx(const char* url_str, void** Handle, char** contentType,
         sockaddr_len = url.hostport.IPaddress.ss_family == AF_INET6
                            ? sizeof(struct sockaddr_in6)
                            : sizeof(struct sockaddr_in);
-        errCode = umock::pupnp.private_connect(
+        errCode = umock::pupnp_httprw.private_connect(
             handle->sock_info.socket,
             (struct sockaddr*)&(url.hostport.IPaddress),
             (socklen_t)sockaddr_len);

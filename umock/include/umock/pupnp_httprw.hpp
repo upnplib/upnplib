@@ -1,7 +1,7 @@
-#ifndef UPNPLIB_PUPNP_HPP
-#define UPNPLIB_PUPNP_HPP
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-09-27
+#ifndef UPNPLIB_PUPNP_HTTPRW_HPP
+#define UPNPLIB_PUPNP_HTTPRW_HPP
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-01-24
 
 // This is a header only mocking include file. When included it is present
 // direct in the source code and can be used to mock static functions that are
@@ -18,12 +18,10 @@ static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
 
 namespace umock {
 
-class PupnpInterface {
+class PupnpHttpRwInterface {
   public:
-    virtual ~PupnpInterface() = default;
+    virtual ~PupnpHttpRwInterface() = default;
     // clang-format off
-    virtual int sock_make_no_blocking(SOCKET sock) = 0;
-    virtual int sock_make_blocking(SOCKET sock) = 0;
 #ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
     virtual int Check_Connect_And_Wait_Connection(SOCKET sock, int connect_res) = 0;
 #endif
@@ -34,15 +32,9 @@ class PupnpInterface {
 //
 // This is the wrapper class for the real function
 // -----------------------------------------------
-class PupnpReal : public PupnpInterface {
+class PupnpHttpRwReal : public PupnpHttpRwInterface {
   public:
-    virtual ~PupnpReal() override = default;
-    int sock_make_no_blocking(SOCKET sock) override {
-        return ::sock_make_no_blocking(sock);
-    }
-    int sock_make_blocking(SOCKET sock) override {
-        return ::sock_make_blocking(sock);
-    }
+    virtual ~PupnpHttpRwReal() override = default;
 #ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
     int Check_Connect_And_Wait_Connection(SOCKET sock,
                                           int connect_res) override {
@@ -58,45 +50,39 @@ class PupnpReal : public PupnpInterface {
 //
 // This is the caller or injector class that injects the class (worker) to be
 // used, real or mocked functions.
+// clang-format off
 /* Example:
-    PupnpReal pupnp_realObj; // already done below
-    Pupnp(&pupnp_realObj);   // already done below
+    PupnpHttpRwReal pupnp_httprw_realObj; // already done below
+    PupnpHttpRw(&pupnp_httprw_realObj);   // already done below
     { // Other scope, e.g. within a gtest
-        class PupnpMock : public PupnpInterface { ...; MOCK_METHOD(...) };
-        PupnpMock pupnp_mockObj;
-        Pupnp pupnp_injectObj(&pupnp_mockObj); // obj. name doesn't matter
-        EXPECT_CALL(pupnp_mockObj, ...);
-    } // End scope, mock objects are destructed, worker restored to default.
-*///----------------------------------------------------------------------------
-class Pupnp {
+        class PupnpHttpRwMock : public PupnpHttpRwInterface { ...; MOCK_METHOD(...) };
+        PupnpHttpRwMock pupnp_httprw_mockObj;
+        PupnpHttpRw pupnp_httprw_injectObj(&pupnp_httprw_mockObj); // obj. name doesn't matter
+        EXPECT_CALL(pupnp_httprw_mockObj, ...);
+    } // End scope, mock objects are destructed, worker restored to default. */
+// clang-format on
+//------------------------------------------------------------------------------
+class PupnpHttpRw {
   public:
     // This constructor is used to inject the pointer to the real function. It
     // sets the default used class, that is the real function.
-    Pupnp(PupnpReal* a_ptr_realObj) {
-        m_ptr_workerObj = (PupnpInterface*)a_ptr_realObj;
+    PupnpHttpRw(PupnpHttpRwReal* a_ptr_realObj) {
+        m_ptr_workerObj = (PupnpHttpRwInterface*)a_ptr_realObj;
     }
 
     // This constructor is used to inject the pointer to the mocking function.
-    Pupnp(PupnpInterface* a_ptr_mockObj) {
+    PupnpHttpRw(PupnpHttpRwInterface* a_ptr_mockObj) {
         m_ptr_oldObj = m_ptr_workerObj;
         m_ptr_workerObj = a_ptr_mockObj;
     }
 
     // The destructor is used to restore the old pointer.
-    virtual ~Pupnp() { m_ptr_workerObj = m_ptr_oldObj; }
+    virtual ~PupnpHttpRw() { m_ptr_workerObj = m_ptr_oldObj; }
 
     // Methods
     virtual int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
                                 socklen_t addrlen) {
         return m_ptr_workerObj->private_connect(sockfd, serv_addr, addrlen);
-    }
-
-    virtual int sock_make_blocking(SOCKET sock) {
-        return m_ptr_workerObj->sock_make_blocking(sock);
-    }
-
-    virtual int sock_make_no_blocking(SOCKET sock) {
-        return m_ptr_workerObj->sock_make_no_blocking(sock);
     }
 #ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
     virtual int Check_Connect_And_Wait_Connection(SOCKET sock,
@@ -112,15 +98,15 @@ class Pupnp {
     // important here for mocking because the pointer is also valid on all
     // objects of the class. With inline we do not need an extra definition line
     // outside the class.
-    static inline PupnpInterface* m_ptr_workerObj;
-    PupnpInterface* m_ptr_oldObj{};
+    static inline PupnpHttpRwInterface* m_ptr_workerObj;
+    PupnpHttpRwInterface* m_ptr_oldObj{};
 };
 
 // On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
-PupnpReal pupnp_realObj;
-Pupnp pupnp(&pupnp_realObj);
+PupnpHttpRwReal pupnp_httprw_realObj;
+PupnpHttpRw pupnp_httprw(&pupnp_httprw_realObj);
 
 } // namespace umock
 
-#endif // UPNPLIB_PUPNP_HPP
+#endif // UPNPLIB_PUPNP_HTTPRW_HPP

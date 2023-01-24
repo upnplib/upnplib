@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-19
+// Redistribution only with this Copyright remark. Last modified: 2023-01-24
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -14,8 +14,6 @@ using ::testing::DoAll;
 using ::testing::NotNull;
 using ::testing::Return;
 using ::testing::SetErrnoAndReturn;
-
-using ::umock::Pupnp;
 
 using ::upnplib::testing::SetArgPtrIntValue;
 
@@ -57,20 +55,22 @@ class Sys_selectMock : public umock::Sys_selectInterface {
                 (override));
 };
 
-//
-class PupnpMock : public umock::PupnpInterface {
+class PupnpSockMock : public umock::PupnpSockInterface {
   public:
-    virtual ~PupnpMock() override = default;
+    virtual ~PupnpSockMock() override = default;
     MOCK_METHOD(int, sock_make_blocking, (SOCKET sock), (override));
     MOCK_METHOD(int, sock_make_no_blocking, (SOCKET sock), (override));
+};
+
+class PupnpHttpRwMock : public umock::PupnpHttpRwInterface {
+  public:
+    virtual ~PupnpHttpRwMock() override = default;
+    MOCK_METHOD(int, private_connect,
+                (SOCKET sockfd, const struct sockaddr* serv_addr,
+                 socklen_t addrlen),
+                (override));
     MOCK_METHOD(int, Check_Connect_And_Wait_Connection,
                 (SOCKET sock, int connect_res), (override));
-    // Not used here but non virtual dummy method for the interface needed.
-    int private_connect([[maybe_unused]] SOCKET sockfd,
-                        [[maybe_unused]] const struct sockaddr* serv_addr,
-                        [[maybe_unused]] socklen_t addrlen) override {
-        return -1;
-    }
 };
 
 //
@@ -161,11 +161,11 @@ TEST_F(PrivateConnectIp4FTestSuite, successful_connect) {
     // * connection succeeds
     // * make blocking succeeds
 
-    PupnpMock mock_pupnpObj;
+    PupnpSockMock mock_pupnpSockObj;
     // First unblock connection, means don't wait on connect and return
     // immediately.
-    Pupnp pupnp_injectObj(&mock_pupnpObj);
-    EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
+    umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
+    EXPECT_CALL(mock_pupnpSockObj, sock_make_no_blocking(m_socketfd))
         .WillOnce(Return(0));
 
     // Then connect to the given ip address. With unblocking this will return
@@ -178,11 +178,13 @@ TEST_F(PrivateConnectIp4FTestSuite, successful_connect) {
 
     // Check the connection with a short timeout (default 5s) and return if
     // ready to send. Arg1 (0 based) must return value of connect().
-    EXPECT_CALL(mock_pupnpObj,
+    PupnpHttpRwMock mock_pupnpHttpRwObj;
+    umock::PupnpHttpRw pupnp_httprw_injectObj(&mock_pupnpHttpRwObj);
+    EXPECT_CALL(mock_pupnpHttpRwObj,
                 Check_Connect_And_Wait_Connection(m_socketfd, -1))
         .WillOnce(Return(0));
     // Set blocking mode
-    EXPECT_CALL(mock_pupnpObj, sock_make_blocking(m_socketfd))
+    EXPECT_CALL(mock_pupnpSockObj, sock_make_blocking(m_socketfd))
         .WillOnce(Return(0));
 
     // Test the Unit
@@ -204,11 +206,11 @@ TEST_F(PrivateConnectIp4FTestSuite, set_no_blocking_fails) {
     Sys_socketMock mock_socketObj;
 
     if (old_code) {
-        PupnpMock mock_pupnpObj;
+        PupnpSockMock mock_pupnpSockObj;
         // First unblock connection, means don't wait on connect and return
         // immediately. Returns with error, preset errno = EINVAL.
-        Pupnp pupnp_injectObj(&mock_pupnpObj);
-        EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
+        umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
+        EXPECT_CALL(mock_pupnpSockObj, sock_make_no_blocking(m_socketfd))
             .WillOnce(SetErrnoAndReturn(
                 EINVAL, 10098)); // On MS Windows are big error numbers
 
@@ -227,12 +229,14 @@ TEST_F(PrivateConnectIp4FTestSuite, set_no_blocking_fails) {
         // connect().
         ::std::cout << "  BUG! Disable blocking has failed so it should not "
                        "wait for a connection.\n";
-        EXPECT_CALL(mock_pupnpObj,
+        PupnpHttpRwMock mock_pupnpHttpRwObj;
+        umock::PupnpHttpRw pupnp_httprw_injectObj(&mock_pupnpHttpRwObj);
+        EXPECT_CALL(mock_pupnpHttpRwObj,
                     Check_Connect_And_Wait_Connection(m_socketfd, 0))
             .WillOnce(Return(0));
 
         // Set blocking mode
-        EXPECT_CALL(mock_pupnpObj, sock_make_blocking(m_socketfd))
+        EXPECT_CALL(mock_pupnpSockObj, sock_make_blocking(m_socketfd))
             .WillOnce(Return(0));
 
         // Test the Unit
@@ -246,10 +250,10 @@ TEST_F(PrivateConnectIp4FTestSuite, set_no_blocking_fails) {
         SUCCEED();
     } else {
 
-        PupnpMock mock_pupnpObj;
+        PupnpSockMock mock_pupnpSockObj;
         // Unblock connection. Returns with error, preset errno = EINVAL.
-        Pupnp pupnp_injectObj(&mock_pupnpObj);
-        EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
+        umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
+        EXPECT_CALL(mock_pupnpSockObj, sock_make_no_blocking(m_socketfd))
             .WillOnce(SetErrnoAndReturn(
                 EINVAL, 10098)); // On MS Windows are big error numbers
 
@@ -260,13 +264,15 @@ TEST_F(PrivateConnectIp4FTestSuite, set_no_blocking_fails) {
             .Times(0);
 
         // Don't try to wait for that connection.
-        EXPECT_CALL(mock_pupnpObj,
+        PupnpHttpRwMock mock_pupnpHttpRwObj;
+        umock::PupnpHttpRw pupnp_httprw_injectObj(&mock_pupnpHttpRwObj);
+        EXPECT_CALL(mock_pupnpHttpRwObj,
                     Check_Connect_And_Wait_Connection(m_socketfd, 0))
             .Times(0);
 
         // Set blocking mode. That's the old workflow. With re-engeneering we
         // will always have unblocking mode set.
-        EXPECT_CALL(mock_pupnpObj, sock_make_blocking(m_socketfd))
+        EXPECT_CALL(mock_pupnpSockObj, sock_make_blocking(m_socketfd))
             .WillOnce(Return(0));
 
         // Test the Unit
@@ -285,11 +291,11 @@ TEST_F(PrivateConnectIp4FTestSuite, connect_fails) {
     // * check connection must also fail if connect() fails
     // * make blocking succeeds
 
-    PupnpMock mock_pupnpObj;
+    PupnpSockMock mock_pupnpSockObj;
     // First unblock connection, means don't wait on connect and return
     // immediately. Returns successful, preset errno = EINVAL.
-    Pupnp pupnp_injectObj(&mock_pupnpObj);
-    EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
+    umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
+    EXPECT_CALL(mock_pupnpSockObj, sock_make_no_blocking(m_socketfd))
         .WillOnce(SetErrnoAndReturn(EINVAL, 0));
 
     // Then connect to the given ip address. We expect that it fails with
@@ -303,7 +309,9 @@ TEST_F(PrivateConnectIp4FTestSuite, connect_fails) {
     // Check the connection with a short timeout (default 5s) and return if
     // ready to send. Arg1 (0 based) must be set to the return value of
     // connect(). Because connect() failed, this must also fail.
-    EXPECT_CALL(mock_pupnpObj,
+    PupnpHttpRwMock mock_pupnpHttpRwObj;
+    umock::PupnpHttpRw pupnp_httprw_injectObj(&mock_pupnpHttpRwObj);
+    EXPECT_CALL(mock_pupnpHttpRwObj,
                 Check_Connect_And_Wait_Connection(m_socketfd, -1))
         .WillOnce(Return(-1));
 
@@ -311,7 +319,7 @@ TEST_F(PrivateConnectIp4FTestSuite, connect_fails) {
         // Set blocking mode
         ::std::cout << "  BUG! Blocking has been disabled so it should be "
                        "enabled as before.\n";
-        EXPECT_CALL(mock_pupnpObj, sock_make_blocking(m_socketfd)).Times(0);
+        EXPECT_CALL(mock_pupnpSockObj, sock_make_blocking(m_socketfd)).Times(0);
 
     } else if (github_actions) {
         ::std::cout << "[  SKIPPED ] Test on Github Actions\n";
@@ -319,7 +327,7 @@ TEST_F(PrivateConnectIp4FTestSuite, connect_fails) {
     } else {
 
         // Set blocking mode
-        EXPECT_CALL(mock_pupnpObj, sock_make_blocking(m_socketfd))
+        EXPECT_CALL(mock_pupnpSockObj, sock_make_blocking(m_socketfd))
             .WillOnce(Return(0));
     }
 
@@ -337,11 +345,11 @@ TEST_F(PrivateConnectIp4FTestSuite, Check_Connect_And_Wait_Connection_fails) {
     // * check connection fails
     // * make blocking succeeds
 
-    PupnpMock mock_pupnpObj;
+    PupnpSockMock mock_pupnpSockObj;
     // First unblock connection, means don't wait on connect and return
     // immediately. Returns successful, preset errno = EINVAL.
-    Pupnp pupnp_injectObj(&mock_pupnpObj);
-    EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
+    umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
+    EXPECT_CALL(mock_pupnpSockObj, sock_make_no_blocking(m_socketfd))
         .WillOnce(SetErrnoAndReturn(EINVAL, 0));
 
     // Then connect to the given ip address. returns with -1 and errno =
@@ -355,7 +363,9 @@ TEST_F(PrivateConnectIp4FTestSuite, Check_Connect_And_Wait_Connection_fails) {
     // Check the connection with a short timeout (default 5s) and return if
     // ready to send. Arg1 (0 based) must be set to the return value of
     // connect(). This will fail.
-    EXPECT_CALL(mock_pupnpObj,
+    PupnpHttpRwMock mock_pupnpHttpRwObj;
+    umock::PupnpHttpRw pupnp_httprw_injectObj(&mock_pupnpHttpRwObj);
+    EXPECT_CALL(mock_pupnpHttpRwObj,
                 Check_Connect_And_Wait_Connection(m_socketfd, -1))
         .WillOnce(Return(-1));
 
@@ -364,7 +374,7 @@ TEST_F(PrivateConnectIp4FTestSuite, Check_Connect_And_Wait_Connection_fails) {
         // if possible, no matter if successful.
         ::std::cout << "  BUG! Blocking has been disabled so it should be "
                        "enabled as before.\n";
-        EXPECT_CALL(mock_pupnpObj, sock_make_blocking(m_socketfd)).Times(0);
+        EXPECT_CALL(mock_pupnpSockObj, sock_make_blocking(m_socketfd)).Times(0);
 
     } else if (github_actions) {
         ::std::cout << "[  SKIPPED ] Test on Github Actions\n";
@@ -372,7 +382,7 @@ TEST_F(PrivateConnectIp4FTestSuite, Check_Connect_And_Wait_Connection_fails) {
     } else {
         // Set blocking mode. This should be executed to revert set no blocking
         // if possible, no matter if successful.
-        EXPECT_CALL(mock_pupnpObj, sock_make_blocking(m_socketfd)).Times(1);
+        EXPECT_CALL(mock_pupnpSockObj, sock_make_blocking(m_socketfd)).Times(1);
     }
 
     // Test the Unit
@@ -389,11 +399,11 @@ TEST_F(PrivateConnectIp4FTestSuite, sock_make_blocking_fails) {
     // * check connection succeeds
     // * make blocking fails
 
-    PupnpMock mock_pupnpObj;
+    PupnpSockMock mock_pupnpSockObj;
     // First unblock connection, means don't wait on connect and return
     // immediately. Returns successful, preset errno = EINVAL.
-    Pupnp pupnp_injectObj(&mock_pupnpObj);
-    EXPECT_CALL(mock_pupnpObj, sock_make_no_blocking(m_socketfd))
+    umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
+    EXPECT_CALL(mock_pupnpSockObj, sock_make_no_blocking(m_socketfd))
         .WillOnce(SetErrnoAndReturn(EINVAL, 0));
 
     // Then connect to the given ip address. Returns with -1 and errno =
@@ -407,7 +417,9 @@ TEST_F(PrivateConnectIp4FTestSuite, sock_make_blocking_fails) {
     // Check the connection with a short timeout (default 5s) and return if
     // ready to send. Arg1 (0 based) must be set to the return value of
     // connect(). This will fail.
-    EXPECT_CALL(mock_pupnpObj,
+    PupnpHttpRwMock mock_pupnpHttpRwObj;
+    umock::PupnpHttpRw pupnp_httprw_injectObj(&mock_pupnpHttpRwObj);
+    EXPECT_CALL(mock_pupnpHttpRwObj,
                 Check_Connect_And_Wait_Connection(m_socketfd, -1))
         .WillOnce(Return(-1));
 
@@ -416,7 +428,7 @@ TEST_F(PrivateConnectIp4FTestSuite, sock_make_blocking_fails) {
         // if possible, no matter if successful.
         ::std::cout << "  BUG! Blocking has been disabled so it should be "
                        "enabled as before.\n";
-        EXPECT_CALL(mock_pupnpObj, sock_make_blocking(m_socketfd)).Times(0);
+        EXPECT_CALL(mock_pupnpSockObj, sock_make_blocking(m_socketfd)).Times(0);
 
     } else if (github_actions) {
         ::std::cout << "[  SKIPPED ] Test on Github Actions\n";
@@ -425,7 +437,7 @@ TEST_F(PrivateConnectIp4FTestSuite, sock_make_blocking_fails) {
 
         // Set blocking mode. This should be executed to revert set no blocking
         // if possible, no matter if successful.
-        EXPECT_CALL(mock_pupnpObj, sock_make_blocking(m_socketfd)).Times(1);
+        EXPECT_CALL(mock_pupnpSockObj, sock_make_blocking(m_socketfd)).Times(1);
     }
 
     // Test the Unit
