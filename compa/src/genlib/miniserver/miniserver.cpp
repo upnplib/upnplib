@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-01-19
+ * Redistribution only with this Copyright remark. Last modified: 2023-01-26
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -514,7 +514,7 @@ static void ssdp_read([[maybe_unused]] SOCKET rsock,
 }
 
 static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
-    size_t byteReceived;
+    SSIZEP_T byteReceived;
     socklen_t clientLen;
     struct sockaddr_storage clientAddr;
     struct sockaddr_in* sa_in{(sockaddr_in*)&clientAddr};

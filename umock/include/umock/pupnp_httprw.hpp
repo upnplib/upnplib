@@ -1,14 +1,14 @@
 #ifndef UPNPLIB_PUPNP_HTTPRW_HPP
 #define UPNPLIB_PUPNP_HTTPRW_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-26
+// Redistribution only with this Copyright remark. Last modified: 2023-01-27
 
 // This is a header only mocking include file. When included it is present
 // direct in the source code and can be used to mock static functions that are
 // hidden to the global context. With some returns and pointer variables this
-// include does not consume many resources. But still, it's better for the
-// global context with exported symbols to use a header + sorce file compile
-// unit as shown in other mocking files.
+// include does not consume many resources.
+
+#include "upnplib/port.hpp"
 
 #ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
 static int Check_Connect_And_Wait_Connection(SOCKET sock, int connect_res);
@@ -103,7 +103,9 @@ class PupnpHttpRw {
 };
 
 // On program start create an object and inject pointer to the real functions.
-// This will exist until program end.
+// This will exist until program end. Because this is a header file the object
+// must be static otherwise we will get a linker error of "multiple definition"
+// if included in more than one source file.
 static PupnpHttpRwReal pupnp_httprw_realObj;
 static PupnpHttpRw pupnp_httprw(&pupnp_httprw_realObj);
 

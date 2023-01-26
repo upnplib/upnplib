@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-19
+// Redistribution only with this Copyright remark. Last modified: 2023-01-26
 
 // Header file for portable definitions
 // ====================================
@@ -41,8 +41,10 @@
 #ifdef _MSC_VER
 // Define portable size_t
   #define SIZEP_T int
+  #define SSIZEP_T int
 #else
   #define SIZEP_T size_t
+  #define SSIZEP_T ssize_t
 
 /*! This typedef makes the code slightly more WIN32 tolerant.
  * On WIN32 systems, SOCKET is unsigned and is not a file

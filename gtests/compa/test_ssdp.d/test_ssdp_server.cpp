@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-24
+// Redistribution only with this Copyright remark. Last modified: 2023-01-26
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -96,43 +96,21 @@ class CLogging { /*
 class Sys_socketMock : public umock::Sys_socketInterface {
   public:
     virtual ~Sys_socketMock() override = default;
-    MOCK_METHOD(SOCKET, socket, (int domain, int type, int protocol),
-                (override));
-    MOCK_METHOD(int, bind,
-                (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen),
-                (override));
+    // clang-format off
+    MOCK_METHOD(SOCKET, socket, (int domain, int type, int protocol), (override));
+    MOCK_METHOD(int, bind, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
     MOCK_METHOD(int, listen, (SOCKET sockfd, int backlog), (override));
-    MOCK_METHOD(SOCKET, accept,
-                (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen),
-                (override));
-    MOCK_METHOD(size_t, recvfrom,
-                (SOCKET sockfd, char* buf, size_t len, int flags,
-                 struct sockaddr* src_addr, socklen_t* addrlen),
-                (override));
-    MOCK_METHOD(int, getsockopt,
-                (SOCKET sockfd, int level, int optname, void* optval,
-                 socklen_t* optlen),
-                (override));
-    MOCK_METHOD(int, setsockopt,
-                (SOCKET sockfd, int level, int optname, const char* optval,
-                 socklen_t optlen),
-                (override));
-    MOCK_METHOD(int, getsockname,
-                (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen),
-                (override));
-    MOCK_METHOD(size_t, recv, (SOCKET sockfd, char* buf, size_t len, int flags),
-                (override));
-    MOCK_METHOD(size_t, send,
-                (SOCKET sockfd, const char* buf, size_t len, int flags),
-                (override));
-    MOCK_METHOD(size_t, sendto,
-                (SOCKET sockfd, const char* buf, SIZEP_T len, int flags,
-                 const struct sockaddr* dest_addr, socklen_t addrlen),
-                (override));
-    MOCK_METHOD(int, connect,
-                (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen),
-                (override));
+    MOCK_METHOD(SOCKET, accept, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(int, getsockopt, (SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen), (override));
+    MOCK_METHOD(int, setsockopt, (SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen), (override));
+    MOCK_METHOD(int, getsockname, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(SSIZEP_T, recv, (SOCKET sockfd, char* buf, SIZEP_T len, int flags), (override));
+    MOCK_METHOD(SSIZEP_T, recvfrom, (SOCKET sockfd, char* buf, SIZEP_T len, int flags, struct sockaddr* src_addr, socklen_t* addrlen), (override));
+    MOCK_METHOD(SSIZEP_T, send, (SOCKET sockfd, const char* buf, SIZEP_T len, int flags), (override));
+    MOCK_METHOD(SSIZEP_T, sendto, (SOCKET sockfd, const char* buf, SIZEP_T len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen), (override));
+    MOCK_METHOD(int, connect, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
     MOCK_METHOD(int, shutdown, (SOCKET sockfd, int how), (override));
+    // clang-format on
 };
 
 class PupnpSockMock : public umock::PupnpSockInterface {
