@@ -148,6 +148,8 @@ set(PUPNP_SOURCE_FILES
     $<$<CONFIG:Debug>:./src/api/upnpdebug.cpp>
 
     $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_WEBSERVER}>>:./src/urlconfig/urlconfig.cpp>
+
+    ${UMOCK_SOURCE_DIR}/src/pupnp_sock.cpp
 )
 
 set(PUPNP_INCLUDE_DIRECTORIES

@@ -1,21 +1,10 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-13
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-01-29
 
 #include "umock/stdlib.inc"
 
 namespace umock {
 
-void* StdlibReal::malloc(size_t size) { return ::malloc(size); }
-
-void* StdlibReal::calloc(size_t nmemb, size_t size) {
-    return ::calloc(nmemb, size);
-}
-void* StdlibReal::realloc(void* ptr, size_t size) {
-    return ::realloc(ptr, size);
-}
-void StdlibReal::free(void* ptr) { return ::free(ptr); }
-
-//
 // This constructor is used to inject the pointer to the real function.
 Stdlib::Stdlib(StdlibReal* a_ptr_realObj) {
     m_ptr_workerObj = (StdlibInterface*)a_ptr_realObj;

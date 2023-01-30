@@ -1,5 +1,5 @@
-#ifndef UPNPLIB_PUPNP_HTTPRW_HPP
-#define UPNPLIB_PUPNP_HTTPRW_HPP
+#ifndef UMOCK_PUPNP_HTTPRW_HPP
+#define UMOCK_PUPNP_HTTPRW_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2023-01-27
 
@@ -52,8 +52,8 @@ class PupnpHttpRwReal : public PupnpHttpRwInterface {
 // used, real or mocked functions.
 // clang-format off
 /* Example:
-    PupnpHttpRwReal pupnp_httprw_realObj; // already done below
-    PupnpHttpRw(&pupnp_httprw_realObj);   // already done below
+    PupnpHttpRwReal pupnp_httprw_realObj;            // already done below
+    PupnpHttpRw pupnp_httprw(&pupnp_httprw_realObj); // already done below
     { // Other scope, e.g. within a gtest
         class PupnpHttpRwMock : public PupnpHttpRwInterface { ...; MOCK_METHOD(...) };
         PupnpHttpRwMock pupnp_httprw_mockObj;
@@ -111,4 +111,4 @@ static PupnpHttpRw pupnp_httprw(&pupnp_httprw_realObj);
 
 } // namespace umock
 
-#endif // UPNPLIB_PUPNP_HTTPRW_HPP
+#endif // UMOCK_PUPNP_HTTPRW_HPP

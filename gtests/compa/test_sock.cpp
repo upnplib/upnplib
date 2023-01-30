@@ -348,7 +348,7 @@ TEST_F(SockFTestSuite, sock_read_no_timeout) {
     EXPECT_CALL(m_mock_sys_socketObj, recv(m_socketfd, NotNull(), _, _))
         .WillOnce(DoAll(SetArrayArgument<1>(
                             received_msg, received_msg + sizeof(received_msg)),
-                        Return(sizeof(received_msg))));
+                        Return((SSIZEP_T)sizeof(received_msg))));
 
     // Test Unit
     char buffer[sizeof(received_msg)]{};
@@ -374,7 +374,7 @@ TEST_F(SockFTestSuite, sock_read_within_timeout) {
     EXPECT_CALL(m_mock_sys_socketObj, recv(m_socketfd, NotNull(), _, _))
         .WillOnce(DoAll(SetArrayArgument<1>(
                             received_msg, received_msg + sizeof(received_msg)),
-                        Return(sizeof(received_msg))));
+                        Return((SSIZEP_T)sizeof(received_msg))));
 
     // Process the Unit
     char buffer[sizeof(received_msg)]{};
@@ -427,7 +427,7 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
     EXPECT_CALL(m_mock_sys_socketObj, recv(m_socketfd, NotNull(), _, _))
         .WillOnce(DoAll(SetArrayArgument<1>(
                             received_msg, received_msg + sizeof(received_msg)),
-                        Return(sizeof(received_msg))));
+                        Return((SSIZEP_T)sizeof(received_msg))));
 
     // Process the Unit
     char buffer[sizeof(received_msg)]{};
@@ -693,7 +693,7 @@ TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_timeout_value)
             .WillOnce(
                 DoAll(SetArrayArgument<1>(received_msg,
                                           received_msg + sizeof(received_msg)),
-                      Return(sizeof(received_msg))));
+                      Return((SSIZEP_T)sizeof(received_msg))));
 
         // Process the Unit
         int returned{UPNP_E_INTERNAL_ERROR};
@@ -720,7 +720,7 @@ TEST_F(SockFTestSuite, sock_write_no_timeout) {
     umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj,
                 send(m_socketfd, sent_msg, sizeof(sent_msg), _))
-        .WillOnce(Return(sizeof(sent_msg)));
+        .WillOnce(Return((SSIZEP_T)sizeof(sent_msg)));
 
     // Process the Unit
     int timeoutSecs{-1}; // -1 Blocks indefinitely waiting for a socket
@@ -741,7 +741,7 @@ TEST_F(SockFTestSuite, sock_write_within_timeout) {
     umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj,
                 send(m_socketfd, sent_msg, sizeof(sent_msg), _))
-        .WillOnce(Return(sizeof(sent_msg)));
+        .WillOnce(Return((SSIZEP_T)sizeof(sent_msg)));
 
     // Process the Unit
     int timeoutSecs{10};

@@ -1,5 +1,5 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-01-30
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
@@ -11,7 +11,7 @@ namespace umock {
 
 class StdlibInterface {
   public:
-    virtual ~StdlibInterface() {}
+    virtual ~StdlibInterface() = default;
 
     virtual void* malloc(size_t size) = 0;
     virtual void* calloc(size_t nmemb, size_t size) = 0;
@@ -24,20 +24,24 @@ class StdlibInterface {
 // ----------------------------------------------------------
 class StdlibReal : public StdlibInterface {
   public:
-    virtual ~StdlibReal() override {}
+    virtual ~StdlibReal() override = default;
 
-    void* malloc(size_t size) override;
-    void* calloc(size_t nmemb, size_t size) override;
-    void* realloc(void* ptr, size_t size) override;
-    void free(void* ptr) override;
+    void* malloc(size_t size) override { return ::malloc(size); }
+    void* calloc(size_t nmemb, size_t size) override {
+        return ::calloc(nmemb, size);
+    }
+    void* realloc(void* ptr, size_t size) override {
+        return ::realloc(ptr, size);
+    }
+    void free(void* ptr) override { return ::free(ptr); }
 };
 
 //
 // This is the caller or injector class that injects the class (worker) to be
 // used, real or mocked functions.
 /* Example:
-    StdlibReal stdlib_realObj; // already done below
-    Stdlib(&stdlib_realObj);   // already done below
+    StdlibReal stdlib_realObj;	      // already done below
+    Stdlib stdlib_h(&stdlib_realObj); // already done below
     { // Other scope, e.g. within a gtest
         class StdlibMock : public StdlibInterface { ...; MOCK_METHOD(...) };
         StdlibMock stdlib_mockObj;
@@ -69,9 +73,10 @@ class UPNPLIB_API Stdlib {
     // important here for mocking because the pointer is also valid on all
     // objects of this class. With inline we do not need an extra definition
     // line outside the class. I also make the symbol hidden so the variable
-    // cannot be accessed globaly with Stdlib::m_ptr_workerObj.
+    // cannot be accessed globaly with Stdlib::m_ptr_workerObj. --Ingo
     UPNPLIB_LOCAL static inline StdlibInterface* m_ptr_workerObj;
     StdlibInterface* m_ptr_oldObj{};
 };
 
 } // namespace umock
+// vim: syntax=cpp
