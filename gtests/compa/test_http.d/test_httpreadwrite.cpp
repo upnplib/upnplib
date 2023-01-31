@@ -1,16 +1,17 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-26
+// Redistribution only with this Copyright remark. Last modified: 2023-01-31
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
 #include "pupnp/upnp/src/genlib/net/http/httpreadwrite.cpp"
 #include "upnplib/src/net/http/httpreadwrite.cpp"
 
-#include "gmock/gmock.h"
 #include "upnplib/upnptools.hpp"
-#include "umock/netdb.hpp"
-
 #include "upnplib/uri.hpp"
+
+#include "gmock/gmock.h"
+#include "umock/netdb.hpp"
+#include "umock/sys_socket_mock.hpp"
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -79,26 +80,6 @@ class PupnpHttpRwMock : public umock::PupnpHttpRwInterface {
                 (override));
     MOCK_METHOD(int, Check_Connect_And_Wait_Connection,
                 (SOCKET sock, int connect_res), (override));
-};
-
-class Sys_socketMock : public umock::Sys_socketInterface {
-  public:
-    virtual ~Sys_socketMock() override {}
-    // clang-format off
-    MOCK_METHOD(SOCKET, socket, (int domain, int type, int protocol), (override));
-    MOCK_METHOD(int, bind, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
-    MOCK_METHOD(int, listen, (SOCKET sockfd, int backlog), (override));
-    MOCK_METHOD(SOCKET, accept, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(SSIZEP_T, recvfrom, (SOCKET sockfd, char* buf, SIZEP_T len, int flags, struct sockaddr* src_addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(int, getsockopt, (SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen), (override));
-    MOCK_METHOD(int, setsockopt, (SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen), (override));
-    MOCK_METHOD(int, getsockname, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(SSIZEP_T, recv, (SOCKET sockfd, char* buf, SIZEP_T len, int flags), (override));
-    MOCK_METHOD(SSIZEP_T, send, (SOCKET sockfd, const char* buf, SIZEP_T len, int flags), (override));
-    MOCK_METHOD(SSIZEP_T, sendto, (SOCKET sockfd, const char* buf, SIZEP_T len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen), (override));
-    MOCK_METHOD(int, connect, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
-    MOCK_METHOD(int, shutdown, (SOCKET sockfd, int how), (override));
-    // clang-format on
 };
 
 class UnistdMock : public umock::UnistdInterface {
@@ -325,7 +306,7 @@ class OpenHttpConnectionIp4FTestSuite : public ::testing::Test {
     // Provide mocked objects
     Mock_netv4info m_mock_netdbObj;
     PupnpHttpRwMock m_mock_pupnpHttpRwObj;
-    Sys_socketMock m_mock_socketObj;
+    umock::Sys_socketMock m_mock_socketObj;
     UnistdMock m_mock_unistdObj;
     Chttpreadwrite_old m_httprw_oObj;
 

@@ -4,15 +4,16 @@
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
 
+#include "upnp.hpp"
 #include "sock.hpp"
 
 #include "upnplib/upnptools.hpp"
-#include "umock/sys_socket.hpp"
-#include "umock/sys_select.hpp"
-#include "umock/unistd.hpp"
-#include "upnp.hpp"
 
 #include "gmock/gmock.h"
+#include "umock/unistd.hpp"
+#include "umock/sys_select.hpp"
+#include "umock/sys_socket_mock.hpp"
+
 #ifndef _WIN32
 #include <fcntl.h>
 #endif
@@ -87,24 +88,6 @@ class Csock : Isock {
 //
 // Mocked system calls
 // ===================
-class Sys_socketMock : public umock::Sys_socketInterface {
-  public:
-    virtual ~Sys_socketMock() override {}
-    MOCK_METHOD(SOCKET, socket, (int domain, int type, int protocol), (override));
-    MOCK_METHOD(int, bind, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
-    MOCK_METHOD(int, listen, (SOCKET sockfd, int backlog), (override));
-    MOCK_METHOD(SOCKET, accept, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(SSIZEP_T, recvfrom, (SOCKET sockfd, char* buf, SIZEP_T len, int flags, struct sockaddr* src_addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(int, getsockopt, (SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen), (override));
-    MOCK_METHOD(int, setsockopt, (SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen), (override));
-    MOCK_METHOD(int, getsockname, (SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen), (override));
-    MOCK_METHOD(SSIZEP_T, recv, (SOCKET sockfd, char* buf, SIZEP_T len, int flags), (override));
-    MOCK_METHOD(SSIZEP_T, send, (SOCKET sockfd, const char* buf, SIZEP_T len, int flags), (override));
-    MOCK_METHOD(SSIZEP_T, sendto, (SOCKET sockfd, const char* buf, SIZEP_T len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen), (override));
-    MOCK_METHOD(int, connect, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
-    MOCK_METHOD(int, shutdown, (SOCKET sockfd, int how), (override));
-};
-
 class Sys_selectMock : public umock::Sys_selectInterface {
   public:
     virtual ~Sys_selectMock() override {}
@@ -157,7 +140,7 @@ class SockFTestSuite : public ::testing::Test {
     Csock m_sockObj{};
 
     // Instantiate mock objects
-    Sys_socketMock m_mock_sys_socketObj;
+    umock::Sys_socketMock m_mock_sys_socketObj;
     UnistdMock m_mock_unistdObj;
     Sys_selectMock m_mock_sys_selectObj;
 
