@@ -21,6 +21,8 @@
 #include "gmock/gmock.h"
 #include "umock/sys_socket_mock.hpp"
 
+#include <string>
+
 using ::upnplib::errStrEx;
 
 using ::testing::_;
@@ -143,6 +145,19 @@ typedef SSDPserverFTestSuite CreateSSDPsockReqV4FTestSuite;
 typedef SSDPserverFTestSuite CreateSSDPsockV4FTestSuite;
 
 //
+// Because we have a void pointer (const void* optval) we cannot direct use it
+// in a matcher to get the pointed value. We must cast the type with this custom
+// matcher to use the pointer.
+MATCHER_P(IsIpMulticastTtl, value, "") {
+    uint8_t ip_ttl = *reinterpret_cast<const uint8_t*>(arg);
+    if (ip_ttl == value)
+        return true;
+
+    *result_listener << "pointing to " << std::to_string(ip_ttl);
+    return false;
+}
+
+//
 TEST_F(CreateSSDPsockReqV4FTestSuite, create_successful) {
     // Steps as given by the Unit and expected results:
     // 1. get a socket succeeds
@@ -152,7 +167,7 @@ TEST_F(CreateSSDPsockReqV4FTestSuite, create_successful) {
     // Due to mocking network connections we don't need real values.
     strcpy(gIF_IPV4, "192.168.192.168");
     SOCKET sockfd{1001};  // mocked socket file descriptor
-    const uint8_t ttl{4}; // This is the ip multicast ttl to set
+    const uint8_t ttl{4}; // It is the ip multicast ttl that is expected to set.
 
     SOCKET ssdpSock; // buffer to get the socket fd
 
@@ -170,8 +185,8 @@ TEST_F(CreateSSDPsockReqV4FTestSuite, create_successful) {
         .WillOnce(Return(sockfd));
     // Expect socket option
     EXPECT_CALL(mocked_sys_socketObj,
-                setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_TTL, Pointee(ttl),
-                           sizeof(ttl)))
+                setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_TTL,
+                           IsIpMulticastTtl(ttl), sizeof(ttl)))
         .WillOnce(Return(0));
     // Unblock connection, means don't wait on connect and return
     // immediately.

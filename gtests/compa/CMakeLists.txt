@@ -1,5 +1,5 @@
-# Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-16
+# Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2023-02-01
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -92,9 +92,11 @@ endif()
 add_executable(test_miniserver-pst
 #---------------------------------
     ./test_miniserver.cpp
+    ${COMPA_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 target_include_directories(test_miniserver-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${COMPA_SOURCE_DIR}/include
 )
 target_compile_definitions(test_miniserver-pst
     PRIVATE
@@ -127,6 +129,7 @@ add_executable(test_miniserver-cst
 )
 target_include_directories(test_miniserver-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${COMPA_SOURCE_DIR}/include
 )
 target_compile_definitions(test_miniserver-cst
     PRIVATE

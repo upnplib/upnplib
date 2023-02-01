@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-31
+// Redistribution only with this Copyright remark. Last modified: 2023-02-01
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
@@ -30,7 +30,7 @@ class Sys_socketInterface {
     virtual SSIZEP_T sendto(SOCKET sockfd, const char* buf, SIZEP_T len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen) = 0;
     virtual int connect(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) = 0;
     virtual int getsockopt(SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen) = 0;
-    virtual int setsockopt(SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen) = 0;
+    virtual int setsockopt(SOCKET sockfd, int level, int optname, const void* optval, socklen_t optlen) = 0;
     virtual int getsockname(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) = 0;
     virtual int shutdown(SOCKET sockfd, int how) = 0;
     // clang-format on
@@ -77,8 +77,12 @@ class Sys_socketReal : public Sys_socketInterface {
         return ::getsockopt(sockfd, level, optname, optval, optlen);
 #endif
     }
-    int setsockopt(SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen) override {
+    int setsockopt(SOCKET sockfd, int level, int optname, const void* optval, socklen_t optlen) override {
+#ifdef _WIN32
+        return ::setsockopt(sockfd, level, optname, (const char*)optval, optlen);
+#else
         return ::setsockopt(sockfd, level, optname, optval, optlen);
+#endif
     }
     int getsockname(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) override {
         return ::getsockname(sockfd, addr, addrlen);
@@ -128,7 +132,7 @@ class UPNPLIB_API Sys_socket {
     virtual SSIZEP_T sendto(SOCKET sockfd, const char* buf, SIZEP_T len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen);
     virtual int connect(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen);
     virtual int getsockopt(SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen);
-    virtual int setsockopt(SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen);
+    virtual int setsockopt(SOCKET sockfd, int level, int optname, const void* optval, socklen_t optlen);
     virtual int getsockname(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen);
     virtual int shutdown(SOCKET sockfd, int how);
     // clang-format on

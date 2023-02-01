@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-31
+// Redistribution only with this Copyright remark. Last modified: 2023-02-01
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -16,6 +16,8 @@
 #endif
 
 #include "webserver.hpp"
+
+#include "compa/upnpdebug.hpp"
 
 #include "upnplib/upnptools.hpp" // for errStrEx
 #include "upnplib/port.hpp"
@@ -107,28 +109,6 @@ by select() so it will always enable a blocked (waiting) select().
    handle_request() as thread, started by schedule_request_job()
    |__ http_RecvMessage()
 */
-
-//
-// Helper class
-// ============
-class CLogging { /*
- * Use it for example with:
-    class CLogging loggingObj; // Output only with build type DEBUG.
-* or
-    class CLogging loggingObj(UPNP_ALL); // Output only with build type DEBUG.
- * or other loglevel.
- */
-  public:
-    CLogging(Upnp_LogLevel a_loglevel = UPNP_ALL) {
-        UpnpSetLogLevel(a_loglevel);
-        if (UpnpInitLog() != UPNP_E_SUCCESS) {
-            throw std::runtime_error(std::string(
-                "UpnpInitLog(): failed to initialize pupnp logging."));
-        }
-    }
-
-    ~CLogging() { UpnpCloseLog(); }
-};
 
 //
 // Mocked system calls
@@ -1713,8 +1693,6 @@ TEST(RunMiniServerTestSuite, ssdp_read) {
 }
 
 TEST(RunMiniServerTestSuite, web_server_accept) {
-    class CLogging loggingObj; // Output only with build type DEBUG.
-
     SOCKET listen_sockfd = 205;
     SOCKET connected_sockfd = 206;
     uint16_t connected_port = 306;
@@ -1743,6 +1721,7 @@ TEST(RunMiniServerTestSuite, web_server_accept) {
                             Return(connected_sockfd)));
 
         // Capture output to stderr
+        CLogging loggingObj; // Output only with build type DEBUG.
         class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
         captureObj.start();
 
@@ -1782,8 +1761,6 @@ TEST(RunMiniServerTestSuite, web_server_accept) {
 }
 
 TEST(RunMiniServerTestSuite, web_server_accept_with_invalid_socket) {
-    class CLogging loggingObj; // Output only with build type DEBUG.
-
     SOCKET listen_sockfd = INVALID_SOCKET;
 
     umock::Sys_socketMock mocked_sys_socketObj;
@@ -1791,6 +1768,7 @@ TEST(RunMiniServerTestSuite, web_server_accept_with_invalid_socket) {
     EXPECT_CALL(mocked_sys_socketObj, accept(_, _, _)).Times(0);
 
     // Capture output to stderr
+    CLogging loggingObj; // Output only with build type DEBUG.
     class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
@@ -1812,8 +1790,6 @@ TEST(RunMiniServerTestSuite, web_server_accept_with_invalid_socket) {
 }
 
 TEST(RunMiniServerTestSuite, web_server_accept_with_empty_set) {
-    class CLogging loggingObj; // Output only with build type DEBUG.
-
     SOCKET listen_sockfd = 207;
     fd_set set;
     FD_ZERO(&set);
@@ -1823,6 +1799,7 @@ TEST(RunMiniServerTestSuite, web_server_accept_with_empty_set) {
     EXPECT_CALL(mocked_sys_socketObj, accept(_, _, _)).Times(0);
 
     // Capture output to stderr
+    CLogging loggingObj; // Output only with build type DEBUG.
     class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
@@ -1870,13 +1847,12 @@ TEST_F(RunMiniServerFTestSuite, fdset_if_valid_with_closed_socket) {
         GTEST_SKIP()
             << "             This test only runs with build type DEBUG.";
 #else
-        class CLogging loggingObj; // Output only with build type DEBUG.
-
         constexpr SOCKET sockfd{1111};
         fd_set rdSet;
         FD_ZERO(&rdSet);
 
         // Capture output to stderr
+        CLogging loggingObj; // Output only with build type DEBUG.
         class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
         captureObj.start();
 
@@ -1897,8 +1873,6 @@ TEST_F(RunMiniServerFTestSuite, fdset_if_valid_with_closed_socket) {
 }
 
 TEST(RunMiniServerTestSuite, schedule_request_job) {
-    class CLogging loggingObj; // Output only with build type DEBUG.
-
     SOCKET connected_sockfd = 202;
     uint16_t connected_port = 302;
     struct SockAddr sock;
@@ -1913,6 +1887,7 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
     EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 0), 0);
 
     // Capture output to stderr
+    CLogging loggingObj; // Output only with build type DEBUG.
     class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
@@ -1967,8 +1942,6 @@ TEST(RunMiniServerTestSuite, handle_request_with_invalid_socket) {
     GTEST_SKIP()
         << "Still needs to be done when I have understood http_RecvMessage().";
 
-    class CLogging loggingObj; // Output only with build type DEBUG.
-
     struct mserv_request_t request {};
     request.connfd = 999;
 
@@ -2014,8 +1987,6 @@ TEST(RunMiniServerTestSuite, getNumericHostRedirection) {
     // getNumericHostRedirection() returns the ip address with port as text
     // (e.g. "192.168.1.2:54321") that is bound to a socket.
 
-    class CLogging loggingObj; // Output only with build type DEBUG.
-
     SOCKET sockfd{405};
     char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
 
@@ -2043,8 +2014,6 @@ TEST(RunMiniServerTestSuite, getNumericHostRedirection) {
 
 TEST(RunMiniServerTestSuite,
      getNumericHostRedirection_with_insufficient_resources) {
-    class CLogging loggingObj; // Output only with build type DEBUG.
-
     SOCKET sockfd{406};
     char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
 
@@ -2101,8 +2070,6 @@ TEST(RunMiniServerTestSuite,
 
 TEST(RunMiniServerTestSuite,
      getNumericHostRedirection_with_wrong_address_family) {
-    class CLogging loggingObj; // Output only with build type DEBUG.
-
     SOCKET sockfd{407};
     char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
 
@@ -2249,6 +2216,6 @@ TEST_F(StopMiniServerFTestSuite, sock_close) {
 //
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-    // compa::CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging loggingObj; // Output only with build type DEBUG.
 #include "compa/gtest_main.inc"
 }

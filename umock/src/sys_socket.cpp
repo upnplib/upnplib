@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-31
+// Redistribution only with this Copyright remark. Last modified: 2023-02-01
 
 #include "umock/sys_socket.inc"
 
@@ -55,8 +55,12 @@ int Sys_socket::getsockopt(SOCKET sockfd, int level, int optname, void* optval, 
     return m_ptr_workerObj->getsockopt(sockfd, level, optname, optval, optlen);
 #endif
 }
-int Sys_socket::setsockopt(SOCKET sockfd, int level, int optname, const char* optval, socklen_t optlen) {
+int Sys_socket::setsockopt(SOCKET sockfd, int level, int optname, const void* optval, socklen_t optlen) {
+#ifdef _WIN32
+    return m_ptr_workerObj->setsockopt(sockfd, level, optname, (const char*)optval, optlen);
+#else
     return m_ptr_workerObj->setsockopt(sockfd, level, optname, optval, optlen);
+#endif
 }
 int Sys_socket::getsockname(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) {
     return m_ptr_workerObj->getsockname(sockfd, addr, addrlen);
