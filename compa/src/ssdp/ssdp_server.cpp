@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-01-31
+ * Redistribution only with this Copyright remark. Last modified: 2023-02-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -880,26 +880,50 @@ error_handler:
 /*!
  * \brief Creates the SSDP IPv4 socket to be used by the control point.
  *
- * \return UPNP_E_SUCCESS on successful socket creation.
+ * \return UPNP_E_SUCCESS on successful socket creation or
+ *         UPNP_E_OUTOF_SOCKET with platform specific details in errno.
  */
 static int create_ssdp_sock_reqv4(
-    /*! [out] SSDP IPv4 request socket to be created. */
-    SOCKET* ssdpReqSock) {
+    /*! [out] SSDP IPv4 request socket to be created, unmodified on error. */
+    SOCKET* a_ssdpReqSock) {
     TRACE("executing compa::create_ssdp_sock_reqv4()\n");
     const uint8_t ttl{4};
+    int err_no{0};
 
-    *ssdpReqSock = umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
-    if (*ssdpReqSock == INVALID_SOCKET) {
+    SOCKET ssdpReqSock = umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
+    if (ssdpReqSock == INVALID_SOCKET) {
+        TRACE("ERROR! return compa::create_ssdp_sock_reqv4(), socket() failed. "
+              "Details in errno.\n");
         UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
                    "Error in socket(): %s\n", std::strerror(errno));
         return UPNP_E_OUTOF_SOCKET;
     }
-    umock::sys_socket_h.setsockopt(*ssdpReqSock, IPPROTO_IP, IP_MULTICAST_TTL,
-                                   (const char*)&ttl, sizeof(ttl));
-    /* just do it, regardless if fails or not. */
-    umock::pupnp_sock.sock_make_no_blocking(*ssdpReqSock);
+    if (-1 == umock::sys_socket_h.setsockopt(ssdpReqSock, IPPROTO_IP,
+                                             IP_MULTICAST_TTL,
+                                             (const char*)&ttl, sizeof(ttl))) {
+        err_no = errno;
+        TRACE("ERROR! return compa::create_ssdp_sock_reqv4(), setsockopt() "
+              "failed. Details in errno.\n");
+        goto return_error;
+    }
+    if (0 != umock::pupnp_sock.sock_make_no_blocking(ssdpReqSock)) {
+        err_no = errno;
+        TRACE("ERROR! return compa::create_ssdp_sock_reqv4(), "
+              "sock_make_no_blocking(sockfd) failed.\n");
+        goto return_error;
+    }
 
+    *a_ssdpReqSock = ssdpReqSock;
     return UPNP_E_SUCCESS;
+
+return_error:
+    if (-1 == CLOSE_SOCKET_P(ssdpReqSock)) {
+        err_no = errno;
+        TRACE("ERROR! return compa::create_ssdp_sock_reqv4(), close(sockfd) "
+              "failed. Details in errno.\n");
+    }
+    errno = err_no;
+    return UPNP_E_OUTOF_SOCKET;
 }
 #endif /* INCLUDE_CLIENT_APIS */
 

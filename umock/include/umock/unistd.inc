@@ -1,30 +1,18 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Redistribution only with this Copyright remark. Last modified: 2023-02-03
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
 
+#include "upnplib/port.hpp"
 #include "upnplib/visibility.hpp"
-
-// clang-format off
-#ifdef _WIN32
-  #include <fcntl.h>
-  #include <winsock2.h>
-  #define UPNPLIB_CLOSE_SOCKET closesocket
-  #define UPNPLIB_SOCKET_TYPE SOCKET
-#else
-  #include <unistd.h>
-  #define UPNPLIB_CLOSE_SOCKET close
-  #define UPNPLIB_SOCKET_TYPE int
-#endif
-// clang-format on
 
 namespace umock {
 
 class UnistdInterface {
   public:
     virtual ~UnistdInterface() = default;
-    virtual int UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd) = 0;
+    virtual int CLOSE_SOCKET_P(SOCKET fd) = 0;
 };
 
 //
@@ -33,15 +21,15 @@ class UnistdInterface {
 class UnistdReal : public UnistdInterface {
   public:
     virtual ~UnistdReal() override = default;
-    int UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd) override;
+    int CLOSE_SOCKET_P(SOCKET fd) override;
 };
 
 //
 // This is the caller or injector class that injects the class (worker) to be
 // used, real or mocked functions.
 /* Example:
-    UnistdReal unistd_realObj; // already done below
-    Unistd(&unistd_realObj);   // already done below
+    UnistdReal unistd_realObj;        // already done
+    Unistd unistd_h(&unistd_realObj); // already done
     { // Other scope, e.g. within a gtest
         class UnistdMock : public UnistdInterface { ...; MOCK_METHOD(...) };
         UnistdMock unistd_mockObj;
@@ -62,7 +50,7 @@ class UPNPLIB_API Unistd {
     virtual ~Unistd();
 
     // Methods
-    virtual int UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd);
+    virtual int CLOSE_SOCKET_P(SOCKET fd);
 
   private:
     // Next variable must be static. Please note that a static member variable

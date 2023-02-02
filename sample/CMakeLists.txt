@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-19
+# Redistribution only with this Copyright remark. Last modified: 2023-02-03
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -64,12 +64,6 @@ IF (UPNPLIB_DEF_SAMPLE_COMBO)
     target_include_directories(tv_combo
         ${SAMPLE_INCLUDE_DIRECTORIES}
     )
-    target_compile_definitions(tv_combo
-        PRIVATE
-            # This is to avoid to compile in 'upnpdebug' that has many
-            # dependencies into the libary and would pull many other sources
-            NDEBUG
-    )
 
 ENDIF()
 
@@ -81,11 +75,5 @@ IF(UPNPLIB_DEF_SAMPLE_DEVICE)
     )
     target_include_directories(tv_device
         ${SAMPLE_INCLUDE_DIRECTORIES}
-    )
-    target_compile_definitions(tv_device
-        PRIVATE
-            # This is to avoid to compile in 'upnpdebug' that has many
-            # dependencies into the libary and would pull many other sources
-            NDEBUG
     )
 ENDIF()

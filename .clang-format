@@ -9,3 +9,4 @@ PointerAlignment: Left
 # There are some includes on MS Windows that require specific order
 SortIncludes: false
 #IndentPPDirectives: AfterHash
+MaxEmptyLinesToKeep: 2

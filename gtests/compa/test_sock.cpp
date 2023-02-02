@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-26
+// Redistribution only with this Copyright remark. Last modified: 2023-02-02
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -10,7 +10,7 @@
 #include "upnplib/upnptools.hpp"
 
 #include "gmock/gmock.h"
-#include "umock/unistd.hpp"
+#include "umock/unistd_mock.hpp"
 #include "umock/sys_select.hpp"
 #include "umock/sys_socket_mock.hpp"
 
@@ -93,12 +93,6 @@ class Sys_selectMock : public umock::Sys_selectInterface {
     virtual ~Sys_selectMock() override {}
     MOCK_METHOD(int, select, (SOCKET nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout), (override));
 };
-
-class UnistdMock : public umock::UnistdInterface {
-  public:
-    virtual ~UnistdMock() override = default;
-    MOCK_METHOD(int, UPNPLIB_CLOSE_SOCKET, (UPNPLIB_SOCKET_TYPE fd), (override));
-};
 // clang-format on
 
 //
@@ -141,7 +135,7 @@ class SockFTestSuite : public ::testing::Test {
 
     // Instantiate mock objects
     umock::Sys_socketMock m_mock_sys_socketObj;
-    UnistdMock m_mock_unistdObj;
+    umock::UnistdMock m_mock_unistdObj;
     Sys_selectMock m_mock_sys_selectObj;
 
     // Dummy socket, if we do not need a real one due to mocking
@@ -208,7 +202,7 @@ TEST_F(SockFTestSuite, sock_destroy_valid_socket_descriptor) {
         .WillOnce(Return(0));
     // close is successful
     umock::Unistd unistd_injectObj(&m_mock_unistdObj);
-    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(m_socketfd))
+    EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(m_socketfd))
         .WillOnce(Return(0));
 
     // Process the Unit
@@ -227,7 +221,7 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_ok_close_fails_not_0) {
         .WillOnce(Return(0));
     // close fails on _WIN32 with positive error number
     umock::Unistd unistd_injectObj(&m_mock_unistdObj);
-    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(m_socketfd))
+    EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(m_socketfd))
         .WillOnce(Return(10093 /*WSANOTINITIALISED*/));
 
     // Process the Unit
@@ -260,7 +254,7 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_fails_close_ok) {
         .WillOnce(Return(-1));
     // close is successful
     umock::Unistd unistd_injectObj(&m_mock_unistdObj);
-    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(m_socketfd))
+    EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(m_socketfd))
         .WillOnce(Return(0));
 
     // Process the Unit
@@ -295,7 +289,7 @@ TEST_F(SockFTestSuite, sock_destroy_inval_fd_shutdown_fails_close_fails_not_0) {
         .WillOnce(Return(-1));
     // close fails on _WIN32 with positive error number
     umock::Unistd unistd_injectObj(&m_mock_unistdObj);
-    EXPECT_CALL(m_mock_unistdObj, UPNPLIB_CLOSE_SOCKET(m_socketfd))
+    EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(m_socketfd))
         .WillOnce(Return(10093 /*WSANOTINITIALISED*/));
 
     // Process the Unit

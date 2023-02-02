@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-31
+// Redistribution only with this Copyright remark. Last modified: 2023-02-02
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -10,6 +10,7 @@
 
 #include "gmock/gmock.h"
 #include "umock/sys_socket_mock.hpp"
+#include "umock/pupnp_sock_mock.hpp"
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -35,13 +36,6 @@ class Sys_selectMock : public umock::Sys_selectInterface {
                 (SOCKET nfds, fd_set* readfds, fd_set* writefds,
                  fd_set* exceptfds, struct timeval* timeout),
                 (override));
-};
-
-class PupnpSockMock : public umock::PupnpSockInterface {
-  public:
-    virtual ~PupnpSockMock() override = default;
-    MOCK_METHOD(int, sock_make_blocking, (SOCKET sock), (override));
-    MOCK_METHOD(int, sock_make_no_blocking, (SOCKET sock), (override));
 };
 
 class PupnpHttpRwMock : public umock::PupnpHttpRwInterface {
@@ -143,7 +137,7 @@ TEST_F(PrivateConnectIp4FTestSuite, successful_connect) {
     // * connection succeeds
     // * make blocking succeeds
 
-    PupnpSockMock mock_pupnpSockObj;
+    umock::PupnpSockMock mock_pupnpSockObj;
     // First unblock connection, means don't wait on connect and return
     // immediately.
     umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
@@ -188,7 +182,7 @@ TEST_F(PrivateConnectIp4FTestSuite, set_no_blocking_fails) {
     umock::Sys_socketMock mock_socketObj;
 
     if (old_code) {
-        PupnpSockMock mock_pupnpSockObj;
+        umock::PupnpSockMock mock_pupnpSockObj;
         // First unblock connection, means don't wait on connect and return
         // immediately. Returns with error, preset errno = EINVAL.
         umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
@@ -232,7 +226,7 @@ TEST_F(PrivateConnectIp4FTestSuite, set_no_blocking_fails) {
         SUCCEED();
     } else {
 
-        PupnpSockMock mock_pupnpSockObj;
+        umock::PupnpSockMock mock_pupnpSockObj;
         // Unblock connection. Returns with error, preset errno = EINVAL.
         umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
         EXPECT_CALL(mock_pupnpSockObj, sock_make_no_blocking(m_socketfd))
@@ -273,7 +267,7 @@ TEST_F(PrivateConnectIp4FTestSuite, connect_fails) {
     // * check connection must also fail if connect() fails
     // * make blocking succeeds
 
-    PupnpSockMock mock_pupnpSockObj;
+    umock::PupnpSockMock mock_pupnpSockObj;
     // First unblock connection, means don't wait on connect and return
     // immediately. Returns successful, preset errno = EINVAL.
     umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
@@ -327,7 +321,7 @@ TEST_F(PrivateConnectIp4FTestSuite, Check_Connect_And_Wait_Connection_fails) {
     // * check connection fails
     // * make blocking succeeds
 
-    PupnpSockMock mock_pupnpSockObj;
+    umock::PupnpSockMock mock_pupnpSockObj;
     // First unblock connection, means don't wait on connect and return
     // immediately. Returns successful, preset errno = EINVAL.
     umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
@@ -381,7 +375,7 @@ TEST_F(PrivateConnectIp4FTestSuite, sock_make_blocking_fails) {
     // * check connection succeeds
     // * make blocking fails
 
-    PupnpSockMock mock_pupnpSockObj;
+    umock::PupnpSockMock mock_pupnpSockObj;
     // First unblock connection, means don't wait on connect and return
     // immediately. Returns successful, preset errno = EINVAL.
     umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);

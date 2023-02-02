@@ -1,13 +1,11 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-23
+// Redistribution only with this Copyright remark. Last modified: 2023-02-02
 
 #include "umock/unistd.inc"
 
 namespace umock {
 
-int UnistdReal::UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd) {
-    return ::UPNPLIB_CLOSE_SOCKET(fd);
-}
+int UnistdReal::CLOSE_SOCKET_P(SOCKET fd) { return ::CLOSE_SOCKET_P(fd); }
 
 // This constructor is used to inject the pointer to the real function.
 Unistd::Unistd(UnistdReal* a_ptr_realObj) {
@@ -24,8 +22,8 @@ Unistd::Unistd(UnistdInterface* a_ptr_mockObj) {
 Unistd::~Unistd() { m_ptr_workerObj = m_ptr_oldObj; }
 
 // Methods
-int Unistd::UPNPLIB_CLOSE_SOCKET(UPNPLIB_SOCKET_TYPE fd) {
-    return m_ptr_workerObj->UPNPLIB_CLOSE_SOCKET(fd);
+int Unistd::CLOSE_SOCKET_P(SOCKET fd) {
+    return m_ptr_workerObj->CLOSE_SOCKET_P(fd);
 }
 
 // On program start create an object and inject pointer to the real functions.
