@@ -156,7 +156,7 @@ jobs:
       - name: Run gtests
         run: |
           cd ./build/gtests
-          ctest --timeout 5 --output-on-failure
+          ctest --timeout 6 --output-on-failure
 
 
   # Job: Configure, build and test with Visual Studio

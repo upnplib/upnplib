@@ -1,10 +1,10 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-01
+# Redistribution only with this Copyright remark. Last modified: 2023-02-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(GTESTS_COMPA VERSION 0009
+project(GTESTS_COMPA VERSION 0010
                   DESCRIPTION "Tests for pupnp and compatible code"
                   HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -156,9 +156,9 @@ add_test(NAME ctest_miniserver-cst COMMAND test_miniserver-cst --gtest_shuffle
 )
 
 
-add_subdirectory(./test_api.d)
-add_subdirectory(./test_http.d)
-add_subdirectory(./test_ssdp.d)
-add_subdirectory(./test_threadutil.d)
-add_subdirectory(./test_uri.d)
-add_subdirectory(./test_util.d)
+add_subdirectory(./api.d)
+add_subdirectory(./http.d)
+add_subdirectory(./ssdp.d)
+add_subdirectory(./threadutil.d)
+add_subdirectory(./uri.d)
+add_subdirectory(./util.d)

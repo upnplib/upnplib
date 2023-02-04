@@ -1,5 +1,5 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-13
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-02-04
 
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 #ifdef UPNP_HAVE_TOOLS
@@ -55,7 +55,6 @@ clang-format off
      |              web_server_destroy()
      |
      |__ ithread_mutex_unlock()
-clang-format on
 
 03) TEST(UpnpapiTestSuite, UpnpInitPreamble)
 04) TEST(UpnpapiTestSuite, WinsockInit)
@@ -64,6 +63,26 @@ clang-format on
 13) Tested with ./test_upnpapi_win32.cpp
 14) Tested with ./test_upnpapi_unix.cpp
 17) Tested with ./test_miniserver.cpp
+
+
+01)  UpnpDownloadXmlDoc()
+     |__ UpnpDownloadUrlItem()
+03)  |   |__ http_Download()
+     |
+     |__ ixmlParseBufferEx()
+     |__ free(xml_buf)
+     |__ if not IXL_SUCCESS
+            print critical xml error messages
+        else
+            #ifdef DEBUG
+              print XML document
+            #endif
+              print success
+
+01) A possible url is http://127.0.0.1:50001/tvdevicedesc.xml
+03) Tested within test_httpreadwrite.cpp
+
+clang-format on
 */
 
 //
@@ -223,6 +242,11 @@ TEST_F(UpnpEnableWebserverFTestSuite, sdk_not_initialized) {
         << errStrEx(ret_UpnpEnableWebserver, UPNP_E_FINISH);
 
     EXPECT_EQ(bWebServerState, WEB_SERVER_DISABLED);
+}
+
+TEST(UpnpDownloadXmlDocTestSuite, download_successful) {
+    // A possible url is http://127.0.0.1:50001/tvdevicedesc.xml
+    GTEST_SKIP() << "Still needs to be done.";
 }
 
 } // namespace compa

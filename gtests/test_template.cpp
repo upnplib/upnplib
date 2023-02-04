@@ -1,5 +1,5 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-02
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-02-04
 
 // This test should always run, reporting no failure
 
@@ -108,7 +108,7 @@ TEST(EmptyTestSuite, empty_gtest) {
 
 } // namespace upnplib
 
-//
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     // ::testing::InitGoogleMock(&argc, argv);

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-02
+// Redistribution only with this Copyright remark. Last modified: 2023-02-04
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -29,11 +29,28 @@ using ::upnplib::errStr;
 using ::upnplib::errStrEx;
 
 namespace compa {
-
 bool old_code{false}; // Managed in compa/gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
-//
+/*
+clang-format off
+
+     http_Download()
+02)  |__ http_FixStrUrl()
+03)  |__ get_hoststr()
+     |__ http_MakeMessage()
+     |__ http_RequestAndResponse()  // get doc msg
+     |__ print_http_headers()
+     |__ if content_type
+     |      copy content type
+     |__ extract doc from msg
+
+02) Tested with TEST(HttpFixUrl, *)
+03) Tested with TEST(GetHostaddr, *)
+
+clang-format on
+*/
+
 // Mocking
 // =======
 class NetdbMock : public umock::NetdbInterface {
@@ -83,7 +100,7 @@ class PupnpHttpRwMock : public umock::PupnpHttpRwInterface {
                 (SOCKET sock, int connect_res), (override));
 };
 
-//
+
 // testsuites for Ip4 httpreadwrite
 // ================================
 #if false
@@ -316,7 +333,7 @@ class OpenHttpConnectionIp4FTestSuite : public ::testing::Test {
     }
 };
 
-//
+
 TEST_F(OpenHttpConnectionIp4FTestSuite, open_close_connection_successful) {
     // Expectations:
     // - get address info for url (DNS name resolution) succeeds
@@ -1084,20 +1101,20 @@ TEST(CUri, only_scheme) {
 }
 
 TEST(HttpReadWriteIp4TestSuite, http_RecvMessage) {
-    // This test will be created when we have understood the message formats.
+    // This test will be created when I have understood the message formats.
     // When we have this test then TEST(RunMiniServerTestSuite, handle_request)
-    // in gtests/test_miniserver.cpp should also be completed.
+    // in gtests/test_miniserver.cpp should also be completed. --Ingo
     GTEST_SKIP() << "Still needs to be done.";
 }
 
 TEST(HttpReadWriteIp4TestSuite, http_SendStatusResponse) {
-    // This test will be created when we have understood the message formats.
+    // This test will be created when I have understood the message formats.
     // When we have this test then TEST(RunMiniServerTestSuite, handle_error)
-    // in gtests/test_miniserver.cpp should also be completed.
+    // in gtests/test_miniserver.cpp should also be completed. --Ingo
     GTEST_SKIP() << "Still needs to be done.";
 }
 
-//
+
 // testsuite for Ip6 httpreadwrite
 // ===============================
 // TODO: Improve ip6 tests.

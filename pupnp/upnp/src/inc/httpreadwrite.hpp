@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-27
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-02-04
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -492,46 +492,52 @@ EXPORT_SPEC int http_SendStatusResponse(SOCKINFO* info, int http_status_code,
                                         int request_major_version,
                                         int request_minor_version);
 
+// clang-format off
 /*!
  * \brief Generate an HTTP message based on the format that is specified in
  * the input parameters.
  *
 \verbatim
 Format types:
-        'B':	arg = int status_code		-- appends content-length,
-content-type and HTML body for given code. 'b':	arg1 = const char *buf; arg2 =
-size_t buf_length memory ptr
-        'C':	(no args)			-- appends a HTTP CONNECTION:
-close header depending on major, minor version. 'c':	(no args)
--- appends CRLF "\r\n"
-        'D':	(no args)			-- appends HTTP DATE: header
-        'd':	arg = int number		-- appends decimal number
-        'G':	arg = range information		-- add range header
-        'h':	arg = off_t number		-- appends off_t number
-        'K':	(no args)			-- add chunky header
-        'L':	arg = language information	-- add Content-Language header
-if Accept-Language header is not empty and if WEB_SERVER_CONTENT_LANGUAGE is not
-empty 'N':	arg1 = off_t content_length	-- content-length header 'q':
-arg1 = http_method_t		-- request start line and HOST header arg2 =
-(uri_type *) 'Q':	arg1 = http_method_t;		-- start line of request
-                arg2 = char* url;
-                arg3 = size_t url_length
-        'R':	arg = int status_code		-- adds a response start line
-        'S':	(no args)			-- appends HTTP SERVER: header
-        's':	arg = const char *		-- C_string
-        'T':	arg = char * content_type;	-- format e.g: "text/html";
-content-type header
-        't':	arg = time_t * gmt_time		-- appends time in RFC 1123 fmt
-        'U':	(no args)			-- appends HTTP USER-AGENT:
-header
-        'X':	arg = const char *		-- useragent; "redsonic" HTTP
-X-User-Agent: useragent \endverbatim
+  'B':  arg = int status_code        -- appends content-length, content-type
+                                        and HTML body for given code.
+  'b':  arg1 = const char *buf;
+        arg2 = size_t buf_length memory ptr
+  'C':  (no args)                    -- appends a HTTP CONNECTION: close header
+                                        depending on major, minor version.
+  'c':  (no args)                    -- appends CRLF "\r\n"
+  'D':  (no args)                    -- appends HTTP DATE: header
+  'd':  arg = int number             -- appends decimal number
+  'G':  arg = range information      -- add range header
+  'h':  arg = off_t number           -- appends off_t number
+  'K':  (no args)                    -- add chunky header
+  'L':  arg = language information   -- add Content-Language header if Accept-
+                                        Language header is not empty and if
+                                        WEB_SERVER_CONTENT_LANGUAGE is not
+                                        empty
+  'N':  arg1 = off_t content_length  -- content-length header
+  'q':  arg1 = http_method_t         -- request start line and HOST header
+        arg2 = (uri_type *)
+  'Q':  arg1 = http_method_t;        -- start line of request
+        arg2 = char* url;
+        arg3 = size_t url_length
+  'R':  arg = int status_code        -- adds a response start line
+  'S':  (no args)                    -- appends HTTP SERVER: header
+  's':  arg = const char *           -- C_string
+  'T':  arg = char * content_type;   -- format e.g: "text/html";
+                                        content-type header
+  't':  arg = time_t * gmt_time      -- appends time in RFC 1123 fmt
+  'U':  (no args)                    -- appends HTTP USER-AGENT: header
+  'X':  arg = const char *           -- useragent; "redsonic"
+                                        HTTP X-User-Agent: useragent
+\endverbatim
  *
  * \return
  *      \li \c 0 - On Success
  *      \li \c UPNP_E_OUTOF_MEMORY
  *      \li \c UPNP_E_INVALID_URL
  */
+// clang-format on
 int http_MakeMessage(
     /* [in,out] Buffer with the contents of the message. */
     membuffer* buf,

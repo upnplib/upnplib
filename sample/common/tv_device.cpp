@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-01-20
+ * Redistribution only with this Copyright remark. Last modified: 2023-02-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1253,6 +1253,7 @@ int TvDeviceStart(char* iface, unsigned short port, const char* desc_doc_name,
                   const char* web_dir_path, int ip_mode, print_string pfun,
                   int combo) {
     int ret{UPNP_E_SUCCESS};
+    // example for desc_doc_url: http://192.168.47.11:50001/tvdevicedesc.xml
     char desc_doc_url[DESC_URL_SIZE];
     char* ip_address{};
     int address_family{AF_INET};
