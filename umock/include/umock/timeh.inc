@@ -1,67 +1,56 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-05
+// Redistribution only with this Copyright remark. Last modified: 2022-12-05
 
 // There is no include guard '#ifndef ...' because this file shouldn't be
 // included more than two times as given.
 
 #include "upnplib/visibility.hpp"
-#include <cstring>
-
-/* strndup() is a GNU extension. */
-#if !HAVE_STRNDUP || defined(_WIN32)
-UPNPLIB_API char* strndup(const char* __string, size_t __n);
-#endif
+#include <ctime>
 
 namespace umock {
 
-class StringhInterface {
+class TimehInterface {
   public:
-    virtual ~StringhInterface() = default;
-    virtual char* strerror(int errnum) = 0;
-    virtual char* strdup(const char* s) = 0;
-    virtual char* strndup(const char* s, size_t n) = 0;
+    virtual ~TimehInterface() = default;
+    virtual time_t time(time_t* tloc) = 0;
 };
 
 //
 // This is the wrapper class (worker) for the real (library?) function
 // -------------------------------------------------------------------
-class StringhReal : public StringhInterface {
+class TimehReal : public TimehInterface {
   public:
-    virtual ~StringhReal() override = default;
-    char* strerror(int errnum) override;
-    char* strdup(const char* s) override;
-    char* strndup(const char* s, size_t n) override;
+    virtual ~TimehReal() override = default;
+    time_t time(time_t* tloc) override;
 };
 
 //
 // This is the caller or injector class that injects the class (worker) to be
 // used, real or mocked functions.
 /* Example:
-    StringhReal stringh_realObj;        // already done
-    Stringh string_h(&stringh_realObj); // already done
+    TimehReal timeh_realObj;       // already done
+    Timeh time_h(&timeh_realObj); // already done
     { // Other scope, e.g. within a gtest
-        class StringhMock : public StringhInterface { ...; MOCK_METHOD(...) };
-        StringhMock stringh_mockObj;
-        Stringh stringh_injectObj(&string_mockObj); // obj. name doesn't matter
-        EXPECT_CALL(stringh_mockObj, ...);
+        class TimehMock : public TimehInterface { ...; MOCK_METHOD(...) };
+        TimehMock timeh_mockObj;
+        Timeh timeh_injectObj(&string_mockObj); // obj. name doesn't matter
+        EXPECT_CALL(timeh_mockObj, ...);
     } // End scope, mock objects are destructed, worker restored to default.
 */ //------------------------------------------------------------------------
-class UPNPLIB_API Stringh {
+class UPNPLIB_API Timeh {
   public:
     // This constructor is used to inject the pointer to the real function. It
     // sets the default used class, that is the real function.
-    Stringh(StringhReal* a_ptr_realObj);
+    Timeh(TimehReal* a_ptr_realObj);
 
     // This constructor is used to inject the pointer to the mocking function.
-    Stringh(StringhInterface* a_ptr_mockObj);
+    Timeh(TimehInterface* a_ptr_mockObj);
 
     // The destructor is ussed to restore the old pointer.
-    virtual ~Stringh();
+    virtual ~Timeh();
 
     // Methods
-    virtual char* strerror(int errnum);
-    virtual char* strdup(const char* s);
-    virtual char* strndup(const char* s, size_t n);
+    virtual time_t time(time_t* tloc);
 
   private:
     // Next variable must be static. Please note that a static member variable
@@ -69,9 +58,9 @@ class UPNPLIB_API Stringh {
     // important here for mocking because the pointer is also valid on all
     // objects of this class. With inline we do not need an extra definition
     // line outside the class. I also make the symbol hidden so the variable
-    // cannot be accessed globaly with Stringh::m_ptr_workerObj. --Ingo
-    UPNPLIB_LOCAL static inline StringhInterface* m_ptr_workerObj;
-    StringhInterface* m_ptr_oldObj{};
+    // cannot be accessed globaly with Timeh::m_ptr_workerObj. --Ingo
+    UPNPLIB_LOCAL static inline TimehInterface* m_ptr_workerObj;
+    TimehInterface* m_ptr_oldObj{};
 };
 
 } // namespace umock
