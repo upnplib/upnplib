@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-05
+# Redistribution only with this Copyright remark. Last modified: 2023-02-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -30,7 +30,7 @@ set(UMOCK_SOURCE_FILES
     ./src/pthread.cpp
     ./src/stdio.cpp
     ./src/unistd.cpp
-    ./src/timeh.cpp
+    ./src/sysinfo.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/net_if.cpp>
     $<$<PLATFORM_ID:Windows>:./src/iphlpapi.cpp>

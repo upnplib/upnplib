@@ -1,5 +1,9 @@
 Next steps to do:
+* Enable openssl compiling
+* Rework test_httpreadwrite.cpp
+* Improve test_http_Download.cpp, start with error conditions for http_MakeMessage()
 * Create gtests for ssdp/*, start with get_ssdp_sockets (needed for miniserver).
+* parse_uri should except "http://127.000.000.001:50001/tvdevicedesc.xml" as valid.
 * Create gtests for web_server_callback.
 * Check bugfix in pupnp/upnp/src/urlconfig/urlconfig.cpp with a gtest.
 * [set EXPECT_CALL to redirect the call to the original method](https://stackoverflow.com/questions/25556601/set-expect-call-to-redirect-the-call-to-the-original-method)
