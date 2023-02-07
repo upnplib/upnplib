@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-18
+// Redistribution only with this Copyright remark. Last modified: 2023-02-05
 
 #include "pupnp/upnp/src/genlib/util/membuffer.cpp"
 
@@ -806,7 +806,7 @@ TEST(MembufferTestSuite, membuffer_append) {
     EXPECT_EQ(mem.buffer.buf[6], 0);
 }
 
-TEST(MembufferTestSuite, membuffer_append_str) {
+TEST(MembufferTestSuite, membuffer_append_str_successful) {
     // membuffer_append_str() just calls membuffer_insert() so that tests also
     // cover membuffer_append_str().
     Cmembuffer mem;

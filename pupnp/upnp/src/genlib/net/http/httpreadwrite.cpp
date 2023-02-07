@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-24
+ * Redistribution only with this Copyright remark. Last modified: 2023-02-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -87,6 +87,7 @@
 #include "umock/sys_select.hpp"
 #include "umock/sys_socket.hpp"
 #include "umock/winsock2.hpp"
+#include "umock/sysinfo.hpp"
 
 /*
  * Please, do not change these to const int while MSVC cannot understand
@@ -1579,7 +1580,7 @@ int http_MakeMessage(membuffer* buf, int http_major_version,
                 /* header */
                 start_str = "DATE: ";
                 end_str = "\r\n";
-                curr_time = time(NULL);
+                curr_time = umock::sysinfo.time(NULL);
                 loc_time = &curr_time;
             } else {
                 /* date value only */
@@ -1993,7 +1994,7 @@ void get_sdk_info(char* info, size_t infoSize) {
     int ret_code;
     struct utsname sys_info;
 
-    ret_code = uname(&sys_info);
+    ret_code = umock::sysinfo.uname(&sys_info);
     if (ret_code == -1)
         *info = '\0';
     snprintf(info, infoSize,
