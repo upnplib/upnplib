@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-10-23
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-02-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,6 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
+// Last compare with pupnp original source file on 2023-02-11, ver 1.14.15
 
 /*!
  * \addtogroup Sock
@@ -57,13 +58,13 @@
 #include <errno.h>
 #include <fcntl.h> /* for F_GETFL, F_SETFL, O_NONBLOCK */
 #include <cstring>
-#include <time.h>
+#include <ctime>
 
 #include "umock/sys_socket.hpp"
 #include "umock/sys_select.hpp"
 
 #ifdef UPNP_ENABLE_OPEN_SSL
-#include <openssl/ssl.h>
+#include "openssl/ssl.h" // don't use <openssl/ssl.h>
 #endif
 
 #ifndef MSG_NOSIGNAL
@@ -127,6 +128,7 @@ int sock_ssl_connect(SOCKINFO* info) {
 
 int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
     int ret = UPNP_E_SUCCESS;
+    char errorBuffer[ERROR_BUFFER_LEN];
 
     if (info->socket != INVALID_SOCKET) {
 #ifdef UPNP_ENABLE_OPEN_SSL
@@ -137,10 +139,9 @@ int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
         }
 #endif
         if (umock::sys_socket_h.shutdown(info->socket, ShutdownMethod) == -1) {
-            // TODO: Test this error message
-            char* errorStr = std::strerror(errno);
+            strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
             UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                       "Error in shutdown: %s\n", errorStr);
+                       "Error in shutdown: %s\n", errorBuffer);
         }
         // BUG! closesocket on _WIN32 does not return -1 on error, but positive
         // numbers. This must check != 0. --Ingo
@@ -197,13 +198,12 @@ static int sock_read_write(
         // BUG! To get correct error messages from the system call for checking
         // signals EINTR (see below) the errno must be resetted. I have seen an
         // endless loop here with old contents of errno.  errno = 0; --Ingo
-        if (*timeoutSecs < 0) {
-            retCode = umock::sys_select_h.select(sockfd + 1, &readSet,
+        if (*timeoutSecs < 0)
+            retCode = umock::sys_select_h.select((int)sockfd + 1, &readSet,
                                                  &writeSet, NULL, NULL);
-        } else {
-            retCode = umock::sys_select_h.select(sockfd + 1, &readSet,
+        else
+            retCode = umock::sys_select_h.select((int)sockfd + 1, &readSet,
                                                  &writeSet, NULL, &timeout);
-        }
         if (retCode == 0)
             return UPNP_E_TIMEDOUT;
         if (retCode == -1) {

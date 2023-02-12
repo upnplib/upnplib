@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-24
+# Redistribution only with this Copyright remark. Last modified: 2023-02-13
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -11,6 +11,7 @@ project(UPNPLIB_PROJECT VERSION ${UPNP_VERSION_STRING}
                 HOMEPAGE_URL "https://github.com/upnplib")
 
 enable_testing()
+
 
 #################################
 # Paths                         #
@@ -64,7 +65,7 @@ option(PT4W_BUILD_TESTING "Build the time and space consuming test suite of pthr
 # Linux mocked functions segfault without it. So we must disable PThreads only
 # on MS Windows. The user can set gtest_disable_pthreads as he like.
 if(WIN32)
-    cmake_dependent_option(gtest_disable_pthreads "Disable Googletest to use POSIX Threads" ON ${UPNPLIB_WITH_GOOGLETEST} ON)
+    CMAKE_DEPENDENT_OPTION(gtest_disable_pthreads "Disable Googletest to use POSIX Threads" ON ${UPNPLIB_WITH_GOOGLETEST} ON)
 endif()
 
 # TODO: Test this option to use the static pthreads4w
@@ -76,6 +77,19 @@ option(PTW32_STATIC_LIB "For using the static pthreads4w library" OFF)
 add_compile_definitions(
     $<$<BOOL:${UPNPLIB_WITH_TOOLS}>:UPNP_HAVE_TOOLS>
 )
+
+# Manage option for OpenSSL.
+# OpenSSL is a very important option for secure communication with https so we
+# enable it by default if it is available on the platform. But there may be
+# restrictions by law to use it in some countries. Although we expect that the
+# user is allowed to use it if installed, she/he should be able to disable it
+# if in doubt.
+# On Microsoft Windows for Github Workflows is only the static OpenSSL version
+# available. That's why we use the static libraries. Linux and MacOS for Github
+# Workflows can also use the shared libraries.
+set(OPENSSL_USE_STATIC_LIBS TRUE)
+find_package (OpenSSL)   # This sets variable OPENSSL_FOUND and other ones.
+CMAKE_DEPENDENT_OPTION(UPNPLIB_WITH_OPENSSL "SSL/TLS and Crypto support as given by the platform should always be ON if not restricted by law." ON OPENSSL_FOUND OFF)
 
 #################################
 # Compiling                     #
@@ -161,6 +175,35 @@ endif()
 add_link_options(
         $<$<CXX_COMPILER_ID:MSVC>:/WX>   # all linker warnings as errors
 )
+
+
+###################################
+# Open SSL for SSL/TLS and Crypto #
+###################################
+
+#set(OPENSSL_SSL_STATIC_LIBRARY ${OPENSSL_SSL_LIBRARY})
+#set(OPENSSL_CRYPTO_STATIC_LIBRARY ${OPENSSL_CRYPTO_LIBRARY})
+#find_library(OPENSSL_SSL_SHARED_LIBRARY ${CMAKE_FIND_LIBRARY_PREFIXES}ssl${CMAKE_FIND_LIBRARY_SUFFIXES})
+#find_library(OPENSSL_CRYPTO_SHARED_LIBRARY ${CMAKE_FIND_LIBRARY_PREFIXES}crypto${CMAKE_FIND_LIBRARY_SUFFIXES})
+
+#message(DEBUG "  DEBUG: OPENSSL_SSL_STATIC_LIBRARY = ${OPENSSL_SSL_STATIC_LIBRARY}")
+#message(DEBUG "  DEBUG: OPENSSL_SSL_SHARED_LIBRARY = ${OPENSSL_SSL_SHARED_LIBRARY}")
+#message(DEBUG "  DEBUG: OPENSSL_CRYPTO_STATIC_LIBRARY = ${OPENSSL_CRYPTO_STATIC_LIBRARY}")
+#message(DEBUG "  DEBUG: OPENSSL_CRYPTO_SHARED_LIBRARY = ${OPENSSL_CRYPTO_SHARED_LIBRARY}")
+
+# Output with cmake option --log-level=DEBUG
+message(DEBUG "  DEBUG: UPNPLIB_WITH_OPENSSL = ${UPNPLIB_WITH_OPENSSL}")
+message(DEBUG "  DEBUG: --")
+message(DEBUG "  DEBUG: CMAKE_FIND_LIBRARY_PREFIXES = ${CMAKE_FIND_LIBRARY_PREFIXES}")
+message(DEBUG "  DEBUG: CMAKE_FIND_LIBRARY_SUFFIXES = ${CMAKE_FIND_LIBRARY_SUFFIXES}")
+message(DEBUG "  DEBUG: OPENSSL_INCLUDE_DIR = ${OPENSSL_INCLUDE_DIR}")
+message(DEBUG "  DEBUG: OPENSSL_CRYPTO_LIBRARY = ${OPENSSL_CRYPTO_LIBRARY}")
+message(DEBUG "  DEBUG: OPENSSL_CRYPTO_LIBRARIES = ${OPENSSL_CRYPTO_LIBRARIES}")
+message(DEBUG "  DEBUG: OPENSSL_SSL_LIBRARY = ${OPENSSL_SSL_LIBRARY}")
+message(DEBUG "  DEBUG: OPENSSL_SSL_LIBRARIES = ${OPENSSL_SSL_LIBRARIES}")
+message(DEBUG "  DEBUG: OPENSSL_LIBRARIES = ${OPENSSL_LIBRARIES}")
+message(DEBUG "  DEBUG: OPENSSL_VERSION = ${OPENSSL_VERSION}")
+message(DEBUG "  DEBUG: OPENSSL_APPLINK_SOURCE = ${OPENSSL_APPLINK_SOURCE}")
 
 
 #################################

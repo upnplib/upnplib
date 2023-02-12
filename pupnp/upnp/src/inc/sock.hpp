@@ -6,8 +6,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-18
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-02-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,6 +34,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
+// Last compare with pupnp original source file on 2023-02-11, ver 1.14.15
 
 /*!
  * \defgroup Sock Network Socket Library
@@ -46,12 +47,12 @@
 #include "UpnpGlobal.hpp" /* for UPNP_INLINE */
 #include "UpnpInet.hpp"   /* for SOCKET, netinet/in */
 #ifdef UPNP_ENABLE_OPEN_SSL
-#include <openssl/ssl.h>
+#include "openssl/ssl.h" // don't use <openssl/ssl.h>
 #endif
 
 /* The following are not defined under winsock.h */
-// Ingo TODO: Cleanup constants: In <sys/socket.h> are defined
-// SHUT_RD, SHUT_WR, SHUT_RDWR with 0, 1, 2, according to man 2 shutdown.
+// TODO: Cleanup constants: In <sys/socket.h> are defined
+// SHUT_RD, SHUT_WR, SHUT_RDWR with 0, 1, 2, according to man 2 shutdown. --Ingo
 #ifndef SD_RECEIVE
 #define SD_RECEIVE 0x00
 #define SD_SEND 0x01
@@ -126,7 +127,7 @@ EXPORT_SPEC int sock_init_with_ip(
  * \li \c UPNP_E_SOCKET_ERROR
  */
 #ifdef UPNP_ENABLE_OPEN_SSL
-int sock_ssl_connect(
+EXPORT_SPEC int sock_ssl_connect(
     /*! [out] Socket Information Object. */
     SOCKINFO* info);
 #endif

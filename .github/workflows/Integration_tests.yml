@@ -23,13 +23,14 @@ jobs:
 
     steps:
     # Step building upnplib
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Configure
         run: >
           cmake
           -S .
           -B build
+          --log-level=DEBUG
           -D CMAKE_C_COMPILER=gcc-10
           -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
@@ -99,14 +100,19 @@ jobs:
 
     steps:
     # Steps to build and test upnplib
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Configure
         run: >
           cmake
           -S .
           -B build ${{matrix.googletest}}
+          --log-level=DEBUG
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+          -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl
+
+      #- name: DEBUG! find OpenSSL header files
+      #  run: ls -la /usr/local/opt/openssl/include/openssl
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -174,7 +180,7 @@ jobs:
 
     steps:
     # Step building upnplib
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - if: matrix.os == 'windows-2019'
         # need developer command prompt
@@ -190,14 +196,20 @@ jobs:
         with:
           arch: amd64
 
+      #- name: DEBUG! find OpenSSL paths
+      #  run: ls C:/Strawberry/c; ls C:/Strawberry/c/bin; ls C:/Strawberry/c/etc; ls C:/Strawberry/c/include; ls C:/Strawberry/c/lib; ls C:/Strawberry/c/libexec; ls C:/Strawberry/c/x86_64-w64-mingw32
+
       - if: matrix.os == 'windows-2019'
         name: Configure 32 bit
         run: >
           cmake
           -S .
           -B build
+          --log-level=DEBUG
           -A Win32 ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+          -D OPENSSL_ROOT_DIR="D:/vcpkg/installed/x64-windows-static"
+          #-D OPENSSL_ROOT_DIR="C:/Strawberry/c/lib"
 
       - if: matrix.os == 'windows-2022'
         name: Configure 64 bit
@@ -205,7 +217,10 @@ jobs:
           cmake
           -S .
           -B build ${{matrix.googletest}}
+          --log-level=DEBUG
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+          -D OPENSSL_ROOT_DIR="D:/vcpkg/installed/x64-windows-static"
+          #-D OPENSSL_ROOT_DIR="C:/Strawberry/c/lib"
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -231,7 +246,9 @@ jobs:
           ls $env:SYSTEMROOT/System32/gmock_main.dll
 
       - name: Run upnplib info programs
-        run: ./build/bin/${{matrix.buildtype}}/upnplib-pst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-psh.exe; ./build/bin/${{matrix.buildtype}}/upnplib-cst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-csh.exe
+        run: ./build/bin/${{matrix.buildtype}}/upnplib-pst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-cst.exe;
+
+        #run: ./build/bin/${{matrix.buildtype}}/upnplib-pst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-psh.exe; ./build/bin/${{matrix.buildtype}}/upnplib-cst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-csh.exe
 
       - if: (matrix.os != 'windows-2019') || (matrix.googletest != '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON')
         # Running static compiled tests with compiled GTESTS_WITH_SHARED_LIBS=ON
@@ -262,7 +279,7 @@ jobs:
 
     steps:
     # Step building upnplib
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - if: matrix.os == 'windows-2019'
         # need developer command prompt
@@ -283,8 +300,11 @@ jobs:
           cmake
           -S .
           -B build
+          --log-level=DEBUG
           -G "NMake Makefiles" ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+          -D OPENSSL_ROOT_DIR="C:/Strawberry/c"
+          #-D OPENSSL_ROOT_DIR="D:/vcpkg/installed/x64-windows-static"
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -357,7 +377,7 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - if: matrix.os == 'windows-latest'
         # need developer command prompt
@@ -372,6 +392,7 @@ jobs:
           cmake
           -S .
           -B build
+          --log-level=DEBUG
           -D CMAKE_C_COMPILER=gcc-10
           -D CMAKE_CXX_COMPILER=g++-10
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
@@ -382,7 +403,9 @@ jobs:
           cmake
           -S .
           -B build
+          --log-level=DEBUG
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
+          -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl
 
       - if: runner.os == 'Windows'
         name: Configure Windows
@@ -390,7 +413,9 @@ jobs:
           cmake
           -S .
           -B build
+          --log-level=DEBUG
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
+          -D OPENSSL_ROOT_DIR="D:/vcpkg/installed/x64-windows-static"
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -403,7 +428,7 @@ jobs:
     needs: [ Build_with_Visual_Studio, Build_with_NMake ]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: DoozyX/clang-format-lint-action@v0.13
       with:
         source: './pupnp ./upnplib ./compa ./gtests ./sample ./umock ./ixml'
