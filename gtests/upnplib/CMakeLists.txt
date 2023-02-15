@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-18
+# Redistribution only with this Copyright remark. Last modified: 2023-02-16
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -26,6 +26,14 @@ target_compile_definitions(test_upnptools-ush
     PRIVATE
         UPNPLIB_SHARED
 )
+target_compile_options(test_upnptools-ush
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+)
 target_link_libraries(test_upnptools-ush
     PRIVATE
         upnplib_shared
@@ -40,6 +48,14 @@ add_executable(test_upnptools-ust
 )
 target_include_directories(test_upnptools-ust
     ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
+)
+target_compile_options(test_upnptools-ust
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_upnptools-ust
     PRIVATE
@@ -65,6 +81,11 @@ target_compile_options(test_sock-ush
         # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
         # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_sock-ush
     PRIVATE
@@ -87,6 +108,14 @@ target_compile_definitions(test_webserver-ush
     PRIVATE
         UPNPLIB_SHARED
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(test_webserver-ush
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_webserver-ush
     PRIVATE

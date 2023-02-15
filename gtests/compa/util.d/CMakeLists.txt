@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-18
+# Redistribution only with this Copyright remark. Last modified: 2023-02-16
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -18,6 +18,14 @@ target_compile_definitions(test_list-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
+)
+target_compile_options(test_list-psh
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_list-psh
     PRIVATE
@@ -46,6 +54,14 @@ target_compile_definitions(test_membuffer-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
 )
+target_compile_options(test_membuffer-pst
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+)
 target_link_libraries(test_membuffer-pst
         PRIVATE
             umock_static
@@ -63,6 +79,14 @@ target_compile_definitions(test_strintmap-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
+)
+target_compile_options(test_strintmap-psh
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_strintmap-psh
     PRIVATE

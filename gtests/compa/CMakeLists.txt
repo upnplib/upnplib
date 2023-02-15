@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-04
+# Redistribution only with this Copyright remark. Last modified: 2023-02-16
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -19,6 +19,14 @@ target_compile_definitions(test_sock-psh
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(test_sock-psh
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_sock-psh
     PRIVATE
@@ -114,6 +122,14 @@ target_compile_options(test_miniserver-pst
         # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
 )
+target_compile_options(test_miniserver-pst
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+)
 target_link_libraries(test_miniserver-pst
     PRIVATE
         pupnp_static
@@ -145,6 +161,14 @@ target_compile_options(test_miniserver-cst
         # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
         # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
+)
+target_compile_options(test_miniserver-cst
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_miniserver-cst
     PRIVATE

@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-18
+# Redistribution only with this Copyright remark. Last modified: 2023-02-16
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -34,6 +34,11 @@ target_compile_options(test_upnpdebug-pst
         # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
         # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_upnpdebug-pst
     PRIVATE
@@ -79,6 +84,14 @@ target_compile_definitions(test_UpnpString-psh
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
+target_compile_options(test_UpnpString-psh
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+)
 target_link_libraries(test_UpnpString-psh
     PRIVATE
         pupnp_shared
@@ -96,6 +109,14 @@ target_compile_definitions(test_UpnpString-csh
     PRIVATE
         UPNPLIB_SHARED
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(test_UpnpString-csh
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_UpnpString-csh
     PRIVATE
@@ -119,6 +140,14 @@ target_compile_definitions(test_UpnpFileInfo-psh
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
+target_compile_options(test_UpnpFileInfo-psh
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+)
 target_link_libraries(test_UpnpFileInfo-psh
     PRIVATE
         pupnp_shared
@@ -136,6 +165,14 @@ target_compile_definitions(test_UpnpFileInfo-csh
     PRIVATE
         UPNPLIB_SHARED
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(test_UpnpFileInfo-csh
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_UpnpFileInfo-csh
     PRIVATE
@@ -221,6 +258,11 @@ target_compile_options(test_upnpapi-pst
         # disable warning C4505: 'UpnpComputeIpv6PrefixLength': unreferenced local function has been removed
         # This isn't used with WIN32 but on other platforms. I won't modify pupnp.
         $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_upnpapi-pst
     PRIVATE
@@ -255,6 +297,11 @@ target_compile_options(test_upnpapi-cst
         # disable warning C4505: 'UpnpComputeIpv6PrefixLength': unreferenced local function has been removed
         # This isn't used with WIN32 but on other platforms. I won't modify pupnp code.
         $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_upnpapi-cst
     PRIVATE
@@ -281,6 +328,11 @@ target_compile_options(test_upnpapi_platform-pst
         # disable warning C4505: 'GetFreeHandle': unreferenced local function has been removed
         # This isn't used with WIN32 but on other platforms. I won't modify pupnp code.
         $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_upnpapi_platform-pst
     PRIVATE

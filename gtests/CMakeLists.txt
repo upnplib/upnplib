@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-19
+# Redistribution only with this Copyright remark. Last modified: 2023-02-16
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -59,6 +59,14 @@ target_compile_definitions(upnplib_gtest_tools_shared
         UPNPLIB_EXPORTS
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
+target_compile_options(upnplib_gtest_tools_shared
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+)
 target_link_libraries(upnplib_gtest_tools_shared
     PUBLIC
         $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
@@ -79,6 +87,14 @@ target_include_directories(upnplib_gtest_tools_static
 target_compile_definitions(upnplib_gtest_tools_static
     PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(upnplib_gtest_tools_static
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(upnplib_gtest_tools_static
     PUBLIC
@@ -119,6 +135,11 @@ target_compile_options(test_upnplib_gtest_tools
         # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
         # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_upnplib_gtest_tools
     PRIVATE
@@ -141,6 +162,14 @@ target_include_directories(test_upnplib_gtest_tools_platform
 target_compile_definitions(test_upnplib_gtest_tools_platform
     PRIVATE
         UPNPLIB_SHARED
+)
+target_compile_options(test_upnplib_gtest_tools_platform
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_upnplib_gtest_tools_platform
     PRIVATE
@@ -168,6 +197,14 @@ target_compile_definitions(test_simple-ush
     PRIVATE
         UPNPLIB_SHARED
 )
+target_compile_options(test_simple-ush
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+)
 target_link_libraries(test_simple-ush
     PRIVATE
         upnplib_shared
@@ -182,6 +219,14 @@ add_executable(test_simple-ust
 )
 target_include_directories(test_simple-ust
     ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
+)
+target_compile_options(test_simple-ust
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_simple-ust
     PRIVATE
@@ -199,6 +244,14 @@ add_executable(test_template
 target_compile_definitions(test_template
     PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(test_template
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 add_test(NAME ctest_template COMMAND test_template --gtest_shuffle
 )

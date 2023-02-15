@@ -2,7 +2,7 @@ name: Integration tests
 
 on:
   push:
-    branches: [ compa-ssdp_server, dev, main, workflow_dispatch ]
+    branches: [ dev, main, workflow_dispatch ]
   pull_request:
     branches: [ dev, main, workflow_dispatch ]
 
@@ -109,7 +109,6 @@ jobs:
           -B build ${{matrix.googletest}}
           --log-level=DEBUG
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
-          -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl
 
       #- name: DEBUG! find OpenSSL header files
       #  run: ls -la /usr/local/opt/openssl/include/openssl
@@ -208,8 +207,7 @@ jobs:
           --log-level=DEBUG
           -A Win32 ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
-          -D OPENSSL_ROOT_DIR="D:/vcpkg/installed/x64-windows-static"
-          #-D OPENSSL_ROOT_DIR="C:/Strawberry/c/lib"
+          -D UPNPLIB_WITH_OPENSSL=NO
 
       - if: matrix.os == 'windows-2022'
         name: Configure 64 bit
@@ -219,8 +217,7 @@ jobs:
           -B build ${{matrix.googletest}}
           --log-level=DEBUG
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
-          -D OPENSSL_ROOT_DIR="D:/vcpkg/installed/x64-windows-static"
-          #-D OPENSSL_ROOT_DIR="C:/Strawberry/c/lib"
+          -D UPNPLIB_WITH_OPENSSL=NO
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -303,8 +300,7 @@ jobs:
           --log-level=DEBUG
           -G "NMake Makefiles" ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
-          -D OPENSSL_ROOT_DIR="C:/Strawberry/c"
-          #-D OPENSSL_ROOT_DIR="D:/vcpkg/installed/x64-windows-static"
+          -D UPNPLIB_WITH_OPENSSL=NO
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -342,7 +338,7 @@ jobs:
         run: |
           $env:path += ";./build/bin"
           cd ./build/gtests
-          ctest -C ${{matrix.buildtype}} --timeout 8 --output-on-failure
+          ctest -C ${{matrix.buildtype}} --timeout 9 --output-on-failure
 
 
   # Job: Run build tests
@@ -405,7 +401,6 @@ jobs:
           -B build
           --log-level=DEBUG
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
-          -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl
 
       - if: runner.os == 'Windows'
         name: Configure Windows
@@ -415,7 +410,7 @@ jobs:
           -B build
           --log-level=DEBUG
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
-          -D OPENSSL_ROOT_DIR="D:/vcpkg/installed/x64-windows-static"
+          -D UPNPLIB_WITH_OPENSSL=NO
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}

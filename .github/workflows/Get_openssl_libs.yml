@@ -1,0 +1,84 @@
+name: Get openssl libraries
+
+on:
+  push:
+    branches: [ workflow_dispatch ]
+
+jobs:
+  # Job: Run build tests
+  # --------------------
+  get_openssl_ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: show openssl files
+        run: |
+          ls -C /usr/lib/x86_64-linux-gnu
+          ls -C /usr/include/openssl
+
+      - name: Archive static library files
+        uses: actions/upload-artifact@v3
+        with:
+          name: ubuntu_openssl_libraries
+          path: |
+            /usr/lib/x86_64-linux-gnu/libssl.a
+            /usr/lib/x86_64-linux-gnu/libcrypto.a
+
+      - name: Archive header files
+        uses: actions/upload-artifact@v3
+        with:
+          name: ubuntu_openssl_header_files
+          path: |
+            /usr/include/openssl
+
+
+  get_openssl_macos:
+    runs-on: macOS-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: show openssl files
+        run: ls -CR /usr/local/opt/openssl
+
+      - name: Archive static library files
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos_openssl_libraries
+          path: |
+            /usr/local/opt/openssl/lib/libssl.a
+            /usr/local/opt/openssl/lib/libcrypto.a
+
+      - name: Archive header files
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos_openssl_header_files
+          path: |
+            /usr/local/opt/openssl/include
+
+
+  get_openssl_win32:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: show openssl files
+        run: ls -R C:/Strawberry/c
+
+      - name: Archive static library files
+        uses: actions/upload-artifact@v3
+        with:
+          name: win32_openssl_libraries
+          path: |
+            C:\Strawberry\c\lib\libssl.a
+            C:\Strawberry\c\lib\libcrypto.a
+
+      - name: Archive header files
+        uses: actions/upload-artifact@v3
+        with:
+          name: win32_openssl_header_files
+          path: |
+            C:\Strawberry\c\include\openssl

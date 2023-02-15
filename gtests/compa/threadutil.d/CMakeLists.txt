@@ -1,4 +1,4 @@
-# Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+# Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 # Redistribution only with this Copyright remark. Last modified: 2023-01-11
 
 cmake_minimum_required(VERSION 3.18)
@@ -23,6 +23,14 @@ target_compile_definitions(test_FreeList-psh
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
 )
+target_compile_options(test_FreeList-psh
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+)
 target_link_libraries(test_FreeList-psh
     PRIVATE
         pupnp_shared
@@ -41,6 +49,14 @@ target_compile_definitions(test_LinkedList-psh
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
+)
+target_compile_options(test_LinkedList-psh
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_LinkedList-psh
     PRIVATE
@@ -65,6 +81,14 @@ target_compile_definitions(test_ThreadPool-psh
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
+target_compile_options(test_ThreadPool-psh
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+)
 target_link_libraries(test_ThreadPool-psh
     PRIVATE
         pupnp_shared
@@ -87,6 +111,14 @@ target_compile_definitions(test_TimerThread-psh
         UPNPLIB_SHARED
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+target_compile_options(test_TimerThread-psh
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_TimerThread-psh
     PRIVATE

@@ -1,5 +1,5 @@
 # Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-20
+# Redistribution only with this Copyright remark. Last modified: 2023-02-16
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -31,6 +31,14 @@ target_compile_definitions(test_ssdp_server-pst
         $<$<BOOL:${UPNPLIB_WITH_IPV6}>:UPNP_ENABLE_IPV6>
         UPNPLIB_WITH_TRACE
 )
+target_compile_options(test_ssdp_server-pst
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+)
 target_link_libraries(test_ssdp_server-pst
     PRIVATE
         pupnp_static
@@ -53,6 +61,14 @@ target_compile_definitions(test_ssdp_server-cst
         UPNP_HAVE_SSDP
         $<$<BOOL:${UPNPLIB_WITH_IPV6}>:UPNP_ENABLE_IPV6>
         UPNPLIB_WITH_TRACE
+)
+target_compile_options(test_ssdp_server-cst
+    PRIVATE
+        # disable warning C4251: 'testing::internal::RE::pattern_': class
+        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+        # needs to have dll-interface to be used by clients of class
+        # 'testing::internal::RE'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_ssdp_server-cst
     PRIVATE

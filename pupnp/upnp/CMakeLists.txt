@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-13
+# Redistribution only with this Copyright remark. Last modified: 2023-02-15
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -159,7 +159,7 @@ set(PUPNP_INCLUDE_DIRECTORIES
     # if pthreads4w isn't installed this path is empty. The linker
     # doesn't find "pthread.h" and falls back to look at <pthread.h>.
     PUBLIC ${pthreads4w_SOURCE_DIR}
-    PUBLIC $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:${OPENSSL_INCLUDE_DIR}>
+    PUBLIC $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:${UPNPLIB_PROJECT_SOURCE_DIR}/include>
     PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 
@@ -180,6 +180,28 @@ add_compile_definitions(
 # Create libraries
 #=================
 if(NOT WIN32)
+
+    if(UPNPLIB_DEF_OPENSSL)
+        add_library(ssl_static STATIC IMPORTED)
+        if(UNIX AND NOT APPLE)
+            set_target_properties(ssl_static PROPERTIES
+                IMPORTED_LOCATION ${UPNPLIB_PROJECT_SOURCE_DIR}/openssl/unix/libssl.a)
+        endif()
+        if(APPLE)
+            set_target_properties(ssl_static PROPERTIES
+                IMPORTED_LOCATION ${UPNPLIB_PROJECT_SOURCE_DIR}/openssl/macos/libssl.a)
+        endif()
+
+        add_library(crypto_static STATIC IMPORTED)
+        if(UNIX AND NOT APPLE)
+            set_target_properties(crypto_static PROPERTIES
+                IMPORTED_LOCATION ${UPNPLIB_PROJECT_SOURCE_DIR}/openssl/unix/libcrypto.a)
+        endif()
+        if(APPLE)
+            set_target_properties(crypto_static PROPERTIES
+                IMPORTED_LOCATION ${UPNPLIB_PROJECT_SOURCE_DIR}/openssl/macos/libcrypto.a)
+        endif()
+    endif()
 
     # Pupnp SHared library: suffix -psh
     #----------------------------------
@@ -205,12 +227,14 @@ if(NOT WIN32)
         PUBLIC
             umock_shared
             ixml_shared
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:OpenSSL::SSL>
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:OpenSSL::Crypto>
+            ssl_static
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:ssl_static>
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:crypto_static>
         INTERFACE
             # On Linux we cannot link with the static pthreads library because then
             # we have also link with a static libc that's not available by default.
             ${UPNP_PTHREADS_SHARED_LIBRARY}
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:dl>
     )
 
     # Pupnp STatic library: suffix -pst
@@ -234,13 +258,14 @@ if(NOT WIN32)
     target_link_libraries(pupnp_static
         PUBLIC
             umock_static
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:OpenSSL::SSL>
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:OpenSSL::Crypto>
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:ssl_static>
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:crypto_static>
         INTERFACE
             ixml_static
             # On Linux we cannot link with the static pthreads library because then
             # we have also link with a static libc that's not available by default.
             ${UPNP_PTHREADS_SHARED_LIBRARY}
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:dl>
 )
 
 else() # WIN32
@@ -264,16 +289,12 @@ else() # WIN32
             UPNPLIB_EXPORTS
             UPNPLIB_WITH_NATIVE_PUPNP
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
-        PUBLIC
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:UPNP_ENABLE_OPEN_SSL>
     )
     # In addition to pthreads we need some more system libraries here
     target_link_libraries(pupnp_shared
         PUBLIC
             umock_shared
             ixml_shared
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:OpenSSL::SSL>
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:OpenSSL::Crypto>
             ws2_32   # winsock to support sockets
             iphlpapi # ip helper interface to get network management tools
             # On MS Windows we link with the static pthreads4w library to
@@ -293,14 +314,10 @@ else() # WIN32
         PRIVATE
             UPNPLIB_WITH_NATIVE_PUPNP
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
-        PUBLIC
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:UPNP_ENABLE_OPEN_SSL>
     )
     target_link_libraries(pupnp_static
         PUBLIC
             umock_static
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:OpenSSL::SSL>
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:OpenSSL::Crypto>
         INTERFACE
             ixml_static
             ws2_32   # winsock to support sockets
