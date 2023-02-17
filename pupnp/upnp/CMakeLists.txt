@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-15
+# Redistribution only with this Copyright remark. Last modified: 2023-02-17
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -177,31 +177,20 @@ add_compile_definitions(
     $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
 )
 
+if(UPNPLIB_DEF_OPENSSL)
+    add_library(ssl_static STATIC IMPORTED)
+    set_target_properties(ssl_static PROPERTIES
+        IMPORTED_LOCATION ${UPNPLIB_PROJECT_SOURCE_DIR}/openssl/${CMAKE_HOST_SYSTEM_NAME}/libssl.a)
+
+    add_library(crypto_static STATIC IMPORTED)
+    set_target_properties(crypto_static PROPERTIES
+        IMPORTED_LOCATION ${UPNPLIB_PROJECT_SOURCE_DIR}/openssl/${CMAKE_HOST_SYSTEM_NAME}/libcrypto.a)
+endif()
+
+
 # Create libraries
 #=================
 if(NOT WIN32)
-
-    if(UPNPLIB_DEF_OPENSSL)
-        add_library(ssl_static STATIC IMPORTED)
-        if(UNIX AND NOT APPLE)
-            set_target_properties(ssl_static PROPERTIES
-                IMPORTED_LOCATION ${UPNPLIB_PROJECT_SOURCE_DIR}/openssl/unix/libssl.a)
-        endif()
-        if(APPLE)
-            set_target_properties(ssl_static PROPERTIES
-                IMPORTED_LOCATION ${UPNPLIB_PROJECT_SOURCE_DIR}/openssl/macos/libssl.a)
-        endif()
-
-        add_library(crypto_static STATIC IMPORTED)
-        if(UNIX AND NOT APPLE)
-            set_target_properties(crypto_static PROPERTIES
-                IMPORTED_LOCATION ${UPNPLIB_PROJECT_SOURCE_DIR}/openssl/unix/libcrypto.a)
-        endif()
-        if(APPLE)
-            set_target_properties(crypto_static PROPERTIES
-                IMPORTED_LOCATION ${UPNPLIB_PROJECT_SOURCE_DIR}/openssl/macos/libcrypto.a)
-        endif()
-    endif()
 
     # Pupnp SHared library: suffix -psh
     #----------------------------------

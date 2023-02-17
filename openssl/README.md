@@ -1,6 +1,8 @@
 Platform specific static libraries OpenSSL
 ==========================================
 All variants are version 1.1.1.
+Don't change the directory names. They are used by CMake with variable
+${CMAKE_HOST_SYSTEM_NAME}.
 
 Using SSL/TLS security with nowadays default https communication, OpenSSL is
 very important for this project. To simplify build and to be independent from
