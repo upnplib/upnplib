@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-17
+# Redistribution only with this Copyright remark. Last modified: 2023-02-21
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -159,7 +159,6 @@ set(PUPNP_INCLUDE_DIRECTORIES
     # if pthreads4w isn't installed this path is empty. The linker
     # doesn't find "pthread.h" and falls back to look at <pthread.h>.
     PUBLIC ${pthreads4w_SOURCE_DIR}
-    PUBLIC $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:${UPNPLIB_PROJECT_SOURCE_DIR}/include>
     PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 
@@ -176,16 +175,6 @@ add_compile_definitions(
     $<$<BOOL:${UPNPLIB_DEF_DEBUG}>:UPNP_HAVE_DEBUG>
     $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
 )
-
-if(UPNPLIB_DEF_OPENSSL)
-    add_library(ssl_static STATIC IMPORTED)
-    set_target_properties(ssl_static PROPERTIES
-        IMPORTED_LOCATION ${UPNPLIB_PROJECT_SOURCE_DIR}/openssl/${CMAKE_HOST_SYSTEM_NAME}/libssl.a)
-
-    add_library(crypto_static STATIC IMPORTED)
-    set_target_properties(crypto_static PROPERTIES
-        IMPORTED_LOCATION ${UPNPLIB_PROJECT_SOURCE_DIR}/openssl/${CMAKE_HOST_SYSTEM_NAME}/libcrypto.a)
-endif()
 
 
 # Create libraries
@@ -209,21 +198,16 @@ if(NOT WIN32)
             UPNPLIB_SHARED
             UPNPLIB_EXPORTS
             UPNPLIB_WITH_NATIVE_PUPNP
-        PUBLIC
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:UPNP_ENABLE_OPEN_SSL>
     )
     target_link_libraries(pupnp_shared
         PUBLIC
             umock_shared
             ixml_shared
-            ssl_static
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:ssl_static>
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:crypto_static>
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:ssl>
         INTERFACE
             # On Linux we cannot link with the static pthreads library because then
             # we have also link with a static libc that's not available by default.
             ${UPNP_PTHREADS_SHARED_LIBRARY}
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:dl>
     )
 
     # Pupnp STatic library: suffix -pst
@@ -241,20 +225,16 @@ if(NOT WIN32)
     target_compile_definitions(pupnp_static
         PRIVATE
             UPNPLIB_WITH_NATIVE_PUPNP
-        PUBLIC
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:UPNP_ENABLE_OPEN_SSL>
     )
     target_link_libraries(pupnp_static
         PUBLIC
             umock_static
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:ssl_static>
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:crypto_static>
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:ssl>
         INTERFACE
             ixml_static
             # On Linux we cannot link with the static pthreads library because then
             # we have also link with a static libc that's not available by default.
             ${UPNP_PTHREADS_SHARED_LIBRARY}
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:dl>
 )
 
 else() # WIN32
@@ -284,6 +264,7 @@ else() # WIN32
         PUBLIC
             umock_shared
             ixml_shared
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:ssl>
             ws2_32   # winsock to support sockets
             iphlpapi # ip helper interface to get network management tools
             # On MS Windows we link with the static pthreads4w library to
@@ -307,6 +288,7 @@ else() # WIN32
     target_link_libraries(pupnp_static
         PUBLIC
             umock_static
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:ssl>
         INTERFACE
             ixml_static
             ws2_32   # winsock to support sockets

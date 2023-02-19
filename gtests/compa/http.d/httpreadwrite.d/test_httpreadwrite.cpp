@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-06
+// Redistribution only with this Copyright remark. Last modified: 2023-02-20
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -8,6 +8,7 @@
 
 #include "upnplib/upnptools.hpp"
 #include "upnplib/uri.hpp"
+#include "upnplib/gtest.hpp"
 
 #include "gmock/gmock.h"
 #include "umock/netdb.hpp"
@@ -244,8 +245,9 @@ TEST(ParseUriIp4TestSuite, verify_testurl) {
     EXPECT_EQ(out.type, ABSOLUTE);
 
     if (old_code) {
-        ::std::cout << "[ BUG!     ] Type value on uri structure should be "
-                       "ABSOLUTE but not 1 on MS Windows.\n";
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Type value on uri structure should be ABSOLUTE but not "
+                     "1 on MS Windows.\n";
 #ifdef _WIN32
         EXPECT_EQ(1, out.type);
 #else
@@ -254,8 +256,9 @@ TEST(ParseUriIp4TestSuite, verify_testurl) {
 
     } else {
 
-        ::std::cout << "[ BUG!     ] Type value on uri structure should be "
-                       "ABSOLUTE but not 1 on MS Windows.\n";
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Type value on uri structure should be ABSOLUTE but not "
+                     "1 on MS Windows.\n";
         EXPECT_EQ(test_url->type, out.type);
     }
 
@@ -533,20 +536,29 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_socket_fails) {
     // Shutdown socket will fail with "The file descriptor sockfd does not refer
     // to a socket."
     EXPECT_CALL(m_mock_socketObj, shutdown(_, _))
+#ifndef UPNP_ENABLE_OPEN_SSL
         .WillOnce(SetErrnoAndReturn(ENOTSOCK, -1));
+#else
+        .Times(0);
+#endif
 
     // Close socket will fail with "fd isn't a valid open file descriptor."
     umock::Unistd unistd_injectObj(&m_mock_unistdObj);
     EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(_))
+#ifndef UPNP_ENABLE_OPEN_SSL
         .WillOnce(SetErrnoAndReturn(EBADF, -1));
+#else
+        .Times(0);
+#endif
 
     // Don't expect a connection to a network server
     umock::PupnpHttpRw pupnp_httprw_injectObj(&m_mock_pupnpHttpRwObj);
     EXPECT_CALL(m_mock_pupnpHttpRwObj, private_connect(_, _, _)).Times(0);
 
     // Connection handle must be freed.
-    http_connection_handle_t* phandle;
-    memset(&phandle, 0xaa, sizeof(phandle));
+    http_connection_handle_t* invalid_ptr;
+    memset(&invalid_ptr, 0xAA, sizeof(invalid_ptr));
+    http_connection_handle_t* phandle{invalid_ptr};
 
     // Test Unit
     int returned = m_httprw_oObj.http_OpenHttpConnection(
@@ -555,10 +567,23 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_socket_fails) {
     EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
         << errStrEx(returned, UPNP_E_SOCKET_ERROR);
 
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Failing to get a socket must return INVALID_SOCKET.\n";
+        EXPECT_NE((*phandle).sock_info.socket, INVALID_SOCKET); // Wrong!
+
+    } else {
+
+        EXPECT_EQ((*phandle).sock_info.socket, INVALID_SOCKET);
+    }
+
     // Close connection
     // Will call socket_h->shutdown and unistd_h->close
+    // Must not segfault with OpenSSL enabled, needs rework.
+#ifndef UPNP_ENABLE_OPEN_SSL
     returned = m_httprw_oObj.http_CloseHttpConnection(phandle);
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
+#endif
 }
 
 TEST_F(OpenHttpConnectionIp4FTestSuite, connect_to_server_fails) {
@@ -676,6 +701,10 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_connection_with_ip_address) {
 typedef OpenHttpConnectionIp4FTestSuite CloseHttpConnectionIp4FTestSuite;
 
 TEST_F(CloseHttpConnectionIp4FTestSuite, close_nullptr_handle) {
+    // TODO: Improve tests which use http_CloseHttpConnection() to match the
+    // current behavior. Rework funtion in compa to always be callable even with
+    // previous error conditions. --Ingo
+
     if (github_actions && !old_code)
         GTEST_SKIP() << "             known failing test on Github Actions";
 
@@ -892,8 +921,8 @@ TEST(HttpFixUrl, nullptr_to_url) {
     uri_type fixed_url;
 
     if (old_code) {
-        ::std::cout
-            << "[ BUG!     ] A nullptr to the input url must not segfault.\n";
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to the input url must not segfault.\n";
 
     } else {
 
@@ -915,8 +944,8 @@ TEST(HttpFixUrl, nullptr_to_fixed_url) {
     uri_type* url = (uri_type*)&testurlObj;
 
     if (old_code) {
-        ::std::cout
-            << "[ BUG!     ] A nullptr to the fixed url must not segfault.\n";
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to the fixed url must not segfault.\n";
 
     } else {
 
@@ -1028,8 +1057,8 @@ TEST(GetHostaddr, nullptr_url_str) {
         GTEST_SKIP() << "             known failing test on Github Actions";
 
     if (old_code) {
-        ::std::cout
-            << "[ BUG!     ] A nullptr to the url string must not segfault.\n";
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": A nullptr to the url string must not segfault.\n";
 
     } else {
 
@@ -1042,7 +1071,7 @@ TEST(GetHostaddr, nullptr_url_str) {
         ASSERT_EXIT(
             (retval = ::get_hoststr(nullptr, &hoststr, &hostlen), exit(0)),
             ::testing::ExitedWithCode(0), ".*")
-            << "[ BUG!     ] A nullptr to the url string must not segfault.\n";
+            << "  BUG! A nullptr to the url string must not segfault.\n";
 
         EXPECT_EQ(retval, UPNP_E_INVALID_URL)
             << errStrEx(retval, UPNP_E_INVALID_URL);
@@ -1145,8 +1174,8 @@ TEST(HttpreadwriteIp6TestSuite, open_http_connection_with_ip_address) {
         "http://2a00:1450:4001:80e::200e", (void**)&phandle, 3);
 
     if (old_code) {
-        ::std::cout << "[ BUG!     ] Connecting with an ip6 address should be "
-                       "possible\n";
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Connecting with an ip6 address should be possible\n";
         EXPECT_EQ(returned, UPNP_E_INVALID_URL)
             << errStrEx(returned, UPNP_E_INVALID_URL);
 

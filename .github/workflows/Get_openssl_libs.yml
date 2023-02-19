@@ -1,8 +1,9 @@
 name: Get openssl libraries
 
-on:
-  push:
-    branches: [ workflow_dispatch ]
+on: workflow_dispatch
+#on:
+#  push:
+#    branches: [ dev ]
 
 jobs:
   # Job: Run build tests
@@ -75,6 +76,8 @@ jobs:
           path: |
             C:\Strawberry\c\lib\libssl.a
             C:\Strawberry\c\lib\libcrypto.a
+            C:\Strawberry\c\bin\libcrypto-1_1-x64__.dll
+            C:\Strawberry\c\bin\libssl-1_1-x64__.dll
 
       - name: Archive header files
         uses: actions/upload-artifact@v3

@@ -7,12 +7,27 @@ on:
     branches: [ dev, main ]
 
 jobs:
+  # Job: Check clang format
+  # -----------------------
+  clang:
+    name: Check clang format
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: DoozyX/clang-format-lint-action@v0.13
+      with:
+        source: './pupnp ./upnplib ./compa ./gtests ./sample ./umock ./ixml ./include ./openssl'
+        extensions: 'cpp,hpp'
+        clangFormatVersion: 11.1.0
+
+
   # Job: Configure, build and test Ubuntu
   # -------------------------------------
   # ubuntu-18.04 isn't used for tests because it doesn't support open standard
   # ISO C++20 that we declared to use for UPnPlib.
   Build_Ubuntu:
     name: Test Ubuntu
+    needs: [ clang ]
     runs-on: ubuntu-latest
 
     strategy:
@@ -90,6 +105,7 @@ jobs:
   #-------------------------------------
   Build_MacOS:
     name: Test MacOS
+    needs: [ clang ]
     runs-on: macOS-latest
 
     strategy:
@@ -109,9 +125,6 @@ jobs:
           -B build ${{matrix.googletest}}
           --log-level=DEBUG
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
-
-      #- name: DEBUG! find OpenSSL header files
-      #  run: ls -la /usr/local/opt/openssl/include/openssl
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -168,6 +181,7 @@ jobs:
   #--------------------------------------------------
   Build_with_Visual_Studio:
     name: Test w/ VS
+    needs: [ clang ]
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -195,9 +209,6 @@ jobs:
         with:
           arch: amd64
 
-      #- name: DEBUG! find OpenSSL paths
-      #  run: ls C:/Strawberry/c; ls C:/Strawberry/c/bin; ls C:/Strawberry/c/etc; ls C:/Strawberry/c/include; ls C:/Strawberry/c/lib; ls C:/Strawberry/c/libexec; ls C:/Strawberry/c/x86_64-w64-mingw32
-
       - if: matrix.os == 'windows-2019'
         name: Configure 32 bit
         run: >
@@ -208,6 +219,8 @@ jobs:
           -A Win32 ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
           -D UPNPLIB_WITH_OPENSSL=NO
+          # We do not have a 32 bit OpenSSL library available. This way we test
+          # also without SSL/TLS support.
 
       - if: matrix.os == 'windows-2022'
         name: Configure 64 bit
@@ -217,7 +230,6 @@ jobs:
           -B build ${{matrix.googletest}}
           --log-level=DEBUG
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
-          -D UPNPLIB_WITH_OPENSSL=NO
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -292,7 +304,8 @@ jobs:
         with:
           arch: amd64
 
-      - name: Configure
+      - if: matrix.os == 'windows-2019'
+        name: Configure 32 bit
         run: >
           cmake
           -S .
@@ -301,6 +314,18 @@ jobs:
           -G "NMake Makefiles" ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
           -D UPNPLIB_WITH_OPENSSL=NO
+          # We do not have a 32 bit OpenSSL library available. This way we test
+          # also without SSL/TLS support.
+
+      - if: matrix.os == 'windows-2022'
+        name: Configure 64 bit
+        run: >
+          cmake
+          -S .
+          -B build
+          --log-level=DEBUG
+          -G "NMake Makefiles" ${{matrix.googletest}}
+          -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -410,22 +435,6 @@ jobs:
           -B build
           --log-level=DEBUG
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
-          -D UPNPLIB_WITH_OPENSSL=NO
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
-
-
-  # Job: Check clang format
-  # -----------------------
-  clang:
-    name: Check clang format
-    needs: [ Build_with_Visual_Studio, Build_with_NMake ]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: DoozyX/clang-format-lint-action@v0.13
-      with:
-        source: './pupnp ./upnplib ./compa ./gtests ./sample ./umock ./ixml'
-        extensions: 'cpp,hpp'
-        clangFormatVersion: 11.1.0

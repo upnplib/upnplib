@@ -366,6 +366,9 @@ endif(WIN32)
 # e.g. PUPNP_UPNP_SOURCE_DIR and PUPNP_UPNP_BINARY_DIR
 # For a successful one step configure the order is important.
 
+if(UPNPLIB_WITH_OPENSSL)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/openssl)
+endif()
 add_subdirectory(${PROJECT_SOURCE_DIR}/umock)
 add_subdirectory(${PROJECT_SOURCE_DIR}/upnplib)
 add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp)
