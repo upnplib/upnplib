@@ -31,23 +31,6 @@
   #include <unistd.h>
 #endif
 
-// Make sockets portable
-// ---------------------
-#ifdef _MSC_VER
-  #include <fcntl.h>
-  #include <winsock2.h>
-  // _MSC_VER has SOCKET defined.
-  #define sa_family_t ADDRESS_FAMILY
-  #define CLOSE_SOCKET_P closesocket
-#else
-  #include <unistd.h> // Also needed here to use 'close()' for a socket.
-  // This typedef makes the code slightly more WIN32 tolerant. On WIN32 systems,
-  // SOCKET is unsigned and is not a file descriptor.
-  typedef int SOCKET;
-  // Posix has sa_family_t defined.
-  #define CLOSE_SOCKET_P close
-#endif
-
 // Make size_t and ssize_t portable
 // --------------------------------
 // no ssize_t defined for VC but SSIZE_T

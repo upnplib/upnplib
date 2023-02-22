@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-12
+// Redistribution only with this Copyright remark. Last modified: 2023-02-21
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -8,10 +8,11 @@
 #include "sock.hpp"
 
 #include "upnplib/upnptools.hpp"
+#include "upnplib/gtest.hpp"
 
 #include "gmock/gmock.h"
 #include "umock/unistd_mock.hpp"
-#include "umock/sys_select.hpp"
+#include "umock/sys_select_mock.hpp"
 #include "umock/sys_socket_mock.hpp"
 
 #ifndef _WIN32
@@ -20,6 +21,7 @@
 
 using ::testing::_;
 using ::testing::DoAll;
+using ::testing::ExitedWithCode;
 using ::testing::NotNull;
 using ::testing::Return;
 using ::testing::SetArrayArgument;
@@ -37,9 +39,9 @@ bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 // =============================
 // clang-format off
 
-class Isock {
+class SockInterface {
   public:
-    virtual ~Isock() {}
+    virtual ~SockInterface() = default;
 
     virtual int sock_init(
         SOCKINFO* info, SOCKET sockfd) = 0;
@@ -59,11 +61,13 @@ class Isock {
         SOCKET sock) = 0;
     virtual int sock_make_no_blocking(
         SOCKET sock) = 0;
+    virtual int sock_close(
+        SOCKET sock) = 0;
 };
 
-class Csock : Isock {
+class Csock : SockInterface {
   public:
-    virtual ~Csock() override {}
+    virtual ~Csock() override = default;
 
     int sock_init(SOCKINFO* info, SOCKET sockfd) override {
         return ::sock_init(info, sockfd); }
@@ -83,15 +87,8 @@ class Csock : Isock {
         return ::sock_make_blocking(sock); }
     int sock_make_no_blocking(SOCKET sock) override {
         return ::sock_make_no_blocking(sock); }
-};
-
-//
-// Mocked system calls
-// ===================
-class Sys_selectMock : public umock::Sys_selectInterface {
-  public:
-    virtual ~Sys_selectMock() override {}
-    MOCK_METHOD(int, select, (SOCKET nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout), (override));
+    int sock_close(SOCKET sock) override {
+        return ::sock_close(sock); }
 };
 // clang-format on
 
@@ -127,7 +124,7 @@ TEST(SockTestSuite, sock_connect_client)
 }
 #endif
 
-//
+
 class SockFTestSuite : public ::testing::Test {
   protected:
     // Instantiate socket object derived from the C++ interface
@@ -136,7 +133,7 @@ class SockFTestSuite : public ::testing::Test {
     // Instantiate mock objects
     umock::Sys_socketMock m_mock_sys_socketObj;
     umock::UnistdMock m_mock_unistdObj;
-    Sys_selectMock m_mock_sys_selectObj;
+    umock::Sys_selectMock m_mock_sys_selectObj;
 
     // Dummy socket, if we do not need a real one due to mocking
     const ::SOCKET m_socketfd{147};
@@ -168,15 +165,41 @@ class SockFTestSuite : public ::testing::Test {
             .WillByDefault(Return(-1));
     }
 };
+typedef SockFTestSuite SockFDeathTest;
 
-TEST_F(SockFTestSuite, sock_init) {
-    // Process the Unit
-    int returned = m_sockObj.sock_init(&m_info, m_socketfd);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
+
+TEST_F(SockFTestSuite, sock_init_successful) {
+    // Test Unit
+    int ret_sock_init = m_sockObj.sock_init(&m_info, m_socketfd);
+    EXPECT_EQ(ret_sock_init, UPNP_E_SUCCESS)
+        << errStrEx(ret_sock_init, UPNP_E_SUCCESS);
+
     EXPECT_EQ(m_info.socket, m_socketfd);
+    EXPECT_EQ(m_info_sa_in_ptr->sin_family, 0);
+    EXPECT_EQ(m_info_sa_in_ptr->sin_port, 0);
+    EXPECT_EQ(m_info_sa_in_ptr->sin_addr.s_addr, (uint32_t)0);
 }
 
-TEST_F(SockFTestSuite, sock_init_with_ip) {
+TEST_F(SockFDeathTest, sock_init_with_no_info) {
+    // Test Unit
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Function should not segfault or abort with failed "
+                     "assert().\n";
+        EXPECT_DEATH(m_sockObj.sock_init(nullptr, m_socketfd), ".*");
+
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT((m_sockObj.sock_init(nullptr, m_socketfd), exit(0)),
+                    ExitedWithCode(0), ".*");
+        int ret_sock_init = m_sockObj.sock_init(nullptr, m_socketfd);
+        EXPECT_EQ(ret_sock_init, UPNP_E_INVALID_PARAM)
+            << errStrEx(ret_sock_init, UPNP_E_INVALID_PARAM);
+    }
+}
+
+TEST_F(SockFTestSuite, sock_init_with_ip_successful) {
     // Provide a sockaddr_in structure
     ::sockaddr_in foreign_sockaddr{};
     foreign_sockaddr.sin_family = AF_INET;
@@ -184,14 +207,40 @@ TEST_F(SockFTestSuite, sock_init_with_ip) {
     EXPECT_EQ(inet_pton(AF_INET, "192.168.192.168", &foreign_sockaddr.sin_addr),
               1);
 
-    // Process the Unit
-    int returned = m_sockObj.sock_init_with_ip(&m_info, m_socketfd,
-                                               (sockaddr*)&foreign_sockaddr);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
+    // Test Unit
+    int ret_sock_init_with_ip = m_sockObj.sock_init_with_ip(
+        &m_info, m_socketfd, (sockaddr*)&foreign_sockaddr);
+    EXPECT_EQ(ret_sock_init_with_ip, UPNP_E_SUCCESS)
+        << errStrEx(ret_sock_init_with_ip, UPNP_E_SUCCESS);
+
     EXPECT_EQ(m_info.socket, m_socketfd);
+    EXPECT_EQ(m_info_sa_in_ptr->sin_family, AF_INET);
     EXPECT_EQ(m_info_sa_in_ptr->sin_port, htons(80));
     EXPECT_EQ(m_info_sa_in_ptr->sin_addr.s_addr,
               foreign_sockaddr.sin_addr.s_addr);
+}
+
+TEST_F(SockFDeathTest, sock_init_with_ip_but_no_ip) {
+    // Error condition with no info structure is tested with
+    // sock_init_with_no_info.
+
+    // Test Unit
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Function should not segfault.\n";
+        EXPECT_DEATH(m_sockObj.sock_init_with_ip(&m_info, m_socketfd, nullptr),
+                     ".*");
+    } else {
+
+        // This expects NO segfault.
+        ASSERT_EXIT((m_sockObj.sock_init_with_ip(&m_info, m_socketfd, nullptr),
+                     exit(0)),
+                    ExitedWithCode(0), ".*");
+        int ret_sock_init_with_ip =
+            m_sockObj.sock_init_with_ip(&m_info, m_socketfd, nullptr);
+        EXPECT_EQ(ret_sock_init_with_ip, UPNP_E_INVALID_PARAM)
+            << errStrEx(ret_sock_init_with_ip, UPNP_E_INVALID_PARAM);
+    }
 }
 
 TEST_F(SockFTestSuite, sock_destroy_valid_socket_descriptor) {

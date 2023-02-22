@@ -33,7 +33,7 @@ jobs:
     strategy:
       matrix:
         buildtype: [ 'Release', 'Debug' ]
-        googletest: [ '-D UPNPLIB_WITH_GOOGLETEST=ON', '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON' ]
+        googletest: [ '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF', '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON' ]
       fail-fast: false
 
     steps:
@@ -53,7 +53,7 @@ jobs:
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON')
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF')
         name: Check gtest library files, static
         run: |
           ls ./build/lib/libgtest.a
@@ -111,7 +111,7 @@ jobs:
     strategy:
       matrix:
         buildtype: [ 'Release', 'Debug' ]
-        googletest: [ '-D UPNPLIB_WITH_GOOGLETEST=ON', '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON' ]
+        googletest: [ '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF', '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON' ]
       fail-fast: false
 
     steps:
@@ -129,7 +129,7 @@ jobs:
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON')
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF')
         name: Check gtest library files, static
         run: |
           ls ./build/lib/libgtest.a
@@ -188,7 +188,7 @@ jobs:
       matrix:
         buildtype: [ 'Release', 'Debug' ]
         os: [ windows-2019, windows-2022 ]
-        googletest: [ '-D UPNPLIB_WITH_GOOGLETEST=ON', '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON' ]
+        googletest: [ '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF', '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON' ]
       fail-fast: false
 
     steps:
@@ -218,9 +218,8 @@ jobs:
           --log-level=DEBUG
           -A Win32 ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
-          -D UPNPLIB_WITH_OPENSSL=NO
-          # We do not have a 32 bit OpenSSL library available. This way we test
-          # also without SSL/TLS support.
+          -D UPNPLIB_WITH_OPENSSL=OFF
+          # We do not have a 32 bit OpenSSL library available.
 
       - if: matrix.os == 'windows-2022'
         name: Configure 64 bit
@@ -234,7 +233,7 @@ jobs:
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON')
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF')
         name: GTest link libraries build with Visual Studio
         run: |
           ls ./build/lib/${{matrix.buildtype}}/gtest.lib
@@ -283,7 +282,7 @@ jobs:
       matrix:
         buildtype: [ 'Release', 'Debug' ]
         os: [ windows-2019, windows-2022 ]
-        googletest: [ '-D UPNPLIB_WITH_GOOGLETEST=ON', '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON' ]
+        googletest: [ '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF', '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON' ]
       fail-fast: false
 
     steps:
@@ -313,9 +312,8 @@ jobs:
           --log-level=DEBUG
           -G "NMake Makefiles" ${{matrix.googletest}}
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
-          -D UPNPLIB_WITH_OPENSSL=NO
-          # We do not have a 32 bit OpenSSL library available. This way we test
-          # also without SSL/TLS support.
+          -D UPNPLIB_WITH_OPENSSL=OFF
+          # We do not have a 32 bit OpenSSL library available.
 
       - if: matrix.os == 'windows-2022'
         name: Configure 64 bit
@@ -330,7 +328,7 @@ jobs:
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON')
+      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF')
         name: GTest link libraries build with NMake
         run: |
           ls ./build/lib/gtest.lib
@@ -381,6 +379,7 @@ jobs:
           '-DUPNPLIB_WITH_TOOLS=ON',
           '-DUPNPLIB_WITH_CLIENT=ON',
           '-DUPNPLIB_WITH_DEVICE=ON',
+          '-DUPNPLIB_WITH_OPENSSL=ON',
           '-DUPNPLIB_WITH_WEBSERVER=ON',
           '-DUPNPLIB_WITH_SSDP=ON',
           '-DUPNPLIB_WITH_OPTSSDP=ON',

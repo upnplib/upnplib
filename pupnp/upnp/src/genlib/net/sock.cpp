@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-02-13
+ * Redistribution only with this Copyright remark. Last modified: 2023-02-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -94,16 +94,8 @@ int sock_init_with_ip(SOCKINFO* info, SOCKET sockfd,
         return ret;
     }
 
-    // clang-format off
-// #ifdef UPNPLIB_PUPNP_BUG
-    // Forming offset [16, 127] is out of the bounds [0, 16] of object
-    // ‘foreign_sockaddr’ with type ‘sockaddr_in’ [-Werror=array-bounds] --Ingo
     memcpy(&info->foreign_sockaddr, foreign_sockaddr,
            sizeof(info->foreign_sockaddr));
-// #else
-//     memcpy(&info->foreign_sockaddr, foreign_sockaddr, sizeof(sockaddr));
-// #endif
-    // clang-format on
 
     return UPNP_E_SUCCESS;
 }

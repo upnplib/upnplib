@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-19
+// Redistribution only with this Copyright remark. Last modified: 2023-02-21
 
 #include "umock/sys_select.inc"
 
@@ -20,7 +20,7 @@ Sys_select::Sys_select(Sys_selectReal* a_ptr_mockObj) {
 // This constructor is used to inject the pointer to the mocking function.
 Sys_select::Sys_select(Sys_selectInterface* a_ptr_mockObj) {
     m_ptr_oldObj = m_ptr_workerObj;
-    m_ptr_workerObj = (Sys_selectInterface*)a_ptr_mockObj;
+    m_ptr_workerObj = a_ptr_mockObj;
 }
 
 // The destructor is ussed to restore the old pointer.

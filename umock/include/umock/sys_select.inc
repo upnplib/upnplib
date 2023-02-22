@@ -1,23 +1,17 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-02-22
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
 
-#include "upnplib/port.hpp"
+#include "upnplib/port_sock.hpp"
 #include "upnplib/visibility.hpp"
-
-#ifdef _WIN32
-#include <winsock2.h>
-#else
-#include <sys/select.h>
-#endif
 
 namespace umock {
 
 class Sys_selectInterface {
   public:
-    virtual ~Sys_selectInterface() {}
+    virtual ~Sys_selectInterface() = default;
     virtual int select(SOCKET nfds, fd_set* readfds, fd_set* writefds,
                        fd_set* exceptfds, struct timeval* timeout) = 0;
 };
@@ -27,7 +21,7 @@ class Sys_selectInterface {
 // ----------------------------------------------------------
 class Sys_selectReal : public Sys_selectInterface {
   public:
-    virtual ~Sys_selectReal() override {}
+    virtual ~Sys_selectReal() override = default;
     int select(SOCKET nfds, fd_set* readfds, fd_set* writefds,
                fd_set* exceptfds, struct timeval* timeout) override;
 };
@@ -51,7 +45,7 @@ class UPNPLIB_API Sys_select {
   public:
     // This constructor is used to inject the pointer to the real function. It
     // sets the default used class, that is the real function.
-    Sys_select(Sys_selectReal* a_ptr_mockObj);
+    Sys_select(Sys_selectReal* a_ptr_realObj);
 
     // This constructor is used to inject the pointer to the mocking function.
     Sys_select(Sys_selectInterface* a_ptr_mockObj);

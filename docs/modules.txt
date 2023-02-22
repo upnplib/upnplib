@@ -14,6 +14,24 @@ file. A test collection is a collection of gtests to test a program unit.
 * One test collection is for testing the native UPnPlib code.
 
 
+sock: find \! -path ' ./build/*' -type f -iregex '.*sock\.[ch]pp
+-----
+The sock module has a well defined C++ Interface.
+pUPnP compile unit
+    ./pupnp/upnp/src/inc/sock.hpp
+    ./pupnp/upnp/src/genlib/net/sock.cpp
+UPnPlib compatible compile unit
+    t.b.d.
+Test collection for both
+    ./gtests/compa/test_sock.cpp
+
+UPnPlib native compile unit
+    ./upnplib/include/upnplib/sock.hpp
+    ./upnplib/src/net/sock.cpp
+Test collection for this
+    ./upnplib/include/upnplib/sock.hpp
+
+
 miniserver: find \! -path './build/*' -type f -iname '*miniserver*'
 -----------
 The miniserver is a central point for processing all network requests. It

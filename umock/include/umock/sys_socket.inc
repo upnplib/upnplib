@@ -5,6 +5,7 @@
 // included more than two times as given.
 
 #include "upnplib/port.hpp"
+#include "upnplib/port_sock.hpp"
 #include "upnplib/visibility.hpp"
 
 #ifdef _WIN32

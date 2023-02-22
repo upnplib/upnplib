@@ -1,31 +1,15 @@
 #ifndef UPNPLIB_NET_SOCK_HPP
 #define UPNPLIB_NET_SOCK_HPP
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-02-22
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
 
-#include "upnplib/port.hpp"
-#include "upnplib/visibility.hpp" // for UPNPLIB_API
+#include "upnplib/port_sock.hpp"
+#include "upnplib/visibility.hpp"
 #include <string>
 #include <stdexcept>
-
-#ifdef _WIN32
-#include <winsock2.h>
-#include <iphlpapi.h> // must be after <winsock2.h>
-#include <ws2tcpip.h> // for socklen_t etc.
-// #include <ws2ipdef.h>
-
-#else // _WIN32
-
-#include <sys/socket.h>
-#include <arpa/inet.h>
-
-/*! socket() returns INVALID_SOCKET on win32 and is unsigned. */
-#define INVALID_SOCKET (-1)
-
-#endif // _WIN32
 
 namespace upnplib {
 
