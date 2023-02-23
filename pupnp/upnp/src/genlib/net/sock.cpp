@@ -64,7 +64,7 @@
 #include "umock/sys_select.hpp"
 
 #ifdef UPNP_ENABLE_OPEN_SSL
-#include "openssl/ssl.h" // don't use <openssl/ssl.h>
+#include <openssl/ssl.h>
 #endif
 
 #ifndef MSG_NOSIGNAL

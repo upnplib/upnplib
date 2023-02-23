@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-21
+# Redistribution only with this Copyright remark. Last modified: 2023-02-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -203,7 +203,7 @@ if(NOT WIN32)
         PUBLIC
             umock_shared
             ixml_shared
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:ssl>
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:upnplib_ssl>
         INTERFACE
             # On Linux we cannot link with the static pthreads library because then
             # we have also link with a static libc that's not available by default.
@@ -229,7 +229,7 @@ if(NOT WIN32)
     target_link_libraries(pupnp_static
         PUBLIC
             umock_static
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:ssl>
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:upnplib_ssl>
         INTERFACE
             ixml_static
             # On Linux we cannot link with the static pthreads library because then
@@ -264,7 +264,7 @@ else() # WIN32
         PUBLIC
             umock_shared
             ixml_shared
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:ssl>
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:upnplib_ssl>
             ws2_32   # winsock to support sockets
             iphlpapi # ip helper interface to get network management tools
             # On MS Windows we link with the static pthreads4w library to
@@ -288,7 +288,7 @@ else() # WIN32
     target_link_libraries(pupnp_static
         PUBLIC
             umock_static
-            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:ssl>
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:upnplib_ssl>
         INTERFACE
             ixml_static
             ws2_32   # winsock to support sockets

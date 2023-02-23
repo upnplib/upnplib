@@ -64,7 +64,7 @@
 #endif
 
 #ifdef UPNP_ENABLE_OPEN_SSL
-#include "openssl/ssl.h" // don't use <openssl/ssl.h>
+#include <openssl/ssl.h>
 #endif
 
 #define LINE_SIZE (size_t)180

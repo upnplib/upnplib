@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: DoozyX/clang-format-lint-action@v0.13
       with:
-        source: './pupnp ./upnplib ./compa ./gtests ./sample ./umock ./ixml ./include ./openssl'
+        source: './pupnp ./upnplib ./compa ./gtests ./sample ./umock ./ixml ./include'
         extensions: 'cpp,hpp'
         clangFormatVersion: 11.1.0
 

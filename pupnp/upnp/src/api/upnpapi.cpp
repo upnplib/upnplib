@@ -104,7 +104,7 @@
 #endif
 
 #ifdef UPNP_ENABLE_OPEN_SSL
-#include "openssl/ssl.h" // don't use <openssl/ssl.h>
+#include <openssl/ssl.h>
 #endif
 
 #ifndef IN6_IS_ADDR_GLOBAL

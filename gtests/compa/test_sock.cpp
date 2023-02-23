@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-21
+// Redistribution only with this Copyright remark. Last modified: 2023-02-23
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -14,6 +14,10 @@
 #include "umock/unistd_mock.hpp"
 #include "umock/sys_select_mock.hpp"
 #include "umock/sys_socket_mock.hpp"
+
+#ifdef UPNP_ENABLE_OPEN_SSL
+#include <openssl/err.h>
+#endif
 
 #ifndef _WIN32
 #include <fcntl.h>
@@ -243,7 +247,45 @@ TEST_F(SockFDeathTest, sock_init_with_ip_but_no_ip) {
     }
 }
 
-TEST_F(SockFTestSuite, sock_destroy_valid_socket_descriptor) {
+#ifdef UPNP_ENABLE_OPEN_SSL
+TEST(SockTestSuite, libssl_connection_successful) {
+    // This test shows how to use libssl to initialize a connection. It does not
+    // test a Unit.
+
+    // Provide a context structure.
+    SSL_CTX* ssl_ctx{};
+
+    // Maybe we need this?
+    // SSL_load_error_strings();
+    // SSL_library_init();
+    // OpenSSL_add_all_algorithms();
+
+    // Create connection
+    ssl_ctx = SSL_CTX_new(TLS_method());
+    EXPECT_NE(ssl_ctx, nullptr);
+
+    // Create structure for a connection
+    SSL* ssl = SSL_new(ssl_ctx);
+    EXPECT_NE(ssl, nullptr);
+
+    // There is no connection established
+    EXPECT_EQ(SSL_shutdown(ssl), -1);
+    // ERR_print_errors_fp (stderr);
+
+    SSL_CTX_free(ssl_ctx);
+}
+
+// TEST_F(SockFTestSuite, sock_ssl_connect_successful) {
+// Test Unit
+// int ret_sock_ssl_connect = m_sockObj.sock_ssl_connect(&m_info);
+// EXPECT_EQ(ret_sock_ssl_connect , UPNP_E_SUCCESS)
+//    << errStrEx(ret_sock_ssl_connect , UPNP_E_SUCCESS);
+
+// EXPECT_EQ(OPENSSL_init_ssl(OPENSSL_INIT_LOAD_SSL_STRINGS, nullptr), 1);
+//}
+#endif
+
+TEST_F(SockFTestSuite, sock_destroy_successful) {
     // shutdown is successful
     umock::Sys_socket sys_socket_injectObj(&m_mock_sys_socketObj);
     EXPECT_CALL(m_mock_sys_socketObj,
@@ -254,9 +296,11 @@ TEST_F(SockFTestSuite, sock_destroy_valid_socket_descriptor) {
     EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(m_socketfd))
         .WillOnce(Return(0));
 
-    // Process the Unit
-    int returned = m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
+    // Test Unit
+    int ret_sock_destroy =
+        m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH);
+    EXPECT_EQ(ret_sock_destroy, UPNP_E_SUCCESS)
+        << errStrEx(ret_sock_destroy, UPNP_E_SUCCESS);
 }
 
 TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_ok_close_fails_not_0) {
