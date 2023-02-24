@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-16
+# Redistribution only with this Copyright remark. Last modified: 2023-02-24
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -13,6 +13,9 @@ project(GTESTS_COMPA VERSION 0010
 #=====
 add_executable(test_sock-psh
         ./test_sock.cpp
+)
+target_include_directories(test_sock-psh
+    PRIVATE ${COMPA_SOURCE_DIR}/include
 )
 target_compile_definitions(test_sock-psh
     PRIVATE
@@ -36,6 +39,30 @@ target_link_libraries(test_sock-psh
 add_test(NAME ctest_sock-psh COMMAND test_sock-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
+
+
+# sock_openssl
+#=============
+if(UPNPLIB_WITH_OPENSSL)
+
+    add_executable(test_sock_openssl-psh
+        ./test_sock_openssl.cpp
+    )
+    target_compile_definitions(test_sock_openssl-psh
+        PRIVATE
+            UPNPLIB_SHARED
+            UPNPLIB_WITH_NATIVE_PUPNP
+    )
+    target_link_libraries(test_sock_openssl-psh
+        PRIVATE
+            pupnp_shared
+            upnplib_gtest_tools_shared
+    )
+    add_test(NAME ctest_sock_openssl-psh COMMAND test_sock_openssl-psh --gtest_shuffle
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+    )
+
+endif()
 
 
 # miniserver

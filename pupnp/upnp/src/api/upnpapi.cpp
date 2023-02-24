@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-02-13
+ * Redistribution only with this Copyright remark. Last modified: 2023-02-23
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -262,7 +262,7 @@ Upnp_SID gUpnpSdkNLSuuid;
  * to be used for all SSL/TLS connections
  */
 #ifdef UPNP_ENABLE_OPEN_SSL
-SSL_CTX* gSslCtx = NULL;
+EXPORT_SPEC SSL_CTX* gSslCtx = NULL;
 #endif
 
 /*!

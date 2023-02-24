@@ -1,9 +1,9 @@
 #ifndef COMPA_UPNPDEBUG_HPP
 #define COMPA_UPNPDEBUG_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-01
+// Redistribution only with this Copyright remark. Last modified: 2023-02-25
 
-#include "pupnp/upnpdebug.hpp"
+#include <upnpdebug.hpp>
 
 namespace compa {
 

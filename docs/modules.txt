@@ -21,9 +21,13 @@ pUPnP compile unit
     ./pupnp/upnp/src/inc/sock.hpp
     ./pupnp/upnp/src/genlib/net/sock.cpp
 UPnPlib compatible compile unit
-    t.b.d.
+    ./compa/include/compa/interface_sock.hpp
+        ./pupnp/include/pupnp/sock.hpp
+        ./compa/include/compa/sock.hpp
+    ./compa/src/genlib/net/sock.cpp
 Test collection for both
     ./gtests/compa/test_sock.cpp
+    ./gtests/compa/test_sock_openssl.cpp
 
 UPnPlib native compile unit
     ./upnplib/include/upnplib/sock.hpp

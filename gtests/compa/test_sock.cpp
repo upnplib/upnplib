@@ -4,8 +4,8 @@
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
 
-#include "upnp.hpp"
-#include "sock.hpp"
+#include <upnp.hpp>
+#include <pupnp/sock.hpp>
 
 #include "upnplib/upnptools.hpp"
 #include "upnplib/gtest.hpp"
@@ -14,10 +14,6 @@
 #include "umock/unistd_mock.hpp"
 #include "umock/sys_select_mock.hpp"
 #include "umock/sys_socket_mock.hpp"
-
-#ifdef UPNP_ENABLE_OPEN_SSL
-#include <openssl/err.h>
-#endif
 
 #ifndef _WIN32
 #include <fcntl.h>
@@ -34,69 +30,10 @@ using ::upnplib::errStr;
 using ::upnplib::errStrEx;
 
 namespace compa {
-
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
-//
-// Interface for the sock module
-// =============================
-// clang-format off
 
-class SockInterface {
-  public:
-    virtual ~SockInterface() = default;
-
-    virtual int sock_init(
-        SOCKINFO* info, SOCKET sockfd) = 0;
-    virtual int sock_init_with_ip(
-        SOCKINFO* info, SOCKET sockfd, struct sockaddr* foreign_sockaddr) = 0;
-#ifdef UPNP_ENABLE_OPEN_SSL
-    virtual int sock_ssl_connect(
-        SOCKINFO* info) = 0;
-#endif
-    virtual int sock_destroy(
-        SOCKINFO* info, int ShutdownMethod) = 0;
-    virtual int sock_read(
-        SOCKINFO* info, char* buffer, size_t bufsize, int* timeoutSecs) = 0;
-    virtual int sock_write(
-        SOCKINFO* info, const char* buffer, size_t bufsize, int* timeoutSecs) = 0;
-    virtual int sock_make_blocking(
-        SOCKET sock) = 0;
-    virtual int sock_make_no_blocking(
-        SOCKET sock) = 0;
-    virtual int sock_close(
-        SOCKET sock) = 0;
-};
-
-class Csock : SockInterface {
-  public:
-    virtual ~Csock() override = default;
-
-    int sock_init(SOCKINFO* info, SOCKET sockfd) override {
-        return ::sock_init(info, sockfd); }
-    int sock_init_with_ip( SOCKINFO* info, SOCKET sockfd, struct sockaddr* foreign_sockaddr) override {
-        return ::sock_init_with_ip(info, sockfd, foreign_sockaddr); }
-#ifdef UPNP_ENABLE_OPEN_SSL
-    int sock_ssl_connect( SOCKINFO* info) override {
-        return ::sock_ssl_connect(info); }
-#endif
-    int sock_destroy(SOCKINFO* info, int ShutdownMethod) override {
-        return ::sock_destroy(info, ShutdownMethod); }
-    int sock_read(SOCKINFO* info, char* buffer, size_t bufsize, int* timeoutSecs) override {
-        return ::sock_read(info, buffer, bufsize, timeoutSecs); }
-    int sock_write(SOCKINFO* info, const char* buffer, size_t bufsize, int* timeoutSecs) override {
-        return ::sock_write(info, buffer, bufsize, timeoutSecs); }
-    int sock_make_blocking(SOCKET sock) override {
-        return ::sock_make_blocking(sock); }
-    int sock_make_no_blocking(SOCKET sock) override {
-        return ::sock_make_no_blocking(sock); }
-    int sock_close(SOCKET sock) override {
-        return ::sock_close(sock); }
-};
-// clang-format on
-
-//
 // testsuite for the sock module
 //==============================
 #if false
@@ -140,7 +77,7 @@ class SockFTestSuite : public ::testing::Test {
     umock::Sys_selectMock m_mock_sys_selectObj;
 
     // Dummy socket, if we do not need a real one due to mocking
-    const ::SOCKET m_socketfd{147};
+    const ::SOCKET m_socketfd{1001};
 
     // Provide a socket info structure
     ::SOCKINFO m_info{};
@@ -246,44 +183,6 @@ TEST_F(SockFDeathTest, sock_init_with_ip_but_no_ip) {
             << errStrEx(ret_sock_init_with_ip, UPNP_E_INVALID_PARAM);
     }
 }
-
-#ifdef UPNP_ENABLE_OPEN_SSL
-TEST(SockTestSuite, libssl_connection_successful) {
-    // This test shows how to use libssl to initialize a connection. It does not
-    // test a Unit.
-
-    // Provide a context structure.
-    SSL_CTX* ssl_ctx{};
-
-    // Maybe we need this?
-    // SSL_load_error_strings();
-    // SSL_library_init();
-    // OpenSSL_add_all_algorithms();
-
-    // Create connection
-    ssl_ctx = SSL_CTX_new(TLS_method());
-    EXPECT_NE(ssl_ctx, nullptr);
-
-    // Create structure for a connection
-    SSL* ssl = SSL_new(ssl_ctx);
-    EXPECT_NE(ssl, nullptr);
-
-    // There is no connection established
-    EXPECT_EQ(SSL_shutdown(ssl), -1);
-    // ERR_print_errors_fp (stderr);
-
-    SSL_CTX_free(ssl_ctx);
-}
-
-// TEST_F(SockFTestSuite, sock_ssl_connect_successful) {
-// Test Unit
-// int ret_sock_ssl_connect = m_sockObj.sock_ssl_connect(&m_info);
-// EXPECT_EQ(ret_sock_ssl_connect , UPNP_E_SUCCESS)
-//    << errStrEx(ret_sock_ssl_connect , UPNP_E_SUCCESS);
-
-// EXPECT_EQ(OPENSSL_init_ssl(OPENSSL_INIT_LOAD_SSL_STRINGS, nullptr), 1);
-//}
-#endif
 
 TEST_F(SockFTestSuite, sock_destroy_successful) {
     // shutdown is successful

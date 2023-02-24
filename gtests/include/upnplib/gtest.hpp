@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_GTEST_HPP
 #define UPNPLIB_GTEST_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Redistribution only with this Copyright remark. Last modified: 2023-02-24
 
 #include "upnplib/visibility.hpp"
 #include <cstring>
@@ -40,10 +40,10 @@ namespace upnplib::testing {
 //
 // Typical usage is:
 /*
-    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
-    captureObj.start();
+    CaptureStdOutErr stdErr(STDERR_FILENO); // or STDOUT_FILENO
+    stdErr.start();
     std::cerr << "Hello World"; // or any other output from within functions
-    std::string capturedStderr = captureObj.get();
+    std::string capturedStderr = stdErr.get();
     EXPECT_THAT(capturedStderr, MatchesRegex("Hello .*"));
 */
 // Exception: Strong guarantee (no modifications)
