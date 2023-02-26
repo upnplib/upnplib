@@ -1,9 +1,9 @@
 #ifndef INCLUDE_COMPA_SOCK_HPP
 #define INCLUDE_COMPA_SOCK_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-24
+// Redistribution only with this Copyright remark. Last modified: 2023-02-26
 
-#include "compa/interface_sock.hpp"
+#include "interface/compa-sock.hpp"
 
 namespace compa {
 

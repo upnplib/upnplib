@@ -1,10 +1,16 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-25
+// Redistribution only with this Copyright remark. Last modified: 2023-02-26
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
 
-#include <sock.hpp>
+#include <pupnp/sock.hpp>
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+#define NS ::pupnp
+#else
+#define NS ::compa
+#include <compa/sock.hpp>
+#endif
 
 #include <upnplib/port.hpp>
 #include <upnplib/port_sock.hpp>
@@ -129,7 +135,7 @@ TEST_F(SockFTestSuite, libssl_connection_error_handling) {
 TEST(SockTestSuite, sock_ssl_connect_signal_broken_pipe) {
     // Provide a socket info structure
     SOCKINFO info{};
-    Csock sockObj;
+    NS::Csock sockObj;
 
     // Initialize the global connection structure
     gSslCtx = SSL_CTX_new(TLS_method());

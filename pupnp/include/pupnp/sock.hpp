@@ -1,17 +1,17 @@
 #ifndef PUPNP_INCLUDE_PUPNP_SOCK_HPP
 #define PUPNP_INCLUDE_PUPNP_SOCK_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-25
+// Redistribution only with this Copyright remark. Last modified: 2023-02-26
 
-#include "compa/interface_sock.hpp"
+#include "interface/compa-sock.hpp"
 
-namespace compa {
+namespace pupnp {
 
 // Interface for the sock module
 // =============================
 // clang-format off
 
-class Csock : SockInterface {
+class Csock : compa::SockInterface {
   public:
     virtual ~Csock() override = default;
 
@@ -38,6 +38,6 @@ class Csock : SockInterface {
 };
 // clang-format on
 
-} // namespace compa
+} // namespace pupnp
 
 #endif // PUPNP_INCLUDE_PUPNP_SOCK_HPP
