@@ -268,7 +268,7 @@ jobs:
         run: |
           $env:path += ";./build/bin/${{matrix.buildtype}}"
           cd ./build/gtests
-          ctest -C ${{matrix.buildtype}} --timeout 8 --output-on-failure
+          ctest -C ${{matrix.buildtype}} --timeout 9 --output-on-failure
 
 
   # Job: Configure, build and test with NMake

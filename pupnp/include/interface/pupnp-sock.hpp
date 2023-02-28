@@ -1,19 +1,19 @@
-#ifndef COMPA_INTERFACE_SOCK_HPP
-#define COMPA_INTERFACE_SOCK_HPP
+#ifndef PUPNP_INTERFACE_SOCK_HPP
+#define PUPNP_INTERFACE_SOCK_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-25
+// Redistribution only with this Copyright remark. Last modified: 2023-03-03
 
 #include <sock.hpp>
 
-namespace compa {
+namespace pupnp {
 
 // Interface for the sock module
 // =============================
 // clang-format off
 
-class SockInterface {
+class UPNPLIB_API SockInterface {
   public:
-    virtual ~SockInterface() = default;
+    virtual ~SockInterface();
 
     virtual int sock_init(
         SOCKINFO* info, SOCKET sockfd) = 0;
@@ -38,6 +38,6 @@ class SockInterface {
 };
 // clang-format on
 
-} // namespace compa
+} // namespace pupnp
 
-#endif // COMPA_INTERFACE_SOCK_HPP
+#endif // PUPNP_INTERFACE_SOCK_HPP

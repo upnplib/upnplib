@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-01
+# Redistribution only with this Copyright remark. Last modified: 2023-02-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -16,6 +16,7 @@ set(COMPATIBLE_SOURCE_FILES
     ./src/api/UpnpFileInfo.cpp
     ./src/api/upnpdebug.cpp
     ./src/genlib/miniserver/miniserver.cpp
+    ./src/genlib/net/sock.cpp
     ./src/ssdp/ssdp_server.cpp
 )
 

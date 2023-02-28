@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-24
+# Redistribution only with this Copyright remark. Last modified: 2023-03-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -56,9 +56,27 @@ if(UPNPLIB_WITH_OPENSSL)
     target_link_libraries(test_sock_openssl-psh
         PRIVATE
             pupnp_shared
+            upnplib_shared
             upnplib_gtest_tools_shared
     )
     add_test(NAME ctest_sock_openssl-psh COMMAND test_sock_openssl-psh --gtest_shuffle
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+    )
+
+    add_executable(test_sock_openssl-csh
+        ./test_sock_openssl.cpp
+    )
+    target_compile_definitions(test_sock_openssl-csh
+        PRIVATE
+            UPNPLIB_SHARED
+    )
+    target_link_libraries(test_sock_openssl-csh
+        PRIVATE
+            compa_shared
+            upnplib_shared
+            upnplib_gtest_tools_shared
+    )
+    add_test(NAME ctest_sock_openssl-csh COMMAND test_sock_openssl-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
     )
 
@@ -140,7 +158,6 @@ target_compile_definitions(test_miniserver-pst
         UPNP_HAVE_DEVICE
         UPNP_HAVE_WEBSERVER
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
-        #UPNPLIB_WITH_TRACE
 )
 target_compile_options(test_miniserver-pst
     PRIVATE
@@ -180,7 +197,6 @@ target_compile_definitions(test_miniserver-cst
         UPNP_HAVE_DEVICE
         UPNP_HAVE_WEBSERVER
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
-        #UPNPLIB_WITH_TRACE
 )
 target_compile_options(test_miniserver-cst
     PRIVATE

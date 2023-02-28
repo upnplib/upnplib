@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-26
+// Redistribution only with this Copyright remark. Last modified: 2023-03-04
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -12,9 +12,12 @@
 #include <compa/sock.hpp>
 #endif
 
+#include <upnp.hpp>
+
 #include <upnplib/port.hpp>
 #include <upnplib/port_sock.hpp>
 #include <upnplib/gtest.hpp>
+#include "upnplib/upnptools.hpp" // for errStrEx
 
 #include <openssl/ssl.h>
 #include <openssl/err.h>
@@ -26,9 +29,12 @@
 
 #include <cstring>
 
+using ::testing::ExitedWithCode;
+
+using upnplib::errStrEx;
 using upnplib::testing::CaptureStdOutErr;
 
-extern SSL_CTX* gSslCtx;
+UPNPLIB_EXTERN SSL_CTX* gSslCtx;
 
 
 namespace compa {
@@ -52,6 +58,7 @@ class SockFTestSuite : public ::testing::Test {
     ~SockFTestSuite() override { WSACleanup(); }
 #endif
 };
+typedef SockFTestSuite SockFDeathTest;
 
 
 TEST_F(SockFTestSuite, libssl_connection_error_handling) {
@@ -93,29 +100,26 @@ TEST_F(SockFTestSuite, libssl_connection_error_handling) {
 #ifndef _WIN32
     signal(SIGPIPE, SIG_IGN); // SIGPIPE not defined on MS Windows
 #endif
-    EXPECT_EQ(SSL_connect(ssl), -1); // error
+    EXPECT_EQ(SSL_connect(ssl), -1); // error, underlaying socket no connection
     int err_no = errno;
 #ifndef _WIN32
     signal(SIGPIPE, SIG_DFL); // default signal handling
 #endif
 
     // errno reports error
-    switch (err_no) {
 #ifdef _WIN32
-    case 0: // no error reported on MS Windows
-        break;
+    // 22: "Invalid argument"
+    EXPECT_EQ(err_no, 22) << "  " << std::strerror(err_no) << "(" << err_no
+                          << ")";
+#elif __APPLE__
+    // 57: "Socket is not connected"
+    EXPECT_EQ(err_no, 57) << "  " << std::strerror(err_no) << "(" << err_no
+                          << ")";
+#else
+    // 32: "Broken pipe" on Ubuntu
+    EXPECT_EQ(err_no, 32) << "  " << std::strerror(err_no) << "(" << err_no
+                          << ")";
 #endif
-    case 32: // "Broken pipe" on Ubuntu
-        break;
-    case 57: // "Socket is not connected" on MacOS
-        break;
-    default:
-        EXPECT_EQ(err_no, 32);
-        EXPECT_EQ(err_no, 57);
-        std::cout << "errno " << err_no << ": \"" << std::strerror(err_no)
-                  << "\"\n";
-        break;
-    }
 
     // There are no errors reported from ssl
     CaptureStdOutErr stdErr(STDERR_FILENO); // or STDOUT_FILENO
@@ -131,28 +135,71 @@ TEST_F(SockFTestSuite, libssl_connection_error_handling) {
     SSL_CTX_free(ssl_ctx);
 }
 
-#if 0
-TEST(SockTestSuite, sock_ssl_connect_signal_broken_pipe) {
-    // Provide a socket info structure
+TEST_F(SockFDeathTest, sock_ssl_connect_signal_broken_pipe) {
+    // Steps as given by the Unit and expected results:
+    // 1. SSL_new(): set new global SSL Context   - succeeds
+    // 2. SSL_set_fd(): set socket to SSL Context - succeeds
+    // 3. SSL_connect(): connect to remote node   - fails
+
+    // Setup needed environment that is:
+    // a) a socket info structure
     SOCKINFO info{};
-    NS::Csock sockObj;
-
-    // Initialize the global connection structure
+    // b) a socket in the info structure that is expected to have a valid
+    //    connection to a remote server. Here it hasn't.
+    ASSERT_NE(info.socket = ::socket(AF_INET, SOCK_STREAM, 0), INVALID_SOCKET);
+    // c) initialize the global SSL Context
     gSslCtx = SSL_CTX_new(TLS_method());
-    ASSERT_NE(gSslCtx, nullptr);
-
-    ASSERT_NE(info.socket = ::socket(AF_INET, SOCK_STREAM, 0), -1);
+    if (gSslCtx == nullptr) {
+        EXPECT_EQ(CLOSE_SOCKET_P(info.socket), 0);
+        // This always fails the test because gSslCtx == nullptr
+        ASSERT_NE(gSslCtx, nullptr);
+    }
+    // d) provide a C++ interface object to call the Unit
+    NS::Csock sockObj;
+    // e) only on BSD-based platforms we can disable the signal on the socket.
+    //    instead of the SIGPIPE signal being generated, EPIPE will be returned.
+#ifdef __APPLE__
+    int set = 1;
+    setsockopt(info.socket, SOL_SOCKET, SO_NOSIGPIPE, &set, sizeof(int));
+#endif
 
     // Test Unit
-    // This crashes silently with SIGPIPE because there is nothing on the other
-    // end of the connection. The signal can be suppressed with
-    // signal(SIGPIPE, SIG_IGN); See other test.
-    EXPECT_DEATH(sockObj.sock_ssl_connect(&info), ".*");
+#if !defined __APPLE__ && !defined _WIN32
+    if (old_code) {
 
-    SSL_free(info.ssl);
+        // This crashes silently with SIGPIPE because there is nothing on the
+        // other end of the connection. The signal can be suppressed with
+        // signal(SIGPIPE, SIG_IGN) but that simple solution must not be used
+        // here; See other test 'libssl_connection_error_handling'.
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": Unit should not silently crash the program with signal "
+                     "\"broken pipe\".\n";
+        EXPECT_DEATH(sockObj.sock_ssl_connect(&info), ".*"); // Wrong!
+
+    } else {
+
+        // This expects NO segfault because it manages the SIGPIPE signal with a
+        // special handler.
+        EXPECT_EXIT((sockObj.sock_ssl_connect(&info), exit(0)),
+                    ExitedWithCode(0), ".*");
+    }
+
+#else
+
+    // This expects NO segfault because Winsock2 and BSD with setsockopt
+    // SO_NOSIGPIPE does not generate a SIGPIPE signal.
+    ASSERT_EXIT((sockObj.sock_ssl_connect(&info), exit(0)), ExitedWithCode(0),
+                ".*");
+    int ret_sock_ssl_connect = sockObj.sock_ssl_connect(&info);
+    EXPECT_EQ(ret_sock_ssl_connect, UPNP_E_SOCKET_ERROR)
+        << errStrEx(ret_sock_ssl_connect, UPNP_E_SOCKET_ERROR);
+#endif
+
+    EXPECT_EQ(CLOSE_SOCKET_P(info.socket), 0);
     SSL_CTX_free(gSslCtx);
 }
 
+#if 0
 TEST_F(SockFTestSuite, sock_ssl_connect_suppress_signal_broken_pipe) {
     // Initialize the global connection structure
     gSslCtx = SSL_CTX_new(TLS_method());

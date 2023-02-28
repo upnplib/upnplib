@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-25
+# Redistribution only with this Copyright remark. Last modified: 2023-03-02
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -150,6 +150,7 @@ set(PUPNP_SOURCE_FILES
     $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_WEBSERVER}>>:./src/urlconfig/urlconfig.cpp>
 
     ${UMOCK_SOURCE_DIR}/src/pupnp_sock.cpp
+    ${PUPNP_SOURCE_DIR}/src/interface/pupnp-sock.cpp
 )
 
 set(PUPNP_INCLUDE_DIRECTORIES
@@ -159,7 +160,7 @@ set(PUPNP_INCLUDE_DIRECTORIES
     # if pthreads4w isn't installed this path is empty. The linker
     # doesn't find "pthread.h" and falls back to look at <pthread.h>.
     PUBLIC ${pthreads4w_SOURCE_DIR}
-    INTERFACE ${PUPNP_SOURCE_DIR}/include
+    PUBLIC ${PUPNP_SOURCE_DIR}/include
     PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 

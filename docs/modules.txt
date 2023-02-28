@@ -1,5 +1,5 @@
 UPnPlib program modules
-=======================
+#######################
 A program module is an encapsulated program unit consisting of three compile
 units and two test collections. A compile unit is a source file with its header
 file. A test collection is a collection of gtests to test a program unit.
@@ -15,16 +15,23 @@ file. A test collection is a collection of gtests to test a program unit.
 
 
 sock: find \! -path ' ./build/*' -type f -iregex '.*sock\.[ch]pp
------
+=====
 The sock module has a well defined C++ Interface.
-pUPnP compile unit
+pUPnP native compile unit
     ./pupnp/upnp/src/inc/sock.hpp
     ./pupnp/upnp/src/genlib/net/sock.cpp
-UPnPlib compatible compile unit
-    ./compa/include/compa/interface_sock.hpp
-        ./pupnp/include/pupnp/sock.hpp
+
+pUPnP interface (not used within pupnp)
+    ./pupnp/include/interface/pupnp-sock.hpp
+    ./pupnp/src/interface/pupnp-sock.cpp
+        ./pupnp/include/pupnp/sock.hpp (used for tests)
+
+UPnPlib compatible compile units
+    (./pupnp/include/interface/pupnp-sock.hpp)
+    (./pupnp/src/interface/pupnp-sock.cpp)
         ./compa/include/compa/sock.hpp
-    ./compa/src/genlib/net/sock.cpp
+        ./compa/src/genlib/net/sock.cpp
+
 Test collection for both
     ./gtests/compa/test_sock.cpp
     ./gtests/compa/test_sock_openssl.cpp
