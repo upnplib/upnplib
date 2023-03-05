@@ -156,12 +156,6 @@ TEST_F(SockFDeathTest, sock_ssl_connect_signal_broken_pipe) {
     }
     // d) provide a C++ interface object to call the Unit
     NS::Csock sockObj;
-    // e) only on BSD-based platforms we can disable the signal on the socket.
-    //    instead of the SIGPIPE signal being generated, EPIPE will be returned.
-#ifdef __APPLE__
-    int set = 1;
-    setsockopt(info.socket, SOL_SOCKET, SO_NOSIGPIPE, &set, sizeof(int));
-#endif
 
     // Test Unit
 #if !defined __APPLE__ && !defined _WIN32

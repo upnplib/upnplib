@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-04
+// Redistribution only with this Copyright remark. Last modified: 2023-03-05
 
 #include <compa/sock.hpp>
 #include <upnp.hpp>
@@ -14,27 +14,36 @@ UPNPLIB_EXTERN SSL_CTX* gSslCtx;
 
 namespace compa {
 
-#if !defined __APPLE__ && !defined _WIN32
-class Csigpipe {
+class CSigpipe {
     // Taking the idea and example for this SIGPIPE handler from
     // https://stackoverflow.com/a/2347848/5014688 and adapt it. Thanks to
     // kroki. --Ingo
 
+#if !defined __APPLE__ && !defined _WIN32
   private:
     sigset_t sigpipe_mask;
     bool sigpipe_pending;
     bool sigpipe_unblock;
 
   public:
-    Csigpipe() {
+    CSigpipe() {
         // The only error that can be returned in errno is 'EINVAL signum is not
         // a valid signal.' SIGPIPE is always a valid signum, so no error
         // handling is required.
         sigemptyset(&sigpipe_mask);
         sigaddset(&sigpipe_mask, SIGPIPE);
     }
+#endif
 
-    void suppress(void) {
+  public:
+    void suppress([[maybe_unused]] SOCKET sockfd) {
+#ifdef _WIN32
+// There is nothing to do with Microsoft Windows. It does not invoke a signal.
+#elif __APPLE__
+        // On MacOS we set the SO_NOSIGPIPE option on the socket.
+        int set = 1;
+        setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &set, sizeof(int));
+#else
         /*
           We want to ignore possible SIGPIPE that we can generate on write.
           SIGPIPE is delivered *synchronously* and *only* to the thread doing
@@ -57,9 +66,11 @@ class Csigpipe {
             /* Maybe is was blocked already?  */
             sigpipe_unblock = !sigismember(&blocked, SIGPIPE);
         }
+#endif
     }
 
-    void restore(void) {
+    void restore() {
+#if !defined __APPLE__ && !defined _WIN32
         /*
           If SIGPIPE was pending already we do nothing. Otherwise, if it become
           pending (i.e., we generated it), then we sigwait() it (thus clearing
@@ -86,9 +97,9 @@ class Csigpipe {
             if (sigpipe_unblock)
                 pthread_sigmask(SIG_UNBLOCK, &sigpipe_mask, NULL);
         }
+#endif
     }
 };
-#endif
 
 
 #ifdef UPNP_ENABLE_OPEN_SSL
@@ -101,14 +112,10 @@ int Csock::sock_ssl_connect(SOCKINFO* info) {
     // Due to man page there is no problem with type cast (int)
     status = SSL_set_fd(info->ssl, (int)info->socket);
     if (status == 1) {
-#if defined _WIN32 || defined __APPLE__
-        status = SSL_connect(info->ssl);
-#else
-        Csigpipe sigpipe;
-        sigpipe.suppress();
+        CSigpipe sigpipe;
+        sigpipe.suppress(info->socket);
         status = SSL_connect(info->ssl);
         sigpipe.restore();
-#endif
     }
     if (status == 1) {
         return UPNP_E_SUCCESS;
