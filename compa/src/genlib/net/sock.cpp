@@ -41,8 +41,9 @@ class CSigpipe {
 // There is nothing to do with Microsoft Windows. It does not invoke a signal.
 #elif __APPLE__
         // On MacOS we set the SO_NOSIGPIPE option on the socket.
-        int set = 1;
-        setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &set, sizeof(int));
+        // (seems it is not needed? We will see with extended tests.) --Ingo
+        // int set = 1;
+        // setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &set, sizeof(int));
 #else
         /*
           We want to ignore possible SIGPIPE that we can generate on write.

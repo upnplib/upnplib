@@ -38,7 +38,18 @@ other platforms. Trying to use the static libraries ends up in incompatibility
 with system libraries. The linker expects shared libraries or not default
 linker options.
 
+## Create self signed certificates for testing
+I use this command to create them with a validity of 10 years (-days 3650):
+
+    $ openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 3650 -nodes
+
+Decode the certificate to show its information:
+
+    $ openssl x509 -in cert.pem -noout -text
+
+The test environment expects the certificates in ${UPNPLIB_PROJECT_SOURCE_DIR}/gtests.
+
 <pre><sup>
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2023-02-21
+// Redistribution only with this Copyright remark. Last modified: 2023-03-08
 </sup></sup>

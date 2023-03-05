@@ -15,19 +15,15 @@
 #include <upnp.hpp>
 
 #include <upnplib/port.hpp>
-#include <upnplib/port_sock.hpp>
 #include <upnplib/gtest.hpp>
 #include "upnplib/upnptools.hpp" // for errStrEx
 
-#include <openssl/ssl.h>
 #include <openssl/err.h>
 #ifdef _WIN32
 #include <openssl/applink.c>
 #endif
 
 #include <gmock/gmock.h>
-
-#include <cstring>
 
 using ::testing::ExitedWithCode;
 
@@ -39,13 +35,55 @@ UPNPLIB_EXTERN SSL_CTX* gSslCtx;
 
 namespace compa {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
-bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
+// Helper Classes
+// ==============
+// I use these simple classes to ensure that we always free resources also in
+// case of aborted tests without extra error checking. --Ingo
+
+// Provide a socket
+class CSockFd {
+  public:
+    SOCKET fd{};
+
+    CSockFd() {
+        TRACE("construct compa::CSockFd\n");
+        this->fd = ::socket(AF_INET, SOCK_STREAM, 0);
+        if (this->fd == -1) {
+            throw std::runtime_error(std::string("Failed to get a socket."));
+        }
+    }
+    virtual ~CSockFd() {
+        TRACE("destruct compa::CSockFd\n");
+        CLOSE_SOCKET_P(this->fd);
+    }
+};
+
+// Provide the global SSL Context
+class CGsslCtx {
+  public:
+    CGsslCtx() {
+        TRACE("construct compa::CGsslCtx\n");
+        gSslCtx = SSL_CTX_new(TLS_method());
+        if (gSslCtx == nullptr) {
+            throw std::runtime_error(std::string(
+                "Failed to initialize the global SSL Context (gSslCtx)."));
+        }
+    }
+    virtual ~CGsslCtx() {
+        TRACE("destruct compa::CGsslCtx\n");
+        SSL_CTX_free(gSslCtx);
+    }
+};
+
+
+// OpenSSL TestSuite
+//==================
 
 class SockFTestSuite : public ::testing::Test {
 #ifdef _WIN32
-    // Initialize and cleanup Windows sochets
   protected:
+    // Initialize Windows sochets
     SockFTestSuite() {
         WSADATA wsaData;
         int rc = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -55,6 +93,7 @@ class SockFTestSuite : public ::testing::Test {
         }
     }
 
+    // Cleanup Windows sochets
     ~SockFTestSuite() override { WSACleanup(); }
 #endif
 };
@@ -65,9 +104,11 @@ TEST_F(SockFTestSuite, libssl_connection_error_handling) {
     // This test shows how to use libssl to initialize a connection and handle
     // some errors. It does not test a Unit. For discussion of the SIGPIPE
     // signal abort have a look at: https://stackoverflow.com/q/108183/5014688
-    // and https://stackoverflow.com/a/5283463/5014688. Signal handlers are
-    // process global so we should not use signal() since it's extremely bad
-    // behavior for a library to alter the caller's signal handlers..
+    // and
+    // http://www.microhowto.info/howto/ignore_sigpipe_without_affecting_other_threads_in_a_process.html.
+    // Signal handlers are process global so we should not use signal() since
+    // it's extremely bad behavior for a library to alter the caller's signal
+    // handlers.
 
     // Provide a context structure.
     SSL_CTX* ssl_ctx{};
@@ -106,7 +147,7 @@ TEST_F(SockFTestSuite, libssl_connection_error_handling) {
     signal(SIGPIPE, SIG_DFL); // default signal handling
 #endif
 
-    // errno reports error
+    // errno reports different error on different platforms
 #ifdef _WIN32
     // 22: "Invalid argument"
     EXPECT_EQ(err_no, 22) << "  " << std::strerror(err_no) << "(" << err_no
@@ -146,14 +187,10 @@ TEST_F(SockFDeathTest, sock_ssl_connect_signal_broken_pipe) {
     SOCKINFO info{};
     // b) a socket in the info structure that is expected to have a valid
     //    connection to a remote server. Here it hasn't.
-    ASSERT_NE(info.socket = ::socket(AF_INET, SOCK_STREAM, 0), INVALID_SOCKET);
-    // c) initialize the global SSL Context
-    gSslCtx = SSL_CTX_new(TLS_method());
-    if (gSslCtx == nullptr) {
-        EXPECT_EQ(CLOSE_SOCKET_P(info.socket), 0);
-        // This always fails the test because gSslCtx == nullptr
-        ASSERT_NE(gSslCtx, nullptr);
-    }
+    CSockFd sock;
+    info.socket = sock.fd;
+    // c) initialize the global SSL Context in external variable gSslCtx;
+    CGsslCtx gSslCtxObj;
     // d) provide a C++ interface object to call the Unit
     NS::Csock sockObj;
 
@@ -168,13 +205,13 @@ TEST_F(SockFDeathTest, sock_ssl_connect_signal_broken_pipe) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": Unit should not silently crash the program with signal "
                      "\"broken pipe\".\n";
-        EXPECT_DEATH(sockObj.sock_ssl_connect(&info), ".*"); // Wrong!
+        ASSERT_DEATH(sockObj.sock_ssl_connect(&info), ".*"); // Wrong!
 
     } else {
 
-        // This expects NO segfault because it manages the SIGPIPE signal with a
-        // special handler.
-        EXPECT_EXIT((sockObj.sock_ssl_connect(&info), exit(0)),
+        // This expects NO program crash because it manages the SIGPIPE signal
+        // with a special handler.
+        ASSERT_EXIT((sockObj.sock_ssl_connect(&info), exit(0)),
                     ExitedWithCode(0), ".*");
     }
 
@@ -188,35 +225,7 @@ TEST_F(SockFDeathTest, sock_ssl_connect_signal_broken_pipe) {
     EXPECT_EQ(ret_sock_ssl_connect, UPNP_E_SOCKET_ERROR)
         << errStrEx(ret_sock_ssl_connect, UPNP_E_SOCKET_ERROR);
 #endif
-
-    EXPECT_EQ(CLOSE_SOCKET_P(info.socket), 0);
-    SSL_CTX_free(gSslCtx);
 }
-
-#if 0
-TEST_F(SockFTestSuite, sock_ssl_connect_suppress_signal_broken_pipe) {
-    // Initialize the global connection structure
-    gSslCtx = SSL_CTX_new(TLS_method());
-    ASSERT_NE(gSslCtx, nullptr);
-
-    ASSERT_NE(m_info.socket = ::socket(AF_INET, SOCK_STREAM, 0), -1);
-    //m_info.socket = m_socketfd;
-
-    // Test Unit
-    // This would crash silently with SIGPIPE because there is nothing on the
-    // other end of the connection. The signal is suppressed with
-    signal(SIGPIPE, SIG_IGN);
-    int ret_sock_ssl_connect = m_sockObj.sock_ssl_connect(&m_info);
-    EXPECT_EQ(ret_sock_ssl_connect, UPNP_E_SOCKET_ERROR)
-        << errStrEx(ret_sock_ssl_connect, UPNP_E_SOCKET_ERROR);
-    signal(SIGPIPE, SIG_DFL); // default signal handling
-
-    EXPECT_NE(m_info.ssl, nullptr);
-
-    SSL_free(m_info.ssl);
-    SSL_CTX_free(gSslCtx);
-}
-#endif
 
 } // namespace compa
 

@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-03-04
+# Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -52,6 +52,7 @@ if(UPNPLIB_WITH_OPENSSL)
         PRIVATE
             UPNPLIB_SHARED
             UPNPLIB_WITH_NATIVE_PUPNP
+            #UPNPLIB_WITH_TRACE
     )
     target_link_libraries(test_sock_openssl-psh
         PRIVATE
@@ -69,6 +70,7 @@ if(UPNPLIB_WITH_OPENSSL)
     target_compile_definitions(test_sock_openssl-csh
         PRIVATE
             UPNPLIB_SHARED
+            #UPNPLIB_WITH_TRACE
     )
     target_link_libraries(test_sock_openssl-csh
         PRIVATE
@@ -77,6 +79,48 @@ if(UPNPLIB_WITH_OPENSSL)
             upnplib_gtest_tools_shared
     )
     add_test(NAME ctest_sock_openssl-csh COMMAND test_sock_openssl-csh --gtest_shuffle
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+    )
+
+
+# openssl_threaded
+#=================
+    add_executable(test_openssl_threaded-psh
+        ./test_openssl_threaded.cpp
+    )
+    target_include_directories(test_openssl_threaded-psh
+        PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
+    )
+    target_compile_definitions(test_openssl_threaded-psh
+        PRIVATE
+            UPNPLIB_SHARED
+            UPNPLIB_WITH_NATIVE_PUPNP
+            UPNPLIB_WITH_TRACE
+    )
+    target_link_libraries(test_openssl_threaded-psh
+        PRIVATE
+            pupnp_shared
+    )
+    add_test(NAME ctest_openssl_threaded-psh COMMAND test_openssl_threaded-psh --gtest_shuffle
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+    )
+
+    add_executable(test_openssl_threaded-csh
+        ./test_openssl_threaded.cpp
+    )
+    target_include_directories(test_openssl_threaded-csh
+        PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
+    )
+    target_compile_definitions(test_openssl_threaded-csh
+        PRIVATE
+            UPNPLIB_SHARED
+            UPNPLIB_WITH_TRACE
+    )
+    target_link_libraries(test_openssl_threaded-csh
+        PRIVATE
+            compa_shared
+    )
+    add_test(NAME ctest_openssl_threaded-csh COMMAND test_openssl_threaded-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
     )
 

@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-26
+# Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -393,13 +393,10 @@ if(UPNPLIB_WITH_GOOGLETEST)
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY    https://github.com/google/googletest.git
-        #GIT_TAG           origin/main
+        GIT_TAG           origin/main
         #GIT_TAG           release-1.11.0
-        #GIT_SHALLOW       ON # comment if using GIT_TAG hash below
-        # Commits on Feb 16, 2023, warning C4251 but only on WIN32
-        #GIT_TAG           f063cd25c90cbd4089a0ff96f5991df4f2721338
-        # Commits on Feb 14, 2023, no warning C4251
-        GIT_TAG           2057566e4e16c88f1fea4d6c96b2e2bfb87507a6
+        GIT_SHALLOW       ON # comment if using GIT_TAG hash below
+        #GIT_TAG           2057566e4e16c88f1fea4d6c96b2e2bfb87507a6
     )
     if(WIN32)
 

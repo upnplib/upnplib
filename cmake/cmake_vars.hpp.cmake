@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_CMAKE_VARS_HPP
 #define UPNPLIB_CMAKE_VARS_HPP
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-25
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 /***************************************************************************
  * CMake configuration settings
@@ -15,6 +15,8 @@
 /***************************************************************************
  * Needed paths of the project
  ***************************************************************************/
+// Path to the project directory
+#cmakedefine UPNPLIB_PROJECT_SOURCE_DIR "${UPNPLIB_PROJECT_SOURCE_DIR}"
 // Path to the build directory of the project
 #cmakedefine UPNPLIB_PROJECT_BINARY_DIR "${UPNPLIB_PROJECT_BINARY_DIR}"
 // Path to sample source directory to access web subdirectory
@@ -52,3 +54,4 @@ UPNP_VERSION_PATCH)
 #cmakedefine PTW32_STATIC_LIB ${PTW32_STATIC_LIB}
 
 #endif // UPNPLIB_CMAKE_VARS_HPP
+// vim: syntax=cpp

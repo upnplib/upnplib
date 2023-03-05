@@ -11,7 +11,7 @@
   #include <fcntl.h>
   #include <winsock2.h>
   #include <iphlpapi.h> // must be after <winsock2.h>
-  #include <ws2tcpip.h> // for socklen_t etc.
+  #include <ws2tcpip.h> // for getaddrinfo, socklen_t etc.
 
   // _MSC_VER has SOCKET defined but unsigned and not a file descriptor.
   #define sa_family_t ADDRESS_FAMILY
@@ -23,6 +23,7 @@
   #include <sys/select.h>
   #include <arpa/inet.h>
   #include <unistd.h> // Also needed here to use 'close()' for a socket.
+  #include <netdb.h>  // for getaddrinfo etc.
 
   // This typedef makes the code slightly more WIN32 tolerant. On WIN32 systems,
   // SOCKET is unsigned and is not a file descriptor.
