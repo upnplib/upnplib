@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-12
+// Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -19,7 +19,7 @@ using ::testing::SetErrnoAndReturn;
 using ::upnplib::errStrEx;
 
 namespace compa {
-bool old_code{true}; // Managed in upnplib/gtest_main.inc
+bool old_code{true}; // Managed in compa/gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 /*
@@ -451,4 +451,5 @@ TEST_F(HttpMakeMessageFTestSuite, format_S_with_failed_system_info) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
 #include "compa/gtest_main.inc"
+    return gtest_return_code; // managed in compa/gtest_main.inc
 }

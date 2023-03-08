@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-20
+// Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -1206,4 +1206,5 @@ TEST(StatcodesTestSuite, http_get_code_text) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
 #include "compa/gtest_main.inc"
+    return gtest_return_code; // managed in compa/gtest_main.inc
 }

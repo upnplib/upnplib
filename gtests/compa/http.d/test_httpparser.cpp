@@ -1,5 +1,5 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-04
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 #include "pupnp/upnp/src/genlib/net/http/httpparser.cpp"
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
@@ -328,4 +328,5 @@ TEST(HttpparserTestSuite, parser_response_init_a_nullptr) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
 #include "compa/gtest_main.inc"
+    return gtest_return_code; // managed in compa/gtest_main.inc
 }

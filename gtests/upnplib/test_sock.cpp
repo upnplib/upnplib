@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-31
+// Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 #include "upnplib/port.hpp"
 #include "upnplib/sock.hpp"
@@ -106,4 +106,5 @@ TEST(SocketAddrTestSuite, get_address_from_invalid_socket) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
 #include "upnplib/gtest_main.inc"
+    return gtest_return_code; // managed in upnplib/gtest_main.inc
 }

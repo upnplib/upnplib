@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-05
+// Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 #include "pupnp/upnp/src/genlib/util/membuffer.cpp"
 
@@ -1204,4 +1204,5 @@ TEST(MembufferTestSuite, membuffer_attach_empty_str_buffer_but_buffer_length) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
 #include "compa/gtest_main.inc"
+    return gtest_return_code; // managed in compa/gtest_main.inc
 }

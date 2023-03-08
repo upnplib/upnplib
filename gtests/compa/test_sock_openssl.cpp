@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-04
+// Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -223,4 +223,5 @@ TEST_F(SockFTestSuite, sock_ssl_connect_suppress_signal_broken_pipe) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
 #include "compa/gtest_main.inc"
+    return gtest_return_code; // managed in compa/gtest_main.inc
 }

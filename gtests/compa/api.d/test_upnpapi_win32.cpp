@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-18
+// Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -242,4 +242,5 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 #include "compa/gtest_main.inc"
+    return gtest_return_code; // managed in compa/gtest_main.inc
 }

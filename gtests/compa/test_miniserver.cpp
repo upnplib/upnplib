@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-02
+// Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -2218,4 +2218,5 @@ int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
     // CLogging loggingObj; // Output only with build type DEBUG.
 #include "compa/gtest_main.inc"
+    return gtest_return_code; // managed in compa/gtest_main.inc
 }

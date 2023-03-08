@@ -1,5 +1,5 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-25
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -48,4 +48,5 @@ TEST(WebserverTestSuite, select_filetype) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
 #include "upnplib/gtest_main.inc"
+    return gtest_return_code; // managed in upnplib/gtest_main.inc
 }

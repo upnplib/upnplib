@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-18
+// Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 #include "UpnpString.hpp"
 
@@ -443,4 +443,5 @@ int main(int argc, char** argv) {
     // GTEST_FLAG_SET(death_test_style, "threadsafe");
 #endif
 #include "compa/gtest_main.inc"
+    return gtest_return_code; // managed in compa/gtest_main.inc
 }

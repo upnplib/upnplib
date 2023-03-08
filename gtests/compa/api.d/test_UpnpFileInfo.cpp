@@ -1,5 +1,5 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-02
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 #include "UpnpFileInfo.hpp"
 
@@ -962,4 +962,5 @@ TEST(UpnpFileInfoDeathTest, UpnpFileInfo_clear_Os) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 #include "compa/gtest_main.inc"
+    return gtest_return_code; // managed in compa/gtest_main.inc
 }

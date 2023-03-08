@@ -1,5 +1,5 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-05
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-03-08
 
 #include "strintmap.hpp"
 #include "httpparser.hpp" // for HTTPMETHOD* constants
@@ -201,4 +201,5 @@ TEST_F(StrintmapTestSuite, map_int_to_str_with_oversized_table_entiries) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 #include "compa/gtest_main.inc"
+    return gtest_return_code; // managed in compa/gtest_main.inc
 }
