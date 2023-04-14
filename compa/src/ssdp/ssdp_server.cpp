@@ -754,7 +754,7 @@ void readFromSSDPSocket(SOCKET socket) {
 static int create_ssdp_sock_v4(
     /*! [] SSDP IPv4 socket to be created. */
     SOCKET* ssdpSock) {
-    TRACE("executing compa::create_ssdp_sock_v4()\n");
+    TRACE("executing compa::create_ssdp_sock_v4()");
     int onOff;
     u_char ttl = (u_char)4;
     struct ip_mreq ssdpMcastAddr;
@@ -886,14 +886,14 @@ error_handler:
 static int create_ssdp_sock_reqv4(
     /*! [out] SSDP IPv4 request socket to be created, unmodified on error. */
     SOCKET* a_ssdpReqSock) {
-    TRACE("executing compa::create_ssdp_sock_reqv4()\n");
+    TRACE("executing compa::create_ssdp_sock_reqv4()");
     const uint8_t ttl{4};
     int err_no{0};
 
     SOCKET ssdpReqSock = umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (ssdpReqSock == INVALID_SOCKET) {
         TRACE("ERROR! return compa::create_ssdp_sock_reqv4(), socket() failed. "
-              "Details in errno.\n");
+              "Details in errno.");
         UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
                    "Error in socket(): %s\n", std::strerror(errno));
         return UPNP_E_OUTOF_SOCKET;
@@ -903,13 +903,13 @@ static int create_ssdp_sock_reqv4(
                                              (const char*)&ttl, sizeof(ttl))) {
         err_no = errno;
         TRACE("ERROR! return compa::create_ssdp_sock_reqv4(), setsockopt() "
-              "failed. Details in errno.\n");
+              "failed. Details in errno.");
         goto return_error;
     }
     if (0 != umock::pupnp_sock.sock_make_no_blocking(ssdpReqSock)) {
         err_no = errno;
         TRACE("ERROR! return compa::create_ssdp_sock_reqv4(), "
-              "sock_make_no_blocking(sockfd) failed.\n");
+              "sock_make_no_blocking(sockfd) failed.");
         goto return_error;
     }
 
@@ -920,7 +920,7 @@ return_error:
     if (-1 == CLOSE_SOCKET_P(ssdpReqSock)) {
         err_no = errno;
         TRACE("ERROR! return compa::create_ssdp_sock_reqv4(), close(sockfd) "
-              "failed. Details in errno.\n");
+              "failed. Details in errno.");
     }
     errno = err_no;
     return UPNP_E_OUTOF_SOCKET;
@@ -1190,7 +1190,7 @@ static int create_ssdp_sock_reqv6(
 #endif /* INCLUDE_CLIENT_APIS */
 
 int get_ssdp_sockets(MiniServerSockArray* out) {
-    TRACE("executing compa::get_ssdp_sockets()\n");
+    TRACE("executing compa::get_ssdp_sockets()");
     int retVal;
 
 #ifdef INCLUDE_CLIENT_APIS

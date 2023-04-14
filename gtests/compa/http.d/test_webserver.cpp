@@ -386,7 +386,7 @@ TEST(MediaListDeathTest, get_content_type_with_no_fileinfo) {
 class XMLaliasFTestSuite : public ::testing::Test {
   protected:
     XMLaliasFTestSuite() {
-        TRACE("construct compa::XMLaliasFTestSuite\n");
+        TRACE("construct compa::XMLaliasFTestSuite");
         // There are mutexes used, so we have to initialize it.
         pthread_mutex_init(&gWebMutex, NULL);
 
@@ -402,7 +402,7 @@ class XMLaliasFTestSuite : public ::testing::Test {
     }
 
     ~XMLaliasFTestSuite() {
-        TRACE("destruct compa::XMLaliasFTestSuite\n");
+        TRACE("destruct compa::XMLaliasFTestSuite");
         // Always unlock a possible locked mutex in case of an aborted function
         // within a locked mutex. This avoids a deadlock in next
         // alias_release() by waiting to unlock the mutex.

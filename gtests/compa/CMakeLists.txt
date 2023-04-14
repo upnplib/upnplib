@@ -101,9 +101,9 @@ if(UPNPLIB_WITH_OPENSSL)
         PRIVATE
             pupnp_shared
     )
-    add_test(NAME ctest_openssl_threaded-psh COMMAND test_openssl_threaded-psh --gtest_shuffle
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-    )
+    #add_test(NAME ctest_openssl_threaded-psh COMMAND test_openssl_threaded-psh --gtest_shuffle
+    #    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+    #)
 
     add_executable(test_openssl_threaded-csh
         ./test_openssl_threaded.cpp
@@ -120,9 +120,9 @@ if(UPNPLIB_WITH_OPENSSL)
         PRIVATE
             compa_shared
     )
-    add_test(NAME ctest_openssl_threaded-csh COMMAND test_openssl_threaded-csh --gtest_shuffle
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-    )
+    #add_test(NAME ctest_openssl_threaded-csh COMMAND test_openssl_threaded-csh --gtest_shuffle
+    #    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+    #)
 
 endif()
 

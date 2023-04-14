@@ -27,14 +27,14 @@ struct xml_alias_t {
 
     // Constructor
     xml_alias_t() {
-        TRACE("construct compa::xml_alias_t\n");
+        TRACE("construct compa::xml_alias_t");
         this->name.size_inc = 5;
         this->doc.size_inc = 5;
     }
 
     // Destructor
     ~xml_alias_t() {
-        TRACE("destruct compa::xml_alias_t\n");
+        TRACE("destruct compa::xml_alias_t");
         // Free possible allocated membuffer.
         // this->clear(); // TODO: This will segfault.
     }
@@ -43,12 +43,12 @@ struct xml_alias_t {
     int set(const char* a_alias_name, const char* a_alias_content,
             size_t a_alias_content_length,
             time_t a_last_modified = time(nullptr)) {
-        TRACE("executing compa::xml_alias_t::set()\n");
+        TRACE("executing compa::xml_alias_t::set()");
 
         if (a_alias_content == nullptr ||
             (a_alias_name != nullptr && a_alias_content == this->doc.buf)) {
             TRACE("return compa::xml_alias_t::set() with "
-                  "UPNP_E_INVALID_ARGUMENT\n");
+                  "UPNP_E_INVALID_ARGUMENT");
             return UPNP_E_INVALID_ARGUMENT;
         }
 
@@ -80,9 +80,9 @@ struct xml_alias_t {
             membuffer_attach(&tmp_doc, (char*)a_alias_content, doc_len);
             tmp_doc.buf[doc_len] = '\0';
             // No errors, set properties
-            TRACE("  set: allocate membuffer name\n");
+            TRACE("  set: allocate membuffer name");
             this->name = tmp_name;
-            TRACE("  set: allocate membuffer doc\n");
+            TRACE("  set: allocate membuffer doc");
             this->doc = tmp_doc;
             this->last_modified = a_last_modified;
             m_requested = 1;
@@ -92,20 +92,20 @@ struct xml_alias_t {
         } while (0);
         /* error handler */
         /* free temp vars */
-        TRACE("  set: already allocated membuffer name freed due to error\n");
+        TRACE("  set: already allocated membuffer name freed due to error");
         membuffer_destroy(&tmp_name);
-        TRACE("  set: already allocated membuffer doc freed due to error\n");
+        TRACE("  set: already allocated membuffer doc freed due to error");
         membuffer_destroy(&tmp_doc);
 
         TRACE("return compa::xml_alias_t::set() with "
-              "UPNP_E_OUTOF_MEMORY\n");
+              "UPNP_E_OUTOF_MEMORY");
         return UPNP_E_OUTOF_MEMORY;
     }
 
     bool is_valid() const { return m_requested > 0; }
 
     void release() {
-        TRACE("executing compa::xml_alias_t::release()\n");
+        TRACE("executing compa::xml_alias_t::release()");
         int mutex_err = pthread_mutex_trylock(&gWebMutex);
         /* ignore invalid alias */
         if (m_requested > 0) {
@@ -114,10 +114,10 @@ struct xml_alias_t {
                 this->clear();
             } else {
                 TRACE("  release: nothing released, more than one time "
-                      "requested\n");
+                      "requested");
             }
         } else {
-            TRACE("  release: nothing to release\n");
+            TRACE("  release: nothing to release");
         }
         if (mutex_err == 0) {
             pthread_mutex_unlock(&gWebMutex);
@@ -125,14 +125,14 @@ struct xml_alias_t {
     }
 
     void clear() {
-        TRACE("executing compa::xml_alias_t::clear()\n");
+        TRACE("executing compa::xml_alias_t::clear()");
         int mutex_err = pthread_mutex_trylock(&gWebMutex);
         if (this->name.buf != nullptr) {
-            TRACE("  clear: destroy membuffer name\n");
+            TRACE("  clear: destroy membuffer name");
             membuffer_destroy(&this->name);
         }
         if (this->doc.buf != nullptr) {
-            TRACE("  clear: destroy membuffer doc\n");
+            TRACE("  clear: destroy membuffer doc");
             membuffer_destroy(&this->doc);
         }
         this->last_modified = 0;
@@ -152,7 +152,7 @@ static xml_alias_t gAliasDoc;
 static UPNP_INLINE void glob_alias_init() {
     // This do nothing, Initialization is done by the constructor of gAliasDoc.
     // It's only available to emulate old code.
-    TRACE("executing compa::glob_alias_init()\n");
+    TRACE("executing compa::glob_alias_init()");
 }
 
 /*!
@@ -163,7 +163,7 @@ static UPNP_INLINE void glob_alias_init() {
 static UPNP_INLINE bool is_valid_alias(
     /*! [in] XML alias object. */
     const xml_alias_t* alias) {
-    TRACE("executing compa::is_valid_alias()\n");
+    TRACE("executing compa::is_valid_alias()");
     if (alias == nullptr)
         return false;
     return alias->is_valid();
@@ -176,15 +176,15 @@ static UPNP_INLINE bool is_valid_alias(
 [[maybe_unused]] static void alias_grab(
     /*! [out] XML alias object. */
     xml_alias_t* a_alias) {
-    TRACE("executing compa::alias_grab()\n");
+    TRACE("executing compa::alias_grab()");
     int mutex_err = pthread_mutex_trylock(&gWebMutex);
     if (a_alias != nullptr) {
-        TRACE("  alias_grab: copy struct gAliasDoc\n");
+        TRACE("  alias_grab: copy struct gAliasDoc");
         *a_alias = gAliasDoc;
         if (a_alias->ct != nullptr)
             *a_alias->ct = *a_alias->ct + 1;
     } else {
-        TRACE("  alias_grab: nothing copied to nullptr\n");
+        TRACE("  alias_grab: nothing copied to nullptr");
     }
     if (mutex_err == 0)
         pthread_mutex_unlock(&gWebMutex);
@@ -197,7 +197,7 @@ static UPNP_INLINE bool is_valid_alias(
 [[maybe_unused]] static void alias_release(
     /*! [in] XML alias object. */
     xml_alias_t* a_alias) {
-    TRACE("executing compa::alias_release()\n");
+    TRACE("executing compa::alias_release()");
     if (a_alias != nullptr)
         a_alias->release();
 }
@@ -205,7 +205,7 @@ static UPNP_INLINE bool is_valid_alias(
 //
 int web_server_set_alias(const char* alias_name, const char* alias_content,
                          size_t alias_content_length, time_t last_modified) {
-    TRACE("executing compa::web_server_set_alias()\n");
+    TRACE("executing compa::web_server_set_alias()");
     return gAliasDoc.set(alias_name, alias_content, alias_content_length,
                          last_modified);
 }
@@ -213,7 +213,7 @@ int web_server_set_alias(const char* alias_name, const char* alias_content,
 // This function do nothing. There is no media_list to initialize anymore with
 // compatible code. It is only callable for compatibility.
 static UPNP_INLINE void media_list_init() {
-    TRACE("executing compa::media_list_init()\n");
+    TRACE("executing compa::media_list_init()");
 }
 
 //
@@ -224,13 +224,13 @@ static UPNP_INLINE int search_extension(
     const char** a_con_type,
     /*! [out] . */
     const char** a_con_subtype) {
-    TRACE("executing compa::search_extension()\n");
+    TRACE("executing compa::search_extension()");
 
     const upnplib::Document_meta* filetype =
         upnplib::select_filetype(std::string_view(a_extension));
 
     if (filetype == nullptr) {
-        TRACE("  search_extension: return with -1\n");
+        TRACE("  search_extension: return with -1");
         return -1;
     }
     *a_con_type = filetype->type.c_str();

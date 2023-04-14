@@ -105,7 +105,7 @@ class SSDPserverFTestSuite : public ::testing::Test {
     SSDPserverFTestSuite() {
 #ifdef _WIN32
         // Initialize Windows sockets
-        TRACE("  SSDPserverFTestSuite: initialize Windows sockets\n");
+        TRACE("  SSDPserverFTestSuite: initialize Windows sockets");
         WSADATA wsaData;
         int rc = WSAStartup(MAKEWORD(2, 2), &wsaData);
         if (rc != NO_ERROR) {

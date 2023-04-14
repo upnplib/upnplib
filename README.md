@@ -90,6 +90,15 @@ Please note that option BUILD_SHARED_LIBS only effects Googletest. By default pr
     PS> $env:Path += ';C:\Users\ingo\devel\upnplib\build\bin\Release'
     PS> .\build\gtests\Release\test_template.exe
 
+## 5. Security
+The following security issues are taken into account:
+### Reuse address
+For security and stability resons there is a delay when a server closes a network conection. By default it accepts a new connection on its same local interface address only after a TIME_WAIT. But many server want to be available immediately again on the network with the risk of network communication problems. They use a socket option that can be set to reuse the address, [Bind: Address Already in Use](https://hea-www.harvard.edu/~fine/Tech/addrinuse.html). This library prefers security and do not use this option. A TIME_WAIT is not necessary if the remote peer closes the connection. Upnplib uses the protocol to signal the remote peer to shutdown the connection if it support it.
+### Socket network security on Microsoft Windows
+In the past Windows had a very bad network security on low level socket handling as documented at [Using SO_REUSEADDR and SO_EXCLUSIVEADDRUSE](https://learn.microsoft.com/en-us/windows/win32/winsock/using-so-reuseaddr-and-so-exclusiveaddruse). Microsoft has fixed this since Windows Server 2003. The network stack now behaves like it does by default on other platforms. Strangely, they call it advanced security, which is standard on other major operating systems. But this isn't done by defauft. The developer has to take this into account by using the socket option SO_EXCLUSIVEADDRUSE. This has be done.
+
+(Will be continued)
+
 ## 6. Configure Options for cmake
 Option prefixed with -D | Default | Description
 -------|---------|---

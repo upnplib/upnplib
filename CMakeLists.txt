@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-03-08
+# Redistribution only with this Copyright remark. Last modified: 2023-03-12
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -125,9 +125,9 @@ add_compile_definitions(
         # Having STRNLEN and STRNDUP are validated above. Give it to the program.
         $<$<BOOL:${UPNPLIB_HAVE_STRNLEN}>:HAVE_STRNLEN>
         $<$<BOOL:${UPNPLIB_HAVE_STRNDUP}>:HAVE_STRNDUP>
-        # General define DEBUG if configuration is Debug, otherwise define NDEBUG.
-        # TODO: manage setting NDEBUG is done by cmake by default. Check against it.
-        $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
+        # General define DEBUG if build type is "Debug". Manage setting NDEBUG
+        # is done by cmake by default.
+        $<$<CONFIG:Debug>:DEBUG>
         # There are traditional min/max macros on MS Windows which conflict
         # with the C++ std::min|max functions. Following switch disable the
         # macros.

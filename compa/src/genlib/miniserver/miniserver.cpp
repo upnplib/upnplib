@@ -144,19 +144,19 @@ struct s_SocketStuff {
 };
 
 void SetHTTPGetCallback(MiniServerCallback callback) {
-    TRACE("executing compa::SetHTTPGetCallback()\n");
+    TRACE("executing compa::SetHTTPGetCallback()");
     gGetCallback = callback;
 }
 
 #ifdef INCLUDE_DEVICE_APIS
 void SetSoapCallback(MiniServerCallback callback) {
-    TRACE("executing compa::SetSoapCallback()\n");
+    TRACE("executing compa::SetSoapCallback()");
     gSoapCallback = callback;
 }
 #endif /* INCLUDE_DEVICE_APIS */
 
 void SetGenaCallback(MiniServerCallback callback) {
-    TRACE("executing compa::SetGenaCallback()\n");
+    TRACE("executing compa::SetGenaCallback()");
     gGenaCallback = callback;
 }
 
@@ -914,7 +914,7 @@ error:
 }
 
 static int do_reinit(struct s_SocketStuff* s) {
-    TRACE("executing compa::do_reinit()\n");
+    TRACE("executing compa::do_reinit()");
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "Inside compa::do_reinit()\n");
 

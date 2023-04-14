@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-03
+// Redistribution only with this Copyright remark. Last modified: 2023-04-15
 
 // Header file for portable definitions
 // ====================================
@@ -12,10 +12,10 @@
 
 // Check Debug settings. Exlusive NDEBUG or DEBUG must be set.
 #if defined(NDEBUG) && defined(DEBUG)
-  #error "NDBUG and DEBUG are defined. Only one is possible."
+  #error "NDEBUG and DEBUG are defined. Only one is possible."
 #endif
 #if !defined(NDEBUG) && !defined(DEBUG)
-  #error "Neither NDBUG nor DEBUG is definded."
+  #error "Neither NDEBUG nor DEBUG is definded."
 #endif
 
 // Header file for portable <unistd.h>
@@ -68,9 +68,11 @@
 // std::clog.clear();
 #ifdef UPNPLIB_WITH_TRACE
   #include <iostream>
-  #define TRACE(s) std::clog<<"TRACE: "<<(s)
+  #define TRACE(s) std::clog<<"TRACE["<<__LINE__<<"]: "<<(s)<<"\n";
+  #define TRACE2(a, b) std::clog<<"TRACE["<<__LINE__<<"]: "<<(a)<<(b)<<"\n";
 #else
   #define TRACE(s)
+  #define TRACE2(a, b)
 #endif
 
 // clang-format on

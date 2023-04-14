@@ -47,14 +47,14 @@ class CSockFd {
     SOCKET fd{};
 
     CSockFd() {
-        TRACE("construct compa::CSockFd\n");
+        TRACE("construct compa::CSockFd");
         this->fd = ::socket(AF_INET, SOCK_STREAM, 0);
         if (this->fd == -1) {
             throw std::runtime_error(std::string("Failed to get a socket."));
         }
     }
     virtual ~CSockFd() {
-        TRACE("destruct compa::CSockFd\n");
+        TRACE("destruct compa::CSockFd");
         CLOSE_SOCKET_P(this->fd);
     }
 };
@@ -63,7 +63,7 @@ class CSockFd {
 class CGsslCtx {
   public:
     CGsslCtx() {
-        TRACE("construct compa::CGsslCtx\n");
+        TRACE("construct compa::CGsslCtx");
         gSslCtx = SSL_CTX_new(TLS_method());
         if (gSslCtx == nullptr) {
             throw std::runtime_error(std::string(
@@ -71,7 +71,7 @@ class CGsslCtx {
         }
     }
     virtual ~CGsslCtx() {
-        TRACE("destruct compa::CGsslCtx\n");
+        TRACE("destruct compa::CGsslCtx");
         SSL_CTX_free(gSslCtx);
     }
 };

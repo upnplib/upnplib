@@ -148,7 +148,7 @@ void configure_context(SSL_CTX* ctx) {
 }
 
 void simple_TLS_server() {
-    TRACE("executing compa::simple_TLS_server()\n");
+    TRACE("executing compa::simple_TLS_server()");
 
 #ifdef _WIN32
     WSADATA wsaData;
@@ -165,7 +165,7 @@ void simple_TLS_server() {
 
     /* Handle connections */
     while (1) {
-        TRACE("  simple_TLS_server: loop next connection\n");
+        TRACE("  simple_TLS_server: loop next connection");
         struct sockaddr_in addr;
         socklen_t len = sizeof(addr);
         SSL* ssl;
@@ -173,8 +173,7 @@ void simple_TLS_server() {
 
         SOCKET client = accept(sock, (struct sockaddr*)&addr, &len);
         if (client == INVALID_SOCKET) {
-            TRACE(
-                "  simple_TLS_server: EXIT - socket connection not accepted\n");
+            TRACE("  simple_TLS_server: EXIT - socket connection not accepted");
 #ifdef _WIN32
             std::clog << "[Server:" << __LINE__
                       << "] Error - socket accept: WSAGetLastError()="
@@ -183,7 +182,7 @@ void simple_TLS_server() {
 #endif
             exit(EXIT_FAILURE);
         }
-        TRACE("  simple_TLS_server: socket connection accepted\n");
+        TRACE("  simple_TLS_server: socket connection accepted");
 
         ssl = SSL_new(ctx);
         // Due to man SSL_set_fd the type cast (int) is no problem.
@@ -193,7 +192,7 @@ void simple_TLS_server() {
             ERR_print_errors_fp(stderr);
         } else {
             TRACE("  simple_TLS_server: SSL connection with socket accepted, "
-                  "send respond\n");
+                  "send respond");
             // type cast (int) is no problem because there is a small buffer
             SSL_write(ssl, reply, (int)strlen(reply));
             std::this_thread::sleep_for(std::chrono::milliseconds(100));

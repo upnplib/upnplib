@@ -165,8 +165,16 @@ C++ provides Visibility Support as powerful optimization. We use it as described
 - [Unicode in C and C++: What You Can Do About It Today](https://www.cprogramming.com/tutorial/unicode.html)
 - [How to use UTF-8 and Unicode in C++?](https://stackoverflow.com/questions/61977664/how-to-use-utf-8-and-unicode-in-c-how-big-is-c20-char8-t)
 - [CMake target_link_libraries PUBLIC, PRIVATE and INTERFACE keywords](https://stackoverflow.com/q/26037954/5014688)
+Rule of Zero/Three/Five
+- ["Rule of Zero", R. Martinho Fernandes 08/15/2012](https://web.archive.org/web/20130211035910/http://flamingdangerzone.com/cxx11/2012/08/15/rule-of-zero.html)
+- ["A Concern about the Rule of Zero", Scott Meyers, 3/13/2014](http://scottmeyers.blogspot.fr/2014/03/a-concern-about-rule-of-zero.html)
+- [What is The Rule of Three?](https://stackoverflow.com/q/4172722/5014688)
+- [What is the copy-and-swap idiom?](https://stackoverflow.com/q/3279543/5014688)
+- [public friend swap member function](https://stackoverflow.com/q/5695548/5014688)
+- [What is move semantics?](What is move semantics?)
+- [Semaphores](https://pages.cs.wisc.edu/~remzi/Classes/537/Fall2008/Notes/threads-semaphores.txt)
 
 <pre><sup>
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2022-09-14
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, &#60;Ingo&#64;Hoeft-online.de&#62;
+// Redistribution only with this Copyright remark. Last modified: 2023-04-12
 </sup></sup>
