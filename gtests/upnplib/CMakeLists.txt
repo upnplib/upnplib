@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-16
+# Redistribution only with this Copyright remark. Last modified: 2023-04-15
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -96,10 +96,48 @@ add_test(NAME ctest_sock-ush COMMAND test_sock-ush --gtest_shuffle
 )
 
 
+# CAddrinfo
+# =========
+add_executable(test_addrinfo-ush
+    ./test_addrinfo.cpp
+)
+target_compile_definitions(test_addrinfo-ush
+    PRIVATE
+        UPNPLIB_SHARED
+        #UPNPLIB_WITH_TRACE
+)
+target_link_libraries(test_addrinfo-ush
+    PRIVATE
+        upnplib_shared
+)
+add_test(NAME ctest_addrinfo-ush COMMAND test_addrinfo-ush --gtest_shuffle
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
+
+# CSocket
+# =======
+add_executable(test_socket-ush
+    ./test_socket.cpp
+)
+target_compile_definitions(test_socket-ush
+    PRIVATE
+        UPNPLIB_SHARED
+        #UPNPLIB_WITH_TRACE
+)
+target_link_libraries(test_socket-ush
+    PRIVATE
+        upnplib_shared
+)
+add_test(NAME ctest_socket-ush COMMAND test_socket-ush --gtest_shuffle
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
+
 # webserver
 # =========
 add_executable(test_webserver-ush
-        ./test_webserver.cpp
+    ./test_webserver.cpp
 )
 target_include_directories(test_webserver-ush
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}

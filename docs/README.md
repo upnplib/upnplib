@@ -120,7 +120,7 @@ Example:
     // * make blocking succeeds
 
 ## Visibility support
-C++ provides Visibility Support as powerful optimization. We use it as described at the [GCC Wiki - Visibility](https://gcc.gnu.org/wiki/Visibility). It only belongs to shared libraries. Here in short the needed steps configured for this library:
+Visibility Support provides a powerful optimization. We use it as described at the [GCC Wiki - Visibility](https://gcc.gnu.org/wiki/Visibility). It only belongs to shared libraries. Here in short the needed steps configured for this library:
 - Enable Visibility Support on the whole project:
 
     set(CMAKE_CXX_VISIBILITY_PRESET hidden)
@@ -154,7 +154,7 @@ C++ provides Visibility Support as powerful optimization. We use it as described
     class UPNPLIB_API PublicClass
     struct UPNPLIB_API PublicStruct
 
-- For optimization with using `UPNPLIB_LOCAL` look at the [GCC Wiki - Visibility](https://gcc.gnu.org/wiki/Visibility).
+- For optimization with using `UPNPLIB_LOCAL` look at the [GCC Wiki - Visibility](https://gcc.gnu.org/wiki/Visibility). Usualy private member functions of a class are prefixed with UPNPLIB_LOCAL.
 
 ## Some references and 0ptimization
 - [Optimize String Use](https://www.oreilly.com/library/view/optimized-c/9781491922057/ch04.html)
@@ -176,5 +176,5 @@ Rule of Zero/Three/Five
 
 <pre><sup>
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2023-04-12
+// Redistribution only with this Copyright remark. Last modified: 2023-04-15
 </sup></sup>
