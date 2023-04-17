@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-15
+// Redistribution only with this Copyright remark. Last modified: 2023-04-18
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/port.hpp>
@@ -53,7 +53,7 @@ CAddrinfo& CAddrinfo::operator=(CAddrinfo that) {
 
 CAddrinfo::~CAddrinfo() {
     TRACE2(this, " Destruct upnplib::CAddrinfo()")
-    TRACE2("Call freeaddrinfo() with m_res = ", m_res)
+    TRACE2("Call STL function ::freeaddrinfo() with m_res = ", m_res)
     ::freeaddrinfo(m_res);
     m_res = nullptr;
 }
@@ -82,7 +82,7 @@ addrinfo* CAddrinfo::get_new_addrinfo() {
     // We just return what was requested by the user.
     new_res->ai_flags = m_hints.ai_flags;
 
-    TRACE2("Called getaddrinfo() with new_res = ", new_res)
+    TRACE2("Called STL function ::getaddrinfo() with new_res = ", new_res)
     return new_res;
 }
 

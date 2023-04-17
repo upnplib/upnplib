@@ -1,9 +1,10 @@
 #ifndef UMOCK_SYS_SOCKET_MOCK_HPP
 #define UMOCK_SYS_SOCKET_MOCK_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-31
+// Redistribution only with this Copyright remark. Last modified: 2023-04-17
 
-#include "umock/sys_socket.hpp"
+#include <umock/sys_socket.hpp>
+#include <gmock/gmock.h>
 
 namespace umock {
 

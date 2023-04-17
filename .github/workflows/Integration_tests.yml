@@ -10,6 +10,7 @@ jobs:
   # Job: Check clang format
   # -----------------------
   clang:
+    if: true
     name: Check clang format
     runs-on: ubuntu-latest
     steps:
@@ -26,6 +27,7 @@ jobs:
   # ubuntu-18.04 isn't used for tests because it doesn't support open standard
   # ISO C++20 that we declared to use for UPnPlib.
   Build_Ubuntu:
+    if: true
     name: Test Ubuntu
     needs: [ clang ]
     runs-on: ubuntu-latest
@@ -104,6 +106,7 @@ jobs:
   # Job: Configure, build and test MacOS
   #-------------------------------------
   Build_MacOS:
+    if: true
     name: Test MacOS
     needs: [ clang ]
     runs-on: macOS-latest
@@ -180,6 +183,7 @@ jobs:
   # Job: Configure, build and test with Visual Studio
   #--------------------------------------------------
   Build_with_Visual_Studio:
+    if: true
     name: Test w/ VS
     needs: [ clang ]
     runs-on: ${{ matrix.os }}
@@ -187,6 +191,7 @@ jobs:
     strategy:
       matrix:
         buildtype: [ 'Release', 'Debug' ]
+        #buildtype: [ 'Release', 'Release', 'Release', 'Debug', 'Debug', 'Debug' ]
         os: [ windows-2019, windows-2022 ]
         googletest: [ '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF', '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON' ]
       fail-fast: false
@@ -274,6 +279,7 @@ jobs:
   # Job: Configure, build and test with NMake
   #------------------------------------------
   Build_with_NMake:
+    if: true
     name: Test w/ NMake
     needs: [ Build_Ubuntu, Build_MacOS ]
     runs-on: ${{ matrix.os }}
@@ -281,6 +287,7 @@ jobs:
     strategy:
       matrix:
         buildtype: [ 'Release', 'Debug' ]
+        #buildtype: [ 'Release', 'Release', 'Release', 'Debug', 'Debug', 'Debug' ]
         os: [ windows-2019, windows-2022 ]
         googletest: [ '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF', '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON' ]
       fail-fast: false
@@ -367,6 +374,7 @@ jobs:
   # Job: Run build tests
   # --------------------
   build_tests:
+    if: true
     name: "build tests"
     needs: [ Build_with_Visual_Studio, Build_with_NMake ]
     runs-on: ${{ matrix.os }}

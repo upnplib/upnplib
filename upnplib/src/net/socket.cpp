@@ -1,8 +1,9 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-15
+// Redistribution only with this Copyright remark. Last modified: 2023-04-18
 
 #include <upnplib/socket.hpp>
 #include <upnplib/port.hpp>
+#include <umock/sys_socket.hpp>
 
 #include <string>
 #include <cstring>
@@ -44,7 +45,7 @@ static inline void throw_error(std::string errmsg) {
 
 // Wrap socket() system call
 // -------------------------
-// Constructor
+// Constructor for new socket file descriptor
 CSocket::CSocket(int a_domain, int a_type, int a_protocol) {
     TRACE2(this, " Construct upnplib::CSocket()")
 
@@ -100,6 +101,9 @@ CSocket::CSocket(int a_domain, int a_type, int a_protocol) {
     m_af = a_domain;
 }
 
+// Constructor with file desciptor
+CSocket::CSocket([[maybe_unused]] SOCKET a_sfd) {}
+
 // Move constructor
 CSocket::CSocket(CSocket&& that) {
     TRACE2(this, " Construct move upnplib::CSocket()")
@@ -133,6 +137,7 @@ CSocket& CSocket::operator=(CSocket that) {
 // Destructor
 CSocket::~CSocket() {
     TRACE2(this, " Destruct upnplib::CSocket()")
+    ::shutdown(m_sfd, SHUT_RDWR);
     CLOSE_SOCKET_P(m_sfd);
 }
 
@@ -160,29 +165,56 @@ void CSocket::set_reuse_addr(bool a_reuse) {
 // Setter: bind socket to local address
 // REF: [Bind: Address Already in Use]
 // (https://hea-www.harvard.edu/~fine/Tech/addrinuse.html)
-void CSocket::bind(const CAddrinfo& ai) {
+void CSocket::bind(const CAddrinfo& a_ai) {
     TRACE2(this, " Executing upnplib::CSocket::bind()")
 
     int so_option{-1};
     socklen_t optlen{sizeof(so_option)}; // May be modified
-    if (::getsockopt(m_sfd, SOL_SOCKET, SO_TYPE, (char*)&so_option, &optlen) ==
-        SOCKET_ERROR)
+    if (::getsockopt(m_sfd, SOL_SOCKET, SO_TYPE, (char*)&so_option, &optlen) !=
+        0)
         throw_error("ERROR! Failed to bind socket to an address:");
 
-    if (ai->ai_socktype != so_option)
+    if (a_ai->ai_socktype != so_option)
         throw std::runtime_error("ERROR! Failed to bind socket to an address: "
                                  "\"socket type of address (" +
-                                 std::to_string(ai->ai_socktype) +
+                                 std::to_string(a_ai->ai_socktype) +
                                  ") does not match socket type (" +
                                  std::to_string(so_option) + ")\"");
+#ifdef _MSC_VER
+    // There is a problem with binding on Microsoft Windows. It may be a delay
+    // after freeing a bind even with different socket addresses. So we take
+    // effort with trying some times to bind with respect to only short
+    // locking. If the first attempt to bind succeeds there is no delay.
+    constexpr int delay_inc{100};
+    constexpr int delay_max{500}; // must be multiple of delay_inc.
+    int i = delay_inc;
+    for (; i <= delay_max; i += delay_inc) {
+        TRACE2("Call STL function ::bind(), next delay = millisec ",
+               std::to_string(i)) { // Only within this scope protect binding
+                                    // and storing its state (m_bound).
+            std::scoped_lock lock(m_bound_mutex);
+
+            if (::bind(m_sfd, a_ai->ai_addr, (socklen_t)a_ai->ai_addrlen) ==
+                0) {
+                m_bound = true;
+                break;
+            }
+        } // delay is not locked.
+        std::this_thread::sleep_for(std::chrono::milliseconds(i));
+    }
+    if (i > delay_max)
+        throw_error("ERROR! Failed to bind socket to an address:");
+
+#else
 
     // Protect binding and storing its state (m_bound).
     std::scoped_lock lock(m_bound_mutex);
 
-    if (::bind(m_sfd, ai->ai_addr, (socklen_t)ai->ai_addrlen) == SOCKET_ERROR)
+    if (::bind(m_sfd, a_ai->ai_addr, (socklen_t)a_ai->ai_addrlen) != 0)
         throw_error("ERROR! Failed to bind socket to an address:");
 
     m_bound = true;
+#endif
 }
 
 // Setter: set socket to listen
@@ -201,31 +233,53 @@ void CSocket::listen() {
 }
 
 // Getter
+std::string CSocket::get_addr_str() const {
+    TRACE2(this, " Executing upnplib::CSocket::get_addr_str()")
+    sockaddr_storage ss{};
+    this->get_sockname(&ss);
+
+    char addr_buf[INET6_ADDRSTRLEN]{};
+    const char* ret{nullptr};
+    switch (ss.ss_family) {
+    case AF_INET6:
+        ret = ::inet_ntop(AF_INET6, &((sockaddr_in6*)&ss)->sin6_addr, addr_buf,
+                          sizeof(addr_buf));
+        break;
+    case AF_INET:
+        ret = ::inet_ntop(AF_INET, &((sockaddr_in*)&ss)->sin_addr, addr_buf,
+                          sizeof(addr_buf));
+        break;
+    default:
+        throw std::invalid_argument(
+            "ERROR! Failed to get a socket address string (IP "
+            "address): unknown address family " +
+            std::to_string(ss.ss_family));
+    }
+
+    if (ret == nullptr)
+        throw_error(
+            "ERROR! Failed to get a socket address string (IP address):");
+
+    // Surround IPv6 address with '[' and ']'
+    return (ss.ss_family == AF_INET6) ? '[' + std::string(addr_buf) + ']'
+                                      : std::string(addr_buf);
+}
+
 uint16_t CSocket::get_port() const {
     TRACE2(this, " Executing upnplib::CSocket::get_port()")
-    if (m_sfd == INVALID_SOCKET)
-        throw std::runtime_error("ERROR! Failed to get socket port number: "
-                                 "\"Bad file descriptor\"");
-    if (!this->is_bind())
-        throw std::runtime_error("ERROR! Failed to get socket port number: "
-                                 "\"not bound to an address\"");
-    // Get port number
     sockaddr_storage ss{};
-    socklen_t len = sizeof(ss); // May be modified
-    if (::getsockname(m_sfd, (sockaddr*)&ss, &len) != 0)
-        throw_error("ERROR! Failed to get socket port number:");
-
+    this->get_sockname(&ss);
     return ntohs(((sockaddr_in6*)&ss)->sin6_port);
 }
 
 int CSocket::get_sockerr() const {
     TRACE2(this, " Executing upnplib::CSocket::get_sockerr()")
-    return this->getsockopt_int(SOL_SOCKET, SO_ERROR, "SO_ERROR");
+    return this->get_sockopt_int(SOL_SOCKET, SO_ERROR, "SO_ERROR");
 }
 
 bool CSocket::is_reuse_addr() const {
     TRACE2(this, " Executing upnplib::CSocket::is_reuse_addr()")
-    return this->getsockopt_int(SOL_SOCKET, SO_REUSEADDR, "SO_REUSEADDR");
+    return this->get_sockopt_int(SOL_SOCKET, SO_REUSEADDR, "SO_REUSEADDR");
 }
 
 bool CSocket::is_v6only() const {
@@ -235,7 +289,7 @@ bool CSocket::is_v6only() const {
                                  "'is_v6only': \"Bad file descriptor\"");
     // We can have v6only with AF_INET6. Otherwise always false is returned.
     return (m_af == AF_INET6)
-               ? this->getsockopt_int(IPPROTO_IPV6, IPV6_V6ONLY, "IPV6_V6ONLY")
+               ? this->get_sockopt_int(IPPROTO_IPV6, IPV6_V6ONLY, "IPV6_V6ONLY")
                : false;
 }
 
@@ -261,10 +315,10 @@ bool CSocket::is_listen() const {
     return m_listen;
 }
 
-int CSocket::getsockopt_int(int a_level, int a_optname,
-                            const std::string& a_optname_str) const {
+int CSocket::get_sockopt_int(int a_level, int a_optname,
+                             const std::string& a_optname_str) const {
     TRACE2(this,
-           " Executing upnplib::CSocket::getsockopt_int(), " + a_optname_str)
+           " Executing upnplib::CSocket::get_sockopt_int(), " + a_optname_str)
     int so_option{-1};
     socklen_t optlen{sizeof(so_option)}; // May be modified
 
@@ -275,6 +329,20 @@ int CSocket::getsockopt_int(int a_level, int a_optname,
                     ":");
 
     return so_option;
+}
+
+void CSocket::get_sockname(sockaddr_storage* a_ss) const {
+    TRACE2(this, " Executing upnplib::CSocket::get_sockname()")
+    const std::string errmsg{"ERROR! Failed to get socket address/port:"};
+
+    if (m_sfd == INVALID_SOCKET)
+        throw std::runtime_error(errmsg + " \"Bad file descriptor\"");
+    if (!this->is_bind())
+        throw std::runtime_error(errmsg + " \"not bound to an address\"");
+    // Get socket address
+    socklen_t len = sizeof(sockaddr_storage); // May be modified
+    if (umock::sys_socket_h.getsockname(m_sfd, (sockaddr*)a_ss, &len) != 0)
+        throw_error(errmsg);
 }
 
 } // namespace upnplib

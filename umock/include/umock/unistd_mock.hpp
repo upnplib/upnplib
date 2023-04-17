@@ -1,9 +1,10 @@
 #ifndef UMOCK_UNISTD_MOCK_HPP
 #define UMOCK_UNISTD_MOCK_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-05
+// Redistribution only with this Copyright remark. Last modified: 2023-04-17
 
-#include "umock/unistd.hpp"
+#include <umock/unistd.hpp>
+#include <gmock/gmock.h>
 
 namespace umock {
 
