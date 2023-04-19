@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-16
+# Redistribution only with this Copyright remark. Last modified: 2023-04-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -182,16 +182,9 @@ add_test(NAME ctest_upnplib_gtest_tools_platform COMMAND test_upnplib_gtest_tool
 
 # simple test
 #============
-set(TEST_SIMPLE_INCLUDE_DIRECTORIES
-    PRIVATE
-)
-
 add_executable(test_simple-ush
 #-----------------------------
         ./test_simple.cpp
-)
-target_include_directories(test_simple-ush
-    ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
 )
 target_compile_definitions(test_simple-ush
     PRIVATE
@@ -216,9 +209,6 @@ add_test(NAME ctest_simple-ush COMMAND test_simple-ush --gtest_shuffle
 # Check also static build for this simple test
 add_executable(test_simple-ust
         ./test_simple.cpp
-)
-target_include_directories(test_simple-ust
-    ${TEST_SIMPLE_INCLUDE_DIRECTORIES}
 )
 target_compile_options(test_simple-ust
     PRIVATE

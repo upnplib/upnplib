@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-18
+// Redistribution only with this Copyright remark. Last modified: 2023-04-20
 
 #include <upnplib/socket.hpp>
 #include <upnplib/port.hpp>
@@ -180,32 +180,6 @@ void CSocket::bind(const CAddrinfo& a_ai) {
                                  std::to_string(a_ai->ai_socktype) +
                                  ") does not match socket type (" +
                                  std::to_string(so_option) + ")\"");
-#ifdef _MSC_VER
-    // There is a problem with binding on Microsoft Windows. It may be a delay
-    // after freeing a bind even with different socket addresses. So we take
-    // effort with trying some times to bind with respect to only short
-    // locking. If the first attempt to bind succeeds there is no delay.
-    constexpr int delay_inc{100};
-    constexpr int delay_max{500}; // must be multiple of delay_inc.
-    int i = delay_inc;
-    for (; i <= delay_max; i += delay_inc) {
-        TRACE2("Call STL function ::bind(), next delay = millisec ",
-               std::to_string(i)) { // Only within this scope protect binding
-                                    // and storing its state (m_bound).
-            std::scoped_lock lock(m_bound_mutex);
-
-            if (::bind(m_sfd, a_ai->ai_addr, (socklen_t)a_ai->ai_addrlen) ==
-                0) {
-                m_bound = true;
-                break;
-            }
-        } // delay is not locked.
-        std::this_thread::sleep_for(std::chrono::milliseconds(i));
-    }
-    if (i > delay_max)
-        throw_error("ERROR! Failed to bind socket to an address:");
-
-#else
 
     // Protect binding and storing its state (m_bound).
     std::scoped_lock lock(m_bound_mutex);
@@ -214,7 +188,6 @@ void CSocket::bind(const CAddrinfo& a_ai) {
         throw_error("ERROR! Failed to bind socket to an address:");
 
     m_bound = true;
-#endif
 }
 
 // Setter: set socket to listen

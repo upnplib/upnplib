@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-04-19
+# Redistribution only with this Copyright remark. Last modified: 2023-04-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -11,16 +11,9 @@ project(UPNPLIB_GTEST5 VERSION 0003
 
 # upnptools
 #==========
-set(TEST_UPNPTOOLS_INCLUDE_DIRECTORIES
-    PRIVATE
-)
-
 add_executable(test_upnptools-ush
 #--------------------------------
         ./test_upnptools.cpp
-)
-target_include_directories(test_upnptools-ush
-    ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
 )
 target_compile_definitions(test_upnptools-ush
     PRIVATE
@@ -45,9 +38,6 @@ add_test(NAME ctest_upnptools-ush COMMAND test_upnptools-ush --gtest_shuffle
 add_executable(test_upnptools-ust
 #---------------------------------
         ./test_upnptools.cpp
-)
-target_include_directories(test_upnptools-ust
-    ${TEST_UPNPTOOLS_INCLUDE_DIRECTORIES}
 )
 target_compile_options(test_upnptools-ust
     PRIVATE

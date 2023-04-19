@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-19
+// Redistribution only with this Copyright remark. Last modified: 2023-04-20
 
 #include <upnplib/socket.hpp>
 
@@ -144,51 +144,6 @@ TEST(SocketTestSuite, object_with_invalid_socket_fd) {
                 ThrowsMessage<std::runtime_error>(
                     "ERROR! Failed to get socket option "
                     "'is_Listen': \"Bad file descriptor\""));
-}
-
-TEST(SocketTestSuite, set_bind1) {
-    WINSOCK_INIT_P
-
-    // Get local interface address.
-    const CAddrinfo ai("", "50012", AF_INET6, SOCK_STREAM,
-                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-
-    // Test Unit.
-    // This binds the local address. You will get an error "address already in
-    // use" if you try to bind to it again in this test.
-    CSocket sock(AF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sock.bind(ai));
-    EXPECT_EQ(sock.get_port(), 50012); // This tests the binding
-}
-
-TEST(SocketTestSuite, set_bind2) {
-    WINSOCK_INIT_P
-
-    // Get local interface address.
-    const CAddrinfo ai("", "50112", AF_INET6, SOCK_STREAM,
-                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-
-    // Test Unit.
-    // This binds the local address. You will get an error "address already in
-    // use" if you try to bind to it again in this test.
-    CSocket sock(AF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sock.bind(ai));
-    EXPECT_EQ(sock.get_port(), 50112); // This tests the binding
-}
-
-TEST(SocketTestSuite, set_bind3) {
-    WINSOCK_INIT_P
-
-    // Get local interface address.
-    const CAddrinfo ai("", "50212", AF_INET6, SOCK_STREAM,
-                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-
-    // Test Unit.
-    // This binds the local address. You will get an error "address already in
-    // use" if you try to bind to it again in this test.
-    CSocket sock(AF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sock.bind(ai));
-    EXPECT_EQ(sock.get_port(), 50212); // This tests the binding
 }
 
 TEST(SocketTestSuite, set_bind) {
