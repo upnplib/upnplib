@@ -1,10 +1,10 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-06
+# Redistribution only with this Copyright remark. Last modified: 2023-04-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UMOCK VERSION 0003
+project(UMOCK VERSION 0004
         DESCRIPTION "UPnP library mocking subproject"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -31,6 +31,7 @@ set(UMOCK_SOURCE_FILES
     ./src/stdio.cpp
     ./src/unistd.cpp
     ./src/sysinfo.cpp
+    ./src/arpa_inet.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/net_if.cpp>
     $<$<PLATFORM_ID:Windows>:./src/iphlpapi.cpp>
