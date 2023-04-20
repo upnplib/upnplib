@@ -1,11 +1,12 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-20
+// Redistribution only with this Copyright remark. Last modified: 2023-04-27
 
+#include <upnplib/port.hpp>
 #include <cstring>
 #include <cstdlib> // for malloc
 
-/* strndup() is a GNU extension. */
-#if !HAVE_STRNDUP || defined(_WIN32)
+// strndup() is a GNU extension.
+#ifndef HAVE_STRNDUP
 char* strndup(const char* __string, size_t __n) {
     size_t strsize = strnlen(__string, __n);
     char* newstr = (char*)malloc(strsize + 1);
@@ -17,4 +18,4 @@ char* strndup(const char* __string, size_t __n) {
 
     return newstr;
 }
-#endif /* HAVE_STRNDUP && !defined(_WIN32) */
+#endif

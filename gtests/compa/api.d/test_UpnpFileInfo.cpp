@@ -1,14 +1,17 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-04-26
 
-#include "UpnpFileInfo.hpp"
+#include <UpnpFileInfo.hpp>
+#include <upnplib/sockaddr.hpp>
+#include <upnplib/port.hpp>
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #define NS
 // Since the following struct is completely invisible outside of pupnp (because
-// of some template macro magic) I have duplicated it for testing here. The
-// original is located in UpnpFileInfo.cpp. Possible differences of the copies
-// in the future should be detected by the tests. --Ingo
+// of some template macro magic) I have duplicated it for testing here and must
+// be availabe on the default namespace for pupnp. The original is located in
+// pupnp/upnp/src/api/UpnpFileInfo.cpp. Possible differences of the copies in
+// the future should be detected by the tests.  --Ingo
 struct s_UpnpFileInfo {
     off_t m_FileLength;
     time_t m_LastModified;
@@ -16,24 +19,25 @@ struct s_UpnpFileInfo {
     int m_IsReadable;
     DOMString m_ContentType;
     UpnpListHead m_ExtraHeadersList;
-    struct sockaddr_storage m_CtrlPtIPAddr;
+    ::sockaddr_storage m_CtrlPtIPAddr;
     UpnpString* m_Os;
 };
 #else
 #define NS ::compa
-#include "compa/UpnpFileInfo.hpp"
+#include <compa/UpnpFileInfo.hpp>
+#include <compa/UpnpString.hpp>
 #endif
 
-#include "upnplib/gtest.hpp"
-#include "upnplib/sock.hpp"
-#include "gtest/gtest.h"
+#include <upnplib/gtest.hpp>
+#include <gtest/gtest.h>
 
-using ::testing::ExitedWithCode;
-using ::upnplib::SockAddr;
 
 namespace compa {
 bool old_code{true}; // Managed in upnplib_gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
+
+using ::testing::ExitedWithCode;
+using ::upnplib::SockAddr;
 
 class CUpnpFileInfo {
     // I use this simple helper class to ensure that we always free an allocated
@@ -41,8 +45,14 @@ class CUpnpFileInfo {
   public:
     UpnpFileInfo* info{};
 
-    CUpnpFileInfo() { this->info = UpnpFileInfo_new(); }
-    ~CUpnpFileInfo() { UpnpFileInfo_delete(this->info); }
+    CUpnpFileInfo() {
+        TRACE2(this, " Construct compa::CUpnpFileInfo()")
+        this->info = UpnpFileInfo_new();
+    }
+    ~CUpnpFileInfo() {
+        TRACE2(this, " Destruct compa::CUpnpFileInfo()")
+        UpnpFileInfo_delete(this->info);
+    }
 };
 
 class CUpnpString {
@@ -54,6 +64,7 @@ class CUpnpString {
     CUpnpString() { this->str = UpnpString_new(); }
     ~CUpnpString() { UpnpString_delete(this->str); }
 };
+
 
 TEST(UpnpFileInfoTestSuite, new_and_verify_struct_and_delete) {
     // Test Unit
@@ -534,18 +545,54 @@ TEST(UpnpFileInfoDeathTest, add_to_list_extra_headers_list_with_nullptr) {
     }
 }
 
+#if 0
+// This test fails only on MacOS due to pointer problems. I don't know why the
+// clang compiler has problems to give the correct pointer from
+// ::upnplib::sockaddr_storage to the function UpnpFileInfo_set_CtrlPtIPAddr()
+// as argument. This test is the reason to reassign the structure
+// ::upnplib::sockaddr_storage. --Ingo
+#ifndef UPNPLIB_WITH_NATIVE_PUPNP
 TEST(UpnpFileInfoDeathTest, UpnpFileInfo_set_get_CtrlPtIPAddr) {
-    CUpnpFileInfo f;
-    char addr4buf[16];
-
-    SockAddr sock;
-    sock.addr_set("192.168.1.2", 52345);
+    UpnpFileInfo* info = UpnpFileInfo_new();
+    info->m_CtrlPtIPAddr.ss_family = AF_INET6;
+    // char addr4buf[16];
+    ::upnplib::sockaddr_storage saddr{};
+    saddr = "192.168.1.2:52345";
+    EXPECT_EQ(saddr.ss_family, AF_INET);
+    EXPECT_EQ(info->m_CtrlPtIPAddr.ss_family, AF_INET6);
 
     // Test Unit
-    EXPECT_EQ(NS::UpnpFileInfo_set_CtrlPtIPAddr(f.info, &sock.addr_ss), 1);
-    const sockaddr_storage* sa_ss = NS::UpnpFileInfo_get_CtrlPtIPAddr(f.info);
+    const ::sockaddr_storage* ssptr =
+        (const ::sockaddr_storage*)&(saddr.ss_family);
+    EXPECT_EQ(ssptr->ss_family, AF_INET);
+    EXPECT_EQ(UpnpFileInfo_set_CtrlPtIPAddr(
+                  info, (const ::sockaddr_storage*)(&saddr.ss_family)),
+              1);
+    EXPECT_EQ(saddr.ss_family, AF_INET);
+    EXPECT_EQ(info->m_CtrlPtIPAddr.ss_family, AF_INET);
+    UpnpFileInfo_delete(info);
+}
+#endif
+#endif // #if 0
+
+TEST(UpnpFileInfoDeathTest, UpnpFileInfo_set_get_CtrlPtIPAddr) {
+    CUpnpFileInfo f;
+
+    f.info->m_CtrlPtIPAddr.ss_family = AF_INET6;
+    ::sockaddr_storage ss{};
+    ss.ss_family = AF_INET;
+    sockaddr_in* const sin = (sockaddr_in*)&ss;
+    ASSERT_EQ(inet_pton(AF_INET, "192.168.1.2", &sin->sin_addr), 1);
+    sin->sin_port = htons(52345);
+
+    // Test Unit
+    EXPECT_EQ(UpnpFileInfo_set_CtrlPtIPAddr(f.info, &ss), 1);
+    EXPECT_EQ(f.info->m_CtrlPtIPAddr.ss_family, AF_INET);
+
+    const ::sockaddr_storage* sa_ss = NS::UpnpFileInfo_get_CtrlPtIPAddr(f.info);
 
     ASSERT_EQ(sa_ss->ss_family, AF_INET);
+    char addr4buf[16];
     EXPECT_STREQ(inet_ntop(AF_INET, &((sockaddr_in*)sa_ss)->sin_addr, addr4buf,
                            sizeof(addr4buf)),
                  "192.168.1.2");
@@ -556,18 +603,15 @@ TEST(UpnpFileInfoDeathTest, UpnpFileInfo_set_get_CtrlPtIPAddr) {
                   << " UpnpFileInfo_set_CtrlPtIPAddr() called with a nullptr "
                      "must not segfault.\n";
         // This expects segfault.
-        EXPECT_DEATH(NS::UpnpFileInfo_set_CtrlPtIPAddr(nullptr, &sock.addr_ss),
-                     ".*");
+        EXPECT_DEATH(NS::UpnpFileInfo_set_CtrlPtIPAddr(nullptr, &ss), ".*");
 
     } else {
 
         // This expects NO segfault.
-        ASSERT_EXIT((NS::UpnpFileInfo_set_CtrlPtIPAddr(nullptr, &sock.addr_ss),
-                     exit(0)),
+        ASSERT_EXIT((NS::UpnpFileInfo_set_CtrlPtIPAddr(nullptr, &ss), exit(0)),
                     ExitedWithCode(0), ".*");
         int ret_set_CtrlPtIPAddr{0x55A55A};
-        ret_set_CtrlPtIPAddr =
-            NS::UpnpFileInfo_set_CtrlPtIPAddr(nullptr, &sock.addr_ss);
+        ret_set_CtrlPtIPAddr = NS::UpnpFileInfo_set_CtrlPtIPAddr(nullptr, &ss);
         EXPECT_EQ(ret_set_CtrlPtIPAddr, 0);
     }
 }
@@ -598,20 +642,20 @@ TEST(UpnpFileInfoDeathTest,
 }
 
 TEST(UpnpFileInfoTestSuite, UpnpFileInfo_get_CtrlPtIPAddr_with_nullptr) {
-    const sockaddr_storage* sa_ss{};
+    const ::sockaddr_storage* saddr{};
 
     // Test Unit
-    sa_ss = NS::UpnpFileInfo_get_CtrlPtIPAddr(nullptr);
+    saddr = NS::UpnpFileInfo_get_CtrlPtIPAddr(nullptr);
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ]" CRES
                   << " UpnpFileInfo_get_CtrlPtIPAddr() called with a nullptr "
                      "should return a nullptr.\n";
-        EXPECT_NE(sa_ss, nullptr);
+        EXPECT_NE(saddr, nullptr);
 
     } else {
 
-        EXPECT_EQ(sa_ss, nullptr);
+        EXPECT_EQ(saddr, nullptr);
     }
 }
 
@@ -620,16 +664,15 @@ TEST(UpnpFileInfoTestSuite, UpnpFileInfo_clear_CtrlPtIPAddr) {
     CUpnpFileInfo f;
     char addr4buf[16];
 
-    SockAddr sock;
-    sock.addr_set("192.168.1.3", 52346);
-    ASSERT_EQ(NS::UpnpFileInfo_set_CtrlPtIPAddr(f.info, &sock.addr_ss), 1);
+    ::upnplib::sockaddr_storage ss("192.168.1.3", 52346);
+    ASSERT_EQ(NS::UpnpFileInfo_set_CtrlPtIPAddr(f.info, &ss), 1);
 
     // Test Unit
     NS::UpnpFileInfo_clear_CtrlPtIPAddr(f.info);
 
-    const sockaddr_storage* sa_ss = NS::UpnpFileInfo_get_CtrlPtIPAddr(f.info);
-    ASSERT_EQ(sa_ss->ss_family, 0);
-    EXPECT_STREQ(inet_ntop(AF_INET, &((sockaddr_in*)sa_ss)->sin_addr, addr4buf,
+    const ::sockaddr_storage* saddr = NS::UpnpFileInfo_get_CtrlPtIPAddr(f.info);
+    ASSERT_EQ(saddr->ss_family, 0);
+    EXPECT_STREQ(inet_ntop(AF_INET, &((sockaddr_in*)saddr)->sin_addr, addr4buf,
                            sizeof(addr4buf)),
                  "0.0.0.0");
 }

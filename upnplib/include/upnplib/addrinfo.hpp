@@ -49,7 +49,7 @@ class UPNPLIB_API CAddrinfo {
     virtual ~CAddrinfo();
 
     // This is to have read access to members of the addrinfo structure,
-    // Example: CAddrinfo ai(..); if(ai->family == AF_INET6) {..};
+    // Example: CAddrinfo ai(..); if(ai->ai_family == AF_INET6) {..};
     // REF: [Overloading member access operators ->, .*]
     // https://stackoverflow.com/a/8782794/5014688
     addrinfo* operator->() const;

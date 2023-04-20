@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-04-18
+# Redistribution only with this Copyright remark. Last modified: 2023-04-28
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -32,6 +32,7 @@ set(UMOCK_SOURCE_FILES
     ./src/unistd.cpp
     ./src/sysinfo.cpp
     ./src/arpa_inet.cpp
+    ${UPNPLIB_PROJECT_SOURCE_DIR}/upnplib/src/port.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./src/net_if.cpp>
     $<$<PLATFORM_ID:Windows>:./src/iphlpapi.cpp>
@@ -41,8 +42,7 @@ set(UMOCK_SOURCE_FILES
 # uMock SHared library: suffix -mst
 #----------------------------------
 add_library(umock_shared SHARED
-        ${UMOCK_SOURCE_FILES}
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/upnplib/src/strndup.cpp
+    ${UMOCK_SOURCE_FILES}
 )
 target_include_directories(umock_shared
     PUBLIC
@@ -73,7 +73,7 @@ target_link_libraries(umock_shared
 # UMock STatic library: suffix -mst
 #----------------------------------
 add_library(umock_static STATIC
-        ${UMOCK_SOURCE_FILES}
+    ${UMOCK_SOURCE_FILES}
 )
 target_include_directories(umock_static
     PUBLIC

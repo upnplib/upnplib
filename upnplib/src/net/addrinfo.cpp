@@ -1,8 +1,9 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-18
+// Redistribution only with this Copyright remark. Last modified: 2023-04-28
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/port.hpp>
+#include <umock/netdb.hpp>
 
 #include <stdexcept>
 
@@ -54,7 +55,7 @@ CAddrinfo& CAddrinfo::operator=(CAddrinfo that) {
 CAddrinfo::~CAddrinfo() {
     TRACE2(this, " Destruct upnplib::CAddrinfo()")
     TRACE2("Call STL function ::freeaddrinfo() with m_res = ", m_res)
-    ::freeaddrinfo(m_res);
+    umock::netdb_h.freeaddrinfo(m_res);
     m_res = nullptr;
 }
 
@@ -65,9 +66,9 @@ addrinfo* CAddrinfo::get_new_addrinfo() {
     // the same address info.
     addrinfo* new_res{nullptr};
 
-    int ret = ::getaddrinfo(m_node.empty() ? nullptr : m_node.c_str(),
-                            m_service.empty() ? nullptr : m_service.c_str(),
-                            &m_hints, &new_res);
+    int ret = umock::netdb_h.getaddrinfo(
+        m_node.empty() ? nullptr : m_node.c_str(),
+        m_service.empty() ? nullptr : m_service.c_str(), &m_hints, &new_res);
     if (ret != 0) {
         throw std::runtime_error(
             "[" + std::to_string(__LINE__) +

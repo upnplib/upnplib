@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-04-28
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -9,9 +9,7 @@
 #include "pupnp/upnp/src/genlib/net/uri/uri.cpp"
 
 #include "upnplib/uri.hpp"
-#include "umock/netdb.hpp"
-
-#include "gmock/gmock.h"
+#include "umock/netdb_mock.hpp"
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -28,17 +26,7 @@ bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 //
 // Mocking
 // =======
-class NetdbMock : public umock::NetdbInterface {
-  public:
-    virtual ~NetdbMock() override {}
-    MOCK_METHOD(int, getaddrinfo,
-                (const char* node, const char* service,
-                 const struct addrinfo* hints, struct addrinfo** res),
-                (override));
-    MOCK_METHOD(void, freeaddrinfo, (struct addrinfo * res), (override));
-};
-
-class Mock_netv4info : public NetdbMock {
+class Mock_netv4info : public umock::NetdbMock {
     // This is a derived class from mocking netdb to provide a structure for
     // addrinfo that can be given to the mocked program.
   private:
@@ -143,7 +131,7 @@ TEST(HostportIp4TestSuite, check_freeaddrinfo) {
 // --------------------------------------------------------
 class HostportIp4FTestSuite : public ::testing::Test {
   protected:
-    NetdbMock m_mocked_netdb;
+    umock::NetdbMock m_mocked_netdb;
     hostport_type m_out;
     struct sockaddr_in* m_sai4 = (struct sockaddr_in*)&m_out.IPaddress;
 

@@ -1,6 +1,7 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-10-05
 // Also Copyright by other contributor as noted below.
+// Last compare with pupnp original source file on 2023-04-25, ver 1.14.15
 
 /*!
  * \file

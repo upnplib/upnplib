@@ -1,14 +1,15 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-20
-// Also Copyright by other contributor as noted below.
-
 #ifndef UPNPLIB_STRING_HPP
 #define UPNPLIB_STRING_HPP
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-04-26
+// Also Copyright by other contributor as noted below.
+// Last compare with pupnp original source file on 2023-04-26, ver 1.14.15
 
 /*!
  * \defgroup UpnpString The UpnpString Class
  *
  * \brief Implements string operations in the UPnP library.
+ *
  * \author Marcelo Roberto Jimenez
  *
  * \version 1.0
@@ -74,11 +75,11 @@ EXPORT_SPEC size_t UpnpString_get_Length(
  * \brief Truncates the string to the specified lenght, or does nothing
  * if the current lenght is less than or equal to the requested length.
  * */
-// EXPORT_SPEC void UpnpString_set_Length(
-//        /*! [in] The \em \b this pointer. */
-//        UpnpString *p,
-//        /*! [in] The requested length. */
-//        size_t n);
+EXPORT_SPEC void UpnpString_set_Length(
+    /*! [in] The \em \b this pointer. */
+    UpnpString* p,
+    /*! [in] The requested length. */
+    size_t n);
 
 /*!
  * \brief Returns the pointer to char.
@@ -121,22 +122,22 @@ EXPORT_SPEC void UpnpString_clear(
  *
  * \return The result of strcmp().
  */
-// EXPORT_SPEC int UpnpString_cmp(
-//        /*! [in] The \em \b the first string. */
-//        UpnpString *p,
-//        /*! [in] The \em \b the second string. */
-//        UpnpString *q);
+EXPORT_SPEC int UpnpString_cmp(
+    /*! [in] The \em \b the first string. */
+    UpnpString* p,
+    /*! [in] The \em \b the second string. */
+    UpnpString* q);
 
 /*!
  * \brief Compares two strings for equality. Case does not matter.
  *
  * \return The result of strcasecmp().
  */
-// EXPORT_SPEC int UpnpString_casecmp(
-//        /*! [in] The \em \b the first string. */
-//        UpnpString *p,
-//        /*! [in] The \em \b the second string. */
-//        UpnpString *q);
+EXPORT_SPEC int UpnpString_casecmp(
+    /*! [in] The \em \b the first string. */
+    UpnpString* p,
+    /*! [in] The \em \b the second string. */
+    UpnpString* q);
 
 /* @} UpnpString The UpnpString API */
 

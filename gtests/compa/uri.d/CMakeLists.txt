@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-16
+# Redistribution only with this Copyright remark. Last modified: 2023-04-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -18,14 +18,15 @@ if(FALSE)
 # Direct linking with source files currently not used but having available for
 # reference. We link against the internal upnplib libraries (see below).
 add_executable(test_uri-pst
-        ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-        ${GTESTS_SOURCE_DIR}/tools/mockObj.cpp
-        ./test_uri.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+    ${GTESTS_SOURCE_DIR}/tools/mockObj.cpp
+    ./test_uri.cpp
 )
 endif()
 
 add_executable(test_uri-pst
-        ./test_uri.cpp
+    ./test_uri.cpp
+    ${UPNPLIB_SOURCE_DIR}/src/port.cpp
 )
 target_include_directories(test_uri-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -60,15 +61,15 @@ if(FALSE)
 # Direct linking with source files currently not used but having available for
 # reference. We link against the internal upnplib libraries (see below).
 add_executable(test_uri_parse-pst
-        ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-        ${GTESTS_SOURCE_DIR}/tools/mockObj.cpp
-        ${UPNPLIB_SOURCE_DIR}/src/api/upnptools.cpp
-        ./test_uri_parse.cpp
+    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
+    ${GTESTS_SOURCE_DIR}/tools/mockObj.cpp
+    ${UPNPLIB_SOURCE_DIR}/src/api/upnptools.cpp
+    ./test_uri_parse.cpp
 )
 endif()
 
 add_executable(test_uri_parse-pst
-        ./test_uri_parse.cpp
+    ./test_uri_parse.cpp
 )
 target_include_directories(test_uri_parse-pst
     PRIVATE

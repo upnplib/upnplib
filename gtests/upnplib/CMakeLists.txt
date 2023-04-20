@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-04-20
+# Redistribution only with this Copyright remark. Last modified: 2023-04-21
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -55,33 +55,34 @@ add_test(NAME ctest_upnptools-ust COMMAND test_upnptools-ust --gtest_shuffle
 )
 
 
-# sock
-# ====
-add_executable(test_sock-ush
-        ./test_sock.cpp
+# sockaddr
+# ========
+add_executable(test_sockaddr-ush
+        ./test_sockaddr.cpp
 )
-target_compile_definitions(test_sock-ush
+target_compile_definitions(test_sockaddr-ush
     PRIVATE
         UPNPLIB_SHARED
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+        $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
+        #$<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
-target_compile_options(test_sock-ush
+target_compile_options(test_sockaddr-ush
     PRIVATE
         # disable warning C4100: 'result_listener': unreferenced formal parameter
         # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
         # be a side effect of the macro definition. --Ingo
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
+        #$<$<CXX_COMPILER_ID:MSVC>:/wd4100>
         # disable warning C4251: 'testing::internal::RE::pattern_': class
         # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
         # needs to have dll-interface to be used by clients of class
         # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+        #$<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
-target_link_libraries(test_sock-ush
+target_link_libraries(test_sockaddr-ush
     PRIVATE
         upnplib_shared
 )
-add_test(NAME ctest_sock-ush COMMAND test_sock-ush --gtest_shuffle
+add_test(NAME ctest_sockaddr-ush COMMAND test_sockaddr-ush --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -94,7 +95,6 @@ add_executable(test_addrinfo-ush
 target_compile_definitions(test_addrinfo-ush
     PRIVATE
         UPNPLIB_SHARED
-        #UPNPLIB_WITH_TRACE
 )
 target_link_libraries(test_addrinfo-ush
     PRIVATE
@@ -113,7 +113,6 @@ add_executable(test_socket-ush
 target_compile_definitions(test_socket-ush
     PRIVATE
         UPNPLIB_SHARED
-        $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
 )
 target_link_libraries(test_socket-ush
     PRIVATE

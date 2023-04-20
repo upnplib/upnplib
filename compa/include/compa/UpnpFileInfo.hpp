@@ -1,50 +1,54 @@
 #ifndef COMPA_UPNPFILEINFO_HPP
 #define COMPA_UPNPFILEINFO_HPP
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-04-26
 
 /*!
  * \file
  *
  * \brief Header file for UpnpFileInfo methods.
  */
-#include "upnplib/visibility.hpp"
-#include "ixml/ixml.hpp"
+#include <upnplib/visibility.hpp>
 
 #ifdef _WIN32
-#include "UpnpInet.hpp"
+#include <UpnpInet.hpp>
 #include <sys/types.h>
 #else
 #include <sys/socket.h>
 #endif // _WIN32
 
-#include "UpnpString.hpp"
-#include "list.hpp"
+#include <compa/UpnpString.hpp>
+#include <ixml/ixml.hpp>
+#include <list.hpp>
+#include <upnplib/sockaddr.hpp>
 
 /*!
  * UpnpFileInfo
  */
 
-// Since the following struct is completely invisible outside of pupnp (because
-// of some template macro magic) I have duplicated it for testing here. The
-// original is located in UpnpFileInfo.cpp. Possible differences of the copies
-// in the future should be detected by the tests. --Ingo
-struct s_UpnpFileInfo {
+namespace compa {
+
+#include <list.hpp>
+
+struct UpnpFileInfo {
     off_t m_FileLength;
     time_t m_LastModified;
     int m_IsDirectory;
     int m_IsReadable;
     DOMString m_ContentType;
     UpnpListHead m_ExtraHeadersList;
-    struct sockaddr_storage m_CtrlPtIPAddr;
+    sockaddr_storage m_CtrlPtIPAddr;
     UpnpString* m_Os;
 };
 
-typedef struct s_UpnpFileInfo UpnpFileInfo;
-
-namespace compa {
-
-#include "list.hpp"
+/*! Constructor */
+UPNPLIB_API UpnpFileInfo* UpnpFileInfo_new();
+/*! Destructor */
+UPNPLIB_API void UpnpFileInfo_delete(UpnpFileInfo* p);
+/*! Copy Constructor */
+UPNPLIB_API UpnpFileInfo* UpnpFileInfo_dup(const UpnpFileInfo* p);
+/*! Assignment operator */
+UPNPLIB_API int UpnpFileInfo_assign(UpnpFileInfo* p, const UpnpFileInfo* q);
 
 /*! UpnpFileInfo_get_FileLength */
 UPNPLIB_API off_t UpnpFileInfo_get_FileLength(const UpnpFileInfo* p);
@@ -80,12 +84,11 @@ UPNPLIB_API int UpnpFileInfo_set_ExtraHeadersList(UpnpFileInfo* p,
 UPNPLIB_API void UpnpFileInfo_add_to_list_ExtraHeadersList(UpnpFileInfo* p,
                                                            UpnpListHead* head);
 /*! UpnpFileInfo_get_CtrlPtIPAddr */
-UPNPLIB_API const struct sockaddr_storage*
+UPNPLIB_API const sockaddr_storage*
 UpnpFileInfo_get_CtrlPtIPAddr(const UpnpFileInfo* p);
 /*! UpnpFileInfo_set_CtrlPtIPAddr */
-UPNPLIB_API int
-UpnpFileInfo_set_CtrlPtIPAddr(UpnpFileInfo* p,
-                              const struct sockaddr_storage* buf);
+UPNPLIB_API int UpnpFileInfo_set_CtrlPtIPAddr(UpnpFileInfo* p,
+                                              const ::sockaddr_storage* buf);
 /*! UpnpFileInfo_clear_CtrlPtIPAddr */
 UPNPLIB_API void UpnpFileInfo_clear_CtrlPtIPAddr(UpnpFileInfo* p);
 /*! UpnpFileInfo_get_Os */

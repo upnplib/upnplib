@@ -1,6 +1,7 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-24
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-04-26
 // Also Copyright by other contributor who haven't made a note.
+// Last compare with pupnp original source file on 2023-04-26, ver 1.14.15
 
 /*!
  * \addtogroup UpnpString
@@ -48,7 +49,7 @@ static size_t strnlen(const char* s, size_t n) {
 
 /* strndup() is a GNU extension. */
 #if !HAVE_STRNDUP || defined(_WIN32)
-char* strndup(const char* __string, size_t __n) {
+static char* strndup(const char* __string, size_t __n) {
     size_t strsize = strnlen(__string, __n);
     char* newstr = (char*)malloc(strsize + 1);
     if (newstr == NULL)

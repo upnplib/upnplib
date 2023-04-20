@@ -1,12 +1,14 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-15
+// Redistribution only with this Copyright remark. Last modified: 2023-04-27
 
 // Header file for portable definitions
 // ====================================
 // This header should be includable into any source file to have portable
-// definitions available.
+// definitions available. It should not build any inline code.
+
+#include <upnplib/visibility.hpp>
 
 // clang-format off
 
@@ -75,6 +77,16 @@
   #define TRACE2(a, b)
 #endif
 
+#ifdef _MSC_VER
+  // POSIX names for functions
+  #define strcasecmp _stricmp
+#endif
+
 // clang-format on
+
+// strndup() is a GNU extension.
+#ifndef HAVE_STRNDUP
+UPNPLIB_API char* strndup(const char* __string, size_t __n);
+#endif
 
 #endif // UPNPLIB_INCLUDE_PORT_HPP

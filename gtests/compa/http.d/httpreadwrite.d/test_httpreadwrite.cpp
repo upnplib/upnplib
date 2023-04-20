@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-04-28
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -10,8 +10,7 @@
 #include "upnplib/uri.hpp"
 #include "upnplib/gtest.hpp"
 
-#include "gmock/gmock.h"
-#include "umock/netdb.hpp"
+#include "umock/netdb_mock.hpp"
 #include "umock/sys_socket_mock.hpp"
 #include "umock/unistd_mock.hpp"
 
@@ -36,17 +35,7 @@ bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
 // Mocking
 // =======
-class NetdbMock : public umock::NetdbInterface {
-  public:
-    virtual ~NetdbMock() override {}
-    MOCK_METHOD(int, getaddrinfo,
-                (const char* node, const char* service,
-                 const struct addrinfo* hints, struct addrinfo** res),
-                (override));
-    MOCK_METHOD(void, freeaddrinfo, (struct addrinfo * res), (override));
-};
-
-class Mock_netv4info : public NetdbMock {
+class Mock_netv4info : public umock::NetdbMock {
     // This is a derived class from mocking netdb to provide a structure for
     // addrinfo that can be given to the mocked program.
   private:

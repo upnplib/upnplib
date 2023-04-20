@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-01-26
+ * Redistribution only with this Copyright remark. Last modified: 2023-04-21
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
  *
  **************************************************************************/
 
-#include "config.hpp"
+#include <config.hpp>
 
 /*!
  * \file
@@ -48,15 +48,15 @@
  *
  */
 
-#include "compa/miniserver.hpp"
+#include <compa/miniserver.hpp>
 
 // #include "ThreadPool.hpp"
-#include "httpreadwrite.hpp"
+#include <httpreadwrite.hpp>
 // #include "ithread.hpp"
-#include "ssdplib.hpp"
-#include "statcodes.hpp"
+#include <ssdplib.hpp>
+#include <statcodes.hpp>
 // #include "unixutil.hpp" /* for socklen_t, EAFNOSUPPORT */
-#include "upnpapi.hpp"
+#include <upnpapi.hpp>
 // #include "upnputil.hpp"
 
 // #include <assert.h>
@@ -68,15 +68,15 @@
 // #include <algorithm> // for std::max()
 #include <iostream>
 
-#include "upnplib/sock.hpp"
+#include <upnplib/sockaddr.hpp>
 
 #ifdef _WIN32
-#include "UpnpStdInt.hpp" // for ssize_t
+#include <UpnpStdInt.hpp> // for ssize_t
 #endif
 
-#include "umock/sys_socket.hpp"
-#include "umock/sys_select.hpp"
-#include "umock/stdlib.hpp"
+#include <umock/sys_socket.hpp>
+#include <umock/sys_select.hpp>
+#include <umock/stdlib.hpp>
 
 using ::upnplib::SocketAddr;
 

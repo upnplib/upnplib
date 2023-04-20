@@ -168,6 +168,9 @@ void CSocket::set_reuse_addr(bool a_reuse) {
 void CSocket::bind(const CAddrinfo& a_ai) {
     TRACE2(this, " Executing upnplib::CSocket::bind()")
 
+    // Protect binding and storing its state (m_bound).
+    std::scoped_lock lock(m_bound_mutex);
+
     int so_option{-1};
     socklen_t optlen{sizeof(so_option)}; // May be modified
     if (::getsockopt(m_sfd, SOL_SOCKET, SO_TYPE, (char*)&so_option, &optlen) !=
@@ -180,9 +183,6 @@ void CSocket::bind(const CAddrinfo& a_ai) {
                                  std::to_string(a_ai->ai_socktype) +
                                  ") does not match socket type (" +
                                  std::to_string(so_option) + ")\"");
-
-    // Protect binding and storing its state (m_bound).
-    std::scoped_lock lock(m_bound_mutex);
 
     if (::bind(m_sfd, a_ai->ai_addr, (socklen_t)a_ai->ai_addrlen) != 0)
         throw_error("ERROR! Failed to bind socket to an address:");

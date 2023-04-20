@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-04-28
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -7,35 +7,38 @@
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
-#include "pupnp/upnp/src/genlib/miniserver/miniserver.cpp"
+#include <pupnp/upnp/src/genlib/miniserver/miniserver.cpp>
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #define NS
 #else
 #define NS ::compa
-#include "compa/src/genlib/miniserver/miniserver.cpp"
+#include <compa/src/genlib/miniserver/miniserver.cpp>
 #endif
 
-#include "webserver.hpp"
+#include <webserver.hpp>
 
-#include "compa/upnpdebug.hpp"
+#include <compa/upnpdebug.hpp>
 
-#include "upnplib/upnptools.hpp" // for errStrEx
-#include "upnplib/port.hpp"
-#include "upnplib/sock.hpp"
-#include "upnplib/gtest.hpp"
+#include <upnplib/upnptools.hpp> // for errStrEx
+#include <upnplib/port.hpp>
+#include <upnplib/sockaddr.hpp>
+#include <upnplib/gtest.hpp>
+#include <upnplib/addrinfo.hpp>
 
-#include "gmock/gmock.h"
-#include "umock/stringh.hpp"
-#include "umock/sys_socket_mock.hpp"
+#include <gmock/gmock.h>
+#include <umock/stringh.hpp>
+#include <umock/sys_socket_mock.hpp>
 
 using ::testing::_;
 using ::testing::DoAll;
+using ::testing::Ge;
 using ::testing::NotNull;
 using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
 
+using ::upnplib::CAddrinfo;
 using ::upnplib::errStrEx;
 using ::upnplib::SockAddr;
 
@@ -226,8 +229,9 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets) {
     MINISERVER_REUSEADDR = false;
     strcpy(gIF_IPV4, "192.168.245.254");
     const SOCKET sockfd{333};
-    struct SockAddr sock;
-    sock.addr_set(gIF_IPV4, APPLICATION_LISTENING_PORT);
+    const CAddrinfo ai(std::string(gIF_IPV4),
+                       std::to_string(APPLICATION_LISTENING_PORT), AF_INET,
+                       SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
     MiniServerSockArray miniSocket{};
     NS::InitMiniServerSockArray(&miniSocket);
 
@@ -240,10 +244,9 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets) {
     // Bind socket to an ip address (gIF_IPV4)
     EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
     // Query port from socket
-    EXPECT_CALL(
-        mocked_sys_socketObj,
-        getsockname(sockfd, _, Pointee((socklen_t)sizeof(sock.addr_ss))))
-        .WillOnce(DoAll(SetArgPointee<1>(*sock.addr), Return(0)));
+    EXPECT_CALL(mocked_sys_socketObj,
+                getsockname(sockfd, _, Pointee(Ge((SOCKLEN_P)ai->ai_addrlen))))
+        .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
     // Listen on the socket
     EXPECT_CALL(mocked_sys_socketObj, listen(sockfd, _)).WillOnce(Return(0));
 
@@ -573,7 +576,7 @@ TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_ip_version) {
                  "0.0.0.0");
 }
 
-TEST(StartMiniServerTestSuite, do_bind_listen_successful) {
+TEST_F(StartMiniServerFTestSuite, do_bind_listen_successful) {
     // Configure expected system calls:
     // * Use fictive socket file descriptor 600
     // * Mocked bind() returns successful
@@ -605,18 +608,18 @@ TEST(StartMiniServerTestSuite, do_bind_listen_successful) {
 
     // Provide a sockaddr structure that will be returned by mocked
     // getsockname().
-    struct SockAddr sock;
-    sock.addr_set(text_addr, APPLICATION_LISTENING_PORT);
+    const CAddrinfo ai(std::string(text_addr),
+                       std::to_string(APPLICATION_LISTENING_PORT), AF_INET,
+                       SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
 
     // Mock system functions
     umock::Sys_socketMock mocked_sys_socketObj;
     umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
     EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _)).Times(1);
     EXPECT_CALL(mocked_sys_socketObj, listen(sockfd, SOMAXCONN)).Times(1);
-    EXPECT_CALL(
-        mocked_sys_socketObj,
-        getsockname(sockfd, _, Pointee((socklen_t)sizeof(sock.addr_ss))))
-        .WillOnce(DoAll(SetArgPointee<1>(*sock.addr), Return(0)));
+    EXPECT_CALL(mocked_sys_socketObj,
+                getsockname(sockfd, _, Pointee(Ge((SOCKLEN_P)ai->ai_addrlen))))
+        .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
 
     // Test Unit
     int ret_get_do_bind_listen = do_bind_listen(&s);
@@ -695,7 +698,7 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_with_failed_listen) {
     // sock_close() is not needed because there is no socket called.
 }
 
-TEST(StartMiniServerTestSuite, do_bind_listen_address_in_use) {
+TEST_F(StartMiniServerFTestSuite, do_bind_listen_address_in_use) {
     // Configure expected system calls:
     // * Use fictive socket file descriptors 600 and 601 with actual port 52534
     // * Mocked bind() returns successful
@@ -734,8 +737,9 @@ TEST(StartMiniServerTestSuite, do_bind_listen_address_in_use) {
 
         // Provide a sockaddr structure that will be returned by mocked
         // getsockname().
-        struct SockAddr sock;
-        sock.addr_set(text_addr, actual_port + 1);
+        const CAddrinfo ai(std::string(text_addr),
+                           std::to_string(actual_port + 1), AF_INET,
+                           SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
 
         // Mock system functions
         umock::Sys_socketMock mocked_sys_socketObj;
@@ -751,10 +755,10 @@ TEST(StartMiniServerTestSuite, do_bind_listen_address_in_use) {
         EXPECT_CALL(mocked_sys_socketObj, bind(sockfd_free, _, _)).Times(1);
         EXPECT_CALL(mocked_sys_socketObj, listen(sockfd_free, SOMAXCONN))
             .Times(1);
-        EXPECT_CALL(mocked_sys_socketObj,
-                    getsockname(sockfd_free, _,
-                                Pointee((socklen_t)sizeof(sock.addr_ss))))
-            .WillOnce(DoAll(SetArgPointee<1>(*sock.addr), Return(0)));
+        EXPECT_CALL(
+            mocked_sys_socketObj,
+            getsockname(sockfd_free, _, Pointee(Ge((SOCKLEN_P)ai->ai_addrlen))))
+            .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
 
         // Test Unit
         int ret_get_do_bind_listen = do_bind_listen(&s);
@@ -1141,7 +1145,7 @@ TEST_F(DoBindFTestSuite, bind_with_wrong_ip_version_assignment) {
         << errStrEx(ret_do_bind, UPNP_E_SOCKET_BIND);
 }
 
-TEST(StartMiniServerTestSuite, do_listen_successful) {
+TEST_F(StartMiniServerFTestSuite, do_listen_successful) {
     // Configure expected system calls:
     // * Use fictive socket file descriptor 512
     // * Actual used port 60000 will be set
@@ -1171,18 +1175,17 @@ TEST(StartMiniServerTestSuite, do_listen_successful) {
 
     // Provide a sockaddr structure that will be returned by mocked
     // getsockname().
-    struct SockAddr sock;
-    sock.addr_set(text_addr, actual_port);
+    const CAddrinfo ai(std::string(text_addr), std::to_string(actual_port),
+                       AF_INET, SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
 
     // Mock system functions
     umock::Sys_socketMock mocked_sys_socketObj;
     umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
     EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
     EXPECT_CALL(mocked_sys_socketObj, listen(sockfd, SOMAXCONN)).Times(1);
-    EXPECT_CALL(
-        mocked_sys_socketObj,
-        getsockname(sockfd, _, Pointee((socklen_t)sizeof(sock.addr_ss))))
-        .WillOnce(DoAll(SetArgPointee<1>(*sock.addr), Return(0)));
+    EXPECT_CALL(mocked_sys_socketObj,
+                getsockname(sockfd, _, Pointee(Ge((SOCKLEN_P)ai->ai_addrlen))))
+        .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
 
     // Test Unit
     int ret_do_listen = do_listen(&s);
@@ -1309,7 +1312,7 @@ TEST(StartMiniServerTestSuite, do_listen_insufficient_resources) {
     EXPECT_EQ(s.address_len, (socklen_t)sizeof(*s.serverAddr4));
 }
 
-TEST(StartMiniServerTestSuite, get_port_successful) {
+TEST_F(StartMiniServerFTestSuite, get_port_successful) {
     // Configure expected system calls:
     // * Use fictive socket file descriptor 1000
     // * Actual socket used port is 55555
@@ -1324,14 +1327,15 @@ TEST(StartMiniServerTestSuite, get_port_successful) {
 
     // Provide a sockaddr structure that will be returned by mocked
     // getsockname().
-    struct SockAddr sock;
-    sock.addr_set(text_addr, actual_port);
+    const CAddrinfo ai(std::string(text_addr), std::to_string(actual_port),
+                       AF_INET, SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
 
     // Mock system functions
     umock::Sys_socketMock mocked_sys_socketObj;
     umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
-        .WillOnce(DoAll(SetArgPointee<1>(*sock.addr), Return(0)));
+    EXPECT_CALL(mocked_sys_socketObj,
+                getsockname(sockfd, _, Pointee(Ge((SOCKLEN_P)ai->ai_addrlen))))
+        .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
 
     // Test Unit
     EXPECT_EQ(get_port(sockfd, &port), 0);
@@ -1351,14 +1355,13 @@ TEST(StartMiniServerTestSuite, get_port_fails) {
 
     // Provide a sockaddr structure that will be returned by mocked
     // getsockname(). It will be empty.
-    struct SockAddr sock;
+    const sockaddr sa{};
 
     // Mock system functions
     umock::Sys_socketMock mocked_sys_socketObj;
     umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
     EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
-        .WillOnce(DoAll(SetArgPointee<1>(*sock.addr),
-                        SetErrnoAndReturn(ENOBUFS, -1)));
+        .WillOnce(DoAll(SetArgPointee<1>(sa), SetErrnoAndReturn(ENOBUFS, -1)));
 
     // Test Unit
     EXPECT_EQ(get_port(sockfd, &port), -1);
@@ -1480,10 +1483,10 @@ TEST(StartMiniServerTestSuite, get_miniserver_stopsock_getsockname_fails) {
     // Close socket; we don't need to close a mocked socket
 }
 
-TEST(RunMiniServerTestSuite, receive_from_stopSock) {
+TEST_F(RunMiniServerFTestSuite, receive_from_stopSock) {
     const SOCKET sockfd{401};
-    struct SockAddr sock;
-    sock.addr_set("192.168.167.166", 54321);
+    const CAddrinfo ai("192.168.167.166", "54321", AF_INET, SOCK_STREAM,
+                       AI_NUMERICHOST | AI_NUMERICSERV);
 
     fd_set rdSet;
     FD_ZERO(&rdSet);
@@ -1496,7 +1499,7 @@ TEST(RunMiniServerTestSuite, receive_from_stopSock) {
                 recvfrom(sockfd, _, 25, 0, _,
                          Pointee((socklen_t)sizeof(sockaddr_storage))))
         .WillOnce(DoAll(StrCpyToArg<1>("ShutDown"),
-                        SetArgPointee<4>(*sock.addr), Return(8)));
+                        SetArgPointee<4>(*ai->ai_addr), Return(8)));
 
     // Test Unit
     // Returns 1 (true) if successfully received "ShutDown" from stopSock
@@ -1520,10 +1523,10 @@ TEST(RunMiniServerTestSuite, receive_from_stopSock_not_selected) {
     EXPECT_EQ(NS::receive_from_stopSock(sockfd, &rdSet), 0);
 }
 
-TEST(RunMiniServerTestSuite, receive_from_stopSock_no_bytes) {
+TEST_F(RunMiniServerFTestSuite, receive_from_stopSock_no_bytes) {
     const SOCKET sockfd{403};
-    struct SockAddr sock;
-    sock.addr_set("192.168.167.168", 54323);
+    const CAddrinfo ai("192.168.167.168", "54323", AF_INET, SOCK_STREAM,
+                       AI_NUMERICHOST | AI_NUMERICSERV);
 
     fd_set rdSet;
     FD_ZERO(&rdSet);
@@ -1535,18 +1538,18 @@ TEST(RunMiniServerTestSuite, receive_from_stopSock_no_bytes) {
     EXPECT_CALL(mocked_sys_socketObj,
                 recvfrom(sockfd, _, 25, 0, _,
                          Pointee((socklen_t)sizeof(sockaddr_storage))))
-        .WillOnce(
-            DoAll(StrCpyToArg<1>(""), SetArgPointee<4>(*sock.addr), Return(0)));
+        .WillOnce(DoAll(StrCpyToArg<1>(""), SetArgPointee<4>(*ai->ai_addr),
+                        Return(0)));
 
     // Test Unit
     // Returns 1 (true) if successfully received "ShutDown" from stopSock
     EXPECT_EQ(NS::receive_from_stopSock(sockfd, &rdSet), 0);
 }
 
-TEST(RunMiniServerTestSuite, receive_from_stopSock_nothing_todo) {
+TEST_F(RunMiniServerFTestSuite, receive_from_stopSock_nothing_todo) {
     SOCKET sockfd{404};
-    struct SockAddr sock;
-    sock.addr_set("192.168.167.169", 54324);
+    const CAddrinfo ai("192.168.167.169", "54324", AF_INET, SOCK_STREAM,
+                       AI_NUMERICHOST | AI_NUMERICSERV);
 
     fd_set rdSet;
     FD_ZERO(&rdSet);
@@ -1559,7 +1562,7 @@ TEST(RunMiniServerTestSuite, receive_from_stopSock_nothing_todo) {
                 recvfrom(sockfd, _, 25, 0, _,
                          Pointee((socklen_t)sizeof(sockaddr_storage))))
         .WillOnce(DoAll(StrCpyToArg<1>("NothingToDo"),
-                        SetArgPointee<4>(*sock.addr), Return(11)));
+                        SetArgPointee<4>(*ai->ai_addr), Return(11)));
 
     // Test Unit
     // Returns 1 (true) if successfully received "ShutDown" from stopSock
@@ -1872,11 +1875,11 @@ TEST_F(RunMiniServerFTestSuite, fdset_if_valid_with_closed_socket) {
     }
 }
 
-TEST(RunMiniServerTestSuite, schedule_request_job) {
+TEST_F(RunMiniServerFTestSuite, schedule_request_job) {
     SOCKET connected_sockfd = 202;
     uint16_t connected_port = 302;
-    struct SockAddr sock;
-    sock.addr_set("192.168.1.1", connected_port);
+    const CAddrinfo ai("192.168.1.1", std::to_string(connected_port), AF_INET,
+                       SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
 
     // Initialize the threadpool. Don't forget to shutdown the threadpool at the
     // end. nullptr means to use default attributes.
@@ -1892,7 +1895,7 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
     captureObj.start();
 
     // Test Unit
-    NS::schedule_request_job(connected_sockfd, sock.addr);
+    NS::schedule_request_job(connected_sockfd, ai->ai_addr);
 
     // Get captured output
     std::string capturedStderr = captureObj.get();
@@ -1983,7 +1986,7 @@ TEST(RunMiniServerTestSuite, dispatch_request) {
                     "httpreadwrite.";
 }
 
-TEST(RunMiniServerTestSuite, getNumericHostRedirection) {
+TEST_F(RunMiniServerFTestSuite, getNumericHostRedirection) {
     // getNumericHostRedirection() returns the ip address with port as text
     // (e.g. "192.168.1.2:54321") that is bound to a socket.
 
@@ -1992,14 +1995,14 @@ TEST(RunMiniServerTestSuite, getNumericHostRedirection) {
 
     // Provide a sockaddr structure that will be returned by mocked
     // getsockname().
-    struct SockAddr sock;
-    sock.addr_set("192.168.123.122", 54321);
+    const CAddrinfo ai("192.168.123.122", "54321", AF_INET, SOCK_STREAM,
+                       AI_NUMERICHOST | AI_NUMERICSERV);
 
     // Mock system functions
     umock::Sys_socketMock mocked_sys_socketObj;
     umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
     EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
-        .WillOnce(DoAll(SetArgPointee<1>(*sock.addr), Return(0)));
+        .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
 
     // Test Unit
 #ifdef _WIN32

@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_SOCK_HPP
 #define UPNPLIB_INCLUDE_PORT_SOCK_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-15
+// Redistribution only with this Copyright remark. Last modified: 2023-04-21
 
 // clang-format off
 
@@ -16,6 +16,7 @@
   // _MSC_VER has SOCKET defined but unsigned and not a file descriptor.
   #define sa_family_t ADDRESS_FAMILY
   #define CLOSE_SOCKET_P closesocket
+  #define SOCKLEN_P int
 
   // For shutdown() send/receive on a socket there are other constant names.
   #define SHUT_RD SD_RECEIVE
@@ -35,6 +36,7 @@
   typedef int SOCKET;
   // Posix has sa_family_t defined.
   #define CLOSE_SOCKET_P close
+  #define SOCKLEN_P socklen_t
 
   // socket() returns INVALID_SOCKET on win32 and is unsigned.
   #define INVALID_SOCKET (-1)

@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-04-17
+# Redistribution only with this Copyright remark. Last modified: 2023-04-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -18,6 +18,7 @@ set(COMPATIBLE_SOURCE_FILES
     ./src/genlib/miniserver/miniserver.cpp
     ./src/genlib/net/sock.cpp
     ./src/ssdp/ssdp_server.cpp
+    ${UPNPLIB_SOURCE_DIR}/src/port.cpp
 )
 
 set(COMPATIBLE_INCLUDE_DIRECTORIES
@@ -51,7 +52,6 @@ if(NOT WIN32)
     #---------------------------------------------
     add_library(compa_shared SHARED
         ${COMPATIBLE_SOURCE_FILES}
-        ${UPNPLIB_SOURCE_DIR}/src/strndup.cpp
     )
     target_include_directories(compa_shared
         ${COMPATIBLE_INCLUDE_DIRECTORIES}
@@ -98,7 +98,6 @@ else() # WIN32
     #---------------------------------------------------
     add_library(compa_shared SHARED
         ${COMPATIBLE_SOURCE_FILES}
-        ${UPNPLIB_SOURCE_DIR}/src/strndup.cpp
     )
     target_include_directories(compa_shared
         ${COMPATIBLE_INCLUDE_DIRECTORIES}

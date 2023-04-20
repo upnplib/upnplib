@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-04-17
+# Redistribution only with this Copyright remark. Last modified: 2023-04-28
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -11,16 +11,6 @@ project(UPNPLIB_PROJECT VERSION ${UPNP_VERSION_STRING}
                 HOMEPAGE_URL "https://github.com/upnplib")
 
 enable_testing()
-
-
-#################################
-# Paths                         #
-#################################
-# Set default POSIX Threads Libraries. May be overwritten if pthreads4w is used.
-# See below on installing pthreads4w.
-set(UPNP_PTHREADS_SHARED_LIBRARY pthread CACHE INTERNAL "Name of the linkable shared library for POSIX threads")  # Implies FORCE
-set(UPNP_PTHREADS_STATIC_LIBRARY libpthread.a CACHE INTERNAL "Name of the linkable static library for POSIX threads")  # Implies FORCE
-
 
 #################################
 # Options                       #
@@ -79,6 +69,15 @@ option(PTW32_STATIC_LIB "For using the static pthreads4w library" OFF)
 add_compile_definitions(
     $<$<BOOL:${UPNPLIB_WITH_TOOLS}>:UPNP_HAVE_TOOLS>
 )
+
+
+#################################
+# Paths                         #
+#################################
+# Set default POSIX Threads Libraries. May be overwritten if pthreads4w is used.
+# See below on installing pthreads4w.
+set(UPNP_PTHREADS_SHARED_LIBRARY pthread CACHE INTERNAL "Name of the linkable shared library for POSIX threads")  # Implies FORCE
+set(UPNP_PTHREADS_STATIC_LIBRARY libpthread.a CACHE INTERNAL "Name of the linkable static library for POSIX threads")  # Implies FORCE
 
 
 #################################

@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-16
+# Redistribution only with this Copyright remark. Last modified: 2023-04-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../../cmake/project-header.cmake)
@@ -47,7 +47,7 @@ endif()
 
 add_executable(test_httpreadwrite-pst
 #------------------------------------
-        ./test_httpreadwrite.cpp
+    ./test_httpreadwrite.cpp
 )
 target_include_directories(test_httpreadwrite-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -125,7 +125,8 @@ endif()
 
 add_executable(test_netconnect-pst
 #---------------------------------
-        ./test_netconnect.cpp
+    ./test_netconnect.cpp
+    ${UPNPLIB_SOURCE_DIR}/src/port.cpp
 )
 target_include_directories(test_netconnect-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -168,7 +169,7 @@ add_test(NAME ctest_netconnect-pst COMMAND test_netconnect-pst --gtest_shuffle
 # conflicts. We must use static libraries.
 add_executable(test_http_Download-pst
 #---------------------------------
-        ./test_http_Download.cpp
+    ./test_http_Download.cpp
 )
 target_include_directories(test_http_Download-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
