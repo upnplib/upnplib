@@ -550,7 +550,6 @@ TEST(UpnpFileInfoDeathTest, add_to_list_extra_headers_list_with_nullptr) {
 // ::upnplib::Sockaddr_storage to the function UpnpFileInfo_set_CtrlPtIPAddr()
 // as argument. This test is the reason to reassign the structure
 // ::upnplib::Sockaddr_storage. --Ingo
-#ifndef UPNPLIB_WITH_NATIVE_PUPNP
 TEST(UpnpFileInfoTestSuite, UpnpFileInfo_set_get_CtrlPtIPAddr) {
     UpnpFileInfo* info = UpnpFileInfo_new();
     info->m_CtrlPtIPAddr.ss_family = AF_INET6;
@@ -574,7 +573,6 @@ TEST(UpnpFileInfoTestSuite, UpnpFileInfo_set_get_CtrlPtIPAddr) {
 
     UpnpFileInfo_delete(info);
 }
-#endif
 
 TEST(UpnpFileInfoDeathTest, UpnpFileInfo_set_get_CtrlPtIPAddr) {
     CUpnpFileInfo f;
