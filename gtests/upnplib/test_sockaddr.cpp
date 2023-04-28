@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-27
+// Redistribution only with this Copyright remark. Last modified: 2023-04-30
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/port.hpp>
@@ -14,6 +14,7 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::DoAll;
+using ::testing::EndsWith;
 using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
@@ -23,84 +24,129 @@ using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::MatchesStdRegex;
 
 
-// sockaddr_storage TestSuite
-// ==========================
+// SSockaddr_storage TestSuite
+// ===========================
 TEST(SockaddrStorageTestSuite, copy_and_assign_structure) {
-    sockaddr_storage ss1;
-    ss1.ss_family = AF_INET6;
+    SSockaddr_storage ss1;
+    ss1 = "[2001:db8::1]:50001";
 
     // Test Unit copy
-    sockaddr_storage ss2 = ss1;
-    EXPECT_EQ(ss2.ss_family, AF_INET6);
+    SSockaddr_storage ss2 = ss1;
+    EXPECT_EQ(ss2.ss.ss_family, AF_INET6);
+    EXPECT_EQ(ss2.get_addr_str(), "[2001:db8::1]");
+    EXPECT_EQ(ss2.get_port(), 50001);
 
     // Test Unit assign
-    sockaddr_storage ss3{};
+    ss1 = "192.168.251.252:50002";
+    SSockaddr_storage ss3;
     ss3 = ss1;
-    EXPECT_EQ(ss3.ss_family, AF_INET6);
+    EXPECT_EQ(ss3.ss.ss_family, AF_INET);
+    EXPECT_EQ(ss3.get_addr_str(), "192.168.251.252");
+    EXPECT_EQ(ss3.get_port(), 50002);
 }
 
 TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
-    sockaddr_storage ss;
+    SSockaddr_storage saddr;
 
-    EXPECT_EQ(ss.ss_family, AF_UNSPEC);
-    EXPECT_EQ(ss.get_addr_str(), "");
-    EXPECT_EQ(ss.get_port(), 0);
+    EXPECT_EQ(saddr.ss.ss_family, AF_UNSPEC);
+    EXPECT_EQ(saddr.get_addr_str(), "");
+    EXPECT_EQ(saddr.get_port(), 0);
 
-    ss.ss_family = AF_INET6;
-    EXPECT_EQ(ss.get_addr_str(), "[::]");
-    EXPECT_EQ(ss.get_port(), 0);
+    saddr.ss.ss_family = AF_INET6;
+    EXPECT_EQ(saddr.get_addr_str(), "[::]");
+    EXPECT_EQ(saddr.get_port(), 0);
 
-    ss.ss_family = AF_INET;
-    EXPECT_EQ(ss.get_addr_str(), "0.0.0.0");
-    EXPECT_EQ(ss.get_port(), 0);
+    saddr.ss.ss_family = AF_INET;
+    EXPECT_EQ(saddr.get_addr_str(), "0.0.0.0");
+    EXPECT_EQ(saddr.get_port(), 0);
 
-    ss = "[2001:db8::1]";
-    EXPECT_EQ(ss.ss_family, AF_INET6);
-    EXPECT_EQ(ss.get_addr_str(), "[2001:db8::1]");
-    EXPECT_EQ(ss.get_port(), 0);
+    saddr = "";
+    EXPECT_EQ(saddr.ss.ss_family, AF_UNSPEC);
+    EXPECT_EQ(saddr.get_addr_str(), "");
+    EXPECT_EQ(saddr.get_port(), 0);
 
-    ss.ss_family = AF_UNSPEC;
-    ss = "[2001:db8::2]:50020";
-    EXPECT_EQ(ss.ss_family, AF_INET6);
-    EXPECT_EQ(ss.get_addr_str(), "[2001:db8::2]");
-    EXPECT_EQ(ss.get_port(), 50020);
+    saddr = "[2001:db8::1]";
+    EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
+    EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::1]");
+    EXPECT_EQ(saddr.get_port(), 0);
 
-    ss = "50021";
-    EXPECT_EQ(ss.ss_family, AF_INET6);
-    EXPECT_EQ(ss.get_addr_str(), "[2001:db8::2]");
-    EXPECT_EQ(ss.get_port(), 50021);
+    saddr.ss.ss_family = AF_UNSPEC;
+    saddr = "[2001:db8::2]:50020";
+    EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
+    EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::2]");
+    EXPECT_EQ(saddr.get_port(), 50020);
 
-    ss = "192.168.47.48";
-    EXPECT_EQ(ss.ss_family, AF_INET);
-    EXPECT_EQ(ss.get_addr_str(), "192.168.47.48");
-    EXPECT_EQ(ss.get_port(), 50021);
+    saddr.ss.ss_family = AF_INET;
+    saddr = "[2001:db8::3]:";
+    EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
+    EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::3]");
+    EXPECT_EQ(saddr.get_port(), 0);
 
-    ss.ss_family = AF_UNSPEC;
-    ss = "192.168.47.49:50022";
-    EXPECT_EQ(ss.ss_family, AF_INET);
-    EXPECT_EQ(ss.get_addr_str(), "192.168.47.49");
-    EXPECT_EQ(ss.get_port(), 50022);
+    saddr = "50021";
+    EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
+    EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::3]");
+    EXPECT_EQ(saddr.get_port(), 50021);
+
+    saddr = "192.168.77.88:";
+    EXPECT_EQ(saddr.ss.ss_family, AF_INET);
+    EXPECT_EQ(saddr.get_addr_str(), "192.168.77.88");
+    EXPECT_EQ(saddr.get_port(), 0);
+
+    saddr.ss.ss_family = AF_UNSPEC;
+    saddr = "192.168.47.49:50022";
+    EXPECT_EQ(saddr.ss.ss_family, AF_INET);
+    EXPECT_EQ(saddr.get_addr_str(), "192.168.47.49");
+    EXPECT_EQ(saddr.get_port(), 50022);
+
+    saddr = "192.168.47.48";
+    EXPECT_EQ(saddr.ss.ss_family, AF_INET);
+    EXPECT_EQ(saddr.get_addr_str(), "192.168.47.48");
+    EXPECT_EQ(saddr.get_port(), 50022);
 
     // Check that a failing call does not modify old settings.
-    EXPECT_THAT([&ss]() { ss = "50x23"; },
+    EXPECT_THAT([&saddr]() { saddr = "50x23"; },
                 ThrowsMessage<std::invalid_argument>(
                     "ERROR! Failed to get port number for \"50x23\""));
-    EXPECT_EQ(ss.ss_family, AF_INET);
-    EXPECT_EQ(ss.get_addr_str(), "192.168.47.49");
-    EXPECT_EQ(ss.get_port(), 50022);
+    EXPECT_EQ(saddr.ss.ss_family, AF_INET);
+    EXPECT_EQ(saddr.get_addr_str(), "192.168.47.48");
+    EXPECT_EQ(saddr.get_port(), 50022);
 }
 
 TEST(SockaddrStorageTestSuite, set_address_and_port_fail) {
-    if (!github_actions)
-        GTEST_FAIL() << "Create additional tests for failing conditions";
+    SSockaddr_storage saddr;
+
+    EXPECT_THAT([&saddr]() { saddr = "[2001::db8::1]"; },
+                ThrowsMessage<std::invalid_argument>(
+                    EndsWith("Invalid ip address '[2001::db8::1]'")));
+
+    EXPECT_THAT([&saddr]() { saddr = "2001:db8::1]"; },
+                ThrowsMessage<std::invalid_argument>(
+                    EndsWith("Invalid ip address '2001'")));
+
+    EXPECT_THROW({ saddr = "[2001:db8::2"; }, std::out_of_range);
+
+    EXPECT_THROW({ saddr = "[2001:db8::3]50003"; }, std::out_of_range);
+
+    EXPECT_THAT([&saddr]() { saddr = "[2001:db8::35003]"; },
+                ThrowsMessage<std::invalid_argument>(
+                    EndsWith("Invalid ip address '[2001:db8::35003]'")));
+
+    EXPECT_THAT([&saddr]() { saddr = "192.168.66.67."; },
+                ThrowsMessage<std::invalid_argument>(
+                    EndsWith("Invalid ip address '192.168.66.67.'")));
+
+    EXPECT_THAT([&saddr]() { saddr = "192.168.66.67z"; },
+                ThrowsMessage<std::invalid_argument>(
+                    EndsWith("Invalid ip address '192.168.66.67z'")));
 }
 
 TEST(ToPortTestSuite, str_to_port) {
     EXPECT_EQ(to_port("123"), 123);
     EXPECT_EQ(to_port("00456"), 456);
     EXPECT_EQ(to_port("65535"), 65535);
-    EXPECT_EQ(to_port("0"), 0);
     EXPECT_EQ(to_port(""), 0);
+    EXPECT_EQ(to_port("0"), 0);
+    EXPECT_EQ(to_port("9"), 9);
     EXPECT_EQ(to_port("00000"), 0);
 
     EXPECT_THAT([]() { to_port("000000"); },
@@ -142,6 +188,32 @@ TEST(ToPortTestSuite, str_to_port) {
     EXPECT_THAT([]() { to_port("12x34"); },
                 ThrowsMessage<std::invalid_argument>(
                     "ERROR! Failed to get port number for \"12x34\""));
+}
+
+TEST(ToAddrStrTestSuite, sockaddr_to_address_string) {
+    SSockaddr_storage saddr;
+
+    EXPECT_EQ(to_addr_str(&saddr.ss), "");
+
+    saddr.ss.ss_family = AF_INET6;
+    EXPECT_EQ(to_addr_str(&saddr.ss), "[::]");
+
+    saddr.ss.ss_family = AF_INET;
+    EXPECT_EQ(to_addr_str(&saddr.ss), "0.0.0.0");
+
+    saddr = "[2001:db8::4]";
+    EXPECT_EQ(to_addr_str(&saddr.ss), "[2001:db8::4]");
+
+    saddr = "192.168.88.99";
+    EXPECT_EQ(to_addr_str(&saddr.ss), "192.168.88.99");
+
+    saddr.ss.ss_family = AF_UNSPEC;
+    EXPECT_EQ(to_addr_str(&saddr.ss), "");
+
+    saddr.ss.ss_family = AF_UNIX;
+    EXPECT_THAT([&saddr]() { to_addr_str(&saddr.ss); },
+                ThrowsMessage<std::invalid_argument>(
+                    "ERROR! Unsupported address family 1"));
 }
 
 

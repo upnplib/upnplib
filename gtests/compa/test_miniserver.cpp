@@ -2163,6 +2163,19 @@ TEST(RunMiniServerTestSuite, set_gena_callback) {
 }
 
 TEST_F(RunMiniServerFTestSuite, do_reinit) {
+    // clang-format off
+    // Unreproducible error detected on Github Action:
+    // 9/42 Test  #9: ctest_miniserver-pst .................***Failed    0.05 sec
+    // [       OK ] RunMiniServerDeathTest.free_handle_request_arg_with_nullptr_to_struct (12 ms)
+    // [ RUN      ] RunMiniServerFTestSuite.do_reinit
+    // D:\a\upnplib\upnplib\gtests\compa\test_miniserver.cpp(2196): error: Expected equality of these values:
+    //   s.fd
+    //     Which is: 404
+    //   sockfd
+    //     Which is: 456
+    // [  FAILED  ] RunMiniServerFTestSuite.do_reinit (1 ms)
+    // clang-format on
+
     MINISERVER_REUSEADDR = false;
     const char text_addr[] = "192.168.202.244";
     char addrbuf[16];
@@ -2173,10 +2186,10 @@ TEST_F(RunMiniServerFTestSuite, do_reinit) {
 
     NS::s_SocketStuff s;
     // Fill all fields of struct s_SocketStuff
+    s.ss.ss_family = AF_INET;
     s.serverAddr = (sockaddr*)&s.ss;
     s.ip_version = 4;
     s.text_addr = text_addr;
-    s.serverAddr4->sin_family = AF_INET;
     s.serverAddr4->sin_port = 0; // not used
     inet_pton(AF_INET, text_addr, &s.serverAddr4->sin_addr);
     s.fd = sockfd;
@@ -2193,7 +2206,10 @@ TEST_F(RunMiniServerFTestSuite, do_reinit) {
         text_addr);
     // Valid real socket
     EXPECT_NE(s.fd, INVALID_SOCKET);
-    EXPECT_EQ(s.fd, sockfd);
+    std::cout << CRED "[ BUG      ] " CRES << __LINE__
+              << ": Unreproducible error detected. For Details look at the "
+                 "test source.\n";
+    EXPECT_EQ(s.fd, sockfd); // Unreproducible error here. See note above.
     EXPECT_EQ(s.try_port, 0);
     EXPECT_EQ(s.actual_port, 0);
     EXPECT_EQ(s.address_len, (socklen_t)sizeof(*s.serverAddr4));
