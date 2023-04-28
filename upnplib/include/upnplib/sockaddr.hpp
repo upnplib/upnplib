@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCK_HPP
 #define UPNPLIB_NET_SOCK_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-26
+// Redistribution only with this Copyright remark. Last modified: 2023-04-28
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -37,8 +37,9 @@ struct UPNPLIB_API sockaddr_storage : public ::sockaddr_storage {
     virtual ~sockaddr_storage();
 
     // Assignment operator to set socket address from string,
-    // e.g.: sockaddr_storage ss; ss = "192.168.100.1";
-    // or with port: ss = "[2001:db8::1]:50001".
+    // e.g.: sockaddr_storage ss; ss = "[2001:db8::1]";
+    // Input examples: "[2001:db8::1]", "[2001:db8::1]:50001",
+    //                 "192.168.1.1", "192.168.1.1:50001".
     void operator=(const std::string& a_addr_str);
 
     // Getter for the assosiated ip address without port, e.g.

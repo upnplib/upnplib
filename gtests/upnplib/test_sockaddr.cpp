@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-27
+// Redistribution only with this Copyright remark. Last modified: 2023-04-28
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/port.hpp>
@@ -99,8 +99,9 @@ TEST(ToPortTestSuite, str_to_port) {
     EXPECT_EQ(to_port("123"), 123);
     EXPECT_EQ(to_port("00456"), 456);
     EXPECT_EQ(to_port("65535"), 65535);
-    EXPECT_EQ(to_port("0"), 0);
     EXPECT_EQ(to_port(""), 0);
+    EXPECT_EQ(to_port("0"), 0);
+    EXPECT_EQ(to_port("9"), 9);
     EXPECT_EQ(to_port("00000"), 0);
 
     EXPECT_THAT([]() { to_port("000000"); },

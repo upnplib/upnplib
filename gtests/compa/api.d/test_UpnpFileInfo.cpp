@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-26
+// Redistribution only with this Copyright remark. Last modified: 2023-04-28
 
 #include <UpnpFileInfo.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -545,14 +545,13 @@ TEST(UpnpFileInfoDeathTest, add_to_list_extra_headers_list_with_nullptr) {
     }
 }
 
-#if 0
 // This test fails only on MacOS due to pointer problems. I don't know why the
 // clang compiler has problems to give the correct pointer from
 // ::upnplib::sockaddr_storage to the function UpnpFileInfo_set_CtrlPtIPAddr()
 // as argument. This test is the reason to reassign the structure
 // ::upnplib::sockaddr_storage. --Ingo
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
-TEST(UpnpFileInfoDeathTest, UpnpFileInfo_set_get_CtrlPtIPAddr) {
+TEST(UpnpFileInfoTestSuite, UpnpFileInfo_set_get_CtrlPtIPAddr) {
     UpnpFileInfo* info = UpnpFileInfo_new();
     info->m_CtrlPtIPAddr.ss_family = AF_INET6;
     // char addr4buf[16];
@@ -566,14 +565,13 @@ TEST(UpnpFileInfoDeathTest, UpnpFileInfo_set_get_CtrlPtIPAddr) {
         (const ::sockaddr_storage*)&(saddr.ss_family);
     EXPECT_EQ(ssptr->ss_family, AF_INET);
     EXPECT_EQ(UpnpFileInfo_set_CtrlPtIPAddr(
-                  info, (const ::sockaddr_storage*)(&saddr.ss_family)),
+                  info, (const ::sockaddr_storage*)&(saddr.ss_family)),
               1);
     EXPECT_EQ(saddr.ss_family, AF_INET);
     EXPECT_EQ(info->m_CtrlPtIPAddr.ss_family, AF_INET);
     UpnpFileInfo_delete(info);
 }
 #endif
-#endif // #if 0
 
 TEST(UpnpFileInfoDeathTest, UpnpFileInfo_set_get_CtrlPtIPAddr) {
     CUpnpFileInfo f;
@@ -664,7 +662,11 @@ TEST(UpnpFileInfoTestSuite, UpnpFileInfo_clear_CtrlPtIPAddr) {
     CUpnpFileInfo f;
     char addr4buf[16];
 
-    ::upnplib::sockaddr_storage ss("192.168.1.3", 52346);
+    ::sockaddr_storage ss{};
+    ss.ss_family = AF_INET;
+    sockaddr_in* const sin = (sockaddr_in*)&ss;
+    ASSERT_EQ(inet_pton(AF_INET, "192.168.1.3", &sin->sin_addr), 1);
+    sin->sin_port = htons(52346);
     ASSERT_EQ(NS::UpnpFileInfo_set_CtrlPtIPAddr(f.info, &ss), 1);
 
     // Test Unit

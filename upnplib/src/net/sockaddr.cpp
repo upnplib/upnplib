@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-27
+// Redistribution only with this Copyright remark. Last modified: 2023-04-28
 
 #include "upnplib/sockaddr.hpp"
 #include "umock/sys_socket.hpp"
@@ -13,8 +13,6 @@ namespace upnplib {
 
 // Free function to get the port number from a string
 // --------------------------------------------------
-// Input examples: "[2001:db8::1]", "[2001:db8::1]:50001",
-//                 "192.168.1.1", "192.168.1.1:50001".
 uint16_t to_port(const std::string& a_port_str) {
     TRACE("Executing upnplib::to_port()")
 
@@ -22,19 +20,17 @@ uint16_t to_port(const std::string& a_port_str) {
         return 0;
 
     int port;
-    auto it = a_port_str.begin();
-    auto str_end = a_port_str.end();
 
     // Only strings with max. 5 characters are valid (uint16_t has max. 65535)
     if (a_port_str.length() > 5)
         goto throw_exit;
 
     // Now we check if the string are all digit characters
-    for (; it < str_end; it++) {
-        if (!isdigit((unsigned char)*it))
+    for (unsigned char ch : a_port_str) {
+        if (!isdigit(ch))
             goto throw_exit;
     }
-    // Valid number but is it within the port range (uint16_t)?
+    // Valid positive number but is it within the port range (uint16_t)?
     port = std::stoi(a_port_str);
     if (port <= 65535)
 
@@ -75,6 +71,8 @@ sockaddr_storage::~sockaddr_storage() {
 
 
 void sockaddr_storage::operator=(const std::string& a_addr_str) {
+    // Input examples: "[2001:db8::1]", "[2001:db8::1]:50001",
+    //                 "192.168.1.1", "192.168.1.1:50001".
     TRACE2(this, " Executing upnplib::sockaddr_storage::operator=()")
 
     if (a_addr_str.front() == '[') {    // IPv6 address
