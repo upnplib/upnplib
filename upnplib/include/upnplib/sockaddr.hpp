@@ -18,6 +18,51 @@ namespace upnplib {
 UPNPLIB_API uint16_t to_port(const std::string& a_port_str);
 
 
+// Specialized sockaddr structure
+// ------------------------------
+struct UPNPLIB_API Sockaddr_storage {
+    ::sockaddr_storage ss;
+
+    // Constructor
+    Sockaddr_storage();
+
+    // Destructor
+    virtual ~Sockaddr_storage();
+
+    // Assignment operator to set socket address from string,
+    // e.g.: Sockaddr_storage ss; ss = "[2001:db8::1]";
+    // Input examples: "[2001:db8::1]", "[2001:db8::1]:50001",
+    //                 "192.168.1.1", "192.168.1.1:50001".
+    void operator=(const std::string& a_addr_str);
+
+    // Getter for the assosiated ip address without port, e.g.
+    // "[2001:db8::2]" or "192.168.254.253".
+    std::string get_addr_str() const;
+
+    // Getter for the numeric port.
+    uint16_t get_port() const;
+
+
+  private:
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+    std::string m_addr_str; // input string without brackets
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+    uint16_t m_port;
+
+    UPNPLIB_LOCAL void handle_ipv6();
+    UPNPLIB_LOCAL void handle_ipv6_with_port();
+    UPNPLIB_LOCAL void handle_ipv4();
+    UPNPLIB_LOCAL void handle_ipv4_with_port();
+    UPNPLIB_LOCAL void handle_port();
+};
+
+
+#if false
 // Specialized sockaddr_structure derived from system ::sockaddr_structure
 // -----------------------------------------------------------------------
 struct UPNPLIB_API sockaddr_storage : public ::sockaddr_storage {
@@ -66,6 +111,7 @@ struct UPNPLIB_API sockaddr_storage : public ::sockaddr_storage {
     UPNPLIB_LOCAL void handle_ipv4_with_port();
     UPNPLIB_LOCAL void handle_port();
 };
+#endif
 
 
 // Wrapper for a sockaddr structure

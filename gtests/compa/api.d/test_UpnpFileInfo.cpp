@@ -547,28 +547,31 @@ TEST(UpnpFileInfoDeathTest, add_to_list_extra_headers_list_with_nullptr) {
 
 // This test fails only on MacOS due to pointer problems. I don't know why the
 // clang compiler has problems to give the correct pointer from
-// ::upnplib::sockaddr_storage to the function UpnpFileInfo_set_CtrlPtIPAddr()
+// ::upnplib::Sockaddr_storage to the function UpnpFileInfo_set_CtrlPtIPAddr()
 // as argument. This test is the reason to reassign the structure
-// ::upnplib::sockaddr_storage. --Ingo
+// ::upnplib::Sockaddr_storage. --Ingo
 #ifndef UPNPLIB_WITH_NATIVE_PUPNP
 TEST(UpnpFileInfoTestSuite, UpnpFileInfo_set_get_CtrlPtIPAddr) {
     UpnpFileInfo* info = UpnpFileInfo_new();
     info->m_CtrlPtIPAddr.ss_family = AF_INET6;
-    // char addr4buf[16];
-    ::upnplib::sockaddr_storage saddr{};
-    saddr = "192.168.1.2:52345";
-    EXPECT_EQ(saddr.ss_family, AF_INET);
+
+    ::upnplib::Sockaddr_storage saddr{};
+    saddr = "192.168.11.12:52345";
+    EXPECT_EQ(saddr.ss.ss_family, AF_INET);
     EXPECT_EQ(info->m_CtrlPtIPAddr.ss_family, AF_INET6);
 
     // Test Unit
-    const ::sockaddr_storage* ssptr =
-        (const ::sockaddr_storage*)&(saddr.ss_family);
-    EXPECT_EQ(ssptr->ss_family, AF_INET);
-    EXPECT_EQ(UpnpFileInfo_set_CtrlPtIPAddr(
-                  info, (const ::sockaddr_storage*)&(saddr.ss_family)),
-              1);
-    EXPECT_EQ(saddr.ss_family, AF_INET);
+    EXPECT_EQ(UpnpFileInfo_set_CtrlPtIPAddr(info, &saddr.ss), 1);
+
+    EXPECT_EQ(saddr.ss.ss_family, AF_INET);
     EXPECT_EQ(info->m_CtrlPtIPAddr.ss_family, AF_INET);
+    char addr4buf[16];
+    EXPECT_STREQ(inet_ntop(AF_INET,
+                           &((sockaddr_in*)&info->m_CtrlPtIPAddr)->sin_addr,
+                           addr4buf, sizeof(addr4buf)),
+                 "192.168.11.12");
+    EXPECT_EQ(ntohs(((sockaddr_in*)&info->m_CtrlPtIPAddr)->sin_port), 52345);
+
     UpnpFileInfo_delete(info);
 }
 #endif

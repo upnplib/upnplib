@@ -23,61 +23,61 @@ using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::MatchesStdRegex;
 
 
-// sockaddr_storage TestSuite
+// Sockaddr_storage TestSuite
 // ==========================
 TEST(SockaddrStorageTestSuite, copy_and_assign_structure) {
-    sockaddr_storage ss1;
-    ss1.ss_family = AF_INET6;
+    Sockaddr_storage ss1;
+    ss1.ss.ss_family = AF_INET6;
 
     // Test Unit copy
-    sockaddr_storage ss2 = ss1;
-    EXPECT_EQ(ss2.ss_family, AF_INET6);
+    Sockaddr_storage ss2 = ss1;
+    EXPECT_EQ(ss2.ss.ss_family, AF_INET6);
 
     // Test Unit assign
-    sockaddr_storage ss3{};
+    Sockaddr_storage ss3{};
     ss3 = ss1;
-    EXPECT_EQ(ss3.ss_family, AF_INET6);
+    EXPECT_EQ(ss3.ss.ss_family, AF_INET6);
 }
 
 TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
-    sockaddr_storage ss;
+    Sockaddr_storage ss;
 
-    EXPECT_EQ(ss.ss_family, AF_UNSPEC);
+    EXPECT_EQ(ss.ss.ss_family, AF_UNSPEC);
     EXPECT_EQ(ss.get_addr_str(), "");
     EXPECT_EQ(ss.get_port(), 0);
 
-    ss.ss_family = AF_INET6;
+    ss.ss.ss_family = AF_INET6;
     EXPECT_EQ(ss.get_addr_str(), "[::]");
     EXPECT_EQ(ss.get_port(), 0);
 
-    ss.ss_family = AF_INET;
+    ss.ss.ss_family = AF_INET;
     EXPECT_EQ(ss.get_addr_str(), "0.0.0.0");
     EXPECT_EQ(ss.get_port(), 0);
 
     ss = "[2001:db8::1]";
-    EXPECT_EQ(ss.ss_family, AF_INET6);
+    EXPECT_EQ(ss.ss.ss_family, AF_INET6);
     EXPECT_EQ(ss.get_addr_str(), "[2001:db8::1]");
     EXPECT_EQ(ss.get_port(), 0);
 
-    ss.ss_family = AF_UNSPEC;
+    ss.ss.ss_family = AF_UNSPEC;
     ss = "[2001:db8::2]:50020";
-    EXPECT_EQ(ss.ss_family, AF_INET6);
+    EXPECT_EQ(ss.ss.ss_family, AF_INET6);
     EXPECT_EQ(ss.get_addr_str(), "[2001:db8::2]");
     EXPECT_EQ(ss.get_port(), 50020);
 
     ss = "50021";
-    EXPECT_EQ(ss.ss_family, AF_INET6);
+    EXPECT_EQ(ss.ss.ss_family, AF_INET6);
     EXPECT_EQ(ss.get_addr_str(), "[2001:db8::2]");
     EXPECT_EQ(ss.get_port(), 50021);
 
     ss = "192.168.47.48";
-    EXPECT_EQ(ss.ss_family, AF_INET);
+    EXPECT_EQ(ss.ss.ss_family, AF_INET);
     EXPECT_EQ(ss.get_addr_str(), "192.168.47.48");
     EXPECT_EQ(ss.get_port(), 50021);
 
-    ss.ss_family = AF_UNSPEC;
+    ss.ss.ss_family = AF_UNSPEC;
     ss = "192.168.47.49:50022";
-    EXPECT_EQ(ss.ss_family, AF_INET);
+    EXPECT_EQ(ss.ss.ss_family, AF_INET);
     EXPECT_EQ(ss.get_addr_str(), "192.168.47.49");
     EXPECT_EQ(ss.get_port(), 50022);
 
@@ -85,7 +85,7 @@ TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
     EXPECT_THAT([&ss]() { ss = "50x23"; },
                 ThrowsMessage<std::invalid_argument>(
                     "ERROR! Failed to get port number for \"50x23\""));
-    EXPECT_EQ(ss.ss_family, AF_INET);
+    EXPECT_EQ(ss.ss.ss_family, AF_INET);
     EXPECT_EQ(ss.get_addr_str(), "192.168.47.49");
     EXPECT_EQ(ss.get_port(), 50022);
 }
