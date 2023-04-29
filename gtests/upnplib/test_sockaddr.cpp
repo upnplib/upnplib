@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-28
+// Redistribution only with this Copyright remark. Last modified: 2023-04-30
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/port.hpp>
@@ -23,24 +23,29 @@ using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::MatchesStdRegex;
 
 
-// Sockaddr_storage TestSuite
-// ==========================
+// SSockaddr_storage TestSuite
+// ===========================
 TEST(SockaddrStorageTestSuite, copy_and_assign_structure) {
-    Sockaddr_storage ss1;
-    ss1.ss.ss_family = AF_INET6;
+    SSockaddr_storage ss1;
+    ss1 = "[2001:db8::1]:50001";
 
     // Test Unit copy
-    Sockaddr_storage ss2 = ss1;
+    SSockaddr_storage ss2 = ss1;
     EXPECT_EQ(ss2.ss.ss_family, AF_INET6);
+    EXPECT_EQ(ss2.get_addr_str(), "[2001:db8::1]");
+    EXPECT_EQ(ss2.get_port(), 50001);
 
     // Test Unit assign
-    Sockaddr_storage ss3{};
+    ss1 = "192.168.251.252:50002";
+    SSockaddr_storage ss3;
     ss3 = ss1;
-    EXPECT_EQ(ss3.ss.ss_family, AF_INET6);
+    EXPECT_EQ(ss3.ss.ss_family, AF_INET);
+    EXPECT_EQ(ss3.get_addr_str(), "192.168.251.252");
+    EXPECT_EQ(ss3.get_port(), 50002);
 }
 
 TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
-    Sockaddr_storage ss;
+    SSockaddr_storage ss;
 
     EXPECT_EQ(ss.ss.ss_family, AF_UNSPEC);
     EXPECT_EQ(ss.get_addr_str(), "");
@@ -93,6 +98,7 @@ TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
 TEST(SockaddrStorageTestSuite, set_address_and_port_fail) {
     if (!github_actions)
         GTEST_FAIL() << "Create additional tests for failing conditions";
+    // Test "[2001:db8::1]:" and others
 }
 
 TEST(ToPortTestSuite, str_to_port) {
@@ -143,6 +149,10 @@ TEST(ToPortTestSuite, str_to_port) {
     EXPECT_THAT([]() { to_port("12x34"); },
                 ThrowsMessage<std::invalid_argument>(
                     "ERROR! Failed to get port number for \"12x34\""));
+}
+
+TEST(ToAddrStrtTestSuite, sockaddr_to_address_string) {
+    SSockaddr_storage saddr;
 }
 
 

@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCK_HPP
 #define UPNPLIB_NET_SOCK_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-28
+// Redistribution only with this Copyright remark. Last modified: 2023-04-30
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -17,20 +17,24 @@ namespace upnplib {
 // --------------------------------------------------
 UPNPLIB_API uint16_t to_port(const std::string& a_port_str);
 
+// Free function to get the address string from a sockaddr structure
+// -----------------------------------------------------------------
+UPNPLIB_API std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr);
+
 
 // Specialized sockaddr structure
 // ------------------------------
-struct UPNPLIB_API Sockaddr_storage {
+struct UPNPLIB_API SSockaddr_storage {
     ::sockaddr_storage ss;
 
     // Constructor
-    Sockaddr_storage();
+    SSockaddr_storage();
 
     // Destructor
-    virtual ~Sockaddr_storage();
+    virtual ~SSockaddr_storage();
 
     // Assignment operator to set socket address from string,
-    // e.g.: Sockaddr_storage ss; ss = "[2001:db8::1]";
+    // e.g.: SSockaddr_storage ss; ss = "[2001:db8::1]";
     // Input examples: "[2001:db8::1]", "[2001:db8::1]:50001",
     //                 "192.168.1.1", "192.168.1.1:50001".
     void operator=(const std::string& a_addr_str);
@@ -44,74 +48,10 @@ struct UPNPLIB_API Sockaddr_storage {
 
 
   private:
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4251)
-#endif
-    std::string m_addr_str; // input string without brackets
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-    uint16_t m_port;
-
-    UPNPLIB_LOCAL void handle_ipv6();
-    UPNPLIB_LOCAL void handle_ipv6_with_port();
-    UPNPLIB_LOCAL void handle_ipv4();
-    UPNPLIB_LOCAL void handle_ipv4_with_port();
-    UPNPLIB_LOCAL void handle_port();
+    UPNPLIB_LOCAL void handle_ipv6(const std::string& a_addr_str);
+    UPNPLIB_LOCAL void handle_ipv4(const std::string& a_addr_str);
+    UPNPLIB_LOCAL void handle_port(const std::string& a_port);
 };
-
-
-#if false
-// Specialized sockaddr_structure derived from system ::sockaddr_structure
-// -----------------------------------------------------------------------
-struct UPNPLIB_API sockaddr_storage : public ::sockaddr_storage {
-
-    // Pointer to the inherited sockaddr_structure for simplified access.
-    ::sockaddr_storage* ss = (::sockaddr_storage*)&ss_family;
-    ::sockaddr_in6* sin6 = (::sockaddr_in6*)&ss_family;
-    ::sockaddr_in* sin = (::sockaddr_in*)&ss_family;
-
-    // Constructor
-    sockaddr_storage();
-
-    // Constructor with socket address initialization.
-    sockaddr_storage(const std::string& a_addr_str, uint16_t a_port);
-
-    // Destructor
-    virtual ~sockaddr_storage();
-
-    // Assignment operator to set socket address from string,
-    // e.g.: sockaddr_storage ss; ss = "[2001:db8::1]";
-    // Input examples: "[2001:db8::1]", "[2001:db8::1]:50001",
-    //                 "192.168.1.1", "192.168.1.1:50001".
-    void operator=(const std::string& a_addr_str);
-
-    // Getter for the assosiated ip address without port, e.g.
-    // "[2001:db8::2]" or "192.168.254.253".
-    std::string get_addr_str() const;
-
-    // Getter for the numeric port.
-    uint16_t get_port() const;
-
-  private:
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4251)
-#endif
-    std::string m_addr_str; // input string without brackets
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-    uint16_t m_port;
-
-    UPNPLIB_LOCAL void handle_ipv6();
-    UPNPLIB_LOCAL void handle_ipv6_with_port();
-    UPNPLIB_LOCAL void handle_ipv4();
-    UPNPLIB_LOCAL void handle_ipv4_with_port();
-    UPNPLIB_LOCAL void handle_port();
-};
-#endif
 
 
 // Wrapper for a sockaddr structure

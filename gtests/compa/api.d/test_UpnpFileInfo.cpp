@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-28
+// Redistribution only with this Copyright remark. Last modified: 2023-04-30
 
 #include <UpnpFileInfo.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -547,14 +547,14 @@ TEST(UpnpFileInfoDeathTest, add_to_list_extra_headers_list_with_nullptr) {
 
 // This test fails only on MacOS due to pointer problems. I don't know why the
 // clang compiler has problems to give the correct pointer from
-// ::upnplib::Sockaddr_storage to the function UpnpFileInfo_set_CtrlPtIPAddr()
+// ::upnplib::SSockaddr_storage to the function UpnpFileInfo_set_CtrlPtIPAddr()
 // as argument. This test is the reason to reassign the structure
-// ::upnplib::Sockaddr_storage. --Ingo
+// ::upnplib::SSockaddr_storage. --Ingo
 TEST(UpnpFileInfoTestSuite, UpnpFileInfo_set_get_CtrlPtIPAddr) {
     UpnpFileInfo* info = UpnpFileInfo_new();
     info->m_CtrlPtIPAddr.ss_family = AF_INET6;
 
-    ::upnplib::Sockaddr_storage saddr{};
+    ::upnplib::SSockaddr_storage saddr{};
     saddr = "192.168.11.12:52345";
     EXPECT_EQ(saddr.ss.ss_family, AF_INET);
     EXPECT_EQ(info->m_CtrlPtIPAddr.ss_family, AF_INET6);
