@@ -45,7 +45,7 @@ throw_exit:
 // Free function to get the address string from a sockaddr structure
 // -----------------------------------------------------------------
 std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr) {
-    TRACE2(this, " Executing upnplib::to_addr_str()")
+    TRACE("Executing upnplib::to_addr_str()")
     char addrbuf[INET6_ADDRSTRLEN]{};
 
     switch (a_sockaddr->ss_family) {
@@ -88,6 +88,12 @@ void SSockaddr_storage::operator=(const std::string& a_addr_str) {
     //                      "192.168.1.1", "192.168.1.1:50001".
     TRACE2(this, " Executing upnplib::SSockaddr_storage::operator=()")
 
+    // An empty address string clears the address storage
+    if (a_addr_str.empty()) {
+        memset(&this->ss, 0, sizeof(this->ss));
+        return;
+    }
+
     if (a_addr_str.front() == '[') {    // IPv6 address
         if (a_addr_str.back() == ']') { // IPv6 address without port
             this->handle_ipv6(a_addr_str);
@@ -125,8 +131,8 @@ void SSockaddr_storage::handle_ipv6(const std::string& a_addr_str) {
     if (ret == 0) {
         throw std::invalid_argument(
             "at */" + std::filesystem::path(__FILE__).filename().string() +
-            "[" + std::to_string(__LINE__) + "]: Invalid ip address '[" +
-            a_addr_str + "]'");
+            "[" + std::to_string(__LINE__) + "]: Invalid ip address '" +
+            a_addr_str + "'");
     }
     this->ss.ss_family = AF_INET6;
 }
