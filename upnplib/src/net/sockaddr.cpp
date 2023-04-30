@@ -72,7 +72,7 @@ std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr) {
 // Specialized sockaddr_structure
 // ------------------------------
 // Constructor
-SSockaddr_storage::SSockaddr_storage() {
+SSockaddr_storage::SSockaddr_storage(){
     TRACE2(this, " Construct upnplib::SSockaddr_storage()") //
 }
 
