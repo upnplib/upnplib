@@ -25,7 +25,7 @@ UPNPLIB_API std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr);
 // Specialized sockaddr structure
 // ------------------------------
 struct UPNPLIB_API SSockaddr_storage {
-    ::sockaddr_storage ss;
+    ::sockaddr_storage ss{};
 
     // Constructor
     SSockaddr_storage();

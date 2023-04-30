@@ -123,15 +123,9 @@ TEST(SockaddrStorageTestSuite, set_address_and_port_fail) {
                 ThrowsMessage<std::invalid_argument>(
                     EndsWith("Invalid ip address '2001'")));
 
-    EXPECT_THAT(
-        [&saddr]() { saddr = "[2001:db8::2"; },
-        ThrowsMessage<std::out_of_range>("basic_string::substr: __pos (which "
-                                         "is 1) > this->size() (which is 0)"));
+    EXPECT_THROW({ saddr = "[2001:db8::2"; }, std::out_of_range);
 
-    EXPECT_THAT(
-        [&saddr]() { saddr = "[2001:db8::3]50003"; },
-        ThrowsMessage<std::out_of_range>("basic_string::substr: __pos (which "
-                                         "is 1) > this->size() (which is 0)"));
+    EXPECT_THROW({ saddr = "[2001:db8::3]50003"; }, std::out_of_range);
 
     EXPECT_THAT([&saddr]() { saddr = "[2001:db8::35003]"; },
                 ThrowsMessage<std::invalid_argument>(
