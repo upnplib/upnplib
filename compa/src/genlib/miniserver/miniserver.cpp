@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-04-21
+ * Redistribution only with this Copyright remark. Last modified: 2023-04-30
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,9 +78,10 @@
 #include <umock/sys_select.hpp>
 #include <umock/stdlib.hpp>
 
-using ::upnplib::SocketAddr;
 
 namespace compa {
+
+using ::upnplib::SocketAddr;
 
 /*! . */
 #define APPLICATION_LISTENING_PORT 49152
@@ -194,8 +195,11 @@ ExitFunction:
     return rc;
 }
 
+// getNumericHostRedirection() returns the ip address with port as text
+// (e.g. "192.168.1.2:54321") that is bound to a socket.
 static int getNumericHostRedirection(SOCKET socket, char* host_port,
                                      size_t hp_size) {
+    TRACE("Executing compa::getNumericHostRedirection()")
     struct SocketAddr sock;
     std::string text_addr;
     try {
@@ -341,6 +345,7 @@ static UPNP_INLINE void handle_error(
 static void free_handle_request_arg(
     /*! [in] Request Message to be freed. */
     void* args) {
+    TRACE("Executing compa::free_handle_request_arg()")
     if (args == nullptr)
         return;
     struct mserv_request_t* request = (struct mserv_request_t*)args;
@@ -683,9 +688,7 @@ static int get_port(
     SOCKET sockfd,
     /*! [out] The port value if successful, otherwise, untouched. */
     uint16_t* port) {
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::get_port()\n");
-
+    TRACE("Executing compa::get_port()")
     struct sockaddr_storage sockinfo;
     socklen_t len;
     int code;
@@ -1095,9 +1098,7 @@ error:
 static int get_miniserver_stopsock(
     /*! [in] Miniserver Socket Array. */
     MiniServerSockArray* out) {
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::get_miniserver_stopsock()\n");
-
+    TRACE("Executing compa::get_miniserver_stopsock()")
     struct sockaddr_in stop_sockaddr;
     SOCKET miniServerStopSock = 0;
     int ret = 0;
