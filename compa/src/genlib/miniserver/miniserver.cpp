@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-04-21
+ * Redistribution only with this Copyright remark. Last modified: 2023-05-01
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,9 +78,10 @@
 #include <umock/sys_select.hpp>
 #include <umock/stdlib.hpp>
 
-using ::upnplib::SocketAddr;
 
 namespace compa {
+
+using ::upnplib::SocketAddr;
 
 /*! . */
 #define APPLICATION_LISTENING_PORT 49152
@@ -194,8 +195,11 @@ ExitFunction:
     return rc;
 }
 
+// getNumericHostRedirection() returns the ip address with port as text
+// (e.g. "192.168.1.2:54321") that is bound to a socket.
 static int getNumericHostRedirection(SOCKET socket, char* host_port,
                                      size_t hp_size) {
+    TRACE("Executing compa::getNumericHostRedirection()")
     struct SocketAddr sock;
     std::string text_addr;
     try {
@@ -341,6 +345,7 @@ static UPNP_INLINE void handle_error(
 static void free_handle_request_arg(
     /*! [in] Request Message to be freed. */
     void* args) {
+    TRACE("Executing compa::free_handle_request_arg()")
     if (args == nullptr)
         return;
     struct mserv_request_t* request = (struct mserv_request_t*)args;
@@ -557,9 +562,7 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
 static void RunMiniServer(
     /*! [in] Socket Array. */
     MiniServerSockArray* miniSock) {
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Executing compa::RunMiniServer(%p)\n", (void*)miniSock);
-
+    TRACE("Executing compa::RunMiniServer()")
     fd_set expSet;
     fd_set rdSet;
     SOCKET maxMiniSock;
@@ -683,9 +686,7 @@ static int get_port(
     SOCKET sockfd,
     /*! [out] The port value if successful, otherwise, untouched. */
     uint16_t* port) {
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::get_port()\n");
-
+    TRACE("Executing compa::get_port()")
     struct sockaddr_storage sockinfo;
     socklen_t len;
     int code;
@@ -883,9 +884,7 @@ error:
 }
 
 static int do_listen(struct s_SocketStuff* s) {
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::do_listen()\n");
-
+    TRACE("Executing compa::do_listen()")
     int ret_val;
     int listen_error;
     int port_error;
@@ -981,9 +980,7 @@ static int get_miniserver_sockets(
     /*! [in] port on which the server is listening for incoming
      * IPv6 ULA or GUA connections. */
     uint16_t listen_port6UlaGua) {
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::get_miniserver_sockets()\n");
-
+    TRACE("Executing compa::get_miniserver_sockets()")
     int ret_val{UPNP_E_INTERNAL_ERROR};
     int err_init_4;
     int err_init_6;
@@ -1095,9 +1092,7 @@ error:
 static int get_miniserver_stopsock(
     /*! [in] Miniserver Socket Array. */
     MiniServerSockArray* out) {
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::get_miniserver_stopsock()\n");
-
+    TRACE("Executing compa::get_miniserver_stopsock()")
     struct sockaddr_in stop_sockaddr;
     SOCKET miniServerStopSock = 0;
     int ret = 0;
@@ -1134,6 +1129,7 @@ static int get_miniserver_stopsock(
 
 static UPNP_INLINE void
 InitMiniServerSockArray(MiniServerSockArray* miniSocket) {
+    TRACE("Executing compa::InitMiniServerSockArray()")
     miniSocket->miniServerSock4 = INVALID_SOCKET;
     miniSocket->miniServerSock6 = INVALID_SOCKET;
     miniSocket->miniServerSock6UlaGua = INVALID_SOCKET;
@@ -1164,9 +1160,7 @@ int StartMiniServer(
     /*! [in,out] Port on which the server listens for incoming
      * IPv6 ULA or GUA connections. */
     [[maybe_unused]] uint16_t* listen_port6UlaGua) {
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::StartMiniServer()\n");
-
+    TRACE("Executing compa::StartMiniServer()")
     int ret_code;
     int count;
     int max_count = 10000;
