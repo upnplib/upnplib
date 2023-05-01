@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-04-30
+ * Redistribution only with this Copyright remark. Last modified: 2023-05-01
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -562,9 +562,7 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
 static void RunMiniServer(
     /*! [in] Socket Array. */
     MiniServerSockArray* miniSock) {
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Executing compa::RunMiniServer(%p)\n", (void*)miniSock);
-
+    TRACE("Executing compa::RunMiniServer()")
     fd_set expSet;
     fd_set rdSet;
     SOCKET maxMiniSock;
@@ -886,9 +884,7 @@ error:
 }
 
 static int do_listen(struct s_SocketStuff* s) {
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::do_listen()\n");
-
+    TRACE("Executing compa::do_listen()")
     int ret_val;
     int listen_error;
     int port_error;
@@ -984,9 +980,7 @@ static int get_miniserver_sockets(
     /*! [in] port on which the server is listening for incoming
      * IPv6 ULA or GUA connections. */
     uint16_t listen_port6UlaGua) {
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::get_miniserver_sockets()\n");
-
+    TRACE("Executing compa::get_miniserver_sockets()")
     int ret_val{UPNP_E_INTERNAL_ERROR};
     int err_init_4;
     int err_init_6;
@@ -1135,6 +1129,7 @@ static int get_miniserver_stopsock(
 
 static UPNP_INLINE void
 InitMiniServerSockArray(MiniServerSockArray* miniSocket) {
+    TRACE("Executing compa::InitMiniServerSockArray()")
     miniSocket->miniServerSock4 = INVALID_SOCKET;
     miniSocket->miniServerSock6 = INVALID_SOCKET;
     miniSocket->miniServerSock6UlaGua = INVALID_SOCKET;
@@ -1165,9 +1160,7 @@ int StartMiniServer(
     /*! [in,out] Port on which the server listens for incoming
      * IPv6 ULA or GUA connections. */
     [[maybe_unused]] uint16_t* listen_port6UlaGua) {
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::StartMiniServer()\n");
-
+    TRACE("Executing compa::StartMiniServer()")
     int ret_code;
     int count;
     int max_count = 10000;

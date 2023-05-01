@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-27
+// Redistribution only with this Copyright remark. Last modified: 2023-05-01
 
 // Header file for portable definitions
 // ====================================
@@ -70,8 +70,8 @@
 // std::clog.clear();
 #ifdef UPNPLIB_WITH_TRACE
   #include <iostream>
-  #define TRACE(s) std::clog<<"TRACE["<<__LINE__<<"]: "<<(s)<<"\n";
-  #define TRACE2(a, b) std::clog<<"TRACE["<<__LINE__<<"]: "<<(a)<<(b)<<"\n";
+  #define TRACE(s) std::cout<<"TRACE["<<__LINE__<<"]: "<<(s)<<"\n";
+  #define TRACE2(a, b) std::cout<<"TRACE["<<__LINE__<<"]: "<<(a)<<(b)<<"\n";
 #else
   #define TRACE(s)
   #define TRACE2(a, b)
