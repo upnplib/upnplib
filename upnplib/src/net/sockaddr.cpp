@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-30
+// Redistribution only with this Copyright remark. Last modified: 2023-05-04
 
 #include "upnplib/sockaddr.hpp"
 #include "umock/sys_socket.hpp"
@@ -70,7 +70,7 @@ std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr) {
 
 
 // Specialized sockaddr_structure
-// ------------------------------
+// ==============================
 // Constructor
 SSockaddr_storage::SSockaddr_storage(){
     TRACE2(this, " Construct upnplib::SSockaddr_storage()") //
@@ -81,7 +81,8 @@ SSockaddr_storage::~SSockaddr_storage() {
     TRACE2(this, " Destruct upnplib::SSockaddr_storage()") //
 }
 
-// Assignment operator to set socket address from string,
+// Assignment operator= to set socket address from string,
+// -------------------------------------------------------
 void SSockaddr_storage::operator=(const std::string& a_addr_str) {
     // Valid input examles: "[2001:db8::1]", "[2001:db8::1]:50001",
     //                      "192.168.1.1", "192.168.1.1:50001".
@@ -120,6 +121,51 @@ void SSockaddr_storage::operator=(const std::string& a_addr_str) {
     }
 }
 
+// Compare operator== to test if another socket address is equal to this
+// ---------------------------------------------------------------------
+bool SSockaddr_storage::operator==(const ::sockaddr_storage& a_ss) {
+    // To have a logical equal socket address we compare the address family, the
+    // ip address and the port.
+    switch (a_ss.ss_family) {
+    case AF_UNSPEC:
+        if (this->ss.ss_family != AF_UNSPEC)
+            return false;
+        break;
+
+    case AF_INET6: {
+        // We compare ipv6 addresses which are stored in a 16 byte array
+        // (unsigned char s6_addr[16]). So we have to use memcmp() for
+        // comparison.
+        const unsigned char* const s6_addr1 =
+            ((sockaddr_in6*)&a_ss)->sin6_addr.s6_addr;
+        const unsigned char* const s6_addr2 =
+            ((sockaddr_in6*)&this->ss)->sin6_addr.s6_addr;
+
+        if (this->ss.ss_family != AF_INET6 ||
+            ::memcmp(s6_addr1, s6_addr2, sizeof(in6_addr)) != 0 ||
+            ((sockaddr_in6*)&a_ss)->sin6_port !=
+                ((sockaddr_in6*)&this->ss)->sin6_port)
+            return false;
+    } break;
+
+    case AF_INET:
+        if (this->ss.ss_family != AF_INET ||
+            ((sockaddr_in*)&a_ss)->sin_addr.s_addr !=
+                ((sockaddr_in*)&this->ss)->sin_addr.s_addr ||
+            ((sockaddr_in*)&a_ss)->sin_port !=
+                ((sockaddr_in*)&this->ss)->sin_port)
+            return false;
+        break;
+
+    default:
+        return false;
+    }
+
+    return true;
+}
+
+// private member functions
+// ------------------------
 void SSockaddr_storage::handle_ipv6(const std::string& a_addr_str) {
     TRACE2(this, " Executing upnplib::SSockaddr_storage::handle_ipv6()")
     // remove surounding brackets
@@ -171,7 +217,7 @@ uint16_t SSockaddr_storage::get_port() const {
 
 
 // Wrapper for a sockaddr structure
-// --------------------------------
+// ================================
 SockAddr::SockAddr() {
     this->addr_ss.ss_family = AF_INET;
     this->addr = (struct sockaddr*)&this->addr_ss;

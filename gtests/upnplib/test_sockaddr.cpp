@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-30
+// Redistribution only with this Copyright remark. Last modified: 2023-05-04
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/port.hpp>
@@ -138,6 +138,78 @@ TEST(SockaddrStorageTestSuite, set_address_and_port_fail) {
     EXPECT_THAT([&saddr]() { saddr = "192.168.66.67z"; },
                 ThrowsMessage<std::invalid_argument>(
                     EndsWith("Invalid ip address '192.168.66.67z'")));
+}
+
+TEST(SockaddrStorageTestSuite, compare_ipv6_address) {
+    SSockaddr_storage saddr1;
+    saddr1 = "[2001:db8::27]:50027";
+    SSockaddr_storage saddr2;
+    saddr2 = "[2001:db8::27]:50027";
+
+    // Show how to address and compare ipv6 address. It is stored with
+    // unsigned char s6_addr[16]; so we have to use memcmp().
+    const unsigned char* const s6_addr1 =
+        ((sockaddr_in6*)&saddr1.ss)->sin6_addr.s6_addr;
+    const unsigned char* const s6_addr2 =
+        ((sockaddr_in6*)&saddr2.ss)->sin6_addr.s6_addr;
+    EXPECT_EQ(memcmp(s6_addr1, s6_addr2, sizeof(*s6_addr1)), 0);
+
+    // Test Unit compare successful
+    EXPECT_TRUE(saddr1 == saddr2.ss);
+
+    // Test Unit different address family
+    saddr2 = "192.168.0.27:50027";
+    EXPECT_FALSE(saddr1 == saddr2.ss);
+
+    // Test Unit different address
+    saddr2 = "[2001:db8::28]:50027";
+    EXPECT_FALSE(saddr1 == saddr2.ss);
+
+    // Test Unit different port
+    saddr2 = "[2001:db8::27]:50028";
+    EXPECT_FALSE(saddr1 == saddr2.ss);
+
+    // Test Unit with unsupported address family
+    saddr2 = "[2001:db8::27]:50027";
+    saddr1.ss.ss_family = AF_UNIX;
+    EXPECT_FALSE(saddr1 == saddr2.ss);
+    saddr1.ss.ss_family = AF_INET6;
+    saddr2.ss.ss_family = AF_UNIX;
+    EXPECT_FALSE(saddr1 == saddr2.ss);
+    saddr2.ss.ss_family = AF_INET6;
+    EXPECT_TRUE(saddr1 == saddr2.ss);
+}
+
+TEST(SockaddrStorageTestSuite, compare_ipv4_address) {
+    SSockaddr_storage saddr1;
+    saddr1 = "192.168.0.1:50029";
+    SSockaddr_storage saddr2;
+    saddr2 = "192.168.0.1:50029";
+
+    // Test Unit compare successful
+    EXPECT_TRUE(saddr1 == saddr2.ss);
+
+    // Test Unit different address family
+    saddr2 = "[2001:db8::27]:50027";
+    EXPECT_FALSE(saddr1 == saddr2.ss);
+
+    // Test Unit different address
+    saddr2 = "192.168.0.2:50029";
+    EXPECT_FALSE(saddr1 == saddr2.ss);
+
+    // Test Unit different port
+    saddr2 = "192.168.0.1:50030";
+    EXPECT_FALSE(saddr1 == saddr2.ss);
+
+    // Test Unit with unsupported address family
+    saddr2 = "192.168.0.1:50029";
+    saddr1.ss.ss_family = AF_UNIX;
+    EXPECT_FALSE(saddr1 == saddr2.ss);
+    saddr1.ss.ss_family = AF_INET;
+    saddr2.ss.ss_family = AF_UNIX;
+    EXPECT_FALSE(saddr1 == saddr2.ss);
+    saddr2.ss.ss_family = AF_INET;
+    EXPECT_TRUE(saddr1 == saddr2.ss);
 }
 
 TEST(ToPortTestSuite, str_to_port) {

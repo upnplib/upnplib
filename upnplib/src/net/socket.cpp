@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-20
+// Redistribution only with this Copyright remark. Last modified: 2023-05-05
 
 #include <upnplib/socket.hpp>
 #include <upnplib/port.hpp>
@@ -45,13 +45,12 @@ static inline void throw_error(std::string errmsg) {
 
 // Wrap socket() system call
 // -------------------------
-// Constructor for new socket file descriptor
-CSocket::CSocket(int a_domain, int a_type, int a_protocol) {
-    TRACE2(this, " Construct upnplib::CSocket()")
+// Default constructor for an empty socket object
+CSocket::CSocket(){TRACE2(this, " Construct default upnplib::CSocket()")}
 
-    // Check if we want an empty socket object.
-    if (a_domain == 0 && a_type == 0 && a_protocol == 0)
-        return;
+// Constructor for new socket file descriptor
+CSocket::CSocket(sa_family_t a_domain, int a_type, int a_protocol) {
+    TRACE2(this, " Construct upnplib::CSocket() with address family and type")
 
     // Get socket file descriptor.
     SOCKET sfd = ::socket(a_domain, a_type, a_protocol);
@@ -101,14 +100,27 @@ CSocket::CSocket(int a_domain, int a_type, int a_protocol) {
     m_af = a_domain;
 }
 
-// Constructor with file desciptor
-CSocket::CSocket([[maybe_unused]] SOCKET a_sfd) {}
+// Constructor with given file desciptor
+CSocket::CSocket(SOCKET a_sfd) {
+    TRACE2(this, " Construct upnplib::CSocket(SOCKET)")
+
+    // Get address family. We can only get it from a bound socket.
+    // Otherwise we cache AF_UNSPEC.
+    ::sockaddr_storage ss{};
+    ss.ss_family = AF_UNSPEC;
+    socklen_t len = sizeof(ss); // May be modified
+    if (umock::sys_socket_h.getsockname(a_sfd, (sockaddr*)&ss, &len) != 0)
+        throw_error("ERROR! Failed to get socket address/port:");
+
+    m_sfd = a_sfd;
+    m_af = ss.ss_family;
+}
 
 // Move constructor
 CSocket::CSocket(CSocket&& that) {
     TRACE2(this, " Construct move upnplib::CSocket()")
     m_af = that.m_af;
-    that.m_af = -1;
+    that.m_af = AF_UNSPEC;
     m_sfd = that.m_sfd;
     that.m_sfd = INVALID_SOCKET;
 
@@ -171,18 +183,13 @@ void CSocket::bind(const CAddrinfo& a_ai) {
     // Protect binding and storing its state (m_bound).
     std::scoped_lock lock(m_bound_mutex);
 
-    int so_option{-1};
-    socklen_t optlen{sizeof(so_option)}; // May be modified
-    if (::getsockopt(m_sfd, SOL_SOCKET, SO_TYPE, (char*)&so_option, &optlen) !=
-        0)
-        throw_error("ERROR! Failed to bind socket to an address:");
-
-    if (a_ai->ai_socktype != so_option)
+    int so_type = this->get_sockopt_int(SOL_SOCKET, SO_TYPE, "SO_TYPE");
+    if (a_ai->ai_socktype != so_type)
         throw std::runtime_error("ERROR! Failed to bind socket to an address: "
                                  "\"socket type of address (" +
                                  std::to_string(a_ai->ai_socktype) +
                                  ") does not match socket type (" +
-                                 std::to_string(so_option) + ")\"");
+                                 std::to_string(so_type) + ")\"");
 
     if (::bind(m_sfd, a_ai->ai_addr, (socklen_t)a_ai->ai_addrlen) != 0)
         throw_error("ERROR! Failed to bind socket to an address:");
@@ -208,7 +215,7 @@ void CSocket::listen() {
 // Getter
 std::string CSocket::get_addr_str() const {
     TRACE2(this, " Executing upnplib::CSocket::get_addr_str()")
-    sockaddr_storage ss{};
+    ::sockaddr_storage ss{};
     this->get_sockname(&ss);
 
     char addr_buf[INET6_ADDRSTRLEN]{};
@@ -240,9 +247,18 @@ std::string CSocket::get_addr_str() const {
 
 uint16_t CSocket::get_port() const {
     TRACE2(this, " Executing upnplib::CSocket::get_port()")
-    sockaddr_storage ss{};
+    ::sockaddr_storage ss{};
     this->get_sockname(&ss);
     return ntohs(((sockaddr_in6*)&ss)->sin6_port);
+}
+
+sa_family_t CSocket::get_af() const {
+    TRACE2(this, " Executing upnplib::CSocket::get_af()")
+    if (m_sfd == INVALID_SOCKET)
+        throw std::runtime_error("ERROR! Failed to get address family: "
+                                 "\"Bad file descriptor\"");
+
+    return m_af;
 }
 
 int CSocket::get_sockerr() const {
@@ -267,14 +283,38 @@ bool CSocket::is_v6only() const {
 }
 
 bool CSocket::is_bind() const {
+    // We assume that a socket with an unknown ip address and port 0 is unbound.
     TRACE2(this, " Executing upnplib::CSocket::is_bind()")
     if (m_sfd == INVALID_SOCKET)
         throw std::runtime_error("ERROR! Failed to get socket option "
                                  "'is_bind': \"Bad file descriptor\"");
 
-    // m_bound is protected.
+    // binding is protected.
     std::scoped_lock lock(m_bound_mutex);
-    return m_bound;
+
+    ::sockaddr_storage ss{};
+    this->get_sockname(&ss);
+
+    switch (ss.ss_family) {
+    case AF_UNSPEC:
+        return false;
+    case AF_INET6:
+        if (((sockaddr_in6*)&ss)->sin6_port == 0 &&
+            ((sockaddr_in6*)&ss)->sin6_port == 0)
+            return false;
+        break;
+    case AF_INET:
+        if (((sockaddr_in*)&ss)->sin_port == 0 &&
+            ((sockaddr_in*)&ss)->sin_port == 0)
+            return false;
+        break;
+    default:
+        throw std::runtime_error("ERROR! Failed to get socket option "
+                                 "'is_bind': unsupported address family " +
+                                 std::to_string(ss.ss_family));
+    }
+
+    return true;
 }
 
 bool CSocket::is_listen() const {
@@ -304,16 +344,13 @@ int CSocket::get_sockopt_int(int a_level, int a_optname,
     return so_option;
 }
 
-void CSocket::get_sockname(sockaddr_storage* a_ss) const {
+void CSocket::get_sockname(::sockaddr_storage* a_ss) const {
     TRACE2(this, " Executing upnplib::CSocket::get_sockname()")
     const std::string errmsg{"ERROR! Failed to get socket address/port:"};
 
     if (m_sfd == INVALID_SOCKET)
         throw std::runtime_error(errmsg + " \"Bad file descriptor\"");
-    if (!this->is_bind())
-        throw std::runtime_error(errmsg + " \"not bound to an address\"");
-    // Get socket address
-    socklen_t len = sizeof(sockaddr_storage); // May be modified
+    socklen_t len = sizeof(*a_ss); // May be modified
     if (umock::sys_socket_h.getsockname(m_sfd, (sockaddr*)a_ss, &len) != 0)
         throw_error(errmsg);
 }

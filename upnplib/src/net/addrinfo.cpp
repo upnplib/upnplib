@@ -87,7 +87,7 @@ addrinfo* CAddrinfo::get_new_addrinfo() {
     return new_res;
 }
 
-addrinfo* CAddrinfo::operator->() const { return m_res; }
+::addrinfo* CAddrinfo::operator->() const { return m_res; }
 
 std::string CAddrinfo::addr_str() const {
     TRACE2(this, " Executing upnplib::CAddrinfo::addr_str()")

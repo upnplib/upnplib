@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_ADDRINFO_HPP
 #define UPNPLIB_INCLUDE_ADDRINFO_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-15
+// Redistribution only with this Copyright remark. Last modified: 2023-05-04
 
 #include <upnplib/visibility.hpp>
 #include <upnplib/port_sock.hpp>
@@ -52,7 +52,7 @@ class UPNPLIB_API CAddrinfo {
     // Example: CAddrinfo ai(..); if(ai->ai_family == AF_INET6) {..};
     // REF: [Overloading member access operators ->, .*]
     // https://stackoverflow.com/a/8782794/5014688
-    addrinfo* operator->() const;
+    ::addrinfo* operator->() const;
 
     // Getter for address string
     std::string addr_str() const;
