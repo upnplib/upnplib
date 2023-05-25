@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-05
+// Redistribution only with this Copyright remark. Last modified: 2023-05-28
 
 #include <upnplib/socket.hpp>
 #include <upnplib/port.hpp>
@@ -204,6 +204,9 @@ void CSocket::listen() {
     // Protect set listen and storing its state (m_listen).
     std::scoped_lock lock(m_listen_mutex);
 
+    if (m_listen)
+        return;
+
     // Second argument backlog (maximum length of the queue for pending
     // connections) is hard coded set to 1 for now.
     if (::listen(m_sfd, 1) != 0)
@@ -284,6 +287,7 @@ bool CSocket::is_v6only() const {
 
 bool CSocket::is_bind() const {
     // We assume that a socket with an unknown ip address and port 0 is unbound.
+    // TODO: Check also for unknown ip address, not only the port.
     TRACE2(this, " Executing upnplib::CSocket::is_bind()")
     if (m_sfd == INVALID_SOCKET)
         throw std::runtime_error("ERROR! Failed to get socket option "

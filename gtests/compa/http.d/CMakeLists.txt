@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-04-27
+# Redistribution only with this Copyright remark. Last modified: 2023-05-24
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -27,7 +27,6 @@ target_compile_definitions(test_webserver-pst
     PRIVATE
         UPNPLIB_WITH_NATIVE_PUPNP
         UPNP_HAVE_WEBSERVER
-        #UPNPLIB_WITH_TRACE
 )
 target_compile_options(test_webserver-pst
     PRIVATE
@@ -62,7 +61,6 @@ target_include_directories(test_webserver-cst
 target_compile_definitions(test_webserver-cst
     PRIVATE
         UPNP_HAVE_WEBSERVER
-        #UPNPLIB_WITH_TRACE
 )
 target_compile_options(test_webserver-cst
     PRIVATE

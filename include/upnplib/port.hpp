@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-01
+// Redistribution only with this Copyright remark. Last modified: 2023-05-27
 
 // Header file for portable definitions
 // ====================================

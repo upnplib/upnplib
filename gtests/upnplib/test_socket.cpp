@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-24
+// Redistribution only with this Copyright remark. Last modified: 2023-05-28
 
 #include <upnplib/socket.hpp>
 
@@ -165,7 +165,21 @@ TEST(SocketTestSuite, object_with_invalid_socket_fd) {
                     "'is_Listen': \"Bad file descriptor\""));
 }
 
-TEST(SocketTestSuite, set_bind_successful) {
+TEST(SocketTestSuite, set_bind_only_node_successful) {
+    // Get local interface address with no service.
+    const CAddrinfo ai("[::1]", "", AF_INET6, SOCK_STREAM,
+                       AI_NUMERICHOST | AI_NUMERICSERV);
+
+    // Test Unit.
+    // This binds the local address.
+    CSocket sock(AF_INET6, SOCK_STREAM);
+
+    EXPECT_FALSE(sock.is_bind());
+    ASSERT_NO_THROW(sock.bind(ai));
+    EXPECT_TRUE(sock.is_bind());
+}
+
+TEST(SocketTestSuite, set_bind_only_service_successful) {
     // Get local interface address.
     const CAddrinfo ai("", "50012", AF_INET6, SOCK_STREAM,
                        AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
@@ -304,14 +318,9 @@ TEST(SocketTestSuite, bind_same_address_two_times) {
 }
 
 TEST(SocketTestSuite, listen_to_same_address_multiple_times) {
-    // SKIP on Github Actions
-    if (github_actions)
-        GTEST_SKIP() << "             known failing test on Github Actions";
-    else
-        GTEST_FAIL() << "TODO: Test must be completed.";
-
     // Listen on the same address again of a valid socket is possible and should
     // do nothing.
+
     // Get local interface address.
     CAddrinfo ai1("", "50025", AF_INET6, SOCK_STREAM,
                   AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);

@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_ADDRINFO_HPP
 #define UPNPLIB_INCLUDE_ADDRINFO_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-04
+// Redistribution only with this Copyright remark. Last modified: 2023-05-27
 
 #include <upnplib/visibility.hpp>
 #include <upnplib/port_sock.hpp>
@@ -46,7 +46,13 @@ class UPNPLIB_API CAddrinfo {
     // Example: ai2 = ai1; // ai1 and ai2 are instantiated valid objects.
     CAddrinfo& operator=(CAddrinfo that);
 
+    // Destructor
     virtual ~CAddrinfo();
+
+    // Compare operator== to test if another address info is equal to this.
+    // It only supports AF_INET6 and AF_INET. For all other address families it
+    // returns false.
+    bool operator==(const CAddrinfo&) const;
 
     // This is to have read access to members of the addrinfo structure,
     // Example: CAddrinfo ai(..); if(ai->ai_family == AF_INET6) {..};
@@ -81,7 +87,7 @@ class UPNPLIB_API CAddrinfo {
     // deeply copied. So we have to go the hard way with getaddrinfo() and free
     // it with freeaddrinfo(),
     // Provides strong exception guarantee.
-    UPNPLIB_LOCAL addrinfo* get_new_addrinfo();
+    UPNPLIB_LOCAL addrinfo* get_new_addrinfo() const;
 };
 
 #ifdef _MSC_VER

@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-04-21
+# Redistribution only with this Copyright remark. Last modified: 2023-05-24
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -63,7 +63,6 @@ add_executable(test_sockaddr-ush
 target_compile_definitions(test_sockaddr-ush
     PRIVATE
         UPNPLIB_SHARED
-        $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
         #$<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_compile_options(test_sockaddr-ush

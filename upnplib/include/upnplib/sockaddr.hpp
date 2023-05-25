@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCK_HPP
 #define UPNPLIB_NET_SOCK_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-04
+// Redistribution only with this Copyright remark. Last modified: 2023-05-27
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -21,9 +21,16 @@ UPNPLIB_API uint16_t to_port(const std::string& a_port_str);
 // -----------------------------------------------------------------
 UPNPLIB_API std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr);
 
+// Free function to logical compare two sockaddr structures
+// --------------------------------------------------------
+// To have a logical equal socket address we compare the address family, the ip
+// address and the port.
+UPNPLIB_API bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
+                             const ::sockaddr_storage* a_ss2);
+
 
 // Specialized sockaddr structure
-// ------------------------------
+// ==============================
 struct UPNPLIB_API SSockaddr_storage {
     ::sockaddr_storage ss{};
 
@@ -40,9 +47,9 @@ struct UPNPLIB_API SSockaddr_storage {
     void operator=(const std::string& a_addr_str);
 
     // Compare operator== to test if another socket address is equal to this.
-    // It only supports AF_INET6 and AF_INET. For all other address familes it
+    // It only supports AF_INET6 and AF_INET. For all other address families it
     // returns false.
-    bool operator==(const ::sockaddr_storage&);
+    bool operator==(const ::sockaddr_storage&) const;
 
     // Getter for the assosiated ip address without port, e.g.
     // "[2001:db8::2]" or "192.168.254.253".

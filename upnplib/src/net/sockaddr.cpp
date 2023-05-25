@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-04
+// Redistribution only with this Copyright remark. Last modified: 2023-05-27
 
 #include "upnplib/sockaddr.hpp"
 #include "umock/sys_socket.hpp"
@@ -69,6 +69,55 @@ std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr) {
 }
 
 
+// Free function to logical compare two sockaddr structures
+// --------------------------------------------------------
+bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
+                 const ::sockaddr_storage* a_ss2) {
+    // To have a logical equal socket address we compare the address family, the
+    // ip address and the port.
+    if (a_ss1 == nullptr && a_ss2 == nullptr)
+        return true;
+    if (a_ss1 == nullptr || a_ss2 == nullptr)
+        return false;
+
+    switch (a_ss1->ss_family) {
+    case AF_UNSPEC:
+        if (a_ss2->ss_family != AF_UNSPEC)
+            return false;
+        break;
+
+    case AF_INET6: {
+        // We compare ipv6 addresses which are stored in a 16 byte array
+        // (unsigned char s6_addr[16]). So we have to use memcmp() for
+        // comparison.
+        const unsigned char* const s6_addr1 =
+            ((sockaddr_in6*)a_ss1)->sin6_addr.s6_addr;
+        const unsigned char* const s6_addr2 =
+            ((sockaddr_in6*)a_ss2)->sin6_addr.s6_addr;
+
+        if (a_ss2->ss_family != AF_INET6 ||
+            ::memcmp(s6_addr1, s6_addr2, sizeof(in6_addr)) != 0 ||
+            ((sockaddr_in6*)a_ss1)->sin6_port !=
+                ((sockaddr_in6*)a_ss2)->sin6_port)
+            return false;
+    } break;
+
+    case AF_INET:
+        if (a_ss2->ss_family != AF_INET ||
+            ((sockaddr_in*)a_ss1)->sin_addr.s_addr !=
+                ((sockaddr_in*)a_ss2)->sin_addr.s_addr ||
+            ((sockaddr_in*)a_ss1)->sin_port != ((sockaddr_in*)a_ss2)->sin_port)
+            return false;
+        break;
+
+    default:
+        return false;
+    }
+
+    return true;
+}
+
+
 // Specialized sockaddr_structure
 // ==============================
 // Constructor
@@ -123,45 +172,8 @@ void SSockaddr_storage::operator=(const std::string& a_addr_str) {
 
 // Compare operator== to test if another socket address is equal to this
 // ---------------------------------------------------------------------
-bool SSockaddr_storage::operator==(const ::sockaddr_storage& a_ss) {
-    // To have a logical equal socket address we compare the address family, the
-    // ip address and the port.
-    switch (a_ss.ss_family) {
-    case AF_UNSPEC:
-        if (this->ss.ss_family != AF_UNSPEC)
-            return false;
-        break;
-
-    case AF_INET6: {
-        // We compare ipv6 addresses which are stored in a 16 byte array
-        // (unsigned char s6_addr[16]). So we have to use memcmp() for
-        // comparison.
-        const unsigned char* const s6_addr1 =
-            ((sockaddr_in6*)&a_ss)->sin6_addr.s6_addr;
-        const unsigned char* const s6_addr2 =
-            ((sockaddr_in6*)&this->ss)->sin6_addr.s6_addr;
-
-        if (this->ss.ss_family != AF_INET6 ||
-            ::memcmp(s6_addr1, s6_addr2, sizeof(in6_addr)) != 0 ||
-            ((sockaddr_in6*)&a_ss)->sin6_port !=
-                ((sockaddr_in6*)&this->ss)->sin6_port)
-            return false;
-    } break;
-
-    case AF_INET:
-        if (this->ss.ss_family != AF_INET ||
-            ((sockaddr_in*)&a_ss)->sin_addr.s_addr !=
-                ((sockaddr_in*)&this->ss)->sin_addr.s_addr ||
-            ((sockaddr_in*)&a_ss)->sin_port !=
-                ((sockaddr_in*)&this->ss)->sin_port)
-            return false;
-        break;
-
-    default:
-        return false;
-    }
-
-    return true;
+bool SSockaddr_storage::operator==(const ::sockaddr_storage& a_ss) const {
+    return sockaddrcmp(&a_ss, &this->ss);
 }
 
 // private member functions

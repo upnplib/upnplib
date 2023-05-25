@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-04
+// Redistribution only with this Copyright remark. Last modified: 2023-05-27
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/port.hpp>
@@ -26,11 +26,87 @@ using ::upnplib::testing::MatchesStdRegex;
 
 // SSockaddr_storage TestSuite
 // ===========================
+TEST(SockaddrCmpTestSuite, compare_equal_ipv6_sockaddrs_successful) {
+    SSockaddr_storage saddr1;
+    saddr1 = "[2001:db8::33]:50033";
+    SSockaddr_storage saddr2;
+    saddr2 = "[2001:db8::33]:50033";
+
+    // Test Unit
+    EXPECT_TRUE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+}
+
+TEST(SockaddrCmpTestSuite, compare_equal_ipv4_sockaddrs_successful) {
+    SSockaddr_storage saddr1;
+    saddr1 = "192.168.167.166:50037";
+    SSockaddr_storage saddr2;
+    saddr2 = "192.168.167.166:50037";
+
+    // Test Unit
+    EXPECT_TRUE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+}
+
+TEST(SockaddrCmpTestSuite, compare_different_ipv6_sockaddrs) {
+    // Test Unit, compare with different ports
+    SSockaddr_storage saddr1;
+    saddr1 = "[2001:db8::35]:50035";
+    SSockaddr_storage saddr2;
+    saddr2 = "[2001:db8::35]:50036";
+    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+
+    // Test Unit, compare with different address
+    saddr2 = "[2001:db8::36]:50035";
+    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+
+    // Test Unit, compare with different address family
+    saddr2 = "192.168.171.172:50035";
+    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+}
+
+TEST(SockaddrCmpTestSuite, compare_different_ipv4_sockaddrs) {
+    // Test Unit, compare with different ports
+    SSockaddr_storage saddr1;
+    saddr1 = "192.168.13.14:50038";
+    SSockaddr_storage saddr2;
+    saddr2 = "192.168.13.14:50039";
+    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+
+    // Test Unit, compare with different address
+    saddr2 = "192.168.13.15:50038";
+    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+}
+
+TEST(SockaddrCmpTestSuite, compare_unspecified_sockaddrs) {
+    // Test Unit with unspecified address family will always return true if
+    // equal, independent of address and port.
+    SSockaddr_storage saddr1;
+    saddr1.ss.ss_family = AF_UNSPEC;
+    SSockaddr_storage saddr2;
+    saddr2.ss.ss_family = AF_UNSPEC;
+    EXPECT_TRUE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+
+    saddr2 = "[2001:db8::40]:50040";
+    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+    EXPECT_FALSE(sockaddrcmp(&saddr2.ss, &saddr1.ss));
+}
+
+TEST(SockaddrCmpTestSuite, compare_nullptr_to_sockaddrs) {
+    SSockaddr_storage saddr1;
+    saddr1 = "[2001:db8::34]:50034";
+
+    // Test Unit
+    EXPECT_TRUE(sockaddrcmp(nullptr, nullptr));
+    EXPECT_FALSE(sockaddrcmp(nullptr, &saddr1.ss));
+    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, nullptr));
+}
+
 TEST(SockaddrStorageTestSuite, copy_and_assign_structure) {
     SSockaddr_storage ss1;
     ss1 = "[2001:db8::1]:50001";
 
     // Test Unit copy
+    // With UPNPLIB_WITH_TRACE we do not see "Construct ..." because the
+    // default copy constructor is used here.
     SSockaddr_storage ss2 = ss1;
     EXPECT_EQ(ss2.ss.ss_family, AF_INET6);
     EXPECT_EQ(ss2.get_addr_str(), "[2001:db8::1]");

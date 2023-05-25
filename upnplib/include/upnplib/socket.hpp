@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_CLASS_HPP
 #define UPNPLIB_SOCKET_CLASS_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-05
+// Redistribution only with this Copyright remark. Last modified: 2023-05-28
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -131,7 +131,7 @@ class UPNPLIB_API CSocket {
     UPNPLIB_LOCAL int get_sockopt_int(int a_level, int a_optname,
                                       const std::string& a_optname_str) const;
 
-    UPNPLIB_LOCAL void get_sockname(sockaddr_storage*) const;
+    UPNPLIB_LOCAL void get_sockname(::sockaddr_storage*) const;
 };
 
 #ifdef _MSC_VER
