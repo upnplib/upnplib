@@ -1,9 +1,10 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-28
+// Redistribution only with this Copyright remark. Last modified: 2023-06-02
 
 #include <upnplib/socket.hpp>
 #include <upnplib/port.hpp>
 #include <umock/sys_socket.hpp>
+#include <umock/stringh.hpp>
 
 #include <string>
 #include <cstring>
@@ -17,9 +18,10 @@ CWSAStartup::CWSAStartup() {
     WSADATA wsaData;
     int rc = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (rc != 0) {
-        throw std::runtime_error("ERROR! Failed to initialize Windows "
-                                 "sockets: WSAStartup() returns " +
-                                 std::to_string(rc));
+        throw std::runtime_error(
+            "UPnPlib ERROR 1003! Failed to initialize Windows "
+            "sockets: WSAStartup() returns " +
+            std::to_string(rc));
     }
 }
 
@@ -30,16 +32,16 @@ CWSAStartup::~CWSAStartup() {
 #endif // MSC_VER
 
 
-static inline void throw_error(std::string errmsg) {
+static inline void throw_error(std::string a_errmsg) {
     // error number given by WSAGetLastError(), resp. contained in errno is
     // used to specify details of the error. It is important that these error
     // numbers hasn't been modified by executing other statements.
 #ifdef _MSC_VER
     throw std::runtime_error(
-        errmsg + " WSAGetLastError()=" + std::to_string(WSAGetLastError()));
+        a_errmsg + " WSAGetLastError()=" + std::to_string(WSAGetLastError()));
 #else
-    throw std::runtime_error(errmsg + " errno(" + std::to_string(errno) +
-                             ")=\"" + std::strerror(errno) + "\"");
+    throw std::runtime_error(a_errmsg + " errno(" + std::to_string(errno) +
+                             ")=\"" + umock::string_h.strerror(errno) + "\"");
 #endif
 }
 
@@ -108,11 +110,10 @@ CSocket::CSocket(SOCKET a_sfd) {
     // Otherwise we cache AF_UNSPEC.
     ::sockaddr_storage ss{};
     ss.ss_family = AF_UNSPEC;
-    socklen_t len = sizeof(ss); // May be modified
-    if (umock::sys_socket_h.getsockname(a_sfd, (sockaddr*)&ss, &len) != 0)
-        throw_error("ERROR! Failed to get socket address/port:");
-
     m_sfd = a_sfd;
+    // Next may throw exceptions
+    this->get_sockname(&ss);
+
     m_af = ss.ss_family;
 }
 
@@ -234,7 +235,7 @@ std::string CSocket::get_addr_str() const {
         break;
     default:
         throw std::invalid_argument(
-            "ERROR! Failed to get a socket address string (IP "
+            "UPnPlib ERROR 1002! Failed to get a socket address string (IP "
             "address): unknown address family " +
             std::to_string(ss.ss_family));
     }
@@ -350,7 +351,8 @@ int CSocket::get_sockopt_int(int a_level, int a_optname,
 
 void CSocket::get_sockname(::sockaddr_storage* a_ss) const {
     TRACE2(this, " Executing upnplib::CSocket::get_sockname()")
-    const std::string errmsg{"ERROR! Failed to get socket address/port:"};
+    const std::string errmsg{
+        "UPnPlib ERROR 1001! Failed to get socket address/port:"};
 
     if (m_sfd == INVALID_SOCKET)
         throw std::runtime_error(errmsg + " \"Bad file descriptor\"");

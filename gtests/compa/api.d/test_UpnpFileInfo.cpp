@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-30
+// Redistribution only with this Copyright remark. Last modified: 2023-05-30
 
 #include <UpnpFileInfo.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -37,7 +37,6 @@ bool old_code{true}; // Managed in upnplib_gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::testing::ExitedWithCode;
-using ::upnplib::SockAddr;
 
 class CUpnpFileInfo {
     // I use this simple helper class to ensure that we always free an allocated

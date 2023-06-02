@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-27
+// Redistribution only with this Copyright remark. Last modified: 2023-06-03
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/port.hpp>
@@ -365,6 +365,7 @@ TEST(ToAddrStrTestSuite, sockaddr_to_address_string) {
 }
 
 
+#if 0
 // struct SockAddr and struct SocketAddr TestSuite
 // ===============================================
 // With testing struct SocketAddr this tests also its base struct SockAddr.
@@ -407,7 +408,6 @@ TEST(SocketAddrTestSuite, get_address_from_socket) {
     EXPECT_EQ(sock.addr_get_port(), 54444);
 }
 
-#if 0
 TEST(SocketAddrTestSuite, set_wrong_address) {
     struct SocketAddr sock;
 

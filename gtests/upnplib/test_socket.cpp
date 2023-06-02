@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-28
+// Redistribution only with this Copyright remark. Last modified: 2023-06-02
 
 #include <upnplib/socket.hpp>
 
@@ -20,36 +20,36 @@ using testing::StartsWith;
 using testing::ThrowsMessage;
 
 
-TEST(SocketTestSuite, get_ipv6_socket_successful) {
+TEST(SocketTestSuite, get_unbind_ipv6_socket_successful) {
     // Test Unit
-    CSocket sock(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(AF_INET6, SOCK_STREAM);
 
     // An unbound socket returns the unknown ip address and port 0
-    EXPECT_EQ(sock.get_addr_str(), "[::]");
-    EXPECT_EQ(sock.get_port(), 0);
-
-    EXPECT_EQ(sock.get_af(), AF_INET6);
-    EXPECT_EQ(sock.get_sockerr(), 0);
-    EXPECT_FALSE(sock.is_reuse_addr());
-    EXPECT_FALSE(sock.is_v6only());
-    EXPECT_FALSE(sock.is_bind());
-    EXPECT_FALSE(sock.is_listen());
+    EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
+    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
+    EXPECT_EQ(sockObj.get_port(), 0);
+    EXPECT_EQ(sockObj.get_af(), AF_INET6);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    EXPECT_FALSE(sockObj.is_v6only());
+    EXPECT_FALSE(sockObj.is_bind());
+    EXPECT_FALSE(sockObj.is_listen());
 }
 
-TEST(SocketTestSuite, get_ipv4_socket_successful) {
+TEST(SocketTestSuite, get_unbind_ipv4_socket_successful) {
     // Test Unit
-    CSocket sock(AF_INET, SOCK_STREAM);
+    CSocket sockObj(AF_INET, SOCK_STREAM);
 
     // An unbound socket returns the unknown ip address and port 0
-    EXPECT_EQ(sock.get_addr_str(), "0.0.0.0");
-    EXPECT_EQ(sock.get_port(), 0);
-
-    EXPECT_EQ(sock.get_af(), AF_INET);
-    EXPECT_EQ(sock.get_sockerr(), 0);
-    EXPECT_FALSE(sock.is_reuse_addr());
-    EXPECT_FALSE(sock.is_v6only());
-    EXPECT_FALSE(sock.is_bind());
-    EXPECT_FALSE(sock.is_listen());
+    EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
+    EXPECT_EQ(sockObj.get_addr_str(), "0.0.0.0");
+    EXPECT_EQ(sockObj.get_port(), 0);
+    EXPECT_EQ(sockObj.get_af(), AF_INET);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    EXPECT_FALSE(sockObj.is_v6only());
+    EXPECT_FALSE(sockObj.is_bind());
+    EXPECT_FALSE(sockObj.is_listen());
 }
 
 TEST(SocketTestSuite, move_socket_successful) {
@@ -127,20 +127,18 @@ TEST(SocketTestSuite, assign_socket_successful) {
     EXPECT_TRUE(sock2.is_listen());
 }
 
-TEST(SocketTestSuite, object_with_invalid_socket_fd) {
+TEST(SocketTestSuite, instantiate_empty_socket) {
     // Test Unit
     CSocket sock;
     EXPECT_EQ((SOCKET)sock, INVALID_SOCKET);
 
     // All getter from an INVALID_SOCKET throw an exception.
-    EXPECT_THAT([&sock]() { sock.get_addr_str(); },
-                ThrowsMessage<std::runtime_error>(
-                    "ERROR! Failed to get socket address/port: \"Bad file "
-                    "descriptor\""));
-    EXPECT_THAT([&sock]() { sock.get_port(); },
-                ThrowsMessage<std::runtime_error>(
-                    "ERROR! Failed to get socket address/port: \"Bad file "
-                    "descriptor\""));
+    EXPECT_THAT(
+        [&sock]() { sock.get_addr_str(); },
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
+    EXPECT_THAT(
+        [&sock]() { sock.get_port(); },
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
     EXPECT_THAT(
         [&sock]() { sock.get_af(); },
         ThrowsMessage<std::runtime_error>(
@@ -165,35 +163,158 @@ TEST(SocketTestSuite, object_with_invalid_socket_fd) {
                     "'is_Listen': \"Bad file descriptor\""));
 }
 
-TEST(SocketTestSuite, set_bind_only_node_successful) {
+TEST(SocketTestSuite, instantiate_with_invalid_socket_fd) {
+    // Test Unit
+    EXPECT_THAT(
+        []() { CSocket sockObj((SOCKET)32000); },
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
+}
+
+TEST(SocketTestSuite, instantiate_with_unbound_socket_fd) {
+    // Get a valid socket file descriptor
+    const SOCKET sfd = socket(AF_INET6, SOCK_STREAM, 0);
+
+    // Test Unit
+    CSocket sockObj(sfd);
+
+    EXPECT_EQ((SOCKET)sockObj, sfd);
+    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
+    EXPECT_EQ(sockObj.get_port(), 0);
+    EXPECT_EQ(sockObj.get_af(), AF_INET6);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    EXPECT_FALSE(sockObj.is_v6only());
+    EXPECT_FALSE(sockObj.is_bind());
+    EXPECT_FALSE(sockObj.is_listen());
+
+    CLOSE_SOCKET_P(sfd);
+}
+
+TEST(SocketTestSuite, instantiate_with_bound_socket_fd) {
+    // Get local interface address
+    const CAddrinfo ai("", "50023", AF_INET6, SOCK_STREAM,
+                       AI_NUMERICHOST | AI_NUMERICSERV);
+
+    // and bind it to a socket.
+    CSocket bound_sockObj(AF_INET6, SOCK_STREAM);
+    EXPECT_FALSE(bound_sockObj.is_v6only());
+    ASSERT_NO_THROW(bound_sockObj.bind(ai));
+    EXPECT_TRUE(bound_sockObj.is_v6only());
+    SOCKET bound_sock = bound_sockObj;
+
+    // Test Unit with a bound socket.
+    CSocket sockObj((SOCKET)bound_sock);
+
+    EXPECT_EQ((SOCKET)sockObj, bound_sock);
+    EXPECT_EQ(sockObj.get_addr_str(), "[::1]");
+    EXPECT_EQ(sockObj.get_port(), 50023);
+    EXPECT_EQ(sockObj.get_af(), AF_INET6);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    EXPECT_TRUE(sockObj.is_v6only());
+    EXPECT_TRUE(sockObj.is_bind());
+    EXPECT_FALSE(sockObj.is_listen());
+}
+
+TEST(SocketBindTestSuite, bind_ipv6_successful) {
+    // Get local interface address with service.
+    const CAddrinfo ai("[::1]", "50044", AF_INET6, SOCK_STREAM,
+                       AI_NUMERICHOST | AI_NUMERICSERV);
+
+    // Create an unbound socket object
+    CSocket sockObj(AF_INET6, SOCK_STREAM);
+
+    // Test Unit.
+    // This binds the local address to the socket.
+    ASSERT_NO_THROW(sockObj.bind(ai));
+
+    EXPECT_EQ(sockObj.get_addr_str(), "[::1]");
+    EXPECT_EQ(sockObj.get_port(), 50044);
+    EXPECT_EQ(sockObj.get_af(), AF_INET6);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    // v6only is true because it is a socket property that's of domain AF_INET6.
+    EXPECT_TRUE(sockObj.is_v6only());
+    EXPECT_TRUE(sockObj.is_bind());
+    EXPECT_FALSE(sockObj.is_listen());
+}
+
+TEST(SocketBindTestSuite, bind_ipv4_successful) {
+    // Get local interface address with service.
+    const CAddrinfo ai("127.0.0.1", "50045", AF_INET, SOCK_STREAM,
+                       AI_NUMERICHOST | AI_NUMERICSERV);
+
+    // Create an unbound socket object
+    CSocket sockObj(AF_INET, SOCK_STREAM);
+
+    // Test Unit.
+    // This binds the local address to the socket.
+    ASSERT_NO_THROW(sockObj.bind(ai));
+
+    EXPECT_EQ(sockObj.get_addr_str(), "127.0.0.1");
+    EXPECT_EQ(sockObj.get_port(), 50045);
+    EXPECT_EQ(sockObj.get_af(), AF_INET);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    // v6only is false because it is a socket property that's of domain AF_INET.
+    EXPECT_FALSE(sockObj.is_v6only());
+    EXPECT_TRUE(sockObj.is_bind());
+    EXPECT_FALSE(sockObj.is_listen());
+}
+
+TEST(SocketBindTestSuite, bind_only_node_successful) {
+    // With empty service the operating system returns next free port number.
+
     // Get local interface address with no service.
     const CAddrinfo ai("[::1]", "", AF_INET6, SOCK_STREAM,
                        AI_NUMERICHOST | AI_NUMERICSERV);
 
-    // Test Unit.
-    // This binds the local address.
-    CSocket sock(AF_INET6, SOCK_STREAM);
+    // Create an unbind socket object
+    CSocket sockObj(AF_INET6, SOCK_STREAM);
 
-    EXPECT_FALSE(sock.is_bind());
-    ASSERT_NO_THROW(sock.bind(ai));
-    EXPECT_TRUE(sock.is_bind());
+    // Test Unit.
+    ASSERT_NO_THROW(sockObj.bind(ai));
+
+    EXPECT_EQ(sockObj.get_addr_str(), "[::1]");
+    // Next free port number but never 0.
+    EXPECT_GT(sockObj.get_port(), 0);
+    EXPECT_EQ(sockObj.get_af(), AF_INET6);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    // v6only is true because it is a socket property that's of domain AF_INET6.
+    EXPECT_TRUE(sockObj.is_v6only());
+    EXPECT_TRUE(sockObj.is_bind());
+    EXPECT_FALSE(sockObj.is_listen());
 }
 
-TEST(SocketTestSuite, set_bind_only_service_successful) {
+TEST(SocketBindTestSuite, bind_only_service_successful) {
     // Get local interface address.
     const CAddrinfo ai("", "50012", AF_INET6, SOCK_STREAM,
                        AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
 
-    // Test Unit.
-    // This binds the local address.
-    CSocket sock(AF_INET6, SOCK_STREAM);
+    // Create an unbind socket object.
+    CSocket sockObj(AF_INET6, SOCK_STREAM);
 
-    EXPECT_FALSE(sock.is_bind());
-    ASSERT_NO_THROW(sock.bind(ai));
-    EXPECT_TRUE(sock.is_bind());
+    // Test Unit.
+    ASSERT_NO_THROW(sockObj.bind(ai));
+
+    // With ai passive setting (for listening) the presented address is the
+    // unknown address. When using this to listen, it will listen on all local
+    // network interfaces.
+    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
+    EXPECT_EQ(sockObj.get_port(), 50012);
+    EXPECT_EQ(sockObj.get_af(), AF_INET6);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    // v6only is always false from the operating system, no matter what domain
+    // (AF_INET6) is set if we request a passive address information (flag
+    // AI_PASSIVE).
+    EXPECT_FALSE(sockObj.is_v6only());
+    EXPECT_TRUE(sockObj.is_bind());
+    EXPECT_FALSE(sockObj.is_listen());
 }
 
-TEST(SocketTestSuite, set_bind_with_wrong_addresses) {
+TEST(SocketBindTestSuite, bind_with_wrong_addresses) {
     // Get local interface address.
     const CAddrinfo ai("", "50026", AF_INET6, SOCK_STREAM,
                        AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
@@ -217,7 +338,7 @@ TEST(SocketTestSuite, set_bind_with_wrong_addresses) {
             StartsWith("ERROR! Failed to bind socket to an address:")));
 }
 
-TEST(SocketTestSuite, set_bind_with_different_socket_type) {
+TEST(SocketBindTestSuite, bind_with_different_socket_type) {
     // Get local interface address.
     const CAddrinfo ai("", "50011", AF_INET, SOCK_DGRAM,
                        AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
@@ -233,7 +354,7 @@ TEST(SocketTestSuite, set_bind_with_different_socket_type) {
             "address (")));
 }
 
-TEST(SocketTestSuite, bind_two_times_different_addresses_fail) {
+TEST(SocketBindTestSuite, bind_two_times_different_addresses_fail) {
     // Binding a socket two times isn't possible. The socket must be
     // shutdown/closed before bind it again.
     // Provide a socket object
@@ -246,6 +367,7 @@ TEST(SocketTestSuite, bind_two_times_different_addresses_fail) {
 
     // Test Unit.
     ASSERT_NO_THROW(sock.bind(ai1));
+
     // Try to bind the socket a second time.
     EXPECT_THAT(
         [&sock]() {
@@ -257,7 +379,7 @@ TEST(SocketTestSuite, bind_two_times_different_addresses_fail) {
             StartsWith("ERROR! Failed to bind socket to an address: ")));
 }
 
-TEST(SocketTestSuite, set_unset_bind_listen_same_address_multiple_times) {
+TEST(SocketBindTestSuite, set_unset_bind_listen_same_address_multiple_times) {
     // Binding a socket again is possible after destruction of the socket that
     // shutdown/close it.
     // Get local interface address.
@@ -280,7 +402,7 @@ TEST(SocketTestSuite, set_unset_bind_listen_same_address_multiple_times) {
     EXPECT_NO_THROW(sock.listen());
 }
 
-TEST(SocketTestSuite, bind_same_address_two_times) {
+TEST(SocketBindTestSuite, bind_same_address_two_times) {
     // SKIP on Github Actions
     if (github_actions)
         GTEST_SKIP() << "             known failing test on Github Actions";
@@ -317,7 +439,7 @@ TEST(SocketTestSuite, bind_same_address_two_times) {
     EXPECT_FALSE(sock.is_listen());
 }
 
-TEST(SocketTestSuite, listen_to_same_address_multiple_times) {
+TEST(SocketBindTestSuite, listen_to_same_address_multiple_times) {
     // Listen on the same address again of a valid socket is possible and should
     // do nothing.
 
@@ -326,11 +448,11 @@ TEST(SocketTestSuite, listen_to_same_address_multiple_times) {
                   AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
 
     // Test Unit
-    CSocket sock1(AF_INET6, SOCK_STREAM);
-    EXPECT_NO_THROW(sock1.bind(ai1));
-    EXPECT_NO_THROW(sock1.listen());
+    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    ASSERT_NO_THROW(sockObj.bind(ai1));
+    ASSERT_NO_THROW(sockObj.listen());
 
-    EXPECT_NO_THROW(sock1.listen());
+    EXPECT_NO_THROW(sockObj.listen());
 }
 
 TEST(SocketTestSuite, set_wrong_arguments) {
@@ -416,9 +538,7 @@ TEST(SocketTestSuite, get_addr_str_from_invalid_socket) {
             CSocket sock;
             sock.get_addr_str();
         },
-        ThrowsMessage<std::runtime_error>(
-            "ERROR! Failed to get socket address/port: \"Bad file "
-            "descriptor\""));
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
 }
 
 TEST(SocketTestSuite, get_addr_str_from_unbound_socket) {
@@ -446,7 +566,7 @@ TEST(SocketTestSuite, get_addr_str_syscall_fail) {
     CSocket sock(AF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sock.bind(ai));
 
-    // Mock system function
+    // Mock system function getsockname().
     umock::Sys_socketMock mocked_sys_socketObj;
     umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
     EXPECT_CALL(
@@ -455,9 +575,9 @@ TEST(SocketTestSuite, get_addr_str_syscall_fail) {
         .WillOnce(SetErrnoAndReturn(ENOBUFS, SOCKET_ERROR));
 
     // Test Unit
-    EXPECT_THAT([&sock]() { sock.get_addr_str(); },
-                ThrowsMessage<std::runtime_error>(
-                    StartsWith("ERROR! Failed to get socket address/port:")));
+    EXPECT_THAT(
+        [&sock]() { sock.get_addr_str(); },
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
 }
 
 TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
@@ -485,45 +605,8 @@ TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
     // Test Unit
     EXPECT_THAT([&sock]() { sock.get_addr_str(); },
                 ThrowsMessage<std::invalid_argument>(
-                    "ERROR! Failed to get a socket address string (IP "
-                    "address): unknown address family 255"));
+                    StartsWith("UPnPlib ERROR 1002!")));
 }
-
-TEST(SocketTestSuite, use_invalid_raw_socket) {
-    // Test Unit
-    EXPECT_THAT([]() { CSocket sock(INVALID_SOCKET); },
-                ThrowsMessage<std::runtime_error>(
-                    StartsWith("ERROR! Failed to get socket address/port:")));
-}
-
-#if 0
-TEST(SocketTestSuite, use_raw_socket_fd_unbound) {
-    SOCKET sfd = socket(AF_INET6, SOCK_STREAM, 0);
-
-    // Test Unit
-    CSocket sock(sfd);
-
-    EXPECT_EQ(sock.get_af(), AF_INET6);
-    // EXPECT_TRUE(sock.get_addr_str().empty());
-    // EXPECT_EQ((SOCKET)sock, sfd);
-    // EXPECT_FALSE(sock.is_bind());
-
-    CLOSE_SOCKET_P(sfd);
-}
-
-TEST(SocketTestSuite, use_raw_socket_fd_bound) {
-    // Get local interface address
-    const CAddrinfo ai("", "50023", AF_INET6, SOCK_STREAM,
-                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-    // and bind it to a socket.
-    CSocket sock(AF_INET6, SOCK_STREAM);
-    // ASSERT_NO_THROW(sock.bind(ai));
-
-    // Test Unit
-    CSocket sock_from_raw(12345);
-}
-#endif
-
 
 } // namespace upnplib
 

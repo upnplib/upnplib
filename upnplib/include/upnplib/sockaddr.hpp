@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCK_HPP
 #define UPNPLIB_NET_SOCK_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-27
+// Redistribution only with this Copyright remark. Last modified: 2023-06-02
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -66,6 +66,7 @@ struct UPNPLIB_API SSockaddr_storage {
 };
 
 
+#if 0
 // Wrapper for a sockaddr structure
 // --------------------------------
 // This structure simplifies the handling and setting of the different sockaddr
@@ -110,6 +111,7 @@ struct UPNPLIB_API SocketAddr : public SockAddr {
     std::string addr_get();
     std::string addr_get(SOCKET sockfd);
 };
+#endif
 
 } // namespace upnplib
 

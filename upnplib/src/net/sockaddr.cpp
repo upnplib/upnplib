@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-27
+// Redistribution only with this Copyright remark. Last modified: 2023-06-02
 
 #include "upnplib/sockaddr.hpp"
 #include "umock/sys_socket.hpp"
@@ -228,6 +228,7 @@ uint16_t SSockaddr_storage::get_port() const {
 }
 
 
+#if 0
 // Wrapper for a sockaddr structure
 // ================================
 SockAddr::SockAddr() {
@@ -287,5 +288,6 @@ std::string SocketAddr::addr_get(SOCKET a_sockfd) {
 
     return SockAddr::addr_get();
 }
+#endif
 
 } // namespace upnplib

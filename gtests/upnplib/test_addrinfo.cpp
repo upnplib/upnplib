@@ -1,16 +1,17 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-28
+// Redistribution only with this Copyright remark. Last modified: 2023-06-02
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/socket.hpp>
 
 #include <gmock/gmock.h>
 
-using testing::HasSubstr;
-
 
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
+
+using testing::HasSubstr;
+
 
 TEST(AddrinfoTestSuite, get_successful) {
     // If node is not empty AI_PASSIVE is ignored.
@@ -75,6 +76,8 @@ TEST(AddrinfoTestSuite, get_passive_addressinfo) {
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
     // wildcard address ipv4 = 0.0.0.0, ipv6 = ::/128
+    // When using this to listen, it will listen on all local network
+    // interfaces.
     EXPECT_EQ(ai1.addr_str(), "[::]");
     EXPECT_EQ(ai1.port(), 50006);
 }

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-05-02
+ * Redistribution only with this Copyright remark. Last modified: 2023-06-02
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,7 +83,6 @@
 namespace compa {
 
 using ::upnplib::CSocket;
-using ::upnplib::SocketAddr;
 
 /*! . */
 #define APPLICATION_LISTENING_PORT 49152
@@ -202,39 +201,19 @@ ExitFunction:
 static int getNumericHostRedirection(SOCKET a_socket, char* a_host_port,
                                      size_t a_hp_size) {
     TRACE("Executing compa::getNumericHostRedirection()")
-#if 0
-// TODO: replace struct SocketAddr with class CSocket.
     try {
-        CSocket socketObj((SOCKET)a_socket);
+        CSocket socketObj(a_socket);
         std::string host_port = socketObj.get_addr_str();
         host_port += ':' + std::to_string(socketObj.get_port());
-        memcpy(host_port, text_addr.c_str(), hp_size);
+        memcpy(a_host_port, host_port.c_str(), a_hp_size);
         return true;
 
+    } catch (const std::runtime_error& e) {
+        std::cerr << e.what();
     } catch (const std::invalid_argument& e) {
         std::cerr << e.what();
-        return false;
     }
-
     return false;
-#endif
-
-    struct SocketAddr sock;
-    std::string text_addr;
-    try {
-        text_addr = sock.addr_get(a_socket);
-    } catch (const std::invalid_argument& e) {
-        std::clog << e.what();
-        return false;
-    } catch (const std::runtime_error& e) {
-        std::clog << e.what();
-        return false;
-    }
-
-    int port = sock.addr_get_port();
-    text_addr.append(":" + std::to_string(port));
-    memcpy(a_host_port, text_addr.c_str(), a_hp_size);
-    return true;
 }
 
 /*!

@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-05-24
+# Redistribution only with this Copyright remark. Last modified: 2023-06-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -63,19 +63,6 @@ add_executable(test_sockaddr-ush
 target_compile_definitions(test_sockaddr-ush
     PRIVATE
         UPNPLIB_SHARED
-        #$<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
-)
-target_compile_options(test_sockaddr-ush
-    PRIVATE
-        # disable warning C4100: 'result_listener': unreferenced formal parameter
-        # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
-        # be a side effect of the macro definition. --Ingo
-        #$<$<CXX_COMPILER_ID:MSVC>:/wd4100>
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        #$<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_sockaddr-ush
     PRIVATE
@@ -84,6 +71,23 @@ target_link_libraries(test_sockaddr-ush
 add_test(NAME ctest_sockaddr-ush COMMAND test_sockaddr-ush --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
+
+if(CMAKE_COMPILER_IS_GNUCC)
+add_executable(test_sockaddr2-ush
+        ./test_sockaddr2.cpp
+)
+target_compile_definitions(test_sockaddr2-ush
+    PRIVATE
+        UPNPLIB_SHARED
+)
+target_link_libraries(test_sockaddr2-ush
+    PRIVATE
+        upnplib_shared
+)
+add_test(NAME ctest_sockaddr2-ush COMMAND test_sockaddr2-ush --gtest_shuffle
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+endif()
 
 
 # CAddrinfo

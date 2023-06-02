@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-02
+// Redistribution only with this Copyright remark. Last modified: 2023-06-05
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -41,10 +41,11 @@ using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
+using ::testing::StartsWith;
 
 using ::upnplib::CAddrinfo;
 using ::upnplib::errStrEx;
-using ::upnplib::SockAddr;
+using ::upnplib::SSockaddr_storage;
 
 using ::upnplib::testing::CaptureStdOutErr;
 using ::upnplib::testing::ContainsStdRegex;
@@ -1394,16 +1395,13 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_stopsock) {
     EXPECT_NE(out.stopPort, 0);
     EXPECT_EQ(out.stopPort, NS::miniStopSockPort);
 
-    // Provide a sockaddr structure to getsockname().
-    SockAddr sock;
-    socklen_t sslen = sizeof(sock.addr_ss);
+    // Get socket object from the bound socket
+    CSocket sockObj(out.miniServerStopSock);
 
-    // Get address information direct from the bound socket
-    ASSERT_EQ(::getsockname(out.miniServerStopSock, sock.addr, &sslen), 0);
     // and verify its settings
-    EXPECT_EQ(sock.addr_in->sin_family, AF_INET);
-    EXPECT_EQ(sock.addr_get_port(), NS::miniStopSockPort);
-    EXPECT_EQ(sock.addr_get(), "127.0.0.1");
+    EXPECT_EQ(sockObj.get_af(), AF_INET);
+    EXPECT_EQ(sockObj.get_port(), NS::miniStopSockPort);
+    EXPECT_EQ(sockObj.get_addr_str(), "127.0.0.1");
 
     // Close socket
     EXPECT_EQ(sock_close(out.miniServerStopSock), 0);
@@ -1600,7 +1598,7 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
     constexpr SOCKET listen_sockfd = 201;
     constexpr uint16_t listen_port = 301;
     constexpr SOCKET connected_sockfd = 202;
-    constexpr uint16_t connected_port = 302;
+    const std::string connected_port = "302";
     constexpr SOCKET stop_sockfd = 203;
     constexpr uint16_t stop_port = 303;
     constexpr SOCKET select_nfds = stop_sockfd + 1; // See man select
@@ -1641,16 +1639,16 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
 
         umock::Sys_socketMock mocked_sys_socketObj;
         umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-        SockAddr connected_sock;
-        connected_sock.addr_set("192.168.200.201", connected_port);
+        SSockaddr_storage ss_connected;
+        ss_connected = "192.168.200.201:" + connected_port;
         EXPECT_CALL(mocked_sys_socketObj,
                     accept(listen_sockfd, NotNull(),
                            Pointee((socklen_t)sizeof(sockaddr_storage))))
-            .WillOnce(DoAll(SetArgPointee<1>(*connected_sock.addr),
+            .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&ss_connected.ss),
                             Return(connected_sockfd)));
 
-        SockAddr localhost_sock;
-        localhost_sock.addr_set("127.0.0.1", stop_port);
+        SSockaddr_storage ss_localhost;
+        ss_localhost = "127.0.0.1:" + std::to_string(stop_port);
 
         if (old_code) {
             std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
@@ -1660,7 +1658,7 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
                         recvfrom(stop_sockfd, _, 25, 0, _,
                                  Pointee((socklen_t)sizeof(sockaddr_storage))))
                 .WillOnce(DoAll(StrCpyToArg<1>("ShutDown"),
-                                SetArgPointee<4>(*localhost_sock.addr),
+                                SetArgPointee<4>(*(sockaddr*)&ss_localhost.ss),
                                 Return(8)));
 
         } else {
@@ -1669,7 +1667,7 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
                         recvfrom(stop_sockfd, _, 25, 0, _,
                                  Pointee((socklen_t)sizeof(sockaddr_storage))))
                 .WillOnce(DoAll(StrCpyToArg<1>("shutdown"),
-                                SetArgPointee<4>(*localhost_sock.addr),
+                                SetArgPointee<4>(*(sockaddr*)&ss_localhost.ss),
                                 Return(8)));
 
             EXPECT_CALL(mocked_sys_socketObj,
@@ -1707,7 +1705,7 @@ TEST(RunMiniServerTestSuite, ssdp_read) {
 TEST(RunMiniServerTestSuite, web_server_accept) {
     constexpr SOCKET listen_sockfd = 205;
     constexpr SOCKET connected_sockfd = 206;
-    constexpr uint16_t connected_port = 306;
+    const std::string connected_port = "306";
     fd_set set;
     FD_ZERO(&set);
     FD_SET(listen_sockfd, &set);
@@ -1724,12 +1722,12 @@ TEST(RunMiniServerTestSuite, web_server_accept) {
 
         umock::Sys_socketMock mocked_sys_socketObj;
         umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-        SockAddr connected_sock;
-        connected_sock.addr_set("192.168.201.202", connected_port);
+        SSockaddr_storage ssObj;
+        ssObj = "192.168.201.202:" + connected_port;
         EXPECT_CALL(mocked_sys_socketObj,
                     accept(listen_sockfd, NotNull(),
-                           Pointee((socklen_t)sizeof(sockaddr_storage))))
-            .WillOnce(DoAll(SetArgPointee<1>(*connected_sock.addr),
+                           Pointee((socklen_t)sizeof(::sockaddr_storage))))
+            .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&ssObj.ss),
                             Return(connected_sockfd)));
 
         // Capture output to stderr
@@ -1756,15 +1754,8 @@ TEST(RunMiniServerTestSuite, web_server_accept) {
                                  "with socket 206.* UPNP-MSER-1: .* mserv 206: "
                                  "cannot schedule request"));
 #else
-        if (old_code) {
-            EXPECT_THAT(
-                capturedStderr,
-                ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0"));
-        } else {
-            EXPECT_THAT(
-                capturedStderr,
-                ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0"));
-        }
+        EXPECT_THAT(capturedStderr,
+                    ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0"));
 #endif
     } // End scope of mocking, objects within the block will be destructed.
 
@@ -2008,14 +1999,18 @@ TEST_F(RunMiniServerFTestSuite, getNumericHostRedirection) {
     // Mock system functions
     umock::Sys_socketMock mocked_sys_socketObj;
     umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
-        .WillOnce(DoAll(SetArgPointee<1>(*ai1->ai_addr), Return(0)));
 
     // Test Unit
-    if (old_code)
+    if (old_code) {
+        EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+            .WillOnce(DoAll(SetArgPointee<1>(*ai1->ai_addr), Return(0)));
         EXPECT_TRUE(NS::getNumericHostRedirection((int)sockfd, host_port,
                                                   sizeof(host_port)));
-    else {
+    } else {
+
+        EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+            .Times(3)
+            .WillRepeatedly(DoAll(SetArgPointee<1>(*ai1->ai_addr), Return(0)));
         EXPECT_TRUE(NS::getNumericHostRedirection(sockfd, host_port,
                                                   sizeof(host_port)));
     }
@@ -2028,52 +2023,30 @@ TEST(RunMiniServerTestSuite,
     constexpr SOCKET sockfd{406};
     char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
 
-    // Mock system functions
+    // Mock system function getsockname()
+    // to fail with insufficient resources.
     umock::Sys_socketMock mocked_sys_socketObj;
     umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
     EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
         .WillOnce(SetErrnoAndReturn(ENOBUFS, -1));
 
-    // Because we have different error messages on different platforms for
-    // ENOBUFS, e.g. "[Nn]o buffer space" or "Unknown error", we mock it to be
-    // independent.
-    char errstr[]{"No buffer space"};
-    StringhMock mocked_stringhObj;
-    umock::Stringh stringh_injectObj(&mocked_stringhObj);
-    if (old_code)
-        EXPECT_CALL(mocked_stringhObj, strerror(ENOBUFS)).Times(0);
-    else
-        EXPECT_CALL(mocked_stringhObj, strerror(ENOBUFS))
-            .WillOnce(Return(errstr));
-
     // Capture output to stderr
-    class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
     // Test Unit
-    if (old_code)
+    if (old_code) {
         EXPECT_FALSE(NS::getNumericHostRedirection((int)sockfd, host_port,
                                                    sizeof(host_port)));
-    else
-        EXPECT_FALSE(NS::getNumericHostRedirection(sockfd, host_port,
-                                                   sizeof(host_port)));
-
-    // Get captured output
-    std::string capturedStderr = captureObj.get();
-
-    if (old_code) {
-        // This doesn't give any error messages.
-        EXPECT_TRUE(capturedStderr.empty());
+        // Get captured output. This doesn't give any error messages.
+        EXPECT_TRUE(captureObj.get().empty());
 
     } else {
 
-        EXPECT_THAT(
-            capturedStderr,
-            MatchesStdRegex(
-                "UPnPlib ERR\\. at \\*/.+\\.cpp\\[\\d+\\], "
-                ".*addr_get\\(\\d+\\), "
-                "errid=\\d+: systemcall getsockname\\(\\d+\\), No buffer "
-                "space.*"));
+        EXPECT_FALSE(NS::getNumericHostRedirection(sockfd, host_port,
+                                                   sizeof(host_port)));
+        // Get captured output
+        EXPECT_THAT(captureObj.get(), StartsWith("UPnPlib ERROR 1001!"));
     }
 
     EXPECT_STREQ(host_port, "<no message>");
@@ -2086,14 +2059,21 @@ TEST(RunMiniServerTestSuite,
 
     // Provide a sockaddr structure that will be returned by mocked
     // getsockname().
-    SockAddr sock;
-    sock.addr->sa_family = AF_UNIX;
+    SSockaddr_storage ssObj;
+    ssObj.ss.ss_family = AF_UNIX;
 
-    // Mock system functions
+    // Mock system function getsockname()
     umock::Sys_socketMock mocked_sys_socketObj;
     umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
-        .WillOnce(DoAll(SetArgPointee<1>(*sock.addr), Return(0)));
+    if (old_code)
+        EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+            .WillOnce(
+                DoAll(SetArgPointee<1>(*(sockaddr*)&ssObj.ss), Return(0)));
+    else
+        EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+            .Times(2)
+            .WillRepeatedly(
+                DoAll(SetArgPointee<1>(*(sockaddr*)&ssObj.ss), Return(0)));
 
     // Capture output to stderr
     CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
@@ -2123,9 +2103,7 @@ TEST(RunMiniServerTestSuite,
         std::string capturedStderr = captureObj.get();
 
         EXPECT_FALSE(ret_getNumericHostRedirection);
-        EXPECT_THAT(capturedStderr,
-                    MatchesStdRegex("UPnPlib ERR\\. at \\*/.+\\.cpp\\[\\d+\\], "
-                                    ".*addr_get\\(\\), errid=\\d+: .+"));
+        EXPECT_THAT(capturedStderr, StartsWith("UPnPlib ERROR 1002!"));
         EXPECT_STREQ(host_port, "<no message>");
     }
 }
@@ -2173,18 +2151,9 @@ TEST(RunMiniServerTestSuite, set_gena_callback) {
 }
 
 TEST_F(RunMiniServerFTestSuite, do_reinit) {
-    // clang-format off
-    // Unreproducible error detected on Github Action:
-    // 9/42 Test  #9: ctest_miniserver-pst .................***Failed    0.05 sec
-    // [       OK ] RunMiniServerDeathTest.free_handle_request_arg_with_nullptr_to_struct (12 ms)
-    // [ RUN      ] RunMiniServerFTestSuite.do_reinit
-    // D:\a\upnplib\upnplib\gtests\compa\test_miniserver.cpp(2196): error: Expected equality of these values:
-    //   s.fd
-    //     Which is: 404
-    //   sockfd
-    //     Which is: 456
-    // [  FAILED  ] RunMiniServerFTestSuite.do_reinit (1 ms)
-    // clang-format on
+    // On reinit the socket file descriptor will be closed and a new file
+    // descriptor is requested. Mostly it is the same but it is possible that
+    // it changes when other socket fds are requested.
 
     NS::MINISERVER_REUSEADDR = false;
     constexpr char text_addr[] = "192.168.202.244";
@@ -2216,10 +2185,7 @@ TEST_F(RunMiniServerFTestSuite, do_reinit) {
         text_addr);
     // Valid real socket
     EXPECT_NE(s.fd, INVALID_SOCKET);
-    std::cout << CRED "[ BUG      ] " CRES << __LINE__
-              << ": Unreproducible error detected. For Details look at the "
-                 "test source.\n";
-    EXPECT_EQ(s.fd, sockfd); // Unreproducible error here. See note above.
+    // EXPECT_EQ(s.fd, sockfd); This is an invalid condition. The fd may change.
     EXPECT_EQ(s.try_port, 0);
     EXPECT_EQ(s.actual_port, 0);
     EXPECT_EQ(s.address_len, (socklen_t)sizeof(*s.serverAddr4));
