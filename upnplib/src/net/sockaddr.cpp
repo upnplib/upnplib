@@ -2,12 +2,9 @@
 // Redistribution only with this Copyright remark. Last modified: 2023-06-02
 
 #include "upnplib/sockaddr.hpp"
-#include "umock/sys_socket.hpp"
-#include "umock/stringh.hpp"
+#include "upnplib/port.hpp"
 #include <filesystem>
 #include <cstring>
-#include <string>
-
 
 namespace upnplib {
 
@@ -37,8 +34,9 @@ uint16_t to_port(const std::string& a_port_str) {
         return static_cast<uint16_t>(port);
 
 throw_exit:
-    throw std::invalid_argument("ERROR! Failed to get port number for \"" +
-                                a_port_str + "\"");
+    throw std::invalid_argument(
+        "UPnPlib ERROR 1004! Failed to get port number for \"" + a_port_str +
+        "\"");
 }
 
 
@@ -63,8 +61,9 @@ std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr) {
         return std::string(addrbuf);
 
     default:
-        throw std::invalid_argument("ERROR! Unsupported address family " +
-                                    std::to_string(a_sockaddr->ss_family));
+        throw std::invalid_argument(
+            "UPnPlib ERROR 1005! Unsupported address family " +
+            std::to_string(a_sockaddr->ss_family));
     }
 }
 
@@ -130,6 +129,12 @@ SSockaddr_storage::~SSockaddr_storage() {
     TRACE2(this, " Destruct upnplib::SSockaddr_storage()") //
 }
 
+// Get reference to the sockaddr_storage structure.
+// Only as example, we don't use it.
+// SSockaddr_storage::operator const ::sockaddr_storage&() const {
+//     return this->ss;
+// }
+
 // Assignment operator= to set socket address from string,
 // -------------------------------------------------------
 void SSockaddr_storage::operator=(const std::string& a_addr_str) {
@@ -176,6 +181,23 @@ bool SSockaddr_storage::operator==(const ::sockaddr_storage& a_ss) const {
     return sockaddrcmp(&a_ss, &this->ss);
 }
 
+// Getter for the assosiated ip address without port
+// -------------------------------------------------
+// e.g. "[2001:db8::2]" or "192.168.254.253".
+std::string SSockaddr_storage::get_addr_str() const {
+    TRACE2(this, " Executing upnplib::SSockaddr_storage::get_addr_str()")
+    return to_addr_str(&this->ss);
+}
+
+// Getter for the assosiated port number
+// -------------------------------------
+uint16_t SSockaddr_storage::get_port() const {
+    TRACE2(this, " Executing upnplib::SSockaddr_storage::get_port()")
+    // sin_port and sin6_port are on the same memory location (union of the
+    // structures) so we can use it for AF_INET and AF_INET6.
+    return ntohs(((sockaddr_in6*)&this->ss)->sin6_port);
+}
+
 // private member functions
 // ------------------------
 void SSockaddr_storage::handle_ipv6(const std::string& a_addr_str) {
@@ -213,81 +235,5 @@ void SSockaddr_storage::handle_port(const std::string& a_port) {
     // structures) so we can use it for AF_INET and AF_INET6.
     ((sockaddr_in6*)&this->ss)->sin6_port = htons(to_port(a_port));
 }
-
-
-std::string SSockaddr_storage::get_addr_str() const {
-    TRACE2(this, " Executing upnplib::SSockaddr_storage::get_addr_str()")
-    return to_addr_str(&this->ss);
-}
-
-uint16_t SSockaddr_storage::get_port() const {
-    TRACE2(this, " Executing upnplib::SSockaddr_storage::get_port()")
-    // sin_port and sin6_port are on the same memory location (union of the
-    // structures) so we can use it for AF_INET and AF_INET6.
-    return ntohs(((sockaddr_in6*)&this->ss)->sin6_port);
-}
-
-
-#if 0
-// Wrapper for a sockaddr structure
-// ================================
-SockAddr::SockAddr() {
-    this->addr_ss.ss_family = AF_INET;
-    this->addr = (struct sockaddr*)&this->addr_ss;
-}
-
-void SockAddr::addr_set(const std::string& a_text_addr, unsigned short a_port) {
-    int ret = inet_pton(this->addr_ss.ss_family, a_text_addr.c_str(),
-                        &this->addr_in->sin_addr);
-    if (ret == 0) {
-        throw std::invalid_argument(
-            "at */" + std::filesystem::path(__FILE__).filename().string() +
-            "[" + std::to_string(__LINE__) + "]: Invalid ip address '" +
-            a_text_addr + "'");
-    }
-    this->addr_in->sin_port = htons(a_port);
-}
-
-std::string SockAddr::addr_get() {
-    // Return the text address which is stored in this structure.
-
-    char buf_ntop[INET6_ADDRSTRLEN]{};
-
-    const char* text_addr =
-        inet_ntop(this->addr_ss.ss_family, &this->addr_in->sin_addr, buf_ntop,
-                  sizeof(buf_ntop));
-    if (text_addr == nullptr)
-        throw std::invalid_argument(
-            "UPnPlib ERR. at */" +                                //
-            std::filesystem::path(__FILE__).filename().string() + //
-            "[" + std::to_string(__LINE__) + "], " + __FUNCTION__ +
-            "(), errid=" + std::to_string(errno) + ": " +
-            umock::string_h.strerror(errno));
-
-    return std::string(buf_ntop);
-}
-
-unsigned short SockAddr::addr_get_port() {
-    return ntohs(this->addr_in->sin_port);
-}
-
-std::string SocketAddr::addr_get() { return SockAddr::addr_get(); }
-
-std::string SocketAddr::addr_get(SOCKET a_sockfd) {
-    int rc = umock::sys_socket_h.getsockname(
-        a_sockfd, (struct sockaddr*)this->addr, &this->addr_len);
-
-    if (rc == -1)
-        throw std::runtime_error(
-            "UPnPlib ERR. at */" +
-            std::filesystem::path(__FILE__).filename().string() + "[" +
-            std::to_string(__LINE__) + "], " + __FUNCTION__ + "(" +
-            std::to_string(a_sockfd) + "), errid=" + std::to_string(errno) +
-            ": systemcall getsockname(" + std::to_string(a_sockfd) + "), " +
-            umock::string_h.strerror(errno));
-
-    return SockAddr::addr_get();
-}
-#endif
 
 } // namespace upnplib

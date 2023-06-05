@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-06-04
+# Redistribution only with this Copyright remark. Last modified: 2023-06-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -71,23 +71,6 @@ target_link_libraries(test_sockaddr-ush
 add_test(NAME ctest_sockaddr-ush COMMAND test_sockaddr-ush --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
-
-if(CMAKE_COMPILER_IS_GNUCC)
-add_executable(test_sockaddr2-ush
-        ./test_sockaddr2.cpp
-)
-target_compile_definitions(test_sockaddr2-ush
-    PRIVATE
-        UPNPLIB_SHARED
-)
-target_link_libraries(test_sockaddr2-ush
-    PRIVATE
-        upnplib_shared
-)
-add_test(NAME ctest_sockaddr2-ush COMMAND test_sockaddr2-ush --gtest_shuffle
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-)
-endif()
 
 
 # CAddrinfo
