@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-02
+// Redistribution only with this Copyright remark. Last modified: 2023-06-08
 
 #include <upnplib/socket.hpp>
 
@@ -20,7 +20,7 @@ using testing::StartsWith;
 using testing::ThrowsMessage;
 
 
-TEST(SocketTestSuite, get_unbind_ipv6_socket_successful) {
+TEST(SocketTestSuite, get_unbind_ipv6_stream_socket_successful) {
     // Test Unit
     CSocket sockObj(AF_INET6, SOCK_STREAM);
 
@@ -32,7 +32,24 @@ TEST(SocketTestSuite, get_unbind_ipv6_socket_successful) {
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
     EXPECT_FALSE(sockObj.is_v6only());
-    EXPECT_FALSE(sockObj.is_bind());
+    EXPECT_FALSE(sockObj.is_bound());
+    EXPECT_FALSE(sockObj.is_listen());
+}
+
+TEST(SocketTestSuite, get_unbind_ipv6_dgram_socket_successful) {
+    // Test Unit
+    CSocket sockObj(AF_INET6, SOCK_DGRAM);
+
+    // An unbound socket returns the unknown ip address and port 0
+    EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
+    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
+    EXPECT_EQ(sockObj.get_port(), 0);
+    EXPECT_EQ(sockObj.get_af(), AF_INET6);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    // This is always true, any setting is ignored
+    EXPECT_TRUE(sockObj.is_v6only());
+    EXPECT_FALSE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
@@ -48,7 +65,7 @@ TEST(SocketTestSuite, get_unbind_ipv4_socket_successful) {
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
     EXPECT_FALSE(sockObj.is_v6only());
-    EXPECT_FALSE(sockObj.is_bind());
+    EXPECT_FALSE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
@@ -86,7 +103,7 @@ TEST(SocketTestSuite, move_socket_successful) {
     EXPECT_EQ(sock2.get_sockerr(), 0);
     EXPECT_FALSE(sock2.is_reuse_addr());
     EXPECT_FALSE(sock2.is_v6only());
-    EXPECT_TRUE(sock2.is_bind());
+    EXPECT_TRUE(sock2.is_bound());
     EXPECT_TRUE(sock2.is_listen());
 }
 
@@ -123,7 +140,7 @@ TEST(SocketTestSuite, assign_socket_successful) {
     EXPECT_EQ(sock2.get_sockerr(), 0);
     EXPECT_FALSE(sock2.is_reuse_addr());
     EXPECT_FALSE(sock2.is_v6only());
-    EXPECT_TRUE(sock2.is_bind());
+    EXPECT_TRUE(sock2.is_bound());
     EXPECT_TRUE(sock2.is_listen());
 }
 
@@ -135,27 +152,28 @@ TEST(SocketTestSuite, instantiate_empty_socket) {
     // All getter from an INVALID_SOCKET throw an exception.
     EXPECT_THAT(
         [&sock]() { sock.get_addr_str(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1011!")));
     EXPECT_THAT(
         [&sock]() { sock.get_port(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1011!")));
     EXPECT_THAT(
         [&sock]() { sock.get_af(); },
         ThrowsMessage<std::runtime_error>(
             "ERROR! Failed to get address family: \"Bad file descriptor\""));
-    EXPECT_THAT([&sock]() { sock.get_sockerr(); },
-                ThrowsMessage<std::runtime_error>(StartsWith(
-                    "ERROR! Failed to get socket option SO_ERROR: ")));
-    EXPECT_THAT([&sock]() { sock.is_reuse_addr(); },
-                ThrowsMessage<std::runtime_error>(StartsWith(
-                    "ERROR! Failed to get socket option SO_REUSEADDR: ")));
+    EXPECT_THAT(
+        [&sock]() { sock.get_sockerr(); },
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1011!")));
+    EXPECT_THAT(
+        [&sock]() { sock.is_reuse_addr(); },
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1013!")));
     EXPECT_THAT([&sock]() { sock.is_v6only(); },
                 ThrowsMessage<std::runtime_error>(
                     "ERROR! Failed to get socket option 'is_v6only': \"Bad "
                     "file descriptor\""));
-    EXPECT_THAT([&sock]() { sock.is_bind(); },
+    EXPECT_THAT([&sock]() { sock.is_bound(); },
                 ThrowsMessage<std::runtime_error>(
-                    "ERROR! Failed to get socket option 'is_bind': \"Bad file "
+                    "UPnPlib ERROR 1010! Failed to get socket option "
+                    "'is_bound': \"Bad file "
                     "descriptor\""));
     EXPECT_THAT([&sock]() { sock.is_listen(); },
                 ThrowsMessage<std::runtime_error>(
@@ -167,7 +185,7 @@ TEST(SocketTestSuite, instantiate_with_invalid_socket_fd) {
     // Test Unit
     EXPECT_THAT(
         []() { CSocket sockObj((SOCKET)32000); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1012!")));
 }
 
 TEST(SocketTestSuite, instantiate_with_unbound_socket_fd) {
@@ -184,7 +202,7 @@ TEST(SocketTestSuite, instantiate_with_unbound_socket_fd) {
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
     EXPECT_FALSE(sockObj.is_v6only());
-    EXPECT_FALSE(sockObj.is_bind());
+    EXPECT_FALSE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 
     CLOSE_SOCKET_P(sfd);
@@ -212,7 +230,7 @@ TEST(SocketTestSuite, instantiate_with_bound_socket_fd) {
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
     EXPECT_TRUE(sockObj.is_v6only());
-    EXPECT_TRUE(sockObj.is_bind());
+    EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
@@ -235,7 +253,7 @@ TEST(SocketBindTestSuite, bind_ipv6_successful) {
     EXPECT_FALSE(sockObj.is_reuse_addr());
     // v6only is true because it is a socket property that's of domain AF_INET6.
     EXPECT_TRUE(sockObj.is_v6only());
-    EXPECT_TRUE(sockObj.is_bind());
+    EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
@@ -258,7 +276,7 @@ TEST(SocketBindTestSuite, bind_ipv4_successful) {
     EXPECT_FALSE(sockObj.is_reuse_addr());
     // v6only is false because it is a socket property that's of domain AF_INET.
     EXPECT_FALSE(sockObj.is_v6only());
-    EXPECT_TRUE(sockObj.is_bind());
+    EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
@@ -283,7 +301,7 @@ TEST(SocketBindTestSuite, bind_only_node_successful) {
     EXPECT_FALSE(sockObj.is_reuse_addr());
     // v6only is true because it is a socket property that's of domain AF_INET6.
     EXPECT_TRUE(sockObj.is_v6only());
-    EXPECT_TRUE(sockObj.is_bind());
+    EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
@@ -310,7 +328,7 @@ TEST(SocketBindTestSuite, bind_only_service_successful) {
     // (AF_INET6) is set if we request a passive address information (flag
     // AI_PASSIVE).
     EXPECT_FALSE(sockObj.is_v6only());
-    EXPECT_TRUE(sockObj.is_bind());
+    EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
@@ -325,8 +343,8 @@ TEST(SocketBindTestSuite, bind_with_wrong_addresses) {
             CSocket sock;
             sock.bind(ai);
         },
-        ThrowsMessage<std::runtime_error>(
-            StartsWith("ERROR! Failed to get socket option SO_TYPE:")));
+        ThrowsMessage<std::runtime_error>(StartsWith(
+            "UPnPlib ERROR 1012! Failed to get socket option SO_TYPE:")));
 
     // Test Unit. Binding with a different AF_INET will fail.
     EXPECT_THAT(
@@ -334,8 +352,8 @@ TEST(SocketBindTestSuite, bind_with_wrong_addresses) {
             CSocket sock(AF_INET, SOCK_STREAM);
             sock.bind(ai);
         },
-        ThrowsMessage<std::runtime_error>(
-            StartsWith("ERROR! Failed to bind socket to an address:")));
+        ThrowsMessage<std::runtime_error>(StartsWith(
+            "UPnPlib ERROR 1008! Failed to bind socket to an address:")));
 }
 
 TEST(SocketBindTestSuite, bind_with_different_socket_type) {
@@ -375,8 +393,8 @@ TEST(SocketBindTestSuite, bind_two_times_different_addresses_fail) {
                           AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
             sock.bind(ai2);
         },
-        ThrowsMessage<std::runtime_error>(
-            StartsWith("ERROR! Failed to bind socket to an address: ")));
+        ThrowsMessage<std::runtime_error>(StartsWith(
+            "UPnPlib ERROR 1008! Failed to bind socket to an address: ")));
 }
 
 TEST(SocketBindTestSuite, set_unset_bind_listen_same_address_multiple_times) {
@@ -423,7 +441,7 @@ TEST(SocketBindTestSuite, bind_same_address_two_times) {
     EXPECT_EQ(sock.get_sockerr(), 0);
     EXPECT_FALSE(sock.is_reuse_addr());
     EXPECT_FALSE(sock.is_v6only());
-    EXPECT_TRUE(sock.is_bind());
+    EXPECT_TRUE(sock.is_bound());
     EXPECT_FALSE(sock.is_listen());
 
     // Doing the same again doesn't hurt.
@@ -435,7 +453,7 @@ TEST(SocketBindTestSuite, bind_same_address_two_times) {
     EXPECT_EQ(sock.get_sockerr(), 0);
     EXPECT_FALSE(sock.is_reuse_addr());
     EXPECT_FALSE(sock.is_v6only());
-    EXPECT_TRUE(sock.is_bind());
+    EXPECT_TRUE(sock.is_bound());
     EXPECT_FALSE(sock.is_listen());
 }
 
@@ -453,6 +471,10 @@ TEST(SocketBindTestSuite, listen_to_same_address_multiple_times) {
     ASSERT_NO_THROW(sockObj.listen());
 
     EXPECT_NO_THROW(sockObj.listen());
+}
+
+TEST(SocketBindTestSuite, is_bound_successful) {
+    //
 }
 
 TEST(SocketTestSuite, set_wrong_arguments) {
@@ -484,27 +506,203 @@ TEST(SocketTestSuite, set_wrong_arguments) {
 //     EXPECT_TRUE(sock.is_listen());
 // }
 
-TEST(SocketTestSuite, check_af_inet6_v6only) {
+TEST(SocketV6onlyTestSuite, modify_v6only_af_inet6_stream_successful) {
     // Get socket
-    CSocket sock(AF_INET6, SOCK_DGRAM);
+    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    EXPECT_FALSE(sockObj.is_v6only());
 
-    // Set option IPV6_V6ONLY. Of course this can only be done with AF_INET6.
-    constexpr int so_option = 1; // Set IPV6_V6ONLY
-    constexpr socklen_t optlen{sizeof(so_option)};
-    ASSERT_EQ(::setsockopt(sock, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&so_option,
-                           optlen),
-              0);
+    // Set option IPV6_V6ONLY. Of course this can only be done with AF_INET6 on
+    // an unbound socket.
     // Test Unit
-    EXPECT_TRUE(sock.is_v6only());
+    ASSERT_NO_THROW(sockObj.set_v6only(true));
+    EXPECT_TRUE(sockObj.is_v6only());
+    ASSERT_NO_THROW(sockObj.set_v6only(false));
+    EXPECT_FALSE(sockObj.is_v6only());
 }
 
-TEST(SocketTestSuite, check_af_inet_v6only) {
+TEST(SocketV6onlyTestSuite, modify_v6only_af_inet6_dgram) {
+    // With SOCK_DGRAM the flag IP6_V6ONLY is always set and ignores any
+    // modification.
+
+    // Get socket
+    CSocket sockObj(AF_INET6, SOCK_DGRAM);
+    EXPECT_TRUE(sockObj.is_v6only());
+
+    // Set option IPV6_V6ONLY. This is always ignored.
+    // Test Unit
+    ASSERT_NO_THROW(sockObj.set_v6only(false));
+    EXPECT_TRUE(sockObj.is_v6only());
+}
+
+TEST(SocketV6onlyTestSuite, modify_check_af_inet_v6only) {
     // This must always return false because on AF_INET we cannot have v6only.
     // Get socket
-    CSocket sock(AF_INET, SOCK_STREAM);
+    CSocket sockObj(AF_INET, SOCK_STREAM);
+    EXPECT_FALSE(sockObj.is_v6only());
 
     // Test Unit
-    EXPECT_FALSE(sock.is_v6only());
+    ASSERT_NO_THROW(sockObj.set_v6only(true));
+    EXPECT_FALSE(sockObj.is_v6only());
+    ASSERT_NO_THROW(sockObj.set_v6only(false));
+    EXPECT_FALSE(sockObj.is_v6only());
+}
+
+TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet6_socket) {
+    // Get local interface address with service.
+    const CAddrinfo ai("[::1]", "50047", AF_INET6, SOCK_DGRAM,
+                       AI_NUMERICHOST | AI_NUMERICSERV);
+
+    // Create an unbound socket object
+    CSocket sockObj(AF_INET6, SOCK_DGRAM);
+    EXPECT_TRUE(sockObj.is_v6only()); // Always set with SOCK_DGRAM
+
+    // This binds the local address to the socket and always sets ipv6_v6only
+    // because we bind to an AF_INET6 address/socket.
+    ASSERT_NO_THROW(sockObj.bind(ai));
+    EXPECT_TRUE(sockObj.is_v6only());
+
+    // Test Unit
+    EXPECT_NO_THROW(sockObj.set_v6only(false));
+
+    // Nothing has changed, the socket is valid.
+    EXPECT_EQ(sockObj.get_addr_str(), "[::1]");
+    EXPECT_EQ(sockObj.get_port(), 50047);
+    EXPECT_EQ(sockObj.get_af(), AF_INET6);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    // Not set to false because the socket is already bound to an AF_INET6
+    // address and because it is always set with SOCK_DGRAM.
+    EXPECT_TRUE(sockObj.is_v6only());
+    EXPECT_TRUE(sockObj.is_bound());
+    EXPECT_FALSE(sockObj.is_listen());
+}
+
+TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet_socket) {
+    // Get local interface address with service.
+    const CAddrinfo ai("127.0.0.1", "50048", AF_INET, SOCK_STREAM,
+                       AI_NUMERICHOST | AI_NUMERICSERV);
+
+    // Create an unbound socket object
+    CSocket sockObj(AF_INET, SOCK_STREAM);
+    EXPECT_FALSE(sockObj.is_v6only());
+
+    // This binds the local address to the socket and never sets ipv6_v6only
+    // because we bind to an AF_INET address/socket.
+    ASSERT_NO_THROW(sockObj.bind(ai));
+    EXPECT_FALSE(sockObj.is_v6only());
+
+    // Test Unit
+    // This is silently ignored.
+    EXPECT_NO_THROW(sockObj.set_v6only(true));
+
+    // Nothing has changed, the socket is valid.
+    EXPECT_EQ(sockObj.get_addr_str(), "127.0.0.1");
+    EXPECT_EQ(sockObj.get_port(), 50048);
+    EXPECT_EQ(sockObj.get_af(), AF_INET);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    // Never set to true because it is an AF_INET socket.
+    EXPECT_FALSE(sockObj.is_v6only());
+    EXPECT_TRUE(sockObj.is_bound());
+    EXPECT_FALSE(sockObj.is_listen());
+}
+
+TEST(SocketV6onlyTestSuite, unset_v6only_on_passive_af_inet6_socket) {
+    // Get local interface address with service.
+    const CAddrinfo ai("", "50049", AF_INET6, SOCK_STREAM,
+                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
+
+    // Create an unbound socket object
+    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    EXPECT_FALSE(sockObj.is_v6only());
+
+    // Test Unit
+    // This binds the local address to the socket but does not modify
+    // IPV6_V6ONLY because we bind to a passive AF_INET6 address/socket.
+    ASSERT_NO_THROW(sockObj.bind(ai));
+    // Even with AF_INET6 the flag is still unset.
+    EXPECT_FALSE(sockObj.is_v6only());
+
+    // It cannot be set afer binding.
+    EXPECT_NO_THROW(sockObj.set_v6only(true));
+
+    // Nothing has changed, the socket is valid.
+    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
+    EXPECT_EQ(sockObj.get_port(), 50049);
+    EXPECT_EQ(sockObj.get_af(), AF_INET6);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    // Not set to true because the socket is already bound to an AF_INET6
+    // address.
+    EXPECT_FALSE(sockObj.is_v6only());
+    EXPECT_TRUE(sockObj.is_bound());
+    EXPECT_FALSE(sockObj.is_listen());
+}
+
+TEST(SocketV6onlyTestSuite, set_v6only_on_passive_af_inet6_socket) {
+    // Get local interface address with service.
+    const CAddrinfo ai("", "50051", AF_INET6, SOCK_DGRAM,
+                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
+
+    // Create an unbound socket object
+    CSocket sockObj(AF_INET6, SOCK_DGRAM);
+    EXPECT_TRUE(sockObj.is_v6only()); // Always set with SOCK_DGRAM
+
+    EXPECT_NO_THROW(sockObj.set_v6only(true));
+    EXPECT_TRUE(sockObj.is_v6only());
+
+    // Test Unit
+    // This binds the local address to the socket but does not modify
+    // IPV6_V6ONLY because we bind to a passive AF_INET6 address/socket.
+    ASSERT_NO_THROW(sockObj.bind(ai));
+    // Even with AF_INET6 the flag is still unset.
+    EXPECT_TRUE(sockObj.is_v6only());
+
+    // It cannot be set afer binding.
+    EXPECT_NO_THROW(sockObj.set_v6only(false));
+
+    // Nothing has changed, the socket is valid.
+    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
+    EXPECT_EQ(sockObj.get_port(), 50051);
+    EXPECT_EQ(sockObj.get_af(), AF_INET6);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    // Not set to false because the socket is already bound to an AF_INET6
+    // address and because it is always set with SOCK_DGRAM.
+    EXPECT_TRUE(sockObj.is_v6only());
+    EXPECT_TRUE(sockObj.is_bound());
+    EXPECT_FALSE(sockObj.is_listen());
+}
+
+TEST(SocketV6onlyTestSuite, modify_v6only_on_passive_af_inet_socket) {
+    // Get local interface address with service.
+    const CAddrinfo ai("", "50050", AF_INET, SOCK_DGRAM,
+                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
+
+    // Create an unbound socket object
+    CSocket sockObj(AF_INET, SOCK_DGRAM);
+    EXPECT_FALSE(sockObj.is_v6only());
+
+    // Test Unit
+    // This binds the local address to the socket and always resets ipv6_v6only
+    // even with passive mode because we bind to an AF_INET address/socket.
+    ASSERT_NO_THROW(sockObj.bind(ai));
+    EXPECT_FALSE(sockObj.is_v6only());
+
+    // It cannot be set afer binding.
+    EXPECT_NO_THROW(sockObj.set_v6only(true));
+
+    // Nothing has changed, the socket is valid.
+    EXPECT_EQ(sockObj.get_addr_str(), "0.0.0.0");
+    EXPECT_EQ(sockObj.get_port(), 50050);
+    EXPECT_EQ(sockObj.get_af(), AF_INET);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    // Not set to true because the socket is already bound to an AF_INET
+    // address.
+    EXPECT_FALSE(sockObj.is_v6only());
+    EXPECT_TRUE(sockObj.is_bound());
+    EXPECT_FALSE(sockObj.is_listen());
 }
 
 TEST(SocketTestSuite, get_addr_str_ipv6_successful) {
@@ -538,7 +736,7 @@ TEST(SocketTestSuite, get_addr_str_from_invalid_socket) {
             CSocket sock;
             sock.get_addr_str();
         },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1011!")));
 }
 
 TEST(SocketTestSuite, get_addr_str_from_unbound_socket) {

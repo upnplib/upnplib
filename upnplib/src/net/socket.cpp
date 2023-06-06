@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-02
+// Redistribution only with this Copyright remark. Last modified: 2023-06-08
 
 #include <upnplib/socket.hpp>
 #include <upnplib/port.hpp>
@@ -48,13 +48,15 @@ static inline void throw_error(std::string a_errmsg) {
 // Wrap socket() system call
 // -------------------------
 // Default constructor for an empty socket object
-CSocket::CSocket(){TRACE2(this, " Construct default upnplib::CSocket()")}
+CSocket::CSocket(){
+    TRACE2(this, " Construct default upnplib::CSocket()") //
+}
 
 // Constructor for new socket file descriptor
 CSocket::CSocket(sa_family_t a_domain, int a_type, int a_protocol) {
     TRACE2(this, " Construct upnplib::CSocket() with address family and type")
 
-    // Get socket file descriptor.
+    // Get new socket file descriptor.
     SOCKET sfd = ::socket(a_domain, a_type, a_protocol);
     if (sfd == INVALID_SOCKET)
         throw_error("ERROR! Failed to create socket:");
@@ -184,6 +186,7 @@ void CSocket::bind(const CAddrinfo& a_ai) {
     // Protect binding and storing its state (m_bound).
     std::scoped_lock lock(m_bound_mutex);
 
+    // Get the socket type, e.g. SOCK_STREAM or SOCK_DGRAM
     int so_type = this->get_sockopt_int(SOL_SOCKET, SO_TYPE, "SO_TYPE");
     if (a_ai->ai_socktype != so_type)
         throw std::runtime_error("ERROR! Failed to bind socket to an address: "
@@ -192,8 +195,26 @@ void CSocket::bind(const CAddrinfo& a_ai) {
                                  ") does not match socket type (" +
                                  std::to_string(so_type) + ")\"");
 
+    // With address family AF_INET6 and not passive mode we always set
+    // IPV6_V6ONLY to true. This is the behavior on Unix platforms when binding
+    // the address and cannot be modified afterwards. MacOS does not modify the
+    // flag with binding. To be portable with same behavior on all platforms we
+    // set the flag before binding.
+    if (a_ai->ai_family == AF_INET6 && (a_ai->ai_flags & AI_PASSIVE) == 0) {
+        // Don't use 'this->set_v6only(true)' because binding is protected with
+        // a mutex and we will get a deadlock because of using
+        // 'this->is_bound()' in 'this->set_v6only(true)'.
+        constexpr int so_option{1}; // true
+        // Type cast (char*)&so_option is needed for Microsoft Windows.
+        if (::setsockopt(m_sfd, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&so_option,
+                         sizeof(so_option)) != 0)
+            throw_error(
+                "UPnPlib ERROR 1007! Failed to set socket option IPV6_V6ONLY:");
+    }
+
+    // Here we bind the socket to an address
     if (::bind(m_sfd, a_ai->ai_addr, (socklen_t)a_ai->ai_addrlen) != 0)
-        throw_error("ERROR! Failed to bind socket to an address:");
+        throw_error("UPnPlib ERROR 1008! Failed to bind socket to an address:");
 
     m_bound = true;
 }
@@ -214,6 +235,21 @@ void CSocket::listen() {
         throw_error("ERROR! Failed to set socket to listen:");
 
     m_listen = true;
+}
+
+// Setter: set IPV6_V6ONLY
+void CSocket::set_v6only(const bool a_opt) {
+    TRACE2(this, " Executing upnplib::CSocket::set_ipv6_v6only()")
+
+    // Needed to have a valid argument for setsockopt()
+    const int so_option{a_opt};
+
+    // Type cast (char*)&so_option is needed for Microsoft Windows.
+    if (m_af == AF_INET6 && !this->is_bound() &&
+        ::setsockopt(m_sfd, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&so_option,
+                     sizeof(so_option)) != 0)
+        throw_error(
+            "UPnPlib ERROR 1006! Failed to set socket option IPV6_V6ONLY:");
 }
 
 // Getter
@@ -267,11 +303,21 @@ sa_family_t CSocket::get_af() const {
 
 int CSocket::get_sockerr() const {
     TRACE2(this, " Executing upnplib::CSocket::get_sockerr()")
+    if (m_sfd == INVALID_SOCKET)
+        throw std::runtime_error(
+            "UPnPlib ERROR 1011! Failed with socket error: "
+            "\"Bad file descriptor\"");
+
     return this->get_sockopt_int(SOL_SOCKET, SO_ERROR, "SO_ERROR");
 }
 
 bool CSocket::is_reuse_addr() const {
     TRACE2(this, " Executing upnplib::CSocket::is_reuse_addr()")
+    if (m_sfd == INVALID_SOCKET)
+        throw std::runtime_error(
+            "UPnPlib ERROR 1013! Failed to get socket option "
+            "'is_reuse_addr': \"Bad file descriptor\"");
+
     return this->get_sockopt_int(SOL_SOCKET, SO_REUSEADDR, "SO_REUSEADDR");
 }
 
@@ -286,40 +332,16 @@ bool CSocket::is_v6only() const {
                : false;
 }
 
-bool CSocket::is_bind() const {
-    // We assume that a socket with an unknown ip address and port 0 is unbound.
-    // TODO: Check also for unknown ip address, not only the port.
-    TRACE2(this, " Executing upnplib::CSocket::is_bind()")
+bool CSocket::is_bound() const {
+    TRACE2(this, " Executing upnplib::CSocket::is_bound()")
     if (m_sfd == INVALID_SOCKET)
-        throw std::runtime_error("ERROR! Failed to get socket option "
-                                 "'is_bind': \"Bad file descriptor\"");
+        throw std::runtime_error(
+            "UPnPlib ERROR 1010! Failed to get socket option "
+            "'is_bound': \"Bad file descriptor\"");
 
     // binding is protected.
     std::scoped_lock lock(m_bound_mutex);
-
-    ::sockaddr_storage ss{};
-    this->get_sockname(&ss);
-
-    switch (ss.ss_family) {
-    case AF_UNSPEC:
-        return false;
-    case AF_INET6:
-        if (((sockaddr_in6*)&ss)->sin6_port == 0 &&
-            ((sockaddr_in6*)&ss)->sin6_port == 0)
-            return false;
-        break;
-    case AF_INET:
-        if (((sockaddr_in*)&ss)->sin_port == 0 &&
-            ((sockaddr_in*)&ss)->sin_port == 0)
-            return false;
-        break;
-    default:
-        throw std::runtime_error("ERROR! Failed to get socket option "
-                                 "'is_bind': unsupported address family " +
-                                 std::to_string(ss.ss_family));
-    }
-
-    return true;
+    return m_bound;
 }
 
 bool CSocket::is_listen() const {
@@ -343,22 +365,32 @@ int CSocket::get_sockopt_int(int a_level, int a_optname,
     // Type cast (char*)&so_option is needed for Microsoft Windows.
     if (::getsockopt(m_sfd, a_level, a_optname, (char*)&so_option, &optlen) !=
         0)
-        throw_error("ERROR! Failed to get socket option " + a_optname_str +
-                    ":");
+        throw_error("UPnPlib ERROR 1012! Failed to get socket option " +
+                    a_optname_str + ":");
 
     return so_option;
 }
 
 void CSocket::get_sockname(::sockaddr_storage* a_ss) const {
     TRACE2(this, " Executing upnplib::CSocket::get_sockname()")
-    const std::string errmsg{
-        "UPnPlib ERROR 1001! Failed to get socket address/port:"};
+    int sockerr = this->get_sockerr();
+    if (sockerr != 0)
+        throw std::runtime_error(
+            "UPnPlib ERROR 1009! Failed to get_sockname(): \"Socket error = " +
+            std::to_string(sockerr) + "\"");
 
-    if (m_sfd == INVALID_SOCKET)
-        throw std::runtime_error(errmsg + " \"Bad file descriptor\"");
+    if (!this->is_bound()) {
+        // Different platforms handle ::getsockname() different with an unbound
+        // socket. MS Windows throws an exception, others do not. To be
+        // portable we return an empty socket address.
+        memset(a_ss, 0, sizeof(*a_ss));
+        a_ss->ss_family = m_af;
+        return;
+    }
+
     socklen_t len = sizeof(*a_ss); // May be modified
     if (umock::sys_socket_h.getsockname(m_sfd, (sockaddr*)a_ss, &len) != 0)
-        throw_error(errmsg);
+        throw_error("UPnPlib ERROR 1001! Failed to get socket address/port:");
 }
 
 } // namespace upnplib

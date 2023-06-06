@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_CLASS_HPP
 #define UPNPLIB_SOCKET_CLASS_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-01
+// Redistribution only with this Copyright remark. Last modified: 2023-06-07
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -96,6 +96,25 @@ class UPNPLIB_API CSocket {
     // REF:_[How_to_get_option_on_MacOS_if_a_socket_is_set_to_listen?](https://stackoverflow.com/q/75942911/5014688)
     void listen();
 
+    // Setter: set IPV6_V6ONLY
+    // * This flag can only be set on sockets of address family AF_INET6.
+    // * It is always false on a socket with address family AF_INET.
+    // * It is always true on Unix platforms after binding a socket to an
+    //   address of family AF_INET6 if passive mode isn't set on the address
+    //   info (flag AI_PASSIVE).
+    // * With an address info set to passive listen on local addresses (flag
+    //   AI_PASSIVE) IPV6_V6ONLY can be modified before binding it to an
+    //   address. After bind it hasn't changed. This means the socket can
+    //   listen to IPv6 and IPv4 connections if IPV6_V6ONLY is set to false.
+    // * It can never be modified on a sochet that is bound to an address.
+    //
+    // If one of the conditions above doesn't match, the setter silently
+    // ignores the request and will not modify the socket. Other system errors
+    // may throw an exception (e.g. using an invalid socket etc.).
+    //
+    // To get the current setting use CSocket::is_v6only().
+    void set_v6only(const bool);
+
     // Getter
     std::string get_addr_str() const;
     // Exception: std::invalid_argument if the socket isn't bound.
@@ -110,7 +129,7 @@ class UPNPLIB_API CSocket {
     bool is_reuse_addr() const;
     // IPV6_V6ONLY = false means allowing IPv4 and IPv6.
     bool is_v6only() const;
-    bool is_bind() const;
+    bool is_bound() const;
     bool is_listen() const;
 
   private:
