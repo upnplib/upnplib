@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-06-02
+ * Redistribution only with this Copyright remark. Last modified: 2023-06-20
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,7 +82,7 @@
 
 namespace compa {
 
-using ::upnplib::CSocket;
+using ::upnplib::CSocket_basic;
 
 /*! . */
 #define APPLICATION_LISTENING_PORT 49152
@@ -202,7 +202,7 @@ static int getNumericHostRedirection(SOCKET a_socket, char* a_host_port,
                                      size_t a_hp_size) {
     TRACE("Executing compa::getNumericHostRedirection()")
     try {
-        CSocket socketObj(a_socket);
+        CSocket_basic socketObj(a_socket);
         std::string host_port = socketObj.get_addr_str();
         host_port += ':' + std::to_string(socketObj.get_port());
         memcpy(a_host_port, host_port.c_str(), a_hp_size);

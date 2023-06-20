@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-06
+// Redistribution only with this Copyright remark. Last modified: 2023-06-19
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/gtest.hpp>
@@ -178,8 +178,6 @@ TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
 }
 
 TEST(SockaddrStorageTestSuite, fill_structure_from_function_output) {
-    WINSOCK_INIT_P
-
     // Get local interface address with service.
     // const CAddrinfo ai("[::1]", "50046", AF_INET6, SOCK_STREAM,
     //                    AI_NUMERICHOST | AI_NUMERICSERV);

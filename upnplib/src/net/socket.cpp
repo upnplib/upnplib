@@ -1,41 +1,52 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-08
+// Redistribution only with this Copyright remark. Last modified: 2023-06-20
 
 #include <upnplib/socket.hpp>
 #include <upnplib/port.hpp>
 #include <umock/sys_socket.hpp>
 #include <umock/stringh.hpp>
 
-#include <string>
-#include <cstring>
 #include <stdexcept>
 
 namespace upnplib {
 
+// Initialize and cleanup Microsoft Windows Sockets
+// ------------------------------------------------
 #ifdef _MSC_VER
-CWSAStartup::CWSAStartup() {
-    TRACE2(this, " Construct upnplib::CWSAStartup")
-    WSADATA wsaData;
-    int rc = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (rc != 0) {
-        throw std::runtime_error(
-            "UPnPlib ERROR 1003! Failed to initialize Windows "
-            "sockets: WSAStartup() returns " +
-            std::to_string(rc));
+class CWSAStartup {
+  public:
+    CWSAStartup() {
+        TRACE2(this, " Construct upnplib::CWSAStartup")
+        WSADATA wsaData;
+        int rc = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
+        if (rc != 0)
+            throw std::runtime_error(
+                "UPnPlib ERROR 1003! Failed to initialize Windows "
+                "sockets: WSAStartup() returns " +
+                std::to_string(rc));
     }
-}
 
-CWSAStartup::~CWSAStartup() {
-    TRACE2(this, " Destruct upnplib::CWSAStartup")
-    ::WSACleanup();
-}
-#endif // MSC_VER
+    ~CWSAStartup() {
+        TRACE2(this, " Destruct upnplib::CWSAStartup")
+        ::WSACleanup();
+    }
+};
+
+// Instantiate an object for livetime of the library.
+// --------------------------------------------------
+CWSAStartup winsock_init;
+#endif // _MSC_VER
 
 
-static inline void throw_error(std::string a_errmsg) {
-    // error number given by WSAGetLastError(), resp. contained in errno is
-    // used to specify details of the error. It is important that these error
-    // numbers hasn't been modified by executing other statements.
+// Free helper functions
+// =====================
+
+// Helper inline function to throw an exeption with additional information.
+// ------------------------------------------------------------------------
+// error number given by WSAGetLastError(), resp. contained in errno is used to
+// specify details of the error. It is important that these error numbers
+// hasn't been modified by executing other statements.
+static inline void throw_error(const std::string& a_errmsg) {
 #ifdef _MSC_VER
     throw std::runtime_error(
         a_errmsg + " WSAGetLastError()=" + std::to_string(WSAGetLastError()));
@@ -45,33 +56,220 @@ static inline void throw_error(std::string a_errmsg) {
 #endif
 }
 
-// Wrap socket() system call
-// -------------------------
+
+// upnplib wrapper for the ::getsockname() system function
+// -------------------------------------------------------
+static int getsockname(SOCKET a_sockfd, struct sockaddr* a_addr,
+                       socklen_t* a_addrlen) {
+    TRACE("Executing upnplib::getsockname()");
+
+    int ret = umock::sys_socket_h.getsockname(a_sockfd, a_addr, a_addrlen);
+    if (ret == 0)
+        return 0;
+
+#ifndef _MSC_VER
+    return ret;
+
+#else
+    if (WSAGetLastError() != WSAEINVAL) // Error code 10022 not set
+        return ret;
+
+    // WSAEINVAL indicates that the socket is unbound. We will return an
+    // empty sockaddr with address family set. This is what we get on Unix
+    // platforms. On Microsoft Windows we cannot use ::getsockname() like
+    // on unix platforms because it returns an error indicating an unbound
+    // socket and an untouched socket address storage. Here we have to use
+    // an alternative ::getsockopt() that provides additional info with a
+    // non-standard option SO_PROTOCOL_INFO.
+    ::WSAPROTOCOL_INFO protocol_info{};
+    int len{sizeof(protocol_info)}; // May be modified?
+    if (umock::sys_socket_h.getsockopt(a_sockfd, SOL_SOCKET, SO_PROTOCOL_INFO,
+                                       &protocol_info, &len) != 0)
+        return ENOBUFS; // Insufficient resources were available in the system
+                        // to perform the operation.
+
+    memset(a_addr, 0, *a_addrlen);
+    // Microsoft itself defines sockaddr.sa_family as ushort, so the typecast
+    // from int should not do any harm.
+    a_addr->sa_family =
+        static_cast<unsigned short>(protocol_info.iAddressFamily);
+    return 0;
+#endif
+}
+
+
+// CSocket_basic class
+// ===================
+// Default constructor for an empty socket object
+CSocket_basic::CSocket_basic(){
+    TRACE2(this, " Construct default upnplib::CSocket_basic()") //
+}
+
+// Constructor with given file desciptor
+CSocket_basic::CSocket_basic(SOCKET a_sfd) {
+    TRACE2(this, " Construct upnplib::CSocket_basic(SOCKET)")
+
+    // Check if we have a valid socket file descriptor
+    int so_option{-1};
+    socklen_t optlen{sizeof(so_option)}; // May be modified
+    // Type cast (char*)&so_option is needed for Microsoft Windows.
+    if (umock::sys_socket_h.getsockopt(a_sfd, SOL_SOCKET, SO_ERROR,
+                                       (char*)&so_option, &optlen) != 0)
+        throw_error("UPnPlib ERROR 1014! Failed to create socket:");
+
+    m_sfd = a_sfd;
+}
+
+// Destructor
+CSocket_basic::~CSocket_basic(){
+    TRACE2(this, " Destruct upnplib::CSocket_basic()") //
+}
+
+// Get the raw socket file descriptor
+CSocket_basic::operator SOCKET&() const {
+    TRACE2(this, " Executing upnplib::CSocket_basic::operator SOCKET&() (get "
+                 "raw socket fd)")
+    // There is no problem with cast here. We cast to const so we can only read.
+    return const_cast<SOCKET&>(m_sfd);
+}
+
+// Getter
+// ------
+sa_family_t CSocket_basic::get_family() const {
+    TRACE2(this, " Executing upnplib::CSocket_basic::get_family()")
+    ::sockaddr_storage ss{};
+    socklen_t len = sizeof(ss); // May be modified
+    if (upnplib::getsockname(m_sfd, (sockaddr*)&ss, &len) != 0)
+        throw_error("UPnPlib ERROR 1032! Failed to get socket address family:");
+
+    return ss.ss_family;
+}
+
+std::string CSocket_basic::get_addr_str() const {
+    TRACE2(this, " Executing upnplib::CSocket::get_addr_str()")
+
+    // Get address from socket file descriptor
+    ::sockaddr_storage ss{};
+    socklen_t len = sizeof(ss); // May be modified
+    if (upnplib::getsockname(m_sfd, (sockaddr*)&ss, &len) != 0)
+        throw_error("UPnPlib ERROR 1001! Failed to get socket address/port:");
+
+    char addr_buf[INET6_ADDRSTRLEN]{};
+    const char* ret{nullptr};
+    switch (ss.ss_family) {
+    case AF_INET6:
+        ret = ::inet_ntop(AF_INET6, &((sockaddr_in6*)&ss)->sin6_addr, addr_buf,
+                          sizeof(addr_buf));
+        break;
+    case AF_INET:
+        ret = ::inet_ntop(AF_INET, &((sockaddr_in*)&ss)->sin_addr, addr_buf,
+                          sizeof(addr_buf));
+        break;
+    default:
+        throw std::runtime_error(
+            "UPnPlib ERROR 1024! Failed to get a socket address string (IP "
+            "address): invalid address family " +
+            std::to_string(ss.ss_family));
+    }
+
+    if (ret == nullptr)
+        throw_error("UPnPlib ERROR 1025! Failed to get a socket address string "
+                    "(IP address):");
+
+    // Surround IPv6 address with '[' and ']'
+    return (ss.ss_family == AF_INET6) ? '[' + std::string(addr_buf) + ']'
+                                      : std::string(addr_buf);
+}
+
+uint16_t CSocket_basic::get_port() const {
+    TRACE2(this, " Executing upnplib::CSocket_basic::get_port()")
+
+    // Get port from socket file descriptor
+    ::sockaddr_storage ss{};
+    socklen_t len = sizeof(ss); // May be modified
+    if (upnplib::getsockname(m_sfd, (sockaddr*)&ss, &len) != 0)
+        throw_error("UPnPlib ERROR 1026! Failed to get socket port:");
+
+    // Because sin6_port and sin_port are as union at the same memory location
+    // this can be used for AF_INET6 and AF_INET port queries.
+    return ntohs(((sockaddr_in6*)&ss)->sin6_port);
+}
+
+int CSocket_basic::get_type() const {
+    TRACE2(this, " Executing upnplib::CSocket_basic::get_type()")
+    int so_option{-1};
+    socklen_t len{sizeof(so_option)}; // May be modified
+    // Type cast (char*)&so_option is needed for Microsoft Windows.
+    if (umock::sys_socket_h.getsockopt(m_sfd, SOL_SOCKET, SO_TYPE,
+                                       (char*)&so_option, &len) != 0)
+        throw_error("UPnPlib ERROR 1030! Failed to get socket option SO_TYPE:");
+
+    return so_option;
+}
+
+int CSocket_basic::get_sockerr() const {
+    TRACE2(this, " Executing upnplib::CSocket_basic::get_sockerr()")
+    int so_option{-1};
+    socklen_t len{sizeof(so_option)}; // May be modified
+    // Type cast (char*)&so_option is needed for Microsoft Windows.
+    if (umock::sys_socket_h.getsockopt(m_sfd, SOL_SOCKET, SO_ERROR,
+                                       (char*)&so_option, &len) != 0)
+        throw_error(
+            "UPnPlib ERROR 1011! Failed to get socket option SO_ERROR:");
+
+    return so_option;
+}
+
+bool CSocket_basic::is_reuse_addr() const {
+    TRACE2(this, " Executing upnplib::CSocket_basic::is_reuse_addr()")
+    int so_option{-1};
+    socklen_t len{sizeof(so_option)}; // May be modified
+    // Type cast (char*)&so_option is needed for Microsoft Windows.
+    if (umock::sys_socket_h.getsockopt(m_sfd, SOL_SOCKET, SO_REUSEADDR,
+                                       (char*)&so_option, &len) != 0)
+        throw_error(
+            "UPnPlib ERROR 1013! Failed to get socket option SO_REUSEADDR:");
+
+    return so_option;
+}
+
+
+// CSocket class
+// =============
 // Default constructor for an empty socket object
 CSocket::CSocket(){
     TRACE2(this, " Construct default upnplib::CSocket()") //
 }
 
 // Constructor for new socket file descriptor
-CSocket::CSocket(sa_family_t a_domain, int a_type, int a_protocol) {
-    TRACE2(this, " Construct upnplib::CSocket() with address family and type")
+CSocket::CSocket(sa_family_t a_family, int a_type) {
+    TRACE2(this, " Construct upnplib::CSocket(af, type)")
+
+    if (a_family != AF_INET6 && a_family != AF_INET)
+        throw std::invalid_argument("UPnPlib ERROR 1015! Failed to create "
+                                    "socket: invalid address family " +
+                                    std::to_string(a_family));
+    if (a_type != SOCK_STREAM && a_type != SOCK_DGRAM)
+        throw std::invalid_argument("UPnPlib ERROR 1016! Failed to create "
+                                    "socket: invalid socket type " +
+                                    std::to_string(a_type));
 
     // Get new socket file descriptor.
-    SOCKET sfd = ::socket(a_domain, a_type, a_protocol);
+    SOCKET sfd = ::socket(a_family, a_type, 0);
     if (sfd == INVALID_SOCKET)
-        throw_error("ERROR! Failed to create socket:");
+        throw_error("UPnPlib ERROR 1017! Failed to create socket:");
 
     int so_option{0};
     constexpr socklen_t optlen{sizeof(so_option)};
 
     // Reset SO_REUSEADDR on all platforms if it should be set by default. This
-    // is unclear on WIN32. See note below. If needed this option can be set
-    // later with a setter.
+    // is unclear on WIN32. See note below.
     // Type cast (char*)&so_option is needed for Microsoft Windows.
     if (::setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR, (char*)&so_option,
                      optlen) != 0) {
         CLOSE_SOCKET_P(sfd);
-        throw_error("ERROR! Failed to set socket option SO_REUSEADDR:");
+        throw_error(
+            "UPnPlib ERROR 1018! Failed to set socket option SO_REUSEADDR:");
     }
 
 #ifdef _MSC_VER
@@ -84,53 +282,42 @@ CSocket::CSocket(sa_family_t a_domain, int a_type, int a_protocol) {
     if (::setsockopt(sfd, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, (char*)&so_option,
                      optlen) != 0) {
         CLOSE_SOCKET_P(sfd);
-        throw_error("ERROR! Failed to set socket option SO_EXCLUSIVEADDRUSE:");
+        throw_error("UPnPlib ERROR 1019! Failed to set socket option "
+                    "SO_EXCLUSIVEADDRUSE:");
     }
 #endif
 
-    // Set socket option IPV6_V6ONLY to false, means allowing IPv4 and IPv6.
-    if (a_domain == AF_INET6) {
+    // Try to set socket option IPV6_V6ONLY to false if possible, means
+    // allowing IPv4 and IPv6. Although it makes no sense to enable
+    // IPV6_V6ONLY on an interface that can only use IPv4 we must reset it on
+    // Microsoft Windows because it is set there.
+#ifndef _MSC_VER
+    if (a_family == AF_INET6) {
+#endif
         so_option = 0;
         // Type cast (char*)&so_option is needed for Microsoft Windows.
         if (::setsockopt(sfd, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&so_option,
                          optlen) != 0) {
             CLOSE_SOCKET_P(sfd);
-            throw_error("ERROR! Failed to set socket option IPV6_V6ONLY:");
+            throw_error(
+                "UPnPlib ERROR 1020! Failed to set socket option IPV6_V6ONLY:");
         }
+#ifndef _MSC_VER
     }
+#endif
 
-    // Store socket file descriptor and settings
+    // Store socket file descriptor
     m_sfd = sfd;
-    m_af = a_domain;
-}
-
-// Constructor with given file desciptor
-CSocket::CSocket(SOCKET a_sfd) {
-    TRACE2(this, " Construct upnplib::CSocket(SOCKET)")
-
-    // Get address family. We can only get it from a bound socket.
-    // Otherwise we cache AF_UNSPEC.
-    ::sockaddr_storage ss{};
-    ss.ss_family = AF_UNSPEC;
-    m_sfd = a_sfd;
-    // Next may throw exceptions
-    this->get_sockname(&ss);
-
-    m_af = ss.ss_family;
 }
 
 // Move constructor
 CSocket::CSocket(CSocket&& that) {
     TRACE2(this, " Construct move upnplib::CSocket()")
-    m_af = that.m_af;
-    that.m_af = AF_UNSPEC;
     m_sfd = that.m_sfd;
     that.m_sfd = INVALID_SOCKET;
 
     // Following variables are protected
-    std::scoped_lock lock(m_bound_mutex, m_listen_mutex);
-    m_bound = that.m_bound;
-    that.m_bound = false;
+    std::scoped_lock lock(m_listen_mutex);
     m_listen = that.m_listen;
     that.m_listen = false;
 }
@@ -139,11 +326,9 @@ CSocket::CSocket(CSocket&& that) {
 CSocket& CSocket::operator=(CSocket that) {
     TRACE2(this, " Executing upnplib::CSocket::operator=()")
     std::swap(m_sfd, that.m_sfd);
-    std::swap(m_af, that.m_af);
 
     // Following variables are protected
-    std::scoped_lock lock(m_bound_mutex, m_listen_mutex);
-    std::swap(m_bound, that.m_bound);
+    std::scoped_lock lock(m_listen_mutex);
     std::swap(m_listen, that.m_listen);
 
     return *this;
@@ -156,12 +341,8 @@ CSocket::~CSocket() {
     CLOSE_SOCKET_P(m_sfd);
 }
 
-// Get the raw socket file descriptor
-CSocket::operator SOCKET&() const {
-    // There is no problem with cast here. We cast to const so we can only read.
-    return const_cast<SOCKET&>(m_sfd);
-}
-
+// Setter
+// ------
 #if 0
 void CSocket::set_reuse_addr(bool a_reuse) {
     // Set socket option SO_REUSEADDR on other platforms.
@@ -177,7 +358,7 @@ void CSocket::set_reuse_addr(bool a_reuse) {
 }
 #endif
 
-// Setter: bind socket to local address
+// Bind socket to local address
 // REF: [Bind: Address Already in Use]
 // (https://hea-www.harvard.edu/~fine/Tech/addrinuse.html)
 void CSocket::bind(const CAddrinfo& a_ai) {
@@ -187,13 +368,13 @@ void CSocket::bind(const CAddrinfo& a_ai) {
     std::scoped_lock lock(m_bound_mutex);
 
     // Get the socket type, e.g. SOCK_STREAM or SOCK_DGRAM
-    int so_type = this->get_sockopt_int(SOL_SOCKET, SO_TYPE, "SO_TYPE");
+    int so_type = this->get_type();
     if (a_ai->ai_socktype != so_type)
-        throw std::runtime_error("ERROR! Failed to bind socket to an address: "
-                                 "\"socket type of address (" +
-                                 std::to_string(a_ai->ai_socktype) +
-                                 ") does not match socket type (" +
-                                 std::to_string(so_type) + ")\"");
+        throw std::runtime_error(
+            "UPnPlib ERROR 1033! Failed to bind socket to an address: "
+            "\"socket type of address (" +
+            std::to_string(a_ai->ai_socktype) +
+            ") does not match socket type (" + std::to_string(so_type) + ")\"");
 
     // With address family AF_INET6 and not passive mode we always set
     // IPV6_V6ONLY to true. This is the behavior on Unix platforms when binding
@@ -215,11 +396,9 @@ void CSocket::bind(const CAddrinfo& a_ai) {
     // Here we bind the socket to an address
     if (::bind(m_sfd, a_ai->ai_addr, (socklen_t)a_ai->ai_addrlen) != 0)
         throw_error("UPnPlib ERROR 1008! Failed to bind socket to an address:");
-
-    m_bound = true;
 }
 
-// Setter: set socket to listen
+// Set socket to listen
 void CSocket::listen() {
     TRACE2(this, " Executing upnplib::CSocket::listen()")
 
@@ -232,12 +411,12 @@ void CSocket::listen() {
     // Second argument backlog (maximum length of the queue for pending
     // connections) is hard coded set to 1 for now.
     if (::listen(m_sfd, 1) != 0)
-        throw_error("ERROR! Failed to set socket to listen:");
+        throw_error("UPnPlib ERROR 1034! Failed to set socket to listen:");
 
     m_listen = true;
 }
 
-// Setter: set IPV6_V6ONLY
+// Set IPV6_V6ONLY
 void CSocket::set_v6only(const bool a_opt) {
     TRACE2(this, " Executing upnplib::CSocket::set_ipv6_v6only()")
 
@@ -245,7 +424,7 @@ void CSocket::set_v6only(const bool a_opt) {
     const int so_option{a_opt};
 
     // Type cast (char*)&so_option is needed for Microsoft Windows.
-    if (m_af == AF_INET6 && !this->is_bound() &&
+    if (this->get_family() == AF_INET6 && !this->is_bound() &&
         ::setsockopt(m_sfd, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&so_option,
                      sizeof(so_option)) != 0)
         throw_error(
@@ -253,144 +432,99 @@ void CSocket::set_v6only(const bool a_opt) {
 }
 
 // Getter
-std::string CSocket::get_addr_str() const {
-    TRACE2(this, " Executing upnplib::CSocket::get_addr_str()")
+// ------
+sa_family_t CSocket::get_family() const {
+    TRACE2(this, " Executing upnplib::CSocket::get_family()")
     ::sockaddr_storage ss{};
-    this->get_sockname(&ss);
+    socklen_t len = sizeof(ss); // May be modified
+    if (upnplib::getsockname(m_sfd, (sockaddr*)&ss, &len) != 0)
+        throw_error("UPnPlib ERROR 1027! Failed to get socket address family:");
 
-    char addr_buf[INET6_ADDRSTRLEN]{};
-    const char* ret{nullptr};
-    switch (ss.ss_family) {
-    case AF_INET6:
-        ret = ::inet_ntop(AF_INET6, &((sockaddr_in6*)&ss)->sin6_addr, addr_buf,
-                          sizeof(addr_buf));
-        break;
-    case AF_INET:
-        ret = ::inet_ntop(AF_INET, &((sockaddr_in*)&ss)->sin_addr, addr_buf,
-                          sizeof(addr_buf));
-        break;
-    default:
-        throw std::invalid_argument(
-            "UPnPlib ERROR 1002! Failed to get a socket address string (IP "
-            "address): unknown address family " +
-            std::to_string(ss.ss_family));
-    }
-
-    if (ret == nullptr)
-        throw_error(
-            "ERROR! Failed to get a socket address string (IP address):");
-
-    // Surround IPv6 address with '[' and ']'
-    return (ss.ss_family == AF_INET6) ? '[' + std::string(addr_buf) + ']'
-                                      : std::string(addr_buf);
+    return ss.ss_family;
 }
 
 uint16_t CSocket::get_port() const {
     TRACE2(this, " Executing upnplib::CSocket::get_port()")
+
+    // Get port from socket file descriptor
     ::sockaddr_storage ss{};
-    this->get_sockname(&ss);
+    socklen_t len = sizeof(ss); // May be modified
+    if (upnplib::getsockname(m_sfd, (sockaddr*)&ss, &len) != 0)
+        throw_error("UPnPlib ERROR 1031! Failed to get socket port:");
+
+    // Because sin6_port and sin_port are as union at the same memory location
+    // this can be used for AF_INET6 and AF_INET port queries.
     return ntohs(((sockaddr_in6*)&ss)->sin6_port);
-}
-
-sa_family_t CSocket::get_af() const {
-    TRACE2(this, " Executing upnplib::CSocket::get_af()")
-    if (m_sfd == INVALID_SOCKET)
-        throw std::runtime_error("ERROR! Failed to get address family: "
-                                 "\"Bad file descriptor\"");
-
-    return m_af;
-}
-
-int CSocket::get_sockerr() const {
-    TRACE2(this, " Executing upnplib::CSocket::get_sockerr()")
-    if (m_sfd == INVALID_SOCKET)
-        throw std::runtime_error(
-            "UPnPlib ERROR 1011! Failed with socket error: "
-            "\"Bad file descriptor\"");
-
-    return this->get_sockopt_int(SOL_SOCKET, SO_ERROR, "SO_ERROR");
-}
-
-bool CSocket::is_reuse_addr() const {
-    TRACE2(this, " Executing upnplib::CSocket::is_reuse_addr()")
-    if (m_sfd == INVALID_SOCKET)
-        throw std::runtime_error(
-            "UPnPlib ERROR 1013! Failed to get socket option "
-            "'is_reuse_addr': \"Bad file descriptor\"");
-
-    return this->get_sockopt_int(SOL_SOCKET, SO_REUSEADDR, "SO_REUSEADDR");
 }
 
 bool CSocket::is_v6only() const {
     TRACE2(this, " Executing upnplib::CSocket::is_v6only()")
     if (m_sfd == INVALID_SOCKET)
-        throw std::runtime_error("ERROR! Failed to get socket option "
-                                 "'is_v6only': \"Bad file descriptor\"");
-    // We can have v6only with AF_INET6. Otherwise always false is returned.
-    return (m_af == AF_INET6)
-               ? this->get_sockopt_int(IPPROTO_IPV6, IPV6_V6ONLY, "IPV6_V6ONLY")
-               : false;
+        throw std::runtime_error("UPnPlib ERROR 1028! Failed to get socket "
+                                 "option IPV6_V6ONLY: \"Bad file descriptor\"");
+
+    int so_option{0};
+    socklen_t len{sizeof(so_option)}; // May be modified
+    // Type cast (char*)&so_option is needed for Microsoft Windows.
+    umock::sys_socket_h.getsockopt(m_sfd, IPPROTO_IPV6, IPV6_V6ONLY,
+                                   (char*)&so_option, &len);
+
+    return so_option;
 }
 
 bool CSocket::is_bound() const {
+    // We get the socket address from the file descriptor and check if its
+    // address and port are all zero. We have to do this different for AF_INET6
+    // and AF_INET.
     TRACE2(this, " Executing upnplib::CSocket::is_bound()")
-    if (m_sfd == INVALID_SOCKET)
-        throw std::runtime_error(
-            "UPnPlib ERROR 1010! Failed to get socket option "
-            "'is_bound': \"Bad file descriptor\"");
 
     // binding is protected.
     std::scoped_lock lock(m_bound_mutex);
-    return m_bound;
+
+    ::sockaddr_storage ss{};
+    socklen_t len = sizeof(ss); // May be modified
+    if (upnplib::getsockname(m_sfd, (sockaddr*)&ss, &len) != 0)
+        throw_error(
+            "UPnPlib ERROR 1010! Failed to get socket status 'is_bound':");
+
+    switch (ss.ss_family) {
+    case AF_INET6: {
+        // The IPv6 address has 16 bytes so we simply compare it with a null
+        // bytes address.
+        unsigned char sin6_addr0[16]{};
+        sockaddr_in6* sa_in6 = (sockaddr_in6*)&ss;
+        // If address and port are 0 then the socket isn't bound to an address.
+        return (memcmp(sa_in6->sin6_addr.s6_addr, sin6_addr0,
+                       sizeof(sin6_addr0)) == 0 &&
+                sa_in6->sin6_port == 0)
+                   ? false
+                   : true;
+    }
+    case AF_INET: {
+        sockaddr_in* sa_in = (sockaddr_in*)&ss;
+        // If address and port are 0 then the socket isn't bound to an address.
+        return (sa_in->sin_addr.s_addr == 0 && sa_in->sin_port == 0) ? false
+                                                                     : true;
+    }
+    default:
+        throw std::runtime_error("UPnPlib ERROR 1029! Failed to check if "
+                                 "socket is bound to an addess: "
+                                 "invalid address family " +
+                                 std::to_string(ss.ss_family));
+    }
 }
 
 bool CSocket::is_listen() const {
     TRACE2(this, " Executing upnplib::CSocket::is_listen()")
     if (m_sfd == INVALID_SOCKET)
-        throw std::runtime_error("ERROR! Failed to get socket option "
-                                 "'is_Listen': \"Bad file descriptor\"");
+        throw std::runtime_error(
+            "UPnPlib ERROR 1035! Failed to get socket option "
+            "'is_Listen': \"Bad file descriptor\"");
 
     // m_listen is protected.
     std::scoped_lock lock(m_listen_mutex);
     return m_listen;
 }
 
-int CSocket::get_sockopt_int(int a_level, int a_optname,
-                             const std::string& a_optname_str) const {
-    TRACE2(this,
-           " Executing upnplib::CSocket::get_sockopt_int(), " + a_optname_str)
-    int so_option{-1};
-    socklen_t optlen{sizeof(so_option)}; // May be modified
-
-    // Type cast (char*)&so_option is needed for Microsoft Windows.
-    if (::getsockopt(m_sfd, a_level, a_optname, (char*)&so_option, &optlen) !=
-        0)
-        throw_error("UPnPlib ERROR 1012! Failed to get socket option " +
-                    a_optname_str + ":");
-
-    return so_option;
-}
-
-void CSocket::get_sockname(::sockaddr_storage* a_ss) const {
-    TRACE2(this, " Executing upnplib::CSocket::get_sockname()")
-    int sockerr = this->get_sockerr();
-    if (sockerr != 0)
-        throw std::runtime_error(
-            "UPnPlib ERROR 1009! Failed to get_sockname(): \"Socket error = " +
-            std::to_string(sockerr) + "\"");
-
-    if (!this->is_bound()) {
-        // Different platforms handle ::getsockname() different with an unbound
-        // socket. MS Windows throws an exception, others do not. To be
-        // portable we return an empty socket address.
-        memset(a_ss, 0, sizeof(*a_ss));
-        a_ss->ss_family = m_af;
-        return;
-    }
-
-    socklen_t len = sizeof(*a_ss); // May be modified
-    if (umock::sys_socket_h.getsockname(m_sfd, (sockaddr*)a_ss, &len) != 0)
-        throw_error("UPnPlib ERROR 1001! Failed to get socket address/port:");
-}
 
 } // namespace upnplib

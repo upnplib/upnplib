@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-16
+// Redistribution only with this Copyright remark. Last modified: 2023-06-20
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -1396,14 +1396,12 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_stopsock) {
     EXPECT_EQ(out.stopPort, NS::miniStopSockPort);
 
     // Get socket object from the bound socket
-    CSocket sockObj(out.miniServerStopSock);
+    CSocket_basic sockObj(out.miniServerStopSock);
 
     // and verify its settings
-    if (!github_actions) {
-        EXPECT_EQ(sockObj.get_af(), AF_INET);
-        EXPECT_EQ(sockObj.get_port(), NS::miniStopSockPort);
-        EXPECT_EQ(sockObj.get_addr_str(), "127.0.0.1");
-    }
+    EXPECT_EQ(sockObj.get_family(), AF_INET);
+    EXPECT_EQ(sockObj.get_port(), NS::miniStopSockPort);
+    EXPECT_EQ(sockObj.get_addr_str(), "127.0.0.1");
 
     // Close socket
     EXPECT_EQ(sock_close(out.miniServerStopSock), 0);
@@ -2010,19 +2008,17 @@ TEST_F(RunMiniServerFTestSuite, getNumericHostRedirection) {
                                                   sizeof(host_port)));
     } else {
 
-        if (!github_actions) {
-            EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
-                .Times(3)
-                .WillRepeatedly(
-                    DoAll(SetArgPointee<1>(*ai1->ai_addr), Return(0)));
-            EXPECT_TRUE(NS::getNumericHostRedirection(sockfd, host_port,
-                                                      sizeof(host_port)));
-        }
+        EXPECT_CALL(mocked_sys_socketObj,
+                    getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
+            .WillOnce(Return(0));
+        EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+            .Times(2)
+            .WillRepeatedly(DoAll(SetArgPointee<1>(*ai1->ai_addr), Return(0)));
+        EXPECT_TRUE(NS::getNumericHostRedirection(sockfd, host_port,
+                                                  sizeof(host_port)));
     }
 
-    if (!github_actions) {
-        EXPECT_STREQ(host_port, "192.168.123.122:54321");
-    }
+    EXPECT_STREQ(host_port, "192.168.123.122:54321");
 }
 
 TEST(RunMiniServerTestSuite,
@@ -2034,34 +2030,33 @@ TEST(RunMiniServerTestSuite,
     // to fail with insufficient resources.
     umock::Sys_socketMock mocked_sys_socketObj;
     umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    if (!github_actions) {
-        EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
-            .WillOnce(SetErrnoAndReturn(ENOBUFS, -1));
-    }
+    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+        .WillOnce(SetErrnoAndReturn(ENOBUFS, -1));
+
     // Capture output to stderr
     CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
     // Test Unit
     if (old_code) {
-        if (!github_actions) {
-            EXPECT_FALSE(NS::getNumericHostRedirection((int)sockfd, host_port,
-                                                       sizeof(host_port)));
-        }
+        EXPECT_FALSE(NS::getNumericHostRedirection((int)sockfd, host_port,
+                                                   sizeof(host_port)));
         // Get captured output. This doesn't give any error messages.
         EXPECT_TRUE(captureObj.get().empty());
 
     } else {
 
+        EXPECT_CALL(mocked_sys_socketObj,
+                    getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
+            .WillOnce(Return(0));
+
         EXPECT_FALSE(NS::getNumericHostRedirection(sockfd, host_port,
                                                    sizeof(host_port)));
         // Get captured output
-        EXPECT_THAT(captureObj.get(), StartsWith("UPnPlib ERROR 1012!"));
+        EXPECT_THAT(captureObj.get(), StartsWith("UPnPlib ERROR 1001!"));
     }
 
-    if (!github_actions) {
-        EXPECT_STREQ(host_port, "<no message>");
-    }
+    EXPECT_STREQ(host_port, "<no message>");
 }
 
 TEST(RunMiniServerTestSuite,
@@ -2077,17 +2072,22 @@ TEST(RunMiniServerTestSuite,
     // Mock system function getsockname()
     umock::Sys_socketMock mocked_sys_socketObj;
     umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    if (old_code)
+
+    if (old_code) {
         EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
             .WillOnce(
                 DoAll(SetArgPointee<1>(*(sockaddr*)&ssObj.ss), Return(0)));
-    else //
-        if (!github_actions) {
+
+    } else {
+
+        EXPECT_CALL(mocked_sys_socketObj,
+                    getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
+            .WillOnce(Return(0));
         EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
-            .Times(2)
-            .WillRepeatedly(
+            .WillOnce(
                 DoAll(SetArgPointee<1>(*(sockaddr*)&ssObj.ss), Return(0)));
     }
+
     // Capture output to stderr
     CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
@@ -2116,7 +2116,7 @@ TEST(RunMiniServerTestSuite,
         std::string capturedStderr = captureObj.get();
 
         EXPECT_FALSE(ret_getNumericHostRedirection);
-        EXPECT_THAT(capturedStderr, StartsWith("UPnPlib ERROR 1012!"));
+        EXPECT_THAT(capturedStderr, StartsWith("UPnPlib ERROR 1024!"));
         EXPECT_STREQ(host_port, "<no message>");
     }
 }
@@ -2223,6 +2223,10 @@ TEST_F(StopMiniServerFTestSuite, sock_close) {
 
 //
 int main(int argc, char** argv) {
+#ifdef _MSC_VER
+    // Uninitialize Windows sockets if already global initialized.
+    ::WSACleanup();
+#endif
     ::testing::InitGoogleMock(&argc, argv);
     // CLogging loggingObj; // Output only with build type DEBUG.
 #include "compa/gtest_main.inc"

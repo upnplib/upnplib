@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-06-09
+# Redistribution only with this Copyright remark. Last modified: 2023-06-19
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -93,7 +93,6 @@ add_test(NAME ctest_addrinfo-ush COMMAND test_addrinfo-ush --gtest_shuffle
 
 # CSocket
 # =======
-if(FALSE)
 add_executable(test_socket-ush
     ./test_socket.cpp
 )
@@ -106,22 +105,6 @@ target_link_libraries(test_socket-ush
         upnplib_shared
 )
 add_test(NAME ctest_socket-ush COMMAND test_socket-ush --gtest_shuffle
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-)
-endif()
-
-add_executable(test_socket2-ush
-    ./test_socket2.cpp
-)
-target_compile_definitions(test_socket2-ush
-    PRIVATE
-        UPNPLIB_SHARED
-)
-target_link_libraries(test_socket2-ush
-    PRIVATE
-        upnplib_shared
-)
-add_test(NAME ctest_socket2-ush COMMAND test_socket2-ush --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
