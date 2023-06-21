@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-28
+// Redistribution only with this Copyright remark. Last modified: 2023-06-21
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -107,13 +107,14 @@ addrinfo* CAddrinfo::get_new_addrinfo() const {
     return new_res;
 
 throw_error1:
-    throw std::invalid_argument("[" + std::to_string(__LINE__) +
-                                "] ERROR! Failed to get address information: "
-                                "invalid numeric node address.");
+    throw std::invalid_argument(
+        "[" + std::to_string(__LINE__) +
+        "] UPnPlib ERROR 1036! Failed to get address information: "
+        "invalid numeric node address.");
 throw_error2:
     throw std::runtime_error(
         "[" + std::to_string(__LINE__) +
-        "] ERROR! Failed to get address information: errid(" +
+        "] UPnPlib ERROR 1037! Failed to get address information: errid(" +
         std::to_string(ret) + ")=\"" + ::gai_strerror(ret) + "\"");
 }
 

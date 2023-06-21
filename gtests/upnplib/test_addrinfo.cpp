@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-19
+// Redistribution only with this Copyright remark. Last modified: 2023-06-21
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/socket.hpp>
@@ -42,9 +42,9 @@ TEST(AddrinfoTestSuite, alphanumeric_host_is_not_supported) {
     // Test Unit
     EXPECT_THAT(
         []() { CAddrinfo ai1("localhost", "50032", AF_INET6, SOCK_STREAM); },
-        ThrowsMessage<std::invalid_argument>(
-            HasSubstr("ERROR! Failed to get address information: invalid "
-                      "numeric node address.")));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "UPnPlib ERROR 1036! Failed to get address information: invalid "
+            "numeric node address.")));
 }
 
 TEST(AddrinfoTestSuite, get_unknown_host) {
@@ -56,9 +56,9 @@ TEST(AddrinfoTestSuite, get_unknown_host) {
             CAddrinfo ai1("localhost", "50031", AF_INET6, SOCK_STREAM,
                           AI_NUMERICHOST);
         },
-        ThrowsMessage<std::invalid_argument>(
-            HasSubstr("ERROR! Failed to get address information: invalid "
-                      "numeric node address.")));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "UPnPlib ERROR 1036! Failed to get address information: invalid "
+            "numeric node address.")));
 }
 
 TEST(AddrinfoTestSuite, get_passive_addressinfo) {
@@ -82,20 +82,30 @@ TEST(AddrinfoTestSuite, get_passive_addressinfo) {
     EXPECT_EQ(ai1.port(), 50006);
 }
 
-TEST(AddrinfoTestSuite, get_info_loopback_interface) {
+TEST(AddrinfoTestSuite, get_info_af_unspec_loopback_interface) {
     // To get info of the loopback interface node must be empty without
-    // AI_PASSIVE flag set.
+    // AI_PASSIVE flag set. The value AF_UNSPEC indicates that getaddrinfo()
+    // should return socket addresses for any address family (either IPv4 or
+    // IPv6) that can be used with node and service.
     // Node "" or "[]" are always equivalent.
 
     // Test Unit
     CAddrinfo ai1("", "50007", AF_UNSPEC, SOCK_STREAM, AI_NUMERICHOST);
 
-    EXPECT_EQ(ai1->ai_family, AF_INET6);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai1.addr_str(), "[::1]");
     EXPECT_EQ(ai1.port(), 50007);
+    switch (ai1->ai_family) {
+    case AF_INET6:
+        EXPECT_EQ(ai1.addr_str(), "[::1]");
+        break;
+    case AF_INET:
+        EXPECT_EQ(ai1.addr_str(), "127.0.0.1");
+        break;
+    default:
+        FAIL() << "invalid address family " << ai1->ai_family;
+    }
 }
 
 TEST(AddrinfoTestSuite, invalid_ipv6_node_address) {
@@ -104,25 +114,25 @@ TEST(AddrinfoTestSuite, invalid_ipv6_node_address) {
         []() {
             CAddrinfo ai1("::1", "", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
         },
-        ThrowsMessage<std::invalid_argument>(
-            HasSubstr("ERROR! Failed to get address information: invalid "
-                      "numeric node address.")));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "UPnPlib ERROR 1036! Failed to get address information: invalid "
+            "numeric node address.")));
 
     EXPECT_THAT(
         []() {
             CAddrinfo ai1("[::1", "", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
         },
-        ThrowsMessage<std::invalid_argument>(
-            HasSubstr("ERROR! Failed to get address information: invalid "
-                      "numeric node address.")));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "UPnPlib ERROR 1036! Failed to get address information: invalid "
+            "numeric node address.")));
 
     EXPECT_THAT(
         []() {
             CAddrinfo ai1("::1]", "", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
         },
-        ThrowsMessage<std::invalid_argument>(
-            HasSubstr("ERROR! Failed to get address information: invalid "
-                      "numeric node address.")));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "UPnPlib ERROR 1036! Failed to get address information: invalid "
+            "numeric node address.")));
 }
 
 TEST(AddrinfoTestSuite, empty_service) {
@@ -148,9 +158,9 @@ TEST(AddrinfoTestSuite, get_fails) {
                           AI_NUMERICHOST);
         },
         // errid(-9)="Address family for hostname not supported"
-        ThrowsMessage<std::invalid_argument>(
-            HasSubstr("ERROR! Failed to get address information: invalid "
-                      "numeric node address.")));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "UPnPlib ERROR 1036! Failed to get address information: invalid "
+            "numeric node address.")));
 }
 
 TEST(AddrinfoTestSuite, copy_successful) {

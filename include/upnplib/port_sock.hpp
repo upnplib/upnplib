@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_SOCK_HPP
 #define UPNPLIB_INCLUDE_PORT_SOCK_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-16
+// Redistribution only with this Copyright remark. Last modified: 2023-06-21
 
 // clang-format off
 
@@ -18,6 +18,8 @@
 
   // _MSC_VER has SOCKET defined but unsigned and not a file descriptor.
   typedef ADDRESS_FAMILY sa_family_t;
+  // socklen_t describes the length of a socket address. This is an integer
+  // type of at least 32 bits.
   typedef int socklen_t;
   typedef uint16_t in_port_t;
 

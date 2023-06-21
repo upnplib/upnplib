@@ -149,10 +149,10 @@ class UPNPLIB_API CSocket : public CSocket_basic {
     // Setter
     // ------
     // Set socket to bind.
-    // Binding a socket address (given with CAddrinfo) with a different socket
-    // type (e.g. SOCK_STREAM, SOCK_DGRAM, etc.) than that of the socket is not
-    // supported and throw an error.
-    void bind(const CAddrinfo& a_addrObj);
+    // We use a string argument for a_port to be able to use service names
+    // instead of only numbers.
+    void bind(const std::string& a_node, const std::string& a_port,
+              const int a_flags = 0);
 
     // Set socket to listen.
     // On Linux there is a socket option SO_ACCEPTCONN that can be get with

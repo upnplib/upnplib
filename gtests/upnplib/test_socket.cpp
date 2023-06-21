@@ -26,10 +26,9 @@ using ::testing::ThrowsMessage;
 
 
 // Create a simple random number generator for port numbers.
-// We need this because we do not reuse addresses before TIME_WAIT has expired
-// (socket option SO_REUSEADDR = false). Quick Repeating tests may violate this
-// rule and fail. So we have always to use different socket addresses and that
-// is already given with different port numbers.
+// We could need this because we do not reuse addresses before TIME_WAIT has
+// expired (socket option SO_REUSEADDR = false). We may want to use different
+// socket addresses and that is already given with different port numbers.
 std::random_device rd;         // obtain a random number from hardware
 std::minstd_rand random(rd()); // seed the generator
 std::uniform_int_distribution<in_port_t> portno(49152, 65535); // define range
@@ -54,14 +53,10 @@ TEST(SocketBasicTestSuite, instantiate_socket_successful) {
 }
 
 TEST(SocketBasicTestSuite, instantiate_with_bound_socket_fd) {
-    // Get local interface address
-    const CAddrinfo ai("", "8080", AF_INET6, SOCK_STREAM,
-                       AI_NUMERICHOST | AI_NUMERICSERV);
-
     // and bind it to a socket.
     CSocket bound_sockObj(AF_INET6, SOCK_STREAM);
     EXPECT_FALSE(bound_sockObj.is_v6only());
-    ASSERT_NO_THROW(bound_sockObj.bind(ai));
+    ASSERT_NO_THROW(bound_sockObj.bind("", "8080"));
     EXPECT_TRUE(bound_sockObj.is_v6only());
     SOCKET bound_sock = bound_sockObj;
 
@@ -346,13 +341,8 @@ TEST(SocketTestSuite, move_socket_successful) {
     CSocket sock1(AF_INET, SOCK_STREAM);
     SOCKET old_fd_sock1 = sock1;
 
-    // Get local interface address when node is empty and flag AI_PASSIVE is
-    // set. Socket type (SOCK_STREAM) must be the same as that from the socket.
-    CAddrinfo ai("", "8080", AF_INET, SOCK_STREAM,
-                 AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-
-    // Bind address to the socket.
-    ASSERT_NO_THROW(sock1.bind(ai));
+    // Get local interface address when node is empty with flag AI_PASSIVE.
+    ASSERT_NO_THROW(sock1.bind("", "8080", AI_PASSIVE));
 
     // Configure socket to listen so it will accept connections.
     ASSERT_NO_THROW(sock1.listen());
@@ -383,17 +373,12 @@ TEST(SocketTestSuite, move_socket_successful) {
 }
 
 TEST(SocketTestSuite, assign_socket_successful) {
-    // Get local interface address when node is empty and flag AI_PASSIVE is
-    // set. Socket type (SOCK_STREAM) must be the same as that from the socket.
-    CAddrinfo ai("", "8080", AF_INET6, SOCK_STREAM,
-                 AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-
     // Provide first of two socket objects.
     CSocket sock1(AF_INET6, SOCK_STREAM);
     SOCKET old_fd_sock1 = sock1;
 
-    // Bind local interface address to the socket.
-    ASSERT_NO_THROW(sock1.bind(ai));
+    // Get local interface address when node is empty with flag AI_PASSIVE.
+    ASSERT_NO_THROW(sock1.bind("", "8080", AI_PASSIVE));
 
     // Configure socket to listen so it will accept connections.
     ASSERT_NO_THROW(sock1.listen());
@@ -434,11 +419,84 @@ TEST(SocketTestSuite, set_wrong_arguments) {
                     "UPnPlib ERROR 1016! Failed to create socket: ")));
 }
 
-TEST(SocketBindTestSuite, bind_ipv6_successful) {
-    // Get local interface address with service.
-    const CAddrinfo ai("[::1]", "8080", AF_INET6, SOCK_STREAM,
-                       AI_NUMERICHOST | AI_NUMERICSERV);
+TEST(SocketTestSuite, get_addr_str_ipv6_successful) {
+    // Get a socket and bind it to the local address.
+    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
+    // Test Unit
+    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
+}
+
+TEST(SocketTestSuite, get_addr_str_ipv4_successful) {
+    // Get a socket and bind it to the local address.
+    CSocket sockObj(AF_INET, SOCK_DGRAM);
+    ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
+
+    // Test Unit
+    EXPECT_EQ(sockObj.get_addr_str(), "0.0.0.0");
+}
+
+TEST(SocketTestSuite, get_addr_str_from_invalid_socket) {
+    // Test Unit wit empty socket.
+    EXPECT_THAT(
+        []() {
+            CSocket sockObj;
+            sockObj.get_addr_str();
+        },
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
+}
+
+TEST(SocketTestSuite, get_addr_str_from_unbound_socket) {
+    // Get a valid socket but do not bind it to an address.
+    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
+    EXPECT_EQ(sockObj.get_port(), 0);
+}
+
+TEST(SocketTestSuite, get_addr_str_syscall_fail) {
+    // Get a socket and bind it to the local address.
+    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
+
+    // Mock system function getsockname().
+    umock::Sys_socketMock mocked_sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    EXPECT_CALL(
+        mocked_sys_socketObj,
+        getsockname((SOCKET)sockObj, _, Pointee((int)sizeof(sockaddr_storage))))
+        .WillOnce(SetErrnoAndReturn(ENOBUFS, SOCKET_ERROR));
+
+    // Test Unit
+    EXPECT_THAT(
+        [&sockObj]() { sockObj.get_addr_str(); },
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
+}
+
+TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
+    // Get a socket and bind it to the local address.
+    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
+
+    // Provide invalid address family.
+    ::sockaddr_storage ss{};
+    ss.ss_family = (sa_family_t)255;
+
+    // Mock system function
+    umock::Sys_socketMock mocked_sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    EXPECT_CALL(mocked_sys_socketObj,
+                getsockname((SOCKET)sockObj, _,
+                            Pointee((int)sizeof(::sockaddr_storage))))
+        .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&ss), Return(0)));
+
+    // Test Unit
+    EXPECT_THAT(
+        [&sockObj]() { sockObj.get_addr_str(); },
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1024!")));
+}
+
+TEST(SocketBindTestSuite, bind_ipv6_successful) {
     // Create an unbound socket object
     CSocket sockObj(AF_INET6, SOCK_STREAM);
     EXPECT_FALSE(sockObj.is_v6only());
@@ -451,7 +509,7 @@ TEST(SocketBindTestSuite, bind_ipv6_successful) {
     // Test Unit.
     // This binds the local address to the socket and sets IPV6_V6ONLY always
     // to true which cannot be modified afterwards.
-    ASSERT_NO_THROW(sockObj.bind(ai));
+    ASSERT_NO_THROW(sockObj.bind("[::1]", "8080"));
     EXPECT_TRUE(sockObj.is_v6only());
     EXPECT_NO_THROW(sockObj.set_v6only(false));
 
@@ -468,10 +526,6 @@ TEST(SocketBindTestSuite, bind_ipv6_successful) {
 }
 
 TEST(SocketBindTestSuite, bind_ipv4_successful) {
-    // Get local interface address with service.
-    const CAddrinfo ai("127.0.0.1", "8080", AF_INET, SOCK_STREAM,
-                       AI_NUMERICHOST | AI_NUMERICSERV);
-
     // Create an unbound socket object
     CSocket sockObj(AF_INET, SOCK_STREAM);
     EXPECT_FALSE(sockObj.is_v6only());
@@ -481,7 +535,7 @@ TEST(SocketBindTestSuite, bind_ipv4_successful) {
 
     // Test Unit.
     // This binds the local address to the socket.
-    ASSERT_NO_THROW(sockObj.bind(ai));
+    ASSERT_NO_THROW(sockObj.bind("127.0.0.1", "8080"));
     // Can never be set after binding
     EXPECT_NO_THROW(sockObj.set_v6only(true));
 
@@ -497,18 +551,13 @@ TEST(SocketBindTestSuite, bind_ipv4_successful) {
     EXPECT_FALSE(sockObj.is_listen());
 }
 
-TEST(SocketBindTestSuite, bind_only_node_successful) {
+TEST(SocketBindTestSuite, bind_to_next_free_port_successful) {
     // With empty service the operating system returns next free port number.
-
-    // Get local interface address with no service.
-    const CAddrinfo ai("[::1]", "", AF_INET6, SOCK_STREAM,
-                       AI_NUMERICHOST | AI_NUMERICSERV);
-
     // Create an unbound socket object
     CSocket sockObj(AF_INET6, SOCK_STREAM);
 
     // Test Unit.
-    ASSERT_NO_THROW(sockObj.bind(ai));
+    ASSERT_NO_THROW(sockObj.bind("[::1]", ""));
 
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_type(), SOCK_STREAM);
@@ -524,15 +573,11 @@ TEST(SocketBindTestSuite, bind_only_node_successful) {
 }
 
 TEST(SocketBindTestSuite, bind_only_service_successful) {
-    // Get local interface address.
-    const CAddrinfo ai("", "8080", AF_INET6, SOCK_STREAM,
-                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-
     // Create an unbind socket object.
     CSocket sockObj(AF_INET6, SOCK_STREAM);
 
     // Test Unit.
-    ASSERT_NO_THROW(sockObj.bind(ai));
+    ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_type(), SOCK_STREAM);
@@ -551,45 +596,14 @@ TEST(SocketBindTestSuite, bind_only_service_successful) {
     EXPECT_FALSE(sockObj.is_listen());
 }
 
-TEST(SocketBindTestSuite, bind_with_wrong_addresses) {
-    // Get local interface address.
-    const CAddrinfo ai("", "8080", AF_INET6, SOCK_STREAM,
-                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-
+TEST(SocketBindTestSuite, bind_with_wrong_address) {
     // Test Unit. Binding an empty socket object will fail.
     EXPECT_THAT(
-        [&ai]() {
+        []() {
             CSocket sockObj;
-            sockObj.bind(ai);
+            sockObj.bind("", "8080", AI_PASSIVE);
         },
-        ThrowsMessage<std::runtime_error>(StartsWith(
-            "UPnPlib ERROR 1030! Failed to get socket option SO_TYPE:")));
-
-    // Test Unit. Binding with a different AF_INET will fail.
-    EXPECT_THAT(
-        [&ai]() {
-            CSocket sockObj(AF_INET, SOCK_STREAM);
-            sockObj.bind(ai);
-        },
-        ThrowsMessage<std::runtime_error>(StartsWith(
-            "UPnPlib ERROR 1008! Failed to bind socket to an address:")));
-}
-
-TEST(SocketBindTestSuite, bind_with_different_socket_type) {
-    // Get local interface address.
-    const CAddrinfo ai("", "8080", AF_INET, SOCK_DGRAM,
-                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-
-    // Test Unit. Binding with different SOCK_STREAM (not SOCK_DGRAM) will fail.
-    EXPECT_THAT(
-        [&ai]() {
-            CSocket sockObj(AF_INET, SOCK_STREAM);
-            sockObj.bind(ai);
-        },
-        ThrowsMessage<std::runtime_error>(
-            StartsWith("UPnPlib ERROR 1033! Failed to bind socket to an "
-                       "address: \"socket type of "
-                       "address (")));
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1027!")));
 }
 
 TEST(SocketBindTestSuite, bind_two_times_different_addresses_fail) {
@@ -598,26 +612,17 @@ TEST(SocketBindTestSuite, bind_two_times_different_addresses_fail) {
     // Provide a socket object
     CSocket sockObj(AF_INET6, SOCK_STREAM);
 
-    // Get local interface address. Socket type (SOCK_STREAM) must be the same
-    // as that from the socket.
-    CAddrinfo ai1("", "8080", AF_INET6, SOCK_STREAM,
-                  AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-
     // Test Unit.
-    ASSERT_NO_THROW(sockObj.bind(ai1));
+    ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
-    // Try to bind the socket a second time.
+    // Try to bind the socket a second time to another address.
     EXPECT_THAT(
-        ([&sockObj]() {
-            CAddrinfo ai2("", "8081", AF_INET6, SOCK_STREAM,
-                          AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-            sockObj.bind(ai2);
-        }),
+        ([&sockObj]() { sockObj.bind("", "8081", AI_PASSIVE); }),
         ThrowsMessage<std::runtime_error>(StartsWith(
             "UPnPlib ERROR 1008! Failed to bind socket to an address: ")));
 }
 
-#if 0 // Don't enable next test permanently!
+#if 0 // Don't enable next test permanent!
       // It is very expensive and do not really test a Unit. It's only for
       // humans to show whats going on.
 // On Microsoft Windows there is an issue with binding an address to a socket
@@ -626,29 +631,25 @@ TEST(SocketBindTestSuite, bind_two_times_different_addresses_fail) {
 // may be possible that we cannot bind an unused socket address to it. For
 // details of this have look at: [SO_EXCLUSIVEADDRUSE socket option]
 // (https://learn.microsoft.com/en-us/windows/win32/winsock/so-exclusiveaddruse)
-// The following test examins the situation. It try to bind all free user
+// The following test examins the situation. It tries to bind all free user
 // application socket numbers from 49152 to 65635 and shows with which port
 // number it fails. It seems the problem exists only for this port range.
-// Reusing port 8080 or 8081 works as expected.
+// For example Reusing port 8080 or 8081 works as expected.
 #ifdef _MSC_VER
 TEST(SocketBindTestSuite, check_binding_passive_all_free_ports) {
     // Binding a socket again is possible after destruction of the socket that
-    // shutdown/close it. Get local interface address.
+    // shutdown/close it.
     in_port_t port{49152};
-    CAddrinfo ai1("", std::to_string(port), AF_INET6, SOCK_STREAM,
-                  AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-    sockaddr_in6* sa_in6 = (sockaddr_in6*)ai1->ai_addr;
 
     std::cout << "DEBUG! start port = " << port << "\n";
     for (; port < 65535; port++) {
         CSocket sockObj(AF_INET6, SOCK_STREAM);
         try {
-            sockObj.bind(ai1);
+            sockObj.bind("", std::to_string(port), AI_PASSIVE);
         } catch (const std::runtime_error& e) {
             std::cout << "DEBUG! port " << port << ": ";
             std::cout << e.what() << "\n";
         }
-        sa_in6->sin6_port = htons(port);
     }
 
     std::cout << "DEBUG! finished port = " << port << "\n";
@@ -664,28 +665,24 @@ TEST(SocketBindTestSuite, set_unset_bind_win32_same_address_multiple_times) {
     // the previous test.
     // Get local interface address.
     in_port_t port = portno(random);
-    CAddrinfo ai1("", std::to_string(port), AF_INET6, SOCK_STREAM,
-                  AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-    sockaddr_in6* sa_in6 = (sockaddr_in6*)ai1->ai_addr;
 
     // Test Unit
     for (int i{0}; i < 2; i++) {
         CSocket sockObj(AF_INET6, SOCK_STREAM);
         try {
-            sockObj.bind(ai1);
+            sockObj.bind("", std::to_string(port), AI_PASSIVE);
             // std::cout << "DEBUG! Success port " << port << "\n";
         } catch ([[maybe_unused]] const std::runtime_error& e) {
             // std::cout << "DEBUG! port " << port << ": " << e.what() << "\n";
             // Continue with a new port number.
             port = portno(random);
-            sa_in6->sin6_port = htons(port);
             // std::this_thread::sleep_for(std::chrono::seconds(5)); // DEBUG!
         }
     }
 
     // std::cout << "DEBUG! Success port " << port << "\n";
     CSocket sockObj(AF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.bind(ai1));
+    ASSERT_NO_THROW(sockObj.bind("", std::to_string(port), AI_PASSIVE));
 }
 
 #else  // _MSC_VER
@@ -693,80 +690,39 @@ TEST(SocketBindTestSuite, set_unset_bind_win32_same_address_multiple_times) {
 TEST(SocketBindTestSuite, set_unset_bind_unix_same_address_multiple_times) {
     // Binding a socket again is possible after destruction of the socket that
     // shutdown/close it.
-    // Get local interface address.
-    CAddrinfo ai1("", "8080", AF_INET6, SOCK_STREAM,
-                  AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
 
     // Test Unit
     {
         CSocket sockObj(AF_INET6, SOCK_STREAM);
-        ASSERT_NO_THROW(sockObj.bind(ai1));
+        ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
     }
     {
         CSocket sockObj(AF_INET6, SOCK_STREAM);
-        ASSERT_NO_THROW(sockObj.bind(ai1));
+        ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
     }
     CSocket sockObj(AF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.bind(ai1));
+    ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 }
 #endif // _MSC_VER
 
-TEST(SocketBindTestSuite, bind_same_address_two_times) {
-    // SKIP on Github Actions
-    if (github_actions)
-        GTEST_SKIP() << "             known failing test on Github Actions";
-
-    // Binding the same address again to a valid socket is possible and should
-    // do nothing.
-    // Get local interface address.
-    CAddrinfo ai1("", "8080", AF_INET6, SOCK_STREAM,
-                  AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-
+TEST(SocketBindTestSuite, bind_same_address_fails) {
     // Test Unit
     CSocket sockObj(AF_INET6, SOCK_STREAM);
-    EXPECT_NO_THROW(sockObj.bind(ai1));
+    EXPECT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
-    EXPECT_EQ(sockObj.get_type(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
-    EXPECT_EQ(sockObj.get_port(), 8080);
-    EXPECT_EQ(sockObj.get_sockerr(), 0);
-    EXPECT_FALSE(sockObj.is_reuse_addr());
-    // v6only is always false from the operating system, no matter what domain
-    // (AF_INET6) is set if we request a passive address information (flag
-    // AI_PASSIVE).
-    EXPECT_FALSE(sockObj.is_v6only());
-    EXPECT_TRUE(sockObj.is_bound());
-    EXPECT_FALSE(sockObj.is_listen());
-
-    // Doing the same again doesn't hurt.
-    EXPECT_NO_THROW(sockObj.bind(ai1));
-
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
-    EXPECT_EQ(sockObj.get_type(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
-    EXPECT_EQ(sockObj.get_port(), 8080);
-    EXPECT_EQ(sockObj.get_sockerr(), 0);
-    EXPECT_FALSE(sockObj.is_reuse_addr());
-    // v6only is always false from the operating system, no matter what domain
-    // (AF_INET6) is set if we request a passive address information (flag
-    // AI_PASSIVE).
-    EXPECT_FALSE(sockObj.is_v6only());
-    EXPECT_TRUE(sockObj.is_bound());
-    EXPECT_FALSE(sockObj.is_listen());
+    // Doing the same again will fail.
+    EXPECT_THAT(
+        [&sockObj]() { sockObj.bind("", "8080", AI_PASSIVE); },
+        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1008!")));
 }
 
 TEST(SocketBindTestSuite, listen_to_same_address_multiple_times) {
     // Listen on the same address again of a valid socket is possible and should
     // do nothing.
 
-    // Get local interface address.
-    CAddrinfo ai1("", "8080", AF_INET6, SOCK_STREAM,
-                  AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-
     // Test Unit
     CSocket sockObj(AF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.bind(ai1));
+    ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
     ASSERT_NO_THROW(sockObj.listen());
 
     EXPECT_NO_THROW(sockObj.listen());
@@ -828,17 +784,13 @@ TEST(SocketV6onlyTestSuite, modify_v6only_af_inet_dgram) {
 }
 
 TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet6_stream_socket) {
-    // Get local interface address with service.
-    const CAddrinfo ai("[::1]", "8080", AF_INET6, SOCK_STREAM,
-                       AI_NUMERICHOST | AI_NUMERICSERV);
-
     // Create an unbound socket object
     CSocket sockObj(AF_INET6, SOCK_STREAM);
     EXPECT_FALSE(sockObj.is_v6only());
 
     // This binds the local address to the socket and always sets ipv6_v6only
     // because we bind to an AF_INET6 address/socket.
-    ASSERT_NO_THROW(sockObj.bind(ai));
+    ASSERT_NO_THROW(sockObj.bind("[::1]", "8080"));
     EXPECT_TRUE(sockObj.is_v6only());
 
     // Test Unit
@@ -858,17 +810,13 @@ TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet6_stream_socket) {
 }
 
 TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet6_dgram_socket) {
-    // Get local interface address with service.
-    const CAddrinfo ai("[::1]", "8080", AF_INET6, SOCK_DGRAM,
-                       AI_NUMERICHOST | AI_NUMERICSERV);
-
     // Create an unbound socket object
     CSocket sockObj(AF_INET6, SOCK_DGRAM);
     EXPECT_FALSE(sockObj.is_v6only());
 
     // This binds the local address to the socket and always sets ipv6_v6only
     // because we bind to an AF_INET6 address/socket.
-    ASSERT_NO_THROW(sockObj.bind(ai));
+    ASSERT_NO_THROW(sockObj.bind("[::1]", "8080"));
     EXPECT_TRUE(sockObj.is_v6only());
 
     // Test Unit
@@ -888,17 +836,13 @@ TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet6_dgram_socket) {
 }
 
 TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet_stream_socket) {
-    // Get local interface address with service.
-    const CAddrinfo ai("127.0.0.1", "8080", AF_INET, SOCK_STREAM,
-                       AI_NUMERICHOST | AI_NUMERICSERV);
-
     // Create an unbound socket object
     CSocket sockObj(AF_INET, SOCK_STREAM);
     EXPECT_FALSE(sockObj.is_v6only());
 
     // This binds the local address to the socket and never sets ipv6_v6only
     // because we bind to an AF_INET address/socket.
-    ASSERT_NO_THROW(sockObj.bind(ai));
+    ASSERT_NO_THROW(sockObj.bind("127.0.0.1", "8080"));
     EXPECT_FALSE(sockObj.is_v6only());
 
     // Test Unit
@@ -919,17 +863,13 @@ TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet_stream_socket) {
 }
 
 TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet_dgram_socket) {
-    // Get local interface address with service.
-    const CAddrinfo ai("127.0.0.1", "8080", AF_INET, SOCK_DGRAM,
-                       AI_NUMERICHOST | AI_NUMERICSERV);
-
     // Create an unbound socket object
     CSocket sockObj(AF_INET, SOCK_DGRAM);
     EXPECT_FALSE(sockObj.is_v6only());
 
     // This binds the local address to the socket and never sets ipv6_v6only
     // because we bind to an AF_INET address/socket.
-    ASSERT_NO_THROW(sockObj.bind(ai));
+    ASSERT_NO_THROW(sockObj.bind("127.0.0.1", "8080"));
     EXPECT_FALSE(sockObj.is_v6only());
 
     // Test Unit
@@ -950,10 +890,6 @@ TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet_dgram_socket) {
 }
 
 TEST(SocketV6onlyTestSuite, unset_v6only_on_passive_af_inet6_stream_socket) {
-    // Get local interface address with service.
-    const CAddrinfo ai("", "8080", AF_INET6, SOCK_STREAM,
-                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-
     // Create an unbound socket object
     CSocket sockObj(AF_INET6, SOCK_STREAM);
     EXPECT_FALSE(sockObj.is_v6only());
@@ -961,7 +897,7 @@ TEST(SocketV6onlyTestSuite, unset_v6only_on_passive_af_inet6_stream_socket) {
     // Test Unit
     // This binds the local address to the socket but does not modify
     // IPV6_V6ONLY because we bind to a passive AF_INET6 address/socket.
-    ASSERT_NO_THROW(sockObj.bind(ai));
+    ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
     // Even with AF_INET6 the flag is still unset.
     EXPECT_FALSE(sockObj.is_v6only());
 
@@ -983,10 +919,6 @@ TEST(SocketV6onlyTestSuite, unset_v6only_on_passive_af_inet6_stream_socket) {
 }
 
 TEST(SocketV6onlyTestSuite, set_v6only_on_passive_af_inet6_stream_socket) {
-    // Get local interface address with service.
-    const CAddrinfo ai("", "8080", AF_INET6, SOCK_STREAM,
-                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-
     // Create an unbound socket object
     CSocket sockObj(AF_INET6, SOCK_STREAM);
     EXPECT_FALSE(sockObj.is_v6only());
@@ -997,7 +929,7 @@ TEST(SocketV6onlyTestSuite, set_v6only_on_passive_af_inet6_stream_socket) {
     // Test Unit
     // This binds the local address to the socket but does not modify
     // IPV6_V6ONLY because we bind to a passive AF_INET6 address/socket.
-    ASSERT_NO_THROW(sockObj.bind(ai));
+    ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
     EXPECT_TRUE(sockObj.is_v6only());
 
     // It cannot be modified afer binding.
@@ -1017,10 +949,6 @@ TEST(SocketV6onlyTestSuite, set_v6only_on_passive_af_inet6_stream_socket) {
 }
 
 TEST(SocketV6onlyTestSuite, modify_v6only_on_passive_af_inet_dgram_socket) {
-    // Get local interface address with service.
-    const CAddrinfo ai("", "8080", AF_INET, SOCK_DGRAM,
-                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-
     // Create an unbound socket object
     CSocket sockObj(AF_INET, SOCK_DGRAM);
     EXPECT_FALSE(sockObj.is_v6only());
@@ -1032,7 +960,7 @@ TEST(SocketV6onlyTestSuite, modify_v6only_on_passive_af_inet_dgram_socket) {
     // Test Unit
     // This binds the local address to the socket and always resets ipv6_v6only
     // even with passive mode because we bind to an AF_INET address/socket.
-    ASSERT_NO_THROW(sockObj.bind(ai));
+    ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
     EXPECT_FALSE(sockObj.is_v6only());
 
     // It cannot be set afer binding.
@@ -1050,95 +978,6 @@ TEST(SocketV6onlyTestSuite, modify_v6only_on_passive_af_inet_dgram_socket) {
     EXPECT_FALSE(sockObj.is_v6only());
     EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
-}
-
-TEST(SocketTestSuite, get_addr_str_ipv6_successful) {
-    // Get local interface address.
-    const CAddrinfo ai("", "8080", AF_INET6, SOCK_STREAM,
-                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-    // Get a socket and bind it to the local address.
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.bind(ai));
-
-    // Test Unit
-    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
-}
-
-TEST(SocketTestSuite, get_addr_str_ipv4_successful) {
-    // Get local interface address.
-    const CAddrinfo ai("", "8080", AF_INET, SOCK_DGRAM,
-                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-    // Get a socket and bind it to the local address.
-    CSocket sockObj(AF_INET, SOCK_DGRAM);
-    ASSERT_NO_THROW(sockObj.bind(ai));
-
-    // Test Unit
-    EXPECT_EQ(sockObj.get_addr_str(), "0.0.0.0");
-}
-
-TEST(SocketTestSuite, get_addr_str_from_invalid_socket) {
-    // Test Unit wit empty socket.
-    EXPECT_THAT(
-        []() {
-            CSocket sockObj;
-            sockObj.get_addr_str();
-        },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
-}
-
-TEST(SocketTestSuite, get_addr_str_from_unbound_socket) {
-    // Get a valid socket but do not bind it to an address.
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
-    EXPECT_EQ(sockObj.get_port(), 0);
-}
-
-TEST(SocketTestSuite, get_addr_str_syscall_fail) {
-    // Get local interface address.
-    const CAddrinfo ai("", "8080", AF_INET6, SOCK_STREAM,
-                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-    // Get a socket and bind it to the local address.
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.bind(ai));
-
-    // Mock system function getsockname().
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(
-        mocked_sys_socketObj,
-        getsockname((SOCKET)sockObj, _, Pointee((int)sizeof(sockaddr_storage))))
-        .WillOnce(SetErrnoAndReturn(ENOBUFS, SOCKET_ERROR));
-
-    // Test Unit
-    EXPECT_THAT(
-        [&sockObj]() { sockObj.get_addr_str(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
-}
-
-TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
-    // Get local interface address.
-    const CAddrinfo ai("", "8080", AF_INET6, SOCK_STREAM,
-                       AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
-    // Get a socket and bind it to the local address.
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.bind(ai));
-
-    // Provide invalid address family.
-    ::sockaddr_storage ss{};
-    ss.ss_family = (sa_family_t)255;
-
-    // Mock system function
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj,
-                getsockname((SOCKET)sockObj, _,
-                            Pointee((int)sizeof(::sockaddr_storage))))
-        .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&ss), Return(0)));
-
-    // Test Unit
-    EXPECT_THAT(
-        [&sockObj]() { sockObj.get_addr_str(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1024!")));
 }
 
 } // namespace upnplib

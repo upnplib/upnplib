@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-20
+// Redistribution only with this Copyright remark. Last modified: 2023-06-21
 
 #include <upnplib/socket.hpp>
 #include <upnplib/port.hpp>
@@ -361,27 +361,21 @@ void CSocket::set_reuse_addr(bool a_reuse) {
 // Bind socket to local address
 // REF: [Bind: Address Already in Use]
 // (https://hea-www.harvard.edu/~fine/Tech/addrinuse.html)
-void CSocket::bind(const CAddrinfo& a_ai) {
+void CSocket::bind(const std::string& a_node, const std::string& a_port,
+                   const int a_flags) {
     TRACE2(this, " Executing upnplib::CSocket::bind()")
 
-    // Protect binding and storing its state (m_bound).
+    // Protect binding.
     std::scoped_lock lock(m_bound_mutex);
 
-    // Get the socket type, e.g. SOCK_STREAM or SOCK_DGRAM
-    int so_type = this->get_type();
-    if (a_ai->ai_socktype != so_type)
-        throw std::runtime_error(
-            "UPnPlib ERROR 1033! Failed to bind socket to an address: "
-            "\"socket type of address (" +
-            std::to_string(a_ai->ai_socktype) +
-            ") does not match socket type (" + std::to_string(so_type) + ")\"");
+    const sa_family_t addr_family = this->get_family();
 
     // With address family AF_INET6 and not passive mode we always set
     // IPV6_V6ONLY to true. This is the behavior on Unix platforms when binding
     // the address and cannot be modified afterwards. MacOS does not modify the
     // flag with binding. To be portable with same behavior on all platforms we
     // set the flag before binding.
-    if (a_ai->ai_family == AF_INET6 && (a_ai->ai_flags & AI_PASSIVE) == 0) {
+    if (addr_family == AF_INET6 && (a_flags & AI_PASSIVE) == 0) {
         // Don't use 'this->set_v6only(true)' because binding is protected with
         // a mutex and we will get a deadlock because of using
         // 'this->is_bound()' in 'this->set_v6only(true)'.
@@ -394,7 +388,10 @@ void CSocket::bind(const CAddrinfo& a_ai) {
     }
 
     // Here we bind the socket to an address
-    if (::bind(m_sfd, a_ai->ai_addr, (socklen_t)a_ai->ai_addrlen) != 0)
+    const CAddrinfo ai(a_node, a_port, addr_family, this->get_type(),
+                       AI_NUMERICHOST | AI_NUMERICSERV | a_flags);
+    // Type cast socklen_t is needed for Microsoft Windows.
+    if (::bind(m_sfd, ai->ai_addr, (socklen_t)ai->ai_addrlen) != 0)
         throw_error("UPnPlib ERROR 1008! Failed to bind socket to an address:");
 }
 
