@@ -1,0 +1,97 @@
+commit 5f5c6898cc23774f11eb2fcfab0e1b6901b31652 (HEAD, tag: release-1.14.16)
+
+git whatchanged release-1.14.15^..release-1.14.16
+updated files are marked with the word "updated" or "deleted" at the line end.
+==============================================================================
+
+commit 5f5c6898cc23774f11eb2fcfab0e1b6901b31652 (HEAD, tag: release-1.14.16)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Thu Mar 30 09:52:50 2023 -0300
+
+    ChangeLog, README.md and THANKS
+
+:100644 100644 9df02796 6428ea74 M	ChangeLog
+:100644 100644 81a38ff8 a4b44b13 M	README.md
+:100644 100644 bdcb5bfa 08e81df6 M	THANKS
+
+commit eaf0fd53d76edd0e13053e4071803a89b34eb55b
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sun Mar 19 22:25:26 2023 -0300
+
+    Whitespaces
+
+:100644 100644 f34d7120 d45dcbff M	upnp/src/api/upnpapi.c updated
+
+commit 8382f632afa4b467ed38c6c414eefd44e979a132
+Author: philippe44 <philippe44@users.noreply.github.com>
+Date:   Sun Mar 19 18:23:52 2023 -0700
+
+    fix memory leak and ActionExAsync (#426)
+    
+    This intends to fix #424. I've found at least 2 memory leaks
+    
+    1- When sending Action(Ex)Async
+    The ActionRequest document was not released nor was the ActionResult. I initially tought that this should be done in UpnpActionComplete::UpnpActionComplete_delete() but I was wrong because ActionRequest and ActionResult do not "belong" to the Evt object. The sets methods only set a pointer and modifying generator.c is not the right solution.
+    The reason is that ActionRequest "belongs" to the ACTION job and should be handled as such if we want as well that, when the job is cancelled, the memory is released as well. So I've change the free_func for ACTION to reflect that.
+    
+    2- When using event subscription
+    The Event was not released upon Timer termination. So I've done as above, created a special free_func that handles that properly.
+    
+    In general, when something prevents the execution/submission of a job, I've also used the actual free function instead of duplicating the individual free(). Note that when terminating a timer, I'm using the job's internal structure free_func() as it was already used to access arg. One can argue that it should be an opaque structure and get/set or the option to call the free function could be use instead.
+    
+    Also, I realized that ActionExAsync has never been working properly because when the job is executed, only an Action is made, never an ActionEx although the Header document is in the job's argument. I've fixed that as well and stopped there to not go too deep in that rabbit hole.
+    
+    I've also removed the upnp_timeout.c/h files as they were not used anymore (and had a strange names anyway)
+
+:100644 100644 f08a2d5f 6dd3d57b M	.gitignore
+:100644 100644 411ab9af 594aaffa M	upnp/CMakeLists.txt
+:100644 100644 6a7219be 287a8ed4 M	upnp/Makefile.am
+:100644 100644 5cb7e215 f34d7120 M	upnp/src/api/upnpapi.c updated
+:100644 100644 434cd359 f57abcfb M	upnp/src/gena/gena_ctrlpt.c updated
+:100644 100644 3deb5b62 ab8e9e90 M	upnp/src/genlib/client_table/client_table.c updated
+:100644 000000 1570fc37 00000000 D	upnp/src/genlib/util/upnp_timeout.c deleted
+:100644 100644 6b80a1fb 33a2c411 M	upnp/src/inc/client_table.h updated
+:100644 000000 cbc6e979 00000000 D	upnp/src/inc/upnp_timeout.h deleted
+
+commit b1e39c0bf2355dc5b4324f9b01f6ce4f8ed286ca
+Author: Thoren Paulson <3453006+thoren-d@users.noreply.github.com>
+Date:   Wed Jan 4 18:03:40 2023 -0800
+
+    handle redundant initialization
+
+:100644 100644 2df5e8bd 5cb7e215 M	upnp/src/api/upnpapi.c updated
+
+commit 5ce2f345cc419d40a4d69e320efa5c3f2ecf0913
+Author: Thoren Paulson <thoren.paulson@gmail.com>
+Date:   Thu Dec 22 14:51:26 2022 -0800
+
+    Clean up after failed initialization.
+    
+    Some initialization failures (such as failure in UpnpGetIfInfo) would
+    leave resources like thread pools initialized. This change ensures if
+    UpnpInit2 fails, we call UpnpFinish before returning to clean up those
+    resources.
+    
+    To ensure UpnpFinish is effective in this way, we set UpnpSdkInit to 1
+    earlier in UpnpInit2.
+
+:100644 100644 a65dde69 2df5e8bd M	upnp/src/api/upnpapi.c updated
+
+commit cffcd8e8c449d7ef5f5d4db5b88f147243e1c082
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Nov 18 23:30:05 2022 -0300
+
+    Homekeeping for the next release
+
+:100644 100644 83a8d8e9 9df02796 M	ChangeLog
+:100644 100644 f3c4eeff 3e61a7a2 M	configure.ac
+:100644 100644 bc2cd8ac ab96ec9d M	docs/Doxyfile
+:100644 100644 3bada10c f5626f71 M	libupnp.spec
+
+commit 2f02a7e341c69314d93c73c6edc3199ba46c5f2f (tag: release-1.14.15)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Nov 18 23:25:37 2022 -0300
+
+    Missed that line in configure.ac
+
+:100644 100644 2b6ded96 f3c4eeff M	configure.ac

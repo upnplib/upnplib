@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-03-02
+# Redistribution only with this Copyright remark. Last modified: 2023-06-22
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -98,7 +98,6 @@ set(PUPNP_SOURCE_FILES
     ./src/genlib/util/list.cpp
     ./src/genlib/util/membuffer.cpp
     ./src/genlib/util/strintmap.cpp
-    ./src/genlib/util/upnp_timeout.cpp
     $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_SOAP}>>:./src/genlib/util/util.cpp>
 
     $<$<BOOL:${UPNPLIB_DEF_DEVICE}>:./src/genlib/service-table/service_table.cpp>

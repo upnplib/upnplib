@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-02-23
+ * Redistribution only with this Copyright remark. Last modified: 2023-06-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-// Last compare with pupnp original source file on 2022-11-26, ver 1.14.15
+// Last compare with pupnp original source file on 2023-06-22, ver 1.14.16
 
 /*!
  * \addtogroup UPnPAPI
@@ -264,6 +264,46 @@ Upnp_SID gUpnpSdkNLSuuid;
 #ifdef UPNP_ENABLE_OPEN_SSL
 EXPORT_SPEC SSL_CTX* gSslCtx = NULL;
 #endif
+
+typedef union {
+    struct {
+        int handle;
+        int eventId;
+        void* Event;
+    } advertise;
+    struct UpnpNonblockParam action;
+} job_arg;
+
+#ifdef INCLUDE_DEVICE_APIS
+#if EXCLUDE_SSDP == 0
+/*!
+ * \brief Free memory associated with advertise job's argument
+ */
+static void free_advertise_arg(job_arg* arg) {
+    if (arg->advertise.Event) {
+        free(arg->advertise.Event);
+    }
+    free(arg);
+}
+#endif /* EXCLUDE_SSDP == 0 */
+#endif /* INCLUDE_DEVICE_APIS */
+
+#if EXCLUDE_SOAP == 0
+#ifdef INCLUDE_CLIENT_APIS
+/*!
+ * \brief Free memory associated with an action job's argument
+ */
+static void free_action_arg(job_arg* arg) {
+    if (arg->action.Header) {
+        ixmlDocument_free(arg->action.Header);
+    }
+    if (arg->action.Act) {
+        ixmlDocument_free(arg->action.Act);
+    }
+    free(arg);
+}
+#endif /* INCLUDE_CLIENT_APIS */
+#endif /* EXCLUDE_SOAP == 0 */
 
 /*!
  * \brief (Windows Only) Initializes the Windows Winsock library.
@@ -518,6 +558,10 @@ int UpnpInit2(const char* IfName, unsigned short DestPort) {
         goto exit_function;
     }
 
+    /* Set the UpnpSdkInit flag to 1 to indicate we're successfully
+     * initialized. */
+    UpnpSdkInit = 1;
+
     /* Perform initialization preamble. */
     retVal = UpnpInitPreamble();
     if (retVal != UPNP_E_SUCCESS) {
@@ -534,18 +578,16 @@ int UpnpInit2(const char* IfName, unsigned short DestPort) {
         goto exit_function;
     }
 
-    /* Set the UpnpSdkInit flag to 1 to indicate we're successfully
-     * initialized. */
-    UpnpSdkInit = 1;
-
     /* Finish initializing the SDK. */
     retVal = UpnpInitStartServers(DestPort);
     if (retVal != UPNP_E_SUCCESS) {
-        UpnpSdkInit = 0;
         goto exit_function;
     }
 
 exit_function:
+    if (retVal != UPNP_E_SUCCESS && retVal != UPNP_E_INIT) {
+        UpnpFinish();
+    }
     ithread_mutex_unlock(&gSDKInitMutex);
 
     return retVal;
@@ -928,7 +970,7 @@ exit_function:
 
     return retVal;
 }
-// #endif /* INCLUDE_DEVICE_APIS */ // bugfix for compiling --Ingo
+// #endif /* INCLUDE_DEVICE_APIS */ // bugfix for compiling C++ --Ingo
 
 /*!
  * \brief Fills the sockadr_in with miniserver information.
@@ -947,7 +989,7 @@ static int GetDescDocumentAndURL(
     /* [out] . */
     char descURL[LINE_SIZE]);
 
-// #ifdef INCLUDE_DEVICE_APIS // bugfix for compiling --Ingo
+// #ifdef INCLUDE_DEVICE_APIS // bugfix for compiling C++ --Ingo
 int UpnpRegisterRootDevice2(Upnp_DescType descriptionType,
                             const char* description_const,
                             size_t bufferLen, /* ignored */
@@ -1675,7 +1717,7 @@ int UpnpSendAdvertisementLowPower(UpnpDevice_Handle Hnd, int Exp,
                                   int RegistrationState) {
     struct Handle_Info* SInfo = NULL;
     int retVal = 0, *ptrMx;
-    upnp_timeout* adEvent;
+    job_arg* adEvent;
     ThreadPoolJob job;
 
     memset(&job, 0, sizeof(job));
@@ -1715,15 +1757,15 @@ int UpnpSendAdvertisementLowPower(UpnpDevice_Handle Hnd, int Exp,
     ptrMx = (int*)malloc(sizeof(int));
     if (ptrMx == NULL)
         return UPNP_E_OUTOF_MEMORY;
-    adEvent = (upnp_timeout*)malloc(sizeof(upnp_timeout));
+    adEvent = (job_arg*)malloc(sizeof(job_arg));
 
     if (adEvent == NULL) {
         free(ptrMx);
         return UPNP_E_OUTOF_MEMORY;
     }
     *ptrMx = Exp;
-    adEvent->handle = Hnd;
-    adEvent->Event = ptrMx;
+    adEvent->advertise.handle = Hnd;
+    adEvent->advertise.Event = ptrMx;
 
     HandleLock();
     switch (GetHandleInfo(Hnd, &SInfo)) {
@@ -1737,26 +1779,25 @@ int UpnpSendAdvertisementLowPower(UpnpDevice_Handle Hnd, int Exp,
     }
 #ifdef SSDP_PACKET_DISTRIBUTE
     TPJobInit(&job, (start_routine)AutoAdvertise, adEvent);
-    TPJobSetFreeFunction(&job, (free_routine)free_upnp_timeout);
+    TPJobSetFreeFunction(&job, (free_routine)free_advertise_arg);
     TPJobSetPriority(&job, MED_PRIORITY);
     if ((retVal = TimerThreadSchedule(
              &gTimerThread, ((Exp / 2) - (AUTO_ADVERTISEMENT_TIME)), REL_SEC,
-             &job, SHORT_TERM, &(adEvent->eventId))) != UPNP_E_SUCCESS) {
+             &job, SHORT_TERM, &(adEvent->advertise.eventId))) !=
+        UPNP_E_SUCCESS) {
         HandleUnlock();
-        free(adEvent);
-        free(ptrMx);
+        free_advertise_arg(adEvent);
         return retVal;
     }
 #else
     TPJobInit(&job, (start_routine)AutoAdvertise, adEvent);
-    TPJobSetFreeFunction(&job, (free_routine)free_upnp_timeout);
+    TPJobSetFreeFunction(&job, (free_routine)free_advertise_arg);
     TPJobSetPriority(&job, MED_PRIORITY);
     if ((retVal = TimerThreadSchedule(
              &gTimerThread, Exp - AUTO_ADVERTISEMENT_TIME, REL_SEC, &job,
-             SHORT_TERM, &(adEvent->eventId))) != UPNP_E_SUCCESS) {
+             SHORT_TERM, &(adEvent->advertise.eventId))) != UPNP_E_SUCCESS) {
         HandleUnlock();
-        free(adEvent);
-        free(ptrMx);
+        free_advertise_arg(adEvent);
         return retVal;
     }
 #endif
@@ -2661,11 +2702,11 @@ int UpnpSendActionAsync(UpnpClient_Handle Hnd, const char* ActionURL_const,
     Param->Fun = Fun;
 
     TPJobInit(&job, (start_routine)UpnpThreadDistribution, Param);
-    TPJobSetFreeFunction(&job, (free_routine)free);
+    TPJobSetFreeFunction(&job, (free_routine)free_action_arg);
 
     TPJobSetPriority(&job, MED_PRIORITY);
     if (ThreadPoolAdd(&gSendThreadPool, &job, NULL) != 0) {
-        free(Param);
+        free_action_arg((job_arg*)Param);
     }
 
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
@@ -2772,11 +2813,11 @@ int UpnpSendActionExAsync(UpnpClient_Handle Hnd, const char* ActionURL_const,
     Param->Fun = Fun;
 
     TPJobInit(&job, (start_routine)UpnpThreadDistribution, Param);
-    TPJobSetFreeFunction(&job, (free_routine)free);
+    TPJobSetFreeFunction(&job, (free_routine)free_action_arg);
 
     TPJobSetPriority(&job, MED_PRIORITY);
     if (ThreadPoolAdd(&gSendThreadPool, &job, NULL) != 0) {
-        free(Param);
+        free_action_arg((job_arg*)Param);
     }
 
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
@@ -3398,7 +3439,7 @@ int UpnpGetIfInfo(const char* IfName) {
  */
 #ifdef INCLUDE_CLIENT_APIS
 void UpnpThreadDistribution(struct UpnpNonblockParam* Param) {
-    // int errCode = 0; // bugfix to compile --Ingo
+    // int errCode = 0; // bugfix to compile C++ --Ingo
 
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                "Inside UpnpThreadDistribution \n");
@@ -3452,15 +3493,23 @@ void UpnpThreadDistribution(struct UpnpNonblockParam* Param) {
     case ACTION: {
         UpnpActionComplete* Evt = UpnpActionComplete_new();
         IXML_Document* actionResult = NULL;
-        int errCode = SoapSendAction(Param->Url, Param->ServiceType, Param->Act,
+        int errCode;
+        if (Param->Header) {
+            errCode =
+                SoapSendActionEx(Param->Url, Param->ServiceType, Param->Header,
+                                 Param->Act, &actionResult);
+        } else {
+            errCode = SoapSendAction(Param->Url, Param->ServiceType, Param->Act,
                                      &actionResult);
+        }
         UpnpActionComplete_set_ErrCode(Evt, errCode);
         UpnpActionComplete_set_ActionRequest(Evt, Param->Act);
         UpnpActionComplete_set_ActionResult(Evt, actionResult);
         UpnpActionComplete_strcpy_CtrlUrl(Evt, Param->Url);
         Param->Fun(UPNP_CONTROL_ACTION_COMPLETE, Evt, Param->Cookie);
-        free(Param);
         UpnpActionComplete_delete(Evt);
+        ixmlDocument_free(actionResult);
+        free_action_arg((job_arg*)Param);
         break;
     }
     case STATUS: {
@@ -3641,10 +3690,10 @@ int PrintHandleInfo(UpnpClient_Handle Hnd) {
 #ifdef INCLUDE_DEVICE_APIS
 #if EXCLUDE_SSDP == 0
 void AutoAdvertise(void* input) {
-    upnp_timeout* event = (upnp_timeout*)input;
+    job_arg* arg = (job_arg*)input;
 
-    UpnpSendAdvertisement(event->handle, *((int*)event->Event));
-    free_upnp_timeout(event);
+    UpnpSendAdvertisement(arg->advertise.handle, *((int*)arg->advertise.Event));
+    free_advertise_arg(arg);
 }
 #endif /* EXCLUDE_SSDP == 0 */
 #endif /* INCLUDE_DEVICE_APIS */

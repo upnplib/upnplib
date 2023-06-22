@@ -1,5 +1,6 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-08
+// Redistribution only with this Copyright remark. Last modified: 2022-06-22
+// Last compare with pupnp original source file on 2023-06-22, ver 1.14.16
 
 #ifndef UPNPLIB_CLIENT_TABLE_HPP
 #define UPNPLIB_CLIENT_TABLE_HPP
@@ -8,17 +9,19 @@
  * \file
  */
 
+
 #include "GenlibClientSubscription.hpp"
 #include "TimerThread.hpp"
 //#include "UpnpString.hpp"
 #include "service_table.hpp"
 //#include "upnp.h"
-//#include "upnp_timeout.h"
 //#include "uri.h"
 
 //#include <stdio.h>
 //#include <stdlib.h>
 //#include <time.h>
+
+extern TimerThread gTimerThread;
 
 #ifdef INCLUDE_CLIENT_APIS
 

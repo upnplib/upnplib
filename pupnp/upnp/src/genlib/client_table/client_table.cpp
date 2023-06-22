@@ -1,6 +1,7 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-20
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2022-06-22
 // Also Copyright by other contributor which haven't made a note.
+// Last compare with pupnp original source file on 2023-06-22, ver 1.14.16
 
 /************************************************************************
  * Purpose: This file defines the functions for clients. It defines
@@ -15,12 +16,9 @@
 
 #ifdef INCLUDE_CLIENT_APIS
 
-#include "upnpapi.hpp"
-#include "upnp_timeout.hpp"
 #include <stdlib.h> /* for calloc(), free() */
 
 void free_client_subscription(GenlibClientSubscription* sub) {
-    upnp_timeout* event;
     ThreadPoolJob tempJob;
     if (sub) {
         int renewEventId = GenlibClientSubscription_get_RenewEventId(sub);
@@ -30,8 +28,7 @@ void free_client_subscription(GenlibClientSubscription* sub) {
             /* do not remove timer event of copy */
             /* invalid timer event id */
             if (TimerThreadRemove(&gTimerThread, renewEventId, &tempJob) == 0) {
-                event = (upnp_timeout*)tempJob.arg;
-                free_upnp_timeout(event);
+                tempJob.free_func(tempJob.arg);
             }
         }
         GenlibClientSubscription_set_RenewEventId(sub, -1);
