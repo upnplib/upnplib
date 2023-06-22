@@ -4,4 +4,4 @@
 #include "init.hpp"
 #include <string>
 
-std::string libinfo() { return "pupnp library version   = 1.14.16"; }
+std::string libinfo() { return "pupnp library version   = 1.14.17"; }

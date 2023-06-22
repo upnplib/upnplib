@@ -80,7 +80,7 @@
 // The version string is only used here and will not change much on upgrading to
 // upnplib. To reduce complexity by including upnpconfig.hpp I just set it here.
 // --Ingo
-#define UPNP_VERSION_STRING "1.14.16"
+#define UPNP_VERSION_STRING "1.14.17"
 
 #include "umock/pupnp_sock.hpp"
 #include "umock/pupnp_httprw.hpp"

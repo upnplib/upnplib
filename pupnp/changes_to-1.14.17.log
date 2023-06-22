@@ -1,0 +1,43 @@
+commit 380c6b09f426b1a34a2b03c43bd83b6d9ec9b000 (HEAD, tag: release-1.14.17)
+
+git whatchanged release-1.14.16^..release-1.14.17
+There has nothing changed to the source code.
+============================================================================
+
+commit 380c6b09f426b1a34a2b03c43bd83b6d9ec9b000 (HEAD, tag: release-1.14.17)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sun Apr 30 19:31:55 2023 -0300
+
+    ChangeLog and README.md
+
+:100644 100644 f1d03027 bb8f0fa5 M	ChangeLog
+:100644 100644 a4b44b13 2dbdc144 M	README.md
+
+commit 2b14cc43a1eefd4aeea31ebaa7d10544276f18fd
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sun Apr 30 19:28:51 2023 -0300
+
+    Include fuzzer and gtest in the tarball
+
+:100644 100644 e63f2de9 28fbb7f8 M	Makefile.am
+
+commit e634b2cea8042f4a87336589e8e695db703ecf4a
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Thu Mar 30 10:04:03 2023 -0300
+
+    Homekeeping for the next release
+
+:100644 100644 6428ea74 f1d03027 M	ChangeLog
+:100644 100644 3e61a7a2 b65d7cf4 M	configure.ac
+:100644 100644 ab96ec9d 489d57db M	docs/Doxyfile
+:100644 100644 f5626f71 37698982 M	libupnp.spec
+
+commit 5f5c6898cc23774f11eb2fcfab0e1b6901b31652 (tag: release-1.14.16)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Thu Mar 30 09:52:50 2023 -0300
+
+    ChangeLog, README.md and THANKS
+
+:100644 100644 9df02796 6428ea74 M	ChangeLog
+:100644 100644 81a38ff8 a4b44b13 M	README.md
+:100644 100644 bdcb5bfa 08e81df6 M	THANKS
