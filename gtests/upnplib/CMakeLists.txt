@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-06-19
+# Redistribution only with this Copyright remark. Last modified: 2023-06-26
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -140,6 +140,3 @@ add_test(NAME ctest_webserver-ush COMMAND test_webserver-ush --gtest_shuffle
 
 
 add_subdirectory(./test_uri.d)
-if(UPNPLIB_WITH_SAMPLES)
-    add_subdirectory(./test_sample.d)
-endif()

@@ -1055,8 +1055,8 @@ InitMiniServerSockArray(MiniServerSockArray* miniSocket) {
 }
 
 int StartMiniServer(
-    // The three parameter only used if the INTERNAL_WEB_SERVER is enabled. The
-    // miniserver does not need them. --Ingo
+    // The three arguments are only used if the INTERNAL_WEB_SERVER is enabled.
+    // The miniserver does not need them. --Ingo
     //
     /*! [in,out] Port on which the server listens for incoming IPv4
      * connections. */

@@ -508,6 +508,7 @@ int TvDeviceDecreaseBrightness(
 /*!
  * \brief Initializes the UPnP Sdk, registers the device, and sends out
  * advertisements.
+ * Returns UPNPLIB_E_SUCCESS or other UPnPlib error code.
  */
 int TvDeviceStart(
     /*! [in] interface to initialize the sdk (may be NULL)

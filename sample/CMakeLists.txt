@@ -1,12 +1,12 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-03
+# Redistribution only with this Copyright remark. Last modified: 2023-06-26
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNPLIB_SAMPLE VERSION 0008
-                       DESCRIPTION "Simple sample to use the library"
-                       HOMEPAGE_URL "https://github.com/upnplib")
+project(SAMPLE VERSION 0008
+               DESCRIPTION "Simple sample to use the library"
+               HOMEPAGE_URL "https://github.com/upnplib")
 
 
 # Switches for this Subproject

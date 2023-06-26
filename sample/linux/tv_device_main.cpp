@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
     if (pthread_create(&cmdloop_thread, NULL, TvDeviceCommandLoop, NULL) != 0) {
         return UPNP_E_INTERNAL_ERROR;
     }
-#ifdef _WIN32
+#ifdef _MSC_VER
     pthread_join(cmdloop_thread, NULL);
 #else
     /* Catch Ctrl-C and properly shutdown */

@@ -20,7 +20,7 @@
 // Path to the build directory of the project
 #cmakedefine UPNPLIB_PROJECT_BINARY_DIR "${UPNPLIB_PROJECT_BINARY_DIR}"
 // Path to sample source directory to access web subdirectory
-#cmakedefine UPNPLIB_SAMPLE_SOURCE_DIR "${UPNPLIB_SAMPLE_SOURCE_DIR}"
+#cmakedefine SAMPLE_SOURCE_DIR "${SAMPLE_SOURCE_DIR}"
 
 /***************************************************************************
  * Library version

@@ -22,7 +22,7 @@ class CDisableTrace {
 #include "compa/src/genlib/net/http/webserver.cpp"
 
 #include "upnplib/upnptools.hpp"  // for errStrEx
-#include "upnplib/cmake_vars.hpp" // for UPNPLIB_SAMPLE_SOURCE_DIR
+#include "upnplib/cmake_vars.hpp" // for SAMPLE_SOURCE_DIR
 #include "upnplib/gtest.hpp"
 
 #include "gmock/gmock.h"
@@ -173,8 +173,8 @@ TEST(WebServerTestSuite, set_root_dir) {
     membuffer_init(&gDocumentRootDir);
 
     // Test Unit
-    EXPECT_EQ(web_server_set_root_dir(UPNPLIB_SAMPLE_SOURCE_DIR "/web"), 0);
-    EXPECT_STREQ(gDocumentRootDir.buf, UPNPLIB_SAMPLE_SOURCE_DIR "/web");
+    EXPECT_EQ(web_server_set_root_dir(SAMPLE_SOURCE_DIR "/web"), 0);
+    EXPECT_STREQ(gDocumentRootDir.buf, SAMPLE_SOURCE_DIR "/web");
 }
 
 TEST(WebServerTestSuite, set_root_dir_with_trailing_slash) {
@@ -182,8 +182,8 @@ TEST(WebServerTestSuite, set_root_dir_with_trailing_slash) {
     membuffer_init(&gDocumentRootDir);
 
     // Test Unit
-    EXPECT_EQ(web_server_set_root_dir(UPNPLIB_SAMPLE_SOURCE_DIR "/web/"), 0);
-    EXPECT_STREQ(gDocumentRootDir.buf, UPNPLIB_SAMPLE_SOURCE_DIR "/web");
+    EXPECT_EQ(web_server_set_root_dir(SAMPLE_SOURCE_DIR "/web/"), 0);
+    EXPECT_STREQ(gDocumentRootDir.buf, SAMPLE_SOURCE_DIR "/web");
 }
 
 TEST(WebServerTestSuite, set_root_dir_empty_string) {

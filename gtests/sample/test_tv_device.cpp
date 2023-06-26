@@ -1,5 +1,5 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-25
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-06-26
 
 // -----------------------------------------------------------------------------
 // This testsuite starts the sample TV Device with general command line
@@ -14,6 +14,57 @@
 #include "upnplib/cmake_vars.hpp"
 
 #include "gtest/gtest.h"
+
+// The tv_device_main call stack to use the pupnp library
+//=======================================================
+/*
+clang-format off
+
+     main() // Starting in tv_device_main.cpp
+     |__ device_main()
+     |   |__ SampleUtil_Initialize()
+     |   |__ 'Parse command line options'
+     |   |__ TvDeviceStart()
+     |       |__ pthread_mutex_init()
+     |       |__ UpnpSetLogFileNames()
+     |       |__ UpnpSetLogLevel()
+     |       |__ UpnpInitLog()
+     |       |
+     |       |__ UpnpInit2()
+     |       |__ if error
+     |              UpnpFinish()
+     |       |
+     |       |__ switch ip_mode
+     |       |     UpnpGetServerIpAddress()
+     |       |     UpnpGetServerPort()
+     |       |   or
+     |       |     UpnpGetServerIp6Address()
+     |       |     UpnpGetServerPort6()
+     |       |   or
+     |       |     UpnpGetServerUlaGuaIp6Address()
+     |       |     UpnpGetServerUlaGuaPort6()
+     |       |__ UpnpSetWebServerRootDir()
+     |       |__ if error
+     |              UpnpFinish()
+     |       |
+     |       |__ UpnpRegisterRootDevice3()
+     |       |__ if error
+     |              UpnpFinish()
+     |       |
+     |       |__ TvDeviceStateTableInit()
+     |       |__ UpnpSendAdvertisement()
+     |       |__ if error
+     |              UpnpFinish()
+     |
+     |__ pthread_create()
+     |#ifdef _MSC_VER
+     |__ pthread_join()
+     |#else
+     |__ 'Catch Ctrl-C for shutdown'
+     |__ TvDeviceStop()
+
+clang-format on
+*/
 
 namespace upnplib {
 
@@ -37,7 +88,7 @@ TEST(SampleTvDeviceTestSuite, valid_arguments) {
     constexpr int argc{3};
     constexpr int argsize = sizeof(UPNPLIB_PROJECT_BINARY_DIR "/bin/tv_device");
     char arg[argc][argsize]{UPNPLIB_PROJECT_BINARY_DIR "/bin/tv_device",
-                            "-webdir", UPNPLIB_SAMPLE_SOURCE_DIR "/web"};
+                            "-webdir", SAMPLE_SOURCE_DIR "/web"};
     char* argv[argc]{arg[0], arg[1], arg[2]};
 
     // argc is valid with valid arguments
@@ -54,37 +105,16 @@ TEST(SampleTvDeviceTestSuite, TvDeviceStart) {
     constexpr char* iface{};
     constexpr unsigned short port{};
     constexpr char* desc_doc_name{};
-    constexpr char web_dir_path[]{UPNPLIB_SAMPLE_SOURCE_DIR "/web"};
+    constexpr char web_dir_path[]{SAMPLE_SOURCE_DIR "/web"};
     constexpr int ip_mode = IP_MODE_IPV4;
 
-    // Start the TV Device with default settings as far as possible
+    // Test Unit with default settings as far as possible
     int returned = TvDeviceStart(iface, port, desc_doc_name, web_dir_path,
                                  ip_mode, linux_print, 0);
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     // Stop device
     EXPECT_EQ(TvDeviceStop(), UPNP_E_SUCCESS);
-}
-
-TEST(SampleTvDeviceTestSuite, UpnpInit2) {
-    GTEST_SKIP() << "Check why does this fail on WIN32 but not on Unix.";
-#ifdef _WIN32
-    // Initialize Windows sockets
-    WSADATA wsaData;
-    WSAStartup(MAKEWORD(2, 2), &wsaData);
-#endif
-
-    // Initialize the library
-    int returned = UpnpInit2(nullptr /*iface*/, 0 /*port*/);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
-
-    // Finish library
-    returned = UpnpFinish();
-    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
-
-#ifdef _WIN32
-    WSACleanup();
-#endif
 }
 
 } // namespace upnplib

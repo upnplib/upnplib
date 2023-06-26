@@ -1,12 +1,12 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-01-18
+# Redistribution only with this Copyright remark. Last modified: 2023-06-26
 
 cmake_minimum_required(VERSION 3.18)
-include(../../../cmake/project-header.cmake)
+include(../../cmake/project-header.cmake)
 
-project(GTESTS_UPNPLIB_SAMPLE VERSION 0006
-                  DESCRIPTION "Tests for upnplib sample programs"
-                  HOMEPAGE_URL "https://github.com/upnplib")
+project(GTESTS_SAMPLE VERSION 0006
+        DESCRIPTION "Tests for upnplib sample programs"
+        HOMEPAGE_URL "https://github.com/upnplib")
 
 if(FALSE)
 # Currently not used but having available for reference.
@@ -86,10 +86,10 @@ set(UPNPLIB_TV_DEVICE_SOURCE_FILES
 endif()
 
 
-# test tv_device build with pupnp shared library
-#-----------------------------------------------
+# test tv_device build with compatible shared library
+#----------------------------------------------------
 add_executable(test_tv_device-csh
-    ${UPNPLIB_SAMPLE_SOURCE_DIR}/common/sample_util.cpp
+    ${SAMPLE_SOURCE_DIR}/common/sample_util.cpp
     ./test_tv_device.cpp
 )
 target_include_directories(test_tv_device-csh
@@ -100,7 +100,7 @@ target_include_directories(test_tv_device-csh
 target_compile_definitions (test_tv_device-csh
     PRIVATE
         UPNPLIB_SHARED
-        UPNPLIB_WITH_NATIVE_PUPNP
+        #UPNPLIB_WITH_NATIVE_PUPNP
 )
 target_compile_options(test_tv_device-csh
     PRIVATE
