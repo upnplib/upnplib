@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-26
+// Redistribution only with this Copyright remark. Last modified: 2023-06-29
 
 // -----------------------------------------------------------------------------
 // This testsuite starts the sample TV Device with general command line
@@ -67,6 +67,7 @@ clang-format on
 */
 
 namespace upnplib {
+bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 TEST(SampleTvDeviceTestSuite, invalid_commandline_argument) {
     constexpr int argc{5};
@@ -82,22 +83,26 @@ TEST(SampleTvDeviceTestSuite, invalid_commandline_argument) {
 }
 
 TEST(SampleTvDeviceTestSuite, valid_arguments) {
-    GTEST_SKIP() << "  # With using real sockets this test has side effects on "
-                    "other tests. It should be mocked.";
+    // SKIP on Github Actions
+    if (github_actions)
+        GTEST_SKIP() << "             known failing test on Github Actions";
 
     constexpr int argc{3};
     constexpr int argsize = sizeof(UPNPLIB_PROJECT_BINARY_DIR "/bin/tv_device");
     char arg[argc][argsize]{UPNPLIB_PROJECT_BINARY_DIR "/bin/tv_device",
-                            "-webdir", SAMPLE_SOURCE_DIR "/web"};
+                            "--webdir", SAMPLE_SOURCE_DIR "/web"};
     char* argv[argc]{arg[0], arg[1], arg[2]};
 
-    // argc is valid with valid arguments
-    EXPECT_EQ(device_main(argc, argv), UPNP_E_SUCCESS);
+    // Test Unit; argc is valid with valid arguments.
+    int ret_device_main = device_main(argc, argv);
+    EXPECT_EQ(ret_device_main, UPNP_E_SUCCESS)
+        << errStrEx(ret_device_main, UPNP_E_SUCCESS);
 
     // Stop device
     EXPECT_EQ(TvDeviceStop(), UPNP_E_SUCCESS);
 }
 
+#if 0
 TEST(SampleTvDeviceTestSuite, TvDeviceStart) {
     GTEST_SKIP() << "  # With using real sockets this test has side effects on "
                     "other tests. It should be mocked.";
@@ -116,6 +121,7 @@ TEST(SampleTvDeviceTestSuite, TvDeviceStart) {
     // Stop device
     EXPECT_EQ(TvDeviceStop(), UPNP_E_SUCCESS);
 }
+#endif
 
 } // namespace upnplib
 

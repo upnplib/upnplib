@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-04-28
+# Redistribution only with this Copyright remark. Last modified: 2023-06-30
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -20,7 +20,7 @@ include(CMakeDependentOption)
 option(UPNPLIB_WITH_TOOLS "Make some not essential program features available like text for error numbers etc." OFF)
 option(UPNPLIB_WITH_CLIENT "Providing client functionality for e.g. a control point listening to a UPnP server." OFF)
 option(UPNPLIB_WITH_DEVICE "Providing device functionality so clients can connect to it." OFF)
-option(UPNPLIB_WITH_WEBSERVER "Provide a webserver." OFF)
+option(UPNPLIB_WITH_WEBSERVER "Provide a webserver." ON)
 option(UPNPLIB_WITH_SSDP "Enable the Simple Service Discovery Protocol." OFF)
 option(UPNPLIB_WITH_OPTSSDP "Enable optional SSDP headers." OFF)
 option(UPNPLIB_WITH_SOAP "Enable the Simple Object Access Protocol." OFF)

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-02-22
+ * Redistribution only with this Copyright remark. Last modified: 2023-06-29
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -217,7 +217,7 @@ static int sock_read_write(
         if (bRead) {
 #ifdef UPNP_ENABLE_OPEN_SSL
             if (info->ssl) {
-                numBytes = (long)SSL_read(info->ssl, buffer, (size_t)bufsize);
+                numBytes = (long)SSL_read(info->ssl, buffer, (int)bufsize);
             } else {
 #endif
                 /* read data. */
@@ -232,8 +232,8 @@ static int sock_read_write(
             while (byte_left != (size_t)0) {
 #ifdef UPNP_ENABLE_OPEN_SSL
                 if (info->ssl) {
-                    num_written =
-                        SSL_write(info->ssl, buffer + bytes_sent, byte_left);
+                    num_written = SSL_write(info->ssl, buffer + bytes_sent,
+                                            (int)byte_left);
                 } else {
 #endif
                     /* write data. */

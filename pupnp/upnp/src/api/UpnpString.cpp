@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-26
+// Redistribution only with this Copyright remark. Last modified: 2023-06-30
 // Also Copyright by other contributor who haven't made a note.
 // Last compare with pupnp original source file on 2023-04-26, ver 1.14.15
 
@@ -48,19 +48,21 @@ static size_t strnlen(const char* s, size_t n) {
 #endif /* _WIN32 */
 
 /* strndup() is a GNU extension. */
-#if !HAVE_STRNDUP || defined(_WIN32)
-static char* strndup(const char* __string, size_t __n) {
-    size_t strsize = strnlen(__string, __n);
-    char* newstr = (char*)malloc(strsize + 1);
-    if (newstr == NULL)
-        return NULL;
-
-    strncpy(newstr, __string, strsize);
-    newstr[strsize] = 0;
-
-    return newstr;
-}
-#endif /* HAVE_STRNDUP && !defined(_WIN32) */
+// For mocking we need the identical function strndup() from upnplib port.cpp
+// to have a successful program linking. --Ingo
+// #if !HAVE_STRNDUP || defined(_WIN32)
+// static char* __strndup(const char* __string, size_t __n) {
+//     size_t strsize = strnlen(__string, __n);
+//     char* newstr = (char*)malloc(strsize + 1);
+//     if (newstr == NULL)
+//         return NULL;
+//
+//     strncpy(newstr, __string, strsize);
+//     newstr[strsize] = 0;
+//
+//     return newstr;
+// }
+// #endif /* HAVE_STRNDUP && !defined(_WIN32) */
 
 /*!
  * \brief Internal implementation of the class UpnpString.

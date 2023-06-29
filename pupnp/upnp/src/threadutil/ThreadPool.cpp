@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-10-06
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-06-29
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -411,8 +411,8 @@ static void SetSeed(void) {
     srand((unsigned long long)t.tv_usec +
           (unsigned long long)ithread_get_current_thread_id().p);
 #elif defined(BSD) || defined(__APPLE__) || defined(__FreeBSD_kernel__)
-    srand((unsigned long)t.tv_usec +
-          (unsigned long)ithread_get_current_thread_id());
+    srand((unsigned int)t.tv_usec +
+          (unsigned int)((unsigned long)ithread_get_current_thread_id()));
 #elif defined(__linux__) || defined(__sun) || defined(__CYGWIN__) ||           \
     defined(__GLIBC__)
     srand((unsigned int)t.tv_usec +

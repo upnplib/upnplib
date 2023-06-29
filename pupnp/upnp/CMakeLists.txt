@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-06-22
+# Redistribution only with this Copyright remark. Last modified: 2023-06-30
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -71,6 +71,8 @@ if(UPNPLIB_DEF_SOAP)
 endif()
 
 if(UPNPLIB_DEF_GENA)
+    set(UPNPLIB_DEF_CLIENT YES)
+    set(UPNPLIB_DEF_DEVICE YES)
     set(UPNPLIB_DEF_SSDP YES)
 endif()
 

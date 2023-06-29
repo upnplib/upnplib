@@ -1,6 +1,7 @@
 /*  $OpenBSD: md5.h,v 1.3 2014/11/16 17:39:09 tedu Exp $    */
 
 /*
+ * Last modified: 2023-06-29 --Ingo
  * This code implements the MD5 message-digest algorithm.
  * The algorithm is due to Ron Rivest.  This code was
  * written by Colin Plumb in 1993, no copyright is claimed.
@@ -16,6 +17,7 @@
 #define UPNPLIB_MD5_HPP
 
 #include <stddef.h>
+#include <stdint.h>
 #include "UpnpStdInt.hpp"
 
 #define MD5_BLOCK_LENGTH 64
