@@ -1,10 +1,10 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-06-19
+# Redistribution only with this Copyright remark. Last modified: 2023-07-02
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(UPNPLIB VERSION 0011
+project(UPNPLIB VERSION 0012
         DESCRIPTION "UPnP library program"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -98,6 +98,7 @@ if(NOT WIN32)
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
+if(FALSE)
     # Info executable linked with the pupnp shared library
     # ----------------------------------------------------
     add_executable(upnplib-psh
@@ -170,6 +171,7 @@ if(NOT WIN32)
             # available by default.
             ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
+endif()
 
 else() # WIN32
 
@@ -224,6 +226,7 @@ else() # WIN32
             ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
+if(FALSE)
     # WIN32 Info executable linked with the pupnp shared library
     #-----------------------------------------------------------
     add_executable(upnplib-psh
@@ -288,5 +291,6 @@ else() # WIN32
         PRIVATE
             compa_static
     )
+endif()
 
 endif() # WIN32

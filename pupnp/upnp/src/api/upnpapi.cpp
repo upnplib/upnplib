@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-06-22
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -64,13 +64,14 @@
 
 /* Needed for GENA */
 #include "gena.hpp"
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-#define NS
+// #ifdef UPNPLIB_WITH_NATIVE_PUPNP
+// #define NS
+// #include "miniserver.hpp"
+// #else
+// #define NS ::compa
+// #include "compa/miniserver.hpp"
+// #endif
 #include "miniserver.hpp"
-#else
-#define NS ::compa
-#include "compa/miniserver.hpp"
-#endif
 #include "service_table.hpp"
 
 #ifdef INTERNAL_WEB_SERVER
@@ -519,8 +520,8 @@ static int UpnpInitStartServers(
     LOCAL_PORT_V4 = DestPort;
     LOCAL_PORT_V6 = DestPort;
     LOCAL_PORT_V6_ULA_GUA = DestPort;
-    retVal = NS::StartMiniServer(&LOCAL_PORT_V4, &LOCAL_PORT_V6,
-                                 &LOCAL_PORT_V6_ULA_GUA);
+    retVal =
+        StartMiniServer(&LOCAL_PORT_V4, &LOCAL_PORT_V6, &LOCAL_PORT_V6_ULA_GUA);
     if (retVal != UPNP_E_SUCCESS) {
         UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
                    "Miniserver failed to start\n");
@@ -698,7 +699,7 @@ int UpnpFinish(void) {
 #endif
     TimerThreadShutdown(&gTimerThread);
 #if EXCLUDE_MINISERVER == 0
-    NS::StopMiniServer();
+    StopMiniServer();
 #endif
 #if EXCLUDE_WEB_SERVER == 0
     web_server_destroy();
@@ -3864,11 +3865,11 @@ int UpnpEnableWebserver([[maybe_unused]] int enable) {
             return retVal;
         }
         bWebServerState = WEB_SERVER_ENABLED;
-        NS::SetHTTPGetCallback(web_server_callback);
+        SetHTTPGetCallback(web_server_callback);
     } else {
         web_server_destroy();
         bWebServerState = WEB_SERVER_DISABLED;
-        NS::SetHTTPGetCallback(NULL);
+        SetHTTPGetCallback(NULL);
     }
 
     return UPNP_E_SUCCESS;

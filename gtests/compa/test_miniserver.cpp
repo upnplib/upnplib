@@ -7,11 +7,11 @@
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
-#include <pupnp/upnp/src/genlib/miniserver/miniserver.cpp>
-#include <compa/src/genlib/miniserver/miniserver.cpp>
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
+#include <pupnp/upnp/src/genlib/miniserver/miniserver.cpp>
 #define NS
 #else
+#include <compa/src/genlib/miniserver/miniserver.cpp>
 #define NS ::compa
 #endif
 
@@ -22,6 +22,7 @@
 #include <upnplib/upnptools.hpp> // for errStrEx
 #include <upnplib/port.hpp>
 #include <upnplib/sockaddr.hpp>
+#include <upnplib/socket.hpp>
 #include <upnplib/gtest.hpp>
 #include <upnplib/addrinfo.hpp>
 
@@ -44,6 +45,7 @@ using ::testing::SetErrnoAndReturn;
 using ::testing::StartsWith;
 
 using ::upnplib::CAddrinfo;
+using ::upnplib::CSocket_basic;
 using ::upnplib::errStrEx;
 using ::upnplib::SSockaddr_storage;
 

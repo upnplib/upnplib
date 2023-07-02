@@ -5,7 +5,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-10
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-02
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -104,7 +104,7 @@ UPNPLIB_API void SetHTTPGetCallback(
  * \brief Set SOAP Callback.
  */
 #ifdef INCLUDE_DEVICE_APIS
-void SetSoapCallback(
+UPNPLIB_API void SetSoapCallback(
     /*! [in] SOAP Callback to be invoked . */
     MiniServerCallback callback);
 #else  /* INCLUDE_DEVICE_APIS */
@@ -114,7 +114,7 @@ SetSoapCallback([[maybe_unused]] MiniServerCallback callback) {}
 /*!
  * \brief Set GENA Callback.
  */
-void SetGenaCallback(
+UPNPLIB_API void SetGenaCallback(
     /*! [in] GENA Callback to be invoked. */
     MiniServerCallback callback);
 
@@ -152,5 +152,7 @@ UPNPLIB_API int StartMiniServer(
 UPNPLIB_API int StopMiniServer();
 
 } // namespace compa
+
+using namespace compa;
 
 #endif /* UPNPLIB_MINISERVER_HPP */

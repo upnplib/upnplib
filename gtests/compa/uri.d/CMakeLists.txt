@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-04-27
+# Redistribution only with this Copyright remark. Last modified: 2023-07-02
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -72,8 +72,7 @@ add_executable(test_uri_parse-pst
     ./test_uri_parse.cpp
 )
 target_include_directories(test_uri_parse-pst
-    PRIVATE
-        ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
 target_compile_definitions(test_uri_parse-pst
     PRIVATE

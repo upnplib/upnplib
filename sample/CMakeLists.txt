@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-06-29
+# Redistribution only with this Copyright remark. Last modified: 2023-07-02
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -123,5 +123,6 @@ IF(UPNPLIB_DEF_SAMPLE_DEVICE)
     )
     target_link_libraries(tv_device-csh
         PRIVATE compa_shared
+        PRIVATE upnplib_shared
     )
 ENDIF()

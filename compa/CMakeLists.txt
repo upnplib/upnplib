@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-04-30
+# Redistribution only with this Copyright remark. Last modified: 2023-07-02
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -103,7 +103,7 @@ set(PUPNP_SOURCE_FILES
     $<$<BOOL:${UPNPLIB_DEF_DEVICE}>:${PUPNP_UPNP_SOURCE_DIR}/src/genlib/service-table/service_table.cpp>
     $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:${PUPNP_UPNP_SOURCE_DIR}/src/genlib/client_table/GenlibClientSubscription.cpp>
     $<$<AND:$<BOOL:${UPNPLIB_DEF_DEVICE}>,$<BOOL:${UPNPLIB_DEF_GENA}>>:${PUPNP_UPNP_SOURCE_DIR}/src/genlib/client_table/client_table.cpp>
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/miniserver/miniserver.cpp
+    #${PUPNP_UPNP_SOURCE_DIR}/src/genlib/miniserver/miniserver.cpp
 
     $<$<BOOL:${UPNPLIB_DEF_SSDP}>:${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_server.cpp>
     $<$<BOOL:${UPNPLIB_DEF_SSDP}>:${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_device.cpp>
@@ -159,7 +159,7 @@ set(COMPA_SOURCE_FILES
     ./src/api/upnpdebug.cpp
     ./src/genlib/miniserver/miniserver.cpp
     ./src/genlib/net/sock.cpp
-    ./src/ssdp/ssdp_server.cpp
+    #./src/ssdp/ssdp_server.cpp   # work in progress
     ${UPNPLIB_SOURCE_DIR}/src/port.cpp
 )
 
@@ -169,15 +169,12 @@ set(COMPATIBLE_SOURCE_FILES
 )
 
 set(COMPATIBLE_INCLUDE_DIRECTORIES
-    PUBLIC ${PUPNP_UPNP_SOURCE_DIR}/inc
-    PUBLIC ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-    PUBLIC ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
+    PUBLIC ./include
     # if pthreads4w isn't installed this path is empty. The linker
     # doesn't find "pthread.h" and falls back to look at <pthread.h>.
     PUBLIC ${pthreads4w_SOURCE_DIR}
     PUBLIC ${PUPNP_SOURCE_DIR}/include
     PUBLIC ${PUPNP_IXML_SOURCE_DIR}/inc
-    PUBLIC ./include
     PUBLIC ${IXML_SOURCE_DIR}/include
     PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )

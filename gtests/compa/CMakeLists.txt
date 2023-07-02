@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-04-30
+# Redistribution only with this Copyright remark. Last modified: 2023-07-02
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -13,9 +13,6 @@ project(GTESTS_COMPA VERSION 0010
 #=====
 add_executable(test_sock-psh
         ./test_sock.cpp
-)
-target_include_directories(test_sock-psh
-    PRIVATE ${COMPA_SOURCE_DIR}/include
 )
 target_compile_definitions(test_sock-psh
     PRIVATE
@@ -193,6 +190,7 @@ add_executable(test_miniserver-pst
 )
 target_include_directories(test_miniserver-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
     PRIVATE ${COMPA_SOURCE_DIR}/include
 )
 target_compile_definitions(test_miniserver-pst
@@ -234,7 +232,6 @@ add_executable(test_miniserver-cst
 )
 target_include_directories(test_miniserver-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
-    PRIVATE ${COMPA_SOURCE_DIR}/include
 )
 target_compile_definitions(test_miniserver-cst
     PRIVATE

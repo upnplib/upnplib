@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-01-15
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -245,7 +245,7 @@ void readFromSSDPSocket(
  *
  * \return UPNP_E_SUCCESS if successful else returns appropriate error.
  */
-int get_ssdp_sockets(
+EXPORT_SPEC int get_ssdp_sockets(
     /* [out] Array of SSDP sockets. */
     MiniServerSockArray* out);
 

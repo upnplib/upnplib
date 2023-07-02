@@ -93,9 +93,9 @@ jobs:
           ls ./build/lib/libcompa_static.a
           ls ./build/lib/libupnplib_static.a
 
-      - name: Run upnplib info programs
-        # This program is always built
-        run: ./build/bin/upnplib-pst; ./build/bin/upnplib-psh; ./build/bin/upnplib-cst; ./build/bin/upnplib-csh
+      #- name: Run upnplib info programs
+      #  # This program is always built
+      #  run: ./build/bin/upnplib-pst; ./build/bin/upnplib-psh; ./build/bin/upnplib-cst; ./build/bin/upnplib-csh
 
       - name: Run gtests
         run: |
@@ -170,9 +170,9 @@ jobs:
           ls ./build/lib/libcompa_static.a
           ls ./build/lib/libupnplib_static.a
 
-      - name: Run upnplib info programs
-        # This program is always built
-        run: ./build/bin/upnplib-pst; ./build/bin/upnplib-psh; ./build/bin/upnplib-cst; ./build/bin/upnplib-csh
+      #- name: Run upnplib info programs
+      #  # This program is always built
+      #  run: ./build/bin/upnplib-pst; ./build/bin/upnplib-psh; ./build/bin/upnplib-cst; ./build/bin/upnplib-csh
 
       - name: Run gtests
         run: |
@@ -258,8 +258,8 @@ jobs:
           ls $env:SYSTEMROOT/System32/gtest_main.dll
           ls $env:SYSTEMROOT/System32/gmock_main.dll
 
-      - name: Run upnplib info programs
-        run: ./build/bin/${{matrix.buildtype}}/upnplib-pst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-cst.exe;
+      #- name: Run upnplib info programs
+      #  run: ./build/bin/${{matrix.buildtype}}/upnplib-pst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-cst.exe;
 
         #run: ./build/bin/${{matrix.buildtype}}/upnplib-pst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-psh.exe; ./build/bin/${{matrix.buildtype}}/upnplib-cst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-csh.exe
 
@@ -355,8 +355,8 @@ jobs:
           ls $env:SYSTEMROOT/System32/gtest_main.dll
           ls $env:SYSTEMROOT/System32/gmock_main.dll
 
-      - name: Run upnplib info programs
-        run: ./build/bin/upnplib-pst.exe; ./build/bin/upnplib-psh.exe; ./build/bin/upnplib-cst.exe; ./build/bin/upnplib-csh.exe
+      #- name: Run upnplib info programs
+      #  run: ./build/bin/upnplib-pst.exe; ./build/bin/upnplib-psh.exe; ./build/bin/upnplib-cst.exe; ./build/bin/upnplib-csh.exe
 
       - if: (matrix.os != 'windows-2019') || (matrix.googletest != '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON')
         # Running static compiled tests with compiled GTESTS_WITH_SHARED_LIBS=ON
