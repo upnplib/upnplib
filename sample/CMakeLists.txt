@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-02
+# Redistribution only with this Copyright remark. Last modified: 2023-07-03
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -32,8 +32,6 @@ include_directories(
 add_compile_options(
     # Default warning level
     $<$<CXX_COMPILER_ID:MSVC>:/W1>
-    # all compiler warnings as errors
-    $<$<CXX_COMPILER_ID:MSVC>:/WX>
 )
 
 

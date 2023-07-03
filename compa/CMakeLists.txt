@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-02
+# Redistribution only with this Copyright remark. Last modified: 2023-07-03
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -195,15 +195,6 @@ add_compile_definitions(
     $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
 )
 
-add_compile_options(
-    # Use lowest default compiler waring level. No need to set it.
-    #$<$<CXX_COMPILER_ID:MSVC>:/W1>
-    # all compiler warnings as errors
-    $<$<CXX_COMPILER_ID:MSVC>:/WX>
-    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wconversion>
-    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wsign-conversion>
-)
-
 # -Wno-deprecated-declarations: disable warning 'sprintf' (and others) is
 # deprecated: This function is provided for compatibility reasons only.
 # We do not fix deprecated functions on old code.
@@ -211,14 +202,23 @@ set_source_files_properties(
         ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
         ${PUPNP_UPNP_SOURCE_DIR}/src/gena/gena_device.cpp
         ${PUPNP_UPNP_SOURCE_DIR}/src/uuid/uuid.cpp
-    PROPERTIES COMPILE_OPTIONS
-	$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wno-deprecated-declarations>
+    PROPERTIES COMPILE_FLAGS
+        $<$<CXX_COMPILER_ID:AppleClang>:"-Wno-deprecated-declarations">
 )
 
 set_source_files_properties(
-        ${COMPA_SOURCE_FILES}
-    # Most compiler warnings enabled on compa source files.
-    PROPERTIES COMPILE_OPTIONS $<$<CXX_COMPILER_ID:MSVC>:/W4>
+        ${PUPNP_SOURCE_FILES}
+        ${PUPNP_UPNP_SOURCE_DIR}/src/gena/gena_ctrlpt.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/service-table/service_table.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/soap/soap_device.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/service-table/service_table.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_device.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/gena/gena_device.cpp
+        ${PUPNP_UPNP_SOURCE_DIR}/src/uuid/sysdep.cpp
+    # Default low warning level on pUPnP source files.
+    PROPERTIES COMPILE_OPTIONS $<$<CXX_COMPILER_ID:MSVC>:/W1>
 )
 
 

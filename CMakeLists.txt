@@ -135,6 +135,10 @@ add_compile_definitions(
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
 )
 add_compile_options(
+        # Most compiler warnings enabled
+        $<$<CXX_COMPILER_ID:MSVC>:/W4>
+        # all compiler warnings as errors
+        $<$<CXX_COMPILER_ID:MSVC>:/WX>
         # disable warning C4996: 'strdup'(or others): The POSIX name for this
         # item is deprecated. Instead, use the ISO C and C++ conformant name:
         # _strdup. See online help for details. (This is Microsoft specific, no

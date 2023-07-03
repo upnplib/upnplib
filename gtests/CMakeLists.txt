@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-06-26
+# Redistribution only with this Copyright remark. Last modified: 2023-07-03
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -30,10 +30,6 @@ add_compile_definitions(
     $<$<PLATFORM_ID:Windows>:_CRT_NONSTDC_NO_DEPRECATE>
 )
 add_compile_options(
-    # Most compiler warnings enabled
-    $<$<CXX_COMPILER_ID:MSVC>:/W4>
-    # all compiler warnings as errors
-    $<$<CXX_COMPILER_ID:MSVC>:/WX>
     # disable warning C4702: unreachable code
     $<$<CXX_COMPILER_ID:MSVC>:/wd4702>
     $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wconversion>
