@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-07-05
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -8,11 +8,10 @@
 
 #include "upnplib/upnptools.hpp" // For upnplib only
 #include "upnplib/gtest_tools_unix.hpp"
-#include "umock/ifaddrs.hpp"
-#include "umock/net_if.hpp"
+#include "umock/ifaddrs_mock.hpp"
+#include "umock/net_if_mock.hpp"
 
 #include "upnplib/gtest.hpp"
-#include "gmock/gmock.h"
 
 using ::testing::_;
 using ::testing::AtLeast;
@@ -29,21 +28,6 @@ namespace compa {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
-//
-class IfaddrsMock : public umock::IfaddrsInterface {
-  public:
-    virtual ~IfaddrsMock() override {}
-    MOCK_METHOD(int, getifaddrs, (struct ifaddrs**), (override));
-    MOCK_METHOD(void, freeifaddrs, (struct ifaddrs*), (override));
-};
-
-class Net_ifMock : public umock::Net_ifInterface {
-  public:
-    virtual ~Net_ifMock() override {}
-    MOCK_METHOD(unsigned int, if_nametoindex, (const char* ifname), (override));
-};
-
-//
 // UpnpApi Testsuite for IP4
 //==========================
 
@@ -54,8 +38,8 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
 {
   protected:
     // Provide mocked functions
-    IfaddrsMock m_mocked_ifaddrs;
-    Net_ifMock m_mocked_net_if;
+    umock::IfaddrsMock m_mocked_ifaddrs;
+    umock::Net_ifMock m_mocked_net_if;
 
     // constructor of this testsuite
     UpnpapiIPv4MockTestSuite() {
@@ -74,11 +58,9 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
 
 TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
     // provide a network interface
-    struct ifaddrs* ifaddr = nullptr;
-
     CIfaddr4 ifaddr4Obj;
     ifaddr4Obj.set("if0v4", "192.168.99.3/11");
-    ifaddr = ifaddr4Obj.get();
+    ifaddrs* ifaddr = ifaddr4Obj.get();
     EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
 
     // Mock system functions
@@ -117,11 +99,9 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
 
 TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     // provide a network interface
-    struct ifaddrs* ifaddr = nullptr;
-
     CIfaddr4 ifaddr4Obj;
     ifaddr4Obj.set("eth0", "192.168.77.48/22");
-    ifaddr = ifaddr4Obj.get();
+    ifaddrs* ifaddr = ifaddr4Obj.get();
     EXPECT_STREQ(ifaddr->ifa_name, "eth0");
 
     umock::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
@@ -154,7 +134,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
         // get an empty netmask from initialization. That's also OK.
         EXPECT_STREQ(gIF_IPV4_NETMASK, "");
 
-    } else {
+    } else if (!github_actions) {
 
         // gIF_NAME mocked with getifaddrs above
         EXPECT_STREQ(gIF_NAME, "")

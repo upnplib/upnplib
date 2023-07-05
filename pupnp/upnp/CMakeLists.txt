@@ -1,10 +1,10 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-02
+# Redistribution only with this Copyright remark. Last modified: 2023-07-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(PUPNP_UPNP VERSION 0027
+project(PUPNP_UPNP VERSION 0028
         DESCRIPTION "Binary build of the UPnP library core"
         HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -268,11 +268,6 @@ else() # WIN32
             umock_shared
             ixml_shared
             $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:upnplib_ssl>
-            ws2_32   # winsock to support sockets
-            iphlpapi # ip helper interface to get network management tools
-            # On MS Windows we link with the static pthreads4w library to
-            # avoid error prone managing access to its .dll file.
-            ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
     # WIN32 Pupnp STatic library: suffix -pst
@@ -294,9 +289,6 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:upnplib_ssl>
         INTERFACE
             ixml_static
-            ws2_32   # winsock to support sockets
-            iphlpapi # ip helper interface to get network management tools
-            ${UPNP_PTHREADS_STATIC_LIBRARY}
     )
 
 endif() # WIN32

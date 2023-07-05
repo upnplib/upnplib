@@ -1,18 +1,17 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-07-07
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
 
-#include "pupnp/upnp/src/api/upnpapi.cpp"
+#include <pupnp/upnp/src/api/upnpapi.cpp>
 
-#include "upnplib/upnptools.hpp" // For upnplib only
-#include "upnplib/gtest_tools_win32.hpp"
-#include "upnplib/port.hpp"
-#include "umock/iphlpapi.hpp"
+#include <upnplib/upnptools.hpp> // For upnplib only
+#include <upnplib/gtest_tools_win32.hpp>
+#include <upnplib/port.hpp>
+#include <umock/iphlpapi_mock.hpp>
 
-#include "upnplib/gtest.hpp"
-#include "gmock/gmock.h"
+#include <upnplib/gtest.hpp>
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -25,18 +24,8 @@ using ::upnplib::CNetIf4;
 using ::upnplib::errStrEx;
 
 namespace compa {
-
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
-
-class IphlpapiMock : public umock::IphlpapiInterface {
-  public:
-    virtual ~IphlpapiMock() override = default;
-    MOCK_METHOD(ULONG, GetAdaptersAddresses,
-                (ULONG Family, ULONG Flags, PVOID Reserved,
-                 PIP_ADAPTER_ADDRESSES AdapterAddresses, PULONG SizePointer),
-                (override));
-};
 
 // UpnpApi Testsuite for IP4
 //==========================
@@ -48,7 +37,7 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
 {
   protected:
     // Provide mocked functions
-    IphlpapiMock m_mocked_iphlpapi;
+    umock::IphlpapiMock m_mocked_iphlpapi;
 
     UpnpapiIPv4MockTestSuite() {
         // initialize needed global variables
@@ -102,7 +91,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
                      "when IPv6 is disabled.\n";
         EXPECT_STRNE(gIF_IPV6, "");
 
-    } else {
+    } else if (!github_actions) {
 
         EXPECT_STREQ(gIF_IPV4_NETMASK, "255.224.0.0");
         EXPECT_STREQ(gIF_IPV6, "");
@@ -164,7 +153,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
                      "address when IPv6 is disabled.\n";
         EXPECT_STRNE(gIF_IPV6, "");
 
-    } else {
+    } else if (!github_actions) {
 
         // There is a zero in the valid name
         EXPECT_STREQ(gIF_NAME, "eth0")

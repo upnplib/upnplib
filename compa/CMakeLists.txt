@@ -1,10 +1,10 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-03
+# Redistribution only with this Copyright remark. Last modified: 2023-07-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
-project(COMPA VERSION 0003
+project(COMPA VERSION 0004
               DESCRIPTION "UPnPlib compatible library subproject"
               HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -183,8 +183,7 @@ add_compile_definitions(
     $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
     $<$<BOOL:${UPNPLIB_DEF_CLIENT}>:UPNP_HAVE_CLIENT>
     $<$<BOOL:${UPNPLIB_DEF_DEVICE}>:UPNP_HAVE_DEVICE>
-    #$<$<BOOL:${UPNPLIB_DEF_WEBSERVER}>:UPNP_HAVE_WEBSERVER>
-    UPNP_HAVE_WEBSERVER   # Needed to have it always available in the library
+    $<$<BOOL:${UPNPLIB_DEF_WEBSERVER}>:UPNP_HAVE_WEBSERVER>
     $<$<BOOL:${UPNPLIB_DEF_SSDP}>:UPNP_HAVE_SSDP>
     $<$<BOOL:${UPNPLIB_DEF_OPTSSDP}>:UPNP_HAVE_OPTSSDP>
     $<$<BOOL:${UPNPLIB_DEF_SOAP}>:UPNP_HAVE_SOAP>
@@ -234,7 +233,7 @@ if(NOT WIN32)
     )
     target_include_directories(compa_shared
         ${COMPATIBLE_INCLUDE_DIRECTORIES}
-        PRIVATE
+        PUBLIC
             # if we are not on WIN32 the linker finds empty "headers.h" and will
             # not complain an error but will not use <headers.h> that isn't available.
             ${PUPNP_UPNP_SOURCE_DIR}/inc/not_win32
@@ -305,9 +304,6 @@ else() # WIN32
             umock_shared
             ixml_shared
             $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:upnplib_ssl>
-            # On MS Windows we link with the static pthreads4w library to
-            # avoid error prone managing access to its .dll file.
-            ${UPNP_PTHREADS_STATIC_LIBRARY}
         PRIVATE
             upnplib_shared
             # disable warning LNK4217: symbol 'symbol' defined in
@@ -331,8 +327,9 @@ else() # WIN32
     target_link_libraries(compa_static
         PUBLIC
             umock_static
+            $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:upnplib_ssl>
+        INTERFACE
             ixml_static
-            ${UPNP_PTHREADS_STATIC_LIBRARY}
         PRIVATE
             upnplib_static
     )

@@ -1,19 +1,19 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-02
+# Redistribution only with this Copyright remark. Last modified: 2023-07-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
 
-project(GTESTS_COMPA_API VERSION 0001
+project(GTESTS_COMPA_API VERSION 0002
                   DESCRIPTION "Tests for api module and compatible code"
                   HOMEPAGE_URL "https://github.com/upnplib")
-
 
 # upnpdebug
 #==========
 # Because we want to include the source file into the test to also test static
 # functions, we cannot use shared libraries due to symbol import/export
-# conflicts. We must use static libraries.
+# conflicts on Microsoft Windows (warning C4273: inconsistent dll linkage). We
+# must use static libraries.
 add_executable(test_upnpdebug-pst
         ./test_upnpdebug.cpp
 )
@@ -33,11 +33,6 @@ target_compile_options(test_upnpdebug-pst
         # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
         # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_upnpdebug-pst
     PRIVATE
@@ -83,14 +78,6 @@ target_compile_definitions(test_UpnpString-psh
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
-target_compile_options(test_UpnpString-psh
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
-)
 target_link_libraries(test_UpnpString-psh
     PRIVATE
         pupnp_shared
@@ -108,14 +95,6 @@ target_compile_definitions(test_UpnpString-csh
     PRIVATE
         UPNPLIB_SHARED
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
-)
-target_compile_options(test_UpnpString-csh
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_UpnpString-csh
     PRIVATE
@@ -139,14 +118,6 @@ target_compile_definitions(test_UpnpFileInfo-psh
         UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
-target_compile_options(test_UpnpFileInfo-psh
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
-)
 target_link_libraries(test_UpnpFileInfo-psh
     PRIVATE
         pupnp_shared
@@ -165,14 +136,6 @@ target_compile_definitions(test_UpnpFileInfo-csh
         UPNPLIB_SHARED
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
-target_compile_options(test_UpnpFileInfo-csh
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
-)
 target_link_libraries(test_UpnpFileInfo-csh
     PRIVATE
         compa_shared
@@ -187,7 +150,8 @@ add_test(NAME ctest_UpnpFileInfo-csh COMMAND test_UpnpFileInfo-csh --gtest_shuff
 #========
 # Because we want to include the source file into the test to also test static
 # functions, we cannot use shared libraries due to symbol import/export
-# conflicts. We must use static libraries.
+# conflicts on Microsoft Windows (warning C4273: inconsistent dll linkage). We
+# must use static libraries.
 if(FALSE)
 # Direct linking with source files currently not used but having available for
 # reference. We link against the internal upnplib libraries (see below).
@@ -244,24 +208,21 @@ target_compile_definitions(test_upnpapi-pst
         UPNPLIB_WITH_NATIVE_PUPNP
         UPNP_HAVE_WEBSERVER
         UPNP_HAVE_CLIENT
-        UPNP_HAVE_SSDP
         UPNP_HAVE_OPTSSDP
-        UPNP_HAVE_GENA
 )
 target_compile_options(test_upnpapi-pst
     PRIVATE
-        # disable warning C4100: 'result_listener': unreferenced formal parameter
-        # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
-        # be a side effect of the macro definition. --Ingo
+        # disable warning C4100: 'result_listener': unreferenced formal
+        # parameter This is from Googlemock MATCHER_P. Don't know how to fix
+        # it. Seems to be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
-        # disable warning C4505: 'UpnpComputeIpv6PrefixLength': unreferenced local function has been removed
-        # This isn't used with WIN32 but on other platforms. I won't modify pupnp.
+        # disable warning C4505: 'UpnpComputeIpv6PrefixLength': unreferenced
+        # local function has been removed This isn't used with WIN32 but on
+        # other platforms. I won't modify pupnp. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+        # disable warning C4065: switch statement contains 'default' but no
+        # 'case' labels
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4065>
 )
 target_link_libraries(test_upnpapi-pst
     PRIVATE
@@ -287,7 +248,7 @@ target_compile_definitions(test_upnpapi-cst
 target_compile_options(test_upnpapi-cst
     PRIVATE
         # disable warning C4065: switch statement contains 'default' but no 'case' labels
-        # Bad practice but I won't modify pupnp code.
+        # Bad practice but I won't modify pupnp code. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4065>
         # disable warning C4100: 'result_listener': unreferenced formal parameter
         # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
@@ -296,11 +257,6 @@ target_compile_options(test_upnpapi-cst
         # disable warning C4505: 'UpnpComputeIpv6PrefixLength': unreferenced local function has been removed
         # This isn't used with WIN32 but on other platforms. I won't modify pupnp code.
         $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_upnpapi-cst
     PRIVATE
@@ -325,19 +281,37 @@ target_compile_definitions(test_upnpapi_platform-pst
 target_compile_options(test_upnpapi_platform-pst
     PRIVATE
         # disable warning C4505: 'GetFreeHandle': unreferenced local function has been removed
-        # This isn't used with WIN32 but on other platforms. I won't modify pupnp code.
+        # This isn't used with WIN32 but on other platforms. I won't modify pupnp code. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_upnpapi_platform-pst
     PRIVATE
-        upnplib_gtest_tools_static
         pupnp_static
         upnplib_static
+        upnplib_gtest_tools_static
 )
 add_test(NAME ctest_upnpapi_platform-pst COMMAND test_upnpapi_platform-pst --gtest_shuffle
+)
+
+add_executable(test_upnpapi_platform-cst
+#---------------------------------------
+    $<$<PLATFORM_ID:Windows>:./test_upnpapi_win32.cpp>
+    $<$<NOT:$<PLATFORM_ID:Windows>>:./test_upnpapi_unix.cpp>
+)
+target_include_directories(test_upnpapi_platform-cst
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+)
+target_compile_options(test_upnpapi_platform-cst
+    PRIVATE
+        # disable warning C4505: 'GetFreeHandle': unreferenced local function has been removed
+        # This isn't used with WIN32 but on other platforms. I won't modify pupnp code. --Ingo
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
+)
+target_link_libraries(test_upnpapi_platform-cst
+    PRIVATE
+        compa_static
+        upnplib_static
+        upnplib_gtest_tools_static
+)
+add_test(NAME ctest_upnpapi_platform-cst COMMAND test_upnpapi_platform-cst --gtest_shuffle
 )

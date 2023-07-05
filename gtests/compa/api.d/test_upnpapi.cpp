@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-07-05
 
 #include "pupnp/upnp/src/api/upnpapi.cpp"
 #ifdef UPNP_HAVE_TOOLS
@@ -246,7 +246,10 @@ TEST_F(UpnpEnableWebserverFTestSuite, sdk_not_initialized) {
 
 TEST(UpnpDownloadXmlDocTestSuite, download_successful) {
     // A possible url is http://127.0.0.1:50001/tvdevicedesc.xml
-    GTEST_SKIP() << "Still needs to be done.";
+    if (github_actions)
+        GTEST_SKIP() << "Still needs to be done.";
+    else
+        GTEST_FAIL() << "Still needs to be done.";
 }
 
 } // namespace compa

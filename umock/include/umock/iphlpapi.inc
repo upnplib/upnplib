@@ -1,12 +1,12 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Redistribution only with this Copyright remark. Last modified: 2023-07-05
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
 
 // iphlpapi.h is a Microsoft Windows library.
 
-#include "upnplib/visibility.hpp"
+#include <upnplib/visibility.hpp>
 #include <winsock2.h>
 #include <iphlpapi.h>
 

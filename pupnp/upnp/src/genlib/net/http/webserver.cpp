@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-12-09
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -231,7 +231,7 @@ static const char* gEncodedMediaTypes =
 static struct document_type_t gMediaTypeList[NUM_MEDIA_TYPES];
 
 /*! Global variable. A local dir which serves as webserver root. */
-membuffer gDocumentRootDir;
+EXPORT_SPEC membuffer gDocumentRootDir;
 
 /*! XML document. */
 static struct xml_alias_t gAliasDoc;

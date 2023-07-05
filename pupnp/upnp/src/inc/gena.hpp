@@ -2,8 +2,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-06-07
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2022-07-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -131,7 +131,7 @@ typedef struct NOTIFY_THREAD_STRUCT {
  *
  * \return UPNP_E_SUCCESS if successful, otherwise appropriate error code.
  */
-void genaCallback(
+EXPORT_SPEC void genaCallback(
     /*! [in] represents the parse state of the request */
     http_parser_t* parser,
     /*! [in] HTTP message containing GENA request */
@@ -150,7 +150,7 @@ void genaCallback(
  *  appropriate error code
  */
 #ifdef INCLUDE_CLIENT_APIS
-int genaSubscribe(
+EXPORT_SPEC int genaSubscribe(
     /*! [in] The client handle. */
     UpnpClient_Handle client_handle,
     /*! [in] Of the form: "http://134.134.156.80:4000/RedBulb/Event */
@@ -175,7 +175,7 @@ int genaSubscribe(
  *  appropriate error code.
  */
 #ifdef INCLUDE_CLIENT_APIS
-int genaUnSubscribe(
+EXPORT_SPEC int genaUnSubscribe(
     /*! [in] UPnP client handle. */
     UpnpClient_Handle client_handle,
     /*! [in] The subscription ID. */
@@ -192,7 +192,7 @@ int genaUnSubscribe(
  *  error code.
  */
 #ifdef INCLUDE_CLIENT_APIS
-int genaUnregisterClient(
+EXPORT_SPEC int genaUnregisterClient(
     /*! [in] Handle containing all the control point related information. */
     UpnpClient_Handle client_handle);
 #endif /* INCLUDE_CLIENT_APIS */
@@ -223,7 +223,7 @@ int genaUnregisterDevice(
  *  appropriate error code.
  */
 #ifdef INCLUDE_CLIENT_APIS
-int genaRenewSubscription(
+EXPORT_SPEC int genaRenewSubscription(
     /*! [in] Client handle. */
     UpnpClient_Handle client_handle,
     /*! [in] Subscription ID. */
