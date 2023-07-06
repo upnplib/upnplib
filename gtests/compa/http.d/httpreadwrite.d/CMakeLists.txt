@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-02
+# Redistribution only with this Copyright remark. Last modified: 2023-07-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../../cmake/project-header.cmake)
@@ -52,10 +52,6 @@ add_executable(test_httpreadwrite-pst
 target_include_directories(test_httpreadwrite-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
-target_compile_definitions(test_httpreadwrite-pst
-    PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
-)
 target_compile_options(test_httpreadwrite-pst
     PRIVATE
         # To fix these warnigs we have to modify the original pupnp code but
@@ -69,11 +65,6 @@ target_compile_options(test_httpreadwrite-pst
         $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
         # disable warning C4706: assignment within conditional expression
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_httpreadwrite-pst
     PRIVATE
@@ -131,10 +122,6 @@ target_include_directories(test_netconnect-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
     PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
-target_compile_definitions(test_netconnect-pst
-    PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
-)
 target_compile_options(test_netconnect-pst
     PRIVATE
         # To fix these warnigs we have to modify the original pupnp code but
@@ -145,11 +132,6 @@ target_compile_options(test_netconnect-pst
         $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-declarations>
         # disable warning C4706: assignment within conditional expression
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_netconnect-pst
     PRIVATE
@@ -173,10 +155,6 @@ add_executable(test_http_Download-pst
 target_include_directories(test_http_Download-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
-target_compile_definitions(test_http_Download-pst
-    PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
-)
 target_compile_options(test_http_Download-pst
     PRIVATE
         # disable warning: 'sprintf' (and others) is deprecated: This function is
@@ -184,11 +162,6 @@ target_compile_options(test_http_Download-pst
         $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-declarations>
         # disable warning C4706: assignment within conditional expression
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_http_Download-pst
     PRIVATE

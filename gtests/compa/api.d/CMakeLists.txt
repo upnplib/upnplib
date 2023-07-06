@@ -20,10 +20,6 @@ add_executable(test_upnpdebug-pst
 target_include_directories(test_upnpdebug-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
-target_compile_definitions(test_upnpdebug-pst
-    PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
-)
 target_compile_options(test_upnpdebug-pst
     PRIVATE
         # disable warning C4459: declaration of 'fp' hides global declaration
@@ -51,14 +47,8 @@ add_executable(test_upnptools-psh
 #--------------------------------
         ./test_upnptools.cpp
 )
-target_compile_definitions(test_upnptools-psh
-    PRIVATE
-        UPNPLIB_SHARED
-        UPNPLIB_WITH_NATIVE_PUPNP
-)
 target_link_libraries(test_upnptools-psh
-    PRIVATE
-        pupnp_shared
+    PRIVATE pupnp_shared
 )
 add_test(NAME ctest_upnptools-psh COMMAND test_upnptools-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -74,8 +64,6 @@ add_executable(test_UpnpString-psh
 )
 target_compile_definitions(test_UpnpString-psh
     PRIVATE
-        UPNPLIB_SHARED
-        UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_link_libraries(test_UpnpString-psh
@@ -93,7 +81,6 @@ add_executable(test_UpnpString-csh
 )
 target_compile_definitions(test_UpnpString-csh
     PRIVATE
-        UPNPLIB_SHARED
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_link_libraries(test_UpnpString-csh
@@ -114,8 +101,6 @@ add_executable(test_UpnpFileInfo-psh
 )
 target_compile_definitions(test_UpnpFileInfo-psh
     PRIVATE
-        UPNPLIB_SHARED
-        UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_link_libraries(test_UpnpFileInfo-psh
@@ -133,7 +118,6 @@ add_executable(test_UpnpFileInfo-csh
 )
 target_compile_definitions(test_UpnpFileInfo-csh
     PRIVATE
-        UPNPLIB_SHARED
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_link_libraries(test_UpnpFileInfo-csh
@@ -205,7 +189,6 @@ target_include_directories(test_upnpapi-pst
 )
 target_compile_definitions(test_upnpapi-pst
     PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
         UPNP_HAVE_WEBSERVER
         UPNP_HAVE_CLIENT
         UPNP_HAVE_OPTSSDP
@@ -274,14 +257,11 @@ add_executable(test_upnpapi_platform-pst
 target_include_directories(test_upnpapi_platform-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
-target_compile_definitions(test_upnpapi_platform-pst
-    PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
-)
 target_compile_options(test_upnpapi_platform-pst
     PRIVATE
-        # disable warning C4505: 'GetFreeHandle': unreferenced local function has been removed
-        # This isn't used with WIN32 but on other platforms. I won't modify pupnp code. --Ingo
+        # disable warning C4505: 'GetFreeHandle': unreferenced local function
+        # has been removed This isn't used with WIN32 but on other platforms. I
+        # won't modify pupnp code. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
 )
 target_link_libraries(test_upnpapi_platform-pst

@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-02
+# Redistribution only with this Copyright remark. Last modified: 2023-07-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -25,7 +25,6 @@ target_include_directories(test_webserver-pst
 )
 target_compile_definitions(test_webserver-pst
     PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
         UPNP_HAVE_WEBSERVER
 )
 target_compile_options(test_webserver-pst
@@ -36,11 +35,6 @@ target_compile_options(test_webserver-pst
         $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
         # disable warning C4703: potentially uninitialized local pointer variable 'subtype' used
         $<$<CXX_COMPILER_ID:MSVC>:/wd4703>
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_webserver-pst
         PRIVATE
@@ -70,11 +64,6 @@ target_compile_options(test_webserver-cst
         $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
         # disable warning C4703: potentially uninitialized local pointer variable 'subtype' used
         $<$<CXX_COMPILER_ID:MSVC>:/wd4703>
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_webserver-cst
         PRIVATE
@@ -118,7 +107,6 @@ target_include_directories(test_httpparser-pst
 )
 target_compile_definitions(test_httpparser-pst
     PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_compile_options(test_httpparser-pst
@@ -129,15 +117,9 @@ target_compile_options(test_httpparser-pst
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
         # disable warning C4701: potentially uninitialized local variable 'status' used
         $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_httpparser-pst
-        PRIVATE
-            pupnp_static
+        PRIVATE pupnp_static
 )
 add_test(NAME ctest_httpparser-pst COMMAND test_httpparser-pst --gtest_shuffle
 )
@@ -162,11 +144,6 @@ target_compile_options(test_httpparser-cst
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
         # disable warning C4701: potentially uninitialized local variable 'status' used
         $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_httpparser-cst
         PRIVATE

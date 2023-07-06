@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-16
+# Redistribution only with this Copyright remark. Last modified: 2023-07-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -18,14 +18,6 @@ target_include_directories(test_urlparser
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}/include
     PRIVATE ${UPNPLIB_SOURCE_DIR}/include
-)
-target_compile_options(test_urlparser
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 add_test(NAME ctest_urlparser COMMAND test_urlparser --gtest_shuffle
 )
@@ -50,11 +42,6 @@ target_compile_options(test_url_class
     PRIVATE
         # disable warning C4244: 'initializing': conversion from '_Ty' to '_Ty2', possible loss of data
         $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 add_test(NAME ctest_url_class COMMAND test_url_class --gtest_shuffle
 )

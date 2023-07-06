@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-02
+# Redistribution only with this Copyright remark. Last modified: 2023-07-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -18,22 +18,8 @@ add_executable(test_FreeList-psh
 #-------------------------------
         ./test_FreeList.cpp
 )
-target_compile_definitions(test_FreeList-psh
-    PRIVATE
-        UPNPLIB_SHARED
-        UPNPLIB_WITH_NATIVE_PUPNP
-)
-target_compile_options(test_FreeList-psh
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
-)
 target_link_libraries(test_FreeList-psh
-    PRIVATE
-        pupnp_shared
+    PRIVATE pupnp_shared
 )
 add_test(NAME ctest_FreeList-psh COMMAND test_FreeList-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -45,22 +31,8 @@ add_test(NAME ctest_FreeList-psh COMMAND test_FreeList-psh --gtest_shuffle
 add_executable(test_LinkedList-psh
         ./test_LinkedList.cpp
 )
-target_compile_definitions(test_LinkedList-psh
-    PRIVATE
-        UPNPLIB_SHARED
-        UPNPLIB_WITH_NATIVE_PUPNP
-)
-target_compile_options(test_LinkedList-psh
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
-)
 target_link_libraries(test_LinkedList-psh
-    PRIVATE
-        pupnp_shared
+    PRIVATE pupnp_shared
 )
 add_test(NAME ctest_LinkedList-psh COMMAND test_LinkedList-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -77,21 +49,10 @@ target_include_directories(test_ThreadPool-psh
 )
 target_compile_definitions(test_ThreadPool-psh
     PRIVATE
-        UPNPLIB_SHARED
-        UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
-target_compile_options(test_ThreadPool-psh
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
-)
 target_link_libraries(test_ThreadPool-psh
-    PRIVATE
-        pupnp_shared
+    PRIVATE pupnp_shared
 )
 add_test(NAME ctest_ThreadPool-psh COMMAND test_ThreadPool-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -108,21 +69,10 @@ target_include_directories(test_TimerThread-psh
 )
 target_compile_definitions(test_TimerThread-psh
     PRIVATE
-        UPNPLIB_SHARED
-        UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
-target_compile_options(test_TimerThread-psh
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
-)
 target_link_libraries(test_TimerThread-psh
-    PRIVATE
-        pupnp_shared
+    PRIVATE pupnp_shared
 )
 add_test(NAME ctest_TimerThread-psh COMMAND test_TimerThread-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

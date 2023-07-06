@@ -1,11 +1,11 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-03
+# Redistribution only with this Copyright remark. Last modified: 2023-07-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(GTESTS VERSION 0033
+project(GTESTS VERSION 0034
                DESCRIPTION "Unit Tests using googletest"
                HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -55,14 +55,6 @@ target_compile_definitions(upnplib_gtest_tools_shared
         UPNPLIB_EXPORTS
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
-target_compile_options(upnplib_gtest_tools_shared
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
-)
 target_link_libraries(upnplib_gtest_tools_shared
     PUBLIC
         $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
@@ -83,14 +75,6 @@ target_include_directories(upnplib_gtest_tools_static
 target_compile_definitions(upnplib_gtest_tools_static
     PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
-)
-target_compile_options(upnplib_gtest_tools_static
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(upnplib_gtest_tools_static
     PUBLIC
@@ -122,8 +106,7 @@ target_include_directories(test_upnplib_gtest_tools
     PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 target_compile_definitions(test_upnplib_gtest_tools
-        PRIVATE
-            UPNPLIB_SHARED
+    PRIVATE UPNPLIB_SHARED
 )
 target_compile_options(test_upnplib_gtest_tools
     PRIVATE
@@ -131,15 +114,9 @@ target_compile_options(test_upnplib_gtest_tools
         # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
         # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_upnplib_gtest_tools
-    PRIVATE
-        upnplib_gtest_tools_shared
+    PRIVATE upnplib_gtest_tools_shared
 )
 add_test(NAME ctest_upnplib_gtest_tools COMMAND test_upnplib_gtest_tools --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -152,24 +129,13 @@ add_executable(test_upnplib_gtest_tools_platform
         $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/test_tools_unix.cpp>
 )
 target_include_directories(test_upnplib_gtest_tools_platform
-    PRIVATE
-        ./include
+    PRIVATE ./include
 )
 target_compile_definitions(test_upnplib_gtest_tools_platform
-    PRIVATE
-        UPNPLIB_SHARED
-)
-target_compile_options(test_upnplib_gtest_tools_platform
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
+    PRIVATE UPNPLIB_SHARED
 )
 target_link_libraries(test_upnplib_gtest_tools_platform
-    PRIVATE
-        upnplib_gtest_tools_shared
+    PRIVATE upnplib_gtest_tools_shared
 )
 add_test(NAME ctest_upnplib_gtest_tools_platform COMMAND test_upnplib_gtest_tools_platform --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -182,21 +148,8 @@ add_executable(test_simple-ush
 #-----------------------------
         ./test_simple.cpp
 )
-target_compile_definitions(test_simple-ush
-    PRIVATE
-        UPNPLIB_SHARED
-)
-target_compile_options(test_simple-ush
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
-)
 target_link_libraries(test_simple-ush
-    PRIVATE
-        upnplib_shared
+    PRIVATE upnplib_shared
 )
 add_test(NAME ctest_simple-ush COMMAND test_simple-ush --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -206,17 +159,8 @@ add_test(NAME ctest_simple-ush COMMAND test_simple-ush --gtest_shuffle
 add_executable(test_simple-ust
         ./test_simple.cpp
 )
-target_compile_options(test_simple-ust
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
-)
 target_link_libraries(test_simple-ust
-    PRIVATE
-        upnplib_static
+    PRIVATE upnplib_static
 )
 add_test(NAME ctest_simple-ust COMMAND test_simple-ust --gtest_shuffle
 )
@@ -230,14 +174,6 @@ add_executable(test_template
 target_compile_definitions(test_template
     PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
-)
-target_compile_options(test_template
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 add_test(NAME ctest_template COMMAND test_template --gtest_shuffle
 )

@@ -170,9 +170,6 @@ set(COMPATIBLE_SOURCE_FILES
 
 set(COMPATIBLE_INCLUDE_DIRECTORIES
     PUBLIC ./include
-    # if pthreads4w isn't installed this path is empty. The linker
-    # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-    PUBLIC ${pthreads4w_SOURCE_DIR}
     PUBLIC ${PUPNP_SOURCE_DIR}/include
     PUBLIC ${PUPNP_IXML_SOURCE_DIR}/inc
     PUBLIC ${IXML_SOURCE_DIR}/include
@@ -240,7 +237,6 @@ if(NOT WIN32)
     )
     target_compile_definitions(compa_shared
         PRIVATE
-            UPNPLIB_SHARED
             UPNPLIB_EXPORTS
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
@@ -295,7 +291,6 @@ else() # WIN32
     )
     target_compile_definitions(compa_shared
         PRIVATE
-            UPNPLIB_SHARED
             UPNPLIB_EXPORTS
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )

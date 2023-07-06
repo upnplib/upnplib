@@ -1,5 +1,5 @@
 # Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-03
+# Redistribution only with this Copyright remark. Last modified: 2023-07-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -18,14 +18,8 @@ target_include_directories(upnplib-psh
     PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
     PRIVATE ${COMPA_SOURCE_DIR}/include
 )
-target_compile_definitions (upnplib-psh
-    PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
-        UPNPLIB_SHARED
-)
 target_link_libraries(upnplib-psh
-    PRIVATE
-        pupnp_shared
+    PRIVATE pupnp_shared
 )
 
 # Info executable linked with the pupnp static library
@@ -36,10 +30,6 @@ add_executable(upnplib-pst
 target_include_directories(upnplib-pst
     PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
     PRIVATE ${COMPA_SOURCE_DIR}/include
-)
-target_compile_definitions (upnplib-pst
-    PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
 )
 target_link_libraries(upnplib-pst
     PRIVATE
@@ -57,10 +47,6 @@ add_executable(upnplib-csh
 )
 target_include_directories(upnplib-csh
     PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
-)
-target_compile_definitions (upnplib-csh
-    PRIVATE
-        UPNPLIB_SHARED
 )
 target_link_libraries(upnplib-csh
     PRIVATE

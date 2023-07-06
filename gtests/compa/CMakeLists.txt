@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-02
+# Redistribution only with this Copyright remark. Last modified: 2023-07-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -16,17 +16,7 @@ add_executable(test_sock-psh
 )
 target_compile_definitions(test_sock-psh
     PRIVATE
-        UPNPLIB_SHARED
-        UPNPLIB_WITH_NATIVE_PUPNP
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
-)
-target_compile_options(test_sock-psh
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_sock-psh
     PRIVATE
@@ -47,8 +37,6 @@ if(UPNPLIB_WITH_OPENSSL)
     )
     target_compile_definitions(test_sock_openssl-psh
         PRIVATE
-            UPNPLIB_SHARED
-            UPNPLIB_WITH_NATIVE_PUPNP
             $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
     )
     target_link_libraries(test_sock_openssl-psh
@@ -66,7 +54,6 @@ if(UPNPLIB_WITH_OPENSSL)
     )
     target_compile_definitions(test_sock_openssl-csh
         PRIVATE
-            UPNPLIB_SHARED
             $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
     )
     target_link_libraries(test_sock_openssl-csh
@@ -90,13 +77,10 @@ if(UPNPLIB_WITH_OPENSSL)
     )
     target_compile_definitions(test_openssl_threaded-psh
         PRIVATE
-            UPNPLIB_SHARED
-            UPNPLIB_WITH_NATIVE_PUPNP
             $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
     )
     target_link_libraries(test_openssl_threaded-psh
-        PRIVATE
-            pupnp_shared
+        PRIVATE pupnp_shared
     )
     #add_test(NAME ctest_openssl_threaded-psh COMMAND test_openssl_threaded-psh --gtest_shuffle
     #    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -110,7 +94,6 @@ if(UPNPLIB_WITH_OPENSSL)
     )
     target_compile_definitions(test_openssl_threaded-csh
         PRIVATE
-            UPNPLIB_SHARED
             $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
     )
     target_link_libraries(test_openssl_threaded-csh
@@ -195,7 +178,6 @@ target_include_directories(test_miniserver-pst
 )
 target_compile_definitions(test_miniserver-pst
     PRIVATE
-        UPNPLIB_WITH_NATIVE_PUPNP
         UPNP_HAVE_CLIENT
         UPNP_HAVE_DEVICE
         UPNP_HAVE_WEBSERVER
@@ -208,14 +190,6 @@ target_compile_options(test_miniserver-pst
         # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
         # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
-)
-target_compile_options(test_miniserver-pst
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_miniserver-pst
     PRIVATE
@@ -247,14 +221,6 @@ target_compile_options(test_miniserver-cst
         # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
         # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
-)
-target_compile_options(test_miniserver-cst
-    PRIVATE
-        # disable warning C4251: 'testing::internal::RE::pattern_': class
-        # 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-        # needs to have dll-interface to be used by clients of class
-        # 'testing::internal::RE'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4251>
 )
 target_link_libraries(test_miniserver-cst
     PRIVATE

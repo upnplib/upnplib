@@ -158,9 +158,6 @@ set(PUPNP_INCLUDE_DIRECTORIES
     PUBLIC ./inc
     PUBLIC ./src/inc
     PUBLIC ./src/threadutil
-    # if pthreads4w isn't installed this path is empty. The linker
-    # doesn't find "pthread.h" and falls back to look at <pthread.h>.
-    PUBLIC ${pthreads4w_SOURCE_DIR}
     PUBLIC ${PUPNP_SOURCE_DIR}/include
     PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
 )
@@ -197,20 +194,14 @@ if(NOT WIN32)
             ./inc/not_win32
     )
     target_compile_definitions(pupnp_shared
-        PRIVATE
-            UPNPLIB_SHARED
-            UPNPLIB_EXPORTS
-            UPNPLIB_WITH_NATIVE_PUPNP
+        PUBLIC UPNPLIB_WITH_NATIVE_PUPNP
+        PRIVATE UPNPLIB_EXPORTS
     )
     target_link_libraries(pupnp_shared
         PUBLIC
             umock_shared
             ixml_shared
             $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:upnplib_ssl>
-        INTERFACE
-            # On Linux we cannot link with the static pthreads library because then
-            # we have also link with a static libc that's not available by default.
-            ${UPNP_PTHREADS_SHARED_LIBRARY}
     )
 
     # Pupnp STatic library: suffix -pst
@@ -226,8 +217,7 @@ if(NOT WIN32)
             ./inc/not_win32
     )
     target_compile_definitions(pupnp_static
-        PRIVATE
-            UPNPLIB_WITH_NATIVE_PUPNP
+        PUBLIC UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(pupnp_static
         PUBLIC
@@ -235,9 +225,6 @@ if(NOT WIN32)
             $<$<BOOL:${UPNPLIB_DEF_OPENSSL}>:upnplib_ssl>
         INTERFACE
             ixml_static
-            # On Linux we cannot link with the static pthreads library because then
-            # we have also link with a static libc that's not available by default.
-            ${UPNP_PTHREADS_SHARED_LIBRARY}
 )
 
 else() # WIN32
@@ -256,10 +243,9 @@ else() # WIN32
         ${PUPNP_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(pupnp_shared
+        PUBLIC UPNPLIB_WITH_NATIVE_PUPNP
         PRIVATE
-            UPNPLIB_SHARED
             UPNPLIB_EXPORTS
-            UPNPLIB_WITH_NATIVE_PUPNP
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     # In addition to pthreads we need some more system libraries here
@@ -279,8 +265,8 @@ else() # WIN32
         ${PUPNP_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(pupnp_static
+        PUBLIC UPNPLIB_WITH_NATIVE_PUPNP
         PRIVATE
-            UPNPLIB_WITH_NATIVE_PUPNP
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(pupnp_static
