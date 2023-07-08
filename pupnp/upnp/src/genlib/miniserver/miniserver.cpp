@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-01-15
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-// Last compare with pupnp original source file on 2022-11-26, ver 1.14.15
+// Last compare with pupnp original source file on 2023-07-08, ver 1.14.17
 
 #include "config.hpp"
 
@@ -1172,7 +1172,7 @@ int StopMiniServer() {
     struct sockaddr_in ssdpAddr;
     char buf[256] = "ShutDown";
     // Due to required type cast for 'sendto' on WIN32 bufLen must fit to an
-    // int, no problem here.
+    // int, no problem here. --Ingo
 #ifdef _WIN32
     int bufLen = (int)strlen(buf);
 #else

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-02
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-// Last compare with pupnp original source file on 2023-06-22, ver 1.14.16
+// Last compare with pupnp original source file on 2023-07-08, ver 1.14.17
 
 /*!
  * \addtogroup UPnPAPI
@@ -151,33 +151,24 @@ ThreadPool gRecvThreadPool;
 
 /*! Mini server thread pool. */
 ThreadPool gMiniServerThreadPool;
-ThreadPool& get_gMiniServerThreadPool() { return gMiniServerThreadPool; }
 
 /*! Flag to indicate the state of web server */
 WebServerState bWebServerState = WEB_SERVER_DISABLED;
 
 /*! webCallback for HOST validation. */
 WebCallback_HostValidate gWebCallback_HostValidate = 0;
-WebCallback_HostValidate get_gWebCallback_HostValidate() {
-    return gWebCallback_HostValidate;
-}
 
 /*! Cookie to the webCallback for HOST validation. */
 void* gWebCallback_HostValidateCookie = 0;
-void* get_gWebCallback_HostValidateCookie() {
-    return &gWebCallback_HostValidateCookie;
-}
 
 /*! Allow literal host names redirection to numeric host names. */
 int gAllowLiteralHostRedirection = 0;
-int get_gAllowLiteralHostRedirection() { return gAllowLiteralHostRedirection; }
 
 /*! Static buffer to contain interface name. (extern'ed in upnp.h) */
 char gIF_NAME[LINE_SIZE] = {'\0'};
 
 /*! Static buffer to contain interface IPv4 address. (extern'ed in upnp.h) */
 char gIF_IPV4[INET_ADDRSTRLEN] = {'\0'};
-char* get_gIF_IPV4() { return gIF_IPV4; }
 
 /*! Static buffer to contain interface IPv4 netmask. (extern'ed in upnp.h) */
 char gIF_IPV4_NETMASK[INET_ADDRSTRLEN] = {'\0'};
@@ -185,7 +176,6 @@ char gIF_IPV4_NETMASK[INET_ADDRSTRLEN] = {'\0'};
 /*! Static buffer to contain interface IPv6 link-local address (LLA).
  * (extern'ed in upnp.h) */
 char gIF_IPV6[INET6_ADDRSTRLEN] = {'\0'};
-char* get_gIF_IPV6() { return gIF_IPV6; }
 
 /*! IPv6 LLA prefix length. (extern'ed in upnp.h) */
 unsigned gIF_IPV6_PREFIX_LENGTH = 0;
@@ -193,14 +183,12 @@ unsigned gIF_IPV6_PREFIX_LENGTH = 0;
 /*! Static buffer to contain interface IPv6 unique-local or globally-unique
  * address (ULA or GUA). (extern'ed in upnp.h) */
 char gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN] = {'\0'};
-char* get_gIF_IPV6_ULA_GUA() { return gIF_IPV6_ULA_GUA; }
 
 /*! IPv6 ULA or GUA prefix length. (extern'ed in upnp.h) */
 unsigned gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
 
 /*! Contains interface index. (extern'ed in upnp.h) */
 unsigned gIF_INDEX = (unsigned)-1;
-unsigned get_gIF_INDEX() { return gIF_INDEX; }
 
 /*! local IPv4 port for the mini-server */
 unsigned short LOCAL_PORT_V4;
@@ -275,7 +263,7 @@ typedef union {
     struct UpnpNonblockParam action;
 } job_arg;
 
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef INCLUDE_DEVICE_APIS // Needed to compile with warings as errors --Ingo
 #if EXCLUDE_SSDP == 0
 /*!
  * \brief Free memory associated with advertise job's argument
@@ -289,7 +277,7 @@ static void free_advertise_arg(job_arg* arg) {
 #endif /* EXCLUDE_SSDP == 0 */
 #endif /* INCLUDE_DEVICE_APIS */
 
-#if EXCLUDE_SOAP == 0
+#if EXCLUDE_SOAP == 0 // Needed to compile with warings as errors --Ingo
 #ifdef INCLUDE_CLIENT_APIS
 /*!
  * \brief Free memory associated with an action job's argument

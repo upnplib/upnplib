@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-02-03
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1260,7 +1260,7 @@ int TvDeviceStart(char* iface, unsigned short port, const char* desc_doc_name,
 
     pthread_mutex_init(&TVDevMutex, NULL);
     UpnpSetLogFileNames(NULL, NULL);
-    UpnpSetLogLevel(UPNP_ALL);
+    UpnpSetLogLevel(UPNP_INFO);
     UpnpInitLog();
     SampleUtil_Initialize(pfun);
     SampleUtil_Print("Initializing UPnP Sdk with\n"

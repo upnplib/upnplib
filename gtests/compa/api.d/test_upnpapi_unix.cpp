@@ -4,14 +4,18 @@
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
 
-#include "pupnp/upnp/src/api/upnpapi.cpp"
+#include <pupnp/upnp/src/api/upnpapi.cpp>
 
-#include "upnplib/upnptools.hpp" // For upnplib only
-#include "upnplib/gtest_tools_unix.hpp"
-#include "umock/ifaddrs_mock.hpp"
-#include "umock/net_if_mock.hpp"
+#include <upnplib/upnptools.hpp> // For upnplib only
+#include <upnplib/gtest_tools_unix.hpp>
+#include <umock/ifaddrs_mock.hpp>
+#include <umock/net_if_mock.hpp>
 
-#include "upnplib/gtest.hpp"
+#include <upnplib/gtest.hpp>
+
+namespace compa {
+bool old_code{false}; // Managed in upnplib_gtest_main.inc
+bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::AtLeast;
@@ -24,9 +28,6 @@ using ::upnplib::testing::CaptureStdOutErr;
 using ::upnplib::CIfaddr4;
 using ::upnplib::errStrEx;
 
-namespace compa {
-bool old_code{false}; // Managed in upnplib_gtest_main.inc
-bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 // UpnpApi Testsuite for IP4
 //==========================

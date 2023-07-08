@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-20
+// Redistribution only with this Copyright remark. Last modified: 2023-07-11
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -28,6 +28,7 @@
 
 #include <umock/stringh.hpp>
 #include <umock/sys_socket_mock.hpp>
+#include <umock/sys_select_mock.hpp>
 
 
 namespace compa {
@@ -115,15 +116,9 @@ by select() so it will always enable a blocked (waiting) select().
    |__ http_RecvMessage()
 */
 
-//
+
 // Mocked system calls
 // ===================
-class Sys_selectMock : public umock::Sys_selectInterface {
-  public:
-    virtual ~Sys_selectMock() override = default;
-    MOCK_METHOD(int, select, (SOCKET nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout), (override));
-};
-
 class StringhMock : public umock::StringhInterface {
   public:
     virtual ~StringhMock() override {}
@@ -373,7 +368,7 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_uninitialized) {
 
     if (old_code) {
         std::cout
-            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << CYEL "[ FIX      ] " CRES << __LINE__
             << ": Function should fail with win32 uninitialized sockets.\n";
     }
 
@@ -391,7 +386,7 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_uninitialized) {
 
     if (old_code) {
         // This is a bug and fixed in new_code.
-        // std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+        // std::cout << CYEL "[ FIX      ] " CRES << __LINE__
         // << ": Function should fail with win32 uninitialized sockets.\n";
         EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
             << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS);
@@ -714,7 +709,7 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_address_in_use) {
     //   port
 
     if (old_code) {
-        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+        std::cout << CYEL "[ FIX      ] " CRES << __LINE__
                   << ": Unit should not loop through about 50000 ports to "
                      "find one free port.\n";
         // This very expensive behavior is skipped here and fixed in function
@@ -840,7 +835,7 @@ TEST_F(DoBindFTestSuite, bind_successful) {
 
     if (old_code) {
         std::cout
-            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << CYEL "[ FIX      ] " CRES << __LINE__
             << ": The actual_port number should be set to the new number.\n";
         EXPECT_EQ(s.actual_port, actual_port);
 
@@ -927,7 +922,7 @@ TEST_F(DoBindFTestSuite, bind_with_invalid_argument) {
         // See notes above about the endless loop. Expected values here are
         // meaningless and only tested to watch code changes.
         std::cout
-            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << CYEL "[ FIX      ] " CRES << __LINE__
             << ": do_bind() should never hung with testing all free ports "
                "before failing.\n";
         EXPECT_EQ(s.actual_port, actual_port);
@@ -997,12 +992,12 @@ TEST(DoBindTestSuite, bind_with_try_port_overrun) {
     EXPECT_EQ(s.address_len, (socklen_t)sizeof(*s.serverAddr4));
 
     if (old_code) {
-        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+        std::cout << CYEL "[ FIX      ] " CRES << __LINE__
                   << ": Next try to bind a port should start with "
                      "APPLICATION_LISTENING_PORT but not with port 0.\n";
         EXPECT_EQ(s.try_port, 0);
         std::cout
-            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << CYEL "[ FIX      ] " CRES << __LINE__
             << ": The actual_port number should be set to the new number.\n";
         EXPECT_EQ(s.actual_port, 56789);
 
@@ -1076,7 +1071,7 @@ TEST(DoBindTestSuite, bind_successful_with_two_tries) {
 
     if (old_code) {
         std::cout
-            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << CYEL "[ FIX      ] " CRES << __LINE__
             << ": The actual_port number should be set to the new number.\n";
         EXPECT_EQ(s.actual_port, 56789);
 
@@ -1090,7 +1085,7 @@ TEST(DoBindTestSuite, bind_with_empty_parameter) {
     // With this test we have an initialized ip_version = 0, instead of valid 4
     // or 6. Switching for this value will never find an end.
     if (old_code) {
-        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+        std::cout << CYEL "[ FIX      ] " CRES << __LINE__
                   << ": This test stuck the program in an endless loop.\n";
 
     } else {
@@ -1132,7 +1127,7 @@ TEST_F(DoBindFTestSuite, bind_with_wrong_ip_version_assignment) {
         // Starting from try_port this will loop until 65535 with always the
         // same error. The short running test here is only given because we
         // start with try_port = 65533 so we have only three attempts here.
-        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+        std::cout << CYEL "[ FIX      ] " CRES << __LINE__
                   << ": This should not loop through all free port numbers. It "
                      "will always fail.\n";
     }
@@ -1582,6 +1577,12 @@ TEST_F(RunMiniServerFTestSuite, receive_from_stopSock_nothing_todo) {
 
 TEST(RunMiniServerTestSuite, RunMiniServer) {
     // NS checked
+    // IMPORTANT! There is a limit FD_SETSIZE = 1024 for socket file
+    // descriptors that can be used with 'select()'. This limit is not given
+    // when using 'poll()' or 'epoll' instead. Old_code uses 'select()' so we
+    // must test with this limited socket file descriptors. Otherwise we may
+    // get segfaults with 'FD_SET()'. For details have a look at 'man select'.
+    //
     // This would start some other threads. We run into dynamic problems with
     // parallel running threads here. For example running the miniserver with
     // schedule_request_job() in a new thread cannot be finished before the
@@ -1597,13 +1598,13 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
     // EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 0), 0);
 
     // Initialize needed data
-    constexpr SOCKET listen_sockfd = 201;
+    constexpr SOCKET select_nfds = FD_SETSIZE - 4; // Must be highest used fd+1
+    constexpr SOCKET listen_sockfd = FD_SETSIZE - 5;
     constexpr uint16_t listen_port = 301;
-    constexpr SOCKET connected_sockfd = 202;
+    constexpr SOCKET connected_sockfd = FD_SETSIZE - 6;
     const std::string connected_port = "302";
-    constexpr SOCKET stop_sockfd = 203;
+    constexpr SOCKET stop_sockfd = FD_SETSIZE - 7;
     constexpr uint16_t stop_port = 303;
-    constexpr SOCKET select_nfds = stop_sockfd + 1; // See man select
 
     NS::MiniServerSockArray* minisock =
         (NS::MiniServerSockArray*)malloc(sizeof(NS::MiniServerSockArray));
@@ -1617,11 +1618,11 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
     { // Scope of mocking only within this block
 
         // Mock functions from standard system library
-        Sys_selectMock sys_select_mockObj;
+        umock::Sys_selectMock sys_select_mockObj;
         umock::Sys_select sys_select_injectObj(&sys_select_mockObj);
 
         if (old_code) {
-            std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            std::cout << CYEL "[ FIX      ] " CRES << __LINE__
                       << ": Max socket fd for select() not setting to 0 if "
                          "INVALID_SOCKET in MiniServerSockArray on WIN32.\n";
 #ifdef _WIN32
@@ -1653,7 +1654,7 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
         ss_localhost = "127.0.0.1:" + std::to_string(stop_port);
 
         if (old_code) {
-            std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            std::cout << CYEL "[ FIX      ] " CRES << __LINE__
                       << ": Unit must not endless loop with wrong \"shutdown\" "
                          "message instead of \"ShutDown\".\n";
             EXPECT_CALL(mocked_sys_socketObj,
@@ -1671,14 +1672,6 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
                 .WillOnce(DoAll(StrCpyToArg<1>("shutdown"),
                                 SetArgPointee<4>(*(sockaddr*)&ss_localhost.ss),
                                 Return(8)));
-
-            EXPECT_CALL(mocked_sys_socketObj,
-                        getsockopt(listen_sockfd, SOL_SOCKET, SO_ERROR, _, _))
-                .WillOnce(Return(0));
-            EXPECT_CALL(mocked_sys_socketObj,
-                        getsockopt(INVALID_SOCKET, SOL_SOCKET, SO_ERROR, _, _))
-                .Times(7)
-                .WillRepeatedly(SetErrnoAndReturn(EBADF, -1));
         }
 
         std::cout << CRED "[ BUG      ] " CRES << __LINE__
@@ -1829,52 +1822,86 @@ TEST_F(RunMiniServerFTestSuite, fdset_if_valid) {
     fd_set rdSet;
     FD_ZERO(&rdSet);
 
-    const SOCKET sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    EXPECT_NE(sockfd, INVALID_SOCKET) << std::strerror(errno);
+    // Testing for negative or >= FD_SETSIZE socket file descriptors with
+    // FD_ISSET fails on Github Integration tests with **exception or with
+    // "buffer overflow" using Ubuntu Release. So we cannot check if negative
+    // file descriptors are not added to the FD list for select().
+    //
+    // EXPECT_EQ(FD_ISSET(INVALID_SOCKET, &rdSet), 0)
+    //     << "Socket file descriptor INVALID_SOCKET should not fail with "
+    //        "**exeption or buffer overflow";
+    //
+    // EXPECT_EQ(FD_ISSET(FD_SETSIZE, &rdSet), 0)
+    //     << "Socket file descriptor FD_SETSIZE should not fail with "
+    //        "**exeption or buffer overflow";
 
-    // Test Unit
-    NS::fdset_if_valid(sockfd, &rdSet);
+    // Valid socket file descriptor will be added to the set.
+    constexpr SOCKET sockfd1{FD_SETSIZE - 1};
+    fdset_if_valid(sockfd1, &rdSet);
+    EXPECT_NE(FD_ISSET(sockfd1, &rdSet), 0)
+        << "Socket file descriptor " << sockfd1
+        << " should be added to the FD SET for select().";
 
-    EXPECT_NE(FD_ISSET(sockfd, &rdSet), 0);
+    std::cout << CYEL "[ TODO     ] " CRES << __LINE__
+              << ": Check if \"buffer overflow\" still exists with FD_ISSET "
+                 "using invalid socket file descriptor.\n";
 
-    EXPECT_EQ(CLOSE_SOCKET_P(sockfd), 0) << std::strerror(errno);
-}
+    if (old_code)
+        // These expectations are labeled below with 'Wrong!'.
+        std::cout << CYEL "[ FIX      ] " CRES << __LINE__
+                  << ": invalid socket file descriptors should not be added to "
+                     "the FD SET for select().\n";
 
-TEST_F(RunMiniServerFTestSuite, fdset_if_valid_with_closed_socket) {
-    if (old_code) {
-        std::cout
-            << CYEL "[ BUGFIX   ] " CRES << __LINE__
-            << ": Due to undefined behavior of FD_SET with invalid fd "
-               "this randomly terminated with 'stack smashing detected'.\n";
-    } else {
+    // This isn't added to the set.
+    constexpr SOCKET sockfd2 = INVALID_SOCKET;
+    fdset_if_valid(sockfd2, &rdSet);
+    EXPECT_NE(FD_ISSET(sockfd1, &rdSet), 0)
+        << "Socket file descriptor " << sockfd1
+        << " should be added to the FD SET for select().";
+    // We cannot check it because of possible negative socket fd.
+    // EXPECT_EQ(FD_ISSET(sockfd2, &rdSet), 0)
+    //     << "Socket file descriptor " << sockfd2
+    //     << " should NOT be added to the FD SET for select().";
 
-#ifndef DEBUG
-        GTEST_SKIP()
-            << "             This test only runs with build type DEBUG.";
-#else
-        constexpr SOCKET sockfd{1111};
-        fd_set rdSet;
-        FD_ZERO(&rdSet);
+    // File descriptor for stderr must not be added to the set.
+    constexpr SOCKET sockfd3 = 2;
+    fdset_if_valid(sockfd3, &rdSet);
+    EXPECT_NE(FD_ISSET(sockfd1, &rdSet), 0)
+        << "Socket file descriptor " << sockfd1
+        << " should be added to the FD SET for select().";
+    if (old_code)
+        EXPECT_NE(FD_ISSET(sockfd3, &rdSet), 0); // Wrong!
+    else
+        EXPECT_EQ(FD_ISSET(sockfd3, &rdSet), 0)
+            << "Socket file descriptor " << sockfd3
+            << " should NOT be added to the FD SET for select().";
 
-        // Capture output to stderr
-        CLogging loggingObj; // Output only with build type DEBUG.
-        class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
-        captureObj.start();
+    // File descriptor 3 could be usable if not already used by another service.
+    constexpr SOCKET sockfd4 = 3;
+    fdset_if_valid(sockfd4, &rdSet);
+    EXPECT_NE(FD_ISSET(sockfd1, &rdSet), 0)
+        << "Socket file descriptor " << sockfd1
+        << " should be added to the FD SET for select().";
+    EXPECT_NE(FD_ISSET(sockfd4, &rdSet), 0)
+        << "Socket file descriptor " << sockfd4
+        << " should be added to the FD SET for select().";
 
-        // Test Unit
-        NS::fdset_if_valid(sockfd, &rdSet);
-
-        // We cannot verify with FD_ISSET due to undefined behavior with invalid
-        // socket.
-        // EXPECT_EQ(FD_ISSET(sockfd, &rdSet), 0);
-
-        // Get captured output
-        std::string capturedStderr = captureObj.get();
-        EXPECT_THAT(capturedStderr,
-                    ContainsStdRegex(" UPNP-MSER-2: .* FD_SET for select\\(\\) "
-                                     "failed with socket 1111."));
-#endif
+    // File descriptor >= FD_SETSIZE must not be added to the set. It is beyond
+    // the limit for connect().
+    if (!old_code) {
+        // Old code tries to add this to the FD set and fails with buffer
+        // overflow on Github Integration test with Ubuntu Release.
+        constexpr SOCKET sockfd5 = FD_SETSIZE;
+        fdset_if_valid(sockfd5, &rdSet);
+        EXPECT_NE(FD_ISSET(sockfd4, &rdSet), 0)
+            << "Socket file descriptor " << sockfd4
+            << " should be added to the FD SET for select().";
     }
+    // We cannot check it because of buffer overflow with FD_ISSET using
+    // FD_SETSIZE.
+    // EXPECT_EQ(FD_ISSET(sockfd5, &rdSet), 0)
+    //     << "Socket file descriptor " << sockfd5
+    //     << " should NOT be added to the FD SET for select().";
 }
 
 TEST_F(RunMiniServerFTestSuite, schedule_request_job) {
@@ -1921,7 +1948,7 @@ TEST(RunMiniServerDeathTest, free_handle_request_arg_with_nullptr_to_struct) {
     if (old_code) {
 #if defined __APPLE__ && !DEBUG
 #else
-        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+        std::cout << CYEL "[ FIX      ] " CRES << __LINE__
                   << ": free_handle_re4quest with nullptr must not segfault.\n";
         // There may be a multithreading test running before with
         // TEST(RunMiniServerTestSuite, schedule_request_job). Due to problems
@@ -2102,7 +2129,7 @@ TEST(RunMiniServerTestSuite,
         // Get captured output
         std::string capturedStderr = captureObj.get();
 
-        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+        std::cout << CYEL "[ FIX      ] " CRES << __LINE__
                   << ": A wrong but accepted address family AF_UNIX should "
                      "return an error.\n";
         EXPECT_TRUE(ret_getNumericHostRedirection); // wrong
@@ -2226,7 +2253,8 @@ TEST_F(StopMiniServerFTestSuite, sock_close) {
 //
 int main(int argc, char** argv) {
 #ifdef _MSC_VER
-    // Uninitialize Windows sockets if already global initialized.
+    // Uninitialize Windows sockets because it is global initialized with using
+    // the upnplib library. We need this for testing uninitialized sockets.
     ::WSACleanup();
 #endif
     ::testing::InitGoogleMock(&argc, argv);

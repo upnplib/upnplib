@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-29
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-// Last compare with pupnp original source file on 2022-11-26, ver 1.14.15
+// Last compare with pupnp original source file on 2023-07-08, ver 1.14.17
 
 #ifndef PUPNP_UPNPAPI_HPP
 #define PUPNP_UPNPAPI_HPP
@@ -56,6 +56,7 @@
 
 #define NUM_HANDLE 200
 
+extern size_t g_maxContentLength;
 extern int g_UpnpSdkEQMaxLen;
 extern int g_UpnpSdkEQMaxAge;
 
@@ -118,14 +119,6 @@ struct Handle_Info {
 };
 
 extern ithread_rwlock_t GlobalHndRWLock;
-
-/*! Mutex to synchronize the uuid creation process. */
-extern ithread_mutex_t gUUIDMutex;
-
-#ifdef INCLUDE_CLIENT_APIS
-/*! Mutex to synchronize the subscription handling at the client side. */
-extern ithread_mutex_t GlobalClientSubscribeMutex;
-#endif /* INCLUDE_CLIENT_APIS */
 
 /*!
  * \brief Get handle information.
@@ -206,18 +199,14 @@ Upnp_Handle_Type GetDeviceHandleInfoForPath(
 
 EXPORT_SPEC extern char gIF_NAME[LINE_SIZE];
 EXPORT_SPEC extern char gIF_IPV4[INET_ADDRSTRLEN];
-EXPORT_SPEC extern char* get_gIF_IPV4();
 EXPORT_SPEC extern char gIF_IPV4_NETMASK[INET_ADDRSTRLEN];
 EXPORT_SPEC extern char gIF_IPV6[INET6_ADDRSTRLEN];
-EXPORT_SPEC extern char* get_gIF_IPV6();
 EXPORT_SPEC extern unsigned gIF_IPV6_PREFIX_LENGTH;
 
 EXPORT_SPEC extern char gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN];
-EXPORT_SPEC extern char* get_gIF_IPV6_ULA_GUA();
 EXPORT_SPEC extern unsigned gIF_IPV6_ULA_GUA_PREFIX_LENGTH;
 
 EXPORT_SPEC extern unsigned gIF_INDEX;
-EXPORT_SPEC extern unsigned get_gIF_INDEX();
 
 EXPORT_SPEC extern unsigned short LOCAL_PORT_V4;
 EXPORT_SPEC extern unsigned short LOCAL_PORT_V6;
@@ -230,7 +219,6 @@ extern TimerThread gTimerThread;
 extern ThreadPool gRecvThreadPool;
 extern ThreadPool gSendThreadPool;
 EXPORT_SPEC extern ThreadPool gMiniServerThreadPool;
-EXPORT_SPEC extern ThreadPool& get_gMiniServerThreadPool();
 
 typedef enum {
     SUBSCRIBE,
@@ -318,19 +306,11 @@ extern WebServerState bWebServerState;
 
 /*! */
 EXPORT_SPEC extern WebCallback_HostValidate gWebCallback_HostValidate;
-EXPORT_SPEC extern WebCallback_HostValidate get_gWebCallback_HostValidate();
 
 /*! */
 EXPORT_SPEC extern void* gWebCallback_HostValidateCookie;
-EXPORT_SPEC extern void* get_gWebCallback_HostValidateCookie();
 
 /*! */
 EXPORT_SPEC extern int gAllowLiteralHostRedirection;
-EXPORT_SPEC extern int get_gAllowLiteralHostRedirection();
-
-/*! Maximum content-length (in bytes) that the SDK will process on an incoming
- * packet. Content-Length exceeding this size will be not processed and
- * error 413 (HTTP Error Code) will be returned to the remote end point. */
-EXPORT_SPEC extern size_t g_maxContentLength;
 
 #endif /* PUPNP_UPNPAPI_HPP */

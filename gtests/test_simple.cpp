@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-21
+// Redistribution only with this Copyright remark. Last modified: 2023-07-08
 
 // This tests only upnplib code without using pupnp code or compa code. The only
 // used 'upnplib' library does not provide it. So these tests belong to
@@ -59,6 +59,8 @@ TEST(simpleTestSuite, simple_winsock_test) {
     SOCKET sockfd = socket(AF_INET, SOCK_STREAM, 0);
     EXPECT_NE(sockfd, (SOCKET)-1);
     EXPECT_EQ(closesocket(sockfd), 0);
+
+    WSACleanup();
 }
 
 // Test library iphlpapi (iphlpapi.h)

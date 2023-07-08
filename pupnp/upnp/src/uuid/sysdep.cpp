@@ -3,6 +3,8 @@
  * Copyright (c) 1989 by Hewlett-Packard Company, Palo Alto, Ca. &
  * Digital Equipment Corporation, Maynard, Mass.
  * Copyright (c) 1998 Microsoft.
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-08
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty: permission to use, copy,
  * modify, and distribute this file for any purpose is hereby
@@ -16,6 +18,7 @@
  * Corporation makes any representations about the suitability of
  * this software for any purpose.
  */
+// Last compare with pupnp original source file on 2023-07-08, ver 1.14.17
 
 /*!
  * \file

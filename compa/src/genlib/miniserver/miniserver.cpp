@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-06-20
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-12
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -258,8 +258,8 @@ static int dispatch_request(
     case HTTPMETHOD_HEAD:
     case HTTPMETHOD_SIMPLEGET:
         callback = gGetCallback;
-        host_validate_callback = get_gWebCallback_HostValidate();
-        cookie = get_gWebCallback_HostValidateCookie();
+        host_validate_callback = gWebCallback_HostValidate;
+        cookie = gWebCallback_HostValidateCookie;
         UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                    "miniserver %d: got WEB server msg\n", info->socket);
         break;
@@ -292,7 +292,7 @@ static int dispatch_request(
             goto ExitFunction;
         }
     } else if (!host_header_is_numeric(host_port, min_size)) {
-        if (!get_gAllowLiteralHostRedirection()) {
+        if (!gAllowLiteralHostRedirection) {
             rc = UPNP_E_BAD_HTTPMSG;
             UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                        "Possible DNS Rebind attack prevented.\n");
@@ -441,7 +441,7 @@ static UPNP_INLINE void schedule_request_job(
     TPJobInit(&job, (start_routine)handle_request, (void*)request);
     TPJobSetFreeFunction(&job, free_handle_request_arg);
     TPJobSetPriority(&job, MED_PRIORITY);
-    if (ThreadPoolAdd(&get_gMiniServerThreadPool(), &job, NULL) != 0) {
+    if (ThreadPoolAdd(&gMiniServerThreadPool, &job, NULL) != 0) {
         UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
                    "mserv %d: cannot schedule request\n", connfd);
         free(request);
@@ -451,23 +451,23 @@ static UPNP_INLINE void schedule_request_job(
 }
 #endif // INTERNAL_WEB_SERVER
 
-static UPNP_INLINE void fdset_if_valid(SOCKET sock, fd_set* set) {
-    // For select() and its macros FD_* POSIX requires fd to be a valid file
-    // descriptor so we will check carefully. Otherwise you risk to run into
-    // undefined behavior.
-    char sock_error[64]{"<no message>"};
-    socklen_t sockerrlen = sizeof(sock_error);
+static void fdset_if_valid(SOCKET sock, fd_set* set) {
+    // This sets the file descriptor set for a socket select() for valid
+    // sochets. It also has a guard that we do not exceed the maximum number
+    // FD_SETSIZE (1024) of selectable file descriptors, see man select().
+    TRACE("Executing compa::fdset_if_valid()")
+    if (sock == INVALID_SOCKET)
+        return;
 
-    errno = EINVAL;
-    if (umock::sys_socket_h.getsockopt(sock, SOL_SOCKET, SO_ERROR,
-                                       &sock_error[0],
-                                       &sockerrlen) == SOCKET_ERROR) {
-        UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-                   "FD_SET for select() failed with socket %d. (%d) %s.\n",
-                   sock, errno, std::strerror(errno));
-    } else {
-        FD_SET(sock, set);
+    if (sock < 3 || sock >= FD_SETSIZE) {
+        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
+                   "FD_SET for select() failed with socket %d, that violates "
+                   "FD_SETSIZE.\n",
+                   sock);
+        return;
     }
+
+    FD_SET(sock, set);
 }
 
 static void web_server_accept([[maybe_unused]] SOCKET lsock,
@@ -571,7 +571,7 @@ static void RunMiniServer(
     // On MS Windows INVALID_SOCKET is unsigned -1 = 18446744073709551615 so we
     // get maxMiniSock with this big number even if there is only one
     // INVALID_SOCKET. Incrementing it at the end results in 0. To be compatible
-    // we must not assume INVALID_SOCKET to be -1.
+    // we must not assume INVALID_SOCKET to be -1. --Ingo
     maxMiniSock =
         std::max(maxMiniSock, miniSock->miniServerSock4 == INVALID_SOCKET
                                   ? 0
@@ -990,10 +990,10 @@ static int get_miniserver_sockets(
 
     /* Create listen socket for IPv4/IPv6. An error here may indicate
      * that we don't have an IPv4/IPv6 stack. */
-    err_init_4 = init_socket_suff(&ss4, get_gIF_IPV4(), 4);
-    err_init_6 = init_socket_suff(&ss6, get_gIF_IPV6(), 6);
-    err_init_6UlaGua = init_socket_suff(&ss6UlaGua, get_gIF_IPV6_ULA_GUA(), 6);
-    ss6.serverAddr6->sin6_scope_id = get_gIF_INDEX();
+    err_init_4 = init_socket_suff(&ss4, gIF_IPV4, 4);
+    err_init_6 = init_socket_suff(&ss6, gIF_IPV6, 6);
+    err_init_6UlaGua = init_socket_suff(&ss6UlaGua, gIF_IPV6_ULA_GUA, 6);
+    ss6.serverAddr6->sin6_scope_id = gIF_INDEX;
     /* Check what happened. */
 #ifdef _WIN32
     if (err_init_4 == WSANOTINITIALISED) {
@@ -1198,11 +1198,8 @@ int StartMiniServer(
         return ret_code;
     }
     /* SSDP socket for discovery/advertising. */
-#if EXCLUDE_SSDP == 0
+    TRACE("Calling compa::get_ssdp_sockets()")
     ret_code = get_ssdp_sockets((::MiniServerSockArray*)miniSocket);
-#else
-    ret_code = UPNP_E_INTERNAL_ERROR;
-#endif
     if (ret_code != UPNP_E_SUCCESS) {
         sock_close(miniSocket->miniServerSock4);
         sock_close(miniSocket->miniServerSock6);
@@ -1214,8 +1211,7 @@ int StartMiniServer(
     TPJobInit(&job, (start_routine)RunMiniServer, (void*)miniSocket);
     TPJobSetPriority(&job, MED_PRIORITY);
     TPJobSetFreeFunction(&job, (free_routine)free);
-    ret_code =
-        ThreadPoolAddPersistent(&get_gMiniServerThreadPool(), &job, NULL);
+    ret_code = ThreadPoolAddPersistent(&gMiniServerThreadPool, &job, NULL);
     if (ret_code < 0) {
         sock_close(miniSocket->miniServerSock4);
         sock_close(miniSocket->miniServerSock6);

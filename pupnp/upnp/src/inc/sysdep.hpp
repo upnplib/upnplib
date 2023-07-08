@@ -21,13 +21,13 @@
  * Corporation makes any representations about the suitability of
  * this software for any purpose.
  */
+// Last compare with pupnp original source file on 2023-07-08, ver 1.14.17
 
 /*!
  * \file
  */
 
 #include "ithread.hpp"
-#include "upnpapi.hpp"
 
 /* change to point to where MD5 .h's live */
 /* get MD5 sample implementation from RFC 1321 */
@@ -46,6 +46,9 @@
 /*! set the following to the number of 100ns ticks of the actual resolution of
  * your system's clock */
 #define UUIDS_PER_TICK 1024
+
+/*! Set the following to a call to acquire a system wide global lock. */
+extern ithread_mutex_t gUUIDMutex;
 
 #define UUIDLock() ithread_mutex_lock(&gUUIDMutex)
 #define UUIDUnlock() ithread_mutex_unlock(&gUUIDMutex)
