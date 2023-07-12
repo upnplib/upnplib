@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-06
+# Redistribution only with this Copyright remark. Last modified: 2023-07-12
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -35,10 +35,6 @@ if(UPNPLIB_WITH_OPENSSL)
     add_executable(test_sock_openssl-psh
         ./test_sock_openssl.cpp
     )
-    target_compile_definitions(test_sock_openssl-psh
-        PRIVATE
-            $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
-    )
     target_link_libraries(test_sock_openssl-psh
         PRIVATE
             pupnp_shared
@@ -51,10 +47,6 @@ if(UPNPLIB_WITH_OPENSSL)
 
     add_executable(test_sock_openssl-csh
         ./test_sock_openssl.cpp
-    )
-    target_compile_definitions(test_sock_openssl-csh
-        PRIVATE
-            $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
     )
     target_link_libraries(test_sock_openssl-csh
         PRIVATE
@@ -75,10 +67,6 @@ if(UPNPLIB_WITH_OPENSSL)
     target_include_directories(test_openssl_threaded-psh
         PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
     )
-    target_compile_definitions(test_openssl_threaded-psh
-        PRIVATE
-            $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
-    )
     target_link_libraries(test_openssl_threaded-psh
         PRIVATE pupnp_shared
     )
@@ -91,10 +79,6 @@ if(UPNPLIB_WITH_OPENSSL)
     )
     target_include_directories(test_openssl_threaded-csh
         PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
-    )
-    target_compile_definitions(test_openssl_threaded-csh
-        PRIVATE
-            $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
     )
     target_link_libraries(test_openssl_threaded-csh
         PRIVATE
@@ -181,7 +165,6 @@ target_compile_definitions(test_miniserver-pst
         UPNP_HAVE_CLIENT
         UPNP_HAVE_DEVICE
         UPNP_HAVE_WEBSERVER
-        $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_compile_options(test_miniserver-pst
@@ -212,7 +195,6 @@ target_compile_definitions(test_miniserver-cst
         UPNP_HAVE_CLIENT
         UPNP_HAVE_DEVICE
         UPNP_HAVE_WEBSERVER
-        $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_compile_options(test_miniserver-cst

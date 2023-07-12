@@ -1836,7 +1836,7 @@ TEST_F(RunMiniServerFTestSuite, fdset_if_valid) {
     //        "**exeption or buffer overflow";
 
     // Valid socket file descriptor will be added to the set.
-    constexpr SOCKET sockfd1{FD_SETSIZE - 1};
+    constexpr SOCKET sockfd1{FD_SETSIZE - 8};
     fdset_if_valid(sockfd1, &rdSet);
     EXPECT_NE(FD_ISSET(sockfd1, &rdSet), 0)
         << "Socket file descriptor " << sockfd1

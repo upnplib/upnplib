@@ -1,1 +1,1 @@
-compa/miniserver.hpp
+./compa/miniserver.hpp

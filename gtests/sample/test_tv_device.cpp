@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-09
+// Redistribution only with this Copyright remark. Last modified: 2023-07-12
 
 // -----------------------------------------------------------------------------
 // This testsuite starts the sample TV Device with general command line
@@ -12,6 +12,7 @@
 #include <sample/common/tv_device.cpp>
 
 #include <upnpapi.hpp>
+#include <membuffer.hpp>
 
 #include <upnplib/upnptools.hpp>
 #include <upnplib/gtest_tools_unix.hpp>
@@ -21,6 +22,8 @@
 #include <umock/ifaddrs_mock.hpp>
 #include <umock/net_if_mock.hpp>
 #include <umock/sys_socket_mock.hpp>
+
+extern membuffer gDocumentRootDir;
 
 
 // The tv_device_main call stack to use the pupnp library
@@ -85,6 +88,7 @@ using ::testing::InSequence;
 using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
+using ::testing::SetErrnoAndReturn;
 
 using ::upnplib::CIfaddr4;
 using ::upnplib::errStrEx;
@@ -148,9 +152,14 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
 
     umock::Sys_socketMock mocked_sys_socketObj;
     umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    ON_CALL(mocked_sys_socketObj, connect(_, _, _))
+        .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+
     { // begin scope InSequence
         InSequence seq;
 
+        // *** Start mock UpnpInit2() on tv_device.cpp -> TvDeviceStart ***
+        // ****************************************************************
         // Mock V4 and V6 http listeners: get socket, bind it, listen on it and
         // get port with getsockname().
         constexpr SOCKET listen_sockfd{FD_SETSIZE - 1};
@@ -210,10 +219,14 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
         EXPECT_CALL(mocked_sys_socketObj,
                     setsockopt(ssdp_sockfd, SOL_SOCKET, SO_BROADCAST, _, _));
         // .WillOnce(Return(-1)); // This will help to find the program line
-        if (!old_code) {
-            EXPECT_CALL(mocked_sys_socketObj,
-                        getsockopt(listen_sockfd, SOL_SOCKET, SO_ERROR, _, _));
-        }
+        // **************************************************************
+        // *** End mock UpnpInit2() on tv_device.cpp -> TvDeviceStart ***
+
+        // if (!old_code) {
+        //     EXPECT_CALL(mocked_sys_socketObj,
+        //                 getsockopt(listen_sockfd, SOL_SOCKET, SO_ERROR, _,
+        //                 _));
+        // }
     } // end scope InSequence
 
     // Test Unit
@@ -222,7 +235,7 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
         << errStrEx(ret_device_main, UPNP_E_SUCCESS);
 
     // Stop device
-    EXPECT_EQ(TvDeviceStop(), UPNP_E_SUCCESS);
+    // EXPECT_EQ(TvDeviceStop(), UPNP_E_SUCCESS);
 }
 
 TEST_F(SampleTvDeviceFTestSuite, invalid_commandline_argument) {

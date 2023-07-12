@@ -2,5 +2,5 @@
 //---------------------------------
 
     // Output text error message of errno
-    std::clog << "DEBUG! errno " << errno << " = ";
+    std::clog << "DEBUG\! errno " << errno << " = ";
     perror(nullptr);

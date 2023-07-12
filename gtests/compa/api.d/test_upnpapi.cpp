@@ -1,14 +1,15 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-05
+// Redistribution only with this Copyright remark. Last modified: 2023-07-12
 
-#include "pupnp/upnp/src/api/upnpapi.cpp"
+#include <pupnp/upnp/src/api/upnpapi.cpp>
 #ifdef UPNP_HAVE_TOOLS
-#include "upnptools.hpp" // For pupnp and compa
+#include <upnptools.hpp> // For pupnp and compa
 #endif
-#include "upnplib/upnptools.hpp" // For upnplib only
+#include <upnplib/upnptools.hpp> // For upnplib only
+#include <compa/upnpdebug.hpp>
 
-#include "gmock/gmock.h"
-#include "upnplib/gtest.hpp"
+#include <gmock/gmock.h>
+#include <upnplib/gtest.hpp>
 
 using ::upnplib::errStrEx;
 
@@ -85,7 +86,6 @@ clang-format off
 clang-format on
 */
 
-//
 // upnpapi TestSuites
 // ==================
 class UpnpapiFTestSuite : public ::testing::Test {
@@ -199,6 +199,21 @@ TEST_F(UpnpapiFTestSuite, get_error_message) {
     EXPECT_STREQ(UpnpGetErrorMessage(-121), "UPNP_E_INVALID_INTERFACE");
     EXPECT_STREQ(UpnpGetErrorMessage(1), "Unknown error code");
 #endif
+}
+
+TEST_F(UpnpapiFTestSuite, UpnpFinish_successful) {
+    CLogging logObj;
+    UpnpSdkInit = 1;
+
+    GTEST_SKIP() << "Work in progress, test must be completed.";
+
+    // Test Unit
+    int ret_UpnpFinish{UPNP_E_INTERNAL_ERROR};
+    ret_UpnpFinish = UpnpFinish();
+    EXPECT_EQ(ret_UpnpFinish, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpFinish, UPNP_E_SUCCESS);
+
+    EXPECT_EQ(UpnpSdkInit, 0);
 }
 
 TEST_F(UpnpapiFTestSuite, UpnpFinish_without_initialization) {

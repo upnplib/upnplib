@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-21
+// Redistribution only with this Copyright remark. Last modified: 2023-07-13
 
 #include <upnplib/socket.hpp>
 #include <upnplib/addrinfo.hpp>
@@ -641,18 +641,18 @@ TEST(SocketBindTestSuite, check_binding_passive_all_free_ports) {
     // shutdown/close it.
     in_port_t port{49152};
 
-    std::cout << "DEBUG! start port = " << port << "\n";
+    std::cout << "DEBUG\! start port = " << port << "\n";
     for (; port < 65535; port++) {
         CSocket sockObj(AF_INET6, SOCK_STREAM);
         try {
             sockObj.bind("", std::to_string(port), AI_PASSIVE);
         } catch (const std::runtime_error& e) {
-            std::cout << "DEBUG! port " << port << ": ";
+            std::cout << "DEBUG\! port " << port << ": ";
             std::cout << e.what() << "\n";
         }
     }
 
-    std::cout << "DEBUG! finished port = " << port << "\n";
+    std::cout << "DEBUG\! finished port = " << port << "\n";
 }
 #endif // MSC_VER
 #endif // if 0
@@ -671,16 +671,16 @@ TEST(SocketBindTestSuite, set_unset_bind_win32_same_address_multiple_times) {
         CSocket sockObj(AF_INET6, SOCK_STREAM);
         try {
             sockObj.bind("", std::to_string(port), AI_PASSIVE);
-            // std::cout << "DEBUG! Success port " << port << "\n";
+            // std::cout << "DEBUG\! Success port " << port << "\n";
         } catch ([[maybe_unused]] const std::runtime_error& e) {
-            // std::cout << "DEBUG! port " << port << ": " << e.what() << "\n";
+            // std::cout << "DEBUG\! port " << port << ": " << e.what() << "\n";
             // Continue with a new port number.
             port = portno(random);
-            // std::this_thread::sleep_for(std::chrono::seconds(5)); // DEBUG!
+            // std::this_thread::sleep_for(std::chrono::seconds(5)); // DEBUG\!
         }
     }
 
-    // std::cout << "DEBUG! Success port " << port << "\n";
+    // std::cout << "DEBUG\! Success port " << port << "\n";
     CSocket sockObj(AF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.bind("", std::to_string(port), AI_PASSIVE));
 }

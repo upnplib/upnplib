@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-06
+# Redistribution only with this Copyright remark. Last modified: 2023-07-13
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -170,6 +170,7 @@ set(COMPATIBLE_SOURCE_FILES
 
 set(COMPATIBLE_INCLUDE_DIRECTORIES
     PUBLIC ./include
+    PUBLIC ./include/pupnp
     PUBLIC ${PUPNP_SOURCE_DIR}/include
     PUBLIC ${PUPNP_IXML_SOURCE_DIR}/inc
     PUBLIC ${IXML_SOURCE_DIR}/include
@@ -177,7 +178,6 @@ set(COMPATIBLE_INCLUDE_DIRECTORIES
 )
 
 add_compile_definitions(
-    $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
     $<$<BOOL:${UPNPLIB_DEF_CLIENT}>:UPNP_HAVE_CLIENT>
     $<$<BOOL:${UPNPLIB_DEF_DEVICE}>:UPNP_HAVE_DEVICE>
     $<$<BOOL:${UPNPLIB_DEF_WEBSERVER}>:UPNP_HAVE_WEBSERVER>

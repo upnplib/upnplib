@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-06
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,12 +44,13 @@
  */
 
 #include "tv_device.hpp"
+#include <upnpdebug.hpp>
 
-#include "upnpdebug.hpp"
+#include <upnplib/port.hpp>
 
 #include <assert.h>
 
-#include "posix_overwrites.hpp"
+#include <posix_overwrites.hpp>
 
 #define DEFAULT_WEB_DIR "./web"
 
@@ -1252,6 +1253,7 @@ int TvDeviceCallbackEventHandler(Upnp_EventType EventType, const void* Event,
 int TvDeviceStart(char* iface, unsigned short port, const char* desc_doc_name,
                   const char* web_dir_path, int ip_mode, print_string pfun,
                   int combo) {
+    TRACE("Executing TvDeviceStart()");
     int ret{UPNP_E_SUCCESS};
     // example for desc_doc_url: http://192.168.47.11:50001/tvdevicedesc.xml
     char desc_doc_url[DESC_URL_SIZE];
@@ -1267,6 +1269,7 @@ int TvDeviceStart(char* iface, unsigned short port, const char* desc_doc_name,
                      "\tinterface = %s port = %u\n",
                      iface ? iface : "{NULL}", port);
     ret = UpnpInit2(iface, port);
+    ret = UPNP_E_INTERNAL_ERROR;
     if (ret != UPNP_E_SUCCESS) {
         SampleUtil_Print("Error with UpnpInit2 -- %s(%d)\n",
                          UpnpGetErrorMessage(ret), ret);
@@ -1405,6 +1408,7 @@ void* TvDeviceCommandLoop(void* args) {
 }
 
 int device_main(const int argc, char* argv[]) {
+    TRACE("Executing device_main()");
     unsigned int portTemp{};
     char* iface{};
     char* desc_doc_name{};
