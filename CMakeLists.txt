@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-12
+# Redistribution only with this Copyright remark. Last modified: 2023-07-15
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -118,6 +118,9 @@ endif()
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
+# Provide length of the path of the projects base directory. We need this
+# mainly for the compile time short file name of a TRACE message.
+string(LENGTH "${UPNPLIB_PROJECT_SOURCE_DIR}/" UPNPLIB_PROJECT_PATH_SIZE)
 
 # Set general compile definitions and options
 #--------------------------------------------
@@ -135,6 +138,7 @@ add_compile_definitions(
 
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
         $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
+        $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_PROJECT_PATH_SIZE=${UPNPLIB_PROJECT_PATH_SIZE}>
 )
 add_compile_options(
         # Most compiler warnings enabled
@@ -152,12 +156,13 @@ add_compile_options(
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wpedantic>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Werror>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wuninitialized>
-        #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wdeprecated>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wno-dangling-else>
         $<$<CXX_COMPILER_ID:GNU>:-Wno-format-truncation>
         $<$<CXX_COMPILER_ID:GNU>:-Wsuggest-override> # Only valid for C++/ObjC++ but not for C
         $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:GNU>>:-fstack-protector-all>
         $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:GNU>>:-fstack-protector-strong>
+        # Next is only to suppress a warning for the TRACE macro.
+        $<$<AND:$<CXX_COMPILER_ID:AppleClang>,$<BOOL:${UPNPLIB_WITH_TRACE}>>:-Wno-string-plus-int>
 
         #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-fanalyzer>
         #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wfatal-errors>
