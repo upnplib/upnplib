@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-12
+// Redistribution only with this Copyright remark. Last modified: 2023-07-15
 
 #include <pupnp/upnp/src/api/upnpapi.cpp>
 #ifdef UPNP_HAVE_TOOLS
@@ -82,6 +82,42 @@ clang-format off
 
 01) A possible url is http://127.0.0.1:50001/tvdevicedesc.xml
 03) Tested within test_httpreadwrite.cpp
+
+
+     UpnpFinish()
+     |#ifdef UPNP_ENABLE_OPEN_SSL
+     |__ SSL_CTX_free()
+     |#endif
+     |__ if not UpnpSdkInit
+            return
+     |   else
+     |
+     |#ifdef INCLUDE_DEVICE_APIS
+     |__ while GetDeviceHandleInfo()
+     |      UpnpUnRegisterRootDevice()
+     |#endif
+     |
+     |#ifdef INCLUDE_CLIENT_APIS
+01)  |__ while GetClientHandleInfo()
+02)  |         |__ GetHandleInfo()
+     |      UpnpUnRegisterClient()
+     |#endif
+     |
+     |__ TimerThreadShutdown()
+     |__ StopMiniServer()
+     |__ web_server_destroy()
+     |__ ThreadPoolShutdown()
+     |
+     |#ifdef INCLUDE_CLIENT_APIS
+     |__    ithread_mutex_destroy() for clients
+     |#endif
+     |
+     |__ ithread_rwlock_destroy()
+     |__ ithread_mutex_destroy()
+     |__ UpnpRemoveAllVirtualDirs()
+     |__ ithread_cleanup_library()
+
+02) TEST(Upnpapi*, GetHandleInfo_*)
 
 clang-format on
 */
@@ -201,11 +237,86 @@ TEST_F(UpnpapiFTestSuite, get_error_message) {
 #endif
 }
 
-TEST_F(UpnpapiFTestSuite, UpnpFinish_successful) {
-    CLogging logObj;
-    UpnpSdkInit = 1;
+TEST(UpnpapiTestSuite, GetHandleInfo_successful) {
+    // CLogging logObj; // Only usable with build type DEBUG
 
+    // Will be filled with a pointer to the requested client info.
+    Handle_Info* hinfo_p{nullptr};
+
+    // Initialize the handle list.
+    for (int i = 0; i < NUM_HANDLE; ++i) {
+        HandleTable[i] = nullptr;
+    }
+    Handle_Info hinfo0{};
+    HandleTable[0] = &hinfo0;
+    HandleTable[0]->HType = HND_INVALID;
+    // HandleTable[1] is nullptr from initialization before;
+    Handle_Info hinfo2{};
+    HandleTable[2] = &hinfo2;
+    HandleTable[2]->HType = HND_CLIENT;
+    Handle_Info hinfo3{};
+    HandleTable[3] = &hinfo3;
+    HandleTable[3]->HType = HND_DEVICE;
+    Handle_Info hinfo4{};
+    HandleTable[4] = &hinfo4;
+    HandleTable[4]->HType = HND_CLIENT;
+
+    // Test Unit
+    EXPECT_EQ(GetHandleInfo(0, &hinfo_p), HND_INVALID);
+    // Out of range, nothing returned.
+    EXPECT_EQ(hinfo_p, nullptr);
+    EXPECT_EQ(GetHandleInfo(NUM_HANDLE, &hinfo_p), HND_INVALID);
+    EXPECT_EQ(hinfo_p, nullptr);
+    EXPECT_EQ(GetHandleInfo(NUM_HANDLE + 1, &hinfo_p), HND_INVALID);
+    EXPECT_EQ(hinfo_p, nullptr);
+
+    EXPECT_EQ(GetHandleInfo(1, &hinfo_p), HND_INVALID); // HandleTable nullptr
+    // Nothing returned.
+    EXPECT_EQ(hinfo_p, nullptr);
+
+    EXPECT_EQ(GetHandleInfo(3, &hinfo_p), HND_DEVICE);
+    // Pointer to handle info is returned.
+    EXPECT_EQ(hinfo_p, &hinfo3);
+
+    EXPECT_EQ(GetHandleInfo(4, &hinfo_p), HND_CLIENT);
+    // Pointer to handle info is returned.
+    EXPECT_EQ(hinfo_p, &hinfo4);
+}
+
+TEST(UpnpapiDeathTest, GetHandleInfo_with_nullptr_to_result) {
+    // Provide a valid entry in the HandleTable.
+    Handle_Info hinfo1{};
+    hinfo1.HType = HND_CLIENT;
+    HandleTable[1] = &hinfo1;
+
+    std::cout
+        << CRED "[ BUG      ] " CRES << __LINE__
+        << ": nullptr argument for the result to return must not segfault.\n";
+
+    if (old_code) {
+#if defined __APPLE__ && !DEBUG
+// Curiosouly this does not fail. I don't know why. Maybe it needs DEBUG mode on
+// Apple to detect nullptr segfault? --Ingo
+#else
+        // This expects segfault.
+        EXPECT_DEATH(GetHandleInfo(1, nullptr), ".*");
+#endif
+
+    } else if (!github_actions) {
+
+        EXPECT_EQ(GetHandleInfo(1, nullptr), HND_INVALID);
+    }
+}
+
+TEST_F(UpnpapiFTestSuite, UpnpFinish_successful) {
     GTEST_SKIP() << "Work in progress, test must be completed.";
+    // CLogging logObj; // Only usable with build type DEBUG
+
+    // Initialize the handle list.
+    for (int i = 0; i < NUM_HANDLE; ++i)
+        HandleTable[i] = nullptr;
+
+    UpnpSdkInit = 1;
 
     // Test Unit
     int ret_UpnpFinish{UPNP_E_INTERNAL_ERROR};
