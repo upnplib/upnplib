@@ -154,18 +154,18 @@ add_executable(test_miniserver-pst
 #---------------------------------
     ./test_miniserver.cpp
     ${COMPA_SOURCE_DIR}/src/api/upnpdebug.cpp
+    ${COMPA_SOURCE_DIR}/src/api/compa/upnpdebug.cpp
 )
 target_include_directories(test_miniserver-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
     PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-    PRIVATE ${COMPA_SOURCE_DIR}/include
+    PRIVATE ${COMPA_SOURCE_DIR}/inc
 )
 target_compile_definitions(test_miniserver-pst
     PRIVATE
         UPNP_HAVE_CLIENT
         UPNP_HAVE_DEVICE
         UPNP_HAVE_WEBSERVER
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_compile_options(test_miniserver-pst
     PRIVATE
@@ -186,6 +186,7 @@ add_test(NAME ctest_miniserver-pst COMMAND test_miniserver-pst --gtest_shuffle
 add_executable(test_miniserver-cst
 #---------------------------------
     ./test_miniserver.cpp
+    ${COMPA_SOURCE_DIR}/src/api/compa/upnpdebug.cpp
 )
 target_include_directories(test_miniserver-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}

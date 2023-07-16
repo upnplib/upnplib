@@ -1,42 +1,22 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-07-18
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
-#include "pupnp/upnp/src/genlib/net/http/webserver.cpp"
-
-#ifdef UPNPLIB_WITH_TRACE
-// Disable TRACE if it is compiled in. We need to do it with instantiation of a
-// class to have it disabled before other classes with TRACE in its constructor
-// are instantiated. Enable on single tests with 'CEnableTrace' or for all tests
-// just comment the 'disable_trace' object below.
-#include <iostream>
-class CDisableTrace {
-  public:
-    CDisableTrace() { std::clog.setstate(std::ios_base::failbit); }
-    ~CDisableTrace() { std::clog.clear(); }
-};
-// CDisableTrace disable_trace;
-#endif
-
-#include "compa/src/genlib/net/http/webserver.cpp"
-
-#include "upnplib/upnptools.hpp"  // for errStrEx
-#include "upnplib/cmake_vars.hpp" // for SAMPLE_SOURCE_DIR
-#include "upnplib/gtest.hpp"
-
-#include "gmock/gmock.h"
-
-using ::testing::_;
-using ::testing::ExitedWithCode;
-
-using ::upnplib::errStrEx;
-
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #define NS
+#include <pupnp/upnp/src/genlib/net/http/webserver.cpp>
 #else
-#define NS ::compa
+#define NS
+#include <compa/src/genlib/net/http/webserver.cpp>
 #endif
+
+#include <upnplib/port.hpp>
+#include <upnplib/upnptools.hpp>  // for errStrEx
+#include <upnplib/cmake_vars.hpp> // for SAMPLE_SOURCE_DIR
+#include <upnplib/gtest.hpp>
+
+#include <gmock/gmock.h>
 
 #if false
 // The web_server functions call stack
@@ -73,10 +53,15 @@ static UPNP_INLINE int is_valid_alias(); // Will become method is_valid().
 static void alias_release();             // Will become method release().
 #endif
 
-//
+
 namespace compa {
 bool old_code{false}; // Managed in compa/gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
+
+using ::testing::_;
+using ::testing::ExitedWithCode;
+using ::upnplib::errStrEx;
+
 
 class CEnableTrace {
 #ifdef UPNPLIB_WITH_TRACE
@@ -264,7 +249,7 @@ TEST(MediaListTestSuite, init) {
         // With new code there is no media list to initialize. We have a
         // constant array there, once initialized by the compiler on startup.
         // This is only a dummy function for compatibility.
-        compa::media_list_init();
+        media_list_init();
     }
 }
 
@@ -349,10 +334,10 @@ TEST(MediaListDeathTest, get_content_type_with_no_filename) {
     } else {
 
         // This expects NO segfault.
-        ASSERT_EXIT((compa::get_content_type(nullptr, f.info), exit(0)),
+        ASSERT_EXIT((get_content_type(nullptr, f.info), exit(0)),
                     ExitedWithCode(0), ".*");
         int ret_get_content_type{UPNP_E_INTERNAL_ERROR};
-        ret_get_content_type = compa::get_content_type(nullptr, f.info);
+        ret_get_content_type = get_content_type(nullptr, f.info);
         EXPECT_EQ(ret_get_content_type, UPNP_E_FILE_NOT_FOUND)
             << errStrEx(ret_get_content_type, UPNP_E_FILE_NOT_FOUND);
     }
@@ -374,10 +359,10 @@ TEST(MediaListDeathTest, get_content_type_with_no_fileinfo) {
     } else {
 
         // This expects NO segfault.
-        ASSERT_EXIT((compa::get_content_type("filename.txt", nullptr), exit(0)),
+        ASSERT_EXIT((get_content_type("filename.txt", nullptr), exit(0)),
                     ExitedWithCode(0), ".*");
         int ret_get_content_type{UPNP_E_INTERNAL_ERROR};
-        ret_get_content_type = compa::get_content_type("filename.txt", nullptr);
+        ret_get_content_type = get_content_type("filename.txt", nullptr);
         EXPECT_EQ(ret_get_content_type, UPNP_E_INVALID_ARGUMENT)
             << errStrEx(ret_get_content_type, UPNP_E_INVALID_ARGUMENT);
     }
@@ -386,14 +371,14 @@ TEST(MediaListDeathTest, get_content_type_with_no_fileinfo) {
 class XMLaliasFTestSuite : public ::testing::Test {
   protected:
     XMLaliasFTestSuite() {
-        TRACE("construct compa::XMLaliasFTestSuite");
+        TRACE("construct XMLaliasFTestSuite");
         // There are mutexes used, so we have to initialize it.
         pthread_mutex_init(&gWebMutex, NULL);
 
         // There is a problem with the global structure ::gAliasDoc due to side
         // effects on other tests. So we always provide a fresh initialized and
         // unused ::gAliasDoc for each test on old_code. With compatible code
-        // (!old_code) the compa::gAliasDoc structure is initialized by its
+        // (!old_code) the gAliasDoc structure is initialized by its
         // constructor.
 
         // Next does not allocate memory, it only nullify pointer so we do
@@ -402,7 +387,7 @@ class XMLaliasFTestSuite : public ::testing::Test {
     }
 
     ~XMLaliasFTestSuite() {
-        TRACE("destruct compa::XMLaliasFTestSuite");
+        TRACE("destruct XMLaliasFTestSuite");
         // Always unlock a possible locked mutex in case of an aborted function
         // within a locked mutex. This avoids a deadlock in next
         // alias_release() by waiting to unlock the mutex.
@@ -490,8 +475,7 @@ TEST_F(XMLaliasFDeathTest, alias_release_nullptr) {
     } else {
 
         // This expects NO segfault.
-        EXPECT_EXIT((compa::alias_release(nullptr), exit(0)), ExitedWithCode(0),
-                    ".*");
+        EXPECT_EXIT((alias_release(nullptr), exit(0)), ExitedWithCode(0), ".*");
     }
 }
 
@@ -513,12 +497,10 @@ TEST_F(XMLaliasFDeathTest, is_valid_alias_nullptr) {
     } else {
 
         // This expects NO segfault.
-        ASSERT_EXIT(
-            (compa::is_valid_alias((compa::xml_alias_t*)nullptr), exit(0)),
-            ExitedWithCode(0), ".*");
+        ASSERT_EXIT((is_valid_alias((xml_alias_t*)nullptr), exit(0)),
+                    ExitedWithCode(0), ".*");
         bool ret_is_valid_alias{true};
-        ret_is_valid_alias =
-            compa::is_valid_alias((compa::xml_alias_t*)nullptr);
+        ret_is_valid_alias = is_valid_alias((xml_alias_t*)nullptr);
         EXPECT_FALSE(ret_is_valid_alias);
     }
 }
@@ -553,10 +535,10 @@ TEST(XMLaliasTestSuite, is_valid_alias_uninitialized_structure) {
         // Here we have a cnstructor of the struct that is doing initialization
         // so we never get an uninitialized alias. But an unset initialized
         // alias is also not valid.
-        compa::xml_alias_t alias;
+        xml_alias_t alias;
 
         // Test Unit
-        ret_is_valid_alias = compa::is_valid_alias(&alias);
+        ret_is_valid_alias = is_valid_alias(&alias);
         EXPECT_FALSE(ret_is_valid_alias);
     }
 }
@@ -703,11 +685,10 @@ TEST_F(XMLaliasFDeathTest, set_alias_with_nullptr_to_alias_content) {
     } else {
 
         // This expects NO abort with failed assertion.
-        ASSERT_EXIT(
-            (compa::web_server_set_alias(alias_name, nullptr, 0, 0), exit(0)),
-            ExitedWithCode(0), ".*");
+        ASSERT_EXIT((web_server_set_alias(alias_name, nullptr, 0, 0), exit(0)),
+                    ExitedWithCode(0), ".*");
         int ret_set_alias{UPNP_E_INTERNAL_ERROR};
-        ret_set_alias = compa::web_server_set_alias(alias_name, nullptr, 0, 0);
+        ret_set_alias = web_server_set_alias(alias_name, nullptr, 0, 0);
         EXPECT_EQ(ret_set_alias, UPNP_E_INVALID_ARGUMENT)
             << errStrEx(ret_set_alias, UPNP_E_INVALID_ARGUMENT);
     }
@@ -747,11 +728,10 @@ TEST_F(XMLaliasFDeathTest, set_alias_with_nullptr_but_length_to_alias_content) {
     } else {
 
         // This expects NO abort with failed assertion.
-        ASSERT_EXIT(
-            (compa::web_server_set_alias(alias_name, nullptr, 1, 0), exit(0)),
-            ExitedWithCode(0), ".*");
+        ASSERT_EXIT((web_server_set_alias(alias_name, nullptr, 1, 0), exit(0)),
+                    ExitedWithCode(0), ".*");
         int ret_set_alias{UPNP_E_INTERNAL_ERROR};
-        ret_set_alias = compa::web_server_set_alias(alias_name, nullptr, 1, 0);
+        ret_set_alias = web_server_set_alias(alias_name, nullptr, 1, 0);
         EXPECT_EQ(ret_set_alias, UPNP_E_INVALID_ARGUMENT)
             << errStrEx(ret_set_alias, UPNP_E_INVALID_ARGUMENT);
     }
@@ -796,7 +776,7 @@ TEST_F(XMLaliasFTestSuite, set_alias_with_content_length_zero) {
 
     } else {
 
-        EXPECT_STREQ(compa::gAliasDoc.doc.buf, "");
+        EXPECT_STREQ(gAliasDoc.doc.buf, "");
     }
 }
 
@@ -823,7 +803,7 @@ TEST_F(XMLaliasFTestSuite, set_alias_with_content_length_one) {
 
     } else {
 
-        EXPECT_STREQ(compa::gAliasDoc.doc.buf, "X");
+        EXPECT_STREQ(gAliasDoc.doc.buf, "X");
     }
 }
 
@@ -867,8 +847,8 @@ TEST_F(XMLaliasFTestSuite, set_alias_with_content_length_greater) {
 
     } else {
 
-        EXPECT_EQ(compa::gAliasDoc.doc.length, (size_t)19);
-        EXPECT_EQ(compa::gAliasDoc.doc.capacity, (size_t)19);
+        EXPECT_EQ(gAliasDoc.doc.length, (size_t)19);
+        EXPECT_EQ(gAliasDoc.doc.capacity, (size_t)19);
     }
 }
 
@@ -992,12 +972,12 @@ TEST_F(XMLaliasFDeathTest, set_alias_three_times_with_same_content) {
                 // is freed by the unit.
                 char* alias_content = (char*)malloc(sizeof(content));
                 strcpy(alias_content, content);
-                compa::web_server_set_alias(alias_name, alias_content,
-                                            sizeof(content) - 1, 1);
-                compa::web_server_set_alias(alias_name, alias_content,
-                                            sizeof(content) - 1, 2);
-                compa::web_server_set_alias(alias_name, alias_content,
-                                            sizeof(content) - 1, 3);
+                web_server_set_alias(alias_name, alias_content,
+                                     sizeof(content) - 1, 1);
+                web_server_set_alias(alias_name, alias_content,
+                                     sizeof(content) - 1, 2);
+                web_server_set_alias(alias_name, alias_content,
+                                     sizeof(content) - 1, 3);
                 exit(0);
             },
             ExitedWithCode(0), ".*");
@@ -1007,20 +987,20 @@ TEST_F(XMLaliasFDeathTest, set_alias_three_times_with_same_content) {
         strcpy(alias_content, content);
 
         int ret_set_alias{UPNP_E_INTERNAL_ERROR};
-        ret_set_alias = compa::web_server_set_alias(alias_name, alias_content,
-                                                    sizeof(content) - 1, 4);
+        ret_set_alias = web_server_set_alias(alias_name, alias_content,
+                                             sizeof(content) - 1, 4);
         EXPECT_EQ(ret_set_alias, UPNP_E_SUCCESS)
             << errStrEx(ret_set_alias, UPNP_E_SUCCESS);
 
-        ret_set_alias = compa::web_server_set_alias(alias_name, alias_content,
-                                                    sizeof(content) - 1, 5);
+        ret_set_alias = web_server_set_alias(alias_name, alias_content,
+                                             sizeof(content) - 1, 5);
         EXPECT_EQ(ret_set_alias, UPNP_E_INVALID_ARGUMENT)
             << errStrEx(ret_set_alias, UPNP_E_INVALID_ARGUMENT);
 
         // This indicates that the second wrong setting attempt hasn't changed
         // the first valid setting.
-        EXPECT_EQ(compa::gAliasDoc.last_modified, 4);
-        EXPECT_EQ(*compa::gAliasDoc.ct, 1);
+        EXPECT_EQ(gAliasDoc.last_modified, 4);
+        EXPECT_EQ(*gAliasDoc.ct, 1);
     }
 }
 
@@ -1075,16 +1055,16 @@ TEST_F(XMLaliasFDeathTest, alias_grab_empty_structure) {
 
         // This expects NO abort.
         // Provide destination structure.
-        compa::xml_alias_t gAliasDoc_dup;
+        xml_alias_t gAliasDoc_dup;
 
         ASSERT_EXIT(
             {
-                compa::alias_grab(&gAliasDoc_dup);
+                alias_grab(&gAliasDoc_dup);
                 exit(0);
             },
             ExitedWithCode(0), ".*");
 
-        compa::alias_grab(&gAliasDoc_dup);
+        alias_grab(&gAliasDoc_dup);
         EXPECT_STREQ(gAliasDoc_dup.doc.buf, nullptr);
         EXPECT_EQ(gAliasDoc_dup.doc.length, (size_t)0);
         EXPECT_EQ(gAliasDoc_dup.doc.capacity, (size_t)0);
@@ -1112,12 +1092,12 @@ TEST_F(XMLaliasFDeathTest, alias_grab_nullptr) {
 
         ASSERT_EXIT(
             {
-                compa::alias_grab(nullptr);
+                alias_grab(nullptr);
                 exit(0);
             },
             ExitedWithCode(0), ".*");
 
-        compa::alias_grab(nullptr);
+        alias_grab(nullptr);
     }
 }
 

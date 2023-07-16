@@ -1,6 +1,10 @@
 Next steps to do:
-* Improve test_sock.cpp with ssl tests
+* Rework test_UpnpString.cpp similar as UpnpFileInfo.cpp.
+* Rework test_UpnpFileInfo.cpp without using s_UpnpFileInfo aka CUpnpFileInfo.
+* Rework compa webserver compile unit.
+* Rework test_httpparser.cpp
 * Rework test_httpreadwrite.cpp
+* Improve test_sock.cpp with ssl tests
 * Improve test_http_Download.cpp, start with error conditions for http_MakeMessage()
 * Create gtests for ssdp/*, start with get_ssdp_sockets (needed for miniserver).
 * parse_uri should except "http://127.000.000.001:50001/tvdevicedesc.xml" as valid.

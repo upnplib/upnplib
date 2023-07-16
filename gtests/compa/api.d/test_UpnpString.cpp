@@ -1,19 +1,24 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-07-17
 
-#include "UpnpString.hpp"
+#include <UpnpString.hpp>
+#if defined UPNPLIB_WITH_NATIVE_PUPNP && !defined PUPNP_UPNPSTRING_HPP
+#error "Wrong UpnpString.hpp header file included for PUPNP"
+#endif
+#if !defined UPNPLIB_WITH_NATIVE_PUPNP && !defined COMPA_UPNPSTRING_HPP
+#error "Wrong UpnpString.hpp header file included for COMPA"
+#endif
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #define NS
 #else
-#define NS compa
-#include "compa/UpnpString.hpp"
+#define NS
 #endif
 
-#include "upnplib/gtest.hpp"
-#include "umock/stdlib.hpp"
-#include "umock/stringh.hpp"
-#include "gmock/gmock.h"
+#include <upnplib/gtest.hpp>
+#include <umock/stdlib.hpp>
+#include <umock/stringh.hpp>
+#include <gmock/gmock.h>
 
 using ::testing::_;
 using ::testing::Eq;

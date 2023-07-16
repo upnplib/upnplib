@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-13
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-16
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  *
  */
 
-#include <compa/miniserver.hpp>
+#include <miniserver.hpp>
 
 // #include "ThreadPool.hpp"
 #include <httpreadwrite.hpp>
@@ -79,8 +79,6 @@
 #include <umock/sys_select.hpp>
 #include <umock/stdlib.hpp>
 
-
-namespace compa {
 
 using ::upnplib::CSocket_basic;
 
@@ -146,19 +144,19 @@ struct s_SocketStuff {
 };
 
 void SetHTTPGetCallback(MiniServerCallback callback) {
-    TRACE("executing compa::SetHTTPGetCallback()");
+    TRACE("executing SetHTTPGetCallback()");
     gGetCallback = callback;
 }
 
 #ifdef INCLUDE_DEVICE_APIS
 void SetSoapCallback(MiniServerCallback callback) {
-    TRACE("executing compa::SetSoapCallback()");
+    TRACE("executing SetSoapCallback()");
     gSoapCallback = callback;
 }
 #endif /* INCLUDE_DEVICE_APIS */
 
 void SetGenaCallback(MiniServerCallback callback) {
-    TRACE("executing compa::SetGenaCallback()");
+    TRACE("executing SetGenaCallback()");
     gGenaCallback = callback;
 }
 
@@ -200,7 +198,7 @@ ExitFunction:
 // (e.g. "192.168.1.2:54321") that is bound to a socket.
 static int getNumericHostRedirection(SOCKET a_socket, char* a_host_port,
                                      size_t a_hp_size) {
-    TRACE("Executing compa::getNumericHostRedirection()")
+    TRACE("Executing getNumericHostRedirection()")
     try {
         CSocket_basic socketObj(a_socket);
         std::string host_port = socketObj.get_addr_str();
@@ -343,7 +341,7 @@ static UPNP_INLINE void handle_error(
 static void free_handle_request_arg(
     /*! [in] Request Message to be freed. */
     void* args) {
-    TRACE("Executing compa::free_handle_request_arg()")
+    TRACE("Executing free_handle_request_arg()")
     if (args == nullptr)
         return;
     struct mserv_request_t* request = (struct mserv_request_t*)args;
@@ -389,7 +387,7 @@ static void handle_request(
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "miniserver %d: PROCESSING...\n", connfd);
     /* dispatch */
-    http_error_code = compa::dispatch_request(&info, &parser);
+    http_error_code = dispatch_request(&info, &parser);
     if (http_error_code != 0) {
         goto error_handler;
     }
@@ -401,7 +399,7 @@ error_handler:
             major = hmsg->major_version;
             minor = hmsg->minor_version;
         }
-        compa::handle_error(&info, http_error_code, major, minor);
+        handle_error(&info, http_error_code, major, minor);
     }
     sock_destroy(&info, SD_BOTH);
     httpmsg_destroy(hmsg);
@@ -421,7 +419,7 @@ static UPNP_INLINE void schedule_request_job(
     /*! [in] Clients Address information. */
     struct sockaddr* clientAddr) {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Executing compa::schedule_request_job(%d, %p)\n", connfd,
+               "Executing schedule_request_job(%d, %p)\n", connfd,
                (void*)clientAddr);
 
     struct mserv_request_t* request;
@@ -455,7 +453,7 @@ static void fdset_if_valid(SOCKET sock, fd_set* set) {
     // This sets the file descriptor set for a socket select() for valid
     // sochets. It also has a guard that we do not exceed the maximum number
     // FD_SETSIZE (1024) of selectable file descriptors, see man select().
-    TRACE("Executing compa::fdset_if_valid()")
+    TRACE("Executing fdset_if_valid()")
     if (sock == INVALID_SOCKET)
         return;
 
@@ -474,8 +472,7 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
                               [[maybe_unused]] fd_set* set) {
 #ifdef INTERNAL_WEB_SERVER
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Executing compa::web_server_accept(%d, %p)\n", lsock,
-               (void*)set);
+               "Executing web_server_accept(%d, %p)\n", lsock, (void*)set);
     SOCKET asock;
     socklen_t clientLen;
     struct sockaddr_storage clientAddr;
@@ -487,22 +484,21 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
                                            &clientLen);
         if (asock == INVALID_SOCKET) {
             UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                       "compa::web_server_accept(): Error in accept(): %s\n",
+                       "web_server_accept(): Error in accept(): %s\n",
                        std::strerror(errno));
         } else {
             char buf_ntop[INET6_ADDRSTRLEN + 7];
             inet_ntop(AF_INET, &sa_in->sin_addr, buf_ntop, sizeof(buf_ntop));
             UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-                       "compa::web_server_accept(): connected to host %s:%d "
+                       "web_server_accept(): connected to host %s:%d "
                        "with socket %d\n",
                        buf_ntop, ntohs(sa_in->sin_port), asock);
-            compa::schedule_request_job(asock, (struct sockaddr*)&clientAddr);
+            schedule_request_job(asock, (struct sockaddr*)&clientAddr);
         }
     } else {
-        UpnpPrintf(
-            UPNP_ERROR, MSERV, __FILE__, __LINE__,
-            "compa::web_server_accept(): invalid socket(%d) or set(%p).\n",
-            lsock, (void*)set);
+        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
+                   "web_server_accept(): invalid socket(%d) or set(%p).\n",
+                   lsock, (void*)set);
     }
 #endif /* INTERNAL_WEB_SERVER */
 }
@@ -560,7 +556,7 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
 static void RunMiniServer(
     /*! [in] Socket Array. */
     MiniServerSockArray* miniSock) {
-    TRACE("Executing compa::RunMiniServer()")
+    TRACE("Executing RunMiniServer()")
     fd_set expSet;
     fd_set rdSet;
     SOCKET maxMiniSock;
@@ -615,15 +611,15 @@ static void RunMiniServer(
         /* FD_SET()'s */
         FD_SET(miniSock->miniServerStopSock, &expSet);
         FD_SET(miniSock->miniServerStopSock, &rdSet);
-        compa::fdset_if_valid(miniSock->miniServerSock4, &rdSet);
-        compa::fdset_if_valid(miniSock->miniServerSock6, &rdSet);
-        compa::fdset_if_valid(miniSock->miniServerSock6UlaGua, &rdSet);
-        compa::fdset_if_valid(miniSock->ssdpSock4, &rdSet);
-        compa::fdset_if_valid(miniSock->ssdpSock6, &rdSet);
-        compa::fdset_if_valid(miniSock->ssdpSock6UlaGua, &rdSet);
+        fdset_if_valid(miniSock->miniServerSock4, &rdSet);
+        fdset_if_valid(miniSock->miniServerSock6, &rdSet);
+        fdset_if_valid(miniSock->miniServerSock6UlaGua, &rdSet);
+        fdset_if_valid(miniSock->ssdpSock4, &rdSet);
+        fdset_if_valid(miniSock->ssdpSock6, &rdSet);
+        fdset_if_valid(miniSock->ssdpSock6UlaGua, &rdSet);
 #ifdef INCLUDE_CLIENT_APIS
-        compa::fdset_if_valid(miniSock->ssdpReqSock4, &rdSet);
-        compa::fdset_if_valid(miniSock->ssdpReqSock6, &rdSet);
+        fdset_if_valid(miniSock->ssdpReqSock4, &rdSet);
+        fdset_if_valid(miniSock->ssdpReqSock6, &rdSet);
 #endif /* INCLUDE_CLIENT_APIS */
         /* select() */
         ret = umock::sys_select_h.select((int)maxMiniSock, &rdSet, NULL,
@@ -638,21 +634,21 @@ static void RunMiniServer(
         } else {
             // Accept requested connection from a remote client and run the
             // connection in a new thread.
-            compa::web_server_accept(miniSock->miniServerSock4, &rdSet);
-            compa::web_server_accept(miniSock->miniServerSock6, &rdSet);
-            compa::web_server_accept(miniSock->miniServerSock6UlaGua, &rdSet);
+            web_server_accept(miniSock->miniServerSock4, &rdSet);
+            web_server_accept(miniSock->miniServerSock6, &rdSet);
+            web_server_accept(miniSock->miniServerSock6UlaGua, &rdSet);
 #ifdef INCLUDE_CLIENT_APIS
-            compa::ssdp_read(miniSock->ssdpReqSock4, &rdSet);
-            compa::ssdp_read(miniSock->ssdpReqSock6, &rdSet);
+            ssdp_read(miniSock->ssdpReqSock4, &rdSet);
+            ssdp_read(miniSock->ssdpReqSock6, &rdSet);
 #endif /* INCLUDE_CLIENT_APIS */
-            compa::ssdp_read(miniSock->ssdpSock4, &rdSet);
-            compa::ssdp_read(miniSock->ssdpSock6, &rdSet);
-            compa::ssdp_read(miniSock->ssdpSock6UlaGua, &rdSet);
+            ssdp_read(miniSock->ssdpSock4, &rdSet);
+            ssdp_read(miniSock->ssdpSock6, &rdSet);
+            ssdp_read(miniSock->ssdpSock6UlaGua, &rdSet);
 
             // Block execution and wait to receive a packet from
             // localhost(127.0.0.1) that will stop the miniserver.
-            stopSock = compa::receive_from_stopSock(
-                miniSock->miniServerStopSock, &rdSet);
+            stopSock =
+                receive_from_stopSock(miniSock->miniServerStopSock, &rdSet);
         }
     }
     /* Close all sockets. */
@@ -684,7 +680,7 @@ static int get_port(
     SOCKET sockfd,
     /*! [out] The port value if successful, otherwise, untouched. */
     uint16_t* port) {
-    TRACE("Executing compa::get_port()")
+    TRACE("Executing get_port()")
     struct sockaddr_storage sockinfo;
     socklen_t len;
     int code;
@@ -717,7 +713,7 @@ static int get_port(
 static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
                             int ip_version) {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::init_socket_suff() for IPv%d.\n", ip_version);
+               "Inside init_socket_suff() for IPv%d.\n", ip_version);
 
     int sockError;
     sa_family_t domain;
@@ -823,8 +819,7 @@ error:
  * It is expected to have a prechecked valid parameter.
  */
 static int do_bind(struct s_SocketStuff* s) {
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::do_bind()\n");
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__, "Inside do_bind()\n");
 
     int ret_val = UPNP_E_SUCCESS;
     int bind_error;
@@ -882,7 +877,7 @@ error:
 }
 
 static int do_listen(struct s_SocketStuff* s) {
-    TRACE("Executing compa::do_listen()")
+    TRACE("Executing do_listen()")
     int ret_val;
     int listen_error;
     int port_error;
@@ -911,9 +906,8 @@ error:
 }
 
 static int do_reinit(struct s_SocketStuff* s) {
-    TRACE("executing compa::do_reinit()");
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::do_reinit()\n");
+    TRACE("executing do_reinit()");
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__, "Inside do_reinit()\n");
 
     sock_close(s->fd);
 
@@ -922,7 +916,7 @@ static int do_reinit(struct s_SocketStuff* s) {
 
 static int do_bind_listen(struct s_SocketStuff* s) {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::do_bind_listen()\n");
+               "Inside do_bind_listen()\n");
 
     int ret_val;
     int ok = 0;
@@ -978,7 +972,7 @@ static int get_miniserver_sockets(
     /*! [in] port on which the server is listening for incoming
      * IPv6 ULA or GUA connections. */
     uint16_t listen_port6UlaGua) {
-    TRACE("Executing compa::get_miniserver_sockets()")
+    TRACE("Executing get_miniserver_sockets()")
     int ret_val{UPNP_E_INTERNAL_ERROR};
     int err_init_4;
     int err_init_6;
@@ -1090,7 +1084,7 @@ error:
 static int get_miniserver_stopsock(
     /*! [in] Miniserver Socket Array. */
     MiniServerSockArray* out) {
-    TRACE("Executing compa::get_miniserver_stopsock()")
+    TRACE("Executing get_miniserver_stopsock()")
     struct sockaddr_in stop_sockaddr;
     SOCKET miniServerStopSock = 0;
     int ret = 0;
@@ -1127,7 +1121,7 @@ static int get_miniserver_stopsock(
 
 static UPNP_INLINE void
 InitMiniServerSockArray(MiniServerSockArray* miniSocket) {
-    TRACE("Executing compa::InitMiniServerSockArray()")
+    TRACE("Executing InitMiniServerSockArray()")
     miniSocket->miniServerSock4 = INVALID_SOCKET;
     miniSocket->miniServerSock6 = INVALID_SOCKET;
     miniSocket->miniServerSock6UlaGua = INVALID_SOCKET;
@@ -1158,7 +1152,7 @@ int StartMiniServer(
     /*! [in,out] Port on which the server listens for incoming
      * IPv6 ULA or GUA connections. */
     [[maybe_unused]] uint16_t* listen_port6UlaGua) {
-    TRACE("Executing compa::StartMiniServer()")
+    TRACE("Executing StartMiniServer()")
     int ret_code;
     int count;
     int max_count = 10000;
@@ -1178,18 +1172,18 @@ int StartMiniServer(
     if (!miniSocket) {
         return UPNP_E_OUTOF_MEMORY;
     }
-    compa::InitMiniServerSockArray(miniSocket);
+    InitMiniServerSockArray(miniSocket);
 #ifdef INTERNAL_WEB_SERVER
     /* V4 and V6 http listeners. */
-    ret_code = compa::get_miniserver_sockets(
-        miniSocket, *listen_port4, *listen_port6, *listen_port6UlaGua);
+    ret_code = get_miniserver_sockets(miniSocket, *listen_port4, *listen_port6,
+                                      *listen_port6UlaGua);
     if (ret_code != UPNP_E_SUCCESS) {
         free(miniSocket);
         return ret_code;
     }
 #endif
     /* Stop socket (To end miniserver processing). */
-    ret_code = compa::get_miniserver_stopsock(miniSocket);
+    ret_code = get_miniserver_stopsock(miniSocket);
     if (ret_code != UPNP_E_SUCCESS) {
         sock_close(miniSocket->miniServerSock4);
         sock_close(miniSocket->miniServerSock6);
@@ -1198,7 +1192,7 @@ int StartMiniServer(
         return ret_code;
     }
     /* SSDP socket for discovery/advertising. */
-    TRACE("Calling compa::get_ssdp_sockets()")
+    TRACE("Calling get_ssdp_sockets()")
     ret_code = get_ssdp_sockets((::MiniServerSockArray*)miniSocket);
     if (ret_code != UPNP_E_SUCCESS) {
         sock_close(miniSocket->miniServerSock4);
@@ -1260,7 +1254,7 @@ int StartMiniServer(
 
 int StopMiniServer() {
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside compa::StopMiniServer()\n");
+               "Inside StopMiniServer()\n");
 
     socklen_t socklen = sizeof(struct sockaddr_in);
     SOCKET sock;
@@ -1299,5 +1293,3 @@ int StopMiniServer() {
 
     return 0;
 }
-
-} // namespace compa

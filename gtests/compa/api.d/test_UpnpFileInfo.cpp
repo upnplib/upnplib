@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-30
+// Redistribution only with this Copyright remark. Last modified: 2023-07-17
 
 #include <UpnpFileInfo.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -7,11 +7,18 @@
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #define NS
-// Since the following struct is completely invisible outside of pupnp (because
-// of some template macro magic) I have duplicated it for testing here and must
-// be availabe on the default namespace for pupnp. The original is located in
-// pupnp/upnp/src/api/UpnpFileInfo.cpp. Possible differences of the copies in
-// the future should be detected by the tests.  --Ingo
+#else
+#define NS
+#endif
+
+#include <upnplib/gtest.hpp>
+#include <gtest/gtest.h>
+
+// This structure is completely hidden by typedef magic. It is only coppied
+// here for internal testing. Usually you have to use UpnpFileInfo_new() to get
+// a pointer to a structure and use getter/setter to access members. The
+// original is located in pupnp/upnp/src/api/UpnpFileInfo.cpp.
+// The tests need rework to respect this.
 struct s_UpnpFileInfo {
     off_t m_FileLength;
     time_t m_LastModified;
@@ -22,15 +29,6 @@ struct s_UpnpFileInfo {
     ::sockaddr_storage m_CtrlPtIPAddr;
     UpnpString* m_Os;
 };
-#else
-#define NS ::compa
-#include <compa/UpnpFileInfo.hpp>
-#include <compa/UpnpString.hpp>
-#endif
-
-#include <upnplib/gtest.hpp>
-#include <gtest/gtest.h>
-
 
 namespace compa {
 bool old_code{true}; // Managed in upnplib_gtest_main.inc
@@ -45,11 +43,11 @@ class CUpnpFileInfo {
     UpnpFileInfo* info{};
 
     CUpnpFileInfo() {
-        TRACE2(this, " Construct compa::CUpnpFileInfo()")
+        TRACE2(this, " Construct CUpnpFileInfo()")
         this->info = UpnpFileInfo_new();
     }
     ~CUpnpFileInfo() {
-        TRACE2(this, " Destruct compa::CUpnpFileInfo()")
+        TRACE2(this, " Destruct CUpnpFileInfo()")
         UpnpFileInfo_delete(this->info);
     }
 };
@@ -1003,7 +1001,7 @@ TEST(UpnpFileInfoDeathTest, UpnpFileInfo_clear_Os) {
 
 } // namespace compa
 
-//
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 #include "compa/gtest_main.inc"

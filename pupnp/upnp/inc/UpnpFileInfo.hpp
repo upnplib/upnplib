@@ -1,5 +1,5 @@
-#ifndef UPNPLIB_UPNPFILEINFO_HPP
-#define UPNPLIB_UPNPFILEINFO_HPP
+#ifndef PUPNP_UPNPFILEINFO_HPP
+#define PUPNP_UPNPFILEINFO_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2023-04-25
 // Also Copyright by other contributor as noted below.
@@ -104,4 +104,4 @@ EXPORT_SPEC int UpnpFileInfo_strncpy_Os(UpnpFileInfo* p, const char* s,
 /*! UpnpFileInfo_clear_Os */
 EXPORT_SPEC void UpnpFileInfo_clear_Os(UpnpFileInfo* p);
 
-#endif /* UPNPLIB_UPNPFILEINFO_HPP */
+#endif /* PUPNP_UPNPFILEINFO_HPP */

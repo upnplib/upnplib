@@ -1,6 +1,21 @@
 // Some little helper code snippets
 //---------------------------------
 
-    // Output text error message of errno
-    std::clog << "DEBUG\! errno " << errno << " = ";
-    perror(nullptr);
+// Output text error message of errno
+std::clog << "DEBUG\! errno " << errno << " = ";
+perror(nullptr);
+
+
+#ifdef UPNPLIB_WITH_TRACE
+// Disable TRACE if it is compiled in. We need to do it with instantiation of a
+// class to have it disabled before other classes with TRACE in its constructor
+// are instantiated. Enable on single tests with 'CEnableTrace' or for all tests
+// just comment the 'disable_trace' object below.
+#include <iostream>
+class CDisableTrace {
+  public:
+    CDisableTrace() { std::clog.setstate(std::ios_base::failbit); }
+    ~CDisableTrace() { std::clog.clear(); }
+};
+// CDisableTrace disable_trace;
+#endif

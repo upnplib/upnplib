@@ -1,5 +1,5 @@
-#ifndef UPNPLIB_STRING_HPP
-#define UPNPLIB_STRING_HPP
+#ifndef PUPNP_UPNPSTRING_HPP
+#define PUPNP_UPNPSTRING_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2023-04-26
 // Also Copyright by other contributor as noted below.
@@ -141,4 +141,4 @@ EXPORT_SPEC int UpnpString_casecmp(
 
 /* @} UpnpString The UpnpString API */
 
-#endif /* UPNPLIB_STRING_HPP */
+#endif /* PUPNP_UPNPSTRING_HPP */

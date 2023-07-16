@@ -1,6 +1,7 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-27
+// Redistribution only with this Copyright remark. Last modified: 2023-07-18
 // Also Copyright by other contributor as noted below.
+// Last compare with pupnp original source file on 2023-04-25, ver 1.14.15
 
 /*!
  * \file
@@ -8,15 +9,31 @@
  * \brief Source file for UpnpFileInfo methods.
  * \author Marcelo Roberto Jimenez
  */
-#include <compa/UpnpFileInfo.hpp>
-#include <upnplib/port.hpp>
-#include <cstring> // for memset
+#include <config.hpp>
+#include <UpnpFileInfo.hpp>
+#ifndef COMPA_UPNPFILEINFO_HPP
+#error "Wrong UpnpFileInfo.hpp header file included."
+#endif
 
-namespace compa {
+#include <upnplib/port.hpp>
+
+#include <cstring> // for memset
+#include <cstdlib>
+
+struct s_UpnpFileInfo {
+    off_t m_FileLength;
+    time_t m_LastModified;
+    int m_IsDirectory;
+    int m_IsReadable;
+    DOMString m_ContentType;
+    UpnpListHead m_ExtraHeadersList;
+    struct sockaddr_storage m_CtrlPtIPAddr;
+    UpnpString* m_Os;
+};
 
 UpnpFileInfo* UpnpFileInfo_new() {
-    struct UpnpFileInfo* p =
-        (UpnpFileInfo*)calloc(1, sizeof(struct UpnpFileInfo));
+    struct s_UpnpFileInfo* p =
+        (s_UpnpFileInfo*)calloc(1, sizeof(struct s_UpnpFileInfo));
 
     if (!p)
         return 0;
@@ -34,7 +51,7 @@ UpnpFileInfo* UpnpFileInfo_new() {
 }
 
 void UpnpFileInfo_delete(UpnpFileInfo* q) {
-    struct UpnpFileInfo* p = (struct UpnpFileInfo*)q;
+    struct s_UpnpFileInfo* p = (struct s_UpnpFileInfo*)q;
 
     if (!p)
         return;
@@ -97,7 +114,6 @@ off_t UpnpFileInfo_get_FileLength(const UpnpFileInfo* p) {
 int UpnpFileInfo_set_FileLength(UpnpFileInfo* p, off_t n) {
     if (!p)
         return 0;
-
     p->m_FileLength = n;
 
     return 1;
@@ -106,14 +122,12 @@ int UpnpFileInfo_set_FileLength(UpnpFileInfo* p, off_t n) {
 time_t UpnpFileInfo_get_LastModified(const UpnpFileInfo* p) {
     if (!p)
         return 0;
-
     return p->m_LastModified;
 }
 
 int UpnpFileInfo_set_LastModified(UpnpFileInfo* p, time_t n) {
     if (!p)
         return 0;
-
     p->m_LastModified = n;
 
     return 1;
@@ -122,14 +136,12 @@ int UpnpFileInfo_set_LastModified(UpnpFileInfo* p, time_t n) {
 int UpnpFileInfo_get_IsDirectory(const UpnpFileInfo* p) {
     if (!p)
         return 0;
-
     return p->m_IsDirectory;
 }
 
 int UpnpFileInfo_set_IsDirectory(UpnpFileInfo* p, int n) {
     if (!p)
         return 0;
-
     p->m_IsDirectory = n;
 
     return 1;
@@ -138,14 +150,12 @@ int UpnpFileInfo_set_IsDirectory(UpnpFileInfo* p, int n) {
 int UpnpFileInfo_get_IsReadable(const UpnpFileInfo* p) {
     if (!p)
         return 0;
-
     return p->m_IsReadable;
 }
 
 int UpnpFileInfo_set_IsReadable(UpnpFileInfo* p, int n) {
     if (!p)
         return 0;
-
     p->m_IsReadable = n;
 
     return 1;
@@ -193,7 +203,7 @@ void UpnpFileInfo_add_to_list_ExtraHeadersList(UpnpFileInfo* p,
 }
 
 const sockaddr_storage* UpnpFileInfo_get_CtrlPtIPAddr(const UpnpFileInfo* p) {
-    TRACE("Executing ::compa::UpnpFileInfo_get_CtrlPtIPAddr()")
+    TRACE("Executing UpnpFileInfo_get_CtrlPtIPAddr()")
     if (!p)
         return nullptr;
 
@@ -261,5 +271,3 @@ void UpnpFileInfo_clear_Os(UpnpFileInfo* p) {
 
     UpnpString_clear(p->m_Os);
 }
-
-} // namespace compa

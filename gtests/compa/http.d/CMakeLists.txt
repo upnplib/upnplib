@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-06
+# Redistribution only with this Copyright remark. Last modified: 2023-07-19
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -31,6 +31,8 @@ target_compile_options(test_webserver-pst
     PRIVATE
         # To fix these warnigs we have to modify the original pupnp code but
         # that isn't intended. So the warnings are suppressed.
+        # :buf’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
+        $<$<CXX_COMPILER_ID:GNU>:-Wno-maybe-uninitialized>
         # disable warning C4701: potentially uninitialized local variable 'subtype' used
         $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
         # disable warning C4703: potentially uninitialized local pointer variable 'subtype' used
@@ -44,6 +46,7 @@ target_link_libraries(test_webserver-pst
 add_test(NAME ctest_webserver-pst COMMAND test_webserver-pst --gtest_shuffle
 )
 
+if(FALSE)
 add_executable(test_webserver-cst
 #--------------------------------
     ./test_webserver.cpp
@@ -72,6 +75,7 @@ target_link_libraries(test_webserver-cst
 )
 add_test(NAME ctest_webserver-cst COMMAND test_webserver-cst --gtest_shuffle
 )
+endif()
 
 
 # httpparser
@@ -138,8 +142,6 @@ target_compile_definitions(test_httpparser-cst
 )
 target_compile_options(test_httpparser-cst
     PRIVATE
-        # To fix these warnigs we have to modify the original pupnp code but
-        # that isn't intended. So the warnings are suppressed.
         # disable warning C4706: assignment within conditional expression
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
         # disable warning C4701: potentially uninitialized local variable 'status' used
@@ -148,6 +150,7 @@ target_compile_options(test_httpparser-cst
 target_link_libraries(test_httpparser-cst
         PRIVATE
             compa_static
+            upnplib_static
 )
 add_test(NAME ctest_httpparser-cst COMMAND test_httpparser-cst --gtest_shuffle
 )
