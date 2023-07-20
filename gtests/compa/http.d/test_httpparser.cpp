@@ -2,26 +2,20 @@
 // Redistribution only with this Copyright remark. Last modified: 2023-07-20
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
-#include "pupnp/upnp/src/genlib/net/http/httpparser.cpp"
+#include <pupnp/upnp/src/genlib/net/http/httpparser.cpp>
 #else
-#include "compa/src/genlib/net/http/httpparser.cpp"
+#include <compa/src/genlib/net/http/httpparser.cpp>
 #endif
 
-#ifndef UPNPLIB_WITH_NATIVE_PUPNP
-#define NS ::upnplib
-#include "upnplib/src/net/http/httpparser.cpp"
-#else
-#define NS
-#endif
+#include <upnplib/gtest.hpp>
+#include <gmock/gmock.h>
 
-#include "gmock/gmock.h"
 
 namespace compa {
-
 bool old_code{false}; // Managed in compa/gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
-//
+
 // Interface for the httpparser module
 // -----------------------------------
 // clang-format off
@@ -77,9 +71,9 @@ class Ihttpparser {
     // virtual void print_http_headers(http_message_t* hmsg) = 0;
 };
 
-class Chttpparser_old : public Ihttpparser {
+class Chttpparser: public Ihttpparser {
   public:
-    virtual ~Chttpparser_old() {}
+    virtual ~Chttpparser() {}
 
     void httpmsg_init(http_message_t* msg) override {
         return ::httpmsg_init(msg); }
@@ -117,14 +111,6 @@ class Chttpparser_old : public Ihttpparser {
     // void print_http_headers(http_message_t* hmsg) override {
     //     return ::print_http_headers(hmsg); }
 };
-
-class Chttpparser : public Chttpparser_old {
-  public:
-    virtual ~Chttpparser() {}
-
-    void httpmsg_init(http_message_t* msg) override {
-        return NS::httpmsg_init(msg); }
-};
 // clang-format on
 
 //
@@ -140,7 +126,7 @@ TEST(HttpparserTestSuite, map_int_to_str) {
                     "test it here and remove module strintmap.";
 }
 
-TEST(HttpparserTestSuite, httpmsg_init_and_httpmsg_destroy) {
+TEST(HttpparserTestSuite, httpmsg_init_and_destroy) {
     http_message_t msg;
     memset(&msg, 0xff, sizeof(msg));
     EXPECT_EQ(msg.headers.head.next, (LISTNODE*)0xffffffffffffffff);
@@ -148,13 +134,15 @@ TEST(HttpparserTestSuite, httpmsg_init_and_httpmsg_destroy) {
     Chttpparser httparsObj;
 
     if (old_code) {
-        std::cout
-            << "  BUG! httpmsg_init: msg->urlbuf set to nullptr otherwise "
-               "segfault with httpmsg_destroy.\n";
-        Chttpparser_old httpars_oldObj;
+        std::cout << CYEL "[ FIX      ] " CRES << __LINE__
+                  << ": httpmsg_init: msg->urlbuf set to nullptr otherwise "
+                     "segfault with httpmsg_destroy.\n";
+        Chttpparser httpars_oldObj;
         httpars_oldObj.httpmsg_init(&msg);
         EXPECT_NE(msg.urlbuf, nullptr);
+
     } else {
+
         // Fixed function
         httparsObj.httpmsg_init(&msg);
         EXPECT_EQ(msg.urlbuf, nullptr);
@@ -189,7 +177,7 @@ TEST(HttpparserTestSuite, httpmsg_init_a_nullptr) {
                        "segfault.\n";
     } else {
         // Test Unit
-        Chttpparser_old httparsObj;
+        Chttpparser httparsObj;
         ASSERT_EXIT((httparsObj.httpmsg_init(nullptr), exit(0)),
                     ::testing::ExitedWithCode(0), ".*")
             << "   BUG! A nullptr to a message structure must not segfault.";
@@ -205,7 +193,7 @@ TEST(HttpparserTestSuite, httpmsg_destroy_a_nullptr) {
                        "segfault.\n";
     } else {
         // Test Unit
-        Chttpparser_old httparsObj;
+        Chttpparser httparsObj;
         ASSERT_EXIT((httparsObj.httpmsg_destroy(nullptr), exit(0)),
                     ::testing::ExitedWithCode(0), ".*")
             << "   BUG! A nullptr to a message structure must not segfault.";
@@ -262,7 +250,7 @@ TEST(HttpparserTestSuite, parser_request_init) {
     ::memset(&parser, 0xaa, sizeof(http_parser_t));
 
     // Test Unit
-    Chttpparser_old httpars_oObj;
+    Chttpparser httpars_oObj;
     httpars_oObj.parser_request_init(&parser);
 
     EXPECT_EQ(parser.msg.is_request, 1);
@@ -282,7 +270,7 @@ TEST(HttpparserTestSuite, parser_request_init_a_nullptr) {
     } else {
 #ifdef DEBUG
         // Test Unit
-        Chttpparser_old httpars_oObj;
+        Chttpparser httpars_oObj;
         ASSERT_EXIT((httpars_oObj.parser_request_init(nullptr), exit(0)),
                     ::testing::ExitedWithCode(0), ".*")
             << "   BUG! A nullptr to a parser structure must not segfault.";
@@ -295,7 +283,7 @@ TEST(HttpparserTestSuite, parser_response_init) {
     ::memset(&parser, 0xaa, sizeof(http_parser_t));
 
     // Test Unit
-    Chttpparser_old httpars_oObj;
+    Chttpparser httpars_oObj;
     httpars_oObj.parser_response_init(&parser, HTTPMETHOD_NOTIFY);
 
     EXPECT_EQ(parser.msg.is_request, 0);
@@ -317,7 +305,7 @@ TEST(HttpparserTestSuite, parser_response_init_a_nullptr) {
     } else {
 #ifdef DEBUG
         // Test Unit
-        Chttpparser_old httpars_oObj;
+        Chttpparser httpars_oObj;
         ASSERT_EXIT(
             (httpars_oObj.parser_response_init(nullptr, HTTPMETHOD_NOTIFY),
              exit(0)),

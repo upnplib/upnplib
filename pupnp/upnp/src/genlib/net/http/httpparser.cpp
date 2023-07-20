@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-10
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,6 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+// Last compare with pupnp original source file on 2023-07-20, ver 1.14.17
 
 /*
  * \file
@@ -1164,17 +1165,9 @@ parse_status_t matchstr(char* str, size_t slen, const char* fmt, ...) {
  *  void
  ************************************************************************/
 static UPNP_INLINE void parser_init(http_parser_t* parser) {
-    // clang-format off
-// #ifdef UPNPLIB_PUPNP_BUG
-    // Ingo - Error old code: argument 1 null where non-null expected
-    // [-Werror=nonnull]
+
     memset(parser, 0, sizeof(http_parser_t));
-// #else
-    //    if (parser == nullptr)
-    //        return;
-    //    memset(parser, 0, sizeof(http_parser_t));
-// #endif
-    // clang-format on
+
     parser->http_error_code = HTTP_BAD_REQUEST; /* err msg by default */
     parser->ent_position = ENTREAD_DETERMINE_READ_METHOD;
     parser->valid_ssdp_notify_hack = 0;

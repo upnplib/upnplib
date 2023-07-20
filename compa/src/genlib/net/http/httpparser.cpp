@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-18
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,6 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+// Last verify with this project pupnp source file on 2023-07-20, ver 1.14.17
 
 /*
  * \file
@@ -42,13 +43,15 @@
 #define _GNU_SOURCE /* For strcasestr() in string.h */
 #endif
 
-#include "config.hpp"
+#include <config.hpp>
 
-#include "httpparser.hpp"
-#include "statcodes.hpp"
-#include "strintmap.hpp"
+#include <httpparser.hpp>
+#include <statcodes.hpp>
+#include <strintmap.hpp>
 //#include "unixutil.h"
-#include "upnpdebug.hpp"
+#include <upnpdebug.hpp>
+
+#include <upnplib/port.hpp>
 
 #include <assert.h>
 //#include <ctype.h>
@@ -387,12 +390,14 @@ static void httpheader_free(void* msg) {
  * Note :
  ************************************************************************/
 void httpmsg_init(http_message_t* msg) {
-    msg->initialized = 1;
-    msg->entity.buf = NULL;
+    TRACE("Executing httpmsg_init()")
+    msg->entity.buf = nullptr;
     msg->entity.length = (size_t)0;
     ListInit(&msg->headers, httpmsg_compare, httpheader_free);
     membuffer_init(&msg->msg);
     membuffer_init(&msg->status_msg);
+    msg->urlbuf = nullptr;
+    msg->initialized = 1;
 }
 
 /************************************************************************
@@ -1164,17 +1169,10 @@ parse_status_t matchstr(char* str, size_t slen, const char* fmt, ...) {
  *  void
  ************************************************************************/
 static UPNP_INLINE void parser_init(http_parser_t* parser) {
-    // clang-format off
-// #ifdef UPNPLIB_PUPNP_BUG
-    // Ingo - Error old code: argument 1 null where non-null expected
-    // [-Werror=nonnull]
+    if (parser == nullptr)
+        return;
+
     memset(parser, 0, sizeof(http_parser_t));
-// #else
-    //    if (parser == nullptr)
-    //        return;
-    //    memset(parser, 0, sizeof(http_parser_t));
-// #endif
-    // clang-format on
     parser->http_error_code = HTTP_BAD_REQUEST; /* err msg by default */
     parser->ent_position = ENTREAD_DETERMINE_READ_METHOD;
     parser->valid_ssdp_notify_hack = 0;
