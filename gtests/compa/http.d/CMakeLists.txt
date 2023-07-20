@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-19
+# Redistribution only with this Copyright remark. Last modified: 2023-07-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -58,15 +58,6 @@ target_include_directories(test_webserver-cst
 target_compile_definitions(test_webserver-cst
     PRIVATE
         UPNP_HAVE_WEBSERVER
-)
-target_compile_options(test_webserver-cst
-    PRIVATE
-        # To fix these warnigs we have to modify the original pupnp code but
-        # that isn't intended. So the warnings are suppressed.
-        # disable warning C4701: potentially uninitialized local variable 'subtype' used
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
-        # disable warning C4703: potentially uninitialized local pointer variable 'subtype' used
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4703>
 )
 target_link_libraries(test_webserver-cst
         PRIVATE
@@ -139,13 +130,6 @@ target_include_directories(test_httpparser-cst
 target_compile_definitions(test_httpparser-cst
     PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
-)
-target_compile_options(test_httpparser-cst
-    PRIVATE
-        # disable warning C4706: assignment within conditional expression
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
-        # disable warning C4701: potentially uninitialized local variable 'status' used
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
 )
 target_link_libraries(test_httpparser-cst
         PRIVATE

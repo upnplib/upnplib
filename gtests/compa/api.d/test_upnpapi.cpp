@@ -1,25 +1,29 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-15
+// Redistribution only with this Copyright remark. Last modified: 2023-07-20
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpapi.cpp>
+#else
+#include <compa/src/api/upnpapi.cpp>
+#endif
+
 #ifdef UPNP_HAVE_TOOLS
 #include <upnptools.hpp> // For pupnp and compa
 #endif
 #include <upnplib/upnptools.hpp> // For upnplib only
 #include <compa/upnpdebug.hpp>
 
-#include <gmock/gmock.h>
 #include <upnplib/gtest.hpp>
+#include <gmock/gmock.h>
 
-using ::upnplib::errStrEx;
-
-using ::upnplib::testing::MatchesStdRegex;
-
-using ::testing::ExitedWithCode;
 
 namespace compa {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
+
+using ::testing::ExitedWithCode;
+using ::upnplib::errStrEx;
+using ::upnplib::testing::MatchesStdRegex;
 
 //
 // The UpnpInit2() call stack to initialize the pupnp library

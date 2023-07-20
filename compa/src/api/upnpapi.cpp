@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-19
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -783,7 +783,8 @@ char* UpnpGetServerUlaGuaIp6Address(void) {
  * \return On success, an integer greater than zero or UPNP_E_OUTOF_HANDLE on
  *  failure.
  */
-[[maybe_unused]] static int GetFreeHandle() {
+#if defined INCLUDE_DEVICE_APIS || defined INCLUDE_CLIENT_APIS
+static int GetFreeHandle() {
     /* Handle 0 is not used as NULL translates to 0 when passed as a handle
      */
     int i = 1;
@@ -801,7 +802,7 @@ char* UpnpGetServerUlaGuaIp6Address(void) {
  *
  * \return UPNP_E_SUCCESS if successful or UPNP_E_INVALID_HANDLE if not
  */
-[[maybe_unused]] static int FreeHandle(
+static int FreeHandle(
     /*! [in] Handle index. */
     int Upnp_Handle) {
     int ret = UPNP_E_INVALID_HANDLE;
@@ -824,6 +825,7 @@ char* UpnpGetServerUlaGuaIp6Address(void) {
 
     return ret;
 }
+#endif // defined INCLUDE_DEVICE_APIS || defined INCLUDE_CLIENT_APIS
 
 #ifdef INCLUDE_DEVICE_APIS
 int UpnpRegisterRootDevice(const char* DescUrl, Upnp_FunPtr Fun,
@@ -3428,10 +3430,8 @@ int UpnpGetIfInfo(const char* IfName) {
 /*!
  * \brief Schedule async functions in threadpool.
  */
-#ifdef INCLUDE_CLIENT_APIS
+#if defined INCLUDE_CLIENT_APIS && (EXCLUDE_GENA == 0 || EXCLUDE_SOAP == 0)
 void UpnpThreadDistribution(struct UpnpNonblockParam* Param) {
-    // int errCode = 0; // bugfix to compile C++ --Ingo
-
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                "Inside UpnpThreadDistribution \n");
 

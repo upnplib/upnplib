@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-06
+# Redistribution only with this Copyright remark. Last modified: 2023-07-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -31,6 +31,8 @@ add_compile_definitions(
 )
 add_compile_options(
     # disable warning C4702: unreachable code
+    # This warning comes with many googletest macros EXPECT_*/ASSERT_* and is
+    # false there. --Ingo
     $<$<CXX_COMPILER_ID:MSVC>:/wd4702>
     $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wconversion>
     $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wsign-conversion>

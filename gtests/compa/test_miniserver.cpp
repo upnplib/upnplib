@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-19
+// Redistribution only with this Copyright remark. Last modified: 2023-07-20
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -1731,10 +1731,13 @@ TEST(RunMiniServerTestSuite, web_server_accept) {
                         ContainsStdRegex(" UPNP-MSER-2: .* mserv 206: cannot "
                                          "schedule request"));
         else
-            EXPECT_THAT(capturedStderr,
-                        ContainsStdRegex(
-                            " connected to host 192\\.168\\.201\\.202:306 "));
-            // "with socket 206.* mserv 206: cannot schedule request"));
+            EXPECT_THAT(
+                capturedStderr,
+                ContainsStdRegex(" connected to host 192\\.168\\.201\\.202:306 "
+                                 "with socket 206"));
+            // ContainsStdRegex(" connected to host 192\\.168\\.201\\.202:306 "
+            //                  "with socket 206.* UPNP-MSER-1: .* mserv 206: "
+            //                  "cannot schedule request"));
 #else
         EXPECT_THAT(capturedStderr,
                     ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0"));

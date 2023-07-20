@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-06
+# Redistribution only with this Copyright remark. Last modified: 2023-07-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -37,11 +37,6 @@ target_include_directories(test_url_class
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}/include
     PRIVATE ${UPNPLIB_SOURCE_DIR}/include
-)
-target_compile_options(test_url_class
-    PRIVATE
-        # disable warning C4244: 'initializing': conversion from '_Ty' to '_Ty2', possible loss of data
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4244>
 )
 add_test(NAME ctest_url_class COMMAND test_url_class --gtest_shuffle
 )

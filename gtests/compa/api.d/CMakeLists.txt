@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-18
+# Redistribution only with this Copyright remark. Last modified: 2023-07-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -237,16 +237,10 @@ target_compile_definitions(test_upnpapi-cst
 )
 target_compile_options(test_upnpapi-cst
     PRIVATE
-        # disable warning C4065: switch statement contains 'default' but no 'case' labels
-        # Bad practice but I won't modify pupnp code. --Ingo
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4065>
         # disable warning C4100: 'result_listener': unreferenced formal parameter
         # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
         # be a side effect of the macro definition. --Ingo
         $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
-        # disable warning C4505: 'UpnpComputeIpv6PrefixLength': unreferenced local function has been removed
-        # This isn't used with WIN32 but on other platforms. I won't modify pupnp code.
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
 )
 target_link_libraries(test_upnpapi-cst
     PRIVATE
@@ -287,12 +281,6 @@ add_executable(test_upnpapi_platform-cst
 )
 target_include_directories(test_upnpapi_platform-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
-)
-target_compile_options(test_upnpapi_platform-cst
-    PRIVATE
-        # disable warning C4505: 'GetFreeHandle': unreferenced local function has been removed
-        # This isn't used with WIN32 but on other platforms. I won't modify pupnp code. --Ingo
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
 )
 target_link_libraries(test_upnpapi_platform-cst
     PRIVATE

@@ -1,10 +1,14 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-05
+// Redistribution only with this Copyright remark. Last modified: 2023-07-20
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
 
+#ifdef UPNPLIB_WITH_NATIVE_UPNP
 #include <pupnp/upnp/src/api/upnpapi.cpp>
+#else
+#include <compa/src/api/upnpapi.cpp>
+#endif
 
 #include <upnplib/upnptools.hpp> // For upnplib only
 #include <upnplib/gtest_tools_unix.hpp>
@@ -12,6 +16,7 @@
 #include <umock/net_if_mock.hpp>
 
 #include <upnplib/gtest.hpp>
+
 
 namespace compa {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
