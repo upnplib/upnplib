@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-20
+# Redistribution only with this Copyright remark. Last modified: 2023-07-21
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -60,39 +60,25 @@ endif()
 #===========
 add_executable(test_UpnpString-psh
 #---------------------------------
-        ./test_UpnpString.cpp
-)
-target_compile_definitions(test_UpnpString-psh
-    PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+    ./test_UpnpString.cpp
 )
 target_link_libraries(test_UpnpString-psh
-    PRIVATE
-        pupnp_shared
-        upnplib_shared
+    PRIVATE pupnp_shared
 )
 add_test(NAME ctest_UpnpString-psh COMMAND test_UpnpString-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
-if(FALSE)
 add_executable(test_UpnpString-csh
 #---------------------------------
-        ./test_UpnpString.cpp
-)
-target_compile_definitions(test_UpnpString-csh
-    PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+    ./test_UpnpString.cpp
 )
 target_link_libraries(test_UpnpString-csh
-    PRIVATE
-        compa_shared
-        upnplib_shared
+    PRIVATE compa_shared
 )
 add_test(NAME ctest_UpnpString-csh COMMAND test_UpnpString-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
-endif()
 
 
 # UpnpFileInfo
@@ -187,12 +173,9 @@ endif()
 add_executable(test_upnpapi-pst
 #------------------------------
     ./test_upnpapi.cpp
-    ${COMPA_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 target_include_directories(test_upnpapi-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
-    PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-    PRIVATE ${COMPA_SOURCE_DIR}/inc
 )
 target_compile_definitions(test_upnpapi-pst
     PRIVATE

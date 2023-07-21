@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-20
+// Redistribution only with this Copyright remark. Last modified: 2023-07-21
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpapi.cpp>
@@ -11,7 +11,6 @@
 #include <upnptools.hpp> // For pupnp and compa
 #endif
 #include <upnplib/upnptools.hpp> // For upnplib only
-#include <compa/upnpdebug.hpp>
 
 #include <upnplib/gtest.hpp>
 #include <gmock/gmock.h>

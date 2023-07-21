@@ -1,7 +1,7 @@
 #ifndef COMPA_UPNPSTRING_HPP
 #define COMPA_UPNPSTRING_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-17
+// Redistribution only with this Copyright remark. Last modified: 2023-07-21
 // Also Copyright by other contributor as noted below.
 // Last compare with pupnp original source file on 2023-04-26, ver 1.14.15
 
@@ -22,12 +22,17 @@
  */
 
 
-#include "upnplib/visibility.hpp"
+#include <upnplib/visibility.hpp>
 #include <stddef.h> // For size_t
 
 /*!
  * \brief Type of the string objects inside libupnp.
  */
+// The typedef must be the same as in pupnp otherwise we cannot switch between
+// pupnp gtest and compa gtest. Using the typedef in the header file but the
+// definiton of the structure in the source file make the mmembers of the
+// structure publicy invisible. That is intended but we will change it with
+// using C++ private. --Ingo
 typedef struct s_UpnpString UpnpString;
 
 /*!
@@ -35,7 +40,7 @@ typedef struct s_UpnpString UpnpString;
  *
  * \return A pointer to a new allocated object.
  */
-UPNPLIB_API UpnpString* UpnpString_new(void);
+UPNPLIB_API UpnpString* UpnpString_new();
 
 /*!
  * \brief Destructor.

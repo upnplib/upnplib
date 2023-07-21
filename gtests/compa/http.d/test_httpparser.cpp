@@ -32,6 +32,7 @@ bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 // `parser_request_init(http_parser_t*)'
 // `parser_response_init(http_parser_t*, http_method_t)'
 
+// This is a proof of concept to use a C++ Interface
 class Ihttpparser {
   public:
     virtual ~Ihttpparser() {}
@@ -130,7 +131,6 @@ TEST(HttpparserTestSuite, httpmsg_init_and_destroy) {
     http_message_t msg;
     memset(&msg, 0xff, sizeof(msg));
     EXPECT_EQ(msg.headers.head.next, (LISTNODE*)0xffffffffffffffff);
-
     Chttpparser httparsObj;
 
     if (old_code) {

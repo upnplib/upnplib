@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-30
+// Redistribution only with this Copyright remark. Last modified: 2023-07-21
 // Also Copyright by other contributor who haven't made a note.
 // Last compare with pupnp original source file on 2023-04-26, ver 1.14.15
 
@@ -20,16 +20,21 @@
  * \brief UpnpString object implementation.
  */
 
-#include "config.hpp"
+#include <config.hpp>
 
-#include "UpnpString.hpp"
-#include "umock/stdlib.hpp"
-#include "umock/stringh.hpp"
+#include <UpnpString.hpp>
+#ifndef COMPA_UPNPSTRING_HPP
+#error "Wrong UpnpString.hpp header file included."
+#endif
+#include <upnplib/port.hpp>
+
+#include <umock/stdlib.hpp>
+#include <umock/stringh.hpp>
 
 // #include <stdlib.h> /* for calloc(), free() */
 #include <string.h> /* for strlen(), strdup() */
 
-#include "posix_overwrites.hpp"
+#include <posix_overwrites.hpp>
 
 #ifndef UPNP_USE_MSVCPP
 #ifdef UPNP_USE_BCBPP
@@ -69,7 +74,11 @@ static size_t strnlen(const char* s, size_t n) {
  *
  * \internal
  */
-struct SUpnpString {
+// This structure is addressed with 'UpnpString' by
+// 'typedef struct s_UpnpString UpnpString;' in the header file. The typedef
+// must be the same as in pupnp otherwise we cannot switch between pupnp gtest
+// and compa gtest.
+struct s_UpnpString {
     /*! \brief Length of the string excluding terminating null byte ('\0'). */
     size_t m_length;
     /*! \brief Pointer to a dynamically allocated area that holds the NULL
@@ -79,8 +88,8 @@ struct SUpnpString {
 
 UpnpString* UpnpString_new() {
     /* All bytes are zero, and so is the length of the string. */
-    struct SUpnpString* p = (SUpnpString*)umock::stdlib_h.calloc(
-        (size_t)1, sizeof(struct SUpnpString));
+    UpnpString* p =
+        (UpnpString*)umock::stdlib_h.calloc((size_t)1, sizeof(UpnpString));
     if (p == NULL) {
         goto error_handler1;
     }
@@ -104,7 +113,7 @@ error_handler1:
 }
 
 void UpnpString_delete(UpnpString* p) {
-    struct SUpnpString* q = (struct SUpnpString*)p;
+    UpnpString* q = (UpnpString*)p;
 
     if (!q)
         return;
@@ -118,13 +127,13 @@ void UpnpString_delete(UpnpString* p) {
 }
 
 UpnpString* UpnpString_dup(const UpnpString* p) {
-    struct SUpnpString* q = (SUpnpString*)umock::stdlib_h.calloc(
-        (size_t)1, sizeof(struct SUpnpString));
+    UpnpString* q =
+        (UpnpString*)umock::stdlib_h.calloc((size_t)1, sizeof(UpnpString));
     if (q == NULL) {
         goto error_handler1;
     }
-    q->m_length = ((struct SUpnpString*)p)->m_length;
-    q->m_string = umock::string_h.strdup(((struct SUpnpString*)p)->m_string);
+    q->m_length = ((UpnpString*)p)->m_length;
+    q->m_string = umock::string_h.strdup(((UpnpString*)p)->m_string);
     if (q->m_string == NULL) {
         goto error_handler2;
     }
@@ -145,49 +154,59 @@ error_handler1:
 }
 
 size_t UpnpString_get_Length(const UpnpString* p) {
-    return ((struct SUpnpString*)p)->m_length;
+    if (!p)
+        return 0;
+    return ((UpnpString*)p)->m_length;
 }
 
 void UpnpString_set_Length(UpnpString* p, size_t n) {
-    if (((struct SUpnpString*)p)->m_length > n) {
-        ((struct SUpnpString*)p)->m_length = n;
+    if (((UpnpString*)p)->m_length > n) {
+        ((UpnpString*)p)->m_length = n;
         /* No need to realloc now, will do later when needed. */
-        ((struct SUpnpString*)p)->m_string[n] = 0;
+        ((UpnpString*)p)->m_string[n] = 0;
     }
 }
 
 const char* UpnpString_get_String(const UpnpString* p) {
-    return ((struct SUpnpString*)p)->m_string;
+    if (!p)
+        return nullptr;
+    return ((UpnpString*)p)->m_string;
 }
 
 int UpnpString_set_String(UpnpString* p, const char* s) {
+    if (!p || !s)
+        return 0;
     char* q = umock::string_h.strdup(s);
     if (!q)
         goto error_handler1;
-    umock::stdlib_h.free(((struct SUpnpString*)p)->m_string);
-    ((struct SUpnpString*)p)->m_length = strlen(q);
-    ((struct SUpnpString*)p)->m_string = q;
+    umock::stdlib_h.free(((UpnpString*)p)->m_string);
+    ((UpnpString*)p)->m_length = strlen(q);
+    ((UpnpString*)p)->m_string = q;
 
 error_handler1:
     return q != NULL;
 }
 
 int UpnpString_set_StringN(UpnpString* p, const char* s, size_t n) {
+    if (!p || !s)
+        return 0;
     char* q = umock::string_h.strndup(s, n);
     if (!q)
         goto error_handler1;
-    umock::stdlib_h.free(((struct SUpnpString*)p)->m_string);
-    ((struct SUpnpString*)p)->m_length = strlen(q);
-    ((struct SUpnpString*)p)->m_string = q;
+    umock::stdlib_h.free(((UpnpString*)p)->m_string);
+    ((UpnpString*)p)->m_length = strlen(q);
+    ((UpnpString*)p)->m_string = q;
 
 error_handler1:
     return q != NULL;
 }
 
 void UpnpString_clear(UpnpString* p) {
-    ((struct SUpnpString*)p)->m_length = (size_t)0;
+    if (!p)
+        return;
+    ((UpnpString*)p)->m_length = (size_t)0;
     /* No need to realloc now, will do later when needed. */
-    ((struct SUpnpString*)p)->m_string[0] = 0;
+    ((UpnpString*)p)->m_string[0] = 0;
 }
 
 int UpnpString_cmp(UpnpString* p, UpnpString* q) {
