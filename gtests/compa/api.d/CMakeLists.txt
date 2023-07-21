@@ -100,7 +100,6 @@ add_test(NAME ctest_UpnpFileInfo-psh COMMAND test_UpnpFileInfo-psh --gtest_shuff
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
-if(FALSE)
 add_executable(test_UpnpFileInfo-csh
 #-----------------------------------
     ./test_UpnpFileInfo.cpp
@@ -117,7 +116,6 @@ target_link_libraries(test_UpnpFileInfo-csh
 add_test(NAME ctest_UpnpFileInfo-csh COMMAND test_UpnpFileInfo-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
-endif()
 
 
 # upnpapi

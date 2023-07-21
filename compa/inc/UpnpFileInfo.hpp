@@ -1,7 +1,7 @@
 #ifndef COMPA_UPNPFILEINFO_HPP
 #define COMPA_UPNPFILEINFO_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-17
+// Redistribution only with this Copyright remark. Last modified: 2023-07-21
 // Also Copyright by other contributor as noted below.
 // Last compare with pupnp original source file on 2023-04-25, ver 1.14.15
 
@@ -27,6 +27,11 @@
 /*!
  * UpnpFileInfo
  */
+// The typedef must be the same as in pupnp otherwise we cannot switch between
+// pupnp gtest and compa gtest. Using the typedef in the header file but the
+// definiton of the structure in the source file make the mmembers of the
+// structure publicy invisible. That is intended but we will change it with
+// using C++ private. --Ingo
 typedef struct s_UpnpFileInfo UpnpFileInfo;
 
 /*! Constructor */
