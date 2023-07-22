@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-20
+# Redistribution only with this Copyright remark. Last modified: 2023-07-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -14,7 +14,6 @@ project(GTESTS_COMPA_HTTP VERSION 0003
 # Because we want to include the source file into the test to also test static
 # functions, we cannot use shared libraries due to symbol import/export
 # conflicts. We must use static libraries.
-
 add_executable(test_webserver-pst
 #--------------------------------
     ./test_webserver.cpp
@@ -31,7 +30,7 @@ target_compile_options(test_webserver-pst
     PRIVATE
         # To fix these warnigs we have to modify the original pupnp code but
         # that isn't intended. So the warnings are suppressed.
-        # :buf’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
+        # 'buf’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
         $<$<CXX_COMPILER_ID:GNU>:-Wno-maybe-uninitialized>
         # disable warning C4701: potentially uninitialized local variable 'subtype' used
         $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
@@ -46,7 +45,6 @@ target_link_libraries(test_webserver-pst
 add_test(NAME ctest_webserver-pst COMMAND test_webserver-pst --gtest_shuffle
 )
 
-if(FALSE)
 add_executable(test_webserver-cst
 #--------------------------------
     ./test_webserver.cpp
@@ -66,7 +64,6 @@ target_link_libraries(test_webserver-cst
 )
 add_test(NAME ctest_webserver-cst COMMAND test_webserver-cst --gtest_shuffle
 )
-endif()
 
 
 # httpparser

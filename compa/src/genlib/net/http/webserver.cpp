@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-18
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-23
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-// Last compare with pupnp original source file on 2022-12-09, ver 1.14.15
+// Last compare with pupnp original source file on 2023-07-21, ver 1.14.17
 
 /*!
  * \file
@@ -45,6 +45,9 @@
 #if EXCLUDE_WEB_SERVER == 0
 
 #include <webserver.hpp>
+#ifndef COMPA_NET_HTTP_WEBSERVER_HPP
+#error "Wrong webserver.hpp header file included."
+#endif
 
 #include <UpnpExtraHeaders.hpp>
 #include <UpnpFileInfo.hpp>
@@ -140,106 +143,17 @@ static char* web_server_asctime_r(const struct tm* tm, char* buf) {
 #define web_server_asctime_r asctime_r
 #endif
 
-/* sorted by file extension; must have 'NUM_MEDIA_TYPES' extensions */
-static const char* gEncodedMediaTypes =
-    "aif\0" AUDIO_STR "aiff\0"
-    "aifc\0" AUDIO_STR "aiff\0"
-    "aiff\0" AUDIO_STR "aiff\0"
-    "asf\0" VIDEO_STR "x-ms-asf\0"
-    "asx\0" VIDEO_STR "x-ms-asf\0"
-    "au\0" AUDIO_STR "basic\0"
-    "avi\0" VIDEO_STR "msvideo\0"
-    "bmp\0" IMAGE_STR "bmp\0"
-    "css\0" TEXT_STR "css\0"
-    "dcr\0" APPLICATION_STR "x-director\0"
-    "dib\0" IMAGE_STR "bmp\0"
-    "dir\0" APPLICATION_STR "x-director\0"
-    "dxr\0" APPLICATION_STR "x-director\0"
-    "gif\0" IMAGE_STR "gif\0"
-    "hta\0" TEXT_STR "hta\0"
-    "htm\0" TEXT_STR "html\0"
-    "html\0" TEXT_STR "html\0"
-    "jar\0" APPLICATION_STR "java-archive\0"
-    "jfif\0" IMAGE_STR "pjpeg\0"
-    "jpe\0" IMAGE_STR "jpeg\0"
-    "jpeg\0" IMAGE_STR "jpeg\0"
-    "jpg\0" IMAGE_STR "jpeg\0"
-    "js\0" APPLICATION_STR "x-javascript\0"
-    "kar\0" AUDIO_STR "midi\0"
-    "m3u\0" AUDIO_STR "mpegurl\0"
-    "mid\0" AUDIO_STR "midi\0"
-    "midi\0" AUDIO_STR "midi\0"
-    "mov\0" VIDEO_STR "quicktime\0"
-    "mp2v\0" VIDEO_STR "x-mpeg2\0"
-    "mp3\0" AUDIO_STR "mpeg\0"
-    "mpe\0" VIDEO_STR "mpeg\0"
-    "mpeg\0" VIDEO_STR "mpeg\0"
-    "mpg\0" VIDEO_STR "mpeg\0"
-    "mpv\0" VIDEO_STR "mpeg\0"
-    "mpv2\0" VIDEO_STR "x-mpeg2\0"
-    "pdf\0" APPLICATION_STR "pdf\0"
-    "pjp\0" IMAGE_STR "jpeg\0"
-    "pjpeg\0" IMAGE_STR "jpeg\0"
-    "plg\0" TEXT_STR "html\0"
-    "pls\0" AUDIO_STR "scpls\0"
-    "png\0" IMAGE_STR "png\0"
-    "qt\0" VIDEO_STR "quicktime\0"
-    "ram\0" AUDIO_STR "x-pn-realaudio\0"
-    "rmi\0" AUDIO_STR "mid\0"
-    "rmm\0" AUDIO_STR "x-pn-realaudio\0"
-    "rtf\0" APPLICATION_STR "rtf\0"
-    "shtml\0" TEXT_STR "html\0"
-    "smf\0" AUDIO_STR "midi\0"
-    "snd\0" AUDIO_STR "basic\0"
-    "spl\0" APPLICATION_STR "futuresplash\0"
-    "ssm\0" APPLICATION_STR "streamingmedia\0"
-    "swf\0" APPLICATION_STR "x-shockwave-flash\0"
-    "tar\0" APPLICATION_STR "tar\0"
-    "tcl\0" APPLICATION_STR "x-tcl\0"
-    "text\0" TEXT_STR "plain\0"
-    "tif\0" IMAGE_STR "tiff\0"
-    "tiff\0" IMAGE_STR "tiff\0"
-    "txt\0" TEXT_STR "plain\0"
-    "ulw\0" AUDIO_STR "basic\0"
-    "wav\0" AUDIO_STR "wav\0"
-    "wax\0" AUDIO_STR "x-ms-wax\0"
-    "wm\0" VIDEO_STR "x-ms-wm\0"
-    "wma\0" AUDIO_STR "x-ms-wma\0"
-    "wmv\0" VIDEO_STR "x-ms-wmv\0"
-    "wvx\0" VIDEO_STR "x-ms-wvx\0"
-    "xbm\0" IMAGE_STR "x-xbitmap\0"
-    "xml\0" TEXT_STR "xml\0"
-    "xsl\0" TEXT_STR "xml\0"
-    "z\0" APPLICATION_STR "x-compress\0"
-    "zip\0" APPLICATION_STR "zip\0"
-    "\0";
-/* *** end *** */
-
 /*!
  * module variables - Globals, static and externs.
  */
 
-static struct document_type_t gMediaTypeList[NUM_MEDIA_TYPES];
-
 /*! Global variable. A local dir which serves as webserver root. */
-EXPORT_SPEC membuffer gDocumentRootDir;
+membuffer gDocumentRootDir;
 
 /*! XML document. */
 static ithread_mutex_t gWebMutex;
 UPNPLIB_EXTERN str_int_entry Http_Header_Names[NUM_HTTP_HEADER_NAMES];
 
-struct xml_alias_t {
-    /*! name of DOC from root; e.g.: /foo/bar/mydesc.xml */
-    membuffer name;
-    /*! the XML document contents */
-    membuffer doc;
-    /*! . */
-    time_t last_modified;
-    /*! . */
-    int* ct;
-};
-
-#if 0
 struct xml_alias_t {
   public:
     /*! name of DOC from root; e.g.: /foo/bar/mydesc.xml */
@@ -248,33 +162,65 @@ struct xml_alias_t {
     membuffer doc{};
     /*! . */
     time_t last_modified{};
-    /*! . */
-    int* ct{nullptr};
+    /*! pointer to ct, only for downstream compatibility */
+    // int* ct{&m_ct};
+    int* ct{nullptr}; // to be compatible; will be initialized with this->set()
+  private:
+    int m_ct{};
 
+  public:
     // Constructor
     xml_alias_t() {
-        TRACE("construct compa::xml_alias_t");
+        TRACE2(this, " Construct xml_alias_t()");
         this->name.size_inc = 5;
         this->doc.size_inc = 5;
     }
 
     // Destructor
     ~xml_alias_t() {
-        TRACE("destruct compa::xml_alias_t");
+        TRACE2(this, " Destruct xml_alias_t()");
         // Free possible allocated membuffer.
         // this->clear(); // TODO: This will segfault.
+    }
+
+    // Copy constructor
+    xml_alias_t(const xml_alias_t& that) {
+        TRACE2(this, " Executing xml_alias_t copy constructor()");
+        int mutex_err = pthread_mutex_trylock(&gWebMutex);
+        this->name = that.name;
+        this->doc = that.doc;
+        this->last_modified = that.last_modified;
+        this->m_ct = that.m_ct;
+        this->ct = (that.ct == nullptr) ? nullptr : &m_ct;
+        if (mutex_err == 0)
+            pthread_mutex_unlock(&gWebMutex);
+    }
+
+    // Copy assignment operator
+    xml_alias_t& operator=(xml_alias_t that) {
+        TRACE2(this, " Executing xml_alias_t assignment operator=");
+        // No need to protect with a mutex. This swapping from the stack is
+        // thread safe.
+        std::swap(this->name, that.name);
+        std::swap(this->doc, that.doc);
+        std::swap(this->last_modified, that.last_modified);
+        std::swap(this->m_ct, that.m_ct);
+        this->ct = (that.ct == nullptr) ? nullptr : &m_ct;
+
+        // by convention, always return *this
+        return *this;
     }
 
     // Methods
     int set(const char* a_alias_name, const char* a_alias_content,
             size_t a_alias_content_length,
             time_t a_last_modified = time(nullptr)) {
-        TRACE("executing compa::xml_alias_t::set()");
+        TRACE2(this, " Executing xml_alias_t::set()");
 
         if (a_alias_content == nullptr ||
             (a_alias_name != nullptr && a_alias_content == this->doc.buf)) {
-            TRACE("return compa::xml_alias_t::set() with "
-                  "UPNP_E_INVALID_ARGUMENT");
+            TRACE2(this, " Return xml_alias_t::set() with "
+                         "UPNP_E_INVALID_ARGUMENT");
             return UPNP_E_INVALID_ARGUMENT;
         }
 
@@ -311,11 +257,11 @@ struct xml_alias_t {
             TRACE("  set: allocate membuffer doc");
             this->doc = tmp_doc;
             this->last_modified = a_last_modified;
-            m_requested = 1;
-            ct = &m_requested;
+            m_ct = 1;
+            this->ct = &m_ct;
 
             return UPNP_E_SUCCESS;
-        } while (0);
+        } while (0); // Seems the "loop" is only used to have breaks.
         /* error handler */
         /* free temp vars */
         TRACE("  set: already allocated membuffer name freed due to error");
@@ -323,20 +269,20 @@ struct xml_alias_t {
         TRACE("  set: already allocated membuffer doc freed due to error");
         membuffer_destroy(&tmp_doc);
 
-        TRACE("return compa::xml_alias_t::set() with "
-              "UPNP_E_OUTOF_MEMORY");
+        TRACE2(this, " Return xml_alias_t::set() with "
+                     "UPNP_E_OUTOF_MEMORY");
         return UPNP_E_OUTOF_MEMORY;
     }
 
-    bool is_valid() const { return m_requested > 0; }
+    bool is_valid() const { return m_ct > 0; }
 
     void release() {
-        TRACE("executing compa::xml_alias_t::release()");
+        TRACE2(this, " Executing xml_alias_t::release()");
         int mutex_err = pthread_mutex_trylock(&gWebMutex);
         /* ignore invalid alias */
-        if (m_requested > 0) {
-            m_requested--;
-            if (m_requested <= 0) {
+        if (m_ct > 0) {
+            m_ct--;
+            if (m_ct <= 0) {
                 this->clear();
             } else {
                 TRACE("  release: nothing released, more than one time "
@@ -345,13 +291,12 @@ struct xml_alias_t {
         } else {
             TRACE("  release: nothing to release");
         }
-        if (mutex_err == 0) {
+        if (mutex_err == 0)
             pthread_mutex_unlock(&gWebMutex);
-        }
     }
 
     void clear() {
-        TRACE("executing compa::xml_alias_t::clear()");
+        TRACE2(this, " Executing xml_alias_t::clear()");
         int mutex_err = pthread_mutex_trylock(&gWebMutex);
         if (this->name.buf != nullptr) {
             TRACE("  clear: destroy membuffer name");
@@ -363,39 +308,18 @@ struct xml_alias_t {
         }
         this->last_modified = 0;
         this->ct = nullptr;
-        m_requested = 0;
-        if (mutex_err == 0) {
+        m_ct = 0;
+        if (mutex_err == 0)
             pthread_mutex_unlock(&gWebMutex);
-        }
     }
-
-  private:
-    int m_requested{};
 };
-#endif
-static struct xml_alias_t gAliasDoc;
+static xml_alias_t gAliasDoc;
 
-/*!
- * \brief Decodes list and stores it in gMediaTypeList.
- */
-static UPNP_INLINE void media_list_init(void) {
-    int i;
-    const char* s = gEncodedMediaTypes;
-    struct document_type_t* doc_type;
 
-    for (i = 0; *s != '\0'; i++) {
-        doc_type = &gMediaTypeList[i];
-        doc_type->file_ext = s;
-        /* point to type. */
-        s += strlen(s) + 1;
-        doc_type->content_type = gMediaTypes[(int)*s];
-        /* point to subtype. */
-        s++;
-        doc_type->content_subtype = s;
-        /* next entry. */
-        s += strlen(s) + 1;
-    }
-    assert(i == NUM_MEDIA_TYPES);
+// This function do nothing. There is no media_list to initialize anymore with
+// compatible code. It is only callable for compatibility.
+static UPNP_INLINE void media_list_init() {
+    TRACE("Executing media_list_init()")
 }
 
 /*!
@@ -403,40 +327,29 @@ static UPNP_INLINE void media_list_init(void) {
  * subtype.
  *
  * \return
- * \li \c 0 on success
- * \li \c -1 on error
+ * \li \c 0  on success
+ * \li \c -1 if not found
  */
 static UPNP_INLINE int search_extension(
     /*! [in] . */
-    const char* extension,
+    const char* a_extension,
     /*! [out] . */
-    const char** con_type,
+    const char** a_con_type,
     /*! [out] . */
-    const char** con_subtype) {
-    int top, mid, bot;
-    int cmp;
+    const char** a_con_subtype) {
+    TRACE("Executing search_extension()")
 
-    top = 0;
-    bot = NUM_MEDIA_TYPES - 1;
+    const upnplib::Document_meta* filetype =
+        upnplib::select_filetype(std::string_view(a_extension));
 
-    while (top <= bot) {
-        mid = (top + bot) / 2;
-        cmp = strcasecmp(extension, gMediaTypeList[mid].file_ext);
-        if (cmp > 0) {
-            /* look below mid. */
-            top = mid + 1;
-        } else if (cmp < 0) {
-            /* look above mid. */
-            bot = mid - 1;
-        } else {
-            /* cmp == 0 */
-            *con_type = gMediaTypeList[mid].content_type;
-            *con_subtype = gMediaTypeList[mid].content_subtype;
-            return 0;
-        }
+    if (filetype == nullptr) {
+        TRACE("  search_extension: return with -1");
+        return -1;
     }
+    *a_con_type = filetype->type.c_str();
+    *a_con_subtype = filetype->subtype.c_str();
 
-    return -1;
+    return 0;
 }
 
 /*!
@@ -446,6 +359,8 @@ static UPNP_INLINE int search_extension(
  *
  * \return
  * \li \c 0 on success.
+ * \li \c UPNP_E_FILE_NOT_FOUND - on invalid filename.
+ * \li \c UPNP_E_INVALID_ARGUMENT- on invalid fileInfo.
  * \li \c UPNP_E_OUTOF_MEMORY - on memory allocation failures.
  */
 static UPNP_INLINE int get_content_type(
@@ -453,6 +368,11 @@ static UPNP_INLINE int get_content_type(
     const char* filename,
     /*! [out] . */
     UpnpFileInfo* fileInfo) {
+    if (!filename)
+        return UPNP_E_FILE_NOT_FOUND;
+    if (!fileInfo)
+        return UPNP_E_INVALID_ARGUMENT;
+
     const char* extension;
     const char* type{};
     const char* subtype{};
@@ -464,9 +384,10 @@ static UPNP_INLINE int get_content_type(
     UpnpFileInfo_set_ContentType(fileInfo, NULL);
     /* get ext */
     extension = strrchr(filename, '.');
-    if (extension != NULL)
+    if (extension != NULL) {
         if (search_extension(extension + 1, &type, &subtype) == 0)
             ctype_found = 1;
+    }
     if (!ctype_found) {
         /* unknown content type */
         type = gMediaTypes[APPLICATION_INDEX];
@@ -493,13 +414,9 @@ static UPNP_INLINE int get_content_type(
  * \brief Initialize the global XML document. Allocate buffers for the XML
  * document.
  */
-static UPNP_INLINE void glob_alias_init(void) {
-    struct xml_alias_t* alias = &gAliasDoc;
-
-    membuffer_init(&alias->doc);
-    membuffer_init(&alias->name);
-    alias->ct = NULL;
-    alias->last_modified = 0;
+static UPNP_INLINE void glob_alias_init() {
+    TRACE("Executing glob_alias_init()")
+    gAliasDoc.clear();
 }
 
 /*!
@@ -509,8 +426,11 @@ static UPNP_INLINE void glob_alias_init(void) {
  */
 static UPNP_INLINE int is_valid_alias(
     /*! [in] XML alias object. */
-    const struct xml_alias_t* alias) {
-    return alias->doc.buf != NULL;
+    const xml_alias_t* alias) {
+    TRACE("Executing is_valid_alias()")
+    if (alias == nullptr)
+        return false;
+    return alias->is_valid();
 }
 
 /*!
@@ -519,79 +439,38 @@ static UPNP_INLINE int is_valid_alias(
  */
 static void alias_grab(
     /*! [out] XML alias object. */
-    struct xml_alias_t* alias) {
-    ithread_mutex_lock(&gWebMutex);
-    assert(is_valid_alias(&gAliasDoc));
-    memcpy(alias, &gAliasDoc, sizeof(struct xml_alias_t));
-    *alias->ct = *alias->ct + 1;
-    ithread_mutex_unlock(&gWebMutex);
+    xml_alias_t* a_alias) {
+    TRACE("Executing alias_grab()")
+    int mutex_err = pthread_mutex_trylock(&gWebMutex);
+    if (a_alias != nullptr) {
+        TRACE("  alias_grab: copy struct gAliasDoc");
+        *a_alias = gAliasDoc;
+        if (a_alias->ct != nullptr)
+            *a_alias->ct = *a_alias->ct + 1;
+    } else {
+        TRACE("  alias_grab: nothing copied to nullptr");
+    }
+    if (mutex_err == 0)
+        pthread_mutex_unlock(&gWebMutex);
 }
 
 /*!
  * \brief Release the XML document referred to by the input parameter. Free
  * the allocated buffers associated with this object.
  */
-[[maybe_unused]] static void alias_release(
+static void alias_release(
     /*! [in] XML alias object. */
-    struct xml_alias_t* alias) {
-    ithread_mutex_lock(&gWebMutex);
-    /* ignore invalid alias */
-    if (!is_valid_alias(alias)) {
-        ithread_mutex_unlock(&gWebMutex);
-        return;
-    }
-    assert(*alias->ct > 0);
-    *alias->ct -= 1;
-    if (*alias->ct <= 0) {
-        membuffer_destroy(&alias->doc);
-        membuffer_destroy(&alias->name);
-        umock::stdlib_h.free(alias->ct);
-    }
-    ithread_mutex_unlock(&gWebMutex);
+    xml_alias_t* a_alias) {
+    TRACE("Executing alias_release()");
+    if (a_alias != nullptr)
+        a_alias->release();
 }
 
 int web_server_set_alias(const char* alias_name, const char* alias_content,
                          size_t alias_content_length, time_t last_modified) {
-    int ret_code;
-    struct xml_alias_t alias;
-
-    alias_release(&gAliasDoc);
-    if (alias_name == NULL) {
-        /* don't serve aliased doc anymore */
-        return 0;
-    }
-    assert(alias_content != NULL);
-    membuffer_init(&alias.doc);
-    membuffer_init(&alias.name);
-    alias.ct = NULL;
-    do {
-        /* insert leading /, if missing */
-        if (*alias_name != '/')
-            if (membuffer_assign_str(&alias.name, "/") != 0)
-                break; /* error; out of mem */
-        ret_code = membuffer_append_str(&alias.name, alias_name);
-        if (ret_code != 0)
-            break; /* error */
-        if ((alias.ct = (int*)malloc(sizeof(int))) == NULL)
-            break; /* error */
-        *alias.ct = 1;
-        membuffer_attach(&alias.doc, (char*)alias_content,
-                         alias_content_length);
-        alias.last_modified = last_modified;
-        /* save in module var */
-        ithread_mutex_lock(&gWebMutex);
-        gAliasDoc = alias;
-        ithread_mutex_unlock(&gWebMutex);
-
-        return 0;
-    } while (0);
-    /* error handler */
-    /* free temp alias */
-    membuffer_destroy(&alias.name);
-    membuffer_destroy(&alias.doc);
-    umock::stdlib_h.free(alias.ct);
-
-    return UPNP_E_OUTOF_MEMORY;
+    TRACE("Executing web_server_set_alias()")
+    return gAliasDoc.set(alias_name, alias_content, alias_content_length,
+                         last_modified);
 }
 
 int web_server_init() {
@@ -621,13 +500,13 @@ int web_server_init() {
     return ret;
 }
 
-void web_server_destroy(void) {
+void web_server_destroy() {
     if (bWebServerState == WEB_SERVER_ENABLED) {
         membuffer_destroy(&gDocumentRootDir);
         alias_release(&gAliasDoc);
 
         ithread_mutex_lock(&gWebMutex);
-        memset(&gAliasDoc, 0, sizeof(struct xml_alias_t));
+        gAliasDoc.clear();
         ithread_mutex_unlock(&gWebMutex);
 
         ithread_mutex_destroy(&gWebMutex);

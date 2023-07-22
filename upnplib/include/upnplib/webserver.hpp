@@ -35,7 +35,7 @@ struct Document_meta {
  *                << ", subtype = " << doc_meta->subtype << "\n";
  *  }
  */
-const Document_meta* select_filetype(
+UPNPLIB_API const Document_meta* select_filetype(
     /*! [in] . */
     std::string_view a_extension);
 

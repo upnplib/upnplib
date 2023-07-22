@@ -1,9 +1,11 @@
+#ifndef COMPA_NET_HTTP_WEBSERVER_HPP
+#define COMPA_NET_HTTP_WEBSERVER_HPP
 /**************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-12-09
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,9 +33,6 @@
  *
  **************************************************************************/
 // Last compare with pupnp original source file on 2022-12-09, ver 1.14.15
-
-#ifndef UPNPLIB_GENLIB_NET_HTTP_WEBSERVER_HPP
-#define UPNPLIB_GENLIB_NET_HTTP_WEBSERVER_HPP
 
 #include "httpparser.hpp"
 #include "sock.hpp"
@@ -70,33 +69,33 @@ struct SendInstruction {
  * \li \c 0 - OK
  * \li \c UPNP_E_OUTOF_MEMORY
  */
-EXPORT_SPEC int web_server_init(void);
+UPNPLIB_API int web_server_init();
 
 /*!
  * \brief Release memory allocated for the global web server root
  * directory and the global XML document. Resets the flag bWebServerState
  * to WEB_SERVER_DISABLED.
  */
-EXPORT_SPEC void web_server_destroy(void);
+UPNPLIB_API void web_server_destroy();
 
 /*!
  * \brief Replaces current alias with the given alias. To remove the current
- * alias, set alias_name to NULL.
+ * alias, set alias_name to nullptr.
  *
  * \note alias_content is not freed here
  *
  * \return
- * \li \c 0 - OK
+ * \li \c UPNP_E_SUCCESS
  * \li \c UPNP_E_OUTOF_MEMORY
  */
-EXPORT_SPEC int web_server_set_alias(
+UPNPLIB_API int web_server_set_alias(
     /*! [in] Webserver name of alias; created by caller and freed by caller
      * (doesn't even have to be malloc()d. */
     const char* alias_name,
     /*! [in] The xml doc; this is allocated by the caller; and freed by
      * the web server. */
     const char* alias_content,
-    /*! [in] Length of alias body in bytes. */
+    /*! [in] Length of alias body in bytes without terminating '\0'. */
     size_t alias_content_length,
     /*! [in] Time when the contents of alias were last changed (local time).
      */
@@ -109,7 +108,7 @@ EXPORT_SPEC int web_server_set_alias(
  *
  * \return Integer.
  */
-EXPORT_SPEC int web_server_set_root_dir(
+UPNPLIB_API int web_server_set_root_dir(
     /*! [in] String having the root directory for the document. */
     const char* root_dir);
 
@@ -117,7 +116,7 @@ EXPORT_SPEC int web_server_set_root_dir(
  * \brief Main entry point into web server; Handles HTTP GET and HEAD
  * requests.
  */
-EXPORT_SPEC void web_server_callback(
+UPNPLIB_API void web_server_callback(
     /*! [in] . */
     http_parser_t* parser,
     /*! [in] . */
@@ -125,4 +124,4 @@ EXPORT_SPEC void web_server_callback(
     /*! [in,out] . */
     SOCKINFO* info);
 
-#endif /* UPNPLIB_GENLIB_NET_HTTP_WEBSERVER_HPP */
+#endif // COMPA_NET_HTTP_WEBSERVER_HPP

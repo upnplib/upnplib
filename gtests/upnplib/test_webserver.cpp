@@ -1,9 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
-
-// Include source code for testing. So we have also direct access to static
-// functions which need to be tested.
-#include "upnplib/src/net/http/webserver.cpp"
+// Redistribution only with this Copyright remark. Last modified: 2023-07-24
 
 #include "upnplib/webserver.hpp"
 #include "gmock/gmock.h"

@@ -1,5 +1,4 @@
 Next steps to do:
-* Rework test_UpnpFileInfo.cpp without using s_UpnpFileInfo aka CUpnpFileInfo.
 * Rework compa webserver compile unit.
 * Rework test_httpreadwrite.cpp
 * Improve test_sock.cpp with ssl tests
