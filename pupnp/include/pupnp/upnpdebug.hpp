@@ -1,16 +1,16 @@
-#ifndef COMPA_UPNPDEBUG_HPP
-#define COMPA_UPNPDEBUG_HPP
+#ifndef PUPNP_UPNPDEBUG_HPP
+#define PUPNP_UPNPDEBUG_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-02
+// Redistribution only with this Copyright remark. Last modified: 2023-07-26
 
-#include <upnplib/visibility.hpp>
 #include <upnpdebug.hpp>
+#include <UpnpGlobal.hpp> // for EXPORT_SPEC
 
-namespace compa {
+namespace pupnp {
 
 // Helper class
 // ============
-class UPNPLIB_API CLogging { /*
+class EXPORT_SPEC CLogging { /*
  * Use it for example with:
     class CLogging loggingObj; // Output only with build type DEBUG.
  * or
@@ -18,10 +18,10 @@ class UPNPLIB_API CLogging { /*
  * or other loglevel.
  */
   public:
-    CLogging(Upnp_LogLevel a_loglevel = UPNP_ALL);
+    CLogging(Upnp_LogLevel a_loglevel = UPNP_INFO);
     virtual ~CLogging();
 };
 
-} // namespace compa
+} // namespace pupnp
 
-#endif // COMPA_UPNPDEBUG_HPP
+#endif // PUPNP_UPNPDEBUG_HPP

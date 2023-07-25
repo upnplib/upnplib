@@ -1,10 +1,12 @@
+#ifndef UPNPLIB_DEBUG_HPP
+#define UPNPLIB_DEBUG_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-24
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-26
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,15 +35,12 @@
  ******************************************************************************/
 // Last compare with pupnp original source file on 2023-01-11, ver 1.14.15
 
-#ifndef UPNPLIB_DEBUG_HPP
-#define UPNPLIB_DEBUG_HPP
-
 /*!
  * \file
  */
 
-#include "UpnpGlobal.hpp" /* for UPNP_INLINE */
-#include "upnp.hpp"       // for UPNP_E_SUCCESS
+#include <UpnpGlobal.hpp> /* for UPNP_INLINE */
+#include <upnp.hpp>       // for UPNP_E_SUCCESS
 #include <stdio.h>
 
 /*! \name Other debugging features
@@ -102,11 +101,11 @@ typedef enum Upnp_LogLevel_e {
  *
  * \return -1 if fails or UPNP_E_SUCCESS if succeeds.
  */
-EXPORT_SPEC int UpnpInitLog(void);
+EXPORT_SPEC int UpnpInitLog();
 
 #if defined NDEBUG && !defined UPNP_DEBUG_C
 #define UpnpInitLog UpnpInitLog_Inlined
-static UPNP_INLINE int UpnpInitLog_Inlined(void) { return UPNP_E_SUCCESS; }
+static UPNP_INLINE int UpnpInitLog_Inlined() { return UPNP_E_SUCCESS; }
 #endif
 /*!
  * \brief Set the log level (see \c Upnp_LogLevel).
@@ -126,11 +125,11 @@ static UPNP_INLINE void UpnpSetLogLevel_Inlined(Upnp_LogLevel log_level) {
 /*!
  * \brief Closes the log files.
  */
-EXPORT_SPEC void UpnpCloseLog(void);
+EXPORT_SPEC void UpnpCloseLog();
 
 #if defined NDEBUG && !defined UPNP_DEBUG_C
 #define UpnpCloseLog UpnpCloseLog_Inlined
-static UPNP_INLINE void UpnpCloseLog_Inlined(void) {}
+static UPNP_INLINE void UpnpCloseLog_Inlined() {}
 #endif
 
 /*!
@@ -207,16 +206,16 @@ EXPORT_SPEC void UpnpPrintf(
 #if defined NDEBUG && !defined UPNP_DEBUG_C
 #define UpnpPrintf UpnpPrintf_Inlined
 // static UPNP_INLINE void UpnpPrintf_Inlined(Upnp_LogLevel DLevel,
-// 	Dbg_Module Module,
-// 	const char *DbgFileName,
-// 	int DbgLineNo,
-// 	const char *FmtStr,
-// 	...)
+//      Dbg_Module Module,
+//      const char *DbgFileName,
+//      int DbgLineNo,
+//      const char *FmtStr,
+//      ...)
 // #if (__GNUC__ >= 3)
-// 	/* This enables printf like format checking by the compiler. */
-// 	__attribute__((format(__printf__, 5, 6)))
+//      /* This enables printf like format checking by the compiler. */
+//      __attribute__((format(__printf__, 5, 6)))
 // #endif
-// 	;
+//      ;
 static UPNP_INLINE void UpnpPrintf_Inlined(Upnp_LogLevel DLevel,
                                            Dbg_Module Module,
                                            const char* DbgFileName,
@@ -231,4 +230,4 @@ static UPNP_INLINE void UpnpPrintf_Inlined(Upnp_LogLevel DLevel,
 }
 #endif /* DEBUG */
 
-#endif /* UPNPLIB_DEBUG_HPP */
+#endif // UPNPLIB_DEBUG_HPP

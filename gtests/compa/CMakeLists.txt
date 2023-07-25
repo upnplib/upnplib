@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-12
+# Redistribution only with this Copyright remark. Last modified: 2023-07-26
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -153,13 +153,10 @@ endif()
 add_executable(test_miniserver-pst
 #---------------------------------
     ./test_miniserver.cpp
-    ${COMPA_SOURCE_DIR}/src/api/upnpdebug.cpp
-    ${COMPA_SOURCE_DIR}/src/api/compa/upnpdebug.cpp
+    ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 target_include_directories(test_miniserver-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
-    PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/inc
-    PRIVATE ${COMPA_SOURCE_DIR}/inc
 )
 target_compile_definitions(test_miniserver-pst
     PRIVATE
@@ -186,7 +183,7 @@ add_test(NAME ctest_miniserver-pst COMMAND test_miniserver-pst --gtest_shuffle
 add_executable(test_miniserver-cst
 #---------------------------------
     ./test_miniserver.cpp
-    ${COMPA_SOURCE_DIR}/src/api/compa/upnpdebug.cpp
+    ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 target_include_directories(test_miniserver-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}

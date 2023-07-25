@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-19
+# Redistribution only with this Copyright remark. Last modified: 2023-07-26
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -44,6 +44,7 @@ if(UPNPLIB_DEF_GOOGLETEST)
     set(UPNPLIB_DEF_WEBSERVER YES)
     set(UPNPLIB_DEF_CLIENT YES)
     set(UPNPLIB_DEF_OPTSSDP YES)
+    set(UPNPLIB_DEF_GENA YES)
 endif()
 
 if(UPNPLIB_DEF_SAMPLES)
@@ -161,17 +162,22 @@ set(COMPA_INCLUDE_DIRECTORIES
 )
 
 add_compile_definitions(
-    $<$<BOOL:${UPNPLIB_DEF_CLIENT}>:UPNP_HAVE_CLIENT>
-    $<$<BOOL:${UPNPLIB_DEF_DEVICE}>:UPNP_HAVE_DEVICE>
-    $<$<BOOL:${UPNPLIB_DEF_WEBSERVER}>:UPNP_HAVE_WEBSERVER>
-    $<$<BOOL:${UPNPLIB_DEF_SSDP}>:UPNP_HAVE_SSDP>
-    $<$<BOOL:${UPNPLIB_DEF_OPTSSDP}>:UPNP_HAVE_OPTSSDP>
-    $<$<BOOL:${UPNPLIB_DEF_SOAP}>:UPNP_HAVE_SOAP>
-    $<$<BOOL:${UPNPLIB_DEF_GENA}>:UPNP_HAVE_GENA>
-    $<$<BOOL:${UPNPLIB_DEF_IPV6}>:UPNP_ENABLE_IPV6>
-    $<$<BOOL:${UPNPLIB_DEF_BLOCKTCP}>:UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS>
-    $<$<BOOL:${UPNPLIB_DEF_DEBUG}>:UPNP_HAVE_DEBUG>
-    $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
+        $<$<BOOL:${UPNPLIB_DEF_WEBSERVER}>:UPNP_HAVE_WEBSERVER>
+        $<$<BOOL:${UPNPLIB_DEF_SSDP}>:UPNP_HAVE_SSDP>
+        $<$<BOOL:${UPNPLIB_DEF_SOAP}>:UPNP_HAVE_SOAP>
+        $<$<BOOL:${UPNPLIB_DEF_GENA}>:UPNP_HAVE_GENA>
+        $<$<BOOL:${UPNPLIB_DEF_IPV6}>:UPNP_ENABLE_IPV6>
+)
+
+set(COMPA_COMPILE_DEFINITIONS
+    PUBLIC
+        $<$<BOOL:${UPNPLIB_DEF_CLIENT}>:UPNP_HAVE_CLIENT>
+        $<$<BOOL:${UPNPLIB_DEF_DEVICE}>:UPNP_HAVE_DEVICE>
+        $<$<BOOL:${UPNPLIB_DEF_OPTSSDP}>:UPNP_HAVE_OPTSSDP>
+        $<$<BOOL:${UPNPLIB_DEF_BLOCKTCP}>:UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS>
+        $<$<BOOL:${UPNPLIB_DEF_DEBUG}>:UPNP_HAVE_DEBUG>
+        $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
+        $<$<BOOL:${UPNPLIB_DEF_TOOLS}>:UPNP_HAVE_TOOLS>
 )
 
 set_source_files_properties(
@@ -200,6 +206,7 @@ if(NOT WIN32)
             inc/not_win32
     )
     target_compile_definitions(compa_shared
+            ${COMPA_COMPILE_DEFINITIONS}
         PRIVATE UPNPLIB_EXPORTS
     )
     target_link_libraries(compa_shared
@@ -223,6 +230,9 @@ if(NOT WIN32)
             # will not complain an error but will not use <headers.h> that
             # isn't available.
             inc/not_win32
+    )
+    target_compile_definitions(compa_static
+            ${COMPA_COMPILE_DEFINITIONS}
     )
     target_link_libraries(compa_static
         PUBLIC
@@ -250,6 +260,7 @@ else() # WIN32
         ${COMPA_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(compa_shared
+            ${COMPA_COMPILE_DEFINITIONS}
         PRIVATE
             UPNPLIB_EXPORTS
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
@@ -278,6 +289,7 @@ else() # WIN32
         ${COMPA_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(compa_static
+            ${COMPA_COMPILE_DEFINITIONS}
         PRIVATE
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )

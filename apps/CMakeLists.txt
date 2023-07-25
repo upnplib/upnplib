@@ -16,7 +16,6 @@ add_executable(upnplib-psh
 )
 target_include_directories(upnplib-psh
     PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
-    PRIVATE ${COMPA_SOURCE_DIR}/include
 )
 target_link_libraries(upnplib-psh
     PRIVATE pupnp_shared
@@ -29,7 +28,6 @@ add_executable(upnplib-pst
 )
 target_include_directories(upnplib-pst
     PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
-    PRIVATE ${COMPA_SOURCE_DIR}/include
 )
 target_link_libraries(upnplib-pst
     PRIVATE

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-16
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-25
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,8 @@
  **************************************************************************/
 
 #include <config.hpp>
+
+#if EXCLUDE_MINISERVER == 0
 
 /*!
  * \file
@@ -978,9 +980,9 @@ static int get_miniserver_sockets(
     int err_init_6;
     int err_init_6UlaGua;
 
-    struct s_SocketStuff ss4;
-    struct s_SocketStuff ss6;
-    struct s_SocketStuff ss6UlaGua;
+    s_SocketStuff ss4;
+    s_SocketStuff ss6;
+    s_SocketStuff ss6UlaGua;
 
     /* Create listen socket for IPv4/IPv6. An error here may indicate
      * that we don't have an IPv4/IPv6 stack. */
@@ -995,6 +997,9 @@ static int get_miniserver_sockets(
         goto error;
     }
 #endif
+    std::cout << "DEBUG! err_init_4 = " << err_init_4
+              << ", err_init_6 = " << err_init_6
+              << ", err_init_6UlaGua = " << err_init_6UlaGua << "\n";
     if (err_init_4 && (err_init_6 || err_init_6UlaGua)) {
         UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
                    "get_miniserver_sockets: no protocols available\n");
@@ -1192,8 +1197,7 @@ int StartMiniServer(
         return ret_code;
     }
     /* SSDP socket for discovery/advertising. */
-    TRACE("Calling get_ssdp_sockets()")
-    ret_code = get_ssdp_sockets((::MiniServerSockArray*)miniSocket);
+    ret_code = get_ssdp_sockets(miniSocket);
     if (ret_code != UPNP_E_SUCCESS) {
         sock_close(miniSocket->miniServerSock4);
         sock_close(miniSocket->miniServerSock6);
@@ -1293,3 +1297,4 @@ int StopMiniServer() {
 
     return 0;
 }
+#endif /* EXCLUDE_MINISERVER */

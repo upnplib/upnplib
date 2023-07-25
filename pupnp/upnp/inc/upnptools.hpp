@@ -1,9 +1,11 @@
+#ifndef PUPNP_UPNPTOOLS_HPP
+#define PUPNP_UPNPTOOLS_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-20
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft,  Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-25
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,9 +32,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
-#ifndef UPNPLIB_TOOLS_HPP
-#define UPNPLIB_TOOLS_HPP
+// Last compare with pupnp original source file on 2023-07-24, ver 1.14.17
 
 /*!
  * \file
@@ -48,8 +48,7 @@
  * @{
  */
 
-#include "ixml.hpp"       /* for IXML_Document */
-#include "UpnpGlobal.hpp" // for EXPORT_SPEC
+#include <ixml.hpp> /* for IXML_Document */
 // #include "upnpconfig.h" /* for UPNP_HAVE_TOOLS */
 
 /*!
@@ -62,9 +61,6 @@
 EXPORT_SPEC const char* UpnpGetErrorMessage(
     /*! [in] The SDK error code to convert. */
     int errorcode);
-
-/* Function declarations only if tools compiled into the library */
-#if UPNP_HAVE_TOOLS
 
 /*!
  * \brief Combines a base URL and a relative URL into a single absolute URL.
@@ -262,6 +258,4 @@ EXPORT_SPEC int UpnpAddToPropertySet(
 
 /*! @} */
 
-#endif /* UPNP_HAVE_TOOLS */
-
-#endif /* UPNPLIB_TOOLS_HPP */
+#endif /* PUPNP_UPNPTOOLS_HPP */

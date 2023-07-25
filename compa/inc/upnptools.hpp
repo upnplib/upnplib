@@ -1,9 +1,11 @@
+#ifndef COMPA_UPNPTOOLS_HPP
+#define COMPA_UPNPTOOLS_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-20
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft,  Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,9 +32,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
-#ifndef UPNPLIB_TOOLS_HPP
-#define UPNPLIB_TOOLS_HPP
+// Last compare with pupnp original source file on 2023-07-24, ver 1.14.17
 
 /*!
  * \file
@@ -48,8 +48,7 @@
  * @{
  */
 
-#include "ixml.hpp"       /* for IXML_Document */
-#include "UpnpGlobal.hpp" // for EXPORT_SPEC
+#include <ixml.hpp> /* for IXML_Document */
 // #include "upnpconfig.h" /* for UPNP_HAVE_TOOLS */
 
 /*!
@@ -59,12 +58,9 @@
  * \return An ASCII text string representation of the error message associated
  *  with the error code or the string "Unknown error code"
  */
-EXPORT_SPEC const char* UpnpGetErrorMessage(
+UPNPLIB_API const char* UpnpGetErrorMessage(
     /*! [in] The SDK error code to convert. */
     int errorcode);
-
-/* Function declarations only if tools compiled into the library */
-#if UPNP_HAVE_TOOLS
 
 /*!
  * \brief Combines a base URL and a relative URL into a single absolute URL.
@@ -80,7 +76,7 @@ EXPORT_SPEC const char* UpnpGetErrorMessage(
  *  \li <tt>UPNP_E_OUTOF_MEMORY</tt>: Insufficient resources exist to
  *              complete this operation.
  */
-EXPORT_SPEC int UpnpResolveURL(
+UPNPLIB_API int UpnpResolveURL(
     /*! [in] The base URL to combine. */
     const char* BaseURL,
     /*! [in] The relative URL to \b BaseURL. */
@@ -102,7 +98,7 @@ EXPORT_SPEC int UpnpResolveURL(
  *  \li <tt>UPNP_E_OUTOF_MEMORY</tt>: Insufficient resources exist to
  *              complete this operation.
  */
-EXPORT_SPEC int UpnpResolveURL2(
+UPNPLIB_API int UpnpResolveURL2(
     /*! [in] The base URL to combine. */
     const char* BaseURL,
     /*! [in] The relative URL to \b BaseURL. */
@@ -124,7 +120,7 @@ EXPORT_SPEC int UpnpResolveURL2(
  * \return The action node of \b Upnp_Document type or <tt>NULL</tt> if the
  *  operation failed.
  */
-EXPORT_SPEC IXML_Document* UpnpMakeAction(
+UPNPLIB_API IXML_Document* UpnpMakeAction(
     /*! [in] Name of the action request or response. */
     const char* ActionName,
     /*! [in] The service type. */
@@ -149,7 +145,7 @@ EXPORT_SPEC IXML_Document* UpnpMakeAction(
  * \return The action node of \b Upnp_Document type or <tt>NULL</tt> if the
  *  operation failed.
  */
-EXPORT_SPEC IXML_Document* UpnpMakeActionResponse(
+UPNPLIB_API IXML_Document* UpnpMakeActionResponse(
     /*! [in] The action name. */
     const char* ActionName,
     /*! [in] The service type.. */
@@ -178,7 +174,7 @@ EXPORT_SPEC IXML_Document* UpnpMakeActionResponse(
  * invalid. \li <tt>UPNP_E_OUTOF_MEMORY</tt>: Insufficient resources exist to
  *      complete this operation.
  */
-EXPORT_SPEC int UpnpAddToAction(
+UPNPLIB_API int UpnpAddToAction(
     /*! [in,out] A pointer to store the action document node. */
     IXML_Document** ActionDoc,
     /*! [in] The action name. */
@@ -208,7 +204,7 @@ EXPORT_SPEC int UpnpAddToAction(
  * invalid. \li <tt>UPNP_E_OUTOF_MEMORY</tt>: Insufficient resources exist to
  *      complete this operation.
  */
-EXPORT_SPEC int UpnpAddToActionResponse(
+UPNPLIB_API int UpnpAddToActionResponse(
     /*! [in,out] Pointer to a document to store the action document node. */
     IXML_Document** ActionResponse,
     /*! [in] The action name. */
@@ -228,7 +224,7 @@ EXPORT_SPEC int UpnpAddToActionResponse(
  *
  * \return <tt>NULL</tt> on failure, or the property-set document node.
  */
-EXPORT_SPEC IXML_Document* UpnpCreatePropertySet(
+UPNPLIB_API IXML_Document* UpnpCreatePropertySet(
     /*! [in] The number of argument pairs passed. */
     int NumArg,
     /*! [in] The status variable name and value pair. */
@@ -251,7 +247,7 @@ EXPORT_SPEC IXML_Document* UpnpCreatePropertySet(
  * invalid. \li <tt>UPNP_E_OUTOF_MEMORY</tt>: Insufficient resources exist to
  *      complete this operation.
  */
-EXPORT_SPEC int UpnpAddToPropertySet(
+UPNPLIB_API int UpnpAddToPropertySet(
     /*! [in,out] A pointer to the document containing the property set document
        node. */
     IXML_Document** PropSet,
@@ -262,6 +258,4 @@ EXPORT_SPEC int UpnpAddToPropertySet(
 
 /*! @} */
 
-#endif /* UPNP_HAVE_TOOLS */
-
-#endif /* UPNPLIB_TOOLS_HPP */
+#endif /* COMPA_UPNPTOOLS_HPP */

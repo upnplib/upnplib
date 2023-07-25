@@ -1,12 +1,12 @@
-#ifndef PUPNP_SSDPLIB_HPP
-#define PUPNP_SSDPLIB_HPP
+#ifndef COMPA_SSDPLIB_HPP
+#define COMPA_SSDPLIB_HPP
 /**************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-08
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-25
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,7 +46,7 @@
 //#include "UpnpInet.h"
 //#include "httpparser.h"
 //#include "httpreadwrite.h"
-#include "miniserver.hpp"
+#include <miniserver.hpp>
 
 //#include <errno.h>
 //#include <setjmp.h>
@@ -178,7 +178,7 @@ typedef int (*ParserFun)(char*, SsdpEvent*);
  *
  * \return UPNP_E_SUCCESS if successful else appropriate error.
  */
-EXPORT_SPEC int AdvertiseAndReply(
+UPNPLIB_API int AdvertiseAndReply(
     /* [in] -1 = Send shutdown, 0 = send reply, 1 = Send Advertisement. */
     int AdFlag,
     /* [in] Device handle. */
@@ -245,7 +245,7 @@ void readFromSSDPSocket(
  *
  * \return UPNP_E_SUCCESS if successful else returns appropriate error.
  */
-EXPORT_SPEC int get_ssdp_sockets(
+UPNPLIB_API int get_ssdp_sockets(
     /* [out] Array of SSDP sockets. */
     MiniServerSockArray* out);
 
@@ -288,7 +288,7 @@ void ssdp_handle_ctrlpt_msg(
  *
  * \return 1 if successful else appropriate error.
  */
-EXPORT_SPEC int SearchByTarget(
+UPNPLIB_API int SearchByTarget(
     /* [in] The handle of the client performing the search. */
     int Hnd,
     /* [in] Number of seconds to wait, to collect all the responses. */
@@ -516,4 +516,4 @@ int DeviceShutdown(
 
 /* @} SSDPlib SSDP Library */
 
-#endif /* PUPNP_SSDPLIB_HPP */
+#endif /* COMPA_SSDPLIB_HPP */

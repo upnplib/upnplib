@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-06
+# Redistribution only with this Copyright remark. Last modified: 2023-07-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -47,6 +47,7 @@ if(UPNPLIB_DEF_GOOGLETEST)
     set(UPNPLIB_DEF_WEBSERVER YES)
     set(UPNPLIB_DEF_CLIENT YES)
     set(UPNPLIB_DEF_OPTSSDP YES)
+    set(UPNPLIB_DEF_GENA YES)
 endif()
 
 if(UPNPLIB_DEF_SAMPLES)
@@ -163,17 +164,22 @@ set(PUPNP_INCLUDE_DIRECTORIES
 )
 
 add_compile_definitions(
-    $<$<BOOL:${UPNPLIB_DEF_CLIENT}>:UPNP_HAVE_CLIENT>
-    $<$<BOOL:${UPNPLIB_DEF_DEVICE}>:UPNP_HAVE_DEVICE>
-    $<$<BOOL:${UPNPLIB_DEF_WEBSERVER}>:UPNP_HAVE_WEBSERVER>
-    $<$<BOOL:${UPNPLIB_DEF_SSDP}>:UPNP_HAVE_SSDP>
-    $<$<BOOL:${UPNPLIB_DEF_OPTSSDP}>:UPNP_HAVE_OPTSSDP>
-    $<$<BOOL:${UPNPLIB_DEF_SOAP}>:UPNP_HAVE_SOAP>
-    $<$<BOOL:${UPNPLIB_DEF_GENA}>:UPNP_HAVE_GENA>
-    $<$<BOOL:${UPNPLIB_DEF_IPV6}>:UPNP_ENABLE_IPV6>
-    $<$<BOOL:${UPNPLIB_DEF_BLOCKTCP}>:UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS>
-    $<$<BOOL:${UPNPLIB_DEF_DEBUG}>:UPNP_HAVE_DEBUG>
-    $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
+        $<$<BOOL:${UPNPLIB_DEF_WEBSERVER}>:UPNP_HAVE_WEBSERVER>
+        $<$<BOOL:${UPNPLIB_DEF_SSDP}>:UPNP_HAVE_SSDP>
+        $<$<BOOL:${UPNPLIB_DEF_SOAP}>:UPNP_HAVE_SOAP>
+        $<$<BOOL:${UPNPLIB_DEF_GENA}>:UPNP_HAVE_GENA>
+        $<$<BOOL:${UPNPLIB_DEF_IPV6}>:UPNP_ENABLE_IPV6>
+        $<$<BOOL:${UPNPLIB_DEF_BLOCKTCP}>:UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS>
+)
+
+set(PUPNP_COMPILE_DEFINITIONS
+    PUBLIC
+        $<$<BOOL:${UPNPLIB_DEF_CLIENT}>:UPNP_HAVE_CLIENT>
+        $<$<BOOL:${UPNPLIB_DEF_DEVICE}>:UPNP_HAVE_DEVICE>
+        $<$<BOOL:${UPNPLIB_DEF_OPTSSDP}>:UPNP_HAVE_OPTSSDP>
+        $<$<BOOL:${UPNPLIB_DEF_DEBUG}>:UPNP_HAVE_DEBUG>
+        $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
+        $<$<BOOL:${UPNPLIB_DEF_TOOLS}>:UPNP_HAVE_TOOLS>
 )
 
 
@@ -194,6 +200,7 @@ if(NOT WIN32)
             ./inc/not_win32
     )
     target_compile_definitions(pupnp_shared
+        ${PUPNP_COMPILE_DEFINITIONS}
         PUBLIC UPNPLIB_WITH_NATIVE_PUPNP
         PRIVATE UPNPLIB_EXPORTS
     )
@@ -217,6 +224,7 @@ if(NOT WIN32)
             ./inc/not_win32
     )
     target_compile_definitions(pupnp_static
+        ${PUPNP_COMPILE_DEFINITIONS}
         PUBLIC UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(pupnp_static
@@ -243,6 +251,7 @@ else() # WIN32
         ${PUPNP_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(pupnp_shared
+        ${PUPNP_COMPILE_DEFINITIONS}
         PUBLIC UPNPLIB_WITH_NATIVE_PUPNP
         PRIVATE
             UPNPLIB_EXPORTS
@@ -265,6 +274,7 @@ else() # WIN32
         ${PUPNP_INCLUDE_DIRECTORIES}
     )
     target_compile_definitions(pupnp_static
+        ${PUPNP_COMPILE_DEFINITIONS}
         PUBLIC UPNPLIB_WITH_NATIVE_PUPNP
         PRIVATE
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>

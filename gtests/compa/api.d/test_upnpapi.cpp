@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-21
+// Redistribution only with this Copyright remark. Last modified: 2023-07-26
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpapi.cpp>
@@ -241,8 +241,6 @@ TEST_F(UpnpapiFTestSuite, get_error_message) {
 }
 
 TEST(UpnpapiTestSuite, GetHandleInfo_successful) {
-    // CLogging logObj; // Only usable with build type DEBUG
-
     // Will be filled with a pointer to the requested client info.
     Handle_Info* hinfo_p{nullptr};
 
@@ -313,7 +311,6 @@ TEST(UpnpapiDeathTest, GetHandleInfo_with_nullptr_to_result) {
 
 TEST_F(UpnpapiFTestSuite, UpnpFinish_successful) {
     GTEST_SKIP() << "Work in progress, test must be completed.";
-    // CLogging logObj; // Only usable with build type DEBUG
 
     // Initialize the handle list.
     for (int i = 0; i < NUM_HANDLE; ++i)

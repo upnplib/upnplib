@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-21
+# Redistribution only with this Copyright remark. Last modified: 2023-07-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -194,6 +194,11 @@ target_compile_options(test_upnpapi-pst
         # disable warning C4065: switch statement contains 'default' but no
         # 'case' labels
         $<$<CXX_COMPILER_ID:MSVC>:/wd4065>
+        # disable warning C4706: assignment within conditional expression
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
+        # disable warning C4701: potentially uninitialized local variable
+        # '<variable>' used
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4701>
 )
 target_link_libraries(test_upnpapi-pst
     PRIVATE

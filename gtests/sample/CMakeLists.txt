@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-20
+# Redistribution only with this Copyright remark. Last modified: 2023-07-24
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -90,6 +90,7 @@ if(NOT WIN32)
 # test tv_device build with pupnp shared library
 #-----------------------------------------------
 add_executable(test_tv_device-psh
+    ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnptools.cpp
     ${SAMPLE_SOURCE_DIR}/common/sample_util.cpp
     ./test_tv_device.cpp
 )
@@ -116,6 +117,7 @@ add_test(NAME ctest_tv_device-psh COMMAND test_tv_device-psh --gtest_shuffle
 # test tv_device build with compatible shared library
 #----------------------------------------------------
 add_executable(test_tv_device-csh
+    ${COMPA_SOURCE_DIR}/src/api/upnptools.cpp
     ${SAMPLE_SOURCE_DIR}/common/sample_util.cpp
     ./test_tv_device.cpp
 )
