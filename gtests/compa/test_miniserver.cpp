@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-26
+// Redistribution only with this Copyright remark. Last modified: 2023-07-28
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -295,8 +295,25 @@ TEST_F(StartMiniServerFTestSuite,
     int ret_get_miniserver_sockets =
         get_miniserver_sockets(&miniSocket, 0, 0, 0);
 
-    EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
-        << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS);
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Using empty IPv4 address with disabled IPv6 stack must "
+                     "not succeed.\n";
+#ifndef UPNP_ENABLE_IPV6
+        // This isn't relevant for new code because there is IPv6 always
+        // available.
+        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
+            << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS); // Wrong!
+#else
+        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET)
+            << errStrEx(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET);
+#endif
+    } else {
+
+        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET)
+            << errStrEx(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET);
+    }
+
     // We do not get a valid socket with an empty text ip address.
     EXPECT_EQ(miniSocket.miniServerSock4, INVALID_SOCKET);
     // It should return the 0 port.
@@ -331,12 +348,25 @@ TEST_F(StartMiniServerFTestSuite,
     int ret_get_miniserver_sockets =
         get_miniserver_sockets(&miniSocket, 0, 0, 0);
 
-    // This is OK because we have got socket file descriptors even if we have
-    // some wrong ip addresses. Failure is indicated by an INVALID_SOCKET for
-    // the particular address_family because it could not be bound to the
-    // socket.
-    EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
-        << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS);
+    if (old_code) {
+        std::cout
+            << CRED "[ BUG      ] " CRES << __LINE__
+            << ": Using invalid IPv4 address with disabled IPv6 stack must "
+               "not succeed.\n";
+#ifndef UPNP_ENABLE_IPV6
+        // This isn't relevant for new code because there is IPv6 always
+        // available.
+        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
+            << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS); // Wrong!
+#else
+        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET)
+            << errStrEx(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET);
+#endif
+    } else {
+
+        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET)
+            << errStrEx(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET);
+    }
 
     EXPECT_EQ(miniSocket.miniServerSock4, INVALID_SOCKET);
     EXPECT_EQ(miniSocket.miniServerPort4, 0);
@@ -382,11 +412,8 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_uninitialized) {
         get_miniserver_sockets(&miniSocket, 0, 0, 0);
 
     if (old_code) {
-        // This is a bug and fixed in new_code.
-        // std::cout << CYEL "[ FIX      ] " CRES << __LINE__
-        // << ": Function should fail with win32 uninitialized sockets.\n";
-        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
-            << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS);
+        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET)
+            << errStrEx(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET);
 
     } else {
 
@@ -430,8 +457,25 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets_with_invalid_socket) {
     // Test Unit, needs initialized sockets on MS Windows
     int ret_get_miniserver_sockets =
         get_miniserver_sockets(&miniSocket, 0, 0, 0);
-    EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
-        << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS);
+
+    if (old_code) {
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Getting an invalid socket for IPv4 address with "
+                     "disabled IPv6 stack must not succeed.\n";
+#ifndef UPNP_ENABLE_IPV6
+        // This isn't relevant for new code because there is IPv6 always
+        // available.
+        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
+            << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS); // Wrong!
+#else
+        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET)
+            << errStrEx(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET);
+#endif
+    } else {
+
+        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET)
+            << errStrEx(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET);
+    }
 
     EXPECT_EQ(miniSocket.miniServerSock4, INVALID_SOCKET);
 

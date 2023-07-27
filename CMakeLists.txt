@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-25
+# Redistribution only with this Copyright remark. Last modified: 2023-07-27
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -25,7 +25,6 @@ option(UPNPLIB_WITH_SSDP "Enable SSDP, the Simple Service Discovery Protocol." O
 option(UPNPLIB_WITH_OPTSSDP "Enable optional SSDP headers." OFF)
 option(UPNPLIB_WITH_SOAP "Enable SOAP, the Simple Object Access Protocol." OFF)
 option(UPNPLIB_WITH_GENA "Enable GENA, the General Event Notification Architecture." OFF)
-option(UPNPLIB_WITH_IPV6 "Enable the IPv6 protocol stack." ON)
 option(UPNPLIB_WITH_BLOCKTCP "Enable the TCP protocol stack to wait (blocking) until receiving an answer or timed out." OFF)
 option(UPNPLIB_WITH_IXML "Enable IXML script support." OFF)
 option(UPNPLIB_WITH_SAMPLES "Provide sample programs device and control point." OFF)

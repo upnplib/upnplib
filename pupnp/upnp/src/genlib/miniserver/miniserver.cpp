@@ -671,6 +671,11 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
         addr = &s->serverAddr4->sin_addr;
         break;
     case 6:
+        // BUG! With empty IPV4 address (gIF_IPV4 == "") case 4: has returned
+        // with error but the next check for an IPV6 address here succeeds if
+        // IPV6 is disabled. In this case there is no error reported with only
+        // IPV4 address that is empty. It's not relevant for UPnPlib because it
+        // has IPV6 always available. --Ingo
         if (!ENABLE_IPV6) {
             goto ok;
         }

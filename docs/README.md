@@ -25,19 +25,19 @@ In general we refere Bjarne Stroustrup [C++ Core Guidelines](https://isocpp.gith
 - A Unit that can produce a segmentation fault is considered to be buggy.
 - Check variables against visibility, lifetime, and thread safety.
 - [Declare local variables nearly where they are first used](https://isocpp.org/wiki/faq/coding-standards#declare-near-first-use), not always at the top of a function.
-- Always prefix namespace ::std::, never "using namespace std".
+- Always prefix namespace std::, never "using namespace std".
 - Avoid pointer casts and/or reference casts.
 - I prefer to use "snake case" variable_names_with_underscores. I find it better readable than "camel case" variablesWithUpperCaseLetters.
 - Clases start with upper case C: CMyClass;
 - Interfaces start with upper case I: IMyClass;
-- New header files have a postfix of .hpp. Old C style header files will be renamened to postfix .hpp during re-engeneering.
 - Use [C++ visibility](https://stackoverflow.com/q/69890807/5014688).
 - [Pull methods outside of a class](https://www.fluentcpp.com/2017/06/20/interface-principle-cpp/), whenever it is possible.
 - Friend classes and friend functions are not used.
 - There is a rule saying "[Do not use underscores in test suite names and test names](https://google.github.io/googletest/faq.html#why-should-test-suite-names-and-test-names-not-contain-underscore)". Because we know the problems we are free to violate the rule for readability with the following restrictions: test suite names only written in "camel case", test names are written in "snake case" without leading and trailing underscore.
 - If supported by C++ nullptr is a valid entry and should never cause a segmentation fault. Functions and methods return successful then.
-- Errors cannot be handled by the library and throw an exception.
+- By definition errors cannot be handled by the library and throw an exception.
 - Warnings are errors that can be fixed by the library. It will continue execution with the fixed error but a Warning is logged because the correction needs attention.
+- The IPv6 protocol stack is always available. There is no option to disable it. Only IPv6 will be used for library internal networking. IPv4 addresses are mapped to IPv6.
 
 ## Git Commit Messages
 The [Udacity Git Commit Message Style Guide](https://udacity.github.io/git-styleguide/) served as a template.
@@ -176,5 +176,5 @@ Rule of Zero/Three/Five
 
 <pre><sup>
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2023-04-15
+// Redistribution only with this Copyright remark. Last modified: 2023-07-27
 </sup></sup>

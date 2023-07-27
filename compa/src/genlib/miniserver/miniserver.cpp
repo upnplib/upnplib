@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-25
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-28
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -115,13 +115,6 @@ static MiniServerState gMServState = MSERV_IDLE;
 static MiniServerCallback gGetCallback = NULL;
 static MiniServerCallback gSoapCallback = NULL;
 static MiniServerCallback gGenaCallback = NULL;
-
-static const int ENABLE_IPV6 =
-#ifdef UPNP_ENABLE_IPV6
-    1;
-#else
-    0;
-#endif
 
 static int MINISERVER_REUSEADDR =
 #ifdef UPNP_MINISERVER_REUSEADDR
@@ -736,9 +729,6 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
         addr = &s->serverAddr4->sin_addr;
         break;
     case 6:
-        if (!ENABLE_IPV6) {
-            goto ok;
-        }
         domain = AF_INET6;
         s->serverAddr6->sin6_family = domain;
         s->address_len = sizeof *s->serverAddr6;
@@ -803,7 +793,7 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
             goto error;
         }
     }
-ok:
+
     return 0;
 
 error:
@@ -997,9 +987,6 @@ static int get_miniserver_sockets(
         goto error;
     }
 #endif
-    std::cout << "DEBUG! err_init_4 = " << err_init_4
-              << ", err_init_6 = " << err_init_6
-              << ", err_init_6UlaGua = " << err_init_6UlaGua << "\n";
     if (err_init_4 && (err_init_6 || err_init_6UlaGua)) {
         UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
                    "get_miniserver_sockets: no protocols available\n");
@@ -1047,8 +1034,8 @@ static int get_miniserver_sockets(
             goto error;
         }
     }
-    // BUG! Ingo: the following condition may be wrong, e.g. with ss4.fd ==
-    // INVALID_SOCKET and ENABLE_IPV6 disabled but also others.
+    // BUG! the following condition may be wrong, e.g. with ss4.fd ==
+    // INVALID_SOCKET and ENABLE_IPV6 disabled but also others. --Ingo
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                // "get_miniserver_sockets: bind successful\n");
                "get_miniserver_sockets: finished\n");
