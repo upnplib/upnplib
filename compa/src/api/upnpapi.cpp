@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-20
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-29
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,43 +41,37 @@
  * \file
  */
 
-#include "config.hpp"
+#include <config.hpp>
 
-#include "upnpapi.hpp"
+#include <upnpapi.hpp>
 
-#include "ThreadPool.hpp"
-#include "UpnpStdInt.hpp"
-#include "UpnpUniStd.hpp" /* for close() */
-#include "httpreadwrite.hpp"
-//#include "membuffer.hpp"
-#include "soaplib.hpp"
-#include "ssdplib.hpp"
-#include "sysdep.hpp"
-#include "uuid.hpp"
+#include <ThreadPool.hpp>
+#include <UpnpStdInt.hpp>
+#include <UpnpUniStd.hpp> /* for close() */
+#include <httpreadwrite.hpp>
+#include <soaplib.hpp>
+#include <ssdplib.hpp>
+#include <sysdep.hpp>
+#include <uuid.hpp>
+
+#include <upnplib/trace.hpp>
 
 #ifdef _WIN32
-#include "umock/iphlpapi.hpp"
+#include <umock/iphlpapi.hpp>
 #else
-#include "umock/ifaddrs.hpp"
-#include "umock/net_if.hpp"
+#include <umock/ifaddrs.hpp>
+#include <umock/net_if.hpp>
 #endif
 
 /* Needed for GENA */
-#include "gena.hpp"
-// #ifdef UPNPLIB_WITH_NATIVE_PUPNP
-// #define NS
-// #include "miniserver.hpp"
-// #else
-// #define NS ::compa
-// #include "compa/miniserver.hpp"
-// #endif
-#include "miniserver.hpp"
-#include "service_table.hpp"
+#include <gena.hpp>
+#include <miniserver.hpp>
+#include <service_table.hpp>
 
 #ifdef INTERNAL_WEB_SERVER
-#include "VirtualDir.hpp"
-#include "urlconfig.hpp"
-#include "webserver.hpp"
+#include <VirtualDir.hpp>
+#include <urlconfig.hpp>
+#include <webserver.hpp>
 #endif /* INTERNAL_WEB_SERVER */
 
 #include <sys/stat.h>
@@ -88,7 +82,7 @@
 #include <string.h>
 #include <iostream> // DEBUG!
 
-#include "posix_overwrites.hpp"
+#include <posix_overwrites.hpp>
 
 #ifdef _WIN32
 /* Do not include these files */
@@ -300,9 +294,10 @@ static void free_action_arg(job_arg* arg) {
  *
  * \return UPNP_E_SUCCESS on success, UPNP_E_INIT_FAILED on failure.
  */
-static int WinsockInit(void) {
+static int WinsockInit() {
     int retVal = UPNP_E_SUCCESS;
 #ifdef _WIN32
+    TRACE("Executing WinsockInit()")
     WORD wVersionRequested;
     WSADATA wsaData;
     int err;
@@ -329,7 +324,6 @@ static int WinsockInit(void) {
     }
     /* The WinSock DLL is acceptable. Proceed. */
 exit_function:
-#else
 #endif
     return retVal;
 }
@@ -340,7 +334,7 @@ exit_function:
  * \return UPNP_E_SUCCESS on success or UPNP_E_INIT_FAILED if a mutex could not
  *  be initialized.
  */
-static int UpnpInitMutexes(void) {
+static int UpnpInitMutexes() {
 #ifdef __CYGWIN__
     /* On Cygwin, pthread_mutex_init() fails without this memset. */
     /* TODO: Fix Cygwin so we don't need this memset(). */
@@ -368,7 +362,7 @@ static int UpnpInitMutexes(void) {
  * \return UPNP_E_SUCCESS on success or UPNP_E_INIT_FAILED if a mutex could not
  *  be initialized.
  */
-static int UpnpInitThreadPools(void) {
+static int UpnpInitThreadPools() {
     int ret = UPNP_E_SUCCESS;
     ThreadPoolAttr attr;
 
@@ -415,7 +409,8 @@ exit_function:
  *
  * \return UPNP_E_SUCCESS on success.
  */
-static int UpnpInitPreamble(void) {
+static int UpnpInitPreamble() {
+    TRACE("Executing UpnpInitPreamble()")
     int retVal = UPNP_E_SUCCESS;
     int i;
 #ifdef UPNP_HAVE_OPTSSDP
@@ -498,6 +493,7 @@ static int UpnpInitPreamble(void) {
 static int UpnpInitStartServers(
     /*! [in] Local Port to listen for incoming connections. */
     [[maybe_unused]] unsigned short DestPort) {
+    TRACE("Executing UpnpInitStartServers()")
 #if EXCLUDE_MINISERVER == 0 || EXCLUDE_WEB_SERVER == 0
     int retVal = 0;
 #endif
@@ -535,6 +531,7 @@ static int UpnpInitStartServers(
 }
 
 int UpnpInit2(const char* IfName, unsigned short DestPort) {
+    TRACE("Executing UpnpInit2()")
     int retVal;
 
     /* Initializes the ithread library */
@@ -644,7 +641,8 @@ void PrintThreadPoolStats(
     } while (0)
 #endif /* DEBUG */
 
-int UpnpFinish(void) {
+int UpnpFinish() {
+    TRACE("Executing UpnpFinish()")
 #ifdef INCLUDE_DEVICE_APIS
     UpnpDevice_Handle device_handle;
 #endif
@@ -719,14 +717,14 @@ int UpnpFinish(void) {
     return UPNP_E_SUCCESS;
 }
 
-unsigned short UpnpGetServerPort(void) {
+unsigned short UpnpGetServerPort() {
     if (UpnpSdkInit != 1)
         return 0u;
 
     return LOCAL_PORT_V4;
 }
 
-unsigned short UpnpGetServerPort6(void) {
+unsigned short UpnpGetServerPort6() {
 #ifdef UPNP_ENABLE_IPV6
     if (UpnpSdkInit != 1)
         return 0u;
@@ -737,7 +735,7 @@ unsigned short UpnpGetServerPort6(void) {
 #endif
 }
 
-unsigned short UpnpGetServerUlaGuaPort6(void) {
+unsigned short UpnpGetServerUlaGuaPort6() {
 #ifdef UPNP_ENABLE_IPV6
     if (UpnpSdkInit != 1)
         return 0u;
@@ -748,14 +746,14 @@ unsigned short UpnpGetServerUlaGuaPort6(void) {
 #endif
 }
 
-char* UpnpGetServerIpAddress(void) {
+char* UpnpGetServerIpAddress() {
     if (UpnpSdkInit != 1)
         return NULL;
 
     return gIF_IPV4;
 }
 
-char* UpnpGetServerIp6Address(void) {
+char* UpnpGetServerIp6Address() {
 #ifdef UPNP_ENABLE_IPV6
     if (UpnpSdkInit != 1)
         return NULL;
@@ -766,7 +764,7 @@ char* UpnpGetServerIp6Address(void) {
 #endif
 }
 
-char* UpnpGetServerUlaGuaIp6Address(void) {
+char* UpnpGetServerUlaGuaIp6Address() {
 #ifdef UPNP_ENABLE_IPV6
     if (UpnpSdkInit != 1)
         return NULL;
@@ -3824,7 +3822,7 @@ int UpnpRemoveVirtualDir(const char* dirName) {
         return UPNP_E_INVALID_PARAM;
 }
 
-void UpnpRemoveAllVirtualDirs(void) {
+void UpnpRemoveAllVirtualDirs() {
     virtualDirList* pCur;
     virtualDirList* pNext;
 
@@ -3845,6 +3843,7 @@ void UpnpRemoveAllVirtualDirs(void) {
 }
 
 int UpnpEnableWebserver([[maybe_unused]] int enable) {
+    TRACE("Executing UpnpEnableWebserver()")
     if (UpnpSdkInit != 1) {
         return UPNP_E_FINISH;
     }
@@ -3873,7 +3872,7 @@ int UpnpEnableWebserver([[maybe_unused]] int enable) {
  *
  * \return 1, if webserver is enabled or 0, if webserver is disabled.
  */
-int UpnpIsWebserverEnabled(void) {
+int UpnpIsWebserverEnabled() {
     if (UpnpSdkInit != 1) {
         return 0;
     }

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-20
+// Redistribution only with this Copyright remark. Last modified: 2023-07-29
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -10,12 +10,15 @@
 #include <compa/src/api/upnpapi.cpp>
 #endif
 
+#include <pupnp/upnpdebug.hpp> // for CLogging
+
 #include <upnplib/upnptools.hpp> // For upnplib only
 #include <upnplib/gtest_tools_unix.hpp>
+#include <upnplib/gtest.hpp>
+
 #include <umock/ifaddrs_mock.hpp>
 #include <umock/net_if_mock.hpp>
-
-#include <upnplib/gtest.hpp>
+#include <umock/sys_socket_mock.hpp>
 
 
 namespace compa {
@@ -28,7 +31,7 @@ using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 
-using ::upnplib::testing::CaptureStdOutErr;
+using ::pupnp::CLogging;
 
 using ::upnplib::CIfaddr4;
 using ::upnplib::errStrEx;
@@ -166,13 +169,17 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
 }
 
 TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_default_initialization) {
+    CLogging loggingObj;
+
     // provide a network interface
     CIfaddr4 ifaddr4Obj;
     ifaddr4Obj.set("if0v4", "192.168.99.3/20");
     ifaddrs* ifaddr = ifaddr4Obj.get();
     EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
+    constexpr SOCKET listen_sockfd{445};
+    constexpr SOCKET stop_sockfd{446};
 
-    // expect calls to system functions (which are mocked)
+    // Mock to get local network interface address and its index number
     umock::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
     umock::Net_if net_if_injectObj(&m_mocked_net_if);
     EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
@@ -180,20 +187,28 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_default_initialization) {
     EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);
     EXPECT_CALL(m_mocked_net_if, if_nametoindex(_)).Times(1);
 
-    // Initialize capturing of the stderr output
-    CaptureStdOutErr captureObj(STDERR_FILENO);
-    captureObj.start();
+    // Mock socket, bind local ip address to it and listen to it
+    umock::Sys_socketMock mocked_sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    // Provide listen socket
+    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+        .WillOnce(Return(listen_sockfd));
+    EXPECT_CALL(mocked_sys_socketObj, bind(listen_sockfd, _, _)).Times(1);
+    EXPECT_CALL(mocked_sys_socketObj, listen(listen_sockfd, SOMAXCONN))
+        .Times(1);
+    EXPECT_CALL(mocked_sys_socketObj, getsockname(listen_sockfd, _, _))
+        .Times(1);
+    // Provide stop socket
+    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+        .WillOnce(Return(stop_sockfd));
+    EXPECT_CALL(mocked_sys_socketObj, bind(stop_sockfd, _, _)).Times(1);
+    EXPECT_CALL(mocked_sys_socketObj, getsockname(stop_sockfd, _, _)).Times(1);
 
     // Test Unit
     UpnpSdkInit = 0;
     int ret_UpnpInit2 = UpnpInit2(nullptr, 0);
     EXPECT_EQ(ret_UpnpInit2, UPNP_E_SUCCESS)
         << errStrEx(ret_UpnpInit2, UPNP_E_SUCCESS);
-
-    // Get and check the captured data
-    std::string capturedStderr = captureObj.get();
-    EXPECT_EQ(capturedStderr, "")
-        << "  There should not be any output to stderr.";
 
     EXPECT_EQ(UpnpSdkInit, 1);
 

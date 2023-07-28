@@ -126,6 +126,12 @@ void* library_info(void*) {
     msg << "UPNP_HAVE_OPTSSDP     = no\n";
 #endif
 
+#ifdef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
+    msg << "UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS = yes\n";
+#else
+    msg << "UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS = no\n";
+#endif
+
     msg << "---- internal settings -----------\n";
 
 #ifdef INTERNAL_WEB_SERVER

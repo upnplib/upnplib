@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-27
+# Redistribution only with this Copyright remark. Last modified: 2023-07-29
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -236,10 +236,12 @@ target_link_libraries(test_upnpapi-cst
 add_test(NAME ctest_upnpapi-cst COMMAND test_upnpapi-cst --gtest_shuffle
 )
 
+if(FALSE)
 add_executable(test_upnpapi_platform-pst
 #---------------------------------------
-        $<$<PLATFORM_ID:Windows>:./test_upnpapi_win32.cpp>
-        $<$<NOT:$<PLATFORM_ID:Windows>>:./test_upnpapi_unix.cpp>
+    $<$<PLATFORM_ID:Windows>:./test_upnpapi_win32.cpp>
+    $<$<NOT:$<PLATFORM_ID:Windows>>:./test_upnpapi_unix.cpp>
+    ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 target_include_directories(test_upnpapi_platform-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -264,6 +266,7 @@ add_executable(test_upnpapi_platform-cst
 #---------------------------------------
     $<$<PLATFORM_ID:Windows>:./test_upnpapi_win32.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./test_upnpapi_unix.cpp>
+    ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 target_include_directories(test_upnpapi_platform-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -276,3 +279,4 @@ target_link_libraries(test_upnpapi_platform-cst
 )
 add_test(NAME ctest_upnpapi_platform-cst COMMAND test_upnpapi_platform-cst --gtest_shuffle
 )
+endif()

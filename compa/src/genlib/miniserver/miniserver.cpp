@@ -676,21 +676,23 @@ static int get_port(
     SOCKET sockfd,
     /*! [out] The port value if successful, otherwise, untouched. */
     uint16_t* port) {
-    TRACE("Executing get_port()")
-    struct sockaddr_storage sockinfo;
-    socklen_t len;
-    int code;
+    TRACE("Executing get_port(), calls system getsockname()")
+    sockaddr_storage sockinfo{};
+    socklen_t len(sizeof sockinfo); // May be modified by getsockname()
 
-    len = sizeof(sockinfo);
-    code = umock::sys_socket_h.getsockname(sockfd, (struct sockaddr*)&sockinfo,
-                                           &len);
-    if (code == -1) {
+    if (umock::sys_socket_h.getsockname(sockfd, (sockaddr*)&sockinfo, &len) ==
+        -1)
         return -1;
-    }
-    if (sockinfo.ss_family == AF_INET) {
-        *port = ntohs(((struct sockaddr_in*)&sockinfo)->sin_port);
-    } else if (sockinfo.ss_family == AF_INET6) {
-        *port = ntohs(((struct sockaddr_in6*)&sockinfo)->sin6_port);
+
+    switch (sockinfo.ss_family) {
+    case AF_INET:
+        *port = ntohs(((sockaddr_in*)&sockinfo)->sin_port);
+        break;
+    case AF_INET6:
+        *port = ntohs(((sockaddr_in6*)&sockinfo)->sin6_port);
+        break;
+    default:
+        return -1;
     }
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "sockfd = %d, .... port = %d\n", sockfd, (int)*port);
@@ -708,6 +710,7 @@ static int get_port(
 #ifdef INTERNAL_WEB_SERVER
 static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
                             int ip_version) {
+    TRACE("Executing init_socket_suff()")
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "Inside init_socket_suff() for IPv%d.\n", ip_version);
 
@@ -812,6 +815,7 @@ error:
  * It is expected to have a prechecked valid parameter.
  */
 static int do_bind(struct s_SocketStuff* s) {
+    TRACE("Executing do_bind()")
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__, "Inside do_bind()\n");
 
     int ret_val = UPNP_E_SUCCESS;
@@ -908,6 +912,7 @@ static int do_reinit(struct s_SocketStuff* s) {
 }
 
 static int do_bind_listen(struct s_SocketStuff* s) {
+    TRACE("Executing do_bind_listen()")
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "Inside do_bind_listen()\n");
 

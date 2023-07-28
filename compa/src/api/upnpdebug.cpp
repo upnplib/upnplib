@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-28
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-29
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,25 +36,22 @@
  * \file
  */
 #define UPNP_DEBUG_C
-#include "config.hpp"
+#include <config.hpp>
 
-#include "ithread.hpp"
-// #include "ixml.h"
-#include "upnp.hpp"
-#include "upnpdebug.hpp"
+#include <ithread.hpp>
+#include <upnp.hpp>
+#include <upnpdebug.hpp>
 
 #include <errno.h>
 #include <stdarg.h>
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
 
-#include "posix_overwrites.hpp"
+#include <posix_overwrites.hpp>
 
 #include <upnplib/cmake_vars.hpp>
+#include <upnplib/trace.hpp>
 
-#include "umock/pthread.hpp"
-#include "umock/stdio.hpp"
+#include <umock/pthread.hpp>
+#include <umock/stdio.hpp>
 #include <cstring>
 
 /*! Mutex to synchronize all the log file operations in the debug mode */
@@ -77,7 +74,8 @@ static char* fileName;
  * before. This can be called again, for example to rotate the log
  * file, and we try to avoid multiple calls to the mutex init, with a
  * risk of race, probably not a problem, and not worth fixing. */
-int UpnpInitLog(void) {
+int UpnpInitLog() {
+    TRACE("Executing UpnpInitLog()")
     if (!initwascalled) {
         umock::pthread_h.pthread_mutex_init(&GlobalDebugMutex, NULL);
         initwascalled = 1;
@@ -136,7 +134,7 @@ void UpnpSetLogLevel(Upnp_LogLevel log_level) {
     setlogwascalled = 1;
 }
 
-void UpnpCloseLog(void) {
+void UpnpCloseLog() {
     if (!initwascalled) {
         return;
     }

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-07-31
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -45,15 +45,17 @@ class PupnpHttpRwMock : public umock::PupnpHttpRwInterface {
                 (SOCKET sockfd, const struct sockaddr* serv_addr,
                  socklen_t addrlen),
                 (override));
+#ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
     MOCK_METHOD(int, Check_Connect_And_Wait_Connection,
                 (SOCKET sock, int connect_res), (override));
+#endif
 };
 
 //
 // ######################################
 // testsuite for Ip4 httpreadwrite
 // ######################################
-#if false
+#if 0
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, real_connect) {
     // This is for humans only to check on a Unix operating system how the Unit
     // works in realtime so we can correct mock it. Don't set '#if true'

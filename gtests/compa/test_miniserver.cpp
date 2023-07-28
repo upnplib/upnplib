@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-28
+// Redistribution only with this Copyright remark. Last modified: 2023-08-01
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -225,7 +225,7 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets) {
     // Initialize needed structure
     MINISERVER_REUSEADDR = false;
     strcpy(gIF_IPV4, "192.168.245.254");
-    constexpr SOCKET sockfd{333};
+    constexpr SOCKET sockfd{FD_SETSIZE - 10};
     const CAddrinfo ai(std::string(gIF_IPV4),
                        std::to_string(APPLICATION_LISTENING_PORT), AF_INET,
                        SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
@@ -629,7 +629,7 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_successful) {
     MINISERVER_REUSEADDR = false;
     constexpr char text_addr[]{"192.168.54.188"};
     char addrbuf[16];
-    constexpr SOCKET sockfd{600};
+    constexpr SOCKET sockfd{FD_SETSIZE - 11};
 
     s_SocketStuff s;
     // Fill all fields of struct s_SocketStuff
@@ -691,7 +691,7 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_with_wrong_socket) {
     EXPECT_EQ(CLOSE_SOCKET_P(s.fd), 0) << std::strerror(errno);
     // The socket id wasn't got from a socket() call now and should trigger an
     // error.
-    s.fd = 32000;
+    s.fd = FD_SETSIZE - 39;
     s.try_port = 65534;
 
     // Test Unit
@@ -709,7 +709,7 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_with_failed_listen) {
     MINISERVER_REUSEADDR = false;
     constexpr char text_addr[]{"192.168.54.188"};
     constexpr int actual_port{0};
-    constexpr SOCKET sockfd{600};
+    constexpr SOCKET sockfd{FD_SETSIZE - 12};
 
     s_SocketStuff s;
     // Fill all fields of struct s_SocketStuff
@@ -761,8 +761,8 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_address_in_use) {
         constexpr char text_addr[]{"192.168.54.188"};
         char addrbuf[16];
         constexpr int actual_port{52534};
-        constexpr SOCKET sockfd_inuse{600};
-        constexpr SOCKET sockfd_free{601};
+        constexpr SOCKET sockfd_inuse{FD_SETSIZE - 13};
+        constexpr SOCKET sockfd_free{FD_SETSIZE - 14};
 
         s_SocketStuff s;
         // Fill all fields of struct s_SocketStuff
@@ -830,7 +830,7 @@ TEST_F(DoBindFTestSuite, bind_successful) {
     // * Mocked bind() returns successful
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{511};
+    constexpr SOCKET sockfd{FD_SETSIZE - 15};
     constexpr char text_addr[]{"192.168.101.233"};
     char addrbuf[16];
     constexpr uint16_t actual_port{56789};
@@ -895,7 +895,7 @@ TEST_F(DoBindFTestSuite, bind_with_invalid_argument) {
     // * Mocked bind() returns EINVAL
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{512};
+    constexpr SOCKET sockfd{FD_SETSIZE - 16};
     constexpr char text_addr[]{"192.168.202.233"};
     char addrbuf[16];
     constexpr uint16_t actual_port{56890};
@@ -988,7 +988,7 @@ TEST(DoBindTestSuite, bind_with_try_port_overrun) {
     // * Mocked bind() returns always failure with errno EINVAL
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{511};
+    constexpr SOCKET sockfd{FD_SETSIZE - 17};
     constexpr char text_addr[]{"192.168.101.233"};
     char addrbuf[16];
 
@@ -1055,7 +1055,7 @@ TEST(DoBindTestSuite, bind_successful_with_two_tries) {
     // * Mocked bind() fails with two tries errno EADDRINUSE, then successful.
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{511};
+    constexpr SOCKET sockfd{FD_SETSIZE - 18};
     constexpr char text_addr[]{"192.168.101.233"};
     char addrbuf[16];
     s_SocketStuff s;
@@ -1143,7 +1143,7 @@ TEST(DoBindTestSuite, bind_with_empty_parameter) {
 TEST_F(DoBindFTestSuite, bind_with_wrong_ip_version_assignment) {
     // Setting ip_version = 6 and sin_family = AF_INET and vise versa does not
     // fit. Provide needed data for the Unit.
-    constexpr SOCKET sockfd{511};
+    constexpr SOCKET sockfd{FD_SETSIZE - 19};
     constexpr char text_addr[]{"192.168.101.233"};
     constexpr uint16_t try_port{65533};
 
@@ -1195,7 +1195,7 @@ TEST_F(StartMiniServerFTestSuite, do_listen_successful) {
     // * Mocked getsockname() returns successful
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{512};
+    constexpr SOCKET sockfd{FD_SETSIZE - 20};
     constexpr char text_addr[] = "192.168.202.233";
     char addrbuf[16];
     constexpr uint16_t actual_port{60000};
@@ -1256,7 +1256,7 @@ TEST(StartMiniServerTestSuite, do_listen_not_supported) {
     // * Mocked getsockname() is not called
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{512};
+    constexpr SOCKET sockfd{FD_SETSIZE - 21};
     constexpr char text_addr[] = "192.168.101.203";
     char addrbuf[16];
 
@@ -1309,7 +1309,7 @@ TEST(StartMiniServerTestSuite, do_listen_insufficient_resources) {
     // * Mocked getsockname() returns with ENOBUFS
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{512};
+    constexpr SOCKET sockfd{FD_SETSIZE - 22};
     constexpr char text_addr[] = "192.168.101.203";
     char addrbuf[16];
 
@@ -1360,7 +1360,7 @@ TEST_F(StartMiniServerFTestSuite, get_port_successful) {
     // * Mocked getsockname() returns successful
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{1000};
+    constexpr SOCKET sockfd{FD_SETSIZE - 23};
     constexpr char text_addr[] = "192.168.154.188";
     constexpr uint16_t actual_port{55555};
     // This is for the returned port number
@@ -1376,12 +1376,50 @@ TEST_F(StartMiniServerFTestSuite, get_port_successful) {
     umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
     EXPECT_CALL(mocked_sys_socketObj,
                 getsockname(sockfd, _, Pointee(Ge((socklen_t)ai->ai_addrlen))))
-        .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
+        .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr),
+                        SetArgPointee<2>(ai->ai_addrlen), Return(0)));
 
     // Test Unit
     EXPECT_EQ(get_port(sockfd, &port), 0);
 
     EXPECT_EQ(port, actual_port);
+}
+
+TEST(StartMiniServerTestSuite, get_port_wrong_sockaddr_family) {
+    // Configure expected system calls:
+    // * Use fictive socket file descriptor 998
+    // * Mocked getsockname() returns successful unusable sockaddr family 0.
+
+    // Provide needed data for the Unit
+    constexpr SOCKET sockfd{FD_SETSIZE - 24};
+    // This is for the returned port number
+    uint16_t port{0xAAAA};
+
+    // Provide a sockaddr structure that will be returned by mocked
+    // getsockname(). It is empty.
+    const sockaddr sa{};
+
+    // Mock system function
+    umock::Sys_socketMock mocked_sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+        .WillOnce(DoAll(SetArgPointee<1>(sa), SetArgPointee<2>(sizeof(sa)),
+                        Return(0)));
+
+    // Test Unit
+    if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": Getting port number with unusable sockaddr family must "
+                     "fail.\n";
+        EXPECT_EQ(get_port(sockfd, &port), 0); // Wrong!
+
+    } else {
+
+        EXPECT_EQ(get_port(sockfd, &port), -1);
+    }
+
+    // The port variable should not be modified.
+    EXPECT_EQ(port, 0xAAAA);
 }
 
 TEST(StartMiniServerTestSuite, get_port_fails) {
@@ -1390,7 +1428,7 @@ TEST(StartMiniServerTestSuite, get_port_fails) {
     // * Mocked getsockname() fails with insufficient resources (ENOBUFS).
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{900};
+    constexpr SOCKET sockfd{FD_SETSIZE - 25};
     // This is for the returned port number
     uint16_t port{0xAAAA};
 
@@ -1474,7 +1512,7 @@ TEST(StartMiniServerTestSuite, get_miniserver_stopsock_bind_fails) {
     // Provide needed data for the Unit
     MiniServerSockArray out;
     InitMiniServerSockArray(&out);
-    const SOCKET sockfd{890};
+    const SOCKET sockfd{FD_SETSIZE - 26};
 
     // Mock system functions
     umock::Sys_socketMock mocked_sys_socketObj;
@@ -1502,7 +1540,7 @@ TEST(StartMiniServerTestSuite, get_miniserver_stopsock_getsockname_fails) {
     // Provide needed data for the Unit
     MiniServerSockArray out;
     InitMiniServerSockArray(&out);
-    const SOCKET sockfd{888};
+    const SOCKET sockfd{FD_SETSIZE - 27};
 
     // Mock system functions
     umock::Sys_socketMock mocked_sys_socketObj;
@@ -1522,7 +1560,7 @@ TEST(StartMiniServerTestSuite, get_miniserver_stopsock_getsockname_fails) {
 }
 
 TEST_F(RunMiniServerFTestSuite, receive_from_stopSock) {
-    constexpr SOCKET sockfd{401};
+    constexpr SOCKET sockfd{FD_SETSIZE - 28};
     const CAddrinfo ai("192.168.167.166", "54321", AF_INET, SOCK_STREAM,
                        AI_NUMERICHOST | AI_NUMERICSERV);
 
@@ -1545,7 +1583,7 @@ TEST_F(RunMiniServerFTestSuite, receive_from_stopSock) {
 }
 
 TEST(RunMiniServerTestSuite, receive_from_stopSock_not_selected) {
-    constexpr SOCKET sockfd{402};
+    constexpr SOCKET sockfd{FD_SETSIZE - 29};
 
     fd_set rdSet;
     FD_ZERO(&rdSet);
@@ -1562,7 +1600,7 @@ TEST(RunMiniServerTestSuite, receive_from_stopSock_not_selected) {
 }
 
 TEST_F(RunMiniServerFTestSuite, receive_from_stopSock_no_bytes) {
-    constexpr SOCKET sockfd{403};
+    constexpr SOCKET sockfd{FD_SETSIZE - 30};
     const CAddrinfo ai("192.168.167.168", "54323", AF_INET, SOCK_STREAM,
                        AI_NUMERICHOST | AI_NUMERICSERV);
 
@@ -1585,7 +1623,7 @@ TEST_F(RunMiniServerFTestSuite, receive_from_stopSock_no_bytes) {
 }
 
 TEST_F(RunMiniServerFTestSuite, receive_from_stopSock_nothing_todo) {
-    constexpr SOCKET sockfd{404};
+    constexpr SOCKET sockfd{FD_SETSIZE - 31};
     const CAddrinfo ai("192.168.167.169", "54324", AF_INET, SOCK_STREAM,
                        AI_NUMERICHOST | AI_NUMERICSERV);
 
@@ -1632,12 +1670,12 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
     // EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 0), 0);
 
     // Initialize needed data
-    constexpr SOCKET select_nfds = FD_SETSIZE - 4; // Must be highest used fd+1
-    constexpr SOCKET listen_sockfd = FD_SETSIZE - 5;
+    constexpr SOCKET select_nfds = FD_SETSIZE - 5; // Must be highest used fd+1
+    constexpr SOCKET listen_sockfd = FD_SETSIZE - 6;
     constexpr uint16_t listen_port = 301;
-    constexpr SOCKET connected_sockfd = FD_SETSIZE - 6;
+    constexpr SOCKET connected_sockfd = FD_SETSIZE - 7;
     const std::string connected_port = "302";
-    constexpr SOCKET stop_sockfd = FD_SETSIZE - 7;
+    constexpr SOCKET stop_sockfd = FD_SETSIZE - 8;
     constexpr uint16_t stop_port = 303;
 
     MiniServerSockArray* minisock =
@@ -1722,7 +1760,7 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
 }
 
 TEST(RunMiniServerTestSuite, ssdp_read) {
-    constexpr SOCKET ssdp_sockfd = 208;
+    constexpr SOCKET ssdp_sockfd{FD_SETSIZE - 32};
     fd_set rdSet;
     FD_ZERO(&rdSet);
     FD_SET(ssdp_sockfd, &rdSet);
@@ -1732,8 +1770,8 @@ TEST(RunMiniServerTestSuite, ssdp_read) {
 }
 
 TEST(RunMiniServerTestSuite, web_server_accept) {
-    constexpr SOCKET listen_sockfd = 205;
-    constexpr SOCKET connected_sockfd = 206;
+    constexpr SOCKET listen_sockfd{FD_SETSIZE - 33};
+    constexpr SOCKET connected_sockfd{FD_SETSIZE - 34};
     const std::string connected_port = "306";
     fd_set set;
     FD_ZERO(&set);
@@ -1774,13 +1812,15 @@ TEST(RunMiniServerTestSuite, web_server_accept) {
 #ifdef DEBUG
         if (old_code)
             EXPECT_THAT(capturedStderr,
-                        ContainsStdRegex(" UPNP-MSER-2: .* mserv 206: cannot "
-                                         "schedule request"));
+                        ContainsStdRegex(" UPNP-MSER-2: .* mserv " +
+                                         std::to_string(connected_sockfd) +
+                                         ": cannot schedule request"));
         else
             EXPECT_THAT(
                 capturedStderr,
                 ContainsStdRegex(" connected to host 192\\.168\\.201\\.202:306 "
-                                 "with socket 206"));
+                                 "with socket " +
+                                 std::to_string(connected_sockfd)));
             // ContainsStdRegex(" connected to host 192\\.168\\.201\\.202:306 "
             //                  "with socket 206.* UPNP-MSER-1: .* mserv 206: "
             //                  "cannot schedule request"));
@@ -1824,7 +1864,7 @@ TEST(RunMiniServerTestSuite, web_server_accept_with_invalid_socket) {
 }
 
 TEST(RunMiniServerTestSuite, web_server_accept_with_empty_set) {
-    constexpr SOCKET listen_sockfd = 207;
+    constexpr SOCKET listen_sockfd{FD_SETSIZE - 35};
     fd_set set;
     FD_ZERO(&set);
 
@@ -1847,8 +1887,9 @@ TEST(RunMiniServerTestSuite, web_server_accept_with_empty_set) {
     else
 #ifdef DEBUG
         EXPECT_THAT(capturedStderr,
-                    ContainsStdRegex(" UPNP-MSER-1: .* invalid socket\\(207\\) "
-                                     "or set\\(.*\\)\\.\n"));
+                    ContainsStdRegex(" UPNP-MSER-1: .* invalid socket\\(" +
+                                     std::to_string(listen_sockfd) +
+                                     "\\) or set\\(.*\\)\\.\n"));
 #else
         EXPECT_TRUE(capturedStderr.empty());
 #endif
@@ -1872,7 +1913,7 @@ TEST_F(RunMiniServerFTestSuite, fdset_if_valid) {
     //        "**exeption or buffer overflow";
 
     // Valid socket file descriptor will be added to the set.
-    constexpr SOCKET sockfd1{FD_SETSIZE - 8};
+    constexpr SOCKET sockfd1{FD_SETSIZE - 9};
     fdset_if_valid(sockfd1, &rdSet);
     EXPECT_NE(FD_ISSET(sockfd1, &rdSet), 0)
         << "Socket file descriptor " << sockfd1
@@ -1941,7 +1982,7 @@ TEST_F(RunMiniServerFTestSuite, fdset_if_valid) {
 }
 
 TEST_F(RunMiniServerFTestSuite, schedule_request_job) {
-    constexpr SOCKET connected_sockfd = 202;
+    constexpr SOCKET connected_sockfd{FD_SETSIZE - 36};
     constexpr uint16_t connected_port = 302;
     const CAddrinfo ai("192.168.1.1", std::to_string(connected_port), AF_INET,
                        SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
@@ -1965,9 +2006,10 @@ TEST_F(RunMiniServerFTestSuite, schedule_request_job) {
     // Get captured output
     std::string capturedStderr = captureObj.get();
 #ifdef DEBUG
-    EXPECT_THAT(
-        capturedStderr,
-        ContainsStdRegex(" UPNP-MSER-\\d: .* 202: cannot schedule request\n"));
+    EXPECT_THAT(capturedStderr,
+                ContainsStdRegex(" UPNP-MSER-\\d: .* " +
+                                 std::to_string(connected_sockfd) +
+                                 ": cannot schedule request\n"));
 #else
     EXPECT_THAT(capturedStderr,
                 ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0\n"));
@@ -2053,7 +2095,7 @@ TEST_F(RunMiniServerFTestSuite, getNumericHostRedirection) {
     // getNumericHostRedirection() returns the ip address with port as text
     // (e.g. "192.168.1.2:54321") that is bound to a socket.
 
-    constexpr SOCKET sockfd{405};
+    constexpr SOCKET sockfd{FD_SETSIZE - 37};
     char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
 
     // Provide a sockaddr structure that will be returned by mocked
@@ -2088,7 +2130,7 @@ TEST_F(RunMiniServerFTestSuite, getNumericHostRedirection) {
 
 TEST(RunMiniServerTestSuite,
      getNumericHostRedirection_with_insufficient_resources) {
-    constexpr SOCKET sockfd{406};
+    constexpr SOCKET sockfd{FD_SETSIZE - 38};
     char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
 
     // Mock system function getsockname()
@@ -2294,7 +2336,6 @@ int main(int argc, char** argv) {
     ::WSACleanup();
 #endif
     ::testing::InitGoogleMock(&argc, argv);
-    // CLogging loggingObj; // Output only with build type DEBUG.
 #include "compa/gtest_main.inc"
     return gtest_return_code; // managed in compa/gtest_main.inc
 }

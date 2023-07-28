@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-04
+// Redistribution only with this Copyright remark. Last modified: 2023-07-31
 
 // This test should always run, reporting no failure
 
@@ -83,6 +83,11 @@ TEST_F(EmptyFixtureTestSuite, empty_gtest_with_fixture) {}
 
 // simple testsuite without fixtures
 //----------------------------------
+TEST(EmptyTestSuite, skip_on_github_action) {
+    if (github_actions)
+        GTEST_SKIP() << "Test is skipped on Github Actions.";
+}
+
 TEST(EmptyTestSuite, empty_gtest) {
     // SKIP on Github Actions
     if (github_actions && !old_code)
@@ -105,6 +110,7 @@ TEST(EmptyTestSuite, empty_gtest) {
         std::cout << "  # Compiling tests for new_code.\n";
     }
 }
+
 
 } // namespace upnplib
 
