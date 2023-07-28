@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-26
+# Redistribution only with this Copyright remark. Last modified: 2023-07-28
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -64,9 +64,6 @@ if(UPNPLIB_WITH_OPENSSL)
     add_executable(test_openssl_threaded-psh
         ./test_openssl_threaded.cpp
     )
-    target_include_directories(test_openssl_threaded-psh
-        PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
-    )
     target_link_libraries(test_openssl_threaded-psh
         PRIVATE pupnp_shared
     )
@@ -76,9 +73,6 @@ if(UPNPLIB_WITH_OPENSSL)
 
     add_executable(test_openssl_threaded-csh
         ./test_openssl_threaded.cpp
-    )
-    target_include_directories(test_openssl_threaded-csh
-        PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
     )
     target_link_libraries(test_openssl_threaded-csh
         PRIVATE

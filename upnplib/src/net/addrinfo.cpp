@@ -1,9 +1,9 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-21
+// Redistribution only with this Copyright remark. Last modified: 2023-06-28
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/sockaddr.hpp>
-#include <upnplib/port.hpp>
+#include <upnplib/trace.hpp>
 #include <umock/netdb.hpp>
 
 #include <stdexcept>

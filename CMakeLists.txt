@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-27
+# Redistribution only with this Copyright remark. Last modified: 2023-07-28
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -108,8 +108,8 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
 # Provide length of the path of the projects base directory. We need this
-# mainly for the compile time short file name of a TRACE message.
-string(LENGTH "${UPNPLIB_PROJECT_SOURCE_DIR}/" UPNPLIB_PROJECT_PATH_SIZE)
+# mainly for the compile time short file name of Debug and TRACE messages.
+string(LENGTH "${UPNPLIB_PROJECT_SOURCE_DIR}/" UPNPLIB_PROJECT_PATH_LENGTH)
 
 # Set general compile definitions and options
 #--------------------------------------------
@@ -127,7 +127,6 @@ add_compile_definitions(
 
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
         $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
-        $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_PROJECT_PATH_SIZE=${UPNPLIB_PROJECT_PATH_SIZE}>
 )
 add_compile_options(
         # Most compiler warnings enabled
@@ -484,7 +483,7 @@ endif(UPNPLIB_WITH_GOOGLETEST)
 # This should be the last statement
 #----------------------------------
 # to compiler macros (#define ...) for conditions to the program source.
-# Hope we have all needed variables defined so we can write upnpconfig.hpp now.
+# Hope we have all needed variables defined so we can write cmake_vars.hpp now.
 # To meet all variables this should be the last statement.
 # Variablename and its value-placeholder must be the same, e.g.
 # #cmakedefine VAR1 ${VAR1}
@@ -492,6 +491,9 @@ endif(UPNPLIB_WITH_GOOGLETEST)
 # #cmakedefine VAR2 1  : VAR2 must be exist before even you set a constant.
 configure_file(${PROJECT_SOURCE_DIR}/cmake/cmake_vars.hpp.cmake
                ${PROJECT_BINARY_DIR}/include/upnplib/cmake_vars.hpp
+)
+configure_file(${PROJECT_SOURCE_DIR}/cmake/trace.hpp.cmake
+               ${PROJECT_BINARY_DIR}/include/upnplib/trace.hpp
 )
 
 # RPATH settings to find shared libraries

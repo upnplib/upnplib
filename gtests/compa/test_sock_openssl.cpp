@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-07-28
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -15,6 +15,7 @@
 #include <upnp.hpp>
 
 #include <upnplib/port.hpp>
+#include <upnplib/trace.hpp>
 #include <upnplib/gtest.hpp>
 #include "upnplib/upnptools.hpp" // for errStrEx
 

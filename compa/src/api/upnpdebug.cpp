@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-27
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -50,6 +50,8 @@
 // #include <string.h>
 
 #include "posix_overwrites.hpp"
+
+#include <upnplib/cmake_vars.hpp>
 
 #include "umock/pthread.hpp"
 #include "umock/stdio.hpp"
@@ -281,7 +283,8 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
 
     va_start(ArgList, FmtStr);
     if (DbgFileName) {
-        UpnpDisplayFileAndLine(fp, DbgFileName, DbgLineNo, DLevel, Module);
+        UpnpDisplayFileAndLine(fp, DbgFileName + UPNPLIB_PROJECT_PATH_LENGTH,
+                               DbgLineNo, DLevel, Module);
         vfprintf(fp, FmtStr, ArgList);
         umock::stdio_h.fflush(fp);
     }

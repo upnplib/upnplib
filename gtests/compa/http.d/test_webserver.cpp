@@ -9,7 +9,7 @@
 #include <compa/src/genlib/net/http/webserver.cpp>
 #endif
 
-#include <upnplib/port.hpp>
+#include <upnplib/trace.hpp>
 #include <upnplib/upnptools.hpp>  // for errStrEx
 #include <upnplib/cmake_vars.hpp> // for SAMPLE_SOURCE_DIR
 #include <upnplib/gtest.hpp>

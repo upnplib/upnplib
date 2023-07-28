@@ -72,6 +72,7 @@
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/socket.hpp>
+#include <upnplib/trace.hpp>
 
 #ifdef _WIN32
 #include <UpnpStdInt.hpp> // for ssize_t

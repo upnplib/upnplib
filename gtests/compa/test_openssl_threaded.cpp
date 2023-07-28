@@ -1,7 +1,7 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-10
+// Redistribution only with this Copyright remark. Last modified: 2023-07-28
 
-#include <upnplib/port.hpp>
+#include <upnplib/trace.hpp>
 #include <upnplib/port_sock.hpp>
 #include <upnplib/cmake_vars.hpp>
 

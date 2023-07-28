@@ -2,7 +2,7 @@
 // Redistribution only with this Copyright remark. Last modified: 2023-06-02
 
 #include "upnplib/sockaddr.hpp"
-#include "upnplib/port.hpp"
+#include "upnplib/trace.hpp"
 #include <filesystem>
 #include <cstring>
 

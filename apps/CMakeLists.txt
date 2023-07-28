@@ -14,9 +14,6 @@ project(APPS VERSION 0002
 add_executable(upnplib-psh
         ./src/upnplib.cpp
 )
-target_include_directories(upnplib-psh
-    PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
-)
 target_link_libraries(upnplib-psh
     PRIVATE pupnp_shared
 )
@@ -25,9 +22,6 @@ target_link_libraries(upnplib-psh
 #-----------------------------------------------------
 add_executable(upnplib-pst
         ./src/upnplib.cpp
-)
-target_include_directories(upnplib-pst
-    PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
 )
 target_link_libraries(upnplib-pst
     PRIVATE
@@ -43,9 +37,6 @@ target_link_libraries(upnplib-pst
 add_executable(upnplib-csh
         ./src/upnplib.cpp
 )
-target_include_directories(upnplib-csh
-    PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
-)
 target_link_libraries(upnplib-csh
     PRIVATE
         compa_shared
@@ -55,9 +46,6 @@ target_link_libraries(upnplib-csh
 #----------------------------------------------------------
 add_executable(upnplib-cst
         ./src/upnplib.cpp
-)
-target_include_directories(upnplib-cst
-    PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
 )
 target_link_libraries(upnplib-cst
     PRIVATE

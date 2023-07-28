@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-12
+# Redistribution only with this Copyright remark. Last modified: 2023-07-28
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -24,16 +24,10 @@ set(UPNPLIB_SOURCE_FILES
 )
 
 set(UPNPLIB_INCLUDE_DIRECTORIES
-    PUBLIC
-        ./include
-)
-
-set(UPNPLIBEXE_INCLUDE_DIRECTORIES
-    # Next variable is needed for one step configure. Don't use
-    # PRIVATE ${COMPA_SOURCE_DIR}/include
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}/compa/include
+    PUBLIC ./include
     PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
 )
+
 
 if(NOT WIN32)
 

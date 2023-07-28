@@ -3,7 +3,7 @@
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-17
+ * Redistribution only with this Copyright remark. Last modified: 2023-07-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,11 +31,11 @@
  *
  *************************************************************************/
 
-#include "FreeList.hpp"
-#include "upnpdebug.hpp"
-#include "upnptools.hpp"
-#include "upnplib/cmake_vars.hpp"
-#include "init.hpp"
+#include <FreeList.hpp>
+#include <upnpdebug.hpp>
+#include <upnptools.hpp>
+#include <upnplib/cmake_vars.hpp>
+#include <init.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -53,12 +53,16 @@ void* library_info(void*) {
     std::stringstream msg;
 
     msg << "---- configuration and build -----\n";
-    msg << "CMAKE_VERSION              = " << CMAKE_VERSION << '\n';
-    msg << "CMAKE_CXX_COMPILER         = " << CMAKE_CXX_COMPILER << '\n';
-    msg << "CMAKE_CXX_COMPILER_VERSION = " << CMAKE_CXX_COMPILER_VERSION
+    msg << "CMAKE_VERSION               = " << CMAKE_VERSION << '\n';
+    msg << "CMAKE_CXX_COMPILER          = " << CMAKE_CXX_COMPILER << '\n';
+    msg << "CMAKE_CXX_COMPILER_VERSION  = " << CMAKE_CXX_COMPILER_VERSION
         << '\n';
-    msg << "CMAKE_BUILD_TYPE           = " << CMAKE_BUILD_TYPE << '\n';
-    msg << "CMAKE_GENERATOR            = " << CMAKE_GENERATOR << '\n';
+    msg << "CMAKE_BUILD_TYPE            = " << CMAKE_BUILD_TYPE << '\n';
+    msg << "CMAKE_GENERATOR             = " << CMAKE_GENERATOR << '\n';
+    msg << "UPNPLIB_PROJECT_SOURCE_DIR  = " << UPNPLIB_PROJECT_SOURCE_DIR
+        << '\n';
+    msg << "UPNPLIB_PROJECT_PATH_LENGTH = " << UPNPLIB_PROJECT_PATH_LENGTH
+        << '\n';
     /*
      * Check library optional features
      */
