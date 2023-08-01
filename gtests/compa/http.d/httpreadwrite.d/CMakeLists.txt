@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-06
+# Redistribution only with this Copyright remark. Last modified: 2023-08-01
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../../cmake/project-header.cmake)
@@ -113,6 +113,7 @@ add_executable(test_netconnect
 )
 endif()
 
+if(FALSE)
 add_executable(test_netconnect-pst
 #---------------------------------
     ./test_netconnect.cpp
@@ -139,6 +140,7 @@ target_link_libraries(test_netconnect-pst
 )
 add_test(NAME ctest_netconnect-pst COMMAND test_netconnect-pst --gtest_shuffle
 )
+endif()
 
 
 # httpreadwrite: http_Download

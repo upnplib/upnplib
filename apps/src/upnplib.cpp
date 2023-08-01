@@ -3,7 +3,7 @@
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-28
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,11 +31,13 @@
  *
  *************************************************************************/
 
+#include <config.hpp>
 #include <FreeList.hpp>
 #include <upnpdebug.hpp>
 #include <upnptools.hpp>
-#include <upnplib/cmake_vars.hpp>
 #include <init.hpp>
+
+#include <upnplib/cmake_vars.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -66,78 +68,107 @@ void* library_info(void*) {
     /*
      * Check library optional features
      */
-    msg << "---- user definable options ------\n";
-#ifdef DEBUG
-    msg << "DEBUG                 = yes\n";
-#else
-    msg << "DEBUG                 = no\n";
-#endif
-
-#ifdef UPNP_HAVE_DEBUG
-    msg << "UPNP_HAVE_DEBUG       = yes\n";
-#else
-    msg << "UPNP_HAVE_DEBUG       = no\n";
-#endif
-
-#ifdef UPNP_ENABLE_OPEN_SSL
-    msg << "UPNP_ENABLE_OPEN_SSL  = yes\n";
-#else
-    msg << "UPNP_ENABLE_OPEN_SSL  = no\n";
-#endif
-
-#ifdef UPNP_HAVE_TOOLS
-    const char* errmsg = UpnpGetErrorMessage(UPNP_E_SUCCESS);
-    if (strcmp(errmsg, "UPNP_E_SUCCESS") == 0)
-        msg << "UPNP_HAVE_TOOLS       = yes\n";
-    else
-        msg << "UPNP_HAVE_TOOLS       = yes, but does not return "
-               "UPNP_E_SUCCESS\n";
-#else
-    msg << "UPNP_HAVE_TOOLS       = no\n";
-#endif
-
-#ifdef UPNP_HAVE_CLIENT
-    msg << "UPNP_HAVE_CLIENT      = yes\n";
-#else
-    msg << "UPNP_HAVE_CLIENT      = no\n";
-#endif
-
-#ifdef UPNP_HAVE_DEVICE
-    msg << "UPNP_HAVE_DEVICE      = yes\n";
-#else
-    msg << "UPNP_HAVE_DEVICE      = no\n";
-#endif
-
-#ifdef UPNP_HAVE_WEBSERVER
-    msg << "UPNP_HAVE_WEBSERVER   = yes\n";
-#else
-    msg << "UPNP_HAVE_WEBSERVER   = no\n";
-#endif
-
-#ifdef UPNP_HAVE_SSDP
-    msg << "UPNP_HAVE_SSDP        = yes\n";
-#else
-    msg << "UPNP_HAVE_SSDP        = no\n";
-#endif
-
-#ifdef UPNP_HAVE_OPTSSDP
-    msg << "UPNP_HAVE_OPTSSDP     = yes\n";
-#else
-    msg << "UPNP_HAVE_OPTSSDP     = no\n";
-#endif
-
+    msg << "\n---- user definable options ------\n";
 #ifdef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
     msg << "UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS = yes\n";
 #else
     msg << "UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS = no\n";
 #endif
 
-    msg << "---- internal settings -----------\n";
+#ifdef DEBUG
+    msg << "DEBUG                   = yes\n";
+#else
+    msg << "DEBUG                   = no\n";
+#endif
+
+#ifdef UPNP_HAVE_DEBUG
+    msg << "UPNP_HAVE_DEBUG         = yes\n";
+#else
+    msg << "UPNP_HAVE_DEBUG         = no\n";
+#endif
+
+#ifdef UPNP_ENABLE_OPEN_SSL
+    msg << "UPNP_ENABLE_OPEN_SSL    = yes\n";
+#else
+    msg << "UPNP_ENABLE_OPEN_SSL    = no\n";
+#endif
+
+#ifdef IXML_HAVE_SCRIPTSUPPORT
+    msg << "IXML_HAVE_SCRIPTSUPPORT = yes\n";
+#else
+    msg << "IXML_HAVE_SCRIPTSUPPORT = no\n";
+#endif
+
+#ifdef UPNP_HAVE_TOOLS
+    const char* errmsg = UpnpGetErrorMessage(UPNP_E_SUCCESS);
+    if (strcmp(errmsg, "UPNP_E_SUCCESS") == 0)
+        msg << "UPNP_HAVE_TOOLS         = yes\n";
+    else
+        msg << "UPNP_HAVE_TOOLS         = yes, but does not return "
+               "UPNP_E_SUCCESS\n";
+#else
+    msg << "UPNP_HAVE_TOOLS         = no\n";
+#endif
+
+#ifdef UPNP_HAVE_WEBSERVER
+    msg << "UPNP_HAVE_WEBSERVER     = yes\n";
+#else
+    msg << "UPNP_HAVE_WEBSERVER     = no\n";
+#endif
+
+#ifdef UPNP_HAVE_SSDP
+    msg << "UPNP_HAVE_SSDP          = yes\n";
+#else
+    msg << "UPNP_HAVE_SSDP          = no\n";
+#endif
+
+#ifdef UPNP_HAVE_OPTSSDP
+    msg << "UPNP_HAVE_OPTSSDP       = yes\n";
+#else
+    msg << "UPNP_HAVE_OPTSSDP       = no\n";
+#endif
+
+#ifdef UPNP_HAVE_SOAP
+    msg << "UPNP_HAVE_SOAP          = yes\n";
+#else
+    msg << "UPNP_HAVE_SOAP          = no\n";
+#endif
+
+#ifdef UPNP_HAVE_GENA
+    msg << "UPNP_HAVE_GENA          = yes\n";
+#else
+    msg << "UPNP_HAVE_GENA          = no\n";
+#endif
+
+#ifdef UPNP_HAVE_CLIENT
+    msg << "UPNP_HAVE_CLIENT        = yes\n";
+#else
+    msg << "UPNP_HAVE_CLIENT        = no\n";
+#endif
+
+#ifdef UPNP_HAVE_DEVICE
+    msg << "UPNP_HAVE_DEVICE        = yes\n";
+#else
+    msg << "UPNP_HAVE_DEVICE        = no\n";
+#endif
+
+    msg << "\n---- internal settings -----------\n";
+#ifdef UPNP_ENABLE_IPV6
+    msg << "UPNP_ENABLE_IPV6        = yes\n";
+#else
+    msg << "UPNP_ENABLE_IPV6        = no\n";
+#endif
 
 #ifdef INTERNAL_WEB_SERVER
-    msg << "INTERNAL_WEB_SERVER                 = yes\n";
+    msg << "INTERNAL_WEB_SERVER     = yes\n";
 #else
-    msg << "INTERNAL_WEB_SERVER                 = no\n";
+    msg << "INTERNAL_WEB_SERVER     = no\n";
+#endif
+
+#ifdef INCLUDE_DEVICE_APIS
+    msg << "INCLUDE_DEVICE_APIS     = yes\n";
+#else
+    msg << "INCLUDE_DEVICE_APIS     = no\n";
 #endif
 
     msg << "----------------------------------\n";
