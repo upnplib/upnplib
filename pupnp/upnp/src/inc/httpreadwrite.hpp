@@ -1,10 +1,12 @@
+#ifndef PUPNP_GENLIB_NET_HTTP_HTTPREADWRITE_HPP
+#define PUPNP_GENLIB_NET_HTTP_HTTPREADWRITE_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-02-04
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,9 +33,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
-#ifndef UPNPLIB_GENLIB_NET_HTTP_HTTPREADWRITE_HPP
-#define UPNPLIB_GENLIB_NET_HTTP_HTTPREADWRITE_HPP
+// Last compare with pupnp original source file on 2023-08-03, ver 1.14.17
 
 /*
  * \file
@@ -53,7 +53,7 @@ struct tm* http_gmtime_r(const time_t* clock, struct tm* result);
 #define http_gmtime_r gmtime_r
 #endif
 
-EXPORT_SPEC int http_CancelHttpGet(/* IN */ void* Handle);
+int http_CancelHttpGet(/* IN */ void* Handle);
 
 /*!
  * \brief Validates URL.
@@ -117,9 +117,9 @@ SOCKET http_Connect(
  *       UPNP_E_BAD_HTTPMSG
  *       UPNP_E_SUCCESS
  ************************************************************************/
-EXPORT_SPEC int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
-                                 http_method_t request_method,
-                                 int* timeout_secs, int* http_error_code);
+int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
+                     http_method_t request_method, int* timeout_secs,
+                     int* http_error_code);
 
 /*!
  * \brief Sends a message to the destination based on the format parameter.
@@ -143,7 +143,7 @@ EXPORT_SPEC int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
  * \li \c UPNP_E_FILE_READ_ERROR
  * \li \c UPNP_E_SUCCESS
  */
-EXPORT_SPEC int http_SendMessage(
+int http_SendMessage(
     /* [in] Socket information object. */
     SOCKINFO* info,
     /* [in,out] Time out value. */
@@ -210,9 +210,8 @@ int http_RequestAndResponse(uri_type* destination, const char* request,
  *      UPNP_E_SUCCESS
  *      UPNP_E_INVALID_URL
  ************************************************************************/
-EXPORT_SPEC int http_Download(const char* url, int timeout_secs,
-                              char** document, size_t* doc_length,
-                              char* content_type);
+int http_Download(const char* url, int timeout_secs, char** document,
+                  size_t* doc_length, char* content_type);
 
 /************************************************************************
  * Function: http_HttpGetProgress
@@ -229,8 +228,7 @@ EXPORT_SPEC int http_Download(const char* url, int timeout_secs,
  *      UPNP_E_SUCCESS          - On Sucess
  *      UPNP_E_INVALID_PARAM    - Invalid Parameter
  ************************************************************************/
-EXPORT_SPEC int http_HttpGetProgress(void* Handle, size_t* length,
-                                     size_t* total);
+int http_HttpGetProgress(void* Handle, size_t* length, size_t* total);
 
 /*!
  * \brief Opens a connection to the server.
@@ -488,9 +486,9 @@ EXPORT_SPEC int http_CloseHttpConnection(
  *      UPNP_E_SOCKET_WRITE
  *      UPNP_E_TIMEDOUT
  ************************************************************************/
-EXPORT_SPEC int http_SendStatusResponse(SOCKINFO* info, int http_status_code,
-                                        int request_major_version,
-                                        int request_minor_version);
+int http_SendStatusResponse(SOCKINFO* info, int http_status_code,
+                            int request_major_version,
+                            int request_minor_version);
 
 // clang-format off
 /*!
@@ -593,10 +591,9 @@ void http_CalcResponseVersion(int request_major_vers, int request_minor_vers,
  *      UPNP_E_SOCKET_ERROR
  *      UPNP_E_BAD_RESPONSE
  ************************************************************************/
-EXPORT_SPEC int http_OpenHttpGetEx(const char* url_str, void** Handle,
-                                   char** contentType, int* contentLength,
-                                   int* httpStatus, int lowRange, int highRange,
-                                   int timeout);
+int http_OpenHttpGetEx(const char* url_str, void** Handle, char** contentType,
+                       int* contentLength, int* httpStatus, int lowRange,
+                       int highRange, int timeout);
 
 /************************************************************************
  * Function: get_sdk_info
@@ -613,4 +610,4 @@ EXPORT_SPEC int http_OpenHttpGetEx(const char* url_str, void** Handle,
  ************************************************************************/
 void get_sdk_info(char* info, size_t infoSize);
 
-#endif /* UPNPLIB_GENLIB_NET_HTTP_HTTPREADWRITE_HPP */
+#endif /* PUPNP_GENLIB_NET_HTTP_HTTPREADWRITE_HPP */

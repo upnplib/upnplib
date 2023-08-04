@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-28
+// Redistribution only with this Copyright remark. Last modified: 2023-08-05
 
 #include <upnplib/socket.hpp>
 #include <upnplib/trace.hpp>
@@ -13,28 +13,21 @@ namespace upnplib {
 // Initialize and cleanup Microsoft Windows Sockets
 // ------------------------------------------------
 #ifdef _MSC_VER
-class CWSAStartup {
-  public:
-    CWSAStartup() {
-        TRACE2(this, " Construct upnplib::CWSAStartup")
-        WSADATA wsaData;
-        int rc = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
-        if (rc != 0)
-            throw std::runtime_error(
-                "UPnPlib ERROR 1003! Failed to initialize Windows "
-                "sockets: WSAStartup() returns " +
-                std::to_string(rc));
-    }
+CWSAStartup::CWSAStartup() {
+    TRACE2(this, " Construct CWSAStartup")
+    WSADATA wsaData;
+    int rc = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (rc != 0)
+        throw std::runtime_error(
+            "UPnPlib ERROR 1003! Failed to initialize Windows "
+            "sockets: WSAStartup() returns " +
+            std::to_string(rc));
+}
 
-    ~CWSAStartup() {
-        TRACE2(this, " Destruct upnplib::CWSAStartup")
-        ::WSACleanup();
-    }
-};
-
-// Instantiate an object for livetime of the library.
-// --------------------------------------------------
-CWSAStartup winsock_init;
+CWSAStartup::~CWSAStartup() {
+    TRACE2(this, " Destruct CWSAStartup")
+    ::WSACleanup();
+}
 #endif // _MSC_VER
 
 
@@ -61,7 +54,7 @@ static inline void throw_error(const std::string& a_errmsg) {
 // -------------------------------------------------------
 static int getsockname(SOCKET a_sockfd, struct sockaddr* a_addr,
                        socklen_t* a_addrlen) {
-    TRACE("Executing upnplib::getsockname()");
+    TRACE("Executing getsockname()");
 
     int ret = umock::sys_socket_h.getsockname(a_sockfd, a_addr, a_addrlen);
     if (ret == 0)
@@ -102,12 +95,12 @@ static int getsockname(SOCKET a_sockfd, struct sockaddr* a_addr,
 // ===================
 // Default constructor for an empty socket object
 CSocket_basic::CSocket_basic(){
-    TRACE2(this, " Construct default upnplib::CSocket_basic()") //
+    TRACE2(this, " Construct default CSocket_basic()") //
 }
 
 // Constructor with given file desciptor
 CSocket_basic::CSocket_basic(SOCKET a_sfd) {
-    TRACE2(this, " Construct upnplib::CSocket_basic(SOCKET)")
+    TRACE2(this, " Construct CSocket_basic(SOCKET)")
 
     // Check if we have a valid socket file descriptor
     int so_option{-1};
@@ -122,12 +115,12 @@ CSocket_basic::CSocket_basic(SOCKET a_sfd) {
 
 // Destructor
 CSocket_basic::~CSocket_basic(){
-    TRACE2(this, " Destruct upnplib::CSocket_basic()") //
+    TRACE2(this, " Destruct CSocket_basic()") //
 }
 
 // Get the raw socket file descriptor
 CSocket_basic::operator SOCKET&() const {
-    TRACE2(this, " Executing upnplib::CSocket_basic::operator SOCKET&() (get "
+    TRACE2(this, " Executing CSocket_basic::operator SOCKET&() (get "
                  "raw socket fd)")
     // There is no problem with cast here. We cast to const so we can only read.
     return const_cast<SOCKET&>(m_sfd);
@@ -136,7 +129,7 @@ CSocket_basic::operator SOCKET&() const {
 // Getter
 // ------
 sa_family_t CSocket_basic::get_family() const {
-    TRACE2(this, " Executing upnplib::CSocket_basic::get_family()")
+    TRACE2(this, " Executing CSocket_basic::get_family()")
     ::sockaddr_storage ss{};
     socklen_t len = sizeof(ss); // May be modified
     if (upnplib::getsockname(m_sfd, (sockaddr*)&ss, &len) != 0)
@@ -146,7 +139,7 @@ sa_family_t CSocket_basic::get_family() const {
 }
 
 std::string CSocket_basic::get_addr_str() const {
-    TRACE2(this, " Executing upnplib::CSocket::get_addr_str()")
+    TRACE2(this, " Executing CSocket::get_addr_str()")
 
     // Get address from socket file descriptor
     ::sockaddr_storage ss{};
@@ -182,7 +175,7 @@ std::string CSocket_basic::get_addr_str() const {
 }
 
 uint16_t CSocket_basic::get_port() const {
-    TRACE2(this, " Executing upnplib::CSocket_basic::get_port()")
+    TRACE2(this, " Executing CSocket_basic::get_port()")
 
     // Get port from socket file descriptor
     ::sockaddr_storage ss{};
@@ -196,7 +189,7 @@ uint16_t CSocket_basic::get_port() const {
 }
 
 int CSocket_basic::get_type() const {
-    TRACE2(this, " Executing upnplib::CSocket_basic::get_type()")
+    TRACE2(this, " Executing CSocket_basic::get_type()")
     int so_option{-1};
     socklen_t len{sizeof(so_option)}; // May be modified
     // Type cast (char*)&so_option is needed for Microsoft Windows.
@@ -208,7 +201,7 @@ int CSocket_basic::get_type() const {
 }
 
 int CSocket_basic::get_sockerr() const {
-    TRACE2(this, " Executing upnplib::CSocket_basic::get_sockerr()")
+    TRACE2(this, " Executing CSocket_basic::get_sockerr()")
     int so_option{-1};
     socklen_t len{sizeof(so_option)}; // May be modified
     // Type cast (char*)&so_option is needed for Microsoft Windows.
@@ -221,7 +214,7 @@ int CSocket_basic::get_sockerr() const {
 }
 
 bool CSocket_basic::is_reuse_addr() const {
-    TRACE2(this, " Executing upnplib::CSocket_basic::is_reuse_addr()")
+    TRACE2(this, " Executing CSocket_basic::is_reuse_addr()")
     int so_option{-1};
     socklen_t len{sizeof(so_option)}; // May be modified
     // Type cast (char*)&so_option is needed for Microsoft Windows.
@@ -238,12 +231,12 @@ bool CSocket_basic::is_reuse_addr() const {
 // =============
 // Default constructor for an empty socket object
 CSocket::CSocket(){
-    TRACE2(this, " Construct default upnplib::CSocket()") //
+    TRACE2(this, " Construct default CSocket()") //
 }
 
 // Constructor for new socket file descriptor
 CSocket::CSocket(sa_family_t a_family, int a_type) {
-    TRACE2(this, " Construct upnplib::CSocket(af, type)")
+    TRACE2(this, " Construct CSocket(af, type)")
 
     if (a_family != AF_INET6 && a_family != AF_INET)
         throw std::invalid_argument("UPnPlib ERROR 1015! Failed to create "
@@ -312,7 +305,7 @@ CSocket::CSocket(sa_family_t a_family, int a_type) {
 
 // Move constructor
 CSocket::CSocket(CSocket&& that) {
-    TRACE2(this, " Construct move upnplib::CSocket()")
+    TRACE2(this, " Construct move CSocket()")
     m_sfd = that.m_sfd;
     that.m_sfd = INVALID_SOCKET;
 
@@ -324,7 +317,7 @@ CSocket::CSocket(CSocket&& that) {
 
 // Assignment operator (parameter as value)
 CSocket& CSocket::operator=(CSocket that) {
-    TRACE2(this, " Executing upnplib::CSocket::operator=()")
+    TRACE2(this, " Executing CSocket::operator=()")
     std::swap(m_sfd, that.m_sfd);
 
     // Following variables are protected
@@ -336,7 +329,7 @@ CSocket& CSocket::operator=(CSocket that) {
 
 // Destructor
 CSocket::~CSocket() {
-    TRACE2(this, " Destruct upnplib::CSocket()")
+    TRACE2(this, " Destruct CSocket()")
     ::shutdown(m_sfd, SHUT_RDWR);
     CLOSE_SOCKET_P(m_sfd);
 }
@@ -363,7 +356,7 @@ void CSocket::set_reuse_addr(bool a_reuse) {
 // (https://hea-www.harvard.edu/~fine/Tech/addrinuse.html)
 void CSocket::bind(const std::string& a_node, const std::string& a_port,
                    const int a_flags) {
-    TRACE2(this, " Executing upnplib::CSocket::bind()")
+    TRACE2(this, " Executing CSocket::bind()")
 
     // Protect binding.
     std::scoped_lock lock(m_bound_mutex);
@@ -397,7 +390,7 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
 
 // Set socket to listen
 void CSocket::listen() {
-    TRACE2(this, " Executing upnplib::CSocket::listen()")
+    TRACE2(this, " Executing CSocket::listen()")
 
     // Protect set listen and storing its state (m_listen).
     std::scoped_lock lock(m_listen_mutex);
@@ -415,7 +408,7 @@ void CSocket::listen() {
 
 // Set IPV6_V6ONLY
 void CSocket::set_v6only(const bool a_opt) {
-    TRACE2(this, " Executing upnplib::CSocket::set_ipv6_v6only()")
+    TRACE2(this, " Executing CSocket::set_ipv6_v6only()")
 
     // Needed to have a valid argument for setsockopt()
     const int so_option{a_opt};
@@ -431,7 +424,7 @@ void CSocket::set_v6only(const bool a_opt) {
 // Getter
 // ------
 sa_family_t CSocket::get_family() const {
-    TRACE2(this, " Executing upnplib::CSocket::get_family()")
+    TRACE2(this, " Executing CSocket::get_family()")
     ::sockaddr_storage ss{};
     socklen_t len = sizeof(ss); // May be modified
     if (upnplib::getsockname(m_sfd, (sockaddr*)&ss, &len) != 0)
@@ -441,7 +434,7 @@ sa_family_t CSocket::get_family() const {
 }
 
 uint16_t CSocket::get_port() const {
-    TRACE2(this, " Executing upnplib::CSocket::get_port()")
+    TRACE2(this, " Executing CSocket::get_port()")
 
     // Get port from socket file descriptor
     ::sockaddr_storage ss{};
@@ -455,7 +448,7 @@ uint16_t CSocket::get_port() const {
 }
 
 bool CSocket::is_v6only() const {
-    TRACE2(this, " Executing upnplib::CSocket::is_v6only()")
+    TRACE2(this, " Executing CSocket::is_v6only()")
     if (m_sfd == INVALID_SOCKET)
         throw std::runtime_error("UPnPlib ERROR 1028! Failed to get socket "
                                  "option IPV6_V6ONLY: \"Bad file descriptor\"");
@@ -473,7 +466,7 @@ bool CSocket::is_bound() const {
     // We get the socket address from the file descriptor and check if its
     // address and port are all zero. We have to do this different for AF_INET6
     // and AF_INET.
-    TRACE2(this, " Executing upnplib::CSocket::is_bound()")
+    TRACE2(this, " Executing CSocket::is_bound()")
 
     // binding is protected.
     std::scoped_lock lock(m_bound_mutex);
@@ -512,7 +505,7 @@ bool CSocket::is_bound() const {
 }
 
 bool CSocket::is_listen() const {
-    TRACE2(this, " Executing upnplib::CSocket::is_listen()")
+    TRACE2(this, " Executing CSocket::is_listen()")
     if (m_sfd == INVALID_SOCKET)
         throw std::runtime_error(
             "UPnPlib ERROR 1035! Failed to get socket option "

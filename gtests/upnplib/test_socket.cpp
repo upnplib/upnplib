@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-13
+// Redistribution only with this Copyright remark. Last modified: 2023-08-05
 
 #include <upnplib/socket.hpp>
 #include <upnplib/addrinfo.hpp>
@@ -985,6 +985,7 @@ TEST(SocketV6onlyTestSuite, modify_v6only_on_passive_af_inet_dgram_socket) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
+    WINSOCK_INIT
 #include <upnplib/gtest_main.inc>
     return gtest_return_code; // managed in upnplib/gtest_main.inc
 }

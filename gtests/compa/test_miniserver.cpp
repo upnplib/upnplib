@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-01
+// Redistribution only with this Copyright remark. Last modified: 2023-08-05
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -1377,7 +1377,8 @@ TEST_F(StartMiniServerFTestSuite, get_port_successful) {
     EXPECT_CALL(mocked_sys_socketObj,
                 getsockname(sockfd, _, Pointee(Ge((socklen_t)ai->ai_addrlen))))
         .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr),
-                        SetArgPointee<2>(ai->ai_addrlen), Return(0)));
+                        SetArgPointee<2>((socklen_t)ai->ai_addrlen),
+                        Return(0)));
 
     // Test Unit
     EXPECT_EQ(get_port(sockfd, &port), 0);
@@ -1403,8 +1404,8 @@ TEST(StartMiniServerTestSuite, get_port_wrong_sockaddr_family) {
     umock::Sys_socketMock mocked_sys_socketObj;
     umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
     EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
-        .WillOnce(DoAll(SetArgPointee<1>(sa), SetArgPointee<2>(sizeof(sa)),
-                        Return(0)));
+        .WillOnce(DoAll(SetArgPointee<1>(sa),
+                        SetArgPointee<2>((socklen_t)sizeof(sa)), Return(0)));
 
     // Test Unit
     if (old_code) {

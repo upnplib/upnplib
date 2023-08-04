@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-13
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-04
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,6 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+// Last compare with pupnp original source file on 2023-08-03, ver 1.14.17
 
 /*!
  * \file
@@ -100,8 +101,6 @@ const int CHUNK_TAIL_SIZE = 10;
 #define CHUNK_HEADER_SIZE (size_t)10
 #define CHUNK_TAIL_SIZE (size_t)10
 
-#ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
-
 /* in seconds */
 #define DEFAULT_TCP_CONNECT_TIMEOUT 5
 
@@ -163,27 +162,35 @@ static int Check_Connect_And_Wait_Connection(
 
     return 0;
 }
-#endif /* UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS */
+
+// Using this variable to be able to set it by unit tests to test
+// blocking vs. unblocking at runtime without to compile it.
+#ifdef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
+bool unblock_tcp_connections{false};
+#else
+bool unblock_tcp_connections{true};
+#endif
 
 static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
                            socklen_t addrlen) {
-#ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
-    int ret = umock::pupnp_sock.sock_make_no_blocking(sockfd);
-    // Ingo BUG! On MS Windows sock_make_no_blocking() returns with positive
-    // error numbers.
-    if (ret != -1) {
-        ret = umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
-        ret =
-            umock::pupnp_httprw.Check_Connect_And_Wait_Connection(sockfd, ret);
+    if (unblock_tcp_connections) {
+        int ret = umock::pupnp_sock.sock_make_no_blocking(sockfd);
+        // BUG! On MS Windows sock_make_no_blocking() returns with positive
+        // error numbers. --Ingo
         if (ret != -1) {
-            ret = umock::pupnp_sock.sock_make_blocking(sockfd);
+            ret = umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
+            ret = Check_Connect_And_Wait_Connection(sockfd, ret);
+            if (ret != -1) {
+                ret = umock::pupnp_sock.sock_make_blocking(sockfd);
+            }
         }
-    }
 
-    return ret;
-#else
-    return umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
-#endif /* UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS */
+        return ret;
+
+    } else {
+
+        return umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
+    }
 }
 
 #ifdef _WIN32

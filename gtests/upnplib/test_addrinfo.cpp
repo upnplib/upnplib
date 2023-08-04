@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-21
+// Redistribution only with this Copyright remark. Last modified: 2023-08-05
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/socket.hpp>
@@ -295,6 +295,7 @@ TEST(AddrinfoTestSuite, compare_different_address_infos) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
+    WINSOCK_INIT
 #include <upnplib/gtest_main.inc>
     return gtest_return_code; // managed in upnplib/gtest_main.inc
 }

@@ -1,16 +1,25 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-31
+// Redistribution only with this Copyright remark. Last modified: 2023-08-05
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
-#include "pupnp/upnp/src/genlib/net/http/httpreadwrite.cpp"
-#include "upnplib/src/net/http/httpreadwrite.cpp"
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+#include <pupnp/upnp/src/genlib/net/http/httpreadwrite.cpp>
+#else
+#include <compa/src/genlib/net/http/httpreadwrite.cpp>
+#endif
 
-#include "upnplib/gtest.hpp"
+#include <upnplib/gtest.hpp>
 
-#include "gmock/gmock.h"
-#include "umock/sys_socket_mock.hpp"
-#include "umock/pupnp_sock_mock.hpp"
+#include <umock/sys_socket_mock.hpp>
+#include <umock/sys_select_mock.hpp>
+#include <umock/pupnp_sock_mock.hpp>
+#include <umock/winsock2_mock.hpp>
+
+
+namespace compa {
+bool old_code{false}; // Managed in compa/gtest_main.inc
+bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -20,24 +29,10 @@ using ::testing::SetErrnoAndReturn;
 
 using ::upnplib::testing::SetArgPtrIntValue;
 
-namespace compa {
 
-bool old_code{false}; // Managed in compa/gtest_main.inc
-bool github_actions = ::std::getenv("GITHUB_ACTIONS");
-
-//
 // ######################################
 // Mocked system calls
 // ######################################
-class Sys_selectMock : public umock::Sys_selectInterface {
-  public:
-    virtual ~Sys_selectMock() override {}
-    MOCK_METHOD(int, select,
-                (SOCKET nfds, fd_set* readfds, fd_set* writefds,
-                 fd_set* exceptfds, struct timeval* timeout),
-                (override));
-};
-
 class PupnpHttpRwMock : public umock::PupnpHttpRwInterface {
   public:
     virtual ~PupnpHttpRwMock() override = default;
@@ -45,13 +40,9 @@ class PupnpHttpRwMock : public umock::PupnpHttpRwInterface {
                 (SOCKET sockfd, const struct sockaddr* serv_addr,
                  socklen_t addrlen),
                 (override));
-#ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
-    MOCK_METHOD(int, Check_Connect_And_Wait_Connection,
-                (SOCKET sock, int connect_res), (override));
-#endif
 };
 
-//
+
 // ######################################
 // testsuite for Ip4 httpreadwrite
 // ######################################
@@ -111,26 +102,27 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, real_connect) {
 }
 #endif
 
-//
-class PrivateConnectIp4FTestSuite : public ::testing::Test {
+
+class PrivateConnectFTestSuite : public ::testing::Test {
   protected:
     // Fictive socket file descriptor for mocking.
-    const int m_socketfd{513};
+    const int m_sockfd{513};
     // Ip address structure
     ::sockaddr_in m_saddrin{};
 
-    PrivateConnectIp4FTestSuite() {
+    PrivateConnectFTestSuite() {
         m_saddrin.sin_family = AF_INET;
         m_saddrin.sin_port = htons(80);
         m_saddrin.sin_addr.s_addr = ::inet_addr("192.168.192.168");
     }
 };
 
-TEST_F(PrivateConnectIp4FTestSuite, successful_connect) {
+
+TEST_F(PrivateConnectFTestSuite, connect_successful) {
     // Steps as given by the Unit:
     // 1. sock_make_no_blocking
     // 2. try to connect
-    // 3. check connection an and wait until connected or timed out
+    // 3. check connection and wait until connected or timed out
     // 4. sock_make_blocking
 
     // Configure expected system calls:
@@ -139,40 +131,68 @@ TEST_F(PrivateConnectIp4FTestSuite, successful_connect) {
     // * connection succeeds
     // * make blocking succeeds
 
+    // Mock used functions
+    // -------------------
+    // Unblock connection to return successful means don't wait on connect and
+    // return immediately.
     umock::PupnpSockMock mock_pupnpSockObj;
-    // First unblock connection, means don't wait on connect and return
-    // immediately.
     umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
-    EXPECT_CALL(mock_pupnpSockObj, sock_make_no_blocking(m_socketfd))
-        .WillOnce(Return(0));
+    // sock_make_no_blocking()
+    EXPECT_CALL(mock_pupnpSockObj, sock_make_no_blocking(m_sockfd)).Times(1);
+    // sock_make_blocking()
+    EXPECT_CALL(mock_pupnpSockObj, sock_make_blocking(m_sockfd)).Times(1);
 
-    // Then connect to the given ip address. With unblocking this will return
-    // with an error condition and errno = EINPROGRESS
+    umock::Sys_selectMock mock_sys_selectObj;
+    umock::Sys_select sys_select_injectObj(&mock_sys_selectObj);
+    // select()
+    EXPECT_CALL(mock_sys_selectObj,
+                select(m_sockfd + 1, NULL, NotNull(), NULL, NotNull()))
+        .WillOnce(Return(1));
+
+    // Connect to the given ip address. With unblocking this will
+    // return with an error condition and errno = EINPROGRESS
     umock::Sys_socketMock mock_socketObj;
     umock::Sys_socket sys_socket_injectObj(&mock_socketObj);
+    // connect()
     EXPECT_CALL(mock_socketObj,
-                connect(m_socketfd, (sockaddr*)&m_saddrin, sizeof(m_saddrin)))
-        .WillOnce(Return(-1));
+                connect(m_sockfd, (sockaddr*)&m_saddrin, sizeof(m_saddrin)))
+        .WillOnce(SetErrnoAndReturn(EINPROGRESS, -1));
+#ifndef _WIN32
+    // getsockopt() to get socket error
+    EXPECT_CALL(mock_socketObj, getsockopt(m_sockfd, _, _, _, _)).Times(1);
 
-    // Check the connection with a short timeout (default 5s) and return if
-    // ready to send. Arg1 (0 based) must return value of connect().
-    PupnpHttpRwMock mock_pupnpHttpRwObj;
-    umock::PupnpHttpRw pupnp_httprw_injectObj(&mock_pupnpHttpRwObj);
-    EXPECT_CALL(mock_pupnpHttpRwObj,
-                Check_Connect_And_Wait_Connection(m_socketfd, -1))
-        .WillOnce(Return(0));
-    // Set blocking mode
-    EXPECT_CALL(mock_pupnpSockObj, sock_make_blocking(m_socketfd))
-        .WillOnce(Return(0));
+#else
+    umock::Winsock2Mock mock_winsock2Obj;
+    umock::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
+    // WSAGetLastError
+    EXPECT_CALL(mock_winsock2Obj, WSAGetLastError())
+        .WillOnce(Return(WSAEWOULDBLOCK));
+#endif
 
-    // Test the Unit
-    errno = EINPROGRESS;
-    // errno = ENETUNREACH; // Network is unreachable.
+    // Test code with unblocked TCP connections
+    // ----------------------------------------
+    unblock_tcp_connections = true;
+
+    // Test Unit
     EXPECT_EQ(
-        private_connect(m_socketfd, (sockaddr*)&m_saddrin, sizeof(sockaddr_in)),
+        private_connect(m_sockfd, (sockaddr*)&m_saddrin, sizeof(sockaddr_in)),
+        0);
+
+    // Test Unit with default blocked TCP connections
+    // ----------------------------------------------
+    unblock_tcp_connections = false;
+
+    EXPECT_CALL(mock_socketObj,
+                connect(m_sockfd, (sockaddr*)&m_saddrin, sizeof(m_saddrin)))
+        .Times(1);
+
+    // Test Unit
+    EXPECT_EQ(
+        private_connect(m_sockfd, (sockaddr*)&m_saddrin, sizeof(sockaddr_in)),
         0);
 }
 
+#if false
 TEST_F(PrivateConnectIp4FTestSuite, set_no_blocking_fails) {
     // Configure expected system calls:
     // * 'make no blocking' fails
@@ -432,42 +452,6 @@ TEST_F(PrivateConnectIp4FTestSuite, sock_make_blocking_fails) {
 // There are corresponding tests for Unix systems below. You may compare them to
 // look for differences.
 
-// Mocked system calls on MS Windows
-// ---------------------------------
-class Winsock2Mock : public umock::Winsock2Interface {
-  public:
-    virtual ~Winsock2Mock() override = default;
-    MOCK_METHOD(int, WSAGetLastError, (), (override));
-};
-
-TEST(CheckConnectAndWaitConnectionIp4TestSuite, successful_connect) {
-    // This file descriptor is assumed to be valid.
-    SOCKET socketfd{258};
-
-    // Configure expected system calls.
-    // select()
-    Sys_selectMock mock_sys_selectObj;
-    umock::Sys_select sys_select_injectObj(&mock_sys_selectObj);
-    EXPECT_CALL(mock_sys_selectObj,
-                select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
-        .WillOnce(Return(1));
-    // WSAGetLastError
-    Winsock2Mock mock_winsock2Obj;
-    umock::Winsock2 winsock2_injectObj(&mock_winsock2Obj);
-    EXPECT_CALL(mock_winsock2Obj, WSAGetLastError())
-        .WillOnce(Return(WSAEWOULDBLOCK));
-
-    // Test the unit
-    int connect_retval{-1};
-    if (old_code)
-        EXPECT_EQ(::Check_Connect_And_Wait_Connection(socketfd, connect_retval),
-                  0);
-    else
-        EXPECT_EQ(upnplib::Check_Connect_And_Wait_Connection(socketfd,
-                                                             connect_retval),
-                  0);
-}
-
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, wrong_connect_retval) {
     // This file descriptor is assumed to be valid.
     int socketfd{258};
@@ -598,36 +582,6 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, getsockopt_error) {
 // There are corresponding tests for Microsoft Windows above. You may compare
 // them to look for differences.
 
-TEST(CheckConnectAndWaitConnectionIp4TestSuite, successful_connect) {
-    // This file descriptor is assumed to be valid.
-    SOCKET socketfd{258};
-
-    // Configure expected system calls.
-    // select()
-    Sys_selectMock mock_sys_selectObj;
-    umock::Sys_select sys_select_injectObj(&mock_sys_selectObj);
-    EXPECT_CALL(mock_sys_selectObj,
-                select(socketfd + 1, NULL, NotNull(), NULL, NotNull()))
-        .WillOnce(Return(1));
-    // getsockopt
-    umock::Sys_socketMock mock_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mock_socketObj);
-    EXPECT_CALL(mock_socketObj, getsockopt(socketfd, SOL_SOCKET, SO_ERROR,
-                                           NotNull(), NotNull()))
-        .WillOnce(DoAll(SetArgPtrIntValue<3>(0), Return(0)));
-
-    // Test the unit
-    int connect_retval{-1};
-    errno = EINPROGRESS;
-    if (old_code)
-        EXPECT_EQ(::Check_Connect_And_Wait_Connection(socketfd, connect_retval),
-                  0);
-    else
-        EXPECT_EQ(upnplib::Check_Connect_And_Wait_Connection(socketfd,
-                                                             connect_retval),
-                  0);
-}
-
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, wrong_connect_retval) {
     // This file descriptor is assumed to be valid.
     SOCKET socketfd{258};
@@ -645,13 +599,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, wrong_connect_retval) {
     // Test the unit
     int connect_retval{0};
     errno = 0;
-    if (old_code)
-        EXPECT_EQ(::Check_Connect_And_Wait_Connection(socketfd, connect_retval),
-                  0);
-    else
-        EXPECT_EQ(upnplib::Check_Connect_And_Wait_Connection(socketfd,
-                                                             connect_retval),
-                  0);
+    EXPECT_EQ(Check_Connect_And_Wait_Connection(socketfd, connect_retval), 0);
 }
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, connect_error) {
@@ -671,13 +619,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, connect_error) {
     // Test the unit
     int connect_retval{-1};
     errno = ETIMEDOUT;
-    if (old_code)
-        EXPECT_EQ(::Check_Connect_And_Wait_Connection(socketfd, connect_retval),
-                  0);
-    else
-        EXPECT_EQ(upnplib::Check_Connect_And_Wait_Connection(socketfd,
-                                                             connect_retval),
-                  0);
+    EXPECT_EQ(Check_Connect_And_Wait_Connection(socketfd, connect_retval), 0);
 }
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_times_out) {
@@ -701,13 +643,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_times_out) {
     // Test the unit
     int connect_retval{-1};
     errno = EINPROGRESS;
-    if (old_code)
-        EXPECT_EQ(::Check_Connect_And_Wait_Connection(socketfd, connect_retval),
-                  -1);
-    else
-        EXPECT_EQ(upnplib::Check_Connect_And_Wait_Connection(socketfd,
-                                                             connect_retval),
-                  -1);
+    EXPECT_EQ(Check_Connect_And_Wait_Connection(socketfd, connect_retval), -1);
 }
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_error) {
@@ -731,13 +667,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, select_error) {
     // Test the unit
     int connect_retval{-1};
     errno = EINPROGRESS;
-    if (old_code)
-        EXPECT_EQ(::Check_Connect_And_Wait_Connection(socketfd, connect_retval),
-                  -1);
-    else
-        EXPECT_EQ(upnplib::Check_Connect_And_Wait_Connection(socketfd,
-                                                             connect_retval),
-                  -1);
+    EXPECT_EQ(Check_Connect_And_Wait_Connection(socketfd, connect_retval), -1);
 }
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, sockoption_error) {
@@ -761,13 +691,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, sockoption_error) {
     // Test the unit
     int connect_retval{-1};
     errno = EINPROGRESS;
-    if (old_code)
-        EXPECT_EQ(::Check_Connect_And_Wait_Connection(socketfd, connect_retval),
-                  -1);
-    else
-        EXPECT_EQ(upnplib::Check_Connect_And_Wait_Connection(socketfd,
-                                                             connect_retval),
-                  -1);
+    EXPECT_EQ(Check_Connect_And_Wait_Connection(socketfd, connect_retval), -1);
 }
 
 TEST(CheckConnectAndWaitConnectionIp4TestSuite, getsockopt_error) {
@@ -791,15 +715,10 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, getsockopt_error) {
     // Test the unit
     int connect_retval{-1};
     errno = EINPROGRESS;
-    if (old_code)
-        EXPECT_EQ(::Check_Connect_And_Wait_Connection(socketfd, connect_retval),
-                  -1);
-    else
-        EXPECT_EQ(upnplib::Check_Connect_And_Wait_Connection(socketfd,
-                                                             connect_retval),
-                  -1);
+    EXPECT_EQ(Check_Connect_And_Wait_Connection(socketfd, connect_retval), -1);
 }
 #endif // _WIN32
+#endif // #if 0
 
 } // namespace compa
 

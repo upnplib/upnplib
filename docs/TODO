@@ -1,4 +1,5 @@
 Next steps to do:
+* Test blocking TCP connections.
 * Rework test_httpreadwrite.cpp
 * Improve test_sock.cpp with ssl tests
 * Improve test_http_Download.cpp, start with error conditions for http_MakeMessage()
@@ -11,6 +12,5 @@ Next steps to do:
 * Check if all fields in struct s_SocketStuff.serverAddr4 are used.
 * Make UpnpPrintf() usable without build type DEBUG.
 * Rework README.md.
-* Bugreport to gtest: EXPECT_THAT THROW shouldn't call two times if no match.
 * Install doxygen.
 * Create own Url class.

@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-20
+// Redistribution only with this Copyright remark. Last modified: 2023-08-05
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -46,7 +46,7 @@
 // --- valid socket file descriptor ---
 // We get this from the C standard library function
 // int ::socket(address_family, socket_type, protocol).
-// Other arguments than specified above does not instantiate a valid socket
+// Other arguments than specified above do not instantiate a valid socket
 // object and throw an exception. For the protocol is always only the default
 // one used that is internal hard coded with argument 0.
 //
@@ -65,6 +65,7 @@
 // (https://learn.microsoft.com/en-us/windows/win32/winsock/using-so-reuseaddr-and-so-exclusiveaddruse#application-strategies)
 // We always set this option with constructing a socket object on a WIN32
 // platform.
+// --Ingo
 
 
 #include <upnplib/visibility.hpp>
@@ -212,6 +213,26 @@ class UPNPLIB_API CSocket : public CSocket_basic {
     bool m_listen{false}; // Protected by a mutex.
 };
 
+
+// Initialize and cleanup Microsoft Windows Sockets
+// ================================================
+// Winsock needs to be initialized before using it and it needs to be freed. We
+// do that with a class, following the RAII paradigm. Multiple initialization
+// doesn't matter. This is managed by the operating system with a counter. It
+// ensures that winsock is initialzed only one time and freed with the last
+// free call. --Ingo
+
+#ifdef _MSC_VER
+class UPNPLIB_API CWSAStartup {
+  public:
+    CWSAStartup();
+    virtual ~CWSAStartup();
+};
+
+#define WINSOCK_INIT upnplib::CWSAStartup winsock_init;
+#else
+#define WINSOCK_INIT
+#endif // _MSC_VER
 
 } // namespace upnplib
 

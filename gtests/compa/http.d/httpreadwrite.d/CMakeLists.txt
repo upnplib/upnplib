@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-08-01
+# Redistribution only with this Copyright remark. Last modified: 2023-08-04
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../../cmake/project-header.cmake)
@@ -113,21 +113,17 @@ add_executable(test_netconnect
 )
 endif()
 
-if(FALSE)
 add_executable(test_netconnect-pst
 #---------------------------------
     ./test_netconnect.cpp
-    ${UPNPLIB_SOURCE_DIR}/src/port.cpp
 )
 target_include_directories(test_netconnect-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
-    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 target_compile_options(test_netconnect-pst
     PRIVATE
         # To fix these warnigs we have to modify the original pupnp code but
         # that isn't intended. So the warnings are suppressed.
-        #
         # disable warning: 'sprintf' (and others) is deprecated: This function is
         # provided for compatibility reasons only.
         $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-declarations>
@@ -135,12 +131,23 @@ target_compile_options(test_netconnect-pst
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
 )
 target_link_libraries(test_netconnect-pst
-    PRIVATE
-        pupnp_static
+    PRIVATE pupnp_static
 )
 add_test(NAME ctest_netconnect-pst COMMAND test_netconnect-pst --gtest_shuffle
 )
-endif()
+
+add_executable(test_netconnect-cst
+#---------------------------------
+    ./test_netconnect.cpp
+)
+target_include_directories(test_netconnect-cst
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+)
+target_link_libraries(test_netconnect-cst
+    PRIVATE compa_static
+)
+add_test(NAME ctest_netconnect-cst COMMAND test_netconnect-cst --gtest_shuffle
+)
 
 
 # httpreadwrite: http_Download

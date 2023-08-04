@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-18
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,6 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+// Last compare with ./pupnp source file on 2023-08-03, ver 1.14.17
 
 /*!
  * \file
@@ -39,29 +40,22 @@
  * It defines functions to receive messages, process messages, send messages.
  */
 
-#include "config.hpp"
+#include <config.hpp>
 
-#include "httpreadwrite.hpp"
+#include <httpreadwrite.hpp>
+#include <upnplib/trace.hpp>
 
-#include "UpnpExtraHeaders.hpp"
-//#include "UpnpFileInfo.h"
-//#include "UpnpInet.hpp"
-#include "UpnpIntTypes.hpp"
-//#include "UpnpStdInt.hpp"
-//#include "membuffer.h"
-//#include "sock.h"
-#include "statcodes.hpp"
-//#include "unixutil.h"
-//#include "upnp.hpp"
-#include "upnpapi.hpp"
-//#include "uri.h"
-#include "webserver.hpp"
+#include <UpnpExtraHeaders.hpp>
+#include <UpnpIntTypes.hpp>
+#include <statcodes.hpp>
+#include <upnpapi.hpp>
+#include <webserver.hpp>
 
 #include <assert.h>
 #include <stdarg.h>
 #include <cstring>
 
-#include "posix_overwrites.hpp"
+#include <posix_overwrites.hpp>
 
 #ifdef _WIN32
 #include <malloc.h>
@@ -70,11 +64,7 @@
 #define snprintf _snprintf
 #endif
 #else /* _WIN32 */
-//#include <arpa/inet.h>
-//#include <sys/time.h>
-//#include <sys/types.h>
 #include <sys/utsname.h>
-//#include <sys/wait.h>
 #endif /* _WIN32 */
 
 // The version string is only used here and will not change much on upgrading to
@@ -82,12 +72,12 @@
 // --Ingo
 #define UPNP_VERSION_STRING "1.14.17"
 
-#include "umock/pupnp_sock.hpp"
-#include "umock/pupnp_httprw.hpp"
-#include "umock/sys_select.hpp"
-#include "umock/sys_socket.hpp"
-#include "umock/winsock2.hpp"
-#include "umock/sysinfo.hpp"
+#include <umock/pupnp_sock.hpp>
+#include <umock/pupnp_httprw.hpp>
+#include <umock/sys_select.hpp>
+#include <umock/sys_socket.hpp>
+#include <umock/winsock2.hpp>
+#include <umock/sysinfo.hpp>
 
 /*
  * Please, do not change these to const int while MSVC cannot understand
@@ -99,8 +89,6 @@ const int CHUNK_TAIL_SIZE = 10;
 */
 #define CHUNK_HEADER_SIZE (size_t)10
 #define CHUNK_TAIL_SIZE (size_t)10
-
-#ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
 
 /* in seconds */
 #define DEFAULT_TCP_CONNECT_TIMEOUT 5
@@ -116,35 +104,42 @@ static int Check_Connect_And_Wait_Connection(
     SOCKET sock,
     /*! [in] result of connect. */
     int connect_res) {
-    struct timeval tmvTimeout = {DEFAULT_TCP_CONNECT_TIMEOUT, 0};
+    TRACE("Executing Check_Connect_And_Wait_Connection()")
+    timeval tmvTimeout = {DEFAULT_TCP_CONNECT_TIMEOUT, 0};
     int result;
-#ifdef _WIN32
-    struct fd_set fdSet;
-#else
+
     fd_set fdSet;
-#endif
     FD_ZERO(&fdSet);
     FD_SET(sock, &fdSet);
 
-    if (connect_res < 0) {
 #ifdef _WIN32
+    if (connect_res < 0) {
         if (WSAEWOULDBLOCK == umock::winsock2_h.WSAGetLastError()) {
-#else
-        if (EINPROGRESS == errno) {
-#endif
             result = umock::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
                                                 &tmvTimeout);
             if (result < 0) {
-#ifdef _WIN32
-                /* WSAGetLastError(); */
-#else
-                /* errno */
-#endif
                 return -1;
             } else if (result == 0) {
                 /* timeout */
                 return -1;
-#ifndef _WIN32
+            }
+        }
+        // BUG! It should not return 0 if we have unexpected 'connect()' errno
+    }
+
+    return 0;
+
+#else // _WIN32
+
+    if (connect_res < 0) {
+        if (EINPROGRESS == errno) {
+            result = umock::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
+                                                &tmvTimeout);
+            if (result < 0) {
+                return -1;
+            } else if (result == 0) {
+                /* timeout */
+                return -1;
             } else {
                 int valopt = 0;
                 socklen_t len = sizeof(valopt);
@@ -154,36 +149,53 @@ static int Check_Connect_And_Wait_Connection(
                     return -1;
                 } else if (valopt) {
                     /* delayed error = valopt */
+                    // TODO: Return more detailed error codes, e.g.
+                    // valopt == 111: ECONNREFUSED "Connection refused"
+                    // if there is a remote host but no server service
+                    // listening.
                     return -1;
                 }
-#endif
             }
         }
+        // BUG! It should not return 0 if we have unexpected 'connect()' errno
     }
 
     return 0;
+
+#endif // _WIN32
 }
-#endif /* UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS */
 
-static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
-                           socklen_t addrlen) {
-#ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
-    int ret = umock::pupnp_sock.sock_make_no_blocking(sockfd);
-    // Ingo BUG! On MS Windows sock_make_no_blocking() returns with positive
-    // error numbers.
-    if (ret != -1) {
-        ret = umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
-        ret =
-            umock::pupnp_httprw.Check_Connect_And_Wait_Connection(sockfd, ret);
-        if (ret != -1) {
-            ret = umock::pupnp_sock.sock_make_blocking(sockfd);
-        }
-    }
-
-    return ret;
+// Using this variable to be able to set it by unit tests to test
+// blocking vs. unblocking at runtime without to compile it.
+#ifdef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
+bool unblock_tcp_connections{false};
 #else
-    return umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
-#endif /* UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS */
+bool unblock_tcp_connections{true};
+#endif
+
+static int private_connect(SOCKET sockfd, const sockaddr* serv_addr,
+                           socklen_t addrlen) {
+    TRACE("Executing private_connect(), blocking " +
+          std::string(unblock_tcp_connections ? "false" : "true"))
+    if (unblock_tcp_connections) {
+        int ret = umock::pupnp_sock.sock_make_no_blocking(sockfd);
+        // BUG! On MS Windows sock_make_no_blocking() returns with positive
+        // error numbers. --Ingo
+        if (ret != -1) {
+            // ret is needed for Check_Connect_And_Wait_Connection()
+            ret = umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
+            ret = Check_Connect_And_Wait_Connection(sockfd, ret);
+            if (ret != -1) {
+                ret = umock::pupnp_sock.sock_make_blocking(sockfd);
+            }
+        }
+
+        return ret;
+
+    } else {
+
+        return umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
+    }
 }
 
 #ifdef _WIN32

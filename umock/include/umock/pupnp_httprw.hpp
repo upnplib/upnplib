@@ -1,7 +1,7 @@
 #ifndef UMOCK_PUPNP_HTTPRW_HPP
 #define UMOCK_PUPNP_HTTPRW_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-27
+// Redistribution only with this Copyright remark. Last modified: 2023-08-04
 
 // This is a header only mocking include file. When included it is present
 // direct in the source code and can be used to mock static functions that are
@@ -10,9 +10,6 @@
 
 #include "upnplib/port.hpp"
 
-#ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
-static int Check_Connect_And_Wait_Connection(SOCKET sock, int connect_res);
-#endif
 static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
                            socklen_t addrlen);
 
@@ -21,33 +18,23 @@ namespace umock {
 class PupnpHttpRwInterface {
   public:
     virtual ~PupnpHttpRwInterface() = default;
-    // clang-format off
-#ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
-    virtual int Check_Connect_And_Wait_Connection(SOCKET sock, int connect_res) = 0;
-#endif
-    virtual int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr, socklen_t addrlen) = 0;
-    // clang-format on
+    virtual int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
+                                socklen_t addrlen) = 0;
 };
 
-//
+
 // This is the wrapper class for the real function
 // -----------------------------------------------
 class PupnpHttpRwReal : public PupnpHttpRwInterface {
   public:
     virtual ~PupnpHttpRwReal() override = default;
-#ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
-    int Check_Connect_And_Wait_Connection(SOCKET sock,
-                                          int connect_res) override {
-        return ::Check_Connect_And_Wait_Connection(sock, connect_res);
-    }
-#endif
     int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
                         socklen_t addrlen) override {
         return ::private_connect(sockfd, serv_addr, addrlen);
     }
 };
 
-//
+
 // This is the caller or injector class that injects the class (worker) to be
 // used, real or mocked functions.
 // clang-format off
@@ -84,13 +71,6 @@ class PupnpHttpRw {
                                 socklen_t addrlen) {
         return m_ptr_workerObj->private_connect(sockfd, serv_addr, addrlen);
     }
-#ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
-    virtual int Check_Connect_And_Wait_Connection(SOCKET sock,
-                                                  int connect_res) {
-        return m_ptr_workerObj->Check_Connect_And_Wait_Connection(sock,
-                                                                  connect_res);
-    }
-#endif
 
   private:
     // Next variable must be static. Please note that a static member variable
