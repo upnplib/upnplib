@@ -175,8 +175,6 @@ static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
                            socklen_t addrlen) {
     if (unblock_tcp_connections) {
         int ret = umock::pupnp_sock.sock_make_no_blocking(sockfd);
-        // BUG! On MS Windows sock_make_no_blocking() returns with positive
-        // error numbers. --Ingo
         if (ret != -1) {
             ret = umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
             ret = Check_Connect_And_Wait_Connection(sockfd, ret);

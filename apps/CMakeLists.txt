@@ -1,5 +1,5 @@
 # Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-16
+# Redistribution only with this Copyright remark. Last modified: 2023-08-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -50,6 +50,7 @@ add_executable(upnplib-cst
 target_link_libraries(upnplib-cst
     PRIVATE
         compa_static
+        upnplib_static
         # On Linux we cannot link with the static pthreads library
         # because then we have also link with a static libc that's not
         # available by default.

@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-08-01
+# Redistribution only with this Copyright remark. Last modified: 2023-08-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -233,9 +233,7 @@ if(NOT WIN32)
             $<$<BOOL:${COMPA_DEF_OPENSSL}>:upnplib_ssl>
         INTERFACE
             ixml_static
-        PRIVATE
-            upnplib_static
-)
+    )
 
 else() # WIN32
 
@@ -292,8 +290,6 @@ else() # WIN32
             $<$<BOOL:${COMPA_DEF_OPENSSL}>:upnplib_ssl>
         INTERFACE
             ixml_static
-        PRIVATE
-            upnplib_static
     )
 
 endif() # WIN32

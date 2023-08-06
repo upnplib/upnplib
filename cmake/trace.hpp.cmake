@@ -13,8 +13,8 @@
 
 #ifdef UPNPLIB_WITH_TRACE
   #include <iostream>
-  #define TRACE(s) std::cout<<"TRACE["<<(__FILE__ + ${UPNPLIB_PROJECT_PATH_LENGTH})<<":"<<__LINE__<<"] "<<(s)<<"\n";
-  #define TRACE2(a, b) std::cout<<"TRACE["<<(__FILE__ + ${UPNPLIB_PROJECT_PATH_LENGTH})<<":"<<__LINE__<<"] "<<(a)<<(b)<<"\n";
+  #define TRACE(s) std::cout<<"TRACE["<<((char*)__FILE__ + ${UPNPLIB_PROJECT_PATH_LENGTH})<<":"<<__LINE__<<"] "<<(s)<<"\n";
+  #define TRACE2(a, b) std::cout<<"TRACE["<<((char*)__FILE__ + ${UPNPLIB_PROJECT_PATH_LENGTH})<<":"<<__LINE__<<"] "<<(a)<<(b)<<"\n";
 #else
   #define TRACE(s)
   #define TRACE2(a, b)

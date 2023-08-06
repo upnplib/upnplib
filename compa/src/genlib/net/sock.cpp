@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-19
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -287,30 +287,30 @@ int sock_write(SOCKINFO* info, const char* buffer, size_t bufsize,
 }
 
 int sock_make_blocking(SOCKET sock) {
+// returns 0 if successful, else SOCKET_ERROR.
 #ifdef _WIN32
     u_long val = 0;
+    // returns 0 if successful, else SOCKET_ERROR.
     return ioctlsocket(sock, FIONBIO, &val);
 #else
-    int val;
-
-    val = fcntl(sock, F_GETFL, 0);
+    int val = fcntl(sock, F_GETFL, 0);
     if (fcntl(sock, F_SETFL, val & ~O_NONBLOCK) == -1) {
-        return -1;
+        return SOCKET_ERROR;
     }
     return 0;
 #endif
 }
 
 int sock_make_no_blocking(SOCKET sock) {
+// returns 0 if successful, else SOCKET_ERROR.
 #ifdef _WIN32
     u_long val = 1;
+    // returns 0 if successful, else SOCKET_ERROR.
     return ioctlsocket(sock, FIONBIO, &val);
 #else  /* _WIN32 */
-    int val;
-
-    val = fcntl(sock, F_GETFL, 0);
+    int val = fcntl(sock, F_GETFL, 0);
     if (fcntl(sock, F_SETFL, val | O_NONBLOCK) == -1) {
-        return -1;
+        return SOCKET_ERROR;
     }
     return 0;
 #endif /* _WIN32 */

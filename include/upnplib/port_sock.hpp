@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_SOCK_HPP
 #define UPNPLIB_INCLUDE_PORT_SOCK_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-21
+// Redistribution only with this Copyright remark. Last modified: 2023-08-07
 
 // clang-format off
 
@@ -22,6 +22,11 @@
   // type of at least 32 bits.
   typedef int socklen_t;
   typedef uint16_t in_port_t;
+
+  // socket() returns INVALID_SOCKET and is defined unsigned:
+  // #define INVALID_SOCKET (0xffff)
+  // some winsock functions return SOCKET_ERROR that is defined:
+  // #define SOCKET_ERROR (-1)
 
   // For shutdown() send/receive on a socket there are other constant names.
   #define SHUT_RD SD_RECEIVE

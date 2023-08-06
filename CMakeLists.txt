@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-08-01
+# Redistribution only with this Copyright remark. Last modified: 2023-08-07
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -150,8 +150,6 @@ add_compile_options(
         $<$<CXX_COMPILER_ID:GNU>:-Wsuggest-override> # Only valid for C++/ObjC++ but not for C
         $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:GNU>>:-fstack-protector-all>
         $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:GNU>>:-fstack-protector-strong>
-        # Next is only to suppress a warning for the TRACE macro.
-        $<$<AND:$<CXX_COMPILER_ID:AppleClang>,$<BOOL:${UPNPLIB_WITH_TRACE}>>:-Wno-string-plus-int>
 
         #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-fanalyzer>
         #$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wfatal-errors>

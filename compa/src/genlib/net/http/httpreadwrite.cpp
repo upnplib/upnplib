@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-05
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -54,6 +54,7 @@
 #include <assert.h>
 #include <stdarg.h>
 #include <cstring>
+#include <iostream> // DEBUG!
 
 #include <posix_overwrites.hpp>
 
@@ -101,98 +102,91 @@ const int CHUNK_TAIL_SIZE = 10;
  */
 static int Check_Connect_And_Wait_Connection(
     /*! [in] socket. */
-    SOCKET sock,
+    SOCKET a_sock,
     /*! [in] result of connect. */
     int connect_res) {
     TRACE("Executing Check_Connect_And_Wait_Connection()")
-    timeval tmvTimeout = {DEFAULT_TCP_CONNECT_TIMEOUT, 0};
-    int result;
+
+    if (connect_res == 0)
+        return 0;
+#ifdef _WIN32
+    if (umock::winsock2_h.WSAGetLastError() != WSAEWOULDBLOCK)
+        return -1;
+#else
+    if (errno != EINPROGRESS)
+        return -1;
+#endif
 
     fd_set fdSet;
     FD_ZERO(&fdSet);
-    FD_SET(sock, &fdSet);
+    FD_SET(a_sock, &fdSet);
+    timeval tmvTimeout = {DEFAULT_TCP_CONNECT_TIMEOUT, 0};
+    int result{SOCKET_ERROR};
 
-#ifdef _WIN32
-    if (connect_res < 0) {
-        if (WSAEWOULDBLOCK == umock::winsock2_h.WSAGetLastError()) {
-            result = umock::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
-                                                &tmvTimeout);
-            if (result < 0) {
-                return -1;
-            } else if (result == 0) {
-                /* timeout */
-                return -1;
-            }
-        }
-        // BUG! It should not return 0 if we have unexpected 'connect()' errno
+    result =
+        umock::sys_select_h.select(a_sock + 1, NULL, &fdSet, NULL, &tmvTimeout);
+    switch (result) {
+    case SOCKET_ERROR:
+        return -1;
+    case 0:
+        /* timeout */
+        return -1;
     }
+    int valopt{};
+    socklen_t len{sizeof(valopt)};
+    if (umock::sys_socket_h.getsockopt(a_sock, SOL_SOCKET, SO_ERROR,
+                                       (void*)&valopt, &len) < 0)
+        /* failed to read delayed error */
+        return -1;
+    if (valopt)
+        /* delayed error = valopt */
+        // TODO: Return more detailed error codes, e.g.
+        // valopt == 111: ECONNREFUSED "Connection refused"
+        // if there is a remote host but no server service
+        // listening.
+        return -1;
 
     return 0;
-
-#else // _WIN32
-
-    if (connect_res < 0) {
-        if (EINPROGRESS == errno) {
-            result = umock::sys_select_h.select(sock + 1, NULL, &fdSet, NULL,
-                                                &tmvTimeout);
-            if (result < 0) {
-                return -1;
-            } else if (result == 0) {
-                /* timeout */
-                return -1;
-            } else {
-                int valopt = 0;
-                socklen_t len = sizeof(valopt);
-                if (umock::sys_socket_h.getsockopt(sock, SOL_SOCKET, SO_ERROR,
-                                                   (void*)&valopt, &len) < 0) {
-                    /* failed to read delayed error */
-                    return -1;
-                } else if (valopt) {
-                    /* delayed error = valopt */
-                    // TODO: Return more detailed error codes, e.g.
-                    // valopt == 111: ECONNREFUSED "Connection refused"
-                    // if there is a remote host but no server service
-                    // listening.
-                    return -1;
-                }
-            }
-        }
-        // BUG! It should not return 0 if we have unexpected 'connect()' errno
-    }
-
-    return 0;
-
-#endif // _WIN32
 }
 
 // Using this variable to be able to set it by unit tests to test
-// blocking vs. unblocking at runtime without to compile it.
+// blocking vs. unblocking at runtime, no need to compile it.
 #ifdef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
 bool unblock_tcp_connections{false};
 #else
 bool unblock_tcp_connections{true};
 #endif
 
+// Returns 0 if successful, else SOCKET_ERROR.
 static int private_connect(SOCKET sockfd, const sockaddr* serv_addr,
                            socklen_t addrlen) {
     TRACE("Executing private_connect(), blocking " +
           std::string(unblock_tcp_connections ? "false" : "true"))
+
     if (unblock_tcp_connections) {
-        int ret = umock::pupnp_sock.sock_make_no_blocking(sockfd);
-        // BUG! On MS Windows sock_make_no_blocking() returns with positive
-        // error numbers. --Ingo
-        if (ret != -1) {
-            // ret is needed for Check_Connect_And_Wait_Connection()
+
+        int ret{SOCKET_ERROR};
+        // returns 0 if successful, else SOCKET_ERROR.
+        ret = umock::pupnp_sock.sock_make_no_blocking(sockfd);
+        if (ret == 0) {
+            // ret is needed for Check_Connect_And_Wait_Connection(),
+            // returns 0 if successful, else -1.
             ret = umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
+            std::cout << "DEBUG! ret() = " << ret << ", errno = " << errno
+                      << "\n";
+            // returns 0 if successful, else -1.
             ret = Check_Connect_And_Wait_Connection(sockfd, ret);
-            if (ret != -1) {
-                ret = umock::pupnp_sock.sock_make_blocking(sockfd);
-            }
+            std::cout << "DEBUG! ret_Check_Connect_And_Wait_Connection() = "
+                      << ret << "\n";
+
+            // Always make_blocking() to revert make_no_blocking() above.
+            // returns 0 if successful, else SOCKET_ERROR.
+            ret = ret | umock::pupnp_sock.sock_make_blocking(sockfd);
         }
 
-        return ret;
+        return ret == 0 ? 0 : SOCKET_ERROR;
 
-    } else {
+    } else { // unblock_tcp_connections == false
 
         return umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
     }
@@ -319,7 +313,7 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
     socklen_t sockaddr_len;
     int ret_connect;
 
-    // Ingo: BUG! Must check return value
+    // BUG! Must check return value. --Ingo
     http_FixUrl(destination_url, url);
 
     connfd = umock::sys_socket_h.socket((int)url->hostport.IPaddress.ss_family,

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-08-06
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -946,8 +946,8 @@ TEST(SockTestSuite, sock_make_blocking_and_sock_make_no_blocking) {
     EXPECT_EQ(sock_make_blocking(sock), 0);
 
     // But an invalid socket should fail.
-    EXPECT_EQ(sock_make_blocking((SOCKET)-2), -1);
-    EXPECT_EQ(sock_make_no_blocking((SOCKET)-2), -1);
+    EXPECT_EQ(sock_make_blocking((SOCKET)-2), SOCKET_ERROR);
+    EXPECT_EQ(sock_make_no_blocking((SOCKET)-2), SOCKET_ERROR);
 
     WSACleanup();
 #else
