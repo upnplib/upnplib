@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-28
+// Redistribution only with this Copyright remark. Last modified: 2023-08-09
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -170,29 +170,28 @@ TEST_F(CreateSSDPsockReqV4FTestSuite, create_successful) {
     }
 
     // Mock system socket functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
     // Provide a socket id to the Unit
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
         .WillOnce(Return(sockfd));
 
     // Expect socket option
-    EXPECT_CALL(mocked_sys_socketObj,
-                setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_TTL,
-                           IsIpMulticastTtl(ttl), sizeof(ttl)))
+    EXPECT_CALL(sys_socketObj, setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_TTL,
+                                          IsIpMulticastTtl(ttl), sizeof(ttl)))
         .WillOnce(Return(0));
 
     // Unblock connection, means don't wait on connect and return
     // immediately.
-    umock::PupnpSockMock mock_pupnpSockObj;
-    umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
-    EXPECT_CALL(mock_pupnpSockObj, sock_make_no_blocking(sockfd))
+    umock::PupnpSockMock pupnpSockObj;
+    umock::PupnpSock pupnp_sock_injectObj(&pupnpSockObj);
+    EXPECT_CALL(pupnpSockObj, sock_make_no_blocking(sockfd))
         .WillOnce(Return(0));
 
     // Mock close socket
-    umock::UnistdMock mocked_unistdObj;
-    umock::Unistd unistd_injectObj(&mocked_unistdObj);
-    EXPECT_CALL(mocked_unistdObj, CLOSE_SOCKET_P(_)).Times(0);
+    umock::UnistdMock unistdObj;
+    umock::Unistd unistd_injectObj(&unistdObj);
+    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(_)).Times(0);
 
     // Test Unit
     int ret_create_ssdp_sock_reqv4{UPNP_E_INTERNAL_ERROR};
@@ -218,13 +217,13 @@ TEST_F(CreateSSDPsockReqV4FTestSuite, set_socket_no_blocking_fails) {
     SOCKET ssdpSock{0xAAAA}; // buffer to get the socket fd
 
     // Mock system socket functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
     // Provide a socket id to the Unit
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
         .WillOnce(Return(sockfd));
     // Expect socket option
-    EXPECT_CALL(mocked_sys_socketObj,
+    EXPECT_CALL(sys_socketObj,
                 setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_TTL,
                            IsIpMulticastTtl(ttl), sizeof(ttl)))
         .WillOnce(Return(0));
@@ -232,9 +231,9 @@ TEST_F(CreateSSDPsockReqV4FTestSuite, set_socket_no_blocking_fails) {
     // immediately.
     // sock_make_no_blocking() returns on fail with SOCKET_ERROR(-1) on WIN32
     // and with -1 otherwise.
-    umock::PupnpSockMock mock_pupnpSockObj;
-    umock::PupnpSock pupnp_sock_injectObj(&mock_pupnpSockObj);
-    EXPECT_CALL(mock_pupnpSockObj, sock_make_no_blocking(sockfd))
+    umock::PupnpSockMock pupnpSockObj;
+    umock::PupnpSock pupnp_sock_injectObj(&pupnpSockObj);
+    EXPECT_CALL(pupnpSockObj, sock_make_no_blocking(sockfd))
         .WillOnce(Return(-1));
 
     // Test Unit

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-08-09
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -137,10 +137,10 @@ TEST_F(HttpMakeMessageFTestSuite, format_D_successful) {
     // format type 'D':  (no args)  -- appends HTTP DATE: header
 
     // Mock "current" time to have a constant value.
-    umock::SysinfoMock mocked_sysinfoObj;
-    umock::Sysinfo sysinfo_injectObj(&mocked_sysinfoObj);
+    umock::SysinfoMock sysinfoObj;
+    umock::Sysinfo sysinfo_injectObj(&sysinfoObj);
     // Return Unix Epoch
-    EXPECT_CALL(mocked_sysinfoObj, time(nullptr)).WillOnce(Return(1675628181));
+    EXPECT_CALL(sysinfoObj, time(nullptr)).WillOnce(Return(1675628181));
 
     // Test Unit
     EXPECT_EQ(http_MakeMessage(&m_request, 1, 1, "D"), 0);
@@ -327,9 +327,9 @@ TEST_F(HttpMakeMessageFTestSuite, format_S_successful) {
     strncpy(sysinf.release, "5.10.0-20-amd64", sizeof(sysinf.release) - 1);
 
     // Mock uname system info
-    umock::SysinfoMock mocked_sysinfoObj;
-    umock::Sysinfo sysinfo_injectObj(&mocked_sysinfoObj);
-    EXPECT_CALL(mocked_sysinfoObj, uname(_))
+    umock::SysinfoMock sysinfoObj;
+    umock::Sysinfo sysinfo_injectObj(&sysinfoObj);
+    EXPECT_CALL(sysinfoObj, uname(_))
         .WillOnce(DoAll(StructCpyToArg0(&sysinf), Return(0)));
 
     // Test Unit
@@ -415,9 +415,9 @@ TEST_F(HttpMakeMessageFTestSuite, format_S_with_failed_system_info) {
 
     // Mock 'uname()' system info to fail with invalid utsname structure. errno
     // returns 'EFAULT buf is not valid'.
-    umock::SysinfoMock mocked_sysinfoObj;
-    umock::Sysinfo sysinfo_injectObj(&mocked_sysinfoObj);
-    EXPECT_CALL(mocked_sysinfoObj, uname(_))
+    umock::SysinfoMock sysinfoObj;
+    umock::Sysinfo sysinfo_injectObj(&sysinfoObj);
+    EXPECT_CALL(sysinfoObj, uname(_))
         .WillOnce(
             DoAll(StructCpyToArg0(&sysinf), SetErrnoAndReturn(EFAULT, -1)));
 

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-04
+// Redistribution only with this Copyright remark. Last modified: 2023-08-09
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -291,7 +291,6 @@ class OpenHttpConnectionIp4FTestSuite : public ::testing::Test {
     Mock_netv4info m_mock_netdbObj;
     PupnpHttpRwMock m_mock_pupnpHttpRwObj;
     umock::Sys_socketMock m_mock_socketObj;
-    umock::UnistdMock m_mock_unistdObj;
     Chttpreadwrite_old m_httprw_oObj;
 
     // Dummy socket, if we do not need a real one due to mocking
@@ -337,12 +336,14 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_close_connection_successful) {
     EXPECT_CALL(m_mock_netdbObj, freeaddrinfo(_)).Times(1);
 
     // Expect socket allocation
-    umock::Sys_socket sys_socket_injectObj(&m_mock_socketObj);
-    EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
-    EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(1);
-    umock::Unistd unistd_injectObj(&m_mock_unistdObj);
-    EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(_)).Times(1);
+    EXPECT_CALL(sys_socketObj, shutdown(_, _)).Times(1);
+    umock::UnistdMock unistdObj;
+    umock::Unistd unistd_injectObj(&unistdObj);
+    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(_)).Times(1);
 
     // Mock for connection to a network server
     umock::PupnpHttpRw pupnp_httprw_injectObj(&m_mock_pupnpHttpRwObj);
@@ -382,11 +383,13 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, nullptr_to_url) {
     umock::Netdb netdb_injectObj(&m_mock_netdbObj);
     EXPECT_CALL(m_mock_netdbObj, getaddrinfo(_, _, _, _)).Times(0);
     EXPECT_CALL(m_mock_netdbObj, freeaddrinfo(_)).Times(0);
-    umock::Sys_socket sys_socket_injectObj(&m_mock_socketObj);
-    EXPECT_CALL(m_mock_socketObj, socket(_, _, _)).Times(0);
-    EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    umock::Unistd unistd_injectObj(&m_mock_unistdObj);
-    EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(_)).Times(0);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(_, _, _)).Times(0);
+    EXPECT_CALL(sys_socketObj, shutdown(_, _)).Times(0);
+    umock::UnistdMock unistdObj;
+    umock::Unistd unistd_injectObj(&unistdObj);
+    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(_)).Times(0);
     umock::PupnpHttpRw pupnp_httprw_injectObj(&m_mock_pupnpHttpRwObj);
     EXPECT_CALL(m_mock_pupnpHttpRwObj, private_connect(_, _, _)).Times(0);
 
@@ -414,11 +417,13 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, empty_url) {
     umock::Netdb netdb_injectObj(&m_mock_netdbObj);
     EXPECT_CALL(m_mock_netdbObj, getaddrinfo(_, _, _, _)).Times(0);
     EXPECT_CALL(m_mock_netdbObj, freeaddrinfo(_)).Times(0);
-    umock::Sys_socket sys_socket_injectObj(&m_mock_socketObj);
-    EXPECT_CALL(m_mock_socketObj, socket(_, _, _)).Times(0);
-    EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    umock::Unistd unistd_injectObj(&m_mock_unistdObj);
-    EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(_)).Times(0);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(_, _, _)).Times(0);
+    EXPECT_CALL(sys_socketObj, shutdown(_, _)).Times(0);
+    umock::UnistdMock unistdObj;
+    umock::Unistd unistd_injectObj(&unistdObj);
+    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(_)).Times(0);
     umock::PupnpHttpRw pupnp_httprw_injectObj(&m_mock_pupnpHttpRwObj);
     EXPECT_CALL(m_mock_pupnpHttpRwObj, private_connect(_, _, _)).Times(0);
 
@@ -460,11 +465,13 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_address_info_fails) {
     EXPECT_CALL(m_mock_netdbObj, freeaddrinfo(_)).Times(0);
 
     // Don't expect socket allocation.
-    umock::Sys_socket sys_socket_injectObj(&m_mock_socketObj);
-    EXPECT_CALL(m_mock_socketObj, socket(_, _, _)).Times(0);
-    EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    umock::Unistd unistd_injectObj(&m_mock_unistdObj);
-    EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(_)).Times(0);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(_, _, _)).Times(0);
+    EXPECT_CALL(sys_socketObj, shutdown(_, _)).Times(0);
+    umock::UnistdMock unistdObj;
+    umock::Unistd unistd_injectObj(&unistdObj);
+    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(_)).Times(0);
 
     // Don't expect a connection to a network server
     umock::PupnpHttpRw pupnp_httprw_injectObj(&m_mock_pupnpHttpRwObj);
@@ -516,13 +523,14 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_socket_fails) {
     EXPECT_CALL(m_mock_netdbObj, freeaddrinfo(_)).Times(1);
 
     // Socket allocation fails.
-    umock::Sys_socket sys_socket_injectObj(&m_mock_socketObj);
-    EXPECT_CALL(m_mock_socketObj, socket(_, _, _))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(_, _, _))
         .WillOnce(SetErrnoAndReturn(EINVAL, -1));
 
     // Shutdown socket will fail with "The file descriptor sockfd does not refer
     // to a socket."
-    EXPECT_CALL(m_mock_socketObj, shutdown(_, _))
+    EXPECT_CALL(sys_socketObj, shutdown(_, _))
 #ifndef UPNP_ENABLE_OPEN_SSL
         .WillOnce(SetErrnoAndReturn(ENOTSOCK, -1));
 #else
@@ -530,8 +538,9 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_socket_fails) {
 #endif
 
     // Close socket will fail with "fd isn't a valid open file descriptor."
-    umock::Unistd unistd_injectObj(&m_mock_unistdObj);
-    EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(_))
+    umock::UnistdMock unistdObj;
+    umock::Unistd unistd_injectObj(&unistdObj);
+    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(_))
 #ifndef UPNP_ENABLE_OPEN_SSL
         .WillOnce(SetErrnoAndReturn(EBADF, -1));
 #else
@@ -595,12 +604,14 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, connect_to_server_fails) {
     EXPECT_CALL(m_mock_netdbObj, freeaddrinfo(_)).Times(1);
 
     // Expect socket allocation
-    umock::Sys_socket sys_socket_injectObj(&m_mock_socketObj);
-    EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
-    EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(1);
-    umock::Unistd unistd_injectObj(&m_mock_unistdObj);
-    EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(_)).Times(1);
+    EXPECT_CALL(sys_socketObj, shutdown(_, _)).Times(1);
+    umock::UnistdMock unistdObj;
+    umock::Unistd unistd_injectObj(&unistdObj);
+    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(_)).Times(1);
 
     // Connection to a network server will fail
     umock::PupnpHttpRw pupnp_httprw_injectObj(&m_mock_pupnpHttpRwObj);
@@ -644,12 +655,14 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_connection_with_ip_address) {
     EXPECT_CALL(m_mock_netdbObj, freeaddrinfo(_)).Times(0);
 
     // Expect socket allocation
-    umock::Sys_socket sys_socket_injectObj(&m_mock_socketObj);
-    EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
-    EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(1);
-    umock::Unistd unistd_injectObj(&m_mock_unistdObj);
-    EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(_)).Times(1);
+    EXPECT_CALL(sys_socketObj, shutdown(_, _)).Times(1);
+    umock::UnistdMock unistdObj;
+    umock::Unistd unistd_injectObj(&unistdObj);
+    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(_)).Times(1);
 
     // Mock for connection to a network server
     umock::PupnpHttpRw pupnp_httprw_injectObj(&m_mock_pupnpHttpRwObj);
@@ -712,12 +725,14 @@ typedef OpenHttpConnectionIp4FTestSuite HttpConnectIp4FTestSuite;
 
 TEST_F(HttpConnectIp4FTestSuite, successful_connect) {
     // Expect socket allocation
-    umock::Sys_socket sys_socket_injectObj(&m_mock_socketObj);
-    EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
-    EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    umock::Unistd unistd_injectObj(&m_mock_unistdObj);
-    EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(_)).Times(0);
+    EXPECT_CALL(sys_socketObj, shutdown(_, _)).Times(0);
+    umock::UnistdMock unistdObj;
+    umock::Unistd unistd_injectObj(&unistdObj);
+    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(_)).Times(0);
 
     // Mock for connection to a network server
     umock::PupnpHttpRw pupnp_httprw_injectObj(&m_mock_pupnpHttpRwObj);
@@ -743,12 +758,14 @@ TEST_F(HttpConnectIp4FTestSuite, successful_connect) {
 
 TEST_F(HttpConnectIp4FTestSuite, socket_allocation_fails) {
     // Expect no socket allocation
-    umock::Sys_socket sys_socket_injectObj(&m_mock_socketObj);
-    EXPECT_CALL(m_mock_socketObj, socket(_, SOCK_STREAM, 0))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(_, SOCK_STREAM, 0))
         .WillOnce(SetErrnoAndReturn(EACCES, -1));
-    EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(0);
-    umock::Unistd unistd_injectObj(&m_mock_unistdObj);
-    EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(_)).Times(0);
+    EXPECT_CALL(sys_socketObj, shutdown(_, _)).Times(0);
+    umock::UnistdMock unistdObj;
+    umock::Unistd unistd_injectObj(&unistdObj);
+    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(_)).Times(0);
 
     // Mock for connection to a network server
     umock::PupnpHttpRw pupnp_httprw_injectObj(&m_mock_pupnpHttpRwObj);
@@ -770,12 +787,14 @@ TEST_F(HttpConnectIp4FTestSuite, socket_allocation_fails) {
 
 TEST_F(HttpConnectIp4FTestSuite, low_level_net_connect_fails) {
     // Expect no socket allocation
-    umock::Sys_socket sys_socket_injectObj(&m_mock_socketObj);
-    EXPECT_CALL(m_mock_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(m_socketfd));
-    EXPECT_CALL(m_mock_socketObj, shutdown(_, _)).Times(1);
-    umock::Unistd unistd_injectObj(&m_mock_unistdObj);
-    EXPECT_CALL(m_mock_unistdObj, CLOSE_SOCKET_P(_)).Times(1);
+    EXPECT_CALL(sys_socketObj, shutdown(_, _)).Times(1);
+    umock::UnistdMock unistdObj;
+    umock::Unistd unistd_injectObj(&unistdObj);
+    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(_)).Times(1);
 
     // Connection to a network server will fail
     umock::PupnpHttpRw pupnp_httprw_injectObj(&m_mock_pupnpHttpRwObj);

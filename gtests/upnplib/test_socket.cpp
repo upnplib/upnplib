@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-05
+// Redistribution only with this Copyright remark. Last modified: 2023-08-09
 
 #include <upnplib/socket.hpp>
 #include <upnplib/addrinfo.hpp>
@@ -460,10 +460,10 @@ TEST(SocketTestSuite, get_addr_str_syscall_fail) {
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
     // Mock system function getsockname().
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
     EXPECT_CALL(
-        mocked_sys_socketObj,
+        sys_socketObj,
         getsockname((SOCKET)sockObj, _, Pointee((int)sizeof(sockaddr_storage))))
         .WillOnce(SetErrnoAndReturn(ENOBUFS, SOCKET_ERROR));
 
@@ -483,9 +483,9 @@ TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
     ss.ss_family = (sa_family_t)255;
 
     // Mock system function
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj,
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj,
                 getsockname((SOCKET)sockObj, _,
                             Pointee((int)sizeof(::sockaddr_storage))))
         .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&ss), Return(0)));

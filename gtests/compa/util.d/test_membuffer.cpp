@@ -1,11 +1,10 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-08-09
 
 #include "pupnp/upnp/src/genlib/util/membuffer.cpp"
 
 #include "upnplib/gtest.hpp"
-#include "umock/stdlib.hpp"
-#include "gmock/gmock.h"
+#include "umock/stdlib_mock.hpp"
 
 using ::testing::_;
 using ::testing::ExitedWithCode;
@@ -89,19 +88,7 @@ class Cmembuffer : Imembuffer {
 };
 // clang-format on
 
-//
-// Mocked system calls
-// ===================
-class StdlibMock : public umock::StdlibInterface {
-  public:
-    virtual ~StdlibMock() override {}
-    MOCK_METHOD(void*, malloc, (size_t size), (override));
-    MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));
-    MOCK_METHOD(void*, realloc, (void* ptr, size_t size), (override));
-    MOCK_METHOD(void, free, (void* ptr), (override));
-};
 
-//
 // Testsuite for the membuffer module
 // ==================================
 TEST(MembufferTestSuite, init_and_destroy) {
@@ -657,12 +644,12 @@ TEST(MembufferTestSuite, membuffer_assign_check_boundaries) {
     char alloc_buf[]{'\x55', '\x55', '\x55'};
     char buf1[]{'\xAA', '\xAA'};
 
-    StdlibMock mock_stdlibObj;
-    umock::Stdlib stdlib_injectObj(&mock_stdlibObj);
-    EXPECT_CALL(mock_stdlibObj, realloc(nullptr, sizeof(alloc_buf)))
+    umock::StdlibMock stdlibObj;
+    umock::Stdlib stdlib_injectObj(&stdlibObj);
+    EXPECT_CALL(stdlibObj, realloc(nullptr, sizeof(alloc_buf)))
         .WillOnce(Return(&alloc_buf));
     // Freeing is from the Cmembuffer destructor.
-    EXPECT_CALL(mock_stdlibObj, free(_)).Times(1);
+    EXPECT_CALL(stdlibObj, free(_)).Times(1);
 
     // Test Unit membuffer_assign()
     Cmembuffer mem;

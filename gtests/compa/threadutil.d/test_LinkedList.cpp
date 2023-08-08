@@ -1,29 +1,15 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-30
+// Redistribution only with this Copyright remark. Last modified: 2023-08-09
 
-#include "umock/stdlib.hpp"
-#include "gmock/gmock.h"
+#include <umock/stdlib_mock.hpp>
 
-#include "LinkedList.hpp"
+#include <LinkedList.hpp>
+
+namespace compa {
 
 using ::testing::_;
 using ::testing::Return;
 
-namespace compa {
-
-//
-// Mocked system calls
-// -------------------
-class StdlibMock : public umock::StdlibInterface {
-  public:
-    virtual ~StdlibMock() override {}
-    MOCK_METHOD(void*, malloc, (size_t size), (override));
-    MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));
-    MOCK_METHOD(void*, realloc, (void* ptr, size_t size), (override));
-    MOCK_METHOD(void, free, (void* ptr), (override));
-};
-
-//
 //###############################
 // Linked List Testsuite        #
 //###############################
@@ -111,16 +97,14 @@ class LinkedListTestSuite : public ::testing::Test {
     // Member variables: instantiate the module object
     CLinkedList LinkedListObj{};
     LinkedList m_linked_list{};
-
-    // instantiate the mock objects.
-    StdlibMock mocked_stdlib{};
 };
 
 TEST_F(LinkedListTestSuite, ListInit_ListDestroy_empty_list) {
     // Expectations: nothing should happen with malloc() and free()
-    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
-    EXPECT_CALL(mocked_stdlib, malloc(_)).Times(0);
-    EXPECT_CALL(mocked_stdlib, free(_)).Times(0);
+    umock::StdlibMock stdlibObj;
+    umock::Stdlib stdlib_injectObj(&stdlibObj);
+    EXPECT_CALL(stdlibObj, malloc(_)).Times(0);
+    EXPECT_CALL(stdlibObj, free(_)).Times(0);
 
     // Initialize linked list
     ASSERT_EQ(LinkedListObj.ListInit(&m_linked_list, NULL, NULL), 0);
@@ -136,12 +120,13 @@ TEST_F(LinkedListTestSuite, ListAddTail_with_item) {
     std::string item1 = "item1";
 
     // Expectations
-    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
-    EXPECT_CALL(mocked_stdlib, malloc(sizeof(ListNode)))
+    umock::StdlibMock stdlibObj;
+    umock::Stdlib stdlib_injectObj(&stdlibObj);
+    EXPECT_CALL(stdlibObj, malloc(sizeof(ListNode)))
         // malloc() is expected to be called by ListAddTail.
         .WillOnce(Return(&node1));
     // free() is expected to be called by ListDestroy.
-    EXPECT_CALL(mocked_stdlib, free(&node1)).Times(1);
+    EXPECT_CALL(stdlibObj, free(&node1)).Times(1);
 
     // Initialize linked list
     ASSERT_EQ(LinkedListObj.ListInit(&m_linked_list, NULL, NULL), 0);
@@ -163,12 +148,12 @@ TEST_F(LinkedListTestSuite, ListDelNode_from_list_with_one_node) {
     std::string item1 = "item1";
 
     // Expectations
-    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
-    EXPECT_CALL(mocked_stdlib, malloc(sizeof(ListNode)))
-        .WillOnce(Return(&node1));
+    umock::StdlibMock stdlibObj;
+    umock::Stdlib stdlib_injectObj(&stdlibObj);
+    EXPECT_CALL(stdlibObj, malloc(sizeof(ListNode))).WillOnce(Return(&node1));
     // We do not expect that free() is called because the deleted node is added
     // to the free list.
-    EXPECT_CALL(mocked_stdlib, free(&node1)).Times(0);
+    EXPECT_CALL(stdlibObj, free(&node1)).Times(0);
 
     // Initialize linked list
     ASSERT_EQ(LinkedListObj.ListInit(&m_linked_list, NULL, NULL), 0);
@@ -206,18 +191,19 @@ TEST_F(LinkedListTestSuite, use_all_functions_on_one_initialized_list) {
     std::string item5 = "item5";
 
     // Expectations
-    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
-    EXPECT_CALL(mocked_stdlib, malloc(sizeof(ListNode)))
+    umock::StdlibMock stdlibObj;
+    umock::Stdlib stdlib_injectObj(&stdlibObj);
+    EXPECT_CALL(stdlibObj, malloc(sizeof(ListNode)))
         .WillOnce(Return(&node1))
         .WillOnce(Return(&node2))
         .WillOnce(Return(&node3))
         .WillOnce(Return(&node4))
         .WillOnce(Return(&node5));
-    EXPECT_CALL(mocked_stdlib, free(&node1)).Times(1);
-    EXPECT_CALL(mocked_stdlib, free(&node2)).Times(1);
-    EXPECT_CALL(mocked_stdlib, free(&node3)).Times(1);
-    EXPECT_CALL(mocked_stdlib, free(&node4)).Times(1);
-    EXPECT_CALL(mocked_stdlib, free(&node5)).Times(1);
+    EXPECT_CALL(stdlibObj, free(&node1)).Times(1);
+    EXPECT_CALL(stdlibObj, free(&node2)).Times(1);
+    EXPECT_CALL(stdlibObj, free(&node3)).Times(1);
+    EXPECT_CALL(stdlibObj, free(&node4)).Times(1);
+    EXPECT_CALL(stdlibObj, free(&node5)).Times(1);
 
     // Initialize linked list
     ASSERT_EQ(LinkedListObj.ListInit(&m_linked_list, NULL, NULL), 0);
@@ -300,13 +286,13 @@ TEST_F(LinkedListTestSuite, ListDelNode_with_free_function) {
     std::string item1 = "item1";
 
     // Expectations
-    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
-    EXPECT_CALL(mocked_stdlib, malloc(sizeof(ListNode)))
-        .WillOnce(Return(&node1));
+    umock::StdlibMock stdlibObj;
+    umock::Stdlib stdlib_injectObj(&stdlibObj);
+    EXPECT_CALL(stdlibObj, malloc(sizeof(ListNode))).WillOnce(Return(&node1));
     // This will free the item on node1 when the node is deleted.
-    EXPECT_CALL(mocked_stdlib, free(&item1)).Times(1);
+    EXPECT_CALL(stdlibObj, free(&item1)).Times(1);
     // This will free node1 from the FreeList when the LinkedList is destroyed.
-    EXPECT_CALL(mocked_stdlib, free(&node1)).Times(1);
+    EXPECT_CALL(stdlibObj, free(&node1)).Times(1);
 
     // Initialize linked list with free function.
     ASSERT_EQ(
@@ -348,14 +334,15 @@ TEST_F(LinkedListTestSuite, ListFind_with_comparing_items) {
     EXPECT_EQ(cmp_func(&item1, &item1), 1);
 
     // Expectations
-    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
-    EXPECT_CALL(mocked_stdlib, malloc(sizeof(ListNode)))
+    umock::StdlibMock stdlibObj;
+    umock::Stdlib stdlib_injectObj(&stdlibObj);
+    EXPECT_CALL(stdlibObj, malloc(sizeof(ListNode)))
         .WillOnce(Return(&node1))
         .WillOnce(Return(&node2))
         .WillOnce(Return(&node3));
-    EXPECT_CALL(mocked_stdlib, free(&node1)).Times(1);
-    EXPECT_CALL(mocked_stdlib, free(&node2)).Times(1);
-    EXPECT_CALL(mocked_stdlib, free(&node3)).Times(1);
+    EXPECT_CALL(stdlibObj, free(&node1)).Times(1);
+    EXPECT_CALL(stdlibObj, free(&node2)).Times(1);
+    EXPECT_CALL(stdlibObj, free(&node3)).Times(1);
 
     // Initialize linked list with compare function.
     ASSERT_EQ(

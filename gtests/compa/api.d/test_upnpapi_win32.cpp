@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-20
+// Redistribution only with this Copyright remark. Last modified: 2023-08-09
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -42,9 +42,6 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
 // Fixtures for this Testsuite
 {
   protected:
-    // Provide mocked functions
-    umock::IphlpapiMock m_mocked_iphlpapi;
-
     UpnpapiIPv4MockTestSuite() {
         // initialize needed global variables
         memset(&gIF_NAME, 0, sizeof(gIF_NAME));
@@ -69,8 +66,9 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
     ::ULONG Size = 16383;
 
     // Mock system functions
-    umock::Iphlpapi iphlpapi_injectObj(&m_mocked_iphlpapi);
-    EXPECT_CALL(m_mocked_iphlpapi, GetAdaptersAddresses(_, _, _, _, _))
+    umock::IphlpapiMock iphlpapiObj;
+    umock::Iphlpapi iphlpapi_injectObj(&iphlpapiObj);
+    EXPECT_CALL(iphlpapiObj, GetAdaptersAddresses(_, _, _, _, _))
         .Times(2)
         .WillOnce(
             DoAll(SetArgPointee<4>(*&Size), Return(ERROR_BUFFER_OVERFLOW)))
@@ -121,8 +119,9 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     EXPECT_STREQ(adapts->FriendlyName, L"eth0");
     ::ULONG Size = 16383;
 
-    umock::Iphlpapi iphlpapi_injectObj(&m_mocked_iphlpapi);
-    EXPECT_CALL(m_mocked_iphlpapi, GetAdaptersAddresses(_, _, _, _, _))
+    umock::IphlpapiMock iphlpapiObj;
+    umock::Iphlpapi iphlpapi_injectObj(&iphlpapiObj);
+    EXPECT_CALL(iphlpapiObj, GetAdaptersAddresses(_, _, _, _, _))
         .Times(4)
         .WillOnce(
             DoAll(SetArgPointee<4>(*&Size), Return(ERROR_BUFFER_OVERFLOW)))
@@ -189,8 +188,9 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
     ::ULONG Size = 16383;
 
     // expect calls to system functions (which are mocked)
-    umock::Iphlpapi iphlpapi_injectObj(&m_mocked_iphlpapi);
-    EXPECT_CALL(m_mocked_iphlpapi, GetAdaptersAddresses(_, _, _, _, _))
+    umock::IphlpapiMock iphlpapiObj;
+    umock::Iphlpapi iphlpapi_injectObj(&iphlpapiObj);
+    EXPECT_CALL(iphlpapiObj, GetAdaptersAddresses(_, _, _, _, _))
         .Times(2)
         .WillOnce(
             DoAll(SetArgPointee<4>(*&Size), Return(ERROR_BUFFER_OVERFLOW)))

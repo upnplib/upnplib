@@ -1,7 +1,7 @@
 #ifndef UMOCK_NETDB_MOCK_HPP
 #define UMOCK_NETDB_MOCK_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-28
+// Redistribution only with this Copyright remark. Last modified: 2023-08-09
 
 #include <umock/netdb.hpp>
 #include <gmock/gmock.h>

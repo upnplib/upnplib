@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-28
+// Redistribution only with this Copyright remark. Last modified: 2023-08-09
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -131,13 +131,14 @@ TEST(HostportIp4TestSuite, check_freeaddrinfo) {
 // --------------------------------------------------------
 class HostportIp4FTestSuite : public ::testing::Test {
   protected:
-    umock::NetdbMock m_mocked_netdb;
     hostport_type m_out;
     struct sockaddr_in* m_sai4 = (struct sockaddr_in*)&m_out.IPaddress;
 
     // Provide empty structures for mocking. Will be filled in the tests.
     struct sockaddr_in m_sa {};
     struct addrinfo m_res {};
+
+    umock::NetdbMock netdbObj;
 
     HostportIp4FTestSuite() {
         // Complete the addrinfo structure
@@ -147,10 +148,10 @@ class HostportIp4FTestSuite : public ::testing::Test {
         // Set default return values for getaddrinfo in case we get an
         // unexpected call but it should not occur. We only use an ip address
         // here so name resolution should be called.
-        ON_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _))
+        ON_CALL(netdbObj, getaddrinfo(_, _, _, _))
             .WillByDefault(DoAll(SetArgPointee<3>(&m_res), Return(EAI_NONAME)));
-        EXPECT_CALL(m_mocked_netdb, getaddrinfo(_, _, _, _)).Times(0);
-        EXPECT_CALL(m_mocked_netdb, freeaddrinfo(_)).Times(0);
+        EXPECT_CALL(netdbObj, getaddrinfo(_, _, _, _)).Times(0);
+        EXPECT_CALL(netdbObj, freeaddrinfo(_)).Times(0);
     }
 };
 

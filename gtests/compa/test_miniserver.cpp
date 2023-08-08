@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-05
+// Redistribution only with this Copyright remark. Last modified: 2023-08-09
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -164,8 +164,8 @@ TEST(StartMiniServerTestSuite, StartMiniServer_in_context) {
     // LOCAL_PORT_V6 = 0;
     // LOCAL_PORT_V6_ULA_GUA = 0;
 
-    // umock::Sys_socketMock mocked_sys_socketObj;
-    // umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    // umock::Sys_socketMock sys_socketObj;
+    // umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
     // class Mock_sys_select mocked_sys_selectObj;
     // class Mock_stdlib  mocked_stdlibObj;
     // class Mock_unistd mocked_unistdObj;
@@ -233,19 +233,19 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets) {
     InitMiniServerSockArray(&miniSocket);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
     // Provide a socket id
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(sockfd));
     // Bind socket to an ip address (gIF_IPV4)
-    EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
+    EXPECT_CALL(sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
     // Query port from socket
-    EXPECT_CALL(mocked_sys_socketObj,
+    EXPECT_CALL(sys_socketObj,
                 getsockname(sockfd, _, Pointee(Ge((socklen_t)ai->ai_addrlen))))
         .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
     // Listen on the socket
-    EXPECT_CALL(mocked_sys_socketObj, listen(sockfd, _)).WillOnce(Return(0));
+    EXPECT_CALL(sys_socketObj, listen(sockfd, _)).WillOnce(Return(0));
 
     // Test Unit, needs initialized sockets on MS Windows
     int ret_get_miniserver_sockets =
@@ -449,9 +449,9 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets_with_invalid_socket) {
     InitMiniServerSockArray(&miniSocket);
 
     // Mock to get an invalid socket id
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(INVALID_SOCKET));
 
     // Test Unit, needs initialized sockets on MS Windows
@@ -559,9 +559,9 @@ TEST_F(StartMiniServerFTestSuite, init_socket_suff_with_invalid_socket) {
     s_SocketStuff ss4;
 
     // Mock to get an invalid socket id
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(SetErrnoAndReturn(EINVAL, SOCKET_ERROR));
 
     // Test Unit
@@ -655,11 +655,11 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_successful) {
                        SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _)).Times(1);
-    EXPECT_CALL(mocked_sys_socketObj, listen(sockfd, SOMAXCONN)).Times(1);
-    EXPECT_CALL(mocked_sys_socketObj,
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, bind(sockfd, _, _)).Times(1);
+    EXPECT_CALL(sys_socketObj, listen(sockfd, SOMAXCONN)).Times(1);
+    EXPECT_CALL(sys_socketObj,
                 getsockname(sockfd, _, Pointee(Ge((socklen_t)ai->ai_addrlen))))
         .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
 
@@ -725,11 +725,11 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_with_failed_listen) {
     s.address_len = sizeof(*s.serverAddr4);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
-    EXPECT_CALL(mocked_sys_socketObj, bind(s.fd, _, _)).Times(1);
-    EXPECT_CALL(mocked_sys_socketObj, listen(s.fd, SOMAXCONN))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
+    EXPECT_CALL(sys_socketObj, bind(s.fd, _, _)).Times(1);
+    EXPECT_CALL(sys_socketObj, listen(s.fd, SOMAXCONN))
         .WillOnce(SetErrnoAndReturn(EOPNOTSUPP, -1));
 
     // Test Unit
@@ -784,21 +784,20 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_address_in_use) {
                            SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
 
         // Mock system functions
-        umock::Sys_socketMock mocked_sys_socketObj;
-        umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+        umock::Sys_socketMock sys_socketObj;
+        umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
         // A successful bind is expected but listen should fail with "address in
         // use"
-        EXPECT_CALL(mocked_sys_socketObj, bind(sockfd_inuse, _, _)).Times(1);
-        EXPECT_CALL(mocked_sys_socketObj, listen(sockfd_inuse, SOMAXCONN))
+        EXPECT_CALL(sys_socketObj, bind(sockfd_inuse, _, _)).Times(1);
+        EXPECT_CALL(sys_socketObj, listen(sockfd_inuse, SOMAXCONN))
             .WillOnce(SetErrnoAndReturn(EADDRINUSE, SOCKET_ERROR));
         // A second attempt will call init_socket_suff() to get a new socket.
-        EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+        EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
             .WillOnce(Return(sockfd_free));
-        EXPECT_CALL(mocked_sys_socketObj, bind(sockfd_free, _, _)).Times(1);
-        EXPECT_CALL(mocked_sys_socketObj, listen(sockfd_free, SOMAXCONN))
-            .Times(1);
+        EXPECT_CALL(sys_socketObj, bind(sockfd_free, _, _)).Times(1);
+        EXPECT_CALL(sys_socketObj, listen(sockfd_free, SOMAXCONN)).Times(1);
         EXPECT_CALL(
-            mocked_sys_socketObj,
+            sys_socketObj,
             getsockname(sockfd_free, _, Pointee(Ge((socklen_t)ai->ai_addrlen))))
             .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
 
@@ -850,10 +849,10 @@ TEST_F(DoBindFTestSuite, bind_successful) {
     s.address_len = sizeof(*s.serverAddr4);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
-    EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
+    EXPECT_CALL(sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
 
     // Test Unit
     errno = EINVAL; // Check if this has an impact.
@@ -915,8 +914,8 @@ TEST_F(DoBindFTestSuite, bind_with_invalid_argument) {
     s.address_len = sizeof(*s.serverAddr4);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
 #ifdef _WIN32
     WSASetLastError(WSAEINVAL);
 #endif
@@ -926,7 +925,7 @@ TEST_F(DoBindFTestSuite, bind_with_invalid_argument) {
         // the Unit will hung in an endless loop. There is no exit for this
         // condition. Here it will only stop after three loops because bind()
         // returns successful at last. This is fixed in new code.
-        EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _))
+        EXPECT_CALL(sys_socketObj, bind(sockfd, _, _))
             .WillOnce(SetErrnoAndReturn(EINVAL, -1))
             .WillOnce(SetErrnoAndReturn(EINVAL, -1))
             .WillOnce(Return(0));
@@ -939,7 +938,7 @@ TEST_F(DoBindFTestSuite, bind_with_invalid_argument) {
 
     } else {
 
-        EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _))
+        EXPECT_CALL(sys_socketObj, bind(sockfd, _, _))
             .WillOnce(SetErrnoAndReturn(EINVAL, -1));
 
         // Test Unit
@@ -1006,11 +1005,11 @@ TEST(DoBindTestSuite, bind_with_try_port_overrun) {
     s.address_len = sizeof(*s.serverAddr4);
 
     // Mock socket
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
     // Mock system function, must also set errno
-    EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _))
+    EXPECT_CALL(sys_socketObj, bind(sockfd, _, _))
         .Times(3)
         .WillRepeatedly(SetErrnoAndReturn(EADDRINUSE, -1));
 
@@ -1073,10 +1072,10 @@ TEST(DoBindTestSuite, bind_successful_with_two_tries) {
     s.address_len = sizeof(*s.serverAddr4);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
-    EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
+    EXPECT_CALL(sys_socketObj, bind(sockfd, _, _))
         .WillOnce(SetErrnoAndReturn(EADDRINUSE, -1))
         .WillOnce(SetErrnoAndReturn(EADDRINUSE, -1))
         // The system library never reset errno so don't do it here.
@@ -1220,11 +1219,11 @@ TEST_F(StartMiniServerFTestSuite, do_listen_successful) {
                        AF_INET, SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
-    EXPECT_CALL(mocked_sys_socketObj, listen(sockfd, SOMAXCONN)).Times(1);
-    EXPECT_CALL(mocked_sys_socketObj,
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
+    EXPECT_CALL(sys_socketObj, listen(sockfd, SOMAXCONN)).Times(1);
+    EXPECT_CALL(sys_socketObj,
                 getsockname(sockfd, _, Pointee(Ge((socklen_t)ai->ai_addrlen))))
         .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
 
@@ -1274,12 +1273,12 @@ TEST(StartMiniServerTestSuite, do_listen_not_supported) {
     s.address_len = sizeof(*s.serverAddr4);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
-    EXPECT_CALL(mocked_sys_socketObj, listen(sockfd, SOMAXCONN))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
+    EXPECT_CALL(sys_socketObj, listen(sockfd, SOMAXCONN))
         .WillOnce(SetErrnoAndReturn(EOPNOTSUPP, -1));
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _)).Times(0);
+    EXPECT_CALL(sys_socketObj, getsockname(sockfd, _, _)).Times(0);
 
     // Test Unit
     int ret_do_listen = do_listen(&s);
@@ -1327,11 +1326,11 @@ TEST(StartMiniServerTestSuite, do_listen_insufficient_resources) {
     s.address_len = sizeof(*s.serverAddr4);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
-    EXPECT_CALL(mocked_sys_socketObj, listen(sockfd, SOMAXCONN)).Times(1);
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
+    EXPECT_CALL(sys_socketObj, listen(sockfd, SOMAXCONN)).Times(1);
+    EXPECT_CALL(sys_socketObj, getsockname(sockfd, _, _))
         .WillOnce(SetErrnoAndReturn(ENOBUFS, -1));
 
     // Test Unit
@@ -1372,9 +1371,9 @@ TEST_F(StartMiniServerFTestSuite, get_port_successful) {
                        AF_INET, SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj,
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj,
                 getsockname(sockfd, _, Pointee(Ge((socklen_t)ai->ai_addrlen))))
         .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr),
                         SetArgPointee<2>((socklen_t)ai->ai_addrlen),
@@ -1401,9 +1400,9 @@ TEST(StartMiniServerTestSuite, get_port_wrong_sockaddr_family) {
     const sockaddr sa{};
 
     // Mock system function
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, getsockname(sockfd, _, _))
         .WillOnce(DoAll(SetArgPointee<1>(sa),
                         SetArgPointee<2>((socklen_t)sizeof(sa)), Return(0)));
 
@@ -1438,9 +1437,9 @@ TEST(StartMiniServerTestSuite, get_port_fails) {
     const sockaddr sa{};
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, getsockname(sockfd, _, _))
         .WillOnce(DoAll(SetArgPointee<1>(sa), SetErrnoAndReturn(ENOBUFS, -1)));
 
     // Test Unit
@@ -1489,12 +1488,12 @@ TEST(StartMiniServerTestSuite, get_miniserver_stopsock_fails) {
     InitMiniServerSockArray(&out);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
         .WillOnce(SetErrnoAndReturn(EACCES, -1));
-    EXPECT_CALL(mocked_sys_socketObj, bind(_, _, _)).Times(0);
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(_, _, _)).Times(0);
+    EXPECT_CALL(sys_socketObj, bind(_, _, _)).Times(0);
+    EXPECT_CALL(sys_socketObj, getsockname(_, _, _)).Times(0);
 
     // Test Unit
     int ret_get_miniserver_stopsock = get_miniserver_stopsock(&out);
@@ -1516,13 +1515,13 @@ TEST(StartMiniServerTestSuite, get_miniserver_stopsock_bind_fails) {
     const SOCKET sockfd{FD_SETSIZE - 26};
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
         .WillOnce(Return(sockfd));
-    EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _))
+    EXPECT_CALL(sys_socketObj, bind(sockfd, _, _))
         .WillOnce(SetErrnoAndReturn(ENOMEM, -1));
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(_, _, _)).Times(0);
+    EXPECT_CALL(sys_socketObj, getsockname(_, _, _)).Times(0);
 
     // Test Unit
     int ret_get_miniserver_stopsock = get_miniserver_stopsock(&out);
@@ -1544,12 +1543,12 @@ TEST(StartMiniServerTestSuite, get_miniserver_stopsock_getsockname_fails) {
     const SOCKET sockfd{FD_SETSIZE - 27};
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
         .WillOnce(Return(sockfd));
-    EXPECT_CALL(mocked_sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+    EXPECT_CALL(sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
+    EXPECT_CALL(sys_socketObj, getsockname(sockfd, _, _))
         .WillOnce(SetErrnoAndReturn(ENOBUFS, -1));
 
     // Test Unit
@@ -1570,9 +1569,9 @@ TEST_F(RunMiniServerFTestSuite, receive_from_stopSock) {
     FD_SET(sockfd, &rdSet);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj,
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj,
                 recvfrom(sockfd, _, 25, 0, _,
                          Pointee((socklen_t)sizeof(sockaddr_storage))))
         .WillOnce(DoAll(StrCpyToArg<1>("ShutDown"),
@@ -1592,9 +1591,9 @@ TEST(RunMiniServerTestSuite, receive_from_stopSock_not_selected) {
     // FD_SET(sockfd, &rdSet);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, recvfrom(_, _, _, _, _, _)).Times(0);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, recvfrom(_, _, _, _, _, _)).Times(0);
 
     // Test Unit
     EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 0);
@@ -1610,9 +1609,9 @@ TEST_F(RunMiniServerFTestSuite, receive_from_stopSock_no_bytes) {
     FD_SET(sockfd, &rdSet);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj,
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj,
                 recvfrom(sockfd, _, 25, 0, _,
                          Pointee((socklen_t)sizeof(sockaddr_storage))))
         .WillOnce(DoAll(StrCpyToArg<1>(""), SetArgPointee<4>(*ai->ai_addr),
@@ -1633,9 +1632,9 @@ TEST_F(RunMiniServerFTestSuite, receive_from_stopSock_nothing_todo) {
     FD_SET(sockfd, &rdSet);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj,
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj,
                 recvfrom(sockfd, _, 25, 0, _,
                          Pointee((socklen_t)sizeof(sockaddr_storage))))
         .WillOnce(DoAll(StrCpyToArg<1>("NothingToDo"),
@@ -1691,33 +1690,33 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
     { // Scope of mocking only within this block
 
         // Mock functions from standard system library
-        umock::Sys_selectMock sys_select_mockObj;
-        umock::Sys_select sys_select_injectObj(&sys_select_mockObj);
+        umock::Sys_selectMock sys_selectObj;
+        umock::Sys_select sys_select_injectObj(&sys_selectObj);
 
         if (old_code) {
             std::cout << CYEL "[ FIX      ] " CRES << __LINE__
                       << ": Max socket fd for select() not setting to 0 if "
                          "INVALID_SOCKET in MiniServerSockArray on WIN32.\n";
 #ifdef _WIN32
-            EXPECT_CALL(sys_select_mockObj, select(0, _, nullptr, _, nullptr))
+            EXPECT_CALL(sys_selectObj, select(0, _, nullptr, _, nullptr))
                 .WillOnce(Return(1));
 #else
-            EXPECT_CALL(sys_select_mockObj,
+            EXPECT_CALL(sys_selectObj,
                         select(select_nfds, _, nullptr, _, nullptr))
                 .WillOnce(Return(1));
 #endif
         } else {
 
-            EXPECT_CALL(sys_select_mockObj,
+            EXPECT_CALL(sys_selectObj,
                         select(select_nfds, _, nullptr, _, nullptr))
                 .WillOnce(Return(1));
         }
 
-        umock::Sys_socketMock mocked_sys_socketObj;
-        umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+        umock::Sys_socketMock sys_socketObj;
+        umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
         SSockaddr_storage ss_connected;
         ss_connected = "192.168.200.201:" + connected_port;
-        EXPECT_CALL(mocked_sys_socketObj,
+        EXPECT_CALL(sys_socketObj,
                     accept(listen_sockfd, NotNull(),
                            Pointee((socklen_t)sizeof(sockaddr_storage))))
             .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&ss_connected.ss),
@@ -1730,7 +1729,7 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
             std::cout << CYEL "[ FIX      ] " CRES << __LINE__
                       << ": Unit must not endless loop with wrong \"shutdown\" "
                          "message instead of \"ShutDown\".\n";
-            EXPECT_CALL(mocked_sys_socketObj,
+            EXPECT_CALL(sys_socketObj,
                         recvfrom(stop_sockfd, _, 25, 0, _,
                                  Pointee((socklen_t)sizeof(sockaddr_storage))))
                 .WillOnce(DoAll(StrCpyToArg<1>("ShutDown"),
@@ -1739,7 +1738,7 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
 
         } else {
 
-            EXPECT_CALL(mocked_sys_socketObj,
+            EXPECT_CALL(sys_socketObj,
                         recvfrom(stop_sockfd, _, 25, 0, _,
                                  Pointee((socklen_t)sizeof(sockaddr_storage))))
                 .WillOnce(DoAll(StrCpyToArg<1>("shutdown"),
@@ -1788,11 +1787,11 @@ TEST(RunMiniServerTestSuite, web_server_accept) {
 
     { // Scope of mocking only within this block
 
-        umock::Sys_socketMock mocked_sys_socketObj;
-        umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+        umock::Sys_socketMock sys_socketObj;
+        umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
         SSockaddr_storage ssObj;
         ssObj = "192.168.201.202:" + connected_port;
-        EXPECT_CALL(mocked_sys_socketObj,
+        EXPECT_CALL(sys_socketObj,
                     accept(listen_sockfd, NotNull(),
                            Pointee((socklen_t)sizeof(::sockaddr_storage))))
             .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&ssObj.ss),
@@ -1838,9 +1837,9 @@ TEST(RunMiniServerTestSuite, web_server_accept) {
 TEST(RunMiniServerTestSuite, web_server_accept_with_invalid_socket) {
     constexpr SOCKET listen_sockfd = INVALID_SOCKET;
 
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, accept(_, _, _)).Times(0);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, accept(_, _, _)).Times(0);
 
     // Capture output to stderr
     CLogging loggingObj; // Output only with build type DEBUG.
@@ -1869,9 +1868,9 @@ TEST(RunMiniServerTestSuite, web_server_accept_with_empty_set) {
     fd_set set;
     FD_ZERO(&set);
 
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, accept(_, _, _)).Times(0);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, accept(_, _, _)).Times(0);
 
     // Capture output to stderr
     CLogging loggingObj; // Output only with build type DEBUG.
@@ -2105,21 +2104,21 @@ TEST_F(RunMiniServerFTestSuite, getNumericHostRedirection) {
                         AI_NUMERICHOST | AI_NUMERICSERV);
 
     // Mock system functions
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
 
     // Test Unit
     if (old_code) {
-        EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+        EXPECT_CALL(sys_socketObj, getsockname(sockfd, _, _))
             .WillOnce(DoAll(SetArgPointee<1>(*ai1->ai_addr), Return(0)));
         EXPECT_TRUE(getNumericHostRedirection((int)sockfd, host_port,
                                               sizeof(host_port)));
     } else {
 
-        EXPECT_CALL(mocked_sys_socketObj,
+        EXPECT_CALL(sys_socketObj,
                     getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
             .WillOnce(Return(0));
-        EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+        EXPECT_CALL(sys_socketObj, getsockname(sockfd, _, _))
             .Times(2)
             .WillRepeatedly(DoAll(SetArgPointee<1>(*ai1->ai_addr), Return(0)));
         EXPECT_TRUE(
@@ -2136,9 +2135,9 @@ TEST(RunMiniServerTestSuite,
 
     // Mock system function getsockname()
     // to fail with insufficient resources.
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    EXPECT_CALL(sys_socketObj, getsockname(sockfd, _, _))
         .WillOnce(SetErrnoAndReturn(ENOBUFS, -1));
 
     // Capture output to stderr
@@ -2154,7 +2153,7 @@ TEST(RunMiniServerTestSuite,
 
     } else {
 
-        EXPECT_CALL(mocked_sys_socketObj,
+        EXPECT_CALL(sys_socketObj,
                     getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
             .WillOnce(Return(0));
 
@@ -2178,20 +2177,20 @@ TEST(RunMiniServerTestSuite,
     ssObj.ss.ss_family = AF_UNIX;
 
     // Mock system function getsockname()
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
 
     if (old_code) {
-        EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+        EXPECT_CALL(sys_socketObj, getsockname(sockfd, _, _))
             .WillOnce(
                 DoAll(SetArgPointee<1>(*(sockaddr*)&ssObj.ss), Return(0)));
 
     } else {
 
-        EXPECT_CALL(mocked_sys_socketObj,
+        EXPECT_CALL(sys_socketObj,
                     getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
             .WillOnce(Return(0));
-        EXPECT_CALL(mocked_sys_socketObj, getsockname(sockfd, _, _))
+        EXPECT_CALL(sys_socketObj, getsockname(sockfd, _, _))
             .WillOnce(
                 DoAll(SetArgPointee<1>(*(sockaddr*)&ssObj.ss), Return(0)));
     }

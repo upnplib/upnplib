@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-12
+// Redistribution only with this Copyright remark. Last modified: 2023-08-09
 
 // -----------------------------------------------------------------------------
 // This testsuite starts the sample TV Device with general command line
@@ -140,19 +140,19 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
     EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
 
     // Mock system functions
-    umock::IfaddrsMock mocked_ifaddrsObj;
-    umock::Ifaddrs ifaddrs_injectObj(&mocked_ifaddrsObj);
-    EXPECT_CALL(mocked_ifaddrsObj, getifaddrs(_))
+    umock::IfaddrsMock ifaddrsObj;
+    umock::Ifaddrs ifaddrs_injectObj(&ifaddrsObj);
+    EXPECT_CALL(ifaddrsObj, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
-    EXPECT_CALL(mocked_ifaddrsObj, freeifaddrs(ifaddr)).Times(1);
+    EXPECT_CALL(ifaddrsObj, freeifaddrs(ifaddr)).Times(1);
 
-    umock::Net_ifMock mocked_net_ifObj;
-    umock::Net_if net_if_injectObj(&mocked_net_ifObj);
-    EXPECT_CALL(mocked_net_ifObj, if_nametoindex(_)).WillOnce(Return(2));
+    umock::Net_ifMock net_ifObj;
+    umock::Net_if net_if_injectObj(&net_ifObj);
+    EXPECT_CALL(net_ifObj, if_nametoindex(_)).WillOnce(Return(2));
 
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
-    ON_CALL(mocked_sys_socketObj, connect(_, _, _))
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+    ON_CALL(sys_socketObj, connect(_, _, _))
         .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
 
     { // begin scope InSequence
@@ -168,13 +168,12 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
             listen_ssObj; // for getsockname() return sockaddr & port
         listen_ssObj = ip_addr_str + ":" + listen_port;
 
-        EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+        EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
             .WillOnce(Return(listen_sockfd));
-        EXPECT_CALL(mocked_sys_socketObj, bind(listen_sockfd, _, _)).Times(1);
-        EXPECT_CALL(mocked_sys_socketObj, listen(listen_sockfd, SOMAXCONN))
-            .Times(1);
+        EXPECT_CALL(sys_socketObj, bind(listen_sockfd, _, _)).Times(1);
+        EXPECT_CALL(sys_socketObj, listen(listen_sockfd, SOMAXCONN)).Times(1);
         EXPECT_CALL(
-            mocked_sys_socketObj,
+            sys_socketObj,
             getsockname(listen_sockfd, _, Pointee(Ge(sizeof(sockaddr_in)))))
             .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&listen_ssObj.ss),
                             Return(0)));
@@ -187,11 +186,11 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
             stop_ssObj; // for getsockname() return sockaddr & port
         stop_ssObj = ip_addr_str + ":" + stop_port;
 
-        EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+        EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
             .WillOnce(Return(stop_sockfd));
-        EXPECT_CALL(mocked_sys_socketObj, bind(stop_sockfd, _, _)).Times(1);
+        EXPECT_CALL(sys_socketObj, bind(stop_sockfd, _, _)).Times(1);
         EXPECT_CALL(
-            mocked_sys_socketObj,
+            sys_socketObj,
             getsockname(stop_sockfd, _, Pointee(Ge(sizeof(sockaddr_in)))))
             .WillOnce(
                 DoAll(SetArgPointee<1>(*(sockaddr*)&stop_ssObj.ss), Return(0)));
@@ -199,31 +198,31 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
         // Mock SSDP socket for discovery/advertising: get socket, bind it.
         // Create the IPv4 socket for SSDP REQUESTS
         constexpr SOCKET ssdpreq_sockfd{FD_SETSIZE - 3};
-        EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+        EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
             .WillOnce(Return(ssdpreq_sockfd));
-        EXPECT_CALL(mocked_sys_socketObj, setsockopt(ssdpreq_sockfd, IPPROTO_IP,
-                                                     IP_MULTICAST_TTL, _, _));
+        EXPECT_CALL(sys_socketObj, setsockopt(ssdpreq_sockfd, IPPROTO_IP,
+                                              IP_MULTICAST_TTL, _, _));
         // Create the IPv4 socket for SSDP
         constexpr SOCKET ssdp_sockfd{FD_SETSIZE - 4};
-        EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+        EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
             .WillOnce(Return(ssdp_sockfd));
-        EXPECT_CALL(mocked_sys_socketObj,
+        EXPECT_CALL(sys_socketObj,
                     setsockopt(ssdp_sockfd, SOL_SOCKET, SO_REUSEADDR, _, _));
-        EXPECT_CALL(mocked_sys_socketObj, bind(ssdp_sockfd, _, _)).Times(1);
-        EXPECT_CALL(mocked_sys_socketObj, setsockopt(ssdp_sockfd, IPPROTO_IP,
-                                                     IP_ADD_MEMBERSHIP, _, _));
-        EXPECT_CALL(mocked_sys_socketObj,
+        EXPECT_CALL(sys_socketObj, bind(ssdp_sockfd, _, _)).Times(1);
+        EXPECT_CALL(sys_socketObj, setsockopt(ssdp_sockfd, IPPROTO_IP,
+                                              IP_ADD_MEMBERSHIP, _, _));
+        EXPECT_CALL(sys_socketObj,
                     setsockopt(ssdp_sockfd, IPPROTO_IP, IP_MULTICAST_IF, _, _));
-        EXPECT_CALL(mocked_sys_socketObj, setsockopt(ssdp_sockfd, IPPROTO_IP,
-                                                     IP_MULTICAST_TTL, _, _));
-        EXPECT_CALL(mocked_sys_socketObj,
+        EXPECT_CALL(sys_socketObj, setsockopt(ssdp_sockfd, IPPROTO_IP,
+                                              IP_MULTICAST_TTL, _, _));
+        EXPECT_CALL(sys_socketObj,
                     setsockopt(ssdp_sockfd, SOL_SOCKET, SO_BROADCAST, _, _));
         // .WillOnce(Return(-1)); // This will help to find the program line
         // **************************************************************
         // *** End mock UpnpInit2() on tv_device.cpp -> TvDeviceStart ***
 
         // if (!old_code) {
-        //     EXPECT_CALL(mocked_sys_socketObj,
+        //     EXPECT_CALL(sys_socketObj,
         //                 getsockopt(listen_sockfd, SOL_SOCKET, SO_ERROR, _,
         //                 _));
         // }

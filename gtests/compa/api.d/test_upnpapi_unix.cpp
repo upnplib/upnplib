@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-29
+// Redistribution only with this Copyright remark. Last modified: 2023-08-09
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -46,10 +46,6 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
 // Fixtures for this Testsuite
 {
   protected:
-    // Provide mocked functions
-    umock::IfaddrsMock m_mocked_ifaddrs;
-    umock::Net_ifMock m_mocked_net_if;
-
     // constructor of this testsuite
     UpnpapiIPv4MockTestSuite() {
         // initialize needed global variables
@@ -73,12 +69,13 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
     EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
 
     // Mock system functions
-    umock::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
-    umock::Net_if net_if_injectObj(&m_mocked_net_if);
-    EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
+    umock::Ifaddrs ifaddrs_injectObj(&umock::ifaddrsObj);
+    umock::Net_ifMock net_ifObj;
+    umock::Net_if net_if_injectObj(&net_ifObj);
+    EXPECT_CALL(umock::ifaddrsObj, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
-    EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);
-    EXPECT_CALL(m_mocked_net_if, if_nametoindex(_)).WillOnce(Return(2));
+    EXPECT_CALL(umock::ifaddrsObj, freeifaddrs(ifaddr)).Times(1);
+    EXPECT_CALL(net_ifObj, if_nametoindex(_)).WillOnce(Return(2));
 
     // Test Unit
     int ret_UpnpGetIfInfo = ::UpnpGetIfInfo("if0v4");
@@ -113,12 +110,13 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     ifaddrs* ifaddr = ifaddr4Obj.get();
     EXPECT_STREQ(ifaddr->ifa_name, "eth0");
 
-    umock::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
-    umock::Net_if net_if_injectObj(&m_mocked_net_if);
-    EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
+    umock::Ifaddrs ifaddrs_injectObj(&umock::ifaddrsObj);
+    umock::Net_ifMock net_ifObj;
+    umock::Net_if net_if_injectObj(&net_ifObj);
+    EXPECT_CALL(umock::ifaddrsObj, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
-    EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);
-    EXPECT_CALL(m_mocked_net_if, if_nametoindex(_)).Times(0);
+    EXPECT_CALL(umock::ifaddrsObj, freeifaddrs(ifaddr)).Times(1);
+    EXPECT_CALL(net_ifObj, if_nametoindex(_)).Times(0);
 
     // Test Unit
     // "ATTENTION! There is a wrong upper case 'O', not zero in 'ethO'";
@@ -180,29 +178,28 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_default_initialization) {
     constexpr SOCKET stop_sockfd{446};
 
     // Mock to get local network interface address and its index number
-    umock::Ifaddrs ifaddrs_injectObj(&m_mocked_ifaddrs);
-    umock::Net_if net_if_injectObj(&m_mocked_net_if);
-    EXPECT_CALL(m_mocked_ifaddrs, getifaddrs(_))
+    umock::Ifaddrs ifaddrs_injectObj(&umock::ifaddrsObj);
+    umock::Net_ifMock net_ifObj;
+    umock::Net_if net_if_injectObj(&net_ifObj);
+    EXPECT_CALL(umock::ifaddrsObj, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
-    EXPECT_CALL(m_mocked_ifaddrs, freeifaddrs(ifaddr)).Times(1);
-    EXPECT_CALL(m_mocked_net_if, if_nametoindex(_)).Times(1);
+    EXPECT_CALL(umock::ifaddrsObj, freeifaddrs(ifaddr)).Times(1);
+    EXPECT_CALL(net_ifObj, if_nametoindex(_)).Times(1);
 
     // Mock socket, bind local ip address to it and listen to it
-    umock::Sys_socketMock mocked_sys_socketObj;
-    umock::Sys_socket sys_socket_injectObj(&mocked_sys_socketObj);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
     // Provide listen socket
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(listen_sockfd));
-    EXPECT_CALL(mocked_sys_socketObj, bind(listen_sockfd, _, _)).Times(1);
-    EXPECT_CALL(mocked_sys_socketObj, listen(listen_sockfd, SOMAXCONN))
-        .Times(1);
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(listen_sockfd, _, _))
-        .Times(1);
+    EXPECT_CALL(sys_socketObj, bind(listen_sockfd, _, _)).Times(1);
+    EXPECT_CALL(sys_socketObj, listen(listen_sockfd, SOMAXCONN)).Times(1);
+    EXPECT_CALL(sys_socketObj, getsockname(listen_sockfd, _, _)).Times(1);
     // Provide stop socket
-    EXPECT_CALL(mocked_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+    EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
         .WillOnce(Return(stop_sockfd));
-    EXPECT_CALL(mocked_sys_socketObj, bind(stop_sockfd, _, _)).Times(1);
-    EXPECT_CALL(mocked_sys_socketObj, getsockname(stop_sockfd, _, _)).Times(1);
+    EXPECT_CALL(sys_socketObj, bind(stop_sockfd, _, _)).Times(1);
+    EXPECT_CALL(sys_socketObj, getsockname(stop_sockfd, _, _)).Times(1);
 
     // Test Unit
     UpnpSdkInit = 0;

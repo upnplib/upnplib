@@ -1,15 +1,11 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-08-09
 
-#include "FreeList.hpp"
+#include <FreeList.hpp>
 
-#include "umock/stdlib.hpp"
-#include "gmock/gmock.h"
+#include <umock/stdlib_mock.hpp>
 
-using ::testing::_;
-using ::testing::Return;
 
-//
 // A Freelist works together with a linked list. If we add or delete nodes on a
 // linked list normaly memory allocation and freeing is used. This is expensive.
 // Once allocated memory blocks if freed from the linked list will be added to
@@ -22,19 +18,10 @@ using ::testing::Return;
 namespace compa {
 bool old_code{false}; // Managed in compa/gtest_main.inc
 
-//
-// Mocked system calls
-// -------------------
-class StdlibMock : public umock::StdlibInterface {
-  public:
-    virtual ~StdlibMock() override {}
-    MOCK_METHOD(void*, malloc, (size_t size), (override));
-    MOCK_METHOD(void*, calloc, (size_t nmemb, size_t size), (override));
-    MOCK_METHOD(void*, realloc, (void* ptr, size_t size), (override));
-    MOCK_METHOD(void, free, (void* ptr), (override));
-};
+using ::testing::_;
+using ::testing::Return;
 
-//
+
 // TestSuites
 // ----------
 TEST(FreeListTestSuite, init_and_destroy) {
@@ -64,11 +51,11 @@ TEST(FreeListTestSuite, allocate_node_from_memory) {
     FreeListNode newnode{};
 
     // Mocking
-    StdlibMock mocked_stdlib;
-    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
-    EXPECT_CALL(mocked_stdlib, malloc(free_list.element_size))
+    umock::StdlibMock stdlibObj;
+    umock::Stdlib stdlib_injectObj(&stdlibObj);
+    EXPECT_CALL(stdlibObj, malloc(free_list.element_size))
         .WillOnce(Return(&newnode));
-    EXPECT_CALL(mocked_stdlib, free(&free_list)).Times(0);
+    EXPECT_CALL(stdlibObj, free(&free_list)).Times(0);
 
     // Test Unit
     FreeListNode* freenode = (FreeListNode*)FreeListAlloc(&free_list);
@@ -98,14 +85,14 @@ TEST(FreeListTestSuite, allocate_node_from_freelist) {
     FreeListNode newnode{};
 
     // Mocking
-    StdlibMock mocked_stdlib;
-    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
+    umock::StdlibMock stdlibObj;
+    umock::Stdlib stdlib_injectObj(&stdlibObj);
     // Expect to free the new node on destroying the freelist
-    EXPECT_CALL(mocked_stdlib, free(&newnode)).Times(0);
+    EXPECT_CALL(stdlibObj, free(&newnode)).Times(0);
 
     // Get a node from the freelist. Because the freelist ist empty it is
     // allocated from the memory.
-    EXPECT_CALL(mocked_stdlib, malloc(free_list.element_size))
+    EXPECT_CALL(stdlibObj, malloc(free_list.element_size))
         .WillOnce(Return(&newnode));
     FreeListNode* freenode1 = (FreeListNode*)FreeListAlloc(&free_list);
     ASSERT_EQ(freenode1, &newnode);
@@ -114,7 +101,7 @@ TEST(FreeListTestSuite, allocate_node_from_freelist) {
     EXPECT_EQ(FreeListFree(&free_list, freenode1), 0);
 
     // Test Unit
-    EXPECT_CALL(mocked_stdlib, malloc(free_list.element_size)).Times(0);
+    EXPECT_CALL(stdlibObj, malloc(free_list.element_size)).Times(0);
     FreeListNode* freenode2 = (FreeListNode*)FreeListAlloc(&free_list);
     ASSERT_EQ(freenode2, &newnode);
 
@@ -134,13 +121,13 @@ TEST(FreeListTestSuite, add_unused_node_to_freelist) {
     FreeListNode newnode{};
 
     // Mocking
-    StdlibMock mocked_stdlib;
-    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
+    umock::StdlibMock stdlibObj;
+    umock::Stdlib stdlib_injectObj(&stdlibObj);
     // Expect to get a new node from the memory
-    EXPECT_CALL(mocked_stdlib, malloc(free_list.element_size))
+    EXPECT_CALL(stdlibObj, malloc(free_list.element_size))
         .WillOnce(Return(&newnode));
     // Expect to free the new node on destroying the freelist
-    EXPECT_CALL(mocked_stdlib, free(&newnode)).Times(1);
+    EXPECT_CALL(stdlibObj, free(&newnode)).Times(1);
 
     // Get a node from the freelist. Because the freelist ist empty it is
     // allocated from the memory.
@@ -168,13 +155,13 @@ TEST(FreeListTestSuite, return_unused_node_to_operating_system) {
     FreeListNode newnode{};
 
     // Mocking
-    StdlibMock mocked_stdlib;
-    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
+    umock::StdlibMock stdlibObj;
+    umock::Stdlib stdlib_injectObj(&stdlibObj);
     // Expect to get a new node from the memory
-    EXPECT_CALL(mocked_stdlib, malloc(free_list.element_size))
+    EXPECT_CALL(stdlibObj, malloc(free_list.element_size))
         .WillOnce(Return(&newnode));
     // Expect to free the new node when giving it back to the operating system.
-    EXPECT_CALL(mocked_stdlib, free(&newnode)).Times(1);
+    EXPECT_CALL(stdlibObj, free(&newnode)).Times(1);
 
     // Get a node from the freelist. Because the freelist ist empty it is
     // allocated from the memory.
@@ -240,9 +227,9 @@ TEST(FreeListTestSuite, freelist_with_nullptr_to_element) {
     EXPECT_EQ(FreeListInit(&free_list, 4, 3), 0);
 
     // Mocking
-    StdlibMock mocked_stdlib;
-    umock::Stdlib stdlib_injectObj(&mocked_stdlib);
-    EXPECT_CALL(mocked_stdlib, free(nullptr)).Times(1);
+    umock::StdlibMock stdlibObj;
+    umock::Stdlib stdlib_injectObj(&stdlibObj);
+    EXPECT_CALL(stdlibObj, free(nullptr)).Times(1);
 
     // Test Unit
     EXPECT_EQ(FreeListFree(&free_list, nullptr), 0);
