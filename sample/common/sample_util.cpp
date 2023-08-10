@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-08
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-11
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -50,6 +50,8 @@
 #include "UpnpEvent.hpp"
 #include "UpnpEventSubscribe.hpp"
 
+#include <upnplib/trace.hpp>
+
 #include "pthread.h" // To find pthreads4w don't use <pthread.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -68,6 +70,7 @@ state_update gStateUpdateFun = NULL;
 pthread_mutex_t display_mutex;
 
 int SampleUtil_Initialize(print_string print_function) {
+    TRACE("Executing SampleUtil_Initialize()")
     if (initialize_init) {
         pthread_mutexattr_t attr;
 

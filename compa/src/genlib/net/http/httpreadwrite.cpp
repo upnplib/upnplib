@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-07
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -54,7 +54,6 @@
 #include <assert.h>
 #include <stdarg.h>
 #include <cstring>
-#include <iostream> // DEBUG!
 
 #include <posix_overwrites.hpp>
 
@@ -85,9 +84,9 @@
  * const int in array dimensions.
  */
 /*
-const int CHUNK_HEADER_SIZE = 10;
-const int CHUNK_TAIL_SIZE = 10;
-*/
+   const int CHUNK_HEADER_SIZE = 10;
+   const int CHUNK_TAIL_SIZE = 10;
+   */
 #define CHUNK_HEADER_SIZE (size_t)10
 #define CHUNK_TAIL_SIZE (size_t)10
 
@@ -102,9 +101,9 @@ const int CHUNK_TAIL_SIZE = 10;
  */
 static int Check_Connect_And_Wait_Connection(
     /*! [in] socket. */
-    SOCKET a_sock,
+    const SOCKET a_sock,
     /*! [in] result of connect. */
-    int connect_res) {
+    const int connect_res) {
     TRACE("Executing Check_Connect_And_Wait_Connection()")
 
     if (connect_res == 0)
@@ -140,10 +139,9 @@ static int Check_Connect_And_Wait_Connection(
         return -1;
     if (valopt)
         /* delayed error = valopt */
-        // TODO: Return more detailed error codes, e.g.
-        // valopt == 111: ECONNREFUSED "Connection refused"
-        // if there is a remote host but no server service
-        // listening.
+        // TODO: Return more detailed error codes, e.g. valopt == 111:
+        // ECONNREFUSED "Connection refused" if there is a remote host but no
+        // server service listening.
         return -1;
 
     return 0;
@@ -158,8 +156,8 @@ bool unblock_tcp_connections{true};
 #endif
 
 // Returns 0 if successful, else SOCKET_ERROR.
-static int private_connect(SOCKET sockfd, const sockaddr* serv_addr,
-                           socklen_t addrlen) {
+static int private_connect(const SOCKET sockfd, const sockaddr* const serv_addr,
+                           const socklen_t addrlen) {
     TRACE("Executing private_connect(), blocking " +
           std::string(unblock_tcp_connections ? "false" : "true"))
 
@@ -172,12 +170,8 @@ static int private_connect(SOCKET sockfd, const sockaddr* serv_addr,
             // ret is needed for Check_Connect_And_Wait_Connection(),
             // returns 0 if successful, else -1.
             ret = umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
-            std::cout << "DEBUG! ret() = " << ret << ", errno = " << errno
-                      << "\n";
             // returns 0 if successful, else -1.
             ret = Check_Connect_And_Wait_Connection(sockfd, ret);
-            std::cout << "DEBUG! ret_Check_Connect_And_Wait_Connection() = "
-                      << ret << "\n";
 
             // Always make_blocking() to revert make_no_blocking() above.
             // returns 0 if successful, else SOCKET_ERROR.
@@ -189,6 +183,9 @@ static int private_connect(SOCKET sockfd, const sockaddr* serv_addr,
     } else { // unblock_tcp_connections == false
 
         return umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
+        // TODO: Return more detailed error codes, e.g. with 'getsockopt()'
+        // valopt == 111: ECONNREFUSED "Connection refused" if there is a
+        // remote host but no server service listening.
     }
 }
 

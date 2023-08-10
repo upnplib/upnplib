@@ -107,7 +107,7 @@ class SampleTvDeviceFTestSuite : public ::testing::Test {
         gIF_IPV6_PREFIX_LENGTH = 0;
         std::fill(std::begin(gIF_IPV6_ULA_GUA), std::end(gIF_IPV6_ULA_GUA), 0);
         gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
-        gIF_INDEX = (unsigned)-1;
+        gIF_INDEX = -1u;
     }
 };
 

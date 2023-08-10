@@ -130,6 +130,7 @@ int UpnpInitLog() {
 }
 
 void UpnpSetLogLevel(Upnp_LogLevel log_level) {
+    TRACE("Executing UpnpSetLogLevel()")
     g_log_level = log_level;
     setlogwascalled = 1;
 }
@@ -155,6 +156,7 @@ void UpnpCloseLog() {
 }
 
 void UpnpSetLogFileNames(const char* newFileName, const char* ignored) {
+    TRACE("Executing UpnpSetLogFileNames()")
     (void)ignored;
 
     if (fileName) {
