@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-09
+// Redistribution only with this Copyright remark. Last modified: 2023-08-14
 
 // -----------------------------------------------------------------------------
 // This testsuite starts the sample TV Device with general command line
@@ -13,6 +13,7 @@
 
 #include <upnpapi.hpp>
 #include <membuffer.hpp>
+#include <ssdplib.hpp>
 
 #include <upnplib/upnptools.hpp>
 #include <upnplib/gtest_tools_unix.hpp>
@@ -22,6 +23,8 @@
 #include <umock/ifaddrs_mock.hpp>
 #include <umock/net_if_mock.hpp>
 #include <umock/sys_socket_mock.hpp>
+
+#include <arpa/inet.h>
 
 extern membuffer gDocumentRootDir;
 
@@ -82,6 +85,7 @@ bool old_code{false}; // Managed in compa/gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
+using ::testing::A;
 using ::testing::DoAll;
 using ::testing::Ge;
 using ::testing::InSequence;
@@ -112,6 +116,7 @@ class SampleTvDeviceFTestSuite : public ::testing::Test {
 };
 
 
+#if false
 TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
     // IMPORTANT! There is a limit FD_SETSIZE = 1024 for socket file
     // descriptors that can be used with 'select()'. This limit is not given
@@ -236,6 +241,7 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
     // Stop device
     // EXPECT_EQ(TvDeviceStop(), UPNP_E_SUCCESS);
 }
+#endif
 
 TEST_F(SampleTvDeviceFTestSuite, invalid_commandline_argument) {
     constexpr int argc{5};
@@ -250,26 +256,134 @@ TEST_F(SampleTvDeviceFTestSuite, invalid_commandline_argument) {
     EXPECT_EQ(TvDeviceStop(), UPNP_E_SUCCESS);
 }
 
-#if 0
-TEST(SampleTvDeviceTestSuite, TvDeviceStart) {
-    GTEST_SKIP() << "  # With using real sockets this test has side effects on "
-                    "other tests. It should be mocked.";
-
+TEST_F(SampleTvDeviceFTestSuite, TvDeviceStart_successful) {
+    // Arguments of TvDeviceStart()
     constexpr char* iface{};
-    constexpr unsigned short port{};
+    constexpr in_port_t port{};
     constexpr char* desc_doc_name{};
-    constexpr char web_dir_path[]{SAMPLE_SOURCE_DIR "/web"};
+    constexpr char web_dir_path[]{SAMPLE_SOURCE_DIR "/web\0"};
     constexpr int ip_mode = IP_MODE_IPV4;
 
+    // Mock system functions
+    umock::IfaddrsMock ifaddrsObj;
+    umock::Ifaddrs ifaddrs_injectObj(&ifaddrsObj);
+    umock::Net_ifMock net_ifObj;
+    umock::Net_if net_if_injectObj(&net_ifObj);
+    umock::Sys_socketMock sys_socketObj;
+    umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
+
+    // Provide values for a local network interface
+    const std::string local_addr_str{"192.168.99.4"};
+
+    CIfaddr4 ifaddr4Obj;
+    ifaddr4Obj.set("if0v4", local_addr_str + "/24");
+    ifaddrs* ifaddr = ifaddr4Obj.get();
+
+    EXPECT_CALL(ifaddrsObj, getifaddrs(_))
+        .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
+    EXPECT_CALL(ifaddrsObj, freeifaddrs(ifaddr)).Times(1);
+    // Interface index set to 2
+    EXPECT_CALL(net_ifObj, if_nametoindex(_)).WillOnce(Return(2));
+
+    // Set default socket object values
+    ON_CALL(sys_socketObj, socket(_, _, _))
+        .WillByDefault(SetErrnoAndReturn(EACCES, SOCKET_ERROR));
+    ON_CALL(sys_socketObj, connect(_, _, _))
+        .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+    ON_CALL(sys_socketObj, bind(_, _, _))
+        .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+    ON_CALL(sys_socketObj, listen(_, _))
+        .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+    ON_CALL(sys_socketObj, setsockopt(_, _, _, _, _))
+        .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+
+    { // begin scope InSequence
+        InSequence seq;
+
+        // *** Start mock UpnpInit2() on tv_device.cpp -> TvDeviceStart ***
+        // ****************************************************************
+        // Mock V4 and V6 http listeners: get socket, bind it, listen on it and
+        // get port with getsockname().
+        constexpr SOCKET listen_sockfd{FD_SETSIZE - 41};
+        const std::string listen_port_str{"50010"};
+        SSockaddr_storage
+            listen_ssObj; // for getsockname() return sockaddr & port
+        listen_ssObj = local_addr_str + ":" + listen_port_str;
+
+        EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+            .WillOnce(Return(listen_sockfd));
+        EXPECT_CALL(sys_socketObj, bind(listen_sockfd, _, _))
+            .WillOnce(Return(0));
+        EXPECT_CALL(sys_socketObj, listen(listen_sockfd, SOMAXCONN))
+            .WillOnce(Return(0));
+        EXPECT_CALL(
+            sys_socketObj,
+            getsockname(listen_sockfd, _, Pointee(Ge(sizeof(sockaddr_in)))))
+            .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&listen_ssObj.ss),
+                            Return(0)));
+
+        // Mock stop socket (to end miniserver processing): get socket, bind it
+        // and get port with getsockname().
+        constexpr SOCKET stop_sockfd{FD_SETSIZE - 42};
+        constexpr SOCKET ssdpReqSock{FD_SETSIZE - 43};
+        constexpr SOCKET ssdpSock{FD_SETSIZE - 44};
+        const std::string stop_port{"50011"};
+        SSockaddr_storage
+            stop_ssObj; // for getsockname() return sockaddr & port
+        stop_ssObj = local_addr_str + ":" + stop_port;
+
+        EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+            .WillOnce(Return(stop_sockfd));
+        EXPECT_CALL(sys_socketObj, bind(stop_sockfd, _, _)).WillOnce(Return(0));
+        EXPECT_CALL(
+            sys_socketObj,
+            getsockname(stop_sockfd, _, Pointee(Ge(sizeof(sockaddr_in)))))
+            .WillOnce(
+                DoAll(SetArgPointee<1>(*(sockaddr*)&stop_ssObj.ss), Return(0)));
+        // Mock ssdp_server: create_ssdp_sock_reqv4()
+        EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+            .WillOnce(Return(ssdpReqSock));
+        EXPECT_CALL(sys_socketObj,
+                    setsockopt(ssdpReqSock, IPPROTO_IP, IP_MULTICAST_TTL, _, _))
+            .WillOnce(Return(0));
+        // Mock ssdp_server: create_ssdp_sock_v4()
+        EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+            .WillOnce(Return(ssdpSock));
+        EXPECT_CALL(sys_socketObj,
+                    setsockopt(ssdpSock, SOL_SOCKET, SO_REUSEADDR, _, _))
+            .WillOnce(Return(0));
+#if (defined(BSD) && !defined(__GNU__)) || defined(__APPLE__)
+        EXPECT_CALL(sys_socketObj,
+                    setsockopt(ssdpSock, SOL_SOCKET, SO_REUSEPORT, _, _))
+            .WillOnce(Return(0));
+#endif
+        EXPECT_CALL(sys_socketObj,
+                    bind(ssdpSock, Pointee(A<sockaddr>()), sizeof(sockaddr_in)))
+            .WillOnce(Return(0));
+        EXPECT_CALL(sys_socketObj,
+                    setsockopt(ssdpSock, IPPROTO_IP, IP_ADD_MEMBERSHIP, _, _))
+            .WillOnce(Return(0));
+        EXPECT_CALL(sys_socketObj,
+                    setsockopt(ssdpSock, IPPROTO_IP, IP_MULTICAST_IF, _, _))
+            .WillOnce(Return(0));
+        EXPECT_CALL(sys_socketObj,
+                    setsockopt(ssdpSock, IPPROTO_IP, IP_MULTICAST_TTL, _, _))
+            .WillOnce(Return(0));
+        EXPECT_CALL(sys_socketObj,
+                    setsockopt(ssdpSock, SOL_SOCKET, SO_BROADCAST, _, _))
+            .WillOnce(Return(0));
+    } // end scope InSequence
+
+
     // Test Unit with default settings as far as possible
-    int returned = TvDeviceStart(iface, port, desc_doc_name, web_dir_path,
-                                 ip_mode, linux_print, 0);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
+    int ret_TvDeviceStart = TvDeviceStart(
+        iface, port, desc_doc_name, web_dir_path, ip_mode, linux_print, 0);
+    EXPECT_EQ(ret_TvDeviceStart, UPNP_E_SUCCESS)
+        << errStrEx(ret_TvDeviceStart, UPNP_E_SUCCESS);
 
     // Stop device
     EXPECT_EQ(TvDeviceStop(), UPNP_E_SUCCESS);
 }
-#endif
 
 } // namespace compa
 

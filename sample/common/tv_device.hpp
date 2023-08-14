@@ -513,10 +513,10 @@ int TvDeviceDecreaseBrightness(
 int TvDeviceStart(
     /*! [in] interface to initialize the sdk (may be NULL)
      * if null, then the first non null interface is used. */
-    char* iface,
+    const char* iface,
     /*! [in] port number to initialize the sdk (may be 0)
      * if zero, then a random number is used. */
-    unsigned short port,
+    in_port_t port,
     /*! [in] name of description document.
      * may be NULL. Default is tvdevicedesc.xml. */
     const char* desc_doc_name,
@@ -525,11 +525,11 @@ int TvDeviceStart(
     const char* web_dir_path,
     /*! [in] IP mode: IP_MODE_IPV4, IP_MODE_IPV6_LLA or
      * IP_MODE_IPV6_ULA_GUA. Default is IP_MODE_IPV4. */
-    int ip_mode,
+    const int ip_mode,
     /*! [in] print function to use. */
-    print_string pfun,
+    const print_string pfun,
     /*! [in] Non-zero if called from the combo application. */
-    int combo);
+    const int combo);
 
 /*!
  * \brief Stops the device. Uninitializes the sdk.

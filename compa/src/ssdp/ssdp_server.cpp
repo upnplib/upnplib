@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-08
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -54,8 +54,10 @@
 //#include "miniserver.h"
 #include "sock.hpp"
 #include "upnpapi.hpp"
-#include "umock/sys_socket.hpp"
-#include "umock/pupnp_sock.hpp"
+
+#include <upnplib/trace.hpp>
+#include <umock/sys_socket.hpp>
+#include <umock/pupnp_sock.hpp>
 
 #include <stdio.h>
 
@@ -752,6 +754,7 @@ void readFromSSDPSocket(SOCKET socket) {
 static int create_ssdp_sock_v4(
     /*! [] SSDP IPv4 socket to be created. */
     SOCKET* ssdpSock) {
+    TRACE("Executing create_ssdp_sock_v4()")
     char errorBuffer[ERROR_BUFFER_LEN];
     int onOff;
     u_char ttl = (u_char)4;
@@ -795,7 +798,7 @@ static int create_ssdp_sock_v4(
     ssdpAddr4->sin_family = (sa_family_t)AF_INET;
     ssdpAddr4->sin_addr.s_addr = htonl(INADDR_ANY);
     ssdpAddr4->sin_port = htons(SSDP_PORT);
-    ret = umock::sys_socket_h.bind(*ssdpSock, (struct sockaddr*)ssdpAddr4,
+    ret = umock::sys_socket_h.bind(*ssdpSock, (sockaddr*)ssdpAddr4,
                                    sizeof(*ssdpAddr4));
     if (ret == -1) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
@@ -888,6 +891,7 @@ error_handler:
 static int create_ssdp_sock_reqv4(
     /*! [out] SSDP IPv4 request socket to be created. */
     SOCKET* ssdpReqSock) {
+    TRACE("Executing create_ssdp_sock_reqv4()")
     char errorBuffer[ERROR_BUFFER_LEN];
     u_char ttl = 4;
 

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-28
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-12
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -140,19 +140,19 @@ struct s_SocketStuff {
 };
 
 void SetHTTPGetCallback(MiniServerCallback callback) {
-    TRACE("executing SetHTTPGetCallback()");
+    TRACE("Executing SetHTTPGetCallback()");
     gGetCallback = callback;
 }
 
 #ifdef INCLUDE_DEVICE_APIS
 void SetSoapCallback(MiniServerCallback callback) {
-    TRACE("executing SetSoapCallback()");
+    TRACE("Executing SetSoapCallback()");
     gSoapCallback = callback;
 }
 #endif /* INCLUDE_DEVICE_APIS */
 
 void SetGenaCallback(MiniServerCallback callback) {
-    TRACE("executing SetGenaCallback()");
+    TRACE("Executing SetGenaCallback()");
     gGenaCallback = callback;
 }
 
@@ -903,7 +903,7 @@ error:
 }
 
 static int do_reinit(struct s_SocketStuff* s) {
-    TRACE("executing do_reinit()");
+    TRACE("Executing do_reinit()");
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__, "Inside do_reinit()\n");
 
     sock_close(s->fd);

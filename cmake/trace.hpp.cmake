@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_CMAKE_TRACE_HPP
 #define UPNPLIB_CMAKE_TRACE_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-28
+// Redistribution only with this Copyright remark. Last modified: 2023-08-12
 
 // This compiles tracing into the source code. Once compiled in with std::clog
 // to output you can disable TRACE with
@@ -13,8 +13,8 @@
 
 #ifdef UPNPLIB_WITH_TRACE
   #include <iostream>
-  #define TRACE(s) std::cout<<"TRACE["<<((char*)__FILE__ + ${UPNPLIB_PROJECT_PATH_LENGTH})<<":"<<__LINE__<<"] "<<(s)<<"\n";
-  #define TRACE2(a, b) std::cout<<"TRACE["<<((char*)__FILE__ + ${UPNPLIB_PROJECT_PATH_LENGTH})<<":"<<__LINE__<<"] "<<(a)<<(b)<<"\n";
+  #define TRACE(s) std::cout<<"TRACE["<<((char*)__FILE__ + ${UPNPLIB_PROJECT_PATH_LENGTH})<<":"<<__LINE__<<"] "<<(s)<<std::endl;
+  #define TRACE2(a, b) std::cout<<"TRACE["<<((char*)__FILE__ + ${UPNPLIB_PROJECT_PATH_LENGTH})<<":"<<__LINE__<<"] "<<(a)<<(b)<<std::endl;
 #else
   #define TRACE(s)
   #define TRACE2(a, b)

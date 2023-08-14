@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-08
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-12
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-// Last compare with pupnp original source file on 2022-11-12, ver 1.14.14
+// Last compare with pupnp original source file on 2023-08-12, ver 1.14.17
 
 /*
  * \file
@@ -167,9 +167,7 @@ void membuffer_destroy(membuffer* m) {
         return;
     }
 
-    if (m->buf != nullptr) {
-        umock::stdlib_h.free(m->buf);
-    }
+    umock::stdlib_h.free(m->buf);
     membuffer_init(m);
 }
 
