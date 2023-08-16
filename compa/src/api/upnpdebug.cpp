@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-29
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-16
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -60,9 +60,8 @@ static ithread_mutex_t GlobalDebugMutex;
 /*! Global log level */
 static Upnp_LogLevel g_log_level = UPNP_DEFAULT_LOG_LEVEL;
 
-/* Output file pointer */
-static FILE* fp;
-static int is_stderr;
+/* Output file descriptor */
+static FILE* filed;
 
 /* Set if the user called setlogfilename() or setloglevel() */
 static int setlogwascalled;
@@ -85,47 +84,25 @@ int UpnpInitLog() {
         return UPNP_E_SUCCESS;
     }
 
-    if (fp) {
-        if (is_stderr == 0) {
-            umock::stdio_h.fclose(fp);
-            fp = NULL;
-        }
+    if (filed != nullptr && filed != stderr) {
+        umock::stdio_h.fclose(filed);
+        filed = nullptr;
     }
-    is_stderr = 0;
-    // Below immediate BUGFIX to have a running test environment on upnplib. The
-    // err_buff is freed but not allocated. We get a segfault here. --Ingo
-#if 0
-    if (fileName) {
-        char* err_buff = NULL;
-#ifdef _WIN32
-        fopen_s(&fp, fileName, "a");
-        if (fp == NULL) {
-            strerror_s(err_buff, 80, errno);
-#else
-        if ((fp = fopen(fileName, "a")) == NULL) {
-            err_buff = strerror(errno);
-#endif
-            fprintf(stderr, "Failed to open fileName (%s): %s\n", fileName,
-                    err_buff);
-        }
-
-        free(err_buff);
-    } // if (fileName)
-#endif // #if 0
 
     if (fileName) {
-        fp = umock::stdio_h.fopen(fileName, "a");
-        if (fp == NULL) {
-            fprintf(stderr, "Failed to open fileName (%s): %s\n", fileName,
-                    std::strerror(errno));
+        filed = umock::stdio_h.fopen(fileName, "a");
+        if (filed == nullptr) {
+            fprintf(stderr,
+                    "UPnPlib Error: failed to open filename \"%s\": %s. "
+                    "Fallback to stderr.\n",
+                    fileName, std::strerror(errno));
         }
-    } // if (fileName)
-      // end BUGFIX
-
-    if (fp == NULL) {
-        fp = stderr;
-        is_stderr = 1;
     }
+
+    // If not set, always set to stderr, also as fallback for a wrong fileName.
+    if (filed == nullptr)
+        filed = stderr;
+
     return UPNP_E_SUCCESS;
 }
 
@@ -136,43 +113,42 @@ void UpnpSetLogLevel(Upnp_LogLevel log_level) {
 }
 
 void UpnpCloseLog() {
-    if (!initwascalled) {
-        return;
-    }
+    TRACE("Executing UpnpCloseLog()")
 
     /* Calling lock() assumes that someone called UpnpInitLog(), but
      * this is reasonable as it is called from UpnpInit2(). We risk a
      * crash if we do this without a lock.*/
-    umock::pthread_h.pthread_mutex_lock(&GlobalDebugMutex);
+    if (initwascalled)
+        umock::pthread_h.pthread_mutex_lock(&GlobalDebugMutex);
 
-    if (fp != NULL && is_stderr == 0) {
-        umock::stdio_h.fclose(fp);
+    if (filed != nullptr && filed != stderr) {
+        umock::stdio_h.fclose(filed);
     }
-    fp = NULL;
-    is_stderr = 0;
+    filed = nullptr;
+    setlogwascalled = 0;
+    int init_called = initwascalled;
     initwascalled = 0;
-    umock::pthread_h.pthread_mutex_unlock(&GlobalDebugMutex);
-    umock::pthread_h.pthread_mutex_destroy(&GlobalDebugMutex);
+    if (init_called) {
+        umock::pthread_h.pthread_mutex_unlock(&GlobalDebugMutex);
+        umock::pthread_h.pthread_mutex_destroy(&GlobalDebugMutex);
+    }
 }
 
-void UpnpSetLogFileNames(const char* newFileName, const char* ignored) {
+void UpnpSetLogFileNames(const char* newFileName,
+                         [[maybe_unused]] const char* ignored) {
     TRACE("Executing UpnpSetLogFileNames()")
-    (void)ignored;
 
     if (fileName) {
         free(fileName);
-        fileName = NULL;
+        fileName = nullptr;
     }
-    if (newFileName && *newFileName) {
+    if (newFileName && *newFileName != '\0') {
         fileName = strdup(newFileName);
     }
     setlogwascalled = 1;
-    return;
 }
 
 static int DebugAtThisLevel(Upnp_LogLevel DLevel, Dbg_Module Module) {
-    (void)Module;
-
     return (DLevel <= g_log_level) &&
            (DEBUG_ALL || (Module == SSDP && DEBUG_SSDP) ||
             (Module == SOAP && DEBUG_SOAP) || (Module == GENA && DEBUG_GENA) ||
@@ -265,8 +241,8 @@ static void UpnpDisplayFileAndLine(FILE* a_fp, const char* DbgFileName,
 void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
                 const char* DbgFileName, int DbgLineNo, const char* FmtStr,
                 ...) {
-    /*fprintf(stderr, "UpnpPrintf: fp %p level %d glev %d mod %d DEBUG_ALL
-      %d\n", fp, DLevel, g_log_level, Module, DEBUG_ALL);*/
+    /*fprintf(stderr, "UpnpPrintf: filed %p level %d glev %d mod %d DEBUG_ALL
+      %d\n", filed, DLevel, g_log_level, Module, DEBUG_ALL);*/
     va_list ArgList;
 
     if (!initwascalled) {
@@ -276,17 +252,17 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
     if (!DebugAtThisLevel(DLevel, Module))
         return;
     umock::pthread_h.pthread_mutex_lock(&GlobalDebugMutex);
-    if (fp == NULL) {
+    if (filed == nullptr) {
         umock::pthread_h.pthread_mutex_unlock(&GlobalDebugMutex);
         return;
     }
 
     va_start(ArgList, FmtStr);
     if (DbgFileName) {
-        UpnpDisplayFileAndLine(fp, DbgFileName + UPNPLIB_PROJECT_PATH_LENGTH,
+        UpnpDisplayFileAndLine(filed, DbgFileName + UPNPLIB_PROJECT_PATH_LENGTH,
                                DbgLineNo, DLevel, Module);
-        vfprintf(fp, FmtStr, ArgList);
-        umock::stdio_h.fflush(fp);
+        vfprintf(filed, FmtStr, ArgList);
+        umock::stdio_h.fflush(filed);
     }
     va_end(ArgList);
     umock::pthread_h.pthread_mutex_unlock(&GlobalDebugMutex);
@@ -296,8 +272,8 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
    closelog from a separate thread... */
 FILE* UpnpGetDebugFile(Upnp_LogLevel DLevel, Dbg_Module Module) {
     if (!DebugAtThisLevel(DLevel, Module)) {
-        return NULL;
+        return nullptr;
     } else {
-        return fp;
+        return filed;
     }
 }

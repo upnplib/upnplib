@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-24
+# Redistribution only with this Copyright remark. Last modified: 2023-08-16
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -38,14 +38,23 @@ add_compile_options(
     $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wsign-conversion>
 )
 
-# Create upnplib helper tools library for gtests. We have version
+
+# Upnplib helper tools library for gtests
+# =======================================
+# We have version
 # upnplib_gtest_tools for all operating systems,
 # upnplib_gtest_tools_unix for Unix operating systems and
 # upnplib_gtest_tools_win32 for Microsoft Windows
+
+set(GTEST_TOOLS_SOURCE_FILES
+    ./tools/upnplib_gtest_tools.cpp
+    $<$<PLATFORM_ID:Windows>:./tools/upnplib_gtest_tools_win32.cpp>
+    $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/upnplib_gtest_tools_unix.cpp>
+)
+
 add_library(upnplib_gtest_tools_shared SHARED
-        ./tools/upnplib_gtest_tools.cpp
-        $<$<PLATFORM_ID:Windows>:./tools/upnplib_gtest_tools_win32.cpp>
-        $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/upnplib_gtest_tools_unix.cpp>
+#--------------------------------------------
+    ${GTEST_TOOLS_SOURCE_FILES}
 )
 target_include_directories(upnplib_gtest_tools_shared
     PRIVATE ./include
@@ -65,9 +74,8 @@ target_link_libraries(upnplib_gtest_tools_shared
 )
 
 add_library(upnplib_gtest_tools_static STATIC
-        ./tools/upnplib_gtest_tools.cpp
-        $<$<PLATFORM_ID:Windows>:./tools/upnplib_gtest_tools_win32.cpp>
-        $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/upnplib_gtest_tools_unix.cpp>
+#--------------------------------------------
+    ${GTEST_TOOLS_SOURCE_FILES}
 )
 target_include_directories(upnplib_gtest_tools_static
     PRIVATE
@@ -84,6 +92,7 @@ target_link_libraries(upnplib_gtest_tools_static
     INTERFACE
         $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network management tools
 )
+
 
 # Reset output directories to default means to use the subprojects directories.
 # This should be done after build of upnplib_gtest_tools.

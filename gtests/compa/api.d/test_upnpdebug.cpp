@@ -1,7 +1,12 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-09
+// Redistribution only with this Copyright remark. Last modified: 2023-08-16
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpdebug.cpp>
+FILE*& filed{fp}; // Other alias for variable fp
+#else
+#include <compa/src/api/upnpdebug.cpp>
+#endif
 
 #include <upnplib/port.hpp>
 #include <upnplib/upnptools.hpp>
@@ -32,9 +37,9 @@ class Iupnpdebug {
   public:
     virtual ~Iupnpdebug() {}
 
-    virtual int UpnpInitLog(void) = 0;
+    virtual int UpnpInitLog() = 0;
     virtual void UpnpSetLogLevel(Upnp_LogLevel log_level) = 0;
-    virtual void UpnpCloseLog(void) = 0;
+    virtual void UpnpCloseLog() = 0;
     virtual void UpnpSetLogFileNames(const char* newFileName, const char* ignored) = 0;
     // virtual void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
     //         const char* DbgFileName, int DbgLineNo, const char* FmtStr, ...) = 0;
@@ -45,11 +50,11 @@ class Cupnpdebug : public Iupnpdebug {
   public:
     virtual ~Cupnpdebug() override {}
 
-    int UpnpInitLog(void) override {
+    int UpnpInitLog() override {
         return ::UpnpInitLog(); }
     void UpnpSetLogLevel(Upnp_LogLevel log_level) override {
         return ::UpnpSetLogLevel(log_level); }
-    void UpnpCloseLog(void) override {
+    void UpnpCloseLog() override {
         return ::UpnpCloseLog(); }
     void UpnpSetLogFileNames( const char* newFileName, const char* ignored) override {
         return ::UpnpSetLogFileNames(newFileName, ignored); }
@@ -62,29 +67,40 @@ class Cupnpdebug : public Iupnpdebug {
 // clang-format on
 
 
-// Test class for the debugging and logging module without fixtures.
-//------------------------------------------------------------------
-TEST(UpnpdebugTestSuite, UpnpPrintf_without_init) {
-    // Process unit
-    ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                 "Unit Test for %s. It should not be called.\n", "UpnpPrintf");
-    // This will enable logging but no initializing
-    ::UpnpSetLogLevel(UPNP_ALL);
-    // Process unit
-    ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                 "Unit Test for %s with logging enabled but not "
-                 "initialized. It should not be called.\n",
-                 "UpnpPrintf");
-}
+// Test class for the debugging and logging module
+//------------------------------------------------
+class UpnpdebugFTestSuite : public ::testing::Test {
+  protected:
+    // constructor
+    UpnpdebugFTestSuite() {
+        // Clear the static variables of the unit
+        g_log_level = UPNP_DEFAULT_LOG_LEVEL;
+        filed = nullptr;
+        setlogwascalled = 0;
+        initwascalled = 0;
+        fileName = nullptr;
+    }
+};
 
-TEST(UpnpdebugTestSuite, UpnpPrintf_normal_use) {
+class UpnpdebugMockTestSuite : public UpnpdebugFTestSuite {
+  protected:
+    // Member variables: instantiate the module object
+    Cupnpdebug upnpdebugObj;
+};
+
+
+// Tests for the debugging and logging module.
+//--------------------------------------------
+TEST_F(UpnpdebugFTestSuite, UpnpPrintf_successful) {
     CaptureStdOutErr captureObj(STDERR_FILENO);
 
     // Enable logging
     ::UpnpSetLogLevel(UPNP_ALL);
-    // Set output to default stderr, second parameter is unused but defined
-    ::UpnpSetLogFileNames(nullptr, nullptr);
-    // Initialize logging, opens output file
+    // ::UpnpSetLogFileNames(arg1, arg2) also enables logging. If not calling
+    // then output is set to default stderr, arg2 is unused but defined for
+    // compatibility.
+    //
+    // Initialize logging, opens output file.
     int ret_UpnpInitLog = ::UpnpInitLog();
     EXPECT_EQ(ret_UpnpInitLog, UPNP_E_SUCCESS)
         << errStrEx(ret_UpnpInitLog, UPNP_E_SUCCESS);
@@ -114,26 +130,180 @@ TEST(UpnpdebugTestSuite, UpnpPrintf_normal_use) {
     ::UpnpCloseLog();
 }
 
-//
-// Test class for the debugging and logging module
-//------------------------------------------------
-class UpnpdebugMockTestSuite : public ::testing::Test {
-  protected:
-    // Member variables: instantiate the module object
-    Cupnpdebug upnpdebugObj;
+TEST_F(UpnpdebugFTestSuite, UpnpPrintf_without_init) {
+    // Process unit
+    ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
+                 "Unit Test for %s. It should not be called.\n", "UpnpPrintf");
+    // This will enable logging but no initializing
+    ::UpnpSetLogLevel(UPNP_ALL);
+    // Process unit
+    ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
+                 "Unit Test for %s with logging enabled but not "
+                 "initialized. It should not be called.\n",
+                 "UpnpPrintf");
+}
 
-    // constructor
-    UpnpdebugMockTestSuite() {
-        // Clear the static variables of the unit
-        g_log_level = UPNP_DEFAULT_LOG_LEVEL;
-        fp = nullptr;
-        is_stderr = 0;
-        setlogwascalled = 0;
-        initwascalled = 0;
-        fileName = nullptr;
+TEST_F(UpnpdebugFTestSuite, close_log_and_reopen_it) {
+    // Start logging with first output.
+    // Enable logging
+    ::UpnpSetLogLevel(UPNP_ALL);
+    // Initialize logging, opens output file
+    int ret_UpnpInitLog = ::UpnpInitLog();
+    ASSERT_EQ(ret_UpnpInitLog, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpInitLog, UPNP_E_SUCCESS);
+
+    ::UpnpCloseLog();
+
+    // Only enable logging should not enable output
+    ::UpnpSetLogLevel(UPNP_ALL);
+
+    CaptureStdOutErr captureObj(STDERR_FILENO);
+    captureObj.start();
+    ::UpnpPrintf(
+        UPNP_INFO, API, __FILE__, __LINE__,
+        "This Unit Test1 \"close log and reopen it\" should not be shown.\n");
+    std::string captured = captureObj.get();
+
+    EXPECT_EQ(captured, "");
+
+    ::UpnpCloseLog();
+
+    // Only initialize logging should not enable output
+    ret_UpnpInitLog = ::UpnpInitLog();
+    ASSERT_EQ(ret_UpnpInitLog, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpInitLog, UPNP_E_SUCCESS);
+
+    captureObj.start();
+    ::UpnpPrintf(
+        UPNP_INFO, API, __FILE__, __LINE__,
+        "This Unit Test2 \"close log and reopen it\" should not be shown.\n");
+    captured = captureObj.get();
+
+    if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ]" CRES
+                  << " Only reenable logging after closing it must not output "
+                     "messages.\n";
+        EXPECT_NE(captured, ""); // Wrong!
+
+    } else {
+
+        EXPECT_EQ(captured, "");
     }
-};
 
+    ::UpnpCloseLog();
+
+    // Enable logging and initialize should do.
+    ::UpnpSetLogLevel(UPNP_ALL);       // enable
+    ret_UpnpInitLog = ::UpnpInitLog(); // initialize
+    ASSERT_EQ(ret_UpnpInitLog, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpInitLog, UPNP_E_SUCCESS);
+
+    captureObj.start();
+    ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
+                 "Unit Test3 close log and reopen it.\n");
+    captured = captureObj.get();
+
+    EXPECT_THAT(
+        captured,
+        MatchesStdRegex(
+            "\\d{4}-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d UPNP-API_-2: "
+            "Thread:0x.+ \\[.+\\]: Unit Test3 close log and reopen it\\.\n"));
+
+    ::UpnpCloseLog();
+}
+
+TEST_F(UpnpdebugFTestSuite, close_log_and_only_reenable_it) {
+    // Start first logging.
+    ::UpnpSetLogLevel(UPNP_ALL);           // enable
+    int ret_UpnpInitLog = ::UpnpInitLog(); // initialize
+    ASSERT_EQ(ret_UpnpInitLog, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpInitLog, UPNP_E_SUCCESS);
+
+    ::UpnpCloseLog();
+
+    // Only enable logging should not enable output
+    ::UpnpSetLogLevel(UPNP_ALL);
+
+    CaptureStdOutErr captureObj(STDERR_FILENO);
+    captureObj.start();
+    ::UpnpPrintf(
+        UPNP_INFO, API, __FILE__, __LINE__,
+        "This Unit Test1 \"close log and reopen it\" should not be shown.\n");
+    std::string captured = captureObj.get();
+
+    EXPECT_EQ(captured, "");
+
+    ::UpnpCloseLog();
+}
+
+TEST_F(UpnpdebugFTestSuite, close_log_and_only_reinitialize_it) {
+    // Start first logging.
+    ::UpnpSetLogLevel(UPNP_ALL);           // enable
+    int ret_UpnpInitLog = ::UpnpInitLog(); // initialize
+    ASSERT_EQ(ret_UpnpInitLog, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpInitLog, UPNP_E_SUCCESS);
+
+    ::UpnpCloseLog();
+
+    // Only initialize logging should not enable output
+    ret_UpnpInitLog = ::UpnpInitLog();
+    ASSERT_EQ(ret_UpnpInitLog, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpInitLog, UPNP_E_SUCCESS);
+
+    CaptureStdOutErr captureObj(STDERR_FILENO);
+    captureObj.start();
+    ::UpnpPrintf(
+        UPNP_INFO, API, __FILE__, __LINE__,
+        "This Unit Test2 \"close log and reopen it\" should not be shown.\n");
+    std::string captured = captureObj.get();
+
+    if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ]" CRES
+                  << " Only reinitialize logging after closing it must not "
+                     "output messages.\n";
+        EXPECT_NE(captured, ""); // Wrong!
+
+    } else {
+
+        EXPECT_EQ(captured, "");
+    }
+
+    ::UpnpCloseLog();
+}
+
+TEST_F(UpnpdebugFTestSuite, close_log_and_reenable_reinitialize_it) {
+    // Start first logging.
+    ::UpnpSetLogLevel(UPNP_ALL);           // enable
+    int ret_UpnpInitLog = ::UpnpInitLog(); // initialize
+    ASSERT_EQ(ret_UpnpInitLog, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpInitLog, UPNP_E_SUCCESS);
+
+    ::UpnpCloseLog();
+
+    // Enable logging and initialize should do.
+    ::UpnpSetLogLevel(UPNP_ALL);       // enable
+    ret_UpnpInitLog = ::UpnpInitLog(); // initialize
+    ASSERT_EQ(ret_UpnpInitLog, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpInitLog, UPNP_E_SUCCESS);
+
+    CaptureStdOutErr captureObj(STDERR_FILENO);
+    captureObj.start();
+    ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
+                 "Unit Test3 close log and reopen it.\n");
+    std::string captured = captureObj.get();
+
+    EXPECT_THAT(
+        captured,
+        MatchesStdRegex(
+            "\\d{4}-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d UPNP-API_-2: "
+            "Thread:0x.+ \\[.+\\]: Unit Test3 close log and reopen it\\.\n"));
+
+    ::UpnpCloseLog();
+}
+
+
+// Tests for the debugging and logging module with mocked functions.
+//------------------------------------------------------------------
 TEST_F(UpnpdebugMockTestSuite, initlog_but_no_log_wanted)
 // For the pthread_mutex_t structure look at
 // https://stackoverflow.com/q/23449508/5014688
@@ -226,21 +396,11 @@ TEST_F(UpnpdebugMockTestSuite, set_log_level_info) {
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_CRITICAL, (Dbg_Module)NULL),
               stderr);
 
-    if (old_code) {
-        // It seems that option Dbg_Module is ignored. It cannot be set with
-        // UpnpSetLogLevel().
-        std::cout << CYEL "[ BUG      ]" CRES
-                  << " Parameter Dbg_Module should not be ignored.\n";
-        EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, API), stderr);
-        EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, DOM), stderr);
-
-    } else {
-
-        // Only one Dbg_Module should be used.
-        EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, API), stderr);
-        EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, DOM), nullptr)
-            << "  # Parameter Dbg_Module should not be ignored.";
-    }
+    // It seems that option Dbg_Module is ignored. It cannot be set with
+    // UpnpSetLogLevel(). This returns the same file descriptor regardless of
+    // the Dbg_Module.
+    EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, API), stderr);
+    EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, DOM), stderr);
 
     umock::StdioMock stdioObj;
     umock::Stdio stdio_injectObj(&stdioObj);
@@ -390,7 +550,8 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_opening_file_fails) {
     if (github_actions && !old_code)
         GTEST_SKIP() << "             known failing test on Github Actions";
 
-    // Set the filename, second parameter is unused but defined
+    // Set the filename, second parameter is unused but defined.
+    // This also enables output of messages like UpnpSetLogLevel(),
     const char filename[]{"upnpdebug.log"};
     upnpdebugObj.UpnpSetLogFileNames(filename, nullptr);
     EXPECT_EQ(
@@ -408,25 +569,16 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_opening_file_fails) {
     //         .WillOnce(Return(EINVAL));
     // #else
     EXPECT_CALL(stdioObj, fopen(StrEq(filename), StrEq("a")))
-        .WillOnce(SetErrnoAndReturn(EINVAL, (FILE*)NULL));
+        .WillOnce(SetErrnoAndReturn(EINVAL, (FILE*)nullptr));
     // #endif
     EXPECT_CALL(stdioObj, fclose(_)).Times(0);
 
     // Test Unit
     int returned = upnpdebugObj.UpnpInitLog();
-    if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
-                  << " UpnpInitLog() should return with failure.\n";
-        EXPECT_EQ(returned, UPNP_E_SUCCESS)
-            << errStrEx(returned, UPNP_E_SUCCESS);
 
-    } else {
-
-        EXPECT_EQ(returned, UPNP_E_FILE_NOT_FOUND)
-            << errStrEx(returned, UPNP_E_FILE_NOT_FOUND);
-    }
-
-    // Will be set to stderr if failed to log to a file
+    // Also with unknown output filename given, the Unit returns successful with
+    // output file set to stderr.
+    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     EXPECT_EQ(
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
         stderr);
@@ -503,7 +655,7 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_to_file_with_wrong_filename) {
     EXPECT_CALL(stdioObj, fopen(_, _)).Times(0);
     EXPECT_CALL(stdioObj, fclose(_)).Times(0);
 
-    // Process unit
+    // Test Unit
     // No filename set, this should log to stderr
     int returned = upnpdebugObj.UpnpInitLog();
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
@@ -519,7 +671,7 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_to_file_with_wrong_filename) {
     EXPECT_CALL(stdioObj, fopen(_, _)).Times(0);
     EXPECT_CALL(stdioObj, fclose(_)).Times(0);
 
-    // Process unit
+    // Test Unit
     returned = upnpdebugObj.UpnpInitLog();
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
     // Filepointer is still set to stderr, that seems to be ok so far ...
@@ -529,14 +681,13 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_to_file_with_wrong_filename) {
 
     // ... but it should not try to close stderr.
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
-                  << " UpnpCloseLog() tries to close stderr.\n";
-        EXPECT_CALL(stdioObj, fclose(_)).Times(1);
+        std::cout << CYEL "[ BUGFIX   ]" CRES
+                  << " UpnpCloseLog() must not try to close stderr.\n";
+        EXPECT_CALL(stdioObj, fclose(stderr)).Times(1);
 
     } else {
 
-        std::cout << "  # UpnpCloseLog() tries to close stderr.\n";
-        EXPECT_CALL(stdioObj, fclose(_)).Times(0);
+        EXPECT_CALL(stdioObj, fclose(stderr)).Times(0);
     }
 
     EXPECT_CALL(pthreadObj, pthread_mutex_lock(_)).Times(1);

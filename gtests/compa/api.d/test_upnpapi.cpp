@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-26
+// Redistribution only with this Copyright remark. Last modified: 2023-08-16
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpapi.cpp>
@@ -10,9 +10,12 @@
 #ifdef UPNP_HAVE_TOOLS
 #include <upnptools.hpp> // For pupnp and compa
 #endif
-#include <upnplib/upnptools.hpp> // For upnplib only
 
+#include <pupnp/upnpdebug.hpp> // for CLogging
+
+#include <upnplib/upnptools.hpp> // For upnplib only
 #include <upnplib/gtest.hpp>
+
 #include <gmock/gmock.h>
 
 
@@ -20,6 +23,7 @@ namespace compa {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
+using ::pupnp::CLogging;
 using ::testing::ExitedWithCode;
 using ::upnplib::errStrEx;
 using ::upnplib::testing::MatchesStdRegex;
@@ -241,6 +245,8 @@ TEST_F(UpnpapiFTestSuite, get_error_message) {
 }
 
 TEST(UpnpapiTestSuite, GetHandleInfo_successful) {
+    // CLogging loggingObj; // Output only with build type DEBUG.
+
     // Will be filled with a pointer to the requested client info.
     Handle_Info* hinfo_p{nullptr};
 
@@ -284,26 +290,32 @@ TEST(UpnpapiTestSuite, GetHandleInfo_successful) {
     EXPECT_EQ(hinfo_p, &hinfo4);
 }
 
-TEST(UpnpapiDeathTest, GetHandleInfo_with_nullptr_to_result) {
+TEST(UpnpapiDeathTest, GetHandleInfo_with_nullptr_to_handle_table) {
+    // CLogging loggingObj; // Output only with build type DEBUG.
+
     // Provide a valid entry in the HandleTable.
     Handle_Info hinfo1{};
-    hinfo1.HType = HND_CLIENT;
+    hinfo1.HType = HND_INVALID;
+
+    // Test Unit
+    HandleTable[1] = nullptr;
+    EXPECT_EQ(GetHandleInfo(1, nullptr), HND_INVALID);
+
+    // Test Unit
     HandleTable[1] = &hinfo1;
-
-    std::cout
-        << CRED "[ BUG      ] " CRES << __LINE__
-        << ": nullptr argument for the result to return must not segfault.\n";
-
     if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": nullptr argument for the result to return must not "
+                     "segfault.\n";
 #if defined __APPLE__ && !DEBUG
 // Curiosouly this does not fail. I don't know why. Maybe it needs DEBUG mode on
 // Apple to detect nullptr segfault? --Ingo
 #else
         // This expects segfault.
-        EXPECT_DEATH(GetHandleInfo(1, nullptr), ".*");
+        EXPECT_DEATH(GetHandleInfo(1, nullptr), ".*"); // Wrong!
 #endif
 
-    } else if (!github_actions) {
+    } else {
 
         EXPECT_EQ(GetHandleInfo(1, nullptr), HND_INVALID);
     }

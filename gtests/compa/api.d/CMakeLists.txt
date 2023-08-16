@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-29
+# Redistribution only with this Copyright remark. Last modified: 2023-08-16
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -15,6 +15,7 @@ project(GTESTS_COMPA_API VERSION 0002
 # conflicts on Microsoft Windows (warning C4273: inconsistent dll linkage). We
 # must use static libraries.
 add_executable(test_upnpdebug-pst
+#--------------------------------
         ./test_upnpdebug.cpp
 )
 target_include_directories(test_upnpdebug-pst
@@ -37,6 +38,29 @@ target_link_libraries(test_upnpdebug-pst
         upnplib_gtest_tools_static
 )
 add_test(NAME ctest_upnpdebug-pst COMMAND test_upnpdebug-pst --gtest_shuffle
+)
+
+add_executable(test_upnpdebug-cst
+#--------------------------------
+        ./test_upnpdebug.cpp
+)
+target_include_directories(test_upnpdebug-cst
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+)
+target_compile_options(test_upnpdebug-cst
+    PRIVATE
+        # disable warning C4100: 'result_listener': unreferenced formal parameter
+        # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
+        # be a side effect of the macro definition. --Ingo
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
+)
+target_link_libraries(test_upnpdebug-cst
+    PRIVATE
+        compa_static
+        upnplib_static
+        upnplib_gtest_tools_static
+)
+add_test(NAME ctest_upnpdebug-cst COMMAND test_upnpdebug-cst --gtest_shuffle
 )
 
 
@@ -171,6 +195,7 @@ endif()
 add_executable(test_upnpapi-pst
 #------------------------------
     ./test_upnpapi.cpp
+    ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 target_include_directories(test_upnpapi-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -211,6 +236,7 @@ add_test(NAME ctest_upnpapi-pst COMMAND test_upnpapi-pst --gtest_shuffle
 add_executable(test_upnpapi-cst
 #------------------------------
     ./test_upnpapi.cpp
+    ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 target_include_directories(test_upnpapi-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}

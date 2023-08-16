@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-10
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-14
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -3628,22 +3628,26 @@ GetDeviceHandleInfoForPath([[maybe_unused]] const char* path,
     return HND_INVALID;
 }
 
-Upnp_Handle_Type GetHandleInfo(UpnpClient_Handle Hnd,
-                               struct Handle_Info** HndInfo) {
+Upnp_Handle_Type GetHandleInfo(UpnpClient_Handle Hnd, Handle_Info** HndInfo) {
+    TRACE("Executing GetHandleInfo()")
     Upnp_Handle_Type ret = HND_INVALID;
 
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                "GetHandleInfo: entering, Handle is %d\n", Hnd);
 
-    if (Hnd < 1 || Hnd >= NUM_HANDLE) {
+    if (HndInfo == nullptr) {
+        UpnpPrintf(UPNP_ERROR, API, __FILE__, __LINE__,
+                   "GetHandleInfo: No HandleTable for output available "
+                   "(Arg2=nullptr)\n");
+    } else if (Hnd < 1 || Hnd >= NUM_HANDLE) {
         UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                    "GetHandleInfo: Handle out of range\n");
-    } else if (HandleTable[Hnd] == NULL) {
+    } else if (HandleTable[Hnd] == nullptr) {
         UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                    "GetHandleInfo: HandleTable[%d] is NULL\n", Hnd);
-    } else if (HandleTable[Hnd] != NULL) {
-        *HndInfo = (struct Handle_Info*)HandleTable[Hnd];
-        ret = ((struct Handle_Info*)*HndInfo)->HType;
+    } else if (HandleTable[Hnd] != nullptr) {
+        *HndInfo = (Handle_Info*)HandleTable[Hnd];
+        ret = ((Handle_Info*)*HndInfo)->HType;
     }
 
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__, "GetHandleInfo: exiting\n");
