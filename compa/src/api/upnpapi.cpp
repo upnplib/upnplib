@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-14
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-16
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -3629,6 +3629,8 @@ GetDeviceHandleInfoForPath([[maybe_unused]] const char* path,
 }
 
 Upnp_Handle_Type GetHandleInfo(UpnpClient_Handle Hnd, Handle_Info** HndInfo) {
+    // This function expects an initialized global HandleTable, at least with
+    // nullptr.
     TRACE("Executing GetHandleInfo()")
     Upnp_Handle_Type ret = HND_INVALID;
 
@@ -3636,9 +3638,10 @@ Upnp_Handle_Type GetHandleInfo(UpnpClient_Handle Hnd, Handle_Info** HndInfo) {
                "GetHandleInfo: entering, Handle is %d\n", Hnd);
 
     if (HndInfo == nullptr) {
-        UpnpPrintf(UPNP_ERROR, API, __FILE__, __LINE__,
-                   "GetHandleInfo: No HandleTable for output available "
-                   "(Arg2=nullptr)\n");
+        UpnpPrintf(
+            UPNP_ERROR, API, __FILE__, __LINE__,
+            "GetHandleInfo: No output variable for handle info available "
+            "(Arg2=nullptr)\n");
     } else if (Hnd < 1 || Hnd >= NUM_HANDLE) {
         UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                    "GetHandleInfo: Handle out of range\n");

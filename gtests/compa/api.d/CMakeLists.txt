@@ -195,7 +195,6 @@ endif()
 add_executable(test_upnpapi-pst
 #------------------------------
     ./test_upnpapi.cpp
-    ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 target_include_directories(test_upnpapi-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -236,7 +235,6 @@ add_test(NAME ctest_upnpapi-pst COMMAND test_upnpapi-pst --gtest_shuffle
 add_executable(test_upnpapi-cst
 #------------------------------
     ./test_upnpapi.cpp
-    ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 target_include_directories(test_upnpapi-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -267,7 +265,6 @@ add_executable(test_upnpapi_platform-pst
 #---------------------------------------
     $<$<PLATFORM_ID:Windows>:./test_upnpapi_win32.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./test_upnpapi_unix.cpp>
-    ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 target_include_directories(test_upnpapi_platform-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -292,7 +289,6 @@ add_executable(test_upnpapi_platform-cst
 #---------------------------------------
     $<$<PLATFORM_ID:Windows>:./test_upnpapi_win32.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./test_upnpapi_unix.cpp>
-    ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 target_include_directories(test_upnpapi_platform-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}

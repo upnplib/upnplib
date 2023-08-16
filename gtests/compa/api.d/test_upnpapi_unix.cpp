@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-09
+// Redistribution only with this Copyright remark. Last modified: 2023-08-16
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -46,6 +46,8 @@ class UpnpapiIPv4MockTestSuite : public ::testing::Test
 // Fixtures for this Testsuite
 {
   protected:
+    umock::IfaddrsMock ifaddrsObj;
+
     // constructor of this testsuite
     UpnpapiIPv4MockTestSuite() {
         // initialize needed global variables
@@ -69,12 +71,12 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_valid_interface) {
     EXPECT_STREQ(ifaddr->ifa_name, "if0v4");
 
     // Mock system functions
-    umock::Ifaddrs ifaddrs_injectObj(&umock::ifaddrsObj);
+    umock::Ifaddrs ifaddrs_injectObj(&ifaddrsObj);
     umock::Net_ifMock net_ifObj;
     umock::Net_if net_if_injectObj(&net_ifObj);
-    EXPECT_CALL(umock::ifaddrsObj, getifaddrs(_))
+    EXPECT_CALL(ifaddrsObj, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
-    EXPECT_CALL(umock::ifaddrsObj, freeifaddrs(ifaddr)).Times(1);
+    EXPECT_CALL(ifaddrsObj, freeifaddrs(ifaddr)).Times(1);
     EXPECT_CALL(net_ifObj, if_nametoindex(_)).WillOnce(Return(2));
 
     // Test Unit
@@ -110,12 +112,12 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     ifaddrs* ifaddr = ifaddr4Obj.get();
     EXPECT_STREQ(ifaddr->ifa_name, "eth0");
 
-    umock::Ifaddrs ifaddrs_injectObj(&umock::ifaddrsObj);
+    umock::Ifaddrs ifaddrs_injectObj(&ifaddrsObj);
     umock::Net_ifMock net_ifObj;
     umock::Net_if net_if_injectObj(&net_ifObj);
-    EXPECT_CALL(umock::ifaddrsObj, getifaddrs(_))
+    EXPECT_CALL(ifaddrsObj, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
-    EXPECT_CALL(umock::ifaddrsObj, freeifaddrs(ifaddr)).Times(1);
+    EXPECT_CALL(ifaddrsObj, freeifaddrs(ifaddr)).Times(1);
     EXPECT_CALL(net_ifObj, if_nametoindex(_)).Times(0);
 
     // Test Unit
@@ -166,8 +168,8 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
     EXPECT_EQ(LOCAL_PORT_V6_ULA_GUA, (unsigned short)0);
 }
 
-TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_default_initialization) {
-    CLogging loggingObj;
+TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_successful) {
+    // CLogging loggingObj;
 
     // provide a network interface
     CIfaddr4 ifaddr4Obj;
@@ -178,12 +180,12 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_default_initialization) {
     constexpr SOCKET stop_sockfd{446};
 
     // Mock to get local network interface address and its index number
-    umock::Ifaddrs ifaddrs_injectObj(&umock::ifaddrsObj);
+    umock::Ifaddrs ifaddrs_injectObj(&ifaddrsObj);
     umock::Net_ifMock net_ifObj;
     umock::Net_if net_if_injectObj(&net_ifObj);
-    EXPECT_CALL(umock::ifaddrsObj, getifaddrs(_))
+    EXPECT_CALL(ifaddrsObj, getifaddrs(_))
         .WillOnce(DoAll(SetArgPointee<0>(ifaddr), Return(0)));
-    EXPECT_CALL(umock::ifaddrsObj, freeifaddrs(ifaddr)).Times(1);
+    EXPECT_CALL(ifaddrsObj, freeifaddrs(ifaddr)).Times(1);
     EXPECT_CALL(net_ifObj, if_nametoindex(_)).Times(1);
 
     // Mock socket, bind local ip address to it and listen to it

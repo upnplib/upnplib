@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-16
+// Redistribution only with this Copyright remark. Last modified: 2023-08-17
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpapi.cpp>
@@ -145,6 +145,7 @@ class UpnpapiFTestSuite : public ::testing::Test {
         memset(&gRecvThreadPool, 0xAA, sizeof(gRecvThreadPool));
         memset(&gMiniServerThreadPool, 0xAA, sizeof(gMiniServerThreadPool));
         memset(&gTimerThread, 0xAA, sizeof(gTimerThread));
+        memset(&bWebServerState, 0xAA, sizeof(bWebServerState));
         UpnpSdkInit = 0xAA;
     }
 };
@@ -236,7 +237,8 @@ TEST_F(UpnpapiFTestSuite, WinsockInit) {
 
 TEST_F(UpnpapiFTestSuite, get_error_message) {
 #ifndef UPNP_HAVE_TOOLS
-    GTEST_SKIP() << "  # Option UPNPLIB_WITH_TOOLS not available.";
+    std::cout
+        << "               Skipped: Option UPNPLIB_WITH_TOOLS not available.\n";
 #else
     EXPECT_STREQ(UpnpGetErrorMessage(0), "UPNP_E_SUCCESS");
     EXPECT_STREQ(UpnpGetErrorMessage(-121), "UPNP_E_INVALID_INTERFACE");
@@ -244,7 +246,7 @@ TEST_F(UpnpapiFTestSuite, get_error_message) {
 #endif
 }
 
-TEST(UpnpapiTestSuite, GetHandleInfo_successful) {
+TEST_F(UpnpapiFTestSuite, GetHandleInfo_successful) {
     // CLogging loggingObj; // Output only with build type DEBUG.
 
     // Will be filled with a pointer to the requested client info.
@@ -290,43 +292,41 @@ TEST(UpnpapiTestSuite, GetHandleInfo_successful) {
     EXPECT_EQ(hinfo_p, &hinfo4);
 }
 
-TEST(UpnpapiDeathTest, GetHandleInfo_with_nullptr_to_handle_table) {
+TEST_F(UpnpapiFTestSuite, GetHandleInfo_with_nullptr_to_handle_table) {
     // CLogging loggingObj; // Output only with build type DEBUG.
 
-    // Provide a valid entry in the HandleTable.
-    Handle_Info hinfo1{};
-    hinfo1.HType = HND_INVALID;
-
-    // Test Unit
+    // Initialize HandleTable bcause it only contains pointer.
     HandleTable[1] = nullptr;
+
+    // Test Unit with nullptr to result variable
     EXPECT_EQ(GetHandleInfo(1, nullptr), HND_INVALID);
 
+    // This will be filled with a pointer to the requested client info.
+    Handle_Info* hinfo_p{nullptr};
+
     // Test Unit
-    HandleTable[1] = &hinfo1;
-    if (old_code) {
-        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
-                  << ": nullptr argument for the result to return must not "
-                     "segfault.\n";
-#if defined __APPLE__ && !DEBUG
-// Curiosouly this does not fail. I don't know why. Maybe it needs DEBUG mode on
-// Apple to detect nullptr segfault? --Ingo
-#else
-        // This expects segfault.
-        EXPECT_DEATH(GetHandleInfo(1, nullptr), ".*"); // Wrong!
-#endif
-
-    } else {
-
-        EXPECT_EQ(GetHandleInfo(1, nullptr), HND_INVALID);
-    }
+    EXPECT_EQ(GetHandleInfo(1, &hinfo_p), HND_INVALID);
 }
 
 TEST_F(UpnpapiFTestSuite, UpnpFinish_successful) {
-    GTEST_SKIP() << "Work in progress, test must be completed.";
+    // CLogging loggingObj; // Output only with build type DEBUG.
+
+    // Doing needed initializations. Otherwise we get segfaults with
+    // UpnpFinish() due to uninitialized pointers.
+    // Initialize SDK global mutexes.
+    ASSERT_EQ(UpnpInitMutexes(), UPNP_E_SUCCESS);
 
     // Initialize the handle list.
+    HandleLock();
     for (int i = 0; i < NUM_HANDLE; ++i)
         HandleTable[i] = nullptr;
+    HandleUnlock();
+
+    // Initialize SDK global thread pools.
+    ASSERT_EQ(UpnpInitThreadPools(), UPNP_E_SUCCESS);
+
+    // Initialize the SDK timer thread.
+    ASSERT_EQ(TimerThreadInit(&gTimerThread, &gSendThreadPool), UPNP_E_SUCCESS);
 
     UpnpSdkInit = 1;
 
@@ -351,12 +351,24 @@ TEST_F(UpnpapiFTestSuite, UpnpFinish_without_initialization) {
     EXPECT_EQ(UpnpSdkInit, 0);
 }
 
-TEST_F(UpnpEnableWebserverFTestSuite, enable_and_disable) {
-    UpnpSdkInit = 1;
+TEST_F(UpnpapiFTestSuite, webserver_enable_and_disable) {
+    // Note that UpnpSetWebServerRootDir(<rootDir>) also enables the webserver,
+    //  and that UpnpSetWebServerRootDir(nullptr) also disables the webserver.
+
+    // The Unit needs a defined state on this flag to work stable, otherwise it
+    // will fail with SEH exception 0xc0000005 on WIN32.
     bWebServerState = WEB_SERVER_DISABLED;
+    UpnpSdkInit = 1;
 
     // Test Unit enable
     int ret_UpnpEnableWebserver = UpnpEnableWebserver(WEB_SERVER_ENABLED);
+    EXPECT_EQ(ret_UpnpEnableWebserver, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpEnableWebserver, UPNP_E_SUCCESS);
+
+    EXPECT_EQ(bWebServerState, WEB_SERVER_ENABLED);
+
+    // Test Unit enable it again should not do any harm.
+    ret_UpnpEnableWebserver = UpnpEnableWebserver(WEB_SERVER_ENABLED);
     EXPECT_EQ(ret_UpnpEnableWebserver, UPNP_E_SUCCESS)
         << errStrEx(ret_UpnpEnableWebserver, UPNP_E_SUCCESS);
 
@@ -368,9 +380,36 @@ TEST_F(UpnpEnableWebserverFTestSuite, enable_and_disable) {
         << errStrEx(ret_UpnpEnableWebserver, UPNP_E_SUCCESS);
 
     EXPECT_EQ(bWebServerState, WEB_SERVER_DISABLED);
+
+    // Test Unit disable again should not do any harm.
+    ret_UpnpEnableWebserver = UpnpEnableWebserver(WEB_SERVER_DISABLED);
+    EXPECT_EQ(ret_UpnpEnableWebserver, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpEnableWebserver, UPNP_E_SUCCESS);
+
+    EXPECT_EQ(bWebServerState, WEB_SERVER_DISABLED);
 }
 
-TEST_F(UpnpEnableWebserverFTestSuite, sdk_not_initialized) {
+TEST_F(UpnpapiFTestSuite, webserver_set_rootdir_successful) {
+    GTEST_SKIP();
+    bWebServerState = WEB_SERVER_DISABLED;
+    UpnpSdkInit = 1;
+
+    // Test Unit: first disable the webserver
+    int ret_UpnpSetWebServerRootDir = UpnpSetWebServerRootDir(nullptr);
+    EXPECT_EQ(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS);
+
+    EXPECT_EQ(bWebServerState, WEB_SERVER_DISABLED);
+
+    // Test Unit: enable webserver and set the root directory
+    ret_UpnpSetWebServerRootDir = UpnpSetWebServerRootDir("sample/web");
+    EXPECT_EQ(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS);
+
+    EXPECT_EQ(bWebServerState, WEB_SERVER_ENABLED);
+}
+
+TEST_F(UpnpapiFTestSuite, webserver_sdk_not_initialized) {
     UpnpSdkInit = 0;
     bWebServerState = WEB_SERVER_DISABLED;
 
@@ -382,12 +421,17 @@ TEST_F(UpnpEnableWebserverFTestSuite, sdk_not_initialized) {
     EXPECT_EQ(bWebServerState, WEB_SERVER_DISABLED);
 }
 
-TEST(UpnpDownloadXmlDocTestSuite, download_successful) {
+TEST_F(UpnpapiFTestSuite, download_xml_successful) {
     // A possible url is http://127.0.0.1:50001/tvdevicedesc.xml
     if (github_actions)
         GTEST_SKIP() << "Still needs to be done.";
-    else
-        GTEST_FAIL() << "Still needs to be done.";
+
+    IXML_Document* xmldocbuf_ptr{nullptr};
+
+    int ret_UpnpDownloadXmlDoc = UpnpDownloadXmlDoc(
+        "https://localhost:443/sample/web/tvdevicedesc.xml", &xmldocbuf_ptr);
+    EXPECT_EQ(ret_UpnpDownloadXmlDoc, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpDownloadXmlDoc, UPNP_E_SUCCESS);
 }
 
 } // namespace compa

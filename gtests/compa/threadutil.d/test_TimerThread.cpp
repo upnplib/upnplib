@@ -16,6 +16,7 @@
 // to 6000 times). You can provoke this with test repetition, e.g.:
 // ./gtests/build/test_TimerThread_old  --gtest_brief=1 --gtest_repeat=10000
 // --gtest_filter=TimerThreadNormalTestSuite.init_and_shutdown_timerthread
+// --Ingo
 
 #include "TimerThread.hpp"
 #include "compa/ThreadPool.hpp"

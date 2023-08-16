@@ -1,5 +1,4 @@
 Next steps to do:
-+ Put CLogging into gtests tools library
 * Rework test_httpreadwrite.cpp
 * Improve test_sock.cpp with ssl tests
 * Improve test_http_Download.cpp, start with error conditions for http_MakeMessage()

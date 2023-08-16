@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-14
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-16
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -126,9 +126,9 @@ extern ithread_rwlock_t GlobalHndRWLock;
  * \return HND_DEVICE, HND_CLIENT, HND_INVALID
  */
 Upnp_Handle_Type GetHandleInfo(
-    /*! handle pointer (key for the client handle structure). */
+    /*! [in] handle number (table index for the client handle structure). */
     int Hnd,
-    /*! handle structure passed by this function. */
+    /*! [out] handle structure passed by this function. */
     struct Handle_Info** HndInfo);
 
 #define HandleLock() HandleWriteLock()
