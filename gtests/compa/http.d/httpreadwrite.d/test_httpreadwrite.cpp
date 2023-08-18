@@ -1,18 +1,19 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-09
+// Redistribution only with this Copyright remark. Last modified: 2023-08-20
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
-#include "pupnp/upnp/src/genlib/net/http/httpreadwrite.cpp"
-#include "upnplib/src/net/http/httpreadwrite.cpp"
+#include <pupnp/upnp/src/genlib/net/http/httpreadwrite.cpp>
+#include <upnplib/src/net/http/httpreadwrite.cpp>
 
-#include "upnplib/upnptools.hpp"
-#include "upnplib/uri.hpp"
-#include "upnplib/gtest.hpp"
+#include <upnplib/upnptools.hpp>
+#include <upnplib/uri.hpp>
+#include <upnplib/gtest.hpp>
 
-#include "umock/netdb_mock.hpp"
-#include "umock/sys_socket_mock.hpp"
-#include "umock/unistd_mock.hpp"
+#include <umock/netdb_mock.hpp>
+#include <umock/sys_socket_mock.hpp>
+#include <umock/unistd_mock.hpp>
+#include <umock/pupnp_httprw_mock.hpp>
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -27,6 +28,22 @@ using ::upnplib::CUri;
 using ::upnplib::Curi;
 using ::upnplib::errStr;
 using ::upnplib::errStrEx;
+
+
+// Pseudo call stack of some important functions to get an overview
+//=================================================================
+/*
+clang-format off
+
+01)  http_Download()
+     |__ http_RequestAndResponse()
+         |__ socket()           // system call
+         |__ private_connect()  // connect
+         |__ http_SendMessage() // send request
+         |__ http_RecvMessage() // receive response
+
+clang-format on
+*/
 
 namespace compa {
 bool old_code{false}; // Managed in compa/gtest_main.inc
@@ -59,15 +76,6 @@ class Mock_netv4info : public umock::NetdbMock {
 
         return &m_res;
     }
-};
-
-class PupnpHttpRwMock : public umock::PupnpHttpRwInterface {
-  public:
-    virtual ~PupnpHttpRwMock() override = default;
-    MOCK_METHOD(int, private_connect,
-                (SOCKET sockfd, const struct sockaddr* serv_addr,
-                 socklen_t addrlen),
-                (override));
 };
 
 
@@ -289,7 +297,7 @@ class OpenHttpConnectionIp4FTestSuite : public ::testing::Test {
   protected:
     // Provide mocked objects
     Mock_netv4info m_mock_netdbObj;
-    PupnpHttpRwMock m_mock_pupnpHttpRwObj;
+    umock::PupnpHttpRwMock m_mock_pupnpHttpRwObj;
     umock::Sys_socketMock m_mock_socketObj;
     Chttpreadwrite_old m_httprw_oObj;
 

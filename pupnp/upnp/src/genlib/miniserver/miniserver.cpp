@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-08
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -706,8 +706,8 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
     } else if (ip_version == 6) {
         int onOff = 1;
 
-        sockError = setsockopt(s->fd, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&onOff,
-                               sizeof(onOff));
+        sockError = umock::sys_socket_h.setsockopt(
+            s->fd, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&onOff, sizeof(onOff));
         if (sockError == SOCKET_ERROR) {
             strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
             UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
@@ -723,8 +723,9 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
      * can be turned on if necessary.
      * TURN ON the reuseaddr_on option to use the option. */
     if (MINISERVER_REUSEADDR) {
-        sockError = setsockopt(s->fd, SOL_SOCKET, SO_REUSEADDR,
-                               (const char*)&reuseaddr_on, sizeof(int));
+        sockError = umock::sys_socket_h.setsockopt(
+            s->fd, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuseaddr_on,
+            sizeof(int));
         if (sockError == SOCKET_ERROR) {
             strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
             UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
@@ -1190,7 +1191,7 @@ int StopMiniServer() {
     default:
         return 0;
     }
-    sock = socket(AF_INET, SOCK_DGRAM, 0);
+    sock = umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (sock == INVALID_SOCKET) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,

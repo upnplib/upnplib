@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-16
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -76,10 +76,11 @@
 
 #include <sys/stat.h>
 
-#include <assert.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cassert>
+#include <csignal>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
 
 #include <posix_overwrites.hpp>
 
@@ -825,8 +826,9 @@ static int FreeHandle(
 #endif // defined INCLUDE_DEVICE_APIS || defined INCLUDE_CLIENT_APIS
 
 #ifdef INCLUDE_DEVICE_APIS
-int UpnpRegisterRootDevice(const char* DescUrl, Upnp_FunPtr Fun,
-                           const void* Cookie, UpnpDevice_Handle* Hnd) {
+int UpnpRegisterRootDevice(const char* const DescUrl, const Upnp_FunPtr Fun,
+                           const void* const Cookie,
+                           UpnpDevice_Handle* const Hnd) {
     struct Handle_Info* HInfo = NULL;
     int retVal = 0;
 #if EXCLUDE_GENA == 0
@@ -979,11 +981,12 @@ static int GetDescDocumentAndURL(
     char descURL[LINE_SIZE]);
 
 // #ifdef INCLUDE_DEVICE_APIS // bugfix for compiling C++ --Ingo
-int UpnpRegisterRootDevice2(Upnp_DescType descriptionType,
-                            const char* description_const,
-                            size_t bufferLen, /* ignored */
-                            int config_baseURL, Upnp_FunPtr Fun,
-                            const void* Cookie, UpnpDevice_Handle* Hnd) {
+int UpnpRegisterRootDevice2(const Upnp_DescType descriptionType,
+                            const char* const description_const,
+                            const size_t bufferLen, /* ignored */
+                            const int config_baseURL, const Upnp_FunPtr Fun,
+                            const void* const Cookie,
+                            UpnpDevice_Handle* const Hnd) {
     struct Handle_Info* HInfo = NULL;
     int retVal = 0;
 #if EXCLUDE_GENA == 0
@@ -1123,21 +1126,14 @@ exit_function:
 #endif /* INCLUDE_DEVICE_APIS */
 
 #ifdef INCLUDE_DEVICE_APIS
-int UpnpRegisterRootDevice3(const char* DescUrl, Upnp_FunPtr Fun,
-                            const void* Cookie, UpnpDevice_Handle* Hnd,
-                            int AddressFamily) {
-    UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-               "Inside UpnpRegisterRootDevice3\n");
-    return UpnpRegisterRootDevice4(DescUrl, Fun, Cookie, Hnd, AddressFamily,
-                                   NULL);
-}
-#endif /* INCLUDE_DEVICE_APIS */
-
-#ifdef INCLUDE_DEVICE_APIS
-int UpnpRegisterRootDevice4(const char* DescUrl, Upnp_FunPtr Fun,
-                            const void* Cookie, UpnpDevice_Handle* Hnd,
-                            int AddressFamily, const char* LowerDescUrl) {
-    struct Handle_Info* HInfo;
+/* For compatibility also available as alias
+int UpnpRegisterRootDevice4() with same arguments */
+int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
+                            const void* const Cookie,
+                            UpnpDevice_Handle* const Hnd,
+                            const int AddressFamily,
+                            const char* const LowerDescUrl) {
+    Handle_Info* HInfo;
     int retVal = 0;
 #if EXCLUDE_GENA == 0
     int hasServiceTable = 0;
@@ -1145,14 +1141,15 @@ int UpnpRegisterRootDevice4(const char* DescUrl, Upnp_FunPtr Fun,
 
     HandleLock();
 
-    UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-               "Inside UpnpRegisterRootDevice4\n");
+    UpnpPrintf(
+        UPNP_ALL, API, __FILE__, __LINE__,
+        "Inside UpnpRegisterRootDevice3 (same as UpnpRegisterRootDevice4)\n");
     if (UpnpSdkInit != 1) {
         retVal = UPNP_E_FINISH;
         goto exit_function;
     }
-    if (Hnd == NULL || Fun == NULL || DescUrl == NULL ||
-        strlen(DescUrl) == (size_t)0 ||
+    if (Hnd == nullptr || Fun == nullptr || DescUrl == nullptr ||
+        strlen(DescUrl) == 0 ||
         (AddressFamily != AF_INET && AddressFamily != AF_INET6)) {
         retVal = UPNP_E_INVALID_PARAM;
         goto exit_function;
@@ -1162,12 +1159,12 @@ int UpnpRegisterRootDevice4(const char* DescUrl, Upnp_FunPtr Fun,
         retVal = UPNP_E_OUTOF_MEMORY;
         goto exit_function;
     }
-    HInfo = (struct Handle_Info*)malloc(sizeof(struct Handle_Info));
-    if (HInfo == NULL) {
+    HInfo = (Handle_Info*)malloc(sizeof(Handle_Info));
+    if (HInfo == nullptr) {
         retVal = UPNP_E_OUTOF_MEMORY;
         goto exit_function;
     }
-    memset(HInfo, 0, sizeof(struct Handle_Info));
+    memset(HInfo, 0, sizeof(Handle_Info));
     HandleTable[*Hnd] = HInfo;
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__, "Root device URL is %s\n",
                DescUrl);
@@ -3631,7 +3628,6 @@ GetDeviceHandleInfoForPath([[maybe_unused]] const char* path,
 Upnp_Handle_Type GetHandleInfo(UpnpClient_Handle Hnd, Handle_Info** HndInfo) {
     // This function expects an initialized global HandleTable, at least with
     // nullptr.
-    TRACE("Executing GetHandleInfo()")
     Upnp_Handle_Type ret = HND_INVALID;
 
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
@@ -3695,9 +3691,10 @@ void AutoAdvertise(void* input) {
 
 #ifdef INTERNAL_WEB_SERVER
 int UpnpSetWebServerRootDir(const char* rootDir) {
+    TRACE("Executing UpnpSetWebServerRootDir()")
     if (UpnpSdkInit == 0)
         return UPNP_E_FINISH;
-    if ((rootDir == NULL) || (strlen(rootDir) == 0)) {
+    if ((rootDir == nullptr) || (strlen(rootDir) == 0)) {
         return UPNP_E_INVALID_PARAM;
     }
 

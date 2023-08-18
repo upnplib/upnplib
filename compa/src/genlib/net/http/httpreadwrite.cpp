@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-10
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,9 +51,12 @@
 #include <upnpapi.hpp>
 #include <webserver.hpp>
 
+#include <umock/sys_socket.hpp>
+
 #include <assert.h>
 #include <stdarg.h>
 #include <cstring>
+#include <iostream>
 
 #include <posix_overwrites.hpp>
 
@@ -688,8 +691,8 @@ int http_RequestAndResponse(uri_type* destination, const char* request,
     int http_error_code;
     SOCKINFO info;
 
-    tcp_connection =
-        socket((int)destination->hostport.IPaddress.ss_family, SOCK_STREAM, 0);
+    tcp_connection = umock::sys_socket_h.socket(
+        (int)destination->hostport.IPaddress.ss_family, SOCK_STREAM, 0);
     if (tcp_connection == INVALID_SOCKET) {
         parser_response_init(response, req_method);
         return UPNP_E_SOCKET_ERROR;
@@ -704,7 +707,7 @@ int http_RequestAndResponse(uri_type* destination, const char* request,
                        ? sizeof(struct sockaddr_in6)
                        : sizeof(struct sockaddr_in);
     ret_code = umock::pupnp_httprw.private_connect(
-        info.socket, (struct sockaddr*)&(destination->hostport.IPaddress),
+        info.socket, (sockaddr*)&(destination->hostport.IPaddress),
         (socklen_t)sockaddr_len);
     if (ret_code == -1) {
         parser_response_init(response, req_method);
@@ -1899,8 +1902,8 @@ int http_OpenHttpGetEx(const char* url_str, void** Handle, char** contentType,
         }
         memset(handle, 0, sizeof(*handle));
         parser_response_init(&handle->response, HTTPMETHOD_GET);
-        tcp_connection =
-            socket((int)url.hostport.IPaddress.ss_family, SOCK_STREAM, 0);
+        tcp_connection = umock::sys_socket_h.socket(
+            (int)url.hostport.IPaddress.ss_family, SOCK_STREAM, 0);
         if (tcp_connection == INVALID_SOCKET) {
             errCode = UPNP_E_SOCKET_ERROR;
             free(handle);

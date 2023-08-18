@@ -261,7 +261,7 @@ TEST_F(SampleTvDeviceFTestSuite, TvDeviceStart_successful) {
     constexpr char* iface{};
     constexpr in_port_t port{};
     constexpr char* desc_doc_name{};
-    constexpr char web_dir_path[]{SAMPLE_SOURCE_DIR "/web\0"};
+    // constexpr char web_dir_path[]{SAMPLE_SOURCE_DIR "/web\0"};
     constexpr int ip_mode = IP_MODE_IPV4;
 
     // Mock system functions
@@ -375,9 +375,12 @@ TEST_F(SampleTvDeviceFTestSuite, TvDeviceStart_successful) {
     } // end scope InSequence
 
 
-    // Test Unit with default settings as far as possible
-    int ret_TvDeviceStart = TvDeviceStart(
-        iface, port, desc_doc_name, web_dir_path, ip_mode, linux_print, 0);
+    // Test Unit
+    // with default settings as far as possible. With nullptr for the
+    // webdir path, the hard coded webdir path is used.
+    int ret_TvDeviceStart =
+        TvDeviceStart(iface, port, desc_doc_name, nullptr /*web_dir_path*/,
+                      ip_mode, linux_print, 0);
     EXPECT_EQ(ret_TvDeviceStart, UPNP_E_SUCCESS)
         << errStrEx(ret_TvDeviceStart, UPNP_E_SUCCESS);
 

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-06
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -217,8 +217,10 @@ static int sock_read_write(
         int old;
         int set = 1;
         socklen_t olen = sizeof(old);
-        getsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &old, &olen);
-        setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &set, sizeof(set));
+        umock::sys_socket_h.getsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &old,
+                                       &olen);
+        umock::sys_socket_h.setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &set,
+                                       sizeof(set));
 #endif
         if (bRead) {
 #ifdef UPNP_ENABLE_OPEN_SSL
@@ -253,7 +255,8 @@ static int sock_read_write(
 #endif
                 if (num_written == -1) {
 #ifdef SO_NOSIGPIPE
-                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &old, olen);
+                    umock::sys_socket_h.setsockopt(sockfd, SOL_SOCKET,
+                                                   SO_NOSIGPIPE, &old, olen);
 #endif
                     // BUG! Should return UPNP_E_SOCKET_ERROR --Ingo
                     return (int)num_written;
@@ -264,7 +267,8 @@ static int sock_read_write(
             numBytes = bytes_sent;
         }
 #ifdef SO_NOSIGPIPE
-        setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &old, olen);
+        umock::sys_socket_h.setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &old,
+                                       olen);
     }
 #endif
     if (numBytes < 0)

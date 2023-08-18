@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-10
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -59,6 +59,8 @@
 #include <string.h>
 
 #include "posix_overwrites.hpp"
+
+#include <umock/sys_socket.hpp>
 
 #define MSGTYPE_SHUTDOWN 0
 #define MSGTYPE_ADVERTISEMENT 1
@@ -195,7 +197,8 @@ static int NewRequestHandler(
         return UPNP_E_INVALID_PARAM;
     }
 
-    ReplySock = socket((int)DestAddr->sa_family, SOCK_DGRAM, 0);
+    ReplySock =
+        umock::sys_socket_h.socket((int)DestAddr->sa_family, SOCK_DGRAM, 0);
     if (ReplySock == INVALID_SOCKET) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,
@@ -210,20 +213,22 @@ static int NewRequestHandler(
     case AF_INET:
         inet_ntop(AF_INET, &((struct sockaddr_in*)DestAddr)->sin_addr, buf_ntop,
                   sizeof(buf_ntop));
-        setsockopt(ReplySock, IPPROTO_IP, IP_MULTICAST_IF, (char*)&replyAddr,
-                   sizeof(replyAddr));
-        setsockopt(ReplySock, IPPROTO_IP, IP_MULTICAST_TTL, (char*)&ttl,
-                   sizeof(int));
+        umock::sys_socket_h.setsockopt(ReplySock, IPPROTO_IP, IP_MULTICAST_IF,
+                                       (char*)&replyAddr, sizeof(replyAddr));
+        umock::sys_socket_h.setsockopt(ReplySock, IPPROTO_IP, IP_MULTICAST_TTL,
+                                       (char*)&ttl, sizeof(int));
         socklen = sizeof(struct sockaddr_in);
         break;
 #ifdef UPNP_ENABLE_IPV6
     case AF_INET6:
         inet_ntop(AF_INET6, &((struct sockaddr_in6*)DestAddr)->sin6_addr,
                   buf_ntop, sizeof(buf_ntop));
-        setsockopt(ReplySock, IPPROTO_IPV6, IPV6_MULTICAST_IF,
-                   (char*)&gIF_INDEX, sizeof(gIF_INDEX));
-        setsockopt(ReplySock, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, (char*)&hops,
-                   sizeof(hops));
+        umock::sys_socket_h.setsockopt(ReplySock, IPPROTO_IPV6,
+                                       IPV6_MULTICAST_IF, (char*)&gIF_INDEX,
+                                       sizeof(gIF_INDEX));
+        umock::sys_socket_h.setsockopt(ReplySock, IPPROTO_IPV6,
+                                       IPV6_MULTICAST_HOPS, (char*)&hops,
+                                       sizeof(hops));
         break;
 #endif
     default:

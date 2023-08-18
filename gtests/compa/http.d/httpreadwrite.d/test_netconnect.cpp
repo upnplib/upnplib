@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-12
+// Redistribution only with this Copyright remark. Last modified: 2023-08-20
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -31,19 +31,6 @@ using ::testing::SetErrnoAndReturn;
 using ::upnplib::SSockaddr_storage;
 
 using ::upnplib::testing::SetArgPtrIntValue;
-
-
-// ######################################
-// Mocked system calls
-// ######################################
-class PupnpHttpRwMock : public umock::PupnpHttpRwInterface {
-  public:
-    virtual ~PupnpHttpRwMock() override = default;
-    MOCK_METHOD(int, private_connect,
-                (SOCKET sockfd, const struct sockaddr* serv_addr,
-                 socklen_t addrlen),
-                (override));
-};
 
 
 // ######################################

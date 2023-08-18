@@ -5,8 +5,8 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-21
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft,  Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-20
  *
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
@@ -62,7 +62,8 @@
 
 #include "posix_overwrites.hpp"
 
-#include "umock/sys_socket.hpp"
+#include <umock/sys_socket.hpp>
+#include <umock/sys_select.hpp>
 
 /*!
  * \brief Sends a callback to the control point application with a SEARCH
@@ -627,20 +628,22 @@ int SearchByTarget(int Hnd, int Mx, char* St, void* Cookie) {
 
     FD_ZERO(&wrSet);
     if (gSsdpReqSocket4 != INVALID_SOCKET) {
-        setsockopt(gSsdpReqSocket4, IPPROTO_IP, IP_MULTICAST_IF, (char*)&addrv4,
-                   sizeof(addrv4));
+        umock::sys_socket_h.setsockopt(gSsdpReqSocket4, IPPROTO_IP,
+                                       IP_MULTICAST_IF, (char*)&addrv4,
+                                       sizeof(addrv4));
         FD_SET(gSsdpReqSocket4, &wrSet);
         max_fd = std::max(max_fd, gSsdpReqSocket4);
     }
 #ifdef UPNP_ENABLE_IPV6
     if (gSsdpReqSocket6 != INVALID_SOCKET) {
-        setsockopt(gSsdpReqSocket6, IPPROTO_IPV6, IPV6_MULTICAST_IF,
-                   (char*)&gIF_INDEX, sizeof(gIF_INDEX));
+        umock::sys_socket_h.setsockopt(gSsdpReqSocket6, IPPROTO_IPV6,
+                                       IPV6_MULTICAST_IF, (char*)&gIF_INDEX,
+                                       sizeof(gIF_INDEX));
         FD_SET(gSsdpReqSocket6, &wrSet);
         max_fd = std::max(max_fd, gSsdpReqSocket6);
     }
 #endif
-    ret = select((int)max_fd + 1, NULL, &wrSet, NULL, NULL);
+    ret = umock::sys_select_h.select((int)max_fd + 1, NULL, &wrSet, NULL, NULL);
     if (ret == -1) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,

@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-14
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -48,12 +48,12 @@
 
 #include <upnplib/trace.hpp>
 
-#include <assert.h>
+#include <cassert>
+#include <iostream>
 
 #include <posix_overwrites.hpp>
 
-#define DEFAULT_WEB_DIR "./web"
-
+#define DEFAULT_WEB_DIR "./sample/web"
 #define DESC_URL_SIZE 200
 
 /*! Global arrays for storing Tv Control Service variable names, values,
@@ -1215,8 +1215,7 @@ int TvDeviceDecreaseBrightness(IXML_Document* in, IXML_Document** out,
 }
 
 int TvDeviceCallbackEventHandler(Upnp_EventType EventType, const void* Event,
-                                 void* Cookie) {
-    (void)Cookie;
+                                 [[maybe_unused]] void* Cookie) {
     switch (EventType) {
     case UPNP_EVENT_SUBSCRIPTION_REQUEST:
         TvDeviceHandleSubscriptionRequest((UpnpSubscriptionRequest*)Event);
@@ -1252,7 +1251,7 @@ int TvDeviceCallbackEventHandler(Upnp_EventType EventType, const void* Event,
 
 int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
                   const char* web_dir_path, const int ip_mode,
-                  const print_string pfun, const int combo) {
+                  const print_string pfunc, const int combo) {
     TRACE("Executing TvDeviceStart()");
     int ret{UPNP_E_SUCCESS};
     // example for desc_doc_url: http://192.168.47.11:50001/tvdevicedesc.xml
@@ -1264,7 +1263,7 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
     // UpnpSetLogFileNames(NULL, NULL); // DEBUG!
     // UpnpSetLogLevel(UPNP_INFO); // DEBUG!
     // UpnpInitLog(); // DEBUG!
-    SampleUtil_Initialize(pfun);
+    SampleUtil_Initialize(pfunc);
     SampleUtil_Print("UpnpInit2 started, initializing UPnP Sdk with interface "
                      "= \"%s\", port = %u\n",
                      iface, port);
@@ -1294,6 +1293,7 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
         break;
     default:
         SampleUtil_Print("Invalid ip_mode : %d\n", ip_mode);
+        UpnpFinish();
         return UPNP_E_INTERNAL_ERROR;
     }
 
@@ -1321,6 +1321,7 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
                  port, desc_doc_name);
         break;
     default:
+        UpnpFinish();
         return UPNP_E_INTERNAL_ERROR;
     }
 
@@ -1336,19 +1337,20 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
         return ret;
     }
 
-    return UPNP_E_SUCCESS; // DEBUG!
-
     SampleUtil_Print("Registering the RootDevice with desc_doc_url: %s\n",
                      desc_doc_url);
-    ret =
-        UpnpRegisterRootDevice3(desc_doc_url, TvDeviceCallbackEventHandler,
-                                &device_handle, &device_handle, address_family);
+    ret = UPNP_E_SUCCESS;
+    //     UpnpRegisterRootDevice3(desc_doc_url, TvDeviceCallbackEventHandler,
+    //                             &device_handle, &device_handle,
+    //                             address_family);
     if (ret != UPNP_E_SUCCESS) {
         SampleUtil_Print("Error registering the rootdevice: %s(%d)\n",
                          UpnpGetErrorMessage(ret), ret);
         UpnpFinish();
         return ret;
     }
+
+    return UPNP_E_SUCCESS; // DEBUG!
 
     SampleUtil_Print("RootDevice Registered, initializing State Table ...\n");
     TvDeviceStateTableInit(desc_doc_url);

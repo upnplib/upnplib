@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-13
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -59,7 +59,8 @@
 #include <umock/sys_socket.hpp>
 #include <umock/pupnp_sock.hpp>
 
-#include <stdio.h>
+#include <cstdio>
+#include <iostream>
 
 #include "posix_overwrites.hpp"
 #define MAX_TIME_TOREAD 45

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-28
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -57,7 +57,6 @@
 #include <httpparser.hpp>
 #include <httpreadwrite.hpp>
 #include <ithread.hpp>
-//#include "membuffer.hpp"
 #include <ssdplib.hpp>
 #include <statcodes.hpp>
 #include <strintmap.hpp>
@@ -73,6 +72,7 @@
 #include <assert.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <iostream>
 
 #include <posix_overwrites.hpp>
 
@@ -588,6 +588,7 @@ exit_function:
 }
 
 int web_server_set_root_dir(const char* root_dir) {
+    TRACE("Executing web_server_set_root_dir()")
     size_t index;
     int ret;
 

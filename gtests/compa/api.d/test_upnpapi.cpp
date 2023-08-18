@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-17
+// Redistribution only with this Copyright remark. Last modified: 2023-08-20
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpapi.cpp>
@@ -15,20 +15,33 @@
 
 #include <upnplib/upnptools.hpp> // For upnplib only
 #include <upnplib/gtest.hpp>
+#include <upnplib/sockaddr.hpp>
 
-#include <gmock/gmock.h>
+#include <umock/sys_socket_mock.hpp>
+#include <umock/sys_select_mock.hpp>
+#include <umock/pupnp_sock_mock.hpp>
+#include <umock/winsock2_mock.hpp>
 
 
 namespace compa {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
-using ::pupnp::CLogging;
-using ::testing::ExitedWithCode;
 using ::upnplib::errStrEx;
+using ::upnplib::SSockaddr_storage;
 using ::upnplib::testing::MatchesStdRegex;
 
-//
+using ::pupnp::CLogging;
+
+using ::testing::_;
+using ::testing::A;
+using ::testing::ExitedWithCode;
+using ::testing::NotNull;
+using ::testing::Pointee;
+using ::testing::Return;
+using ::testing::SetErrnoAndReturn;
+
+
 // The UpnpInit2() call stack to initialize the pupnp library
 //===========================================================
 /*
@@ -73,21 +86,25 @@ clang-format off
 17) Tested with ./test_miniserver.cpp
 
 
-01)  UpnpDownloadXmlDoc()
-     |__ UpnpDownloadUrlItem()
-03)  |   |__ http_Download()
-     |
-     |__ ixmlParseBufferEx()
-     |__ free(xml_buf)
-     |__ if not IXL_SUCCESS
-            print critical xml error messages
-        else
-            #ifdef DEBUG
-              print XML document
-            #endif
-              print success
+     UpnpRegisterRootDevice3() same as
+01)  UpnpRegisterRootDevice4()
+02)  |__ UpnpDownloadXmlDoc()
+         |__ UpnpDownloadUrlItem()
+03)      |   |__ http_Download()
+         |
+         |__ ixmlParseBufferEx()
+         |__ free(xml_buf)
+         |__ if not IXL_SUCCESS
+                print critical xml error messages
+             else
+                #ifdef DEBUG
+                  print XML document
+                #endif
+                  print success
 
-01) A possible url is http://127.0.0.1:50001/tvdevicedesc.xml
+01) Two symbols for the same function are given for compatibility. The given
+    function can do both.
+02) A possible url is http://127.0.0.1:50001/tvdevicedesc.xml
 03) Tested within test_httpreadwrite.cpp
 
 
@@ -149,9 +166,32 @@ class UpnpapiFTestSuite : public ::testing::Test {
         UpnpSdkInit = 0xAA;
     }
 };
-typedef UpnpapiFTestSuite UpnpEnableWebserverFTestSuite;
 
-TEST_F(UpnpapiFTestSuite, UpnpInitPreamble) {
+class UpnpapiMockFTestSuite : public UpnpapiFTestSuite {
+  protected:
+    // Ip address structure
+    SSockaddr_storage m_saddr;
+
+    // Needed mocked functions
+    umock::PupnpSockMock m_pupnpSockObj;
+    umock::Sys_selectMock m_sys_selectObj;
+    umock::Sys_socketMock m_sys_socketObj;
+#ifdef _WIN32
+    umock::Winsock2Mock m_winsock2Obj;
+#endif
+
+    UpnpapiMockFTestSuite() { m_saddr = "192.168.99.4:50010"; }
+};
+/* Following injections must be placed into the test cases.
+    umock::PupnpSock pupnp_sock_injectObj(&m_pupnpSockObj);
+    umock::Sys_select sys_select_injectObj(&m_sys_selectObj);
+    umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
+#ifdef _WIN32
+    umock::Winsock2 winsock2_injectObj(&m_winsock2Obj);
+#endif
+*/
+
+TEST_F(UpnpapiFTestSuite, UpnpInitPreamble_successful) {
     // Test Unit
     // ---------
     // UpnpInitPreamble() should not use and modify the UpnpSdkInit flag.
@@ -390,23 +430,67 @@ TEST_F(UpnpapiFTestSuite, webserver_enable_and_disable) {
 }
 
 TEST_F(UpnpapiFTestSuite, webserver_set_rootdir_successful) {
-    GTEST_SKIP();
-    bWebServerState = WEB_SERVER_DISABLED;
     UpnpSdkInit = 1;
 
-    // Test Unit: first disable the webserver
-    int ret_UpnpSetWebServerRootDir = UpnpSetWebServerRootDir(nullptr);
+    // Test Unit
+    int ret_UpnpSetWebServerRootDir = UpnpSetWebServerRootDir("sample/web/");
     EXPECT_EQ(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS)
         << errStrEx(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS);
 
-    EXPECT_EQ(bWebServerState, WEB_SERVER_DISABLED);
+    EXPECT_STREQ(gDocumentRootDir.buf, "sample/web");
 
-    // Test Unit: enable webserver and set the root directory
-    ret_UpnpSetWebServerRootDir = UpnpSetWebServerRootDir("sample/web");
+    ret_UpnpSetWebServerRootDir = UpnpSetWebServerRootDir("/");
     EXPECT_EQ(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS)
         << errStrEx(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS);
 
-    EXPECT_EQ(bWebServerState, WEB_SERVER_ENABLED);
+    EXPECT_STREQ(gDocumentRootDir.buf, "");
+
+    ret_UpnpSetWebServerRootDir = UpnpSetWebServerRootDir("//");
+    EXPECT_EQ(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS);
+
+    EXPECT_STREQ(gDocumentRootDir.buf, "/");
+
+    ret_UpnpSetWebServerRootDir = UpnpSetWebServerRootDir(".");
+    EXPECT_EQ(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS);
+
+    EXPECT_STREQ(gDocumentRootDir.buf, ".");
+
+    ret_UpnpSetWebServerRootDir = UpnpSetWebServerRootDir("./");
+    EXPECT_EQ(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS);
+
+    EXPECT_STREQ(gDocumentRootDir.buf, ".");
+
+    ret_UpnpSetWebServerRootDir = UpnpSetWebServerRootDir("..");
+    EXPECT_EQ(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS);
+
+    EXPECT_STREQ(gDocumentRootDir.buf, "..");
+
+    ret_UpnpSetWebServerRootDir = UpnpSetWebServerRootDir("../");
+    EXPECT_EQ(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpSetWebServerRootDir, UPNP_E_SUCCESS);
+
+    EXPECT_STREQ(gDocumentRootDir.buf, "..");
+}
+
+TEST_F(UpnpapiFTestSuite, webserver_set_rootdir_fails) {
+    // Test Unit
+    UpnpSdkInit = 0;
+    int ret_UpnpSetWebServerRootDir = UpnpSetWebServerRootDir("sample/web");
+    EXPECT_EQ(ret_UpnpSetWebServerRootDir, UPNP_E_FINISH)
+        << errStrEx(ret_UpnpSetWebServerRootDir, UPNP_E_FINISH);
+
+    UpnpSdkInit = 1;
+    ret_UpnpSetWebServerRootDir = UpnpSetWebServerRootDir(nullptr);
+    EXPECT_EQ(ret_UpnpSetWebServerRootDir, UPNP_E_INVALID_PARAM)
+        << errStrEx(ret_UpnpSetWebServerRootDir, UPNP_E_INVALID_PARAM);
+
+    ret_UpnpSetWebServerRootDir = UpnpSetWebServerRootDir("");
+    EXPECT_EQ(ret_UpnpSetWebServerRootDir, UPNP_E_INVALID_PARAM)
+        << errStrEx(ret_UpnpSetWebServerRootDir, UPNP_E_INVALID_PARAM);
 }
 
 TEST_F(UpnpapiFTestSuite, webserver_sdk_not_initialized) {
@@ -421,6 +505,95 @@ TEST_F(UpnpapiFTestSuite, webserver_sdk_not_initialized) {
     EXPECT_EQ(bWebServerState, WEB_SERVER_DISABLED);
 }
 
+
+int CallbackEventHandler(Upnp_EventType EventType, const void* Event,
+                         [[maybe_unused]] void* Cookie) {
+
+    // Print a summary of the event received
+    std::cout << "Received event type \"" << EventType << "\" with event '"
+              << Event << "'\n";
+    return 0;
+}
+
+TEST_F(UpnpapiMockFTestSuite, UpnpRegisterRootDevice3_successful) {
+    if (github_actions)
+        GTEST_SKIP() << "Need to test subroutines first.";
+
+    constexpr char desc_doc_url[]{"http://192.168.99.4:50010/tvdevicedesc.xml"};
+    constexpr SOCKET sockfd{FD_SETSIZE - 45};
+    UpnpDevice_Handle device_handle = -1;
+
+    // Initialization preamble to have essential structures initialized.
+    int ret_UpnpInitPreamble = UpnpInitPreamble();
+    ASSERT_EQ(ret_UpnpInitPreamble, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpInitPreamble, UPNP_E_SUCCESS);
+
+    umock::PupnpSock pupnp_sock_injectObj(&m_pupnpSockObj);
+    umock::Sys_select sys_select_injectObj(&m_sys_selectObj);
+    umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
+#ifdef _WIN32
+    umock::Winsock2 winsock2_injectObj(&m_winsock2Obj);
+#endif
+
+    EXPECT_CALL(m_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+        .WillOnce(Return(sockfd));
+    EXPECT_CALL(m_pupnpSockObj, sock_make_no_blocking(sockfd)).Times(1);
+    EXPECT_CALL(m_pupnpSockObj, sock_make_blocking(sockfd)).Times(1);
+    EXPECT_CALL(m_sys_selectObj,
+                select(sockfd + 1, NULL, NotNull(), NULL, NotNull()))
+        .WillOnce(Return(1));
+    EXPECT_CALL(m_sys_selectObj,
+                select(sockfd + 1, NotNull(), NotNull(), NULL, NotNull()))
+        .Times(2)
+        .WillRepeatedly(Return(1));
+    EXPECT_CALL(m_sys_socketObj, connect(sockfd, _, sizeof(sockaddr_in)))
+        .WillOnce(SetErrnoAndReturn(EINPROGRESS, -1));
+    EXPECT_CALL(m_sys_socketObj, getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
+        .Times(1);
+    EXPECT_CALL(m_sys_socketObj, send(sockfd, _, _, _)).WillOnce(Return(200));
+    EXPECT_CALL(m_sys_socketObj, recv(sockfd, _, 1024, _)).Times(1);
+    EXPECT_CALL(m_sys_socketObj, shutdown(sockfd, _)).Times(1);
+
+    UpnpSdkInit = 1;
+    {                        // Scope for logging
+        CLogging loggingObj; // Output only with build type DEBUG.
+
+        // Test Unit
+        int ret_UpnpRegisterRootDevice3 =
+            UpnpRegisterRootDevice3(desc_doc_url, CallbackEventHandler,
+                                    &device_handle, &device_handle, AF_INET6);
+        EXPECT_EQ(ret_UpnpRegisterRootDevice3, UPNP_E_SUCCESS)
+            << errStrEx(ret_UpnpRegisterRootDevice3, UPNP_E_SUCCESS);
+
+        EXPECT_EQ(device_handle, 1);
+
+        // The handle table was initialized with UpnpInitPreamble() and should
+        // have the device_handle info now.
+        ASSERT_NE(HandleTable[device_handle], nullptr);
+        Handle_Info* HInfo{HandleTable[device_handle]};
+        EXPECT_EQ(HInfo->aliasInstalled, 0);
+
+        // Finish
+        int ret_UpnpUnRegisterRootDevice =
+            UpnpUnRegisterRootDevice(device_handle);
+        EXPECT_EQ(ret_UpnpUnRegisterRootDevice, UPNP_E_SUCCESS)
+            << errStrEx(ret_UpnpUnRegisterRootDevice, UPNP_E_SUCCESS);
+
+    } // End scope for logging
+
+    // Finish the library
+    int ret_UpnpFinish = UpnpFinish();
+    EXPECT_EQ(ret_UpnpFinish, UPNP_E_SUCCESS)
+        << errStrEx(ret_UpnpFinish, UPNP_E_SUCCESS);
+}
+
+#if 0
+
+TEST_F(UpnpapiFTestSuite, get_free_handle_successful) {
+    // To be done
+    int ret_GetFreeHandle = GetFreeHandle();
+}
+
 TEST_F(UpnpapiFTestSuite, download_xml_successful) {
     // A possible url is http://127.0.0.1:50001/tvdevicedesc.xml
     if (github_actions)
@@ -433,6 +606,7 @@ TEST_F(UpnpapiFTestSuite, download_xml_successful) {
     EXPECT_EQ(ret_UpnpDownloadXmlDoc, UPNP_E_SUCCESS)
         << errStrEx(ret_UpnpDownloadXmlDoc, UPNP_E_SUCCESS);
 }
+#endif // #if 0
 
 } // namespace compa
 
