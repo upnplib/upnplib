@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-20
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -61,6 +61,7 @@
 #include <assert.h>
 #include <stdarg.h>
 #include <cstring>
+#include <string>
 
 #include "posix_overwrites.hpp"
 
@@ -1475,6 +1476,9 @@ int http_SendStatusResponse(SOCKINFO* info, int http_status_code,
     return ret;
 }
 
+// Using this variable to be able to modify it by gtests without recompile.
+std::string web_server_content_language{WEB_SERVER_CONTENT_LANGUAGE};
+
 int http_MakeMessage(membuffer* buf, int http_major_version,
                      int http_minor_version, const char* fmt, ...) {
     char c;
@@ -1606,7 +1610,7 @@ int http_MakeMessage(membuffer* buf, int http_major_version,
                 goto error_handler;
         } else if (c == 'L') {
             /* Add CONTENT-LANGUAGE header only if
-             * WEB_SERVER_CONTENT_LANGUAGE */
+             * WEB_SERVER_CONTENT_LANGUAGE (aka web_server_content_language) */
             /* is not empty and if Accept-Language header is not
              * empty */
             struct SendInstruction* RespInstr;
@@ -1614,10 +1618,11 @@ int http_MakeMessage(membuffer* buf, int http_major_version,
                 (struct SendInstruction*)va_arg(argp, struct SendInstruction*);
             assert(RespInstr);
             if ((bool)strcmp(RespInstr->AcceptLanguageHeader, "") &&
-                (bool)strcmp(WEB_SERVER_CONTENT_LANGUAGE, "") &&
+                !web_server_content_language.empty() &&
                 (bool)http_MakeMessage(
                     buf, http_major_version, http_minor_version, "ssc",
-                    "CONTENT-LANGUAGE: ", WEB_SERVER_CONTENT_LANGUAGE) != 0)
+                    "CONTENT-LANGUAGE: ",
+                    web_server_content_language.c_str()) != 0)
                 goto error_handler;
         } else if (c == 'C') {
             if ((http_major_version > 1) ||

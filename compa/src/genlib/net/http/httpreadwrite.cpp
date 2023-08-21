@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-20
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -732,25 +732,7 @@ end_function:
     return ret_code;
 }
 
-/************************************************************************
- * Function: http_Download
- *
- * Parameters:
- *  IN const char* url_str; String as a URL
- *  IN int timeout_secs;    time out value
- *  OUT char** document;    buffer to store the document extracted
- *              from the donloaded message.
- *  OUT int* doc_length;    length of the extracted document
- *  OUT char* content_type; Type of content
- *
- * Description:
- *  Download the document message and extract the document
- *  from the message.
- *
- * Return: int
- *  UPNP_E_SUCCESS
- *  UPNP_E_INVALID_URL
- ************************************************************************/
+
 int http_Download(const char* url_str, int timeout_secs, char** document,
                   size_t* doc_length, char* content_type) {
     int ret_code;
@@ -1476,8 +1458,14 @@ int http_SendStatusResponse(SOCKINFO* info, int http_status_code,
     return ret;
 }
 
+// Using this variable to be able to modify it by gtests without recompile.
+std::string web_server_content_language{WEB_SERVER_CONTENT_LANGUAGE};
+
 int http_MakeMessage(membuffer* buf, int http_major_version,
                      int http_minor_version, const char* fmt, ...) {
+    // For format types look at the declaration of http_MakeMessage() in the
+    // header file httpreadwrite.hpp.
+    TRACE("Executing http_MakeMessage()")
     char c;
     char* s = NULL;
     size_t num;
@@ -1606,19 +1594,20 @@ int http_MakeMessage(membuffer* buf, int http_major_version,
                 membuffer_append(buf, tempbuf, strlen(tempbuf)))
                 goto error_handler;
         } else if (c == 'L') {
-            /* Add CONTENT-LANGUAGE header only if
-             * WEB_SERVER_CONTENT_LANGUAGE */
-            /* is not empty and if Accept-Language header is not
-             * empty */
-            struct SendInstruction* RespInstr;
-            RespInstr =
-                (struct SendInstruction*)va_arg(argp, struct SendInstruction*);
+            // Add CONTENT-LANGUAGE header only
+            // if Accept-Language header is not empty
+            // and
+            // if web_server_content_language (aka WEB_SERVER_CONTENT_LANGUAGE)
+            //    is not empty
+            SendInstruction* RespInstr;
+            RespInstr = (SendInstruction*)va_arg(argp, SendInstruction*);
             assert(RespInstr);
             if ((bool)strcmp(RespInstr->AcceptLanguageHeader, "") &&
-                (bool)strcmp(WEB_SERVER_CONTENT_LANGUAGE, "") &&
+                !web_server_content_language.empty() &&
                 (bool)http_MakeMessage(
                     buf, http_major_version, http_minor_version, "ssc",
-                    "CONTENT-LANGUAGE: ", WEB_SERVER_CONTENT_LANGUAGE) != 0)
+                    "CONTENT-LANGUAGE: ",
+                    web_server_content_language.c_str()) != 0)
                 goto error_handler;
         } else if (c == 'C') {
             if ((http_major_version > 1) ||
@@ -1989,24 +1978,27 @@ int http_OpenHttpGetEx(const char* url_str, void** Handle, char** contentType,
  ************************************************************************/
 /* 'info' should have a size of at least 100 bytes */
 void get_sdk_info(char* info, size_t infoSize) {
+    TRACE("Executing get_sdk_info().")
 #ifdef UPNP_ENABLE_UNSPECIFIED_SERVER
     snprintf(info, infoSize, "Unspecified, UPnP/1.0, Unspecified\r\n");
 #else /* UPNP_ENABLE_UNSPECIFIED_SERVER */
 #ifdef _WIN32
     snprintf(info, infoSize,
              "UPnP/1.0, Portable SDK for UPnP devices/" UPNP_VERSION_STRING
-             "on windows\r\n");
+             " on windows\r\n");
 #else
-    int ret_code;
     struct utsname sys_info;
 
-    ret_code = umock::sysinfo.uname(&sys_info);
+    int ret_code = umock::sysinfo.uname(&sys_info);
     if (ret_code == -1)
-        *info = '\0';
-    snprintf(info, infoSize,
-             "%s/%s, UPnP/1.0, Portable SDK for UPnP "
-             "devices/" UPNP_VERSION_STRING "\r\n",
-             sys_info.sysname, sys_info.release);
+        snprintf(info, infoSize,
+                 "Unspecified, UPnP/1.0, Portable SDK for UPnP "
+                 "devices/" UPNP_VERSION_STRING "\r\n");
+    else
+        snprintf(info, infoSize,
+                 "%s/%s, UPnP/1.0, Portable SDK for UPnP "
+                 "devices/" UPNP_VERSION_STRING "\r\n",
+                 sys_info.sysname, sys_info.release);
 #endif
 #endif /* UPNP_ENABLE_UNSPECIFIED_SERVER */
 }

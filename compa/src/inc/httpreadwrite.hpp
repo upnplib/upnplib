@@ -1,10 +1,12 @@
+#ifndef COMPA_GENLIB_NET_HTTP_HTTPREADWRITE_HPP
+#define COMPA_GENLIB_NET_HTTP_HTTPREADWRITE_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-02-04
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,9 +33,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+// Last compare with ./pupnp source file on 2023-08-20, ver 1.14.17
 
-#ifndef UPNPLIB_GENLIB_NET_HTTP_HTTPREADWRITE_HPP
-#define UPNPLIB_GENLIB_NET_HTTP_HTTPREADWRITE_HPP
 
 /*
  * \file
@@ -53,7 +54,7 @@ struct tm* http_gmtime_r(const time_t* clock, struct tm* result);
 #define http_gmtime_r gmtime_r
 #endif
 
-EXPORT_SPEC int http_CancelHttpGet(/* IN */ void* Handle);
+UPNPLIB_API int http_CancelHttpGet(/* IN */ void* Handle);
 
 /*!
  * \brief Validates URL.
@@ -117,7 +118,7 @@ SOCKET http_Connect(
  *       UPNP_E_BAD_HTTPMSG
  *       UPNP_E_SUCCESS
  ************************************************************************/
-EXPORT_SPEC int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
+UPNPLIB_API int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
                                  http_method_t request_method,
                                  int* timeout_secs, int* http_error_code);
 
@@ -143,7 +144,7 @@ EXPORT_SPEC int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
  * \li \c UPNP_E_FILE_READ_ERROR
  * \li \c UPNP_E_SUCCESS
  */
-EXPORT_SPEC int http_SendMessage(
+UPNPLIB_API int http_SendMessage(
     /* [in] Socket information object. */
     SOCKINFO* info,
     /* [in,out] Time out value. */
@@ -210,7 +211,7 @@ int http_RequestAndResponse(uri_type* destination, const char* request,
  *      UPNP_E_SUCCESS
  *      UPNP_E_INVALID_URL
  ************************************************************************/
-EXPORT_SPEC int http_Download(const char* url, int timeout_secs,
+UPNPLIB_API int http_Download(const char* url, int timeout_secs,
                               char** document, size_t* doc_length,
                               char* content_type);
 
@@ -229,7 +230,7 @@ EXPORT_SPEC int http_Download(const char* url, int timeout_secs,
  *      UPNP_E_SUCCESS          - On Sucess
  *      UPNP_E_INVALID_PARAM    - Invalid Parameter
  ************************************************************************/
-EXPORT_SPEC int http_HttpGetProgress(void* Handle, size_t* length,
+UPNPLIB_API int http_HttpGetProgress(void* Handle, size_t* length,
                                      size_t* total);
 
 /*!
@@ -255,7 +256,7 @@ EXPORT_SPEC int http_HttpGetProgress(void* Handle, size_t* length,
  *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
  *              allocated.
  */
-EXPORT_SPEC int http_OpenHttpConnection(
+UPNPLIB_API int http_OpenHttpConnection(
     /*! [in] The URL which contains the host, and the scheme to make the
        connection. */
     const char* url,
@@ -295,7 +296,7 @@ EXPORT_SPEC int http_OpenHttpConnection(
  *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
  *              allocated.
  */
-EXPORT_SPEC int http_MakeHttpRequest(
+UPNPLIB_API int http_MakeHttpRequest(
     /* ![in] The method to use to make the request. */
     Upnp_HttpMethod method,
     /*! [in] The URL to use to make the request. The URL should use the same
@@ -334,7 +335,7 @@ EXPORT_SPEC int http_MakeHttpRequest(
  *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
  *              allocated.
  */
-EXPORT_SPEC int http_WriteHttpRequest(
+UPNPLIB_API int http_WriteHttpRequest(
     /*! [in] The handle of the connection created by the call to
      * \b UpnpOpenHttpConnection. */
     void* handle,
@@ -365,7 +366,7 @@ EXPORT_SPEC int http_WriteHttpRequest(
  *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
  *              allocated.
  */
-EXPORT_SPEC int http_EndHttpRequest(
+UPNPLIB_API int http_EndHttpRequest(
     /*! [in] The handle to the connection. */
     void* handle,
     /*! [in] The time out value sent with the request during which a response
@@ -402,7 +403,7 @@ EXPORT_SPEC int http_EndHttpRequest(
  *     \li \c UPNP_E_BAD_RESPONSE: A bad response was received from the
  *             remote server.
  */
-EXPORT_SPEC int http_GetHttpResponse(
+UPNPLIB_API int http_GetHttpResponse(
     /*! [in] The handle of the connection created by the call to
      * \b UpnpOpenHttpConnection. */
     void* handle,
@@ -438,7 +439,7 @@ EXPORT_SPEC int http_GetHttpResponse(
  *        in handle value may provide additional information on the return
  *        value.
  */
-EXPORT_SPEC int http_ReadHttpResponse(
+UPNPLIB_API int http_ReadHttpResponse(
     /*! [in] The handle of the connection created by the call to
      * \b UpnpOpenHttpConnection. */
     void* handle,
@@ -463,7 +464,7 @@ EXPORT_SPEC int http_ReadHttpResponse(
  *     \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
  *             allocated.
  */
-EXPORT_SPEC int http_CloseHttpConnection(
+UPNPLIB_API int http_CloseHttpConnection(
     /*! [in] The handle of the connection to close, created by the call to
      * \b UpnpOpenHttpPost. */
     void* handle);
@@ -488,7 +489,7 @@ EXPORT_SPEC int http_CloseHttpConnection(
  *      UPNP_E_SOCKET_WRITE
  *      UPNP_E_TIMEDOUT
  ************************************************************************/
-EXPORT_SPEC int http_SendStatusResponse(SOCKINFO* info, int http_status_code,
+UPNPLIB_API int http_SendStatusResponse(SOCKINFO* info, int http_status_code,
                                         int request_major_version,
                                         int request_minor_version);
 
@@ -593,7 +594,7 @@ void http_CalcResponseVersion(int request_major_vers, int request_minor_vers,
  *      UPNP_E_SOCKET_ERROR
  *      UPNP_E_BAD_RESPONSE
  ************************************************************************/
-EXPORT_SPEC int http_OpenHttpGetEx(const char* url_str, void** Handle,
+UPNPLIB_API int http_OpenHttpGetEx(const char* url_str, void** Handle,
                                    char** contentType, int* contentLength,
                                    int* httpStatus, int lowRange, int highRange,
                                    int timeout);
@@ -613,4 +614,4 @@ EXPORT_SPEC int http_OpenHttpGetEx(const char* url_str, void** Handle,
  ************************************************************************/
 void get_sdk_info(char* info, size_t infoSize);
 
-#endif /* UPNPLIB_GENLIB_NET_HTTP_HTTPREADWRITE_HPP */
+#endif /* COMPA_GENLIB_NET_HTTP_HTTPREADWRITE_HPP */

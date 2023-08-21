@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-08-10
+# Redistribution only with this Copyright remark. Last modified: 2023-08-21
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -30,8 +30,12 @@ option(UPNPLIB_WITH_IXML "Enable IXML script support." OFF)
 option(UPNPLIB_WITH_TOOLS "Make some not essential program features available like text for error numbers etc." OFF)
 option(UPNPLIB_WITH_SAMPLES "Provide sample programs device and control point." OFF)
 option(UPNPLIB_WITH_GOOGLETEST "Download and build Googletest." OFF)
-option(GTESTS_WITH_SHARED_LIBS "Build GOOGLETEST libraries shared instead of default static." OFF)
 option(UPNPLIB_WITH_TRACE "Compile trace messages into the libraries for analizing program execution." OFF)
+option(GTESTS_WITH_SHARED_LIBS "Build GOOGLETEST libraries shared instead of default static." OFF)
+# option(UPNPLIB_WITH_UNSPECIFIED_SERVER "Set information in UPnP SERVER http request header to \"Unspecified\"". OFF)
+    # This is an option to set to "Unspecified" the OS name, OS version, product
+    # name and product version normally contained in the SERVER header of a
+    # UPnP http request as this could be used by an attacker.
 # Always built:
 # option(UPNPLIB_WITH_NATIVE_PUPNP "Build the library with old native PUPNP code." ON)
 

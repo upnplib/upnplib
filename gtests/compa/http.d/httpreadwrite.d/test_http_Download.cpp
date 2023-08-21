@@ -1,15 +1,23 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-09
+// Redistribution only with this Copyright remark. Last modified: 2023-08-22
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
-#include "pupnp/upnp/src/genlib/net/http/httpreadwrite.cpp"
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+#include <pupnp/upnp/src/genlib/net/http/httpreadwrite.cpp>
+#else
+#include <compa/src/genlib/net/http/httpreadwrite.cpp>
+#endif
 
 #include "upnplib/upnptools.hpp"
 #include "upnplib/gtest.hpp"
 
-#include "gmock/gmock.h"
 #include "umock/sysinfo_mock.hpp"
+
+
+namespace compa {
+bool old_code{true}; // Managed in compa/gtest_main.inc
+bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -18,9 +26,8 @@ using ::testing::SetErrnoAndReturn;
 
 using ::upnplib::errStrEx;
 
-namespace compa {
-bool old_code{true}; // Managed in compa/gtest_main.inc
-bool github_actions = std::getenv("GITHUB_ACTIONS");
+using ::upnplib::testing::ContainsStdRegex;
+using ::upnplib::testing::MatchesStdRegex;
 
 /*
 clang-format off
@@ -29,66 +36,36 @@ clang-format off
 02)  |__ http_FixStrUrl()
 03)  |__ get_hoststr()
 04)  |__ http_MakeMessage()
-     |__ http_RequestAndResponse()  // get doc msg
+     |__ http_RequestAndResponse() // get doc msg
+     |   |__ socket()              // system call
+07)  |   |__ private_connect()     // connect
+     |   |__ http_SendMessage()    // send request
+     |   |__ http_RecvMessage()    // receive response
+     |
      |__ print_http_headers()
      |__ if content_type
      |      copy content type
      |__ extract doc from msg
 
-02) Tested with test_httpreadwrite.cpp - TEST(HttpFixUrl, *)
-03) Tested with test_httpreadwrite.cpp - TEST(GetHostaddr, *)
-04) Tested with TEST(HttpMakeMessage, *)
+02) Tested with test_httpreadwrite.cpp - TEST(HttpFixUrl*)
+03) Tested with test_httpreadwrite.cpp - TEST(GetHostaddr*)
+04) Tested with TEST(HttpMakeMessage*)
 
 clang-format on
 */
 
 // Testsuite for http_MakeMessage()
 // ================================
-/* All available format types are tested:
-clang-format off
-Format types:
-  'B':  arg = int status_code        -- appends content-length, content-type
-                                        and HTML body for given code.
-  'b':  arg1 = const char* buf;
-        arg2 = size_t buf_length memory ptr
-  'C':  (no args)                    -- appends a HTTP CONNECTION: close header
-                                        depending on major, minor version.
-  'c':  (no args)                    -- appends CRLF "\r\n"
-  'D':  (no args)                    -- appends HTTP DATE: header
-  'd':  arg = int number             -- appends decimal number
-  'G':  arg = range information      -- add range header
-  'h':  arg = off_t number           -- appends off_t number
-  'K':  (no args)                    -- add chunky header
-  'L':  arg = language information   -- add Content-Language header if Accept-
-                                        Language header is not empty and if
-                                        WEB_SERVER_CONTENT_LANGUAGE is not
-                                        empty
-  'N':  arg1 = off_t content_length  -- content-length header
-  'Q':  arg1 = http_method_t;        -- start line of request
-        arg2 = char* url;
-        arg3 = size_t url_length
-  'q':  arg1 = http_method_t         -- request start line and HOST header
-        arg2 = (uri_type *)
-  'R':  arg = int status_code        -- adds a response start line
-  'S':  (no args)                    -- appends HTTP SERVER: header
-  's':  arg = const char *           -- C_string
-  'T':  arg = char * content_type;   -- add content-type header,
-                                        format e.g: "text/html";
-  't':  arg = time_t * gmt_time      -- appends time in RFC 1123 fmt
-  'U':  (no args)                    -- appends HTTP USER-AGENT: header
-  'X':  arg = const char *           -- useragent; "redsonic"
-                                        HTTP X-User-Agent: useragent
-clang-format on
-*/
+// For format types look at the declaration of http_MakeMessage() in the header
+// file httpreadwrite.hpp. All available format types are tested.
 
 class HttpMakeMessageFTestSuite : public ::testing::Test {
   protected:
     membuffer m_request{};
-
     HttpMakeMessageFTestSuite() { membuffer_init(&m_request); }
-
     ~HttpMakeMessageFTestSuite() override { membuffer_destroy(&m_request); }
 };
+
 
 TEST_F(HttpMakeMessageFTestSuite, format_B_successful) {
     // format type 'B':  arg = int status_code  -- appends content-length,
@@ -204,20 +181,42 @@ TEST_F(HttpMakeMessageFTestSuite, format_L_successful) {
     //                   -- add Content-Language header only
     //                      if Accept-Language header is not empty and
     //                      if WEB_SERVER_CONTENT_LANGUAGE is not empty
-
-    GTEST_SKIP() << "Still to be done";
-    // Here we have a bug with the conditions noted above. They are checked with
-    // logical AND but need to be ORed.
-
     SendInstruction RespInstr;
     memset(&RespInstr, 0, sizeof(RespInstr));
+
+    // Test Unit with default setting.
+    int ret_http_MakeMessage =
+        http_MakeMessage(&m_request, 1, 1, "L", &RespInstr);
+    EXPECT_EQ(ret_http_MakeMessage, 0) << errStrEx(ret_http_MakeMessage, 0);
+    // This does not return a UPnP header entry.
+    EXPECT_EQ(m_request.buf, nullptr);
+
+    // Test Unit with only content language set.
+    web_server_content_language = "en";
+
+    ret_http_MakeMessage = http_MakeMessage(&m_request, 1, 1, "L", &RespInstr);
+    EXPECT_EQ(ret_http_MakeMessage, 0) << errStrEx(ret_http_MakeMessage, 0);
+    // This does not return a UPnP header entry.
+    EXPECT_EQ(m_request.buf, nullptr);
+
     // RFC 9110: 12.5.4. Accept-Language
     strcpy(RespInstr.AcceptLanguageHeader, // buffer size is 200
            "en, de-DE;q=0.8, de;q=0.7");
 
     // Test Unit
-    EXPECT_EQ(http_MakeMessage(&m_request, 1, 1, "L", &RespInstr), 0);
-    EXPECT_STREQ(m_request.buf, "en, de-DE;q=0.8, de;q=0.7\r\n");
+    web_server_content_language.clear();
+
+    ret_http_MakeMessage = http_MakeMessage(&m_request, 1, 1, "L", &RespInstr);
+    EXPECT_EQ(ret_http_MakeMessage, 0) << errStrEx(ret_http_MakeMessage, 0);
+    // This does not return a UPnP header entry.
+    EXPECT_EQ(m_request.buf, nullptr);
+
+    // Test Unit with all needed information set.
+    web_server_content_language = "en";
+
+    ret_http_MakeMessage = http_MakeMessage(&m_request, 1, 1, "L", &RespInstr);
+    EXPECT_EQ(ret_http_MakeMessage, 0) << errStrEx(ret_http_MakeMessage, 0);
+    EXPECT_STREQ(m_request.buf, "CONTENT-LANGUAGE: en\r\n");
 }
 
 TEST_F(HttpMakeMessageFTestSuite, format_N_successful) {
@@ -294,30 +293,14 @@ ACTION_P(StructCpyToArg0, buf) { memcpy(arg0, buf, sizeof(*arg0)); }
 TEST_F(HttpMakeMessageFTestSuite, format_S_successful) {
     // format type 'S':  (no args)  -- appends HTTP SERVER: header
 
-    std::cout << CRED "[ BUG      ] " CRES << __LINE__
-              << ": On Microsoft Windows the HTTP response header 'Server' "
-                 "should be correct formated.\n";
-
 #ifdef _WIN32
     // Test Unit
     EXPECT_EQ(http_MakeMessage(&m_request, 1, 1, "S"), 0);
 
-    std::string result;
-    if (old_code) {
-        result = "SERVER: UPnP/1.0, Portable SDK for UPnP devices/" +
-                 std::string(UPNP_VERSION_STRING) + "on windows\r\n";
-        EXPECT_EQ(std::string(m_request.buf), result);
-
-    } else {
-
-        if (github_actions)
-            GTEST_SKIP() << "             known failing test on Github Actions";
-
-        result = "SERVER: Microsoft Windows, UPnP/1.0, Portable SDK for UPnP "
-                 "devices/" +
-                 std::string(UPNP_VERSION_STRING) + "\r\n";
-        EXPECT_EQ(std::string(m_request.buf), result);
-    }
+    EXPECT_THAT(m_request.buf,
+                MatchesStdRegex("SERVER: UPnP/1.0, Portable SDK for UPnP "
+                                "devices/" UPNP_VERSION_STRING
+                                " ?on windows\r\n"));
 
 #else
 
@@ -336,8 +319,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_S_successful) {
     EXPECT_EQ(http_MakeMessage(&m_request, 1, 1, "S"), 0);
 
     std::string result = "SERVER: Linux/5.10.0-20-amd64, UPnP/1.0, Portable "
-                         "SDK for UPnP devices/" +
-                         std::string(UPNP_VERSION_STRING) + "\r\n";
+                         "SDK for UPnP devices/" UPNP_VERSION_STRING "\r\n";
     EXPECT_EQ(std::string(m_request.buf), result);
 #endif
 }
@@ -352,10 +334,24 @@ TEST_F(HttpMakeMessageFTestSuite, format_T_successful) {
 }
 
 TEST_F(HttpMakeMessageFTestSuite, format_U_successful) {
-    GTEST_SKIP() << "Still to be done.";
     // This is the same as with format type 'S' except that the HTTP header
-    // field starts with "USER-AGENT: " instead of "SERVER: ". Just test only
+    // field starts with "USER-AGENT: " instead of "SERVER: ". Just tested only
     // this difference.
+
+    // Test Unit
+    EXPECT_EQ(http_MakeMessage(&m_request, 1, 1, "U"), 0);
+
+#ifdef _WIN32
+    EXPECT_THAT(m_request.buf,
+                MatchesStdRegex("USER-AGENT: UPnP/1.0, Portable SDK for UPnP "
+                                "devices/" UPNP_VERSION_STRING
+                                " ?on windows\r\n"));
+#else
+    EXPECT_THAT(
+        m_request.buf,
+        MatchesStdRegex("USER-AGENT: .*/.*, UPnP/1.0, Portable SDK for UPnP "
+                        "devices/" UPNP_VERSION_STRING "\r\n"));
+#endif
 }
 
 
@@ -387,25 +383,43 @@ TEST_F(HttpMakeMessageFTestSuite, format_Q_invalid_version) {
     EXPECT_STREQ(m_request.buf, "GET /path/dest/?query=value#fragment");
 }
 
-TEST(HttpMakeMessageTestSuite, improve_tests_for_version_no) {
-    GTEST_SKIP() << "To be done: improve tests for the HTTP version number";
+TEST_F(HttpMakeMessageFTestSuite, get_sdk_info_successful) {
+    char info[128];
+
+    // Test Unit
+    get_sdk_info(info, sizeof(info));
+
+    if (old_code) {
+        std::cout
+            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << ": UPnP header string should not miss a spaceon windows.\n";
+    }
+
+#ifdef _WIN32
+    if (old_code) {
+        EXPECT_STREQ(
+            (char*)info,
+            "UPnP/1.0, Portable SDK for UPnP devices/" UPNP_VERSION_STRING
+            "on windows\r\n"); // Wrong! There is a space missing
+
+    } else {
+
+        EXPECT_STREQ(
+            (char*)info,
+            "UPnP/1.0, Portable SDK for UPnP devices/" UPNP_VERSION_STRING
+            " on windows\r\n");
+    }
+#else
+    EXPECT_THAT((char*)info,
+                MatchesStdRegex(".*/.*, UPnP/1.0, Portable SDK for UPnP "
+                                "devices/" UPNP_VERSION_STRING "\r\n"));
+#endif
 }
-
-
-// Tests for error conditions on HttpMakeMessage()
-// -----------------------------------------------
-TEST(HttpMakeMessageTestSuite, improve_tests_for_error_conditions) {
-    GTEST_SKIP() << "To be done: improve tests for error conditions on "
-                    "HttpMakeMessage()";
-}
-
-TEST_F(HttpMakeMessageFTestSuite, format_S_with_failed_system_info) {
-    // format type 'S':  (no args)  -- appends HTTP SERVER: header
-
-    // TODO: Make this Test mainly with testing get_sdk_info(). Here only
-    // provide a simple failing condition.
 
 #ifndef _WIN32
+TEST_F(HttpMakeMessageFTestSuite, get_sdk_info_system_info_fails) {
+    char info[128];
+
     // Provide invalid structure for 'uname()'
     utsname sysinf;
     constexpr size_t sysinf_size{sizeof(sysinf)};
@@ -422,28 +436,24 @@ TEST_F(HttpMakeMessageFTestSuite, format_S_with_failed_system_info) {
             DoAll(StructCpyToArg0(&sysinf), SetErrnoAndReturn(EFAULT, -1)));
 
     // Test Unit
-    EXPECT_EQ(http_MakeMessage(&m_request, 1, 1, "S"), 0);
+    get_sdk_info(info, sizeof(info));
 
     if (old_code) {
-
-        std::cout << CRED "[ BUG      ] " CRES << __LINE__
-                  << ": Formating HTTP response header 'Server' should not "
-                     "return garbage with failing system info.\n";
-        EXPECT_EQ(strncmp(m_request.buf,
-                          "SERVER: \xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA",
-                          18),
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": Failing system info must not return memory garbage.\n";
+        EXPECT_EQ(strncmp(info,
+                          "\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA"
+                          "\xAA\xAA\xAA",
+                          16),
                   0); // Wrong!
-
     } else {
 
-        std::string result =
-            "SERVER: Unknown, UPnP/1.0, Portable SDK for UPnP devices/" +
-            std::string(UPNP_VERSION_STRING) + "\r\n";
-        EXPECT_EQ(std::string(m_request.buf), result);
+        EXPECT_STREQ((char*)info,
+                     "Unspecified, UPnP/1.0, Portable SDK for UPnP "
+                     "devices/" UPNP_VERSION_STRING "\r\n");
     }
-#endif
 }
-
+#endif
 
 } // namespace compa
 

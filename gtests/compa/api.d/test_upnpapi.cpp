@@ -105,7 +105,7 @@ clang-format off
 01) Two symbols for the same function are given for compatibility. The given
     function can do both.
 02) A possible url is http://127.0.0.1:50001/tvdevicedesc.xml
-03) Tested within test_httpreadwrite.cpp
+03) Tested within test_Download.cpp
 
 
      UpnpFinish()

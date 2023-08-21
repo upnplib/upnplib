@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-08-10
+# Redistribution only with this Copyright remark. Last modified: 2023-08-22
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../../cmake/project-header.cmake)
@@ -160,7 +160,7 @@ add_test(NAME ctest_netconnect-cst COMMAND test_netconnect-cst --gtest_shuffle
 # functions, we cannot use shared libraries due to symbol import/export
 # conflicts. We must use static libraries.
 add_executable(test_http_Download-pst
-#---------------------------------
+#------------------------------------
     ./test_http_Download.cpp
 )
 target_include_directories(test_http_Download-pst
@@ -173,6 +173,10 @@ target_compile_options(test_http_Download-pst
         $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-declarations>
         # disable warning C4706: assignment within conditional expression
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
+        # disable warning C4100: 'result_listener': unreferenced formal
+        # parameter This is from Googlemock MATCHER_P. Don't know how to fix
+        # it. Seems to be a side effect of the macro definition. --Ingo
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
 )
 target_link_libraries(test_http_Download-pst
     PRIVATE
@@ -180,3 +184,24 @@ target_link_libraries(test_http_Download-pst
         upnplib_static
 )
 add_test(NAME ctest_http_Download-pst COMMAND test_http_Download-pst --gtest_shuffle)
+
+add_executable(test_http_Download-cst
+#------------------------------------
+    ./test_http_Download.cpp
+)
+target_include_directories(test_http_Download-cst
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+)
+target_compile_options(test_http_Download-cst
+    PRIVATE
+        # disable warning C4100: 'result_listener': unreferenced formal
+        # parameter This is from Googlemock MATCHER_P. Don't know how to fix
+        # it. Seems to be a side effect of the macro definition. --Ingo
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
+)
+target_link_libraries(test_http_Download-cst
+    PRIVATE
+        compa_static
+        upnplib_static
+)
+add_test(NAME ctest_http_Download-cst COMMAND test_http_Download-cst --gtest_shuffle)

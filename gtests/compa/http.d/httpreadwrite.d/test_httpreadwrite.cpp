@@ -15,6 +15,11 @@
 #include <umock/unistd_mock.hpp>
 #include <umock/pupnp_httprw_mock.hpp>
 
+
+namespace compa {
+bool old_code{false}; // Managed in compa/gtest_main.inc
+bool github_actions = ::std::getenv("GITHUB_ACTIONS");
+
 using ::testing::_;
 using ::testing::DoAll;
 using ::testing::NotNull;
@@ -36,19 +41,11 @@ using ::upnplib::errStrEx;
 clang-format off
 
 01)  http_Download()
-     |__ http_RequestAndResponse()
-         |__ socket()           // system call
-         |__ private_connect()  // connect
-         |__ http_SendMessage() // send request
-         |__ http_RecvMessage() // receive response
+
+01) Tested within test_Download.cpp
 
 clang-format on
 */
-
-namespace compa {
-bool old_code{false}; // Managed in compa/gtest_main.inc
-bool github_actions = ::std::getenv("GITHUB_ACTIONS");
-
 
 // Mocking
 // =======
