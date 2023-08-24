@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-22
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-23
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -472,6 +472,7 @@ ExitFunction:
 }
 
 int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
+    TRACE("Executing http_SendMessage()")
 #if EXCLUDE_WEB_SERVER == 0
     FILE* Fp;
     struct SendInstruction* Instr = NULL;
@@ -488,7 +489,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
     char* buf = NULL;
     char c;
     int nw;
-    int RetVal = 0;
+    int RetVal = UPNP_E_SUCCESS;
     size_t buf_length;
     size_t num_written;
     [[maybe_unused]] int I_fmt_processed = 0;
@@ -632,7 +633,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
         } else
 #endif /* EXCLUDE_WEB_SERVER */
             if (c == 'b') {
-            /* memory buffer */
+            /* Message to send is given in a memory buffer */
             buf = va_arg(argp, char*);
             buf_length = va_arg(argp, size_t);
             if (buf_length > (size_t)0) {
@@ -644,8 +645,12 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                            "\n"
                            "------------\n",
                            (int)buf_length, buf, buf_length, num_written);
+                if (nw < 0) {
+                    RetVal = nw;
+                    goto ExitFunction;
+                }
                 if (num_written != buf_length) {
-                    RetVal = 0;
+                    RetVal = UPNP_E_SOCKET_WRITE;
                     goto ExitFunction;
                 }
             }

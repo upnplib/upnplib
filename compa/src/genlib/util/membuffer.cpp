@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-12
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,6 +51,10 @@
 
 #include <upnplib/trace.hpp>
 #include <umock/stdlib.hpp>
+
+#ifdef UPNPLIB_WITH_TRACE
+#include <iostream>
+#endif
 
 char* str_alloc(const char* str, size_t str_len) {
     char* s;
@@ -155,6 +159,7 @@ int membuffer_set_size(membuffer* m, size_t new_length) {
 }
 
 void membuffer_init(membuffer* m) {
+    TRACE("Executing membuffer_init()")
     assert(m != NULL);
 
     m->size_inc = MEMBUF_DEF_SIZE_INC;
@@ -162,6 +167,7 @@ void membuffer_init(membuffer* m) {
 }
 
 void membuffer_destroy(membuffer* m) {
+    TRACE("Executing membuffer_destroy()")
     if (m == NULL) {
         return;
     }

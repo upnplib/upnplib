@@ -1,8 +1,8 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-09
+// Redistribution only with this Copyright remark. Last modified: 2023-08-22
 
 // Helpful link for ip address structures:
-// https://stackoverflow.com/a/16010670/5014688
+// https://stackoverflow.com/q/76548580/5014688
 
 #include <upnp.hpp>
 #include <pupnp/sock.hpp>
@@ -13,17 +13,22 @@
 #include <compa/sock.hpp>
 #endif
 
-#include "upnplib/upnptools.hpp"
-#include "upnplib/gtest.hpp"
+#include <upnplib/upnptools.hpp>
+#include <upnplib/gtest.hpp>
 
-#include "gmock/gmock.h"
-#include "umock/unistd_mock.hpp"
-#include "umock/sys_select_mock.hpp"
-#include "umock/sys_socket_mock.hpp"
+#include <gmock/gmock.h>
+#include <umock/unistd_mock.hpp>
+#include <umock/sys_select_mock.hpp>
+#include <umock/sys_socket_mock.hpp>
 
 #ifndef _WIN32
 #include <fcntl.h>
 #endif
+
+
+namespace compa {
+bool old_code{false}; // Managed in upnplib_gtest_main.inc
+bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -35,14 +40,10 @@ using ::testing::SetArrayArgument;
 using ::upnplib::errStr;
 using ::upnplib::errStrEx;
 
-namespace compa {
-bool old_code{false}; // Managed in upnplib_gtest_main.inc
-bool github_actions = ::std::getenv("GITHUB_ACTIONS");
-
 
 // testsuite for the sock module
 //==============================
-#if false
+#if 0
 TEST(SockTestSuite, sock_connect_client)
 // This is for humans only to check on Unix operating systems how to 'connect()'
 // to a server exactly works so we can correct mock it. Don't set '#if true'
@@ -496,10 +497,10 @@ TEST_F(SockFTestSuite, sock_read_with_empty_socket_info) {
     EXPECT_STREQ(buffer, "");
 }
 
-TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_0_byte_length)
-// This is a valid call and indicates that there should nothing received. With 0
-// byte buffer length the buffer doesn't matter and may be not available at all.
-{
+TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_0_byte_length) {
+    // This is a valid call and indicates that there should nothing received.
+    // With 0 byte buffer length the buffer doesn't matter and may be not
+    // available at all.
     if (github_actions && !old_code)
         GTEST_SKIP() << "             known failing test on Github Actions";
 
@@ -560,10 +561,9 @@ TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_0_byte_length)
     }
 }
 
-TEST_F(SockFTestSuite, sock_read_with_valid_buffer_but_0_byte_length)
-// This is a valid call and indicates that there should nothing received. With 0
-// byte buffer length the buffer doesn't matter.
-{
+TEST_F(SockFTestSuite, sock_read_with_valid_buffer_but_0_byte_length) {
+    // This is a valid call and indicates that there should nothing received.
+    // With 0 byte buffer length the buffer doesn't matter.
     if (github_actions && !old_code)
         GTEST_SKIP() << "             known failing test on Github Actions";
 
@@ -832,10 +832,10 @@ TEST_F(SockFTestSuite, sock_write_with_empty_socket_info) {
         << errStrEx(returned, UPNP_E_SOCKET_ERROR);
 }
 
-TEST_F(SockFTestSuite, sock_write_with_nullptr_to_buffer_0_byte_length)
-// This is a valid call and indicates that there is nothing to send. With 0 byte
-// buffer length the buffer doesn't matter and may also be not available at all.
-{
+TEST_F(SockFTestSuite, sock_write_with_nullptr_to_buffer_0_byte_length) {
+    // This is a valid call and indicates that there is nothing to send. With 0
+    // byte buffer length the buffer doesn't matter and may also be not
+    // available at all.
     if (github_actions && !old_code)
         GTEST_SKIP() << "             known failing test on Github Actions";
 
@@ -869,10 +869,9 @@ TEST_F(SockFTestSuite, sock_write_with_nullptr_to_buffer_0_byte_length)
                            << " but not " << errStr(returned) << ".";
 }
 
-TEST_F(SockFTestSuite, sock_write_with_valid_buffer_but_0_byte_length)
-// This is a valid call and indicates that there is nothing to send. With 0 byte
-// buffer length the buffer doesn't matter.
-{
+TEST_F(SockFTestSuite, sock_write_with_valid_buffer_but_0_byte_length) {
+    // This is a valid call and indicates that there is nothing to send. With 0
+    // byte buffer length the buffer doesn't matter.
     if (github_actions && !old_code)
         GTEST_SKIP() << "             known failing test on Github Actions";
 

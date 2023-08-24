@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-20
+// Redistribution only with this Copyright remark. Last modified: 2023-08-22
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -96,7 +96,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, real_connect) {
 class PrivateConnectFTestSuite : public ::testing::Test {
   protected:
     // Fictive socket file descriptor for mocking.
-    const int m_sockfd{FD_SETSIZE - 40};
+    const SOCKET m_sockfd{FD_SETSIZE - 40};
     // Ip address structure
     SSockaddr_storage m_saddr;
 

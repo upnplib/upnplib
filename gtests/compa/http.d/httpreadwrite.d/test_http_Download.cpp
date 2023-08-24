@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-22
+// Redistribution only with this Copyright remark. Last modified: 2023-08-24
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -9,10 +9,14 @@
 #include <compa/src/genlib/net/http/httpreadwrite.cpp>
 #endif
 
-#include "upnplib/upnptools.hpp"
-#include "upnplib/gtest.hpp"
+#include <pupnp/upnpdebug.hpp>
 
-#include "umock/sysinfo_mock.hpp"
+#include <upnplib/upnptools.hpp>
+#include <upnplib/gtest.hpp>
+
+#include <umock/sysinfo_mock.hpp>
+#include <umock/sys_socket_mock.hpp>
+#include <umock/sys_select_mock.hpp>
 
 
 namespace compa {
@@ -21,8 +25,11 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::DoAll;
+using ::testing::NotNull;
 using ::testing::Return;
 using ::testing::SetErrnoAndReturn;
+
+using ::pupnp::CLogging;
 
 using ::upnplib::errStrEx;
 
@@ -54,20 +61,38 @@ clang-format off
 clang-format on
 */
 
+class HttpBasicFTestSuite : public ::testing::Test {
+  protected:
+    membuffer m_request{};
+    HttpBasicFTestSuite() { membuffer_init(&m_request); }
+    ~HttpBasicFTestSuite() override { membuffer_destroy(&m_request); }
+};
+
+
+class HttpMockFTestSuite : public HttpBasicFTestSuite {
+  protected:
+    // Fictive socket file descriptor for mocking.
+    const SOCKET m_sockfd{FD_SETSIZE - 46};
+
+    // Instantiate mocking objects.
+    umock::Sys_selectMock m_sys_selectObj;
+    umock::Sys_socketMock m_sys_socketObj;
+
+    HttpMockFTestSuite() {
+        // Inject mocking objects into the production code.
+        static umock::Sys_select sys_select_injectObj(&m_sys_selectObj);
+        static umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
+    }
+};
+
+
 // Testsuite for http_MakeMessage()
 // ================================
 // For format types look at the declaration of http_MakeMessage() in the header
 // file httpreadwrite.hpp. All available format types are tested.
 
-class HttpMakeMessageFTestSuite : public ::testing::Test {
-  protected:
-    membuffer m_request{};
-    HttpMakeMessageFTestSuite() { membuffer_init(&m_request); }
-    ~HttpMakeMessageFTestSuite() override { membuffer_destroy(&m_request); }
-};
 
-
-TEST_F(HttpMakeMessageFTestSuite, format_B_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_B_successful) {
     // format type 'B':  arg = int status_code  -- appends content-length,
     //                                             content-type and HTML body
     //                                             for given code.
@@ -81,7 +106,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_B_successful) {
                  "text/html\r\n\r\n<html><body><h1>200 OK</h1></body></html>");
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_b_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_b_successful) {
     // format type 'b':  arg1 = const char* buf;  -- mem buffer
     //                   arg2 = size_t buf_length memory ptr
 
@@ -93,7 +118,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_b_successful) {
     EXPECT_STREQ(m_request.buf, "upnplib.net:443");
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_C_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_C_successful) {
     // format type 'C':  (no args)  -- appends a HTTP CONNECTION: close header
     //                                 depending on major, minor version.
 
@@ -102,7 +127,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_C_successful) {
     EXPECT_STREQ(m_request.buf, "CONNECTION: close\r\n");
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_c_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_c_successful) {
     // format type 'c':  (no args)  -- appends CRLF "\r\n"
 
     // Test Unit
@@ -110,7 +135,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_c_successful) {
     EXPECT_STREQ(m_request.buf, "\r\n");
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_D_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_D_successful) {
     // format type 'D':  (no args)  -- appends HTTP DATE: header
 
     // Mock "current" time to have a constant value.
@@ -124,7 +149,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_D_successful) {
     EXPECT_STREQ(m_request.buf, "DATE: Sun, 05 Feb 2023 20:16:21 GMT\r\n");
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_d_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_d_successful) {
     // format type 'd':  arg = int number  -- appends decimal number
 
     // Test Unit
@@ -132,7 +157,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_d_successful) {
     EXPECT_STREQ(m_request.buf, "123456");
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_G_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_G_successful) {
     // format type 'G':  arg = range information  -- add range header
 
     // From */upnp.hpp to function 'UpnpOpenHttpGetEx()':
@@ -157,7 +182,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_G_successful) {
     EXPECT_STREQ(m_request.buf, "Range: bytes=2-32768\r\n");
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_h_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_h_successful) {
     // format type 'h':  arg = off_t number  -- appends off_t number
 
     // One more will compile to -Werror=overflow
@@ -168,7 +193,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_h_successful) {
     EXPECT_STREQ(m_request.buf, "2147483647");
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_K_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_K_successful) {
     // format type 'K':  (no args)  -- add chunky header
 
     // Test Unit
@@ -176,7 +201,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_K_successful) {
     EXPECT_STREQ(m_request.buf, "TRANSFER-ENCODING: chunked\r\n");
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_L_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_L_successful) {
     // format type 'L':  arg = language information
     //                   -- add Content-Language header only
     //                      if Accept-Language header is not empty and
@@ -219,7 +244,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_L_successful) {
     EXPECT_STREQ(m_request.buf, "CONTENT-LANGUAGE: en\r\n");
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_N_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_N_successful) {
     // format type 'N':  arg1 = off_t content_length  -- content-length header
 
     // One more will compile to -Werror=overflow
@@ -231,7 +256,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_N_successful) {
                  "CONTENT-LENGTH: 2147483647\r\nAccept-Ranges: bytes\r\n");
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_Q_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_Q_successful) {
     // format type 'Q':  arg1 = http_method_t;  -- start line of request
     //                   arg2 = char* urlpath; (not complete url)
     //                   arg3 = size_t urlpath_length
@@ -247,7 +272,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_Q_successful) {
     EXPECT_STREQ(m_request.buf, "GET /path/dest/?query=value#fragment");
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_q_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_q_successful) {
     // format type 'q':  arg1 = http_method_t  -- request start line
     //                                            and HOST header
     //                   arg2 = (uri_type *)
@@ -280,7 +305,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_q_successful) {
 #endif
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_R_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_R_successful) {
     // format type 'R':  arg = int status_code  -- adds a response start line
 
     // Test Unit
@@ -290,7 +315,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_R_successful) {
 
 ACTION_P(StructCpyToArg0, buf) { memcpy(arg0, buf, sizeof(*arg0)); }
 
-TEST_F(HttpMakeMessageFTestSuite, format_S_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_S_successful) {
     // format type 'S':  (no args)  -- appends HTTP SERVER: header
 
 #ifdef _WIN32
@@ -324,7 +349,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_S_successful) {
 #endif
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_T_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_T_successful) {
     // format type 'T':  arg = char* content_type;  -- add content-type header,
     //                                                 format e.g: "text/html";
 
@@ -333,7 +358,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_T_successful) {
     EXPECT_STREQ(m_request.buf, "CONTENT-TYPE: text/html\r\n");
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_U_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_format_U_successful) {
     // This is the same as with format type 'S' except that the HTTP header
     // field starts with "USER-AGENT: " instead of "SERVER: ". Just tested only
     // this difference.
@@ -358,7 +383,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_U_successful) {
 // Tests for the HTTP version number
 // ---------------------------------
 
-TEST_F(HttpMakeMessageFTestSuite, format_C_invalid_version) {
+TEST_F(HttpBasicFTestSuite, make_message_format_C_invalid_version) {
     // format type 'C':  (no args)  -- appends a HTTP CONNECTION: close header
     //                                 depending on major, minor version.
 
@@ -367,7 +392,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_C_invalid_version) {
     EXPECT_EQ(m_request.buf, nullptr);
 }
 
-TEST_F(HttpMakeMessageFTestSuite, format_Q_invalid_version) {
+TEST_F(HttpBasicFTestSuite, make_message_format_Q_invalid_version) {
     // format type 'Q':  arg1 = http_method_t;  -- start line of request
     //                   arg2 = char* urlpath; (not complete url)
     //                   arg3 = size_t urlpath_length
@@ -383,7 +408,7 @@ TEST_F(HttpMakeMessageFTestSuite, format_Q_invalid_version) {
     EXPECT_STREQ(m_request.buf, "GET /path/dest/?query=value#fragment");
 }
 
-TEST_F(HttpMakeMessageFTestSuite, get_sdk_info_successful) {
+TEST_F(HttpBasicFTestSuite, make_message_get_sdk_info_successful) {
     char info[128];
 
     // Test Unit
@@ -417,7 +442,7 @@ TEST_F(HttpMakeMessageFTestSuite, get_sdk_info_successful) {
 }
 
 #ifndef _WIN32
-TEST_F(HttpMakeMessageFTestSuite, get_sdk_info_system_info_fails) {
+TEST_F(HttpBasicFTestSuite, make_massage_get_sdk_info_system_info_fails) {
     char info[128];
 
     // Provide invalid structure for 'uname()'
@@ -454,6 +479,62 @@ TEST_F(HttpMakeMessageFTestSuite, get_sdk_info_system_info_fails) {
     }
 }
 #endif
+
+
+// Testsuite for http_SendMessage()
+// ================================
+
+TEST_F(HttpMockFTestSuite, send_message_successful) {
+    CLogging loggingObj; // Output only with build type DEBUG.
+
+    SOCKINFO info{};
+    info.socket = m_sockfd;
+    int timeout_secs{1};
+    constexpr char request[]{"Request to send."};
+    constexpr size_t request_length{sizeof(request) - 1};
+
+    // Mock select()
+    EXPECT_CALL(m_sys_selectObj,
+                select(info.socket + 1, NotNull(), NotNull(), NULL, NotNull()))
+        .WillOnce(Return(1));
+    // Mock send()
+    EXPECT_CALL(m_sys_socketObj, send(info.socket, request, request_length, _))
+        .WillOnce(Return(request_length));
+
+    // Test Unit
+    int ret_http_SendMessage =
+        http_SendMessage(&info, &timeout_secs, "b", request, request_length);
+    EXPECT_EQ(ret_http_SendMessage, UPNP_E_SUCCESS)
+        << errStrEx(ret_http_SendMessage, UPNP_E_SUCCESS);
+}
+
+TEST_F(HttpBasicFTestSuite, send_message_without_socket_file_descriptor) {
+    if (github_actions)
+        GTEST_SKIP()
+            << "Test needs to be completed after revision of test_sock.cpp.";
+
+    CLogging loggingObj; // Output only with build type DEBUG.
+
+    SOCKINFO info{};
+    int timeout_secs{1};
+    constexpr char request[]{
+        "Try to send message without socket file descriptor."};
+    constexpr size_t request_length{sizeof(request) - 1};
+
+    // Mock select()
+    // EXPECT_CALL(m_sys_selectObj,
+    //            select(info.socket + 1, NotNull(), NotNull(), NULL,
+    //            NotNull()))
+    // .WillOnce(SetErrnoAndReturn(EBADF, -1)); // Bad file descriptor
+    // Mock send()
+    // EXPECT_CALL(m_sys_socketObj, send(_, _, _, _)).Times(0);
+
+    // Test Unit
+    int ret_http_SendMessage =
+        http_SendMessage(&info, &timeout_secs, "b", request, request_length);
+    EXPECT_EQ(ret_http_SendMessage, UPNP_E_SOCKET_ERROR)
+        << errStrEx(ret_http_SendMessage, UPNP_E_SOCKET_ERROR);
+}
 
 } // namespace compa
 

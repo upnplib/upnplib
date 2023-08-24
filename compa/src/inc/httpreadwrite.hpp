@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-20
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -142,6 +142,9 @@ UPNPLIB_API int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
  * \return
  * \li \c UPNP_E_OUTOF_MEMORY
  * \li \c UPNP_E_FILE_READ_ERROR
+ * \li \c UPNP_E_TIMEDOUT
+ * \li \c UPNP_E_SOCKET_WRITE
+ * \li \c UPNP_E_SOCKET_ERROR
  * \li \c UPNP_E_SUCCESS
  */
 UPNPLIB_API int http_SendMessage(

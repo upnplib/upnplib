@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-20
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-23
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -60,6 +60,11 @@
 #include <fcntl.h> /* for F_GETFL, F_SETFL, O_NONBLOCK */
 #include <cstring>
 #include <ctime>
+
+#ifdef UPNPLIB_WITH_TRACE
+#include <iostream>
+#endif
+#include <upnplib/trace.hpp>
 
 #ifndef _WIN32
 #include <csignal>
@@ -173,6 +178,7 @@ static int sock_read_write(
     int* timeoutSecs,
     /*! [in] Boolean value specifying read or write option. */
     int bRead) {
+    TRACE("Executing sock_read_write()")
     int retCode;
     fd_set readSet;
     fd_set writeSet;
@@ -281,11 +287,13 @@ static int sock_read_write(
 }
 
 int sock_read(SOCKINFO* info, char* buffer, size_t bufsize, int* timeoutSecs) {
+    TRACE("Executing sock_read()")
     return sock_read_write(info, buffer, bufsize, timeoutSecs, 1);
 }
 
 int sock_write(SOCKINFO* info, const char* buffer, size_t bufsize,
                int* timeoutSecs) {
+    TRACE("Executing sock_write()")
     /* Consciently removing constness. */
     return sock_read_write(info, (char*)buffer, bufsize, timeoutSecs, 0);
 }
