@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-20
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-// Last compare with pupnp original source file on 2023-07-08, ver 1.14.17
+// Last compare with pupnp original source file on 2023-08-24, ver 1.14.18
 
 #include "config.hpp"
 
@@ -484,9 +484,17 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
 #endif /* INTERNAL_WEB_SERVER */
 }
 
-static void ssdp_read(SOCKET rsock, fd_set* set) {
-    if (rsock != INVALID_SOCKET && FD_ISSET(rsock, set)) {
-        readFromSSDPSocket(rsock);
+static void ssdp_read(SOCKET* rsock, fd_set* set) {
+    if (*rsock != INVALID_SOCKET && FD_ISSET(*rsock, set)) {
+        int ret = readFromSSDPSocket(*rsock);
+        if (ret != 0) {
+            UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+                       "miniserver: Error in readFromSSDPSocket(%d): "
+                       "closing socket\n",
+                       *rsock);
+            sock_close(*rsock);
+            *rsock = INVALID_SOCKET;
+        }
     }
 }
 
@@ -515,6 +523,10 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
             if (NULL != strstr(requestBuf, "ShutDown")) {
                 return 1;
             }
+        } else {
+            UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+                       "miniserver: stopSock Error, aborting...\n");
+            return 1;
         }
     }
 
@@ -589,12 +601,12 @@ static void RunMiniServer(
             web_server_accept(miniSock->miniServerSock6, &rdSet);
             web_server_accept(miniSock->miniServerSock6UlaGua, &rdSet);
 #ifdef INCLUDE_CLIENT_APIS
-            ssdp_read(miniSock->ssdpReqSock4, &rdSet);
-            ssdp_read(miniSock->ssdpReqSock6, &rdSet);
+            ssdp_read(&miniSock->ssdpReqSock4, &rdSet);
+            ssdp_read(&miniSock->ssdpReqSock6, &rdSet);
 #endif /* INCLUDE_CLIENT_APIS */
-            ssdp_read(miniSock->ssdpSock4, &rdSet);
-            ssdp_read(miniSock->ssdpSock6, &rdSet);
-            ssdp_read(miniSock->ssdpSock6UlaGua, &rdSet);
+            ssdp_read(&miniSock->ssdpSock4, &rdSet);
+            ssdp_read(&miniSock->ssdpSock6, &rdSet);
+            ssdp_read(&miniSock->ssdpSock6UlaGua, &rdSet);
             stopSock =
                 receive_from_stopSock(miniSock->miniServerStopSock, &rdSet);
         }

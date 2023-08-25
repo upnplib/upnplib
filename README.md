@@ -15,7 +15,7 @@ This is a fork of the [Portable SDK for UPnP Devices (pupnp)](https://github.com
 ## 2. Version numbering
 We follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html#semantic-versioning-200).
 
-The fork is based on [release-1.14.15](https://github.com/pupnp/pupnp/releases/tag/release-1.14.15) from the pupnp library. Because it is intended to be backwards compatible on the API we start with release number 1.14.0 for this repository to reflect it by following
+The fork is based on [release-1.14.18](https://github.com/pupnp/pupnp/releases/tag/release-1.14.18) from the pupnp library. Because it is intended to be backwards compatible on the API we start with release number 1.14.0 for this repository to reflect it by following
 - MAJOR version when you make incompatible API changes,
 - MINOR version when you add functionality in a backwards compatible manner, and
 - PATCH version when you make backwards compatible bug fixes.
@@ -114,5 +114,5 @@ No limits documented so far.
 
 <pre><sup>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2022-11-25
+// Redistribution only with this Copyright remark. Last modified: 2023-08-25
 </sup></sup>

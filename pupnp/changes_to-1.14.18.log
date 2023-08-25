@@ -1,0 +1,67 @@
+commit c540ce2431bdeac73359029d4592b45790e1d154 (HEAD, tag: release-1.14.18)
+
+git whatchanged release-1.14.17^..release-1.14.18
+updated files are marked with the word "updated" or "deleted" at the line end.
+============================================================================
+
+commit c540ce2431bdeac73359029d4592b45790e1d154 (HEAD, tag: release-1.14.18)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Mon Aug 21 18:36:43 2023 -0300
+
+    ChangeLog, README.md and THANKS
+
+:100644 100644 0886c7fd 56801c86 M	ChangeLog
+:100644 100644 2dbdc144 355062e1 M	README.md
+:100644 100644 08e81df6 ceb2a780 M	THANKS
+
+commit 6f1819ad7860d9e6bed5fb72e5347a8c4e3cacf4
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Mon Aug 21 18:12:42 2023 -0300
+
+    Fix .clang-format
+
+:100644 100644 6301da09 e8926e18 M	.clang-format
+
+commit 1c751e7ed9461ebe712f9ac35df0e6d74d625c0f
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Mon Aug 21 17:47:26 2023 -0300
+
+    Fix for lint-clang-format
+
+:100644 100644 f41b03d2 f332e41d M	upnp/src/genlib/miniserver/miniserver.c updated
+:100644 100644 c4f23f40 e66efe1f M	upnp/src/ssdp/ssdp_server.c updated
+
+commit c7a6823dfc5cc10b2067991f0add19efdd7b6943
+Author: Thomas Guillem <thomas@gllm.fr>
+Date:   Thu Jun 29 13:34:13 2023 +0200
+
+    miniserver: fix busy loop on socket error
+
+    In case of a socket error, the socket was not removed from the select
+    pool, causing future select() calls to return immediately, and
+    readFromSSDPSocket() to be called just after on the failing socket. This
+    was causing a high CPU load.
+
+:100644 100644 cffe7984 f41b03d2 M	upnp/src/genlib/miniserver/miniserver.c upndated
+:100644 100644 64f500c8 3578a245 M	upnp/src/inc/ssdplib.h updated
+:100644 100644 728f543d c4f23f40 M	upnp/src/ssdp/ssdp_server.c updated
+
+commit 8e9774f1b0827b88b7640a68dd7254c74505bda6
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sun Apr 30 19:38:33 2023 -0300
+
+    Homekeeping for the next release
+
+:100644 100644 bb8f0fa5 0886c7fd M	ChangeLog
+:100644 100644 b65d7cf4 3b10e17d M	configure.ac
+:100644 100644 489d57db 9ac77218 M	docs/Doxyfile
+:100644 100644 37698982 45446ea8 M	libupnp.spec
+
+commit 380c6b09f426b1a34a2b03c43bd83b6d9ec9b000 (tag: release-1.14.17)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sun Apr 30 19:31:55 2023 -0300
+
+    ChangeLog and README.md
+
+:100644 100644 f1d03027 bb8f0fa5 M	ChangeLog
+:100644 100644 a4b44b13 2dbdc144 M	README.md

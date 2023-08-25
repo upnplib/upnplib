@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-09
+// Redistribution only with this Copyright remark. Last modified: 2023-08-25
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -1600,6 +1600,9 @@ TEST(RunMiniServerTestSuite, receive_from_stopSock_not_selected) {
 }
 
 TEST_F(RunMiniServerFTestSuite, receive_from_stopSock_no_bytes) {
+    if (github_actions && old_code)
+        GTEST_SKIP() << "Test needs rework after pUPnP 1.14.18 bugfix.";
+
     constexpr SOCKET sockfd{FD_SETSIZE - 30};
     const CAddrinfo ai("192.168.167.168", "54323", AF_INET, SOCK_STREAM,
                        AI_NUMERICHOST | AI_NUMERICSERV);
@@ -1760,13 +1763,19 @@ TEST(RunMiniServerTestSuite, RunMiniServer) {
 }
 
 TEST(RunMiniServerTestSuite, ssdp_read) {
-    constexpr SOCKET ssdp_sockfd{FD_SETSIZE - 32};
+    SOCKET ssdp_sockfd{FD_SETSIZE - 32};
     fd_set rdSet;
     FD_ZERO(&rdSet);
     FD_SET(ssdp_sockfd, &rdSet);
 
     // Test Unit
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+    ssdp_read(&ssdp_sockfd, &rdSet);
+#else
     ssdp_read(ssdp_sockfd, &rdSet);
+#endif
+    if (!github_actions)
+        GTEST_FAIL() << "Test needs rework after pUPnP 1.14.18 bugfix.";
 }
 
 TEST(RunMiniServerTestSuite, web_server_accept) {

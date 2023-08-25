@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-08
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,7 +33,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-// Last compare with pupnp original source file on 2023-07-08, ver 1.14.17
+// Last compare with pupnp original source file on 2023-08-24, ver 1.14.18
 
 /*!
  * \defgroup SSDPlib SSDP Library
@@ -234,8 +234,10 @@ int ssdp_request_type(
 
 /*!
  * \brief This function reads the data from the ssdp socket.
+ *
+ * \return 0 on success; -1 on error.
  */
-void readFromSSDPSocket(
+int readFromSSDPSocket(
     /* [in] SSDP socket. */
     SOCKET socket);
 

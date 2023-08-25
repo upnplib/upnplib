@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-21
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -82,7 +82,7 @@
 // The version string is only used here and will not change much on upgrading to
 // upnplib. To reduce complexity by including upnpconfig.hpp I just set it here.
 // --Ingo
-#define UPNP_VERSION_STRING "1.14.17"
+#define UPNP_VERSION_STRING "1.14.18"
 
 #include "umock/pupnp_sock.hpp"
 #include "umock/pupnp_httprw.hpp"

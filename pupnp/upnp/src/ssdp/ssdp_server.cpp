@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-08
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-// Last compare with pupnp original source file on 2023-07-08, ver 1.14.17
+// Last compare with pupnp original source file on 2023-08-24, ver 1.14.18
 
 /*!
  * \addtogroup SSDPlib
@@ -664,7 +664,7 @@ static void ssdp_event_handler_thread(
     free_ssdp_event_handler_data(data);
 }
 
-void readFromSSDPSocket(SOCKET socket) {
+int readFromSSDPSocket(SOCKET socket) {
     char* requestBuf = NULL;
     char staticBuf[BUFSIZE];
     struct sockaddr_storage __ss;
@@ -742,8 +742,11 @@ void readFromSSDPSocket(SOCKET socket) {
             if (ThreadPoolAdd(&gRecvThreadPool, &job, NULL) != 0)
                 free_ssdp_event_handler_data(data);
         }
-    } else
+        return 0;
+    } else {
         free_ssdp_event_handler_data(data);
+        return -1;
+    }
 }
 
 /*!
