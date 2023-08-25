@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-06-29
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-31
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,10 +44,15 @@
 
 //#include "FreeList.h"
 
+#include <upnplib/trace.hpp>
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> /* for memset()*/
+#ifdef UPNPLIB_WITH_TRACE
+#include <iostream>
+#endif
 
 /*!
  * \brief Returns the difference in milliseconds between two timeval structures.
@@ -683,6 +688,7 @@ static void AddWorker(
 }
 
 int ThreadPoolInit(ThreadPool* tp, ThreadPoolAttr* attr) {
+    TRACE2("Executing ThreadPoolInit() for ThreadPool ", tp)
     int retCode = 0;
     int i = 0;
 
@@ -797,6 +803,7 @@ exit_function:
 }
 
 int ThreadPoolAdd(ThreadPool* tp, ThreadPoolJob* job, int* jobId) {
+    TRACE("Executing ThreadPoolAdd()")
     int rc = EOUTOFMEM;
     int tempId = -1;
     long totalJobs;
@@ -956,6 +963,7 @@ int ThreadPoolSetAttr(ThreadPool* tp, ThreadPoolAttr* attr) {
 }
 
 int ThreadPoolShutdown(ThreadPool* tp) {
+    TRACE2("Executing ThreadPoolShutdown() for ThreadPool ", tp)
     ListNode* head = NULL;
     ThreadPoolJob* temp = NULL;
 

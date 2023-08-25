@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-24
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-31
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -472,12 +472,12 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
                "Executing web_server_accept(%d, %p)\n", lsock, (void*)set);
     SOCKET asock;
     socklen_t clientLen;
-    struct sockaddr_storage clientAddr;
-    struct sockaddr_in* sa_in{(sockaddr_in*)&clientAddr};
+    sockaddr_storage clientAddr;
+    sockaddr_in* sa_in{(sockaddr_in*)&clientAddr};
 
     if (lsock != INVALID_SOCKET && FD_ISSET(lsock, set)) {
         clientLen = sizeof(clientAddr);
-        asock = umock::sys_socket_h.accept(lsock, (struct sockaddr*)&clientAddr,
+        asock = umock::sys_socket_h.accept(lsock, (sockaddr*)&clientAddr,
                                            &clientLen);
         if (asock == INVALID_SOCKET) {
             UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
@@ -490,7 +490,7 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
                        "web_server_accept(): connected to host %s:%d "
                        "with socket %d\n",
                        buf_ntop, ntohs(sa_in->sin_port), asock);
-            schedule_request_job(asock, (struct sockaddr*)&clientAddr);
+            schedule_request_job(asock, (sockaddr*)&clientAddr);
         }
     } else {
         UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
@@ -500,47 +500,77 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
 #endif /* INTERNAL_WEB_SERVER */
 }
 
-static void ssdp_read([[maybe_unused]] SOCKET rsock,
-                      [[maybe_unused]] fd_set* set) {
-#if EXCLUDE_SSDP == 0
-    if (rsock != INVALID_SOCKET && FD_ISSET(rsock, set)) {
-        readFromSSDPSocket(rsock);
+static void ssdp_read(SOCKET* rsock, fd_set* set) {
+    TRACE("Executing ssdp_read()")
+    if (*rsock == INVALID_SOCKET || !FD_ISSET(*rsock, set))
+        return;
+
+    if (readFromSSDPSocket(*rsock) != 0) {
+        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
+                   "miniserver: Error in readFromSSDPSocket(%d): "
+                   "closing socket\n",
+                   *rsock);
+        sock_close(*rsock);
+        *rsock = INVALID_SOCKET;
     }
-#endif
 }
 
 static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
-    SSIZEP_T byteReceived;
-    socklen_t clientLen;
-    struct sockaddr_storage clientAddr;
-    struct sockaddr_in* sa_in{(sockaddr_in*)&clientAddr};
-    char requestBuf[256];
+    // The received datagram must exactly match the shutdown_str from
+    // 127.0.0.1. This is a security issue to avoid that the UPnPlib can be
+    // terminated from a remote ip address.
+    TRACE("Executing receive_from_stopSock()")
+    constexpr char shutdown_str[]{"ShutDown"};
+
+    if (!FD_ISSET(ssock, set))
+        return 0; // Nothing to do for this socket
+
+    sockaddr_storage clientAddr{};
+    sockaddr_in* sa_in{(sockaddr_in*)&clientAddr};
+    socklen_t clientLen{sizeof(clientAddr)}; // May be modified
+
+    // The receive buffer is one byte greater with '\0' than the max receiving
+    // bytes so the received message will always be terminated.
+    char receiveBuf[sizeof(shutdown_str) + 1]{};
     char buf_ntop[INET6_ADDRSTRLEN];
 
-    if (FD_ISSET(ssock, set)) {
-        clientLen = sizeof(clientAddr);
-        memset((char*)&clientAddr, 0, sizeof(clientAddr));
-        byteReceived = umock::sys_socket_h.recvfrom(
-            ssock, requestBuf, (size_t)25, 0, (struct sockaddr*)&clientAddr,
-            &clientLen);
-        if (byteReceived > 0) {
-            requestBuf[byteReceived] = '\0';
-            inet_ntop(AF_INET, &sa_in->sin_addr, buf_ntop, sizeof(buf_ntop));
-            UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-                       "Received multicast packet: \"%s\" from host %s:%d\n",
-                       requestBuf, buf_ntop, ntohs(sa_in->sin_port));
-            if (NULL == strstr(requestBuf, "ShutDown")) {
-                UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                           "receive_from_stopSock(): \"%s\" from host %s:%d, "
-                           "should be "
-                           "\"ShutDown\". Stopping miniserver anyway.\n",
-                           requestBuf, buf_ntop, ntohs(sa_in->sin_port));
-            }
-            return 1;
-        }
+    // receive from
+    SSIZEP_T byteReceived =
+        umock::sys_socket_h.recvfrom(ssock, receiveBuf, sizeof(shutdown_str), 0,
+                                     (sockaddr*)&clientAddr, &clientLen);
+    if (byteReceived == SOCKET_ERROR ||
+        inet_ntop(AF_INET, &sa_in->sin_addr, buf_ntop, sizeof(buf_ntop)) ==
+            nullptr) //
+    {
+        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
+                   "receive_from_stopSock(): error receiving data from socket "
+                   "%d. Don't stopping miniserver.\n",
+                   ssock);
+
+        return 0;
     }
 
-    return 0;
+    // 16777343 are netorder bytes of "127.0.0.1"
+    if (sa_in->sin_addr.s_addr != 16777343 ||
+        strcmp(receiveBuf, shutdown_str) != 0) //
+    {
+        char nullstr[]{"\\0"};
+        if (byteReceived == 0 || receiveBuf[byteReceived - 1] != '\0')
+            nullstr[0] = '\0';
+        UpnpPrintf(
+            UPNP_ERROR, MSERV, __FILE__, __LINE__,
+            "receive_from_stopSock(): \"%s%s\" from %s:%d, must be "
+            "\"ShutDown\\0\" from 127.0.0.1:*. Don't stopping miniserver.\n",
+            receiveBuf, nullstr, buf_ntop, ntohs(sa_in->sin_port));
+
+        return 0;
+    }
+
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+               "Received datagram packet: \"%s\\0\" from %s:%d\n", receiveBuf,
+               buf_ntop, ntohs(sa_in->sin_port));
+
+    return 1;
 }
 
 /*!
@@ -635,12 +665,12 @@ static void RunMiniServer(
             web_server_accept(miniSock->miniServerSock6, &rdSet);
             web_server_accept(miniSock->miniServerSock6UlaGua, &rdSet);
 #ifdef INCLUDE_CLIENT_APIS
-            ssdp_read(miniSock->ssdpReqSock4, &rdSet);
-            ssdp_read(miniSock->ssdpReqSock6, &rdSet);
+            ssdp_read(&miniSock->ssdpReqSock4, &rdSet);
+            ssdp_read(&miniSock->ssdpReqSock6, &rdSet);
 #endif /* INCLUDE_CLIENT_APIS */
-            ssdp_read(miniSock->ssdpSock4, &rdSet);
-            ssdp_read(miniSock->ssdpSock6, &rdSet);
-            ssdp_read(miniSock->ssdpSock6UlaGua, &rdSet);
+            ssdp_read(&miniSock->ssdpSock4, &rdSet);
+            ssdp_read(&miniSock->ssdpSock6, &rdSet);
+            ssdp_read(&miniSock->ssdpSock6UlaGua, &rdSet);
 
             // Block execution and wait to receive a packet from
             // localhost(127.0.0.1) that will stop the miniserver.
@@ -1119,8 +1149,7 @@ static int get_miniserver_stopsock(
     return UPNP_E_SUCCESS;
 }
 
-static UPNP_INLINE void
-InitMiniServerSockArray(MiniServerSockArray* miniSocket) {
+static void InitMiniServerSockArray(MiniServerSockArray* miniSocket) {
     TRACE("Executing InitMiniServerSockArray()")
     miniSocket->miniServerSock4 = INVALID_SOCKET;
     miniSocket->miniServerSock6 = INVALID_SOCKET;

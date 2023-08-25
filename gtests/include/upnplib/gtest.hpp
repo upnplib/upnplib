@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_GTEST_HPP
 #define UPNPLIB_GTEST_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-24
+// Redistribution only with this Copyright remark. Last modified: 2023-02-29
 
 #include "upnplib/visibility.hpp"
 #include <cstring>
@@ -163,6 +163,10 @@ ACTION_TEMPLATE(SetArgPtrIntValue, HAS_1_TEMPLATE_PARAMS(int, k),
 ACTION_TEMPLATE(StrCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
                 AND_1_VALUE_PARAMS(str)) {
     std::strcpy(std::get<k>(args), str);
+}
+ACTION_TEMPLATE(StrnCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
+                AND_2_VALUE_PARAMS(str, len)) {
+    std::strncpy(std::get<k>(args), str, (size_t)len);
 }
 
 } // namespace upnplib::testing

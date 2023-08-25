@@ -5,7 +5,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-15
+ * Redistribution only with this Copyright remark. Last modified: 2023-08-30
  * Copied from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,16 +47,17 @@
 
 extern SOCKET gMiniServerStopSock;
 
-typedef struct MServerSockArray {
+struct MiniServerSockArray {
     /*! IPv4 socket for listening for miniserver requests. */
     SOCKET miniServerSock4;
     /*! IPv6 LLA Socket for listening for miniserver requests. */
     SOCKET miniServerSock6;
     /*! IPv6 ULA or GUA Socket for listening for miniserver requests. */
     SOCKET miniServerSock6UlaGua;
-    /*! Socket for stopping miniserver */
+    /*! Datagram Socket for stopping miniserver */
     SOCKET miniServerStopSock;
-    /*! IPv4 SSDP Socket for incoming advertisments and search requests. */
+    /*! IPv4 SSDP datagram Socket for incoming advertisments and search
+     * requests. */
     SOCKET ssdpSock4;
     /*! IPv6 LLA SSDP Socket for incoming advertisments and search requests.
      */
@@ -80,7 +81,7 @@ typedef struct MServerSockArray {
      * replies */
     SOCKET ssdpReqSock6;
 #endif /* INCLUDE_CLIENT_APIS */
-} MiniServerSockArray;
+};
 
 /*! . */
 typedef void (*MiniServerCallback)(

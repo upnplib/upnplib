@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-24
+// Redistribution only with this Copyright remark. Last modified: 2023-08-31
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -499,7 +499,7 @@ TEST_F(HttpMockFTestSuite, send_message_successful) {
         .WillOnce(Return(1));
     // Mock send()
     EXPECT_CALL(m_sys_socketObj, send(info.socket, request, request_length, _))
-        .WillOnce(Return(request_length));
+        .WillOnce(Return((SSIZEP_T)request_length));
 
     // Test Unit
     int ret_http_SendMessage =
