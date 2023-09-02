@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-17
+// Redistribution only with this Copyright remark. Last modified: 2023-09-01
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
@@ -137,7 +137,7 @@ class UPNPLIB_API Sys_socket {
     // important here for mocking because the pointer is also valid on all
     // objects of this class. With inline we do not need an extra definition
     // line outside the class. I also make the symbol hidden so the variable
-    // cannot be accessed globaly with Stdlib::m_ptr_workerObj. --Ingo
+    // cannot be accessed globaly with Sys_socket::m_ptr_workerObj. --Ingo
     UPNPLIB_LOCAL static inline Sys_socketInterface* m_ptr_workerObj;
     Sys_socketInterface* m_ptr_oldObj{};
 };

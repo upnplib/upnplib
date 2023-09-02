@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_GTEST_HPP
 #define UPNPLIB_GTEST_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-29
+// Redistribution only with this Copyright remark. Last modified: 2023-09-02
 
 #include "upnplib/visibility.hpp"
 #include <cstring>
@@ -35,7 +35,8 @@ namespace upnplib::testing {
 // managed with asynchronous mode on a pipe but that is far away from Posix
 // compatible handling. This deadlock is only a problem on MS Windows.
 //
-// If you run into a deadlock on MS Windows then increase the 'pipebuffer'.
+// If you run into a deadlock on MS Windows then increase the 'm_pipebuffer'.
+// --Ingo
 // clang-format off
 //
 // Typical usage is:

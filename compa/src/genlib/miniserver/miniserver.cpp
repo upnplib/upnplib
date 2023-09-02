@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-31
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-01
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -361,7 +361,7 @@ static void handle_request(
     http_parser_t parser;
     http_message_t* hmsg = NULL;
     int timeout = HTTP_DEFAULT_TIMEOUT;
-    struct mserv_request_t* request = (struct mserv_request_t*)args;
+    mserv_request_t* request = (mserv_request_t*)args;
     SOCKET connfd = request->connfd;
 
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
@@ -468,35 +468,37 @@ static void fdset_if_valid(SOCKET sock, fd_set* set) {
 static void web_server_accept([[maybe_unused]] SOCKET lsock,
                               [[maybe_unused]] fd_set* set) {
 #ifdef INTERNAL_WEB_SERVER
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Executing web_server_accept(%d, %p)\n", lsock, (void*)set);
+    TRACE("Executing " + std::string(__func__))
+    if (lsock == INVALID_SOCKET || !FD_ISSET(lsock, set)) {
+        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
+                   "web_server_accept(): invalid socket(%d) or set(%p).\n",
+                   lsock, (void*)set);
+        return;
+    }
+
     SOCKET asock;
     socklen_t clientLen;
     sockaddr_storage clientAddr;
     sockaddr_in* sa_in{(sockaddr_in*)&clientAddr};
+    clientLen = sizeof(clientAddr);
 
-    if (lsock != INVALID_SOCKET && FD_ISSET(lsock, set)) {
-        clientLen = sizeof(clientAddr);
-        asock = umock::sys_socket_h.accept(lsock, (sockaddr*)&clientAddr,
-                                           &clientLen);
-        if (asock == INVALID_SOCKET) {
-            UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                       "web_server_accept(): Error in accept(): %s\n",
-                       std::strerror(errno));
-        } else {
-            char buf_ntop[INET6_ADDRSTRLEN + 7];
-            inet_ntop(AF_INET, &sa_in->sin_addr, buf_ntop, sizeof(buf_ntop));
-            UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-                       "web_server_accept(): connected to host %s:%d "
-                       "with socket %d\n",
-                       buf_ntop, ntohs(sa_in->sin_port), asock);
-            schedule_request_job(asock, (sockaddr*)&clientAddr);
-        }
-    } else {
+    asock =
+        umock::sys_socket_h.accept(lsock, (sockaddr*)&clientAddr, &clientLen);
+    if (asock == INVALID_SOCKET) {
         UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                   "web_server_accept(): invalid socket(%d) or set(%p).\n",
-                   lsock, (void*)set);
+                   "web_server_accept(): Error in accept(): %s\n",
+                   std::strerror(errno));
+        return;
     }
+
+    // Here we schedule the job to manage a UPnP request from a client.
+    char buf_ntop[INET6_ADDRSTRLEN + 7];
+    inet_ntop(AF_INET, &sa_in->sin_addr, buf_ntop, sizeof(buf_ntop));
+    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
+               "web_server_accept(): connected to host %s:%d "
+               "with socket %d\n",
+               buf_ntop, ntohs(sa_in->sin_port), asock);
+    schedule_request_job(asock, (sockaddr*)&clientAddr);
 #endif /* INTERNAL_WEB_SERVER */
 }
 
@@ -846,7 +848,7 @@ error:
  * in case this function is called again.
  * It is expected to have a prechecked valid parameter.
  */
-static int do_bind(struct s_SocketStuff* s) {
+static int do_bind(s_SocketStuff* s) {
     TRACE("Executing do_bind()")
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__, "Inside do_bind()\n");
 
@@ -943,7 +945,7 @@ static int do_reinit(struct s_SocketStuff* s) {
     return init_socket_suff(s, s->text_addr, s->ip_version);
 }
 
-static int do_bind_listen(struct s_SocketStuff* s) {
+static int do_bind_listen(s_SocketStuff* s) {
     TRACE("Executing do_bind_listen()")
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "Inside do_bind_listen()\n");
