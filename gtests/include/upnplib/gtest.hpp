@@ -1,12 +1,10 @@
 #ifndef UPNPLIB_GTEST_HPP
 #define UPNPLIB_GTEST_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-02
+// Redistribution only with this Copyright remark. Last modified: 2023-09-03
 
-#include "upnplib/visibility.hpp"
-#include <cstring>
 #include <regex>
-#include "gmock/gmock.h"
+#include <gmock/gmock.h>
 
 // ANSI console colors
 #define CRED "\033[38;5;203m" // red
@@ -35,17 +33,19 @@ namespace upnplib::testing {
 // managed with asynchronous mode on a pipe but that is far away from Posix
 // compatible handling. This deadlock is only a problem on MS Windows.
 //
-// If you run into a deadlock on MS Windows then increase the 'm_pipebuffer'.
-// --Ingo
+// If you run into a deadlock on MS Windows then increase the
+// 'm_pipebuffer_size'. --Ingo
 // clang-format off
 //
+// Accessing the captured string will stop captureing.
 // Typical usage is:
 /*
-    CaptureStdOutErr stdErr(STDERR_FILENO); // or STDOUT_FILENO
-    stdErr.start();
-    std::cerr << "Hello World"; // or any other output from within functions
-    std::string capturedStderr = stdErr.get();
-    EXPECT_THAT(capturedStderr, MatchesRegex("Hello .*"));
+    CaptureStdOutErr stderrObj(STDERR_FILENO); // or STDOUT_FILENO
+    stderrObj.start();
+    std::cerr << "Hello"; // or any other output from within functions
+    EXPECT_EQ(stderrObj.str(), "Hello"));
+    stderrObj.str() += " World";
+    EXPECT_EQ(stderrObj.str(), "Hello World"));
 */
 // Exception: Strong guarantee (no modifications)
 //    throws: [std::logic_error] <- std::invalid_argument
@@ -62,12 +62,22 @@ class UPNPLIB_API CaptureStdOutErr {
     CaptureStdOutErr(int a_fileno);
     virtual ~CaptureStdOutErr();
     void start();
-    std::string get();
+    std::string& str();
 
   private:
     int out_pipe[2]{};
-    static constexpr int m_pipebuffer{8192};
+    static constexpr int m_pipebuffer_size{8192};
     static constexpr int m_chunk_size{512};
+    bool m_capturing{false};
+#ifdef _MSC_VER
+#pragma warning(push)
+// This can be ignored for classes from the C++ STL (best if it is private).
+#pragma warning(disable : 4251)
+#endif
+    std::string m_strbuffer{};
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
     // The original file descriptor STDOUT_FILENO or STDERR_FILENO that is
     // captured.

@@ -201,6 +201,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
   private:
 #ifdef _MSC_VER
 #pragma warning(push)
+// This can be ignored for classes from the C++ STL (best if it is private).
 #pragma warning(disable : 4251)
 #endif
     // Mutex to protect concurrent binding a socket.

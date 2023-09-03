@@ -1,11 +1,9 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-21
+// Redistribution only with this Copyright remark. Last modified: 2023-09-04
 
-#include <upnplib/port.hpp>
+#include <upnplib/port.hpp> // needed for _MSC_VER
 #include <upnplib/sockaddr.hpp>
-
 #include <upnplib/gtest.hpp>
-#include <gtest/gtest.h>
 
 using ::testing::ThrowsMessage;
 
@@ -18,30 +16,33 @@ namespace upnplib {
 
 TEST(CaptureStdOutErrTestSuite, capture_stderr_message) {
     CaptureStdOutErr captErrObj(STDERR_FILENO);
+    EXPECT_TRUE(captErrObj.str().empty());
+
     captErrObj.start();
+    std::cerr << "Testing capture stderr";
 
-    std::cerr << "Testing error message\n";
-
-    std::string captured_err = captErrObj.get();
-
-    EXPECT_EQ(captured_err, "Testing error message\n");
+    captErrObj.str() += " message";
+    EXPECT_EQ(captErrObj.str(), "Testing capture stderr message");
+    EXPECT_EQ(captErrObj.str(), "Testing capture stderr message");
 }
 
 TEST(CaptureStdOutErrTestSuite, capture_stdout_message) {
     CaptureStdOutErr captOutObj(STDOUT_FILENO);
+    EXPECT_TRUE(captOutObj.str().empty());
+
     captOutObj.start();
+    std::cout << "Testing capture stdout";
 
-    std::cout << "Testing error message\n";
-
-    std::string captured_out = captOutObj.get();
-
-    EXPECT_EQ(captured_out, "Testing error message\n");
+    EXPECT_EQ(captOutObj.str(), "Testing capture stdout");
+    EXPECT_EQ(captOutObj.str(), "Testing capture stdout");
+    captOutObj.str() += " message";
+    EXPECT_EQ(captOutObj.str(), "Testing capture stdout message");
 }
 
 TEST(CaptureStdOutErrTestSuite, capture_stderr_empty) {
     CaptureStdOutErr captErrObj(STDERR_FILENO);
     captErrObj.start();
-    std::string captured_err = captErrObj.get();
+    std::string captured_err = captErrObj.str();
 
     EXPECT_EQ(captured_err, "");
 }
@@ -49,7 +50,7 @@ TEST(CaptureStdOutErrTestSuite, capture_stderr_empty) {
 TEST(CaptureStdOutErrTestSuite, capture_stdout_empty) {
     CaptureStdOutErr captOutObj(STDOUT_FILENO);
     captOutObj.start();
-    std::string captured_out = captOutObj.get();
+    std::string captured_out = captOutObj.str();
 
     EXPECT_EQ(captured_out, "");
 }
@@ -72,7 +73,7 @@ TEST(CaptureStdOutErrTestSuite, capture_stderr_with_one_chunk) {
     // do not need to delimit with "\n".
     std::cerr << message512;
 
-    std::string captured_err = captErrObj.get();
+    std::string captured_err = captErrObj.str();
 
     EXPECT_EQ(captured_err, message512);
 }
@@ -84,7 +85,7 @@ TEST(CaptureStdOutErrTestSuite, capture_stdout_with_one_chunk) {
     // Makes the message 512 bytes long like a chunk.
     std::cout << message512;
 
-    std::string captured_out = captOutObj.get();
+    std::string captured_out = captOutObj.str();
 
     EXPECT_EQ(captured_out, message512);
 }
@@ -96,7 +97,7 @@ TEST(CaptureStdOutErrTestSuite, capture_stderr_with_two_chunks) {
     // Makes the message 513 bytes long like one chunk plus one byte.
     std::cerr << message512 << "+";
 
-    std::string captured_err = captErrObj.get();
+    std::string captured_err = captErrObj.str();
 
     EXPECT_EQ(captured_err, message512 + "+");
 }
@@ -108,7 +109,7 @@ TEST(CaptureStdOutErrTestSuite, capture_stdout_with_two_chunks) {
     // Makes the message 513 bytes long like one chunk plus one byte.
     std::cout << message512 << "+";
 
-    std::string captured_out = captOutObj.get();
+    std::string captured_out = captOutObj.str();
 
     EXPECT_EQ(captured_out, message512 + "+");
 }
@@ -127,8 +128,8 @@ TEST(CaptureStdOutErrTestSuite, capture_output_with_pipe) {
     std::cout << "out: First output ";
     std::cerr << "to StdErr" << std::endl;
     std::cout << "to StdOut" << std::endl;
-    std::string captured_err = captErrObj.get();
-    std::string captured_out = captOutObj.get();
+    std::string captured_err = captErrObj.str();
+    std::string captured_out = captOutObj.str();
 
     EXPECT_EQ(captured_err, "err: First output to StdErr\n");
     EXPECT_EQ(captured_out, "out: First output to StdOut\n");
@@ -139,8 +140,8 @@ TEST(CaptureStdOutErrTestSuite, capture_output_with_pipe) {
     captOutObj.start();
     std::cerr << "err: Second output to StdErr" << std::endl;
     std::cout << "out: Second output to StdOut" << std::endl;
-    captured_err = captErrObj.get();
-    captured_out = captOutObj.get();
+    captured_err = captErrObj.str();
+    captured_out = captOutObj.str();
 
     EXPECT_EQ(captured_err, "err: Second output to StdErr\n");
     EXPECT_EQ(captured_out, "out: Second output to StdOut\n");

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-09
+// Redistribution only with this Copyright remark. Last modified: 2023-09-03
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -207,8 +207,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
         << errStrEx(ret_UpnpInit2, UPNP_E_SUCCESS);
 
     // Get and check the captured data
-    std::string capturedStderr = captureObj.get();
-    EXPECT_EQ(capturedStderr, "")
+    EXPECT_EQ(captureObj.str(), "")
         << "  There should not be any output to stderr.";
 
     EXPECT_EQ(UpnpSdkInit, 1);

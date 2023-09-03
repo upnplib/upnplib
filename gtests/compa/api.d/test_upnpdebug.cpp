@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-16
+// Redistribution only with this Copyright remark. Last modified: 2023-09-03
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpdebug.cpp>
@@ -114,12 +114,10 @@ TEST_F(UpnpdebugFTestSuite, UpnpPrintf_successful) {
     ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
                  "Unit Test for %s on line %d.\n", "UpnpPrintf", __LINE__);
 
-    std::string captured = captureObj.get();
-
     // Example: "2021-10-17 21:09:01 UPNP-API_-2: Thread:0x7F1366618740
     // [/home/ingo/devel/upnplib-dev/upnplib/gtests/test_upnpdebug.cpp:535]:
     // Unit Test for UpnpPrintf on line 536.\n"
-    EXPECT_THAT(captured,
+    EXPECT_THAT(captureObj.str(),
                 MatchesStdRegex(
                     "\\d{4}-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d UPNP-API_-2: "
                     "Thread:0x.+ \\[.+\\]: Unit Test for UpnpPrintf on line "
@@ -162,9 +160,8 @@ TEST_F(UpnpdebugFTestSuite, close_log_and_reopen_it) {
     ::UpnpPrintf(
         UPNP_INFO, API, __FILE__, __LINE__,
         "This Unit Test1 \"close log and reopen it\" should not be shown.\n");
-    std::string captured = captureObj.get();
 
-    EXPECT_EQ(captured, "");
+    EXPECT_EQ(captureObj.str(), "");
 
     ::UpnpCloseLog();
 
@@ -177,17 +174,16 @@ TEST_F(UpnpdebugFTestSuite, close_log_and_reopen_it) {
     ::UpnpPrintf(
         UPNP_INFO, API, __FILE__, __LINE__,
         "This Unit Test2 \"close log and reopen it\" should not be shown.\n");
-    captured = captureObj.get();
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ]" CRES
                   << " Only reenable logging after closing it must not output "
                      "messages.\n";
-        EXPECT_NE(captured, ""); // Wrong!
+        EXPECT_NE(captureObj.str(), ""); // Wrong!
 
     } else {
 
-        EXPECT_EQ(captured, "");
+        EXPECT_EQ(captureObj.str(), "");
     }
 
     ::UpnpCloseLog();
@@ -201,10 +197,9 @@ TEST_F(UpnpdebugFTestSuite, close_log_and_reopen_it) {
     captureObj.start();
     ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
                  "Unit Test3 close log and reopen it.\n");
-    captured = captureObj.get();
 
     EXPECT_THAT(
-        captured,
+        captureObj.str(),
         MatchesStdRegex(
             "\\d{4}-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d UPNP-API_-2: "
             "Thread:0x.+ \\[.+\\]: Unit Test3 close log and reopen it\\.\n"));
@@ -229,9 +224,8 @@ TEST_F(UpnpdebugFTestSuite, close_log_and_only_reenable_it) {
     ::UpnpPrintf(
         UPNP_INFO, API, __FILE__, __LINE__,
         "This Unit Test1 \"close log and reopen it\" should not be shown.\n");
-    std::string captured = captureObj.get();
 
-    EXPECT_EQ(captured, "");
+    EXPECT_EQ(captureObj.str(), "");
 
     ::UpnpCloseLog();
 }
@@ -255,17 +249,16 @@ TEST_F(UpnpdebugFTestSuite, close_log_and_only_reinitialize_it) {
     ::UpnpPrintf(
         UPNP_INFO, API, __FILE__, __LINE__,
         "This Unit Test2 \"close log and reopen it\" should not be shown.\n");
-    std::string captured = captureObj.get();
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ]" CRES
                   << " Only reinitialize logging after closing it must not "
                      "output messages.\n";
-        EXPECT_NE(captured, ""); // Wrong!
+        EXPECT_NE(captureObj.str(), ""); // Wrong!
 
     } else {
 
-        EXPECT_EQ(captured, "");
+        EXPECT_EQ(captureObj.str(), "");
     }
 
     ::UpnpCloseLog();
@@ -290,10 +283,9 @@ TEST_F(UpnpdebugFTestSuite, close_log_and_reenable_reinitialize_it) {
     captureObj.start();
     ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
                  "Unit Test3 close log and reopen it.\n");
-    std::string captured = captureObj.get();
 
     EXPECT_THAT(
-        captured,
+        captureObj.str(),
         MatchesStdRegex(
             "\\d{4}-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d UPNP-API_-2: "
             "Thread:0x.+ \\[.+\\]: Unit Test3 close log and reopen it\\.\n"));

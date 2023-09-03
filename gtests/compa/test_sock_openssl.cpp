@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-28
+// Redistribution only with this Copyright remark. Last modified: 2023-09-03
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -167,7 +167,7 @@ TEST_F(SockFTestSuite, libssl_connection_error_handling) {
     CaptureStdOutErr stdErr(STDERR_FILENO); // or STDOUT_FILENO
     stdErr.start();
     ERR_print_errors_fp(stderr);
-    EXPECT_EQ(stdErr.get(), "");
+    EXPECT_EQ(stdErr.str(), "");
 
     // There is no connection established. We must not use
     // EXPECT_EQ(SSL_shutdown(ssl), -1);

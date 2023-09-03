@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-02
+// Redistribution only with this Copyright remark. Last modified: 2023-09-03
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -1950,25 +1950,25 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept) {
 
         // Capture output to stderr
         CLogging loggingObj; // Output only with build type DEBUG.
-        class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+        CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
         captureObj.start();
 
         // Test Unit
         web_server_accept(listen_sockfd, &set);
 
         // Get captured output
-        std::string capturedStderr = captureObj.get();
         // '\n' is not matched by regex '.'-wildcard so we just replace it.
-        std::replace(capturedStderr.begin(), capturedStderr.end(), '\n', '@');
+        std::replace(captureObj.str().begin(), captureObj.str().end(), '\n',
+                     '@');
 #ifdef DEBUG
         if (old_code)
-            EXPECT_THAT(capturedStderr,
+            EXPECT_THAT(captureObj.str(),
                         ContainsStdRegex(" UPNP-MSER-2: .* mserv " +
                                          std::to_string(connected_sockfd) +
                                          ": cannot schedule request"));
         else
             EXPECT_THAT(
-                capturedStderr,
+                captureObj.str(),
                 ContainsStdRegex(" connected to host 192\\.168\\.201\\.202:306 "
                                  "with socket " +
                                  std::to_string(connected_sockfd)));
@@ -1976,7 +1976,7 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept) {
             //                  "with socket 206.* UPNP-MSER-1: .* mserv 206: "
             //                  "cannot schedule request"));
 #else
-        EXPECT_THAT(capturedStderr,
+        EXPECT_THAT(captureObj.str(),
                     ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0"));
 #endif
     } // End scope of mocking, objects within the block will be destructed.
@@ -1999,16 +1999,15 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_with_invalid_socket) {
     web_server_accept(listen_sockfd, nullptr);
 
     // Get captured output
-    std::string capturedStderr = captureObj.get();
     if (old_code)
-        EXPECT_TRUE(capturedStderr.empty());
+        EXPECT_TRUE(captureObj.str().empty());
     else
 #ifdef DEBUG
-        EXPECT_THAT(capturedStderr,
+        EXPECT_THAT(captureObj.str(),
                     ContainsStdRegex(" UPNP-MSER-1: .* invalid socket\\(-1\\) "
                                      "or set\\(.*\\)\\.\n"));
 #else
-        EXPECT_TRUE(capturedStderr.empty());
+        EXPECT_TRUE(captureObj.str().empty());
 #endif
 }
 
@@ -2028,17 +2027,16 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_with_empty_set) {
     web_server_accept(listen_sockfd, &set);
 
     // Get captured output
-    std::string capturedStderr = captureObj.get();
     if (old_code)
-        EXPECT_TRUE(capturedStderr.empty());
+        EXPECT_TRUE(captureObj.str().empty());
     else
 #ifdef DEBUG
-        EXPECT_THAT(capturedStderr,
+        EXPECT_THAT(captureObj.str(),
                     ContainsStdRegex(" UPNP-MSER-1: .* invalid socket\\(" +
                                      std::to_string(listen_sockfd) +
                                      "\\) or set\\(.*\\)\\.\n"));
 #else
-        EXPECT_TRUE(capturedStderr.empty());
+        EXPECT_TRUE(captureObj.str().empty());
 #endif
 }
 
@@ -2062,21 +2060,20 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_fails) {
     web_server_accept(listen_sockfd, &set);
 
     // Get captured output
-    std::string capturedStderr = captureObj.get();
-    std::cout << capturedStderr;
+    std::cout << captureObj.str();
 #ifdef DEBUG
     if (old_code)
         EXPECT_THAT(
-            capturedStderr,
+            captureObj.str(),
             ContainsStdRegex(
                 " UPNP-MSER-2: .* miniserver: Error in accept\\(\\): "));
     else
         EXPECT_THAT(
-            capturedStderr,
+            captureObj.str(),
             ContainsStdRegex(" UPNP-MSER-1: .* web_server_accept\\(\\): Error "
                              "in accept\\(\\): "));
 #else
-    EXPECT_TRUE(capturedStderr.empty());
+    EXPECT_TRUE(captureObj.str().empty());
 #endif
 }
 
@@ -2190,14 +2187,13 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
     schedule_request_job(connected_sockfd, ai->ai_addr);
 
     // Get captured output
-    std::string capturedStderr = captureObj.get();
 #ifdef DEBUG
-    EXPECT_THAT(capturedStderr,
+    EXPECT_THAT(captureObj.str(),
                 ContainsStdRegex(" UPNP-MSER-\\d: .* " +
                                  std::to_string(connected_sockfd) +
                                  ": cannot schedule request\n"));
 #else
-    EXPECT_THAT(capturedStderr,
+    EXPECT_THAT(captureObj.str(),
                 ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0\n"));
 #endif
     // Shutdown the threadpool.
@@ -2330,7 +2326,7 @@ TEST_F(RunMiniServerFTestSuite,
         EXPECT_FALSE(getNumericHostRedirection((int)sockfd, host_port,
                                                sizeof(host_port)));
         // Get captured output. This doesn't give any error messages.
-        EXPECT_TRUE(captureObj.get().empty());
+        EXPECT_TRUE(captureObj.str().empty());
 
     } else {
 
@@ -2341,7 +2337,7 @@ TEST_F(RunMiniServerFTestSuite,
         EXPECT_FALSE(
             getNumericHostRedirection(sockfd, host_port, sizeof(host_port)));
         // Get captured output
-        EXPECT_THAT(captureObj.get(), HasSubstr("UPnPlib ERROR 1001!"));
+        EXPECT_THAT(captureObj.str(), HasSubstr("UPnPlib ERROR 1001!"));
     }
 
     EXPECT_STREQ(host_port, "<no message>");
@@ -2381,14 +2377,12 @@ TEST_F(RunMiniServerFTestSuite,
         bool ret_getNumericHostRedirection = getNumericHostRedirection(
             (int)sockfd, host_port, sizeof(host_port));
 
-        // Get captured output
-        std::string capturedStderr = captureObj.get();
-
         std::cout << CYEL "[ FIX      ] " CRES << __LINE__
                   << ": A wrong but accepted address family AF_UNIX should "
                      "return an error.\n";
         EXPECT_TRUE(ret_getNumericHostRedirection); // wrong
-        EXPECT_TRUE(capturedStderr.empty());
+        // Get captured output
+        EXPECT_TRUE(captureObj.str().empty());
         EXPECT_STREQ(host_port, "0.0.0.0:0"); // wrong
 
     } else {
@@ -2396,11 +2390,9 @@ TEST_F(RunMiniServerFTestSuite,
         bool ret_getNumericHostRedirection =
             getNumericHostRedirection(sockfd, host_port, sizeof(host_port));
 
-        // Get captured output
-        std::string capturedStderr = captureObj.get();
-
         EXPECT_FALSE(ret_getNumericHostRedirection);
-        EXPECT_THAT(capturedStderr, HasSubstr("UPnPlib ERROR 1024!"));
+        // Get captured output
+        EXPECT_THAT(captureObj.str(), HasSubstr("UPnPlib ERROR 1024!"));
         EXPECT_STREQ(host_port, "<no message>");
     }
 }
