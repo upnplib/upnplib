@@ -678,6 +678,7 @@ int TvDeviceSetVolume(IXML_Document* in, IXML_Document** out,
     if (volume < MIN_VOLUME || volume > MAX_VOLUME) {
         SampleUtil_Print("error: can't change to volume %d\n", volume);
         (*errorString) = "Invalid Volume";
+        free(value);
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the volume goes here. */
@@ -779,6 +780,7 @@ int TvDeviceSetColor(IXML_Document* in, IXML_Document** out,
     if (color < MIN_COLOR || color > MAX_COLOR) {
         SampleUtil_Print("error: can't change to color %d\n", color);
         (*errorString) = "Invalid Color";
+        free(value);
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the volume goes here. */
@@ -880,6 +882,7 @@ int TvDeviceSetTint(IXML_Document* in, IXML_Document** out,
     if (tint < MIN_TINT || tint > MAX_TINT) {
         SampleUtil_Print("error: can't change to tint %d\n", tint);
         (*errorString) = "Invalid Tint";
+        free(value);
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the volume goes here. */
@@ -1026,6 +1029,7 @@ int TvDeviceSetContrast(IXML_Document* in, IXML_Document** out,
     if (contrast < MIN_CONTRAST || contrast > MAX_CONTRAST) {
         SampleUtil_Print("error: can't change to contrast %d\n", contrast);
         (*errorString) = "Invalid Contrast";
+        free(value);
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the volume goes here. */
@@ -1127,6 +1131,7 @@ int TvDeviceSetBrightness(IXML_Document* in, IXML_Document** out,
     if (brightness < MIN_BRIGHTNESS || brightness > MAX_BRIGHTNESS) {
         SampleUtil_Print("error: can't change to brightness %d\n", brightness);
         (*errorString) = "Invalid Brightness";
+        free(value);
         return UPNP_E_INVALID_PARAM;
     }
     /* Vendor-specific code to set the volume goes here. */
