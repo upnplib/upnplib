@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-20
+// Redistribution only with this Copyright remark. Last modified: 2023-09-05
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpapi.cpp>
@@ -40,6 +40,7 @@ using ::testing::NotNull;
 using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetErrnoAndReturn;
+using ::testing::StrictMock;
 
 
 // The UpnpInit2() call stack to initialize the pupnp library
@@ -84,28 +85,6 @@ clang-format off
 13) Tested with ./test_upnpapi_win32.cpp
 14) Tested with ./test_upnpapi_unix.cpp
 17) Tested with ./test_miniserver.cpp
-
-
-     UpnpRegisterRootDevice3() same as
-01)  UpnpRegisterRootDevice4()
-02)  |__ UpnpDownloadXmlDoc()
-         |__ UpnpDownloadUrlItem()
-03)      |   |__ http_Download()
-         |
-         |__ ixmlParseBufferEx()
-         |__ free(xml_buf)
-         |__ if not IXL_SUCCESS
-                print critical xml error messages
-             else
-                #ifdef DEBUG
-                  print XML document
-                #endif
-                  print success
-
-01) Two symbols for the same function are given for compatibility. The given
-    function can do both.
-02) A possible url is http://127.0.0.1:50001/tvdevicedesc.xml
-03) Tested within test_Download.cpp
 
 
      UpnpFinish()
@@ -172,24 +151,24 @@ class UpnpapiMockFTestSuite : public UpnpapiFTestSuite {
     // Ip address structure
     SSockaddr_storage m_saddr;
 
-    // Needed mocked functions
-    umock::PupnpSockMock m_pupnpSockObj;
-    umock::Sys_selectMock m_sys_selectObj;
-    umock::Sys_socketMock m_sys_socketObj;
+    // clang-format off
+    // Instantiate mocking objects.
+    StrictMock<umock::PupnpSockMock> m_pupnpSockObj;
+    StrictMock<umock::Sys_selectMock> m_sys_selectObj;
+    StrictMock<umock::Sys_socketMock> m_sys_socketObj;
+    // Inject the mocking objects into the tested code.
+    umock::PupnpSock pupnp_sock_injectObj = umock::PupnpSock(&m_pupnpSockObj);
+    umock::Sys_select sys_select_injectObj = umock::Sys_select(&m_sys_selectObj);
+    umock::Sys_socket sys_socket_injectObj = umock::Sys_socket(&m_sys_socketObj);
 #ifdef _WIN32
     umock::Winsock2Mock m_winsock2Obj;
+    umock::Winsock2 winsock2_injectObj = umock::Winsock2(&m_winsock2Obj);
 #endif
+    // clang-format on
 
     UpnpapiMockFTestSuite() { m_saddr = "192.168.99.4:50010"; }
 };
-/* Following injections must be placed into the test cases.
-    umock::PupnpSock pupnp_sock_injectObj(&m_pupnpSockObj);
-    umock::Sys_select sys_select_injectObj(&m_sys_selectObj);
-    umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
-#ifdef _WIN32
-    umock::Winsock2 winsock2_injectObj(&m_winsock2Obj);
-#endif
-*/
+
 
 TEST_F(UpnpapiFTestSuite, UpnpInitPreamble_successful) {
     // Test Unit
@@ -527,13 +506,6 @@ TEST_F(UpnpapiMockFTestSuite, UpnpRegisterRootDevice3_successful) {
     int ret_UpnpInitPreamble = UpnpInitPreamble();
     ASSERT_EQ(ret_UpnpInitPreamble, UPNP_E_SUCCESS)
         << errStrEx(ret_UpnpInitPreamble, UPNP_E_SUCCESS);
-
-    umock::PupnpSock pupnp_sock_injectObj(&m_pupnpSockObj);
-    umock::Sys_select sys_select_injectObj(&m_sys_selectObj);
-    umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
-#ifdef _WIN32
-    umock::Winsock2 winsock2_injectObj(&m_winsock2Obj);
-#endif
 
     EXPECT_CALL(m_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(Return(sockfd));

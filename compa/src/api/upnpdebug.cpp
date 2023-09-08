@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-26
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -236,7 +236,7 @@ static void UpnpDisplayFileAndLine(FILE* a_fp, const char* DbgFileName,
 #endif
             ,
             DbgFileName, DbgLineNo);
-    fflush(a_fp);
+    umock::stdio_h.fflush(a_fp);
 }
 
 void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,

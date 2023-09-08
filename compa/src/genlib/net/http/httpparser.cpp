@@ -1916,8 +1916,8 @@ void parser_request_init(http_parser_t* parser) {
  * Function: parser_response_init
  *
  * Parameters:
- *  OUT http_parser_t* parser   ; HTTP Parser object
- *  IN http_method_t request_method ; Request method
+ *   OUT http_parser_t* parser       ; HTTP Parser object
+ *   IN http_method_t request_method ; Request method
  *
  * Description: Initializes parser object for a response
  *

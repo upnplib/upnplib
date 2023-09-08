@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-24
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -90,6 +90,7 @@
 #include "umock/sys_socket.hpp"
 #include "umock/winsock2.hpp"
 #include "umock/sysinfo.hpp"
+#include "umock/stdio.hpp"
 
 /*
  * Please, do not change these to const int while MSVC cannot understand
@@ -523,9 +524,9 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                     filename, UPNP_READ, Instr->Cookie, Instr->RequestCookie);
             else
 #ifdef _WIN32
-                fopen_s(&Fp, filename, "rb");
+                umock::stdio_h.fopen_s(&Fp, filename, "rb");
 #else
-                Fp = fopen(filename, "rb");
+                Fp = umock::stdio_h.fopen(filename, "rb");
 #endif
             if (Fp == NULL) {
                 RetVal = UPNP_E_FILE_READ_ERROR;

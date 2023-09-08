@@ -1,5 +1,5 @@
-# Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2022-12-05
+# Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+# Redistribution only with this Copyright remark. Last modified: 2023-09-08
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -44,6 +44,9 @@ target_compile_definitions(ixml_shared
         $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
         $<$<CONFIG:Debug>:DEBUG>
 )
+target_link_libraries(ixml_shared
+    PRIVATE umock_shared
+)
 
 # ixml static library
 #--------------------
@@ -57,6 +60,9 @@ target_compile_definitions(ixml_static
     PRIVATE
         $<$<BOOL:${script_support}>:IXML_HAVE_SCRIPTSUPPORT>
         $<$<CONFIG:Debug>:DEBUG>
+)
+target_link_libraries(ixml_static
+    PRIVATE umock_static
 )
 
 #if (BUILD_TESTING)

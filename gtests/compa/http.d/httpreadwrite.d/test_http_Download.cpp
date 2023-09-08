@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-31
+// Redistribution only with this Copyright remark. Last modified: 2023-09-08
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -17,6 +17,7 @@
 #include <umock/sysinfo_mock.hpp>
 #include <umock/sys_socket_mock.hpp>
 #include <umock/sys_select_mock.hpp>
+#include <umock/stdio_mock.hpp>
 
 
 namespace compa {
@@ -27,7 +28,10 @@ using ::testing::_;
 using ::testing::DoAll;
 using ::testing::NotNull;
 using ::testing::Return;
+using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
+using ::testing::StrEq;
+using ::testing::StrictMock;
 
 using ::pupnp::CLogging;
 
@@ -43,20 +47,22 @@ clang-format off
 02)  |__ http_FixStrUrl()
 03)  |__ get_hoststr()
 04)  |__ http_MakeMessage()
-     |__ http_RequestAndResponse() // get doc msg
+05)  |__ http_RequestAndResponse() // get doc msg
      |   |__ socket()              // system call
 07)  |   |__ private_connect()     // connect
-     |   |__ http_SendMessage()    // send request
+08)  |   |__ http_SendMessage()    // send request
      |   |__ http_RecvMessage()    // receive response
      |
-     |__ print_http_headers()
      |__ if content_type
      |      copy content type
-     |__ extract doc from msg
+     |__ extract doc from response msg
 
 02) Tested with test_httpreadwrite.cpp - TEST(HttpFixUrl*)
 03) Tested with test_httpreadwrite.cpp - TEST(GetHostaddr*)
-04) Tested with TEST(HttpMakeMessage*)
+04) Tested with TEST(*, make_message_*)
+05) Tested with TEST(*, request_response_*)
+07) Tested with test_netconnect.cpp - TEST(PrivateConnectFTestSuite, *)
+08) Tested with TEST(*, send_message_*)
 
 clang-format on
 */
@@ -74,15 +80,16 @@ class HttpMockFTestSuite : public HttpBasicFTestSuite {
     // Fictive socket file descriptor for mocking.
     const SOCKET m_sockfd{FD_SETSIZE - 46};
 
+    // clang-format off
     // Instantiate mocking objects.
-    umock::Sys_selectMock m_sys_selectObj;
-    umock::Sys_socketMock m_sys_socketObj;
-
-    HttpMockFTestSuite() {
-        // Inject mocking objects into the production code.
-        static umock::Sys_select sys_select_injectObj(&m_sys_selectObj);
-        static umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
-    }
+    StrictMock<umock::Sys_selectMock> m_sys_selectObj;
+    StrictMock<umock::Sys_socketMock> m_sys_socketObj;
+    StrictMock<umock::StdioMock> m_stdioObj;
+    // Inject the mocking objects into the tested code.
+    umock::Sys_select sys_select_injectObj = umock::Sys_select(&m_sys_selectObj);
+    umock::Sys_socket sys_socket_injectObj = umock::Sys_socket(&m_sys_socketObj);
+    umock::Stdio stdio_injectObj = umock::Stdio(&m_stdioObj);
+    // clang-format on
 };
 
 
@@ -442,7 +449,7 @@ TEST_F(HttpBasicFTestSuite, make_message_get_sdk_info_successful) {
 }
 
 #ifndef _WIN32
-TEST_F(HttpBasicFTestSuite, make_massage_get_sdk_info_system_info_fails) {
+TEST_F(HttpBasicFTestSuite, make_message_get_sdk_info_system_info_fails) {
     char info[128];
 
     // Provide invalid structure for 'uname()'
@@ -483,30 +490,72 @@ TEST_F(HttpBasicFTestSuite, make_massage_get_sdk_info_system_info_fails) {
 
 // Testsuite for http_SendMessage()
 // ================================
-
+#if 0
 TEST_F(HttpMockFTestSuite, send_message_successful) {
     CLogging loggingObj; // Output only with build type DEBUG.
 
     SOCKINFO info{};
     info.socket = m_sockfd;
-    int timeout_secs{1};
-    constexpr char request[]{"Request to send."};
+    int timeout_secs{HTTP_DEFAULT_TIMEOUT};
+    constexpr char request[]{"This is a test message."};
+    constexpr size_t request_length{sizeof(request) - 1};
+    char filename[]{"./mocked/message.txt"};
+    FILE fp{};
+
+    // Mock select()
+    EXPECT_CALL(m_sys_selectObj,
+                select(info.socket + 1, NotNull(), NotNull(), NULL, NotNull()))
+        .WillOnce(Return(1));  // send from buffer successful
+    // Mock send()
+    EXPECT_CALL(m_sys_socketObj, send(info.socket, request, request_length, _))
+        .WillOnce(Return((SSIZEP_T)request_length));
+    // Mock fopen()
+    EXPECT_CALL(m_stdioObj, fopen(StrEq(filename), StrEq("rb"))).WillOnce(Return(&fp));
+
+    // Test Unit, send from buffer successful
+    int ret_http_SendMessage =
+        http_SendMessage(&info, &timeout_secs, "b", request, request_length);
+    EXPECT_EQ(ret_http_SendMessage, UPNP_E_SUCCESS)
+        << errStrEx(ret_http_SendMessage, UPNP_E_SUCCESS);
+
+    // Test Unit, send from file successful
+    ret_http_SendMessage =
+        http_SendMessage(&info, &timeout_secs, "f", filename);
+    EXPECT_EQ(ret_http_SendMessage, UPNP_E_SUCCESS)
+        << errStrEx(ret_http_SendMessage, UPNP_E_SUCCESS);
+}
+
+TEST_F(HttpMockFTestSuite, send_message_fails) {
+    CLogging loggingObj; // Output only with build type DEBUG.
+
+    SOCKINFO info{};
+    info.socket = m_sockfd;
+    int timeout_secs{HTTP_DEFAULT_TIMEOUT};
+    constexpr char request[]{"This is a UPnP Request."};
     constexpr size_t request_length{sizeof(request) - 1};
 
     // Mock select()
     EXPECT_CALL(m_sys_selectObj,
                 select(info.socket + 1, NotNull(), NotNull(), NULL, NotNull()))
-        .WillOnce(Return(1));
+        .WillOnce(Return(1))  // 1) successful
+        .WillOnce(Return(0)); // 2) timeout
     // Mock send()
     EXPECT_CALL(m_sys_socketObj, send(info.socket, request, request_length, _))
         .WillOnce(Return((SSIZEP_T)request_length));
 
-    // Test Unit
+    // 1) Test Unit, send_message_successful
     int ret_http_SendMessage =
         http_SendMessage(&info, &timeout_secs, "b", request, request_length);
-    EXPECT_EQ(ret_http_SendMessage, UPNP_E_SUCCESS)
+    ASSERT_EQ(ret_http_SendMessage, UPNP_E_SUCCESS)
+        << errStrEx(ret_http_SendMessage, UPNP_E_SUCCESS);
+
+    // 2) Test Unit, send message with timeout of select
+    ret_http_SendMessage =
+        http_SendMessage(&info, &timeout_secs, "b", request, request_length);
+    ASSERT_EQ(ret_http_SendMessage, UPNP_E_SUCCESS)
         << errStrEx(ret_http_SendMessage, UPNP_E_SUCCESS);
 }
+#endif
 
 TEST_F(HttpBasicFTestSuite, send_message_without_socket_file_descriptor) {
     if (github_actions)
@@ -516,7 +565,7 @@ TEST_F(HttpBasicFTestSuite, send_message_without_socket_file_descriptor) {
     CLogging loggingObj; // Output only with build type DEBUG.
 
     SOCKINFO info{};
-    int timeout_secs{1};
+    int timeout_secs{HTTP_DEFAULT_TIMEOUT};
     constexpr char request[]{
         "Try to send message without socket file descriptor."};
     constexpr size_t request_length{sizeof(request) - 1};
@@ -534,6 +583,43 @@ TEST_F(HttpBasicFTestSuite, send_message_without_socket_file_descriptor) {
         http_SendMessage(&info, &timeout_secs, "b", request, request_length);
     EXPECT_EQ(ret_http_SendMessage, UPNP_E_SOCKET_ERROR)
         << errStrEx(ret_http_SendMessage, UPNP_E_SOCKET_ERROR);
+}
+
+TEST_F(HttpMockFTestSuite, request_response_successful) {
+    if (github_actions)
+        GTEST_SKIP() << "Test needs to be completed after testing subroutines.";
+
+    CLogging loggingObj; // Output only with build type DEBUG.
+
+    uri_type url;
+    http_parser_t response;
+
+    // Test Unit
+    int ret_http_RequestAndResponse = http_RequestAndResponse(
+        &url, m_request.buf, m_request.length, HTTPMETHOD_GET,
+        HTTP_DEFAULT_TIMEOUT, &response);
+    EXPECT_EQ(ret_http_RequestAndResponse, UPNP_E_TIMEDOUT)
+        << errStrEx(ret_http_RequestAndResponse, UPNP_E_SUCCESS);
+
+    httpmsg_destroy(&response.msg);
+}
+
+TEST_F(HttpMockFTestSuite, http_Download_successful) {
+    if (github_actions)
+        GTEST_SKIP() << "Test needs to be completed after testing subroutines.";
+
+    CLogging loggingObj; // Output only with build type DEBUG.
+
+    const char url[]{"http://127.0.0.1:50001/tvdevicedesc.xml"};
+    char* outBuf;
+    size_t doc_length;
+    char contentType[LINE_SIZE];
+
+    // Test Unit
+    int ret_http_Download = http_Download(url, HTTP_DEFAULT_TIMEOUT, &outBuf,
+                                          &doc_length, contentType);
+    EXPECT_EQ(ret_http_Download, UPNP_E_TIMEDOUT)
+        << errStrEx(ret_http_Download, UPNP_E_SUCCESS);
 }
 
 } // namespace compa

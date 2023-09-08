@@ -156,6 +156,12 @@ Visibility Support provides a powerful optimization. We use it as described at t
 
 - For optimization with using `UPNPLIB_LOCAL` look at the [GCC Wiki - Visibility](https://gcc.gnu.org/wiki/Visibility). Usualy private member functions of a class are prefixed with UPNPLIB_LOCAL.
 
+## To be thread-safe
+Because it isn't possible in general to test if a software is thread-safe I will ensure this by using recognized methods:
+- [Using data that is not shared between threads](https://softwareengineering.stackexchange.com/a/285942)
+- Using immutable data
+- [Message passing with threads](https://web.mit.edu/6.005/www/fa14/classes/20-queues-locks/message-passing/#message_passing_with_threads)
+
 ## Some references and 0ptimization
 - [Optimize String Use](https://www.oreilly.com/library/view/optimized-c/9781491922057/ch04.html)
 - [ Move Objects](https://newbedev.com/is-std-vector-copying-the-objects-with-a-push-back) instead of coppying.
@@ -176,5 +182,5 @@ Rule of Zero/Three/Five
 
 <pre><sup>
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2023-07-27
+// Redistribution only with this Copyright remark. Last modified: 2023-09-05
 </sup></sup>

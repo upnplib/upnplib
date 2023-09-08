@@ -29,8 +29,8 @@
 extern membuffer gDocumentRootDir;
 
 
-// The tv_device_main call stack to use the pupnp library
-//=======================================================
+// The tv_device call stack to use the pupnp library
+//==================================================
 /*
 clang-format off
 
@@ -57,11 +57,12 @@ clang-format off
      |       |   or
      |       |     UpnpGetServerUlaGuaIp6Address()
      |       |     UpnpGetServerUlaGuaPort6()
-     |       |__ UpnpSetWebServerRootDir()
+     |       |
+24)  |       |__ UpnpSetWebServerRootDir()
      |       |__ if error
      |              UpnpFinish()
      |       |
-     |       |__ UpnpRegisterRootDevice3()
+28)  |       |__ UpnpRegisterRootDevice3()
      |       |__ if error
      |              UpnpFinish()
      |       |
@@ -76,6 +77,9 @@ clang-format off
      |#else
      |__ 'Catch Ctrl-C for shutdown'
      |__ TvDeviceStop()
+
+24) Tested within gtests/compa/api.d/test_upnpapi.cpp
+28) Tested within gtests/compa/api.d/test_upnpapi.cpp
 
 clang-format on
 */

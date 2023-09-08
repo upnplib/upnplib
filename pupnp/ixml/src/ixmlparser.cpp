@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-10-06
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,6 +47,8 @@
 #include <stdio.h>
 #include <stdlib.h> /* for free(), malloc() */
 #include <string.h>
+
+#include <umock/stdio.hpp>
 
 #include "posix_overwrites.hpp"
 
@@ -2426,9 +2428,9 @@ static int Parser_readFileOrBuffer(
 
     if (file) {
 #ifdef _WIN32
-        fopen_s(&xmlFilePtr, xmlFileName, "rb");
+        umock::stdio_h.fopen_s(&xmlFilePtr, xmlFileName, "rb");
 #else
-        xmlFilePtr = fopen(xmlFileName, "rb");
+        xmlFilePtr = umock::stdio_h.fopen(xmlFileName, "rb");
 #endif
         if (xmlFilePtr == NULL) {
             return IXML_NO_SUCH_FILE;

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-23
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -52,6 +52,7 @@
 #include <webserver.hpp>
 
 #include <umock/sys_socket.hpp>
+#include <umock/stdio.hpp>
 
 #include <assert.h>
 #include <stdarg.h>
@@ -474,11 +475,11 @@ ExitFunction:
 int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
     TRACE("Executing http_SendMessage()")
 #if EXCLUDE_WEB_SERVER == 0
-    FILE* Fp;
-    struct SendInstruction* Instr = NULL;
-    char* filename = NULL;
-    char* file_buf = NULL;
-    char* ChunkBuf = NULL;
+    FILE* Fp{};
+    SendInstruction* Instr{nullptr};
+    char* filename = nullptr;
+    char* file_buf = nullptr;
+    char* ChunkBuf = nullptr;
     /* 10 byte allocated for chunk header. */
     char Chunk_Header[CHUNK_HEADER_SIZE];
     size_t num_read;
@@ -486,7 +487,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
     size_t Data_Buf_Size = WEB_SERVER_BUF_SIZE;
 #endif /* EXCLUDE_WEB_SERVER */
     va_list argp;
-    char* buf = NULL;
+    char* buf = nullptr;
     char c;
     int nw;
     int RetVal = UPNP_E_SUCCESS;
@@ -498,7 +499,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
     memset(Chunk_Header, 0, sizeof(Chunk_Header));
 #endif /* EXCLUDE_WEB_SERVER */
     va_start(argp, fmt);
-    while ((c = *fmt++) != 0) {
+    while ((c = *fmt++) != '\0') {
 #if EXCLUDE_WEB_SERVER == 0
         if (c == 'I' && !I_fmt_processed) {
             I_fmt_processed = 1;
@@ -524,11 +525,13 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                     filename, UPNP_READ, Instr->Cookie, Instr->RequestCookie);
             else
 #ifdef _WIN32
-                fopen_s(&Fp, filename, "rb");
+                // returns error code
+                if (umock::stdio_h.fopen_s(&Fp, filename, "rb") != 0)
+                Fp = nullptr;
 #else
-                Fp = fopen(filename, "rb");
+                Fp = umock::stdio_h.fopen(filename, "rb");
 #endif
-            if (Fp == NULL) {
+            if (Fp == nullptr) {
                 RetVal = UPNP_E_FILE_READ_ERROR;
                 goto ExitFunction;
             }
@@ -665,28 +668,6 @@ ExitFunction:
     return RetVal;
 }
 
-/************************************************************************
- * Function: http_RequestAndResponse
- *
- * Parameters:
- *  IN uri_type* destination;   Destination URI object which contains
- *                  remote IP address among other elements
- *  IN const char* request;     Request to be sent
- *  IN size_t request_length;   Length of the request
- *  IN http_method_t req_method;    HTTP Request method
- *  IN int timeout_secs;        time out value
- *  OUT http_parser_t* response;    Parser object to receive the repsonse
- *
- * Description:
- *  Initiates socket, connects to the destination, sends a
- *  request and waits for the response from the remote end
- *
- * Returns:
- *  UPNP_E_SOCKET_ERROR
- *  UPNP_E_SOCKET_CONNECT
- *  Error Codes returned by http_SendMessage
- *  Error Codes returned by http_RecvMessage
- ************************************************************************/
 int http_RequestAndResponse(uri_type* destination, const char* request,
                             size_t request_length, http_method_t req_method,
                             int timeout_secs, http_parser_t* response) {
@@ -740,14 +721,15 @@ end_function:
 
 int http_Download(const char* url_str, int timeout_secs, char** document,
                   size_t* doc_length, char* content_type) {
+    TRACE("Executing http_Download()")
     int ret_code;
     uri_type url;
     char* msg_start;
     char* entity_start;
     const char* hoststr;
+    size_t hostlen;
     http_parser_t response;
     size_t msg_length;
-    size_t hostlen;
     memptr ctype;
     size_t copy_len;
     membuffer request;

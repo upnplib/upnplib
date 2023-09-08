@@ -1,10 +1,12 @@
+#ifndef SERVICE_TABLE_HPP
+#define SERVICE_TABLE_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-18
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,17 +33,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
-#ifndef SERVICE_TABLE_H
-#define SERVICE_TABLE_H
-
+// Last compare with pupnp original source file on 2023-09-06, ver 1.14.18
 /*!
  * \file
  */
 
-#include "config.hpp"
 
 #include "LinkedList.hpp"
+#include "config.hpp"
 //#include "ixml.h"
 //#include "upnp.hpp"
 #include "upnpdebug.hpp"
@@ -182,7 +181,7 @@ service_info* FindServiceId(
  * \return Pointer to the service list node from the service table whose event
  * URL matches a known event URL.
  */
-service_info* FindServiceEventURLPath(
+UPNPLIB_API service_info* FindServiceEventURLPath(
     /*! [in] Service table. */
     service_table* table,
     /*! [in] Event URL path used to find a service from the table. */
@@ -351,4 +350,4 @@ int getSubElement(
 
 #endif /* INCLUDE_DEVICE_APIS */
 
-#endif /* SERVICE_TABLE */
+#endif // SERVICE_TABLE_HPP

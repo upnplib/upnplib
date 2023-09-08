@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
  * Redistribution only with this Copyright remark. Last modified: 2022-02-18
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+// Last compare with pupnp original source file on 2023-09-06, ver 1.14.18
 
 /************************************************************************
  * Purpose: This file defines the functions for services. It defines
@@ -44,8 +45,7 @@
 
 #ifdef INCLUDE_DEVICE_APIS
 
-// Ingo TODO: Check if GENA is always neded here
-// #if EXCLUDE_GENA == 0
+#if EXCLUDE_GENA == 0
 /************************************************************************
  *  Function :  copy_subscription
  *
@@ -192,10 +192,7 @@ subscription* GetFirstSubscription(service_info* service) {
 void freeSubscription(subscription* sub) {
     if (sub) {
         free_URL_list(&sub->DeliveryURLs);
-#if EXCLUDE_GENA == 0
-        // Ingo TODO: Check if GENA is always neded or if it can disabled here
         freeSubscriptionQueuedEvents(sub);
-#endif
     }
 }
 
@@ -256,6 +253,7 @@ service_info* FindServiceId(service_table* table, const char* serviceId,
 
     return NULL;
 }
+#endif /* EXCLUDE_GENA */
 
 /************************************************************************
  *  Function :  FindServiceEventURLPath
@@ -301,7 +299,6 @@ service_info* FindServiceEventURLPath(service_table* table,
 
     return NULL;
 }
-#endif /* EXCLUDE_GENA */
 
 /***********************************************************************
  * Function: FindServiceControlURLPath
@@ -974,6 +971,6 @@ int getServiceTable(IXML_Node* node, service_table* out,
 
     return 0;
 }
-// #endif /* EXCLUDE_GENA */
+#endif /* EXCLUDE_GENA */
 
 #endif /* INCLUDE_DEVICE_APIS */

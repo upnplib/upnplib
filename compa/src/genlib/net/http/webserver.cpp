@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-18
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -67,7 +67,9 @@
 
 #include <upnplib/webserver.hpp>
 #include <upnplib/trace.hpp>
+
 #include <umock/stdlib.hpp>
+#include <umock/stdio.hpp>
 
 #include <assert.h>
 #include <fcntl.h>
@@ -539,9 +541,9 @@ static int get_file_info(
 
     UpnpFileInfo_set_ContentType(info, NULL);
 #ifdef _WIN32
-    fopen_s(&fp, filename, "r");
+    umock::stdio_h.fopen_s(&fp, filename, "r");
 #else
-    fp = fopen(filename, "r");
+    fp = umock::stdio_h.fopen(filename, "r");
 #endif
     /* check readable */
     UpnpFileInfo_set_IsReadable(info, fp != NULL);
@@ -1499,7 +1501,7 @@ static int http_RecvPostMessage(
             return HTTP_INTERNAL_SERVER_ERROR;
     } else {
 #ifdef UPNP_ENABLE_POST_WRITE
-        Fp = fopen(filename, "wb");
+        Fp = umock::stdio_h.fopen(filename, "wb");
         if (Fp == NULL)
             return HTTP_UNAUTHORIZED;
 #else

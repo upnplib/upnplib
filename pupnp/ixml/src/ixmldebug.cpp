@@ -1,5 +1,5 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-26
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-09-08
 // Taken from authors who haven't made a note.
 
 /*!
@@ -12,6 +12,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <umock/stdio.hpp>
 
 #ifdef DEBUG
 void IxmlPrintf(const char* DbgFileName, int DbgLineNo,
@@ -24,7 +25,7 @@ void IxmlPrintf(const char* DbgFileName, int DbgLineNo,
         fprintf(fp, ": ");
         va_start(ArgList, FmtStr);
         vfprintf(fp, FmtStr, ArgList);
-        fflush(fp);
+        umock::stdio_h.fflush(fp);
         va_end(ArgList);
     } else {
         fprintf(fp, "\n");

@@ -177,7 +177,7 @@ static int sock_read_write(
        descriptor to become ready. */
     int* timeoutSecs,
     /*! [in] Boolean value specifying read or write option. */
-    int bRead) {
+    bool bRead) {
     TRACE("Executing sock_read_write()")
     int retCode;
     fd_set readSet;
@@ -288,14 +288,14 @@ static int sock_read_write(
 
 int sock_read(SOCKINFO* info, char* buffer, size_t bufsize, int* timeoutSecs) {
     TRACE("Executing sock_read()")
-    return sock_read_write(info, buffer, bufsize, timeoutSecs, 1);
+    return sock_read_write(info, buffer, bufsize, timeoutSecs, true);
 }
 
 int sock_write(SOCKINFO* info, const char* buffer, size_t bufsize,
                int* timeoutSecs) {
     TRACE("Executing sock_write()")
     /* Consciently removing constness. */
-    return sock_read_write(info, (char*)buffer, bufsize, timeoutSecs, 0);
+    return sock_read_write(info, (char*)buffer, bufsize, timeoutSecs, false);
 }
 
 int sock_make_blocking(SOCKET sock) {

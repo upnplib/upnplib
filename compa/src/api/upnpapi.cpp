@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-20
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -62,6 +62,7 @@
 #include <umock/ifaddrs.hpp>
 #include <umock/net_if.hpp>
 #endif
+#include <umock/stdio.hpp>
 
 /* Needed for GENA */
 #include <gena.hpp>
@@ -1171,7 +1172,7 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
     HInfo->aliasInstalled = 0;
     HInfo->HType = HND_DEVICE;
     strncpy(HInfo->DescURL, DescUrl, sizeof(HInfo->DescURL) - 1);
-    if (LowerDescUrl == NULL)
+    if (LowerDescUrl == nullptr)
         strncpy(HInfo->LowerDescURL, DescUrl, sizeof(HInfo->LowerDescURL) - 1);
     else
         strncpy(HInfo->LowerDescURL, LowerDescUrl,
@@ -1183,16 +1184,17 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
     HInfo->Callback = Fun;
     HInfo->Cookie = (char*)Cookie;
     HInfo->MaxAge = DEFAULT_MAXAGE;
-    HInfo->DeviceList = NULL;
-    HInfo->ServiceList = NULL;
-    HInfo->DescDocument = NULL;
+    HInfo->DeviceList = nullptr;
+    HInfo->ServiceList = nullptr;
+    HInfo->DescDocument = nullptr;
 #ifdef INCLUDE_CLIENT_APIS
     ListInit(&HInfo->SsdpSearchList, NULL, NULL);
-    HInfo->ClientSubList = NULL;
+    HInfo->ClientSubList = nullptr;
 #endif /* INCLUDE_CLIENT_APIS */
     HInfo->MaxSubscriptions = UPNP_INFINITE;
     HInfo->MaxSubscriptionTimeOut = UPNP_INFINITE;
     HInfo->DeviceAf = AddressFamily;
+
     retVal = UpnpDownloadXmlDoc(HInfo->DescURL, &(HInfo->DescDocument));
     if (retVal != UPNP_E_SUCCESS) {
 #ifdef INCLUDE_CLIENT_APIS
@@ -1202,8 +1204,8 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
         goto exit_function;
     }
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-               "UpnpRegisterRootDevice4: Valid Description\n"
-               "UpnpRegisterRootDevice4: DescURL : %s\n",
+               "UpnpRegisterRootDevice[34]: Valid Description\n"
+               "UpnpRegisterRootDevice[34]: DescURL : %s\n",
                HInfo->DescURL);
 
     HInfo->DeviceList =
@@ -1215,7 +1217,7 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
         ixmlDocument_free(HInfo->DescDocument);
         FreeHandle(*Hnd);
         UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
-                   "UpnpRegisterRootDevice4: No devices found for "
+                   "UpnpRegisterRootDevice[34]: No devices found for "
                    "RootDevice\n");
         retVal = UPNP_E_INVALID_DESC;
         goto exit_function;
@@ -1225,7 +1227,7 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
         ixmlDocument_getElementsByTagName(HInfo->DescDocument, "serviceList");
     if (!HInfo->ServiceList) {
         UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
-                   "UpnpRegisterRootDevice4: No services found for "
+                   "UpnpRegisterRootDevice[34]: No services found for "
                    "RootDevice\n");
     }
 
@@ -1234,18 +1236,18 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
      * GENA SET UP
      */
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-               "UpnpRegisterRootDevice4: Gena Check\n");
+               "UpnpRegisterRootDevice[34]: Gena Check\n");
     memset(&HInfo->ServiceTable, 0, sizeof(HInfo->ServiceTable));
     hasServiceTable = getServiceTable((IXML_Node*)HInfo->DescDocument,
                                       &HInfo->ServiceTable, HInfo->DescURL);
     if (hasServiceTable) {
         UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-                   "UpnpRegisterRootDevice4: GENA Service Table \n"
+                   "UpnpRegisterRootDevice[34]: GENA Service Table \n"
                    "Here are the known services: \n");
         printServiceTable(&HInfo->ServiceTable, UPNP_ALL, API);
     } else {
         UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-                   "\nUpnpRegisterRootDevice4: Empty service table\n");
+                   "\nUpnpRegisterRootDevice[34]: Empty service table\n");
     }
 #endif /* EXCLUDE_GENA */
 
@@ -1261,7 +1263,8 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
 
 exit_function:
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-               "Exiting RegisterRootDevice4, return value == %d\n", retVal);
+               "Exiting UpnpRegisterRootDevice[34], return value == %d\n",
+               retVal);
     HandleUnlock();
 
     return retVal;
@@ -1544,9 +1547,9 @@ static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
         int ret = 0;
 
 #ifdef _WIN32
-        fopen_s(&fp, description, "rb");
+        umock::stdio_h.fopen_s(&fp, description, "rb");
 #else
-        fp = fopen(description, "rb");
+        fp = umock::stdio_h.fopen(description, "rb");
 #endif
         if (!fp) {
             rc = UPNP_E_FILE_NOT_FOUND;
@@ -3038,12 +3041,12 @@ int UpnpCloseHttpConnection(void* handle) {
 
 int UpnpDownloadUrlItem(const char* url, char** outBuf, char* contentType) {
     int ret_code;
-    size_t dummy;
+    size_t doc_length;
 
     if (url == NULL || outBuf == NULL || contentType == NULL)
         return UPNP_E_INVALID_PARAM;
-    ret_code =
-        http_Download(url, HTTP_DEFAULT_TIMEOUT, outBuf, &dummy, contentType);
+    ret_code = http_Download(url, HTTP_DEFAULT_TIMEOUT, outBuf, &doc_length,
+                             contentType);
     if (ret_code > 0)
         /* error reply was received */
         ret_code = UPNP_E_INVALID_URL;

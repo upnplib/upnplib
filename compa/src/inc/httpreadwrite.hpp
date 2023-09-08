@@ -170,16 +170,17 @@ UPNPLIB_API int http_SendMessage(
  *      OUT http_parser_t* response;    Parser object to receive the repsonse
  *
  * Description:
- *      Initiates socket, connects to the destination, sends a
+ *      Initiates socket, connects to the remote host, sends a
  *      request and waits for the response from the remote end
  *
  * Returns:
+ *      UPNP_E_SUCCESS
  *      UPNP_E_SOCKET_ERROR
  *      UPNP_E_SOCKET_CONNECT
  *      Error Codes returned by http_SendMessage
  *      Error Codes returned by http_RecvMessage
  ************************************************************************/
-int http_RequestAndResponse(uri_type* destination, const char* request,
+int http_RequestAndResponse(uri_type* remote_host, const char* request,
                             size_t request_length, http_method_t req_method,
                             int timeout_secs, http_parser_t* response);
 

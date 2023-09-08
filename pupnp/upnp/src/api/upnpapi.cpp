@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-10
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -60,7 +60,9 @@
 #else
 #include "umock/ifaddrs.hpp"
 #include "umock/net_if.hpp"
+#include "umock/stdio.hpp"
 #endif
+#include <umock/stdio.hpp>
 
 /* Needed for GENA */
 #include "gena.hpp"
@@ -1553,9 +1555,9 @@ static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
         int ret = 0;
 
 #ifdef _WIN32
-        fopen_s(&fp, description, "rb");
+        umock::stdio_h.fopen_s(&fp, description, "rb");
 #else
-        fp = fopen(description, "rb");
+        fp = umock::stdio_h.fopen(description, "rb");
 #endif
         if (!fp) {
             rc = UPNP_E_FILE_NOT_FOUND;
