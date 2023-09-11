@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-03
+// Redistribution only with this Copyright remark. Last modified: 2023-09-09
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpdebug.cpp>
@@ -23,6 +23,7 @@ using ::testing::_;
 using ::testing::Return;
 using ::testing::SetErrnoAndReturn;
 using ::testing::StrEq;
+using ::testing::StrictMock;
 
 using ::upnplib::errStrEx;
 
@@ -82,17 +83,24 @@ class UpnpdebugFTestSuite : public ::testing::Test {
     }
 };
 
-class UpnpdebugMockTestSuite : public UpnpdebugFTestSuite {
+class UpnpdebugMockFTestSuite : public UpnpdebugFTestSuite {
   protected:
     // Member variables: instantiate the module object
     Cupnpdebug upnpdebugObj;
+
+    // Instantiate mocking objects.
+    StrictMock<umock::PthreadMock> m_pthreadObj;
+    StrictMock<umock::StdioMock> m_stdioObj;
+    // Inject the mocking objects into the tested code.
+    umock::Pthread pthread_injectObj = umock::Pthread(&m_pthreadObj);
+    umock::Stdio stdio_injectObj = umock::Stdio(&m_stdioObj);
 };
 
 
 // Tests for the debugging and logging module.
 //--------------------------------------------
 TEST_F(UpnpdebugFTestSuite, UpnpPrintf_successful) {
-    CaptureStdOutErr captureObj(STDERR_FILENO);
+    // Have also a look at TEST_F(UpnpdebugMockFTestSuite, UpnpPrintf_to_stderr)
 
     // Enable logging
     ::UpnpSetLogLevel(UPNP_ALL);
@@ -109,8 +117,10 @@ TEST_F(UpnpdebugFTestSuite, UpnpPrintf_successful) {
     EXPECT_EQ(::UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
               stderr);
 
+    CaptureStdOutErr captureObj(STDERR_FILENO);
     captureObj.start();
 
+    // Test Unit
     ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
                  "Unit Test for %s on line %d.\n", "UpnpPrintf", __LINE__);
 
@@ -296,13 +306,36 @@ TEST_F(UpnpdebugFTestSuite, close_log_and_reenable_reinitialize_it) {
 
 // Tests for the debugging and logging module with mocked functions.
 //------------------------------------------------------------------
-TEST_F(UpnpdebugMockTestSuite, initlog_but_no_log_wanted)
-// For the pthread_mutex_t structure look at
-// https://stackoverflow.com/q/23449508/5014688
-{
-    umock::PthreadMock pthreadObj;
-    umock::Pthread pthread_injectObj(&pthreadObj);
-    EXPECT_CALL(pthreadObj, pthread_mutex_init(_, _)).Times(1);
+TEST_F(UpnpdebugMockFTestSuite, UpnpPrintf_to_stderr) {
+    // Enable logging
+    ::UpnpSetLogLevel(UPNP_ALL);
+
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(1);
+
+    // Initialize logging
+    ASSERT_EQ(::UpnpInitLog(), UPNP_E_SUCCESS);
+
+    if (old_code)
+        std::cout << CYEL "[ BUGFIX   ]" CRES
+                  << " upnpdebug should flush stdout before output debug "
+                     "messages to stderr.\n";
+
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_lock(_)).Times(2);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_unlock(_)).Times(2);
+
+    // Test Unit
+    ::UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
+                 "Unit Test debug output to stderr.\n");
+
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_destroy(_)).Times(1);
+    ::UpnpCloseLog();
+}
+
+TEST_F(UpnpdebugMockFTestSuite, initlog_but_no_log_wanted) {
+    // For the pthread_mutex_t structure look at
+    // https://stackoverflow.com/q/23449508/5014688
+
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(1);
     // Process unit
     int returned = upnpdebugObj.UpnpInitLog();
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
@@ -311,7 +344,7 @@ TEST_F(UpnpdebugMockTestSuite, initlog_but_no_log_wanted)
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
         nullptr);
 
-    EXPECT_CALL(pthreadObj, pthread_mutex_init(_, _)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(0);
     // Process unit again
     returned = upnpdebugObj.UpnpInitLog();
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
@@ -320,21 +353,17 @@ TEST_F(UpnpdebugMockTestSuite, initlog_but_no_log_wanted)
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
         nullptr);
 
-    umock::StdioMock stdioObj;
-    umock::Stdio stdio_injectObj(&stdioObj);
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
-    EXPECT_CALL(pthreadObj, pthread_mutex_lock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_unlock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_destroy(_)).Times(1);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_lock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_unlock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_destroy(_)).Times(1);
     upnpdebugObj.UpnpCloseLog();
 }
 
-TEST_F(UpnpdebugMockTestSuite, set_all_log_level) {
+TEST_F(UpnpdebugMockFTestSuite, set_all_log_level) {
     // Set logging for all levels
-    umock::PthreadMock pthreadObj;
     upnpdebugObj.UpnpSetLogLevel(UPNP_ALL);
-    umock::Pthread pthread_injectObj(&pthreadObj);
-    EXPECT_CALL(pthreadObj, pthread_mutex_init(_, _)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(1);
     int returned = upnpdebugObj.UpnpInitLog();
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
@@ -347,16 +376,14 @@ TEST_F(UpnpdebugMockTestSuite, set_all_log_level) {
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_CRITICAL, (Dbg_Module)NULL),
               stderr);
 
-    umock::StdioMock stdioObj;
-    umock::Stdio stdio_injectObj(&stdioObj);
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
-    EXPECT_CALL(pthreadObj, pthread_mutex_lock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_unlock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_destroy(_)).Times(1);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_lock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_unlock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_destroy(_)).Times(1);
     upnpdebugObj.UpnpCloseLog();
 }
 
-TEST_F(UpnpdebugMockTestSuite, set_log_level_info) {
+TEST_F(UpnpdebugMockFTestSuite, set_log_level_info) {
     // Process unit
     upnpdebugObj.UpnpSetLogLevel(UPNP_INFO);
 
@@ -366,9 +393,7 @@ TEST_F(UpnpdebugMockTestSuite, set_log_level_info) {
         nullptr);
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, API), nullptr);
 
-    umock::PthreadMock pthreadObj;
-    umock::Pthread pthread_injectObj(&pthreadObj);
-    EXPECT_CALL(pthreadObj, pthread_mutex_init(_, _)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(1);
     // Process unit
     int returned = upnpdebugObj.UpnpInitLog();
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
@@ -394,21 +419,17 @@ TEST_F(UpnpdebugMockTestSuite, set_log_level_info) {
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, API), stderr);
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, DOM), stderr);
 
-    umock::StdioMock stdioObj;
-    umock::Stdio stdio_injectObj(&stdioObj);
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
-    EXPECT_CALL(pthreadObj, pthread_mutex_lock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_unlock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_destroy(_)).Times(1);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_lock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_unlock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_destroy(_)).Times(1);
     upnpdebugObj.UpnpCloseLog();
 }
 
-TEST_F(UpnpdebugMockTestSuite, set_log_level_error) {
+TEST_F(UpnpdebugMockFTestSuite, set_log_level_error) {
     // Set logging
     upnpdebugObj.UpnpSetLogLevel(UPNP_ERROR);
-    umock::PthreadMock pthreadObj;
-    umock::Pthread pthread_injectObj(&pthreadObj);
-    EXPECT_CALL(pthreadObj, pthread_mutex_init(_, _)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(1);
     int returned = upnpdebugObj.UpnpInitLog();
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
@@ -421,21 +442,17 @@ TEST_F(UpnpdebugMockTestSuite, set_log_level_error) {
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_CRITICAL, (Dbg_Module)NULL),
               stderr);
 
-    umock::StdioMock stdioObj;
-    umock::Stdio stdio_injectObj(&stdioObj);
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
-    EXPECT_CALL(pthreadObj, pthread_mutex_lock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_unlock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_destroy(_)).Times(1);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_lock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_unlock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_destroy(_)).Times(1);
     upnpdebugObj.UpnpCloseLog();
 }
 
-TEST_F(UpnpdebugMockTestSuite, set_log_level_critical) {
+TEST_F(UpnpdebugMockFTestSuite, set_log_level_critical) {
     // Set logging
     upnpdebugObj.UpnpSetLogLevel(UPNP_CRITICAL);
-    umock::PthreadMock pthreadObj;
-    umock::Pthread pthread_injectObj(&pthreadObj);
-    EXPECT_CALL(pthreadObj, pthread_mutex_init(_, _)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(1);
     int returned = upnpdebugObj.UpnpInitLog();
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
@@ -448,23 +465,17 @@ TEST_F(UpnpdebugMockTestSuite, set_log_level_critical) {
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_CRITICAL, (Dbg_Module)NULL),
               stderr);
 
-    umock::StdioMock stdioObj;
-    umock::Stdio stdio_injectObj(&stdioObj);
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
-    EXPECT_CALL(pthreadObj, pthread_mutex_lock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_unlock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_destroy(_)).Times(1);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_lock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_unlock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_destroy(_)).Times(1);
     upnpdebugObj.UpnpCloseLog();
 }
 
-TEST_F(UpnpdebugMockTestSuite, log_stderr_but_not_to_fIle) {
-    umock::PthreadMock pthreadObj;
-    umock::Pthread pthread_injectObj(&pthreadObj);
-    umock::StdioMock stdioObj;
-    umock::Stdio stdio_injectObj(&stdioObj);
-    EXPECT_CALL(stdioObj, fopen(_, _)).Times(0);
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
-    EXPECT_CALL(pthreadObj, pthread_mutex_init(_, _)).Times(1);
+TEST_F(UpnpdebugMockFTestSuite, log_stderr_but_not_to_fIle) {
+    EXPECT_CALL(m_stdioObj, fopen(_, _)).Times(0);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(1);
 
     // Just set the log level but no filename. This should log to stderr.
     upnpdebugObj.UpnpSetLogLevel(UPNP_CRITICAL);
@@ -486,14 +497,14 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_but_not_to_fIle) {
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_ALL, (Dbg_Module)NULL),
               nullptr);
 
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
-    EXPECT_CALL(pthreadObj, pthread_mutex_lock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_unlock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_destroy(_)).Times(1);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_lock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_unlock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_destroy(_)).Times(1);
     upnpdebugObj.UpnpCloseLog();
 }
 
-TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_to_file) {
+TEST_F(UpnpdebugMockFTestSuite, log_not_stderr_but_to_file) {
     // Set the filename, second parameter is unused but defined
     upnpdebugObj.UpnpSetLogFileNames("upnpdebug.log", nullptr);
     // Check if logging is enabled. It should not.
@@ -501,13 +512,9 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_to_file) {
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
         nullptr);
 
-    umock::PthreadMock pthreadObj;
-    umock::Pthread pthread_injectObj(&pthreadObj);
-    umock::StdioMock stdioObj;
-    umock::Stdio stdio_injectObj(&stdioObj);
-    EXPECT_CALL(pthreadObj, pthread_mutex_init(_, _)).Times(1);
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
-    EXPECT_CALL(stdioObj, fopen(_, StrEq("a")))
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(1);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_stdioObj, fopen(_, StrEq("a")))
         .WillOnce(Return((FILE*)0x123456abcdef));
 
     // Process unit
@@ -518,9 +525,9 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_to_file) {
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
         (FILE*)0x123456abcdef);
 
-    EXPECT_CALL(pthreadObj, pthread_mutex_init(_, _)).Times(0);
-    EXPECT_CALL(stdioObj, fclose(_)).Times(1);
-    EXPECT_CALL(stdioObj, fopen(_, StrEq("a")))
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(0);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(1);
+    EXPECT_CALL(m_stdioObj, fopen(_, StrEq("a")))
         .WillOnce(Return((FILE*)0x5a5a5a5a5a5a));
 
     // Process unit
@@ -531,14 +538,14 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_to_file) {
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
         (FILE*)0x5a5a5a5a5a5a);
 
-    EXPECT_CALL(stdioObj, fclose(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_lock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_unlock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_destroy(_)).Times(1);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_lock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_unlock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_destroy(_)).Times(1);
     upnpdebugObj.UpnpCloseLog();
 }
 
-TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_opening_file_fails) {
+TEST_F(UpnpdebugMockFTestSuite, log_not_stderr_but_opening_file_fails) {
     if (github_actions && !old_code)
         GTEST_SKIP() << "             known failing test on Github Actions";
 
@@ -550,20 +557,16 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_opening_file_fails) {
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
         nullptr);
 
-    umock::PthreadMock pthreadObj;
-    umock::Pthread pthread_injectObj(&pthreadObj);
-    umock::StdioMock stdioObj;
-    umock::Stdio stdio_injectObj(&stdioObj);
-    EXPECT_CALL(pthreadObj, pthread_mutex_init(_, _)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(1);
     // #ifdef _WIN32
     // Mock fopen_s for MS Windows
-    //     EXPECT_CALL(stdioObj, fopen_s(_, StrEq(filename), "a"))
+    //     EXPECT_CALL(m_stdioObj, fopen_s(_, StrEq(filename), "a"))
     //         .WillOnce(Return(EINVAL));
     // #else
-    EXPECT_CALL(stdioObj, fopen(StrEq(filename), StrEq("a")))
+    EXPECT_CALL(m_stdioObj, fopen(StrEq(filename), StrEq("a")))
         .WillOnce(SetErrnoAndReturn(EINVAL, (FILE*)nullptr));
     // #endif
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
 
     // Test Unit
     int returned = upnpdebugObj.UpnpInitLog();
@@ -575,27 +578,23 @@ TEST_F(UpnpdebugMockTestSuite, log_not_stderr_but_opening_file_fails) {
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
         stderr);
 
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
-    EXPECT_CALL(pthreadObj, pthread_mutex_lock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_unlock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_destroy(_)).Times(1);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_lock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_unlock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_destroy(_)).Times(1);
     upnpdebugObj.UpnpCloseLog();
 }
 
-TEST_F(UpnpdebugMockTestSuite, log_stderr_and_using_file) {
+TEST_F(UpnpdebugMockFTestSuite, log_stderr_and_using_file) {
     // This should set logging but not enable it
     upnpdebugObj.UpnpSetLogLevel(UPNP_CRITICAL);
     EXPECT_EQ(
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
         nullptr);
 
-    umock::PthreadMock pthreadObj;
-    umock::Pthread pthread_injectObj(&pthreadObj);
-    umock::StdioMock stdioObj;
-    umock::Stdio stdio_injectObj(&stdioObj);
-    EXPECT_CALL(pthreadObj, pthread_mutex_init(_, _)).Times(1);
-    EXPECT_CALL(stdioObj, fopen(_, _)).Times(0);
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(1);
+    EXPECT_CALL(m_stdioObj, fopen(_, _)).Times(0);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
 
     // Process unit
     // No filename set, this should enable logging and log to stderr
@@ -612,10 +611,10 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_using_file) {
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
         stderr);
 
-    EXPECT_CALL(pthreadObj, pthread_mutex_init(_, _)).Times(0);
-    EXPECT_CALL(stdioObj, fopen(_, StrEq("a")))
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(0);
+    EXPECT_CALL(m_stdioObj, fopen(_, StrEq("a")))
         .WillOnce(Return((FILE*)0x123456abcdef));
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
 
     // Process unit. This should open a filepointer to file with set filename.
     returned = upnpdebugObj.UpnpInitLog();
@@ -625,27 +624,23 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_using_file) {
     EXPECT_EQ(upnpdebugObj.UpnpGetDebugFile(UPNP_INFO, (Dbg_Module)NULL),
               nullptr);
 
-    EXPECT_CALL(stdioObj, fclose(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_lock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_unlock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_destroy(_)).Times(1);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_lock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_unlock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_destroy(_)).Times(1);
     upnpdebugObj.UpnpCloseLog();
 }
 
-TEST_F(UpnpdebugMockTestSuite, log_stderr_and_to_file_with_wrong_filename) {
+TEST_F(UpnpdebugMockFTestSuite, log_stderr_and_to_file_with_wrong_filename) {
     // This should enable logging
     upnpdebugObj.UpnpSetLogLevel(UPNP_ALL);
     EXPECT_EQ(
         upnpdebugObj.UpnpGetDebugFile((Upnp_LogLevel)NULL, (Dbg_Module)NULL),
         nullptr);
 
-    umock::PthreadMock pthreadObj;
-    umock::Pthread pthread_injectObj(&pthreadObj);
-    umock::StdioMock stdioObj;
-    umock::Stdio stdio_injectObj(&stdioObj);
-    EXPECT_CALL(pthreadObj, pthread_mutex_init(_, _)).Times(1);
-    EXPECT_CALL(stdioObj, fopen(_, _)).Times(0);
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(1);
+    EXPECT_CALL(m_stdioObj, fopen(_, _)).Times(0);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
 
     // Test Unit
     // No filename set, this should log to stderr
@@ -659,9 +654,9 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_to_file_with_wrong_filename) {
     // Now we set a wrong filename, second parameter is unused but defined
     upnpdebugObj.UpnpSetLogFileNames("", nullptr);
 
-    EXPECT_CALL(pthreadObj, pthread_mutex_init(_, _)).Times(0);
-    EXPECT_CALL(stdioObj, fopen(_, _)).Times(0);
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_init(_, _)).Times(0);
+    EXPECT_CALL(m_stdioObj, fopen(_, _)).Times(0);
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
 
     // Test Unit
     returned = upnpdebugObj.UpnpInitLog();
@@ -675,28 +670,24 @@ TEST_F(UpnpdebugMockTestSuite, log_stderr_and_to_file_with_wrong_filename) {
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ]" CRES
                   << " UpnpCloseLog() must not try to close stderr.\n";
-        EXPECT_CALL(stdioObj, fclose(stderr)).Times(1);
+        EXPECT_CALL(m_stdioObj, fclose(stderr)).Times(1);
 
     } else {
 
-        EXPECT_CALL(stdioObj, fclose(stderr)).Times(0);
+        EXPECT_CALL(m_stdioObj, fclose(stderr)).Times(0);
     }
 
-    EXPECT_CALL(pthreadObj, pthread_mutex_lock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_unlock(_)).Times(1);
-    EXPECT_CALL(pthreadObj, pthread_mutex_destroy(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_lock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_unlock(_)).Times(1);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_destroy(_)).Times(1);
     upnpdebugObj.UpnpCloseLog();
 }
 
-TEST_F(UpnpdebugMockTestSuite, close_log_without_init_log) {
-    umock::PthreadMock pthreadObj;
-    umock::Pthread pthread_injectObj(&pthreadObj);
-    umock::StdioMock stdioObj;
-    umock::Stdio stdio_injectObj(&stdioObj);
-    EXPECT_CALL(stdioObj, fclose(_)).Times(0);
-    EXPECT_CALL(pthreadObj, pthread_mutex_lock(_)).Times(0);
-    EXPECT_CALL(pthreadObj, pthread_mutex_unlock(_)).Times(0);
-    EXPECT_CALL(pthreadObj, pthread_mutex_destroy(_)).Times(0);
+TEST_F(UpnpdebugMockFTestSuite, close_log_without_init_log) {
+    EXPECT_CALL(m_stdioObj, fclose(_)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_lock(_)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_unlock(_)).Times(0);
+    EXPECT_CALL(m_pthreadObj, pthread_mutex_destroy(_)).Times(0);
     // Process unit
     upnpdebugObj.UpnpCloseLog();
 }

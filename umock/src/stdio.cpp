@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-23
+// Redistribution only with this Copyright remark. Last modified: 2023-09-09
 
 #include "umock/stdio.inc"
 
@@ -15,6 +15,15 @@ errno_t StdioReal::fopen_s(FILE** pFile, const char* pathname,
 
 FILE* StdioReal::fopen(const char* pathname, const char* mode) {
     return ::fopen(pathname, mode);
+}
+
+size_t StdioReal::fread(void* ptr, size_t size, size_t nmemb, FILE* stream) {
+    return ::fread(ptr, size, nmemb, stream);
+}
+
+size_t StdioReal::fwrite(const void* ptr, size_t size, size_t nmemb,
+                         FILE* stream) {
+    return ::fwrite(ptr, size, nmemb, stream);
 }
 
 int StdioReal::fclose(FILE* stream) { return ::fclose(stream); }
@@ -46,6 +55,14 @@ errno_t Stdio::fopen_s(FILE** pFile, const char* pathname, const char* mode) {
 
 FILE* Stdio::fopen(const char* pathname, const char* mode) {
     return m_ptr_workerObj->fopen(pathname, mode);
+}
+
+size_t Stdio::fread(void* ptr, size_t size, size_t nmemb, FILE* stream) {
+    return m_ptr_workerObj->fread(ptr, size, nmemb, stream);
+}
+
+size_t Stdio::fwrite(const void* ptr, size_t size, size_t nmemb, FILE* stream) {
+    return m_ptr_workerObj->fwrite(ptr, size, nmemb, stream);
 }
 
 int Stdio::fclose(FILE* stream) { return m_ptr_workerObj->fclose(stream); }

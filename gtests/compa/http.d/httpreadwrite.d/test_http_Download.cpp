@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-08
+// Redistribution only with this Copyright remark. Last modified: 2023-09-12
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -26,9 +26,10 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::DoAll;
+using ::testing::InSequence;
 using ::testing::NotNull;
 using ::testing::Return;
-using ::testing::SetArgPointee;
+using ::testing::SetArgPointee; // <argno> is 0-based
 using ::testing::SetErrnoAndReturn;
 using ::testing::StrEq;
 using ::testing::StrictMock;
@@ -39,6 +40,9 @@ using ::upnplib::errStrEx;
 
 using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::MatchesStdRegex;
+using ::upnplib::testing::PointeeVoidToConstInt;
+using ::upnplib::testing::SetArgPtrIntValue;
+using ::upnplib::testing::StrCpyToArg;
 
 /*
 clang-format off
@@ -77,9 +81,6 @@ class HttpBasicFTestSuite : public ::testing::Test {
 
 class HttpMockFTestSuite : public HttpBasicFTestSuite {
   protected:
-    // Fictive socket file descriptor for mocking.
-    const SOCKET m_sockfd{FD_SETSIZE - 46};
-
     // clang-format off
     // Instantiate mocking objects.
     StrictMock<umock::Sys_selectMock> m_sys_selectObj;
@@ -490,46 +491,105 @@ TEST_F(HttpBasicFTestSuite, make_message_get_sdk_info_system_info_fails) {
 
 // Testsuite for http_SendMessage()
 // ================================
-#if 0
-TEST_F(HttpMockFTestSuite, send_message_successful) {
-    CLogging loggingObj; // Output only with build type DEBUG.
+
+TEST_F(HttpMockFTestSuite, send_message_from_buffer_successful) {
+    // CLogging loggingObj; // Output only with build type DEBUG.
 
     SOCKINFO info{};
-    info.socket = m_sockfd;
+    info.socket = FD_SETSIZE - 51;
     int timeout_secs{HTTP_DEFAULT_TIMEOUT};
     constexpr char request[]{"This is a test message."};
     constexpr size_t request_length{sizeof(request) - 1};
-    char filename[]{"./mocked/message.txt"};
-    FILE fp{};
 
     // Mock select()
     EXPECT_CALL(m_sys_selectObj,
                 select(info.socket + 1, NotNull(), NotNull(), NULL, NotNull()))
-        .WillOnce(Return(1));  // send from buffer successful
+        .WillOnce(Return(1)); // send from buffer successful
     // Mock send()
     EXPECT_CALL(m_sys_socketObj, send(info.socket, request, request_length, _))
         .WillOnce(Return((SSIZEP_T)request_length));
-    // Mock fopen()
-    EXPECT_CALL(m_stdioObj, fopen(StrEq(filename), StrEq("rb"))).WillOnce(Return(&fp));
+
+// #define SO_NOSIGPIPE MSG_NOSIGNAL // For compiling test on Linux
+#ifdef SO_NOSIGPIPE // this seems to be defined on MacOS
+    {               // Scope InSequence
+        InSequence seq;
+        // Mock getsockopt(), get old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockopt(info.socket, SOL_SOCKET, SO_NOSIGPIPE, _, _))
+            .WillOnce(DoAll(SetArgPtrIntValue<3>(0xAA55), Return(0)));
+        // Mock setsockopt(), set new option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(info.socket, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(1), _));
+        // Mock setsockopt(), restore old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(info.socket, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(0xAA55), _));
+    } // End scope InSequence
+#endif
 
     // Test Unit, send from buffer successful
     int ret_http_SendMessage =
         http_SendMessage(&info, &timeout_secs, "b", request, request_length);
     EXPECT_EQ(ret_http_SendMessage, UPNP_E_SUCCESS)
         << errStrEx(ret_http_SendMessage, UPNP_E_SUCCESS);
-
-    // Test Unit, send from file successful
-    ret_http_SendMessage =
-        http_SendMessage(&info, &timeout_secs, "f", filename);
-    EXPECT_EQ(ret_http_SendMessage, UPNP_E_SUCCESS)
-        << errStrEx(ret_http_SendMessage, UPNP_E_SUCCESS);
 }
 
+TEST_F(HttpMockFTestSuite, send_message_from_file_successful) {
+    if (github_actions)
+        GTEST_SKIP() << "Test needs to be completed after rewritten "
+                        "'sock_read()' and 'sock_write()' functions.";
+
+    CLogging loggingObj; // Output only with build type DEBUG.
+
+    // Mock fopen()
+    char filename[]{"./mocked/message.txt"};
+    FILE fd{};
+#ifdef _WIN32
+    FILE* fp{};
+    EXPECT_CALL(m_stdioObj, fopen_s(&fp, StrEq(filename), StrEq("rb")))
+        .WillOnce(DoAll(SetArgPointee<0>(&fd), Return(0)));
+#else
+    EXPECT_CALL(m_stdioObj, fopen(StrEq(filename), StrEq("rb")))
+        .WillOnce(Return(&fd));
+#endif
+    // Mock fread()
+    constexpr char receive_buf[]{"Test contents from file."};
+    EXPECT_CALL(m_stdioObj, fread(_, 1, _, _))
+        .WillOnce(
+            DoAll(StrCpyToArg<0>(receive_buf), Return(sizeof(receive_buf))));
+    // Mock fclose()
+    EXPECT_CALL(m_stdioObj, fclose(&fd)).Times(1);
+
+    // Provide needed data.
+    SOCKINFO info{};
+    info.socket = FD_SETSIZE - 52;
+    int timeout_secs{HTTP_DEFAULT_TIMEOUT};
+    SendInstruction instr{};
+    instr.ReadSendSize = -1;
+
+    // Mock select()
+    EXPECT_CALL(m_sys_selectObj,
+                select(info.socket + 1, NotNull(), NotNull(), NULL, NotNull()))
+        .WillOnce(Return(1)); // send from buffer successful
+
+    // Test Unit, send from file successful.
+    int ret_http_SendMessage =
+        http_SendMessage(&info, &timeout_secs, "If", &instr, filename);
+    EXPECT_EQ(ret_http_SendMessage, UPNP_E_SUCCESS)
+        << errStrEx(ret_http_SendMessage, UPNP_E_SUCCESS);
+
+#ifdef _WIN32
+    EXPECT_EQ(fp, &fd);
+#endif
+}
+
+#if 0
 TEST_F(HttpMockFTestSuite, send_message_fails) {
     CLogging loggingObj; // Output only with build type DEBUG.
 
     SOCKINFO info{};
-    info.socket = m_sockfd;
+    info.socket = FD_SETSIZE - 53;
     int timeout_secs{HTTP_DEFAULT_TIMEOUT};
     constexpr char request[]{"This is a UPnP Request."};
     constexpr size_t request_length{sizeof(request) - 1};

@@ -1887,7 +1887,7 @@ TEST_F(RunMiniServerFTestSuite, ssdp_read_fails) {
         "Some SSDP test data for a request of a remote client."};
     ASSERT_LE(sizeof(ssdpdata_str), BUFSIZE - 1);
 
-    constexpr SOCKET ssdp_sockfd_valid{FD_SETSIZE - 32};
+    constexpr SOCKET ssdp_sockfd_valid{FD_SETSIZE - 46};
     const CAddrinfo ai("192.168.71.82", "50023", AF_INET, SOCK_DGRAM,
                        AI_NUMERICHOST | AI_NUMERICSERV);
 

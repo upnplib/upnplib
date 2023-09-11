@@ -2438,22 +2438,22 @@ static int Parser_readFileOrBuffer(
             fseek(xmlFilePtr, 0, SEEK_END);
             fileSize = ftell(xmlFilePtr);
             if (fileSize <= 0) {
-                fclose(xmlFilePtr);
+                umock::stdio_h.fclose(xmlFilePtr);
                 return IXML_SYNTAX_ERR;
             }
 
             xmlParser->dataBuffer = (char*)malloc((size_t)fileSize + (size_t)1);
             if (xmlParser->dataBuffer == NULL) {
-                fclose(xmlFilePtr);
+                umock::stdio_h.fclose(xmlFilePtr);
                 return IXML_INSUFFICIENT_MEMORY;
             }
 
             fseek(xmlFilePtr, 0, SEEK_SET);
-            bytesRead = fread(xmlParser->dataBuffer, (size_t)1,
-                              (size_t)fileSize, xmlFilePtr);
+            bytesRead = umock::stdio_h.fread(xmlParser->dataBuffer, (size_t)1,
+                                             (size_t)fileSize, xmlFilePtr);
             /* append null */
             xmlParser->dataBuffer[bytesRead] = '\0';
-            fclose(xmlFilePtr);
+            umock::stdio_h.fclose(xmlFilePtr);
         }
     } else {
         xmlParser->dataBuffer = safe_strdup(xmlFileName);

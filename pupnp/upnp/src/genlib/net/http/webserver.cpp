@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-08
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-09
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -544,7 +544,7 @@ static int get_file_info(
         rc = -1;
         goto exit_function;
     }
-    fclose(fp);
+    umock::stdio_h.fclose(fp);
     fp = NULL;
     if (S_ISDIR(s.st_mode)) {
         UpnpFileInfo_set_IsDirectory(info, 1);
@@ -567,7 +567,7 @@ static int get_file_info(
 
 exit_function:
     if (fp) {
-        fclose(fp);
+        umock::stdio_h.fclose(fp);
     }
     return rc;
 }
@@ -1562,7 +1562,7 @@ static int http_RecvPostMessage(
                 goto ExitFunction;
             }
         } else {
-            size_t n = fwrite(Buf, 1, Data_Buf_Size, Fp);
+            size_t n = umock::stdio_h.fwrite(Buf, 1, Data_Buf_Size, Fp);
             if (n != Data_Buf_Size) {
                 ret_code = HTTP_INTERNAL_SERVER_ERROR;
                 goto ExitFunction;
@@ -1574,7 +1574,7 @@ ExitFunction:
     if (Instr && Instr->IsVirtualFile) {
         virtualDirCallback.close(Fp, Instr->Cookie, Instr->RequestCookie);
     } else {
-        fclose(Fp);
+        umock::stdio_h.fclose(Fp);
     }
 
     return ret_code;

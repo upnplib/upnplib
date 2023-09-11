@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-22
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -126,15 +126,24 @@ UPNPLIB_API int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
  * \brief Sends a message to the destination based on the format parameter.
  *
  * fmt types:
- * \li \c 'f': arg = "const char *" file name
- * \li \c 'b': arg1 = "const char *" mem_buffer; arg2 = "size_t" buffer length.
- * \li \c 'I': arg = "struct SendInstruction *"
+ * \li \c 'f': arg  = "const char*" file name
+ * \li \c 'b': arg1 = "const char*" mem_buffer, arg2 = "size_t" buffer length
+ * \li \c 'I': arg  = "SendInstruction*" send instruction
  *
+ * \note Sending from file (fmt = "If") always needs an instruction tag before
+ * with at least SendInstruction.ReadSendSize set. Otherwise nothing is sent.
+ * .ReadSendSize > 0: amount of bytes to send
+ * .ReadSendSize = 0: nothing to send
+ * .ReadSendSize < 0: send until end from data in file or until internal
+ *                    sendbuffer size.
  * E.g.:
  \verbatim
         char *buf = "POST /xyz.cgi http/1.1\r\n\r\n";
         char *filename = "foo.dat";
-        int status = http_SendMessage(tcpsock, "bf",
+        SendInstruction instruct;
+        instruct.ReadSendSize = -1;
+        int status = http_SendMessage(tcpsock, "Ibf",
+                &instruct,              // arg pointer to send instruction
                 buf, strlen(buf),       // args for memory buffer
                 filename);              // arg for file
  \endverbatim

@@ -1584,7 +1584,7 @@ static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
             ret = 1;
             goto exit_function1;
         }
-        num_read = fread(membuf, (size_t)1, fileLen, fp);
+        num_read = umock::stdio_h.fread(membuf, (size_t)1, fileLen, fp);
         if (num_read != fileLen) {
             rc = UPNP_E_FILE_READ_ERROR;
             ret = 1;
@@ -1598,7 +1598,7 @@ static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
         }
     exit_function1:
         if (fp) {
-            fclose(fp);
+            umock::stdio_h.fclose(fp);
         }
         if (ret) {
             return rc;

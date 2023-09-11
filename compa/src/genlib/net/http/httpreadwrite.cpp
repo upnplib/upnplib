@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-08
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-12
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -54,9 +54,10 @@
 #include <umock/sys_socket.hpp>
 #include <umock/stdio.hpp>
 
-#include <assert.h>
-#include <stdarg.h>
+#include <cassert>
+#include <cstdarg>
 #include <cstring>
+#include <string>
 #include <iostream>
 
 #include <posix_overwrites.hpp>
@@ -475,19 +476,19 @@ ExitFunction:
 int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
     TRACE("Executing http_SendMessage()")
 #if EXCLUDE_WEB_SERVER == 0
-    FILE* Fp{};
+    FILE* Fp{nullptr};
     SendInstruction* Instr{nullptr};
-    char* filename = nullptr;
-    char* file_buf = nullptr;
-    char* ChunkBuf = nullptr;
+    char* filename{nullptr};
+    char* file_buf{nullptr};
+    char* ChunkBuf{nullptr};
     /* 10 byte allocated for chunk header. */
     char Chunk_Header[CHUNK_HEADER_SIZE];
     size_t num_read;
-    off_t amount_to_be_read = 0;
-    size_t Data_Buf_Size = WEB_SERVER_BUF_SIZE;
+    off_t amount_to_be_read{};
+    size_t Data_Buf_Size{WEB_SERVER_BUF_SIZE};
 #endif /* EXCLUDE_WEB_SERVER */
     va_list argp;
-    char* buf = nullptr;
+    char* buf{nullptr};
     char c;
     int nw;
     int RetVal = UPNP_E_SUCCESS;
@@ -504,10 +505,11 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
         if (c == 'I' && !I_fmt_processed) {
             I_fmt_processed = 1;
             Instr = va_arg(argp, struct SendInstruction*);
-            if (Instr->ReadSendSize >= 0)
+            if (Instr->ReadSendSize >= 0) {
                 amount_to_be_read = Instr->ReadSendSize;
-            else
+            } else {
                 amount_to_be_read = (off_t)Data_Buf_Size;
+            }
             if (amount_to_be_read < (off_t)WEB_SERVER_BUF_SIZE)
                 Data_Buf_Size = (size_t)amount_to_be_read;
             ChunkBuf = (char*)malloc(
@@ -525,7 +527,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                     filename, UPNP_READ, Instr->Cookie, Instr->RequestCookie);
             else
 #ifdef _WIN32
-                // returns error code
+                // returns error code direct
                 if (umock::stdio_h.fopen_s(&Fp, filename, "rb") != 0)
                 Fp = nullptr;
 #else
@@ -560,7 +562,11 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                                                      Instr->RequestCookie);
                         num_read = (size_t)nr;
                     } else {
-                        num_read = fread(file_buf, (size_t)1, n, Fp);
+                        num_read =
+                            umock::stdio_h.fread(file_buf, (size_t)1, n, Fp);
+                        TRACE("Read " + std::to_string(num_read) +
+                              " bytes from input file = \"" +
+                              std::string(file_buf) + "\"")
                     }
                     amount_to_be_read -= (off_t)num_read;
                     if (Instr->ReadSendSize < 0) {
@@ -568,7 +574,8 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                         amount_to_be_read = (off_t)Data_Buf_Size;
                     }
                 } else {
-                    num_read = fread(file_buf, (size_t)1, Data_Buf_Size, Fp);
+                    num_read = umock::stdio_h.fread(file_buf, (size_t)1,
+                                                    Data_Buf_Size, Fp);
                 }
                 if (num_read == (size_t)0) {
                     /* EOF so no more to send. */
@@ -630,7 +637,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                 virtualDirCallback.close(Fp, Instr->Cookie,
                                          Instr->RequestCookie);
             } else {
-                fclose(Fp);
+                umock::stdio_h.fclose(Fp);
             }
             goto ExitFunction;
         } else

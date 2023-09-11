@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-08
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-09
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -236,7 +236,6 @@ static void UpnpDisplayFileAndLine(FILE* a_fp, const char* DbgFileName,
 #endif
             ,
             DbgFileName, DbgLineNo);
-    umock::stdio_h.fflush(a_fp);
 }
 
 void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
@@ -260,11 +259,13 @@ void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
 
     va_start(ArgList, FmtStr);
     if (DbgFileName) {
-        std::cout << std::flush;
+        // flush stdout to have a sequencial output with stderr on screen.
+        fflush(stdout); // Don't mock this because we use it for debuging.
         UpnpDisplayFileAndLine(filed, DbgFileName + UPNPLIB_PROJECT_PATH_LENGTH,
                                DbgLineNo, DLevel, Module);
         vfprintf(filed, FmtStr, ArgList);
-        umock::stdio_h.fflush(filed);
+        if (filed != nullptr && filed != stderr)
+            fflush(filed); // Don't mock this because we use it for debuging.
     }
     va_end(ArgList);
     umock::pthread_h.pthread_mutex_unlock(&GlobalDebugMutex);

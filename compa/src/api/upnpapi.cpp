@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-08
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-09
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1576,7 +1576,7 @@ static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
             ret = 1;
             goto exit_function1;
         }
-        num_read = fread(membuf, (size_t)1, fileLen, fp);
+        num_read = umock::stdio_h.fread(membuf, (size_t)1, fileLen, fp);
         if (num_read != fileLen) {
             rc = UPNP_E_FILE_READ_ERROR;
             ret = 1;
@@ -1590,7 +1590,7 @@ static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
         }
     exit_function1:
         if (fp) {
-            fclose(fp);
+            umock::stdio_h.fclose(fp);
         }
         if (ret) {
             return rc;

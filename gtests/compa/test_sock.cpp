@@ -626,11 +626,10 @@ TEST_F(SockFTestSuite, sock_read_with_valid_buffer_but_0_byte_length) {
     }
 }
 
-TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_timeout_value)
-// The underlaying system call 'select()' accepts NULL as pointer to the timeout
-// value to indicate not using a timeout and wait indefinitely. So it should
-// also be possible to call the Unit with a nullptr for that.
-{
+TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_timeout_value) {
+    // The underlaying system call 'select()' accepts NULL as pointer to the
+    // timeout value to indicate not using a timeout and wait indefinitely. So
+    // it should also be possible to call the Unit with a nullptr for that.
     if (github_actions && !old_code)
         GTEST_SKIP() << "             known failing test on Github Actions";
 

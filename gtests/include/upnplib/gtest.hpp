@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_GTEST_HPP
 #define UPNPLIB_GTEST_HPP
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-03
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-09-11
 
 #include <regex>
 #include <gmock/gmock.h>
@@ -134,6 +134,12 @@ MATCHER_P(ContainsStdRegex, pattern, "") {
     return std::regex_search(arg, regex);
 }
 
+// Void pointer must be type casted
+// --------------------------------
+MATCHER_P(PointeeVoidToConstInt, expected, "") {
+    return *static_cast<const int*>(arg) == expected;
+}
+
 //
 //###############################
 //       Custom Actions         #
@@ -171,13 +177,14 @@ ACTION_TEMPLATE(SetArgPtrIntValue, HAS_1_TEMPLATE_PARAMS(int, k),
         recvfrom(sockfd, _, _, _, _, _))
         .WillOnce(DoAll(StrCpyToArg<1>("ShutDown"), Return(8)));
 */
+// Using type cast in case there is a 'void*' pointer used.
 ACTION_TEMPLATE(StrCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
                 AND_1_VALUE_PARAMS(str)) {
-    std::strcpy(std::get<k>(args), str);
+    std::strcpy(static_cast<char*>(std::get<k>(args)), str);
 }
 ACTION_TEMPLATE(StrnCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
                 AND_2_VALUE_PARAMS(str, len)) {
-    std::strncpy(std::get<k>(args), str, (size_t)len);
+    std::strncpy(static_cast<char*>(std::get<k>(args)), str, (size_t)len);
 }
 
 } // namespace upnplib::testing

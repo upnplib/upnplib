@@ -557,7 +557,8 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                                                      Instr->RequestCookie);
                         num_read = (size_t)nr;
                     } else {
-                        num_read = fread(file_buf, (size_t)1, n, Fp);
+                        num_read =
+                            umock::stdio_h.fread(file_buf, (size_t)1, n, Fp);
                     }
                     amount_to_be_read -= (off_t)num_read;
                     if (Instr->ReadSendSize < 0) {
@@ -565,7 +566,8 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                         amount_to_be_read = (off_t)Data_Buf_Size;
                     }
                 } else {
-                    num_read = fread(file_buf, (size_t)1, Data_Buf_Size, Fp);
+                    num_read = umock::stdio_h.fread(file_buf, (size_t)1,
+                                                    Data_Buf_Size, Fp);
                 }
                 if (num_read == (size_t)0) {
                     /* EOF so no more to send. */
@@ -627,7 +629,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                 virtualDirCallback.close(Fp, Instr->Cookie,
                                          Instr->RequestCookie);
             } else {
-                fclose(Fp);
+                umock::stdio_h.fclose(Fp);
             }
             goto ExitFunction;
         } else

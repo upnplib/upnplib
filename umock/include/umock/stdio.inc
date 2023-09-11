@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Redistribution only with this Copyright remark. Last modified: 2023-09-09
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
@@ -13,18 +13,20 @@ class StdioInterface {
   public:
     virtual ~StdioInterface() {}
 
+// clang-format off
 #ifdef _WIN32
     // Secure function only on MS Windows, not completely virtual
-    virtual errno_t fopen_s(FILE** pFile, const char* pathname,
-                            const char* mode) = 0;
+    virtual errno_t fopen_s(FILE** pFile, const char* pathname, const char* mode) = 0;
 #endif
     // Portable function also available on MS Windows
     virtual FILE* fopen(const char* pathname, const char* mode) = 0;
+    virtual size_t fread(void* ptr, size_t size, size_t nmemb, FILE* stream) = 0;
+    virtual size_t fwrite(const void* ptr, size_t size, size_t nmemb, FILE* stream) = 0;
     virtual int fclose(FILE* stream) = 0;
     virtual int fflush(FILE* stream) = 0;
 };
 
-//
+
 // This is the wrapper class for the real (library?) function
 // ----------------------------------------------------------
 class StdioReal : public StdioInterface {
@@ -33,15 +35,17 @@ class StdioReal : public StdioInterface {
 
 #ifdef _WIN32
     // Secure function only on MS Windows
-    errno_t fopen_s(FILE** pFile, const char* pathname,
-                    const char* mode) override;
+    errno_t fopen_s(FILE** pFile, const char* pathname, const char* mode) override;
 #endif
     FILE* fopen(const char* pathname, const char* mode) override;
+    size_t fread(void* ptr, size_t size, size_t nmemb, FILE* stream) override;
+    size_t fwrite(const void* ptr, size_t size, size_t nmemb, FILE* stream) override;
     int fclose(FILE* stream) override;
     int fflush(FILE* stream) override;
 };
+// clang-format on
 
-//
+
 // This is the caller or injector class that injects the class (worker) to be
 // used, real or mocked functions.
 /* Example:
@@ -66,15 +70,18 @@ class UPNPLIB_API Stdio {
     // The destructor is ussed to restore the old pointer.
     virtual ~Stdio();
 
+// clang-format off
     // Methods
 #ifdef _WIN32
     // Secure function only on MS Windows
-    virtual errno_t fopen_s(FILE** pFile, const char* pathname,
-                            const char* mode);
+    virtual errno_t fopen_s(FILE** pFile, const char* pathname, const char* mode);
 #endif
     virtual FILE* fopen(const char* pathname, const char* mode);
+    virtual size_t fread(void* ptr, size_t size, size_t nmemb, FILE* stream);
+    virtual size_t fwrite(const void* ptr, size_t size, size_t nmemb, FILE* stream);
     virtual int fclose(FILE* stream);
     virtual int fflush(FILE* stream);
+    // clang-format on
 
   private:
     // Next variable must be static. Please note that a static member variable
