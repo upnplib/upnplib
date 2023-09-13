@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-08-16
+# Redistribution only with this Copyright remark. Last modified: 2023-09-14
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -58,7 +58,7 @@ add_library(upnplib_gtest_tools_shared SHARED
 )
 target_include_directories(upnplib_gtest_tools_shared
     PRIVATE ./include
-    PUBLIC ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 target_compile_definitions(upnplib_gtest_tools_shared
     PRIVATE
@@ -78,9 +78,8 @@ add_library(upnplib_gtest_tools_static STATIC
     ${GTEST_TOOLS_SOURCE_FILES}
 )
 target_include_directories(upnplib_gtest_tools_static
-    PRIVATE
-        ./include
-        ${UPNPLIB_PROJECT_SOURCE_DIR}/include
+    PRIVATE ./include
+    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 target_compile_definitions(upnplib_gtest_tools_static
     PRIVATE
@@ -141,6 +140,7 @@ add_executable(test_upnplib_gtest_tools_platform
 )
 target_include_directories(test_upnplib_gtest_tools_platform
     PRIVATE ./include
+    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 target_compile_definitions(test_upnplib_gtest_tools_platform
     PRIVATE UPNPLIB_SHARED

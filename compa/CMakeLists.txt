@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-13
+# Redistribution only with this Copyright remark. Last modified: 2023-09-14
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -157,7 +157,6 @@ set(COMPA_INCLUDE_DIRECTORIES
     PUBLIC ${UPNPLIB_PROJECT_SOURCE_DIR}/interface/include
     PUBLIC ${UPNPLIB_PROJECT_BINARY_DIR}/include
     PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
-    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 
 set(COMPA_COMPILE_DEFINITIONS

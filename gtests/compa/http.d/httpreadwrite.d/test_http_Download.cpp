@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-12
+// Redistribution only with this Copyright remark. Last modified: 2023-09-13
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -540,7 +540,7 @@ TEST_F(HttpMockFTestSuite, send_message_from_file_successful) {
         GTEST_SKIP() << "Test needs to be completed after rewritten "
                         "'sock_read()' and 'sock_write()' functions.";
 
-    CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging loggingObj; // Output only with build type DEBUG.
 
     // Mock fopen()
     char filename[]{"./mocked/message.txt"};
@@ -622,7 +622,7 @@ TEST_F(HttpBasicFTestSuite, send_message_without_socket_file_descriptor) {
         GTEST_SKIP()
             << "Test needs to be completed after revision of test_sock.cpp.";
 
-    CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging loggingObj; // Output only with build type DEBUG.
 
     SOCKINFO info{};
     int timeout_secs{HTTP_DEFAULT_TIMEOUT};
@@ -649,7 +649,7 @@ TEST_F(HttpMockFTestSuite, request_response_successful) {
     if (github_actions)
         GTEST_SKIP() << "Test needs to be completed after testing subroutines.";
 
-    CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging loggingObj; // Output only with build type DEBUG.
 
     uri_type url;
     http_parser_t response;
@@ -668,7 +668,7 @@ TEST_F(HttpMockFTestSuite, http_Download_successful) {
     if (github_actions)
         GTEST_SKIP() << "Test needs to be completed after testing subroutines.";
 
-    CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging loggingObj; // Output only with build type DEBUG.
 
     const char url[]{"http://127.0.0.1:50001/tvdevicedesc.xml"};
     char* outBuf;

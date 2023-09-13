@@ -1,12 +1,12 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-03
+// Redistribution only with this Copyright remark. Last modified: 2023-09-13
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
 
-#include <pupnp/sock.hpp>
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #define NS ::pupnp
+#include <pupnp/sock.hpp>
 #else
 #define NS ::compa
 #include <compa/sock.hpp>

@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-05
+// Redistribution only with this Copyright remark. Last modified: 2023-09-13
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpapi.cpp>
@@ -527,8 +527,8 @@ TEST_F(UpnpapiMockFTestSuite, UpnpRegisterRootDevice3_successful) {
     EXPECT_CALL(m_sys_socketObj, shutdown(sockfd, _)).Times(1);
 
     UpnpSdkInit = 1;
-    {                        // Scope for logging
-        CLogging loggingObj; // Output only with build type DEBUG.
+    { // Scope for logging
+        // CLogging loggingObj; // Output only with build type DEBUG.
 
         // Test Unit
         int ret_UpnpRegisterRootDevice3 =
