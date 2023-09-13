@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-08-16
+# Redistribution only with this Copyright remark. Last modified: 2023-09-13
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -147,16 +147,17 @@ set(PUPNP_SOURCE_FILES
     $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_WEBSERVER}>>:./src/urlconfig/urlconfig.cpp>
 
     ${UMOCK_SOURCE_DIR}/src/pupnp_sock.cpp
-    ${PUPNP_SOURCE_DIR}/src/interface/pupnp-sock.cpp
+    ${UPNPLIB_PROJECT_SOURCE_DIR}/interface/src/pupnp-sock.cpp
 
     ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 
 set(PUPNP_INCLUDE_DIRECTORIES
-    PUBLIC ./inc
-    PUBLIC ./src/inc
-    PUBLIC ./src/threadutil
+    PUBLIC inc
+    PUBLIC src/inc
+    PUBLIC src/threadutil
     PUBLIC ${PUPNP_SOURCE_DIR}/include
+    PUBLIC ${UPNPLIB_PROJECT_SOURCE_DIR}/interface/include
     INTERFACE ${UPNPLIB_PROJECT_BINARY_DIR}/include
     PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
 )

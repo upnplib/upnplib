@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-28
+# Redistribution only with this Copyright remark. Last modified: 2023-09-13
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -26,6 +26,20 @@ target_link_libraries(test_sock-psh
 add_test(NAME ctest_sock-psh COMMAND test_sock-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
+
+if(FALSE)
+add_executable(test_sock-csh
+        ./test_sock.cpp
+)
+target_link_libraries(test_sock-csh
+    PRIVATE
+        compa_shared
+        upnplib_shared
+)
+add_test(NAME ctest_sock-csh COMMAND test_sock-csh --gtest_shuffle
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+endif()
 
 
 # sock_openssl

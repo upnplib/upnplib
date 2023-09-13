@@ -1,9 +1,7 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-03
+// Redistribution only with this Copyright remark. Last modified: 2023-09-13
 
 #include <interface/pupnp-sock.hpp>
-
-namespace pupnp {
 
 // Interface for the sock module
 // =============================
@@ -15,5 +13,3 @@ namespace pupnp {
 // UPNPLIB_API and would require other advanced special handling. So we link
 // the symbol with this source file so it do the right think with it. --Ingo
 SockInterface::~SockInterface() = default;
-
-} // namespace pupnp

@@ -1,17 +1,17 @@
 #ifndef INCLUDE_COMPA_SOCK_HPP
 #define INCLUDE_COMPA_SOCK_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-03
+// Redistribution only with this Copyright remark. Last modified: 2023-09-13
 
 #include <interface/pupnp-sock.hpp>
 
 namespace compa {
 
-// Interface for the sock module
-// =============================
+// Declarations for the sock module using the interface
+// ====================================================
 // clang-format off
 
-class UPNPLIB_API Csock : public pupnp::SockInterface {
+class UPNPLIB_API Csock : public ::SockInterface {
   public:
     virtual ~Csock() override = default;
 

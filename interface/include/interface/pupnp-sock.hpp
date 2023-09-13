@@ -1,11 +1,9 @@
-#ifndef PUPNP_INTERFACE_SOCK_HPP
-#define PUPNP_INTERFACE_SOCK_HPP
+#ifndef INTERFACE_PUPNP_SOCK_HPP
+#define INTERFACE_PUPNP_SOCK_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-03
+// Redistribution only with this Copyright remark. Last modified: 2023-09-13
 
 #include <sock.hpp>
-
-namespace pupnp {
 
 // Interface for the sock module
 // =============================
@@ -38,6 +36,4 @@ class UPNPLIB_API SockInterface {
 };
 // clang-format on
 
-} // namespace pupnp
-
-#endif // PUPNP_INTERFACE_SOCK_HPP
+#endif // INTERFACE_PUPNP_SOCK_HPP

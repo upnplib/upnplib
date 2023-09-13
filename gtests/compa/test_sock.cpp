@@ -1,22 +1,21 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-22
+// Redistribution only with this Copyright remark. Last modified: 2023-09-13
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/q/76548580/5014688
 
 #include <upnp.hpp>
-#include <pupnp/sock.hpp>
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
-#define NS ::pupnp
+#include <pupnp/sock.hpp>
+#define NS ::pupnp::
 #else
-#define NS ::compa
 #include <compa/sock.hpp>
+#define NS
 #endif
 
 #include <upnplib/upnptools.hpp>
 #include <upnplib/gtest.hpp>
 
-#include <gmock/gmock.h>
 #include <umock/unistd_mock.hpp>
 #include <umock/sys_select_mock.hpp>
 #include <umock/sys_socket_mock.hpp>
@@ -76,7 +75,7 @@ TEST(SockTestSuite, sock_connect_client)
 class SockFTestSuite : public ::testing::Test {
   protected:
     // Instantiate socket object derived from the C++ interface
-    NS::Csock m_sockObj{};
+    NS Csock m_sockObj{};
 
     // Dummy socket, if we do not need a real one due to mocking
     const ::SOCKET m_socketfd{1001};
