@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-09
+// Redistribution only with this Copyright remark. Last modified: 2023-09-18
 
 #include <UpnpString.hpp>
 #if defined UPNPLIB_WITH_NATIVE_PUPNP && !defined PUPNP_UPNPSTRING_HPP
@@ -23,6 +23,7 @@ using ::testing::_;
 using ::testing::Eq;
 using ::testing::ExitedWithCode;
 using ::testing::Return;
+using ::testing::StrictMock;
 
 
 // Since the following struct is completely invisible outside of pupnp (because
@@ -41,8 +42,18 @@ namespace compa {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = std::getenv("GITHUB_ACTIONS");
 
-// testsuite
-//----------
+
+class UpnpStringFTestSuite : public ::testing::Test {
+  protected:
+    // clang-format off
+    // Instantiate mocking objects.
+    StrictMock<umock::StringhMock> m_stringhObj;
+    // Inject the mocking objects into the tested code.
+    umock::Stringh stringh_injectObj = umock::Stringh(&m_stringhObj);
+};
+
+// Testsuite
+// =========
 TEST(UpnpStringMockTestSuite, create_new_upnp_string) {
     // provide a structure of a UpnpString
     char mstring[]{""};
@@ -108,7 +119,7 @@ TEST(UpnpStringMockTestSuite, delete_upnp_string) {
     EXPECT_EQ(upnpstr.m_string, nullptr);
 }
 
-TEST(UpnpStringMockTestSuite, set_upnp_string) {
+TEST_F(UpnpStringFTestSuite, set_upnp_string) {
     // provide an empty UpnpString
     char mstring1[]{""};
     UpnpString upnpstr{0, mstring1};
@@ -119,9 +130,7 @@ TEST(UpnpStringMockTestSuite, set_upnp_string) {
     // UpnpString.
     char mstring3[]{"set string"};
 
-    umock::StringhMock stringhObj;
-    umock::Stringh stringh_injectObj(&stringhObj);
-    EXPECT_CALL(stringhObj, strdup(mstring2)).WillOnce(Return(mstring3));
+    EXPECT_CALL(m_stringhObj, strdup(mstring2)).WillOnce(Return(mstring3));
 
     umock::StdlibMock stdlibObj;
     umock::Stdlib stdlib_injectObj(&stdlibObj);
@@ -137,7 +146,7 @@ TEST(UpnpStringMockTestSuite, set_upnp_string) {
     EXPECT_STREQ(p->m_string, "set string");
 }
 
-TEST(UpnpStringMockTestSuite, set_upnp_string_n) {
+TEST_F(UpnpStringFTestSuite, set_upnp_string_n) {
     // provide an empty UpnpString
     char mstring_empty[]{""};
     UpnpString upnpstr{0, mstring_empty};
@@ -148,9 +157,7 @@ TEST(UpnpStringMockTestSuite, set_upnp_string_n) {
     // UpnpString.
     char mstring3[]{"hello world"};
 
-    umock::StringhMock stringhObj;
-    umock::Stringh stringh_injectObj(&stringhObj);
-    EXPECT_CALL(stringhObj, strndup(mstring2, 11)).WillOnce(Return(mstring3));
+    EXPECT_CALL(m_stringhObj, strndup(mstring2, 11)).WillOnce(Return(mstring3));
 
     umock::StdlibMock stdlibObj;
     umock::Stdlib stdlib_injectObj(&stdlibObj);
@@ -165,7 +172,7 @@ TEST(UpnpStringMockTestSuite, set_upnp_string_n) {
     EXPECT_STREQ(p->m_string, "hello world");
 
     // Empty string with lenth 0 should set an empty UpnpString.
-    EXPECT_CALL(stringhObj, strndup(mstring_empty, 0))
+    EXPECT_CALL(m_stringhObj, strndup(mstring_empty, 0))
         .WillOnce(Return(mstring_empty));
     EXPECT_CALL(stdlibObj, free(mstring3)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring_empty, 0);
@@ -173,7 +180,7 @@ TEST(UpnpStringMockTestSuite, set_upnp_string_n) {
     EXPECT_STREQ(upnpstr.m_string, "");
 
     // longer string but length 0 should set an empty UpnpString.
-    EXPECT_CALL(stringhObj, strndup(mstring2, 0))
+    EXPECT_CALL(m_stringhObj, strndup(mstring2, 0))
         .WillOnce(Return(mstring_empty));
     EXPECT_CALL(stdlibObj, free(mstring_empty)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring2, 0);
@@ -182,7 +189,7 @@ TEST(UpnpStringMockTestSuite, set_upnp_string_n) {
 
     // longer string but length 1
     char mstring4[]{"h"};
-    EXPECT_CALL(stringhObj, strndup(mstring2, 1)).WillOnce(Return(mstring4));
+    EXPECT_CALL(m_stringhObj, strndup(mstring2, 1)).WillOnce(Return(mstring4));
     EXPECT_CALL(stdlibObj, free(mstring_empty)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring2, 1);
     EXPECT_EQ(upnpstr.m_length, (size_t)1);
@@ -190,14 +197,14 @@ TEST(UpnpStringMockTestSuite, set_upnp_string_n) {
 
     // Length = 10 is one character shorter than string length
     char mstring5[]{"hello worl"};
-    EXPECT_CALL(stringhObj, strndup(mstring2, 10)).WillOnce(Return(mstring5));
+    EXPECT_CALL(m_stringhObj, strndup(mstring2, 10)).WillOnce(Return(mstring5));
     EXPECT_CALL(stdlibObj, free(mstring4)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring2, 10);
     EXPECT_EQ(upnpstr.m_length, (size_t)10);
     EXPECT_EQ(upnpstr.m_string, mstring5);
 
     // Length = 12 is one character longer than string length
-    EXPECT_CALL(stringhObj, strndup(mstring2, 12)).WillOnce(Return(mstring3));
+    EXPECT_CALL(m_stringhObj, strndup(mstring2, 12)).WillOnce(Return(mstring3));
     EXPECT_CALL(stdlibObj, free(mstring5)).Times(1);
     EXPECT_PRED3(NS::UpnpString_set_StringN, p, mstring2, 12);
     EXPECT_EQ(upnpstr.m_length, (size_t)11);

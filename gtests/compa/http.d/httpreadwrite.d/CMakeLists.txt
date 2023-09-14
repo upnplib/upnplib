@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-08-22
+# Redistribution only with this Copyright remark. Last modified: 2023-09-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../../cmake/project-header.cmake)
@@ -72,6 +72,7 @@ target_link_libraries(test_httpreadwrite-pst
         upnplib_static
 )
 add_test(NAME ctest_httpreadwrite-pst COMMAND test_httpreadwrite-pst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 
@@ -135,6 +136,7 @@ target_link_libraries(test_netconnect-pst
     PRIVATE upnplib_static
 )
 add_test(NAME ctest_netconnect-pst COMMAND test_netconnect-pst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 add_executable(test_netconnect-cst
@@ -149,6 +151,7 @@ target_link_libraries(test_netconnect-cst
     PRIVATE upnplib_static
 )
 add_test(NAME ctest_netconnect-cst COMMAND test_netconnect-cst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 
@@ -183,7 +186,9 @@ target_link_libraries(test_http_Download-pst
         pupnp_static
         upnplib_static
 )
-add_test(NAME ctest_http_Download-pst COMMAND test_http_Download-pst --gtest_shuffle)
+add_test(NAME ctest_http_Download-pst COMMAND test_http_Download-pst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
 
 add_executable(test_http_Download-cst
 #------------------------------------
@@ -204,4 +209,6 @@ target_link_libraries(test_http_Download-cst
         compa_static
         upnplib_static
 )
-add_test(NAME ctest_http_Download-cst COMMAND test_http_Download-cst --gtest_shuffle)
+add_test(NAME ctest_http_Download-cst COMMAND test_http_Download-cst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)

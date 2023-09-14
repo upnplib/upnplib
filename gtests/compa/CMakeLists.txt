@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-13
+# Redistribution only with this Copyright remark. Last modified: 2023-09-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -186,6 +186,7 @@ target_link_libraries(test_miniserver-pst
         upnplib_gtest_tools_static
 )
 add_test(NAME ctest_miniserver-pst COMMAND test_miniserver-pst --gtest_shuffle
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 add_executable(test_miniserver-cst
@@ -217,6 +218,7 @@ target_link_libraries(test_miniserver-cst
         upnplib_gtest_tools_static
 )
 add_test(NAME ctest_miniserver-cst COMMAND test_miniserver-cst --gtest_shuffle
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 

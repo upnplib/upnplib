@@ -1,12 +1,15 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-05
+// Redistribution only with this Copyright remark. Last modified: 2023-09-14
 
-#include "umock/stringh.inc"
-#include <cstdlib> // for malloc
+#include <umock/stringh.inc>
 
-//
 namespace umock {
 
+StringhInterface::StringhInterface() = default;
+StringhInterface::~StringhInterface() = default;
+
+StringhReal::StringhReal() = default;
+StringhReal::~StringhReal() = default;
 char* StringhReal::strerror(int errnum) { return ::strerror(errnum); }
 char* StringhReal::strdup(const char* s) { return ::strdup(s); }
 char* StringhReal::strndup(const char* s, size_t n) { return ::strndup(s, n); }

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-03
+// Redistribution only with this Copyright remark. Last modified: 2023-09-17
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -129,6 +129,7 @@ class MiniServerFTestSuite : public ::testing::Test {
     // Instantiate mocking objects.
     StrictMock<umock::Sys_selectMock> m_sys_selectObj;
     StrictMock<umock::Sys_socketMock> m_sys_socketObj;
+    // Inject the mocking objects into the tested code.
     umock::Sys_select sys_select_injectObj = umock::Sys_select(&m_sys_selectObj);
     umock::Sys_socket sys_socket_injectObj = umock::Sys_socket(&m_sys_socketObj);
     // clang-format on

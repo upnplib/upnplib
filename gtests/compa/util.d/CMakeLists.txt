@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-06
+# Redistribution only with this Copyright remark. Last modified: 2023-09-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -44,6 +44,7 @@ target_link_libraries(test_membuffer-pst
     PRIVATE umock_static
 )
 add_test(NAME ctest_membuffer-pst COMMAND test_membuffer-pst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 

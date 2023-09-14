@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-05
+// Redistribution only with this Copyright remark. Last modified: 2023-09-14
 
 // There is no include guard '#ifndef ...' because this file shouldn't be
 // included more than two times as given.
@@ -14,9 +14,10 @@ UPNPLIB_API char* strndup(const char* __string, size_t __n);
 
 namespace umock {
 
-class StringhInterface {
+class UPNPLIB_API StringhInterface {
   public:
-    virtual ~StringhInterface() = default;
+    StringhInterface();
+    virtual ~StringhInterface();
     virtual char* strerror(int errnum) = 0;
     virtual char* strdup(const char* s) = 0;
     virtual char* strndup(const char* s, size_t n) = 0;
@@ -27,7 +28,8 @@ class StringhInterface {
 // -------------------------------------------------------------------
 class StringhReal : public StringhInterface {
   public:
-    virtual ~StringhReal() override = default;
+    StringhReal();
+    virtual ~StringhReal() override;
     char* strerror(int errnum) override;
     char* strdup(const char* s) override;
     char* strndup(const char* s, size_t n) override;

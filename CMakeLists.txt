@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-08-21
+# Redistribution only with this Copyright remark. Last modified: 2023-09-18
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -31,7 +31,12 @@ option(UPNPLIB_WITH_TOOLS "Make some not essential program features available li
 option(UPNPLIB_WITH_SAMPLES "Provide sample programs device and control point." OFF)
 option(UPNPLIB_WITH_GOOGLETEST "Download and build Googletest." OFF)
 option(UPNPLIB_WITH_TRACE "Compile trace messages into the libraries for analizing program execution." OFF)
-option(GTESTS_WITH_SHARED_LIBS "Build GOOGLETEST libraries shared instead of default static." OFF)
+# Because we link utests with shared and static libraries we need gtest/gmock
+# libraries that link together with both versions of other libraries. These are
+# the shared gtest/gmock libraries. Next option is only available for testing
+# other combinations. It should be set to ON by default otherwise you may get
+# compiling errors if you do not know what you are doing.
+option(GTESTS_WITH_SHARED_LIBS "Build GOOGLETEST libraries shared. You should not disable this except you know what you doing." ON)
 # option(UPNPLIB_WITH_UNSPECIFIED_SERVER "Set information in UPnP SERVER http request header to \"Unspecified\"". OFF)
     # This is an option to set to "Unspecified" the OS name, OS version, product
     # name and product version normally contained in the SERVER header of a
@@ -90,7 +95,7 @@ set(UPNP_PTHREADS_STATIC_LIBRARY libpthread.a CACHE INTERNAL "Name of the linkab
 
 # Set the default build type
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: None, Debug, Release, RelWithDebInfo, or Release." FORCE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: None, Debug, Release, RelWithDebInfo, or MinSizeRel." FORCE)
     message(STATUS "No build type specified, defaulting to Release.")
 endif()
 
@@ -364,25 +369,6 @@ endif(WIN32)
 
 
 #################################
-# UPnP subdirectories           #
-#################################
-# This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
-# e.g. PUPNP_UPNP_SOURCE_DIR and PUPNP_UPNP_BINARY_DIR
-# For a successful one step configure the order is important.
-
-if(UPNPLIB_WITH_OPENSSL)
-    add_subdirectory(${PROJECT_SOURCE_DIR}/openssl)
-endif()
-add_subdirectory(${PROJECT_SOURCE_DIR}/umock)
-add_subdirectory(${PROJECT_SOURCE_DIR}/upnplib)
-add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp)
-add_subdirectory(${PROJECT_SOURCE_DIR}/ixml)
-add_subdirectory(${PROJECT_SOURCE_DIR}/compa)
-add_subdirectory(${PROJECT_SOURCE_DIR}/sample)
-add_subdirectory(${PROJECT_SOURCE_DIR}/apps)
-
-
-#################################
 # Googletest                    #
 #################################
 # Download, configure and build
@@ -409,7 +395,8 @@ if(UPNPLIB_WITH_GOOGLETEST)
         # Must be set before FetchContent_MakeAvailable().
         set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-        # This caches googletest_SOURCE_DIR, googletest_BINARY_DIR and googletest_POPULATED.
+        # This caches FETCHCONTENT_BASE_DIR (e.g. ${PROJECT_BINARY_DIR}/_deps)),
+        # googletest_SOURCE_DIR, googletest_BINARY_DIR and googletest_POPULATED.
         FetchContent_MakeAvailable(googletest)
 
         # Due to issue https://github.com/google/googletest/issues/1325#issuecomment-903884914
@@ -423,9 +410,6 @@ if(UPNPLIB_WITH_GOOGLETEST)
         ##################################
 
         message(CHECK_START "configuring Unit Tests")
-
-        # This caches GTESTS_SOURCE_DIR and GTESTS_BINARY_DIR
-        add_subdirectory(${PROJECT_SOURCE_DIR}/gtests)
 
         # Create symlinks for shared gtest .dlls so the Unit Tests can find them.
         if(BUILD_SHARED_LIBS)
@@ -454,7 +438,8 @@ if(UPNPLIB_WITH_GOOGLETEST)
 
     else(WIN32) # AND UPNPLIB_WITH_GOOGLETEST
 
-        # This caches googletest_SOURCE_DIR, googletest_BINARY_DIR and googletest_POPULATED.
+        # This caches FETCHCONTENT_BASE_DIR (e.g. ${PROJECT_BINARY_DIR}/_deps)),
+        # googletest_SOURCE_DIR, googletest_BINARY_DIR and googletest_POPULATED.
         FetchContent_MakeAvailable(googletest)
 
         # Due to issue https://github.com/google/googletest/issues/1325#issuecomment-903884914
@@ -468,10 +453,6 @@ if(UPNPLIB_WITH_GOOGLETEST)
         ##################################
 
         message(CHECK_START "configuring Unit Tests")
-
-        # This caches GTESTS_SOURCE_DIR and GTESTS_BINARY_DIR
-        add_subdirectory(${PROJECT_SOURCE_DIR}/gtests)
-
         message(CHECK_PASS "done")
 
     endif(WIN32)
@@ -481,6 +462,29 @@ if(UPNPLIB_WITH_GOOGLETEST)
     message(DEBUG "  DEBUG: googletest_BINARY_DIR is: ${googletest_BINARY_DIR}")
 
 endif(UPNPLIB_WITH_GOOGLETEST)
+
+
+#################################
+# UPnP subdirectories           #
+#################################
+# This caches <subprojectname>_SOURCE_DIR and <subprojectname_BINARY_DIR
+# e.g. PUPNP_UPNP_SOURCE_DIR and PUPNP_UPNP_BINARY_DIR
+# For a successful one step configure the order is important.
+
+if(UPNPLIB_WITH_OPENSSL)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/openssl)
+endif()
+add_subdirectory(${PROJECT_SOURCE_DIR}/umock)
+add_subdirectory(${PROJECT_SOURCE_DIR}/upnplib)
+add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp)
+add_subdirectory(${PROJECT_SOURCE_DIR}/ixml)
+add_subdirectory(${PROJECT_SOURCE_DIR}/compa)
+add_subdirectory(${PROJECT_SOURCE_DIR}/sample)
+add_subdirectory(${PROJECT_SOURCE_DIR}/apps)
+if(googletest_POPULATED)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/gtests)
+endif()
+
 
 #################################
 # Export cmake variables        #

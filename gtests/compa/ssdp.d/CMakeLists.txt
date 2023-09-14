@@ -1,5 +1,5 @@
 # Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-27
+# Redistribution only with this Copyright remark. Last modified: 2023-09-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -34,6 +34,7 @@ target_link_libraries(test_ssdp_server-pst
         upnplib_static
 )
 add_test(NAME ctest_ssdp_server-pst COMMAND test_ssdp_server-pst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 if(FALSE)
@@ -53,5 +54,6 @@ target_link_libraries(test_ssdp_server-cst
         upnplib_static
 )
 add_test(NAME ctest_ssdp_server-cst COMMAND test_ssdp_server-cst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 endif()

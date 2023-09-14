@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-08-16
+# Redistribution only with this Copyright remark. Last modified: 2023-08-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -38,6 +38,7 @@ target_link_libraries(test_upnpdebug-pst
         upnplib_gtest_tools_static
 )
 add_test(NAME ctest_upnpdebug-pst COMMAND test_upnpdebug-pst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 add_executable(test_upnpdebug-cst
@@ -61,6 +62,7 @@ target_link_libraries(test_upnpdebug-cst
         upnplib_gtest_tools_static
 )
 add_test(NAME ctest_upnpdebug-cst COMMAND test_upnpdebug-cst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 
@@ -84,24 +86,50 @@ endif()
 #===========
 add_executable(test_UpnpString-psh
 #---------------------------------
-    ./test_UpnpString.cpp
+    test_UpnpString.cpp
 )
 target_link_libraries(test_UpnpString-psh
     PRIVATE pupnp_shared
+    PRIVATE upnplib_gtest_tools_shared
 )
 add_test(NAME ctest_UpnpString-psh COMMAND test_UpnpString-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
+add_executable(test_UpnpString-pst
+#---------------------------------
+    test_UpnpString.cpp
+)
+target_link_libraries(test_UpnpString-pst
+    PRIVATE pupnp_static
+    PRIVATE upnplib_gtest_tools_static
+)
+add_test(NAME ctest_UpnpString-pst COMMAND test_UpnpString-pst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
 add_executable(test_UpnpString-csh
 #---------------------------------
-    ./test_UpnpString.cpp
+    test_UpnpString.cpp
 )
 target_link_libraries(test_UpnpString-csh
     PRIVATE compa_shared
+    PRIVATE upnplib_gtest_tools_shared
 )
 add_test(NAME ctest_UpnpString-csh COMMAND test_UpnpString-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
+add_executable(test_UpnpString-cst
+#---------------------------------
+    test_UpnpString.cpp
+)
+target_link_libraries(test_UpnpString-cst
+    PRIVATE compa_static
+    PRIVATE upnplib_gtest_tools_static
+)
+add_test(NAME ctest_UpnpString-cst COMMAND test_UpnpString-cst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 
@@ -230,6 +258,7 @@ target_link_libraries(test_upnpapi-pst
         upnplib_static
 )
 add_test(NAME ctest_upnpapi-pst COMMAND test_upnpapi-pst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 add_executable(test_upnpapi-cst
@@ -258,6 +287,7 @@ target_link_libraries(test_upnpapi-cst
         upnplib_static
 )
 add_test(NAME ctest_upnpapi-cst COMMAND test_upnpapi-cst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 if(FALSE)
@@ -283,6 +313,7 @@ target_link_libraries(test_upnpapi_platform-pst
         upnplib_gtest_tools_static
 )
 add_test(NAME ctest_upnpapi_platform-pst COMMAND test_upnpapi_platform-pst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 add_executable(test_upnpapi_platform-cst
@@ -300,5 +331,6 @@ target_link_libraries(test_upnpapi_platform-cst
         upnplib_gtest_tools_static
 )
 add_test(NAME ctest_upnpapi_platform-cst COMMAND test_upnpapi_platform-cst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 endif()

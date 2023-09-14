@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-14
+# Redistribution only with this Copyright remark. Last modified: 2023-09-15
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -15,21 +15,21 @@ add_compile_definitions(
 )
 
 set(UMOCK_SOURCE_FILES
-    ./src/stringh.cpp
-    ./src/stdlib.cpp
-    ./src/sys_select.cpp
-    ./src/sys_socket.cpp
-    ./src/netdb.cpp
-    ./src/pthread.cpp
-    ./src/stdio.cpp
-    ./src/unistd.cpp
-    ./src/sysinfo.cpp
-    ./src/arpa_inet.cpp
+    src/stringh.cpp
+    src/stdlib.cpp
+    src/sys_select.cpp
+    src/sys_socket.cpp
+    src/netdb.cpp
+    src/pthread.cpp
+    src/stdio.cpp
+    src/unistd.cpp
+    src/sysinfo.cpp
+    src/arpa_inet.cpp
     ${UPNPLIB_PROJECT_SOURCE_DIR}/upnplib/src/port.cpp
-    $<$<NOT:$<PLATFORM_ID:Windows>>:./src/ifaddrs.cpp>
-    $<$<NOT:$<PLATFORM_ID:Windows>>:./src/net_if.cpp>
-    $<$<PLATFORM_ID:Windows>:./src/iphlpapi.cpp>
-    $<$<PLATFORM_ID:Windows>:./src/winsock2.cpp>
+    $<$<NOT:$<PLATFORM_ID:Windows>>:src/ifaddrs.cpp>
+    $<$<NOT:$<PLATFORM_ID:Windows>>:src/net_if.cpp>
+    $<$<PLATFORM_ID:Windows>:src/iphlpapi.cpp>
+    $<$<PLATFORM_ID:Windows>:src/winsock2.cpp>
 )
 
 set(UMOCK_INCLUDE_DIRECTORIES
@@ -58,17 +58,16 @@ target_compile_definitions(umock_shared
         UPNPLIB_EXPORTS
 )
 target_link_libraries(umock_shared
-    PUBLIC
-        # In addition to pthreads we need some more system libraries on WIN32
-        $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
-        $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network
-                                           # management tools
-        # On MS Windows we link with the static pthreads4w library to avoid
-        # error prone managing access to its .dll file.
-        # On Unix platforms we cannot link with the static pthreads library
-        # because then we have also to link with a static libc that's not
-        # available by default.
-        $<IF:$<PLATFORM_ID:Windows>,${UPNP_PTHREADS_STATIC_LIBRARY},${UPNP_PTHREADS_SHARED_LIBRARY}>
+    # In addition to pthreads we need some more system libraries on WIN32
+    PUBLIC $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
+    PUBLIC $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network
+                                       # management tools
+    # On MS Windows we link with the static pthreads4w library to avoid
+    # error prone managing access to its .dll file.
+    # On Unix platforms we cannot link with the static pthreads library
+    # because then we have also to link with a static libc that's not
+    # available by default.
+    PUBLIC $<IF:$<PLATFORM_ID:Windows>,${UPNP_PTHREADS_STATIC_LIBRARY},${UPNP_PTHREADS_SHARED_LIBRARY}>
 )
 
 # UMock STatic library: suffix -mst
@@ -80,16 +79,14 @@ target_include_directories(umock_static
     ${UMOCK_INCLUDE_DIRECTORIES}
 )
 target_link_libraries(umock_static
-    PUBLIC
-        # In addition to pthreads we need some more system libraries on WIN32
-        $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
-        $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network
-                                           # management tools
-    INTERFACE
-        # On MS Windows we link with the static pthreads4w library to avoid
-        # error prone managing access to its .dll file.
-        # On Unix platforms we cannot link with the static pthreads library
-        # because then we have also to link with a static libc that's not
-        # available by default.
-        $<IF:$<PLATFORM_ID:Windows>,${UPNP_PTHREADS_STATIC_LIBRARY},${UPNP_PTHREADS_SHARED_LIBRARY}>
+    # In addition to pthreads we need some more system libraries on WIN32
+    PUBLIC $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
+    PUBLIC $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network
+                                       # management tools
+    # On MS Windows we link with the static pthreads4w library to avoid
+    # error prone managing access to its .dll file.
+    # On Unix platforms we cannot link with the static pthreads library
+    # because then we have also to link with a static libc that's not
+    # available by default.
+    INTERFACE $<IF:$<PLATFORM_ID:Windows>,${UPNP_PTHREADS_STATIC_LIBRARY},${UPNP_PTHREADS_SHARED_LIBRARY}>
 )

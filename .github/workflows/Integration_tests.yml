@@ -55,13 +55,13 @@ jobs:
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF')
-        name: Check gtest library files, static
-        run: |
-          ls ./build/lib/libgtest.a
-          ls ./build/lib/libgmock.a
-          ls ./build/lib/libgtest_main.a
-          ls ./build/lib/libgmock_main.a
+      #- if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF')
+      #  name: Check gtest library files, static
+      #  run: |
+      #    ls ./build/lib/libgtest.a
+      #    ls ./build/lib/libgmock.a
+      #    ls ./build/lib/libgtest_main.a
+      #    ls ./build/lib/libgmock_main.a
 
       - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON')
         name: Check gtest library files, shared
@@ -132,13 +132,13 @@ jobs:
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
 
-      - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF')
-        name: Check gtest library files, static
-        run: |
-          ls ./build/lib/libgtest.a
-          ls ./build/lib/libgmock.a
-          ls ./build/lib/libgtest_main.a
-          ls ./build/lib/libgmock_main.a
+      #- if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF')
+      #  name: Check gtest library files, static
+      #  run: |
+      #    ls ./build/lib/libgtest.a
+      #    ls ./build/lib/libgmock.a
+      #    ls ./build/lib/libgtest_main.a
+      #    ls ./build/lib/libgmock_main.a
 
       - if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON')
         name: Check gtest library files, shared

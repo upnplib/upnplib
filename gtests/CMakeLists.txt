@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-14
+# Redistribution only with this Copyright remark. Last modified: 2023-09-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -50,6 +50,7 @@ set(GTEST_TOOLS_SOURCE_FILES
     ./tools/upnplib_gtest_tools.cpp
     $<$<PLATFORM_ID:Windows>:./tools/upnplib_gtest_tools_win32.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/upnplib_gtest_tools_unix.cpp>
+    ${UMOCK_SOURCE_DIR}/src/stringh_mock.cpp
 )
 
 add_library(upnplib_gtest_tools_shared SHARED
@@ -67,10 +68,9 @@ target_compile_definitions(upnplib_gtest_tools_shared
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_link_libraries(upnplib_gtest_tools_shared
-    PUBLIC
-        $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
-    INTERFACE
-        $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network management tools
+    PUBLIC $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
+    INTERFACE $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network management tools
+    PRIVATE umock_shared;
 )
 
 add_library(upnplib_gtest_tools_static STATIC
@@ -86,10 +86,9 @@ target_compile_definitions(upnplib_gtest_tools_static
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_link_libraries(upnplib_gtest_tools_static
-    PUBLIC
-        $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
-    INTERFACE
-        $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network management tools
+    PUBLIC $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
+    INTERFACE $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network management tools
+    PRIVATE umock_static;
 )
 
 
@@ -174,6 +173,7 @@ target_link_libraries(test_simple-ust
     PRIVATE upnplib_static
 )
 add_test(NAME ctest_simple-ust COMMAND test_simple-ust --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 
@@ -187,6 +187,7 @@ target_compile_definitions(test_template
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 add_test(NAME ctest_template COMMAND test_template --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 
