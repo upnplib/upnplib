@@ -30,60 +30,26 @@ class Sys_socketInterface {
     // clang-format on
 };
 
-//
+
 // This is the wrapper class for the real (library?) function
 // ----------------------------------------------------------
 class Sys_socketReal : public Sys_socketInterface {
   public:
     virtual ~Sys_socketReal() override = default;
     // clang-format off
-    SOCKET socket(int domain, int type, int protocol) override {
-        return ::socket(domain, type, protocol);
-    }
-    int bind(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) override {
-        return ::bind(sockfd, addr, addrlen);
-    }
-    int listen(SOCKET sockfd, int backlog) override {
-        return ::listen(sockfd, backlog);
-    }
-    SOCKET accept(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) override {
-        return ::accept(sockfd, addr, addrlen);
-    }
-    SSIZEP_T recv(SOCKET sockfd, char* buf, SIZEP_T len, int flags) override {
-        return ::recv(sockfd, buf, len, flags);
-    }
-    SSIZEP_T recvfrom(SOCKET sockfd, char* buf, SIZEP_T len, int flags, struct sockaddr* src_addr, socklen_t* addrlen) override {
-        return ::recvfrom(sockfd, buf, len, flags, src_addr, addrlen);
-    }
-    SSIZEP_T send(SOCKET sockfd, const char* buf, SIZEP_T len, int flags) override {
-        return ::send(sockfd, buf, len, flags);
-    }
-    SSIZEP_T sendto(SOCKET sockfd, const char* buf, SIZEP_T len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen) override {
-        return ::sendto(sockfd, buf, len, flags, dest_addr, addrlen);
-    }
-    int connect(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) override {
-        return ::connect(sockfd, addr, addrlen);
-    }
-    int getsockopt(SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen) override {
-#ifdef _WIN32
-        return ::getsockopt(sockfd, level, optname, (char*)optval, optlen);
-#else
-        return ::getsockopt(sockfd, level, optname, optval, optlen);
-#endif
-    }
-    int setsockopt(SOCKET sockfd, int level, int optname, const void* optval, socklen_t optlen) override {
-#ifdef _WIN32
-        return ::setsockopt(sockfd, level, optname, (const char*)optval, optlen);
-#else
-        return ::setsockopt(sockfd, level, optname, optval, optlen);
-#endif
-    }
-    int getsockname(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) override {
-        return ::getsockname(sockfd, addr, addrlen);
-    }
-    int shutdown(SOCKET sockfd, int how) override {
-        return ::shutdown(sockfd, how);
-    }
+    SOCKET socket(int domain, int type, int protocol) override;
+    int bind(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) override;
+    int listen(SOCKET sockfd, int backlog) override;
+    SOCKET accept(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) override;
+    SSIZEP_T recv(SOCKET sockfd, char* buf, SIZEP_T len, int flags) override;
+    SSIZEP_T recvfrom(SOCKET sockfd, char* buf, SIZEP_T len, int flags, struct sockaddr* src_addr, socklen_t* addrlen) override;
+    SSIZEP_T send(SOCKET sockfd, const char* buf, SIZEP_T len, int flags) override;
+    SSIZEP_T sendto(SOCKET sockfd, const char* buf, SIZEP_T len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen) override;
+    int connect(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) override;
+    int getsockopt(SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen) override;
+    int setsockopt(SOCKET sockfd, int level, int optname, const void* optval, socklen_t optlen) override;
+    int getsockname(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) override;
+    int shutdown(SOCKET sockfd, int how) override;
     // clang-format on
 };
 

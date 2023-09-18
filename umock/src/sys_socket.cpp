@@ -5,6 +5,69 @@
 
 namespace umock {
 
+// clang-format off
+SOCKET Sys_socketReal::socket(int domain, int type, int protocol) {
+    return ::socket(domain, type, protocol);
+}
+
+int Sys_socketReal::bind(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) {
+    return ::bind(sockfd, addr, addrlen);
+}
+
+int Sys_socketReal::listen(SOCKET sockfd, int backlog) {
+    return ::listen(sockfd, backlog);
+}
+
+SOCKET Sys_socketReal::accept(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) {
+    return ::accept(sockfd, addr, addrlen);
+}
+
+SSIZEP_T Sys_socketReal::recv(SOCKET sockfd, char* buf, SIZEP_T len, int flags) {
+    return ::recv(sockfd, buf, len, flags);
+}
+
+SSIZEP_T Sys_socketReal::recvfrom(SOCKET sockfd, char* buf, SIZEP_T len, int flags, struct sockaddr* src_addr, socklen_t* addrlen) {
+    return ::recvfrom(sockfd, buf, len, flags, src_addr, addrlen);
+}
+
+SSIZEP_T Sys_socketReal::send(SOCKET sockfd, const char* buf, SIZEP_T len, int flags) {
+    return ::send(sockfd, buf, len, flags);
+}
+
+SSIZEP_T Sys_socketReal::sendto(SOCKET sockfd, const char* buf, SIZEP_T len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen) {
+    return ::sendto(sockfd, buf, len, flags, dest_addr, addrlen);
+}
+
+int Sys_socketReal::connect(SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen) {
+    return ::connect(sockfd, addr, addrlen);
+}
+
+int Sys_socketReal::getsockopt(SOCKET sockfd, int level, int optname, void* optval, socklen_t* optlen) {
+#ifdef _WIN32
+    return ::getsockopt(sockfd, level, optname, (char*)optval, optlen);
+#else
+    return ::getsockopt(sockfd, level, optname, optval, optlen);
+#endif
+}
+
+int Sys_socketReal::setsockopt(SOCKET sockfd, int level, int optname, const void* optval, socklen_t optlen) {
+#ifdef _WIN32
+    return ::setsockopt(sockfd, level, optname, (const char*)optval, optlen);
+#else
+    return ::setsockopt(sockfd, level, optname, optval, optlen);
+#endif
+}
+
+int Sys_socketReal::getsockname(SOCKET sockfd, struct sockaddr* addr, socklen_t* addrlen) {
+    return ::getsockname(sockfd, addr, addrlen);
+}
+
+int Sys_socketReal::shutdown(SOCKET sockfd, int how) {
+    return ::shutdown(sockfd, how);
+}
+// clang-format on
+
+
 // This constructor is used to inject the pointer to the real function.
 Sys_socket::Sys_socket(Sys_socketReal* a_ptr_realObj) {
     m_ptr_workerObj = (Sys_socketInterface*)a_ptr_realObj;
