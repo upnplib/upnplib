@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-01
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-19
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,7 +80,6 @@
 #endif
 
 #include <umock/sys_socket.hpp>
-#include <umock/sys_select.hpp>
 #include <umock/stdlib.hpp>
 
 
@@ -651,7 +650,7 @@ static void RunMiniServer(
         fdset_if_valid(miniSock->ssdpReqSock6, &rdSet);
 #endif /* INCLUDE_CLIENT_APIS */
         /* select() */
-        ret = umock::sys_select_h.select((int)maxMiniSock, &rdSet, NULL,
+        ret = umock::sys_socket_h.select((int)maxMiniSock, &rdSet, NULL,
                                          &expSet, NULL);
         if (ret == SOCKET_ERROR && errno == EINTR) {
             continue;

@@ -1,7 +1,7 @@
 #ifndef UMOCK_SYS_SOCKET_MOCK_HPP
 #define UMOCK_SYS_SOCKET_MOCK_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-09
+// Redistribution only with this Copyright remark. Last modified: 2023-08-19
 
 #include <umock/sys_socket.hpp>
 #include <gmock/gmock.h>
@@ -25,6 +25,7 @@ class Sys_socketMock : public umock::Sys_socketInterface {
     MOCK_METHOD(SSIZEP_T, sendto, (SOCKET sockfd, const char* buf, SIZEP_T len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen), (override));
     MOCK_METHOD(int, connect, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
     MOCK_METHOD(int, shutdown, (SOCKET sockfd, int how), (override));
+    MOCK_METHOD(int, select, (SOCKET nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout), (override));
     // clang-format on
 };
 

@@ -193,7 +193,7 @@ add_test(NAME ctest_template COMMAND test_template --gtest_shuffle
 
 add_subdirectory(./compa)
 add_subdirectory(./upnplib)
-add_subdirectory(./sample)
+#add_subdirectory(./sample)
 
 
 # set(ENV{GITHUB_ACTIONS} 1)

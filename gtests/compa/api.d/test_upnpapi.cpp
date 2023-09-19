@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-13
+// Redistribution only with this Copyright remark. Last modified: 2023-09-19
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpapi.cpp>
@@ -18,7 +18,6 @@
 #include <upnplib/sockaddr.hpp>
 
 #include <umock/sys_socket_mock.hpp>
-#include <umock/sys_select_mock.hpp>
 #include <umock/pupnp_sock_mock.hpp>
 #include <umock/winsock2_mock.hpp>
 
@@ -154,11 +153,9 @@ class UpnpapiMockFTestSuite : public UpnpapiFTestSuite {
     // clang-format off
     // Instantiate mocking objects.
     StrictMock<umock::PupnpSockMock> m_pupnpSockObj;
-    StrictMock<umock::Sys_selectMock> m_sys_selectObj;
     StrictMock<umock::Sys_socketMock> m_sys_socketObj;
     // Inject the mocking objects into the tested code.
     umock::PupnpSock pupnp_sock_injectObj = umock::PupnpSock(&m_pupnpSockObj);
-    umock::Sys_select sys_select_injectObj = umock::Sys_select(&m_sys_selectObj);
     umock::Sys_socket sys_socket_injectObj = umock::Sys_socket(&m_sys_socketObj);
 #ifdef _WIN32
     umock::Winsock2Mock m_winsock2Obj;
@@ -511,10 +508,10 @@ TEST_F(UpnpapiMockFTestSuite, UpnpRegisterRootDevice3_successful) {
         .WillOnce(Return(sockfd));
     EXPECT_CALL(m_pupnpSockObj, sock_make_no_blocking(sockfd)).Times(1);
     EXPECT_CALL(m_pupnpSockObj, sock_make_blocking(sockfd)).Times(1);
-    EXPECT_CALL(m_sys_selectObj,
+    EXPECT_CALL(m_sys_socketObj,
                 select(sockfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1));
-    EXPECT_CALL(m_sys_selectObj,
+    EXPECT_CALL(m_sys_socketObj,
                 select(sockfd + 1, NotNull(), NotNull(), NULL, NotNull()))
         .Times(2)
         .WillRepeatedly(Return(1));

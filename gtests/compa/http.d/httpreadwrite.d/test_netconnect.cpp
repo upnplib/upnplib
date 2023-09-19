@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-22
+// Redistribution only with this Copyright remark. Last modified: 2023-09-19
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -13,7 +13,6 @@
 #include <upnplib/sockaddr.hpp>
 
 #include <umock/sys_socket_mock.hpp>
-#include <umock/sys_select_mock.hpp>
 #include <umock/pupnp_sock_mock.hpp>
 #include <umock/winsock2_mock.hpp>
 
@@ -102,7 +101,6 @@ class PrivateConnectFTestSuite : public ::testing::Test {
 
     // Needed mocked functions
     umock::PupnpSockMock m_pupnpSockObj;
-    umock::Sys_selectMock m_sys_selectObj;
     umock::Sys_socketMock m_sys_socketObj;
 #ifdef _WIN32
     umock::Winsock2Mock m_winsock2Obj;
@@ -139,15 +137,14 @@ TEST_F(PrivateConnectFTestSuite, connect_successful) {
     // sock_make_blocking()
     EXPECT_CALL(m_pupnpSockObj, sock_make_blocking(m_sockfd)).Times(1);
 
-    umock::Sys_select sys_select_injectObj(&m_sys_selectObj);
+    umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
     // select()
-    EXPECT_CALL(m_sys_selectObj,
+    EXPECT_CALL(m_sys_socketObj,
                 select(m_sockfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1));
 
     // Connect to the given ip address. With unblocking this will
     // return with an error condition and errno = EINPROGRESS
-    umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
     // connect()
     EXPECT_CALL(m_sys_socketObj,
                 connect(m_sockfd, (sockaddr*)&m_saddr.ss, sizeof(m_saddr.ss)))
@@ -239,9 +236,8 @@ TEST_F(PrivateConnectFTestSuite, connect_immediately) {
     EXPECT_CALL(m_winsock2Obj, WSAGetLastError()).Times(0);
 #endif
 
-    umock::Sys_select sys_select_injectObj(&m_sys_selectObj);
     // select()
-    EXPECT_CALL(m_sys_selectObj, select(_, _, _, _, _)).Times(0);
+    EXPECT_CALL(m_sys_socketObj, select(_, _, _, _, _)).Times(0);
 
     // Test Unit
     EXPECT_EQ(
@@ -271,7 +267,7 @@ TEST_F(PrivateConnectFTestSuite, connect_immediately) {
     EXPECT_CALL(m_winsock2Obj, WSAGetLastError()).Times(0);
 #endif
     // select()
-    EXPECT_CALL(m_sys_selectObj, select(_, _, _, _, _)).Times(0);
+    EXPECT_CALL(m_sys_socketObj, select(_, _, _, _, _)).Times(0);
     // getsockopt()
     EXPECT_CALL(m_sys_socketObj, getsockopt(m_sockfd, _, _, _, _)).Times(0);
     // sock_make_blocking()
@@ -305,10 +301,8 @@ TEST_F(PrivateConnectFTestSuite, set_no_blocking_fails) {
     umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
     // connect()
     EXPECT_CALL(m_sys_socketObj, connect(_, _, _)).Times(0);
-
-    umock::Sys_select sys_select_injectObj(&m_sys_selectObj);
     // select()
-    EXPECT_CALL(m_sys_selectObj, select(_, _, _, _, _)).Times(0);
+    EXPECT_CALL(m_sys_socketObj, select(_, _, _, _, _)).Times(0);
 
     // Test Unit
     EXPECT_EQ(
@@ -378,9 +372,8 @@ TEST_F(PrivateConnectFTestSuite, connect_fails) {
         .WillOnce(Return(WSAENETUNREACH));
 #endif
 
-    umock::Sys_select sys_select_injectObj(&m_sys_selectObj);
     // select()
-    EXPECT_CALL(m_sys_selectObj, select(_, _, _, _, _)).Times(0);
+    EXPECT_CALL(m_sys_socketObj, select(_, _, _, _, _)).Times(0);
 
     // Test Unit
     if (old_code) {
@@ -421,7 +414,7 @@ TEST_F(PrivateConnectFTestSuite, connect_fails) {
     EXPECT_CALL(m_winsock2Obj, WSAGetLastError()).Times(0);
 #endif
     // select()
-    EXPECT_CALL(m_sys_selectObj, select(_, _, _, _, _)).Times(0);
+    EXPECT_CALL(m_sys_socketObj, select(_, _, _, _, _)).Times(0);
     // getsockopt()
     EXPECT_CALL(m_sys_socketObj, getsockopt(m_sockfd, _, _, _, _)).Times(0);
     // sock_make_blocking()
@@ -450,7 +443,6 @@ TEST_F(PrivateConnectFTestSuite, select_fails) {
     // Inject needed mock objects into the productive code.
     umock::PupnpSock pupnp_sock_injectObj(&m_pupnpSockObj);
     umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
-    umock::Sys_select sys_select_injectObj(&m_sys_selectObj);
 #ifdef _WIN32
     umock::Winsock2 winsock2_injectObj(&m_winsock2Obj);
 #endif
@@ -488,7 +480,7 @@ TEST_F(PrivateConnectFTestSuite, select_fails) {
     }
 
     // select()
-    EXPECT_CALL(m_sys_selectObj,
+    EXPECT_CALL(m_sys_socketObj,
                 select(m_sockfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(SOCKET_ERROR));
 
@@ -498,7 +490,7 @@ TEST_F(PrivateConnectFTestSuite, select_fails) {
         0);
 
     // select()
-    EXPECT_CALL(m_sys_selectObj,
+    EXPECT_CALL(m_sys_socketObj,
                 select(m_sockfd + 1, NULL, NotNull(), NULL, NotNull()))
         .WillOnce(Return(0)); // 0 indicates "timeout" and is an error.
 
@@ -530,7 +522,6 @@ TEST_F(PrivateConnectFTestSuite, getsockopt_fails) {
     // Inject needed mock objects into the production code.
     umock::PupnpSock pupnp_sock_injectObj(&m_pupnpSockObj);
     umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
-    umock::Sys_select sys_select_injectObj(&m_sys_selectObj);
 #ifdef _WIN32
     umock::Winsock2 winsock2_injectObj(&m_winsock2Obj);
 #endif
@@ -547,7 +538,7 @@ TEST_F(PrivateConnectFTestSuite, getsockopt_fails) {
         .Times(2)
         .WillRepeatedly(SetErrnoAndReturn(EINPROGRESS, -1));
     // select()
-    EXPECT_CALL(m_sys_selectObj,
+    EXPECT_CALL(m_sys_socketObj,
                 select(m_sockfd + 1, NULL, NotNull(), NULL, NotNull()))
         .Times(2)
         .WillRepeatedly(Return(1));

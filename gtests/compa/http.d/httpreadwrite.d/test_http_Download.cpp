@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-13
+// Redistribution only with this Copyright remark. Last modified: 2023-09-19
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -16,7 +16,6 @@
 
 #include <umock/sysinfo_mock.hpp>
 #include <umock/sys_socket_mock.hpp>
-#include <umock/sys_select_mock.hpp>
 #include <umock/stdio_mock.hpp>
 
 
@@ -83,11 +82,9 @@ class HttpMockFTestSuite : public HttpBasicFTestSuite {
   protected:
     // clang-format off
     // Instantiate mocking objects.
-    StrictMock<umock::Sys_selectMock> m_sys_selectObj;
     StrictMock<umock::Sys_socketMock> m_sys_socketObj;
     StrictMock<umock::StdioMock> m_stdioObj;
     // Inject the mocking objects into the tested code.
-    umock::Sys_select sys_select_injectObj = umock::Sys_select(&m_sys_selectObj);
     umock::Sys_socket sys_socket_injectObj = umock::Sys_socket(&m_sys_socketObj);
     umock::Stdio stdio_injectObj = umock::Stdio(&m_stdioObj);
     // clang-format on
@@ -502,7 +499,7 @@ TEST_F(HttpMockFTestSuite, send_message_from_buffer_successful) {
     constexpr size_t request_length{sizeof(request) - 1};
 
     // Mock select()
-    EXPECT_CALL(m_sys_selectObj,
+    EXPECT_CALL(m_sys_socketObj,
                 select(info.socket + 1, NotNull(), NotNull(), NULL, NotNull()))
         .WillOnce(Return(1)); // send from buffer successful
     // Mock send()
@@ -569,7 +566,7 @@ TEST_F(HttpMockFTestSuite, send_message_from_file_successful) {
     instr.ReadSendSize = -1;
 
     // Mock select()
-    EXPECT_CALL(m_sys_selectObj,
+    EXPECT_CALL(m_sys_socketObj,
                 select(info.socket + 1, NotNull(), NotNull(), NULL, NotNull()))
         .WillOnce(Return(1)); // send from buffer successful
 
@@ -595,7 +592,7 @@ TEST_F(HttpMockFTestSuite, send_message_fails) {
     constexpr size_t request_length{sizeof(request) - 1};
 
     // Mock select()
-    EXPECT_CALL(m_sys_selectObj,
+    EXPECT_CALL(m_sys_socketObj,
                 select(info.socket + 1, NotNull(), NotNull(), NULL, NotNull()))
         .WillOnce(Return(1))  // 1) successful
         .WillOnce(Return(0)); // 2) timeout
@@ -631,7 +628,7 @@ TEST_F(HttpBasicFTestSuite, send_message_without_socket_file_descriptor) {
     constexpr size_t request_length{sizeof(request) - 1};
 
     // Mock select()
-    // EXPECT_CALL(m_sys_selectObj,
+    // EXPECT_CALL(m_sys_socketObj,
     //            select(info.socket + 1, NotNull(), NotNull(), NULL,
     //            NotNull()))
     // .WillOnce(SetErrnoAndReturn(EBADF, -1)); // Bad file descriptor

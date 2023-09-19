@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-01
+// Redistribution only with this Copyright remark. Last modified: 2023-09-19
 
 #include "umock/sys_socket.inc"
 
@@ -64,6 +64,13 @@ int Sys_socketReal::getsockname(SOCKET sockfd, struct sockaddr* addr, socklen_t*
 
 int Sys_socketReal::shutdown(SOCKET sockfd, int how) {
     return ::shutdown(sockfd, how);
+}
+
+int Sys_socketReal::select(SOCKET nfds, fd_set* readfds, fd_set* writefds,
+                           fd_set* exceptfds, struct timeval* timeout) {
+    // Call real standard library function. On MS Windows nfds is only provided
+    // for compatibility but ignored so the type cast doesn't matter.
+    return ::select((int)nfds, readfds, writefds, exceptfds, timeout);
 }
 // clang-format on
 
@@ -130,6 +137,9 @@ int Sys_socket::getsockname(SOCKET sockfd, struct sockaddr* addr, socklen_t* add
 }
 int Sys_socket::shutdown(SOCKET sockfd, int how) {
     return m_ptr_workerObj->shutdown(sockfd, how);
+}
+int Sys_socket::select(SOCKET nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout) {
+    return m_ptr_workerObj->select(nfds, readfds, writefds, exceptfds, timeout);
 }
 // clang-format on
 

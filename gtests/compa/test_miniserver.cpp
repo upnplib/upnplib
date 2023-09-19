@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-17
+// Redistribution only with this Copyright remark. Last modified: 2023-09-19
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -26,7 +26,6 @@
 
 // #include <umock/pthread_mock.hpp>
 #include <umock/sys_socket_mock.hpp>
-#include <umock/sys_select_mock.hpp>
 
 
 namespace compa {
@@ -127,10 +126,8 @@ class MiniServerFTestSuite : public ::testing::Test {
   protected:
     // clang-format off
     // Instantiate mocking objects.
-    StrictMock<umock::Sys_selectMock> m_sys_selectObj;
     StrictMock<umock::Sys_socketMock> m_sys_socketObj;
     // Inject the mocking objects into the tested code.
-    umock::Sys_select sys_select_injectObj = umock::Sys_select(&m_sys_selectObj);
     umock::Sys_socket sys_socket_injectObj = umock::Sys_socket(&m_sys_socketObj);
     // clang-format on
 };
@@ -153,7 +150,7 @@ TEST(StartMiniServerTestSuite, StartMiniServer_in_context) {
 
     // umock::Sys_socketMock sys_socketObj;
     // umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
-    // class Mock_sys_select mocked_sys_selectObj;
+    // class Mock_sys_socket mocked_sys_socketObj;
     // class Mock_stdlib  mocked_stdlibObj;
     // class Mock_unistd mocked_unistdObj;
 
@@ -1775,17 +1772,17 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer) {
                       << ": Max socket fd for select() not setting to 0 if "
                          "INVALID_SOCKET in MiniServerSockArray on WIN32.\n";
 #ifdef _WIN32
-            EXPECT_CALL(m_sys_selectObj, //
+            EXPECT_CALL(m_sys_socketObj, //
                         select(0, _, nullptr, _, nullptr))
                 .WillOnce(Return(1)); // Wrong !
 #else
-            EXPECT_CALL(m_sys_selectObj,
+            EXPECT_CALL(m_sys_socketObj,
                         select(select_nfds, _, nullptr, _, nullptr))
                 .WillOnce(Return(1));
 #endif
         } else {
 
-            EXPECT_CALL(m_sys_selectObj,
+            EXPECT_CALL(m_sys_socketObj,
                         select(select_nfds, _, nullptr, _, nullptr))
                 .WillOnce(Return(1));
         }

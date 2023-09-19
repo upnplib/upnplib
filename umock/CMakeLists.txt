@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-15
+# Redistribution only with this Copyright remark. Last modified: 2023-09-19
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -17,7 +17,6 @@ add_compile_definitions(
 set(UMOCK_SOURCE_FILES
     src/stringh.cpp
     src/stdlib.cpp
-    src/sys_select.cpp
     src/sys_socket.cpp
     src/netdb.cpp
     src/pthread.cpp

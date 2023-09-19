@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-12
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-19
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -79,7 +79,6 @@
 
 #include <umock/pupnp_sock.hpp>
 #include <umock/pupnp_httprw.hpp>
-#include <umock/sys_select.hpp>
 #include <umock/sys_socket.hpp>
 #include <umock/winsock2.hpp>
 #include <umock/sysinfo.hpp>
@@ -128,7 +127,7 @@ static int Check_Connect_And_Wait_Connection(
     int result{SOCKET_ERROR};
 
     result =
-        umock::sys_select_h.select(a_sock + 1, NULL, &fdSet, NULL, &tmvTimeout);
+        umock::sys_socket_h.select(a_sock + 1, NULL, &fdSet, NULL, &tmvTimeout);
     switch (result) {
     case SOCKET_ERROR:
         return -1;
