@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-19
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-24
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -464,15 +464,16 @@ static void fdset_if_valid(SOCKET sock, fd_set* set) {
     FD_SET(sock, set);
 }
 
-static void web_server_accept([[maybe_unused]] SOCKET lsock,
-                              [[maybe_unused]] fd_set* set) {
+namespace compa {
+static int web_server_accept([[maybe_unused]] SOCKET lsock,
+                             [[maybe_unused]] fd_set& set) {
 #ifdef INTERNAL_WEB_SERVER
-    TRACE("Executing " + std::string(__func__))
-    if (lsock == INVALID_SOCKET || !FD_ISSET(lsock, set)) {
+    TRACE("Executing web_server_accept()")
+    if (lsock == INVALID_SOCKET || !FD_ISSET(lsock, &set)) {
         UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
                    "web_server_accept(): invalid socket(%d) or set(%p).\n",
-                   lsock, (void*)set);
-        return;
+                   lsock, static_cast<void*>(&set));
+        return UPNP_E_SOCKET_ERROR;
     }
 
     SOCKET asock;
@@ -481,13 +482,14 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
     sockaddr_in* sa_in{(sockaddr_in*)&clientAddr};
     clientLen = sizeof(clientAddr);
 
+    // accept a network request connection
     asock =
         umock::sys_socket_h.accept(lsock, (sockaddr*)&clientAddr, &clientLen);
     if (asock == INVALID_SOCKET) {
         UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
                    "web_server_accept(): Error in accept(): %s\n",
                    std::strerror(errno));
-        return;
+        return UPNP_E_SOCKET_ACCEPT;
     }
 
     // Here we schedule the job to manage a UPnP request from a client.
@@ -498,8 +500,13 @@ static void web_server_accept([[maybe_unused]] SOCKET lsock,
                "with socket %d\n",
                buf_ntop, ntohs(sa_in->sin_port), asock);
     schedule_request_job(asock, (sockaddr*)&clientAddr);
+
+    return UPNP_E_SUCCESS;
+#else
+    return UPNP_E_NO_WEB_SERVER;
 #endif /* INTERNAL_WEB_SERVER */
 }
+} // namespace compa
 
 static void ssdp_read(SOCKET* rsock, fd_set* set) {
     TRACE("Executing ssdp_read()")
@@ -587,48 +594,51 @@ static void RunMiniServer(
     TRACE("Executing RunMiniServer()")
     fd_set expSet;
     fd_set rdSet;
-    SOCKET maxMiniSock;
     int ret = 0;
     int stopSock = 0;
 
-    maxMiniSock = 0;
     // On MS Windows INVALID_SOCKET is unsigned -1 = 18446744073709551615 so we
     // get maxMiniSock with this big number even if there is only one
-    // INVALID_SOCKET. Incrementing it at the end results in 0. To be compatible
+    // INVALID_SOCKET. Incrementing it at the end results in 0. To be portable
     // we must not assume INVALID_SOCKET to be -1. --Ingo
-    maxMiniSock =
+    SOCKET maxMiniSock = 0;
+    maxMiniSock = //
         std::max(maxMiniSock, miniSock->miniServerSock4 == INVALID_SOCKET
                                   ? 0
                                   : miniSock->miniServerSock4);
-    maxMiniSock =
+    maxMiniSock = //
         std::max(maxMiniSock, miniSock->miniServerSock6 == INVALID_SOCKET
                                   ? 0
                                   : miniSock->miniServerSock6);
-    maxMiniSock =
+    maxMiniSock = //
         std::max(maxMiniSock, miniSock->miniServerSock6UlaGua == INVALID_SOCKET
                                   ? 0
                                   : miniSock->miniServerSock6UlaGua);
-    maxMiniSock =
+    maxMiniSock = //
         std::max(maxMiniSock, miniSock->miniServerStopSock == INVALID_SOCKET
                                   ? 0
                                   : miniSock->miniServerStopSock);
-    maxMiniSock = std::max(maxMiniSock, miniSock->ssdpSock4 == INVALID_SOCKET
-                                            ? 0
-                                            : miniSock->ssdpSock4);
-    maxMiniSock = std::max(maxMiniSock, miniSock->ssdpSock6 == INVALID_SOCKET
-                                            ? 0
-                                            : miniSock->ssdpSock6);
-    maxMiniSock =
+    maxMiniSock = //
+        std::max(maxMiniSock, miniSock->ssdpSock4 == INVALID_SOCKET
+                                  ? 0
+                                  : miniSock->ssdpSock4);
+    maxMiniSock = //
+        std::max(maxMiniSock, miniSock->ssdpSock6 == INVALID_SOCKET
+                                  ? 0
+                                  : miniSock->ssdpSock6);
+    maxMiniSock = //
         std::max(maxMiniSock, miniSock->ssdpSock6UlaGua == INVALID_SOCKET
                                   ? 0
                                   : miniSock->ssdpSock6UlaGua);
 #ifdef INCLUDE_CLIENT_APIS
-    maxMiniSock = std::max(maxMiniSock, miniSock->ssdpReqSock4 == INVALID_SOCKET
-                                            ? 0
-                                            : miniSock->ssdpReqSock4);
-    maxMiniSock = std::max(maxMiniSock, miniSock->ssdpReqSock6 == INVALID_SOCKET
-                                            ? 0
-                                            : miniSock->ssdpReqSock6);
+    maxMiniSock = //
+        std::max(maxMiniSock, miniSock->ssdpReqSock4 == INVALID_SOCKET
+                                  ? 0
+                                  : miniSock->ssdpReqSock4);
+    maxMiniSock = //
+        std::max(maxMiniSock, miniSock->ssdpReqSock6 == INVALID_SOCKET
+                                  ? 0
+                                  : miniSock->ssdpReqSock6);
 #endif /* INCLUDE_CLIENT_APIS */
     ++maxMiniSock;
 
@@ -653,18 +663,26 @@ static void RunMiniServer(
         ret = umock::sys_socket_h.select((int)maxMiniSock, &rdSet, NULL,
                                          &expSet, NULL);
         if (ret == SOCKET_ERROR && errno == EINTR) {
-            continue;
+            continue; // A signal was caught, not for us. We ignore it.
         }
         if (ret == SOCKET_ERROR) {
             UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
                        "Error in select(): %s\n", std::strerror(errno));
-            continue;
+            continue; // or
+            // break: // ? TODO: Extended error checking is required. --Ingo
         } else {
             // Accept requested connection from a remote client and run the
-            // connection in a new thread.
-            web_server_accept(miniSock->miniServerSock4, &rdSet);
-            web_server_accept(miniSock->miniServerSock6, &rdSet);
-            web_server_accept(miniSock->miniServerSock6UlaGua, &rdSet);
+            // connection in a new thread. Due to side effects we need to
+            // avoid lazy evaluation.
+            [[maybe_unused]] int ret1 = //
+                compa::web_server_accept(miniSock->miniServerSock4, rdSet);
+            [[maybe_unused]] int ret2 = //
+                compa::web_server_accept(miniSock->miniServerSock6, rdSet);
+            [[maybe_unused]] int ret3 = //
+                compa::web_server_accept(miniSock->miniServerSock6UlaGua,
+                                         rdSet);
+            // if (ret1 == UPNP_E_SUCCESS || ret2 == UPNP_E_SUCCESS ||
+            //     ret3 == UPNP_E_SUCCESS) {
 #ifdef INCLUDE_CLIENT_APIS
             ssdp_read(&miniSock->ssdpReqSock4, &rdSet);
             ssdp_read(&miniSock->ssdpReqSock6, &rdSet);
@@ -672,8 +690,9 @@ static void RunMiniServer(
             ssdp_read(&miniSock->ssdpSock4, &rdSet);
             ssdp_read(&miniSock->ssdpSock6, &rdSet);
             ssdp_read(&miniSock->ssdpSock6UlaGua, &rdSet);
+            // }
 
-            // Block execution and wait to receive a packet from
+            // Check if we have received a packet from
             // localhost(127.0.0.1) that will stop the miniserver.
             stopSock =
                 receive_from_stopSock(miniSock->miniServerStopSock, &rdSet);

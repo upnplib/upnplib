@@ -1,4 +1,8 @@
 Next steps to do:
+* Manage FD_SETSIZE and used socket fds for testing
+* Rename library upnplib_gtest_tools_* to utest_*
+* Manage verbose messages with runtime switching
+* Rework miniserver.cpp and test_miniserver.cpp with verbose messages
 * Rework test_httpreadwrite.cpp
 * Improve test_sock.cpp with ssl tests
 * Improve test_http_Download.cpp, start with error conditions for http_MakeMessage()

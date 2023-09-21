@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-17
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -321,6 +321,16 @@
  * cancelation.
  */
 #define UPNP_E_CANCELED -210
+
+/*!
+ * \brief The SDK had a problem accepting a network connection.
+ *
+ * This occurs in any function that makes network connections, such as discovery
+ * (e.g. \b UpnpSearchAsync or \b UpnpSendAdvertisement), control (e.g.
+ * \b UpnpSendAction), eventing (e.g. \b UpnpNotify), and HTTP functions (e.g.
+ * \b UpnpDownloadXmlDoc).
+ */
+#define UPNP_E_SOCKET_ACCEPT -211
 
 #define UPNP_E_EVENT_PROTOCOL -300
 

@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_GLOBAL_HPP
 #define UPNPLIB_GLOBAL_HPP
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Redistribution only with this Copyright remark. Last modified: 2023-09-20
 
 #include "upnplib/visibility.hpp" // for UPNPLIB_API
 
@@ -250,6 +250,16 @@
  * cancelation.
  */
 #define UPNP_E_CANCELED -210
+
+/*!
+ * \brief The SDK had a problem accepting a network connection.
+ *
+ * This occurs in any function that makes network connections, such as discovery
+ * (e.g. \b UpnpSearchAsync or \b UpnpSendAdvertisement), control (e.g.
+ * \b UpnpSendAction), eventing (e.g. \b UpnpNotify), and HTTP functions (e.g.
+ * \b UpnpDownloadXmlDoc).
+ */
+#define UPNP_E_SOCKET_ACCEPT -211
 
 #define UPNP_E_EVENT_PROTOCOL -300
 

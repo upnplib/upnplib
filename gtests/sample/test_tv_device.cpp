@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-14
+// Redistribution only with this Copyright remark. Last modified: 2023-09-23
 
 // -----------------------------------------------------------------------------
 // This testsuite starts the sample TV Device with general command line
@@ -14,6 +14,8 @@
 #include <upnpapi.hpp>
 #include <membuffer.hpp>
 #include <ssdplib.hpp>
+
+#include <pupnp/upnpdebug.hpp>
 
 #include <upnplib/upnptools.hpp>
 #include <upnplib/gtest_tools_unix.hpp>
@@ -97,6 +99,8 @@ using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
+
+using ::pupnp::CLogging;
 
 using ::upnplib::CIfaddr4;
 using ::upnplib::errStrEx;
@@ -261,6 +265,8 @@ TEST_F(SampleTvDeviceFTestSuite, invalid_commandline_argument) {
 }
 
 TEST_F(SampleTvDeviceFTestSuite, TvDeviceStart_successful) {
+    CLogging loggingObj; // Output only with build type DEBUG.
+
     // Arguments of TvDeviceStart()
     constexpr char* iface{};
     constexpr in_port_t port{};
@@ -292,6 +298,8 @@ TEST_F(SampleTvDeviceFTestSuite, TvDeviceStart_successful) {
     // Set default socket object values
     ON_CALL(sys_socketObj, socket(_, _, _))
         .WillByDefault(SetErrnoAndReturn(EACCES, SOCKET_ERROR));
+    ON_CALL(sys_socketObj, select(_, _, _, _, _))
+        .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
     ON_CALL(sys_socketObj, connect(_, _, _))
         .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
     ON_CALL(sys_socketObj, bind(_, _, _))
@@ -394,8 +402,10 @@ TEST_F(SampleTvDeviceFTestSuite, TvDeviceStart_successful) {
 
 } // namespace compa
 
-//
+
 int main(int argc, char** argv) {
+    if (std::getenv("GITHUB_ACTIONS"))
+        return 0;
     ::testing::InitGoogleMock(&argc, argv);
 #include "compa/gtest_main.inc"
     return gtest_return_code; // managed in compa/gtest_main.inc

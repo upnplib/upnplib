@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Redistribution only with this Copyright remark. Last modified: 2023-09-20
 
 #include "upnplib/messages.hpp"
 #include "upnplib/upnptools.hpp"
@@ -45,6 +45,7 @@ constexpr struct ErrorString ErrorMessages[] = {
     {UPNP_E_SOCKET_ERROR, "UPNP_E_SOCKET_ERROR"},
     {UPNP_E_FILE_WRITE_ERROR, "UPNP_E_FILE_WRITE_ERROR"},
     {UPNP_E_CANCELED, "UPNP_E_CANCELED"},
+    {UPNP_E_SOCKET_ACCEPT, "UPNP_E_SOCKET_ACCEPT"},
     {UPNP_E_EVENT_PROTOCOL, "UPNP_E_EVENT_PROTOCOL"},
     {UPNP_E_SUBSCRIBE_UNACCEPTED, "UPNP_E_SUBSCRIBE_UNACCEPTED"},
     {UPNP_E_UNSUBSCRIBE_UNACCEPTED, "UPNP_E_UNSUBSCRIBE_UNACCEPTED"},

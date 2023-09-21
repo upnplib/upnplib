@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-19
+// Redistribution only with this Copyright remark. Last modified: 2023-09-24
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -136,6 +136,7 @@ typedef MiniServerFTestSuite StartMiniServerFTestSuite;
 typedef MiniServerFTestSuite DoBindFTestSuite;
 typedef MiniServerFTestSuite StopMiniServerFTestSuite;
 typedef MiniServerFTestSuite RunMiniServerFTestSuite;
+typedef MiniServerFTestSuite RunMiniServerFDeathTest;
 
 
 // This test uses real connections and isn't portable. It is only for humans to
@@ -1702,7 +1703,7 @@ TEST_F(RunMiniServerFTestSuite, receive_from_stopsock_without_0_termbyte) {
     }
 }
 
-TEST_F(RunMiniServerFTestSuite, RunMiniServer) {
+TEST_F(RunMiniServerFTestSuite, RunMiniServer_successful) {
     // IMPORTANT! There is a limit FD_SETSIZE = 1024 for socket file
     // descriptors that can be used with 'select()'. This limit is not given
     // when using 'poll()' or 'epoll' instead. Old_code uses 'select()' so we
@@ -1745,25 +1746,18 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer) {
 
     // Set needed data, listen miniserver only on IPv4 that will connect to a
     // remote client which has done e rquest.
-    minisock->miniServerSock4 = FD_SETSIZE - 6;
     minisock->miniServerPort4 = 50012;
-    // minisock->miniServerSock6 = FD_SETSIZE - n;
-    // minisock->miniServerPort6 = 5xxxx;
-    // minisock->ssdpSock4 = FD_SETSIZE - 7;
-
-    minisock->miniServerStopSock = FD_SETSIZE - 8;
     minisock->stopPort = 50013;
-    constexpr SOCKET remote_connect_sockfd = FD_SETSIZE - 9;
     const std::string remote_connect_port = "50014";
+    // minisock->miniServerPort6 = 5xxxx;
 
-    // Get highest used socket file descriptor
-    SOCKET select_nfds{};
-    select_nfds = std::max(select_nfds, minisock->miniServerSock4);
-    // select_nfds = std::max(select_nfds, minisock->miniServerSock6);
-    // select_nfds = std::max(select_nfds, minisock->ssdpSock4);
-    select_nfds = std::max(select_nfds, minisock->miniServerStopSock);
-    select_nfds = std::max(select_nfds, remote_connect_sockfd);
-    ++select_nfds; // Must be highest used fd + 1
+    // Due to 'select()' have ATTENTION to set select_nfds correct.
+    SOCKET select_nfds{FD_SETSIZE - 5}; // Must be highest used fd + 1
+    minisock->miniServerSock4 = FD_SETSIZE - 6;
+    // minisock->ssdpSock4 = FD_SETSIZE - 7;
+    minisock->miniServerStopSock = FD_SETSIZE - 8;
+    constexpr SOCKET remote_connect_sockfd = FD_SETSIZE - 9;
+    // minisock->miniServerSock6 = FD_SETSIZE - n;
 
     { // Scope of mocking only within this block
 
@@ -1772,14 +1766,17 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer) {
                       << ": Max socket fd for select() not setting to 0 if "
                          "INVALID_SOCKET in MiniServerSockArray on WIN32.\n";
 #ifdef _WIN32
-            EXPECT_CALL(m_sys_socketObj, //
-                        select(0, _, nullptr, _, nullptr))
-                .WillOnce(Return(1)); // Wrong !
-#else
+            // On MS Windows INVALID_SOCKET is unsigned -1 =
+            // 18446744073709551615 so we get select_nfds with this big number
+            // even if there is only one INVALID_SOCKET. Incrementing it at the
+            // end results in 0. To be portable we must not assume
+            // INVALID_SOCKET to be -1. --Ingo
+            select_nfds = 0; // Wrong!
+#endif
             EXPECT_CALL(m_sys_socketObj,
                         select(select_nfds, _, nullptr, _, nullptr))
                 .WillOnce(Return(1));
-#endif
+
         } else {
 
             EXPECT_CALL(m_sys_socketObj,
@@ -1819,6 +1816,166 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer) {
                                 SetArgPointee<4>(*(sockaddr*)&ss_localhost.ss),
                                 Return((SSIZEP_T)shutdown_strlen)));
         }
+
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Unit must not expect its argument MiniServerSockArray* "
+                     "to be on the heap and free it.\n";
+
+        // Test Unit
+        RunMiniServer(minisock);
+
+    } // End scope of mocking, objects within the block will be destructed.
+
+    // Shutdown the threadpool.
+    EXPECT_EQ(ThreadPoolShutdown(&gMiniServerThreadPool), 0);
+}
+
+TEST_F(RunMiniServerFTestSuite, RunMiniServer_select_fails) {
+    // See important note at
+    // TEST_F(RunMiniServerFTestSuite, RunMiniServer_successful).
+
+    // CLogging loggingObj; // Output only with build type DEBUG.
+
+    // Initialize the threadpool. Don't forget to shutdown the threadpool at the
+    // end. nullptr means to use default attributes.
+    ASSERT_EQ(ThreadPoolInit(&gMiniServerThreadPool, nullptr), 0);
+    // Prevent to add jobs, we test jobs isolated.
+    gMiniServerThreadPool.shutdown = 1;
+    // EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 0), 0);
+
+    // We need this on the heap because it is freed by 'RunMiniServer()'.
+    MiniServerSockArray* minisock =
+        (MiniServerSockArray*)malloc(sizeof(MiniServerSockArray));
+    ASSERT_NE(minisock, nullptr);
+    InitMiniServerSockArray(minisock);
+
+    // Set needed data, listen miniserver only on IPv4 that will connect to a
+    // remote client which has done a request.
+    minisock->miniServerPort4 = 50025;
+    minisock->stopPort = 50026;
+    const std::string remote_connect_port = "50044";
+
+    // Due to 'select()' have ATTENTION to set select_nfds correct.
+    SOCKET select_nfds{FD_SETSIZE - 54 + 1}; // Must be highest used fd + 1
+    minisock->miniServerSock4 = FD_SETSIZE - 54;
+    minisock->miniServerStopSock = FD_SETSIZE - 55;
+
+    { // Scope of mocking only within this block
+
+        if (old_code) {
+#ifdef _WIN32
+            // On MS Windows INVALID_SOCKET is unsigned -1 =
+            // 18446744073709551615 so we get select_nfds with this big number
+            // even if there is only one INVALID_SOCKET. Incrementing it at the
+            // end results in 0. To be portable we must not assume
+            // INVALID_SOCKET to be -1. --Ingo
+            select_nfds = 0; // Wrong!
+#endif
+            std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                      << ": Ongoing failing select() must not hang in an "
+                         "endless loop.\n";
+            EXPECT_CALL(m_sys_socketObj,
+                        select(select_nfds, _, nullptr, _, nullptr))
+                .WillOnce(SetErrnoAndReturn(EBADF, SOCKET_ERROR))
+                // Next is only to force errors to leave endless loop.
+                .WillOnce(Return(1)); // Wrong!
+            EXPECT_CALL(m_sys_socketObj, accept(_, _, _))
+                .WillOnce(SetErrnoAndReturn(EINVAL, INVALID_SOCKET));
+            EXPECT_CALL(m_sys_socketObj, recvfrom(_, _, _, _, _, _))
+                .WillOnce(SetErrnoAndReturn(EINVAL, SOCKET_ERROR));
+
+            // Test Unit
+            RunMiniServer(minisock);
+        }
+
+    } // End scope of mocking, objects within the block will be destructed.
+
+    // Shutdown the threadpool.
+    EXPECT_EQ(ThreadPoolShutdown(&gMiniServerThreadPool), 0);
+
+    if (!old_code && !std::getenv("GITHUB_ACTIONS"))
+        GTEST_FAIL() << CRED "[ TODO     ] " CRES << __LINE__
+                     << ": Test and Unit need detailed rework on error "
+                        "checking.";
+    else
+        GTEST_SKIP() << CYEL "[ TODO     ] " CRES << __LINE__
+                     << ": Test and Unit need detailed rework on error "
+                        "checking.";
+}
+
+TEST_F(RunMiniServerFTestSuite, RunMiniServer_accept_fails) {
+    // See important note at
+    // TEST_F(RunMiniServerFTestSuite, RunMiniServer_successful).
+    // For this test we use only socket file descriptor miniServerSock4 that is
+    // listening on IPv4 for the miniserver. --Ingo
+
+    // CLogging loggingObj; // Output only with build type DEBUG.
+
+    // Initialize the threadpool. Don't forget to shutdown the threadpool at the
+    // end. nullptr means to use default attributes.
+    ASSERT_EQ(ThreadPoolInit(&gMiniServerThreadPool, nullptr), 0);
+    // Prevent to add jobs, we test jobs isolated.
+    gMiniServerThreadPool.shutdown = 1;
+    // EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 0), 0);
+
+    // We need this on the heap because it is freed by 'RunMiniServer()'.
+    MiniServerSockArray* minisock =
+        (MiniServerSockArray*)malloc(sizeof(MiniServerSockArray));
+    ASSERT_NE(minisock, nullptr);
+    InitMiniServerSockArray(minisock);
+
+    // Set needed data, listen miniserver only on IPv4 that will connect to a
+    // remote client which has done e rquest.
+    minisock->miniServerPort4 = 50045;
+    minisock->stopPort = 50047;
+
+    // Due to 'select()' have ATTENTION to set select_nfds correct.
+    SOCKET select_nfds{FD_SETSIZE - 57}; // Must be highest used fd + 1
+    minisock->miniServerSock4 = FD_SETSIZE - 58;
+    minisock->miniServerStopSock = FD_SETSIZE - 59;
+
+    { // Scope of mocking only within this block
+
+        constexpr char shutdown_str[]{"ShutDown"};
+        SIZEP_T shutdown_strlen;
+
+        if (old_code) {
+#ifdef _WIN32
+            // On MS Windows INVALID_SOCKET is unsigned -1 =
+            // 18446744073709551615 so we get select_nfds with this big number
+            // even if there is only one INVALID_SOCKET. Incrementing it at the
+            // end results in 0. To be portable we must not assume
+            // INVALID_SOCKET to be -1. --Ingo
+            select_nfds = 0; // Wrong!
+#endif
+            shutdown_strlen = 25; // This is fixed given by the tested Unit
+        } else {
+            shutdown_strlen = sizeof(shutdown_str);
+        }
+
+        // select()
+        EXPECT_CALL(m_sys_socketObj,
+                    select(select_nfds, _, nullptr, _, nullptr))
+            .WillOnce(Return(2)); // data and stopsock available
+
+        // accept() will fail for incomming data. stopsock uses a datagram so it
+        // doesn't use accept.
+        EXPECT_CALL(m_sys_socketObj,
+                    accept(minisock->miniServerSock4, NotNull(),
+                           Pointee((socklen_t)sizeof(sockaddr_storage))))
+            .WillOnce(SetErrnoAndReturn(ENOMEM, INVALID_SOCKET));
+
+        // Provide data for stopsock with ShutDown.
+        SSockaddr_storage ss_localhost;
+        ss_localhost = "127.0.0.1:" + std::to_string(minisock->stopPort);
+
+        EXPECT_CALL(m_sys_socketObj,
+                    recvfrom(minisock->miniServerStopSock, _, shutdown_strlen,
+                             0, _,
+                             Pointee((socklen_t)sizeof(sockaddr_storage))))
+            .WillOnce(DoAll(StrCpyToArg<1>(shutdown_str),
+                            SetArgPointee<4>(*(sockaddr*)&ss_localhost.ss),
+                            Return(shutdown_strlen)));
 
         std::cout << CRED "[ BUG      ] " CRES << __LINE__
                   << ": Unit must not expect its argument MiniServerSockArray* "
@@ -1920,7 +2077,10 @@ TEST_F(RunMiniServerFTestSuite, ssdp_read_fails) {
     EXPECT_EQ(ssdp_sockfd, INVALID_SOCKET);
 }
 
-TEST_F(RunMiniServerFTestSuite, web_server_accept) {
+TEST_F(RunMiniServerFTestSuite, web_server_accept_successful) {
+    // The tested units are different for old_code (pupnp) and new code (compa).
+    // We have void      ::web_server_accept() and
+    //         int  compa::web_server_accept().
     constexpr SOCKET listen_sockfd{FD_SETSIZE - 33};
     constexpr SOCKET connected_sockfd{FD_SETSIZE - 34};
     const std::string connected_port = "306";
@@ -1932,7 +2092,7 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept) {
     // end. nullptr means to use default attributes.
     ASSERT_EQ(ThreadPoolInit(&gMiniServerThreadPool, nullptr), 0);
     // Prevent to add jobs, we test jobs isolated. See note at
-    // TEST(RunMiniServerTestSuite, RunMiniServer).
+    // TEST(RunMiniServerTestSuite, RunMiniServer_successful).
     // gMiniServerThreadPool.shutdown = 1;
     EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 0), 0);
 
@@ -1946,6 +2106,7 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept) {
             .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&ssObj.ss),
                             Return(connected_sockfd)));
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
         // Capture output to stderr
         CLogging loggingObj; // Output only with build type DEBUG.
         CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
@@ -1959,24 +2120,24 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept) {
         std::replace(captureObj.str().begin(), captureObj.str().end(), '\n',
                      '@');
 #ifdef DEBUG
-        if (old_code)
-            EXPECT_THAT(captureObj.str(),
-                        ContainsStdRegex(" UPNP-MSER-2: .* mserv " +
-                                         std::to_string(connected_sockfd) +
-                                         ": cannot schedule request"));
-        else
-            EXPECT_THAT(
-                captureObj.str(),
-                ContainsStdRegex(" connected to host 192\\.168\\.201\\.202:306 "
-                                 "with socket " +
-                                 std::to_string(connected_sockfd)));
-            // ContainsStdRegex(" connected to host 192\\.168\\.201\\.202:306 "
-            //                  "with socket 206.* UPNP-MSER-1: .* mserv 206: "
-            //                  "cannot schedule request"));
+        EXPECT_THAT(captureObj.str(),
+                    ContainsStdRegex(" UPNP-MSER-2: .* mserv " +
+                                     std::to_string(connected_sockfd) +
+                                     ": cannot schedule request"));
 #else
         EXPECT_THAT(captureObj.str(),
                     ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0"));
 #endif
+
+#else // UPNPLIB_WITH_NATIVE_PUPNP
+
+        // Test Unit
+        int ret_web_server_accept = web_server_accept(listen_sockfd, set);
+        EXPECT_EQ(ret_web_server_accept, UPNP_E_SUCCESS)
+            << errStrEx(ret_web_server_accept, UPNP_E_SUCCESS);
+
+#endif // UPNPLIB_WITH_NATIVE_PUPNP
+
     } // End scope of mocking, objects within the block will be destructed.
 
     // Shutdown the threadpool.
@@ -1984,10 +2145,14 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept) {
 }
 
 TEST_F(RunMiniServerFTestSuite, web_server_accept_with_invalid_socket) {
+    // The tested units are different for old_code (pupnp) and new code (compa).
+    // We have void      ::web_server_accept() and
+    //         int  compa::web_server_accept().
     constexpr SOCKET listen_sockfd = INVALID_SOCKET;
 
     EXPECT_CALL(m_sys_socketObj, accept(_, _, _)).Times(0);
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     // Capture output to stderr
     CLogging loggingObj; // Output only with build type DEBUG.
     CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
@@ -1997,25 +2162,62 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_with_invalid_socket) {
     web_server_accept(listen_sockfd, nullptr);
 
     // Get captured output
-    if (old_code)
-        EXPECT_TRUE(captureObj.str().empty());
-    else
-#ifdef DEBUG
-        EXPECT_THAT(captureObj.str(),
-                    ContainsStdRegex(" UPNP-MSER-1: .* invalid socket\\(-1\\) "
-                                     "or set\\(.*\\)\\.\n"));
-#else
-        EXPECT_TRUE(captureObj.str().empty());
-#endif
+    EXPECT_TRUE(captureObj.str().empty());
+
+#else // UPNPLIB_WITH_NATIVE_PUPNP
+
+    // Test Unit
+    fd_set set; // unused, only for reference
+    FD_ZERO(&set);
+    int ret_web_server_accept = web_server_accept(listen_sockfd, set);
+    EXPECT_EQ(ret_web_server_accept, UPNP_E_SOCKET_ERROR)
+        << errStrEx(ret_web_server_accept, UPNP_E_SOCKET_ERROR);
+
+#endif // UPNPLIB_WITH_NATIVE_PUPNP
+}
+
+TEST_F(RunMiniServerFDeathTest, web_server_accept_with_invalid_set) {
+    // The tested units are different for old_code (pupnp) and new code (compa).
+    // We have void      ::web_server_accept() and
+    //         int  compa::web_server_accept().
+    constexpr SOCKET listen_sockfd{FD_SETSIZE - 57};
+
+    EXPECT_CALL(m_sys_socketObj, accept(_, _, _)).Times(0);
+
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+    std::cerr << CYEL "[ BUGFIX   ] " CRES << __LINE__
+              << ": nullptr to socket select set must not segfault.\n";
+    // There may be a multithreading test running before.  Due to problems
+    // running this together with death tests as noted in the gtest docu the
+    // GTEST_FLAG has to be set. If having more death tests it should be
+    // considered to run multithreading tests with an own test file without
+    // death tests.
+    GTEST_FLAG_SET(death_test_style, "threadsafe");
+    EXPECT_DEATH(web_server_accept(listen_sockfd, nullptr), "");
+
+#else // UPNPLIB_WITH_NATIVE_PUPNP
+
+    // Test Unit
+    fd_set set; // unused, only for reference
+    FD_ZERO(&set);
+    int ret_web_server_accept = web_server_accept(listen_sockfd, set);
+    EXPECT_EQ(ret_web_server_accept, UPNP_E_SOCKET_ERROR)
+        << errStrEx(ret_web_server_accept, UPNP_E_SOCKET_ERROR);
+
+#endif // UPNPLIB_WITH_NATIVE_PUPNP
 }
 
 TEST_F(RunMiniServerFTestSuite, web_server_accept_with_empty_set) {
+    // The tested units are different for old_code (pupnp) and new code (compa).
+    // We have void      ::web_server_accept() and
+    //         int  compa::web_server_accept().
     constexpr SOCKET listen_sockfd{FD_SETSIZE - 35};
     fd_set set;
     FD_ZERO(&set);
 
     EXPECT_CALL(m_sys_socketObj, accept(_, _, _)).Times(0);
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     // Capture output to stderr
     CLogging loggingObj; // Output only with build type DEBUG.
     class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
@@ -2025,20 +2227,22 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_with_empty_set) {
     web_server_accept(listen_sockfd, &set);
 
     // Get captured output
-    if (old_code)
-        EXPECT_TRUE(captureObj.str().empty());
-    else
-#ifdef DEBUG
-        EXPECT_THAT(captureObj.str(),
-                    ContainsStdRegex(" UPNP-MSER-1: .* invalid socket\\(" +
-                                     std::to_string(listen_sockfd) +
-                                     "\\) or set\\(.*\\)\\.\n"));
-#else
-        EXPECT_TRUE(captureObj.str().empty());
-#endif
+    EXPECT_TRUE(captureObj.str().empty());
+
+#else // UPNPLIB_WITH_NATIVE_PUPNP
+
+    // Test Unit
+    int ret_web_server_accept = web_server_accept(listen_sockfd, set);
+    EXPECT_EQ(ret_web_server_accept, UPNP_E_SOCKET_ERROR)
+        << errStrEx(ret_web_server_accept, UPNP_E_SOCKET_ERROR);
+
+#endif // UPNPLIB_WITH_NATIVE_PUPNP
 }
 
 TEST_F(RunMiniServerFTestSuite, web_server_accept_fails) {
+    // The tested units are different for old_code (pupnp) and new code (compa).
+    // We have void      ::web_server_accept() and
+    //         int  compa::web_server_accept().
     constexpr SOCKET listen_sockfd{FD_SETSIZE - 50};
     fd_set set;
     FD_ZERO(&set);
@@ -2049,6 +2253,7 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_fails) {
                        Pointee((socklen_t)sizeof(::sockaddr_storage))))
         .WillOnce(SetErrnoAndReturn(EINVAL, INVALID_SOCKET));
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
     // Capture output to stderr
     CLogging loggingObj; // Output only with build type DEBUG.
     class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
@@ -2056,23 +2261,25 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_fails) {
 
     // Test Unit
     web_server_accept(listen_sockfd, &set);
-
-    // Get captured output
-    std::cout << captureObj.str();
 #ifdef DEBUG
-    if (old_code)
-        EXPECT_THAT(
-            captureObj.str(),
-            ContainsStdRegex(
-                " UPNP-MSER-2: .* miniserver: Error in accept\\(\\): "));
-    else
-        EXPECT_THAT(
-            captureObj.str(),
-            ContainsStdRegex(" UPNP-MSER-1: .* web_server_accept\\(\\): Error "
-                             "in accept\\(\\): "));
+    EXPECT_THAT(captureObj.str(),
+                ContainsStdRegex(
+                    " UPNP-MSER-2: .* miniserver: Error in accept\\(\\): "));
 #else
-    EXPECT_TRUE(captureObj.str().empty());
+    std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+              << ": Failing accept() must not silently be ignored and continue "
+                 "to fail recvfrom.\n";
+    EXPECT_TRUE(captureObj.str().empty()); // Wrong!
 #endif
+
+#else // UPNPLIB_WITH_NATIVE_PUPNP
+
+    // Test Unit
+    int ret_web_server_accept = web_server_accept(listen_sockfd, set);
+    EXPECT_EQ(ret_web_server_accept, UPNP_E_SOCKET_ACCEPT)
+        << errStrEx(ret_web_server_accept, UPNP_E_SOCKET_ACCEPT);
+
+#endif // UPNPLIB_WITH_NATIVE_PUPNP
 }
 
 TEST(RunMiniServerTestSuite, fdset_if_valid) {
@@ -2172,7 +2379,7 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
     // end. nullptr means to use default attributes.
     ASSERT_EQ(ThreadPoolInit(&gMiniServerThreadPool, nullptr), 0);
     // Prevent to add jobs, we test jobs isolated. See note at
-    // TEST(RunMiniServerTestSuite, RunMiniServer).
+    // TEST(RunMiniServerTestSuite, RunMiniServer_successful).
     // gMiniServerThreadPool.shutdown = 1;
     EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 0), 0);
 
@@ -2206,7 +2413,7 @@ TEST(RunMiniServerDeathTest, free_handle_request_arg_with_nullptr_to_struct) {
     if (old_code) {
 #if defined __APPLE__ && !DEBUG
 #else
-        std::cout << CYEL "[ FIX      ] " CRES << __LINE__
+        std::cerr << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": free_handle_re4quest with nullptr must not segfault.\n";
         // There may be a multithreading test running before with
         // TEST(RunMiniServerTestSuite, schedule_request_job). Due to problems
@@ -2378,10 +2585,10 @@ TEST_F(RunMiniServerFTestSuite,
         std::cout << CYEL "[ FIX      ] " CRES << __LINE__
                   << ": A wrong but accepted address family AF_UNIX should "
                      "return an error.\n";
-        EXPECT_TRUE(ret_getNumericHostRedirection); // wrong
+        EXPECT_TRUE(ret_getNumericHostRedirection); // Wrong!
         // Get captured output
         EXPECT_TRUE(captureObj.str().empty());
-        EXPECT_STREQ(host_port, "0.0.0.0:0"); // wrong
+        EXPECT_STREQ(host_port, "0.0.0.0:0"); // Wrong!
 
     } else {
 
