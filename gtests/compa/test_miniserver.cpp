@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-24
+// Redistribution only with this Copyright remark. Last modified: 2023-09-25
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -229,7 +229,7 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets) {
     // Initialize needed structure
     MINISERVER_REUSEADDR = false;
     strcpy(gIF_IPV4, "192.168.245.254");
-    constexpr SOCKET sockfd{FD_SETSIZE - 10};
+    constexpr SOCKET sockfd{umock::sfd_base + 10};
     const CAddrinfo ai(std::string(gIF_IPV4),
                        std::to_string(APPLICATION_LISTENING_PORT), AF_INET,
                        SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
@@ -588,7 +588,7 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_successful) {
     MINISERVER_REUSEADDR = false;
     constexpr char text_addr[]{"192.168.54.188"};
     char addrbuf[16];
-    constexpr SOCKET sockfd{FD_SETSIZE - 11};
+    constexpr SOCKET sockfd{umock::sfd_base + 11};
 
     s_SocketStuff s;
     // Fill all fields of struct s_SocketStuff
@@ -650,7 +650,7 @@ TEST(StartMiniServerTestSuite, do_bind_listen_with_wrong_socket) {
     EXPECT_EQ(CLOSE_SOCKET_P(s.fd), 0) << std::strerror(errno);
     // The socket id wasn't got from a socket() call now and should trigger an
     // error.
-    s.fd = FD_SETSIZE - 39;
+    s.fd = umock::sfd_base + 39;
     s.try_port = 65534;
 
     // Test Unit
@@ -668,7 +668,7 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_with_failed_listen) {
     MINISERVER_REUSEADDR = false;
     constexpr char text_addr[]{"192.168.54.188"};
     constexpr int actual_port{0};
-    constexpr SOCKET sockfd{FD_SETSIZE - 12};
+    constexpr SOCKET sockfd{umock::sfd_base + 12};
 
     s_SocketStuff s;
     // Fill all fields of struct s_SocketStuff
@@ -720,8 +720,8 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_address_in_use) {
         constexpr char text_addr[]{"192.168.54.188"};
         char addrbuf[16];
         constexpr int actual_port{50024};
-        constexpr SOCKET sockfd_inuse{FD_SETSIZE - 13};
-        constexpr SOCKET sockfd_free{FD_SETSIZE - 14};
+        constexpr SOCKET sockfd_inuse{umock::sfd_base + 13};
+        constexpr SOCKET sockfd_free{umock::sfd_base + 14};
 
         s_SocketStuff s;
         // Fill all fields of struct s_SocketStuff
@@ -786,7 +786,7 @@ TEST_F(DoBindFTestSuite, bind_successful) {
     // * Mocked bind() returns successful
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{FD_SETSIZE - 15};
+    constexpr SOCKET sockfd{umock::sfd_base + 15};
     constexpr char text_addr[]{"192.168.101.233"};
     char addrbuf[16];
     constexpr uint16_t actual_port{56789};
@@ -849,7 +849,7 @@ TEST_F(DoBindFTestSuite, bind_with_invalid_argument) {
     // * Mocked bind() returns EINVAL
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{FD_SETSIZE - 16};
+    constexpr SOCKET sockfd{umock::sfd_base + 16};
     constexpr char text_addr[]{"192.168.202.233"};
     char addrbuf[16];
     constexpr uint16_t actual_port{56890};
@@ -940,7 +940,7 @@ TEST_F(DoBindFTestSuite, bind_with_try_port_overrun) {
     // * Mocked bind() returns always failure with errno EINVAL
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{FD_SETSIZE - 17};
+    constexpr SOCKET sockfd{umock::sfd_base + 17};
     constexpr char text_addr[]{"192.168.101.233"};
     char addrbuf[16];
 
@@ -1005,7 +1005,7 @@ TEST_F(DoBindFTestSuite, bind_successful_with_two_tries) {
     // * Mocked bind() fails with two tries errno EADDRINUSE, then successful.
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{FD_SETSIZE - 18};
+    constexpr SOCKET sockfd{umock::sfd_base + 18};
     constexpr char text_addr[]{"192.168.101.233"};
     char addrbuf[16];
     s_SocketStuff s;
@@ -1091,7 +1091,7 @@ TEST(DoBindTestSuite, bind_with_empty_parameter) {
 TEST(DoBindTestSuite, bind_with_wrong_ip_version_assignment) {
     // Setting ip_version = 6 and sin_family = AF_INET and vise versa does not
     // fit. Provide needed data for the Unit.
-    constexpr SOCKET sockfd{FD_SETSIZE - 19};
+    constexpr SOCKET sockfd{umock::sfd_base + 19};
     constexpr char text_addr[]{"192.168.101.233"};
     constexpr uint16_t try_port{65533};
 
@@ -1144,7 +1144,7 @@ TEST_F(StartMiniServerFTestSuite, do_listen_successful) {
     WINSOCK_INIT
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{FD_SETSIZE - 20};
+    constexpr SOCKET sockfd{umock::sfd_base + 20};
     constexpr char text_addr[] = "192.168.202.233";
     char addrbuf[16];
     constexpr uint16_t actual_port{60000};
@@ -1203,7 +1203,7 @@ TEST_F(StartMiniServerFTestSuite, do_listen_not_supported) {
     // * Mocked getsockname() is not called
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{FD_SETSIZE - 21};
+    constexpr SOCKET sockfd{umock::sfd_base + 21};
     constexpr char text_addr[] = "192.168.101.203";
     char addrbuf[16];
 
@@ -1254,7 +1254,7 @@ TEST_F(StartMiniServerFTestSuite, do_listen_insufficient_resources) {
     // * Mocked getsockname() returns with ENOBUFS
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{FD_SETSIZE - 22};
+    constexpr SOCKET sockfd{umock::sfd_base + 22};
     constexpr char text_addr[] = "192.168.101.203";
     char addrbuf[16];
 
@@ -1304,7 +1304,7 @@ TEST_F(StartMiniServerFTestSuite, get_port_successful) {
     WINSOCK_INIT
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{FD_SETSIZE - 23};
+    constexpr SOCKET sockfd{umock::sfd_base + 23};
     constexpr char text_addr[] = "192.168.154.188";
     constexpr uint16_t actual_port{55555};
     // This is for the returned port number
@@ -1334,7 +1334,7 @@ TEST_F(StartMiniServerFTestSuite, get_port_wrong_sockaddr_family) {
     // * Mocked getsockname() returns successful unusable sockaddr family 0.
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{FD_SETSIZE - 24};
+    constexpr SOCKET sockfd{umock::sfd_base + 24};
     // This is for the returned port number
     uint16_t port{0xAAAA};
 
@@ -1369,7 +1369,7 @@ TEST_F(StartMiniServerFTestSuite, get_port_fails) {
     // * Mocked getsockname() fails with insufficient resources (ENOBUFS).
 
     // Provide needed data for the Unit
-    constexpr SOCKET sockfd{FD_SETSIZE - 25};
+    constexpr SOCKET sockfd{umock::sfd_base + 25};
     // This is for the returned port number
     uint16_t port{0xAAAA};
 
@@ -1450,7 +1450,7 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_stopsock_bind_fails) {
     // Provide needed data for the Unit
     MiniServerSockArray out;
     InitMiniServerSockArray(&out);
-    const SOCKET sockfd{FD_SETSIZE - 26};
+    const SOCKET sockfd{umock::sfd_base + 26};
 
     // Mock system functions
     EXPECT_CALL(m_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
@@ -1476,7 +1476,7 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_stopsock_getsockname_fails) {
     // Provide needed data for the Unit
     MiniServerSockArray out;
     InitMiniServerSockArray(&out);
-    const SOCKET sockfd{FD_SETSIZE - 27};
+    const SOCKET sockfd{umock::sfd_base + 27};
 
     // Mock system functions
     EXPECT_CALL(m_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
@@ -1504,7 +1504,7 @@ TEST_F(RunMiniServerFTestSuite, receive_from_stopsock_successful) {
     // it does not match so there is no danger to break destination buffer size.
     constexpr int expected_destbuflen{9};
 
-    constexpr SOCKET sockfd{FD_SETSIZE - 5};
+    constexpr SOCKET sockfd{umock::sfd_base + 5};
     const CAddrinfo ai("127.0.0.1", "50015", AF_INET, SOCK_DGRAM,
                        AI_NUMERICHOST | AI_NUMERICSERV);
     fd_set rdSet;
@@ -1528,7 +1528,7 @@ TEST_F(RunMiniServerFTestSuite, receive_from_stopsock_successful) {
 TEST_F(RunMiniServerFTestSuite, receive_from_stopsock_not_selected) {
     // CLogging loggingObj; // Output only with build type DEBUG.
 
-    constexpr SOCKET sockfd{FD_SETSIZE - 29};
+    constexpr SOCKET sockfd{umock::sfd_base + 29};
 
     fd_set rdSet;
     FD_ZERO(&rdSet);
@@ -1543,7 +1543,7 @@ TEST_F(RunMiniServerFTestSuite, receive_from_stopsock_not_selected) {
 TEST_F(RunMiniServerFTestSuite, receive_from_stopsock_receiving_fails) {
     // CLogging loggingObj; // Output only with build type DEBUG.
 
-    constexpr SOCKET sockfd{FD_SETSIZE - 28};
+    constexpr SOCKET sockfd{umock::sfd_base + 28};
     fd_set rdSet;
     FD_ZERO(&rdSet);
     FD_SET(sockfd, &rdSet);
@@ -1570,7 +1570,7 @@ TEST_F(RunMiniServerFTestSuite, receive_from_stopsock_no_bytes_received) {
     // CLogging loggingObj; // Output only with build type DEBUG.
 
     constexpr char shutdown_str[]{"ShutDown"};
-    constexpr SOCKET sockfd{FD_SETSIZE - 30};
+    constexpr SOCKET sockfd{umock::sfd_base + 30};
     const CAddrinfo ai("127.0.0.1", "50016", AF_INET, SOCK_DGRAM,
                        AI_NUMERICHOST | AI_NUMERICSERV);
     fd_set rdSet;
@@ -1606,7 +1606,7 @@ TEST_F(RunMiniServerFTestSuite, receive_from_stopsock_wrong_stop_message) {
     // it does not match so there is no danger to break buffer size.
     constexpr int expected_destbuflen{9};
 
-    constexpr SOCKET sockfd{FD_SETSIZE - 31};
+    constexpr SOCKET sockfd{umock::sfd_base + 31};
     const CAddrinfo ai("127.0.0.1", "50017", AF_INET, SOCK_DGRAM,
                        AI_NUMERICHOST | AI_NUMERICSERV);
     fd_set rdSet;
@@ -1636,7 +1636,7 @@ TEST_F(RunMiniServerFTestSuite, receive_from_stopsock_from_wrong_address) {
     // it does not match so there is no danger to break buffer size.
     constexpr int expected_destbuflen{9};
 
-    constexpr SOCKET sockfd{FD_SETSIZE - 48};
+    constexpr SOCKET sockfd{umock::sfd_base + 48};
     const CAddrinfo ai("192.168.150.151", "50018", AF_INET, SOCK_DGRAM,
                        AI_NUMERICHOST | AI_NUMERICSERV);
     fd_set rdSet;
@@ -1674,7 +1674,7 @@ TEST_F(RunMiniServerFTestSuite, receive_from_stopsock_without_0_termbyte) {
     // it does not match so there is no danger to break buffer size.
     constexpr int expected_destbuflen{9};
 
-    constexpr SOCKET sockfd{FD_SETSIZE - 49};
+    constexpr SOCKET sockfd{umock::sfd_base + 49};
     const CAddrinfo ai("127.0.0.1", "50019", AF_INET, SOCK_DGRAM,
                        AI_NUMERICHOST | AI_NUMERICSERV);
     fd_set rdSet;
@@ -1752,12 +1752,14 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer_successful) {
     // minisock->miniServerPort6 = 5xxxx;
 
     // Due to 'select()' have ATTENTION to set select_nfds correct.
-    SOCKET select_nfds{FD_SETSIZE - 5}; // Must be highest used fd + 1
-    minisock->miniServerSock4 = FD_SETSIZE - 6;
-    // minisock->ssdpSock4 = FD_SETSIZE - 7;
-    minisock->miniServerStopSock = FD_SETSIZE - 8;
-    constexpr SOCKET remote_connect_sockfd = FD_SETSIZE - 9;
-    // minisock->miniServerSock6 = FD_SETSIZE - n;
+    SOCKET select_nfds{umock::sfd_base + 8 + 1}; // Must be highest used fd + 1
+    minisock->miniServerSock4 = umock::sfd_base + 6;
+    // minisock->miniServerSock6 = umock::sfd_base + n;
+    // minisock->ssdpSock4 = umock::sfd_base + n;
+    minisock->miniServerStopSock = umock::sfd_base + 8;
+    // Next is the socket file descriptor of an accepted connection to a remote
+    // peer and not part of listening sockets monitored by select().
+    constexpr SOCKET remote_connect_sockfd = umock::sfd_base + 9;
 
     { // Scope of mocking only within this block
 
@@ -1768,9 +1770,9 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer_successful) {
 #ifdef _WIN32
             // On MS Windows INVALID_SOCKET is unsigned -1 =
             // 18446744073709551615 so we get select_nfds with this big number
-            // even if there is only one INVALID_SOCKET. Incrementing it at the
-            // end results in 0. To be portable we must not assume
-            // INVALID_SOCKET to be -1. --Ingo
+            // even if there is only one INVALID_SOCKET. Incrementing it by one
+            // results in 0. To be portable we must not assume INVALID_SOCKET
+            // to be -1. --Ingo
             select_nfds = 0; // Wrong!
 #endif
             EXPECT_CALL(m_sys_socketObj,
@@ -1856,9 +1858,9 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer_select_fails) {
     const std::string remote_connect_port = "50044";
 
     // Due to 'select()' have ATTENTION to set select_nfds correct.
-    SOCKET select_nfds{FD_SETSIZE - 54 + 1}; // Must be highest used fd + 1
-    minisock->miniServerSock4 = FD_SETSIZE - 54;
-    minisock->miniServerStopSock = FD_SETSIZE - 55;
+    SOCKET select_nfds{umock::sfd_base + 55 + 1}; // Must be highest used fd + 1
+    minisock->miniServerSock4 = umock::sfd_base + 54;
+    minisock->miniServerStopSock = umock::sfd_base + 55;
 
     { // Scope of mocking only within this block
 
@@ -1866,9 +1868,9 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer_select_fails) {
 #ifdef _WIN32
             // On MS Windows INVALID_SOCKET is unsigned -1 =
             // 18446744073709551615 so we get select_nfds with this big number
-            // even if there is only one INVALID_SOCKET. Incrementing it at the
-            // end results in 0. To be portable we must not assume
-            // INVALID_SOCKET to be -1. --Ingo
+            // even if there is only one INVALID_SOCKET. Incrementing it by one
+            // results in 0. To be portable we must not assume INVALID_SOCKET
+            // to be -1. --Ingo
             select_nfds = 0; // Wrong!
 #endif
             std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
@@ -1930,9 +1932,9 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer_accept_fails) {
     minisock->stopPort = 50047;
 
     // Due to 'select()' have ATTENTION to set select_nfds correct.
-    SOCKET select_nfds{FD_SETSIZE - 57}; // Must be highest used fd + 1
-    minisock->miniServerSock4 = FD_SETSIZE - 58;
-    minisock->miniServerStopSock = FD_SETSIZE - 59;
+    SOCKET select_nfds{umock::sfd_base + 59 + 1}; // Must be highest used fd + 1
+    minisock->miniServerSock4 = umock::sfd_base + 58;
+    minisock->miniServerStopSock = umock::sfd_base + 59;
 
     { // Scope of mocking only within this block
 
@@ -1943,9 +1945,9 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer_accept_fails) {
 #ifdef _WIN32
             // On MS Windows INVALID_SOCKET is unsigned -1 =
             // 18446744073709551615 so we get select_nfds with this big number
-            // even if there is only one INVALID_SOCKET. Incrementing it at the
-            // end results in 0. To be portable we must not assume
-            // INVALID_SOCKET to be -1. --Ingo
+            // even if there is only one INVALID_SOCKET. Incrementing it by one
+            // results in 0. To be portable we must not assume INVALID_SOCKET
+            // to be -1. --Ingo
             select_nfds = 0; // Wrong!
 #endif
             shutdown_strlen = 25; // This is fixed given by the tested Unit
@@ -2004,7 +2006,7 @@ TEST_F(RunMiniServerFTestSuite, ssdp_read_successful) {
         "Some SSDP test data for a request of a remote client."};
     ASSERT_LE(sizeof(ssdpdata_str), BUFSIZE - 1);
 
-    SOCKET ssdp_sockfd{FD_SETSIZE - 32};
+    SOCKET ssdp_sockfd{umock::sfd_base + 32};
     const CAddrinfo ai("192.168.71.82", "50023", AF_INET, SOCK_DGRAM,
                        AI_NUMERICHOST | AI_NUMERICSERV);
     fd_set rdSet;
@@ -2042,7 +2044,7 @@ TEST_F(RunMiniServerFTestSuite, ssdp_read_fails) {
         "Some SSDP test data for a request of a remote client."};
     ASSERT_LE(sizeof(ssdpdata_str), BUFSIZE - 1);
 
-    constexpr SOCKET ssdp_sockfd_valid{FD_SETSIZE - 46};
+    constexpr SOCKET ssdp_sockfd_valid{umock::sfd_base + 46};
     const CAddrinfo ai("192.168.71.82", "50023", AF_INET, SOCK_DGRAM,
                        AI_NUMERICHOST | AI_NUMERICSERV);
 
@@ -2081,8 +2083,8 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_successful) {
     // The tested units are different for old_code (pupnp) and new code (compa).
     // We have void      ::web_server_accept() and
     //         int  compa::web_server_accept().
-    constexpr SOCKET listen_sockfd{FD_SETSIZE - 33};
-    constexpr SOCKET connected_sockfd{FD_SETSIZE - 34};
+    constexpr SOCKET listen_sockfd{umock::sfd_base + 33};
+    constexpr SOCKET connected_sockfd{umock::sfd_base + 34};
     const std::string connected_port = "306";
     fd_set set;
     FD_ZERO(&set);
@@ -2180,7 +2182,7 @@ TEST_F(RunMiniServerFDeathTest, web_server_accept_with_invalid_set) {
     // The tested units are different for old_code (pupnp) and new code (compa).
     // We have void      ::web_server_accept() and
     //         int  compa::web_server_accept().
-    constexpr SOCKET listen_sockfd{FD_SETSIZE - 57};
+    constexpr SOCKET listen_sockfd{umock::sfd_base + 57};
 
     EXPECT_CALL(m_sys_socketObj, accept(_, _, _)).Times(0);
 
@@ -2211,7 +2213,7 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_with_empty_set) {
     // The tested units are different for old_code (pupnp) and new code (compa).
     // We have void      ::web_server_accept() and
     //         int  compa::web_server_accept().
-    constexpr SOCKET listen_sockfd{FD_SETSIZE - 35};
+    constexpr SOCKET listen_sockfd{umock::sfd_base + 35};
     fd_set set;
     FD_ZERO(&set);
 
@@ -2243,7 +2245,7 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_fails) {
     // The tested units are different for old_code (pupnp) and new code (compa).
     // We have void      ::web_server_accept() and
     //         int  compa::web_server_accept().
-    constexpr SOCKET listen_sockfd{FD_SETSIZE - 50};
+    constexpr SOCKET listen_sockfd{umock::sfd_base + 50};
     fd_set set;
     FD_ZERO(&set);
     FD_SET(listen_sockfd, &set);
@@ -2300,7 +2302,7 @@ TEST(RunMiniServerTestSuite, fdset_if_valid) {
     //        "**exeption or buffer overflow";
 
     // Valid socket file descriptor will be added to the set.
-    constexpr SOCKET sockfd1{FD_SETSIZE - 47};
+    constexpr SOCKET sockfd1{umock::sfd_base + 47};
     fdset_if_valid(sockfd1, &rdSet);
     EXPECT_NE(FD_ISSET(sockfd1, &rdSet), 0)
         << "Socket file descriptor " << sockfd1
@@ -2370,7 +2372,7 @@ TEST(RunMiniServerTestSuite, fdset_if_valid) {
 
 TEST(RunMiniServerTestSuite, schedule_request_job) {
     WINSOCK_INIT
-    constexpr SOCKET connected_sockfd{FD_SETSIZE - 36};
+    constexpr SOCKET connected_sockfd{umock::sfd_base + 36};
     constexpr uint16_t connected_port = 302;
     const CAddrinfo ai("192.168.1.1", std::to_string(connected_port), AF_INET,
                        SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
@@ -2483,7 +2485,7 @@ TEST_F(RunMiniServerFTestSuite, get_numeric_host_redirection) {
     // getNumericHostRedirection() returns the ip address with port as text
     // (e.g. "192.168.1.2:54321") that is bound to a socket.
 
-    constexpr SOCKET sockfd{FD_SETSIZE - 37};
+    constexpr SOCKET sockfd{umock::sfd_base + 37};
     char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
 
     // Provide a sockaddr structure that will be returned by mocked
@@ -2514,7 +2516,7 @@ TEST_F(RunMiniServerFTestSuite, get_numeric_host_redirection) {
 
 TEST_F(RunMiniServerFTestSuite,
        get_numeric_host_redirection_with_insufficient_resources) {
-    constexpr SOCKET sockfd{FD_SETSIZE - 38};
+    constexpr SOCKET sockfd{umock::sfd_base + 38};
     char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
 
     // Mock system function getsockname()

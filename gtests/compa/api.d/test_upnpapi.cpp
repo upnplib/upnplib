@@ -496,7 +496,7 @@ TEST_F(UpnpapiMockFTestSuite, UpnpRegisterRootDevice3_successful) {
         GTEST_SKIP() << "Need to test subroutines first.";
 
     constexpr char desc_doc_url[]{"http://192.168.99.4:50010/tvdevicedesc.xml"};
-    constexpr SOCKET sockfd{FD_SETSIZE - 45};
+    constexpr SOCKET sockfd{umock::sfd_base + 45};
     UpnpDevice_Handle device_handle = -1;
 
     // Initialization preamble to have essential structures initialized.

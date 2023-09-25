@@ -95,7 +95,7 @@ TEST(CheckConnectAndWaitConnectionIp4TestSuite, real_connect) {
 class PrivateConnectFTestSuite : public ::testing::Test {
   protected:
     // Fictive socket file descriptor for mocking.
-    const SOCKET m_sockfd{FD_SETSIZE - 40};
+    const SOCKET m_sockfd{umock::sfd_base + 40};
     // Ip address structure
     SSockaddr_storage m_saddr;
 

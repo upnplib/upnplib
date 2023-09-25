@@ -493,7 +493,7 @@ TEST_F(HttpMockFTestSuite, send_message_from_buffer_successful) {
     // CLogging loggingObj; // Output only with build type DEBUG.
 
     SOCKINFO info{};
-    info.socket = FD_SETSIZE - 51;
+    info.socket = umock::sfd_base + 51;
     int timeout_secs{HTTP_DEFAULT_TIMEOUT};
     constexpr char request[]{"This is a test message."};
     constexpr size_t request_length{sizeof(request) - 1};
@@ -560,7 +560,7 @@ TEST_F(HttpMockFTestSuite, send_message_from_file_successful) {
 
     // Provide needed data.
     SOCKINFO info{};
-    info.socket = FD_SETSIZE - 52;
+    info.socket = umock::sfd_base + 52;
     int timeout_secs{HTTP_DEFAULT_TIMEOUT};
     SendInstruction instr{};
     instr.ReadSendSize = -1;
@@ -586,7 +586,7 @@ TEST_F(HttpMockFTestSuite, send_message_fails) {
     CLogging loggingObj; // Output only with build type DEBUG.
 
     SOCKINFO info{};
-    info.socket = FD_SETSIZE - 53;
+    info.socket = umock::sfd_base + n;
     int timeout_secs{HTTP_DEFAULT_TIMEOUT};
     constexpr char request[]{"This is a UPnP Request."};
     constexpr size_t request_length{sizeof(request) - 1};

@@ -119,43 +119,6 @@ Example:
     // * connection succeeds
     // * make blocking succeeds
 
-## Visibility support
-Visibility Support provides a powerful optimization. We use it as described at the [GCC Wiki - Visibility](https://gcc.gnu.org/wiki/Visibility). It only belongs to shared libraries. Here in short the needed steps configured for this library:
-- Enable Visibility Support on the whole project:
-
-    set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-    set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
-
-    # or only on a target:
-    set_target_properties(upnplib_shared PROPERTIES
-            CXX_VISIBILITY_PRESET hidden
-            VISIBILITY_INLINES_HIDDEN ON)
-
-- When building a shared library set its compile definitions to `UPNPLIB_SHARED` and `UPNPLIB_EXPORTS`
-
-    add_library(upnplib_shared SHARED
-            ${UPNPLIB_SOURCE_FILES})
-    target_compile_definitions(upnplib_shared
-            PRIVATE UPNPLIB_SHARED
-            PRIVATE UPNPLIB_EXPORTS)
-
-- On every executable that uses the shared library set its compile definition to `UPNPLIB_SHARED`
-
-    add_executable(upnplibInfo_shared
-            ./src/upnplibInfo.cpp)
-    target_compile_definitions(upnplibInfo_shared
-            PRIVATE UPNPLIB_SHARED)
-    target_link_libraries(upnplibInfo_shared
-            PRIVATE upnplib_shared)
-
-- In your header files, wherever you want an interface or API made public outside the current Dynamic Shared Object, place `UPNPLIB_API` in struct, class and function declarations you wish to make public. You should not specify it in the definition of your source files. On Microsoft Windows Visual Studio it does not compile with an error. You should never do it on templated or static functions because they are defined to be local.
-
-    UPNPLIB_API int PublicFunc()
-    class UPNPLIB_API PublicClass
-    struct UPNPLIB_API PublicStruct
-
-- For optimization with using `UPNPLIB_LOCAL` look at the [GCC Wiki - Visibility](https://gcc.gnu.org/wiki/Visibility). Usualy private member functions of a class are prefixed with UPNPLIB_LOCAL.
-
 ## To be thread-safe
 Because it isn't possible in general to test if a software is thread-safe I will ensure this by using recognized methods:
 - [Using data that is not shared between threads](https://softwareengineering.stackexchange.com/a/285942)
@@ -182,5 +145,5 @@ Rule of Zero/Three/Five
 
 <pre><sup>
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2023-09-05
+// Redistribution only with this Copyright remark. Last modified: 2023-09-25
 </sup></sup>

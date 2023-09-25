@@ -45,19 +45,10 @@ To avoid conflicts on different tests there are some varibles that have to be
 unique over all tests.
 
 Due to 'man select' socket file descriptors must be less than FD_SETSIZE (1024)
-to be supported. To have unique socket file descriptors I use 'FD_SETSIZE -
+to be supported. To have unique socket file descriptors I use 'sfd_base +
 [1,2,..]' and search for used fds for example with:
 
-    ~$ grep -Pnor --color=never --include='*.[chi]*' 'FD_SETSIZE - \d+' ./gtests | sort -t: -k3.14n
-    ./gtests/sample/test_tv_device.cpp:165:FD_SETSIZE - 1
-    ./gtests/sample/test_tv_device.cpp:184:FD_SETSIZE - 2
-    ./gtests/compa/test_miniserver.cpp:1673:FD_SETSIZE - 3
-    ./gtests/sample/test_tv_device.cpp:207:FD_SETSIZE - 3
-    ./gtests/compa/test_miniserver.cpp:1674:FD_SETSIZE - 5
-    ./gtests/compa/test_miniserver.cpp:1676:FD_SETSIZE - 6
-
-There is a problem with `FD_SETSIZE - 3` and should be fixed. `FD_SETSIZE - 4`
-can be used.
+    ~$ grep -Pnor --color=never --include='*.[chi]*' 'sfd_base \+ \d+ *\+* *\d*' ./gtests | sort -t: -k3.12n
 
 It is also strongly recommended to use unique port numbers for testing to avoid
 getting a delay to re-use an ip address. I start with test port number 50000
@@ -68,5 +59,5 @@ But it doesn't matter as long as the new used number isn't found. I use this:
 
 <br /><pre>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2023-08-13
+// Redistribution only with this Copyright remark. Last modified: 2023-09-25
 </pre>

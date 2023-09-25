@@ -1,9 +1,11 @@
 Next steps to do:
 * Manage FD_SETSIZE and used socket fds for testing
+* Use umock::port_base to grep for used test port numbers
 * Rename library upnplib_gtest_tools_* to utest_*
 * Manage verbose messages with runtime switching
-* Rework miniserver.cpp and test_miniserver.cpp with verbose messages
+* Rework miniserver.cpp and test_miniserver.cpp with verbose messages and derived test classes.
 * Rework test_httpreadwrite.cpp
+* Use poll() and WSAPoll() instead of select().
 * Improve test_sock.cpp with ssl tests
 * Improve test_http_Download.cpp, start with error conditions for http_MakeMessage()
 * Create gtests for ssdp/*, start with get_ssdp_sockets (needed for miniserver).

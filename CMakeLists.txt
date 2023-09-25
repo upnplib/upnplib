@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-18
+# Redistribution only with this Copyright remark. Last modified: 2023-09-26
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -136,6 +136,7 @@ add_compile_definitions(
         $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
 
         $<$<CXX_COMPILER_ID:MSVC>:UPNP_USE_MSVCPP>
+        $<$<CXX_COMPILER_ID:MSVC>:FD_SETSIZE=1024>
         $<$<BOOL:${UPNPLIB_WITH_TRACE}>:UPNPLIB_WITH_TRACE>
 )
 add_compile_options(

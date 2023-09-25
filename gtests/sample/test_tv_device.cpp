@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-23
+// Redistribution only with this Copyright remark. Last modified: 2023-09-25
 
 // -----------------------------------------------------------------------------
 // This testsuite starts the sample TV Device with general command line
@@ -175,7 +175,7 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
         // ****************************************************************
         // Mock V4 and V6 http listeners: get socket, bind it, listen on it and
         // get port with getsockname().
-        constexpr SOCKET listen_sockfd{FD_SETSIZE - 1};
+        constexpr SOCKET listen_sockfd{umock::sfd_base + 1};
         const std::string listen_port{"50008"};
         SSockaddr_storage
             listen_ssObj; // for getsockname() return sockaddr & port
@@ -193,7 +193,7 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
 
         // Mock stop socket (to end miniserver processing): get socket, bind it
         // and get port with getsockname().
-        constexpr SOCKET stop_sockfd{FD_SETSIZE - 2};
+        constexpr SOCKET stop_sockfd{umock::sfd_base + 2};
         const std::string stop_port{"50009"};
         SSockaddr_storage
             stop_ssObj; // for getsockname() return sockaddr & port
@@ -210,13 +210,13 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
 
         // Mock SSDP socket for discovery/advertising: get socket, bind it.
         // Create the IPv4 socket for SSDP REQUESTS
-        constexpr SOCKET ssdpreq_sockfd{FD_SETSIZE - 3};
+        constexpr SOCKET ssdpreq_sockfd{umock::sfd_base + 3};
         EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
             .WillOnce(Return(ssdpreq_sockfd));
         EXPECT_CALL(sys_socketObj, setsockopt(ssdpreq_sockfd, IPPROTO_IP,
                                               IP_MULTICAST_TTL, _, _));
         // Create the IPv4 socket for SSDP
-        constexpr SOCKET ssdp_sockfd{FD_SETSIZE - 4};
+        constexpr SOCKET ssdp_sockfd{umock::sfd_base + 4};
         EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
             .WillOnce(Return(ssdp_sockfd));
         EXPECT_CALL(sys_socketObj,
@@ -316,7 +316,7 @@ TEST_F(SampleTvDeviceFTestSuite, TvDeviceStart_successful) {
         // ****************************************************************
         // Mock V4 and V6 http listeners: get socket, bind it, listen on it and
         // get port with getsockname().
-        constexpr SOCKET listen_sockfd{FD_SETSIZE - 41};
+        constexpr SOCKET listen_sockfd{umock::sfd_base + 41};
         const std::string listen_port_str{"50010"};
         SSockaddr_storage
             listen_ssObj; // for getsockname() return sockaddr & port
@@ -336,9 +336,9 @@ TEST_F(SampleTvDeviceFTestSuite, TvDeviceStart_successful) {
 
         // Mock stop socket (to end miniserver processing): get socket, bind it
         // and get port with getsockname().
-        constexpr SOCKET stop_sockfd{FD_SETSIZE - 42};
-        constexpr SOCKET ssdpReqSock{FD_SETSIZE - 43};
-        constexpr SOCKET ssdpSock{FD_SETSIZE - 44};
+        constexpr SOCKET stop_sockfd{umock::sfd_base + 42};
+        constexpr SOCKET ssdpReqSock{umock::sfd_base + 43};
+        constexpr SOCKET ssdpSock{umock::sfd_base + 44};
         const std::string stop_port{"50011"};
         SSockaddr_storage
             stop_ssObj; // for getsockname() return sockaddr & port
