@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_ADDRINFO_HPP
 #define UPNPLIB_INCLUDE_ADDRINFO_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-05-27
+// Redistribution only with this Copyright remark. Last modified: 2023-09-26
 
 #include <upnplib/visibility.hpp>
 #include <upnplib/port_sock.hpp>
@@ -27,8 +27,13 @@ namespace upnplib {
 
 class UPNPLIB_API CAddrinfo {
   public:
-    // Constructor for getting an address information.
+    // Constructor for getting an address information with port number string.
     CAddrinfo(const std::string& a_node, const std::string& a_service,
+              const int a_family = AF_UNSPEC, const int a_socktype = 0,
+              const int a_flags = 0, const int protocol = 0);
+
+    // Constructor for getting an address information with numeric port number.
+    CAddrinfo(const std::string& a_node, in_port_t a_service,
               const int a_family = AF_UNSPEC, const int a_socktype = 0,
               const int a_flags = 0, const int protocol = 0);
 

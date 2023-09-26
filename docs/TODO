@@ -1,6 +1,4 @@
 Next steps to do:
-* Manage FD_SETSIZE and used socket fds for testing
-* Use umock::port_base to grep for used test port numbers
 * Rename library upnplib_gtest_tools_* to utest_*
 * Manage verbose messages with runtime switching
 * Rework miniserver.cpp and test_miniserver.cpp with verbose messages and derived test classes.

@@ -41,23 +41,29 @@ To run all tests local from the projects root directory with GITHUB_ACTIONS I us
     ~$ (cd ./build && GITHUB_ACTIONS=true ctest --timeout 2 --output-on-failure)
 
 ## Find different test variables
-To avoid conflicts on different tests there are some varibles that have to be
-unique over all tests.
+To avoid conflicts with double used socket file descriptors (sfd) on tests I
+always use a new one. To have a simple search pattern I define a constant
+`umock::sfd_base` and set a new socket file descriptor for testing for example
+with 'umock::sfd_base + 1' so I can simply grep for 'sfd_base' to find already
+used ones.
 
-Due to 'man select' socket file descriptors must be less than FD_SETSIZE (1024)
-to be supported. To have unique socket file descriptors I use 'sfd_base +
-[1,2,..]' and search for used fds for example with:
+IMPORTANT! There is a limit FD_SETSIZE = 1024 for socket file descriptors
+that can be used with 'select()'. We must not use more than 1023 fds.
+Otherwise we have undefined behavior and may get segfaults with 'FD_SET()'.
+For details have a look at 'man select'.
+
+To find all used file descriptors in tests I use this command:
 
     ~$ grep -Pnor --color=never --include='*.[chi]*' 'sfd_base \+ \d+ *\+* *\d*' ./gtests | sort -t: -k3.12n
 
 It is also strongly recommended to use unique port numbers for testing to avoid
 getting a delay to re-use an ip address. I start with test port number 50000
-and use a simple search that does not necessarily find only used port nummbers.
-But it doesn't matter as long as the new used number isn't found. I use this:
+-and use a simple search that does not necessarily find only used port nummbers.
+-But it doesn't matter as long as the new used number isn't found. I use this:
 
     ~$ grep -Phor --include='*.[chi]*' '5\d\d\d\d' ./gtests | sort -n | uniq
 
 <br /><pre>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2023-09-25
+// Redistribution only with this Copyright remark. Last modified: 2023-09-26
 </pre>

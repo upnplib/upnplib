@@ -1,21 +1,16 @@
 #ifndef UMOCK_SYS_SOCKET_MOCK_HPP
 #define UMOCK_SYS_SOCKET_MOCK_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-25
+// Redistribution only with this Copyright remark. Last modified: 2023-09-26
 
 #include <umock/sys_socket.hpp>
 #include <gmock/gmock.h>
 
 namespace umock {
 
-// To avoid conflicts with double used socket file descriptors (sfd) on tests I
-// always use a new one. I define a new sfd for example with 'umock::sfd_base +
-// 1' so I can simply grep for 'sfd_base' to find already used ones.
-//
-// IMPORTANT! There is a limit FD_SETSIZE = 1024 for socket file descriptors
-// that can be used with 'select()'. We must not use more than 1023 fds.
-// Otherwise we have undefined behavior and may get segfaults with 'FD_SET()'.
-// For details have a look at 'man select'.
+// For details about using this constant have a look at
+// [./gtests README]
+// (https://github.com/upnplib/upnplib/tree/main/gtests#find-different-test-variables).
 constexpr SOCKET sfd_base{};
 
 

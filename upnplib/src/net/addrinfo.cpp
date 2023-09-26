@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-18
+// Redistribution only with this Copyright remark. Last modified: 2023-09-26
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -13,7 +13,7 @@ namespace upnplib {
 
 // Provide C style addrinfo as class and wrap its system calls
 // -----------------------------------------------------------
-// Constructor with getting an address information.
+// Constructor for getting an address information with port number string.
 CAddrinfo::CAddrinfo(const std::string& a_node, const std::string& a_service,
                      const int a_family, const int a_socktype,
                      const int a_flags, const int a_protocol)
@@ -25,6 +25,13 @@ CAddrinfo::CAddrinfo(const std::string& a_node, const std::string& a_service,
     // Get new address information from the operating system.
     m_res = this->get_new_addrinfo(); // may throw exception
 }
+
+// Constructor for getting an address information with numeric port number.
+CAddrinfo::CAddrinfo(const std::string& a_node, in_port_t a_service,
+                     const int a_family, const int a_socktype,
+                     const int a_flags, const int a_protocol)
+    : CAddrinfo(a_node, std::to_string(a_service), a_family, a_socktype,
+                a_flags, a_protocol) {}
 
 // Copy constructor
 CAddrinfo::CAddrinfo(const CAddrinfo& that) {

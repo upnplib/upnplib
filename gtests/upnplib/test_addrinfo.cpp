@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-05
+// Redistribution only with this Copyright remark. Last modified: 2023-09-26
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/socket.hpp>
@@ -19,7 +19,7 @@ TEST(AddrinfoTestSuite, get_successful) {
     // from external DNS server. This will be changed when we need name
     // resolution.
 
-    // Test Unit
+    // Test Unit with string port number
     CAddrinfo ai1("[::1]", "50001", AF_INET6, SOCK_STREAM,
                   AI_PASSIVE | AI_NUMERICHOST);
 
@@ -36,6 +36,18 @@ TEST(AddrinfoTestSuite, get_successful) {
     // Returns what ::getaddrinfo() returns.
     EXPECT_EQ(ai1.addr_str(), "[::1]");
     EXPECT_EQ(ai1.port(), 50001);
+
+    // Test Unit with numeric port number
+    CAddrinfo ai2("[::2]", 50048, AF_INET6, SOCK_STREAM,
+                  AI_PASSIVE | AI_NUMERICHOST);
+
+    // Same results as above
+    EXPECT_EQ(ai2->ai_family, AF_INET6);
+    EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
+    EXPECT_EQ(ai2->ai_protocol, 0);
+    EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
+    EXPECT_EQ(ai2.addr_str(), "[::2]");
+    EXPECT_EQ(ai2.port(), 50048);
 }
 
 TEST(AddrinfoTestSuite, alphanumeric_host_is_not_supported) {
