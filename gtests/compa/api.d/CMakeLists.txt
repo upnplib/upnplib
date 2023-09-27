@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-08-18
+# Redistribution only with this Copyright remark. Last modified: 2023-09-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -26,16 +26,12 @@ target_compile_options(test_upnpdebug-pst
         # disable warning C4459: declaration of 'fp' hides global declaration
         # This is intended and don't fixed it because we won't modify pupnp code.
         $<$<CXX_COMPILER_ID:MSVC>:/wd4459>
-        # disable warning C4100: 'result_listener': unreferenced formal parameter
-        # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
-        # be a side effect of the macro definition. --Ingo
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
 )
 target_link_libraries(test_upnpdebug-pst
     PRIVATE
         pupnp_static
         upnplib_static
-        upnplib_gtest_tools_static
+        utest_static
 )
 add_test(NAME ctest_upnpdebug-pst COMMAND test_upnpdebug-pst --gtest_shuffle
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -48,18 +44,11 @@ add_executable(test_upnpdebug-cst
 target_include_directories(test_upnpdebug-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
-target_compile_options(test_upnpdebug-cst
-    PRIVATE
-        # disable warning C4100: 'result_listener': unreferenced formal parameter
-        # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
-        # be a side effect of the macro definition. --Ingo
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
-)
 target_link_libraries(test_upnpdebug-cst
     PRIVATE
         compa_static
         upnplib_static
-        upnplib_gtest_tools_static
+        utest_static
 )
 add_test(NAME ctest_upnpdebug-cst COMMAND test_upnpdebug-cst --gtest_shuffle
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -90,7 +79,7 @@ add_executable(test_UpnpString-psh
 )
 target_link_libraries(test_UpnpString-psh
     PRIVATE pupnp_shared
-    PRIVATE upnplib_gtest_tools_shared
+    PRIVATE utest_shared
 )
 add_test(NAME ctest_UpnpString-psh COMMAND test_UpnpString-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -102,7 +91,7 @@ add_executable(test_UpnpString-pst
 )
 target_link_libraries(test_UpnpString-pst
     PRIVATE pupnp_static
-    PRIVATE upnplib_gtest_tools_static
+    PRIVATE utest_static
 )
 add_test(NAME ctest_UpnpString-pst COMMAND test_UpnpString-pst --gtest_shuffle
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -114,7 +103,7 @@ add_executable(test_UpnpString-csh
 )
 target_link_libraries(test_UpnpString-csh
     PRIVATE compa_shared
-    PRIVATE upnplib_gtest_tools_shared
+    PRIVATE utest_shared
 )
 add_test(NAME ctest_UpnpString-csh COMMAND test_UpnpString-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -126,7 +115,7 @@ add_executable(test_UpnpString-cst
 )
 target_link_libraries(test_UpnpString-cst
     PRIVATE compa_static
-    PRIVATE upnplib_gtest_tools_static
+    PRIVATE utest_static
 )
 add_test(NAME ctest_UpnpString-cst COMMAND test_UpnpString-cst --gtest_shuffle
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -235,10 +224,6 @@ target_compile_definitions(test_upnpapi-pst
 )
 target_compile_options(test_upnpapi-pst
     PRIVATE
-        # disable warning C4100: 'result_listener': unreferenced formal
-        # parameter This is from Googlemock MATCHER_P. Don't know how to fix
-        # it. Seems to be a side effect of the macro definition. --Ingo
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
         # disable warning C4505: 'UpnpComputeIpv6PrefixLength': unreferenced
         # local function has been removed This isn't used with WIN32 but on
         # other platforms. I won't modify pupnp. --Ingo
@@ -274,13 +259,6 @@ target_compile_definitions(test_upnpapi-cst
         UPNP_HAVE_CLIENT
         UPNP_HAVE_OPTSSDP
 )
-target_compile_options(test_upnpapi-cst
-    PRIVATE
-        # disable warning C4100: 'result_listener': unreferenced formal parameter
-        # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
-        # be a side effect of the macro definition. --Ingo
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
-)
 target_link_libraries(test_upnpapi-cst
     PRIVATE
         compa_static
@@ -310,7 +288,7 @@ target_link_libraries(test_upnpapi_platform-pst
     PRIVATE
         pupnp_static
         upnplib_static
-        upnplib_gtest_tools_static
+        utest_static
 )
 add_test(NAME ctest_upnpapi_platform-pst COMMAND test_upnpapi_platform-pst --gtest_shuffle
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -328,7 +306,7 @@ target_link_libraries(test_upnpapi_platform-cst
     PRIVATE
         compa_static
         upnplib_static
-        upnplib_gtest_tools_static
+        utest_static
 )
 add_test(NAME ctest_upnpapi_platform-cst COMMAND test_upnpapi_platform-cst --gtest_shuffle
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

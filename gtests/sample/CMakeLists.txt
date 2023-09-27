@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-28
+# Redistribution only with this Copyright remark. Last modified: 2023-09-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -107,7 +107,7 @@ target_link_libraries(test_tv_device-psh
     PRIVATE
         pupnp_shared
         upnplib_shared
-        upnplib_gtest_tools_shared
+        utest_shared
 )
 add_test(NAME ctest_tv_device-psh COMMAND test_tv_device-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -127,7 +127,7 @@ target_link_libraries(test_tv_device-csh
     PRIVATE
         compa_shared
         upnplib_shared
-        upnplib_gtest_tools_shared
+        utest_shared
 )
 add_test(NAME ctest_tv_device-csh COMMAND test_tv_device-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

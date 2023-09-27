@@ -126,10 +126,12 @@ UPNPLIB_API void check_closed_fds(int a_from_fd, int a_to_fd);
                 ContainsStdRegex(" UPNP-MSER-1: .* invalid socket\\(-1\\) "));
 */
 MATCHER_P(MatchesStdRegex, pattern, "") {
+    static_cast<void>(*result_listener); // To suppress warning "unused param"
     std::regex regex(pattern);
     return std::regex_match(arg, regex);
 }
 MATCHER_P(ContainsStdRegex, pattern, "") {
+    static_cast<void>(*result_listener); // To suppress warning "unused param"
     std::regex regex(pattern);
     return std::regex_search(arg, regex);
 }

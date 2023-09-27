@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-21
+# Redistribution only with this Copyright remark. Last modified: 2023-09-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -53,7 +53,7 @@ if(UPNPLIB_WITH_OPENSSL)
         PRIVATE
             pupnp_shared
             upnplib_shared
-            upnplib_gtest_tools_shared
+            utest_shared
     )
     add_test(NAME ctest_sock_openssl-psh COMMAND test_sock_openssl-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -66,7 +66,7 @@ if(UPNPLIB_WITH_OPENSSL)
         PRIVATE
             compa_shared
             upnplib_shared
-            upnplib_gtest_tools_shared
+            utest_shared
     )
     add_test(NAME ctest_sock_openssl-csh COMMAND test_sock_openssl-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -172,18 +172,11 @@ target_compile_definitions(test_miniserver-pst
         UPNP_HAVE_DEVICE
         UPNP_HAVE_WEBSERVER
 )
-target_compile_options(test_miniserver-pst
-    PRIVATE
-        # disable warning C4100: 'result_listener': unreferenced formal parameter
-        # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
-        # be a side effect of the macro definition. --Ingo
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
-)
 target_link_libraries(test_miniserver-pst
     PRIVATE
         pupnp_static
         upnplib_static
-        upnplib_gtest_tools_static
+        utest_static
 )
 add_test(NAME ctest_miniserver-pst COMMAND test_miniserver-pst --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -204,18 +197,11 @@ target_compile_definitions(test_miniserver-cst
         UPNP_HAVE_WEBSERVER
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
-target_compile_options(test_miniserver-cst
-    PRIVATE
-        # disable warning C4100: 'result_listener': unreferenced formal parameter
-        # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
-        # be a side effect of the macro definition. --Ingo
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
-)
 target_link_libraries(test_miniserver-cst
     PRIVATE
         compa_static
         upnplib_static
-        upnplib_gtest_tools_static
+        utest_static
 )
 add_test(NAME ctest_miniserver-cst COMMAND test_miniserver-cst --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

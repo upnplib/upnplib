@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-21
+# Redistribution only with this Copyright remark. Last modified: 2023-09-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -39,61 +39,48 @@ add_compile_options(
 )
 
 
-# Upnplib helper tools library for gtests
-# =======================================
+# Upnplib helper library for gtests
+# =================================
 # We have version
-# upnplib_gtest_tools for all operating systems,
-# upnplib_gtest_tools_unix for Unix operating systems and
-# upnplib_gtest_tools_win32 for Microsoft Windows
+# utest for all operating systems,
+# utest_unix for Unix operating systems and
+# utest_win32 for Microsoft Windows
 
-set(GTEST_TOOLS_SOURCE_FILES
-    ./tools/upnplib_gtest_tools.cpp
-    $<$<PLATFORM_ID:Windows>:./tools/upnplib_gtest_tools_win32.cpp>
-    $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/upnplib_gtest_tools_unix.cpp>
+set(UTEST_SOURCE_FILES
+    tools/utest.cpp
+    $<$<PLATFORM_ID:Windows>:tools/utest_win32.cpp>
+    $<$<NOT:$<PLATFORM_ID:Windows>>:tools/utest_unix.cpp>
     ${UMOCK_SOURCE_DIR}/src/stringh_mock.cpp
 )
 
-add_library(upnplib_gtest_tools_shared SHARED
-#--------------------------------------------
-    ${GTEST_TOOLS_SOURCE_FILES}
+add_library(utest_shared SHARED
+#------------------------------
+    ${UTEST_SOURCE_FILES}
 )
-target_include_directories(upnplib_gtest_tools_shared
-    PRIVATE ./include
-    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
-)
-target_compile_definitions(upnplib_gtest_tools_shared
+target_compile_definitions(utest_shared
     PRIVATE
         UPNPLIB_SHARED
         UPNPLIB_EXPORTS
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
-target_link_libraries(upnplib_gtest_tools_shared
-    PUBLIC $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
+target_link_libraries(utest_shared
+    PUBLIC $<$<PLATFORM_ID:Windows>:ws2_32>      # winsock to support sockets
     INTERFACE $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network management tools
     PRIVATE umock_shared;
 )
 
-add_library(upnplib_gtest_tools_static STATIC
-#--------------------------------------------
-    ${GTEST_TOOLS_SOURCE_FILES}
+add_library(utest_static STATIC
+#------------------------------
+    ${UTEST_SOURCE_FILES}
 )
-target_include_directories(upnplib_gtest_tools_static
-    PRIVATE ./include
-    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
-)
-target_compile_definitions(upnplib_gtest_tools_static
-    PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
-)
-target_link_libraries(upnplib_gtest_tools_static
-    PUBLIC $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
+target_link_libraries(utest_static
+    PUBLIC $<$<PLATFORM_ID:Windows>:ws2_32>      # winsock to support sockets
     INTERFACE $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network management tools
     PRIVATE umock_static;
 )
 
 
 # Reset output directories to default means to use the subprojects directories.
-# This should be done after build of upnplib_gtest_tools.
+# This should be done after build of utest.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "")
@@ -104,50 +91,41 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "")
 #################################
 # The tests are build in reverse order. test_template.cpp will be build first.
 
-# upnplib_gtest_tools
-#====================
-add_executable(test_upnplib_gtest_tools
-#--------------------------------------
-        ./tools/test_tools.cpp
+# gtests for utest helper
+#========================
+add_executable(test_utest-ush
+#----------------------------
+    tools/test_utest.cpp
 )
-target_include_directories(test_upnplib_gtest_tools
-    PRIVATE ./include
+target_include_directories(test_utest-ush
     PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
-target_compile_definitions(test_upnplib_gtest_tools
+target_compile_definitions(test_utest-ush
     PRIVATE UPNPLIB_SHARED
 )
-target_compile_options(test_upnplib_gtest_tools
-    PRIVATE
-        # disable warning C4100: 'result_listener': unreferenced formal parameter
-        # This is from Googlemock MATCHER_P. Don't know how to fix it. Seems to
-        # be a side effect of the macro definition. --Ingo
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4100>
+target_link_libraries(test_utest-ush
+    PRIVATE utest_shared
 )
-target_link_libraries(test_upnplib_gtest_tools
-    PRIVATE upnplib_gtest_tools_shared
-)
-add_test(NAME ctest_upnplib_gtest_tools COMMAND test_upnplib_gtest_tools --gtest_shuffle
+add_test(NAME ctest_utest-ush COMMAND test_utest-ush --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 
-add_executable(test_upnplib_gtest_tools_platform
+add_executable(test_utest_platform-ush
 #-----------------------------------------------
-        $<$<PLATFORM_ID:Windows>:./tools/test_tools_win32.cpp>
-        $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/test_tools_unix.cpp>
+    $<$<PLATFORM_ID:Windows>:./tools/test_utest_win32.cpp>
+    $<$<NOT:$<PLATFORM_ID:Windows>>:./tools/test_utest_unix.cpp>
 )
-target_include_directories(test_upnplib_gtest_tools_platform
-    PRIVATE ./include
+target_include_directories(test_utest_platform-ush
     PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
-target_compile_definitions(test_upnplib_gtest_tools_platform
+target_compile_definitions(test_utest_platform-ush
     PRIVATE UPNPLIB_SHARED
 )
-target_link_libraries(test_upnplib_gtest_tools_platform
-    PRIVATE upnplib_gtest_tools_shared
+target_link_libraries(test_utest_platform-ush
+    PRIVATE utest_shared
 )
-add_test(NAME ctest_upnplib_gtest_tools_platform COMMAND test_upnplib_gtest_tools_platform --gtest_shuffle
+add_test(NAME ctest_utest_platform-ush COMMAND test_utest_platform-ush --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
@@ -156,7 +134,7 @@ add_test(NAME ctest_upnplib_gtest_tools_platform COMMAND test_upnplib_gtest_tool
 #============
 add_executable(test_simple-ush
 #-----------------------------
-        ./test_simple.cpp
+        test_simple.cpp
 )
 target_link_libraries(test_simple-ush
     PRIVATE upnplib_shared
@@ -167,7 +145,7 @@ add_test(NAME ctest_simple-ush COMMAND test_simple-ush --gtest_shuffle
 
 # Check also static build for this simple test
 add_executable(test_simple-ust
-        ./test_simple.cpp
+        test_simple.cpp
 )
 target_link_libraries(test_simple-ust
     PRIVATE upnplib_static
