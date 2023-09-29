@@ -1,7 +1,6 @@
 Next steps to do:
-* Rename library upnplib_gtest_tools_* to utest_*
 * Manage verbose messages with runtime switching
-* Rework miniserver.cpp and test_miniserver.cpp with verbose messages and derived test classes.
+* Rework miniserver.cpp and test_miniserver.cpp with verbose messages.
 * Rework test_sock.cp to work with changed sys_socket mocking.
 * Rework test_httpreadwrite.cpp
 * Use poll() and WSAPoll() instead of select().

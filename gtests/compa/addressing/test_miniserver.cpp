@@ -2708,7 +2708,7 @@ TEST(StopMiniServerTestSuite, sock_close) {
 
 } // namespace compa
 
-//
+
 int main(int argc, char** argv) {
 #ifdef _MSC_VER
     // Uninitialize Windows sockets because it is global initialized with using

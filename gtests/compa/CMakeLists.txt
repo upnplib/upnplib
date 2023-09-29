@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-27
+# Redistribution only with this Copyright remark. Last modified: 2023-09-29
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -99,115 +99,7 @@ if(UPNPLIB_WITH_OPENSSL)
 endif()
 
 
-# miniserver
-#===========
-# Because we want to include the source file into the test to also test static
-# functions, we cannot use shared libraries due to symbol import/export
-# conflicts. We must use static libraries.
-if(FALSE)
-# Direct linking with source files currently not used but having available for
-# reference. We link against the internal upnplib libraries (see below).
-set(MINISERVER_SOURCE_FILES
-#--------------------------
-    ./test_miniserver.cpp
-
-    ${PUPNP_UPNP_SOURCE_DIR}/src/global.cpp
-    ./tools/mockObj.cpp
-    $<$<PLATFORM_ID:Windows>:./tools/mockObj_win32.cpp>
-
-    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/FreeList.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/LinkedList.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil/TimerThread.cpp
-
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/sock.cpp
-
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/uri/uri.cpp
-
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpparser.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/httpreadwrite.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/statcodes.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/parsetools.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/net/http/webserver.cpp
-
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/list.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/strintmap.cpp
-
-    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_server.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/ssdp_ctrlpt.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/SSDPResultData.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/ssdp/SSDPResultDataCallback.cpp
-
-    ${PUPNP_UPNP_SOURCE_DIR}/src/soap/soap_common.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/soap/soap_ctrlpt.cpp
-
-    ${PUPNP_UPNP_SOURCE_DIR}/src/uuid/uuid.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/uuid/sysdep.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/uuid/md5.cpp
-
-    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpExtraHeaders.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpString.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpFileInfo.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpDiscovery.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpActionComplete.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/api/UpnpStateVarComplete.cpp
-    ${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpapi.cpp
-#    ${UPNPLIB_SOURCE_DIR}/src/api/upnptools.cpp
-    $<$<CONFIG:Debug>:${PUPNP_UPNP_SOURCE_DIR}/src/api/upnpdebug.cpp>
-)
-endif()
-
-add_executable(test_miniserver-pst
-#---------------------------------
-    ./test_miniserver.cpp
-    ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
-)
-target_include_directories(test_miniserver-pst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
-)
-target_compile_definitions(test_miniserver-pst
-    PRIVATE
-        UPNP_HAVE_CLIENT
-        UPNP_HAVE_DEVICE
-        UPNP_HAVE_WEBSERVER
-)
-target_link_libraries(test_miniserver-pst
-    PRIVATE
-        pupnp_static
-        upnplib_static
-        utest_static
-)
-add_test(NAME ctest_miniserver-pst COMMAND test_miniserver-pst --gtest_shuffle
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-)
-
-add_executable(test_miniserver-cst
-#---------------------------------
-    ./test_miniserver.cpp
-    ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
-)
-target_include_directories(test_miniserver-cst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
-)
-target_compile_definitions(test_miniserver-cst
-    PRIVATE
-        UPNP_HAVE_CLIENT
-        UPNP_HAVE_DEVICE
-        UPNP_HAVE_WEBSERVER
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
-)
-target_link_libraries(test_miniserver-cst
-    PRIVATE
-        compa_static
-        upnplib_static
-        utest_static
-)
-add_test(NAME ctest_miniserver-cst COMMAND test_miniserver-cst --gtest_shuffle
-        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-)
-
-
+add_subdirectory(./addressing)
 add_subdirectory(./api.d)
 add_subdirectory(./http.d)
 add_subdirectory(./ssdp.d)

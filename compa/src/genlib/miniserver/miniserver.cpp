@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-24
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-29
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,9 +81,6 @@
 
 #include <umock/sys_socket.hpp>
 #include <umock/stdlib.hpp>
-
-
-using ::upnplib::CSocket_basic;
 
 /*! . */
 #define APPLICATION_LISTENING_PORT 49152
@@ -190,13 +187,14 @@ ExitFunction:
     return rc;
 }
 
+namespace compa {
 // getNumericHostRedirection() returns the ip address with port as text
 // (e.g. "192.168.1.2:54321") that is bound to a socket.
 static int getNumericHostRedirection(SOCKET a_socket, char* a_host_port,
                                      size_t a_hp_size) {
     TRACE("Executing getNumericHostRedirection()")
     try {
-        CSocket_basic socketObj(a_socket);
+        upnplib::CSocket_basic socketObj(a_socket);
         std::string host_port = socketObj.get_addr_str();
         host_port += ':' + std::to_string(socketObj.get_port());
         memcpy(a_host_port, host_port.c_str(), a_hp_size);
@@ -209,6 +207,7 @@ static int getNumericHostRedirection(SOCKET a_socket, char* a_host_port,
     }
     return false;
 }
+} // namespace compa
 
 /*!
  * \brief Based on the type pf message, appropriate callback is issued.
@@ -266,7 +265,7 @@ static int dispatch_request(
     }
     request = &hparser->msg;
 #ifdef DEBUG_REDIRECT
-    getNumericHostRedirection(info->socket, host_port, sizeof host_port);
+    compa::getNumericHostRedirection(info->socket, host_port, sizeof host_port);
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "DEBUG TEST: Redirect host_port = %s.\n", host_port);
 #endif
@@ -298,8 +297,8 @@ static int dispatch_request(
             char redir_str[NAME_SIZE];
             int timeout = HTTP_DEFAULT_TIMEOUT;
 
-            getNumericHostRedirection(info->socket, host_port,
-                                      sizeof host_port);
+            compa::getNumericHostRedirection(info->socket, host_port,
+                                             sizeof host_port);
             membuffer_init(&redir_buf);
             snprintf(redir_str, NAME_SIZE, redir_fmt, host_port);
             membuffer_append_str(&redir_buf, redir_str);
@@ -659,9 +658,11 @@ static void RunMiniServer(
         fdset_if_valid(miniSock->ssdpReqSock4, &rdSet);
         fdset_if_valid(miniSock->ssdpReqSock6, &rdSet);
 #endif /* INCLUDE_CLIENT_APIS */
+
         /* select() */
         ret = umock::sys_socket_h.select((int)maxMiniSock, &rdSet, NULL,
                                          &expSet, NULL);
+
         if (ret == SOCKET_ERROR && errno == EINTR) {
             continue; // A signal was caught, not for us. We ignore it.
         }
@@ -673,7 +674,7 @@ static void RunMiniServer(
         } else {
             // Accept requested connection from a remote client and run the
             // connection in a new thread. Due to side effects we need to
-            // avoid lazy evaluation.
+            // avoid lazy evaluation with chained ||.
             [[maybe_unused]] int ret1 = //
                 compa::web_server_accept(miniSock->miniServerSock4, rdSet);
             [[maybe_unused]] int ret2 = //
@@ -698,6 +699,7 @@ static void RunMiniServer(
                 receive_from_stopSock(miniSock->miniServerStopSock, &rdSet);
         }
     }
+
     /* Close all sockets. */
     sock_close(miniSock->miniServerSock4);
     sock_close(miniSock->miniServerSock6);
