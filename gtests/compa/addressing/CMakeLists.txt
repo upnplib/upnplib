@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-29
+# Redistribution only with this Copyright remark. Last modified: 2023-09-30
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -21,16 +21,9 @@ project(GTESTS_ADDRESSING VERSION 0010
 add_executable(test_miniserver-pst
 #---------------------------------
     ./test_miniserver.cpp
-    ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 target_include_directories(test_miniserver-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
-)
-target_compile_definitions(test_miniserver-pst
-    PRIVATE
-        UPNP_HAVE_CLIENT
-        UPNP_HAVE_DEVICE
-        UPNP_HAVE_WEBSERVER
 )
 target_link_libraries(test_miniserver-pst
     PRIVATE
@@ -45,17 +38,9 @@ add_test(NAME ctest_miniserver-pst COMMAND test_miniserver-pst --gtest_shuffle
 add_executable(test_miniserver-cst
 #---------------------------------
     ./test_miniserver.cpp
-    ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
 )
 target_include_directories(test_miniserver-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
-)
-target_compile_definitions(test_miniserver-cst
-    PRIVATE
-        UPNP_HAVE_CLIENT
-        UPNP_HAVE_DEVICE
-        UPNP_HAVE_WEBSERVER
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_link_libraries(test_miniserver-cst
     PRIVATE
@@ -83,6 +68,7 @@ target_include_directories(test_miniserver_run-pst
 target_link_libraries(test_miniserver_run-pst
     PRIVATE
         pupnp_static
+        upnplib_static
 )
 add_test(NAME ctest_miniserver_run-pst COMMAND test_miniserver_run-pst --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

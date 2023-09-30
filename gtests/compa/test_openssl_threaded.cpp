@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-28
+// Redistribution only with this Copyright remark. Last modified: 2023-09-30
 
 #include <upnplib/trace.hpp>
 #include <upnplib/port_sock.hpp>
@@ -18,47 +18,6 @@
 
 namespace compa {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
-
-
-// Little Helper classes
-// =====================
-#if 0
-class CInitWinsock {
-    // Initialize and cleanup Windows sochets
-  public:
-    CInitWinsock() {
-        WSADATA wsaData;
-        int rc = WSAStartup(MAKEWORD(2, 2), &wsaData);
-        if (rc != NO_ERROR) {
-            throw std::runtime_error(
-                std::string("Failed to start Windows sockets (WSAStartup)."));
-        }
-    }
-
-    virtual ~CInitWinsock() { WSACleanup(); }
-};
-#endif
-
-
-class CRedirectClog {
-    // Redirect clog to cout so we have a serialized output with threads only
-    // using cout. Needs #include <sstream>.
-  private:
-    std::streambuf* m_clog_old;
-
-  public:
-    CRedirectClog() {
-        m_clog_old = std::clog.rdbuf();
-        std::clog.rdbuf(std::cout.rdbuf());
-    }
-
-    ~CRedirectClog() {
-        // Restore clog
-        std::clog.rdbuf(m_clog_old);
-    }
-};
-CRedirectClog redirect_clogObj; // This instance is doing the work.
-
 
 // Simple TLS Server
 // =================

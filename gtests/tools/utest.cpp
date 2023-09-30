@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-03
+// Redistribution only with this Copyright remark. Last modified: 2023-09-30
 
 // Tools and helper classes to manage gtests
 // =========================================
@@ -213,5 +213,28 @@ void check_closed_fds(int a_from_fd, int a_to_fd) {
         }
     }
 }
+
+
+#if 0
+// Redirect clog to cout
+// ---------------------
+class CRedirectClog {
+    // Redirect clog to cout so we have a serialized output with threads only
+    // using cout. Needs #include <sstream>.
+  private:
+    std::streambuf* m_clog_old;
+
+  public:
+    CRedirectClog() {
+        m_clog_old = std::clog.rdbuf();
+        std::clog.rdbuf(std::cout.rdbuf());
+    }
+
+    ~CRedirectClog() {
+        // Restore clog
+        std::clog.rdbuf(m_clog_old);
+    }
+};
+#endif
 
 } // namespace upnplib::testing
