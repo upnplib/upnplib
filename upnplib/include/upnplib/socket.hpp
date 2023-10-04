@@ -1,10 +1,10 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-05
+// Redistribution only with this Copyright remark. Last modified: 2023-10-01
 
 // Helpful link for ip address structures:
-// https://stackoverflow.com/a/16010670/5014688
+// https://stackoverflow.com/a/76548581/5014688
 
 // Socket module
 // =============
@@ -46,9 +46,9 @@
 // --- valid socket file descriptor ---
 // We get this from the C standard library function
 // int ::socket(address_family, socket_type, protocol).
-// Other arguments than specified above do not instantiate a valid socket
-// object and throw an exception. For the protocol is always only the default
-// one used that is internal hard coded with argument 0.
+// Other arguments than address family and socket type do not instantiate a
+// valid socket object and throw an exception. For the protocol argument is
+// always the default one used that is internal hard coded with argument 0.
 //
 // --- option SO_REUSEADDR ---
 // We don't set the option to immediately reuse an address of a local listening
@@ -120,6 +120,7 @@ class UPNPLIB_API CSocket_basic {
     bool is_reuse_addr() const;
 
   protected:
+    // This is the raw socket file descriptor
     SOCKET m_sfd{INVALID_SOCKET};
 };
 

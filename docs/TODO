@@ -1,4 +1,6 @@
 Next steps to do:
+* Improve CAddrinfo to support more than one address info (use *ai_next).
+* Add AI_IDN and AI_CANONIDN support to CAddrinfo.
 * Manage verbose messages with runtime switching
 * Rework miniserver.cpp and test_miniserver.cpp with verbose messages.
 * Rework test_sock.cp to work with changed sys_socket mocking.

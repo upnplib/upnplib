@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-26
+// Redistribution only with this Copyright remark. Last modified: 2023-10-07
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -10,6 +10,39 @@
 #include <iostream>
 
 namespace upnplib {
+
+// Free function to test if the node is a valid numeric address string
+// -------------------------------------------------------------------
+int is_numeric_node(const std::string& a_node, const int a_addr_family) {
+    // clang-format off
+    TRACE("Executing is_numeric_node(\"" + a_node + "\", " +
+          (a_addr_family == AF_INET6 ? "AF_INET6" :
+          (a_addr_family == AF_INET ? "AF_INET" : "AF_UNSPEC")) + ")")
+    // clang-format on
+    if (a_node.empty())
+        return 0;
+
+    unsigned char buf[sizeof(in6_addr)];
+    switch (a_addr_family) {
+    case AF_INET6: {
+        if (a_node.front() != '[' || a_node.back() != ']')
+            return 0;
+        // remove surounding brackets for inet_pton()
+        const std::string node{a_node.substr(1, a_node.length() - 2)};
+        return ::inet_pton(AF_INET6, node.c_str(), buf) ? AF_INET6 : 0;
+    }
+    case AF_INET:
+        return ::inet_pton(AF_INET, a_node.c_str(), buf) ? AF_INET : 0;
+    case AF_UNSPEC:
+        // Recursive call
+        // clang-format off
+        return is_numeric_node(a_node, AF_INET6) ? AF_INET6 : 0 ||
+               is_numeric_node(a_node, AF_INET) ? AF_INET : 0;
+        // clang-format on
+    }
+    return 0;
+}
+
 
 // Provide C style addrinfo as class and wrap its system calls
 // -----------------------------------------------------------
@@ -22,27 +55,46 @@ CAddrinfo::CAddrinfo(const std::string& a_node, const std::string& a_service,
                                     {},      nullptr,  nullptr,    nullptr} {
     TRACE2(this, " Construct CAddrinfo(..) with arguments")
 
-    // Get new address information from the operating system.
-    m_res = this->get_new_addrinfo(); // may throw exception
+    // Correct weak hints:
+    // Always call is_numeric_node() with AF_UNSPEC to check all types. We
+    // always set AI_NUMERICHOST if it match, no matter what 'a_family' was
+    // reqested by the caller. But if AF_UNSPEC was requested, the found
+    // address family must be set.
+    int addr_family = is_numeric_node(m_node, AF_UNSPEC);
+    if (addr_family) {
+        m_hints.ai_flags |= AI_NUMERICHOST;
+        if (m_hints.ai_family == AF_UNSPEC) {
+            m_hints.ai_family = addr_family;
+        }
+    }
+
+    // Get address information from the operating system.
+    m_res = this->get_addrinfo(); // may throw exception
 }
 
+
 // Constructor for getting an address information with numeric port number.
+// ------------------------------------------------------------------------
 CAddrinfo::CAddrinfo(const std::string& a_node, in_port_t a_service,
                      const int a_family, const int a_socktype,
                      const int a_flags, const int a_protocol)
     : CAddrinfo(a_node, std::to_string(a_service), a_family, a_socktype,
                 a_flags, a_protocol) {}
 
+
 // Copy constructor
+// ----------------
 CAddrinfo::CAddrinfo(const CAddrinfo& that) {
     TRACE2(this, " Construct copy CAddrinfo()")
     m_node = that.m_node;
     m_service = that.m_service;
     m_hints = that.m_hints;
-    m_res = this->get_new_addrinfo(); // may throw exception
+    m_res = this->get_addrinfo(); // may throw exception
 }
 
+
 // Copy assignment operator
+// ------------------------
 CAddrinfo& CAddrinfo::operator=(CAddrinfo that) {
     TRACE2(this, " Executing CAddrinfo::operator=()")
     // The argument by value ('that') was copied to the stack by the copy
@@ -61,7 +113,9 @@ CAddrinfo& CAddrinfo::operator=(CAddrinfo that) {
     return *this;
 }
 
+
 // Destructor
+// ----------
 CAddrinfo::~CAddrinfo() {
     TRACE2(this, " Destruct CAddrinfo()")
     TRACE2("Call STL function ::freeaddrinfo() with m_res = ", m_res)
@@ -69,74 +123,101 @@ CAddrinfo::~CAddrinfo() {
     m_res = nullptr;
 }
 
-addrinfo* CAddrinfo::get_new_addrinfo() const {
-    TRACE2(this, " Executing CAddrinfo::get_new_addrinfo()")
-    addrinfo* new_res{nullptr};
-    std::string node{m_node};
-    int ret{EAI_BADFLAGS};
 
-    // Check if AI_NUMERICHOST flag is set. Due to avoid expensive DNS name
-    // resolution we only support this but may be changed if we need name
-    // resolution.
-    if (!(m_hints.ai_flags & AI_NUMERICHOST))
-        goto throw_error1;
+// Private method to get an addrinfo
+// ---------------------------------
+// Get address information with cached hints and ensure that we have a valid
+// unknown address info for unknown nodes.
+addrinfo* CAddrinfo::get_addrinfo() const {
+    TRACE2(this, " Executing CAddrinfo::get_addrinfo)")
 
-    // A numeric ipv6 address must be surounded with brackets.
-    if (!m_node.empty() && m_hints.ai_family == AF_INET6) {
-        if (m_node.front() != '[' || m_node.back() != ']')
-            goto throw_error1;
-        else
+    // Check surounding brackets for AF_INET6 node address string.
+    std::string node;
+    if (!m_node.empty() && m_hints.ai_family == AF_INET6 &&
+        (m_hints.ai_flags & AI_NUMERICHOST))
+        // Here we have only ipv6 node strings representing a numeric ip
+        // address.
+        if (m_node.front() == '[' && m_node.back() == ']')
             // remove surounding brackets for ::getaddrinfo()
             node = m_node.substr(1, m_node.length() - 2);
-    }
+        else
+            // An ipv6 node string without enclosing brackets is never numeric
+            // but we ask to be numeric. This is a failed condition for an
+            // alphanumeric address string and we ask ::getaddrinfo() for an
+            // unknown address info.
+            node = "::";
+    else
+        node = m_node;
 
-    // Get new address information with cached hints. This should always return
-    // the same address info.
-    ret = umock::netdb_h.getaddrinfo(
+    // Very helpful for debugging to see what is given to ::getaddrinfo()
+    // std::clog << "DEBUG: m_node = \"" << m_node << "\", node = \"" << node
+    //           << "\", m_service = \"" << m_service
+    //           << "\", m_hints.ai_flags = " << m_hints.ai_flags
+    //           << ", m_hints.ai_family = " << m_hints.ai_family << "\n";
+
+    // ::getaddrinfo()
+    addrinfo* new_res{nullptr};
+    int ret = umock::netdb_h.getaddrinfo(
         node.empty() ? nullptr : node.c_str(),
         m_service.empty() ? nullptr : m_service.c_str(), &m_hints, &new_res);
-    if (ret != 0)
-        goto throw_error2;
 
-    // Different on platforms: Ubuntu & MacOS return protocol number, win32
-    // returns 0. We just return what was requested by the user.
+    if (ret == EAI_NONAME && new_res == nullptr) {
+        // Node or service not known. This is a valid condition for example for
+        // an alphanumeric node name that cannot be resolved by DNS. new_res
+        // has been untouched by ::getaddrinfo(). We set an unknown address
+        // information.
+        m_hints.ai_flags |= AI_NUMERICHOST;
+        if (m_hints.ai_family == AF_INET) {
+            ret = umock::netdb_h.getaddrinfo(
+                "0.0.0.0", m_service.empty() ? nullptr : m_service.c_str(),
+                &m_hints, &new_res);
+        } else {
+            ret = umock::netdb_h.getaddrinfo(
+                "::", m_service.empty() ? nullptr : m_service.c_str(), &m_hints,
+                &new_res);
+        }
+    }
+    if (ret != 0)
+        throw std::runtime_error("UPnPlib ERROR 1012! Failed to get "
+                                 "address information: errid(" +
+                                 std::to_string(ret) + ")=\"" +
+                                 ::gai_strerror(ret) + "\"");
+
+    // Different on platforms: man getsockaddr says "Specifying 0 in
+    // hints.ai_socktype indicates that socket addresses of any type can be
+    // returned". Linux returns SOCK_STREAM, MacOS returns SOCK_DGRAM and win32
+    // returns 0. To be portable we always return 0 in this case, the same as
+    // requested by the user.
+    if (m_hints.ai_socktype == 0)
+        new_res->ai_socktype = 0;
+    // Different on platforms: Ubuntu & MacOS return protocol number,
+    // win32 returns 0. We just return what was requested by the user.
     new_res->ai_protocol = m_hints.ai_protocol;
-    // Different on platforms: Ubuntu returns set flags, MacOS & win32 return 0.
-    // We just return what was requested by the user.
+    // Different on platforms: Ubuntu returns set flags, MacOS & win32
+    // return 0. We just return what was requested by the user.
     new_res->ai_flags = m_hints.ai_flags;
-    // Man setaddrinfo says: "If service is NULL, then the port number of the
-    // returned socket addresses will be left uninitialized." So we set it
-    // definitely to 0.
+    // Man setaddrinfo says: "If service is NULL, then the port number
+    // of the returned socket addresses will be left uninitialized." So
+    // we set it definitely to 0.
     if (m_service.empty())
         // port for AF_INET6 is also valid for AF_INET
-        ((sockaddr_in6*)new_res->ai_addr)->sin6_port = 0;
+        reinterpret_cast<sockaddr_in6*>(new_res->ai_addr)->sin6_port = 0;
 
     TRACE2("Called STL function ::getaddrinfo() with new_res = ", new_res)
     return new_res;
-
-throw_error1:
-    throw std::invalid_argument(
-        "[" + std::to_string(__LINE__) +
-        "] UPnPlib ERROR 1036! Failed to get address information: "
-        "invalid numeric node address.");
-throw_error2:
-    throw std::runtime_error(
-        "[" + std::to_string(__LINE__) +
-        "] UPnPlib ERROR 1037! Failed to get address information: errid(" +
-        std::to_string(ret) + ")=\"" + ::gai_strerror(ret) + "\"");
 }
 
 
 // Compare operator ==
-// ------------------&&
+// -------------------
 bool CAddrinfo::operator==(const CAddrinfo& a_ai) const {
     if (a_ai.m_res->ai_flags == m_res->ai_flags &&
         a_ai.m_res->ai_family == m_res->ai_family &&
         a_ai.m_res->ai_socktype == m_res->ai_socktype &&
         a_ai.m_res->ai_protocol == m_res->ai_protocol &&
         a_ai.m_res->ai_addrlen == m_res->ai_addrlen &&
-        sockaddrcmp((sockaddr_storage*)a_ai.m_res->ai_addr,
-                    (sockaddr_storage*)m_res->ai_addr))
+        sockaddrcmp(reinterpret_cast<sockaddr_storage*>(a_ai.m_res->ai_addr),
+                    reinterpret_cast<sockaddr_storage*>(m_res->ai_addr)))
         return true;
 
     return false;
@@ -148,12 +229,14 @@ bool CAddrinfo::operator==(const CAddrinfo& a_ai) const {
 ::addrinfo* CAddrinfo::operator->() const { return m_res; }
 
 
+// Getter address string
+// ---------------------
 std::string CAddrinfo::addr_str() const {
     TRACE2(this, " Executing CAddrinfo::addr_str()")
     char addrbuf[INET6_ADDRSTRLEN]{};
 
     if (m_res->ai_family == AF_INET6) {
-        sockaddr_in6* sa6 = (sockaddr_in6*)m_res->ai_addr;
+        sockaddr_in6* sa6 = reinterpret_cast<sockaddr_in6*>(m_res->ai_addr);
         inet_ntop(m_res->ai_family, &sa6->sin6_addr.s6_addr, addrbuf,
                   sizeof(addrbuf));
 
@@ -161,7 +244,7 @@ std::string CAddrinfo::addr_str() const {
 
     } else {
 
-        sockaddr_in* sa = (sockaddr_in*)m_res->ai_addr;
+        sockaddr_in* sa = reinterpret_cast<sockaddr_in*>(m_res->ai_addr);
         inet_ntop(m_res->ai_family, &sa->sin_addr.s_addr, addrbuf,
                   sizeof(addrbuf));
 
@@ -170,10 +253,12 @@ std::string CAddrinfo::addr_str() const {
 }
 
 
+// Getter for the port number
+// --------------------------
 uint16_t CAddrinfo::port() const {
     // port for AF_INET6 is also valid for AF_INET
     TRACE2(this, " Executing CAddrinfo::port()")
-    return ntohs(((sockaddr_in6*)m_res->ai_addr)->sin6_port);
+    return ntohs(reinterpret_cast<sockaddr_in6*>(m_res->ai_addr)->sin6_port);
 }
 
 } // namespace upnplib

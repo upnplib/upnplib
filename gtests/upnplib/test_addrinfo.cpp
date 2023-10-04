@@ -1,23 +1,25 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-26
+// Redistribution only with this Copyright remark. Last modified: 2023-10-07
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/socket.hpp>
+#include <upnplib/gtest.hpp>
 
 #include <gmock/gmock.h>
 
 
 namespace upnplib {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
+bool github_actions = std::getenv("GITHUB_ACTIONS");
 
-using testing::HasSubstr;
+using ::testing::AnyOf;
+using ::testing::StartsWith;
 
 
-TEST(AddrinfoTestSuite, get_successful) {
+TEST(AddrinfoTestSuite, get_numeric_host_successful) {
     // If node is not empty AI_PASSIVE is ignored.
-    // Flag AI_NUMERICHOST must always be set to avoid expensive name resolution
-    // from external DNS server. This will be changed when we need name
-    // resolution.
+    // Flag AI_NUMERICHOST should be set if possible to avoid expensive name
+    // resolution from external DNS server.
 
     // Test Unit with string port number
     CAddrinfo ai1("[::1]", "50001", AF_INET6, SOCK_STREAM,
@@ -38,39 +40,129 @@ TEST(AddrinfoTestSuite, get_successful) {
     EXPECT_EQ(ai1.port(), 50001);
 
     // Test Unit with numeric port number
-    CAddrinfo ai2("[::2]", 50048, AF_INET6, SOCK_STREAM,
-                  AI_PASSIVE | AI_NUMERICHOST);
+    CAddrinfo ai2("[2001:db8::2]", 50048, AF_INET6, SOCK_STREAM,
+                  AI_NUMERICHOST);
 
-    // Same results as above
     EXPECT_EQ(ai2->ai_family, AF_INET6);
     EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai2->ai_protocol, 0);
-    EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
-    EXPECT_EQ(ai2.addr_str(), "[::2]");
+    EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai2.addr_str(), "[2001:db8::2]");
     EXPECT_EQ(ai2.port(), 50048);
+
+    // Test Unit with unspecified ipv6 address
+    CAddrinfo ai3("[::]", 0, AF_INET6, 0, AI_NUMERICHOST | AI_NUMERICSERV);
+
+    EXPECT_EQ(ai3->ai_family, AF_INET6);
+    EXPECT_EQ(ai3->ai_socktype, 0);
+    EXPECT_EQ(ai3->ai_protocol, 0);
+    EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
+    EXPECT_EQ(ai3.addr_str(), "[::]");
+    EXPECT_EQ(ai3.port(), 0);
+
+    // Test Unit with unspecified ipv4 address
+    CAddrinfo ai4("0.0.0.0", 0, AF_INET, 0, AI_NUMERICHOST | AI_NUMERICSERV);
+
+    EXPECT_EQ(ai4->ai_family, AF_INET);
+    EXPECT_EQ(ai4->ai_socktype, 0);
+    EXPECT_EQ(ai4->ai_protocol, 0);
+    EXPECT_EQ(ai4->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
+    EXPECT_EQ(ai4.addr_str(), "0.0.0.0");
+    EXPECT_EQ(ai4.port(), 0);
 }
 
-TEST(AddrinfoTestSuite, alphanumeric_host_is_not_supported) {
+TEST(AddrinfoTestSuite, get_implicit_ipv6_host) {
     // Test Unit
-    EXPECT_THAT(
-        []() { CAddrinfo ai1("localhost", "50032", AF_INET6, SOCK_STREAM); },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "UPnPlib ERROR 1036! Failed to get address information: invalid "
-            "numeric node address.")));
+    CAddrinfo ai1("[2001:db8::3]", "50032", AF_INET6, SOCK_STREAM,
+                  AI_NUMERICHOST);
+
+    EXPECT_EQ(ai1->ai_family, AF_INET6);
+    EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
+    EXPECT_EQ(ai1->ai_protocol, 0);
+    // Numeric host implicit set
+    EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai1.addr_str(), "[2001:db8::3]");
+    EXPECT_EQ(ai1.port(), 50032);
+
+    // Test Unit
+    CAddrinfo ai3("[2001:db8::5]", "50051", AF_UNSPEC, SOCK_STREAM);
+
+    EXPECT_EQ(ai3->ai_family, AF_INET6);
+    EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
+    EXPECT_EQ(ai3->ai_protocol, 0);
+    EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai3.addr_str(), "[2001:db8::5]");
+    EXPECT_EQ(ai3.port(), 50051);
+
+    // Test Unit
+    CAddrinfo ai2("localhost", "50050", AF_INET6);
+
+    EXPECT_EQ(ai2->ai_family, AF_INET6);
+    EXPECT_EQ(ai2->ai_socktype, 0);
+    EXPECT_EQ(ai2->ai_protocol, 0);
+    EXPECT_EQ(ai2->ai_flags, 0);
+    EXPECT_EQ(ai2.addr_str(), "[::1]");
+    EXPECT_EQ(ai2.port(), 50050);
+}
+
+TEST(AddrinfoTestSuite, get_alphanumeric_host_successful) {
+    // If node is not empty AI_PASSIVE is ignored.
+    // Test Unit
+    CAddrinfo ai1("localhost", "50049", AF_UNSPEC, SOCK_DGRAM);
+
+    EXPECT_THAT(ai1->ai_family, AnyOf(AF_INET6, AF_INET));
+    EXPECT_EQ(ai1->ai_socktype, SOCK_DGRAM);
+    EXPECT_EQ(ai1->ai_protocol, 0);
+    EXPECT_EQ(ai1->ai_flags, 0);
+    EXPECT_THAT(ai1.addr_str(), AnyOf("[::1]", "127.0.0.1"));
+    EXPECT_EQ(ai1.port(), 50049);
 }
 
 TEST(AddrinfoTestSuite, get_unknown_host) {
     // With AI_NUMERICHOST "localhost" is unknown.
+    // Test Unit
+    CAddrinfo ai1("localhost", "50031", AF_INET, SOCK_STREAM, AI_NUMERICHOST);
+
+    EXPECT_EQ(ai1->ai_family, AF_INET);
+    EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
+    EXPECT_EQ(ai1->ai_protocol, 0);
+    EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai1.addr_str(), "0.0.0.0");
+    EXPECT_EQ(ai1.port(), 50031);
 
     // Test Unit
-    EXPECT_THAT(
-        []() {
-            CAddrinfo ai1("localhost", "50031", AF_INET6, SOCK_STREAM,
-                          AI_NUMERICHOST);
-        },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "UPnPlib ERROR 1036! Failed to get address information: invalid "
-            "numeric node address.")));
+    CAddrinfo ai2("localhost", "50052", AF_INET6, SOCK_DGRAM, AI_NUMERICHOST);
+
+    EXPECT_EQ(ai2->ai_family, AF_INET6);
+    EXPECT_EQ(ai2->ai_socktype, SOCK_DGRAM);
+    EXPECT_EQ(ai2->ai_protocol, 0);
+    EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai2.addr_str(), "[::]");
+    EXPECT_EQ(ai2.port(), 50052);
+
+    // Test Unit
+    CAddrinfo ai3("localhost", "50053", AF_UNSPEC, SOCK_STREAM, AI_NUMERICHOST);
+
+    EXPECT_EQ(ai3->ai_family, AF_INET6);
+    EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
+    EXPECT_EQ(ai3->ai_protocol, 0);
+    EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai3.addr_str(), "[::]");
+    EXPECT_EQ(ai3.port(), 50053);
+
+    // Test Unit
+    // An alphanumeric node with enclosing brackets may be valid if
+    // defined anywhere (/etc/hosts file, DNS lookup, etc.) but here it
+    // shouldn't.
+    CAddrinfo ai4("[localhost]", "50055", AF_UNSPEC, SOCK_DGRAM,
+                  AI_NUMERICHOST);
+
+    EXPECT_EQ(ai4->ai_family, AF_INET6);
+    EXPECT_EQ(ai4->ai_socktype, SOCK_DGRAM);
+    EXPECT_EQ(ai4->ai_protocol, 0);
+    EXPECT_EQ(ai4->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai4.addr_str(), "[::]");
+    EXPECT_EQ(ai4.port(), 50055);
 }
 
 TEST(AddrinfoTestSuite, get_passive_addressinfo) {
@@ -94,8 +186,8 @@ TEST(AddrinfoTestSuite, get_passive_addressinfo) {
     EXPECT_EQ(ai1.port(), 50006);
 }
 
-TEST(AddrinfoTestSuite, get_info_af_unspec_loopback_interface) {
-    // To get info of the loopback interface node must be empty without
+TEST(AddrinfoTestSuite, get_info_loopback_interface) {
+    // To get info of the loopback interface, node must be empty without
     // AI_PASSIVE flag set. The value AF_UNSPEC indicates that getaddrinfo()
     // should return socket addresses for any address family (either IPv4 or
     // IPv6) that can be used with node and service.
@@ -118,33 +210,68 @@ TEST(AddrinfoTestSuite, get_info_af_unspec_loopback_interface) {
     default:
         FAIL() << "invalid address family " << ai1->ai_family;
     }
+
+    // Test Unit
+    CAddrinfo ai2("", "50056", AF_INET6);
+
+    EXPECT_EQ(ai2->ai_family, AF_INET6);
+    EXPECT_EQ(ai2->ai_socktype, 0);
+    EXPECT_EQ(ai2->ai_protocol, 0);
+    EXPECT_EQ(ai2->ai_flags, 0);
+    EXPECT_EQ(ai2.addr_str(), "[::1]");
+    EXPECT_EQ(ai2.port(), 50056);
+
+    // Test Unit
+    CAddrinfo ai3("", "50057", AF_INET);
+
+    EXPECT_EQ(ai3->ai_family, AF_INET);
+    EXPECT_EQ(ai3->ai_socktype, 0);
+    EXPECT_EQ(ai3->ai_protocol, 0);
+    EXPECT_EQ(ai3->ai_flags, 0);
+    EXPECT_EQ(ai3.addr_str(), "127.0.0.1");
+    EXPECT_EQ(ai3.port(), 50057);
+
+    // Test Unit
+    CAddrinfo ai4("", "50058", AF_INET6, SOCK_STREAM,
+                  AI_NUMERICHOST | AI_NUMERICSERV);
+
+    EXPECT_EQ(ai4->ai_family, AF_INET6);
+    EXPECT_EQ(ai4->ai_socktype, SOCK_STREAM);
+    EXPECT_EQ(ai4->ai_protocol, 0);
+    EXPECT_EQ(ai4->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
+    EXPECT_EQ(ai4.addr_str(), "[::1]");
+    EXPECT_EQ(ai4.port(), 50058);
 }
 
 TEST(AddrinfoTestSuite, invalid_ipv6_node_address) {
     // Test Unit. Node address must be surounded with brackets.
-    EXPECT_THAT(
-        []() {
-            CAddrinfo ai1("::1", "", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
-        },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "UPnPlib ERROR 1036! Failed to get address information: invalid "
-            "numeric node address.")));
 
-    EXPECT_THAT(
-        []() {
-            CAddrinfo ai1("[::1", "", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
-        },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "UPnPlib ERROR 1036! Failed to get address information: invalid "
-            "numeric node address.")));
+    CAddrinfo ai1("::1", "", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
 
-    EXPECT_THAT(
-        []() {
-            CAddrinfo ai1("::1]", "", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
-        },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "UPnPlib ERROR 1036! Failed to get address information: invalid "
-            "numeric node address.")));
+    EXPECT_EQ(ai1->ai_family, AF_INET6);
+    EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
+    EXPECT_EQ(ai1->ai_protocol, 0);
+    EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai1.addr_str(), "[::]");
+    EXPECT_EQ(ai1.port(), 0);
+
+    CAddrinfo ai2("[::1", "", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
+
+    EXPECT_EQ(ai2->ai_family, AF_INET6);
+    EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
+    EXPECT_EQ(ai2->ai_protocol, 0);
+    EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai2.addr_str(), "[::]");
+    EXPECT_EQ(ai2.port(), 0);
+
+    CAddrinfo ai3("::1]", "", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
+
+    EXPECT_EQ(ai3->ai_family, AF_INET6);
+    EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
+    EXPECT_EQ(ai3->ai_protocol, 0);
+    EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai3.addr_str(), "[::]");
+    EXPECT_EQ(ai3.port(), 0);
 }
 
 TEST(AddrinfoTestSuite, empty_service) {
@@ -164,18 +291,45 @@ TEST(AddrinfoTestSuite, empty_service) {
 
 TEST(AddrinfoTestSuite, get_fails) {
     // Test Unit. Address family does not match the numeric host address.
-    EXPECT_THAT(
-        []() {
-            CAddrinfo ai1("127.0.0.1", "50003", AF_INET6, SOCK_STREAM,
-                          AI_NUMERICHOST);
-        },
-        // errid(-9)="Address family for hostname not supported"
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "UPnPlib ERROR 1036! Failed to get address information: invalid "
-            "numeric node address.")));
+    CAddrinfo ai1("127.0.0.1", "50003", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
+
+    EXPECT_EQ(ai1->ai_family, AF_INET6);
+    EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
+    EXPECT_EQ(ai1->ai_protocol, 0);
+    EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai1.addr_str(), "[::]");
+    EXPECT_EQ(ai1.port(), 50003);
 }
 
-TEST(AddrinfoTestSuite, copy_successful) {
+TEST(AddrinfoTestSuite, copy_ipv6_successful) {
+    // This tests the copy constructor.
+
+    // Get valid address information.
+    CAddrinfo ai1("[2001:db8::6]", "50054", AF_INET6, SOCK_STREAM,
+                  AI_NUMERICHOST);
+
+    // Test Unit
+    { // scope for ai2
+        CAddrinfo ai2 = ai1;
+
+        EXPECT_EQ(ai2->ai_family, AF_INET6);
+        EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
+        EXPECT_EQ(ai2->ai_protocol, 0);
+        EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
+        EXPECT_EQ(ai1.addr_str(), "[2001:db8::6]");
+        EXPECT_EQ(ai2.port(), 50054);
+    } // End scope, ai2 will be destructed
+
+    // Check if ai1 is still available.
+    EXPECT_EQ(ai1->ai_family, AF_INET6);
+    EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
+    EXPECT_EQ(ai1->ai_protocol, 0);
+    EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai1.addr_str(), "[2001:db8::6]");
+    EXPECT_EQ(ai1.port(), 50054);
+}
+
+TEST(AddrinfoTestSuite, copy_ipv4_successful) {
     // This tests the copy constructor.
 
     // Get valid address information.
@@ -201,6 +355,7 @@ TEST(AddrinfoTestSuite, copy_successful) {
     EXPECT_EQ(ai1.addr_str(), "127.0.0.1");
     EXPECT_EQ(ai1.port(), 50002);
 }
+
 /*
  * TEST(AddrinfoTestSuite, copy_fails) {
  *      This isn't possible because the test would be:
@@ -209,6 +364,7 @@ TEST(AddrinfoTestSuite, copy_successful) {
  *      compiler accepts. --Ingo
  * }
  */
+
 TEST(AddrinfoTestSuite, assign_other_object_successful) {
     // This tests the copy assignment operator.
     // Get two valid address informations.
@@ -300,6 +456,36 @@ TEST(AddrinfoTestSuite, compare_different_address_infos) {
     ai1->ai_protocol = 0;
     ai4->ai_protocol = IPPROTO_UDP;
     EXPECT_FALSE(ai1 == ai4);
+}
+
+TEST(AddrinfoTestSuite, is_numeric_node_successful) {
+    EXPECT_EQ(is_numeric_node("[2001:db8::4]", AF_INET6), AF_INET6);
+    EXPECT_EQ(is_numeric_node("192.168.47.9", AF_INET), AF_INET);
+    EXPECT_EQ(is_numeric_node("192.168.47.8"), AF_INET);
+    EXPECT_EQ(is_numeric_node("[2001:db8::5]"), AF_INET6);
+    EXPECT_EQ(is_numeric_node("[::1]"), AF_INET6);
+    EXPECT_EQ(is_numeric_node("[::]"), AF_INET6);
+}
+
+TEST(AddrinfoTestSuite, is_numeric_node_fails) {
+    EXPECT_FALSE(is_numeric_node("2001:db8::4", AF_INET6));
+    EXPECT_FALSE(is_numeric_node("localhost", AF_INET6));
+    EXPECT_FALSE(is_numeric_node("192.168.47.a", AF_INET));
+    EXPECT_FALSE(is_numeric_node("example.com"));
+    EXPECT_FALSE(is_numeric_node("::1"));
+    EXPECT_FALSE(is_numeric_node("[::1"));
+    EXPECT_FALSE(is_numeric_node("::1]"));
+    EXPECT_FALSE(is_numeric_node("::"));
+    if (!github_actions) {
+        // This gives a runtime error. Since C++23 adopted [P2166]
+        // (http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2166r1.html)
+        // nullptr is prohibited now. Check if the compiler fails instead of
+        // having a runtime error.
+        std::cout << CYEL "[ TODO     ] " CRES << __LINE__
+                  << ": Check if using a nullptr to a std::string is detected "
+                     "by the compiler now.\n";
+        EXPECT_FALSE(is_numeric_node(nullptr));
+    }
 }
 
 } // namespace upnplib

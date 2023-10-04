@@ -1,8 +1,8 @@
-#ifndef PUPNP_POSIX_OVERWRTIES_HPP
-#define PUPNP_POSIX_OVERWRTIES_HPP
+#ifndef PUPNP_POSIX_OVERWRITES_HPP
+#define PUPNP_POSIX_OVERWRITES_HPP
 #ifdef _WIN32
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-06
+// Redistribution only with this Copyright remark. Last modified: 2023-10-07
 
 /* POSIX names for functions */
 #define fileno _fileno
@@ -44,4 +44,4 @@
 #endif
 
 #endif /* _WIN32 */
-#endif /* PUPNP_POSIX_OVERWRTIES_HPP */
+#endif /* PUPNP_POSIX_OVERWRITES_HPP */

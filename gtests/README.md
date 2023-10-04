@@ -40,7 +40,15 @@ To run all tests local from the projects root directory with GITHUB_ACTIONS I us
 
     ~$ (cd ./build && GITHUB_ACTIONS=true ctest --timeout 2 --output-on-failure)
 
-## Find different test variables
+## Find different unique values
+There are some values that must be unique system wide. To find all used values
+here are some pattern using grep.
+
+All error messages have a unique nummber so the number does not only specify the associated message text but also its location in the source code. This also means that messages with the same text but a different location in the source have different numbers. Or with other words, each message have a unique index number, no matter what it is meaning. By default the message numbers start with 1000. Numbers below are reservered for special use. You can find already used message numbers with:
+
+    ~$ # Get used error message numbers
+    ~$ grep -Pnor --color=never --exclude-dir={build,gtests} --include='*.[chi]*' 'UPnPlib ERROR 1\d\d\d!' | sort -t: -k3
+
 To avoid conflicts with double used socket file descriptors (sfd) on tests I
 always use a new one. To have a simple search pattern I define a constant
 `umock::sfd_base` and set a new socket file descriptor for testing for example
@@ -54,6 +62,7 @@ For details have a look at 'man select'.
 
 To find all used file descriptors in tests I use this command:
 
+    ~$ # Get used file descriptors
     ~$ grep -Pnor --color=never --include='*.[chi]*' 'sfd_base \+ \d+ *\+* *\d*' ./gtests | sort -t: -k3.12n
 
 It is also strongly recommended to use unique port numbers for testing to avoid
@@ -61,6 +70,7 @@ getting a delay to re-use an ip address. I start with test port number 50000
 -and use a simple search that does not necessarily find only used port nummbers.
 -But it doesn't matter as long as the new used number isn't found. I use this:
 
+    ~$ # Get used port numbers
     ~$ grep -Phor --include='*.[chi]*' '5\d\d\d\d' ./gtests | sort -n | uniq
 
 <br /><pre>

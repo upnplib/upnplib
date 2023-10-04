@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_ADDRINFO_HPP
 #define UPNPLIB_INCLUDE_ADDRINFO_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-26
+// Redistribution only with this Copyright remark. Last modified: 2023-10-06
 
 #include <upnplib/visibility.hpp>
 #include <upnplib/port_sock.hpp>
@@ -9,6 +9,19 @@
 #include <string>
 
 namespace upnplib {
+
+// Free function to test if the node is a valid numeric address string
+// -------------------------------------------------------------------
+// Checks if a string represents a numeric ipv6 or ipv4 address.
+// On success it returns the socket address family AF_INET6 or AF_INET the
+// address belongs to.
+// Otherwise it returns 0.
+// Note: I simply use the system function inet_pton() to check if the node
+// string is accepted. This function can also be used to realize what address
+// family an address belongs to. --Ingo
+UPNPLIB_API int is_numeric_node(const std::string& a_node,
+                                const int a_addr_family = AF_UNSPEC);
+
 
 // Provide C style addrinfo as class and wrap its system calls
 // -----------------------------------------------------------
@@ -80,7 +93,7 @@ class UPNPLIB_API CAddrinfo {
     // identical address information from the operating system.
     std::string m_node;
     std::string m_service;
-    addrinfo m_hints{};
+    mutable addrinfo m_hints{};
 
     // This is a helper method that gets a new address information from the
     // operating system. Because we always use the same cached hints we also get
@@ -92,7 +105,7 @@ class UPNPLIB_API CAddrinfo {
     // deeply copied. So we have to go the hard way with getaddrinfo() and free
     // it with freeaddrinfo(),
     // Provides strong exception guarantee.
-    UPNPLIB_LOCAL addrinfo* get_new_addrinfo() const;
+    UPNPLIB_LOCAL addrinfo* get_addrinfo() const;
 };
 
 #ifdef _MSC_VER
