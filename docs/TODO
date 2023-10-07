@@ -1,11 +1,11 @@
 Next steps to do:
-* Improve CAddrinfo to support more than one address info (use *ai_next).
-* Add AI_IDN and AI_CANONIDN support to CAddrinfo.
 * Manage verbose messages with runtime switching
 * Rework miniserver.cpp and test_miniserver.cpp with verbose messages.
 * Rework test_sock.cp to work with changed sys_socket mocking.
 * Rework test_httpreadwrite.cpp
 * Use poll() and WSAPoll() instead of select().
+* Add AI_IDN and AI_CANONIDN support to CAddrinfo.
+* Improve CAddrinfo to support more than one address info (use *ai_next). It needs extended mocking.
 * Improve test_sock.cpp with ssl tests
 * Improve test_http_Download.cpp, start with error conditions for http_MakeMessage()
 * Create gtests for ssdp/*, start with get_ssdp_sockets (needed for miniserver).

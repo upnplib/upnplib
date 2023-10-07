@@ -1,9 +1,8 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-27
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-10-07
 
-#include <upnplib/port.hpp>
-#include <cstring>
-#include <cstdlib> // for malloc
+#include "upnplib/general.hpp"
+
 
 // strndup() is a GNU extension.
 #ifndef HAVE_STRNDUP
@@ -19,3 +18,10 @@ char* strndup(const char* __string, size_t __n) {
     return newstr;
 }
 #endif
+
+
+namespace upnplib {
+
+std::string libinfo() { return "upnplib library version = under developement"; }
+
+} // namespace upnplib

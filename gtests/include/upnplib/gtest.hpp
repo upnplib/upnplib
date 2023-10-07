@@ -1,7 +1,9 @@
 #ifndef UPNPLIB_GTEST_HPP
 #define UPNPLIB_GTEST_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-11
+// Redistribution only with this Copyright remark. Last modified: 2023-10-07
+
+#include <upnplib/visibility.hpp>
 
 #include <regex>
 #include <gmock/gmock.h>
@@ -12,7 +14,7 @@
 #define CGRN "\033[38;5;83m"  // green
 #define CRES "\033[0m"        // reset
 
-//
+
 namespace upnplib::testing {
 
 //###############################
@@ -92,19 +94,19 @@ class UPNPLIB_API CaptureStdOutErr {
     int orig_stdOutErrFd{};
 };
 
-//
+
 // function to get the modification time of a file
 // -----------------------------------------------
 //     using ::upnplib::testing::file_mod_time;
 UPNPLIB_API time_t file_mod_time(const std::string& a_pathname);
 
-//
+
 // function to test if file descriptors are closed
 // -----------------------------------------------
 //     using ::upnplib::testing::check_closed_fds;
 UPNPLIB_API void check_closed_fds(int a_from_fd, int a_to_fd);
 
-//
+
 //###############################
 //       Custom Matcher         #
 //###############################
@@ -142,7 +144,7 @@ MATCHER_P(PointeeVoidToConstInt, expected, "") {
     return *static_cast<const int*>(arg) == expected;
 }
 
-//
+
 //###############################
 //       Custom Actions         #
 //###############################
@@ -166,7 +168,7 @@ ACTION_TEMPLATE(SetArgPtrIntValue, HAS_1_TEMPLATE_PARAMS(int, k),
     *static_cast<int*>(std::get<k>(args)) = value;
 }
 
-//
+
 // Action to return a string literal
 // ---------------------------------
 // Reference: https://groups.google.com/g/googlemock/c/lQqCMW1ANQA

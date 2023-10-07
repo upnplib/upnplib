@@ -1,16 +1,12 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-14
+// Redistribution only with this Copyright remark. Last modified: 2023-10-07
 
 // There is no include guard '#ifndef ...' because this file shouldn't be
 // included more than two times as given.
 
-#include "upnplib/visibility.hpp"
+#include <upnplib/general.hpp>
+#include <upnplib/visibility.hpp>
 #include <cstring>
-
-/* strndup() is a GNU extension. */
-#if !HAVE_STRNDUP || defined(_WIN32)
-UPNPLIB_API char* strndup(const char* __string, size_t __n);
-#endif
 
 namespace umock {
 
