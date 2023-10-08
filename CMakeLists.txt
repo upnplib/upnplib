@@ -1,10 +1,10 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-26
+# Redistribution only with this Copyright remark. Last modified: 2023-10-08
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
 
-set (UPNP_VERSION_STRING "1.14.0")
+set (UPNP_VERSION_STRING "1.14.18")
 set (UPNP_VERSION_MAJOR 1)
 project(UPNPLIB_PROJECT VERSION ${UPNP_VERSION_STRING}
                 DESCRIPTION "UPnP library"
@@ -501,9 +501,6 @@ endif()
 # #cmakedefine VAR2 1  : VAR2 must be exist before even you set a constant.
 configure_file(${PROJECT_SOURCE_DIR}/cmake/cmake_vars.hpp.cmake
                ${PROJECT_BINARY_DIR}/include/upnplib/cmake_vars.hpp
-)
-configure_file(${PROJECT_SOURCE_DIR}/cmake/trace.hpp.cmake
-               ${PROJECT_BINARY_DIR}/include/upnplib/trace.hpp
 )
 
 # RPATH settings to find shared libraries

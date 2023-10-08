@@ -1,10 +1,10 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-18
+# Redistribution only with this Copyright remark. Last modified: 2023-10-08
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(UPNPLIB_GTEST5 VERSION 0003
+project(GTEST5_UPNPLIB VERSION 0003
       DESCRIPTION "Tests for upnplib programs"
       HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -16,8 +16,7 @@ add_executable(test_upnptools-ush
         ./test_upnptools.cpp
 )
 target_link_libraries(test_upnptools-ush
-    PRIVATE
-        upnplib_shared
+    PRIVATE upnplib_shared
 )
 add_test(NAME ctest_upnptools-ush COMMAND test_upnptools-ush --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -87,10 +86,22 @@ target_compile_definitions(test_webserver-ush
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_link_libraries(test_webserver-ush
-    PRIVATE
-        upnplib_shared
+    PRIVATE upnplib_shared
 )
 add_test(NAME ctest_webserver-ush COMMAND test_webserver-ush --gtest_shuffle
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
+
+# general
+# =======
+add_executable(test_general-ush
+    ./test_general.cpp
+)
+target_link_libraries(test_general-ush
+    PRIVATE upnplib_shared
+)
+add_test(NAME ctest_general-ush COMMAND test_general-ush --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 

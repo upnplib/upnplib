@@ -1,10 +1,10 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-31
+// Redistribution only with this Copyright remark. Last modified: 2023-10-08
 
 // This test should always run, reporting no failure
 
-#include "gtest/gtest.h"
-//#include "gmock/gmock.h"
+// #include <gtest/gtest.h>
+#include <gmock/gmock.h> // preferred because it contains also gtest.h
 
 // two macros to compare values in a range
 #define EXPECT_IN_RANGE(VAL, MIN, MAX)                                         \
@@ -111,13 +111,14 @@ TEST(EmptyTestSuite, empty_gtest) {
     }
 }
 
-
 } // namespace upnplib
 
 
 int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    // ::testing::InitGoogleMock(&argc, argv);
-    return RUN_ALL_TESTS();
-    // #include "upnplib/gtest_main.inc"
+    // ::testing::InitGoogleTest(&argc, argv);
+    ::testing::InitGoogleMock(&argc, argv); // preferred
+    return RUN_ALL_TESTS(); // or use next lines, but needs additional includes
+    // #include <compa/gtest_main.inc>
+    // #include <upnplib/gtest_main.inc>
+    //    return gtest_return_code; // managed in upnplib/gtest_main.inc
 }

@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-03-08
+// Redistribution only with this Copyright remark. Last modified: 2023-10-08
 
 // Because this part of the main entry function uses gtest macros we have to
 // include it directly into the source of the test. These macros need to have
@@ -11,10 +11,13 @@
 
 int gtest_return_code{EXIT_FAILURE};
 
+std::string_view usage_hint{
+    "Too many arguments supplied. Valid upnplib options "
+    "are:\n--upnplib_old_code\n--upnplib_new_code\n--upnplib_debug - to enable "
+    "debug messages\n"};
+
 if (argc > 2) {
-    std::cerr << "Too many arguments supplied. Valid upnplib options "
-                 "only:\n--upnplib_old_code\n--upnplib_new_code"
-              << std::endl;
+    std::cerr << usage_hint;
 
 } else {
 
@@ -26,13 +29,15 @@ if (argc > 2) {
         } else if ((strncmp(argv[1], "--upnplib_new_code", 18) == 0) &&
                    (strlen(argv[1]) == 18)) {
             upnplib::old_code = false;
+        } else if ((strncmp(argv[1], "--upnplib_debug", 15) == 0) &&
+                   (strlen(argv[1]) == 15)) {
+            upnplib::dbug = true;
         } else {
-            std::cerr << "Unknown argument. Valid upnplib options "
-                         "only:\n--upnplib_old_code\n--upnplib_new_code"
-                      << std::endl;
+            std::cerr << usage_hint;
+            return gtest_return_code;
         }
     } else { // There is no --upnplib* argument
-        // both = true;
+             // both = true;
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
         upnplib::old_code = true;
 #else

@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-10-07
+# Redistribution only with this Copyright remark. Last modified: 2023-10-08
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -23,7 +23,6 @@ set(UPNPLIB_SOURCE_FILES
 
 set(UPNPLIB_INCLUDE_DIRECTORIES
     PUBLIC ./include
-    PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}/include
 )
 
 
@@ -46,10 +45,8 @@ if(NOT WIN32)
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_shared
-        PUBLIC
-            umock_shared
-        INTERFACE
-            ixml_shared
+        PUBLIC umock_shared
+        INTERFACE ixml_shared
     )
 
     # Upnplib STatic library: suffix -ust
@@ -65,10 +62,8 @@ if(NOT WIN32)
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_static
-        PUBLIC
-            umock_static
-        INTERFACE
-            ixml_static
+        PUBLIC umock_static
+        INTERFACE ixml_static
     )
 
 else() # WIN32
@@ -90,8 +85,7 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_shared
-        PUBLIC
-            umock_shared
+        PUBLIC umock_shared
     )
 
     # WIN32 Upnplib STatic library: suffix -ust
@@ -107,8 +101,7 @@ else() # WIN32
             $<$<BOOL:${UPNPLIB_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(upnplib_static
-        PUBLIC
-            umock_static
+        PUBLIC umock_static
     )
 
 endif() # WIN32

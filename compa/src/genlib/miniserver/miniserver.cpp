@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-29
+ * Redistribution only with this Copyright remark. Last modified: 2023-10-08
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,7 +73,7 @@
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/socket.hpp>
-#include <upnplib/trace.hpp>
+#include <upnplib/general.hpp>
 
 #ifdef _WIN32
 #include <UpnpStdInt.hpp> // for ssize_t

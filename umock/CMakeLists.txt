@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-10-07
+# Redistribution only with this Copyright remark. Last modified: 2023-10-08
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -35,7 +35,7 @@ set(UMOCK_INCLUDE_DIRECTORIES
     PUBLIC ./include
     # We need this variable to find the path before subdir upnplib is scanned.
     PUBLIC ${UPNPLIB_PROJECT_SOURCE_DIR}/upnplib/include
-    PRIVATE ${UPNPLIB_PROJECT_BINARY_DIR}}/include
+    PUBLIC ${UPNPLIB_PROJECT_BINARY_DIR}/include
     # if pthreads4w isn't installed this path is empty. The linker doesn't
     # find "pthread.h" and falls back to look at <pthread.h>.
     PUBLIC ${pthreads4w_SOURCE_DIR} # needed for pthread.h
@@ -51,10 +51,8 @@ target_include_directories(umock_shared
     ${UMOCK_INCLUDE_DIRECTORIES}
 )
 target_compile_definitions(umock_shared
-    PUBLIC
-        UPNPLIB_SHARED
-    PRIVATE
-        UPNPLIB_EXPORTS
+    PUBLIC UPNPLIB_SHARED
+    PRIVATE UPNPLIB_EXPORTS
 )
 target_link_libraries(umock_shared
     # In addition to pthreads we need some more system libraries on WIN32

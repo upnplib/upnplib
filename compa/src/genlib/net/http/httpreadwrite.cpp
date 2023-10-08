@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-19
+ * Redistribution only with this Copyright remark. Last modified: 2023-10-08
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,7 +43,7 @@
 #include <config.hpp>
 
 #include <httpreadwrite.hpp>
-#include <upnplib/trace.hpp>
+#include <upnplib/general.hpp>
 
 #include <UpnpExtraHeaders.hpp>
 #include <UpnpIntTypes.hpp>
@@ -71,11 +71,6 @@
 #else /* _WIN32 */
 #include <sys/utsname.h>
 #endif /* _WIN32 */
-
-// The version string is only used here and will not change much on upgrading to
-// upnplib. To reduce complexity by including upnpconfig.hpp I just set it here.
-// --Ingo
-#define UPNP_VERSION_STRING "1.14.18"
 
 #include <umock/pupnp_sock.hpp>
 #include <umock/pupnp_httprw.hpp>
