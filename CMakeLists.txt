@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-10-08
+# Redistribution only with this Copyright remark. Last modified: 2023-10-09
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -483,7 +483,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/compa)
 add_subdirectory(${PROJECT_SOURCE_DIR}/sample)
 add_subdirectory(${PROJECT_SOURCE_DIR}/apps)
 if(googletest_POPULATED)
-    add_subdirectory(${PROJECT_SOURCE_DIR}/gtests)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/utest)
 endif()
 
 

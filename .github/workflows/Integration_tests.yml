@@ -17,7 +17,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: DoozyX/clang-format-lint-action@v0.13
       with:
-        source: './apps ./compa ./gtests ./interface ./ixml ./pupnp ./sample ./umock ./upnplib'
+        source: './apps ./compa ./utest ./interface ./ixml ./pupnp ./sample ./umock ./upnplib'
         extensions: 'cpp,hpp'
         clangFormatVersion: 11.1.0
 
@@ -99,7 +99,7 @@ jobs:
 
       - name: Run gtests
         run: |
-          cd ./build/gtests
+          cd ./build/utest
           ctest --timeout 6 --output-on-failure
 
 
@@ -176,7 +176,7 @@ jobs:
 
       - name: Run gtests
         run: |
-          cd ./build/gtests
+          cd ./build/utest
           ctest --timeout 6 --output-on-failure
 
 
@@ -270,7 +270,7 @@ jobs:
         name: Run gtests
         run: |
           $env:path += ";./build/bin/${{matrix.buildtype}}"
-          cd ./build/gtests
+          cd ./build/utest
           ctest -C ${{matrix.buildtype}} --timeout 9 --output-on-failure
 
 
@@ -365,7 +365,7 @@ jobs:
         name: Run gtests
         run: |
           $env:path += ";./build/bin"
-          cd ./build/gtests
+          cd ./build/utest
           ctest -C ${{matrix.buildtype}} --timeout 9 --output-on-failure
 
 
