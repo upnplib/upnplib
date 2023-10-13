@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-10
+// Redistribution only with this Copyright remark. Last modified: 2023-10-12
 
 // Because this part of the main entry function uses gtest macros we have to
 // include it directly into the source of the test. These macros need to have
@@ -26,7 +26,7 @@ if (argc > 2) {
 if (argc == 2) {
     if ((strncmp(argv[1], "--upnplib_debug", 15) == 0) &&
         (strlen(argv[1]) == 15)) {
-        upnplib::dbug = true;
+        upnplib::g_dbug = true;
     } else {
         std::cerr << usage_hint;
         goto finish;

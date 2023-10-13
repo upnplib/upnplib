@@ -1,5 +1,6 @@
 Next steps to do:
 * Manage verbose messages with runtime switching
+* Improve gtests for fdset_if_valid().
 * Rework miniserver.cpp and test_miniserver.cpp with verbose messages.
 * Rework test_sock.cp to work with changed sys_socket mocking.
 * Rework test_httpreadwrite.cpp

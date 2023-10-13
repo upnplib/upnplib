@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-10-08
+ * Redistribution only with this Copyright remark. Last modified: 2023-10-15
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -187,7 +187,6 @@ ExitFunction:
     return rc;
 }
 
-namespace compa {
 // getNumericHostRedirection() returns the ip address with port as text
 // (e.g. "192.168.1.2:54321") that is bound to a socket.
 static int getNumericHostRedirection(SOCKET a_socket, char* a_host_port,
@@ -207,7 +206,6 @@ static int getNumericHostRedirection(SOCKET a_socket, char* a_host_port,
     }
     return false;
 }
-} // namespace compa
 
 /*!
  * \brief Based on the type pf message, appropriate callback is issued.
@@ -265,7 +263,7 @@ static int dispatch_request(
     }
     request = &hparser->msg;
 #ifdef DEBUG_REDIRECT
-    compa::getNumericHostRedirection(info->socket, host_port, sizeof host_port);
+    getNumericHostRedirection(info->socket, host_port, sizeof host_port);
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "DEBUG TEST: Redirect host_port = %s.\n", host_port);
 #endif
@@ -297,8 +295,8 @@ static int dispatch_request(
             char redir_str[NAME_SIZE];
             int timeout = HTTP_DEFAULT_TIMEOUT;
 
-            compa::getNumericHostRedirection(info->socket, host_port,
-                                             sizeof host_port);
+            getNumericHostRedirection(info->socket, host_port,
+                                      sizeof host_port);
             membuffer_init(&redir_buf);
             snprintf(redir_str, NAME_SIZE, redir_fmt, host_port);
             membuffer_append_str(&redir_buf, redir_str);
@@ -444,26 +442,37 @@ static UPNP_INLINE void schedule_request_job(
 }
 #endif // INTERNAL_WEB_SERVER
 
-static void fdset_if_valid(SOCKET sock, fd_set* set) {
-    // This sets the file descriptor set for a socket select() for valid
-    // sochets. It also has a guard that we do not exceed the maximum number
-    // FD_SETSIZE (1024) of selectable file descriptors, see man select().
+static void fdset_if_valid(SOCKET a_sock, fd_set* a_set) {
+    // This sets the file descriptor set for a socket ::select() for valid
+    // sochets. It ensures that ::select() does not fail with invalid socket
+    // file descriiptors, in particular with the EBADF error. It checks that we
+    // do not use closed sockets. It also has a guard that we do not exceed the
+    // maximum number FD_SETSIZE (1024) of selectable file descriptors, as
+    // noted in "man select".
     TRACE("Executing fdset_if_valid()")
-    if (sock == INVALID_SOCKET)
+    if (a_sock == INVALID_SOCKET)
+        // This is a defined state and we return silently.
         return;
 
-    if (sock < 3 || sock >= FD_SETSIZE) {
-        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                   "FD_SET for select() failed with socket %d, that violates "
-                   "FD_SETSIZE.\n",
-                   sock);
+    if (a_sock < 3 || a_sock >= FD_SETSIZE) {
+        UPNPLIB_LOGERR << "FD_SET for select() failed with socket " << a_sock
+                       << ", that violates FD_SETSIZE.\n";
         return;
     }
 
-    FD_SET(sock, set);
+    // Check if socket is valid
+    int valopt{};
+    socklen_t len{sizeof(valopt)};
+    if (umock::sys_socket_h.getsockopt(a_sock, SOL_SOCKET, SO_ERROR,
+                                       static_cast<void*>(&valopt), &len) < 0) {
+        UPNPLIB_LOGERR << "fdset_if_valid() ignore invalid socket " << a_sock
+                       << ": " << std::strerror(errno) << ".\n";
+        return;
+    }
+
+    FD_SET(a_sock, a_set);
 }
 
-namespace compa {
 static int web_server_accept([[maybe_unused]] SOCKET lsock,
                              [[maybe_unused]] fd_set& set) {
 #ifdef INTERNAL_WEB_SERVER
@@ -472,6 +481,8 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
         UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
                    "web_server_accept(): invalid socket(%d) or set(%p).\n",
                    lsock, static_cast<void*>(&set));
+        // UPNPLIB_LOGERR << "web_server_accept(): invalid socket(" << lsock
+        //                << ") or set(" << static_cast<void*>(&set) << ").\n";
         return UPNP_E_SOCKET_ERROR;
     }
 
@@ -488,6 +499,8 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
         UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
                    "web_server_accept(): Error in accept(): %s\n",
                    std::strerror(errno));
+        // UPNPLIB_LOGERR << "web_server_accept(): Error in accept(): "
+        //                << std::strerror(errno) << ".\n";
         return UPNP_E_SOCKET_ACCEPT;
     }
 
@@ -495,9 +508,12 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
     char buf_ntop[INET6_ADDRSTRLEN + 7];
     inet_ntop(AF_INET, &sa_in->sin_addr, buf_ntop, sizeof(buf_ntop));
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "web_server_accept(): connected to host %s:%d "
-               "with socket %d\n",
+               "web_server_accept(): connected to host %s:%d with socket %d\n",
                buf_ntop, ntohs(sa_in->sin_port), asock);
+    // UPNPLIB_LOGINF << "web_server_accept(): connected to host " << buf_ntop
+    //                << ":" << ntohs(sa_in->sin_port) << " with socket " <<
+    //                asock
+    //                << "\n";
     schedule_request_job(asock, (sockaddr*)&clientAddr);
 
     return UPNP_E_SUCCESS;
@@ -505,7 +521,6 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
     return UPNP_E_NO_WEB_SERVER;
 #endif /* INTERNAL_WEB_SERVER */
 }
-} // namespace compa
 
 static void ssdp_read(SOCKET* rsock, fd_set* set) {
     TRACE("Executing ssdp_read()")
@@ -593,7 +608,6 @@ static void RunMiniServer(
     TRACE("Executing RunMiniServer()")
     fd_set expSet;
     fd_set rdSet;
-    int ret = 0;
     int stopSock = 0;
 
     // On MS Windows INVALID_SOCKET is unsigned -1 = 18446744073709551615 so we
@@ -660,45 +674,58 @@ static void RunMiniServer(
 #endif /* INCLUDE_CLIENT_APIS */
 
         /* select() */
-        ret = umock::sys_socket_h.select((int)maxMiniSock, &rdSet, NULL,
-                                         &expSet, NULL);
+        int ret = umock::sys_socket_h.select(static_cast<int>(maxMiniSock),
+                                             &rdSet, NULL, &expSet, NULL);
 
-        if (ret == SOCKET_ERROR && errno == EINTR) {
-            continue; // A signal was caught, not for us. We ignore it.
-        }
         if (ret == SOCKET_ERROR) {
-            UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
-                       "Error in select(): %s\n", std::strerror(errno));
-            continue; // or
-            // break: // ? TODO: Extended error checking is required. --Ingo
-        } else {
-            // Accept requested connection from a remote client and run the
-            // connection in a new thread. Due to side effects we need to
-            // avoid lazy evaluation with chained ||.
-            [[maybe_unused]] int ret1 = //
-                compa::web_server_accept(miniSock->miniServerSock4, rdSet);
-            [[maybe_unused]] int ret2 = //
-                compa::web_server_accept(miniSock->miniServerSock6, rdSet);
-            [[maybe_unused]] int ret3 = //
-                compa::web_server_accept(miniSock->miniServerSock6UlaGua,
-                                         rdSet);
-            // if (ret1 == UPNP_E_SUCCESS || ret2 == UPNP_E_SUCCESS ||
-            //     ret3 == UPNP_E_SUCCESS) {
-#ifdef INCLUDE_CLIENT_APIS
-            ssdp_read(&miniSock->ssdpReqSock4, &rdSet);
-            ssdp_read(&miniSock->ssdpReqSock6, &rdSet);
-#endif /* INCLUDE_CLIENT_APIS */
-            ssdp_read(&miniSock->ssdpSock4, &rdSet);
-            ssdp_read(&miniSock->ssdpSock6, &rdSet);
-            ssdp_read(&miniSock->ssdpSock6UlaGua, &rdSet);
-            // }
-
-            // Check if we have received a packet from
-            // localhost(127.0.0.1) that will stop the miniserver.
-            stopSock =
-                receive_from_stopSock(miniSock->miniServerStopSock, &rdSet);
+            if (errno == EINTR) {
+                // A signal was caught, not for us. We ignore it and
+                continue;
+            }
+            if (errno == EBADF) {
+                // A closed socket file descriptor was given in one of the
+                // sets. For details look at
+                // REF: [Should I assert fail on select() EBADF?]
+                // (https://stackoverflow.com/q/28015859/5014688)
+                // It is difficult to determine here what file descriptor
+                // in rdSet or expSet is invalid. So I ensure that only valid
+                // socket fds are given by checking them with fdset_if_valid()
+                // before calling select(). Doing this I have to
+                continue;
+            }
+            // All other errors EINVAL and ENOMEM are critical and cannot
+            // continue run mininserver.
+            UPNPLIB_LOGCRT << "Error in ::select(): " << std::strerror(errno)
+                           << ".\n";
+            // UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
+            //            "Error in select(): %s\n", std::strerror(errno));
+            break;
         }
-    }
+
+        // Accept requested connection from a remote client and run the
+        // connection in a new thread. Due to side effects we need to
+        // avoid lazy evaluation with chained ||.
+        [[maybe_unused]] int ret1 =
+            web_server_accept(miniSock->miniServerSock4, rdSet);
+        [[maybe_unused]] int ret2 =
+            web_server_accept(miniSock->miniServerSock6, rdSet);
+        [[maybe_unused]] int ret3 =
+            web_server_accept(miniSock->miniServerSock6UlaGua, rdSet);
+        // if (ret1 == UPNP_E_SUCCESS || ret2 == UPNP_E_SUCCESS ||
+        //     ret3 == UPNP_E_SUCCESS) {
+#ifdef INCLUDE_CLIENT_APIS
+        ssdp_read(&miniSock->ssdpReqSock4, &rdSet);
+        ssdp_read(&miniSock->ssdpReqSock6, &rdSet);
+#endif /* INCLUDE_CLIENT_APIS */
+        ssdp_read(&miniSock->ssdpSock4, &rdSet);
+        ssdp_read(&miniSock->ssdpSock6, &rdSet);
+        ssdp_read(&miniSock->ssdpSock6UlaGua, &rdSet);
+        // }
+
+        // Check if we have received a packet from
+        // localhost(127.0.0.1) that will stop the miniserver.
+        stopSock = receive_from_stopSock(miniSock->miniServerStopSock, &rdSet);
+    } // while (!stopsock)
 
     /* Close all sockets. */
     sock_close(miniSock->miniServerSock4);

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-14
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -55,11 +55,6 @@ using ::upnplib::testing::ContainsStdRegex;
 using ::upnplib::testing::MatchesStdRegex;
 using ::upnplib::testing::StrCpyToArg;
 using ::upnplib::testing::StrnCpyToArg;
-
-#ifndef UPNPLIB_WITH_NATIVE_PUPNP
-using ::compa::getNumericHostRedirection;
-using ::compa::web_server_accept;
-#endif
 
 using ::pupnp::CLogging;
 
@@ -1730,7 +1725,7 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer_accept_fails) {
     InitMiniServerSockArray(minisock);
 
     // Set needed data, listen miniserver only on IPv4 that will connect to a
-    // remote client which has done e rquest.
+    // remote client which has done a request.
     minisock->miniServerPort4 = 50045;
     minisock->stopPort = 50047;
 
@@ -1759,9 +1754,14 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer_accept_fails) {
         }
 
         // select()
+        if (!old_code)
+            EXPECT_CALL(m_sys_socketObj, getsockopt(minisock->miniServerSock4,
+                                                    SOL_SOCKET, SO_ERROR, _, _))
+                .WillOnce(Return(0)); // Check socket in fdset_if_valid()
         EXPECT_CALL(m_sys_socketObj,
                     select(select_nfds, _, nullptr, _, nullptr))
-            .WillOnce(Return(2)); // data and stopsock available
+            .WillOnce(Return(2)); // select in RunMiniServer(),
+                                  // data and stopsock available
 
         // accept() will fail for incomming data. stopsock uses a datagram so it
         // doesn't use accept.

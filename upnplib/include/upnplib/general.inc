@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-12
 
 // There is no include guard '#ifndef ...' because this file shouldn't be
 // included more than two times as given.
@@ -42,7 +42,12 @@ namespace upnplib {
 
 // Debug output message that can be enabled during runtime.
 // --------------------------------------------------------
-#define DBUG if(upnplib::dbug) std::cout.flush()&&std::clog<<"DEBUG["<<(static_cast<const char*>(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)<<":"<<__LINE__<<"] "
+#define UPNPLIB_DBUG std::cout.flush()&&std::clog<<"DEBUG["<<(static_cast<const char*>(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)<<":"<<__LINE__<<"] "
+// This is for future expansion and not to loose information
+#define UPNPLIB_LOGCRT if(upnplib::g_dbug) UPNPLIB_DBUG<<"CRITICAL: "
+#define UPNPLIB_LOGERR if(upnplib::g_dbug) UPNPLIB_DBUG<<"ERROR: "
+#define UPNPLIB_LOGINF if(upnplib::g_dbug) UPNPLIB_DBUG<<"INFO: "
+#define UPNPLIB_LOGDET if(upnplib::g_dbug) UPNPLIB_DBUG<<"DETAIL: "
 
 // clang-format on
 

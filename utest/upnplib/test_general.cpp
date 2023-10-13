@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-10
+// Redistribution only with this Copyright remark. Last modified: 2023-10-13
 
 #include <upnplib/general.hpp>
 #include <gmock/gmock.h>
@@ -11,8 +11,7 @@ bool old_code{true}; // Managed in gtest_main.inc
 
 TEST(EmptyTestSuite, simple_test) {
     TRACE("This is a TRACE output.")
-    std::cout << "DEBUG! upnplib::dbug = " << upnplib::dbug << "\n";
-    DBUG << "This is a DEBUG output.\n";
+    UPNPLIB_LOGDET << "This is a DEBUG output.\n";
 }
 
 } // namespace utest
