@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-15
+// Redistribution only with this Copyright remark. Last modified: 2023-10-19
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -26,6 +26,7 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::DoAll;
+using ::testing::Ge;
 using ::testing::HasSubstr;
 using ::testing::NotNull;
 using ::testing::Pointee;
@@ -157,12 +158,27 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_successful) {
 
     } else {
 
+        // Check socket in fdset_if_valid() successful
         EXPECT_CALL(m_sys_socketObj, getsockopt(m_minisock->miniServerSock4,
                                                 SOL_SOCKET, SO_ERROR, _, _))
-            .WillOnce(Return(0)); // Check socket in fdset_if_valid() successful
+            .WillOnce(Return(0));
+
+        // Mock that the socket fd ist bound to an address.
+        SSockaddr_storage ssObj;
+        ssObj = "[2001:db8::cd]:50059";
+        EXPECT_CALL(
+            m_sys_socketObj,
+            getsockname(m_minisock->miniServerSock4, _,
+                        Pointee(Ge(static_cast<socklen_t>(sizeof(ssObj.ss))))))
+            .WillOnce(DoAll(
+                SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                SetArgPointee<2>(static_cast<socklen_t>(sizeof(ssObj.ss))),
+                Return(0)));
+
+        // select in RunMiniServer() also succeeds
         EXPECT_CALL(m_sys_socketObj,
                     select(select_nfds, _, nullptr, _, nullptr))
-            .WillOnce(Return(1)); // select in RunMiniServer() also succeeds
+            .WillOnce(Return(1));
     }
 
     SSockaddr_storage ss_connected;
@@ -244,16 +260,47 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
 
     } else {
 
+        // Check socket in fdset_if_valid() successful
         EXPECT_CALL(m_sys_socketObj, getsockopt(m_minisock->miniServerSock4,
                                                 SOL_SOCKET, SO_ERROR, _, _))
-            .WillOnce(Return(0)); // Check socket in fdset_if_valid() successful
-        EXPECT_CALL(m_sys_socketObj, // but select in RunMiniServer() fails
+            .WillOnce(Return(0));
+
+        // Mock that the socket fd ist bound to an address.
+        SSockaddr_storage ssObj;
+        ssObj = "192.168.10.10:50060";
+        EXPECT_CALL(
+            m_sys_socketObj,
+            getsockname(m_minisock->miniServerSock4, _,
+                        Pointee(Ge(static_cast<socklen_t>(sizeof(ssObj.ss))))))
+            .WillOnce(DoAll(
+                SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                SetArgPointee<2>(static_cast<socklen_t>(sizeof(ssObj.ss))),
+                Return(0)));
+
+        // but select in RunMiniServer() fails
+        EXPECT_CALL(m_sys_socketObj,
                     select(select_nfds, _, nullptr, _, nullptr))
             .WillOnce(SetErrnoAndReturn(ENOMEM, SOCKET_ERROR));
     }
 
+    // Capture output to stderr
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    captureObj.start();
+
     // Test Unit
     RunMiniServer(m_minisock);
+
+    if (old_code) {
+
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": Unit should not silently ignore critical error "
+                     "messages from ::select().\n";
+        EXPECT_EQ(captureObj.str(), ""); // Wrong!
+
+    } else {
+
+        EXPECT_THAT(captureObj.str(), HasSubstr("] CRITICAL MSG1021: "));
+    }
 }
 
 TEST_F(MiniServerRunFTestSuite, fdset_if_valid_read_successful) {
@@ -263,11 +310,24 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_read_successful) {
     // Socket file descriptor should be added to the read set.
     constexpr SOCKET sockfd{umock::sfd_base + 56};
 
-    // Mock ::getsockopt() to find sockfd valid.
-    if (!old_code)
+    if (!old_code) {
+        // Mock ::getsockopt() to find sockfd valid.
         EXPECT_CALL(m_sys_socketObj,
                     getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
             .WillOnce(Return(0));
+
+        // Mock that the socket fd ist bound to an address.
+        SSockaddr_storage ssObj;
+        ssObj = "192.168.10.11:50061";
+        EXPECT_CALL(
+            m_sys_socketObj,
+            getsockname(sockfd, _,
+                        Pointee(Ge(static_cast<socklen_t>(sizeof(ssObj.ss))))))
+            .WillOnce(DoAll(
+                SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                SetArgPointee<2>(static_cast<socklen_t>(sizeof(ssObj.ss))),
+                Return(0)));
+    }
 
     // Test Unit
     fdset_if_valid(sockfd, &rdSet);
@@ -283,13 +343,14 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
     ASSERT_FALSE(FD_ISSET(static_cast<SOCKET>(0), &rdSet));
 
     // Capture output to stderr
+    bool g_debug_old = upnplib::g_dbug;
     upnplib::g_dbug = true;
     CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
     if (old_code) {
 
-        // Test Unit not possible because this results in indefined behavior and
+        // Test Unit not possible because this results in undefined behavior and
         // may randomly segfault.
         // fdset_if_valid(static_cast<SOCKET>(-17000), &rdSet);
 
@@ -298,10 +359,32 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
                      "to ::select() set.\n";
         EXPECT_EQ(captureObj.str(), ""); // Wrong!
 
-        // Test Unit, fd 0 = stdin is not a valid network socket and should not
+        upnplib::g_dbug = g_debug_old;
+
+        // Test Unit, fd 0 to 2 are not valid network sockets and should not
         // be set.
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": Unit should not accept file descriptors 0 to 2 or >= "
+                     "FD_SETSIZE.\n";
+        FD_ZERO(&rdSet);
         fdset_if_valid(static_cast<SOCKET>(0), &rdSet);
-        ASSERT_TRUE(FD_ISSET(static_cast<SOCKET>(0), &rdSet)); // Wrong!
+        EXPECT_TRUE(FD_ISSET(static_cast<SOCKET>(0), &rdSet)); // Wrong!
+        FD_ZERO(&rdSet);
+        fdset_if_valid(static_cast<SOCKET>(1), &rdSet);
+        EXPECT_TRUE(FD_ISSET(static_cast<SOCKET>(1), &rdSet)); // Wrong!
+        FD_ZERO(&rdSet);
+        fdset_if_valid(static_cast<SOCKET>(2), &rdSet);
+        EXPECT_TRUE(FD_ISSET(static_cast<SOCKET>(2), &rdSet)); // Wrong!
+#if 0
+        FD_ZERO(&rdSet);
+        fdset_if_valid(static_cast<SOCKET>(FD_SETSIZE), &rdSet);
+#ifdef __APPLE__
+        EXPECT_FALSE(FD_ISSET(static_cast<SOCKET>(FD_SETSIZE), &rdSet));
+#else
+        EXPECT_TRUE(
+            FD_ISSET(static_cast<SOCKET>(FD_SETSIZE), &rdSet)); // Wrong!
+#endif
+#endif
 
     } else {
 
@@ -311,11 +394,25 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
         // Get captured output
         EXPECT_THAT(
             captureObj.str(),
-            HasSubstr("ERROR: FD_SET for select() failed with socket "));
+            HasSubstr("ERROR FD_SET for select() failed with invalid socket "));
+
+        upnplib::g_dbug = g_debug_old;
 
         // Test Unit
+        FD_ZERO(&rdSet);
         fdset_if_valid(static_cast<SOCKET>(0), &rdSet);
-        ASSERT_FALSE(FD_ISSET(static_cast<SOCKET>(0), &rdSet));
+        EXPECT_FALSE(FD_ISSET(static_cast<SOCKET>(0), &rdSet));
+        FD_ZERO(&rdSet);
+        fdset_if_valid(static_cast<SOCKET>(1), &rdSet);
+        EXPECT_FALSE(FD_ISSET(static_cast<SOCKET>(1), &rdSet));
+        FD_ZERO(&rdSet);
+        fdset_if_valid(static_cast<SOCKET>(2), &rdSet);
+        EXPECT_FALSE(FD_ISSET(static_cast<SOCKET>(2), &rdSet));
+#if 0
+        FD_ZERO(&rdSet);
+        fdset_if_valid(static_cast<SOCKET>(FD_SETSIZE), &rdSet);
+        EXPECT_FALSE(FD_ISSET(static_cast<SOCKET>(FD_SETSIZE), &rdSet));
+#endif
     }
 }
 
@@ -331,9 +428,6 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
         << "Socket file descriptor " << sockfd
         << " should not be added to the FD SET for select().";
 }
-
-// TEST(MiniServerRunTestSuite, fdset_if_valid_with_sfd_FD_SETSIZE) {
-// }
 
 TEST(MiniServerRunTestSuite, fdset_if_valid) {
     fd_set rdSet;

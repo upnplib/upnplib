@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-14
+// Redistribution only with this Copyright remark. Last modified: 2023-10-19
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -52,7 +52,6 @@ using ::upnplib::SSockaddr_storage;
 
 using ::upnplib::testing::CaptureStdOutErr;
 using ::upnplib::testing::ContainsStdRegex;
-using ::upnplib::testing::MatchesStdRegex;
 using ::upnplib::testing::StrCpyToArg;
 using ::upnplib::testing::StrnCpyToArg;
 
@@ -242,8 +241,10 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets) {
     // Bind socket to an ip address (gIF_IPV4)
     EXPECT_CALL(m_sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
     // Query port from socket
-    EXPECT_CALL(m_sys_socketObj,
-                getsockname(sockfd, _, Pointee(Ge((socklen_t)ai->ai_addrlen))))
+    EXPECT_CALL(
+        m_sys_socketObj,
+        getsockname(sockfd, _,
+                    Pointee(Ge(static_cast<socklen_t>(ai->ai_addrlen)))))
         .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
     // Listen on the socket
     EXPECT_CALL(m_sys_socketObj, listen(sockfd, _)).WillOnce(Return(0));
@@ -616,8 +617,10 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_successful) {
     // Mock system functions
     EXPECT_CALL(m_sys_socketObj, bind(sockfd, _, _)).Times(1);
     EXPECT_CALL(m_sys_socketObj, listen(sockfd, SOMAXCONN)).Times(1);
-    EXPECT_CALL(m_sys_socketObj,
-                getsockname(sockfd, _, Pointee(Ge((socklen_t)ai->ai_addrlen))))
+    EXPECT_CALL(
+        m_sys_socketObj,
+        getsockname(sockfd, _,
+                    Pointee(Ge(static_cast<socklen_t>(ai->ai_addrlen)))))
         .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
 
     // Test Unit
@@ -755,7 +758,8 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_address_in_use) {
         EXPECT_CALL(m_sys_socketObj, listen(sockfd_free, SOMAXCONN)).Times(1);
         EXPECT_CALL(
             m_sys_socketObj,
-            getsockname(sockfd_free, _, Pointee(Ge((socklen_t)ai->ai_addrlen))))
+            getsockname(sockfd_free, _,
+                        Pointee(Ge(static_cast<socklen_t>(ai->ai_addrlen)))))
             .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
 
         // Test Unit
@@ -1171,8 +1175,10 @@ TEST_F(StartMiniServerFTestSuite, do_listen_successful) {
     // Mock system functions
     EXPECT_CALL(m_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0)).Times(0);
     EXPECT_CALL(m_sys_socketObj, listen(sockfd, SOMAXCONN)).Times(1);
-    EXPECT_CALL(m_sys_socketObj,
-                getsockname(sockfd, _, Pointee(Ge((socklen_t)ai->ai_addrlen))))
+    EXPECT_CALL(
+        m_sys_socketObj,
+        getsockname(sockfd, _,
+                    Pointee(Ge(static_cast<socklen_t>(ai->ai_addrlen)))))
         .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
 
     // Test Unit
@@ -1316,8 +1322,10 @@ TEST_F(StartMiniServerFTestSuite, get_port_successful) {
                        AF_INET, SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
 
     // Mock system functions
-    EXPECT_CALL(m_sys_socketObj,
-                getsockname(sockfd, _, Pointee(Ge((socklen_t)ai->ai_addrlen))))
+    EXPECT_CALL(
+        m_sys_socketObj,
+        getsockname(sockfd, _,
+                    Pointee(Ge(static_cast<socklen_t>(ai->ai_addrlen)))))
         .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr),
                         SetArgPointee<2>((socklen_t)ai->ai_addrlen),
                         Return(0)));
@@ -1754,10 +1762,27 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer_accept_fails) {
         }
 
         // select()
-        if (!old_code)
+        if (!old_code) {
+            // Mock socket check in 'fdset_if_valid()' to be successful.
+            // 'getsockopt()' and 'getsockname()' are called in the production
+            // code for verification.
             EXPECT_CALL(m_sys_socketObj, getsockopt(minisock->miniServerSock4,
                                                     SOL_SOCKET, SO_ERROR, _, _))
-                .WillOnce(Return(0)); // Check socket in fdset_if_valid()
+                .WillOnce(Return(0));
+
+            // Mock that the socket fd ist bound to an address.
+            SSockaddr_storage ssObj;
+            ssObj = "[2001:db8::ab]:50044";
+            EXPECT_CALL(m_sys_socketObj,
+                        getsockname(minisock->miniServerSock4, _,
+                                    Pointee(Ge(static_cast<socklen_t>(
+                                        sizeof(ssObj.ss))))))
+                .WillOnce(DoAll(
+                    SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                    SetArgPointee<2>(static_cast<socklen_t>(sizeof(ssObj.ss))),
+                    Return(0)));
+        }
+
         EXPECT_CALL(m_sys_socketObj,
                     select(select_nfds, _, nullptr, _, nullptr))
             .WillOnce(Return(2)); // select in RunMiniServer(),
@@ -2277,20 +2302,13 @@ TEST_F(RunMiniServerFTestSuite,
     SSockaddr_storage ssObj;
     ssObj.ss.ss_family = AF_UNIX;
 
-    if (old_code) {
-        EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))
-            .WillOnce(
-                DoAll(SetArgPointee<1>(*(sockaddr*)&ssObj.ss), Return(0)));
+    EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))
+        .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&ssObj.ss), Return(0)));
 
-    } else {
-
+    if (!old_code)
         EXPECT_CALL(m_sys_socketObj,
                     getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
             .WillOnce(Return(0));
-        EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))
-            .WillOnce(
-                DoAll(SetArgPointee<1>(*(sockaddr*)&ssObj.ss), Return(0)));
-    }
 
     // Capture output to stderr
     CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO

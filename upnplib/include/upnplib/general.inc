@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-12
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 // There is no include guard '#ifndef ...' because this file shouldn't be
 // included more than two times as given.
@@ -38,19 +38,29 @@ UPNPLIB_API char* strndup(const char* __string, size_t __n);
 #endif
 
 
-namespace upnplib {
+// Debug output messages with some that can be enabled during runtime.
+// -------------------------------------------------------------------
+#ifdef _MSC_VER
+#define __PRETTY_FUNCTION__ __FUNCTION__
+// or more verbose: #define __PRETTY_FUNCTION__ __FUNCSIG__
+#endif
 
-// Debug output message that can be enabled during runtime.
-// --------------------------------------------------------
-#define UPNPLIB_DBUG std::cout.flush()&&std::clog<<"DEBUG["<<(static_cast<const char*>(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)<<":"<<__LINE__<<"] "
-// This is for future expansion and not to loose information
-#define UPNPLIB_LOGCRT if(upnplib::g_dbug) UPNPLIB_DBUG<<"CRITICAL: "
-#define UPNPLIB_LOGERR if(upnplib::g_dbug) UPNPLIB_DBUG<<"ERROR: "
-#define UPNPLIB_LOGINF if(upnplib::g_dbug) UPNPLIB_DBUG<<"INFO: "
-#define UPNPLIB_LOGDET if(upnplib::g_dbug) UPNPLIB_DBUG<<"DETAIL: "
+// This is intended to be used as:
+// throw(UPNPLIB_LOGEXCEPT + "MSG1nnn: exception message.\n");
+#define UPNPLIB_LOGEXCEPT "UPnPlib ["+::std::string(__PRETTY_FUNCTION__)+"] EXCEPTION "
+
+#define UPNPLIB_LOG std::cout.flush()&&std::clog<<"UPnPlib ["<<__PRETTY_FUNCTION__
+// This is for future expansion and not to loose information.
+// Critical messages are always output.
+#define UPNPLIB_LOGCRIT UPNPLIB_LOG<<"] CRITICAL "
+#define UPNPLIB_LOGERR if(upnplib::g_dbug) UPNPLIB_LOG<<"] ERROR "
+#define UPNPLIB_LOGCATCH if(upnplib::g_dbug) UPNPLIB_LOG<<"] CATCH "
+#define UPNPLIB_LOGINFO if(upnplib::g_dbug) UPNPLIB_LOG<<"] INFO "
 
 // clang-format on
 
+
+namespace upnplib {
 
 // Info message about the library
 // ------------------------------

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-10-15
+ * Redistribution only with this Copyright remark. Last modified: 2023-10-19
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -446,31 +446,38 @@ static void fdset_if_valid(SOCKET a_sock, fd_set* a_set) {
     // This sets the file descriptor set for a socket ::select() for valid
     // sochets. It ensures that ::select() does not fail with invalid socket
     // file descriiptors, in particular with the EBADF error. It checks that we
-    // do not use closed sockets. It also has a guard that we do not exceed the
-    // maximum number FD_SETSIZE (1024) of selectable file descriptors, as
-    // noted in "man select".
+    // do not use closed or unbind sockets. It also has a guard that we do not
+    // exceed the maximum number FD_SETSIZE (1024) of selectable file
+    // descriptors, as noted in "man select".
     TRACE("Executing fdset_if_valid()")
     if (a_sock == INVALID_SOCKET)
         // This is a defined state and we return silently.
         return;
 
     if (a_sock < 3 || a_sock >= FD_SETSIZE) {
-        UPNPLIB_LOGERR << "FD_SET for select() failed with socket " << a_sock
-                       << ", that violates FD_SETSIZE.\n";
+        UPNPLIB_LOGERR << "FD_SET for select() failed with invalid socket "
+                       << a_sock
+                       << (a_sock >= 3 ? ", that violates FD_SETSIZE.\n"
+                                       : ".\n");
         return;
     }
 
-    // Check if socket is valid
-    int valopt{};
-    socklen_t len{sizeof(valopt)};
-    if (umock::sys_socket_h.getsockopt(a_sock, SOL_SOCKET, SO_ERROR,
-                                       static_cast<void*>(&valopt), &len) < 0) {
-        UPNPLIB_LOGERR << "fdset_if_valid() ignore invalid socket " << a_sock
-                       << ": " << std::strerror(errno) << ".\n";
-        return;
-    }
+    // Check if socket is valid and bound
+    try {
+        upnplib::CSocket_basic sockObj(a_sock);
+        if (sockObj.is_bound())
 
-    FD_SET(a_sock, a_set);
+            FD_SET(a_sock, a_set);
+
+        else
+            UPNPLIB_LOGERR << "MSG1002: ignore unbound socket " << a_sock
+                           << ".\n";
+
+    } catch (const std::runtime_error& e) {
+        std::clog << e.what();
+        UPNPLIB_LOGCATCH << "MSG1009: ignore invalid socket " << a_sock
+                         << ".\n";
+    }
 }
 
 static int web_server_accept([[maybe_unused]] SOCKET lsock,
@@ -478,11 +485,8 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
 #ifdef INTERNAL_WEB_SERVER
     TRACE("Executing web_server_accept()")
     if (lsock == INVALID_SOCKET || !FD_ISSET(lsock, &set)) {
-        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                   "web_server_accept(): invalid socket(%d) or set(%p).\n",
-                   lsock, static_cast<void*>(&set));
-        // UPNPLIB_LOGERR << "web_server_accept(): invalid socket(" << lsock
-        //                << ") or set(" << static_cast<void*>(&set) << ").\n";
+        UPNPLIB_LOGERR << "invalid socket(" << lsock << ") or set("
+                       << static_cast<void*>(&set) << ").\n";
         return UPNP_E_SOCKET_ERROR;
     }
 
@@ -496,24 +500,17 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
     asock =
         umock::sys_socket_h.accept(lsock, (sockaddr*)&clientAddr, &clientLen);
     if (asock == INVALID_SOCKET) {
-        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                   "web_server_accept(): Error in accept(): %s\n",
-                   std::strerror(errno));
-        // UPNPLIB_LOGERR << "web_server_accept(): Error in accept(): "
-        //                << std::strerror(errno) << ".\n";
+        UPNPLIB_LOGERR << "Error in ::accept(): " << std::strerror(errno)
+                       << ".\n";
         return UPNP_E_SOCKET_ACCEPT;
     }
 
     // Here we schedule the job to manage a UPnP request from a client.
     char buf_ntop[INET6_ADDRSTRLEN + 7];
     inet_ntop(AF_INET, &sa_in->sin_addr, buf_ntop, sizeof(buf_ntop));
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "web_server_accept(): connected to host %s:%d with socket %d\n",
-               buf_ntop, ntohs(sa_in->sin_port), asock);
-    // UPNPLIB_LOGINF << "web_server_accept(): connected to host " << buf_ntop
-    //                << ":" << ntohs(sa_in->sin_port) << " with socket " <<
-    //                asock
-    //                << "\n";
+    UPNPLIB_LOGINFO << "connected to host " << buf_ntop << ":"
+                    << ntohs(sa_in->sin_port) << " with socket " << asock
+                    << "\n";
     schedule_request_job(asock, (sockaddr*)&clientAddr);
 
     return UPNP_E_SUCCESS;
@@ -695,10 +692,8 @@ static void RunMiniServer(
             }
             // All other errors EINVAL and ENOMEM are critical and cannot
             // continue run mininserver.
-            UPNPLIB_LOGCRT << "Error in ::select(): " << std::strerror(errno)
-                           << ".\n";
-            // UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
-            //            "Error in select(): %s\n", std::strerror(errno));
+            UPNPLIB_LOGCRIT "MSG1021: Error in ::select(): "
+                << std::strerror(errno) << ".\n";
             break;
         }
 

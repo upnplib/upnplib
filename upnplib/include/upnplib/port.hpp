@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-07
+// Redistribution only with this Copyright remark. Last modified: 2023-10-19
 
 // Header file for portable definitions
 // ====================================
@@ -11,6 +11,7 @@
 // clang-format off
 
 // Check Debug settings. Exlusive NDEBUG or DEBUG must be set.
+// -----------------------------------------------------------
 #if defined(NDEBUG) && defined(DEBUG)
   #error "NDEBUG and DEBUG are defined. Only one is possible."
 #endif

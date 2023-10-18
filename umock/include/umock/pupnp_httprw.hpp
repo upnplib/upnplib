@@ -1,12 +1,12 @@
 #ifndef UMOCK_PUPNP_HTTPRW_HPP
 #define UMOCK_PUPNP_HTTPRW_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-04
+// Redistribution only with this Copyright remark. Last modified: 2023-10-16
 
 // This is a header only mocking include file. When included it is present
 // direct in the source code and can be used to mock static functions that are
 // hidden to the global context. With some returns and pointer variables this
-// include does not consume many resources.
+// include does not have a big footprint.
 
 #include "upnplib/port.hpp"
 
