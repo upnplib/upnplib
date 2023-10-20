@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-08
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -178,10 +178,10 @@ addrinfo* CAddrinfo::get_addrinfo() const {
         }
     }
     if (ret != 0)
-        throw std::runtime_error("UPnPlib ERROR 1012! Failed to get "
-                                 "address information: errid(" +
-                                 std::to_string(ret) + ")=\"" +
-                                 ::gai_strerror(ret) + "\"");
+        throw std::runtime_error(
+            UPNPLIB_LOGEXCEPT +
+            "MSG1037: Failed to get address information: errid(" +
+            std::to_string(ret) + ")=\"" + ::gai_strerror(ret) + "\"");
 
     // Different on platforms: man getsockaddr says "Specifying 0 in
     // hints.ai_socktype indicates that socket addresses of any type can be

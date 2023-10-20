@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-08
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/general.hpp>
@@ -35,9 +35,9 @@ uint16_t to_port(const std::string& a_port_str) {
         return static_cast<uint16_t>(port);
 
 throw_exit:
-    throw std::invalid_argument(
-        "UPnPlib ERROR 1004! Failed to get port number for \"" + a_port_str +
-        "\"");
+    throw std::invalid_argument(UPNPLIB_LOGEXCEPT +
+                                "MSG1033: Failed to get port number for \"" +
+                                a_port_str + "\"");
 }
 
 
@@ -62,9 +62,9 @@ std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr) {
         return std::string(addrbuf);
 
     default:
-        throw std::invalid_argument(
-            "UPnPlib ERROR 1005! Unsupported address family " +
-            std::to_string(a_sockaddr->ss_family));
+        throw std::invalid_argument(UPNPLIB_LOGEXCEPT +
+                                    "MSG1036: Unsupported address family " +
+                                    std::to_string(a_sockaddr->ss_family));
     }
 }
 

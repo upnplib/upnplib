@@ -42,7 +42,6 @@ using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
-using ::testing::StartsWith;
 using ::testing::StrictMock;
 
 using ::upnplib::CAddrinfo;
@@ -2281,7 +2280,7 @@ TEST_F(RunMiniServerFTestSuite,
         EXPECT_FALSE(
             getNumericHostRedirection(sockfd, host_port, sizeof(host_port)));
         // Get captured output
-        EXPECT_THAT(captureObj.str(), HasSubstr("UPnPlib ERROR 1001!"));
+        EXPECT_THAT(captureObj.str(), HasSubstr("] EXCEPTION MSG1001: "));
     }
 
     EXPECT_STREQ(host_port, "<no message>");
@@ -2329,7 +2328,7 @@ TEST_F(RunMiniServerFTestSuite,
 
         EXPECT_FALSE(ret_getNumericHostRedirection);
         // Get captured output
-        EXPECT_THAT(captureObj.str(), HasSubstr("UPnPlib ERROR 1024!"));
+        EXPECT_THAT(captureObj.str(), HasSubstr("] EXCEPTION MSG1024: "));
         EXPECT_STREQ(host_port, "<no message>");
     }
 }

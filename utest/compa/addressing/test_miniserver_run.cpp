@@ -389,9 +389,7 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
         fdset_if_valid(static_cast<SOCKET>(-17000), &rdSet);
 
         // Get captured output
-        EXPECT_THAT(
-            captureObj.str(),
-            HasSubstr("ERROR FD_SET for select() failed with invalid socket "));
+        EXPECT_THAT(captureObj.str(), HasSubstr("] ERROR MSG1005: "));
 
         upnplib::g_dbug = g_debug_old;
 

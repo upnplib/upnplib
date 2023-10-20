@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-10
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 #include <upnplib/general.hpp>
 #include <upnplib/socket.hpp>
@@ -18,11 +18,11 @@ bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::DoAll;
+using ::testing::HasSubstr;
 using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
-using ::testing::StartsWith;
 using ::testing::ThrowsMessage;
 
 using ::upnplib::CSocket;
@@ -88,7 +88,7 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_stream) {
     EXPECT_FALSE(sockObj.is_reuse_addr());
     EXPECT_THAT(
         [&sockObj]() { sockObj.get_addr_str(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1024!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1024: ")));
 
     CLOSE_SOCKET_P(sfd);
 }
@@ -286,23 +286,23 @@ TEST(SocketTestSuite, get_unbound_ipv4_dgram_socket_successful) {
 TEST(SocketTestSuite, try_to_instantiate_invalid_sockets) {
     EXPECT_THAT([]() { CSocket sockObj(AF_UNSPEC, SOCK_STREAM); },
                 ThrowsMessage<std::invalid_argument>(
-                    StartsWith("UPnPlib ERROR 1015!")));
+                    HasSubstr("] EXCEPTION MSG1015: ")));
 
     EXPECT_THAT([]() { CSocket sockObj(AF_UNIX, SOCK_STREAM); },
                 ThrowsMessage<std::invalid_argument>(
-                    StartsWith("UPnPlib ERROR 1015!")));
+                    HasSubstr("] EXCEPTION MSG1015: ")));
 
     EXPECT_THAT([]() { CSocket sockObj(0, SOCK_STREAM); },
                 ThrowsMessage<std::invalid_argument>(
-                    StartsWith("UPnPlib ERROR 1015!")));
+                    HasSubstr("] EXCEPTION MSG1015: ")));
 
     EXPECT_THAT([]() { CSocket sockObj(AF_INET6, SOCK_RAW); },
                 ThrowsMessage<std::invalid_argument>(
-                    StartsWith("UPnPlib ERROR 1016!")));
+                    HasSubstr("] EXCEPTION MSG1016: ")));
 
     EXPECT_THAT([]() { CSocket sockObj(AF_INET, 0); },
                 ThrowsMessage<std::invalid_argument>(
-                    StartsWith("UPnPlib ERROR 1016!")));
+                    HasSubstr("] EXCEPTION MSG1016: ")));
 }
 
 TEST(SocketTestSuite, instantiate_empty_socket) {
@@ -312,31 +312,31 @@ TEST(SocketTestSuite, instantiate_empty_socket) {
     // All getter from an INVALID_SOCKET throw an exception.
     EXPECT_THAT(
         [&sockObj]() { sockObj.get_addr_str(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1001: ")));
     EXPECT_THAT(
         [&sockObj]() { sockObj.get_port(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1031!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1031: ")));
     EXPECT_THAT(
         [&sockObj]() { sockObj.get_family(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1027!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1027: ")));
     EXPECT_THAT(
         [&sockObj]() { sockObj.get_type(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1030!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1030: ")));
     EXPECT_THAT(
         [&sockObj]() { sockObj.get_sockerr(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1011!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1011: ")));
     EXPECT_THAT(
         [&sockObj]() { sockObj.is_reuse_addr(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1013!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1013: ")));
     EXPECT_THAT(
         [&sockObj]() { sockObj.is_v6only(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1028!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1028: ")));
     EXPECT_THAT(
         [&sockObj]() { sockObj.is_bound(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1010!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1010: ")));
     EXPECT_THAT(
         [&sockObj]() { sockObj.is_listen(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1035!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1035: ")));
 }
 
 TEST(SocketTestSuite, move_socket_successful) {
@@ -413,13 +413,13 @@ TEST(SocketTestSuite, assign_socket_successful) {
 TEST(SocketTestSuite, set_wrong_arguments) {
     // Test Unit. Set wrong address family.
     EXPECT_THAT([]() { CSocket sockObj((sa_family_t)-1, SOCK_STREAM); },
-                ThrowsMessage<std::invalid_argument>(StartsWith(
-                    "UPnPlib ERROR 1015! Failed to create socket: ")));
+                ThrowsMessage<std::invalid_argument>(
+                    HasSubstr("] EXCEPTION MSG1015: ")));
 
     // Test Unit. Set wrong socket type.
     EXPECT_THAT([]() { CSocket sockObj(AF_INET6, -1); },
-                ThrowsMessage<std::invalid_argument>(StartsWith(
-                    "UPnPlib ERROR 1016! Failed to create socket: ")));
+                ThrowsMessage<std::invalid_argument>(
+                    HasSubstr("] EXCEPTION MSG1016: ")));
 }
 
 TEST(SocketTestSuite, get_addr_str_ipv6_successful) {
@@ -447,7 +447,7 @@ TEST(SocketTestSuite, get_addr_str_from_invalid_socket) {
             CSocket sockObj;
             sockObj.get_addr_str();
         },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1001: ")));
 }
 
 TEST(SocketTestSuite, get_addr_str_from_unbound_socket) {
@@ -473,7 +473,7 @@ TEST(SocketTestSuite, get_addr_str_syscall_fail) {
     // Test Unit
     EXPECT_THAT(
         [&sockObj]() { sockObj.get_addr_str(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1001!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1001: ")));
 }
 
 TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
@@ -496,7 +496,7 @@ TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
     // Test Unit
     EXPECT_THAT(
         [&sockObj]() { sockObj.get_addr_str(); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1024!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1024: ")));
 }
 
 TEST(SocketBindTestSuite, bind_ipv6_successful) {
@@ -606,7 +606,7 @@ TEST(SocketBindTestSuite, bind_with_wrong_address) {
             CSocket sockObj;
             sockObj.bind("", "8080", AI_PASSIVE);
         },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1027!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1027: ")));
 }
 
 TEST(SocketBindTestSuite, bind_two_times_different_addresses_fail) {
@@ -621,8 +621,7 @@ TEST(SocketBindTestSuite, bind_two_times_different_addresses_fail) {
     // Try to bind the socket a second time to another address.
     EXPECT_THAT(
         ([&sockObj]() { sockObj.bind("", "8081", AI_PASSIVE); }),
-        ThrowsMessage<std::runtime_error>(StartsWith(
-            "UPnPlib ERROR 1008! Failed to bind socket to an address: ")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1008: ")));
 }
 
 #if 0 // Don't enable next test permanent!
@@ -716,7 +715,7 @@ TEST(SocketBindTestSuite, bind_same_address_fails) {
     // Doing the same again will fail.
     EXPECT_THAT(
         [&sockObj]() { sockObj.bind("", "8080", AI_PASSIVE); },
-        ThrowsMessage<std::runtime_error>(StartsWith("UPnPlib ERROR 1008!")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1008: ")));
 }
 
 TEST(SocketBindTestSuite, listen_to_same_address_multiple_times) {

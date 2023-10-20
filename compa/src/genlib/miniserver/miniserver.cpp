@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-10-19
+ * Redistribution only with this Copyright remark. Last modified: 2023-10-20
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -455,10 +455,10 @@ static void fdset_if_valid(SOCKET a_sock, fd_set* a_set) {
         return;
 
     if (a_sock < 3 || a_sock >= FD_SETSIZE) {
-        UPNPLIB_LOGERR << "FD_SET for select() failed with invalid socket "
-                       << a_sock
-                       << (a_sock >= 3 ? ", that violates FD_SETSIZE.\n"
-                                       : ".\n");
+        UPNPLIB_LOGERR
+            << "MSG1005: FD_SET for select() failed with invalid socket "
+            << a_sock
+            << (a_sock >= 3 ? ", that violates FD_SETSIZE.\n" : ".\n");
         return;
     }
 
@@ -470,12 +470,12 @@ static void fdset_if_valid(SOCKET a_sock, fd_set* a_set) {
             FD_SET(a_sock, a_set);
 
         else
-            UPNPLIB_LOGERR << "MSG1002: ignore unbound socket " << a_sock
+            UPNPLIB_LOGERR << "MSG1002: Ignore unbound socket " << a_sock
                            << ".\n";
 
     } catch (const std::runtime_error& e) {
         std::clog << e.what();
-        UPNPLIB_LOGCATCH << "MSG1009: ignore invalid socket " << a_sock
+        UPNPLIB_LOGCATCH << "MSG1009: Ignore invalid socket " << a_sock
                          << ".\n";
     }
 }
@@ -485,7 +485,7 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
 #ifdef INTERNAL_WEB_SERVER
     TRACE("Executing web_server_accept()")
     if (lsock == INVALID_SOCKET || !FD_ISSET(lsock, &set)) {
-        UPNPLIB_LOGERR << "invalid socket(" << lsock << ") or set("
+        UPNPLIB_LOGERR << "MSG1012: Invalid socket(" << lsock << ") or set("
                        << static_cast<void*>(&set) << ").\n";
         return UPNP_E_SOCKET_ERROR;
     }
@@ -500,15 +500,15 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
     asock =
         umock::sys_socket_h.accept(lsock, (sockaddr*)&clientAddr, &clientLen);
     if (asock == INVALID_SOCKET) {
-        UPNPLIB_LOGERR << "Error in ::accept(): " << std::strerror(errno)
-                       << ".\n";
+        UPNPLIB_LOGERR << "MSG1022: Error in ::accept(): "
+                       << std::strerror(errno) << ".\n";
         return UPNP_E_SOCKET_ACCEPT;
     }
 
     // Here we schedule the job to manage a UPnP request from a client.
     char buf_ntop[INET6_ADDRSTRLEN + 7];
     inet_ntop(AF_INET, &sa_in->sin_addr, buf_ntop, sizeof(buf_ntop));
-    UPNPLIB_LOGINFO << "connected to host " << buf_ntop << ":"
+    UPNPLIB_LOGINFO << "MSG1023: Connected to host " << buf_ntop << ":"
                     << ntohs(sa_in->sin_port) << " with socket " << asock
                     << "\n";
     schedule_request_job(asock, (sockaddr*)&clientAddr);

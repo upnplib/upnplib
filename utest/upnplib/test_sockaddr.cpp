@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-18
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 #include <upnplib/general.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -11,6 +11,7 @@ namespace utest {
 bool old_code{false}; // Managed in gtest_main.inc
 
 using ::testing::EndsWith;
+using ::testing::HasSubstr;
 using ::testing::ThrowsMessage;
 
 using ::upnplib::CSocket;
@@ -176,10 +177,9 @@ TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
     EXPECT_EQ(saddr.get_port(), 50022);
 
     // Check that a failing call does not modify old settings.
-    EXPECT_THAT(
-        [&saddr]() { saddr = "50x23"; },
-        ThrowsMessage<std::invalid_argument>(
-            "UPnPlib ERROR 1004! Failed to get port number for \"50x23\""));
+    EXPECT_THAT([&saddr]() { saddr = "50x23"; },
+                ThrowsMessage<std::invalid_argument>(
+                    HasSubstr("] EXCEPTION MSG1033: ")));
     EXPECT_EQ(saddr.ss.ss_family, AF_INET);
     EXPECT_EQ(saddr.get_addr_str(), "192.168.47.48");
     EXPECT_EQ(saddr.get_port(), 50022);
@@ -321,52 +321,53 @@ TEST(ToPortTestSuite, str_to_port) {
 
     EXPECT_THAT(
         []() { to_port("000000"); },
-        ThrowsMessage<std::invalid_argument>(
-            "UPnPlib ERROR 1004! Failed to get port number for \"000000\""));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "] EXCEPTION MSG1033: Failed to get port number for \"000000\"")));
 
     EXPECT_THAT(
         []() { to_port("65536"); },
-        ThrowsMessage<std::invalid_argument>(
-            "UPnPlib ERROR 1004! Failed to get port number for \"65536\""));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "] EXCEPTION MSG1033: Failed to get port number for \"65536\"")));
 
     EXPECT_THAT(
         []() { to_port("-1"); },
-        ThrowsMessage<std::invalid_argument>(
-            "UPnPlib ERROR 1004! Failed to get port number for \"-1\""));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "] EXCEPTION MSG1033: Failed to get port number for \"-1\"")));
 
     EXPECT_THAT(
         []() { to_port("123456"); },
-        ThrowsMessage<std::invalid_argument>(
-            "UPnPlib ERROR 1004! Failed to get port number for \"123456\""));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "] EXCEPTION MSG1033: Failed to get port number for \"123456\"")));
 
-    EXPECT_THAT([]() { to_port(" "); },
-                ThrowsMessage<std::invalid_argument>(
-                    "UPnPlib ERROR 1004! Failed to get port number for \" \""));
+    EXPECT_THAT(
+        []() { to_port(" "); },
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "] EXCEPTION MSG1033: Failed to get port number for \" \"")));
 
     EXPECT_THAT(
         []() { to_port(" 123"); },
-        ThrowsMessage<std::invalid_argument>(
-            "UPnPlib ERROR 1004! Failed to get port number for \" 123\""));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "] EXCEPTION MSG1033: Failed to get port number for \" 123\"")));
 
     EXPECT_THAT(
         []() { to_port("123 "); },
-        ThrowsMessage<std::invalid_argument>(
-            "UPnPlib ERROR 1004! Failed to get port number for \"123 \""));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "] EXCEPTION MSG1033: Failed to get port number for \"123 \"")));
 
     EXPECT_THAT(
         []() { to_port("123.4"); },
-        ThrowsMessage<std::invalid_argument>(
-            "UPnPlib ERROR 1004! Failed to get port number for \"123.4\""));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "] EXCEPTION MSG1033: Failed to get port number for \"123.4\"")));
 
     EXPECT_THAT(
         []() { to_port(":1234"); },
-        ThrowsMessage<std::invalid_argument>(
-            "UPnPlib ERROR 1004! Failed to get port number for \":1234\""));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "] EXCEPTION MSG1033: Failed to get port number for \":1234\"")));
 
     EXPECT_THAT(
         []() { to_port("12x34"); },
-        ThrowsMessage<std::invalid_argument>(
-            "UPnPlib ERROR 1004! Failed to get port number for \"12x34\""));
+        ThrowsMessage<std::invalid_argument>(HasSubstr(
+            "] EXCEPTION MSG1033: Failed to get port number for \"12x34\"")));
 }
 
 TEST(ToAddrStrTestSuite, sockaddr_to_address_string) {
@@ -391,8 +392,8 @@ TEST(ToAddrStrTestSuite, sockaddr_to_address_string) {
 
     saddr.ss.ss_family = AF_UNIX;
     EXPECT_THAT([&saddr]() { to_addr_str(&saddr.ss); },
-                ThrowsMessage<std::invalid_argument>(
-                    "UPnPlib ERROR 1005! Unsupported address family 1"));
+                ThrowsMessage<std::invalid_argument>(HasSubstr(
+                    "] EXCEPTION MSG1036: Unsupported address family 1")));
 }
 
 } // namespace utest
