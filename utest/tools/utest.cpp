@@ -1,17 +1,17 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-30
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 // Tools and helper classes to manage gtests
 // =========================================
 
 #include <upnplib/port.hpp>
 #include <upnplib/port_sock.hpp>
-#include <upnplib/gtest.hpp>
+#include <utest/utest.hpp>
 
 #include <cstring>
 #include <fcntl.h> // Obtain O_* constant definitions
 
-namespace upnplib::testing {
+namespace utest {
 
 // class CaptureStdOutErr definition
 // ----------------------------------
@@ -237,4 +237,4 @@ class CRedirectClog {
 };
 #endif
 
-} // namespace upnplib::testing
+} // namespace utest

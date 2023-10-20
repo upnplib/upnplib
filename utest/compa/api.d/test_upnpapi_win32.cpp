@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-03
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -15,10 +15,10 @@
 #include <upnplib/port.hpp>
 #include <umock/iphlpapi_mock.hpp>
 
-#include <upnplib/gtest.hpp>
+#include <utest/utest.hpp>
 
 
-namespace compa {
+namespace utest {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
 bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
@@ -26,8 +26,6 @@ using ::testing::_;
 using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SetArgPointee;
-
-using ::upnplib::testing::CaptureStdOutErr;
 
 using ::upnplib::CNetIf4;
 using ::upnplib::errStrEx;
@@ -231,7 +229,7 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
     EXPECT_EQ(UpnpSdkInit, 0);
 }
 
-} // namespace compa
+} // namespace utest
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

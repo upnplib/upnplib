@@ -1,7 +1,8 @@
 Next steps to do:
 * Manage verbose messages with runtime switching.
-* Improve gtests for fdset_if_valid().
 * Rework miniserver.cpp and test_miniserver.cpp with verbose messages.
+* Move utest tools to namespace utest.
+* Improve gtests for fdset_if_valid().
 * Continue moving RunMiniserver tests from test_miniserver.cpp to test_miniservver_run.cpp.
 * Rework test_sock.cp to work with changed sys_socket mocking.
 * Rework test_httpreadwrite.cpp

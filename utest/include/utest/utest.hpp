@@ -1,7 +1,7 @@
-#ifndef UPNPLIB_GTEST_HPP
-#define UPNPLIB_GTEST_HPP
+#ifndef UPNPLIB_UTEST_HPP
+#define UPNPLIB_UTEST_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-07
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 #include <upnplib/visibility.hpp>
 
@@ -15,7 +15,7 @@
 #define CRES "\033[0m"        // reset
 
 
-namespace upnplib::testing {
+namespace utest {
 
 //###############################
 //           Helper             #
@@ -97,13 +97,13 @@ class UPNPLIB_API CaptureStdOutErr {
 
 // function to get the modification time of a file
 // -----------------------------------------------
-//     using ::upnplib::testing::file_mod_time;
+//     using ::utest::file_mod_time;
 UPNPLIB_API time_t file_mod_time(const std::string& a_pathname);
 
 
 // function to test if file descriptors are closed
 // -----------------------------------------------
-//     using ::upnplib::testing::check_closed_fds;
+//     using ::utest::check_closed_fds;
 UPNPLIB_API void check_closed_fds(int a_from_fd, int a_to_fd);
 
 
@@ -122,7 +122,7 @@ UPNPLIB_API void check_closed_fds(int a_from_fd, int a_to_fd);
 // ECMAScript syntax: https://cplusplus.com/reference/regex/ECMAScript/
 //
 /* Example:
-    using ::upnplib::testing::ContainsStdRegex;
+    using ::utest::ContainsStdRegex;
 
     EXPECT_THAT(capturedStderr,
                 ContainsStdRegex(" UPNP-MSER-1: .* invalid socket\\(-1\\) "));
@@ -158,7 +158,7 @@ MATCHER_P(PointeeVoidToConstInt, expected, "") {
 // ACTION_P(SetArg3PtrIntValue, value) { *static_cast<int*>(arg3) = value; }
 //
 /* Example:
-    using ::upnplib::testing::SetArgPtrIntValue
+    using ::utest::SetArgPtrIntValue
 
     EXPECT_CALL(mock_sys_socketObj, getsockopt(sockfd, _, _, _, _))
         .WillOnce(DoAll(SetArgPtrIntValue<3>(1), Return(0)));
@@ -175,7 +175,7 @@ ACTION_TEMPLATE(SetArgPtrIntValue, HAS_1_TEMPLATE_PARAMS(int, k),
 // simple version: ACTION_P(StrCpyToArg0, str) { strcpy(arg0, str); }
 //
 /* Example:
-    using ::upnplib::testing::StrCpyToArg
+    using ::utest::StrCpyToArg
 
     EXPECT_CALL( mocked_sys_socketObj,
         recvfrom(sockfd, _, _, _, _, _))
@@ -191,6 +191,6 @@ ACTION_TEMPLATE(StrnCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
     std::strncpy(static_cast<char*>(std::get<k>(args)), str, (size_t)len);
 }
 
-} // namespace upnplib::testing
+} // namespace utest
 
-#endif // UPNPLIB_GTEST_HPP
+#endif // UPNPLIB_UTEST_HPP

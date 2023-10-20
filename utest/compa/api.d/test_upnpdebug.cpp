@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpdebug.cpp>
@@ -11,8 +11,8 @@ FILE*& filed{fp}; // Other alias for variable fp
 #include <upnplib/port.hpp>
 #include <upnplib/general.hpp>
 #include <upnplib/upnptools.hpp>
-#include <upnplib/gtest.hpp>
 
+#include <utest/utest.hpp>
 #include <umock/pthread_mock.hpp>
 #include <umock/stdio_mock.hpp>
 
@@ -27,9 +27,6 @@ using ::testing::StrEq;
 using ::testing::StrictMock;
 
 using ::upnplib::errStrEx;
-
-using ::upnplib::testing::CaptureStdOutErr;
-using ::upnplib::testing::MatchesStdRegex;
 
 
 // Interface for the upnpdebug module

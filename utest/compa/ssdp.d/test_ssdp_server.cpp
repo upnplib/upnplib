@@ -1,29 +1,33 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-18
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
 
-#include "pupnp/upnp/src/ssdp/ssdp_server.cpp"
+#include <pupnp/upnp/src/ssdp/ssdp_server.cpp>
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #define NS
 #else
 #define NS ::compa
-#include "compa/src/ssdp/ssdp_server.cpp"
+#include <compa/src/ssdp/ssdp_server.cpp>
 #endif
 
-#include "upnp.hpp" // for UPNP_E_* constants
+#include <upnp.hpp> // for UPNP_E_* constants
 
-#include "upnplib/general.hpp"
-#include "upnplib/upnptools.hpp" // for errStrEx
-#include "upnplib/gtest.hpp"
+#include <upnplib/general.hpp>
+#include <upnplib/upnptools.hpp> // for errStrEx
 
-#include "gmock/gmock.h"
-#include "umock/sys_socket_mock.hpp"
-#include "umock/pupnp_sock_mock.hpp"
-#include "umock/unistd_mock.hpp"
+#include <utest/utest.hpp>
+#include <umock/sys_socket_mock.hpp>
+#include <umock/pupnp_sock_mock.hpp>
+#include <umock/unistd_mock.hpp>
 
 #include <string>
+
+
+namespace utest {
+bool old_code{false}; // Managed in gtest_main.inc
+bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::upnplib::errStrEx;
 
@@ -31,11 +35,6 @@ using ::testing::_;
 using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetErrnoAndReturn;
-
-
-namespace utest {
-bool old_code{false}; // Managed in gtest_main.inc
-bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 
 // The ssdp_server call stack

@@ -1,15 +1,15 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-31
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 // Tools and helper classes to manage gtests
 // =========================================
 
-#include "upnplib/gtest_tools_unix.hpp"
+#include <utest/utest_unix.hpp>
 
 #include <arpa/inet.h>
 #include <net/if.h>
 
-namespace upnplib {
+namespace utest {
 
 //
 // CIfaddr4
@@ -98,4 +98,4 @@ void CIfaddr4::chain_next_addr(struct ifaddrs* a_ptrNextAddr) {
     m_ifaddr.ifa_next = a_ptrNextAddr;
 }
 
-} // namespace upnplib
+} // namespace utest

@@ -1,18 +1,14 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-04
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 #include <upnplib/port.hpp> // needed for _MSC_VER
 #include <upnplib/sockaddr.hpp>
-#include <upnplib/gtest.hpp>
+#include <utest/utest.hpp>
+
+namespace utest {
 
 using ::testing::ThrowsMessage;
 
-using ::upnplib::testing::CaptureStdOutErr;
-using ::upnplib::testing::check_closed_fds;
-using ::upnplib::testing::file_mod_time;
-using ::upnplib::testing::MatchesStdRegex;
-
-namespace upnplib {
 
 TEST(CaptureStdOutErrTestSuite, capture_stderr_message) {
     CaptureStdOutErr captErrObj(STDERR_FILENO);
@@ -219,7 +215,7 @@ TEST(DISABLED_ClosedFdsTestSuite, check_closed_fds_with_open_file) {
                     "non-socket"));
 }
 
-} // namespace upnplib
+} // namespace utest
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

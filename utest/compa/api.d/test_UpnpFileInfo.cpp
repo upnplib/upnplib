@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-18
 
 #include <UpnpFileInfo.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -11,8 +11,8 @@
 #define NS
 #endif
 
-#include <upnplib/gtest.hpp>
-#include <gtest/gtest.h>
+#include <utest/utest.hpp>
+
 
 // This structure is completely hidden by typedef magic. It is only coppied
 // here for internal testing. Usually you have to use UpnpFileInfo_new() to get

@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpapi.cpp>
@@ -15,9 +15,9 @@
 
 #include <upnplib/upnptools.hpp> // For upnplib only
 #include <upnplib/general.hpp>
-#include <upnplib/gtest.hpp>
 #include <upnplib/sockaddr.hpp>
 
+#include <utest/utest.hpp>
 #include <umock/sys_socket_mock.hpp>
 #include <umock/pupnp_sock_mock.hpp>
 #include <umock/winsock2_mock.hpp>
@@ -29,7 +29,6 @@ bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
 using ::upnplib::errStrEx;
 using ::upnplib::SSockaddr_storage;
-using ::upnplib::testing::MatchesStdRegex;
 
 using ::pupnp::CLogging;
 

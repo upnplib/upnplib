@@ -1,14 +1,14 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-17
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 // Implementation of the NetIf classes
 // ===================================
 
-#include "upnplib/gtest_tools_win32.hpp"
+#include <utest/utest_win32.hpp>
 #include <ws2tcpip.h>
 #include <string>
 
-namespace upnplib {
+namespace utest {
 
 CNetIf4::CNetIf4() {
     // set ip4 unicast address structures
@@ -114,4 +114,4 @@ void CNetIf4::chain_next(::PIP_ADAPTER_ADDRESSES a_ptrNextAddr) {
     m_adapts.Next = a_ptrNextAddr;
 }
 
-} // namespace upnplib
+} // namespace utest

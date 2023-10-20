@@ -3,8 +3,7 @@
 
 #include <upnplib/port.hpp>
 #include <upnplib/general.hpp>
-#include <upnplib/gtest.hpp>
-// #include <utest/utest.hpp>
+#include <utest/utest.hpp>
 
 
 namespace utest {
@@ -14,9 +13,6 @@ bool old_code{true}; // Managed in gtest_main.inc
 using ::upnplib::g_dbug;
 
 using ::testing::HasSubstr;
-
-using ::upnplib::testing::CaptureStdOutErr;
-using ::upnplib::testing::MatchesStdRegex;
 
 
 class CSave_g_debug {

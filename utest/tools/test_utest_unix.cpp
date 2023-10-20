@@ -1,13 +1,13 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-08-12
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
-#include "upnplib/gtest_tools_unix.hpp"
-#include "gtest/gtest.h"
+#include <utest/utest_unix.hpp>
+#include <gtest/gtest.h>
 
 #include <net/if.h>
 #include <arpa/inet.h>
 
-namespace upnplib {
+namespace utest {
 
 TEST(ToolsTestSuite, initialize_interface_addresses) {
     struct ifaddrs* ifaddr{};
@@ -74,7 +74,7 @@ TEST(ToolsTestSuite, initialize_interface_addresses) {
     EXPECT_ANY_THROW(ifaddr4Obj.set("if2v4", "10.168.168.47/"));
 }
 
-} // namespace upnplib
+} // namespace utest
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

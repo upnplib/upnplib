@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -10,9 +10,9 @@
 #endif
 
 #include <upnplib/general.hpp>
-#include <upnplib/gtest.hpp>
 #include <upnplib/sockaddr.hpp>
 
+#include <utest/utest.hpp>
 #include <umock/sys_socket_mock.hpp>
 #include <umock/pupnp_sock_mock.hpp>
 #include <umock/winsock2_mock.hpp>
@@ -29,8 +29,6 @@ using ::testing::Return;
 using ::testing::SetErrnoAndReturn;
 
 using ::upnplib::SSockaddr_storage;
-
-using ::upnplib::testing::SetArgPtrIntValue;
 
 
 // ######################################

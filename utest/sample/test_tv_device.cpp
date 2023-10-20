@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 // -----------------------------------------------------------------------------
 // This testsuite starts the sample TV Device with general command line
@@ -18,10 +18,10 @@
 #include <pupnp/upnpdebug.hpp>
 
 #include <upnplib/upnptools.hpp>
-#include <upnplib/gtest_tools_unix.hpp>
 #include <upnplib/cmake_vars.hpp>
 #include <upnplib/sockaddr.hpp>
 
+#include <utest/utest_unix.hpp>
 #include <umock/ifaddrs_mock.hpp>
 #include <umock/net_if_mock.hpp>
 #include <umock/sys_socket_mock.hpp>
@@ -102,7 +102,8 @@ using ::testing::SetErrnoAndReturn;
 
 using ::pupnp::CLogging;
 
-using ::upnplib::CIfaddr4;
+using ::utest::CIfaddr4;
+
 using ::upnplib::errStrEx;
 using ::upnplib::SSockaddr_storage;
 

@@ -1,14 +1,14 @@
-#ifndef UPNP_TOOLS_WIN_HPP
-#define UPNP_TOOLS_WIN_HPP
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-17
+#ifndef UTEST_TOOLS_WIN32_HPP
+#define UTEST_TOOLS_WIN32_HPP
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
-#include "upnplib/visibility.hpp" // for UPNPLIB_API
+#include <upnplib/visibility.hpp> // for UPNPLIB_API
 #include <winsock2.h>
 #include <iphlpapi.h> // must be after <winsock2.h>
 #include <iostream>
 
-namespace upnplib {
+namespace utest {
 
 class UPNPLIB_API CNetIf4
 // Object to manage and fill a network adapter structure. This is needed for
@@ -78,6 +78,6 @@ class UPNPLIB_API CNetIf4
         L"Mocked Adapter for Unit testing"};
 };
 
-} // namespace upnplib
+} // namespace utest
 
-#endif // UPNP_TOOLS_WIN_HPP
+#endif // UTEST_TOOLS_WIN32_HPP

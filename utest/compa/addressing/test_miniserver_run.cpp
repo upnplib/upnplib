@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-19
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -14,9 +14,9 @@
 #endif
 
 #include <upnplib/general.hpp>
-#include <upnplib/gtest.hpp>
 #include <upnplib/sockaddr.hpp>
 
+#include <utest/utest.hpp>
 #include <umock/sys_socket_mock.hpp>
 
 
@@ -36,9 +36,6 @@ using ::testing::SetErrnoAndReturn;
 using ::testing::StrictMock;
 
 using ::upnplib::SSockaddr_storage;
-
-using ::upnplib::testing::CaptureStdOutErr;
-using ::upnplib::testing::StrCpyToArg;
 
 
 // Miniserver Run TestSuite

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-19
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -20,11 +20,11 @@
 #include <upnplib/port.hpp>
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/socket.hpp>
-#include <upnplib/gtest.hpp>
 #include <upnplib/addrinfo.hpp>
 
 #include <pupnp/upnpdebug.hpp>
 
+#include <utest/utest.hpp>
 #include <umock/sys_socket_mock.hpp>
 
 
@@ -49,11 +49,6 @@ using ::upnplib::CAddrinfo;
 using ::upnplib::CSocket_basic;
 using ::upnplib::errStrEx;
 using ::upnplib::SSockaddr_storage;
-
-using ::upnplib::testing::CaptureStdOutErr;
-using ::upnplib::testing::ContainsStdRegex;
-using ::upnplib::testing::StrCpyToArg;
-using ::upnplib::testing::StrnCpyToArg;
 
 using ::pupnp::CLogging;
 

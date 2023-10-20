@@ -1,15 +1,15 @@
-#ifndef UPNP_IFADDRS_UIX_HPP
-#define UPNP_IFADDRS_UIX_HPP
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+#ifndef UTEST_TOOLS_UNIX_HPP
+#define UTEST_TOOLS_UNIX_HPP
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
-#include "upnplib/visibility.hpp"
+#include <upnplib/visibility.hpp>
 #include <ifaddrs.h>
 #include <netinet/in.h> // for sockaddr_in
 #include <string>
 #include <vector>
 
-namespace upnplib {
+namespace utest {
 
 class UPNPLIB_API CIfaddr4
 // Tool to manage and fill a socket address structure. This is needed
@@ -45,6 +45,6 @@ class UPNPLIB_API CIfaddr4
     // clang-format on
 };
 
-} // namespace upnplib
+} // namespace utest
 
-#endif // UPNP_IFADDRS_UIX_HPP
+#endif // UTEST_TOOLS_UNIX_HPP

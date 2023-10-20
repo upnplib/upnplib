@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-18
 
 #include <UpnpString.hpp>
 #if defined UPNPLIB_WITH_NATIVE_PUPNP && !defined PUPNP_UPNPSTRING_HPP
@@ -15,7 +15,7 @@
 #define NS
 #endif
 
-#include <upnplib/gtest.hpp>
+#include <utest/utest.hpp>
 #include <umock/stdlib_mock.hpp>
 #include <umock/stringh_mock.hpp>
 

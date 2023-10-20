@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-18
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/q/76548580/5014688
@@ -14,8 +14,9 @@
 #endif
 
 #include <upnplib/upnptools.hpp>
-#include <upnplib/gtest.hpp>
 #include <upnplib/general.hpp>
+
+#include <utest/utest.hpp>
 
 #include <umock/unistd_mock.hpp>
 #include <umock/sys_socket_mock.hpp>

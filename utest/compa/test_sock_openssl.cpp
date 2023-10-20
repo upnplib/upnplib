@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -16,7 +16,6 @@
 
 #include <upnplib/port.hpp>
 #include <upnplib/general.hpp>
-#include <upnplib/gtest.hpp>
 #include "upnplib/upnptools.hpp" // for errStrEx
 
 #include <openssl/err.h>
@@ -24,18 +23,18 @@
 #include <openssl/applink.c>
 #endif
 
-#include <gmock/gmock.h>
-
-using ::testing::ExitedWithCode;
-
-using upnplib::errStrEx;
-using upnplib::testing::CaptureStdOutErr;
+#include <utest/utest.hpp>
 
 UPNPLIB_EXTERN SSL_CTX* gSslCtx;
 
 
 namespace utest {
 bool old_code{false}; // Managed in upnplib_gtest_main.inc
+
+using ::testing::ExitedWithCode;
+
+using upnplib::errStrEx;
+
 
 // Helper Classes
 // ==============

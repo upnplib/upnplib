@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -13,8 +13,8 @@
 
 #include <upnplib/general.hpp>
 #include <upnplib/upnptools.hpp>
-#include <upnplib/gtest.hpp>
 
+#include <utest/utest.hpp>
 #include <umock/sysinfo_mock.hpp>
 #include <umock/sys_socket_mock.hpp>
 #include <umock/stdio_mock.hpp>
@@ -37,12 +37,6 @@ using ::testing::StrictMock;
 using ::pupnp::CLogging;
 
 using ::upnplib::errStrEx;
-
-using ::upnplib::testing::ContainsStdRegex;
-using ::upnplib::testing::MatchesStdRegex;
-using ::upnplib::testing::PointeeVoidToConstInt;
-using ::upnplib::testing::SetArgPtrIntValue;
-using ::upnplib::testing::StrCpyToArg;
 
 /*
 clang-format off

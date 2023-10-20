@@ -1,13 +1,14 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-17
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-10-20
 
-#include "upnplib/gtest_tools_win32.hpp"
+#include <utest/utest_win32.hpp>
 #include <ws2tcpip.h>
-#include "gmock/gmock.h"
+#include <gmock/gmock.h>
+
+namespace utest {
 
 using ::testing::ElementsAre;
 
-namespace upnplib {
 
 class Cmalloc_adapts {
     // This is a wrapper class to use traditional malloc for an adapter address
@@ -344,7 +345,7 @@ TEST(NetIfs4ChainTestSuite, add_fake_interface_to_chain) {
                  L"Mocked Adapter for Unit testing");
 }
 
-} // namespace upnplib
+} // namespace utest
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
