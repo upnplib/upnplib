@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-22
+// Redistribution only with this Copyright remark. Last modified: 2023-10-23
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -15,6 +15,9 @@
 
 #include <upnplib/general.hpp>
 #include <upnplib/sockaddr.hpp>
+#include <upnplib/addrinfo.hpp>
+
+#include <pupnp/upnpdebug.hpp>
 
 #include <utest/utest.hpp>
 #include <umock/sys_socket_mock.hpp>
@@ -35,7 +38,10 @@ using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
 using ::testing::StrictMock;
 
+using ::upnplib::g_dbug;
 using ::upnplib::SSockaddr_storage;
+
+using ::pupnp::CLogging;
 
 
 // Miniserver Run TestSuite
@@ -43,8 +49,6 @@ using ::upnplib::SSockaddr_storage;
 class MiniServerRunFTestSuite : public ::testing::Test {
     // This is a fixture to provide mocking of sys_socket only.
   protected:
-    MiniServerSockArray* m_minisock{};
-
     // clang-format off
     // Instantiate mocking objects.
     StrictMock<umock::Sys_socketMock> m_sys_socketObj;
@@ -66,6 +70,8 @@ class RunMiniserverFuncFTestSuite : public MiniServerRunFTestSuite {
     // threadpool and a MiniServerSockArray on the heap to call the
     // RunMiniserver() function.
   protected:
+    MiniServerSockArray* m_minisock{};
+
     RunMiniserverFuncFTestSuite() {
         TRACE2(this, " Construct RunMiniserverFuncFTestSuite()")
         // nullptr means to use default attributes.
@@ -295,7 +301,7 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
 
     } else {
 
-        if (upnplib::g_dbug)
+        if (g_dbug)
             std::cout << captureObj.str();
         EXPECT_THAT(captureObj.str(), HasSubstr("] CRITICAL MSG1021: "));
     }
@@ -342,7 +348,7 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
     ASSERT_FALSE(FD_ISSET(static_cast<SOCKET>(0), &rdSet));
 
     // Capture output to stderr
-    bool dbug_old = upnplib::g_dbug;
+    bool dbug_old = g_dbug;
     CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
 
     if (old_code) {
@@ -355,9 +361,9 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
         // detected ***: terminated"
         // FD_ZERO(&rdSet);
         // captureObj.start();
-        // upnplib::g_dbug = true;
+        // g_dbug = true;
         // fdset_if_valid(static_cast<SOCKET>(-17000), &rdSet);
-        // upnplib::g_dbug = dbug_old;
+        // g_dbug = dbug_old;
         // EXPECT_EQ(captureObj.str(), ""); // Wrong!
 
         // Test Unit, fd 0 to 2 are not valid network sockets and should not
@@ -379,9 +385,9 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
         // ***: terminated"
         // FD_ZERO(&rdSet);
         // captureObj.start();
-        // upnplib::g_dbug = true;
+        // g_dbug = true;
         // fdset_if_valid(static_cast<SOCKET>(FD_SETSIZE), &rdSet);
-        // upnplib::g_dbug = dbug_old;
+        // g_dbug = dbug_old;
         // EXPECT_EQ(captureObj.str(), ""); // Wrong!
 
     } else { // if (old_code)
@@ -389,12 +395,12 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
         // Test Unit
         FD_ZERO(&rdSet);
         captureObj.start();
-        upnplib::g_dbug = true;
+        g_dbug = true;
         fdset_if_valid(static_cast<SOCKET>(-17000), &rdSet);
-        upnplib::g_dbug = dbug_old;
+        g_dbug = dbug_old;
 
         // Get captured output
-        if (upnplib::g_dbug)
+        if (g_dbug)
             std::cout << captureObj.str();
         EXPECT_THAT(captureObj.str(), HasSubstr("] ERROR MSG1005: "));
 
@@ -410,12 +416,12 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
         EXPECT_FALSE(FD_ISSET(static_cast<SOCKET>(2), &rdSet));
         FD_ZERO(&rdSet);
         captureObj.start();
-        upnplib::g_dbug = true;
+        g_dbug = true;
         fdset_if_valid(static_cast<SOCKET>(FD_SETSIZE), &rdSet);
-        upnplib::g_dbug = dbug_old;
+        g_dbug = dbug_old;
 
         // Get captured output
-        if (upnplib::g_dbug)
+        if (g_dbug)
             std::cout << captureObj.str();
         EXPECT_THAT(captureObj.str(),
                     HasSubstr("] ERROR MSG1005: Prohibited socket 1024"));
@@ -495,6 +501,221 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails_with_unbind_socket) {
         EXPECT_EQ(FD_ISSET(sockfd, &rdSet), 0)
             << "Socket file descriptor " << sockfd
             << " should not be added to the FD SET for ::select().";
+    }
+}
+
+TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_successful) {
+    // The stop socket is got with 'get_miniserver_stopsock()' and uses a
+    // datagram with exactly "ShutDown" on AF_INET to 127.0.0.1.
+    constexpr char shutdown_str[]{"ShutDown"};
+    // This should be the buffer size in the tested code. The test will fail if
+    // it does not match so there is no danger to break destination buffer size.
+    constexpr SIZEP_T expected_destbuflen{sizeof(shutdown_str)};
+
+    constexpr SOCKET sockfd{umock::sfd_base + 5};
+    SSockaddr_storage ssObj;
+    ssObj = "127.0.0.1:50015";
+
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+    FD_SET(sockfd, &rdSet);
+
+    // Mock system functions
+    // expected_destbuflen is important here to avoid buffer limit overwrite.
+    EXPECT_CALL(m_sys_socketObj,
+                recvfrom(sockfd, _, Ge(expected_destbuflen), 0, _,
+                         Pointee(static_cast<socklen_t>(sizeof(ssObj.ss)))))
+        .WillOnce(
+            DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
+                  SetArgPointee<4>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                  Return(expected_destbuflen)));
+
+    // Test Unit
+    // Returns 1 (true) if successfully received "ShutDown" from stopSock
+    EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 1);
+}
+
+TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_not_selected) {
+    constexpr SOCKET sockfd{umock::sfd_base + 29};
+
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+    // Socket not selected to be received
+    // FD_SET(sockfd, &rdSet);
+    // This should not call recvfrom() and is guarded by StrictMock<>.
+
+    // Capture output to stderr
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    bool dbug_old = g_dbug;
+
+    // Test Unit should silently nothing have received.
+    captureObj.start();
+    g_dbug = true;
+    EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 0);
+    g_dbug = dbug_old;
+
+    EXPECT_EQ(captureObj.str(), "");
+}
+
+TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_receiving_fails) {
+    constexpr SOCKET sockfd{umock::sfd_base + 28};
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+    FD_SET(sockfd, &rdSet);
+
+    // Mock system functions
+    EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, _, _, _, _))
+        .WillOnce(SetErrnoAndReturn(EINVAL, SOCKET_ERROR));
+
+    // Test Unit
+    // Here we have a critical error. The Unit should return 'true' to stop the
+    // miniserver.
+    EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 1);
+}
+
+TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_no_bytes_received) {
+    if (old_code && g_dbug)
+        CLogging static loggingObj; // Output only with build type DEBUG.
+
+    constexpr char shutdown_str[]{""};
+    constexpr SIZEP_T bufsizeof_ShutDown_str{9};
+    constexpr SOCKET sockfd{umock::sfd_base + 30};
+    SSockaddr_storage ssObj;
+    ssObj = "127.0.0.1:50015";
+
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+    FD_SET(sockfd, &rdSet);
+
+    // Mock system functions
+    EXPECT_CALL(m_sys_socketObj,
+                recvfrom(sockfd, _, Ge(bufsizeof_ShutDown_str), 0, _,
+                         Pointee(static_cast<socklen_t>(sizeof(ssObj.ss)))))
+        .WillOnce(
+            DoAll(StrCpyToArg<1>(shutdown_str),
+                  SetArgPointee<4>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                  Return(0)));
+
+    // Test Unit
+    // Returns 1 (true) if successfully received "ShutDown" from stopSock
+    if (old_code) {
+        std::cout
+            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << ": Receiving a datagram with 0 bytes length should fail.\n";
+        EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 1); // Wrong!
+
+    } else {
+
+        EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 0);
+    }
+}
+
+TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_wrong_stop_message) {
+    if (old_code && g_dbug)
+        CLogging static loggingObj; // Output only with build type DEBUG.
+
+    constexpr char shutdown_str[]{"Nothings"};
+    // This should be the buffer size in the tested code. The test will fail if
+    // it does not match so there is no danger to break buffer size.
+    constexpr SIZEP_T expected_destbuflen{sizeof(shutdown_str)};
+
+    constexpr SOCKET sockfd{umock::sfd_base + 31};
+    SSockaddr_storage ssObj;
+    ssObj = "127.0.0.1:50017";
+
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+    FD_SET(sockfd, &rdSet);
+
+    // Mock system functions
+    // expected_destbuflen is important here to avoid buffer limit overwrite.
+    EXPECT_CALL(m_sys_socketObj,
+                recvfrom(sockfd, _, Ge(expected_destbuflen), 0, _,
+                         Pointee(static_cast<socklen_t>(sizeof(ssObj.ss)))))
+        .WillOnce(
+            DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
+                  SetArgPointee<4>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                  Return(expected_destbuflen)));
+
+    // Test Unit
+    EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 0);
+}
+
+TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_from_wrong_address) {
+    if (old_code && g_dbug)
+        CLogging static loggingObj; // Output only with build type DEBUG.
+
+    constexpr char shutdown_str[]{"ShutDown"};
+    // This should be the buffer size in the tested code. The test will fail if
+    // it does not match so there is no danger to break buffer size.
+    constexpr SIZEP_T expected_destbuflen{sizeof(shutdown_str)};
+
+    constexpr SOCKET sockfd{umock::sfd_base + 48};
+    SSockaddr_storage ssObj;
+    ssObj = "192.168.150.151:50018";
+
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+    FD_SET(sockfd, &rdSet);
+
+    // Mock system functions
+    // expected_destbuflen is important here to avoid buffer limit overwrite.
+    EXPECT_CALL(m_sys_socketObj,
+                recvfrom(sockfd, _, Ge(expected_destbuflen), 0, _,
+                         Pointee(static_cast<socklen_t>(sizeof(ssObj.ss)))))
+        .WillOnce(
+            DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
+                  SetArgPointee<4>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                  Return(expected_destbuflen)));
+
+    // Test Unit
+    if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": Receiving ShutDown not from 127.0.0.1 must fail.\n";
+        EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 1); // Wrong!
+
+    } else {
+
+        EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 0);
+    }
+}
+
+TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_without_0_termbyte) {
+    if (old_code && g_dbug)
+        CLogging static loggingObj; // Output only with build type DEBUG.
+
+    constexpr char shutdown_str[]{"ShutDown "};
+    // With this buffer size the last byte is a space but not a '\0'.
+    constexpr SIZEP_T expected_destbuflen{sizeof(shutdown_str) - 1};
+
+    constexpr SOCKET sockfd{umock::sfd_base + 49};
+    SSockaddr_storage ssObj;
+    ssObj = "127.0.0.1:50019";
+
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+    FD_SET(sockfd, &rdSet);
+
+    // Mock system functions
+    // expected_destbuflen is important here to avoid buffer limit overwrite.
+    EXPECT_CALL(m_sys_socketObj,
+                recvfrom(sockfd, _, Ge(expected_destbuflen), 0, _,
+                         Pointee(static_cast<socklen_t>(sizeof(ssObj.ss)))))
+        .WillOnce(
+            DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
+                  SetArgPointee<4>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                  Return(expected_destbuflen)));
+
+    // Test Unit
+    if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": Receiving \"ShutDown\" without terminating nullbyte "
+                     "must fail.\n";
+        EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 1); // Wrong!
+
+    } else {
+
+        EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 0);
     }
 }
 

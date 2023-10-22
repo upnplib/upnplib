@@ -538,7 +538,12 @@ static void ssdp_read(SOCKET* rsock, fd_set* set) {
 static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
     // The received datagram must exactly match the shutdown_str from
     // 127.0.0.1. This is a security issue to avoid that the UPnPlib can be
-    // terminated from a remote ip address.
+    // terminated from a remote ip address. Receiving 0 bytes on a datagram
+    // (there's a datagram here) indicates that a zero-length datagram
+    // was successful sent. This will not stop the miniserver.
+    //
+    // Returns 1 when the miniserver shall be stopped,
+    // Returns 0 otherwise.
     TRACE("Executing receive_from_stopSock()")
     constexpr char shutdown_str[]{"ShutDown"};
 
@@ -546,7 +551,7 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
         return 0; // Nothing to do for this socket
 
     sockaddr_storage clientAddr{};
-    sockaddr_in* sa_in{(sockaddr_in*)&clientAddr};
+    sockaddr_in* const sa_in{reinterpret_cast<sockaddr_in*>(&clientAddr)};
     socklen_t clientLen{sizeof(clientAddr)}; // May be modified
 
     // The receive buffer is one byte greater with '\0' than the max receiving
@@ -555,19 +560,15 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
     char buf_ntop[INET6_ADDRSTRLEN];
 
     // receive from
-    SSIZEP_T byteReceived =
-        umock::sys_socket_h.recvfrom(ssock, receiveBuf, sizeof(shutdown_str), 0,
-                                     (sockaddr*)&clientAddr, &clientLen);
+    SSIZEP_T byteReceived = umock::sys_socket_h.recvfrom(
+        ssock, receiveBuf, sizeof(shutdown_str), 0,
+        reinterpret_cast<sockaddr*>(&clientAddr), &clientLen);
     if (byteReceived == SOCKET_ERROR ||
         inet_ntop(AF_INET, &sa_in->sin_addr, buf_ntop, sizeof(buf_ntop)) ==
-            nullptr) //
-    {
-        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                   "receive_from_stopSock(): error receiving data from socket "
-                   "%d. Don't stopping miniserver.\n",
-                   ssock);
-
-        return 0;
+            nullptr) {
+        UPNPLIB_LOGCRIT << "MSG1038: Failed to receive data from socket "
+                        << ssock << ". Stop miniserver.\n";
+        return 1;
     }
 
     // 16777343 are netorder bytes of "127.0.0.1"
@@ -577,19 +578,17 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
         char nullstr[]{"\\0"};
         if (byteReceived == 0 || receiveBuf[byteReceived - 1] != '\0')
             nullstr[0] = '\0';
-        UpnpPrintf(
-            UPNP_ERROR, MSERV, __FILE__, __LINE__,
-            "receive_from_stopSock(): \"%s%s\" from %s:%d, must be "
-            "\"ShutDown\\0\" from 127.0.0.1:*. Don't stopping miniserver.\n",
-            receiveBuf, nullstr, buf_ntop, ntohs(sa_in->sin_port));
-
+        UPNPLIB_LOGERR << "MSG1039: Received \"" << receiveBuf << nullstr
+                       << "\" from " << buf_ntop << ":"
+                       << ntohs(sa_in->sin_port)
+                       << ", must be \"ShutDown\\0\" from 127.0.0.1:*. Don't "
+                          "stopping miniserver.\n";
         return 0;
     }
 
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Received datagram packet: \"%s\\0\" from %s:%d\n", receiveBuf,
-               buf_ntop, ntohs(sa_in->sin_port));
-
+    UPNPLIB_LOGINFO << "MSG1040: Received ordinary datagram \"" << receiveBuf
+                    << "\\0\" from " << buf_ntop << ":"
+                    << ntohs(sa_in->sin_port) << ". Stop miniserver.\n";
     return 1;
 }
 

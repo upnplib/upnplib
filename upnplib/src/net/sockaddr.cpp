@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-21
+// Redistribution only with this Copyright remark. Last modified: 2023-10-23
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/general.hpp>
@@ -12,7 +12,7 @@ namespace upnplib {
 // Free function to get the port number from a string
 // --------------------------------------------------
 uint16_t to_port(const std::string& a_port_str) {
-    TRACE("Executing upnplib::to_port()")
+    TRACE("Executing to_port()")
 
     if (a_port_str.empty())
         return 0;
@@ -44,7 +44,7 @@ throw_exit:
 // Free function to get the address string from a sockaddr structure
 // -----------------------------------------------------------------
 std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr) {
-    TRACE("Executing upnplib::to_addr_str()")
+    TRACE("Executing to_addr_str()")
     char addrbuf[INET6_ADDRSTRLEN]{};
 
     switch (a_sockaddr->ss_family) {
@@ -122,12 +122,12 @@ bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
 // ==============================
 // Constructor
 SSockaddr_storage::SSockaddr_storage(){
-    TRACE2(this, " Construct upnplib::SSockaddr_storage()") //
+    TRACE2(this, " Construct SSockaddr_storage()") //
 }
 
 // Destructor
 SSockaddr_storage::~SSockaddr_storage() {
-    TRACE2(this, " Destruct upnplib::SSockaddr_storage()")
+    TRACE2(this, " Destruct SSockaddr_storage()")
     // Destroy structure
     ::memset(&this->ss, 0xAA, sizeof(this->ss));
 }
@@ -143,7 +143,7 @@ SSockaddr_storage::~SSockaddr_storage() {
 void SSockaddr_storage::operator=(const std::string& a_addr_str) {
     // Valid input examles: "[2001:db8::1]", "[2001:db8::1]:50001",
     //                      "192.168.1.1", "192.168.1.1:50001".
-    TRACE2(this, " Executing upnplib::SSockaddr_storage::operator=()")
+    TRACE2(this, " Executing SSockaddr_storage::operator=()")
 
     // An empty address string clears the address storage
     if (a_addr_str.empty()) {
@@ -188,14 +188,14 @@ bool SSockaddr_storage::operator==(const ::sockaddr_storage& a_ss) const {
 // -------------------------------------------------
 // e.g. "[2001:db8::2]" or "192.168.254.253".
 std::string SSockaddr_storage::get_addr_str() const {
-    TRACE2(this, " Executing upnplib::SSockaddr_storage::get_addr_str()")
+    TRACE2(this, " Executing SSockaddr_storage::get_addr_str()")
     return to_addr_str(&this->ss);
 }
 
 // Getter for the assosiated port number
 // -------------------------------------
 uint16_t SSockaddr_storage::get_port() const {
-    TRACE2(this, " Executing upnplib::SSockaddr_storage::get_port()")
+    TRACE2(this, " Executing SSockaddr_storage::get_port()")
     // sin_port and sin6_port are on the same memory location (union of the
     // structures) so we can use it for AF_INET and AF_INET6.
     return ntohs(((sockaddr_in6*)&this->ss)->sin6_port);
@@ -204,7 +204,7 @@ uint16_t SSockaddr_storage::get_port() const {
 // private member functions
 // ------------------------
 void SSockaddr_storage::handle_ipv6(const std::string& a_addr_str) {
-    TRACE2(this, " Executing upnplib::SSockaddr_storage::handle_ipv6()")
+    TRACE2(this, " Executing SSockaddr_storage::handle_ipv6()")
     // remove surounding brackets
     std::string addr_str = a_addr_str.substr(1, a_addr_str.length() - 2);
 
@@ -220,7 +220,7 @@ void SSockaddr_storage::handle_ipv6(const std::string& a_addr_str) {
 }
 
 void SSockaddr_storage::handle_ipv4(const std::string& a_addr_str) {
-    TRACE2(this, " Executing upnplib::SSockaddr_storage::handle_ipv4()")
+    TRACE2(this, " Executing SSockaddr_storage::handle_ipv4()")
     int ret = inet_pton(AF_INET, a_addr_str.c_str(),
                         &((sockaddr_in*)&this->ss)->sin_addr);
     if (ret == 0) {
@@ -233,7 +233,7 @@ void SSockaddr_storage::handle_ipv4(const std::string& a_addr_str) {
 }
 
 void SSockaddr_storage::handle_port(const std::string& a_port) {
-    TRACE2(this, " Executing upnplib::SSockaddr_storage::handle_port()")
+    TRACE2(this, " Executing SSockaddr_storage::handle_port()")
     // sin_port and sin6_port are on the same memory location (union of the
     // structures) so we can use it for AF_INET and AF_INET6.
     ((sockaddr_in6*)&this->ss)->sin6_port = htons(to_port(a_port));
