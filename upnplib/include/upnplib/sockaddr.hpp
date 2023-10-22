@@ -1,10 +1,13 @@
 #ifndef UPNPLIB_NET_SOCKADDR_HPP
 #define UPNPLIB_NET_SOCKADDR_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-06-05
+// Redistribution only with this Copyright remark. Last modified: 2023-10-21
 
-// Helpful link for ip address structures:
-// https://stackoverflow.com/a/16010670/5014688
+// Helpful links:
+// clang-format off
+// REF: [sockaddr structures as union](https://stackoverflow.com/a/76548581/5014688)
+// REF: [Why do I get wrong pointer to a base class with a virtual constructor](https://stackoverflow.com/q/76360179/5014688)
+// clang-format on
 
 #include <upnplib/port_sock.hpp>
 #include <upnplib/visibility.hpp>
@@ -40,7 +43,9 @@ struct UPNPLIB_API SSockaddr_storage {
     virtual ~SSockaddr_storage();
 
     // Get reference to the sockaddr_storage structure.
-    // Only as example, we don't use it.
+    // Only as example, I don't use it because it may be confusing. I only use
+    // SSockaddr_storage::ss (instantiated e.g. ssObj.ss) to access the trivial
+    // member structure.
     // operator const ::sockaddr_storage&() const;
 
     // Assignment operator= to set socket address from string,

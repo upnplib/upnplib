@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-20
+// Redistribution only with this Copyright remark. Last modified: 2023-10-22
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -288,7 +288,6 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
     RunMiniServer(m_minisock);
 
     if (old_code) {
-
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": Unit should not silently ignore critical error "
                      "messages from ::select().\n";
@@ -296,24 +295,25 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
 
     } else {
 
+        if (upnplib::g_dbug)
+            std::cout << captureObj.str();
         EXPECT_THAT(captureObj.str(), HasSubstr("] CRITICAL MSG1021: "));
     }
 }
 
 TEST_F(MiniServerRunFTestSuite, fdset_if_valid_read_successful) {
-    fd_set rdSet;
-    FD_ZERO(&rdSet);
-
     // Socket file descriptor should be added to the read set.
     constexpr SOCKET sockfd{umock::sfd_base + 56};
 
     if (!old_code) {
-        // Mock ::getsockopt() to find sockfd valid.
+        // ::getsockopt() is used to verify a valid socket. Here I mock it to
+        // find sockfd valid.
         EXPECT_CALL(m_sys_socketObj,
                     getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
             .WillOnce(Return(0));
 
-        // Mock that the socket fd ist bound to an address.
+        // ::getsockname() is used to verify if a socket is bound to a local
+        // interface address. Here I mock it to find the socket is bound.
         SSockaddr_storage ssObj;
         ssObj = "192.168.10.11:50061";
         EXPECT_CALL(
@@ -327,6 +327,8 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_read_successful) {
     }
 
     // Test Unit
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
     fdset_if_valid(sockfd, &rdSet);
 
     EXPECT_NE(FD_ISSET(sockfd, &rdSet), 0)
@@ -340,23 +342,23 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
     ASSERT_FALSE(FD_ISSET(static_cast<SOCKET>(0), &rdSet));
 
     // Capture output to stderr
-    bool g_debug_old = upnplib::g_dbug;
-    upnplib::g_dbug = true;
+    bool dbug_old = upnplib::g_dbug;
     CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
-    captureObj.start();
 
     if (old_code) {
 
-        // Test Unit not possible because this results in undefined behavior and
-        // may randomly segfault.
-        // fdset_if_valid(static_cast<SOCKET>(-17000), &rdSet);
-
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
-                  << ": Unit should have extended error checking before adding "
-                     "to ::select() set.\n";
-        EXPECT_EQ(captureObj.str(), ""); // Wrong!
-
-        upnplib::g_dbug = g_debug_old;
+                  << ": Unit should not terminate program with \"*** buffer "
+                     "overflow detected ***\".\n";
+        // Next cannot be tested because pupnp fdset_if_valid() does not
+        // respect limit FD_SETSIZE and randomly produces "*** buffer overflow
+        // detected ***: terminated"
+        // FD_ZERO(&rdSet);
+        // captureObj.start();
+        // upnplib::g_dbug = true;
+        // fdset_if_valid(static_cast<SOCKET>(-17000), &rdSet);
+        // upnplib::g_dbug = dbug_old;
+        // EXPECT_EQ(captureObj.str(), ""); // Wrong!
 
         // Test Unit, fd 0 to 2 are not valid network sockets and should not
         // be set.
@@ -372,26 +374,29 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
         FD_ZERO(&rdSet);
         fdset_if_valid(static_cast<SOCKET>(2), &rdSet);
         EXPECT_TRUE(FD_ISSET(static_cast<SOCKET>(2), &rdSet)); // Wrong!
-#if 0
-        FD_ZERO(&rdSet);
-        fdset_if_valid(static_cast<SOCKET>(FD_SETSIZE), &rdSet);
-#ifdef __APPLE__
-        EXPECT_FALSE(FD_ISSET(static_cast<SOCKET>(FD_SETSIZE), &rdSet));
-#else
-        EXPECT_TRUE(
-            FD_ISSET(static_cast<SOCKET>(FD_SETSIZE), &rdSet)); // Wrong!
-#endif
-#endif
+        // Next cannot be tested because pupnp fdset_if_valid() does not respect
+        // limit FD_SETSIZE and randomly produces "*** buffer overflow detected
+        // ***: terminated"
+        // FD_ZERO(&rdSet);
+        // captureObj.start();
+        // upnplib::g_dbug = true;
+        // fdset_if_valid(static_cast<SOCKET>(FD_SETSIZE), &rdSet);
+        // upnplib::g_dbug = dbug_old;
+        // EXPECT_EQ(captureObj.str(), ""); // Wrong!
 
-    } else {
+    } else { // if (old_code)
 
         // Test Unit
+        FD_ZERO(&rdSet);
+        captureObj.start();
+        upnplib::g_dbug = true;
         fdset_if_valid(static_cast<SOCKET>(-17000), &rdSet);
+        upnplib::g_dbug = dbug_old;
 
         // Get captured output
+        if (upnplib::g_dbug)
+            std::cout << captureObj.str();
         EXPECT_THAT(captureObj.str(), HasSubstr("] ERROR MSG1005: "));
-
-        upnplib::g_dbug = g_debug_old;
 
         // Test Unit
         FD_ZERO(&rdSet);
@@ -403,113 +408,95 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
         FD_ZERO(&rdSet);
         fdset_if_valid(static_cast<SOCKET>(2), &rdSet);
         EXPECT_FALSE(FD_ISSET(static_cast<SOCKET>(2), &rdSet));
-#if 0
         FD_ZERO(&rdSet);
+        captureObj.start();
+        upnplib::g_dbug = true;
         fdset_if_valid(static_cast<SOCKET>(FD_SETSIZE), &rdSet);
-        EXPECT_FALSE(FD_ISSET(static_cast<SOCKET>(FD_SETSIZE), &rdSet));
-#endif
+        upnplib::g_dbug = dbug_old;
+
+        // Get captured output
+        if (upnplib::g_dbug)
+            std::cout << captureObj.str();
+        EXPECT_THAT(captureObj.str(),
+                    HasSubstr("] ERROR MSG1005: Prohibited socket 1024"));
     }
 }
 
-#if 0
-TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
-    fd_set rdSet;
-    FD_ZERO(&rdSet);
+TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails_with_invalid_socket) {
+    // Provide a socket file descriptor.
+    constexpr SOCKET sockfd{umock::sfd_base + 7};
 
-    // Unbind socket file descriptor should not be added to the read set.
-    constexpr SOCKET sockfd{umock::sfd_base + 53};
-    fdset_if_valid(sockfd, &rdSet);
-    EXPECT_EQ(FD_ISSET(sockfd, &rdSet), 0)
-        << "Socket file descriptor " << sockfd
-        << " should not be added to the FD SET for select().";
-}
-
-TEST(MiniServerRunTestSuite, fdset_if_valid) {
-    fd_set rdSet;
-    FD_ZERO(&rdSet);
-
-    // Testing for negative or >= FD_SETSIZE socket file descriptors with
-    // FD_ISSET fails on Github Integration tests with **exception or with
-    // "buffer overflow" using Ubuntu Release. So we cannot check if negative
-    // file descriptors are not added to the FD list for select().
-    //
-    // EXPECT_EQ(FD_ISSET(INVALID_SOCKET, &rdSet), 0)
-    //     << "Socket file descriptor INVALID_SOCKET should not fail with "
-    //        "**exception or buffer overflow";
-    //
-    // EXPECT_EQ(FD_ISSET(FD_SETSIZE, &rdSet), 0)
-    //     << "Socket file descriptor FD_SETSIZE should not fail with "
-    //        "**exception or buffer overflow";
-
-    // Valid socket file descriptor will be added to the set.
-    constexpr SOCKET sockfd1{umock::sfd_base + 47};
-    fdset_if_valid(sockfd1, &rdSet);
-    EXPECT_NE(FD_ISSET(sockfd1, &rdSet), 0)
-        << "Socket file descriptor " << sockfd1
-        << " should be added to the FD SET for select().";
-
-    std::cout << CYEL "[ TODO     ] " CRES << __LINE__
-              << ": Check if \"buffer overflow\" still exists with FD_ISSET "
-                 "using invalid socket file descriptor.\n";
-
-    if (old_code)
-        // These expectations are labeled below with 'Wrong!'.
-        std::cout << CYEL "[ FIX      ] " CRES << __LINE__
-                  << ": invalid socket file descriptors should not be added to "
-                     "the FD SET for select().\n";
-
-    // This isn't added to the set.
-    constexpr SOCKET sockfd2 = INVALID_SOCKET;
-    fdset_if_valid(sockfd2, &rdSet);
-    EXPECT_NE(FD_ISSET(sockfd1, &rdSet), 0)
-        << "Socket file descriptor " << sockfd1
-        << " should be added to the FD SET for select().";
-    // We cannot check it because of possible negative socket fd.
-    // EXPECT_EQ(FD_ISSET(sockfd2, &rdSet), 0)
-    //     << "Socket file descriptor " << sockfd2
-    //     << " should NOT be added to the FD SET for select().";
-
-    // File descriptor for stderr must not be added to the set.
-    constexpr SOCKET sockfd3 = 2;
-    fdset_if_valid(sockfd3, &rdSet);
-    EXPECT_NE(FD_ISSET(sockfd1, &rdSet), 0)
-        << "Socket file descriptor " << sockfd1
-        << " should be added to the FD SET for select().";
-    if (old_code)
-        EXPECT_NE(FD_ISSET(sockfd3, &rdSet), 0); // Wrong!
-    else
-        EXPECT_EQ(FD_ISSET(sockfd3, &rdSet), 0)
-            << "Socket file descriptor " << sockfd3
-            << " should NOT be added to the FD SET for select().";
-
-    // File descriptor 3 could be usable if not already used by another service.
-    constexpr SOCKET sockfd4 = 3;
-    fdset_if_valid(sockfd4, &rdSet);
-    EXPECT_NE(FD_ISSET(sockfd1, &rdSet), 0)
-        << "Socket file descriptor " << sockfd1
-        << " should be added to the FD SET for select().";
-    EXPECT_NE(FD_ISSET(sockfd4, &rdSet), 0)
-        << "Socket file descriptor " << sockfd4
-        << " should be added to the FD SET for select().";
-
-    // File descriptor >= FD_SETSIZE must not be added to the set. It is beyond
-    // the limit for connect().
     if (!old_code) {
-        // Old code tries to add this to the FD set and fails with buffer
-        // overflow on Github Integration test with Ubuntu Release.
-        constexpr SOCKET sockfd5 = FD_SETSIZE;
-        fdset_if_valid(sockfd5, &rdSet);
-        EXPECT_NE(FD_ISSET(sockfd4, &rdSet), 0)
-            << "Socket file descriptor " << sockfd4
-            << " should be added to the FD SET for select().";
+        // ::getsockopt() is used to verify a valid socket. Here I mock it to
+        // find sockfd invalid.
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
+            .WillOnce(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
     }
-    // We cannot check it because of buffer overflow with FD_ISSET using
-    // FD_SETSIZE.
-    // EXPECT_EQ(FD_ISSET(sockfd5, &rdSet), 0)
-    //     << "Socket file descriptor " << sockfd5
-    //     << " should NOT be added to the FD SET for select().";
+
+    // Test Unit
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+    fdset_if_valid(sockfd, &rdSet);
+
+    if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": Socket file descriptor " << sockfd
+                  << " should not be added to the FD SET for ::select().\n";
+        EXPECT_NE(FD_ISSET(sockfd, &rdSet), 0); // Wrong!
+
+    } else {
+
+        EXPECT_EQ(FD_ISSET(sockfd, &rdSet), 0)
+            << "Socket file descriptor " << sockfd
+            << " should not be added to the FD SET for ::select().";
+    }
 }
-#endif
+
+TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails_with_unbind_socket) {
+    // Provide a socket file descriptor.
+    constexpr SOCKET sockfd{umock::sfd_base + 53};
+
+    if (!old_code) {
+        // ::getsockopt() is used to verify a valid socket. Here I mock it to
+        // find sockfd valid.
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
+            .WillOnce(Return(0));
+
+        // ::getsockname() is used to verify if a socket is bound to a local
+        // interface address. Here I mock it with the unknown sockaddr "[::]"
+        // to find the socket is not bound.
+        SSockaddr_storage ssObj;
+        ssObj = "[::]";
+        EXPECT_CALL(
+            m_sys_socketObj,
+            getsockname(sockfd, _,
+                        Pointee(Ge(static_cast<socklen_t>(sizeof(ssObj.ss))))))
+            .WillOnce(DoAll(
+                SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                SetArgPointee<2>(static_cast<socklen_t>(sizeof(ssObj.ss))),
+                Return(0)));
+    }
+
+    // Test Unit
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+    fdset_if_valid(sockfd, &rdSet);
+
+    if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": Socket file descriptor " << sockfd
+                  << " should not be added to the FD SET for ::select().\n";
+        EXPECT_NE(FD_ISSET(sockfd, &rdSet), 0); // Wrong!
+
+    } else {
+
+        EXPECT_EQ(FD_ISSET(sockfd, &rdSet), 0)
+            << "Socket file descriptor " << sockfd
+            << " should not be added to the FD SET for ::select().";
+    }
+}
 
 } // namespace utest
 

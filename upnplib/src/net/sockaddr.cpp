@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-20
+// Redistribution only with this Copyright remark. Last modified: 2023-10-21
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/general.hpp>
@@ -127,7 +127,9 @@ SSockaddr_storage::SSockaddr_storage(){
 
 // Destructor
 SSockaddr_storage::~SSockaddr_storage() {
-    TRACE2(this, " Destruct upnplib::SSockaddr_storage()") //
+    TRACE2(this, " Destruct upnplib::SSockaddr_storage()")
+    // Destroy structure
+    ::memset(&this->ss, 0xAA, sizeof(this->ss));
 }
 
 // Get reference to the sockaddr_storage structure.

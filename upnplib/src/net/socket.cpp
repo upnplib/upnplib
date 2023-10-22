@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-20
+// Redistribution only with this Copyright remark. Last modified: 2023-10-22
 
 #include <upnplib/socket.hpp>
 #include <upnplib/general.hpp>
@@ -35,6 +35,24 @@ CWSAStartup::~CWSAStartup() {
 // Free helper functions
 // =====================
 
+// Free function to get socket type string (eg. "SOCK_STREAM") from value
+// ----------------------------------------------------------------------
+#if 0 // When used then tests are needed.
+std::string to_socktype_str(const int socktype) {
+    switch (socktype) {
+    case AF_INET6:
+        return "AF_INET6";
+    case AF_INET:
+        return "AF_INET";
+    case AF_UNSPEC:
+        return "AF_UNSPEC";
+    default:
+        return "AF_" + std::to_string(socktype);
+    }
+}
+#endif
+
+
 // Helper inline function to throw an exeption with additional information.
 // ------------------------------------------------------------------------
 // error number given by WSAGetLastError(), resp. contained in errno is used to
@@ -48,7 +66,7 @@ static inline void throw_error(const std::string& a_errmsg) {
 #else
     throw std::runtime_error(UPNPLIB_LOGEXCEPT + a_errmsg + " errno(" +
                              std::to_string(errno) + ")=\"" +
-                             umock::string_h.strerror(errno) + "\"");
+                             umock::string_h.strerror(errno) + "\"\n");
 #endif
 }
 
@@ -123,7 +141,7 @@ CSocket_basic::~CSocket_basic(){
 }
 
 // Get the raw socket file descriptor
-CSocket_basic::operator SOCKET&() const {
+CSocket_basic::operator const SOCKET&() const {
     TRACE2(this, " Executing CSocket_basic::operator SOCKET&() (get "
                  "raw socket fd)")
     // There is no problem with cast here. We cast to const so we can only read.

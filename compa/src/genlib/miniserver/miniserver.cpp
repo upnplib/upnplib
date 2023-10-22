@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-10-20
+ * Redistribution only with this Copyright remark. Last modified: 2023-10-22
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -455,13 +455,13 @@ static void fdset_if_valid(SOCKET a_sock, fd_set* a_set) {
         return;
 
     if (a_sock < 3 || a_sock >= FD_SETSIZE) {
-        UPNPLIB_LOGERR
-            << "MSG1005: FD_SET for select() failed with invalid socket "
-            << a_sock
-            << (a_sock >= 3 ? ", that violates FD_SETSIZE.\n" : ".\n");
+        UPNPLIB_LOGERR << "MSG1005: " << (a_sock < 0 ? "Invalid" : "Prohibited")
+                       << " socket " << a_sock
+                       << " not set to be monitored by ::select()"
+                       << (a_sock >= 3 ? " because it violates FD_SETSIZE.\n"
+                                       : ".\n");
         return;
     }
-
     // Check if socket is valid and bound
     try {
         upnplib::CSocket_basic sockObj(a_sock);
@@ -470,23 +470,26 @@ static void fdset_if_valid(SOCKET a_sock, fd_set* a_set) {
             FD_SET(a_sock, a_set);
 
         else
-            UPNPLIB_LOGERR << "MSG1002: Ignore unbound socket " << a_sock
-                           << ".\n";
+            UPNPLIB_LOGINFO << "MSG1002: Unbound socket " << a_sock
+                            << " not set to be monitored by ::select().\n";
 
     } catch (const std::runtime_error& e) {
-        std::clog << e.what();
-        UPNPLIB_LOGCATCH << "MSG1009: Ignore invalid socket " << a_sock
-                         << ".\n";
+        if (upnplib::g_dbug)
+            std::clog << e.what();
+        UPNPLIB_LOGCATCH << "MSG1009: Invalid socket " << a_sock
+                         << " not set to be monitored by ::select().\n";
     }
 }
 
 static int web_server_accept([[maybe_unused]] SOCKET lsock,
                              [[maybe_unused]] fd_set& set) {
-#ifdef INTERNAL_WEB_SERVER
+#ifndef INTERNAL_WEB_SERVER
+    return UPNP_E_NO_WEB_SERVER;
+#else
     TRACE("Executing web_server_accept()")
     if (lsock == INVALID_SOCKET || !FD_ISSET(lsock, &set)) {
-        UPNPLIB_LOGERR << "MSG1012: Invalid socket(" << lsock << ") or set("
-                       << static_cast<void*>(&set) << ").\n";
+        UPNPLIB_LOGINFO << "MSG1012: Socket(" << lsock
+                        << ") invalid or not in file descriptor set.\n";
         return UPNP_E_SOCKET_ERROR;
     }
 
@@ -514,8 +517,6 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
     schedule_request_job(asock, (sockaddr*)&clientAddr);
 
     return UPNP_E_SUCCESS;
-#else
-    return UPNP_E_NO_WEB_SERVER;
 #endif /* INTERNAL_WEB_SERVER */
 }
 

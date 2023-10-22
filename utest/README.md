@@ -47,7 +47,7 @@ here are some pattern using grep.
 All error messages have a unique nummber so the number does not only specify the associated message text but also its location in the source code. This also means that messages with the same text but a different location in the source have different numbers. Or with other words, each message have a unique index number, no matter what it is meaning. By default the message numbers start with 1000. Numbers below are reservered for special use. You can find already used message numbers with:
 
     ~$ # Get used error message numbers
-    ~$ grep -Pnor --color=never --exclude-dir={build,utest} --include='*.[chi]*' 'UPnPlib ERROR 1\d\d\d!' | sort -t: -k3
+    ~$ grep -Pnor --color=never --exclude-dir={build,utest} --include='*.[chi]*' '...MSG\d\d\d\d...' | sort -t: -k3.4
 
 To avoid conflicts with double used socket file descriptors (sfd) on tests I
 always use a new one. To have a simple search pattern I define a constant
@@ -75,5 +75,5 @@ getting a delay to re-use an ip address. I start with test port number 50000
 
 <br /><pre>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2023-10-16
+// Redistribution only with this Copyright remark. Last modified: 2023-10-21
 </pre>

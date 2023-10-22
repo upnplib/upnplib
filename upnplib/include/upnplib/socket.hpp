@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-18
+// Redistribution only with this Copyright remark. Last modified: 2023-10-21
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/76548581/5014688
@@ -76,6 +76,11 @@
 
 namespace upnplib {
 
+// Free function to get socket type string (eg. "SOCK_STREAM") from value
+// ----------------------------------------------------------------------
+UPNPLIB_API std::string to_socktype_str(const int socktype);
+
+
 // CSocket_basic class
 // ===================
 // This class takes the resources and results as given by the platform. It does
@@ -103,8 +108,9 @@ class UPNPLIB_API CSocket_basic {
     // Destructor
     virtual ~CSocket_basic();
 
-    // Get socket file descriptor, e.g.: CSocket_basic sock; SOCKET sfd = sock;
-    operator SOCKET&() const;
+    // Get socket file descriptor, e.g.:
+    // CSocket_basic sockObj; SOCKET sfd = sockObj;
+    operator const SOCKET&() const;
 
     // Getter
     // ------
@@ -114,6 +120,8 @@ class UPNPLIB_API CSocket_basic {
 
     uint16_t get_port() const;
 
+    // Get the socket type, e.g. SOCK_STREAM or SOCK_DGRAM, but also others.
+    // Throws exception std::runtime_error.
     int get_type() const;
 
     int get_sockerr() const;
@@ -229,7 +237,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
 
 // Initialize and cleanup Microsoft Windows Sockets
 // ================================================
-// Winsock needs to be initialized before using it and it needs to be freed. We
+// Winsock needs to be initialized before using it and it needs to be freed. I
 // do that with a class, following the RAII paradigm. Multiple initialization
 // doesn't matter. This is managed by the operating system with a counter. It
 // ensures that winsock is initialzed only one time and freed with the last
