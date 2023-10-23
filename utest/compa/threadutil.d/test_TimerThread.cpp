@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-18
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 // Note
 // -------------
@@ -30,8 +30,6 @@
 
 
 namespace utest {
-bool old_code{false}; // Managed in gtest_main.inc
-bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::upnplib::CThreadPool;
 
@@ -230,6 +228,6 @@ TEST(TimerThreadNormalTestSuite, remove_timer_thread) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-#include "gtest_main.inc"
+#include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

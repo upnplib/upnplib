@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-18
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -26,8 +26,6 @@
 
 
 namespace utest {
-bool old_code{false}; // Managed in gtest_main.inc
-bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::upnplib::errStrEx;
 
@@ -238,6 +236,6 @@ TEST_F(CreateSSDPsockReqV4FTestSuite, set_socket_no_blocking_fails) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-#include <gtest_main.inc>
+#include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

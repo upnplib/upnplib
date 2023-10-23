@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-18
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -52,8 +52,6 @@ static void alias_release();             // Will become method release().
 
 
 namespace utest {
-bool old_code{false}; // Managed in gtest_main.inc
-bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::ExitedWithCode;
@@ -1202,6 +1200,6 @@ TEST_F(XMLaliasFDeathTest, alias_grab_nullptr) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-#include "gtest_main.inc"
+#include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-18
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -22,8 +22,6 @@
 
 
 namespace utest {
-bool old_code{false}; // Managed in upnplib_gtest_main.inc
-bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::AtLeast;
@@ -169,7 +167,8 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpGetIfInfo_called_with_unknown_interface) {
 }
 
 TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_successful) {
-    // CLogging loggingObj;
+    // CLogging logObj; // Output only with build type DEBUG.
+    // logObj.enable(UPNP_ALL);
 
     // provide a network interface
     CIfaddr4 ifaddr4Obj;
@@ -234,6 +233,6 @@ TEST_F(UpnpapiIPv4MockTestSuite, UpnpInit2_successful) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-#include "gtest_main.inc"
+#include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

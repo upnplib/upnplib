@@ -1,8 +1,9 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-08
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 // This test should always run, reporting no failure
 
+#include <utest/utest.hpp>
 // #include <gtest/gtest.h>
 #include <gmock/gmock.h> // preferred because it contains also gtest.h
 
@@ -21,9 +22,7 @@
 #define CGRN "\033[38;5;83m"  // green
 #define CRES "\033[0m"        // reset
 
-namespace upnplib {
-bool old_code{true}; // Managed in upnplib/gtest_main.inc
-bool github_actions = std::getenv("GITHUB_ACTIONS");
+namespace utest {
 
 // testsuite with fixtures
 //------------------------
@@ -111,14 +110,13 @@ TEST(EmptyTestSuite, empty_gtest) {
     }
 }
 
-} // namespace upnplib
+} // namespace utest
 
 
 int main(int argc, char** argv) {
     // ::testing::InitGoogleTest(&argc, argv);
     ::testing::InitGoogleMock(&argc, argv); // preferred
-    return RUN_ALL_TESTS(); // or use next lines, but needs additional includes
-    // #include <compa/gtest_main.inc>
-    // #include <upnplib/gtest_main.inc>
-    //    return gtest_return_code; // managed in upnplib/gtest_main.inc
+    return RUN_ALL_TESTS();                 // or next line
+    // #include <utest/utest_main.inc>
+    // return gtest_return_code; // managed in utest/utest_main.inc
 }

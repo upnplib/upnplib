@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-20
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -21,8 +21,6 @@
 
 
 namespace utest {
-bool old_code{true}; // Managed in gtest_main.inc
-bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -485,7 +483,8 @@ TEST_F(HttpBasicFTestSuite, make_message_get_sdk_info_system_info_fails) {
 // ================================
 
 TEST_F(HttpMockFTestSuite, send_message_from_buffer_successful) {
-    // CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging logObj; // Output only with build type DEBUG.
+    // logObj.enable(UPNP_ALL);
 
     SOCKINFO info{};
     info.socket = umock::sfd_base + 51;
@@ -532,7 +531,8 @@ TEST_F(HttpMockFTestSuite, send_message_from_file_successful) {
         GTEST_SKIP() << "Test needs to be completed after rewritten "
                         "'sock_read()' and 'sock_write()' functions.";
 
-    // CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging logObj; // Output only with build type DEBUG.
+    // logObj.enable(UPNP_ALL);
 
     // Mock fopen()
     char filename[]{"./mocked/message.txt"};
@@ -578,7 +578,8 @@ TEST_F(HttpMockFTestSuite, send_message_from_file_successful) {
 
 #if 0
 TEST_F(HttpMockFTestSuite, send_message_fails) {
-    CLogging loggingObj; // Output only with build type DEBUG.
+    CLogging logObj; // Output only with build type DEBUG.
+    logObj.enable(UPNP_ALL);
 
     SOCKINFO info{};
     info.socket = umock::sfd_base + n;
@@ -614,7 +615,8 @@ TEST_F(HttpBasicFTestSuite, send_message_without_socket_file_descriptor) {
         GTEST_SKIP()
             << "Test needs to be completed after revision of test_sock.cpp.";
 
-    // CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging logObj; // Output only with build type DEBUG.
+    // logObj.enable(UPNP_ALL);
 
     SOCKINFO info{};
     int timeout_secs{HTTP_DEFAULT_TIMEOUT};
@@ -641,7 +643,8 @@ TEST_F(HttpMockFTestSuite, request_response_successful) {
     if (github_actions)
         GTEST_SKIP() << "Test needs to be completed after testing subroutines.";
 
-    // CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging logObj; // Output only with build type DEBUG.
+    // logObj.enable(UPNP_ALL);
 
     uri_type url;
     http_parser_t response;
@@ -660,7 +663,8 @@ TEST_F(HttpMockFTestSuite, http_Download_successful) {
     if (github_actions)
         GTEST_SKIP() << "Test needs to be completed after testing subroutines.";
 
-    // CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging logObj; // Output only with build type DEBUG.
+    // logObj.enable(UPNP_ALL);
 
     const char url[]{"http://127.0.0.1:50001/tvdevicedesc.xml"};
     char* outBuf;
@@ -679,6 +683,6 @@ TEST_F(HttpMockFTestSuite, http_Download_successful) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-#include "gtest_main.inc"
+#include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 #include <FreeList.hpp>
 
@@ -17,7 +17,6 @@
 // isn't used here anymore.
 
 namespace utest {
-bool old_code{false}; // Managed in gtest_main.inc
 
 using ::testing::_;
 using ::testing::Return;
@@ -252,6 +251,6 @@ TEST(FreeListDeathTest, freelist_destroy_a_nullptr) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-#include "gtest_main.inc"
+#include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

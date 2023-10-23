@@ -1,7 +1,7 @@
 #ifndef PUPNP_UPNPDEBUG_HPP
 #define PUPNP_UPNPDEBUG_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-14
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 #include <upnpdebug.hpp>
 #include <UpnpGlobal.hpp> // for EXPORT_SPEC
@@ -12,14 +12,15 @@ namespace pupnp {
 // ============
 class EXPORT_SPEC CLogging { /*
  * Use it for example with:
-    class CLogging loggingObj; // Output only with build type DEBUG.
- * or
-    class CLogging loggingObj(UPNP_INFO); // Output only with build type DEBUG.
- * or other loglevel.
+    CLogging loggingObj; // Output only with build type DEBUG.
+    loggingObj.enable(UPNP_ALL); // or other loglevel, e.g. UPNP_INFO.
+    loggingObj.disable(); // optional
  */
   public:
-    CLogging(Upnp_LogLevel a_loglevel = UPNP_ALL);
+    CLogging();
     virtual ~CLogging();
+    void enable(Upnp_LogLevel a_loglevel);
+    void disable();
 };
 
 } // namespace pupnp

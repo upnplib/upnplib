@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 #include <upnplib/general.hpp>
 #include <upnplib/port_sock.hpp>
@@ -17,7 +17,6 @@
 #include <thread>
 
 namespace utest {
-bool old_code{false}; // Managed in upnplib_gtest_main.inc
 
 // Simple TLS Server
 // =================
@@ -345,7 +344,7 @@ int main(int argc, char** argv) {
     std::thread t1(utest::simple_TLS_server);
     t1.detach();
     ::testing::InitGoogleMock(&argc, argv);
-#include "gtest_main.inc"
+#include "utest/utest_main.inc"
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
 #ifdef _WIN32

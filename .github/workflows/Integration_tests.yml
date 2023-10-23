@@ -102,6 +102,11 @@ jobs:
           cd ./build/utest
           ctest --timeout 6 --output-on-failure
 
+      - name: Run gtests with debug output
+        run: |
+          cd ./build/utest
+          UPNPLIB_DEBUG=true ctest --timeout 6 --output-on-failure
+
 
   # Job: Configure, build and test MacOS
   #-------------------------------------
@@ -178,6 +183,11 @@ jobs:
         run: |
           cd ./build/utest
           ctest --timeout 6 --output-on-failure
+
+      - name: Run gtests with debug output
+        run: |
+          cd ./build/utest
+          UPNPLIB_DEBUG=true ctest --timeout 6 --output-on-failure
 
 
   # Job: Configure, build and test with Visual Studio
@@ -261,15 +271,22 @@ jobs:
       - name: Run upnplib info programs
         run: ./build/bin/${{matrix.buildtype}}/upnplib-pst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-psh.exe; ./build/bin/${{matrix.buildtype}}/upnplib-cst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-csh.exe
 
-      - if: (matrix.os != 'windows-2019') || (matrix.googletest != '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON')
+      #- if: (matrix.os != 'windows-2019') || (matrix.googletest != '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON')
         # Running static compiled tests with compiled GTESTS_WITH_SHARED_LIBS=ON
         # we have a problem. The static compiled tests crash with Exit code
         # 0xc0000135. This is only with windows-2019. Maybe the gtest/gmock
         # libraries does not compile to 32 bit code and I have to do additional
         # configuration? On all other platforms all tests run successful. --Ingo
-        name: Run gtests
+      - name: Run gtests
         run: |
           $env:path += ";./build/bin/${{matrix.buildtype}}"
+          cd ./build/utest
+          ctest -C ${{matrix.buildtype}} --timeout 9 --output-on-failure
+
+      #- if: (matrix.os != 'windows-2019') || (matrix.googletest != '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON')
+      - name: Run gtests with debug output
+        run: |
+          $env:UPNPLIB_DEBUG = "set"
           cd ./build/utest
           ctest -C ${{matrix.buildtype}} --timeout 9 --output-on-failure
 
@@ -356,15 +373,22 @@ jobs:
       - name: Run upnplib info programs
         run: ./build/bin/upnplib-pst.exe; ./build/bin/upnplib-psh.exe; ./build/bin/upnplib-cst.exe; ./build/bin/upnplib-csh.exe
 
-      - if: (matrix.os != 'windows-2019') || (matrix.googletest != '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON')
+      #- if: (matrix.os != 'windows-2019') || (matrix.googletest != '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON')
         # Running static compiled tests with compiled GTESTS_WITH_SHARED_LIBS=ON
         # we have a problem. The static compiled tests crash with Exit code
         # 0xc0000135. This is only with windows-2019. Maybe the gtest/gmock
         # libraries does not compile to 32 bit code and I have to do additional
         # configuration? On all other platforms all tests run successful. --Ingo
-        name: Run gtests
+      - name: Run gtests
         run: |
           $env:path += ";./build/bin"
+          cd ./build/utest
+          ctest -C ${{matrix.buildtype}} --timeout 9 --output-on-failure
+
+      #- if: (matrix.os != 'windows-2019') || (matrix.googletest != '-D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=ON')
+      - name: Run gtests with debug output
+        run: |
+          $env:UPNPLIB_DEBUG = "set"
           cd ./build/utest
           ctest -C ${{matrix.buildtype}} --timeout 9 --output-on-failure
 

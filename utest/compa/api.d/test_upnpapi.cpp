@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-20
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpapi.cpp>
@@ -24,8 +24,6 @@
 
 
 namespace utest {
-bool old_code{false}; // Managed in upnplib_gtest_main.inc
-bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
 using ::upnplib::errStrEx;
 using ::upnplib::SSockaddr_storage;
@@ -263,7 +261,8 @@ TEST_F(UpnpapiFTestSuite, get_error_message) {
 }
 
 TEST_F(UpnpapiFTestSuite, GetHandleInfo_successful) {
-    // CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging logObj; // Output only with build type DEBUG.
+    // logObj.enable(UPNP_ALL);
 
     // Will be filled with a pointer to the requested client info.
     Handle_Info* hinfo_p{nullptr};
@@ -309,7 +308,8 @@ TEST_F(UpnpapiFTestSuite, GetHandleInfo_successful) {
 }
 
 TEST_F(UpnpapiFTestSuite, GetHandleInfo_with_nullptr_to_handle_table) {
-    // CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging logObj; // Output only with build type DEBUG.
+    // logObj.enable(UPNP_ALL);
 
     // Initialize HandleTable bcause it only contains pointer.
     HandleTable[1] = nullptr;
@@ -325,7 +325,8 @@ TEST_F(UpnpapiFTestSuite, GetHandleInfo_with_nullptr_to_handle_table) {
 }
 
 TEST_F(UpnpapiFTestSuite, UpnpFinish_successful) {
-    // CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging logObj; // Output only with build type DEBUG.
+    // logObj.enable(UPNP_ALL);
 
     // Doing needed initializations. Otherwise we get segfaults with
     // UpnpFinish() due to uninitialized pointers.
@@ -525,7 +526,8 @@ TEST_F(UpnpapiMockFTestSuite, UpnpRegisterRootDevice3_successful) {
 
     UpnpSdkInit = 1;
     { // Scope for logging
-        // CLogging loggingObj; // Output only with build type DEBUG.
+        // CLogging logObj; // Output only with build type DEBUG.
+        // logObj.enable(UPNP_ALL);
 
         // Test Unit
         int ret_UpnpRegisterRootDevice3 =
@@ -581,6 +583,6 @@ TEST_F(UpnpapiFTestSuite, download_xml_successful) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-#include "gtest_main.inc"
+#include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

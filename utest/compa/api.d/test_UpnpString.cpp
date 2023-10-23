@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-18
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 #include <UpnpString.hpp>
 #if defined UPNPLIB_WITH_NATIVE_PUPNP && !defined PUPNP_UPNPSTRING_HPP
@@ -39,9 +39,6 @@ struct s_UpnpString {
 };
 
 namespace utest {
-bool old_code{false}; // Managed in upnplib_gtest_main.inc
-bool github_actions = std::getenv("GITHUB_ACTIONS");
-
 
 class UpnpStringFTestSuite : public ::testing::Test {
   protected:
@@ -428,6 +425,6 @@ int main(int argc, char** argv) {
     // See https://google.github.io/googletest/reference/assertions.html#death
     // GTEST_FLAG_SET(death_test_style, "threadsafe");
 #endif
-#include "gtest_main.inc"
+#include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

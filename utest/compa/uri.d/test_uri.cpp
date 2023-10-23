@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -10,6 +10,7 @@
 
 #include <upnplib/general.hpp>
 #include <upnplib/uri.hpp>
+#include <utest/utest.hpp>
 #include <umock/netdb_mock.hpp>
 
 using ::testing::_;
@@ -21,10 +22,6 @@ using ::upnplib::Curi;
 
 
 namespace utest {
-
-bool old_code{false}; // Managed in gtest_main.inc
-bool github_actions = ::std::getenv("GITHUB_ACTIONS");
-
 
 // Mocking
 // =======
@@ -916,6 +913,6 @@ TEST(UriIp4TestSuite, free_URL_list) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-#include "gtest_main.inc"
+#include <utest/utest_main.inc>
     return gtest_return_code; // Managed in gtest_main.inc
 }

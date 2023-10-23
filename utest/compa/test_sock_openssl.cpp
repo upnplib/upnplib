@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-20
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -29,7 +29,6 @@ UPNPLIB_EXTERN SSL_CTX* gSslCtx;
 
 
 namespace utest {
-bool old_code{false}; // Managed in upnplib_gtest_main.inc
 
 using ::testing::ExitedWithCode;
 
@@ -231,6 +230,6 @@ TEST_F(SockFDeathTest, sock_ssl_connect_signal_broken_pipe) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-#include "gtest_main.inc"
+#include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

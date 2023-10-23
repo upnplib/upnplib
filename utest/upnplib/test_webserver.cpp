@@ -1,13 +1,11 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-10
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 #include <upnplib/general.hpp>
 #include <upnplib/webserver.hpp>
 #include <gmock/gmock.h>
 
 namespace utest {
-bool old_code{false}; // Managed in gtest_main.inc
-bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::upnplib::Document_meta;
 using ::upnplib::select_filetype;
@@ -48,6 +46,6 @@ TEST(WebserverTestSuite, select_filetype) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-#include "gtest_main.inc"
+#include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

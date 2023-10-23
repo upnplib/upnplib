@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-12
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 #include "upnplib/general.inc"
 
@@ -23,7 +23,7 @@ char* strndup(const char* __string, size_t __n) {
 namespace upnplib {
 
 // Global switch to enable verbose (debug) output.
-UPNPLIB_API bool g_dbug(false);
+UPNPLIB_API bool g_dbug{false};
 
 std::string libinfo() { return "upnplib library version = under developement"; }
 

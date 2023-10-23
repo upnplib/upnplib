@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-12
+// Redistribution only with this Copyright remark. Last modified: 2023-10-23
 
 // Because this part of the main entry function uses gtest macros we have to
 // include it directly into the source of the test. These macros need to have
@@ -33,13 +33,11 @@ if (argc == 2) {
     }
 }
 
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-utest::old_code = true;
+upnplib::g_dbug = static_cast<bool>(std::getenv("UPNPLIB_DEBUG"));
 gtest_return_code = RUN_ALL_TESTS();
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
 std::cout << "[----------] Tested UPnPlib old code.\n\n";
 #else
-utest::old_code = false;
-gtest_return_code = RUN_ALL_TESTS();
 std::cout << "[----------] Tested UPnPlib new code.\n\n";
 #endif
 finish:

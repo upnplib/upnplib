@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-18
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 #include <upnplib/general.hpp>
 #include <upnplib/addrinfo.hpp>
@@ -9,8 +9,6 @@
 
 
 namespace utest {
-bool old_code{false}; // Managed in gtest_main.inc
-bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::testing::AnyOf;
 using ::testing::StartsWith;
@@ -497,6 +495,6 @@ TEST(AddrinfoTestSuite, is_numeric_node_fails) {
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
     WINSOCK_INIT
-#include <gtest_main.inc>
+#include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

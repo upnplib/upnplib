@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-23
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -8,8 +8,10 @@
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
+// #include <pupnp/upnp/src/api/upnpapi.cpp> // only for StartMiniServer_real
 #include <pupnp/upnp/src/genlib/miniserver/miniserver.cpp>
 #else
+// #include <compa/src/api/upnpapi.cpp> // only for StartMiniServer_real
 #include <compa/src/genlib/miniserver/miniserver.cpp>
 #endif
 
@@ -29,8 +31,6 @@
 
 
 namespace utest {
-bool old_code{false}; // Managed in gtest_main.inc
-bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::AnyOf;
@@ -135,18 +135,12 @@ typedef MiniServerFTestSuite RunMiniServerFDeathTest;
 // This test uses real connections and isn't portable. It is only for humans to
 // see how it works and should not always enabled.
 #if 0
-TEST(StartMiniServerTestSuite, StartMiniServer_in_context) {
+TEST(StartMiniServerTestSuite, StartMiniServer_real) {
     // MINISERVER_REUSEADDR = false;
     // gIF_IPV4 = "";
     // LOCAL_PORT_V4 = 0;
     // LOCAL_PORT_V6 = 0;
     // LOCAL_PORT_V6_ULA_GUA = 0;
-
-    // umock::Sys_socketMock sys_socketObj;
-    // umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
-    // class Mock_sys_socket mocked_sys_socketObj;
-    // class Mock_stdlib  mocked_stdlibObj;
-    // class Mock_unistd mocked_unistdObj;
 
     // Perform initialization preamble.
     int ret_UpnpInitPreamble = UpnpInitPreamble();
@@ -1501,7 +1495,8 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer_accept_fails) {
     // For this test we use only socket file descriptor miniServerSock4 that is
     // listening on IPv4 for the miniserver. --Ingo
 
-    // CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging logObj; // Output only with build type DEBUG.
+    // logObj.enable(UPNP_ALL);
 
     // Initialize the threadpool. Don't forget to shutdown the threadpool at the
     // end. nullptr means to use default attributes.
@@ -1606,7 +1601,8 @@ TEST_F(RunMiniServerFTestSuite, RunMiniServer_accept_fails) {
 
 TEST_F(RunMiniServerFTestSuite, ssdp_read_successful) {
     WINSOCK_INIT
-    // CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging logObj; // Output only with build type DEBUG.
+    // logObj.enable(UPNP_ALL);
 
     // Initialize the threadpool. Don't forget to shutdown the threadpool at the
     // end. nullptr means to use default attributes.
@@ -1650,7 +1646,8 @@ TEST_F(RunMiniServerFTestSuite, ssdp_read_successful) {
 
 TEST_F(RunMiniServerFTestSuite, ssdp_read_fails) {
     WINSOCK_INIT
-    // CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging logObj; // Output only with build type DEBUG.
+    // logObj.enable(UPNP_ALL);
 
     constexpr char ssdpdata_str[]{
         "Some SSDP test data for a request of a remote client."};
@@ -1722,7 +1719,8 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_successful) {
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
         // Capture output to stderr
-        CLogging loggingObj; // Output only with build type DEBUG.
+        CLogging logObj; // Output only with build type DEBUG.
+        logObj.enable(UPNP_ALL);
         CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
         captureObj.start();
 
@@ -1768,7 +1766,8 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_with_invalid_socket) {
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
     // Capture output to stderr
-    CLogging loggingObj; // Output only with build type DEBUG.
+    CLogging logObj; // Output only with build type DEBUG.
+    logObj.enable(UPNP_ALL);
     CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
@@ -1833,7 +1832,8 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_with_empty_set) {
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
     // Capture output to stderr
-    CLogging loggingObj; // Output only with build type DEBUG.
+    CLogging logObj; // Output only with build type DEBUG.
+    logObj.enable(UPNP_ALL);
     class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
@@ -1869,7 +1869,8 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_fails) {
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
     // Capture output to stderr
-    CLogging loggingObj; // Output only with build type DEBUG.
+    CLogging logObj; // Output only with build type DEBUG.
+    logObj.enable(UPNP_ALL);
     class CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
@@ -1912,7 +1913,8 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
     EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 0), 0);
 
     // Capture output to stderr
-    CLogging loggingObj; // Output only with build type DEBUG.
+    CLogging logObj; // Output only with build type DEBUG.
+    logObj.enable(UPNP_ALL);
     CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     captureObj.start();
 
@@ -2167,7 +2169,8 @@ TEST(RunMiniServerTestSuite, set_gena_callback) {
 
 TEST(RunMiniServerTestSuite, do_reinit) {
     WINSOCK_INIT
-    // CLogging loggingObj; // Output only with build type DEBUG.
+    // CLogging logObj; // Output only with build type DEBUG.
+    // logObj.enable(UPNP_ALL);
 
     // On reinit the socket file descriptor will be closed and a new file
     // descriptor is requested. Mostly it is the same but it is possible that
@@ -2235,6 +2238,6 @@ int main(int argc, char** argv) {
     ::WSACleanup();
 #endif
     ::testing::InitGoogleMock(&argc, argv);
-#include "gtest_main.inc"
+#include "utest/utest_main.inc"
     return gtest_return_code; // managed in compa/gtest_main.inc
 }

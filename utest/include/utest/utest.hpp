@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_UTEST_HPP
 #define UPNPLIB_UTEST_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-20
+// Redistribution only with this Copyright remark. Last modified: 2023-10-23
 
 #include <upnplib/visibility.hpp>
 
@@ -16,6 +16,14 @@
 
 
 namespace utest {
+
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+constexpr bool old_code{true};
+#else
+constexpr bool old_code{false};
+#endif
+const bool github_actions{static_cast<bool>(std::getenv("GITHUB_ACTIONS"))};
+
 
 //###############################
 //           Helper             #

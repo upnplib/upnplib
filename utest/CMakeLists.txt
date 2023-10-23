@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-10-18
+# Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -160,9 +160,8 @@ add_test(NAME ctest_simple-ust COMMAND test_simple-ust --gtest_shuffle
 add_executable(test_template
         test_template.cpp
 )
-target_compile_definitions(test_template
-    PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+target_include_directories(test_template
+    PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 add_test(NAME ctest_template COMMAND test_template --gtest_shuffle
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-23
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -24,8 +24,6 @@
 
 
 namespace utest {
-bool old_code{false}; // Managed in gtest_main.inc
-bool github_actions = std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -574,8 +572,10 @@ TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_receiving_fails) {
 }
 
 TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_no_bytes_received) {
-    if (old_code && g_dbug)
-        CLogging static loggingObj; // Output only with build type DEBUG.
+    CLogging logObj; // Output only with build type DEBUG.
+    if (old_code)
+        if (g_dbug)
+            logObj.enable(UPNP_ALL);
 
     constexpr char shutdown_str[]{""};
     constexpr SIZEP_T bufsizeof_ShutDown_str{9};
@@ -611,8 +611,10 @@ TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_no_bytes_received) {
 }
 
 TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_wrong_stop_message) {
-    if (old_code && g_dbug)
-        CLogging static loggingObj; // Output only with build type DEBUG.
+    CLogging logObj;
+    if (old_code)
+        if (g_dbug)
+            logObj.enable(UPNP_ALL);
 
     constexpr char shutdown_str[]{"Nothings"};
     // This should be the buffer size in the tested code. The test will fail if
@@ -642,8 +644,10 @@ TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_wrong_stop_message) {
 }
 
 TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_from_wrong_address) {
-    if (old_code && g_dbug)
-        CLogging static loggingObj; // Output only with build type DEBUG.
+    CLogging logObj; // Output only with build type DEBUG.
+    if (old_code)
+        if (g_dbug)
+            logObj.enable(UPNP_ALL);
 
     constexpr char shutdown_str[]{"ShutDown"};
     // This should be the buffer size in the tested code. The test will fail if
@@ -681,8 +685,10 @@ TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_from_wrong_address) {
 }
 
 TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_without_0_termbyte) {
-    if (old_code && g_dbug)
-        CLogging static loggingObj; // Output only with build type DEBUG.
+    CLogging logObj; // Output only with build type DEBUG.
+    if (old_code)
+        if (g_dbug)
+            logObj.enable(UPNP_ALL);
 
     constexpr char shutdown_str[]{"ShutDown "};
     // With this buffer size the last byte is a space but not a '\0'.
@@ -724,6 +730,6 @@ TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_without_0_termbyte) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-#include "gtest_main.inc"
+#include "utest/utest_main.inc"
     return gtest_return_code; // managed in gtest_main.inc
 }

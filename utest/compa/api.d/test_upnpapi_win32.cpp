@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-20
+// Redistribution only with this Copyright remark. Last modified: 2023-10-24
 
 // Mock network interfaces
 // For further information look at https://stackoverflow.com/a/66498073/5014688
@@ -19,8 +19,6 @@
 
 
 namespace utest {
-bool old_code{false}; // Managed in upnplib_gtest_main.inc
-bool github_actions = ::std::getenv("GITHUB_ACTIONS");
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -233,6 +231,6 @@ TEST_F(UpnpapiIPv4MockTestSuite, initialize_default_UpnpInit2) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-#include "compa/gtest_main.inc"
-    return gtest_return_code; // managed in compa/gtest_main.inc
+#include <utest/utest_main.inc>
+    return gtest_return_code; // managed in utest/utest_main.inc
 }
