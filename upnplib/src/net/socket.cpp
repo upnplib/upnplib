@@ -1,10 +1,13 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-22
+// Redistribution only with this Copyright remark. Last modified: 2023-10-27
 
 #include <upnplib/socket.hpp>
 #include <upnplib/general.hpp>
 #include <umock/sys_socket.hpp>
 #include <umock/stringh.hpp>
+#ifdef _MSC_VER
+#include <umock/winsock2.hpp>
+#endif
 
 #include <stdexcept>
 #include <iostream>
@@ -61,8 +64,8 @@ std::string to_socktype_str(const int socktype) {
 static inline void throw_error(const std::string& a_errmsg) {
 #ifdef _MSC_VER
     throw std::runtime_error(
-        UPNPLIB_LOGEXCEPT + a_errmsg +
-        " WSAGetLastError()=" + std::to_string(WSAGetLastError()));
+        UPNPLIB_LOGEXCEPT + a_errmsg + " WSAGetLastError()=" +
+        std::to_string(umock::winsock2_h.WSAGetLastError()));
 #else
     throw std::runtime_error(UPNPLIB_LOGEXCEPT + a_errmsg + " errno(" +
                              std::to_string(errno) + ")=\"" +
@@ -85,7 +88,7 @@ static int getsockname(SOCKET a_sockfd, struct sockaddr* a_addr,
     return ret;
 
 #else
-    if (WSAGetLastError() != WSAEINVAL) // Error code 10022 not set
+    if (umock::winsock2_h.WSAGetLastError() != WSAEINVAL) // Error 10022 not set
         return ret;
 
     // WSAEINVAL indicates that the socket is unbound. We will return an

@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCKADDR_HPP
 #define UPNPLIB_NET_SOCKADDR_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-21
+// Redistribution only with this Copyright remark. Last modified: 2023-10-25
 
 // Helpful links:
 // clang-format off
@@ -21,7 +21,16 @@ UPNPLIB_API uint16_t to_port(const std::string& a_port_str);
 
 // Free function to get the address string from a sockaddr structure
 // -----------------------------------------------------------------
+// Throws exception 'invalid argument' with unsupported address family.
+// Supported is only AF_INET6 and AF_INET.
 UPNPLIB_API std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr);
+
+// Free function to get the address string with port from a sockaddr structure
+// ---------------------------------------------------------------------------
+// Throws exception 'invalid argument' with unsupported address family.
+// Supported is only AF_INET6 and AF_INET.
+UPNPLIB_API std::string
+to_addrport_str(const ::sockaddr_storage* const a_sockaddr);
 
 // Free function to logical compare two sockaddr structures
 // --------------------------------------------------------
@@ -67,6 +76,8 @@ struct UPNPLIB_API SSockaddr_storage {
     // Getter for the numeric port.
     uint16_t get_port() const;
 
+    // Getter for the length of the sockaddr structure.
+    socklen_t get_sslen() const;
 
   private:
     UPNPLIB_LOCAL void handle_ipv6(const std::string& a_addr_str);

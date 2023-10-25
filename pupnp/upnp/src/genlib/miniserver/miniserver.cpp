@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-19
+ * Redistribution only with this Copyright remark. Last modified: 2023-09-26
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -69,8 +69,9 @@
 #include <sys/types.h>
 #include <algorithm> // for std::max()
 
-#include "umock/sys_socket.hpp"
-#include "umock/stdlib.hpp"
+#include <umock/sys_socket.hpp>
+#include <umock/stdlib.hpp>
+#include <umock/winsock2.hpp>
 
 /*! . */
 #define APPLICATION_LISTENING_PORT 49152
@@ -792,7 +793,7 @@ static int do_bind(struct s_SocketStuff* s) {
             umock::sys_socket_h.bind(s->fd, s->serverAddr, s->address_len);
         if (bind_error == SOCKET_ERROR) {
 #ifdef _WIN32
-            errCode = WSAGetLastError();
+            errCode = umock::winsock2_h.WSAGetLastError();
 #else
             errCode = errno;
 #endif

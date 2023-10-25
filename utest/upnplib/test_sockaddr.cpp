@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-24
+// Redistribution only with this Copyright remark. Last modified: 2023-10-25
 
 #include <upnplib/general.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -307,6 +307,11 @@ TEST(SockaddrStorageTestSuite, compare_ipv4_address) {
     EXPECT_FALSE(saddr1 == saddr2.ss);
     saddr2.ss.ss_family = AF_INET;
     EXPECT_TRUE(saddr1 == saddr2.ss);
+}
+
+TEST(SockaddrStorageTestSuite, get_sslen) {
+    SSockaddr_storage saddr1;
+    EXPECT_EQ(saddr1.get_sslen(), sizeof(::sockaddr_storage));
 }
 
 TEST(ToPortTestSuite, str_to_port) {

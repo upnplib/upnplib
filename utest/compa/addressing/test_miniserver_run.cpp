@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-24
+// Redistribution only with this Copyright remark. Last modified: 2023-10-26
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -15,7 +15,6 @@
 
 #include <upnplib/general.hpp>
 #include <upnplib/sockaddr.hpp>
-#include <upnplib/addrinfo.hpp>
 
 #include <pupnp/upnpdebug.hpp>
 
@@ -72,14 +71,15 @@ class RunMiniserverFuncFTestSuite : public MiniServerRunFTestSuite {
 
     RunMiniserverFuncFTestSuite() {
         TRACE2(this, " Construct RunMiniserverFuncFTestSuite()")
-        // nullptr means to use default attributes.
+        // Initialize the threadpool. nullptr means to use default attributes.
         int ret_ThreadPoolInit =
             ThreadPoolInit(&gMiniServerThreadPool, nullptr);
         if (ret_ThreadPoolInit != 0)
             throw std::runtime_error(
-                "Initializing the ThreadPool fails with return number " +
+                UPNPLIB_LOGEXCEPT
+                "MSG0088: Initializing ThreadPool fails with return number " +
                 std::to_string(ret_ThreadPoolInit));
-        // Prevent to add jobs, we test jobs isolated.
+        // Prevent to add jobs, I test jobs isolated.
         gMiniServerThreadPool.shutdown = 1;
         // EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 0), 0);
 
@@ -124,6 +124,10 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_successful) {
         << CYEL "[ TODO     ] " CRES << __LINE__
         << ": Test must be extended for IPv6 sockets and other sockets.\n";
 
+    CLogging logObj; // Output only with build type DEBUG.
+    if (g_dbug)
+        logObj.enable(UPNP_ALL);
+
     // Set needed data, listen miniserver only on IPv4 that will connect to a
     // remote client which has done e rquest.
     m_minisock->miniServerPort4 = 50012;
@@ -138,8 +142,11 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_successful) {
     // m_minisock->ssdpSock4 = umock::sfd_base + n;
     m_minisock->miniServerStopSock = umock::sfd_base + 8;
     // Next is the socket file descriptor of an accepted connection to a remote
-    // peer and not part of listening sockets monitored by select().
+    // host and not part of listening sockets monitored by select().
     constexpr SOCKET remote_connect_sockfd = umock::sfd_base + 9;
+
+    // We need this to mock socket addresses.
+    SSockaddr_storage ssObj;
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
@@ -159,65 +166,52 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_successful) {
 
     } else {
 
+        std::cout << CYEL "[ TODO     ] " CRES << __LINE__
+                  << ": Unit must not expect its argument MiniServerSockArray* "
+                     "to be on the heap and free it.\n";
+
         // Check socket in fdset_if_valid() successful
         EXPECT_CALL(m_sys_socketObj, getsockopt(m_minisock->miniServerSock4,
                                                 SOL_SOCKET, SO_ERROR, _, _))
             .WillOnce(Return(0));
 
-        // Mock that the socket fd ist bound to an address.
-        SSockaddr_storage ssObj;
+        // Mock that the socket fd ist bound to an address of a local interface.
         ssObj = "[2001:db8::cd]:50059";
-        EXPECT_CALL(
-            m_sys_socketObj,
-            getsockname(m_minisock->miniServerSock4, _,
-                        Pointee(Ge(static_cast<socklen_t>(sizeof(ssObj.ss))))))
-            .WillOnce(DoAll(
-                SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
-                SetArgPointee<2>(static_cast<socklen_t>(sizeof(ssObj.ss))),
-                Return(0)));
+        EXPECT_CALL(m_sys_socketObj, getsockname(m_minisock->miniServerSock4, _,
+                                                 Pointee(ssObj.get_sslen())))
+            .WillOnce(
+                DoAll(SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                      SetArgPointee<2>(ssObj.get_sslen()), Return(0)));
 
-        // select in RunMiniServer() also succeeds
+        // select() in RunMiniServer() also succeeds.
         EXPECT_CALL(m_sys_socketObj,
                     select(select_nfds, _, nullptr, _, nullptr))
             .WillOnce(Return(1));
     }
 
-    SSockaddr_storage ss_connected;
-    ss_connected = "192.168.200.201:" + remote_connect_port;
+    // accept() in RunMiniServer() succeeds and returns the remote ip address
+    // that it is connected to.
+    ssObj = "192.168.200.201:" + remote_connect_port;
     EXPECT_CALL(m_sys_socketObj,
                 accept(m_minisock->miniServerSock4, NotNull(),
-                       Pointee((socklen_t)sizeof(sockaddr_storage))))
-        .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&ss_connected.ss),
-                        Return(remote_connect_sockfd)));
+                       Pointee(Ge(static_cast<socklen_t>(sizeof(ssObj.ss))))))
+        .WillOnce(
+            DoAll(SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                  Return(remote_connect_sockfd)));
 
-    SSockaddr_storage ss_localhost;
-    ss_localhost = "127.0.0.1:" + std::to_string(m_minisock->stopPort);
-
-    if (old_code) {
-        EXPECT_CALL(m_sys_socketObj,
-                    recvfrom(m_minisock->miniServerStopSock, _, 25, 0, _,
-                             Pointee((socklen_t)sizeof(sockaddr_storage))))
-            .WillOnce(DoAll(StrCpyToArg<1>("ShutDown"),
-                            SetArgPointee<4>(*(sockaddr*)&ss_localhost.ss),
-                            Return((SSIZEP_T)sizeof("ShutDown"))));
-
-    } else {
-
-        constexpr char shutdown_str[]("ShutDown");
-        constexpr size_t shutdown_strlen{sizeof(shutdown_str)};
-        // It is important to expect shutdown_strlen.
-        EXPECT_CALL(m_sys_socketObj,
-                    recvfrom(m_minisock->miniServerStopSock, _, shutdown_strlen,
-                             0, _,
-                             Pointee((socklen_t)sizeof(sockaddr_storage))))
-            .WillOnce(DoAll(StrCpyToArg<1>(shutdown_str),
-                            SetArgPointee<4>(*(sockaddr*)&ss_localhost.ss),
-                            Return((SSIZEP_T)shutdown_strlen)));
-    }
-
-    std::cout << CRED "[ BUG      ] " CRES << __LINE__
-              << ": Unit must not expect its argument MiniServerSockArray* "
-                 "to be on the heap and free it.\n";
+    // Here I mock receiving of the ShutDown datagram.
+    constexpr char shutdown_str[]("ShutDown");
+    constexpr SIZEP_T shutdown_strlen{sizeof(shutdown_str)};
+    ssObj = "127.0.0.1:" + std::to_string(m_minisock->stopPort);
+    // It is important to expect shutdown_strlen.
+    EXPECT_CALL(m_sys_socketObj,
+                recvfrom(m_minisock->miniServerStopSock, _, Ge(shutdown_strlen),
+                         0, _,
+                         Pointee(static_cast<socklen_t>(sizeof(ssObj.ss)))))
+        .WillOnce(
+            DoAll(StrCpyToArg<1>(shutdown_str),
+                  SetArgPointee<4>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                  Return(shutdown_strlen)));
 
     // Test Unit
     RunMiniServer(m_minisock);
@@ -226,6 +220,10 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_successful) {
 TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
     // See important note at
     // TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_successful).
+
+    CLogging logObj; // Output only with build type DEBUG.
+    if (g_dbug)
+        logObj.enable(UPNP_ALL);
 
     // Set needed data, listen miniserver only on IPv4 that will connect to a
     // remote client which has done a request.
@@ -236,6 +234,9 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
     SOCKET select_nfds{umock::sfd_base + 55 + 1}; // Must be highest used fd + 1
     m_minisock->miniServerSock4 = umock::sfd_base + 54;
     m_minisock->miniServerStopSock = umock::sfd_base + 55;
+
+    // We need this to mock socket addresses.
+    SSockaddr_storage ssObj;
 
     if (old_code) {
 #ifdef _WIN32
@@ -266,17 +267,13 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
                                                 SOL_SOCKET, SO_ERROR, _, _))
             .WillOnce(Return(0));
 
-        // Mock that the socket fd ist bound to an address.
-        SSockaddr_storage ssObj;
+        // Mock that the socket fd ist bound to an address of a local interface.
         ssObj = "192.168.10.10:50060";
-        EXPECT_CALL(
-            m_sys_socketObj,
-            getsockname(m_minisock->miniServerSock4, _,
-                        Pointee(Ge(static_cast<socklen_t>(sizeof(ssObj.ss))))))
-            .WillOnce(DoAll(
-                SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
-                SetArgPointee<2>(static_cast<socklen_t>(sizeof(ssObj.ss))),
-                Return(0)));
+        EXPECT_CALL(m_sys_socketObj, getsockname(m_minisock->miniServerSock4, _,
+                                                 Pointee(ssObj.get_sslen())))
+            .WillOnce(
+                DoAll(SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                      SetArgPointee<2>(ssObj.get_sslen()), Return(0)));
 
         // but select in RunMiniServer() fails
         EXPECT_CALL(m_sys_socketObj,
@@ -290,19 +287,110 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
 
     // Test Unit
     RunMiniServer(m_minisock);
+    std::cout << captureObj.str();
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
-                  << ": Unit should not silently ignore critical error "
-                     "messages from ::select().\n";
-        EXPECT_EQ(captureObj.str(), ""); // Wrong!
-
-    } else {
-
+                  << ": Unit should critical errors always output, not only "
+                     "with build type DEBUG and no garbage.\n";
         if (g_dbug)
-            std::cout << captureObj.str();
+#ifdef UPNP_HAVE_DEBUG
+            EXPECT_THAT(captureObj.str(),
+                        HasSubstr("stopSock Error, aborting..."));
+#else
+            EXPECT_EQ(captureObj.str(), ""); // Wrong!
+#endif
+        else
+            EXPECT_EQ(captureObj.str(), ""); // Wrong!
+
+    } else { // New code
+
         EXPECT_THAT(captureObj.str(), HasSubstr("] CRITICAL MSG1021: "));
     }
+}
+
+TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_accept_fails) {
+    // See important note at
+    // TEST_F( MiniServerRunFTestSuite, RunMiniServer_successful).
+    // For this test I use only socket file descriptor miniServerSock4 that is
+    // listening on IPv4 for the miniserver. --Ingo
+
+    CLogging logObj; // Output only with build type DEBUG.
+    logObj.enable(UPNP_ALL);
+
+    // Set needed data, listen miniserver only on IPv4 that will connect to a
+    // remote client which has done a request.
+    m_minisock->miniServerPort4 = 50045;
+    m_minisock->stopPort = 50047;
+
+    // Due to 'select()' have ATTENTION to set select_nfds correct.
+    SOCKET select_nfds{umock::sfd_base + 59 + 1}; // Must be highest used fd + 1
+    m_minisock->miniServerSock4 = umock::sfd_base + 58;
+    m_minisock->miniServerStopSock = umock::sfd_base + 59;
+
+    constexpr char shutdown_str[]{"ShutDown"};
+    SIZEP_T shutdown_strlen;
+
+    if (old_code) {
+#ifdef _WIN32
+        // On MS Windows INVALID_SOCKET is unsigned -1 =
+        // 18446744073709551615 so we get select_nfds with this big number
+        // even if there is only one INVALID_SOCKET. Incrementing it by one
+        // results in 0. To be portable we must not assume INVALID_SOCKET
+        // to be -1. --Ingo
+        select_nfds = 0; // Wrong!
+#endif
+        shutdown_strlen = 25; // This is fixed given by the tested Unit
+    } else {
+        shutdown_strlen = sizeof(shutdown_str);
+    }
+
+    // select()
+    if (!old_code) {
+        // Mock socket check in 'fdset_if_valid()' to be successful.
+        // 'getsockopt()' and 'getsockname()' are called in the production
+        // code for verification.
+        EXPECT_CALL(m_sys_socketObj, getsockopt(m_minisock->miniServerSock4,
+                                                SOL_SOCKET, SO_ERROR, _, _))
+            .WillOnce(Return(0));
+
+        // Mock that the socket fd ist bound to an address.
+        SSockaddr_storage ssObj;
+        ssObj = "[2001:db8::ab]:50044";
+        EXPECT_CALL(
+            m_sys_socketObj,
+            getsockname(m_minisock->miniServerSock4, _,
+                        Pointee(Ge(static_cast<socklen_t>(sizeof(ssObj.ss))))))
+            .WillOnce(DoAll(
+                SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
+                SetArgPointee<2>(static_cast<socklen_t>(sizeof(ssObj.ss))),
+                Return(0)));
+    }
+
+    // select in RunMiniServer() also succeeds.
+    EXPECT_CALL(m_sys_socketObj, select(select_nfds, _, nullptr, _, nullptr))
+        .WillOnce(Return(2)); // data and stopsock available on select()
+
+    // accept() will fail for incomming data. stopsock uses a datagram so it
+    // doesn't use accept().
+    EXPECT_CALL(m_sys_socketObj,
+                accept(m_minisock->miniServerSock4, NotNull(),
+                       Pointee((socklen_t)sizeof(sockaddr_storage))))
+        .WillOnce(SetErrnoAndReturn(ENOMEM, INVALID_SOCKET));
+
+    // Provide data for stopsock with ShutDown.
+    SSockaddr_storage ss_localhost;
+    ss_localhost = "127.0.0.1:" + std::to_string(m_minisock->stopPort);
+
+    EXPECT_CALL(m_sys_socketObj,
+                recvfrom(m_minisock->miniServerStopSock, _, shutdown_strlen, 0,
+                         _, Pointee((socklen_t)sizeof(sockaddr_storage))))
+        .WillOnce(DoAll(StrCpyToArg<1>(shutdown_str),
+                        SetArgPointee<4>(*(sockaddr*)&ss_localhost.ss),
+                        Return(shutdown_strlen)));
+
+    // Test Unit
+    RunMiniServer(m_minisock);
 }
 
 TEST_F(MiniServerRunFTestSuite, fdset_if_valid_read_successful) {

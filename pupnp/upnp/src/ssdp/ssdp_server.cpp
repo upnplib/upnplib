@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-24
+ * Redistribution only with this Copyright remark. Last modified: 2023-10-27
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -54,8 +54,9 @@
 //#include "miniserver.h"
 #include "sock.hpp"
 #include "upnpapi.hpp"
-#include "umock/sys_socket.hpp"
-#include "umock/pupnp_sock.hpp"
+#include <umock/sys_socket.hpp>
+#include <umock/pupnp_sock.hpp>
+#include <umock/winsock2.hpp>
 
 #include <stdio.h>
 
@@ -982,7 +983,7 @@ static int create_ssdp_sock_v6(
         ret = UPNP_E_SOCKET_BIND;
         goto error_handler;
 #else
-        int wsa_err = WSAGetLastError();
+        int wsa_err = umock::winsock2_h.WSAGetLastError();
         UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
                    "Error in bind(), addr=%s, index=%d, port=%d: %d\n",
                    gIF_IPV6, gIF_INDEX, SSDP_PORT, wsa_err);

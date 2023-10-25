@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-23
+// Redistribution only with this Copyright remark. Last modified: 2023-10-25
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/general.hpp>
@@ -44,7 +44,7 @@ throw_exit:
 // Free function to get the address string from a sockaddr structure
 // -----------------------------------------------------------------
 std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr) {
-    TRACE("Executing to_addr_str()")
+    // TRACE("Executing to_addr_str()") // not usable in chained output.
     char addrbuf[INET6_ADDRSTRLEN]{};
 
     switch (a_sockaddr->ss_family) {
@@ -66,6 +66,19 @@ std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr) {
                                     "MSG1036: Unsupported address family " +
                                     std::to_string(a_sockaddr->ss_family));
     }
+}
+
+
+// Free function to get the address string with port from a sockaddr structure
+// ---------------------------------------------------------------------------
+std::string to_addrport_str(const ::sockaddr_storage* const a_sockaddr) {
+    // TRACE("Executing to_addrport_str()") // not usable in chained output.
+    //
+    // sin_port and sin6_port are on the same memory location (union of the
+    // structures) so I can use it for AF_INET and AF_INET6.
+    return to_addr_str(a_sockaddr) + ":" +
+           std::to_string(ntohs(
+               reinterpret_cast<const ::sockaddr_in6*>(a_sockaddr)->sin6_port));
 }
 
 
@@ -200,6 +213,13 @@ uint16_t SSockaddr_storage::get_port() const {
     // structures) so we can use it for AF_INET and AF_INET6.
     return ntohs(((sockaddr_in6*)&this->ss)->sin6_port);
 }
+
+// Getter for the length of the sockaddr structure.
+socklen_t SSockaddr_storage::get_sslen() const {
+    TRACE2(this, " Executing SSockaddr_storage::get_sslen()")
+    return sizeof(this->ss);
+}
+
 
 // private member functions
 // ------------------------

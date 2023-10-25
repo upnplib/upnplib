@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-10-22
+ * Redistribution only with this Copyright remark. Last modified: 2023-10-28
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,6 +80,7 @@
 #endif
 
 #include <umock/sys_socket.hpp>
+#include <umock/winsock2.hpp>
 #include <umock/stdlib.hpp>
 
 /*! . */
@@ -410,12 +411,14 @@ static UPNP_INLINE void schedule_request_job(
     /*! [in] Socket Descriptor on which connection is accepted. */
     SOCKET connfd,
     /*! [in] Clients Address information. */
-    struct sockaddr* clientAddr) {
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Executing schedule_request_job(%d, %p)\n", connfd,
-               (void*)clientAddr);
-
-    struct mserv_request_t* request;
+    sockaddr* clientAddr) {
+    TRACE("Executing schedule_request_job()")
+    UPNPLIB_LOGINFO << "MSG1042: Schedule request job to host "
+                    << upnplib::to_addrport_str(
+                           reinterpret_cast<const sockaddr_storage*>(
+                               clientAddr))
+                    << " with socket " << connfd << ".\n";
+    mserv_request_t* request;
     ThreadPoolJob job{};
 
     request = (struct mserv_request_t*)malloc(sizeof(struct mserv_request_t));
@@ -473,7 +476,7 @@ static void fdset_if_valid(SOCKET a_sock, fd_set* a_set) {
             UPNPLIB_LOGINFO << "MSG1002: Unbound socket " << a_sock
                             << " not set to be monitored by ::select().\n";
 
-    } catch (const std::runtime_error& e) {
+    } catch (const std::exception& e) {
         if (upnplib::g_dbug)
             std::clog << e.what();
         UPNPLIB_LOGCATCH << "MSG1009: Invalid socket " << a_sock
@@ -513,7 +516,7 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
     inet_ntop(AF_INET, &sa_in->sin_addr, buf_ntop, sizeof(buf_ntop));
     UPNPLIB_LOGINFO << "MSG1023: Connected to host " << buf_ntop << ":"
                     << ntohs(sa_in->sin_port) << " with socket " << asock
-                    << "\n";
+                    << ".\n";
     schedule_request_job(asock, (sockaddr*)&clientAddr);
 
     return UPNP_E_SUCCESS;
@@ -793,7 +796,6 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
     sa_family_t domain;
     void* addr; // This holds a pointer to sin_addr, not a value
     int reuseaddr_on = MINISERVER_REUSEADDR;
-    int errval{1};
 
     memset(s, 0, sizeof *s);
     s->fd = INVALID_SOCKET;
@@ -829,19 +831,21 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
 
     if (s->fd == INVALID_SOCKET) {
 #ifdef _WIN32
-        // check if MS Windows sockets are initialized
-        if (WSAGetLastError() == WSANOTINITIALISED) {
+        int errval = umock::winsock2_h.WSAGetLastError();
+        if (errval == WSANOTINITIALISED)
             UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
                        "init_socket_suff(): WSAStartup() wasn't called to "
                        "initialize use of sockets\n");
-            errval = WSANOTINITIALISED;
-            goto error;
-        }
-#endif
+        else
+            UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
+                       "init_socket_suff(): WSAGetLastError() returned %d.\n",
+                       errval);
+#else
         UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
                    "init_socket_suff(): IPv%d socket not available: "
                    "%s\n",
                    ip_version, std::strerror(errno));
+#endif
         goto error;
     } else if (ip_version == 6) {
         int onOff = 1;
@@ -882,7 +886,8 @@ error:
     }
     s->fd = INVALID_SOCKET;
 
-    return errval;
+    // return errval; // errval is available here but to be compatible I use
+    return 1;
 }
 
 /*
@@ -898,7 +903,7 @@ static int do_bind(s_SocketStuff* s) {
     int bind_error;
     uint16_t original_listen_port = s->try_port;
 
-    int repeat_do = 0;
+    bool repeat_do{false};
     do {
         switch (s->ip_version) {
         case 4:
@@ -926,18 +931,31 @@ static int do_bind(s_SocketStuff* s) {
         if (s->try_port == 0)
             s->try_port = APPLICATION_LISTENING_PORT;
 
+        // Bind socket
         bind_error =
             umock::sys_socket_h.bind(s->fd, s->serverAddr, s->address_len);
-        if (bind_error == -1)
-            repeat_do = (errno == EADDRINUSE) ? 1 : 0;
 
-    } while (repeat_do != 0 && s->try_port >= original_listen_port);
+        if (bind_error != 0)
+#ifdef _MSC_VER
+            repeat_do = (umock::winsock2_h.WSAGetLastError() == WSAEADDRINUSE)
+                            ? true
+                            : false;
+#else
+            repeat_do = (errno == EADDRINUSE) ? true : false;
+#endif
+    } while (repeat_do && s->try_port >= original_listen_port);
 
-    if (bind_error == -1) {
+    if (bind_error != 0) {
         UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
                    "do_bind(): "
+#ifdef _MSC_VER
+                   "Error with IPv%d returned from ::bind() = %d.\n",
+                   s->ip_version, umock::winsock2_h.WSAGetLastError()
+#else
                    "Error with IPv%d returned from ::bind() = %s.\n",
-                   s->ip_version, std::strerror(errno));
+                   s->ip_version, std::strerror(errno)
+#endif
+        );
         /* Bind failed. */
         ret_val = UPNP_E_SOCKET_BIND;
         goto error;

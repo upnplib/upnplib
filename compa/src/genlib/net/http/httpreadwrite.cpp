@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-10-08
+ * Redistribution only with this Copyright remark. Last modified: 2023-10-26
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -325,7 +325,7 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
     if (ret_connect == -1) {
 #ifdef _WIN32
         UpnpPrintf(UPNP_CRITICAL, HTTP, __FILE__, __LINE__,
-                   "connect error: %d\n", WSAGetLastError());
+                   "connect error: %d\n", umock::winsock2_h.WSAGetLastError());
 #endif
         if (umock::sys_socket_h.shutdown(connfd, SD_BOTH) == -1) {
             UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
