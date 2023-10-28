@@ -1,10 +1,21 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-21
+// Redistribution only with this Copyright remark. Last modified: 2023-11-01
 
 // Helpful link for ip address structures:
-// https://stackoverflow.com/a/76548581/5014688
+// REF: [sockaddr structures as union]
+// (https://stackoverflow.com/a/76548581/5014688)
+
+
+// To be portable with BSD socket error number constants I have to
+// define and use these macros with appended 'P' for portable.
+#ifdef _MSC_VER
+#define EBADFP WSAENOTSOCK
+#else
+#define EBADFP EBADF
+#endif
+
 
 // Socket module
 // =============
@@ -254,6 +265,33 @@ class UPNPLIB_API CWSAStartup {
 #else
 #define WINSOCK_INIT
 #endif // _MSC_VER
+
+
+// Portable handling of socket errors
+// ==================================
+// There is a problem that Winsock2 on the Microsoft Windows platform does not
+// support detailed error information given in the global variable 'errno'.
+// Instead it returns them with calling 'WSAGetLastError()'. This class
+// encapsulates this different so there is no need to always check the platform
+// to get the error information.
+class UPNPLIB_API CSocketError {
+  public:
+    CSocketError();
+    ~CSocketError();
+
+    // Get error number, e.g.:
+    // CSocketError sockerrObj; int sock_err = sockerrObj;
+    operator const int&() const;
+
+    // Setter
+    void catch_error();
+
+    // Getter
+    std::string error_str();
+
+  private:
+    int m_errno{}; // Cached error number
+};
 
 } // namespace upnplib
 

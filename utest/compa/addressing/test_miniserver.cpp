@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-28
+// Redistribution only with this Copyright remark. Last modified: 2023-11-01
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -486,8 +486,8 @@ TEST(StartMiniServerTestSuite, init_socket_suff) {
 
     char reuseaddr;
     socklen_t optlen{sizeof(reuseaddr)};
-    EXPECT_EQ(getsockopt(ss4.fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, &optlen),
-              0);
+    EXPECT_EQ(
+        ::getsockopt(ss4.fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, &optlen), 0);
     EXPECT_FALSE(reuseaddr);
 
     // Close real socket
@@ -802,6 +802,10 @@ TEST_F(DoBindFTestSuite, bind_successful) {
     // * Actual used port is 56789
     // * Next port to try is 56790
     // * Mocked bind() returns successful
+
+    CLogging logObj; // Output only with build type DEBUG.
+    if (g_dbug)
+        logObj.enable(UPNP_ALL);
 
     // Provide needed data for the Unit
     constexpr SOCKET sockfd{umock::sfd_base + 15};

@@ -2,6 +2,7 @@ Next steps to do:
 * Create platform independent error checking for errno resp. WSAGetLastError(), e.g. miniserver do_bind().
 * Create tests for to_addrport_str().
 + Unite and simplify to_addr_str(), get_addr_str(), and create to_addrport_str(),
++ Use random port number generator.
 * Continue moving RunMiniserver tests from test_miniserver.cpp to test_miniservver_run.cpp.
 * Rework test_sock.cp to work with changed sys_socket mocking.
 * Rework test_httpreadwrite.cpp

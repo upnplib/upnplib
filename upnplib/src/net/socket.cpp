@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-27
+// Redistribution only with this Copyright remark. Last modified: 2023-11-01
 
 #include <upnplib/socket.hpp>
 #include <upnplib/general.hpp>
@@ -102,8 +102,8 @@ static int getsockname(SOCKET a_sockfd, struct sockaddr* a_addr,
     int len{sizeof(protocol_info)}; // May be modified?
     if (umock::sys_socket_h.getsockopt(a_sockfd, SOL_SOCKET, SO_PROTOCOL_INFO,
                                        &protocol_info, &len) != 0)
-        return ENOBUFS; // Insufficient resources were available in the system
-                        // to perform the operation.
+        return WSAENOBUFS; // Insufficient resources were available in the
+                           // system to perform the operation.
 
     memset(a_addr, 0, *a_addrlen);
     // Microsoft itself defines sockaddr.sa_family as ushort, so the typecast
@@ -546,5 +546,36 @@ bool CSocket::is_listen() const {
     return m_listen;
 }
 
+
+// Portable handling of socket errors
+// ==================================
+CSocketError::CSocketError(){TRACE2(this, " Construct CSocketError()")}
+
+CSocketError::~CSocketError(){TRACE2(this, " Destruct CSocketError()")}
+
+CSocketError::operator const int&() const {
+    TRACE2(this,
+           " Executing CSocketError::operator int&() (get socket error number)")
+    return m_errno;
+}
+
+void CSocketError::catch_error() {
+#ifdef _MSC_VER
+    m_errno = WSAGetLastError();
+#else
+    m_errno = errno;
+#endif
+    TRACE2(this, " Executing CSocketError::catch_error()")
+}
+
+std::string CSocketError::error_str() {
+    TRACE2(this, " Executing CSocketError::error_str()")
+#ifdef _MSC_VER
+    return std::system_category().message(m_errno);
+#else
+    // return std::generic_category().message(m_errno);
+    return std::strerror(m_errno);
+#endif
+}
 
 } // namespace upnplib

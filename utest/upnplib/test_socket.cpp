@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-24
+// Redistribution only with this Copyright remark. Last modified: 2023-11-01
 
 #include <upnplib/general.hpp>
 #include <upnplib/socket.hpp>
@@ -25,6 +25,7 @@ using ::testing::ThrowsMessage;
 
 using ::upnplib::CSocket;
 using ::upnplib::CSocket_basic;
+using ::upnplib::CSocketError;
 
 // Create a simple random number generator for port numbers.
 // We could need this because we do not reuse addresses before TIME_WAIT has
@@ -34,6 +35,55 @@ std::random_device rd;         // obtain a random number from hardware
 std::minstd_rand random(rd()); // seed the generator
 std::uniform_int_distribution<in_port_t> portno(49152, 65535); // define range
 
+
+#ifdef _MSC_VER
+TEST(SocketErrorTestSuite, check_WSA_errorcode_compatibillity) {
+    // The result of this test with the real system functions is, that there is
+    // no clear assignment between BSD socket error constant numbers (e.g.
+    // ENOTSOCK) and its counterparts on win32 (e.g. WSAENOTSOCK). I have to
+    // map them with a new macro e.g. EBADFP.
+    //
+    // For details look at
+    // REF: [Error Codes - errno, h_errno and WSAGetLastError]
+    // (https://learn.microsoft.com/en-us/windows/win32/winsock/error-codes-errno-h-errno-and-wsagetlasterror-2)
+    WINSOCK_INIT
+
+    WSASetLastError(EWOULDBLOCK);
+    EXPECT_EQ(WSAGetLastError(), EWOULDBLOCK);
+    EXPECT_EQ(EWOULDBLOCK, 140);
+    EXPECT_EQ(WSAEWOULDBLOCK, 10035);
+    // std::cout << "EWOULDBLOCK = " << EWOULDBLOCK << ", WSAEWOULDBLOCK = " <<
+    // WSAEWOULDBLOCK << "\n";
+
+    WSASetLastError(EINVAL);
+    EXPECT_EQ(WSAGetLastError(), EINVAL);
+    EXPECT_EQ(EINVAL, 22);
+    EXPECT_EQ(WSAEINVAL, 10022);
+    // std::cout << "EINVAL = " << EINVAL << ", WSAEINVAL = " << WSAEINVAL <<
+    // "\n";
+
+    // This returns a real error of an invalid socket file descriptor number.
+    char so_opt;
+    socklen_t optlen{sizeof(so_opt)};
+    EXPECT_NE(::getsockopt(55555, SOL_SOCKET, SO_ERROR, &so_opt, &optlen), 0);
+    EXPECT_EQ(WSAGetLastError(), WSAENOTSOCK); // WSAENOTSOCK = 10038
+    EXPECT_NE(WSAGetLastError(), ENOTSOCK);    // ENOTSOCK = 128
+}
+#endif
+
+TEST(SocketErrorTestSuite, get_socket_error_successful) {
+    WINSOCK_INIT
+    CSocketError sockerrObj;
+
+    // Test Unit
+    // This returns a real error of an invalid socket file descriptor number.
+    char so_opt;
+    socklen_t optlen{sizeof(so_opt)};
+    EXPECT_NE(::getsockopt(55555, SOL_SOCKET, SO_ERROR, &so_opt, &optlen), 0);
+
+    sockerrObj.catch_error();
+    EXPECT_EQ(static_cast<int>(sockerrObj), EBADFP);
+}
 
 TEST(SocketBasicTestSuite, instantiate_socket_successful) {
     SOCKET sfd = ::socket(AF_INET6, SOCK_STREAM, 0);

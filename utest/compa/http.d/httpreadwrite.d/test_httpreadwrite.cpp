@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-24
+// Redistribution only with this Copyright remark. Last modified: 2023-11-01
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -9,6 +9,7 @@
 #include <upnplib/general.hpp>
 #include <upnplib/upnptools.hpp>
 #include <upnplib/uri.hpp>
+#include <upnplib/socket.hpp>
 
 #include <utest/utest.hpp>
 #include <umock/netdb_mock.hpp>
@@ -536,7 +537,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_socket_fails) {
     // to a socket."
     EXPECT_CALL(sys_socketObj, shutdown(_, _))
 #ifndef UPNP_ENABLE_OPEN_SSL
-        .WillOnce(SetErrnoAndReturn(ENOTSOCK, -1));
+        .WillOnce(SetErrnoAndReturn(EBADFP, -1));
 #else
         .Times(0);
 #endif
