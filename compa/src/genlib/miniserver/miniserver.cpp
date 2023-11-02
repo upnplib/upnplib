@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-10-28
+ * Redistribution only with this Copyright remark. Last modified: 2023-11-02
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -897,8 +897,6 @@ error:
  */
 static int do_bind(s_SocketStuff* s) {
     TRACE("Executing do_bind()")
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__, "Inside do_bind()\n");
-
     int ret_val = UPNP_E_SUCCESS;
     int bind_error;
     uint16_t original_listen_port = s->try_port;

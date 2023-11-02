@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-25
+// Redistribution only with this Copyright remark. Last modified: 2023-11-03
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/general.hpp>
@@ -51,13 +51,19 @@ std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr) {
     case AF_UNSPEC:
         return "";
 
+    // There is no need to test the return value of ::inet_ntop() because its
+    // two possible errors are implicit managed by this code.
     case AF_INET6:
-        ::inet_ntop(AF_INET6, &((sockaddr_in6*)a_sockaddr)->sin6_addr.s6_addr,
+        ::inet_ntop(AF_INET6,
+                    &reinterpret_cast<const ::sockaddr_in6*>(a_sockaddr)
+                         ->sin6_addr.s6_addr,
                     addrbuf, sizeof(addrbuf));
         return '[' + std::string(addrbuf) + ']';
 
     case AF_INET:
-        ::inet_ntop(AF_INET, &((sockaddr_in*)a_sockaddr)->sin_addr.s_addr,
+        ::inet_ntop(AF_INET,
+                    &reinterpret_cast<const ::sockaddr_in*>(a_sockaddr)
+                         ->sin_addr.s_addr,
                     addrbuf, sizeof(addrbuf));
         return std::string(addrbuf);
 
@@ -76,9 +82,12 @@ std::string to_addrport_str(const ::sockaddr_storage* const a_sockaddr) {
     //
     // sin_port and sin6_port are on the same memory location (union of the
     // structures) so I can use it for AF_INET and AF_INET6.
-    return to_addr_str(a_sockaddr) + ":" +
-           std::to_string(ntohs(
-               reinterpret_cast<const ::sockaddr_in6*>(a_sockaddr)->sin6_port));
+    return (a_sockaddr->ss_family == AF_UNSPEC)
+               ? ""
+               : to_addr_str(a_sockaddr) + ":" +
+                     std::to_string(ntohs(
+                         reinterpret_cast<const ::sockaddr_in6*>(a_sockaddr)
+                             ->sin6_port));
 }
 
 
@@ -104,22 +113,24 @@ bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
         // (unsigned char s6_addr[16]). So we have to use memcmp() for
         // comparison.
         const unsigned char* const s6_addr1 =
-            ((sockaddr_in6*)a_ss1)->sin6_addr.s6_addr;
+            reinterpret_cast<const ::sockaddr_in6*>(a_ss1)->sin6_addr.s6_addr;
         const unsigned char* const s6_addr2 =
-            ((sockaddr_in6*)a_ss2)->sin6_addr.s6_addr;
+            reinterpret_cast<const ::sockaddr_in6*>(a_ss2)->sin6_addr.s6_addr;
 
         if (a_ss2->ss_family != AF_INET6 ||
             ::memcmp(s6_addr1, s6_addr2, sizeof(in6_addr)) != 0 ||
-            ((sockaddr_in6*)a_ss1)->sin6_port !=
-                ((sockaddr_in6*)a_ss2)->sin6_port)
+            reinterpret_cast<const ::sockaddr_in6*>(a_ss1)->sin6_port !=
+                reinterpret_cast<const ::sockaddr_in6*>(a_ss2)->sin6_port)
             return false;
     } break;
 
     case AF_INET:
         if (a_ss2->ss_family != AF_INET ||
-            ((sockaddr_in*)a_ss1)->sin_addr.s_addr !=
-                ((sockaddr_in*)a_ss2)->sin_addr.s_addr ||
-            ((sockaddr_in*)a_ss1)->sin_port != ((sockaddr_in*)a_ss2)->sin_port)
+            reinterpret_cast<const ::sockaddr_in*>(a_ss1)->sin_addr.s_addr !=
+                reinterpret_cast<const ::sockaddr_in*>(a_ss2)
+                    ->sin_addr.s_addr ||
+            reinterpret_cast<const ::sockaddr_in*>(a_ss1)->sin_port !=
+                reinterpret_cast<const ::sockaddr_in*>(a_ss2)->sin_port)
             return false;
         break;
 
@@ -211,10 +222,11 @@ uint16_t SSockaddr_storage::get_port() const {
     TRACE2(this, " Executing SSockaddr_storage::get_port()")
     // sin_port and sin6_port are on the same memory location (union of the
     // structures) so we can use it for AF_INET and AF_INET6.
-    return ntohs(((sockaddr_in6*)&this->ss)->sin6_port);
+    return ntohs(reinterpret_cast<const ::sockaddr_in6*>(&this->ss)->sin6_port);
 }
 
 // Getter for the length of the sockaddr structure.
+// ------------------------------------------------
 socklen_t SSockaddr_storage::get_sslen() const {
     TRACE2(this, " Executing SSockaddr_storage::get_sslen()")
     return sizeof(this->ss);
@@ -228,13 +240,13 @@ void SSockaddr_storage::handle_ipv6(const std::string& a_addr_str) {
     // remove surounding brackets
     std::string addr_str = a_addr_str.substr(1, a_addr_str.length() - 2);
 
-    int ret = inet_pton(AF_INET6, addr_str.c_str(),
-                        &((sockaddr_in6*)&this->ss)->sin6_addr);
+    int ret =
+        inet_pton(AF_INET6, addr_str.c_str(),
+                  &reinterpret_cast<::sockaddr_in6*>(&this->ss)->sin6_addr);
     if (ret == 0) {
-        throw std::invalid_argument(
-            "at */" + std::filesystem::path(__FILE__).filename().string() +
-            "[" + std::to_string(__LINE__) + "]: Invalid ip address '" +
-            a_addr_str + "'");
+        throw std::invalid_argument(UPNPLIB_LOGEXCEPT +
+                                    "MSG1043: Invalid ip address '" +
+                                    a_addr_str + "'");
     }
     this->ss.ss_family = AF_INET6;
 }
@@ -242,12 +254,11 @@ void SSockaddr_storage::handle_ipv6(const std::string& a_addr_str) {
 void SSockaddr_storage::handle_ipv4(const std::string& a_addr_str) {
     TRACE2(this, " Executing SSockaddr_storage::handle_ipv4()")
     int ret = inet_pton(AF_INET, a_addr_str.c_str(),
-                        &((sockaddr_in*)&this->ss)->sin_addr);
+                        &reinterpret_cast<::sockaddr_in*>(&this->ss)->sin_addr);
     if (ret == 0) {
-        throw std::invalid_argument(
-            "at */" + std::filesystem::path(__FILE__).filename().string() +
-            "[" + std::to_string(__LINE__) + "]: Invalid ip address '" +
-            a_addr_str + "'");
+        throw std::invalid_argument(UPNPLIB_LOGEXCEPT +
+                                    "MSG1044: Invalid ip address '" +
+                                    a_addr_str + "'");
     }
     this->ss.ss_family = AF_INET;
 }
@@ -256,7 +267,8 @@ void SSockaddr_storage::handle_port(const std::string& a_port) {
     TRACE2(this, " Executing SSockaddr_storage::handle_port()")
     // sin_port and sin6_port are on the same memory location (union of the
     // structures) so we can use it for AF_INET and AF_INET6.
-    ((sockaddr_in6*)&this->ss)->sin6_port = htons(to_port(a_port));
+    reinterpret_cast<::sockaddr_in6*>(&this->ss)->sin6_port =
+        htons(to_port(a_port));
 }
 
 } // namespace upnplib

@@ -16,6 +16,7 @@ namespace utest {
 
 using ::testing::_;
 using ::testing::DoAll;
+using ::testing::EndsWith;
 using ::testing::HasSubstr;
 using ::testing::Pointee;
 using ::testing::Return;
@@ -134,9 +135,9 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_stream) {
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    EXPECT_THAT(
-        [&sockObj]() { sockObj.get_addr_str(); },
-        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1024: ")));
+    EXPECT_THAT([&sockObj]() { sockObj.get_addr_str(); },
+                ThrowsMessage<std::invalid_argument>(EndsWith(
+                    "] EXCEPTION MSG1036: Unsupported address family 1")));
 
     CLOSE_SOCKET_P(sfd);
 }
@@ -531,7 +532,7 @@ TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
 
     // Provide invalid address family.
     ::sockaddr_storage ss{};
-    ss.ss_family = (sa_family_t)255;
+    ss.ss_family = static_cast<sa_family_t>(255);
 
     // Mock system function
     umock::Sys_socketMock sys_socketObj;
@@ -539,12 +540,13 @@ TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
     EXPECT_CALL(sys_socketObj,
                 getsockname((SOCKET)sockObj, _,
                             Pointee((int)sizeof(::sockaddr_storage))))
-        .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&ss), Return(0)));
+        .WillOnce(DoAll(SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ss)),
+                        Return(0)));
 
     // Test Unit
-    EXPECT_THAT(
-        [&sockObj]() { sockObj.get_addr_str(); },
-        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1024: ")));
+    EXPECT_THAT([&sockObj]() { sockObj.get_addr_str(); },
+                ThrowsMessage<std::invalid_argument>(EndsWith(
+                    "] EXCEPTION MSG1036: Unsupported address family 255")));
 }
 
 TEST(SocketBindTestSuite, bind_ipv6_successful) {

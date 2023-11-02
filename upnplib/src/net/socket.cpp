@@ -1,8 +1,9 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-01
+// Redistribution only with this Copyright remark. Last modified: 2023-11-03
 
 #include <upnplib/socket.hpp>
 #include <upnplib/general.hpp>
+#include <upnplib/sockaddr.hpp>
 #include <umock/sys_socket.hpp>
 #include <umock/stringh.hpp>
 #ifdef _MSC_VER
@@ -76,14 +77,14 @@ static inline void throw_error(const std::string& a_errmsg) {
 
 // upnplib wrapper for the ::getsockname() system function
 // -------------------------------------------------------
-static int getsockname(SOCKET a_sockfd, struct sockaddr* a_addr,
+static int getsockname(SOCKET a_sockfd, sockaddr* a_addr,
                        socklen_t* a_addrlen) {
     TRACE("Executing getsockname()");
 
     int ret = umock::sys_socket_h.getsockname(a_sockfd, a_addr, a_addrlen);
-    if (ret == 0)
+    if (ret == 0) {
         return 0;
-
+    }
 #ifndef _MSC_VER
     return ret;
 
@@ -174,32 +175,7 @@ std::string CSocket_basic::get_addr_str() const {
         0)
         throw_error("MSG1001: Failed to get socket address/port:");
 
-    char addr_buf[INET6_ADDRSTRLEN]{};
-    const char* ret{nullptr};
-    switch (ss.ss_family) {
-    case AF_INET6:
-        ret = ::inet_ntop(AF_INET6,
-                          &(reinterpret_cast<sockaddr_in6*>(&ss))->sin6_addr,
-                          addr_buf, sizeof(addr_buf));
-        break;
-    case AF_INET:
-        ret = ::inet_ntop(AF_INET,
-                          &(reinterpret_cast<sockaddr_in*>(&ss))->sin_addr,
-                          addr_buf, sizeof(addr_buf));
-        break;
-    default:
-        throw std::runtime_error(UPNPLIB_LOGEXCEPT +
-                                 "MSG1024: Invalid address family " +
-                                 std::to_string(ss.ss_family));
-    }
-
-    if (ret == nullptr)
-        throw_error("MSG1025: Failed to get a socket address string "
-                    "(IP address):");
-
-    // Surround IPv6 address with '[' and ']'
-    return (ss.ss_family == AF_INET6) ? '[' + std::string(addr_buf) + ']'
-                                      : std::string(addr_buf);
+    return to_addr_str(&ss);
 }
 
 uint16_t CSocket_basic::get_port() const {

@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_UTEST_HPP
 #define UPNPLIB_UTEST_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-23
+// Redistribution only with this Copyright remark. Last modified: 2023-11-03
 
 #include <upnplib/visibility.hpp>
 
@@ -196,7 +196,8 @@ ACTION_TEMPLATE(StrCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
 }
 ACTION_TEMPLATE(StrnCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
                 AND_2_VALUE_PARAMS(str, len)) {
-    std::strncpy(static_cast<char*>(std::get<k>(args)), str, (size_t)len);
+    std::strncpy(static_cast<char*>(std::get<k>(args)), str,
+                 static_cast<size_t>(len));
 }
 
 } // namespace utest

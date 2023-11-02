@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-25
+// Redistribution only with this Copyright remark. Last modified: 2023-11-02
 
 #include <upnplib/general.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -17,6 +17,7 @@ using ::upnplib::CSocket;
 using ::upnplib::sockaddrcmp;
 using ::upnplib::SSockaddr_storage;
 using ::upnplib::to_addr_str;
+using ::upnplib::to_addrport_str;
 using ::upnplib::to_port;
 
 
@@ -212,25 +213,28 @@ TEST(SockaddrStorageTestSuite, fill_structure_from_function_output) {
 TEST(SockaddrStorageTestSuite, set_address_and_port_fail) {
     SSockaddr_storage saddr;
 
-    EXPECT_THAT([&saddr]() { saddr = "[2001::db8::1]"; },
-                ThrowsMessage<std::invalid_argument>(
-                    EndsWith("Invalid ip address '[2001::db8::1]'")));
+    EXPECT_THAT(
+        [&saddr]() { saddr = "[2001::db8::1]"; },
+        ThrowsMessage<std::invalid_argument>(EndsWith(
+            "] EXCEPTION MSG1043: Invalid ip address '[2001::db8::1]'")));
 
     EXPECT_THAT([&saddr]() { saddr = "2001:db8::1]"; },
-                ThrowsMessage<std::invalid_argument>(
-                    EndsWith("Invalid ip address '2001'")));
+                ThrowsMessage<std::invalid_argument>(EndsWith(
+                    "] EXCEPTION MSG1044: Invalid ip address '2001'")));
 
     EXPECT_THROW({ saddr = "[2001:db8::2"; }, std::out_of_range);
 
     EXPECT_THROW({ saddr = "[2001:db8::3]50003"; }, std::out_of_range);
 
-    EXPECT_THAT([&saddr]() { saddr = "[2001:db8::35003]"; },
-                ThrowsMessage<std::invalid_argument>(
-                    EndsWith("Invalid ip address '[2001:db8::35003]'")));
+    EXPECT_THAT(
+        [&saddr]() { saddr = "[2001:db8::35003]"; },
+        ThrowsMessage<std::invalid_argument>(EndsWith(
+            "] EXCEPTION MSG1043: Invalid ip address '[2001:db8::35003]'")));
 
-    EXPECT_THAT([&saddr]() { saddr = "192.168.66.67."; },
-                ThrowsMessage<std::invalid_argument>(
-                    EndsWith("Invalid ip address '192.168.66.67.'")));
+    EXPECT_THAT(
+        [&saddr]() { saddr = "192.168.66.67."; },
+        ThrowsMessage<std::invalid_argument>(EndsWith(
+            "] EXCEPTION MSG1044: Invalid ip address '192.168.66.67.'")));
 
     EXPECT_THAT([&saddr]() { saddr = "192.168.66.67z"; },
                 ThrowsMessage<std::invalid_argument>(
@@ -246,9 +250,9 @@ TEST(SockaddrStorageTestSuite, compare_ipv6_address) {
     // Show how to address and compare ipv6 address. It is stored with
     // unsigned char s6_addr[16]; so we have to use memcmp().
     const unsigned char* const s6_addr1 =
-        ((sockaddr_in6*)&saddr1.ss)->sin6_addr.s6_addr;
+        reinterpret_cast<const sockaddr_in6*>(&saddr1.ss)->sin6_addr.s6_addr;
     const unsigned char* const s6_addr2 =
-        ((sockaddr_in6*)&saddr2.ss)->sin6_addr.s6_addr;
+        reinterpret_cast<const sockaddr_in6*>(&saddr2.ss)->sin6_addr.s6_addr;
     EXPECT_EQ(memcmp(s6_addr1, s6_addr2, sizeof(*s6_addr1)), 0);
 
     // Test Unit compare successful
@@ -379,6 +383,9 @@ TEST(ToAddrStrTestSuite, sockaddr_to_address_string) {
 
     EXPECT_EQ(to_addr_str(&saddr.ss), "");
 
+    saddr.ss.ss_family = AF_UNSPEC;
+    EXPECT_EQ(to_addr_str(&saddr.ss), "");
+
     saddr.ss.ss_family = AF_INET6;
     EXPECT_EQ(to_addr_str(&saddr.ss), "[::]");
 
@@ -391,18 +398,47 @@ TEST(ToAddrStrTestSuite, sockaddr_to_address_string) {
     saddr = "192.168.88.99";
     EXPECT_EQ(to_addr_str(&saddr.ss), "192.168.88.99");
 
-    saddr.ss.ss_family = AF_UNSPEC;
-    EXPECT_EQ(to_addr_str(&saddr.ss), "");
-
     saddr.ss.ss_family = AF_UNIX;
     EXPECT_THAT([&saddr]() { to_addr_str(&saddr.ss); },
                 ThrowsMessage<std::invalid_argument>(HasSubstr(
                     "] EXCEPTION MSG1036: Unsupported address family 1")));
 }
 
+TEST(ToAddrStrTestSuite, sockaddr_to_address_port_string) {
+    SSockaddr_storage saddr;
+
+    EXPECT_EQ(to_addrport_str(&saddr.ss), "");
+
+    saddr.ss.ss_family = AF_UNSPEC;
+    EXPECT_EQ(to_addrport_str(&saddr.ss), "");
+
+    saddr.ss.ss_family = AF_INET6;
+    EXPECT_EQ(to_addrport_str(&saddr.ss), "[::]:0");
+
+    saddr.ss.ss_family = AF_INET;
+    EXPECT_EQ(to_addrport_str(&saddr.ss), "0.0.0.0:0");
+
+    saddr = "[2001:db8::4]";
+    EXPECT_EQ(to_addrport_str(&saddr.ss), "[2001:db8::4]:0");
+
+    saddr = "192.168.88.100";
+    EXPECT_EQ(to_addrport_str(&saddr.ss), "192.168.88.100:0");
+
+    saddr = "[2001:db8::5]:56789";
+    EXPECT_EQ(to_addrport_str(&saddr.ss), "[2001:db8::5]:56789");
+
+    saddr = "192.168.88.101:54321";
+    EXPECT_EQ(to_addrport_str(&saddr.ss), "192.168.88.101:54321");
+
+    saddr.ss.ss_family = AF_UNIX;
+    EXPECT_THAT([&saddr]() { to_addrport_str(&saddr.ss); },
+                ThrowsMessage<std::invalid_argument>(HasSubstr(
+                    "] EXCEPTION MSG1036: Unsupported address family 1")));
+}
+
 } // namespace utest
 
-//
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
     WINSOCK_INIT

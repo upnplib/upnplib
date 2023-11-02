@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-01
+// Redistribution only with this Copyright remark. Last modified: 2023-11-03
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -2101,7 +2101,9 @@ TEST_F(RunMiniServerFTestSuite,
 
         EXPECT_FALSE(ret_getNumericHostRedirection);
         // Get captured output
-        EXPECT_THAT(captureObj.str(), HasSubstr("] EXCEPTION MSG1024: "));
+        EXPECT_THAT(
+            captureObj.str(),
+            HasSubstr("] EXCEPTION MSG1036: Unsupported address family 1"));
         EXPECT_STREQ(host_port, "<no message>");
     }
 }
