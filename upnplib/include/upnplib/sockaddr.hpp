@@ -1,19 +1,26 @@
 #ifndef UPNPLIB_NET_SOCKADDR_HPP
 #define UPNPLIB_NET_SOCKADDR_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-25
+// Redistribution only with this Copyright remark. Last modified: 2023-11-03
 
 // Helpful links:
-// clang-format off
-// REF: [sockaddr structures as union](https://stackoverflow.com/a/76548581/5014688)
-// REF: [Why do I get wrong pointer to a base class with a virtual constructor](https://stackoverflow.com/q/76360179/5014688)
-// clang-format on
+// REF:_[Why_do_I_get_wrong_pointer_to_a_base_class_with_a_virtual_constructor](https://stackoverflow.com/q/76360179/5014688)
 
 #include <upnplib/port_sock.hpp>
 #include <upnplib/visibility.hpp>
 #include <string>
 
 namespace upnplib {
+
+// Never need to use type casts with pointer to different socket address
+// structures. For details about using this helpful union have a look at
+// REF:_[sockaddr_structures_as_union](https://stackoverflow.com/a/76548581/5014688)
+using sockaddr_t = union {
+    sockaddr_storage ss;
+    sockaddr_in6 sin6;
+    sockaddr_in sin;
+    sockaddr sa;
+};
 
 // Free function to get the port number from a string
 // --------------------------------------------------

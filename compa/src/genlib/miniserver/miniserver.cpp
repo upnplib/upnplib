@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-11-02
+ * Redistribution only with this Copyright remark. Last modified: 2023-11-03
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -90,7 +90,7 @@ struct mserv_request_t {
     /*! Connection handle. */
     SOCKET connfd;
     /*! . */
-    struct sockaddr_storage foreign_sockaddr;
+    sockaddr_storage foreign_sockaddr;
 };
 
 /*! . */
@@ -125,11 +125,11 @@ static int MINISERVER_REUSEADDR =
 struct s_SocketStuff {
     int ip_version;
     const char* text_addr;
-    struct sockaddr_storage ss;
+    sockaddr_storage ss;
     union {
-        struct sockaddr* serverAddr;
-        struct sockaddr_in* serverAddr4;
-        struct sockaddr_in6* serverAddr6;
+        sockaddr* serverAddr;
+        sockaddr_in* serverAddr4;
+        sockaddr_in6* serverAddr6;
     };
     SOCKET fd;
     uint16_t try_port;
@@ -497,14 +497,11 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
     }
 
     SOCKET asock;
-    socklen_t clientLen;
-    sockaddr_storage clientAddr;
-    sockaddr_in* sa_in{(sockaddr_in*)&clientAddr};
-    clientLen = sizeof(clientAddr);
+    upnplib::sockaddr_t clientAddr;
+    socklen_t clientLen = sizeof(clientAddr);
 
     // accept a network request connection
-    asock =
-        umock::sys_socket_h.accept(lsock, (sockaddr*)&clientAddr, &clientLen);
+    asock = umock::sys_socket_h.accept(lsock, &clientAddr.sa, &clientLen);
     if (asock == INVALID_SOCKET) {
         UPNPLIB_LOGERR << "MSG1022: Error in ::accept(): "
                        << std::strerror(errno) << ".\n";
@@ -513,11 +510,11 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
 
     // Here we schedule the job to manage a UPnP request from a client.
     char buf_ntop[INET6_ADDRSTRLEN + 7];
-    inet_ntop(AF_INET, &sa_in->sin_addr, buf_ntop, sizeof(buf_ntop));
+    inet_ntop(AF_INET, &clientAddr.sin.sin_addr, buf_ntop, sizeof(buf_ntop));
     UPNPLIB_LOGINFO << "MSG1023: Connected to host " << buf_ntop << ":"
-                    << ntohs(sa_in->sin_port) << " with socket " << asock
-                    << ".\n";
-    schedule_request_job(asock, (sockaddr*)&clientAddr);
+                    << ntohs(clientAddr.sin.sin_port) << " with socket "
+                    << asock << ".\n";
+    schedule_request_job(asock, &clientAddr.sa);
 
     return UPNP_E_SUCCESS;
 #endif /* INTERNAL_WEB_SERVER */
@@ -553,8 +550,7 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
     if (!FD_ISSET(ssock, set))
         return 0; // Nothing to do for this socket
 
-    sockaddr_storage clientAddr{};
-    sockaddr_in* const sa_in{reinterpret_cast<sockaddr_in*>(&clientAddr)};
+    upnplib::sockaddr_t clientAddr{};
     socklen_t clientLen{sizeof(clientAddr)}; // May be modified
 
     // The receive buffer is one byte greater with '\0' than the max receiving
@@ -564,18 +560,17 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
 
     // receive from
     SSIZEP_T byteReceived = umock::sys_socket_h.recvfrom(
-        ssock, receiveBuf, sizeof(shutdown_str), 0,
-        reinterpret_cast<sockaddr*>(&clientAddr), &clientLen);
+        ssock, receiveBuf, sizeof(shutdown_str), 0, &clientAddr.sa, &clientLen);
     if (byteReceived == SOCKET_ERROR ||
-        inet_ntop(AF_INET, &sa_in->sin_addr, buf_ntop, sizeof(buf_ntop)) ==
-            nullptr) {
+        inet_ntop(AF_INET, &clientAddr.sin.sin_addr, buf_ntop,
+                  sizeof(buf_ntop)) == nullptr) {
         UPNPLIB_LOGCRIT << "MSG1038: Failed to receive data from socket "
                         << ssock << ". Stop miniserver.\n";
         return 1;
     }
 
     // 16777343 are netorder bytes of "127.0.0.1"
-    if (sa_in->sin_addr.s_addr != 16777343 ||
+    if (clientAddr.sin.sin_addr.s_addr != 16777343 ||
         strcmp(receiveBuf, shutdown_str) != 0) //
     {
         char nullstr[]{"\\0"};
@@ -583,7 +578,7 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
             nullstr[0] = '\0';
         UPNPLIB_LOGERR << "MSG1039: Received \"" << receiveBuf << nullstr
                        << "\" from " << buf_ntop << ":"
-                       << ntohs(sa_in->sin_port)
+                       << ntohs(clientAddr.sin.sin_port)
                        << ", must be \"ShutDown\\0\" from 127.0.0.1:*. Don't "
                           "stopping miniserver.\n";
         return 0;
@@ -591,7 +586,7 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
 
     UPNPLIB_LOGINFO << "MSG1040: Received ordinary datagram \"" << receiveBuf
                     << "\\0\" from " << buf_ntop << ":"
-                    << ntohs(sa_in->sin_port) << ". Stop miniserver.\n";
+                    << ntohs(clientAddr.sin.sin_port) << ". Stop miniserver.\n";
     return 1;
 }
 
@@ -755,19 +750,18 @@ static int get_port(
     /*! [out] The port value if successful, otherwise, untouched. */
     uint16_t* port) {
     TRACE("Executing get_port(), calls system getsockname()")
-    sockaddr_storage sockinfo{};
+    upnplib::sockaddr_t sockinfo{};
     socklen_t len(sizeof sockinfo); // May be modified by getsockname()
 
-    if (umock::sys_socket_h.getsockname(sockfd, (sockaddr*)&sockinfo, &len) ==
-        -1)
+    if (umock::sys_socket_h.getsockname(sockfd, &sockinfo.sa, &len) == -1)
         return -1;
 
-    switch (sockinfo.ss_family) {
+    switch (sockinfo.ss.ss_family) {
     case AF_INET:
-        *port = ntohs(((sockaddr_in*)&sockinfo)->sin_port);
+        *port = ntohs(sockinfo.sin.sin_port);
         break;
     case AF_INET6:
-        *port = ntohs(((sockaddr_in6*)&sockinfo)->sin6_port);
+        *port = ntohs(sockinfo.sin6.sin6_port);
         break;
     default:
         return -1;
