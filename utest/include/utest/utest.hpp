@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_UTEST_HPP
 #define UPNPLIB_UTEST_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-03
+// Redistribution only with this Copyright remark. Last modified: 2023-11-04
 
 #include <upnplib/visibility.hpp>
 
@@ -176,7 +176,10 @@ ACTION_TEMPLATE(SetArgPtrIntValue, HAS_1_TEMPLATE_PARAMS(int, k),
     *static_cast<int*>(std::get<k>(args)) = value;
 }
 
-
+#if 1
+// Coppy a string to an argument can also be done with
+// SetArrayArgument<N>(first, last) but I keep this as example.
+//
 // Action to return a string literal
 // ---------------------------------
 // Reference: https://groups.google.com/g/googlemock/c/lQqCMW1ANQA
@@ -199,6 +202,7 @@ ACTION_TEMPLATE(StrnCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
     std::strncpy(static_cast<char*>(std::get<k>(args)), str,
                  static_cast<size_t>(len));
 }
+#endif
 
 } // namespace utest
 

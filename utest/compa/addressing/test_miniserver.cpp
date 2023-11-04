@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-03
+// Redistribution only with this Copyright remark. Last modified: 2023-11-05
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -36,6 +36,7 @@ namespace utest {
 using ::testing::_;
 using ::testing::AnyOf;
 using ::testing::DoAll;
+using ::testing::EndsWith;
 using ::testing::Ge;
 using ::testing::HasSubstr;
 using ::testing::NotNull;
@@ -43,6 +44,7 @@ using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
+using ::testing::StartsWith;
 using ::testing::StrictMock;
 
 using ::upnplib::CAddrinfo;
@@ -1562,95 +1564,6 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_stopsock_getsockname_fails) {
     // Close socket; we don't need to close a mocked socket
 }
 
-TEST_F(RunMiniServerFTestSuite, ssdp_read_successful) {
-    WINSOCK_INIT
-    // CLogging logObj; // Output only with build type DEBUG.
-    // logObj.enable(UPNP_ALL);
-
-    // Initialize the threadpool. Don't forget to shutdown the threadpool at the
-    // end. nullptr means to use default attributes.
-    ASSERT_EQ(ThreadPoolInit(&gRecvThreadPool, nullptr), 0);
-    // Prevent to add jobs, we test jobs isolated.
-    gRecvThreadPool.shutdown = 1;
-
-    constexpr char ssdpdata_str[]{
-        "Some SSDP test data for a request of a remote client."};
-    ASSERT_LE(sizeof(ssdpdata_str), BUFSIZE - 1);
-
-    SOCKET ssdp_sockfd{umock::sfd_base + 32};
-    const CAddrinfo ai("192.168.71.82", "50023", AF_INET, SOCK_DGRAM,
-                       AI_NUMERICHOST | AI_NUMERICSERV);
-    fd_set rdSet;
-    FD_ZERO(&rdSet);
-    FD_SET(ssdp_sockfd, &rdSet);
-
-    // Instantiate mocking objects.
-    // umock::PthreadMock pthreadObj;
-    // Inject mocking objects into the production code.
-    // umock::Pthread pthread_injectObj(&pthreadObj);
-
-    // EXPECT_CALL(pthreadObj, pthread_mutex_lock(_)).Times(1);
-    // EXPECT_CALL(pthreadObj, pthread_mutex_unlock(_)).Times(1);
-    EXPECT_CALL(m_sys_socketObj,
-                recvfrom(ssdp_sockfd, _, BUFSIZE - 1, 0, _,
-                         Pointee((socklen_t)sizeof(sockaddr_storage))))
-        .WillOnce(DoAll(StrCpyToArg<1>(ssdpdata_str),
-                        SetArgPointee<4>(*ai->ai_addr),
-                        Return((SSIZEP_T)sizeof(ssdpdata_str))));
-
-    // Test Unit
-    ssdp_read(&ssdp_sockfd, &rdSet);
-
-    EXPECT_NE(ssdp_sockfd, INVALID_SOCKET);
-
-    // Shutdown the threadpool.
-    EXPECT_EQ(ThreadPoolShutdown(&gRecvThreadPool), 0);
-}
-
-TEST_F(RunMiniServerFTestSuite, ssdp_read_fails) {
-    WINSOCK_INIT
-    // CLogging logObj; // Output only with build type DEBUG.
-    // logObj.enable(UPNP_ALL);
-
-    constexpr char ssdpdata_str[]{
-        "Some SSDP test data for a request of a remote client."};
-    ASSERT_LE(sizeof(ssdpdata_str), BUFSIZE - 1);
-
-    constexpr SOCKET ssdp_sockfd_valid{umock::sfd_base + 46};
-    const CAddrinfo ai("192.168.71.82", "50023", AF_INET, SOCK_DGRAM,
-                       AI_NUMERICHOST | AI_NUMERICSERV);
-
-    // Instantiate mocking objects.
-    EXPECT_CALL(m_sys_socketObj, recvfrom(_, _, _, _, _, _)).Times(0);
-
-    // Socket is set but not in the select set.
-    SOCKET ssdp_sockfd{ssdp_sockfd_valid};
-    fd_set rdSet;
-    FD_ZERO(&rdSet);
-
-    // Test Unit, socket should be untouched.
-    ssdp_read(&ssdp_sockfd, &rdSet);
-    EXPECT_EQ(ssdp_sockfd, ssdp_sockfd_valid);
-
-    // Invalid socket must not be set in the select set.
-    ssdp_sockfd = INVALID_SOCKET;
-
-    // Test Unit
-    ssdp_read(&ssdp_sockfd, &rdSet);
-    EXPECT_EQ(ssdp_sockfd, INVALID_SOCKET);
-
-    // Socket is set, also in the select set, but reading from socket fails.
-    ssdp_sockfd = ssdp_sockfd_valid;
-    FD_SET(ssdp_sockfd, &rdSet);
-
-    EXPECT_CALL(m_sys_socketObj, recvfrom(ssdp_sockfd, _, _, _, _, _))
-        .WillOnce(SetErrnoAndReturn(EINVAL, SOCKET_ERROR));
-
-    // Test Unit
-    ssdp_read(&ssdp_sockfd, &rdSet);
-    EXPECT_EQ(ssdp_sockfd, INVALID_SOCKET);
-}
-
 TEST_F(RunMiniServerFTestSuite, web_server_accept_successful) {
     // The tested units are different for old_code (pupnp) and new code (compa).
     // We have void      ::web_server_accept() and
@@ -1885,15 +1798,20 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
     schedule_request_job(connected_sockfd, ai->ai_addr);
 
     // Get captured output
+    EXPECT_THAT(captureObj.str(),
+                HasSubstr("libupnp ThreadPoolAdd too many jobs: 0\n"));
+    if (old_code) {
 #ifdef DEBUG
-    EXPECT_THAT(captureObj.str(),
-                ContainsStdRegex(" UPNP-MSER-\\d: .* " +
-                                 std::to_string(connected_sockfd) +
-                                 ": cannot schedule request\n"));
-#else
-    EXPECT_THAT(captureObj.str(),
-                ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0\n"));
+        EXPECT_THAT(captureObj.str(),
+                    EndsWith("]: mserv 36: cannot schedule request\n"));
 #endif
+    } else {
+        if (g_dbug)
+            EXPECT_THAT(
+                captureObj.str(),
+                EndsWith(
+                    "] ERROR MSG1025: Socket 36: cannot schedule request.\n"));
+    }
     // Shutdown the threadpool.
     EXPECT_EQ(ThreadPoolShutdown(&gMiniServerThreadPool), 0);
 }

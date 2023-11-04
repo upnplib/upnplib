@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-26
+// Redistribution only with this Copyright remark. Last modified: 2023-11-04
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -32,6 +32,7 @@ using ::testing::NotNull;
 using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
+using ::testing::SetArrayArgument;
 using ::testing::SetErrnoAndReturn;
 using ::testing::StrictMock;
 
@@ -43,7 +44,7 @@ using ::pupnp::CLogging;
 
 // Miniserver Run TestSuite
 // ========================
-class MiniServerRunFTestSuite : public ::testing::Test {
+class MiniServerMockFTestSuite : public ::testing::Test {
     // This is a fixture to provide mocking of sys_socket only.
   protected:
     // clang-format off
@@ -53,25 +54,23 @@ class MiniServerRunFTestSuite : public ::testing::Test {
     umock::Sys_socket sys_socket_injectObj = umock::Sys_socket(&m_sys_socketObj);
     // clang-format on
 
-    MiniServerRunFTestSuite() {
-        TRACE2(this, " Construct MiniServerRunFTestSuite()")
+    MiniServerMockFTestSuite() {
+        TRACE2(this, " Construct MiniServerMockFTestSuite()")
     }
 
-    ~MiniServerRunFTestSuite() {
-        TRACE2(this, " Destruct MiniServerRunFTestSuite()")
+    virtual ~MiniServerMockFTestSuite() override {
+        TRACE2(this, " Destruct MiniServerMockFTestSuite()")
     }
 };
 
-class RunMiniserverFuncFTestSuite : public MiniServerRunFTestSuite {
-    // This is a fixture to provide mocking of sys_socket and initializing the
-    // threadpool and a MiniServerSockArray on the heap to call the
-    // RunMiniserver() function.
+class MiniServerThreadFTestSuite : public MiniServerMockFTestSuite {
   protected:
-    MiniServerSockArray* m_minisock{};
-
-    RunMiniserverFuncFTestSuite() {
-        TRACE2(this, " Construct RunMiniserverFuncFTestSuite()")
-        // Initialize the threadpool. nullptr means to use default attributes.
+    // This is a fixture to provide mocking of sys_socket and initializing the
+    // threadpool.
+    MiniServerThreadFTestSuite() {
+        TRACE2(this, " Construct MiniServerThreadFTestSuite()")
+        // Initialize the MiniServer Threadpool. nullptr means to use default
+        // attributes.
         int ret_ThreadPoolInit =
             ThreadPoolInit(&gMiniServerThreadPool, nullptr);
         if (ret_ThreadPoolInit != 0)
@@ -79,10 +78,29 @@ class RunMiniserverFuncFTestSuite : public MiniServerRunFTestSuite {
                 UPNPLIB_LOGEXCEPT
                 "MSG0088: Initializing ThreadPool fails with return number " +
                 std::to_string(ret_ThreadPoolInit));
-        // Prevent to add jobs, I test jobs isolated.
+        // Prevent to add jobs without error message, I test jobs isolated.
         gMiniServerThreadPool.shutdown = 1;
-        // EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 0), 0);
+        // or allow number of threads. Use 0 with check of error message to
+        // stderr to test if threads are used.
+        // EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 1), 0);
+    }
 
+    virtual ~MiniServerThreadFTestSuite() override {
+        TRACE2(this, " Destruct MiniServerThreadFTestSuite()")
+        // Shutdown the threadpool.
+        ThreadPoolShutdown(&gMiniServerThreadPool);
+    }
+};
+
+class RunMiniServerFuncFTestSuite : public MiniServerThreadFTestSuite {
+    // This is a fixture to provide mocking of sys_socket and initializing the
+    // threadpool and a MiniServerSockArray on the heap to call the
+    // RunMiniserver() function.
+  protected:
+    MiniServerSockArray* m_minisock{};
+
+    RunMiniServerFuncFTestSuite() {
+        TRACE2(this, " Construct RunMiniServerFuncFTestSuite()")
         // We need this on the heap because it is freed by 'RunMiniServer()'.
         m_minisock = (MiniServerSockArray*)malloc(sizeof(MiniServerSockArray));
         if (m_minisock == nullptr)
@@ -90,15 +108,13 @@ class RunMiniserverFuncFTestSuite : public MiniServerRunFTestSuite {
         InitMiniServerSockArray(m_minisock);
     }
 
-    ~RunMiniserverFuncFTestSuite() {
-        TRACE2(this, " Destruct RunMiniserverFuncFTestSuite()")
-        // Shutdown the threadpool.
-        ThreadPoolShutdown(&gMiniServerThreadPool);
+    virtual ~RunMiniServerFuncFTestSuite() override {
+        TRACE2(this, " Destruct RunMiniServerFuncFTestSuite()")
     }
 };
 
 
-TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_successful) {
+TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful) {
     // IMPORTANT! There is a limit FD_SETSIZE = 1024 for socket file
     // descriptors that can be used with 'select()'. This limit is not given
     // when using 'poll()' or 'epoll' instead. Old_code uses 'select()' so we
@@ -217,9 +233,9 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_successful) {
     RunMiniServer(m_minisock);
 }
 
-TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
+TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
     // See important note at
-    // TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_successful).
+    // TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful).
 
     CLogging logObj; // Output only with build type DEBUG.
     if (g_dbug)
@@ -309,9 +325,9 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
     }
 }
 
-TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_accept_fails) {
+TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_accept_fails) {
     // See important note at
-    // TEST_F( MiniServerRunFTestSuite, RunMiniServer_successful).
+    // TEST_F(MiniServerMockFTestSuite, RunMiniServer_successful).
     // For this test I use only socket file descriptor miniServerSock4 that is
     // listening on IPv4 for the miniserver. --Ingo
 
@@ -393,7 +409,7 @@ TEST_F(RunMiniserverFuncFTestSuite, RunMiniServer_accept_fails) {
     RunMiniServer(m_minisock);
 }
 
-TEST_F(MiniServerRunFTestSuite, fdset_if_valid_read_successful) {
+TEST_F(MiniServerMockFTestSuite, fdset_if_valid_read_successful) {
     // Socket file descriptor should be added to the read set.
     constexpr SOCKET sockfd{umock::sfd_base + 56};
 
@@ -428,7 +444,7 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_read_successful) {
         << " should be added to the FD SET for select().";
 }
 
-TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
+TEST_F(MiniServerMockFTestSuite, fdset_if_valid_fails) {
     fd_set rdSet;
     FD_ZERO(&rdSet);
     ASSERT_FALSE(FD_ISSET(static_cast<SOCKET>(0), &rdSet));
@@ -514,7 +530,7 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails) {
     }
 }
 
-TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails_with_invalid_socket) {
+TEST_F(MiniServerMockFTestSuite, fdset_if_valid_fails_with_invalid_socket) {
     // Provide a socket file descriptor.
     constexpr SOCKET sockfd{umock::sfd_base + 7};
 
@@ -545,7 +561,7 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails_with_invalid_socket) {
     }
 }
 
-TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails_with_unbind_socket) {
+TEST_F(MiniServerMockFTestSuite, fdset_if_valid_fails_with_unbind_socket) {
     // Provide a socket file descriptor.
     constexpr SOCKET sockfd{umock::sfd_base + 53};
 
@@ -590,7 +606,7 @@ TEST_F(MiniServerRunFTestSuite, fdset_if_valid_fails_with_unbind_socket) {
     }
 }
 
-TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_successful) {
+TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_successful) {
     // The stop socket is got with 'get_miniserver_stopsock()' and uses a
     // datagram with exactly "ShutDown" on AF_INET to 127.0.0.1.
     constexpr char shutdown_str[]{"ShutDown"};
@@ -621,7 +637,7 @@ TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_successful) {
     EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 1);
 }
 
-TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_not_selected) {
+TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_not_selected) {
     constexpr SOCKET sockfd{umock::sfd_base + 29};
 
     fd_set rdSet;
@@ -643,7 +659,7 @@ TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_not_selected) {
     EXPECT_EQ(captureObj.str(), "");
 }
 
-TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_receiving_fails) {
+TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_receiving_fails) {
     constexpr SOCKET sockfd{umock::sfd_base + 28};
     fd_set rdSet;
     FD_ZERO(&rdSet);
@@ -659,7 +675,7 @@ TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_receiving_fails) {
     EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 1);
 }
 
-TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_no_bytes_received) {
+TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_no_bytes_received) {
     CLogging logObj; // Output only with build type DEBUG.
     if (old_code)
         if (g_dbug)
@@ -698,7 +714,7 @@ TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_no_bytes_received) {
     }
 }
 
-TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_wrong_stop_message) {
+TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_wrong_stop_message) {
     CLogging logObj;
     if (old_code)
         if (g_dbug)
@@ -731,7 +747,7 @@ TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_wrong_stop_message) {
     EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 0);
 }
 
-TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_from_wrong_address) {
+TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_from_wrong_address) {
     CLogging logObj; // Output only with build type DEBUG.
     if (old_code)
         if (g_dbug)
@@ -772,7 +788,7 @@ TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_from_wrong_address) {
     }
 }
 
-TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_without_0_termbyte) {
+TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_without_0_termbyte) {
     CLogging logObj; // Output only with build type DEBUG.
     if (old_code)
         if (g_dbug)
@@ -811,6 +827,110 @@ TEST_F(MiniServerRunFTestSuite, receive_from_stopsock_without_0_termbyte) {
 
         EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 0);
     }
+}
+
+TEST_F(MiniServerMockFTestSuite, ssdp_read_successful) {
+    CLogging logObj; // Output only with build type DEBUG.
+    if (g_dbug)
+        logObj.enable(UPNP_ALL);
+
+    // Initialize the Recv Threadpool. Don't forget to shutdown the threadpool
+    // at the end. nullptr means to use default attributes.
+    ASSERT_EQ(ThreadPoolInit(&gRecvThreadPool, nullptr), 0);
+    // Prevent to add jobs, we test jobs isolated.
+    // gRecvThreadPool.shutdown = 1; // Prevent adding job without error message
+    EXPECT_EQ(TPAttrSetMaxJobsTotal(&gRecvThreadPool.attr, 1), 0);
+
+    constexpr char ssdpdata_str[]{
+        "Some SSDP test data for a request of a remote client."};
+    ASSERT_LE(sizeof(ssdpdata_str), BUFSIZE - 1);
+    const char* const ssdpd_str_last{ssdpdata_str + sizeof(ssdpdata_str)};
+
+    SOCKET ssdp_sockfd{umock::sfd_base + 32};
+    SSockaddr_storage ss;
+    ss = "192.168.71.82:50023";
+
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+    FD_SET(ssdp_sockfd, &rdSet);
+
+    EXPECT_CALL(m_sys_socketObj,
+                recvfrom(ssdp_sockfd, _, BUFSIZE - 1, 0, _,
+                         Pointee((socklen_t)sizeof(::sockaddr_storage))))
+        .WillOnce(DoAll(SetArrayArgument<1>(ssdpdata_str, ssdpd_str_last),
+                        SetArgPointee<4>(*reinterpret_cast<sockaddr*>(&ss.ss)),
+                        Return((SSIZEP_T)sizeof(ssdpdata_str))));
+
+    // Capture output to stderr
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    captureObj.start();
+
+    // Test Unit
+    ssdp_read(&ssdp_sockfd, &rdSet); // Will return an error to ssdp_sockfd
+
+    EXPECT_THAT(
+        captureObj.str(),
+        AnyOf("",
+              HasSubstr(
+                  "Some SSDP test data for a request of a remote client.")));
+    EXPECT_NE(ssdp_sockfd, INVALID_SOCKET);
+
+    // Shutdown the threadpool.
+    EXPECT_EQ(ThreadPoolShutdown(&gRecvThreadPool), 0);
+}
+
+TEST_F(MiniServerMockFTestSuite, ssdp_read_fails) {
+    // Due to error there is no job added to the Threadpool. Initializing it
+    // is not needed.
+
+    CLogging logObj; // Output only with build type DEBUG.
+    if (g_dbug)
+        logObj.enable(UPNP_ALL);
+
+    constexpr char ssdpdata_str[]{
+        "Some SSDP test data for a request of a remote client."};
+    ASSERT_LE(sizeof(ssdpdata_str), BUFSIZE - 1);
+
+    constexpr SOCKET ssdp_sockfd_valid{umock::sfd_base + 46};
+
+    // Instantiate mocking objects.
+    EXPECT_CALL(m_sys_socketObj, recvfrom(_, _, _, _, _, _)).Times(0);
+
+    // Socket is set but not in the select set.
+    SOCKET ssdp_sockfd{ssdp_sockfd_valid};
+    fd_set rdSet;
+    FD_ZERO(&rdSet);
+
+    // Test Unit, socket should be untouched.
+    ssdp_read(&ssdp_sockfd, &rdSet);
+    EXPECT_EQ(ssdp_sockfd, ssdp_sockfd_valid);
+
+    // Invalid socket must not be set in the select set.
+    ssdp_sockfd = INVALID_SOCKET;
+
+    // Test Unit
+    ssdp_read(&ssdp_sockfd, &rdSet);
+    EXPECT_EQ(ssdp_sockfd, INVALID_SOCKET);
+
+    // Socket is set, also in the select set, but reading from socket fails.
+    ssdp_sockfd = ssdp_sockfd_valid;
+    FD_SET(ssdp_sockfd, &rdSet);
+
+    EXPECT_CALL(m_sys_socketObj, recvfrom(ssdp_sockfd, _, _, _, _, _))
+        .WillOnce(SetErrnoAndReturn(EINVAL, SOCKET_ERROR));
+
+    // Capture output to stderr
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    captureObj.start();
+
+    // Test Unit
+    ssdp_read(&ssdp_sockfd, &rdSet);
+
+    EXPECT_THAT(
+        captureObj.str(),
+        AnyOf("", HasSubstr("]: miniserver: Error in readFromSSDPSocket(46): "
+                            "closing socket")));
+    EXPECT_EQ(ssdp_sockfd, INVALID_SOCKET);
 }
 
 } // namespace utest

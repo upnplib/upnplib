@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-11-03
+ * Redistribution only with this Copyright remark. Last modified: 2023-11-04
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -418,13 +418,13 @@ static UPNP_INLINE void schedule_request_job(
                            reinterpret_cast<const sockaddr_storage*>(
                                clientAddr))
                     << " with socket " << connfd << ".\n";
-    mserv_request_t* request;
-    ThreadPoolJob job{};
 
-    request = (struct mserv_request_t*)malloc(sizeof(struct mserv_request_t));
-    if (request == NULL) {
-        UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
-                   "mserv %d: out of memory\n", connfd);
+    ThreadPoolJob job{};
+    mserv_request_t* request{
+        static_cast<mserv_request_t*>(std::malloc(sizeof(mserv_request_t)))};
+
+    if (request == nullptr) {
+        UPNPLIB_LOGCRIT << "MSG1024: Socket " << connfd << ": out of memory.\n";
         sock_close(connfd);
         return;
     }
@@ -432,12 +432,12 @@ static UPNP_INLINE void schedule_request_job(
     request->connfd = connfd;
     memcpy(&request->foreign_sockaddr, clientAddr,
            sizeof(request->foreign_sockaddr));
-    TPJobInit(&job, (start_routine)handle_request, (void*)request);
+    TPJobInit(&job, (start_routine)handle_request, request);
     TPJobSetFreeFunction(&job, free_handle_request_arg);
     TPJobSetPriority(&job, MED_PRIORITY);
     if (ThreadPoolAdd(&gMiniServerThreadPool, &job, NULL) != 0) {
-        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                   "mserv %d: cannot schedule request\n", connfd);
+        UPNPLIB_LOGERR << "MSG1025: Socket " << connfd
+                       << ": cannot schedule request.\n";
         free(request);
         sock_close(connfd);
         return;
@@ -584,7 +584,8 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
         return 0;
     }
 
-    UPNPLIB_LOGINFO << "MSG1040: Received ordinary datagram \"" << receiveBuf
+    UPNPLIB_LOGINFO << "MSG1040: On socket " << ssock
+                    << " received ordinary datagram \"" << receiveBuf
                     << "\\0\" from " << buf_ntop << ":"
                     << ntohs(clientAddr.sin.sin_port) << ". Stop miniserver.\n";
     return 1;
@@ -680,8 +681,7 @@ static void RunMiniServer(
             if (errno == EBADF) {
                 // A closed socket file descriptor was given in one of the
                 // sets. For details look at
-                // REF: [Should I assert fail on select() EBADF?]
-                // (https://stackoverflow.com/q/28015859/5014688)
+                // REF:_[Should_I_assert_fail_on_select()_EBADF?](https://stackoverflow.com/q/28015859/5014688)
                 // It is difficult to determine here what file descriptor
                 // in rdSet or expSet is invalid. So I ensure that only valid
                 // socket fds are given by checking them with fdset_if_valid()
