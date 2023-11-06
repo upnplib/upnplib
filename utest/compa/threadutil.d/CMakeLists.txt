@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-16
+# Redistribution only with this Copyright remark. Last modified: 2023-11-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -45,11 +45,7 @@ add_executable(test_ThreadPool-psh
         ./test_ThreadPool.cpp
 )
 target_include_directories(test_ThreadPool-psh
-    PRIVATE ${COMPA_SOURCE_DIR}/src/threadutil
-)
-target_compile_definitions(test_ThreadPool-psh
-    PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+    PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
 )
 target_link_libraries(test_ThreadPool-psh
     PRIVATE pupnp_shared
@@ -58,6 +54,10 @@ add_test(NAME ctest_ThreadPool-psh COMMAND test_ThreadPool-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
+# I do not modify the ThreadPool management so there is no need to test for
+# compatible modifications. I intend to replace threading with C++ standard
+# library functions. --Ingo
+
 
 # TimerThread
 #============
@@ -65,11 +65,7 @@ add_executable(test_TimerThread-psh
         ./test_TimerThread.cpp
 )
 target_include_directories(test_TimerThread-psh
-    PRIVATE ${COMPA_SOURCE_DIR}/src/threadutil
-)
-target_compile_definitions(test_TimerThread-psh
-    PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+    PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/src/threadutil
 )
 target_link_libraries(test_TimerThread-psh
     PRIVATE pupnp_shared
@@ -77,3 +73,7 @@ target_link_libraries(test_TimerThread-psh
 add_test(NAME ctest_TimerThread-psh COMMAND test_TimerThread-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
+
+# I do not modify the ThreadPool management so there is no need to test for
+# compatible modifications. I intend to replace threading with C++ standard
+# library functions. --Ingo

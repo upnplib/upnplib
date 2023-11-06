@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-08
+ * Redistribution only with this Copyright remark. Last modified: 2023-11-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -216,8 +216,8 @@ EXPORT_SPEC extern unsigned short LOCAL_PORT_V6_ULA_GUA;
 extern Upnp_SID gUpnpSdkNLSuuid;
 
 extern TimerThread gTimerThread;
-extern ThreadPool gRecvThreadPool;
-extern ThreadPool gSendThreadPool;
+EXPORT_SPEC extern ThreadPool gRecvThreadPool;
+EXPORT_SPEC extern ThreadPool gSendThreadPool;
 EXPORT_SPEC extern ThreadPool gMiniServerThreadPool;
 
 typedef enum {

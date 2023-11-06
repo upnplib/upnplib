@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-24
+// Redistribution only with this Copyright remark. Last modified: 2023-11-06
 
 // Note
 // -------------
@@ -17,10 +17,10 @@
 // ./utest/build/test_ThreadPool_old  --gtest_brief=1 --gtest_repeat=10000
 // --gtest_filter=ThreadPoolNormalTestSuite.init_and_shutdown_threadpool --Ingo
 
-#include <FreeList.hpp>
-#include <LinkedList.hpp>
-#include <ThreadPool.hpp>
-#include <compa/ThreadPool.hpp>
+#include <pupnp/ThreadPool.hpp>
+#include <pupnp/threadpool_init.hpp>
+
+#include <upnpapi.hpp>
 
 #include <upnplib/general.hpp>
 #include <utest/utest.hpp>
@@ -28,7 +28,8 @@
 
 namespace utest {
 
-using ::upnplib::CThreadPool;
+using ::pupnp::CThreadPool;
+using ::pupnp::CThreadPoolInit;
 
 
 //###############################
@@ -667,6 +668,61 @@ TEST(ThreadPoolNormalTestSuite, gettimeofday) {
 
     EXPECT_EQ(tpObj.gettimeofday(&tv, nullptr), 0);
     EXPECT_GT(tv.tv_sec, 1635672176); // that is about 2021-10-31T10:24
+}
+
+TEST(ThreadPoolInitTestSuite, threadpool_init) {
+    {
+        CThreadPoolInit tp(gMiniServerThreadPool);
+        EXPECT_EQ(gMiniServerThreadPool.shutdown, 0);
+        EXPECT_EQ(gMiniServerThreadPool.attr.maxJobsTotal,
+                  DEFAULT_MAX_JOBS_TOTAL);
+    }
+    {
+        CThreadPoolInit tp(gSendThreadPool, false);
+        EXPECT_EQ(gSendThreadPool.shutdown, 0);
+        EXPECT_EQ(gSendThreadPool.attr.maxJobsTotal, DEFAULT_MAX_JOBS_TOTAL);
+    }
+    {
+        CThreadPoolInit tp(gRecvThreadPool, false, -1);
+        EXPECT_EQ(gRecvThreadPool.shutdown, 0);
+        EXPECT_EQ(gRecvThreadPool.attr.maxJobsTotal, -1);
+    }
+    {
+        CThreadPoolInit tp(gMiniServerThreadPool, false, 0);
+        EXPECT_EQ(gMiniServerThreadPool.shutdown, 0);
+        EXPECT_EQ(gMiniServerThreadPool.attr.maxJobsTotal, 0);
+    }
+    {
+        CThreadPoolInit tp(gSendThreadPool, false, 1);
+        EXPECT_EQ(gSendThreadPool.shutdown, 0);
+        EXPECT_EQ(gSendThreadPool.attr.maxJobsTotal, 1);
+    }
+    {
+        CThreadPoolInit tp(gSendThreadPool, false, 2);
+        EXPECT_EQ(gSendThreadPool.shutdown, 0);
+        EXPECT_EQ(gSendThreadPool.attr.maxJobsTotal, 2);
+    }
+    {
+        CThreadPoolInit tp(gRecvThreadPool, true);
+        EXPECT_EQ(gRecvThreadPool.shutdown, 1);
+        EXPECT_EQ(gRecvThreadPool.attr.maxJobsTotal, DEFAULT_MAX_JOBS_TOTAL);
+    }
+    {
+        CThreadPoolInit tp(gMiniServerThreadPool, true, -1);
+        EXPECT_EQ(gMiniServerThreadPool.shutdown, 1);
+        EXPECT_EQ(gMiniServerThreadPool.attr.maxJobsTotal,
+                  DEFAULT_MAX_JOBS_TOTAL);
+    }
+    {
+        CThreadPoolInit tp(gSendThreadPool, true, 0);
+        EXPECT_EQ(gSendThreadPool.shutdown, 1);
+        EXPECT_EQ(gSendThreadPool.attr.maxJobsTotal, DEFAULT_MAX_JOBS_TOTAL);
+    }
+    {
+        CThreadPoolInit tp(gRecvThreadPool, true, 1);
+        EXPECT_EQ(gRecvThreadPool.shutdown, 1);
+        EXPECT_EQ(gRecvThreadPool.attr.maxJobsTotal, DEFAULT_MAX_JOBS_TOTAL);
+    }
 }
 
 } // namespace utest

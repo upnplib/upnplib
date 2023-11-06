@@ -1,6 +1,6 @@
 Next steps to do:
-* disable StrCpyToArg() and use SetArrayArgument<N>() instead.
 * Create test class to initialize ThreadPools.
+* disable StrCpyToArg() and use SetArrayArgument<N>() instead.
 * Rework SSockaddr_storage to use sockaddr_t instead of sockaddr_storage.
 * Continue moving RunMiniserver tests from test_miniserver.cpp to test_miniservver_run.cpp.
 * Rework test_sock.cp to work with changed sys_socket mocking.
@@ -17,7 +17,7 @@ Next steps to do:
 * [set EXPECT_CALL to redirect the call to the original method](https://stackoverflow.com/questions/25556601/set-expect-call-to-redirect-the-call-to-the-original-method)
 * Move pupnp/upnp/src/inc/sock.hpp:79:static UPNP_INLINE int sock_close() to miniserver.cpp and rework.
 * Check if all fields in struct s_SocketStuff.serverAddr4 are used.
-* Make UpnpPrintf() usable without build type DEBUG.
 * Rework README.md.
 * Install doxygen.
 * Create own Url class.
+* Replace ThreadPool and multithreading with C++ standard library functions.

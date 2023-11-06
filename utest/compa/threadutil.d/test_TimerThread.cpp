@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-24
+// Redistribution only with this Copyright remark. Last modified: 2023-11-06
 
 // Note
 // -------------
@@ -19,7 +19,7 @@
 // --Ingo
 
 #include <TimerThread.hpp>
-#include <compa/ThreadPool.hpp>
+#include <pupnp/ThreadPool.hpp>
 
 #include <chrono>
 #include <thread>
@@ -31,7 +31,7 @@
 
 namespace utest {
 
-using ::upnplib::CThreadPool;
+using ::pupnp::CThreadPool;
 
 
 //###############################
