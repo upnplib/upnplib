@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-06
+// Redistribution only with this Copyright remark. Last modified: 2023-11-07
 
 // Note
 // -------------
@@ -47,7 +47,7 @@ TEST(ThreadPoolNormalTestSuite, init_and_shutdown_threadpool) {
     EXPECT_EQ(tpObj.ThreadPoolInit(&tp, nullptr), 0);
     EXPECT_EQ(tpObj.ThreadPoolShutdown(&tp), 0);
     if (old_code)
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CRED "[ BUG      ]" CRES
                   << " Finish a test without threadpool shutdown should be "
                      "possible without random segfaults.\n";
     else
@@ -243,7 +243,7 @@ TEST(ThreadPoolNormalTestSuite, set_maximal_threads_to_attribute) {
     EXPECT_EQ(TPAttr.maxThreads, 1);
 
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CRED "[ BUG      ]" CRES
                   << " It should not be possible to set maxThreads < 0 or < "
                      "minThreads.\n";
         EXPECT_EQ(tpObj.TPAttrSetMaxThreads(&TPAttr, -1), 0);
@@ -283,7 +283,7 @@ TEST(ThreadPoolNormalTestSuite, set_minimal_threads_to_attribute) {
     EXPECT_EQ(TPAttr.maxThreads, 2);
 
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CRED "[ BUG      ]" CRES
                   << " It should not be possible to set minThreads < 0 or > "
                      "maxThreads.\n";
         EXPECT_EQ(tpObj.TPAttrSetMinThreads(&TPAttr, -1), 0);
@@ -316,7 +316,7 @@ TEST(ThreadPoolNormalTestSuite, set_stack_size_to_attribute) {
     EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, 1), 0);
 
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CRED "[ BUG      ]" CRES
                   << " It should not be possible to set StackSize < 0.\n";
         EXPECT_EQ(tpObj.TPAttrSetStackSize(&TPAttr, (size_t)-1), 0);
         EXPECT_EQ(TPAttr.stackSize, (size_t)-1);
@@ -344,7 +344,7 @@ TEST(ThreadPoolNormalTestSuite, set_idle_time_to_attribute) {
     EXPECT_EQ(tpObj.TPAttrSetIdleTime(&TPAttr, 1), 0);
 
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CRED "[ BUG      ]" CRES
                   << " It should not be possible to set IdleTime < 0.\n";
         EXPECT_EQ(tpObj.TPAttrSetIdleTime(&TPAttr, -1), 0);
         EXPECT_EQ(TPAttr.maxIdleTime, -1);
@@ -372,7 +372,7 @@ TEST(ThreadPoolNormalTestSuite, set_jobs_per_thread_to_attribute) {
     EXPECT_EQ(tpObj.TPAttrSetJobsPerThread(&TPAttr, 1), 0);
 
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CRED "[ BUG      ]" CRES
                   << " It should not be possible to set JobsPerThread < 0.\n";
         EXPECT_EQ(tpObj.TPAttrSetJobsPerThread(&TPAttr, -1), 0);
         EXPECT_EQ(TPAttr.jobsPerThread, -1);
@@ -400,7 +400,7 @@ TEST(ThreadPoolNormalTestSuite, set_starvation_time_to_attribute) {
     EXPECT_EQ(tpObj.TPAttrSetStarvationTime(&TPAttr, 1), 0);
 
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CRED "[ BUG      ]" CRES
                   << " It should not be possible to set StarvationTime < 0.\n";
         EXPECT_EQ(tpObj.TPAttrSetStarvationTime(&TPAttr, -1), 0);
         EXPECT_EQ(TPAttr.starvationTime, -1);
@@ -433,7 +433,7 @@ TEST(ThreadPoolNormalTestSuite, set_scheduling_policy_to_attribute) {
     EXPECT_EQ(tpObj.TPAttrSetSchedPolicy(&TPAttr, SCHED_OTHER), 0);
 
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
+        std::cout << CRED "[ BUG      ]" CRES
                   << " Only SCHED_OTHER, SCHED_IDLE, SCHED_BATCH, SCHED_FIFO, "
                      "SCHED_RR or SCHED_DEADLINE should be valid.\n";
         EXPECT_EQ(tpObj.TPAttrSetSchedPolicy(&TPAttr, 0x5a5a), 0);
@@ -463,16 +463,30 @@ TEST(ThreadPoolNormalTestSuite, set_max_jobs_qeued_totally_to_attribute) {
     EXPECT_EQ(tpObj.TPAttrSetMaxJobsTotal(&TPAttr, 1), 0);
 
     if (old_code) {
-        std::cout << CYEL "[ BUG      ]" CRES
-                  << " It should not be possible to set MaxJobsTotal < 0.\n";
+        std::cout << CRED "[ BUG      ]" CRES
+                  << " It should not be possible to set MaxJobsTotal < 0 or > "
+                     "DEFAULT_MAX_JOBS_TOTAL.\n";
         EXPECT_EQ(tpObj.TPAttrSetMaxJobsTotal(&TPAttr, -1), 0);
         EXPECT_EQ(TPAttr.maxJobsTotal, -1);
+
+        EXPECT_EQ(
+            tpObj.TPAttrSetMaxJobsTotal(&TPAttr, DEFAULT_MAX_JOBS_TOTAL + 1),
+            0);
+        EXPECT_EQ(TPAttr.maxJobsTotal, DEFAULT_MAX_JOBS_TOTAL + 1);
 
     } else {
 
         EXPECT_EQ(tpObj.TPAttrSetMaxJobsTotal(&TPAttr, -1), EINVAL)
             << "# It should not be possible to set MaxJobsTotal < 0.";
         EXPECT_EQ(TPAttr.maxJobsTotal, 1)
+            << "# Wrong settings should not modify old maxJobsTotal value.";
+
+        EXPECT_EQ(
+            tpObj.TPAttrSetMaxJobsTotal(&TPAttr, DEFAULT_MAX_JOBS_TOTAL + 1),
+            EINVAL)
+            << "# It should not be possible to set MaxJobsTotal > "
+               "DEFAULT_MAX_JOBS_TOTAL.";
+        EXPECT_EQ(TPAttr.maxJobsTotal, DEFAULT_MAX_JOBS_TOTAL)
             << "# Wrong settings should not modify old maxJobsTotal value.";
     }
 }
@@ -670,7 +684,7 @@ TEST(ThreadPoolNormalTestSuite, gettimeofday) {
     EXPECT_GT(tv.tv_sec, 1635672176); // that is about 2021-10-31T10:24
 }
 
-TEST(ThreadPoolInitTestSuite, threadpool_init) {
+TEST(ThreadPoolInitTestSuite, threadpool_init_successful) {
     {
         CThreadPoolInit tp(gMiniServerThreadPool);
         EXPECT_EQ(gMiniServerThreadPool.shutdown, 0);
@@ -722,6 +736,37 @@ TEST(ThreadPoolInitTestSuite, threadpool_init) {
         CThreadPoolInit tp(gRecvThreadPool, true, 1);
         EXPECT_EQ(gRecvThreadPool.shutdown, 1);
         EXPECT_EQ(gRecvThreadPool.attr.maxJobsTotal, DEFAULT_MAX_JOBS_TOTAL);
+    }
+}
+
+TEST(ThreadPoolInitTestSuite, threadpool_init_with_invalid_settings) {
+    // With this class any setting of maxJobs is ignored if the shutdown flag is
+    // set. maxJobs is always set to DEFAULT_MAX_JOBS_TOTAL then. With unset
+    // shutdown flag all values of maxJobs are taken without checking of invalid
+    // values. This is already tested and reported in tests before.
+    {
+        CThreadPoolInit tp(gMiniServerThreadPool, true,
+                           DEFAULT_MAX_JOBS_TOTAL + 1);
+        EXPECT_EQ(gMiniServerThreadPool.shutdown, 1);
+        EXPECT_EQ(gMiniServerThreadPool.attr.maxJobsTotal,
+                  DEFAULT_MAX_JOBS_TOTAL);
+    }
+    {
+        CThreadPoolInit tp(gSendThreadPool, true, -1);
+        EXPECT_EQ(gSendThreadPool.shutdown, 1);
+        EXPECT_EQ(gSendThreadPool.attr.maxJobsTotal, DEFAULT_MAX_JOBS_TOTAL);
+    }
+    {
+        CThreadPoolInit tp(gMiniServerThreadPool, false,
+                           DEFAULT_MAX_JOBS_TOTAL + 1);
+        EXPECT_EQ(gMiniServerThreadPool.shutdown, 0);
+        EXPECT_EQ(gMiniServerThreadPool.attr.maxJobsTotal,
+                  DEFAULT_MAX_JOBS_TOTAL + 1);
+    }
+    {
+        CThreadPoolInit tp(gSendThreadPool, false, -1);
+        EXPECT_EQ(gSendThreadPool.shutdown, 0);
+        EXPECT_EQ(gSendThreadPool.attr.maxJobsTotal, -1);
     }
 }
 

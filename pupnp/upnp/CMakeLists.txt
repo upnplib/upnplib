@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-11-06
+# Redistribution only with this Copyright remark. Last modified: 2023-11-07
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -152,7 +152,8 @@ set(PUPNP_SOURCE_FILES
     # Helper classes added but not original old pupnp code. To separate them,
     # they are in a parent directory of the original code. They only
     # encapsulate old fuctions mainly for testing with init and shutdown
-    # following the RAII paradigm.
+    # following the RAII paradigm. They are assigned with the UPnPlib rules,
+    # e.g. throwing exceptions etc.
     ../src/api/upnpdebug.cpp
     ../src/threadpool_init.cpp
 )

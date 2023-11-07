@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-06
+// Redistribution only with this Copyright remark. Last modified: 2023-11-07
 
 #include <pupnp/threadpool_init.hpp>
 #include <upnplib/general.hpp>
@@ -21,7 +21,7 @@ CThreadPoolInit::CThreadPoolInit(ThreadPool& a_threadpool,
     if (ret != 0)
         throw std::runtime_error(
             UPNPLIB_LOGEXCEPT
-            "MSG0088: Initializing ThreadPool fails with return number " +
+            "MSG1045: Initializing ThreadPool fails with return number " +
             std::to_string(ret));
 
     if (a_shutdown) {
@@ -32,7 +32,12 @@ CThreadPoolInit::CThreadPoolInit(ThreadPool& a_threadpool,
     } else {
         // or allow number of threads. Use 0 with check of error message
         // to stderr to test if threads are used.
-        TPAttrSetMaxJobsTotal(&m_threadpool.attr, a_maxJobsTotal);
+        ret = TPAttrSetMaxJobsTotal(&m_threadpool.attr, a_maxJobsTotal);
+        if (ret != 0)
+            throw std::runtime_error(UPNPLIB_LOGEXCEPT
+                                     "MSG1046: Setting maximal jobs number "
+                                     "fails with return number " +
+                                     std::to_string(ret));
     }
 }
 

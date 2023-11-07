@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-04
+// Redistribution only with this Copyright remark. Last modified: 2023-11-07
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -17,6 +17,7 @@
 #include <upnplib/sockaddr.hpp>
 
 #include <pupnp/upnpdebug.hpp>
+#include <pupnp/threadpool_init.hpp>
 
 #include <utest/utest.hpp>
 #include <umock/sys_socket_mock.hpp>
@@ -40,12 +41,13 @@ using ::upnplib::g_dbug;
 using ::upnplib::SSockaddr_storage;
 
 using ::pupnp::CLogging;
+using ::pupnp::CThreadPoolInit;
 
 
 // Miniserver Run TestSuite
 // ========================
 class MiniServerMockFTestSuite : public ::testing::Test {
-    // This is a fixture to provide mocking of sys_socket only.
+    // This is a fixture to provide mocking of sys_socket.
   protected:
     // clang-format off
     // Instantiate mocking objects.
@@ -63,39 +65,10 @@ class MiniServerMockFTestSuite : public ::testing::Test {
     }
 };
 
-class MiniServerThreadFTestSuite : public MiniServerMockFTestSuite {
-  protected:
-    // This is a fixture to provide mocking of sys_socket and initializing the
-    // threadpool.
-    MiniServerThreadFTestSuite() {
-        TRACE2(this, " Construct MiniServerThreadFTestSuite()")
-        // Initialize the MiniServer Threadpool. nullptr means to use default
-        // attributes.
-        int ret_ThreadPoolInit =
-            ThreadPoolInit(&gMiniServerThreadPool, nullptr);
-        if (ret_ThreadPoolInit != 0)
-            throw std::runtime_error(
-                UPNPLIB_LOGEXCEPT
-                "MSG0088: Initializing ThreadPool fails with return number " +
-                std::to_string(ret_ThreadPoolInit));
-        // Prevent to add jobs without error message, I test jobs isolated.
-        gMiniServerThreadPool.shutdown = 1;
-        // or allow number of threads. Use 0 with check of error message to
-        // stderr to test if threads are used.
-        // EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 1), 0);
-    }
-
-    virtual ~MiniServerThreadFTestSuite() override {
-        TRACE2(this, " Destruct MiniServerThreadFTestSuite()")
-        // Shutdown the threadpool.
-        ThreadPoolShutdown(&gMiniServerThreadPool);
-    }
-};
-
-class RunMiniServerFuncFTestSuite : public MiniServerThreadFTestSuite {
-    // This is a fixture to provide mocking of sys_socket and initializing the
-    // threadpool and a MiniServerSockArray on the heap to call the
-    // RunMiniserver() function.
+class RunMiniServerFuncFTestSuite : public MiniServerMockFTestSuite {
+    // This is a fixture to provide mocking of sys_socket and a
+    // MiniServerSockArray on the heap to call the RunMiniserver() function.
+    // This is needed because RunMiniserver() frees MiniServerSockArray.
   protected:
     MiniServerSockArray* m_minisock{};
 
@@ -143,6 +116,16 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful) {
     CLogging logObj; // Output only with build type DEBUG.
     if (g_dbug)
         logObj.enable(UPNP_ALL);
+
+    // With shutdown = true, maxJobs is ignored.
+    std::cout
+        << CYEL "[ TODO     ] " CRES << __LINE__
+        << ": Fix dynamic problem with shutdown before job initialization.\n";
+    // CThreadPoolInit tp(gMiniServerThreadPool,
+    //                    /*shutdown*/ false, /*maxJobs*/ 1);
+    // Workaround:
+    CThreadPoolInit tp(gMiniServerThreadPool,
+                       /*shutdown*/ true); //*maxJobs*/ 1);
 
     // Set needed data, listen miniserver only on IPv4 that will connect to a
     // remote client which has done e rquest.
@@ -241,6 +224,10 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
     if (g_dbug)
         logObj.enable(UPNP_ALL);
 
+    // With shutdown = true, maxJobs is ignored.
+    CThreadPoolInit tp(gMiniServerThreadPool,
+                       /*shutdown*/ false, /*maxJobs*/ 1);
+
     // Set needed data, listen miniserver only on IPv4 that will connect to a
     // remote client which has done a request.
     m_minisock->miniServerPort4 = 50025;
@@ -327,12 +314,16 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
 
 TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_accept_fails) {
     // See important note at
-    // TEST_F(MiniServerMockFTestSuite, RunMiniServer_successful).
+    // TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful).
     // For this test I use only socket file descriptor miniServerSock4 that is
     // listening on IPv4 for the miniserver. --Ingo
 
     CLogging logObj; // Output only with build type DEBUG.
     logObj.enable(UPNP_ALL);
+
+    // With shutdown = true, maxJobs is ignored.
+    CThreadPoolInit tp(gMiniServerThreadPool,
+                       /*shutdown*/ false, /*maxJobs*/ 1);
 
     // Set needed data, listen miniserver only on IPv4 that will connect to a
     // remote client which has done a request.
@@ -834,12 +825,10 @@ TEST_F(MiniServerMockFTestSuite, ssdp_read_successful) {
     if (g_dbug)
         logObj.enable(UPNP_ALL);
 
-    // Initialize the Recv Threadpool. Don't forget to shutdown the threadpool
-    // at the end. nullptr means to use default attributes.
-    ASSERT_EQ(ThreadPoolInit(&gRecvThreadPool, nullptr), 0);
-    // Prevent to add jobs, we test jobs isolated.
-    // gRecvThreadPool.shutdown = 1; // Prevent adding job without error message
-    EXPECT_EQ(TPAttrSetMaxJobsTotal(&gRecvThreadPool.attr, 1), 0);
+    // Initialize the Recv Threadpool, allow only one job.
+    // With shutdown = true, maxJobs is ignored.
+    CThreadPoolInit tp(gRecvThreadPool,
+                       /*shutdown*/ false, /*maxJobs*/ 1);
 
     constexpr char ssdpdata_str[]{
         "Some SSDP test data for a request of a remote client."};
@@ -874,9 +863,6 @@ TEST_F(MiniServerMockFTestSuite, ssdp_read_successful) {
               HasSubstr(
                   "Some SSDP test data for a request of a remote client.")));
     EXPECT_NE(ssdp_sockfd, INVALID_SOCKET);
-
-    // Shutdown the threadpool.
-    EXPECT_EQ(ThreadPoolShutdown(&gRecvThreadPool), 0);
 }
 
 TEST_F(MiniServerMockFTestSuite, ssdp_read_fails) {

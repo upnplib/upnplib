@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-10-08
+# Redistribution only with this Copyright remark. Last modified: 2023-11-07
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -146,7 +146,11 @@ set(COMPA_SOURCE_FILES
     ${UMOCK_SOURCE_DIR}/src/pupnp_sock.cpp
     ${UPNPLIB_PROJECT_SOURCE_DIR}/interface/src/pupnp-sock.cpp
 
+    # Helper classes added here. They are assigned with the UPnPlib rules, e.g.
+    # throwing exceptions etc. They only encapsulate old fuctions mainly for
+    # testing with init and shutdown following the RAII paradigm.
     ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
+    ${PUPNP_SOURCE_DIR}/src/threadpool_init.cpp
 )
 
 set(COMPA_INCLUDE_DIRECTORIES

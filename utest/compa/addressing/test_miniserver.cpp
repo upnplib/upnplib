@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-05
+// Redistribution only with this Copyright remark. Last modified: 2023-11-07
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -25,6 +25,7 @@
 #include <upnplib/addrinfo.hpp>
 
 #include <pupnp/upnpdebug.hpp>
+#include <pupnp/threadpool_init.hpp>
 
 #include <utest/utest.hpp>
 #include <umock/sys_socket_mock.hpp>
@@ -54,6 +55,7 @@ using ::upnplib::g_dbug;
 using ::upnplib::SSockaddr_storage;
 
 using ::pupnp::CLogging;
+using ::pupnp::CThreadPoolInit;
 
 
 // The miniserver call stack to get a server socket
@@ -1575,13 +1577,11 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_successful) {
     FD_ZERO(&set);
     FD_SET(listen_sockfd, &set);
 
-    // Initialize the threadpool. Don't forget to shutdown the threadpool at the
-    // end. nullptr means to use default attributes.
-    ASSERT_EQ(ThreadPoolInit(&gMiniServerThreadPool, nullptr), 0);
     // Prevent to add jobs, we test jobs isolated. See note at
     // TEST(RunMiniServerTestSuite, RunMiniServer_successful).
-    // gMiniServerThreadPool.shutdown = 1;
-    EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 0), 0);
+    // With shutdown = true, maxJobs is ignored.
+    CThreadPoolInit tp(gMiniServerThreadPool,
+                       /*shutdown*/ false, /*maxJobs*/ 0);
 
     { // Scope of mocking only within this block
 
@@ -1627,9 +1627,6 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_successful) {
 #endif // UPNPLIB_WITH_NATIVE_PUPNP
 
     } // End scope of mocking, objects within the block will be destructed.
-
-    // Shutdown the threadpool.
-    EXPECT_EQ(ThreadPoolShutdown(&gMiniServerThreadPool), 0);
 }
 
 TEST_F(RunMiniServerFTestSuite, web_server_accept_with_invalid_socket) {
@@ -1780,13 +1777,11 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
     const CAddrinfo ai("192.168.1.1", std::to_string(connected_port), AF_INET,
                        SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
 
-    // Initialize the threadpool. Don't forget to shutdown the threadpool at the
-    // end. nullptr means to use default attributes.
-    ASSERT_EQ(ThreadPoolInit(&gMiniServerThreadPool, nullptr), 0);
     // Prevent to add jobs, we test jobs isolated. See note at
     // TEST(RunMiniServerTestSuite, RunMiniServer_successful).
-    // gMiniServerThreadPool.shutdown = 1;
-    EXPECT_EQ(TPAttrSetMaxJobsTotal(&gMiniServerThreadPool.attr, 0), 0);
+    // With shutdown = true, maxJobs is ignored.
+    CThreadPoolInit tp(gMiniServerThreadPool,
+                       /*shutdown*/ false, /*maxJobs*/ 0);
 
     // Capture output to stderr
     CLogging logObj; // Output only with build type DEBUG.
@@ -1812,8 +1807,6 @@ TEST(RunMiniServerTestSuite, schedule_request_job) {
                 EndsWith(
                     "] ERROR MSG1025: Socket 36: cannot schedule request.\n"));
     }
-    // Shutdown the threadpool.
-    EXPECT_EQ(ThreadPoolShutdown(&gMiniServerThreadPool), 0);
 }
 
 TEST(RunMiniServerDeathTest, free_handle_request_arg_with_nullptr_to_struct) {
