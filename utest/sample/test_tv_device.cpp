@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-24
+// Redistribution only with this Copyright remark. Last modified: 2023-11-08
 
 // -----------------------------------------------------------------------------
 // This testsuite starts the sample TV Device with general command line
@@ -103,7 +103,7 @@ using ::pupnp::CLogging;
 using ::utest::CIfaddr4;
 
 using ::upnplib::errStrEx;
-using ::upnplib::SSockaddr_storage;
+using ::upnplib::SSockaddr;
 
 
 class SampleTvDeviceFTestSuite : public ::testing::Test {
@@ -176,7 +176,7 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
         // get port with getsockname().
         constexpr SOCKET listen_sockfd{umock::sfd_base + 1};
         const std::string listen_port{"50008"};
-        SSockaddr_storage
+        SSockaddr
             listen_ssObj; // for getsockname() return sockaddr & port
         listen_ssObj = ip_addr_str + ":" + listen_port;
 
@@ -194,7 +194,7 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
         // and get port with getsockname().
         constexpr SOCKET stop_sockfd{umock::sfd_base + 2};
         const std::string stop_port{"50009"};
-        SSockaddr_storage
+        SSockaddr
             stop_ssObj; // for getsockname() return sockaddr & port
         stop_ssObj = ip_addr_str + ":" + stop_port;
 
@@ -318,8 +318,7 @@ TEST_F(SampleTvDeviceFTestSuite, TvDeviceStart_successful) {
         // get port with getsockname().
         constexpr SOCKET listen_sockfd{umock::sfd_base + 41};
         const std::string listen_port_str{"50010"};
-        SSockaddr_storage
-            listen_ssObj; // for getsockname() return sockaddr & port
+        SSockaddr listen_ssObj; // for getsockname() return sockaddr & port
         listen_ssObj = local_addr_str + ":" + listen_port_str;
 
         EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
@@ -340,8 +339,7 @@ TEST_F(SampleTvDeviceFTestSuite, TvDeviceStart_successful) {
         constexpr SOCKET ssdpReqSock{umock::sfd_base + 43};
         constexpr SOCKET ssdpSock{umock::sfd_base + 44};
         const std::string stop_port{"50011"};
-        SSockaddr_storage
-            stop_ssObj; // for getsockname() return sockaddr & port
+        SSockaddr stop_ssObj; // for getsockname() return sockaddr & port
         stop_ssObj = local_addr_str + ":" + stop_port;
 
         EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))

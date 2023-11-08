@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-03
+// Redistribution only with this Copyright remark. Last modified: 2023-11-08
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/general.hpp>
@@ -145,29 +145,46 @@ bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
 // Specialized sockaddr_structure
 // ==============================
 // Constructor
-SSockaddr_storage::SSockaddr_storage(){
-    TRACE2(this, " Construct SSockaddr_storage()") //
+SSockaddr::SSockaddr(){
+    TRACE2(this, " Construct SSockaddr()") //
 }
 
 // Destructor
-SSockaddr_storage::~SSockaddr_storage() {
-    TRACE2(this, " Destruct SSockaddr_storage()")
+SSockaddr::~SSockaddr() {
+    TRACE2(this, " Destruct SSockaddr()")
     // Destroy structure
     ::memset(&this->ss, 0xAA, sizeof(this->ss));
 }
 
 // Get reference to the sockaddr_storage structure.
 // Only as example, we don't use it.
-// SSockaddr_storage::operator const ::sockaddr_storage&() const {
+// SSockaddr::operator const ::sockaddr_storage&() const {
 //     return this->ss;
 // }
 
+// Copy constructor
+// ----------------
+SSockaddr::SSockaddr(const SSockaddr& that) {
+    TRACE2(this, " Construct copy SSockaddr()")
+    sas = that.sas;
+}
+
+// Copy assignment operator
+// ------------------------
+SSockaddr& SSockaddr::operator=(SSockaddr that) {
+    TRACE2(this,
+           " Executing SSockaddr::operator=(SSockaddr) (struct assign op).")
+    std::swap(sas, that.sas);
+
+    return *this;
+}
+
 // Assignment operator= to set socket address from string,
 // -------------------------------------------------------
-void SSockaddr_storage::operator=(const std::string& a_addr_str) {
+void SSockaddr::operator=(const std::string& a_addr_str) {
     // Valid input examles: "[2001:db8::1]", "[2001:db8::1]:50001",
     //                      "192.168.1.1", "192.168.1.1:50001".
-    TRACE2(this, " Executing SSockaddr_storage::operator=()")
+    TRACE2(this, " Executing SSockaddr::operator=()")
 
     // An empty address string clears the address storage
     if (a_addr_str.empty()) {
@@ -204,22 +221,22 @@ void SSockaddr_storage::operator=(const std::string& a_addr_str) {
 
 // Compare operator== to test if another socket address is equal to this
 // ---------------------------------------------------------------------
-bool SSockaddr_storage::operator==(const ::sockaddr_storage& a_ss) const {
+bool SSockaddr::operator==(const ::sockaddr_storage& a_ss) const {
     return sockaddrcmp(&a_ss, &this->ss);
 }
 
 // Getter for the assosiated ip address without port
 // -------------------------------------------------
 // e.g. "[2001:db8::2]" or "192.168.254.253".
-std::string SSockaddr_storage::get_addr_str() const {
-    TRACE2(this, " Executing SSockaddr_storage::get_addr_str()")
+std::string SSockaddr::get_addr_str() const {
+    TRACE2(this, " Executing SSockaddr::get_addr_str()")
     return to_addr_str(&this->ss);
 }
 
 // Getter for the assosiated port number
 // -------------------------------------
-uint16_t SSockaddr_storage::get_port() const {
-    TRACE2(this, " Executing SSockaddr_storage::get_port()")
+uint16_t SSockaddr::get_port() const {
+    TRACE2(this, " Executing SSockaddr::get_port()")
     // sin_port and sin6_port are on the same memory location (union of the
     // structures) so we can use it for AF_INET and AF_INET6.
     return ntohs(reinterpret_cast<const ::sockaddr_in6*>(&this->ss)->sin6_port);
@@ -227,16 +244,16 @@ uint16_t SSockaddr_storage::get_port() const {
 
 // Getter for the length of the sockaddr structure.
 // ------------------------------------------------
-socklen_t SSockaddr_storage::get_sslen() const {
-    TRACE2(this, " Executing SSockaddr_storage::get_sslen()")
+socklen_t SSockaddr::get_sslen() const {
+    TRACE2(this, " Executing SSockaddr::get_sslen()")
     return sizeof(this->ss);
 }
 
 
 // private member functions
 // ------------------------
-void SSockaddr_storage::handle_ipv6(const std::string& a_addr_str) {
-    TRACE2(this, " Executing SSockaddr_storage::handle_ipv6()")
+void SSockaddr::handle_ipv6(const std::string& a_addr_str) {
+    TRACE2(this, " Executing SSockaddr::handle_ipv6()")
     // remove surounding brackets
     std::string addr_str = a_addr_str.substr(1, a_addr_str.length() - 2);
 
@@ -251,8 +268,8 @@ void SSockaddr_storage::handle_ipv6(const std::string& a_addr_str) {
     this->ss.ss_family = AF_INET6;
 }
 
-void SSockaddr_storage::handle_ipv4(const std::string& a_addr_str) {
-    TRACE2(this, " Executing SSockaddr_storage::handle_ipv4()")
+void SSockaddr::handle_ipv4(const std::string& a_addr_str) {
+    TRACE2(this, " Executing SSockaddr::handle_ipv4()")
     int ret = inet_pton(AF_INET, a_addr_str.c_str(),
                         &reinterpret_cast<::sockaddr_in*>(&this->ss)->sin_addr);
     if (ret == 0) {
@@ -263,12 +280,34 @@ void SSockaddr_storage::handle_ipv4(const std::string& a_addr_str) {
     this->ss.ss_family = AF_INET;
 }
 
-void SSockaddr_storage::handle_port(const std::string& a_port) {
-    TRACE2(this, " Executing SSockaddr_storage::handle_port()")
+void SSockaddr::handle_port(const std::string& a_port) {
+    TRACE2(this, " Executing SSockaddr::handle_port()")
     // sin_port and sin6_port are on the same memory location (union of the
     // structures) so we can use it for AF_INET and AF_INET6.
     reinterpret_cast<::sockaddr_in6*>(&this->ss)->sin6_port =
         htons(to_port(a_port));
 }
+
+#if 0
+// Structure SSockaddr
+// ===================
+
+// Constructor
+SSockaddr::SSockaddr(){
+    TRACE2(this, " Construct SSockaddr()") //
+}
+
+// Destructor
+SSockaddr::~SSockaddr() {
+    TRACE2(this, " Destruct SSockaddr()")
+    // Destroy structure
+    ::memset(&this->ss, 0xAA, sizeof(this->ss));
+}
+
+// Get reference to the sockaddr_storage structure.
+SSockaddr::operator ::sockaddr_t&() {
+    return sas;
+}
+#endif
 
 } // namespace upnplib

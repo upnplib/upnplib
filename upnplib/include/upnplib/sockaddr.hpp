@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCKADDR_HPP
 #define UPNPLIB_NET_SOCKADDR_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-03
+// Redistribution only with this Copyright remark. Last modified: 2023-11-08
 
 // Helpful links:
 // REF:_[Why_do_I_get_wrong_pointer_to_a_base_class_with_a_virtual_constructor](https://stackoverflow.com/q/76360179/5014688)
@@ -15,7 +15,7 @@ namespace upnplib {
 // Never need to use type casts with pointer to different socket address
 // structures. For details about using this helpful union have a look at
 // REF:_[sockaddr_structures_as_union](https://stackoverflow.com/a/76548581/5014688)
-using sockaddr_t = union {
+union sockaddr_t {
     sockaddr_storage ss;
     sockaddr_in6 sin6;
     sockaddr_in sin;
@@ -49,23 +49,37 @@ UPNPLIB_API bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
 
 // Specialized sockaddr structure
 // ==============================
-struct UPNPLIB_API SSockaddr_storage {
-    ::sockaddr_storage ss{};
+struct UPNPLIB_API SSockaddr {
+    sockaddr_t sas{};
+    sockaddr_storage& ss{sas.ss};
+    sockaddr_in6& sin6{sas.sin6};
+    sockaddr_in& sin{sas.sin};
+    sockaddr& sa{sas.sa};
 
     // Constructor
-    SSockaddr_storage();
+    SSockaddr();
 
     // Destructor
-    virtual ~SSockaddr_storage();
+    virtual ~SSockaddr();
 
     // Get reference to the sockaddr_storage structure.
     // Only as example, I don't use it because it may be confusing. I only use
-    // SSockaddr_storage::ss (instantiated e.g. ssObj.ss) to access the trivial
+    // SSockaddr::ss (instantiated e.g. ssObj.ss) to access the trivial
     // member structure.
     // operator const ::sockaddr_storage&() const;
 
+    // copy constructor:
+    // Example: SSockaddr saddr2 = saddr1; // saddr1 is an instantiated object,
+    // or       SSockaddr saddr2{saddr1};
+    SSockaddr(const SSockaddr&);
+    //
+    // copy assignment operator, needs user defined copy contructor.
+    // Provides strong exception guarantee with value argument.
+    // Example: saddr2 = saddr1; // saddr? are instantiated valid objects.
+    SSockaddr& operator=(SSockaddr); // value argument
+
     // Assignment operator= to set socket address from string,
-    // e.g.: SSockaddr_storage ss; ss = "[2001:db8::1]";
+    // e.g.: SSockaddr ss; ss = "[2001:db8::1]";
     // Input examples: "[2001:db8::1]", "[2001:db8::1]:50001",
     //                 "192.168.1.1", "192.168.1.1:50001".
     // An empty address string clears the address storage.
@@ -91,6 +105,28 @@ struct UPNPLIB_API SSockaddr_storage {
     UPNPLIB_LOCAL void handle_ipv4(const std::string& a_addr_str);
     UPNPLIB_LOCAL void handle_port(const std::string& a_port);
 };
+
+#if 0
+// Structure SSockaddr
+// ===================
+
+struct UPNPLIB_API SSockaddr {
+    sockaddr_t sas{};
+    sockaddr_storage& ss{sas.ss};
+    sockaddr_in6& sin6{sas.sin6};
+    sockaddr_in& sin{sas.sin};
+    sockaddr& sa{sas.sa};
+
+    // Constructor
+    SSockaddr();
+
+    // Destructor
+    virtual ~SSockaddr();
+
+    // Get reference to the sockaddr_storage structure.
+    operator sockaddr_t&();
+};
+#endif
 
 } // namespace upnplib
 

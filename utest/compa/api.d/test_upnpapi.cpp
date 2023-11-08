@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-24
+// Redistribution only with this Copyright remark. Last modified: 2023-11-08
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <pupnp/upnp/src/api/upnpapi.cpp>
@@ -26,7 +26,7 @@
 namespace utest {
 
 using ::upnplib::errStrEx;
-using ::upnplib::SSockaddr_storage;
+using ::upnplib::SSockaddr;
 
 using ::pupnp::CLogging;
 
@@ -146,7 +146,7 @@ class UpnpapiFTestSuite : public ::testing::Test {
 class UpnpapiMockFTestSuite : public UpnpapiFTestSuite {
   protected:
     // Ip address structure
-    SSockaddr_storage m_saddr;
+    SSockaddr m_saddr;
 
     // clang-format off
     // Instantiate mocking objects.

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-24
+// Redistribution only with this Copyright remark. Last modified: 2023-11-08
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -26,7 +26,7 @@ using ::testing::NotNull;
 using ::testing::Return;
 using ::testing::SetErrnoAndReturn;
 
-using ::upnplib::SSockaddr_storage;
+using ::upnplib::SSockaddr;
 
 
 // ######################################
@@ -94,7 +94,7 @@ class PrivateConnectFTestSuite : public ::testing::Test {
     // Fictive socket file descriptor for mocking.
     const SOCKET m_sockfd{umock::sfd_base + 40};
     // Ip address structure
-    SSockaddr_storage m_saddr;
+    SSockaddr m_saddr;
 
     // Needed mocked functions
     umock::PupnpSockMock m_pupnpSockObj;

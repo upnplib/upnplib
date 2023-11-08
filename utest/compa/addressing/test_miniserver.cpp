@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-07
+// Redistribution only with this Copyright remark. Last modified: 2023-11-08
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -52,7 +52,7 @@ using ::upnplib::CAddrinfo;
 using ::upnplib::CSocket_basic;
 using ::upnplib::errStrEx;
 using ::upnplib::g_dbug;
-using ::upnplib::SSockaddr_storage;
+using ::upnplib::SSockaddr;
 
 using ::pupnp::CLogging;
 using ::pupnp::CThreadPoolInit;
@@ -1585,7 +1585,7 @@ TEST_F(RunMiniServerFTestSuite, web_server_accept_successful) {
 
     { // Scope of mocking only within this block
 
-        SSockaddr_storage ssObj;
+        SSockaddr ssObj;
         ssObj = "192.168.201.202:" + connected_port;
         EXPECT_CALL(m_sys_socketObj,
                     accept(listen_sockfd, NotNull(),
@@ -1977,7 +1977,7 @@ TEST_F(RunMiniServerFTestSuite,
 
     // Provide a sockaddr structure that will be returned by mocked
     // getsockname().
-    SSockaddr_storage ssObj;
+    SSockaddr ssObj;
     ssObj.ss.ss_family = AF_UNIX;
 
     EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))

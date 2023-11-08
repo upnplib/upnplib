@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-07
+// Redistribution only with this Copyright remark. Last modified: 2023-11-08
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -38,7 +38,7 @@ using ::testing::SetErrnoAndReturn;
 using ::testing::StrictMock;
 
 using ::upnplib::g_dbug;
-using ::upnplib::SSockaddr_storage;
+using ::upnplib::SSockaddr;
 
 using ::pupnp::CLogging;
 using ::pupnp::CThreadPoolInit;
@@ -145,7 +145,7 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful) {
     constexpr SOCKET remote_connect_sockfd = umock::sfd_base + 9;
 
     // We need this to mock socket addresses.
-    SSockaddr_storage ssObj;
+    SSockaddr ssObj;
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
@@ -239,7 +239,7 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
     m_minisock->miniServerStopSock = umock::sfd_base + 55;
 
     // We need this to mock socket addresses.
-    SSockaddr_storage ssObj;
+    SSockaddr ssObj;
 
     if (old_code) {
 #ifdef _WIN32
@@ -362,7 +362,7 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_accept_fails) {
             .WillOnce(Return(0));
 
         // Mock that the socket fd ist bound to an address.
-        SSockaddr_storage ssObj;
+        SSockaddr ssObj;
         ssObj = "[2001:db8::ab]:50044";
         EXPECT_CALL(
             m_sys_socketObj,
@@ -386,7 +386,7 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_accept_fails) {
         .WillOnce(SetErrnoAndReturn(ENOMEM, INVALID_SOCKET));
 
     // Provide data for stopsock with ShutDown.
-    SSockaddr_storage ss_localhost;
+    SSockaddr ss_localhost;
     ss_localhost = "127.0.0.1:" + std::to_string(m_minisock->stopPort);
 
     EXPECT_CALL(m_sys_socketObj,
@@ -413,7 +413,7 @@ TEST_F(MiniServerMockFTestSuite, fdset_if_valid_read_successful) {
 
         // ::getsockname() is used to verify if a socket is bound to a local
         // interface address. Here I mock it to find the socket is bound.
-        SSockaddr_storage ssObj;
+        SSockaddr ssObj;
         ssObj = "192.168.10.11:50061";
         EXPECT_CALL(
             m_sys_socketObj,
@@ -566,7 +566,7 @@ TEST_F(MiniServerMockFTestSuite, fdset_if_valid_fails_with_unbind_socket) {
         // ::getsockname() is used to verify if a socket is bound to a local
         // interface address. Here I mock it with the unknown sockaddr "[::]"
         // to find the socket is not bound.
-        SSockaddr_storage ssObj;
+        SSockaddr ssObj;
         ssObj = "[::]";
         EXPECT_CALL(
             m_sys_socketObj,
@@ -606,7 +606,7 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_successful) {
     constexpr SIZEP_T expected_destbuflen{sizeof(shutdown_str)};
 
     constexpr SOCKET sockfd{umock::sfd_base + 5};
-    SSockaddr_storage ssObj;
+    SSockaddr ssObj;
     ssObj = "127.0.0.1:50015";
 
     fd_set rdSet;
@@ -675,7 +675,7 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_no_bytes_received) {
     constexpr char shutdown_str[]{""};
     constexpr SIZEP_T bufsizeof_ShutDown_str{9};
     constexpr SOCKET sockfd{umock::sfd_base + 30};
-    SSockaddr_storage ssObj;
+    SSockaddr ssObj;
     ssObj = "127.0.0.1:50015";
 
     fd_set rdSet;
@@ -717,7 +717,7 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_wrong_stop_message) {
     constexpr SIZEP_T expected_destbuflen{sizeof(shutdown_str)};
 
     constexpr SOCKET sockfd{umock::sfd_base + 31};
-    SSockaddr_storage ssObj;
+    SSockaddr ssObj;
     ssObj = "127.0.0.1:50017";
 
     fd_set rdSet;
@@ -750,7 +750,7 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_from_wrong_address) {
     constexpr SIZEP_T expected_destbuflen{sizeof(shutdown_str)};
 
     constexpr SOCKET sockfd{umock::sfd_base + 48};
-    SSockaddr_storage ssObj;
+    SSockaddr ssObj;
     ssObj = "192.168.150.151:50018";
 
     fd_set rdSet;
@@ -790,7 +790,7 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_without_0_termbyte) {
     constexpr SIZEP_T expected_destbuflen{sizeof(shutdown_str) - 1};
 
     constexpr SOCKET sockfd{umock::sfd_base + 49};
-    SSockaddr_storage ssObj;
+    SSockaddr ssObj;
     ssObj = "127.0.0.1:50019";
 
     fd_set rdSet;
@@ -836,7 +836,7 @@ TEST_F(MiniServerMockFTestSuite, ssdp_read_successful) {
     const char* const ssdpd_str_last{ssdpdata_str + sizeof(ssdpdata_str)};
 
     SOCKET ssdp_sockfd{umock::sfd_base + 32};
-    SSockaddr_storage ss;
+    SSockaddr ss;
     ss = "192.168.71.82:50023";
 
     fd_set rdSet;
