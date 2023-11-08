@@ -178,9 +178,8 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful) {
         ssObj = "[2001:db8::cd]:50059";
         EXPECT_CALL(m_sys_socketObj, getsockname(m_minisock->miniServerSock4, _,
                                                  Pointee(ssObj.get_sslen())))
-            .WillOnce(
-                DoAll(SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
-                      SetArgPointee<2>(ssObj.get_sslen()), Return(0)));
+            .WillOnce(DoAll(SetArgPointee<1>(ssObj.sa),
+                            SetArgPointee<2>(ssObj.get_sslen()), Return(0)));
 
         // select() in RunMiniServer() also succeeds.
         EXPECT_CALL(m_sys_socketObj,
@@ -191,12 +190,10 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful) {
     // accept() in RunMiniServer() succeeds and returns the remote ip address
     // that it is connected to.
     ssObj = "192.168.200.201:" + remote_connect_port;
-    EXPECT_CALL(m_sys_socketObj,
-                accept(m_minisock->miniServerSock4, NotNull(),
-                       Pointee(Ge(static_cast<socklen_t>(sizeof(ssObj.ss))))))
+    EXPECT_CALL(m_sys_socketObj, accept(m_minisock->miniServerSock4, NotNull(),
+                                        Pointee(Ge(ssObj.get_sslen()))))
         .WillOnce(
-            DoAll(SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
-                  Return(remote_connect_sockfd)));
+            DoAll(SetArgPointee<1>(ssObj.sa), Return(remote_connect_sockfd)));
 
     // Here I mock receiving of the ShutDown datagram.
     constexpr char shutdown_str[]("ShutDown");
@@ -205,12 +202,9 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful) {
     // It is important to expect shutdown_strlen.
     EXPECT_CALL(m_sys_socketObj,
                 recvfrom(m_minisock->miniServerStopSock, _, Ge(shutdown_strlen),
-                         0, _,
-                         Pointee(static_cast<socklen_t>(sizeof(ssObj.ss)))))
-        .WillOnce(
-            DoAll(StrCpyToArg<1>(shutdown_str),
-                  SetArgPointee<4>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
-                  Return(shutdown_strlen)));
+                         0, _, Pointee(ssObj.get_sslen())))
+        .WillOnce(DoAll(StrCpyToArg<1>(shutdown_str),
+                        SetArgPointee<4>(ssObj.sa), Return(shutdown_strlen)));
 
     // Test Unit
     RunMiniServer(m_minisock);
@@ -274,9 +268,8 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
         ssObj = "192.168.10.10:50060";
         EXPECT_CALL(m_sys_socketObj, getsockname(m_minisock->miniServerSock4, _,
                                                  Pointee(ssObj.get_sslen())))
-            .WillOnce(
-                DoAll(SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
-                      SetArgPointee<2>(ssObj.get_sslen()), Return(0)));
+            .WillOnce(DoAll(SetArgPointee<1>(ssObj.sa),
+                            SetArgPointee<2>(ssObj.get_sslen()), Return(0)));
 
         // but select in RunMiniServer() fails
         EXPECT_CALL(m_sys_socketObj,
@@ -364,14 +357,11 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_accept_fails) {
         // Mock that the socket fd ist bound to an address.
         SSockaddr ssObj;
         ssObj = "[2001:db8::ab]:50044";
-        EXPECT_CALL(
-            m_sys_socketObj,
-            getsockname(m_minisock->miniServerSock4, _,
-                        Pointee(Ge(static_cast<socklen_t>(sizeof(ssObj.ss))))))
-            .WillOnce(DoAll(
-                SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
-                SetArgPointee<2>(static_cast<socklen_t>(sizeof(ssObj.ss))),
-                Return(0)));
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockname(m_minisock->miniServerSock4, _,
+                                Pointee(Ge(ssObj.get_sslen()))))
+            .WillOnce(DoAll(SetArgPointee<1>(ssObj.sa),
+                            SetArgPointee<2>(ssObj.get_sslen()), Return(0)));
     }
 
     // select in RunMiniServer() also succeeds.
@@ -415,14 +405,10 @@ TEST_F(MiniServerMockFTestSuite, fdset_if_valid_read_successful) {
         // interface address. Here I mock it to find the socket is bound.
         SSockaddr ssObj;
         ssObj = "192.168.10.11:50061";
-        EXPECT_CALL(
-            m_sys_socketObj,
-            getsockname(sockfd, _,
-                        Pointee(Ge(static_cast<socklen_t>(sizeof(ssObj.ss))))))
-            .WillOnce(DoAll(
-                SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
-                SetArgPointee<2>(static_cast<socklen_t>(sizeof(ssObj.ss))),
-                Return(0)));
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockname(sockfd, _, Pointee(Ge(ssObj.get_sslen()))))
+            .WillOnce(DoAll(SetArgPointee<1>(ssObj.sa),
+                            SetArgPointee<2>(ssObj.get_sslen()), Return(0)));
     }
 
     // Test Unit
@@ -568,14 +554,10 @@ TEST_F(MiniServerMockFTestSuite, fdset_if_valid_fails_with_unbind_socket) {
         // to find the socket is not bound.
         SSockaddr ssObj;
         ssObj = "[::]";
-        EXPECT_CALL(
-            m_sys_socketObj,
-            getsockname(sockfd, _,
-                        Pointee(Ge(static_cast<socklen_t>(sizeof(ssObj.ss))))))
-            .WillOnce(DoAll(
-                SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
-                SetArgPointee<2>(static_cast<socklen_t>(sizeof(ssObj.ss))),
-                Return(0)));
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockname(sockfd, _, Pointee(Ge(ssObj.get_sslen()))))
+            .WillOnce(DoAll(SetArgPointee<1>(ssObj.sa),
+                            SetArgPointee<2>(ssObj.get_sslen()), Return(0)));
     }
 
     // Test Unit
@@ -615,13 +597,11 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_successful) {
 
     // Mock system functions
     // expected_destbuflen is important here to avoid buffer limit overwrite.
-    EXPECT_CALL(m_sys_socketObj,
-                recvfrom(sockfd, _, Ge(expected_destbuflen), 0, _,
-                         Pointee(static_cast<socklen_t>(sizeof(ssObj.ss)))))
-        .WillOnce(
-            DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
-                  SetArgPointee<4>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
-                  Return(expected_destbuflen)));
+    EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(expected_destbuflen), 0,
+                                          _, Pointee(ssObj.get_sslen())))
+        .WillOnce(DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
+                        SetArgPointee<4>(ssObj.sa),
+                        Return(expected_destbuflen)));
 
     // Test Unit
     // Returns 1 (true) if successfully received "ShutDown" from stopSock
@@ -683,13 +663,10 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_no_bytes_received) {
     FD_SET(sockfd, &rdSet);
 
     // Mock system functions
-    EXPECT_CALL(m_sys_socketObj,
-                recvfrom(sockfd, _, Ge(bufsizeof_ShutDown_str), 0, _,
-                         Pointee(static_cast<socklen_t>(sizeof(ssObj.ss)))))
-        .WillOnce(
-            DoAll(StrCpyToArg<1>(shutdown_str),
-                  SetArgPointee<4>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
-                  Return(0)));
+    EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(bufsizeof_ShutDown_str),
+                                          0, _, Pointee(ssObj.get_sslen())))
+        .WillOnce(DoAll(StrCpyToArg<1>(shutdown_str),
+                        SetArgPointee<4>(ssObj.sa), Return(0)));
 
     // Test Unit
     // Returns 1 (true) if successfully received "ShutDown" from stopSock
@@ -726,13 +703,11 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_wrong_stop_message) {
 
     // Mock system functions
     // expected_destbuflen is important here to avoid buffer limit overwrite.
-    EXPECT_CALL(m_sys_socketObj,
-                recvfrom(sockfd, _, Ge(expected_destbuflen), 0, _,
-                         Pointee(static_cast<socklen_t>(sizeof(ssObj.ss)))))
-        .WillOnce(
-            DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
-                  SetArgPointee<4>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
-                  Return(expected_destbuflen)));
+    EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(expected_destbuflen), 0,
+                                          _, Pointee(ssObj.get_sslen())))
+        .WillOnce(DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
+                        SetArgPointee<4>(ssObj.sa),
+                        Return(expected_destbuflen)));
 
     // Test Unit
     EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 0);
@@ -759,13 +734,11 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_from_wrong_address) {
 
     // Mock system functions
     // expected_destbuflen is important here to avoid buffer limit overwrite.
-    EXPECT_CALL(m_sys_socketObj,
-                recvfrom(sockfd, _, Ge(expected_destbuflen), 0, _,
-                         Pointee(static_cast<socklen_t>(sizeof(ssObj.ss)))))
-        .WillOnce(
-            DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
-                  SetArgPointee<4>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
-                  Return(expected_destbuflen)));
+    EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(expected_destbuflen), 0,
+                                          _, Pointee(ssObj.get_sslen())))
+        .WillOnce(DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
+                        SetArgPointee<4>(ssObj.sa),
+                        Return(expected_destbuflen)));
 
     // Test Unit
     if (old_code) {
@@ -799,13 +772,11 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_without_0_termbyte) {
 
     // Mock system functions
     // expected_destbuflen is important here to avoid buffer limit overwrite.
-    EXPECT_CALL(m_sys_socketObj,
-                recvfrom(sockfd, _, Ge(expected_destbuflen), 0, _,
-                         Pointee(static_cast<socklen_t>(sizeof(ssObj.ss)))))
-        .WillOnce(
-            DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
-                  SetArgPointee<4>(*reinterpret_cast<sockaddr*>(&ssObj.ss)),
-                  Return(expected_destbuflen)));
+    EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(expected_destbuflen), 0,
+                                          _, Pointee(ssObj.get_sslen())))
+        .WillOnce(DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
+                        SetArgPointee<4>(ssObj.sa),
+                        Return(expected_destbuflen)));
 
     // Test Unit
     if (old_code) {

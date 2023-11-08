@@ -1,5 +1,4 @@
 Next steps to do:
-* Rework SSockaddr_storage to use sockaddr_t instead of sockaddr_storage.
 * Continue moving RunMiniserver tests from test_miniserver.cpp to test_miniservver_run.cpp.
 * Rework test_sock.cp to work with changed sys_socket mocking.
 * Rework test_httpreadwrite.cpp

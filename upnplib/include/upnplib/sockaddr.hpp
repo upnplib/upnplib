@@ -12,16 +12,6 @@
 
 namespace upnplib {
 
-// Never need to use type casts with pointer to different socket address
-// structures. For details about using this helpful union have a look at
-// REF:_[sockaddr_structures_as_union](https://stackoverflow.com/a/76548581/5014688)
-union sockaddr_t {
-    sockaddr_storage ss;
-    sockaddr_in6 sin6;
-    sockaddr_in sin;
-    sockaddr sa;
-};
-
 // Free function to get the port number from a string
 // --------------------------------------------------
 UPNPLIB_API uint16_t to_port(const std::string& a_port_str);
@@ -47,14 +37,25 @@ UPNPLIB_API bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
                              const ::sockaddr_storage* a_ss2);
 
 
+// Never need to use type casts with pointer to different socket address
+// structures. For details about using this helpful union have a look at
+// REF:_[sockaddr_structures_as_union](https://stackoverflow.com/a/76548581/5014688)
+union sockaddr_t {
+    sockaddr_storage ss;
+    sockaddr_in6 sin6;
+    sockaddr_in sin;
+    sockaddr sa;
+};
+
 // Specialized sockaddr structure
 // ==============================
 struct UPNPLIB_API SSockaddr {
-    sockaddr_t sas{};
-    sockaddr_storage& ss{sas.ss};
-    sockaddr_in6& sin6{sas.sin6};
-    sockaddr_in& sin{sas.sin};
-    sockaddr& sa{sas.sa};
+    // References to have direct access to the trival structures in the private
+    // union.
+    sockaddr_storage& ss{m_sa_union.ss};
+    sockaddr_in6& sin6{m_sa_union.sin6};
+    sockaddr_in& sin{m_sa_union.sin};
+    sockaddr& sa{m_sa_union.sa};
 
     // Constructor
     SSockaddr();
@@ -101,32 +102,12 @@ struct UPNPLIB_API SSockaddr {
     socklen_t get_sslen() const;
 
   private:
+    sockaddr_t m_sa_union{}; // this is the union of trivial sockaddr structures
+                             // that is managed.
     UPNPLIB_LOCAL void handle_ipv6(const std::string& a_addr_str);
     UPNPLIB_LOCAL void handle_ipv4(const std::string& a_addr_str);
     UPNPLIB_LOCAL void handle_port(const std::string& a_port);
 };
-
-#if 0
-// Structure SSockaddr
-// ===================
-
-struct UPNPLIB_API SSockaddr {
-    sockaddr_t sas{};
-    sockaddr_storage& ss{sas.ss};
-    sockaddr_in6& sin6{sas.sin6};
-    sockaddr_in& sin{sas.sin};
-    sockaddr& sa{sas.sa};
-
-    // Constructor
-    SSockaddr();
-
-    // Destructor
-    virtual ~SSockaddr();
-
-    // Get reference to the sockaddr_storage structure.
-    operator sockaddr_t&();
-};
-#endif
 
 } // namespace upnplib
 
