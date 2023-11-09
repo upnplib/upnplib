@@ -1,9 +1,10 @@
 #ifndef UPNPLIB_UTEST_HPP
 #define UPNPLIB_UTEST_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-07
+// Redistribution only with this Copyright remark. Last modified: 2023-11-17
 
 #include <upnplib/visibility.hpp>
+#include <upnplib/port.hpp>
 
 #include <regex>
 #include <gmock/gmock.h>
@@ -79,15 +80,8 @@ class UPNPLIB_API CaptureStdOutErr {
     static constexpr int m_pipebuffer_size{8192};
     static constexpr int m_chunk_size{512};
     bool m_capturing{false};
-#ifdef _MSC_VER
-#pragma warning(push)
-// This can be ignored for classes from the C++ STL (best if it is private).
-#pragma warning(disable : 4251)
-#endif
+    SUPPRESS_MSVC_WARN_4251_NEXT_LINE
     std::string m_strbuffer{};
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
 
     // The original file descriptor STDOUT_FILENO or STDERR_FILENO that is
     // captured.

@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-20
+// Redistribution only with this Copyright remark. Last modified: 2023-11-13
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -13,7 +13,15 @@ namespace upnplib {
 
 // Free function to test if the node is a valid numeric address string
 // -------------------------------------------------------------------
-int is_numeric_node(const std::string& a_node, const int a_addr_family) {
+// Checks if a string represents a numeric ipv6 or ipv4 address without port.
+// On success it returns the socket address family AF_INET6 or AF_INET the
+// address belongs to.
+// Otherwise it returns 0.
+// Note: I simply use the system function inet_pton() to check if the node
+// string is accepted. This function can also be used to realize what address
+// family an address belongs to. --Ingo
+static int is_numeric_node(const std::string& a_node,
+                           const int a_addr_family = AF_UNSPEC) {
     // clang-format off
     TRACE("Executing is_numeric_node(\"" + a_node + "\", " +
           (a_addr_family == AF_INET6 ? "AF_INET6" :

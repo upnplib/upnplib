@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-16
+ * Redistribution only with this Copyright remark. Last modified: 2023-11-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -197,28 +197,28 @@ Upnp_Handle_Type GetDeviceHandleInfoForPath(
     /*! [out] Service info for found path. */
     service_info** serv_info);
 
-EXPORT_SPEC extern char gIF_NAME[LINE_SIZE];
-EXPORT_SPEC extern char gIF_IPV4[INET_ADDRSTRLEN];
-EXPORT_SPEC extern char gIF_IPV4_NETMASK[INET_ADDRSTRLEN];
-EXPORT_SPEC extern char gIF_IPV6[INET6_ADDRSTRLEN];
-EXPORT_SPEC extern unsigned gIF_IPV6_PREFIX_LENGTH;
+UPNPLIB_API extern char gIF_NAME[LINE_SIZE];
+UPNPLIB_API extern char gIF_IPV4[INET_ADDRSTRLEN];
+UPNPLIB_API extern char gIF_IPV4_NETMASK[INET_ADDRSTRLEN];
+UPNPLIB_API extern char gIF_IPV6[INET6_ADDRSTRLEN];
+UPNPLIB_API extern unsigned gIF_IPV6_PREFIX_LENGTH;
 
-EXPORT_SPEC extern char gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN];
-EXPORT_SPEC extern unsigned gIF_IPV6_ULA_GUA_PREFIX_LENGTH;
+UPNPLIB_API extern char gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN];
+UPNPLIB_API extern unsigned gIF_IPV6_ULA_GUA_PREFIX_LENGTH;
 
-EXPORT_SPEC extern unsigned gIF_INDEX;
+UPNPLIB_API extern unsigned gIF_INDEX;
 
-EXPORT_SPEC extern unsigned short LOCAL_PORT_V4;
-EXPORT_SPEC extern unsigned short LOCAL_PORT_V6;
-EXPORT_SPEC extern unsigned short LOCAL_PORT_V6_ULA_GUA;
+UPNPLIB_API extern unsigned short LOCAL_PORT_V4;
+UPNPLIB_API extern unsigned short LOCAL_PORT_V6;
+UPNPLIB_API extern unsigned short LOCAL_PORT_V6_ULA_GUA;
 
 /*! NLS uuid. */
 extern Upnp_SID gUpnpSdkNLSuuid;
 
 extern TimerThread gTimerThread;
-extern ThreadPool gRecvThreadPool;
+UPNPLIB_API extern ThreadPool gRecvThreadPool;
 extern ThreadPool gSendThreadPool;
-EXPORT_SPEC extern ThreadPool gMiniServerThreadPool;
+UPNPLIB_API extern ThreadPool gMiniServerThreadPool;
 
 typedef enum {
     SUBSCRIBE,
@@ -278,7 +278,7 @@ typedef enum { WEB_SERVER_DISABLED, WEB_SERVER_ENABLED } WebServerState;
  *
  * \return UPNP_E_SUCCESS on success.
  */
-EXPORT_SPEC int UpnpGetIfInfo(
+UPNPLIB_API int UpnpGetIfInfo(
     /*! [in] Interface name (can be NULL). */
     const char* IfName);
 
@@ -305,12 +305,12 @@ int PrintHandleInfo(
 extern WebServerState bWebServerState;
 
 /*! */
-EXPORT_SPEC extern WebCallback_HostValidate gWebCallback_HostValidate;
+UPNPLIB_API extern WebCallback_HostValidate gWebCallback_HostValidate;
 
 /*! */
-EXPORT_SPEC extern void* gWebCallback_HostValidateCookie;
+UPNPLIB_API extern void* gWebCallback_HostValidateCookie;
 
 /*! */
-EXPORT_SPEC extern int gAllowLiteralHostRedirection;
+UPNPLIB_API extern int gAllowLiteralHostRedirection;
 
 #endif /* PUPNP_UPNPAPI_HPP */

@@ -131,6 +131,7 @@ CSocket_basic::CSocket_basic(SOCKET a_sfd) {
     int so_option{-1};
     socklen_t optlen{sizeof(so_option)}; // May be modified
     // Type cast (char*)&so_option is needed for Microsoft Windows.
+    TRACE2(this, " Calling system funtion ::getsockopt().")
     if (umock::sys_socket_h.getsockopt(a_sfd, SOL_SOCKET, SO_ERROR,
                                        reinterpret_cast<char*>(&so_option),
                                        &optlen) != 0)

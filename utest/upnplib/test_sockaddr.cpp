@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-08
+// Redistribution only with this Copyright remark. Last modified: 2023-11-15
 
 #include <upnplib/general.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -23,101 +23,6 @@ using ::upnplib::to_port;
 
 // SSockaddr TestSuite
 // ===========================
-TEST(SockaddrCmpTestSuite, compare_equal_ipv6_sockaddrs_successful) {
-    SSockaddr saddr1;
-    saddr1 = "[2001:db8::33]:50033";
-    SSockaddr saddr2;
-    saddr2 = "[2001:db8::33]:50033";
-
-    // Test Unit
-    EXPECT_TRUE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
-}
-
-TEST(SockaddrCmpTestSuite, compare_equal_ipv4_sockaddrs_successful) {
-    SSockaddr saddr1;
-    saddr1 = "192.168.167.166:50037";
-    SSockaddr saddr2;
-    saddr2 = "192.168.167.166:50037";
-
-    // Test Unit
-    EXPECT_TRUE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
-}
-
-TEST(SockaddrCmpTestSuite, compare_different_ipv6_sockaddrs) {
-    // Test Unit, compare with different ports
-    SSockaddr saddr1;
-    saddr1 = "[2001:db8::35]:50035";
-    SSockaddr saddr2;
-    saddr2 = "[2001:db8::35]:50036";
-    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
-
-    // Test Unit, compare with different address
-    saddr2 = "[2001:db8::36]:50035";
-    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
-
-    // Test Unit, compare with different address family
-    saddr2 = "192.168.171.172:50035";
-    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
-}
-
-TEST(SockaddrCmpTestSuite, compare_different_ipv4_sockaddrs) {
-    // Test Unit, compare with different ports
-    SSockaddr saddr1;
-    saddr1 = "192.168.13.14:50038";
-    SSockaddr saddr2;
-    saddr2 = "192.168.13.14:50039";
-    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
-
-    // Test Unit, compare with different address
-    saddr2 = "192.168.13.15:50038";
-    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
-}
-
-TEST(SockaddrCmpTestSuite, compare_unspecified_sockaddrs) {
-    // Test Unit with unspecified address family will always return true if
-    // equal, independent of address and port.
-    SSockaddr saddr1;
-    saddr1.ss.ss_family = AF_UNSPEC;
-    SSockaddr saddr2;
-    saddr2.ss.ss_family = AF_UNSPEC;
-    EXPECT_TRUE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
-
-    saddr2 = "[2001:db8::40]:50040";
-    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
-    EXPECT_FALSE(sockaddrcmp(&saddr2.ss, &saddr1.ss));
-}
-
-TEST(SockaddrCmpTestSuite, compare_nullptr_to_sockaddrs) {
-    SSockaddr saddr1;
-    saddr1 = "[2001:db8::34]:50034";
-
-    // Test Unit
-    EXPECT_TRUE(sockaddrcmp(nullptr, nullptr));
-    EXPECT_FALSE(sockaddrcmp(nullptr, &saddr1.ss));
-    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, nullptr));
-}
-
-TEST(SockaddrStorageTestSuite, copy_and_assign_structure) {
-    SSockaddr ss1;
-    ss1 = "[2001:db8::1]:50001";
-
-    // Test Unit copy
-    // With UPNPLIB_WITH_TRACE we do not see "Construct ..." because the
-    // default copy constructor is used here.
-    SSockaddr ss2 = ss1;
-    EXPECT_EQ(ss2.ss.ss_family, AF_INET6);
-    EXPECT_EQ(ss2.get_addr_str(), "[2001:db8::1]");
-    EXPECT_EQ(ss2.get_port(), 50001);
-
-    // Test Unit assign
-    ss1 = "192.168.251.252:50002";
-    SSockaddr ss3;
-    ss3 = ss1;
-    EXPECT_EQ(ss3.ss.ss_family, AF_INET);
-    EXPECT_EQ(ss3.get_addr_str(), "192.168.251.252");
-    EXPECT_EQ(ss3.get_port(), 50002);
-}
-
 TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
     SSockaddr saddr;
 
@@ -185,42 +90,22 @@ TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
     EXPECT_EQ(saddr.get_port(), 50022);
 }
 
-TEST(SockaddrStorageTestSuite, fill_structure_from_function_output) {
-    // Get local interface address with service.
-    // const CAddrinfo ai("[::1]", "50046", AF_INET6, SOCK_STREAM,
-    //                    AI_NUMERICHOST | AI_NUMERICSERV);
-
-    // Create an unbound socket object
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
-
-    // Bind the local address to the socket.
-    // ASSERT_NO_THROW(sockObj.bind(ai));
-
-    // Get a sockaddr storage structure
-    // SSockaddr ssObj;
-    // socklen_t sslen = sizeof(ssObj.ss);
-
-    // Test Unit
-    EXPECT_FALSE(sockObj.is_bound());
-    // errno = 0;
-    // if (::getsockname(sockObj, (sockaddr*)&ssObj.ss, &sslen) != 0) {
-    //     std::cout << std::strerror(errno) << "\n";
-    //     GTEST_FAIL() << "::getsockname() returns SOCKET_ERROR";
-    // }
-    // EXPECT_EQ(ssObj.ss.ss_family, AF_INET6);
-}
-
 TEST(SockaddrStorageTestSuite, set_address_and_port_fail) {
     SSockaddr saddr;
+
+    EXPECT_THAT([&saddr]() { saddr = "garbage"; },
+                ThrowsMessage<std::invalid_argument>(
+                    EndsWith("] EXCEPTION MSG1033: Failed to get port number "
+                             "for \"garbage\".")));
 
     EXPECT_THAT(
         [&saddr]() { saddr = "[2001::db8::1]"; },
         ThrowsMessage<std::invalid_argument>(EndsWith(
-            "] EXCEPTION MSG1043: Invalid ip address '[2001::db8::1]'")));
+            "] EXCEPTION MSG1043: Invalid netaddress \"[2001::db8::1]\".")));
 
     EXPECT_THAT([&saddr]() { saddr = "2001:db8::1]"; },
                 ThrowsMessage<std::invalid_argument>(EndsWith(
-                    "] EXCEPTION MSG1044: Invalid ip address '2001'")));
+                    "] EXCEPTION MSG1044: Invalid netaddress \"2001\".")));
 
     EXPECT_THROW({ saddr = "[2001:db8::2"; }, std::out_of_range);
 
@@ -229,16 +114,115 @@ TEST(SockaddrStorageTestSuite, set_address_and_port_fail) {
     EXPECT_THAT(
         [&saddr]() { saddr = "[2001:db8::35003]"; },
         ThrowsMessage<std::invalid_argument>(EndsWith(
-            "] EXCEPTION MSG1043: Invalid ip address '[2001:db8::35003]'")));
+            "] EXCEPTION MSG1043: Invalid netaddress \"[2001:db8::35003]\".")));
 
     EXPECT_THAT(
         [&saddr]() { saddr = "192.168.66.67."; },
         ThrowsMessage<std::invalid_argument>(EndsWith(
-            "] EXCEPTION MSG1044: Invalid ip address '192.168.66.67.'")));
+            "] EXCEPTION MSG1044: Invalid netaddress \"192.168.66.67.\".")));
 
-    EXPECT_THAT([&saddr]() { saddr = "192.168.66.67z"; },
-                ThrowsMessage<std::invalid_argument>(
-                    EndsWith("Invalid ip address '192.168.66.67z'")));
+    EXPECT_THAT(
+        [&saddr]() { saddr = "192.168.66.67z"; },
+        ThrowsMessage<std::invalid_argument>(EndsWith(
+            "] EXCEPTION MSG1044: Invalid netaddress \"192.168.66.67z\".")));
+}
+
+TEST(SockaddrCmpTestSuite, compare_equal_ipv6_sockaddrs_successful) {
+    SSockaddr saddr1;
+    saddr1 = "[2001:db8::33]:50033";
+    SSockaddr saddr2;
+    saddr2 = "[2001:db8::33]:50033";
+
+    // Test Unit
+    EXPECT_TRUE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+}
+
+TEST(SockaddrCmpTestSuite, compare_equal_ipv4_sockaddrs_successful) {
+    SSockaddr saddr1;
+    saddr1 = "192.168.167.166:50037";
+    SSockaddr saddr2;
+    saddr2 = "192.168.167.166:50037";
+
+    // Test Unit
+    EXPECT_TRUE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+}
+
+TEST(SockaddrCmpTestSuite, compare_different_ipv6_sockaddrs) {
+    // Test Unit, compare with different ports
+    SSockaddr saddr1;
+    saddr1 = "[2001:db8::35]:50035";
+    SSockaddr saddr2;
+    saddr2 = "[2001:db8::35]:50036";
+    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+
+    // Test Unit, compare with different address
+    saddr2 = "[2001:db8::36]:50035";
+    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+
+    // Test Unit, compare with different address family
+    saddr2 = "192.168.171.172:50035";
+    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+}
+
+TEST(SockaddrCmpTestSuite, compare_different_ipv4_sockaddrs) {
+    // Test Unit, compare with different ports
+    SSockaddr saddr1;
+    saddr1 = "192.168.13.14:50038";
+    SSockaddr saddr2;
+    saddr2 = "192.168.13.14:50039";
+    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+
+    // Test Unit, compare with different address
+    saddr2 = "192.168.13.15:50038";
+    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+
+    // Test Unit, compare with different address family already done with
+    // compare_different_ipv6_sockaddrs.
+}
+
+TEST(SockaddrCmpTestSuite, compare_unspecified_sockaddrs) {
+    // Test Unit with unspecified address family will always return true if
+    // equal, independent of address and port.
+    SSockaddr saddr1;
+    saddr1.ss.ss_family = AF_UNSPEC;
+    SSockaddr saddr2;
+    saddr2.ss.ss_family = AF_UNSPEC;
+    EXPECT_TRUE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+
+    saddr2 = "[2001:db8::40]:50040";
+    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, &saddr2.ss));
+    EXPECT_FALSE(sockaddrcmp(&saddr2.ss, &saddr1.ss));
+}
+
+TEST(SockaddrCmpTestSuite, compare_nullptr_to_sockaddrs) {
+    SSockaddr saddr1;
+    saddr1 = "[2001:db8::34]:50034";
+
+    // Test Unit
+    EXPECT_TRUE(sockaddrcmp(nullptr, nullptr));
+    EXPECT_FALSE(sockaddrcmp(nullptr, &saddr1.ss));
+    EXPECT_FALSE(sockaddrcmp(&saddr1.ss, nullptr));
+}
+
+TEST(SockaddrStorageTestSuite, copy_and_assign_structure) {
+    SSockaddr saddr1;
+    saddr1 = "[2001:db8::1]:50001";
+
+    // Test Unit copy
+    // With UPNPLIB_WITH_TRACE we do not see "Construct ..." because the
+    // default copy constructor is used here.
+    SSockaddr saddr2 = saddr1;
+    EXPECT_EQ(saddr2.ss.ss_family, AF_INET6);
+    EXPECT_EQ(saddr2.get_addr_str(), "[2001:db8::1]");
+    EXPECT_EQ(saddr2.get_port(), 50001);
+
+    // Test Unit assign
+    saddr1 = "192.168.251.252:50002";
+    SSockaddr saddr3;
+    saddr3 = saddr1;
+    EXPECT_EQ(saddr3.ss.ss_family, AF_INET);
+    EXPECT_EQ(saddr3.get_addr_str(), "192.168.251.252");
+    EXPECT_EQ(saddr3.get_port(), 50002);
 }
 
 TEST(SockaddrStorageTestSuite, compare_ipv6_address) {

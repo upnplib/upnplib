@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-10-26
+ * Redistribution only with this Copyright remark. Last modified: 2023-11-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -346,11 +346,11 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
  * the http_errr_code parameter.
  *
  * Parameters:
- *  IN SOCKINFO *info;          Socket information object
- *  OUT http_parser_t* parser;      HTTP parser object
- *  IN http_method_t request_method;    HTTP request method
- *  IN OUT int* timeout_secs;       time out
- *  OUT int* http_error_code;       HTTP error code returned
+ *  IN  SOCKINFO *info;               Socket information object
+ *  OUT http_parser_t* parser;        HTTP parser object
+ *  IN  http_method_t request_method; HTTP request method
+ *  IN  OUT int* timeout_secs;        time out
+ *  OUT int* http_error_code;         HTTP error code returned
  *
  * \return
  *   UPNP_E_SUCCESS
@@ -359,13 +359,14 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
 int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
                      http_method_t request_method, int* timeout_secs,
                      int* http_error_code) {
-    int ret = UPNP_E_SUCCESS;
-    int line = 0;
-    parse_status_t status;
+    TRACE("Executing http_RecvMessage()")
+    int ret{UPNP_E_SUCCESS};
+    int line{};
+    parse_status_t status{};
     int num_read{};
-    int ok_on_close = 0;
-    char* buf;
-    size_t buf_len = 1024;
+    int ok_on_close{};
+    char* buf{nullptr};
+    size_t buf_len{1024};
 
     *http_error_code = HTTP_INTERNAL_SERVER_ERROR;
     buf = (char*)malloc(buf_len);
@@ -398,10 +399,9 @@ int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
             status = parser_append(parser, buf, (size_t)num_read);
             switch (status) {
             case PARSE_SUCCESS:
-                UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                           "<<< (RECVD) "
-                           "<<<\n%s\n-----------------\n",
-                           parser->msg.msg.buf);
+                UPNPLIB_LOGINFO << "MSG1031: <<< (RECVD) <<<\n"
+                                << parser->msg.msg.buf
+                                << "\n-----------------\n";
                 print_http_headers(&parser->msg);
                 if (g_maxContentLength > (size_t)0 &&
                     parser->content_length > (unsigned int)g_maxContentLength) {
@@ -433,13 +433,12 @@ int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
             }
         } else if (num_read == 0) {
             if (ok_on_close) {
-                UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                           "<<< (RECVD) "
-                           "<<<\n%s\n-----------------\n",
-                           parser->msg.msg.buf);
+                UPNPLIB_LOGINFO << "MSG1047: <<< (RECVD) <<<\n"
+                                << parser->msg.msg.buf
+                                << "\n-----------------\n";
                 print_http_headers(&parser->msg);
                 line = __LINE__;
-                ret = 0;
+                ret = UPNP_E_SUCCESS;
                 goto ExitFunction;
             } else {
                 /* partial msg */
@@ -459,9 +458,8 @@ int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
 ExitFunction:
     free(buf);
     if (ret != UPNP_E_SUCCESS) {
-        UpnpPrintf(UPNP_ALL, HTTP, __FILE__, line,
-                   "(http_RecvMessage): Error %d, http_error_code = %d.\n", ret,
-                   *http_error_code);
+        UPNPLIB_LOGERR << "MSG1048: " << ret << " on line " << line
+                       << ", http_error_code = " << *http_error_code << ".\n";
     }
 
     return ret;
@@ -1406,9 +1404,9 @@ int http_CloseHttpConnection(void* Handle) {
  * Function: http_SendStatusResponse
  *
  * Parameters:
- *  IN SOCKINFO *info;      Socket information object
- *  IN int http_status_code;    error code returned while making
- *                  or sending the response message
+ *  IN SOCKINFO *info;              Socket information object
+ *  IN int http_status_code;        error code returned while making or sending
+ *                                  the response message
  *  IN int request_major_version;   request major version
  *  IN int request_minor_version;   request minor version
  *

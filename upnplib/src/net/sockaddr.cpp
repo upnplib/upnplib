@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-08
+// Redistribution only with this Copyright remark. Last modified: 2023-11-16
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/general.hpp>
@@ -37,7 +37,7 @@ uint16_t to_port(const std::string& a_port_str) {
 throw_exit:
     throw std::invalid_argument(UPNPLIB_LOGEXCEPT +
                                 "MSG1033: Failed to get port number for \"" +
-                                a_port_str + "\"");
+                                a_port_str + "\".");
 }
 
 
@@ -68,9 +68,9 @@ std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr) {
         return std::string(addrbuf);
 
     default:
-        throw std::invalid_argument(UPNPLIB_LOGEXCEPT +
-                                    "MSG1036: Unsupported address family " +
-                                    std::to_string(a_sockaddr->ss_family));
+        throw std::invalid_argument(
+            UPNPLIB_LOGEXCEPT + "MSG1036: Unsupported address family " +
+            std::to_string(a_sockaddr->ss_family) + ".");
     }
 }
 
@@ -186,7 +186,7 @@ void SSockaddr::operator=(const std::string& a_addr_str) {
     //                      "192.168.1.1", "192.168.1.1:50001".
     TRACE2(this, " Executing SSockaddr::operator=()")
 
-    // An empty address string clears the address storage
+    // An empty address string clears the address storage.
     if (a_addr_str.empty()) {
         ::memset(&m_sa_union, 0, sizeof(m_sa_union));
         return;
@@ -232,6 +232,11 @@ std::string SSockaddr::get_addr_str() const {
     TRACE2(this, " Executing SSockaddr::get_addr_str()")
     return to_addr_str(&ss);
 }
+const std::string& SSockaddr::get_addr_str2() {
+    TRACE2(this, " Executing SSockaddr::get_addr_str2()")
+    m_netaddr = to_addr_str(&ss);
+    return m_netaddr;
+}
 
 // Getter for the assosiated port number
 // -------------------------------------
@@ -261,8 +266,8 @@ void SSockaddr::handle_ipv6(const std::string& a_addr_str) {
     int ret = ::inet_pton(AF_INET6, addr_str.c_str(), &sin6.sin6_addr);
     if (ret == 0) {
         throw std::invalid_argument(UPNPLIB_LOGEXCEPT +
-                                    "MSG1043: Invalid ip address '" +
-                                    a_addr_str + "'");
+                                    "MSG1043: Invalid netaddress \"" +
+                                    a_addr_str + "\".");
     }
     ss.ss_family = AF_INET6;
 }
@@ -272,8 +277,8 @@ void SSockaddr::handle_ipv4(const std::string& a_addr_str) {
     int ret = ::inet_pton(AF_INET, a_addr_str.c_str(), &sin.sin_addr);
     if (ret == 0) {
         throw std::invalid_argument(UPNPLIB_LOGEXCEPT +
-                                    "MSG1044: Invalid ip address '" +
-                                    a_addr_str + "'");
+                                    "MSG1044: Invalid netaddress \"" +
+                                    a_addr_str + "\".");
     }
     ss.ss_family = AF_INET;
 }

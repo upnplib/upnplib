@@ -1,10 +1,11 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-24
+// Redistribution only with this Copyright remark. Last modified: 2023-11-13
 
-#include <upnplib/general.hpp>
-#include <upnplib/addrinfo.hpp>
+// Include source code for testing. So we have also direct access to static
+// functions which need to be tested.
+#include <upnplib/src/net/addrinfo.cpp>
+
 #include <upnplib/socket.hpp>
-
 #include <utest/utest.hpp>
 
 

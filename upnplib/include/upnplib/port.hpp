@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-19
+// Redistribution only with this Copyright remark. Last modified: 2023-11-17
 
 // Header file for portable definitions
 // ====================================
@@ -36,11 +36,8 @@
 // --------------------------------
 // no ssize_t defined for VC but SSIZE_T
 #ifdef _MSC_VER
-  #ifndef UPNPLIB_WITH_NATIVE_PUPNP
-    // This conflicts with definition of ssize_t in pupnp/UpnpStdInt.hpp.
-    #include <BaseTsd.h> // for SSIZE_T
-    #define ssize_t SSIZE_T
-  #endif
+  #include <BaseTsd.h> // for SSIZE_T
+   #define ssize_t SSIZE_T
   // Needed for some uncompatible arguments on MS Windows.
   #define SIZEP_T int
   #define SSIZEP_T int
@@ -65,6 +62,34 @@
 #ifdef _MSC_VER
   // POSIX names for functions
   #define strcasecmp _stricmp
+#endif
+
+
+// Macros to disable and enable compiler warnings
+// ----------------------------------------------
+// Warning 4251: 'type' : class 'type1' needs to have dll-interface to be used
+// by clients of class 'type2'.
+// This can be ignored for classes from the C++ STL (best if it is private).
+#ifdef _MSC_VER
+  #define SUPPRESS_MSVC_WARN_4251_NEXT_LINE \
+    _Pragma("warning(suppress: 4251)")
+#else
+  #define SUPPRESS_MSVC_WARN_4251_NEXT_LINE
+#endif
+
+#ifdef _MSC_VER
+  #define DISABLE_MSVC_WARN_4251 \
+    _Pragma("warning(push)") \
+    _Pragma("warning(disable: 4251)")
+#else
+  #define DISABLE_MSVC_WARN_4251
+#endif
+
+#ifdef _MSC_VER
+  #define ENABLE_MSVC_WARN \
+    _Pragma("warning(pop)")
+#else
+  #define ENABLE_MSVC_WARN
 #endif
 
 // clang-format on

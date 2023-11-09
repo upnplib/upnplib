@@ -1,27 +1,15 @@
 #ifndef UPNPLIB_INCLUDE_ADDRINFO_HPP
 #define UPNPLIB_INCLUDE_ADDRINFO_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-09
+// Redistribution only with this Copyright remark. Last modified: 2023-11-17
 
 #include <upnplib/visibility.hpp>
+#include <upnplib/port.hpp>
 #include <upnplib/port_sock.hpp>
 
 #include <string>
 
 namespace upnplib {
-
-// Free function to test if the node is a valid numeric address string
-// -------------------------------------------------------------------
-// Checks if a string represents a numeric ipv6 or ipv4 address.
-// On success it returns the socket address family AF_INET6 or AF_INET the
-// address belongs to.
-// Otherwise it returns 0.
-// Note: I simply use the system function inet_pton() to check if the node
-// string is accepted. This function can also be used to realize what address
-// family an address belongs to. --Ingo
-UPNPLIB_API int is_numeric_node(const std::string& a_node,
-                                const int a_addr_family = AF_UNSPEC);
-
 
 // Provide C style addrinfo as class and wrap its system calls
 // ===========================================================
@@ -29,14 +17,6 @@ UPNPLIB_API int is_numeric_node(const std::string& a_node,
 // type. For example '[2001:db8::1]:8080, type SOCK_STREAM' is different from
 // '[2001:db8::1]:8080, type SOCK_DGRAM' or from '[2001:db8::1]:50000, type
 // SOCK_STREAM'. Binding will not complain "address already in use".
-
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4251)
-// REF: 'type' : class 'type1' needs to have dll-interface to be used by
-// clients of class 'type2'
-// https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4251
-#endif
 
 class UPNPLIB_API CAddrinfo {
   public:
@@ -91,7 +71,9 @@ class UPNPLIB_API CAddrinfo {
 
     // Cache the hints that are given by the user, so we can always get
     // identical address information from the operating system.
+    SUPPRESS_MSVC_WARN_4251_NEXT_LINE
     std::string m_node;
+    SUPPRESS_MSVC_WARN_4251_NEXT_LINE
     std::string m_service;
     mutable addrinfo m_hints{};
 
@@ -107,10 +89,6 @@ class UPNPLIB_API CAddrinfo {
     // Provides strong exception guarantee.
     UPNPLIB_LOCAL addrinfo* get_addrinfo() const;
 };
-
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
 
 } // namespace upnplib
 

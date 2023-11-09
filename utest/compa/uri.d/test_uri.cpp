@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-24
+// Redistribution only with this Copyright remark. Last modified: 2023-11-13
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/a/16010670/5014688
@@ -214,13 +214,13 @@ TEST_P(HostportFailIp4PTestSuite, parse_name_with_scheme) {
 INSTANTIATE_TEST_SUITE_P(
     uri, HostportFailIp4PTestSuite,
     ::testing::Values(
-        //                 uristr,      ipaddr,     port
+        // clang-format off
+        //                 uristr,              ipaddr,        port
         ::std::make_tuple("http://192.168.1.3", "192.168.1.3", (uint16_t)80),
         ::std::make_tuple("/192.168.1.4:433", "192.168.1.4", (uint16_t)433),
-        ::std::make_tuple("http://example.com/site", "192.168.1.5",
-                          (uint16_t)80),
-        ::std::make_tuple(":example.com:443/site", "192.168.1.6",
-                          (uint16_t)433)));
+        ::std::make_tuple("http://example.com/site", "192.168.1.5", (uint16_t)80),
+        ::std::make_tuple(":example.com:443/site", "192.168.1.6", (uint16_t)433)));
+// clang-format on
 
 
 // parse_hostport() calls should be successful

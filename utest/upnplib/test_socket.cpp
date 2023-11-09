@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-09
+// Redistribution only with this Copyright remark. Last modified: 2023-11-13
 
 #include <upnplib/general.hpp>
 #include <upnplib/socket.hpp>
@@ -141,7 +141,7 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_stream) {
     EXPECT_FALSE(sockObj.is_reuse_addr());
     EXPECT_THAT([&sockObj]() { sockObj.get_addr_str(); },
                 ThrowsMessage<std::invalid_argument>(EndsWith(
-                    "] EXCEPTION MSG1036: Unsupported address family 1")));
+                    "] EXCEPTION MSG1036: Unsupported address family 1.")));
 
     CLOSE_SOCKET_P(sfd);
 }
@@ -577,10 +577,10 @@ TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
     // Test Unit
     EXPECT_THAT([&sockObj]() { sockObj.get_addr_str(); },
                 ThrowsMessage<std::invalid_argument>(EndsWith(
-                    "] EXCEPTION MSG1036: Unsupported address family 255")));
+                    "] EXCEPTION MSG1036: Unsupported address family 255.")));
     EXPECT_THAT([&sockObj]() { sockObj.get_addrp_str(); },
                 ThrowsMessage<std::invalid_argument>(EndsWith(
-                    "] EXCEPTION MSG1036: Unsupported address family 255")));
+                    "] EXCEPTION MSG1036: Unsupported address family 255.")));
 }
 
 TEST(SocketBindTestSuite, bind_ipv6_successful) {

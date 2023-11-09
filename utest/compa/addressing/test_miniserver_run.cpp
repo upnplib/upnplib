@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-09
+// Redistribution only with this Copyright remark. Last modified: 2023-11-17
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -13,7 +13,10 @@
 #include <compa/src/genlib/miniserver/miniserver.cpp>
 #endif
 
+#include <webserver.hpp>
+
 #include <upnplib/general.hpp>
+#include <upnplib/socket.hpp>
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/upnptools.hpp> // for errStrEx
 
@@ -22,22 +25,26 @@
 
 #include <utest/utest.hpp>
 #include <umock/sys_socket_mock.hpp>
+#include <umock/winsock2_mock.hpp>
 
 
 namespace utest {
 
 using ::testing::_;
+using ::testing::Between;
 using ::testing::DoAll;
+using ::testing::EndsWith;
+using ::testing::ExitedWithCode;
 using ::testing::Ge;
 using ::testing::HasSubstr;
 using ::testing::NotNull;
 using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
-using ::testing::SetArrayArgument;
 using ::testing::SetErrnoAndReturn;
 using ::testing::StrictMock;
 
+using ::upnplib::CSocket;
 using ::upnplib::errStrEx;
 using ::upnplib::g_dbug;
 using ::upnplib::SSockaddr;
@@ -48,7 +55,7 @@ using ::pupnp::CThreadPoolInit;
 
 // Miniserver Run TestSuite
 // ========================
-class MiniServerMockFTestSuite : public ::testing::Test {
+class RunMiniServerMockFTestSuite : public ::testing::Test {
     // This is a fixture to provide mocking of sys_socket.
   protected:
     // clang-format off
@@ -58,18 +65,18 @@ class MiniServerMockFTestSuite : public ::testing::Test {
     umock::Sys_socket sys_socket_injectObj = umock::Sys_socket(&m_sys_socketObj);
     // clang-format on
 
-    MiniServerMockFTestSuite() {
-        TRACE2(this, " Construct MiniServerMockFTestSuite()")
+    RunMiniServerMockFTestSuite() {
+        TRACE2(this, " Construct RunMiniServerMockFTestSuite()")
     }
 
-    virtual ~MiniServerMockFTestSuite() override {
-        TRACE2(this, " Destruct MiniServerMockFTestSuite()")
+    virtual ~RunMiniServerMockFTestSuite() override {
+        TRACE2(this, " Destruct RunMiniServerMockFTestSuite()")
     }
 };
-typedef MiniServerMockFTestSuite MiniServerMockFDeathTest;
+typedef RunMiniServerMockFTestSuite RunMiniServerMockFDeathTest;
 
 
-class RunMiniServerFuncFTestSuite : public MiniServerMockFTestSuite {
+class RunMiniServerFuncFTestSuite : public RunMiniServerMockFTestSuite {
     // This is a fixture to provide mocking of sys_socket and a
     // MiniServerSockArray on the heap to call the RunMiniserver() function.
     // This is needed because RunMiniserver() frees MiniServerSockArray.
@@ -89,7 +96,6 @@ class RunMiniServerFuncFTestSuite : public MiniServerMockFTestSuite {
         TRACE2(this, " Destruct RunMiniServerFuncFTestSuite()")
     }
 };
-
 
 TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful) {
     // IMPORTANT! There is a limit FD_SETSIZE = 1024 for socket file
@@ -387,14 +393,14 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_accept_fails) {
                 recvfrom(m_minisock->miniServerStopSock, _, shutdown_strlen, 0,
                          _, Pointee((socklen_t)sizeof(sockaddr_storage))))
         .WillOnce(DoAll(StrCpyToArg<1>(shutdown_str),
-                        SetArgPointee<4>(*(sockaddr*)&ss_localhost.ss),
+                        SetArgPointee<4>(ss_localhost.sa),
                         Return(shutdown_strlen)));
 
     // Test Unit
     RunMiniServer(m_minisock);
 }
 
-TEST_F(MiniServerMockFTestSuite, fdset_if_valid_read_successful) {
+TEST_F(RunMiniServerMockFTestSuite, fdset_if_valid_read_successful) {
     // Socket file descriptor should be added to the read set.
     constexpr SOCKET sockfd{umock::sfd_base + 56};
 
@@ -425,7 +431,7 @@ TEST_F(MiniServerMockFTestSuite, fdset_if_valid_read_successful) {
         << " should be added to the FD SET for select().";
 }
 
-TEST_F(MiniServerMockFTestSuite, fdset_if_valid_fails) {
+TEST_F(RunMiniServerMockFTestSuite, fdset_if_valid_fails) {
     fd_set rdSet;
     FD_ZERO(&rdSet);
     ASSERT_FALSE(FD_ISSET(static_cast<SOCKET>(0), &rdSet));
@@ -511,7 +517,7 @@ TEST_F(MiniServerMockFTestSuite, fdset_if_valid_fails) {
     }
 }
 
-TEST_F(MiniServerMockFTestSuite, fdset_if_valid_fails_with_invalid_socket) {
+TEST_F(RunMiniServerMockFTestSuite, fdset_if_valid_fails_with_invalid_socket) {
     // Provide a socket file descriptor.
     constexpr SOCKET sockfd{umock::sfd_base + 7};
 
@@ -542,7 +548,7 @@ TEST_F(MiniServerMockFTestSuite, fdset_if_valid_fails_with_invalid_socket) {
     }
 }
 
-TEST_F(MiniServerMockFTestSuite, fdset_if_valid_fails_with_unbind_socket) {
+TEST_F(RunMiniServerMockFTestSuite, fdset_if_valid_fails_with_unbind_socket) {
     // Provide a socket file descriptor.
     constexpr SOCKET sockfd{umock::sfd_base + 53};
 
@@ -583,7 +589,7 @@ TEST_F(MiniServerMockFTestSuite, fdset_if_valid_fails_with_unbind_socket) {
     }
 }
 
-TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_successful) {
+TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_successful) {
     // The stop socket is got with 'get_miniserver_stopsock()' and uses a
     // datagram with exactly "ShutDown" on AF_INET to 127.0.0.1.
     constexpr char shutdown_str[]{"ShutDown"};
@@ -612,7 +618,7 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_successful) {
     EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 1);
 }
 
-TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_not_selected) {
+TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_not_selected) {
     constexpr SOCKET sockfd{umock::sfd_base + 29};
 
     fd_set rdSet;
@@ -634,7 +640,7 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_not_selected) {
     EXPECT_EQ(captureObj.str(), "");
 }
 
-TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_receiving_fails) {
+TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_receiving_fails) {
     constexpr SOCKET sockfd{umock::sfd_base + 28};
     fd_set rdSet;
     FD_ZERO(&rdSet);
@@ -650,7 +656,7 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_receiving_fails) {
     EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 1);
 }
 
-TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_no_bytes_received) {
+TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_no_bytes_received) {
     CLogging logObj; // Output only with build type DEBUG.
     if (old_code)
         if (g_dbug)
@@ -686,7 +692,7 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_no_bytes_received) {
     }
 }
 
-TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_wrong_stop_message) {
+TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_wrong_stop_message) {
     CLogging logObj;
     if (old_code)
         if (g_dbug)
@@ -717,7 +723,7 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_wrong_stop_message) {
     EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 0);
 }
 
-TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_from_wrong_address) {
+TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_from_wrong_address) {
     CLogging logObj; // Output only with build type DEBUG.
     if (old_code)
         if (g_dbug)
@@ -756,7 +762,7 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_from_wrong_address) {
     }
 }
 
-TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_without_0_termbyte) {
+TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_without_0_termbyte) {
     CLogging logObj; // Output only with build type DEBUG.
     if (old_code)
         if (g_dbug)
@@ -795,7 +801,7 @@ TEST_F(MiniServerMockFTestSuite, receive_from_stopsock_without_0_termbyte) {
     }
 }
 
-TEST_F(MiniServerMockFTestSuite, ssdp_read_successful) {
+TEST_F(RunMiniServerMockFTestSuite, ssdp_read_successful) {
     CLogging logObj; // Output only with build type DEBUG.
     if (g_dbug)
         logObj.enable(UPNP_ALL);
@@ -808,11 +814,10 @@ TEST_F(MiniServerMockFTestSuite, ssdp_read_successful) {
     constexpr char ssdpdata_str[]{
         "Some SSDP test data for a request of a remote client."};
     ASSERT_LE(sizeof(ssdpdata_str), BUFSIZE - 1);
-    const char* const ssdpd_str_last{ssdpdata_str + sizeof(ssdpdata_str)};
 
     SOCKET ssdp_sockfd{umock::sfd_base + 32};
-    SSockaddr ss;
-    ss = "192.168.71.82:50023";
+    SSockaddr ssObj;
+    ssObj = "192.168.71.82:50023";
 
     fd_set rdSet;
     FD_ZERO(&rdSet);
@@ -821,8 +826,8 @@ TEST_F(MiniServerMockFTestSuite, ssdp_read_successful) {
     EXPECT_CALL(m_sys_socketObj,
                 recvfrom(ssdp_sockfd, _, BUFSIZE - 1, 0, _,
                          Pointee((socklen_t)sizeof(::sockaddr_storage))))
-        .WillOnce(DoAll(SetArrayArgument<1>(ssdpdata_str, ssdpd_str_last),
-                        SetArgPointee<4>(*reinterpret_cast<sockaddr*>(&ss.ss)),
+        .WillOnce(DoAll(StrCpyToArg<1>(ssdpdata_str),
+                        SetArgPointee<4>(ssObj.sa),
                         Return((SSIZEP_T)sizeof(ssdpdata_str))));
 
     // Capture output to stderr
@@ -840,7 +845,7 @@ TEST_F(MiniServerMockFTestSuite, ssdp_read_successful) {
     EXPECT_NE(ssdp_sockfd, INVALID_SOCKET);
 }
 
-TEST_F(MiniServerMockFTestSuite, ssdp_read_fails) {
+TEST_F(RunMiniServerMockFTestSuite, ssdp_read_fails) {
     // Due to error there is no job added to the Threadpool. Initializing it
     // is not needed.
 
@@ -894,13 +899,13 @@ TEST_F(MiniServerMockFTestSuite, ssdp_read_fails) {
     EXPECT_EQ(ssdp_sockfd, INVALID_SOCKET);
 }
 
-TEST_F(MiniServerMockFTestSuite, web_server_accept_successful) {
+TEST_F(RunMiniServerMockFTestSuite, web_server_accept_successful) {
     // The tested units are different for old_code (pupnp) and new code (compa).
     // We have void      ::web_server_accept() and
     //         int  compa::web_server_accept().
     constexpr SOCKET listen_sockfd{umock::sfd_base + 33};
     constexpr SOCKET connected_sockfd{umock::sfd_base + 34};
-    const std::string connected_port = "306";
+    const std::string connected_port = "50062";
     fd_set set;
     FD_ZERO(&set);
     FD_SET(listen_sockfd, &set);
@@ -950,7 +955,7 @@ TEST_F(MiniServerMockFTestSuite, web_server_accept_successful) {
 #endif // UPNPLIB_WITH_NATIVE_PUPNP
 }
 
-TEST_F(MiniServerMockFTestSuite, web_server_accept_with_invalid_socket) {
+TEST_F(RunMiniServerMockFTestSuite, web_server_accept_with_invalid_socket) {
     // The tested units are different for old_code (pupnp) and new code (compa).
     // We have void      ::web_server_accept() and
     //         int  compa::web_server_accept().
@@ -981,7 +986,7 @@ TEST_F(MiniServerMockFTestSuite, web_server_accept_with_invalid_socket) {
 #endif // UPNPLIB_WITH_NATIVE_PUPNP
 }
 
-TEST_F(MiniServerMockFDeathTest, web_server_accept_with_invalid_set) {
+TEST_F(RunMiniServerMockFDeathTest, web_server_accept_with_invalid_set) {
     // The tested units are different for old_code (pupnp) and new code (compa).
     // We have void      ::web_server_accept() and
     //         int  compa::web_server_accept().
@@ -1010,7 +1015,7 @@ TEST_F(MiniServerMockFDeathTest, web_server_accept_with_invalid_set) {
 #endif // UPNPLIB_WITH_NATIVE_PUPNP
 }
 
-TEST_F(MiniServerMockFTestSuite, web_server_accept_with_empty_set) {
+TEST_F(RunMiniServerMockFTestSuite, web_server_accept_with_empty_set) {
     // The tested units are different for old_code (pupnp) and new code (compa).
     // We have void      ::web_server_accept() and
     //         int  compa::web_server_accept().
@@ -1041,7 +1046,7 @@ TEST_F(MiniServerMockFTestSuite, web_server_accept_with_empty_set) {
 #endif // UPNPLIB_WITH_NATIVE_PUPNP
 }
 
-TEST_F(MiniServerMockFTestSuite, web_server_accept_fails) {
+TEST_F(RunMiniServerMockFTestSuite, web_server_accept_fails) {
     // The tested units are different for old_code (pupnp) and new code (compa).
     // We have void      ::web_server_accept() and
     //         int  compa::web_server_accept().
@@ -1085,9 +1090,7 @@ TEST_F(MiniServerMockFTestSuite, web_server_accept_fails) {
 #endif // UPNPLIB_WITH_NATIVE_PUPNP
 }
 
-#if 0
-TEST_F(RunMiniServerFTestSuite, get_numeric_host_redirection) {
-    WINSOCK_INIT
+TEST_F(RunMiniServerMockFTestSuite, get_numeric_host_redirection) {
     // getNumericHostRedirection() returns the ip address with port as text
     // (e.g. "192.168.1.2:54321") that is bound to a socket.
 
@@ -1096,15 +1099,16 @@ TEST_F(RunMiniServerFTestSuite, get_numeric_host_redirection) {
 
     // Provide a sockaddr structure that will be returned by mocked
     // getsockname().
-    const CAddrinfo ai1("192.168.123.122", "54321", AF_INET, SOCK_STREAM,
-                        AI_NUMERICHOST | AI_NUMERICSERV);
+    SSockaddr ssObj;
+    ssObj = "192.168.123.122:54321";
 
     // Test Unit
     if (old_code) {
         EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))
-            .WillOnce(DoAll(SetArgPointee<1>(*ai1->ai_addr), Return(0)));
-        EXPECT_TRUE(getNumericHostRedirection((int)sockfd, host_port,
-                                              sizeof(host_port)));
+            .WillOnce(DoAll(SetArgPointee<1>(ssObj.sa), Return(0)));
+        EXPECT_TRUE(
+            getNumericHostRedirection(sockfd, host_port, sizeof(host_port)));
+
     } else {
 
         EXPECT_CALL(m_sys_socketObj,
@@ -1112,7 +1116,7 @@ TEST_F(RunMiniServerFTestSuite, get_numeric_host_redirection) {
             .WillOnce(Return(0));
         EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))
             .Times(2)
-            .WillRepeatedly(DoAll(SetArgPointee<1>(*ai1->ai_addr), Return(0)));
+            .WillRepeatedly(DoAll(SetArgPointee<1>(ssObj.sa), Return(0)));
         EXPECT_TRUE(
             getNumericHostRedirection(sockfd, host_port, sizeof(host_port)));
     }
@@ -1120,10 +1124,14 @@ TEST_F(RunMiniServerFTestSuite, get_numeric_host_redirection) {
     EXPECT_STREQ(host_port, "192.168.123.122:54321");
 }
 
-TEST_F(RunMiniServerFTestSuite,
+TEST_F(RunMiniServerMockFTestSuite,
        get_numeric_host_redirection_with_insufficient_resources) {
     constexpr SOCKET sockfd{umock::sfd_base + 38};
     char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
+#ifdef _MSC_VER
+    StrictMock<umock::Winsock2Mock> m_winsock2Obj;
+    umock::Winsock2 winsock2_injectObj = umock::Winsock2(&m_winsock2Obj);
+#endif
 
     // Mock system function ::getsockname() to fail with insufficient
     // resources. It is called here within the free function
@@ -1143,10 +1151,9 @@ TEST_F(RunMiniServerFTestSuite,
 
     // Test Unit
     if (old_code) {
-        EXPECT_FALSE(getNumericHostRedirection((int)sockfd, host_port,
-                                               sizeof(host_port)));
+        EXPECT_FALSE(
+            getNumericHostRedirection(sockfd, host_port, sizeof(host_port)));
         // Get captured output. This doesn't give any error messages.
-        std::cout << captureObj.str() << "\n";
         EXPECT_EQ(captureObj.str(), "");
 
     } else {
@@ -1167,62 +1174,452 @@ TEST_F(RunMiniServerFTestSuite,
         EXPECT_FALSE(
             getNumericHostRedirection(sockfd, host_port, sizeof(host_port)));
         // Get captured output
-        std::cout << captureObj.str() << "\n";
-        EXPECT_THAT(captureObj.str(), HasSubstr("] EXCEPTION MSG1001: "));
+        EXPECT_THAT(captureObj.str(),
+                    // Different on MacOS
+                    AnyOf(HasSubstr("] EXCEPTION MSG1026: "),
+                          HasSubstr("] EXCEPTION MSG1001: ")));
     }
 
     EXPECT_STREQ(host_port, "<no message>");
 }
 
-TEST_F(RunMiniServerFTestSuite,
+TEST_F(RunMiniServerMockFTestSuite,
        get_numeric_host_redirection_with_wrong_address_family) {
-    constexpr SOCKET sockfd{407};
+    constexpr SOCKET sockfd{umock::sfd_base + 47};
     char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
 
     // Provide a sockaddr structure that will be returned by mocked
     // getsockname().
-    SSockaddr ssObj;
-    ssObj.ss.ss_family = AF_UNIX;
+    SSockaddr saddrObj;
+    saddrObj.ss.ss_family = AF_UNIX;
 
-    EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))
-        .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&ssObj.ss), Return(0)));
+    if (old_code) {
+        EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))
+            .WillOnce(DoAll(SetArgPointee<1>(saddrObj.sa), Return(0)));
 
-    if (!old_code)
+        // Capture output to stderr
+        CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+        captureObj.start();
+
+        // Test Unit
+        bool ret_getNumericHostRedirection =
+            getNumericHostRedirection(sockfd, host_port, sizeof(host_port));
+
+        // Get captured output
+        EXPECT_TRUE(captureObj.str().empty());
+
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": A wrong but accepted address family AF_UNIX should "
+                     "return an error.\n";
+        EXPECT_TRUE(ret_getNumericHostRedirection); // Wrong!
+        EXPECT_STREQ(host_port, "0.0.0.0:0");       // Wrong!
+
+    } else {
+
+        // Mock check on CSocket_basic constructor if raw sochet is valid.
         EXPECT_CALL(m_sys_socketObj,
                     getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
             .WillOnce(Return(0));
 
-    // Capture output to stderr
-    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
-    captureObj.start();
+        // Mock on CSocket_basic to get address (1 time) and port (1 time).
+        EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))
+            // Different on MacOS
+            .Times(Between(1, 2))
+            .WillRepeatedly(DoAll(SetArgPointee<1>(saddrObj.sa), Return(0)));
 
-    // Test Unit
-    if (old_code) {
-        bool ret_getNumericHostRedirection = getNumericHostRedirection(
-            (int)sockfd, host_port, sizeof(host_port));
+        // Capture output to stderr
+        CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+        captureObj.start();
 
-        std::cout << CYEL "[ FIX      ] " CRES << __LINE__
-                  << ": A wrong but accepted address family AF_UNIX should "
-                     "return an error.\n";
-        EXPECT_TRUE(ret_getNumericHostRedirection); // Wrong!
-        // Get captured output
-        EXPECT_TRUE(captureObj.str().empty());
-        EXPECT_STREQ(host_port, "0.0.0.0:0"); // Wrong!
-
-    } else {
-
+        // Test Unit
         bool ret_getNumericHostRedirection =
             getNumericHostRedirection(sockfd, host_port, sizeof(host_port));
 
-        EXPECT_FALSE(ret_getNumericHostRedirection);
         // Get captured output
         EXPECT_THAT(
             captureObj.str(),
             HasSubstr("] EXCEPTION MSG1036: Unsupported address family 1"));
+
+        EXPECT_FALSE(ret_getNumericHostRedirection);
         EXPECT_STREQ(host_port, "<no message>");
     }
 }
+
+TEST(RunMiniServerTestSuite, schedule_request_job) {
+    constexpr SOCKET connected_sockfd{umock::sfd_base + 36};
+    SSockaddr saddrObj;
+    saddrObj = "192.168.1.1:50063";
+
+    // Prevent to add jobs, we test jobs isolated. See note at
+    // TEST(RunMiniServerTestSuite, RunMiniServer_successful).
+    // With shutdown = true, maxJobs is ignored.
+    CThreadPoolInit tp(gMiniServerThreadPool,
+                       /*shutdown*/ false, /*maxJobs*/ 0);
+
+    // Capture output to stderr
+    CLogging logObj; // Output only with build type DEBUG.
+    logObj.enable(UPNP_ALL);
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    captureObj.start();
+
+    // Test Unit
+    schedule_request_job(connected_sockfd, &saddrObj.sa);
+
+    // Get captured output
+    EXPECT_THAT(captureObj.str(),
+                HasSubstr("libupnp ThreadPoolAdd too many jobs: 0\n"));
+    if (old_code) {
+#ifdef DEBUG
+        EXPECT_THAT(captureObj.str(),
+                    EndsWith("]: mserv 36: cannot schedule request\n"));
 #endif
+    } else {
+        if (g_dbug)
+            EXPECT_THAT(
+                captureObj.str(),
+                EndsWith(
+                    "] ERROR MSG1025: Socket 36: cannot schedule request.\n"));
+    }
+}
+
+TEST(RunMiniServerTestSuite, free_handle_request_arg_successful) {
+    // Provide null set request structure
+    mserv_request_t* request =
+        static_cast<mserv_request_t*>(calloc(1, sizeof(mserv_request_t)));
+
+    // Test Unit
+    free_handle_request_arg(request);
+
+    request = static_cast<mserv_request_t*>(malloc(sizeof(mserv_request_t)));
+    memset(request, 0xAA, sizeof(mserv_request_t));
+
+    // Test Unit
+    free_handle_request_arg(request);
+}
+
+TEST(RunMiniServerTestSuite, free_handle_request_arg_with_valid_socket) {
+    WINSOCK_INIT
+    // Provide null set request structure
+    mserv_request_t* request =
+        static_cast<mserv_request_t*>(calloc(1, sizeof(mserv_request_t)));
+    // and set a valid socket
+    ASSERT_NE(request->connfd = socket(AF_INET6, SOCK_STREAM, 0),
+              INVALID_SOCKET);
+
+    // Test Unit
+    free_handle_request_arg(request);
+
+    // Check if closed socket file descriptor is invalid now.
+    int so_option{-1};
+    socklen_t optlen{sizeof(so_option)}; // May be modified
+    // Type cast (char*)&so_option is needed for Microsoft Windows.
+    EXPECT_NE(getsockopt(request->connfd, SOL_SOCKET, SO_ERROR,
+                         reinterpret_cast<char*>(&so_option), &optlen),
+              0);
+}
+
+TEST(RunMiniServerTestSuite, free_handle_request_arg_with_invalid_socket) {
+    // Provide null set request structure
+    mserv_request_t* request =
+        static_cast<mserv_request_t*>(calloc(1, sizeof(mserv_request_t)));
+    // and set an invalid socket
+    request->connfd = INVALID_SOCKET;
+
+    // Test Unit
+    free_handle_request_arg(request);
+}
+
+TEST(RunMiniServerDeathTest, free_handle_request_arg_with_nullptr) {
+    if (old_code) {
+#if !defined __APPLE__ || DEBUG
+        std::cerr << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": free_handle_re4quest with nullptr must not segfault.\n";
+        // There may be a multithreading test running before with
+        // TEST(RunMiniServerTestSuite, schedule_request_job). Due to problems
+        // running this together with death tests as noted in the gtest docu the
+        // GTEST_FLAG has to be set. If having more death tests it should be
+        // considered to run multithreading tests with an own test file without
+        // death tests.
+        GTEST_FLAG_SET(death_test_style, "threadsafe");
+
+        // Test Unit
+        EXPECT_DEATH(free_handle_request_arg(nullptr), "");
+#endif
+    } else {
+
+        // Test Unit, this expects NO segfault.
+        ASSERT_EXIT((free_handle_request_arg(nullptr), exit(0)),
+                    ExitedWithCode(0), ".*");
+    }
+}
+
+TEST(RunMiniServerDeathTest, free_handle_request_arg_double_free) {
+    // See note at previous test.
+    GTEST_FLAG_SET(death_test_style, "threadsafe");
+
+    EXPECT_DEATH(
+        {
+            // Provide null set request structure
+            mserv_request_t* request = static_cast<mserv_request_t*>(
+                calloc(1, sizeof(mserv_request_t)));
+
+            // Test Unit
+            free_handle_request_arg(request);
+
+            // This should abort with "double free".
+            free_handle_request_arg(request);
+        },
+        "");
+}
+
+TEST_F(RunMiniServerMockFTestSuite, handle_request_successful) {
+    // This test depends on mocking of http_RecvMessage() with a correct request
+    // message from a client and will be completed if that is done.
+    GTEST_SKIP() << "Still needs to be completed when tests for "
+                    "http_RecvMessage() has been made.";
+#if 0
+    CLogging logObj; // Output only with build type DEBUG.
+    if (g_dbug)
+        logObj.enable(UPNP_ALL);
+
+    constexpr SOCKET connfd{umock::sfd_base + 60};
+    mserv_request_t request_in{};
+    request_in.connfd = connfd;
+
+    constexpr char received_request_str[]{
+        "Test data of a request from a remote client."};
+    constexpr SSIZEP_T req_strlen{sizeof(received_request_str)};
+
+    // Mock received data string.
+    EXPECT_CALL(m_sys_socketObj,
+                recv(connfd, _, Ge(req_strlen), 16384))
+        .WillOnce(DoAll(StrCpyToArg<1>(received_request_str),
+                        Return(req_strlen)));
+
+    // Test Unit
+    handle_request(&request_in);
+#endif
+}
+
+TEST_F(RunMiniServerMockFTestSuite, handle_request_with_failing_select) {
+    // This test depends on mocking of http_RecvMessage() and will be completed
+    // if that is done. I have to decide if a status response is to send (http
+    // 400) or not.
+    GTEST_SKIP() << "Still needs to be completed when tests for "
+                    "http_RecvMessage() has been made.";
+#if 0
+    CLogging logObj; // Output only with build type DEBUG.
+    if (g_dbug)
+        logObj.enable(UPNP_ALL);
+
+    constexpr SOCKET connfd{umock::sfd_base + 61};
+    mserv_request_t reqest_in{};
+    reqest_in.connfd = connfd;
+
+    // select() fails.
+    EXPECT_CALL(m_sys_socketObj, select(connfd + 1, _, _, nullptr, _))
+        .WillOnce(SetErrnoAndReturn(ENOMEM, SOCKET_ERROR));
+
+    // Test Unit
+    handle_request(&reqest_in);
+#endif
+}
+
+TEST(RunMiniServerTestSuite, dispatch_request) {
+    GTEST_SKIP() << "Still needs to be done when we have complete tests for "
+                    "httpreadwrite.";
+}
+
+TEST(RunMiniServerTestSuite, host_header_is_numeric_modifies_argument) {
+    // This test is to show that the Unit is modifying its C string argument. It
+    // addresses it with sizeof(arg) - 1. That is a serious problem if working
+    // on an empty string. Then it modifies the byte before the first string
+    // character and results in random segfaults.
+    char str1[]{"[2001:db8::42]:59878"};
+
+    // Test Unit
+    // Length is without terminating '\0`.
+    EXPECT_TRUE(host_header_is_numeric(str1, sizeof(str1) - 1))
+        << "\"" << str1 << "\"";
+
+    if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": The Unit must not modify its argument it point to, may "
+                     "segfault with empty string \"\".\n";
+        EXPECT_STREQ(str1,
+                     "[2001:db8::42"); // Wrong! Was "[2001:db8::42]:59878"
+
+    } else {
+
+        EXPECT_STREQ(str1, "[2001:db8::42]:59878");
+    }
+}
+
+class HeaderIsNumTest
+    : public ::testing::TestWithParam<std::tuple<const char*, const bool>> {};
+
+TEST_P(HeaderIsNumTest, host_header_is_numeric) {
+    // Because the old_code tested Unit modifies its argument '*netaddr' it
+    // must be copied to a local variable, otherwise we may get a segfault with
+    // old_code.
+    constexpr int buflen{32};
+    char netaddr[buflen]; // The buffer is modified by the tested Unit.
+
+    // Get parameter
+    std::tuple params = GetParam();
+    ::strcpy(netaddr, std::get<0>(params));
+    const size_t netaddrlen{strlen(netaddr)};
+    const bool valid{std::get<1>(params)};
+
+    // Testing for "[::]" is to ensure that the messages only one time output
+    // and not with every test loop.
+    if (old_code)
+        if (strcmp(netaddr, "[::]") == 0) {
+            std::cout
+                << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                << ": Unit must not check unknown netaddresses as valid.\n";
+            std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                      << ": Unit must not accept invalid port number 65536 as "
+                         "valid.\n";
+        }
+
+    // Test Unit
+    EXPECT_EQ(host_header_is_numeric(netaddr, netaddrlen), valid);
+}
+
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+// clang-format off
+INSTANTIATE_TEST_SUITE_P(
+    // The netaddresses must not exceed 'buflen', see TEST_P(HeaderIsNumTest, ..
+    HeaderIsNumOldCode, HeaderIsNumTest,
+    ::testing::Values(
+                      // std::make_tuple("", false), // This randomly segfaults.
+                      // Next conditions must be false. They are Wrong!
+                      std::make_tuple("[::]", true),
+                      std::make_tuple("[::]:0", true),
+                      std::make_tuple("[::]:50016", true),
+                      std::make_tuple("0.0.0.0", true),
+                      std::make_tuple("0.0.0.0:0", true),
+                      std::make_tuple("0.0.0.0:50046", true),
+                      // The highest valid port number is 65535.
+                      std::make_tuple("192.168.88.91:65536", true)
+                      ));
+#else
+INSTANTIATE_TEST_SUITE_P(
+    // The netaddresses must not exceed 'buflen'.
+    HeaderIsNumNewCode, HeaderIsNumTest,
+    ::testing::Values(
+                      std::make_tuple("", false), // segfaults fixed.
+                      std::make_tuple("[::]", false),
+                      std::make_tuple("[::]:0", false),
+                      std::make_tuple("[::]:50016", false),
+                      std::make_tuple("0.0.0.0", false),
+                      std::make_tuple("0.0.0.0:0", false),
+                      std::make_tuple("0.0.0.0:50046", false),
+                      // The highest valid port number is 65535.
+                      std::make_tuple("192.168.88.91:65536", false)
+                      ));
+#endif
+INSTANTIATE_TEST_SUITE_P(
+    // The netaddresses must not exceed 'buflen'.
+    HeaderIsNum, HeaderIsNumTest,
+    ::testing::Values(
+                      std::make_tuple("[", false),
+                      std::make_tuple("]", false),
+                      std::make_tuple("[]", false),
+                      std::make_tuple(":", false),
+                      std::make_tuple(".", false),
+                      std::make_tuple(".:", false),
+                      std::make_tuple("[::1]", true),
+                      std::make_tuple("[::1]:0", true),
+                      std::make_tuple("[::1].4", false),
+                      std::make_tuple("127.0.0.1", true),
+                      std::make_tuple("127.0.0.1:", true),
+                      std::make_tuple("127.0.0.1:0", true),
+                      std::make_tuple("127.0.0.1.4", false),
+                      std::make_tuple("[2001:db8::42]:59877", true),
+                      std::make_tuple("[2001:db8::46]", true),
+                      std::make_tuple("192.168.88.99:59876", true),
+                      std::make_tuple("192.168.88.256:59866", false),
+                      std::make_tuple("192.168.88.91", true),
+                      std::make_tuple("[2001:db8::42]:", true),
+                      std::make_tuple("2001:db8::41:59897", false),
+                      std::make_tuple("[2001:db8::fg]:59877", false),
+                      std::make_tuple("garbage", false)
+                      ));
+// clang-format on
+
+TEST(RunMiniServerTestSuite, set_http_get_callback) {
+    memset(&gGetCallback, 0xAA, sizeof(gGetCallback));
+    SetHTTPGetCallback(web_server_callback);
+    EXPECT_EQ(gGetCallback,
+              static_cast<MiniServerCallback>(web_server_callback));
+}
+
+TEST(RunMiniServerTestSuite, set_soap_callback) {
+    memset(&gSoapCallback, 0xAA, sizeof(gSoapCallback));
+    SetSoapCallback(nullptr);
+    EXPECT_EQ(gSoapCallback, static_cast<MiniServerCallback>(nullptr));
+}
+
+TEST(RunMiniServerTestSuite, set_gena_callback) {
+    memset(&gGenaCallback, 0xAA, sizeof(gGenaCallback));
+    SetGenaCallback(nullptr);
+    EXPECT_EQ(gGenaCallback, static_cast<MiniServerCallback>(nullptr));
+}
+
+TEST(RunMiniServerTestSuite, do_reinit) {
+    WINSOCK_INIT
+    // On reinit the socket file descriptor will be closed and a new file
+    // descriptor is requested. Mostly it is the same but it is possible that
+    // it changes when other socket fds are requested.
+
+    MINISERVER_REUSEADDR = false;
+    SSockaddr saddrObj;
+    saddrObj = "192.168.202.244";
+
+    // Get a valid socket, needs initialized sockets on MS Windows.
+    CSocket sockObj;
+
+    s_SocketStuff s;
+    // Fill all fields of struct s_SocketStuff
+    s.ss.ss_family = saddrObj.ss.ss_family;
+    s.serverAddr = &saddrObj.sa;
+    s.ip_version = 4;
+    s.text_addr = saddrObj.get_addr_str2().c_str();
+    s.serverAddr4->sin_port = saddrObj.get_port(); // not used
+    s.serverAddr4->sin_addr = saddrObj.sin.sin_addr;
+    s.fd = sockObj;
+    s.try_port = 0; // not used
+    s.actual_port = 0;
+    s.address_len = sizeof(*s.serverAddr4);
+
+    // Test Unit
+    EXPECT_EQ(do_reinit(&s), 0);
+
+    EXPECT_STREQ(s.text_addr, saddrObj.get_addr_str().c_str());
+    EXPECT_EQ(s.serverAddr4->sin_addr.s_addr, saddrObj.sin.sin_addr.s_addr);
+    // Valid real socket
+    // EXPECT_EQ(s.fd, sockfd); This is an invalid condition. The fd may change.
+    EXPECT_NE(s.fd, INVALID_SOCKET);
+    EXPECT_EQ(s.try_port, 0);
+    EXPECT_EQ(s.actual_port, 0);
+    EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
+}
+
+TEST(StopMiniServerTestSuite, sock_close) {
+    WINSOCK_INIT
+
+    // Close invalid sockets
+    EXPECT_EQ(sock_close(INVALID_SOCKET), -1);
+    EXPECT_EQ(sock_close(1234), -1);
+
+    // Get a valid socket, needs initialized sockets on MS Windows.
+    const SOCKET sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    ASSERT_NE(sockfd, static_cast<SOCKET>(-1));
+    // Close a valid socket.
+    EXPECT_EQ(sock_close(sockfd), 0);
+}
 
 } // namespace utest
 

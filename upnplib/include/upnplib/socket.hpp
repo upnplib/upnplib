@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-09
+// Redistribution only with this Copyright remark. Last modified: 2023-11-16
 
 // Helpful link for ip address structures:
 // REF: [sockaddr structures as union]
@@ -119,7 +119,7 @@ class UPNPLIB_API CSocket_basic {
     // Destructor
     virtual ~CSocket_basic();
 
-    // Get socket file descriptor, e.g.:
+    // Get raw socket file descriptor, e.g.:
     // CSocket_basic sockObj; SOCKET sfd = sockObj;
     operator const SOCKET&() const;
 
@@ -150,16 +150,9 @@ class UPNPLIB_API CSocket_basic {
     // This is the raw socket file descriptor
     SOCKET m_sfd{INVALID_SOCKET};
 
-#ifdef _MSC_VER
-#pragma warning(push)
-// This can be ignored for classes from the C++ STL (best if it is private).
-#pragma warning(disable : 4251)
-#endif
     // Mutex to protect concurrent binding a socket.
+    SUPPRESS_MSVC_WARN_4251_NEXT_LINE
     mutable std::mutex m_bound_mutex;
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
 };
 
 
@@ -230,16 +223,9 @@ class UPNPLIB_API CSocket : public CSocket_basic {
     bool is_listen() const;
 
   private:
-#ifdef _MSC_VER
-#pragma warning(push)
-// This can be ignored for classes from the C++ STL (best if it is private).
-#pragma warning(disable : 4251)
-#endif
     // Mutex to protect concurrent listen a socket.
+    SUPPRESS_MSVC_WARN_4251_NEXT_LINE
     mutable std::mutex m_listen_mutex;
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
     bool m_listen{false}; // Protected by a mutex.
 };
 

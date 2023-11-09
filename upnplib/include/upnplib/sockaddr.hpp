@@ -1,16 +1,27 @@
 #ifndef UPNPLIB_NET_SOCKADDR_HPP
 #define UPNPLIB_NET_SOCKADDR_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-09
+// Redistribution only with this Copyright remark. Last modified: 2023-11-16
 
 // Helpful links:
 // REF:_[Why_do_I_get_wrong_pointer_to_a_base_class_with_a_virtual_constructor](https://stackoverflow.com/q/76360179/5014688)
 
+#include <upnplib/port.hpp>
 #include <upnplib/port_sock.hpp>
 #include <upnplib/visibility.hpp>
 #include <string>
 
 namespace upnplib {
+
+// Never need to use type casts with pointer to different socket address
+// structures. For details about using this helpful union have a look at
+// REF:_[sockaddr_structures_as_union](https://stackoverflow.com/a/76548581/5014688)
+union sockaddr_t {
+    sockaddr_storage ss;
+    sockaddr_in6 sin6;
+    sockaddr_in sin;
+    sockaddr sa;
+};
 
 // Free function to get the port number from a string
 // --------------------------------------------------
@@ -37,25 +48,15 @@ UPNPLIB_API bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
                              const ::sockaddr_storage* a_ss2);
 
 
-// Never need to use type casts with pointer to different socket address
-// structures. For details about using this helpful union have a look at
-// REF:_[sockaddr_structures_as_union](https://stackoverflow.com/a/76548581/5014688)
-union sockaddr_t {
-    sockaddr_storage ss;
-    sockaddr_in6 sin6;
-    sockaddr_in sin;
-    sockaddr sa;
-};
-
 // Specialized sockaddr structure
 // ==============================
 struct UPNPLIB_API SSockaddr {
     // References to have direct access to the trival structures in the private
     // union.
-    sockaddr_storage& ss{m_sa_union.ss};
-    sockaddr_in6& sin6{m_sa_union.sin6};
-    sockaddr_in& sin{m_sa_union.sin};
-    sockaddr& sa{m_sa_union.sa};
+    sockaddr_storage& ss = m_sa_union.ss;
+    sockaddr_in6& sin6 = m_sa_union.sin6;
+    sockaddr_in& sin = m_sa_union.sin;
+    sockaddr& sa = m_sa_union.sa;
 
     // Constructor
     SSockaddr();
@@ -83,7 +84,8 @@ struct UPNPLIB_API SSockaddr {
     // e.g.: SSockaddr ss; ss = "[2001:db8::1]";
     // Input examples: "[2001:db8::1]", "[2001:db8::1]:50001",
     //                 "192.168.1.1", "192.168.1.1:50001".
-    // An empty address string clears the address storage.
+    // An empty netaddress "" clears the address storage.
+    // An invalid netaddress throws an exception 'std::invalid_argument'.
     void operator=(const std::string& a_addr_str);
 
     // Compare operator== to test if another socket address is equal to this.
@@ -94,6 +96,7 @@ struct UPNPLIB_API SSockaddr {
     // Getter for the assosiated ip address without port, e.g.
     // "[2001:db8::2]" or "192.168.254.253".
     std::string get_addr_str() const;
+    const std::string& get_addr_str2();
 
     // Getter for the numeric port.
     uint16_t get_port() const;
@@ -104,6 +107,8 @@ struct UPNPLIB_API SSockaddr {
   private:
     sockaddr_t m_sa_union{}; // this is the union of trivial sockaddr structures
                              // that is managed.
+    SUPPRESS_MSVC_WARN_4251_NEXT_LINE
+    std::string m_netaddr;
     UPNPLIB_LOCAL void handle_ipv6(const std::string& a_addr_str);
     UPNPLIB_LOCAL void handle_ipv4(const std::string& a_addr_str);
     UPNPLIB_LOCAL void handle_port(const std::string& a_port);

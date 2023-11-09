@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-10-19
+# Redistribution only with this Copyright remark. Last modified: 2023-11-14
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -49,8 +49,21 @@ add_test(NAME ctest_sockaddr-ush COMMAND test_sockaddr-ush --gtest_shuffle
 
 # CAddrinfo
 # =========
+# disable warning C4273: inconsistent dll linkage.
+# This warning on Microsoft Windows (MSVC) is because the source code is
+# included into the test code to be able to test static functions. The compiled
+# function in the link library is exported and it is also decorated to export
+# with the included code. That's the warning. Because I know what I'm doing, I
+# suppress it. It's not productive code. --Ingo
 add_executable(test_addrinfo-ush
     ./test_addrinfo.cpp
+)
+target_include_directories(test_addrinfo-ush
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+)
+target_compile_options(test_addrinfo-ush
+        # disable warning C4273: inconsistent dll linkage.
+        PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/wd4273>
 )
 target_link_libraries(test_addrinfo-ush
     PRIVATE upnplib_shared
@@ -80,10 +93,6 @@ add_executable(test_webserver-ush
 )
 target_include_directories(test_webserver-ush
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
-)
-target_compile_definitions(test_webserver-ush
-    PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 target_link_libraries(test_webserver-ush
     PRIVATE upnplib_shared

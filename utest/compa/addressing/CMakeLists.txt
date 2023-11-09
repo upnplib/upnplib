@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-10-14
+# Redistribution only with this Copyright remark. Last modified: 2023-11-14
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -55,39 +55,50 @@ add_test(NAME ctest_miniserver-cst COMMAND test_miniserver-cst --gtest_shuffle
 
 # miniserver_run
 #===============
-# Because we want to include the source file into the test to also test static
-# functions, we cannot use shared libraries due to symbol import/export
-# conflicts. We must use static libraries.
-add_executable(test_miniserver_run-pst
+# disable warning C4273: inconsistent dll linkage.
+# This warning on Microsoft Windows (MSVC) is because the source code is
+# included into the test code to be able to test static functions. The compiled
+# function in the link library is exported and it is also decorated to export
+# with the included code. That's the warning. Because I know what I'm doing, I
+# suppress it. It's not productive code. --Ingo
+add_executable(test_miniserver_run-psh
 #-------------------------------------
     ./test_miniserver_run.cpp
 )
-target_include_directories(test_miniserver_run-pst
+target_include_directories(test_miniserver_run-psh
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
-target_link_libraries(test_miniserver_run-pst
-    PRIVATE
-        pupnp_static
-        upnplib_static
-        utest_static
+target_compile_options(test_miniserver_run-psh
+    # disable warning C4273: inconsistent dll linkage.
+    PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/wd4273>
 )
-add_test(NAME ctest_miniserver_run-pst COMMAND test_miniserver_run-pst --gtest_shuffle
+target_link_libraries(test_miniserver_run-psh
+    PRIVATE
+        pupnp_shared
+        upnplib_shared
+        utest_shared
+)
+add_test(NAME ctest_miniserver_run-psh COMMAND test_miniserver_run-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
-add_executable(test_miniserver_run-cst
+add_executable(test_miniserver_run-csh
 #-------------------------------------
     ./test_miniserver_run.cpp
 )
-target_include_directories(test_miniserver_run-cst
+target_include_directories(test_miniserver_run-csh
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
-target_link_libraries(test_miniserver_run-cst
-    PRIVATE
-        compa_static
-        upnplib_static
-        utest_static
+target_compile_options(test_miniserver_run-csh
+    # disable warning C4273: inconsistent dll linkage.
+    PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/wd4273>
 )
-add_test(NAME ctest_miniserver_run-cst COMMAND test_miniserver_run-cst --gtest_shuffle
+target_link_libraries(test_miniserver_run-csh
+    PRIVATE
+        compa_shared
+        upnplib_shared
+        utest_shared
+)
+add_test(NAME ctest_miniserver_run-csh COMMAND test_miniserver_run-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )

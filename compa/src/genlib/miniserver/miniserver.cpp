@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-11-09
+ * Redistribution only with this Copyright remark. Last modified: 2023-11-17
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,10 +74,6 @@
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/socket.hpp>
 #include <upnplib/general.hpp>
-
-#ifdef _WIN32
-#include <UpnpStdInt.hpp> // for ssize_t
-#endif
 
 #include <umock/sys_socket.hpp>
 #include <umock/winsock2.hpp>
@@ -154,38 +150,24 @@ void SetGenaCallback(MiniServerCallback callback) {
     gGenaCallback = callback;
 }
 
-static int host_header_is_numeric(char* host_port, size_t host_port_size) {
-    int rc = 0;
-    struct in6_addr addr;
-    char* s;
+// This is a wrapper function to provide compatibility.
+// 'a_host_port_len' is the length of the string excluding the terminating '\0'.
+static int host_header_is_numeric(char* a_host_port, size_t a_host_port_len) {
+    TRACE("Executing host_header_is_numeric()");
+    // An empty netaddress or an unspecified one is not valid.
+    if (a_host_port_len == 0 || strncmp(a_host_port, "[::]", 4) == 0 ||
+        strncmp(a_host_port, "0.0.0.0", 7) == 0)
+        return 0;
 
-    /* Remove the port part. */
-    s = host_port + host_port_size - 1;
-    while (s != host_port && *s != ']' && *s != ':') {
-        --s;
+    upnplib::SSockaddr saddrObj;
+    try {
+        saddrObj = std::string(a_host_port, a_host_port_len);
+    } catch (const std::exception& e) {
+        UPNPLIB_LOGINFO "MSG1049: catched next message ...\n"
+            << e.what() << "\n";
+        return 0;
     }
-    if (*s == ':') {
-        *s = 0;
-    } else {
-        s = host_port + host_port_size;
-    }
-
-    /* Try IPV4 */
-    rc = inet_pton(AF_INET, host_port, &addr);
-    if (rc == 1) {
-        goto ExitFunction;
-    }
-    /* Try IPV6 */
-    /* Check for and remove the square brackets. */
-    if (strlen(host_port) < 3 || host_port[0] != '[' || *(s - 1) != ']') {
-        rc = 0;
-        goto ExitFunction;
-    }
-    *(s - 1) = '\0';
-    rc = inet_pton(AF_INET6, host_port + 1, &addr) == 1;
-
-ExitFunction:
-    return rc;
+    return 1;
 }
 
 // getNumericHostRedirection() returns the ip address with port as text
@@ -195,19 +177,18 @@ static int getNumericHostRedirection(SOCKET a_socket, char* a_host_port,
     TRACE("Executing getNumericHostRedirection()")
     try {
         upnplib::CSocket_basic socketObj(a_socket);
-        std::string host_port = socketObj.get_addr_str();
-        host_port += ':' + std::to_string(socketObj.get_port());
+        std::string host_port = socketObj.get_addrp_str();
         memcpy(a_host_port, host_port.c_str(), a_hp_size);
         return true;
 
     } catch (const std::exception& e) {
-        std::cerr << e.what();
+        std::cerr << e.what() << "\n";
     }
     return false;
 }
 
 /*!
- * \brief Based on the type pf message, appropriate callback is issued.
+ * \brief Based on the type of message, appropriate callback is issued.
  *
  * \return 0 on Success or HTTP_INTERNAL_SERVER_ERROR if Callback is NULL.
  */
@@ -312,21 +293,6 @@ ExitFunction:
 }
 
 /*!
- * \brief Send Error Message.
- */
-static UPNP_INLINE void handle_error(
-    /*! [in] Socket Information object. */
-    SOCKINFO* info,
-    /*! [in] HTTP Error Code. */
-    int http_error_code,
-    /*! [in] Major Version Number. */
-    int major,
-    /*! [in] Minor Version Number. */
-    int minor) {
-    http_SendStatusResponse(info, http_error_code, major, minor);
-}
-
-/*!
  * \brief Free memory assigned for handling request and unitialize socket
  * functionality.
  */
@@ -336,18 +302,17 @@ static void free_handle_request_arg(
     TRACE("Executing free_handle_request_arg()")
     if (args == nullptr)
         return;
-    struct mserv_request_t* request = (struct mserv_request_t*)args;
 
-    sock_close(request->connfd);
-    free(request);
+    sock_close(static_cast<mserv_request_t*>(args)->connfd);
+    free(args);
 }
 
 /*!
  * \brief Receive the request and dispatch it for handling.
  */
 static void handle_request(
-    /*! [in] Request Message to be handled. */
-    void* args) {
+    /*! [in] Received Request Message to be handled. */
+    void* args) { // Expected to be mserv_request_t*
     SOCKINFO info;
     int http_error_code;
     int ret_code;
@@ -356,26 +321,28 @@ static void handle_request(
     http_parser_t parser;
     http_message_t* hmsg = NULL;
     int timeout = HTTP_DEFAULT_TIMEOUT;
-    mserv_request_t* request = (mserv_request_t*)args;
-    SOCKET connfd = request->connfd;
+    mserv_request_t* request_in = (mserv_request_t*)args;
+    SOCKET connfd = request_in->connfd;
 
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "miniserver socket %d: READING\n", connfd);
+    UPNPLIB_LOGINFO "MSG1027: Miniserver socket "
+        << connfd << ": READING request from client...\n";
     /* parser_request_init( &parser ); */ /* LEAK_FIX_MK */
     hmsg = &parser.msg;
     ret_code = sock_init_with_ip(&info, connfd,
-                                 (struct sockaddr*)&request->foreign_sockaddr);
+                                 (sockaddr*)&request_in->foreign_sockaddr);
     if (ret_code != UPNP_E_SUCCESS) {
-        free(request);
+        free(request_in);
         httpmsg_destroy(hmsg);
         return;
     }
+
     /* read */
     ret_code = http_RecvMessage(&info, &parser, HTTPMETHOD_UNKNOWN, &timeout,
                                 &http_error_code);
     if (ret_code != 0) {
         goto error_handler;
     }
+
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "miniserver %d: PROCESSING...\n", connfd);
     /* dispatch */
@@ -391,11 +358,14 @@ error_handler:
             major = hmsg->major_version;
             minor = hmsg->minor_version;
         }
-        handle_error(&info, http_error_code, major, minor);
+        // BUG! Don't try to send a status response to a remote client with
+        // http error (e.g. 400) if we have a socket error. It doesn't make
+        // sense. --Ingo
+        http_SendStatusResponse(&info, http_error_code, major, minor);
     }
     sock_destroy(&info, SD_BOTH);
     httpmsg_destroy(hmsg);
-    free(request);
+    free(request_in);
 
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "miniserver %d: COMPLETE\n", connfd);
@@ -411,18 +381,17 @@ static UPNP_INLINE void schedule_request_job(
     /*! [in] Clients Address information. */
     sockaddr* clientAddr) {
     TRACE("Executing schedule_request_job()")
-    UPNPLIB_LOGINFO << "MSG1042: Schedule request job to host "
-                    << upnplib::to_addrport_str(
-                           reinterpret_cast<const sockaddr_storage*>(
-                               clientAddr))
-                    << " with socket " << connfd << ".\n";
+    UPNPLIB_LOGINFO "MSG1042: Schedule request job to host "
+        << upnplib::to_addrport_str(
+               reinterpret_cast<const sockaddr_storage*>(clientAddr))
+        << " with socket " << connfd << ".\n";
 
     ThreadPoolJob job{};
     mserv_request_t* request{
         static_cast<mserv_request_t*>(std::malloc(sizeof(mserv_request_t)))};
 
     if (request == nullptr) {
-        UPNPLIB_LOGCRIT << "MSG1024: Socket " << connfd << ": out of memory.\n";
+        UPNPLIB_LOGCRIT "MSG1024: Socket " << connfd << ": out of memory.\n";
         sock_close(connfd);
         return;
     }
@@ -434,8 +403,8 @@ static UPNP_INLINE void schedule_request_job(
     TPJobSetFreeFunction(&job, free_handle_request_arg);
     TPJobSetPriority(&job, MED_PRIORITY);
     if (ThreadPoolAdd(&gMiniServerThreadPool, &job, NULL) != 0) {
-        UPNPLIB_LOGERR << "MSG1025: Socket " << connfd
-                       << ": cannot schedule request.\n";
+        UPNPLIB_LOGERR "MSG1025: Socket " << connfd
+                                          << ": cannot schedule request.\n";
         free(request);
         sock_close(connfd);
         return;
@@ -456,11 +425,10 @@ static void fdset_if_valid(SOCKET a_sock, fd_set* a_set) {
         return;
 
     if (a_sock < 3 || a_sock >= FD_SETSIZE) {
-        UPNPLIB_LOGERR << "MSG1005: " << (a_sock < 0 ? "Invalid" : "Prohibited")
-                       << " socket " << a_sock
-                       << " not set to be monitored by ::select()"
-                       << (a_sock >= 3 ? " because it violates FD_SETSIZE.\n"
-                                       : ".\n");
+        UPNPLIB_LOGERR "MSG1005: "
+            << (a_sock < 0 ? "Invalid" : "Prohibited") << " socket " << a_sock
+            << " not set to be monitored by ::select()"
+            << (a_sock >= 3 ? " because it violates FD_SETSIZE.\n" : ".\n");
         return;
     }
     // Check if socket is valid and bound
@@ -471,14 +439,14 @@ static void fdset_if_valid(SOCKET a_sock, fd_set* a_set) {
             FD_SET(a_sock, a_set);
 
         else
-            UPNPLIB_LOGINFO << "MSG1002: Unbound socket " << a_sock
-                            << " not set to be monitored by ::select().\n";
+            UPNPLIB_LOGINFO "MSG1002: Unbound socket "
+                << a_sock << " not set to be monitored by ::select().\n";
 
     } catch (const std::exception& e) {
         if (upnplib::g_dbug)
             std::clog << e.what();
-        UPNPLIB_LOGCATCH << "MSG1009: Invalid socket " << a_sock
-                         << " not set to be monitored by ::select().\n";
+        UPNPLIB_LOGCATCH "MSG1009: Invalid socket "
+            << a_sock << " not set to be monitored by ::select().\n";
     }
 }
 
@@ -489,8 +457,8 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
 #else
     TRACE("Executing web_server_accept()")
     if (lsock == INVALID_SOCKET || !FD_ISSET(lsock, &set)) {
-        UPNPLIB_LOGINFO << "MSG1012: Socket(" << lsock
-                        << ") invalid or not in file descriptor set.\n";
+        UPNPLIB_LOGINFO "MSG1012: Socket("
+            << lsock << ") invalid or not in file descriptor set.\n";
         return UPNP_E_SOCKET_ERROR;
     }
 
@@ -501,17 +469,17 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
     // accept a network request connection
     asock = umock::sys_socket_h.accept(lsock, &clientAddr.sa, &clientLen);
     if (asock == INVALID_SOCKET) {
-        UPNPLIB_LOGERR << "MSG1022: Error in ::accept(): "
-                       << std::strerror(errno) << ".\n";
+        UPNPLIB_LOGERR "MSG1022: Error in ::accept(): " << std::strerror(errno)
+                                                        << ".\n";
         return UPNP_E_SOCKET_ACCEPT;
     }
 
     // Here we schedule the job to manage a UPnP request from a client.
     char buf_ntop[INET6_ADDRSTRLEN + 7];
     inet_ntop(AF_INET, &clientAddr.sin.sin_addr, buf_ntop, sizeof(buf_ntop));
-    UPNPLIB_LOGINFO << "MSG1023: Connected to host " << buf_ntop << ":"
-                    << ntohs(clientAddr.sin.sin_port) << " with socket "
-                    << asock << ".\n";
+    UPNPLIB_LOGINFO "MSG1023: Connected to host "
+        << buf_ntop << ":" << ntohs(clientAddr.sin.sin_port) << " with socket "
+        << asock << ".\n";
     schedule_request_job(asock, &clientAddr.sa);
 
     return UPNP_E_SUCCESS;
@@ -562,8 +530,8 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
     if (byteReceived == SOCKET_ERROR ||
         inet_ntop(AF_INET, &clientAddr.sin.sin_addr, buf_ntop,
                   sizeof(buf_ntop)) == nullptr) {
-        UPNPLIB_LOGCRIT << "MSG1038: Failed to receive data from socket "
-                        << ssock << ". Stop miniserver.\n";
+        UPNPLIB_LOGCRIT "MSG1038: Failed to receive data from socket "
+            << ssock << ". Stop miniserver.\n";
         return 1;
     }
 
@@ -574,18 +542,18 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
         char nullstr[]{"\\0"};
         if (byteReceived == 0 || receiveBuf[byteReceived - 1] != '\0')
             nullstr[0] = '\0';
-        UPNPLIB_LOGERR << "MSG1039: Received \"" << receiveBuf << nullstr
-                       << "\" from " << buf_ntop << ":"
-                       << ntohs(clientAddr.sin.sin_port)
-                       << ", must be \"ShutDown\\0\" from 127.0.0.1:*. Don't "
-                          "stopping miniserver.\n";
+        UPNPLIB_LOGERR "MSG1039: Received \""
+            << receiveBuf << nullstr << "\" from " << buf_ntop << ":"
+            << ntohs(clientAddr.sin.sin_port)
+            << ", must be \"ShutDown\\0\" from 127.0.0.1:*. Don't "
+               "stopping miniserver.\n";
         return 0;
     }
 
-    UPNPLIB_LOGINFO << "MSG1040: On socket " << ssock
-                    << " received ordinary datagram \"" << receiveBuf
-                    << "\\0\" from " << buf_ntop << ":"
-                    << ntohs(clientAddr.sin.sin_port) << ". Stop miniserver.\n";
+    UPNPLIB_LOGINFO "MSG1040: On socket "
+        << ssock << " received ordinary datagram \"" << receiveBuf
+        << "\\0\" from " << buf_ntop << ":" << ntohs(clientAddr.sin.sin_port)
+        << ". Stop miniserver.\n";
     return 1;
 }
 
@@ -778,12 +746,10 @@ static int get_port(
  * \return 1 or WSANOTINITIALISED on error, 0 if successful.
  */
 #ifdef INTERNAL_WEB_SERVER
-static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
+static int init_socket_suff(s_SocketStuff* s, const char* text_addr,
                             int ip_version) {
-    TRACE("Executing init_socket_suff()")
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside init_socket_suff() for IPv%d.\n", ip_version);
-
+    TRACE("Executing init_socket_suff() for IPv" + std::to_string(ip_version) +
+          ".")
     int sockError;
     sa_family_t domain;
     void* addr; // This holds a pointer to sin_addr, not a value
@@ -808,15 +774,13 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
         addr = &s->serverAddr6->sin6_addr;
         break;
     default:
-        UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
-                   "init_socket_suff(): Invalid IP version: %d.\n", ip_version);
+        UPNPLIB_LOGCRIT "MSG1050: Invalid IP version: " << ip_version << ".\n";
         goto error;
         break;
     }
 
     if (inet_pton(domain, text_addr, addr) <= 0) {
-        UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
-                   "init_socket_suff(): Invalid ip address: %s.\n", text_addr);
+        UPNPLIB_LOGCRIT "MSG1051: Invalid ip address: " << text_addr << ".\n";
         goto error;
     }
     s->fd = umock::sys_socket_h.socket(domain, SOCK_STREAM, 0);
@@ -825,18 +789,15 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
 #ifdef _WIN32
         int errval = umock::winsock2_h.WSAGetLastError();
         if (errval == WSANOTINITIALISED)
-            UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
-                       "init_socket_suff(): WSAStartup() wasn't called to "
-                       "initialize use of sockets\n");
+            UPNPLIB_LOGCRIT "MSG1052: WSAStartup() wasn't called to initialize "
+                            "use of sockets.\n";
         else
-            UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
-                       "init_socket_suff(): WSAGetLastError() returned %d.\n",
-                       errval);
+            UPNPLIB_LOGCRIT "MSG1053: WSAGetLastError() returned " << errval
+                                                                   << ".\n";
 #else
-        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                   "init_socket_suff(): IPv%d socket not available: "
-                   "%s\n",
-                   ip_version, std::strerror(errno));
+        UPNPLIB_LOGERR "MSG1054: IPv"
+            << ip_version << " socket not available: " << std::strerror(errno)
+            << ".\n";
 #endif
         goto error;
     } else if (ip_version == 6) {
@@ -845,10 +806,8 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
         sockError = umock::sys_socket_h.setsockopt(
             s->fd, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&onOff, sizeof(onOff));
         if (sockError == SOCKET_ERROR) {
-            UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                       "init_socket_suff(): unable to set IPv6 "
-                       "socket protocol: %s\n",
-                       std::strerror(errno));
+            UPNPLIB_LOGERR "MSG1055: unable to set IPv6 socket protocol: "
+                << std::strerror(errno) << ".\n";
             goto error;
         }
     }
@@ -862,10 +821,8 @@ static int init_socket_suff(struct s_SocketStuff* s, const char* text_addr,
             s->fd, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuseaddr_on,
             sizeof(int));
         if (sockError == SOCKET_ERROR) {
-            UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                       "init_socket_suff(): unable to set "
-                       "SO_REUSEADDR: %s\n",
-                       std::strerror(errno));
+            UPNPLIB_LOGERR "MSG1056: unable to set SO_REUSEADDR: "
+                << std::strerror(errno) << ".\n";
             goto error;
         }
     }
@@ -879,7 +836,7 @@ error:
     s->fd = INVALID_SOCKET;
 
     // return errval; // errval is available here but to be compatible I use
-    return 1;
+    return 1; // --Ingo
 }
 
 /*
@@ -986,10 +943,8 @@ error:
     return ret_val;
 }
 
-static int do_reinit(struct s_SocketStuff* s) {
+static int do_reinit(s_SocketStuff* s) {
     TRACE("Executing do_reinit()");
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__, "Inside do_reinit()\n");
-
     sock_close(s->fd);
 
     return init_socket_suff(s, s->text_addr, s->ip_version);
