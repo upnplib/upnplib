@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-01
+// Redistribution only with this Copyright remark. Last modified: 2023-11-09
 
 // Helpful link for ip address structures:
 // REF: [sockaddr structures as union]
@@ -129,6 +129,8 @@ class UPNPLIB_API CSocket_basic {
 
     std::string get_addr_str() const;
 
+    std::string get_addrp_str() const;
+
     uint16_t get_port() const;
 
     // Get the socket type, e.g. SOCK_STREAM or SOCK_DGRAM, but also others.
@@ -222,10 +224,6 @@ class UPNPLIB_API CSocket : public CSocket_basic {
 
     // Getter
     // ------
-    sa_family_t get_family() const;
-
-    uint16_t get_port() const;
-
     // IPV6_V6ONLY = false means allowing IPv4 and IPv6.
     bool is_v6only() const;
 

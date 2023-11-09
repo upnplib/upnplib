@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-03
+// Redistribution only with this Copyright remark. Last modified: 2023-11-09
 
 #include <upnplib/socket.hpp>
 #include <upnplib/general.hpp>
@@ -168,7 +168,7 @@ sa_family_t CSocket_basic::get_family() const {
 std::string CSocket_basic::get_addr_str() const {
     TRACE2(this, " Executing CSocket::get_addr_str()")
 
-    // Get address from socket file descriptor
+    // Get address direct from socket file descriptor.
     ::sockaddr_storage ss{};
     socklen_t len = sizeof(ss); // May be modified
     if (upnplib::getsockname(m_sfd, reinterpret_cast<sockaddr*>(&ss), &len) !=
@@ -178,10 +178,17 @@ std::string CSocket_basic::get_addr_str() const {
     return to_addr_str(&ss);
 }
 
+std::string CSocket_basic::get_addrp_str() const {
+    TRACE2(this, " Executing CSocket::get_addrp_str()")
+
+    // Get address and port direct from socket file descriptor.
+    return this->get_addr_str() + ':' + std::to_string(this->get_port());
+}
+
 uint16_t CSocket_basic::get_port() const {
     TRACE2(this, " Executing CSocket_basic::get_port()")
 
-    // Get port from socket file descriptor
+    // Get port direct from socket file descriptor.
     ::sockaddr_storage ss{};
     socklen_t len = sizeof(ss); // May be modified
     if (upnplib::getsockname(m_sfd, reinterpret_cast<sockaddr*>(&ss), &len) !=
@@ -468,32 +475,6 @@ void CSocket::set_v6only(const bool a_opt) {
 
 // Getter
 // ------
-sa_family_t CSocket::get_family() const {
-    TRACE2(this, " Executing CSocket::get_family()")
-    ::sockaddr_storage ss{};
-    socklen_t len = sizeof(ss); // May be modified
-    if (upnplib::getsockname(m_sfd, reinterpret_cast<sockaddr*>(&ss), &len) !=
-        0)
-        throw_error("MSG1027: Failed to get socket address family:");
-
-    return ss.ss_family;
-}
-
-uint16_t CSocket::get_port() const {
-    TRACE2(this, " Executing CSocket::get_port()")
-
-    // Get port from socket file descriptor
-    ::sockaddr_storage ss{};
-    socklen_t len = sizeof(ss); // May be modified
-    if (upnplib::getsockname(m_sfd, reinterpret_cast<sockaddr*>(&ss), &len) !=
-        0)
-        throw_error("MSG1031: Failed to get socket port:");
-
-    // Because sin6_port and sin_port are as union at the same memory location
-    // this can be used for AF_INET6 and AF_INET port queries.
-    return ntohs((reinterpret_cast<sockaddr_in6*>(&ss))->sin6_port);
-}
-
 bool CSocket::is_v6only() const {
     TRACE2(this, " Executing CSocket::is_v6only()")
     if (m_sfd == INVALID_SOCKET)

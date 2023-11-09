@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCKADDR_HPP
 #define UPNPLIB_NET_SOCKADDR_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-08
+// Redistribution only with this Copyright remark. Last modified: 2023-11-09
 
 // Helpful links:
 // REF:_[Why_do_I_get_wrong_pointer_to_a_base_class_with_a_virtual_constructor](https://stackoverflow.com/q/76360179/5014688)
@@ -69,7 +69,7 @@ struct UPNPLIB_API SSockaddr {
     // member structure.
     // operator const ::sockaddr_storage&() const;
 
-    // copy constructor:
+    // copy constructor: needed for copy assignment operator.
     // Example: SSockaddr saddr2 = saddr1; // saddr1 is an instantiated object,
     // or       SSockaddr saddr2{saddr1};
     SSockaddr(const SSockaddr&);

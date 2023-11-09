@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-08
+// Redistribution only with this Copyright remark. Last modified: 2023-11-09
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -15,6 +15,7 @@
 
 #include <upnplib/general.hpp>
 #include <upnplib/sockaddr.hpp>
+#include <upnplib/upnptools.hpp> // for errStrEx
 
 #include <pupnp/upnpdebug.hpp>
 #include <pupnp/threadpool_init.hpp>
@@ -37,6 +38,7 @@ using ::testing::SetArrayArgument;
 using ::testing::SetErrnoAndReturn;
 using ::testing::StrictMock;
 
+using ::upnplib::errStrEx;
 using ::upnplib::g_dbug;
 using ::upnplib::SSockaddr;
 
@@ -64,6 +66,8 @@ class MiniServerMockFTestSuite : public ::testing::Test {
         TRACE2(this, " Destruct MiniServerMockFTestSuite()")
     }
 };
+typedef MiniServerMockFTestSuite MiniServerMockFDeathTest;
+
 
 class RunMiniServerFuncFTestSuite : public MiniServerMockFTestSuite {
     // This is a fixture to provide mocking of sys_socket and a
@@ -889,6 +893,336 @@ TEST_F(MiniServerMockFTestSuite, ssdp_read_fails) {
                             "closing socket")));
     EXPECT_EQ(ssdp_sockfd, INVALID_SOCKET);
 }
+
+TEST_F(MiniServerMockFTestSuite, web_server_accept_successful) {
+    // The tested units are different for old_code (pupnp) and new code (compa).
+    // We have void      ::web_server_accept() and
+    //         int  compa::web_server_accept().
+    constexpr SOCKET listen_sockfd{umock::sfd_base + 33};
+    constexpr SOCKET connected_sockfd{umock::sfd_base + 34};
+    const std::string connected_port = "306";
+    fd_set set;
+    FD_ZERO(&set);
+    FD_SET(listen_sockfd, &set);
+
+    // Prevent to add jobs, I test jobs isolated. See note at
+    // TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful).
+    // With shutdown = true, maxJobs is ignored.
+    CThreadPoolInit tp(gMiniServerThreadPool,
+                       /*shutdown*/ false, /*maxJobs*/ 0);
+
+    SSockaddr ssObj;
+    ssObj = "192.168.201.202:" + connected_port;
+    EXPECT_CALL(m_sys_socketObj,
+                accept(listen_sockfd, NotNull(), Pointee(ssObj.get_sslen())))
+        .WillOnce(DoAll(SetArgPointee<1>(ssObj.sa), Return(connected_sockfd)));
+
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+    // Capture output to stderr
+    CLogging logObj; // Output only with build type DEBUG.
+    logObj.enable(UPNP_ALL);
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    captureObj.start();
+
+    // Test Unit
+    web_server_accept(listen_sockfd, &set);
+
+    // Get captured output
+    // '\n' is not matched by regex '.'-wildcard so we just replace it.
+    std::replace(captureObj.str().begin(), captureObj.str().end(), '\n', '@');
+#ifdef DEBUG
+    EXPECT_THAT(captureObj.str(),
+                ContainsStdRegex(" UPNP-MSER-2: .* mserv " +
+                                 std::to_string(connected_sockfd) +
+                                 ": cannot schedule request"));
+#else
+    EXPECT_THAT(captureObj.str(),
+                ContainsStdRegex("libupnp ThreadPoolAdd too many jobs: 0"));
+#endif
+
+#else // UPNPLIB_WITH_NATIVE_PUPNP
+
+    // Test Unit
+    int ret_web_server_accept = web_server_accept(listen_sockfd, set);
+    EXPECT_EQ(ret_web_server_accept, UPNP_E_SUCCESS)
+        << errStrEx(ret_web_server_accept, UPNP_E_SUCCESS);
+
+#endif // UPNPLIB_WITH_NATIVE_PUPNP
+}
+
+TEST_F(MiniServerMockFTestSuite, web_server_accept_with_invalid_socket) {
+    // The tested units are different for old_code (pupnp) and new code (compa).
+    // We have void      ::web_server_accept() and
+    //         int  compa::web_server_accept().
+    constexpr SOCKET listen_sockfd = INVALID_SOCKET;
+
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+    // Capture output to stderr
+    CLogging logObj; // Output only with build type DEBUG.
+    logObj.enable(UPNP_ALL);
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    captureObj.start();
+
+    // Test Unit
+    web_server_accept(listen_sockfd, nullptr);
+
+    // Get captured output
+    EXPECT_TRUE(captureObj.str().empty());
+
+#else // UPNPLIB_WITH_NATIVE_PUPNP
+
+    // Test Unit
+    fd_set set; // unused, only for reference
+    FD_ZERO(&set);
+    int ret_web_server_accept = web_server_accept(listen_sockfd, set);
+    EXPECT_EQ(ret_web_server_accept, UPNP_E_SOCKET_ERROR)
+        << errStrEx(ret_web_server_accept, UPNP_E_SOCKET_ERROR);
+
+#endif // UPNPLIB_WITH_NATIVE_PUPNP
+}
+
+TEST_F(MiniServerMockFDeathTest, web_server_accept_with_invalid_set) {
+    // The tested units are different for old_code (pupnp) and new code (compa).
+    // We have void      ::web_server_accept() and
+    //         int  compa::web_server_accept().
+    constexpr SOCKET listen_sockfd{umock::sfd_base + 57};
+
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+    std::cerr << CYEL "[ BUGFIX   ] " CRES << __LINE__
+              << ": nullptr to socket select set must not segfault.\n";
+    // There may be a multithreading test running before. Due to problems
+    // running this together with death tests as noted in the gtest docu the
+    // GTEST_FLAG has to be set. If having more death tests it should be
+    // considered to run multithreading tests with an own test file without
+    // death tests.
+    GTEST_FLAG_SET(death_test_style, "threadsafe");
+    EXPECT_DEATH(web_server_accept(listen_sockfd, nullptr), "");
+
+#else // UPNPLIB_WITH_NATIVE_PUPNP
+
+    // Test Unit
+    fd_set set; // unused, only for reference
+    FD_ZERO(&set);
+    int ret_web_server_accept = web_server_accept(listen_sockfd, set);
+    EXPECT_EQ(ret_web_server_accept, UPNP_E_SOCKET_ERROR)
+        << errStrEx(ret_web_server_accept, UPNP_E_SOCKET_ERROR);
+
+#endif // UPNPLIB_WITH_NATIVE_PUPNP
+}
+
+TEST_F(MiniServerMockFTestSuite, web_server_accept_with_empty_set) {
+    // The tested units are different for old_code (pupnp) and new code (compa).
+    // We have void      ::web_server_accept() and
+    //         int  compa::web_server_accept().
+    constexpr SOCKET listen_sockfd{umock::sfd_base + 35};
+    fd_set set;
+    FD_ZERO(&set);
+
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+    // Capture output to stderr
+    CLogging logObj; // Output only with build type DEBUG.
+    logObj.enable(UPNP_ALL);
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    captureObj.start();
+
+    // Test Unit
+    web_server_accept(listen_sockfd, &set);
+
+    // Get captured output
+    EXPECT_TRUE(captureObj.str().empty());
+
+#else // UPNPLIB_WITH_NATIVE_PUPNP
+
+    // Test Unit
+    int ret_web_server_accept = web_server_accept(listen_sockfd, set);
+    EXPECT_EQ(ret_web_server_accept, UPNP_E_SOCKET_ERROR)
+        << errStrEx(ret_web_server_accept, UPNP_E_SOCKET_ERROR);
+
+#endif // UPNPLIB_WITH_NATIVE_PUPNP
+}
+
+TEST_F(MiniServerMockFTestSuite, web_server_accept_fails) {
+    // The tested units are different for old_code (pupnp) and new code (compa).
+    // We have void      ::web_server_accept() and
+    //         int  compa::web_server_accept().
+    constexpr SOCKET listen_sockfd{umock::sfd_base + 50};
+    fd_set set;
+    FD_ZERO(&set);
+    FD_SET(listen_sockfd, &set);
+
+    EXPECT_CALL(m_sys_socketObj,
+                accept(listen_sockfd, NotNull(),
+                       Pointee((socklen_t)sizeof(::sockaddr_storage))))
+        .WillOnce(SetErrnoAndReturn(EINVAL, INVALID_SOCKET));
+
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+    // Capture output to stderr
+    CLogging logObj; // Output only with build type DEBUG.
+    logObj.enable(UPNP_ALL);
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    captureObj.start();
+
+    // Test Unit
+    web_server_accept(listen_sockfd, &set);
+#ifdef DEBUG
+    EXPECT_THAT(captureObj.str(),
+                ContainsStdRegex(
+                    " UPNP-MSER-2: .* miniserver: Error in accept\\(\\): "));
+#else
+    std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+              << ": Failing accept() must not silently be ignored and continue "
+                 "to fail recvfrom.\n";
+    EXPECT_TRUE(captureObj.str().empty()); // Wrong!
+#endif
+
+#else // UPNPLIB_WITH_NATIVE_PUPNP
+
+    // Test Unit
+    int ret_web_server_accept = web_server_accept(listen_sockfd, set);
+    EXPECT_EQ(ret_web_server_accept, UPNP_E_SOCKET_ACCEPT)
+        << errStrEx(ret_web_server_accept, UPNP_E_SOCKET_ACCEPT);
+
+#endif // UPNPLIB_WITH_NATIVE_PUPNP
+}
+
+#if 0
+TEST_F(RunMiniServerFTestSuite, get_numeric_host_redirection) {
+    WINSOCK_INIT
+    // getNumericHostRedirection() returns the ip address with port as text
+    // (e.g. "192.168.1.2:54321") that is bound to a socket.
+
+    constexpr SOCKET sockfd{umock::sfd_base + 37};
+    char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
+
+    // Provide a sockaddr structure that will be returned by mocked
+    // getsockname().
+    const CAddrinfo ai1("192.168.123.122", "54321", AF_INET, SOCK_STREAM,
+                        AI_NUMERICHOST | AI_NUMERICSERV);
+
+    // Test Unit
+    if (old_code) {
+        EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))
+            .WillOnce(DoAll(SetArgPointee<1>(*ai1->ai_addr), Return(0)));
+        EXPECT_TRUE(getNumericHostRedirection((int)sockfd, host_port,
+                                              sizeof(host_port)));
+    } else {
+
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
+            .WillOnce(Return(0));
+        EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))
+            .Times(2)
+            .WillRepeatedly(DoAll(SetArgPointee<1>(*ai1->ai_addr), Return(0)));
+        EXPECT_TRUE(
+            getNumericHostRedirection(sockfd, host_port, sizeof(host_port)));
+    }
+
+    EXPECT_STREQ(host_port, "192.168.123.122:54321");
+}
+
+TEST_F(RunMiniServerFTestSuite,
+       get_numeric_host_redirection_with_insufficient_resources) {
+    constexpr SOCKET sockfd{umock::sfd_base + 38};
+    char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
+
+    // Mock system function ::getsockname() to fail with insufficient
+    // resources. It is called here within the free function
+    // upnplib::getsockname().
+    EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))
+#ifndef _MSC_VER
+        .WillOnce(SetErrnoAndReturn(ENOBUFS, -1));
+#else
+        // errno isn't used with Winsock. That uses WSAGetLastError() as mocked
+        // below with new code.
+        .WillOnce(Return(-1));
+#endif
+
+    // Capture output to stderr
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    captureObj.start();
+
+    // Test Unit
+    if (old_code) {
+        EXPECT_FALSE(getNumericHostRedirection((int)sockfd, host_port,
+                                               sizeof(host_port)));
+        // Get captured output. This doesn't give any error messages.
+        std::cout << captureObj.str() << "\n";
+        EXPECT_EQ(captureObj.str(), "");
+
+    } else {
+
+        // ::getsockopt() is called here within the CSocket constructor.
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
+            .WillOnce(Return(0));
+#ifdef _MSC_VER
+        // ::WSAGetLastError() is called here within the free function
+        // upnplib::getsockname() and when throwing the error used by CSocket.
+        EXPECT_CALL(m_winsock2Obj, WSAGetLastError())
+            .Times(2)
+            .WillRepeatedly(Return(WSAENOBUFS));
+#endif
+
+        // Test Unit
+        EXPECT_FALSE(
+            getNumericHostRedirection(sockfd, host_port, sizeof(host_port)));
+        // Get captured output
+        std::cout << captureObj.str() << "\n";
+        EXPECT_THAT(captureObj.str(), HasSubstr("] EXCEPTION MSG1001: "));
+    }
+
+    EXPECT_STREQ(host_port, "<no message>");
+}
+
+TEST_F(RunMiniServerFTestSuite,
+       get_numeric_host_redirection_with_wrong_address_family) {
+    constexpr SOCKET sockfd{407};
+    char host_port[INET6_ADDRSTRLEN + 1 + 5]{"<no message>"};
+
+    // Provide a sockaddr structure that will be returned by mocked
+    // getsockname().
+    SSockaddr ssObj;
+    ssObj.ss.ss_family = AF_UNIX;
+
+    EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))
+        .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&ssObj.ss), Return(0)));
+
+    if (!old_code)
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
+            .WillOnce(Return(0));
+
+    // Capture output to stderr
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    captureObj.start();
+
+    // Test Unit
+    if (old_code) {
+        bool ret_getNumericHostRedirection = getNumericHostRedirection(
+            (int)sockfd, host_port, sizeof(host_port));
+
+        std::cout << CYEL "[ FIX      ] " CRES << __LINE__
+                  << ": A wrong but accepted address family AF_UNIX should "
+                     "return an error.\n";
+        EXPECT_TRUE(ret_getNumericHostRedirection); // Wrong!
+        // Get captured output
+        EXPECT_TRUE(captureObj.str().empty());
+        EXPECT_STREQ(host_port, "0.0.0.0:0"); // Wrong!
+
+    } else {
+
+        bool ret_getNumericHostRedirection =
+            getNumericHostRedirection(sockfd, host_port, sizeof(host_port));
+
+        EXPECT_FALSE(ret_getNumericHostRedirection);
+        // Get captured output
+        EXPECT_THAT(
+            captureObj.str(),
+            HasSubstr("] EXCEPTION MSG1036: Unsupported address family 1"));
+        EXPECT_STREQ(host_port, "<no message>");
+    }
+}
+#endif
 
 } // namespace utest
 

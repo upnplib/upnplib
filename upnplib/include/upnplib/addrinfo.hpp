@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_ADDRINFO_HPP
 #define UPNPLIB_INCLUDE_ADDRINFO_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-06
+// Redistribution only with this Copyright remark. Last modified: 2023-10-09
 
 #include <upnplib/visibility.hpp>
 #include <upnplib/port_sock.hpp>
@@ -24,7 +24,7 @@ UPNPLIB_API int is_numeric_node(const std::string& a_node,
 
 
 // Provide C style addrinfo as class and wrap its system calls
-// -----------------------------------------------------------
+// ===========================================================
 // Typically, a complete socket address consists of IP address, port and socket
 // type. For example '[2001:db8::1]:8080, type SOCK_STREAM' is different from
 // '[2001:db8::1]:8080, type SOCK_DGRAM' or from '[2001:db8::1]:50000, type

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-11-04
+ * Redistribution only with this Copyright remark. Last modified: 2023-11-09
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -200,9 +200,7 @@ static int getNumericHostRedirection(SOCKET a_socket, char* a_host_port,
         memcpy(a_host_port, host_port.c_str(), a_hp_size);
         return true;
 
-    } catch (const std::runtime_error& e) {
-        std::cerr << e.what();
-    } catch (const std::invalid_argument& e) {
+    } catch (const std::exception& e) {
         std::cerr << e.what();
     }
     return false;
