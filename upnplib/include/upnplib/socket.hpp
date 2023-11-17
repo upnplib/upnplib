@@ -1,20 +1,11 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-16
+// Redistribution only with this Copyright remark. Last modified: 2023-11-19
 
 // Helpful link for ip address structures:
 // REF: [sockaddr structures as union]
 // (https://stackoverflow.com/a/76548581/5014688)
-
-
-// To be portable with BSD socket error number constants I have to
-// define and use these macros with appended 'P' for portable.
-#ifdef _MSC_VER
-#define EBADFP WSAENOTSOCK
-#else
-#define EBADFP EBADF
-#endif
 
 
 // Socket module
@@ -81,9 +72,18 @@
 
 #include <upnplib/visibility.hpp>
 #include <upnplib/port_sock.hpp>
+#include <upnplib/sockaddr.hpp>
 #include <upnplib/addrinfo.hpp>
 #include <string>
 #include <mutex>
+
+// To be portable with BSD socket error number constants I have to
+// define and use these macros with appended 'P' for portable.
+#ifdef _MSC_VER
+#define EBADFP WSAENOTSOCK
+#else
+#define EBADFP EBADF
+#endif
 
 namespace upnplib {
 
@@ -97,7 +97,7 @@ UPNPLIB_API std::string to_socktype_str(const int socktype);
 // This class takes the resources and results as given by the platform. It does
 // not perform any emulations for unification. The behavior can be different on
 // different platforms.
-class UPNPLIB_API CSocket_basic {
+class UPNPLIB_API CSocket_basic : private SSockaddr {
   protected:
     // Default constructor for an empty socket object
     CSocket_basic();
@@ -127,15 +127,15 @@ class UPNPLIB_API CSocket_basic {
     // ------
     sa_family_t get_family() const;
 
-    std::string get_addr_str() const;
+    const std::string& get_addr_str() override;
 
-    std::string get_addrp_str() const;
+    const std::string& get_addrp_str() override;
 
-    uint16_t get_port() const;
+    in_port_t get_port() const override;
 
-    // Get the socket type, e.g. SOCK_STREAM or SOCK_DGRAM, but also others.
-    // Throws exception std::runtime_error.
-    int get_type() const;
+    // Get the socket connection type, e.g. SOCK_STREAM or SOCK_DGRAM, but also
+    // others. Throws exception std::runtime_error.
+    int get_conntype() const;
 
     int get_sockerr() const;
 
@@ -144,7 +144,7 @@ class UPNPLIB_API CSocket_basic {
     // I assume that a valid socket file descriptor with unknown address (all
     // zero) and port 0 is not bound.
     // Throws exception std::runtime_error.
-    bool is_bound() const;
+    bool is_bound();
 
   protected:
     // This is the raw socket file descriptor
@@ -153,6 +153,10 @@ class UPNPLIB_API CSocket_basic {
     // Mutex to protect concurrent binding a socket.
     SUPPRESS_MSVC_WARN_4251_NEXT_LINE
     mutable std::mutex m_bound_mutex;
+
+  private:
+    // Helper method
+    void m_get_addr_from_socket(int line) const;
 };
 
 

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-16
+// Redistribution only with this Copyright remark. Last modified: 2023-11-18
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/general.hpp>
@@ -8,38 +8,6 @@
 #include <iostream>
 
 namespace upnplib {
-
-// Free function to get the port number from a string
-// --------------------------------------------------
-uint16_t to_port(const std::string& a_port_str) {
-    TRACE("Executing to_port()")
-
-    if (a_port_str.empty())
-        return 0;
-
-    int port;
-
-    // Only strings with max. 5 characters are valid (uint16_t has max. 65535)
-    if (a_port_str.length() > 5)
-        goto throw_exit;
-
-    // Now we check if the string are all digit characters
-    for (unsigned char ch : a_port_str) {
-        if (!isdigit(ch))
-            goto throw_exit;
-    }
-    // Valid positive number but is it within the port range (uint16_t)?
-    port = std::stoi(a_port_str);
-    if (port <= 65535)
-
-        return static_cast<uint16_t>(port);
-
-throw_exit:
-    throw std::invalid_argument(UPNPLIB_LOGEXCEPT +
-                                "MSG1033: Failed to get port number for \"" +
-                                a_port_str + "\".");
-}
-
 
 // Free function to get the address string from a sockaddr structure
 // -----------------------------------------------------------------
@@ -77,7 +45,7 @@ std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr) {
 
 // Free function to get the address string with port from a sockaddr structure
 // ---------------------------------------------------------------------------
-std::string to_addrport_str(const ::sockaddr_storage* const a_sockaddr) {
+std::string to_addrp_str(const ::sockaddr_storage* const a_sockaddr) {
     // TRACE("Executing to_addrport_str()") // not usable in chained output.
     //
     // sin_port and sin6_port are on the same memory location (union of the
@@ -88,6 +56,38 @@ std::string to_addrport_str(const ::sockaddr_storage* const a_sockaddr) {
                      std::to_string(ntohs(
                          reinterpret_cast<const ::sockaddr_in6*>(a_sockaddr)
                              ->sin6_port));
+}
+
+
+// Free function to get the port number from a string
+// --------------------------------------------------
+in_port_t to_port(const std::string& a_port_str) {
+    TRACE("Executing to_port()")
+
+    if (a_port_str.empty())
+        return 0;
+
+    int port;
+
+    // Only strings with max. 5 characters are valid (uint16_t has max. 65535)
+    if (a_port_str.length() > 5)
+        goto throw_exit;
+
+    // Now we check if the string are all digit characters
+    for (unsigned char ch : a_port_str) {
+        if (!::isdigit(ch))
+            goto throw_exit;
+    }
+    // Valid positive number but is it within the port range (uint16_t)?
+    port = std::stoi(a_port_str);
+    if (port <= 65535)
+
+        return static_cast<uint16_t>(port);
+
+throw_exit:
+    throw std::invalid_argument(UPNPLIB_LOGEXCEPT +
+                                "MSG1033: Failed to get port number for \"" +
+                                a_port_str + "\".");
 }
 
 
@@ -228,19 +228,28 @@ bool SSockaddr::operator==(const ::sockaddr_storage& a_ss) const {
 // Getter for the assosiated ip address without port
 // -------------------------------------------------
 // e.g. "[2001:db8::2]" or "192.168.254.253".
-std::string SSockaddr::get_addr_str() const {
+const std::string& SSockaddr::get_addr_str() {
     TRACE2(this, " Executing SSockaddr::get_addr_str()")
-    return to_addr_str(&ss);
-}
-const std::string& SSockaddr::get_addr_str2() {
-    TRACE2(this, " Executing SSockaddr::get_addr_str2()")
+    // It is important to have the string available as long as the object lives,
+    // otherwise you may get dangling pointer, e.g. with getting .c_str().
     m_netaddr = to_addr_str(&ss);
     return m_netaddr;
 }
 
+// Getter for the assosiated ip address with port
+// ----------------------------------------------
+// e.g. "[2001:db8::2]:50001" or "192.168.254.253:50001".
+const std::string& SSockaddr::get_addrp_str() {
+    TRACE2(this, " Executing SSockaddr::get_addrp_str()")
+    // It is important to have the string available as long as the object lives,
+    // otherwise you may get dangling pointer, e.g. with getting .c_str().
+    m_netaddrp = to_addrp_str(&ss);
+    return m_netaddrp;
+}
+
 // Getter for the assosiated port number
 // -------------------------------------
-uint16_t SSockaddr::get_port() const {
+in_port_t SSockaddr::get_port() const {
     TRACE2(this, " Executing SSockaddr::get_port()")
     // sin_port and sin6_port are on the same memory location (union of the
     // structures) so we can use it for AF_INET and AF_INET6.
@@ -248,9 +257,9 @@ uint16_t SSockaddr::get_port() const {
     return ntohs(sin6.sin6_port);
 }
 
-// Getter for the length of the sockaddr structure.
-// ------------------------------------------------
-socklen_t SSockaddr::get_sslen() const {
+// Getter for sizeof the Sockaddr Structure.
+// -----------------------------------------
+socklen_t SSockaddr::sizeof_ss() const {
     TRACE2(this, " Executing SSockaddr::get_sslen()")
     return sizeof(ss);
 }

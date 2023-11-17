@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-09
+// Redistribution only with this Copyright remark. Last modified: 2023-11-19
 
 #include <upnplib/socket.hpp>
 #include <upnplib/general.hpp>
@@ -157,52 +157,30 @@ CSocket_basic::operator const SOCKET&() const {
 // ------
 sa_family_t CSocket_basic::get_family() const {
     TRACE2(this, " Executing CSocket_basic::get_family()")
-    ::sockaddr_storage ss{};
-    socklen_t len = sizeof(ss); // May be modified
-    if (upnplib::getsockname(m_sfd, reinterpret_cast<sockaddr*>(&ss), &len) !=
-        0)
-        throw_error("MSG1032: Failed to get socket address family:");
-
-    return ss.ss_family;
+    m_get_addr_from_socket(__LINE__);
+    return this->ss.ss_family;
 }
 
-std::string CSocket_basic::get_addr_str() const {
-    TRACE2(this, " Executing CSocket::get_addr_str()")
-
-    // Get address direct from socket file descriptor.
-    ::sockaddr_storage ss{};
-    socklen_t len = sizeof(ss); // May be modified
-    if (upnplib::getsockname(m_sfd, reinterpret_cast<sockaddr*>(&ss), &len) !=
-        0)
-        throw_error("MSG1001: Failed to get socket address/port:");
-
-    return to_addr_str(&ss);
+const std::string& CSocket_basic::get_addr_str() {
+    TRACE2(this, " Executing CSocket_basic::get_addr_str()")
+    m_get_addr_from_socket(__LINE__);
+    return SSockaddr::get_addr_str();
 }
 
-std::string CSocket_basic::get_addrp_str() const {
-    TRACE2(this, " Executing CSocket::get_addrp_str()")
-
-    // Get address and port direct from socket file descriptor.
-    return this->get_addr_str() + ':' + std::to_string(this->get_port());
+const std::string& CSocket_basic::get_addrp_str() {
+    TRACE2(this, " Executing CSocket_basic::get_addrp_str()")
+    m_get_addr_from_socket(__LINE__);
+    return SSockaddr::get_addrp_str();
 }
 
-uint16_t CSocket_basic::get_port() const {
+in_port_t CSocket_basic::get_port() const {
     TRACE2(this, " Executing CSocket_basic::get_port()")
-
-    // Get port direct from socket file descriptor.
-    ::sockaddr_storage ss{};
-    socklen_t len = sizeof(ss); // May be modified
-    if (upnplib::getsockname(m_sfd, reinterpret_cast<sockaddr*>(&ss), &len) !=
-        0)
-        throw_error("MSG1026: Failed to get socket port:");
-
-    // Because sin6_port and sin_port are as union at the same memory location
-    // this can be used for AF_INET6 and AF_INET port queries.
-    return ntohs((reinterpret_cast<sockaddr_in6*>(&ss))->sin6_port);
+    m_get_addr_from_socket(__LINE__);
+    return SSockaddr::get_port();
 }
 
-int CSocket_basic::get_type() const {
-    TRACE2(this, " Executing CSocket_basic::get_type()")
+int CSocket_basic::get_conntype() const {
+    TRACE2(this, " Executing CSocket_basic::get_conntype()")
     int so_option{-1};
     socklen_t len{sizeof(so_option)}; // May be modified
     // Type cast (char*)&so_option is needed for Microsoft Windows.
@@ -240,44 +218,35 @@ bool CSocket_basic::is_reuse_addr() const {
     return so_option;
 }
 
-bool CSocket_basic::is_bound() const {
+bool CSocket_basic::is_bound() {
     // We get the socket address from the file descriptor and check if its
-    // address and port are all zero. We have to do this different for AF_INET6
-    // and AF_INET.
+    // address is unspecified or if the address and port are all zero. This
+    // replaces the method with direct compare of the socket addresses with a
+    // 16 byte AF_INET6 compare which last version can be found at commit
+    // a5ec86a93608234016630123c776c09f8ff276fb.
     TRACE2(this, " Executing CSocket::is_bound()")
 
     // binding is protected.
     std::scoped_lock lock(m_bound_mutex);
 
-    ::sockaddr_storage ss{};
-    socklen_t len = sizeof(ss); // May be modified
-    if (upnplib::getsockname(m_sfd, reinterpret_cast<sockaddr*>(&ss), &len) !=
-        0)
-        throw_error("MSG1010: Failed to get socket status 'is_bound':");
+    const std::string& netaddr = this->get_addrp_str();
+    return (netaddr.empty() || netaddr.compare("[::]:0") == 0 ||
+            netaddr.compare("0.0.0.0:0") == 0)
+               ? false
+               : true;
+}
 
-    switch (ss.ss_family) {
-    case AF_INET6: {
-        // The IPv6 address has 16 bytes so we simply compare it with a null
-        // bytes address.
-        constexpr unsigned char sin6_addr0[sizeof(in6_addr)]{};
-        sockaddr_in6* sa_in6 = reinterpret_cast<sockaddr_in6*>(&ss);
-        // If address and port are 0 then the socket isn't bound to an address.
-        return (memcmp(sa_in6->sin6_addr.s6_addr, sin6_addr0,
-                       sizeof(sin6_addr0)) == 0 &&
-                sa_in6->sin6_port == 0)
-                   ? false
-                   : true;
-    }
-    case AF_INET: {
-        sockaddr_in* sa_in = reinterpret_cast<sockaddr_in*>(&ss);
-        // If address and port are 0 then the socket isn't bound to an address.
-        return (sa_in->sin_addr.s_addr == 0 && sa_in->sin_port == 0) ? false
-                                                                     : true;
-    }
-    default:
-        throw std::runtime_error("MSG1029: Invalid address family " +
-                                 std::to_string(ss.ss_family) + ".\n");
-    }
+// Private methods
+// ---------------
+void CSocket_basic::m_get_addr_from_socket(int line) const {
+    TRACE2(this, " Executing CSocket_basic::m_get_addr_from_socket()")
+
+    // Get address from socket file descriptor and fill in the inherited
+    // sockaddr structure from SSockaddr.
+    socklen_t len = this->sizeof_ss(); // May be modified
+    if (upnplib::getsockname(m_sfd, &this->sa, &len) != 0)
+        throw_error("MSG1001: [" + std::to_string(line) +
+                    "] Failed to get address from socket:");
 }
 
 
@@ -434,7 +403,7 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
     }
 
     // Here we bind the socket to an address
-    const CAddrinfo ai(a_node, a_port, addr_family, this->get_type(),
+    const CAddrinfo ai(a_node, a_port, addr_family, this->get_conntype(),
                        AI_NUMERICHOST | AI_NUMERICSERV | a_flags);
     // Type cast socklen_t is needed for Microsoft Windows.
     if (::bind(m_sfd, ai->ai_addr, static_cast<socklen_t>(ai->ai_addrlen)) != 0)

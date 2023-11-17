@@ -1,9 +1,11 @@
 Next steps to do:
-* Continue moving RunMiniserver tests from test_miniserver.cpp to test_miniservver_run.cpp.
-* Improve tests for CSockaddr with parameterized tests like utest/compa/addressing/test_miniserver_run.cpp host_header_is_numeric().
-* Rename get_addrport_str(), use exceptions on upnplib::getsockname(), optimize CSocket get_addr_str(), get_addrp_str() and get_port().
-* Use reference instead of pointer for CAddrinfo::addrinfo* operator->() const;
+* Rename get_addrport_str(), unify methods get_addr_str(), get_addrp_str() and get_port() on all classes.
+* Derive classes from basic SSockaddr.
+* Rework test_sockaddr.cpp with the changed and added methods of SSockaddr.
+* Check mutex locking on CSocket.
+* Use exceptions on upnplib::getsockname().
 * Mock upnplib::getsockname().
+* Rework RunMiniserver tests from test_miniserver.cpp.
 * Rework test_sock.cp to work with changed sys_socket mocking.
 * Rework test_httpreadwrite.cpp.
 * Reduce size of shared libraries.

@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCKADDR_HPP
 #define UPNPLIB_NET_SOCKADDR_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-16
+// Redistribution only with this Copyright remark. Last modified: 2023-11-19
 
 // Helpful links:
 // REF:_[Why_do_I_get_wrong_pointer_to_a_base_class_with_a_virtual_constructor](https://stackoverflow.com/q/76360179/5014688)
@@ -17,15 +17,11 @@ namespace upnplib {
 // structures. For details about using this helpful union have a look at
 // REF:_[sockaddr_structures_as_union](https://stackoverflow.com/a/76548581/5014688)
 union sockaddr_t {
-    sockaddr_storage ss;
-    sockaddr_in6 sin6;
-    sockaddr_in sin;
-    sockaddr sa;
+    ::sockaddr_storage ss;
+    ::sockaddr_in6 sin6;
+    ::sockaddr_in sin;
+    ::sockaddr sa;
 };
-
-// Free function to get the port number from a string
-// --------------------------------------------------
-UPNPLIB_API uint16_t to_port(const std::string& a_port_str);
 
 // Free function to get the address string from a sockaddr structure
 // -----------------------------------------------------------------
@@ -38,7 +34,12 @@ UPNPLIB_API std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr);
 // Throws exception 'invalid argument' with unsupported address family.
 // Supported is only AF_INET6 and AF_INET.
 UPNPLIB_API std::string
-to_addrport_str(const ::sockaddr_storage* const a_sockaddr);
+to_addrp_str(const ::sockaddr_storage* const a_sockaddr);
+
+// Free function to get the port number from a string
+// --------------------------------------------------
+// Throws exception 'invalid argument' with invalid port number.
+UPNPLIB_API uint16_t to_port(const std::string& a_port_str);
 
 // Free function to logical compare two sockaddr structures
 // --------------------------------------------------------
@@ -95,20 +96,30 @@ struct UPNPLIB_API SSockaddr {
 
     // Getter for the assosiated ip address without port, e.g.
     // "[2001:db8::2]" or "192.168.254.253".
-    std::string get_addr_str() const;
-    const std::string& get_addr_str2();
+    virtual const std::string& get_addr_str();
+
+    // Getter for the assosiated ip address with port, e.g.
+    // "[2001:db8::2]:50001" or "192.168.254.253:50001".
+    virtual const std::string& get_addrp_str();
 
     // Getter for the numeric port.
-    uint16_t get_port() const;
+    virtual in_port_t get_port() const;
 
-    // Getter for the length of the sockaddr structure.
-    socklen_t get_sslen() const;
+    // Getter for sizeof the Sockaddr Structure.
+    socklen_t sizeof_ss() const;
 
   private:
     sockaddr_t m_sa_union{}; // this is the union of trivial sockaddr structures
                              // that is managed.
+
+    // Two buffer to have the strings valid for the lifetime of the object. This
+    // is important for pointer to the string, for example with getting a C
+    // string by using '.c_str()'.
     SUPPRESS_MSVC_WARN_4251_NEXT_LINE
-    std::string m_netaddr;
+    std::string m_netaddr; // For a netaddress without port
+    SUPPRESS_MSVC_WARN_4251_NEXT_LINE
+    std::string m_netaddrp; // For a netaddress with port
+
     UPNPLIB_LOCAL void handle_ipv6(const std::string& a_addr_str);
     UPNPLIB_LOCAL void handle_ipv4(const std::string& a_addr_str);
     UPNPLIB_LOCAL void handle_port(const std::string& a_port);

@@ -382,7 +382,7 @@ static UPNP_INLINE void schedule_request_job(
     sockaddr* clientAddr) {
     TRACE("Executing schedule_request_job()")
     UPNPLIB_LOGINFO "MSG1042: Schedule request job to host "
-        << upnplib::to_addrport_str(
+        << upnplib::to_addrp_str(
                reinterpret_cast<const sockaddr_storage*>(clientAddr))
         << " with socket " << connfd << ".\n";
 

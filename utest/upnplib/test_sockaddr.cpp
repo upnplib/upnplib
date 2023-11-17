@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-15
+// Redistribution only with this Copyright remark. Last modified: 2023-11-19
 
 #include <upnplib/general.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -17,69 +17,116 @@ using ::upnplib::CSocket;
 using ::upnplib::sockaddrcmp;
 using ::upnplib::SSockaddr;
 using ::upnplib::to_addr_str;
-using ::upnplib::to_addrport_str;
+using ::upnplib::to_addrp_str;
 using ::upnplib::to_port;
 
 
 // SSockaddr TestSuite
 // ===========================
-TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
+class SetAddrPortTest : public ::testing::TestWithParam<
+                            std::tuple<const std::string, const ::sa_family_t,
+                                       const std::string, const in_port_t>> {};
+
+TEST_P(SetAddrPortTest, set_address_and_port) {
+    // Get parameter
+    const std::tuple params = GetParam();
+    const std::string netaddr = std::get<0>(params);
+    const sa_family_t family = std::get<1>(params);
+    const std::string addr_str = std::get<2>(params);
+    const in_port_t port = std::get<3>(params);
+
+    SSockaddr saddr;
+    saddr = netaddr;
+    EXPECT_EQ(saddr.ss.ss_family, family);
+    EXPECT_EQ(saddr.get_addr_str(), addr_str);
+    EXPECT_EQ(saddr.get_addrp_str(), addr_str + ":" + std::to_string(port));
+    EXPECT_EQ(saddr.get_port(), port);
+}
+
+// clang-format off
+INSTANTIATE_TEST_SUITE_P(SetAddrPort, SetAddrPortTest, ::testing::Values(
+    // std::make_tuple("", AF_UNSPEC, "", 0), // special, single tested
+    // std::make_tuple(":", AF_UNSPEC, "", 0), // invalid, throws exception
+    // std::make_tuple(":50067", AF_UNSPEC, "", 50067), // invalid, throws exception
+    // --- Essential for checking bind, see note next test
+    std::make_tuple("[::]", AF_INET6, "[::]", 0),
+    std::make_tuple("[::]:", AF_INET6, "[::]", 0),
+    std::make_tuple("[::]:0", AF_INET6, "[::]", 0),
+    // ---
+    std::make_tuple("[::]:50064", AF_INET6, "[::]", 50064),
+    std::make_tuple("[::1]", AF_INET6, "[::1]", 0),
+    std::make_tuple("[::1]:", AF_INET6, "[::1]", 0),
+    std::make_tuple("[::1]:0", AF_INET6, "[::1]", 0),
+    std::make_tuple("[::1]:50065", AF_INET6, "[::1]", 50065),
+    std::make_tuple("[2001:db8::68]", AF_INET6, "[2001:db8::68]", 0),
+    std::make_tuple("[2001:db8::67]:", AF_INET6, "[2001:db8::67]", 0),
+    std::make_tuple("[2001:db8::66]:50066", AF_INET6, "[2001:db8::66]", 50066),
+    // --- Essential for checking bind, see note next test
+    std::make_tuple("0.0.0.0", AF_INET, "0.0.0.0", 0),
+    std::make_tuple("0.0.0.0:", AF_INET, "0.0.0.0", 0),
+    std::make_tuple("0.0.0.0:0", AF_INET, "0.0.0.0", 0),
+    // ---
+    std::make_tuple("0.0.0.0:50068", AF_INET, "0.0.0.0", 50068),
+    std::make_tuple("127.0.0.1", AF_INET, "127.0.0.1", 0),
+    std::make_tuple("127.0.0.1:", AF_INET, "127.0.0.1", 0),
+    std::make_tuple("127.0.0.1:50069", AF_INET, "127.0.0.1", 50069),
+    std::make_tuple("192.168.33.34", AF_INET, "192.168.33.34", 0),
+    std::make_tuple("192.168.33.35:", AF_INET, "192.168.33.35", 0),
+    std::make_tuple("192.168.33.35:0", AF_INET, "192.168.33.35", 0),
+    std::make_tuple("192.168.33.36:50067", AF_INET, "192.168.33.36", 50067)
+));
+// clang-format on
+//
+TEST(SockaddrStorageTestSuite, pattern_for_checking_bind) {
+    // In addition to the marked pattern above these pattern are also essential
+    // for portable checking if a socket is bound to a local interface with an
+    // ip address by calling the system function '::bind()'.
     SSockaddr saddr;
 
     EXPECT_EQ(saddr.ss.ss_family, AF_UNSPEC);
     EXPECT_EQ(saddr.get_addr_str(), "");
+    EXPECT_EQ(saddr.get_addrp_str(), "");
     EXPECT_EQ(saddr.get_port(), 0);
 
     saddr.ss.ss_family = AF_INET6;
     EXPECT_EQ(saddr.get_addr_str(), "[::]");
+    EXPECT_EQ(saddr.get_addrp_str(), "[::]:0");
     EXPECT_EQ(saddr.get_port(), 0);
 
     saddr.ss.ss_family = AF_INET;
     EXPECT_EQ(saddr.get_addr_str(), "0.0.0.0");
+    EXPECT_EQ(saddr.get_addrp_str(), "0.0.0.0:0");
     EXPECT_EQ(saddr.get_port(), 0);
+}
+
+TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
+    SSockaddr saddr;
 
     saddr = "";
     EXPECT_EQ(saddr.ss.ss_family, AF_UNSPEC);
     EXPECT_EQ(saddr.get_addr_str(), "");
+    EXPECT_EQ(saddr.get_addrp_str(), "");
     EXPECT_EQ(saddr.get_port(), 0);
 
-    saddr = "[2001:db8::1]";
-    EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
-    EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::1]");
-    EXPECT_EQ(saddr.get_port(), 0);
-
-    saddr.ss.ss_family = AF_UNSPEC;
-    saddr = "[2001:db8::2]:50020";
-    EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
-    EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::2]");
-    EXPECT_EQ(saddr.get_port(), 50020);
-
+    // Setting address and port in two steps
     saddr.ss.ss_family = AF_INET;
     saddr = "[2001:db8::3]:";
     EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
     EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::3]");
+    EXPECT_EQ(saddr.get_addrp_str(), "[2001:db8::3]:0");
     EXPECT_EQ(saddr.get_port(), 0);
-
     saddr = "50021";
     EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
     EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::3]");
+    EXPECT_EQ(saddr.get_addrp_str(), "[2001:db8::3]:50021");
     EXPECT_EQ(saddr.get_port(), 50021);
 
-    saddr = "192.168.77.88:";
-    EXPECT_EQ(saddr.ss.ss_family, AF_INET);
-    EXPECT_EQ(saddr.get_addr_str(), "192.168.77.88");
-    EXPECT_EQ(saddr.get_port(), 0);
-
-    saddr.ss.ss_family = AF_UNSPEC;
-    saddr = "192.168.47.49:50022";
-    EXPECT_EQ(saddr.ss.ss_family, AF_INET);
-    EXPECT_EQ(saddr.get_addr_str(), "192.168.47.49");
-    EXPECT_EQ(saddr.get_port(), 50022);
-
+    // This will not modify the port
     saddr = "192.168.47.48";
     EXPECT_EQ(saddr.ss.ss_family, AF_INET);
     EXPECT_EQ(saddr.get_addr_str(), "192.168.47.48");
-    EXPECT_EQ(saddr.get_port(), 50022);
+    EXPECT_EQ(saddr.get_addrp_str(), "192.168.47.48:50021");
+    EXPECT_EQ(saddr.get_port(), 50021);
 
     // Check that a failing call does not modify old settings.
     EXPECT_THAT([&saddr]() { saddr = "50x23"; },
@@ -87,7 +134,8 @@ TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
                     HasSubstr("] EXCEPTION MSG1033: ")));
     EXPECT_EQ(saddr.ss.ss_family, AF_INET);
     EXPECT_EQ(saddr.get_addr_str(), "192.168.47.48");
-    EXPECT_EQ(saddr.get_port(), 50022);
+    EXPECT_EQ(saddr.get_addrp_str(), "192.168.47.48:50021");
+    EXPECT_EQ(saddr.get_port(), 50021);
 }
 
 TEST(SockaddrStorageTestSuite, set_address_and_port_fail) {
@@ -297,11 +345,6 @@ TEST(SockaddrStorageTestSuite, compare_ipv4_address) {
     EXPECT_TRUE(saddr1 == saddr2.ss);
 }
 
-TEST(SockaddrStorageTestSuite, get_sslen) {
-    SSockaddr saddr1;
-    EXPECT_EQ(saddr1.get_sslen(), sizeof(::sockaddr_storage));
-}
-
 TEST(ToPortTestSuite, str_to_port) {
     EXPECT_EQ(to_port("123"), 123);
     EXPECT_EQ(to_port("00456"), 456);
@@ -391,31 +434,31 @@ TEST(ToAddrStrTestSuite, sockaddr_to_address_string) {
 TEST(ToAddrStrTestSuite, sockaddr_to_address_port_string) {
     SSockaddr saddr;
 
-    EXPECT_EQ(to_addrport_str(&saddr.ss), "");
+    EXPECT_EQ(to_addrp_str(&saddr.ss), "");
 
     saddr.ss.ss_family = AF_UNSPEC;
-    EXPECT_EQ(to_addrport_str(&saddr.ss), "");
+    EXPECT_EQ(to_addrp_str(&saddr.ss), "");
 
     saddr.ss.ss_family = AF_INET6;
-    EXPECT_EQ(to_addrport_str(&saddr.ss), "[::]:0");
+    EXPECT_EQ(to_addrp_str(&saddr.ss), "[::]:0");
 
     saddr.ss.ss_family = AF_INET;
-    EXPECT_EQ(to_addrport_str(&saddr.ss), "0.0.0.0:0");
+    EXPECT_EQ(to_addrp_str(&saddr.ss), "0.0.0.0:0");
 
     saddr = "[2001:db8::4]";
-    EXPECT_EQ(to_addrport_str(&saddr.ss), "[2001:db8::4]:0");
+    EXPECT_EQ(to_addrp_str(&saddr.ss), "[2001:db8::4]:0");
 
     saddr = "192.168.88.100";
-    EXPECT_EQ(to_addrport_str(&saddr.ss), "192.168.88.100:0");
+    EXPECT_EQ(to_addrp_str(&saddr.ss), "192.168.88.100:0");
 
     saddr = "[2001:db8::5]:56789";
-    EXPECT_EQ(to_addrport_str(&saddr.ss), "[2001:db8::5]:56789");
+    EXPECT_EQ(to_addrp_str(&saddr.ss), "[2001:db8::5]:56789");
 
     saddr = "192.168.88.101:54321";
-    EXPECT_EQ(to_addrport_str(&saddr.ss), "192.168.88.101:54321");
+    EXPECT_EQ(to_addrp_str(&saddr.ss), "192.168.88.101:54321");
 
     saddr.ss.ss_family = AF_UNIX;
-    EXPECT_THAT([&saddr]() { to_addrport_str(&saddr.ss); },
+    EXPECT_THAT([&saddr]() { to_addrp_str(&saddr.ss); },
                 ThrowsMessage<std::invalid_argument>(HasSubstr(
                     "] EXCEPTION MSG1036: Unsupported address family 1")));
 }

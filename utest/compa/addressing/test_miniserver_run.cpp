@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-17
+// Redistribution only with this Copyright remark. Last modified: 2023-11-18
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -187,9 +187,9 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful) {
         // Mock that the socket fd ist bound to an address of a local interface.
         ssObj = "[2001:db8::cd]:50059";
         EXPECT_CALL(m_sys_socketObj, getsockname(m_minisock->miniServerSock4, _,
-                                                 Pointee(ssObj.get_sslen())))
+                                                 Pointee(ssObj.sizeof_ss())))
             .WillOnce(DoAll(SetArgPointee<1>(ssObj.sa),
-                            SetArgPointee<2>(ssObj.get_sslen()), Return(0)));
+                            SetArgPointee<2>(ssObj.sizeof_ss()), Return(0)));
 
         // select() in RunMiniServer() also succeeds.
         EXPECT_CALL(m_sys_socketObj,
@@ -201,7 +201,7 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful) {
     // that it is connected to.
     ssObj = "192.168.200.201:" + remote_connect_port;
     EXPECT_CALL(m_sys_socketObj, accept(m_minisock->miniServerSock4, NotNull(),
-                                        Pointee(Ge(ssObj.get_sslen()))))
+                                        Pointee(Ge(ssObj.sizeof_ss()))))
         .WillOnce(
             DoAll(SetArgPointee<1>(ssObj.sa), Return(remote_connect_sockfd)));
 
@@ -212,7 +212,7 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful) {
     // It is important to expect shutdown_strlen.
     EXPECT_CALL(m_sys_socketObj,
                 recvfrom(m_minisock->miniServerStopSock, _, Ge(shutdown_strlen),
-                         0, _, Pointee(ssObj.get_sslen())))
+                         0, _, Pointee(sizeof(ssObj.ss))))
         .WillOnce(DoAll(StrCpyToArg<1>(shutdown_str),
                         SetArgPointee<4>(ssObj.sa), Return(shutdown_strlen)));
 
@@ -277,9 +277,9 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_select_fails_with_no_memory) {
         // Mock that the socket fd ist bound to an address of a local interface.
         ssObj = "192.168.10.10:50060";
         EXPECT_CALL(m_sys_socketObj, getsockname(m_minisock->miniServerSock4, _,
-                                                 Pointee(ssObj.get_sslen())))
+                                                 Pointee(ssObj.sizeof_ss())))
             .WillOnce(DoAll(SetArgPointee<1>(ssObj.sa),
-                            SetArgPointee<2>(ssObj.get_sslen()), Return(0)));
+                            SetArgPointee<2>(ssObj.sizeof_ss()), Return(0)));
 
         // but select in RunMiniServer() fails
         EXPECT_CALL(m_sys_socketObj,
@@ -369,9 +369,9 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_accept_fails) {
         ssObj = "[2001:db8::ab]:50044";
         EXPECT_CALL(m_sys_socketObj,
                     getsockname(m_minisock->miniServerSock4, _,
-                                Pointee(Ge(ssObj.get_sslen()))))
+                                Pointee(Ge(ssObj.sizeof_ss()))))
             .WillOnce(DoAll(SetArgPointee<1>(ssObj.sa),
-                            SetArgPointee<2>(ssObj.get_sslen()), Return(0)));
+                            SetArgPointee<2>(ssObj.sizeof_ss()), Return(0)));
     }
 
     // select in RunMiniServer() also succeeds.
@@ -380,18 +380,20 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_accept_fails) {
 
     // accept() will fail for incomming data. stopsock uses a datagram so it
     // doesn't use accept().
-    EXPECT_CALL(m_sys_socketObj,
-                accept(m_minisock->miniServerSock4, NotNull(),
-                       Pointee((socklen_t)sizeof(sockaddr_storage))))
+    EXPECT_CALL(
+        m_sys_socketObj,
+        accept(m_minisock->miniServerSock4, NotNull(),
+               Pointee(static_cast<socklen_t>(sizeof(::sockaddr_storage)))))
         .WillOnce(SetErrnoAndReturn(ENOMEM, INVALID_SOCKET));
 
     // Provide data for stopsock with ShutDown.
     SSockaddr ss_localhost;
     ss_localhost = "127.0.0.1:" + std::to_string(m_minisock->stopPort);
 
-    EXPECT_CALL(m_sys_socketObj,
-                recvfrom(m_minisock->miniServerStopSock, _, shutdown_strlen, 0,
-                         _, Pointee((socklen_t)sizeof(sockaddr_storage))))
+    EXPECT_CALL(
+        m_sys_socketObj,
+        recvfrom(m_minisock->miniServerStopSock, _, shutdown_strlen, 0, _,
+                 Pointee(static_cast<socklen_t>(sizeof(::sockaddr_storage)))))
         .WillOnce(DoAll(StrCpyToArg<1>(shutdown_str),
                         SetArgPointee<4>(ss_localhost.sa),
                         Return(shutdown_strlen)));
@@ -416,9 +418,9 @@ TEST_F(RunMiniServerMockFTestSuite, fdset_if_valid_read_successful) {
         SSockaddr ssObj;
         ssObj = "192.168.10.11:50061";
         EXPECT_CALL(m_sys_socketObj,
-                    getsockname(sockfd, _, Pointee(Ge(ssObj.get_sslen()))))
+                    getsockname(sockfd, _, Pointee(Ge(ssObj.sizeof_ss()))))
             .WillOnce(DoAll(SetArgPointee<1>(ssObj.sa),
-                            SetArgPointee<2>(ssObj.get_sslen()), Return(0)));
+                            SetArgPointee<2>(ssObj.sizeof_ss()), Return(0)));
     }
 
     // Test Unit
@@ -565,9 +567,9 @@ TEST_F(RunMiniServerMockFTestSuite, fdset_if_valid_fails_with_unbind_socket) {
         SSockaddr ssObj;
         ssObj = "[::]";
         EXPECT_CALL(m_sys_socketObj,
-                    getsockname(sockfd, _, Pointee(Ge(ssObj.get_sslen()))))
+                    getsockname(sockfd, _, Pointee(Ge(ssObj.sizeof_ss()))))
             .WillOnce(DoAll(SetArgPointee<1>(ssObj.sa),
-                            SetArgPointee<2>(ssObj.get_sslen()), Return(0)));
+                            SetArgPointee<2>(ssObj.sizeof_ss()), Return(0)));
     }
 
     // Test Unit
@@ -608,7 +610,7 @@ TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_successful) {
     // Mock system functions
     // expected_destbuflen is important here to avoid buffer limit overwrite.
     EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(expected_destbuflen), 0,
-                                          _, Pointee(ssObj.get_sslen())))
+                                          _, Pointee(sizeof(ssObj.ss))))
         .WillOnce(DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
                         SetArgPointee<4>(ssObj.sa),
                         Return(expected_destbuflen)));
@@ -674,7 +676,7 @@ TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_no_bytes_received) {
 
     // Mock system functions
     EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(bufsizeof_ShutDown_str),
-                                          0, _, Pointee(ssObj.get_sslen())))
+                                          0, _, Pointee(sizeof(ssObj.ss))))
         .WillOnce(DoAll(StrCpyToArg<1>(shutdown_str),
                         SetArgPointee<4>(ssObj.sa), Return(0)));
 
@@ -714,7 +716,7 @@ TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_wrong_stop_message) {
     // Mock system functions
     // expected_destbuflen is important here to avoid buffer limit overwrite.
     EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(expected_destbuflen), 0,
-                                          _, Pointee(ssObj.get_sslen())))
+                                          _, Pointee(sizeof(ssObj.ss))))
         .WillOnce(DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
                         SetArgPointee<4>(ssObj.sa),
                         Return(expected_destbuflen)));
@@ -745,7 +747,7 @@ TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_from_wrong_address) {
     // Mock system functions
     // expected_destbuflen is important here to avoid buffer limit overwrite.
     EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(expected_destbuflen), 0,
-                                          _, Pointee(ssObj.get_sslen())))
+                                          _, Pointee(sizeof(ssObj.ss))))
         .WillOnce(DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
                         SetArgPointee<4>(ssObj.sa),
                         Return(expected_destbuflen)));
@@ -783,7 +785,7 @@ TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_without_0_termbyte) {
     // Mock system functions
     // expected_destbuflen is important here to avoid buffer limit overwrite.
     EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(expected_destbuflen), 0,
-                                          _, Pointee(ssObj.get_sslen())))
+                                          _, Pointee(sizeof(ssObj.ss))))
         .WillOnce(DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
                         SetArgPointee<4>(ssObj.sa),
                         Return(expected_destbuflen)));
@@ -823,9 +825,10 @@ TEST_F(RunMiniServerMockFTestSuite, ssdp_read_successful) {
     FD_ZERO(&rdSet);
     FD_SET(ssdp_sockfd, &rdSet);
 
-    EXPECT_CALL(m_sys_socketObj,
-                recvfrom(ssdp_sockfd, _, BUFSIZE - 1, 0, _,
-                         Pointee((socklen_t)sizeof(::sockaddr_storage))))
+    EXPECT_CALL(
+        m_sys_socketObj,
+        recvfrom(ssdp_sockfd, _, BUFSIZE - 1, 0, _,
+                 Pointee(static_cast<socklen_t>(sizeof(::sockaddr_storage)))))
         .WillOnce(DoAll(StrCpyToArg<1>(ssdpdata_str),
                         SetArgPointee<4>(ssObj.sa),
                         Return((SSIZEP_T)sizeof(ssdpdata_str))));
@@ -919,7 +922,7 @@ TEST_F(RunMiniServerMockFTestSuite, web_server_accept_successful) {
     SSockaddr ssObj;
     ssObj = "192.168.201.202:" + connected_port;
     EXPECT_CALL(m_sys_socketObj,
-                accept(listen_sockfd, NotNull(), Pointee(ssObj.get_sslen())))
+                accept(listen_sockfd, NotNull(), Pointee(ssObj.sizeof_ss())))
         .WillOnce(DoAll(SetArgPointee<1>(ssObj.sa), Return(connected_sockfd)));
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
@@ -1055,9 +1058,10 @@ TEST_F(RunMiniServerMockFTestSuite, web_server_accept_fails) {
     FD_ZERO(&set);
     FD_SET(listen_sockfd, &set);
 
-    EXPECT_CALL(m_sys_socketObj,
-                accept(listen_sockfd, NotNull(),
-                       Pointee((socklen_t)sizeof(::sockaddr_storage))))
+    EXPECT_CALL(
+        m_sys_socketObj,
+        accept(listen_sockfd, NotNull(),
+               Pointee(static_cast<socklen_t>(sizeof(::sockaddr_storage)))))
         .WillOnce(SetErrnoAndReturn(EINVAL, INVALID_SOCKET));
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
@@ -1115,8 +1119,7 @@ TEST_F(RunMiniServerMockFTestSuite, get_numeric_host_redirection) {
                     getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
             .WillOnce(Return(0));
         EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))
-            .Times(2)
-            .WillRepeatedly(DoAll(SetArgPointee<1>(ssObj.sa), Return(0)));
+            .WillOnce(DoAll(SetArgPointee<1>(ssObj.sa), Return(0)));
         EXPECT_TRUE(
             getNumericHostRedirection(sockfd, host_port, sizeof(host_port)));
     }
@@ -1176,7 +1179,7 @@ TEST_F(RunMiniServerMockFTestSuite,
         // Get captured output
         EXPECT_THAT(captureObj.str(),
                     // Different on MacOS
-                    AnyOf(HasSubstr("] EXCEPTION MSG1026: "),
+                    AnyOf(HasSubstr("] EXCEPTION MSG1057: "),
                           HasSubstr("] EXCEPTION MSG1001: ")));
     }
 
@@ -1586,7 +1589,7 @@ TEST(RunMiniServerTestSuite, do_reinit) {
     s.ss.ss_family = saddrObj.ss.ss_family;
     s.serverAddr = &saddrObj.sa;
     s.ip_version = 4;
-    s.text_addr = saddrObj.get_addr_str2().c_str();
+    s.text_addr = saddrObj.get_addr_str().c_str();
     s.serverAddr4->sin_port = saddrObj.get_port(); // not used
     s.serverAddr4->sin_addr = saddrObj.sin.sin_addr;
     s.fd = sockObj;
