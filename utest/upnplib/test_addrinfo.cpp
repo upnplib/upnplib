@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-13
+// Redistribution only with this Copyright remark. Last modified: 2023-11-20
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -38,8 +38,8 @@ TEST(AddrinfoTestSuite, get_numeric_host_successful) {
     // We just return that what was requested by the user.
     EXPECT_EQ(ai1->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
     // Returns what ::getaddrinfo() returns.
-    EXPECT_EQ(ai1.addr_str(), "[::1]");
-    EXPECT_EQ(ai1.port(), 50001);
+    EXPECT_EQ(ai1.get_addr_str(), "[::1]");
+    EXPECT_EQ(ai1.get_port(), 50001);
 
     // Test Unit with numeric port number
     CAddrinfo ai2("[2001:db8::2]", 50048, AF_INET6, SOCK_STREAM,
@@ -49,8 +49,8 @@ TEST(AddrinfoTestSuite, get_numeric_host_successful) {
     EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai2->ai_protocol, 0);
     EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai2.addr_str(), "[2001:db8::2]");
-    EXPECT_EQ(ai2.port(), 50048);
+    EXPECT_EQ(ai2.get_addr_str(), "[2001:db8::2]");
+    EXPECT_EQ(ai2.get_port(), 50048);
 
     // Test Unit with unspecified ipv6 address
     CAddrinfo ai3("[::]", 0, AF_INET6, 0, AI_NUMERICHOST | AI_NUMERICSERV);
@@ -59,8 +59,8 @@ TEST(AddrinfoTestSuite, get_numeric_host_successful) {
     EXPECT_EQ(ai3->ai_socktype, 0);
     EXPECT_EQ(ai3->ai_protocol, 0);
     EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
-    EXPECT_EQ(ai3.addr_str(), "[::]");
-    EXPECT_EQ(ai3.port(), 0);
+    EXPECT_EQ(ai3.get_addr_str(), "[::]");
+    EXPECT_EQ(ai3.get_port(), 0);
 
     // Test Unit with unspecified ipv4 address
     CAddrinfo ai4("0.0.0.0", 0, AF_INET, 0, AI_NUMERICHOST | AI_NUMERICSERV);
@@ -69,8 +69,8 @@ TEST(AddrinfoTestSuite, get_numeric_host_successful) {
     EXPECT_EQ(ai4->ai_socktype, 0);
     EXPECT_EQ(ai4->ai_protocol, 0);
     EXPECT_EQ(ai4->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
-    EXPECT_EQ(ai4.addr_str(), "0.0.0.0");
-    EXPECT_EQ(ai4.port(), 0);
+    EXPECT_EQ(ai4.get_addr_str(), "0.0.0.0");
+    EXPECT_EQ(ai4.get_port(), 0);
 }
 
 TEST(AddrinfoTestSuite, get_implicit_ipv6_host) {
@@ -83,8 +83,8 @@ TEST(AddrinfoTestSuite, get_implicit_ipv6_host) {
     EXPECT_EQ(ai1->ai_protocol, 0);
     // Numeric host implicit set
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai1.addr_str(), "[2001:db8::3]");
-    EXPECT_EQ(ai1.port(), 50032);
+    EXPECT_EQ(ai1.get_addr_str(), "[2001:db8::3]");
+    EXPECT_EQ(ai1.get_port(), 50032);
 
     // Test Unit
     CAddrinfo ai3("[2001:db8::5]", "50051", AF_UNSPEC, SOCK_STREAM);
@@ -93,8 +93,8 @@ TEST(AddrinfoTestSuite, get_implicit_ipv6_host) {
     EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai3->ai_protocol, 0);
     EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai3.addr_str(), "[2001:db8::5]");
-    EXPECT_EQ(ai3.port(), 50051);
+    EXPECT_EQ(ai3.get_addr_str(), "[2001:db8::5]");
+    EXPECT_EQ(ai3.get_port(), 50051);
 
     // Test Unit
     CAddrinfo ai2("localhost", "50050", AF_INET6);
@@ -103,8 +103,8 @@ TEST(AddrinfoTestSuite, get_implicit_ipv6_host) {
     EXPECT_EQ(ai2->ai_socktype, 0);
     EXPECT_EQ(ai2->ai_protocol, 0);
     EXPECT_EQ(ai2->ai_flags, 0);
-    EXPECT_EQ(ai2.addr_str(), "[::1]");
-    EXPECT_EQ(ai2.port(), 50050);
+    EXPECT_EQ(ai2.get_addr_str(), "[::1]");
+    EXPECT_EQ(ai2.get_port(), 50050);
 }
 
 TEST(AddrinfoTestSuite, get_alphanumeric_host_successful) {
@@ -116,8 +116,8 @@ TEST(AddrinfoTestSuite, get_alphanumeric_host_successful) {
     EXPECT_EQ(ai1->ai_socktype, SOCK_DGRAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, 0);
-    EXPECT_THAT(ai1.addr_str(), AnyOf("[::1]", "127.0.0.1"));
-    EXPECT_EQ(ai1.port(), 50049);
+    EXPECT_THAT(ai1.get_addr_str(), AnyOf("[::1]", "127.0.0.1"));
+    EXPECT_EQ(ai1.get_port(), 50049);
 }
 
 TEST(AddrinfoTestSuite, get_unknown_host) {
@@ -129,8 +129,8 @@ TEST(AddrinfoTestSuite, get_unknown_host) {
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai1.addr_str(), "0.0.0.0");
-    EXPECT_EQ(ai1.port(), 50031);
+    EXPECT_EQ(ai1.get_addr_str(), "0.0.0.0");
+    EXPECT_EQ(ai1.get_port(), 50031);
 
     // Test Unit
     CAddrinfo ai2("localhost", "50052", AF_INET6, SOCK_DGRAM, AI_NUMERICHOST);
@@ -139,8 +139,8 @@ TEST(AddrinfoTestSuite, get_unknown_host) {
     EXPECT_EQ(ai2->ai_socktype, SOCK_DGRAM);
     EXPECT_EQ(ai2->ai_protocol, 0);
     EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai2.addr_str(), "[::]");
-    EXPECT_EQ(ai2.port(), 50052);
+    EXPECT_EQ(ai2.get_addr_str(), "[::]");
+    EXPECT_EQ(ai2.get_port(), 50052);
 
     // Test Unit
     CAddrinfo ai3("localhost", "50053", AF_UNSPEC, SOCK_STREAM, AI_NUMERICHOST);
@@ -149,8 +149,8 @@ TEST(AddrinfoTestSuite, get_unknown_host) {
     EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai3->ai_protocol, 0);
     EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai3.addr_str(), "[::]");
-    EXPECT_EQ(ai3.port(), 50053);
+    EXPECT_EQ(ai3.get_addr_str(), "[::]");
+    EXPECT_EQ(ai3.get_port(), 50053);
 
     // Test Unit
     // An alphanumeric node with enclosing brackets may be valid if
@@ -163,8 +163,8 @@ TEST(AddrinfoTestSuite, get_unknown_host) {
     EXPECT_EQ(ai4->ai_socktype, SOCK_DGRAM);
     EXPECT_EQ(ai4->ai_protocol, 0);
     EXPECT_EQ(ai4->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai4.addr_str(), "[::]");
-    EXPECT_EQ(ai4.port(), 50055);
+    EXPECT_EQ(ai4.get_addr_str(), "[::]");
+    EXPECT_EQ(ai4.get_port(), 50055);
 }
 
 TEST(AddrinfoTestSuite, get_passive_addressinfo) {
@@ -184,8 +184,8 @@ TEST(AddrinfoTestSuite, get_passive_addressinfo) {
     // wildcard address ipv4 = 0.0.0.0, ipv6 = ::/128
     // When using this to listen, it will listen on all local network
     // interfaces.
-    EXPECT_EQ(ai1.addr_str(), "[::]");
-    EXPECT_EQ(ai1.port(), 50006);
+    EXPECT_EQ(ai1.get_addr_str(), "[::]");
+    EXPECT_EQ(ai1.get_port(), 50006);
 }
 
 TEST(AddrinfoTestSuite, get_info_loopback_interface) {
@@ -201,13 +201,13 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai1.port(), 50007);
+    EXPECT_EQ(ai1.get_port(), 50007);
     switch (ai1->ai_family) {
     case AF_INET6:
-        EXPECT_EQ(ai1.addr_str(), "[::1]");
+        EXPECT_EQ(ai1.get_addr_str(), "[::1]");
         break;
     case AF_INET:
-        EXPECT_EQ(ai1.addr_str(), "127.0.0.1");
+        EXPECT_EQ(ai1.get_addr_str(), "127.0.0.1");
         break;
     default:
         FAIL() << "invalid address family " << ai1->ai_family;
@@ -220,8 +220,8 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai2->ai_socktype, 0);
     EXPECT_EQ(ai2->ai_protocol, 0);
     EXPECT_EQ(ai2->ai_flags, 0);
-    EXPECT_EQ(ai2.addr_str(), "[::1]");
-    EXPECT_EQ(ai2.port(), 50056);
+    EXPECT_EQ(ai2.get_addr_str(), "[::1]");
+    EXPECT_EQ(ai2.get_port(), 50056);
 
     // Test Unit
     CAddrinfo ai3("", "50057", AF_INET);
@@ -230,8 +230,8 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai3->ai_socktype, 0);
     EXPECT_EQ(ai3->ai_protocol, 0);
     EXPECT_EQ(ai3->ai_flags, 0);
-    EXPECT_EQ(ai3.addr_str(), "127.0.0.1");
-    EXPECT_EQ(ai3.port(), 50057);
+    EXPECT_EQ(ai3.get_addr_str(), "127.0.0.1");
+    EXPECT_EQ(ai3.get_port(), 50057);
 
     // Test Unit
     CAddrinfo ai4("", "50058", AF_INET6, SOCK_STREAM,
@@ -241,8 +241,8 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai4->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai4->ai_protocol, 0);
     EXPECT_EQ(ai4->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
-    EXPECT_EQ(ai4.addr_str(), "[::1]");
-    EXPECT_EQ(ai4.port(), 50058);
+    EXPECT_EQ(ai4.get_addr_str(), "[::1]");
+    EXPECT_EQ(ai4.get_port(), 50058);
 }
 
 TEST(AddrinfoTestSuite, invalid_ipv6_node_address) {
@@ -254,8 +254,8 @@ TEST(AddrinfoTestSuite, invalid_ipv6_node_address) {
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai1.addr_str(), "[::]");
-    EXPECT_EQ(ai1.port(), 0);
+    EXPECT_EQ(ai1.get_addr_str(), "[::]");
+    EXPECT_EQ(ai1.get_port(), 0);
 
     CAddrinfo ai2("[::1", "", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
 
@@ -263,8 +263,8 @@ TEST(AddrinfoTestSuite, invalid_ipv6_node_address) {
     EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai2->ai_protocol, 0);
     EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai2.addr_str(), "[::]");
-    EXPECT_EQ(ai2.port(), 0);
+    EXPECT_EQ(ai2.get_addr_str(), "[::]");
+    EXPECT_EQ(ai2.get_port(), 0);
 
     CAddrinfo ai3("::1]", "", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
 
@@ -272,8 +272,8 @@ TEST(AddrinfoTestSuite, invalid_ipv6_node_address) {
     EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai3->ai_protocol, 0);
     EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai3.addr_str(), "[::]");
-    EXPECT_EQ(ai3.port(), 0);
+    EXPECT_EQ(ai3.get_addr_str(), "[::]");
+    EXPECT_EQ(ai3.get_port(), 0);
 }
 
 TEST(AddrinfoTestSuite, empty_service) {
@@ -287,8 +287,8 @@ TEST(AddrinfoTestSuite, empty_service) {
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai1.addr_str(), "[2001:db8::2]");
-    EXPECT_EQ(ai1.port(), 0);
+    EXPECT_EQ(ai1.get_addr_str(), "[2001:db8::2]");
+    EXPECT_EQ(ai1.get_port(), 0);
 }
 
 TEST(AddrinfoTestSuite, get_fails) {
@@ -299,8 +299,8 @@ TEST(AddrinfoTestSuite, get_fails) {
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai1.addr_str(), "[::]");
-    EXPECT_EQ(ai1.port(), 50003);
+    EXPECT_EQ(ai1.get_addr_str(), "[::]");
+    EXPECT_EQ(ai1.get_port(), 50003);
 }
 
 TEST(AddrinfoTestSuite, copy_ipv6_successful) {
@@ -318,8 +318,8 @@ TEST(AddrinfoTestSuite, copy_ipv6_successful) {
         EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
         EXPECT_EQ(ai2->ai_protocol, 0);
         EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
-        EXPECT_EQ(ai1.addr_str(), "[2001:db8::6]");
-        EXPECT_EQ(ai2.port(), 50054);
+        EXPECT_EQ(ai1.get_addr_str(), "[2001:db8::6]");
+        EXPECT_EQ(ai2.get_port(), 50054);
     } // End scope, ai2 will be destructed
 
     // Check if ai1 is still available.
@@ -327,8 +327,8 @@ TEST(AddrinfoTestSuite, copy_ipv6_successful) {
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai1.addr_str(), "[2001:db8::6]");
-    EXPECT_EQ(ai1.port(), 50054);
+    EXPECT_EQ(ai1.get_addr_str(), "[2001:db8::6]");
+    EXPECT_EQ(ai1.get_port(), 50054);
 }
 
 TEST(AddrinfoTestSuite, copy_ipv4_successful) {
@@ -345,8 +345,8 @@ TEST(AddrinfoTestSuite, copy_ipv4_successful) {
         EXPECT_EQ(ai2->ai_socktype, SOCK_DGRAM);
         EXPECT_EQ(ai2->ai_protocol, 0);
         EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
-        EXPECT_EQ(ai2.addr_str(), "127.0.0.1");
-        EXPECT_EQ(ai2.port(), 50002);
+        EXPECT_EQ(ai2.get_addr_str(), "127.0.0.1");
+        EXPECT_EQ(ai2.get_port(), 50002);
     } // End scope, ai2 will be destructed
 
     // Check if ai1 is still available.
@@ -354,8 +354,8 @@ TEST(AddrinfoTestSuite, copy_ipv4_successful) {
     EXPECT_EQ(ai1->ai_socktype, SOCK_DGRAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai1.addr_str(), "127.0.0.1");
-    EXPECT_EQ(ai1.port(), 50002);
+    EXPECT_EQ(ai1.get_addr_str(), "127.0.0.1");
+    EXPECT_EQ(ai1.get_port(), 50002);
 }
 
 /*
@@ -386,16 +386,16 @@ TEST(AddrinfoTestSuite, assign_other_object_successful) {
     EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai2->ai_protocol, 0);
     EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
-    EXPECT_EQ(ai2.addr_str(), "[2001:db8::1]");
-    EXPECT_EQ(ai2.port(), 50004);
+    EXPECT_EQ(ai2.get_addr_str(), "[2001:db8::1]");
+    EXPECT_EQ(ai2.get_port(), 50004);
 
     // Check if ai1 is still available.
     EXPECT_EQ(ai1->ai_family, AF_INET6);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
-    EXPECT_EQ(ai1.addr_str(), "[2001:db8::1]");
-    EXPECT_EQ(ai1.port(), 50004);
+    EXPECT_EQ(ai1.get_addr_str(), "[2001:db8::1]");
+    EXPECT_EQ(ai1.get_port(), 50004);
 }
 
 TEST(AddrinfoTestSuite, compare_two_ipv6_address_infos_successful) {

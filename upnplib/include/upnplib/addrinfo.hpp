@@ -1,11 +1,12 @@
 #ifndef UPNPLIB_INCLUDE_ADDRINFO_HPP
 #define UPNPLIB_INCLUDE_ADDRINFO_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-17
+// Redistribution only with this Copyright remark. Last modified: 2023-11-20
 
 #include <upnplib/visibility.hpp>
 #include <upnplib/port.hpp>
 #include <upnplib/port_sock.hpp>
+#include <upnplib/sockaddr.hpp>
 
 #include <string>
 
@@ -18,7 +19,7 @@ namespace upnplib {
 // '[2001:db8::1]:8080, type SOCK_DGRAM' or from '[2001:db8::1]:50000, type
 // SOCK_STREAM'. Binding will not complain "address already in use".
 
-class UPNPLIB_API CAddrinfo {
+class UPNPLIB_API CAddrinfo : public SSockaddr {
   public:
     // Constructor for getting an address information with port number string.
     CAddrinfo(const std::string& a_node, const std::string& a_service,
@@ -58,12 +59,6 @@ class UPNPLIB_API CAddrinfo {
     // https://stackoverflow.com/a/8782794/5014688
     ::addrinfo* operator->() const;
 
-    // Getter for address string
-    std::string addr_str() const;
-
-    // Getter for port number
-    uint16_t port() const;
-
   private:
     // This pointer is the reason why we need a copy constructor and a copy
     // assignment operator.
@@ -71,10 +66,11 @@ class UPNPLIB_API CAddrinfo {
 
     // Cache the hints that are given by the user, so we can always get
     // identical address information from the operating system.
-    SUPPRESS_MSVC_WARN_4251_NEXT_LINE
+    DISABLE_MSVC_WARN_4251
     std::string m_node;
-    SUPPRESS_MSVC_WARN_4251_NEXT_LINE
     std::string m_service;
+    std::string m_netaddr; // For a netaddress without port
+    ENABLE_MSVC_WARN
     mutable addrinfo m_hints{};
 
     // This is a helper method that gets a new address information from the

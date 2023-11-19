@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-13
+// Redistribution only with this Copyright remark. Last modified: 2023-11-20
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -8,6 +8,7 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <cstring>
 
 namespace upnplib {
 
@@ -52,8 +53,8 @@ static int is_numeric_node(const std::string& a_node,
 }
 
 
-// Provide C style addrinfo as class and wrap its system calls
-// -----------------------------------------------------------
+// CAddrinfo class to wrap ::addrinfo system calls
+// ===============================================
 // Constructor for getting an address information with port number string.
 CAddrinfo::CAddrinfo(const std::string& a_node, const std::string& a_service,
                      const int a_family, const int a_socktype,
@@ -78,6 +79,8 @@ CAddrinfo::CAddrinfo(const std::string& a_node, const std::string& a_service,
 
     // Get address information from the operating system.
     m_res = this->get_addrinfo(); // may throw exception
+    // Copy socket address from the address info to this socket address:
+    std::memcpy(&this->ss, m_res->ai_addr, m_res->ai_addrlen);
 }
 
 
@@ -92,12 +95,14 @@ CAddrinfo::CAddrinfo(const std::string& a_node, in_port_t a_service,
 
 // Copy constructor
 // ----------------
-CAddrinfo::CAddrinfo(const CAddrinfo& that) {
+CAddrinfo::CAddrinfo(const CAddrinfo& that) : SSockaddr() {
     TRACE2(this, " Construct copy CAddrinfo()")
     m_node = that.m_node;
     m_service = that.m_service;
     m_hints = that.m_hints;
     m_res = this->get_addrinfo(); // may throw exception
+    // Copy socket address from the address info to this socket address:
+    std::memcpy(&this->ss, m_res->ai_addr, m_res->ai_addrlen);
 }
 
 
@@ -116,6 +121,7 @@ CAddrinfo& CAddrinfo::operator=(CAddrinfo that) {
     std::swap(m_node, that.m_node);
     std::swap(m_service, that.m_service);
     std::swap(m_hints, that.m_hints);
+    std::swap(this->ss, that.ss);
 
     // by convention, always return *this
     return *this;
@@ -211,7 +217,7 @@ addrinfo* CAddrinfo::get_addrinfo() const {
         // port for AF_INET6 is also valid for AF_INET
         reinterpret_cast<sockaddr_in6*>(new_res->ai_addr)->sin6_port = 0;
 
-    TRACE2("Called STL function ::getaddrinfo() with new_res = ", new_res)
+    TRACE2("Called system function ::getaddrinfo() with new_res = ", new_res)
     return new_res;
 }
 
@@ -235,38 +241,5 @@ bool CAddrinfo::operator==(const CAddrinfo& a_ai) const {
 // Member access operator ->
 // -------------------------
 ::addrinfo* CAddrinfo::operator->() const { return m_res; }
-
-
-// Getter address string
-// ---------------------
-std::string CAddrinfo::addr_str() const {
-    TRACE2(this, " Executing CAddrinfo::addr_str()")
-    char addrbuf[INET6_ADDRSTRLEN]{};
-
-    if (m_res->ai_family == AF_INET6) {
-        sockaddr_in6* sa6 = reinterpret_cast<sockaddr_in6*>(m_res->ai_addr);
-        inet_ntop(m_res->ai_family, &sa6->sin6_addr.s6_addr, addrbuf,
-                  sizeof(addrbuf));
-
-        return "[" + std::string(addrbuf) + "]";
-
-    } else {
-
-        sockaddr_in* sa = reinterpret_cast<sockaddr_in*>(m_res->ai_addr);
-        inet_ntop(m_res->ai_family, &sa->sin_addr.s_addr, addrbuf,
-                  sizeof(addrbuf));
-
-        return std::string(addrbuf);
-    }
-}
-
-
-// Getter for the port number
-// --------------------------
-uint16_t CAddrinfo::port() const {
-    // port for AF_INET6 is also valid for AF_INET
-    TRACE2(this, " Executing CAddrinfo::port()")
-    return ntohs(reinterpret_cast<sockaddr_in6*>(m_res->ai_addr)->sin6_port);
-}
 
 } // namespace upnplib

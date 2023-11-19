@@ -258,22 +258,22 @@ CSocket::CSocket(){
 }
 
 // Constructor for new socket file descriptor
-CSocket::CSocket(sa_family_t a_family, int a_type) {
-    TRACE2(this, " Construct CSocket(af, type)")
+CSocket::CSocket(sa_family_t a_family, int a_conntype) {
+    TRACE2(this, " Construct CSocket(af, conntype)")
 
     if (a_family != AF_INET6 && a_family != AF_INET)
         throw std::invalid_argument(
             UPNPLIB_LOGEXCEPT +
             "MSG1015: Failed to create socket: invalid address family " +
             std::to_string(a_family));
-    if (a_type != SOCK_STREAM && a_type != SOCK_DGRAM)
+    if (a_conntype != SOCK_STREAM && a_conntype != SOCK_DGRAM)
         throw std::invalid_argument(
             UPNPLIB_LOGEXCEPT +
             "MSG1016: Failed to create socket: invalid socket type " +
-            std::to_string(a_type));
+            std::to_string(a_conntype));
 
     // Get new socket file descriptor.
-    SOCKET sfd = ::socket(a_family, a_type, 0);
+    SOCKET sfd = ::socket(a_family, a_conntype, 0);
     if (sfd == INVALID_SOCKET)
         throw_error("MSG1017: Failed to create socket:");
 
@@ -374,8 +374,7 @@ void CSocket::set_reuse_addr(bool a_reuse) {
 #endif
 
 // Bind socket to local address
-// REF: [Bind: Address Already in Use]
-// (https://hea-www.harvard.edu/~fine/Tech/addrinuse.html)
+// REF:_[Bind:_Address_Already_in_Use]_(https://hea-www.harvard.edu/~fine/Tech/addrinuse.html)
 void CSocket::bind(const std::string& a_node, const std::string& a_port,
                    const int a_flags) {
     TRACE2(this, " Executing CSocket::bind()")
