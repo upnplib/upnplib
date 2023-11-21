@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-08
+// Redistribution only with this Copyright remark. Last modified: 2023-11-21
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -15,17 +15,12 @@
 #include <compa/src/genlib/miniserver/miniserver.cpp>
 #endif
 
-#include <webserver.hpp>
-
 #include <upnplib/general.hpp>
 #include <upnplib/upnptools.hpp> // for errStrEx
-#include <upnplib/port.hpp>
-#include <upnplib/sockaddr.hpp>
 #include <upnplib/socket.hpp>
-#include <upnplib/addrinfo.hpp>
+#include <upnplib/sockaddr.hpp>
 
 #include <pupnp/upnpdebug.hpp>
-#include <pupnp/threadpool_init.hpp>
 
 #include <utest/utest.hpp>
 #include <umock/sys_socket_mock.hpp>
@@ -35,17 +30,12 @@
 namespace utest {
 
 using ::testing::_;
-using ::testing::AnyOf;
 using ::testing::DoAll;
-using ::testing::EndsWith;
 using ::testing::Ge;
-using ::testing::HasSubstr;
-using ::testing::NotNull;
 using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
-using ::testing::StartsWith;
 using ::testing::StrictMock;
 
 using ::upnplib::CAddrinfo;
@@ -55,7 +45,6 @@ using ::upnplib::g_dbug;
 using ::upnplib::SSockaddr;
 
 using ::pupnp::CLogging;
-using ::pupnp::CThreadPoolInit;
 
 
 // The miniserver call stack to get a server socket
@@ -137,9 +126,6 @@ class MiniServerFTestSuite : public ::testing::Test {
 
 typedef MiniServerFTestSuite StartMiniServerFTestSuite;
 typedef MiniServerFTestSuite DoBindFTestSuite;
-typedef MiniServerFTestSuite StopMiniServerFTestSuite;
-typedef MiniServerFTestSuite RunMiniServerFTestSuite;
-typedef MiniServerFTestSuite RunMiniServerFDeathTest;
 
 
 // This test uses real connections and isn't portable. It is only for humans to
@@ -227,9 +213,9 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets) {
     MINISERVER_REUSEADDR = false;
     strcpy(gIF_IPV4, "192.168.245.254");
     constexpr SOCKET sockfd{umock::sfd_base + 10};
-    const CAddrinfo ai(std::string(gIF_IPV4),
-                       std::to_string(APPLICATION_LISTENING_PORT), AF_INET,
-                       SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
+    SSockaddr saddrObj;
+    saddrObj = std::string(gIF_IPV4) + ":" +
+               std::to_string(APPLICATION_LISTENING_PORT);
     MiniServerSockArray miniSocket{};
     InitMiniServerSockArray(&miniSocket);
 
@@ -239,11 +225,9 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets) {
     // Bind socket to an ip address (gIF_IPV4)
     EXPECT_CALL(m_sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
     // Query port from socket
-    EXPECT_CALL(
-        m_sys_socketObj,
-        getsockname(sockfd, _,
-                    Pointee(Ge(static_cast<socklen_t>(ai->ai_addrlen)))))
-        .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
+    EXPECT_CALL(m_sys_socketObj,
+                getsockname(sockfd, _, Pointee(Ge(saddrObj.sizeof_ss()))))
+        .WillOnce(DoAll(SetArgPointee<1>(saddrObj.sa), Return(0)));
     // Listen on the socket
     EXPECT_CALL(m_sys_socketObj, listen(sockfd, _)).WillOnce(Return(0));
 
@@ -282,7 +266,7 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_with_empty_ip_address) {
     // empty ip address.
     ASSERT_STREQ(gIF_IPV4, "");
 
-    // Test Unit, needs initialized sockets on MS Windows (look at the fixture).
+    // Test Unit
     int ret_get_miniserver_sockets =
         get_miniserver_sockets(&miniSocket, 0, 0, 0);
 
@@ -381,7 +365,7 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_uninitialized) {
     MiniServerSockArray miniSocket{};
     InitMiniServerSockArray(&miniSocket);
 
-    // Test Unit, needs initialized sockets on MS Windows
+    // Test Unit
     int ret_get_miniserver_sockets =
         get_miniserver_sockets(&miniSocket, 0, 0, 0);
 
@@ -469,7 +453,7 @@ TEST(StartMiniServerTestSuite, init_socket_suff) {
 
     // Set ip address and needed structure
     constexpr char text_addr[]{"192.168.54.85"};
-    char addrbuf[16];
+    char addrbuf[INET_ADDRSTRLEN];
     s_SocketStuff ss4;
     memset(&ss4, 0xAA, sizeof(ss4));
 
@@ -486,7 +470,8 @@ TEST(StartMiniServerTestSuite, init_socket_suff) {
     EXPECT_NE(ss4.fd, INVALID_SOCKET);
     EXPECT_EQ(ss4.try_port, 0);
     EXPECT_EQ(ss4.actual_port, 0);
-    EXPECT_EQ(ss4.address_len, (socklen_t)sizeof(*ss4.serverAddr4));
+    EXPECT_EQ(ss4.address_len,
+              static_cast<socklen_t>(sizeof(*ss4.serverAddr4)));
 
     char reuseaddr;
     socklen_t optlen{sizeof(reuseaddr)};
@@ -529,7 +514,7 @@ TEST_F(StartMiniServerFTestSuite, init_socket_suff_with_invalid_socket) {
 
     // Set ip address and needed structure
     constexpr char text_addr[]{"192.168.99.85"};
-    char addrbuf[16];
+    char addrbuf[INET_ADDRSTRLEN];
     s_SocketStuff ss4;
 
     // Mock to get an invalid socket id
@@ -560,7 +545,7 @@ TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_ip_address) {
     // Set ip address and needed structure
     constexpr char text_addr[]{
         "192.168.255.256"}; // invalid ip address with .256
-    char addrbuf[16];
+    char addrbuf[INET_ADDRSTRLEN];
     s_SocketStuff ss4;
 
     // Test Unit, needs initialized sockets on MS Windows
@@ -579,7 +564,7 @@ TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_ip_version) {
     // Set ip address and needed structure. There is no real network adapter on
     // this host with this ip address.
     constexpr char text_addr[]{"192.168.24.85"};
-    char addrbuf[16];
+    char addrbuf[INET_ADDRSTRLEN];
     s_SocketStuff ss4;
 
     // Test Unit
@@ -597,7 +582,7 @@ TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_ip_version) {
 
 TEST_F(StartMiniServerFTestSuite, do_bind_listen_successful) {
     // Configure expected system calls:
-    // * Use fictive socket file descriptor 600
+    // * Use fictive socket file descriptor sockfd
     // * Mocked bind() returns successful
     // * Mocked listen() returns successful
     // * Mocked getsockname() returns a sockaddr with current ip address and
@@ -605,19 +590,19 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_successful) {
     WINSOCK_INIT
 
     MINISERVER_REUSEADDR = false;
-    constexpr char text_addr[]{"192.168.54.188"};
-    char addrbuf[16];
+    SSockaddr saddrObj;
+    saddrObj = "192.168.54.188:50020";
+    const char* text_addr = saddrObj.get_addr_str().c_str();
+    char addrbuf[INET_ADDRSTRLEN];
     constexpr SOCKET sockfd{umock::sfd_base + 11};
 
     s_SocketStuff s;
     // Fill all fields of struct s_SocketStuff
-    s.serverAddr = (struct sockaddr*)&s.ss;
+    s.serverAddr = reinterpret_cast<sockaddr*>(&s.ss);
     s.ip_version = 4;
     s.text_addr = text_addr;
-    s.serverAddr4->sin_family = AF_INET;
-    s.actual_port = 56789;
-    s.serverAddr4->sin_port = htons(s.actual_port);
-    inet_pton(AF_INET, text_addr, &s.serverAddr4->sin_addr);
+    s.actual_port = saddrObj.get_port();
+    s.serverAddr4 = &saddrObj.sin;
     s.fd = sockfd;
     s.try_port = APPLICATION_LISTENING_PORT;
     s.address_len = sizeof(*s.serverAddr4);
@@ -627,19 +612,15 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_successful) {
     // but will never find one. The program hungs in an endless loop.
 
     // Provide a sockaddr structure that will be returned by mocked
-    // getsockname().
-    const CAddrinfo ai(std::string(text_addr),
-                       std::to_string(APPLICATION_LISTENING_PORT), AF_INET,
-                       SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
+    // getsockname(). It is the same address saddrObj with different port.
+    saddrObj = APPLICATION_LISTENING_PORT;
 
     // Mock system functions
     EXPECT_CALL(m_sys_socketObj, bind(sockfd, _, _)).Times(1);
     EXPECT_CALL(m_sys_socketObj, listen(sockfd, SOMAXCONN)).Times(1);
-    EXPECT_CALL(
-        m_sys_socketObj,
-        getsockname(sockfd, _,
-                    Pointee(Ge(static_cast<socklen_t>(ai->ai_addrlen)))))
-        .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr), Return(0)));
+    EXPECT_CALL(m_sys_socketObj,
+                getsockname(sockfd, _, Pointee(Ge(saddrObj.sizeof_ss()))))
+        .WillOnce(DoAll(SetArgPointee<1>(saddrObj.sa), Return(0)));
 
     // Test Unit
     int ret_get_do_bind_listen = do_bind_listen(&s);
@@ -649,6 +630,8 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_successful) {
     // Check all fields of struct s_SocketStuff
     EXPECT_EQ(s.ip_version, 4);
     EXPECT_STREQ(s.text_addr, text_addr);
+    EXPECT_TRUE(saddrObj ==
+                *reinterpret_cast<sockaddr_storage*>(s.serverAddr4));
     EXPECT_EQ(s.serverAddr4->sin_family, AF_INET);
     EXPECT_STREQ(
         inet_ntop(AF_INET, &s.serverAddr4->sin_addr, addrbuf, sizeof(addrbuf)),
@@ -657,7 +640,7 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_successful) {
     EXPECT_EQ(s.fd, sockfd);
     EXPECT_EQ(s.try_port, APPLICATION_LISTENING_PORT + 1);
     EXPECT_EQ(s.actual_port, APPLICATION_LISTENING_PORT);
-    EXPECT_EQ(s.address_len, (socklen_t)sizeof(*s.serverAddr4));
+    EXPECT_EQ(s.address_len, static_cast<socklen_t>(sizeof(*s.serverAddr4)));
 }
 
 TEST(StartMiniServerTestSuite, do_bind_listen_with_wrong_socket) {
@@ -682,24 +665,23 @@ TEST(StartMiniServerTestSuite, do_bind_listen_with_wrong_socket) {
 
 TEST_F(StartMiniServerFTestSuite, do_bind_listen_with_failed_listen) {
     // Configure expected system calls:
-    // * Use fictive socket file descriptor 600
+    // * Use fictive socket file descriptor sockfd
     // * Mocked bind() returns successful
     // * Mocked listen() returns error
 
     MINISERVER_REUSEADDR = false;
-    constexpr char text_addr[]{"192.168.54.188"};
-    constexpr int actual_port{0};
+    SSockaddr saddrObj;
+    saddrObj = "192.168.54.188";
+    const char* text_addr = saddrObj.get_addr_str().c_str();
     constexpr SOCKET sockfd{umock::sfd_base + 12};
 
     s_SocketStuff s;
     // Fill all fields of struct s_SocketStuff
-    s.serverAddr = (struct sockaddr*)&s.ss;
+    s.serverAddr = (sockaddr*)&s.ss;
     s.ip_version = 4;
     s.text_addr = text_addr;
-    s.serverAddr4->sin_family = AF_INET;
-    s.actual_port = actual_port;
-    s.serverAddr4->sin_port = htons(s.actual_port);
-    inet_pton(AF_INET, text_addr, &s.serverAddr4->sin_addr);
+    s.actual_port = saddrObj.get_port();
+    s.serverAddr4 = &saddrObj.sin;
     s.fd = sockfd;
     s.try_port = APPLICATION_LISTENING_PORT;
     s.address_len = sizeof(*s.serverAddr4);
@@ -739,7 +721,7 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_address_in_use) {
 
         MINISERVER_REUSEADDR = false;
         constexpr char text_addr[]{"192.168.54.188"};
-        char addrbuf[16];
+        char addrbuf[INET_ADDRSTRLEN];
         constexpr int actual_port{50024};
         constexpr SOCKET sockfd_inuse{umock::sfd_base + 13};
         constexpr SOCKET sockfd_free{umock::sfd_base + 14};

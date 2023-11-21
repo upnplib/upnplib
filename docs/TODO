@@ -1,8 +1,4 @@
 Next steps to do:
-* Unify methods get_addr_str(), get_addrp_str() and get_port() on all classes.
-* Derive classes from basic SSockaddr.
-* Use exceptions on upnplib::getsockname().
-* Rework RunMiniserver tests from test_miniserver.cpp.
 * Rework test_sock.cp to work with changed sys_socket mocking.
 * Rework test_httpreadwrite.cpp.
 * Reduce size of shared libraries.

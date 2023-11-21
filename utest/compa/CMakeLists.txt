@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-29
+# Redistribution only with this Copyright remark. Last modified: 2023-11-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -99,7 +99,7 @@ if(UPNPLIB_WITH_OPENSSL)
 endif()
 
 
-add_subdirectory(./addressing)
+add_subdirectory(./0-addressing)
 add_subdirectory(./api.d)
 add_subdirectory(./http.d)
 add_subdirectory(./ssdp.d)

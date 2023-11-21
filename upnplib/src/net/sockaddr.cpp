@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-18
+// Redistribution only with this Copyright remark. Last modified: 2023-11-21
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/general.hpp>
@@ -181,6 +181,9 @@ SSockaddr& SSockaddr::operator=(SSockaddr that) {
 
 // Assignment operator= to set socket address from string,
 // -------------------------------------------------------
+// For port conversion:
+// Don't use '::htons' instead of 'htons', MacOS don't like it.
+// 'sin6_port' is also 'sin_port' due to union.
 void SSockaddr::operator=(const std::string& a_addr_str) {
     // Valid input examles: "[2001:db8::1]", "[2001:db8::1]:50001",
     //                      "192.168.1.1", "192.168.1.1:50001".
@@ -200,23 +203,36 @@ void SSockaddr::operator=(const std::string& a_addr_str) {
             // Split address and port
             size_t pos = a_addr_str.find("]:");
             this->handle_ipv6(a_addr_str.substr(0, pos + 1));
-            this->handle_port(a_addr_str.substr(pos + 2));
+            sin6.sin6_port = htons(to_port(a_addr_str.substr(pos + 2)));
         }
     } else { // IPv4 address or port
-        size_t pos = a_addr_str.find_first_of(":");
-        if (pos != std::string::npos) { // ':' found means ipv4 with port
+        size_t pos = a_addr_str.find_first_of(':');
+        if (pos == 0 && a_addr_str.size() > 1 && ss.ss_family != AF_UNSPEC) {
+            // Special case: only port with leading ':' is valid to change port
+            // of existing socket address.
+            sin6.sin6_port = htons(to_port(a_addr_str.substr(pos + 1)));
+
+        } else if (pos != std::string::npos) { // ':' found means ipv4 with port
             this->handle_ipv4(a_addr_str.substr(0, pos));
-            this->handle_port(a_addr_str.substr(pos + 1));
+            sin6.sin6_port = htons(to_port(a_addr_str.substr(pos + 1)));
 
         } else { // IPv4 without port or port only
             if (a_addr_str.find_first_of(".") != std::string::npos) {
                 this->handle_ipv4(a_addr_str); // IPv4 address without port
 
             } else { // port only
-                this->handle_port(a_addr_str);
+                sin6.sin6_port = htons(to_port(a_addr_str));
             }
         }
     }
+}
+
+// Assignment operator= to set socket port from an integer,
+// --------------------------------------------------------
+void SSockaddr::operator=(const in_port_t a_port) {
+    // Don't use ::htons, MacOS don't like it.
+    // sin6_port is also sin_port due to union.
+    sin6.sin6_port = htons(a_port);
 }
 
 // Compare operator== to test if another trivial socket address is equal to this
@@ -290,14 +306,6 @@ void SSockaddr::handle_ipv4(const std::string& a_addr_str) {
                                     a_addr_str + "\".");
     }
     ss.ss_family = AF_INET;
-}
-
-void SSockaddr::handle_port(const std::string& a_port) {
-    TRACE2(this, " Executing SSockaddr::handle_port()")
-    // sin_port and sin6_port are on the same memory location (union of the
-    // structures) so we can use it for AF_INET and AF_INET6.
-    // Don't use ::htons, MacOS don't like it.
-    sin6.sin6_port = htons(to_port(a_port));
 }
 
 } // namespace upnplib

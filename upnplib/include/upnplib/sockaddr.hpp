@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCKADDR_HPP
 #define UPNPLIB_NET_SOCKADDR_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-19
+// Redistribution only with this Copyright remark. Last modified: 2023-11-21
 
 // Helpful links:
 // REF:_[Why_do_I_get_wrong_pointer_to_a_base_class_with_a_virtual_constructor](https://stackoverflow.com/q/76360179/5014688)
@@ -88,6 +88,8 @@ struct UPNPLIB_API SSockaddr {
     // An empty netaddress "" clears the address storage.
     // An invalid netaddress throws an exception 'std::invalid_argument'.
     void operator=(const std::string& a_addr_str);
+    // To set the port number from an integer.
+    void operator=(const in_port_t a_port);
 
     // Compare operator== to test if another socket address is equal to this.
     // It only supports AF_INET6 and AF_INET. For all other address families it
@@ -122,7 +124,6 @@ struct UPNPLIB_API SSockaddr {
 
     UPNPLIB_LOCAL void handle_ipv6(const std::string& a_addr_str);
     UPNPLIB_LOCAL void handle_ipv4(const std::string& a_addr_str);
-    UPNPLIB_LOCAL void handle_port(const std::string& a_port);
 };
 
 } // namespace upnplib

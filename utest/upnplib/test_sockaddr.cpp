@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-19
+// Redistribution only with this Copyright remark. Last modified: 2023-11-21
 
 #include <upnplib/general.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -46,8 +46,6 @@ TEST_P(SetAddrPortTest, set_address_and_port) {
 // clang-format off
 INSTANTIATE_TEST_SUITE_P(SetAddrPort, SetAddrPortTest, ::testing::Values(
     // std::make_tuple("", AF_UNSPEC, "", 0), // special, single tested
-    // std::make_tuple(":", AF_UNSPEC, "", 0), // invalid, throws exception
-    // std::make_tuple(":50067", AF_UNSPEC, "", 50067), // invalid, throws exception
     // --- Essential for checking bind, see note next test
     std::make_tuple("[::]", AF_INET6, "[::]", 0),
     std::make_tuple("[::]:", AF_INET6, "[::]", 0),
@@ -120,26 +118,59 @@ TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
     EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::3]");
     EXPECT_EQ(saddr.get_addrp_str(), "[2001:db8::3]:50021");
     EXPECT_EQ(saddr.get_port(), 50021);
+    saddr = ":50022";
+    EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
+    EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::3]");
+    EXPECT_EQ(saddr.get_addrp_str(), "[2001:db8::3]:50022");
+    EXPECT_EQ(saddr.get_port(), 50022);
+
+    saddr = 0;
+    EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
+    EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::3]");
+    EXPECT_EQ(saddr.get_addrp_str(), "[2001:db8::3]:0");
+    EXPECT_EQ(saddr.get_port(), 0);
+
+    saddr = 65535;
+    EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
+    EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::3]");
+    EXPECT_EQ(saddr.get_addrp_str(), "[2001:db8::3]:65535");
+    EXPECT_EQ(saddr.get_port(), 65535);
 
     // This will not modify the port
     saddr = "192.168.47.48";
     EXPECT_EQ(saddr.ss.ss_family, AF_INET);
     EXPECT_EQ(saddr.get_addr_str(), "192.168.47.48");
-    EXPECT_EQ(saddr.get_addrp_str(), "192.168.47.48:50021");
-    EXPECT_EQ(saddr.get_port(), 50021);
+    EXPECT_EQ(saddr.get_addrp_str(), "192.168.47.48:65535");
+    EXPECT_EQ(saddr.get_port(), 65535);
 
     // Check that a failing call does not modify old settings.
-    EXPECT_THAT([&saddr]() { saddr = "50x23"; },
+    EXPECT_THAT([&saddr]() { saddr = "65536"; },
                 ThrowsMessage<std::invalid_argument>(
                     HasSubstr("] EXCEPTION MSG1033: ")));
     EXPECT_EQ(saddr.ss.ss_family, AF_INET);
     EXPECT_EQ(saddr.get_addr_str(), "192.168.47.48");
-    EXPECT_EQ(saddr.get_addrp_str(), "192.168.47.48:50021");
-    EXPECT_EQ(saddr.get_port(), 50021);
+    EXPECT_EQ(saddr.get_addrp_str(), "192.168.47.48:65535");
+    EXPECT_EQ(saddr.get_port(), 65535);
 }
 
 TEST(SockaddrStorageTestSuite, set_address_and_port_fail) {
     SSockaddr saddr;
+
+    // Throws only with AF_UNSPEC that is also 0.
+    saddr.ss.ss_family = AF_UNSPEC;
+    EXPECT_THAT([&saddr]() { saddr = ":50070"; },
+                ThrowsMessage<std::invalid_argument>(
+                    EndsWith("] EXCEPTION MSG1044: Invalid netaddress \"\".")));
+
+    // This does not compile with error
+    // ‘short unsigned int’ changes value from ‘65536’ to ‘0’.
+    // EXPECT_THAT([&saddr]() { saddr = 65536; },
+    //             ThrowsMessage<std::invalid_argument>(
+    //             EndsWith("] EXCEPTION MSG1044: Invalid netaddress \"\".")));
+
+    EXPECT_THAT([&saddr]() { saddr = ":"; },
+                ThrowsMessage<std::invalid_argument>(
+                    EndsWith("] EXCEPTION MSG1044: Invalid netaddress \"\".")));
 
     EXPECT_THAT([&saddr]() { saddr = "garbage"; },
                 ThrowsMessage<std::invalid_argument>(
