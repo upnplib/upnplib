@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_SOCK_HPP
 #define UPNPLIB_INCLUDE_PORT_SOCK_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-07
+// Redistribution only with this Copyright remark. Last modified: 2023-11-22
 
 // clang-format off
 
@@ -22,6 +22,7 @@
   // type of at least 32 bits.
   typedef int socklen_t;
   typedef uint16_t in_port_t;
+  typedef uint32_t in_addr_t;
 
   // socket() returns INVALID_SOCKET and is defined unsigned:
   // #define INVALID_SOCKET (0xffff)

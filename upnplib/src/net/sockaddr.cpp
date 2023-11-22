@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-21
+// Redistribution only with this Copyright remark. Last modified: 2023-11-23
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/general.hpp>
@@ -245,7 +245,9 @@ bool SSockaddr::operator==(const ::sockaddr_storage& a_ss) const {
 // -------------------------------------------------
 // e.g. "[2001:db8::2]" or "192.168.254.253".
 const std::string& SSockaddr::get_addr_str() {
-    TRACE2(this, " Executing SSockaddr::get_addr_str()")
+    // TRACE not usable with chained output.
+    // TRACE2(this, " Executing SSockaddr::get_addr_str()")
+    //
     // It is important to have the string available as long as the object lives,
     // otherwise you may get dangling pointer, e.g. with getting .c_str().
     m_netaddr = to_addr_str(&ss);
@@ -256,7 +258,9 @@ const std::string& SSockaddr::get_addr_str() {
 // ----------------------------------------------
 // e.g. "[2001:db8::2]:50001" or "192.168.254.253:50001".
 const std::string& SSockaddr::get_addrp_str() {
-    TRACE2(this, " Executing SSockaddr::get_addrp_str()")
+    // TRACE not usable with chained output.
+    // TRACE2(this, " Executing SSockaddr::get_addrp_str()")
+    //
     // It is important to have the string available as long as the object lives,
     // otherwise you may get dangling pointer, e.g. with getting .c_str().
     m_netaddrp = to_addrp_str(&ss);
@@ -276,8 +280,22 @@ in_port_t SSockaddr::get_port() const {
 // Getter for sizeof the Sockaddr Structure.
 // -----------------------------------------
 socklen_t SSockaddr::sizeof_ss() const {
-    TRACE2(this, " Executing SSockaddr::get_sslen()")
+    TRACE2(this, " Executing SSockaddr::sizeof_ss()")
     return sizeof(ss);
+}
+
+// Getter for sizeof the current (sin6 or sin) Sockaddr Structure.
+// ---------------------------------------------------------------
+socklen_t SSockaddr::sizeof_saddr() const {
+    TRACE2(this, " Executing SSockaddr::sizeof_saddr()")
+    switch (ss.ss_family) {
+    case AF_INET6:
+        return sizeof(sin6);
+    case AF_INET:
+        return sizeof(sin);
+    default:
+        return 0;
+    }
 }
 
 

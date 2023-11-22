@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-18
+// Redistribution only with this Copyright remark. Last modified: 2023-11-23
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -212,7 +212,7 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful) {
     // It is important to expect shutdown_strlen.
     EXPECT_CALL(m_sys_socketObj,
                 recvfrom(m_minisock->miniServerStopSock, _, Ge(shutdown_strlen),
-                         0, _, Pointee(sizeof(ssObj.ss))))
+                         0, _, Pointee(ssObj.sizeof_ss())))
         .WillOnce(DoAll(StrCpyToArg<1>(shutdown_str),
                         SetArgPointee<4>(ssObj.sa), Return(shutdown_strlen)));
 
@@ -610,7 +610,7 @@ TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_successful) {
     // Mock system functions
     // expected_destbuflen is important here to avoid buffer limit overwrite.
     EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(expected_destbuflen), 0,
-                                          _, Pointee(sizeof(ssObj.ss))))
+                                          _, Pointee(ssObj.sizeof_ss())))
         .WillOnce(DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
                         SetArgPointee<4>(ssObj.sa),
                         Return(expected_destbuflen)));
@@ -676,7 +676,7 @@ TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_no_bytes_received) {
 
     // Mock system functions
     EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(bufsizeof_ShutDown_str),
-                                          0, _, Pointee(sizeof(ssObj.ss))))
+                                          0, _, Pointee(ssObj.sizeof_ss())))
         .WillOnce(DoAll(StrCpyToArg<1>(shutdown_str),
                         SetArgPointee<4>(ssObj.sa), Return(0)));
 
@@ -716,7 +716,7 @@ TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_wrong_stop_message) {
     // Mock system functions
     // expected_destbuflen is important here to avoid buffer limit overwrite.
     EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(expected_destbuflen), 0,
-                                          _, Pointee(sizeof(ssObj.ss))))
+                                          _, Pointee(ssObj.sizeof_ss())))
         .WillOnce(DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
                         SetArgPointee<4>(ssObj.sa),
                         Return(expected_destbuflen)));
@@ -747,7 +747,7 @@ TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_from_wrong_address) {
     // Mock system functions
     // expected_destbuflen is important here to avoid buffer limit overwrite.
     EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(expected_destbuflen), 0,
-                                          _, Pointee(sizeof(ssObj.ss))))
+                                          _, Pointee(ssObj.sizeof_ss())))
         .WillOnce(DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
                         SetArgPointee<4>(ssObj.sa),
                         Return(expected_destbuflen)));
@@ -785,7 +785,7 @@ TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_without_0_termbyte) {
     // Mock system functions
     // expected_destbuflen is important here to avoid buffer limit overwrite.
     EXPECT_CALL(m_sys_socketObj, recvfrom(sockfd, _, Ge(expected_destbuflen), 0,
-                                          _, Pointee(sizeof(ssObj.ss))))
+                                          _, Pointee(ssObj.sizeof_ss())))
         .WillOnce(DoAll(StrnCpyToArg<1>(shutdown_str, expected_destbuflen),
                         SetArgPointee<4>(ssObj.sa),
                         Return(expected_destbuflen)));

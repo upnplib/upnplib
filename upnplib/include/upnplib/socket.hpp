@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-19
+// Redistribution only with this Copyright remark. Last modified: 2023-11-24
 
 // Helpful link for ip address structures:
 // REF: [sockaddr structures as union]
@@ -81,8 +81,10 @@
 // define and use these macros with appended 'P' for portable.
 #ifdef _MSC_VER
 #define EBADFP WSAENOTSOCK
+#define ENOTCONNP WSAENOTCONN
 #else
 #define EBADFP EBADF
+#define ENOTCONNP ENOTCONN
 #endif
 
 namespace upnplib {
@@ -135,7 +137,7 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
 
     // Get the socket connection type, e.g. SOCK_STREAM or SOCK_DGRAM, but also
     // others. Throws exception std::runtime_error.
-    int get_conntype() const;
+    int get_socktype() const;
 
     int get_sockerr() const;
 
@@ -168,7 +170,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
     CSocket();
 
     // Constructor for new socket file descriptor
-    CSocket(sa_family_t a_family, int a_type);
+    CSocket(sa_family_t a_family, int a_socktype);
 
     // Move constructor
     CSocket(CSocket&&);
@@ -275,7 +277,7 @@ class UPNPLIB_API CSocketError {
     void catch_error();
 
     // Getter
-    std::string error_str();
+    std::string get_error_str();
 
   private:
     int m_errno{}; // Cached error number

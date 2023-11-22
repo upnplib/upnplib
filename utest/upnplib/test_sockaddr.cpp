@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-21
+// Redistribution only with this Copyright remark. Last modified: 2023-11-23
 
 #include <upnplib/general.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -23,17 +23,17 @@ using ::upnplib::to_port;
 
 // SSockaddr TestSuite
 // ===========================
-class SetAddrPortTest : public ::testing::TestWithParam<
-                            std::tuple<const std::string, const ::sa_family_t,
-                                       const std::string, const in_port_t>> {};
+class SetAddrPortTest
+    : public ::testing::TestWithParam<std::tuple<
+          const std::string, const int, const std::string, const int>> {};
 
 TEST_P(SetAddrPortTest, set_address_and_port) {
     // Get parameter
     const std::tuple params = GetParam();
     const std::string netaddr = std::get<0>(params);
-    const sa_family_t family = std::get<1>(params);
+    const int family = std::get<1>(params);
     const std::string addr_str = std::get<2>(params);
-    const in_port_t port = std::get<3>(params);
+    const int port = std::get<3>(params);
 
     SSockaddr saddr;
     saddr = netaddr;
@@ -374,6 +374,24 @@ TEST(SockaddrStorageTestSuite, compare_ipv4_address) {
     EXPECT_FALSE(saddr1 == saddr2.ss);
     saddr2.ss.ss_family = AF_INET;
     EXPECT_TRUE(saddr1 == saddr2.ss);
+}
+
+TEST(SockaddrStorageTestSuite, sizeof_ss_get_successful) {
+    SSockaddr saddr;
+    EXPECT_EQ(saddr.sizeof_ss(),
+              static_cast<socklen_t>(sizeof(::sockaddr_storage)));
+}
+
+TEST(SockaddrStorageTestSuite, sizeof_saddr_get_successful) {
+    SSockaddr saddr;
+    saddr = "[::]";
+    EXPECT_EQ(saddr.sizeof_saddr(),
+              static_cast<socklen_t>(sizeof(::sockaddr_in6)));
+    saddr = "0.0.0.0";
+    EXPECT_EQ(saddr.sizeof_saddr(),
+              static_cast<socklen_t>(sizeof(::sockaddr_in)));
+    saddr = "";
+    EXPECT_EQ(saddr.sizeof_saddr(), static_cast<socklen_t>(0));
 }
 
 TEST(ToPortTestSuite, str_to_port) {

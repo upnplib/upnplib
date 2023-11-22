@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-19
+// Redistribution only with this Copyright remark. Last modified: 2023-11-24
 
 #include <upnplib/socket.hpp>
 #include <upnplib/general.hpp>
@@ -179,8 +179,8 @@ in_port_t CSocket_basic::get_port() const {
     return SSockaddr::get_port();
 }
 
-int CSocket_basic::get_conntype() const {
-    TRACE2(this, " Executing CSocket_basic::get_conntype()")
+int CSocket_basic::get_socktype() const {
+    TRACE2(this, " Executing CSocket_basic::get_socktype()")
     int so_option{-1};
     socklen_t len{sizeof(so_option)}; // May be modified
     // Type cast (char*)&so_option is needed for Microsoft Windows.
@@ -258,22 +258,22 @@ CSocket::CSocket(){
 }
 
 // Constructor for new socket file descriptor
-CSocket::CSocket(sa_family_t a_family, int a_conntype) {
-    TRACE2(this, " Construct CSocket(af, conntype)")
+CSocket::CSocket(sa_family_t a_family, int a_socktype) {
+    TRACE2(this, " Construct CSocket(af, socktype)")
 
     if (a_family != AF_INET6 && a_family != AF_INET)
         throw std::invalid_argument(
             UPNPLIB_LOGEXCEPT +
             "MSG1015: Failed to create socket: invalid address family " +
             std::to_string(a_family));
-    if (a_conntype != SOCK_STREAM && a_conntype != SOCK_DGRAM)
+    if (a_socktype != SOCK_STREAM && a_socktype != SOCK_DGRAM)
         throw std::invalid_argument(
             UPNPLIB_LOGEXCEPT +
             "MSG1016: Failed to create socket: invalid socket type " +
-            std::to_string(a_conntype));
+            std::to_string(a_socktype));
 
     // Get new socket file descriptor.
-    SOCKET sfd = ::socket(a_family, a_conntype, 0);
+    SOCKET sfd = ::socket(a_family, a_socktype, 0);
     if (sfd == INVALID_SOCKET)
         throw_error("MSG1017: Failed to create socket:");
 
@@ -402,7 +402,7 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
     }
 
     // Here we bind the socket to an address
-    const CAddrinfo ai(a_node, a_port, addr_family, this->get_conntype(),
+    const CAddrinfo ai(a_node, a_port, addr_family, this->get_socktype(),
                        AI_NUMERICHOST | AI_NUMERICSERV | a_flags);
     // Type cast socklen_t is needed for Microsoft Windows.
     if (::bind(m_sfd, ai->ai_addr, static_cast<socklen_t>(ai->ai_addrlen)) != 0)
@@ -480,22 +480,25 @@ CSocketError::CSocketError(){TRACE2(this, " Construct CSocketError()")}
 CSocketError::~CSocketError(){TRACE2(this, " Destruct CSocketError()")}
 
 CSocketError::operator const int&() const {
-    TRACE2(this,
-           " Executing CSocketError::operator int&() (get socket error number)")
+    // TRACE not usable with chained output.
+    // TRACE2(this,
+    //     " Executing CSocketError::operator int&() (get socket error number)")
     return m_errno;
 }
 
 void CSocketError::catch_error() {
 #ifdef _MSC_VER
-    m_errno = WSAGetLastError();
+    m_errno = ::WSAGetLastError();
 #else
     m_errno = errno;
 #endif
     TRACE2(this, " Executing CSocketError::catch_error()")
 }
 
-std::string CSocketError::error_str() {
-    TRACE2(this, " Executing CSocketError::error_str()")
+std::string CSocketError::get_error_str() {
+    // TRACE not usable with chained output, e.g.
+    // std::cerr << "Error: " << sockerrObj.get_error_str();
+    // TRACE2(this, " Executing CSocketError::get_error_str()")
 #ifdef _MSC_VER
     return std::system_category().message(m_errno);
 #else

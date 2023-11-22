@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-20
+// Redistribution only with this Copyright remark. Last modified: 2023-11-23
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -132,7 +132,7 @@ CAddrinfo& CAddrinfo::operator=(CAddrinfo that) {
 // ----------
 CAddrinfo::~CAddrinfo() {
     TRACE2(this, " Destruct CAddrinfo()")
-    TRACE2("Call STL function ::freeaddrinfo() with m_res = ", m_res)
+    TRACE2("syscall ::freeaddrinfo() with m_res = ", m_res)
     umock::netdb_h.freeaddrinfo(m_res);
     m_res = nullptr;
 }
@@ -217,7 +217,7 @@ addrinfo* CAddrinfo::get_addrinfo() const {
         // port for AF_INET6 is also valid for AF_INET
         reinterpret_cast<sockaddr_in6*>(new_res->ai_addr)->sin6_port = 0;
 
-    TRACE2("Called system function ::getaddrinfo() with new_res = ", new_res)
+    TRACE2("syscall ::getaddrinfo() with new_res = ", new_res)
     return new_res;
 }
 

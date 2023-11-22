@@ -1,50 +1,18 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-11-20
+# Redistribution only with this Copyright remark. Last modified: 2023-11-21
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
 
-project(GTESTS_COMPA VERSION 0010
+project(GTESTS_COMPA VERSION 0011
                   DESCRIPTION "Tests for pupnp and compatible code"
                   HOMEPAGE_URL "https://github.com/upnplib")
-
-
-# sock
-#=====
-if(NOT DEFINED ENV{GITHUB_ACTIONS})
-    add_executable(test_sock-psh
-            ./test_sock.cpp
-    )
-    target_compile_definitions(test_sock-psh
-        PRIVATE
-            $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
-    )
-    target_link_libraries(test_sock-psh
-        PRIVATE
-            pupnp_shared
-            upnplib_shared
-    )
-    add_test(NAME ctest_sock-psh COMMAND test_sock-psh --gtest_shuffle
-            WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-    )
-
-    add_executable(test_sock-csh
-            ./test_sock.cpp
-    )
-    target_link_libraries(test_sock-csh
-        PRIVATE
-            compa_shared
-            upnplib_shared
-    )
-    add_test(NAME ctest_sock-csh COMMAND test_sock-csh --gtest_shuffle
-            WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
-    )
-endif()
 
 
 # sock_openssl
 #=============
 if(UPNPLIB_WITH_OPENSSL)
+if(FALSE)
 
     add_executable(test_sock_openssl-psh
         ./test_sock_openssl.cpp
@@ -71,6 +39,7 @@ if(UPNPLIB_WITH_OPENSSL)
     add_test(NAME ctest_sock_openssl-csh COMMAND test_sock_openssl-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
     )
+endif()
 
 
 # openssl_threaded

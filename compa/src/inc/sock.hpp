@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-11-16
+ * Redistribution only with this Copyright remark. Last modified: 2023-11-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,6 +34,9 @@
  *
  **************************************************************************/
 // Last compare with ./pupnp source file on 2023-09-13, ver 1.14.18
+//
+// Unused interface header file deleted. It's available until commit
+// a01e0186bc0dcb8dc243f6d313ca8527535648fd:compa/inc/compa/sock.hpp
 
 /*!
  * \defgroup Sock Network Socket Library
@@ -59,15 +62,15 @@
 #endif
 
 /*! */
-typedef struct {
+struct SOCKINFO {
     /*! Handle/descriptor to a socket. */
     SOCKET socket;
     /*! The following two fields are filled only in incoming requests. */
-    struct sockaddr_storage foreign_sockaddr;
+    sockaddr_storage foreign_sockaddr;
 #ifdef UPNP_ENABLE_OPEN_SSL
     SSL* ssl;
 #endif
-} SOCKINFO;
+};
 
 /*!
  * \brief Closes the socket if it is different from -1.

@@ -1,5 +1,8 @@
 Next steps to do:
-* Rework test_sock.cp to work with changed sys_socket mocking.
+* Remove a_service argument from CAddrinfo constructor.
+* Rework test_sock.cpp to work with changed sys_socket mocking.
+* Enable test_sock_openssl.cpp again.
+* Instantiate 'xml_alias_t' only when used.
 * Rework test_httpreadwrite.cpp.
 * Reduce size of shared libraries.
 * Use poll() and WSAPoll() instead of select().

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-11-17
+ * Redistribution only with this Copyright remark. Last modified: 2023-11-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,8 +46,6 @@
 #include <config.hpp>
 
 #include <sock.hpp>
-#include <compa/sock.hpp>
-
 #include <unixutil.hpp> /* for socklen_t, EAFNOSUPPORT */
 #include <upnp.hpp>
 
@@ -59,11 +57,10 @@
 #include <fcntl.h> /* for F_GETFL, F_SETFL, O_NONBLOCK */
 #include <cstring>
 #include <ctime>
-
-#ifdef UPNPLIB_WITH_TRACE
 #include <iostream>
-#endif
+
 #include <upnplib/general.hpp>
+#include <upnplib/socket.hpp>
 
 #ifndef _WIN32
 #include <csignal>
@@ -85,7 +82,9 @@ UPNPLIB_EXTERN SSL_CTX* gSslCtx;
 #endif
 
 int sock_init(SOCKINFO* info, SOCKET sockfd) {
-    assert(info);
+    TRACE("Executing sock_init()")
+    if (info == nullptr)
+        return UPNP_E_INVALID_PARAM;
 
     memset(info, 0, sizeof(SOCKINFO));
     info->socket = sockfd;
@@ -94,14 +93,16 @@ int sock_init(SOCKINFO* info, SOCKET sockfd) {
 }
 
 int sock_init_with_ip(SOCKINFO* info, SOCKET sockfd,
-                      struct sockaddr* foreign_sockaddr) {
-    int ret;
+                      sockaddr* foreign_sockaddr) {
+    TRACE("Executing sock_init_with_ip()")
 
-    ret = sock_init(info, sockfd);
+    if (foreign_sockaddr == nullptr)
+        return UPNP_E_INVALID_PARAM;
+
+    int ret = sock_init(info, sockfd);
     if (ret != UPNP_E_SUCCESS) {
         return ret;
     }
-
     memcpy(&info->foreign_sockaddr, foreign_sockaddr,
            sizeof(info->foreign_sockaddr));
 
@@ -128,8 +129,8 @@ int sock_ssl_connect(SOCKINFO* info) {
 #endif
 
 int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
-    int ret = UPNP_E_SUCCESS;
-    char errorBuffer[ERROR_BUFFER_LEN];
+    TRACE("Executing sock_destroy()")
+    int ret{UPNP_E_SUCCESS};
 
     if (info->socket != INVALID_SOCKET) {
 #ifdef UPNP_ENABLE_OPEN_SSL
@@ -139,14 +140,21 @@ int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
             info->ssl = NULL;
         }
 #endif
-        if (umock::sys_socket_h.shutdown(info->socket, ShutdownMethod) == -1) {
-            strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
-            UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                       "Error in shutdown: %s\n", errorBuffer);
+        upnplib::CSocketError sockerrObj;
+        if (umock::sys_socket_h.shutdown(info->socket, ShutdownMethod) ==
+            SOCKET_ERROR) {
+            sockerrObj.catch_error();
+            std::string msg = "MSG1010: syscall ::shutdown() returned \"" +
+                              sockerrObj.get_error_str() + "\".\n";
+            if (sockerrObj == ENOTCONNP) {
+                // shutdown a not connected connection is not an error.
+                UPNPLIB_LOGINFO << msg;
+            } else {
+                UPNPLIB_LOGERR << msg;
+                ret = UPNP_E_SOCKET_ERROR;
+            }
         }
-        // BUG! closesocket on _WIN32 does not return -1 on error, but positive
-        // numbers. This must check != 0. --Ingo
-        if (sock_close(info->socket) == -1) {
+        if (sock_close(info->socket) != 0) {
             ret = UPNP_E_SOCKET_ERROR;
         }
         info->socket = INVALID_SOCKET;
@@ -419,7 +427,7 @@ class CSigpipe {
 
 
 #ifdef UPNP_ENABLE_OPEN_SSL
-int Csock::sock_ssl_connect(SOCKINFO* info) {
+int sock_ssl_connect(SOCKINFO* info) {
     int status{};
     info->ssl = SSL_new(gSslCtx);
     if (!info->ssl) {

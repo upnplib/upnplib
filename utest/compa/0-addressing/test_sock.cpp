@@ -1,77 +1,46 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-24
+// Redistribution only with this Copyright remark. Last modified: 2023-11-24
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/q/76548580/5014688
 
 #include <upnp.hpp>
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-#include <pupnp/sock.hpp>
-#define NS ::pupnp::
-#else
-#include <compa/sock.hpp>
-#define NS ::compa::
-#endif
 
-#include <upnplib/upnptools.hpp>
 #include <upnplib/general.hpp>
+#include <upnplib/upnptools.hpp> // For errStr??
+#include <upnplib/sockaddr.hpp>
+#include <upnplib/socket.hpp>
+
+#include <pupnp/upnpdebug.hpp>
 
 #include <utest/utest.hpp>
 
 #include <umock/unistd_mock.hpp>
 #include <umock/sys_socket_mock.hpp>
 
-#ifndef _WIN32
-#include <fcntl.h>
-#endif
-
+#define sockaddr_storage upnplib::sockaddr_t
+#include <sock.hpp>
 
 namespace utest {
 
 using ::testing::_;
-using ::testing::DoAll;
+// using ::testing::DoAll;
 using ::testing::ExitedWithCode;
-using ::testing::NotNull;
+// using ::testing::NotNull;
 using ::testing::Return;
-using ::testing::SetArrayArgument;
+// using ::testing::SetArrayArgument;
+using ::testing::SetErrnoAndReturn;
 using ::testing::StrictMock;
 
-using ::upnplib::errStr;
+// using ::upnplib::errStr;
 using ::upnplib::errStrEx;
+using ::upnplib::SSockaddr;
+
+using ::umock::sfd_base;
 
 
 // testsuite for the sock module
 //==============================
-#if 0
-TEST(SockTestSuite, sock_connect_client)
-// This is for humans only to check on Unix operating systems how to 'connect()'
-// to a server exactly works so we can correct mock it. Don't set '#if true'
-// permanently because it connects to the real internet and may slow down this
-// gtest dramatically. You may change the ip address if google.com changed its
-// ip address.
-{
-    // Get a TCP socket
-    int sockfd;
-    ASSERT_NE(sockfd = ::socket(AF_INET, SOCK_STREAM, 0), -1);
-
-    // Fill an address structure
-    ::sockaddr_in saddrin{};
-    saddrin.sin_family = AF_INET;
-    saddrin.sin_port = htons(80);
-    // This was a valid ip address from google.com
-    saddrin.sin_addr.s_addr = inet_addr("172.217.18.110");
-
-    // Connect to the server
-    EXPECT_EQ(::connect(sockfd, (const sockaddr*)&saddrin,
-                        sizeof(struct sockaddr_in)),
-              0)
-        << ::strerror(errno);
-
-    EXPECT_EQ(::close(sockfd), 0);
-}
-#endif
-
-
 class SockFTestSuite : public ::testing::Test {
   protected:
     // clang-format off
@@ -81,224 +50,236 @@ class SockFTestSuite : public ::testing::Test {
     umock::Sys_socket sys_socket_injectObj = umock::Sys_socket(&m_sys_socketObj);
     // clang-format on
 
-    // Instantiate socket object derived from the C++ interface
-    NS Csock m_sockObj{};
-
-    // Dummy socket, if we do not need a real one due to mocking
-    const ::SOCKET m_socketfd{1001};
-
-    // Provide a socket info structure
-    ::SOCKINFO m_info{};
-    // Point to the sockaddr_storage structure in SOCKINFO with type cast to
-    // sockaddr_in.
-    ::sockaddr_in* m_info_sa_in_ptr = (::sockaddr_in*)&m_info.foreign_sockaddr;
-
-    umock::UnistdMock unistdObj;
-
-    SockFTestSuite() {
-        // Need to clear errno before each test because we set it sometimes for
-        // mocking. The Unit under test doesn't handle it correct and we see
-        // side effects between different tests with this global variable.
-        errno = 0;
-
-        m_info.socket = m_socketfd;
-        m_info_sa_in_ptr->sin_family = AF_INET;
-        m_info_sa_in_ptr->sin_port = htons(443);
-        inet_pton(AF_INET, "192.168.24.128", &m_info_sa_in_ptr->sin_addr);
-
-        // Set defaut return values of mocked system functions. They will fail.
-        ON_CALL(m_sys_socketObj, recv(_, _, _, _)).WillByDefault(Return(-1));
-        ON_CALL(m_sys_socketObj, send(_, _, _, _)).WillByDefault(Return(-1));
-    }
+    StrictMock<umock::UnistdMock> m_unistdObj;
+    umock::Unistd unistd_injectObj = umock::Unistd(&m_unistdObj);
 };
-typedef SockFTestSuite SockFDeathTest;
+// typedef SockFTestSuite SockFDeathTest;
 
+TEST(SockTestSuite, sock_init_successful) {
+    constexpr SOCKET sockfd{sfd_base + 62};
+    ::SOCKINFO sockinfo;
 
-TEST_F(SockFTestSuite, sock_init_successful) {
     // Test Unit
-    int ret_sock_init = m_sockObj.sock_init(&m_info, m_socketfd);
+    int ret_sock_init = sock_init(&sockinfo, sockfd);
     EXPECT_EQ(ret_sock_init, UPNP_E_SUCCESS)
         << errStrEx(ret_sock_init, UPNP_E_SUCCESS);
 
-    EXPECT_EQ(m_info.socket, m_socketfd);
-    EXPECT_EQ(m_info_sa_in_ptr->sin_family, 0);
-    EXPECT_EQ(m_info_sa_in_ptr->sin_port, 0);
-    EXPECT_EQ(m_info_sa_in_ptr->sin_addr.s_addr, (uint32_t)0);
+    EXPECT_EQ(sockinfo.socket, sockfd);
+    EXPECT_EQ(sockinfo.foreign_sockaddr.sin.sin_family, 0);
+    EXPECT_EQ(sockinfo.foreign_sockaddr.sin.sin_port, 0);
+    EXPECT_EQ(sockinfo.foreign_sockaddr.sin.sin_addr.s_addr,
+              static_cast<in_addr_t>(0));
 }
 
-TEST_F(SockFDeathTest, sock_init_with_no_info) {
+TEST(SockDeathTest, sock_init_with_no_info) {
+    constexpr SOCKET sockfd{sfd_base + 63};
+
     // Test Unit
     if (old_code) {
-        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": Function should not segfault or abort with failed "
                      "assert().\n";
-        EXPECT_DEATH(m_sockObj.sock_init(nullptr, m_socketfd), ".*");
+        EXPECT_DEATH(sock_init(nullptr, sockfd), ".*");
 
     } else {
 
         // This expects NO segfault.
-        ASSERT_EXIT((m_sockObj.sock_init(nullptr, m_socketfd), exit(0)),
-                    ExitedWithCode(0), ".*");
-        int ret_sock_init = m_sockObj.sock_init(nullptr, m_socketfd);
+        ASSERT_EXIT((sock_init(nullptr, sockfd), exit(0)), ExitedWithCode(0),
+                    ".*");
+        int ret_sock_init = sock_init(nullptr, sockfd);
         EXPECT_EQ(ret_sock_init, UPNP_E_INVALID_PARAM)
             << errStrEx(ret_sock_init, UPNP_E_INVALID_PARAM);
     }
 }
 
-TEST_F(SockFTestSuite, sock_init_with_ip_successful) {
+TEST(SockTestSuite, sock_init_with_ip_successful) {
+    constexpr SOCKET sockfd{sfd_base + 64};
+    ::SOCKINFO sockinfo;
+
     // Provide a sockaddr_in structure
-    ::sockaddr_in foreign_sockaddr{};
-    foreign_sockaddr.sin_family = AF_INET;
-    foreign_sockaddr.sin_port = htons(80);
-    EXPECT_EQ(inet_pton(AF_INET, "192.168.192.168", &foreign_sockaddr.sin_addr),
-              1);
+    SSockaddr saddrObj;
+    saddrObj = "192.168.192.168:80";
 
     // Test Unit
-    int ret_sock_init_with_ip = m_sockObj.sock_init_with_ip(
-        &m_info, m_socketfd, (sockaddr*)&foreign_sockaddr);
+    int ret_sock_init_with_ip =
+        sock_init_with_ip(&sockinfo, sockfd, &saddrObj.sa);
     EXPECT_EQ(ret_sock_init_with_ip, UPNP_E_SUCCESS)
         << errStrEx(ret_sock_init_with_ip, UPNP_E_SUCCESS);
 
-    EXPECT_EQ(m_info.socket, m_socketfd);
-    EXPECT_EQ(m_info_sa_in_ptr->sin_family, AF_INET);
-    EXPECT_EQ(m_info_sa_in_ptr->sin_port, htons(80));
-    EXPECT_EQ(m_info_sa_in_ptr->sin_addr.s_addr,
-              foreign_sockaddr.sin_addr.s_addr);
+    EXPECT_EQ(sockinfo.socket, sockfd);
+    EXPECT_EQ(sockinfo.foreign_sockaddr.sin.sin_family, AF_INET);
+    EXPECT_EQ(sockinfo.foreign_sockaddr.sin.sin_port, htons(80));
+    EXPECT_EQ(sockinfo.foreign_sockaddr.sin.sin_addr.s_addr,
+              saddrObj.sin.sin_addr.s_addr);
 }
 
-TEST_F(SockFDeathTest, sock_init_with_ip_but_no_ip) {
+TEST(SockDeathTest, sock_init_with_ip_but_no_ip) {
     // Error condition with no info structure is tested with
     // sock_init_with_no_info.
+    constexpr SOCKET sockfd{sfd_base + 65};
+    ::SOCKINFO sockinfo;
 
     // Test Unit
     if (old_code) {
-        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": Function should not segfault.\n";
-        EXPECT_DEATH(m_sockObj.sock_init_with_ip(&m_info, m_socketfd, nullptr),
-                     ".*");
+        EXPECT_DEATH(sock_init_with_ip(&sockinfo, sockfd, nullptr), ".*");
     } else {
 
         // This expects NO segfault.
-        ASSERT_EXIT((m_sockObj.sock_init_with_ip(&m_info, m_socketfd, nullptr),
-                     exit(0)),
+        ASSERT_EXIT((sock_init_with_ip(&sockinfo, sockfd, nullptr), exit(0)),
                     ExitedWithCode(0), ".*");
         int ret_sock_init_with_ip =
-            m_sockObj.sock_init_with_ip(&m_info, m_socketfd, nullptr);
+            sock_init_with_ip(&sockinfo, sockfd, nullptr);
         EXPECT_EQ(ret_sock_init_with_ip, UPNP_E_INVALID_PARAM)
             << errStrEx(ret_sock_init_with_ip, UPNP_E_INVALID_PARAM);
     }
 }
 
 TEST_F(SockFTestSuite, sock_destroy_successful) {
+    constexpr SOCKET sockfd{sfd_base + 66};
+    ::SOCKINFO sockinfo;
+    sock_init(&sockinfo, sockfd);
+
     // shutdown is successful
-    EXPECT_CALL(m_sys_socketObj, shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
+    EXPECT_CALL(m_sys_socketObj, shutdown(sockfd, /*SHUT_RDWR*/ SD_BOTH))
         .WillOnce(Return(0));
     // close is successful
-    umock::Unistd unistd_injectObj(&unistdObj);
-    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(m_socketfd)).WillOnce(Return(0));
+    EXPECT_CALL(m_unistdObj, CLOSE_SOCKET_P(sockfd)).WillOnce(Return(0));
 
     // Test Unit
-    int ret_sock_destroy =
-        m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH);
+    int ret_sock_destroy = sock_destroy(&sockinfo, /*SHUT_RDWR*/ SD_BOTH);
     EXPECT_EQ(ret_sock_destroy, UPNP_E_SUCCESS)
         << errStrEx(ret_sock_destroy, UPNP_E_SUCCESS);
 }
 
-TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_ok_close_fails_not_0) {
-    if (github_actions && !old_code)
-        GTEST_SKIP() << "             known failing test on Github Actions";
+TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_ok_close_fails) {
+    constexpr SOCKET sockfd{sfd_base + 67};
+    ::SOCKINFO sockinfo;
+    sock_init(&sockinfo, sockfd);
 
     // shutdown is successful
-    EXPECT_CALL(m_sys_socketObj, shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
+    EXPECT_CALL(m_sys_socketObj, shutdown(sockfd, /*SHUT_RDWR*/ SD_BOTH))
         .WillOnce(Return(0));
     // close fails on _WIN32 with positive error number
-    umock::Unistd unistd_injectObj(&unistdObj);
-    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(m_socketfd))
+    EXPECT_CALL(m_unistdObj, CLOSE_SOCKET_P(sockfd))
         .WillOnce(Return(10093 /*WSANOTINITIALISED*/));
 
-    // Process the Unit
-    int returned;
+    // Test Unit
+    int ret_sock_destroy;
     if (old_code) {
-        ::std::cout << "  BUG! Successful socket shutdown but close != 0 "
-                       "should fail.\n";
-        EXPECT_EQ(returned =
-                      m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH),
-                  UPNP_E_SUCCESS)
-            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
+        // BUG! closesocket on _WIN32 does not return -1 on error, but positive
+        // numbers. Check of -1 results on win32 in UPNP_E_SUCCESS instead of
+        // UPNP_E_SOCKET_ERROR. Check must be on != 0. --Ingo
+        std::cout
+            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << ": Successful socket shutdown but close != 0 should fail.\n";
+        EXPECT_EQ(ret_sock_destroy =
+                      sock_destroy(&sockinfo, /*SHUT_RDWR*/ SD_BOTH),
+                  UPNP_E_SUCCESS) // Wrong!
+            << errStrEx(ret_sock_destroy, UPNP_E_SOCKET_ERROR);
 
     } else {
 
-        EXPECT_EQ(returned =
-                      m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH),
+        EXPECT_EQ(ret_sock_destroy =
+                      sock_destroy(&sockinfo, /*SHUT_RDWR*/ SD_BOTH),
                   UPNP_E_SOCKET_ERROR)
-            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
+            << errStrEx(ret_sock_destroy, UPNP_E_SOCKET_ERROR);
     }
 }
 
 TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_fails_close_ok) {
-    if (github_actions && !old_code)
-        GTEST_SKIP() << "             known failing test on Github Actions";
+    constexpr SOCKET sockfd{sfd_base + 68};
 
-    // shutdown fails
-    EXPECT_CALL(m_sys_socketObj, shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
-        .WillOnce(Return(-1));
+    // shutdown should fail
+    EXPECT_CALL(m_sys_socketObj, shutdown(sockfd, /*SHUT_RDWR*/ SD_BOTH))
+        // First call: shutdown a not connected connection is not an error.
+        .WillOnce(SetErrnoAndReturn(ENOTCONNP, SOCKET_ERROR))
+        // Second call: shutdown error on connected connection.
+        .WillOnce(SetErrnoAndReturn(EBADFP, SOCKET_ERROR));
     // close is successful
-    umock::Unistd unistd_injectObj(&unistdObj);
-    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(m_socketfd)).WillOnce(Return(0));
+    EXPECT_CALL(m_unistdObj, CLOSE_SOCKET_P(sockfd))
+        .Times(2)
+        .WillRepeatedly(Return(0));
 
-    // Process the Unit
-    int returned;
-    errno = 1; // 'Operation not permitted'
+    // Test Unit
+    ::SOCKINFO sockinfo;
+    int ret_sock_destroy;
 
     if (old_code) {
-        ::std::cout << "  BUG! Failing socket shutdown with successful close "
-                       "should fail.\n";
-        EXPECT_EQ(returned =
-                      m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH),
+        std::cout
+            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << ": Failing socket shutdown with successful close should fail.\n";
+        sock_init(&sockinfo, sockfd);
+        EXPECT_EQ(ret_sock_destroy =
+                      sock_destroy(&sockinfo, /*SHUT_RDWR*/ SD_BOTH),
                   UPNP_E_SUCCESS)
-            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
+            << errStrEx(ret_sock_destroy, UPNP_E_SUCCESS);
+
+        sock_init(&sockinfo, sockfd);
+        EXPECT_EQ(ret_sock_destroy =
+                      sock_destroy(&sockinfo, /*SHUT_RDWR*/ SD_BOTH),
+                  UPNP_E_SUCCESS) // Wrong!
+            << errStrEx(ret_sock_destroy, UPNP_E_SOCKET_ERROR);
 
     } else {
 
-        EXPECT_EQ(returned =
-                      m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH),
+        // First call: shutdown a not connected connection is not an error.
+        sock_init(&sockinfo, sockfd);
+#ifdef _MSC_VER
+        ::WSASetLastError(ENOTCONNP); // Instead of mocking
+#endif
+        EXPECT_EQ(ret_sock_destroy =
+                      sock_destroy(&sockinfo, /*SHUT_RDWR*/ SD_BOTH),
+                  UPNP_E_SUCCESS)
+            << errStrEx(ret_sock_destroy, UPNP_E_SUCCESS);
+
+        // Second call: shutdown error on connected connection.
+        sock_init(&sockinfo, sockfd);
+#ifdef _MSC_VER
+        ::WSASetLastError(EBADFP); // Instead of mocking
+#endif
+        EXPECT_EQ(ret_sock_destroy =
+                      sock_destroy(&sockinfo, /*SHUT_RDWR*/ SD_BOTH),
                   UPNP_E_SOCKET_ERROR)
-            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
+            << errStrEx(ret_sock_destroy, UPNP_E_SOCKET_ERROR);
     }
 }
 
-TEST_F(SockFTestSuite, sock_destroy_inval_fd_shutdown_fails_close_fails_not_0) {
-    if (github_actions && !old_code)
-        GTEST_SKIP() << "             known failing test on Github Actions";
+TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_and_close_fails) {
+    constexpr SOCKET sockfd{sfd_base + 69};
 
-    // shutdown fails
-    EXPECT_CALL(m_sys_socketObj, shutdown(m_socketfd, /*SHUT_RDWR*/ SD_BOTH))
-        .WillOnce(Return(-1));
+    // shutdown should fail
+    EXPECT_CALL(m_sys_socketObj, shutdown(sockfd, /*SHUT_RDWR*/ SD_BOTH))
+        .WillOnce(Return(SOCKET_ERROR));
     // close fails on _WIN32 with positive error number
-    umock::Unistd unistd_injectObj(&unistdObj);
-    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(m_socketfd))
+    EXPECT_CALL(m_unistdObj, CLOSE_SOCKET_P(sockfd))
         .WillOnce(Return(10093 /*WSANOTINITIALISED*/));
 
     // Process the Unit
-    int returned;
+    ::SOCKINFO sockinfo;
+    int ret_sock_destroy;
 
     if (old_code) {
-        ::std::cout
-            << "  BUG! Failing socket shutdown and close != 0 should fail.\n";
-        EXPECT_EQ(returned =
-                      m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH),
+        ::std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                    << ": Failing socket shutdown and close should fail.\n";
+        sock_init(&sockinfo, sockfd);
+        EXPECT_EQ(ret_sock_destroy =
+                      sock_destroy(&sockinfo, /*SHUT_RDWR*/ SD_BOTH),
                   UPNP_E_SUCCESS)
-            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
+            << errStrEx(ret_sock_destroy, UPNP_E_SOCKET_ERROR);
 
     } else {
 
-        EXPECT_EQ(returned =
-                      m_sockObj.sock_destroy(&m_info, /*SHUT_RDWR*/ SD_BOTH),
+        sock_init(&sockinfo, sockfd);
+        EXPECT_EQ(ret_sock_destroy =
+                      sock_destroy(&sockinfo, /*SHUT_RDWR*/ SD_BOTH),
                   UPNP_E_SOCKET_ERROR)
-            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
+            << errStrEx(ret_sock_destroy, UPNP_E_SOCKET_ERROR);
     }
 }
 
+#if 0
 TEST_F(SockFTestSuite, sock_read_no_timeout) {
     // Configure expected system calls that will return a received message.
     // select()
@@ -927,15 +908,15 @@ TEST(SockTestSuite, sock_ssl_connect) {
         << "  # No tests for Open SSL connections available, must be created.";
 }
 #endif
+#endif
 
 } // namespace utest
 
 int main(int argc, char** argv) {
-#ifndef UPNPLIB_WITH_NATIVE_PUPNP
-    if (std::getenv("GITHUB_ACTIONS"))
-        return 0;
-#endif
     ::testing::InitGoogleMock(&argc, argv);
+    pupnp::CLogging logObj; // DEBUG! Output only with build type DEBUG.
+    // if (g_dbug)
+    logObj.enable(UPNP_ALL);
 #include "utest/utest_main.inc"
     return gtest_return_code; // managed in gtest_main.inc
 }
