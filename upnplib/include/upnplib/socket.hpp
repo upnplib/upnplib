@@ -82,9 +82,11 @@
 #ifdef _MSC_VER
 #define EBADFP WSAENOTSOCK
 #define ENOTCONNP WSAENOTCONN
+#define EINTRP WSAEINTR
 #else
 #define EBADFP EBADF
 #define ENOTCONNP ENOTCONN
+#define EINTRP EINTR
 #endif
 
 namespace upnplib {
@@ -262,7 +264,7 @@ class UPNPLIB_API CWSAStartup {
 // There is a problem that Winsock2 on the Microsoft Windows platform does not
 // support detailed error information given in the global variable 'errno'.
 // Instead it returns them with calling 'WSAGetLastError()'. This class
-// encapsulates this different so there is no need to always check the platform
+// encapsulates this difference so there is no need to always check the platform
 // to get the error information.
 class UPNPLIB_API CSocketError {
   public:

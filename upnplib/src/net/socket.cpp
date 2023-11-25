@@ -488,7 +488,7 @@ CSocketError::operator const int&() const {
 
 void CSocketError::catch_error() {
 #ifdef _MSC_VER
-    m_errno = ::WSAGetLastError();
+    m_errno = umock::winsock2_h.WSAGetLastError();
 #else
     m_errno = errno;
 #endif

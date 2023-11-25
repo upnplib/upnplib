@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-24
+// Redistribution only with this Copyright remark. Last modified: 2023-11-30
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/q/76548580/5014688
@@ -24,16 +24,19 @@
 namespace utest {
 
 using ::testing::_;
-// using ::testing::DoAll;
+using ::testing::DoAll;
 using ::testing::ExitedWithCode;
-// using ::testing::NotNull;
+using ::testing::InSequence;
+using ::testing::NotNull;
 using ::testing::Return;
-// using ::testing::SetArrayArgument;
 using ::testing::SetErrnoAndReturn;
 using ::testing::StrictMock;
 
-// using ::upnplib::errStr;
+using ::utest::StrCpyToArg;
+
+using ::upnplib::errStr;
 using ::upnplib::errStrEx;
+using ::upnplib::g_dbug;
 using ::upnplib::SSockaddr;
 
 using ::umock::sfd_base;
@@ -53,7 +56,8 @@ class SockFTestSuite : public ::testing::Test {
     StrictMock<umock::UnistdMock> m_unistdObj;
     umock::Unistd unistd_injectObj = umock::Unistd(&m_unistdObj);
 };
-// typedef SockFTestSuite SockFDeathTest;
+typedef SockFTestSuite SockFDeathTest;
+
 
 TEST(SockTestSuite, sock_init_successful) {
     constexpr SOCKET sockfd{sfd_base + 62};
@@ -256,7 +260,7 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_and_close_fails) {
     EXPECT_CALL(m_unistdObj, CLOSE_SOCKET_P(sockfd))
         .WillOnce(Return(10093 /*WSANOTINITIALISED*/));
 
-    // Process the Unit
+    // Test Unit
     ::SOCKINFO sockinfo;
     int ret_sock_destroy;
 
@@ -279,358 +283,430 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_and_close_fails) {
     }
 }
 
-#if 0
-TEST_F(SockFTestSuite, sock_read_no_timeout) {
+TEST_F(SockFTestSuite, sock_read_within_timeout_successful) {
+    constexpr SOCKET sockfd{sfd_base + 71};
+
     // Configure expected system calls that will return a received message.
     // select()
     EXPECT_CALL(m_sys_socketObj,
-                select(m_socketfd + 1, NotNull(), _, NULL, NULL))
+                select(sockfd + 1, NotNull(), _, NULL, NotNull()))
         .WillOnce(Return(1));
     // recv()
-    char received_msg[]{"Mocked received TCP message no timeout."};
-    EXPECT_CALL(m_sys_socketObj, recv(m_socketfd, NotNull(), _, _))
-        .WillOnce(DoAll(SetArrayArgument<1>(
-                            received_msg, received_msg + sizeof(received_msg)),
-                        Return((SSIZEP_T)sizeof(received_msg))));
+    constexpr char received_msg[]{
+        "Mocked received TCP message within timeout."};
+    EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), _, _))
+        .WillOnce(DoAll(StrCpyToArg<1>(received_msg),
+                        Return(static_cast<SSIZEP_T>(sizeof(received_msg)))));
+#ifdef SO_NOSIGPIPE // this is defined on MacOS
+    if (old_code) { // Scope InSequence
+        InSequence seq;
+        // Mock getsockopt(), get old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, _, _))
+            .WillOnce(DoAll(SetArgPtrIntValue<3>(0xAA55), Return(0)));
+        // Mock setsockopt(), set new option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(1), _));
+        // Mock setsockopt(), restore old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(0xAA55), _));
+    } // End scope InSequence
+#endif
+
+    char buffer[sizeof(received_msg)]{};
+    int timeoutSecs{10};
+    ::SOCKINFO sockinfo;
+    sock_init(&sockinfo, sockfd);
 
     // Test Unit
+    int ret_sock_read =
+        sock_read(&sockinfo, buffer, sizeof(buffer), &timeoutSecs);
+
+    EXPECT_EQ(ret_sock_read, static_cast<int>(sizeof(received_msg)))
+        << errStr(ret_sock_read);
+    EXPECT_STREQ(buffer, received_msg);
+    if (g_dbug)
+        std::cout << "DEBUG: time used = " << timeoutSecs << ".\n";
+}
+
+TEST_F(SockFTestSuite, sock_read_no_timeout_successful) {
+    constexpr SOCKET sockfd{sfd_base + 70};
+
+    // Configure expected system calls that will return a received message.
+    // select()
+    EXPECT_CALL(m_sys_socketObj, select(sockfd + 1, NotNull(), _, NULL, NULL))
+        .WillOnce(Return(1));
+    // recv()
+    constexpr char received_msg[]{"Mocked received TCP message no timeout."};
+    EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), _, _))
+        .WillOnce(DoAll(StrCpyToArg<1>(received_msg),
+                        Return(static_cast<SSIZEP_T>(sizeof(received_msg)))));
+#ifdef SO_NOSIGPIPE // this is defined on MacOS
+    if (old_code) { // Scope InSequence
+        InSequence seq;
+        // Mock getsockopt(), get old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, _, _))
+            .WillOnce(DoAll(SetArgPtrIntValue<3>(0xAA55), Return(0)));
+        // Mock setsockopt(), set new option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(1), _));
+        // Mock setsockopt(), restore old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(0xAA55), _));
+    } // End scope InSequence
+#endif
+
     char buffer[sizeof(received_msg)]{};
     int timeoutSecs{-1}; // -1 Blocks indefinitely waiting for a socket
                          // descriptor to become ready.
-    // Also on _WIN32 select() returns SOCKET_ERROR (-1).
-    int returned =
-        m_sockObj.sock_read(&m_info, buffer, sizeof(buffer), &timeoutSecs);
-    EXPECT_EQ(returned, (int)sizeof(received_msg)) << errStr(returned);
-    EXPECT_STREQ(buffer, received_msg);
-}
+    ::SOCKINFO sockinfo;
+    sock_init(&sockinfo, sockfd);
 
-TEST_F(SockFTestSuite, sock_read_within_timeout) {
-    // Configure expected system calls that will return a received message.
-    // select()
-    EXPECT_CALL(m_sys_socketObj,
-                select(m_socketfd + 1, NotNull(), _, NULL, NotNull()))
-        .WillOnce(Return(1));
-    // recv()
-    char received_msg[]{"Mocked received TCP message within timeout."};
-    EXPECT_CALL(m_sys_socketObj, recv(m_socketfd, NotNull(), _, _))
-        .WillOnce(DoAll(SetArrayArgument<1>(
-                            received_msg, received_msg + sizeof(received_msg)),
-                        Return((SSIZEP_T)sizeof(received_msg))));
+    // Test Unit
+    int ret_sock_read =
+        sock_read(&sockinfo, buffer, sizeof(buffer), &timeoutSecs);
 
-    // Process the Unit
-    char buffer[sizeof(received_msg)]{};
-    int timeoutSecs{10};
-    // Also on _WIN32 select() returns SOCKET_ERROR (-1).
-    int returned =
-        m_sockObj.sock_read(&m_info, buffer, sizeof(buffer), &timeoutSecs);
-    EXPECT_EQ(returned, (int)sizeof(received_msg)) << errStr(returned);
+    EXPECT_EQ(ret_sock_read, static_cast<int>(sizeof(received_msg)))
+        << errStr(ret_sock_read);
     EXPECT_STREQ(buffer, received_msg);
+    if (g_dbug)
+        std::cout << "DEBUG: time used = " << timeoutSecs << ".\n";
 }
 
 TEST_F(SockFTestSuite, sock_read_with_connection_error) {
+    // Provide needed environment.
+    constexpr SOCKET sockfd{sfd_base + 72};
+    ::SOCKINFO sockinfo;
+    sock_init(&sockinfo, sockfd);
+    char buffer[1]{'\xAA'};
+    int timeoutSecs{10};
+
     // Configure expected system calls.
     // select()
     EXPECT_CALL(m_sys_socketObj,
-                select(m_socketfd + 1, NotNull(), _, NULL, NotNull()))
-        .WillOnce(Return(-1));
-    // recv()
-    EXPECT_CALL(m_sys_socketObj, recv(_, _, _, _)).Times(0);
+                select(sockfd + 1, NotNull(), _, NULL, NotNull()))
+#ifndef _MSC_VER
+        .WillOnce(SetErrnoAndReturn(EBADFP, SOCKET_ERROR));
+#else
+        .WillOnce(SetErrnoAndReturn(0, SOCKET_ERROR));
+    ::WSASetLastError(EBADFP); // Set instead of mocking, just before testing
+#endif
+    // Test Unit
+    int ret_sock_read =
+        sock_read(&sockinfo, buffer, sizeof(buffer), &timeoutSecs);
 
-    // Process the Unit
-    char buffer[1]{};
-    int timeoutSecs{10};
-    // Also on _WIN32 select() returns SOCKET_ERROR (-1).
-    int returned =
-        m_sockObj.sock_read(&m_info, buffer, sizeof(buffer), &timeoutSecs);
-    EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
-        << errStrEx(returned, UPNP_E_SOCKET_ERROR);
-    EXPECT_STREQ(buffer, "");
+    EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR)
+        << errStrEx(ret_sock_read, UPNP_E_SOCKET_ERROR);
+    EXPECT_EQ(*buffer, '\xAA');
 }
 
 TEST_F(SockFTestSuite, sock_read_signal_catched) {
     // A signal like ^C should not interrupt reading. When catching it, reading
     // is restarted. So we expect in this test that 'select()' is called
     // two times.
-    ::std::cout << "  BUG! Must be a fix in the Unit by setting 'errno = 0;'! "
-                   "(Search 'BUG!')\n";
-
-    // Configure expected system calls. select()
-    EXPECT_CALL(m_sys_socketObj,
-                select(m_socketfd + 1, NotNull(), _, NULL, NotNull()))
-        .WillOnce(Return(-1)) // Signal catched
-        .WillOnce(Return(1)); // Message received
-    // recv()
-    char received_msg[]{"Mocked received TCP message after signal catched."};
-    EXPECT_CALL(m_sys_socketObj, recv(m_socketfd, NotNull(), _, _))
-        .WillOnce(DoAll(SetArrayArgument<1>(
-                            received_msg, received_msg + sizeof(received_msg)),
-                        Return((SSIZEP_T)sizeof(received_msg))));
-
-    // Process the Unit
+    // Managing SIGPIPE is not required on reading network data so you will not
+    // find this check on new code. SIGPIPE may only occur on writing network
+    // data.
+    constexpr SOCKET sockfd{sfd_base + 73};
+    constexpr char received_msg[]{
+        "Mocked received TCP message after signal catched."};
     char buffer[sizeof(received_msg)]{};
     int timeoutSecs{10};
-    errno = EINTR; // this indicates that a signal is catched.
-    // Also on _WIN32 select() returns SOCKET_ERROR (-1).
-    int returned =
-        m_sockObj.sock_read(&m_info, buffer, sizeof(buffer), &timeoutSecs);
-    EXPECT_EQ(returned, (int)sizeof(received_msg)) << errStr(returned);
+    ::SOCKINFO sockinfo;
+    sock_init(&sockinfo, sockfd);
+
+    // Configure expected system calls.
+#ifdef SO_NOSIGPIPE // this is defined on MacOS
+    if (old_code) { // Scope InSequence
+        // Managing SIGPIPE (not required).
+        InSequence seq;
+        // Mock getsockopt(), get old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, _, _))
+            .WillOnce(DoAll(SetArgPtrIntValue<3>(0xAA55), Return(0)));
+        // Mock setsockopt(), set new option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(1), _));
+        // Mock setsockopt(), restore old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(0xAA55), _));
+    }
+#endif
+
+#ifdef _MSC_VER
+    if (old_code) {
+        // select
+        EXPECT_CALL(m_sys_socketObj,
+                    select(sockfd + 1, NotNull(), _, NULL, NotNull()))
+            .WillOnce(Return(SOCKET_ERROR));
+
+        // Test Unit
+        ::WSASetLastError(EINTRP); // Instead of mocking
+        int ret_sock_read =
+            sock_read(&sockinfo, buffer, sizeof(buffer), &timeoutSecs);
+
+        ::std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                    << ": Unit must not fail reading network data on win32 due "
+                       "to wrong error checking.\n";
+        EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR) // Wrong!
+            << errStr(ret_sock_read);
+        EXPECT_STREQ(buffer, ""); // Wrong!
+
+    } else {
+
+        // select
+        EXPECT_CALL(m_sys_socketObj,
+                    select(sockfd + 1, NotNull(), _, NULL, NotNull()))
+            .WillOnce(Return(SOCKET_ERROR)) // Signal catched
+            .WillOnce(Return(1));           // Message received
+        // recv()
+        EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), _, _))
+            .WillOnce(
+                DoAll(StrCpyToArg<1>(received_msg),
+                      Return(static_cast<SSIZEP_T>(sizeof(received_msg)))));
+
+        // Test Unit
+        ::WSASetLastError(EINTRP); // Instead of mocking
+        int ret_sock_read =
+            sock_read(&sockinfo, buffer, sizeof(buffer), &timeoutSecs);
+
+        EXPECT_EQ(ret_sock_read, sizeof(received_msg)) << errStr(ret_sock_read);
+        EXPECT_STREQ(buffer, received_msg);
+    }
+
+#else // _MSC_VER
+
+    // select
+    EXPECT_CALL(m_sys_socketObj,
+                select(sockfd + 1, NotNull(), _, NULL, NotNull()))
+        .WillOnce(SetErrnoAndReturn(EINTRP, SOCKET_ERROR)) // Signal catched
+        .WillOnce(Return(1));                              // Message received
+    // recv()
+    EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), _, _))
+        .WillOnce(DoAll(StrCpyToArg<1>(received_msg),
+                        Return(static_cast<SSIZEP_T>(sizeof(received_msg)))));
+
+    // Test Unit
+    int ret_sock_read =
+        sock_read(&sockinfo, buffer, sizeof(buffer), &timeoutSecs);
+
+    EXPECT_EQ(ret_sock_read, sizeof(received_msg)) << errStr(ret_sock_read);
     EXPECT_STREQ(buffer, received_msg);
+#endif
 }
 
 TEST_F(SockFTestSuite, sock_read_with_receiving_error) {
     // Configure expected system calls that will return a received message.
+    constexpr SOCKET sockfd{sfd_base + 74};
+
     // select()
     EXPECT_CALL(m_sys_socketObj,
-                select(m_socketfd + 1, NotNull(), _, NULL, NotNull()))
+                select(sockfd + 1, NotNull(), _, NULL, NotNull()))
         .WillOnce(Return(1));
     // recv()
-    EXPECT_CALL(m_sys_socketObj, recv(m_socketfd, NotNull(), _, _))
-        .WillOnce(Return(-1));
+    EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), _, _))
+        .WillOnce(Return(SOCKET_ERROR));
 
-    // Process the Unit
+#ifdef SO_NOSIGPIPE // this is defined on MacOS
+    if (old_code) { // Scope InSequence
+        InSequence seq;
+        // Mock getsockopt(), get old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, _, _))
+            .WillOnce(DoAll(SetArgPtrIntValue<3>(0xAA55), Return(0)));
+        // Mock setsockopt(), set new option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(1), _));
+        // Mock setsockopt(), restore old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(0xAA55), _));
+    } // End scope InSequence
+#endif
+
+    char buffer[2]{"\xAA"};
+    int timeoutSecs{10};
+    ::SOCKINFO sockinfo;
+    sock_init(&sockinfo, sockfd);
+
+    // Test Unit
+    int ret_sock_read =
+        sock_read(&sockinfo, buffer, sizeof(buffer), &timeoutSecs);
+
+    EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR)
+        << errStrEx(ret_sock_read, UPNP_E_SOCKET_ERROR);
+    EXPECT_STREQ(buffer, "\xAA");
+}
+
+TEST(SockDeathTest, sock_read_with_invalid_pointer_to_socket_info) {
     char buffer[1]{};
-    int timeoutSecs{10};
-    // Also on _WIN32 select() returns SOCKET_ERROR (-1).
-    int returned =
-        m_sockObj.sock_read(&m_info, buffer, sizeof(buffer), &timeoutSecs);
-    EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
-        << errStrEx(returned, UPNP_E_SOCKET_ERROR);
-    EXPECT_STREQ(buffer, "");
-}
-
-TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_socket_info) {
-    if (github_actions && !old_code)
-        GTEST_SKIP() << "             known failing test on Github Actions";
-
+    int timeoutSecs{-1}; // -1 Blocks indefinitely waiting for a socket
+                         // descriptor to become ready.
     if (old_code) {
-        ::std::cout << "  BUG! A nullptr to a socket info structure must not "
-                       "segfault.\n";
+        ::std::cout
+            << CYEL "[ BUGFIX   ] " CRES << __LINE__
+            << ": A nullptr to a socket info structure must not segfault.\n";
+        EXPECT_DEATH(sock_read(nullptr, buffer, sizeof(buffer), &timeoutSecs),
+                     ".*");
 
     } else {
 
-        // Configure expected system calls should never called.
-        // select()
-        EXPECT_CALL(m_sys_socketObj, select(_, _, _, _, _)).Times(0);
-        // recv()
-        EXPECT_CALL(m_sys_socketObj, recv(_, _, _, _)).Times(0);
-
-        // Process the Unit
-        int returned{UPNP_E_INTERNAL_ERROR};
-        char buffer[1]{};
-        int timeoutSecs{-1}; // -1 Blocks indefinitely waiting for a socket
-                             // descriptor to become ready.
-        ASSERT_EXIT((returned = m_sockObj.sock_read(
-                         nullptr, buffer, sizeof(buffer), &timeoutSecs),
-                     exit(0)),
-                    ::testing::ExitedWithCode(0), ".*")
+        ASSERT_EXIT(
+            (sock_read(nullptr, buffer, sizeof(buffer), &timeoutSecs), exit(0)),
+            ExitedWithCode(0), ".*")
             << "  # A nullptr to a socket info structure must not segfault.";
-        EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
-            << errStrEx(returned, UPNP_E_SOCKET_ERROR);
+        int ret_sock_read =
+            sock_read(nullptr, buffer, sizeof(buffer), &timeoutSecs);
+        EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR)
+            << errStrEx(ret_sock_read, UPNP_E_SOCKET_ERROR);
     }
 }
 
-TEST_F(SockFTestSuite, sock_read_with_empty_socket_info) {
-    if (github_actions && !old_code)
-        GTEST_SKIP() << "             known failing test on Github Actions";
-
-    // Configure expected system calls that will return a received message.
-    if (old_code) {
-        // select()
-        ::std::cout << "  BUG! System function 'select()' must not be called. "
-                       "Without timeout it may hang.\n";
-        EXPECT_CALL(m_sys_socketObj, select(_, NotNull(), _, NULL, NotNull()))
-            .WillOnce(Return(-1));
-
-    } else {
-
-        ::std::cout
-            << "  # System function 'select()' must not be called. Without "
-               "timeout it may hang.\n";
-        EXPECT_CALL(m_sys_socketObj, select(_, _, _, _, _)).Times(0);
-    }
-    // recv()
-    EXPECT_CALL(m_sys_socketObj, recv(_, _, _, _)).Times(0);
-
-    // Process the Unit
-    ::SOCKINFO info{}; // Empty socket info
-
-    char buffer[8]{};
+#if 0
+TEST(SockTestSuite, sock_write_read_successful) {
+    constexpr char received_msg[]{"Received message"};
+    char buffer[sizeof(received_msg)]{};
     int timeoutSecs{10};
-    // Also on _WIN32 select() returns SOCKET_ERROR (-1).
-    int returned =
-        m_sockObj.sock_read(&info, buffer, sizeof(buffer), &timeoutSecs);
-    EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
-        << errStrEx(returned, UPNP_E_SOCKET_ERROR);
-    EXPECT_STREQ(buffer, "");
-}
+    ::SOCKINFO sockinfo;
+    sock_init(&sockinfo, sockfd);
 
-TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_0_byte_length) {
+    // Test Unit
+    int ret_sock_read =
+        sock_read(&sockinfo, buffer, sizeof(buffer), &timeoutSecs);
+}
+#endif
+
+// TODO: needs to be tested with real syscalls.
+TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_or_0_byte_length) {
     // This is a valid call and indicates that there should nothing received.
-    // With 0 byte buffer length the buffer doesn't matter and may be not
-    // available at all.
-    if (github_actions && !old_code)
-        GTEST_SKIP() << "             known failing test on Github Actions";
+    // With no pointer to a buffer, the buffer length doesn't matter.
+    // With buffer pointer but 0 byte length, the buffer doesn't mätter.
+    constexpr SOCKET sockfd{sfd_base + 75};
+    int timeoutSecs{10}; // -1 Blocks indefinitely waiting for a socket
+                         // descriptor to become ready.
+    ::SOCKINFO sockinfo;
+    sock_init(&sockinfo, sockfd);
 
     if (old_code) {
         // Configure expected system calls should never called.
         // select()
-        ::std::cout
-            << "  OPT: It is not needed to call system function 'select()' "
-               "in this case.\n";
+        if (g_dbug)
+            ::std::cout
+                << "  OPT: It is not needed to call system function 'select()' "
+                   "in this case.\n";
         EXPECT_CALL(m_sys_socketObj,
-                    select(m_socketfd + 1, NotNull(), _, NULL, NULL))
+                    select(sockfd + 1, NotNull(), NotNull(), NULL, NotNull()))
+            .WillOnce(Return(1))
             .WillOnce(Return(1));
 
         // recv()
-        ::std::cout
-            << "  OPT: It is not needed to call system function 'recv()' "
-               "in this case.\n";
-        EXPECT_CALL(m_sys_socketObj, recv(m_socketfd, _, _, _))
-            .WillOnce(Return(-1));
+        if (g_dbug)
+            ::std::cout
+                << "  OPT: It is not needed to call system function 'recv()' "
+                   "in this case.\n";
+        EXPECT_CALL(m_sys_socketObj, recv(sockfd, _, _, _))
+            .WillOnce(Return(SOCKET_ERROR));
+        EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), 0, _))
+            .WillOnce(Return(SOCKET_ERROR));
 
-        // Process the Unit
-        int timeoutSecs{-1}; // -1 Blocks indefinitely waiting for a socket
-                             // descriptor to become ready.
-        errno = EFAULT;      // The receive buffer pointer(s) point outside the
-                             // process's address space.
-        int returned = m_sockObj.sock_read(&m_info, nullptr, 0, &timeoutSecs);
-        EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR);
-        ::std::cout << "  BUG! Should be received number of bytes = 0"
-                    << " but not " << errStr(returned) << ".\n";
-
-    } else {
-
-        // Configure expected system calls should never called.
-        // select()
-        ::std::cout
-            << "  OPT: It is not needed to call system function 'select()' "
-               "in this case.\n";
+#ifdef SO_NOSIGPIPE // this is defined on MacOS
+        // Mock getsockopt(), get old option SIGPIPE
         EXPECT_CALL(m_sys_socketObj,
-                    select(m_socketfd + 1, NotNull(), _, NULL, NULL))
-            .Times(0);
-
-        // recv()
-        ::std::cout
-            << "  OPT: It is not needed to call system function 'recv()' "
-               "in this case.\n";
-        EXPECT_CALL(m_sys_socketObj, recv(m_socketfd, _, _, _)).Times(0);
-
-        // Process the Unit
-        int timeoutSecs{-1}; // -1 Blocks indefinitely waiting for a socket
-                             // descriptor to become ready.
-        errno = EFAULT;      // The receive buffer pointer(s) point outside the
-                             // process's address space.
-        int returned = m_sockObj.sock_read(&m_info, nullptr, 0, &timeoutSecs);
-        EXPECT_EQ(returned, 0) << "  # Should be received number of bytes = 0"
-                               << " but not " << errStr(returned) << ".";
-    }
-}
-
-TEST_F(SockFTestSuite, sock_read_with_valid_buffer_but_0_byte_length) {
-    // This is a valid call and indicates that there should nothing received.
-    // With 0 byte buffer length the buffer doesn't matter.
-    if (github_actions && !old_code)
-        GTEST_SKIP() << "             known failing test on Github Actions";
-
-    if (old_code) {
-        // Configure expected system calls that will return a received message.
-        // select()
-        ::std::cout
-            << "  OPT: It is not needed to call system function 'select()' "
-               "in this case.\n";
+                    getsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, _, _))
+            .Times(2)
+            .WillRepeatedly(DoAll(SetArgPtrIntValue<3>(0xAA55), Return(0)));
+        // Mock setsockopt(), set new option SIGPIPE
         EXPECT_CALL(m_sys_socketObj,
-                    select(m_socketfd + 1, NotNull(), _, NULL, NULL))
-            .WillOnce(Return(1));
-
-        // recv()
+                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(1), _))
+            .Times(2);
+        // Mock setsockopt(), restore old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(0xAA55), _))
+            .Times(2);
+#endif
+        // Test Unit
+        int ret_sock_read = sock_read(&sockinfo, nullptr, 0, &timeoutSecs);
+        EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR); // Wrong!
         ::std::cout
-            << "  OPT: It is not needed to call system function 'recv()' "
-               "in this case.\n";
-        EXPECT_CALL(m_sys_socketObj, recv(m_socketfd, NotNull(), 0, _))
-            .WillOnce(Return(-1));
+            << CYEL "[ FIX      ] " CRES << __LINE__
+            << ": nullptr to buffer should receive number of bytes = 0 but not "
+            << errStr(ret_sock_read) << ".\n";
 
-        // Process the Unit
-        char buffer[1]{'\0'};
-        int timeoutSecs{-1}; // -1 Blocks indefinitely waiting for a socket
-                             // descriptor to become ready.
-        // Also on _WIN32 select() returns SOCKET_ERROR (-1).
-        int returned = m_sockObj.sock_read(&m_info, buffer, 0, &timeoutSecs);
-        EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR);
-        ::std::cout << "  BUG! Should be received number of bytes = 0"
-                    << " but not " << errStr(returned) << ".\n";
+        char buffer[]{""};
+        ret_sock_read = sock_read(&sockinfo, buffer, 0, &timeoutSecs);
+        EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR); // Wrong!
         EXPECT_STREQ(buffer, "");
+        ::std::cout << CYEL "[ FIX      ] " CRES << __LINE__
+                    << ": 0 byte buffer length should receive number of bytes "
+                       "= 0 but not "
+                    << errStr(ret_sock_read) << ".\n";
 
     } else {
 
-        // Configure expected system calls that will return a received message.
-        // select()
-        ::std::cout
-            << "  OPT: It is not needed to call system function 'select()' "
-               "in this case.\n";
-        EXPECT_CALL(m_sys_socketObj,
-                    select(m_socketfd + 1, NotNull(), _, NULL, NULL))
-            .Times(0);
+        // Test Unit
+        int ret_sock_read = sock_read(&sockinfo, nullptr, 0, &timeoutSecs);
+        EXPECT_EQ(ret_sock_read, 0)
+            << "  # Should receive number of bytes = 0"
+            << " but not " << errStr(ret_sock_read) << ".";
 
-        // recv()
-        ::std::cout
-            << "  OPT: It is not needed to call system function 'recv()' "
-               "in this case.\n";
-        EXPECT_CALL(m_sys_socketObj, recv(m_socketfd, NotNull(), 0, _))
-            .Times(0);
-
-        // Process the Unit
-        char buffer[1]{'\0'};
-        int timeoutSecs{-1}; // -1 Blocks indefinitely waiting for a socket
-                             // descriptor to become ready.
-        // Also on _WIN32 select() returns SOCKET_ERROR (-1).
-        int returned = m_sockObj.sock_read(&m_info, buffer, 0, &timeoutSecs);
-        EXPECT_EQ(returned, 0) << "  # Should be received number of bytes = 0"
-                               << " but not " << errStr(returned) << ".";
+        char buffer[]{""};
+        ret_sock_read = sock_read(&sockinfo, buffer, 0, &timeoutSecs);
+        EXPECT_EQ(ret_sock_read, 0)
+            << "  # Should receive number of bytes = 0"
+            << " but not " << errStr(ret_sock_read) << ".";
         EXPECT_STREQ(buffer, "");
     }
 }
 
-TEST_F(SockFTestSuite, sock_read_with_invalid_pointer_to_timeout_value) {
-    // The underlaying system call 'select()' accepts NULL as pointer to the
-    // timeout value to indicate not using a timeout and wait indefinitely. So
-    // it should also be possible to call the Unit with a nullptr for that.
-    if (github_actions && !old_code)
-        GTEST_SKIP() << "             known failing test on Github Actions";
+TEST_F(SockFDeathTest, sock_read_with_nullptr_to_timeout_value) {
+    // Specifying a nullptr for the timeout value results in using the default
+    // response timeout.
+    constexpr SOCKET sockfd{sfd_base + 76};
+    ::SOCKINFO sockinfo;
+    sock_init(&sockinfo, sockfd);
+    constexpr char received_msg[]{
+        "Mocked received TCP message with nullptr to timeout value."};
+    char buffer[sizeof(received_msg)]{};
 
     if (old_code) {
-        ::std::cout
-            << "  BUG! A nullptr to the timeout value must not segfault.\n";
+        ::std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                    << ": A nullptr to the timeout value must not segfault.\n";
+        // Test Unit
+        ASSERT_DEATH(sock_read(&sockinfo, buffer, sizeof(buffer), nullptr), "");
 
     } else {
 
         // Configure expected system calls that will return a received message.
         // select()
         EXPECT_CALL(m_sys_socketObj,
-                    select(m_socketfd + 1, NotNull(), _, NULL, NULL))
+                    select(sockfd + 1, NotNull(), _, NULL, NotNull()))
             .WillOnce(Return(1));
         // recv()
-        char received_msg[]{
-            "Mocked received TCP message with nullptr to timeout value."};
-        EXPECT_CALL(m_sys_socketObj, recv(m_socketfd, NotNull(), _, _))
+        EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), _, _))
             .WillOnce(
-                DoAll(SetArrayArgument<1>(received_msg,
-                                          received_msg + sizeof(received_msg)),
-                      Return((SSIZEP_T)sizeof(received_msg))));
+                DoAll(StrCpyToArg<1>(received_msg),
+                      Return(static_cast<SSIZEP_T>(sizeof(received_msg)))));
 
-        // Process the Unit
-        int returned{UPNP_E_INTERNAL_ERROR};
-        char buffer[sizeof(received_msg)]{};
-        // Also on _WIN32 select() returns SOCKET_ERROR (-1).
-        ASSERT_EXIT((returned = m_sockObj.sock_read(&m_info, buffer,
-                                                    sizeof(buffer), nullptr),
-                     exit(0)),
-                    ::testing::ExitedWithCode(0), ".*")
-            << "  # A nullptr to the timeout value must not segfault.";
-        EXPECT_EQ(returned, (int)sizeof(received_msg)) << errStr(returned);
+        // Test Unit
+        int ret_sock_read =
+            sock_read(&sockinfo, buffer, sizeof(buffer), nullptr);
+        EXPECT_EQ(ret_sock_read, static_cast<SSIZEP_T>(sizeof(received_msg)))
+            << errStr(ret_sock_read);
         EXPECT_STREQ(buffer, received_msg);
     }
 }
 
+#if 0
 TEST_F(SockFTestSuite, sock_write_no_timeout) {
     // select()
     EXPECT_CALL(m_sys_socketObj,
@@ -914,9 +990,6 @@ TEST(SockTestSuite, sock_ssl_connect) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-    pupnp::CLogging logObj; // DEBUG! Output only with build type DEBUG.
-    // if (g_dbug)
-    logObj.enable(UPNP_ALL);
 #include "utest/utest_main.inc"
     return gtest_return_code; // managed in gtest_main.inc
 }

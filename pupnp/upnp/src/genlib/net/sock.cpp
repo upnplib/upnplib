@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-19
+ * Redistribution only with this Copyright remark. Last modified: 2023-11-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -186,9 +186,6 @@ static int sock_read_write(
     timeout.tv_sec = *timeoutSecs;
     timeout.tv_usec = 0;
     while (1) {
-        // BUG! To get correct error messages from the system call for checking
-        // signals EINTR (see below) the errno must be resetted. I have seen an
-        // endless loop here with old contents of errno.  errno = 0; --Ingo
         if (*timeoutSecs < 0)
             retCode = umock::sys_socket_h.select((int)sockfd + 1, &readSet,
                                                  &writeSet, NULL, NULL);
