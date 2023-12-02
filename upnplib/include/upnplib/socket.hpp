@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-24
+// Redistribution only with this Copyright remark. Last modified: 2023-12-03
 
 // Helpful link for ip address structures:
 // REF: [sockaddr structures as union]
@@ -83,10 +83,14 @@
 #define EBADFP WSAENOTSOCK
 #define ENOTCONNP WSAENOTCONN
 #define EINTRP WSAEINTR
+#define EFAULTP WSAEFAULT
+#define ENOMEMP WSA_NOT_ENOUGH_MEMORY
 #else
 #define EBADFP EBADF
 #define ENOTCONNP ENOTCONN
 #define EINTRP EINTR
+#define EFAULTP EFAULT
+#define ENOMEMP ENOMEM
 #endif
 
 namespace upnplib {

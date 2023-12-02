@@ -1,9 +1,11 @@
 Next steps to do:
 * Rework test_sock.cpp to work with changed sys_socket mocking.
-* Enable CSigpipe@sock.cpp for MacOS and create tests for it.
-* Fix time to receive or send data on sock_read_write()@sock.cpp.
+  * Rework tests to write data.
+  * Create custom action to set errno or WSASetLastError()
+  * Create no mocked tests for read and write data.
+  * Enable CSigpipe@sock.cpp for MacOS and create tests for it.
+  * Enable test_sock_openssl.cpp again.
 * Remove a_service argument from CAddrinfo constructor.
-* Enable test_sock_openssl.cpp again.
 * Rework test_httpreadwrite.cpp.
 * Reduce size of shared libraries.
 * Use poll() and WSAPoll() instead of select().

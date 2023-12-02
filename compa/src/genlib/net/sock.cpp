@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-11-29
+ * Redistribution only with this Copyright remark. Last modified: 2023-12-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -200,6 +200,7 @@ class CNosigpipe {
  *	\li \c numBytes - On Success, number of bytes received or sent or
  *	\li \c UPNP_E_TIMEDOUT - Timeout
  *	\li \c UPNP_E_SOCKET_ERROR - Error on socket calls
+ *	\li \c UPNP_E_SOCKET_WRITE - Error on send data
  */
 static int sock_read_write(
     /*! [in] Socket Information Object. */
@@ -214,10 +215,9 @@ static int sock_read_write(
     /*! [in] Boolean value specifying read or write option. */
     bool bRead) {
     TRACE("Executing sock_read_write()")
-    if (info == nullptr)
+    if (info == nullptr || buffer == nullptr)
         return UPNP_E_SOCKET_ERROR;
-    if (buffer == nullptr || bufsize <= 0)
-        // No buffer available, successful returns 0 bytes read.
+    if (bufsize == 0)
         return 0;
 
     int retCode;
@@ -227,8 +227,6 @@ static int sock_read_write(
     long numBytes;
     time_t start_time{time(NULL)};
     SOCKET sockfd{info->socket};
-    long bytes_sent{};
-    size_t byte_left{};
     ssize_t num_written;
 
     FD_ZERO(&readSet);
@@ -278,41 +276,42 @@ static int sock_read_write(
         }
 #endif
 
-    } else {
+    } else { // write network data
 
-        byte_left = bufsize;
-        bytes_sent = 0;
+        size_t byte_left{bufsize};
+        long bytes_sent{};
 #ifdef SO_NOSIGPIPE                   // This is defined on MacOS
         CNosigpipe nosigpipe(sockfd); // Save, set and restore option settings.
 #endif
-        while (byte_left != (size_t)0) {
+        while (byte_left != static_cast<size_t>(0)) {
 #ifdef UPNP_ENABLE_OPEN_SSL
             if (info->ssl) {
-                num_written =
-                    SSL_write(info->ssl, buffer + bytes_sent, (int)byte_left);
+                TRACE("Write data with syscall ::SSL_write().")
+                num_written = SSL_write(info->ssl, buffer + bytes_sent,
+                                        static_cast<int>(byte_left));
             } else {
 #endif
                 TRACE("Write data with syscall ::send().")
-                num_written = umock::sys_socket_h.send(
-                    sockfd, buffer + bytes_sent, (SIZEP_T)byte_left,
-                    MSG_DONTROUTE | MSG_NOSIGNAL);
+                num_written =
+                    umock::sys_socket_h.send(sockfd, buffer + bytes_sent,
+                                             static_cast<SIZEP_T>(byte_left),
+                                             MSG_DONTROUTE | MSG_NOSIGNAL);
 #ifdef UPNP_ENABLE_OPEN_SSL
             }
 #endif
             if (num_written == -1) {
-                // BUG! Should return UPNP_E_SOCKET_ERROR --Ingo
-                return (int)num_written;
+                return UPNP_E_SOCKET_WRITE;
             }
-            byte_left -= (size_t)num_written;
-            bytes_sent += (long)num_written;
+            byte_left -= static_cast<size_t>(num_written);
+            bytes_sent += static_cast<long>(num_written);
         }
         numBytes = bytes_sent;
     }
     if (numBytes < 0)
         return UPNP_E_SOCKET_ERROR;
-    /* subtract time used for reading/writing. */
+    /* return time used for reading/writing. */
     if (timeoutSecs != nullptr && timeout_secs != 0)
-        *timeoutSecs -= (int)(time(NULL) - start_time);
+        *timeoutSecs = static_cast<int>(time(NULL) - start_time);
 
     return numBytes;
 }

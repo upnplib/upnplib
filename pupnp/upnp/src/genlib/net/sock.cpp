@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-11-24
+ * Redistribution only with this Copyright remark. Last modified: 2023-12-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -246,7 +246,7 @@ static int sock_read_write(
                     umock::sys_socket_h.setsockopt(sockfd, SOL_SOCKET,
                                                    SO_NOSIGPIPE, &old, olen);
 #endif
-                    // BUG! Should return UPNP_E_SOCKET_ERROR --Ingo
+                    // BUG! Should return UPNP_E_SOCKET_WRITE --Ingo
                     return (int)num_written;
                 }
                 byte_left -= (size_t)num_written;

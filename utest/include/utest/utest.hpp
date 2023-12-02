@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_UTEST_HPP
 #define UPNPLIB_UTEST_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-17
+// Redistribution only with this Copyright remark. Last modified: 2023-12-03
 
 #include <upnplib/visibility.hpp>
 #include <upnplib/port.hpp>
@@ -195,6 +195,18 @@ ACTION_TEMPLATE(StrnCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
                 AND_2_VALUE_PARAMS(str, len)) {
     std::strncpy(static_cast<char*>(std::get<k>(args)), str,
                  static_cast<size_t>(len));
+}
+
+// Set Error portable means set 'errno' on Linux, 'WSASetLastError()' on win32
+// ---------------------------------------------------------------------------
+// 'errid' is portable mapped in upnplib socket.hpp.
+ACTION_P(SetErrPortAndReturn, errid, ret) {
+#ifdef _MSC_VER
+    ::WSASetLastError(errid);
+#else
+    errno = errid;
+#endif
+    return (ret);
 }
 
 } // namespace utest
