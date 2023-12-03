@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-08
+// Redistribution only with this Copyright remark. Last modified: 2023-12-06
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -9,7 +9,7 @@
 #include <compa/src/genlib/net/http/httpreadwrite.cpp>
 #endif
 
-#include <upnplib/general.hpp>
+#include <upnplib/global.hpp>
 #include <upnplib/sockaddr.hpp>
 
 #include <utest/utest.hpp>

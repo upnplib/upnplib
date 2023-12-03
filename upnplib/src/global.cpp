@@ -1,7 +1,7 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-01
+// Redistribution only with this Copyright remark. Last modified: 2023-12-06
 
-#include "upnplib/general.inc"
+#include "upnplib/global.hpp"
 
 
 // strndup() is a GNU extension.
@@ -18,12 +18,3 @@ char* strndup(const char* __string, size_t __n) {
     return newstr;
 }
 #endif
-
-
-namespace upnplib {
-
-UPNPLIB_API bool g_dbug{false};
-
-std::string libinfo() { return "upnplib library version = under developement"; }
-
-} // namespace upnplib

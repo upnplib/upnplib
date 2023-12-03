@@ -1,14 +1,15 @@
+#ifndef UPNPLIB_GENERAL_HPP
+#define UPNPLIB_GENERAL_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-22
-
-// There is no include guard '#ifndef ...' because this file shouldn't be
-// included more than two times as given.
+// Redistribution only with this Copyright remark. Last modified: 2023-12-06
 
 // Here we have general used functions and tools.
 
 #include <upnplib/cmake_vars.hpp>
 #include <upnplib/visibility.hpp>
+#include <upnplib/port.hpp>
 #include <string>
+
 
 // strndup() is a GNU extension.
 // -----------------------------
@@ -62,9 +63,25 @@ UPNPLIB_API char* strndup(const char* __string, size_t __n);
 
 namespace upnplib {
 
+// Global constants
+// ================
+// Default response timeout for UPnP messages as given by The UPnP™ Device
+// Architecture 2.0, Document Revision Date: April 17, 2020.
+inline constexpr int g_response_timeout{30};
+
 // Info message about the library
-// ------------------------------
-UPNPLIB_API std::string libinfo();
+inline constexpr std::string_view libinfo{
+    "upnplib library version = under developement"};
+
+
+// Global variables
+// ================
+// Switch to enable verbose (debug) output.
+// This is only modified by user intervention, e.g. on the command line or with
+// an environment variable but never modified by the production code. Only Unit
+// tests may modify the switch under test.
+inline bool g_dbug;
 
 } // namespace upnplib
-// vim: syntax=cpp
+
+#endif // UPNPLIB_GENERAL_HPP

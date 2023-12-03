@@ -1,10 +1,10 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-07
+// Redistribution only with this Copyright remark. Last modified: 2023-12-06
 
 // There is no include guard '#ifndef ...' because this file shouldn't be
 // included more than two times as given.
 
-#include <upnplib/general.hpp>
+#include <upnplib/global.hpp>
 #include <upnplib/visibility.hpp>
 #include <cstring>
 

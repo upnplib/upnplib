@@ -1,8 +1,8 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-24
+// Redistribution only with this Copyright remark. Last modified: 2023-12-06
 
 #include <upnplib/socket.hpp>
-#include <upnplib/general.hpp>
+#include <upnplib/global.hpp>
 #include <upnplib/sockaddr.hpp>
 #include <umock/sys_socket.hpp>
 #include <umock/stringh.hpp>

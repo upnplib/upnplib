@@ -1,7 +1,8 @@
 Next steps to do:
-* Rework test_sock.cpp to work with changed sys_socket mocking.
-  * Rework tests to write data.
-  * Create custom action to set errno or WSASetLastError()
+* Rename general.* to global*.
+* Create github account upnpp and copy/rename library/namespace upnplib to upnpp.
+* Rework socket read/write function and test_sock.cpp.
+  * Split monolitic 'sock_read_write()' into specialized smaller functions.
   * Create no mocked tests for read and write data.
   * Enable CSigpipe@sock.cpp for MacOS and create tests for it.
   * Enable test_sock_openssl.cpp again.

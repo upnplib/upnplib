@@ -1,12 +1,12 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-01
+// Redistribution only with this Copyright remark. Last modified: 2023-12-06
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
 #include <pupnp/upnp/src/genlib/net/http/httpreadwrite.cpp>
 #include <upnplib/src/net/http/httpreadwrite.cpp>
 
-#include <upnplib/general.hpp>
+#include <upnplib/global.hpp>
 #include <upnplib/upnptools.hpp>
 #include <upnplib/uri.hpp>
 #include <upnplib/socket.hpp>

@@ -1,12 +1,12 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-03
+// Redistribution only with this Copyright remark. Last modified: 2023-12-06
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/q/76548580/5014688
 
 #include <upnp.hpp>
 
-#include <upnplib/general.hpp>
+#include <upnplib/global.hpp>
 #include <upnplib/upnptools.hpp> // For errStr??
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/socket.hpp>
