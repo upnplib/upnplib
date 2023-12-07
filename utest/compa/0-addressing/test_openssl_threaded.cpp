@@ -1,9 +1,10 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-06
+// Redistribution only with this Copyright remark. Last modified: 2023-12-08
 
 #include <upnplib/global.hpp>
-#include <upnplib/port_sock.hpp>
 #include <upnplib/cmake_vars.hpp>
+#include <upnplib/port_sock.hpp>
+#include <upnplib/socket.hpp>
 
 #include <openssl/ssl.h>
 #include <openssl/err.h>
@@ -91,15 +92,15 @@ SSL_CTX* create_context() {
 void configure_context(SSL_CTX* ctx) {
     /* Set the key and cert */
     if (SSL_CTX_use_certificate_file(
-            ctx, UPNPLIB_PROJECT_SOURCE_DIR "/gtests/cert.pem",
+            ctx, UPNPLIB_PROJECT_SOURCE_DIR "/utest/cert.pem",
             SSL_FILETYPE_PEM) <= 0) {
         ERR_print_errors_fp(stderr);
         exit(EXIT_FAILURE);
     }
 
-    if (SSL_CTX_use_PrivateKey_file(
-            ctx, UPNPLIB_PROJECT_SOURCE_DIR "/gtests/key.pem",
-            SSL_FILETYPE_PEM) <= 0) {
+    if (SSL_CTX_use_PrivateKey_file(ctx,
+                                    UPNPLIB_PROJECT_SOURCE_DIR "/utest/key.pem",
+                                    SSL_FILETYPE_PEM) <= 0) {
         ERR_print_errors_fp(stderr);
         exit(EXIT_FAILURE);
     }
@@ -108,11 +109,7 @@ void configure_context(SSL_CTX* ctx) {
 void simple_TLS_server() {
     TRACE("executing utest::simple_TLS_server()");
 
-#ifdef _WIN32
-    WSADATA wsaData;
-    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != NO_ERROR)
-        exit(EXIT_FAILURE);
-#else
+#ifndef _WIN32
     /* Ignore broken pipe signals */
     // signal(SIGPIPE, SIG_IGN);
 #endif
@@ -173,67 +170,67 @@ void simple_TLS_server() {
 SSL* ssl_client;
 SOCKET sock;
 
-int SSL_error_print(const SSL* a_ssl, const int a_result) {
+int SSL_error_print(const int a_line, const SSL* a_ssl, const int a_result) {
     const int ssl_error = SSL_get_error(a_ssl, a_result);
     const int err_no = errno;
     switch (ssl_error) {
     case SSL_ERROR_NONE:
         break;
     case SSL_ERROR_ZERO_RETURN:
-        std::clog << "[Client:" << __LINE__ << "] SSL_ERROR_ZERO_RETURN\n";
+        std::clog << "[Client:" << a_line << "] SSL_ERROR_ZERO_RETURN\n";
         break;
     case SSL_ERROR_WANT_READ:
-        std::clog << "[Client:" << __LINE__
+        std::clog << "[Client:" << a_line
                   << "] SSL_ERROR_WANT_READ, the operation did not complete "
                      "and can be retried later.\n";
         break;
     case SSL_ERROR_WANT_WRITE:
-        std::clog << "[Client:" << __LINE__
+        std::clog << "[Client:" << a_line
                   << "] SSL_ERROR_WANT_WRITE, the operation did not complete "
                      "and can be retried later.\n";
         break;
     case SSL_ERROR_WANT_CONNECT:
         std::clog
-            << "[Client:" << __LINE__
+            << "[Client:" << a_line
             << "] SSL_ERROR_WANT_CONNECT, the operation did not complete; the "
                "same TLS/SSL I/O function should be called again later.\n";
         break;
     case SSL_ERROR_WANT_ACCEPT:
         std::clog
-            << "[Client:" << __LINE__
+            << "[Client:" << a_line
             << "] SSL_ERROR_WANT_ACCEPT, the operation did not complete; the "
                "same TLS/SSL I/O function should be called again later.\n";
         break;
     case SSL_ERROR_WANT_X509_LOOKUP:
         std::clog
-            << "[Client:" << __LINE__
+            << "[Client:" << a_line
             << "] SSL_ERROR_WANT_X509_LOOKUP, the operation did not complete; "
                "the "
                "same TLS/SSL I/O function should be called again later.\n";
         break;
     case SSL_ERROR_WANT_ASYNC:
         std::clog
-            << "[Client:" << __LINE__
+            << "[Client:" << a_line
             << "] SSL_ERROR_WANT_ASYNC, the operation did not complete; the "
                "same TLS/SSL I/O function should be called again later.\n";
         break;
     case SSL_ERROR_WANT_ASYNC_JOB:
-        std::clog << "[Client:" << __LINE__ << "] SSL_ERROR_WANT_ASYNC_JOB.\n";
+        std::clog << "[Client:" << a_line << "] SSL_ERROR_WANT_ASYNC_JOB.\n";
         break;
     case SSL_ERROR_SYSCALL:
         ERR_print_errors_fp(stdout);
-        std::clog << "[Client:" << __LINE__
+        std::clog << "[Client:" << a_line
                   << "] SSL_ERROR_SYSCALL, some non-recoverable, fatal I/O "
                      "error occurred. errno("
                   << err_no << "): " << std::strerror(err_no) << "\n";
         break;
     case SSL_ERROR_SSL:
-        std::clog << "[Client:" << __LINE__
+        std::clog << "[Client:" << a_line
                   << "] SSL_ERROR_SSL, a non-recoverable, fatal error in the "
                      "SSL library occurred, usually a protocol error.\n";
         break;
     default:
-        std::clog << "[Client:" << __LINE__ << "] Unknown SSL_ERROR.\n";
+        std::clog << "[Client:" << a_line << "] Unknown SSL_ERROR.\n";
         break;
     }
     errno = err_no;
@@ -250,21 +247,23 @@ int RecvPacket() {
         buf[len] = 0;
         std::cout << std::string(buf);
     } while (len > 0);
-    return SSL_error_print(ssl_client, len);
+    return SSL_error_print(__LINE__, ssl_client, len);
 }
 
 int SendPacket(const char* buf) {
     ERR_clear_error(); // must be empty to get correct SSL_get_error()
     int len = SSL_write(ssl_client, buf, (int)strlen(buf));
-    return SSL_error_print(ssl_client, len);
+    return SSL_error_print(__LINE__, ssl_client, len);
 }
 
 int simple_TLS_client() {
+    upnplib::CSocketError sockerrObj;
     const SOCKET s = socket(AF_INET, SOCK_STREAM, 0);
     if (s == INVALID_SOCKET) {
+        sockerrObj.catch_error();
         std::clog << "[Client:" << __LINE__
-                  << "] Error - creating socket: errno(" << errno << ")=\""
-                  << std::strerror(errno) << "\"\n";
+                  << "] Error - creating socket: error-id(" << sockerrObj
+                  << ")=\"" << sockerrObj.get_error_str() << "\"\n";
         return -1;
     }
 
@@ -336,20 +335,17 @@ int simple_TLS_client() {
 }
 
 
-// TEST(SockTestSuite, simple_tls_server) { EXPECT_EQ(simple_TLS_client(), 0); }
+TEST(SockTestSuite, simple_tls_server) { EXPECT_EQ(simple_TLS_client(), 0); }
 
 } // namespace utest
 
 int main(int argc, char** argv) {
+    WINSOCK_INIT
     std::thread t1(utest::simple_TLS_server);
     t1.detach();
     ::testing::InitGoogleMock(&argc, argv);
 #include "utest/utest_main.inc"
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
-#ifdef _WIN32
-    WSACleanup();
-#endif
+    std::this_thread::sleep_for(std::chrono::milliseconds(250));
     TRACE("Program end.");
     return gtest_return_code; // managed in gtest_main.inc
 }

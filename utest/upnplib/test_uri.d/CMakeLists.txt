@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-18
+# Redistribution only with this Copyright remark. Last modified: 2023-12-08
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -25,10 +25,10 @@ add_test(NAME ctest_urlparser COMMAND test_urlparser --gtest_shuffle
 
 # uri: url_class
 #===============
-# These tests need rework because on MS Windows with Debug enabled the compiler
-# asserts boundary errors of the string pointer (iterator). With no Debug flag
-# set the tests also run on MS Windows.
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND WIN32)
+if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+# This Unit needs rework on WIN32 with CMAKE_BUILD_TYPE=Debug due to several
+# iterator bounding asserts. Because this Unit is currently not used I disable
+# its test. --Ingo
 else()
 add_executable(test_url_class
     ./test_url_class.cpp

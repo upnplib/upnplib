@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-21
+// Redistribution only with this Copyright remark. Last modified: 2022-12-08
 //
 // TODO: Provide url_is_special() as flag
 
@@ -14,8 +14,12 @@
 namespace upnplib {
 
 static const std::map<const std::string, const uint16_t> special_scheme{
-    {"file", NULL}, {"ftp", 21}, {"http", 80},
-    {"https", 443}, {"ws", 80},  {"wss", 443}};
+    {"file", static_cast<uint16_t>(NULL)},
+    {"ftp", static_cast<uint16_t>(21)},
+    {"http", static_cast<uint16_t>(80)},
+    {"https", static_cast<uint16_t>(443)},
+    {"ws", static_cast<uint16_t>(80)},
+    {"wss", static_cast<uint16_t>(443)}};
 
 static bool url_is_special(std::string_view a_str) {
     return a_str == "ftp" || a_str == "file" || a_str == "http" ||

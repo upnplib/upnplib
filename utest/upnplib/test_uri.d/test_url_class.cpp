@@ -1,5 +1,5 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-18
+// Redistribution only with this Copyright remark. Last modified: 2022-12-08
 //
 // If you need more information how the Url class works you can temporary
 // uncomment #define DEBUG_URL and run the tests with
@@ -52,10 +52,9 @@ scheme                    path
 
 using ::testing::ThrowsMessage;
 
-//
+
 namespace upnplib {
 
-//
 TEST(UrlClassTestSuite, is_in_percent_encode_set) {
     EXPECT_TRUE(is_in_userinfo_percent_encode_set('\0'));
     EXPECT_TRUE(is_in_userinfo_percent_encode_set('|'));
@@ -102,7 +101,7 @@ TEST(UrlClassTestSuite, empty_url_object) {
     EXPECT_EQ(url.fragment(), "");
 }
 
-//
+
 class UrlClassFTestSuite : public ::testing::Test {
   private:
     // Original clog pointer stored to recover it with the destructor.
@@ -886,7 +885,7 @@ TEST_F(UrlClassAuthorityFTestSuite, noUser_noPw_noHost_noPort_5) {
 
 } // namespace upnplib
 
-//
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
     return RUN_ALL_TESTS();

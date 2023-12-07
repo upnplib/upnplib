@@ -1,15 +1,18 @@
 Next steps to do:
-* Rename general.* to global*.
-* Create github account upnpp and copy/rename library/namespace upnplib to upnpp.
++ Rework umock files to use inline global variables instead workaround with *.inc files.
 * Rework socket read/write function and test_sock.cpp.
   * Split monolitic 'sock_read_write()' into specialized smaller functions.
-  * Create no mocked tests for read and write data.
-  * Enable CSigpipe@sock.cpp for MacOS and create tests for it.
-  * Enable test_sock_openssl.cpp again.
+  * General use of CSigpipe@sock.cpp.
+  * Use poll() and WSAPoll() instead of select().
+* Create github account 'upnpp' and copy/rename library/namespace upnplib to upnpp.
 * Remove a_service argument from CAddrinfo constructor.
+* Create threaded simple_inet_server and simple_inet_client for testing.
+  * Create no mocked tests for CSigpipe@sock.cpp, read and write data.
+  * Fix openssl_threaded on win32.
+* Test openssl.
+
 * Rework test_httpreadwrite.cpp.
 * Reduce size of shared libraries.
-* Use poll() and WSAPoll() instead of select().
 * Add AI_IDN and AI_CANONIDN support to CAddrinfo.
 * Improve CAddrinfo to support more than one address info (use *ai_next). It needs extended mocking.
 * Improve test_sock.cpp with ssl tests

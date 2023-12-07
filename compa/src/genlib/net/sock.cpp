@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-06
+ * Redistribution only with this Copyright remark. Last modified: 2023-12-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,8 +43,6 @@
  * \brief Implements the sockets functionality.
  */
 
-#include <config.hpp>
-
 #include <sock.hpp>
 #include <unixutil.hpp> /* for socklen_t, EAFNOSUPPORT */
 #include <upnp.hpp>
@@ -61,10 +59,7 @@
 
 #include <upnplib/global.hpp>
 #include <upnplib/socket.hpp>
-
-#ifndef _WIN32
-#include <csignal>
-#endif
+#include <upnplib/connection.hpp>
 
 #include <umock/sys_socket.hpp>
 
@@ -80,6 +75,7 @@
 /* OpenSSL context defined in upnpapi.c */
 UPNPLIB_EXTERN SSL_CTX* gSslCtx;
 #endif
+
 
 int sock_init(SOCKINFO* info, SOCKET sockfd) {
     TRACE("Executing sock_init()")
@@ -111,15 +107,18 @@ int sock_init_with_ip(SOCKINFO* info, SOCKET sockfd,
 
 #ifdef UPNP_ENABLE_OPEN_SSL
 int sock_ssl_connect(SOCKINFO* info) {
-    int status = 0;
+    int status{};
     info->ssl = SSL_new(gSslCtx);
     if (!info->ssl) {
         return UPNP_E_SOCKET_ERROR;
     }
-    // Typecast from SOCKET to int is no problem due to SSL man page.
+    // Due to man page there is no problem with type cast (int)
     status = SSL_set_fd(info->ssl, (int)info->socket);
     if (status == 1) {
+        upnplib::CSigpipe sigpipe;
+        sigpipe.suppress(info->socket);
         status = SSL_connect(info->ssl);
+        sigpipe.restore();
     }
     if (status == 1) {
         return UPNP_E_SUCCESS;
@@ -357,123 +356,5 @@ int sock_make_no_blocking(SOCKET sock) {
     return 0;
 #endif /* _WIN32 */
 }
-
-
-namespace compa {
-
-class CSigpipe {
-    // Taking the idea and example for this SIGPIPE handler from
-    // https://stackoverflow.com/a/2347848/5014688 and adapt it.
-    // Thanks to kroki.
-    // This is a general solution, for when you are not in full control of the
-    // program’s signal handling and want to write data to an actual pipe or
-    // use write(2) on a socket. To control SIGPIPE on send(2) I use socket
-    // option MSG_NOSIGNAL on Linux and SO_NOSIGPIPE on MacOS. But with SSL
-    // function calls we have to use this class. --Ingo
-
-#if !defined __APPLE__ && !defined _WIN32
-  private:
-    sigset_t sigpipe_mask;
-    bool sigpipe_pending;
-    bool sigpipe_unblock;
-
-  public:
-    CSigpipe() {
-        // The only error that can be returned in errno is 'EINVAL signum is not
-        // a valid signal.' SIGPIPE is always a valid signum, so no error
-        // handling is required.
-        sigemptyset(&sigpipe_mask);
-        sigaddset(&sigpipe_mask, SIGPIPE);
-    }
-#endif
-
-  public:
-    void suppress([[maybe_unused]] SOCKET sockfd) {
-#ifdef _WIN32
-        // Nothing to do for Microsoft Windows. It does not invoke a signal.
-#elif __APPLE__
-        // On MacOS I set the SO_NOSIGPIPE option for send() with the socket.
-#else
-        /*
-          We want to ignore possible SIGPIPE that we can generate on write.
-          SIGPIPE is delivered *synchronously* and *only* to the thread doing
-          the write. So if it is reported as already pending (which means the
-          thread blocks it), then we do nothing: if we generate SIGPIPE, it will
-          be merged with the pending one (there's no queuing), and that suits us
-          well. If it is not pending, we block it in this thread (and we avoid
-          changing signal action, because it is per-process).
-        */
-        sigset_t pending;
-        sigemptyset(&pending);
-        sigpending(&pending);
-
-        sigpipe_pending = sigismember(&pending, SIGPIPE);
-        if (!sigpipe_pending) {
-            sigset_t blocked;
-            sigemptyset(&blocked);
-            pthread_sigmask(SIG_BLOCK, &sigpipe_mask, &blocked);
-
-            /* Maybe is was blocked already?  */
-            sigpipe_unblock = !sigismember(&blocked, SIGPIPE);
-        }
-#endif
-    }
-
-    void restore() {
-#if !defined __APPLE__ && !defined _WIN32
-        /*
-          If SIGPIPE was pending already we do nothing. Otherwise, if it become
-          pending (i.e., we generated it), then we sigwait() it (thus clearing
-          pending status). Then we unblock SIGPIPE, but only if it were us who
-          blocked it.
-        */
-        if (!sigpipe_pending) {
-            sigset_t pending;
-            sigemptyset(&pending);
-            sigpending(&pending);
-            if (sigismember(&pending, SIGPIPE)) {
-                /*
-                  Protect ourselves from a situation when SIGPIPE was sent by
-                  the user to the whole process, and was delivered to other
-                  thread before we had a chance to wait for it.
-                */
-                static const struct timespec nowait = {0, 0};
-                int sig{-1};
-                do
-                    sig = sigtimedwait(&sigpipe_mask, NULL, &nowait);
-                while (sig == -1 && errno == EINTR);
-            }
-
-            if (sigpipe_unblock)
-                pthread_sigmask(SIG_UNBLOCK, &sigpipe_mask, NULL);
-        }
-#endif
-    }
-};
-
-
-#ifdef UPNP_ENABLE_OPEN_SSL
-int sock_ssl_connect(SOCKINFO* info) {
-    int status{};
-    info->ssl = SSL_new(gSslCtx);
-    if (!info->ssl) {
-        return UPNP_E_SOCKET_ERROR;
-    }
-    // Due to man page there is no problem with type cast (int)
-    status = SSL_set_fd(info->ssl, (int)info->socket);
-    if (status == 1) {
-        CSigpipe sigpipe;
-        sigpipe.suppress(info->socket);
-        status = SSL_connect(info->ssl);
-        sigpipe.restore();
-    }
-    if (status == 1) {
-        return UPNP_E_SUCCESS;
-    }
-    return UPNP_E_SOCKET_ERROR;
-}
-#endif
-
-} // namespace compa
 
 /* @} Sock */

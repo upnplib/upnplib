@@ -147,7 +147,7 @@ set(COMPA_SOURCE_FILES
     ${UPNPLIB_PROJECT_SOURCE_DIR}/interface/src/pupnp-sock.cpp
 
     # Helper classes added here. They are assigned with the UPnPlib rules, e.g.
-    # throwing exceptions etc. They only encapsulate old fuctions mainly for
+    # throwing exceptions etc. They only encapsulate old functions mainly for
     # testing with init and shutdown following the RAII paradigm.
     ${PUPNP_SOURCE_DIR}/src/api/upnpdebug.cpp
     ${PUPNP_SOURCE_DIR}/src/threadpool_init.cpp

@@ -1,18 +1,8 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-06
-
-// Helpful link for ip address structures:
-// https://stackoverflow.com/a/16010670/5014688
-
-#ifdef UPNPLIB_WITH_NATIVE_PUPNP
-#define NS ::pupnp
-#include <pupnp/sock.hpp>
-#else
-#define NS ::compa
-#include <compa/sock.hpp>
-#endif
+// Redistribution only with this Copyright remark. Last modified: 2023-12-07
 
 #include <upnp.hpp>
+#include <sock.hpp>
 
 #include <upnplib/port.hpp>
 #include <upnplib/global.hpp>
@@ -190,8 +180,6 @@ TEST_F(SockFDeathTest, sock_ssl_connect_signal_broken_pipe) {
     info.socket = sock.fd;
     // c) initialize the global SSL Context in external variable gSslCtx;
     CGsslCtx gSslCtxObj;
-    // d) provide a C++ interface object to call the Unit
-    NS::Csock sockObj;
 
     // Test Unit
 #if !defined __APPLE__ && !defined _WIN32
@@ -204,23 +192,22 @@ TEST_F(SockFDeathTest, sock_ssl_connect_signal_broken_pipe) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": Unit should not silently crash the program with signal "
                      "\"broken pipe\".\n";
-        ASSERT_DEATH(sockObj.sock_ssl_connect(&info), ".*"); // Wrong!
+        ASSERT_DEATH(sock_ssl_connect(&info), ".*"); // Wrong!
 
     } else {
 
         // This expects NO program crash because it manages the SIGPIPE signal
         // with a special handler.
-        ASSERT_EXIT((sockObj.sock_ssl_connect(&info), exit(0)),
-                    ExitedWithCode(0), ".*");
+        ASSERT_EXIT((sock_ssl_connect(&info), exit(0)), ExitedWithCode(0),
+                    ".*");
     }
 
 #else
 
     // This expects NO segfault because Winsock2 and BSD with setsockopt
     // SO_NOSIGPIPE does not generate a SIGPIPE signal.
-    ASSERT_EXIT((sockObj.sock_ssl_connect(&info), exit(0)), ExitedWithCode(0),
-                ".*");
-    int ret_sock_ssl_connect = sockObj.sock_ssl_connect(&info);
+    ASSERT_EXIT((sock_ssl_connect(&info), exit(0)), ExitedWithCode(0), ".*");
+    int ret_sock_ssl_connect = sock_ssl_connect(&info);
     EXPECT_EQ(ret_sock_ssl_connect, UPNP_E_SOCKET_ERROR)
         << errStrEx(ret_sock_ssl_connect, UPNP_E_SOCKET_ERROR);
 #endif
