@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_UTEST_HPP
 #define UPNPLIB_UTEST_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-03
+// Redistribution only with this Copyright remark. Last modified: 2023-12-10
 
 #include <upnplib/visibility.hpp>
 #include <upnplib/port.hpp>
@@ -180,10 +180,9 @@ ACTION_TEMPLATE(SetArgPtrIntValue, HAS_1_TEMPLATE_PARAMS(int, k),
 // simple version: ACTION_P(StrCpyToArg0, str) { strcpy(arg0, str); }
 //
 /* Example:
-    using ::utest::StrCpyToArg
+    using ::utest::StrCpyToArg;
 
-    EXPECT_CALL( mocked_sys_socketObj,
-        recvfrom(sockfd, _, _, _, _, _))
+    EXPECT_CALL( mocked_sys_socketObj, recvfrom(sockfd, _, _, _, _, _))
         .WillOnce(DoAll(StrCpyToArg<1>("ShutDown"), Return(8)));
 */
 // Using type cast in case there is a 'void*' pointer used.
@@ -195,6 +194,31 @@ ACTION_TEMPLATE(StrnCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
                 AND_2_VALUE_PARAMS(str, len)) {
     std::strncpy(static_cast<char*>(std::get<k>(args)), str,
                  static_cast<size_t>(len));
+}
+
+// Action for side effect to place or fill a structure at a location
+// -----------------------------------------------------------------
+// simple version:
+// ACTION_P(StructCpyToArg0, src) { memcpy(arg0, src, sizeof(*arg0)); }
+/* Example:
+    using ::utest::StructCpyToArg;
+
+    timeval timeout{1, 1000);
+    EXPECT_CALL(m_sys_socketObj, select(_, _, _, _, _)
+        .WillOnce(DoAll(StructCpyToArg<4>(&timeout), Return(1)));
+*/
+ACTION_TEMPLATE(StructCpyToArg, HAS_1_TEMPLATE_PARAMS(int, k),
+                AND_1_VALUE_PARAMS(src)) {
+    auto arg = std::get<k>(args);
+    if (arg != nullptr)
+        std::memcpy(arg, src, sizeof(*arg));
+}
+
+ACTION_TEMPLATE(StructSetToArg, HAS_1_TEMPLATE_PARAMS(int, k),
+                AND_1_VALUE_PARAMS(val)) {
+    auto arg = std::get<k>(args);
+    if (arg != nullptr)
+        std::memset(arg, val, sizeof(*arg));
 }
 
 // Set Error portable means set 'errno' on Linux, 'WSASetLastError()' on win32

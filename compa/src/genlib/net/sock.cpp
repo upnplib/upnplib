@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-07
+ * Redistribution only with this Copyright remark. Last modified: 2023-12-12
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -315,16 +315,182 @@ static int sock_read_write(
     return numBytes;
 }
 
+
+namespace compa {
+static int sock_read(
+    /*! [in] Socket Information Object. */
+    const SOCKET a_sockfd,
+    /*! [out] Buffer to get data to. */
+    char& a_buffer,
+    /*! [in] Size of the buffer. */
+    const SIZEP_T a_bufsize,
+    /*! [in] timeout value: optional
+                Not given or nullptr uses the default UPnP+ responds timeout.
+                < 0 blocks indefinitely waiting for a file descriptor to become
+                    ready. */
+    int* timeoutSecs = nullptr) {
+
+    time_t start_time{time(NULL)};
+    TRACE("Executing compa::sock_read()")
+    if (a_bufsize == 0)
+        return UPNP_E_SOCKET_ERROR;
+
+    fd_set readSet;
+    FD_ZERO(&readSet);
+    FD_SET(a_sockfd, &readSet);
+
+    // timeoutSecs == nullptr means default timeout to use.
+    // Used type long instead of time_t to be compatible with win32.
+    const long timeout_secs =
+        (timeoutSecs == nullptr) ? upnplib::g_response_timeout : *timeoutSecs;
+    timeval timeout;
+
+    upnplib::CSocketError sockerrObj;
+    while (true) {
+        // Due to 'man select' timeout should be considered to be undefined
+        // after select() returns so we must set it again.
+        timeout.tv_sec = timeout_secs;
+        timeout.tv_usec = 0;
+
+        // select() monitors only one socket file descriptor.
+        int retCode = umock::sys_socket_h.select(
+            static_cast<int>(a_sockfd + 1), &readSet, NULL, NULL,
+            (timeout_secs < 0) ? NULL : &timeout);
+
+        if (retCode == 0)
+            return UPNP_E_TIMEDOUT;
+        if (retCode == SOCKET_ERROR) {
+            sockerrObj.catch_error();
+            if (sockerrObj == EINTRP)
+                // Signal catched by select(). It is not for us so we
+                continue;
+            return UPNP_E_SOCKET_ERROR;
+        } else
+            /* read */
+            break;
+    }
+
+    TRACE("Read data with syscall ::recv().")
+    long numBytes = umock::sys_socket_h.recv(a_sockfd, &a_buffer, a_bufsize, 0);
+
+    if (numBytes < 0)
+        return UPNP_E_SOCKET_ERROR;
+    /* return time used for reading. */
+    if (timeoutSecs != nullptr && timeout_secs != 0)
+        *timeoutSecs = static_cast<int>(time(NULL) - start_time);
+
+    return numBytes;
+}
+
+
+static int sock_write_unp(
+    /*! [in] Socket Information Object. */
+    SOCKINFO* info,
+    /*! [out] Buffer to send data from. */
+    char* buffer,
+    /*! [in] Size of the buffer. */
+    size_t bufsize,
+    /*! [in] timeout value: < 0 blocks indefinitely waiting for a file
+       descriptor to become ready. */
+    int* timeoutSecs) {
+
+    time_t start_time{time(NULL)};
+    TRACE("Executing sock_write_unp()")
+    if (info == nullptr || buffer == nullptr)
+        return UPNP_E_SOCKET_ERROR;
+    if (bufsize == 0)
+        return 0;
+
+    SOCKET sockfd{info->socket};
+
+    fd_set writeSet;
+    FD_ZERO(&writeSet);
+    FD_SET(sockfd, &writeSet);
+
+    // timeoutSecs == nullptr means default timeout to use.
+    int timeout_secs =
+        (timeoutSecs == nullptr) ? upnplib::g_response_timeout : *timeoutSecs;
+    timeval timeout;
+
+    upnplib::CSocketError sockerrObj;
+    while (true) {
+        // timeout is undefined after error so we must set it again.
+        timeout.tv_sec = timeout_secs;
+        timeout.tv_usec = 0;
+
+        // select monitors only one socket file descriptor.
+        int retCode = umock::sys_socket_h.select(
+            static_cast<int>(sockfd + 1), NULL, &writeSet, NULL,
+            (timeout_secs < 0) ? NULL : &timeout);
+
+        if (retCode == 0)
+            return UPNP_E_TIMEDOUT;
+        if (retCode == SOCKET_ERROR) {
+            sockerrObj.catch_error();
+            if (sockerrObj == EINTRP)
+                // Signal catched by select(). It is not for us so we
+                continue;
+            return UPNP_E_SOCKET_ERROR;
+        } else
+            /* write. */
+            break;
+    }
+
+    size_t byte_left{bufsize};
+    long bytes_sent{};
+    ssize_t num_written;
+#ifdef SO_NOSIGPIPE               // This is defined on MacOS
+    CNosigpipe nosigpipe(sockfd); // Save, set and restore option settings.
+#endif
+    while (byte_left != static_cast<size_t>(0)) {
+        TRACE("Write data with syscall ::send().")
+        num_written = umock::sys_socket_h.send(sockfd, buffer + bytes_sent,
+                                               static_cast<SIZEP_T>(byte_left),
+                                               MSG_DONTROUTE | MSG_NOSIGNAL);
+        if (num_written == -1) {
+            return UPNP_E_SOCKET_WRITE;
+        }
+        byte_left -= static_cast<size_t>(num_written);
+        bytes_sent += static_cast<long>(num_written);
+    }
+    long numBytes = bytes_sent;
+
+    if (numBytes < 0)
+        return UPNP_E_SOCKET_ERROR;
+    /* return time used for reading/writing. */
+    if (timeoutSecs != nullptr && timeout_secs != 0)
+        *timeoutSecs = static_cast<int>(time(NULL) - start_time);
+
+    return numBytes;
+}
+} // namespace compa
+
+
 int sock_read(SOCKINFO* info, char* buffer, size_t bufsize, int* timeoutSecs) {
-    TRACE("Executing sock_read()")
-    return sock_read_write(info, buffer, bufsize, timeoutSecs, true);
+    TRACE("Executing ::sock_read()")
+    // nullptr check is important, arguments of called function are references.
+    if (info == nullptr || buffer == nullptr)
+        return UPNP_E_SOCKET_ERROR;
+    if (info->ssl)
+        return sock_read_write(info, buffer, bufsize, timeoutSecs, true);
+    else
+        return compa::sock_read(info->socket, *buffer,
+                                static_cast<SIZEP_T>(bufsize), timeoutSecs);
 }
 
 int sock_write(SOCKINFO* info, const char* buffer, size_t bufsize,
                int* timeoutSecs) {
     TRACE("Executing sock_write()")
-    /* Consciently removing constness. */
-    return sock_read_write(info, (char*)buffer, bufsize, timeoutSecs, false);
+    if (info == nullptr)
+        return UPNP_E_SOCKET_ERROR;
+    if (info->ssl)
+        /* Consciently removing constness. */
+        return sock_read_write(info, (char*)buffer, bufsize, timeoutSecs,
+                               false);
+    else
+        /* Consciently removing constness. */
+        return compa::sock_write_unp(info, const_cast<char*>(buffer), bufsize,
+                                     timeoutSecs);
 }
 
 int sock_make_blocking(SOCKET sock) {

@@ -1,5 +1,4 @@
 Next steps to do:
-+ Rework umock files to use inline global variables instead workaround with *.inc files.
 * Rework socket read/write function and test_sock.cpp.
   * Split monolitic 'sock_read_write()' into specialized smaller functions.
   * General use of CSigpipe@sock.cpp.

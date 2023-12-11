@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-06
+// Redistribution only with this Copyright remark. Last modified: 2023-12-11
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/q/76548580/5014688
@@ -27,13 +27,16 @@ namespace utest {
 
 using ::testing::_;
 using ::testing::DoAll;
+using ::testing::Eq;
 using ::testing::ExitedWithCode;
+using ::testing::Field;
 using ::testing::InSequence;
+using ::testing::IsNull;
+using ::testing::Ne;
 using ::testing::NotNull;
 using ::testing::Return;
 using ::testing::StrictMock;
-
-using ::utest::StrCpyToArg;
+using ::testing::no_adl::Conditional;
 
 using ::upnplib::errStr;
 using ::upnplib::errStrEx;
@@ -281,13 +284,17 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_and_close_fails) {
 }
 
 TEST_F(SockFTestSuite, sock_read_within_timeout_successful) {
-    constexpr SOCKET sockfd{sfd_base + 71};
+    constexpr SOCKET sockfd{3};
+    constexpr time_t timeout{5};
 
     // Configure expected system calls that will return a received message.
     // select()
     EXPECT_CALL(m_sys_socketObj,
-                select(sockfd + 1, NotNull(), _, NULL, NotNull()))
-        .WillOnce(Return(1));
+                select(sockfd + 1, NotNull(),
+                       Conditional(old_code, NotNull(), IsNull()), IsNull(),
+                       Field(&::timeval::tv_sec, Eq(timeout))))
+        // Consider timeout to be undefined after select() returns.
+        .WillOnce(DoAll(StructSetToArg<4>(0xAA), Return(1)));
     // recv()
     constexpr char received_msg[]{
         "Mocked received TCP message within timeout."};
@@ -312,9 +319,8 @@ TEST_F(SockFTestSuite, sock_read_within_timeout_successful) {
     } // End scope InSequence
 #endif
 
-    char buffer[sizeof(received_msg)]{};
-    constexpr time_t timeout{5};
     int timeoutSecs{timeout}; // Will be modified to used time
+    char buffer[sizeof(received_msg)]{};
     ::SOCKINFO sockinfo;
     sock_init(&sockinfo, sockfd);
 
@@ -339,11 +345,17 @@ TEST_F(SockFTestSuite, sock_read_within_timeout_successful) {
 }
 
 TEST_F(SockFTestSuite, sock_read_no_timeout_successful) {
-    constexpr SOCKET sockfd{sfd_base + 70};
+    constexpr SOCKET sockfd{3};
+    // timeout -1 blocks indefinitely waiting for a socket descriptor to become
+    // ready.
+    constexpr time_t timeout{-1};
 
     // Configure expected system calls that will return a received message.
     // select()
-    EXPECT_CALL(m_sys_socketObj, select(sockfd + 1, NotNull(), _, NULL, NULL))
+    EXPECT_CALL(m_sys_socketObj,
+                select(sockfd + 1, NotNull(),
+                       Conditional(old_code, NotNull(), IsNull()), IsNull(),
+                       IsNull()))
         .WillOnce(Return(1));
     // recv()
     constexpr char received_msg[]{"Mocked received TCP message no timeout."};
@@ -369,8 +381,7 @@ TEST_F(SockFTestSuite, sock_read_no_timeout_successful) {
 #endif
 
     char buffer[sizeof(received_msg)]{};
-    int timeoutSecs{-1}; // -1 Blocks indefinitely waiting for a socket
-                         // descriptor to become ready.
+    int timeoutSecs{timeout}; // Will be modified to used time
     ::SOCKINFO sockinfo;
     sock_init(&sockinfo, sockfd);
 
@@ -387,17 +398,23 @@ TEST_F(SockFTestSuite, sock_read_no_timeout_successful) {
 
 TEST_F(SockFTestSuite, sock_read_with_connection_error) {
     // Provide needed environment.
-    constexpr SOCKET sockfd{sfd_base + 72};
+    constexpr SOCKET sockfd{3};
+    constexpr time_t timeout{5};
     ::SOCKINFO sockinfo;
     sock_init(&sockinfo, sockfd);
     char buffer[1]{'\xAA'};
-    int timeoutSecs{10};
 
     // Configure expected system calls.
     // select()
     EXPECT_CALL(m_sys_socketObj,
-                select(sockfd + 1, NotNull(), _, NULL, NotNull()))
-        .WillOnce(SetErrPortAndReturn(EBADFP, SOCKET_ERROR));
+                select(sockfd + 1, NotNull(),
+                       Conditional(old_code, NotNull(), IsNull()), IsNull(),
+                       Field(&::timeval::tv_sec, Eq(timeout))))
+        // Consider timeout to be undefined after select() returns.
+        .WillOnce(DoAll(StructSetToArg<4>(0xAA),
+                        SetErrPortAndReturn(EBADFP, SOCKET_ERROR)));
+
+    int timeoutSecs{timeout};
 
     // Test Unit
     int ret_sock_read =
@@ -415,11 +432,12 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
     // Managing SIGPIPE is not required on reading network data so you will not
     // find this check on new code. SIGPIPE may only occur on writing network
     // data.
-    constexpr SOCKET sockfd{sfd_base + 73};
+    constexpr SOCKET sockfd{3};
+    constexpr time_t timeout{5};
+    int timeoutSecs{timeout}; // Will be modified to used time
     constexpr char received_msg[]{
         "Mocked received TCP message after signal catched."};
     char buffer[sizeof(received_msg)]{};
-    int timeoutSecs{10};
     ::SOCKINFO sockinfo;
     sock_init(&sockinfo, sockfd);
 
@@ -443,20 +461,24 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
     }
 #endif
 
+    if (old_code)
+        ::std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                    << ": Unit must not fail reading network data on win32 due "
+                       "to wrong error checking.\n";
 #ifdef _MSC_VER
     if (old_code) {
         // select
         EXPECT_CALL(m_sys_socketObj,
-                    select(sockfd + 1, NotNull(), _, NULL, NotNull()))
-            .WillOnce(SetErrPortAndReturn(ENOMEMP, SOCKET_ERROR));
+                    select(sockfd + 1, NotNull(), NotNull(), IsNull(),
+                           Field(&::timeval::tv_sec, Eq(timeout))))
+            // Consider timeout to be undefined after select() returns.
+            .WillOnce(DoAll(StructSetToArg<4>(0xAA),
+                            SetErrPortAndReturn(ENOMEMP, SOCKET_ERROR)));
 
         // Test Unit
         int ret_sock_read =
             sock_read(&sockinfo, buffer, sizeof(buffer), &timeoutSecs);
 
-        ::std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
-                    << ": Unit must not fail reading network data on win32 due "
-                       "to wrong error checking.\n";
         EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR) // Wrong!
             << errStr(ret_sock_read);
         EXPECT_STREQ(buffer, ""); // Wrong!
@@ -465,10 +487,13 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
 
         // select
         EXPECT_CALL(m_sys_socketObj,
-                    select(sockfd + 1, NotNull(), _, NULL, NotNull()))
-            .WillOnce(
-                SetErrPortAndReturn(EINTRP, SOCKET_ERROR)) // Signal catched
-            .WillOnce(Return(1));                          // Message received
+                    select(sockfd + 1, NotNull(), IsNull(), IsNull(),
+                           Field(&::timeval::tv_sec, Eq(timeout))))
+            // Consider timeout to be undefined after select() returns.
+            .WillOnce(DoAll(StructSetToArg<4>(0xAA), // Signal catched
+                            SetErrPortAndReturn(EINTRP, SOCKET_ERROR)))
+            .WillOnce(DoAll(StructSetToArg<4>(0xAA), // Message received
+                            SetErrPortAndReturn(EINTRP, 1)));
         // recv()
         EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), _, _))
             .WillOnce(
@@ -482,14 +507,51 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
         EXPECT_EQ(ret_sock_read, sizeof(received_msg)) << errStr(ret_sock_read);
         EXPECT_STREQ(buffer, received_msg);
     }
+#endif
 
-#else // _MSC_VER
+    if (old_code)
+        ::std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                    << ": Unit must not read network data on unix with an "
+                       "undefined timeout.\n";
+#ifndef _MSC_VER
+    if (old_code) {
+        // select
+        // Blocking select() is interrupted by a signal that is not for us.
+        // This is ignored and reading will continue with a new select(). The
+        // second attempt with the same timeout should succeed. Here the second
+        // attempt uses the undefined timeout modified by the first attempt.
+        // That is wrong.
+        // First attempt that is interrupted with EINTR.
+        EXPECT_CALL(m_sys_socketObj,
+                    select(sockfd + 1, NotNull(), NotNull(), IsNull(),
+                           Field(&::timeval::tv_sec, Eq(timeout))))
+            // Consider timeout to be undefined after select() returns. Fill
+            // with 0x55 will give a big positive number.
+            .WillOnce(DoAll(StructSetToArg<4>(0x55), // Signal catched
+                            SetErrPortAndReturn(EINTRP, SOCKET_ERROR)));
+        // Second attempt with undefined timeout. For this test case I assume a
+        // positve timeout (filled with 0x55) that will block until we get a
+        // socket ready to read.
+        EXPECT_CALL(m_sys_socketObj,
+                    select(sockfd + 1, NotNull(), NotNull(), IsNull(),
+                           Field(&::timeval::tv_sec, Ne(timeout)))) // Wrong!
+            .WillOnce(
+                DoAll(StructSetToArg<4>(0xAA), SetErrPortAndReturn(EINTRP, 1)));
 
-    // select
-    EXPECT_CALL(m_sys_socketObj,
-                select(sockfd + 1, NotNull(), _, NULL, NotNull()))
-        .WillOnce(SetErrPortAndReturn(EINTRP, SOCKET_ERROR)) // Signal catched
-        .WillOnce(Return(1));                                // Message received
+    } else {
+
+        // select
+        EXPECT_CALL(m_sys_socketObj,
+                    select(sockfd + 1, NotNull(),
+                           Conditional(old_code, NotNull(), IsNull()), IsNull(),
+                           Field(&::timeval::tv_sec, Eq(timeout))))
+            // Consider timeout to be undefined after select() returns.
+            .WillOnce(DoAll(StructSetToArg<4>(0xAA), // Signal catched
+                            SetErrPortAndReturn(EINTRP, SOCKET_ERROR)))
+            .WillOnce(DoAll(StructSetToArg<4>(0xAA), // Message received
+                            SetErrPortAndReturn(EINTRP, 1)));
+    }
+
     // recv()
     EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), _, _))
         .WillOnce(DoAll(StrCpyToArg<1>(received_msg),
@@ -506,12 +568,16 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
 
 TEST_F(SockFTestSuite, sock_read_with_receiving_error) {
     // Configure expected system calls that will return a received message.
-    constexpr SOCKET sockfd{sfd_base + 74};
+    constexpr SOCKET sockfd{3};
+    constexpr time_t timeout{5};
 
     // select()
     EXPECT_CALL(m_sys_socketObj,
-                select(sockfd + 1, NotNull(), _, NULL, NotNull()))
-        .WillOnce(Return(1));
+                select(sockfd + 1, NotNull(),
+                       Conditional(old_code, NotNull(), IsNull()), IsNull(),
+                       Field(&::timeval::tv_sec, Eq(timeout))))
+        // Consider timeout to be undefined after select() returns.
+        .WillOnce(DoAll(StructSetToArg<4>(0xAA), Return(1)));
     // recv()
     EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), _, _))
         .WillOnce(SetErrPortAndReturn(ENOMEMP, SOCKET_ERROR));
@@ -535,7 +601,7 @@ TEST_F(SockFTestSuite, sock_read_with_receiving_error) {
 #endif
 
     char buffer[2]{"\xAA"};
-    int timeoutSecs{10};
+    int timeoutSecs{timeout};
     ::SOCKINFO sockinfo;
     sock_init(&sockinfo, sockfd);
 
@@ -572,42 +638,29 @@ TEST(SockDeathTest, sock_read_with_invalid_pointer_to_socket_info) {
     }
 }
 
-#if 0
-TEST(SockTestSuite, sock_write_read_successful) {
-    constexpr char received_msg[]{"Received message"};
-    char buffer[sizeof(received_msg)]{};
-    int timeoutSecs{10};
-    ::SOCKINFO sockinfo;
-    sock_init(&sockinfo, sockfd);
-
-    // Test Unit
-    int ret_sock_read =
-        sock_read(&sockinfo, buffer, sizeof(buffer), &timeoutSecs);
-}
-#endif
-
-// TODO: needs to be tested with real syscalls.
 TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_or_0_byte_length) {
-    // This is a valid call and indicates that there should nothing received.
-    // With no pointer to a buffer, the buffer length doesn't matter.
-    // With buffer pointer but 0 byte length, the buffer doesn't mätter.
-    constexpr SOCKET sockfd{sfd_base + 75};
-    int timeoutSecs{10}; // -1 Blocks indefinitely waiting for a socket
-                         // descriptor to become ready.
+    // This should be a valid condition and indicating that there is nothing to
+    // receive. With no pointer to a buffer, the buffer length doesn't matter.
+    // With buffer pointer but 0 byte length, the buffer doesn't mätter. But
+    // to stay compatible with old code I will also expect both to be an error.
+    constexpr SOCKET sockfd{3};
+    constexpr time_t timeout{5};
+    int timeoutSecs{timeout};
     ::SOCKINFO sockinfo;
     sock_init(&sockinfo, sockfd);
 
     if (old_code) {
-        // Configure expected system calls should never called.
         // select()
         if (g_dbug)
             ::std::cout
                 << "  OPT: It is not needed to call system function 'select()' "
                    "in this case.\n";
         EXPECT_CALL(m_sys_socketObj,
-                    select(sockfd + 1, NotNull(), NotNull(), NULL, NotNull()))
-            .WillOnce(Return(1))
-            .WillOnce(Return(1));
+                    select(sockfd + 1, NotNull(), NotNull(), IsNull(),
+                           Field(&::timeval::tv_sec, Eq(timeout))))
+            // Consider timeout to be undefined after select() returns.
+            .Times(2)
+            .WillRepeatedly(DoAll(StructSetToArg<4>(0xAA), Return(1)));
 
         // recv()
         if (g_dbug)
@@ -638,33 +691,43 @@ TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_or_0_byte_length) {
 #endif
         // Test Unit
         int ret_sock_read = sock_read(&sockinfo, nullptr, 0, &timeoutSecs);
-        EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR); // Wrong!
-        ::std::cout
-            << CYEL "[ FIX      ] " CRES << __LINE__
-            << ": nullptr to buffer should receive number of bytes = 0 but not "
-            << errStr(ret_sock_read) << ".\n";
+        EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR);
+        // ::std::cout
+        //     << CYEL "[ FIX      ] " CRES << __LINE__
+        //     << ": nullptr to buffer should receive number of bytes = 0 but
+        //     not "
+        //     << errStr(ret_sock_read) << ".\n";
 
         char buffer[]{""};
         ret_sock_read = sock_read(&sockinfo, buffer, 0, &timeoutSecs);
-        EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR); // Wrong!
+        EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR);
         EXPECT_STREQ(buffer, "");
-        ::std::cout << CYEL "[ FIX      ] " CRES << __LINE__
-                    << ": 0 byte buffer length should receive number of bytes "
-                       "= 0 but not "
-                    << errStr(ret_sock_read) << ".\n";
+        // ::std::cout << CYEL "[ FIX      ] " CRES << __LINE__
+        //             << ": 0 byte buffer length should receive number of bytes
+        //             "
+        //                "= 0 but not "
+        //             << errStr(ret_sock_read) << ".\n";
 
     } else {
 
         // Test Unit
+        // To be compatible with old code I accept UPNP_E_SOCKET_ERROR instead
+        // of 0 bytes received.
         int ret_sock_read = sock_read(&sockinfo, nullptr, 0, &timeoutSecs);
         EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR)
             << errStrEx(ret_sock_read, UPNP_E_SOCKET_ERROR);
+        // EXPECT_EQ(ret_sock_read, 0)
+        //     << "  # Should receive number of bytes = 0"
+        //     << " but not " << errStr(ret_sock_read) << ".";
 
         char buffer[]{""};
         ret_sock_read = sock_read(&sockinfo, buffer, 0, &timeoutSecs);
-        EXPECT_EQ(ret_sock_read, 0)
-            << "  # Should receive number of bytes = 0"
-            << " but not " << errStr(ret_sock_read) << ".";
+        EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR)
+            << errStrEx(ret_sock_read, UPNP_E_SOCKET_ERROR);
+        // EXPECT_EQ(ret_sock_read, 0)
+        //     << "  # Should receive number of bytes = 0"
+        //     << " but not " << errStr(ret_sock_read) << ".";
+
         EXPECT_STREQ(buffer, "");
     }
 }
@@ -672,7 +735,7 @@ TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_or_0_byte_length) {
 TEST_F(SockFDeathTest, sock_read_with_nullptr_to_timeout_value) {
     // Specifying a nullptr for the timeout value results in using the default
     // response timeout.
-    constexpr SOCKET sockfd{sfd_base + 76};
+    constexpr SOCKET sockfd{3};
     ::SOCKINFO sockinfo;
     sock_init(&sockinfo, sockfd);
     constexpr char received_msg[]{
@@ -689,9 +752,12 @@ TEST_F(SockFDeathTest, sock_read_with_nullptr_to_timeout_value) {
 
         // Configure expected system calls that will return a received message.
         // select()
-        EXPECT_CALL(m_sys_socketObj,
-                    select(sockfd + 1, NotNull(), _, NULL, NotNull()))
-            .WillOnce(Return(1));
+        EXPECT_CALL(
+            m_sys_socketObj,
+            select(sockfd + 1, NotNull(), IsNull(), IsNull(),
+                   Field(&::timeval::tv_sec, Eq(upnplib::g_response_timeout))))
+            // Consider timeout to be undefined after select() returns.
+            .WillOnce(DoAll(StructSetToArg<4>(0xAA), Return(1)));
         // recv()
         EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), _, _))
             .WillOnce(
@@ -877,8 +943,13 @@ TEST_F(SockFDeathTest, sock_write_with_nullptr_to_socket_info) {
 TEST_F(SockFTestSuite, sock_write_with_empty_socket_info) {
     // Configure expected system calls.
     // select() should fail with invalid socket file descriptor in sockinfo.
-    EXPECT_CALL(m_sys_socketObj, select(_, NotNull(), NotNull(), NULL, NULL))
-        .WillOnce(SetErrPortAndReturn(EBADFP, SOCKET_ERROR));
+    if (old_code)
+        EXPECT_CALL(m_sys_socketObj,
+                    select(_, NotNull(), NotNull(), NULL, NULL))
+            .WillOnce(SetErrPortAndReturn(EBADFP, SOCKET_ERROR));
+    else
+        EXPECT_CALL(m_sys_socketObj, select(_, NULL, NotNull(), NULL, NULL))
+            .WillOnce(SetErrPortAndReturn(EBADFP, SOCKET_ERROR));
 
     ::SOCKINFO sockinfo{}; // Empty socket info
     char sent_msg[1]{};

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-06
+// Redistribution only with this Copyright remark. Last modified: 2023-12-09
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -311,8 +311,6 @@ TEST_F(HttpBasicFTestSuite, make_message_format_R_successful) {
     EXPECT_STREQ(m_request.buf, "HTTP/1.1 200 OK\r\n");
 }
 
-ACTION_P(StructCpyToArg0, buf) { memcpy(arg0, buf, sizeof(*arg0)); }
-
 TEST_F(HttpBasicFTestSuite, make_message_format_S_successful) {
     // format type 'S':  (no args)  -- appends HTTP SERVER: header
 
@@ -336,7 +334,7 @@ TEST_F(HttpBasicFTestSuite, make_message_format_S_successful) {
     umock::SysinfoMock sysinfoObj;
     umock::Sysinfo sysinfo_injectObj(&sysinfoObj);
     EXPECT_CALL(sysinfoObj, uname(_))
-        .WillOnce(DoAll(StructCpyToArg0(&sysinf), Return(0)));
+        .WillOnce(DoAll(StructCpyToArg<0>(&sysinf), Return(0)));
 
     // Test Unit
     EXPECT_EQ(http_MakeMessage(&m_request, 1, 1, "S"), 0);
@@ -456,7 +454,7 @@ TEST_F(HttpBasicFTestSuite, make_message_get_sdk_info_system_info_fails) {
     umock::Sysinfo sysinfo_injectObj(&sysinfoObj);
     EXPECT_CALL(sysinfoObj, uname(_))
         .WillOnce(
-            DoAll(StructCpyToArg0(&sysinf), SetErrnoAndReturn(EFAULT, -1)));
+            DoAll(StructCpyToArg<0>(&sysinf), SetErrnoAndReturn(EFAULT, -1)));
 
     // Test Unit
     get_sdk_info(info, sizeof(info));
@@ -494,7 +492,7 @@ TEST_F(HttpMockFTestSuite, send_message_from_buffer_successful) {
 
     // Mock select()
     EXPECT_CALL(m_sys_socketObj,
-                select(info.socket + 1, NotNull(), NotNull(), NULL, NotNull()))
+                select(info.socket + 1, _, NotNull(), NULL, NotNull()))
         .WillOnce(Return(1)); // send from buffer successful
     // Mock send()
     EXPECT_CALL(m_sys_socketObj, send(info.socket, request, request_length, _))

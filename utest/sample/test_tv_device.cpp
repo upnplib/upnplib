@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-08
+// Redistribution only with this Copyright remark. Last modified: 2023-12-09
 
 // -----------------------------------------------------------------------------
 // This testsuite starts the sample TV Device with general command line
@@ -174,7 +174,7 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
         // ****************************************************************
         // Mock V4 and V6 http listeners: get socket, bind it, listen on it and
         // get port with getsockname().
-        constexpr SOCKET listen_sockfd{umock::sfd_base + 1};
+        constexpr SOCKET listen_sockfd{umock::sfd_base + 82};
         const std::string listen_port{"50008"};
         SSockaddr
             listen_ssObj; // for getsockname() return sockaddr & port
@@ -192,7 +192,7 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
 
         // Mock stop socket (to end miniserver processing): get socket, bind it
         // and get port with getsockname().
-        constexpr SOCKET stop_sockfd{umock::sfd_base + 2};
+        constexpr SOCKET stop_sockfd{umock::sfd_base + 83};
         const std::string stop_port{"50009"};
         SSockaddr
             stop_ssObj; // for getsockname() return sockaddr & port
@@ -209,13 +209,13 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
 
         // Mock SSDP socket for discovery/advertising: get socket, bind it.
         // Create the IPv4 socket for SSDP REQUESTS
-        constexpr SOCKET ssdpreq_sockfd{umock::sfd_base + 3};
+        constexpr SOCKET ssdpreq_sockfd{umock::sfd_base + 84};
         EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
             .WillOnce(Return(ssdpreq_sockfd));
         EXPECT_CALL(sys_socketObj, setsockopt(ssdpreq_sockfd, IPPROTO_IP,
                                               IP_MULTICAST_TTL, _, _));
         // Create the IPv4 socket for SSDP
-        constexpr SOCKET ssdp_sockfd{umock::sfd_base + 4};
+        constexpr SOCKET ssdp_sockfd{umock::sfd_base + 85};
         EXPECT_CALL(sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
             .WillOnce(Return(ssdp_sockfd));
         EXPECT_CALL(sys_socketObj,
