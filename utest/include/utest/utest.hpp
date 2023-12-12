@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_UTEST_HPP
 #define UPNPLIB_UTEST_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-10
+// Redistribution only with this Copyright remark. Last modified: 2023-12-14
 
 #include <upnplib/visibility.hpp>
 #include <upnplib/port.hpp>
@@ -224,7 +224,7 @@ ACTION_TEMPLATE(StructSetToArg, HAS_1_TEMPLATE_PARAMS(int, k),
 // Set Error portable means set 'errno' on Linux, 'WSASetLastError()' on win32
 // ---------------------------------------------------------------------------
 // 'errid' is portable mapped in upnplib socket.hpp.
-ACTION_P(SetErrPortAndReturn, errid, ret) {
+ACTION_P(SetErrPtblAndReturn, errid, ret) {
 #ifdef _MSC_VER
     ::WSASetLastError(errid);
 #else

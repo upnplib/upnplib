@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-11
+// Redistribution only with this Copyright remark. Last modified: 2023-12-15
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/q/76548580/5014688
@@ -36,7 +36,6 @@ using ::testing::Ne;
 using ::testing::NotNull;
 using ::testing::Return;
 using ::testing::StrictMock;
-using ::testing::no_adl::Conditional;
 
 using ::upnplib::errStr;
 using ::upnplib::errStrEx;
@@ -204,9 +203,9 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_fails_close_ok) {
     // shutdown should fail
     EXPECT_CALL(m_sys_socketObj, shutdown(sockfd, /*SHUT_RDWR*/ SD_BOTH))
         // First call: shutdown a not connected connection is not an error.
-        .WillOnce(SetErrPortAndReturn(ENOTCONNP, SOCKET_ERROR))
+        .WillOnce(SetErrPtblAndReturn(ENOTCONNP, SOCKET_ERROR))
         // Second call: shutdown error on connected connection.
-        .WillOnce(SetErrPortAndReturn(EBADFP, SOCKET_ERROR));
+        .WillOnce(SetErrPtblAndReturn(EBADFP, SOCKET_ERROR));
     // close is successful
     EXPECT_CALL(m_unistdObj, CLOSE_SOCKET_P(sockfd))
         .Times(2)
@@ -255,7 +254,7 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_and_close_fails) {
 
     // shutdown should fail
     EXPECT_CALL(m_sys_socketObj, shutdown(sockfd, /*SHUT_RDWR*/ SD_BOTH))
-        .WillOnce(SetErrPortAndReturn(EBADFP, SOCKET_ERROR));
+        .WillOnce(SetErrPtblAndReturn(EBADFP, SOCKET_ERROR));
     // close fails on _WIN32 with positive error number
     EXPECT_CALL(m_unistdObj, CLOSE_SOCKET_P(sockfd))
         .WillOnce(Return(10093 /*WSANOTINITIALISED*/));
@@ -290,8 +289,7 @@ TEST_F(SockFTestSuite, sock_read_within_timeout_successful) {
     // Configure expected system calls that will return a received message.
     // select()
     EXPECT_CALL(m_sys_socketObj,
-                select(sockfd + 1, NotNull(),
-                       Conditional(old_code, NotNull(), IsNull()), IsNull(),
+                select(sockfd + 1, NotNull(), NotNull(), IsNull(),
                        Field(&::timeval::tv_sec, Eq(timeout))))
         // Consider timeout to be undefined after select() returns.
         .WillOnce(DoAll(StructSetToArg<4>(0xAA), Return(1)));
@@ -331,17 +329,10 @@ TEST_F(SockFTestSuite, sock_read_within_timeout_successful) {
     EXPECT_EQ(ret_sock_read, static_cast<int>(sizeof(received_msg)))
         << errStr(ret_sock_read);
     EXPECT_STREQ(buffer, received_msg);
-
-    if (old_code) {
-        ::std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
-                    << ": Unit should return the correct used time for "
-                       "execution.\n";
-        EXPECT_GE(timeoutSecs, timeout - 1); // Wrong! Value is to big.
-
-    } else {
-
-        EXPECT_LT(timeoutSecs, timeout);
-    }
+    // Don't know for what next is good. I haven't found any useful
+    // documentation about this "used time" and it is not used anywhere in the
+    // production code. Here it is only given for compatibility.
+    EXPECT_GE(timeoutSecs, timeout - 1);
 }
 
 TEST_F(SockFTestSuite, sock_read_no_timeout_successful) {
@@ -353,9 +344,7 @@ TEST_F(SockFTestSuite, sock_read_no_timeout_successful) {
     // Configure expected system calls that will return a received message.
     // select()
     EXPECT_CALL(m_sys_socketObj,
-                select(sockfd + 1, NotNull(),
-                       Conditional(old_code, NotNull(), IsNull()), IsNull(),
-                       IsNull()))
+                select(sockfd + 1, NotNull(), NotNull(), IsNull(), IsNull()))
         .WillOnce(Return(1));
     // recv()
     constexpr char received_msg[]{"Mocked received TCP message no timeout."};
@@ -407,12 +396,11 @@ TEST_F(SockFTestSuite, sock_read_with_connection_error) {
     // Configure expected system calls.
     // select()
     EXPECT_CALL(m_sys_socketObj,
-                select(sockfd + 1, NotNull(),
-                       Conditional(old_code, NotNull(), IsNull()), IsNull(),
+                select(sockfd + 1, NotNull(), NotNull(), IsNull(),
                        Field(&::timeval::tv_sec, Eq(timeout))))
         // Consider timeout to be undefined after select() returns.
         .WillOnce(DoAll(StructSetToArg<4>(0xAA),
-                        SetErrPortAndReturn(EBADFP, SOCKET_ERROR)));
+                        SetErrPtblAndReturn(EBADFP, SOCKET_ERROR)));
 
     int timeoutSecs{timeout};
 
@@ -473,7 +461,7 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
                            Field(&::timeval::tv_sec, Eq(timeout))))
             // Consider timeout to be undefined after select() returns.
             .WillOnce(DoAll(StructSetToArg<4>(0xAA),
-                            SetErrPortAndReturn(ENOMEMP, SOCKET_ERROR)));
+                            SetErrPtblAndReturn(ENOMEMP, SOCKET_ERROR)));
 
         // Test Unit
         int ret_sock_read =
@@ -487,13 +475,13 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
 
         // select
         EXPECT_CALL(m_sys_socketObj,
-                    select(sockfd + 1, NotNull(), IsNull(), IsNull(),
+                    select(sockfd + 1, NotNull(), NotNull(), IsNull(),
                            Field(&::timeval::tv_sec, Eq(timeout))))
             // Consider timeout to be undefined after select() returns.
             .WillOnce(DoAll(StructSetToArg<4>(0xAA), // Signal catched
-                            SetErrPortAndReturn(EINTRP, SOCKET_ERROR)))
+                            SetErrPtblAndReturn(EINTRP, SOCKET_ERROR)))
             .WillOnce(DoAll(StructSetToArg<4>(0xAA), // Message received
-                            SetErrPortAndReturn(EINTRP, 1)));
+                            SetErrPtblAndReturn(EINTRP, 1)));
         // recv()
         EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), _, _))
             .WillOnce(
@@ -528,7 +516,7 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
             // Consider timeout to be undefined after select() returns. Fill
             // with 0x55 will give a big positive number.
             .WillOnce(DoAll(StructSetToArg<4>(0x55), // Signal catched
-                            SetErrPortAndReturn(EINTRP, SOCKET_ERROR)));
+                            SetErrPtblAndReturn(EINTRP, SOCKET_ERROR)));
         // Second attempt with undefined timeout. For this test case I assume a
         // positve timeout (filled with 0x55) that will block until we get a
         // socket ready to read.
@@ -536,20 +524,19 @@ TEST_F(SockFTestSuite, sock_read_signal_catched) {
                     select(sockfd + 1, NotNull(), NotNull(), IsNull(),
                            Field(&::timeval::tv_sec, Ne(timeout)))) // Wrong!
             .WillOnce(
-                DoAll(StructSetToArg<4>(0xAA), SetErrPortAndReturn(EINTRP, 1)));
+                DoAll(StructSetToArg<4>(0xAA), SetErrPtblAndReturn(EINTRP, 1)));
 
     } else {
 
         // select
         EXPECT_CALL(m_sys_socketObj,
-                    select(sockfd + 1, NotNull(),
-                           Conditional(old_code, NotNull(), IsNull()), IsNull(),
+                    select(sockfd + 1, NotNull(), NotNull(), IsNull(),
                            Field(&::timeval::tv_sec, Eq(timeout))))
             // Consider timeout to be undefined after select() returns.
             .WillOnce(DoAll(StructSetToArg<4>(0xAA), // Signal catched
-                            SetErrPortAndReturn(EINTRP, SOCKET_ERROR)))
+                            SetErrPtblAndReturn(EINTRP, SOCKET_ERROR)))
             .WillOnce(DoAll(StructSetToArg<4>(0xAA), // Message received
-                            SetErrPortAndReturn(EINTRP, 1)));
+                            SetErrPtblAndReturn(EINTRP, 1)));
     }
 
     // recv()
@@ -573,14 +560,13 @@ TEST_F(SockFTestSuite, sock_read_with_receiving_error) {
 
     // select()
     EXPECT_CALL(m_sys_socketObj,
-                select(sockfd + 1, NotNull(),
-                       Conditional(old_code, NotNull(), IsNull()), IsNull(),
+                select(sockfd + 1, NotNull(), NotNull(), IsNull(),
                        Field(&::timeval::tv_sec, Eq(timeout))))
         // Consider timeout to be undefined after select() returns.
         .WillOnce(DoAll(StructSetToArg<4>(0xAA), Return(1)));
     // recv()
     EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), _, _))
-        .WillOnce(SetErrPortAndReturn(ENOMEMP, SOCKET_ERROR));
+        .WillOnce(SetErrPtblAndReturn(ENOMEMP, SOCKET_ERROR));
 
 #ifdef SO_NOSIGPIPE // this is defined on MacOS
     if (old_code) { // Scope InSequence
@@ -668,9 +654,9 @@ TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_or_0_byte_length) {
                 << "  OPT: It is not needed to call system function 'recv()' "
                    "in this case.\n";
         EXPECT_CALL(m_sys_socketObj, recv(sockfd, _, _, _))
-            .WillOnce(SetErrPortAndReturn(ENOMEMP, SOCKET_ERROR));
+            .WillOnce(SetErrPtblAndReturn(ENOMEMP, SOCKET_ERROR));
         EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), 0, _))
-            .WillOnce(SetErrPortAndReturn(ENOMEMP, SOCKET_ERROR));
+            .WillOnce(SetErrPtblAndReturn(ENOMEMP, SOCKET_ERROR));
 
 #ifdef SO_NOSIGPIPE // this is defined on MacOS
         // Mock getsockopt(), get old option SIGPIPE
@@ -700,19 +686,18 @@ TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_or_0_byte_length) {
 
         char buffer[]{""};
         ret_sock_read = sock_read(&sockinfo, buffer, 0, &timeoutSecs);
-        EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR);
+        EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR); // Wrong!
         EXPECT_STREQ(buffer, "");
-        // ::std::cout << CYEL "[ FIX      ] " CRES << __LINE__
-        //             << ": 0 byte buffer length should receive number of bytes
-        //             "
-        //                "= 0 but not "
-        //             << errStr(ret_sock_read) << ".\n";
+        ::std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                    << ": 0 byte buffer length should receive number of bytes "
+                       "= 0 but not "
+                    << errStr(ret_sock_read) << ".\n";
 
     } else {
 
-        // Test Unit
+        // Test Unit with nullptr to buffer
         // To be compatible with old code I accept UPNP_E_SOCKET_ERROR instead
-        // of 0 bytes received.
+        // of 0 bytes received. --Ingo
         int ret_sock_read = sock_read(&sockinfo, nullptr, 0, &timeoutSecs);
         EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR)
             << errStrEx(ret_sock_read, UPNP_E_SOCKET_ERROR);
@@ -720,21 +705,19 @@ TEST_F(SockFTestSuite, sock_read_with_nullptr_to_buffer_or_0_byte_length) {
         //     << "  # Should receive number of bytes = 0"
         //     << " but not " << errStr(ret_sock_read) << ".";
 
+        // Test Unit with with 0 byte buffer size.
         char buffer[]{""};
         ret_sock_read = sock_read(&sockinfo, buffer, 0, &timeoutSecs);
-        EXPECT_EQ(ret_sock_read, UPNP_E_SOCKET_ERROR)
-            << errStrEx(ret_sock_read, UPNP_E_SOCKET_ERROR);
-        // EXPECT_EQ(ret_sock_read, 0)
-        //     << "  # Should receive number of bytes = 0"
-        //     << " but not " << errStr(ret_sock_read) << ".";
-
+        EXPECT_EQ(ret_sock_read, 0)
+            << "  # Should receive number of bytes = 0 but not "
+            << errStr(ret_sock_read) << ".";
         EXPECT_STREQ(buffer, "");
     }
 }
 
 TEST_F(SockFDeathTest, sock_read_with_nullptr_to_timeout_value) {
-    // Specifying a nullptr for the timeout value results in using the default
-    // response timeout.
+    // Specifying a nullptr for the timeout value results in using the UPnP+
+    // default response timeout.
     constexpr SOCKET sockfd{3};
     ::SOCKINFO sockinfo;
     sock_init(&sockinfo, sockfd);
@@ -754,7 +737,7 @@ TEST_F(SockFDeathTest, sock_read_with_nullptr_to_timeout_value) {
         // select()
         EXPECT_CALL(
             m_sys_socketObj,
-            select(sockfd + 1, NotNull(), IsNull(), IsNull(),
+            select(sockfd + 1, NotNull(), NotNull(), IsNull(),
                    Field(&::timeval::tv_sec, Eq(upnplib::g_response_timeout))))
             // Consider timeout to be undefined after select() returns.
             .WillOnce(DoAll(StructSetToArg<4>(0xAA), Return(1)));
@@ -774,19 +757,25 @@ TEST_F(SockFDeathTest, sock_read_with_nullptr_to_timeout_value) {
 }
 
 TEST_F(SockFTestSuite, sock_write_successful) {
-    constexpr SOCKET sockfd{sfd_base + 77};
+    constexpr SOCKET sockfd{3};
+    constexpr time_t timeout{5};
+    // -1 Blocks indefinitely waiting for a socket descriptor to become ready.
+    constexpr time_t no_timeout{-1};
 
     // select()
     EXPECT_CALL(m_sys_socketObj, // With timeout set
-                select(sockfd + 1, _, NotNull(), NULL, NotNull()))
-        .WillOnce(Return(1));
+                select(sockfd + 1, NotNull(), NotNull(), IsNull(),
+                       Field(&::timeval::tv_sec, Eq(timeout))))
+        // Consider timeout to be undefined after select() returns.
+        .WillOnce(DoAll(StructSetToArg<4>(0xAA), Return(1)));
     EXPECT_CALL(m_sys_socketObj, // Without timeout set
-                select(sockfd + 1, _, NotNull(), NULL, NULL))
-        .WillOnce(Return(1));
+                select(sockfd + 1, NotNull(), NotNull(), IsNull(), IsNull()))
+        // Consider timeout to be undefined after select() returns.
+        .WillOnce(DoAll(StructSetToArg<4>(0xAA), Return(1)));
     // send()
     char sent_msg[]{"Mocked sent TCP message."};
-    EXPECT_CALL(m_sys_socketObj, // With timeout set
-                send(sockfd, sent_msg, sizeof(sent_msg), _))
+    EXPECT_CALL(m_sys_socketObj, send(sockfd, sent_msg, sizeof(sent_msg),
+                                      MSG_DONTROUTE | MSG_NOSIGNAL))
         .Times(2) // With and without timeout set.
         .WillRepeatedly(Return(static_cast<SSIZEP_T>(sizeof(sent_msg))));
 
@@ -806,50 +795,43 @@ TEST_F(SockFTestSuite, sock_write_successful) {
         .Times(2);
 #endif
 
-    constexpr time_t timeout{5};
-    int timeoutSecs{timeout}; // Will be set to used time by the Unit.
     ::SOCKINFO sockinfo;
     sock_init(&sockinfo, sockfd);
 
     // Test Unit with timeout
+    int timeoutSecs{timeout}; // Will be set to used time by the Unit.
     int ret_sock_write =
         sock_write(&sockinfo, sent_msg, sizeof(sent_msg), &timeoutSecs);
 
     EXPECT_EQ(ret_sock_write, static_cast<int>(sizeof(sent_msg)))
         << errStr(ret_sock_write);
 
-    if (old_code) {
-        ::std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
-                    << ": Unit should return the correct used time for "
-                       "execution.\n";
-        EXPECT_GE(timeoutSecs, timeout - 1); // Wrong! Value is to big.
-
-    } else {
-
-        EXPECT_LT(timeoutSecs, timeout);
-    }
-
-    // -1 Blocks indefinitely waiting for a socket descriptor to become ready.
-    timeoutSecs = -1; // Will be set to used time by the Unit.
+    // Don't know for what next is good. I haven't found any useful
+    // documentation about this "used time" and it is not used anywhere in the
+    // production code. Here it is only given for compatibility. --Ingo
+    EXPECT_GE(timeoutSecs, timeout - 1);
 
     // Test Unit without timeout
+    timeoutSecs = no_timeout; // Should not be modified by the Unit
     ret_sock_write =
         sock_write(&sockinfo, sent_msg, sizeof(sent_msg), &timeoutSecs);
 
     EXPECT_EQ(ret_sock_write, static_cast<int>(sizeof(sent_msg)))
         << errStr(ret_sock_write);
+    EXPECT_EQ(timeoutSecs, no_timeout); // Should not be modified.
 }
 
 TEST_F(SockFTestSuite, sock_write_with_connection_error) {
-    constexpr SOCKET sockfd{sfd_base + 78};
+    constexpr SOCKET sockfd{3};
 
     // select()
     EXPECT_CALL(m_sys_socketObj,
-                select(sockfd + 1, _, NotNull(), NULL, NotNull()))
-        .WillOnce(SetErrPortAndReturn(ENOMEMP, SOCKET_ERROR));
+                select(sockfd + 1, _, NotNull(), IsNull(), NotNull()))
+        .WillOnce(SetErrPtblAndReturn(ENOMEMP, SOCKET_ERROR));
 
     char sent_msg[]{'\0'}; // This will not be sent.
-    int timeoutSecs{5};    // Will be set to used time by the Unit.
+    constexpr time_t timeout{5};
+    int timeoutSecs{timeout}; // Will be set to used time by the Unit.
     ::SOCKINFO sockinfo;
     sock_init(&sockinfo, sockfd);
 
@@ -860,20 +842,20 @@ TEST_F(SockFTestSuite, sock_write_with_connection_error) {
     EXPECT_EQ(ret_sock_write, UPNP_E_SOCKET_ERROR)
         << errStrEx(ret_sock_write, UPNP_E_SOCKET_ERROR);
     // On error nothing should be modified.
-    EXPECT_EQ(timeoutSecs, 5);
+    EXPECT_EQ(timeoutSecs, timeout);
 }
 
 TEST_F(SockFTestSuite, sock_write_with_sending_error) {
-    constexpr SOCKET sockfd{sfd_base + 79};
+    constexpr SOCKET sockfd{3};
 
     // select()
     EXPECT_CALL(m_sys_socketObj,
-                select(sockfd + 1, _, NotNull(), NULL, NotNull()))
+                select(sockfd + 1, _, NotNull(), IsNull(), NotNull()))
         .WillOnce(Return(1));
     // send()
     char sent_msg[]{'\0'}; // This will not be sent.
     EXPECT_CALL(m_sys_socketObj, send(sockfd, sent_msg, sizeof(sent_msg), _))
-        .WillOnce(SetErrPortAndReturn(ENOMEMP, SOCKET_ERROR));
+        .WillOnce(SetErrPtblAndReturn(ENOMEMP, SOCKET_ERROR));
 
 #ifdef SO_NOSIGPIPE // this is defined on MacOS
     {
@@ -945,11 +927,12 @@ TEST_F(SockFTestSuite, sock_write_with_empty_socket_info) {
     // select() should fail with invalid socket file descriptor in sockinfo.
     if (old_code)
         EXPECT_CALL(m_sys_socketObj,
-                    select(_, NotNull(), NotNull(), NULL, NULL))
-            .WillOnce(SetErrPortAndReturn(EBADFP, SOCKET_ERROR));
+                    select(_, NotNull(), NotNull(), IsNull(), IsNull()))
+            .WillOnce(SetErrPtblAndReturn(EBADFP, SOCKET_ERROR));
     else
-        EXPECT_CALL(m_sys_socketObj, select(_, NULL, NotNull(), NULL, NULL))
-            .WillOnce(SetErrPortAndReturn(EBADFP, SOCKET_ERROR));
+        EXPECT_CALL(m_sys_socketObj,
+                    select(_, NotNull(), NotNull(), IsNull(), IsNull()))
+            .WillOnce(SetErrPtblAndReturn(EBADFP, SOCKET_ERROR));
 
     ::SOCKINFO sockinfo{}; // Empty socket info
     char sent_msg[1]{};
@@ -965,7 +948,7 @@ TEST_F(SockFTestSuite, sock_write_with_empty_socket_info) {
 }
 
 TEST_F(SockFTestSuite, sock_write_with_nullptr_to_buffer_but_length_given) {
-    constexpr SOCKET sockfd{sfd_base + 80};
+    constexpr SOCKET sockfd{3};
 
     // Configure expected system calls.
     if (old_code) {
@@ -975,7 +958,7 @@ TEST_F(SockFTestSuite, sock_write_with_nullptr_to_buffer_but_length_given) {
             .WillOnce(Return(1));
         // send()
         EXPECT_CALL(m_sys_socketObj, send(sockfd, nullptr, 1, _))
-            .WillOnce(SetErrPortAndReturn(EFAULTP, SOCKET_ERROR));
+            .WillOnce(SetErrPtblAndReturn(EFAULTP, SOCKET_ERROR));
 
 #ifdef SO_NOSIGPIPE // this is defined on MacOS
         {           // Scope InSequence
@@ -1013,8 +996,8 @@ TEST_F(SockFTestSuite, sock_write_with_nullptr_to_buffer_but_length_given) {
 }
 
 TEST_F(SockFTestSuite, sock_write_with_valid_buffer_but_0_byte_length) {
-    // This is a valid call and indicates that there is nothing to send. With 0
-    // byte buffer length the buffer doesn't matter.
+    // This is a valid condition and indicates that there is nothing to send.
+    // With 0 byte buffer length the buffer doesn't matter.
     constexpr SOCKET sockfd{sfd_base + 81};
 
     // Configure expected system calls.
@@ -1048,7 +1031,7 @@ TEST_F(SockFTestSuite, sock_write_with_valid_buffer_but_0_byte_length) {
     ::SOCKINFO sockinfo;
     sock_init(&sockinfo, sockfd);
 
-    // Process the Unit
+    // Test Unit
     int ret_sock_write = sock_write(&sockinfo, buffer, 0, &timeoutSecs);
     EXPECT_EQ(ret_sock_write, 0)
         << "  # Should be sent number of bytes = 0"

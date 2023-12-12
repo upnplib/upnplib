@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_SOCK_HPP
 #define UPNPLIB_INCLUDE_PORT_SOCK_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-22
+// Redistribution only with this Copyright remark. Last modified: 2023-12-14
 
 // clang-format off
 
@@ -54,6 +54,15 @@
   // some functions return SOCKET_ERROR on win32.
   #define SOCKET_ERROR (-1)
 #endif
+
+
+// This a bit flag to disable SIGPIPE on socket connections. With 0 it do
+// nothing but we need it on platforms that do not support it, to compile
+// without error missing this macro.
+#ifndef MSG_NOSIGNAL
+#define MSG_NOSIGNAL 0
+#endif
+
 
 // clang-format on
 

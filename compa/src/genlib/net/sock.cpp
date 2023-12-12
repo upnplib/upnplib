@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-12
+ * Redistribution only with this Copyright remark. Last modified: 2023-12-15
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -65,10 +65,6 @@
 
 #ifdef UPNP_ENABLE_OPEN_SSL
 #include <openssl/ssl.h>
-#endif
-
-#ifndef MSG_NOSIGNAL
-#define MSG_NOSIGNAL 0
 #endif
 
 #ifdef UPNP_ENABLE_OPEN_SSL
@@ -209,7 +205,7 @@ static int sock_read_write(
     /*! [in] Size of the buffer. */
     size_t bufsize,
     /*! [in] timeout value: < 0 blocks indefinitely waiting for a file
-       descriptor to become ready. */
+                                descriptor to become ready. */
     int* timeoutSecs,
     /*! [in] Boolean value specifying read or write option. */
     bool bRead) {
@@ -222,7 +218,6 @@ static int sock_read_write(
     int retCode;
     fd_set readSet;
     fd_set writeSet;
-    timeval timeout;
     long numBytes;
     time_t start_time{time(NULL)};
     SOCKET sockfd{info->socket};
@@ -235,11 +230,15 @@ static int sock_read_write(
     // timeoutSecs == nullptr means default timeout to use.
     int timeout_secs =
         (timeoutSecs == nullptr) ? upnplib::g_response_timeout : *timeoutSecs;
-    timeout.tv_sec = timeout_secs;
-    timeout.tv_usec = 0;
 
     upnplib::CSocketError sockerrObj;
     while (true) {
+        // Due to 'man select' timeout should be considered to be undefined
+        // after select() returns so we must set it on every loop.
+        timeval timeout;
+        timeout.tv_sec = timeout_secs;
+        timeout.tv_usec = 0;
+
         // select monitors only one socket file descriptor.
         retCode = umock::sys_socket_h.select(
             static_cast<int>(sockfd + 1), &readSet, &writeSet, NULL,
@@ -308,54 +307,58 @@ static int sock_read_write(
     }
     if (numBytes < 0)
         return UPNP_E_SOCKET_ERROR;
-    /* return time used for reading/writing. */
+
+    /* subtract time used for reading/writing. */
     if (timeoutSecs != nullptr && timeout_secs != 0)
-        *timeoutSecs = static_cast<int>(time(NULL) - start_time);
+        *timeoutSecs -= static_cast<int>(time(NULL) - start_time);
 
     return numBytes;
 }
 
 
 namespace compa {
-static int sock_read(
+static int sock_read_unprotected(
     /*! [in] Socket Information Object. */
-    const SOCKET a_sockfd,
-    /*! [out] Buffer to get data to. */
-    char& a_buffer,
+    const SOCKINFO* a_info,
+    /*! [out] Buffer to get data to or send data from. */
+    char* a_buffer,
     /*! [in] Size of the buffer. */
-    const SIZEP_T a_bufsize,
-    /*! [in] timeout value: optional
-                Not given or nullptr uses the default UPnP+ responds timeout.
-                < 0 blocks indefinitely waiting for a file descriptor to become
-                    ready. */
-    int* timeoutSecs = nullptr) {
-
+    const size_t a_bufsize,
+    /*! [in] timeout value: < 0 blocks indefinitely waiting for a file
+                                descriptor to become ready. */
+    int* a_timeoutSecs) {
     time_t start_time{time(NULL)};
-    TRACE("Executing compa::sock_read()")
-    if (a_bufsize == 0)
+
+    TRACE("Executing compa::sock_read_unprotected()")
+    if (a_info == nullptr || a_buffer == nullptr)
         return UPNP_E_SOCKET_ERROR;
+    if (a_bufsize == 0)
+        return 0;
 
-    fd_set readSet;
+    SOCKET sockfd{a_info->socket};
+
+    ::fd_set readSet;
+    ::fd_set writeSet;
     FD_ZERO(&readSet);
-    FD_SET(a_sockfd, &readSet);
+    FD_ZERO(&writeSet);
+    FD_SET(sockfd, &readSet);
 
-    // timeoutSecs == nullptr means default timeout to use.
-    // Used type long instead of time_t to be compatible with win32.
-    const long timeout_secs =
-        (timeoutSecs == nullptr) ? upnplib::g_response_timeout : *timeoutSecs;
-    timeval timeout;
+    // a_timeoutSecs == nullptr means default timeout to use.
+    int timeout_secs = (a_timeoutSecs == nullptr) ? upnplib::g_response_timeout
+                                                  : *a_timeoutSecs;
 
     upnplib::CSocketError sockerrObj;
     while (true) {
         // Due to 'man select' timeout should be considered to be undefined
-        // after select() returns so we must set it again.
+        // after select() returns so we must set it on every loop.
+        ::timeval timeout;
         timeout.tv_sec = timeout_secs;
         timeout.tv_usec = 0;
 
         // select() monitors only one socket file descriptor.
         int retCode = umock::sys_socket_h.select(
-            static_cast<int>(a_sockfd + 1), &readSet, NULL, NULL,
-            (timeout_secs < 0) ? NULL : &timeout);
+            static_cast<int>(sockfd + 1), &readSet, &writeSet, nullptr,
+            (timeout_secs < 0) ? nullptr : &timeout);
 
         if (retCode == 0)
             return UPNP_E_TIMEDOUT;
@@ -371,57 +374,62 @@ static int sock_read(
     }
 
     TRACE("Read data with syscall ::recv().")
-    long numBytes = umock::sys_socket_h.recv(a_sockfd, &a_buffer, a_bufsize, 0);
+    long numBytes = umock::sys_socket_h.recv(
+        sockfd, a_buffer, static_cast<SIZEP_T>(a_bufsize), 0);
 
     if (numBytes < 0)
         return UPNP_E_SOCKET_ERROR;
-    /* return time used for reading. */
-    if (timeoutSecs != nullptr && timeout_secs != 0)
-        *timeoutSecs = static_cast<int>(time(NULL) - start_time);
+
+    /* subtract time used for reading/writing. */
+    if (a_timeoutSecs != nullptr && timeout_secs != 0)
+        *a_timeoutSecs -= static_cast<int>(time(NULL) - start_time);
 
     return numBytes;
 }
 
 
-static int sock_write_unp(
+static int sock_write_unprotected(
     /*! [in] Socket Information Object. */
-    SOCKINFO* info,
+    const SOCKINFO* a_info,
     /*! [out] Buffer to send data from. */
-    char* buffer,
+    char* a_buffer,
     /*! [in] Size of the buffer. */
-    size_t bufsize,
+    const size_t a_bufsize,
     /*! [in] timeout value: < 0 blocks indefinitely waiting for a file
-       descriptor to become ready. */
-    int* timeoutSecs) {
-
+                                descriptor to become ready. */
+    int* a_timeoutSecs) {
     time_t start_time{time(NULL)};
-    TRACE("Executing sock_write_unp()")
-    if (info == nullptr || buffer == nullptr)
+
+    TRACE("Executing compa::sock_write_unprotected()")
+    if (a_info == nullptr || a_buffer == nullptr)
         return UPNP_E_SOCKET_ERROR;
-    if (bufsize == 0)
+    if (a_bufsize == 0)
         return 0;
 
-    SOCKET sockfd{info->socket};
+    SOCKET sockfd{a_info->socket};
 
-    fd_set writeSet;
+    ::fd_set readSet;
+    ::fd_set writeSet;
+    FD_ZERO(&readSet);
     FD_ZERO(&writeSet);
     FD_SET(sockfd, &writeSet);
 
-    // timeoutSecs == nullptr means default timeout to use.
-    int timeout_secs =
-        (timeoutSecs == nullptr) ? upnplib::g_response_timeout : *timeoutSecs;
-    timeval timeout;
+    // a_timeoutSecs == nullptr means default timeout to use.
+    int timeout_secs = (a_timeoutSecs == nullptr) ? upnplib::g_response_timeout
+                                                  : *a_timeoutSecs;
 
     upnplib::CSocketError sockerrObj;
     while (true) {
-        // timeout is undefined after error so we must set it again.
+        // Due to 'man select' timeout should be considered to be undefined
+        // after select() returns so we must set it on every loop.
+        ::timeval timeout;
         timeout.tv_sec = timeout_secs;
         timeout.tv_usec = 0;
 
         // select monitors only one socket file descriptor.
         int retCode = umock::sys_socket_h.select(
-            static_cast<int>(sockfd + 1), NULL, &writeSet, NULL,
-            (timeout_secs < 0) ? NULL : &timeout);
+            static_cast<int>(sockfd + 1), &readSet, &writeSet, nullptr,
+            (timeout_secs < 0) ? nullptr : &timeout);
 
         if (retCode == 0)
             return UPNP_E_TIMEDOUT;
@@ -436,7 +444,7 @@ static int sock_write_unp(
             break;
     }
 
-    size_t byte_left{bufsize};
+    size_t byte_left{a_bufsize};
     long bytes_sent{};
     ssize_t num_written;
 #ifdef SO_NOSIGPIPE               // This is defined on MacOS
@@ -444,7 +452,7 @@ static int sock_write_unp(
 #endif
     while (byte_left != static_cast<size_t>(0)) {
         TRACE("Write data with syscall ::send().")
-        num_written = umock::sys_socket_h.send(sockfd, buffer + bytes_sent,
+        num_written = umock::sys_socket_h.send(sockfd, a_buffer + bytes_sent,
                                                static_cast<SIZEP_T>(byte_left),
                                                MSG_DONTROUTE | MSG_NOSIGNAL);
         if (num_written == -1) {
@@ -457,9 +465,10 @@ static int sock_write_unp(
 
     if (numBytes < 0)
         return UPNP_E_SOCKET_ERROR;
-    /* return time used for reading/writing. */
-    if (timeoutSecs != nullptr && timeout_secs != 0)
-        *timeoutSecs = static_cast<int>(time(NULL) - start_time);
+
+    /* subtract time used for writing. */
+    if (a_timeoutSecs != nullptr && timeout_secs != 0)
+        *a_timeoutSecs -= static_cast<int>(time(NULL) - start_time);
 
     return numBytes;
 }
@@ -467,15 +476,13 @@ static int sock_write_unp(
 
 
 int sock_read(SOCKINFO* info, char* buffer, size_t bufsize, int* timeoutSecs) {
-    TRACE("Executing ::sock_read()")
-    // nullptr check is important, arguments of called function are references.
-    if (info == nullptr || buffer == nullptr)
+    TRACE("Executing sock_read()")
+    if (info == nullptr)
         return UPNP_E_SOCKET_ERROR;
     if (info->ssl)
         return sock_read_write(info, buffer, bufsize, timeoutSecs, true);
     else
-        return compa::sock_read(info->socket, *buffer,
-                                static_cast<SIZEP_T>(bufsize), timeoutSecs);
+        return compa::sock_read_unprotected(info, buffer, bufsize, timeoutSecs);
 }
 
 int sock_write(SOCKINFO* info, const char* buffer, size_t bufsize,
@@ -489,8 +496,8 @@ int sock_write(SOCKINFO* info, const char* buffer, size_t bufsize,
                                false);
     else
         /* Consciently removing constness. */
-        return compa::sock_write_unp(info, const_cast<char*>(buffer), bufsize,
-                                     timeoutSecs);
+        return compa::sock_write_unprotected(info, const_cast<char*>(buffer),
+                                             bufsize, timeoutSecs);
 }
 
 int sock_make_blocking(SOCKET sock) {
