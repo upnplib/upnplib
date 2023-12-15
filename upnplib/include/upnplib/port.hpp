@@ -85,6 +85,17 @@
   #define DISABLE_MSVC_WARN_4251
 #endif
 
+// Warning 4273: 'function' : inconsistent DLL linkage.
+// This is expected on propagate global variables with included header file
+// (__declspec(dllimport)) in its source file (__declspec(dllexport)).
+#ifdef _MSC_VER
+  #define DISABLE_MSVC_WARN_4273 \
+    _Pragma("warning(push)") \
+    _Pragma("warning(disable: 4273)")
+#else
+  #define DISABLE_MSVC_WARN_4273
+#endif
+
 #ifdef _MSC_VER
   #define ENABLE_MSVC_WARN \
     _Pragma("warning(pop)")

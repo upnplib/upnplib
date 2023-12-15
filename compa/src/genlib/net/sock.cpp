@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-15
+ * Redistribution only with this Copyright remark. Last modified: 2023-12-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,34 +44,22 @@
  */
 
 #include <sock.hpp>
-#include <unixutil.hpp> /* for socklen_t, EAFNOSUPPORT */
-#include <upnp.hpp>
 
-#include <upnpdebug.hpp>
 #include <upnputil.hpp>
 
-#include <assert.h>
-#include <cerrno>
 #include <fcntl.h> /* for F_GETFL, F_SETFL, O_NONBLOCK */
-#include <cstring>
-#include <ctime>
 #include <iostream>
 
 #include <upnplib/global.hpp>
-#include <upnplib/socket.hpp>
 #include <upnplib/connection.hpp>
+#include <upnplib/socket.hpp>
 
 #include <umock/sys_socket.hpp>
-
-#ifdef UPNP_ENABLE_OPEN_SSL
-#include <openssl/ssl.h>
-#endif
 
 #ifdef UPNP_ENABLE_OPEN_SSL
 /* OpenSSL context defined in upnpapi.c */
 UPNPLIB_EXTERN SSL_CTX* gSslCtx;
 #endif
-
 
 int sock_init(SOCKINFO* info, SOCKET sockfd) {
     TRACE("Executing sock_init()")
@@ -103,23 +91,22 @@ int sock_init_with_ip(SOCKINFO* info, SOCKET sockfd,
 
 #ifdef UPNP_ENABLE_OPEN_SSL
 int sock_ssl_connect(SOCKINFO* info) {
-    int status{};
+    TRACE("Executing sock_ssl_connect()");
     info->ssl = SSL_new(gSslCtx);
     if (!info->ssl) {
         return UPNP_E_SOCKET_ERROR;
     }
     // Due to man page there is no problem with type cast (int)
-    status = SSL_set_fd(info->ssl, (int)info->socket);
-    if (status == 1) {
-        upnplib::CSigpipe sigpipe;
-        sigpipe.suppress(info->socket);
-        status = SSL_connect(info->ssl);
-        sigpipe.restore();
-    }
-    if (status == 1) {
-        return UPNP_E_SUCCESS;
-    }
-    return UPNP_E_SOCKET_ERROR;
+    int status = SSL_set_fd(info->ssl, static_cast<int>(info->socket));
+    if (status == 0)
+        return UPNP_E_SOCKET_ERROR;
+
+    UPNPLIB_SCOPED_NO_SIGPIPE;
+    status = SSL_connect(info->ssl);
+    if (status != 1)
+        return UPNP_E_SOCKET_ERROR;
+
+    return UPNP_E_SUCCESS;
 }
 #endif
 
@@ -320,9 +307,11 @@ namespace compa {
 static int sock_read_unprotected(
     /*! [in] Socket Information Object. */
     const SOCKINFO* a_info,
-    /*! [out] Buffer to get data to or send data from. */
-    char* a_buffer,
-    /*! [in] Size of the buffer. */
+    /*! [out] Buffer to get data to. */
+    char* a_readbuf,
+    /*! [in] Buffer to send data from. */
+    [[maybe_unused]] const char* a_writebuf,
+    /*! [in] Size of the used buffer (read or write). */
     const size_t a_bufsize,
     /*! [in] timeout value: < 0 blocks indefinitely waiting for a file
                                 descriptor to become ready. */
@@ -330,7 +319,7 @@ static int sock_read_unprotected(
     time_t start_time{time(NULL)};
 
     TRACE("Executing compa::sock_read_unprotected()")
-    if (a_info == nullptr || a_buffer == nullptr)
+    if (a_info == nullptr || a_readbuf == nullptr)
         return UPNP_E_SOCKET_ERROR;
     if (a_bufsize == 0)
         return 0;
@@ -375,7 +364,7 @@ static int sock_read_unprotected(
 
     TRACE("Read data with syscall ::recv().")
     long numBytes = umock::sys_socket_h.recv(
-        sockfd, a_buffer, static_cast<SIZEP_T>(a_bufsize), 0);
+        sockfd, a_readbuf, static_cast<SIZEP_T>(a_bufsize), 0);
 
     if (numBytes < 0)
         return UPNP_E_SOCKET_ERROR;
@@ -391,8 +380,10 @@ static int sock_read_unprotected(
 static int sock_write_unprotected(
     /*! [in] Socket Information Object. */
     const SOCKINFO* a_info,
-    /*! [out] Buffer to send data from. */
-    char* a_buffer,
+    /*! [out] Buffer to get data to. */
+    [[maybe_unused]] char* a_readbuf,
+    /*! [in] Buffer to send data from. */
+    const char* a_writebuf,
     /*! [in] Size of the buffer. */
     const size_t a_bufsize,
     /*! [in] timeout value: < 0 blocks indefinitely waiting for a file
@@ -401,7 +392,7 @@ static int sock_write_unprotected(
     time_t start_time{time(NULL)};
 
     TRACE("Executing compa::sock_write_unprotected()")
-    if (a_info == nullptr || a_buffer == nullptr)
+    if (a_info == nullptr || a_writebuf == nullptr)
         return UPNP_E_SOCKET_ERROR;
     if (a_bufsize == 0)
         return 0;
@@ -452,7 +443,7 @@ static int sock_write_unprotected(
 #endif
     while (byte_left != static_cast<size_t>(0)) {
         TRACE("Write data with syscall ::send().")
-        num_written = umock::sys_socket_h.send(sockfd, a_buffer + bytes_sent,
+        num_written = umock::sys_socket_h.send(sockfd, a_writebuf + bytes_sent,
                                                static_cast<SIZEP_T>(byte_left),
                                                MSG_DONTROUTE | MSG_NOSIGNAL);
         if (num_written == -1) {
@@ -482,7 +473,9 @@ int sock_read(SOCKINFO* info, char* buffer, size_t bufsize, int* timeoutSecs) {
     if (info->ssl)
         return sock_read_write(info, buffer, bufsize, timeoutSecs, true);
     else
-        return compa::sock_read_unprotected(info, buffer, bufsize, timeoutSecs);
+        return compa::sock_read_unprotected(info, buffer /*read_buffer*/,
+                                            nullptr /*write_buffer*/, bufsize,
+                                            timeoutSecs);
 }
 
 int sock_write(SOCKINFO* info, const char* buffer, size_t bufsize,
@@ -495,9 +488,9 @@ int sock_write(SOCKINFO* info, const char* buffer, size_t bufsize,
         return sock_read_write(info, (char*)buffer, bufsize, timeoutSecs,
                                false);
     else
-        /* Consciently removing constness. */
-        return compa::sock_write_unprotected(info, const_cast<char*>(buffer),
-                                             bufsize, timeoutSecs);
+        return compa::sock_write_unprotected(info, nullptr /*read_buffer*/,
+                                             buffer /*write_buffer*/, bufsize,
+                                             timeoutSecs);
 }
 
 int sock_make_blocking(SOCKET sock) {

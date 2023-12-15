@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-11-07
+# Redistribution only with this Copyright remark. Last modified: 2023-12-16
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -75,6 +75,7 @@ endif()
 
 set(COMPA_SOURCE_FILES
     ./src/init.cpp
+    ./src/globalvars.cpp
 
     ./src/threadutil/FreeList.cpp
     ./src/threadutil/LinkedList.cpp

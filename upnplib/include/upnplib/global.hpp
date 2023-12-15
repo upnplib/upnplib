@@ -1,9 +1,9 @@
-#ifndef UPNPLIB_GENERAL_HPP
-#define UPNPLIB_GENERAL_HPP
+#ifndef UPNPLIB_GLOBAL_HPP
+#define UPNPLIB_GLOBAL_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-06
+// Redistribution only with this Copyright remark. Last modified: 2023-12-15
 
-// Here we have general used functions and tools.
+// Here we have global used constants, variables, functions and macros.
 
 #include <upnplib/cmake_vars.hpp>
 #include <upnplib/visibility.hpp>
@@ -84,4 +84,4 @@ inline bool g_dbug;
 
 } // namespace upnplib
 
-#endif // UPNPLIB_GENERAL_HPP
+#endif // UPNPLIB_GLOBAL_HPP

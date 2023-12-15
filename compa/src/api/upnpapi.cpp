@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-06
+ * Redistribution only with this Copyright remark. Last modified: 2023-12-16
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -54,6 +54,7 @@
 #include <uuid.hpp>
 
 #include <upnplib/global.hpp>
+#include <compa/globalvars.hpp>
 
 #ifdef _WIN32
 #include <umock/iphlpapi.hpp>
@@ -97,10 +98,6 @@
 // ifru_netmask/ifru_addr are all just union members, this should work
 #ifndef ifr_netmask // it's a define if it exists
 #define ifr_netmask ifr_addr
-#endif
-
-#ifdef UPNP_ENABLE_OPEN_SSL
-#include <openssl/ssl.h>
 #endif
 
 #ifndef IN6_IS_ADDR_GLOBAL
@@ -241,13 +238,6 @@ int UpnpSdkDeviceregisteredV6 = 0;
 /*! Global variable used in discovery notifications. */
 Upnp_SID gUpnpSdkNLSuuid;
 #endif /* UPNP_HAVE_OPTSSDP */
-
-/*! Global variable used as to store the OpenSSL context object
- * to be used for all SSL/TLS connections
- */
-#ifdef UPNP_ENABLE_OPEN_SSL
-EXPORT_SPEC SSL_CTX* gSslCtx = NULL;
-#endif
 
 typedef union {
     struct {

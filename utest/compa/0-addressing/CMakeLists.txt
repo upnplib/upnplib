@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-12-07
+# Redistribution only with this Copyright remark. Last modified: 2023-12-15
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -36,32 +36,32 @@ add_test(NAME ctest_sock-csh COMMAND test_sock-csh --gtest_shuffle
 )
 
 
-# sock_openssl
-#=============
+# sock_ssl
+#=========
 if(UPNPLIB_WITH_OPENSSL)
-    add_executable(test_sock_openssl-psh
-        ./test_sock_openssl.cpp
+    add_executable(test_sock_ssl-psh
+        ./test_sock_ssl.cpp
     )
-    target_link_libraries(test_sock_openssl-psh
+    target_link_libraries(test_sock_ssl-psh
         PRIVATE
             pupnp_shared
             upnplib_shared
             utest_shared
     )
-    add_test(NAME ctest_sock_openssl-psh COMMAND test_sock_openssl-psh --gtest_shuffle
+    add_test(NAME ctest_sock_ssl-psh COMMAND test_sock_ssl-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
     )
 
-    add_executable(test_sock_openssl-csh
-        ./test_sock_openssl.cpp
+    add_executable(test_sock_ssl-csh
+        ./test_sock_ssl.cpp
     )
-    target_link_libraries(test_sock_openssl-csh
+    target_link_libraries(test_sock_ssl-csh
         PRIVATE
             compa_shared
             upnplib_shared
             utest_shared
     )
-    add_test(NAME ctest_sock_openssl-csh COMMAND test_sock_openssl-csh --gtest_shuffle
+    add_test(NAME ctest_sock_ssl-csh COMMAND test_sock_ssl-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
     )
 

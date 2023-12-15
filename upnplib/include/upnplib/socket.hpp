@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-03
+// Redistribution only with this Copyright remark. Last modified: 2023-12-15
 
 // Helpful link for ip address structures:
 // REF: [sockaddr structures as union]
@@ -56,15 +56,13 @@
 // I don't set the option to immediately reuse an address of a local listening
 // socket after it was closed. Instead I respect the 'TIME_WAIT'. This is a
 // security issue as described at
-// REF: [Bind: Address Already in Use]
-// (https://hea-www.harvard.edu/~fine/Tech/addrinuse.html).
+// REF:_[Bind:_Address_Already_in_Use](https://hea-www.harvard.edu/~fine/Tech/addrinuse.html).
 // I reset SO_REUSEADDR with constructing a socket object on all platforms if
 // it should be set by default. This is unclear on WIN32. See next note.
 //
 // --- option SO_EXCLUSIVEADDRUSE on Microsoft Windows ---
 // THIS IS AN IMPORTANT SECURITY ISSUE! Lock at
-// REF: [Using SO_REUSEADDR and SO_EXCLUSIVEADDRUSE]
-// (https://learn.microsoft.com/en-us/windows/win32/winsock/using-so-reuseaddr-and-so-exclusiveaddruse#application-strategies)
+// REF:_[Using_SO_REUSEADDR_and_SO_EXCLUSIVEADDRUSE](https://learn.microsoft.com/en-us/windows/win32/winsock/using-so-reuseaddr-and-so-exclusiveaddruse#application-strategies)
 // I always set this option with constructing a socket object on a WIN32
 // platform.
 // --Ingo

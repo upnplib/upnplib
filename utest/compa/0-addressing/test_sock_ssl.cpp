@@ -1,12 +1,13 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-07
+// Redistribution only with this Copyright remark. Last modified: 2023-12-15
 
 #include <upnp.hpp>
 #include <sock.hpp>
 
 #include <upnplib/port.hpp>
 #include <upnplib/global.hpp>
-#include "upnplib/upnptools.hpp" // for errStrEx
+#include <upnplib/upnptools.hpp> // for errStrEx
+#include <upnplib/socket.hpp>
 
 #include <openssl/err.h>
 #ifdef _WIN32
@@ -22,6 +23,7 @@ namespace utest {
 
 using ::testing::ExitedWithCode;
 
+using upnplib::CSocket;
 using upnplib::errStrEx;
 
 
@@ -30,29 +32,11 @@ using upnplib::errStrEx;
 // I use these simple classes to ensure that we always free resources also in
 // case of aborted tests without extra error checking. --Ingo
 
-// Provide a socket
-class CSockFd {
-  public:
-    SOCKET fd{};
-
-    CSockFd() {
-        TRACE("construct compa::CSockFd");
-        this->fd = ::socket(AF_INET, SOCK_STREAM, 0);
-        if (this->fd == -1) {
-            throw std::runtime_error(std::string("Failed to get a socket."));
-        }
-    }
-    virtual ~CSockFd() {
-        TRACE("destruct compa::CSockFd");
-        CLOSE_SOCKET_P(this->fd);
-    }
-};
-
 // Provide the global SSL Context
 class CGsslCtx {
   public:
     CGsslCtx() {
-        TRACE("construct compa::CGsslCtx");
+        TRACE("construct CGsslCtx");
         gSslCtx = SSL_CTX_new(TLS_method());
         if (gSslCtx == nullptr) {
             throw std::runtime_error(std::string(
@@ -60,7 +44,7 @@ class CGsslCtx {
         }
     }
     virtual ~CGsslCtx() {
-        TRACE("destruct compa::CGsslCtx");
+        TRACE("destruct CGsslCtx");
         SSL_CTX_free(gSslCtx);
     }
 };
@@ -69,27 +53,7 @@ class CGsslCtx {
 // OpenSSL TestSuite
 //==================
 
-class SockFTestSuite : public ::testing::Test {
-#ifdef _WIN32
-  protected:
-    // Initialize Windows sochets
-    SockFTestSuite() {
-        WSADATA wsaData;
-        int rc = WSAStartup(MAKEWORD(2, 2), &wsaData);
-        if (rc != NO_ERROR) {
-            throw std::runtime_error(
-                std::string("Failed to start Windows sockets (WSAStartup)."));
-        }
-    }
-
-    // Cleanup Windows sochets
-    ~SockFTestSuite() override { WSACleanup(); }
-#endif
-};
-typedef SockFTestSuite SockFDeathTest;
-
-
-TEST_F(SockFTestSuite, libssl_connection_error_handling) {
+TEST(SockTestSuite, libssl_connection_error_handling) {
     // This test shows how to use libssl to initialize a connection and handle
     // some errors. It does not test a Unit. For discussion of the SIGPIPE
     // signal abort have a look at: https://stackoverflow.com/q/108183/5014688
@@ -120,7 +84,7 @@ TEST_F(SockFTestSuite, libssl_connection_error_handling) {
     }
     ASSERT_NE(sockfd, INVALID_SOCKET);
     // Due to openssl man page, type cast is no problem.
-    EXPECT_EQ(SSL_set_fd(ssl, (int)sockfd), 1);
+    EXPECT_EQ(SSL_set_fd(ssl, static_cast<int>(sockfd)), 1);
 
     // Connect to remote peer
     // If we have a broken connection, as given here, a try to connect will
@@ -165,7 +129,7 @@ TEST_F(SockFTestSuite, libssl_connection_error_handling) {
     SSL_CTX_free(ssl_ctx);
 }
 
-TEST_F(SockFDeathTest, sock_ssl_connect_signal_broken_pipe) {
+TEST(SockDeathTest, sock_ssl_connect_signal_broken_pipe) {
     // Steps as given by the Unit and expected results:
     // 1. SSL_new(): set new global SSL Context   - succeeds
     // 2. SSL_set_fd(): set socket to SSL Context - succeeds
@@ -173,12 +137,12 @@ TEST_F(SockFDeathTest, sock_ssl_connect_signal_broken_pipe) {
 
     // Setup needed environment that is:
     // a) a socket info structure
-    SOCKINFO info{};
+    ::SOCKINFO info{};
     // b) a socket in the info structure that is expected to have a valid
     //    connection to a remote server. Here it hasn't.
-    CSockFd sock;
-    info.socket = sock.fd;
-    // c) initialize the global SSL Context in external variable gSslCtx;
+    CSocket sock(AF_INET6, SOCK_STREAM);
+    info.socket = sock;
+    // c) initialize the global SSL Context in global variable gSslCtx;
     CGsslCtx gSslCtxObj;
 
     // Test Unit
@@ -200,6 +164,7 @@ TEST_F(SockFDeathTest, sock_ssl_connect_signal_broken_pipe) {
         // with a special handler.
         ASSERT_EXIT((sock_ssl_connect(&info), exit(0)), ExitedWithCode(0),
                     ".*");
+        EXPECT_EQ(sock_ssl_connect(&info), UPNP_E_SOCKET_ERROR);
     }
 
 #else
@@ -217,6 +182,7 @@ TEST_F(SockFDeathTest, sock_ssl_connect_signal_broken_pipe) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
+    WINSOCK_INIT
 #include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }
