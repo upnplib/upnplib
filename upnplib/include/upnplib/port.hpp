@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-17
+// Redistribution only with this Copyright remark. Last modified: 2023-12-22
 
 // Header file for portable definitions
 // ====================================
@@ -88,6 +88,13 @@
 // Warning 4273: 'function' : inconsistent DLL linkage.
 // This is expected on propagate global variables with included header file
 // (__declspec(dllimport)) in its source file (__declspec(dllexport)).
+#ifdef _MSC_VER
+  #define SUPPRESS_MSVC_WARN_4273_NEXT_LINE \
+    _Pragma("warning(suppress: 4273)")
+#else
+  #define SUPPRESS_MSVC_WARN_4273_NEXT_LINE
+#endif
+
 #ifdef _MSC_VER
   #define DISABLE_MSVC_WARN_4273 \
     _Pragma("warning(push)") \

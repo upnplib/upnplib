@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-01
+ * Redistribution only with this Copyright remark. Last modified: 2023-12-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -60,7 +60,8 @@
 #include <cstring>
 #include <ctime>
 
-#include "umock/sys_socket.hpp"
+#include <umock/sys_socket.hpp>
+#include <umock/ssl.hpp>
 
 #ifdef UPNP_ENABLE_OPEN_SSL
 #include <openssl/ssl.h>
@@ -215,7 +216,8 @@ static int sock_read_write(
         if (bRead) {
 #ifdef UPNP_ENABLE_OPEN_SSL
             if (info->ssl) {
-                numBytes = (long)SSL_read(info->ssl, buffer, (int)bufsize);
+                numBytes = (long)umock::ssl_h.SSL_read(info->ssl, buffer,
+                                                       (int)bufsize);
             } else {
 #endif
                 /* read data. */

@@ -1,13 +1,13 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-10-24
+# Redistribution only with this Copyright remark. Last modified: 2023-12-22
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 # set the project name and version
-project(GTESTS VERSION 0034
-               DESCRIPTION "Unit Tests using googletest"
-               HOMEPAGE_URL "https://github.com/upnplib")
+project(UTEST VERSION 0034
+              DESCRIPTION "Unit Tests using googletest"
+              HOMEPAGE_URL "https://github.com/upnplib")
 
 
 #################################
@@ -16,7 +16,7 @@ project(GTESTS VERSION 0034
 # For old builds with direct build from source files look at git commit:
 # git show 741a85fbc88:gtests/CMakeLists.txt
 
-include_directories(${GTESTS_SOURCE_DIR}/include
+include_directories(${UTEST_SOURCE_DIR}/include
 )
 # To link googletest we need of course its libraries.
 # gmock libraries also contain gtest libraries.
@@ -51,6 +51,7 @@ set(UTEST_SOURCE_FILES
     $<$<PLATFORM_ID:Windows>:tools/utest_win32.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:tools/utest_unix.cpp>
     ${UMOCK_SOURCE_DIR}/src/stringh_mock.cpp
+    $<$<BOOL:${UPNPLIB_WITH_OPENSSL}>:${UMOCK_SOURCE_DIR}/src/ssl_mock.cpp>
 )
 
 add_library(utest_shared SHARED

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-18
+ * Redistribution only with this Copyright remark. Last modified: 2023-12-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,15 +51,12 @@
 #include <iostream>
 
 #include <upnplib/global.hpp>
+#include <compa/globalvars.hpp>
 #include <upnplib/connection.hpp>
 #include <upnplib/socket.hpp>
 
 #include <umock/sys_socket.hpp>
-
-#ifdef UPNP_ENABLE_OPEN_SSL
-/* OpenSSL context defined in upnpapi.c */
-UPNPLIB_EXTERN SSL_CTX* gSslCtx;
-#endif
+#include <umock/ssl.hpp>
 
 int sock_init(SOCKINFO* info, SOCKET sockfd) {
     TRACE("Executing sock_init()")
@@ -173,6 +170,7 @@ class CNosigpipe {
 };
 #endif
 
+#if 0
 /*!
  * \brief Receives or sends data on one unicast link. That means the Unit
  * manages only one socket file descriptor. Also returns the time taken to
@@ -265,7 +263,7 @@ static int sock_read_write(
 
         size_t byte_left{bufsize};
         long bytes_sent{};
-#ifdef SO_NOSIGPIPE                   // This is defined on MacOS
+#ifdef SO_NOSIGPIPE // This is defined on MacOS
         CNosigpipe nosigpipe(sockfd); // Save, set and restore option settings.
 #endif
         while (byte_left != static_cast<size_t>(0)) {
@@ -301,9 +299,11 @@ static int sock_read_write(
 
     return numBytes;
 }
+#endif // #if 0
 
 
 namespace compa {
+
 static int sock_read_unprotected(
     /*! [in] Socket Information Object. */
     const SOCKINFO* a_info,
@@ -363,7 +363,7 @@ static int sock_read_unprotected(
     }
 
     TRACE("Read data with syscall ::recv().")
-    long numBytes = umock::sys_socket_h.recv(
+    SSIZEP_T numBytes = umock::sys_socket_h.recv(
         sockfd, a_readbuf, static_cast<SIZEP_T>(a_bufsize), 0);
 
     if (numBytes < 0)
@@ -438,14 +438,13 @@ static int sock_write_unprotected(
     size_t byte_left{a_bufsize};
     long bytes_sent{};
     ssize_t num_written;
-#ifdef SO_NOSIGPIPE               // This is defined on MacOS
-    CNosigpipe nosigpipe(sockfd); // Save, set and restore option settings.
-#endif
+
+    UPNPLIB_SCOPED_NO_SIGPIPE
     while (byte_left != static_cast<size_t>(0)) {
         TRACE("Write data with syscall ::send().")
         num_written = umock::sys_socket_h.send(sockfd, a_writebuf + bytes_sent,
                                                static_cast<SIZEP_T>(byte_left),
-                                               MSG_DONTROUTE | MSG_NOSIGNAL);
+                                               MSG_DONTROUTE);
         if (num_written == -1) {
             return UPNP_E_SOCKET_WRITE;
         }
@@ -463,6 +462,171 @@ static int sock_write_unprotected(
 
     return numBytes;
 }
+
+
+#ifdef UPNP_ENABLE_OPEN_SSL
+static int sock_read_ssl(
+    /*! [in] Socket Information Object. */
+    const SOCKINFO* a_info,
+    /*! [out] Buffer to get data to. */
+    char* a_readbuf,
+    /*! [in] Buffer to send data from. */
+    [[maybe_unused]] const char* a_writebuf,
+    /*! [in] Size of the used buffer (read or write). */
+    const size_t a_bufsize,
+    /*! [in] timeout value: < 0 blocks indefinitely waiting for a file
+                                descriptor to become ready. */
+    int* a_timeoutSecs) {
+    time_t start_time{time(NULL)};
+
+    TRACE("Executing compa::sock_read_ssl()")
+    if (a_info == nullptr || a_readbuf == nullptr)
+        return UPNP_E_SOCKET_ERROR;
+    if (a_bufsize == 0)
+        return 0;
+
+    SOCKET sockfd{a_info->socket};
+
+    ::fd_set readSet;
+    ::fd_set writeSet;
+    FD_ZERO(&readSet);
+    FD_ZERO(&writeSet);
+    FD_SET(sockfd, &readSet);
+
+    // a_timeoutSecs == nullptr means default timeout to use.
+    int timeout_secs = (a_timeoutSecs == nullptr) ? upnplib::g_response_timeout
+                                                  : *a_timeoutSecs;
+
+    upnplib::CSocketError sockerrObj;
+    while (true) {
+        // Due to 'man select' timeout should be considered to be undefined
+        // after select() returns so we must set it on every loop.
+        ::timeval timeout;
+        timeout.tv_sec = timeout_secs;
+        timeout.tv_usec = 0;
+
+        // select() monitors only one socket file descriptor.
+        int retCode = umock::sys_socket_h.select(
+            static_cast<int>(sockfd + 1), &readSet, &writeSet, nullptr,
+            (timeout_secs < 0) ? nullptr : &timeout);
+
+        if (retCode == 0)
+            return UPNP_E_TIMEDOUT;
+        if (retCode == SOCKET_ERROR) {
+            sockerrObj.catch_error();
+            if (sockerrObj == EINTRP)
+                // Signal catched by select(). It is not for us so we
+                continue;
+            return UPNP_E_SOCKET_ERROR;
+        } else
+            /* read */
+            break;
+    }
+
+    // Typecasts are needed to call the SSL function and should not
+    // be an issue.
+    TRACE("Read data with syscall ::SSL_read().")
+    int numBytes = umock::ssl_h.SSL_read(a_info->ssl, a_readbuf,
+                                         static_cast<SIZEP_T>(a_bufsize));
+
+    if (numBytes < 0)
+        return UPNP_E_SOCKET_ERROR;
+
+    /* subtract time used for reading/writing. */
+    if (a_timeoutSecs != nullptr && timeout_secs != 0)
+        *a_timeoutSecs -= static_cast<int>(time(NULL) - start_time);
+
+    return numBytes;
+}
+
+
+static int sock_write_ssl(
+    /*! [in] Socket Information Object. */
+    const SOCKINFO* a_info,
+    /*! [out] Buffer to get data to. */
+    [[maybe_unused]] char* a_readbuf,
+    /*! [in] Buffer to send data from. */
+    const char* a_writebuf,
+    /*! [in] Size of the buffer. */
+    const size_t a_bufsize,
+    /*! [in] timeout value: < 0 blocks indefinitely waiting for a file
+                                descriptor to become ready. */
+    int* a_timeoutSecs) {
+    time_t start_time{time(NULL)};
+
+    TRACE("Executing compa::sock_write_ssl()")
+    // if (a_info == nullptr || a_writebuf == nullptr)
+    if (true)
+        return UPNP_E_SOCKET_ERROR;
+    if (a_bufsize == 0)
+        return 0;
+
+    SOCKET sockfd{a_info->socket};
+
+    ::fd_set readSet;
+    ::fd_set writeSet;
+    FD_ZERO(&readSet);
+    FD_ZERO(&writeSet);
+    FD_SET(sockfd, &writeSet);
+
+    // a_timeoutSecs == nullptr means default timeout to use.
+    int timeout_secs = (a_timeoutSecs == nullptr) ? upnplib::g_response_timeout
+                                                  : *a_timeoutSecs;
+
+    upnplib::CSocketError sockerrObj;
+    while (true) {
+        // Due to 'man select' timeout should be considered to be undefined
+        // after select() returns so we must set it on every loop.
+        ::timeval timeout;
+        timeout.tv_sec = timeout_secs;
+        timeout.tv_usec = 0;
+
+        // select monitors only one socket file descriptor.
+        int retCode = umock::sys_socket_h.select(
+            static_cast<int>(sockfd + 1), &readSet, &writeSet, nullptr,
+            (timeout_secs < 0) ? nullptr : &timeout);
+
+        if (retCode == 0)
+            return UPNP_E_TIMEDOUT;
+        if (retCode == SOCKET_ERROR) {
+            sockerrObj.catch_error();
+            if (sockerrObj == EINTRP)
+                // Signal catched by select(). It is not for us so we
+                continue;
+            return UPNP_E_SOCKET_ERROR;
+        } else
+            /* write. */
+            break;
+    }
+
+    size_t byte_left{a_bufsize};
+    long bytes_sent{};
+    ssize_t num_written;
+
+    UPNPLIB_SCOPED_NO_SIGPIPE
+    while (byte_left != static_cast<size_t>(0)) {
+        TRACE("Write data with syscall ::send().")
+        num_written = umock::sys_socket_h.send(sockfd, a_writebuf + bytes_sent,
+                                               static_cast<SIZEP_T>(byte_left),
+                                               MSG_DONTROUTE);
+        if (num_written == -1) {
+            return UPNP_E_SOCKET_WRITE;
+        }
+        byte_left -= static_cast<size_t>(num_written);
+        bytes_sent += static_cast<long>(num_written);
+    }
+    long numBytes = bytes_sent;
+
+    if (numBytes < 0)
+        return UPNP_E_SOCKET_ERROR;
+
+    /* subtract time used for writing. */
+    if (a_timeoutSecs != nullptr && timeout_secs != 0)
+        *a_timeoutSecs -= static_cast<int>(time(NULL) - start_time);
+
+    return numBytes;
+}
+#endif
 } // namespace compa
 
 
@@ -470,9 +634,13 @@ int sock_read(SOCKINFO* info, char* buffer, size_t bufsize, int* timeoutSecs) {
     TRACE("Executing sock_read()")
     if (info == nullptr)
         return UPNP_E_SOCKET_ERROR;
+#ifdef UPNP_ENABLE_OPEN_SSL
     if (info->ssl)
-        return sock_read_write(info, buffer, bufsize, timeoutSecs, true);
+        return compa::sock_read_ssl(info, buffer /*read_buffer*/,
+                                    nullptr /*write_buffer*/, bufsize,
+                                    timeoutSecs);
     else
+#endif
         return compa::sock_read_unprotected(info, buffer /*read_buffer*/,
                                             nullptr /*write_buffer*/, bufsize,
                                             timeoutSecs);
@@ -483,11 +651,13 @@ int sock_write(SOCKINFO* info, const char* buffer, size_t bufsize,
     TRACE("Executing sock_write()")
     if (info == nullptr)
         return UPNP_E_SOCKET_ERROR;
+#ifdef UPNP_ENABLE_OPEN_SSL
     if (info->ssl)
-        /* Consciently removing constness. */
-        return sock_read_write(info, (char*)buffer, bufsize, timeoutSecs,
-                               false);
+        return compa::sock_write_ssl(info, nullptr /*read_buffer*/,
+                                     buffer /*write_buffer*/, bufsize,
+                                     timeoutSecs);
     else
+#endif
         return compa::sock_write_unprotected(info, nullptr /*read_buffer*/,
                                              buffer /*write_buffer*/, bufsize,
                                              timeoutSecs);

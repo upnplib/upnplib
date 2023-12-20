@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-09
+// Redistribution only with this Copyright remark. Last modified: 2023-12-20
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -498,9 +498,8 @@ TEST_F(HttpMockFTestSuite, send_message_from_buffer_successful) {
     EXPECT_CALL(m_sys_socketObj, send(info.socket, request, request_length, _))
         .WillOnce(Return((SSIZEP_T)request_length));
 
-// #define SO_NOSIGPIPE MSG_NOSIGNAL // For compiling test on Linux
 #ifdef SO_NOSIGPIPE // this seems to be defined on MacOS
-    {               // Scope InSequence
+    if (old_code) { // Scope InSequence
         InSequence seq;
         // Mock getsockopt(), get old option SIGPIPE
         EXPECT_CALL(m_sys_socketObj,

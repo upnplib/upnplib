@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-12-06
+# Redistribution only with this Copyright remark. Last modified: 2023-12-22
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -24,6 +24,7 @@ set(UMOCK_SOURCE_FILES
     src/unistd.cpp
     src/sysinfo.cpp
     src/arpa_inet.cpp
+    $<$<BOOL:${UPNPLIB_WITH_OPENSSL}>:src/ssl.cpp>
     ${UPNPLIB_PROJECT_SOURCE_DIR}/upnplib/src/global.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:src/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:src/net_if.cpp>
@@ -55,6 +56,7 @@ target_compile_definitions(umock_shared
     PRIVATE UPNPLIB_EXPORTS
 )
 target_link_libraries(umock_shared
+    PUBLIC $<$<BOOL:${UPNPLIB_WITH_OPENSSL}>:upnplib_ssl>
     # In addition to pthreads we need some more system libraries on WIN32
     PUBLIC $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
     PUBLIC $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network
@@ -76,6 +78,7 @@ target_include_directories(umock_static
     ${UMOCK_INCLUDE_DIRECTORIES}
 )
 target_link_libraries(umock_static
+    PUBLIC $<$<BOOL:${UPNPLIB_WITH_OPENSSL}>:upnplib_ssl>
     # In addition to pthreads we need some more system libraries on WIN32
     PUBLIC $<$<PLATFORM_ID:Windows>:ws2_32>   # winsock to support sockets
     PUBLIC $<$<PLATFORM_ID:Windows>:iphlpapi> # ip helper interface to get network

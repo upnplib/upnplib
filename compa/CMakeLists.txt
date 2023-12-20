@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-12-16
+# Redistribution only with this Copyright remark. Last modified: 2023-12-22
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -212,7 +212,6 @@ if(NOT WIN32)
         PUBLIC
             umock_shared
             ixml_shared
-            $<$<BOOL:${COMPA_DEF_OPENSSL}>:upnplib_ssl>
         PRIVATE
             upnplib_shared
     )
@@ -234,11 +233,8 @@ if(NOT WIN32)
             ${COMPA_COMPILE_DEFINITIONS}
     )
     target_link_libraries(compa_static
-        PUBLIC
-            umock_static
-            $<$<BOOL:${COMPA_DEF_OPENSSL}>:upnplib_ssl>
-        INTERFACE
-            ixml_static
+        PUBLIC umock_static
+        INTERFACE ixml_static
     )
 
 else() # WIN32
@@ -266,7 +262,6 @@ else() # WIN32
         PUBLIC
             umock_shared
             ixml_shared
-            $<$<BOOL:${COMPA_DEF_OPENSSL}>:upnplib_ssl>
         PRIVATE
             upnplib_shared
             # disable warning LNK4217: symbol 'symbol' defined in
@@ -291,11 +286,8 @@ else() # WIN32
             $<$<BOOL:${COMPA_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(compa_static
-        PUBLIC
-            umock_static
-            $<$<BOOL:${COMPA_DEF_OPENSSL}>:upnplib_ssl>
-        INTERFACE
-            ixml_static
+        PUBLIC umock_static
+        INTERFACE ixml_static
     )
 
 endif() # WIN32

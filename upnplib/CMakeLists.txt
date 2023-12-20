@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-12-16
+# Redistribution only with this Copyright remark. Last modified: 2023-12-22
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -48,7 +48,6 @@ if(NOT WIN32)
     target_link_libraries(upnplib_shared
         PUBLIC umock_shared
         INTERFACE ixml_shared
-        PRIVATE $<$<BOOL:${UPNPLIB_WITH_OPENSSL}>:upnplib_ssl>
     )
 
     # Upnplib STatic library: suffix -ust
@@ -66,7 +65,6 @@ if(NOT WIN32)
     target_link_libraries(upnplib_static
         PUBLIC umock_static
         INTERFACE ixml_static
-        PRIVATE $<$<BOOL:${UPNPLIB_WITH_OPENSSL}>:upnplib_ssl>
     )
 
 else() # WIN32
@@ -89,7 +87,6 @@ else() # WIN32
     )
     target_link_libraries(upnplib_shared
         PUBLIC umock_shared
-        PRIVATE $<$<BOOL:${UPNPLIB_WITH_OPENSSL}>:upnplib_ssl>
     )
 
     # WIN32 Upnplib STatic library: suffix -ust
@@ -106,7 +103,6 @@ else() # WIN32
     )
     target_link_libraries(upnplib_static
         PUBLIC umock_static
-        PRIVATE $<$<BOOL:${UPNPLIB_WITH_OPENSSL}>:upnplib_ssl>
     )
 
 endif() # WIN32

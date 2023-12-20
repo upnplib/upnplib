@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-15
+// Redistribution only with this Copyright remark. Last modified: 2023-12-22
 
 // Helpful link for ip address structures:
 // https://stackoverflow.com/q/76548580/5014688
@@ -17,6 +17,7 @@
 
 #include <umock/unistd_mock.hpp>
 #include <umock/sys_socket_mock.hpp>
+#include <umock/ssl_mock.hpp>
 
 #include <fcntl.h>
 
@@ -36,6 +37,7 @@ using ::testing::Ne;
 using ::testing::NotNull;
 using ::testing::Return;
 using ::testing::StrictMock;
+using ::testing::no_adl::Conditional;
 
 using ::upnplib::errStr;
 using ::upnplib::errStrEx;
@@ -60,6 +62,10 @@ class SockFTestSuite : public ::testing::Test {
 
     StrictMock<umock::UnistdMock> m_unistdObj;
     umock::Unistd unistd_injectObj = umock::Unistd(&m_unistdObj);
+#ifdef UPNP_ENABLE_OPEN_SSL
+    StrictMock<umock::SslMock> m_sslObj;
+    umock::Ssl ssl_injectObj = umock::Ssl(&m_sslObj);
+#endif
 };
 typedef SockFTestSuite SockFDeathTest;
 
@@ -282,6 +288,76 @@ TEST_F(SockFTestSuite, sock_destroy_invalid_fd_shutdown_and_close_fails) {
     }
 }
 
+#ifdef UPNP_ENABLE_OPEN_SSL
+TEST_F(SockFTestSuite, sock_read_ssl_within_timeout_successful) {
+    constexpr SOCKET sockfd{3};
+    constexpr time_t timeout{5};
+
+    // Configure expected system calls that will return a received message.
+    // select()
+    EXPECT_CALL(m_sys_socketObj,
+                select(sockfd + 1, NotNull(), NotNull(), IsNull(),
+                       Field(&::timeval::tv_sec, Eq(timeout))))
+        .Times(2)
+        // Consider timeout to be undefined after select() returns.
+        .WillRepeatedly(DoAll(StructSetToArg<4>(0xAA), Return(1)));
+
+    constexpr char received_msg[]{
+        "Mocked received TCP message within timeout."};
+    // SSL_read()
+    EXPECT_CALL(m_sslObj, SSL_read(_, _, _))
+        .WillOnce(DoAll(StrCpyToArg<1>(received_msg),
+                        Return(static_cast<SSIZEP_T>(sizeof(received_msg)))));
+    // recv()
+    EXPECT_CALL(m_sys_socketObj, recv(sockfd, NotNull(), _, _))
+        .WillOnce(DoAll(StrCpyToArg<1>(received_msg),
+                        Return(static_cast<SSIZEP_T>(sizeof(received_msg)))));
+#ifdef SO_NOSIGPIPE // this is defined on MacOS
+    if (old_code) {
+        // Mock getsockopt(), get old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, _, _))
+            .Times(2)
+            .WillRepeatedly(DoAll(SetArgPtrIntValue<3>(0xAA55), Return(0)));
+        // Mock setsockopt(), set new option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(1), _))
+            .Times(2);
+        // Mock setsockopt(), restore old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(0xAA55), _))
+            .Times(2);
+    }
+#endif
+
+    int timeoutSecs{timeout}; // Will be modified to used time
+    char buffer[sizeof(received_msg)]{};
+    ::SOCKINFO sockinfo;
+    sock_init(&sockinfo, sockfd);
+
+    // Test Unit unprotected
+    int ret_sock_read =
+        sock_read(&sockinfo, buffer, sizeof(buffer), &timeoutSecs);
+
+    EXPECT_EQ(ret_sock_read, static_cast<int>(sizeof(received_msg)))
+        << errStr(ret_sock_read);
+    EXPECT_STREQ(buffer, received_msg);
+    // Don't know for what next is good. I haven't found any useful
+    // documentation about this "used time" and it is not used anywhere in the
+    // production code. Here it is only given for compatibility.
+    EXPECT_GE(timeoutSecs, timeout - 1);
+
+    // Test Unit with ssl
+    sockinfo.ssl = reinterpret_cast<SSL*>(1);
+    ret_sock_read = sock_read(&sockinfo, buffer, sizeof(buffer), &timeoutSecs);
+    EXPECT_STREQ(buffer, received_msg);
+    EXPECT_GE(timeoutSecs, timeout - 1);
+}
+
+#else
+
 TEST_F(SockFTestSuite, sock_read_within_timeout_successful) {
     constexpr SOCKET sockfd{3};
     constexpr time_t timeout{5};
@@ -334,6 +410,7 @@ TEST_F(SockFTestSuite, sock_read_within_timeout_successful) {
     // production code. Here it is only given for compatibility.
     EXPECT_GE(timeoutSecs, timeout - 1);
 }
+#endif
 
 TEST_F(SockFTestSuite, sock_read_no_timeout_successful) {
     constexpr SOCKET sockfd{3};
@@ -774,25 +851,31 @@ TEST_F(SockFTestSuite, sock_write_successful) {
         .WillOnce(DoAll(StructSetToArg<4>(0xAA), Return(1)));
     // send()
     char sent_msg[]{"Mocked sent TCP message."};
-    EXPECT_CALL(m_sys_socketObj, send(sockfd, sent_msg, sizeof(sent_msg),
-                                      MSG_DONTROUTE | MSG_NOSIGNAL))
+    EXPECT_CALL(m_sys_socketObj,
+                send(sockfd, sent_msg, sizeof(sent_msg),
+                     Conditional(old_code, MSG_DONTROUTE | MSG_NOSIGNAL,
+                                 MSG_DONTROUTE)))
         .Times(2) // With and without timeout set.
         .WillRepeatedly(Return(static_cast<SSIZEP_T>(sizeof(sent_msg))));
 
 #ifdef SO_NOSIGPIPE // this is defined on MacOS
-    // Mock getsockopt(), get old option SIGPIPE
-    EXPECT_CALL(m_sys_socketObj,
-                getsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, _, _))
-        .Times(2)
-        .WillRepeatedly(DoAll(SetArgPtrIntValue<3>(0xAA55), Return(0)));
-    // Mock setsockopt(), set new option SIGPIPE
-    EXPECT_CALL(m_sys_socketObj, setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
-                                            PointeeVoidToConstInt(1), _))
-        .Times(2);
-    // Mock setsockopt(), restore old option SIGPIPE
-    EXPECT_CALL(m_sys_socketObj, setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
-                                            PointeeVoidToConstInt(0xAA55), _))
-        .Times(2);
+    if (old_code) {
+        // Mock getsockopt(), get old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, _, _))
+            .Times(2)
+            .WillRepeatedly(DoAll(SetArgPtrIntValue<3>(0xAA55), Return(0)));
+        // Mock setsockopt(), set new option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(1), _))
+            .Times(2);
+        // Mock setsockopt(), restore old option SIGPIPE
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE,
+                               PointeeVoidToConstInt(0xAA55), _))
+            .Times(2);
+    }
 #endif
 
     ::SOCKINFO sockinfo;
@@ -858,7 +941,7 @@ TEST_F(SockFTestSuite, sock_write_with_sending_error) {
         .WillOnce(SetErrPtblAndReturn(ENOMEMP, SOCKET_ERROR));
 
 #ifdef SO_NOSIGPIPE // this is defined on MacOS
-    {
+    if (old_code) {
         InSequence seq;
         // Mock getsockopt(), get old option SIGPIPE
         EXPECT_CALL(m_sys_socketObj,

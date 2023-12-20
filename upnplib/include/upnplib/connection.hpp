@@ -1,7 +1,7 @@
 #ifndef UPNPP_0_ADDRESSING_CONNECTION_HPP
 #define UPNPP_0_ADDRESSING_CONNECTION_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-16
+// Redistribution only with this Copyright remark. Last modified: 2023-12-20
 
 #ifndef _MSC_VER
 
@@ -27,22 +27,19 @@ namespace upnplib {
 // c76d123ffbd6989ff415169b86fe0b27c5a111aa. --Ingo
 class UPNPLIB_API CSigpipe_scoped {
   public:
-    // The only error that can be returned in errno is 'EINVAL signum is not a
-    // valid signal.' SIGPIPE is always a valid signum, so no error handling is
-    // required.
     CSigpipe_scoped();
     ~CSigpipe_scoped();
 
   private:
-    sigset_t m_sigpipe_mask;
     bool m_sigpipe_pending;
     bool m_sigpipe_unblock;
 };
 
 } // namespace upnplib
 
-#define UPNPLIB_SCOPED_NO_SIGPIPE upnplib::CSigpipe_scoped sigpipe
+#define UPNPLIB_SCOPED_NO_SIGPIPE upnplib::CSigpipe_scoped sigpipe;
 #else // #ifndef _MSC_VER
+// This will the ported program also compile on win32 without error.
 #define UPNPLIB_SCOPED_NO_SIGPIPE
 #endif
 

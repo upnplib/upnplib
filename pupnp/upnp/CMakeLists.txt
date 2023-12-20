@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-11-07
+# Redistribution only with this Copyright remark. Last modified: 2023-12-22
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -209,7 +209,6 @@ if(NOT WIN32)
         PUBLIC
             umock_shared
             ixml_shared
-            $<$<BOOL:${PUPNP_DEF_OPENSSL}>:upnplib_ssl>
     )
 
     # Pupnp STatic library: suffix -pst
@@ -229,11 +228,8 @@ if(NOT WIN32)
         PUBLIC UPNPLIB_WITH_NATIVE_PUPNP
     )
     target_link_libraries(pupnp_static
-        PUBLIC
-            umock_static
-            $<$<BOOL:${PUPNP_DEF_OPENSSL}>:upnplib_ssl>
-        INTERFACE
-            ixml_static
+        PUBLIC umock_static
+        INTERFACE ixml_static
 )
 
 else() # WIN32
@@ -258,12 +254,10 @@ else() # WIN32
             UPNPLIB_EXPORTS
             $<$<BOOL:${PUPNP_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
-    # In addition to pthreads we need some more system libraries here
     target_link_libraries(pupnp_shared
         PUBLIC
             umock_shared
             ixml_shared
-            $<$<BOOL:${PUPNP_DEF_OPENSSL}>:upnplib_ssl>
     )
 
     # WIN32 Pupnp STatic library: suffix -pst
@@ -281,11 +275,8 @@ else() # WIN32
             $<$<BOOL:${PUPNP_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
     )
     target_link_libraries(pupnp_static
-        PUBLIC
-            umock_static
-            $<$<BOOL:${PUPNP_DEF_OPENSSL}>:upnplib_ssl>
-        INTERFACE
-            ixml_static
+        PUBLIC umock_static
+        INTERFACE ixml_static
     )
 
 endif() # WIN32

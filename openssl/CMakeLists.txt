@@ -1,5 +1,5 @@
 # Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-02-23
+# Redistribution only with this Copyright remark. Last modified: 2023-12-22
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -24,6 +24,7 @@ if(NOT WIN32)
     )
     target_link_libraries(upnplib_crypto
         INTERFACE dl
+        INTERFACE pthread
     )
 
     add_library(upnplib_ssl STATIC IMPORTED GLOBAL)

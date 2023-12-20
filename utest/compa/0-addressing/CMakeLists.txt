@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-12-15
+# Redistribution only with this Copyright remark. Last modified: 2023-12-22
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -12,24 +12,26 @@ project(UTEST_ADDRESSING VERSION 0011
 # sock
 #=====
 add_executable(test_sock-psh
-        ./test_sock.cpp
+        test_sock.cpp
 )
 target_link_libraries(test_sock-psh
     PRIVATE
         pupnp_shared
         upnplib_shared
+        utest_shared
 )
 add_test(NAME ctest_sock-psh COMMAND test_sock-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 add_executable(test_sock-csh
-        ./test_sock.cpp
+        test_sock.cpp
 )
 target_link_libraries(test_sock-csh
     PRIVATE
         compa_shared
         upnplib_shared
+        utest_shared
 )
 add_test(NAME ctest_sock-csh COMMAND test_sock-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
@@ -40,7 +42,7 @@ add_test(NAME ctest_sock-csh COMMAND test_sock-csh --gtest_shuffle
 #=========
 if(UPNPLIB_WITH_OPENSSL)
     add_executable(test_sock_ssl-psh
-        ./test_sock_ssl.cpp
+        test_sock_ssl.cpp
     )
     target_link_libraries(test_sock_ssl-psh
         PRIVATE
@@ -53,7 +55,7 @@ if(UPNPLIB_WITH_OPENSSL)
     )
 
     add_executable(test_sock_ssl-csh
-        ./test_sock_ssl.cpp
+        test_sock_ssl.cpp
     )
     target_link_libraries(test_sock_ssl-csh
         PRIVATE
@@ -73,7 +75,7 @@ if(FALSE)
 # test. They also fail on WIN32 with Exception: Exit code 0xc0000409 means
 # STATUS_STACK_BUFFER_OVERRUN.
     add_executable(test_openssl_threaded-psh
-        ./test_openssl_threaded.cpp
+        test_openssl_threaded.cpp
     )
     target_link_libraries(test_openssl_threaded-psh
         PRIVATE pupnp_shared
@@ -84,7 +86,7 @@ if(FALSE)
     )
 
     add_executable(test_openssl_threaded-csh
-        ./test_openssl_threaded.cpp
+        test_openssl_threaded.cpp
     )
     target_link_libraries(test_openssl_threaded-csh
         PRIVATE compa_shared
@@ -108,7 +110,7 @@ endif()
 
 add_executable(test_miniserver-pst
 #---------------------------------
-    ./test_miniserver.cpp
+    test_miniserver.cpp
 )
 target_include_directories(test_miniserver-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -125,7 +127,7 @@ add_test(NAME ctest_miniserver-pst COMMAND test_miniserver-pst --gtest_shuffle
 
 add_executable(test_miniserver-cst
 #---------------------------------
-    ./test_miniserver.cpp
+    test_miniserver.cpp
 )
 target_include_directories(test_miniserver-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -151,7 +153,7 @@ add_test(NAME ctest_miniserver-cst COMMAND test_miniserver-cst --gtest_shuffle
 # suppress it. It's not productive code. --Ingo
 add_executable(test_miniserver_run-psh
 #-------------------------------------
-    ./test_miniserver_run.cpp
+    test_miniserver_run.cpp
 )
 target_include_directories(test_miniserver_run-psh
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -172,7 +174,7 @@ add_test(NAME ctest_miniserver_run-psh COMMAND test_miniserver_run-psh --gtest_s
 
 add_executable(test_miniserver_run-csh
 #-------------------------------------
-    ./test_miniserver_run.cpp
+    test_miniserver_run.cpp
 )
 target_include_directories(test_miniserver_run-csh
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
