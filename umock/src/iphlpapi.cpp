@@ -1,10 +1,16 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-05
+// Redistribution only with this Copyright remark. Last modified: 2023-12-23
 
-#include <umock/iphlpapi.inc>
+#include <umock/iphlpapi.hpp>
+#include <upnplib/port.hpp>
 
 namespace umock {
 
+IphlpapiInterface::IphlpapiInterface() = default;
+IphlpapiInterface::~IphlpapiInterface() = default;
+
+IphlpapiReal::IphlpapiReal() = default;
+IphlpapiReal::~IphlpapiReal() = default;
 ULONG IphlpapiReal::GetAdaptersAddresses(ULONG Family, ULONG Flags,
                                          PVOID Reserved,
                                          PIP_ADAPTER_ADDRESSES AdapterAddresses,
@@ -38,6 +44,7 @@ ULONG Iphlpapi::GetAdaptersAddresses(ULONG Family, ULONG Flags, PVOID Reserved,
 // On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
 IphlpapiReal iphlpapi_realObj;
+SUPPRESS_MSVC_WARN_4273_NEXT_LINE
 UPNPLIB_API Iphlpapi iphlpapi_h(&iphlpapi_realObj);
 
 } // namespace umock

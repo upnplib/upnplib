@@ -1,11 +1,11 @@
 #ifndef UMOCK_STRINGH_MOCK_HPP
 #define UMOCK_STRINGH_MOCK_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-16
+// Redistribution only with this Copyright remark. Last modified: 2023-12-23
 
 #include <umock/stringh.hpp>
-#include <gmock/gmock.h>
 #include <upnplib/port.hpp>
+#include <gmock/gmock.h>
 
 namespace umock {
 

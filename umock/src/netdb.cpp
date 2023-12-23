@@ -1,16 +1,21 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-22
+// Redistribution only with this Copyright remark. Last modified: 2023-12-24
 
-#include "umock/netdb.inc"
+#include <umock/netdb.hpp>
+#include <upnplib/port.hpp>
 
 namespace umock {
 
+NetdbInterface::NetdbInterface() = default;
+NetdbInterface::~NetdbInterface() = default;
+
+NetdbReal::NetdbReal() = default;
+NetdbReal::~NetdbReal() = default;
 int NetdbReal::getaddrinfo(const char* node, const char* service,
                            const struct addrinfo* hints,
                            struct addrinfo** res) {
     return ::getaddrinfo(node, service, hints, res);
 }
-
 void NetdbReal::freeaddrinfo(struct addrinfo* res) {
     return ::freeaddrinfo(res);
 }
@@ -42,6 +47,7 @@ void Netdb::freeaddrinfo(struct addrinfo* res) {
 // On program start create an object and inject pointer to the real function.
 // This will exist until program end.
 NetdbReal netdb_realObj;
+SUPPRESS_MSVC_WARN_4273_NEXT_LINE
 UPNPLIB_API Netdb netdb_h(&netdb_realObj);
 
 } // namespace umock

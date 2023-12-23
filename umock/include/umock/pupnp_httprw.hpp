@@ -5,10 +5,9 @@
 
 // This is a header only mocking include file. When included it is present
 // direct in the source code and can be used to mock static functions that are
-// hidden to the global context. With some returns and pointer variables this
-// include does not have a big footprint.
+// hidden to the global context.
 
-#include "upnplib/port.hpp"
+#include <upnplib/port.hpp>
 
 static int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
                            socklen_t addrlen);

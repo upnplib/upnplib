@@ -2,11 +2,11 @@
 #ifndef UMOCK_SSL_MOCK_HPP
 #define UMOCK_SSL_MOCK_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-22
+// Redistribution only with this Copyright remark. Last modified: 2023-12-23
 
-#include <gmock/gmock.h>
 #include <umock/ssl.hpp>
 #include <upnplib/port.hpp>
+#include <gmock/gmock.h>
 
 namespace umock {
 

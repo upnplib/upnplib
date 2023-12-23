@@ -1,10 +1,16 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-23
+// Redistribution only with this Copyright remark. Last modified: 2023-12-23
 
-#include "umock/net_if.inc"
+#include <umock/net_if.hpp>
+#include <upnplib/port.hpp>
 
 namespace umock {
 
+Net_ifInterface::Net_ifInterface() = default;
+Net_ifInterface::~Net_ifInterface() = default;
+
+Net_ifReal::Net_ifReal() = default;
+Net_ifReal::~Net_ifReal() = default;
 unsigned int Net_ifReal::if_nametoindex(const char* ifname) {
     return ::if_nametoindex(ifname);
 }
@@ -31,6 +37,7 @@ unsigned int Net_if::if_nametoindex(const char* ifname) {
 // On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
 Net_ifReal net_if_realObj;
+SUPPRESS_MSVC_WARN_4273_NEXT_LINE
 UPNPLIB_API Net_if net_if_h(&net_if_realObj);
 
 } // namespace umock

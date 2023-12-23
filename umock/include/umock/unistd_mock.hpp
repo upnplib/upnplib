@@ -1,17 +1,21 @@
 #ifndef UMOCK_UNISTD_MOCK_HPP
 #define UMOCK_UNISTD_MOCK_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-08-09
+// Redistribution only with this Copyright remark. Last modified: 2023-12-26
 
 #include <umock/unistd.hpp>
+#include <upnplib/port.hpp>
 #include <gmock/gmock.h>
 
 namespace umock {
 
-class UnistdMock : public UnistdInterface {
+class UPNPLIB_API UnistdMock : public UnistdInterface {
   public:
-    virtual ~UnistdMock() override = default;
+    UnistdMock();
+    virtual ~UnistdMock() override;
+    DISABLE_MSVC_WARN_4251
     MOCK_METHOD(int, CLOSE_SOCKET_P, (SOCKET fd), (override));
+    ENABLE_MSVC_WARN
 };
 
 } // namespace umock

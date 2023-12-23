@@ -1,7 +1,8 @@
 Next steps to do:
 * Rework socket read/write function and test_sock.cpp.
   * Split monolitic 'sock_read_write()' into specialized smaller functions.
-  * General use of CSigpipe@sock.cpp.
+  * Improve tests for sock read_ssl.
+  * Extract write_ssl from sock_read_write().
   * Use poll() and WSAPoll() instead of select().
 * Create github account 'upnpp' and copy/rename library/namespace upnplib to upnpp.
 * Remove a_service argument from CAddrinfo constructor.

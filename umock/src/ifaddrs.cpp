@@ -1,14 +1,19 @@
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-10-23
 
-#include "umock/ifaddrs.inc"
+#include <umock/ifaddrs.hpp>
+#include <upnplib/port.hpp>
 
 namespace umock {
 
+IfaddrsInterface::IfaddrsInterface() = default;
+IfaddrsInterface::~IfaddrsInterface() = default;
+
+IfaddrsReal::IfaddrsReal() = default;
+IfaddrsReal::~IfaddrsReal() = default;
 int IfaddrsReal::getifaddrs(struct ifaddrs** ifap) {
     return ::getifaddrs(ifap);
 }
-
 void IfaddrsReal::freeifaddrs(struct ifaddrs* ifa) {
     return ::freeifaddrs(ifa);
 }
@@ -31,7 +36,6 @@ Ifaddrs::~Ifaddrs() { m_ptr_workerObj = m_ptr_oldObj; }
 int Ifaddrs::getifaddrs(struct ifaddrs** ifap) {
     return m_ptr_workerObj->getifaddrs(ifap);
 }
-
 void Ifaddrs::freeifaddrs(struct ifaddrs* ifa) {
     return m_ptr_workerObj->freeifaddrs(ifa);
 }
@@ -39,6 +43,7 @@ void Ifaddrs::freeifaddrs(struct ifaddrs* ifa) {
 // On program start create an object and inject pointer to the real function.
 // This will exist until program end.
 IfaddrsReal ifaddrs_realObj;
+SUPPRESS_MSVC_WARN_4273_NEXT_LINE
 UPNPLIB_API Ifaddrs ifaddrs_h(&ifaddrs_realObj);
 
 } // namespace umock

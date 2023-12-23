@@ -1,10 +1,16 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-02-02
+// Redistribution only with this Copyright remark. Last modified: 2023-12-26
 
-#include "umock/unistd.inc"
+#include <umock/unistd.hpp>
+#include <upnplib/port.hpp>
 
 namespace umock {
 
+UnistdInterface::UnistdInterface() = default;
+UnistdInterface::~UnistdInterface() = default;
+
+UnistdReal::UnistdReal() = default;
+UnistdReal::~UnistdReal() = default;
 int UnistdReal::CLOSE_SOCKET_P(SOCKET fd) { return ::CLOSE_SOCKET_P(fd); }
 
 // This constructor is used to inject the pointer to the real function.
@@ -29,6 +35,7 @@ int Unistd::CLOSE_SOCKET_P(SOCKET fd) {
 // On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
 UnistdReal unistd_realObj;
+SUPPRESS_MSVC_WARN_4273_NEXT_LINE
 UPNPLIB_API Unistd unistd_h(&unistd_realObj);
 
 } // namespace umock

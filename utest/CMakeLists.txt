@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-12-22
+# Redistribution only with this Copyright remark. Last modified: 2023-12-26
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -50,7 +50,18 @@ set(UTEST_SOURCE_FILES
     tools/utest.cpp
     $<$<PLATFORM_ID:Windows>:tools/utest_win32.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:tools/utest_unix.cpp>
+    ${UMOCK_SOURCE_DIR}/src/arpa_inet_mock.cpp
     ${UMOCK_SOURCE_DIR}/src/stringh_mock.cpp
+    ${UMOCK_SOURCE_DIR}/src/netdb_mock.cpp
+    ${UMOCK_SOURCE_DIR}/src/pthread_mock.cpp
+    ${UMOCK_SOURCE_DIR}/src/stdio_mock.cpp
+    ${UMOCK_SOURCE_DIR}/src/stdlib_mock.cpp
+    ${UMOCK_SOURCE_DIR}/src/sys_socket_mock.cpp
+    ${UMOCK_SOURCE_DIR}/src/sysinfo_mock.cpp
+    ${UMOCK_SOURCE_DIR}/src/unistd_mock.cpp
+    $<$<PLATFORM_ID:Windows>:${UMOCK_SOURCE_DIR}/src/iphlpapi_mock.cpp>
+    $<$<NOT:$<PLATFORM_ID:Windows>>:${UMOCK_SOURCE_DIR}/src/ifaddrs_mock.cpp>
+    $<$<NOT:$<PLATFORM_ID:Windows>>:${UMOCK_SOURCE_DIR}/src/net_if_mock.cpp>
     $<$<BOOL:${UPNPLIB_WITH_OPENSSL}>:${UMOCK_SOURCE_DIR}/src/ssl_mock.cpp>
 )
 
@@ -80,6 +91,10 @@ target_link_libraries(utest_static
 )
 
 
+#link_libraries(utest_shared utest_static
+#)
+
+#
 # Reset output directories to default means to use the subprojects directories.
 # This should be done after build of utest.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "")

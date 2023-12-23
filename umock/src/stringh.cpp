@@ -1,7 +1,8 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-14
+// Redistribution only with this Copyright remark. Last modified: 2023-12-23
 
-#include <umock/stringh.inc>
+#include <umock/stringh.hpp>
+#include <upnplib/port.hpp>
 
 namespace umock {
 
@@ -40,6 +41,7 @@ char* Stringh::strndup(const char* s, size_t n) {
 // On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
 StringhReal stringh_realObj;
+SUPPRESS_MSVC_WARN_4273_NEXT_LINE
 UPNPLIB_API Stringh string_h(&stringh_realObj);
 
 } // namespace umock

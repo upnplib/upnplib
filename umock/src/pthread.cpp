@@ -1,10 +1,16 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-22
+// Redistribution only with this Copyright remark. Last modified: 2023-12-24
 
-#include "umock/pthread.inc"
+#include <umock/pthread.hpp>
+#include <upnplib/port.hpp>
 
 namespace umock {
 
+PthreadInterface::PthreadInterface() = default;
+PthreadInterface::~PthreadInterface() = default;
+
+PthreadReal::PthreadReal() = default;
+PthreadReal::~PthreadReal() = default;
 int PthreadReal::pthread_mutex_init(pthread_mutex_t* mutex,
                                     const pthread_mutexattr_t* mutexattr) {
     return ::pthread_mutex_init(mutex, mutexattr);
@@ -96,6 +102,7 @@ int Pthread::pthread_cond_destroy(pthread_cond_t* cond) {
 // On program start create an object and inject pointer to the real function.
 // This will exist until program end.
 PthreadReal pthread_realObj;
+SUPPRESS_MSVC_WARN_4273_NEXT_LINE
 UPNPLIB_API Pthread pthread_h(&pthread_realObj);
 
 } // namespace umock

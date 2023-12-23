@@ -1,9 +1,10 @@
 #ifndef UMOCK_SYS_SOCKET_MOCK_HPP
 #define UMOCK_SYS_SOCKET_MOCK_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-26
+// Redistribution only with this Copyright remark. Last modified: 2023-12-26
 
 #include <umock/sys_socket.hpp>
+#include <upnplib/port.hpp>
 #include <gmock/gmock.h>
 
 namespace umock {
@@ -14,10 +15,12 @@ namespace umock {
 constexpr SOCKET sfd_base{};
 
 
-class Sys_socketMock : public umock::Sys_socketInterface {
+class UPNPLIB_API Sys_socketMock : public umock::Sys_socketInterface {
   public:
-    virtual ~Sys_socketMock() override = default;
+    Sys_socketMock();
+    virtual ~Sys_socketMock() override;
     // clang-format off
+    DISABLE_MSVC_WARN_4251
     MOCK_METHOD(SOCKET, socket, (int domain, int type, int protocol), (override));
     MOCK_METHOD(int, bind, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
     MOCK_METHOD(int, listen, (SOCKET sockfd, int backlog), (override));
@@ -32,6 +35,7 @@ class Sys_socketMock : public umock::Sys_socketInterface {
     MOCK_METHOD(int, connect, (SOCKET sockfd, const struct sockaddr* addr, socklen_t addrlen), (override));
     MOCK_METHOD(int, shutdown, (SOCKET sockfd, int how), (override));
     MOCK_METHOD(int, select, (SOCKET nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout), (override));
+    ENABLE_MSVC_WARN
     // clang-format on
 };
 
