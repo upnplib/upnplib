@@ -1,10 +1,7 @@
 Next steps to do:
-* Rework socket read/write function and test_sock.cpp.
-  * Split monolitic 'sock_read_write()' into specialized smaller functions.
-  * Improve tests for sock read_ssl.
-  * Extract write_ssl from sock_read_write().
-  * Use poll() and WSAPoll() instead of select().
 * Create github account 'upnpp' and copy/rename library/namespace upnplib to upnpp.
+* Fix "time used" on sock_read and sock_write.
+* Improve tests for sock read_ssl and sock write_ssl.
 * Remove a_service argument from CAddrinfo constructor.
 * Create threaded simple_inet_server and simple_inet_client for testing.
   * Create no mocked tests for CSigpipe@sock.cpp, read and write data.
@@ -18,6 +15,7 @@ Next steps to do:
 * Improve test_sock.cpp with ssl tests
 * Improve test_http_Download.cpp, start with error conditions for http_MakeMessage()
 * Create gtests for ssdp/*, start with get_ssdp_sockets (needed for miniserver).
+* Use poll() and WSAPoll() instead of select().
 * parse_uri should except "http://127.000.000.001:50001/tvdevicedesc.xml" as valid.
 * Create gtests for web_server_callback.
 * Check bugfix in pupnp/upnp/src/urlconfig/urlconfig.cpp with a gtest.

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-21
+ * Redistribution only with this Copyright remark. Last modified: 2023-12-27
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -437,14 +437,13 @@ static int sock_write_unprotected(
 
     size_t byte_left{a_bufsize};
     long bytes_sent{};
-    ssize_t num_written;
 
     UPNPLIB_SCOPED_NO_SIGPIPE
     while (byte_left != static_cast<size_t>(0)) {
         TRACE("Write data with syscall ::send().")
-        num_written = umock::sys_socket_h.send(sockfd, a_writebuf + bytes_sent,
-                                               static_cast<SIZEP_T>(byte_left),
-                                               MSG_DONTROUTE);
+        ssize_t num_written = umock::sys_socket_h.send(
+            sockfd, a_writebuf + bytes_sent, static_cast<SIZEP_T>(byte_left),
+            MSG_DONTROUTE);
         if (num_written == -1) {
             return UPNP_E_SOCKET_WRITE;
         }
@@ -555,8 +554,7 @@ static int sock_write_ssl(
     time_t start_time{time(NULL)};
 
     TRACE("Executing compa::sock_write_ssl()")
-    // if (a_info == nullptr || a_writebuf == nullptr)
-    if (true)
+    if (a_info == nullptr || a_writebuf == nullptr)
         return UPNP_E_SOCKET_ERROR;
     if (a_bufsize == 0)
         return 0;
@@ -601,14 +599,13 @@ static int sock_write_ssl(
 
     size_t byte_left{a_bufsize};
     long bytes_sent{};
-    ssize_t num_written;
 
     UPNPLIB_SCOPED_NO_SIGPIPE
     while (byte_left != static_cast<size_t>(0)) {
-        TRACE("Write data with syscall ::send().")
-        num_written = umock::sys_socket_h.send(sockfd, a_writebuf + bytes_sent,
-                                               static_cast<SIZEP_T>(byte_left),
-                                               MSG_DONTROUTE);
+        TRACE("Write data with syscall ::SSL_write().")
+        ssize_t num_written =
+            umock::ssl_h.SSL_write(a_info->ssl, a_writebuf + bytes_sent,
+                                   static_cast<SIZEP_T>(byte_left));
         if (num_written == -1) {
             return UPNP_E_SOCKET_WRITE;
         }

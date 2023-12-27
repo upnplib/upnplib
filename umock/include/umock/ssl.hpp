@@ -2,7 +2,7 @@
 #ifndef UMOCK_SSL_HPP
 #define UMOCK_SSL_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-20
+// Redistribution only with this Copyright remark. Last modified: 2023-12-27
 
 #include <upnplib/visibility.hpp>
 #include <openssl/ssl.h>
@@ -14,6 +14,7 @@ class UPNPLIB_API SslInterface {
     SslInterface();
     virtual ~SslInterface();
     virtual int SSL_read(SSL* ssl, void* buf, int num) = 0;
+    virtual int SSL_write(SSL* ssl, const void* buf, int num) = 0;
 };
 
 
@@ -24,6 +25,7 @@ class SslReal : public SslInterface {
     SslReal();
     virtual ~SslReal() override;
     int SSL_read(SSL* ssl, void* buf, int num) override;
+    int SSL_write(SSL* ssl, const void* buf, int num) override;
 };
 
 
@@ -53,6 +55,7 @@ class UPNPLIB_API Ssl {
 
     // Methods
     virtual int SSL_read(SSL* ssl, void* buf, int num);
+    virtual int SSL_write(SSL* ssl, const void* buf, int num);
 
   private:
     // Next variable must be static. Please note that a static member variable

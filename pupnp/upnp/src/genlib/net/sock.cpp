@@ -232,8 +232,8 @@ static int sock_read_write(
             while (byte_left != (size_t)0) {
 #ifdef UPNP_ENABLE_OPEN_SSL
                 if (info->ssl) {
-                    num_written = SSL_write(info->ssl, buffer + bytes_sent,
-                                            (int)byte_left);
+                    num_written = umock::ssl_h.SSL_write(
+                        info->ssl, buffer + bytes_sent, (int)byte_left);
                 } else {
 #endif
                     /* write data. */

@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-22
+// Redistribution only with this Copyright remark. Last modified: 2023-12-27
 
 #include <umock/ssl.hpp>
 #include <upnplib/port.hpp>
@@ -13,6 +13,9 @@ SslReal::SslReal() = default;
 SslReal::~SslReal() = default;
 int SslReal::SSL_read(SSL* ssl, void* buf, int num) {
     return ::SSL_read(ssl, buf, num);
+}
+int SslReal::SSL_write(SSL* ssl, const void* buf, int num) {
+    return ::SSL_write(ssl, buf, num);
 }
 
 // This constructor is used to inject the pointer to the real function.
@@ -33,6 +36,10 @@ Ssl::~Ssl() { m_ptr_workerObj = m_ptr_oldObj; }
 int Ssl::SSL_read(SSL* ssl, void* buf, int num) {
     return m_ptr_workerObj->SSL_read(ssl, buf, num);
 }
+int Ssl::SSL_write(SSL* ssl, const void* buf, int num) {
+    return m_ptr_workerObj->SSL_write(ssl, buf, num);
+}
+
 
 // On program start create an object and inject pointer to the real functions.
 // This will exist until program end.
