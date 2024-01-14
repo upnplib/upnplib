@@ -43,25 +43,25 @@
  * \file
  */
 
-//#include "UpnpInet.h"
-//#include "httpparser.h"
-//#include "httpreadwrite.h"
+// #include "UpnpInet.h"
+// #include "httpparser.h"
+// #include "httpreadwrite.h"
 #include <miniserver.hpp>
 
-//#include <errno.h>
-//#include <setjmp.h>
-//#include <signal.h>
-//#include <sys/types.h>
+// #include <errno.h>
+// #include <setjmp.h>
+// #include <signal.h>
+// #include <sys/types.h>
 
 #ifdef _WIN32
 #else /* _WIN32 */
-//#include <syslog.h>
+// #include <syslog.h>
 #ifndef __APPLE__
-//#include <netinet/in_systm.h>
-//#include <netinet/ip.h>
-//#include <netinet/ip_icmp.h>
+// #include <netinet/in_systm.h>
+// #include <netinet/ip.h>
+// #include <netinet/ip_icmp.h>
 #endif /* __APPLE__ */
-//#include <sys/time.h>
+// #include <sys/time.h>
 #endif /* _WIN32 */
 
 /*! Enumeration to define all different types of ssdp searches */

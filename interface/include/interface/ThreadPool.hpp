@@ -5,9 +5,9 @@
 
 #include <ThreadPool.hpp>
 
-//###############################
-// ThreadPool Interface         #
-//###############################
+// ###############################
+//  ThreadPool Interface         #
+// ###############################
 
 // clang-format off
 class IThreadPool {

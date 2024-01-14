@@ -14,7 +14,7 @@ class UPNPLIB_API StdioMock : public umock::StdioInterface {
     StdioMock();
     virtual ~StdioMock() override;
     DISABLE_MSVC_WARN_4251
-// clang-format off
+    // clang-format off
 #ifdef _WIN32
     // Secure function only on MS Windows
     MOCK_METHOD(errno_t, fopen_s, (FILE * *pFile, const char* pathname, const char* mode), (override));

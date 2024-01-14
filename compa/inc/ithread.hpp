@@ -40,11 +40,11 @@
  */
 
 #if !defined(_WIN32)
-//#include <sys/param.h>
+// #include <sys/param.h>
 #endif
 
 #include "UpnpGlobal.hpp" /* For UPNP_INLINE, EXPORT_SPEC */
-//#include "UpnpUniStd.h" /* for close() */
+// #include "UpnpUniStd.h" /* for close() */
 #include "pthread.h" // To find pthreads4w don't use <pthread.h>
 
 #if defined(BSD) && !defined(__GNU__)
@@ -870,7 +870,7 @@ static UPNP_INLINE int ithread_cleanup_thread(void) {
  *              See man page for sleep (man 3 sleep)
  *****************************************************************************/
 #ifdef _WIN32
-#define isleep(x) Sleep((x)*1000)
+#define isleep(x) Sleep((x) * 1000)
 #else
 #define isleep sleep
 #endif

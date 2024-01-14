@@ -39,25 +39,25 @@
  */
 
 #if !defined(_WIN32)
-//#include <sys/param.h>
+// #include <sys/param.h>
 #endif
 
 #include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
-//#include "UpnpInet.hpp"
+// #include "UpnpInet.hpp"
 #include "winsock2.h" // For different platforms: don't use <winsock2.h>
 
 #include <ctype.h>
-//#include <errno.h>
-//#include <fcntl.h>
-//#include <stdlib.h>
+// #include <errno.h>
+// #include <fcntl.h>
+// #include <stdlib.h>
 #include <string.h>
-//#include <sys/types.h>
-//#include <time.h>
+// #include <sys/types.h>
+// #include <time.h>
 
 #ifdef _WIN32
 #if !defined(UPNP_USE_MSVCPP) && !defined(UPNP_USE_BCBPP)
 /* VC Winsocks2 includes these functions */
-//#include "inet_pton.h"
+// #include "inet_pton.h"
 #endif
 #else
 #include <netdb.h> /* for struct addrinfo */

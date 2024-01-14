@@ -41,11 +41,11 @@
 
 #include "config.hpp"
 #include <assert.h>
-//#include "upnputil.hpp"
-//#include "membuffer.hpp"
+// #include "upnputil.hpp"
+// #include "membuffer.hpp"
 #include "httpparser.hpp"
-//#include "statcodes.hpp"
-//#include "parsetools.hpp"
+// #include "statcodes.hpp"
+// #include "parsetools.hpp"
 
 int has_xml_content_type(http_message_t* hmsg) {
     memptr hdr_value;

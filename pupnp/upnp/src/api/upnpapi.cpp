@@ -49,7 +49,7 @@
 #include "UpnpStdInt.hpp"
 #include "UpnpUniStd.hpp" /* for close() */
 #include "httpreadwrite.hpp"
-//#include "membuffer.hpp"
+// #include "membuffer.hpp"
 #include "soaplib.hpp"
 #include "ssdplib.hpp"
 #include "sysdep.hpp"

@@ -42,13 +42,13 @@
 #include "config.hpp"
 
 #include "LinkedList.hpp"
-//#include "ixml.h"
-//#include "upnp.hpp"
+// #include "ixml.h"
+// #include "upnp.hpp"
 #include "upnpdebug.hpp"
 #include "uri.hpp"
 
-//#include <stdio.h>
-//#include <time.h>
+// #include <stdio.h>
+// #include <time.h>
 
 #define SID_SIZE (size_t)41
 

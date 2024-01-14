@@ -44,11 +44,11 @@
 
 #include "upnputil.hpp"
 
-//#include <stdio.h>
+// #include <stdio.h>
 #include <string.h>
 
 #ifdef _WIN32
-//#include "unixutil.h"
+// #include "unixutil.h"
 #endif
 
 #define NUM_1XX_CODES 2

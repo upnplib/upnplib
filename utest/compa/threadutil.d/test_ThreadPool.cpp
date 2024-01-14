@@ -32,9 +32,9 @@ using ::pupnp::CThreadPool;
 using ::pupnp::CThreadPoolInit;
 
 
-//###############################
-// ThreadPool Testsuite         #
-//###############################
+// ###############################
+//  ThreadPool Testsuite         #
+// ###############################
 
 // This is a dummy start routine for a threadpool job
 void start_function([[maybe_unused]] void* arg) {}

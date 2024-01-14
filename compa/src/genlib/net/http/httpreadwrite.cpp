@@ -521,7 +521,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
 #ifdef _WIN32
                 // returns error code direct
                 if (umock::stdio_h.fopen_s(&Fp, filename, "rb") != 0)
-                Fp = nullptr;
+                    Fp = nullptr;
 #else
                 Fp = umock::stdio_h.fopen(filename, "rb");
 #endif
@@ -635,28 +635,28 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
         } else
 #endif /* EXCLUDE_WEB_SERVER */
             if (c == 'b') {
-            /* Message to send is given in a memory buffer */
-            buf = va_arg(argp, char*);
-            buf_length = va_arg(argp, size_t);
-            if (buf_length > (size_t)0) {
-                nw = sock_write(info, buf, buf_length, TimeOut);
-                num_written = (size_t)nw;
-                UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                           ">>> (SENT) >>>\n"
-                           "%.*s\nbuf_length=%" PRIzd ", num_written=%" PRIzd
-                           "\n"
-                           "------------\n",
-                           (int)buf_length, buf, buf_length, num_written);
-                if (nw < 0) {
-                    RetVal = nw;
-                    goto ExitFunction;
-                }
-                if (num_written != buf_length) {
-                    RetVal = UPNP_E_SOCKET_WRITE;
-                    goto ExitFunction;
+                /* Message to send is given in a memory buffer */
+                buf = va_arg(argp, char*);
+                buf_length = va_arg(argp, size_t);
+                if (buf_length > (size_t)0) {
+                    nw = sock_write(info, buf, buf_length, TimeOut);
+                    num_written = (size_t)nw;
+                    UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
+                               ">>> (SENT) >>>\n"
+                               "%.*s\nbuf_length=%" PRIzd
+                               ", num_written=%" PRIzd "\n"
+                               "------------\n",
+                               (int)buf_length, buf, buf_length, num_written);
+                    if (nw < 0) {
+                        RetVal = nw;
+                        goto ExitFunction;
+                    }
+                    if (num_written != buf_length) {
+                        RetVal = UPNP_E_SOCKET_WRITE;
+                        goto ExitFunction;
+                    }
                 }
             }
-        }
     }
 
 ExitFunction:

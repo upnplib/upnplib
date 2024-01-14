@@ -45,17 +45,17 @@
 #include "httpreadwrite.hpp"
 
 #include "UpnpExtraHeaders.hpp"
-//#include "UpnpFileInfo.h"
-//#include "UpnpInet.hpp"
+// #include "UpnpFileInfo.h"
+// #include "UpnpInet.hpp"
 #include "UpnpIntTypes.hpp"
-//#include "UpnpStdInt.hpp"
-//#include "membuffer.h"
-//#include "sock.h"
+// #include "UpnpStdInt.hpp"
+// #include "membuffer.h"
+// #include "sock.h"
 #include "statcodes.hpp"
-//#include "unixutil.h"
-//#include "upnp.hpp"
+// #include "unixutil.h"
+// #include "upnp.hpp"
 #include "upnpapi.hpp"
-//#include "uri.h"
+// #include "uri.h"
 #include "webserver.hpp"
 
 #include <assert.h>
@@ -72,11 +72,11 @@
 #define snprintf _snprintf
 #endif
 #else /* _WIN32 */
-//#include <arpa/inet.h>
-//#include <sys/time.h>
-//#include <sys/types.h>
+// #include <arpa/inet.h>
+// #include <sys/time.h>
+// #include <sys/types.h>
 #include <sys/utsname.h>
-//#include <sys/wait.h>
+// #include <sys/wait.h>
 #endif /* _WIN32 */
 
 // The version string is only used here and will not change much on upgrading to
@@ -634,24 +634,24 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
         } else
 #endif /* EXCLUDE_WEB_SERVER */
             if (c == 'b') {
-            /* memory buffer */
-            buf = va_arg(argp, char*);
-            buf_length = va_arg(argp, size_t);
-            if (buf_length > (size_t)0) {
-                nw = sock_write(info, buf, buf_length, TimeOut);
-                num_written = (size_t)nw;
-                UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                           ">>> (SENT) >>>\n"
-                           "%.*s\nbuf_length=%" PRIzd ", num_written=%" PRIzd
-                           "\n"
-                           "------------\n",
-                           (int)buf_length, buf, buf_length, num_written);
-                if (num_written != buf_length) {
-                    RetVal = 0;
-                    goto ExitFunction;
+                /* memory buffer */
+                buf = va_arg(argp, char*);
+                buf_length = va_arg(argp, size_t);
+                if (buf_length > (size_t)0) {
+                    nw = sock_write(info, buf, buf_length, TimeOut);
+                    num_written = (size_t)nw;
+                    UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
+                               ">>> (SENT) >>>\n"
+                               "%.*s\nbuf_length=%" PRIzd
+                               ", num_written=%" PRIzd "\n"
+                               "------------\n",
+                               (int)buf_length, buf, buf_length, num_written);
+                    if (num_written != buf_length) {
+                        RetVal = 0;
+                        goto ExitFunction;
+                    }
                 }
             }
-        }
     }
 
 ExitFunction:

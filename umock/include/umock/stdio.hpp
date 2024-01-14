@@ -12,7 +12,7 @@ class UPNPLIB_API StdioInterface {
   public:
     StdioInterface();
     virtual ~StdioInterface();
-// clang-format off
+    // clang-format off
 #ifdef _WIN32
     // Secure function only on MS Windows, not completely virtual
     virtual errno_t fopen_s(FILE** pFile, const char* pathname, const char* mode) = 0;
@@ -69,7 +69,7 @@ class UPNPLIB_API Stdio {
     // The destructor is ussed to restore the old pointer.
     virtual ~Stdio();
 
-// clang-format off
+    // clang-format off
     // Methods
 #ifdef _WIN32
     // Secure function only on MS Windows

@@ -50,7 +50,7 @@
 #include "posix_overwrites.hpp"
 
 #ifdef _WIN32
-#define isleep(x) Sleep((x)*1000)
+#define isleep(x) Sleep((x) * 1000)
 #else
 #define isleep sleep
 #endif

@@ -43,8 +43,8 @@
 #define EOUTOFMEM (-7 & 1 << 29)
 
 #define FREELISTSIZE 100
-//#define LIST_SUCCESS 1
-//#define LIST_FAIL 0
+// #define LIST_SUCCESS 1
+// #define LIST_FAIL 0
 
 /*! Function for freeing list items. */
 typedef void (*free_function)(void* arg);

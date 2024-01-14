@@ -1,12 +1,13 @@
 #ifndef UPNPLIB_UTEST_HPP
 #define UPNPLIB_UTEST_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-14
+// Redistribution only with this Copyright remark. Last modified: 2024-01-14
 
 #include <upnplib/visibility.hpp>
 #include <upnplib/port.hpp>
 
 #include <regex>
+#include <cstring>
 #include <gmock/gmock.h>
 
 // ANSI console colors
@@ -26,9 +27,9 @@ constexpr bool old_code{false};
 const bool github_actions{static_cast<bool>(std::getenv("GITHUB_ACTIONS"))};
 
 
-//###############################
-//           Helper             #
-//###############################
+// ###############################
+//            Helper             #
+// ###############################
 
 // Capture output to stdout or stderr
 // ----------------------------------
@@ -109,9 +110,9 @@ UPNPLIB_API time_t file_mod_time(const std::string& a_pathname);
 UPNPLIB_API void check_closed_fds(int a_from_fd, int a_to_fd);
 
 
-//###############################
-//       Custom Matcher         #
-//###############################
+// ###############################
+//        Custom Matcher         #
+// ###############################
 
 // Matcher to use portable Regex from the C++ standard library
 //------------------------------------------------------------
@@ -147,9 +148,9 @@ MATCHER_P(PointeeVoidToConstInt, expected, "") {
 }
 
 
-//###############################
-//       Custom Actions         #
-//###############################
+// ###############################
+//        Custom Actions         #
+// ###############################
 
 // Action for side effect to place a value at a location
 // -----------------------------------------------------

@@ -59,9 +59,9 @@ static int is_numeric_node(const std::string& a_node,
 CAddrinfo::CAddrinfo(const std::string& a_node, const std::string& a_service,
                      const int a_family, const int a_socktype,
                      const int a_flags, const int a_protocol)
-    : m_node(a_node),
-      m_service(a_service), m_hints{a_flags, a_family, a_socktype, a_protocol,
-                                    {},      nullptr,  nullptr,    nullptr} {
+    : m_node(a_node), m_service(a_service),
+      m_hints{a_flags, a_family, a_socktype, a_protocol,
+              {},      nullptr,  nullptr,    nullptr} {
     TRACE2(this, " Construct CAddrinfo(..) with arguments")
 
     // Correct weak hints:

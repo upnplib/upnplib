@@ -34,8 +34,8 @@
 #ifndef GENLIB_UTIL_STRINTMAP_HPP
 #define GENLIB_UTIL_STRINTMAP_HPP
 
-//#include "upnputil.hpp"
-//#include <stdlib.h>
+// #include "upnputil.hpp"
+// #include <stdlib.h>
 #include "UpnpGlobal.hpp" // for EXPORT_SPEC
 
 /* Util to map from a string to an integer and vice versa */

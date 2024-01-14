@@ -37,17 +37,17 @@ typedef ADDRESS_FAMILY sa_family_t;
 #else // _WIN32
 #include <sys/param.h>
 #if defined(__sun)
-//#include <fcntl.h>
-//#include <sys/sockio.h>
+// #include <fcntl.h>
+// #include <sys/sockio.h>
 #elif (defined(BSD) && BSD >= 199306) || defined(__FreeBSD_kernel__)
-//#include <ifaddrs.h>
+// #include <ifaddrs.h>
 /* Do not move or remove the include below for "sys/socket"!
  * Will break FreeBSD builds. */
-//#include <sys/socket.h>
+// #include <sys/socket.h>
 #endif
 #include <arpa/inet.h> /* for inet_pton() */
 #include <net/if.h>
-//#include <netinet/in.h>
+// #include <netinet/in.h>
 
 /*! This typedef makes the code slightly more WIN32 tolerant.
  * On WIN32 systems, SOCKET is unsigned and is not a file

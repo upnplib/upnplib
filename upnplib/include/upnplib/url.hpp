@@ -1,5 +1,5 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-16
+// Redistribution only with this Copyright remark. Last modified: 2024-01-15
 
 // This class is based on the "URL Living Standard"
 // ================================================
@@ -25,6 +25,7 @@
 #define UPNPLIB_NET_URI_URL_HPP
 
 #include <string>
+#include <cstdint>
 
 namespace upnplib {
 

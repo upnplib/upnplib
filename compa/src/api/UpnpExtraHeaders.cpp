@@ -13,7 +13,7 @@
 #include <UpnpExtraHeaders.hpp>
 
 #include <cstdlib> /* for calloc(), free() */
-//#include <string.h> /* for strlen(), strdup() */
+// #include <string.h> /* for strlen(), strdup() */
 
 struct s_UpnpExtraHeaders {
     UpnpListHead m_node;

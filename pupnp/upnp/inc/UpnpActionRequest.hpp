@@ -7,14 +7,14 @@
  * \brief Header file for UpnpActionRequest methods.
  * \author Marcelo Roberto Jimenez
  */
-//#include <stdlib.h> /* for size_t */
+// #include <stdlib.h> /* for size_t */
 
-//#include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
+// #include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
 
 #include "UpnpString.hpp"
 #include "ixml.hpp"
 #include "UpnpInet.hpp"
-//#include "list.hpp"
+// #include "list.hpp"
 
 /*!
  * UpnpActionRequest

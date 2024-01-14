@@ -48,15 +48,15 @@
 #include "httpparser.hpp"
 #include "statcodes.hpp"
 #include "strintmap.hpp"
-//#include "unixutil.h"
+// #include "unixutil.h"
 #include "upnpdebug.hpp"
 
 #include <assert.h>
-//#include <ctype.h>
-//#include <limits.h>
+// #include <ctype.h>
+// #include <limits.h>
 #include <stdarg.h>
-//#include <stdio.h>
-//#include <string.h>
+// #include <stdio.h>
+// #include <string.h>
 
 /* entity positions */
 

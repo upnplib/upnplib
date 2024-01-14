@@ -34,9 +34,9 @@ namespace utest {
 using ::pupnp::CThreadPool;
 
 
-//###############################
-// TimerThread Interface        #
-//###############################
+// ###############################
+//  TimerThread Interface        #
+// ###############################
 
 class ITimerThread {
   public:
@@ -72,9 +72,9 @@ class CTimerThread : public ITimerThread {
 };
 
 
-//###############################
-// TimerThread Testsuite        #
-//###############################
+// ###############################
+//  TimerThread Testsuite        #
+// ###############################
 
 TEST(TimerThreadNormalTestSuite, init_and_shutdown_timerthread) {
     CThreadPool tpObj{};  // ThreadPool Object

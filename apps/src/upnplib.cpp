@@ -44,7 +44,7 @@
 #include <string.h>
 
 #if defined INCLUDE_DEVICE_APIS && EXCLUDE_SOAP == 0
-//#include "miniserver.hpp"
+// #include "miniserver.hpp"
 #endif
 
 namespace upnplib {

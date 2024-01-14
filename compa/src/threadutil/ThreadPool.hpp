@@ -56,10 +56,10 @@ struct timezone {
 UPNPLIB_API int gettimeofday(struct timeval* tv, struct timezone* tz);
 #endif
 #else                 // _WIN32
-//#include <sys/param.h>
+// #include <sys/param.h>
 #include <sys/time.h> /* for gettimeofday() */
 #if defined(__APPLE__) || defined(__NetBSD__)
-//#include <sys/resource.h> /* for setpriority() */
+// #include <sys/resource.h> /* for setpriority() */
 #endif
 #endif // _WIN32
 
