@@ -1,32 +1,48 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-20
+// Redistribution only with this Copyright remark. Last modified: 2024-01-18
+/*!
+ * \file
+ * \brief General usable free function tools and helper
+ */
 
-#include "upnplib/messages.hpp"
-#include "upnplib/upnptools.hpp"
+#include <upnplib/messages.hpp>
+#include <upnplib/upnptools.hpp>
 
-namespace upnplib {
+namespace {
 
+/**
+ * \brief Sample: assign {UPNP_E_SUCCESS, "UPNP_E_SUCCESS"}
+ *
+ * Table with assignment of the integer message number to its text string.
+ */
 struct ErrorString {
-    int rc;              // Error code.
-    const char* rcError; // Error description.
+    int rc; ///< Error code.
+    const char* rcError; ///< Error description.
 };
 
-constexpr struct ErrorString ErrorMessages[] = {
+/**
+ * \brief Array with text names of error messages.
+ *
+ * This const array is initialized with the character string names of the
+ * UPNP_E_* error messages so we can translate the integer number of a message
+ * to its human readable name for output.
+ */
+constexpr ErrorString ErrorMessages[] = {
     {UPNP_E_SUCCESS, "UPNP_E_SUCCESS"},
     {UPNP_E_INVALID_HANDLE, "UPNP_E_INVALID_HANDLE"},
     {UPNP_E_INVALID_PARAM, "UPNP_E_INVALID_PARAM"},
     {UPNP_E_OUTOF_HANDLE, "UPNP_E_OUTOF_HANDLE"},
-    {UPNP_E_OUTOF_CONTEXT, "UPNP_E_OUTOF_CONTEXT"},
+    // {UPNP_E_OUTOF_CONTEXT, "UPNP_E_OUTOF_CONTEXT"},
     {UPNP_E_OUTOF_MEMORY, "UPNP_E_OUTOF_MEMORY"},
     {UPNP_E_INIT, "UPNP_E_INIT"},
-    {UPNP_E_BUFFER_TOO_SMALL, "UPNP_E_BUFFER_TOO_SMALL"},
+    // {UPNP_E_BUFFER_TOO_SMALL, "UPNP_E_BUFFER_TOO_SMALL"},
     {UPNP_E_INVALID_DESC, "UPNP_E_INVALID_DESC"},
     {UPNP_E_INVALID_URL, "UPNP_E_INVALID_URL"},
-    {UPNP_E_INVALID_SID, "UPNP_E_INVALID_SID"},
-    {UPNP_E_INVALID_DEVICE, "UPNP_E_INVALID_DEVICE"},
+    // {UPNP_E_INVALID_SID, "UPNP_E_INVALID_SID"},
+    // {UPNP_E_INVALID_DEVICE, "UPNP_E_INVALID_DEVICE"},
     {UPNP_E_INVALID_SERVICE, "UPNP_E_INVALID_SERVICE"},
     {UPNP_E_BAD_RESPONSE, "UPNP_E_BAD_RESPONSE"},
-    {UPNP_E_BAD_REQUEST, "UPNP_E_BAD_REQUEST"},
+    // {UPNP_E_BAD_REQUEST, "UPNP_E_BAD_REQUEST"},
     {UPNP_E_INVALID_ACTION, "UPNP_E_INVALID_ACTION"},
     {UPNP_E_FINISH, "UPNP_E_FINISH"},
     {UPNP_E_INIT_FAILED, "UPNP_E_INIT_FAILED"},
@@ -43,10 +59,10 @@ constexpr struct ErrorString ErrorMessages[] = {
     {UPNP_E_LISTEN, "UPNP_E_LISTEN"},
     {UPNP_E_TIMEDOUT, "UPNP_E_TIMEDOUT"},
     {UPNP_E_SOCKET_ERROR, "UPNP_E_SOCKET_ERROR"},
-    {UPNP_E_FILE_WRITE_ERROR, "UPNP_E_FILE_WRITE_ERROR"},
+    // {UPNP_E_FILE_WRITE_ERROR, "UPNP_E_FILE_WRITE_ERROR"},
     {UPNP_E_CANCELED, "UPNP_E_CANCELED"},
     {UPNP_E_SOCKET_ACCEPT, "UPNP_E_SOCKET_ACCEPT"},
-    {UPNP_E_EVENT_PROTOCOL, "UPNP_E_EVENT_PROTOCOL"},
+    // {UPNP_E_EVENT_PROTOCOL, "UPNP_E_EVENT_PROTOCOL"},
     {UPNP_E_SUBSCRIBE_UNACCEPTED, "UPNP_E_SUBSCRIBE_UNACCEPTED"},
     {UPNP_E_UNSUBSCRIBE_UNACCEPTED, "UPNP_E_UNSUBSCRIBE_UNACCEPTED"},
     {UPNP_E_NOTIFY_UNACCEPTED, "UPNP_E_NOTIFY_UNACCEPTED"},
@@ -54,12 +70,19 @@ constexpr struct ErrorString ErrorMessages[] = {
     {UPNP_E_FILE_NOT_FOUND, "UPNP_E_FILE_NOT_FOUND"},
     {UPNP_E_FILE_READ_ERROR, "UPNP_E_FILE_READ_ERROR"},
     {UPNP_E_EXT_NOT_XML, "UPNP_E_EXT_NOT_XML"},
-    {UPNP_E_NO_WEB_SERVER, "UPNP_E_NO_WEB_SERVER"},
-    {UPNP_E_OUTOF_BOUNDS, "UPNP_E_OUTOF_BOUNDS"},
+    // {UPNP_E_NO_WEB_SERVER, "UPNP_E_NO_WEB_SERVER"},
+    // {UPNP_E_OUTOF_BOUNDS, "UPNP_E_OUTOF_BOUNDS"},
     {UPNP_E_NOT_FOUND, "UPNP_E_NOT_FOUND"},
     {UPNP_E_INTERNAL_ERROR, "UPNP_E_INTERNAL_ERROR"},
 };
 
+} // namespace
+
+namespace upnplib {
+
+/*!
+ * Search for the string name of an error number and return it.
+ */
 const std::string errStr(const int error) {
     size_t i;
     std::string error_msg = "UPNPLIB_E_UNKNOWN";
@@ -73,6 +96,10 @@ const std::string errStr(const int error) {
     return error_msg + "(" + std::to_string(error) + ")";
 }
 
+/*!
+ * Search for the string names of two error numbers, the wrong and the right
+ * one, and return an error message with a hint what is expected.
+ */
 const std::string errStrEx(const int error, const int success) {
     size_t i;
     std::string error_msg = "UPNPLIB_E_UNKNOWN";

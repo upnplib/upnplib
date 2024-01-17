@@ -1,9 +1,11 @@
 #ifndef UPNPLIB_GLOBAL_HPP
 #define UPNPLIB_GLOBAL_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-15
-
-// Here we have global used constants, variables, functions and macros.
+// Redistribution only with this Copyright remark. Last modified: 2024-01-18
+/*!
+ * \file
+ * \brief Global used constants, variables, functions and macros.
+ */
 
 #include <upnplib/cmake_vars.hpp>
 #include <upnplib/visibility.hpp>

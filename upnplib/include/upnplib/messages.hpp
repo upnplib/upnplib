@@ -1,21 +1,21 @@
 #ifndef UPNPLIB_GLOBAL_HPP
 #define UPNPLIB_GLOBAL_HPP
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-09-20
-
-#include "upnplib/visibility.hpp" // for UPNPLIB_API
+// Redistribution only with this Copyright remark. Last modified: 2024-01-19
+/*!
+ * \file
+ * \brief Definition of the UPNP_E_* error messages.
+ */
 
 /*!
  * \name Error codes
  *
- * The functions in the SDK API can return a variety of error
- * codes to describe problems encountered during execution.  This section
- * lists the error codes and provides a brief description of what each error
- * code means.  Refer to the documentation for each function for a
- * description of what an error code means in that context.
- *
- * @{
- */
+ * The functions in the SDK API can return a variety of error codes to describe
+ * problems encountered during execution. This section lists the error codes
+ * and provides a brief description of what each error code means. Refer to
+ * the documentation for each function for a description of what an error code
+ * means in that context. */
+/// @{
 
 /*!
  * \brief The operation completed successfully.
@@ -46,7 +46,7 @@
  */
 #define UPNP_E_OUTOF_HANDLE -102
 
-#define UPNP_E_OUTOF_CONTEXT -103
+// #define UPNP_E_OUTOF_CONTEXT -103
 
 /*!
  * \brief Not enough resources are currently available to complete the
@@ -64,7 +64,7 @@
  */
 #define UPNP_E_INIT -105
 
-#define UPNP_E_BUFFER_TOO_SMALL -106
+// #define UPNP_E_BUFFER_TOO_SMALL -109
 
 /*!
  * \brief The description document passed to \b UpnpRegisterRootDevice,
@@ -82,9 +82,9 @@
  */
 #define UPNP_E_INVALID_URL -108
 
-#define UPNP_E_INVALID_SID -109
+// #define UPNP_E_INVALID_SID -109
 
-#define UPNP_E_INVALID_DEVICE -110
+// #define UPNP_E_INVALID_DEVICE -110
 
 /*!
  * \brief The device ID/service ID pair does not refer to a valid service.
@@ -102,7 +102,7 @@
  */
 #define UPNP_E_BAD_RESPONSE -113
 
-#define UPNP_E_BAD_REQUEST -114
+// #define UPNP_E_BAD_REQUEST -114
 
 /*!
  * \brief The SOAP action message is invalid.
@@ -242,7 +242,7 @@
  */
 #define UPNP_E_SOCKET_ERROR -208
 
-#define UPNP_E_FILE_WRITE_ERROR -209
+// #define UPNP_E_FILE_WRITE_ERROR -209
 
 /*! \brief The operation was canceled.
  *
@@ -261,7 +261,7 @@
  */
 #define UPNP_E_SOCKET_ACCEPT -211
 
-#define UPNP_E_EVENT_PROTOCOL -300
+// #define UPNP_E_EVENT_PROTOCOL -300
 
 /*!
  * \brief A subscription request was rejected from the remote side.
@@ -303,8 +303,8 @@
  */
 #define UPNP_E_EXT_NOT_XML -504
 
-#define UPNP_E_NO_WEB_SERVER -505
-#define UPNP_E_OUTOF_BOUNDS -506
+// #define UPNP_E_NO_WEB_SERVER -505
+// #define UPNP_E_OUTOF_BOUNDS -506
 
 /*!
  * \brief The response to a SOAP request did not contain the required XML
@@ -318,13 +318,15 @@
  */
 #define UPNP_E_INTERNAL_ERROR -911
 
+/// \cond
 /* SOAP-related error codes */
 #define UPNP_SOAP_E_INVALID_ACTION 401
 #define UPNP_SOAP_E_INVALID_ARGS 402
 #define UPNP_SOAP_E_OUT_OF_SYNC 403
 #define UPNP_SOAP_E_INVALID_VAR 404
 #define UPNP_SOAP_E_ACTION_FAILED 501
+/// \endcond
 
-/* @} ErrorCodes */
+/// @}
 
 #endif // UPNPLIB_GLOBAL_HPP

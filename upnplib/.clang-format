@@ -1,0 +1,14 @@
+---
+# We'll use defaults from the LLVM style, but with 4 columns indentation.
+BasedOnStyle:  LLVM
+IndentWidth: 4
+---
+Language: Cpp
+# Force pointers to the type for C++.
+PointerAlignment: Left
+# There are some includes on MS Windows that require specific order
+SortIncludes: false
+#IndentPPDirectives: AfterHash
+MaxEmptyLinesToKeep: 2
+AlignTrailingComments: false
+AllowAllParametersOfDeclarationOnNextLine: false

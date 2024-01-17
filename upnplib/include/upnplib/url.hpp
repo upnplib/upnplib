@@ -62,7 +62,7 @@ class Url {
     std::string m_username;
     std::string m_password;
     std::string m_host;
-    std::string m_port;    // Always set to the current port
+    std::string m_port; // Always set to the current port
     uint16_t m_port_num{}; // Only set if not default port of the scheme
     std::string m_path;
     std::string m_query;

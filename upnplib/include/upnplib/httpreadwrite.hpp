@@ -1,12 +1,11 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-02
-
 #ifndef UPNPLIB_HTTPREADWRITE_HPP
 #define UPNPLIB_HTTPREADWRITE_HPP
-
-#include "httpreadwrite.hpp"
-#include <string>
-#include <stdexcept>
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-19
+/*!
+ * \file
+ * \brief C++ Interface class httpreadwrite and declaration class Uri
+ */
 
 namespace upnplib {
 
@@ -27,71 +26,99 @@ namespace upnplib {
 // `http_OpenHttpGetEx(char const*, void**, char**, int*, int*, int, int, int)'
 // `http_ReadHttpResponse(void*, char*, unsigned long*, int)'
 
+/*!
+ * \brief C++ Interface for http read and write
+ */
 class Ihttpreadwrite {
   public:
     virtual ~Ihttpreadwrite() {}
 
-    virtual struct tm* http_gmtime_r( // no gtest, only port wrapper for system call
+    /// no gtest, only port wrapper for system call
+    virtual struct tm* http_gmtime_r(
             const time_t* clock, struct tm* result) = 0;
-    virtual int http_FixUrl( // gtest available
+    /// gtest available
+    virtual int http_FixUrl(
             uri_type* url, uri_type* fixed_url) = 0;
-    virtual int http_FixStrUrl( // gtest available
+    /// gtest available
+    virtual int http_FixStrUrl(
             const char* urlstr, size_t urlstrlen, uri_type* fixed_url) = 0;
-    virtual SOCKET http_Connect( // gtest available
+    /// gtest available
+    virtual SOCKET http_Connect(
             uri_type* destination_url, uri_type* url) = 0;
+    /// Receive a message with http
     virtual int http_RecvMessage(
             SOCKINFO* info, http_parser_t* parser, http_method_t request_method,
             int* timeout_secs, int* http_error_code) = 0;
     // virtual int http_SendMessage(
     //         SOCKINFO* info, int* TimeOut, const char* fmt, ...) = 0;
+    /// Request and response a message with http
     virtual int http_RequestAndResponse(
             uri_type* destination, const char* request, size_t request_length,
             http_method_t req_method, int timeout_secs, http_parser_t* response) = 0;
+    /// Download a document with http
     virtual int http_Download(
             const char* url_str, int timeout_secs, char** document,
             size_t* doc_length, char* content_type) = 0;
+    /// Create a generic message for http communication
     virtual int MakeGenericMessage(
             http_method_t method, const char* url_str, membuffer* request, uri_type* url,
             int contentLength, const char* contentType, const UpnpString* headers) = 0;
+    /// Get progress of an http communication
     virtual int http_HttpGetProgress(
             void* Handle, size_t* length, size_t* total) = 0;
+    /// Cancel an http GET communication
     virtual int http_CancelHttpGet(
             void* Handle) = 0;
-    virtual int http_OpenHttpConnection( // gtest available
+     /// gtest available
+    virtual int http_OpenHttpConnection(
             const char* url_str, void** Handle, int timeout) = 0;
+    /// Create an http request
     virtual int http_MakeHttpRequest(
             Upnp_HttpMethod method, const char* url_str, void* Handle, UpnpString* headers,
             const char* contentType, int contentLength, int timeout) = 0;
+    /// Write an http request
     virtual int http_WriteHttpRequest(
             void* Handle, char* buf, size_t* size, int timeout) = 0;
+    /// Finish an http request
     virtual int http_EndHttpRequest(
             void* Handle, int timeout) = 0;
+    /// Get an http response
     virtual int http_GetHttpResponse(
             void* Handle, UpnpString* headers, char** contentType, int* contentLength,
             int* httpStatus, int timeout) = 0;
+    /// Read an http response
     virtual int http_ReadHttpResponse(
             void* Handle, char* buf, size_t* size, int timeout) = 0;
-    virtual int http_CloseHttpConnection( // gtest available
+    /// gtest available
+    virtual int http_CloseHttpConnection(
             void* Handle) = 0;
+    /// Send http status of a response
     virtual int http_SendStatusResponse(
             SOCKINFO* info, int http_status_code, int request_major_version,
             int request_minor_version) = 0;
     // virtual int http_MakeMessage(
     //         membuffer* buf, int http_major_version, int http_minor_version,
     //         const char* fmt, ...) = 0;
+    /// Calculate response version
     virtual void http_CalcResponseVersion(
             int request_major_vers, int request_minor_vers, int* response_major_vers,
             int* response_minor_vers) = 0;
+    /// Create an extended http GET message
     virtual int MakeGetMessageEx(
             const char* url_str, membuffer* request, uri_type* url,
             struct SendInstruction* pRangeSpecifier) = 0;
+    /// Open an extended http GET communication
     virtual int http_OpenHttpGetEx(
             const char* url_str, void** Handle, char** contentType, int* contentLength,
             int* httpStatus, int lowRange, int highRange, int timeout) = 0;
+    /// Get information about the SDK
     virtual void get_sdk_info(
             char* info, size_t infoSize) = 0;
 };
 
+/*!
+ * \brief Http read and write old implementation
+ */
 class Chttpreadwrite_old : Ihttpreadwrite {
   public:
     virtual ~Chttpreadwrite_old() override {}
@@ -148,6 +175,7 @@ class Chttpreadwrite_old : Ihttpreadwrite {
         return ::get_sdk_info(info, infoSize); }
 };
 
+#if 0
 class Chttpreadwrite: Chttpreadwrite_old {
   public:
     virtual ~Chttpreadwrite() override {}
@@ -182,7 +210,7 @@ class Chttpreadwrite: Chttpreadwrite_old {
  *      \li \c UPNP_E_OUTOF_SOCKET: Too many sockets are currently
  *              allocated.
  */
-EXPORT_SPEC int http_OpenHttpConnection(
+UPNPLIB_API int http_OpenHttpConnection(
     /*! [in] The URL which contains the host, and the scheme to make the
        connection. */
     const char* url,
@@ -194,13 +222,20 @@ EXPORT_SPEC int http_OpenHttpConnection(
      * response is expected from the receiver, failing which, an error is
      * reported. If value is negative, timeout is infinite. */
     int timeout);
+#endif
 
-//
+
+/*!
+ * \brief ???
+ */
 class CUri {
   public:
+    /// ???
     const std::string url_str;
+    /// ???
     std::string hostport;
 
+    /// ???
     CUri(std::string a_url_str);
 };
 

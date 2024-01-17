@@ -1,5 +1,4 @@
 Next steps to do:
-* Create github account 'upnpp' and copy/rename library/namespace upnplib to upnpp.
 * Fix "time used" on sock_read and sock_write.
 * Improve tests for sock read_ssl and sock write_ssl.
 * Remove a_service argument from CAddrinfo constructor.
@@ -8,8 +7,8 @@ Next steps to do:
   * Fix openssl_threaded on win32.
 * Test openssl.
 
-* Rework test_httpreadwrite.cpp.
 * Reduce size of shared libraries.
+* Rework test_httpreadwrite.cpp.
 * Add AI_IDN and AI_CANONIDN support to CAddrinfo.
 * Improve CAddrinfo to support more than one address info (use *ai_next). It needs extended mocking.
 * Improve test_sock.cpp with ssl tests

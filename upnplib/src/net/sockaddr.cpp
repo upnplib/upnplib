@@ -195,7 +195,7 @@ void SSockaddr::operator=(const std::string& a_addr_str) {
         return;
     }
 
-    if (a_addr_str.front() == '[') {    // IPv6 address
+    if (a_addr_str.front() == '[') { // IPv6 address
         if (a_addr_str.back() == ']') { // IPv6 address without port
             this->handle_ipv6(a_addr_str);
 

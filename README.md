@@ -113,6 +113,6 @@ PT4W_BUILD_TESTING=[ON\|OFF] | OFF | Runs the testsuite of pthreads4w (PT4W) wit
 No limits documented so far.
 
 <pre><sup>
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2023-08-25
-</sup></sup>
+Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, \<Ingo@Hoeft-online.de>
+Redistribution only with this Copyright remark. Last modified: 2024-01-19
+</sup></pre>

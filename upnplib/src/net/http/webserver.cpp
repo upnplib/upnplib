@@ -1,16 +1,20 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-03
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2023-01-20
+/*!
+ * \file
+ * \brief Definations to manage the builtin Webserver
+ */
 
-#include "upnplib/webserver.hpp"
-#include "upnplib/port.hpp"
+#include <upnplib/webserver.hpp>
+#include <upnplib/port.hpp>
 #include <array>
 
-namespace upnplib {
+namespace {
 
 // Following table maps the file extension to the associated media type and its
 // subtype. Because we use effective binary search on this table it must be
 // sorted by file extension.
-static const std::array<Document_meta, 70> mediatype_list{
+const std::array<upnplib::Document_meta, 70> mediatype_list{
     {// file-ext, media-type, media-subtype
      {"aif", "audio", "aiff"},
      {"aifc", "audio", "aiff"},
@@ -83,9 +87,11 @@ static const std::array<Document_meta, 70> mediatype_list{
      {"z", "application", "x-compress"},
      {"zip", "application", "zip"}}};
 
-const Document_meta* select_filetype(
-    /*! [in] . */
-    std::string_view a_extension) {
+} // anonymous namespace
+
+namespace upnplib {
+
+const Document_meta* select_filetype(std::string_view a_extension) {
 
     ssize_t top = 0;
     ssize_t bot = mediatype_list.size() - 1;
