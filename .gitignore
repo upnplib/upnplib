@@ -12,9 +12,7 @@
 .*
 *~
 tags
-build/
 Testing/
-html/
 
 #
 # git files that we don't want to ignore even it they are dot-files
@@ -23,3 +21,8 @@ html/
 !.github
 !.mailmap
 !.clang-format
+
+# Special: exclude build/ but not build/docs/
+! build/
+**/build/*
+!**/build/docs
