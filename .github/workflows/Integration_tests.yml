@@ -97,12 +97,12 @@ jobs:
 
       - name: Run gtests
         run: |
-          cd ./build/utest
+          cd ./build/Utest
           ctest --timeout 6 --output-on-failure
 
       - name: Run gtests with debug output
         run: |
-          cd ./build/utest
+          cd ./build/Utest
           UPNPLIB_DEBUG=true ctest --timeout 6 --output-on-failure
 
 
@@ -179,12 +179,12 @@ jobs:
 
       - name: Run gtests
         run: |
-          cd ./build/utest
+          cd ./build/Utest
           ctest --timeout 6 --output-on-failure
 
       - name: Run gtests with debug output
         run: |
-          cd ./build/utest
+          cd ./build/Utest
           UPNPLIB_DEBUG=true ctest --timeout 6 --output-on-failure
 
 
@@ -272,13 +272,13 @@ jobs:
       - name: Run gtests
         run: |
           $env:path += ";./build/bin/${{matrix.buildtype}}"
-          cd ./build/utest
+          cd ./build/Utest
           ctest -C ${{matrix.buildtype}} --timeout 9 --output-on-failure
 
       - name: Run gtests with debug output
         run: |
           $env:UPNPLIB_DEBUG = "set"
-          cd ./build/utest
+          cd ./build/Utest
           ctest -C ${{matrix.buildtype}} --timeout 9 --output-on-failure
 
 
@@ -367,13 +367,13 @@ jobs:
       - name: Run gtests
         run: |
           $env:path += ";./build/bin"
-          cd ./build/utest
+          cd ./build/Utest
           ctest -C ${{matrix.buildtype}} --timeout 9 --output-on-failure
 
       - name: Run gtests with debug output
         run: |
           $env:UPNPLIB_DEBUG = "set"
-          cd ./build/utest
+          cd ./build/Utest
           ctest -C ${{matrix.buildtype}} --timeout 9 --output-on-failure
 
 

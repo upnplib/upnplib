@@ -1,0 +1,17 @@
+// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-23
+/*!
+ * \file
+ * \brief General documentation for this directory.
+ *
+ * This file contains only documentation and is parsed by Doxygen but never by
+ * the compiler/linker.
+ *
+ * \namespace upnplib
+ * \brief Reengineered UPnP+ program code for the new written object oriented SDK.
+ *
+ * \dir Upnplib
+ * \brief This directory hosts all code belonging to namespace upnplib.
+ */
+
+// vim: filetype=cpp

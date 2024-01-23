@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-10-09
+# Redistribution only with this Copyright remark. Last modified: 2024-01-24
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -475,15 +475,15 @@ endif(UPNPLIB_WITH_GOOGLETEST)
 if(UPNPLIB_WITH_OPENSSL)
     add_subdirectory(${PROJECT_SOURCE_DIR}/openssl)
 endif()
-add_subdirectory(${PROJECT_SOURCE_DIR}/umock)
-add_subdirectory(${PROJECT_SOURCE_DIR}/upnplib)
-add_subdirectory(${PROJECT_SOURCE_DIR}/pupnp)
-add_subdirectory(${PROJECT_SOURCE_DIR}/ixml)
-add_subdirectory(${PROJECT_SOURCE_DIR}/compa)
+add_subdirectory(${PROJECT_SOURCE_DIR}/Umock)
+add_subdirectory(${PROJECT_SOURCE_DIR}/Upnplib)
+add_subdirectory(${PROJECT_SOURCE_DIR}/Pupnp)
+add_subdirectory(${PROJECT_SOURCE_DIR}/Ixml)
+add_subdirectory(${PROJECT_SOURCE_DIR}/Compa)
 add_subdirectory(${PROJECT_SOURCE_DIR}/sample)
 add_subdirectory(${PROJECT_SOURCE_DIR}/apps)
 if(googletest_POPULATED)
-    add_subdirectory(${PROJECT_SOURCE_DIR}/utest)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/Utest)
 endif()
 
 

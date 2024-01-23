@@ -907,14 +907,16 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = README.md \
-                         upnplib/directory.dox \
-                         upnplib/include/upnplib/httpreadwrite.hpp \
-                         upnplib/include/upnplib/messages.hpp \
-                         upnplib/include/upnplib/upnptools.hpp \
-                         upnplib/include/upnplib/visibility.hpp \
-                         upnplib/include/upnplib/webserver.hpp \
-                         upnplib/src/api \
-                         upnplib/src/net/http
+                         Compa/directory.dox \
+                         Compa/inc/compa/globalvars.hpp \
+                         Upnplib/directory.dox \
+                         Upnplib/include/upnplib/httpreadwrite.hpp \
+                         Upnplib/include/upnplib/messages.hpp \
+                         Upnplib/include/upnplib/upnptools.hpp \
+                         Upnplib/include/upnplib/visibility.hpp \
+                         Upnplib/include/upnplib/webserver.hpp \
+                         Upnplib/src/api \
+                         Upnplib/src/net/http
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
