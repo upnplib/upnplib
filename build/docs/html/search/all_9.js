@@ -38,11 +38,10 @@ var searchData=
   ['upnp_5fe_5funsubscribe_5funaccepted_35',['UPNP_E_UNSUBSCRIBE_UNACCEPTED',['../messages_8hpp.html#aafd15afa6e6a522e2164d0358d0ab27f',1,'messages.hpp']]],
   ['upnp_5fe_5furl_5ftoo_5fbig_36',['UPNP_E_URL_TOO_BIG',['../messages_8hpp.html#ae5228af2fff0211f58dab828b30cfafd',1,'messages.hpp']]],
   ['upnplib_37',['upnplib',['../namespaceupnplib.html',1,'']]],
-  ['upnplib_2edox_38',['upnplib.dox',['../upnplib_8dox.html',1,'']]],
-  ['upnplib_5fapi_39',['UPNPLIB_API',['../visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0',1,'visibility.hpp']]],
-  ['upnplib_5fextern_40',['UPNPLIB_EXTERN',['../visibility_8hpp.html#a72645054d319ce792dfd05ca41b3ef48',1,'visibility.hpp']]],
-  ['upnplib_5flocal_41',['UPNPLIB_LOCAL',['../visibility_8hpp.html#a6b5b485b157613c8d3dab58a514c2427',1,'visibility.hpp']]],
-  ['upnptools_2ecpp_42',['upnptools.cpp',['../upnptools_8cpp.html',1,'']]],
-  ['upnptools_2ehpp_43',['upnptools.hpp',['../upnptools_8hpp.html',1,'']]],
-  ['url_5fstr_44',['url_str',['../classupnplib_1_1CUri.html#ae59cb0be0f7f79a7da3ee09dfda75803',1,'upnplib::CUri']]]
+  ['upnplib_5fapi_38',['UPNPLIB_API',['../visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0',1,'visibility.hpp']]],
+  ['upnplib_5fextern_39',['UPNPLIB_EXTERN',['../visibility_8hpp.html#a72645054d319ce792dfd05ca41b3ef48',1,'visibility.hpp']]],
+  ['upnplib_5flocal_40',['UPNPLIB_LOCAL',['../visibility_8hpp.html#a6b5b485b157613c8d3dab58a514c2427',1,'visibility.hpp']]],
+  ['upnptools_2ecpp_41',['upnptools.cpp',['../upnptools_8cpp.html',1,'']]],
+  ['upnptools_2ehpp_42',['upnptools.hpp',['../upnptools_8hpp.html',1,'']]],
+  ['url_5fstr_43',['url_str',['../classupnplib_1_1CUri.html#ae59cb0be0f7f79a7da3ee09dfda75803',1,'upnplib::CUri']]]
 ];
