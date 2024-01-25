@@ -5,6 +5,8 @@
 /*!
  * \file
  * \brief Global used constants, variables, functions and macros.
+ * \cond
+ * It isn't documented so far.
  */
 
 #include <upnplib/cmake_vars.hpp>
@@ -86,4 +88,5 @@ inline bool g_dbug;
 
 } // namespace upnplib
 
+/// \endcond
 #endif // UPNPLIB_GLOBAL_HPP

@@ -1,0 +1,21 @@
+// Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-24
+/*!
+ * \file
+ * \brief General documentation for this directory.
+ *
+ * This file contains only documentation and is parsed by Doxygen but never by
+ * the compiler/linker.
+ */
+
+ /* I found no way to specify the global namespace
+ * \namespace
+ * \brief Original cloned pupnp program code.
+ */
+
+ /*!
+ * \dir Pupnp
+ * \brief This directory hosts all pupnp code located in the global namespace.
+ */
+
+// vim: filetype=cpp

@@ -1,6 +1,12 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-08
-//
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+/*!
+ * \file
+ * \brief Definition of the 'class Url'. Not usable, work in progess.
+ * \cond
+ * It isn't documented so far.
+ */
+
 // TODO: Provide url_is_special() as flag
 
 #include "upnplib/url.hpp"
@@ -11,9 +17,9 @@
 #include <iostream>
 #include <array>
 
-namespace upnplib {
+namespace {
 
-static const std::map<const std::string, const uint16_t> special_scheme{
+const std::map<const std::string, const uint16_t> special_scheme{
     {"file", static_cast<uint16_t>(NULL)},
     {"ftp", static_cast<uint16_t>(21)},
     {"http", static_cast<uint16_t>(80)},
@@ -21,12 +27,12 @@ static const std::map<const std::string, const uint16_t> special_scheme{
     {"ws", static_cast<uint16_t>(80)},
     {"wss", static_cast<uint16_t>(443)}};
 
-static bool url_is_special(std::string_view a_str) {
+bool url_is_special(std::string_view a_str) {
     return a_str == "ftp" || a_str == "file" || a_str == "http" ||
            a_str == "https" || a_str == "ws" || a_str == "wss";
 }
 
-static bool is_in_userinfo_percent_encode_set(const unsigned char a_chr) {
+bool is_in_userinfo_percent_encode_set(const unsigned char a_chr) {
     return // C0 controls
         a_chr <= '\x1F' ||
         // C0 control percent-encode set
@@ -41,7 +47,7 @@ static bool is_in_userinfo_percent_encode_set(const unsigned char a_chr) {
         a_chr == '@' || (a_chr >= '[' && a_chr <= '^') || a_chr == '|';
 }
 
-static std::string UTF8_percent_encode(const unsigned char a_chr) {
+std::string UTF8_percent_encode(const unsigned char a_chr) {
     // Simplified function 'UTF-8 percent-encode' from the URL standard may be
     // adjusted if needed.
     if (is_in_userinfo_percent_encode_set(a_chr)) {
@@ -54,7 +60,7 @@ static std::string UTF8_percent_encode(const unsigned char a_chr) {
         return std::string(sizeof(a_chr), (char)a_chr);
 }
 
-static std::string esc_url(std::string_view a_str) {
+std::string esc_url(std::string_view a_str) {
     std::ostringstream escaped;
     escaped.fill('0');
     escaped << std::uppercase << std::hex;
@@ -68,7 +74,11 @@ static std::string esc_url(std::string_view a_str) {
     return escaped.str();
 }
 
-//
+} // namespace
+
+namespace upnplib {
+
+
 // Url class methods
 // =================
 
@@ -88,7 +98,7 @@ Url::~Url() {
 }
 #endif
 
-//
+
 Url::operator std::string() const { return m_ser_url; }
 
 void Url::clear() {
@@ -140,7 +150,7 @@ std::string Url::query() const { return m_query; }
 
 std::string Url::fragment() const { return m_fragment; }
 
-//
+
 void Url::operator=(std::string_view a_given_url) {
 
     m_given_url = a_given_url;
@@ -236,7 +246,7 @@ void Url::operator=(std::string_view a_given_url) {
     }
 }
 
-//
+
 void Url::clean_and_copy_url_to_input() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'clean_and_copy_url_to_input'.\n";
@@ -289,7 +299,7 @@ void Url::clean_and_copy_url_to_input() {
                   << "\" now." << std::endl;
 }
 
-//
+
 void Url::fsm_scheme_start() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'scheme_start_state' with \""
@@ -313,7 +323,7 @@ void Url::fsm_scheme_start() {
     }
 }
 
-//
+
 void Url::fsm_scheme() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'scheme state' with \""
@@ -366,7 +376,7 @@ void Url::fsm_scheme() {
     }
 }
 
-//
+
 void Url::fsm_no_scheme() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'no_scheme_state' with input \"" << m_input
@@ -378,7 +388,7 @@ void Url::fsm_no_scheme() {
     m_state = STATE_NO_STATE;
 }
 
-//
+
 void Url::fsm_special_relative_or_authority() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'special_relative_or_authority_state' with \""
@@ -388,7 +398,7 @@ void Url::fsm_special_relative_or_authority() {
     m_state = STATE_NO_STATE;
 }
 
-//
+
 void Url::fsm_path_or_authority() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'path_or_authority_state' with \""
@@ -403,7 +413,7 @@ void Url::fsm_path_or_authority() {
     }
 }
 
-//
+
 void Url::fsm_special_authority_slashes() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'special_authority_slashes_state' with \""
@@ -422,7 +432,7 @@ void Url::fsm_special_authority_slashes() {
     }
 }
 
-//
+
 void Url::fsm_special_authority_ignore_slashes() {
 #ifdef DEBUG_URL
     std::clog
@@ -440,7 +450,7 @@ void Url::fsm_special_authority_ignore_slashes() {
     }
 }
 
-//
+
 void Url::fsm_authority() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'authority_state' with \""
@@ -489,7 +499,7 @@ void Url::fsm_authority() {
     }
 }
 
-//
+
 void Url::fsm_host() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'host_state' with \""
@@ -542,7 +552,7 @@ void Url::fsm_host() {
     }
 }
 
-//
+
 void Url::fsm_port() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'port_state' with \""
@@ -604,7 +614,7 @@ void Url::fsm_port() {
     }
 }
 
-//
+
 void Url::fsm_file() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'file_state' with \""
@@ -613,7 +623,7 @@ void Url::fsm_file() {
     m_state = STATE_NO_STATE;
 }
 
-//
+
 void Url::fsm_path_start() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'path_start_state' with \""
@@ -622,7 +632,7 @@ void Url::fsm_path_start() {
     m_state = STATE_NO_STATE;
 }
 
-//
+
 void Url::fsm_path() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'path_state' with \""
@@ -631,7 +641,7 @@ void Url::fsm_path() {
     m_state = STATE_NO_STATE;
 }
 
-//
+
 void Url::fsm_opaque_path() {
 #ifdef DEBUG_URL
     std::clog << "DEBUG: Being on 'opaque_path_state' with \""
@@ -639,5 +649,7 @@ void Url::fsm_opaque_path() {
 #endif
     m_state = STATE_NO_STATE;
 }
+
+/// \endcond
 
 } // namespace upnplib

@@ -1,5 +1,11 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-15
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+/*!
+ * \file
+ * \brief Declaration of the 'class Url'. Not usable, work in progess.
+ * \cond
+ * It isn't documented so far.
+ */
 
 // This class is based on the "URL Living Standard"
 // ================================================
@@ -29,10 +35,37 @@
 
 namespace upnplib {
 
+// clang-format off
+/*!
+ * \brief This manage a URL and is based on the <a href="https://url.spec.whatwg.org/">URL Living Standard</a>
+ *
+ * At time the %Url parser was coded this snapshot was used:<br/>
+ * <a href="https://url.spec.whatwg.org/commit-snapshots/9a83e251778046b20f4822f15ad4e2a469de2f57//">Commit Snapshot</a> - Last Updated 21 February 2022 of the URL standard.<br/>
+ * To understand the parser follow at that snapshot the <a href="https://url.spec.whatwg.org/commit-snapshots/9a83e251778046b20f4822f15ad4e2a469de2f57//#concept-basic-url-parser">basic URL parser</a>.
+ *
+ * This definition is helpful for coding. It is only understandable if you
+ * examine the code but I will have it available here.<br/>
+ * "A URI is opaque if, and only if, it is absolute and its scheme-specific
+ * part does not begin with a slash character ('/'). An opaque URI has a
+ * scheme, a scheme-specific part, and possibly a fragment; all other
+ * components are undefined."<br/>
+ * Example of an opaque %url: mailto:a\@b<br/>
+ * REF: http://docs.oracle.com/javase/8/docs/api/java/net/URI.html#isOpaque--
+ *
+ * To manual verify URLs conforming to the standard you can use the
+ * <a href="https://jsdom.github.io/whatwg-url">Live URL Viewer</a>.
+ */
+// clang-format on
 class Url {
 
   public:
-    // Set url, e.g.: Url url; url = "http://example.com"
+    /*! \brief Set url
+     *
+     * **Example:**
+     * \code
+     * Url url;
+     * url = "http://example.com";
+     * \endcode */
     void operator=(std::string_view a_url);
 
     // Get serialized url, e.g.: ser_url = (std::string)url
@@ -115,5 +148,7 @@ class Url {
 };
 
 } // namespace upnplib
+
+/// \endcond
 
 #endif // UPNPLIB_NET_URI_URL_HPP

@@ -1,7 +1,13 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-22
+// Redistribution only with this Copyright remark. Last modified: 202e-01-25
+/*!
+ * \file
+ * \brief Specifications to be portable between different platforms.
+ * \cond
+ * It isn't documented so far.
+ */
 
 // Header file for portable definitions
 // ====================================
@@ -112,4 +118,5 @@
 
 // clang-format on
 
+/// \endcond
 #endif // UPNPLIB_INCLUDE_PORT_HPP

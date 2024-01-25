@@ -1,7 +1,13 @@
 #ifndef UPNPP_0_ADDRESSING_CONNECTION_HPP
 #define UPNPP_0_ADDRESSING_CONNECTION_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-20
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+/*!
+ * \file
+ * \brief Declaration of classes and functions that manage connections.
+ * \cond
+ * It isn't documented so far.
+ */
 
 #ifndef _MSC_VER
 
@@ -43,4 +49,5 @@ class UPNPLIB_API CSigpipe_scoped {
 #define UPNPLIB_SCOPED_NO_SIGPIPE
 #endif
 
+/// \endcond
 #endif // UPNPP_0_ADDRESSING_CONNECTION_HPP

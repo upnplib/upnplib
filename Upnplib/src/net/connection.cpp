@@ -1,7 +1,13 @@
 #ifndef _MSC_VER
 
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-20
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+/*!
+ * \file
+ * \brief Definition of classes and functions that manage connections.
+ * \cond
+ * It isn't documented so far.
+ */
 
 #include <upnplib/connection.hpp>
 #include <iostream>
@@ -71,5 +77,6 @@ CSigpipe_scoped::~CSigpipe_scoped() {
 }
 
 } // namespace upnplib
+/// \endcond
 
 #endif

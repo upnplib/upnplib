@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-23
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -14,8 +14,8 @@ namespace utest {
 using ::testing::AnyOf;
 using ::testing::StartsWith;
 
+using ::is_numeric_node;
 using ::upnplib::CAddrinfo;
-using ::upnplib::is_numeric_node;
 
 
 TEST(AddrinfoTestSuite, get_numeric_host_successful) {

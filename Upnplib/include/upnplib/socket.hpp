@@ -1,7 +1,13 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-15
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+/*!
+ * \file
+ * \brief Declaration of the 'class Socket'.
+ * \cond
+ * It isn't documented so far.
+ */
 
 // Helpful link for ip address structures:
 // REF: [sockaddr structures as union]
@@ -288,5 +294,6 @@ class UPNPLIB_API CSocketError {
 };
 
 } // namespace upnplib
+/// \endcond
 
 #endif // UPNPLIB_SOCKET_HPP

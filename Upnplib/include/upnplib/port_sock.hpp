@@ -1,7 +1,13 @@
 #ifndef UPNPLIB_INCLUDE_PORT_SOCK_HPP
 #define UPNPLIB_INCLUDE_PORT_SOCK_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-14
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+/*!
+ * \file
+ * \brief Specifications to be portable with sockets between different
+ * platforms.
+ * \cond It isn't documented so far.
+ */
 
 // clang-format off
 
@@ -63,7 +69,7 @@
 #define MSG_NOSIGNAL 0
 #endif
 
-
 // clang-format on
 
+/// \endcond
 #endif // UPNPLIB_INCLUDE_PORT_SOCK_HPP

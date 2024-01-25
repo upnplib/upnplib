@@ -1,7 +1,14 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-18
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+/*!
+ * \file
+ * \brief Free functions to parse IPv6 and host URLs. Not usable, work in
+ * progess.
+ * \cond
+ * It isn't documented so far.
+ */
 
-#include "upnplib/urlparser.hpp"
+#include <upnplib/urlparser.hpp>
 
 #include <cctype>
 #include <string>
@@ -9,8 +16,8 @@
 
 namespace upnplib {
 
-// IPv6 parser
-// ===========
+/// \brief Parse IPv6 URL
+// ======================
 std::array<unsigned short, 8> ipv6_parser(std::string_view a_input) {
     std::array<unsigned short, 8> address{0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -186,9 +193,9 @@ throw_failure:
     throw std::invalid_argument(errormsg);
 }
 
-//
-// Host parser
-// ===========
+
+/// \brief Parse host URL
+// ======================
 std::string host_parser(std::string_view a_input,
                         bool a_isNotSpecial = false) //
 {
@@ -214,5 +221,7 @@ std::string host_parser(std::string_view a_input,
 
     return "dummy.final.parsed.host";
 }
+
+/// \endcond
 
 } // namespace upnplib

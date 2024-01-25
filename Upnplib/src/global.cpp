@@ -1,7 +1,13 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-06
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+/*!
+ * \file
+ * \brief Global used emulated system function.
+ * \cond
+ * It isn't documented so far.
+ */
 
-#include "upnplib/global.hpp"
+#include <upnplib/global.hpp>
 
 
 // strndup() is a GNU extension.
@@ -18,3 +24,4 @@ char* strndup(const char* __string, size_t __n) {
     return newstr;
 }
 #endif
+/// \endcond

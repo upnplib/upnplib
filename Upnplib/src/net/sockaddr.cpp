@@ -1,5 +1,11 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-06
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+/*!
+ * \file
+ * \brief Definition of the Sockaddr class and some free helper functions.
+ * \cond
+ * It isn't documented so far.
+ */
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/global.hpp>
@@ -327,3 +333,4 @@ void SSockaddr::handle_ipv4(const std::string& a_addr_str) {
 }
 
 } // namespace upnplib
+/// \endcond

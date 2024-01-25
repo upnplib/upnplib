@@ -1,5 +1,11 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-06
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+/*!
+ * \file
+ * \brief Definition of the Addrinfo class and free helper functions.
+ * \cond
+ * It isn't documented so far.
+ */
 
 #include <upnplib/addrinfo.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -10,7 +16,7 @@
 #include <iostream>
 #include <cstring>
 
-namespace upnplib {
+namespace {
 
 // Free function to test if the node is a valid numeric address string
 // -------------------------------------------------------------------
@@ -21,8 +27,8 @@ namespace upnplib {
 // Note: I simply use the system function inet_pton() to check if the node
 // string is accepted. This function can also be used to realize what address
 // family an address belongs to. --Ingo
-static int is_numeric_node(const std::string& a_node,
-                           const int a_addr_family = AF_UNSPEC) {
+int is_numeric_node(const std::string& a_node,
+                    const int a_addr_family = AF_UNSPEC) {
     // clang-format off
     TRACE("Executing is_numeric_node(\"" + a_node + "\", " +
           (a_addr_family == AF_INET6 ? "AF_INET6" :
@@ -52,6 +58,9 @@ static int is_numeric_node(const std::string& a_node,
     return 0;
 }
 
+} // namespace
+
+namespace upnplib {
 
 // CAddrinfo class to wrap ::addrinfo system calls
 // ===============================================
@@ -243,3 +252,4 @@ bool CAddrinfo::operator==(const CAddrinfo& a_ai) const {
 ::addrinfo* CAddrinfo::operator->() const { return m_res; }
 
 } // namespace upnplib
+/// \endcond

@@ -1,5 +1,11 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-06
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+/*!
+ * \file
+ * \brief Definition of the 'class Socket'.
+ * \cond
+ * It isn't documented so far.
+ */
 
 #include <upnplib/socket.hpp>
 #include <upnplib/global.hpp>
@@ -508,3 +514,4 @@ std::string CSocketError::get_error_str() {
 }
 
 } // namespace upnplib
+/// \endcond

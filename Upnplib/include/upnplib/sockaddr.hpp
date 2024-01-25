@@ -1,7 +1,13 @@
 #ifndef UPNPLIB_NET_SOCKADDR_HPP
 #define UPNPLIB_NET_SOCKADDR_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-11-24
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+/*!
+ * \file
+ * \brief Declaration of the Sockaddr class and some free helper functions.
+ * \cond
+ * It isn't documented so far.
+ */
 
 // Helpful links:
 // REF:_[Why_do_I_get_wrong_pointer_to_a_base_class_with_a_virtual_constructor](https://stackoverflow.com/q/76360179/5014688)
@@ -130,5 +136,6 @@ struct UPNPLIB_API SSockaddr {
 };
 
 } // namespace upnplib
+/// \endcond
 
 #endif // UPNPLIB_NET_SOCKADDR_HPP

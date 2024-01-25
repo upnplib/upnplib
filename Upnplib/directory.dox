@@ -1,4 +1,4 @@
-// Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
+// Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2024-01-23
 /*!
  * \file
@@ -8,7 +8,7 @@
  * the compiler/linker.
  *
  * \namespace upnplib
- * \brief Reengineered UPnP+ program code for the new written object oriented SDK.
+ * \brief Reengineered UPnP+ program code.
  *
  * \dir Upnplib
  * \brief This directory hosts all code belonging to namespace upnplib.
