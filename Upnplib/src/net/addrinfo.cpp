@@ -3,18 +3,15 @@
 /*!
  * \file
  * \brief Definition of the Addrinfo class and free helper functions.
- * \cond
- * It isn't documented so far.
  */
 
 #include <upnplib/addrinfo.hpp>
-#include <upnplib/sockaddr.hpp>
 #include <upnplib/global.hpp>
 #include <umock/netdb.hpp>
 
-#include <stdexcept>
 #include <iostream>
 #include <cstring>
+/// \cond
 
 namespace {
 

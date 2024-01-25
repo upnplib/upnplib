@@ -1,11 +1,11 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-05-01
+#ifndef UPNPLIB_NET_URI_URLPARSER_HPP
+#define UPNPLIB_NET_URI_URLPARSER_HPP
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
 /*!
  * \file
  * \brief Free functions to parse IPv6 and host URLs. Not usable, work in
  * progess.
- * \cond
- * It isn't documented so far.
  */
 
 // This class is based on the "URL Living Standard"
@@ -21,12 +21,10 @@
 // To manual verify URLs conforming to the standard you can use the
 // [Live URL Viewer](https://jsdom.github.io/whatwg-url/).
 
-#ifndef UPNPLIB_NET_URI_URLPARSER_HPP
-#define UPNPLIB_NET_URI_URLPARSER_HPP
-
 #include <array>
 #include <string_view>
 
+/// \cond
 namespace upnplib {
 
 // IPv6 parser
@@ -34,7 +32,6 @@ namespace upnplib {
 std::array<unsigned short, 8> ipv6_parser(std::string_view a_input);
 
 } // namespace upnplib
-
 /// \endcond
 
 #endif // UPNPLIB_NET_URI_URLPARSER_HPP

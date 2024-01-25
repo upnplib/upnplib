@@ -3,22 +3,18 @@
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
- * \cond
- * It isn't documented so far.
  */
 
 #include <upnplib/socket.hpp>
-#include <upnplib/global.hpp>
-#include <upnplib/sockaddr.hpp>
 #include <umock/sys_socket.hpp>
 #include <umock/stringh.hpp>
 #ifdef _MSC_VER
 #include <umock/winsock2.hpp>
 #endif
 
-#include <stdexcept>
 #include <iostream>
 
+/// \cond
 namespace upnplib {
 
 // Initialize and cleanup Microsoft Windows Sockets

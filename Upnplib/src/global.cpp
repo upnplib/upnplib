@@ -3,12 +3,10 @@
 /*!
  * \file
  * \brief Global used emulated system function.
- * \cond
- * It isn't documented so far.
  */
 
 #include <upnplib/global.hpp>
-
+/// \cond
 
 // strndup() is a GNU extension.
 #ifndef HAVE_STRNDUP

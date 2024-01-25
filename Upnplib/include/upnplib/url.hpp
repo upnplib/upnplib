@@ -1,10 +1,10 @@
+#ifndef UPNPLIB_NET_URI_URL_HPP
+#define UPNPLIB_NET_URI_URL_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2024-01-25
 /*!
  * \file
  * \brief Declaration of the 'class Url'. Not usable, work in progess.
- * \cond
- * It isn't documented so far.
  */
 
 // This class is based on the "URL Living Standard"
@@ -27,12 +27,10 @@
 // To manual verify URLs conforming to the standard you can use the
 // [Live URL Viewer](https://jsdom.github.io/whatwg-url/).
 
-#ifndef UPNPLIB_NET_URI_URL_HPP
-#define UPNPLIB_NET_URI_URL_HPP
-
 #include <string>
 #include <cstdint>
 
+/// \cond
 namespace upnplib {
 
 // clang-format off
@@ -148,7 +146,6 @@ class Url {
 };
 
 } // namespace upnplib
-
 /// \endcond
 
 #endif // UPNPLIB_NET_URI_URL_HPP

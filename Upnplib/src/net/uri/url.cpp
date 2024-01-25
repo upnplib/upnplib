@@ -3,8 +3,6 @@
 /*!
  * \file
  * \brief Definition of the 'class Url'. Not usable, work in progess.
- * \cond
- * It isn't documented so far.
  */
 
 // TODO: Provide url_is_special() as flag
@@ -15,7 +13,7 @@
 #include <sstream>
 #include <iomanip>
 #include <iostream>
-#include <array>
+/// \cond
 
 namespace {
 
@@ -650,6 +648,5 @@ void Url::fsm_opaque_path() {
     m_state = STATE_NO_STATE;
 }
 
-/// \endcond
-
 } // namespace upnplib
+/// \endcond

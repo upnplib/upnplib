@@ -2,6 +2,12 @@
 #define UPNPLIB_CMAKE_VARS_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2023-07-28
+/*!
+ * \file
+ * \brief Defines symbols for the compiler that are provided by CMake.
+ * \cond
+ * It isn't documented so far.
+ */
 
 /***************************************************************************
  * CMake configuration settings
@@ -54,5 +60,6 @@ UPNP_VERSION_PATCH)
 // Defined to ON if the library will use the static pthreads4W library
 #cmakedefine PTW32_STATIC_LIB ${PTW32_STATIC_LIB}
 
+/// \endcond
 #endif // UPNPLIB_CMAKE_VARS_HPP
 // vim: syntax=cpp

@@ -5,18 +5,17 @@
 /*!
  * \file
  * \brief Declaration of the Sockaddr class and some free helper functions.
- * \cond
- * It isn't documented so far.
  */
 
 // Helpful links:
 // REF:_[Why_do_I_get_wrong_pointer_to_a_base_class_with_a_virtual_constructor](https://stackoverflow.com/q/76360179/5014688)
 
+#include <upnplib/visibility.hpp>
 #include <upnplib/port.hpp>
 #include <upnplib/port_sock.hpp>
-#include <upnplib/visibility.hpp>
 #include <string>
 
+/// \cond
 namespace upnplib {
 
 // Never need to use type casts with pointer to different socket address

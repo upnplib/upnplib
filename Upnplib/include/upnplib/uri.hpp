@@ -5,18 +5,12 @@
 /*!
  * \file
  * \brief C++ interface for the Uri module.
- * \cond
- * It isn't documented so far.
  */
 
-// This header file is included by '#include "upnplib/uri.hpp"' so its current
-// directory is 'upnplib/'. The preprocessor looks fist at the currrent
-// directory and finds the wrong uri.hpp. So we have to use the full path.
-#include <Pupnp/upnp/src/inc/uri.hpp>
-
+/// \cond
 namespace upnplib {
 
-//
+
 // Interface for the uri module
 // ============================
 // clang-format off
@@ -71,6 +65,5 @@ class Curi : Iuri {
 // clang-format on
 
 } // namespace upnplib
-
 /// \endcond
 #endif // UPNPLIB_NET_URI_HPP

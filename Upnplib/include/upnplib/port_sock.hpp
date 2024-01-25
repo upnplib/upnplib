@@ -6,7 +6,8 @@
  * \file
  * \brief Specifications to be portable with sockets between different
  * platforms.
- * \cond It isn't documented so far.
+ * \cond
+ * It isn't documented so far.
  */
 
 // clang-format off

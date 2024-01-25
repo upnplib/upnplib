@@ -1,20 +1,18 @@
 #ifndef UPNPLIB_WEBSERVER_HPP
 #define UPNPLIB_WEBSERVER_HPP
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-19
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
 /*!
  * \file
  * \brief Declarations to manage the builtin Webserver
  */
 
-#include "upnplib/visibility.hpp"
+#include <upnplib/visibility.hpp>
 #include <string>
 
 namespace upnplib {
 
-/*!
- * \brief ~apping of file extension to content-type of document
- */
+/*! \brief Mapping of file extension to content-type of document */
 struct Document_meta {
     std::string extension; ///< extension of a filename
     std::string type; ///< file type

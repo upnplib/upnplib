@@ -5,14 +5,13 @@
 /*!
  * \file
  * \brief Definition of classes and functions that manage connections.
- * \cond
- * It isn't documented so far.
  */
 
 #include <upnplib/connection.hpp>
 #include <iostream>
 #include <upnplib/global.hpp>
 
+/// \cond
 namespace upnplib {
 
 CSigpipe_scoped::CSigpipe_scoped() {

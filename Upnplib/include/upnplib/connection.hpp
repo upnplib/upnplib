@@ -5,17 +5,15 @@
 /*!
  * \file
  * \brief Declaration of classes and functions that manage connections.
- * \cond
- * It isn't documented so far.
  */
 
 #ifndef _MSC_VER
 
-#include <upnplib/visibility.hpp>
 #include <upnplib/socket.hpp>
 #include <csignal> // not usable on win32
 
 
+/// \cond
 namespace upnplib {
 
 // Taking the idea and example for this SIGPIPE handler from

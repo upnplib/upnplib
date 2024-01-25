@@ -1,16 +1,16 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-18
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
 /*!
  * \file
  * \brief General usable free function tools and helper
  */
 
-#include <upnplib/messages.hpp>
 #include <upnplib/upnptools.hpp>
+#include <upnplib/messages.hpp>
 
 namespace {
 
-/**
+/*!
  * \brief Sample: assign {UPNP_E_SUCCESS, "UPNP_E_SUCCESS"}
  *
  * Table with assignment of the integer message number to its text string.
@@ -20,7 +20,7 @@ struct ErrorString {
     const char* rcError; ///< Error description.
 };
 
-/**
+/*!
  * \brief Array with text names of error messages.
  *
  * This const array is initialized with the character string names of the

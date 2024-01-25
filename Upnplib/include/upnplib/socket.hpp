@@ -5,8 +5,6 @@
 /*!
  * \file
  * \brief Declaration of the 'class Socket'.
- * \cond
- * It isn't documented so far.
  */
 
 // Helpful link for ip address structures:
@@ -74,12 +72,9 @@
 // --Ingo
 
 
-#include <upnplib/visibility.hpp>
-#include <upnplib/port_sock.hpp>
-#include <upnplib/sockaddr.hpp>
 #include <upnplib/addrinfo.hpp>
-#include <string>
 #include <mutex>
+/// \cond
 
 // To be portable with BSD socket error number constants I have to
 // define and use these macros with appended 'P' for portable.

@@ -1,0 +1,8 @@
+<map id="Upnplib/include/upnplib/addrinfo.hpp" name="Upnplib/include/upnplib/addrinfo.hpp">
+<area shape="rect" id="node1" title="Declaration of the Addrinfo class." alt="" coords="240,5,415,47"/>
+<area shape="rect" id="node2" href="$socket_8hpp.html" title="Declaration of the &#39;class Socket&#39;." alt="" coords="133,95,308,136"/>
+<area shape="rect" id="node6" href="$addrinfo_8cpp.html" title="Definition of the Addrinfo class and free helper functions." alt="" coords="333,102,538,129"/>
+<area shape="rect" id="node3" href="$connection_8hpp.html" title="Declaration of classes and functions that manage connections." alt="" coords="29,184,204,225"/>
+<area shape="rect" id="node5" href="$socket_8cpp.html" title="Definition of the &#39;class Socket&#39;." alt="" coords="228,191,421,218"/>
+<area shape="rect" id="node4" href="$connection_8cpp.html" title="Definition of classes and functions that manage connections." alt="" coords="5,273,228,300"/>
+</map>

@@ -26,7 +26,7 @@
 // C++ visibility support
 //-----------------------
 // clang-format off
-/// @cond
+/// \cond
 // Generic helper definitions for shared library support
 #if defined _WIN32 || defined __CYGWIN__
   #define UPNP_HELPER_DLL_IMPORT __declspec(dllimport)
@@ -43,7 +43,7 @@
     #define UPNP_HELPER_DLL_LOCAL
   #endif
 #endif
-/// @endcond
+/// \endcond
 
 // Now we use the generic helper definitions above to define UPNPLIB_API and
 // UPNPLIB_LOCAL. UPNPLIB_API is used for the public API symbols. It either DLL imports

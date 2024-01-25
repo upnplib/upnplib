@@ -1,18 +1,16 @@
 #ifndef UPNPLIB_GLOBAL_HPP
 #define UPNPLIB_GLOBAL_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-18
+// Redistribution only with this Copyright remark. Last modified: 2024-01-25
 /*!
  * \file
  * \brief Global used constants, variables, functions and macros.
- * \cond
- * It isn't documented so far.
  */
 
 #include <upnplib/cmake_vars.hpp>
 #include <upnplib/visibility.hpp>
-#include <upnplib/port.hpp>
 #include <string>
+/// \cond
 
 
 // strndup() is a GNU extension.

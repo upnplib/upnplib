@@ -3,16 +3,14 @@
 /*!
  * \file
  * \brief Definition of the Sockaddr class and some free helper functions.
- * \cond
- * It isn't documented so far.
  */
 
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/global.hpp>
-#include <filesystem>
 #include <cstring>
 #include <iostream>
 
+/// \cond
 namespace upnplib {
 
 // Free function to get the address string from a sockaddr structure

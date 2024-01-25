@@ -908,9 +908,115 @@ WARN_LOGFILE           =
 
 INPUT                  = README.md \
                          Pupnp/directory.dox \
+                         Upnplib \
+                         build/include/upnplib/cmake_vars.hpp \
                          Compa/directory.dox \
+                         #Compa/inc/Callback.hpp \
+#Compa/inc/UpnpActionComplete.hpp \
+#Compa/inc/UpnpActionRequest.hpp \
+#Compa/inc/UpnpDiscovery.hpp \
+#Compa/inc/UpnpEvent.hpp \
+#Compa/inc/UpnpEventSubscribe.hpp \
+#Compa/inc/UpnpExtraHeaders.hpp \
+#Compa/inc/UpnpFileInfo.hpp \
+#Compa/inc/UpnpGlobal.hpp \
+#Compa/inc/UpnpInet.hpp \
+#Compa/inc/UpnpIntTypes.hpp \
+#Compa/inc/UpnpStateVarComplete.hpp \
+#Compa/inc/UpnpStateVarRequest.hpp \
+#Compa/inc/UpnpString.hpp \
+#Compa/inc/UpnpSubscriptionRequest.hpp \
+#Compa/inc/UpnpUniStd.hpp \
                          Compa/inc/compa/globalvars.hpp \
-                         Upnplib
+#Compa/inc/init.hpp
+#Compa/inc/ithread.hpp
+#Compa/inc/list.hpp
+#Compa/inc/upnp.hpp
+#Compa/inc/upnpdebug.hpp
+#Compa/inc/upnptools.hpp
+#Compa/src/api/UpnpActionComplete.cpp
+#Compa/src/api/UpnpActionRequest.cpp
+#Compa/src/api/UpnpDiscovery.cpp
+#Compa/src/api/UpnpEvent.cpp
+#Compa/src/api/UpnpEventSubscribe.cpp
+#Compa/src/api/UpnpExtraHeaders.cpp
+#Compa/src/api/UpnpFileInfo.cpp
+#Compa/src/api/UpnpStateVarComplete.cpp
+#Compa/src/api/UpnpStateVarRequest.cpp
+#Compa/src/api/UpnpString.cpp
+#Compa/src/api/UpnpSubscriptionRequest.cpp
+#Compa/src/api/upnpapi.cpp
+#Compa/src/api/upnpdebug.cpp
+#Compa/src/api/upnptools.cpp
+#Compa/src/gena/gena_callback2.cpp
+#Compa/src/gena/gena_ctrlpt.cpp
+#Compa/src/gena/gena_device.cpp
+#Compa/src/genlib/client_table/GenlibClientSubscription.cpp
+#Compa/src/genlib/client_table/client_table.cpp
+#Compa/src/genlib/miniserver/miniserver.cpp
+#Compa/src/genlib/net/http/httpparser.cpp
+#Compa/src/genlib/net/http/httpreadwrite.cpp
+#Compa/src/genlib/net/http/parsetools.cpp
+#Compa/src/genlib/net/http/statcodes.cpp
+#Compa/src/genlib/net/http/webserver.cpp
+#Compa/src/genlib/net/sock.cpp
+#Compa/src/genlib/net/uri/uri.cpp
+#Compa/src/genlib/service-table/service_table.cpp
+#Compa/src/genlib/util/list.cpp
+#Compa/src/genlib/util/membuffer.cpp
+#Compa/src/genlib/util/strintmap.cpp
+#Compa/src/genlib/util/util.cpp
+#Compa/src/globalvars.cpp
+#Compa/src/inc/GenlibClientSubscription.hpp
+#Compa/src/inc/VirtualDir.hpp
+#Compa/src/inc/client_table.hpp
+#Compa/src/inc/config.hpp
+#Compa/src/inc/gena.hpp
+#Compa/src/inc/gena_ctrlpt.hpp
+#Compa/src/inc/gena_device.hpp
+#Compa/src/inc/httpparser.hpp
+#Compa/src/inc/httpreadwrite.hpp
+#Compa/src/inc/md5.hpp
+#Compa/src/inc/membuffer.hpp
+#Compa/src/inc/miniserver.hpp
+#Compa/src/inc/parsetools.hpp
+#Compa/src/inc/service_table.hpp
+#Compa/src/inc/soaplib.hpp
+#Compa/src/inc/sock.hpp
+#Compa/src/inc/ssdplib.hpp
+#Compa/src/inc/statcodes.hpp
+#Compa/src/inc/strintmap.hpp
+#Compa/src/inc/sysdep.hpp
+#Compa/src/inc/unixutil.hpp
+#Compa/src/inc/upnpapi.hpp
+#Compa/src/inc/upnputil.hpp
+#Compa/src/inc/uri.hpp
+#Compa/src/inc/urlconfig.hpp
+#Compa/src/inc/uuid.hpp
+#Compa/src/inc/webserver.hpp
+#Compa/src/init.cpp
+#Compa/src/soap/soap_common.cpp
+#Compa/src/soap/soap_ctrlpt.cpp
+#Compa/src/soap/soap_device.cpp
+#Compa/src/ssdp/SSDPResultData.cpp
+#Compa/src/ssdp/SSDPResultData.hpp
+#Compa/src/ssdp/SSDPResultDataCallback.cpp
+#Compa/src/ssdp/SSDPResultDataCallback.hpp
+#Compa/src/ssdp/ssdp_ctrlpt.cpp
+#Compa/src/ssdp/ssdp_device.cpp
+#Compa/src/ssdp/ssdp_server.cpp
+#Compa/src/threadutil/FreeList.cpp
+#Compa/src/threadutil/FreeList.hpp
+#Compa/src/threadutil/LinkedList.cpp
+#Compa/src/threadutil/LinkedList.hpp
+#Compa/src/threadutil/ThreadPool.cpp
+#Compa/src/threadutil/ThreadPool.hpp
+#Compa/src/threadutil/TimerThread.cpp
+#Compa/src/threadutil/TimerThread.hpp
+#Compa/src/urlconfig/urlconfig.cpp
+#Compa/src/uuid/md5.cpp
+#Compa/src/uuid/sysdep.cpp
+#Compa/src/uuid/uuid.cpp
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

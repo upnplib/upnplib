@@ -5,17 +5,11 @@
 /*!
  * \file
  * \brief Declaration of the Addrinfo class.
- * \cond
- * It isn't documented so far.
  */
 
-#include <upnplib/visibility.hpp>
-#include <upnplib/port.hpp>
-#include <upnplib/port_sock.hpp>
 #include <upnplib/sockaddr.hpp>
 
-#include <string>
-
+/// \cond
 namespace upnplib {
 
 // Provide C style addrinfo as class and wrap its system calls

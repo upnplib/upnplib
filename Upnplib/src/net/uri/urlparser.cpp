@@ -4,16 +4,14 @@
  * \file
  * \brief Free functions to parse IPv6 and host URLs. Not usable, work in
  * progess.
- * \cond
- * It isn't documented so far.
  */
 
 #include <upnplib/urlparser.hpp>
 
-#include <cctype>
-#include <string>
+#include <string> // needed for MSC_VER
 #include <iostream>
 
+/// \cond
 namespace upnplib {
 
 /// \brief Parse IPv6 URL
@@ -222,6 +220,5 @@ std::string host_parser(std::string_view a_input,
     return "dummy.final.parsed.host";
 }
 
-/// \endcond
-
 } // namespace upnplib
+/// \endcond
