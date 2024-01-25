@@ -4,14 +4,12 @@
 // Redistribution only with this Copyright remark. Last modified: 2023-07-21
 // Also Copyright by other contributor as noted below.
 // Last compare with pupnp original source file on 2023-04-25, ver 1.14.15
-
 /*!
  * \file
  *
  * \brief Header file for UpnpFileInfo methods.
  * \author Marcelo Roberto Jimenez
  */
-#include <upnplib/visibility.hpp>
 
 #ifdef _WIN32
 #include <UpnpInet.hpp>
@@ -28,7 +26,7 @@
  * UpnpFileInfo
  */
 // The typedef must be the same as in pupnp otherwise we cannot switch between
-// pupnp gtest and compa gtest. Using the typedef in the header file but the
+// pupnp utest and compa utest. Using the typedef in the header file but the
 // definiton of the structure in the source file make the mmembers of the
 // structure publicy invisible. That is intended but we will change it with
 // using C++ private. --Ingo

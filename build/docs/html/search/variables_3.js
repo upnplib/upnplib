@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['type_0',['type',['../structupnplib_1_1Document__meta.html#ab28b46e87d7d69fdcace8eca7db3cb4d',1,'upnplib::Document_meta']]]
+  ['next_0',['next',['../structUpnpListHead.html#ad9117acc2cfb1847063f7bc506e3c47d',1,'UpnpListHead']]]
 ];

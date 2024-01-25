@@ -42,6 +42,8 @@ var NAVTREE =
       [ "6. Configure Options for cmake", "index.html#autotoc_md12", null ],
       [ "7. Limitations", "index.html#autotoc_md13", null ]
     ] ],
+    [ "Deprecated List", "deprecated.html", null ],
+    [ "Modules", "modules.html", "modules" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -62,7 +64,12 @@ var NAVTREE =
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "File Members", "globals.html", [
-        [ "All", "globals.html", null ],
+        [ "All", "globals.html", "globals_dup" ],
+        [ "Functions", "globals_func.html", "globals_func" ],
+        [ "Variables", "globals_vars.html", null ],
+        [ "Typedefs", "globals_type.html", null ],
+        [ "Enumerations", "globals_enum.html", null ],
+        [ "Enumerator", "globals_eval.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]
@@ -71,7 +78,10 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"addrinfo_8cpp.html"
+"Callback_8hpp.html",
+"UpnpFileInfo_8hpp.html#ad9025c0f1be1c68c392fbd6d523564b1",
+"global_8hpp_source.html",
+"messages_8hpp.html#a23c8fb90c3b4bcbec917b5064e7633dc"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

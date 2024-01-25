@@ -4,23 +4,17 @@
 // Redistribution only with this Copyright remark. Last modified: 2023-07-21
 // Also Copyright by other contributor as noted below.
 // Last compare with pupnp original source file on 2023-04-26, ver 1.14.15
-
-/*!
- * \defgroup UpnpString The UpnpString Class
- *
- * \brief Implements string operations in the UPnP library.
- *
- * \author Marcelo Roberto Jimenez
- *
- * \version 1.0
- *
- * @{
- *
- * \file
- *
+/*! \file
  * \brief UpnpString object declaration.
  */
 
+/*!
+ * \defgroup UpnpString The UpnpString Class
+ * \brief Implements string operations in the UPnP library.
+ * \author Marcelo Roberto Jimenez
+ * \version 1.0
+ * @{
+ */
 
 #include <upnplib/visibility.hpp>
 #include <stddef.h> // For size_t
@@ -49,7 +43,7 @@ UPNPLIB_API void UpnpString_delete(
     /*! [in] The \em \b this pointer. */
     UpnpString* p);
 
-/*!
+/* !
  * \brief Copy Constructor.
  *
  * \return A pointer to a new allocated copy of the original object.
@@ -144,6 +138,6 @@ UPNPLIB_API int UpnpString_casecmp(
     /*! [in] The \em \b the second string. */
     UpnpString* q);
 
-/* @} UpnpString The UpnpString API */
+/// @} UpnpString The UpnpString API
 
 #endif // COMPA_UPNPSTRING_HPP

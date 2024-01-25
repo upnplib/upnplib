@@ -1,15 +1,13 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-19
-
 #ifndef UPNPLIB_UPNPSUBSCRIPTIONREQUEST_HPP
 #define UPNPLIB_UPNPSUBSCRIPTIONREQUEST_HPP
-
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-26
 /*!
  * \file
- *
  * \brief Header file for UpnpSubscriptionRequest methods.
  * \author Marcelo Roberto Jimenez
  */
+
 #include <stdlib.h> /* for size_t */
 
 #include "UpnpGlobal.hpp" /* for EXPORT_SPEC */

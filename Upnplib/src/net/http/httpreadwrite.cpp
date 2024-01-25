@@ -10,7 +10,7 @@
 
 namespace upnplib {
 
-CUri::CUri(std::string a_url_str) : url_str(a_url_str), hostport{} {
+CUri::CUri(std::string a_url_str) : url_str(a_url_str) {
     // Exception: no
     const auto start = this->url_str.find("://");
     if (start == std::string::npos)

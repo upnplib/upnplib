@@ -6,7 +6,7 @@
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-19
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-26
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,22 +34,37 @@
  *
  ******************************************************************************/
 // Last compare with pupnp original source file on 2023-08-19, ver 1.14.17
-
 /*!
  * \file
+ * \brief Manage Debug messages with levels "critical" to "all".
  */
 
-#include <UpnpGlobal.hpp> /* for UPNP_INLINE */
-#include <upnp.hpp>       // for UPNP_E_SUCCESS
+#include <upnp.hpp> // for UPNP_E_SUCCESS
 #include <stdio.h>
 
-/*! \name Other debugging features
+/* ! \name Other debugging features
  *
  * The UPnP SDK contains other features to aid in debugging.
+ * @{
  */
-/*@{*/
 
-/*! \name Upnp_LogLevel
+/// @{
+/// Only debug messages from this program module
+typedef enum Upnp_Module {
+    SSDP,
+    SOAP,
+    GENA,
+    TPOOL,
+    MSERV,
+    DOM,
+    API,
+    HTTP
+} Dbg_Module;
+/// @}
+
+/// @{
+/*! \brief Upnp_LogLevel
+ *
  *  The user has the option to select 4 different types of debugging levels,
  *  see \c UpnpSetLogLevel.
  *  The critical level will show only those messages
@@ -64,36 +79,20 @@
  *    \li \c UPNP_INFO [2]
  *    \li \c UPNP_ALL [3]
  */
-typedef enum Upnp_Module {
-    SSDP,
-    SOAP,
-    GENA,
-    TPOOL,
-    MSERV,
-    DOM,
-    API,
-    HTTP
-} Dbg_Module;
-
-/*@{*/
 typedef enum Upnp_LogLevel_e {
     UPNP_CRITICAL,
     UPNP_ERROR,
     UPNP_INFO,
     UPNP_ALL
 } Upnp_LogLevel;
-/*@}*/
+/// @}
 
-/* UPNP_PACKET probably resulted from a confusion between module and
-   level and was only used by a few messages in ssdp_device.c (they
-   have been moved to INFO). Kept for compatibility, don't use for new
-   messages.
-*/
+/*! UPNP_PACKET probably resulted from a confusion between module and level and
+ * was only used by a few messages in ssdp_device.c (they have been moved to
+ * INFO). Kept for compatibility, don't use for new messages. */
 #define UPNP_PACKET UPNP_ERROR
 
-/*!
- * Default log level : see \c Upnp_LogLevel
- */
+/*! Default log level : see \c Upnp_LogLevel */
 #define UPNP_DEFAULT_LOG_LEVEL UPNP_ALL
 
 /*!

@@ -1,0 +1,12 @@
+<map id="Compa/inc/UpnpGlobal.hpp" name="Compa/inc/UpnpGlobal.hpp">
+<area shape="rect" id="node1" title="Defines constants that for some reason are not defined on some systems." alt="" coords="329,5,527,32"/>
+<area shape="rect" id="node2" href="$UpnpStateVarComplete_8hpp.html" title="Header file for UpnpStateVarComplete methods." alt="" coords="5,169,280,196"/>
+<area shape="rect" id="node5" href="$UpnpStateVarRequest_8hpp.html" title="Header file for UpnpStateVarRequest methods." alt="" coords="34,87,299,114"/>
+<area shape="rect" id="node6" href="$UpnpSubscriptionRequest_8hpp.html" title="Header file for UpnpSubscriptionRequest methods." alt="" coords="323,80,533,121"/>
+<area shape="rect" id="node7" href="$ithread_8hpp.html" title="Deprecated ithread functions redirected to pthread. Internal use Only." alt="" coords="557,87,726,114"/>
+<area shape="rect" id="node8" href="$list_8hpp.html" title="Trivial list management interface, patterned on std::list." alt="" coords="750,87,893,114"/>
+<area shape="rect" id="node3" href="$upnp_8hpp.html" title="UPnPlib API." alt="" coords="332,244,487,271"/>
+<area shape="rect" id="node4" href="$upnpdebug_8hpp.html" title="Manage Debug messages with levels &quot;critical&quot; to &quot;all&quot;." alt="" coords="312,319,507,345"/>
+<area shape="rect" id="node9" href="$UpnpExtraHeaders_8hpp.html" title="Header file for UpnpExtraHeaders methods." alt="" coords="449,169,695,196"/>
+<area shape="rect" id="node10" href="$UpnpFileInfo_8hpp.html" title="Header file for UpnpFileInfo methods." alt="" coords="719,169,924,196"/>
+</map>

@@ -1,6 +1,5 @@
-#ifndef _UPNP_LIST_H_
-#define _UPNP_LIST_H_
-
+#ifndef COMPA_LIST_HPP
+#define COMPA_LIST_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
@@ -34,43 +33,47 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
-/** Trivial list management interface, patterned on std::list. It aims more at
- * being familiar than at being minimal. The implementation does not perform
- * any allocation or deallocation.
+/*!
+ * \file
+ * \brief Trivial list management interface, patterned on std::list.
+ *
+ * It aims more at being familiar than at being minimal. The implementation does
+ * not perform any allocation or deallocation.
  */
 
-#include "UpnpGlobal.hpp"
+#include <UpnpGlobal.hpp>
 
-/** List anchor structure. This should be the *first* entry in list
- *  member objects, except if you want to do member offset arithmetic
- *  instead of simple casts (look up "containerof"). The list code itself
- *  does not care. */
+/*! \brief List anchor structure.
+ *
+ * This should be the *first* entry in list member objects, except if you want
+ * to do member offset arithmetic instead of simple casts (look up
+ * "containerof"). The list code itself does not care. */
 typedef struct UpnpListHead {
-    struct UpnpListHead *next, *prev;
+    UpnpListHead* next; ///< Points to next entry in the list
+    UpnpListHead* prev; ///< Points to previous entry in the list
 } UpnpListHead;
 
-/** List iterator. Not strictly necessary, but clarifies the interface. */
+/*! List iterator. Not strictly necessary, but clarifies the interface. */
 typedef UpnpListHead* UpnpListIter;
 
-/** Initialize empty list */
+/*! Initialize empty list */
 EXPORT_SPEC void UpnpListInit(UpnpListHead* list);
 
-/** Return iterator pointing to the first list element, or
+/*! Return iterator pointing to the first list element, or
  *  UpnpListEnd(list) if the list is empty */
 EXPORT_SPEC UpnpListIter UpnpListBegin(UpnpListHead* list);
 
-/** Return end of list sentinel iterator (not an element) */
+/*! Return end of list sentinel iterator (not an element) */
 EXPORT_SPEC UpnpListIter UpnpListEnd(UpnpListHead* list);
 
-/** Return iterator pointing to element after pos, or end() */
+/*! Return iterator pointing to element after pos, or end() */
 EXPORT_SPEC UpnpListIter UpnpListNext(UpnpListHead* list, UpnpListIter pos);
 
-/** Insert element before pos, returns iterator pointing to inserted element. */
+/*! Insert element before pos, returns iterator pointing to inserted element. */
 EXPORT_SPEC UpnpListIter UpnpListInsert(UpnpListHead* list, UpnpListIter pos,
                                         UpnpListHead* elt);
 
-/** Erase element at pos, return next one, or end()*/
+/*! Erase element at pos, return next one, or end()*/
 EXPORT_SPEC UpnpListIter UpnpListErase(UpnpListHead* list, UpnpListIter pos);
 
-#endif /* _UPNPLISTH_ */
+#endif // COMPA_LIST_HPP

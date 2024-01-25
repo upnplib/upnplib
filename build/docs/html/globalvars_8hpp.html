@@ -93,17 +93,56 @@ $(document).ready(function(){initNavTree('globalvars_8hpp.html',''); initResizab
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">globalvars.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
 <p>Provides global variables.  
 <a href="#details">More...</a></p>
-
+<div class="textblock"><code>#include &lt;<a class="el" href="visibility_8hpp_source.html">upnplib/visibility.hpp</a>&gt;</code><br />
+<code>#include &lt;openssl/ssl.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for globalvars.hpp:</div>
+<div class="dyncontent">
+<div class="center"><img src="globalvars_8hpp__incl.png" border="0" usemap="#aCompa_2inc_2compa_2globalvars_8hpp" alt=""/></div>
+<map name="aCompa_2inc_2compa_2globalvars_8hpp" id="aCompa_2inc_2compa_2globalvars_8hpp">
+<area shape="rect" title="Provides global variables." alt="" coords="41,5,280,32"/>
+<area shape="rect" href="visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,80,161,107"/>
+<area shape="rect" title=" " alt="" coords="186,80,293,107"/>
+</map>
+</div>
+</div>
 <p><a href="globalvars_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:aeda6b71829e02d6ec5be2f7b3ea44b12"><td class="memItemLeft" align="right" valign="top"><a class="el" href="visibility_8hpp.html#a72645054d319ce792dfd05ca41b3ef48">UPNPLIB_EXTERN</a> SSL_CTX *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="globalvars_8hpp.html#aeda6b71829e02d6ec5be2f7b3ea44b12">gSslCtx</a></td></tr>
+<tr class="memdesc:aeda6b71829e02d6ec5be2f7b3ea44b12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to the global available SSL Context object if OpenSSL is enabled.  <a href="globalvars_8hpp.html#aeda6b71829e02d6ec5be2f7b3ea44b12">More...</a><br /></td></tr>
+<tr class="separator:aeda6b71829e02d6ec5be2f7b3ea44b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Provides global variables. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Variable Documentation</h2>
+<a id="aeda6b71829e02d6ec5be2f7b3ea44b12" name="aeda6b71829e02d6ec5be2f7b3ea44b12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeda6b71829e02d6ec5be2f7b3ea44b12">&#9670;&nbsp;</a></span>gSslCtx</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="visibility_8hpp.html#a72645054d319ce792dfd05ca41b3ef48">UPNPLIB_EXTERN</a> SSL_CTX* gSslCtx</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Pointer to the global available SSL Context object if OpenSSL is enabled. </p>
+<p >If OpenSSL is available and configured to use then an SSL_CTX object is initialized and the pointer to it is global available so it can be used for SSL connections. </p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

@@ -9,7 +9,7 @@ var dir_80023e064d24958bf48d92ff505d1ef6 =
     [ "port_sock.hpp", "port__sock_8hpp.html", null ],
     [ "sockaddr.hpp", "sockaddr_8hpp.html", null ],
     [ "socket.hpp", "socket_8hpp.html", null ],
-    [ "upnptools.hpp", "upnptools_8hpp.html", "upnptools_8hpp" ],
+    [ "upnptools.hpp", "Upnplib_2include_2upnplib_2upnptools_8hpp.html", "Upnplib_2include_2upnplib_2upnptools_8hpp" ],
     [ "uri.hpp", "uri_8hpp.html", null ],
     [ "url.hpp", "url_8hpp.html", null ],
     [ "urlparser.hpp", "urlparser_8hpp.html", null ],

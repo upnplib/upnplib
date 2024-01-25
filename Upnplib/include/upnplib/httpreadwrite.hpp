@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_HTTPREADWRITE_HPP
 #define UPNPLIB_HTTPREADWRITE_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-19
+// Redistribution only with this Copyright remark. Last modified: 2024-01-27
 /*!
  * \file
  * \brief C++ Interface class httpreadwrite and declaration class Uri
@@ -226,16 +226,16 @@ UPNPLIB_API int http_OpenHttpConnection(
 
 
 /*!
- * \brief ???
+ * \brief Stores a URL and provides its host with port part.
  */
 class CUri {
   public:
-    /// ???
+    /// URL
     const std::string url_str;
-    /// ???
+    /// Host with port part from the URL
     std::string hostport;
 
-    /// ???
+    /// Constructor
     CUri(std::string a_url_str);
 };
 

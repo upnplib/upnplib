@@ -1,13 +1,12 @@
 #ifndef UPNPLIB_ITHREAD_HPP
 #define UPNPLIB_ITHREAD_HPP
-
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-25
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-26
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,18 +33,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
 /*!
  * \file
+ * \brief Deprecated ithread functions redirected to pthread. Internal use Only.
  */
 
-#if !defined(_WIN32)
-// #include <sys/param.h>
-#endif
+#include <UpnpGlobal.hpp> /* For UPNP_INLINE, EXPORT_SPEC */
+#include "pthread.h"      // To find pthreads4w don't use <pthread.h>
 
-#include "UpnpGlobal.hpp" /* For UPNP_INLINE, EXPORT_SPEC */
-// #include "UpnpUniStd.h" /* for close() */
-#include "pthread.h" // To find pthreads4w don't use <pthread.h>
+/// \cond
 
 #if defined(BSD) && !defined(__GNU__)
 #define PTHREAD_MUTEX_RECURSIVE_NP PTHREAD_MUTEX_RECURSIVE
@@ -910,5 +906,7 @@ static UPNP_INLINE int ithread_cleanup_thread(void) {
 // EXPORT_SPEC int pthread_mutexattr_setkind_np(
 //         pthread_mutexattr_t *attr, int kind);
 #endif
+
+/// \endcond
 
 #endif /* UPNPLIB_ITHREAD_HPP */

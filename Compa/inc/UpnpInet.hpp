@@ -1,19 +1,14 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-23
-// Taken from authors who haven't made a note.
-
 #ifndef PUPNP_UPNPINET_HPP
 #define PUPNP_UPNPINET_HPP
-
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-26
+// Taken from authors who haven't made a note.
 /*!
- * \addtogroup Sock
- *
- * @{
- *
  * \file
- *
  * \brief Provides a platform independent way to include TCP/IP types and
  * functions.
+ * \addtogroup Sock
+ * @{
  */
 
 #include "UpnpUniStd.hpp" /* for close() */
@@ -64,6 +59,6 @@ typedef int SOCKET;
 #define UpnpCloseSocket umock::unistd_h.close
 #endif /* _WIN32 */
 
-/* @} Sock */
+/// @}
 
 #endif /* PUPNP_UPNPINET_HPP */

@@ -410,7 +410,7 @@ IDL_PROPERTY_SUPPORT   = YES
 # all members of a group must be documented explicitly.
 # The default value is: NO.
 
-DISTRIBUTE_GROUP_DOC   = NO
+DISTRIBUTE_GROUP_DOC   = YES
 
 # If one adds a struct or class to a group and this option is enabled, then also
 # any nested class or struct is added to the same group. By default this option
@@ -909,31 +909,37 @@ WARN_LOGFILE           =
 INPUT                  = README.md \
                          Pupnp/directory.dox \
                          Upnplib \
-                         build/include/upnplib/cmake_vars.hpp \
                          Compa/directory.dox \
-                         #Compa/inc/Callback.hpp \
-#Compa/inc/UpnpActionComplete.hpp \
-#Compa/inc/UpnpActionRequest.hpp \
-#Compa/inc/UpnpDiscovery.hpp \
-#Compa/inc/UpnpEvent.hpp \
-#Compa/inc/UpnpEventSubscribe.hpp \
-#Compa/inc/UpnpExtraHeaders.hpp \
-#Compa/inc/UpnpFileInfo.hpp \
-#Compa/inc/UpnpGlobal.hpp \
-#Compa/inc/UpnpInet.hpp \
-#Compa/inc/UpnpIntTypes.hpp \
-#Compa/inc/UpnpStateVarComplete.hpp \
-#Compa/inc/UpnpStateVarRequest.hpp \
-#Compa/inc/UpnpString.hpp \
-#Compa/inc/UpnpSubscriptionRequest.hpp \
-#Compa/inc/UpnpUniStd.hpp \
-                         Compa/inc/compa/globalvars.hpp \
-#Compa/inc/init.hpp
-#Compa/inc/ithread.hpp
-#Compa/inc/list.hpp
-#Compa/inc/upnp.hpp
-#Compa/inc/upnpdebug.hpp
-#Compa/inc/upnptools.hpp
+                         Compa/inc/Callback.hpp \
+                         Compa/inc/UpnpActionComplete.hpp \
+                         Compa/inc/UpnpActionRequest.hpp \
+                         Compa/inc/UpnpDiscovery.hpp \
+                         Compa/inc/UpnpEvent.hpp \
+                         Compa/inc/UpnpEventSubscribe.hpp \
+                         Compa/inc/UpnpExtraHeaders.hpp \
+                         Compa/inc/UpnpFileInfo.hpp \
+                         Compa/inc/UpnpGlobal.hpp \
+                         Compa/inc/UpnpInet.hpp \
+                         Compa/inc/UpnpIntTypes.hpp \
+                         Compa/inc/UpnpStateVarComplete.hpp \
+                         Compa/inc/UpnpStateVarRequest.hpp \
+                         Compa/inc/UpnpString.hpp \
+                         Compa/inc/UpnpSubscriptionRequest.hpp \
+                         Compa/inc/UpnpUniStd.hpp \
+                         Compa/inc/init.hpp \
+                         Compa/inc/ithread.hpp \
+                         Compa/inc/list.hpp \
+                         Compa/inc/upnp.hpp \
+                         Compa/inc/upnpdebug.hpp \
+                         Compa/inc/upnptools.hpp \
+                         Compa/inc/compa/globalvars.hpp
+#
+#delete Compa/inc/UpnpGlobal.hpp
+#delete Compa/inc/UpnpInet.hpp
+#delete Compa/inc/UpnpIntTypes.hpp
+#delete Compa/inc/UpnpUniStd.hpp
+#delete Compa/inc/init.hpp
+#
 #Compa/src/api/UpnpActionComplete.cpp
 #Compa/src/api/UpnpActionRequest.cpp
 #Compa/src/api/UpnpDiscovery.cpp
@@ -2391,7 +2397,7 @@ INCLUDE_FILE_PATTERNS  =
 # recursively expanded use the := operator instead of the = operator.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-PREDEFINED             =
+PREDEFINED             = DOXYGEN_RUN
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The

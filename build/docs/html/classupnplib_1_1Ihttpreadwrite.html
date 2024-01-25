@@ -125,7 +125,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a39b1f7032a2e6be9659528f57c03d47b"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#a39b1f7032a2e6be9659528f57c03d47b">http_FixStrUrl</a> (const char *urlstr, size_t urlstrlen, uri_type *fixed_url)=0</td></tr>
 <tr class="memdesc:a39b1f7032a2e6be9659528f57c03d47b"><td class="mdescLeft">&#160;</td><td class="mdescRight">gtest available  <a href="classupnplib_1_1Ihttpreadwrite.html#a39b1f7032a2e6be9659528f57c03d47b">More...</a><br /></td></tr>
 <tr class="separator:a39b1f7032a2e6be9659528f57c03d47b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b559b9d56011043b72690efa8297408"><td class="memItemLeft" align="right" valign="top">virtual SOCKET&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#a4b559b9d56011043b72690efa8297408">http_Connect</a> (uri_type *destination_url, uri_type *url)=0</td></tr>
+<tr class="memitem:a4b559b9d56011043b72690efa8297408"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="group__Sock.html#ga8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#a4b559b9d56011043b72690efa8297408">http_Connect</a> (uri_type *destination_url, uri_type *url)=0</td></tr>
 <tr class="memdesc:a4b559b9d56011043b72690efa8297408"><td class="mdescLeft">&#160;</td><td class="mdescRight">gtest available  <a href="classupnplib_1_1Ihttpreadwrite.html#a4b559b9d56011043b72690efa8297408">More...</a><br /></td></tr>
 <tr class="separator:a4b559b9d56011043b72690efa8297408"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e207c8e823a83b264af858746b32f32"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#a7e207c8e823a83b264af858746b32f32">http_RecvMessage</a> (SOCKINFO *info, http_parser_t *parser, http_method_t request_method, int *timeout_secs, int *http_error_code)=0</td></tr>
@@ -137,7 +137,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa97f1ff4f854a3d232f1858f4f0914c2"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#aa97f1ff4f854a3d232f1858f4f0914c2">http_Download</a> (const char *url_str, int timeout_secs, char **document, size_t *doc_length, char *content_type)=0</td></tr>
 <tr class="memdesc:aa97f1ff4f854a3d232f1858f4f0914c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Download a document with http.  <a href="classupnplib_1_1Ihttpreadwrite.html#aa97f1ff4f854a3d232f1858f4f0914c2">More...</a><br /></td></tr>
 <tr class="separator:aa97f1ff4f854a3d232f1858f4f0914c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0448822201f7fb6d4f0d4af295a46ce2"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#a0448822201f7fb6d4f0d4af295a46ce2">MakeGenericMessage</a> (http_method_t method, const char *url_str, membuffer *request, uri_type *url, int contentLength, const char *contentType, const UpnpString *headers)=0</td></tr>
+<tr class="memitem:a0448822201f7fb6d4f0d4af295a46ce2"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#a0448822201f7fb6d4f0d4af295a46ce2">MakeGenericMessage</a> (http_method_t method, const char *url_str, membuffer *request, uri_type *url, int contentLength, const char *contentType, const <a class="el" href="group__UpnpString.html#gaeecf142f551b0bc6880a321f07ac381c">UpnpString</a> *headers)=0</td></tr>
 <tr class="memdesc:a0448822201f7fb6d4f0d4af295a46ce2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a generic message for http communication.  <a href="classupnplib_1_1Ihttpreadwrite.html#a0448822201f7fb6d4f0d4af295a46ce2">More...</a><br /></td></tr>
 <tr class="separator:a0448822201f7fb6d4f0d4af295a46ce2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a715f31d799514caaa4ce377eca0c9082"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#a715f31d799514caaa4ce377eca0c9082">http_HttpGetProgress</a> (void *Handle, size_t *length, size_t *total)=0</td></tr>
@@ -149,7 +149,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3f5bf0e7391f035752bbe7d164f57bed"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#a3f5bf0e7391f035752bbe7d164f57bed">http_OpenHttpConnection</a> (const char *url_str, void **Handle, int timeout)=0</td></tr>
 <tr class="memdesc:a3f5bf0e7391f035752bbe7d164f57bed"><td class="mdescLeft">&#160;</td><td class="mdescRight">gtest available  <a href="classupnplib_1_1Ihttpreadwrite.html#a3f5bf0e7391f035752bbe7d164f57bed">More...</a><br /></td></tr>
 <tr class="separator:a3f5bf0e7391f035752bbe7d164f57bed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8962b395d294b795fdd78350bcbeb5a"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#ae8962b395d294b795fdd78350bcbeb5a">http_MakeHttpRequest</a> (Upnp_HttpMethod method, const char *url_str, void *Handle, UpnpString *headers, const char *contentType, int contentLength, int timeout)=0</td></tr>
+<tr class="memitem:ae8962b395d294b795fdd78350bcbeb5a"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#ae8962b395d294b795fdd78350bcbeb5a">http_MakeHttpRequest</a> (<a class="el" href="group__UPnPAPI.html#ga1a3394ea4dc9be8a3e0bcbe1622ad1d6">Upnp_HttpMethod</a> method, const char *url_str, void *Handle, <a class="el" href="group__UpnpString.html#gaeecf142f551b0bc6880a321f07ac381c">UpnpString</a> *headers, const char *contentType, int contentLength, int timeout)=0</td></tr>
 <tr class="memdesc:ae8962b395d294b795fdd78350bcbeb5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an http request.  <a href="classupnplib_1_1Ihttpreadwrite.html#ae8962b395d294b795fdd78350bcbeb5a">More...</a><br /></td></tr>
 <tr class="separator:ae8962b395d294b795fdd78350bcbeb5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91325567053323278e60a1046aadc9dc"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#a91325567053323278e60a1046aadc9dc">http_WriteHttpRequest</a> (void *Handle, char *buf, size_t *size, int timeout)=0</td></tr>
@@ -158,7 +158,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa190f062e9f8bc139c45d91590428dc3"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#aa190f062e9f8bc139c45d91590428dc3">http_EndHttpRequest</a> (void *Handle, int timeout)=0</td></tr>
 <tr class="memdesc:aa190f062e9f8bc139c45d91590428dc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finish an http request.  <a href="classupnplib_1_1Ihttpreadwrite.html#aa190f062e9f8bc139c45d91590428dc3">More...</a><br /></td></tr>
 <tr class="separator:aa190f062e9f8bc139c45d91590428dc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e12827c58f16d5cd594375b979c9e38"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#a6e12827c58f16d5cd594375b979c9e38">http_GetHttpResponse</a> (void *Handle, UpnpString *headers, char **contentType, int *contentLength, int *httpStatus, int timeout)=0</td></tr>
+<tr class="memitem:a6e12827c58f16d5cd594375b979c9e38"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#a6e12827c58f16d5cd594375b979c9e38">http_GetHttpResponse</a> (void *Handle, <a class="el" href="group__UpnpString.html#gaeecf142f551b0bc6880a321f07ac381c">UpnpString</a> *headers, char **contentType, int *contentLength, int *httpStatus, int timeout)=0</td></tr>
 <tr class="memdesc:a6e12827c58f16d5cd594375b979c9e38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an http response.  <a href="classupnplib_1_1Ihttpreadwrite.html#a6e12827c58f16d5cd594375b979c9e38">More...</a><br /></td></tr>
 <tr class="separator:a6e12827c58f16d5cd594375b979c9e38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0cf900ae2520ab33e02b372c7745a5de"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classupnplib_1_1Ihttpreadwrite.html#a0cf900ae2520ab33e02b372c7745a5de">http_ReadHttpResponse</a> (void *Handle, char *buf, size_t *size, int timeout)=0</td></tr>
@@ -348,7 +348,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual SOCKET upnplib::Ihttpreadwrite::http_Connect </td>
+          <td class="memname">virtual <a class="el" href="group__Sock.html#ga8dc8083897335125630f1af5dafd5831">SOCKET</a> upnplib::Ihttpreadwrite::http_Connect </td>
           <td>(</td>
           <td class="paramtype">uri_type *&#160;</td>
           <td class="paramname"><em>destination_url</em>, </td>
@@ -580,7 +580,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">UpnpString *&#160;</td>
+          <td class="paramtype"><a class="el" href="group__UpnpString.html#gaeecf142f551b0bc6880a321f07ac381c">UpnpString</a> *&#160;</td>
           <td class="paramname"><em>headers</em>, </td>
         </tr>
         <tr>
@@ -724,7 +724,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual int upnplib::Ihttpreadwrite::http_MakeHttpRequest </td>
           <td>(</td>
-          <td class="paramtype">Upnp_HttpMethod&#160;</td>
+          <td class="paramtype"><a class="el" href="group__UPnPAPI.html#ga1a3394ea4dc9be8a3e0bcbe1622ad1d6">Upnp_HttpMethod</a>&#160;</td>
           <td class="paramname"><em>method</em>, </td>
         </tr>
         <tr>
@@ -742,7 +742,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">UpnpString *&#160;</td>
+          <td class="paramtype"><a class="el" href="group__UpnpString.html#gaeecf142f551b0bc6880a321f07ac381c">UpnpString</a> *&#160;</td>
           <td class="paramname"><em>headers</em>, </td>
         </tr>
         <tr>
@@ -1230,7 +1230,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const UpnpString *&#160;</td>
+          <td class="paramtype">const <a class="el" href="group__UpnpString.html#gaeecf142f551b0bc6880a321f07ac381c">UpnpString</a> *&#160;</td>
           <td class="paramname"><em>headers</em>&#160;</td>
         </tr>
         <tr>

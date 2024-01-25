@@ -1,9 +1,12 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-27
-// Taken from authors who haven't made a note.
-
 #ifndef UPNPLIB_UPNPINTTYPES_HPP
 #define UPNPLIB_UPNPINTTYPES_HPP
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-26
+// Taken from authors who haven't made a note.
+/*!
+ * \file
+ * \brief Printf format for integers.
+ */
 
 #if !defined(UPNP_USE_BCBPP)
 

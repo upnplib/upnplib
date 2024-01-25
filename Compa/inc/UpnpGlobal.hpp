@@ -84,7 +84,7 @@ typedef __int64 int64_t;
 #define PRIzx "lx"
 #endif /* __GNUC__ */
 #else
-/*!
+/* !
  * \brief Export functions on WIN32 DLLs.
  *
  * Every funtion that belongs to the library API must use this
@@ -106,7 +106,7 @@ typedef __int64 int64_t;
 #define UPNP_INLINE inline
 #endif
 
-/*!
+/* !
  * \brief Supply the PRId64 printf() macro.
  *
  * MSVC still does not know about this.
@@ -116,13 +116,14 @@ typedef __int64 int64_t;
 /*!
  * \brief Supply the PRIz* printf() macros.
  *
- * These macros were invented so that we can live a little longer with
+ * This macro was invented so that we can live a little longer with
  * MSVC lack of C99. "z" is the correct printf() size specifier for
  * the size_t type.
- */
+ * @{ */
 #define PRIzd "zd"
 #define PRIzu "zu"
 #define PRIzx "zx"
+///@}
 #endif
 
 /*
@@ -134,6 +135,7 @@ typedef __int64 int64_t;
 
 //
 // clang-format off
+/// \cond
 //
 // C++ visibility support
 //-----------------------
@@ -183,6 +185,7 @@ typedef __int64 int64_t;
 #define EXPORT_SPEC_LOCAL UPNPLIB_LOCAL
 #define EXPORT_SPEC_EXTERN UPNPLIB_EXTERN
 
+/// \endcond
 // clang-format on
 
 #endif /* UPNPLIB_UPNPGLOBAL_HPP */

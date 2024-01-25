@@ -1,12 +1,12 @@
-#ifndef PUPNP_UPNP_HPP
-#define PUPNP_UPNP_HPP
+#ifndef COMPA_UPNP_HPP
+#define COMPA_UPNP_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-20
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-26
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,11 +36,11 @@
 // Last compare with pupnp original source file on 2023-02-03, ver 1.14.15
 
 /*!
- * \defgroup UPnPAPI UPnP API
- *
+ * \defgroup UPnPAPI UPnPlib API
  * @{
  *
  * \file
+ * \brief UPnPlib API
  */
 
 // #include "UpnpGlobal.hpp"
@@ -66,6 +66,8 @@
 #include <openssl/ssl.h>
 #endif
 
+/// @{
+/// Program constant
 #define LINE_SIZE (size_t)180
 #define NAME_SIZE (size_t)256
 #define MNFT_NAME_SIZE 64
@@ -75,6 +77,7 @@
 #define UPNP_INFINITE -1
 #define UPNP_USING_CHUNKED -3
 #define UPNP_UNTIL_CLOSE -4
+/// @}
 
 /*!
  * \name Error codes
@@ -396,7 +399,7 @@
 #define UPNP_SOAP_E_INVALID_VAR 404
 #define UPNP_SOAP_E_ACTION_FAILED 501
 
-/* @} ErrorCodes */
+/// @} ErrorCodes
 
 /*
  * Opaque data structures. The following includes are data structures that
@@ -420,7 +423,6 @@
 
 /*!
  * \name Constants and Types
- *
  * @{
  */
 
@@ -503,11 +505,10 @@ typedef enum Upnp_DescType_e Upnp_DescType;
 
 #include "Callback.hpp"
 
-/* @} Constants and Types */
+/// @} Constants and Types
 
 /*!
  * \name Initialization and Registration
- *
  * @{
  */
 
@@ -1003,7 +1004,7 @@ UPNPLIB_API int UpnpSetMaxContentLength(
      * actions, in bytes. */
     size_t contentLength);
 
-/* @} Initialization and Registration */
+/// @} Initialization and Registration
 
 /******************************************************************************
  ******************************************************************************
@@ -1015,7 +1016,6 @@ UPNPLIB_API int UpnpSetMaxContentLength(
 
 /*!
  * \name Discovery
- *
  * @{
  */
 
@@ -1115,7 +1115,7 @@ UPNPLIB_API int UpnpSendAdvertisementLowPower(
     /*! RegistrationState as defined by UPnP Low Power. */
     int RegistrationState);
 
-/* @} Discovery */
+/// @} Discovery
 
 /******************************************************************************
  ******************************************************************************
@@ -1127,7 +1127,6 @@ UPNPLIB_API int UpnpSendAdvertisementLowPower(
 
 /*!
  * \name Control
- *
  * @{
  */
 
@@ -1359,7 +1358,7 @@ UPNPLIB_API int UpnpSendActionExAsync(
      * invoked. */
     const void* Cookie);
 
-/*! @} Control */
+/// @} Control
 
 /******************************************************************************
  ******************************************************************************
@@ -1371,7 +1370,6 @@ UPNPLIB_API int UpnpSendActionExAsync(
 
 /*!
  * \name Eventing
- *
  * @{
  */
 
@@ -1867,7 +1865,7 @@ UPNPLIB_API int UpnpUnSubscribeAsync(
        invoked. */
     const void* Cookie);
 
-/*! @} Eventing */
+/// @} Eventing
 
 /******************************************************************************
  ******************************************************************************
@@ -1879,7 +1877,6 @@ UPNPLIB_API int UpnpUnSubscribeAsync(
 
 /*!
  * \name Control Point HTTP API
- *
  * @{
  */
 
@@ -2306,7 +2303,7 @@ UPNPLIB_API int UpnpOpenHttpConnection(
  *              allocated.
  */
 UPNPLIB_API int UpnpMakeHttpRequest(
-    /* ![in] The method to use to make the request. */
+    /*! [in] The method to use to make the request. */
     Upnp_HttpMethod method,
     /*! [in] The URL to use to make the request. The URL should use the same
      *  scheme used to create the connection, but the host can be different
@@ -2513,7 +2510,7 @@ UPNPLIB_API int UpnpDownloadXmlDoc(
     /*! [out] A pointer in which to store the XML document. */
     IXML_Document** xmlDoc);
 
-/*! @} Control Point HTTP API */
+/// @} Control Point HTTP API
 
 /******************************************************************************
  ******************************************************************************
@@ -2525,7 +2522,6 @@ UPNPLIB_API int UpnpDownloadXmlDoc(
 
 /*!
  * \name Web Server API
- *
  * @{
  */
 
@@ -2729,30 +2725,32 @@ UPNPLIB_API int UpnpEnableWebserver(
  */
 UPNPLIB_API int UpnpIsWebserverEnabled(void);
 
-/*
+/*!
  * \brief Callback for validating HTTP requests HOST header values.
  *
- * @param hostname the value in the request HOST header.
- * @return An integer representing one of the following:
+ * \param hostname the value in the request HOST header.
+ * \param cookie Pointer to user data to pass to the callback function when
+ *        invoked.
+ * \return An integer representing one of the following:
  *     \li \c UPNP_E_SUCCESS: a request with the HOST header set to hostname
  *                            should be processed.
  *     \li \c UPNP_E_BAD_HTTPMSG the request should be rejected.
  */
 typedef int (*WebCallback_HostValidate)(const char* hostname, void* cookie);
 
-/*
+/*!
  * \brief Set callback for validating HTTP requests HOST header values.
  *
- * @param callback the host validating callback function or NULL.
- * @param cookie the chocolate you like.
+ * \param callback the host validating callback function or NULL.
+ * \param cookie the chocolate you like.
  */
 UPNPLIB_API void UpnpSetHostValidateCallback(WebCallback_HostValidate callback,
                                              void* cookie);
 
-/*
+/*!
  * \brief Enable or disable literal IP redirection.
  *
- * @param enable Zero to disable (default) non-zero to enable.
+ * \param enable Zero to disable (default) non-zero to enable.
  */
 UPNPLIB_API void UpnpSetAllowLiteralHostRedirection(int enable);
 
@@ -2795,8 +2793,8 @@ UPNPLIB_API int UpnpRemoveVirtualDir(
  */
 UPNPLIB_API void UpnpRemoveAllVirtualDirs(void);
 
-/* @} Web Server API */
+/// @} Web Server API
 
-/* @} UPnPAPI UPnP API */
+/// @} UPnPAPI UPnP API
 
-#endif /* PUPNP_UPNP_HPP */
+#endif // COMPA_UPNP_HPP
