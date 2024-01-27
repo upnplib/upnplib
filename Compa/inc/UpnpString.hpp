@@ -1,17 +1,18 @@
 #ifndef COMPA_UPNPSTRING_HPP
 #define COMPA_UPNPSTRING_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-21
+// Redistribution only with this Copyright remark. Last modified: 2023-07-28
 // Also Copyright by other contributor as noted below.
 // Last compare with pupnp original source file on 2023-04-26, ver 1.14.15
-/*! \file
+/*!
+ * \file
  * \brief UpnpString object declaration.
  */
 
 /*!
  * \defgroup UpnpString The UpnpString Class
  * \brief Implements string operations in the UPnP library.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  * \version 1.0
  * @{
  */
@@ -43,14 +44,14 @@ UPNPLIB_API void UpnpString_delete(
     /*! [in] The \em \b this pointer. */
     UpnpString* p);
 
-/* !
+/*!
  * \brief Copy Constructor.
  *
  * \return A pointer to a new allocated copy of the original object.
  */
-// EXPORT_SPEC UpnpString *UpnpString_dup(
-//        /*! [in] The \em \b this pointer. */
-//        const UpnpString *p);
+UPNPLIB_API UpnpString* UpnpString_dup(
+    /*! [in] The \em \b this pointer. */
+    const UpnpString* p);
 
 /*!
  * \brief Assignment operator.

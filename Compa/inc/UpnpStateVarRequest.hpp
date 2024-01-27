@@ -1,11 +1,11 @@
-#ifndef UPNPSTATEVARREQUEST_HPP
-#define UPNPSTATEVARREQUEST_HPP
+#ifndef COMPA_UPNPSTATEVARREQUEST_HPP
+#define COMPA_UPNPSTATEVARREQUEST_HPP
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-26
+// Redistribution only with this Copyright remark. Last modified: 2024-01-28
 /*!
  * \file
  * \brief Header file for UpnpStateVarRequest methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 
 #include <stdlib.h> /* for size_t */
@@ -147,4 +147,4 @@ EXPORT_SPEC int UpnpStateVarRequest_set_CurrentVal(UpnpStateVarRequest* p,
 EXPORT_SPEC const char*
 UpnpStateVarRequest_get_CurrentVal_cstr(const UpnpStateVarRequest* p);
 
-#endif // UPNPSTATEVARREQUEST_HPP
+#endif // COMPA_UPNPSTATEVARREQUEST_HPP

@@ -1,12 +1,12 @@
-#ifndef UPNPLIB_UPNPACTIONCOMPLETE_HPP
-#define UPNPLIB_UPNPACTIONCOMPLETE_HPP
+#ifndef COMPA_UPNPACTIONCOMPLETE_HPP
+#define COMPA_UPNPACTIONCOMPLETE_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+// Redistribution only with this Copyright remark. Last modified: 2024-01-28
 /*!
  * \file
  *
  * \brief Header file for UpnpActionComplete methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 
 #include <UpnpString.hpp>
@@ -65,4 +65,4 @@ UpnpActionComplete_get_ActionResult(const UpnpActionComplete* p);
 /*! UpnpActionComplete_set_ActionResult */
 UPNPLIB_API int UpnpActionComplete_set_ActionResult(UpnpActionComplete* p,
                                                     IXML_Document* n);
-#endif /* UPNPLIB_UPNPACTIONCOMPLETE_HPP */
+#endif /* COMPA_UPNPACTIONCOMPLETE_HPP */

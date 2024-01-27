@@ -1,9 +1,0 @@
-<map id="Compa/inc/UpnpInet.hpp" name="Compa/inc/UpnpInet.hpp">
-<area shape="rect" id="node1" title="Provides a platform independent way to include TCP/IP types and functions." alt="" coords="280,5,463,32"/>
-<area shape="rect" id="node2" href="$UpnpUniStd_8hpp.html" title="Do not #include &lt;unistd.h&gt; on WIN32." alt="" coords="5,80,132,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="157,80,295,107"/>
-<area shape="rect" id="node5" title=" " alt="" coords="320,80,423,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="447,80,539,107"/>
-<area shape="rect" id="node7" title=" " alt="" coords="563,80,630,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="31,155,106,181"/>
-</map>

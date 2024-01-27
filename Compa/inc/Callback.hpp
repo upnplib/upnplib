@@ -1,5 +1,5 @@
-#ifndef UPNPLIB_CALLBACK_HPP
-#define UPNPLIB_CALLBACK_HPP
+#ifndef COMPA_CALLBACK_HPP
+#define COMPA_CALLBACK_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2024-01-25
 // Taken from authors who haven't made a note.
@@ -145,4 +145,4 @@ typedef int (*Upnp_FunPtr)(   //
     void* Cookie              ///< [in]
 );
 
-#endif /* UPNPLIB_CALLBACK_HPP */
+#endif /* COMPA_CALLBACK_HPP */

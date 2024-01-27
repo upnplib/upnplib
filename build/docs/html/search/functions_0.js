@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['curi_0',['CUri',['../classupnplib_1_1CUri.html#aa0bd5796ad47818a282392e1cf7f7d7c',1,'upnplib::CUri']]]
+  ['autoadvertise_0',['AutoAdvertise',['../d3/da9/upnpapi_8hpp.html#abb1ab3d0ba145286005284d447110fce',1,'upnpapi.hpp']]]
 ];

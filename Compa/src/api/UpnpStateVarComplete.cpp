@@ -1,24 +1,27 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-19
-
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-28
+// Also Copyright by other contributor as noted below.
 /*!
  * \file
- *
  * \brief Source file for UpnpStateVarComplete methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
-#include "config.hpp"
+
+#include <config.hpp>
+#include <UpnpStateVarComplete.hpp>
 
 #include <stdlib.h> /* for calloc(), free() */
 #include <string.h> /* for strlen(), strdup() */
 
-#include "UpnpStateVarComplete.hpp"
-
+/// \brief s_UpnpStateVarComplete
 struct s_UpnpStateVarComplete {
+    /// @{
+    /// s_UpnpStateVarComplete
     int m_ErrCode;
     UpnpString* m_CtrlUrl;
     UpnpString* m_StateVarName;
     DOMString m_CurrentVal;
+    /// @}
 };
 
 UpnpStateVarComplete* UpnpStateVarComplete_new() {

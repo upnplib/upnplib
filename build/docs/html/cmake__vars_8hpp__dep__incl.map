@@ -1,8 +1,0 @@
-<map id="build/include/upnplib/cmake_vars.hpp" name="build/include/upnplib/cmake_vars.hpp">
-<area shape="rect" id="node1" title="Defines symbols for the compiler that are provided by CMake." alt="" coords="339,5,497,47"/>
-<area shape="rect" id="node2" href="$global_8hpp.html" title="Global used constants, variables, functions and macros." alt="" coords="331,95,505,136"/>
-<area shape="rect" id="node3" href="$global_8cpp.html" title="Global used emulated system function." alt="" coords="5,184,172,211"/>
-<area shape="rect" id="node4" href="$addrinfo_8cpp.html" title="Definition of the Addrinfo class and free helper functions." alt="" coords="197,184,402,211"/>
-<area shape="rect" id="node5" href="$connection_8cpp.html" title="Definition of classes and functions that manage connections." alt="" coords="427,184,649,211"/>
-<area shape="rect" id="node6" href="$sockaddr_8cpp.html" title="Definition of the Sockaddr class and some free helper functions." alt="" coords="674,184,882,211"/>
-</map>

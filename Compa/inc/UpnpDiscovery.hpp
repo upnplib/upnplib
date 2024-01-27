@@ -1,11 +1,11 @@
-#ifndef UPNPLIB_UPNPDISCOVERY_HPP
-#define UPNPLIB_UPNPDISCOVERY_HPP
+#ifndef COMPA_UPNPDISCOVERY_HPP
+#define COMPA_UPNPDISCOVERY_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+// Redistribution only with this Copyright remark. Last modified: 2024-01-28
 /*!
  * \file
  * \brief Header file for UpnpDiscovery methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 
 #include <UpnpString.hpp>
@@ -188,4 +188,4 @@ UPNPLIB_API int UpnpDiscovery_set_DestAddr(UpnpDiscovery* p,
 /*! UpnpDiscovery_get_DestAddr */
 UPNPLIB_API void UpnpDiscovery_clear_DestAddr(UpnpDiscovery* p);
 
-#endif /* UPNPLIB_UPNPDISCOVERY_HPP */
+#endif /* COMPA_UPNPDISCOVERY_HPP */

@@ -1,0 +1,5 @@
+<map id="UpnpString_assign" name="UpnpString_assign">
+<area shape="rect" id="node1" title="Assignment operator." alt="" coords="5,31,148,57"/>
+<area shape="rect" id="node2" href="$d1/d03/group__UpnpString.html#ga0ed631a52c94f4f9ee0d6a6182ee3ea1" title="Returns the pointer to char." alt="" coords="196,5,363,32"/>
+<area shape="rect" id="node3" href="$d1/d03/group__UpnpString.html#ga463186356cf8d4ea888d8d9fa28a8682" title="Sets the string from a pointer to char." alt="" coords="196,56,363,83"/>
+</map>

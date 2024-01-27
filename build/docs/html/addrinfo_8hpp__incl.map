@@ -1,8 +1,0 @@
-<map id="Upnplib/include/upnplib/addrinfo.hpp" name="Upnplib/include/upnplib/addrinfo.hpp">
-<area shape="rect" id="node1" title="Declaration of the Addrinfo class." alt="" coords="248,5,423,47"/>
-<area shape="rect" id="node2" href="$sockaddr_8hpp.html" title="Declaration of the Sockaddr class and some free helper functions." alt="" coords="256,95,415,121"/>
-<area shape="rect" id="node3" href="$visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,169,161,196"/>
-<area shape="rect" id="node4" href="$port_8hpp.html" title="Specifications to be portable between different platforms." alt="" coords="186,169,314,196"/>
-<area shape="rect" id="node5" href="$port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="338,169,503,196"/>
-<area shape="rect" id="node6" title=" " alt="" coords="527,169,586,196"/>
-</map>

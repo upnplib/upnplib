@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,16 +31,16 @@
  *
  ******************************************************************************/
 // Last compare with pupnp original source file on 2023-08-19, ver 1.14.17
-
 /*!
  * \file
+ * \brief Manage Debug messages with levels "critical" to "all".
  */
 #define UPNP_DEBUG_C
 #include <config.hpp>
+#include <upnpdebug.hpp>
 
 #include <ithread.hpp>
 #include <upnp.hpp>
-#include <upnpdebug.hpp>
 
 #include <cerrno>
 #include <cstdarg>

@@ -1,5 +1,5 @@
-#ifndef PUPNP_UPNPINET_HPP
-#define PUPNP_UPNPINET_HPP
+#ifndef COMPA_UPNPINET_HPP
+#define COMPA_UPNPINET_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2024-01-26
 // Taken from authors who haven't made a note.
@@ -61,4 +61,4 @@ typedef int SOCKET;
 
 /// @}
 
-#endif /* PUPNP_UPNPINET_HPP */
+#endif /* COMPA_UPNPINET_HPP */

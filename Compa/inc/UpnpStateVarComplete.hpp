@@ -1,11 +1,11 @@
-#ifndef UPNPLIB_UPNPSTATEVARCOMPLETE_HPP
-#define UPNPLIB_UPNPSTATEVARCOMPLETE_HPP
+#ifndef COMPA_UPNPSTATEVARCOMPLETE_HPP
+#define COMPA_UPNPSTATEVARCOMPLETE_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-26
+// Redistribution only with this Copyright remark. Last modified: 2024-01-28
 /*!
  * \file
  * \brief Header file for UpnpStateVarComplete methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 
 #include <stdlib.h> /* for size_t */
@@ -92,4 +92,4 @@ EXPORT_SPEC int UpnpStateVarComplete_set_CurrentVal(UpnpStateVarComplete* p,
 EXPORT_SPEC const char*
 UpnpStateVarComplete_get_CurrentVal_cstr(const UpnpStateVarComplete* p);
 
-#endif /* UPNPLIB_UPNPSTATEVARCOMPLETE_HPP */
+#endif /* COMPA_UPNPSTATEVARCOMPLETE_HPP */

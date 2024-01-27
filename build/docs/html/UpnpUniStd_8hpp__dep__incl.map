@@ -1,9 +1,0 @@
-<map id="Compa/inc/UpnpUniStd.hpp" name="Compa/inc/UpnpUniStd.hpp">
-<area shape="rect" id="node1" title="Do not #include &lt;unistd.h&gt; on WIN32." alt="" coords="291,5,491,32"/>
-<area shape="rect" id="node2" href="$UpnpInet_8hpp.html" title="Provides a platform independent way to include TCP/IP types and functions." alt="" coords="299,80,482,107"/>
-<area shape="rect" id="node3" href="$UpnpActionRequest_8hpp.html" title="Header file for UpnpActionRequest methods." alt="" coords="5,155,256,181"/>
-<area shape="rect" id="node6" href="$UpnpDiscovery_8hpp.html" title="Header file for UpnpDiscovery methods." alt="" coords="281,155,501,181"/>
-<area shape="rect" id="node7" href="$UpnpStateVarRequest_8hpp.html" title="Header file for UpnpStateVarRequest methods." alt="" coords="525,155,790,181"/>
-<area shape="rect" id="node4" href="$upnp_8hpp.html" title="UPnPlib API." alt="" coords="183,229,337,256"/>
-<area shape="rect" id="node5" href="$upnpdebug_8hpp.html" title="Manage Debug messages with levels &quot;critical&quot; to &quot;all&quot;." alt="" coords="163,304,357,331"/>
-</map>

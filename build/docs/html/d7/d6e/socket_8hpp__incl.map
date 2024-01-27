@@ -1,0 +1,10 @@
+<map id="Upnplib/include/upnplib/socket.hpp" name="Upnplib/include/upnplib/socket.hpp">
+<area shape="rect" id="node1" title="Declaration of the &#39;class Socket&#39;." alt="" coords="315,5,489,47"/>
+<area shape="rect" id="node2" href="$d6/dbf/addrinfo_8hpp.html" title="Declaration of the Addrinfo class." alt="" coords="257,95,413,121"/>
+<area shape="rect" id="node8" title=" " alt="" coords="438,95,502,121"/>
+<area shape="rect" id="node3" href="$d7/d1b/sockaddr_8hpp.html" title="Declaration of the Sockaddr class and some free helper functions." alt="" coords="256,169,415,196"/>
+<area shape="rect" id="node4" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,244,161,271"/>
+<area shape="rect" id="node5" href="$d1/d42/port_8hpp.html" title="Specifications to be portable between different platforms." alt="" coords="186,244,314,271"/>
+<area shape="rect" id="node6" href="$d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="338,244,503,271"/>
+<area shape="rect" id="node7" title=" " alt="" coords="527,244,586,271"/>
+</map>

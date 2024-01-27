@@ -1,24 +1,23 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-19
-
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-28
+// Also Copyright by other contributor as noted below.
 /*!
  * \file
- *
  * \brief Source file for UpnpActionComplete methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
-#include "config.hpp"
+#include <config.hpp>
+#include <UpnpActionComplete.hpp>
 
 #include <stdlib.h> /* for calloc(), free() */
 #include <string.h> /* for strlen(), strdup() */
 
-#include "UpnpActionComplete.hpp"
-
+/// \brief UpnpActionComplete
 struct s_UpnpActionComplete {
-    int m_ErrCode;
-    UpnpString* m_CtrlUrl;
-    IXML_Document* m_ActionRequest;
-    IXML_Document* m_ActionResult;
+    int m_ErrCode;                  ///< ErrCode
+    UpnpString* m_CtrlUrl;          ///< CtrlUrl
+    IXML_Document* m_ActionRequest; ///< m_ActionRequest
+    IXML_Document* m_ActionResult;  ///< m_ActionResult
 };
 
 UpnpActionComplete* UpnpActionComplete_new() {

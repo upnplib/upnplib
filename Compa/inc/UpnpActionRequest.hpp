@@ -1,10 +1,11 @@
-#ifndef UPNPLIB_UPNPACTIONREQUEST_HPP
-#define UPNPLIB_UPNPACTIONREQUEST_HPP
+#ifndef COMPA_UPNPACTIONREQUEST_HPP
+#define COMPA_UPNPACTIONREQUEST_HPP
+// Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-28
 /*!
  * \file
- *
  * \brief Header file for UpnpActionRequest methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 
 #include <UpnpString.hpp>
@@ -172,4 +173,4 @@ UPNPLIB_API int UpnpActionRequest_strncpy_Os(UpnpActionRequest* p,
 /*! UpnpActionRequest_clear_Os */
 UPNPLIB_API void UpnpActionRequest_clear_Os(UpnpActionRequest* p);
 
-#endif /* UPNPLIB_UPNPACTIONREQUEST_HPP */
+#endif /* COMPA_UPNPACTIONREQUEST_HPP */

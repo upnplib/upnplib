@@ -1,25 +1,26 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-27
+// Redistribution only with this Copyright remark. Last modified: 2024-01-28
 // Also Copyright by other contributor as noted below.
-
 /*!
  * \file
- *
  * \brief Source file for UpnpExtraHeaders methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
-#include <config.hpp>
 
+#include <config.hpp>
 #include <UpnpExtraHeaders.hpp>
 
 #include <cstdlib> /* for calloc(), free() */
-// #include <string.h> /* for strlen(), strdup() */
 
+/// \brief s_UpnpExtraHeaders
 struct s_UpnpExtraHeaders {
+    /// @{
+    /// s_UpnpExtraHeaders
     UpnpListHead m_node;
     UpnpString* m_name;
     UpnpString* m_value;
     DOMString m_resp;
+    /// @}
 };
 
 UpnpExtraHeaders* UpnpExtraHeaders_new() {

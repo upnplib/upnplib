@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['errstr_0',['errStr',['../namespaceupnplib.html#a1d1c50145ab351b5bfcb723c637201cd',1,'upnplib']]],
-  ['errstrex_1',['errStrEx',['../namespaceupnplib.html#ab9e5d2a23dfa5b2d5b3db3ff934af7ae',1,'upnplib']]]
+  ['curi_0',['CUri',['../dd/db5/classupnplib_1_1CUri.html#aa0bd5796ad47818a282392e1cf7f7d7c',1,'upnplib::CUri']]]
 ];

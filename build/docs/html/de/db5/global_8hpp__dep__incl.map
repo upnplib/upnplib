@@ -1,0 +1,9 @@
+<map id="Upnplib/include/upnplib/global.hpp" name="Upnplib/include/upnplib/global.hpp">
+<area shape="rect" id="node1" title="Global used constants, variables, functions and macros." alt="" coords="573,5,748,47"/>
+<area shape="rect" id="node2" href="$d4/d99/upnpapi_8cpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="5,95,204,121"/>
+<area shape="rect" id="node3" href="$d5/dfa/upnpdebug_8cpp.html" title="Manage Debug messages with levels &quot;critical&quot; to &quot;all&quot;." alt="" coords="229,95,447,121"/>
+<area shape="rect" id="node4" href="$db/d7d/global_8cpp.html" title="Global used emulated system function." alt="" coords="472,95,639,121"/>
+<area shape="rect" id="node5" href="$dc/d59/addrinfo_8cpp.html" title="Definition of the Addrinfo class and free helper functions." alt="" coords="663,95,869,121"/>
+<area shape="rect" id="node6" href="$df/db6/connection_8cpp.html" title="Definition of classes and functions that manage connections." alt="" coords="893,95,1116,121"/>
+<area shape="rect" id="node7" href="$d7/def/sockaddr_8cpp.html" title="Definition of the Sockaddr class and some free helper functions." alt="" coords="1141,95,1349,121"/>
+</map>

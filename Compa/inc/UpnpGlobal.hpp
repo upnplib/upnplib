@@ -1,5 +1,5 @@
-#ifndef UPNPLIB_UPNPGLOBAL_HPP
-#define UPNPLIB_UPNPGLOBAL_HPP
+#ifndef COMPA_UPNPGLOBAL_HPP
+#define COMPA_UPNPGLOBAL_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2022-12-05
 // Taken from authors who haven't made a note.
@@ -188,4 +188,4 @@ typedef __int64 int64_t;
 /// \endcond
 // clang-format on
 
-#endif /* UPNPLIB_UPNPGLOBAL_HPP */
+#endif /* COMPA_UPNPGLOBAL_HPP */

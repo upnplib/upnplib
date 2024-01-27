@@ -1,5 +1,5 @@
-#ifndef UPNPLIB_UPNPINTTYPES_HPP
-#define UPNPLIB_UPNPINTTYPES_HPP
+#ifndef COMPA_UPNPINTTYPES_HPP
+#define COMPA_UPNPINTTYPES_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2024-01-26
 // Taken from authors who haven't made a note.
@@ -15,4 +15,4 @@
 
 #endif /* !defined(UPNP_USE_BCBPP) */
 
-#endif /* UPNPLIB_UPNPINTTYPES_HPP */
+#endif /* COMPA_UPNPINTTYPES_HPP */

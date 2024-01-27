@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['prizd_0',['PRIzd',['../UpnpGlobal_8hpp.html#a0855108ee8c9689193118457373c7fcd',1,'UpnpGlobal.hpp']]],
-  ['prizu_1',['PRIzu',['../UpnpGlobal_8hpp.html#a3b5c970ea7e50fe76805d522c665b3f6',1,'UpnpGlobal.hpp']]],
-  ['prizx_2',['PRIzx',['../UpnpGlobal_8hpp.html#aa5d3ccde649720b6444a201515ce1794',1,'UpnpGlobal.hpp']]]
+  ['default_5fmaxage_0',['DEFAULT_MAXAGE',['../d3/da9/upnpapi_8hpp.html#a48b597f177e17210d50c1f4a1b73ec6f',1,'upnpapi.hpp']]],
+  ['default_5fmx_1',['DEFAULT_MX',['../d3/da9/upnpapi_8hpp.html#a5833e7db11d84798e48ef868463666e5',1,'upnpapi.hpp']]],
+  ['default_5fsoap_5fcontent_5flength_2',['DEFAULT_SOAP_CONTENT_LENGTH',['../d3/da9/upnpapi_8hpp.html#a6183ee56f83c6d84a1e26c980effc725',1,'upnpapi.hpp']]],
+  ['dev_5flimit_3',['DEV_LIMIT',['../d3/da9/upnpapi_8hpp.html#a0974c3ecfdafd647a33e70cdd084cf37',1,'upnpapi.hpp']]]
 ];

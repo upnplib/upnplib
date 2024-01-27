@@ -1,21 +1,22 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-17
-
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-28
+// Also Copyright by other contributor as noted below.
 /*!
  * \file
- *
  * \brief Source file for UpnpDiscovery methods.
- *
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
-#include "config.hpp"
+
+#include <config.hpp>
+#include <UpnpDiscovery.hpp>
 
 #include <stdlib.h> /* for calloc(), free() */
 #include <string.h> /* for strlen(), strdup() */
 
-#include "UpnpDiscovery.hpp"
-
+/// \brief s_UpnpDiscovery
 struct s_UpnpDiscovery {
+    /// @{
+    /// s_UpnpDiscovery
     int m_ErrCode;
     int m_Expires;
     UpnpString* m_DeviceID;
@@ -27,6 +28,7 @@ struct s_UpnpDiscovery {
     UpnpString* m_Date;
     UpnpString* m_Ext;
     struct sockaddr_storage m_DestAddr;
+    /// @}
 };
 
 UpnpDiscovery* UpnpDiscovery_new() {

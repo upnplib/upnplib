@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-16
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-27
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,13 +32,14 @@
  *
  ******************************************************************************/
 // Last compare with pupnp original source file on 2023-07-08, ver 1.14.17
+/*!
+ * \file
+ * \brief Inititalize the compatible library before it can be used.
+ */
 
 /*!
  * \addtogroup UPnPAPI
- *
  * @{
- *
- * \file
  */
 
 #include <config.hpp>
@@ -94,19 +95,21 @@
 #include <sys/types.h>
 #endif
 
-// ifr_netmask is not defined on eg OmniOS/Solaris, but since
-// ifru_netmask/ifru_addr are all just union members, this should work
-#ifndef ifr_netmask // it's a define if it exists
+#if !defined(ifr_netmask) || defined(DOXYGEN_RUN) // it's a define if exists
+/*! \brief ifr_netmask is not defined on e.g. OmniOS/Solaris, but since
+ * ifru_netmask/ifru_addr are all just union members, this should work. */
 #define ifr_netmask ifr_addr
 #endif
 
-#ifndef IN6_IS_ADDR_GLOBAL
+#if !defined(IN6_IS_ADDR_GLOBAL) || defined(DOXYGEN_RUN)
+/// \brief If IN6_IS_ADDR_GLOBAL is not defined then this is set.
 #define IN6_IS_ADDR_GLOBAL(a)                                                  \
     ((((__const uint32_t*)(a))[0] & htonl((uint32_t)0x70000000)) ==            \
      htonl((uint32_t)0x20000000))
 #endif /* IN6_IS_ADDR_GLOBAL */
 
-#ifndef IN6_IS_ADDR_ULA
+#if !defined(IN6_IS_ADDR_ULA) || defined(DOXYGEN_RUN)
+/// \brief If IN6_IS_ADDR_ULA is not defined then this is set.
 #define IN6_IS_ADDR_ULA(a)                                                     \
     ((((__const uint32_t*)(a))[0] & htonl((uint32_t)0xfe000000)) ==            \
      htonl((uint32_t)0xfc000000))
@@ -239,12 +242,15 @@ int UpnpSdkDeviceregisteredV6 = 0;
 Upnp_SID gUpnpSdkNLSuuid;
 #endif /* UPNP_HAVE_OPTSSDP */
 
+/// job_arg
 typedef union {
+    /// advertise
     struct {
         int handle;
         int eventId;
         void* Event;
     } advertise;
+    /// UpnpNonblockParam
     struct UpnpNonblockParam action;
 } job_arg;
 
@@ -587,21 +593,19 @@ int UpnpInitSslContext(int initOpenSslLib, const SSL_METHOD* sslMethod) {
 }
 #endif
 
-#ifdef DEBUG
+#if defined(DEBUG) || defined(DOXYGEN_RUN)
 /*!
- * \brief Prints thread pool statistics.
+ * \anchor PrintThreadPoolStats_dbg
+ * \brief Prints thread pool statistics if DEBUG is enabled. See also \#define
+ * PrintThreadPoolStats()
  */
 void PrintThreadPoolStats(
-    /*! [in] The thread pool. */
-    ThreadPool* tp,
-    /*! [in] The file name that called this function, use the macro
-     * __FILE__. */
-    const char* DbgFileName,
-    /*! [in] The line number that the function was called, use the macro
-     * __LINE__. */
-    int DbgLineNo,
-    /*! [in] The message. */
-    const char* msg) {
+    ThreadPool* tp,          ///< [in] The thread pool.
+    const char* DbgFileName, /*!< [in] The file name that called this function,
+                              *        use the macro %__FILE__. */
+    int DbgLineNo,           /*!< [in] The line number that the function was
+                              *        called, use the macro %__LINE__. */
+    const char* msg) /*!< [in] The message. */ {
     ThreadPoolStats stats;
     ThreadPoolGetStats(tp, &stats);
     UpnpPrintf(UPNP_INFO, API, DbgFileName, DbgLineNo,
@@ -625,11 +629,14 @@ void PrintThreadPoolStats(
                stats.persistentThreads, stats.idleThreads, stats.totalThreads,
                stats.totalWorkTime, stats.totalIdleTime);
 }
-#else
+#endif
+#if !defined(DEBUG) || defined(DOXYGEN_RUN)
+/*! \brief This is called if DEBUG is not enabled and do nothing. See also
+ * function \ref PrintThreadPoolStats_dbg "PrintThreadPoolStats()" for DEBUG. */
 #define PrintThreadPoolStats(tp, DbgFileName, DbgLineNo, msg)                  \
     do {                                                                       \
     } while (0)
-#endif /* DEBUG */
+#endif
 
 int UpnpFinish() {
     TRACE("Executing UpnpFinish()")
@@ -3995,10 +4002,4 @@ int UpnpSetMaxContentLength(size_t contentLength) {
     return errCode;
 }
 
-int UpnpSetEventQueueLimits(int maxLen, int maxAge) {
-    g_UpnpSdkEQMaxLen = maxLen;
-    g_UpnpSdkEQMaxAge = maxAge;
-    return UPNP_E_SUCCESS;
-}
-
-/* @} UPnPAPI */
+/// @} UPnPAPI

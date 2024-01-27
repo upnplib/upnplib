@@ -1,0 +1,4 @@
+<map id="UpnpCloseHttpConnection" name="UpnpCloseHttpConnection">
+<area shape="rect" id="node1" title="Closes the connection created with UpnpOpenHttpConnection and frees any memory associated with the co..." alt="" coords="196,5,389,32"/>
+<area shape="rect" id="node2" href="$db/d55/group__UPnPAPI.html#ga018aae442dadad3aa0f880d03b34aa88" title="Closes the connection and frees memory that was allocated for the handle parameter." alt="" coords="5,5,148,32"/>
+</map>

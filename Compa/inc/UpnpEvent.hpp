@@ -1,12 +1,12 @@
-#ifndef UPNPLIB_UPNPEVENT_HPP
-#define UPNPLIB_UPNPEVENT_HPP
+#ifndef COMPA_UPNPEVENT_HPP
+#define COMPA_UPNPEVENT_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+// Redistribution only with this Copyright remark. Last modified: 2024-01-28
 // Also Copyright by other contributor as noted below.
 /*!
  * \file
  * \brief Header file for UpnpEvent methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 
 #include <ixml.hpp>
@@ -51,4 +51,4 @@ UPNPLIB_API int UpnpEvent_strncpy_SID(UpnpEvent* p, const char* s, size_t n);
 /*! UpnpEvent_clear_SID */
 UPNPLIB_API void UpnpEvent_clear_SID(UpnpEvent* p);
 
-#endif /* UPNPLIB_UPNPEVENT_HPP */
+#endif /* COMPA_UPNPEVENT_HPP */

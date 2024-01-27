@@ -1,31 +1,30 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-19
-
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-28
+// Also Copyright by other contributor as noted below.
 /*!
  * \file
- *
  * \brief Source file for UpnpActionRequest methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
-#include "config.hpp"
+#include <config.hpp>
+#include <UpnpActionRequest.hpp>
 
 #include <stdlib.h> /* for calloc(), free() */
 #include <string.h> /* for strlen(), strdup() */
 
-#include "UpnpActionRequest.hpp"
-
+/// \brief s_UpnpActionRequest
 struct s_UpnpActionRequest {
-    int m_ErrCode;
-    int m_Socket;
-    UpnpString* m_ErrStr;
-    UpnpString* m_ActionName;
-    UpnpString* m_DevUDN;
-    UpnpString* m_ServiceID;
-    IXML_Document* m_ActionRequest;
-    IXML_Document* m_ActionResult;
-    IXML_Document* m_SoapHeader;
-    struct sockaddr_storage m_CtrlPtIPAddr;
-    UpnpString* m_Os;
+    int m_ErrCode;                   ///< m_ErrCode
+    int m_Socket;                    ///< m_Socket
+    UpnpString* m_ErrStr;            ///< m_ErrStr
+    UpnpString* m_ActionName;        ///< m_ActionName
+    UpnpString* m_DevUDN;            ///< m_DevUDN
+    UpnpString* m_ServiceID;         ///< m_ServiceID
+    IXML_Document* m_ActionRequest;  ///< m_ActionRequest
+    IXML_Document* m_ActionResult;   ///< m_ActionResult
+    IXML_Document* m_SoapHeader;     ///< m_SoapHeader
+    sockaddr_storage m_CtrlPtIPAddr; ///< m_CtrlPtIPAddr
+    UpnpString* m_Os;                ///< m_Os
 };
 
 UpnpActionRequest* UpnpActionRequest_new() {

@@ -1,8 +1,0 @@
-<map id="Upnplib/src/net/http/webserver.cpp" name="Upnplib/src/net/http/webserver.cpp">
-<area shape="rect" id="node1" title="Definations to manage the builtin Webserver." alt="" coords="247,5,397,47"/>
-<area shape="rect" id="node2" href="$webserver_8hpp.html" title="Declarations to manage the builtin Webserver." alt="" coords="64,95,233,121"/>
-<area shape="rect" id="node5" href="$port_8hpp.html" title="Specifications to be portable between different platforms." alt="" coords="258,95,386,121"/>
-<area shape="rect" id="node6" title=" " alt="" coords="410,95,466,121"/>
-<area shape="rect" id="node3" href="$visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,169,161,196"/>
-<area shape="rect" id="node4" title=" " alt="" coords="186,169,245,196"/>
-</map>

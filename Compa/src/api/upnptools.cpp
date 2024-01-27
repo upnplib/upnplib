@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-24
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,11 +32,13 @@
  *
  **************************************************************************/
 // Last compare with pupnp original source file on 2023-07-24, ver 1.14.17
-
-#include <config.hpp> // for EXCLUDE_DOM
 /*!
  * \file
+ * \brief Additional, optional utility API that can be helpful in writing
+ * applications.
  */
+
+#include <config.hpp> // for EXCLUDE_DOM
 
 #if EXCLUDE_DOM == 0
 

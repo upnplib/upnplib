@@ -1,11 +1,11 @@
-#ifndef UPNPLIB_UPNPSUBSCRIPTIONREQUEST_HPP
-#define UPNPLIB_UPNPSUBSCRIPTIONREQUEST_HPP
+#ifndef COMPA_UPNPSUBSCRIPTIONREQUEST_HPP
+#define COMPA_UPNPSUBSCRIPTIONREQUEST_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-26
+// Redistribution only with this Copyright remark. Last modified: 2024-01-28
 /*!
  * \file
  * \brief Header file for UpnpSubscriptionRequest methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 
 #include <stdlib.h> /* for size_t */
@@ -98,4 +98,4 @@ EXPORT_SPEC int UpnpSubscriptionRequest_strncpy_SID(UpnpSubscriptionRequest* p,
 /*! UpnpSubscriptionRequest_clear_SID */
 EXPORT_SPEC void UpnpSubscriptionRequest_clear_SID(UpnpSubscriptionRequest* p);
 
-#endif /* UPNPLIB_UPNPSUBSCRIPTIONREQUEST_HPP */
+#endif /* COMPA_UPNPSUBSCRIPTIONREQUEST_HPP */

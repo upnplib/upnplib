@@ -1,0 +1,7 @@
+<map id="UpnpPrintf" name="UpnpPrintf">
+<area shape="rect" id="node1" title="Prints the debug statement either on the standard output or log file along with the information from ..." alt="" coords="225,81,316,108"/>
+<area shape="rect" id="node2" href="$db/d55/group__UPnPAPI.html#ga4a0f84b177b8a84964bcb7a057fc3831" title="Prints thread pool statistics if DEBUG is enabled. See also #define PrintThreadPoolStats()" alt="" coords="12,5,171,32"/>
+<area shape="rect" id="node3" href="$db/d55/group__UPnPAPI.html#gac43a9ddbe8e1c8270f20565240d20563" title="Downloads an XML document specified in a URL." alt="" coords="5,56,177,83"/>
+<area shape="rect" id="node4" href="$db/d55/group__UPnPAPI.html#ga5c3d3c4ede70e9b385a165c64daac4a7" title="Initializes the OpenSSL library, and the OpenSSL context for use with pupnp." alt="" coords="44,107,139,133"/>
+<area shape="rect" id="node5" href="$db/d55/group__UPnPAPI.html#ga9b1e118dea693a492fc976b037e35bfe" title="Retrieve interface information and keep it in global variables. If NULL, we&#39;ll find the first suitabl..." alt="" coords="35,157,148,184"/>
+</map>

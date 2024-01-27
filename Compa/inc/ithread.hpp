@@ -1,5 +1,5 @@
-#ifndef UPNPLIB_ITHREAD_HPP
-#define UPNPLIB_ITHREAD_HPP
+#ifndef COMPA_ITHREAD_HPP
+#define COMPA_ITHREAD_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
@@ -909,4 +909,4 @@ static UPNP_INLINE int ithread_cleanup_thread(void) {
 
 /// \endcond
 
-#endif /* UPNPLIB_ITHREAD_HPP */
+#endif /* COMPA_ITHREAD_HPP */

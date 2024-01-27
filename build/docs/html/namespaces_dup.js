@@ -1,5 +1,5 @@
 var namespaces_dup =
 [
-    [ "compa", "namespacecompa.html", null ],
-    [ "upnplib", "namespaceupnplib.html", "namespaceupnplib" ]
+    [ "compa", "d3/d02/namespacecompa.html", null ],
+    [ "upnplib", "dc/d6d/namespaceupnplib.html", "dc/d6d/namespaceupnplib" ]
 ];

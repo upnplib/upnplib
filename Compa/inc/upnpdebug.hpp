@@ -1,12 +1,12 @@
-#ifndef UPNPLIB_DEBUG_HPP
-#define UPNPLIB_DEBUG_HPP
+#ifndef COMPA_DEBUG_HPP
+#define COMPA_DEBUG_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-01-26
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -154,7 +154,9 @@ static UPNP_INLINE void UpnpSetLogFileNames_Inlined(const char* ErrFileName,
 
 /*!
  * \brief Check if the module is turned on for debug and returns the file
- * descriptor corresponding to the debug level
+ * descriptor corresponding to the debug level. See also \#define
+ * UpnpGetDebugFile().
+ * \anchor UpnpGetDebugFile_dbg
  *
  * \return nullptr if the module is turn off for debug otherwise returns the
  *	right FILE pointer.
@@ -162,16 +164,18 @@ static UPNP_INLINE void UpnpSetLogFileNames_Inlined(const char* ErrFileName,
 UPNPLIB_API FILE* UpnpGetDebugFile(
     /*! [in] The level of the debug logging. It will decide whether debug
      * statement will go to standard output, or any of the log files. */
-    Upnp_LogLevel level,
+    Upnp_LogLevel DLevel,
     /*! [in] debug will go in the name of this module. */
-    Dbg_Module module);
+    Dbg_Module Module);
 
-#if defined NDEBUG && !defined UPNP_DEBUG_C
+#if (defined NDEBUG && !defined UPNP_DEBUG_C) || defined(DOXYGEN_RUN)
+/*! \brief This do nothing if DEBUG is disabled. See also function
+ * \ref UpnpGetDebugFile_dbg "UpnpGetDebugFile()" for debugging. */
 #define UpnpGetDebugFile UpnpGetDebugFile_Inlined
-static UPNP_INLINE FILE* UpnpGetDebugFile_Inlined(Upnp_LogLevel level,
-                                                  Dbg_Module module) {
-    (void)level;
-    (void)module;
+static UPNP_INLINE FILE* UpnpGetDebugFile_Inlined(
+    [[maybe_unused]] Upnp_LogLevel level, ///< Log level "critical"..."all".
+    [[maybe_unused]] Dbg_Module
+        module) /*!< Info of what program module should be used. */ {
     return NULL;
 }
 #endif
@@ -229,4 +233,4 @@ static UPNP_INLINE void UpnpPrintf_Inlined(Upnp_LogLevel DLevel,
 }
 #endif /* DEBUG */
 
-#endif // UPNPLIB_DEBUG_HPP
+#endif // COMPA_DEBUG_HPP

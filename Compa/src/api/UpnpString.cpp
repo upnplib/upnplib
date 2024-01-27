@@ -2,6 +2,10 @@
 // Redistribution only with this Copyright remark. Last modified: 2023-07-21
 // Also Copyright by other contributor who haven't made a note.
 // Last compare with pupnp original source file on 2023-04-26, ver 1.14.15
+/*!
+ * \file
+ * \brief UpnpString object implementation.
+ */
 
 /*!
  * \addtogroup UpnpString
@@ -14,10 +18,6 @@
  * do not perform a new memory allocation.
  *
  * @{
- *
- * \file
- *
- * \brief UpnpString object implementation.
  */
 
 #include <config.hpp>
@@ -223,4 +223,4 @@ int UpnpString_casecmp(UpnpString* p, UpnpString* q) {
     return strcasecmp(cp, cq);
 }
 
-/* @} UpnpString */
+/*! @} UpnpString */

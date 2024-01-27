@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['get_5fsdk_5finfo_0',['get_sdk_info',['../classupnplib_1_1Ihttpreadwrite.html#ac284380dda0f3a0dfb344cfd038d6b6d',1,'upnplib::Ihttpreadwrite::get_sdk_info()'],['../classupnplib_1_1Chttpreadwrite__old.html#a78ee531c98a4167adf9f6283ed0f98bb',1,'upnplib::Chttpreadwrite_old::get_sdk_info()']]]
+  ['errstr_0',['errStr',['../dc/d6d/namespaceupnplib.html#a1d1c50145ab351b5bfcb723c637201cd',1,'upnplib']]],
+  ['errstrex_1',['errStrEx',['../dc/d6d/namespaceupnplib.html#ab9e5d2a23dfa5b2d5b3db3ff934af7ae',1,'upnplib']]]
 ];

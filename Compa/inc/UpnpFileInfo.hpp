@@ -1,14 +1,13 @@
 #ifndef COMPA_UPNPFILEINFO_HPP
 #define COMPA_UPNPFILEINFO_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-21
+// Redistribution only with this Copyright remark. Last modified: 2024-01-28
 // Also Copyright by other contributor as noted below.
 // Last compare with pupnp original source file on 2023-04-25, ver 1.14.15
 /*!
  * \file
- *
  * \brief Header file for UpnpFileInfo methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 
 #ifdef _WIN32

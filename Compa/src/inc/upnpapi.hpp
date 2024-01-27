@@ -1,10 +1,12 @@
+#ifndef COMPA_UPNPAPI_HPP
+#define COMPA_UPNPAPI_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-11-13
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-27
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,89 +34,83 @@
  *
  ******************************************************************************/
 // Last compare with pupnp original source file on 2023-07-08, ver 1.14.17
-
-#ifndef PUPNP_UPNPAPI_HPP
-#define PUPNP_UPNPAPI_HPP
-
 /*!
  * \file
+ * \brief Inititalize the compatible library before it can be used.
  */
 
-#include "VirtualDir.hpp" /* for struct VirtualDirCallbacks */
-#include "client_table.hpp"
+#include <VirtualDir.hpp> /* for struct VirtualDirCallbacks */
+#include <client_table.hpp>
 
+/// MAX_INTERFACES
 #define MAX_INTERFACES 256
 
+/// DEV_LIMIT
 #define DEV_LIMIT 200
 
+/// DEFAULT_MX
 #define DEFAULT_MX 5
 
+/// DEFAULT_MAXAGE
 #define DEFAULT_MAXAGE 1800
 
+/// DEFAULT_SOAP_CONTENT_LENGTH
 #define DEFAULT_SOAP_CONTENT_LENGTH 16000
+/// MAX_SOAP_CONTENT_LENGTH
 #define MAX_SOAP_CONTENT_LENGTH (size_t)32000
 
+/// NUM_HANDLE
 #define NUM_HANDLE 200
 
 extern size_t g_maxContentLength;
 extern int g_UpnpSdkEQMaxLen;
 extern int g_UpnpSdkEQMaxAge;
 
-/* 30-second timeout */
+/// UPNP_TIMEOUT
 #define UPNP_TIMEOUT 30
 
+/// Specifies if a device, or client has to be handled for a connection.
 typedef enum { HND_INVALID = -1, HND_CLIENT, HND_DEVICE } Upnp_Handle_Type;
 
-/* Data to be stored in handle table for */
-struct Handle_Info {
-    /*! . */
-    Upnp_Handle_Type HType;
-    /*! Callback function pointer. */
-    Upnp_FunPtr Callback;
-    /*! . */
-    char* Cookie;
-    /*! 0 = not installed; otherwise installed. */
-    int aliasInstalled;
 
-    /* Device Only */
-#ifdef INCLUDE_DEVICE_APIS
-    /*! URL for the use of SSDP. */
-    char DescURL[LINE_SIZE];
-    /*! URL for the use of SSDP when answering to legacy CPs (CP searching
-     * for a v1 when the device is v2). */
-    char LowerDescURL[LINE_SIZE];
-    /*! XML file path for device description. */
-    char DescXML[LINE_SIZE];
-    /* Advertisement timeout */
-    int MaxAge;
-    /* Power State as defined by UPnP Low Power. */
-    int PowerState;
-    /* Sleep Period as defined by UPnP Low Power. */
-    int SleepPeriod;
-    /* Registration State as defined by UPnP Low Power. */
-    int RegistrationState;
-    /*! Description parsed in terms of DOM document. */
-    IXML_Document* DescDocument;
-    /*! List of devices in the description document. */
-    IXML_NodeList* DeviceList;
-    /*! List of services in the description document. */
-    IXML_NodeList* ServiceList;
-    /*! Table holding subscriptions and URL information. */
-    service_table ServiceTable;
-    /*! . */
-    int MaxSubscriptions;
-    /*! . */
-    int MaxSubscriptionTimeOut;
-    /*! Address family: AF_INET or AF_INET6. */
-    int DeviceAf;
+/// \brief Data to be stored in handle table for Handle Info.
+struct Handle_Info {
+    Upnp_Handle_Type HType; ///< Handle Type
+    Upnp_FunPtr Callback;   ///< Callback function pointer.
+    char* Cookie;           ///< ???
+    int aliasInstalled;     ///< 0 = not installed; otherwise installed.
+
+#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
+    /// \name Following attributes are only valid with managing a device.
+    /// @{
+    char DescURL[LINE_SIZE];      ///< URL for the use of SSDP.
+    char LowerDescURL[LINE_SIZE]; /*!< \brief URL for the use of SSDP when
+                                   * answering to legacy CPs (CP searching for a
+                                   * v1 when the device is v2). */
+    char DescXML[LINE_SIZE];      ///< XML file path for device description.
+    int MaxAge;                   ///< Advertisement timeout.
+    int PowerState;               ///< Power State as defined by UPnP Low Power.
+    int SleepPeriod;       ///< Sleep Period as defined by UPnP Low Power.
+    int RegistrationState; ///< Registration State as defined by UPnP Low Power.
+    IXML_Document*
+        DescDocument;          ///< Description parsed in terms of DOM document.
+    IXML_NodeList* DeviceList; ///< List of devices in the description document.
+    IXML_NodeList*
+        ServiceList; ///< List of services in the description document.
+    service_table
+        ServiceTable;     ///< Table holding subscriptions and URL information.
+    int MaxSubscriptions; ///< ???
+    int MaxSubscriptionTimeOut; ///< ???
+    int DeviceAf;               ///< Address family: AF_INET6 or AF_INET.
+    /// @}
 #endif
 
-    /* Client only */
-#ifdef INCLUDE_CLIENT_APIS
-    /*! Client subscription list. */
-    GenlibClientSubscription* ClientSubList;
-    /*! Active SSDP searches. */
-    LinkedList SsdpSearchList;
+#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+    /// \name Following attributes are only valid with managing a client.
+    /// @{
+    GenlibClientSubscription* ClientSubList; ///< Client subscription list.
+    LinkedList SsdpSearchList;               ///< Active SSDP searches.
+    /// @}
 #endif
 };
 
@@ -131,18 +127,22 @@ Upnp_Handle_Type GetHandleInfo(
     /*! [out] handle structure passed by this function. */
     struct Handle_Info** HndInfo);
 
+/// HandleLock
 #define HandleLock() HandleWriteLock()
 
+/// HandleWriteLock
 #define HandleWriteLock()                                                      \
     UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "Trying a write lock\n");   \
     ithread_rwlock_wrlock(&GlobalHndRWLock);                                   \
     UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "Write lock acquired\n");
 
+/// HandleReadLock
 #define HandleReadLock()                                                       \
     UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "Trying a read lock\n");    \
     ithread_rwlock_rdlock(&GlobalHndRWLock);                                   \
     UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "Read lock acquired\n");
 
+/// HandleUnlock
 #define HandleUnlock()                                                         \
     UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "Trying Unlock\n");         \
     ithread_rwlock_unlock(&GlobalHndRWLock);                                   \
@@ -220,6 +220,7 @@ UPNPLIB_API extern ThreadPool gRecvThreadPool;
 extern ThreadPool gSendThreadPool;
 UPNPLIB_API extern ThreadPool gMiniServerThreadPool;
 
+/// UpnpFunName
 typedef enum {
     SUBSCRIBE,
     UNSUBSCRIBE,
@@ -233,7 +234,10 @@ typedef enum {
     RENEW
 } UpnpFunName;
 
+/// \brief UpnpNonblockParam
 struct UpnpNonblockParam {
+    /// @{
+    /// \brief %UpnpNonblockParam
     UpnpFunName FunName;
     int Handle;
     int TimeOut;
@@ -250,13 +254,16 @@ struct UpnpNonblockParam {
     IXML_Document* Header;
     IXML_Document* Act;
     struct DevDesc* Devdesc;
+    /// @}
 };
 
 extern virtualDirList* pVirtualDirList;
 extern struct VirtualDirCallbacks virtualDirCallback;
 
+/// Possible status of the internal webserver.
 typedef enum { WEB_SERVER_DISABLED, WEB_SERVER_ENABLED } WebServerState;
 
+/// E_HTTP_SYNTAX
 #define E_HTTP_SYNTAX -6
 
 /*!
@@ -282,6 +289,7 @@ UPNPLIB_API int UpnpGetIfInfo(
     /*! [in] Interface name (can be NULL). */
     const char* IfName);
 
+/// UpnpThreadDistribution
 void UpnpThreadDistribution(struct UpnpNonblockParam* Param);
 
 /*!
@@ -313,4 +321,4 @@ UPNPLIB_API extern void* gWebCallback_HostValidateCookie;
 /*! */
 UPNPLIB_API extern int gAllowLiteralHostRedirection;
 
-#endif /* PUPNP_UPNPAPI_HPP */
+#endif /* COMPA_UPNPAPI_HPP */

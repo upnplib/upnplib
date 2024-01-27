@@ -1,20 +1,22 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-19
-
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-28
+// Also Copyright by other contributor as noted below.
 /*!
  * \file
- *
  * \brief Source file for UpnpStateVarRequest methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
-#include "config.hpp"
+
+#include <config.hpp>
+#include <UpnpStateVarRequest.hpp>
 
 #include <stdlib.h> /* for calloc(), free() */
 #include <string.h> /* for strlen(), strdup() */
 
-#include "UpnpStateVarRequest.hpp"
-
+/// \brief s_UpnpStateVarRequest
 struct s_UpnpStateVarRequest {
+    /// @{
+    /// s_UpnpStateVarRequest
     int m_ErrCode;
     int m_Socket;
     UpnpString* m_ErrStr;
@@ -23,6 +25,7 @@ struct s_UpnpStateVarRequest {
     UpnpString* m_StateVarName;
     struct sockaddr_storage m_CtrlPtIPAddr;
     DOMString m_CurrentVal;
+    /// @}
 };
 
 UpnpStateVarRequest* UpnpStateVarRequest_new() {
