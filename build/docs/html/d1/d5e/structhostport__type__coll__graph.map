@@ -1,0 +1,4 @@
+<map id="hostport_type" name="hostport_type">
+<area shape="rect" id="node1" title="Represents a host port, e.g. &quot;127.127.0.1:80&quot;." alt="" coords="5,95,117,121"/>
+<area shape="rect" id="node2" href="$d4/df4/structtoken.html" title="Buffer used in parsinghttp messages, urls, etc. Generally this simply holds a pointer into a larger a..." alt="" coords="32,5,91,32"/>
+</map>

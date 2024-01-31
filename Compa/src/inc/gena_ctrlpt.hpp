@@ -1,9 +1,11 @@
+#ifndef COMPA_GENA_CTRLPT_HPP
+#define COMPA_GENA_CTRLPT_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-20
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,15 +32,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
-#ifndef UPNPLIB_GENA_CTRLPT_HPP
-#define UPNPLIB_GENA_CTRLPT_HPP
-
 /*!
  * \file
+ * \brief Processes NOTIFY events that are sent by devices.
  */
 
-#include "sock.hpp"
+#include <sock.hpp>
 
 /*!
  * \brief This function processes NOTIFY events that are sent by devices.
@@ -52,9 +51,9 @@
  * \note called by genacallback()
  */
 void gena_process_notification_event(
-    /*! [in] Socket info of the device. */
+    /// [in] Socket info of the device.
     SOCKINFO* info,
-    /*! [in] The http message contains the GENA notification. */
+    /// [in] The http message contains the GENA notification.
     http_message_t* event);
 
-#endif /* UPNPLIB_GENA_CTRLPT_HPP */
+#endif /* COMPA_GENA_CTRLPT_HPP */

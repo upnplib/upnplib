@@ -8,7 +8,7 @@
  * the compiler/linker.
  *
  * \namespace upnplib
- * \brief Reengineered UPnP+ program code.
+ * \brief Reengineered Object Oriented UPnP+ program code.
  *
  * \dir Upnplib
  * \brief This directory hosts all code belonging to namespace upnplib.

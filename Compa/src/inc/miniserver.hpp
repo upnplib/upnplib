@@ -5,7 +5,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-08-30
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-01
  * Copied from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,64 +33,64 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-
 /*!
  * \file
+ * \brief Manage "Step 0: Addressing" of the UPnP+™ specification.
  */
 
-#include "config.hpp"
+#include <config.hpp>
 
-#include "httpparser.hpp"
-#include "sock.hpp"
+#include <httpparser.hpp>
+#include <sock.hpp>
 
 #include <cstdint> // for uint16_t
 
+/// \brief Global available Stop Socket.
 extern SOCKET gMiniServerStopSock;
 
+/// \brief Provides sockets for all network communications.
 struct MiniServerSockArray {
-    /*! IPv4 socket for listening for miniserver requests. */
+    /*! \brief IPv4 socket for listening for miniserver requests. */
     SOCKET miniServerSock4;
-    /*! IPv6 LLA Socket for listening for miniserver requests. */
+    /*! \brief IPv6 LLA Socket for listening for miniserver requests. */
     SOCKET miniServerSock6;
-    /*! IPv6 ULA or GUA Socket for listening for miniserver requests. */
+    /*! \brief IPv6 ULA or GUA Socket for listening for miniserver requests. */
     SOCKET miniServerSock6UlaGua;
-    /*! Datagram Socket for stopping miniserver */
+    /*! \brief Datagram Socket for stopping miniserver. */
     SOCKET miniServerStopSock;
-    /*! IPv4 SSDP datagram Socket for incoming advertisments and search
+    /*! \brief IPv4 SSDP datagram Socket for incoming advertisments and search
      * requests. */
     SOCKET ssdpSock4;
-    /*! IPv6 LLA SSDP Socket for incoming advertisments and search requests.
-     */
+    /*! \brief IPv6 LLA SSDP Socket for incoming advertisments and search
+     * requests. */
     SOCKET ssdpSock6;
-    /*! IPv6 ULA or GUA SSDP Socket for incoming advertisments and search
+    /*! \brief IPv6 ULA or GUA SSDP Socket for incoming advertisments and search
      * requests. */
     SOCKET ssdpSock6UlaGua;
-    /* ! . */
+    /*! \brief Corresponding port to miniServerStopSock */
     uint16_t stopPort;
-    /* ! . */
+    /*! \brief Corresponding port to miniServerSock4 */
     uint16_t miniServerPort4;
-    /* ! . */
+    /*! \brief Corresponding port to miniServerSock6 */
     uint16_t miniServerPort6;
-    /* ! . */
+    /*! \brief Corresponding port to miniServerSock6UlaGua */
     uint16_t miniServerPort6UlaGua;
-#ifdef INCLUDE_CLIENT_APIS
-    /*! IPv4 SSDP socket for sending search requests and receiving search
+#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+    /*! \name Only with Client Module.
+     * @{ */
+    /*! \brief IPv4 SSDP socket for sending search requests and receiving search
      * replies */
     SOCKET ssdpReqSock4;
-    /*! IPv6 SSDP socket for sending search requests and receiving search
+    /*! \brief IPv6 SSDP socket for sending search requests and receiving search
      * replies */
     SOCKET ssdpReqSock6;
+    /// @}
 #endif /* INCLUDE_CLIENT_APIS */
 };
 
-/*! . */
-typedef void (*MiniServerCallback)(
-    /* ! [in] . */
-    http_parser_t* parser,
-    /* ! [in] . */
-    http_message_t* request,
-    /* ! [in] . */
-    SOCKINFO* info);
+/*! \brief For a miniserver callback function. */
+typedef void (*MiniServerCallback)(http_parser_t* parser,
+                                   http_message_t* request, SOCKINFO* info);
 
 /*!
  * \brief Set HTTP Get Callback.

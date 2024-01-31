@@ -1,0 +1,4 @@
+<map id="http_SendStatusResponse" name="http_SendStatusResponse">
+<area shape="rect" id="node1" title="Generate a response message for the status query and send the status response." alt="" coords="280,13,471,39"/>
+<area shape="rect" id="node2" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#a9e840ed3ebc83e2485ffd3a8da400c6e" title="Send http status of a response." alt="" coords="5,5,232,47"/>
+</map>

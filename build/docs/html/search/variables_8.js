@@ -1,7 +1,11 @@
 var searchData=
 [
-  ['local_5fport_5fv4_0',['LOCAL_PORT_V4',['../db/d55/group__UPnPAPI.html#gaa156f785de62bbb87aa7c569f727849f',1,'LOCAL_PORT_V4():&#160;upnpapi.cpp'],['../db/d55/group__UPnPAPI.html#gaa156f785de62bbb87aa7c569f727849f',1,'LOCAL_PORT_V4():&#160;upnpapi.cpp']]],
-  ['local_5fport_5fv6_1',['LOCAL_PORT_V6',['../db/d55/group__UPnPAPI.html#ga9ec6e5dbc7ed57e50b98fc9e3bb47820',1,'LOCAL_PORT_V6():&#160;upnpapi.cpp'],['../db/d55/group__UPnPAPI.html#ga9ec6e5dbc7ed57e50b98fc9e3bb47820',1,'LOCAL_PORT_V6():&#160;upnpapi.cpp']]],
-  ['local_5fport_5fv6_5fula_5fgua_2',['LOCAL_PORT_V6_ULA_GUA',['../db/d55/group__UPnPAPI.html#ga4cdb66fa84acfe9ef88b35efaa14d994',1,'LOCAL_PORT_V6_ULA_GUA():&#160;upnpapi.cpp'],['../db/d55/group__UPnPAPI.html#ga4cdb66fa84acfe9ef88b35efaa14d994',1,'LOCAL_PORT_V6_ULA_GUA():&#160;upnpapi.cpp']]],
-  ['lowerdescurl_3',['LowerDescURL',['../d3/d84/structHandle__Info.html#a7e7fa47128e27abfc2b99dc8074183e4',1,'Handle_Info']]]
+  ['id_0',['id',['../d7/d2f/structstr__int__entry.html#a28f267cc32dbe8ea29048ee8f5edc9ae',1,'str_int_entry']]],
+  ['initialized_1',['initialized',['../de/d66/structhttp__message__t.html#ab586e7ef7512057314a980f391ecea9b',1,'http_message_t']]],
+  ['ipaddress_2',['IPaddress',['../db/d73/structhostport__type.html#ab5a116daf81869f2788cab7eae0ad7ad',1,'hostport_type']]],
+  ['is_5frequest_3',['is_request',['../de/d66/structhttp__message__t.html#a2d335ffbfa533def795b026483da4125',1,'http_message_t']]],
+  ['ischunkactive_4',['IsChunkActive',['../d0/d20/structSendInstruction.html#afa6ba123649d39f817b0995f69825622',1,'SendInstruction']]],
+  ['israngeactive_5',['IsRangeActive',['../d0/d20/structSendInstruction.html#a8b6eaf12d65fb66c71d4212d1f59de58',1,'SendInstruction']]],
+  ['istrailers_6',['IsTrailers',['../d0/d20/structSendInstruction.html#acca65587dff5b8580cab8c8e50219316',1,'SendInstruction']]],
+  ['isvirtualfile_7',['IsVirtualFile',['../d0/d20/structSendInstruction.html#adb51c6992a742975ff82bc470d9c6f66',1,'SendInstruction']]]
 ];

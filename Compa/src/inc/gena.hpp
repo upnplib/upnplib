@@ -1,9 +1,11 @@
+#ifndef COMPA_GENA_HPP
+#define COMPA_GENA_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-07-05
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,34 +32,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
-#ifndef UPNPLIB_GENA_HPP
-#define UPNPLIB_GENA_HPP
-
 /*!
  * \file
+ * \brief Manage Eventing with **GENA**, the General Event Notification
+ * Architecture.
  */
 
-#include "config.hpp"
+#include <config.hpp>
 
 #include <string.h>
 #include <time.h>
 
-#include "client_table.hpp"
-#include "httpparser.hpp"
-// #include "miniserver.hpp"
-#include "service_table.hpp"
-#include "sock.hpp"
-#include "ThreadPool.hpp"
-#include "upnp.hpp"
-#include "UpnpString.hpp"
-#include "uri.hpp"
+#include <client_table.hpp>
+#include <httpparser.hpp>
+#include <sock.hpp>
+#include <ThreadPool.hpp>
+#include <upnp.hpp>
 
-/*!
- * \brief XML version comment. Not used because it is not interopeable with
- * other UPnP vendors.
- */
+/*! \brief XML version comment. Not used because it is not interoperable with
+ * other UPnP vendors. */
 #define XML_VERSION "<?xml version='1.0' encoding='ISO-8859-1' ?>\n"
+/// @{
+/// Constant for Eventing with GENA
 #define XML_PROPERTYSET_HEADER                                                 \
     "<e:propertyset xmlns:e=\"urn:schemas-upnp-org:event-1-0\">\n"
 
@@ -93,6 +89,7 @@
 
 #define CALLBACK_SUCCESS 0
 #define DEFAULT_TIMEOUT 1801
+/// @}
 
 /*!
  * \brief Locks the subscription.
@@ -115,6 +112,8 @@
  * Structure to send NOTIFY message to all subscribed control points
  */
 typedef struct NOTIFY_THREAD_STRUCT {
+    /// @{
+    /// Member of notify thread structure
     char* headers;
     DOMString propertySet;
     char* servId;
@@ -123,15 +122,16 @@ typedef struct NOTIFY_THREAD_STRUCT {
     time_t ctime;
     int* reference_count;
     UpnpDevice_Handle device_handle;
+    /// @}
 } notify_thread_struct;
 
 /*!
  * \brief This is the callback function called by the miniserver to handle
  *  incoming GENA requests.
  *
- * \return UPNP_E_SUCCESS if successful, otherwise appropriate error code.
+ * \ return UPNP_E_SUCCESS if successful, otherwise appropriate error code.
  */
-EXPORT_SPEC void genaCallback(
+UPNPLIB_API void genaCallback(
     /*! [in] represents the parse state of the request */
     http_parser_t* parser,
     /*! [in] HTTP message containing GENA request */
@@ -149,11 +149,11 @@ EXPORT_SPEC void genaCallback(
  * \return UPNP_E_SUCCESS if service response is OK, otherwise returns the
  *  appropriate error code
  */
-#ifdef INCLUDE_CLIENT_APIS
-EXPORT_SPEC int genaSubscribe(
+#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+UPNPLIB_API int genaSubscribe(
     /*! [in] The client handle. */
     UpnpClient_Handle client_handle,
-    /*! [in] Of the form: "http://134.134.156.80:4000/RedBulb/Event */
+    /*! [in] Of the form: "http://134.134.156.80:4000/RedBulb/Event" */
     const UpnpString* PublisherURL,
     /*! [in,out] requested Duration:
      * \li if -1, then "infinite".
@@ -174,8 +174,8 @@ EXPORT_SPEC int genaSubscribe(
  * \return UPNP_E_SUCCESS if service response is OK, otherwise returns the
  *  appropriate error code.
  */
-#ifdef INCLUDE_CLIENT_APIS
-EXPORT_SPEC int genaUnSubscribe(
+#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+UPNPLIB_API int genaUnSubscribe(
     /*! [in] UPnP client handle. */
     UpnpClient_Handle client_handle,
     /*! [in] The subscription ID. */
@@ -191,8 +191,8 @@ EXPORT_SPEC int genaUnSubscribe(
  * \returns UPNP_E_SUCCESS if successful, otherwise returns the appropriate
  *  error code.
  */
-#ifdef INCLUDE_CLIENT_APIS
-EXPORT_SPEC int genaUnregisterClient(
+#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+UPNPLIB_API int genaUnregisterClient(
     /*! [in] Handle containing all the control point related information. */
     UpnpClient_Handle client_handle);
 #endif /* INCLUDE_CLIENT_APIS */
@@ -206,7 +206,7 @@ EXPORT_SPEC int genaUnregisterClient(
  *
  * \return UPNP_E_SUCCESS if successful, otherwise returns GENA_E_BAD_HANDLE
  */
-#ifdef INCLUDE_DEVICE_APIS
+#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
 int genaUnregisterDevice(
     /*! [in] Handle of the root device */
     UpnpDevice_Handle device_handle);
@@ -222,8 +222,8 @@ int genaUnregisterDevice(
  * \return UPNP_E_SUCCESS if service response is OK, otherwise the
  *  appropriate error code.
  */
-#ifdef INCLUDE_CLIENT_APIS
-EXPORT_SPEC int genaRenewSubscription(
+#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+UPNPLIB_API int genaRenewSubscription(
     /*! [in] Client handle. */
     UpnpClient_Handle client_handle,
     /*! [in] Subscription ID. */
@@ -241,7 +241,7 @@ EXPORT_SPEC int genaRenewSubscription(
  * \note This function is similar to the genaNotifyAllExt. The only difference
  *  is it takes event variable array instead of xml document.
  */
-#ifdef INCLUDE_DEVICE_APIS
+#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
 int genaNotifyAll(
     /*! [in] Device handle. */
     UpnpDevice_Handle device_handle,
@@ -265,7 +265,7 @@ int genaNotifyAll(
  * \note This function is similar to the genaNotifyAll. the only difference
  *  is it takes the document instead of event variable array.
  */
-#ifdef INCLUDE_DEVICE_APIS
+#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
 int genaNotifyAllExt(
     /*! [in] Device handle. */
     UpnpDevice_Handle device_handle,
@@ -285,7 +285,7 @@ int genaNotifyAllExt(
  * \note  No other event will be sent to this control point before the
  *  intial state table dump.
  */
-#ifdef INCLUDE_DEVICE_APIS
+#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
 int genaInitNotify(
     /*! [in] Device handle. */
     UpnpDevice_Handle device_handle,
@@ -313,7 +313,7 @@ int genaInitNotify(
  * \note No other event will be sent to this control point before the
  *  intial state table dump.
  */
-#ifdef INCLUDE_DEVICE_APIS
+#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
 int genaInitNotifyExt(
     /*! [in] Device handle. */
     UpnpDevice_Handle device_handle,
@@ -329,16 +329,14 @@ int genaInitNotifyExt(
 
 /*!
  * \brief Sends an error message to the control point in the case of incorrect
- *  GENA requests.
+ * GENA requests.
  *
- * \return UPNP_E_SUCCESS if successful, otherwise appropriate error code.
+ * \ return UPNP_E_SUCCESS if successful, otherwise appropriate error code.
  */
 void error_respond(
-    /*! [in] Structure containing information about the socket. */
-    SOCKINFO* info,
-    /*! [in] error code that will be in the GENA response. */
-    int error_code,
-    /*! [in] GENA request Packet. */
-    http_message_t* hmsg);
+    SOCKINFO* info, ///< [in] Structure containing information about the socket.
+    int error_code, ///< [in] error code that will be in the GENA response.
+    http_message_t* hmsg ///< [in] GENA request Packet.
+);
 
-#endif /* UPNPLIB_GENA_HPP */
+#endif /* COMPA_GENA_HPP */

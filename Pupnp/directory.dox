@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-24
+// Redistribution only with this Copyright remark. Last modified: 2024-01-30
 /*!
  * \file
  * \brief General documentation for this directory.
@@ -8,14 +8,25 @@
  * the compiler/linker.
  */
 
- /* I found no way to specify the global namespace
- * \namespace
- * \brief Original cloned pupnp program code.
- */
-
- /*!
+// I found no way to specify the global namespace.
+/*!
+ * \namespace pupnp
+ * \brief Only for some helper classes. The original pupnp code is in the global
+ * namespace. More....
+ *
+ * The original Pupnp code was written in plain C that don't know namespaces. So
+ * its code is now in the C++ global namespace. Because I don't want to modify
+ * the original code it isn't documented here with doxygen. You will find the
+ * code in the projects subdirectory 'Pupnp/'. You may have a look at the
+ * corresponding compa documentation.
+ *
  * \dir Pupnp
  * \brief This directory hosts all pupnp code located in the global namespace.
+ * It isn't documented here. More....
+ *
+ * Because I don't want to modify the original Pupnp code it isn't documented
+ * here with doxygen. You will find the code in the projects subdirectory
+ * 'Pupnp/'. You may have a look at the corresponding compa documentation.
  */
 
 // vim: filetype=cpp

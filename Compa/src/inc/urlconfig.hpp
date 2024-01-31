@@ -1,9 +1,11 @@
-/**************************************************************************
+#ifndef COMPA_URLCONFIG_HPP
+#define COMPA_URLCONFIG_HPP
+/* ************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-10
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,38 +33,31 @@
  *
  **************************************************************************/
 // Last compare with pupnp original source file on 2022-11-10, ver 1.14.14
+/*!
+ * \file
+ * \brief Configure_urlbase.
+ */
 
-#ifndef UPNPLIB_URLCONFIG_HPP
-#define UPNPLIB_URLCONFIG_HPP
-
-#include "UpnpInet.hpp"
-
-/* functions available only if the web server is included */
-
-/************************************************************************
- * Function: configure_urlbase
+/*!
+ * \brief Configure the full URL for the description document.
  *
- * Parameters :
- *  INOUT IXML_Document *doc ;  IXML Description document
- *  IN const struct sockaddr *serverAddr;   socket address object
- *      providing the IP address and port information
- *  IN const char* alias ;      string containing the alias
- *  IN time_t last_modified ;   time when the XML document was
- *      downloaded
- *  OUT char docURL[LINE_SIZE] ;    buffer to hold the URL of the
- *      document.
+ * Create the URL document and add alias, description information. The doc is
+ * added to the web server to be served using the given alias.
  *
- * Description : Configure the full URL for the description document.
- *  Create the URL document and add alias, description information.
- *  The doc is added to the web server to be served using the given
- *  alias.
+ * \note The function is available only if the web server was enabled on
+ * compiling.
  *
- * Return : int ;
- *  UPNP_E_SUCCESS - On Success
- *  UPNP_E_OUTOF_MEMORY - Default Error
- ****************************************************************************/
-int configure_urlbase(IXML_Document* doc, const struct sockaddr* serverAddr,
-                      const char* alias, time_t last_modified,
-                      char docURL[LINE_SIZE]);
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error: UPNP_E_OUTOF_MEMORY - Default Error
+ */
+int configure_urlbase(
+    IXML_Document* doc,                ///< [in,out] IXML Description document
+    const struct sockaddr* serverAddr, /*!< [in] Socket address object providing
+                                          the IP address and port information */
+    const char* alias,                 ///< [in] String containing the alias
+    time_t last_modified,  ///< [in] Time when the XML document was downloaded
+    char docURL[LINE_SIZE] ///< [out] Buffer to hold the URL of the document
+);
 
-#endif /* UPNPLIB_URLCONFIG_HPP */
+#endif /* COMPA_URLCONFIG_HPP */

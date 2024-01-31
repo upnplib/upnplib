@@ -1,0 +1,5 @@
+<map id="http_header_t" name="http_header_t">
+<area shape="rect" id="node1" title="Structure of an HTTP header object." alt="" coords="41,109,153,136"/>
+<area shape="rect" id="node2" href="$d4/d89/structmemptr.html" title="pointer to a chunk of memory." alt="" coords="5,5,80,32"/>
+<area shape="rect" id="node3" href="$d8/d52/structmembuffer.html" title="Maintains a block of dynamically allocated memory." alt="" coords="105,5,199,32"/>
+</map>

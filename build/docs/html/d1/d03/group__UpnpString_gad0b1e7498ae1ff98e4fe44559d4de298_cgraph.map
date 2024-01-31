@@ -1,4 +1,0 @@
-<map id="UpnpString_casecmp" name="UpnpString_casecmp">
-<area shape="rect" id="node1" title="Compares two strings for equality. Case does not matter." alt="" coords="5,5,164,32"/>
-<area shape="rect" id="node2" href="$d1/d03/group__UpnpString.html#ga0ed631a52c94f4f9ee0d6a6182ee3ea1" title="Returns the pointer to char." alt="" coords="212,5,379,32"/>
-</map>

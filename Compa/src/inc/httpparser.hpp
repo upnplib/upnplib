@@ -1,10 +1,12 @@
+#ifndef COMPA_GENLIB_NET_HTTP_HTTPPARSER_HPP
+#define COMPA_GENLIB_NET_HTTP_HTTPPARSER_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-20
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-29
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,64 +34,54 @@
  *
  ******************************************************************************/
 // Last verify with this project pupnp source file on 2023-07-20, ver 1.14.17
-
-#ifndef UPNPLIB_GENLIB_NET_HTTP_HTTPPARSER_HPP
-#define UPNPLIB_GENLIB_NET_HTTP_HTTPPARSER_HPP
-
 /*!
  * \file
+ * \brief Functions to parse UPnP messages like requests and responses.
  */
 
-#include "LinkedList.hpp"
-#include "membuffer.hpp"
-#include "upnputil.hpp"
-#include "uri.hpp"
+#include <LinkedList.hpp>
+#include <membuffer.hpp>
+#include <upnputil.hpp>
+#include <uri.hpp>
 
-/* private types */
-
-/* scanner */
-
-/* Used to represent different types of tokens in input. */
-typedef enum {
-    TT_IDENTIFIER,
-    TT_WHITESPACE,
-    TT_CRLF,
-    TT_CTRL,
-    TT_SEPARATOR,
-    TT_QUOTEDSTRING
-} token_type_t;
-
-typedef struct {
-    /*! raw http msg. */
-    membuffer* msg;
-    /*! current position in buffer. */
-    size_t cursor;
-    /*! set this to 1 if the entire msg is loaded in 'msg';
-     * else 0 if only partial msg in 'msg' (default is 0). */
-    int entire_msg_loaded;
-} scanner_t;
-
-typedef enum {
-    POS_REQUEST_LINE,
-    POS_RESPONSE_LINE,
-    POS_HEADERS,
-    POS_ENTITY,
-    POS_COMPLETE
-} parser_pos_t;
-
+/*! \name Constants that define the read method.
+ * @{
+ */
+/// \brief Defines read method
 #define ENTREAD_DETERMINE_READ_METHOD 1
 #define ENTREAD_USING_CLEN 2
 #define ENTREAD_USING_CHUNKED 3
 #define ENTREAD_UNTIL_CLOSE 4
 #define ENTREAD_CHUNKY_BODY 5
 #define ENTREAD_CHUNKY_HEADERS 6
+/// @}
 
-/* end of private section. */
+/// Type of a parser position
+enum parser_pos_t {
+    POS_REQUEST_LINE,  ///< Position request line
+    POS_RESPONSE_LINE, ///< Position response line
+    POS_HEADERS,       ///< Position headers
+    POS_ENTITY,        ///< Position entity
+    POS_COMPLETE       ///< Position complete
+};
 
-/* method in a HTTP request.
- * IMPORTANT: The enum values of the standard HTTP method should match
- * those of Upnp_HttpMethod enum defined in upnp.h */
-typedef enum {
+/// \brief Structure of a scanner object.
+struct scanner_t {
+    /// Raw http message.
+    membuffer* msg;
+    /// Current position in buffer.
+    size_t cursor;
+    /*! \brief Completeness of 'msg'.
+     * - Set to 1 if the entire message is loaded in 'msg'.
+     * - Set to 0 if only a partial message is in 'msg'.
+     * - Default is 0. */
+    int entire_msg_loaded;
+};
+
+/*! \brief Method in a HTTP request. **For a Warning see**
+ * \warning The enum values of the standard HTTP method should match
+ * those of Upnp_HttpMethod enum defined in Compa/inc/upnp.hpp */
+enum http_method_t {
     HTTPMETHOD_PUT = UPNP_HTTPMETHOD_PUT,
     HTTPMETHOD_DELETE = UPNP_HTTPMETHOD_DELETE,
     HTTPMETHOD_GET = UPNP_HTTPMETHOD_GET,
@@ -103,9 +95,12 @@ typedef enum {
     HTTPMETHOD_UNKNOWN,
     SOAPMETHOD_POST,
     HTTPMETHOD_SIMPLEGET
-} http_method_t;
+};
 
-/* different types of HTTP headers */
+/*! \name Different types of HTTP headers.
+ * @{
+ */
+/// Type of a HTTP header
 #define HDR_UNKNOWN -1
 #define HDR_CACHE_CONTROL 1
 #define HDR_CALLBACK 2
@@ -131,8 +126,11 @@ typedef enum {
 #define HDR_TRANSFER_ENCODING 22
 #define HDR_USN 23
 #define HDR_USER_AGENT 24
-
-/* Adding new header difinition */
+/// @}
+/*! \name Adding new header definitions
+ * @{
+ */
+/// Header definition
 #define HDR_ACCEPT 25
 #define HDR_ACCEPT_ENCODING 26
 #define HDR_ACCEPT_CHARSET 27
@@ -145,9 +143,10 @@ typedef enum {
 #define HDR_IF_RANGE 34
 #define HDR_RANGE 35
 #define HDR_TE 36
+/// @}
 
-/*! status of parsing */
-typedef enum {
+/*! \brief Status of parsing. */
+enum parse_status_t {
     /*! msg was parsed successfully. */
     PARSE_SUCCESS = 0,
     /*! need more data to continue. */
@@ -162,330 +161,266 @@ typedef enum {
     PARSE_NO_MATCH,
     /*! private. */
     PARSE_CONTINUE_1
-} parse_status_t;
+};
 
-typedef struct {
-    /*! header name as a string. */
+/// Structure of an HTTP header object.
+struct http_header_t {
+    /*! \brief Header name as a string. */
     memptr name;
-    /*! header name id (for a selective group of headers only). */
+    /*! \brief Header name id (for a selective group of headers only). */
     int name_id;
-    /*! raw-value; could be multi-lined; min-length = 0. */
+    /*! \brief Raw-value; could be multi-lined; min-length = 0. */
     membuffer value;
-    /* private. */
+    /*! \brief (Private use -- don't touch.) */
     membuffer name_buf;
-} http_header_t;
+};
 
-typedef struct {
+/// \brief Structure of an HTTP message.
+struct http_message_t {
+    /// \brief Indicates if the object is initialized.
     int initialized;
-    /*! request only. */
-    http_method_t method;
-    /*! request only. */
-    uri_type uri;
-    /*! response only. */
-    http_method_t request_method;
-    /*! response only. */
-    int status_code;
-    /*! response only. */
-    membuffer status_msg;
-    /*! response only. the amount of data that's been read by the user,
-     * that's no longer in the raw message buffer.
-     */
-    size_t amount_discarded;
-    /* fields used in both request or response messages. */
-    /*! if 1, msg is a request, else response. */
-    int is_request;
-    /* http major version. */
-    int major_version;
-    /* http minor version. */
-    int minor_version;
-    /*! . */
-    LinkedList headers;
-    /*! message body(entity). */
-    memptr entity;
-    /* private fields. */
-    /*! entire raw message. */
-    membuffer msg;
-    /*! storage for url string. */
-    char* urlbuf;
-} http_message_t;
 
-typedef struct {
+    /*! \name Used only for outgoing requests.
+     * @{ */
+    /// \brief Http method of an outgoing request.
+    http_method_t method;
+    /// \brief Type of a uri, e.g. absolute, relative, etc.
+    uri_type uri;
+    /// @}
+
+    /*! \name Used only for incoming responses.
+     * @{ */
+    /// \brief Http method of an incoming response.
+    http_method_t request_method;
+    /// \brief ???
+    int status_code;
+    /// \brief ???
+    membuffer status_msg;
+    /*! \brief The amount of data that's been read by the user,
+     * that's no longer in the raw message buffer. */
+    size_t amount_discarded;
+    /// @}
+
+    /*! \name Used for outgoing requests or incoming responses.
+     * @{ */
+    /// \brief If 1, msg is a request, else response.
+    int is_request;
+    /// \brief Http major version.
+    int major_version;
+    /// \brief Http minor version.
+    int minor_version;
+    /// \brief List of headers.
+    LinkedList headers;
+    /// \brief message body(entity).
+    memptr entity;
+    /// @}
+
+    /*! \name Private fields -- don't touch.
+     * @{ */
+    /// \brief entire raw message.
+    membuffer msg;
+    /// \brief storage for url string.
+    char* urlbuf;
+    /// @}
+};
+
+/// \brief Structure of an HTTP parser object.
+struct http_parser_t {
+    /*! \brief entire raw message
+     * \details This contains the complete HTTP message with preceding header
+     * and message body. There is also the http_parser_t::entity_start_position
+     * available that points to the message body in the message. */
     http_message_t msg;
-    /*! read-only; in case of parse error, this
+    /*! \brief read-only; in case of parse error, this
      * contains the HTTP error code (4XX or 5XX). */
     int http_error_code;
-    /*! read-only; this is set to 1 if a NOTIFY request has no
+    /*! \brief read-only; this is set to 1 if a NOTIFY request has no
      * content-length. used to read valid sspd notify msg. */
     int valid_ssdp_notify_hack;
-    /* private data -- don't touch. */
+    /// @{
+    /// \brief Private data -- don't touch.
     parser_pos_t position;
     int ent_position;
     unsigned int content_length;
     size_t chunk_size;
-    /*! offset in the the raw message buffer, which contains the message
-     * body. preceding this are the headers of the messsage. */
+    /// @}
+    /*! \brief Offset in the raw message buffer, which contains the message
+     * body. preceding this are the headers of the message. */
     size_t entity_start_position;
+    /// ???
     scanner_t scanner;
-} http_parser_t;
+};
 
-/************************************************************************
- *	Function :	httpmsg_init
- *
- *	Parameters :
- *		INOUT http_message_t* msg ;	HTTP Message Object
- *
- *	Description :	Initialize and allocate memory for http message
- *
- *	Return : void ;
- *
- *	Note :
- ************************************************************************/
-void httpmsg_init(http_message_t* msg);
-
-/************************************************************************
- *	Function :	httpmsg_destroy
- *
- *	Parameters :
- *		INOUT http_message_t* msg ;	HTTP Message Object
- *
- *	Description :	Free memory allocated for the http message
- *
- *	Return : void ;
- *
- *	Note :
- ************************************************************************/
-EXPORT_SPEC void httpmsg_destroy(http_message_t* msg);
-
-/************************************************************************
- *	Function :	httpmsg_find_hdr_str
- *
- *	Parameters :
- *		IN http_message_t* msg ;	HTTP Message Object
- *		IN const char* header_name ; Header name to be compared with
- *
- *	Description :	Compares the header name with the header names stored
- *		in	the linked list of messages
- *
- *	Return : http_header_t* - Pointer to a header on success;
- *			 NULL on failure
- *	Note :
- ************************************************************************/
-EXPORT_SPEC http_header_t* httpmsg_find_hdr_str(http_message_t* msg,
-                                                const char* header_name);
-
-/************************************************************************
- *	Function :	httpmsg_find_hdr
- *
- *	Parameters :
- *		IN http_message_t* msg ; HTTP Message Object
- *		IN int header_name_id ;	 Header Name ID to be compared with
- *		OUT memptr* value ;		 Buffer to get the ouput to.
- *
- *	Description :	Finds header from a list, with the given 'name_id'.
- *
- *	Return : http_header_t*  - Pointer to a header on success;
- *		 NULL on failure
- *
- *	Note :
- ************************************************************************/
-EXPORT_SPEC http_header_t* httpmsg_find_hdr(http_message_t* msg,
-                                            int header_name_id, memptr* value);
-
-/************************************************************************
- * Function: parser_request_init
- *
- * Parameters:
- *	OUT http_parser_t* parser ; HTTP Parser object
- *
- * Description: Initializes parser object for a request
- *
- * Returns:
- *	 void
- ************************************************************************/
-EXPORT_SPEC void parser_request_init(http_parser_t* parser);
-
-/************************************************************************
- * Function: parser_response_init
- *
- * Parameters:
- *	OUT http_parser_t* parser	;	  HTTP Parser object
- *	IN http_method_t request_method	; Request method
- *
- * Description: Initializes parser object for a response
- *
- * Returns:
- *	 void
- ************************************************************************/
-EXPORT_SPEC void parser_response_init(http_parser_t* parser,
-                                      http_method_t request_method);
-
-/************************************************************************
- * Function: parser_parse
- *
- * Parameters:
- *	INOUT http_parser_t* parser ; HTTP Parser object
- *
- * Description: The parser function. Depending on the position of the
- *	parser object the actual parsing function is invoked
- *
- * Returns:
- *	 void
- ************************************************************************/
-parse_status_t parser_parse(http_parser_t* parser);
-
-/************************************************************************
- * Function: parser_parse_responseline
- *
- * Parameters:
- *	INOUT http_parser_t* parser	; HTTP Parser object
- *
- * Description: Get HTTP Method, URL location and version information.
- *
- * Returns:
- *	PARSE_OK
- *	PARSE_SUCCESS
- *	PARSE_FAILURE
- ************************************************************************/
-EXPORT_SPEC parse_status_t parser_parse_responseline(http_parser_t* parser);
-
-/************************************************************************
- * Function: parser_parse_headers
- *
- * Parameters:
- *	INOUT http_parser_t* parser	; HTTP Parser object
- *
- * Description: Get HTTP Method, URL location and version information.
- *
- * Returns:
- *	PARSE_OK
- *	PARSE_SUCCESS
- *	PARSE_FAILURE
- ************************************************************************/
-EXPORT_SPEC parse_status_t parser_parse_headers(http_parser_t* parser);
-
-/************************************************************************
- * Function: parser_parse_entity
- *
- * Parameters:
- *	INOUT http_parser_t* parser	; HTTP Parser object
- *
- * Description: Determines method to read entity
- *
- * Returns:
- *	 PARSE_OK
- * 	 PARSE_FAILURE
- *	 PARSE_COMPLETE	-- no more reading to do
- ************************************************************************/
-EXPORT_SPEC parse_status_t parser_parse_entity(http_parser_t* parser);
-
-/************************************************************************
- * Function: parser_get_entity_read_method
- *
- * Parameters:
- *	INOUT http_parser_t* parser	; HTTP Parser object
- *
- * Description: Determines method to read entity
- *
- * Returns:
- *	 PARSE_OK
- * 	 PARSE_FAILURE
- *	 PARSE_COMPLETE	-- no more reading to do
- ************************************************************************/
-EXPORT_SPEC parse_status_t parser_get_entity_read_method(http_parser_t* parser);
-
-/************************************************************************
- * Function: parser_append
- *
- * Parameters:
- *	INOUT http_parser_t* parser ;	HTTP Parser Object
- *	IN const char* buf	;	buffer to be appended to the parser
- *					buffer
- *	IN size_t buf_length ;		Size of the buffer
- *
- * Description: The parser function. Depending on the position of the
- *	parser object the actual parsing function is invoked
- *
- * Returns:
- *	 void
- ************************************************************************/
-EXPORT_SPEC parse_status_t parser_append(http_parser_t* parser, const char* buf,
-                                         size_t buf_length);
-
-/************************************************************************
- * Function: matchstr
- *
- * Parameters:
- *	IN char *str ;		 String to be matched
- *	IN size_t slen ;     Length of the string
- *	IN const char* fmt ; Pattern format
- *	...
- *
- * Description: Matches a variable parameter list with a string
- *	and takes actions based on the data type specified.
- *
- * Returns:
- *   PARSE_OK
- *   PARSE_NO_MATCH -- failure to match pattern 'fmt'
- *   PARSE_FAILURE	-- 'str' is bad input
- ************************************************************************/
-parse_status_t matchstr(char* str, size_t slen, const char* fmt, ...);
-
-/************************************************************************
- * Function: raw_to_int
- *
- * Parameters:
- *	IN memptr* raw_value ;	Buffer to be converted
- *	IN int base ;			Base  to use for conversion
- *
- * Description: Converts raw character data to long-integer value
- *
- * Returns:
- *	 int
- ************************************************************************/
-int raw_to_int(memptr* raw_value, int base);
-
-/************************************************************************
- * Function: raw_find_str
- *
- * Parameters:
- *	IN memptr* raw_value ; Buffer containg the string
- *	IN const char* str ;	Substring to be found
- *
- * Description: Find a substring from raw character string buffer
- *
- * Side effects: raw_value is transformed to lowercase.
- *
- * Returns:
- *	 int - index at which the substring is found.
- ************************************************************************/
-int raw_find_str(memptr* raw_value, const char* str);
-
-/************************************************************************
- * Function: method_to_str
- *
- * Parameters:
- * IN http_method_t method ; HTTP method
- *
- * Description: A wrapper function that maps a method id to a method
- *	nameConverts a http_method id stored in the HTTP Method
- *
- * Returns:
- *	 const char* ptr - Ptr to the HTTP Method
- ************************************************************************/
-EXPORT_SPEC const char* method_to_str(http_method_t method);
 
 /*!
- * \brief Print the HTTP headers.
+ * \brief Initialize and allocate memory for http message.
  */
+void httpmsg_init(      //
+    http_message_t* msg ///< [in,out] HTTP message object.
+);
 
-#ifdef DEBUG
-EXPORT_SPEC void print_http_headers(
-    /*! [in] HTTP Message object. */
-    http_message_t* hmsg);
+/*!
+ * \brief Free memory allocated for the http message.
+ */
+UPNPLIB_API void httpmsg_destroy( //
+    http_message_t* msg           ///< [in,out] HTTP Message Object.
+);
+
+/*!
+ * \brief Compares the header name with the header names stored in the linked
+ * list of messages.
+ * \returns
+ *  - Pointer to a header on success
+ *  - nullptr on failure
+ */
+UPNPLIB_API http_header_t* httpmsg_find_hdr_str(
+    http_message_t* msg,    ///< [in] HTTP Message Object.
+    const char* header_name ///< [in] Header name to be compared with.
+);
+
+/*!
+ * \brief Finds header from a list, with the given 'name_id'.
+ * \returns
+ *  - Pointer to a header on success
+ *  - nullptr on failure
+ */
+UPNPLIB_API http_header_t* httpmsg_find_hdr(
+    http_message_t* msg, ///< [in] HTTP Message Object.
+    int header_name_id,  ///< [in] Header Name ID to be compared with.
+    memptr* value        ///< [out] Buffer to get the ouput to.
+);
+
+/*!
+ * \brief Initializes parser object for a request.
+ */
+UPNPLIB_API void parser_request_init( //
+    http_parser_t* parser             ///< [out] HTTP Parser object.
+);
+
+/*!
+ * \brief Initializes parser object for a response.
+ */
+UPNPLIB_API void parser_response_init( //
+    http_parser_t* parser,             ///< [out] HTTP Parser object.
+    http_method_t request_method       ///< [in] Request method.
+);
+
+/*!
+ * \brief The parser function. Depending on the position of the parser object
+ * the actual parsing function is invoked.
+ */
+parse_status_t parser_parse( //
+    http_parser_t* parser    ///< [in,out] HTTP Parser object.
+);
+
+/*!
+ * \brief Get HTTP Method, URL location and version information.
+ * \returns
+ *  - PARSE_OK
+ *  - PARSE_SUCCESS
+ *  - PARSE_FAILURE
+ */
+UPNPLIB_API parse_status_t parser_parse_responseline(
+    http_parser_t* parser ///< [in,out] HTTP Parser object.
+);
+
+/*!
+ * \brief Get HTTP Method, URL location and version information.
+ * \returns
+ *  - PARSE_OK
+ *  - PARSE_SUCCESS
+ *  - PARSE_FAILURE
+ */
+UPNPLIB_API parse_status_t parser_parse_headers(
+    http_parser_t* parser ///< [in,out] HTTP Parser object.
+);
+
+/*!
+ * \brief Determines method to read entity.
+ * \returns
+ *  - PARSE_OK
+ *  - PARSE_FAILURE
+ *  - PARSE_COMPLETE -- no more reading to do
+ */
+UPNPLIB_API parse_status_t parser_parse_entity(
+    http_parser_t* parser ///< [in,out] HTTP Parser object.
+);
+
+/*!
+ * \brief Determines method to read entity.
+ * \returns
+ *  - PARSE_OK
+ *  - PARSE_FAILURE
+ *  - PARSE_COMPLETE -- no more reading to do
+ */
+UPNPLIB_API parse_status_t parser_get_entity_read_method(
+    http_parser_t* parser ///< [in,out] HTTP Parser object.
+);
+
+/*!
+ * \brief The parser function. Depending on the position of the parser object
+ * the actual parsing function is invoked.
+ */
+UPNPLIB_API parse_status_t parser_append(
+    http_parser_t* parser, ///< [in,out] HTTP Parser object.
+    const char* buf,       ///< [in] buffer to be appended to the parser.
+    size_t buf_length      ///< [in] Size of the buffer.
+);
+
+/*!
+ * \brief Matches a variable parameter list with a string and takes actions
+ * based on the data type specified.
+ * \returns
+ *  - PARSE_OK
+ *  - PARSE_NO_MATCH -- failure to match pattern 'fmt'
+ *  - PARSE_FAILURE  -- 'str' is bad input
+ */
+parse_status_t matchstr( //
+    char* str,           ///< [in] String to be matched.
+    size_t slen,         ///< [in] Length of the string.
+    const char* fmt,     ///< [in] Pattern format for arguments (like printf()).
+    ...                  ///< [in] Variable list of arguments (like printf()).
+);
+
+/*!
+ * \brief Converts raw character data to integer value.
+ * \returns integer
+ */
+int raw_to_int(        //
+    memptr* raw_value, ///< [in] Buffer to be converted.
+    int base           ///< Base to use for conversion.
+);
+
+/*!
+ * \brief Find a substring from raw character string buffer.
+ * \returns integer - index at which the substring is found.
+ */
+int raw_find_str(      //
+    memptr* raw_value, ///< [in] Buffer containg the string.
+    const char* str    ///< [in] Substring to be found.
+);
+
+/*!
+ * \brief A wrapper function that maps a method id to a method<br/>
+ * nameConverts a http_method id stored in the HTTP Method.
+ * \returns Pointer to the HTTP Method.
+ */
+UPNPLIB_API const char* method_to_str( //
+    http_method_t method               ///< [in] HTTP method.
+);
+
+/*!
+ * \brief Print the HTTP headers if DEBUG is enabled.
+ * \details Function is only available when compiled with DEBUG enabled.
+ */
+#if defined(DEBUG) || defined(DOXYGEN_RUN)
+UPNPLIB_API void print_http_headers( //
+    http_message_t* hmsg             ///< [in] HTTP Message object.
+);
 #else
 #define print_http_headers(hmsg)                                               \
     do {                                                                       \
     } while (0)
 #endif
 
-#endif /* UPNPLIB_GENLIB_NET_HTTP_HTTPPARSER_HPP */
+#endif /* COMPA_GENLIB_NET_HTTP_HTTPPARSER_HPP */

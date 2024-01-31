@@ -1,9 +1,11 @@
-/*******************************************************************************
+#ifndef COMPA_GENLIB_NET_URI_HPP
+#define COMPA_GENLIB_NET_URI_HPP
+/* *****************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-17
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,37 +31,18 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- ******************************************************************************/
-
-#ifndef UPNPLIB_GENLIB_NET_URI_HPP
-#define UPNPLIB_GENLIB_NET_URI_HPP
-
+ * ****************************************************************************/
 /*!
  * \file
+ * \brief Modify and parse URIs.
  */
 
-#if !defined(_WIN32)
-// #include <sys/param.h>
-#endif
-
-#include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
-// #include "UpnpInet.hpp"
 #include "winsock2.h" // For different platforms: don't use <winsock2.h>
 
 #include <ctype.h>
-// #include <errno.h>
-// #include <fcntl.h>
-// #include <stdlib.h>
 #include <string.h>
-// #include <sys/types.h>
-// #include <time.h>
 
-#ifdef _WIN32
-#if !defined(UPNP_USE_MSVCPP) && !defined(UPNP_USE_BCBPP)
-/* VC Winsocks2 includes these functions */
-// #include "inet_pton.h"
-#endif
-#else
+#ifndef _WIN32
 #include <netdb.h> /* for struct addrinfo */
 #endif
 
@@ -69,84 +52,90 @@
 /* Other systems have strncasecmp */
 #endif
 
+/// \brief Some character marks.
 #define MARK "-_.!~*'()"
 
-/*! added {} for compatibility */
+/// \brief Reserved character. Added {} for compatibility.
 #define RESERVED ";/?:@&=+$,{}"
 
+/// Yet another success code.
 #define HTTP_SUCCESS 1
 
+/// Type of the host.
 enum hostType { HOSTNAME, IPv4address };
 
+/// Type of the "path" part of the URI.
 enum pathType { ABS_PATH, REL_PATH, OPAQUE_PART };
 
-#ifdef _WIN32
-/* there is a conflict in windows with other symbols. */
+#if defined(_WIN32) || defined(DOXYGEN_RUN)
+/*! \brief Need this for WIN32. There is a conflict with other symbols.
+ *
+ * Default is\n`enum uriType { ABSOLUTE, RELATIVE };` */
 enum uriType { absolute, relative };
 #else
 enum uriType { ABSOLUTE, RELATIVE };
 #endif
 
 /*!
- * \brief Buffer used in parsinghttp messages, urls, etc. generally this simply
+ * \brief Buffer used in parsinghttp messages, urls, etc. Generally this simply
  * holds a pointer into a larger array.
  */
-typedef struct TOKEN {
-    const char* buff;
-    size_t size;
-} token;
+struct token {
+    const char* buff; ///< Buffer
+    size_t size;      ///< Size of the buffer
+};
 
 /*!
- * \brief Represents a host port: e.g. "127.127.0.1:80" text is a token
- * pointing to the full string representation.
+ * \brief Represents a host port, e.g. "127.127.0.1:80".
  */
-typedef struct HOSTPORT {
-    /*! Full host port. */
-    token text;
-    /* Network Byte Order */
-    struct sockaddr_storage IPaddress;
-} hostport_type;
+struct hostport_type {
+    token text; ///< Pointing to the full host:port string representation.
+    struct sockaddr_storage IPaddress; ///< Network socket address.
+};
 
 /*!
- * \brief Represents a URI used in parse_uri and elsewhere
+ * \brief Represents a URI used in parse_uri and elsewhere.
  */
-typedef struct URI {
+struct uri_type {
+    /// @{
+    /// \brief Member variable
     enum uriType type;
     token scheme;
     enum pathType path_type;
     token pathquery;
     token fragment;
     hostport_type hostport;
-} uri_type;
+    /// @}
+};
 
 /*!
  * \brief Represents a list of URLs as in the "callback" header of SUBSCRIBE
- * message in GENA. "char *" URLs holds dynamic memory.
+ * message in GENA.
  */
-typedef struct URL_LIST {
-    /*! */
-    size_t size;
-    /*! All the urls, delimited by <> */
-    char* URLs;
-    /*! */
-    uri_type* parsedURLs;
-} URL_list;
+struct URL_list {
+    size_t size;          ///< size
+    char* URLs;           ///< Dynamic memory for all urls, delimited by `<>`
+    uri_type* parsedURLs; ///< parsed URLs
+};
 
 /*!
  * \brief Replaces one single escaped character within a string with its
- * unescaped version as in http://www.ietf.org/rfc/rfc2396.txt (RFC explaining
- * URIs). The index must exactly point to the '%' character, otherwise the
- * function will return unsuccessful.
+ * unescaped version.
  *
- * Size of array is NOT checked (MUST be checked by caller).
+ * This is spezified in <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396
+ * (RFC explaining URIs)</a>. The index must exactly point to the \b '\%'
+ * character, otherwise the function will return unsuccessful. Size of array is
+ * NOT checked (MUST be checked by caller).
  *
  * \note This function modifies the string and the max size. If the sequence is
  * an escaped sequence it is replaced, the other characters in the string are
  * shifted over, and NULL characters are placed at the end of the string.
  *
- * \return 1 if an escaped character was converted, otherwise return 0.
+ * \returns
+ *   1 - if an escaped character was converted\n
+ *   0 - otherwise
  */
-EXPORT_SPEC int replace_escaped(
+UPNPLIB_API int replace_escaped(
     /*! [in,out] String of characters. */
     char* in,
     /*! [in] Index at which to start checking the characters. */
@@ -163,10 +152,10 @@ EXPORT_SPEC int replace_escaped(
  * by the caller through: free_URL_list(&out).
  *
  * \return
- * 	\li HTTP_SUCCESS - On Success.
- * 	\li UPNP_E_OUTOF_MEMORY - On Failure to allocate memory.
+ *  \li HTTP_SUCCESS - On Success.
+ *  \li UPNP_E_OUTOF_MEMORY - On Failure to allocate memory.
  */
-EXPORT_SPEC int copy_URL_list(
+UPNPLIB_API int copy_URL_list(
     /*! [in] Source URL list. */
     URL_list* in,
     /*! [out] Destination URL list. */
@@ -178,30 +167,27 @@ EXPORT_SPEC int copy_URL_list(
  * Frees the dynamically allocated members of of list. Does NOT free the
  * pointer to the list itself ( i.e. does NOT free(list)).
  */
-EXPORT_SPEC void free_URL_list(
+UPNPLIB_API void free_URL_list(
     /*! [in] URL list object. */
     URL_list* list);
 
-/*!
- * \brief Function useful in debugging for printing a parsed uri.
- */
-#ifdef DEBUG
-void print_uri(
-    /*! [in] URI object to print. */
-    uri_type* in);
+#if defined(DEBUG) || defined(DOXYGEN_RUN)
+/*! \brief Function useful in debugging for printing a parsed uri.
+ * \details This is only available when compiled with DEBUG enabled. */
+void print_uri(uri_type* in ///< [in] URI object to print.
+);
 #else
 #define print_uri(in)                                                          \
     do {                                                                       \
     } while (0)
 #endif
 
-/*!
- * \brief Function useful in debugging for printing a token.
- */
-#ifdef DEBUG
-void print_token(
-    /*! [in] Token object to print. */
-    token* in);
+#if defined(DEBUG) || defined(DOXYGEN_RUN)
+/*! \brief Function useful in debugging for printing a token.
+ * \details This is only available when compiled with DEBUG enabled. */
+void print_token( //
+    token* in     ///< [in] Token object to print.
+);
 #else
 #define print_token(in)                                                        \
     do {                                                                       \
@@ -213,11 +199,11 @@ void print_token(
  * insensitive.
  *
  * \return
- * 	\li < 0, if string1 is less than string2.
- * 	\li == 0, if string1 is identical to string2 .
- * 	\li > 0, if string1 is greater than string2.
+ *  \li < 0, if string1 is less than string2.
+ *  \li == 0, if string1 is identical to string2 .
+ *  \li > 0, if string1 is greater than string2.
  */
-EXPORT_SPEC int token_string_casecmp(
+UPNPLIB_API int token_string_casecmp(
     /*! [in] Token object whose buffer is to be compared. */
     token* in1,
     /*! [in] String of characters to compare with. */
@@ -227,11 +213,11 @@ EXPORT_SPEC int token_string_casecmp(
  * \brief Compares two tokens.
  *
  * \return
- * 	\li < 0, if string1 is less than string2.
- * 	\li == 0, if string1 is identical to string2 .
- * 	\li > 0, if string1 is greater than string2.
+ *  \li < 0, if string1 is less than string2.
+ *  \li == 0, if string1 is identical to string2 .
+ *  \li > 0, if string1 is greater than string2.
  */
-EXPORT_SPEC int token_cmp(
+UPNPLIB_API int token_cmp(
     /*! [in] First token object whose buffer is to be compared. */
     token* in1,
     /*! [in] Second token object used for the comparison. */
@@ -239,14 +225,14 @@ EXPORT_SPEC int token_cmp(
 
 /*!
  * \brief Removes http escaped characters such as: "%20" and replaces them with
- * their character representation. i.e. "hello%20foo" -> "hello foo".
+ * their character representation.
  *
- * The input IS MODIFIED in place (shortened). Extra characters are replaced
- * with \b NULL.
+ * For example: "hello%20foo" -> "hello foo". The input IS MODIFIED in place
+ * (shortened). Extra characters are replaced with \b NULL.
  *
- * \return UPNP_E_SUCCESS.
+ * \returns UPNP_E_SUCCESS.
  */
-EXPORT_SPEC int remove_escaped_chars(
+UPNPLIB_API int remove_escaped_chars(
     /*! [in,out] String of characters to be modified. */
     char* in,
     /*! [in,out] Size limit for the number of characters. */
@@ -256,45 +242,48 @@ EXPORT_SPEC int remove_escaped_chars(
  * \brief Removes ".", and ".." from a path.
  *
  * If a ".." can not be resolved (i.e. the .. would go past the root of the
- * path) an error is returned.
+ * path) an error is returned. The input IS modified in place.
  *
- * The input IS modified in place.)
+ * \verbatim
+Examples:
+ uchar path[30]="/../hello";
+ uremove_dots(path, strlen(path)) -> UPNP_E_INVALID_URL
+ uchar path[30]="/./hello";
+ uremove_dots(path, strlen(path)) -> UPNP_E_SUCCESS,
+ uin = "/hello"
+ uchar path[30]="/./hello/foo/../goodbye" ->
+ uUPNP_E_SUCCESS, in = "/hello/goodbye"
+\endverbatim
  *
- * \note Examples
- * 	char path[30]="/../hello";
- * 	remove_dots(path, strlen(path)) -> UPNP_E_INVALID_URL
- * 	char path[30]="/./hello";
- * 	remove_dots(path, strlen(path)) -> UPNP_E_SUCCESS,
- * 	in = "/hello"
- * 	char path[30]="/./hello/foo/../goodbye" ->
- * 	UPNP_E_SUCCESS, in = "/hello/goodbye"
- *
- * \return
- * 	\li UPNP_E_SUCCESS - On Success.
- * 	\li UPNP_E_OUTOF_MEMORY - On failure to allocate memory.
- * 	\li UPNP_E_INVALID_URL - Failure to resolve URL.
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_OUTOF_MEMORY - On failure to allocate memory.
+ *  - UPNP_E_INVALID_URL - Failure to resolve URL.
  */
-EXPORT_SPEC int remove_dots(
+UPNPLIB_API int remove_dots(
     /*! [in] String of characters from which "dots" have to be removed. */
     char* in,
     /*! [in] Size limit for the number of characters. */
     size_t size);
 
 /*!
- * \brief resolves a relative url with a base url returning a NEW (dynamically
- * allocated with malloc) full url.
+ * \brief Resolves a relative url with a base url.
  *
- * If the base_url is \b NULL, then a copy of the  rel_url is passed back if
- * the rel_url is absolute then a copy of the rel_url is passed back if neither
- * the base nor the rel_url are Absolute then NULL is returned. Otherwise it
- * tries and resolves the relative url with the base as described in
- * http://www.ietf.org/rfc/rfc2396.txt (RFCs explaining URIs).
+ * - If the base_url is a \b nullptr, then a copy of the rel_url is passed back.
+ * - If the rel_url is absolute then a copy of the rel_url is passed back.
+ * - If neither the base nor the rel_url are absolute then a \b nullptr is
+ *   returned.
+ * - Otherwise it tries and resolves the relative url with the base as
+ *   described in <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396 (RFC
+ *   explaining URIs)</a>.
  *
  * The resolution of '..' is NOT implemented, but '.' is resolved.
  *
- * \return
+ * \returns
+ *  Pointer to a new with malloc dynamically allocated full URL or a \b nullptr.
  */
-EXPORT_SPEC char* resolve_rel_url(
+UPNPLIB_API char* resolve_rel_url(
     /*! [in] Base URL. */
     char* base_url,
     /*! [in] Relative URL. */
@@ -311,9 +300,11 @@ EXPORT_SPEC char* resolve_rel_url(
  *
  * Caller should check for the pieces they require.
  *
- * \return HTTP_SUCCESS or UPNP_E_INVALID_URL
+ * \returns
+ *  On success: HTTP_SUCCESS\n
+ *  On error: UPNP_E_INVALID_URL
  */
-EXPORT_SPEC int parse_uri(
+UPNPLIB_API int parse_uri(
     /*! [in] Character string containing uri information to be parsed. */
     const char* in,
     /*! [in] Number of characters (strlen()) of the input string. */
@@ -335,4 +326,4 @@ int parse_token(
     /*! [in] . */
     int max_size);
 
-#endif /* UPNPLIB_GENLIB_NET_URI_HPP */
+#endif /* COMPA_GENLIB_NET_URI_HPP */

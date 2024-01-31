@@ -1,0 +1,4 @@
+<map id="SsdpSearchReply" name="SsdpSearchReply">
+<area shape="rect" id="node1" title="SSDP search reply." alt="" coords="5,95,140,121"/>
+<area shape="rect" id="node2" href="$d1/da6/structSsdpEvent.html" title="Structure to store the SSDP information." alt="" coords="27,5,118,32"/>
+</map>

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-31
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -289,21 +289,6 @@ int http_FixStrUrl(const char* urlstr, size_t urlstrlen, uri_type* fixed_url) {
     return http_FixUrl(&url, fixed_url);
 }
 
-/************************************************************************
- * Function: http_Connect
- *
- * Parameters:
- *  IN uri_type* destination_url;   URL containing destination information
- *  OUT uri_type *url;      Fixed and corrected URL
- *
- * Description:
- *  Gets destination address from URL and then connects to the remote end
- *
- *  Returns:
- *  socket descriptor on success
- *  UPNP_E_OUTOF_SOCKET
- *  UPNP_E_SOCKET_CONNECT on error
- ************************************************************************/
 SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
     SOCKET connfd;
     socklen_t sockaddr_len;
@@ -829,26 +814,6 @@ int http_Download(const char* url_str, int timeout_secs, char** document,
     return ret_code;
 }
 
-/************************************************************************
- * Function: MakeGenericMessage
- *
- * Parameters:
- *  http_method_t method;   The type of HTTP method.
- *  const char *url_str;        String as a URL
- *  membuffer *request;     Buffer containing the request
- *  uri_type *url;          URI object containing the scheme,
- *                  path query token, etc.
- *  int contentLength;      length of content
- *  const char *contentType;    Type of content
- *
- * Description:
- *  Makes the message for the HTTP POST message
- *
- * Returns:
- *  UPNP_E_INVALID_URL
- *  UPNP_E_INVALID_PARAM
- *  UPNP_E_SUCCESS
- ************************************************************************/
 int MakeGenericMessage(http_method_t method, const char* url_str,
                        membuffer* request, uri_type* url, int contentLength,
                        const char* contentType, const UpnpString* headers) {
@@ -1034,21 +999,6 @@ static int ReadResponseLineAndHeaders(
     return PARSE_OK;
 }
 
-/************************************************************************
- * Function: http_HttpGetProgress
- *
- * Parameters:
- *  IN void *Handle;    Handle to the HTTP get object
- *  OUT size_t *length; Buffer to get the read and parsed data
- *  OUT size_t *total;  Size of tge buffer passed
- *
- * Description:
- *  Extracts information from the Handle to the HTTP get object.
- *
- * Return: int
- *  UPNP_E_SUCCESS      - On Sucess
- *  UPNP_E_INVALID_PARAM    - Invalid Parameter
- ************************************************************************/
 int http_HttpGetProgress(void* Handle, size_t* length, size_t* total) {
     http_connection_handle_t* handle = (http_connection_handle_t*)Handle;
 
@@ -1061,19 +1011,6 @@ int http_HttpGetProgress(void* Handle, size_t* length, size_t* total) {
     return UPNP_E_SUCCESS;
 }
 
-/************************************************************************
- * Function: http_CancelHttpGet
- *
- * Parameters:
- *  IN void *Handle;    Handle to HTTP get object
- *
- * Description:
- *  Set the cancel flag of the HttpGet handle
- *
- * Return: int
- *  UPNP_E_SUCCESS      - On Success
- *  UPNP_E_INVALID_PARAM    - Invalid Parameter
- ************************************************************************/
 int http_CancelHttpGet(void* Handle) {
     http_connection_handle_t* handle = (http_connection_handle_t*)Handle;
 
@@ -1400,26 +1337,6 @@ int http_CloseHttpConnection(void* Handle) {
     return UPNP_E_SUCCESS;
 }
 
-/************************************************************************
- * Function: http_SendStatusResponse
- *
- * Parameters:
- *  IN SOCKINFO *info;              Socket information object
- *  IN int http_status_code;        error code returned while making or sending
- *                                  the response message
- *  IN int request_major_version;   request major version
- *  IN int request_minor_version;   request minor version
- *
- * Description:
- *  Generate a response message for the status query and send the
- *  status response.
- *
- * Return: int
- *  0 -- success
- *  UPNP_E_OUTOF_MEMORY
- *  UPNP_E_SOCKET_WRITE
- *  UPNP_E_TIMEDOUT
- ************************************************************************/
 int http_SendStatusResponse(SOCKINFO* info, int http_status_code,
                             int request_major_version,
                             int request_minor_version) {
@@ -1710,20 +1627,6 @@ ExitFunction:
     return error_code;
 }
 
-/************************************************************************
- * Function: http_CalcResponseVersion
- *
- * Parameters:
- *  IN int request_major_vers;  Request major version
- *  IN int request_minor_vers;  Request minor version
- *  OUT int* response_major_vers;   Response mojor version
- *  OUT int* response_minor_vers;   Response minor version
- *
- * Description:
- *  Calculate HTTP response versions based on the request versions.
- *
- * Return: void
- ************************************************************************/
 void http_CalcResponseVersion(int request_major_vers, int request_minor_vers,
                               int* response_major_vers,
                               int* response_minor_vers) {
@@ -1737,23 +1640,6 @@ void http_CalcResponseVersion(int request_major_vers, int request_minor_vers,
     }
 }
 
-/************************************************************************
- * Function: MakeGetMessageEx
- *
- * Parameters:
- *  const char *url_str;    String as a URL
- *  membuffer *request; Buffer containing the request
- *  uri_type *url;      URI object containing the scheme, path
- *              query token, etc.
- *
- * Description:
- *  Makes the message for the HTTP GET method
- *
- * Returns:
- *  UPNP_E_INVALID_URL
- *  Error Codes returned by http_MakeMessage
- *  UPNP_E_SUCCESS
- ************************************************************************/
 int MakeGetMessageEx(const char* url_str, membuffer* request, uri_type* url,
                      struct SendInstruction* pRangeSpecifier) {
     size_t url_str_len;
@@ -1802,31 +1688,6 @@ int MakeGetMessageEx(const char* url_str, membuffer* request, uri_type* url,
 
 #define SIZE_RANGE_BUFFER 50
 
-/************************************************************************
- * Function: http_OpenHttpGetEx
- *
- * Parameters:
- *  IN const char *url_str;     String as a URL
- *  IN OUT void **Handle;       Pointer to buffer to store HTTP
- *                  post handle
- *  IN OUT char **contentType;  Type of content
- *  OUT int *contentLength;     length of content
- *  OUT int *httpStatus;        HTTP status returned on receiving a
- *                  response message
- *  IN int timeout;         time out value
- *
- * Description:
- *  Makes the HTTP GET message, connects to the peer,
- *  sends the HTTP GET request, gets the response and parses the
- *  response.
- *
- * Return: int
- *  UPNP_E_SUCCESS      - On Success
- *  UPNP_E_INVALID_PARAM    - Invalid Paramters
- *  UPNP_E_OUTOF_MEMORY
- *  UPNP_E_SOCKET_ERROR
- *  UPNP_E_BAD_RESPONSE
- ************************************************************************/
 int http_OpenHttpGetEx(const char* url_str, void** Handle, char** contentType,
                        int* contentLength, int* httpStatus, int lowRange,
                        int highRange, int timeout) {
@@ -1949,19 +1810,6 @@ int http_OpenHttpGetEx(const char* url_str, void** Handle, char** contentType,
     return errCode;
 }
 
-/************************************************************************
- * Function: get_sdk_info
- *
- * Parameters:
- *  OUT char *info; buffer to store the operating system information
- *  IN size_t infoSize; size of buffer
- *
- * Description:
- *  Returns the server information for the operating system
- *
- * Return:
- *  UPNP_INLINE void
- ************************************************************************/
 /* 'info' should have a size of at least 100 bytes */
 void get_sdk_info(char* info, size_t infoSize) {
     TRACE("Executing get_sdk_info().")

@@ -1,20 +1,18 @@
-#ifdef UPNP_HAVE_CLIENT
+#if defined(UPNP_HAVE_CLIENT) || defined(DOXYGEN_RUN)
 
-#ifndef GENLIBCLIENTSUBSCRIPTION_HPP
-#define GENLIBCLIENTSUBSCRIPTION_HPP
-
+#ifndef COMPA_GENLIB_CLIENTSUBSCRIPTION_HPP
+#define COMPA_GENLIB_CLIENTSUBSCRIPTION_HPP
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-29
 /*!
  * \file
- *
  * \brief Header file for GenlibClientSubscription methods.
- *
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 #include <stdlib.h> /* for size_t */
 
-#include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
-
-#include "UpnpString.hpp"
+#include <UpnpGlobal.hpp> /* for EXPORT_SPEC */
+#include <UpnpString.hpp>
 
 /*!
  * GenlibClientSubscription
@@ -22,104 +20,104 @@
 typedef struct s_GenlibClientSubscription GenlibClientSubscription;
 
 /*! Constructor */
-EXPORT_SPEC GenlibClientSubscription* GenlibClientSubscription_new();
+UPNPLIB_API GenlibClientSubscription* GenlibClientSubscription_new();
 /*! Destructor */
-EXPORT_SPEC void GenlibClientSubscription_delete(GenlibClientSubscription* p);
+UPNPLIB_API void GenlibClientSubscription_delete(GenlibClientSubscription* p);
 /*! Copy Constructor */
-EXPORT_SPEC GenlibClientSubscription*
+UPNPLIB_API GenlibClientSubscription*
 GenlibClientSubscription_dup(const GenlibClientSubscription* p);
 /*! Assignment operator */
-EXPORT_SPEC int
+UPNPLIB_API int
 GenlibClientSubscription_assign(GenlibClientSubscription* p,
                                 const GenlibClientSubscription* q);
 
 /*! GenlibClientSubscription_get_RenewEventId */
-EXPORT_SPEC int
+UPNPLIB_API int
 GenlibClientSubscription_get_RenewEventId(const GenlibClientSubscription* p);
 /*! GenlibClientSubscription_set_RenewEventId */
-EXPORT_SPEC int
+UPNPLIB_API int
 GenlibClientSubscription_set_RenewEventId(GenlibClientSubscription* p, int n);
 
 /*! GenlibClientSubscription_get_SID */
-EXPORT_SPEC const UpnpString*
+UPNPLIB_API const UpnpString*
 GenlibClientSubscription_get_SID(const GenlibClientSubscription* p);
 /*! GenlibClientSubscription_set_SID */
-EXPORT_SPEC int GenlibClientSubscription_set_SID(GenlibClientSubscription* p,
+UPNPLIB_API int GenlibClientSubscription_set_SID(GenlibClientSubscription* p,
                                                  const UpnpString* s);
 /*! GenlibClientSubscription_get_SID_Length */
-EXPORT_SPEC size_t
+UPNPLIB_API size_t
 GenlibClientSubscription_get_SID_Length(const GenlibClientSubscription* p);
 /*! GenlibClientSubscription_get_SID_cstr */
-EXPORT_SPEC const char*
+UPNPLIB_API const char*
 GenlibClientSubscription_get_SID_cstr(const GenlibClientSubscription* p);
 /*! GenlibClientSubscription_strcpy_SID */
-EXPORT_SPEC int GenlibClientSubscription_strcpy_SID(GenlibClientSubscription* p,
+UPNPLIB_API int GenlibClientSubscription_strcpy_SID(GenlibClientSubscription* p,
                                                     const char* s);
 /*! GenlibClientSubscription_strncpy_SID */
-EXPORT_SPEC int
+UPNPLIB_API int
 GenlibClientSubscription_strncpy_SID(GenlibClientSubscription* p, const char* s,
                                      size_t n);
 /*! GenlibClientSubscription_clear_SID */
-EXPORT_SPEC void
+UPNPLIB_API void
 GenlibClientSubscription_clear_SID(GenlibClientSubscription* p);
 
 /*! GenlibClientSubscription_get_ActualSID */
-EXPORT_SPEC const UpnpString*
+UPNPLIB_API const UpnpString*
 GenlibClientSubscription_get_ActualSID(const GenlibClientSubscription* p);
 /*! GenlibClientSubscription_set_ActualSID */
-EXPORT_SPEC int
+UPNPLIB_API int
 GenlibClientSubscription_set_ActualSID(GenlibClientSubscription* p,
                                        const UpnpString* s);
 /*! GenlibClientSubscription_get_ActualSID_Length */
-EXPORT_SPEC size_t GenlibClientSubscription_get_ActualSID_Length(
+UPNPLIB_API size_t GenlibClientSubscription_get_ActualSID_Length(
     const GenlibClientSubscription* p);
 /*! GenlibClientSubscription_get_ActualSID_cstr */
-EXPORT_SPEC const char*
+UPNPLIB_API const char*
 GenlibClientSubscription_get_ActualSID_cstr(const GenlibClientSubscription* p);
 /*! GenlibClientSubscription_strcpy_ActualSID */
-EXPORT_SPEC int
+UPNPLIB_API int
 GenlibClientSubscription_strcpy_ActualSID(GenlibClientSubscription* p,
                                           const char* s);
 /*! GenlibClientSubscription_strncpy_ActualSID */
-EXPORT_SPEC int
+UPNPLIB_API int
 GenlibClientSubscription_strncpy_ActualSID(GenlibClientSubscription* p,
                                            const char* s, size_t n);
 /*! GenlibClientSubscription_clear_ActualSID */
-EXPORT_SPEC void
+UPNPLIB_API void
 GenlibClientSubscription_clear_ActualSID(GenlibClientSubscription* p);
 
 /*! GenlibClientSubscription_get_EventURL */
-EXPORT_SPEC const UpnpString*
+UPNPLIB_API const UpnpString*
 GenlibClientSubscription_get_EventURL(const GenlibClientSubscription* p);
 /*! GenlibClientSubscription_set_EventURL */
-EXPORT_SPEC int
+UPNPLIB_API int
 GenlibClientSubscription_set_EventURL(GenlibClientSubscription* p,
                                       const UpnpString* s);
 /*! GenlibClientSubscription_get_EventURL_Length */
-EXPORT_SPEC size_t
+UPNPLIB_API size_t
 GenlibClientSubscription_get_EventURL_Length(const GenlibClientSubscription* p);
 /*! GenlibClientSubscription_get_EventURL_cstr */
-EXPORT_SPEC const char*
+UPNPLIB_API const char*
 GenlibClientSubscription_get_EventURL_cstr(const GenlibClientSubscription* p);
 /*! GenlibClientSubscription_strcpy_EventURL */
-EXPORT_SPEC int
+UPNPLIB_API int
 GenlibClientSubscription_strcpy_EventURL(GenlibClientSubscription* p,
                                          const char* s);
 /*! GenlibClientSubscription_strncpy_EventURL */
-EXPORT_SPEC int
+UPNPLIB_API int
 GenlibClientSubscription_strncpy_EventURL(GenlibClientSubscription* p,
                                           const char* s, size_t n);
 /*! GenlibClientSubscription_clear_EventURL */
-EXPORT_SPEC void
+UPNPLIB_API void
 GenlibClientSubscription_clear_EventURL(GenlibClientSubscription* p);
 
 /*! GenlibClientSubscription_get_Next */
-EXPORT_SPEC GenlibClientSubscription*
+UPNPLIB_API GenlibClientSubscription*
 GenlibClientSubscription_get_Next(const GenlibClientSubscription* p);
 /*! GenlibClientSubscription_set_Next */
-EXPORT_SPEC int GenlibClientSubscription_set_Next(GenlibClientSubscription* p,
+UPNPLIB_API int GenlibClientSubscription_set_Next(GenlibClientSubscription* p,
                                                   GenlibClientSubscription* n);
 
-#endif /* GENLIBCLIENTSUBSCRIPTION_HPP */
+#endif // COMPA_GENLIB_CLIENTSUBSCRIPTION_HPP
 
 #endif // UPNP_HAVE_CLIENT

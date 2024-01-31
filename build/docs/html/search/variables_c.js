@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['rc_0',['rc',['../dc/dff/structErrorString.html#a5e7891c45ecc262cc496d792da86b129',1,'ErrorString']]],
-  ['rcerror_1',['rcError',['../dc/dff/structErrorString.html#a5694eca588d226b385ecafe45fa068b5',1,'ErrorString']]],
-  ['registrationstate_2',['RegistrationState',['../d3/d84/structHandle__Info.html#a7ee8e6accb8db1354a823bebf72dc560',1,'Handle_Info']]]
+  ['open_0',['open',['../d1/d09/structVirtualDirCallbacks.html#a4c883b1191946a96a03e9609a4ca9885',1,'VirtualDirCallbacks']]],
+  ['os_1',['Os',['../d1/da6/structSsdpEvent.html#ab3050a65f930d005d25a17804b2304e6',1,'SsdpEvent']]],
+  ['outgoing_2',['outgoing',['../dd/dc7/structsubscription.html#a8043871a87822b2ceb4ff081ce5734b9',1,'subscription']]]
 ];

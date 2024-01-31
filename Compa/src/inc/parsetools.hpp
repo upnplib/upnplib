@@ -1,9 +1,11 @@
+#ifndef COMPA_GENLIB_NET_HTTP_PARSETOOLS_HPP
+#define COMPA_GENLIB_NET_HTTP_PARSETOOLS_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-19
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,16 +32,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
-#ifndef UPNPLIB_GENLIB_NET_HTTP_PARSETOOLS_HPP
-#define UPNPLIB_GENLIB_NET_HTTP_PARSETOOLS_HPP
-
 /*!
  * \file
+ * \brief Tool for parsing HTTP messages. No details
  */
-
-// #include "upnputil.hpp"
-// #include "httpparser.hpp"
 
 /*!
  * \brief Find the header from the HTTP message and match the header for
@@ -47,8 +43,7 @@
  *
  * \return boolean.
  */
-int has_xml_content_type(
-    /*! [in] HTTP Message object. */
-    http_message_t* hmsg);
+int has_xml_content_type(  //
+    http_message_t* hmsg); ///< [in] HTTP Message object.
 
-#endif /* UPNPLIB_GENLIB_NET_HTTP_PARSETOOLS_HPP */
+#endif /* COMPA_GENLIB_NET_HTTP_PARSETOOLS_HPP */

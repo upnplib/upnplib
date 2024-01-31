@@ -7,25 +7,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>UPnPlib: File Members</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript">var page_layout=1;</script>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtreedata.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(document).ready(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
@@ -37,21 +26,6 @@
    <div id="projectbrief">&#39;Universal Plug and Play plus&#39; System Developement Kit</div>
   </td>
  </tr>
-   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <img id="MSearchSelect" src="search/mag_sel.svg"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
-               alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td></tr>
  </tbody>
 </table>
 </div>
@@ -62,22 +36,18 @@
 var searchBox = new SearchBox("searchBox", "search",'Search','.html');
 /* @license-end */
 </script>
-</div><!-- top -->
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('globals_enum.html',''); initResizable(); });
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -94,6 +64,12 @@ $(document).ready(function(){initNavTree('globals_enum.html',''); initResizable(
 
 <div class="contents">
 &#160;<ul>
+<li>hostType&#160;:&#160;<a class="el" href="de/dd0/Compa_2src_2inc_2uri_8hpp.html#aa6ef72084b20ce8707531eebb486ec88">uri.hpp</a></li>
+<li>http_method_t&#160;:&#160;<a class="el" href="db/da7/httpparser_8hpp.html#a2fd930fba66817097e73ba9b75800eb2">httpparser.hpp</a></li>
+<li>parse_status_t&#160;:&#160;<a class="el" href="db/da7/httpparser_8hpp.html#aaec739c6f0ff93b139062af2ba4b0f1d">httpparser.hpp</a></li>
+<li>parser_pos_t&#160;:&#160;<a class="el" href="db/da7/httpparser_8hpp.html#aa87468a6ef98f54ebd919c9ba6ea0f32">httpparser.hpp</a></li>
+<li>pathType&#160;:&#160;<a class="el" href="de/dd0/Compa_2src_2inc_2uri_8hpp.html#a631372ca4f28d9792e14f9b83cf4a863">uri.hpp</a></li>
+<li>SsdpSearchType&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#gaf02d8708a05f0c2fc97df242360e70f7">ssdplib.hpp</a></li>
 <li>Upnp_DescType_e&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#ga21e2f98505bf5d519851acf83c34f263">upnp.hpp</a></li>
 <li>Upnp_EventType_e&#160;:&#160;<a class="el" href="df/da3/Callback_8hpp.html#a751d2422ae0051f6d15da3c924f8cbb9">Callback.hpp</a></li>
 <li>Upnp_Handle_Type&#160;:&#160;<a class="el" href="d3/da9/upnpapi_8hpp.html#a2b57a2af79ca49c62e0994e4e5989e04">upnpapi.hpp</a></li>
@@ -103,15 +79,13 @@ $(document).ready(function(){initNavTree('globals_enum.html',''); initResizable(
 <li>Upnp_SType_e&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#gaa251615d319878648538bb669c9d3226">upnp.hpp</a></li>
 <li>UpnpFunName&#160;:&#160;<a class="el" href="d3/da9/upnpapi_8hpp.html#abd0e7f62f90e8c2b6d9f10de04cdfde4">upnpapi.hpp</a></li>
 <li>UpnpOpenFileMode&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#ga9f9c4441037bc234cdf6e08895950a95">upnp.hpp</a></li>
+<li>uriType&#160;:&#160;<a class="el" href="de/dd0/Compa_2src_2inc_2uri_8hpp.html#a4124ed067881b326cc6d886f0f1017af">uri.hpp</a></li>
 <li>WebServerState&#160;:&#160;<a class="el" href="d3/da9/upnpapi_8hpp.html#ab99d7af73b3898a672966e7f986abe5d">upnpapi.hpp</a></li>
 </ul>
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
+</small></address>
 </body>
 </html>

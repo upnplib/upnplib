@@ -1,0 +1,4 @@
+<map id="UpnpReadHttpResponse" name="UpnpReadHttpResponse">
+<area shape="rect" id="node1" title="Reads the content of a response using a connection previously created by UpnpOpenHttpConnection." alt="" coords="5,5,185,32"/>
+<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#ae48d1ed33b6f1546d15396eca2f2b3e4" title="Reads the content of a response using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="233,5,412,32"/>
+</map>

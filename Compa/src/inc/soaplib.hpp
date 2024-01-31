@@ -1,9 +1,11 @@
+#ifndef COMPA_SOAPLIB_HPP
+#define COMPA_SOAPLIB_HPP
 /**************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-08-05
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,22 +32,19 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-
-#ifndef UPNPLIB_SOAPLIB_HPP
-#define UPNPLIB_SOAPLIB_HPP
-
 /*!
  * \file
+ * \brief SOAP module API to be called in UPnP-SDK API. No details
  */
 
-/* SOAP module API to be called in Upnp-Dk API */
-
-#include "sock.hpp"
+#include <sock.hpp>
 
 /*!
- * \brief This is a callback called by minisever after receiving the request
- * from the control point. This function will start processing the request.
- * It calls handle_invoke_action to handle the SOAP action.
+ * \brief This is a callback called by minisever.
+ *
+ * This is called after receiving the request from the control point. The
+ * function will start processing the request. It calls handle_invoke_action()
+ * to handle the SOAP action.
  */
 void soap_device_callback(
     /*! [in] Parsed request received by the device. */
@@ -55,67 +54,59 @@ void soap_device_callback(
     /*! [in,out] Socket info. */
     SOCKINFO* info);
 
-/****************************************************************************
- * Function: SoapSendAction
+/*!
+ * \brief This function is called by UPnP API to send the SOAP action request.
  *
- * Parameters:
- *  IN char* action_url: device contrl URL
- *  IN char *service_type: device service type
- *  IN IXML_Document *action_node: SOAP action node
- *  OUT IXML_Document **response_node: SOAP response node
+ * It waits till it gets the response from the device pass the response to the
+ * API layer.
  *
- * Description: This function is called by UPnP API to send the SOAP
- *  action request and waits till it gets the response from the device
- *  pass the response to the API layer
- *
- * Return: int
- *  returns UPNP_E_SUCCESS if successful else returns appropriate error
- * Note:
- ****************************************************************************/
-int SoapSendAction(char* action_url, char* service_type,
-                   IXML_Document* action_node, IXML_Document** response_node);
+ * \returns
+ * On success: UPNP_E_SUCCESS\n
+ * On error: appropriate error
+ */
+int SoapSendAction(               //
+    char* action_url,             ///< [in] device contrl URL.
+    char* service_type,           ///< [in] device service type.
+    IXML_Document* action_node,   ///< [in] SOAP action node.
+    IXML_Document** response_node ///< [out] SOAP response node.
+);
 
-/****************************************************************************
- * Function: SoapSendActionEx
+/*!
+ * \brief This extended function is called by UPnP API to send the SOAP action
+ * request.
  *
- * Parameters:
- *  IN char* action_url: device contrl URL
- *  IN char *service_type: device service type
- *  IN IXML_Document *Header: Soap header
- *  IN IXML_Document *action_node: SOAP action node (SOAP body)
- *  OUT IXML_Document **response_node: SOAP response node
+ * The function waits till it gets the response from the device pass the
+ * response to the API layer. This action is similar to the SoapSendAction()
+ * with only difference that it allows users to pass the SOAP header along the
+ * SOAP body (soap action request).
  *
- * Description: This function is called by UPnP API to send the SOAP
- *  action request and waits till it gets the response from the device
- *  pass the response to the API layer. This action is similar to the
- *  the SoapSendAction with only difference that it allows users to
- *  pass the SOAP header along the SOAP body ( soap action request)
- *
- * Return: int
- *  returns UPNP_E_SUCCESS if successful else returns appropriate error
- * Note:
- ****************************************************************************/
-int SoapSendActionEx(char* ActionURL, char* ServiceType, IXML_Document* Header,
-                     IXML_Document* ActNode, IXML_Document** RespNode);
+ * \returns
+ * On success: UPNP_E_SUCCESS\n
+ * On error: appropriate error
+ */
+int SoapSendActionEx(        //
+    char* ActionURL,         ///< [in] device contrl URL.
+    char* ServiceType,       ///< [in] device service type.
+    IXML_Document* Header,   ///< [in] Soap header.
+    IXML_Document* ActNode,  ///< [in] SOAP action node (SOAP body).
+    IXML_Document** RespNode ///< [out] SOAP response node.
+);
 
-/****************************************************************************
- * Function: SoapGetServiceVarStatus
+/*!
+ * \brief This function creates a status variable query message send it to the
+ * specified URL. It also collect the response.
  *
- * Parameters:
- *  IN  char * action_url: Address to send this variable query message.
- *  IN  char *var_name: Name of the variable.
- *  OUT char **var_value: Output value.
- *
- * Description: This function creates a status variable query message
- *  send it to the specified URL. It also collect the response.
- *
- * Return: int
- *
- * Note:
- ****************************************************************************/
-int SoapGetServiceVarStatus(char* ActionURL, DOMString VarName,
-                            DOMString* StVar);
+ * \returns
+ * On success: ???\n
+ * On error: ???
+ */
+int SoapGetServiceVarStatus(
+    char* ActionURL,   ///< [in] Address to send this variable query message.
+    DOMString VarName, ///< [in] Name of the variable.
+    DOMString* StVar   ///< [out] Output value.
+);
 
+/// \brief Global constant string specifying the content type header.
 extern const char* ContentTypeHeader;
 
-#endif /* UPNPLIB_SOAPLIB_HPP */
+#endif /* COMPA_SOAPLIB_HPP */

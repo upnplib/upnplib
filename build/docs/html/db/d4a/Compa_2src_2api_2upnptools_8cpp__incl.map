@@ -1,9 +1,9 @@
 <map id="Compa/src/api/upnptools.cpp" name="Compa/src/api/upnptools.cpp">
 <area shape="rect" id="node1" title="Additional, optional utility API that can be helpful in writing applications." alt="" coords="1067,5,1278,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="780,80,869,107"/>
+<area shape="rect" id="node2" href="$d8/dfd/config_8hpp.html" title="Main program configuration file." alt="" coords="780,80,869,107"/>
 <area shape="rect" id="node3" href="$da/d1d/upnp_8hpp.html" title="UPnPlib API." alt="" coords="894,80,977,107"/>
 <area shape="rect" id="node28" title=" " alt="" coords="1001,80,1115,107"/>
-<area shape="rect" id="node29" href="$d0/dee/uri_8hpp.html" title="C++ interface for the Uri module." alt="" coords="1139,80,1206,107"/>
+<area shape="rect" id="node29" title=" " alt="" coords="1139,80,1206,107"/>
 <area shape="rect" id="node30" title=" " alt="" coords="1230,80,1305,107"/>
 <area shape="rect" id="node31" title=" " alt="" coords="1329,80,1395,107"/>
 <area shape="rect" id="node32" title=" " alt="" coords="1420,80,1581,107"/>

@@ -7,25 +7,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>UPnPlib: File Members</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript">var page_layout=1;</script>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtreedata.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(document).ready(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
@@ -37,21 +26,6 @@
    <div id="projectbrief">&#39;Universal Plug and Play plus&#39; System Developement Kit</div>
   </td>
  </tr>
-   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <img id="MSearchSelect" src="search/mag_sel.svg"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
-               alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td></tr>
  </tbody>
 </table>
 </div>
@@ -62,22 +36,18 @@
 var searchBox = new SearchBox("searchBox", "search",'Search','.html');
 /* @license-end */
 </script>
-</div><!-- top -->
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('globals_m.html',''); initResizable(); });
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -96,19 +66,53 @@ $(document).ready(function(){initNavTree('globals_m.html',''); initResizable(); 
 <div class="textblock">Here is a list of all documented file members with links to the documentation:</div>
 
 <h3><a id="index_m" name="index_m"></a>- m -</h3><ul>
+<li>map_int_to_str()&#160;:&#160;<a class="el" href="d6/d0f/strintmap_8cpp.html#a12124a7b002b1e43158e9b178180e358">strintmap.cpp</a>, <a class="el" href="df/df3/strintmap_8hpp.html#a18bf9d3c1514e89166e47db21b8024e0">strintmap.hpp</a></li>
+<li>map_str_to_int()&#160;:&#160;<a class="el" href="d6/d0f/strintmap_8cpp.html#a039e0c7847e637aaf1135d0c8d86e4dd">strintmap.cpp</a>, <a class="el" href="df/df3/strintmap_8hpp.html#a5a75ff8609ca5b7ff4bd51b3f1255508">strintmap.hpp</a></li>
+<li>MARK&#160;:&#160;<a class="el" href="de/dd0/Compa_2src_2inc_2uri_8hpp.html#abeb214368f7f34cff98de9047aa6eb2f">uri.hpp</a></li>
+<li>matchstr()&#160;:&#160;<a class="el" href="db/da7/httpparser_8hpp.html#adb6f04b4682aae5e4690b672025b6856">httpparser.hpp</a></li>
+<li>MAX_CONTENT_LENGTH&#160;:&#160;<a class="el" href="d9/dd2/gena_8hpp.html#aace3c09acf4173f55f74d5c65976b23a">gena.hpp</a></li>
+<li>MAX_EVENTS&#160;:&#160;<a class="el" href="d9/dd2/gena_8hpp.html#ae42954bb8545d24e3e9dcde5920c9a0b">gena.hpp</a></li>
 <li>MAX_INTERFACES&#160;:&#160;<a class="el" href="d3/da9/upnpapi_8hpp.html#a10bf2917a6a4297e21e03f60c487f591">upnpapi.hpp</a></li>
+<li>MAX_JOBS_TOTAL&#160;:&#160;<a class="el" href="d8/dfd/config_8hpp.html#ae2421a7efc26d9310dec1594a638cce2">config.hpp</a></li>
+<li>MAX_PORT_SIZE&#160;:&#160;<a class="el" href="d9/dd2/gena_8hpp.html#a7676451b684e2f0bbc7d467f1b7f9520">gena.hpp</a></li>
+<li>MAX_SEARCH_TIME&#160;:&#160;<a class="el" href="d8/dfd/config_8hpp.html#a9385d2cb4d027b7eea862df73c9fb8eb">config.hpp</a></li>
+<li>MAX_SECONDS&#160;:&#160;<a class="el" href="d9/dd2/gena_8hpp.html#ad573bc67e6c14677a06d1737f3d72975">gena.hpp</a></li>
 <li>MAX_SOAP_CONTENT_LENGTH&#160;:&#160;<a class="el" href="d3/da9/upnpapi_8hpp.html#af0947c94106f7bfe82e7d54067612c9b">upnpapi.hpp</a></li>
+<li>MAX_SUBSCRIPTION_EVENT_AGE&#160;:&#160;<a class="el" href="d8/dfd/config_8hpp.html#a5e9f9145f02fcf7c70238140ca534091">config.hpp</a></li>
+<li>MAX_SUBSCRIPTION_QUEUED_EVENTS&#160;:&#160;<a class="el" href="d8/dfd/config_8hpp.html#a225baaa3f4f5e498e194b33d9a256671">config.hpp</a></li>
+<li>MAX_THREADS&#160;:&#160;<a class="el" href="d8/dfd/config_8hpp.html#a8b5173357adb02a86c027316e0acdfa0">config.hpp</a></li>
+<li>MD5_CTX&#160;:&#160;<a class="el" href="d4/d0f/md5_8hpp.html#acf46d1ff29aa6a014a24cbd08174d351">md5.hpp</a></li>
+<li>MD5Final()&#160;:&#160;<a class="el" href="d4/d0f/md5_8hpp.html#a8917fc553bc2ee41c148650d53059971">md5.hpp</a></li>
+<li>MD5Init()&#160;:&#160;<a class="el" href="d4/d0f/md5_8hpp.html#a43e334cd23b7e92d1ee2f8b26071b1f0">md5.hpp</a></li>
+<li>MD5Transform()&#160;:&#160;<a class="el" href="d4/d0f/md5_8hpp.html#a251eb6fb9810ff7f45942f7481c280c0">md5.hpp</a></li>
+<li>MD5Update()&#160;:&#160;<a class="el" href="d4/d0f/md5_8hpp.html#a0fcf933558f4d5bee663f2b82d6407c6">md5.hpp</a></li>
+<li>MEMBUF_DEF_SIZE_INC&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#a399858f10b0d323cb28ace43a136b3af">membuffer.hpp</a></li>
+<li>membuffer_append()&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#a63e6eaa20b3a9f5ac020e23f1966d20d">membuffer.hpp</a></li>
+<li>membuffer_append_str()&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#a4ac8f804d91832a07c2ddf6d8190c2fa">membuffer.hpp</a></li>
+<li>membuffer_assign()&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#aed25d99b33ce20bd0dd819f64252eb6f">membuffer.hpp</a></li>
+<li>membuffer_assign_str()&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#a6e41eb5e1e1635dfa932c5fbb2228133">membuffer.hpp</a></li>
+<li>membuffer_attach()&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#a4bd06d73513179f6154430fea704a265">membuffer.hpp</a></li>
+<li>membuffer_delete()&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#aee72bc5a9c58a849f2e41503500a773d">membuffer.hpp</a></li>
+<li>membuffer_destroy()&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#a9f0c10726e31d660009f2c80d736a836">membuffer.hpp</a></li>
+<li>membuffer_detach()&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#a727e989f878121a7304ca15f60fa3327">membuffer.hpp</a></li>
+<li>membuffer_init()&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#a6943a2d171fcdaa9f0d730fcb6d7c2d4">membuffer.hpp</a></li>
+<li>membuffer_insert()&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#ad2b10e589712efb648a8f86bfe3b5975">membuffer.hpp</a></li>
+<li>membuffer_set_size()&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#a353b8c4e33ef3f9b64dbe56b7866746b">membuffer.hpp</a></li>
+<li>memptr_cmp()&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#a0ebdc3494e3cb774b96ee021f7ae6c3b">membuffer.hpp</a></li>
+<li>memptr_cmp_nocase()&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#acc25b821b69d506631865b53f8307b3a">membuffer.hpp</a></li>
+<li>method_to_str()&#160;:&#160;<a class="el" href="db/da7/httpparser_8hpp.html#a34ffcb549b62290faab9e8f46a030bdb">httpparser.hpp</a></li>
+<li>MIN_SEARCH_TIME&#160;:&#160;<a class="el" href="d8/dfd/config_8hpp.html#a9775e3bbff8531ec52a2f7c71a6042f4">config.hpp</a></li>
+<li>MIN_THREADS&#160;:&#160;<a class="el" href="d8/dfd/config_8hpp.html#a1ab221677f5957f7d10b4a002e8b95cf">config.hpp</a></li>
+<li>MiniServerCallback&#160;:&#160;<a class="el" href="d3/d8b/miniserver_8hpp.html#a3f28f3a60a8a50e6fb3a27904c32dde6">miniserver.hpp</a></li>
+<li>MISSING_SID&#160;:&#160;<a class="el" href="d9/dd2/gena_8hpp.html#ac3a0b355d9a5babd9641d64f91715a15">gena.hpp</a></li>
 <li>MNFT_NAME_SIZE&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#gaee9251f5bf7fb969520526370c9b0af5">upnp.hpp</a></li>
 <li>MODL_DESC_SIZE&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#ga092e2d5dfa7d42f6cb180425cd19778e">upnp.hpp</a></li>
 <li>MODL_NAME_SIZE&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#ga001910880736275e3a96a8e1e0925ff2">upnp.hpp</a></li>
 </ul>
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
+</small></address>
 </body>
 </html>

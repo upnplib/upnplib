@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-18
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1007,7 +1007,7 @@ static int create_url_list(
 
     if (URLcount > 0) {
         out->URLs = (char*)malloc(URLS->size + 1);
-        out->parsedURLs = (URI*)malloc(sizeof(uri_type) * URLcount);
+        out->parsedURLs = (uri_type*)malloc(sizeof(uri_type) * URLcount);
         if (!out->URLs || !out->parsedURLs) {
             free(out->URLs);
             free(out->parsedURLs);

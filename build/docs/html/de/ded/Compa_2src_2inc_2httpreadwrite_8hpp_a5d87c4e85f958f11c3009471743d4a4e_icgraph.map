@@ -1,0 +1,4 @@
+<map id="http_CalcResponseVersion" name="http_CalcResponseVersion">
+<area shape="rect" id="node1" title="Calculate HTTP response versions based on the request versions." alt="" coords="283,13,477,39"/>
+<area shape="rect" id="node2" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#a9e86561f70e0f916f0f3ee450a663c0d" title="Calculate response version." alt="" coords="5,5,235,47"/>
+</map>

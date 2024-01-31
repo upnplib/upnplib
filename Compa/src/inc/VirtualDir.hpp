@@ -1,11 +1,14 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-27
+#ifndef COMPA_VIRTUALDIR_HPP
+#define COMPA_VIRTUALDIR_HPP
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-29
 // Taken from authors who haven't made a note.
+/*!
+ * \file
+ * \brief Provide the Virtual Directory Callbacks structure.
+ */
 
-#ifndef UPNPLIB_VIRTUALDIR_HPP
-#define UPNPLIB_VIRTUALDIR_HPP
-
-#include "upnp.hpp"
+#include <upnp.hpp>
 
 /** The \b VirtualDirCallbacks structure contains the pointers to
  *  file-related callback functions a device application can register to
@@ -60,10 +63,14 @@ struct VirtualDirCallbacks {
     VDCallback_Close close;
 };
 
+/// \brief Virtual directory list
 typedef struct virtual_Dir_List {
+    /// Member of virtual directory list
+    /// @{
     struct virtual_Dir_List* next;
     const void* cookie;
     char dirName[NAME_SIZE];
+    /// @}
 } virtualDirList;
 
 #endif /* UPNPLIB_VIRTUALDIR_HPP */

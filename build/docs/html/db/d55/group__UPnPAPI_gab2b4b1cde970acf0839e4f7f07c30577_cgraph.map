@@ -1,0 +1,4 @@
+<map id="UpnpOpenHttpGetEx" name="UpnpOpenHttpGetEx">
+<area shape="rect" id="node1" title="Gets specified number of bytes from a file specified in the URL." alt="" coords="5,5,163,32"/>
+<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#af6f33b62fbc2347b9a579f360d8bc3c2" title="Makes the HTTP GET message, connects to the peer, sends the HTTP GET request, gets the response and p..." alt="" coords="211,5,367,32"/>
+</map>

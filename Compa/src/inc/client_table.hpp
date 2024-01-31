@@ -1,29 +1,19 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-22
+#ifndef COMPA_CLIENT_TABLE_HPP
+#define COMPA_CLIENT_TABLE_HPP
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-01-29
 // Last compare with pupnp original source file on 2023-06-22, ver 1.14.16
-
-#ifndef UPNPLIB_CLIENT_TABLE_HPP
-#define UPNPLIB_CLIENT_TABLE_HPP
-
 /*!
  * \file
  */
 
-
-#include "GenlibClientSubscription.hpp"
-#include "TimerThread.hpp"
-// #include "UpnpString.hpp"
-#include "service_table.hpp"
-// #include "upnp.h"
-// #include "uri.h"
-
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <time.h>
+#include <GenlibClientSubscription.hpp>
+#include <TimerThread.hpp>
+#include <service_table.hpp>
 
 extern TimerThread gTimerThread;
 
-#ifdef INCLUDE_CLIENT_APIS
+#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
 
 /*!
  * \brief Free memory allocated for client subscription data.
@@ -78,4 +68,4 @@ GenlibClientSubscription* GetClientSubActualSID(
 
 #endif /* INCLUDE_CLIENT_APIS */
 
-#endif /* UPNPLIB_CLIENT_TABLE_HPP */
+#endif /* COMPA_CLIENT_TABLE_HPP */

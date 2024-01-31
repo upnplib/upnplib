@@ -1,0 +1,4 @@
+<map id="upnplib::Chttpreadwrite_old::http_CancelHttpGet" name="upnplib::Chttpreadwrite_old::http_CancelHttpGet">
+<area shape="rect" id="node1" title="Cancel an http GET communication." alt="" coords="5,5,191,47"/>
+<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a4fee2574f1801c0221f4da7c596c4909" title="Set the cancel flag of the HttpGet handle." alt="" coords="239,13,389,39"/>
+</map>

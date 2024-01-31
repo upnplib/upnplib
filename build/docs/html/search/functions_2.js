@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['errstr_0',['errStr',['../dc/d6d/namespaceupnplib.html#a1d1c50145ab351b5bfcb723c637201cd',1,'upnplib']]],
-  ['errstrex_1',['errStrEx',['../dc/d6d/namespaceupnplib.html#ab9e5d2a23dfa5b2d5b3db3ff934af7ae',1,'upnplib']]]
+  ['deviceadvertisement_0',['DeviceAdvertisement',['../d4/dd5/group__SSDPlib.html#ga359289d0987b2a9aede8d3a426480986',1,'ssdplib.hpp']]],
+  ['devicereply_1',['DeviceReply',['../d4/dd5/group__SSDPlib.html#ga082e945c4fe977cff7c19a7e1ac8da99',1,'ssdplib.hpp']]],
+  ['deviceshutdown_2',['DeviceShutdown',['../d4/dd5/group__SSDPlib.html#ga65d1171e5dcab19e9b7848773650eaf7',1,'ssdplib.hpp']]]
 ];

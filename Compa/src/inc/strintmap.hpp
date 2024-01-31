@@ -1,9 +1,11 @@
-/*******************************************************************************
+#ifndef COMPA_GENLIB_UTIL_STRINTMAP_HPP
+#define COMPA_GENLIB_UTIL_STRINTMAP_HPP
+/* *****************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-03
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,68 +31,54 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- ******************************************************************************/
+ * ****************************************************************************/
+/*!
+ * \file
+ * \brief String to integer and integer to string conversion functions.
+ *
+ * There are some constant mappings of a number to its string name for human
+ * readability or for UPnP messages, e.g. error number, HTTP method etc. Because
+ * these functions use very effective binary search, the map tables to seach
+ * must be sorted by the key.
+ */
 
-#ifndef GENLIB_UTIL_STRINTMAP_HPP
-#define GENLIB_UTIL_STRINTMAP_HPP
+#include <upnplib/visibility.hpp>
+#include <cstddef> // for size_t
 
-// #include "upnputil.hpp"
-// #include <stdlib.h>
-#include "UpnpGlobal.hpp" // for EXPORT_SPEC
+/// String to integer map entry.
+struct str_int_entry {
+    const char* name; ///< A value in string form.
+    int id;           ///< Same value in integer form.
+};
 
-/* Util to map from a string to an integer and vice versa */
+/*!
+ * \brief Match the given name with names from the entries in the table.
+ *
+ * \returns
+ * On success: Zero based index (position) on the table of entries.\n
+ * On failure: -1
+ */
+UPNPLIB_API int map_str_to_int(
+    const char* name,     ///< [in] String containing the name to be matched.
+    size_t name_len,      ///< [in] Size of the string to be matched.
+    str_int_entry* table, ///< [in] Table of entries that need to be matched.
+    int num_entries,   /*!< [in] Number of entries in the table that need to be
+                                 searched. */
+    int case_sensitive ///< [in] Whether search should be case sensitive or not.
+);
 
-typedef struct /* str_int_entry */
-{
-    const char* name; /* a value in string form */
-    int id;           /* same value in integer form */
-} str_int_entry;
+/*!
+ * \brief Returns the index from the table where the id matches the entry from
+ * the table.
+ *
+ * \returns
+ * On success: Zero based index (position) on the table of entries.\n
+ * On error: -1
+ */
+UPNPLIB_API int map_int_to_str(
+    int id,               ///< [in] ID to be matched.
+    str_int_entry* table, ///< [in] Table of entries that need to be matched.
+    int num_entries       ///< [in] Number of entries in the table.
+);
 
-/************************************************************************
- *	Function :	map_str_to_int
- *
- *	Parameters :
- *		IN const char* name ;	string containing the name to be matched
- *		IN size_t name_len ;	size of the string to be matched
- *		IN str_int_entry* table ;	table of entries that need to be
- *					matched.
- *		IN int num_entries ; number of entries in the table that need
- *					to be searched.
- *		IN int case_sensitive ; whether the case should be case
- *					sensitive or not
- *
- *	Description : Match the given name with names from the entries in the
- *		table. Returns the index of the table when the entry is found.
- *
- *	Return : int ;
- *		On success - zero based index (position) on the table of entries
- *		On failure - -1
- *
- *	Note :
- ************************************************************************/
-EXPORT_SPEC int map_str_to_int(const char* name, size_t name_len,
-                               str_int_entry* table, int num_entries,
-                               int case_sensitive);
-
-/************************************************************************
- *	Function :	map_int_to_str
- *
- *	Parameters :
- *		IN int id ;	ID to be matched
- *		IN str_int_entry* table ;	table of entries that need to be
- *					matched.
- *		IN int num_entries ; number of entries in the table that need
- *					to be searched.
- *
- *	Description : Returns the index from the table where the id matches
- *		the entry from the table.
- *
- *	Return : int ;
- *		On success - zero based index (position) on the table of entries
- *		On failure - -1
- *
- *	Note :
- ************************************************************************/
-EXPORT_SPEC int map_int_to_str(int id, str_int_entry* table, int num_entries);
-
-#endif /* GENLIB_UTIL_STRINTMAP_HPP */
+#endif /* COMPA_GENLIB_UTIL_STRINTMAP_HPP */

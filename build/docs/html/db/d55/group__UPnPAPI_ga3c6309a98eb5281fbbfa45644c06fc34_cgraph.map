@@ -1,0 +1,4 @@
+<map id="UpnpEnableWebserver" name="UpnpEnableWebserver">
+<area shape="rect" id="node1" title="Enables or disables the webserver." alt="" coords="5,5,175,32"/>
+<area shape="rect" id="node2" href="$d9/d36/Compa_2src_2inc_2webserver_8hpp.html#a73339545ff89681c9e25f6a2530dca5a" title="Initilialize the different documents. Initialize the memory for root directory for web server...." alt="" coords="223,5,348,32"/>
+</map>

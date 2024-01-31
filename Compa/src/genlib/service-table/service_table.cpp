@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -685,11 +685,11 @@ service_info* getServiceList(IXML_Node* node, service_info** end,
                 current_service = ixmlNodeList_item(serviceNodeList, i);
                 fail = 0;
                 if (current) {
-                    current->next = (SERVICE_INFO*)malloc(sizeof(service_info));
+                    current->next = (service_info*)malloc(sizeof(service_info));
                     previous = current;
                     current = current->next;
                 } else {
-                    head = (SERVICE_INFO*)malloc(sizeof(service_info));
+                    head = (service_info*)malloc(sizeof(service_info));
                     current = head;
                 }
                 if (!current) {

@@ -1,12 +1,12 @@
-#ifndef GENLIB_NET_UNIXUTIL_HPP
-#define GENLIB_NET_UNIXUTIL_HPP
-/*******************************************************************************
+#ifndef COMPA_GENLIB_NET_UNIXUTIL_HPP
+#define COMPA_GENLIB_NET_UNIXUTIL_HPP
+/* *****************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  *
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-11-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -31,11 +31,11 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- ******************************************************************************/
-
-/* Unix-specific network utilities */
-
-#include "UpnpInet.hpp"
+ * ****************************************************************************/
+/*!
+ * \file
+ * \brief Unix-specific network utilities.
+ */
 
 #ifdef _WIN32
 #include <errno.h>
@@ -50,4 +50,4 @@ typedef uint16_t in_port_t;
 #include <sys/wait.h>
 #endif
 
-#endif /* GENLIB_NET_UNIXUTIL_HPP */
+#endif /* COMPA_GENLIB_NET_UNIXUTIL_HPP */

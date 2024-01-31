@@ -1,9 +1,11 @@
+#ifndef COMPA_GENA_DEVICE_HPP
+#define COMPA_GENA_DEVICE_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-19
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-29
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,16 +32,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
-#ifndef UPNPLIB_GENA_DEVICE_HPP
-#define UPNPLIB_GENA_DEVICE_HPP
-
 /*!
  * \file
+ * \brief Handles subscriptions from a control point.
  */
 
-#include "httpparser.hpp"
-#include "sock.hpp"
+#include <httpparser.hpp>
+#include <sock.hpp>
 
 /*!
  * \brief Handles a subscription request from a ctrl point. The socket is not
@@ -71,4 +70,4 @@ void gena_process_unsubscribe_request(
     /*! [in] UNSUBSCRIBE request from the control point. */
     http_message_t* request);
 
-#endif /* UPNPLIB_GENA_DEVICE_HPP */
+#endif /* COMPA_GENA_DEVICE_HPP */

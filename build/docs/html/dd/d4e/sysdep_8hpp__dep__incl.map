@@ -1,0 +1,5 @@
+<map id="Compa/src/inc/sysdep.hpp" name="Compa/src/inc/sysdep.hpp">
+<area shape="rect" id="node1" title="Get some system dependend information. No details." alt="" coords="9,5,201,32"/>
+<area shape="rect" id="node2" href="$d7/db4/uuid_8hpp.html" title="Manage UUIDs." alt="" coords="17,80,192,107"/>
+<area shape="rect" id="node3" href="$d4/d99/upnpapi_8cpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="5,155,204,181"/>
+</map>

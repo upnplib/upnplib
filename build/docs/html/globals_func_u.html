@@ -7,25 +7,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>UPnPlib: File Members</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript">var page_layout=1;</script>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtreedata.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(document).ready(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
@@ -37,21 +26,6 @@
    <div id="projectbrief">&#39;Universal Plug and Play plus&#39; System Developement Kit</div>
   </td>
  </tr>
-   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <img id="MSearchSelect" src="search/mag_sel.svg"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
-               alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td></tr>
  </tbody>
 </table>
 </div>
@@ -62,22 +36,18 @@
 var searchBox = new SearchBox("searchBox", "search",'Search','.html');
 /* @license-end */
 </script>
-</div><!-- top -->
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('globals_func_u.html',''); initResizable(); });
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -96,22 +66,24 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 &#160;
 
 <h3><a id="index_u" name="index_u"></a>- u -</h3><ul>
+<li>unique_service_name()&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#gae3e29279280d276d05762d9dbeffe31d">ssdplib.hpp</a></li>
+<li>upnp_uuid_unpack()&#160;:&#160;<a class="el" href="d7/db4/uuid_8hpp.html#a1691420b138d34be5d3382e903a9f02d">uuid.hpp</a></li>
 <li>UpnpAcceptSubscription()&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#gaebf79b182cb56e21f500e60d219832c9">upnp.hpp</a></li>
 <li>UpnpAcceptSubscriptionExt()&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#gae24bd1f7e4c7d4e9de7a7a696c4b255b">upnp.hpp</a></li>
 <li>UpnpActionComplete_assign()&#160;:&#160;<a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#ae809531ee569fc22da67d33abd188879">UpnpActionComplete.cpp</a>, <a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a85bf8262e67b477dee91f56997f55917">UpnpActionComplete.hpp</a></li>
 <li>UpnpActionComplete_clear_CtrlUrl()&#160;:&#160;<a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a958fe3b50c840036e952c61655846e73">UpnpActionComplete.cpp</a>, <a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a638f0ad15720b8361c8ed64ec0a6aaba">UpnpActionComplete.hpp</a></li>
 <li>UpnpActionComplete_delete()&#160;:&#160;<a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a9a086146d37c11d839af45b571d2f641">UpnpActionComplete.cpp</a>, <a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a7e5b21368a44b8f86f36ae8f07238c6a">UpnpActionComplete.hpp</a></li>
 <li>UpnpActionComplete_dup()&#160;:&#160;<a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a51458f01a8b46450281e0c5adb6e2e70">UpnpActionComplete.cpp</a>, <a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a818ae0f3c593b123333c8347eaa6ee13">UpnpActionComplete.hpp</a></li>
-<li>UpnpActionComplete_get_ActionRequest()&#160;:&#160;<a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a3273fe3fef8fb02f940cf6f1752d8620">UpnpActionComplete.cpp</a>, <a class="el" href="df/d90/UpnpActionComplete_8hpp.html#ab71b09f41a3aa619645ff7c9b824dffa">UpnpActionComplete.hpp</a></li>
+<li>UpnpActionComplete_get_ActionRequest()&#160;:&#160;<a class="el" href="df/d90/UpnpActionComplete_8hpp.html#ab71b09f41a3aa619645ff7c9b824dffa">UpnpActionComplete.hpp</a>, <a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a3273fe3fef8fb02f940cf6f1752d8620">UpnpActionComplete.cpp</a></li>
 <li>UpnpActionComplete_get_ActionResult()&#160;:&#160;<a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a19de38218608bee35d27a29e61523ac0">UpnpActionComplete.hpp</a>, <a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a6233246d4b22d80c4762539ce35f64cc">UpnpActionComplete.cpp</a></li>
 <li>UpnpActionComplete_get_CtrlUrl()&#160;:&#160;<a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a5abd250e3cbce9c5fe1c668c850fd039">UpnpActionComplete.hpp</a>, <a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a551f64715996ef2b1d2881203d25a7a1">UpnpActionComplete.cpp</a></li>
-<li>UpnpActionComplete_get_CtrlUrl_cstr()&#160;:&#160;<a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a87d3866e25d0b2e7d9d2ae2266a10a7d">UpnpActionComplete.hpp</a>, <a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a506339fc1fb05236d31f822a719e0c4d">UpnpActionComplete.cpp</a></li>
-<li>UpnpActionComplete_get_CtrlUrl_Length()&#160;:&#160;<a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#ae5a5fc137d573a76bb8ee70547c62e34">UpnpActionComplete.cpp</a>, <a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a271a983a23aba9043a28b8ee9f1f4e3c">UpnpActionComplete.hpp</a></li>
+<li>UpnpActionComplete_get_CtrlUrl_cstr()&#160;:&#160;<a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a506339fc1fb05236d31f822a719e0c4d">UpnpActionComplete.cpp</a>, <a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a87d3866e25d0b2e7d9d2ae2266a10a7d">UpnpActionComplete.hpp</a></li>
+<li>UpnpActionComplete_get_CtrlUrl_Length()&#160;:&#160;<a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a271a983a23aba9043a28b8ee9f1f4e3c">UpnpActionComplete.hpp</a>, <a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#ae5a5fc137d573a76bb8ee70547c62e34">UpnpActionComplete.cpp</a></li>
 <li>UpnpActionComplete_get_ErrCode()&#160;:&#160;<a class="el" href="df/d90/UpnpActionComplete_8hpp.html#abaf8e4e37d36ecc41e316ed7757ca8c2">UpnpActionComplete.hpp</a>, <a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a92896b180b554ee165f00c1ffb259298">UpnpActionComplete.cpp</a></li>
 <li>UpnpActionComplete_new()&#160;:&#160;<a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a4bdd6cf5b58661c9dc5c66934b323092">UpnpActionComplete.hpp</a>, <a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a9e9714ea7b7ed7f583a7ec8725212809">UpnpActionComplete.cpp</a></li>
 <li>UpnpActionComplete_set_ActionRequest()&#160;:&#160;<a class="el" href="df/d90/UpnpActionComplete_8hpp.html#af694266e8b69c8b655bae0947d0298c9">UpnpActionComplete.hpp</a>, <a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a4c362eb3d679efdab798323d6bf02e33">UpnpActionComplete.cpp</a></li>
-<li>UpnpActionComplete_set_ActionResult()&#160;:&#160;<a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a22d34ebcdbe316b9f13f0b3be75e63a4">UpnpActionComplete.hpp</a>, <a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a8047abb916db070f7390e084aa37af2e">UpnpActionComplete.cpp</a></li>
-<li>UpnpActionComplete_set_CtrlUrl()&#160;:&#160;<a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a82b7644b44d7a6226162de8cee9c7009">UpnpActionComplete.cpp</a>, <a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a44a7e26f8735f6f92c7fedf7ffc11ec1">UpnpActionComplete.hpp</a></li>
+<li>UpnpActionComplete_set_ActionResult()&#160;:&#160;<a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a8047abb916db070f7390e084aa37af2e">UpnpActionComplete.cpp</a>, <a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a22d34ebcdbe316b9f13f0b3be75e63a4">UpnpActionComplete.hpp</a></li>
+<li>UpnpActionComplete_set_CtrlUrl()&#160;:&#160;<a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a44a7e26f8735f6f92c7fedf7ffc11ec1">UpnpActionComplete.hpp</a>, <a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a82b7644b44d7a6226162de8cee9c7009">UpnpActionComplete.cpp</a></li>
 <li>UpnpActionComplete_set_ErrCode()&#160;:&#160;<a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a558b90af50b60db153e27ea172e3d8cf">UpnpActionComplete.hpp</a>, <a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a703135ccc7f2b5d147afc271b361f635">UpnpActionComplete.cpp</a></li>
 <li>UpnpActionComplete_strcpy_CtrlUrl()&#160;:&#160;<a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a8e4850e81b915f25ad0511740240e7c5">UpnpActionComplete.hpp</a>, <a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a08c9950d89d61eb5866781398f5a8e1a">UpnpActionComplete.cpp</a></li>
 <li>UpnpActionComplete_strncpy_CtrlUrl()&#160;:&#160;<a class="el" href="df/d90/UpnpActionComplete_8hpp.html#a8f6da64557215aca651c64992ba7eb0d">UpnpActionComplete.hpp</a>, <a class="el" href="d4/d18/UpnpActionComplete_8cpp.html#a7abba7f983c311e7a1bc776e3c7a880f">UpnpActionComplete.cpp</a></li>
@@ -121,8 +93,8 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpActionRequest_clear_DevUDN()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a74d70c4f7b6f900ee2262bd22bd25c41">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a30d8cb815f8c4d8202df38443dbaf561">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_clear_ErrStr()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a885ad255dac2a6788c9d0f47163c9b0b">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a246867f86c7a99c5ed33efff3cd821d2">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_clear_Os()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a33e2e44ff4d6a969e79938472c18e76c">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#ade6032bfb6da5d04979ca534c5644bb6">UpnpActionRequest.cpp</a></li>
-<li>UpnpActionRequest_clear_ServiceID()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#af3b935f404da2c6f83ca2b28f2e02d5a">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a69a736a2d5b304688014b4544cbb08eb">UpnpActionRequest.cpp</a></li>
-<li>UpnpActionRequest_delete()&#160;:&#160;<a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a98278bcdb0fb6ed32563722b37f5a280">UpnpActionRequest.cpp</a>, <a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a88824f4c7cb097d54d376492de28240d">UpnpActionRequest.hpp</a></li>
+<li>UpnpActionRequest_clear_ServiceID()&#160;:&#160;<a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a69a736a2d5b304688014b4544cbb08eb">UpnpActionRequest.cpp</a>, <a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#af3b935f404da2c6f83ca2b28f2e02d5a">UpnpActionRequest.hpp</a></li>
+<li>UpnpActionRequest_delete()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a88824f4c7cb097d54d376492de28240d">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a98278bcdb0fb6ed32563722b37f5a280">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_dup()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a3a14d67a5889ad92551997c2c882527f">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#acff1dc3ee6d4b9089b62621f473bb0fc">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_get_ActionName()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a8288b3425767a384ac0b23126a3dcea4">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a122954f05afd857d1dc6aa979961247a">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_get_ActionName_cstr()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#afeaf0789dfa366d74bf6556f7a14863b">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a51b8e707447585676b93be32c5847a8d">UpnpActionRequest.cpp</a></li>
@@ -144,20 +116,20 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpActionRequest_get_ServiceID_cstr()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a80fda7305d98c2b63f3ec3cb1bf0f955">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#aeff9afc184b47e713fb694b7fa66d9e8">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_get_ServiceID_Length()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#ae1af68c99717fe23463ae7f645bb57a4">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#afa85b2aead2c5839fa075515e162dc05">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_get_SoapHeader()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a659e1d517a90f6b2fe6135cc94fc5b0b">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#ad9c957e3b0134635478ea5f3385bc735">UpnpActionRequest.cpp</a></li>
-<li>UpnpActionRequest_get_Socket()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a701582e18a30cc498839198907ce9a05">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a968cd1ad7fb14d90836bd818e15fc28f">UpnpActionRequest.cpp</a></li>
-<li>UpnpActionRequest_new()&#160;:&#160;<a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#ad6a29ab27d4fbec4fac2c0de5703bf5b">UpnpActionRequest.cpp</a>, <a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#ad4dda4f45a59bfe3a731bdece6dcfc6d">UpnpActionRequest.hpp</a></li>
+<li>UpnpActionRequest_get_Socket()&#160;:&#160;<a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a968cd1ad7fb14d90836bd818e15fc28f">UpnpActionRequest.cpp</a>, <a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a701582e18a30cc498839198907ce9a05">UpnpActionRequest.hpp</a></li>
+<li>UpnpActionRequest_new()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#ad4dda4f45a59bfe3a731bdece6dcfc6d">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#ad6a29ab27d4fbec4fac2c0de5703bf5b">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_set_ActionName()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a621fd48b44ab125e73152cece2e5f112">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#acaec5eb0209f8ff678734bef73453d43">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_set_ActionRequest()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#ae165e14f9f51ab8e0a4c8fea8e77dcd9">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a2a0fe29a46f0206f9e14f0b159041811">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_set_ActionResult()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a8bad9936720a7acd04f31f84b068d5a7">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a537b0bc20a1fc5ef50458975dfd53205">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_set_CtrlPtIPAddr()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a3936d557f587805f02384e2097b22028">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a4fb11e583e5379df82b1aee2e951ac87">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_set_DevUDN()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#af3c875ef1afa7fa35cdaca3b35f8a17c">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#aaae31d1e03bd6caa6a5055939ec6b53c">UpnpActionRequest.cpp</a></li>
-<li>UpnpActionRequest_set_ErrCode()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a3d92d56b531f303d2ffa92c8ac033128">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a49f89a5494f7bf967316b35a5059e669">UpnpActionRequest.cpp</a></li>
-<li>UpnpActionRequest_set_ErrStr()&#160;:&#160;<a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#acfb37ff71473e9d0430c050a8f67f1b1">UpnpActionRequest.cpp</a>, <a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#ae6a8e67eab472f0c723ba4853a306d62">UpnpActionRequest.hpp</a></li>
+<li>UpnpActionRequest_set_ErrCode()&#160;:&#160;<a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a49f89a5494f7bf967316b35a5059e669">UpnpActionRequest.cpp</a>, <a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a3d92d56b531f303d2ffa92c8ac033128">UpnpActionRequest.hpp</a></li>
+<li>UpnpActionRequest_set_ErrStr()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#ae6a8e67eab472f0c723ba4853a306d62">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#acfb37ff71473e9d0430c050a8f67f1b1">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_set_Os()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a0639c58da98747645b24848567fdd63f">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#ac77a8099c1816974af90cbb8aa9bdd1b">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_set_ServiceID()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a191a8de85e1f23886ef6056a00f60970">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a262836ef98061661ff01dbb7b3a18ae3">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_set_SoapHeader()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a71b7249d6fcea8536eb22fd35305c999">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#ae51a99b271d07b13c7e201204b94972f">UpnpActionRequest.cpp</a></li>
-<li>UpnpActionRequest_set_Socket()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a752e672e54b409c92aa426f0c68013ac">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a985f8a5ae62f5f10a308179dd129d1b1">UpnpActionRequest.cpp</a></li>
-<li>UpnpActionRequest_strcpy_ActionName()&#160;:&#160;<a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#af6569d1b222d32e9b30c822812c7668e">UpnpActionRequest.cpp</a>, <a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#aa850934ead2a052b173a6f3870c9cf35">UpnpActionRequest.hpp</a></li>
+<li>UpnpActionRequest_set_Socket()&#160;:&#160;<a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a985f8a5ae62f5f10a308179dd129d1b1">UpnpActionRequest.cpp</a>, <a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a752e672e54b409c92aa426f0c68013ac">UpnpActionRequest.hpp</a></li>
+<li>UpnpActionRequest_strcpy_ActionName()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#aa850934ead2a052b173a6f3870c9cf35">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#af6569d1b222d32e9b30c822812c7668e">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_strcpy_DevUDN()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#ae403a86e248ef6c1f9d561ffb1763db7">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#ace47ff8a93948e25ec4013fe75d0849a">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_strcpy_ErrStr()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#aeeb9bd1c149d30d11a51a5147cb9cda1">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a612853ebfc1217009a218a2ff4fdf0c9">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_strcpy_Os()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a89ee914647e1aa732528ae9256b40af5">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a421f93b796d2ec5d2baac658b61b3998">UpnpActionRequest.cpp</a></li>
@@ -167,8 +139,8 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpActionRequest_strncpy_ErrStr()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#afea4b2f184a7a5f95753ed3205672836">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a7c3f869972fc0c189c82bb0f355ddf1a">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_strncpy_Os()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#ac6d441cbb3edd7ced148d988be8c94ef">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a595b92bb888f5663f043405c11b8136a">UpnpActionRequest.cpp</a></li>
 <li>UpnpActionRequest_strncpy_ServiceID()&#160;:&#160;<a class="el" href="d7/d47/UpnpActionRequest_8hpp.html#a780b81d6fc88ade3d2430b78874f9e92">UpnpActionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpActionRequest_8cpp.html#a640ffacfe5b4849204d2b5e6df838ffb">UpnpActionRequest.cpp</a></li>
-<li>UpnpAddToAction()&#160;:&#160;<a class="el" href="d3/d57/group__UPnPTools.html#gaecd324ad2ede6fa97a0fb77a67074468">upnptools.hpp</a>, <a class="el" href="d3/d57/group__UPnPTools.html#gaecd324ad2ede6fa97a0fb77a67074468">upnptools.cpp</a></li>
-<li>UpnpAddToActionResponse()&#160;:&#160;<a class="el" href="d3/d57/group__UPnPTools.html#ga6a5c02ae1eca518c8d6507eacd76a928">upnptools.cpp</a>, <a class="el" href="d3/d57/group__UPnPTools.html#ga6a5c02ae1eca518c8d6507eacd76a928">upnptools.hpp</a></li>
+<li>UpnpAddToAction()&#160;:&#160;<a class="el" href="d3/d57/group__UPnPTools.html#gaecd324ad2ede6fa97a0fb77a67074468">upnptools.cpp</a>, <a class="el" href="d3/d57/group__UPnPTools.html#gaecd324ad2ede6fa97a0fb77a67074468">upnptools.hpp</a></li>
+<li>UpnpAddToActionResponse()&#160;:&#160;<a class="el" href="d3/d57/group__UPnPTools.html#ga6a5c02ae1eca518c8d6507eacd76a928">upnptools.hpp</a>, <a class="el" href="d3/d57/group__UPnPTools.html#ga6a5c02ae1eca518c8d6507eacd76a928">upnptools.cpp</a></li>
 <li>UpnpAddToPropertySet()&#160;:&#160;<a class="el" href="d3/d57/group__UPnPTools.html#gae933908ded200771ae8dc9cb8d06d303">upnptools.hpp</a>, <a class="el" href="d3/d57/group__UPnPTools.html#gae933908ded200771ae8dc9cb8d06d303">upnptools.cpp</a></li>
 <li>UpnpAddVirtualDir()&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#ga4c164169140e652c4d529f832689cee8">upnp.hpp</a></li>
 <li>UpnpCancelHttpGet()&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#gac82986ebd850fca749c629251ef5239c">upnp.hpp</a></li>
@@ -181,19 +153,19 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpDiscovery_clear_Date()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#aef4ec01a784d377da2487b12c0479605">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a5a8c2d2eefab9c522814584d5bbf72ea">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_clear_DestAddr()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#aa19a46b5e0fe6316b467d58b231d7573">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ab89d65bf703b0c930b24bbffc0dcc4d9">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_clear_DeviceID()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a9b4e9d53118e7d6698f940f00beb8911">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ad8d6af4264d52e921a79368765097694">UpnpDiscovery.cpp</a></li>
-<li>UpnpDiscovery_clear_DeviceType()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a04a4b74c7054a88bb09e327fe87b0ca1">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ac48258bc4605325f55ec7a298feba9c2">UpnpDiscovery.cpp</a></li>
-<li>UpnpDiscovery_clear_Ext()&#160;:&#160;<a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ac09d1e4a70be0dcb8dfc7ae5988131be">UpnpDiscovery.cpp</a>, <a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a01af09a136bd047ebd718ef9db7bc14d">UpnpDiscovery.hpp</a></li>
+<li>UpnpDiscovery_clear_DeviceType()&#160;:&#160;<a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ac48258bc4605325f55ec7a298feba9c2">UpnpDiscovery.cpp</a>, <a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a04a4b74c7054a88bb09e327fe87b0ca1">UpnpDiscovery.hpp</a></li>
+<li>UpnpDiscovery_clear_Ext()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a01af09a136bd047ebd718ef9db7bc14d">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ac09d1e4a70be0dcb8dfc7ae5988131be">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_clear_Location()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#aae9f150d179e8d22505292d0d433796c">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#aa679c56b66ceafa5fef64db076cd6533">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_clear_Os()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#abf686b217c2813e82c2364d48919d392">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a73ac78957cb6f015d4043fced2b79330">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_clear_ServiceType()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a82f1c345a22abd3b4d7a4d13f925d887">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ae12d4fe0232b6147cde99dc8396cd1b7">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_clear_ServiceVer()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#aff7f050f07b251968e8ee27db8b8c710">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ac31cea887d92645faf812450c5bf5450">UpnpDiscovery.cpp</a></li>
-<li>UpnpDiscovery_delete()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a00aa854d2ad5e0946c194824bd6651f3">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a58aca6889f6bde70985000c65814601f">UpnpDiscovery.cpp</a></li>
-<li>UpnpDiscovery_dup()&#160;:&#160;<a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a6f39eceff3b9c00e1294111c73352b55">UpnpDiscovery.cpp</a>, <a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#ada357e9f95e18ea662f1cba6c314c660">UpnpDiscovery.hpp</a></li>
+<li>UpnpDiscovery_delete()&#160;:&#160;<a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a58aca6889f6bde70985000c65814601f">UpnpDiscovery.cpp</a>, <a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a00aa854d2ad5e0946c194824bd6651f3">UpnpDiscovery.hpp</a></li>
+<li>UpnpDiscovery_dup()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#ada357e9f95e18ea662f1cba6c314c660">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a6f39eceff3b9c00e1294111c73352b55">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_Date()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a37fb29e29a403324239d960a41d4bdd5">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a5de74442ce2e4ab1cc5051d0efdcea97">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_Date_cstr()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a3e52fad6597dbe0e4d06efe0017f534e">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a5de7ec77824451bab52e23154a2b3c57">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_Date_Length()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#aab78ffaf39e0a06ef1b16211f1fc0290">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#acbbeb2fcf999fb38798784fac2236179">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_DestAddr()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#afb24abf2afa29d8b839134790ed4554b">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a5c29c78ed1eb8637c34df2115ff028f1">UpnpDiscovery.cpp</a></li>
-<li>UpnpDiscovery_get_DeviceID()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a73c560dc17aafdfa35ed5746d4914140">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#af507261051a77f7009352bdd85d59c94">UpnpDiscovery.cpp</a></li>
+<li>UpnpDiscovery_get_DeviceID()&#160;:&#160;<a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#af507261051a77f7009352bdd85d59c94">UpnpDiscovery.cpp</a>, <a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a73c560dc17aafdfa35ed5746d4914140">UpnpDiscovery.hpp</a></li>
 <li>UpnpDiscovery_get_DeviceID_cstr()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a84de0014a50377a36d05fde24e6e42ff">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ab454bd9b942bfd00a95197e0de304750">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_DeviceID_Length()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#ab8d9728d8290c51cec3209aa44d9a532">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a4eafd4629efd61ca4a3acdab5149555e">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_DeviceType()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a1a9502bb81bf391544abdb79e417a40a">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ae7bb7d2f2e9c71027d1a586b63b752da">UpnpDiscovery.cpp</a></li>
@@ -201,13 +173,13 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpDiscovery_get_DeviceType_Length()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a19262114019cbe33c409b6942817e16a">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#aee8e955618683bab1821fd9c4e22a753">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_ErrCode()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a65a9097959573f7d4bf914d95182a33c">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ab364eebfc87ffc768abe4eec9c14c3aa">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_Expires()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a2b5cef28e198d230ce022e50e5d366fb">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ae0e60f167dc50439337c4275f493481c">UpnpDiscovery.cpp</a></li>
-<li>UpnpDiscovery_get_Ext()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a9862d64814e9e2ac3af9b4608a368302">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a01e1526557f4085cb439829b4b067a44">UpnpDiscovery.cpp</a></li>
-<li>UpnpDiscovery_get_Ext_cstr()&#160;:&#160;<a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ad2b22e3fc07df522c011133134f96583">UpnpDiscovery.cpp</a>, <a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a6a202140824e2248c83a04d61a86d86c">UpnpDiscovery.hpp</a></li>
+<li>UpnpDiscovery_get_Ext()&#160;:&#160;<a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a01e1526557f4085cb439829b4b067a44">UpnpDiscovery.cpp</a>, <a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a9862d64814e9e2ac3af9b4608a368302">UpnpDiscovery.hpp</a></li>
+<li>UpnpDiscovery_get_Ext_cstr()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a6a202140824e2248c83a04d61a86d86c">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ad2b22e3fc07df522c011133134f96583">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_Ext_Length()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a387a6b942e375d4c53b3c5f7eb60fc63">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a9142746520262614f4167f72c927c0ea">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_Location()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a51dac4ee4a8d99f3f0c843e1ae8779b3">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a7d8b6d2df7380247c161f7391273dc5a">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_Location_cstr()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a0a30b51e6459a9610eb8d56bb60b2eb4">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a11d02d0bc19b3096559840c16cffd193">UpnpDiscovery.cpp</a></li>
-<li>UpnpDiscovery_get_Location_Length()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a43492a555c93f71508ebf2252e7dc2e9">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#aa5cbbea957c41ea7fa8b28bc5b9c289b">UpnpDiscovery.cpp</a></li>
-<li>UpnpDiscovery_get_Os()&#160;:&#160;<a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a3fed8920fad02002d8c283eb434e8ced">UpnpDiscovery.cpp</a>, <a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#ac8dd77e8fd2d888c6823f971a2ed263e">UpnpDiscovery.hpp</a></li>
+<li>UpnpDiscovery_get_Location_Length()&#160;:&#160;<a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#aa5cbbea957c41ea7fa8b28bc5b9c289b">UpnpDiscovery.cpp</a>, <a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a43492a555c93f71508ebf2252e7dc2e9">UpnpDiscovery.hpp</a></li>
+<li>UpnpDiscovery_get_Os()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#ac8dd77e8fd2d888c6823f971a2ed263e">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a3fed8920fad02002d8c283eb434e8ced">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_Os_cstr()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a6409bac6d0fb1710117fef26744aa3fa">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#aae605c335455715b97044e4ac4114fdf">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_Os_Length()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a184a9271ef18e677fb1c0c04fac0e302">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#aeb3cf1c3d01e40974e0025162d655a67">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_ServiceType()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#aada6fce50a7fedec2a65bcc34286cde9">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a752bd25a18671b348931e324b5e6be96">UpnpDiscovery.cpp</a></li>
@@ -217,8 +189,8 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpDiscovery_get_ServiceVer_cstr()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a31bcf03ff7c984bad84c4dcb3c4fe194">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#af3920b84dca7c192fbbd5e51b5426d20">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_get_ServiceVer_Length()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a88b0d3518ead8596b3818f890ee099c9">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ad76325c2540d0da839b1d7acb1029f00">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_new()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#ab23861ed1b456687a41811aace6b8951">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ac9d98236e3bb52b39af7552866d7b5a8">UpnpDiscovery.cpp</a></li>
-<li>UpnpDiscovery_set_Date()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a4e2386b882dd9e00e5597faabdb85e43">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a1144318ab08831da89f3ea4e97cfd1d3">UpnpDiscovery.cpp</a></li>
-<li>UpnpDiscovery_set_DestAddr()&#160;:&#160;<a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a89fff177d01b792b6038ecb6e2e1b3da">UpnpDiscovery.cpp</a>, <a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a34f1b9f4fdb8eb3bbccac6c0a7374bd3">UpnpDiscovery.hpp</a></li>
+<li>UpnpDiscovery_set_Date()&#160;:&#160;<a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a1144318ab08831da89f3ea4e97cfd1d3">UpnpDiscovery.cpp</a>, <a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a4e2386b882dd9e00e5597faabdb85e43">UpnpDiscovery.hpp</a></li>
+<li>UpnpDiscovery_set_DestAddr()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a34f1b9f4fdb8eb3bbccac6c0a7374bd3">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a89fff177d01b792b6038ecb6e2e1b3da">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_set_DeviceID()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a0b7112f44c0fcb47e166de60e6b17697">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ae14ce18ba1f42707a3d03cb55471539a">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_set_DeviceType()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a386fcf895688f9b79dab178ac5494cfe">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a5e1ebbc6fd1ec304a27281e4428e905c">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_set_ErrCode()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a7c374ae75e775745d3a3f4fd08161cb2">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a935674aa8d6ff0dac5b0fbb7aa79c561">UpnpDiscovery.cpp</a></li>
@@ -240,7 +212,7 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpDiscovery_strncpy_DeviceID()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#af92639396397d761317bd4713dcd776d">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a487984f8fe37859c54542c7b238454f2">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_strncpy_DeviceType()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#ae9bf2802b8469ec219086588c550130e">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#ab724f7b445fc7eb1f98b9d2e55e241a1">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_strncpy_Ext()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#af752262c369a03d48fd609ab3168b05a">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a9664ff1acca2c5974f51374791e4fcb8">UpnpDiscovery.cpp</a></li>
-<li>UpnpDiscovery_strncpy_Location()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#ab48bff4b60e706f681c732bc8b2da1ff">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a999784a89cf00994e04cd74eb1b3c668">UpnpDiscovery.cpp</a></li>
+<li>UpnpDiscovery_strncpy_Location()&#160;:&#160;<a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a999784a89cf00994e04cd74eb1b3c668">UpnpDiscovery.cpp</a>, <a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#ab48bff4b60e706f681c732bc8b2da1ff">UpnpDiscovery.hpp</a></li>
 <li>UpnpDiscovery_strncpy_Os()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a31672337f179671a213c2cb1816ad4c1">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a0c411cf401940584ce04b130b76fd7ad">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_strncpy_ServiceType()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a782cdd12260790b3133c0994d2197244">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#a814c08b25d4ceb9ec7cfba162161ce3d">UpnpDiscovery.cpp</a></li>
 <li>UpnpDiscovery_strncpy_ServiceVer()&#160;:&#160;<a class="el" href="d0/d03/UpnpDiscovery_8hpp.html#a08eee8e695d9e65c3d9273073a2b5ce9">UpnpDiscovery.hpp</a>, <a class="el" href="d8/db8/UpnpDiscovery_8cpp.html#aee020a365d5107b39a519191844a6205">UpnpDiscovery.cpp</a></li>
@@ -250,12 +222,12 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpEndHttpRequest()&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#gabf7220a78d77e61b8d3bcc3165cfa71b">upnp.hpp</a></li>
 <li>UpnpEvent_assign()&#160;:&#160;<a class="el" href="dd/d7e/UpnpEvent_8hpp.html#ac8edde4d6bdabcfdbab12fae113de10c">UpnpEvent.hpp</a>, <a class="el" href="d6/daa/UpnpEvent_8cpp.html#ae83a58e639b452fb145f0b1de5771b1d">UpnpEvent.cpp</a></li>
 <li>UpnpEvent_clear_SID()&#160;:&#160;<a class="el" href="dd/d7e/UpnpEvent_8hpp.html#a4f44eccc1257a993b753939316fe6807">UpnpEvent.hpp</a>, <a class="el" href="d6/daa/UpnpEvent_8cpp.html#a445a69bff19a0a5d323a5b3476ff0e9b">UpnpEvent.cpp</a></li>
-<li>UpnpEvent_delete()&#160;:&#160;<a class="el" href="d6/daa/UpnpEvent_8cpp.html#aea37612097327d905b1ad9f4b2f12406">UpnpEvent.cpp</a>, <a class="el" href="dd/d7e/UpnpEvent_8hpp.html#a43aa459d4d68eb7fcaa3146b5290af76">UpnpEvent.hpp</a></li>
+<li>UpnpEvent_delete()&#160;:&#160;<a class="el" href="dd/d7e/UpnpEvent_8hpp.html#a43aa459d4d68eb7fcaa3146b5290af76">UpnpEvent.hpp</a>, <a class="el" href="d6/daa/UpnpEvent_8cpp.html#aea37612097327d905b1ad9f4b2f12406">UpnpEvent.cpp</a></li>
 <li>UpnpEvent_dup()&#160;:&#160;<a class="el" href="dd/d7e/UpnpEvent_8hpp.html#ac5287996783ece1a41422d4cd7f5b041">UpnpEvent.hpp</a>, <a class="el" href="d6/daa/UpnpEvent_8cpp.html#adf7a3b839a2cd23a363e34f9092c5d46">UpnpEvent.cpp</a></li>
 <li>UpnpEvent_get_ChangedVariables()&#160;:&#160;<a class="el" href="dd/d7e/UpnpEvent_8hpp.html#a6b1091b8c9d69d84ae649f9fb67c7974">UpnpEvent.hpp</a>, <a class="el" href="d6/daa/UpnpEvent_8cpp.html#a039433b7db97f217bf5ca74e3f4704ae">UpnpEvent.cpp</a></li>
 <li>UpnpEvent_get_EventKey()&#160;:&#160;<a class="el" href="dd/d7e/UpnpEvent_8hpp.html#a75040238370e2bf539092250297a9b2d">UpnpEvent.hpp</a>, <a class="el" href="d6/daa/UpnpEvent_8cpp.html#a5294834d2d3c7ce4e0833e63e744c512">UpnpEvent.cpp</a></li>
 <li>UpnpEvent_get_SID()&#160;:&#160;<a class="el" href="dd/d7e/UpnpEvent_8hpp.html#a7705a92b0739ad3375532aa66286c3f4">UpnpEvent.hpp</a>, <a class="el" href="d6/daa/UpnpEvent_8cpp.html#a9edd5999f29495efc5518ecf575f0ee3">UpnpEvent.cpp</a></li>
-<li>UpnpEvent_get_SID_cstr()&#160;:&#160;<a class="el" href="d6/daa/UpnpEvent_8cpp.html#a96677746bd9bd6e54d3863298c64f24a">UpnpEvent.cpp</a>, <a class="el" href="dd/d7e/UpnpEvent_8hpp.html#a3d44b7185c84f778243c693df8a21959">UpnpEvent.hpp</a></li>
+<li>UpnpEvent_get_SID_cstr()&#160;:&#160;<a class="el" href="dd/d7e/UpnpEvent_8hpp.html#a3d44b7185c84f778243c693df8a21959">UpnpEvent.hpp</a>, <a class="el" href="d6/daa/UpnpEvent_8cpp.html#a96677746bd9bd6e54d3863298c64f24a">UpnpEvent.cpp</a></li>
 <li>UpnpEvent_get_SID_Length()&#160;:&#160;<a class="el" href="dd/d7e/UpnpEvent_8hpp.html#aa5a3364eeafc82e907acab87f6a5e418">UpnpEvent.hpp</a>, <a class="el" href="d6/daa/UpnpEvent_8cpp.html#a67bc98cdc46ac70814f3124e7862cc42">UpnpEvent.cpp</a></li>
 <li>UpnpEvent_new()&#160;:&#160;<a class="el" href="dd/d7e/UpnpEvent_8hpp.html#ad005b63a986a26631fc9a1cb0f634b22">UpnpEvent.hpp</a>, <a class="el" href="d6/daa/UpnpEvent_8cpp.html#a5669fee4cff109237315ba1aacff0e2f">UpnpEvent.cpp</a></li>
 <li>UpnpEvent_set_ChangedVariables()&#160;:&#160;<a class="el" href="dd/d7e/UpnpEvent_8hpp.html#a520fb83de6feb2d3acc35519f67ee52c">UpnpEvent.hpp</a>, <a class="el" href="d6/daa/UpnpEvent_8cpp.html#a4a300e10c4ed82cb1805e3156a79e53e">UpnpEvent.cpp</a></li>
@@ -266,7 +238,7 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpEventSubscribe_assign()&#160;:&#160;<a class="el" href="d5/dd8/UpnpEventSubscribe_8hpp.html#a2eef484f5480079eebe4d2a047481cfc">UpnpEventSubscribe.hpp</a>, <a class="el" href="de/df3/UpnpEventSubscribe_8cpp.html#a64dd7d24892119c01b5bfefe023c92c6">UpnpEventSubscribe.cpp</a></li>
 <li>UpnpEventSubscribe_clear_PublisherUrl()&#160;:&#160;<a class="el" href="d5/dd8/UpnpEventSubscribe_8hpp.html#ae5f0d148e714045b0868fb76be1f4db7">UpnpEventSubscribe.hpp</a>, <a class="el" href="de/df3/UpnpEventSubscribe_8cpp.html#aea03de542afc0fe35072dec5966a3804">UpnpEventSubscribe.cpp</a></li>
 <li>UpnpEventSubscribe_clear_SID()&#160;:&#160;<a class="el" href="d5/dd8/UpnpEventSubscribe_8hpp.html#a5aed6da1aab1aa81347758217064e36d">UpnpEventSubscribe.hpp</a>, <a class="el" href="de/df3/UpnpEventSubscribe_8cpp.html#a4f68afe10d35875f56ad069b55fe0f25">UpnpEventSubscribe.cpp</a></li>
-<li>UpnpEventSubscribe_delete()&#160;:&#160;<a class="el" href="de/df3/UpnpEventSubscribe_8cpp.html#afb58f5c07fb2a9c868a956a6d6267d00">UpnpEventSubscribe.cpp</a>, <a class="el" href="d5/dd8/UpnpEventSubscribe_8hpp.html#a1a48391d61402e72ebaa5d2d4348e8bd">UpnpEventSubscribe.hpp</a></li>
+<li>UpnpEventSubscribe_delete()&#160;:&#160;<a class="el" href="d5/dd8/UpnpEventSubscribe_8hpp.html#a1a48391d61402e72ebaa5d2d4348e8bd">UpnpEventSubscribe.hpp</a>, <a class="el" href="de/df3/UpnpEventSubscribe_8cpp.html#afb58f5c07fb2a9c868a956a6d6267d00">UpnpEventSubscribe.cpp</a></li>
 <li>UpnpEventSubscribe_dup()&#160;:&#160;<a class="el" href="d5/dd8/UpnpEventSubscribe_8hpp.html#a97bdf71d8560b6be034bc437c3771adb">UpnpEventSubscribe.hpp</a>, <a class="el" href="de/df3/UpnpEventSubscribe_8cpp.html#a7807d8227c7ebbe7df59606877dc83cc">UpnpEventSubscribe.cpp</a></li>
 <li>UpnpEventSubscribe_get_ErrCode()&#160;:&#160;<a class="el" href="d5/dd8/UpnpEventSubscribe_8hpp.html#a74e6c029845961d5b99b2aa27bb3d940">UpnpEventSubscribe.hpp</a>, <a class="el" href="de/df3/UpnpEventSubscribe_8cpp.html#a710bd297666c20beecbb0cbe548eff14">UpnpEventSubscribe.cpp</a></li>
 <li>UpnpEventSubscribe_get_PublisherUrl()&#160;:&#160;<a class="el" href="d5/dd8/UpnpEventSubscribe_8hpp.html#ab63ea46bbe8857c5a989ae99baae29c2">UpnpEventSubscribe.hpp</a>, <a class="el" href="de/df3/UpnpEventSubscribe_8cpp.html#a94a48380aaafd45e6ada6d3377a202ec">UpnpEventSubscribe.cpp</a></li>
@@ -409,7 +381,7 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpStateVarComplete_get_CtrlUrl_Length()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#aac25bc631698ebdc694433598c7488e7">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#a8a6905f876a51a1160b1b5000e715e07">UpnpStateVarComplete.cpp</a></li>
 <li>UpnpStateVarComplete_get_CurrentVal()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#afcf43eab37e3fc7e7b623326f509949f">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#a6d951518291694bc5fd8edaf5c0dc68e">UpnpStateVarComplete.cpp</a></li>
 <li>UpnpStateVarComplete_get_CurrentVal_cstr()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#a6f7ebcd56eec65304f2bf39e4e114bac">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#acd8a210b6e07c0db9880973174f8f435">UpnpStateVarComplete.cpp</a></li>
-<li>UpnpStateVarComplete_get_ErrCode()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#a09d3cfee0acb30dda35362d80d76414f">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#a0cca758ea26e59f384809feef0f4c572">UpnpStateVarComplete.cpp</a></li>
+<li>UpnpStateVarComplete_get_ErrCode()&#160;:&#160;<a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#a0cca758ea26e59f384809feef0f4c572">UpnpStateVarComplete.cpp</a>, <a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#a09d3cfee0acb30dda35362d80d76414f">UpnpStateVarComplete.hpp</a></li>
 <li>UpnpStateVarComplete_get_StateVarName()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#a2f2f716470093a0740d353ae1240415b">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#aeb7e6c53ceae806fd0b6da56094d2392">UpnpStateVarComplete.cpp</a></li>
 <li>UpnpStateVarComplete_get_StateVarName_cstr()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#a9c55b89ea90de67ae37f05d6121c2a67">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#a008e9b76aa0b95b47b22a042e0c98e90">UpnpStateVarComplete.cpp</a></li>
 <li>UpnpStateVarComplete_get_StateVarName_Length()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#a16abb23d6b1b13c507b3b98f171b592f">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#ab86eb7ed45c4c37307ccab419f0a0d37">UpnpStateVarComplete.cpp</a></li>
@@ -417,12 +389,12 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpStateVarComplete_set_CtrlUrl()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#a26808bb3a5a1f2469143f94081c762c5">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#a2dc826432bb38d2ec4f79a52add66d65">UpnpStateVarComplete.cpp</a></li>
 <li>UpnpStateVarComplete_set_CurrentVal()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#aff222f33c8aec50d2ad135610987acb4">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#abd945af953be65df80a9958294486c4a">UpnpStateVarComplete.cpp</a></li>
 <li>UpnpStateVarComplete_set_ErrCode()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#ab5496ca2fa133cbe0245c3d7c1c966f6">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#a148d16441178bdcbe7e60290e82f506f">UpnpStateVarComplete.cpp</a></li>
-<li>UpnpStateVarComplete_set_StateVarName()&#160;:&#160;<a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#ad43b34bcd024f7352c6cc24e5204d260">UpnpStateVarComplete.cpp</a>, <a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#a4750beded16d7aadff7b6f3fbe73d84a">UpnpStateVarComplete.hpp</a></li>
+<li>UpnpStateVarComplete_set_StateVarName()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#a4750beded16d7aadff7b6f3fbe73d84a">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#ad43b34bcd024f7352c6cc24e5204d260">UpnpStateVarComplete.cpp</a></li>
 <li>UpnpStateVarComplete_strcpy_CtrlUrl()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#a86564950fcac125bc5bdc4f6f678ea4a">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#a02a08531b1194199de9056a239bcf570">UpnpStateVarComplete.cpp</a></li>
 <li>UpnpStateVarComplete_strcpy_StateVarName()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#a73c97b43c6ddb7c13794d9d633702de5">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#a5d8c20f2c00f746d8d97bf77f7779442">UpnpStateVarComplete.cpp</a></li>
 <li>UpnpStateVarComplete_strncpy_CtrlUrl()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#a0e2b13e65a13590ae27c3cf33e65f2b9">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#a632151713225be67da32220727c847c3">UpnpStateVarComplete.cpp</a></li>
 <li>UpnpStateVarComplete_strncpy_StateVarName()&#160;:&#160;<a class="el" href="df/dea/UpnpStateVarComplete_8hpp.html#a7956e2a1f9968bf791ad0e0be917c224">UpnpStateVarComplete.hpp</a>, <a class="el" href="d2/dc8/UpnpStateVarComplete_8cpp.html#a4aa0d911195e37eda3da8680fb112e64">UpnpStateVarComplete.cpp</a></li>
-<li>UpnpStateVarRequest_assign()&#160;:&#160;<a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#a2c1d93efd2b737b04852debf2d3a4ccd">UpnpStateVarRequest.cpp</a>, <a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#af79c09ef4c6d977ccfc968d33ceb5833">UpnpStateVarRequest.hpp</a></li>
+<li>UpnpStateVarRequest_assign()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#af79c09ef4c6d977ccfc968d33ceb5833">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#a2c1d93efd2b737b04852debf2d3a4ccd">UpnpStateVarRequest.cpp</a></li>
 <li>UpnpStateVarRequest_clear_CtrlPtIPAddr()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#adbd728256017ff3692bbcf3632416735">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#ab20d00aa35cf204c4d69b5535f571198">UpnpStateVarRequest.cpp</a></li>
 <li>UpnpStateVarRequest_clear_DevUDN()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#a825393c838bed88d3a0c26437e9d729d">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#a673b34d209460ffd9d84f6b8edfc2950">UpnpStateVarRequest.cpp</a></li>
 <li>UpnpStateVarRequest_clear_ErrStr()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#a7ce1b589402f7d44db1edc02ae295947">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#a0a8d24a09d77edbfe4522d1f7131fabb">UpnpStateVarRequest.cpp</a></li>
@@ -433,7 +405,7 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpStateVarRequest_get_CtrlPtIPAddr()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#a328df706a3116d1a6944ec4fb91df372">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#a82954ef1fefc95c5c7a94cdd1ffa73f3">UpnpStateVarRequest.cpp</a></li>
 <li>UpnpStateVarRequest_get_CurrentVal()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#a03e051d2c33c9978f9e0cc278952f8b5">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#a7b42927cfc398fc0acef0d39728f55ff">UpnpStateVarRequest.cpp</a></li>
 <li>UpnpStateVarRequest_get_CurrentVal_cstr()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#a78433c7d94179c8638607b27da0ba750">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#a00b06767adaec64501d4915ed337026a">UpnpStateVarRequest.cpp</a></li>
-<li>UpnpStateVarRequest_get_DevUDN()&#160;:&#160;<a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#aba5f8e10e06e31c22ec6cf196e53143e">UpnpStateVarRequest.cpp</a>, <a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#ad8a972b47ed09f22f532ef2d45da4f28">UpnpStateVarRequest.hpp</a></li>
+<li>UpnpStateVarRequest_get_DevUDN()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#ad8a972b47ed09f22f532ef2d45da4f28">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#aba5f8e10e06e31c22ec6cf196e53143e">UpnpStateVarRequest.cpp</a></li>
 <li>UpnpStateVarRequest_get_DevUDN_cstr()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#a2e18346fb8a85d2144b92712dfcefd53">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#add7228f459c888cbe1e0e6406cc327c7">UpnpStateVarRequest.cpp</a></li>
 <li>UpnpStateVarRequest_get_DevUDN_Length()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#a6358c569bea6a6ef0f9c8f0df688f5ae">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#a8f4c5a87aec02acd2df4c171030f8c0a">UpnpStateVarRequest.cpp</a></li>
 <li>UpnpStateVarRequest_get_ErrCode()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#a572df430afa2c4098fe940291a36ed9b">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#a7004cbf792a5328e392cb851585c223e">UpnpStateVarRequest.cpp</a></li>
@@ -463,7 +435,7 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpStateVarRequest_strncpy_DevUDN()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#ae2432499c5244408f7d3d25a317bfc0a">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#a0127417343a27be7b309908574690f9b">UpnpStateVarRequest.cpp</a></li>
 <li>UpnpStateVarRequest_strncpy_ErrStr()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#ac31d11702a9c0322582780f6a92b85c1">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#a06239aaafb1a65667872f4ecdd6c11fb">UpnpStateVarRequest.cpp</a></li>
 <li>UpnpStateVarRequest_strncpy_ServiceID()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#a10a248e0859d09795fb71e5abd8a9bfc">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#a8fda2b48cfeac57d9a2bd91a892efc37">UpnpStateVarRequest.cpp</a></li>
-<li>UpnpStateVarRequest_strncpy_StateVarName()&#160;:&#160;<a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#af4b93d17f4ad794e1becde982c2b28f5">UpnpStateVarRequest.cpp</a>, <a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#a251996dfa3bfa43fd187f8effb7b308f">UpnpStateVarRequest.hpp</a></li>
+<li>UpnpStateVarRequest_strncpy_StateVarName()&#160;:&#160;<a class="el" href="d6/d72/UpnpStateVarRequest_8hpp.html#a251996dfa3bfa43fd187f8effb7b308f">UpnpStateVarRequest.hpp</a>, <a class="el" href="d3/d7b/UpnpStateVarRequest_8cpp.html#af4b93d17f4ad794e1becde982c2b28f5">UpnpStateVarRequest.cpp</a></li>
 <li>UpnpString_assign()&#160;:&#160;<a class="el" href="d1/d03/group__UpnpString.html#gaf388f53d32e149566c8eaede13a1a99b">UpnpString.hpp</a></li>
 <li>UpnpString_casecmp()&#160;:&#160;<a class="el" href="d1/d03/group__UpnpString.html#ga2858483ddec8c61cd9718fc5bb691a35">UpnpString.hpp</a></li>
 <li>UpnpString_clear()&#160;:&#160;<a class="el" href="d1/d03/group__UpnpString.html#gaf95ac319aeabad0ed623864cde16f354">UpnpString.hpp</a></li>
@@ -486,7 +458,7 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpSubscriptionRequest_dup()&#160;:&#160;<a class="el" href="dd/d6d/UpnpSubscriptionRequest_8hpp.html#ac8e809b7b9bfe9c92d08028feed87057">UpnpSubscriptionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpSubscriptionRequest_8cpp.html#a577e00a26a879876811fd2d8e6b0e87f">UpnpSubscriptionRequest.cpp</a></li>
 <li>UpnpSubscriptionRequest_get_ServiceId()&#160;:&#160;<a class="el" href="dd/d6d/UpnpSubscriptionRequest_8hpp.html#abe1d5660cb2d5420644fd327dbcd6002">UpnpSubscriptionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpSubscriptionRequest_8cpp.html#a0f18919d0f404c4380e1f61fbb006345">UpnpSubscriptionRequest.cpp</a></li>
 <li>UpnpSubscriptionRequest_get_ServiceId_cstr()&#160;:&#160;<a class="el" href="dd/d6d/UpnpSubscriptionRequest_8hpp.html#ab64eb97d2899eefb0e8d81782083f8ad">UpnpSubscriptionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpSubscriptionRequest_8cpp.html#ad2145aa1436353508e0e5499e53fad22">UpnpSubscriptionRequest.cpp</a></li>
-<li>UpnpSubscriptionRequest_get_ServiceId_Length()&#160;:&#160;<a class="el" href="d4/d6b/UpnpSubscriptionRequest_8cpp.html#a8b70e9c310e43f2341fca34db487a4b1">UpnpSubscriptionRequest.cpp</a>, <a class="el" href="dd/d6d/UpnpSubscriptionRequest_8hpp.html#a4ac74b402e6070871c967e895f507d27">UpnpSubscriptionRequest.hpp</a></li>
+<li>UpnpSubscriptionRequest_get_ServiceId_Length()&#160;:&#160;<a class="el" href="dd/d6d/UpnpSubscriptionRequest_8hpp.html#a4ac74b402e6070871c967e895f507d27">UpnpSubscriptionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpSubscriptionRequest_8cpp.html#a8b70e9c310e43f2341fca34db487a4b1">UpnpSubscriptionRequest.cpp</a></li>
 <li>UpnpSubscriptionRequest_get_SID()&#160;:&#160;<a class="el" href="dd/d6d/UpnpSubscriptionRequest_8hpp.html#a2f0f11811acae3acd04d25eed0d1a161">UpnpSubscriptionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpSubscriptionRequest_8cpp.html#afc663c41004be24c41b19621b2f7622b">UpnpSubscriptionRequest.cpp</a></li>
 <li>UpnpSubscriptionRequest_get_SID_cstr()&#160;:&#160;<a class="el" href="dd/d6d/UpnpSubscriptionRequest_8hpp.html#ad854a1b8bfedaaa37c433c2270c1fc5d">UpnpSubscriptionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpSubscriptionRequest_8cpp.html#a108155fe071e421e6c0a30eb01cdb2a3">UpnpSubscriptionRequest.cpp</a></li>
 <li>UpnpSubscriptionRequest_get_SID_Length()&#160;:&#160;<a class="el" href="dd/d6d/UpnpSubscriptionRequest_8hpp.html#a7ea3f1df40478ae25d0b3a1d01673613">UpnpSubscriptionRequest.hpp</a>, <a class="el" href="d4/d6b/UpnpSubscriptionRequest_8cpp.html#a16e64cbfc99c62e1f4d475f957cf32f0">UpnpSubscriptionRequest.cpp</a></li>
@@ -517,14 +489,14 @@ $(document).ready(function(){initNavTree('globals_func_u.html',''); initResizabl
 <li>UpnpVirtualDir_set_WriteCallback()&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#ga673a132bd1689ac3a4549fbba0e252fe">upnp.hpp</a></li>
 <li>UpnpWriteHttpPost()&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#ga6794b5f98e814417967fc8fe1c44c6f5">upnp.hpp</a></li>
 <li>UpnpWriteHttpRequest()&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#gaccbd92c541367e88598a5126fa97b2fb">upnp.hpp</a></li>
+<li>uuid_compare()&#160;:&#160;<a class="el" href="d7/db4/uuid_8hpp.html#a4d78eb9a0740c64bed75b8cc9f696b41">uuid.hpp</a></li>
+<li>uuid_create()&#160;:&#160;<a class="el" href="d7/db4/uuid_8hpp.html#ae9c4d836de0decca6efab890f1af01ee">uuid.hpp</a></li>
+<li>uuid_create_from_name()&#160;:&#160;<a class="el" href="d7/db4/uuid_8hpp.html#a066dfd080b903c06fbab3b4ff1606e6a">uuid.hpp</a></li>
 </ul>
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
+</small></address>
 </body>
 </html>

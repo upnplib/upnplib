@@ -1,0 +1,4 @@
+<map id="upnplib::Chttpreadwrite_old::http_SendStatusResponse" name="upnplib::Chttpreadwrite_old::http_SendStatusResponse">
+<area shape="rect" id="node1" title="Send http status of a response." alt="" coords="5,5,232,47"/>
+<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a6528a95139cc335e8a0efb80aab1efe7" title="Generate a response message for the status query and send the status response." alt="" coords="280,13,471,39"/>
+</map>

@@ -1,9 +1,8 @@
-#ifndef UPNPLIB_SYSDEP_HPP
-#define UPNPLIB_SYSDEP_HPP
-
+#ifndef COMPA_SYSDEP_HPP
+#define COMPA_SYSDEP_HPP
 /*
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-11-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  * Copyright (c) 1990- 1993, 1996 Open Software Foundation, Inc.
  * Copyright (c) 1989 by Hewlett-Packard Company, Palo Alto, Ca. &
  * Digital Equipment Corporation, Maynard, Mass.
@@ -22,18 +21,16 @@
  * this software for any purpose.
  */
 // Last compare with pupnp original source file on 2023-07-08, ver 1.14.17
-
 /*!
  * \file
+ * \brief Get some system dependend information. No details
  */
 
-#include "ithread.hpp"
+#include <ithread.hpp>
 
 /* change to point to where MD5 .h's live */
 /* get MD5 sample implementation from RFC 1321 */
-#include "md5.hpp"
-
-#include <sys/types.h>
+#include <md5.hpp>
 
 #ifdef _WIN32
 /* Do not #include <sys/time.h> */
@@ -41,24 +38,31 @@
 #include <sys/time.h>
 #endif
 
-/*! set the following to the number of 100ns ticks of the actual resolution of
- * your system's clock */
+/*! \brief set the following to the number of 100ns ticks of the actual
+ * resolution of your system's clock */
 #define UUIDS_PER_TICK 1024
 
 /*! Set the following to a call to acquire a system wide global lock. */
 extern ithread_mutex_t gUUIDMutex;
 
+/// \brief UUID lock
 #define UUIDLock() ithread_mutex_lock(&gUUIDMutex)
+/// \brief UUID unlock
 #define UUIDUnlock() ithread_mutex_unlock(&gUUIDMutex)
 
+/// \brief UUID time
 typedef uint64_t uuid_time_t;
 
-typedef struct {
-    char nodeID[6];
-} uuid_node_t;
+/// \brief node ID
+struct uuid_node_t {
+    char nodeID[6]; ///< node ID
+};
 
+/// Get IEEE node identifier.
 void get_ieee_node_identifier(uuid_node_t* node);
+/// Get system time.
 void get_system_time(uuid_time_t* uuid_time);
+/// Get random info.
 void get_random_info(unsigned char seed[16]);
 
-#endif /* UPNPLIB_SYSDEP_HPP */
+#endif /* COMPA_SYSDEP_HPP */

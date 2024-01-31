@@ -1,0 +1,10 @@
+<map id="http_parser_t" name="http_parser_t">
+<area shape="rect" id="node1" title="Structure of an HTTP parser object." alt="" coords="177,395,285,421"/>
+<area shape="rect" id="node2" href="$de/d66/structhttp__message__t.html" title="Structure of an HTTP message." alt="" coords="102,305,229,332"/>
+<area shape="rect" id="node3" href="$d4/d48/structuri__type.html" title="Represents a URI used in parse_uri and elsewhere." alt="" coords="5,201,80,228"/>
+<area shape="rect" id="node4" href="$d4/df4/structtoken.html" title="Buffer used in parsinghttp messages, urls, etc. Generally this simply holds a pointer into a larger a..." alt="" coords="13,5,72,32"/>
+<area shape="rect" id="node5" href="$db/d73/structhostport__type.html" title="Represents a host port, e.g. &quot;127.127.0.1:80&quot;." alt="" coords="112,103,224,130"/>
+<area shape="rect" id="node6" href="$d8/d52/structmembuffer.html" title="Maintains a block of dynamically allocated memory." alt="" coords="238,201,333,228"/>
+<area shape="rect" id="node8" href="$dc/d0a/structscanner__t.html" title="Structure of a scanner object." alt="" coords="265,305,351,332"/>
+<area shape="rect" id="node7" href="$d4/d89/structmemptr.html" title="pointer to a chunk of memory." alt="" coords="104,201,179,228"/>
+</map>

@@ -1,12 +1,12 @@
-#ifndef GENLIB_NET_SOCK_HPP
-#define GENLIB_NET_SOCK_HPP
+#ifndef COMPA_GENLIB_NET_SOCK_HPP
+#define COMPA_GENLIB_NET_SOCK_HPP
 /**************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-15
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,37 +37,42 @@
 //
 // Unused interface header file deleted. It's available until commit
 // a01e0186bc0dcb8dc243f6d313ca8527535648fd:compa/inc/compa/sock.hpp
-
 /*!
- * \defgroup Sock Network Socket Library
- *
- * @{
- *
  * \file
+ * \brief \copybrief Sock
+ *
+ * \defgroup Sock Network Socket Library
+ * \brief Manage network sockets and connections.
+ * @{
  */
 
 #include <UpnpGlobal.hpp> /* for UPNP_INLINE */
 #include <UpnpInet.hpp>   /* for SOCKET, netinet/in */
-#ifdef UPNP_ENABLE_OPEN_SSL
+#if defined(UPNP_ENABLE_OPEN_SSL) || defined(DOXYGEN_RUN)
 #include <openssl/ssl.h>
 #endif
 
 /* The following are not defined under winsock.h */
 // TODO: Cleanup constants: In <sys/socket.h> are defined
 // SHUT_RD, SHUT_WR, SHUT_RDWR with 0, 1, 2, according to man 2 shutdown. --Ingo
+/// \cond
 #ifndef SD_RECEIVE
 #define SD_RECEIVE 0x00
 #define SD_SEND 0x01
 #define SD_BOTH 0x02
 #endif
+/// \endcond
 
-/*! */
+/// \brief Additional socket information for connections and ssl.
 struct SOCKINFO {
-    /*! Handle/descriptor to a socket. */
+    /// \brief Handle/descriptor to a socket.
     SOCKET socket;
-    /*! The following two fields are filled only in incoming requests. */
+    /*! \brief Socket address of the remote node only filled in incoming
+     * requests. */
     sockaddr_storage foreign_sockaddr;
-#ifdef UPNP_ENABLE_OPEN_SSL
+#if defined(UPNP_ENABLE_OPEN_SSL) || defined(DOXYGEN_RUN)
+    /*! \brief information about an ssl connection only filled in incoming
+     * requests. */
     SSL* ssl;
 #else
     void* ssl;
@@ -204,6 +209,6 @@ UPNPLIB_API int sock_make_no_blocking(
     /* [in] socket. */
     SOCKET sock);
 
-/* @} Sock Network Socket Library */
+/// @} // Sock Network Socket Library
 
-#endif /* GENLIB_NET_SOCK_HPP */
+#endif /* COMPA_GENLIB_NET_SOCK_HPP */

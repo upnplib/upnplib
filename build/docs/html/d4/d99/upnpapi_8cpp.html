@@ -7,25 +7,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>UPnPlib: Compa/src/api/upnpapi.cpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript">var page_layout=1;</script>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
-<link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../resize.js"></script>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(document).ready(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
@@ -37,21 +26,6 @@
    <div id="projectbrief">&#39;Universal Plug and Play plus&#39; System Developement Kit</div>
   </td>
  </tr>
-   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <img id="MSearchSelect" src="../../search/mag_sel.svg"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
-               alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td></tr>
  </tbody>
 </table>
 </div>
@@ -62,22 +36,17 @@
 var searchBox = new SearchBox("searchBox", "../../search",'Search','.html');
 /* @license-end */
 </script>
-</div><!-- top -->
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('d4/d99/upnpapi_8cpp.html','../../'); initResizable(); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -92,6 +61,11 @@ $(document).ready(function(){initNavTree('d4/d99/upnpapi_8cpp.html','../../'); i
 </iframe>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="../../dir_71746572e519a5ccd4e3b0176757c048.html">Compa</a></li><li class="navelem"><a class="el" href="../../dir_185e5737dee257d2bd62c4d45a2734a7.html">src</a></li><li class="navelem"><a class="el" href="../../dir_09fc05caaf95268806aa2697a94fb0c5.html">api</a></li>  </ul>
+</div>
+</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
@@ -104,23 +78,17 @@ $(document).ready(function(){initNavTree('d4/d99/upnpapi_8cpp.html','../../'); i
 
 <p>Inititalize the compatible library before it can be used.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;config.hpp&gt;</code><br />
-<code>#include &lt;<a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>&gt;</code><br />
-<code>#include &lt;ThreadPool.hpp&gt;</code><br />
-<code>#include &lt;<a class="el" href="../../da/df8/UpnpUniStd_8hpp_source.html">UpnpUniStd.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="../../d8/df1/httpreadwrite_8hpp_source.html">httpreadwrite.hpp</a>&gt;</code><br />
-<code>#include &lt;soaplib.hpp&gt;</code><br />
-<code>#include &lt;ssdplib.hpp&gt;</code><br />
-<code>#include &lt;sysdep.hpp&gt;</code><br />
-<code>#include &lt;uuid.hpp&gt;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>&gt;</code><br />
+<code>#include &lt;httpreadwrite.hpp&gt;</code><br />
+<code>#include &lt;<a class="el" href="../../d8/d77/soaplib_8hpp_source.html">soaplib.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="../../d1/d9b/ssdplib_8hpp_source.html">ssdplib.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="../../d7/db4/uuid_8hpp_source.html">uuid.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="../../d9/d3a/global_8hpp_source.html">upnplib/global.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="../../df/d34/globalvars_8hpp_source.html">compa/globalvars.hpp</a>&gt;</code><br />
 <code>#include &lt;umock/ifaddrs.hpp&gt;</code><br />
 <code>#include &lt;umock/net_if.hpp&gt;</code><br />
 <code>#include &lt;umock/stdio.hpp&gt;</code><br />
-<code>#include &lt;gena.hpp&gt;</code><br />
-<code>#include &lt;miniserver.hpp&gt;</code><br />
-<code>#include &lt;service_table.hpp&gt;</code><br />
+<code>#include &lt;<a class="el" href="../../d9/dd2/gena_8hpp_source.html">gena.hpp</a>&gt;</code><br />
 <code>#include &lt;sys/stat.h&gt;</code><br />
 <code>#include &lt;cassert&gt;</code><br />
 <code>#include &lt;csignal&gt;</code><br />
@@ -130,49 +98,74 @@ $(document).ready(function(){initNavTree('d4/d99/upnpapi_8cpp.html','../../'); i
 <code>#include &lt;posix_overwrites.hpp&gt;</code><br />
 <code>#include &lt;ifaddrs.h&gt;</code><br />
 <code>#include &lt;sys/ioctl.h&gt;</code><br />
-<code>#include &lt;sys/param.h&gt;</code><br />
 <code>#include &lt;sys/types.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for upnpapi.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../d4/dad/upnpapi_8cpp__incl.png" border="0" usemap="#aCompa_2src_2api_2upnpapi_8cpp" alt=""/></div>
 <map name="aCompa_2src_2api_2upnpapi_8cpp" id="aCompa_2src_2api_2upnpapi_8cpp">
-<area shape="rect" title="Inititalize the compatible library before it can be used." alt="" coords="1888,5,2087,32"/>
-<area shape="rect" title=" " alt="" coords="5,80,95,107"/>
-<area shape="rect" href="../../d3/da9/upnpapi_8hpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="119,80,221,107"/>
-<area shape="rect" title=" " alt="" coords="246,80,369,107"/>
-<area shape="rect" href="../../da/df8/UpnpUniStd_8hpp.html" title="Do not #include &lt;unistd.h&gt; on WIN32." alt="" coords="393,80,520,107"/>
-<area shape="rect" href="../../d8/df1/httpreadwrite_8hpp.html" title="C++ Interface class httpreadwrite and declaration class Uri." alt="" coords="545,80,683,107"/>
-<area shape="rect" title=" " alt="" coords="708,80,805,107"/>
-<area shape="rect" title=" " alt="" coords="830,80,926,107"/>
-<area shape="rect" title=" " alt="" coords="950,80,1046,107"/>
-<area shape="rect" title=" " alt="" coords="1071,80,1149,107"/>
-<area shape="rect" href="../../d9/d3a/global_8hpp.html" title="Global used constants, variables, functions and macros." alt="" coords="1173,80,1316,107"/>
-<area shape="rect" href="../../df/d34/globalvars_8hpp.html" title="Provides global variables." alt="" coords="1340,80,1507,107"/>
-<area shape="rect" title=" " alt="" coords="1531,80,1673,107"/>
-<area shape="rect" title=" " alt="" coords="1697,80,1832,107"/>
-<area shape="rect" title=" " alt="" coords="1857,80,1987,107"/>
-<area shape="rect" title=" " alt="" coords="2011,80,2094,107"/>
-<area shape="rect" title=" " alt="" coords="2119,80,2237,107"/>
-<area shape="rect" title=" " alt="" coords="2261,80,2399,107"/>
-<area shape="rect" title=" " alt="" coords="2423,80,2509,107"/>
-<area shape="rect" title=" " alt="" coords="2533,80,2602,107"/>
-<area shape="rect" title=" " alt="" coords="2627,80,2695,107"/>
-<area shape="rect" title=" " alt="" coords="2719,80,2784,107"/>
-<area shape="rect" title=" " alt="" coords="2809,80,2875,107"/>
-<area shape="rect" title=" " alt="" coords="2899,80,2979,107"/>
-<area shape="rect" title=" " alt="" coords="3004,80,3165,107"/>
-<area shape="rect" title=" " alt="" coords="3189,80,3268,107"/>
-<area shape="rect" title=" " alt="" coords="3293,80,3381,107"/>
-<area shape="rect" title=" " alt="" coords="3405,80,3508,107"/>
-<area shape="rect" title=" " alt="" coords="3533,80,3629,107"/>
-<area shape="rect" title=" " alt="" coords="44,155,155,181"/>
-<area shape="rect" title=" " alt="" coords="179,155,305,181"/>
-<area shape="rect" title=" " alt="" coords="419,155,494,181"/>
-<area shape="rect" title=" " alt="" coords="1011,155,1191,181"/>
-<area shape="rect" href="../../d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="1299,155,1455,181"/>
-<area shape="rect" title=" " alt="" coords="1215,155,1274,181"/>
-<area shape="rect" title=" " alt="" coords="1479,155,1586,181"/>
+<area shape="rect" title="Inititalize the compatible library before it can be used." alt="" coords="2500,5,2699,32"/>
+<area shape="rect" href="../../d3/da9/upnpapi_8hpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="1426,80,1528,107"/>
+<area shape="rect" title=" " alt="" coords="2045,80,2184,107"/>
+<area shape="rect" href="../../d8/d77/soaplib_8hpp.html" title="SOAP module API to be called in UPnP&#45;SDK API. No details." alt="" coords="1559,155,1656,181"/>
+<area shape="rect" href="../../d1/d9b/ssdplib_8hpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification with SSDP. No details." alt="" coords="1553,80,1649,107"/>
+<area shape="rect" href="../../d7/db4/uuid_8hpp.html" title="Manage UUIDs." alt="" coords="1775,80,1854,107"/>
+<area shape="rect" href="../../d9/d3a/global_8hpp.html" title="Global used constants, variables, functions and macros." alt="" coords="1878,80,2020,107"/>
+<area shape="rect" href="../../df/d34/globalvars_8hpp.html" title="Provides global variables." alt="" coords="1594,229,1760,256"/>
+<area shape="rect" title=" " alt="" coords="2208,80,2351,107"/>
+<area shape="rect" title=" " alt="" coords="2375,80,2510,107"/>
+<area shape="rect" title=" " alt="" coords="2534,80,2665,107"/>
+<area shape="rect" href="../../d9/dd2/gena_8hpp.html" title="Manage Eventing with GENA, the General Event Notification Architecture." alt="" coords="670,80,753,107"/>
+<area shape="rect" title=" " alt="" coords="2689,80,2774,107"/>
+<area shape="rect" title=" " alt="" coords="2798,80,2868,107"/>
+<area shape="rect" title=" " alt="" coords="2892,80,2960,107"/>
+<area shape="rect" title=" " alt="" coords="2984,80,3050,107"/>
+<area shape="rect" title=" " alt="" coords="3074,80,3141,107"/>
+<area shape="rect" title=" " alt="" coords="3165,80,3245,107"/>
+<area shape="rect" title=" " alt="" coords="3270,80,3431,107"/>
+<area shape="rect" title=" " alt="" coords="3455,80,3534,107"/>
+<area shape="rect" title=" " alt="" coords="3558,80,3646,107"/>
+<area shape="rect" title=" " alt="" coords="3670,80,3766,107"/>
+<area shape="rect" href="../../d6/d92/VirtualDir_8hpp.html" title="Provide the Virtual Directory Callbacks structure." alt="" coords="1599,304,1710,331"/>
+<area shape="rect" href="../../d9/d78/client__table_8hpp.html" title=" " alt="" coords="648,155,775,181"/>
+<area shape="rect" href="../../da/d1d/upnp_8hpp.html" title="UPnPlib API." alt="" coords="1053,379,1136,405"/>
+<area shape="rect" href="../../df/d90/UpnpActionComplete_8hpp.html" title="Header file for UpnpActionComplete methods." alt="" coords="1014,453,1202,480"/>
+<area shape="rect" href="../../d7/d47/UpnpActionRequest_8hpp.html" title="Header file for UpnpActionRequest methods." alt="" coords="1750,453,1929,480"/>
+<area shape="rect" href="../../d0/d03/UpnpDiscovery_8hpp.html" title="Header file for UpnpDiscovery methods." alt="" coords="1580,453,1726,480"/>
+<area shape="rect" href="../../dd/d7e/UpnpEvent_8hpp.html" title="Header file for UpnpEvent methods." alt="" coords="1226,453,1347,480"/>
+<area shape="rect" href="../../d5/dd8/UpnpEventSubscribe_8hpp.html" title="Header file for UpnpEventSubscribe methods." alt="" coords="1372,453,1556,480"/>
+<area shape="rect" href="../../d5/dc6/UpnpFileInfo_8hpp.html" title="Header file for UpnpFileInfo methods." alt="" coords="858,453,990,480"/>
+<area shape="rect" href="../../df/dea/UpnpStateVarComplete_8hpp.html" title="Header file for UpnpStateVarComplete methods." alt="" coords="630,453,833,480"/>
+<area shape="rect" href="../../df/da3/Callback_8hpp.html" title="Definition of event type codes." alt="" coords="500,453,606,480"/>
+<area shape="rect" href="../../d3/dd1/UpnpString_8hpp.html" title="UpnpString object declaration." alt="" coords="1225,528,1348,555"/>
+<area shape="rect" href="../../d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="1574,603,1730,629"/>
+<area shape="rect" href="../../da/dc0/UpnpInet_8hpp.html" title="Provides a platform independent way to include TCP/IP types and functions." alt="" coords="1785,528,1894,555"/>
+<area shape="rect" title=" " alt="" coords="554,528,624,555"/>
+<area shape="rect" href="../../d8/df6/UpnpGlobal_8hpp.html" title="Defines constants that for some reason are not defined on some systems." alt="" coords="259,528,386,555"/>
+<area shape="rect" title=" " alt="" coords="214,603,284,629"/>
+<area shape="rect" href="../../d2/dad/GenlibClientSubscription_8hpp.html" title="Header file for GenlibClientSubscription methods." alt="" coords="265,453,476,480"/>
+<area shape="rect" title=" " alt="" coords="644,229,777,256"/>
+<area shape="rect" href="../../db/d74/service__table_8hpp.html" title="Manage the UPnP Services of a UPnP Device if available." alt="" coords="482,229,619,256"/>
+<area shape="rect" href="../../d8/dfd/config_8hpp.html" title="Main program configuration file." alt="" coords="770,304,859,331"/>
+<area shape="rect" title=" " alt="" coords="292,304,406,331"/>
+<area shape="rect" href="../../d8/d32/upnpdebug_8hpp.html" title="Manage Debug messages with levels &quot;critical&quot; to &quot;all&quot;." alt="" coords="556,304,678,331"/>
+<area shape="rect" href="../../de/dd0/Compa_2src_2inc_2uri_8hpp.html" title="Modify and parse URIs." alt="" coords="22,304,89,331"/>
+<area shape="rect" title=" " alt="" coords="20,379,91,405"/>
+<area shape="rect" href="../../d6/df0/sock_8hpp.html" title="Manage network sockets and connections." alt="" coords="1345,229,1425,256"/>
+<area shape="rect" title=" " alt="" coords="1468,304,1574,331"/>
+<area shape="rect" href="../../d3/d8b/miniserver_8hpp.html" title="Manage &quot;Step 0: Addressing&quot; of the UPnP+™ specification." alt="" coords="852,155,971,181"/>
+<area shape="rect" href="../../db/da7/httpparser_8hpp.html" title="Functions to parse UPnP messages like requests and responses." alt="" coords="243,229,359,256"/>
+<area shape="rect" title=" " alt="" coords="902,229,969,256"/>
+<area shape="rect" href="../../d1/d10/membuffer_8hpp.html" title="Manage blocks of dynamically allocated memory." alt="" coords="114,528,235,555"/>
+<area shape="rect" href="../../da/dd0/upnputil_8hpp.html" title="Some utility functions." alt="" coords="114,304,216,331"/>
+<area shape="rect" href="../../d5/de9/sysdep_8hpp.html" title="Get some system dependend information. No details." alt="" coords="1804,155,1900,181"/>
+<area shape="rect" href="../../d4/d0f/ithread_8hpp.html" title="Deprecated ithread functions redirected to pthread. Internal use Only." alt="" coords="298,379,394,405"/>
+<area shape="rect" href="../../d4/d0f/md5_8hpp.html" title="This code implements the MD5 message&#45;digest algorithm." alt="" coords="1951,229,2030,256"/>
+<area shape="rect" title=" " alt="" coords="1836,229,1926,256"/>
+<area shape="rect" title=" " alt="" coords="2188,155,2368,181"/>
+<area shape="rect" title=" " alt="" coords="2105,155,2164,181"/>
+<area shape="rect" title=" " alt="" coords="413,155,477,181"/>
+<area shape="rect" title=" " alt="" coords="501,155,624,181"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -215,7 +208,7 @@ Functions</h2></td></tr>
 <tr class="memitem:gab014d8c655f48d04fcc9ea7931a8f99c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/da9/upnpapi_8hpp.html#a2b57a2af79ca49c62e0994e4e5989e04">Upnp_Handle_Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gab014d8c655f48d04fcc9ea7931a8f99c">GetDeviceHandleInfo</a> (<a class="el" href="../../db/d55/group__UPnPAPI.html#gaa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> start, int AddressFamily, <a class="el" href="../../db/d55/group__UPnPAPI.html#gaa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> *device_handle_out, struct <a class="el" href="../../d3/d84/structHandle__Info.html">Handle_Info</a> **HndInfo)</td></tr>
 <tr class="memdesc:gab014d8c655f48d04fcc9ea7931a8f99c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the device handle and information of the first device of the address family specified. The search begins at the 'start' index, which should be 0 for the first call, then the last successful value returned. This allows listing all entries for the address family.  <a href="../../db/d55/group__UPnPAPI.html#gab014d8c655f48d04fcc9ea7931a8f99c">More...</a><br /></td></tr>
 <tr class="separator:gab014d8c655f48d04fcc9ea7931a8f99c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga67f191fc3d9877d0efef0af385d07ac9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/da9/upnpapi_8hpp.html#a2b57a2af79ca49c62e0994e4e5989e04">Upnp_Handle_Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga67f191fc3d9877d0efef0af385d07ac9">GetDeviceHandleInfoForPath</a> (const char *path, int AddressFamily, <a class="el" href="../../db/d55/group__UPnPAPI.html#gaa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> *device_handle_out, struct <a class="el" href="../../d3/d84/structHandle__Info.html">Handle_Info</a> **HndInfo, service_info **serv_info)</td></tr>
+<tr class="memitem:ga67f191fc3d9877d0efef0af385d07ac9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/da9/upnpapi_8hpp.html#a2b57a2af79ca49c62e0994e4e5989e04">Upnp_Handle_Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga67f191fc3d9877d0efef0af385d07ac9">GetDeviceHandleInfoForPath</a> (const char *path, int AddressFamily, <a class="el" href="../../db/d55/group__UPnPAPI.html#gaa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> *device_handle_out, struct <a class="el" href="../../d3/d84/structHandle__Info.html">Handle_Info</a> **HndInfo, <a class="el" href="../../df/db2/structservice__info.html">service_info</a> **serv_info)</td></tr>
 <tr class="memdesc:ga67f191fc3d9877d0efef0af385d07ac9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the device handle and information of the first device of the address family specified, with a service having a controlURL or eventSubURL matching the path.  <a href="../../db/d55/group__UPnPAPI.html#ga67f191fc3d9877d0efef0af385d07ac9">More...</a><br /></td></tr>
 <tr class="separator:ga67f191fc3d9877d0efef0af385d07ac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga276f608a72d2b223bb429ba31c32f64b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/da9/upnpapi_8hpp.html#a2b57a2af79ca49c62e0994e4e5989e04">Upnp_Handle_Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga276f608a72d2b223bb429ba31c32f64b">GetHandleInfo</a> (<a class="el" href="../../db/d55/group__UPnPAPI.html#ga84542bc42a4adba31063aacbca481cba">UpnpClient_Handle</a> Hnd, <a class="el" href="../../d3/d84/structHandle__Info.html">Handle_Info</a> **HndInfo)</td></tr>
@@ -356,81 +349,137 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga24983ed57bf9c82a82e0dc3daeaca538"><td class="memItemLeft" align="right" valign="top">struct VirtualDirCallbacks&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga24983ed57bf9c82a82e0dc3daeaca538">virtualDirCallback</a></td></tr>
+<tr class="memitem:ga24983ed57bf9c82a82e0dc3daeaca538"><td class="memItemLeft" align="right" valign="top">
+struct <a class="el" href="../../d1/d09/structVirtualDirCallbacks.html">VirtualDirCallbacks</a>&#160;</td><td class="memItemRight" valign="bottom"><b>virtualDirCallback</b></td></tr>
+<tr class="memdesc:ga24983ed57bf9c82a82e0dc3daeaca538"><td class="mdescLeft">&#160;</td><td class="mdescRight">This structure is for virtual directory callbacks. <br /></td></tr>
 <tr class="separator:ga24983ed57bf9c82a82e0dc3daeaca538"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga85ec286c63778e7aa2c8013917312713"><td class="memItemLeft" align="right" valign="top">virtualDirList *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga85ec286c63778e7aa2c8013917312713">pVirtualDirList</a></td></tr>
+<tr class="memitem:ga85ec286c63778e7aa2c8013917312713"><td class="memItemLeft" align="right" valign="top">
+<a class="el" href="../../d6/d92/VirtualDir_8hpp.html#ad7a936c7ad5e4ff04823408d18a77f25">virtualDirList</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>pVirtualDirList</b></td></tr>
+<tr class="memdesc:ga85ec286c63778e7aa2c8013917312713"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to the virtual directory list. <br /></td></tr>
 <tr class="separator:ga85ec286c63778e7aa2c8013917312713"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa54fee38c9414acaa5af164cd7622950"><td class="memItemLeft" align="right" valign="top">ithread_rwlock_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gaa54fee38c9414acaa5af164cd7622950">GlobalHndRWLock</a></td></tr>
+<tr class="memitem:gaa54fee38c9414acaa5af164cd7622950"><td class="memItemLeft" align="right" valign="top">
+ithread_rwlock_t&#160;</td><td class="memItemRight" valign="bottom"><b>GlobalHndRWLock</b></td></tr>
+<tr class="memdesc:gaa54fee38c9414acaa5af164cd7622950"><td class="mdescLeft">&#160;</td><td class="mdescRight">rwlock to synchronize handles (root device or control point handle). <br /></td></tr>
 <tr class="separator:gaa54fee38c9414acaa5af164cd7622950"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7b2447f75cd3406129a4c17c06e155dc"><td class="memItemLeft" align="right" valign="top">ithread_mutex_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga7b2447f75cd3406129a4c17c06e155dc">gUUIDMutex</a></td></tr>
+<tr class="memdesc:ga7b2447f75cd3406129a4c17c06e155dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mutex to synchronize the uuid creation process.  <a href="../../db/d55/group__UPnPAPI.html#ga7b2447f75cd3406129a4c17c06e155dc">More...</a><br /></td></tr>
 <tr class="separator:ga7b2447f75cd3406129a4c17c06e155dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab10aadd9f04edb574b771da76ec8496e"><td class="memItemLeft" align="right" valign="top">ithread_mutex_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gab10aadd9f04edb574b771da76ec8496e">gSDKInitMutex</a> = PTHREAD_MUTEX_INITIALIZER</td></tr>
+<tr class="memitem:gab10aadd9f04edb574b771da76ec8496e"><td class="memItemLeft" align="right" valign="top">
+ithread_mutex_t&#160;</td><td class="memItemRight" valign="bottom"><b>gSDKInitMutex</b> = PTHREAD_MUTEX_INITIALIZER</td></tr>
+<tr class="memdesc:gab10aadd9f04edb574b771da76ec8496e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization mutex. <br /></td></tr>
 <tr class="separator:gab10aadd9f04edb574b771da76ec8496e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad1644e3f1b27134f80ed3bd08289cc58"><td class="memItemLeft" align="right" valign="top">TimerThread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gad1644e3f1b27134f80ed3bd08289cc58">gTimerThread</a></td></tr>
+<tr class="memitem:gad1644e3f1b27134f80ed3bd08289cc58"><td class="memItemLeft" align="right" valign="top">
+TimerThread&#160;</td><td class="memItemRight" valign="bottom"><b>gTimerThread</b></td></tr>
+<tr class="memdesc:gad1644e3f1b27134f80ed3bd08289cc58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global timer thread. <br /></td></tr>
 <tr class="separator:gad1644e3f1b27134f80ed3bd08289cc58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga28877c45f9c6c81ce570bf1143205a9f"><td class="memItemLeft" align="right" valign="top">ThreadPool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga28877c45f9c6c81ce570bf1143205a9f">gSendThreadPool</a></td></tr>
+<tr class="memitem:ga28877c45f9c6c81ce570bf1143205a9f"><td class="memItemLeft" align="right" valign="top">
+ThreadPool&#160;</td><td class="memItemRight" valign="bottom"><b>gSendThreadPool</b></td></tr>
+<tr class="memdesc:ga28877c45f9c6c81ce570bf1143205a9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send thread pool. <br /></td></tr>
 <tr class="separator:ga28877c45f9c6c81ce570bf1143205a9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3677cd9fbaceb007bd2cb1f4ff5a1a9c"><td class="memItemLeft" align="right" valign="top">ThreadPool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga3677cd9fbaceb007bd2cb1f4ff5a1a9c">gRecvThreadPool</a></td></tr>
+<tr class="memitem:ga3677cd9fbaceb007bd2cb1f4ff5a1a9c"><td class="memItemLeft" align="right" valign="top">
+ThreadPool&#160;</td><td class="memItemRight" valign="bottom"><b>gRecvThreadPool</b></td></tr>
+<tr class="memdesc:ga3677cd9fbaceb007bd2cb1f4ff5a1a9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive thread pool. <br /></td></tr>
 <tr class="separator:ga3677cd9fbaceb007bd2cb1f4ff5a1a9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad84bb722a188556a4d5acea6a9804a2e"><td class="memItemLeft" align="right" valign="top">ThreadPool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gad84bb722a188556a4d5acea6a9804a2e">gMiniServerThreadPool</a></td></tr>
+<tr class="memitem:gad84bb722a188556a4d5acea6a9804a2e"><td class="memItemLeft" align="right" valign="top">
+ThreadPool&#160;</td><td class="memItemRight" valign="bottom"><b>gMiniServerThreadPool</b></td></tr>
+<tr class="memdesc:gad84bb722a188556a4d5acea6a9804a2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mini server thread pool. <br /></td></tr>
 <tr class="separator:gad84bb722a188556a4d5acea6a9804a2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf2e50b19eb4233305087b3a85a6ca766"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/da9/upnpapi_8hpp.html#ab99d7af73b3898a672966e7f986abe5d">WebServerState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gaf2e50b19eb4233305087b3a85a6ca766">bWebServerState</a> = WEB_SERVER_DISABLED</td></tr>
+<tr class="memitem:gaf2e50b19eb4233305087b3a85a6ca766"><td class="memItemLeft" align="right" valign="top">
+<a class="el" href="../../d3/da9/upnpapi_8hpp.html#ab99d7af73b3898a672966e7f986abe5d">WebServerState</a>&#160;</td><td class="memItemRight" valign="bottom"><b>bWebServerState</b> = WEB_SERVER_DISABLED</td></tr>
+<tr class="memdesc:gaf2e50b19eb4233305087b3a85a6ca766"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag to indicate the state of web server. <br /></td></tr>
 <tr class="separator:gaf2e50b19eb4233305087b3a85a6ca766"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga014adb2103416de29bf68c74c166c8b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga85af9917367cc7cd316d6ca0a3b806c8">WebCallback_HostValidate</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga014adb2103416de29bf68c74c166c8b7">gWebCallback_HostValidate</a> = 0</td></tr>
+<tr class="memitem:ga014adb2103416de29bf68c74c166c8b7"><td class="memItemLeft" align="right" valign="top">
+<a class="el" href="../../db/d55/group__UPnPAPI.html#ga85af9917367cc7cd316d6ca0a3b806c8">WebCallback_HostValidate</a>&#160;</td><td class="memItemRight" valign="bottom"><b>gWebCallback_HostValidate</b> = 0</td></tr>
+<tr class="memdesc:ga014adb2103416de29bf68c74c166c8b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">webCallback for HOST validation. <br /></td></tr>
 <tr class="separator:ga014adb2103416de29bf68c74c166c8b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga78e1733db46cf81d9c9f43ebd7e230b1"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga78e1733db46cf81d9c9f43ebd7e230b1">gWebCallback_HostValidateCookie</a> = 0</td></tr>
+<tr class="memitem:ga78e1733db46cf81d9c9f43ebd7e230b1"><td class="memItemLeft" align="right" valign="top">
+void *&#160;</td><td class="memItemRight" valign="bottom"><b>gWebCallback_HostValidateCookie</b> = 0</td></tr>
+<tr class="memdesc:ga78e1733db46cf81d9c9f43ebd7e230b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cookie to the webCallback for HOST validation. <br /></td></tr>
 <tr class="separator:ga78e1733db46cf81d9c9f43ebd7e230b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga52bf7ea19140c3c6f6c1883d6800fdb9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga52bf7ea19140c3c6f6c1883d6800fdb9">gAllowLiteralHostRedirection</a> = 0</td></tr>
+<tr class="memitem:ga52bf7ea19140c3c6f6c1883d6800fdb9"><td class="memItemLeft" align="right" valign="top">
+int&#160;</td><td class="memItemRight" valign="bottom"><b>gAllowLiteralHostRedirection</b> = 0</td></tr>
+<tr class="memdesc:ga52bf7ea19140c3c6f6c1883d6800fdb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow literal host names redirection to numeric host names. <br /></td></tr>
 <tr class="separator:ga52bf7ea19140c3c6f6c1883d6800fdb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad2ccfd9e1b205a5f1a3b8beaf874ecb6"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gad2ccfd9e1b205a5f1a3b8beaf874ecb6">gIF_NAME</a> [<a class="el" href="../../db/d55/group__UPnPAPI.html#gaba889888734a8b272a51d444d70ad2fa">LINE_SIZE</a>] = {'\0'}</td></tr>
+<tr class="memitem:gad2ccfd9e1b205a5f1a3b8beaf874ecb6"><td class="memItemLeft" align="right" valign="top">
+char&#160;</td><td class="memItemRight" valign="bottom"><b>gIF_NAME</b> [<a class="el" href="../../db/d55/group__UPnPAPI.html#gaba889888734a8b272a51d444d70ad2fa">LINE_SIZE</a>] = {'\0'}</td></tr>
+<tr class="memdesc:gad2ccfd9e1b205a5f1a3b8beaf874ecb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static buffer to contain interface name. (extern'ed in upnp.h) <br /></td></tr>
 <tr class="separator:gad2ccfd9e1b205a5f1a3b8beaf874ecb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacf4a303b0077dbc6fd9847a35ca9ab00"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gacf4a303b0077dbc6fd9847a35ca9ab00">gIF_IPV4</a> [INET_ADDRSTRLEN] = {'\0'}</td></tr>
+<tr class="memitem:gacf4a303b0077dbc6fd9847a35ca9ab00"><td class="memItemLeft" align="right" valign="top">
+char&#160;</td><td class="memItemRight" valign="bottom"><b>gIF_IPV4</b> [INET_ADDRSTRLEN] = {'\0'}</td></tr>
+<tr class="memdesc:gacf4a303b0077dbc6fd9847a35ca9ab00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static buffer to contain interface IPv4 address. (extern'ed in upnp.h) <br /></td></tr>
 <tr class="separator:gacf4a303b0077dbc6fd9847a35ca9ab00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadeab4435dd9e96727e819e03f6e034da"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gadeab4435dd9e96727e819e03f6e034da">gIF_IPV4_NETMASK</a> [INET_ADDRSTRLEN] = {'\0'}</td></tr>
+<tr class="memitem:gadeab4435dd9e96727e819e03f6e034da"><td class="memItemLeft" align="right" valign="top">
+char&#160;</td><td class="memItemRight" valign="bottom"><b>gIF_IPV4_NETMASK</b> [INET_ADDRSTRLEN] = {'\0'}</td></tr>
+<tr class="memdesc:gadeab4435dd9e96727e819e03f6e034da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static buffer to contain interface IPv4 netmask. (extern'ed in upnp.h) <br /></td></tr>
 <tr class="separator:gadeab4435dd9e96727e819e03f6e034da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae6f264655ff472f88641e92223a9b671"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gae6f264655ff472f88641e92223a9b671">gIF_IPV6</a> [INET6_ADDRSTRLEN] = {'\0'}</td></tr>
+<tr class="memitem:gae6f264655ff472f88641e92223a9b671"><td class="memItemLeft" align="right" valign="top">
+char&#160;</td><td class="memItemRight" valign="bottom"><b>gIF_IPV6</b> [INET6_ADDRSTRLEN] = {'\0'}</td></tr>
+<tr class="memdesc:gae6f264655ff472f88641e92223a9b671"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static buffer to contain interface IPv6 link-local address (LLA). (extern'ed in upnp.h) <br /></td></tr>
 <tr class="separator:gae6f264655ff472f88641e92223a9b671"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga71c1aeb985b2c40b7574c469e22e9a66"><td class="memItemLeft" align="right" valign="top">unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga71c1aeb985b2c40b7574c469e22e9a66">gIF_IPV6_PREFIX_LENGTH</a> = 0</td></tr>
+<tr class="memitem:ga71c1aeb985b2c40b7574c469e22e9a66"><td class="memItemLeft" align="right" valign="top">
+unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>gIF_IPV6_PREFIX_LENGTH</b> = 0</td></tr>
+<tr class="memdesc:ga71c1aeb985b2c40b7574c469e22e9a66"><td class="mdescLeft">&#160;</td><td class="mdescRight">IPv6 LLA prefix length. (extern'ed in upnp.h) <br /></td></tr>
 <tr class="separator:ga71c1aeb985b2c40b7574c469e22e9a66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga28cd6f2a372863a541771965db91e95a"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga28cd6f2a372863a541771965db91e95a">gIF_IPV6_ULA_GUA</a> [INET6_ADDRSTRLEN] = {'\0'}</td></tr>
+<tr class="memitem:ga28cd6f2a372863a541771965db91e95a"><td class="memItemLeft" align="right" valign="top">
+char&#160;</td><td class="memItemRight" valign="bottom"><b>gIF_IPV6_ULA_GUA</b> [INET6_ADDRSTRLEN] = {'\0'}</td></tr>
+<tr class="memdesc:ga28cd6f2a372863a541771965db91e95a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static buffer to contain interface IPv6 unique-local or globally-unique address (ULA or GUA). (extern'ed in upnp.h) <br /></td></tr>
 <tr class="separator:ga28cd6f2a372863a541771965db91e95a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1051faa771afdee6227ce54cb298d092"><td class="memItemLeft" align="right" valign="top">unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga1051faa771afdee6227ce54cb298d092">gIF_IPV6_ULA_GUA_PREFIX_LENGTH</a> = 0</td></tr>
+<tr class="memitem:ga1051faa771afdee6227ce54cb298d092"><td class="memItemLeft" align="right" valign="top">
+unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>gIF_IPV6_ULA_GUA_PREFIX_LENGTH</b> = 0</td></tr>
+<tr class="memdesc:ga1051faa771afdee6227ce54cb298d092"><td class="mdescLeft">&#160;</td><td class="mdescRight">IPv6 ULA or GUA prefix length. (extern'ed in upnp.h) <br /></td></tr>
 <tr class="separator:ga1051faa771afdee6227ce54cb298d092"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad69f1ad2703bdbb6546d7d7dc85c6bd8"><td class="memItemLeft" align="right" valign="top">unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gad69f1ad2703bdbb6546d7d7dc85c6bd8">gIF_INDEX</a> = (unsigned)-1</td></tr>
+<tr class="memitem:gad69f1ad2703bdbb6546d7d7dc85c6bd8"><td class="memItemLeft" align="right" valign="top">
+unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>gIF_INDEX</b> = (unsigned)-1</td></tr>
+<tr class="memdesc:gad69f1ad2703bdbb6546d7d7dc85c6bd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains interface index. (extern'ed in upnp.h) <br /></td></tr>
 <tr class="separator:gad69f1ad2703bdbb6546d7d7dc85c6bd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa156f785de62bbb87aa7c569f727849f"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gaa156f785de62bbb87aa7c569f727849f">LOCAL_PORT_V4</a></td></tr>
+<tr class="memitem:gaa156f785de62bbb87aa7c569f727849f"><td class="memItemLeft" align="right" valign="top">
+unsigned short&#160;</td><td class="memItemRight" valign="bottom"><b>LOCAL_PORT_V4</b></td></tr>
+<tr class="memdesc:gaa156f785de62bbb87aa7c569f727849f"><td class="mdescLeft">&#160;</td><td class="mdescRight">local IPv4 port for the mini-server <br /></td></tr>
 <tr class="separator:gaa156f785de62bbb87aa7c569f727849f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9ec6e5dbc7ed57e50b98fc9e3bb47820"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga9ec6e5dbc7ed57e50b98fc9e3bb47820">LOCAL_PORT_V6</a></td></tr>
+<tr class="memitem:ga9ec6e5dbc7ed57e50b98fc9e3bb47820"><td class="memItemLeft" align="right" valign="top">
+unsigned short&#160;</td><td class="memItemRight" valign="bottom"><b>LOCAL_PORT_V6</b></td></tr>
+<tr class="memdesc:ga9ec6e5dbc7ed57e50b98fc9e3bb47820"><td class="mdescLeft">&#160;</td><td class="mdescRight">IPv6 LLA port for the mini-server. <br /></td></tr>
 <tr class="separator:ga9ec6e5dbc7ed57e50b98fc9e3bb47820"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4cdb66fa84acfe9ef88b35efaa14d994"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga4cdb66fa84acfe9ef88b35efaa14d994">LOCAL_PORT_V6_ULA_GUA</a></td></tr>
+<tr class="memitem:ga4cdb66fa84acfe9ef88b35efaa14d994"><td class="memItemLeft" align="right" valign="top">
+unsigned short&#160;</td><td class="memItemRight" valign="bottom"><b>LOCAL_PORT_V6_ULA_GUA</b></td></tr>
+<tr class="memdesc:ga4cdb66fa84acfe9ef88b35efaa14d994"><td class="mdescLeft">&#160;</td><td class="mdescRight">IPv6 ULA or GUA port for the mini-server. <br /></td></tr>
 <tr class="separator:ga4cdb66fa84acfe9ef88b35efaa14d994"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga27edf910202d9fb95a131e851cf2217d"><td class="memItemLeft" align="right" valign="top">membuffer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga27edf910202d9fb95a131e851cf2217d">gDocumentRootDir</a></td></tr>
+<tr class="memitem:ga27edf910202d9fb95a131e851cf2217d"><td class="memItemLeft" align="right" valign="top">
+<a class="el" href="../../d8/d52/structmembuffer.html">membuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>gDocumentRootDir</b></td></tr>
+<tr class="memdesc:ga27edf910202d9fb95a131e851cf2217d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A local dir which serves as webserver root. <br /></td></tr>
 <tr class="separator:ga27edf910202d9fb95a131e851cf2217d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7b23201fb250f9f61c0f0b4dc9055b8e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga7b23201fb250f9f61c0f0b4dc9055b8e">g_maxContentLength</a> = <a class="el" href="../../d3/da9/upnpapi_8hpp.html#a6183ee56f83c6d84a1e26c980effc725">DEFAULT_SOAP_CONTENT_LENGTH</a></td></tr>
+<tr class="memdesc:ga7b23201fb250f9f61c0f0b4dc9055b8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum content-length (in bytes) that the SDK will process on an incoming packet.  <a href="../../db/d55/group__UPnPAPI.html#ga7b23201fb250f9f61c0f0b4dc9055b8e">More...</a><br /></td></tr>
 <tr class="separator:ga7b23201fb250f9f61c0f0b4dc9055b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga860921de5ab17cfc4c5fd4269755f009"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga860921de5ab17cfc4c5fd4269755f009">g_UpnpSdkEQMaxLen</a> = MAX_SUBSCRIPTION_QUEUED_EVENTS</td></tr>
+<tr class="memitem:ga860921de5ab17cfc4c5fd4269755f009"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga860921de5ab17cfc4c5fd4269755f009">g_UpnpSdkEQMaxLen</a> = <a class="el" href="../../d8/dfd/config_8hpp.html#a225baaa3f4f5e498e194b33d9a256671">MAX_SUBSCRIPTION_QUEUED_EVENTS</a></td></tr>
+<tr class="memdesc:ga860921de5ab17cfc4c5fd4269755f009"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global variable to determines the maximum number of events.  <a href="../../db/d55/group__UPnPAPI.html#ga860921de5ab17cfc4c5fd4269755f009">More...</a><br /></td></tr>
 <tr class="separator:ga860921de5ab17cfc4c5fd4269755f009"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae2bd413c4df052328cc983653f488ca4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gae2bd413c4df052328cc983653f488ca4">g_UpnpSdkEQMaxAge</a> = MAX_SUBSCRIPTION_EVENT_AGE</td></tr>
+<tr class="memitem:gae2bd413c4df052328cc983653f488ca4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gae2bd413c4df052328cc983653f488ca4">g_UpnpSdkEQMaxAge</a> = <a class="el" href="../../d8/dfd/config_8hpp.html#a5e9f9145f02fcf7c70238140ca534091">MAX_SUBSCRIPTION_EVENT_AGE</a></td></tr>
+<tr class="memdesc:gae2bd413c4df052328cc983653f488ca4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global variable to determine the maximum number of seconds which an event can spend on a subscription queue.  <a href="../../db/d55/group__UPnPAPI.html#gae2bd413c4df052328cc983653f488ca4">More...</a><br /></td></tr>
 <tr class="separator:gae2bd413c4df052328cc983653f488ca4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa1096e5acbefc9d31bf492b9d97c8a35"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gaa1096e5acbefc9d31bf492b9d97c8a35">UpnpSdkInit</a> = 0</td></tr>
+<tr class="memitem:gaa1096e5acbefc9d31bf492b9d97c8a35"><td class="memItemLeft" align="right" valign="top">
+int&#160;</td><td class="memItemRight" valign="bottom"><b>UpnpSdkInit</b> = 0</td></tr>
+<tr class="memdesc:gaa1096e5acbefc9d31bf492b9d97c8a35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global variable to denote the state of Upnp SDK == 0 if uninitialized, == 1 if initialized. <br /></td></tr>
 <tr class="separator:gaa1096e5acbefc9d31bf492b9d97c8a35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab0e28e8f93f4ea84c883fa1921ee22fe"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gab0e28e8f93f4ea84c883fa1921ee22fe">UpnpSdkClientRegistered</a> = 0</td></tr>
+<tr class="memdesc:gab0e28e8f93f4ea84c883fa1921ee22fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global variable to denote the state of Upnp SDK client registration.  <a href="../../db/d55/group__UPnPAPI.html#gab0e28e8f93f4ea84c883fa1921ee22fe">More...</a><br /></td></tr>
 <tr class="separator:gab0e28e8f93f4ea84c883fa1921ee22fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaaee775017145f5b74d27624a1c2d0b19"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gaaee775017145f5b74d27624a1c2d0b19">UpnpSdkDeviceRegisteredV4</a> = 0</td></tr>
+<tr class="memdesc:gaaee775017145f5b74d27624a1c2d0b19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global variable to denote the state of Upnp SDK IPv4 device registration.  <a href="../../db/d55/group__UPnPAPI.html#gaaee775017145f5b74d27624a1c2d0b19">More...</a><br /></td></tr>
 <tr class="separator:gaaee775017145f5b74d27624a1c2d0b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae8cd15a2a7aca26fb8bd579d09581eed"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#gae8cd15a2a7aca26fb8bd579d09581eed">UpnpSdkDeviceregisteredV6</a> = 0</td></tr>
+<tr class="memdesc:gae8cd15a2a7aca26fb8bd579d09581eed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global variable to denote the state of Upnp SDK IPv6 device registration.  <a href="../../db/d55/group__UPnPAPI.html#gae8cd15a2a7aca26fb8bd579d09581eed">More...</a><br /></td></tr>
 <tr class="separator:gae8cd15a2a7aca26fb8bd579d09581eed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga64bc6835ebc8f8483719f32ebfbf680c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga12b0c6df3254ac4a5c88aeb7e7c9dc90">Upnp_SID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d55/group__UPnPAPI.html#ga64bc6835ebc8f8483719f32ebfbf680c">gUpnpSdkNLSuuid</a></td></tr>
+<tr class="memdesc:ga64bc6835ebc8f8483719f32ebfbf680c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global variable used in discovery notifications.  <a href="../../db/d55/group__UPnPAPI.html#ga64bc6835ebc8f8483719f32ebfbf680c">More...</a><br /></td></tr>
+<tr class="separator:ga64bc6835ebc8f8483719f32ebfbf680c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Inititalize the compatible library before it can be used. </p>
 </div></div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="../../dir_71746572e519a5ccd4e3b0176757c048.html">Compa</a></li><li class="navelem"><a class="el" href="../../dir_185e5737dee257d2bd62c4d45a2734a7.html">src</a></li><li class="navelem"><a class="el" href="../../dir_09fc05caaf95268806aa2697a94fb0c5.html">api</a></li><li class="navelem"><a class="el" href="../../d4/d99/upnpapi_8cpp.html">upnpapi.cpp</a></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
+</small></address>
 </body>
 </html>

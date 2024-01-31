@@ -1,0 +1,6 @@
+<map id="URL_list" name="URL_list">
+<area shape="rect" id="node1" title="Represents a list of URLs as in the &quot;callback&quot; header of SUBSCRIBE message in GENA." alt="" coords="5,291,80,317"/>
+<area shape="rect" id="node2" href="$d4/d48/structuri__type.html" title="Represents a URI used in parse_uri and elsewhere." alt="" coords="5,201,80,228"/>
+<area shape="rect" id="node3" href="$d4/df4/structtoken.html" title="Buffer used in parsinghttp messages, urls, etc. Generally this simply holds a pointer into a larger a..." alt="" coords="13,5,72,32"/>
+<area shape="rect" id="node4" href="$db/d73/structhostport__type.html" title="Represents a host port, e.g. &quot;127.127.0.1:80&quot;." alt="" coords="112,103,224,130"/>
+</map>

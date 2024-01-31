@@ -1,0 +1,6 @@
+<map id="http_GetHttpResponse" name="http_GetHttpResponse">
+<area shape="rect" id="node1" title="Gets the response from the server using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="257,71,427,98"/>
+<area shape="rect" id="node2" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#aff5a470ca935d2f745245e6b0844f39e" title="Get an http response." alt="" coords="5,5,209,47"/>
+<area shape="rect" id="node3" href="$db/d55/group__UPnPAPI.html#ga32b6a961a76abcb37fcd7f6e3de10ee7" title="Sends and receives any pending data, closes the connection with the server, and frees memory allocate..." alt="" coords="33,71,181,98"/>
+<area shape="rect" id="node4" href="$db/d55/group__UPnPAPI.html#gafca845cb73300ed7cbd96849c9ae137c" title="Gets the response from the server using a connection previously created by UpnpOpenHttpConnection." alt="" coords="22,122,193,149"/>
+</map>

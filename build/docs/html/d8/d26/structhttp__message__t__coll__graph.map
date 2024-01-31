@@ -1,0 +1,8 @@
+<map id="http_message_t" name="http_message_t">
+<area shape="rect" id="node1" title="Structure of an HTTP message." alt="" coords="89,305,215,332"/>
+<area shape="rect" id="node2" href="$d4/d48/structuri__type.html" title="Represents a URI used in parse_uri and elsewhere." alt="" coords="5,201,80,228"/>
+<area shape="rect" id="node3" href="$d4/df4/structtoken.html" title="Buffer used in parsinghttp messages, urls, etc. Generally this simply holds a pointer into a larger a..." alt="" coords="13,5,72,32"/>
+<area shape="rect" id="node4" href="$db/d73/structhostport__type.html" title="Represents a host port, e.g. &quot;127.127.0.1:80&quot;." alt="" coords="112,103,224,130"/>
+<area shape="rect" id="node5" href="$d8/d52/structmembuffer.html" title="Maintains a block of dynamically allocated memory." alt="" coords="105,201,199,228"/>
+<area shape="rect" id="node6" href="$d4/d89/structmemptr.html" title="pointer to a chunk of memory." alt="" coords="224,201,299,228"/>
+</map>

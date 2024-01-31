@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-11-13
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,79 +34,81 @@
  *
  **************************************************************************/
 // Last compare with ./pupnp source file on 2023-08-30, ver 1.14.18
-
 /*!
- * \defgroup SSDPlib SSDP Library
- *
- * @{
- *
  * \file
+ * \brief Manage "Step 1: Discovery" of the UPnP+™ specification with SSDP. No
+ * details
+ *
+ * \defgroup SSDPlib SSDP Library
+ * \brief Manage "Step 1: Discovery" of the UPnP+™ specification with SSDP.
+ * @{
  */
 
-// #include "UpnpInet.h"
-// #include "httpparser.h"
-// #include "httpreadwrite.h"
 #include <miniserver.hpp>
 
-// #include <errno.h>
-// #include <setjmp.h>
-// #include <signal.h>
-// #include <sys/types.h>
+/// \brief Enumeration to define all different types of ssdp searches.
+enum SsdpSearchType {
+    SSDP_SERROR = -1, ///< Unknown search command.
+    SSDP_ALL,         ///< Part of SType.
+    SSDP_ROOTDEVICE,  ///< Part of SType.
+    SSDP_DEVICEUDN,   ///< Part of SType.
+    SSDP_DEVICETYPE,  ///< Part of SType.
+    SSDP_SERVICE      ///< Part of SType.
+};
 
-#ifdef _WIN32
-#else /* _WIN32 */
-// #include <syslog.h>
-#ifndef __APPLE__
-// #include <netinet/in_systm.h>
-// #include <netinet/ip.h>
-// #include <netinet/ip_icmp.h>
-#endif /* __APPLE__ */
-// #include <sys/time.h>
-#endif /* _WIN32 */
-
-/*! Enumeration to define all different types of ssdp searches */
-typedef enum SsdpSearchType {
-    /*! Unknown search command. */
-    SSDP_SERROR = -1,
-    SSDP_ALL,
-    SSDP_ROOTDEVICE,
-    SSDP_DEVICEUDN,
-    SSDP_DEVICETYPE,
-    SSDP_SERVICE
-} SType;
-
+/*! \name SSDP constants.
+ * @{ */
+/// constant
 #define BUFSIZE (size_t)2500
+/// constant
 #define SSDP_IP "239.255.255.250"
+/// constant
 #define SSDP_IPV6_LINKLOCAL "FF02::C"
+/// constant
 #define SSDP_IPV6_SITELOCAL "FF05::C"
+/// constant
 #define SSDP_PORT 1900
+/// constant
 #define NUM_TRY 3
+/// constant
 #define THREAD_LIMIT 50
+/// constant
 #define COMMAND_LEN 300
+/// @}
 
-/*! can be overwritten by configure CFLAGS argument. */
-#ifndef X_USER_AGENT
-/*! @name X_USER_AGENT
- *  The {\tt X_USER_AGENT} constant specifies the value of the X-User-Agent:
- *  HTTP header. The value "redsonic" is needed for the DSM-320. See
- *  https://sourceforge.net/forum/message.php?msg_id=3166856 for more
- * information
+#if !defined(X_USER_AGENT) || defined(DOXYGEN_RUN)
+/*! \brief Can be overwritten by configure CFLAGS argument.
+ *
+ * If not already defined, the {`X_USER_AGENT`} constant specifies the value of
+ * the X-User-Agent: HTTP header. The value "redsonic" is needed for the
+ * DSM-320. See https://sourceforge.net/forum/message.php?msg_id=3166856 for
+ * more information.
  */
 #define X_USER_AGENT "redsonic"
 #endif
 
-/*! Error codes. */
+/*! \name SSDP Error codes.
+ * @{ */
 #define NO_ERROR_FOUND 0
+/// error code
 #define E_REQUEST_INVALID -3
+/// error code
 #define E_RES_EXPIRED -4
+/// error code
 #define E_MEM_ALLOC -5
+/// error code
 #define E_HTTP_SYNTEX -6
+/// error code
 #define E_SOCKET -7
+/// @}
 
+/// timeout
 #define RQST_TIMEOUT 20
 
-/*! Structure to store the SSDP information */
-typedef struct SsdpEventStruct {
+/// \brief Structure to store the SSDP information.
+struct SsdpEvent {
+    /// @{
+    /// \brief Part of SSDP Event
     enum SsdpSearchType RequestType;
     int ErrCode;
     int MaxAge;
@@ -122,54 +124,75 @@ typedef struct SsdpEventStruct {
     char Date[LINE_SIZE];
     struct sockaddr* DestAddr;
     void* Cookie;
-} SsdpEvent;
+    /// @}
+};
 
+/// \brief Maybe a callback function?
 typedef void (*SsdpFunPtr)(SsdpEvent*);
 
-typedef struct TData {
+/// \brief thread data.
+struct ThreadData {
+    /// @{
+    /// \brief part of thread data
     int Mx;
     void* Cookie;
     char* Data;
     struct sockaddr_storage DestAddr;
-} ThreadData;
+    /// @}
+};
 
-typedef struct ssdpsearchreply {
+/// \brief SSDP search reply.
+struct SsdpSearchReply {
+    /// @{
+    /// \brief part of search reply
     int MaxAge;
     UpnpDevice_Handle handle;
     struct sockaddr_storage dest_addr;
     SsdpEvent event;
-} SsdpSearchReply;
+    /// @}
+};
 
-typedef struct ssdpsearcharg {
+/// \brief SSDP search argument.
+struct SsdpSearchArg {
+    /// @{
+    /// \brief part of search argument
     int timeoutEventId;
     char* searchTarget;
     void* cookie;
     enum SsdpSearchType requestType;
-} SsdpSearchArg;
+    /// @}
+};
 
-typedef struct ssdpsearchexparg {
-    int handle;
-    int timeoutEventId;
-} SsdpSearchExpArg;
+/// \brief SSDP search exp argument.
+struct SsdpSearchExpArg {
+    int handle;         ///< \brief handle
+    int timeoutEventId; ///< \brief timeout event id
+};
 
-typedef struct {
-    http_parser_t parser;
-    struct sockaddr_storage dest_addr;
-} ssdp_thread_data;
+/// \brief SSDP thread data.
+struct ssdp_thread_data {
+    http_parser_t parser;       ///< parser
+    sockaddr_storage dest_addr; ///< destination socket address
+};
 
 /* globals */
 
-#ifdef INCLUDE_CLIENT_APIS
+#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+/*! \brief If control point API is compiled in, this is the global IPv4 socket
+ * for it. */
 extern SOCKET gSsdpReqSocket4;
-#ifdef UPNP_ENABLE_IPV6
+#if defined(UPNP_ENABLE_IPV6) || defined(DOXYGEN_RUN)
+/*! \brief If control point API is compiled in, this is the global IPv6 socket
+ * for it. */
 extern SOCKET gSsdpReqSocket6;
 #endif /* UPNP_ENABLE_IPV6 */
 #endif /* INCLUDE_CLIENT_APIS */
+
+/// \brief Maybe a callback function?
 typedef int (*ParserFun)(char*, SsdpEvent*);
 
 /*!
  * \name SSDP Server Functions
- *
  * @{
  */
 
@@ -210,8 +233,7 @@ int unique_service_name(
     SsdpEvent* Evt);
 
 /*!
- * \brief This function figures out the type of the SSDP search in the in the
- * request.
+ * \brief This function figures out the type of the SSDP search in the request.
  *
  * \return enum SsdpSearchType. Returns appropriate search type,
  * else returns SSDP_ERROR
@@ -251,11 +273,10 @@ UPNPLIB_API int get_ssdp_sockets(
     /* [out] Array of SSDP sockets. */
     MiniServerSockArray* out);
 
-/* @} SSDP Server Functions */
+/// @} SSDP Server Functions
 
 /*!
  * \name SSDP Control Point Functions
- *
  * @{
  */
 
@@ -301,11 +322,10 @@ UPNPLIB_API int SearchByTarget(
      * be returned to application in the callback. */
     void* Cookie);
 
-/* @} SSDP Control Point Functions */
+/// @} SSDP Control Point Functions
 
 /*!
  * \name SSDP Device Functions
- *
  * @{
  */
 
@@ -514,8 +534,8 @@ int DeviceShutdown(
     /* [in] RegistrationState as defined by UPnP Low Power. */
     int RegistrationState);
 
-/* @} SSDP Device Functions */
+/// @} SSDP Device Functions
 
-/* @} SSDPlib SSDP Library */
+/// @} // SSDPlib SSDP Library
 
 #endif /* COMPA_SSDPLIB_HPP */

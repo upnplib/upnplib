@@ -1,0 +1,5 @@
+<map id="http_CancelHttpGet" name="http_CancelHttpGet">
+<area shape="rect" id="node1" title="Set the cancel flag of the HttpGet handle." alt="" coords="239,42,389,69"/>
+<area shape="rect" id="node2" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#a2be162d63cc40a0ceae5eea0622189f9" title="Cancel an http GET communication." alt="" coords="5,5,191,47"/>
+<area shape="rect" id="node3" href="$db/d55/group__UPnPAPI.html#gac82986ebd850fca749c629251ef5239c" title="Set the cancel flag of the handle parameter." alt="" coords="23,71,173,98"/>
+</map>

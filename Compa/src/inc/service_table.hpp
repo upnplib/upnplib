@@ -1,10 +1,12 @@
+#ifndef COMPA_SERVICE_TABLE_HPP
+#define COMPA_SERVICE_TABLE_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-18
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,42 +33,44 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
-#ifndef SERVICE_TABLE_H
-#define SERVICE_TABLE_H
-
 /*!
  * \file
+ * \brief Manage the UPnP Services of a UPnP Device if available.
+ *
+ * This is only available if the Device Module was selected at compile time.
  */
 
-#include "config.hpp"
+#include <config.hpp>
 
-#include "LinkedList.hpp"
-// #include "ixml.h"
-// #include "upnp.hpp"
-#include "upnpdebug.hpp"
-#include "uri.hpp"
+#include <LinkedList.hpp>
+#include <upnpdebug.hpp>
+#include <uri.hpp>
 
-// #include <stdio.h>
-// #include <time.h>
-
+/// \brief ???
 #define SID_SIZE (size_t)41
 
-typedef struct SUBSCRIPTION {
+/// \brief device subscriptions
+struct subscription {
+    /// @{
+    /// \brief Part of subscription.
     Upnp_SID sid;
     int ToSendEventKey;
     time_t expireTime;
     int active;
     URL_list DeliveryURLs;
-    /* List of queued events for this subscription. Only one event job
-       at a time goes into the thread pool. The first element in the
-       list is a copy of the active job. Others are activated on job
-       completion. */
+    /// @}
+    /*! \brief List of queued events for this subscription.
+     * \details Only one event job at a time goes into the thread pool. The
+     * first element in the list is a copy of the active job. Others are
+     * activated on job completion. */
     LinkedList outgoing;
-    struct SUBSCRIPTION* next;
-} subscription;
+    struct subscription* next; ///< Part of subscription.
+};
 
-typedef struct SERVICE_INFO {
+/// -brief Service information
+struct service_info {
+    /// @{
+    /// \brief Part of Service information.
     DOMString serviceType;
     DOMString serviceId;
     char* SCPDURL;
@@ -76,18 +80,24 @@ typedef struct SERVICE_INFO {
     int active;
     int TotalSubscriptions;
     subscription* subscriptionList;
-    struct SERVICE_INFO* next;
-} service_info;
+    struct service_info* next;
+    /// @}
+};
 
-#ifdef INCLUDE_DEVICE_APIS
+#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
 
+/// \brief ???
 extern void freeSubscriptionQueuedEvents(subscription* sub);
 
-typedef struct SERVICE_TABLE {
+/// \brief table of services
+struct service_table {
+    /// @{
+    /// \brief Part of the service table
     DOMString URLBase;
     service_info* serviceList;
     service_info* endServiceList;
-} service_table;
+    /// @}
+};
 
 /* Functions for Subscriptions */
 
@@ -102,7 +112,7 @@ int copy_subscription(
     /*! [in] Destination subscription. */
     subscription* out);
 
-/*
+/*!
  * \brief Remove the subscription represented by the const Upnp_SID sid
  * parameter from the service table and update the service table.
  */
@@ -202,10 +212,10 @@ service_info* FindServiceControlURLPath(
     const char* controlURLPath);
 
 /*!
- * \brief For debugging purposes prints information from the service
- * passed into the function.
+ * \brief Only available if DEBUG was selected on compiling: prints information
+ * from the service passed into the function.
  */
-#ifdef DEBUG
+#if defined(DEBUG) || defined(DOXYGEN_RUN)
 void printService(
     /*! [in] Service whose information is to be printed. */
     service_info* service,
@@ -220,10 +230,10 @@ void printService(
 #endif
 
 /*!
- * \brief For debugging purposes prints information of each service from
- * the service table passed into the function.
+ * \brief Only available if DEBUG was selected on compiling: prints information
+ * of each service from the service table passed into the function.
  */
-#ifdef DEBUG
+#if defined(DEBUG) || defined(DOXYGEN_RUN)
 void printServiceList(
     /*! [in] Service whose information is to be printed. */
     service_info* service,
@@ -238,11 +248,11 @@ void printServiceList(
 #endif
 
 /*!
- * \brief For debugging purposes prints the URL base of the table and
- * information of each service from the service table passed into the
- * function.
+ * \brief Only available if DEBUG was selected on compiling: prints the URL base
+ * of the table and information of each service from the service table passed
+ * into the function.
  */
-#ifdef DEBUG
+#if defined(DEBUG) || defined(DOXYGEN_RUN)
 void printServiceTable(
     /*! [in] Service table to be printed. */
     service_table* table,
@@ -281,7 +291,9 @@ void freeServiceTable(
     service_table* table);
 
 /*!
- * \brief This function assumes that services for a particular root device are
+ * \brief Remove all services for a root device.
+ *
+ * This function assumes that services for a particular root device are
  * placed linearly in the service table, and in the order in which they are
  * found in the description document all services for this root device are
  * removed from the list.
@@ -324,7 +336,6 @@ int getServiceTable(
 
 /*!
  * \brief Returns the clone of the element value.
- *
  * \note Value must be freed with DOMString_free.
  *
  * \return DOMString
@@ -351,4 +362,4 @@ int getSubElement(
 
 #endif /* INCLUDE_DEVICE_APIS */
 
-#endif /* SERVICE_TABLE */
+#endif /* COMPA_SERVICE_TABLE_HPP */

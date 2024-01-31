@@ -7,25 +7,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>UPnPlib: Handle_Info Struct Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript">var page_layout=1;</script>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
-<link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../resize.js"></script>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(document).ready(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
@@ -37,21 +26,6 @@
    <div id="projectbrief">&#39;Universal Plug and Play plus&#39; System Developement Kit</div>
   </td>
  </tr>
-   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <img id="MSearchSelect" src="../../search/mag_sel.svg"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
-               alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td></tr>
  </tbody>
 </table>
 </div>
@@ -62,22 +36,17 @@
 var searchBox = new SearchBox("searchBox", "../../search",'Search','.html');
 /* @license-end */
 </script>
-</div><!-- top -->
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('d3/d84/structHandle__Info.html','../../'); initResizable(); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -92,6 +61,7 @@ $(document).ready(function(){initNavTree('d3/d84/structHandle__Info.html','../..
 </iframe>
 </div>
 
+</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a> &#124;
@@ -104,6 +74,21 @@ $(document).ready(function(){initNavTree('d3/d84/structHandle__Info.html','../..
  <a href="../../d3/d84/structHandle__Info.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for Handle_Info:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d7/db8/structHandle__Info__coll__graph.png" border="0" usemap="#aHandle__Info_coll__map" alt="Collaboration graph"/></div>
+<map name="aHandle__Info_coll__map" id="aHandle__Info_coll__map">
+<area shape="rect" title="Data to be stored in handle table for Handle Info." alt="" coords="10,663,110,689"/>
+<area shape="rect" href="../../df/d30/structservice__table.html" title="table of services" alt="" coords="5,573,115,600"/>
+<area shape="rect" href="../../df/db2/structservice__info.html" title="&#45;brief Service information" alt="" coords="9,469,111,496"/>
+<area shape="rect" href="../../dd/dc7/structsubscription.html" title="device subscriptions" alt="" coords="9,380,111,407"/>
+<area shape="rect" href="../../d2/d70/structURL__list.html" title="Represents a list of URLs as in the &quot;callback&quot; header of SUBSCRIBE message in GENA." alt="" coords="23,291,97,317"/>
+<area shape="rect" href="../../d4/d48/structuri__type.html" title="Represents a URI used in parse_uri and elsewhere." alt="" coords="23,201,97,228"/>
+<area shape="rect" href="../../d4/df4/structtoken.html" title="Buffer used in parsinghttp messages, urls, etc. Generally this simply holds a pointer into a larger a..." alt="" coords="31,5,89,32"/>
+<area shape="rect" href="../../db/d73/structhostport__type.html" title="Represents a host port, e.g. &quot;127.127.0.1:80&quot;." alt="" coords="129,103,241,130"/>
+</map>
+<center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -165,7 +150,7 @@ IXML_NodeList *&#160;</td><td class="memItemRight" valign="bottom"><b>ServiceLis
 <tr class="memdesc:a14d2c72150844989c3470c5424a7a947"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of services in the description document. <br /></td></tr>
 <tr class="separator:a14d2c72150844989c3470c5424a7a947"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a532ced075e5ad2f9e30ad2f77381e2d2"><td class="memItemLeft" align="right" valign="top"><a id="a532ced075e5ad2f9e30ad2f77381e2d2" name="a532ced075e5ad2f9e30ad2f77381e2d2"></a>
-service_table&#160;</td><td class="memItemRight" valign="bottom"><b>ServiceTable</b></td></tr>
+<a class="el" href="../../df/d30/structservice__table.html">service_table</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ServiceTable</b></td></tr>
 <tr class="memdesc:a532ced075e5ad2f9e30ad2f77381e2d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Table holding subscriptions and URL information. <br /></td></tr>
 <tr class="separator:a532ced075e5ad2f9e30ad2f77381e2d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acafe316f00ef26251a966a22e732fd07"><td class="memItemLeft" align="right" valign="top"><a id="acafe316f00ef26251a966a22e732fd07" name="acafe316f00ef26251a966a22e732fd07"></a>
@@ -182,7 +167,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>DeviceAf</b></td></tr>
 <tr class="separator:ae82cc7e284e42de707edfe1640aeee1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Following attributes are only valid with managing a client.</div></td></tr>
 <tr class="memitem:a4488fbe1cce3c304b51a00ee3def4293"><td class="memItemLeft" align="right" valign="top"><a id="a4488fbe1cce3c304b51a00ee3def4293" name="a4488fbe1cce3c304b51a00ee3def4293"></a>
-GenlibClientSubscription *&#160;</td><td class="memItemRight" valign="bottom"><b>ClientSubList</b></td></tr>
+<a class="el" href="../../d2/dad/GenlibClientSubscription_8hpp.html#a135e3269f5d121a273011b61a49530b7">GenlibClientSubscription</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>ClientSubList</b></td></tr>
 <tr class="memdesc:a4488fbe1cce3c304b51a00ee3def4293"><td class="mdescLeft">&#160;</td><td class="mdescRight">Client subscription list. <br /></td></tr>
 <tr class="separator:a4488fbe1cce3c304b51a00ee3def4293"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0b542629bd1690491dcecbf344fdbf6"><td class="memItemLeft" align="right" valign="top"><a id="ad0b542629bd1690491dcecbf344fdbf6" name="ad0b542629bd1690491dcecbf344fdbf6"></a>
@@ -196,13 +181,9 @@ LinkedList&#160;</td><td class="memItemRight" valign="bottom"><b>SsdpSearchList<
 <li>Compa/src/inc/<a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a></li>
 </ul>
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="../../d3/d84/structHandle__Info.html">Handle_Info</a></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
+</small></address>
 </body>
 </html>

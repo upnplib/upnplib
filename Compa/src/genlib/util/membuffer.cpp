@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-31
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -120,7 +120,7 @@ int membuffer_set_size(membuffer* m, size_t new_length) {
         }
 
         diff = new_length - m->length;
-        alloc_len = MAXVAL(m->size_inc, diff) + m->capacity;
+        alloc_len = std::max(m->size_inc, diff) + m->capacity;
     } else { /* decrease length */
 
         assert(new_length <= m->length);

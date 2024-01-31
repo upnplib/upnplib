@@ -7,25 +7,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>UPnPlib: Class Index</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript">var page_layout=1;</script>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtreedata.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(document).ready(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
@@ -37,21 +26,6 @@
    <div id="projectbrief">&#39;Universal Plug and Play plus&#39; System Developement Kit</div>
   </td>
  </tr>
-   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <img id="MSearchSelect" src="search/mag_sel.svg"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
-               alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td></tr>
  </tbody>
 </table>
 </div>
@@ -62,22 +36,18 @@
 var searchBox = new SearchBox("searchBox", "search",'Search','.html');
 /* @license-end */
 </script>
-</div><!-- top -->
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('classes.html',''); initResizable(); });
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -96,7 +66,7 @@ $(document).ready(function(){initNavTree('classes.html',''); initResizable(); })
   <div class="headertitle"><div class="title">Class Index</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="qindex"><a class="qindex" href="#letter_C">C</a>&#160;|&#160;<a class="qindex" href="#letter_D">D</a>&#160;|&#160;<a class="qindex" href="#letter_E">E</a>&#160;|&#160;<a class="qindex" href="#letter_H">H</a>&#160;|&#160;<a class="qindex" href="#letter_I">I</a>&#160;|&#160;<a class="qindex" href="#letter_J">J</a>&#160;|&#160;<a class="qindex" href="#letter_S">S</a>&#160;|&#160;<a class="qindex" href="#letter_U">U</a></div>
+<div class="qindex"><a class="qindex" href="#letter_C">C</a>&#160;|&#160;<a class="qindex" href="#letter_D">D</a>&#160;|&#160;<a class="qindex" href="#letter_E">E</a>&#160;|&#160;<a class="qindex" href="#letter_H">H</a>&#160;|&#160;<a class="qindex" href="#letter_I">I</a>&#160;|&#160;<a class="qindex" href="#letter_J">J</a>&#160;|&#160;<a class="qindex" href="#letter_M">M</a>&#160;|&#160;<a class="qindex" href="#letter_N">N</a>&#160;|&#160;<a class="qindex" href="#letter_S">S</a>&#160;|&#160;<a class="qindex" href="#letter_T">T</a>&#160;|&#160;<a class="qindex" href="#letter_U">U</a>&#160;|&#160;<a class="qindex" href="#letter_V">V</a></div>
 <div class="classindex">
 <dl class="classindex even">
 <dt class="alphachar"><a id="letter_C" name="letter_C">C</a></dt>
@@ -109,7 +79,7 @@ $(document).ready(function(){initNavTree('classes.html',''); initResizable(); })
 <dd><a class="el" href="dc/dff/structErrorString.html">ErrorString</a></dd></dl>
 <dl class="classindex odd">
 <dt class="alphachar"><a id="letter_H" name="letter_H">H</a></dt>
-<dd><a class="el" href="d3/d84/structHandle__Info.html">Handle_Info</a></dd></dl>
+<dd><a class="el" href="d3/d84/structHandle__Info.html">Handle_Info</a></dd><dd><a class="el" href="db/d73/structhostport__type.html">hostport_type</a></dd><dd><a class="el" href="df/d1d/structhttp__header__t.html">http_header_t</a></dd><dd><a class="el" href="de/d66/structhttp__message__t.html">http_message_t</a></dd><dd><a class="el" href="d7/ddd/structhttp__parser__t.html">http_parser_t</a></dd></dl>
 <dl class="classindex even">
 <dt class="alphachar"><a id="letter_I" name="letter_I">I</a></dt>
 <dd><a class="el" href="dd/d94/classupnplib_1_1Ihttpreadwrite.html">Ihttpreadwrite</a> (<a class="el" href="dc/d6d/namespaceupnplib.html">upnplib</a>)</dd></dl>
@@ -117,19 +87,28 @@ $(document).ready(function(){initNavTree('classes.html',''); initResizable(); })
 <dt class="alphachar"><a id="letter_J" name="letter_J">J</a></dt>
 <dd><a class="el" href="dd/d20/unionjob__arg.html">job_arg</a></dd></dl>
 <dl class="classindex even">
-<dt class="alphachar"><a id="letter_S" name="letter_S">S</a></dt>
-<dd><a class="el" href="d0/d66/structs__UpnpActionComplete.html">s_UpnpActionComplete</a></dd><dd><a class="el" href="d4/de9/structs__UpnpActionRequest.html">s_UpnpActionRequest</a></dd><dd><a class="el" href="dc/ddb/structs__UpnpDiscovery.html">s_UpnpDiscovery</a></dd><dd><a class="el" href="d3/dbc/structs__UpnpEvent.html">s_UpnpEvent</a></dd><dd><a class="el" href="db/d57/structs__UpnpEventSubscribe.html">s_UpnpEventSubscribe</a></dd><dd><a class="el" href="d8/d08/structs__UpnpExtraHeaders.html">s_UpnpExtraHeaders</a></dd><dd><a class="el" href="d7/d1f/structs__UpnpFileInfo.html">s_UpnpFileInfo</a></dd><dd><a class="el" href="da/dcf/structs__UpnpStateVarComplete.html">s_UpnpStateVarComplete</a></dd><dd><a class="el" href="d1/de3/structs__UpnpStateVarRequest.html">s_UpnpStateVarRequest</a></dd><dd><a class="el" href="d8/dbb/structs__UpnpString.html">s_UpnpString</a></dd><dd><a class="el" href="d0/dff/structs__UpnpSubscriptionRequest.html">s_UpnpSubscriptionRequest</a></dd></dl>
+<dt class="alphachar"><a id="letter_M" name="letter_M">M</a></dt>
+<dd><a class="el" href="d1/d32/structMD5Context.html">MD5Context</a></dd><dd><a class="el" href="d8/d52/structmembuffer.html">membuffer</a></dd><dd><a class="el" href="d4/d89/structmemptr.html">memptr</a></dd><dd><a class="el" href="d2/d37/structMiniServerSockArray.html">MiniServerSockArray</a></dd></dl>
 <dl class="classindex odd">
+<dt class="alphachar"><a id="letter_N" name="letter_N">N</a></dt>
+<dd><a class="el" href="d5/d37/structNOTIFY__THREAD__STRUCT.html">NOTIFY_THREAD_STRUCT</a></dd></dl>
+<dl class="classindex even">
+<dt class="alphachar"><a id="letter_S" name="letter_S">S</a></dt>
+<dd><a class="el" href="d0/d66/structs__UpnpActionComplete.html">s_UpnpActionComplete</a></dd><dd><a class="el" href="d4/de9/structs__UpnpActionRequest.html">s_UpnpActionRequest</a></dd><dd><a class="el" href="dc/ddb/structs__UpnpDiscovery.html">s_UpnpDiscovery</a></dd><dd><a class="el" href="d3/dbc/structs__UpnpEvent.html">s_UpnpEvent</a></dd><dd><a class="el" href="db/d57/structs__UpnpEventSubscribe.html">s_UpnpEventSubscribe</a></dd><dd><a class="el" href="d8/d08/structs__UpnpExtraHeaders.html">s_UpnpExtraHeaders</a></dd><dd><a class="el" href="d7/d1f/structs__UpnpFileInfo.html">s_UpnpFileInfo</a></dd><dd><a class="el" href="da/dcf/structs__UpnpStateVarComplete.html">s_UpnpStateVarComplete</a></dd><dd><a class="el" href="d1/de3/structs__UpnpStateVarRequest.html">s_UpnpStateVarRequest</a></dd><dd><a class="el" href="d8/dbb/structs__UpnpString.html">s_UpnpString</a></dd><dd><a class="el" href="d0/dff/structs__UpnpSubscriptionRequest.html">s_UpnpSubscriptionRequest</a></dd><dd><a class="el" href="dc/d0a/structscanner__t.html">scanner_t</a></dd><dd><a class="el" href="d0/d20/structSendInstruction.html">SendInstruction</a></dd><dd><a class="el" href="df/db2/structservice__info.html">service_info</a></dd><dd><a class="el" href="df/d30/structservice__table.html">service_table</a></dd><dd><a class="el" href="d9/d4f/structSOCKINFO.html">SOCKINFO</a></dd><dd><a class="el" href="dc/dfb/structssdp__thread__data.html">ssdp_thread_data</a></dd><dd><a class="el" href="d1/da6/structSsdpEvent.html">SsdpEvent</a></dd><dd><a class="el" href="d4/df8/structSsdpSearchArg.html">SsdpSearchArg</a></dd><dd><a class="el" href="d2/d52/structSsdpSearchExpArg.html">SsdpSearchExpArg</a></dd><dd><a class="el" href="df/dd8/structSsdpSearchReply.html">SsdpSearchReply</a></dd><dd><a class="el" href="d7/d2f/structstr__int__entry.html">str_int_entry</a></dd><dd><a class="el" href="dd/dc7/structsubscription.html">subscription</a></dd></dl>
+<dl class="classindex odd">
+<dt class="alphachar"><a id="letter_T" name="letter_T">T</a></dt>
+<dd><a class="el" href="de/d7d/structThreadData.html">ThreadData</a></dd><dd><a class="el" href="d4/df4/structtoken.html">token</a></dd></dl>
+<dl class="classindex even">
 <dt class="alphachar"><a id="letter_U" name="letter_U">U</a></dt>
-<dd><a class="el" href="d0/d92/structUpnpListHead.html">UpnpListHead</a></dd><dd><a class="el" href="d8/db0/structUpnpNonblockParam.html">UpnpNonblockParam</a></dd></dl>
+<dd><a class="el" href="d0/d92/structUpnpListHead.html">UpnpListHead</a></dd><dd><a class="el" href="d8/db0/structUpnpNonblockParam.html">UpnpNonblockParam</a></dd><dd><a class="el" href="d4/d48/structuri__type.html">uri_type</a></dd><dd><a class="el" href="d2/d70/structURL__list.html">URL_list</a></dd><dd><a class="el" href="da/ded/structuuid__node__t.html">uuid_node_t</a></dd><dd><a class="el" href="d3/d27/structuuid__upnp.html">uuid_upnp</a></dd></dl>
+<dl class="classindex odd">
+<dt class="alphachar"><a id="letter_V" name="letter_V">V</a></dt>
+<dd><a class="el" href="d1/dec/structvirtual__Dir__List.html">virtual_Dir_List</a></dd><dd><a class="el" href="d1/d09/structVirtualDirCallbacks.html">VirtualDirCallbacks</a></dd></dl>
 </div>
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
+</small></address>
 </body>
 </html>

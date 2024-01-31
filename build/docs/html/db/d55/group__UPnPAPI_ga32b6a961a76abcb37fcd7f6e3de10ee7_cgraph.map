@@ -1,0 +1,6 @@
+<map id="UpnpCloseHttpPost" name="UpnpCloseHttpPost">
+<area shape="rect" id="node1" title="Sends and receives any pending data, closes the connection with the server, and frees memory allocate..." alt="" coords="5,56,153,83"/>
+<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a2bbebb3c673dfaf9ddb2d28f802e41af" title="Closes the connection created with UpnpOpenHttpConnection() and frees any memory associated with the ..." alt="" coords="201,5,393,32"/>
+<area shape="rect" id="node3" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a550653cde6daad2db55f36b999e8c64b" title="Indicates the end of a HTTP request previously made by UpnpMakeHttpRequest()." alt="" coords="217,56,377,83"/>
+<area shape="rect" id="node4" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a67b47eb9d6c95c90245733cfbf8510a8" title="Gets the response from the server using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="213,107,382,133"/>
+</map>

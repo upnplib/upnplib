@@ -1,0 +1,5 @@
+<map id="http_OpenHttpGetEx" name="http_OpenHttpGetEx">
+<area shape="rect" id="node1" title="Makes the HTTP GET message, connects to the peer, sends the HTTP GET request, gets the response and p..." alt="" coords="244,42,400,69"/>
+<area shape="rect" id="node2" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#a066cfee6ca4fd53d0dc0400b1d188c8f" title="Open an extended http GET communication." alt="" coords="5,5,196,47"/>
+<area shape="rect" id="node3" href="$db/d55/group__UPnPAPI.html#gab2b4b1cde970acf0839e4f7f07c30577" title="Gets specified number of bytes from a file specified in the URL." alt="" coords="22,71,179,98"/>
+</map>

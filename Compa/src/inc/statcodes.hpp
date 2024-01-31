@@ -1,9 +1,11 @@
+#ifndef COMPA_GENLIB_NET_HTTP_STATCODES_HPP
+#define COMPA_GENLIB_NET_HTTP_STATCODES_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-17
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,14 +32,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+/*!
+ * \file
+ * \brief HTTP status codes
+ */
 
-#ifndef UPNPLIB_GENLIB_NET_HTTP_STATCODES_HPP
-#define UPNPLIB_GENLIB_NET_HTTP_STATCODES_HPP
-
-#include "UpnpGlobal.hpp" // for EXPORT_SPEC
+#include <upnplib/visibility.hpp>
 
 /* HTTP response status codes */
-
+/// \cond
 #define HTTP_CONTINUE 100
 #define HTTP_SWITCHING_PROCOTOLS 101
 
@@ -94,20 +97,16 @@
 #define HTTP_E_BAD_MSG_FORMAT -3
 #define HTTP_E_TIMEDOUT -4
 #define HTTP_E_FILE_READ -5
+/// \endcond
 
-/************************************************************************
- * Function: http_get_code_text
- *
- * Parameters:
- *	int statusCode ; Status code based on which the status table and
- *					status message is returned
- *
- * Description: Return the right status message based on the passed in
- *	int statusCode input parameter
- *
- * Returns:
- *	 const char* ptr - pointer to the status message string
- ************************************************************************/
-EXPORT_SPEC const char* http_get_code_text(int statusCode);
+/*!
+ * \brief Return the right status message based on the passed in int statusCode
+ * input parameter.
+ * \returns
+ * Pointer to the status message string.
+ */
+UPNPLIB_API const char* http_get_code_text(
+    /// [in] Status code based on which the status message is returned.
+    int statusCode);
 
-#endif /* UPNPLIB_GENLIB_NET_HTTP_STATCODES_HPP */
+#endif /* COMPA_GENLIB_NET_HTTP_STATCODES_HPP */

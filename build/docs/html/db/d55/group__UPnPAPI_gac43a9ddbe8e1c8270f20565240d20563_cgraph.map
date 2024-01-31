@@ -1,5 +1,6 @@
 <map id="UpnpDownloadXmlDoc" name="UpnpDownloadXmlDoc">
 <area shape="rect" id="node1" title="Downloads an XML document specified in a URL." alt="" coords="5,31,177,57"/>
 <area shape="rect" id="node2" href="$db/d55/group__UPnPAPI.html#ga475c51dac06a22d937da76a5dbde80c6" title="Downloads a file specified in a URL." alt="" coords="225,5,396,32"/>
-<area shape="rect" id="node3" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement either on the standard output or log file along with the information from ..." alt="" coords="265,56,356,83"/>
+<area shape="rect" id="node4" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement either on the standard output or log file along with the information from ..." alt="" coords="265,56,356,83"/>
+<area shape="rect" id="node3" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#ae95bd964feefc6257c8c1d10bae4a1ec" title="Download the document message and extract the document from the message." alt="" coords="444,5,564,32"/>
 </map>

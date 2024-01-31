@@ -1,12 +1,12 @@
-#ifndef GENLIB_UTIL_MEMBUFFER_HPP
-#define GENLIB_UTIL_MEMBUFFER_HPP
+#ifndef COMPA_GENLIB_UTIL_MEMBUFFER_HPP
+#define COMPA_GENLIB_UTIL_MEMBUFFER_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft,  Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2028-08-12
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-31
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,41 +34,38 @@
  *
  ******************************************************************************/
 // Last compare with pupnp original source file on 2023-08-12, ver 1.14.17
-
 /*!
  * \file
+ * \brief Manage blocks of dynamically allocated memory.
  */
 
-#include "UpnpGlobal.hpp" // for EXPORT_SPEC
+#include <upnplib/visibility.hpp>
 #include <cstddef>
 
-#define MINVAL(a, b) ((a) < (b) ? (a) : (b))
-#define MAXVAL(a, b) ((a) > (b) ? (a) : (b))
-
-/*! pointer to a chunk of memory. */
-typedef struct {
-    /*! start of memory (read/write). */
+/*! \brief pointer to a chunk of memory. */
+struct memptr {
+    /*! \brief start of memory (read/write). */
     char* buf;
-    /*! length of memory (read-only). */
+    /*! \brief length of memory (read-only). */
     size_t length;
-} memptr;
+};
 
-/*! Maintains a block of dynamically allocated memory
- * note: Total length/capacity should not exceed MAX_INT. It is always a
+/*! \brief Maintains a block of dynamically allocated memory.
+ * \note Total length/capacity should not exceed MAX_INT. It is always a
  * terminating null byte ('\0') appended but not reflected in length and
  * capacity */
-typedef struct {
-    /*! mem buffer; must not write beyond buf[length-1] (read/write). */
+struct membuffer {
+    /// \brief mem buffer; must not write beyond buf[length-1] (read/write).
     char* buf;
-    /*! length of buffer without terminating null byte (read-only). */
+    /// \brief length of buffer without terminating null byte (read-only).
     size_t length;
-    /*! total allocated memory without terminating null byte (read-only). */
+    /// \brief total allocated memory without terminating null byte (read-only).
     size_t capacity;
-    /*! used to increase size; MUST be > 0; (read/write). */
+    /// \brief used to increase size; MUST be > 0; (read/write).
     size_t size_inc;
-    /*! default value of size_inc. */
+    /// \brief default value of size_inc.
 #define MEMBUF_DEF_SIZE_INC (size_t)5
-} membuffer;
+};
 
 /*!
  * \brief Allocate memory and copy information from the input string to the
@@ -141,14 +138,14 @@ int membuffer_set_size(
  * Set the size of the buffer to MEMBUF_DEF_SIZE_INC and Initializes
  * m->buf to NULL, length = 0.
  */
-EXPORT_SPEC void membuffer_init(
+UPNPLIB_API void membuffer_init(
     /*! [in,out] Buffer to be initialized. */
     membuffer* m);
 
 /*!
  * \brief Free's memory allocated for membuffer* m.
  */
-EXPORT_SPEC void membuffer_destroy(
+UPNPLIB_API void membuffer_destroy(
     /*! [in,out] Buffer to be destroyed. */
     membuffer* m);
 
@@ -199,7 +196,7 @@ int membuffer_append(
  *
  * \return int.
  */
-EXPORT_SPEC int membuffer_append_str(
+UPNPLIB_API int membuffer_append_str(
     /*! [in,out] Buffer whose memory is to be appended. */
     membuffer* m,
     /*! [in] Source buffer whose contents will be copied. */
@@ -237,7 +234,7 @@ void membuffer_delete(
     /*! [in] Number of bytes that the data needs to shrink by. */
     size_t num_bytes);
 
-/*
+/*!
  * \brief Detaches current buffer and returns it. The caller must free the
  * returned buffer using free(). After this call, length becomes 0.
  *
@@ -247,7 +244,7 @@ char* membuffer_detach(
     /*! [in,out] Buffer to be returned and updated. */
     membuffer* m);
 
-/*
+/*!
  * \brief Free existing memory in membuffer and assign the new buffer in its
  * place.
  *
@@ -263,4 +260,4 @@ void membuffer_attach(
     /*! [in] Length of the source buffer. */
     size_t buf_len);
 
-#endif /* GENLIB_UTIL_MEMBUFFER_HPP */
+#endif /* COMPA_GENLIB_UTIL_MEMBUFFER_HPP */

@@ -912,8 +912,9 @@ INPUT                  = README.md \
                          Compa/directory.dox \
                          Compa/inc \
                          Compa/src/api \
+                         Compa/src/inc \
                          \
-                         Compa/src/inc/upnpapi.hpp
+                         Compa/src/genlib/util/strintmap.cpp
 #
 #delete Compa/inc/UpnpGlobal.hpp
 #delete Compa/inc/UpnpInet.hpp
@@ -921,13 +922,13 @@ INPUT                  = README.md \
 #delete Compa/inc/UpnpUniStd.hpp
 #delete Compa/inc/init.hpp
 #
-#Compa/src/gena/gena_callback2.cpp
+#Compa/src/gena/gena_callback2.cpp \
 #Compa/src/gena/gena_ctrlpt.cpp
 #Compa/src/gena/gena_device.cpp
 #Compa/src/genlib/client_table/GenlibClientSubscription.cpp
 #Compa/src/genlib/client_table/client_table.cpp
 #Compa/src/genlib/miniserver/miniserver.cpp
-#Compa/src/genlib/net/http/httpparser.cpp
+# Compa/src/genlib/net/http/httpparser.cpp
 #Compa/src/genlib/net/http/httpreadwrite.cpp
 #Compa/src/genlib/net/http/parsetools.cpp
 #Compa/src/genlib/net/http/statcodes.cpp
@@ -937,35 +938,8 @@ INPUT                  = README.md \
 #Compa/src/genlib/service-table/service_table.cpp
 #Compa/src/genlib/util/list.cpp
 #Compa/src/genlib/util/membuffer.cpp
-#Compa/src/genlib/util/strintmap.cpp
 #Compa/src/genlib/util/util.cpp
 #Compa/src/globalvars.cpp
-#Compa/src/inc/GenlibClientSubscription.hpp
-#Compa/src/inc/VirtualDir.hpp
-#Compa/src/inc/client_table.hpp
-#Compa/src/inc/config.hpp
-#Compa/src/inc/gena.hpp
-#Compa/src/inc/gena_ctrlpt.hpp
-#Compa/src/inc/gena_device.hpp
-#Compa/src/inc/httpparser.hpp
-#Compa/src/inc/httpreadwrite.hpp
-#Compa/src/inc/md5.hpp
-#Compa/src/inc/membuffer.hpp
-#Compa/src/inc/miniserver.hpp
-#Compa/src/inc/parsetools.hpp
-#Compa/src/inc/service_table.hpp
-#Compa/src/inc/soaplib.hpp
-#Compa/src/inc/sock.hpp
-#Compa/src/inc/ssdplib.hpp
-#Compa/src/inc/statcodes.hpp
-#Compa/src/inc/strintmap.hpp
-#Compa/src/inc/sysdep.hpp
-#Compa/src/inc/unixutil.hpp
-#Compa/src/inc/upnputil.hpp
-#Compa/src/inc/uri.hpp
-#Compa/src/inc/urlconfig.hpp
-#Compa/src/inc/uuid.hpp
-#Compa/src/inc/webserver.hpp
 #Compa/src/init.cpp
 #Compa/src/soap/soap_common.cpp
 #Compa/src/soap/soap_ctrlpt.cpp
@@ -1658,7 +1632,7 @@ ECLIPSE_DOC_ID         = org.doxygen.Project
 # The default value is: NO.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-DISABLE_INDEX          = YES
+DISABLE_INDEX          = NO
 
 # The GENERATE_TREEVIEW tag is used to specify whether a tree-like index
 # structure should be generated to display hierarchical information. If the tag
@@ -1675,7 +1649,7 @@ DISABLE_INDEX          = YES
 # The default value is: NO.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-GENERATE_TREEVIEW      = YES
+GENERATE_TREEVIEW      = NO
 
 # When both GENERATE_TREEVIEW and DISABLE_INDEX are set to YES, then the
 # FULL_SIDEBAR option determines if the side bar is limited to only the treeview
@@ -1687,7 +1661,7 @@ GENERATE_TREEVIEW      = YES
 # The default value is: NO.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-FULL_SIDEBAR           = YES
+FULL_SIDEBAR           = NO
 
 # The ENUM_VALUES_PER_LINE tag can be used to set the number of enum values that
 # doxygen will group on one line in the generated HTML documentation.

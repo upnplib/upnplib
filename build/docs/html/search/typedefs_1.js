@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['socket_0',['SOCKET',['../dc/de4/group__Sock.html#ga8dc8083897335125630f1af5dafd5831',1,'UpnpInet.hpp']]]
+  ['genlibclientsubscription_0',['GenlibClientSubscription',['../d2/dad/GenlibClientSubscription_8hpp.html#a135e3269f5d121a273011b61a49530b7',1,'GenlibClientSubscription.hpp']]]
 ];

@@ -1,9 +1,9 @@
-/*******************************************************************************
+/* *****************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-31
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,39 +29,20 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- ******************************************************************************/
+ * ****************************************************************************/
+/*!
+ * \file
+ * \brief String to integer and integer to string conversion functions.
+ */
 
-/************************************************************************
+/* **********************************************************************
  * Purpose: This file contains string to integer and integer to string
- *	conversion functions
- ************************************************************************/
+ * conversion functions
+ * **********************************************************************/
 
-#include "strintmap.hpp"
-#include "config.hpp"
-#include "membuffer.hpp"
+#include <strintmap.hpp>
+#include <membuffer.hpp>
 
-/************************************************************************
- *	Function :	map_str_to_int
- *
- *	Parameters :
- *		IN const char* name ;	string containing the name to be matched
- *		IN size_t name_len ;	size of the string to be matched
- *		IN str_int_entry* table ;	table of entries that need to be
- *					matched.
- *		IN int num_entries ; number of entries in the table that need
- *					to be searched.
- *		IN int case_sensitive ; whether the case should be case
- *					sensitive or not
- *
- *	Description : Match the given name with names from the entries in the
- *		table. Returns the index of the table when the entry is found.
- *
- *	Return : int ;
- *		index - On Success
- *		-1 - On failure
- *
- *	Note :
- ************************************************************************/
 int map_str_to_int(const char* name, size_t name_len, str_int_entry* table,
                    int num_entries, int case_sensitive) {
     int top, mid, bot;
@@ -97,23 +78,6 @@ int map_str_to_int(const char* name, size_t name_len, str_int_entry* table,
     return -1; /* header name not found */
 }
 
-/************************************************************************
- *	Function :	map_int_to_str
- *
- *	Parameters :
- *		IN int id ;	ID to be matched
- *		IN str_int_entry* table ;	table of entries that need to be
- *					matched.
- *		IN int num_entries ; number of entries in the table that need
- *					to be searched.
- *
- *	Description : Returns the index from the table where the id matches
- *		the entry from the table.
- *
- *	Return : int ;
- *
- *	Note :
- ************************************************************************/
 int map_int_to_str(int id, str_int_entry* table, int num_entries) {
     int i;
 

@@ -1,10 +1,23 @@
 var searchData=
 [
-  ['ifr_5fnetmask_0',['ifr_netmask',['../db/d55/group__UPnPAPI.html#ga249f4577f2fbad03ccb2959e9f9a9fda',1,'upnpapi.cpp']]],
-  ['ihttpreadwrite_1',['Ihttpreadwrite',['../dd/d94/classupnplib_1_1Ihttpreadwrite.html',1,'upnplib']]],
-  ['in6_5fis_5faddr_5fglobal_2',['IN6_IS_ADDR_GLOBAL',['../db/d55/group__UPnPAPI.html#gadac75b931d6c8b4517f3b5d806d33d10',1,'upnpapi.cpp']]],
-  ['in6_5fis_5faddr_5fula_3',['IN6_IS_ADDR_ULA',['../db/d55/group__UPnPAPI.html#ga9dd7c394529caa29a98958354f269d31',1,'upnpapi.cpp']]],
-  ['init_2ehpp_4',['init.hpp',['../dd/ded/init_8hpp.html',1,'']]],
-  ['invalid_5fsocket_5',['INVALID_SOCKET',['../dc/de4/group__Sock.html#ga26769957ec1a2beaf223f33b66ee64ab',1,'UpnpInet.hpp']]],
-  ['ithread_2ehpp_6',['ithread.hpp',['../d4/d0f/ithread_8hpp.html',1,'']]]
+  ['id_0',['id',['../d7/d2f/structstr__int__entry.html#a28f267cc32dbe8ea29048ee8f5edc9ae',1,'str_int_entry']]],
+  ['ifr_5fnetmask_1',['ifr_netmask',['../db/d55/group__UPnPAPI.html#ga249f4577f2fbad03ccb2959e9f9a9fda',1,'upnpapi.cpp']]],
+  ['ihttpreadwrite_2',['Ihttpreadwrite',['../dd/d94/classupnplib_1_1Ihttpreadwrite.html',1,'upnplib']]],
+  ['in6_5fis_5faddr_5fglobal_3',['IN6_IS_ADDR_GLOBAL',['../db/d55/group__UPnPAPI.html#gadac75b931d6c8b4517f3b5d806d33d10',1,'upnpapi.cpp']]],
+  ['in6_5fis_5faddr_5fula_4',['IN6_IS_ADDR_ULA',['../db/d55/group__UPnPAPI.html#ga9dd7c394529caa29a98958354f269d31',1,'upnpapi.cpp']]],
+  ['include_5fclient_5fapis_5',['INCLUDE_CLIENT_APIS',['../d8/dfd/config_8hpp.html#a52b373221a28b37537fd51768f8da637',1,'config.hpp']]],
+  ['include_5fdevice_5fapis_6',['INCLUDE_DEVICE_APIS',['../d8/dfd/config_8hpp.html#a6e26bf57858233bdc51905286e1da3ae',1,'config.hpp']]],
+  ['init_2ehpp_7',['init.hpp',['../dd/ded/init_8hpp.html',1,'']]],
+  ['initialized_8',['initialized',['../de/d66/structhttp__message__t.html#ab586e7ef7512057314a980f391ecea9b',1,'http_message_t']]],
+  ['internal_5fweb_5fserver_9',['INTERNAL_WEB_SERVER',['../d8/dfd/config_8hpp.html#a6c0f6be02f505e70b24cb49ae1189470',1,'config.hpp']]],
+  ['invalid_5fnt_10',['INVALID_NT',['../d9/dd2/gena_8hpp.html#a30ccbf856771f17e82f751e385906da9',1,'gena.hpp']]],
+  ['invalid_5fsid_11',['INVALID_SID',['../d9/dd2/gena_8hpp.html#a97b3f2a8cb686000581e7455b2950c2c',1,'gena.hpp']]],
+  ['invalid_5fsocket_12',['INVALID_SOCKET',['../dc/de4/group__Sock.html#ga26769957ec1a2beaf223f33b66ee64ab',1,'UpnpInet.hpp']]],
+  ['ipaddress_13',['IPaddress',['../db/d73/structhostport__type.html#ab5a116daf81869f2788cab7eae0ad7ad',1,'hostport_type']]],
+  ['is_5frequest_14',['is_request',['../de/d66/structhttp__message__t.html#a2d335ffbfa533def795b026483da4125',1,'http_message_t']]],
+  ['ischunkactive_15',['IsChunkActive',['../d0/d20/structSendInstruction.html#afa6ba123649d39f817b0995f69825622',1,'SendInstruction']]],
+  ['israngeactive_16',['IsRangeActive',['../d0/d20/structSendInstruction.html#a8b6eaf12d65fb66c71d4212d1f59de58',1,'SendInstruction']]],
+  ['istrailers_17',['IsTrailers',['../d0/d20/structSendInstruction.html#acca65587dff5b8580cab8c8e50219316',1,'SendInstruction']]],
+  ['isvirtualfile_18',['IsVirtualFile',['../d0/d20/structSendInstruction.html#adb51c6992a742975ff82bc470d9c6f66',1,'SendInstruction']]],
+  ['ithread_2ehpp_19',['ithread.hpp',['../d4/d0f/ithread_8hpp.html',1,'']]]
 ];

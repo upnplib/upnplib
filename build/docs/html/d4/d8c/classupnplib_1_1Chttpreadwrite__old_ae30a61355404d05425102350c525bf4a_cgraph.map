@@ -1,0 +1,4 @@
+<map id="upnplib::Chttpreadwrite_old::http_MakeHttpRequest" name="upnplib::Chttpreadwrite_old::http_MakeHttpRequest">
+<area shape="rect" id="node1" title="Create an http request." alt="" coords="5,5,212,47"/>
+<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a05a72106893427290043afc79d4b1955" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="260,13,431,39"/>
+</map>

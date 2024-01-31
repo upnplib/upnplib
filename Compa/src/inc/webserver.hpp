@@ -5,7 +5,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-21
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,12 +33,18 @@
  *
  **************************************************************************/
 // Last compare with pupnp original source file on 2022-12-09, ver 1.14.15
+/*!
+ * \file
+ * \brief Internal webserver
+ */
 
-#include "httpparser.hpp"
-#include "sock.hpp"
-// #include <time.h>
+#include <httpparser.hpp>
+#include <sock.hpp>
 
+/// \brief Send instruction
 struct SendInstruction {
+    /// @{
+    /// \brief member variable
     int IsVirtualFile;
     int IsChunkActive;
     int IsRangeActive;
@@ -46,13 +52,14 @@ struct SendInstruction {
     char RangeHeader[200];
     char AcceptLanguageHeader[200];
     off_t RangeOffset;
-    /*! Read from local source and send on the network. */
+    /// @}
+    /*! \brief Read from local source and send on the network. */
     off_t ReadSendSize;
-    /*! Recv from the network and write into local file. */
+    /*! \brief Recv from the network and write into local file. */
     long RecvWriteSize;
-    /*! Cookie associated with the virtualDir. */
+    /*! \brief Cookie associated with the virtualDir. */
     const void* Cookie;
-    /*! Cookie associated with the request. */
+    /*! \brief Cookie associated with the request. */
     const void* RequestCookie;
     /* Later few more member could be added depending
      * on the requirement.*/

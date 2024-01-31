@@ -7,25 +7,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>UPnPlib: File Members</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript">var page_layout=1;</script>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtreedata.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(document).ready(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
@@ -37,21 +26,6 @@
    <div id="projectbrief">&#39;Universal Plug and Play plus&#39; System Developement Kit</div>
   </td>
  </tr>
-   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <img id="MSearchSelect" src="search/mag_sel.svg"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
-               alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td></tr>
  </tbody>
 </table>
 </div>
@@ -62,22 +36,18 @@
 var searchBox = new SearchBox("searchBox", "search",'Search','.html');
 /* @license-end */
 </script>
-</div><!-- top -->
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('globals_s.html',''); initResizable(); });
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -96,17 +66,55 @@ $(document).ready(function(){initNavTree('globals_s.html',''); initResizable(); 
 <div class="textblock">Here is a list of all documented file members with links to the documentation:</div>
 
 <h3><a id="index_s" name="index_s"></a>- s -</h3><ul>
+<li>SearchByTarget()&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#ga5ce5ab5b0d61a5fe8b6d72cf8f7b6736">ssdplib.hpp</a></li>
+<li>SendReply()&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#gada63c5136ba9b3c63e949e2db2f55d67">ssdplib.hpp</a></li>
 <li>SERL_NUMR_SIZE&#160;:&#160;<a class="el" href="db/d55/group__UPnPAPI.html#gab822507c855ff9add621a85f9039f9a3">upnp.hpp</a></li>
+<li>ServiceAdvertisement()&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#gac90369e3ec78ce279fd45dfeb3f0f33f">ssdplib.hpp</a></li>
+<li>ServiceReply()&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#gae54b8393bd5d949c0859f443dc48e4c1">ssdplib.hpp</a></li>
+<li>ServiceShutdown()&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#gac92b2e78ce280abc5041ce0eda84bf2a">ssdplib.hpp</a></li>
+<li>SetGenaCallback()&#160;:&#160;<a class="el" href="d3/d8b/miniserver_8hpp.html#ac87dd9485c4a559c13f5dab99ec2cace">miniserver.hpp</a></li>
+<li>SetHTTPGetCallback()&#160;:&#160;<a class="el" href="d3/d8b/miniserver_8hpp.html#a4f98e891649f93434b1f44660c28f8cd">miniserver.hpp</a></li>
+<li>SID_SIZE&#160;:&#160;<a class="el" href="db/d74/service__table_8hpp.html#ad1163f0bf6339f1dd003192df69052df">service_table.hpp</a></li>
+<li>soap_device_callback()&#160;:&#160;<a class="el" href="d8/d77/soaplib_8hpp.html#a4b5104845d73b836d6365a306fba1679">soaplib.hpp</a></li>
+<li>SoapGetServiceVarStatus()&#160;:&#160;<a class="el" href="d8/d77/soaplib_8hpp.html#a1bbd39eb00bacc50f2f978a87b9f4609">soaplib.hpp</a></li>
+<li>SoapSendAction()&#160;:&#160;<a class="el" href="d8/d77/soaplib_8hpp.html#a98ef5ed7d4950c8d6c2624271efb36bc">soaplib.hpp</a></li>
+<li>SoapSendActionEx()&#160;:&#160;<a class="el" href="d8/d77/soaplib_8hpp.html#a21d635ae97889bf1745f64f20fab6bfb">soaplib.hpp</a></li>
+<li>sock_destroy()&#160;:&#160;<a class="el" href="dc/de4/group__Sock.html#ga806d7d231975d7c356f9e322dbf324be">sock.hpp</a></li>
+<li>sock_init()&#160;:&#160;<a class="el" href="dc/de4/group__Sock.html#ga6618c55418b22f19614c4a44864a8350">sock.hpp</a></li>
+<li>sock_init_with_ip()&#160;:&#160;<a class="el" href="dc/de4/group__Sock.html#gab449ecffa6efe86ca29b9dac0c6c817c">sock.hpp</a></li>
+<li>sock_make_blocking()&#160;:&#160;<a class="el" href="dc/de4/group__Sock.html#gadd1cc9f72f4e4c2c8093b6bf8d5d5400">sock.hpp</a></li>
+<li>sock_make_no_blocking()&#160;:&#160;<a class="el" href="dc/de4/group__Sock.html#ga1edda41b3be1ae335b466eecf22b04e1">sock.hpp</a></li>
+<li>sock_read()&#160;:&#160;<a class="el" href="dc/de4/group__Sock.html#ga924c94e23a875e461f39e846d86ed3bf">sock.hpp</a></li>
+<li>sock_write()&#160;:&#160;<a class="el" href="dc/de4/group__Sock.html#ga25a965d6233079a1178ea3b8a23a4e65">sock.hpp</a></li>
 <li>SOCKET&#160;:&#160;<a class="el" href="dc/de4/group__Sock.html#ga8dc8083897335125630f1af5dafd5831">UpnpInet.hpp</a></li>
 <li>SOCKET_ERROR&#160;:&#160;<a class="el" href="dc/de4/group__Sock.html#ga633b0396ff93d336a088412a190a5072">UpnpInet.hpp</a></li>
+<li>SSDP_ALL&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#ggaf02d8708a05f0c2fc97df242360e70f7afffa53be1a65b86c1f48b38222314855">ssdplib.hpp</a></li>
+<li>SSDP_DEVICETYPE&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#ggaf02d8708a05f0c2fc97df242360e70f7a1ce99b071206c6feda37d9d3c0f128f6">ssdplib.hpp</a></li>
+<li>SSDP_DEVICEUDN&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#ggaf02d8708a05f0c2fc97df242360e70f7a08caf5b4c373e6c56470aef53037fa5f">ssdplib.hpp</a></li>
+<li>ssdp_handle_ctrlpt_msg()&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#gad71a204fd6ad556dd5632a601bf5938d">ssdplib.hpp</a></li>
+<li>SSDP_IP&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#ga57818618649d0540ca1badd7b72a72a0">ssdplib.hpp</a></li>
+<li>SSDP_IPV6_LINKLOCAL&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#ga6f6d9730dd0bf4338227c5c572989fce">ssdplib.hpp</a></li>
+<li>SSDP_IPV6_SITELOCAL&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#ga59aa1778bc64335c066dd7511c53deec">ssdplib.hpp</a></li>
+<li>SSDP_PACKET_DISTRIBUTE&#160;:&#160;<a class="el" href="d8/dfd/config_8hpp.html#a76c469f016e62d3639b5d7cb7e5eb1b7">config.hpp</a></li>
+<li>SSDP_PAUSE&#160;:&#160;<a class="el" href="d8/dfd/config_8hpp.html#a901a32957b667b1168adb87a493825ad">config.hpp</a></li>
+<li>SSDP_PORT&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#ga0a3b7291b732fc6a286c6f0d1e796836">ssdplib.hpp</a></li>
+<li>ssdp_request_type()&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#ga3096b77d16b0ab09d3d0ec540fb09016">ssdplib.hpp</a></li>
+<li>ssdp_request_type1()&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#gaa9bf78fccd29b5d5b8c7788f897e3326">ssdplib.hpp</a></li>
+<li>SSDP_ROOTDEVICE&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#ggaf02d8708a05f0c2fc97df242360e70f7a82111d1af2ec8bfd45d13b6821b7d53f">ssdplib.hpp</a></li>
+<li>SSDP_SERROR&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#ggaf02d8708a05f0c2fc97df242360e70f7a06eaf67c90cce475adf58eae6c7fa6a2">ssdplib.hpp</a></li>
+<li>SSDP_SERVICE&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#ggaf02d8708a05f0c2fc97df242360e70f7aeb51fe41ab493f11da2d4d1860cc6c5b">ssdplib.hpp</a></li>
+<li>SsdpFunPtr&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#ga90661b2cc071ea571b3c50dcbba973a7">ssdplib.hpp</a></li>
+<li>SsdpSearchType&#160;:&#160;<a class="el" href="d4/dd5/group__SSDPlib.html#gaf02d8708a05f0c2fc97df242360e70f7">ssdplib.hpp</a></li>
+<li>StartMiniServer()&#160;:&#160;<a class="el" href="d3/d8b/miniserver_8hpp.html#aa972f9a8f3dc9fd6631bccddadb20fa8">miniserver.hpp</a></li>
+<li>StopMiniServer()&#160;:&#160;<a class="el" href="d3/d8b/miniserver_8hpp.html#a2b9d198a3eb6aadb0edc16bd2147ab63">miniserver.hpp</a></li>
+<li>str_alloc()&#160;:&#160;<a class="el" href="d1/d10/membuffer_8hpp.html#a37962f857cb3a490e8f21ca923352983">membuffer.hpp</a></li>
+<li>SubscribeLock&#160;:&#160;<a class="el" href="d9/dd2/gena_8hpp.html#a20ec28c9a655fb14963cb865475abb13">gena.hpp</a></li>
+<li>SubscribeUnlock&#160;:&#160;<a class="el" href="d9/dd2/gena_8hpp.html#ab79e212dffb1ab098c165ebd97dd718d">gena.hpp</a></li>
 </ul>
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
+</small></address>
 </body>
 </html>

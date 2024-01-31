@@ -1,4 +1,9 @@
 <map id="Compa/inc/upnpdebug.hpp" name="Compa/inc/upnpdebug.hpp">
-<area shape="rect" id="node1" title="Manage Debug messages with levels &quot;critical&quot; to &quot;all&quot;." alt="" coords="17,5,212,32"/>
-<area shape="rect" id="node2" href="$d5/dfa/upnpdebug_8cpp.html" title="Manage Debug messages with levels &quot;critical&quot; to &quot;all&quot;." alt="" coords="5,80,224,107"/>
+<area shape="rect" id="node1" title="Manage Debug messages with levels &quot;critical&quot; to &quot;all&quot;." alt="" coords="125,5,320,32"/>
+<area shape="rect" id="node2" href="$d5/dfa/upnpdebug_8cpp.html" title="Manage Debug messages with levels &quot;critical&quot; to &quot;all&quot;." alt="" coords="5,87,224,114"/>
+<area shape="rect" id="node3" href="$db/d74/service__table_8hpp.html" title="Manage the UPnP Services of a UPnP Device if available." alt="" coords="248,80,413,121"/>
+<area shape="rect" id="node4" href="$d9/d78/client__table_8hpp.html" title=" " alt="" coords="253,169,408,211"/>
+<area shape="rect" id="node5" href="$d9/dd2/gena_8hpp.html" title="Manage Eventing with GENA, the General Event Notification Architecture." alt="" coords="135,259,313,285"/>
+<area shape="rect" id="node7" href="$d3/da9/upnpapi_8hpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="338,259,537,285"/>
+<area shape="rect" id="node6" href="$d4/d99/upnpapi_8cpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="231,333,430,360"/>
 </map>

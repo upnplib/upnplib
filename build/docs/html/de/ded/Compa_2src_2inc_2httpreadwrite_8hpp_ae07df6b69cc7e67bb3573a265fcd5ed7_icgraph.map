@@ -1,0 +1,6 @@
+<map id="http_WriteHttpRequest" name="http_WriteHttpRequest">
+<area shape="rect" id="node1" title="Writes the content of a HTTP request initiated by a UpnpMakeHttpRequest() call. The end of the conten..." alt="" coords="260,71,431,98"/>
+<area shape="rect" id="node2" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#a4a67c96e26b8fd7e3cec25edd142382c" title="Write an http request." alt="" coords="5,5,212,47"/>
+<area shape="rect" id="node3" href="$db/d55/group__UPnPAPI.html#ga6794b5f98e814417967fc8fe1c44c6f5" title="Sends a request to a server to copy the contents of a buffer to the URI specified in the UpnpOpenHttp..." alt="" coords="35,71,182,98"/>
+<area shape="rect" id="node4" href="$db/d55/group__UPnPAPI.html#gaccbd92c541367e88598a5126fa97b2fb" title="Writes the content of a HTTP request initiated by a UpnpMakeHttpRequest call. The end of the content ..." alt="" coords="23,122,195,149"/>
+</map>

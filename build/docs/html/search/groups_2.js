@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['the_20upnpstring_20class_0',['The UpnpString Class',['../d1/d03/group__UpnpString.html',1,'']]]
+  ['ssdp_20library_0',['SSDP Library',['../d4/dd5/group__SSDPlib.html',1,'']]]
 ];

@@ -1,0 +1,4 @@
+<map id="upnplib::Chttpreadwrite_old::http_CloseHttpConnection" name="upnplib::Chttpreadwrite_old::http_CloseHttpConnection">
+<area shape="rect" id="node1" title="gtest available" alt="" coords="5,5,232,47"/>
+<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a2bbebb3c673dfaf9ddb2d28f802e41af" title="Closes the connection created with UpnpOpenHttpConnection() and frees any memory associated with the ..." alt="" coords="280,13,472,39"/>
+</map>

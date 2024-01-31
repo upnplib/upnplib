@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-01-30
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -58,8 +58,20 @@
 
 /* entity positions */
 
+namespace { // private types
+
+/* Used to represent different types of tokens in input. */
+enum token_type_t {
+    TT_IDENTIFIER,
+    TT_WHITESPACE,
+    TT_CRLF,
+    TT_CTRL,
+    TT_SEPARATOR,
+    TT_QUOTEDSTRING
+};
+
 #define NUM_HTTP_METHODS 11
-static str_int_entry Http_Method_Table[NUM_HTTP_METHODS] = {
+str_int_entry Http_Method_Table[NUM_HTTP_METHODS] = {
     {"DELETE", HTTPMETHOD_DELETE},
     {"GET", HTTPMETHOD_GET},
     {"HEAD", HTTPMETHOD_HEAD},
@@ -71,6 +83,8 @@ static str_int_entry Http_Method_Table[NUM_HTTP_METHODS] = {
     {"UNSUBSCRIBE", HTTPMETHOD_UNSUBSCRIBE},
     {"POST", SOAPMETHOD_POST},
     {"PUT", HTTPMETHOD_PUT}};
+
+} // namespace
 
 #define NUM_HTTP_HEADER_NAMES 33
 str_int_entry Http_Header_Names[NUM_HTTP_HEADER_NAMES] = {

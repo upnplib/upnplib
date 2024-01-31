@@ -1,0 +1,11 @@
+<map id="Compa/src/inc/upnputil.hpp" name="Compa/src/inc/upnputil.hpp">
+<area shape="rect" id="node1" title="Some utility functions." alt="" coords="220,5,418,32"/>
+<area shape="rect" id="node2" href="$db/da7/httpparser_8hpp.html" title="Functions to parse UPnP messages like requests and responses." alt="" coords="213,80,425,107"/>
+<area shape="rect" id="node3" href="$d9/dd2/gena_8hpp.html" title="Manage Eventing with GENA, the General Event Notification Architecture." alt="" coords="84,244,263,271"/>
+<area shape="rect" id="node5" href="$d2/d33/gena__device_8hpp.html" title="Handles subscriptions from a control point." alt="" coords="26,155,177,196"/>
+<area shape="rect" id="node6" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html" title="Performs HTTP read and write messages." alt="" coords="202,162,436,189"/>
+<area shape="rect" id="node7" href="$d3/d8b/miniserver_8hpp.html" title="Manage &quot;Step 0: Addressing&quot; of the UPnP+™ specification." alt="" coords="461,162,676,189"/>
+<area shape="rect" id="node9" href="$d9/d36/Compa_2src_2inc_2webserver_8hpp.html" title="Internal webserver." alt="" coords="700,162,914,189"/>
+<area shape="rect" id="node4" href="$d4/d99/upnpapi_8cpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="178,319,377,345"/>
+<area shape="rect" id="node8" href="$d1/d9b/ssdplib_8hpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification with SSDP. No details." alt="" coords="379,244,571,271"/>
+</map>

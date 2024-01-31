@@ -5,27 +5,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>UPnPlib: Sock</title>
+<title>UPnPlib: Network Socket Library</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript">var page_layout=1;</script>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
-<link href="../../navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../resize.js"></script>
-<script type="text/javascript" src="../../navtreedata.js"></script>
-<script type="text/javascript" src="../../navtree.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-  $(document).ready(function() { init_search(); });
-/* @license-end */
-</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
@@ -37,21 +26,6 @@
    <div id="projectbrief">&#39;Universal Plug and Play plus&#39; System Developement Kit</div>
   </td>
  </tr>
-   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
-          <img id="MSearchSelect" src="../../search/mag_sel.svg"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
-               alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
-          </span>
-        </div>
-</td></tr>
  </tbody>
 </table>
 </div>
@@ -62,22 +36,18 @@
 var searchBox = new SearchBox("searchBox", "../../search",'Search','.html');
 /* @license-end */
 </script>
-</div><!-- top -->
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
+<script type="text/javascript" src="../../menudata.js"></script>
+<script type="text/javascript" src="../../menu.js"></script>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('dc/de4/group__Sock.html','../../'); initResizable(); });
+$(function() {
+  initMenu('../../',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
 /* @license-end */
 </script>
-<div id="doc-content">
+<div id="main-nav"></div>
+</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -94,12 +64,23 @@ $(document).ready(function(){initNavTree('dc/de4/group__Sock.html','../../'); in
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#define-members">Macros</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
-  <div class="headertitle"><div class="title">Sock</div></div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">Network Socket Library</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Manage network sockets and connections.  
+<a href="#details">More...</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d4f/structSOCKINFO.html">SOCKINFO</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Additional socket information for connections and ssl.  <a href="../../d9/d4f/structSOCKINFO.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ga26769957ec1a2beaf223f33b66ee64ab"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de4/group__Sock.html#ga26769957ec1a2beaf223f33b66ee64ab">INVALID_SOCKET</a>&#160;&#160;&#160;(-1)</td></tr>
@@ -113,8 +94,33 @@ Macros</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:ga8dc8083897335125630f1af5dafd5831"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de4/group__Sock.html#ga8dc8083897335125630f1af5dafd5831">SOCKET</a></td></tr>
 <tr class="separator:ga8dc8083897335125630f1af5dafd5831"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga6618c55418b22f19614c4a44864a8350"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de4/group__Sock.html#ga6618c55418b22f19614c4a44864a8350">sock_init</a> (<a class="el" href="../../d9/d4f/structSOCKINFO.html">SOCKINFO</a> *info, <a class="el" href="../../dc/de4/group__Sock.html#ga8dc8083897335125630f1af5dafd5831">SOCKET</a> sockfd)</td></tr>
+<tr class="memdesc:ga6618c55418b22f19614c4a44864a8350"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign the passed in socket descriptor to socket descriptor in the <a class="el" href="../../d9/d4f/structSOCKINFO.html" title="Additional socket information for connections and ssl.">SOCKINFO</a> structure.  <a href="../../dc/de4/group__Sock.html#ga6618c55418b22f19614c4a44864a8350">More...</a><br /></td></tr>
+<tr class="separator:ga6618c55418b22f19614c4a44864a8350"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab449ecffa6efe86ca29b9dac0c6c817c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de4/group__Sock.html#gab449ecffa6efe86ca29b9dac0c6c817c">sock_init_with_ip</a> (<a class="el" href="../../d9/d4f/structSOCKINFO.html">SOCKINFO</a> *info, <a class="el" href="../../dc/de4/group__Sock.html#ga8dc8083897335125630f1af5dafd5831">SOCKET</a> sockfd, struct sockaddr *foreign_sockaddr)</td></tr>
+<tr class="memdesc:gab449ecffa6efe86ca29b9dac0c6c817c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the sock_init function and assigns the passed in IP address and port to the IP address and port in the <a class="el" href="../../d9/d4f/structSOCKINFO.html" title="Additional socket information for connections and ssl.">SOCKINFO</a> structure.  <a href="../../dc/de4/group__Sock.html#gab449ecffa6efe86ca29b9dac0c6c817c">More...</a><br /></td></tr>
+<tr class="separator:gab449ecffa6efe86ca29b9dac0c6c817c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga806d7d231975d7c356f9e322dbf324be"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de4/group__Sock.html#ga806d7d231975d7c356f9e322dbf324be">sock_destroy</a> (<a class="el" href="../../d9/d4f/structSOCKINFO.html">SOCKINFO</a> *info, int ShutdownMethod)</td></tr>
+<tr class="memdesc:ga806d7d231975d7c356f9e322dbf324be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Associates an SSL object with the socket and begins the client-side SSL/TLS handshake.  <a href="../../dc/de4/group__Sock.html#ga806d7d231975d7c356f9e322dbf324be">More...</a><br /></td></tr>
+<tr class="separator:ga806d7d231975d7c356f9e322dbf324be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga924c94e23a875e461f39e846d86ed3bf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de4/group__Sock.html#ga924c94e23a875e461f39e846d86ed3bf">sock_read</a> (<a class="el" href="../../d9/d4f/structSOCKINFO.html">SOCKINFO</a> *info, char *buffer, size_t bufsize, int *timeoutSecs)</td></tr>
+<tr class="memdesc:ga924c94e23a875e461f39e846d86ed3bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data on socket in sockinfo.  <a href="../../dc/de4/group__Sock.html#ga924c94e23a875e461f39e846d86ed3bf">More...</a><br /></td></tr>
+<tr class="separator:ga924c94e23a875e461f39e846d86ed3bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga25a965d6233079a1178ea3b8a23a4e65"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de4/group__Sock.html#ga25a965d6233079a1178ea3b8a23a4e65">sock_write</a> (<a class="el" href="../../d9/d4f/structSOCKINFO.html">SOCKINFO</a> *info, const char *buffer, size_t bufsize, int *timeoutSecs)</td></tr>
+<tr class="memdesc:ga25a965d6233079a1178ea3b8a23a4e65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes data on the socket in sockinfo.  <a href="../../dc/de4/group__Sock.html#ga25a965d6233079a1178ea3b8a23a4e65">More...</a><br /></td></tr>
+<tr class="separator:ga25a965d6233079a1178ea3b8a23a4e65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadd1cc9f72f4e4c2c8093b6bf8d5d5400"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de4/group__Sock.html#gadd1cc9f72f4e4c2c8093b6bf8d5d5400">sock_make_blocking</a> (<a class="el" href="../../dc/de4/group__Sock.html#ga8dc8083897335125630f1af5dafd5831">SOCKET</a> sock)</td></tr>
+<tr class="memdesc:gadd1cc9f72f4e4c2c8093b6bf8d5d5400"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make socket blocking.  <a href="../../dc/de4/group__Sock.html#gadd1cc9f72f4e4c2c8093b6bf8d5d5400">More...</a><br /></td></tr>
+<tr class="separator:gadd1cc9f72f4e4c2c8093b6bf8d5d5400"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1edda41b3be1ae335b466eecf22b04e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de4/group__Sock.html#ga1edda41b3be1ae335b466eecf22b04e1">sock_make_no_blocking</a> (<a class="el" href="../../dc/de4/group__Sock.html#ga8dc8083897335125630f1af5dafd5831">SOCKET</a> sock)</td></tr>
+<tr class="memdesc:ga1edda41b3be1ae335b466eecf22b04e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make socket non-blocking.  <a href="../../dc/de4/group__Sock.html#ga1edda41b3be1ae335b466eecf22b04e1">More...</a><br /></td></tr>
+<tr class="separator:ga1edda41b3be1ae335b466eecf22b04e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p >Manage network sockets and connections. </p>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="ga26769957ec1a2beaf223f33b66ee64ab" name="ga26769957ec1a2beaf223f33b66ee64ab"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga26769957ec1a2beaf223f33b66ee64ab">&#9670;&nbsp;</a></span>INVALID_SOCKET</h2>
@@ -177,13 +183,308 @@ Typedefs</h2></td></tr>
 
 </div>
 </div>
-</div><!-- contents -->
-</div><!-- doc-content -->
-<!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
-  </ul>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ga806d7d231975d7c356f9e322dbf324be" name="ga806d7d231975d7c356f9e322dbf324be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga806d7d231975d7c356f9e322dbf324be">&#9670;&nbsp;</a></span>sock_destroy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int sock_destroy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d9/d4f/structSOCKINFO.html">SOCKINFO</a> *&#160;</td>
+          <td class="paramname"><em>info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>ShutdownMethod</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Associates an SSL object with the socket and begins the client-side SSL/TLS handshake. </p>
+<dl class="section return"><dt>Returns</dt><dd>Integer: <ul>
+<li><code>UPNP_E_SUCCESS</code> </li>
+<li><code>UPNP_E_SOCKET_ERROR</code> </li>
+</ul>
+Shutsdown the socket using the ShutdownMethod to indicate whether sends and receives on the socket will be dis-allowed.</dd></dl>
+<p>After shutting down the socket, closesocket is called to release system resources used by the socket calls.</p>
+<dl class="section return"><dt>Returns</dt><dd>Integer: <ul>
+<li><code>UPNP_E_SOCKET_ERROR</code> on failure. </li>
+<li><code>UPNP_E_SUCCESS</code> on success. </li>
+</ul>
+</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">info</td><td>Socket Information Object.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ShutdownMethod</td><td>How to shutdown the socket. Used by sockets's shutdown(). </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
+</div>
+<a id="ga6618c55418b22f19614c4a44864a8350" name="ga6618c55418b22f19614c4a44864a8350"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6618c55418b22f19614c4a44864a8350">&#9670;&nbsp;</a></span>sock_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int sock_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d9/d4f/structSOCKINFO.html">SOCKINFO</a> *&#160;</td>
+          <td class="paramname"><em>info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../dc/de4/group__Sock.html#ga8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramname"><em>sockfd</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Assign the passed in socket descriptor to socket descriptor in the <a class="el" href="../../d9/d4f/structSOCKINFO.html" title="Additional socket information for connections and ssl.">SOCKINFO</a> structure. </p>
+<dl class="section return"><dt>Returns</dt><dd>Integer: <ul>
+<li><code>UPNP_E_SUCCESS</code> </li>
+<li><code>UPNP_E_OUTOF_MEMORY</code> </li>
+<li><code>UPNP_E_SOCKET_ERROR</code> </li>
+</ul>
+</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">info</td><td>Socket Information Object.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sockfd</td><td>Socket Descriptor. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gab449ecffa6efe86ca29b9dac0c6c817c" name="gab449ecffa6efe86ca29b9dac0c6c817c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab449ecffa6efe86ca29b9dac0c6c817c">&#9670;&nbsp;</a></span>sock_init_with_ip()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int sock_init_with_ip </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d9/d4f/structSOCKINFO.html">SOCKINFO</a> *&#160;</td>
+          <td class="paramname"><em>info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../dc/de4/group__Sock.html#ga8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramname"><em>sockfd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct sockaddr *&#160;</td>
+          <td class="paramname"><em>foreign_sockaddr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calls the sock_init function and assigns the passed in IP address and port to the IP address and port in the <a class="el" href="../../d9/d4f/structSOCKINFO.html" title="Additional socket information for connections and ssl.">SOCKINFO</a> structure. </p>
+<dl class="section return"><dt>Returns</dt><dd>Integer: <ul>
+<li><code>UPNP_E_SUCCESS</code> </li>
+<li><code>UPNP_E_OUTOF_MEMORY</code> </li>
+<li><code>UPNP_E_SOCKET_ERROR</code> </li>
+</ul>
+</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">info</td><td>Socket Information Object.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sockfd</td><td>Socket Descriptor.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">foreign_sockaddr</td><td>Remote socket address. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gadd1cc9f72f4e4c2c8093b6bf8d5d5400" name="gadd1cc9f72f4e4c2c8093b6bf8d5d5400"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadd1cc9f72f4e4c2c8093b6bf8d5d5400">&#9670;&nbsp;</a></span>sock_make_blocking()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int sock_make_blocking </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../dc/de4/group__Sock.html#ga8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramname"><em>sock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Make socket blocking. </p>
+<dl class="section return"><dt>Returns</dt><dd>0 if successful, -1 otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="ga1edda41b3be1ae335b466eecf22b04e1" name="ga1edda41b3be1ae335b466eecf22b04e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1edda41b3be1ae335b466eecf22b04e1">&#9670;&nbsp;</a></span>sock_make_no_blocking()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int sock_make_no_blocking </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../dc/de4/group__Sock.html#ga8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramname"><em>sock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Make socket non-blocking. </p>
+<dl class="section return"><dt>Returns</dt><dd>0 if successful, -1 otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="ga924c94e23a875e461f39e846d86ed3bf" name="ga924c94e23a875e461f39e846d86ed3bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga924c94e23a875e461f39e846d86ed3bf">&#9670;&nbsp;</a></span>sock_read()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int sock_read </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d9/d4f/structSOCKINFO.html">SOCKINFO</a> *&#160;</td>
+          <td class="paramname"><em>info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>bufsize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>timeoutSecs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reads data on socket in sockinfo. </p>
+<dl class="section return"><dt>Returns</dt><dd>Integer: <ul>
+<li><code>numBytes</code> - On Success, no of bytes received. </li>
+<li><code>UPNP_E_TIMEDOUT</code> - Timeout. </li>
+<li><code>UPNP_E_SOCKET_ERROR</code> - Error on socket calls. </li>
+</ul>
+</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">info</td><td>Socket Information Object.</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>Buffer to get data to.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">bufsize</td><td>Size of the buffer.</td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">timeoutSecs</td><td>timeout value. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga25a965d6233079a1178ea3b8a23a4e65" name="ga25a965d6233079a1178ea3b8a23a4e65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga25a965d6233079a1178ea3b8a23a4e65">&#9670;&nbsp;</a></span>sock_write()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int sock_write </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d9/d4f/structSOCKINFO.html">SOCKINFO</a> *&#160;</td>
+          <td class="paramname"><em>info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>bufsize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>timeoutSecs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Writes data on the socket in sockinfo. </p>
+<dl class="section return"><dt>Returns</dt><dd>Integer: <ul>
+<li><code>numBytes</code> - On Success, no of bytes sent. </li>
+<li><code>UPNP_E_TIMEDOUT</code> - Timeout. </li>
+<li><code>UPNP_E_SOCKET_ERROR</code> - Error on socket calls. </li>
+</ul>
+</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">info</td><td>Socket Information Object.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>Buffer to send data from.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">bufsize</td><td>Size of the buffer.</td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">timeoutSecs</td><td>timeout value. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
+</small></address>
 </body>
 </html>

@@ -1,0 +1,4 @@
+<map id="http_Connect" name="http_Connect">
+<area shape="rect" id="node1" title="Gets destination address from URL and then connects to the remote end." alt="" coords="228,13,336,39"/>
+<area shape="rect" id="node2" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#a812cab3f428985d9b19658aecd58880a" title="gtest available" alt="" coords="5,5,180,47"/>
+</map>

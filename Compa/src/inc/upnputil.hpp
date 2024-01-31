@@ -1,13 +1,12 @@
-#ifndef UPNPLIB_UTIL_HPP
-#define UPNPLIB_UTIL_HPP
-
-/*******************************************************************************
+#ifndef COMPA_UPNP_UTIL_HPP
+#define COMPA_UPNP_UTIL_HPP
+/* *****************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-09-05
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,18 +32,21 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- ******************************************************************************/
-
+ * ****************************************************************************/
 /*!
  * \file
+ * \brief Some utility functions.
  */
 
-#include "upnp.hpp"
+#include <upnp.hpp>
 #include <errno.h>
 #include <string.h>
 
+/// \brief GEMD out of memory
 #define GEMD_OUT_OF_MEMORY -1
+/// \brief Event timeout
 #define EVENT_TIMEDOUT -2
+/// \brief Event terminate
 #define EVENT_TERMINATE -3
 
 /*!
@@ -83,7 +85,7 @@ void linecopylen(
     /*! [in] bytes to be copied. */
     size_t srclen);
 
-/* Size of the errorBuffer variable, passed to the strerror_r() function */
+/// \brief Size of the errorBuffer variable, passed to the strerror_r() function
 #define ERROR_BUFFER_LEN (size_t)256
 
 /* C specific */
@@ -102,10 +104,7 @@ void linecopylen(
 #define sleep(a) Sleep((a) * 1000)
 #define usleep(a) Sleep((a) / 1000)
 #define strerror_r(a, b, c) (strerror_s((b), (c), (a)))
-#else
-#define max(a, b) (((a) > (b)) ? (a) : (b))
-#define min(a, b) (((a) < (b)) ? (a) : (b))
 #endif /* _WIN32 */
 #endif /* !defined(__cplusplus) || defined(UPNP_USE_MSVCPP) */
 
-#endif /* UPNPLIB_UTIL_HPP */
+#endif /* COMPA_UPNP_UTIL_HPP */
