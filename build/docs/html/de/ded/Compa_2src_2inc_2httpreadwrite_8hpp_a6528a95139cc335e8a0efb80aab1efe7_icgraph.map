@@ -1,4 +1,8 @@
 <map id="http_SendStatusResponse" name="http_SendStatusResponse">
-<area shape="rect" id="node1" title="Generate a response message for the status query and send the status response." alt="" coords="280,13,471,39"/>
-<area shape="rect" id="node2" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#a9e840ed3ebc83e2485ffd3a8da400c6e" title="Send http status of a response." alt="" coords="5,5,232,47"/>
+<area shape="rect" id="node1" title="Generate a response message for the status query and send the status response." alt="" coords="525,107,716,134"/>
+<area shape="rect" id="node2" href="$dc/d02/gena__callback2_8cpp.html#abb1570eae1e832145e2ae85cf1b5ad75" title="Sends an error message to the control point in the case of incorrect GENA requests." alt="" coords="308,78,420,105"/>
+<area shape="rect" id="node6" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#a9e840ed3ebc83e2485ffd3a8da400c6e" title="Send http status of a response." alt="" coords="251,129,477,171"/>
+<area shape="rect" id="node3" href="$d6/de3/gena__ctrlpt_8cpp.html#a2eb03f67113de1b037f592d6e49cdf3c" title="This function processes NOTIFY events that are sent by devices." alt="" coords="9,5,199,47"/>
+<area shape="rect" id="node4" href="$dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="5,71,203,112"/>
+<area shape="rect" id="node5" href="$dd/de6/gena__device_8cpp.html#a4b03afbfa4cbf8c318857a43bbf92d8e" title="Handles a subscription cancellation request from a ctrl point. The connection is not destroyed on ret..." alt="" coords="6,136,202,177"/>
 </map>

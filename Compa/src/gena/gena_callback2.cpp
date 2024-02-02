@@ -2,8 +2,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-01-28
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,7 +35,6 @@
  * \brief Callback function to handle incoming GENA requests.
  */
 
-#include <config.hpp>
 #if EXCLUDE_GENA == 0
 #include <gena.hpp>
 #include <gena_ctrlpt.hpp>
@@ -46,21 +45,7 @@
 #include <statcodes.hpp>
 #include <unixutil.hpp>
 
-/************************************************************************
- * Function : error_respond
- *
- * Parameters:
- *  IN SOCKINFO *info: Structure containing information about the socket
- *  IN int error_code: error code that will be in the GENA response
- *  IN http_message_t* hmsg: GENA request Packet
- *
- * Description:
- *  This function send an error message to the control point in the case
- *  incorrect GENA requests.
- *
- * Returns: int
- *  UPNP_E_SUCCESS if successful else appropriate error
- ***************************************************************************/
+
 void error_respond(SOCKINFO* info, int error_code, http_message_t* hmsg) {
     int major, minor;
 
@@ -71,25 +56,7 @@ void error_respond(SOCKINFO* info, int error_code, http_message_t* hmsg) {
     http_SendStatusResponse(info, error_code, major, minor);
 }
 
-/************************************************************************
- * Function : genaCallback
- *
- * Parameters:
- *  IN http_parser_t *parser: represents the parse state of the request
- *  IN http_message_t* request: HTTP message containing GENA request
- *  INOUT SOCKINFO *info: Structure containing information about the socket
- *
- * Description:
- *  This is the callback function called by the miniserver to handle
- *  incoming GENA requests.
- *
- * Returns: int
- *  UPNP_E_SUCCESS if successful else appropriate error
- ***************************************************************************/
-/*!
- * \brief Callback function called by the miniserver to handle incoming GENA
- * requests.
- */
+
 void genaCallback(http_parser_t* parser, http_message_t* request,
                   SOCKINFO* info) {
     int found_function = 0;

@@ -1,5 +1,7 @@
 <map id="Compa/src/inc/sysdep.hpp" name="Compa/src/inc/sysdep.hpp">
-<area shape="rect" id="node1" title="Get some system dependend information. No details." alt="" coords="9,5,201,32"/>
-<area shape="rect" id="node2" href="$d7/db4/uuid_8hpp.html" title="Manage UUIDs." alt="" coords="17,80,192,107"/>
-<area shape="rect" id="node3" href="$d4/d99/upnpapi_8cpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="5,155,204,181"/>
+<area shape="rect" id="node1" title="Get some system dependend information. No details." alt="" coords="214,5,406,32"/>
+<area shape="rect" id="node2" href="$d7/db4/uuid_8hpp.html" title="Manage UUIDs." alt="" coords="223,80,397,107"/>
+<area shape="rect" id="node3" href="$d4/d99/upnpapi_8cpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="5,162,204,189"/>
+<area shape="rect" id="node4" href="$d6/de3/gena__ctrlpt_8cpp.html" title="Manage GENA control point." alt="" coords="229,155,391,196"/>
+<area shape="rect" id="node5" href="$dd/de6/gena__device_8cpp.html" title="Manage GENA Devices." alt="" coords="415,155,578,196"/>
 </map>

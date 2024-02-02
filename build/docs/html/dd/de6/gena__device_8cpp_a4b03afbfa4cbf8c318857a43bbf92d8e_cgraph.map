@@ -1,0 +1,10 @@
+<map id="gena_process_unsubscribe_request" name="gena_process_unsubscribe_request">
+<area shape="rect" id="node1" title="Handles a subscription cancellation request from a ctrl point. The connection is not destroyed on ret..." alt="" coords="5,125,201,166"/>
+<area shape="rect" id="node2" href="$dc/d02/gena__callback2_8cpp.html#abb1570eae1e832145e2ae85cf1b5ad75" title="Sends an error message to the control point in the case of incorrect GENA requests." alt="" coords="298,31,410,57"/>
+<area shape="rect" id="node5" href="$db/d55/group__UPnPAPI.html#ga67f191fc3d9877d0efef0af385d07ac9" title="Retrieves the device handle and information of the first device of the address family specified,..." alt="" coords="249,81,459,108"/>
+<area shape="rect" id="node6" href="$db/da7/httpparser_8hpp.html#a6136244ecac6f1942c0b48fd75e59840" title="Finds header from a list, with the given &#39;name_id&#39;." alt="" coords="287,132,421,159"/>
+<area shape="rect" id="node7" href="$d1/d10/membuffer_8hpp.html#a63e6eaa20b3a9f5ac020e23f1966d20d" title="Invokes function to appends data from a constant buffer to the buffer." alt="" coords="279,183,429,209"/>
+<area shape="rect" id="node8" href="$d1/d10/membuffer_8hpp.html#a6943a2d171fcdaa9f0d730fcb6d7c2d4" title="Wrapper to membuffer_initialize()." alt="" coords="293,233,415,260"/>
+<area shape="rect" id="node3" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a5d87c4e85f958f11c3009471743d4a4e" title="Calculate HTTP response versions based on the request versions." alt="" coords="507,5,701,32"/>
+<area shape="rect" id="node4" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a6528a95139cc335e8a0efb80aab1efe7" title="Generate a response message for the status query and send the status response." alt="" coords="509,56,699,83"/>
+</map>

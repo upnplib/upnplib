@@ -1,0 +1,4 @@
+<map id="genaInitNotify" name="genaInitNotify">
+<area shape="rect" id="node1" title="Sends the intial state table dump to newly subscribed control point." alt="" coords="5,5,120,32"/>
+<area shape="rect" id="node2" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement either on the standard output or log file along with the information from ..." alt="" coords="168,5,259,32"/>
+</map>

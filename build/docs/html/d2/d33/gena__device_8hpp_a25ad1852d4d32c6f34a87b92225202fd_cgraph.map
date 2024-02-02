@@ -1,0 +1,6 @@
+<map id="gena_process_subscription_request" name="gena_process_subscription_request">
+<area shape="rect" id="node1" title="Handles a subscription request from a ctrl point. The socket is not closed on return." alt="" coords="5,23,203,65"/>
+<area shape="rect" id="node2" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement either on the standard output or log file along with the information from ..." alt="" coords="317,5,407,32"/>
+<area shape="rect" id="node3" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#a768c19623f66c87fc68088df2e4c184c" title=" " alt="" coords="251,56,473,83"/>
+<area shape="rect" id="node4" href="$d1/d03/group__UpnpString.html#gab66dcdfe778dd5e2e8d16e1131ef9ac1" title="Constructor." alt="" coords="521,56,649,83"/>
+</map>

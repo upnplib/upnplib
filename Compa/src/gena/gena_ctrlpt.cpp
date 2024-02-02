@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-06-22
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,40 +32,40 @@
  *
  ******************************************************************************/
 // Last compare with pupnp original source file on 2023-06-22, ver 1.14.16
-
-#include "config.hpp"
-
 /*!
  * \file
+ * \brief Manage GENA control point
  */
 
-#if EXCLUDE_GENA == 0
-#ifdef INCLUDE_CLIENT_APIS
+#include <config.hpp>
 
-#include "UpnpEventSubscribe.hpp"
-#include "gena.hpp"
-#include "httpparser.hpp"
-#include "httpreadwrite.hpp"
-#include "parsetools.hpp"
-#include "statcodes.hpp"
-#include "sysdep.hpp"
-#include "upnpapi.hpp"
-#include "uuid.hpp"
+#if (EXCLUDE_GENA == 0) || defined(DOXYGEN_RUN)
+#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
 
-#include "posix_overwrites.hpp"
+#include <gena.hpp>
+#include <httpreadwrite.hpp>
+#include <parsetools.hpp>
+#include <statcodes.hpp>
+#include <upnpapi.hpp>
+#include <uuid.hpp>
 
+#include <posix_overwrites.hpp>
+
+/// \brief Provide global Client subscribe mutex.
 extern ithread_mutex_t GlobalClientSubscribeMutex;
 
-typedef struct {
+struct job_arg {
     int handle;
     int eventId;
     void* Event;
-} job_arg;
+};
+
+namespace {
 
 /*!
  * \brief Free memory associated with job's argument
  */
-static void free_subscribe_arg(job_arg* arg) {
+void free_subscribe_arg(job_arg* arg) {
     if (arg) {
         if (arg->Event) {
             UpnpEventSubscribe_delete((UpnpEventSubscribe*)arg->Event);
@@ -78,7 +78,7 @@ static void free_subscribe_arg(job_arg* arg) {
  * \brief This is a thread function to send the renewal just before the
  * subscription times out.
  */
-static void GenaAutoRenewSubscription(
+void GenaAutoRenewSubscription(
     /*! [in] Thread data(job_arg *) needed to send the renewal. */
     void* input) {
     job_arg* arg = (job_arg*)input;
@@ -138,7 +138,7 @@ end_function:
  * \return GENA_E_SUCCESS if successful, otherwise returns the appropriate
  *  error code.
  */
-static int ScheduleGenaAutoRenew(
+int ScheduleGenaAutoRenew(
     /*! [in] Handle that also contains the subscription list. */
     int client_handle,
     /*! [in] The time out value of the subscription. */
@@ -210,7 +210,7 @@ end_function:
  *
  * \returns 0 if successful, otherwise returns the appropriate error code.
  */
-static int gena_unsubscribe(
+int gena_unsubscribe(
     /*! [in] Event URL of the service. */
     const UpnpString* url,
     /*! [in] The subcription ID. */
@@ -267,7 +267,7 @@ static int gena_unsubscribe(
  *
  * \return 0 if successful, otherwise returns the appropriate error code.
  */
-static int gena_subscribe(
+int gena_subscribe(
     /*! [in] URL of service to subscribe. */
     const UpnpString* url,
     /*! [in,out] Subscription time desired (in secs). */
@@ -415,6 +415,8 @@ static int gena_subscribe(
 
     return UPNP_E_SUCCESS;
 }
+
+} // namespace
 
 int genaUnregisterClient(UpnpClient_Handle client_handle) {
     GenlibClientSubscription* sub_copy = GenlibClientSubscription_new();

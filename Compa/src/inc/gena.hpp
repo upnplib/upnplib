@@ -38,16 +38,12 @@
  * Architecture.
  */
 
-#include <config.hpp>
-
-#include <string.h>
 #include <time.h>
 
 #include <client_table.hpp>
 #include <httpparser.hpp>
 #include <sock.hpp>
 #include <ThreadPool.hpp>
-#include <upnp.hpp>
 
 /*! \brief XML version comment. Not used because it is not interoperable with
  * other UPnP vendors. */
@@ -129,10 +125,10 @@ typedef struct NOTIFY_THREAD_STRUCT {
  * \brief This is the callback function called by the miniserver to handle
  *  incoming GENA requests.
  *
- * \ return UPNP_E_SUCCESS if successful, otherwise appropriate error code.
+ * \ returns UPNP_E_SUCCESS if successful, otherwise appropriate error code.
  */
 UPNPLIB_API void genaCallback(
-    /*! [in] represents the parse state of the request */
+    /*! [in] Represents the parse state of the request */
     http_parser_t* parser,
     /*! [in] HTTP message containing GENA request */
     http_message_t* request,

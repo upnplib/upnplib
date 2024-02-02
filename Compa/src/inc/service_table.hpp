@@ -87,7 +87,7 @@ struct service_info {
 #if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
 
 /// \brief ???
-extern void freeSubscriptionQueuedEvents(subscription* sub);
+void freeSubscriptionQueuedEvents(subscription* sub);
 
 /// \brief table of services
 struct service_table {

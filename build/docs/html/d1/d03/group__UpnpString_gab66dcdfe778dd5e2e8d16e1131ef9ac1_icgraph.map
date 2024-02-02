@@ -1,23 +1,26 @@
 <map id="UpnpString_new" name="UpnpString_new">
-<area shape="rect" id="node1" title="Constructor." alt="" coords="544,233,672,260"/>
-<area shape="rect" id="node2" href="$d4/d18/UpnpActionComplete_8cpp.html#a9e9714ea7b7ed7f583a7ec8725212809" title=" " alt="" coords="287,5,482,32"/>
-<area shape="rect" id="node4" href="$d4/d6b/UpnpActionRequest_8cpp.html#ad6a29ab27d4fbec4fac2c0de5703bf5b" title=" " alt="" coords="293,56,477,83"/>
-<area shape="rect" id="node6" href="$d8/db8/UpnpDiscovery_8cpp.html#ac9d98236e3bb52b39af7552866d7b5a8" title=" " alt="" coords="307,107,462,133"/>
-<area shape="rect" id="node8" href="$d6/daa/UpnpEvent_8cpp.html#a5669fee4cff109237315ba1aacff0e2f" title=" " alt="" coords="321,157,448,184"/>
-<area shape="rect" id="node10" href="$de/df3/UpnpEventSubscribe_8cpp.html#a9e2ab3e597bdd699336c1801c3176db8" title=" " alt="" coords="289,208,480,235"/>
-<area shape="rect" id="node12" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#a4654fcbbd9b882100e25453af2950456" title=" " alt="" coords="295,259,474,285"/>
-<area shape="rect" id="node14" href="$dd/da6/UpnpFileInfo_8cpp.html#a8d6b6ce6c9ba97da2e6dd90786119a92" title=" " alt="" coords="315,309,454,336"/>
-<area shape="rect" id="node16" href="$d2/dc8/UpnpStateVarComplete_8cpp.html#a03f08e0e024df656b5b6d9fe1226d1d2" title=" " alt="" coords="281,360,489,387"/>
-<area shape="rect" id="node18" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a79f7e511ccc494ecd1ed991021e2101a" title=" " alt="" coords="285,411,484,437"/>
-<area shape="rect" id="node20" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#a768c19623f66c87fc68088df2e4c184c" title=" " alt="" coords="273,461,496,488"/>
-<area shape="rect" id="node3" href="$d4/d18/UpnpActionComplete_8cpp.html#a51458f01a8b46450281e0c5adb6e2e70" title=" " alt="" coords="20,5,211,32"/>
-<area shape="rect" id="node5" href="$d4/d6b/UpnpActionRequest_8cpp.html#acff1dc3ee6d4b9089b62621f473bb0fc" title=" " alt="" coords="25,56,206,83"/>
-<area shape="rect" id="node7" href="$d8/db8/UpnpDiscovery_8cpp.html#a6f39eceff3b9c00e1294111c73352b55" title=" " alt="" coords="39,107,191,133"/>
-<area shape="rect" id="node9" href="$d6/daa/UpnpEvent_8cpp.html#adf7a3b839a2cd23a363e34f9092c5d46" title=" " alt="" coords="53,157,177,184"/>
-<area shape="rect" id="node11" href="$de/df3/UpnpEventSubscribe_8cpp.html#a7807d8227c7ebbe7df59606877dc83cc" title=" " alt="" coords="22,208,209,235"/>
-<area shape="rect" id="node13" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#adc75f9d14c6b550f8fd1ab55e61132e9" title=" " alt="" coords="28,259,203,285"/>
-<area shape="rect" id="node15" href="$dd/da6/UpnpFileInfo_8cpp.html#a0b4a987bcc4ad2e19fe5ce934a01098f" title=" " alt="" coords="48,309,183,336"/>
-<area shape="rect" id="node17" href="$d2/dc8/UpnpStateVarComplete_8cpp.html#a82c0526f1f61dd64308c0fafd39a8203" title=" " alt="" coords="13,360,218,387"/>
-<area shape="rect" id="node19" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a3866a42a64ca574f4735248481d0c88b" title=" " alt="" coords="18,411,213,437"/>
-<area shape="rect" id="node21" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#a577e00a26a879876811fd2d8e6b0e87f" title=" " alt="" coords="5,461,225,488"/>
+<area shape="rect" id="node1" title="Constructor." alt="" coords="544,275,672,301"/>
+<area shape="rect" id="node2" href="$d6/de3/gena__ctrlpt_8cpp.html#ac18ff86dd814e974314f13e3f4b12316" title="Renews a SID." alt="" coords="295,21,474,48"/>
+<area shape="rect" id="node3" href="$d4/d18/UpnpActionComplete_8cpp.html#a9e9714ea7b7ed7f583a7ec8725212809" title=" " alt="" coords="287,72,482,99"/>
+<area shape="rect" id="node5" href="$d4/d6b/UpnpActionRequest_8cpp.html#ad6a29ab27d4fbec4fac2c0de5703bf5b" title=" " alt="" coords="293,123,477,149"/>
+<area shape="rect" id="node7" href="$d8/db8/UpnpDiscovery_8cpp.html#ac9d98236e3bb52b39af7552866d7b5a8" title=" " alt="" coords="307,173,462,200"/>
+<area shape="rect" id="node9" href="$d6/daa/UpnpEvent_8cpp.html#a5669fee4cff109237315ba1aacff0e2f" title=" " alt="" coords="321,224,448,251"/>
+<area shape="rect" id="node12" href="$de/df3/UpnpEventSubscribe_8cpp.html#a9e2ab3e597bdd699336c1801c3176db8" title=" " alt="" coords="289,275,480,301"/>
+<area shape="rect" id="node14" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#a4654fcbbd9b882100e25453af2950456" title=" " alt="" coords="295,325,474,352"/>
+<area shape="rect" id="node16" href="$dd/da6/UpnpFileInfo_8cpp.html#a8d6b6ce6c9ba97da2e6dd90786119a92" title=" " alt="" coords="315,376,454,403"/>
+<area shape="rect" id="node18" href="$d2/dc8/UpnpStateVarComplete_8cpp.html#a03f08e0e024df656b5b6d9fe1226d1d2" title=" " alt="" coords="281,427,489,453"/>
+<area shape="rect" id="node20" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a79f7e511ccc494ecd1ed991021e2101a" title=" " alt="" coords="285,477,484,504"/>
+<area shape="rect" id="node22" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#a768c19623f66c87fc68088df2e4c184c" title=" " alt="" coords="273,536,496,563"/>
+<area shape="rect" id="node4" href="$d4/d18/UpnpActionComplete_8cpp.html#a51458f01a8b46450281e0c5adb6e2e70" title=" " alt="" coords="20,5,211,32"/>
+<area shape="rect" id="node6" href="$d4/d6b/UpnpActionRequest_8cpp.html#acff1dc3ee6d4b9089b62621f473bb0fc" title=" " alt="" coords="25,56,206,83"/>
+<area shape="rect" id="node8" href="$d8/db8/UpnpDiscovery_8cpp.html#a6f39eceff3b9c00e1294111c73352b55" title=" " alt="" coords="39,107,191,133"/>
+<area shape="rect" id="node10" href="$d6/de3/gena__ctrlpt_8cpp.html#a2eb03f67113de1b037f592d6e49cdf3c" title="This function processes NOTIFY events that are sent by devices." alt="" coords="20,158,211,199"/>
+<area shape="rect" id="node11" href="$d6/daa/UpnpEvent_8cpp.html#adf7a3b839a2cd23a363e34f9092c5d46" title=" " alt="" coords="53,224,177,251"/>
+<area shape="rect" id="node13" href="$de/df3/UpnpEventSubscribe_8cpp.html#a7807d8227c7ebbe7df59606877dc83cc" title=" " alt="" coords="22,275,209,301"/>
+<area shape="rect" id="node15" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#adc75f9d14c6b550f8fd1ab55e61132e9" title=" " alt="" coords="28,325,203,352"/>
+<area shape="rect" id="node17" href="$dd/da6/UpnpFileInfo_8cpp.html#a0b4a987bcc4ad2e19fe5ce934a01098f" title=" " alt="" coords="48,376,183,403"/>
+<area shape="rect" id="node19" href="$d2/dc8/UpnpStateVarComplete_8cpp.html#a82c0526f1f61dd64308c0fafd39a8203" title=" " alt="" coords="13,427,218,453"/>
+<area shape="rect" id="node21" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a3866a42a64ca574f4735248481d0c88b" title=" " alt="" coords="18,477,213,504"/>
+<area shape="rect" id="node23" href="$dd/de6/gena__device_8cpp.html#a25ad1852d4d32c6f34a87b92225202fd" title="Handles a subscription request from a ctrl point. The socket is not closed on return." alt="" coords="17,529,214,570"/>
+<area shape="rect" id="node24" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#a577e00a26a879876811fd2d8e6b0e87f" title=" " alt="" coords="5,595,225,621"/>
 </map>

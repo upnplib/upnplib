@@ -1,0 +1,5 @@
+<map id="error_respond" name="error_respond">
+<area shape="rect" id="node1" title="Sends an error message to the control point in the case of incorrect GENA requests." alt="" coords="5,31,117,57"/>
+<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a5d87c4e85f958f11c3009471743d4a4e" title="Calculate HTTP response versions based on the request versions." alt="" coords="165,5,360,32"/>
+<area shape="rect" id="node3" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a6528a95139cc335e8a0efb80aab1efe7" title="Generate a response message for the status query and send the status response." alt="" coords="167,56,358,83"/>
+</map>
