@@ -1,27 +1,30 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-20
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-02-03
 // Also Copyright by other contributor.
-
 /*!
  * \file
- *
  * \brief Source file for GenlibClientSubscription methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
-#include "config.hpp"
 
-#include "GenlibClientSubscription.hpp"
-#include "UpnpString.hpp"
+#include <config.hpp>
+#include <GenlibClientSubscription.hpp>
 
-#include <stdlib.h> /* for calloc(), free() */
-#include <string.h> /* for strlen(), strdup() */
+/// \cond
+#include <cstdlib> // for malloc() and friends
+/// \endcond
 
+
+/// \brief Genlib Client subscription.
 struct s_GenlibClientSubscription {
+    /// @{
+    /// \brief member variable
     int m_RenewEventId;
     UpnpString* m_SID;
     UpnpString* m_ActualSID;
     UpnpString* m_EventURL;
     GenlibClientSubscription* m_Next;
+    /// @}
 };
 
 GenlibClientSubscription* GenlibClientSubscription_new() {

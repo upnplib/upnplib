@@ -1,5 +1,0 @@
-<map id="map_str_to_int" name="map_str_to_int">
-<area shape="rect" id="node1" title="Match the given name with names from the entries in the table." alt="" coords="5,31,124,57"/>
-<area shape="rect" id="node2" href="$d1/d10/membuffer_8hpp.html#a0ebdc3494e3cb774b96ee021f7ae6c3b" title="Compares characters of strings passed for number of bytes. If equal for the number of bytes,..." alt="" coords="199,5,308,32"/>
-<area shape="rect" id="node3" href="$d1/d10/membuffer_8hpp.html#acc25b821b69d506631865b53f8307b3a" title="Compares characters of 2 strings irrespective of the case for a specific count of bytes." alt="" coords="172,56,335,83"/>
-</map>

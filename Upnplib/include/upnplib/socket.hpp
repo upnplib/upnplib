@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+// Redistribution only with this Copyright remark. Last modified: 2024-02-03
 /*!
  * \file
  * \brief Declaration of the 'class Socket'.
@@ -73,8 +73,8 @@
 
 
 #include <upnplib/addrinfo.hpp>
-#include <mutex>
 /// \cond
+#include <mutex>
 
 // To be portable with BSD socket error number constants I have to
 // define and use these macros with appended 'P' for portable.

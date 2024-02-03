@@ -1,4 +1,0 @@
-<map id="UpnpGetIfInfo" name="UpnpGetIfInfo">
-<area shape="rect" id="node1" title="Retrieve interface information and keep it in global variables. If NULL, we&#39;ll find the first suitabl..." alt="" coords="5,5,119,32"/>
-<area shape="rect" id="node2" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement either on the standard output or log file along with the information from ..." alt="" coords="167,5,257,32"/>
-</map>

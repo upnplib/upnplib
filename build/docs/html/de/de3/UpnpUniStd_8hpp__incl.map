@@ -1,4 +1,0 @@
-<map id="Compa/inc/UpnpUniStd.hpp" name="Compa/inc/UpnpUniStd.hpp">
-<area shape="rect" id="node1" title="Do not #include &lt;unistd.h&gt; on WIN32." alt="" coords="5,5,205,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="68,80,143,107"/>
-</map>

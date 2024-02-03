@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-21
+// Redistribution only with this Copyright remark. Last modified: 2024-02-04
 // Also Copyright by other contributor who haven't made a note.
 // Last compare with pupnp original source file on 2023-04-26, ver 1.14.15
 /*!
@@ -31,9 +31,6 @@
 #include <umock/stdlib.hpp>
 #include <umock/stringh.hpp>
 
-// #include <stdlib.h> /* for calloc(), free() */
-#include <string.h> /* for strlen(), strdup() */
-
 #include <posix_overwrites.hpp>
 
 #ifndef UPNP_USE_MSVCPP
@@ -42,8 +39,8 @@ static size_t strnlen(const char* s, size_t n) { return strnlen_s(s, n); }
 #else
 /* VC has strnlen which is already included but with
  * (potentially) different linkage */
-/* strnlen() is a GNU extension. */
-#if !HAVE_STRNLEN
+#if !HAVE_STRNLEN || defined(DOXYGEN_RUN)
+/*! \brief %strnlen() is a GNU extension and here provided for portability. */
 static size_t strnlen(const char* s, size_t n) {
     const char* p = (const char*)memchr(s, 0, n);
     return p ? p - s : n;

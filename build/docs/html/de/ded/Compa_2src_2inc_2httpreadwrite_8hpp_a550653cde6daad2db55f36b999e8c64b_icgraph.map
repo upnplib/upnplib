@@ -1,6 +1,0 @@
-<map id="http_EndHttpRequest" name="http_EndHttpRequest">
-<area shape="rect" id="node1" title="Indicates the end of a HTTP request previously made by UpnpMakeHttpRequest()." alt="" coords="248,71,408,98"/>
-<area shape="rect" id="node2" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#a0f3da0befbb3e165a4650e21ed64ef0e" title="Finish an http request." alt="" coords="5,5,200,47"/>
-<area shape="rect" id="node3" href="$db/d55/group__UPnPAPI.html#ga32b6a961a76abcb37fcd7f6e3de10ee7" title="Sends and receives any pending data, closes the connection with the server, and frees memory allocate..." alt="" coords="29,71,177,98"/>
-<area shape="rect" id="node4" href="$db/d55/group__UPnPAPI.html#gabf7220a78d77e61b8d3bcc3165cfa71b" title="Indicates the end of a HTTP request previously made by UpnpMakeHttpRequest." alt="" coords="22,122,183,149"/>
-</map>

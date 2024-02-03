@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-01-28
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-04
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -61,13 +61,14 @@ static ithread_mutex_t GlobalDebugMutex;
 /*! Global log level */
 static Upnp_LogLevel g_log_level = UPNP_DEFAULT_LOG_LEVEL;
 
-/* Output file descriptor */
+/*! Output file descriptor */
 static FILE* filed;
 
-/* Set if the user called setlogfilename() or setloglevel() */
+/*! Set if the user called setlogfilename() or setloglevel() */
 static int setlogwascalled;
+/*! The UPnP Debug module is initialized */
 static int initwascalled;
-/* Name of the output file. We keep a copy */
+/*! Name of the output file. We keep a copy */
 static char* fileName;
 
 /* This is called from UpnpInit2(). So the user must call UpnpSetLogFileNames()
@@ -149,6 +150,7 @@ void UpnpSetLogFileNames(const char* newFileName,
     setlogwascalled = 1;
 }
 
+/// \brief Check Debug level.
 static int DebugAtThisLevel(Upnp_LogLevel DLevel, Dbg_Module Module) {
     return (DLevel <= g_log_level) &&
            (DEBUG_ALL || (Module == SSDP && DEBUG_SSDP) ||
@@ -158,6 +160,7 @@ static int DebugAtThisLevel(Upnp_LogLevel DLevel, Dbg_Module Module) {
             (Module == HTTP && DEBUG_HTTP));
 }
 
+/// \brief Display File and Line.
 static void UpnpDisplayFileAndLine(FILE* a_fp, const char* DbgFileName,
                                    int DbgLineNo, Upnp_LogLevel DLevel,
                                    Dbg_Module Module) {

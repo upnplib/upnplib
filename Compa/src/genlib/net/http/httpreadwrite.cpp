@@ -54,22 +54,28 @@
 #include <umock/sys_socket.hpp>
 #include <umock/stdio.hpp>
 
+/// \cond
 #include <cassert>
 #include <cstdarg>
 #include <cstring>
 #include <string>
 #include <iostream>
+/// \endcond
 
 #include <posix_overwrites.hpp>
 
 #ifdef _WIN32
+/// \cond
 #include <malloc.h>
+/// \endcond
 #define fseeko fseek
 #if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf _snprintf
 #endif
 #else /* _WIN32 */
+/// \cond
 #include <sys/utsname.h>
+/// \endcond
 #endif /* _WIN32 */
 
 #include <umock/pupnp_sock.hpp>
@@ -878,13 +884,13 @@ int MakeGenericMessage(http_method_t method, const char* url_str,
     return UPNP_E_SUCCESS;
 }
 
-typedef struct HTTPCONNECTIONHANDLE {
+struct http_connection_handle_t {
     SOCKINFO sock_info;
     int contentLength;
     http_parser_t response;
     int requestStarted;
     int cancel;
-} http_connection_handle_t;
+};
 
 /*!
  * \brief Parses already exiting data. If not complete reads more

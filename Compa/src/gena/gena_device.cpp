@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-02
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-04
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -402,7 +402,7 @@ ExitFunction:
     return headers;
 }
 
-/* We take ownership of propertySet and will free it */
+/*! \brief We take ownership of propertySet and will free it */
 int genaInitNotifyCommon(UpnpDevice_Handle device_handle, char* UDN,
                          char* servId, DOMString propertySet,
                          const Upnp_SID sid) {
@@ -547,8 +547,9 @@ ExitFunction:
     return ret;
 }
 
-/*
- * This gets called before queuing a new event.
+/*!
+ * \brief This gets called before queuing a new event.
+ *
  * - The list size can never go over MAX_SUBSCRIPTION_QUEUED_EVENTS so we
  *   discard the oldest non-active event if it is already at the max
  * - We also discard any non-active event older than MAX_SUBSCRIPTION_EVENT_AGE.
@@ -583,7 +584,7 @@ void maybeDiscardEvents(LinkedList* listp) {
     }
 }
 
-/* We take ownership of propertySet and will free it */
+/*! \brief We take ownership of propertySet and will free it */
 int genaNotifyAllCommon(UpnpDevice_Handle device_handle, char* UDN,
                         char* servId, DOMString propertySet) {
     int ret = GENA_SUCCESS;

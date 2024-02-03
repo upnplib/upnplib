@@ -1,19 +1,22 @@
 #ifndef COMPA_UPNPSTATEVARCOMPLETE_HPP
 #define COMPA_UPNPSTATEVARCOMPLETE_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-28
+// Redistribution only with this Copyright remark. Last modified: 2024-02-03
 /*!
  * \file
  * \brief Header file for UpnpStateVarComplete methods.
  * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 
-#include <stdlib.h> /* for size_t */
+#include <UpnpGlobal.hpp> /* for EXPORT_SPEC */
 
-#include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
+#include <UpnpString.hpp>
+#include <ixml.hpp>
 
-#include "UpnpString.hpp"
-#include "ixml.hpp"
+/// \cond
+#include <cstdlib> /* for size_t */
+/// \endcond
+
 
 /*!
  * UpnpStateVarComplete

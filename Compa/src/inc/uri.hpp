@@ -5,7 +5,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-02
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,14 +37,16 @@
  * \brief Modify and parse URIs.
  */
 
+/// \cond
 #include "winsock2.h" // For different platforms: don't use <winsock2.h>
 
-#include <ctype.h>
-#include <string.h>
+#include <cctype>
+#include <cstring>
 
 #ifndef _WIN32
 #include <netdb.h> /* for struct addrinfo */
 #endif
+/// \endcond
 
 #ifdef _WIN32
 #define strncasecmp strnicmp

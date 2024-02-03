@@ -1,7 +1,7 @@
 #ifndef COMPA_UPNPINET_HPP
 #define COMPA_UPNPINET_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-26
+// Redistribution only with this Copyright remark. Last modified: 2024-02-03
 // Taken from authors who haven't made a note.
 /*!
  * \file
@@ -11,15 +11,17 @@
  * @{
  */
 
-#include "UpnpUniStd.hpp" /* for close() */
-#include "umock/unistd.hpp"
+#include <UpnpUniStd.hpp> /* for close() */
+#include <umock/unistd.hpp>
 
 #ifdef _WIN32
+/// \cond
 #include <winsock2.h>
 
 #include <iphlpapi.h>
 #include <stdarg.h>
 #include <ws2tcpip.h>
+/// \endcond
 
 #define UpnpCloseSocket umock::unistd_h.closesocket
 
@@ -30,19 +32,17 @@ typedef ADDRESS_FAMILY sa_family_t;
 #endif
 
 #else // _WIN32
+/// \cond
 #include <sys/param.h>
 #if defined(__sun)
-// #include <fcntl.h>
-// #include <sys/sockio.h>
 #elif (defined(BSD) && BSD >= 199306) || defined(__FreeBSD_kernel__)
-// #include <ifaddrs.h>
 /* Do not move or remove the include below for "sys/socket"!
  * Will break FreeBSD builds. */
 // #include <sys/socket.h>
 #endif
 #include <arpa/inet.h> /* for inet_pton() */
 #include <net/if.h>
-// #include <netinet/in.h>
+/// \endcond
 
 /*! This typedef makes the code slightly more WIN32 tolerant.
  * On WIN32 systems, SOCKET is unsigned and is not a file

@@ -1,4 +1,0 @@
-<map id="web_server_init" name="web_server_init">
-<area shape="rect" id="node1" title="Initilialize the different documents. Initialize the memory for root directory for web server...." alt="" coords="223,5,348,32"/>
-<area shape="rect" id="node2" href="$db/d55/group__UPnPAPI.html#ga3c6309a98eb5281fbbfa45644c06fc34" title="Enables or disables the webserver." alt="" coords="5,5,175,32"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="UpnpCloseHttpGet" name="UpnpCloseHttpGet">
-<area shape="rect" id="node1" title="Closes the connection and frees memory that was allocated for the handle parameter." alt="" coords="5,5,148,32"/>
-<area shape="rect" id="node2" href="$db/d55/group__UPnPAPI.html#ga865d9b116a6028d1fd1f1ad2377dca35" title="Closes the connection created with UpnpOpenHttpConnection and frees any memory associated with the co..." alt="" coords="196,5,389,32"/>
-<area shape="rect" id="node3" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a2bbebb3c673dfaf9ddb2d28f802e41af" title="Closes the connection created with UpnpOpenHttpConnection() and frees any memory associated with the ..." alt="" coords="437,5,629,32"/>
-</map>

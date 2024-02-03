@@ -1,4 +1,0 @@
-<map id="upnplib::Chttpreadwrite_old::http_WriteHttpRequest" name="upnplib::Chttpreadwrite_old::http_WriteHttpRequest">
-<area shape="rect" id="node1" title="Write an http request." alt="" coords="5,5,212,47"/>
-<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#ae07df6b69cc7e67bb3573a265fcd5ed7" title="Writes the content of a HTTP request initiated by a UpnpMakeHttpRequest() call. The end of the conten..." alt="" coords="260,13,431,39"/>
-</map>

@@ -1,22 +1,24 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-06-22
+// Redistribution only with this Copyright remark. Last modified: 2024-02-03
 // Also Copyright by other contributor which haven't made a note.
 // Last compare with pupnp original source file on 2023-06-22, ver 1.14.16
+/*!
+ * \file
+ * \brief This file defines the functions for control points.
+ *
+ * It defines functions for adding and removing control points to and from the
+ * client table, adding and accessing subscription and other attributes
+ * pertaining to the control point.
+ */
 
-/************************************************************************
- * Purpose: This file defines the functions for clients. It defines
- * functions for adding and removing clients to and from the client table,
- * adding and accessing subscription and other attributes pertaining to the
- * client
- ************************************************************************/
+#include <config.hpp>
+#include <client_table.hpp>
 
-#include "config.hpp"
+#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
 
-#include "client_table.hpp"
-
-#ifdef INCLUDE_CLIENT_APIS
-
-#include <stdlib.h> /* for calloc(), free() */
+/// \cond
+#include <cstdlib> /* for calloc(), free() */
+/// \endcond
 
 void free_client_subscription(GenlibClientSubscription* sub) {
     ThreadPoolJob tempJob;

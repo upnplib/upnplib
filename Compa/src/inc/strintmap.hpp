@@ -43,7 +43,9 @@
  */
 
 #include <upnplib/visibility.hpp>
+/// \cond
 #include <cstddef> // for size_t
+/// \endcond
 
 /// String to integer map entry.
 struct str_int_entry {

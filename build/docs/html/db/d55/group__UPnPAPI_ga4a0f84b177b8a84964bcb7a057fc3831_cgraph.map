@@ -1,4 +1,0 @@
-<map id="PrintThreadPoolStats" name="PrintThreadPoolStats">
-<area shape="rect" id="node1" title="Prints thread pool statistics if DEBUG is enabled. See also #define PrintThreadPoolStats()" alt="" coords="5,5,164,32"/>
-<area shape="rect" id="node2" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement either on the standard output or log file along with the information from ..." alt="" coords="212,5,303,32"/>
-</map>

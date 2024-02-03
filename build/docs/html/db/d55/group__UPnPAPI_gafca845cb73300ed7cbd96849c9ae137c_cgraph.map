@@ -1,4 +1,0 @@
-<map id="UpnpGetHttpResponse" name="UpnpGetHttpResponse">
-<area shape="rect" id="node1" title="Gets the response from the server using a connection previously created by UpnpOpenHttpConnection." alt="" coords="5,5,176,32"/>
-<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a67b47eb9d6c95c90245733cfbf8510a8" title="Gets the response from the server using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="224,5,393,32"/>
-</map>

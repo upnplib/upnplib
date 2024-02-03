@@ -1,16 +1,18 @@
 #ifndef COMPA_UPNPGLOBAL_HPP
 #define COMPA_UPNPGLOBAL_HPP
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-12-05
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-02-03
 // Taken from authors who haven't made a note.
-
 /*!
  * \file
  *
  * \brief Defines constants that for some reason are not defined on some
  * systems.
  */
+
+/// \cond
 #include <cstddef>
+/// \endcond
 
 #if defined UPNP_LARGEFILE_SENSITIVE && _FILE_OFFSET_BITS + 0 != 64
 #if defined __GNUC__

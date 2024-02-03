@@ -1,4 +1,0 @@
-<map id="http_RequestAndResponse" name="http_RequestAndResponse">
-<area shape="rect" id="node1" title="Initiates socket, connects to the remote host, sends a request and waits for the response from the re..." alt="" coords="284,13,480,39"/>
-<area shape="rect" id="node2" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#ae63c95d54386babb0706b5a7d9925481" title="Request and response a message with http." alt="" coords="5,5,236,47"/>
-</map>

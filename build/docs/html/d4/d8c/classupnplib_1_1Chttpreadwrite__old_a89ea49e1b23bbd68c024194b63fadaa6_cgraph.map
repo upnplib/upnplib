@@ -1,4 +1,0 @@
-<map id="upnplib::Chttpreadwrite_old::http_RecvMessage" name="upnplib::Chttpreadwrite_old::http_RecvMessage">
-<area shape="rect" id="node1" title="Receive a message with http." alt="" coords="5,5,185,47"/>
-<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#aec2117c42b8c08b39fc822b71de3b6ce" title="Get the data on the socket and take actions based on the read data to modify the parser objects buffe..." alt="" coords="233,13,379,39"/>
-</map>

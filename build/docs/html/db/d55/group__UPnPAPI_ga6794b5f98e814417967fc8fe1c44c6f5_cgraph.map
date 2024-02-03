@@ -1,4 +1,0 @@
-<map id="UpnpWriteHttpPost" name="UpnpWriteHttpPost">
-<area shape="rect" id="node1" title="Sends a request to a server to copy the contents of a buffer to the URI specified in the UpnpOpenHttp..." alt="" coords="5,5,152,32"/>
-<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#ae07df6b69cc7e67bb3573a265fcd5ed7" title="Writes the content of a HTTP request initiated by a UpnpMakeHttpRequest() call. The end of the conten..." alt="" coords="200,5,371,32"/>
-</map>

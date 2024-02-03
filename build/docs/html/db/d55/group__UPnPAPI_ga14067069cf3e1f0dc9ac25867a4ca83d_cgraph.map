@@ -1,7 +1,0 @@
-<map id="UpnpOpenHttpGet" name="UpnpOpenHttpGet">
-<area shape="rect" id="node1" title="Gets a file specified in a URL." alt="" coords="5,31,147,57"/>
-<area shape="rect" id="node2" href="$db/d55/group__UPnPAPI.html#ga534218b5a1c6cdcc1094a58449019882" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection." alt="" coords="204,5,376,32"/>
-<area shape="rect" id="node4" href="$db/d55/group__UPnPAPI.html#gaf28645a07fa4c84254776136a8050db6" title="Opens a connection to the server." alt="" coords="195,56,385,83"/>
-<area shape="rect" id="node3" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a05a72106893427290043afc79d4b1955" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="443,5,614,32"/>
-<area shape="rect" id="node5" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a0d7d3b0e051a61c56ed6af99fa003244" title="Opens a connection to the server." alt="" coords="433,56,624,83"/>
-</map>

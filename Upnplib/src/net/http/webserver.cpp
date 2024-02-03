@@ -11,9 +11,13 @@
 
 namespace {
 
-// Following table maps the file extension to the associated media type and its
-// subtype. Because we use effective binary search on this table it must be
-// sorted by file extension.
+/*!
+ * \brief This table maps the file extension to the associated media type and
+ * its subtype.
+ *
+ * Because we use effective binary search on this table it must be sorted by
+ * file extension.
+ */
 const std::array<upnplib::Document_meta, 70> mediatype_list{
     {// file-ext, media-type, media-subtype
      {"aif", "audio", "aiff"},

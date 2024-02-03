@@ -251,14 +251,6 @@ struct http_parser_t {
     scanner_t scanner;
 };
 
-
-/*!
- * \brief Initialize and allocate memory for http message.
- */
-void httpmsg_init(      //
-    http_message_t* msg ///< [in,out] HTTP message object.
-);
-
 /*!
  * \brief Free memory allocated for the http message.
  */
@@ -269,6 +261,7 @@ UPNPLIB_API void httpmsg_destroy( //
 /*!
  * \brief Compares the header name with the header names stored in the linked
  * list of messages.
+ *
  * \returns
  *  - Pointer to a header on success
  *  - nullptr on failure
@@ -280,6 +273,7 @@ UPNPLIB_API http_header_t* httpmsg_find_hdr_str(
 
 /*!
  * \brief Finds header from a list, with the given 'name_id'.
+ *
  * \returns
  *  - Pointer to a header on success
  *  - nullptr on failure
@@ -294,7 +288,7 @@ UPNPLIB_API http_header_t* httpmsg_find_hdr(
  * \brief Initializes parser object for a request.
  */
 UPNPLIB_API void parser_request_init( //
-    http_parser_t* parser             ///< [out] HTTP Parser object.
+    http_parser_t* parser             ///< [out] HTTP Parser Object.
 );
 
 /*!
@@ -306,41 +300,107 @@ UPNPLIB_API void parser_response_init( //
 );
 
 /*!
- * \brief The parser function. Depending on the position of the parser object
- * the actual parsing function is invoked.
+ * \brief The parser function.
+ *
+ * Depending on the position of the parser object the actual parsing function is
+ * invoked.
+ *
+ *  \returns
+ *  On success: PARSE_SUCCESS\n
+ *  On error:
+ *  - PARSE_FAILURE
+ *  - PARSE_INCOMPLETE
+ *  - PARSE_INCOMPLETE_ENTITY
+ *  - PARSE_NO_MATCH
  */
 parse_status_t parser_parse( //
-    http_parser_t* parser    ///< [in,out] HTTP Parser object.
+    http_parser_t* parser    ///< [in,out] HTTP Parser Object.
 );
 
+/* **********************************************************************
+ * Function: matchstr
+ *
+ * Parameters:
+ *  IN char *str ;      String to be matched
+ *  IN size_t slen ;    Length of the string
+ *  IN const char* fmt ;    Pattern format
+ *  ...
+ *
+ * Description: Matches a variable parameter list with a string
+ *  and takes actions based on the data type specified.
+ *
+ * Returns:
+ *   PARSE_OK
+ *   PARSE_NO_MATCH -- failure to match pattern 'fmt'
+ *   PARSE_FAILURE  -- 'str' is bad input
+ *   PARSE_INCOMPLETE
+ ************************************************************************/
 /*!
  * \brief Get HTTP Method, URL location and version information.
+ *
  * \returns
  *  - PARSE_OK
  *  - PARSE_SUCCESS
  *  - PARSE_FAILURE
+ *
+ *  \todo Check what function description is the right one. There was another
+ * found.
  */
 UPNPLIB_API parse_status_t parser_parse_responseline(
     http_parser_t* parser ///< [in,out] HTTP Parser object.
 );
 
+/* **********************************************************************
+ * Function: parser_parse_headers
+ *
+ * Parameters:
+ *  INOUT http_parser_t* parser ; HTTP Parser object
+ *
+ * Description: Read HTTP header fields.
+ *
+ * Returns:
+ *  PARSE_OK
+ *  PARSE_SUCCESS
+ *  PARSE_FAILURE
+ *  PARSE_INCOMPLETE
+ *  PARSE_NO_MATCH
+ ************************************************************************/
 /*!
  * \brief Get HTTP Method, URL location and version information.
+ *
  * \returns
  *  - PARSE_OK
  *  - PARSE_SUCCESS
  *  - PARSE_FAILURE
+ *
+ *  \todo Check what function description is the right one. There was another
+ * found.
  */
 UPNPLIB_API parse_status_t parser_parse_headers(
     http_parser_t* parser ///< [in,out] HTTP Parser object.
 );
 
+/* !
+ * \brief Read HTTP entity body.
+ *
+ * \returns
+ *  On success: PARSE_SUCCESS - no more reading to do.\n
+ *  On error:
+ *  - PARSE_FAILURE
+ *  - PARSE_NO_MATCH
+ *  - PARSE_INCOMPLETE
+ *  - PARSE_INCOMPLETE_ENTITY
+ */
 /*!
  * \brief Determines method to read entity.
+ *
  * \returns
  *  - PARSE_OK
  *  - PARSE_FAILURE
  *  - PARSE_COMPLETE -- no more reading to do
+ *
+ *  \todo Check what function description is the right one. There was another
+ * found.
  */
 UPNPLIB_API parse_status_t parser_parse_entity(
     http_parser_t* parser ///< [in,out] HTTP Parser object.
@@ -348,18 +408,27 @@ UPNPLIB_API parse_status_t parser_parse_entity(
 
 /*!
  * \brief Determines method to read entity.
+ *
  * \returns
- *  - PARSE_OK
+ *  On success: PARSE_CONTINUE_1\n
+ *  On error:
  *  - PARSE_FAILURE
- *  - PARSE_COMPLETE -- no more reading to do
+ *  - PARSE_SUCCESS  -- no more reading to do
  */
 UPNPLIB_API parse_status_t parser_get_entity_read_method(
     http_parser_t* parser ///< [in,out] HTTP Parser object.
 );
 
 /*!
- * \brief The parser function. Depending on the position of the parser object
- * the actual parsing function is invoked.
+ * \brief Append date to HTTP parser, and do the parsing.
+ *
+ * \returns
+ *  On success: PARSE_SUCCESS\n
+ *  On error:
+ *  - PARSE_FAILURE
+ *  - PARSE_INCOMPLETE
+ *  - PARSE_INCOMPLETE_ENTITY
+ *  - PARSE_NO_MATCH
  */
 UPNPLIB_API parse_status_t parser_append(
     http_parser_t* parser, ///< [in,out] HTTP Parser object.
@@ -370,6 +439,7 @@ UPNPLIB_API parse_status_t parser_append(
 /*!
  * \brief Matches a variable parameter list with a string and takes actions
  * based on the data type specified.
+ *
  * \returns
  *  - PARSE_OK
  *  - PARSE_NO_MATCH -- failure to match pattern 'fmt'
@@ -384,6 +454,7 @@ parse_status_t matchstr( //
 
 /*!
  * \brief Converts raw character data to integer value.
+ *
  * \returns integer
  */
 int raw_to_int(        //
@@ -393,6 +464,9 @@ int raw_to_int(        //
 
 /*!
  * \brief Find a substring from raw character string buffer.
+ *
+ * Side effects: raw_value is transformed to lowercase.
+ *
  * \returns integer - index at which the substring is found.
  */
 int raw_find_str(      //
@@ -401,8 +475,10 @@ int raw_find_str(      //
 );
 
 /*!
- * \brief A wrapper function that maps a method id to a method<br/>
+ * \brief A wrapper function that maps a method id to a method.
+ *
  * nameConverts a http_method id stored in the HTTP Method.
+ *
  * \returns Pointer to the HTTP Method.
  */
 UPNPLIB_API const char* method_to_str( //

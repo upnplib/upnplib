@@ -5,7 +5,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-01
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-04
  * Copied from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,10 +43,9 @@
 #include <httpparser.hpp>
 #include <sock.hpp>
 
+/// \cond
 #include <cstdint> // for uint16_t
-
-/// \brief Global available Stop Socket.
-extern SOCKET gMiniServerStopSock;
+/// \endcond
 
 /// \brief Provides sockets for all network communications.
 struct MiniServerSockArray {
@@ -76,7 +75,7 @@ struct MiniServerSockArray {
     /*! \brief Corresponding port to miniServerSock6UlaGua */
     uint16_t miniServerPort6UlaGua;
 #if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
-    /*! \name Only with Client Module.
+    /*! \name Only with Client (control point) Module.
      * @{ */
     /*! \brief IPv4 SSDP socket for sending search requests and receiving search
      * replies */
@@ -92,61 +91,62 @@ struct MiniServerSockArray {
 typedef void (*MiniServerCallback)(http_parser_t* parser,
                                    http_message_t* request, SOCKINFO* info);
 
+
+#if defined(INTERNAL_WEB_SERVER) || defined(DOXYGEN_RUN)
 /*!
  * \brief Set HTTP Get Callback.
  */
 UPNPLIB_API void SetHTTPGetCallback(
-    /*! [in] HTTP Callback to be invoked . */
+    /*! [in] HTTP Callback to be invoked. */
     MiniServerCallback callback);
 
 /*!
  * \brief Set SOAP Callback.
  */
-#ifdef INCLUDE_DEVICE_APIS
+#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
 UPNPLIB_API void SetSoapCallback(
-    /*! [in] SOAP Callback to be invoked . */
+    /*! [in] SOAP Callback to be invoked. */
     MiniServerCallback callback);
 #else  /* INCLUDE_DEVICE_APIS */
 static UPNP_INLINE void
 SetSoapCallback([[maybe_unused]] MiniServerCallback callback) {}
 #endif /* INCLUDE_DEVICE_APIS */
+
 /*!
  * \brief Set GENA Callback.
  */
 UPNPLIB_API void SetGenaCallback(
     /*! [in] GENA Callback to be invoked. */
     MiniServerCallback callback);
+#endif // defined(INTERNAL_WEB_SERVER)
 
 /*!
  * \brief Initialize the sockets functionality for the Miniserver.
  *
  * Initialize a thread pool job to run the MiniServer and the job to the
- * thread pool.
- *
- * If listen port is 0, port is dynamically picked.
- *
- * Use timer mechanism to start the MiniServer, failure to meet the
+ * thread pool. If **listen_port?** is 0, then the port number is dynamically
+ * picked. Use timer mechanism to start the MiniServer, failure to meet the
  * allowed delay aborts the attempt to launch the MiniServer.
  *
- * \return
- *  \li On success: UPNP_E_SUCCESS.
- *  \li On error: UPNP_E_XXX.
+ * \returns
+ *  - On success: UPNP_E_SUCCESS.
+ *  - On error: UPNP_E_XXX.
  */
 UPNPLIB_API int StartMiniServer(
     /*! [in,out] Port on which the server listens for incoming IPv4
      * connections. */
     uint16_t* listen_port4,
-    /*! [in,out] Port on which the server listens for incoming IPv6
-     * LLA connections. */
+    /*! [in,out] Port on which the server listens for incoming IPv6 LLA
+       connections. */
     uint16_t* listen_port6,
-    /*! [in,out] Port on which the server listens for incoming
-     * IPv6 ULA or GUA connections. */
+    /*! [in,out] Port on which the server listens for incoming IPv6 ULA or GUA
+       connections. */
     uint16_t* listen_port6UlaGua);
 
 /*!
  * \brief Stop and Shutdown the MiniServer and free socket resources.
  *
- * \return Always returns 0.
+ * \returns Always returns 0.
  */
 UPNPLIB_API int StopMiniServer();
 

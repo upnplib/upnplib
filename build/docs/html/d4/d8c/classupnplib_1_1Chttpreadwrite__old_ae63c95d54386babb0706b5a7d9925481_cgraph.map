@@ -1,4 +1,0 @@
-<map id="upnplib::Chttpreadwrite_old::http_RequestAndResponse" name="upnplib::Chttpreadwrite_old::http_RequestAndResponse">
-<area shape="rect" id="node1" title="Request and response a message with http." alt="" coords="5,5,236,47"/>
-<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a1fabc1da6f9d7172f40a4b73fa40e49f" title="Initiates socket, connects to the remote host, sends a request and waits for the response from the re..." alt="" coords="284,13,480,39"/>
-</map>

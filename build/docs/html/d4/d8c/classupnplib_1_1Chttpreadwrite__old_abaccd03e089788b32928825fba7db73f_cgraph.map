@@ -1,4 +1,0 @@
-<map id="upnplib::Chttpreadwrite_old::http_ReadHttpResponse" name="upnplib::Chttpreadwrite_old::http_ReadHttpResponse">
-<area shape="rect" id="node1" title="Read an http response." alt="" coords="5,5,220,47"/>
-<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#ae48d1ed33b6f1546d15396eca2f2b3e4" title="Reads the content of a response using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="268,13,447,39"/>
-</map>

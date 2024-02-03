@@ -1,4 +1,0 @@
-<map id="UpnpMakeHttpRequest" name="UpnpMakeHttpRequest">
-<area shape="rect" id="node1" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection." alt="" coords="5,5,177,32"/>
-<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a05a72106893427290043afc79d4b1955" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="225,5,396,32"/>
-</map>

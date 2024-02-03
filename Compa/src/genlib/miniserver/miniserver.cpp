@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-06
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,45 +33,25 @@
  *
  **************************************************************************/
 // Last compare with ./pupnp source file on 2023-08-25, ver 1.14.18
-
-#include <config.hpp>
-
-#if EXCLUDE_MINISERVER == 0
-
 /*!
  * \file
- *
- * \brief Implements the functionality and utility functions
- * used by the Miniserver module.
+ * \brief Implements the functionality and utility functions used by the
+ * Miniserver module.
  *
  * The miniserver is a central point for processing all network requests.
  * It is made of:
- *   - The SSDP sockets for discovery.
  *   - The HTTP listeners for description / control / eventing.
- *
+ *   - The SSDP sockets for discovery.
  */
 
-#include <miniserver.hpp>
+#include <config.hpp>
+#if EXCLUDE_MINISERVER == 0
 
-// #include "ThreadPool.hpp"
 #include <httpreadwrite.hpp>
-// #include "ithread.hpp"
 #include <ssdplib.hpp>
 #include <statcodes.hpp>
-// #include "unixutil.hpp" /* for socklen_t, EAFNOSUPPORT */
 #include <upnpapi.hpp>
-// #include "upnputil.hpp"
 
-// #include <assert.h>
-// #include <errno.h>
-// #include <stdio.h>
-// #include <stdlib.h>
-#include <cstring>
-// #include <sys/types.h>
-// #include <algorithm> // for std::max()
-#include <iostream>
-
-#include <upnplib/sockaddr.hpp>
 #include <upnplib/socket.hpp>
 #include <upnplib/global.hpp>
 
@@ -79,80 +59,96 @@
 #include <umock/winsock2.hpp>
 #include <umock/stdlib.hpp>
 
-/*! . */
-#define APPLICATION_LISTENING_PORT 49152
+/// \cond
+#include <cstring>
+#include <iostream>
+/// \endcond
 
+
+namespace {
+
+#if defined(INTERNAL_WEB_SERVER) || defined(DOXYGEN_RUN)
+/*! \brief First dynamic and/or private port from 49152 to 65535 used by the
+ * library.\n
+ * Only available with INTERNAL_WEB_SERVER compiled in. */
+constexpr in_port_t APPLICATION_LISTENING_PORT{49152};
+#endif
+
+/*! \brief miniserver received request message.
+ * \details This defines the structure of a UPnP request that has income from a
+ * remote control point.
+ */
 struct mserv_request_t {
-    /*! Connection handle. */
+    /// \brief Connection socket file descriptor.
     SOCKET connfd;
-    /*! . */
+    /// \brief Socket address of the remote control point.
     sockaddr_storage foreign_sockaddr;
 };
 
-/*! . */
-typedef enum {
-    /*! . */
-    MSERV_IDLE,
-    /*! . */
-    MSERV_RUNNING,
-    /*! . */
-    MSERV_STOPPING
-} MiniServerState;
+/// \brief miniserver state
+enum MiniServerState {
+    MSERV_IDLE,    ///< miniserver is idle.
+    MSERV_RUNNING, ///< miniserver is running.
+    MSERV_STOPPING ///< miniserver is running to stop.
+};
 
-/*! . */
-uint16_t miniStopSockPort;
+/*! \brief Port of the stop socket.
+ *  \details With starting the miniserver there is also this port registered.
+ * Its socket is listing for a "ShutDown" message from a local network address
+ * (localhost). This is used to stop the miniserver from another thread.
+ * \todo It is unclear for what MiniServerSockArray::stopPort is used and need
+ * to be checked. */
+in_port_t miniStopSockPort;
 
-/*!
- * module vars
- */
-static MiniServerState gMServState = MSERV_IDLE;
-#ifdef INTERNAL_WEB_SERVER
-static MiniServerCallback gGetCallback = NULL;
-static MiniServerCallback gSoapCallback = NULL;
-static MiniServerCallback gGenaCallback = NULL;
+/// \brief miniserver state
+MiniServerState gMServState = MSERV_IDLE;
+#if defined(INTERNAL_WEB_SERVER) || defined(DOXYGEN_RUN)
+/// \brief HTTP server callback
+MiniServerCallback gGetCallback = NULL;
+/// \brief SOAP callback
+MiniServerCallback gSoapCallback = NULL;
+/// \brief GENA callback
+MiniServerCallback gGenaCallback = NULL;
 
-static int MINISERVER_REUSEADDR =
-#ifdef UPNP_MINISERVER_REUSEADDR
-    1;
+/*! \brief Flag if to immediately reuse the network address of a just broken
+ * connetion. */
+#if !defined(UPNP_MINISERVER_REUSEADDR) || defined(DOXYGEN_RUN)
+int MINISERVER_REUSEADDR = 0;
 #else
-    0;
+int MINISERVER_REUSEADDR = 1;
 #endif
 
+/// \brief additional management information to a socket.
 struct s_SocketStuff {
+    /// @{
+    /// \brief member variable
     int ip_version;
     const char* text_addr;
     sockaddr_storage ss;
     union {
+        /// @{
+        /// \brief member variable
         sockaddr* serverAddr;
         sockaddr_in* serverAddr4;
         sockaddr_in6* serverAddr6;
+        /// @}
     };
     SOCKET fd;
     uint16_t try_port;
     uint16_t actual_port;
     socklen_t address_len;
+    /// @}
 };
 
-void SetHTTPGetCallback(MiniServerCallback callback) {
-    TRACE("Executing SetHTTPGetCallback()");
-    gGetCallback = callback;
-}
 
-#ifdef INCLUDE_DEVICE_APIS
-void SetSoapCallback(MiniServerCallback callback) {
-    TRACE("Executing SetSoapCallback()");
-    gSoapCallback = callback;
-}
-#endif /* INCLUDE_DEVICE_APIS */
-
-void SetGenaCallback(MiniServerCallback callback) {
-    TRACE("Executing SetGenaCallback()");
-    gGenaCallback = callback;
-}
-
-// This is a wrapper function to provide compatibility.
-// 'a_host_port_len' is the length of the string excluding the terminating '\0'.
-static int host_header_is_numeric(char* a_host_port, size_t a_host_port_len) {
+/*! \name Scope restricted to file
+ * @{
+ */
+/// Check if a network address is numeric.
+int host_header_is_numeric(
+    char* a_host_port,     ///< network address
+    size_t a_host_port_len ///< length of a_host_port excl. terminating '\0'.
+) {
     TRACE("Executing host_header_is_numeric()");
     // An empty netaddress or an unspecified one is not valid.
     if (a_host_port_len == 0 || strncmp(a_host_port, "[::]", 4) == 0 ||
@@ -170,10 +166,19 @@ static int host_header_is_numeric(char* a_host_port, size_t a_host_port_len) {
     return 1;
 }
 
-// getNumericHostRedirection() returns the ip address with port as text
-// (e.g. "192.168.1.2:54321") that is bound to a socket.
-static int getNumericHostRedirection(SOCKET a_socket, char* a_host_port,
-                                     size_t a_hp_size) {
+/*! \brief Returns the ip address with port as text that is bound to a socket.
+ *
+ * Example: may return "[2001:db8::ab]:50044" or "192.168.1.2:54321".
+ *
+ * \returns
+ *   On success: **true**\n
+ *   On error: **false**, The result buffer remains unmodified.
+ */
+int getNumericHostRedirection(
+    SOCKET a_socket,   ///< [in] Socket file descriptor.
+    char* a_host_port, ///< [out] Pointer to buffer that will be filled.
+    size_t a_hp_size   ///< [in] size of the buffer.
+) {
     TRACE("Executing getNumericHostRedirection()")
     try {
         upnplib::CSocket_basic socketObj(a_socket);
@@ -192,7 +197,7 @@ static int getNumericHostRedirection(SOCKET a_socket, char* a_host_port,
  *
  * \return 0 on Success or HTTP_INTERNAL_SERVER_ERROR if Callback is NULL.
  */
-static int dispatch_request(
+int dispatch_request(
     /*! [in] Socket Information object. */
     SOCKINFO* info,
     /*! [in] HTTP parser object. */
@@ -296,7 +301,7 @@ ExitFunction:
  * \brief Free memory assigned for handling request and unitialize socket
  * functionality.
  */
-static void free_handle_request_arg(
+void free_handle_request_arg(
     /*! [in] Request Message to be freed. */
     void* args) {
     TRACE("Executing free_handle_request_arg()")
@@ -310,7 +315,7 @@ static void free_handle_request_arg(
 /*!
  * \brief Receive the request and dispatch it for handling.
  */
-static void handle_request(
+void handle_request(
     /*! [in] Received Request Message to be handled. */
     void* args) { // Expected to be mserv_request_t*
     SOCKINFO info;
@@ -375,7 +380,7 @@ error_handler:
  * \brief Initilize the thread pool to handle a request, sets priority for the
  * job and adds the job to the thread pool.
  */
-static UPNP_INLINE void schedule_request_job(
+UPNP_INLINE void schedule_request_job(
     /*! [in] Socket Descriptor on which connection is accepted. */
     SOCKET connfd,
     /*! [in] Clients Address information. */
@@ -412,13 +417,29 @@ static UPNP_INLINE void schedule_request_job(
 }
 #endif // INTERNAL_WEB_SERVER
 
-static void fdset_if_valid(SOCKET a_sock, fd_set* a_set) {
-    // This sets the file descriptor set for a socket ::select() for valid
-    // sochets. It ensures that ::select() does not fail with invalid socket
-    // file descriiptors, in particular with the EBADF error. It checks that we
-    // do not use closed or unbind sockets. It also has a guard that we do not
-    // exceed the maximum number FD_SETSIZE (1024) of selectable file
-    // descriptors, as noted in "man select".
+/*!
+ * \brief Add a socket file descriptor to an \p 'fd_set' structure as needed for
+ * \p \::select().
+ *
+ * **a_set** may already contain file descriptors. The given **a_sock** is added
+ * to the set. It is ensured that \p \::select() is not fed with invalid socket
+ * file descriptors, in particular with the EBADF error. That could mean: closed
+ * socket, or an other network error was detected before adding to the set. It
+ * checks that we do not use closed or unbind sockets. It also has a guard that
+ * we do not exceed the maximum number FD_SETSIZE (1024) of selectable file
+ * descriptors, as noted in "man select".
+ *
+ * **Returns**
+ *  - Nothing. Not good, but needed for compatibility.\n
+ * You can check if **a_sock** was added to **a_set**. There are messages to
+ * stderr if verbose logging is enabled.
+ */
+void fdset_if_valid( //
+    SOCKET a_sock,   ///< [in] socket file descriptor.
+    fd_set* a_set /*!< [out] Pointer to an \p 'fd_set' structure as needed for
+                     \p \::select(). The structure is modified as documented for
+                     \p \::select(). */
+) {
     TRACE("Executing fdset_if_valid()")
     if (a_sock == INVALID_SOCKET)
         // This is a defined state and we return silently.
@@ -450,8 +471,22 @@ static void fdset_if_valid(SOCKET a_sock, fd_set* a_set) {
     }
 }
 
-static int web_server_accept([[maybe_unused]] SOCKET lsock,
-                             [[maybe_unused]] fd_set& set) {
+/*!
+ * \brief Accept requested connection from a remote control point and run it in
+ * a new thread.
+ *
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_NO_WEB_SERVER
+ *  - UPNP_E_SOCKET_ERROR
+ *  - UPNP_E_SOCKET_ACCEPT
+ */
+int web_server_accept(
+    /// [in] Socket file descriptor.
+    [[maybe_unused]] SOCKET lsock,
+    /// [out] Reference to a file descriptor set as needed for \::select().
+    [[maybe_unused]] fd_set& set) {
 #ifndef INTERNAL_WEB_SERVER
     return UPNP_E_NO_WEB_SERVER;
 #else
@@ -474,7 +509,7 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
         return UPNP_E_SOCKET_ACCEPT;
     }
 
-    // Here we schedule the job to manage a UPnP request from a client.
+    // Schedule a job to manage a UPnP request from a remote host.
     char buf_ntop[INET6_ADDRSTRLEN + 7];
     inet_ntop(AF_INET, &clientAddr.sin.sin_addr, buf_ntop, sizeof(buf_ntop));
     UPNPLIB_LOGINFO "MSG1023: Connected to host "
@@ -486,7 +521,13 @@ static int web_server_accept([[maybe_unused]] SOCKET lsock,
 #endif /* INTERNAL_WEB_SERVER */
 }
 
-static void ssdp_read(SOCKET* rsock, fd_set* set) {
+/*!
+ * \brief Read data from the SSDP socket.
+ */
+void ssdp_read( //
+    SOCKET* rsock,     ///< [in] Pointer to a Socket file descriptor.
+    fd_set* set        /*!< [in] Pointer to a file descriptor set as needed for
+                                 \::select(). */) {
     TRACE("Executing ssdp_read()")
     if (*rsock == INVALID_SOCKET || !FD_ISSET(*rsock, set))
         return;
@@ -501,15 +542,24 @@ static void ssdp_read(SOCKET* rsock, fd_set* set) {
     }
 }
 
-static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
-    // The received datagram must exactly match the shutdown_str from
-    // 127.0.0.1. This is a security issue to avoid that the UPnPlib can be
-    // terminated from a remote ip address. Receiving 0 bytes on a datagram
-    // (there's a datagram here) indicates that a zero-length datagram
-    // was successful sent. This will not stop the miniserver.
-    //
-    // Returns 1 when the miniserver shall be stopped,
-    // Returns 0 otherwise.
+/*!
+ * \brief Check if we have received a packet that shall stop the miniserver.
+ *
+ * The received datagram must exactly match the shutdown_str from 127.0.0.1.
+ * This is a security issue to avoid that the UPnPlib can be terminated from a
+ * remote ip address. Receiving 0 bytes on a datagram (there's a datagram here)
+ * indicates that a zero-length datagram was successful sent. This will not
+ * stop the miniserver.
+ *
+ * \returns
+ * - 1 - when the miniserver shall be stopped,
+ * - 0 - otherwise.
+ */
+int receive_from_stopSock(
+    SOCKET ssock, ///< [in] Socket file descriptor.
+    fd_set* set   /*!< [in] Pointer to a file descriptor set as needed for
+                            \::select(). */
+) {
     TRACE("Executing receive_from_stopSock()")
     constexpr char shutdown_str[]{"ShutDown"};
 
@@ -564,8 +614,8 @@ static int receive_from_stopSock(SOCKET ssock, fd_set* set) {
  * new request. Checks for socket state and invokes appropriate read and
  * shutdown actions for the Miniserver and SSDP sockets.
  */
-static void RunMiniServer(
-    /*! [in] Socket Array. */
+void RunMiniServer(
+    /*! [in] Pointer to a Socket Array. */
     MiniServerSockArray* miniSock) {
     TRACE("Executing RunMiniServer()")
     fd_set expSet;
@@ -661,17 +711,18 @@ static void RunMiniServer(
             break;
         }
 
-        // Accept requested connection from a remote client and run the
-        // connection in a new thread. Due to side effects we need to
-        // avoid lazy evaluation with chained ||.
+        // Accept requested connection from a remote control point and run the
+        // connection in a new thread. Due to side effects with threading we
+        // need to avoid lazy evaluation with chained || because all
+        // web_server_accept() must be called.
+        // if (ret1 == UPNP_E_SUCCESS || ret2 == UPNP_E_SUCCESS ||
+        //     ret3 == UPNP_E_SUCCESS) {
         [[maybe_unused]] int ret1 =
             web_server_accept(miniSock->miniServerSock4, rdSet);
         [[maybe_unused]] int ret2 =
             web_server_accept(miniSock->miniServerSock6, rdSet);
         [[maybe_unused]] int ret3 =
             web_server_accept(miniSock->miniServerSock6UlaGua, rdSet);
-        // if (ret1 == UPNP_E_SUCCESS || ret2 == UPNP_E_SUCCESS ||
-        //     ret3 == UPNP_E_SUCCESS) {
 #ifdef INCLUDE_CLIENT_APIS
         ssdp_read(&miniSock->ssdpReqSock4, &rdSet);
         ssdp_read(&miniSock->ssdpReqSock6, &rdSet);
@@ -710,7 +761,7 @@ static void RunMiniServer(
  *
  * \return -1 on error; check errno. 0 if successful.
  */
-static int get_port(
+int get_port(
     /*! [in] Socket descriptor. */
     SOCKET sockfd,
     /*! [out] The port value if successful, otherwise, untouched. */
@@ -738,16 +789,16 @@ static int get_port(
     return 0;
 }
 
+#if defined(INTERNAL_WEB_SERVER) || defined(DOXYGEN_RUN)
 /*!
  * \brief Get valid sockets.
  *
  * An empty text_addr will be translated to a valid sock addr = 0 that
  * binds to all local ip addresses.
+ *
  * \return 1 or WSANOTINITIALISED on error, 0 if successful.
  */
-#ifdef INTERNAL_WEB_SERVER
-static int init_socket_suff(s_SocketStuff* s, const char* text_addr,
-                            int ip_version) {
+int init_socket_suff(s_SocketStuff* s, const char* text_addr, int ip_version) {
     TRACE("Executing init_socket_suff() for IPv" + std::to_string(ip_version) +
           ".")
     int sockError;
@@ -839,12 +890,23 @@ error:
     return 1; // --Ingo
 }
 
-/*
- * s->port will be one more than the used port in the end. This is important,
- * in case this function is called again.
- * It is expected to have a prechecked valid parameter.
+/*!
+ * \brief Bind a socket address to a local network interface.
+ *
+ * **s->port** will be one more than the used port in the end. This is
+ * important, in case this function is called again. It is expected to have a
+ * prechecked valid parameter.\n
+ * Only available with INTERNAL_WEB_SERVER compiled in.
+ *
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_INVALID_PARAM
+ *  - UPNP_E_SOCKET_BIND
  */
-static int do_bind(s_SocketStuff* s) {
+int do_bind(         //
+    s_SocketStuff* s ///< [in] Information for the socket.
+) {
     TRACE("Executing do_bind()")
     int ret_val = UPNP_E_SUCCESS;
     int bind_error;
@@ -914,7 +976,20 @@ error:
     return ret_val;
 }
 
-static int do_listen(struct s_SocketStuff* s) {
+/*!
+ * \brief Listen on a local network interface to incomming requests.
+ *
+ * Only available with INTERNAL_WEB_SERVER compiled in.
+ *
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_LISTEN
+ *  - UPNP_E_INTERNAL_ERROR
+ */
+int do_listen(       //
+    s_SocketStuff* s ///< [in] Information for the socket.
+) {
     TRACE("Executing do_listen()")
     int ret_val;
     int listen_error;
@@ -943,14 +1018,40 @@ error:
     return ret_val;
 }
 
-static int do_reinit(s_SocketStuff* s) {
+/*!
+ * \brief Close and (re)initialize a socket.
+ *
+ * Only available with INTERNAL_WEB_SERVER compiled in.
+ *
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error: 1 or WSANOTINITIALISED
+ */
+int do_reinit(       //
+    s_SocketStuff* s ///< [in] Information for the socket.
+) {
     TRACE("Executing do_reinit()");
     sock_close(s->fd);
 
     return init_socket_suff(s, s->text_addr, s->ip_version);
 }
 
-static int do_bind_listen(s_SocketStuff* s) {
+/*!
+ * \brief Bind and listen to a socket address.
+ *
+ * Only available with INTERNAL_WEB_SERVER compiled in.
+ *
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error.
+ *  - UPNP_E_INVALID_PARAM
+ *  - UPNP_E_SOCKET_BIND
+ *  - UPNP_E_LISTEN
+ *  - UPNP_E_INTERNAL_ERROR
+ */
+int do_bind_listen(  //
+    s_SocketStuff* s ///< [in] Information for the socket.
+) {
     TRACE("Executing do_bind_listen()")
     UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
                "Inside do_bind_listen()\n");
@@ -976,28 +1077,30 @@ static int do_bind_listen(s_SocketStuff* s) {
         ok = s->try_port >= original_port;
     }
 
-    return 0;
+    return UPNP_E_SUCCESS;
 
 error:
     return ret_val;
 }
 
 /*!
- * \brief Creates a STREAM socket, binds to INADDR_ANY and listens for
- * incoming connecttions. Returns the actual port which the sockets
- * sub-system returned.
+ * \brief Creates a STREAM socket, binds to INADDR_ANY and listens for incoming
+ * connecttions.
  *
- * Also creates a DGRAM socket, binds to the loop back address and
- * returns the port allocated by the socket sub-system.
+ * Returns the actual port which the sockets sub-system returned. Also creates a
+ * DGRAM socket, binds to the loop back address and returns the port allocated
+ * by the socket sub-system.\n
+ * Only available with INTERNAL_WEB_SERVER compiled in.
  *
- * \return
- *  \li UPNP_E_OUTOF_SOCKET: Failed to create a socket.
- *  \li UPNP_E_SOCKET_BIND: Bind() failed.
- *  \li UPNP_E_LISTEN: Listen() failed.
- *  \li UPNP_E_INTERNAL_ERROR: Port returned by the socket layer is < 0.
- *  \li UPNP_E_SUCCESS: Success.
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_OUTOF_SOCKET - Failed to create a socket.
+ *  - UPNP_E_SOCKET_BIND - Bind() failed.
+ *  - UPNP_E_LISTEN - Listen() failed.
+ *  - UPNP_E_INTERNAL_ERROR - Port returned by the socket layer is < 0.
  */
-static int get_miniserver_sockets(
+int get_miniserver_sockets(
     /*! [in] Socket Array. */
     MiniServerSockArray* out,
     /*! [in] port on which the server is listening for incoming IPv4
@@ -1041,10 +1144,10 @@ static int get_miniserver_sockets(
     /* As per the IANA specifications for the use of ports by applications
      * override the listen port passed in with the first available. */
     if (listen_port4 == 0) {
-        listen_port4 = (uint16_t)APPLICATION_LISTENING_PORT;
+        listen_port4 = APPLICATION_LISTENING_PORT;
     }
     if (listen_port6 == 0) {
-        listen_port6 = (uint16_t)APPLICATION_LISTENING_PORT;
+        listen_port6 = APPLICATION_LISTENING_PORT;
     }
     if (listen_port6UlaGua < APPLICATION_LISTENING_PORT) {
         /* Increment the port to make it harder to fail at first try */
@@ -1118,7 +1221,7 @@ error:
  * \li \c UPNP_E_INTERNAL_ERROR: Port returned by the socket layer is < 0.
  * \li \c UPNP_E_SUCCESS: Success.
  */
-static int get_miniserver_stopsock(
+int get_miniserver_stopsock(
     /*! [in] Miniserver Socket Array. */
     MiniServerSockArray* out) {
     TRACE("Executing get_miniserver_stopsock()")
@@ -1156,7 +1259,12 @@ static int get_miniserver_stopsock(
     return UPNP_E_SUCCESS;
 }
 
-static void InitMiniServerSockArray(MiniServerSockArray* miniSocket) {
+/*!
+ * \brief Initialize a miniserver Socket Array.
+ */
+void InitMiniServerSockArray(
+    MiniServerSockArray* miniSocket ///< Pointer to a miniserver Socket Array.
+) {
     TRACE("Executing InitMiniServerSockArray()")
     miniSocket->miniServerSock4 = INVALID_SOCKET;
     miniSocket->miniServerSock6 = INVALID_SOCKET;
@@ -1174,6 +1282,29 @@ static void InitMiniServerSockArray(MiniServerSockArray* miniSocket) {
     miniSocket->ssdpReqSock6 = INVALID_SOCKET;
 #endif /* INCLUDE_CLIENT_APIS */
 }
+
+/// @} // Functions (scope restricted to file)
+} // anonymous namespace
+
+
+#if defined(INTERNAL_WEB_SERVER) || defined(DOXYGEN_RUN)
+void SetHTTPGetCallback(MiniServerCallback callback) {
+    TRACE("Executing SetHTTPGetCallback()");
+    gGetCallback = callback;
+}
+
+#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
+void SetSoapCallback(MiniServerCallback callback) {
+    TRACE("Executing SetSoapCallback()");
+    gSoapCallback = callback;
+}
+#endif /* INCLUDE_DEVICE_APIS */
+
+void SetGenaCallback(MiniServerCallback callback) {
+    TRACE("Executing SetGenaCallback()");
+    gGenaCallback = callback;
+}
+#endif
 
 int StartMiniServer(
     // The three parameter only used if the INTERNAL_WEB_SERVER is enabled.
@@ -1310,7 +1441,7 @@ int StopMiniServer() {
         UpnpPrintf(UPNP_ERROR, SSDP, __FILE__, __LINE__,
                    "SSDP_SERVER: StopSSDPServer: Error in socket() %s\n",
                    std::strerror(errno));
-        return 0;
+        return 1;
     }
     while (gMServState != (MiniServerState)MSERV_IDLE) {
         ssdpAddr.sin_family = (sa_family_t)AF_INET;
@@ -1328,4 +1459,5 @@ int StopMiniServer() {
 
     return 0;
 }
+
 #endif /* EXCLUDE_MINISERVER */

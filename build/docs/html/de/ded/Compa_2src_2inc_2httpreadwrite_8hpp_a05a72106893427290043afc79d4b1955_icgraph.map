@@ -1,8 +1,0 @@
-<map id="http_MakeHttpRequest" name="http_MakeHttpRequest">
-<area shape="rect" id="node1" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="487,71,657,98"/>
-<area shape="rect" id="node2" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#ae30a61355404d05425102350c525bf4a" title="Create an http request." alt="" coords="232,5,439,47"/>
-<area shape="rect" id="node3" href="$db/d55/group__UPnPAPI.html#ga534218b5a1c6cdcc1094a58449019882" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection." alt="" coords="249,71,421,98"/>
-<area shape="rect" id="node6" href="$db/d55/group__UPnPAPI.html#ga45850f990fe110e26f9b093a88e3e8a0" title="Makes an HTTP POST request message, opens a connection to the server and sends the POST request to th..." alt="" coords="262,122,409,149"/>
-<area shape="rect" id="node4" href="$db/d55/group__UPnPAPI.html#ga14067069cf3e1f0dc9ac25867a4ca83d" title="Gets a file specified in a URL." alt="" coords="24,46,165,73"/>
-<area shape="rect" id="node5" href="$db/d55/group__UPnPAPI.html#ga5f069548a767baef4623774d7bb3ce9f" title="Gets a file specified in a URL through the specified proxy." alt="" coords="5,97,184,123"/>
-</map>

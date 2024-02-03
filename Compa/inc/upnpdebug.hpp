@@ -6,7 +6,7 @@
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-01-28
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-04
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,7 +40,9 @@
  */
 
 #include <upnp.hpp> // for UPNP_E_SUCCESS
-#include <stdio.h>
+/// \cond
+#include <cstdio>
+/// \endcond
 
 /* ! \name Other debugging features
  *
@@ -49,7 +51,7 @@
  */
 
 /// @{
-/// Only debug messages from this program module
+/// \brief Only debug messages from this program module
 typedef enum Upnp_Module {
     SSDP,
     SOAP,
@@ -154,12 +156,11 @@ static UPNP_INLINE void UpnpSetLogFileNames_Inlined(const char* ErrFileName,
 
 /*!
  * \brief Check if the module is turned on for debug and returns the file
- * descriptor corresponding to the debug level. See also \#define
- * UpnpGetDebugFile().
+ * descriptor corresponding to the debug level.
  * \anchor UpnpGetDebugFile_dbg
  *
  * \return nullptr if the module is turn off for debug otherwise returns the
- *	right FILE pointer.
+ * right FILE pointer.
  */
 UPNPLIB_API FILE* UpnpGetDebugFile(
     /*! [in] The level of the debug logging. It will decide whether debug
@@ -168,17 +169,16 @@ UPNPLIB_API FILE* UpnpGetDebugFile(
     /*! [in] debug will go in the name of this module. */
     Dbg_Module Module);
 
-#if (defined NDEBUG && !defined UPNP_DEBUG_C) || defined(DOXYGEN_RUN)
-/*! \brief This do nothing if DEBUG is disabled. See also function
- * \ref UpnpGetDebugFile_dbg "UpnpGetDebugFile()" for debugging. */
+/// \cond
+#if (defined NDEBUG && !defined UPNP_DEBUG_C)
 #define UpnpGetDebugFile UpnpGetDebugFile_Inlined
-static UPNP_INLINE FILE* UpnpGetDebugFile_Inlined(
-    [[maybe_unused]] Upnp_LogLevel level, ///< Log level "critical"..."all".
-    [[maybe_unused]] Dbg_Module
-        module) /*!< Info of what program module should be used. */ {
+static UPNP_INLINE FILE*
+UpnpGetDebugFile_Inlined([[maybe_unused]] Upnp_LogLevel level,
+                         [[maybe_unused]] Dbg_Module module) {
     return NULL;
 }
 #endif
+/// \endcond
 
 /*!
  * \brief Prints the debug statement either on the standard output or log file

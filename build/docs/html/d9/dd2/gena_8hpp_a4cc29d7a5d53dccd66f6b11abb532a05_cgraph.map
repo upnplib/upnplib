@@ -1,4 +1,0 @@
-<map id="genaUnregisterDevice" name="genaUnregisterDevice">
-<area shape="rect" id="node1" title="Cleans the service table of the device." alt="" coords="5,5,172,32"/>
-<area shape="rect" id="node2" href="$db/d55/group__UPnPAPI.html#ga276f608a72d2b223bb429ba31c32f64b" title="Get handle information." alt="" coords="220,5,336,32"/>
-</map>

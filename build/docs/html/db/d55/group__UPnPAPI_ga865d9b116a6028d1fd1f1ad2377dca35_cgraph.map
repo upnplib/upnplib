@@ -1,4 +1,0 @@
-<map id="UpnpCloseHttpConnection" name="UpnpCloseHttpConnection">
-<area shape="rect" id="node1" title="Closes the connection created with UpnpOpenHttpConnection and frees any memory associated with the co..." alt="" coords="5,5,199,32"/>
-<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#a2bbebb3c673dfaf9ddb2d28f802e41af" title="Closes the connection created with UpnpOpenHttpConnection() and frees any memory associated with the ..." alt="" coords="247,5,439,32"/>
-</map>

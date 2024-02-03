@@ -11,7 +11,9 @@
 #ifdef _WIN32
 /* Do not #include <unistd.h> on WIN32. */
 #else               /* _WIN32 */
+/// \cond
 #include <unistd.h> /* for close() */
+/// \endcond
 #endif              /* _WIN32 */
 
 #endif /* COMPA_UPNPUNISTD_HPP */

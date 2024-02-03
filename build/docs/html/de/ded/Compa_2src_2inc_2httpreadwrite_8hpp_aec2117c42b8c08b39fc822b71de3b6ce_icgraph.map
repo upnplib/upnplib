@@ -1,4 +1,0 @@
-<map id="http_RecvMessage" name="http_RecvMessage">
-<area shape="rect" id="node1" title="Get the data on the socket and take actions based on the read data to modify the parser objects buffe..." alt="" coords="233,13,379,39"/>
-<area shape="rect" id="node2" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#a89ea49e1b23bbd68c024194b63fadaa6" title="Receive a message with http." alt="" coords="5,5,185,47"/>
-</map>

@@ -1,4 +1,0 @@
-<map id="upnplib::Chttpreadwrite_old::http_OpenHttpGetEx" name="upnplib::Chttpreadwrite_old::http_OpenHttpGetEx">
-<area shape="rect" id="node1" title="Open an extended http GET communication." alt="" coords="5,5,196,47"/>
-<area shape="rect" id="node2" href="$de/ded/Compa_2src_2inc_2httpreadwrite_8hpp.html#af6f33b62fbc2347b9a579f360d8bc3c2" title="Makes the HTTP GET message, connects to the peer, sends the HTTP GET request, gets the response and p..." alt="" coords="244,13,400,39"/>
-</map>

@@ -1,8 +1,0 @@
-<map id="service_info" name="service_info">
-<area shape="rect" id="node1" title="&#45;brief Service information" alt="" coords="5,469,107,496"/>
-<area shape="rect" id="node2" href="$dd/dc7/structsubscription.html" title="device subscriptions" alt="" coords="5,380,107,407"/>
-<area shape="rect" id="node3" href="$d2/d70/structURL__list.html" title="Represents a list of URLs as in the &quot;callback&quot; header of SUBSCRIBE message in GENA." alt="" coords="19,291,93,317"/>
-<area shape="rect" id="node4" href="$d4/d48/structuri__type.html" title="Represents a URI used in parse_uri and elsewhere." alt="" coords="19,201,93,228"/>
-<area shape="rect" id="node5" href="$d4/df4/structtoken.html" title="Buffer used in parsinghttp messages, urls, etc. Generally this simply holds a pointer into a larger a..." alt="" coords="27,5,85,32"/>
-<area shape="rect" id="node6" href="$db/d73/structhostport__type.html" title="Represents a host port, e.g. &quot;127.127.0.1:80&quot;." alt="" coords="125,103,237,130"/>
-</map>

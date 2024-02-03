@@ -1,6 +1,0 @@
-<map id="http_Download" name="http_Download">
-<area shape="rect" id="node1" title="Download the document message and extract the document from the message." alt="" coords="448,42,568,69"/>
-<area shape="rect" id="node2" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#a9a9de579e2451fa4c340c325e96159eb" title="Download a document with http." alt="" coords="225,5,400,47"/>
-<area shape="rect" id="node3" href="$db/d55/group__UPnPAPI.html#ga475c51dac06a22d937da76a5dbde80c6" title="Downloads a file specified in a URL." alt="" coords="227,71,398,98"/>
-<area shape="rect" id="node4" href="$db/d55/group__UPnPAPI.html#gac43a9ddbe8e1c8270f20565240d20563" title="Downloads an XML document specified in a URL." alt="" coords="5,71,177,98"/>
-</map>

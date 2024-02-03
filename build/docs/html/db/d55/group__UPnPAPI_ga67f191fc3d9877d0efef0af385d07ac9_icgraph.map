@@ -1,5 +1,0 @@
-<map id="GetDeviceHandleInfoForPath" name="GetDeviceHandleInfoForPath">
-<area shape="rect" id="node1" title="Retrieves the device handle and information of the first device of the address family specified,..." alt="" coords="251,46,460,73"/>
-<area shape="rect" id="node2" href="$dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="5,5,203,47"/>
-<area shape="rect" id="node3" href="$dd/de6/gena__device_8cpp.html#a4b03afbfa4cbf8c318857a43bbf92d8e" title="Handles a subscription cancellation request from a ctrl point. The connection is not destroyed on ret..." alt="" coords="6,71,202,112"/>
-</map>

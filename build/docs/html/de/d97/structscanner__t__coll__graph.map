@@ -1,4 +1,0 @@
-<map id="scanner_t" name="scanner_t">
-<area shape="rect" id="node1" title="Structure of a scanner object." alt="" coords="10,95,95,121"/>
-<area shape="rect" id="node2" href="$d8/d52/structmembuffer.html" title="Maintains a block of dynamically allocated memory." alt="" coords="5,5,100,32"/>
-</map>

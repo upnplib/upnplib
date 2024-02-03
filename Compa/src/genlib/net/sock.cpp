@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-27
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,15 +32,12 @@
  *
  **************************************************************************/
 // Last compare with ./pupnp source file on 2023-09-13, ver 1.14.18
-
 /*!
- * \addtogroup Sock
- *
- * @{
- *
  * \file
- *
  * \brief Implements the sockets functionality.
+ *
+ * \addtogroup Sock
+ * @{
  */
 
 #include <sock.hpp>
@@ -690,4 +687,4 @@ int sock_make_no_blocking(SOCKET sock) {
 #endif /* _WIN32 */
 }
 
-/* @} Sock */
+/// @} // Sock

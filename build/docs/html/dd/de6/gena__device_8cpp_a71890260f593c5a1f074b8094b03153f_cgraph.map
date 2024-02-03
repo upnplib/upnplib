@@ -1,4 +1,0 @@
-<map id="gena_validate_delivery_urls" name="gena_validate_delivery_urls">
-<area shape="rect" id="node1" title="Validate that the URLs passed by the user are on the same network segment than the device." alt="" coords="5,5,211,32"/>
-<area shape="rect" id="node2" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement either on the standard output or log file along with the information from ..." alt="" coords="259,5,349,32"/>
-</map>

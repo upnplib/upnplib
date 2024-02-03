@@ -1,5 +1,0 @@
-<map id="http_HttpGetProgress" name="http_HttpGetProgress">
-<area shape="rect" id="node1" title="Extracts information from the Handle to the HTTP get object." alt="" coords="251,42,413,69"/>
-<area shape="rect" id="node2" href="$d4/d8c/classupnplib_1_1Chttpreadwrite__old.html#a888ac3f362a792383e9acaaa7b2fe86b" title="Get progress of an http communication." alt="" coords="5,5,203,47"/>
-<area shape="rect" id="node3" href="$db/d55/group__UPnPAPI.html#ga73f92133747b61ba5510732b5b7d0b98" title="Retrieve progress information of a http&#45;get transfer." alt="" coords="23,71,185,98"/>
-</map>
