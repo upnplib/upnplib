@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-01-31
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,8 +35,8 @@
 
 /*!
  * \file
+ * \brief This file defines the functionality making use of the http.
  *
- * Purpose: This file defines the functionality making use of the http.
  * It defines functions to receive messages, process messages, send messages.
  */
 
@@ -84,31 +84,35 @@
 #include <umock/winsock2.hpp>
 #include <umock/sysinfo.hpp>
 
-/*
- * Please, do not change these to const int while MSVC cannot understand
- * const int in array dimensions.
- */
-/*
-   const int CHUNK_HEADER_SIZE = 10;
-   const int CHUNK_TAIL_SIZE = 10;
-   */
-#define CHUNK_HEADER_SIZE (size_t)10
-#define CHUNK_TAIL_SIZE (size_t)10
+
+namespace {
+
+/// ???
+constexpr size_t CHUNK_HEADER_SIZE{10};
+/// ???
+constexpr size_t CHUNK_TAIL_SIZE{10};
 
 /* in seconds */
-#define DEFAULT_TCP_CONNECT_TIMEOUT 5
+/*! \brief Default TCP connection timeout.
+ */
+constexpr time_t DEFAULT_TCP_CONNECT_TIMEOUT{5};
 
+
+/*! \name Scope restricted to file
+ * @{
+ */
 /*!
  * \brief Checks socket connection and wait if it is not connected.
+ *
  * It should be called just after connect.
  *
  * \return 0 if successful, else -1.
  */
-static int Check_Connect_And_Wait_Connection(
-    /*! [in] socket. */
-    const SOCKET a_sock,
-    /*! [in] result of connect. */
-    const int connect_res) {
+int Check_Connect_And_Wait_Connection(
+    const SOCKET a_sock,  ///< [in] Socket file descriptor.
+    const int connect_res /*!< [in] Result of connect that has been executed
+                                    before calling this. */
+) {
     TRACE("Executing Check_Connect_And_Wait_Connection()")
 
     if (connect_res == 0)
@@ -152,6 +156,7 @@ static int Check_Connect_And_Wait_Connection(
     return 0;
 }
 
+/// \cond
 // Using this variable to be able to set it by unit tests to test
 // blocking vs. unblocking at runtime, no need to compile it.
 #ifdef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
@@ -159,54 +164,22 @@ bool unblock_tcp_connections{false};
 #else
 bool unblock_tcp_connections{true};
 #endif
+/// \endcond
 
-// Returns 0 if successful, else SOCKET_ERROR.
-static int private_connect(const SOCKET sockfd, const sockaddr* const serv_addr,
-                           const socklen_t addrlen) {
-    TRACE("Executing private_connect(), blocking " +
-          std::string(unblock_tcp_connections ? "false" : "true"))
-
-    if (unblock_tcp_connections) {
-
-        int ret{SOCKET_ERROR};
-        // returns 0 if successful, else SOCKET_ERROR.
-        ret = umock::pupnp_sock.sock_make_no_blocking(sockfd);
-        if (ret == 0) {
-            // ret is needed for Check_Connect_And_Wait_Connection(),
-            // returns 0 if successful, else -1.
-            ret = umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
-            // returns 0 if successful, else -1.
-            ret = Check_Connect_And_Wait_Connection(sockfd, ret);
-
-            // Always make_blocking() to revert make_no_blocking() above.
-            // returns 0 if successful, else SOCKET_ERROR.
-            ret = ret | umock::pupnp_sock.sock_make_blocking(sockfd);
-        }
-
-        return ret == 0 ? 0 : SOCKET_ERROR;
-
-    } else { // unblock_tcp_connections == false
-
-        return umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
-        // TODO: Return more detailed error codes, e.g. with 'getsockopt()'
-        // valopt == 111: ECONNREFUSED "Connection refused" if there is a
-        // remote host but no server service listening.
-    }
-}
-
-#ifdef _WIN32
-struct tm* http_gmtime_r(const time_t* clock, struct tm* result) {
-    if (clock == NULL || *clock < 0 || result == NULL)
-        return NULL;
-
-    /* gmtime in VC runtime is thread safe. */
-    gmtime_s(result, clock);
-    return result;
-}
-#endif
-
-static int get_hoststr(const char* url_str, const char** hoststr,
-                       size_t* hostlen) {
+/*!
+ * \brief Extract hostname from URL.
+ *
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error: UPNP_E_INVALID_URL
+ *
+ * \todo Check if this can be taken from the httpparser.
+ */
+int get_hoststr(
+    const char* url_str,  ///< [in] Pointer to URL string.
+    const char** hoststr, ///< [out] Pointer to pointer to the host string.
+    size_t* hostlen       ///< [in] Pointer to max length of the host string.
+) {
     const char* start;
     const char* finish;
     int ret_code = UPNP_E_INVALID_URL;
@@ -230,9 +203,13 @@ end_function:
     return ret_code;
 }
 
-static void copy_msg_headers(LinkedList* msgHeaders, UpnpString* headers) {
-    (void)msgHeaders;
-    (void)headers;
+/*!
+ * \brief Dummy function. It do nothing since years. Do we need it?
+ *
+ * \todo Dummy function. It do nothing since years. Do we need it?
+ */
+void copy_msg_headers([[maybe_unused]] LinkedList* msgHeaders,
+                      [[maybe_unused]] UpnpString* headers) {
     return;
 /* TODO: */
 #if 0
@@ -258,6 +235,313 @@ static void copy_msg_headers(LinkedList* msgHeaders, UpnpString* headers) {
     }
 #endif
 }
+
+/*!
+ * \brief Make a generic message, what ever this mean.
+ *
+ * \todo Need to be documented.
+ */
+int MakeGenericMessage(http_method_t method, const char* url_str,
+                       membuffer* request, uri_type* url, int contentLength,
+                       const char* contentType, const UpnpString* headers) {
+    int ret_code = 0;
+    size_t hostlen{};
+    const char* hoststr;
+
+    UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__, "URL: %s method: %d\n",
+               url_str, method);
+    ret_code = http_FixStrUrl(url_str, strlen(url_str), url);
+    if (ret_code != UPNP_E_SUCCESS)
+        return ret_code;
+    /* make msg */
+    membuffer_init(request);
+    ret_code = http_MakeMessage(request, 1, 1, "Q", method, url->pathquery.buff,
+                                url->pathquery.size);
+    /* add request headers if specified, otherwise use default headers */
+    if (ret_code == 0) {
+        if (headers) {
+            ret_code = http_MakeMessage(request, 1, 1, "s",
+                                        UpnpString_get_String(headers));
+        } else {
+            ret_code = get_hoststr(url_str, &hoststr, &hostlen);
+            if (ret_code != UPNP_E_SUCCESS)
+                return ret_code;
+            UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
+                       "HOSTNAME : %s Length : %" PRIzu "\n", hoststr, hostlen);
+            ret_code = http_MakeMessage(request, 1, 1,
+                                        "s"
+                                        "bcDCU",
+                                        "HOST: ", hoststr, hostlen);
+        }
+    }
+
+    /* add the content-type header */
+    if (ret_code == 0 && contentType) {
+        ret_code = http_MakeMessage(request, 1, 1, "T", contentType);
+    }
+    /* add content-length header. */
+    if (ret_code == 0) {
+        if (contentLength >= 0)
+            ret_code =
+                http_MakeMessage(request, 1, 1, "Nc", (off_t)contentLength);
+        else if (contentLength == UPNP_USING_CHUNKED)
+            ret_code = http_MakeMessage(request, 1, 1, "Kc");
+        else if (contentLength == UPNP_UNTIL_CLOSE)
+            ret_code = http_MakeMessage(request, 1, 1, "c");
+        else
+            ret_code = UPNP_E_INVALID_PARAM;
+    }
+    if (ret_code != 0) {
+        UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
+                   "HTTP Makemessage failed\n");
+        membuffer_destroy(request);
+        return ret_code;
+    }
+    UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
+               "HTTP Buffer:\n%s\n"
+               "----------END--------\n",
+               request->buf);
+
+    return UPNP_E_SUCCESS;
+}
+
+/*!
+ * \brief Handle for a connection.
+ */
+struct http_connection_handle_t {
+    SOCKINFO sock_info;
+    int contentLength;
+    http_parser_t response;
+    int requestStarted;
+    int cancel;
+};
+
+/*!
+ * \brief Parses already exiting data.
+ *
+ * If not complete reads more data on the connected socket. The read data is
+ * then parsed. The same methid is carried out for headers.
+ *
+ * \returns
+ *  On success: PARSE_OK\n
+ *  On error:
+ *  - PARSE_FAILURE - Failure to parse data correctly
+ *  - UPNP_E_BAD_HTTPMSG - Socker read() returns an error
+ */
+int ReadResponseLineAndHeaders(
+    /*! Socket information object. */
+    SOCKINFO* info,
+    /*! HTTP Parser object. */
+    http_parser_t* parser,
+    /*! Time out value. */
+    int* timeout_secs,
+    /*! HTTP errror code returned. */
+    int* http_error_code) {
+    parse_status_t status;
+    int num_read;
+    char buf[2 * 1024];
+    int done = 0;
+    int ret_code = 0;
+
+    /*read response line */
+    status = parser_parse_responseline(parser);
+    switch (status) {
+    case PARSE_OK:
+        done = 1;
+        break;
+    case PARSE_INCOMPLETE:
+        done = 0;
+        break;
+    default:
+        /*error */
+        return status;
+    }
+    while (!done) {
+        num_read = sock_read(info, buf, sizeof(buf), timeout_secs);
+        if (num_read > 0) {
+            /* append data to buffer */
+            ret_code =
+                membuffer_append(&parser->msg.msg, buf, (size_t)num_read);
+            if (ret_code != 0) {
+                /* set failure status */
+                parser->http_error_code = HTTP_INTERNAL_SERVER_ERROR;
+                return PARSE_FAILURE;
+            }
+            status = parser_parse_responseline(parser);
+            switch (status) {
+            case PARSE_OK:
+                done = 1;
+                break;
+            case PARSE_INCOMPLETE:
+                done = 0;
+                break;
+            default:
+                /*error */
+                return status;
+            }
+        } else if (num_read == 0) {
+            /* partial msg */
+            *http_error_code = HTTP_BAD_REQUEST; /* or response */
+            return UPNP_E_BAD_HTTPMSG;
+        } else {
+            *http_error_code = parser->http_error_code;
+            return num_read;
+        }
+    }
+    status = parser_parse_headers(parser);
+    if ((status == (parse_status_t)PARSE_OK) &&
+        (parser->position == (parser_pos_t)POS_ENTITY))
+        done = 1;
+    else if (status == (parse_status_t)PARSE_INCOMPLETE)
+        done = 0;
+    else
+        /*error */
+        return status;
+    /*read headers */
+    while (!done) {
+        num_read = sock_read(info, buf, sizeof(buf), timeout_secs);
+        if (num_read > 0) {
+            /* append data to buffer */
+            ret_code =
+                membuffer_append(&parser->msg.msg, buf, (size_t)num_read);
+            if (ret_code != 0) {
+                /* set failure status */
+                parser->http_error_code = HTTP_INTERNAL_SERVER_ERROR;
+                return PARSE_FAILURE;
+            }
+            status = parser_parse_headers(parser);
+            if (status == (parse_status_t)PARSE_OK &&
+                parser->position == (parser_pos_t)POS_ENTITY)
+                done = 1;
+            else if (status == (parse_status_t)PARSE_INCOMPLETE)
+                done = 0;
+            else
+                /*error */
+                return status;
+        } else if (num_read == 0) {
+            /* partial msg */
+            *http_error_code = HTTP_BAD_REQUEST; /* or response */
+            return UPNP_E_BAD_HTTPMSG;
+        } else {
+            *http_error_code = parser->http_error_code;
+            return num_read;
+        }
+    }
+
+    return PARSE_OK;
+}
+
+/*!
+ * \brief Make extended GetMessage.
+ * \todo Needs documentation. There was no information found.
+ */
+int MakeGetMessageEx(const char* url_str, membuffer* request, uri_type* url,
+                     SendInstruction* pRangeSpecifier) {
+    size_t url_str_len;
+    int ret_code = UPNP_E_SUCCESS;
+    size_t hostlen = 0;
+    const char* hoststr;
+
+    url_str_len = strlen(url_str);
+    do {
+        UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__, "DOWNLOAD URL : %s\n",
+                   url_str);
+        ret_code = http_FixStrUrl(url_str, url_str_len, url);
+        if (ret_code != UPNP_E_SUCCESS) {
+            break;
+        }
+        /* make msg */
+        membuffer_init(request);
+        ret_code = get_hoststr(url_str, &hoststr, &hostlen);
+        if (ret_code != UPNP_E_SUCCESS) {
+            break;
+        }
+        UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
+                   "HOSTNAME : %s Length : %" PRIzu "\n", hoststr, hostlen);
+        ret_code = http_MakeMessage(request, 1, 1,
+                                    "Q"
+                                    "s"
+                                    "bc"
+                                    "GDCUc",
+                                    HTTPMETHOD_GET, url->pathquery.buff,
+                                    url->pathquery.size, "HOST: ", hoststr,
+                                    hostlen, pRangeSpecifier);
+        if (ret_code != 0) {
+            UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
+                       "HTTP Makemessage failed\n");
+            membuffer_destroy(request);
+            return ret_code;
+        }
+    } while (0);
+    UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
+               "HTTP Buffer:\n%s\n"
+               "----------END--------\n",
+               request->buf);
+
+    return ret_code;
+}
+
+/// @} // Functions (scope restricted to file)
+} // anonymous namespace
+
+/// @{
+/*!
+ * \brief Initiate a connection on a socket.
+ *
+ * \returns
+ *  On success: 0\n
+ *  On error: SOCKET_ERROR
+ *
+ * \todo Return more detailed error codes, e.g. with 'getsockopt()' valopt ==
+ * 111: ECONNREFUSED "Connection refused" if there is a remote host but no
+ * server service listening.
+ */
+static int private_connect(
+    // Due to compatibility with Umock for Pupnp this has to be defined static.
+    const SOCKET sockfd, ///< [in] Socket file descriptor.
+    const sockaddr* const
+        serv_addr,          ///< [in] Socket address of a remote network node.
+    const socklen_t addrlen ///< [in] Size of the socket address.
+) {
+    TRACE("Executing private_connect(), blocking " +
+          std::string(unblock_tcp_connections ? "false" : "true"))
+
+    if (unblock_tcp_connections) {
+
+        int ret{SOCKET_ERROR};
+        // returns 0 if successful, else SOCKET_ERROR.
+        ret = umock::pupnp_sock.sock_make_no_blocking(sockfd);
+        if (ret == 0) {
+            // ret is needed for Check_Connect_And_Wait_Connection(),
+            // returns 0 if successful, else -1.
+            ret = umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
+            // returns 0 if successful, else -1.
+            ret = Check_Connect_And_Wait_Connection(sockfd, ret);
+
+            // Always make_blocking() to revert make_no_blocking() above.
+            // returns 0 if successful, else SOCKET_ERROR.
+            ret = ret | umock::pupnp_sock.sock_make_blocking(sockfd);
+        }
+
+        return ret == 0 ? 0 : SOCKET_ERROR;
+
+    } else { // unblock_tcp_connections == false
+
+        return umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
+    }
+}
+/// @}
+
+#if defined(_WIN32) || defined(DOXYGEN_RUN)
+tm* http_gmtime_r(const time_t* clock, tm* result) {
+    if (clock == NULL || *clock < 0 || result == NULL)
+        return NULL;
+
+    /* gmtime in VC runtime is thread safe. */
+    gmtime_s(result, clock);
+    return result;
+}
+#endif
 
 int http_FixUrl(uri_type* url, uri_type* fixed_url) {
     const char* temp_path = "/";
@@ -329,24 +613,6 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
     return connfd;
 }
 
-/*!
- * \brief Get the data on the socket and take actions based on the read data to
- * modify the parser objects buffer.
- *
- * If an error is reported while parsing the data, the error code is passed in
- * the http_errr_code parameter.
- *
- * Parameters:
- *  IN  SOCKINFO *info;               Socket information object
- *  OUT http_parser_t* parser;        HTTP parser object
- *  IN  http_method_t request_method; HTTP request method
- *  IN  OUT int* timeout_secs;        time out
- *  OUT int* http_error_code;         HTTP error code returned
- *
- * \return
- *   UPNP_E_SUCCESS
- *   UPNP_E_BAD_HTTPMSG
- */
 int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
                      http_method_t request_method, int* timeout_secs,
                      int* http_error_code) {
@@ -658,6 +924,7 @@ ExitFunction:
     return RetVal;
 }
 
+
 int http_RequestAndResponse(uri_type* destination, const char* request,
                             size_t request_length, http_method_t req_method,
                             int timeout_secs, http_parser_t* response) {
@@ -820,190 +1087,6 @@ int http_Download(const char* url_str, int timeout_secs, char** document,
     return ret_code;
 }
 
-int MakeGenericMessage(http_method_t method, const char* url_str,
-                       membuffer* request, uri_type* url, int contentLength,
-                       const char* contentType, const UpnpString* headers) {
-    int ret_code = 0;
-    size_t hostlen{};
-    const char* hoststr;
-
-    UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__, "URL: %s method: %d\n",
-               url_str, method);
-    ret_code = http_FixStrUrl(url_str, strlen(url_str), url);
-    if (ret_code != UPNP_E_SUCCESS)
-        return ret_code;
-    /* make msg */
-    membuffer_init(request);
-    ret_code = http_MakeMessage(request, 1, 1, "Q", method, url->pathquery.buff,
-                                url->pathquery.size);
-    /* add request headers if specified, otherwise use default headers */
-    if (ret_code == 0) {
-        if (headers) {
-            ret_code = http_MakeMessage(request, 1, 1, "s",
-                                        UpnpString_get_String(headers));
-        } else {
-            ret_code = get_hoststr(url_str, &hoststr, &hostlen);
-            if (ret_code != UPNP_E_SUCCESS)
-                return ret_code;
-            UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                       "HOSTNAME : %s Length : %" PRIzu "\n", hoststr, hostlen);
-            ret_code = http_MakeMessage(request, 1, 1,
-                                        "s"
-                                        "bcDCU",
-                                        "HOST: ", hoststr, hostlen);
-        }
-    }
-
-    /* add the content-type header */
-    if (ret_code == 0 && contentType) {
-        ret_code = http_MakeMessage(request, 1, 1, "T", contentType);
-    }
-    /* add content-length header. */
-    if (ret_code == 0) {
-        if (contentLength >= 0)
-            ret_code =
-                http_MakeMessage(request, 1, 1, "Nc", (off_t)contentLength);
-        else if (contentLength == UPNP_USING_CHUNKED)
-            ret_code = http_MakeMessage(request, 1, 1, "Kc");
-        else if (contentLength == UPNP_UNTIL_CLOSE)
-            ret_code = http_MakeMessage(request, 1, 1, "c");
-        else
-            ret_code = UPNP_E_INVALID_PARAM;
-    }
-    if (ret_code != 0) {
-        UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                   "HTTP Makemessage failed\n");
-        membuffer_destroy(request);
-        return ret_code;
-    }
-    UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-               "HTTP Buffer:\n%s\n"
-               "----------END--------\n",
-               request->buf);
-
-    return UPNP_E_SUCCESS;
-}
-
-struct http_connection_handle_t {
-    SOCKINFO sock_info;
-    int contentLength;
-    http_parser_t response;
-    int requestStarted;
-    int cancel;
-};
-
-/*!
- * \brief Parses already exiting data. If not complete reads more
- * data on the connected socket. The read data is then parsed. The
- * same methid is carried out for headers.
- *
- * \return integer:
- *  \li \c PARSE_OK - On Success
- *  \li \c PARSE_FAILURE - Failure to parse data correctly
- *  \li \c UPNP_E_BAD_HTTPMSG - Socker read() returns an error
- */
-static int ReadResponseLineAndHeaders(
-    /*! Socket information object. */
-    SOCKINFO* info,
-    /*! HTTP Parser object. */
-    http_parser_t* parser,
-    /*! Time out value. */
-    int* timeout_secs,
-    /*! HTTP errror code returned. */
-    int* http_error_code) {
-    parse_status_t status;
-    int num_read;
-    char buf[2 * 1024];
-    int done = 0;
-    int ret_code = 0;
-
-    /*read response line */
-    status = parser_parse_responseline(parser);
-    switch (status) {
-    case PARSE_OK:
-        done = 1;
-        break;
-    case PARSE_INCOMPLETE:
-        done = 0;
-        break;
-    default:
-        /*error */
-        return status;
-    }
-    while (!done) {
-        num_read = sock_read(info, buf, sizeof(buf), timeout_secs);
-        if (num_read > 0) {
-            /* append data to buffer */
-            ret_code =
-                membuffer_append(&parser->msg.msg, buf, (size_t)num_read);
-            if (ret_code != 0) {
-                /* set failure status */
-                parser->http_error_code = HTTP_INTERNAL_SERVER_ERROR;
-                return PARSE_FAILURE;
-            }
-            status = parser_parse_responseline(parser);
-            switch (status) {
-            case PARSE_OK:
-                done = 1;
-                break;
-            case PARSE_INCOMPLETE:
-                done = 0;
-                break;
-            default:
-                /*error */
-                return status;
-            }
-        } else if (num_read == 0) {
-            /* partial msg */
-            *http_error_code = HTTP_BAD_REQUEST; /* or response */
-            return UPNP_E_BAD_HTTPMSG;
-        } else {
-            *http_error_code = parser->http_error_code;
-            return num_read;
-        }
-    }
-    status = parser_parse_headers(parser);
-    if ((status == (parse_status_t)PARSE_OK) &&
-        (parser->position == (parser_pos_t)POS_ENTITY))
-        done = 1;
-    else if (status == (parse_status_t)PARSE_INCOMPLETE)
-        done = 0;
-    else
-        /*error */
-        return status;
-    /*read headers */
-    while (!done) {
-        num_read = sock_read(info, buf, sizeof(buf), timeout_secs);
-        if (num_read > 0) {
-            /* append data to buffer */
-            ret_code =
-                membuffer_append(&parser->msg.msg, buf, (size_t)num_read);
-            if (ret_code != 0) {
-                /* set failure status */
-                parser->http_error_code = HTTP_INTERNAL_SERVER_ERROR;
-                return PARSE_FAILURE;
-            }
-            status = parser_parse_headers(parser);
-            if (status == (parse_status_t)PARSE_OK &&
-                parser->position == (parser_pos_t)POS_ENTITY)
-                done = 1;
-            else if (status == (parse_status_t)PARSE_INCOMPLETE)
-                done = 0;
-            else
-                /*error */
-                return status;
-        } else if (num_read == 0) {
-            /* partial msg */
-            *http_error_code = HTTP_BAD_REQUEST; /* or response */
-            return UPNP_E_BAD_HTTPMSG;
-        } else {
-            *http_error_code = parser->http_error_code;
-            return num_read;
-        }
-    }
-
-    return PARSE_OK;
-}
 
 int http_HttpGetProgress(void* Handle, size_t* length, size_t* total) {
     http_connection_handle_t* handle = (http_connection_handle_t*)Handle;
@@ -1367,8 +1450,10 @@ int http_SendStatusResponse(SOCKINFO* info, int http_status_code,
     return ret;
 }
 
+/// \cond
 // Using this variable to be able to modify it by gtests without recompile.
 std::string web_server_content_language{WEB_SERVER_CONTENT_LANGUAGE};
+/// \endcond
 
 int http_MakeMessage(membuffer* buf, int http_major_version,
                      int http_minor_version, const char* fmt, ...) {
@@ -1646,53 +1731,6 @@ void http_CalcResponseVersion(int request_major_vers, int request_minor_vers,
     }
 }
 
-int MakeGetMessageEx(const char* url_str, membuffer* request, uri_type* url,
-                     struct SendInstruction* pRangeSpecifier) {
-    size_t url_str_len;
-    int ret_code = UPNP_E_SUCCESS;
-    size_t hostlen = 0;
-    const char* hoststr;
-
-    url_str_len = strlen(url_str);
-    do {
-        UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__, "DOWNLOAD URL : %s\n",
-                   url_str);
-        ret_code = http_FixStrUrl(url_str, url_str_len, url);
-        if (ret_code != UPNP_E_SUCCESS) {
-            break;
-        }
-        /* make msg */
-        membuffer_init(request);
-        ret_code = get_hoststr(url_str, &hoststr, &hostlen);
-        if (ret_code != UPNP_E_SUCCESS) {
-            break;
-        }
-        UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                   "HOSTNAME : %s Length : %" PRIzu "\n", hoststr, hostlen);
-        ret_code = http_MakeMessage(request, 1, 1,
-                                    "Q"
-                                    "s"
-                                    "bc"
-                                    "GDCUc",
-                                    HTTPMETHOD_GET, url->pathquery.buff,
-                                    url->pathquery.size, "HOST: ", hoststr,
-                                    hostlen, pRangeSpecifier);
-        if (ret_code != 0) {
-            UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                       "HTTP Makemessage failed\n");
-            membuffer_destroy(request);
-            return ret_code;
-        }
-    } while (0);
-    UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-               "HTTP Buffer:\n%s\n"
-               "----------END--------\n",
-               request->buf);
-
-    return ret_code;
-}
-
-#define SIZE_RANGE_BUFFER 50
 
 int http_OpenHttpGetEx(const char* url_str, void** Handle, char** contentType,
                        int* contentLength, int* httpStatus, int lowRange,
@@ -1706,7 +1744,6 @@ int http_OpenHttpGetEx(const char* url_str, void** Handle, char** contentType,
     uri_type url;
     parse_status_t status;
     int errCode = UPNP_E_SUCCESS;
-    /* char rangeBuf[SIZE_RANGE_BUFFER]; */
     struct SendInstruction rangeBuf;
     int rc = 0;
 

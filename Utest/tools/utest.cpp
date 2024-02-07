@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-05
+// Redistribution only with this Copyright remark. Last modified: 2024-02-07
 
 // Tools and helper classes to manage gtests
 // =========================================
@@ -12,8 +12,10 @@
 #include <cstring>
 #include <fcntl.h> // Obtain O_* constant definitions
 
+#ifdef __APPLE__
 #include <chrono>
 #include <thread>
+#endif
 
 namespace utest {
 
@@ -91,8 +93,8 @@ void CaptureStdOutErr::start() {
 
 std::string& CaptureStdOutErr::str() {
 #ifdef __APPLE__
-    // temporary sleep just for debug on macOS, will be removed after fix.
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    // temporary sleep just for debug on macOS, may be removed after fix.
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
 #endif
 
     // read from pipe into chunk and append the chunk to a string

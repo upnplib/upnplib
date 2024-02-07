@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-01-31
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -48,7 +48,7 @@
 
 #if defined(_WIN32) || defined(DOXYGEN_RUN)
 /// \brief Portable gmtime_r for Microsoft Windows.
-struct tm* http_gmtime_r(const time_t* clock, struct tm* result);
+tm* http_gmtime_r(const time_t* clock, tm* result);
 #else
 #define http_gmtime_r gmtime_r
 #endif
@@ -110,10 +110,10 @@ SOCKET http_Connect(           //
  *
  * If an error is reported while parsing the data, the error code is passed in
  * the http_error_code parameter.
+ *
  * \returns
  * On success: UPNP_E_SUCCESS\n
- * On error:
- *  - UPNP_E_BAD_HTTPMSG
+ * On error: UPNP_E_BAD_HTTPMSG
  */
 UPNPLIB_API int http_RecvMessage( //
     SOCKINFO* info,               ///< [in] Socket information object.
@@ -158,9 +158,9 @@ UPNPLIB_API int http_RecvMessage( //
  *  - UPNP_E_SOCKET_WRITE
  *  - UPNP_E_SOCKET_ERROR
  */
-UPNPLIB_API int http_SendMessage( //
-    SOCKINFO* info,               ///< [in] Socket information object.
-    int* timeout_secs,            ///< [in,out] Time out value.
+UPNPLIB_API int http_SendMessage(
+    SOCKINFO* info, ///< [in] Socket information object.
+    int* TimeOut,   ///< [in,out] Time out value.
     const char*
         fmt, ///< [in] Pattern format to take actions upon (like printf()).
     ...      ///< [in] Variable argument list (like printf()).
@@ -179,7 +179,7 @@ UPNPLIB_API int http_SendMessage( //
  *  - Error Codes returned by http_RecvMessage()
  */
 int http_RequestAndResponse(  //
-    uri_type* remote_host,    /*!< [in] Destination URI object which contains
+    uri_type* destination,    /*!< [in] Destination URI object which contains
                                *   remote IP address among other elements. */
     const char* request,      ///< [in] Request to be sent.
     size_t request_length,    ///< [in] Length of the request.
@@ -210,7 +210,7 @@ int http_RequestAndResponse(  //
  *  - UPNP_E_INVALID_URL
  */
 UPNPLIB_API int http_Download( //
-    const char* url,           ///< [in] String as a URL.
+    const char* url_str,       ///< [in] String as a URL.
     int timeout_secs,          ///< [in] Time out value.
     char** document, /*!< [out] Buffer to store the document extracted from the
                       *   donloaded message. */
@@ -255,10 +255,10 @@ UPNPLIB_API int http_HttpGetProgress(
 UPNPLIB_API int http_OpenHttpConnection(
     /*! [in] The URL which contains the host, and the scheme to make the
        connection. */
-    const char* url,
+    const char* url_str,
     /*! [in,out] A pointer in which to store the handle for this connection.
      * This handle is required for futher operations over this connection. */
-    void** handle,
+    void** Handle,
     /*! [in] The time out value sent with the request during which a response
      * is expected from the receiver, failing which, an error is reported.
      * If value is negative, timeout is infinite.\n
@@ -292,9 +292,9 @@ UPNPLIB_API int http_MakeHttpRequest(
     Upnp_HttpMethod method,
     /*! [in] The URL to use to make the request. The URL should use the same
      * host and scheme used to create the connection. */
-    const char* url,
+    const char* url_str,
     /*! [in] The handle to the connection. */
-    void* handle,
+    void* Handle,
     /*! [in] Headers to be used for the request. Each header should be
      * terminated by a CRLF as specified in the HTTP specification. If NULL
      * then the default headers will be used. */
@@ -327,7 +327,7 @@ UPNPLIB_API int http_MakeHttpRequest(
 UPNPLIB_API int http_WriteHttpRequest(
     /*! [in] The handle of the connection created by the call to
      * UpnpOpenHttpConnection(). */
-    void* handle,
+    void* Handle,
     /*! [in] The buffer containing date to be written. */
     char* buf,
     /*! [in] The size, in bytes of **buf**. */
@@ -353,7 +353,7 @@ UPNPLIB_API int http_WriteHttpRequest(
  */
 UPNPLIB_API int http_EndHttpRequest(
     /*! [in] The handle to the connection. */
-    void* handle,
+    void* Handle,
     /*! [in] The time out value sent with the request during which a response is
        expected from the receiver, failing which, an error is reported. If value
        is negative, timeout is infinite. */
@@ -385,7 +385,7 @@ UPNPLIB_API int http_EndHttpRequest(
 UPNPLIB_API int http_GetHttpResponse(
     /*! [in] The handle of the connection created by the call to
        UpnpOpenHttpConnection(). */
-    void* handle,
+    void* Handle,
     /*! [in] Headers sent by the server for the response. If nullptr then the
      * headers are not copied. */
     UpnpString* headers,
@@ -421,7 +421,7 @@ UPNPLIB_API int http_GetHttpResponse(
 UPNPLIB_API int http_ReadHttpResponse(
     /*! [in] The handle of the connection created by the call to
        UpnpOpenHttpConnection(). */
-    void* handle,
+    void* Handle,
     /*! [in,out] The buffer to store the read item. */
     char* buf,
     /*! [in,out] The size of the buffer to be read. */
@@ -445,7 +445,7 @@ UPNPLIB_API int http_ReadHttpResponse(
 UPNPLIB_API int http_CloseHttpConnection(
     /*! [in] The handle of the connection to close, created by the call to
        UpnpOpenHttpPost(). */
-    void* handle);
+    void* Handle);
 
 /*!
  * \brief Generate a response message for the status query and send the status
