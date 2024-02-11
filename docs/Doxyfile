@@ -955,20 +955,20 @@ INPUT                  = README.md \
                          Compa/src/genlib/miniserver/miniserver.cpp \
                          Compa/src/genlib/net/http/httpparser.cpp \
                          Compa/src/genlib/net/http/httpreadwrite.cpp \
+                         Compa/src/genlib/net/http/parsetools.cpp \
+                         Compa/src/genlib/net/http/statcodes.cpp \
+                         Compa/src/genlib/net/http/webserver.cpp \
                          \
                          Compa/src/genlib/util/strintmap.cpp \
                          \
                          Compa/src/inc
-#
+
 #delete Compa/inc/UpnpGlobal.hpp
 #delete Compa/inc/UpnpInet.hpp
 #delete Compa/inc/UpnpIntTypes.hpp
 #delete Compa/inc/UpnpUniStd.hpp
 #delete Compa/inc/init.hpp
 #
-#Compa/src/genlib/net/http/parsetools.cpp
-#Compa/src/genlib/net/http/statcodes.cpp
-#Compa/src/genlib/net/http/webserver.cpp
 #Compa/src/genlib/net/sock.cpp
 #Compa/src/genlib/net/uri/uri.cpp
 #Compa/src/genlib/service-table/service_table.cpp
@@ -1189,7 +1189,7 @@ FORTRAN_COMMENT_AFTER  = 72
 # also VERBATIM_HEADERS is set to NO.
 # The default value is: NO.
 
-SOURCE_BROWSER         = NO
+SOURCE_BROWSER         = YES
 
 # Setting the INLINE_SOURCES tag to YES will include the body of functions,
 # classes and enums directly into the documentation.

@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-19
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,21 +31,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
 /*!
  * \file
- *
- * Purpose: This file a function to extract the header information from
- * an http message and then matches the data with XML data.
+ * \brief Function to extract header information from an http message and match
+ * the data with XML data.
  */
 
-#include "config.hpp"
+#include <config.hpp>
+#include <httpparser.hpp>
+/// \cond
 #include <assert.h>
-// #include "upnputil.hpp"
-// #include "membuffer.hpp"
-#include "httpparser.hpp"
-// #include "statcodes.hpp"
-// #include "parsetools.hpp"
+/// \endcond
 
 int has_xml_content_type(http_message_t* hmsg) {
     memptr hdr_value;

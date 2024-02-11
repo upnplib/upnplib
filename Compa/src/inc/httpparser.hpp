@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-01-29
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-11
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,7 +42,13 @@
 #include <LinkedList.hpp>
 #include <membuffer.hpp>
 #include <upnputil.hpp>
+#include <strintmap.hpp>
 #include <uri.hpp>
+
+/// \cond
+#include <array>
+/// \endcond
+
 
 /*! \name Constants that define the read method.
  * @{
@@ -144,6 +150,47 @@ enum http_method_t {
 #define HDR_RANGE 35
 #define HDR_TE 36
 /// @}
+
+// clang-format off
+/// \brief Assigns header-name id to its text representation.
+inline constexpr std::array<const str_int_entry, 35> Http_Header_Names {{
+    {"ACCEPT", HDR_ACCEPT},
+    {"ACCEPT-CHARSET", HDR_ACCEPT_CHARSET},
+    {"ACCEPT", HDR_ACCEPT},
+    {"ACCEPT-CHARSET", HDR_ACCEPT_CHARSET},
+    {"ACCEPT-ENCODING", HDR_ACCEPT_ENCODING},
+    {"ACCEPT-LANGUAGE", HDR_ACCEPT_LANGUAGE},
+    {"ACCEPT-RANGES", HDR_ACCEPT_RANGE},
+    {"CACHE-CONTROL", HDR_CACHE_CONTROL},
+    {"CALLBACK", HDR_CALLBACK},
+    {"CONTENT-ENCODING", HDR_CONTENT_ENCODING},
+    {"CONTENT-LANGUAGE", HDR_CONTENT_LANGUAGE},
+    {"CONTENT-LENGTH", HDR_CONTENT_LENGTH},
+    {"CONTENT-LOCATION", HDR_CONTENT_LOCATION},
+    {"CONTENT-RANGE", HDR_CONTENT_RANGE},
+    {"CONTENT-TYPE", HDR_CONTENT_TYPE},
+    {"DATE", HDR_DATE},
+    {"EXT", HDR_EXT},
+    {"HOST", HDR_HOST},
+    {"IF-RANGE", HDR_IF_RANGE},
+    {"LOCATION", HDR_LOCATION},
+    {"MAN", HDR_MAN},
+    {"MX", HDR_MX},
+    {"NT", HDR_NT},
+    {"NTS", HDR_NTS},
+    {"RANGE", HDR_RANGE},
+    {"SEQ", HDR_SEQ},
+    {"SERVER", HDR_SERVER},
+    {"SID", HDR_SID},
+    {"SOAPACTION", HDR_SOAPACTION},
+    {"ST", HDR_ST},
+    {"TE", HDR_TE},
+    {"TIMEOUT", HDR_TIMEOUT},
+    {"TRANSFER-ENCODING", HDR_TRANSFER_ENCODING},
+    {"USER-AGENT", HDR_USER_AGENT},
+    {"USN", HDR_USN}
+}};
+// clang-format off
 
 /*! \brief Status of parsing. */
 enum parse_status_t {

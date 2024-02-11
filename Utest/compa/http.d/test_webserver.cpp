@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-24
+// Redistribution only with this Copyright remark. Last modified: 2024-02-10
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -50,6 +50,24 @@ static UPNP_INLINE int is_valid_alias(); // Will become method is_valid().
 static void alias_release();             // Will become method release().
 #endif
 
+#ifndef UPNPLIB_WITH_NATIVE_PUPNP
+namespace {
+/*!
+ * \brief Check for the validity of the XML object buffer.
+ *
+ * \returns **true** if valid alias, **false** otherwise.
+ */
+UPNP_INLINE bool is_valid_alias(
+    /*! [in] XML alias object. */
+    const xml_alias_t* alias) {
+    TRACE("Executing is_valid_alias()")
+    if (alias == nullptr)
+        return false;
+    return alias->is_valid();
+}
+
+} // anonymous namespace
+#endif
 
 namespace utest {
 
@@ -245,7 +263,6 @@ TEST(MediaListTestSuite, init) {
         // With new code there is no media list to initialize. We have a
         // constant array there, once initialized by the compiler on startup.
         // This is only a dummy function for compatibility.
-        media_list_init();
     }
 }
 
@@ -253,8 +270,8 @@ TEST(MediaListTestSuite, search_extension) {
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
     // Destroy gMediaTypeList to avoid side effects from other tests.
     memset(&gMediaTypeList, 0xAA, sizeof(gMediaTypeList));
+    ::media_list_init();
 #endif
-    media_list_init();
 
     const char* con_unused{"<unused>"};
     const char* con_type{con_unused};
@@ -285,9 +302,9 @@ TEST(MediaListTestSuite, get_content_type) {
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
     // Destroy gMediaTypeList to avoid side effects from other tests.
     memset(&gMediaTypeList, 0xAA, sizeof(gMediaTypeList));
+    ::media_list_init();
 #endif
     CUpnpFileInfo f;
-    media_list_init();
 
     EXPECT_EQ(get_content_type("tvdevicedesc.xml", f.info), 0);
     EXPECT_STREQ((DOMString)UpnpFileInfo_get_ContentType(f.info), "text/xml");
@@ -346,9 +363,8 @@ TEST(MediaListDeathTest, get_content_type_with_no_fileinfo) {
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
     // Destroy gMediaTypeList to avoid side effects from other tests.
     memset(&gMediaTypeList, 0xAA, sizeof(gMediaTypeList));
+    ::media_list_init();
 #endif
-
-    media_list_init();
 
     if (old_code) {
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__

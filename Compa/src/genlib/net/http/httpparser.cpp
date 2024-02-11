@@ -47,7 +47,6 @@
 
 #include <httpparser.hpp>
 #include <statcodes.hpp>
-#include <strintmap.hpp>
 #include <upnpdebug.hpp>
 
 #include <upnplib/global.hpp>
@@ -59,46 +58,6 @@
 /// \endcond
 
 /* entity positions */
-
-/// \cond
-constexpr int NUM_HTTP_HEADER_NAMES{33};
-/// \endcond
-/// \brief Assigns header-name id to its text representation.
-str_int_entry Http_Header_Names[NUM_HTTP_HEADER_NAMES] = {
-    {"ACCEPT", HDR_ACCEPT},
-    {"ACCEPT-CHARSET", HDR_ACCEPT_CHARSET},
-    {"ACCEPT-ENCODING", HDR_ACCEPT_ENCODING},
-    {"ACCEPT-LANGUAGE", HDR_ACCEPT_LANGUAGE},
-    {"ACCEPT-RANGES", HDR_ACCEPT_RANGE},
-    {"CACHE-CONTROL", HDR_CACHE_CONTROL},
-    {"CALLBACK", HDR_CALLBACK},
-    {"CONTENT-ENCODING", HDR_CONTENT_ENCODING},
-    {"CONTENT-LANGUAGE", HDR_CONTENT_LANGUAGE},
-    {"CONTENT-LENGTH", HDR_CONTENT_LENGTH},
-    {"CONTENT-LOCATION", HDR_CONTENT_LOCATION},
-    {"CONTENT-RANGE", HDR_CONTENT_RANGE},
-    {"CONTENT-TYPE", HDR_CONTENT_TYPE},
-    {"DATE", HDR_DATE},
-    {"EXT", HDR_EXT},
-    {"HOST", HDR_HOST},
-    {"IF-RANGE", HDR_IF_RANGE},
-    {"LOCATION", HDR_LOCATION},
-    {"MAN", HDR_MAN},
-    {"MX", HDR_MX},
-    {"NT", HDR_NT},
-    {"NTS", HDR_NTS},
-    {"RANGE", HDR_RANGE},
-    {"SEQ", HDR_SEQ},
-    {"SERVER", HDR_SERVER},
-    {"SID", HDR_SID},
-    {"SOAPACTION", HDR_SOAPACTION},
-    {"ST", HDR_ST},
-    {"TE", HDR_TE},
-    {"TIMEOUT", HDR_TIMEOUT},
-    {"TRANSFER-ENCODING", HDR_TRANSFER_ENCODING},
-    {"USER-AGENT", HDR_USER_AGENT},
-    {"USN", HDR_USN},
-};
 
 
 namespace { // anonymous namespace to keep scope local to file
@@ -1515,14 +1474,19 @@ parse_status_t parser_parse_headers(http_parser_t* parser) {
         }
         /* add header */
         /* find header */
-        index = map_str_to_int(token.buf, token.length, Http_Header_Names,
-                               NUM_HTTP_HEADER_NAMES, 0);
-        if (index != -1) {
+        index = map_str_to_int(token.buf, token.length, &Http_Header_Names[0],
+                               Http_Header_Names.size(), 0);
+        if (index >= 0) {
             /*Check if it is a soap header */
-            if (Http_Header_Names[index].id == HDR_SOAPACTION) {
+            // No problem with type_cast to 'long unsigned int', index is
+            // checked to be >= 0.
+            if (Http_Header_Names[static_cast<size_t>(index)].id ==
+                HDR_SOAPACTION) {
                 parser->msg.method = SOAPMETHOD_POST;
             }
-            header_id = Http_Header_Names[index].id;
+            // No problem with type_cast to 'long unsigned int', index is
+            // checked to be >= 0.
+            header_id = Http_Header_Names[static_cast<size_t>(index)].id;
             orig_header = httpmsg_find_hdr(&parser->msg, header_id, NULL);
         } else {
             header_id = HDR_UNKNOWN;

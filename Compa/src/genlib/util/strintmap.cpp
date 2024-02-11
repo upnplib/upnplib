@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-02
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-11
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,10 +42,15 @@
 
 #include <strintmap.hpp>
 #include <membuffer.hpp>
+/// \cond
+#include <limits>
+/// \endcond
 
-int map_str_to_int(const char* name, size_t name_len, str_int_entry* table,
-                   int num_entries, int case_sensitive) {
-    int top, mid, bot;
+
+int map_str_to_int(const char* name, size_t name_len,
+                   const str_int_entry* table, size_t num_entries,
+                   int case_sensitive) {
+    size_t top, mid, bot;
     int cmp;
     memptr name_ptr;
 
@@ -70,15 +75,17 @@ int map_str_to_int(const char* name, size_t name_len, str_int_entry* table,
         } else if (cmp < 0) {
             bot = mid - 1; /* look above mid */
         } else             /* cmp == 0 */
-        {
-            return mid; /* match; return table index */
-        }
+            if (mid <=
+                static_cast<size_t>(
+                    std::numeric_limits<int>::max())) { // Protect type cast
+                return static_cast<int>(mid); /* match; return table index */
+            }
     }
 
     return -1; /* header name not found */
 }
 
-int map_int_to_str(int id, str_int_entry* table, int num_entries) {
+int map_int_to_str(int id, const str_int_entry* table, int num_entries) {
     int i;
 
     for (i = 0; i < num_entries; i++) {

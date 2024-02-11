@@ -1,14 +1,16 @@
 #ifndef UPNPLIB_WEBSERVER_HPP
 #define UPNPLIB_WEBSERVER_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+// Redistribution only with this Copyright remark. Last modified: 2024-02-10
 /*!
  * \file
  * \brief Declarations to manage the builtin Webserver
  */
 
 #include <upnplib/visibility.hpp>
+/// \cond
 #include <string>
+/// \endcond
 
 namespace upnplib {
 

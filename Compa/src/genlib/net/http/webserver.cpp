@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-11
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,54 +32,46 @@
  *
  **************************************************************************/
 // Last compare with pupnp original source file on 2023-07-21, ver 1.14.17
-
 /*!
  * \file
- *
- * \brief Defines the Web Server and has functions to carry out
- * operations of the Web Server.
+ * \brief Internal Web Server and functions to carry out operations of it.
  */
 
-#include <config.hpp>
-
-#if EXCLUDE_WEB_SERVER == 0
-
 #include <webserver.hpp>
-#ifndef COMPA_NET_HTTP_WEBSERVER_HPP
-#error "Wrong webserver.hpp header file included."
-#endif
-
 #include <UpnpExtraHeaders.hpp>
-#include <UpnpFileInfo.hpp>
 #include <UpnpIntTypes.hpp>
-#include <VirtualDir.hpp>
-#include <httpparser.hpp>
 #include <httpreadwrite.hpp>
-#include <ithread.hpp>
 #include <ssdplib.hpp>
 #include <statcodes.hpp>
-#include <strintmap.hpp>
-#include <unixutil.hpp>
-#include <upnp.hpp>
 #include <upnpapi.hpp>
-#include <upnputil.hpp>
+#include <posix_overwrites.hpp>
 
-#include <upnplib/webserver.hpp>
 #include <upnplib/global.hpp>
+#include <upnplib/webserver.hpp>
 
 #include <umock/stdlib.hpp>
 #include <umock/stdio.hpp>
 
-#include <assert.h>
-#include <fcntl.h>
+#ifndef COMPA_INTERNAL_CONFIG_HPP
+#error "No or wrong config.hpp header file included."
+#endif
+
+#if EXCLUDE_WEB_SERVER == 0
+
+#ifndef COMPA_NET_HTTP_WEBSERVER_HPP
+#error "No or wrong webserver.hpp header file included."
+#endif
+
+/// \cond
+#include <cassert>
 #include <sys/stat.h>
 #include <iostream>
+/// \endcond
 
-#include <posix_overwrites.hpp>
 
-/*!
- * Response Types.
- */
+namespace {
+
+/*! \brief Response Types. */
 enum resp_type {
     RESP_FILEDOC,
     RESP_XMLDOC,
@@ -88,84 +80,38 @@ enum resp_type {
     RESP_POST
 };
 
-/* mapping of file extension to content-type of document */
-struct document_type_t {
-    /*! . */
-    const char* file_ext;
-    /*! . */
-    const char* content_type;
-    /*! . */
-    const char* content_subtype;
+/// \brief Media types.
+const char* gMediaTypes[] = {
+    NULL,          ///< 0.
+    "audio",       ///< 1.
+    "video",       ///< 2.
+    "image",       ///< 3.
+    "application", ///< 4.
+    "text"         ///< 5.
 };
 
-static const char* gMediaTypes[] = {
-    /*! 0. */
-    NULL,
-    /*! 1. */
-    "audio",
-    /*! 2. */
-    "video",
-    /*! 3. */
-    "image",
-    /*! 4. */
-    "application",
-    /*! 5. */
-    "text"};
+/// \brief index to get media type of application from the media types table.
+constexpr size_t APPLICATION_INDEX{4};
 
-/*
- * Defines.
- */
+/// \brief Number of elements for asctime_s on win32, means buffer size.
+constexpr size_t ASCTIME_R_BUFFER_SIZE{26};
 
-/* index into 'gMediaTypes' */
-#define AUDIO_STR "\1"
-#define VIDEO_STR "\2"
-#define IMAGE_STR "\3"
-#define APPLICATION_STR "\4"
-#define TEXT_STR "\5"
 
-/* int index */
-#define APPLICATION_INDEX 4
-#define TEXT_INDEX 5
+/// \brief Mutex to protect managing an XML document.
+pthread_mutex_t gWebMutex;
 
-/* general */
-#define NUM_MEDIA_TYPES 70
-#define NUM_HTTP_HEADER_NAMES 33
-
-#define ASCTIME_R_BUFFER_SIZE 26
-#ifdef _WIN32
-static char* web_server_asctime_r(const struct tm* tm, char* buf) {
-    if (tm == NULL || buf == NULL)
-        return NULL;
-
-    asctime_s(buf, ASCTIME_R_BUFFER_SIZE, tm);
-    return buf;
-}
-#else
-#define web_server_asctime_r asctime_r
-#endif
-
-/*!
- * module variables - Globals, static and externs.
- */
-
-/*! Global variable. A local dir which serves as webserver root. */
-membuffer gDocumentRootDir;
-
-/*! XML document. */
-static ithread_mutex_t gWebMutex;
-UPNPLIB_EXTERN str_int_entry Http_Header_Names[NUM_HTTP_HEADER_NAMES];
-
+/*! \brief Alias directory structure on the webserver for an XML document. */
 struct xml_alias_t {
   public:
     /*! name of DOC from root; e.g.: /foo/bar/mydesc.xml */
     membuffer name{};
-    /*! the XML document contents */
+    /*! the XML document contents. */
     membuffer doc{};
-    /*! . */
+    /*! Last modified time. */
     time_t last_modified{};
-    /*! pointer to ct, only for downstream compatibility */
-    // int* ct{&m_ct};
+    /*! pointer to ct, only for downstream compatibility. */
     int* ct{nullptr}; // to be compatible; will be initialized with this->set()
+                      // int* ct{&m_ct};
   private:
     int m_ct{};
 
@@ -180,11 +126,11 @@ struct xml_alias_t {
     // Destructor
     ~xml_alias_t() {
         TRACE2(this, " Destruct xml_alias_t()");
-        // Free possible allocated membuffer.
-        // this->clear(); // TODO: This will segfault.
+        /// \todo Free possible allocated membuffer will segfault. Fix it.
+        // this->clear();
     }
 
-    // Copy constructor
+    /// \brief Copy constructor.
     xml_alias_t(const xml_alias_t& that) {
         TRACE2(this, " Executing xml_alias_t copy constructor()");
         int mutex_err = pthread_mutex_trylock(&gWebMutex);
@@ -197,7 +143,7 @@ struct xml_alias_t {
             pthread_mutex_unlock(&gWebMutex);
     }
 
-    // Copy assignment operator
+    /// \brief Copy assignment operator.
     xml_alias_t& operator=(xml_alias_t that) {
         TRACE2(this, " Executing xml_alias_t assignment operator=");
         // No need to protect with a mutex. This swapping from the stack is
@@ -212,7 +158,7 @@ struct xml_alias_t {
         return *this;
     }
 
-    // Methods
+    /// \brief Set an XML Document.
     int set(const char* a_alias_name, const char* a_alias_content,
             size_t a_alias_content_length,
             time_t a_last_modified = time(nullptr)) {
@@ -275,8 +221,10 @@ struct xml_alias_t {
         return UPNP_E_OUTOF_MEMORY;
     }
 
+    /// \brief Returns if the XML object contains a valid XML document.
     bool is_valid() const { return m_ct > 0; }
 
+    /// \brief Release an XML document from the XML object.
     void release() {
         TRACE2(this, " Executing xml_alias_t::release()");
         int mutex_err = pthread_mutex_trylock(&gWebMutex);
@@ -296,6 +244,7 @@ struct xml_alias_t {
             pthread_mutex_unlock(&gWebMutex);
     }
 
+    /// \brief Clear the XML object.
     void clear() {
         TRACE2(this, " Executing xml_alias_t::clear()");
         int mutex_err = pthread_mutex_trylock(&gWebMutex);
@@ -314,30 +263,52 @@ struct xml_alias_t {
             pthread_mutex_unlock(&gWebMutex);
     }
 };
-static xml_alias_t gAliasDoc;
+
+/*! \brief XML document object. */
+xml_alias_t gAliasDoc;
 
 
-// This function do nothing. There is no media_list to initialize anymore with
-// compatible code. It is only callable for compatibility.
-static UPNP_INLINE void media_list_init() {
-    TRACE("Executing media_list_init()")
+/*! \name Scope restricted to file
+ * @{
+ */
+
+#if defined(_WIN32) || defined(DOXYGEN_RUN)
+/*! \brief Multiplatform wrapper to make win32 asctime_s compatible to posix
+ * asctime_r.
+ * \details Only available on Microsoft Windows.*/
+char* web_server_asctime_r(const struct tm* tm, char* buf) {
+    if (tm == NULL || buf == NULL)
+        return NULL;
+
+    asctime_s(buf, ASCTIME_R_BUFFER_SIZE, tm);
+    return buf;
 }
+#else
+#define web_server_asctime_r asctime_r
+#endif
 
 /*!
  * \brief Based on the extension, returns the content type and content
  * subtype.
  *
- * \return
- * \li \c 0  on success
- * \li \c -1 if not found
+ * For example:
+ * Ext | type  | subtype
+ * --- | ----- | -------
+ * txt | text  | plain
+ * htm | text  | html
+ * xml | text  | xml
+ * mp3 | audio | mpeg
+ * The complete list you find at #mediatype_list.
+ *
+ * \returns
+ *  On Success: 0\n
+ *  On Error: -1 - not found
  */
-static UPNP_INLINE int search_extension(
-    /*! [in] . */
-    const char* a_extension,
-    /*! [out] . */
-    const char** a_con_type,
-    /*! [out] . */
-    const char** a_con_subtype) {
+UPNP_INLINE int search_extension( //
+    const char* a_extension,      ///< [in]
+    const char** a_con_type,      ///< [out]
+    const char** a_con_subtype    ///< [out]
+) {
     TRACE("Executing search_extension()")
 
     const upnplib::Document_meta* filetype =
@@ -354,21 +325,22 @@ static UPNP_INLINE int search_extension(
 }
 
 /*!
- * \brief Based on the extension, clones an XML string based on type and
- * content subtype. If content type and sub type are not found, unknown
- * types are used.
+ * \brief Based on the extension of the \p filename, clones an XML string based
+ * on type and content subtype.
  *
- * \return
- * \li \c 0 on success.
- * \li \c UPNP_E_FILE_NOT_FOUND - on invalid filename.
- * \li \c UPNP_E_INVALID_ARGUMENT- on invalid fileInfo.
- * \li \c UPNP_E_OUTOF_MEMORY - on memory allocation failures.
+ * If content type and sub type are not found, unknown types are used.
+ *
+ * \returns
+ *  On Success: 0.\n
+ *  On Error:
+ *  - UPNP_E_FILE_NOT_FOUND - on invalid filename.
+ *  - UPNP_E_INVALID_ARGUMENT - on invalid fileInfo.
+ *  - UPNP_E_OUTOF_MEMORY - on memory allocation failures.
  */
-static UPNP_INLINE int get_content_type(
-    /*! [in] . */
-    const char* filename,
-    /*! [out] . */
-    UpnpFileInfo* fileInfo) {
+UPNP_INLINE int get_content_type(
+    const char* filename,  ///< [in] with extension, extension will be used.
+    UpnpFileInfo* fileInfo ///< [out]
+) {
     if (!filename)
         return UPNP_E_FILE_NOT_FOUND;
     if (!fileInfo)
@@ -415,30 +387,16 @@ static UPNP_INLINE int get_content_type(
  * \brief Initialize the global XML document. Allocate buffers for the XML
  * document.
  */
-static UPNP_INLINE void glob_alias_init() {
+UPNP_INLINE void glob_alias_init() {
     TRACE("Executing glob_alias_init()")
     gAliasDoc.clear();
-}
-
-/*!
- * \brief Check for the validity of the XML object buffer.
- *
- * \return int.
- */
-static UPNP_INLINE int is_valid_alias(
-    /*! [in] XML alias object. */
-    const xml_alias_t* alias) {
-    TRACE("Executing is_valid_alias()")
-    if (alias == nullptr)
-        return false;
-    return alias->is_valid();
 }
 
 /*!
  * \brief Copy the contents of the global XML document into the local output
  * parameter.
  */
-static void alias_grab(
+void alias_grab(
     /*! [out] XML alias object. */
     xml_alias_t* a_alias) {
     TRACE("Executing alias_grab()")
@@ -456,10 +414,11 @@ static void alias_grab(
 }
 
 /*!
- * \brief Release the XML document referred to by the input parameter. Free
- * the allocated buffers associated with this object.
+ * \brief Release the XML document referred to by the input parameter.
+ *
+ * Free the allocated buffers associated with this object.
  */
-static void alias_release(
+void alias_release(
     /*! [in] XML alias object. */
     xml_alias_t* a_alias) {
     TRACE("Executing alias_release()");
@@ -467,62 +426,12 @@ static void alias_release(
         a_alias->release();
 }
 
-int web_server_set_alias(const char* alias_name, const char* alias_content,
-                         size_t alias_content_length, time_t last_modified) {
-    TRACE("Executing web_server_set_alias()")
-    return gAliasDoc.set(alias_name, alias_content, alias_content_length,
-                         last_modified);
-}
-
-int web_server_init() {
-    int ret = UPNP_E_SUCCESS;
-
-    if (bWebServerState == WEB_SERVER_DISABLED) {
-        /* decode media list */
-        media_list_init();
-        membuffer_init(&gDocumentRootDir);
-        glob_alias_init();
-        pVirtualDirList = NULL;
-
-        /* Initialize callbacks */
-        virtualDirCallback.get_info = NULL;
-        virtualDirCallback.open = NULL;
-        virtualDirCallback.read = NULL;
-        virtualDirCallback.write = NULL;
-        virtualDirCallback.seek = NULL;
-        virtualDirCallback.close = NULL;
-
-        if (ithread_mutex_init(&gWebMutex, NULL) == -1)
-            ret = UPNP_E_OUTOF_MEMORY;
-        else
-            bWebServerState = WEB_SERVER_ENABLED;
-    }
-
-    return ret;
-}
-
-void web_server_destroy() {
-    if (bWebServerState == WEB_SERVER_ENABLED) {
-        membuffer_destroy(&gDocumentRootDir);
-        alias_release(&gAliasDoc);
-
-        ithread_mutex_lock(&gWebMutex);
-        gAliasDoc.clear();
-        ithread_mutex_unlock(&gWebMutex);
-
-        ithread_mutex_destroy(&gWebMutex);
-        bWebServerState = WEB_SERVER_DISABLED;
-    }
-}
-
 /*!
- * \brief Release memory allocated for the global web server root directory
- * and the global XML document. Resets the flag bWebServerState to
- * WEB_SERVER_DISABLED.
+ * \brief Get file information.
  *
- * \return Integer.
+ * \returns Integer.
  */
-static int get_file_info(
+int get_file_info(
     /*! [in] Filename having the description document. */
     const char* filename,
     /*! [out] File information object having file attributes such as
@@ -588,33 +497,17 @@ exit_function:
     return rc;
 }
 
-int web_server_set_root_dir(const char* root_dir) {
-    TRACE("Executing web_server_set_root_dir()")
-    size_t index;
-    int ret;
-
-    ret = membuffer_assign_str(&gDocumentRootDir, root_dir);
-    if (ret != 0)
-        return ret;
-    /* remove trailing '/', if any */
-    if (gDocumentRootDir.length > 0) {
-        index = gDocumentRootDir.length - 1; /* last char */
-        if (gDocumentRootDir.buf[index] == '/')
-            membuffer_delete(&gDocumentRootDir, index, 1);
-    }
-
-    return 0;
-}
-
 /*!
- * \brief Compare the files names between the one on the XML alias the one
+ * \brief Compare file names.
+ *
+ * Compare the file names between the one on the XML alias and the one
  * passed in as the input parameter. If equal extract file information.
  *
  * \return
  * \li \c 1 - On Success
  * \li \c 0 if request is not an alias
  */
-static UPNP_INLINE int get_alias(
+UPNP_INLINE int get_alias(
     /*! [in] request file passed in to be compared with. */
     const char* request_file,
     /*! [out] xml alias object which has a file name stored. */
@@ -639,7 +532,7 @@ static UPNP_INLINE int get_alias(
  *
  * \return int.
  */
-static int isFileInVirtualDir(
+int isFileInVirtualDir(
     /*! [in] Directory path to be tested for virtual directory. */
     char* filePath,
     /*! [out] The cookie registered with this virtual directory, if matched.
@@ -678,13 +571,13 @@ static int isFileInVirtualDir(
 }
 
 /*!
- * \brief Converts input string to upper case.
+ * \brief Converts C string in place to upper case.
  */
-static void ToUpperCase(
-    /*! Input string to be converted. */
+void ToUpperCase(
+    /*! [in,out] string to be converted. */
     char* s) {
     while (*s) {
-        *s = (char)toupper(*s);
+        *s = static_cast<char>(std::toupper(static_cast<unsigned char>(*s)));
         ++s;
     }
 }
@@ -692,17 +585,17 @@ static void ToUpperCase(
 /*!
  * \brief Finds a substring from a string in a case insensitive way.
  *
- * \return A pointer to the first occurence of s2 in s1.
+ * \returns A pointer to the first occurence of s2 in s1.
  */
-static char* StrStr(
-    /*! Input string. */
+char* StrStr(
+    /*! [in] Input string. */
     char* s1,
-    /*! Input sub-string. */
+    /*! [in] Input sub-string. */
     const char* s2) {
     char* Str1;
     char* Str2;
     const char* Ptr;
-    char* ret = NULL;
+    char* ret = nullptr;
 
     Str1 = strdup(s1);
     if (!Str1)
@@ -730,10 +623,10 @@ error1:
  *
  * \return Pointer to the next token.
  */
-static char* StrTok(
-    /*! String containing the token. */
+char* StrTok(
+    /*! [in] String containing the token. */
     char** Src,
-    /*! Set of delimiter characters. */
+    /*! [in] Set of delimiter characters. */
     const char* Del) {
     char* TmpPtr;
     char* RetPtr;
@@ -756,9 +649,9 @@ static char* StrTok(
 /*!
  * \brief Returns a range of integers from a string.
  *
- * \return Always returns 1.
+ * \returns Always returns 1.
  */
-static int GetNextRange(
+int GetNextRange(
     /*! string containing the token / range. */
     char** SrcRangeStr,
     /*! gets the first byte of the token. */
@@ -815,7 +708,7 @@ static int GetNextRange(
  * \li \c HTTP_REQUEST_RANGE_NOT_SATISFIABLE
  * \li \c HTTP_OK
  */
-static int CreateHTTPRangeResponseHeader(
+int CreateHTTPRangeResponseHeader(
     /*! String containing the range. */
     char* ByteRangeSpecifier,
     /*! Length of the file. */
@@ -919,16 +812,18 @@ static int CreateHTTPRangeResponseHeader(
 }
 
 /*!
- * \brief Get header id from the request parameter and take appropriate
- * action based on the ids as an HTTP Range Response.
+ * \brief Get header id from the request parameter.
  *
- * \return
+ * Get header id from the request parameter and take appropriate action based
+ * on the ids as an HTTP Range Response.
+ *
+ * \returns
  * \li \c HTTP_BAD_REQUEST
  * \li \c HTTP_INTERNAL_SERVER_ERROR
  * \li \c HTTP_REQUEST_RANGE_NOT_SATISFIABLE
  * \li \c HTTP_OK
  */
-static int CheckOtherHTTPHeaders(
+int CheckOtherHTTPHeaders(
     /*! [in] HTTP Request message. */
     http_message_t* Req,
     /*! [out] Send Instruction object to data for the response. */
@@ -951,7 +846,7 @@ static int CheckOtherHTTPHeaders(
         /* find header type. */
         index =
             map_str_to_int((const char*)header->name.buf, header->name.length,
-                           Http_Header_Names, NUM_HTTP_HEADER_NAMES, 0);
+                           &Http_Header_Names[0], Http_Header_Names.size(), 0);
         if (header->value.length >= TmpBufSize) {
             umock::stdlib_h.free(TmpBuf);
             TmpBufSize = header->value.length + 1;
@@ -962,7 +857,9 @@ static int CheckOtherHTTPHeaders(
         memcpy(TmpBuf, header->value.buf, header->value.length);
         TmpBuf[header->value.length] = '\0';
         if (index >= 0) {
-            switch (Http_Header_Names[index].id) {
+            // No problem with type_cast to 'long unsigned int', index is
+            // checked to be >= 0.
+            switch (Http_Header_Names[static_cast<size_t>(index)].id) {
             case HDR_TE: {
                 /* Request */
                 RespInstr->IsChunkActive = 1;
@@ -1042,7 +939,10 @@ static int CheckOtherHTTPHeaders(
     return RetCode;
 }
 
-static void FreeExtraHTTPHeaders(
+/*!
+ * \brief Free extra HTTP headers.
+ */
+void FreeExtraHTTPHeaders(
     /*! [in] extra HTTP headers to free. */
     [[maybe_unused]] UpnpListHead* extraHeadersList) {
     UpnpListIter pos;
@@ -1059,11 +959,14 @@ static void FreeExtraHTTPHeaders(
 /*!
  * \brief Build an array of unrecognized headers.
  *
- * \return nothing
+ * \returns
+ *  On success: HTTP_OK\n
+ *  On error: HTTP_INTERNAL_SERVER_ERROR
  */
-static int ExtraHTTPHeaders(
+int ExtraHTTPHeaders(
     /*! [in] HTTP Request message. */
     [[maybe_unused]] http_message_t* Req,
+    /*! [in] Extra header list. */
     [[maybe_unused]] UpnpListHead* extraHeadersList) {
     http_header_t* header;
     ListNode* node;
@@ -1077,7 +980,7 @@ static int ExtraHTTPHeaders(
         /* find header type. */
         index =
             map_str_to_int((const char*)header->name.buf, header->name.length,
-                           Http_Header_Names, NUM_HTTP_HEADER_NAMES, 0);
+                           &Http_Header_Names[0], Http_Header_Names.size(), 0);
         if (index < 0) {
             extraHeader = UpnpExtraHeaders_new();
             if (!extraHeader) {
@@ -1100,18 +1003,19 @@ static int ExtraHTTPHeaders(
 }
 
 /*!
- * \brief Processes the request and returns the result in the output parameters.
+ * \brief Process a remote request and return the result.
  *
- * \return
- * \li \c HTTP_BAD_REQUEST
- * \li \c HTTP_INTERNAL_SERVER_ERROR
- * \li \c HTTP_REQUEST_RANGE_NOT_SATISFIABLE
- * \li \c HTTP_FORBIDDEN
- * \li \c HTTP_NOT_FOUND
- * \li \c HTTP_NOT_ACCEPTABLE
- * \li \c HTTP_OK
+ * \returns
+ *  On success: HTTP_OK\n
+ *  On error:
+ *  - HTTP_BAD_REQUEST
+ *  - HTTP_INTERNAL_SERVER_ERROR
+ *  - HTTP_REQUEST_RANGE_NOT_SATISFIABLE
+ *  - HTTP_FORBIDDEN
+ *  - HTTP_NOT_FOUND
+ *  - HTTP_NOT_ACCEPTABLE
  */
-static int process_request(
+int process_request(
     /*! [in] Socket info. */
     SOCKINFO* info,
     /*! [in] HTTP Request message. */
@@ -1187,7 +1091,7 @@ static int process_request(
         }
     } else {
         /* try using alias */
-        if (is_valid_alias(&gAliasDoc)) {
+        if (gAliasDoc.is_valid()) {
             alias_grab(alias);
             alias_grabbed = 1;
             using_alias = get_alias(request_doc, alias, finfo);
@@ -1466,14 +1370,15 @@ error_handler:
 /*!
  * \brief Receives the HTTP post message.
  *
- * \return
- * \li \c HTTP_INTERNAL_SERVER_ERROR
- * \li \c HTTP_UNAUTHORIZED
- * \li \c HTTP_BAD_REQUEST
- * \li \c HTTP_SERVICE_UNAVAILABLE
- * \li \c HTTP_OK
+ * \returns
+ *  On success: HTTP_OK\n
+ *  On error:
+ *  - HTTP_INTERNAL_SERVER_ERROR
+ *  - HTTP_UNAUTHORIZED
+ *  - HTTP_BAD_REQUEST
+ *  - HTTP_SERVICE_UNAVAILABLE
  */
-static int http_RecvPostMessage(
+int http_RecvPostMessage(
     /*! HTTP Parser object. */
     http_parser_t* parser,
     /*! [in] Socket Information object. */
@@ -1597,6 +1502,60 @@ ExitFunction:
     return ret_code;
 }
 
+/// @} // Scope restricted to file
+} // anonymous namespace
+
+
+int web_server_init() {
+    int ret = UPNP_E_SUCCESS;
+
+    if (bWebServerState == WEB_SERVER_DISABLED) {
+        membuffer_init(&gDocumentRootDir);
+        glob_alias_init();
+        pVirtualDirList = NULL;
+
+        /* Initialize callbacks */
+        virtualDirCallback.get_info = NULL;
+        virtualDirCallback.open = NULL;
+        virtualDirCallback.read = NULL;
+        virtualDirCallback.write = NULL;
+        virtualDirCallback.seek = NULL;
+        virtualDirCallback.close = NULL;
+
+        if (pthread_mutex_init(&gWebMutex, NULL) == -1)
+            ret = UPNP_E_OUTOF_MEMORY;
+        else
+            bWebServerState = WEB_SERVER_ENABLED;
+    }
+
+    return ret;
+}
+
+int web_server_set_alias(const char* alias_name, const char* alias_content,
+                         size_t alias_content_length, time_t last_modified) {
+    TRACE("Executing web_server_set_alias()")
+    return gAliasDoc.set(alias_name, alias_content, alias_content_length,
+                         last_modified);
+}
+
+int web_server_set_root_dir(const char* root_dir) {
+    TRACE("Executing web_server_set_root_dir()")
+    size_t index;
+    int ret;
+
+    ret = membuffer_assign_str(&gDocumentRootDir, root_dir);
+    if (ret != 0)
+        return ret;
+    /* remove trailing '/', if any */
+    if (gDocumentRootDir.length > 0) {
+        index = gDocumentRootDir.length - 1; /* last char */
+        if (gDocumentRootDir.buf[index] == '/')
+            membuffer_delete(&gDocumentRootDir, index, 1);
+    }
+
+    return 0;
+}
+
 void web_server_callback(http_parser_t* parser, /* INOUT */ http_message_t* req,
                          SOCKINFO* info) {
     int ret;
@@ -1663,4 +1622,19 @@ void web_server_callback(http_parser_t* parser, /* INOUT */ http_message_t* req,
     membuffer_destroy(&headers);
     membuffer_destroy(&filename);
 }
+
+void web_server_destroy() {
+    if (bWebServerState == WEB_SERVER_ENABLED) {
+        membuffer_destroy(&gDocumentRootDir);
+        alias_release(&gAliasDoc);
+
+        pthread_mutex_lock(&gWebMutex);
+        gAliasDoc.clear();
+        pthread_mutex_unlock(&gWebMutex);
+
+        pthread_mutex_destroy(&gWebMutex);
+        bWebServerState = WEB_SERVER_DISABLED;
+    }
+}
+
 #endif /* EXCLUDE_WEB_SERVER */

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-09
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,6 +51,10 @@
 #include <ssdplib.hpp>
 #include <statcodes.hpp>
 #include <upnpapi.hpp>
+
+#ifndef COMPA_MINISERVER_HPP
+#error "No or wrong miniserver.hpp header file included."
+#endif
 
 #include <upnplib/socket.hpp>
 #include <upnplib/global.hpp>

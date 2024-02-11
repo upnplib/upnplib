@@ -5,7 +5,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-02
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-11
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,11 +35,14 @@
 // Last compare with pupnp original source file on 2022-12-09, ver 1.14.15
 /*!
  * \file
- * \brief Internal webserver
+ * \brief Internal Web Server and functions to carry out operations of it.
  */
 
 #include <httpparser.hpp>
 #include <sock.hpp>
+
+/*! Global variable. A local dir which serves as webserver root. */
+inline membuffer gDocumentRootDir;
 
 /// \brief Send instruction
 struct SendInstruction {
@@ -66,9 +69,11 @@ struct SendInstruction {
 };
 
 /*!
- * \brief Initilialize the different documents. Initialize the memory
- * for root directory for web server. Call to initialize global XML
- * document. Sets bWebServerState to WEB_SERVER_ENABLED.
+ * \brief Initilialize root directory for web server and different documents.
+ *
+ * Initilialize the different documents. Initialize the memory for root
+ * directory for web server. Call to initialize global XML document. Sets
+ * bWebServerState to WEB_SERVER_ENABLED.
  *
  * \note alias_content is not freed here
  *
@@ -79,15 +84,9 @@ struct SendInstruction {
 UPNPLIB_API int web_server_init();
 
 /*!
- * \brief Release memory allocated for the global web server root
- * directory and the global XML document. Resets the flag bWebServerState
- * to WEB_SERVER_DISABLED.
- */
-UPNPLIB_API void web_server_destroy();
-
-/*!
- * \brief Replaces current alias with the given alias. To remove the current
- * alias, set alias_name to nullptr.
+ * \brief Replaces current alias with the given alias.
+ *
+ * To remove the current alias, set alias_name to nullptr.
  *
  * \note alias_content is not freed here
  *
@@ -109,9 +108,9 @@ UPNPLIB_API int web_server_set_alias(
     time_t last_modified);
 
 /*!
- * \brief Assign the path specfied by the input const char* root_dir parameter
- * to the global Document root directory. Also check for path names ending
- * in '/'.
+ * \brief Assign the path to the global Document root directory.
+ *
+ * Also check for path names ending in '/'.
  *
  * \return Integer.
  */
@@ -120,8 +119,9 @@ UPNPLIB_API int web_server_set_root_dir(
     const char* root_dir);
 
 /*!
- * \brief Main entry point into web server; Handles HTTP GET and HEAD
- * requests.
+ * \brief Main entry point into web server.
+ *
+ * Handles HTTP GET and HEAD requests.
  */
 UPNPLIB_API void web_server_callback(
     /*! [in] . */
@@ -130,5 +130,13 @@ UPNPLIB_API void web_server_callback(
     http_message_t* req,
     /*! [in,out] . */
     SOCKINFO* info);
+
+/*!
+ * \brief Release memory allocated for the global web server root
+ * directory and the global XML document.
+ *
+ * Resets the flag bWebServerState to WEB_SERVER_DISABLED.
+ */
+UPNPLIB_API void web_server_destroy();
 
 #endif // COMPA_NET_HTTP_WEBSERVER_HPP
