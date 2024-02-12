@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-09
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-12
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -177,7 +177,7 @@ char gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN] = {'\0'};
 /*! \brief IPv6 ULA or GUA prefix length. (extern'ed in upnp.h) */
 unsigned gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
 
-/*! \brief Contains interface index. (extern'ed in upnp.h) */
+/*! \brief Contains network interface index. */
 unsigned gIF_INDEX = (unsigned)-1;
 
 /*! \brief local IPv4 port for the mini-server */

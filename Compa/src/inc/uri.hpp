@@ -5,7 +5,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-03
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-12
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,6 +37,8 @@
  * \brief Modify and parse URIs.
  */
 
+#include <upnplib/visibility.hpp>
+
 /// \cond
 #include "winsock2.h" // For different platforms: don't use <winsock2.h>
 
@@ -54,17 +56,8 @@
 /* Other systems have strncasecmp */
 #endif
 
-/// \brief Some character marks.
-#define MARK "-_.!~*'()"
-
-/// \brief Reserved character. Added {} for compatibility.
-#define RESERVED ";/?:@&=+$,{}"
-
 /// Yet another success code.
-#define HTTP_SUCCESS 1
-
-/// Type of the host.
-enum hostType { HOSTNAME, IPv4address };
+inline constexpr int HTTP_SUCCESS{1};
 
 /// Type of the "path" part of the URI.
 enum pathType { ABS_PATH, REL_PATH, OPAQUE_PART };
@@ -92,7 +85,7 @@ struct token {
  */
 struct hostport_type {
     token text; ///< Pointing to the full host:port string representation.
-    struct sockaddr_storage IPaddress; ///< Network socket address.
+    sockaddr_storage IPaddress; ///< Network socket address.
 };
 
 /*!
@@ -101,9 +94,9 @@ struct hostport_type {
 struct uri_type {
     /// @{
     /// \brief Member variable
-    enum uriType type;
+    uriType type;
     token scheme;
-    enum pathType path_type;
+    pathType path_type;
     token pathquery;
     token fragment;
     hostport_type hostport;
@@ -125,7 +118,7 @@ struct URL_list {
  * unescaped version.
  *
  * This is spezified in <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396
- * (RFC explaining URIs)</a>. The index must exactly point to the \b '\%'
+ * (explaining URIs)</a>. The index must exactly point to the \b '\%'
  * character, otherwise the function will return unsuccessful. Size of array is
  * NOT checked (MUST be checked by caller).
  *
@@ -140,7 +133,7 @@ struct URL_list {
 UPNPLIB_API int replace_escaped(
     /*! [in,out] String of characters. */
     char* in,
-    /*! [in] Index at which to start checking the characters. */
+    /// [in] Index at which to start checking the characters; must point to '%'.
     size_t index,
     /*! [in,out] Maximal size of the string buffer will be reduced by 2 if a
        character is converted. */
@@ -153,9 +146,9 @@ UPNPLIB_API int replace_escaped(
  * and the structures used to hold the parsedURLs. This memory MUST be freed
  * by the caller through: free_URL_list(&out).
  *
- * \return
- *  \li HTTP_SUCCESS - On Success.
- *  \li UPNP_E_OUTOF_MEMORY - On Failure to allocate memory.
+ * \returns
+ *  On success: HTTP_SUCCESS\n
+ *  On error: UPNP_E_OUTOF_MEMORY - On Failure to allocate memory.
  */
 UPNPLIB_API int copy_URL_list(
     /*! [in] Source URL list. */
@@ -244,7 +237,9 @@ UPNPLIB_API int remove_escaped_chars(
  * \brief Removes ".", and ".." from a path.
  *
  * If a ".." can not be resolved (i.e. the .. would go past the root of the
- * path) an error is returned. The input IS modified in place.
+ * path) an error is returned. The input IS modified in place. This function
+ * directly implements the "Remove Dot Segments" algorithm described in RFC
+ * 3986 section 5.2.4.
  *
  * \verbatim
 Examples:
@@ -265,7 +260,7 @@ Examples:
  */
 UPNPLIB_API int remove_dots(
     /*! [in] String of characters from which "dots" have to be removed. */
-    char* in,
+    char* buf,
     /*! [in] Size limit for the number of characters. */
     size_t size);
 
@@ -277,8 +272,8 @@ UPNPLIB_API int remove_dots(
  * - If neither the base nor the rel_url are absolute then a \b nullptr is
  *   returned.
  * - Otherwise it tries and resolves the relative url with the base as
- *   described in <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396 (RFC
- *   explaining URIs)</a>.
+ *   described in <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396
+ *   (explaining URIs)</a>.
  *
  * The resolution of '..' is NOT implemented, but '.' is resolved.
  *
@@ -292,8 +287,8 @@ UPNPLIB_API char* resolve_rel_url(
     char* rel_url);
 
 /*!
- * \brief Parses a uri as defined in http://www.ietf.org/rfc/rfc2396.txt
- * (RFC explaining URIs).
+ * \brief Parses a uri as defined in <a
+ * href="http://www.ietf.org/rfc/rfc2396.txt"> RFC 2396 (explaining URIs)</a>.
  *
  * Handles absolute, relative, and opaque uris. Parses into the following
  * pieces: scheme, hostport, pathquery, fragment (host with port and path with

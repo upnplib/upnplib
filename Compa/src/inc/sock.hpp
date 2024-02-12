@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-02
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-11
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,16 +46,15 @@
  * @{
  */
 
-#include <UpnpGlobal.hpp> /* for UPNP_INLINE */
-#include <UpnpInet.hpp>   /* for SOCKET, netinet/in */
+#include <UpnpInet.hpp> /* for SOCKET, netinet/in */
 #if defined(UPNP_ENABLE_OPEN_SSL) || defined(DOXYGEN_RUN)
 #include <openssl/ssl.h>
 #endif
 
 /* The following are not defined under winsock.h */
-// TODO: Cleanup constants: In <sys/socket.h> are defined
-// SHUT_RD, SHUT_WR, SHUT_RDWR with 0, 1, 2, according to man 2 shutdown. --Ingo
-/// \cond
+/*! \todo Cleanup constants: In <sys/socket.h> are defined SHUT_RD, SHUT_WR,
+ * SHUT_RDWR with 0, 1, 2, according to man 2 shutdown.
+ * \cond */
 #ifndef SD_RECEIVE
 #define SD_RECEIVE 0x00
 #define SD_SEND 0x01
@@ -84,7 +83,7 @@ struct SOCKINFO {
  *
  * \return -1 if an error occurred or if the socket is -1.
  */
-static UPNP_INLINE int sock_close(
+inline int sock_close(
     /*! Socket descriptor. */
     SOCKET sock) {
     if (sock == INVALID_SOCKET)

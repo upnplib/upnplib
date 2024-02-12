@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-05
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-12
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,107 +41,32 @@
  */
 
 #include <sock.hpp>
-
 #include <upnputil.hpp>
 
-#include <fcntl.h> /* for F_GETFL, F_SETFL, O_NONBLOCK */
-#include <iostream>
+#include <compa/globalvars.hpp>
 
 #include <upnplib/global.hpp>
-#include <compa/globalvars.hpp>
 #include <upnplib/connection.hpp>
-#include <upnplib/socket.hpp>
+#include <upnplib/socket.hpp> // needed for compiling on win32.
 
 #include <umock/sys_socket.hpp>
 #include <umock/ssl.hpp>
 
-int sock_init(SOCKINFO* info, SOCKET sockfd) {
-    TRACE("Executing sock_init()")
-    if (info == nullptr)
-        return UPNP_E_INVALID_PARAM;
-
-    memset(info, 0, sizeof(SOCKINFO));
-    info->socket = sockfd;
-
-    return UPNP_E_SUCCESS;
-}
-
-int sock_init_with_ip(SOCKINFO* info, SOCKET sockfd,
-                      sockaddr* foreign_sockaddr) {
-    TRACE("Executing sock_init_with_ip()")
-
-    if (foreign_sockaddr == nullptr)
-        return UPNP_E_INVALID_PARAM;
-
-    int ret = sock_init(info, sockfd);
-    if (ret != UPNP_E_SUCCESS) {
-        return ret;
-    }
-    memcpy(&info->foreign_sockaddr, foreign_sockaddr,
-           sizeof(info->foreign_sockaddr));
-
-    return UPNP_E_SUCCESS;
-}
-
-#ifdef UPNP_ENABLE_OPEN_SSL
-int sock_ssl_connect(SOCKINFO* info) {
-    TRACE("Executing sock_ssl_connect()");
-    info->ssl = SSL_new(gSslCtx);
-    if (!info->ssl) {
-        return UPNP_E_SOCKET_ERROR;
-    }
-    // Due to man page there is no problem with type cast (int)
-    int status = SSL_set_fd(info->ssl, static_cast<int>(info->socket));
-    if (status == 0)
-        return UPNP_E_SOCKET_ERROR;
-
-    UPNPLIB_SCOPED_NO_SIGPIPE;
-    status = SSL_connect(info->ssl);
-    if (status != 1)
-        return UPNP_E_SOCKET_ERROR;
-
-    return UPNP_E_SUCCESS;
-}
-#endif
-
-int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
-    TRACE("Executing sock_destroy()")
-    int ret{UPNP_E_SUCCESS};
-
-    if (info->socket != INVALID_SOCKET) {
-#ifdef UPNP_ENABLE_OPEN_SSL
-        if (info->ssl) {
-            SSL_shutdown(info->ssl);
-            SSL_free(info->ssl);
-            info->ssl = NULL;
-        }
-#endif
-        upnplib::CSocketError sockerrObj;
-        if (umock::sys_socket_h.shutdown(info->socket, ShutdownMethod) ==
-            SOCKET_ERROR) {
-            sockerrObj.catch_error();
-            std::string msg = "MSG1010: syscall ::shutdown() returned \"" +
-                              sockerrObj.get_error_str() + "\".\n";
-            if (sockerrObj == ENOTCONNP) {
-                // shutdown a not connected connection is not an error.
-                UPNPLIB_LOGINFO << msg;
-            } else {
-                UPNPLIB_LOGERR << msg;
-                ret = UPNP_E_SOCKET_ERROR;
-            }
-        }
-        if (sock_close(info->socket) != 0) {
-            ret = UPNP_E_SOCKET_ERROR;
-        }
-        info->socket = INVALID_SOCKET;
-    }
-
-    return ret;
-}
+/// \cond
+#include <fcntl.h> /* for F_GETFL, F_SETFL, O_NONBLOCK */
+#include <iostream>
+/// \endcond
 
 
-#ifdef SO_NOSIGPIPE // This is defined on MacOS
-// Helper class to unravel the code.
+namespace {
+/*! \name Scope restricted to file
+ * @{
+ */
+
+#if 0
+// This is defined on MacOS
+#if defined(SO_NOSIGPIPE) || defined(DOXYGEN_RUN)
+/// \brief Helper class to unravel the code.
 class CNosigpipe {
   public:
     CNosigpipe(SOCKET a_sockfd) : m_sockfd(a_sockfd) {
@@ -167,7 +92,6 @@ class CNosigpipe {
 };
 #endif
 
-#if 0
 /*!
  * \brief Receives or sends data on one unicast link. That means the Unit
  * manages only one socket file descriptor. Also returns the time taken to
@@ -298,10 +222,16 @@ static int sock_read_write(
 }
 #endif // #if 0
 
-
-namespace compa {
-
-static int sock_read_unprotected(
+/*!
+ * \brief Read from a not SSL protected socket.
+ *
+ * \returns
+ *  On success: Number of bytes read. 0 bytes read is no error.\n
+ *  On error:
+ *  - UPNP_E_SOCKET_ERROR
+ *  - UPNP_E_TIMEDOUT
+ */
+int sock_read_unprotected(
     /*! [in] Socket Information Object. */
     const SOCKINFO* a_info,
     /*! [out] Buffer to get data to. */
@@ -315,7 +245,7 @@ static int sock_read_unprotected(
     int* a_timeoutSecs) {
     time_t start_time{time(NULL)};
 
-    TRACE("Executing compa::sock_read_unprotected()")
+    TRACE("Executing sock_read_unprotected()")
     if (a_info == nullptr || a_readbuf == nullptr)
         return UPNP_E_SOCKET_ERROR;
     if (a_bufsize == 0)
@@ -374,7 +304,17 @@ static int sock_read_unprotected(
 }
 
 
-static int sock_write_unprotected(
+/*!
+ * \brief Write to a not SSL protected socket.
+ *
+ * \returns
+ *  On success: Number of bytes written. 0 bytes written is no error.\n
+ *  On error:
+ *  - UPNP_E_SOCKET_ERROR
+ *  - UPNP_E_TIMEDOUT
+ *  - UPNP_E_SOCKET_WRITE
+ */
+int sock_write_unprotected(
     /*! [in] Socket Information Object. */
     const SOCKINFO* a_info,
     /*! [out] Buffer to get data to. */
@@ -388,7 +328,7 @@ static int sock_write_unprotected(
     int* a_timeoutSecs) {
     time_t start_time{time(NULL)};
 
-    TRACE("Executing compa::sock_write_unprotected()")
+    TRACE("Executing sock_write_unprotected()")
     if (a_info == nullptr || a_writebuf == nullptr)
         return UPNP_E_SOCKET_ERROR;
     if (a_bufsize == 0)
@@ -460,8 +400,19 @@ static int sock_write_unprotected(
 }
 
 
-#ifdef UPNP_ENABLE_OPEN_SSL
-static int sock_read_ssl(
+#if defined(UPNP_ENABLE_OPEN_SSL) || defined(DOXYGEN_RUN)
+/*!
+ * \brief Read from an SSL protected socket.
+ *
+ * This is only available with OpenSSL enabled on compiling the library.
+ *
+ * \returns
+ *  On success: Number of bytes read. 0 bytes read is no error.\n
+ *  On error:
+ *  - UPNP_E_SOCKET_ERROR
+ *  - UPNP_E_TIMEDOUT
+ */
+int sock_read_ssl(
     /*! [in] Socket Information Object. */
     const SOCKINFO* a_info,
     /*! [out] Buffer to get data to. */
@@ -475,7 +426,7 @@ static int sock_read_ssl(
     int* a_timeoutSecs) {
     time_t start_time{time(NULL)};
 
-    TRACE("Executing compa::sock_read_ssl()")
+    TRACE("Executing sock_read_ssl()")
     if (a_info == nullptr || a_readbuf == nullptr)
         return UPNP_E_SOCKET_ERROR;
     if (a_bufsize == 0)
@@ -536,7 +487,19 @@ static int sock_read_ssl(
 }
 
 
-static int sock_write_ssl(
+/*!
+ * \brief Write to an SSL protected socket.
+ *
+ * This is only available with OpenSSL enabled on compiling the library.
+ *
+ * \returns
+ *  On success: Number of bytes written. 0 bytes written is no error.\n
+ *  On error:
+ *  - UPNP_E_SOCKET_ERROR
+ *  - UPNP_E_TIMEDOUT
+ *  - UPNP_E_SOCKET_WRITE
+ */
+int sock_write_ssl(
     /*! [in] Socket Information Object. */
     const SOCKINFO* a_info,
     /*! [out] Buffer to get data to. */
@@ -550,7 +513,7 @@ static int sock_write_ssl(
     int* a_timeoutSecs) {
     time_t start_time{time(NULL)};
 
-    TRACE("Executing compa::sock_write_ssl()")
+    TRACE("Executing sock_write_ssl()")
     if (a_info == nullptr || a_writebuf == nullptr)
         return UPNP_E_SOCKET_ERROR;
     if (a_bufsize == 0)
@@ -621,7 +584,94 @@ static int sock_write_ssl(
     return numBytes;
 }
 #endif
-} // namespace compa
+
+/// @} // Functions (scope restricted to file)
+} // anonymous namespace
+
+
+int sock_init(SOCKINFO* info, SOCKET sockfd) {
+    TRACE("Executing sock_init()")
+    if (info == nullptr)
+        return UPNP_E_INVALID_PARAM;
+
+    memset(info, 0, sizeof(SOCKINFO));
+    info->socket = sockfd;
+
+    return UPNP_E_SUCCESS;
+}
+
+int sock_init_with_ip(SOCKINFO* info, SOCKET sockfd,
+                      sockaddr* foreign_sockaddr) {
+    TRACE("Executing sock_init_with_ip()")
+
+    if (foreign_sockaddr == nullptr)
+        return UPNP_E_INVALID_PARAM;
+
+    int ret = sock_init(info, sockfd);
+    if (ret != UPNP_E_SUCCESS) {
+        return ret;
+    }
+    memcpy(&info->foreign_sockaddr, foreign_sockaddr,
+           sizeof(info->foreign_sockaddr));
+
+    return UPNP_E_SUCCESS;
+}
+
+#ifdef UPNP_ENABLE_OPEN_SSL
+int sock_ssl_connect(SOCKINFO* info) {
+    TRACE("Executing sock_ssl_connect()");
+    info->ssl = SSL_new(gSslCtx);
+    if (!info->ssl) {
+        return UPNP_E_SOCKET_ERROR;
+    }
+    // Due to man page there is no problem with type cast (int)
+    int status = SSL_set_fd(info->ssl, static_cast<int>(info->socket));
+    if (status == 0)
+        return UPNP_E_SOCKET_ERROR;
+
+    UPNPLIB_SCOPED_NO_SIGPIPE;
+    status = SSL_connect(info->ssl);
+    if (status != 1)
+        return UPNP_E_SOCKET_ERROR;
+
+    return UPNP_E_SUCCESS;
+}
+#endif
+
+int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
+    TRACE("Executing sock_destroy()")
+    int ret{UPNP_E_SUCCESS};
+
+    if (info->socket != INVALID_SOCKET) {
+#ifdef UPNP_ENABLE_OPEN_SSL
+        if (info->ssl) {
+            SSL_shutdown(info->ssl);
+            SSL_free(info->ssl);
+            info->ssl = NULL;
+        }
+#endif
+        upnplib::CSocketError sockerrObj;
+        if (umock::sys_socket_h.shutdown(info->socket, ShutdownMethod) ==
+            SOCKET_ERROR) {
+            sockerrObj.catch_error();
+            std::string msg = "MSG1010: syscall ::shutdown() returned \"" +
+                              sockerrObj.get_error_str() + "\".\n";
+            if (sockerrObj == ENOTCONNP) {
+                // shutdown a not connected connection is not an error.
+                UPNPLIB_LOGINFO << msg;
+            } else {
+                UPNPLIB_LOGERR << msg;
+                ret = UPNP_E_SOCKET_ERROR;
+            }
+        }
+        if (sock_close(info->socket) != 0) {
+            ret = UPNP_E_SOCKET_ERROR;
+        }
+        info->socket = INVALID_SOCKET;
+    }
+
+    return ret;
+}
 
 
 int sock_read(SOCKINFO* info, char* buffer, size_t bufsize, int* timeoutSecs) {
@@ -630,14 +680,13 @@ int sock_read(SOCKINFO* info, char* buffer, size_t bufsize, int* timeoutSecs) {
         return UPNP_E_SOCKET_ERROR;
 #ifdef UPNP_ENABLE_OPEN_SSL
     if (info->ssl)
-        return compa::sock_read_ssl(info, buffer /*read_buffer*/,
-                                    nullptr /*write_buffer*/, bufsize,
-                                    timeoutSecs);
+        return sock_read_ssl(info, buffer /*read_buffer*/,
+                             nullptr /*write_buffer*/, bufsize, timeoutSecs);
     else
 #endif
-        return compa::sock_read_unprotected(info, buffer /*read_buffer*/,
-                                            nullptr /*write_buffer*/, bufsize,
-                                            timeoutSecs);
+        return sock_read_unprotected(info, buffer /*read_buffer*/,
+                                     nullptr /*write_buffer*/, bufsize,
+                                     timeoutSecs);
 }
 
 int sock_write(SOCKINFO* info, const char* buffer, size_t bufsize,
@@ -647,14 +696,13 @@ int sock_write(SOCKINFO* info, const char* buffer, size_t bufsize,
         return UPNP_E_SOCKET_ERROR;
 #ifdef UPNP_ENABLE_OPEN_SSL
     if (info->ssl)
-        return compa::sock_write_ssl(info, nullptr /*read_buffer*/,
-                                     buffer /*write_buffer*/, bufsize,
-                                     timeoutSecs);
+        return sock_write_ssl(info, nullptr /*read_buffer*/,
+                              buffer /*write_buffer*/, bufsize, timeoutSecs);
     else
 #endif
-        return compa::sock_write_unprotected(info, nullptr /*read_buffer*/,
-                                             buffer /*write_buffer*/, bufsize,
-                                             timeoutSecs);
+        return sock_write_unprotected(info, nullptr /*read_buffer*/,
+                                      buffer /*write_buffer*/, bufsize,
+                                      timeoutSecs);
 }
 
 int sock_make_blocking(SOCKET sock) {

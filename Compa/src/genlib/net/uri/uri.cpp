@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-30
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,44 +31,53 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
 /*!
  * \file
- *
- * \brief Contains functions for uri, url parsing utility.
+ * \brief Modify and parse URIs.
  */
 
-#ifdef __FreeBSD__
-// #include <osreldate.h>
-#if __FreeBSD_version < 601103
-// #include <lwres/netdb.h>
-#endif
-#endif
 #ifdef _WIN32
 #if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf _snprintf
 #endif
 #endif
-#include <assert.h>
 
-#include "config.hpp"
-#include "upnpapi.hpp"
-#include "uri.hpp"
+#include <upnp.hpp>
+#include <posix_overwrites.hpp>
+#include <umock/netdb.hpp>
 
-#include "posix_overwrites.hpp"
+#include <config.hpp>
+// #ifndef COMPA_INTERNAL_CONFIG_HPP
+// #error "No or wrong config.hpp header file included."
+// #endif
+#include <uri.hpp>
 
-#include "umock/netdb.hpp"
+/// \cond
+#include <cassert>
+#include <cstdio> // Needed if OpenSSL isn't compiled in.
+/// \endcond
+
+UPNPLIB_EXTERN unsigned gIF_INDEX;
+
+
+namespace {
+/*! \name Scope restricted to file
+ * @{
+ */
 
 /*!
- * \brief Returns a 1 if a char is a RESERVED char as defined in
- * http://www.ietf.org/rfc/rfc2396.txt RFC explaining URIs).
+ * \brief Check for a RESERVED character.
  *
- * \return 1 if char is a RESERVED char.
+ * Returns a 1 if a char is a RESERVED char as defined in
+ * <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396 (explaining URIs)</a>.
+ * Added {} for compatibility.
+ *
+ * \returns 1 if char is a RESERVED char, otherwise 0.
  */
-static int is_reserved(
+int is_reserved(
     /*! [in] Char to be matched for RESERVED characters. */
-    char in) {
-    if (strchr(RESERVED, (int)in)) {
+    const unsigned char in) {
+    if (strchr(";/?:@&=+$,{}", in)) {
         return 1;
     } else {
         return 0;
@@ -76,16 +85,17 @@ static int is_reserved(
 }
 
 /*!
- * \brief Returns a 1 if a char is a MARK char as defined in
- * http://www.ietf.org/rfc/rfc2396.txt (RFC explaining URIs).
+ * \brief Check for a MARK character.
  *
- * \return 1 if char is a MARKED char.
+ * Returns a 1 if a char is a MARK char as defined in
+ * <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396 (explaining URIs)</a>.
+ *
+ * \returns 1 if char is a MARKED char, otherwise 0.
  */
-// TODO: set to static, no interface function
 int is_mark(
-    /*! [in] Char to be matched for MARKED characters. */
-    char in) {
-    if (strchr(MARK, (int)in)) {
+    /*! [in] Char to be matched for MARK characters. */
+    const unsigned char in) {
+    if (strchr("-_.!~*'()", in)) {
         return 1;
     } else {
         return 0;
@@ -93,14 +103,16 @@ int is_mark(
 }
 
 /*!
- * \brief Returns a 1 if a char is an UNRESERVED char as defined in
- * http://www.ietf.org/rfc/rfc2396.txt (RFC explaining URIs).
+ * \brief Check for an UNRESERVED character.
  *
- * \return 1 if char is a UNRESERVED char.
+ * Returns a 1 if a char is an UNRESERVED char as defined in
+ * <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396 (explaining URIs)</a>.
+ *
+ * \return 1 if char is a UNRESERVED char, otherwise 0.
  */
 int is_unreserved(
     /*! [in] Char to be matched for UNRESERVED characters. */
-    char in) {
+    const unsigned char in) {
     if (isalnum(in) || is_mark(in)) {
         return 1;
     } else {
@@ -109,16 +121,18 @@ int is_unreserved(
 }
 
 /*!
- * \brief Returns a 1 if a char[3] sequence is ESCAPED as defined in
- * http://www.ietf.org/rfc/rfc2396.txt (RFC explaining URIs).
+ * \brief Check that a char[3] sequence is ESCAPED.
  *
- * Size of array is NOT checked (MUST be checked by caller).
+ * Returns a 1 if a char[3] sequence is ESCAPED as defined in
+ * <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396 (explaining URIs)</a>.
  *
- * \return 1 if char is a ESCAPED char.
+ * \returns 1 if char is a ESCAPED char, otherwise 0.
  */
 int is_escaped(
     /*! [in] Char sequence to be matched for ESCAPED characters. */
-    const char* in) {
+    const unsigned char* in) {
+    if (in == nullptr)
+        return 0;
     if (in[0] == '%' && isxdigit(in[1]) && isxdigit(in[2])) {
         return 1;
     } else {
@@ -126,47 +140,15 @@ int is_escaped(
     }
 }
 
-int replace_escaped(char* in, size_t index, size_t* max) {
-    int tempInt = 0;
-    char tempChar = 0;
-    size_t i = (size_t)0;
-    size_t j = (size_t)0;
-
-    if (in[index] == '%' && isxdigit(in[index + (size_t)1]) &&
-        isxdigit(in[index + (size_t)2])) {
-        /* Note the "%2x", makes sure that we convert a maximum of two
-         * characters. */
-#ifdef _WIN32
-        if (sscanf_s(&in[index + (size_t)1],
-#else
-        if (sscanf(&in[index + (size_t)1],
-#endif
-                     "%2x", (unsigned int*)&tempInt) != 1) {
-            return 0;
-        }
-        tempChar = (char)tempInt;
-        for (i = index + (size_t)3, j = index; j < *max; i++, j++) {
-            in[j] = tempChar;
-            if (i < *max) {
-                tempChar = in[i];
-            } else {
-                tempChar = 0;
-            }
-        }
-        *max -= (size_t)2;
-        return 1;
-    } else {
-        return 0;
-    }
-}
-
 /*!
- * \brief Parses a string of uric characters starting at in[0] as defined in
- * http://www.ietf.org/rfc/rfc2396.txt (RFC explaining URIs).
+ * \brief Parses a string of uric characters starting at in[0].
  *
- * \return
+ * As defined in <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396
+ * (explaining URIs)</a>.
+ *
+ * \returns ???
  */
-static size_t parse_uric(
+size_t parse_uric(
     /*! [in] String of characters. */
     const char* in,
     /*! [in] Maximum limit. */
@@ -175,8 +157,10 @@ static size_t parse_uric(
     token* out) {
     size_t i = (size_t)0;
 
-    while (i < max && (is_unreserved(in[i]) || is_reserved(in[i]) ||
-                       ((i + (size_t)2 < max) && is_escaped(&in[i])))) {
+    while (i < max &&
+           (is_unreserved(in[i]) || is_reserved(in[i]) ||
+            ((i + (size_t)2 < max) &&
+             is_escaped(reinterpret_cast<const unsigned char*>(&in[i]))))) {
         i++;
     }
 
@@ -186,131 +170,41 @@ static size_t parse_uric(
 }
 
 /*!
- * \brief Tokens are generally pointers into other strings. This copies the
- * offset and size from a token (in) relative to one string (in_base) into
- * a token (out) relative to another string (out_base).
+ * \brief Copy the offset and size from a token to another token.
+ *
+ * Tokens are generally pointers into other strings. This copies the offset and
+ * size from a token (in) relative to one string (in_base) into a token (out)
+ * relative to another string (out_base).
  */
-static void copy_token(
+void copy_token(
     /*! [in] Source token. */
     const token* in,
-    /*! [in] . */
+    /*! [in] */
     const char* in_base,
     /*! [out] Destination token. */
     token* out,
-    /*! [in] . */
+    /*! [in] */
     char* out_base) {
     out->size = in->size;
     out->buff = out_base + (in->buff - in_base);
 }
 
-int copy_URL_list(URL_list* in, URL_list* out) {
-    size_t len = strlen(in->URLs) + (size_t)1;
-    size_t i = (size_t)0;
-
-    out->URLs = NULL;
-    out->parsedURLs = NULL;
-    out->size = (size_t)0;
-
-    // clang-format off
-// #ifdef UPNPLIB_PUPNP_BUG
-    // Ingo - Error old code: this isn't fixed due to compatibility.
-    out->URLs = (char*)malloc(len);
-    out->parsedURLs = (uri_type*)malloc(sizeof(uri_type) * in->size);
-
-    if (!out->URLs || !out->parsedURLs)
-        return UPNP_E_OUTOF_MEMORY;
-// #else
-//     out->URLs = (char*)malloc(len);
-//     if (!out->URLs)
-//         return UPNP_E_OUTOF_MEMORY;
-//     out->parsedURLs = (uri_type*)malloc(sizeof(uri_type) * in->size);
-//     if (!out->parsedURLs) {
-//         free(out->URLs);
-//         return UPNP_E_OUTOF_MEMORY;
-//     }
-// #endif
-    // clang-format on
-    memcpy(out->URLs, in->URLs, len);
-    for (i = (size_t)0; i < in->size; i++) {
-        /*copy the parsed uri */
-        out->parsedURLs[i].type = in->parsedURLs[i].type;
-        copy_token(&in->parsedURLs[i].scheme, in->URLs,
-                   &out->parsedURLs[i].scheme, out->URLs);
-        out->parsedURLs[i].path_type = in->parsedURLs[i].path_type;
-        copy_token(&in->parsedURLs[i].pathquery, in->URLs,
-                   &out->parsedURLs[i].pathquery, out->URLs);
-        copy_token(&in->parsedURLs[i].fragment, in->URLs,
-                   &out->parsedURLs[i].fragment, out->URLs);
-        copy_token(&in->parsedURLs[i].hostport.text, in->URLs,
-                   &out->parsedURLs[i].hostport.text, out->URLs);
-        memcpy(&out->parsedURLs[i].hostport.IPaddress,
-               &in->parsedURLs[i].hostport.IPaddress,
-               sizeof(struct sockaddr_storage));
-    }
-    out->size = in->size;
-
-    return HTTP_SUCCESS;
-}
-
-void free_URL_list(URL_list* list) {
-    if (list->URLs) {
-        free(list->URLs);
-    }
-    if (list->parsedURLs) {
-        free(list->parsedURLs);
-    }
-    list->size = (size_t)0;
-}
-
-/* This should use upnpdebug. Failing that, disable by default */
-#ifdef DEBUG_URI
-void print_uri(uri_type* in) {
-    print_token(&in->scheme);
-    print_token(&in->hostport.text);
-    print_token(&in->pathquery);
-    print_token(&in->fragment);
-}
-
-void print_token(token* in) {
-    size_t i = 0;
-
-    fprintf(stderr, "Token Size : %" PRIzu "\n\'", in->size);
-    for (i = 0; i < in->size; i++)
-        putchar(in->buff[i]);
-    putchar('\'');
-    putchar('\n');
-}
-#endif /* DEBUG */
-
-int token_string_casecmp(token* in1, const char* in2) {
-    size_t in2_length = strlen(in2);
-    if (in1->size != in2_length)
-        return 1;
-    else
-        return strncasecmp(in1->buff, in2, in1->size);
-}
-
-int token_cmp(token* in1, token* in2) {
-    if (in1->size != in2->size)
-        return 1;
-    else
-        return memcmp(in1->buff, in2->buff, in1->size);
-}
-
 /*!
- * \brief Parses a string representing a host and port (e.g. "127.127.0.1:80"
- * or "localhost") and fills out a hostport_type struct with internet address
- * and a token representing the full host and port.
+ * \brief Parses a string with host and port and fills a hostport structure.
  *
- * Uses getaddrinfo to resolve DNS names. This may result in a longer delay
- * until response from the internet.
+ * Parses a string representing a host and port (e.g. "127.127.0.1:80" or
+ * "localhost") and fills out a hostport_type struct with internet address and a
+ * token representing the full host and port. Uses getaddrinfo() to resolve DNS
+ * names. This may result in a longer delay until response from the internet.
  */
-static int parse_hostport(
+int parse_hostport(
     /*! [in] String of characters representing host and port. */
     const char* in,
     /*! [out] Output parameter where the host and port are represented as
      * an internet address. */
-    unsigned short int defaultPort, hostport_type* out) {
+    unsigned short int defaultPort,
+    /*! [out] The netaddress (with port) */
+    hostport_type* out) {
     char workbuf[256];
     char* c;
     struct sockaddr_in* sai4 = (struct sockaddr_in*)&out->IPaddress;
@@ -440,24 +334,24 @@ static int parse_hostport(
 }
 
 /*!
- * \brief parses a uri scheme starting at in[0] as defined in
- * http://www.ietf.org/rfc/rfc2396.txt (RFC explaining URIs).
+ * \brief parses a uri scheme starting at in[0].
  *
- * (e.g. "http:" -> scheme= "http").
+ * As defined in <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396
+ * (explaining URIs)</a> (e.g. "http:" -> scheme= "http").\n
+ * The funcion parses also opaque URIs. A URI is opaque if, and only if, it is
+ * absolute and its scheme-specific part does not begin with a slash character
+ * ('/'). An opaque URI has a scheme, a scheme-specific part, and possibly a
+ * fragment; all other components are undefined. A typical example of an opaque
+ * uri is a mail to url **mailto:a@b.com**.\n
+ * REF: http://docs.oracle.com/javase/8/docs/api/java/net/URI.html#isOpaque--
  *
  * \note String MUST include ':' within the max charcters.
  *
- * \return size of the scheme identifier (e.g. 4 for "http"). Will be 0 with
+ * \returns size of the scheme identifier (e.g. 4 for "http"). Will be 0 with
  * invalid scheme identifier.
  */
-// http://docs.oracle.com/javase/8/docs/api/java/net/URI.html#isOpaque--
-// A URI is opaque if, and only if, it is absolute and its scheme-specific part
-// does not begin with a slash character ('/'). An opaque URI has a scheme, a
-// scheme-specific part, and possibly a fragment; all other components are
-// undefined. A typical example of an opaque uri is a mail to url
-// mailto:a@b.com.
 //
-static size_t parse_scheme(
+size_t parse_scheme(
     /*! [in] String of characters representing a scheme. */
     const char* in,
     /*! [in] Maximum number of characters. */
@@ -488,18 +382,8 @@ static size_t parse_scheme(
     return (size_t)0;
 }
 
-int remove_escaped_chars(/* INOUT */ char* in, /* INOUT */ size_t* size) {
-    // TODO: Optimize with prechecking the delimiter '%'.
-    size_t i = (size_t)0;
-
-    for (i = (size_t)0; i < *size; i++) {
-        replace_escaped(in, i, size);
-    }
-
-    return UPNP_E_SUCCESS;
-}
-
-static UPNP_INLINE int is_end_path(char c) {
+/// \brief Check if end of a path.
+inline int is_end_path(char c) {
     switch (c) {
     case '?':
     case '#':
@@ -509,8 +393,152 @@ static UPNP_INLINE int is_end_path(char c) {
     return 0;
 }
 
-/* This function directly implements the "Remove Dot Segments"
- * algorithm described in RFC 3986 section 5.2.4. */
+/// @} // Scope restricted to file
+} // anonymous namespace
+
+
+int replace_escaped(char* in, size_t index, size_t* max) {
+    int tempInt = 0;
+    char tempChar = 0;
+    size_t i = (size_t)0;
+    size_t j = (size_t)0;
+
+    if (in[index] == '%' && isxdigit(in[index + (size_t)1]) &&
+        isxdigit(in[index + (size_t)2])) {
+        /* Note the "%2x", makes sure that we convert a maximum of two
+         * characters. */
+#ifdef _WIN32
+        if (sscanf_s(&in[index + (size_t)1],
+#else
+        if (sscanf(&in[index + (size_t)1],
+#endif
+                     "%2x", (unsigned int*)&tempInt) != 1) {
+            return 0;
+        }
+        tempChar = (char)tempInt;
+        for (i = index + (size_t)3, j = index; j < *max; i++, j++) {
+            in[j] = tempChar;
+            if (i < *max) {
+                tempChar = in[i];
+            } else {
+                tempChar = 0;
+            }
+        }
+        *max -= (size_t)2;
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+
+int copy_URL_list(URL_list* in, URL_list* out) {
+    size_t len = strlen(in->URLs) + (size_t)1;
+    size_t i = (size_t)0;
+
+    out->URLs = NULL;
+    out->parsedURLs = NULL;
+    out->size = (size_t)0;
+
+    // clang-format off
+// #ifdef UPNPLIB_PUPNP_BUG
+    // Ingo - Error old code: this isn't fixed due to compatibility.
+    out->URLs = (char*)malloc(len);
+    out->parsedURLs = (uri_type*)malloc(sizeof(uri_type) * in->size);
+
+    if (!out->URLs || !out->parsedURLs)
+        return UPNP_E_OUTOF_MEMORY;
+// #else
+//     out->URLs = (char*)malloc(len);
+//     if (!out->URLs)
+//         return UPNP_E_OUTOF_MEMORY;
+//     out->parsedURLs = (uri_type*)malloc(sizeof(uri_type) * in->size);
+//     if (!out->parsedURLs) {
+//         free(out->URLs);
+//         return UPNP_E_OUTOF_MEMORY;
+//     }
+// #endif
+    // clang-format on
+    memcpy(out->URLs, in->URLs, len);
+    for (i = (size_t)0; i < in->size; i++) {
+        /*copy the parsed uri */
+        out->parsedURLs[i].type = in->parsedURLs[i].type;
+        copy_token(&in->parsedURLs[i].scheme, in->URLs,
+                   &out->parsedURLs[i].scheme, out->URLs);
+        out->parsedURLs[i].path_type = in->parsedURLs[i].path_type;
+        copy_token(&in->parsedURLs[i].pathquery, in->URLs,
+                   &out->parsedURLs[i].pathquery, out->URLs);
+        copy_token(&in->parsedURLs[i].fragment, in->URLs,
+                   &out->parsedURLs[i].fragment, out->URLs);
+        copy_token(&in->parsedURLs[i].hostport.text, in->URLs,
+                   &out->parsedURLs[i].hostport.text, out->URLs);
+        memcpy(&out->parsedURLs[i].hostport.IPaddress,
+               &in->parsedURLs[i].hostport.IPaddress,
+               sizeof(struct sockaddr_storage));
+    }
+    out->size = in->size;
+
+    return HTTP_SUCCESS;
+}
+
+void free_URL_list(URL_list* list) {
+    if (list->URLs) {
+        free(list->URLs);
+    }
+    if (list->parsedURLs) {
+        free(list->parsedURLs);
+    }
+    list->size = (size_t)0;
+}
+
+/* This should use upnpdebug. Failing that, disable by default */
+#if defined(DEBUG_URI) || defined(DOXYGEN_RUN)
+void print_uri(uri_type* in) {
+    print_token(&in->scheme);
+    print_token(&in->hostport.text);
+    print_token(&in->pathquery);
+    print_token(&in->fragment);
+}
+
+void print_token(token* in) {
+    size_t i = 0;
+
+    fprintf(stderr, "Token Size : %" PRIzu "\n\'", in->size);
+    for (i = 0; i < in->size; i++)
+        putchar(in->buff[i]);
+    putchar('\'');
+    putchar('\n');
+}
+#endif /* DEBUG */
+
+int token_string_casecmp(token* in1, const char* in2) {
+    size_t in2_length = strlen(in2);
+    if (in1->size != in2_length)
+        return 1;
+    else
+        return strncasecmp(in1->buff, in2, in1->size);
+}
+
+int token_cmp(token* in1, token* in2) {
+    if (in1->size != in2->size)
+        return 1;
+    else
+        return memcmp(in1->buff, in2->buff, in1->size);
+}
+
+
+int remove_escaped_chars(char* in, size_t* size) {
+    /// \todo Optimize with prechecking the delimiter '\%'.
+    size_t i = (size_t)0;
+
+    for (i = (size_t)0; i < *size; i++) {
+        replace_escaped(in, i, size);
+    }
+
+    return UPNP_E_SUCCESS;
+}
+
+
 int remove_dots(char* buf, size_t size) {
     char* in = buf;
     char* out = buf;
@@ -644,7 +672,7 @@ char* resolve_rel_url(char* base_url, char* rel_url) {
 
     /* path */
     path = out_finger;
-    if (rel.path_type == (enum pathType)ABS_PATH) {
+    if (rel.path_type == (pathType)ABS_PATH) {
         rv = snprintf(out_finger, len, "%s", rel_url);
     } else if (base.pathquery.size == (size_t)0) {
         rv = snprintf(out_finger, len, "/%s", rel_url);

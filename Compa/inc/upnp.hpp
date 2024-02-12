@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-01-26
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-12
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -392,15 +392,13 @@
  * the internal implementation of these data structures without breaking
  * the API.
  */
-#include "UpnpActionComplete.hpp"
-#include "UpnpActionRequest.hpp"
-#include "UpnpDiscovery.hpp"
-#include "UpnpEvent.hpp"
-#include "UpnpEventSubscribe.hpp"
-#include "UpnpFileInfo.hpp"
-#include "UpnpStateVarComplete.hpp"
-// #include "UpnpStateVarRequest.h"
-// #include "UpnpSubscriptionRequest.h"
+#include <UpnpActionComplete.hpp>
+#include <UpnpActionRequest.hpp>
+#include <UpnpDiscovery.hpp>
+#include <UpnpEvent.hpp>
+#include <UpnpEventSubscribe.hpp>
+#include <UpnpFileInfo.hpp>
+#include <UpnpStateVarComplete.hpp>
 
 /*!
  * \name Constants and Types

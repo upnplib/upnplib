@@ -958,6 +958,8 @@ INPUT                  = README.md \
                          Compa/src/genlib/net/http/parsetools.cpp \
                          Compa/src/genlib/net/http/statcodes.cpp \
                          Compa/src/genlib/net/http/webserver.cpp \
+                         Compa/src/genlib/net/sock.cpp \
+                         Compa/src/genlib/net/uri/uri.cpp \
                          \
                          Compa/src/genlib/util/strintmap.cpp \
                          \
@@ -969,8 +971,6 @@ INPUT                  = README.md \
 #delete Compa/inc/UpnpUniStd.hpp
 #delete Compa/inc/init.hpp
 #
-#Compa/src/genlib/net/sock.cpp
-#Compa/src/genlib/net/uri/uri.cpp
 #Compa/src/genlib/service-table/service_table.cpp
 #Compa/src/genlib/util/list.cpp
 #Compa/src/genlib/util/membuffer.cpp
