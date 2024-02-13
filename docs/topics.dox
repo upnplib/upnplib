@@ -1,0 +1,111 @@
+// Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-02-13
+/*!
+ * \file
+ * \brief Definition of the documentation topics.
+ *
+ * This file contains only documentation and is parsed by Doxygen but never by
+ * the compiler/linker.
+ *
+ * \defgroup compa Compatible library
+ * \defgroup upnplib UPnP library
+ *
+ *
+ * \defgroup compa-Addressing Step 0: Addressing
+ * \ingroup compa
+ * \brief Items to get a network address for UPnP devices and control points.
+ *
+ * Addressing is Step 0 of UPnP networking. Through addressing, devices
+ * and control points get a network address. Addressing enables discovery (Step
+ * 1) where control points find interesting device(s), description (Step 2)
+ * where control points learn about device capabilities, control (Step 3) where
+ * a control point sends commands to device(s), eventing (Step 4) where control
+ * points listen to state changes in device(s), and presentation (Step 5) where
+ * control points display a user interface for device(s).
+ *
+ *
+ * \defgroup compa-Discovery Step 1: Discovery
+ * \ingroup compa
+ * \brief Items for control points to find UPnP device(s) with **SSDP** the
+ * *Simple Service Discovery Protocol*.
+ *
+ * Discovery is Step 1 in UPnP networking. Discovery comes after addressing
+ * (Step 0) where devices get a network address. Through discovery, control
+ * points find interesting device(s). Discovery enables description (Step 2)
+ * where control points learn about device capabilities, control (Step 3) where
+ * a control point sends commands to device(s), eventing (Step 4) where control
+ * points listen to state changes in device(s), and presentation (Step 5) where
+ * control points display a user interface for device(s).
+ *
+ *
+ * \defgroup compa-Description Step 2: Description
+ * \ingroup compa
+ * \brief Items for control points to learn more about a UPnP device and its
+ * capabilities.
+ *
+ * Description is Step 2 in UPnP networking. Description comes after addressing
+ * (Step 0) where devices get a network address, and after discovery (Step 1)
+ * where control points find interesting device(s). Description enables control
+ * (Step 3) where control points send commands to device(s), eventing (Step 4)
+ * where control points listen to state changes in device(s), and presentation
+ * (Step 5) where control points may display an html user interface for
+ * device(s).
+ *
+ * After a control point has discovered a device, the control point still knows
+ * very little about the device. For the control point to learn more about the
+ * device and its capabilities, or to interact with the device, the control
+ * point shall retrieve a description of the device and its capabilities from
+ * the URL provided by the device in the discovery message.
+ *
+ *
+ * \defgroup compa-Control Step 3: Control
+ * \ingroup compa
+ * \brief Items for control points to invoke actions on UPnP devices with
+ * **SOAP** the *Simple Object Access Protocol*.
+ *
+ * Control is Step 3 in UPnP networking. Control comes after addressing (Step 0)
+ * where devices get a network address, after discovery (Step 1) where control
+ * points find interesting device(s), and after description (Step 2) where
+ * control points learn about device capabilities. Control is independent of
+ * eventing (Step 4) where control points listen to state changes in device(s).
+ * Through control, control points invoke actions on devices and poll for
+ * values. Control and eventing are complementary to presentation (Step 5) where
+ * control points display a user interface provided by device(s).
+ *
+ *
+ * \defgroup compa-Eventing Step 4: Eventing
+ * \ingroup compa
+ * \brief Items to manage events with **GENA** the *General Event Notification
+ * Architecture*.
+ *
+ * Eventing is Step 4 in UPnP networking. Eventing comes after addressing (Step
+ * 0) where devices get a network address, after discovery (Step 1) where
+ * control points find interesting device(s), and after description (Step 2)
+ * where control points learn about device capabilities. Eventing is intimately
+ * linked with control (Step 3) where control points send actions to devices.
+ * Through eventing, control points listen to state changes in device(s).
+ * Control and eventing are complementary to presentation (Step 5) where control
+ * points display a user interface provided by device(s).
+ *
+ *
+ * \defgroup compa-Presentation Step 5: Presentation
+ * \ingroup compa
+ * \brief Items for control points to expose an HTML-based user interface for
+ * controlling and/or viewing device status.
+ *
+ * Presentation is Step 5 in UPnP networking. Presentation comes after
+ * addressing (Step 0) where devices get network addresses, after discovery
+ * (Step 1) where control points find interesting device(s), and after
+ * description (Step 2) where control points learn about device capabilities.
+ * Presentation exposes an HTML-based user interface for controlling and/or
+ * viewing device status. Presentation is complementary to control (Step 3)
+ * where control points send actions to devices, and eventing (Step 4) where
+ * control points listen to state changes in device(s).
+ *
+ *
+ * \defgroup upnplib-Addressing Step 0: Addressing
+ * \ingroup upnplib
+ * \copydoc compa-Addressing
+ */
+
+// vim: filetype=cpp

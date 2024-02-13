@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-19
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-14
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,7 +49,6 @@
 #include "soaplib.hpp"
 #include "ssdplib.hpp"
 #include "statcodes.hpp"
-#include "unixutil.hpp"
 #include "upnpapi.hpp"
 
 #include <assert.h>
@@ -94,6 +93,14 @@ typedef struct soap_devserv_t {
     Upnp_FunPtr callback;
     void* cookie;
 } soap_devserv_t;
+
+namespace {
+void namecopy(char dest[NAME_SIZE], const char* src) {
+    strncpy(dest, src, NAME_SIZE - (size_t)1);
+    /* null-terminate if len(src) >= NAME_SIZE. */
+    dest[NAME_SIZE - 1] = '\0';
+}
+} // anonymous namespace
 
 /*!
  * \brief Sends SOAP error response.

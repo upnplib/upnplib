@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-16
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-14
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,7 +44,7 @@
 #include "unixutil.hpp"
 #include "upnp.hpp"
 #include "upnpdebug.hpp"
-#include "upnputil.hpp"
+#include "upnp.hpp"
 #include "uri.hpp"
 #include "urlconfig.hpp"
 #include "webserver.hpp"

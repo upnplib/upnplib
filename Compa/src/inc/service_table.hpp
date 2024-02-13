@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-01
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -101,20 +101,26 @@ struct service_table {
 
 /* Functions for Subscriptions */
 
+#if (EXCLUDE_GENA == 0) || defined(DOXYGEN_RUN)
 /*!
  * \brief Makes a copy of the subscription.
+ * \ingroup Eventing
+ * \note Only available with the GENA module compiled in.
  *
- * \return HTTP_SUCCESS on success.
+ * \returns
+ *  On success: HTTP_SUCCESS\n
+ *  On error: Error codes from copy_URL_list.
  */
 int copy_subscription(
     /*! [in] Source subscription. */
     subscription* in,
-    /*! [in] Destination subscription. */
+    /*! [out] Destination subscription. */
     subscription* out);
 
 /*!
- * \brief Remove the subscription represented by the const Upnp_SID sid
- * parameter from the service table and update the service table.
+ * \brief Remove the subscription from the service table and update it.
+ * \ingroup Eventing
+ * \note Only available with the GENA module compiled in.
  */
 void RemoveSubscriptionSID(
     /*! [in] Subscription ID. */
@@ -123,8 +129,10 @@ void RemoveSubscriptionSID(
     service_info* service);
 
 /*!
- * \brief Return the subscription from the service table that matches
- * const Upnp_SID sid value.
+ * \brief Return the subscription from the service table that matches const
+ * Upnp_SID sid value.
+ * \ingroup Eventing
+ * \note Only available with the GENA module compiled in.
  *
  * \return Pointer to the matching subscription node.
  */
@@ -136,6 +144,8 @@ subscription* GetSubscriptionSID(
 
 /*!
  * \brief Gets pointer to the first subscription node in the service table.
+ * \ingroup Eventing
+ * \note Only available with the GENA module compiled in.
  *
  * \return Pointer to the first subscription node.
  */
@@ -145,6 +155,8 @@ subscription* GetFirstSubscription(
 
 /*!
  * \brief Get current and valid subscription from the service table.
+ * \ingroup Eventing
+ * \note Only available with the GENA module compiled in.
  *
  * \return Pointer to the next subscription node.
  */
@@ -156,6 +168,8 @@ subscription* GetNextSubscription(
 
 /*!
  * \brief Free's the memory allocated for storing the URL of the subscription.
+ * \ingroup Eventing
+ * \note Only available with the GENA module compiled in.
  */
 void freeSubscription(
     /*! [in] Subscription object to be freed. */
@@ -164,16 +178,23 @@ void freeSubscription(
 /*!
  * \brief Free's memory allocated for all the subscriptions in the service
  * table.
+ * \ingroup Eventing
+ * \note Only available with the GENA module compiled in.
  */
 void freeSubscriptionList(
     /*! [in] Head of the subscription list. */
     subscription* head);
 
 /*!
- * \brief Traverses through the service table and returns a pointer to the
- * service node that matches a known service id and a known UDN.
+ * \brief Traverses through the service table to find a service.
+ * \ingroup Eventing
  *
- * \return Pointer to the matching service_info node.
+ * Returns a pointer to the service node that matches a known service id and a
+ * known UDN.
+ *
+ * \note Only available with the GENA module compiled in.
+ *
+ * \returns Pointer to the matching service_info node.
  */
 service_info* FindServiceId(
     /*! [in] Service table. */
@@ -185,11 +206,13 @@ service_info* FindServiceId(
      * table. */
     const char* UDN);
 
+#endif /* EXCLUDE_GENA */
+
 /*!
  * \brief Traverses the service table and finds the node whose event URL Path
- * matches a know value.
+ * matches a known value.
  *
- * \return Pointer to the service list node from the service table whose event
+ * \returns Pointer to the service list node from the service table whose event
  * URL matches a known event URL.
  */
 service_info* FindServiceEventURLPath(
@@ -198,12 +221,15 @@ service_info* FindServiceEventURLPath(
     /*! [in] Event URL path used to find a service from the table. */
     const char* eventURLPath);
 
+#if (EXCLUDE_SOAP == 0) || defined(DOXYGEN_RUN)
 /*!
  * \brief Traverses the service table and finds the node whose control URL Path
- * matches a know value.
+ * matches a known value.
+ * \ingroup Control
+ * \note Only available with the SOAP module compiled in.
  *
- * \return Pointer to the service list node from the service table whose control
- * URL Path matches a known value.
+ * \returns Pointer to the service list node from the service table whose
+ * control URL Path matches a known value.
  */
 service_info* FindServiceControlURLPath(
     /*! [in] Service table. */
@@ -211,9 +237,11 @@ service_info* FindServiceControlURLPath(
     /*! [in] Control URL path used to find a service from the table. */
     const char* controlURLPath);
 
+#endif /* EXCLUDE_SOAP */
+
 /*!
- * \brief Only available if DEBUG was selected on compiling: prints information
- * from the service passed into the function.
+ * \brief prints information from the service passed into the function.
+ * \note Only available if DEBUG was selected on compiling.
  */
 #if defined(DEBUG) || defined(DOXYGEN_RUN)
 void printService(
@@ -230,8 +258,9 @@ void printService(
 #endif
 
 /*!
- * \brief Only available if DEBUG was selected on compiling: prints information
- * of each service from the service table passed into the function.
+ * \brief Prints information of each service from the service table passed into
+ * the function.
+ * \note Only available if DEBUG was selected on compiling.
  */
 #if defined(DEBUG) || defined(DOXYGEN_RUN)
 void printServiceList(
@@ -248,9 +277,9 @@ void printServiceList(
 #endif
 
 /*!
- * \brief Only available if DEBUG was selected on compiling: prints the URL base
- * of the table and information of each service from the service table passed
- * into the function.
+ * \brief Prints the URL base of the table and information of each service from
+ * the service table.
+ * \note Only available if DEBUG was selected on compiling.
  */
 #if defined(DEBUG) || defined(DOXYGEN_RUN)
 void printServiceTable(
@@ -266,9 +295,12 @@ void printServiceTable(
     } while (0)
 #endif
 
+#if (EXCLUDE_GENA == 0) || defined(DOXYGEN_RUN)
 /*!
  * \brief Free's memory allocated for the various components of the service
  * entry in the service table.
+ * \ingroup Eventing
+ * \note Only available with the GENA module compiled in.
  */
 void freeService(
     /*! [in] Service information that is to be freed. */
@@ -277,6 +309,8 @@ void freeService(
 /*!
  * \brief Free's memory allocated for the various components of each service
  * entry in the service table.
+ * \ingroup Eventing
+ * \note Only available with the GENA module compiled in.
  */
 void freeServiceList(
     /*! [in] Head of the service list to be freed. */
@@ -285,6 +319,8 @@ void freeServiceList(
 /*!
  * \brief Free's dynamic memory in table (does not free table, only memory
  * within the structure).
+ * \ingroup Eventing
+ * \note Only available with the GENA module compiled in.
  */
 void freeServiceTable(
     /*! [in] Service table whose internal memory needs to be freed. */
@@ -292,13 +328,15 @@ void freeServiceTable(
 
 /*!
  * \brief Remove all services for a root device.
+ * \ingroup Eventing
+ * \note Only available with the GENA module compiled in.
  *
  * This function assumes that services for a particular root device are
  * placed linearly in the service table, and in the order in which they are
  * found in the description document all services for this root device are
  * removed from the list.
  *
- * \return An integer.
+ * \returns An integer.
  */
 int removeServiceTable(
     /*! [in] XML node information. */
@@ -308,6 +346,8 @@ int removeServiceTable(
 
 /*!
  * \brief Add Service to the table.
+ * \ingroup Eventing
+ * \note Only available with the GENA module compiled in.
  */
 int addServiceTable(
     /*! [in] XML node information. */
@@ -320,14 +360,15 @@ int addServiceTable(
 
 /*!
  * \brief Retrieve service from the table.
+ * \ingroup Eventing
+ * \note Only available with the GENA module compiled in.
  *
- * \return An integer
+ * \returns An integer
  */
 int getServiceTable(
     /*! [in] XML node information. */
     IXML_Node* node,
-    /*! [in] Output parameter which will contain the service list and URL.
-     */
+    /*! [in] Output parameter which will contain the service list and URL. */
     service_table* out,
     /*! [in] Default base URL on which the URL will be returned. */
     const char* DefaultURLBase);
@@ -336,9 +377,11 @@ int getServiceTable(
 
 /*!
  * \brief Returns the clone of the element value.
+ * \ingroup Eventing
  * \note Value must be freed with DOMString_free.
+ * \note Only available with the GENA module compiled in.
  *
- * \return DOMString
+ * \returns DOMString
  */
 DOMString getElementValue(
     /*! [in] Input node which provides the list of child nodes. */
@@ -347,10 +390,12 @@ DOMString getElementValue(
 /*!
  * \brief Traverses through a list of XML nodes to find the node with the
  * known element name.
+ * \ingroup Eventing
+ * \note Only available with the GENA module compiled in.
  *
- * \return
- *  \li 1 - On Success
- *  \li 0 - On Failure
+ * \returns
+ *  On success: 1\n
+ *  On error: 0
  */
 int getSubElement(
     /*! [in] Sub element name to be searched for. */
@@ -359,6 +404,8 @@ int getSubElement(
     IXML_Node* node,
     /*! [out] Ouput node to which the matched child node is returned. */
     IXML_Node** out);
+
+#endif /* EXCLUDE_GENA */
 
 #endif /* INCLUDE_DEVICE_APIS */
 

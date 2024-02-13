@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft,  Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-04
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-14
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,13 +33,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-// Last compare with pupnp original source file on 2023-08-12, ver 1.14.17
+// Last compare with pupnp original source file on 2024-02-14, ver 1.14.18
 /*!
  * \file
  * \brief Manage blocks of dynamically allocated memory.
+ *
+ * membuffer is only used internal within the library and linked with the source
+ * file so there are no exports UPNPLIB_API for external use.
  */
 
-#include <upnplib/visibility.hpp>
 /// \cond
 #include <cstddef>
 /// \endcond
@@ -59,15 +61,17 @@ struct memptr {
 struct membuffer {
     /// \brief mem buffer; must not write beyond buf[length-1] (read/write).
     char* buf;
-    /// \brief length of buffer without terminating null byte (read-only).
+    /*! \brief length of buffer without terminating null byte (read-only). */
     size_t length;
     /// \brief total allocated memory without terminating null byte (read-only).
     size_t capacity;
-    /// \brief used to increase size; MUST be > 0; (read/write).
+    /*! \brief used to increase size; MUST be > 0; (read/write). */
     size_t size_inc;
-    /// \brief default value of size_inc.
-#define MEMBUF_DEF_SIZE_INC (size_t)5
+    /*! \brief default value of size_inc. */
 };
+/// \cond
+inline constexpr size_t MEMBUF_DEF_SIZE_INC{5};
+/// \endcond
 
 /*!
  * \brief Allocate memory and copy information from the input string to the
@@ -91,10 +95,6 @@ char* str_alloc(
  * \li <  0 string1 substring less than string2 substring
  * \li == 0 string1 substring identical to string2 substring
  * \li >  0 string1 substring greater than string2 substring
- *
- * \note Different cases result in different length:
- * \li "abC" compared with "abc": < 0
- * \li "abc" compared with "abC": > 0
  */
 int memptr_cmp(
     /*! [in] Input memory object. */
@@ -140,14 +140,14 @@ int membuffer_set_size(
  * Set the size of the buffer to MEMBUF_DEF_SIZE_INC and Initializes
  * m->buf to NULL, length = 0.
  */
-UPNPLIB_API void membuffer_init(
+void membuffer_init(
     /*! [in,out] Buffer to be initialized. */
     membuffer* m);
 
 /*!
  * \brief Free's memory allocated for membuffer* m.
  */
-UPNPLIB_API void membuffer_destroy(
+void membuffer_destroy(
     /*! [in,out] Buffer to be destroyed. */
     membuffer* m);
 
@@ -198,7 +198,7 @@ int membuffer_append(
  *
  * \return int.
  */
-UPNPLIB_API int membuffer_append_str(
+int membuffer_append_str(
     /*! [in,out] Buffer whose memory is to be appended. */
     membuffer* m,
     /*! [in] Source buffer whose contents will be copied. */

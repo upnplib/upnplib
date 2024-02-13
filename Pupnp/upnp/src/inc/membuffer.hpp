@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft,  Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2028-08-12
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-14
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,7 +33,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-// Last compare with pupnp original source file on 2023-08-12, ver 1.14.17
+// Last compare with pupnp original source file on 2024-02-14, ver 1.14.18
 
 /*!
  * \file
@@ -41,7 +41,6 @@
 
 // #include "upnputil.hpp"
 // #include <stdlib.h>
-#include "UpnpGlobal.hpp" // for EXPORT_SPEC
 #include <cstddef>
 
 #define MINVAL(a, b) ((a) < (b) ? (a) : (b))
@@ -94,10 +93,6 @@ char* str_alloc(
  * \li <  0 string1 substring less than string2 substring
  * \li == 0 string1 substring identical to string2 substring
  * \li >  0 string1 substring greater than string2 substring
- *
- * \note Different cases result in different length:
- * \li "abC" compared with "abc": < 0
- * \li "abc" compared with "abC": > 0
  */
 int memptr_cmp(
     /*! [in] Input memory object. */
@@ -143,14 +138,14 @@ int membuffer_set_size(
  * Set the size of the buffer to MEMBUF_DEF_SIZE_INC and Initializes
  * m->buf to NULL, length = 0.
  */
-EXPORT_SPEC void membuffer_init(
+void membuffer_init(
     /*! [in,out] Buffer to be initialized. */
     membuffer* m);
 
 /*!
  * \brief Free's memory allocated for membuffer* m.
  */
-EXPORT_SPEC void membuffer_destroy(
+void membuffer_destroy(
     /*! [in,out] Buffer to be destroyed. */
     membuffer* m);
 
@@ -201,7 +196,7 @@ int membuffer_append(
  *
  * \return int.
  */
-EXPORT_SPEC int membuffer_append_str(
+int membuffer_append_str(
     /*! [in,out] Buffer whose memory is to be appended. */
     membuffer* m,
     /*! [in] Source buffer whose contents will be copied. */

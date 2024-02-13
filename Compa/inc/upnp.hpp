@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-12
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,11 +36,11 @@
 // Last compare with pupnp original source file on 2023-02-03, ver 1.14.15
 
 /*!
- * \defgroup UPnPAPI UPnPlib API
+ * \defgroup UPnPAPI old pUPnP API
  * @{
  *
  * \file
- * \brief UPnPlib API
+ * \brief old pUPnP API
  */
 
 #ifdef UPNP_ENABLE_OPEN_SSL
@@ -404,6 +404,9 @@
  * \name Constants and Types
  * @{
  */
+
+/// \brief Size of the errorBuffer variable, passed to the strerror_r() function
+inline constexpr size_t ERROR_BUFFER_LEN{256};
 
 enum UpnpOpenFileMode { UPNP_READ, UPNP_WRITE };
 

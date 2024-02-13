@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-12-22
+# Redistribution only with this Copyright remark. Last modified: 2024-02-14
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -154,6 +154,9 @@ add_test(NAME ctest_miniserver-cst COMMAND test_miniserver-cst --gtest_shuffle
 add_executable(test_miniserver_run-psh
 #-------------------------------------
     test_miniserver_run.cpp
+    # Due to only library internal use of membuffer it doesn't export symbols.
+    # So we have to compile the test  with the membuffer source.
+    ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
 )
 target_include_directories(test_miniserver_run-psh
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
@@ -175,6 +178,9 @@ add_test(NAME ctest_miniserver_run-psh COMMAND test_miniserver_run-psh --gtest_s
 add_executable(test_miniserver_run-csh
 #-------------------------------------
     test_miniserver_run.cpp
+    # Due to only library internal use of membuffer it doesn't export symbols.
+    # So we have to compile the test  with the membuffer source.
+    ${COMPA_SOURCE_DIR}/src/genlib/util/membuffer.cpp
 )
 target_include_directories(test_miniserver_run-csh
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}

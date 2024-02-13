@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 202e-01-25
+// Redistribution only with this Copyright remark. Last modified: 2024-02-14
 /*!
  * \file
  * \brief Specifications to be portable between different platforms.
@@ -117,6 +117,24 @@
 #endif
 
 // clang-format on
+
+
+// This has been taken from removed Compa/src/inc/upnputil.hpp
+/* C specific */
+/* VC needs these in C++ mode too (do other compilers?) */
+#if !defined(__cplusplus) || defined(UPNP_USE_MSVCPP)
+#ifdef _WIN32
+#ifndef S_ISREG
+#define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+#endif
+#ifndef S_ISDIR
+#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+#endif
+#define sleep(a) Sleep((a) * 1000)
+#define usleep(a) Sleep((a) / 1000)
+#define strerror_r(a, b, c) (strerror_s((b), (c), (a)))
+#endif /* _WIN32 */
+#endif /* !defined(__cplusplus) || defined(UPNP_USE_MSVCPP) */
 
 /// \endcond
 #endif // UPNPLIB_INCLUDE_PORT_HPP

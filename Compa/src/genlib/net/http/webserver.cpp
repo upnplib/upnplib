@@ -47,6 +47,7 @@
 #include <posix_overwrites.hpp>
 
 #include <upnplib/global.hpp>
+#include <upnplib/port.hpp>
 #include <upnplib/webserver.hpp>
 
 #include <umock/stdlib.hpp>

@@ -5,8 +5,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-29
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,39 +41,40 @@
  * not perform any allocation or deallocation.
  */
 
-#include <UpnpGlobal.hpp>
+#include <upnplib/visibility.hpp>
 
 /*! \brief List anchor structure.
  *
  * This should be the *first* entry in list member objects, except if you want
  * to do member offset arithmetic instead of simple casts (look up
  * "containerof"). The list code itself does not care. */
-typedef struct UpnpListHead {
+struct UpnpListHead {
     UpnpListHead* next; ///< Points to next entry in the list
     UpnpListHead* prev; ///< Points to previous entry in the list
-} UpnpListHead;
+};
 
-/*! List iterator. Not strictly necessary, but clarifies the interface. */
+/// \brief List iterator. Not strictly necessary, but clarifies the interface.
 typedef UpnpListHead* UpnpListIter;
 
-/*! Initialize empty list */
-EXPORT_SPEC void UpnpListInit(UpnpListHead* list);
+/*! \brief Initialize empty list */
+UPNPLIB_API void UpnpListInit(UpnpListHead* list);
 
-/*! Return iterator pointing to the first list element, or
+/*! \brief Return iterator pointing to the first list element, or
  *  UpnpListEnd(list) if the list is empty */
-EXPORT_SPEC UpnpListIter UpnpListBegin(UpnpListHead* list);
+UPNPLIB_API UpnpListIter UpnpListBegin(UpnpListHead* list);
 
-/*! Return end of list sentinel iterator (not an element) */
-EXPORT_SPEC UpnpListIter UpnpListEnd(UpnpListHead* list);
+/*! \brief Return end of list sentinel iterator (not an element) */
+UPNPLIB_API UpnpListIter UpnpListEnd(UpnpListHead* list);
 
-/*! Return iterator pointing to element after pos, or end() */
-EXPORT_SPEC UpnpListIter UpnpListNext(UpnpListHead* list, UpnpListIter pos);
+/*! \brief Return iterator pointing to element after pos, or end() */
+UPNPLIB_API UpnpListIter UpnpListNext(UpnpListHead* list, UpnpListIter pos);
 
-/*! Insert element before pos, returns iterator pointing to inserted element. */
-EXPORT_SPEC UpnpListIter UpnpListInsert(UpnpListHead* list, UpnpListIter pos,
+/*! \brief Insert element before pos, returns iterator pointing to inserted
+ * element. */
+UPNPLIB_API UpnpListIter UpnpListInsert(UpnpListHead* list, UpnpListIter pos,
                                         UpnpListHead* elt);
 
-/*! Erase element at pos, return next one, or end()*/
-EXPORT_SPEC UpnpListIter UpnpListErase(UpnpListHead* list, UpnpListIter pos);
+/*! \brief Erase element at pos, return next one, or end()*/
+UPNPLIB_API UpnpListIter UpnpListErase(UpnpListHead* list, UpnpListIter pos);
 
 #endif // COMPA_LIST_HPP

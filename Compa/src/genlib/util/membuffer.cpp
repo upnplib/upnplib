@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-01-31
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-14
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,30 +31,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-// Last compare with pupnp original source file on 2023-08-12, ver 1.14.17
-
-/*
+// Last compare with pupnp original source file on 2024-02-14, ver 1.14.18
+/*!
  * \file
+ * \brief This file contains functions that operate on memory and buffers.
  *
- * \brief This file contains functions that operate on memory and buffers,
- * allocation, re-allocation, and modification of the memory
+ * Allocation, re-allocation, and modification of the memory.
  */
 
 #include <membuffer.hpp>
 #include <upnp.hpp>
-
-#include <cassert>
-#include <cstdlib>
-#include <cstring>
 
 #include <posix_overwrites.hpp>
 
 #include <upnplib/global.hpp>
 #include <umock/stdlib.hpp>
 
+/// \cond
+#include <cassert>
+#include <cstdlib>
+#include <cstring>
 #ifdef UPNPLIB_WITH_TRACE
 #include <iostream>
 #endif
+/// \endcond
+
 
 char* str_alloc(const char* str, size_t str_len) {
     char* s;
@@ -97,6 +98,10 @@ int memptr_cmp_nocase(memptr* m, const char* s) {
     return cmp;
 }
 
+namespace {
+/*! \name Scope restricted to file
+ * @{ */
+
 /*!
  * \brief Initialize the buffer.
  */
@@ -107,6 +112,9 @@ static UPNP_INLINE void membuffer_initialize(
     m->length = (size_t)0;
     m->capacity = (size_t)0;
 }
+
+/// @}
+} // anonymous namespace
 
 int membuffer_set_size(membuffer* m, size_t new_length) {
     size_t diff;

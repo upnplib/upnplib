@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-01-24
+# Redistribution only with this Copyright remark. Last modified: 2024-02-14
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -94,7 +94,6 @@ set(COMPA_SOURCE_FILES
     ./src/genlib/util/list.cpp
     ./src/genlib/util/membuffer.cpp
     ./src/genlib/util/strintmap.cpp
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE}>,$<BOOL:${COMPA_DEF_SOAP}>>:./src/genlib/util/util.cpp>
 
     $<$<BOOL:${COMPA_DEF_DEVICE}>:./src/genlib/service-table/service_table.cpp>
     $<$<AND:$<BOOL:${COMPA_DEF_DEVICE}>,$<BOOL:${COMPA_DEF_GENA}>>:./src/genlib/client_table/GenlibClientSubscription.cpp>

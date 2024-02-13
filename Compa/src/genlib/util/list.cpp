@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-29
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,8 +31,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+/*!
+ * \file
+ * \brief Trivial list management interface, patterned on std::list.
+ *
+ * It aims more at being familiar than at being minimal. The implementation does
+ * not perform any allocation or deallocation.
+ */
 
-#include "list.hpp"
+#include <list.hpp>
 
 void UpnpListInit(UpnpListHead* list) {
     list->next = list;
