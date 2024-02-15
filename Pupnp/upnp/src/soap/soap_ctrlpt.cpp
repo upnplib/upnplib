@@ -2,8 +2,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-17
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-14
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,27 +30,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+// Last compare with pupnp original source file on 2024-02-14, ver 1.14.18
 
 #include "config.hpp"
 #ifdef INCLUDE_CLIENT_APIS
 #if EXCLUDE_SOAP == 0
 
 #include <assert.h>
-#include <stdlib.h>
 #include <ctype.h>
-#include <stdio.h>
 #include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-// #include "miniserver.hpp"
-// #include "membuffer.hpp"
 #include "httpparser.hpp"
 #include "httpreadwrite.hpp"
-#include "statcodes.hpp"
+// #include "membuffer.hpp"
+// #include "miniserver.hpp"
 #include "parsetools.hpp"
-#include "upnpapi.hpp"
 #include "soaplib.hpp"
-#include "uri.hpp"
+#include "statcodes.hpp"
 #include "upnp.hpp"
+#include "upnpapi.hpp"
+#include "uri.hpp"
 
 #include "unixutil.hpp"
 

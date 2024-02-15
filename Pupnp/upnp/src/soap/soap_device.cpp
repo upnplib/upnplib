@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-19
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-14
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
+// Last compare with pupnp original source file on 2024-02-14, ver 1.14.18
 /*!
  * \file
  */
@@ -41,7 +41,6 @@
 #ifdef INCLUDE_DEVICE_APIS
 #if EXCLUDE_SOAP == 0
 
-#include "UpnpStateVarRequest.hpp"
 #include "UpnpActionRequest.hpp"
 #include "httpparser.hpp"
 #include "httpreadwrite.hpp"
@@ -51,6 +50,7 @@
 #include "statcodes.hpp"
 #include "unixutil.hpp"
 #include "upnpapi.hpp"
+#include "UpnpStateVarRequest.hpp"
 
 #include <assert.h>
 #include <string.h>

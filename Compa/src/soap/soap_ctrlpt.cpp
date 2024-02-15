@@ -2,8 +2,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-11-17
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-15
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,42 +30,65 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+// Last compare with ./pupnp source file on 2024-02-14, ver 1.14.18
+/*!
+ * \file
+ * \brief Items for control points to manage UPnP Control.
+ *
+ * This is only available if the option for Clients and the option for SOAP is
+ * enabled with compiling the library.
+ */
 
-#include "config.hpp"
-#ifdef INCLUDE_CLIENT_APIS
-#if EXCLUDE_SOAP == 0
+#include <soap_common.hpp>
+#include <soap_ctrlpt.hpp>
 
-#include <assert.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <stdarg.h>
+#include <httpreadwrite.hpp>
+#include <parsetools.hpp>
+#include <statcodes.hpp>
+#include <upnpapi.hpp>
 
-// #include "miniserver.hpp"
-// #include "membuffer.hpp"
-#include "httpparser.hpp"
-#include "httpreadwrite.hpp"
-#include "statcodes.hpp"
-#include "parsetools.hpp"
-#include "upnpapi.hpp"
-#include "soaplib.hpp"
-#include "uri.hpp"
-#include "upnp.hpp"
+#ifndef COMPA_INTERNAL_CONFIG_HPP
+#error "No or wrong config.hpp header file included."
+#endif
 
-#include "unixutil.hpp"
+#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+#if (EXCLUDE_SOAP == 0) || defined(DOXYGEN_RUN)
 
-#define SOAP_ACTION_RESP 1
-#define SOAP_VAR_RESP 2
+/// \cond
+#include <cassert>
+#include <cctype>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+/// \endcond
+
+
+namespace {
+
+/*! \name Variable scope restricted to file
+ * @{ */
+/*! @{
+ * \brief Control point SOAP status */
+constexpr int SOAP_ACTION_RESP{1};
+constexpr int SOAP_VAR_RESP{2};
 /*#define SOAP_ERROR_RESP       3*/
-#define SOAP_ACTION_RESP_ERROR 3
-#define SOAP_VAR_RESP_ERROR 4
+constexpr int SOAP_ACTION_RESP_ERROR{3};
+constexpr int SOAP_VAR_RESP_ERROR{4};
+/// @}
+/// @}
+
+
+/*! \name Functions scope restricted to file
+ * @{ */
 
 /*!
  * \brief Compares 'name' and node's name.
  *
- * \return 0 if both are equal; 1 if not equal, and UPNP_E_OUTOF_MEMORY.
+ * \returns
+ *  On success: 0 if both are equal; 1 if not equal\n
+ *  On error: UPNP_E_OUTOF_MEMORY
  */
-static int dom_cmp_name(
+int dom_cmp_name(
     /* [in] lookup name. */
     const char* name,
     /* [in] xml node. */
@@ -98,9 +121,11 @@ static int dom_cmp_name(
  * \brief Goes thru each child of 'start_node' looking for a node having
  * the name 'node_name'.
  *
- * \return UPNP_E_SUCCESS if successful else returns appropriate error.
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error: UPNP_E_NOT_FOUND
  */
-static int dom_find_node(
+int dom_find_node(
     /* [in] name of the node. */
     const char* node_name,
     /* [in] complete xml node. */
@@ -129,14 +154,16 @@ static int dom_find_node(
 /*!
  * \brief Searches for the node specifed by the last name in the 'name' array.
  *
- * \return UPNP_E_SUCCESS if successful, else returns appropriate error.
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error: UPNP_E_NOT_FOUND
  */
-static int dom_find_deep_node(
+int dom_find_deep_node(
     /* [in] array of names. */
     const char* names[],
     /* [in] size of array. */
     int num_names,
-    /* [in] Node from where it should should be searched. */
+    /* [in] Node from where it should be searched. */
     IXML_Node* start_node,
     /* [out] Node that matches the last name of the array. */
     IXML_Node** matching_node) {
@@ -168,20 +195,15 @@ static int dom_find_deep_node(
     return UPNP_E_NOT_FOUND;
 }
 
-/****************************************************************************
- *   Function :  get_node_value
+/*!
+ * \brief This function returns the value of the text node.
+ * \note The given node must have a text node as its first child.
  *
- *   Parameters :
- *           IN IXML_Node *node : input node
- *
- *   Description :   This function returns the value of the text node
- *
- *   Return : DOMString
- *       string containing the node value
- *
- *   Note :The given node must have a text node as its first child
- ****************************************************************************/
-static const DOMString get_node_value(IXML_Node* node) {
+ * \returns DOMString - string containing the node value.
+ */
+const DOMString get_node_value( //
+    IXML_Node* node             ///< [in] input node
+) {
     IXML_Node* text_node = NULL;
     const DOMString text_value = NULL;
 
@@ -194,25 +216,19 @@ static const DOMString get_node_value(IXML_Node* node) {
     return text_value;
 }
 
-/****************************************************************************
- *   Function :  get_host_and_path
+/*!
+ * \brief This function retrives the host and path from the control URL.
  *
- *   Parameters :
- *           IN char *ctrl_url : URL
- *           OUT memptr *host :  host string
- *           OUT memptr *path :  path string
- *           OUT uri_type* url : URL type
- *
- *   Description :   This function retrives the host and path from the
- *       control URL
- *
- *   Return : int
- *       returns 0 on success; -1 on error
- *
- *   Note :
- ****************************************************************************/
-static UPNP_INLINE int get_host_and_path(char* ctrl_url, const memptr* host,
-                                         const memptr* path, uri_type* url) {
+ * \returns
+ *  On success: **0**\n
+ *  On error: **-1**
+ */
+inline int get_host_and_path( //
+    char* ctrl_url,           ///< [in] URL
+    const memptr* host,       ///< [out] host string
+    const memptr* path,       ///< [out] path string
+    uri_type* url             ///< [out] URL type
+) {
     if (parse_uri(ctrl_url, strlen(ctrl_url), url) != HTTP_SUCCESS) {
         return -1;
     }
@@ -226,21 +242,17 @@ static UPNP_INLINE int get_host_and_path(char* ctrl_url, const memptr* host,
     return 0;
 }
 
-/****************************************************************************
- *   Function :  get_action_name
+/*!
+ * \brief This function retrives the action name in the buffer.
  *
- *   Parameters :
- *           IN char* action :   string containing action name
- *           OUT memptr* name : name of the action
- *
- *   Description :   This functions retirves the action name in the buffer
- *
- *   Return : int
- *       returns 0 on success; -1 on error
- *
- *   Note :
- ****************************************************************************/
-static UPNP_INLINE int get_action_name(char* action, memptr* name) {
+ * \returns
+ *  On success: **0**\n
+ *  On error: **-1**
+ */
+inline int get_action_name( //
+    char* action,           ///< [in] String containing action name.
+    memptr* name            ///< [out] Name of the action.
+) {
     memptr dummy;
     int ret_code;
 
@@ -252,9 +264,11 @@ static UPNP_INLINE int get_action_name(char* action, memptr* name) {
 /*!
  * \brief Adds "MAN" field in the HTTP header.
  *
- * \return 0 on success, UPNP_E_OUTOFMEMORY on error.
+ * \returns
+ *  On success: **0**\n
+ *  On error: UPNP_E_OUTOF_MEMORY
  */
-static UPNP_INLINE int add_man_header(
+inline int add_man_header(
     /* [in,out] HTTP header. */
     membuffer* headers) {
     size_t n;
@@ -276,24 +290,26 @@ static UPNP_INLINE int add_man_header(
     return 0;
 }
 
-/****************************************************************************
- *   Function :  soap_request_and_response
+/*!
+ * \brief This function sends the control point's request to the device and
+ * receives a response from it.
  *
- *   Parameters :
- *       IN membuffer* request : request that will be sent to the device
- *       IN uri_type* destination_url :  destination address string
- *       OUT http_parser_t *response :   response from the device
- *
- *   Description :   This function sends the control point's request to the
- *       device and receives a response from it.
- *
- *   Return : int
- *
- *   Note :
- ****************************************************************************/
-static int soap_request_and_response(membuffer* request,
-                                     uri_type* destination_url,
-                                     http_parser_t* response) {
+ * \returns
+ *  On success: **0**\n
+ *  On error:
+ *  - UPNP_E_SOCKET_ERROR
+ *  - UPNP_E_SOCKET_CONNECT
+ *  - UPNP_E_OUTOF_MEMORY
+ *  - UPNP_E_FILE_READ_ERROR
+ *  - UPNP_E_TIMEDOUT
+ *  - UPNP_E_SOCKET_WRITE
+ *  - UPNP_E_BAD_HTTPMSG
+ */
+int soap_request_and_response( //
+    membuffer* request, ///< [in] Request that will be sent to the device.
+    uri_type* destination_url, ///< [in] Destination address string.
+    http_parser_t* response    ///< [out] Response from the device.
+) {
     int ret_code;
 
     ret_code =
@@ -324,31 +340,31 @@ static int soap_request_and_response(membuffer* request,
     return ret_code;
 }
 
-/****************************************************************************
- *   Function :  get_response_value
+/*!
+ * \brief This function handles the response coming back from the device.
  *
- *   Parameters :
- *           IN http_message_t* hmsg :   HTTP response message
- *           IN int code :   return code in the HTTP response
- *           IN char*name :  name of the action
- *           OUT int *upnp_error_code :  UPnP error code
- *           OUT IXML_Node ** action_value : SOAP response node
- *           OUT DOMString * str_value : state varible value ( in the case of
- *                           querry state variable request)
+ * This function parses the response and gives back the SOAP response node.
  *
- *   Description :   This function handles the response coming back from the
- *       device. This function parses the response and gives back the SOAP
- *       response node.
- *
- *   Return : int
- *       return the type of the SOAP message if successful else returns
- *   appropriate error.
- *
- *   Note :
- ****************************************************************************/
-static int get_response_value(http_message_t* hmsg, int code, char* name,
-                              int* upnp_error_code, IXML_Node** action_value,
-                              DOMString* str_value) {
+ * \returns
+ *  On success: The type of the SOAP message.\n
+ *  On error:
+ *  - UPNP_E_BAD_RESPONSE
+ *  - UPNP_E_OUTOF_MEMORY
+ *  - SOAP_ACTION_RESP
+ *  - SOAP_VAR_RESP
+ *  - SOAP_VAR_RESP_ERROR
+ *  - SOAP_ACTION_RESP_ERROR
+ *  - HTTP error codes >400
+ */
+int get_response_value(       //
+    http_message_t* hmsg,     ///< [in] HTTP response message.
+    int code,                 ///< [in] Return code in the HTTP response.
+    char* name,               ///< [in] Name of the action.
+    int* upnp_error_code,     ///< [out] UPnP error code.
+    IXML_Node** action_value, ///< [out] SOAP response node.
+    DOMString* str_value /*!< [out] State varible value (in the case of querry
+                                    state variable request). */
+) {
     IXML_Node* node = NULL;
     IXML_Node* root_node = NULL;
     IXML_Node* error_node = NULL;
@@ -470,23 +486,10 @@ error_handler:
     return err_code;
 }
 
-/****************************************************************************
- *   Function :  SoapSendAction
- *
- *   Parameters :
- *       IN char* action_url :   device contrl URL
- *       IN char *service_type : device service type
- *       IN IXML_Document *action_node : SOAP action node
- *       OUT IXML_Document **response_node : SOAP response node
- *
- *   Description :   This function is called by UPnP API to send the SOAP
- *       action request and waits till it gets the response from the device
- *       pass the response to the API layer
- *
- *   Return :    int
- *       returns UPNP_E_SUCCESS if successful else returns appropriate error
- *   Note :
- ****************************************************************************/
+/// @} // Scope restricted to file
+} // anonymous namespace
+
+
 int SoapSendAction(char* action_url, char* service_type,
                    IXML_Document* action_node, IXML_Document** response_node) {
     char* action_str = NULL;
@@ -602,26 +605,6 @@ error_handler:
     return err_code;
 }
 
-/****************************************************************************
-*   Function :  SoapSendActionEx
-*
-*   Parameters :
-*       IN char* action_url :   device contrl URL
-*       IN char *service_type : device service type
-        IN IXML_Document *Header: Soap header
-*       IN IXML_Document *action_node : SOAP action node ( SOAP body)
-*       OUT IXML_Document **response_node : SOAP response node
-*
-*   Description :   This function is called by UPnP API to send the SOAP
-*       action request and waits till it gets the response from the device
-*       pass the response to the API layer. This action is similar to the
-*       the SoapSendAction with only difference that it allows users to
-*       pass the SOAP header along the SOAP body ( soap action request)
-*
-*   Return :    int
-*       returns UPNP_E_SUCCESS if successful else returns appropriate error
-*   Note :
-****************************************************************************/
 int SoapSendActionEx(char* action_url, char* service_type,
                      IXML_Document* header, IXML_Document* action_node,
                      IXML_Document** response_node) {
@@ -765,24 +748,9 @@ error_handler:
     return err_code;
 }
 
-/****************************************************************************
- *   Function :  SoapGetServiceVarStatus
- *
- *   Parameters :
- *           IN  char * action_url : Address to send this variable
- *                                   query message.
- *           IN  char *var_name : Name of the variable.
- *           OUT char **var_value :  Output value.
- *
- *   Description :   This function creates a status variable query message
- *       send it to the specified URL. It also collect the response.
- *
- *   Return :    int
- *
- *   Note :
- ****************************************************************************/
-int SoapGetServiceVarStatus(char* action_url, char* var_name,
-                            char** var_value) {
+int SoapGetServiceVarStatus(char* action_url, DOMString var_name,
+                            DOMString* var_value) {
+/// \todo Verify the bug in the source code of this function with a unit test.
 #ifdef UPNPLIB_PUPNP_BUG
     // Error old code: uninitialized 'const host|path' [-fpermissive]. Need to
     // fix it here otherwise it will not compile. --Ingo

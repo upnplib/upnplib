@@ -953,10 +953,9 @@ INPUT                  = README.md \
                          Compa/src/gena \
                          Compa/src/genlib \
                          Compa/src/inc \
-                         Compa/src/soap/soap_common.cpp
+                         Compa/src/soap/soap_ctrlpt.cpp \
+                         Compa/src/soap/soap_device.cpp
 
-#Compa/src/soap/soap_ctrlpt.cpp
-#Compa/src/soap/soap_device.cpp
 #Compa/src/ssdp/SSDPResultData.cpp
 #Compa/src/ssdp/SSDPResultData.hpp
 #Compa/src/ssdp/SSDPResultDataCallback.cpp

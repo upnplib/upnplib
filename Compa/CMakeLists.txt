@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-14
+# Redistribution only with this Copyright remark. Last modified: 2024-02-15
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -34,7 +34,8 @@ if(UPNPLIB_WITH_SAMPLES)                             # all samples -> UPNP_BUILD
     set(COMPA_DEF_SAMPLES YES) # To make it separate selectable don't set it direct
 endif()
 
-# Dependencies of options
+# Dependencies of options. The order is important.
+#-------------------------------------------------
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(COMPA_DEF_DEBUG YES)
 endif()
@@ -107,7 +108,6 @@ set(COMPA_SOURCE_FILES
     $<$<BOOL:${COMPA_DEF_SSDP}>:./src/ssdp/SSDPResultDataCallback.cpp>
 
     $<$<AND:$<BOOL:${COMPA_DEF_DEVICE}>,$<BOOL:${COMPA_DEF_SOAP}>>:./src/soap/soap_device.cpp>
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE}>,$<BOOL:${COMPA_DEF_SOAP}>>:./src/soap/soap_common.cpp>
     $<$<AND:$<BOOL:${COMPA_DEF_DEVICE}>,$<BOOL:${COMPA_DEF_SOAP}>>:./src/soap/soap_ctrlpt.cpp>
 
     $<$<AND:$<BOOL:${COMPA_DEF_DEVICE}>,$<BOOL:${COMPA_DEF_GENA}>>:./src/gena/gena_device.cpp>

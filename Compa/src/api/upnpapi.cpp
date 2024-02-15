@@ -45,7 +45,8 @@
 #include <upnpapi.hpp>
 
 #include <httpreadwrite.hpp>
-#include <soaplib.hpp>
+#include <soap_device.hpp>
+#include <soap_ctrlpt.hpp>
 #include <ssdplib.hpp>
 #include <uuid.hpp>
 

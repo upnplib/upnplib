@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-14
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-15
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,81 +31,100 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
+// Last compare with ./pupnp source file on 2024-02-14, ver 1.14.18
 /*!
  * \file
+ * \brief Items for UPnP devices to manage UPnP Control.
+ *
+ * This is only available if the option for Devices and the option for SOAP is
+ * enabled with compiling the library.
  */
 
-#include "config.hpp"
+#include <soap_common.hpp>
+#include <soap_device.hpp>
 
-#ifdef INCLUDE_DEVICE_APIS
-#if EXCLUDE_SOAP == 0
+#include <httpreadwrite.hpp>
+#include <parsetools.hpp>
+#include <ssdplib.hpp>
+#include <statcodes.hpp>
+#include <upnpapi.hpp>
+#include <UpnpStateVarRequest.hpp>
 
-#include "UpnpStateVarRequest.hpp"
-#include "UpnpActionRequest.hpp"
-#include "httpparser.hpp"
-#include "httpreadwrite.hpp"
-#include "parsetools.hpp"
-#include "soaplib.hpp"
-#include "ssdplib.hpp"
-#include "statcodes.hpp"
-#include "upnpapi.hpp"
-
-#include <assert.h>
-#include <string.h>
-
-#ifdef _WIN32
-#if defined(_MSC_VER) && _MSC_VER < 1900
-#define snprintf _snprintf
-#endif
+#ifndef COMPA_INTERNAL_CONFIG_HPP
+#error "No or wrong config.hpp header file included."
 #endif
 
-/*! timeout duration in secs for transmission/reception */
-#define SOAP_TIMEOUT UPNP_TIMEOUT
+#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
+#if (EXCLUDE_SOAP == 0) || defined(DOXYGEN_RUN)
 
-#define SREQ_HDR_NOT_FOUND -1
-#define SREQ_BAD_HDR_FORMAT -2
-#define SREQ_NOT_EXTENDED -3
+/// \cond
+#include <cassert>
+#include <cstring>
+/// \endcond
 
-#define SOAP_INVALID_ACTION 401
-#define SOAP_INVALID_ARGS 402
-#define SOAP_OUT_OF_SYNC 403
-#define SOAP_INVALID_VAR 404
-#define SOAP_ACTION_FAILED 501
-#define SOAP_MEMORY_OUT 603
+namespace {
 
-static const char* SOAP_BODY = "Body";
-static const char* SOAP_URN = "http:/"
-                              "/schemas.xmlsoap.org/soap/envelope/";
-static const char* QUERY_STATE_VAR_URN = "urn:schemas-upnp-org:control-1-0";
+/*! \name Variables scope restricted to file
+ * @{ */
 
-static const char* Soap_Invalid_Action = "Invalid Action";
-/*static const char* Soap_Invalid_Args = "Invalid Args"; */
-static const char* Soap_Action_Failed = "Action Failed";
-static const char* Soap_Invalid_Var = "Invalid Var";
-static const char* Soap_Memory_out = "Out of Memory";
+/*! @{
+ * \brief UPnP Device SOAP status */
+constexpr int SREQ_HDR_NOT_FOUND{-1};
+constexpr int SREQ_BAD_HDR_FORMAT{-2};
+constexpr int SREQ_NOT_EXTENDED{-3};
 
-typedef struct soap_devserv_t {
+constexpr int SOAP_INVALID_ACTION{401};
+// constexpr int SOAP_INVALID_ARGS{402};
+// constexpr int SOAP_OUT_OF_SYNC{403};
+constexpr int SOAP_INVALID_VAR{404};
+constexpr int SOAP_ACTION_FAILED{501};
+constexpr int SOAP_MEMORY_OUT{603};
+/// @}
+
+/*! @{
+ * \brief UPnP Device SOAP strings */
+constexpr char SOAP_BODY[]{"Body"};
+constexpr char SOAP_URN[]{"http://schemas.xmlsoap.org/soap/envelope/"};
+constexpr char QUERY_STATE_VAR_URN[]{"urn:schemas-upnp-org:control-1-0"};
+
+constexpr char Soap_Invalid_Action[]{"Invalid Action"};
+// constexpr char Soap_Invalid_Args[]{"Invalid Args"};
+constexpr char Soap_Action_Failed[]{"Action Failed"};
+constexpr char Soap_Invalid_Var[]{"Invalid Var"};
+constexpr char Soap_Memory_out[]{"Out of Memory"};
+/// @}
+
+/// @} // Variables scope restricted to file
+
+/*! \name Classes scope restricted to file
+ * @{ */
+
+/// \brief SOAP info
+struct soap_devserv_t {
     char dev_udn[NAME_SIZE];
     char service_type[NAME_SIZE];
     char service_id[NAME_SIZE];
     memptr action_name;
     Upnp_FunPtr callback;
     void* cookie;
-} soap_devserv_t;
+};
 
-namespace {
+/// @} // Classes scope restricted to file
+
+/*! \name Functions scope restricted to file
+ * @{ */
+
+/// \brief Copy string with length NAME_SIZE and terminate with '\0'.
 void namecopy(char dest[NAME_SIZE], const char* src) {
     strncpy(dest, src, NAME_SIZE - (size_t)1);
     /* null-terminate if len(src) >= NAME_SIZE. */
     dest[NAME_SIZE - 1] = '\0';
 }
-} // anonymous namespace
 
 /*!
  * \brief Sends SOAP error response.
  */
-static void send_error_response(
+void send_error_response(
     /*! [in] Socket info. */
     SOCKINFO* info,
     /*! [in] Error code. */
@@ -115,7 +134,7 @@ static void send_error_response(
     /*! [in] HTTP request. */
     http_message_t* hmsg) {
     off_t content_length;
-    int timeout_secs = SOAP_TIMEOUT;
+    int timeout_secs = UPNP_TIMEOUT;
     int major;
     int minor;
     const char* start_body =
@@ -170,7 +189,7 @@ static void send_error_response(
 /*!
  * \brief Sends response of get var status.
  */
-static UPNP_INLINE void send_var_query_response(
+inline void send_var_query_response(
     /*! [in] Socket info. */
     SOCKINFO* info,
     /*! [in] Value of the state variable. */
@@ -178,7 +197,7 @@ static UPNP_INLINE void send_var_query_response(
     /*! [in] HTTP request. */
     http_message_t* hmsg) {
     off_t content_length;
-    int timeout_secs = SOAP_TIMEOUT;
+    int timeout_secs = UPNP_TIMEOUT;
     int major;
     int minor;
     const char* start_body =
@@ -219,7 +238,7 @@ static UPNP_INLINE void send_var_query_response(
 /*!
  * \brief Sends the SOAP action response.
  */
-static UPNP_INLINE void send_action_response(
+inline void send_action_response(
     /*! [in] Socket info. */
     SOCKINFO* info,
     /*! [in] The response document. */
@@ -232,7 +251,7 @@ static UPNP_INLINE void send_action_response(
     int err_code;
     off_t content_length;
     int ret_code;
-    int timeout_secs = SOAP_TIMEOUT;
+    int timeout_secs = UPNP_TIMEOUT;
     static const char* start_body =
         /*"<?xml version=\"1.0\"?>" required?? */
         "<s:Envelope xmlns:s=\"http://schemas.xmlsoap."
@@ -279,9 +298,10 @@ error_handler:
 
 /*!
  * \brief Handles the SOAP requests to querry the state variables.
- * This functionality has been deprecated in the UPnP V1.0 architecture.
+ * \deprecated This functionality has been deprecated in the UPnP V1.0
+ * architecture.
  */
-static UPNP_INLINE void handle_query_variable(
+inline void handle_query_variable(
     /*! [in] Socket info. */
     SOCKINFO* info,
     /*! [in] HTTP Request. */
@@ -343,7 +363,7 @@ error_handler:
 /*!
  * \brief Handles the SOAP action request.
  */
-static void handle_invoke_action(
+inline void handle_invoke_action(
     /*! [in] Socket info. */
     SOCKINFO* info,
     /*! [in] HTTP Request. */
@@ -431,13 +451,16 @@ error_handler:
 }
 
 /*!
- * \brief Retrieve SOAP device/service information associated
- * with request-URI, which includes the callback function to hand-over
- * the request to the device application.
+ * \brief Retrieve SOAP device/service information associated with request-URI.
  *
- * \return 0 if OK, -1 on error.
+ * This includes the callback function to hand-over the request to the device
+ * application.
+ *
+ * \returns
+ *  On success: **0**\n
+ *  On error: **-1**
  */
-static int get_dev_service(
+inline int get_dev_service(
     /*! [in] HTTP request. */
     http_message_t* request,
     /*! [in] Address family: AF_INET or AF_INET6. */
@@ -482,9 +505,14 @@ error_handler:
 /*!
  * \brief Get the SOAPACTION header value for M-POST request.
  *
- * \return UPNP_E_SUCCESS if OK, error number on failure.
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_OUTOF_MEMORY
+ *  - SREQ_NOT_EXTENDED
+ *  - SREQ_HDR_NOT_FOUND
  */
-static int get_mpost_acton_hdrval(
+inline int get_mpost_acton_hdrval(
     /*! [in] HTTP request. */
     http_message_t* request,
     /*! [out] Buffer to get the header value */
@@ -519,12 +547,20 @@ static int get_mpost_acton_hdrval(
 }
 
 /*!
- * \brief Check the header validity, and get the action name
- * and the version of the service that the CP wants to use.
+ * \brief Check header validity, get action name and version of service.
  *
- * \return UPNP_E_SUCCESS if OK, error number on failure.
+ * Check the header validity, and get the action name and the version of the
+ * service that the Control Point wants to use.
+ *
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_OUTOF_MEMORY
+ *  - SREQ_NOT_EXTENDED
+ *  - SREQ_HDR_NOT_FOUND
+ *  - SREQ_BAD_HDR_FORMAT
  */
-static int check_soapaction_hdr(
+inline int check_soapaction_hdr(
     /*! [in] HTTP request. */
     http_message_t* request,
     /*! [in, out] SOAP device/service information. */
@@ -601,9 +637,11 @@ error_handler:
 /*!
  * \brief Check validity of the SOAP request per UPnP specification.
  *
- * \return 0 if OK, -1 on failure.
+ * \returns
+ *  On success: **0**\n
+ *  On error: **-1**
  */
-static int check_soap_request(
+inline int check_soap_request(
     /*! [in] SOAP device/service information. */
     soap_devserv_t* soap_info,
     /*! [in] Document containing the SOAP action request. */
@@ -685,10 +723,15 @@ error_handler:
     return ret_val;
 }
 
+/// @} // Fuctions scope restricted to file
+} // anonymous namespace
+
+
 /*!
  * \brief This is a callback called by minisever after receiving the request
- * from the control point. After HTTP processing, it calls handle_soap_request
- * to start SOAP processing.
+ * from the control point.
+ *
+ * After HTTP processing, it calls handle_soap_request to start SOAP processing.
  */
 void soap_device_callback(
     /*! [in] Parsed request received by the device. */
@@ -770,5 +813,4 @@ error_handler:
 }
 
 #endif /* EXCLUDE_SOAP */
-
 #endif /* INCLUDE_DEVICE_APIS */

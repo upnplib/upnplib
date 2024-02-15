@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-07
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-15
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -175,8 +175,11 @@ UPNPLIB_API int http_SendMessage(
  * On error:
  *  - UPNP_E_SOCKET_ERROR
  *  - UPNP_E_SOCKET_CONNECT
- *  - Error Codes returned by http_SendMessage()
- *  - Error Codes returned by http_RecvMessage()
+ *  - UPNP_E_OUTOF_MEMORY
+ *  - UPNP_E_FILE_READ_ERROR
+ *  - UPNP_E_TIMEDOUT
+ *  - UPNP_E_SOCKET_WRITE
+ *  - UPNP_E_BAD_HTTPMSG
  */
 int http_RequestAndResponse(  //
     uri_type* destination,    /*!< [in] Destination URI object which contains

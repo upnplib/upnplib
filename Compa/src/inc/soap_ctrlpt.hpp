@@ -1,11 +1,11 @@
-#ifndef COMPA_SOAPLIB_HPP
-#define COMPA_SOAPLIB_HPP
+#ifndef COMPA_SOAP_CTRLPT_HPP
+#define COMPA_SOAP_CTRLPT_HPP
 /**************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-01
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-15
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,27 +32,19 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
+// Last compare with ./Pupnp source file on 2024-02-14, ver 1.14.18
 /*!
  * \file
- * \brief SOAP module API to be called in UPnP-SDK API. No details
+ * \brief SOAP declarations for Control Points using SOAP.
  */
 
-#include <sock.hpp>
+#include <ixml.hpp>
 
-/*!
- * \brief This is a callback called by minisever.
- *
- * This is called after receiving the request from the control point. The
- * function will start processing the request. It calls handle_invoke_action()
- * to handle the SOAP action.
- */
-void soap_device_callback(
-    /*! [in] Parsed request received by the device. */
-    http_parser_t* parser,
-    /*! [in] HTTP request. */
-    http_message_t* request,
-    /*! [in,out] Socket info. */
-    SOCKINFO* info);
+#ifndef COMPA_INTERNAL_CONFIG_HPP
+#error "No or wrong config.hpp header file included."
+#endif
+
+#if (EXCLUDE_SOAP == 0) || defined(DOXYGEN_RUN)
 
 /*!
  * \brief This function is called by UPnP API to send the SOAP action request.
@@ -61,8 +53,18 @@ void soap_device_callback(
  * API layer.
  *
  * \returns
- * On success: UPNP_E_SUCCESS\n
- * On error: appropriate error
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_OUTOF_MEMORY
+ *  - UPNP_E_INVALID_ACTION
+ *  - UPNP_E_INVALID_URL
+ *  - UPNP_E_SOCKET_ERROR
+ *  - UPNP_E_SOCKET_CONNECT
+ *  - UPNP_E_FILE_READ_ERROR
+ *  - UPNP_E_TIMEDOUT
+ *  - UPNP_E_SOCKET_WRITE
+ *  - UPNP_E_BAD_HTTPMSG
+ *  - may have additional error codes
  */
 int SoapSendAction(               //
     char* action_url,             ///< [in] device contrl URL.
@@ -82,14 +84,29 @@ int SoapSendAction(               //
  *
  * \returns
  * On success: UPNP_E_SUCCESS\n
- * On error: appropriate error
+ * On error:
+ *  - UPNP_E_BAD_RESPONSE
+ *  - UPNP_E_OUTOF_MEMORY
+ *  - UPNP_E_INVALID_ACTION
+ *  - UPNP_E_INVALID_URL
+ *  - UPNP_E_SOCKET_ERROR
+ *  - UPNP_E_SOCKET_CONNECT
+ *  - UPNP_E_FILE_READ_ERROR
+ *  - UPNP_E_TIMEDOUT
+ *  - UPNP_E_SOCKET_WRITE
+ *  - UPNP_E_BAD_HTTPMSG
+ *  - SOAP_ACTION_RESP
+ *  - SOAP_VAR_RESP
+ *  - SOAP_VAR_RESP_ERROR
+ *  - SOAP_ACTION_RESP_ERROR
+ *  - HTTP error codes >400
  */
-int SoapSendActionEx(        //
-    char* ActionURL,         ///< [in] device contrl URL.
-    char* ServiceType,       ///< [in] device service type.
-    IXML_Document* Header,   ///< [in] Soap header.
-    IXML_Document* ActNode,  ///< [in] SOAP action node (SOAP body).
-    IXML_Document** RespNode ///< [out] SOAP response node.
+int SoapSendActionEx(             //
+    char* action_url,             ///< [in] device contrl URL.
+    char* service_type,           ///< [in] device service type.
+    IXML_Document* header,        ///< [in] Soap header.
+    IXML_Document* action_node,   ///< [in] SOAP action node (SOAP body).
+    IXML_Document** response_node ///< [out] SOAP response node.
 );
 
 /*!
@@ -97,16 +114,29 @@ int SoapSendActionEx(        //
  * specified URL. It also collect the response.
  *
  * \returns
- * On success: ???\n
- * On error: ???
+ * On success: UPNP_E_SUCCESS\n
+ * On error:
+ *  - UPNP_E_SOCKET_ERROR
+ *  - UPNP_E_SOCKET_CONNECT
+ *  - UPNP_E_OUTOF_MEMORY
+ *  - UPNP_E_FILE_READ_ERROR
+ *  - UPNP_E_TIMEDOUT
+ *  - UPNP_E_SOCKET_WRITE
+ *  - UPNP_E_BAD_HTTPMSG
+ *  - UPNP_E_BAD_RESPONSE
+ *  - SOAP_ACTION_RESP
+ *  - SOAP_VAR_RESP
+ *  - SOAP_VAR_RESP_ERROR
+ *  - SOAP_ACTION_RESP_ERROR
+ *  - HTTP error codes >400
+ *
+ * \todo Returned error message IDs are ambiguous. Fix it.
  */
 int SoapGetServiceVarStatus(
-    char* ActionURL,   ///< [in] Address to send this variable query message.
-    DOMString VarName, ///< [in] Name of the variable.
-    DOMString* StVar   ///< [out] Output value.
+    char* action_url,    ///< [in] Address to send this variable query message.
+    DOMString var_name,  ///< [in] Name of the variable.
+    DOMString* var_value ///< [out] Output value.
 );
 
-/// \brief Global constant string specifying the content type header.
-extern const char* ContentTypeHeader;
-
-#endif /* COMPA_SOAPLIB_HPP */
+#endif /* EXCLUDE_SOAP */
+#endif /* COMPA_SOAP_CTRLPT_HPP */
