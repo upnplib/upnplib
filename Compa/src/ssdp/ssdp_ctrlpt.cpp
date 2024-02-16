@@ -6,7 +6,7 @@
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-14
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-17
  *
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
@@ -30,52 +30,257 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-
+// Last compare with ./pupnp source file on 2024-02-15, ver 1.14.18
 /*!
- * \addtogroup SSDPlib
- *
- * @{
- *
  * \file
+ * \brief Manage "Step 1: Discovery" of the UPnP+™ specification for Control
+ * Points with SSDP.
+ *
+ * \ingroup compa-Discovery
  */
 
-#include <config.hpp>
-
-#include <upnp.hpp>
-
-#ifdef INCLUDE_CLIENT_APIS
-#if EXCLUDE_SSDP == 0
-
-#include "SSDPResultData.hpp"
+#include <ssdp_common.hpp>
 #include "SSDPResultDataCallback.hpp"
-#include <ThreadPool.hpp>
-#include <UpnpInet.hpp>
-#include <httpparser.hpp>
-#include <httpreadwrite.hpp>
-#include <ssdplib.hpp>
 #include <statcodes.hpp>
-#include <unixutil.hpp>
 #include <upnpapi.hpp>
 
-#include <stdio.h>
-#include <algorithm> // for std::min()|max()
+#include <umock/sys_socket.hpp>
 
 #include <posix_overwrites.hpp>
 
-#include <umock/sys_socket.hpp>
+#ifndef COMPA_INTERNAL_CONFIG_HPP
+#error "No or wrong config.hpp header file included."
+#endif
+
+#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+#if (EXCLUDE_SSDP == 0) || defined(DOXYGEN_RUN)
+
+namespace {
+/*! \name Scope restricted to file
+ * @{
+ */
 
 /*!
  * \brief Sends a callback to the control point application with a SEARCH
  * result.
  */
-static void send_search_result(
-    /* [in] Search reply from the device. */
+void send_search_result(
+    /*! [in] Search reply from the device. */
     void* data) {
     SSDPResultData* temp = (SSDPResultData*)data;
 
     SSDPResultData_Callback(temp);
     SSDPResultData_delete(temp);
 }
+
+/*!
+ * \brief Creates a HTTP search request packet depending on the input
+ * parameter.
+ *
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_INTERNAL_ERROR
+ *  - UPNP_E_INVALID_ARGUMENT
+ *  - UPNP_E_BUFFER_TOO_SMALL
+ */
+int CreateClientRequestPacket(
+    /*! [in,out] Output string in HTTP format. */
+    char* RqstBuf,
+    /*! [in] RqstBuf size. */
+    size_t RqstBufSize,
+    /*! [in] Search Target. */
+    int Mx,
+    /*! [in] Number of seconds to wait to collect all the responses. */
+    char* SearchTarget,
+    /*! [in] search address family. */
+    int AddressFamily) {
+    int rc;
+    char TempBuf[COMMAND_LEN];
+    const char* command = "M-SEARCH * HTTP/1.1\r\n";
+    const char* man = "MAN: \"ssdp:discover\"\r\n";
+
+    memset(TempBuf, 0, sizeof(TempBuf));
+    if (RqstBufSize <= strlen(command))
+        return UPNP_E_INTERNAL_ERROR;
+    strcpy(RqstBuf, command);
+
+    switch (AddressFamily) {
+    case AF_INET:
+        rc = snprintf(TempBuf, sizeof(TempBuf), "HOST: %s:%d\r\n", SSDP_IP,
+                      SSDP_PORT);
+        break;
+    case AF_INET6:
+        rc = snprintf(TempBuf, sizeof(TempBuf), "HOST: [%s]:%d\r\n",
+                      SSDP_IPV6_LINKLOCAL, SSDP_PORT);
+        break;
+    default:
+        return UPNP_E_INVALID_ARGUMENT;
+    }
+    if (rc < 0 || (unsigned int)rc >= sizeof(TempBuf))
+        return UPNP_E_INTERNAL_ERROR;
+
+    if (RqstBufSize <= strlen(RqstBuf) + strlen(TempBuf))
+        return UPNP_E_BUFFER_TOO_SMALL;
+    strcat(RqstBuf, TempBuf);
+
+    if (RqstBufSize <= strlen(RqstBuf) + strlen(man))
+        return UPNP_E_BUFFER_TOO_SMALL;
+    strcat(RqstBuf, man);
+
+    if (Mx > 0) {
+        rc = snprintf(TempBuf, sizeof(TempBuf), "MX: %d\r\n", Mx);
+        if (rc < 0 || (unsigned int)rc >= sizeof(TempBuf))
+            return UPNP_E_INTERNAL_ERROR;
+        if (RqstBufSize <= strlen(RqstBuf) + strlen(TempBuf))
+            return UPNP_E_BUFFER_TOO_SMALL;
+        strcat(RqstBuf, TempBuf);
+    }
+
+    if (SearchTarget != NULL) {
+        rc = snprintf(TempBuf, sizeof(TempBuf), "ST: %s\r\n", SearchTarget);
+        if (rc < 0 || (unsigned int)rc >= sizeof(TempBuf))
+            return UPNP_E_INTERNAL_ERROR;
+        if (RqstBufSize <= strlen(RqstBuf) + strlen(TempBuf))
+            return UPNP_E_BUFFER_TOO_SMALL;
+        strcat(RqstBuf, TempBuf);
+    }
+    if (RqstBufSize <= strlen(RqstBuf) + strlen("\r\n"))
+        return UPNP_E_BUFFER_TOO_SMALL;
+    strcat(RqstBuf, "\r\n");
+
+    return UPNP_E_SUCCESS;
+}
+
+/*!
+ * \brief Creates a HTTP search request packet for IPv6 UlaGua depending on the
+ * input parameter.
+ *
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_INTERNAL_ERROR
+ *  - UPNP_E_INVALID_ARGUMENT
+ *  - UPNP_E_BUFFER_TOO_SMALL
+ */
+#if defined(UPNP_ENABLE_IPV6) || defined(DOXYGEN_RUN)
+inline int CreateClientRequestPacketUlaGua(
+    /*! [in,out] Output string in HTTP format. */
+    char* RqstBuf,
+    /*! [in] RqstBuf size. */
+    size_t RqstBufSize,
+    /*! [in] Search Target. */
+    int Mx,
+    /*! [in] Number of seconds to wait to collect all the responses. */
+    char* SearchTarget,
+    /*! [in] search address family. */
+    int AddressFamily) {
+    int rc;
+    char TempBuf[COMMAND_LEN];
+    const char* command = "M-SEARCH * HTTP/1.1\r\n";
+    const char* man = "MAN: \"ssdp:discover\"\r\n";
+
+    memset(TempBuf, 0, sizeof(TempBuf));
+    if (RqstBufSize <= strlen(command))
+        return UPNP_E_INTERNAL_ERROR;
+    strcpy(RqstBuf, command);
+    switch (AddressFamily) {
+    case AF_INET:
+        rc = snprintf(TempBuf, sizeof(TempBuf), "HOST: %s:%d\r\n", SSDP_IP,
+                      SSDP_PORT);
+        break;
+    case AF_INET6:
+        rc = snprintf(TempBuf, sizeof(TempBuf), "HOST: [%s]:%d\r\n",
+                      SSDP_IPV6_SITELOCAL, SSDP_PORT);
+        break;
+    default:
+        return UPNP_E_INVALID_ARGUMENT;
+    }
+    if (rc < 0 || (unsigned int)rc >= sizeof(TempBuf))
+        return UPNP_E_INTERNAL_ERROR;
+
+    if (RqstBufSize <= strlen(RqstBuf) + strlen(TempBuf))
+        return UPNP_E_BUFFER_TOO_SMALL;
+    strcat(RqstBuf, TempBuf);
+
+    if (RqstBufSize <= strlen(RqstBuf) + strlen(man))
+        return UPNP_E_BUFFER_TOO_SMALL;
+    strcat(RqstBuf, man);
+
+    if (Mx > 0) {
+        rc = snprintf(TempBuf, sizeof(TempBuf), "MX: %d\r\n", Mx);
+        if (rc < 0 || (unsigned int)rc >= sizeof(TempBuf))
+            return UPNP_E_INTERNAL_ERROR;
+        if (RqstBufSize <= strlen(RqstBuf) + strlen(TempBuf))
+            return UPNP_E_BUFFER_TOO_SMALL;
+        strcat(RqstBuf, TempBuf);
+    }
+    if (SearchTarget) {
+        rc = snprintf(TempBuf, sizeof(TempBuf), "ST: %s\r\n", SearchTarget);
+        if (rc < 0 || (unsigned int)rc >= sizeof(TempBuf))
+            return UPNP_E_INTERNAL_ERROR;
+        if (RqstBufSize <= strlen(RqstBuf) + strlen(TempBuf))
+            return UPNP_E_BUFFER_TOO_SMALL;
+        strcat(RqstBuf, TempBuf);
+    }
+    if (RqstBufSize <= strlen(RqstBuf) + strlen("\r\n"))
+        return UPNP_E_BUFFER_TOO_SMALL;
+    strcat(RqstBuf, "\r\n");
+
+    return UPNP_E_SUCCESS;
+}
+#endif /* UPNP_ENABLE_IPV6 */
+
+/*!
+ * \brief Remove search Target from list and call client back.
+ */
+inline void searchExpired(
+    /*! [in] Search target */
+    void* arg) {
+    int id = ((SsdpSearchExpArg*)arg)->timeoutEventId;
+    int handle = ((SsdpSearchExpArg*)arg)->handle;
+    struct Handle_Info* ctrlpt_info = NULL;
+
+    /* remove search Target from list and call client back */
+    ListNode* node = NULL;
+    SsdpSearchArg* item;
+    Upnp_FunPtr ctrlpt_callback;
+    void* cookie = NULL;
+    int found = 0;
+
+    HandleLock();
+
+    /* remove search target from search list */
+    if (GetHandleInfo(handle, &ctrlpt_info) != HND_CLIENT) {
+        free(arg);
+        HandleUnlock();
+        return;
+    }
+    ctrlpt_callback = ctrlpt_info->Callback;
+    node = ListHead(&ctrlpt_info->SsdpSearchList);
+    while (node != NULL) {
+        item = (SsdpSearchArg*)node->item;
+        if (item->timeoutEventId == id) {
+            free(item->searchTarget);
+            cookie = item->cookie;
+            found = 1;
+            item->searchTarget = NULL;
+            free(item);
+            ListDelNode(&ctrlpt_info->SsdpSearchList, node, 0);
+            break;
+        }
+        node = ListNext(&ctrlpt_info->SsdpSearchList, node);
+    }
+    HandleUnlock();
+
+    if (found)
+        ctrlpt_callback(UPNP_DISCOVERY_SEARCH_TIMEOUT, NULL, cookie);
+
+    free(arg);
+}
+
+/// @} Scope restricted to file
+} // anonymous namespace
 
 void ssdp_handle_ctrlpt_msg(http_message_t* hmsg,
                             struct sockaddr_storage* dest_addr, int timeout) {
@@ -335,196 +540,6 @@ end_ssdp_handle_ctrlpt_msg:
     UpnpDiscovery_delete(param);
 }
 
-/*!
- * \brief Creates a HTTP search request packet depending on the input
- * parameter.
- */
-static int CreateClientRequestPacket(
-    /*! [in,out] Output string in HTTP format. */
-    char* RqstBuf,
-    /*! [in] RqstBuf size. */
-    size_t RqstBufSize,
-    /*! [in] Search Target. */
-    int Mx,
-    /*! [in] Number of seconds to wait to collect all the responses. */
-    char* SearchTarget,
-    /*! [in] search address family. */
-    int AddressFamily) {
-    int rc;
-    char TempBuf[COMMAND_LEN];
-    const char* command = "M-SEARCH * HTTP/1.1\r\n";
-    const char* man = "MAN: \"ssdp:discover\"\r\n";
-
-    memset(TempBuf, 0, sizeof(TempBuf));
-    if (RqstBufSize <= strlen(command))
-        return UPNP_E_INTERNAL_ERROR;
-    strcpy(RqstBuf, command);
-
-    switch (AddressFamily) {
-    case AF_INET:
-        rc = snprintf(TempBuf, sizeof(TempBuf), "HOST: %s:%d\r\n", SSDP_IP,
-                      SSDP_PORT);
-        break;
-    case AF_INET6:
-        rc = snprintf(TempBuf, sizeof(TempBuf), "HOST: [%s]:%d\r\n",
-                      SSDP_IPV6_LINKLOCAL, SSDP_PORT);
-        break;
-    default:
-        return UPNP_E_INVALID_ARGUMENT;
-    }
-    if (rc < 0 || (unsigned int)rc >= sizeof(TempBuf))
-        return UPNP_E_INTERNAL_ERROR;
-
-    if (RqstBufSize <= strlen(RqstBuf) + strlen(TempBuf))
-        return UPNP_E_BUFFER_TOO_SMALL;
-    strcat(RqstBuf, TempBuf);
-
-    if (RqstBufSize <= strlen(RqstBuf) + strlen(man))
-        return UPNP_E_BUFFER_TOO_SMALL;
-    strcat(RqstBuf, man);
-
-    if (Mx > 0) {
-        rc = snprintf(TempBuf, sizeof(TempBuf), "MX: %d\r\n", Mx);
-        if (rc < 0 || (unsigned int)rc >= sizeof(TempBuf))
-            return UPNP_E_INTERNAL_ERROR;
-        if (RqstBufSize <= strlen(RqstBuf) + strlen(TempBuf))
-            return UPNP_E_BUFFER_TOO_SMALL;
-        strcat(RqstBuf, TempBuf);
-    }
-
-    if (SearchTarget != NULL) {
-        rc = snprintf(TempBuf, sizeof(TempBuf), "ST: %s\r\n", SearchTarget);
-        if (rc < 0 || (unsigned int)rc >= sizeof(TempBuf))
-            return UPNP_E_INTERNAL_ERROR;
-        if (RqstBufSize <= strlen(RqstBuf) + strlen(TempBuf))
-            return UPNP_E_BUFFER_TOO_SMALL;
-        strcat(RqstBuf, TempBuf);
-    }
-    if (RqstBufSize <= strlen(RqstBuf) + strlen("\r\n"))
-        return UPNP_E_BUFFER_TOO_SMALL;
-    strcat(RqstBuf, "\r\n");
-
-    return UPNP_E_SUCCESS;
-}
-
-/*!
- * \brief
- */
-#ifdef UPNP_ENABLE_IPV6
-static int CreateClientRequestPacketUlaGua(
-    /*! [in,out] . */
-    char* RqstBuf,
-    /*! [in] . */
-    size_t RqstBufSize,
-    /*! [in] . */
-    int Mx,
-    /*! [in] . */
-    char* SearchTarget,
-    /*! [in] . */
-    int AddressFamily) {
-    int rc;
-    char TempBuf[COMMAND_LEN];
-    const char* command = "M-SEARCH * HTTP/1.1\r\n";
-    const char* man = "MAN: \"ssdp:discover\"\r\n";
-
-    memset(TempBuf, 0, sizeof(TempBuf));
-    if (RqstBufSize <= strlen(command))
-        return UPNP_E_INTERNAL_ERROR;
-    strcpy(RqstBuf, command);
-    switch (AddressFamily) {
-    case AF_INET:
-        rc = snprintf(TempBuf, sizeof(TempBuf), "HOST: %s:%d\r\n", SSDP_IP,
-                      SSDP_PORT);
-        break;
-    case AF_INET6:
-        rc = snprintf(TempBuf, sizeof(TempBuf), "HOST: [%s]:%d\r\n",
-                      SSDP_IPV6_SITELOCAL, SSDP_PORT);
-        break;
-    default:
-        return UPNP_E_INVALID_ARGUMENT;
-    }
-    if (rc < 0 || (unsigned int)rc >= sizeof(TempBuf))
-        return UPNP_E_INTERNAL_ERROR;
-
-    if (RqstBufSize <= strlen(RqstBuf) + strlen(TempBuf))
-        return UPNP_E_BUFFER_TOO_SMALL;
-    strcat(RqstBuf, TempBuf);
-
-    if (RqstBufSize <= strlen(RqstBuf) + strlen(man))
-        return UPNP_E_BUFFER_TOO_SMALL;
-    strcat(RqstBuf, man);
-
-    if (Mx > 0) {
-        rc = snprintf(TempBuf, sizeof(TempBuf), "MX: %d\r\n", Mx);
-        if (rc < 0 || (unsigned int)rc >= sizeof(TempBuf))
-            return UPNP_E_INTERNAL_ERROR;
-        if (RqstBufSize <= strlen(RqstBuf) + strlen(TempBuf))
-            return UPNP_E_BUFFER_TOO_SMALL;
-        strcat(RqstBuf, TempBuf);
-    }
-    if (SearchTarget) {
-        rc = snprintf(TempBuf, sizeof(TempBuf), "ST: %s\r\n", SearchTarget);
-        if (rc < 0 || (unsigned int)rc >= sizeof(TempBuf))
-            return UPNP_E_INTERNAL_ERROR;
-        if (RqstBufSize <= strlen(RqstBuf) + strlen(TempBuf))
-            return UPNP_E_BUFFER_TOO_SMALL;
-        strcat(RqstBuf, TempBuf);
-    }
-    if (RqstBufSize <= strlen(RqstBuf) + strlen("\r\n"))
-        return UPNP_E_BUFFER_TOO_SMALL;
-    strcat(RqstBuf, "\r\n");
-
-    return UPNP_E_SUCCESS;
-}
-#endif /* UPNP_ENABLE_IPV6 */
-
-/*!
- * \brief
- */
-static void searchExpired(
-    /* [in] . */
-    void* arg) {
-    int id = ((SsdpSearchExpArg*)arg)->timeoutEventId;
-    int handle = ((SsdpSearchExpArg*)arg)->handle;
-    struct Handle_Info* ctrlpt_info = NULL;
-
-    /* remove search Target from list and call client back */
-    ListNode* node = NULL;
-    SsdpSearchArg* item;
-    Upnp_FunPtr ctrlpt_callback;
-    void* cookie = NULL;
-    int found = 0;
-
-    HandleLock();
-
-    /* remove search target from search list */
-    if (GetHandleInfo(handle, &ctrlpt_info) != HND_CLIENT) {
-        free(arg);
-        HandleUnlock();
-        return;
-    }
-    ctrlpt_callback = ctrlpt_info->Callback;
-    node = ListHead(&ctrlpt_info->SsdpSearchList);
-    while (node != NULL) {
-        item = (SsdpSearchArg*)node->item;
-        if (item->timeoutEventId == id) {
-            free(item->searchTarget);
-            cookie = item->cookie;
-            found = 1;
-            item->searchTarget = NULL;
-            free(item);
-            ListDelNode(&ctrlpt_info->SsdpSearchList, node, 0);
-            break;
-        }
-        node = ListNext(&ctrlpt_info->SsdpSearchList, node);
-    }
-    HandleUnlock();
-
-    if (found)
-        ctrlpt_callback(UPNP_DISCOVERY_SEARCH_TIMEOUT, NULL, cookie);
-
-    free(arg);
-}
 
 int SearchByTarget(int Hnd, int Mx, char* St, void* Cookie) {
     char errorBuffer[ERROR_BUFFER_LEN];
@@ -698,7 +713,6 @@ int SearchByTarget(int Hnd, int Mx, char* St, void* Cookie) {
 
     return 1;
 }
+
 #endif /* EXCLUDE_SSDP */
 #endif /* INCLUDE_CLIENT_APIS */
-
-/* @} SSDPlib */

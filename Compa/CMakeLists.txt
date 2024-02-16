@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-15
+# Redistribution only with this Copyright remark. Last modified: 2024-02-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -15,10 +15,10 @@ project(COMPA VERSION 0005
 # Options selectable by user configuration
 set(COMPA_DEF_GOOGLETEST ${UPNPLIB_WITH_GOOGLETEST})
 set(COMPA_DEF_TOOLS ${UPNPLIB_WITH_TOOLS})         # tools -> UPNP_ENABLE_HELPER_API_TOOLS
-set(COMPA_DEF_CLIENT ${UPNPLIB_WITH_CLIENT})       # client -> UPNP_ENABLE_CLIENT_API
-set(COMPA_DEF_DEVICE ${UPNPLIB_WITH_DEVICE})
 set(COMPA_DEF_WEBSERVER ${UPNPLIB_WITH_WEBSERVER}) # webserver -> UPNP_ENABLE_WEBSERVER
                                                      #   only enabled with COMPA_DEF_DEVICE
+set(COMPA_DEF_CLIENT ${UPNPLIB_WITH_CLIENT})       # client -> UPNP_ENABLE_CLIENT_API
+set(COMPA_DEF_DEVICE ${UPNPLIB_WITH_DEVICE})
 set(COMPA_DEF_SSDP ${UPNPLIB_WITH_SSDP})           # ssdp -> UPNP_ENABLE_SSDP
 set(COMPA_DEF_OPTSSDP ${UPNPLIB_WITH_OPTSSDP})     # optssdp -> UPNP_ENABLE_OPTIONAL_SSDP_HEADERS
 set(COMPA_DEF_SOAP ${UPNPLIB_WITH_SOAP})           # soap -> UPNP_ENABLE_SOAP
@@ -26,8 +26,8 @@ set(COMPA_DEF_SOAP ${UPNPLIB_WITH_SOAP})           # soap -> UPNP_ENABLE_SOAP
 set(COMPA_DEF_GENA ${UPNPLIB_WITH_GENA})           # gena -> UPNP_ENABLE_GENA
                                                      #   compiles only with COMPA_DEF_CLIENT and COMPA_DEF_DEVICE
 set(COMPA_DEF_OPENSSL ${UPNPLIB_WITH_OPENSSL})     # open_ssl -> UPNP_ENABLE_OPEN_SSL
-set(COMPA_DEF_BLOCKTCP ${UPNPLIB_WITH_BLOCKTCP})   # blocking_tcp_connections -> UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
 set(COMPA_DEF_IXML ${UPNPLIB_WITH_IXML})           # scriptsupport -> IXML_HAVE_SCRIPTSUPPORT
+#set(COMPA_DEF_BLOCKTCP ${UPNPLIB_WITH_BLOCKTCP})   # blocking_tcp_connections -> UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
 #set(COMPA_DEF_UNSPECSVR ${UPNPLIB_WITH_UNSPECIFIED_SERVER}) # unspecified_server -> UPNP_ENABLE_UNSPECIFIED_SERVER
 #set(COMPA_DEF_REUSEADDR NO)                        # reuseaddr -> UPNP_MINISERVER_REUSEADDR
 if(UPNPLIB_WITH_SAMPLES)                             # all samples -> UPNP_BUILD_SAMPLES
@@ -101,7 +101,7 @@ set(COMPA_SOURCE_FILES
     $<$<AND:$<BOOL:${COMPA_DEF_DEVICE}>,$<BOOL:${COMPA_DEF_GENA}>>:./src/genlib/client_table/client_table.cpp>
     ./src/genlib/miniserver/miniserver.cpp
 
-    $<$<BOOL:${COMPA_DEF_SSDP}>:./src/ssdp/ssdp_server.cpp>
+    $<$<BOOL:${COMPA_DEF_SSDP}>:./src/ssdp/ssdp_common.cpp>
     $<$<BOOL:${COMPA_DEF_SSDP}>:./src/ssdp/ssdp_device.cpp>
     $<$<BOOL:${COMPA_DEF_SSDP}>:./src/ssdp/ssdp_ctrlpt.cpp>
     $<$<BOOL:${COMPA_DEF_SSDP}>:./src/ssdp/SSDPResultData.cpp>
@@ -164,18 +164,23 @@ set(COMPA_INCLUDE_DIRECTORIES
 
 set(COMPA_COMPILE_DEFINITIONS
     PUBLIC
-        $<$<BOOL:${COMPA_DEF_DEBUG}>:UPNP_HAVE_DEBUG>
         UPNP_ENABLE_IPV6
-        $<$<BOOL:${COMPA_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
-        $<$<BOOL:${COMPA_DEF_TOOLS}>:UPNP_HAVE_TOOLS>
+        UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
+
         $<$<BOOL:${COMPA_DEF_WEBSERVER}>:UPNP_HAVE_WEBSERVER>
+
         $<$<BOOL:${COMPA_DEF_SSDP}>:UPNP_HAVE_SSDP>
         $<$<BOOL:${COMPA_DEF_OPTSSDP}>:UPNP_HAVE_OPTSSDP>
+        $<$<BOOL:${COMPA_DEF_CLIENT}>:UPNP_HAVE_CLIENT> # part of SSDP
+        $<$<BOOL:${COMPA_DEF_DEVICE}>:UPNP_HAVE_DEVICE> # part of SSDP
+
         $<$<BOOL:${COMPA_DEF_SOAP}>:UPNP_HAVE_SOAP>
+
         $<$<BOOL:${COMPA_DEF_GENA}>:UPNP_HAVE_GENA>
-        $<$<BOOL:${COMPA_DEF_CLIENT}>:UPNP_HAVE_CLIENT>
-        $<$<BOOL:${COMPA_DEF_DEVICE}>:UPNP_HAVE_DEVICE>
-        $<$<BOOL:${COMPA_DEF_BLOCKTCP}>:UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS>
+
+        $<$<BOOL:${COMPA_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
+        $<$<BOOL:${COMPA_DEF_TOOLS}>:UPNP_HAVE_TOOLS>
+        $<$<BOOL:${COMPA_DEF_DEBUG}>:UPNP_HAVE_DEBUG>
 )
 
 set_source_files_properties(

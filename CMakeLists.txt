@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-01-24
+# Redistribution only with this Copyright remark. Last modified: 2024-02-18
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -17,15 +17,14 @@ enable_testing()
 #################################
 include(CMakeDependentOption)
 
-option(UPNPLIB_WITH_CLIENT "Providing client functionality for e.g. a control point to manage a UPnP device." OFF)
-option(UPNPLIB_WITH_DEVICE "Providing UPnP device functionality so clients can connect to it." OFF)
+option(UPNPLIB_WITH_CLIENT "Providing control point functionality to manage a remote UPnP device." OFF)
+option(UPNPLIB_WITH_DEVICE "Providing UPnP device functionality so remote control points can connect to it." OFF)
 option(UPNPLIB_WITH_OPENSSL "SSL/TLS and Crypto support should always be ON if not restricted by law." ON)
 option(UPNPLIB_WITH_WEBSERVER "Provide a webserver." OFF)
 option(UPNPLIB_WITH_SSDP "Enable SSDP, the Simple Service Discovery Protocol." OFF)
 option(UPNPLIB_WITH_OPTSSDP "Enable optional SSDP headers." OFF)
 option(UPNPLIB_WITH_SOAP "Enable SOAP, the Simple Object Access Protocol." OFF)
 option(UPNPLIB_WITH_GENA "Enable GENA, the General Event Notification Architecture." OFF)
-option(UPNPLIB_WITH_BLOCKTCP "Enable the TCP protocol stack to wait (blocking) until receiving an answer or timed out." OFF)
 option(UPNPLIB_WITH_IXML "Enable IXML script support." OFF)
 option(UPNPLIB_WITH_TOOLS "Make some not essential program features available like text for error numbers etc." OFF)
 option(UPNPLIB_WITH_SAMPLES "Provide sample programs device and control point." OFF)
@@ -43,6 +42,8 @@ option(GTESTS_WITH_SHARED_LIBS "Build GOOGLETEST libraries shared. You should no
     # UPnP http request as this could be used by an attacker.
 # Always built:
 # option(UPNPLIB_WITH_NATIVE_PUPNP "Build the library with old native PUPNP code." ON)
+# option(UPNPLIB_WITH_BLOCKTCP "Enable the TCP protocol stack to wait (blocking) until receiving an answer or timed out." ON)
+    # This is not an option anymore. Blocking until data received is always enabled.
 
 if(GTESTS_WITH_SHARED_LIBS)
     set (BUILD_SHARED_LIBS ON CACHE INTERNAL

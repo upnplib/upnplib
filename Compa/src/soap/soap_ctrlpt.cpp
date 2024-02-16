@@ -486,7 +486,7 @@ error_handler:
     return err_code;
 }
 
-/// @} // Scope restricted to file
+/// @} // Functions scope restricted to file
 } // anonymous namespace
 
 

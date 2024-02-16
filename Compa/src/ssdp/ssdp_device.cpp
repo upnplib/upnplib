@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-01-31
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,156 +31,71 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-
+// Last compare with ./pupnp source file on 2024-02-16, ver 1.14.18
 /*!
- * \addtogroup SSDPlib
- *
- * @{
- *
  * \file
+ * \brief Manage "Step 1: Discovery" of the UPnP+™ specification for UPnP
+ * Devices with SSDP.
+ *
+ * \ingroup compa-Discovery
  */
 
-#include "config.hpp"
+#include <ssdp_common.hpp>
 
-#ifdef INCLUDE_DEVICE_APIS
-#if EXCLUDE_SSDP == 0
+#include <httpreadwrite.hpp>
+#include <statcodes.hpp>
+#include <upnpapi.hpp>
 
-#include "ThreadPool.hpp"
-#include "UpnpInet.hpp"
-#include "httpparser.hpp"
-#include "httpreadwrite.hpp"
-#include "ssdplib.hpp"
-#include "statcodes.hpp"
-#include "unixutil.hpp"
-#include "upnpapi.hpp"
-
-#include <upnplib/port.hpp>
-
-#include <assert.h>
-#include <stdio.h>
-#include <string.h>
-#include <algorithm> // for std::min|max
-
-#include "posix_overwrites.hpp"
-
+#include <posix_overwrites.hpp>
 #include <umock/sys_socket.hpp>
 
-#define MSGTYPE_SHUTDOWN 0
-#define MSGTYPE_ADVERTISEMENT 1
-#define MSGTYPE_REPLY 2
-
-void advertiseAndReplyThread(void* data) {
-    SsdpSearchReply* arg = (SsdpSearchReply*)data;
-
-    AdvertiseAndReply(0, arg->handle, arg->event.RequestType,
-                      (struct sockaddr*)&arg->dest_addr, arg->event.DeviceType,
-                      arg->event.UDN, arg->event.ServiceType, arg->MaxAge);
-    free(arg);
-}
-
-#ifdef INCLUDE_DEVICE_APIS
-void ssdp_handle_device_request(http_message_t* hmsg,
-                                struct sockaddr_storage* dest_addr) {
-#define MX_FUDGE_FACTOR 10
-    int handle, start;
-    struct Handle_Info* dev_info = NULL;
-    memptr hdr_value;
-    int mx;
-    char save_char;
-    SsdpEvent event;
-    int ret_code;
-    SsdpSearchReply* threadArg = NULL;
-    ThreadPoolJob job;
-    int replyTime;
-    int maxAge;
-
-    memset(&job, 0, sizeof(job));
-
-    /* check man hdr. */
-    if (httpmsg_find_hdr(hmsg, HDR_MAN, &hdr_value) == NULL ||
-        memptr_cmp(&hdr_value, "\"ssdp:discover\"") != 0)
-        /* bad or missing hdr. */
-        return;
-    /* MX header. */
-    if (httpmsg_find_hdr(hmsg, HDR_MX, &hdr_value) == NULL ||
-        (mx = raw_to_int(&hdr_value, 10)) < 0)
-        return;
-    /* ST header. */
-    if (httpmsg_find_hdr(hmsg, HDR_ST, &hdr_value) == NULL)
-        return;
-    save_char = hdr_value.buf[hdr_value.length];
-    hdr_value.buf[hdr_value.length] = '\0';
-    ret_code = ssdp_request_type(hdr_value.buf, &event);
-    /* restore. */
-    hdr_value.buf[hdr_value.length] = save_char;
-    if (ret_code == -1)
-        /* bad ST header. */
-        return;
-
-    start = 0;
-    for (;;) {
-        HandleLock();
-        /* device info. */
-        switch (GetDeviceHandleInfo(start, (int)dest_addr->ss_family, &handle,
-                                    &dev_info)) {
-        case HND_DEVICE:
-            break;
-        default:
-            HandleUnlock();
-            /* no info found. */
-            return;
-        }
-        maxAge = dev_info->MaxAge;
-        HandleUnlock();
-
-        UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "MAX-AGE     =  %d\n",
-                   maxAge);
-        UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "MX     =  %d\n",
-                   event.Mx);
-        UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "DeviceType   =  %s\n",
-                   event.DeviceType);
-        UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "DeviceUuid   =  %s\n",
-                   event.UDN);
-        UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "ServiceType =  %s\n",
-                   event.ServiceType);
-        threadArg = (SsdpSearchReply*)malloc(sizeof(SsdpSearchReply));
-        if (threadArg == NULL)
-            return;
-        threadArg->handle = handle;
-        memcpy(&threadArg->dest_addr, dest_addr, sizeof(threadArg->dest_addr));
-        threadArg->event = event;
-        threadArg->MaxAge = maxAge;
-
-        TPJobInit(&job, advertiseAndReplyThread, threadArg);
-        TPJobSetFreeFunction(&job, (free_routine)free);
-
-        /* Subtract a percentage from the mx to allow for network and processing
-         * delays (i.e. if search is for 30 seconds, respond
-         * within 0 - 27 seconds). */
-        if (mx >= 2)
-            mx -= std::max(1, mx / MX_FUDGE_FACTOR);
-        if (mx < 1)
-            mx = 1;
-        replyTime = rand() % mx;
-        TimerThreadSchedule(&gTimerThread, replyTime, REL_SEC, &job, SHORT_TERM,
-                            NULL);
-        start = handle;
-    }
-}
+#ifndef COMPA_INTERNAL_CONFIG_HPP
+#error "No or wrong config.hpp header file included."
 #endif
+
+#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
+#if (EXCLUDE_SSDP == 0) || defined(DOXYGEN_RUN)
+
+/// \cond
+#include <cassert>
+#include <cstdio>
+#include <cstring>
+#include <algorithm> // for std::min|max
+/// \endcond
+
+namespace {
+
+/*! \name Variables scope restricted to file
+ * @{ */
+/// @{
+/// \brief Message type
+constexpr int MSGTYPE_SHUTDOWN{0};
+constexpr int MSGTYPE_ADVERTISEMENT{1};
+constexpr int MSGTYPE_REPLY{2};
+/// @}
+/// @}
+
+/*! \name Functions scope restricted to file
+ * @{ */
 
 /*!
  * \brief Works as a request handler which passes the HTTP request string
  * to multicast channel.
  *
- * \return UPNP_E_SUCCESS if successful else appropriate error.
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_INVALID_PARAM
+ *  - UPNP_E_OUTOF_SOCKET
+ *  - UPNP_E_NETWORK_ERROR
+ *  - UPNP_E_SOCKET_WRITE
  */
-static int NewRequestHandler(
+int NewRequestHandler(
     /*! [in] Ip address, to send the reply. */
     struct sockaddr* DestAddr,
     /*! [in] Number of packet to be sent. */
     int NumPacket,
-    /*! [in] . */
+    /*! [in] */
     char** RqPacket) {
     char errorBuffer[ERROR_BUFFER_LEN];
     SOCKET ReplySock;
@@ -267,11 +182,14 @@ end_NewRequestHandler:
 }
 
 /*!
- * \brief
+ * \brief Extract IPv6 address.
  *
- * \return 1 if an inet6 @ has been found.
+ * \returns **1** if an inet6 has been found, othherwise **0**.
  */
-static int extractIPv6address(char* url, char* address) {
+inline int extractIPv6address( //
+    char* url,                 ///< [in]
+    char* address              ///< [out] Extracted IPv6 address.
+) {
     int i = 0;
     int j = 0;
     int ret = 0;
@@ -304,11 +222,14 @@ exit_function:
 }
 
 /*!
- * \brief
+ * \brief Test if a Url contains an ULA or GUA IPv6 address.
  *
- * \return 1 if the Url contains an ULA or GUA IPv6 address, 0 otherwise.
+ * \returns **1** if the Url contains an ULA or GUA IPv6 address, **0**
+ * otherwise.
  */
-static int isUrlV6UlaGua(char* descdocUrl) {
+int isUrlV6UlaGua(   //
+    char* descdocUrl ///< [in] Url
+) {
     char address[INET6_ADDRSTRLEN];
     struct in6_addr v6_addr;
 
@@ -321,11 +242,12 @@ static int isUrlV6UlaGua(char* descdocUrl) {
 }
 
 /*!
- * \brief Creates a HTTP request packet. Depending on the input parameter,
- * it either creates a service advertisement request or service shutdown
- * request etc.
+ * \brief Creates a HTTP request packet.
+ *
+ * Depending on the input parameter, it either creates a service advertisement
+ * request or service shutdown request etc.
  */
-static void CreateServicePacket(
+void CreateServicePacket(
     /*! [in] type of the message (Search Reply, Advertisement
      * or Shutdown). */
     int msg_type,
@@ -449,9 +371,8 @@ static void CreateServicePacket(
         else
             /* shutdown */
             nts = "ssdp:byebye";
-        /* NOTE: The CACHE-CONTROL and LOCATION headers are not present
-         * in
-         * a shutdown msg, but are present here for MS WinMe interop. */
+        /* NOTE: The CACHE-CONTROL and LOCATION headers are not present in a
+         * shutdown msg, but are present here for MS WinMe interop. */
         switch (AddressFamily) {
         case AF_INET:
             host = SSDP_IP;
@@ -557,6 +478,110 @@ static void CreateServicePacket(
     return;
 }
 
+/// @} // Functions scope restricted to file
+} // anonymous namespace
+
+
+void advertiseAndReplyThread(void* data) {
+    SsdpSearchReply* arg = (SsdpSearchReply*)data;
+
+    AdvertiseAndReply(0, arg->handle, arg->event.RequestType,
+                      (struct sockaddr*)&arg->dest_addr, arg->event.DeviceType,
+                      arg->event.UDN, arg->event.ServiceType, arg->MaxAge);
+    free(arg);
+}
+
+#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
+void ssdp_handle_device_request(http_message_t* hmsg,
+                                struct sockaddr_storage* dest_addr) {
+    constexpr int MX_FUDGE_FACTOR{10};
+    int handle, start;
+    struct Handle_Info* dev_info = NULL;
+    memptr hdr_value;
+    int mx;
+    char save_char;
+    SsdpEvent event;
+    int ret_code;
+    SsdpSearchReply* threadArg = NULL;
+    ThreadPoolJob job;
+    int replyTime;
+    int maxAge;
+
+    memset(&job, 0, sizeof(job));
+
+    /* check man hdr. */
+    if (httpmsg_find_hdr(hmsg, HDR_MAN, &hdr_value) == NULL ||
+        memptr_cmp(&hdr_value, "\"ssdp:discover\"") != 0)
+        /* bad or missing hdr. */
+        return;
+    /* MX header. */
+    if (httpmsg_find_hdr(hmsg, HDR_MX, &hdr_value) == NULL ||
+        (mx = raw_to_int(&hdr_value, 10)) < 0)
+        return;
+    /* ST header. */
+    if (httpmsg_find_hdr(hmsg, HDR_ST, &hdr_value) == NULL)
+        return;
+    save_char = hdr_value.buf[hdr_value.length];
+    hdr_value.buf[hdr_value.length] = '\0';
+    ret_code = ssdp_request_type(hdr_value.buf, &event);
+    /* restore. */
+    hdr_value.buf[hdr_value.length] = save_char;
+    if (ret_code == -1)
+        /* bad ST header. */
+        return;
+
+    start = 0;
+    for (;;) {
+        HandleLock();
+        /* device info. */
+        switch (GetDeviceHandleInfo(start, (int)dest_addr->ss_family, &handle,
+                                    &dev_info)) {
+        case HND_DEVICE:
+            break;
+        default:
+            HandleUnlock();
+            /* no info found. */
+            return;
+        }
+        maxAge = dev_info->MaxAge;
+        HandleUnlock();
+
+        UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "MAX-AGE     =  %d\n",
+                   maxAge);
+        UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "MX     =  %d\n",
+                   event.Mx);
+        UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "DeviceType   =  %s\n",
+                   event.DeviceType);
+        UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "DeviceUuid   =  %s\n",
+                   event.UDN);
+        UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "ServiceType =  %s\n",
+                   event.ServiceType);
+        threadArg = (SsdpSearchReply*)malloc(sizeof(SsdpSearchReply));
+        if (threadArg == NULL)
+            return;
+        threadArg->handle = handle;
+        memcpy(&threadArg->dest_addr, dest_addr, sizeof(threadArg->dest_addr));
+        threadArg->event = event;
+        threadArg->MaxAge = maxAge;
+
+        TPJobInit(&job, advertiseAndReplyThread, threadArg);
+        TPJobSetFreeFunction(&job, (free_routine)free);
+
+        /* Subtract a percentage from the mx to allow for network and processing
+         * delays (i.e. if search is for 30 seconds, respond
+         * within 0 - 27 seconds). */
+        if (mx >= 2)
+            mx -= std::max(1, mx / MX_FUDGE_FACTOR);
+        if (mx < 1)
+            mx = 1;
+        replyTime = rand() % mx;
+        TimerThreadSchedule(&gTimerThread, replyTime, REL_SEC, &job, SHORT_TERM,
+                            NULL);
+        start = handle;
+    }
+}
+#endif
+
 int DeviceAdvertisement(char* DevType, int RootDev, char* Udn, char* Location,
                         int Duration, int AddressFamily, int PowerState,
                         int SleepPeriod, int RegistrationState) {
@@ -594,8 +619,7 @@ int DeviceAdvertisement(char* DevType, int RootDev, char* Udn, char* Location,
     msgs[0] = NULL;
     msgs[1] = NULL;
     msgs[2] = NULL;
-    /* If deviceis a root device , here we need to send 3 advertisement
-     * or reply */
+    // If device is a root device, here we need to send 3 advertisement or reply
     if (RootDev) {
         rc = snprintf(Mil_Usn, sizeof(Mil_Usn), "%s::upnp:rootdevice", Udn);
         if (rc < 0 || (unsigned int)rc >= sizeof(Mil_Usn))
@@ -959,7 +983,6 @@ error_handler:
 
     return ret_code;
 }
+
 #endif /* EXCLUDE_SSDP */
 #endif /* INCLUDE_DEVICE_APIS */
-
-/* @} SSDPlib */

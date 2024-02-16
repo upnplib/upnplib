@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-12
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,7 +47,8 @@
 #include <httpreadwrite.hpp>
 #include <soap_device.hpp>
 #include <soap_ctrlpt.hpp>
-#include <ssdplib.hpp>
+#include <ssdp_ctrlpt.hpp>
+#include <ssdp_common.hpp>
 #include <uuid.hpp>
 
 #include <upnplib/global.hpp>

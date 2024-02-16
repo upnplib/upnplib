@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-09
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-17
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
 #if EXCLUDE_MINISERVER == 0
 
 #include <httpreadwrite.hpp>
-#include <ssdplib.hpp>
+#include <ssdp_common.hpp>
 #include <statcodes.hpp>
 #include <upnpapi.hpp>
 
