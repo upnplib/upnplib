@@ -1,14 +1,42 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-13
+// Redistribution only with this Copyright remark. Last modified: 2024-02-20
 /*!
  * \file
  * \brief Definition of the documentation topics.
  *
  * This file contains only documentation and is parsed by Doxygen but never by
  * the compiler/linker.
+ */
+
+// Topics for the compatible library
+// ---------------------------------
+/*!
+ * \defgroup compaAPI * COMPATIBLE API
+ * \brief Well defined Application Programming Interface of the **compatible**
+ * part of the library.
  *
- * \defgroup compa Compatible library
- * \defgroup upnplib UPnP library
+ * This API is equal to the API of the old **pUPnP** System Developement Kit
+ * (SDK). It drop in replaces the API of the old **pUPnP** SDK. If the default
+ * usage of this Interface does not behave like the old one then it should be
+ * reported as an issue. Differences may exist with error conditions due to bug
+ * fixes and stability enhacements. This ensures that you can direct use
+ * **UPnPlib** instead **pUPnP** without changes to your source code. Then you
+ * can modify your source code step by step or only when needed, to use the new
+ * object oriented features of the completely rewritten **UPnPlib**.
+ *
+ * This feature is only to ease the port to the new library but support will be
+ * discontinued after some time of transition. It is not intended to continue
+ * supporting this. With starting a new software project it is strongly
+ * recommended to only use the new object oriented **UPnPlib API**.
+ *
+ *
+ * \defgroup compa * * compatible UPnP library
+ * \brief Detailed documentation of this part of the library. Not of interest
+ * for only using the SDK.
+ *
+ * This is only for users/developers who want to take a look behind the scenes
+ * and have deeper insight. The description of the API is sufficient to use the
+ * library.
  *
  *
  * \defgroup compa-Addressing Step 0: Addressing
@@ -36,6 +64,26 @@
  * a control point sends commands to device(s), eventing (Step 4) where control
  * points listen to state changes in device(s), and presentation (Step 5) where
  * control points display a user interface for device(s).
+ *
+ * \defgroup SSDP-Data SSDP Data
+ * \ingroup compa-Discovery
+ * \brief Constants, variables, trivial structures to manage SSDP discovery
+ *
+ * \defgroup SSDP-common_functions SSDP Common Functions
+ * \ingroup compa-Discovery
+ * \brief Functions that are commonly used for SSDP Discovery.
+ * \details These functions are needed for both SSDP Devices and SSDP Control
+ * Points, for example to network read or write to/from an SSDP socket. They are
+ * conditional compiled with\n
+ * `#if INCLUDE_DEVICE_APIS == 1 || INCLUDE_CLIENT_APIS == 1`
+ *
+ * \defgroup SSDP-device_functions SSDP Device Functions
+ * \ingroup compa-Discovery
+ * \brief Functions to manage SSDP for UPnP Devices.
+ *
+ * \defgroup SSDP-ctrlpt_functions SSDP Control Point Functions
+ * \ingroup compa-Discovery
+ * \brief Functions to manage SSDP for UPnP Control Points.
  *
  *
  * \defgroup compa-Description Step 2: Description
@@ -101,6 +149,19 @@
  * viewing device status. Presentation is complementary to control (Step 3)
  * where control points send actions to devices, and eventing (Step 4) where
  * control points listen to state changes in device(s).
+ */
+
+// Topics for the object oriented UPnPlib library
+// ----------------------------------------------
+/*!
+ * \defgroup upnplibAPI * UPNPLIB API
+ * \brief Well defined Application Programming Interface of the **object
+ * oriented** part  of the library.
+ *
+ *
+ * \defgroup upnplib * * object oriented UPnP library
+ * \brief Detailed documentation of this part of the library. Not of interest
+ * for only using the SDK.
  *
  *
  * \defgroup upnplib-Addressing Step 0: Addressing

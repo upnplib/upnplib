@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -48,7 +48,7 @@
 #include <soap_device.hpp>
 #include <soap_ctrlpt.hpp>
 #include <ssdp_ctrlpt.hpp>
-#include <ssdp_common.hpp>
+#include <ssdp_device.hpp>
 #include <uuid.hpp>
 
 #include <upnplib/global.hpp>
@@ -261,7 +261,6 @@ typedef union {
 } job_arg;
 
 #ifdef INCLUDE_DEVICE_APIS // Needed to compile with warings as errors --Ingo
-#if EXCLUDE_SSDP == 0
 /*!
  * \brief Free memory associated with advertise job's argument
  */
@@ -271,7 +270,6 @@ static void free_advertise_arg(job_arg* arg) {
     }
     free(arg);
 }
-#endif /* EXCLUDE_SSDP == 0 */
 #endif /* INCLUDE_DEVICE_APIS */
 
 #if EXCLUDE_SOAP == 0 // Needed to compile with warings as errors --Ingo
@@ -462,9 +460,7 @@ static int UpnpInitPreamble() {
     }
 
 #ifdef INCLUDE_DEVICE_APIS
-#if EXCLUDE_SOAP == 0
     SetSoapCallback(soap_device_callback);
-#endif
 #endif /* INCLUDE_DEVICE_APIS */
 
 #ifdef INTERNAL_WEB_SERVER
@@ -1309,7 +1305,7 @@ int UpnpUnRegisterRootDeviceLowPower(UpnpDevice_Handle Hnd, int PowerState,
     HInfo->RegistrationState = RegistrationState;
     HandleUnlock();
 
-#if EXCLUDE_SSDP == 0
+#ifdef INCLUDE_DEVICE_APIS
     retVal = AdvertiseAndReply(-1, Hnd, (enum SsdpSearchType)0,
                                (struct sockaddr*)NULL, (char*)NULL, (char*)NULL,
                                (char*)NULL, HInfo->MaxAge);
@@ -1696,7 +1692,6 @@ static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
  ******************************************************************************/
 
 #ifdef INCLUDE_DEVICE_APIS
-#if EXCLUDE_SSDP == 0
 int UpnpSendAdvertisement(UpnpDevice_Handle Hnd, int Exp) {
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                "Inside UpnpSendAdvertisement \n");
@@ -1799,12 +1794,9 @@ int UpnpSendAdvertisementLowPower(UpnpDevice_Handle Hnd, int Exp,
 
     return retVal;
 }
-#endif /* EXCLUDE_SSDP == 0 */
 #endif /* INCLUDE_DEVICE_APIS */
 
-#if EXCLUDE_SSDP == 0
 #ifdef INCLUDE_CLIENT_APIS
-
 int UpnpSearchAsync(UpnpClient_Handle Hnd, int Mx, const char* Target_const,
                     const void* Cookie_const) {
     struct Handle_Info* SInfo = NULL;
@@ -1843,7 +1835,6 @@ int UpnpSearchAsync(UpnpClient_Handle Hnd, int Mx, const char* Target_const,
     return UPNP_E_SUCCESS;
 }
 #endif /* INCLUDE_CLIENT_APIS */
-#endif
 
 /*******************************************************************************
  *
@@ -3684,14 +3675,12 @@ int PrintHandleInfo(UpnpClient_Handle Hnd) {
 }
 
 #ifdef INCLUDE_DEVICE_APIS
-#if EXCLUDE_SSDP == 0
 void AutoAdvertise(void* input) {
     job_arg* arg = (job_arg*)input;
 
     UpnpSendAdvertisement(arg->advertise.handle, *((int*)arg->advertise.Event));
     free_advertise_arg(arg);
 }
-#endif /* EXCLUDE_SSDP == 0 */
 #endif /* INCLUDE_DEVICE_APIS */
 
 #ifdef INTERNAL_WEB_SERVER

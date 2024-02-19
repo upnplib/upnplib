@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-24
+// Redistribution only with this Copyright remark. Last modified: 2024-02-21
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -1312,6 +1312,10 @@ TEST(RunMiniServerTestSuite, free_handle_request_arg_with_valid_socket) {
     // Test Unit
     free_handle_request_arg(request);
 
+    // This test isn't possible because the compiler complains
+    // error: pointer ‘request’ used after ‘void free(void*)’
+    // [-Werror=use-after-free]
+    /*
     // Check if closed socket file descriptor is invalid now.
     int so_option{-1};
     socklen_t optlen{sizeof(so_option)}; // May be modified
@@ -1319,6 +1323,7 @@ TEST(RunMiniServerTestSuite, free_handle_request_arg_with_valid_socket) {
     EXPECT_NE(getsockopt(request->connfd, SOL_SOCKET, SO_ERROR,
                          reinterpret_cast<char*>(&so_option), &optlen),
               0);
+    */
 }
 
 TEST(RunMiniServerTestSuite, free_handle_request_arg_with_invalid_socket) {

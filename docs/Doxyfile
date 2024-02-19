@@ -815,7 +815,7 @@ FILE_VERSION_FILTER    =
 # DoxygenLayout.xml, doxygen will parse it automatically even if the LAYOUT_FILE
 # tag is left empty.
 
-LAYOUT_FILE            =
+LAYOUT_FILE            = docs/DoxygenLayout.xml
 
 # The CITE_BIB_FILES tag can be used to specify one or more bib files containing
 # the reference definitions. This must be a list of .bib files. The .bib
@@ -956,12 +956,12 @@ INPUT                  = README.md \
                          Compa/src/soap \
                          Compa/src/ssdp/ssdp_ctrlpt.cpp \
                          Compa/src/ssdp/ssdp_device.cpp \
-                         Compa/src/ssdp/ssdp_common.cpp
+                         Compa/src/ssdp/ssdp_common.cpp \
+                         Compa/src/ssdp/SSDPResultData.hpp \
+                         Compa/src/ssdp/SSDPResultData.cpp \
+                         Compa/src/ssdp/SSDPResultDataCallback.hpp
 
-#Compa/src/ssdp/SSDPResultData.cpp
-#Compa/src/ssdp/SSDPResultData.hpp
 #Compa/src/ssdp/SSDPResultDataCallback.cpp
-#Compa/src/ssdp/SSDPResultDataCallback.hpp
 #Compa/src/threadutil/FreeList.cpp
 #Compa/src/threadutil/FreeList.hpp
 #Compa/src/threadutil/LinkedList.cpp
@@ -2815,7 +2815,7 @@ DOT_GRAPH_MAX_NODES    = 103
 # Minimum value: 0, maximum value: 1000, default value: 0.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-MAX_DOT_GRAPH_DEPTH    = 3
+MAX_DOT_GRAPH_DEPTH    = 8
 
 # Set the DOT_MULTI_TARGETS tag to YES to allow dot to generate multiple output
 # files in one run (i.e. multiple -o and -T options on the command line). This

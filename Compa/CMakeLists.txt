@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-18
+# Redistribution only with this Copyright remark. Last modified: 2024-02-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -19,7 +19,6 @@ set(COMPA_DEF_WEBSERVER ${UPNPLIB_WITH_WEBSERVER}) # webserver -> UPNP_ENABLE_WE
                                                      #   only enabled with COMPA_DEF_DEVICE
 set(COMPA_DEF_CLIENT ${UPNPLIB_WITH_CLIENT})       # client -> UPNP_ENABLE_CLIENT_API
 set(COMPA_DEF_DEVICE ${UPNPLIB_WITH_DEVICE})
-set(COMPA_DEF_SSDP ${UPNPLIB_WITH_SSDP})           # ssdp -> UPNP_ENABLE_SSDP
 set(COMPA_DEF_OPTSSDP ${UPNPLIB_WITH_OPTSSDP})     # optssdp -> UPNP_ENABLE_OPTIONAL_SSDP_HEADERS
 set(COMPA_DEF_SOAP ${UPNPLIB_WITH_SOAP})           # soap -> UPNP_ENABLE_SOAP
                                                      #   only enabled with COMPA_DEF_WEBSERVER
@@ -61,12 +60,19 @@ if(COMPA_DEF_DEVICE)
     set(COMPA_DEF_WEBSERVER YES)
 endif()
 
+if(COMPA_DEF_SOAP)
+    set(COMPA_DEF_WEBSERVER YES)
+    set(COMPA_DEF_CLIENT YES)
+    set(COMPA_DEF_DEVICE YES)
+endif()
+
+
 if(COMPA_DEF_WEBSERVER)
     set(COMPA_DEF_DEVICE YES)
     set(COMPA_DEF_SOAP YES)
 endif()
 
-if(COMPA_DEF_SOAP)
+if(COMPA_DEF_CLIENT OR COMPA_DEF_DEVICE)
     set(COMPA_DEF_SSDP YES)
 endif()
 

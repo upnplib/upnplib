@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,36 +34,32 @@
 // Last compare with ./pupnp source file on 2023-08-30, ver 1.14.18
 /*!
  * \file
- * \brief Manage "Step 1: Discovery" of the UPnP+™ specification for SSDP
- * Server.
+ * \brief Manage "Step 1: Discovery" of the UPnP+™ specification for common SSDP
+ * usage.
  *
  * \ingroup compa-Discovery
  */
 
 #include <ssdp_device.hpp>
 #include <ssdp_ctrlpt.hpp>
-#include <ssdp_common.hpp>
 
 #include <upnpapi.hpp>
 
-#include <upnplib/global.hpp>
+#include <upnplib/global.hpp> // for TRACE
 #include <umock/sys_socket.hpp>
-#include <umock/pupnp_sock.hpp>
 #include <umock/winsock2.hpp>
-
-#include <posix_overwrites.hpp>
 
 #ifndef COMPA_INTERNAL_CONFIG_HPP
 #error "No or wrong config.hpp header file included."
 #endif
 
-#if EXCLUDE_SSDP == 0
+#if defined(INCLUDE_DEVICE_APIS) || defined(INCLUDE_CLIENT_APIS)
 
 /// \cond
-#include <cstdio>
+#if UPNPLIB_WITH_TRACE
 #include <iostream>
+#endif
 /// \endcond
-
 
 namespace {
 /*! \name Functions scope restricted to file
@@ -188,11 +184,14 @@ inline void ssdp_event_handler_thread(
     /* send msg to device or ctrlpt */
     if (hmsg->method == (http_method_t)HTTPMETHOD_NOTIFY ||
         hmsg->request_method == (http_method_t)HTTPMETHOD_MSEARCH) {
-#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+/// \todo Make utests and split function to separate handle ctrlpt and service.
+#ifdef INCLUDE_CLIENT_APIS
         ssdp_handle_ctrlpt_msg(hmsg, &data->dest_addr, 0);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
     } else {
+#ifdef INCLUDE_DEVICE_APIS
         ssdp_handle_device_request(hmsg, &data->dest_addr);
+#endif
     }
 
     /* free data */
@@ -341,38 +340,6 @@ error_handler:
     return ret;
 }
 
-#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
-/*!
- * \brief Creates the SSDP IPv4 socket to be used by the control point.
- *
- * \returns
- *  On success: UPNP_E_SUCCESS\n
- *  On error:
- *  - UPNP_E_OUTOF_SOCKET
- */
-inline int create_ssdp_sock_reqv4(
-    /*! [out] SSDP IPv4 request socket to be created. */
-    SOCKET* ssdpReqSock) {
-    TRACE("Executing create_ssdp_sock_reqv4()")
-    char errorBuffer[ERROR_BUFFER_LEN];
-    u_char ttl = 4;
-
-    *ssdpReqSock = umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
-    if (*ssdpReqSock == INVALID_SOCKET) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
-        UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
-                   "Error in socket(): %s\n", errorBuffer);
-        return UPNP_E_OUTOF_SOCKET;
-    }
-    umock::sys_socket_h.setsockopt(*ssdpReqSock, IPPROTO_IP, IP_MULTICAST_TTL,
-                                   (const char*)&ttl, sizeof(ttl));
-    /* just do it, regardless if fails or not. */
-    umock::pupnp_sock.sock_make_no_blocking(*ssdpReqSock);
-
-    return UPNP_E_SUCCESS;
-}
-#endif /* INCLUDE_CLIENT_APIS */
-
 #ifdef UPNP_ENABLE_IPV6
 /*!
  * \brief Create an SSDP IPv6 socket.
@@ -385,7 +352,7 @@ inline int create_ssdp_sock_reqv4(
  *  - UPNP_E_SOCKET_BIND
  *  - UPNP_E_NETWORK_ERROR
  */
-int create_ssdp_sock_v6(
+inline int create_ssdp_sock_v6(
     /*! [out] SSDP IPv6 socket to be created. */
     SOCKET* ssdpSock) {
     char errorBuffer[ERROR_BUFFER_LEN];
@@ -623,390 +590,9 @@ error_handler:
 }
 #endif /* IPv6 */
 
-#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
-#ifdef UPNP_ENABLE_IPV6
-/*!
- * \brief Creates the SSDP IPv6 socket to be used by the control point.
- *
- * \returns
- *  On success: UPNP_E_SUCCESS\n
- *  On error:
- *  - UPNP_E_OUTOF_SOCKET
- */
-inline int create_ssdp_sock_reqv6(
-    /*! [out] SSDP IPv6 request socket to be created. */
-    SOCKET* ssdpReqSock) {
-    char errorBuffer[ERROR_BUFFER_LEN];
-    char hops = 1;
-
-    *ssdpReqSock = umock::sys_socket_h.socket(AF_INET6, SOCK_DGRAM, 0);
-    if (*ssdpReqSock == INVALID_SOCKET) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
-        UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
-                   "Error in socket(): %s\n", errorBuffer);
-        return UPNP_E_OUTOF_SOCKET;
-    }
-    /* MUST use scoping of IPv6 addresses to control the propagation os SSDP
-     * messages instead of relying on the Hop Limit (Equivalent to the TTL
-     * limit in IPv4). */
-    umock::sys_socket_h.setsockopt(*ssdpReqSock, IPPROTO_IPV6,
-                                   IPV6_MULTICAST_HOPS, &hops, sizeof(hops));
-    /* just do it, regardless if fails or not. */
-    umock::pupnp_sock.sock_make_no_blocking(*ssdpReqSock);
-
-    return UPNP_E_SUCCESS;
-}
-#endif /* IPv6 */
-#endif /* INCLUDE_CLIENT_APIS */
-
 /// @} // Functions scope restricted to file
 } // anonymous namespace
 
-
-#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
-int AdvertiseAndReply(int AdFlag, UpnpDevice_Handle Hnd,
-                      enum SsdpSearchType SearchType, struct sockaddr* DestAddr,
-                      char* DeviceType, char* DeviceUDN, char* ServiceType,
-                      int Exp) {
-    constexpr char SERVICELIST_STR[] = "serviceList";
-    int retVal = UPNP_E_SUCCESS;
-    long unsigned int i;
-    long unsigned int j;
-    int defaultExp = DEFAULT_MAXAGE;
-    struct Handle_Info* SInfo = NULL;
-    char UDNstr[100];
-    char devType[100];
-    char servType[100];
-    IXML_NodeList* nodeList = NULL;
-    IXML_NodeList* tmpNodeList = NULL;
-    IXML_Node* tmpNode = NULL;
-    IXML_Node* tmpNode2 = NULL;
-    IXML_Node* textNode = NULL;
-    const DOMString tmpStr;
-    const DOMString dbgStr;
-    int NumCopy = 0;
-
-    memset(UDNstr, 0, sizeof(UDNstr));
-    memset(devType, 0, sizeof(devType));
-    memset(servType, 0, sizeof(servType));
-
-    UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-               "Inside AdvertiseAndReply with AdFlag = %d\n", AdFlag);
-
-    /* Use a read lock */
-    HandleReadLock();
-    if (GetHandleInfo(Hnd, &SInfo) != HND_DEVICE) {
-        retVal = UPNP_E_INVALID_HANDLE;
-        goto end_function;
-    }
-    defaultExp = SInfo->MaxAge;
-    /* parse the device list and send advertisements/replies */
-    while (NumCopy == 0 || (AdFlag && NumCopy < NUM_SSDP_COPY)) {
-        if (NumCopy != 0)
-            imillisleep(SSDP_PAUSE);
-        NumCopy++;
-        for (i = 0lu;; i++) {
-            UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-                       "Entering new device list with i = %lu\n\n", i);
-            tmpNode = ixmlNodeList_item(SInfo->DeviceList, i);
-            if (!tmpNode) {
-                UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-                           "Exiting new device list with i = "
-                           "%lu\n\n",
-                           i);
-                break;
-            }
-            dbgStr = ixmlNode_getNodeName(tmpNode);
-            UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                       "Extracting device type once for %s\n", dbgStr);
-            ixmlNodeList_free(nodeList);
-            nodeList = ixmlElement_getElementsByTagName((IXML_Element*)tmpNode,
-                                                        "deviceType");
-            if (!nodeList)
-                continue;
-            UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-                       "Extracting UDN for %s\n", dbgStr);
-            UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-                       "Extracting device type\n");
-            tmpNode2 = ixmlNodeList_item(nodeList, 0lu);
-            if (!tmpNode2)
-                continue;
-            textNode = ixmlNode_getFirstChild(tmpNode2);
-            if (!textNode)
-                continue;
-            UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-                       "Extracting device type \n");
-            tmpStr = ixmlNode_getNodeValue(textNode);
-            if (!tmpStr)
-                continue;
-            strncpy(devType, tmpStr, sizeof(devType) - 1);
-            UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-                       "Extracting device type = %s\n", devType);
-            if (!tmpNode) {
-                UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-                           "TempNode is NULL\n");
-            }
-            dbgStr = ixmlNode_getNodeName(tmpNode);
-            UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-                       "Extracting UDN for %s\n", dbgStr);
-            ixmlNodeList_free(nodeList);
-            nodeList =
-                ixmlElement_getElementsByTagName((IXML_Element*)tmpNode, "UDN");
-            if (!nodeList) {
-                UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
-                           "UDN not found!\n");
-                continue;
-            }
-            tmpNode2 = ixmlNodeList_item(nodeList, 0lu);
-            if (!tmpNode2) {
-                UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
-                           "UDN not found!\n");
-                continue;
-            }
-            textNode = ixmlNode_getFirstChild(tmpNode2);
-            if (!textNode) {
-                UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
-                           "UDN not found!\n");
-                continue;
-            }
-            tmpStr = ixmlNode_getNodeValue(textNode);
-            if (!tmpStr) {
-                UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
-                           "UDN not found!\n");
-                continue;
-            }
-            strncpy(UDNstr, tmpStr, sizeof(UDNstr) - 1);
-            UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                       "Sending UDNStr = %s \n", UDNstr);
-            if (AdFlag) {
-                /* send the device advertisement */
-                if (AdFlag == 1) {
-                    DeviceAdvertisement(devType, i == 0lu, UDNstr,
-                                        SInfo->DescURL, Exp, SInfo->DeviceAf,
-                                        SInfo->PowerState, SInfo->SleepPeriod,
-                                        SInfo->RegistrationState);
-                } else {
-                    /* AdFlag == -1 */
-                    DeviceShutdown(devType, i == 0lu, UDNstr, SInfo->DescURL,
-                                   Exp, SInfo->DeviceAf, SInfo->PowerState,
-                                   SInfo->SleepPeriod,
-                                   SInfo->RegistrationState);
-                }
-            } else {
-                switch (SearchType) {
-                case SSDP_ALL:
-                    DeviceReply(DestAddr, devType, i == 0lu, UDNstr,
-                                SInfo->DescURL, defaultExp, SInfo->PowerState,
-                                SInfo->SleepPeriod, SInfo->RegistrationState);
-                    break;
-                case SSDP_ROOTDEVICE:
-                    if (i == 0lu) {
-                        SendReply(DestAddr, devType, 1, UDNstr, SInfo->DescURL,
-                                  defaultExp, 0, SInfo->PowerState,
-                                  SInfo->SleepPeriod, SInfo->RegistrationState);
-                    }
-                    break;
-                case SSDP_DEVICEUDN: {
-                    /* clang-format off */
-                    if (DeviceUDN && strlen(DeviceUDN) != (size_t)0) {
-                        if (strcasecmp(DeviceUDN, UDNstr)) {
-                            UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                                "DeviceUDN=%s and search UDN=%s DID NOT match\n",
-                                UDNstr, DeviceUDN);
-                        } else {
-                            UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                                "DeviceUDN=%s and search UDN=%s MATCH\n",
-                                UDNstr, DeviceUDN);
-                            SendReply(DestAddr, devType, 0, UDNstr, SInfo->DescURL, defaultExp, 0,
-                                SInfo->PowerState,
-                                SInfo->SleepPeriod,
-                                SInfo->RegistrationState);
-                        }
-                    }
-                    /* clang-format on */
-                    break;
-                }
-                case SSDP_DEVICETYPE: {
-                    /* clang-format off */
-                    if (!strncasecmp(DeviceType, devType, strlen(DeviceType) - (size_t)2)) {
-                        if (atoi(strrchr(DeviceType, ':') + 1)
-                            < atoi(&devType[strlen(devType) - (size_t)1])) {
-                            /* the requested version is lower than the device version
-                             * must reply with the lower version number and the lower
-                             * description URL */
-                            UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                                   "DeviceType=%s and search devType=%s MATCH\n",
-                                   devType, DeviceType);
-                            SendReply(DestAddr, DeviceType, 0, UDNstr, SInfo->LowerDescURL,
-                                  defaultExp, 1,
-                                  SInfo->PowerState,
-                                  SInfo->SleepPeriod,
-                                  SInfo->RegistrationState);
-                        } else if (atoi(strrchr(DeviceType, ':') + 1)
-                               == atoi(&devType[strlen(devType) - (size_t)1])) {
-                            UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                                   "DeviceType=%s and search devType=%s MATCH\n",
-                                   devType, DeviceType);
-                            SendReply(DestAddr, DeviceType, 0, UDNstr, SInfo->DescURL,
-                                  defaultExp, 1,
-                                  SInfo->PowerState,
-                                  SInfo->SleepPeriod,
-                                  SInfo->RegistrationState);
-                        } else {
-                            UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                                   "DeviceType=%s and search devType=%s DID NOT MATCH\n",
-                                   devType, DeviceType);
-                        }
-                    } else {
-                        UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                               "DeviceType=%s and search devType=%s DID NOT MATCH\n",
-                               devType, DeviceType);
-                    }
-                    /* clang-format on */
-                    break;
-                }
-                default:
-                    break;
-                }
-            }
-            /* send service advertisements for services
-             * corresponding to the same device */
-            UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                       "Sending service Advertisement\n");
-            /* Correct service traversal such that each device's
-             * serviceList is directly traversed as a child of its
-             * parent device. This ensures that the service's alive
-             * message uses the UDN of the parent device. */
-            tmpNode = ixmlNode_getFirstChild(tmpNode);
-            while (tmpNode) {
-                dbgStr = ixmlNode_getNodeName(tmpNode);
-                if (!strncmp(dbgStr, SERVICELIST_STR, sizeof SERVICELIST_STR)) {
-                    break;
-                }
-                tmpNode = ixmlNode_getNextSibling(tmpNode);
-            }
-            ixmlNodeList_free(nodeList);
-            if (!tmpNode) {
-                nodeList = NULL;
-                continue;
-            }
-            nodeList = ixmlElement_getElementsByTagName((IXML_Element*)tmpNode,
-                                                        "service");
-            if (!nodeList) {
-                UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                           "Service not found 3\n");
-                continue;
-            }
-            for (j = 0lu;; j++) {
-                tmpNode = ixmlNodeList_item(nodeList, j);
-                if (!tmpNode) {
-                    break;
-                }
-                ixmlNodeList_free(tmpNodeList);
-                tmpNodeList = ixmlElement_getElementsByTagName(
-                    (IXML_Element*)tmpNode, "serviceType");
-                if (!tmpNodeList) {
-                    UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
-                               "ServiceType not found \n");
-                    continue;
-                }
-                tmpNode2 = ixmlNodeList_item(tmpNodeList, 0lu);
-                if (!tmpNode2)
-                    continue;
-                textNode = ixmlNode_getFirstChild(tmpNode2);
-                if (!textNode)
-                    continue;
-                /* servType is of format
-                 * Servicetype:ServiceVersion */
-                tmpStr = ixmlNode_getNodeValue(textNode);
-                if (!tmpStr)
-                    continue;
-                strncpy(servType, tmpStr, sizeof(servType) - 1);
-                UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                           "ServiceType = %s\n", servType);
-                if (AdFlag) {
-                    if (AdFlag == 1) {
-                        ServiceAdvertisement(
-                            UDNstr, servType, SInfo->DescURL, Exp,
-                            SInfo->DeviceAf, SInfo->PowerState,
-                            SInfo->SleepPeriod, SInfo->RegistrationState);
-                    } else {
-                        /* AdFlag == -1 */
-                        ServiceShutdown(UDNstr, servType, SInfo->DescURL, Exp,
-                                        SInfo->DeviceAf, SInfo->PowerState,
-                                        SInfo->SleepPeriod,
-                                        SInfo->RegistrationState);
-                    }
-                } else {
-                    switch (SearchType) {
-                    case SSDP_ALL:
-                        ServiceReply(DestAddr, servType, UDNstr, SInfo->DescURL,
-                                     defaultExp, SInfo->PowerState,
-                                     SInfo->SleepPeriod,
-                                     SInfo->RegistrationState);
-                        break;
-                    case SSDP_SERVICE:
-                        /* clang-format off */
-                        if (ServiceType) {
-                            if (!strncasecmp(ServiceType, servType, strlen(ServiceType) - (size_t)2)) {
-                                if (atoi(strrchr(ServiceType, ':') + 1) <
-                                    atoi(&servType[strlen(servType) - (size_t)1])) {
-                                    /* the requested version is lower than the service version
-                                     * must reply with the lower version number and the lower
-                                     * description URL */
-                                    UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                                           "ServiceType=%s and search servType=%s MATCH\n",
-                                           ServiceType, servType);
-                                    SendReply(DestAddr, ServiceType, 0, UDNstr, SInfo->LowerDescURL,
-                                          defaultExp, 1,
-                                          SInfo->PowerState,
-                                          SInfo->SleepPeriod,
-                                          SInfo->RegistrationState);
-                                } else if (atoi(strrchr (ServiceType, ':') + 1) ==
-                                       atoi(&servType[strlen(servType) - (size_t)1])) {
-                                    UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                                           "ServiceType=%s and search servType=%s MATCH\n",
-                                           ServiceType, servType);
-                                    SendReply(DestAddr, ServiceType, 0, UDNstr, SInfo->DescURL,
-                                          defaultExp, 1,
-                                          SInfo->PowerState,
-                                          SInfo->SleepPeriod,
-                                          SInfo->RegistrationState);
-                                } else {
-                                    UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                                       "ServiceType=%s and search servType=%s DID NOT MATCH\n",
-                                       ServiceType, servType);
-                                }
-                            } else {
-                                UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-                                       "ServiceType=%s and search servType=%s DID NOT MATCH\n",
-                                       ServiceType, servType);
-                            }
-                        }
-                        /* clang-format on */
-                        break;
-                    default:
-                        break;
-                    }
-                }
-            }
-            ixmlNodeList_free(tmpNodeList);
-            tmpNodeList = NULL;
-            ixmlNodeList_free(nodeList);
-            nodeList = NULL;
-        }
-    }
-
-end_function:
-    ixmlNodeList_free(tmpNodeList);
-    ixmlNodeList_free(nodeList);
-    UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-               "Exiting AdvertiseAndReply.\n");
-    HandleUnlock();
-
-    return retVal;
-}
-#endif /* INCLUDE_DEVICE_APIS */
 
 int unique_service_name(char* cmd, SsdpEvent* Evt) {
     char TempBuf[LINE_SIZE - 3];
@@ -1277,4 +863,4 @@ int get_ssdp_sockets(MiniServerSockArray* out) {
     return UPNP_E_SUCCESS;
 }
 
-#endif /* EXCLUDE_SSDP */
+#endif /* INCLUDE_DEVICE|CLIENT_APIS */

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-23
+// Redistribution only with this Copyright remark. Last modified: 2024-02-21
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -1054,7 +1054,22 @@ TEST(GetHostaddr, empty_url_str) {
     memset(&hoststr, 0xaa, sizeof(hoststr));
     size_t hostlen{0xaa};
 
-    int retval = get_hoststr(url_str, &hoststr, &hostlen);
+    int retval{UPNP_E_INVALID_URL};
+
+    if (old_code) {
+        // Does not compile with error:
+        // retval = get_hoststr(url_str, &hoststr, &hostlen);
+        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+                  << ": Will fail to compile with: reading 1 or more bytes "
+                     "from a region of size 0.\n";
+        if (!github_actions)
+            GTEST_FAIL();
+
+    } else {
+
+        retval = get_hoststr(url_str, &hoststr, &hostlen);
+    }
+
     EXPECT_EQ(retval, UPNP_E_INVALID_URL)
         << errStrEx(retval, UPNP_E_INVALID_URL);
     const char* refptr;

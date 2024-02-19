@@ -1,20 +1,27 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-17
-
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-02-20
 /*!
  * \file
- *
  * \brief Source file for SSDPResultData methods.
+ * \ingroup compa-Discovery
  *
  * \author Marcelo Roberto Jimenez
  */
-#include "config.hpp"
-
-#include <stdlib.h> /* for calloc(), free() */
-#include <string.h> /* for strlen(), strdup() */
 
 #include "SSDPResultData.hpp"
 
+#ifndef COMPA_INTERNAL_CONFIG_HPP
+#error "No or wrong config.hpp header file included."
+#endif
+
+#if INCLUDE_DEVICE_APIS == 1 || INCLUDE_CLIENT_APIS == 1
+
+/// \cond
+#include <cstring> /* for strlen(), strdup() */
+/// \endcond
+
+/*! \brief "protected" structure, addressable with typedef
+ * \ingroup SSDP-Data */
 struct s_SSDPResultData {
     UpnpDiscovery* m_Param;
     void* m_Cookie;
@@ -104,3 +111,5 @@ int SSDPResultData_set_CtrlptCallback(SSDPResultData* p, Upnp_FunPtr n) {
 
     return 1;
 }
+
+#endif // INCLUDE_CLIENT|DEVICE_APIS

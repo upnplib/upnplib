@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-13
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -221,7 +221,7 @@ service_info* FindServiceEventURLPath(
     /*! [in] Event URL path used to find a service from the table. */
     const char* eventURLPath);
 
-#if (EXCLUDE_SOAP == 0) || defined(DOXYGEN_RUN)
+#if (EXCLUDE_SOAP == 0) || (INCLUDE_DEVICE_APIS == 1) || defined(DOXYGEN_RUN)
 /*!
  * \brief Traverses the service table and finds the node whose control URL Path
  * matches a known value.

@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,6 +41,13 @@
  */
 
 #include <miniserver.hpp>
+
+#ifndef COMPA_INTERNAL_CONFIG_HPP
+#error "No or wrong config.hpp header file included."
+#endif
+
+#if defined(INCLUDE_DEVICE_APIS) || defined(INCLUDE_CLIENT_APIS)
+
 
 /// \brief Enumeration to define all different types of ssdp searches.
 enum SsdpSearchType {
@@ -79,6 +86,8 @@ enum SsdpSearchType {
  * the X-User-Agent: HTTP header. The value "redsonic" is needed for the
  * DSM-320. See https://sourceforge.net/forum/message.php?msg_id=3166856 for
  * more information.
+ *
+ * \todo Check setting of X_USER_AGENT.
  */
 #define X_USER_AGENT "redsonic"
 #endif
@@ -173,56 +182,21 @@ struct ssdp_thread_data {
 
 /* globals */
 
-#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
 /*! \brief If control point API is compiled in, this is the global IPv4 socket
  * for it. */
 inline SOCKET gSsdpReqSocket4;
-#if defined(UPNP_ENABLE_IPV6) || defined(DOXYGEN_RUN)
+#ifdef UPNP_ENABLE_IPV6
 /*! \brief If control point API is compiled in, this is the global IPv6 socket
  * for it. */
 inline SOCKET gSsdpReqSocket6;
 #endif /* UPNP_ENABLE_IPV6 */
-#endif /* INCLUDE_CLIENT_APIS */
 
 /// \brief Maybe a callback function?
 typedef int (*ParserFun)(char*, SsdpEvent*);
 
 
-/*! \name SSDP Common Functions
- * @{ */
-/// \ingroup compa-Discovery
-
-#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
-/*!
- * \brief Sends SSDP advertisements, replies and shutdown messages.
- *
- * \note This function is only available when the Device option was enabled on
- * compiling the library.
- *
- * \returns
- *  On success: UPNP_E_SUCCESS\n
- *  There are several messages on stderr if DEBUG is enabled.\n
- *  On error:
- *  - UPNP_E_INVALID_HANDLE
- */
-UPNPLIB_API int AdvertiseAndReply(
-    /*! [in] -1 = Send shutdown, 0 = send reply, 1 = Send Advertisement. */
-    int AdFlag,
-    /*! [in] Device handle. */
-    UpnpDevice_Handle Hnd,
-    /*! [in] Search type for sending replies. */
-    enum SsdpSearchType SearchType,
-    /*! [in] Destination address. */
-    struct sockaddr* DestAddr,
-    /*! [in] Device type. */
-    char* DeviceType,
-    /*! [in] Device UDN. */
-    char* DeviceUDN,
-    /*! [in] Service type. */
-    char* ServiceType,
-    /*! [in] Advertisement age. */
-    int Exp);
-#endif
+/*! @{
+ * \ingroup SSDP-common_functions */
 
 /*!
  * \brief Fills the fields of the event structure like DeviceType, Device UDN
@@ -292,4 +266,5 @@ UPNPLIB_API int get_ssdp_sockets(
 
 /// @} SSDP Common Functions
 
+#endif // INCLUDE_DEVICE|CLIENT_APIS
 #endif /* COMPA_SSDP_COMMON_HPP */

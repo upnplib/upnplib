@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,27 +42,14 @@
  * \ingroup compa-Discovery
  */
 
-#include <httpparser.hpp>
-
-#include <config.hpp>
+#include <ssdp_common.hpp>
 
 #ifndef COMPA_INTERNAL_CONFIG_HPP
 #error "No or wrong config.hpp header file included."
 #endif
 
-#if EXCLUDE_SSDP == 0
 
-/*! \name SSDP Device Functions
- * @{ */
-/// \ingroup compa-Discovery
-
-/*!
- * \brief Wrapper function to reply the search request coming from the
- * control point.
- */
-void advertiseAndReplyThread(
-    /*! [in] Structure containing the search request. */
-    void* data);
+#ifdef INCLUDE_DEVICE_APIS
 
 /*!
  * \brief Handles the search request.
@@ -74,19 +61,53 @@ void advertiseAndReplyThread(
  * \note Only available when the DEVICE_APIS option was enabled on compiling the
  * library.
  */
-#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
 void ssdp_handle_device_request(
     /*! [in] */
     http_message_t* hmsg,
     /*! [in] */
     struct sockaddr_storage* dest_addr);
-#else  /* INCLUDE_DEVICE_APIS */
-static UPNP_INLINE void ssdp_handle_device_request(
-    /* [in] . */
-    [[maybe_unused]] http_message_t* hmsg,
-    /* [in] . */
-    [[maybe_unused]] struct sockaddr_storage* dest_addr) {}
-#endif /* INCLUDE_DEVICE_APIS */
+
+
+/*! @{
+ * \ingroup SSDP-device_functions */
+
+/*!
+ * \brief Sends SSDP advertisements, replies and shutdown messages.
+ *
+ * \note This function is only available when the Device option was enabled on
+ * compiling the library.
+ *
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  There are several messages on stderr if DEBUG is enabled.\n
+ *  On error:
+ *  - UPNP_E_INVALID_HANDLE
+ */
+UPNPLIB_API int AdvertiseAndReply(
+    /*! [in] -1 = Send shutdown, 0 = send reply, 1 = Send Advertisement. */
+    int AdFlag,
+    /*! [in] Device handle. */
+    UpnpDevice_Handle Hnd,
+    /*! [in] Search type for sending replies. */
+    enum SsdpSearchType SearchType,
+    /*! [in] Destination address. */
+    struct sockaddr* DestAddr,
+    /*! [in] Device type. */
+    char* DeviceType,
+    /*! [in] Device UDN. */
+    char* DeviceUDN,
+    /*! [in] Service type. */
+    char* ServiceType,
+    /*! [in] Advertisement age. */
+    int Exp);
+
+/*!
+ * \brief Wrapper function to reply the search request coming from the
+ * control point.
+ */
+void advertiseAndReplyThread(
+    /*! [in] Structure containing the search request. */
+    void* data);
 
 /*!
  * \brief Creates the device advertisement request.
@@ -318,5 +339,5 @@ int DeviceShutdown(
 
 /// @} SSDP Device Functions
 
-#endif // EXCLUDE_SSDP
+#endif // INCLUDE_DEVICE_APIS
 #endif // COMPA_SSDP_DEVICE_HPP

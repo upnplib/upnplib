@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -48,11 +48,10 @@
 #error "No or wrong config.hpp header file included."
 #endif
 
-#if (EXCLUDE_SSDP == 0) || defined(DOXYGEN_RUN)
+#ifdef INCLUDE_CLIENT_APIS
 
-/*! \name SSDP Control Point Functions
- * @{ */
-/// \ingroup compa-Discovery
+/*! @{
+ * \ingroup SSDP-ctrlpt_functions */
 
 /*!
  * \brief This function handles the ssdp messages from the devices.
@@ -103,7 +102,31 @@ UPNPLIB_API int SearchByTarget(
        returned to application in the callback. */
     void* Cookie);
 
+/*!
+ * \brief Creates the SSDP IPv4 socket to be used by the control point.
+ *
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_OUTOF_SOCKET
+ */
+int create_ssdp_sock_reqv4(
+    /*! [out] SSDP IPv4 request socket to be created. */
+    SOCKET* ssdpReqSock);
+
+/*!
+ * \brief Creates the SSDP IPv6 socket to be used by the control point.
+ *
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_OUTOF_SOCKET
+ */
+int create_ssdp_sock_reqv6(
+    /*! [out] SSDP IPv6 request socket to be created. */
+    SOCKET* ssdpReqSock);
+
 /// @} // SSDP Control Point Functions
 
-#endif // EXCLUDE_SSDP
+#endif // INCLUDE_CLIENT_APIS
 #endif // COMPA_SSDP_CTRLPT_HPP
