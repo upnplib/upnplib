@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-23
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,12 +49,12 @@
 #include <statcodes.hpp>
 #include <upnpapi.hpp>
 #include <UpnpStateVarRequest.hpp>
+#include <webserver.hpp>
 
 #ifndef COMPA_INTERNAL_CONFIG_HPP
 #error "No or wrong config.hpp header file included."
 #endif
 
-#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
 #if (EXCLUDE_SOAP == 0) || defined(DOXYGEN_RUN)
 
 /// \cond
@@ -813,4 +813,3 @@ error_handler:
 }
 
 #endif /* EXCLUDE_SOAP */
-#endif /* INCLUDE_DEVICE_APIS */

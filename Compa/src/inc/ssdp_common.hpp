@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-21
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-23
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -78,19 +78,6 @@ enum SsdpSearchType {
 /// constant
 #define COMMAND_LEN 300
 /// @}
-
-#if !defined(X_USER_AGENT) || defined(DOXYGEN_RUN)
-/*! \brief Can be overwritten by configure CFLAGS argument.
- *
- * If not already defined, the {`X_USER_AGENT`} constant specifies the value of
- * the X-User-Agent: HTTP header. The value "redsonic" is needed for the
- * DSM-320. See https://sourceforge.net/forum/message.php?msg_id=3166856 for
- * more information.
- *
- * \todo Check setting of X_USER_AGENT.
- */
-#define X_USER_AGENT "redsonic"
-#endif
 
 /*! \name SSDP Error codes.
  * @{ */

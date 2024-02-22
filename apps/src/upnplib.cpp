@@ -3,7 +3,7 @@
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-04
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -118,10 +118,12 @@ void* library_info(void*) {
     msg << "UPNP_HAVE_WEBSERVER     = no\n";
 #endif
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #ifdef UPNP_HAVE_SSDP
     msg << "UPNP_HAVE_SSDP          = yes\n";
 #else
     msg << "UPNP_HAVE_SSDP          = no\n";
+#endif
 #endif
 
 #ifdef UPNP_HAVE_OPTSSDP
@@ -161,10 +163,22 @@ void* library_info(void*) {
     msg << "UPNP_ENABLE_IPV6        = no\n";
 #endif
 
+#if EXCLUDE_MINISERVER == 0
+    msg << "EXCLUDE_MINISERVER      = 0\n";
+#else
+    msg << "EXCLUDE_MINISERVER      = 1\n";
+#endif
+
 #ifdef INTERNAL_WEB_SERVER
     msg << "INTERNAL_WEB_SERVER     = yes\n";
 #else
     msg << "INTERNAL_WEB_SERVER     = no\n";
+#endif
+
+#ifdef INCLUDE_CLIENT_APIS
+    msg << "INCLUDE_CLIENT_APIS     = yes\n";
+#else
+    msg << "INCLUDE_CLIENT_APIS     = no\n";
 #endif
 
 #ifdef INCLUDE_DEVICE_APIS

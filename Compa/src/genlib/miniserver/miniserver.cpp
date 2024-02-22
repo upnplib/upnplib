@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-20
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-23
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,7 +45,6 @@
  */
 
 #include <config.hpp>
-#if EXCLUDE_MINISERVER == 0
 
 #include <httpreadwrite.hpp>
 #include <ssdp_common.hpp>
@@ -536,6 +535,7 @@ void ssdp_read( //
     if (*rsock == INVALID_SOCKET || !FD_ISSET(*rsock, set))
         return;
 
+#if defined(INCLUDE_CLIENT_APIS) || defined(INCLUDE_DEVICE_APIS)
     if (readFromSSDPSocket(*rsock) != 0) {
         UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
                    "miniserver: Error in readFromSSDPSocket(%d): "
@@ -544,6 +544,10 @@ void ssdp_read( //
         sock_close(*rsock);
         *rsock = INVALID_SOCKET;
     }
+#else
+    sock_close(*rsock);
+    *rsock = INVALID_SOCKET;
+#endif
 }
 
 /*!
@@ -1362,6 +1366,7 @@ int StartMiniServer(
         free(miniSocket);
         return ret_code;
     }
+#if defined(INCLUDE_CLIENT_APIS) || defined(INCLUDE_DEVICE_APIS)
     /* SSDP socket for discovery/advertising. */
     ret_code = get_ssdp_sockets(miniSocket);
     if (ret_code != UPNP_E_SUCCESS) {
@@ -1372,6 +1377,7 @@ int StartMiniServer(
         free(miniSocket);
         return ret_code;
     }
+#endif
     TPJobInit(&job, (start_routine)RunMiniServer, (void*)miniSocket);
     TPJobSetPriority(&job, MED_PRIORITY);
     TPJobSetFreeFunction(&job, (free_routine)free);
@@ -1463,5 +1469,3 @@ int StopMiniServer() {
 
     return 0;
 }
-
-#endif /* EXCLUDE_MINISERVER */

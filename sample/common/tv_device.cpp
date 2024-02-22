@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1265,9 +1265,9 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
     int address_family{AF_INET};
 
     pthread_mutex_init(&TVDevMutex, NULL);
-    // UpnpSetLogFileNames(NULL, NULL); // DEBUG!
-    // UpnpSetLogLevel(UPNP_INFO); // DEBUG!
-    // UpnpInitLog(); // DEBUG!
+    // UpnpSetLogFileNames(NULL, NULL); // DEBUG! Comment for no logging.
+    // UpnpSetLogLevel(UPNP_INFO); // DEBUG! Comment for no logging.
+    // UpnpInitLog(); // DEBUG! Comment for no logging.
     SampleUtil_Initialize(pfunc);
     SampleUtil_Print("UpnpInit2 started, initializing UPnP Sdk with interface "
                      "= \"%s\", port = %u\n",
@@ -1344,10 +1344,15 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
 
     SampleUtil_Print("Registering the RootDevice with desc_doc_url: %s\n",
                      desc_doc_url);
+    ret =
+        UpnpRegisterRootDevice3(desc_doc_url, TvDeviceCallbackEventHandler,
+                                &device_handle, &device_handle, address_family);
+#if 0 // DEBUG! Instead use next for existing unit test.
     ret = UPNP_E_SUCCESS;
     //     UpnpRegisterRootDevice3(desc_doc_url, TvDeviceCallbackEventHandler,
     //                             &device_handle, &device_handle,
     //                             address_family);
+#endif
     if (ret != UPNP_E_SUCCESS) {
         SampleUtil_Print("Error registering the rootdevice: %s(%d)\n",
                          UpnpGetErrorMessage(ret), ret);
@@ -1355,7 +1360,7 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
         return ret;
     }
 
-    return UPNP_E_SUCCESS; // DEBUG!
+    // return UPNP_E_SUCCESS; // DEBUG! Uncomment for existing unit test.
 
     SampleUtil_Print("RootDevice Registered, initializing State Table ...\n");
     TvDeviceStateTableInit(desc_doc_url);
@@ -1375,7 +1380,7 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
 
 int TvDeviceStop(void) {
     UpnpUnRegisterRootDevice(device_handle);
-    // UpnpFinish(); // DEBUG!
+    UpnpFinish(); // DEBUG! Comment for existing unit test.
     SampleUtil_Finish();
     pthread_mutex_destroy(&TVDevMutex);
 

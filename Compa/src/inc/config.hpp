@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-20
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-23
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -257,7 +257,6 @@
  * SDK.
  *   - `EXCLUDE_SOAP[0,1]`
  *   - `EXCLUDE_GENA[0,1]`
- *   - `EXCLUDE_SSDP[0,1]`
  *   - `EXCLUDE_DOM [0,1]`
  *   - `EXCLUDE_MINISERVER[0,1]`
  *   - `EXCLUDE_WEB_SERVER[0,1]`
@@ -268,10 +267,7 @@
  * only). */
 #define EXCLUDE_SOAP 0
 #define EXCLUDE_GENA 0
-#define EXCLUDE_SSDP 0
 #define EXCLUDE_DOM 0
-#define EXCLUDE_MINISERVER 0
-#define EXCLUDE_WEB_SERVER 0
 #ifdef USE_JNI
 #define EXCLUDE_JNI 0
 #else
@@ -324,18 +320,6 @@
 #define INCLUDE_DEVICE_APIS 1
 #endif
 
-#if UPNP_HAVE_WEBSERVER
-/// Configure with CMake option -D UPNPLIB_WITH_WEBSERVER=ON|OFF
-#define INTERNAL_WEB_SERVER 1
-#endif
-
-#undef EXCLUDE_SSDP
-#if UPNP_HAVE_SSDP
-#define EXCLUDE_SSDP 0
-#else
-#define EXCLUDE_SSDP 1
-#endif
-
 #undef EXCLUDE_SOAP
 #if UPNP_HAVE_SOAP
 /// Configure with CMake option -D UPNPLIB_WITH_SOAP=ON|OFF
@@ -353,36 +337,6 @@
 /// Configure with CMake option -D UPNPLIB_WITH_GENA=ON|OFF
 #define EXCLUDE_GENA 1
 #endif
-
-/// \cond
-#undef EXCLUDE_WEB_SERVER
-#undef EXCLUDE_MINISERVER
-#ifdef INTERNAL_WEB_SERVER
-#define EXCLUDE_WEB_SERVER 0
-#define EXCLUDE_MINISERVER 0
-#else
-#define EXCLUDE_WEB_SERVER 1
-#define EXCLUDE_MINISERVER 1
-#endif
-
-#if EXCLUDE_SSDP == 1 && EXCLUDE_GENA == 1 && EXCLUDE_SOAP == 1 &&             \
-    EXCLUDE_WEB_SERVER == 1
-#undef EXCLUDE_MINISERVER
-#define EXCLUDE_MINISERVER 1
-#if INTERNAL_WEB_SERVER
-#error "conflicting settings: use configure --disable-webserver"
-#endif
-#endif
-
-#if EXCLUDE_SSDP == 0 || EXCLUDE_GENA == 0 || EXCLUDE_SOAP == 0 ||             \
-    EXCLUDE_WEB_SERVER == 0
-#undef EXCLUDE_MINISERVER
-#define EXCLUDE_MINISERVER 0
-#if EXCLUDE_WEB_SERVER == 0 && !defined INTERNAL_WEB_SERVER
-#error "conflicting settings : use configure --enable-webserver"
-#endif
-#endif
-/// \endcond
 
 /// @}
 

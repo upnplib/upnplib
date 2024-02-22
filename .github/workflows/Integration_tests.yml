@@ -46,9 +46,10 @@ jobs:
           -S .
           -B build
           --log-level=DEBUG
-          -D CMAKE_C_COMPILER=gcc-10
-          -D CMAKE_CXX_COMPILER=g++-10 ${{matrix.googletest}}
+          -D CMAKE_C_COMPILER=gcc-13
+          -D CMAKE_CXX_COMPILER=g++-13
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+          ${{matrix.googletest}}
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -128,9 +129,10 @@ jobs:
         run: >
           cmake
           -S .
-          -B build ${{matrix.googletest}}
+          -B build
           --log-level=DEBUG
           -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+          ${{matrix.googletest}}
 
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
@@ -390,24 +392,22 @@ jobs:
         os: [ ubuntu-latest, macOS-latest, windows-latest ]
         buildtype: [ 'Release', 'Debug' ]
         option: [ '',
-          '-DUPNPLIB_WITH_TOOLS=OFF -DUPNPLIB_WITH_CLIENT=OFF -DUPNPLIB_WITH_DEVICE=OFF -DUPNPLIB_WITH_WEBSERVER=OFF -DUPNPLIB_WITH_SSDP=OFF -DUPNPLIB_WITH_OPTSSDP=OFF -DUPNPLIB_WITH_SOAP=OFF -DUPNPLIB_WITH_GENA=OFF -DUPNPLIB_WITH_BLOCKTCP=OFF -DUPNPLIB_WITH_IXML=OFF -DUPNPLIB_WITH_SAMPLES=OFF -DUPNPLIB_WITH_GOOGLETEST=OFF -DGTESTS_WITH_SHARED_LIBS=OFF -DUPNPLIB_WITH_TRACE=OFF -DUPNPLIB_WITH_OPENSSL=OFF',
+          '-DUPNPLIB_WITH_TOOLS=OFF -DUPNPLIB_WITH_CLIENT=OFF -DUPNPLIB_WITH_DEVICE=OFF -DUPNPLIB_WITH_WEBSERVER=OFF  -DUPNPLIB_WITH_OPTSSDP=OFF -DUPNPLIB_WITH_SOAP=OFF -DUPNPLIB_WITH_GENA=OFF -DUPNPLIB_WITH_IXML=OFF -DUPNPLIB_WITH_SAMPLES=OFF -DUPNPLIB_WITH_GOOGLETEST=OFF -DGTESTS_WITH_SHARED_LIBS=OFF -DUPNPLIB_WITH_TRACE=OFF -DUPNPLIB_WITH_OPENSSL=OFF',
           '-DUPNPLIB_WITH_TOOLS=ON',
           '-DUPNPLIB_WITH_CLIENT=ON',
           '-DUPNPLIB_WITH_DEVICE=ON',
           '-DUPNPLIB_WITH_OPENSSL=ON',
           '-DUPNPLIB_WITH_WEBSERVER=ON',
-          '-DUPNPLIB_WITH_SSDP=ON',
           '-DUPNPLIB_WITH_OPTSSDP=ON',
           '-DUPNPLIB_WITH_SOAP=ON',
           '-DUPNPLIB_WITH_GENA=ON',
-          '-DUPNPLIB_WITH_BLOCKTCP=ON',
           '-DUPNPLIB_WITH_IXML=ON',
           '-DUPNPLIB_DEF_SAMPLES=ON -DUPNPLIB_DEF_DEVICE=ON',
           '-DUPNPLIB_DEF_SAMPLES=ON -DUPNPLIB_DEF_CLIENT=ON',
           '-DUPNPLIB_DEF_SAMPLES=ON -DUPNPLIB_DEF_COMBO=ON',
           '-DUPNPLIB_WITH_SAMPLES=ON',
           '-DUPNPLIB_WITH_TRACE=ON',
-          '-DUPNPLIB_WITH_TOOLS=ON -DUPNPLIB_WITH_CLIENT=ON -DUPNPLIB_WITH_DEVICE=ON -DUPNPLIB_WITH_WEBSERVER=ON -DUPNPLIB_WITH_SSDP=ON -DUPNPLIB_WITH_OPTSSDP=ON -DUPNPLIB_WITH_SOAP=ON -DUPNPLIB_WITH_GENA=ON -DUPNPLIB_WITH_BLOCKTCP=ON -DUPNPLIB_WITH_IXML=ON -DUPNPLIB_WITH_SAMPLES=ON -DUPNPLIB_WITH_GOOGLETEST=ON -DGTESTS_WITH_SHARED_LIBS=ON -DUPNPLIB_WITH_TRACE=ON -DUPNPLIB_WITH_OPENSSL=ON' ]
+          '-DUPNPLIB_WITH_TOOLS=ON -DUPNPLIB_WITH_CLIENT=ON -DUPNPLIB_WITH_DEVICE=ON -DUPNPLIB_WITH_WEBSERVER=ON -DUPNPLIB_WITH_OPTSSDP=ON -DUPNPLIB_WITH_SOAP=ON -DUPNPLIB_WITH_GENA=ON -DUPNPLIB_WITH_IXML=ON -DUPNPLIB_WITH_SAMPLES=ON -DUPNPLIB_WITH_GOOGLETEST=ON -DGTESTS_WITH_SHARED_LIBS=ON -DUPNPLIB_WITH_TRACE=ON -DUPNPLIB_WITH_OPENSSL=ON' ]
       fail-fast: false
 
     steps:
@@ -427,9 +427,10 @@ jobs:
           -S .
           -B build
           --log-level=DEBUG
-          -D CMAKE_C_COMPILER=gcc-10
-          -D CMAKE_CXX_COMPILER=g++-10
-          -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
+          -D CMAKE_C_COMPILER=gcc-13
+          -D CMAKE_CXX_COMPILER=g++-13
+          -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+          ${{matrix.option}}
 
       - if: runner.os == 'macOS'
         name: Configure macOS
@@ -438,7 +439,8 @@ jobs:
           -S .
           -B build
           --log-level=DEBUG
-          -D CMAKE_BUILD_TYPE=${{matrix.buildtype}} ${{matrix.option}}
+          -D CMAKE_BUILD_TYPE=${{matrix.buildtype}}
+          ${{matrix.option}}
 
       - if: runner.os == 'Windows'
         name: Configure Windows

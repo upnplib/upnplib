@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-21
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-24
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -459,9 +459,9 @@ static int UpnpInitPreamble() {
         return retVal;
     }
 
-#ifdef INCLUDE_DEVICE_APIS
+#if EXCLUDE_SOAP == 0
     SetSoapCallback(soap_device_callback);
-#endif /* INCLUDE_DEVICE_APIS */
+#endif
 
 #ifdef INTERNAL_WEB_SERVER
 #if EXCLUDE_GENA == 0
@@ -2920,7 +2920,7 @@ int UpnpGetServiceVarStatus(UpnpClient_Handle Hnd, const char* ActionURL_const,
  *                             Client API
  *
  ******************************************************************************/
-
+#ifdef UPNP_HAVE_WEBSERVER
 int UpnpOpenHttpPost(const char* url, void** handle, const char* contentType,
                      int contentLength, int timeout) {
     int status = http_OpenHttpConnection(url, handle, timeout);
@@ -3031,7 +3031,9 @@ int UpnpReadHttpResponse(void* handle, char* buf, size_t* size, int timeout) {
 int UpnpCloseHttpConnection(void* handle) {
     return http_CloseHttpConnection(handle);
 }
+#endif // UPNP_HAVE_WEBSERVER
 
+#ifdef UPNP_HAVE_WEBSERVER
 int UpnpDownloadUrlItem(const char* url, char** outBuf, char* contentType) {
     int ret_code;
     size_t doc_length;
@@ -3046,6 +3048,13 @@ int UpnpDownloadUrlItem(const char* url, char** outBuf, char* contentType) {
 
     return ret_code;
 }
+#else
+int UpnpDownloadUrlItem([[maybe_unused]] const char* url,
+                        [[maybe_unused]] char** outBuf,
+                        [[maybe_unused]] char* contentType) {
+    return UPNP_E_INVALID_PARAM;
+}
+#endif
 
 int UpnpDownloadXmlDoc(const char* url, IXML_Document** xmlDoc) {
     int ret_code;

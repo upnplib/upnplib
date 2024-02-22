@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-18
+# Redistribution only with this Copyright remark. Last modified: 2024-02-22
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -17,11 +17,10 @@ enable_testing()
 #################################
 include(CMakeDependentOption)
 
-option(UPNPLIB_WITH_CLIENT "Providing control point functionality to manage a remote UPnP device." OFF)
-option(UPNPLIB_WITH_DEVICE "Providing UPnP device functionality so remote control points can connect to it." OFF)
 option(UPNPLIB_WITH_OPENSSL "SSL/TLS and Crypto support should always be ON if not restricted by law." ON)
 option(UPNPLIB_WITH_WEBSERVER "Provide a webserver." OFF)
-option(UPNPLIB_WITH_SSDP "Enable SSDP, the Simple Service Discovery Protocol." OFF)
+option(UPNPLIB_WITH_CLIENT "Providing control point functionality to manage a remote UPnP device." OFF)
+option(UPNPLIB_WITH_DEVICE "Providing UPnP device functionality so remote control points can connect to it." OFF)
 option(UPNPLIB_WITH_OPTSSDP "Enable optional SSDP headers." OFF)
 option(UPNPLIB_WITH_SOAP "Enable SOAP, the Simple Object Access Protocol." OFF)
 option(UPNPLIB_WITH_GENA "Enable GENA, the General Event Notification Architecture." OFF)
@@ -30,20 +29,23 @@ option(UPNPLIB_WITH_TOOLS "Make some not essential program features available li
 option(UPNPLIB_WITH_SAMPLES "Provide sample programs device and control point." OFF)
 option(UPNPLIB_WITH_GOOGLETEST "Download and build Googletest." OFF)
 option(UPNPLIB_WITH_TRACE "Compile trace messages into the libraries for analizing program execution." OFF)
-# Because we link utests with shared and static libraries we need gtest/gmock
-# libraries that link together with both versions of other libraries. These are
-# the shared gtest/gmock libraries. Next option is only available for testing
-# other combinations. It should be set to ON by default otherwise you may get
-# compiling errors if you do not know what you are doing.
 option(GTESTS_WITH_SHARED_LIBS "Build GOOGLETEST libraries shared. You should not disable this except you know what you doing." ON)
+    # Because we link utests with shared and static libraries we need gtest/gmock
+    # libraries that link together with both versions of other libraries. These are
+    # the shared gtest/gmock libraries. Next option is only available for testing
+    # other combinations. It should be set to ON by default otherwise you may get
+    # compiling errors if you do not know what you are doing.
 # option(UPNPLIB_WITH_UNSPECIFIED_SERVER "Set information in UPnP SERVER http request header to \"Unspecified\"". OFF)
     # This is an option to set to "Unspecified" the OS name, OS version, product
     # name and product version normally contained in the SERVER header of a
     # UPnP http request as this could be used by an attacker.
 # Always built:
 # option(UPNPLIB_WITH_NATIVE_PUPNP "Build the library with old native PUPNP code." ON)
+    # It is always built a library with native pUPnP code and a library with
+    # compatible code.
 # option(UPNPLIB_WITH_BLOCKTCP "Enable the TCP protocol stack to wait (blocking) until receiving an answer or timed out." ON)
-    # This is not an option anymore. Blocking until data received is always enabled.
+    # This is not an option anymore. Blocking until data received is always
+    # enabled.
 
 if(GTESTS_WITH_SHARED_LIBS)
     set (BUILD_SHARED_LIBS ON CACHE INTERNAL

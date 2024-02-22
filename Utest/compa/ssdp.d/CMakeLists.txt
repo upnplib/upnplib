@@ -47,7 +47,6 @@ target_compile_definitions(test_ssdp_server-cst
     PRIVATE
         UPNP_HAVE_CLIENT
         UPNP_HAVE_DEVICE
-        UPNP_HAVE_SSDP
 )
 target_link_libraries(test_ssdp_server-cst
     PRIVATE

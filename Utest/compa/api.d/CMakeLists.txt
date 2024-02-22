@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-12-26
+# Redistribution only with this Copyright remark. Last modified: 2024-02-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -216,12 +216,6 @@ add_executable(test_upnpapi-pst
 target_include_directories(test_upnpapi-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
-target_compile_definitions(test_upnpapi-pst
-    PRIVATE
-        UPNP_HAVE_WEBSERVER
-        UPNP_HAVE_CLIENT
-        UPNP_HAVE_OPTSSDP
-)
 target_compile_options(test_upnpapi-pst
     PRIVATE
         # disable warning C4505: 'UpnpComputeIpv6PrefixLength': unreferenced
@@ -255,10 +249,7 @@ target_include_directories(test_upnpapi-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
 target_compile_definitions(test_upnpapi-cst
-    PRIVATE
-        UPNP_HAVE_WEBSERVER
-        UPNP_HAVE_CLIENT
-        UPNP_HAVE_OPTSSDP
+    PRIVATE UPNP_HAVE_OPTSSDP
 )
 target_link_libraries(test_upnpapi-cst
     PRIVATE

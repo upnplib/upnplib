@@ -1,3 +1,5 @@
+#ifdef UPNP_HAVE_WEBSERVER
+
 #ifndef COMPA_GENLIB_NET_HTTP_HTTPREADWRITE_HPP
 #define COMPA_GENLIB_NET_HTTP_HTTPREADWRITE_HPP
 /*******************************************************************************
@@ -566,3 +568,4 @@ void get_sdk_info(
 );
 
 #endif /* COMPA_GENLIB_NET_HTTP_HTTPREADWRITE_HPP */
+#endif // UPNP_HAVE_WEBSERVER

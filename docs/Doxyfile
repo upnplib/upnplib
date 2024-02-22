@@ -954,14 +954,8 @@ INPUT                  = README.md \
                          Compa/src/genlib \
                          Compa/src/inc \
                          Compa/src/soap \
-                         Compa/src/ssdp/ssdp_ctrlpt.cpp \
-                         Compa/src/ssdp/ssdp_device.cpp \
-                         Compa/src/ssdp/ssdp_common.cpp \
-                         Compa/src/ssdp/SSDPResultData.hpp \
-                         Compa/src/ssdp/SSDPResultData.cpp \
-                         Compa/src/ssdp/SSDPResultDataCallback.hpp
+                         Compa/src/ssdp
 
-#Compa/src/ssdp/SSDPResultDataCallback.cpp
 #Compa/src/threadutil/FreeList.cpp
 #Compa/src/threadutil/FreeList.hpp
 #Compa/src/threadutil/LinkedList.cpp
