@@ -19,8 +19,9 @@ jobs:
       - name: Install Doxygen
         run: |
           sudo apt install doxygen graphviz
+          doxygen -l docs/DoxygenLayout.xml
+          sed -i 's/<groupgraph visible="\$GROUP_GRAPHS"\/>/<groupgraph visible="no"\/>/' docs/DoxygenLayout.xml
           mkdir -p build/docs
 
       - name: Build documentation
-        run: |
-          doxygen docs/Doxyfile
+        run: doxygen docs/Doxyfile
