@@ -1,0 +1,26 @@
+name: Run Doxygen
+
+on:
+  push:
+    branches: [ "dev" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  # Job: Run Doxygen
+  # ----------------
+  Run_Doxygen:
+    name: Run Doxygen
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Doxygen
+        run: |
+          sudo apt install doxygen graphviz
+          mkdir -p build/docs
+
+      - name: Build documentation
+        run: |
+          doxygen docs/Doxyfile

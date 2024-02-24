@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Deploy documentation to Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -29,9 +29,17 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install Doxygen
+        run: |
+          sudo apt install doxygen graphviz
+          mkdir -p build/docs
+      - name: Run Doxygen
+        run: doxygen docs/Doxyfile
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
