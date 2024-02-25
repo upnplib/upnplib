@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-22
+# Redistribution only with this Copyright remark. Last modified: 2024-02-26
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -17,13 +17,17 @@ enable_testing()
 #################################
 include(CMakeDependentOption)
 
+option(UPNPLIB_WITH_NATIVE_PUPNP "Build the library with old native PUPNP code." OFF)
 option(UPNPLIB_WITH_OPENSSL "SSL/TLS and Crypto support should always be ON if not restricted by law." ON)
+option(UPNPLIB_WITH_MINISERVER "Provide the miniserver for low level network communication." OFF)
 option(UPNPLIB_WITH_WEBSERVER "Provide a webserver." OFF)
-option(UPNPLIB_WITH_CLIENT "Providing control point functionality to manage a remote UPnP device." OFF)
-option(UPNPLIB_WITH_DEVICE "Providing UPnP device functionality so remote control points can connect to it." OFF)
-option(UPNPLIB_WITH_OPTSSDP "Enable optional SSDP headers." OFF)
-option(UPNPLIB_WITH_SOAP "Enable SOAP, the Simple Object Access Protocol." OFF)
-option(UPNPLIB_WITH_GENA "Enable GENA, the General Event Notification Architecture." OFF)
+option(UPNPLIB_WITH_CTRLPT_SSDP "Providing control point functionality to manage a remote UPnP device." OFF)
+option(UPNPLIB_WITH_DEVICE_SSDP "Providing UPnP device functionality so remote control points can connect to it." OFF)
+option(UPNPLIB_WITH_OPTION_SSDP "Enable optional SSDP headers." OFF)
+option(UPNPLIB_WITH_CTRLPT_SOAP "Enable SOAP, the Simple Object Access Protocol." OFF)
+option(UPNPLIB_WITH_DEVICE_SOAP "Enable SOAP, the Simple Object Access Protocol." OFF)
+option(UPNPLIB_WITH_CTRLPT_GENA "Enable GENA, the General Event Notification Architecture." OFF)
+option(UPNPLIB_WITH_DEVICE_GENA "Enable GENA, the General Event Notification Architecture." OFF)
 option(UPNPLIB_WITH_IXML "Enable IXML script support." OFF)
 option(UPNPLIB_WITH_TOOLS "Make some not essential program features available like text for error numbers etc." OFF)
 option(UPNPLIB_WITH_SAMPLES "Provide sample programs device and control point." OFF)
@@ -39,17 +43,20 @@ option(GTESTS_WITH_SHARED_LIBS "Build GOOGLETEST libraries shared. You should no
     # This is an option to set to "Unspecified" the OS name, OS version, product
     # name and product version normally contained in the SERVER header of a
     # UPnP http request as this could be used by an attacker.
-# Always built:
-# option(UPNPLIB_WITH_NATIVE_PUPNP "Build the library with old native PUPNP code." ON)
-    # It is always built a library with native pUPnP code and a library with
-    # compatible code.
 # option(UPNPLIB_WITH_BLOCKTCP "Enable the TCP protocol stack to wait (blocking) until receiving an answer or timed out." ON)
     # This is not an option anymore. Blocking until data received is always
     # enabled.
 
+if(UPNPLIB_WITH_GOOGLETEST OR UPNPLIB_WITH_SAMPLES)
+    # It is important to have the old library available with the tests because
+    # the new code is compared with it.
+    set (UPNPLIB_WITH_NATIVE_PUPNP ON CACHE BOOL
+        "Build the library with old native PUPNP code." FORCE)
+endif()
+
 if(GTESTS_WITH_SHARED_LIBS)
     set (BUILD_SHARED_LIBS ON CACHE INTERNAL
-        "This option belongs only to GOOGLETEST and build its libraries shared.")  # Implies FORCE
+        "This option belongs only to GOOGLETEST and build its libraries shared.")  # Implies FORCE?
 endif()
 
 option(PT4W_BUILD_TESTING "Build the time and space consuming test suite of pthreads4w" OFF)
@@ -484,7 +491,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/Pupnp)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Ixml)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Compa)
 add_subdirectory(${PROJECT_SOURCE_DIR}/sample)
-add_subdirectory(${PROJECT_SOURCE_DIR}/apps)
+#add_subdirectory(${PROJECT_SOURCE_DIR}/apps)
 if(googletest_POPULATED)
     add_subdirectory(${PROJECT_SOURCE_DIR}/Utest)
 endif()

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-14
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-27
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -245,9 +245,10 @@ int sock_read_unprotected(
                                 descriptor to become ready. */
     int* a_timeoutSecs) {
     time_t start_time{time(NULL)};
-
     TRACE("Executing sock_read_unprotected()")
-    if (a_info == nullptr || a_readbuf == nullptr)
+
+    // Also restrict a_bufsize to integer for save later use despite type cast.
+    if (a_info == nullptr || a_readbuf == nullptr || a_bufsize > INT_MAX)
         return UPNP_E_SOCKET_ERROR;
     if (a_bufsize == 0)
         return 0;
@@ -294,14 +295,15 @@ int sock_read_unprotected(
     SSIZEP_T numBytes = umock::sys_socket_h.recv(
         sockfd, a_readbuf, static_cast<SIZEP_T>(a_bufsize), 0);
 
-    if (numBytes < 0)
+    // Also protect type cast
+    if (numBytes < 0 || numBytes > INT_MAX)
         return UPNP_E_SOCKET_ERROR;
 
     /* subtract time used for reading/writing. */
     if (a_timeoutSecs != nullptr && timeout_secs != 0)
         *a_timeoutSecs -= static_cast<int>(time(NULL) - start_time);
 
-    return numBytes;
+    return static_cast<int>(numBytes);
 }
 
 
@@ -328,9 +330,10 @@ int sock_write_unprotected(
                                 descriptor to become ready. */
     int* a_timeoutSecs) {
     time_t start_time{time(NULL)};
-
     TRACE("Executing sock_write_unprotected()")
-    if (a_info == nullptr || a_writebuf == nullptr)
+
+    // Also restrict a_bufsize to integer for save later use despite type cast.
+    if (a_info == nullptr || a_writebuf == nullptr || a_bufsize > INT_MAX)
         return UPNP_E_SOCKET_ERROR;
     if (a_bufsize == 0)
         return 0;
@@ -373,31 +376,32 @@ int sock_write_unprotected(
             break;
     }
 
-    size_t byte_left{a_bufsize};
-    long bytes_sent{};
+    // a_bufsize is restricted from 0 to INT_MAX.
+    ssize_t byte_left{static_cast<ssize_t>(a_bufsize)};
+    ssize_t bytes_sent{};
 
     UPNPLIB_SCOPED_NO_SIGPIPE
-    while (byte_left != static_cast<size_t>(0)) {
+    while (byte_left != 0) {
         TRACE("Write data with syscall ::send().")
         ssize_t num_written = umock::sys_socket_h.send(
             sockfd, a_writebuf + bytes_sent, static_cast<SIZEP_T>(byte_left),
             MSG_DONTROUTE);
-        if (num_written == -1) {
+        if (num_written == -1 || num_written > INT_MAX) {
             return UPNP_E_SOCKET_WRITE;
         }
-        byte_left -= static_cast<size_t>(num_written);
-        bytes_sent += static_cast<long>(num_written);
+        byte_left -= num_written;
+        bytes_sent += num_written;
     }
-    long numBytes = bytes_sent;
 
-    if (numBytes < 0)
+    // Also protect type cast
+    if (bytes_sent < 0 || bytes_sent > INT_MAX)
         return UPNP_E_SOCKET_ERROR;
 
     /* subtract time used for writing. */
     if (a_timeoutSecs != nullptr && timeout_secs != 0)
         *a_timeoutSecs -= static_cast<int>(time(NULL) - start_time);
 
-    return numBytes;
+    return static_cast<int>(bytes_sent);
 }
 
 
@@ -426,9 +430,10 @@ int sock_read_ssl(
                                 descriptor to become ready. */
     int* a_timeoutSecs) {
     time_t start_time{time(NULL)};
-
     TRACE("Executing sock_read_ssl()")
-    if (a_info == nullptr || a_readbuf == nullptr)
+
+    // Also restrict a_bufsize to integer for save later use despite type cast.
+    if (a_info == nullptr || a_readbuf == nullptr || a_bufsize > INT_MAX)
         return UPNP_E_SOCKET_ERROR;
     if (a_bufsize == 0)
         return 0;
@@ -471,11 +476,10 @@ int sock_read_ssl(
             break;
     }
 
-    // Typecasts are needed to call the SSL function and should not
-    // be an issue.
     TRACE("Read data with syscall ::SSL_read().")
+    // Type cast a_bufsize is protected above to only contain 0 to INT_MAX.
     int numBytes = umock::ssl_h.SSL_read(a_info->ssl, a_readbuf,
-                                         static_cast<SIZEP_T>(a_bufsize));
+                                         static_cast<int>(a_bufsize));
 
     if (numBytes < 0)
         return UPNP_E_SOCKET_ERROR;
@@ -513,9 +517,10 @@ int sock_write_ssl(
                                 descriptor to become ready. */
     int* a_timeoutSecs) {
     time_t start_time{time(NULL)};
-
     TRACE("Executing sock_write_ssl()")
-    if (a_info == nullptr || a_writebuf == nullptr)
+
+    // Also restrict a_bufsize to integer for save later use despite type cast.
+    if (a_info == nullptr || a_writebuf == nullptr || a_bufsize > INT_MAX)
         return UPNP_E_SOCKET_ERROR;
     if (a_bufsize == 0)
         return 0;
@@ -558,31 +563,29 @@ int sock_write_ssl(
             break;
     }
 
-    size_t byte_left{a_bufsize};
-    long bytes_sent{};
+    int byte_left{static_cast<int>(a_bufsize)};
+    int bytes_sent{};
 
     UPNPLIB_SCOPED_NO_SIGPIPE
-    while (byte_left != static_cast<size_t>(0)) {
+    while (byte_left != 0) {
         TRACE("Write data with syscall ::SSL_write().")
-        ssize_t num_written =
-            umock::ssl_h.SSL_write(a_info->ssl, a_writebuf + bytes_sent,
-                                   static_cast<SIZEP_T>(byte_left));
+        int num_written = umock::ssl_h.SSL_write(
+            a_info->ssl, a_writebuf + bytes_sent, byte_left);
         if (num_written == -1) {
             return UPNP_E_SOCKET_WRITE;
         }
-        byte_left -= static_cast<size_t>(num_written);
-        bytes_sent += static_cast<long>(num_written);
+        byte_left -= num_written;
+        bytes_sent += num_written;
     }
-    long numBytes = bytes_sent;
 
-    if (numBytes < 0)
+    if (bytes_sent < 0)
         return UPNP_E_SOCKET_ERROR;
 
     /* subtract time used for writing. */
     if (a_timeoutSecs != nullptr && timeout_secs != 0)
         *a_timeoutSecs -= static_cast<int>(time(NULL) - start_time);
 
-    return numBytes;
+    return bytes_sent;
 }
 #endif
 

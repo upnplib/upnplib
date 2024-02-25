@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft,  Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-14
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-27
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -80,6 +80,7 @@ inline constexpr size_t MEMBUF_DEF_SIZE_INC{5};
  * \return Pointer to the newly allocated memory.
  * NULL if memory cannot be allocated.
  */
+// Don't export function symbol; only used library intern.
 char* str_alloc(
     /*! [in] Input string object. */
     const char* str,
@@ -96,6 +97,7 @@ char* str_alloc(
  * \li == 0 string1 substring identical to string2 substring
  * \li >  0 string1 substring greater than string2 substring
  */
+// Don't export function symbol; only used library intern.
 int memptr_cmp(
     /*! [in] Input memory object. */
     memptr* m,
@@ -114,6 +116,7 @@ int memptr_cmp(
  * \li == 0 string1 substring identical to string2 substring
  * \li >  0 string1 substring greater than string2 substring
  */
+// Don't export function symbol; only used library intern.
 int memptr_cmp_nocase(
     /*! [in] Input memory object. */
     memptr* m,
@@ -128,6 +131,7 @@ int memptr_cmp_nocase(
  * \li UPNP_E_SUCCESS - On Success
  * \li UPNP_E_OUTOF_MEMORY - On failure to allocate memory.
  */
+// Don't export function symbol; only used library intern.
 int membuffer_set_size(
     /*! [in,out] buffer whose size is to be modified. */
     membuffer* m,
@@ -140,6 +144,7 @@ int membuffer_set_size(
  * Set the size of the buffer to MEMBUF_DEF_SIZE_INC and Initializes
  * m->buf to NULL, length = 0.
  */
+// Don't export function symbol; only used library intern.
 void membuffer_init(
     /*! [in,out] Buffer to be initialized. */
     membuffer* m);
@@ -147,6 +152,7 @@ void membuffer_init(
 /*!
  * \brief Free's memory allocated for membuffer* m.
  */
+// Don't export function symbol; only used library intern.
 void membuffer_destroy(
     /*! [in,out] Buffer to be destroyed. */
     membuffer* m);
@@ -159,6 +165,7 @@ void membuffer_destroy(
  * \li UPNP_E_SUCCESS
  * \li UPNP_E_OUTOF_MEMORY
  */
+// Don't export function symbol; only used library intern.
 int membuffer_assign(
     /*! [in,out] Buffer whose memory is to be allocated and assigned. */
     membuffer* m,
@@ -174,6 +181,7 @@ int membuffer_assign(
  * \li UPNP_E_SUCCESS
  * \li UPNP_E_OUTOF_MEMORY
  */
+// Don't export function symbol; only used library intern.
 int membuffer_assign_str(
     /*! [in,out] Buffer to be allocated and assigned. */
     membuffer* m,
@@ -185,6 +193,7 @@ int membuffer_assign_str(
  *
  * \return int.
  */
+// Don't export function symbol; only used library intern.
 int membuffer_append(
     /*! [in,out] Buffer whose memory is to be appended. */
     membuffer* m,
@@ -198,6 +207,7 @@ int membuffer_append(
  *
  * \return int.
  */
+// Don't export function symbol; only used library intern.
 int membuffer_append_str(
     /*! [in,out] Buffer whose memory is to be appended. */
     membuffer* m,
@@ -211,6 +221,7 @@ int membuffer_append_str(
  *
  * \return 0 if successful, error code if error.
  */
+// Don't export function symbol; only used library intern.
 int membuffer_insert(
     /*! [in,out] Buffer whose memory size is to be increased and appended.
      */
@@ -227,6 +238,7 @@ int membuffer_insert(
  * buffer and the input parameters. Move contents from the old buffer to the
  * new sized buffer.
  */
+// Don't export function symbol; only used library intern.
 void membuffer_delete(
     /*! [in,out] Buffer whose memory size is to be decreased and copied
      * to the modified location. */
@@ -242,6 +254,7 @@ void membuffer_delete(
  *
  * \return A pointer to the current buffer.
  */
+// Don't export function symbol; only used library intern.
 char* membuffer_detach(
     /*! [in,out] Buffer to be returned and updated. */
     membuffer* m);
@@ -253,6 +266,7 @@ char* membuffer_detach(
  * \note 'new_buf' must be allocted using malloc or realloc so that it can be
  * freed using free().
  */
+// Don't export function symbol; only used library intern.
 void membuffer_attach(
     /*! [in,out] Buffer to be updated. */
     membuffer* m,

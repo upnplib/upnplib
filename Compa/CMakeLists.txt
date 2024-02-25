@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-24
+# Redistribution only with this Copyright remark. Last modified: 2024-02-27
 
 cmake_minimum_required(VERSION 3.28)
 include(../cmake/project-header.cmake)
@@ -13,17 +13,19 @@ project(COMPA VERSION 0008
 # These switches are all handled only in this configuration file.
 
 # Options selectable by user configuration
-set(COMPA_DEF_GOOGLETEST ${UPNPLIB_WITH_GOOGLETEST})
-set(COMPA_DEF_TOOLS ${UPNPLIB_WITH_TOOLS})         # tools -> UPNP_ENABLE_HELPER_API_TOOLS
-set(COMPA_DEF_WEBSERVER ${UPNPLIB_WITH_WEBSERVER})
-set(COMPA_DEF_CTRLPT_SSDP ${UPNPLIB_WITH_CLIENT})  # client -> UPNP_ENABLE_CLIENT_API
-set(COMPA_DEF_DEVICE_SSDP ${UPNPLIB_WITH_DEVICE})
-set(COMPA_DEF_OPTION_SSDP ${UPNPLIB_WITH_OPTSSDP}) # optssdp -> UPNP_ENABLE_OPTIONAL_SSDP_HEADERS
-set(COMPA_DEF_CTRLPT_SOAP ${UPNPLIB_WITH_SOAP})
-set(COMPA_DEF_DEVICE_SOAP ${UPNPLIB_WITH_SOAP})
-set(COMPA_DEF_GENA ${UPNPLIB_WITH_GENA})
 set(COMPA_DEF_OPENSSL ${UPNPLIB_WITH_OPENSSL})
+set(COMPA_DEF_MINISERVER ${UPNPLIB_WITH_MINISERVER})
+set(COMPA_DEF_WEBSERVER ${UPNPLIB_WITH_WEBSERVER})
+set(COMPA_DEF_CTRLPT_SSDP ${UPNPLIB_WITH_CTRLPT_SSDP})  # client -> UPNP_ENABLE_CLIENT_API
+set(COMPA_DEF_DEVICE_SSDP ${UPNPLIB_WITH_DEVICE_SSDP})
+set(COMPA_DEF_OPTION_SSDP ${UPNPLIB_WITH_OPTION_SSDP}) # optssdp -> UPNP_ENABLE_OPTIONAL_SSDP_HEADERS
+set(COMPA_DEF_CTRLPT_SOAP ${UPNPLIB_WITH_CTRLPT_SOAP})
+set(COMPA_DEF_DEVICE_SOAP ${UPNPLIB_WITH_DEVICE_SOAP})
+set(COMPA_DEF_CTRLPT_GENA ${UPNPLIB_WITH_CTRLPT_GENA})
+set(COMPA_DEF_DEVICE_GENA ${UPNPLIB_WITH_DEVICE_GENA})
+set(COMPA_DEF_TOOLS ${UPNPLIB_WITH_TOOLS})         # tools -> UPNP_ENABLE_HELPER_API_TOOLS
 set(COMPA_DEF_IXML ${UPNPLIB_WITH_IXML})           # scriptsupport -> IXML_HAVE_SCRIPTSUPPORT
+set(COMPA_DEF_GOOGLETEST ${UPNPLIB_WITH_GOOGLETEST})
 #set(COMPA_DEF_BLOCKTCP ${UPNPLIB_WITH_BLOCKTCP})  # blocking_tcp_connections -> UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
 #set(COMPA_DEF_UNSPECSVR ${UPNPLIB_WITH_UNSPECIFIED_SERVER}) # unspecified_server -> UPNP_ENABLE_UNSPECIFIED_SERVER
 #set(COMPA_DEF_REUSEADDR NO)                       # reuseaddr -> UPNP_MINISERVER_REUSEADDR
@@ -36,24 +38,33 @@ endif()
 #-------------------------------------------------
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(COMPA_DEF_DEBUG YES)
+    set(COMPA_DEF_TOOLS YES)
 endif()
 
 if(COMPA_DEF_GOOGLETEST)
-    #set(COMPA_DEF_OPTION_SSDP YES)
-    set(COMPA_DEF_GENA YES)
+    set(COMPA_DEF_CTRLPT_GENA YES)
+    set(COMPA_DEF_DEVICE_GENA YES)
 endif()
 
 if(COMPA_DEF_SAMPLES)
+    set(COMPA_DEF_CTRLPT_GENA YES)
+    set(COMPA_DEF_DEVICE_GENA YES)
     set(COMPA_DEF_TOOLS YES)
-    set(COMPA_DEF_GENA YES)
 endif()
 
-if(COMPA_DEF_GENA)
-    set(COMPA_DEF_SOAP YES)
+if(COMPA_DEF_CTRLPT_GENA)
+    set(COMPA_DEF_CTRLPT_SOAP YES)
 endif()
 
-if(COMPA_DEF_SOAP)
+if(COMPA_DEF_DEVICE_GENA)
+    set(COMPA_DEF_DEVICE_SOAP YES)
+endif()
+
+if(COMPA_DEF_CTRLPT_SOAP)
     set(COMPA_DEF_CTRLPT_SSDP YES)
+endif()
+
+if(COMPA_DEF_DEVICE_SOAP)
     set(COMPA_DEF_DEVICE_SSDP YES)
 endif()
 
@@ -67,76 +78,84 @@ endif()
 
 
 # Source files and compile settings
-#----------------------------------
+# =================================
 
 set(COMPA_SOURCE_FILES
     src/init.cpp
     src/globalvars.cpp
 
-    src/threadutil/FreeList.cpp
+    src/genlib/util/membuffer.cpp
+    src/genlib/util/list.cpp
+    src/genlib/util/strintmap.cpp
+    src/api/UpnpString.cpp
+    src/api/upnpapi.cpp
+
+    src/threadutil/FreeList.cpp # Only for LinkedList, ThreadPool, TimerThread
     src/threadutil/LinkedList.cpp
     src/threadutil/ThreadPool.cpp
     src/threadutil/TimerThread.cpp
 
     src/genlib/net/sock.cpp
-    src/genlib/net/uri/uri.cpp
 
+    # Miniserver
+    $<$<BOOL:${COMPA_DEF_MINISERVER}>:src/genlib/miniserver/miniserver.cpp>
+
+    # Webserver
+    $<$<BOOL:${COMPA_DEF_WEBSERVER}>:src/genlib/net/http/webserver.cpp>
     $<$<BOOL:${COMPA_DEF_WEBSERVER}>:src/genlib/net/http/httpparser.cpp>
     $<$<BOOL:${COMPA_DEF_WEBSERVER}>:src/genlib/net/http/httpreadwrite.cpp>
     $<$<BOOL:${COMPA_DEF_WEBSERVER}>:src/genlib/net/http/statcodes.cpp>
-    $<$<BOOL:${COMPA_DEF_WEBSERVER}>:src/genlib/net/http/webserver.cpp>
     $<$<BOOL:${COMPA_DEF_WEBSERVER}>:src/genlib/net/http/parsetools.cpp>
+    $<$<BOOL:${COMPA_DEF_WEBSERVER}>:src/api/UpnpExtraHeaders.cpp>
+    $<$<BOOL:${COMPA_DEF_WEBSERVER}>:src/api/UpnpFileInfo.cpp>
+    $<$<OR:$<BOOL:${COMPA_DEF_WEBSERVER}>,$<BOOL:${COMPA_DEF_TOOLS}>>:src/genlib/net/uri/uri.cpp>
 
-    src/genlib/util/list.cpp
-    src/genlib/util/membuffer.cpp
-    src/genlib/util/strintmap.cpp
-
-    $<$<BOOL:${COMPA_DEF_DEVICE_SSD}}>:src/genlib/service-table/service_table.cpp>
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_GENA}>>:src/genlib/client_table/GenlibClientSubscription.cpp>
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_GENA}>>:src/genlib/client_table/client_table.cpp>
-    $<$<BOOL:${COMPA_DEF_MINISERVER}>:src/genlib/miniserver/miniserver.cpp>
-
+    # Common
+    # -------------------------------------------------------------------------
+    # SSDP
     $<$<OR:$<BOOL:${COMPA_DEF_CTRLPT_SSDP}>,$<BOOL:${COMPA_DEF_DEVICE_SSDP}>>:src/ssdp/ssdp_common.cpp>
-    $<$<BOOL:${COMPA_DEF_DEVICE_SSDP}>:src/ssdp/ssdp_device.cpp>
+    # GENA
+    $<$<OR:$<BOOL:${COMPA_DEF_CTRLPT_GENA}>,$<BOOL:${COMPA_DEF_DEVICE_GENA}>>:src/gena/gena_callback2.cpp>
+    $<$<OR:$<BOOL:${COMPA_DEF_CTRLPT_GENA}>,$<BOOL:${COMPA_DEF_DEVICE_GENA}>,$<BOOL:${COMPA_DEF_OPTION_SSDP}>>:src/uuid/md5.cpp> # needed only by uuid.cpp and sysdep.cpp
+    $<$<OR:$<BOOL:${COMPA_DEF_CTRLPT_GENA}>,$<BOOL:${COMPA_DEF_DEVICE_GENA}>,$<BOOL:${COMPA_DEF_OPTION_SSDP}>>:src/uuid/sysdep.cpp> # needed only by uuid.cpp
+    $<$<OR:$<BOOL:${COMPA_DEF_CTRLPT_GENA}>,$<BOOL:${COMPA_DEF_DEVICE_GENA}>,$<BOOL:${COMPA_DEF_OPTION_SSDP}>>:src/uuid/uuid.cpp>
+
+    #Control Point
+    # -------------------------------------------------------------------------
+    # SSDP
     $<$<BOOL:${COMPA_DEF_CTRLPT_SSDP}>:src/ssdp/ssdp_ctrlpt.cpp>
     $<$<BOOL:${COMPA_DEF_CTRLPT_SSDP}>:src/ssdp/SSDPResultData.cpp>
     $<$<BOOL:${COMPA_DEF_CTRLPT_SSDP}>:src/ssdp/SSDPResultDataCallback.cpp>
-
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_SOAP}>>:src/soap/soap_device.cpp>
-    $<$<AND:$<BOOL:${COMPA_DEF_CTRLPT_SSDP}>,$<BOOL:${COMPA_DEF_SOAP}>>:src/soap/soap_ctrlpt.cpp>
-
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_GENA}>>:src/gena/gena_device.cpp>
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_GENA}>>:src/gena/gena_callback2.cpp>
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_GENA}>>:src/gena/gena_ctrlpt.cpp>
-
-    $<$<OR:$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_GENA}>>,$<BOOL:${COMPA_DEF_OPTION_SSDP}>>:src/uuid/uuid.cpp>
-    $<$<OR:$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_GENA}>>,$<BOOL:${COMPA_DEF_OPTION_SSDP}>>:src/uuid/md5.cpp>
-    $<$<OR:$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_GENA}>>,$<BOOL:${COMPA_DEF_OPTION_SSDP}>>:src/uuid/sysdep.cpp>
-
-    src/api/UpnpExtraHeaders.cpp
-    src/api/UpnpString.cpp
-    src/api/upnpapi.cpp
-    $<$<OR:$<BOOL:${COMPA_DEF_TOOLS}>,$<BOOL:${COMPA_DEF_DEBUG}>>:src/api/upnptools.cpp>
-    $<$<BOOL:${COMPA_DEF_WEBSERVER}>:src/api/UpnpFileInfo.cpp>
     $<$<BOOL:${COMPA_DEF_CTRLPT_SSDP}>:src/api/UpnpDiscovery.cpp>
-    #$<$<OR:$<BOOL:${COMPA_DEF_CTRLPT_SSDP}>,$<BOOL:${COMPA_DEF_DEBUG}>>:src/api/UpnpDiscovery.cpp>
+    # SOAP
+    $<$<BOOL:${COMPA_DEF_CTRLPT_SOAP}>:src/soap/soap_ctrlpt.cpp>
+    $<$<BOOL:${COMPA_DEF_CTRLPT_SOAP}>:src/api/UpnpActionComplete.cpp>
+    $<$<BOOL:${COMPA_DEF_CTRLPT_SOAP}>:src/api/UpnpStateVarComplete.cpp>
+    # GENA
+    $<$<BOOL:${COMPA_DEF_CTRLPT_GENA}>:src/gena/gena_ctrlpt.cpp>
+    $<$<BOOL:${COMPA_DEF_CTRLPT_GENA}>:src/genlib/client_table/GenlibClientSubscription.cpp>
+    $<$<BOOL:${COMPA_DEF_CTRLPT_GENA}>:src/genlib/client_table/client_table.cpp>
+    $<$<BOOL:${COMPA_DEF_CTRLPT_GENA}>:src/api/UpnpEventSubscribe.cpp>
+    $<$<BOOL:${COMPA_DEF_CTRLPT_GENA}>:src/api/UpnpEvent.cpp>
 
-    $<$<OR:$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_SOAP}>>,$<BOOL:${COMPA_DEF_DEBUG}>>:src/api/UpnpActionRequest.cpp>
-    $<$<OR:$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_SOAP}>>,$<BOOL:${COMPA_DEF_DEBUG}>>:src/api/UpnpActionComplete.cpp>
-    $<$<OR:$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_SOAP}>>,$<BOOL:${COMPA_DEF_DEBUG}>>:src/api/UpnpStateVarRequest.cpp>
-    $<$<OR:$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_SOAP}>>,$<BOOL:${COMPA_DEF_DEBUG}>>:src/api/UpnpStateVarComplete.cpp>
-    $<$<OR:$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_SOAP}>>,$<BOOL:${COMPA_DEF_DEBUG}>>:src/api/UpnpSubscriptionRequest.cpp>
-    $<$<OR:$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_SOAP}>>,$<BOOL:${COMPA_DEF_DEBUG}>>:src/api/UpnpEvent.cpp>
-    $<$<OR:$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_SOAP}>>,$<BOOL:${COMPA_DEF_DEBUG}>>:src/api/UpnpEventSubscribe.cpp>
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_SOAP}>>:src/api/UpnpStateVarRequest.cpp>
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_SOAP}>>:src/api/UpnpActionComplete.cpp>
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_SOAP}>>:src/api/UpnpStateVarComplete.cpp>
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_GENA}>>:src/api/UpnpSubscriptionRequest.cpp>
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_GENA}>>:src/api/UpnpEventSubscribe.cpp>
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_GENA}>>:src/api/UpnpEvent.cpp>
+    # UPnP Device
+    # -------------------------------------------------------------------------
+    # SSDP
+    $<$<BOOL:${COMPA_DEF_DEVICE_SSDP}>:src/ssdp/ssdp_device.cpp>
+    $<$<BOOL:${COMPA_DEF_DEVICE_SSDP}>:src/genlib/service-table/service_table.cpp>
+    $<$<BOOL:${COMPA_DEF_DEVICE_SSDP}>:src/urlconfig/urlconfig.cpp>
+    # SOAP
+    $<$<BOOL:${COMPA_DEF_DEVICE_SOAP}>:src/soap/soap_device.cpp>
+    $<$<BOOL:${COMPA_DEF_DEVICE_SOAP}>:src/api/UpnpActionRequest.cpp>
+    $<$<BOOL:${COMPA_DEF_DEVICE_SOAP}>:src/api/UpnpStateVarRequest.cpp>
+    # GENA
+    $<$<BOOL:${COMPA_DEF_DEVICE_GENA}>:src/gena/gena_device.cpp>
+    $<$<BOOL:${COMPA_DEF_DEVICE_GENA}>:src/api/UpnpSubscriptionRequest.cpp>
+
+    # Other sources (need rework)
+    # -------------------------------------------------------------------------
+    $<$<BOOL:${COMPA_DEF_TOOLS}>:src/api/upnptools.cpp>
     $<$<CONFIG:Debug>:src/api/upnpdebug.cpp>
-
-    $<$<AND:$<BOOL:${COMPA_DEF_DEVICE_SSDP}>,$<BOOL:${COMPA_DEF_WEBSERVER}>>:src/urlconfig/urlconfig.cpp>
 
     ${UMOCK_SOURCE_DIR}/src/pupnp_sock.cpp
     ${UPNPLIB_PROJECT_SOURCE_DIR}/Interface/src/pupnp-sock.cpp
@@ -162,6 +181,7 @@ set(COMPA_COMPILE_DEFINITIONS
         UPNP_ENABLE_IPV6
         UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
 
+        $<$<BOOL:${COMPA_DEF_MINISERVER}>:COMPA_HAVE_MINISERVER>
         $<IF:$<BOOL:${COMPA_DEF_MINISERVER}>,EXCLUDE_MINISERVER=0,EXCLUDE_MINISERVER=1>
 
         $<$<BOOL:${COMPA_DEF_WEBSERVER}>:UPNP_HAVE_WEBSERVER>
@@ -172,9 +192,13 @@ set(COMPA_COMPILE_DEFINITIONS
         $<$<BOOL:${COMPA_DEF_DEVICE_SSDP}>:UPNP_HAVE_DEVICE>
         $<$<BOOL:${COMPA_DEF_OPTION_SSDP}>:UPNP_HAVE_OPTSSDP>
 
-        $<$<BOOL:${COMPA_DEF_SOAP}>:UPNP_HAVE_SOAP>
+        $<$<BOOL:${COMPA_DEF_CTRLPT_SOAP}>:COMPA_HAVE_CTRLPT_SOAP>
+        $<$<BOOL:${COMPA_DEF_DEVICE_SOAP}>:COMPA_HAVE_DEVICE_SOAP>
+        $<IF:$<OR:$<BOOL:${COMPA_DEF_CTRLPT_SOAP}>,$<BOOL:${COMPA_DEF_DEVICE_SOAP}>>,EXCLUDE_SOAP=0,EXCLUDE_SOAP=1>
 
-        $<$<BOOL:${COMPA_DEF_GENA}>:UPNP_HAVE_GENA>
+        $<$<BOOL:${COMPA_DEF_CTRLPT_GENA}>:COMPA_HAVE_CTRLPT_GENA>
+        $<$<BOOL:${COMPA_DEF_DEVICE_GENA}>:COMPA_HAVE_DEVICE_GENA>
+        $<IF:$<OR:$<BOOL:${COMPA_DEF_CTRLPT_GENA}>,$<BOOL:${COMPA_DEF_DEVICE_GENA}>>,EXCLUDE_GENA=0,EXCLUDE_GENA=1>
 
         $<$<BOOL:${COMPA_DEF_IXML}>:IXML_HAVE_SCRIPTSUPPORT>
         $<$<BOOL:${COMPA_DEF_TOOLS}>:UPNP_HAVE_TOOLS>

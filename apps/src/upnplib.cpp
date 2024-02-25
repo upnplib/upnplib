@@ -3,7 +3,7 @@
  * Copyright (c) 2006 Rémi Turboult <r3mi@users.sourceforge.net>
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-24
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-25
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -132,6 +132,7 @@ void* library_info(void*) {
     msg << "UPNP_HAVE_OPTSSDP       = no\n";
 #endif
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #ifdef UPNP_HAVE_SOAP
     msg << "UPNP_HAVE_SOAP          = yes\n";
 #else
@@ -142,6 +143,7 @@ void* library_info(void*) {
     msg << "UPNP_HAVE_GENA          = yes\n";
 #else
     msg << "UPNP_HAVE_GENA          = no\n";
+#endif
 #endif
 
 #ifdef UPNP_HAVE_CLIENT

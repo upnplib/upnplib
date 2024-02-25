@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-18
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-26
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -99,7 +99,8 @@ typedef struct LINKEDLIST {
  *	\li \c 0 on success.
  *	\li \c EOUTOFMEM on failure.
  */
-EXPORT_SPEC int ListInit(
+// Don't export function symbol; only used library intern.
+int ListInit(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Function used to compare items. (May be NULL). */
@@ -116,7 +117,8 @@ EXPORT_SPEC int ListInit(
  *
  * \return The pointer to the ListNode on success, NULL on failure.
  */
-EXPORT_SPEC ListNode* ListAddHead(
+// Don't export function symbol; only used library intern.
+ListNode* ListAddHead(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Item to be added. */
@@ -130,7 +132,8 @@ EXPORT_SPEC ListNode* ListAddHead(
  *
  * \return The pointer to the ListNode on success, NULL on failure.
  */
-EXPORT_SPEC ListNode* ListAddTail(
+// Don't export function symbol; only used library intern.
+ListNode* ListAddTail(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Item to be added. */
@@ -144,7 +147,8 @@ EXPORT_SPEC ListNode* ListAddTail(
  *
  * \return The pointer to the ListNode on success, NULL on failure.
  */
-EXPORT_SPEC ListNode* ListAddAfter(
+// Don't export function symbol; only used library intern.
+ListNode* ListAddAfter(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Item to be added. */
@@ -160,7 +164,8 @@ EXPORT_SPEC ListNode* ListAddAfter(
  *
  * \return The pointer to the ListNode on success, NULL on failure.
  */
-EXPORT_SPEC ListNode* ListAddBefore(
+// Don't export function symbol; only used library intern.
+ListNode* ListAddBefore(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Item to be added. */
@@ -176,7 +181,8 @@ EXPORT_SPEC ListNode* ListAddBefore(
  * \return The pointer to the item stored in the node or NULL if the item
  * is freed.
  */
-EXPORT_SPEC void* ListDelNode(
+// Don't export function symbol; only used library intern.
+void* ListDelNode(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Node to delete. */
@@ -193,7 +199,8 @@ EXPORT_SPEC void* ListDelNode(
  *
  * \return 0 on success, EINVAL on failure.
  */
-EXPORT_SPEC int ListDestroy(
+// Don't export function symbol; only used library intern.
+int ListDestroy(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! if !0 then item is freed using free function. If 0 (or free
@@ -207,7 +214,8 @@ EXPORT_SPEC int ListDestroy(
  *
  * \return The head of the list. NULL if list is empty.
  */
-EXPORT_SPEC ListNode* ListHead(
+// Don't export function symbol; only used library intern.
+ListNode* ListHead(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list);
 
@@ -218,7 +226,8 @@ EXPORT_SPEC ListNode* ListHead(
  *
  * \return The tail of the list. NULL if list is empty.
  */
-EXPORT_SPEC ListNode* ListTail(
+// Don't export function symbol; only used library intern.
+ListNode* ListTail(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list);
 
@@ -229,7 +238,8 @@ EXPORT_SPEC ListNode* ListTail(
  *
  * \return The next item in the list. NULL if there are no more items in list.
  */
-EXPORT_SPEC ListNode* ListNext(
+// Don't export function symbol; only used library intern.
+ListNode* ListNext(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Node from the list. */
@@ -243,7 +253,8 @@ EXPORT_SPEC ListNode* ListNext(
  * \return The previous item in the list. NULL if there are no more items in
  * list.
  */
-EXPORT_SPEC ListNode* ListPrev(
+// Don't export function symbol; only used library intern.
+ListNode* ListPrev(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! Node from the list. */
@@ -259,7 +270,8 @@ EXPORT_SPEC ListNode* ListPrev(
  *
  * \return The node containing the item. NULL if no node contains the item.
  */
-EXPORT_SPEC ListNode* ListFind(
+// Don't export function symbol; only used library intern.
+ListNode* ListFind(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list,
     /*! The node to start from, NULL if to start from beginning. */
@@ -274,7 +286,8 @@ EXPORT_SPEC ListNode* ListFind(
  *
  * \return The number of items in the list.
  */
-EXPORT_SPEC long ListSize(
+// Don't export function symbol; only used library intern.
+long ListSize(
     /*! Must be valid, non null, pointer to a linked list. */
     LinkedList* list);
 

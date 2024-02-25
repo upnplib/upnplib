@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-23
+# Redistribution only with this Copyright remark. Last modified: 2024-02-26
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -144,6 +144,7 @@ add_test(NAME ctest_UpnpFileInfo-psh COMMAND test_UpnpFileInfo-psh --gtest_shuff
 add_executable(test_UpnpFileInfo-csh
 #-----------------------------------
     ./test_UpnpFileInfo.cpp
+    ${COMPA_SOURCE_DIR}/src/genlib/util/list.cpp
 )
 target_compile_definitions(test_UpnpFileInfo-csh
     PRIVATE

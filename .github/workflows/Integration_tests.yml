@@ -14,7 +14,7 @@ jobs:
     name: Check clang format
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: jidicula/clang-format-action@v4.11.0
       with:
         clang-format-version: '17'
@@ -38,7 +38,7 @@ jobs:
 
     steps:
     # Step building upnplib
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Configure
         run: >
@@ -92,9 +92,9 @@ jobs:
           ls ./build/lib/libcompa_static.a
           ls ./build/lib/libupnplib_static.a
 
-      - name: Run upnplib info programs
-        # This program is always built
-        run: ./build/bin/upnplib-pst; ./build/bin/upnplib-psh; ./build/bin/upnplib-cst; ./build/bin/upnplib-csh
+     #- name: Run upnplib info programs
+     #  # This program is always built
+     #  run: ./build/bin/upnplib-pst; ./build/bin/upnplib-psh; ./build/bin/upnplib-cst; ./build/bin/upnplib-csh
 
       - name: Run gtests
         run: |
@@ -123,7 +123,7 @@ jobs:
 
     steps:
     # Steps to build and test upnplib
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Configure
         run: >
@@ -175,9 +175,9 @@ jobs:
           ls ./build/lib/libcompa_static.a
           ls ./build/lib/libupnplib_static.a
 
-      - name: Run upnplib info programs
-        # This program is always built
-        run: ./build/bin/upnplib-pst; ./build/bin/upnplib-psh; ./build/bin/upnplib-cst; ./build/bin/upnplib-csh
+     #- name: Run upnplib info programs
+     #  # This program is always built
+     #  run: ./build/bin/upnplib-pst; ./build/bin/upnplib-psh; ./build/bin/upnplib-cst; ./build/bin/upnplib-csh
 
       - name: Run gtests
         run: |
@@ -208,7 +208,7 @@ jobs:
 
     steps:
     # Step building upnplib
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - if: matrix.os == 'windows-2019'
         # need developer command prompt
@@ -268,8 +268,8 @@ jobs:
           ls $env:SYSTEMROOT/System32/gtest_main.dll
           ls $env:SYSTEMROOT/System32/gmock_main.dll
 
-      - name: Run upnplib info programs
-        run: ./build/bin/${{matrix.buildtype}}/upnplib-pst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-psh.exe; ./build/bin/${{matrix.buildtype}}/upnplib-cst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-csh.exe
+     #- name: Run upnplib info programs
+     #  run: ./build/bin/${{matrix.buildtype}}/upnplib-pst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-psh.exe; ./build/bin/${{matrix.buildtype}}/upnplib-cst.exe; ./build/bin/${{matrix.buildtype}}/upnplib-csh.exe
 
       - name: Run gtests
         run: |
@@ -302,7 +302,7 @@ jobs:
 
     steps:
     # Step building upnplib
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - if: matrix.os == 'windows-2019'
         # need developer command prompt
@@ -363,8 +363,8 @@ jobs:
           ls $env:SYSTEMROOT/System32/gtest_main.dll
           ls $env:SYSTEMROOT/System32/gmock_main.dll
 
-      - name: Run upnplib info programs
-        run: ./build/bin/upnplib-pst.exe; ./build/bin/upnplib-psh.exe; ./build/bin/upnplib-cst.exe; ./build/bin/upnplib-csh.exe
+     #- name: Run upnplib info programs
+     #  run: ./build/bin/upnplib-pst.exe; ./build/bin/upnplib-psh.exe; ./build/bin/upnplib-cst.exe; ./build/bin/upnplib-csh.exe
 
       - name: Run gtests
         run: |
@@ -392,26 +392,29 @@ jobs:
         os: [ ubuntu-latest, macOS-latest, windows-latest ]
         buildtype: [ 'Release', 'Debug' ]
         option: [ '',
-          '-DUPNPLIB_WITH_TOOLS=OFF -DUPNPLIB_WITH_CLIENT=OFF -DUPNPLIB_WITH_DEVICE=OFF -DUPNPLIB_WITH_WEBSERVER=OFF  -DUPNPLIB_WITH_OPTSSDP=OFF -DUPNPLIB_WITH_SOAP=OFF -DUPNPLIB_WITH_GENA=OFF -DUPNPLIB_WITH_IXML=OFF -DUPNPLIB_WITH_SAMPLES=OFF -DUPNPLIB_WITH_GOOGLETEST=OFF -DGTESTS_WITH_SHARED_LIBS=OFF -DUPNPLIB_WITH_TRACE=OFF -DUPNPLIB_WITH_OPENSSL=OFF',
-          '-DUPNPLIB_WITH_TOOLS=ON',
-          '-DUPNPLIB_WITH_CLIENT=ON',
-          '-DUPNPLIB_WITH_DEVICE=ON',
+          '-DUPNPLIB_WITH_OPENSSL=OFF -DUPNPLIB_WITH_MINISERVER=OFF -DUPNPLIB_WITH_WEBSERVER=OFF -DUPNPLIB_WITH_CTRLPT_SSDP=OFF -DUPNPLIB_WITH_DEVICE_SSDP=OFF -DUPNPLIB_WITH_OPTION_SSDP=OFF -DUPNPLIB_WITH_CTRLPT_SOAP=OFF -DUPNPLIB_WITH_DEVICE_SOAP=OFF -DUPNPLIB_WITH_CTRLPT_GENA=OFF -DUPNPLIB_WITH_DEVICE_GENA=OFF -DUPNPLIB_WITH_IXML=OFF -DUPNPLIB_WITH_TOOLS=OFF -DUPNPLIB_WITH_SAMPLES=OFF -DUPNPLIB_WITH_GOOGLETEST=OFF -DUPNPLIB_WITH_TRACE=OFF -DGTESTS_WITH_SHARED_LIBS=OFF',
           '-DUPNPLIB_WITH_OPENSSL=ON',
+          '-DUPNPLIB_WITH_MINISERVER=ON',
           '-DUPNPLIB_WITH_WEBSERVER=ON',
-          '-DUPNPLIB_WITH_OPTSSDP=ON',
-          '-DUPNPLIB_WITH_SOAP=ON',
-          '-DUPNPLIB_WITH_GENA=ON',
+          '-DUPNPLIB_WITH_CTRLPT_SSDP=ON',
+          '-DUPNPLIB_WITH_DEVICE_SSDP=ON',
+          '-DUPNPLIB_WITH_OPTION_SSDP=ON',
+          '-DUPNPLIB_WITH_CTRLPT_SOAP=ON',
+          '-DUPNPLIB_WITH_DEVICE_SOAP=ON',
+          '-DUPNPLIB_WITH_CTRLPT_GENA=ON',
+          '-DUPNPLIB_WITH_DEVICE_GENA=ON',
           '-DUPNPLIB_WITH_IXML=ON',
+          '-DUPNPLIB_WITH_TOOLS=ON',
           '-DUPNPLIB_DEF_SAMPLES=ON -DUPNPLIB_DEF_DEVICE=ON',
           '-DUPNPLIB_DEF_SAMPLES=ON -DUPNPLIB_DEF_CLIENT=ON',
           '-DUPNPLIB_DEF_SAMPLES=ON -DUPNPLIB_DEF_COMBO=ON',
           '-DUPNPLIB_WITH_SAMPLES=ON',
           '-DUPNPLIB_WITH_TRACE=ON',
-          '-DUPNPLIB_WITH_TOOLS=ON -DUPNPLIB_WITH_CLIENT=ON -DUPNPLIB_WITH_DEVICE=ON -DUPNPLIB_WITH_WEBSERVER=ON -DUPNPLIB_WITH_OPTSSDP=ON -DUPNPLIB_WITH_SOAP=ON -DUPNPLIB_WITH_GENA=ON -DUPNPLIB_WITH_IXML=ON -DUPNPLIB_WITH_SAMPLES=ON -DUPNPLIB_WITH_GOOGLETEST=ON -DGTESTS_WITH_SHARED_LIBS=ON -DUPNPLIB_WITH_TRACE=ON -DUPNPLIB_WITH_OPENSSL=ON' ]
+          '-DUPNPLIB_WITH_OPENSSL=ON -DUPNPLIB_WITH_MINISERVER=ON -DUPNPLIB_WITH_WEBSERVER=ON -DUPNPLIB_WITH_CTRLPT_SSDP=ON -DUPNPLIB_WITH_DEVICE_SSDP=ON -DUPNPLIB_WITH_OPTION_SSDP=ON -DUPNPLIB_WITH_CTRLPT_SOAP=ON -DUPNPLIB_WITH_DEVICE_SOAP=ON -DUPNPLIB_WITH_CTRLPT_GENA=ON -DUPNPLIB_WITH_DEVICE_GENA=ON -DUPNPLIB_WITH_IXML=ON -DUPNPLIB_WITH_TOOLS=ON -DUPNPLIB_WITH_SAMPLES=ON -DUPNPLIB_WITH_GOOGLETEST=ON -DUPNPLIB_WITH_TRACE=ON -DGTESTS_WITH_SHARED_LIBS=ON' ]
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - if: matrix.os == 'windows-latest'
         # need developer command prompt

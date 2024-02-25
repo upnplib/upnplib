@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-08
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-26
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -66,13 +66,6 @@
 
 /* Needed for GENA */
 #include "gena.hpp"
-// #ifdef UPNPLIB_WITH_NATIVE_PUPNP
-// #define NS
-// #include "miniserver.hpp"
-// #else
-// #define NS ::compa
-// #include "compa/miniserver.hpp"
-// #endif
 #include "miniserver.hpp"
 #include "service_table.hpp"
 

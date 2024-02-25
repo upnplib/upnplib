@@ -1,3 +1,5 @@
+#ifdef COMPA_HAVE_MINISERVER
+
 #ifndef COMPA_MINISERVER_HPP
 #define COMPA_MINISERVER_HPP
 /**************************************************************************
@@ -5,7 +7,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-04
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-25
  * Copied from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,7 +76,7 @@ struct MiniServerSockArray {
     uint16_t miniServerPort6;
     /*! \brief Corresponding port to miniServerSock6UlaGua */
     uint16_t miniServerPort6UlaGua;
-#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+#ifdef INCLUDE_CLIENT_APIS
     /*! \name Only with Client (control point) Module.
      * @{ */
     /*! \brief IPv4 SSDP socket for sending search requests and receiving search
@@ -103,7 +105,7 @@ UPNPLIB_API void SetHTTPGetCallback(
 /*!
  * \brief Set SOAP Callback.
  */
-#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
+#ifdef INCLUDE_DEVICE_APIS
 UPNPLIB_API void SetSoapCallback(
     /*! [in] SOAP Callback to be invoked. */
     MiniServerCallback callback);
@@ -151,3 +153,4 @@ UPNPLIB_API int StartMiniServer(
 UPNPLIB_API int StopMiniServer();
 
 #endif /* COMPA_MINISERVER_HPP */
+#endif // COMPA_HAVE_MINISERVER

@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-23
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-25
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -265,8 +265,6 @@
 /// @{
 /*! This setting has no effect due to compiler defines (for internal purpose
  * only). */
-#define EXCLUDE_SOAP 0
-#define EXCLUDE_GENA 0
 #define EXCLUDE_DOM 0
 #ifdef USE_JNI
 #define EXCLUDE_JNI 0
@@ -305,37 +303,20 @@
  *
  * Select these options with CMake configuration options preceeded with **-D**,
  * for example:
- * `cmake -S . -B build -D UPNPLIB_WITH_CLIENT=ON -D UPNPLIB_WITH_DEVICE=ON`.
+ * `cmake -S . -B build -D UPNPLIB_WITH_CTRLPT_SSDP=ON -D
+ * UPNPLIB_WITH_DEVICE_SSDP=ON`.
  *
  * @{
  */
 
 #if UPNP_HAVE_CLIENT
-/// Configure with CMake option -D UPNPLIB_WITH_CLIENT=ON|OFF
+/// Configure with CMake option -D UPNPLIB_WITH_CTRLPT_SSDP=ON|OFF
 #define INCLUDE_CLIENT_APIS 1
 #endif
 
 #if UPNP_HAVE_DEVICE
-/// Configure with CMake option -D UPNPLIB_WITH_DEVICE=ON|OFF
+/// Configure with CMake option -D UPNPLIB_WITH_DEVICE_SSDP=ON|OFF
 #define INCLUDE_DEVICE_APIS 1
-#endif
-
-#undef EXCLUDE_SOAP
-#if UPNP_HAVE_SOAP
-/// Configure with CMake option -D UPNPLIB_WITH_SOAP=ON|OFF
-#define EXCLUDE_SOAP 0
-#else
-/// Configure with CMake option -D UPNPLIB_WITH_SOAP=ON|OFF
-#define EXCLUDE_SOAP 1
-#endif
-
-#undef EXCLUDE_GENA
-#if UPNP_HAVE_GENA
-/// Configure with CMake option -D UPNPLIB_WITH_GENA=ON|OFF
-#define EXCLUDE_GENA 0
-#else
-/// Configure with CMake option -D UPNPLIB_WITH_GENA=ON|OFF
-#define EXCLUDE_GENA 1
 #endif
 
 /// @}

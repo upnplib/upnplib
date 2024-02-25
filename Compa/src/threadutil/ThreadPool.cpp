@@ -406,6 +406,7 @@ static void SetRelTimeout(
  * \brief Sets seed for random number generator. Each thread sets the seed
  * random number generator.
  *
+ * \todo Solve problem with type casts.
  * \internal
  */
 static void SetSeed(void) {
@@ -413,8 +414,10 @@ static void SetSeed(void) {
 
     gettimeofday(&t, NULL);
 #if defined(__PTW32_DLLPORT)
-    srand((unsigned long long)t.tv_usec +
-          (unsigned long long)ithread_get_current_thread_id().p);
+    // There is pthreads4w on Microsoft Windows available.
+    srand(
+        (unsigned int)t.tv_usec +
+        (unsigned int)((unsigned long long)ithread_get_current_thread_id().p));
 #elif defined(BSD) || defined(__APPLE__) || defined(__FreeBSD_kernel__)
     srand((unsigned int)t.tv_usec +
           (unsigned int)((unsigned long)ithread_get_current_thread_id()));

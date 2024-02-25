@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-11-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-26
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -53,7 +53,8 @@ struct timezone {
     int tz_minuteswest; /* minutes W of Greenwich */
     int tz_dsttime;     /* type of dst correction */
 };
-UPNPLIB_API int gettimeofday(struct timeval* tv, struct timezone* tz);
+// Don't export function symbol; only used library intern.
+int gettimeofday(struct timeval* tv, struct timezone* tz);
 #endif
 #else                 // _WIN32
 // #include <sys/param.h>
@@ -246,7 +247,8 @@ struct ThreadPool {
  * \li \c INVALID_POLICY if schedPolicy can't be set.
  * \li \c EMAXTHREADS if minimum threads is greater than maximum threads.
  */
-UPNPLIB_API int ThreadPoolInit(
+// Don't export function symbol; only used library intern.
+int ThreadPoolInit(
     /*! Must be valid, non null, pointer to ThreadPool. */
     ThreadPool* tp,
     /*! Can be null. if not null then attr contains the following fields:
@@ -276,7 +278,8 @@ UPNPLIB_API int ThreadPoolInit(
  *	\li \c EOUTOFMEM not enough memory to add job.
  *	\li \c EMAXTHREADS not enough threads to add persistent job.
  */
-UPNPLIB_API int ThreadPoolAddPersistent(
+// Don't export function symbol; only used library intern.
+int ThreadPoolAddPersistent(
     /*! Valid thread pool pointer. */
     ThreadPool* tp,
     /*! Valid thread pool job. */
@@ -290,7 +293,8 @@ UPNPLIB_API int ThreadPoolAddPersistent(
  * \return
  * 	\li \c 0 on success, nonzero on failure.
  */
-UPNPLIB_API int ThreadPoolGetAttr(
+// Don't export function symbol; only used library intern.
+int ThreadPoolGetAttr(
     /*! valid thread pool pointer. */
     ThreadPool* tp,
     /*! non null pointer to store attributes. */
@@ -304,7 +308,8 @@ UPNPLIB_API int ThreadPoolGetAttr(
  * 	\li \c 0 on success, nonzero on failure.
  * 	\li \c INVALID_POLICY if policy can not be set.
  */
-UPNPLIB_API int ThreadPoolSetAttr(
+// Don't export function symbol; only used library intern.
+int ThreadPoolSetAttr(
     /*! valid thread pool pointer. */
     ThreadPool* tp,
     /*! pointer to attributes, null sets attributes to default. */
@@ -317,7 +322,8 @@ UPNPLIB_API int ThreadPoolSetAttr(
  * 	\li \c 0 on success, nonzero on failure.
  * 	\li \c EOUTOFMEM if not enough memory to add job.
  */
-UPNPLIB_API int ThreadPoolAdd(
+// Don't export function symbol; only used library intern.
+int ThreadPoolAdd(
     /*! valid thread pool pointer. */
     ThreadPool* tp,
     /*! . */
@@ -333,7 +339,8 @@ UPNPLIB_API int ThreadPoolAdd(
  * 	\li \c 0 on success, nonzero on failure.
  * 	\li \c INVALID_JOB_ID if job not found.
  */
-UPNPLIB_API int ThreadPoolRemove(
+// Don't export function symbol; only used library intern.
+int ThreadPoolRemove(
     /*! valid thread pool pointer. */
     ThreadPool* tp,
     /*! id of job. */
@@ -347,7 +354,8 @@ UPNPLIB_API int ThreadPoolRemove(
  *
  * \return 0 on success, nonzero on failure
  */
-UPNPLIB_API int ThreadPoolShutdown(
+// Don't export function symbol; only used library intern.
+int ThreadPoolShutdown(
     /*! must be valid tp. */
     ThreadPool* tp);
 
@@ -358,7 +366,8 @@ UPNPLIB_API int ThreadPoolShutdown(
  *
  * \return Always returns 0.
  */
-UPNPLIB_API int TPJobInit(
+// Don't export function symbol; only used library intern.
+int TPJobInit(
     /*! must be valid thread pool attributes. */
     ThreadPoolJob* job,
     /*! function to run, must be valid. */
@@ -371,7 +380,8 @@ UPNPLIB_API int TPJobInit(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-UPNPLIB_API int TPJobSetPriority(
+// Don't export function symbol; only used library intern.
+int TPJobSetPriority(
     /*! must be valid thread pool attributes. */
     ThreadPoolJob* job,
     /*! value to set. */
@@ -382,7 +392,8 @@ UPNPLIB_API int TPJobSetPriority(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-UPNPLIB_API int TPJobSetFreeFunction(
+// Don't export function symbol; only used library intern.
+int TPJobSetFreeFunction(
     /*! must be valid thread pool attributes. */
     ThreadPoolJob* job,
     /*! value to set. */
@@ -394,7 +405,8 @@ UPNPLIB_API int TPJobSetFreeFunction(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-UPNPLIB_API int TPAttrInit(
+// Don't export function symbol; only used library intern.
+int TPAttrInit(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr);
 
@@ -403,7 +415,8 @@ UPNPLIB_API int TPAttrInit(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-UPNPLIB_API int TPAttrSetMaxThreads(
+// Don't export function symbol; only used library intern.
+int TPAttrSetMaxThreads(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr,
     /*! value to set. */
@@ -414,7 +427,8 @@ UPNPLIB_API int TPAttrSetMaxThreads(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-UPNPLIB_API int TPAttrSetMinThreads(
+// Don't export function symbol; only used library intern.
+int TPAttrSetMinThreads(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr,
     /*! value to set. */
@@ -425,7 +439,8 @@ UPNPLIB_API int TPAttrSetMinThreads(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-UPNPLIB_API int TPAttrSetStackSize(
+// Don't export function symbol; only used library intern.
+int TPAttrSetStackSize(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr,
     /*! value to set. */
@@ -436,7 +451,8 @@ UPNPLIB_API int TPAttrSetStackSize(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-UPNPLIB_API int TPAttrSetIdleTime(
+// Don't export function symbol; only used library intern.
+int TPAttrSetIdleTime(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr,
     /*! . */
@@ -447,7 +463,8 @@ UPNPLIB_API int TPAttrSetIdleTime(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-UPNPLIB_API int TPAttrSetJobsPerThread(
+// Don't export function symbol; only used library intern.
+int TPAttrSetJobsPerThread(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr,
     /*! number of jobs per thread to maintain. */
@@ -458,7 +475,8 @@ UPNPLIB_API int TPAttrSetJobsPerThread(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-UPNPLIB_API int TPAttrSetStarvationTime(
+// Don't export function symbol; only used library intern.
+int TPAttrSetStarvationTime(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr,
     /*! milliseconds. */
@@ -469,7 +487,8 @@ UPNPLIB_API int TPAttrSetStarvationTime(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-UPNPLIB_API int TPAttrSetSchedPolicy(
+// Don't export function symbol; only used library intern.
+int TPAttrSetSchedPolicy(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr,
     /*! must be a valid policy type. */
@@ -480,7 +499,8 @@ UPNPLIB_API int TPAttrSetSchedPolicy(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
-UPNPLIB_API int TPAttrSetMaxJobsTotal(
+// Don't export function symbol; only used library intern.
+int TPAttrSetMaxJobsTotal(
     /*! must be valid thread pool attributes. */
     ThreadPoolAttr* attr,
     /*! maximum number of jobs. */
@@ -493,8 +513,9 @@ UPNPLIB_API int TPAttrSetMaxJobsTotal(
  *
  * \returns 0 if successful, otherwise EINVAL.
  */
+// Don't export function symbol; only used library intern.
 #ifdef STATS
-UPNPLIB_API int ThreadPoolGetStats(
+int ThreadPoolGetStats(
     /*! Valid initialized threadpool. */
     ThreadPool* tp,
     /*! Valid stats, out parameter. */
@@ -510,8 +531,9 @@ static UPNP_INLINE int ThreadPoolGetStats(
 /*!
  * \brief
  */
+// Don't export function symbol; only used library intern.
 #ifdef STATS
-UPNPLIB_API void ThreadPoolPrintStats(
+void ThreadPoolPrintStats(
     /*! . */
     ThreadPoolStats* stats);
 #else

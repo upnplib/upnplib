@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-11
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-26
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -83,6 +83,7 @@ struct SOCKINFO {
  *
  * \return -1 if an error occurred or if the socket is -1.
  */
+// Don't export function symbol; only used library intern.
 inline int sock_close(
     /*! Socket descriptor. */
     SOCKET sock) {
@@ -100,7 +101,8 @@ inline int sock_close(
  * \li \c UPNP_E_OUTOF_MEMORY
  * \li \c UPNP_E_SOCKET_ERROR
  */
-UPNPLIB_API int sock_init(
+// Don't export function symbol; only used library intern.
+int sock_init(
     /*! [out] Socket Information Object. */
     SOCKINFO* info,
     /*! [in] Socket Descriptor. */
@@ -115,7 +117,8 @@ UPNPLIB_API int sock_init(
  * \li \c UPNP_E_OUTOF_MEMORY
  * \li \c UPNP_E_SOCKET_ERROR
  */
-UPNPLIB_API int sock_init_with_ip(
+// Don't export function symbol; only used library intern.
+int sock_init_with_ip(
     /*! [out] Socket Information Object. */
     SOCKINFO* info,
     /*! [in] Socket Descriptor. */
@@ -131,8 +134,9 @@ UPNPLIB_API int sock_init_with_ip(
  * \li \c UPNP_E_SUCCESS
  * \li \c UPNP_E_SOCKET_ERROR
  */
+// Don't export function symbol; only used library intern.
 #ifdef UPNP_ENABLE_OPEN_SSL
-UPNPLIB_API int sock_ssl_connect(
+int sock_ssl_connect(
     /*! [out] Socket Information Object. */
     SOCKINFO* info);
 #endif
@@ -148,7 +152,8 @@ UPNPLIB_API int sock_ssl_connect(
  * \li \c UPNP_E_SOCKET_ERROR on failure.
  * \li \c UPNP_E_SUCCESS on success.
  */
-UPNPLIB_API int sock_destroy(
+// Don't export function symbol; only used library intern.
+int sock_destroy(
     /*! [in,out] Socket Information Object. */
     SOCKINFO* info,
     /*! [in] How to shutdown the socket. Used by sockets's shutdown(). */
@@ -162,7 +167,8 @@ UPNPLIB_API int sock_destroy(
  * \li \c UPNP_E_TIMEDOUT - Timeout.
  * \li \c UPNP_E_SOCKET_ERROR - Error on socket calls.
  */
-UPNPLIB_API int sock_read(
+// Don't export function symbol; only used library intern.
+int sock_read(
     /*! [in] Socket Information Object. */
     SOCKINFO* info,
     /*! [out] Buffer to get data to. */
@@ -180,7 +186,8 @@ UPNPLIB_API int sock_read(
  * \li \c UPNP_E_TIMEDOUT - Timeout.
  * \li \c UPNP_E_SOCKET_ERROR - Error on socket calls.
  */
-UPNPLIB_API int sock_write(
+// Don't export function symbol; only used library intern.
+int sock_write(
     /*! [in] Socket Information Object. */
     SOCKINFO* info,
     /*! [in] Buffer to send data from. */
@@ -195,7 +202,8 @@ UPNPLIB_API int sock_write(
  *
  * \return 0 if successful, -1 otherwise.
  */
-UPNPLIB_API int sock_make_blocking(
+// Don't export function symbol; only used library intern.
+int sock_make_blocking(
     /* [in] socket. */
     SOCKET sock);
 
@@ -204,7 +212,8 @@ UPNPLIB_API int sock_make_blocking(
  *
  * \return 0 if successful, -1 otherwise.
  */
-UPNPLIB_API int sock_make_no_blocking(
+// Don't export function symbol; only used library intern.
+int sock_make_no_blocking(
     /* [in] socket. */
     SOCKET sock);
 

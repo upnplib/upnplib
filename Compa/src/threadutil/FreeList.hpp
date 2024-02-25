@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-18
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-26
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -71,7 +71,8 @@ typedef struct FREELIST {
  *	\li \c 0 on success.
  *	\li \c EINVAL on failure.
  */
-EXPORT_SPEC int FreeListInit(
+// Don't export function symbol; only used library intern.
+int FreeListInit(
     /*! Must be valid, non null, pointer to a linked list. */
     FreeList* free_list,
     /*! Size of elements to store in free list. */
@@ -88,7 +89,8 @@ EXPORT_SPEC int FreeListInit(
  *
  * \return Non NULL on success. NULL on failure.
  */
-EXPORT_SPEC void* FreeListAlloc(
+// Don't export function symbol; only used library intern.
+void* FreeListAlloc(
     /*! Must be valid, non null, pointer to a linked list. */
     FreeList* free_list);
 
@@ -102,7 +104,8 @@ EXPORT_SPEC void* FreeListAlloc(
  *	\li \c 0 on success.
  *	\li \c EINVAL on failure.
  */
-EXPORT_SPEC int FreeListFree(
+// Don't export function symbol; only used library intern.
+int FreeListFree(
     /*! Must be valid, non null, pointer to a free list. */
     FreeList* free_list,
     /*! Must be a pointer allocated by FreeListAlloc. */
@@ -115,7 +118,8 @@ EXPORT_SPEC int FreeListFree(
  *	\li \c 0 on success.
  *	\li \c EINVAL on failure.
  */
-EXPORT_SPEC int FreeListDestroy(
+// Don't export function symbol; only used library intern.
+int FreeListDestroy(
     /*! Must be valid, non null, pointer to a linked list. */
     FreeList* free_list);
 

@@ -2419,7 +2419,9 @@ INCLUDE_FILE_PATTERNS  =
 
 PREDEFINED             = DOXYGEN_RUN \
                          UPNP_ENABLE_IPV6 \
+                         COMPA_HAVE_MINISERVER \
                          UPNP_HAVE_WEBSERVER \
+                         COMPA_HAVE_DEVICE_SOAP \
                          EXCLUDE_SSDP=0 \
                          INCLUDE_CLIENT_APIS=1 \
                          INCLUDE_DEVICE_APIS=1

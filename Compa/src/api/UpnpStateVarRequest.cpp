@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-28
+// Redistribution only with this Copyright remark. Last modified: 2024-02-27
 // Also Copyright by other contributor as noted below.
 /*!
  * \file
@@ -10,10 +10,12 @@
 #include <config.hpp>
 #include <UpnpStateVarRequest.hpp>
 
-#include <stdlib.h> /* for calloc(), free() */
-#include <string.h> /* for strlen(), strdup() */
+/// \cond
+#include <cstdlib> /* for calloc(), free() */
+#include <cstring> /* for strlen(), strdup() */
+/// \endcond
 
-/// \brief s_UpnpStateVarRequest
+/// \brief With header typedef "protected" s_UpnpStateVarRequest
 struct s_UpnpStateVarRequest {
     /// @{
     /// s_UpnpStateVarRequest

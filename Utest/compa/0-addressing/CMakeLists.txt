@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-14
+# Redistribution only with this Copyright remark. Last modified: 2024-02-27
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -26,6 +26,7 @@ add_test(NAME ctest_sock-psh COMMAND test_sock-psh --gtest_shuffle
 
 add_executable(test_sock-csh
         test_sock.cpp
+        ${COMPA_SOURCE_DIR}/src/genlib/net/sock.cpp
 )
 target_link_libraries(test_sock-csh
     PRIVATE
@@ -56,6 +57,7 @@ if(UPNPLIB_WITH_OPENSSL)
 
     add_executable(test_sock_ssl-csh
         test_sock_ssl.cpp
+        ${COMPA_SOURCE_DIR}/src/genlib/net/sock.cpp
     )
     target_link_libraries(test_sock_ssl-csh
         PRIVATE
@@ -178,9 +180,14 @@ add_test(NAME ctest_miniserver_run-psh COMMAND test_miniserver_run-psh --gtest_s
 add_executable(test_miniserver_run-csh
 #-------------------------------------
     test_miniserver_run.cpp
-    # Due to only library internal use of membuffer it doesn't export symbols.
-    # So we have to compile the test  with the membuffer source.
+    # Due to only library internal use of membuffer, threadutil, and sock they
+    # don't export symbols. So we have to compile the test with the sources.
     ${COMPA_SOURCE_DIR}/src/genlib/util/membuffer.cpp
+    ${COMPA_SOURCE_DIR}/src/threadutil/FreeList.cpp
+    ${COMPA_SOURCE_DIR}/src/threadutil/LinkedList.cpp
+    ${COMPA_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
+    #${COMPA_SOURCE_DIR}/src/threadutil/TimerThread.cpp
+    ${COMPA_SOURCE_DIR}/src/genlib/net/sock.cpp
 )
 target_include_directories(test_miniserver_run-csh
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
