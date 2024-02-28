@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-27
+# Redistribution only with this Copyright remark. Last modified: 2024-02-28
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -177,31 +177,23 @@ add_test(NAME ctest_miniserver_run-psh COMMAND test_miniserver_run-psh --gtest_s
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
-add_executable(test_miniserver_run-csh
+add_executable(test_miniserver_run-cst
 #-------------------------------------
     test_miniserver_run.cpp
-    # Due to only library internal use of membuffer, threadutil, and sock they
-    # don't export symbols. So we have to compile the test with the sources.
-    ${COMPA_SOURCE_DIR}/src/genlib/util/membuffer.cpp
-    ${COMPA_SOURCE_DIR}/src/threadutil/FreeList.cpp
-    ${COMPA_SOURCE_DIR}/src/threadutil/LinkedList.cpp
-    ${COMPA_SOURCE_DIR}/src/threadutil/ThreadPool.cpp
-    #${COMPA_SOURCE_DIR}/src/threadutil/TimerThread.cpp
-    ${COMPA_SOURCE_DIR}/src/genlib/net/sock.cpp
 )
-target_include_directories(test_miniserver_run-csh
+target_include_directories(test_miniserver_run-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
-target_compile_options(test_miniserver_run-csh
+target_compile_options(test_miniserver_run-cst
     # disable warning C4273: inconsistent dll linkage.
     PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/wd4273>
 )
-target_link_libraries(test_miniserver_run-csh
+target_link_libraries(test_miniserver_run-cst
     PRIVATE
-        compa_shared
-        upnplib_shared
-        utest_shared
+        compa_static
+        upnplib_static
+        utest_static
 )
-add_test(NAME ctest_miniserver_run-csh COMMAND test_miniserver_run-csh --gtest_shuffle
+add_test(NAME ctest_miniserver_run-cst COMMAND test_miniserver_run-cst --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )

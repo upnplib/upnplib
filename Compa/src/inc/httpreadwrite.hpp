@@ -1,4 +1,4 @@
-#ifdef UPNP_HAVE_WEBSERVER
+#ifdef COMPA_HAVE_WEBSERVER
 
 #ifndef COMPA_GENLIB_NET_HTTP_HTTPREADWRITE_HPP
 #define COMPA_GENLIB_NET_HTTP_HTTPREADWRITE_HPP
@@ -8,7 +8,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-15
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -568,4 +568,4 @@ void get_sdk_info(
 );
 
 #endif /* COMPA_GENLIB_NET_HTTP_HTTPREADWRITE_HPP */
-#endif // UPNP_HAVE_WEBSERVER
+#endif // COMPA_HAVE_WEBSERVER

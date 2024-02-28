@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-15
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -50,9 +50,6 @@
 #ifndef COMPA_INTERNAL_CONFIG_HPP
 #error "No or wrong config.hpp header file included."
 #endif
-
-#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
-#if (EXCLUDE_SOAP == 0) || defined(DOXYGEN_RUN)
 
 /// \cond
 #include <cassert>
@@ -823,6 +820,3 @@ int SoapGetServiceVarStatus(char* action_url, DOMString var_name,
         return ret_code;
     }
 }
-
-#endif /* EXCLUDE_SOAP */
-#endif /* INCLUDE_CLIENT_APIS */

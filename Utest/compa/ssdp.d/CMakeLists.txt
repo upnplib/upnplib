@@ -1,5 +1,5 @@
 # Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-12-26
+# Redistribution only with this Copyright remark. Last modified: 2024-02-28
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -24,8 +24,8 @@ target_include_directories(test_ssdp_server-pst
 )
 target_compile_definitions(test_ssdp_server-pst
     PRIVATE
-        UPNP_HAVE_CLIENT
-        UPNP_HAVE_DEVICE
+        COMPA_HAVE_CTRLPT_SSDP
+        COMPA_HAVE_DEVICE_SSDP
         UPNP_HAVE_SSDP
 )
 target_link_libraries(test_ssdp_server-pst
@@ -45,8 +45,8 @@ add_executable(test_ssdp_server-cst
 )
 target_compile_definitions(test_ssdp_server-cst
     PRIVATE
-        UPNP_HAVE_CLIENT
-        UPNP_HAVE_DEVICE
+        COMPA_HAVE_CTRLPT_SSDP
+        COMPA_HAVE_DEVICE_SSDP
 )
 target_link_libraries(test_ssdp_server-cst
     PRIVATE

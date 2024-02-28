@@ -38,6 +38,7 @@
  * \brief Internal Web Server and functions to carry out operations of it.
  */
 
+#include <miniserver.hpp>
 #include <httpparser.hpp>
 #include <sock.hpp>
 
@@ -143,6 +144,13 @@ UPNPLIB_API void web_server_callback(
     http_message_t* req,
     /*! [in,out] . */
     SOCKINFO* info);
+
+/*!
+ * \brief Set HTTP Get Callback.
+ */
+UPNPLIB_API void SetHTTPGetCallback(
+    /*! [in] HTTP Callback to be invoked. */
+    MiniServerCallback callback);
 
 /*!
  * \brief Release memory allocated for the global web server root

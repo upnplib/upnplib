@@ -2,6 +2,10 @@
 
 General information to the library, its structure and specifications.
 
+\section parts Parts 'Control Point' and 'UPnP Device'
+
+The library has two parts, handling Control Points or UPnP Devices. They are largely independent of each other. You can compile both parts separately so you have a library that only handle Control Points or UPnP Devices. That make sense for installations that are only a Control Point or only a UPnP Device and is of particular interest for embedded devices. Of course you can also have both parts for hybrid applications.
+
 \section main_modules Main Modules
 
 The <b>S</b>oftware <b>D</b>evelopment <b>K</b>it contains some main modules that are associated with a specific step of the <a href="UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf">UPnP™ Device Architecture 2.0</a>.\n

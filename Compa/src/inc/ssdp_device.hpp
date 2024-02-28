@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-21
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-29
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,7 +49,7 @@
 #endif
 
 
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
 
 /*!
  * \brief Handles the search request.
@@ -58,8 +58,8 @@
  * a random time reply (random within maximum time given by the control point to
  * reply).
  *
- * \note Only available when the DEVICE_APIS option was enabled on compiling the
- * library.
+ * \note Only available when the SSDP option for Devices was enabled on
+ * compiling the library.
  */
 void ssdp_handle_device_request(
     /*! [in] */
@@ -339,5 +339,5 @@ int DeviceShutdown(
 
 /// @} SSDP Device Functions
 
-#endif // INCLUDE_DEVICE_APIS
+#endif // COMPA_HAVE_DEVICE_SSDP
 #endif // COMPA_SSDP_DEVICE_HPP

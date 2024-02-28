@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-03
+// Redistribution only with this Copyright remark. Last modified: 2024-02-28
 // Also Copyright by other contributor which haven't made a note.
 // Last compare with pupnp original source file on 2023-06-22, ver 1.14.16
 /*!
@@ -13,8 +13,6 @@
 
 #include <config.hpp>
 #include <client_table.hpp>
-
-#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
 
 /// \cond
 #include <cstdlib> /* for calloc(), free() */
@@ -103,5 +101,3 @@ GenlibClientSubscription* GetClientSubActualSID(GenlibClientSubscription* head,
 
     return next;
 }
-
-#endif /* INCLUDE_CLIENT_APIS */

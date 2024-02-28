@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-12
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,7 +35,6 @@
  * \brief Callback function to handle incoming GENA requests.
  */
 
-#if EXCLUDE_GENA == 0
 #include <gena.hpp>
 #include <gena_ctrlpt.hpp>
 #include <gena_device.hpp>
@@ -62,7 +61,7 @@ void genaCallback(http_parser_t* parser, http_message_t* request,
     (void)parser;
 
     if (request->method == HTTPMETHOD_SUBSCRIBE) {
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
         found_function = 1;
         if (httpmsg_find_hdr(request, HDR_NT, NULL) == NULL) {
             /* renew subscription */
@@ -79,7 +78,7 @@ void genaCallback(http_parser_t* parser, http_message_t* request,
         gena_process_unsubscribe_request(info, request);
 #endif
     } else if (request->method == HTTPMETHOD_NOTIFY) {
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
         found_function = 1;
         /* notify */
         gena_process_notification_event(info, request);
@@ -92,4 +91,3 @@ void genaCallback(http_parser_t* parser, http_message_t* request,
     }
     return;
 }
-#endif /* EXCLUDE_GENA */

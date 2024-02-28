@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-25
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-29
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,6 +36,7 @@
 /*!
  * \file
  * \brief Main program configuration file
+ * \todo Remove config.hpp
  */
 
 /*!
@@ -255,11 +256,7 @@
  * default everything is included inside the SDK.  By setting any of
  * the values below to 0, that component will not be included in the final
  * SDK.
- *   - `EXCLUDE_SOAP[0,1]`
- *   - `EXCLUDE_GENA[0,1]`
  *   - `EXCLUDE_DOM [0,1]`
- *   - `EXCLUDE_MINISERVER[0,1]`
- *   - `EXCLUDE_WEB_SERVER[0,1]`
  *   - `EXCLUDE_JNI[0,1]`
  */
 /// @{
@@ -294,31 +291,5 @@
 /// @}
 
 /// @} Compile time configuration options
-
-/* *************************************************************************
- * Do not change, Internal purpose only!!!
- * *************************************************************************/
-/*!
- * \name Defines based on requested configuration.
- *
- * Select these options with CMake configuration options preceeded with **-D**,
- * for example:
- * `cmake -S . -B build -D UPNPLIB_WITH_CTRLPT_SSDP=ON -D
- * UPNPLIB_WITH_DEVICE_SSDP=ON`.
- *
- * @{
- */
-
-#if UPNP_HAVE_CLIENT
-/// Configure with CMake option -D UPNPLIB_WITH_CTRLPT_SSDP=ON|OFF
-#define INCLUDE_CLIENT_APIS 1
-#endif
-
-#if UPNP_HAVE_DEVICE
-/// Configure with CMake option -D UPNPLIB_WITH_DEVICE_SSDP=ON|OFF
-#define INCLUDE_DEVICE_APIS 1
-#endif
-
-/// @}
 
 #endif /* COMPA_INTERNAL_CONFIG_HPP */

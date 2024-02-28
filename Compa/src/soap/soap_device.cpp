@@ -55,8 +55,6 @@
 #error "No or wrong config.hpp header file included."
 #endif
 
-#if (EXCLUDE_SOAP == 0) || defined(DOXYGEN_RUN)
-
 /// \cond
 #include <cassert>
 #include <cstring>
@@ -811,5 +809,3 @@ error_handler:
     }
     return;
 }
-
-#endif /* EXCLUDE_SOAP */

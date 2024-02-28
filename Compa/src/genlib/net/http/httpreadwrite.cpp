@@ -724,7 +724,7 @@ ExitFunction:
 
 int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
     TRACE("Executing http_SendMessage()")
-#if EXCLUDE_WEB_SERVER == 0
+#ifdef COMPA_HAVE_WEBSERVER
     FILE* Fp{nullptr};
     SendInstruction* Instr{nullptr};
     char* filename{nullptr};
@@ -735,7 +735,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
     size_t num_read;
     off_t amount_to_be_read{};
     size_t Data_Buf_Size{WEB_SERVER_BUF_SIZE};
-#endif /* EXCLUDE_WEB_SERVER */
+#endif /* COMPA_HAVE_WEBSERVER */
     va_list argp;
     char* buf{nullptr};
     char c;
@@ -745,12 +745,12 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
     size_t num_written;
     [[maybe_unused]] int I_fmt_processed = 0;
 
-#if EXCLUDE_WEB_SERVER == 0
+#ifdef COMPA_HAVE_WEBSERVER
     memset(Chunk_Header, 0, sizeof(Chunk_Header));
-#endif /* EXCLUDE_WEB_SERVER */
+#endif
     va_start(argp, fmt);
     while ((c = *fmt++) != '\0') {
-#if EXCLUDE_WEB_SERVER == 0
+#ifdef COMPA_HAVE_WEBSERVER
         if (c == 'I' && !I_fmt_processed) {
             I_fmt_processed = 1;
             Instr = va_arg(argp, struct SendInstruction*);
@@ -890,7 +890,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
             }
             goto ExitFunction;
         } else
-#endif /* EXCLUDE_WEB_SERVER */
+#endif /* COMPA_HAVE_WEBSERVER */
             if (c == 'b') {
                 /* Message to send is given in a memory buffer */
                 buf = va_arg(argp, char*);
@@ -918,9 +918,9 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
 
 ExitFunction:
     va_end(argp);
-#if EXCLUDE_WEB_SERVER == 0
+#ifdef COMPA_HAVE_WEBSERVER
     free(ChunkBuf);
-#endif /* EXCLUDE_WEB_SERVER */
+#endif
     return RetVal;
 }
 

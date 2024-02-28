@@ -80,7 +80,7 @@ struct Handle_Info {
     char* Cookie;           ///< ???
     int aliasInstalled;     ///< 0 = not installed; otherwise installed.
 
-#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_DEVICE_SSDP
     /// \name Following attributes are only valid with managing a device.
     /// @{
     char DescURL[LINE_SIZE];      ///< URL for the use of SSDP.
@@ -105,7 +105,7 @@ struct Handle_Info {
     /// @}
 #endif
 
-#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_CTRLPT_SSDP
     /// \name Following attributes are only valid with managing a client.
     /// @{
     GenlibClientSubscription* ClientSubList; ///< Client subscription list.

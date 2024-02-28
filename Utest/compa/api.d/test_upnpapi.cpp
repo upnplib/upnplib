@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-24
+// Redistribution only with this Copyright remark. Last modified: 2024-02-28
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <Pupnp/upnp/src/api/upnpapi.cpp>
@@ -92,12 +92,12 @@ clang-format off
             return
      |   else
      |
-     |#ifdef INCLUDE_DEVICE_APIS
+     |#ifdef COMPA_HAVE_DEVICE_SSDP
      |__ while GetDeviceHandleInfo()
      |      UpnpUnRegisterRootDevice()
      |#endif
      |
-     |#ifdef INCLUDE_CLIENT_APIS
+     |#ifdef COMPA_HAVE_CTRLPT_SSDP
 01)  |__ while GetClientHandleInfo()
 02)  |         |__ GetHandleInfo()
      |      UpnpUnRegisterClient()
@@ -108,7 +108,7 @@ clang-format off
      |__ web_server_destroy()
      |__ ThreadPoolShutdown()
      |
-     |#ifdef INCLUDE_CLIENT_APIS
+     |#ifdef COMPA_HAVE_CTRLPT_SSDP
      |__    ithread_mutex_destroy() for clients
      |#endif
      |

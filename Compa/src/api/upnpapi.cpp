@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-28
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -65,11 +65,11 @@
 /* Needed for GENA */
 #include <gena.hpp>
 
-#ifdef INTERNAL_WEB_SERVER
+#ifdef COMPA_HAVE_WEBSERVER
 #include <VirtualDir.hpp>
 #include <urlconfig.hpp>
 #include <webserver.hpp>
-#endif /* INTERNAL_WEB_SERVER */
+#endif /* COMPA_HAVE_WEBSERVER */
 
 #include <sys/stat.h>
 
@@ -115,10 +115,10 @@ struct VirtualDirCallbacks virtualDirCallback;
 /*! \brief Pointer to the virtual directory list. */
 virtualDirList* pVirtualDirList;
 
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
 /*! \brief Mutex to synchronize the subscription handling at the client side. */
 ithread_mutex_t GlobalClientSubscribeMutex;
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
 
 /*! \brief rwlock to synchronize handles (root device or control point handle).
  */
@@ -241,12 +241,12 @@ int UpnpSdkDeviceRegisteredV4 = 0;
  * == 0 if unregistered, == 1 if registered. */
 int UpnpSdkDeviceregisteredV6 = 0;
 
-#if defined(UPNP_HAVE_OPTSSDP) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_OPTION_SSDP
 /*! \brief Global variable used in discovery notifications.
  *
- * Only available when optional SSDP (OPTSSDP) is compiled in. */
+ * Only available when options SSDP are compiled in. */
 Upnp_SID gUpnpSdkNLSuuid;
-#endif /* UPNP_HAVE_OPTSSDP */
+#endif
 
 /// job_arg
 typedef union {
@@ -260,7 +260,7 @@ typedef union {
     struct UpnpNonblockParam action;
 } job_arg;
 
-#ifdef INCLUDE_DEVICE_APIS // Needed to compile with warings as errors --Ingo
+#ifdef COMPA_HAVE_DEVICE_SSDP // Needed to compile with warings as errors --Ingo
 /*!
  * \brief Free memory associated with advertise job's argument
  */
@@ -270,10 +270,9 @@ static void free_advertise_arg(job_arg* arg) {
     }
     free(arg);
 }
-#endif /* INCLUDE_DEVICE_APIS */
+#endif
 
-#if EXCLUDE_SOAP == 0 // Needed to compile with warings as errors --Ingo
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SOAP
 /*!
  * \brief Free memory associated with an action job's argument
  */
@@ -286,8 +285,7 @@ static void free_action_arg(job_arg* arg) {
     }
     free(arg);
 }
-#endif /* INCLUDE_CLIENT_APIS */
-#endif /* EXCLUDE_SOAP == 0 */
+#endif
 
 /*!
  * \brief (Windows Only) Initializes the Windows Winsock library.
@@ -348,7 +346,7 @@ static int UpnpInitMutexes() {
         return UPNP_E_INIT_FAILED;
     }
     /* initialize subscribe mutex. */
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
     if (ithread_mutex_init(&GlobalClientSubscribeMutex, NULL) != 0) {
         return UPNP_E_INIT_FAILED;
     }
@@ -413,9 +411,6 @@ static int UpnpInitPreamble() {
     TRACE("Executing UpnpInitPreamble()")
     int retVal = UPNP_E_SUCCESS;
     int i;
-#ifdef UPNP_HAVE_OPTSSDP
-    uuid_upnp nls_uuid;
-#endif /* UPNP_HAVE_OPTSSDP */
 
     retVal = WinsockInit();
     if (retVal != UPNP_E_SUCCESS) {
@@ -440,11 +435,12 @@ static int UpnpInitPreamble() {
         return retVal;
     }
 
-#ifdef UPNP_HAVE_OPTSSDP
+#ifdef COMPA_HAVE_OPTION_SSDP
     /* Create the NLS uuid. */
+    uuid_upnp nls_uuid;
     uuid_create(&nls_uuid);
     upnp_uuid_unpack(&nls_uuid, gUpnpSdkNLSuuid);
-#endif /* UPNP_HAVE_OPTSSDP */
+#endif
 
     /* Initializes the handle list. */
     HandleLock();
@@ -463,11 +459,9 @@ static int UpnpInitPreamble() {
     SetSoapCallback(soap_device_callback);
 #endif
 
-#ifdef INTERNAL_WEB_SERVER
-#if EXCLUDE_GENA == 0
+#if defined(COMPA_HAVE_CTRLPT_GENA) || defined(COMPA_HAVE_DEVICE_GENA)
     SetGenaCallback(genaCallback);
 #endif
-#endif /* INTERNAL_WEB_SERVER */
 
     /* Initialize the SDK timer thread. */
     retVal = TimerThreadInit(&gTimerThread, &gSendThreadPool);
@@ -492,18 +486,14 @@ static int UpnpInitStartServers(
     /*! [in] Local Port to listen for incoming connections. */
     [[maybe_unused]] unsigned short DestPort) {
     TRACE("Executing UpnpInitStartServers()")
-#if EXCLUDE_MINISERVER == 0 || EXCLUDE_WEB_SERVER == 0
-    int retVal = 0;
-#endif
-
     UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
                "Entering UpnpInitStartServers\n");
 
-#if EXCLUDE_MINISERVER == 0
+#ifdef COMPA_HAVE_MINISERVER
     LOCAL_PORT_V4 = DestPort;
     LOCAL_PORT_V6 = DestPort;
     LOCAL_PORT_V6_ULA_GUA = DestPort;
-    retVal =
+    int retVal =
         StartMiniServer(&LOCAL_PORT_V4, &LOCAL_PORT_V6, &LOCAL_PORT_V6_ULA_GUA);
     if (retVal != UPNP_E_SUCCESS) {
         UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
@@ -513,7 +503,7 @@ static int UpnpInitStartServers(
     }
 #endif
 
-#if EXCLUDE_WEB_SERVER == 0
+#ifdef COMPA_HAVE_WEBSERVER
     membuffer_init(&gDocumentRootDir);
     retVal = UpnpEnableWebserver(WEB_SERVER_ENABLED);
     if (retVal != UPNP_E_SUCCESS) {
@@ -595,7 +585,7 @@ int UpnpInitSslContext(int initOpenSslLib, const SSL_METHOD* sslMethod) {
 }
 #endif
 
-#if defined(DEBUG) || defined(DOXYGEN_RUN)
+#ifdef DEBUG
 /*!
  * \anchor PrintThreadPoolStats_dbg
  * \brief Prints thread pool statistics if DEBUG is enabled. See also \#define
@@ -631,21 +621,20 @@ void PrintThreadPoolStats(
                stats.persistentThreads, stats.idleThreads, stats.totalThreads,
                stats.totalWorkTime, stats.totalIdleTime);
 }
-#endif
-#if !defined(DEBUG) || defined(DOXYGEN_RUN)
+#else
 /*! \brief This is called if DEBUG is not enabled and do nothing. See also
  * function \ref PrintThreadPoolStats_dbg "PrintThreadPoolStats()" for DEBUG. */
 #define PrintThreadPoolStats(tp, DbgFileName, DbgLineNo, msg)                  \
     do {                                                                       \
     } while (0)
-#endif
+#endif /* DEBUG */
 
 int UpnpFinish() {
     TRACE("Executing UpnpFinish()")
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
     UpnpDevice_Handle device_handle;
 #endif
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
     UpnpClient_Handle client_handle;
 #endif
     [[maybe_unused]] struct Handle_Info* temp;
@@ -668,7 +657,7 @@ int UpnpFinish() {
                          "Recv Thread Pool");
     PrintThreadPoolStats(&gMiniServerThreadPool, __FILE__, __LINE__,
                          "MiniServer Thread Pool");
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
     while (GetDeviceHandleInfo(0, AF_INET, &device_handle, &temp) ==
            HND_DEVICE) {
         UpnpUnRegisterRootDevice(device_handle);
@@ -678,16 +667,16 @@ int UpnpFinish() {
         UpnpUnRegisterRootDevice(device_handle);
     }
 #endif
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
     while (HND_CLIENT == GetClientHandleInfo(&client_handle, &temp)) {
         UpnpUnRegisterClient(client_handle);
     }
 #endif
     TimerThreadShutdown(&gTimerThread);
-#if EXCLUDE_MINISERVER == 0
+#ifdef COMPA_HAVE_MINISERVER
     StopMiniServer();
 #endif
-#if EXCLUDE_WEB_SERVER == 0
+#ifdef COMPA_HAVE_WEBSERVER
     web_server_destroy();
 #endif
     ThreadPoolShutdown(&gMiniServerThreadPool);
@@ -699,7 +688,7 @@ int UpnpFinish() {
     ThreadPoolShutdown(&gSendThreadPool);
     PrintThreadPoolStats(&gRecvThreadPool, __FILE__, __LINE__,
                          "Recv Thread Pool");
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
     ithread_mutex_destroy(&GlobalClientSubscribeMutex);
 #endif
     ithread_rwlock_destroy(&GlobalHndRWLock);
@@ -780,7 +769,7 @@ char* UpnpGetServerUlaGuaIp6Address() {
  * \return On success, an integer greater than zero or UPNP_E_OUTOF_HANDLE on
  *  failure.
  */
-#if defined INCLUDE_DEVICE_APIS || defined INCLUDE_CLIENT_APIS
+#if defined(COMPA_HAVE_DEVICE_SSDP) || defined(COMPA_HAVE_CTRLPT_SSDP)
 static int GetFreeHandle() {
     /* Handle 0 is not used as NULL translates to 0 when passed as a handle
      */
@@ -822,18 +811,17 @@ static int FreeHandle(
 
     return ret;
 }
-#endif // defined INCLUDE_DEVICE_APIS || defined INCLUDE_CLIENT_APIS
+#endif // defined(COMPA_HAVE_DEVICE_SSDP) || defined(COMPA_HAVE_CTRLPT_SSDP)
 
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
 int UpnpRegisterRootDevice(const char* const DescUrl, const Upnp_FunPtr Fun,
                            const void* const Cookie,
                            UpnpDevice_Handle* const Hnd) {
     struct Handle_Info* HInfo = NULL;
     int retVal = 0;
-#if EXCLUDE_GENA == 0
-    int hasServiceTable = 0;
-#endif /* EXCLUDE_GENA */
-
+#ifdef COMPA_HAVE_DEVICE_GENA
+    int hasServiceTable{0};
+#endif
     HandleLock();
 
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
@@ -881,10 +869,12 @@ int UpnpRegisterRootDevice(const char* const DescUrl, const Upnp_FunPtr Fun,
     HInfo->DeviceList = NULL;
     HInfo->ServiceList = NULL;
     HInfo->DescDocument = NULL;
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
+    /*! \todo Check if it is intended that this and the following is only
+     * compiled in if we have also Device SSDP enabled. */
     ListInit(&HInfo->SsdpSearchList, NULL, NULL);
     HInfo->ClientSubList = NULL;
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
     HInfo->MaxSubscriptions = UPNP_INFINITE;
     HInfo->MaxSubscriptionTimeOut = UPNP_INFINITE;
     HInfo->DeviceAf = AF_INET;
@@ -895,9 +885,9 @@ int UpnpRegisterRootDevice(const char* const DescUrl, const Upnp_FunPtr Fun,
                    "UpnpRegisterRootDevice: error downloading Document: "
                    "%d\n",
                    retVal);
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
         ListDestroy(&HInfo->SsdpSearchList, 0);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
         FreeHandle(*Hnd);
         goto exit_function;
     }
@@ -909,9 +899,9 @@ int UpnpRegisterRootDevice(const char* const DescUrl, const Upnp_FunPtr Fun,
     HInfo->DeviceList =
         ixmlDocument_getElementsByTagName(HInfo->DescDocument, "device");
     if (!HInfo->DeviceList) {
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
         ListDestroy(&HInfo->SsdpSearchList, 0);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
         ixmlDocument_free(HInfo->DescDocument);
         FreeHandle(*Hnd);
         UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
@@ -929,7 +919,7 @@ int UpnpRegisterRootDevice(const char* const DescUrl, const Upnp_FunPtr Fun,
                    "RootDevice\n");
     }
 
-#if EXCLUDE_GENA == 0
+#ifdef COMPA_HAVE_DEVICE_GENA
     /*
      * GENA SET UP
      */
@@ -947,7 +937,7 @@ int UpnpRegisterRootDevice(const char* const DescUrl, const Upnp_FunPtr Fun,
         UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                    "\nUpnpRegisterRootDevice: Empty service table\n");
     }
-#endif /* EXCLUDE_GENA */
+#endif // COMPA_HAVE_DEVICE_GENA
 
     UpnpSdkDeviceRegisteredV4 = 1;
 
@@ -960,7 +950,6 @@ exit_function:
 
     return retVal;
 }
-// #endif /* INCLUDE_DEVICE_APIS */ // bugfix for compiling C++ --Ingo
 
 /*!
  * \brief Fills the sockadr_in with miniserver information.
@@ -979,7 +968,6 @@ static int GetDescDocumentAndURL(
     /* [out] . */
     char descURL[LINE_SIZE]);
 
-// #ifdef INCLUDE_DEVICE_APIS // bugfix for compiling C++ --Ingo
 int UpnpRegisterRootDevice2(const Upnp_DescType descriptionType,
                             const char* const description_const,
                             const size_t bufferLen, /* ignored */
@@ -988,12 +976,11 @@ int UpnpRegisterRootDevice2(const Upnp_DescType descriptionType,
                             UpnpDevice_Handle* const Hnd) {
     struct Handle_Info* HInfo = NULL;
     int retVal = 0;
-#if EXCLUDE_GENA == 0
-    int hasServiceTable = 0;
-#endif /* EXCLUDE_GENA */
     char* description = (char*)description_const;
     (void)bufferLen;
-
+#ifdef COMPA_HAVE_DEVICE_GENA
+    int hasServiceTable{0};
+#endif
     HandleLock();
 
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
@@ -1055,10 +1042,12 @@ int UpnpRegisterRootDevice2(const Upnp_DescType descriptionType,
     HInfo->MaxAge = DEFAULT_MAXAGE;
     HInfo->DeviceList = NULL;
     HInfo->ServiceList = NULL;
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
+    /*! \todo Check if it is intended that this and the following is only
+     * compiled in if we have also Device SSDP enabled. */
     ListInit(&HInfo->SsdpSearchList, NULL, NULL);
     HInfo->ClientSubList = NULL;
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
     HInfo->MaxSubscriptions = UPNP_INFINITE;
     HInfo->MaxSubscriptionTimeOut = UPNP_INFINITE;
     HInfo->DeviceAf = AF_INET;
@@ -1071,9 +1060,9 @@ int UpnpRegisterRootDevice2(const Upnp_DescType descriptionType,
     HInfo->DeviceList =
         ixmlDocument_getElementsByTagName(HInfo->DescDocument, "device");
     if (!HInfo->DeviceList) {
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
         ListDestroy(&HInfo->SsdpSearchList, 0);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
         ixmlDocument_free(HInfo->DescDocument);
         FreeHandle(*Hnd);
         UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
@@ -1091,7 +1080,7 @@ int UpnpRegisterRootDevice2(const Upnp_DescType descriptionType,
                    "RootDevice\n");
     }
 
-#if EXCLUDE_GENA == 0
+#ifdef COMPA_HAVE_DEVICE_GENA
     /*
      * GENA SET UP
      */
@@ -1109,7 +1098,7 @@ int UpnpRegisterRootDevice2(const Upnp_DescType descriptionType,
         UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                    "\nUpnpRegisterRootDevice2: Empty service table\n");
     }
-#endif /* EXCLUDE_GENA */
+#endif // COMPA_HAVE_DEVICE_GENA
 
     UpnpSdkDeviceRegisteredV4 = 1;
 
@@ -1122,9 +1111,9 @@ exit_function:
 
     return retVal;
 }
-#endif /* INCLUDE_DEVICE_APIS */
+#endif /* COMPA_HAVE_DEVICE_SSDP */
 
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
 /* For compatibility also available as alias
 int UpnpRegisterRootDevice4() with same arguments */
 int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
@@ -1134,10 +1123,9 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
                             const char* const LowerDescUrl) {
     Handle_Info* HInfo;
     int retVal = 0;
-#if EXCLUDE_GENA == 0
-    int hasServiceTable = 0;
-#endif /* EXCLUDE_GENA */
-
+#ifdef COMPA_HAVE_DEVICE_GENA
+    int hasServiceTable{0};
+#endif
     HandleLock();
 
     UpnpPrintf(
@@ -1185,19 +1173,21 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
     HInfo->DeviceList = nullptr;
     HInfo->ServiceList = nullptr;
     HInfo->DescDocument = nullptr;
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
+    /*! \todo Check if it is intended that this and the following is only
+     * compiled in if we have also Device SSDP enabled. */
     ListInit(&HInfo->SsdpSearchList, NULL, NULL);
     HInfo->ClientSubList = nullptr;
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
     HInfo->MaxSubscriptions = UPNP_INFINITE;
     HInfo->MaxSubscriptionTimeOut = UPNP_INFINITE;
     HInfo->DeviceAf = AddressFamily;
 
     retVal = UpnpDownloadXmlDoc(HInfo->DescURL, &(HInfo->DescDocument));
     if (retVal != UPNP_E_SUCCESS) {
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
         ListDestroy(&HInfo->SsdpSearchList, 0);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
         FreeHandle(*Hnd);
         goto exit_function;
     }
@@ -1209,9 +1199,9 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
     HInfo->DeviceList =
         ixmlDocument_getElementsByTagName(HInfo->DescDocument, "device");
     if (!HInfo->DeviceList) {
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
         ListDestroy(&HInfo->SsdpSearchList, 0);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
         ixmlDocument_free(HInfo->DescDocument);
         FreeHandle(*Hnd);
         UpnpPrintf(UPNP_CRITICAL, API, __FILE__, __LINE__,
@@ -1229,7 +1219,7 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
                    "RootDevice\n");
     }
 
-#if EXCLUDE_GENA == 0
+#ifdef COMPA_HAVE_DEVICE_GENA
     /*
      * GENA SET UP
      */
@@ -1247,7 +1237,7 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
         UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                    "\nUpnpRegisterRootDevice[34]: Empty service table\n");
     }
-#endif /* EXCLUDE_GENA */
+#endif // COMPA_HAVE_CTRLPT_GENA || COMPA_HAVE_DEVICE_GENA
 
     switch (AddressFamily) {
     case AF_INET:
@@ -1267,9 +1257,9 @@ exit_function:
 
     return retVal;
 }
-#endif /* INCLUDE_DEVICE_APIS */
+#endif /* COMPA_HAVE_DEVICE_SSDP */
 
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
 int UpnpUnRegisterRootDevice(UpnpDevice_Handle Hnd) {
     UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
                "Inside UpnpUnRegisterRootDevice\n");
@@ -1285,7 +1275,7 @@ int UpnpUnRegisterRootDeviceLowPower(UpnpDevice_Handle Hnd, int PowerState,
         return UPNP_E_FINISH;
     UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
                "Inside UpnpUnRegisterRootDeviceLowPower\n");
-#if EXCLUDE_GENA == 0
+#ifdef COMPA_HAVE_DEVICE_GENA
     if (genaUnregisterDevice(Hnd) != UPNP_E_SUCCESS)
         return UPNP_E_INVALID_HANDLE;
 #endif
@@ -1305,11 +1295,9 @@ int UpnpUnRegisterRootDeviceLowPower(UpnpDevice_Handle Hnd, int PowerState,
     HInfo->RegistrationState = RegistrationState;
     HandleUnlock();
 
-#ifdef INCLUDE_DEVICE_APIS
     retVal = AdvertiseAndReply(-1, Hnd, (enum SsdpSearchType)0,
                                (struct sockaddr*)NULL, (char*)NULL, (char*)NULL,
                                (char*)NULL, HInfo->MaxAge);
-#endif
 
     HandleLock();
     switch (GetHandleInfo(Hnd, &HInfo)) {
@@ -1322,13 +1310,15 @@ int UpnpUnRegisterRootDeviceLowPower(UpnpDevice_Handle Hnd, int PowerState,
     ixmlNodeList_free(HInfo->DeviceList);
     ixmlNodeList_free(HInfo->ServiceList);
     ixmlDocument_free(HInfo->DescDocument);
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
+    /*! \todo Check if it is intended that this and the following is only
+     * compiled in if we have also Device SSDP enabled. */
     ListDestroy(&HInfo->SsdpSearchList, 0);
-#endif /* INCLUDE_CLIENT_APIS */
-#ifdef INTERNAL_WEB_SERVER
+#endif
+#ifdef COMPA_HAVE_WEBSERVER
     if (HInfo->aliasInstalled)
         web_server_set_alias(NULL, NULL, 0, 0);
-#endif /* INTERNAL_WEB_SERVER */
+#endif
     switch (HInfo->DeviceAf) {
     case AF_INET:
         UpnpSdkDeviceRegisteredV4 = 0;
@@ -1347,9 +1337,9 @@ int UpnpUnRegisterRootDeviceLowPower(UpnpDevice_Handle Hnd, int PowerState,
 
     return retVal;
 }
-#endif /* INCLUDE_DEVICE_APIS */
+#endif /* COMPA_HAVE_DEVICE_SSDP */
 
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
 int UpnpRegisterClient(Upnp_FunPtr Fun, const void* Cookie,
                        UpnpClient_Handle* Hnd) {
     struct Handle_Info* HInfo;
@@ -1382,7 +1372,9 @@ int UpnpRegisterClient(Upnp_FunPtr Fun, const void* Cookie,
     HInfo->Cookie = (char*)Cookie;
     HInfo->ClientSubList = NULL;
     ListInit(&HInfo->SsdpSearchList, NULL, NULL);
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
+    /*! \todo Check if it is intended that this and the following is only
+     * compiled in if we have also Ctrlpt SSDP enabled. */
     HInfo->MaxAge = 0;
     HInfo->MaxSubscriptions = UPNP_INFINITE;
     HInfo->MaxSubscriptionTimeOut = UPNP_INFINITE;
@@ -1396,9 +1388,9 @@ int UpnpRegisterClient(Upnp_FunPtr Fun, const void* Cookie,
 
     return UPNP_E_SUCCESS;
 }
-#endif /* INCLUDE_CLIENT_APIS */
+#endif /* COMPA_HAVE_CTRLPT_SSDP */
 
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
 int UpnpUnRegisterClient(UpnpClient_Handle Hnd) {
     struct Handle_Info* HInfo;
     ListNode* node = NULL;
@@ -1416,7 +1408,7 @@ int UpnpUnRegisterClient(UpnpClient_Handle Hnd) {
     }
     HandleUnlock();
 
-#if EXCLUDE_GENA == 0
+#ifdef COMPA_HAVE_CTRLPT_GENA
     if (genaUnregisterClient(Hnd) != UPNP_E_SUCCESS)
         return UPNP_E_INVALID_HANDLE;
 #endif
@@ -1449,10 +1441,9 @@ int UpnpUnRegisterClient(UpnpClient_Handle Hnd) {
 
     return UPNP_E_SUCCESS;
 }
-#endif /* INCLUDE_CLIENT_APIS */
+#endif /* COMPA_HAVE_CTRLPT_SSDP */
 
-#ifdef INCLUDE_DEVICE_APIS
-#ifdef INTERNAL_WEB_SERVER
+#ifdef COMPA_HAVE_DEVICE_SSDP
 /*!
  * \brief Determines alias for given name which is a file name or URL.
  *
@@ -1651,39 +1642,7 @@ static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
 
     return UPNP_E_SUCCESS;
 }
-
-#else /* INTERNAL_WEB_SERVER */ /* no web server */
-static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
-                                 char* description, int config_baseURL,
-                                 [[maybe_unused]] int AddressFamily,
-                                 IXML_Document** xmlDoc,
-                                 char descURL[LINE_SIZE]) {
-    int retVal = 0;
-
-    if (descriptionType != (enum Upnp_DescType_e)UPNPREG_URL_DESC ||
-        config_baseURL) {
-        return UPNP_E_NO_WEB_SERVER;
-    }
-
-    if (description == NULL) {
-        return UPNP_E_INVALID_PARAM;
-    }
-
-    if (strlen(description) > LINE_SIZE - (size_t)1) {
-        return UPNP_E_URL_TOO_BIG;
-    }
-    strncpy(descURL, description, LINE_SIZE - 1);
-    descURL[LINE_SIZE - 1] = '\0';
-
-    retVal = UpnpDownloadXmlDoc(description, xmlDoc);
-    if (retVal != UPNP_E_SUCCESS) {
-        return retVal;
-    }
-
-    return UPNP_E_SUCCESS;
-}
-#endif                          /* INTERNAL_WEB_SERVER */
-#endif                          /* INCLUDE_DEVICE_APIS */
+#endif /* COMPA_HAVE_DEVICE_SSDP */
 
 /*******************************************************************************
  *
@@ -1691,7 +1650,7 @@ static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
  *
  ******************************************************************************/
 
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
 int UpnpSendAdvertisement(UpnpDevice_Handle Hnd, int Exp) {
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                "Inside UpnpSendAdvertisement \n");
@@ -1794,9 +1753,9 @@ int UpnpSendAdvertisementLowPower(UpnpDevice_Handle Hnd, int Exp,
 
     return retVal;
 }
-#endif /* INCLUDE_DEVICE_APIS */
+#endif /* COMPA_HAVE_DEVICE_SSDP */
 
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
 int UpnpSearchAsync(UpnpClient_Handle Hnd, int Mx, const char* Target_const,
                     const void* Cookie_const) {
     struct Handle_Info* SInfo = NULL;
@@ -1834,7 +1793,7 @@ int UpnpSearchAsync(UpnpClient_Handle Hnd, int Mx, const char* Target_const,
 
     return UPNP_E_SUCCESS;
 }
-#endif /* INCLUDE_CLIENT_APIS */
+#endif /* COMPA_HAVE_CTRLPT_SSDP */
 
 /*******************************************************************************
  *
@@ -1842,8 +1801,7 @@ int UpnpSearchAsync(UpnpClient_Handle Hnd, int Mx, const char* Target_const,
  *
  ******************************************************************************/
 
-#if EXCLUDE_GENA == 0
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_GENA
 int UpnpSetMaxSubscriptions(UpnpDevice_Handle Hnd, int MaxSubscriptions) {
     struct Handle_Info* SInfo = NULL;
 
@@ -1874,9 +1832,9 @@ int UpnpSetMaxSubscriptions(UpnpDevice_Handle Hnd, int MaxSubscriptions) {
 
     return UPNP_E_SUCCESS;
 }
-#endif /* INCLUDE_DEVICE_APIS */
+#endif /* COMPA_HAVE_DEVICE_GENA */
 
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_GENA
 int UpnpSetMaxSubscriptionTimeOut(UpnpDevice_Handle Hnd,
                                   int MaxSubscriptionTimeOut) {
     struct Handle_Info* SInfo = NULL;
@@ -1911,9 +1869,9 @@ int UpnpSetMaxSubscriptionTimeOut(UpnpDevice_Handle Hnd,
 
     return UPNP_E_SUCCESS;
 }
-#endif /* INCLUDE_DEVICE_APIS */
+#endif /* COMPA_HAVE_DEVICE_GENA */
 
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_GENA
 int UpnpSubscribeAsync(UpnpClient_Handle Hnd, const char* EvtUrl_const,
                        int TimeOut, Upnp_FunPtr Fun, const void* Cookie_const) {
     struct Handle_Info* SInfo = NULL;
@@ -1977,9 +1935,9 @@ int UpnpSubscribeAsync(UpnpClient_Handle Hnd, const char* EvtUrl_const,
 
     return UPNP_E_SUCCESS;
 }
-#endif /* INCLUDE_CLIENT_APIS */
+#endif /* COMPA_HAVE_CTRLPT_GENA */
 
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_GENA
 int UpnpSubscribe(UpnpClient_Handle Hnd, const char* EvtUrl_const, int* TimeOut,
                   Upnp_SID SubsId) {
     int retVal;
@@ -2043,9 +2001,9 @@ exit_function:
 
     return retVal;
 }
-#endif /* INCLUDE_CLIENT_APIS */
+#endif /* COMPA_HAVE_CTRLPT_GENA */
 
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_GENA
 int UpnpUnSubscribe(UpnpClient_Handle Hnd, const Upnp_SID SubsId) {
     struct Handle_Info* SInfo = NULL;
     int retVal;
@@ -2089,9 +2047,9 @@ exit_function:
 
     return retVal;
 }
-#endif /* INCLUDE_CLIENT_APIS */
+#endif /* COMPA_HAVE_CTRLPT_GENA */
 
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_GENA
 int UpnpUnSubscribeAsync(UpnpClient_Handle Hnd, Upnp_SID SubsId,
                          Upnp_FunPtr Fun, const void* Cookie_const) {
     int retVal = UPNP_E_SUCCESS;
@@ -2154,9 +2112,9 @@ exit_function:
 
     return retVal;
 }
-#endif /* INCLUDE_CLIENT_APIS */
+#endif /* COMPA_HAVE_CTRLPT_GENA */
 
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_GENA
 int UpnpRenewSubscription(UpnpClient_Handle Hnd, int* TimeOut,
                           const Upnp_SID SubsId) {
     struct Handle_Info* SInfo = NULL;
@@ -2207,9 +2165,9 @@ exit_function:
 
     return retVal;
 }
-#endif /* INCLUDE_CLIENT_APIS */
+#endif /* COMPA_HAVE_CTRLPT_GENA */
 
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_GENA
 int UpnpRenewSubscriptionAsync(UpnpClient_Handle Hnd, int TimeOut,
                                Upnp_SID SubsId, Upnp_FunPtr Fun,
                                const void* Cookie_const) {
@@ -2272,9 +2230,9 @@ int UpnpRenewSubscriptionAsync(UpnpClient_Handle Hnd, int TimeOut,
 
     return UPNP_E_SUCCESS;
 }
-#endif /* INCLUDE_CLIENT_APIS */
+#endif /* COMPA_HAVE_CTRLPT_GENA */
 
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_GENA
 int UpnpNotify(UpnpDevice_Handle Hnd, const char* DevID_const,
                const char* ServName_const, const char** VarName_const,
                const char** NewVal_const, int cVariables) {
@@ -2357,9 +2315,9 @@ int UpnpNotifyExt(UpnpDevice_Handle Hnd, const char* DevID_const,
 
     return retVal;
 }
-#endif /* INCLUDE_DEVICE_APIS */
+#endif /* COMPA_HAVE_DEVICE_GENA */
 
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_GENA
 int UpnpAcceptSubscription(UpnpDevice_Handle Hnd, const char* DevID_const,
                            const char* ServName_const,
                            const char** VarName_const,
@@ -2504,8 +2462,7 @@ exit_function:
 
     return ret;
 }
-#endif /* INCLUDE_DEVICE_APIS */
-#endif /* EXCLUDE_GENA == 0 */
+#endif /* COMPA_HAVE_DEVICE_GENA */
 
 /*******************************************************************************
  *
@@ -2513,8 +2470,7 @@ exit_function:
  *
  ******************************************************************************/
 
-#if EXCLUDE_SOAP == 0
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SOAP
 int UpnpSendAction(UpnpClient_Handle Hnd, const char* ActionURL_const,
                    const char* ServiceType_const, const char* DevUDN_const,
                    IXML_Document* Action, IXML_Document** RespNodePtr) {
@@ -2912,15 +2868,14 @@ int UpnpGetServiceVarStatus(UpnpClient_Handle Hnd, const char* ActionURL_const,
 
     return retVal;
 }
-#endif /* INCLUDE_CLIENT_APIS */
-#endif /* EXCLUDE_SOAP */
+#endif /* COMPA_HAVE_CTRLPT_SOAP */
 
 /*******************************************************************************
  *
  *                             Client API
  *
  ******************************************************************************/
-#ifdef UPNP_HAVE_WEBSERVER
+#ifdef COMPA_HAVE_WEBSERVER
 int UpnpOpenHttpPost(const char* url, void** handle, const char* contentType,
                      int contentLength, int timeout) {
     int status = http_OpenHttpConnection(url, handle, timeout);
@@ -3031,9 +2986,9 @@ int UpnpReadHttpResponse(void* handle, char* buf, size_t* size, int timeout) {
 int UpnpCloseHttpConnection(void* handle) {
     return http_CloseHttpConnection(handle);
 }
-#endif // UPNP_HAVE_WEBSERVER
+#endif // COMPA_HAVE_WEBSERVER
 
-#ifdef UPNP_HAVE_WEBSERVER
+#ifdef COMPA_HAVE_WEBSERVER
 int UpnpDownloadUrlItem(const char* url, char** outBuf, char* contentType) {
     int ret_code;
     size_t doc_length;
@@ -3286,7 +3241,9 @@ int UpnpGetIfInfo(const char* IfName) {
     }
     inet_ntop(AF_INET, &v4_addr, gIF_IPV4, sizeof(gIF_IPV4));
     inet_ntop(AF_INET6, &v6_addr, gIF_IPV6, sizeof(gIF_IPV6));
-#else
+
+#else  // not _WIN32
+
     struct ifaddrs *ifap, *ifa;
     struct in_addr v4_addr = {0};
     struct in_addr v4_netmask = {0};
@@ -3418,7 +3375,8 @@ int UpnpGetIfInfo(const char* IfName) {
             gIF_IPV6_ULA_GUA_PREFIX_LENGTH = v6ulagua_prefix;
         }
     }
-#endif
+#endif // _WIN32
+
     UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
                "Interface name=%s, index=%d, v4=%s, v6=%s, ULA or GUA v6=%s\n",
                gIF_NAME, gIF_INDEX, gIF_IPV4, gIF_IPV6, gIF_IPV6_ULA_GUA);
@@ -3429,13 +3387,13 @@ int UpnpGetIfInfo(const char* IfName) {
 /*!
  * \brief Schedule async functions in threadpool.
  */
-#if defined INCLUDE_CLIENT_APIS && (EXCLUDE_GENA == 0 || EXCLUDE_SOAP == 0)
+#if defined(COMPA_HAVE_CTRLPT_SOAP) || defined(COMPA_HAVE_CTRLPT_GENA)
 void UpnpThreadDistribution(struct UpnpNonblockParam* Param) {
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                "Inside UpnpThreadDistribution \n");
 
     switch (Param->FunName) {
-#if EXCLUDE_GENA == 0
+#ifdef COMPA_HAVE_CTRLPT_GENA
     case SUBSCRIBE: {
         UpnpEventSubscribe* evt = UpnpEventSubscribe_new();
         UpnpString* Sid = UpnpString_new();
@@ -3478,8 +3436,8 @@ void UpnpThreadDistribution(struct UpnpNonblockParam* Param) {
         free(Param);
         break;
     }
-#endif /* EXCLUDE_GENA == 0 */
-#if EXCLUDE_SOAP == 0
+#endif /* COMPA_HAVE_CTRLPT_GENA */
+#ifdef COMPA_HAVE_CTRLPT_SOAP
     case ACTION: {
         UpnpActionComplete* Evt = UpnpActionComplete_new();
         IXML_Document* actionResult = NULL;
@@ -3516,7 +3474,7 @@ void UpnpThreadDistribution(struct UpnpNonblockParam* Param) {
         UpnpStateVarComplete_delete(Evt);
         break;
     }
-#endif /* EXCLUDE_SOAP == 0 */
+#endif /* COMPA_HAVE_CTRLPT_SOAP */
     default:
         break;
     }
@@ -3524,7 +3482,7 @@ void UpnpThreadDistribution(struct UpnpNonblockParam* Param) {
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                "Exiting UpnpThreadDistribution\n");
 }
-#endif /* INCLUDE_CLIENT_APIS */
+#endif /* COMPA_HAVE_CTRLPT_SOAP || COMPA_HAVE_CTRLPT_GENA */
 
 /*!
  * \brief Get callback function ptr from a handle.
@@ -3560,7 +3518,7 @@ GetDeviceHandleInfo([[maybe_unused]] UpnpDevice_Handle start,
                     [[maybe_unused]] int AddressFamily,
                     UpnpDevice_Handle* device_handle_out,
                     [[maybe_unused]] struct Handle_Info** HndInfo) {
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
     /* Check if we've got a registered device of the address family
      * specified. */
     if ((AddressFamily == AF_INET && UpnpSdkDeviceRegisteredV4 == 0) ||
@@ -3586,7 +3544,7 @@ GetDeviceHandleInfo([[maybe_unused]] UpnpDevice_Handle start,
             break;
         }
     }
-#endif /* INCLUDE_DEVICE_APIS */
+#endif /* COMPA_HAVE_DEVICE_SSDP */
 
     *device_handle_out = -1;
     return HND_INVALID;
@@ -3598,7 +3556,7 @@ GetDeviceHandleInfoForPath([[maybe_unused]] const char* path,
                            UpnpDevice_Handle* device_handle_out,
                            [[maybe_unused]] struct Handle_Info** HndInfo,
                            [[maybe_unused]] service_info** serv_info) {
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
     /* Check if we've got a registered device of the address family
      * specified. */
     if ((AddressFamily == AF_INET && UpnpSdkDeviceRegisteredV4 == 0) ||
@@ -3624,7 +3582,7 @@ GetDeviceHandleInfoForPath([[maybe_unused]] const char* path,
             break;
         }
     }
-#endif /* INCLUDE_DEVICE_APIS */
+#endif /* COMPA_HAVE_DEVICE_SSDP */
 
     *device_handle_out = -1;
     return HND_INVALID;
@@ -3667,7 +3625,7 @@ int PrintHandleInfo(UpnpClient_Handle Hnd) {
                    "Printing information for Handle_%d\n", Hnd);
         UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__, "HType_%d\n",
                    HndInfo->HType);
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
         switch (HndInfo->HType) {
         case HND_CLIENT:
             break;
@@ -3675,7 +3633,7 @@ int PrintHandleInfo(UpnpClient_Handle Hnd) {
             UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__, "DescURL_%s\n",
                        HndInfo->DescURL);
         }
-#endif /* INCLUDE_DEVICE_APIS */
+#endif
     } else {
         return UPNP_E_INVALID_HANDLE;
     }
@@ -3683,16 +3641,16 @@ int PrintHandleInfo(UpnpClient_Handle Hnd) {
     return UPNP_E_SUCCESS;
 }
 
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
 void AutoAdvertise(void* input) {
     job_arg* arg = (job_arg*)input;
 
     UpnpSendAdvertisement(arg->advertise.handle, *((int*)arg->advertise.Event));
     free_advertise_arg(arg);
 }
-#endif /* INCLUDE_DEVICE_APIS */
+#endif
 
-#ifdef INTERNAL_WEB_SERVER
+#ifdef COMPA_HAVE_WEBSERVER
 int UpnpSetWebServerRootDir(const char* rootDir) {
     TRACE("Executing UpnpSetWebServerRootDir()")
     if (UpnpSdkInit == 0)
@@ -3705,7 +3663,7 @@ int UpnpSetWebServerRootDir(const char* rootDir) {
 
     return web_server_set_root_dir(rootDir);
 }
-#endif /* INTERNAL_WEB_SERVER */
+#endif /* COMPA_HAVE_WEBSERVER */
 
 int UpnpAddVirtualDir(const char* newDirName, const void* cookie,
                       const void** oldcookie) {
@@ -3853,7 +3811,7 @@ int UpnpEnableWebserver([[maybe_unused]] int enable) {
     if (UpnpSdkInit != 1) {
         return UPNP_E_FINISH;
     }
-#ifdef INTERNAL_WEB_SERVER
+#ifdef COMPA_HAVE_WEBSERVER
     if (enable) {
         int retVal = web_server_init();
         if (retVal != UPNP_E_SUCCESS) {
@@ -3870,7 +3828,7 @@ int UpnpEnableWebserver([[maybe_unused]] int enable) {
     return UPNP_E_SUCCESS;
 #else  /* Internal web server disabled */
     return UPNP_E_NO_WEB_SERVER;
-#endif /* INTERNAL_WEB_SERVER */
+#endif /* COMPA_HAVE_WEBSERVER */
 }
 
 /*!
@@ -4004,6 +3962,12 @@ int UpnpSetMaxContentLength(size_t contentLength) {
     } while (0);
 
     return errCode;
+}
+
+int UpnpSetEventQueueLimits(int maxLen, int maxAge) {
+    g_UpnpSdkEQMaxLen = maxLen;
+    g_UpnpSdkEQMaxAge = maxAge;
+    return UPNP_E_SUCCESS;
 }
 
 /// @} UPnPAPI

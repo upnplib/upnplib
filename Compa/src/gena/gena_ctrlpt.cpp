@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-02
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,9 +38,6 @@
  */
 
 #include <config.hpp>
-
-#if (EXCLUDE_GENA == 0) || defined(DOXYGEN_RUN)
-#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
 
 #include <gena.hpp>
 #include <httpreadwrite.hpp>
@@ -459,7 +456,7 @@ exit_function:
     return return_code;
 }
 
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
 int genaUnSubscribe(UpnpClient_Handle client_handle, const UpnpString* in_sid) {
     GenlibClientSubscription* sub = NULL;
     int return_code = GENA_SUCCESS;
@@ -504,9 +501,9 @@ exit_function:
     GenlibClientSubscription_delete(sub_copy);
     return return_code;
 }
-#endif /* INCLUDE_CLIENT_APIS */
+#endif /* COMPA_HAVE_CTRLPT_SSDP */
 
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
 int genaSubscribe(UpnpClient_Handle client_handle,
                   const UpnpString* PublisherURL, int* TimeOut,
                   UpnpString* out_sid) {
@@ -593,7 +590,7 @@ error_handler:
 
     return return_code;
 }
-#endif /* INCLUDE_CLIENT_APIS */
+#endif /* COMPA_HAVE_CTRLPT_SSDP */
 
 int genaRenewSubscription(UpnpClient_Handle client_handle,
                           const UpnpString* in_sid, int* TimeOut) {
@@ -830,6 +827,3 @@ exit_function:
     ixmlDocument_free(ChangedVars);
     UpnpEvent_delete(event_struct);
 }
-
-#endif /* INCLUDE_CLIENT_APIS */
-#endif /* EXCLUDE_GENA */

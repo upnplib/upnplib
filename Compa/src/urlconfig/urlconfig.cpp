@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-14
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -59,9 +59,6 @@
 #else
 #include <sys/types.h>
 #endif
-
-#ifdef INCLUDE_DEVICE_APIS
-#ifdef INTERNAL_WEB_SERVER
 
 /************************************************************************
  *  Function :  addrToString
@@ -410,5 +407,3 @@ error_handler:
     }
     return err_code;
 }
-#endif /* INTERNAL_WEB_SERVER */
-#endif /* INCLUDE_DEVICE_APIS */

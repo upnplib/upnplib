@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -56,8 +56,6 @@
 #ifndef COMPA_INTERNAL_CONFIG_HPP
 #error "No or wrong config.hpp header file included."
 #endif
-
-#if EXCLUDE_WEB_SERVER == 0
 
 #ifndef COMPA_NET_HTTP_WEBSERVER_HPP
 #error "No or wrong webserver.hpp header file included."
@@ -1624,6 +1622,11 @@ void web_server_callback(http_parser_t* parser, /* INOUT */ http_message_t* req,
     membuffer_destroy(&filename);
 }
 
+void SetHTTPGetCallback(MiniServerCallback callback) {
+    TRACE("Executing SetHTTPGetCallback()");
+    gGetCallback = callback;
+}
+
 void web_server_destroy() {
     if (bWebServerState == WEB_SERVER_ENABLED) {
         membuffer_destroy(&gDocumentRootDir);
@@ -1637,5 +1640,3 @@ void web_server_destroy() {
         bWebServerState = WEB_SERVER_DISABLED;
     }
 }
-
-#endif /* EXCLUDE_WEB_SERVER */

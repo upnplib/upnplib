@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-23
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-29
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,7 +46,7 @@
 #error "No or wrong config.hpp header file included."
 #endif
 
-#if defined(INCLUDE_DEVICE_APIS) || defined(INCLUDE_CLIENT_APIS)
+#if defined(COMPA_HAVE_CTRLPT_SSDP) || defined(COMPA_HAVE_DEVICE_SSDP)
 
 
 /// \brief Enumeration to define all different types of ssdp searches.
@@ -253,5 +253,5 @@ UPNPLIB_API int get_ssdp_sockets(
 
 /// @} SSDP Common Functions
 
-#endif // INCLUDE_DEVICE|CLIENT_APIS
+#endif // defined(COMPA_HAVE_CTRLPT_SSDP) || defined(COMPA_HAVE_DEVICE_SSDP)
 #endif /* COMPA_SSDP_COMMON_HPP */

@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-24
+// Redistribution only with this Copyright remark. Last modified: 2024-02-28
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -42,7 +42,7 @@ using ::testing::SetErrnoAndReturn;
 
 01)  get_ssdp_sockets()
      |
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
      |__ create_ssdp_sock_reqv4() // for SSDP REQUESTS
      |   |__ socket()                  // get a socket
      |   |__ setsockopt(.* IP_MULTICAST_TTL .*)

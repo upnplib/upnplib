@@ -1,4 +1,4 @@
-#if defined(UPNP_HAVE_CLIENT) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_CTRLPT_SSDP
 
 #ifndef COMPA_GENLIB_CLIENTSUBSCRIPTION_HPP
 #define COMPA_GENLIB_CLIENTSUBSCRIPTION_HPP
@@ -117,5 +117,4 @@ UPNPLIB_API int GenlibClientSubscription_set_Next(GenlibClientSubscription* p,
                                                   GenlibClientSubscription* n);
 
 #endif // COMPA_GENLIB_CLIENTSUBSCRIPTION_HPP
-
-#endif // UPNP_HAVE_CLIENT
+#endif // COMPA_HAVE_CTRLPT_SSDP

@@ -14,7 +14,7 @@
 #error "No or wrong config.hpp header file included."
 #endif
 
-#if (EXCLUDE_SOAP == 0) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_DEVICE_SOAP
 
 /*!
  * \brief This is a callback called by minisever.
@@ -31,5 +31,5 @@ void soap_device_callback(
     /*! [in,out] Socket info. */
     SOCKINFO* info);
 
-#endif /* EXCLUDE_SOAP */
+#endif /* COMPA_HAVE_DEVICE_SOAP */
 #endif // COMPA_SOAP_DEVICE_HPP

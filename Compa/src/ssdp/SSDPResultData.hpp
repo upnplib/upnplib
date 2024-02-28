@@ -1,7 +1,7 @@
 #ifndef COMPA_SSDPRESULTDATA_HPP
 #define COMPA_SSDPRESULTDATA_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-20
+// Redistribution only with this Copyright remark. Last modified: 2024-02-29
 /*!
  * \file
  * \brief Header file for SSDPResultData methods.
@@ -14,7 +14,7 @@
 #include <UpnpDiscovery.hpp>
 #include <Callback.hpp>
 
-#if INCLUDE_DEVICE_APIS == 1 || INCLUDE_CLIENT_APIS == 1
+#ifdef COMPA_HAVE_CTRLPT_SSDP
 
 /// \cond
 #include <cstdlib> /* for size_t */
@@ -58,5 +58,5 @@ UPNPLIB_API int SSDPResultData_set_CtrlptCallback(SSDPResultData* p,
 
 /// @} SSDP Common Functions
 
-#endif // INCLUDE_CLIENT|DEVICE_APIS
+#endif // COMPA_HAVE_CTRLPT_SSDP
 #endif /* COMPA_SSDPRESULTDATA_HPP */

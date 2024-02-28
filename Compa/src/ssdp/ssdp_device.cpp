@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-23
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -52,8 +52,6 @@
 #ifndef COMPA_INTERNAL_CONFIG_HPP
 #error "No or wrong config.hpp header file included."
 #endif
-
-#ifdef INCLUDE_DEVICE_APIS
 
 /// \cond
 #include <cassert>
@@ -281,7 +279,7 @@ void CreateServicePacket(
     *packet = NULL;
     if (msg_type == MSGTYPE_REPLY) {
         if (PowerState > 0) {
-#ifdef UPNP_HAVE_OPTSSDP
+#ifdef COMPA_HAVE_OPTION_SSDP
             ret_code = http_MakeMessage(
                 &buf, 1, 1,
                 "R"
@@ -323,9 +321,9 @@ void CreateServicePacket(
                 "EXT:", "LOCATION: ", location, "ST: ", nt, "USN: ", usn,
                 "Powerstate: ", PowerState, "SleepPeriod: ", SleepPeriod,
                 "RegistrationState: ", RegistrationState);
-#endif /* UPNP_HAVE_OPTSSDP */
+#endif /* COMPA_HAVE_OPTION_SSDP */
         } else {
-#ifdef UPNP_HAVE_OPTSSDP
+#ifdef COMPA_HAVE_OPTION_SSDP
             ret_code = http_MakeMessage(
                 &buf, 1, 1,
                 "R"
@@ -357,7 +355,7 @@ void CreateServicePacket(
                 "sscc",
                 HTTP_OK, "CACHE-CONTROL: max-age=", duration,
                 "EXT:", "LOCATION: ", location, "ST: ", nt, "USN: ", usn);
-#endif /* UPNP_HAVE_OPTSSDP */
+#endif /* COMPA_HAVE_OPTION_SSDP */
         }
         if (ret_code != 0) {
             return;
@@ -384,7 +382,7 @@ void CreateServicePacket(
                 host = "[" SSDP_IPV6_LINKLOCAL "]";
         }
         if (PowerState > 0) {
-#ifdef UPNP_HAVE_OPTSSDP
+#ifdef COMPA_HAVE_OPTION_SSDP
             ret_code = http_MakeMessage(
                 &buf, 1, 1,
                 "Q"
@@ -428,9 +426,9 @@ void CreateServicePacket(
                 "LOCATION: ", location, "NT: ", nt, "NTS: ", nts, "USN: ", usn,
                 "Powerstate: ", PowerState, "SleepPeriod: ", SleepPeriod,
                 "RegistrationState: ", RegistrationState);
-#endif /* UPNP_HAVE_OPTSSDP */
+#endif /* COMPA_HAVE_OPTION_SSDP */
         } else {
-#ifdef UPNP_HAVE_OPTSSDP
+#ifdef COMPA_HAVE_OPTION_SSDP
             ret_code = http_MakeMessage(
                 &buf, 1, 1,
                 "Q"
@@ -464,7 +462,7 @@ void CreateServicePacket(
                 HTTPMETHOD_NOTIFY, "*", (size_t)1, "HOST: ", host, ":",
                 SSDP_PORT, "CACHE-CONTROL: max-age=", duration,
                 "LOCATION: ", location, "NT: ", nt, "NTS: ", nts, "USN: ", usn);
-#endif /* UPNP_HAVE_OPTSSDP */
+#endif /* COMPA_HAVE_OPTION_SSDP */
         }
         if (ret_code)
             return;
@@ -1324,5 +1322,3 @@ void advertiseAndReplyThread(void* data) {
                       arg->event.UDN, arg->event.ServiceType, arg->MaxAge);
     free(arg);
 }
-
-#endif /* INCLUDE_DEVICE_APIS */

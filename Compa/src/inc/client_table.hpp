@@ -13,7 +13,7 @@
 
 extern TimerThread gTimerThread;
 
-#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_CTRLPT_SSDP
 
 /*!
  * \brief Free memory allocated for client subscription data.
@@ -66,6 +66,5 @@ GenlibClientSubscription* GetClientSubActualSID(
     /*! [in] Subscription ID to be mactched. */
     token* sid);
 
-#endif /* INCLUDE_CLIENT_APIS */
-
+#endif /* COMPA_HAVE_CTRLPT_SSDP */
 #endif /* COMPA_CLIENT_TABLE_HPP */

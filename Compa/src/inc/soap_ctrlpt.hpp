@@ -44,7 +44,7 @@
 #error "No or wrong config.hpp header file included."
 #endif
 
-#if (EXCLUDE_SOAP == 0) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_CTRLPT_SOAP
 
 /*!
  * \brief This function is called by UPnP API to send the SOAP action request.
@@ -138,5 +138,5 @@ int SoapGetServiceVarStatus(
     DOMString* var_value ///< [out] Output value.
 );
 
-#endif /* EXCLUDE_SOAP */
+#endif /* COMPA_HAVE_CTRLPT_SOAP */
 #endif /* COMPA_SOAP_CTRLPT_HPP */

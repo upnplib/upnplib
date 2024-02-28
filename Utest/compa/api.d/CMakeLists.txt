@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-26
+# Redistribution only with this Copyright remark. Last modified: 2024-02-28
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -250,7 +250,7 @@ target_include_directories(test_upnpapi-cst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
 target_compile_definitions(test_upnpapi-cst
-    PRIVATE UPNP_HAVE_OPTSSDP
+    PRIVATE COMPA_HAVE_DEVICE_SSDP
 )
 target_link_libraries(test_upnpapi-cst
     PRIVATE

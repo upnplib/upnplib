@@ -52,8 +52,6 @@
 #error "No or wrong config.hpp header file included."
 #endif
 
-#ifdef INCLUDE_CLIENT_APIS
-
 /// \cond
 #if UPNPLIB_WITH_TRACE
 #include <iostream>
@@ -767,5 +765,3 @@ int create_ssdp_sock_reqv6(
     return UPNP_E_SUCCESS;
 }
 #endif /* IPv6 */
-
-#endif /* INCLUDE_CLIENT_APIS */

@@ -2418,13 +2418,18 @@ INCLUDE_FILE_PATTERNS  =
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
 PREDEFINED             = DOXYGEN_RUN \
+                         DEBUG \
+                         UPNP_HAVE_DEBUG \
                          UPNP_ENABLE_IPV6 \
                          COMPA_HAVE_MINISERVER \
-                         UPNP_HAVE_WEBSERVER \
+                         COMPA_HAVE_WEBSERVER \
+                         COMPA_HAVE_CTRLPT_SSDP \
+                         COMPA_HAVE_CTRLPT_SOAP \
+                         COMPA_HAVE_CTRLPT_GENA \
+                         COMPA_HAVE_DEVICE_SSDP \
                          COMPA_HAVE_DEVICE_SOAP \
-                         EXCLUDE_SSDP=0 \
-                         INCLUDE_CLIENT_APIS=1 \
-                         INCLUDE_DEVICE_APIS=1
+                         COMPA_HAVE_DEVICE_GENA \
+                         COMPA_HAVE_OPTION_SSDP
 
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this

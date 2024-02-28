@@ -4,8 +4,8 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-20
- *
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-02
+ k
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -49,9 +49,7 @@
 #error "No or wrong config.hpp header file included."
 #endif
 
-#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
-
-#if (EXCLUDE_GENA == 0) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_DEVICE_GENA
 namespace {
 
 /*!
@@ -380,7 +378,7 @@ service_info* FindServiceId(service_table* table, const char* serviceId,
 
     return NULL;
 }
-#endif /* EXCLUDE_GENA */
+#endif // COMPA_HAVE_DEVICE_GENA
 
 service_info* FindServiceEventURLPath(service_table* table,
                                       const char* eventURLPath) {
@@ -411,7 +409,6 @@ service_info* FindServiceEventURLPath(service_table* table,
     return NULL;
 }
 
-#if (EXCLUDE_SOAP == 0) || (INCLUDE_DEVICE_APIS == 1) || defined(DOXYGEN_RUN)
 service_info* FindServiceControlURLPath(service_table* table,
                                         const char* controlURLPath) {
     service_info* finger = NULL;
@@ -440,9 +437,8 @@ service_info* FindServiceControlURLPath(service_table* table,
 
     return NULL;
 }
-#endif /* EXCLUDE_SOAP */
 
-#if defined(DEBUG) || defined(DOXYGEN_RUN)
+#ifdef DEBUG
 void printService(service_info* service, Upnp_LogLevel level,
                   Dbg_Module module) {
     if (service) {
@@ -481,7 +477,7 @@ void printService(service_info* service, Upnp_LogLevel level,
 }
 #endif
 
-#if defined(DEBUG) || defined(DOXYGEN_RUN)
+#ifdef DEBUG
 void printServiceList(service_info* service, Upnp_LogLevel level,
                       Dbg_Module module) {
     while (service) {
@@ -521,7 +517,7 @@ void printServiceList(service_info* service, Upnp_LogLevel level,
 }
 #endif
 
-#if defined(DEBUG) || defined(DOXYGEN_RUN)
+#ifdef DEBUG
 void printServiceTable(service_table* table, Upnp_LogLevel level,
                        Dbg_Module module) {
     UpnpPrintf(level, module, __FILE__, __LINE__, "URL_BASE: %s\n",
@@ -531,7 +527,7 @@ void printServiceTable(service_table* table, Upnp_LogLevel level,
 }
 #endif
 
-#if (EXCLUDE_GENA == 0) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_DEVICE_GENA
 void freeService(service_info* in) {
     if (in) {
         if (in->serviceType)
@@ -743,6 +739,4 @@ int getSubElement(const char* element_name, IXML_Node* node, IXML_Node** out) {
     return found;
 }
 
-#endif /* EXCLUDE_GENA */
-
-#endif /* INCLUDE_DEVICE_APIS */
+#endif // COMPA_HAVE_DEVICE_GENA

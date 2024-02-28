@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-23
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-28
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,10 +70,10 @@
 
 namespace {
 
-#if defined(INTERNAL_WEB_SERVER) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_WEBSERVER
 /*! \brief First dynamic and/or private port from 49152 to 65535 used by the
  * library.\n
- * Only available with INTERNAL_WEB_SERVER compiled in. */
+ * Only available with webserver compiled in. */
 constexpr in_port_t APPLICATION_LISTENING_PORT{49152};
 #endif
 
@@ -105,9 +105,7 @@ in_port_t miniStopSockPort;
 
 /// \brief miniserver state
 MiniServerState gMServState = MSERV_IDLE;
-#if defined(INTERNAL_WEB_SERVER) || defined(DOXYGEN_RUN)
-/// \brief HTTP server callback
-MiniServerCallback gGetCallback = NULL;
+#ifdef COMPA_HAVE_WEBSERVER
 /// \brief SOAP callback
 MiniServerCallback gSoapCallback = NULL;
 /// \brief GENA callback
@@ -418,7 +416,7 @@ UPNP_INLINE void schedule_request_job(
         return;
     }
 }
-#endif // INTERNAL_WEB_SERVER
+#endif // COMPA_HAVE_WEBSERVER
 
 /*!
  * \brief Add a socket file descriptor to an \p 'fd_set' structure as needed for
@@ -490,7 +488,7 @@ int web_server_accept(
     [[maybe_unused]] SOCKET lsock,
     /// [out] Reference to a file descriptor set as needed for \::select().
     [[maybe_unused]] fd_set& set) {
-#ifndef INTERNAL_WEB_SERVER
+#ifndef COMPA_HAVE_WEBSERVER
     return UPNP_E_NO_WEB_SERVER;
 #else
     TRACE("Executing web_server_accept()")
@@ -521,7 +519,7 @@ int web_server_accept(
     schedule_request_job(asock, &clientAddr.sa);
 
     return UPNP_E_SUCCESS;
-#endif /* INTERNAL_WEB_SERVER */
+#endif /* COMPA_HAVE_WEBSERVER */
 }
 
 /*!
@@ -535,7 +533,7 @@ void ssdp_read( //
     if (*rsock == INVALID_SOCKET || !FD_ISSET(*rsock, set))
         return;
 
-#if defined(INCLUDE_CLIENT_APIS) || defined(INCLUDE_DEVICE_APIS)
+#if defined(COMPA_HAVE_CTRLPT_SSDP) || defined(COMPA_HAVE_DEVICE_SSDP)
     if (readFromSSDPSocket(*rsock) != 0) {
         UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
                    "miniserver: Error in readFromSSDPSocket(%d): "
@@ -663,7 +661,7 @@ void RunMiniServer(
         std::max(maxMiniSock, miniSock->ssdpSock6UlaGua == INVALID_SOCKET
                                   ? 0
                                   : miniSock->ssdpSock6UlaGua);
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
     maxMiniSock = //
         std::max(maxMiniSock, miniSock->ssdpReqSock4 == INVALID_SOCKET
                                   ? 0
@@ -672,7 +670,7 @@ void RunMiniServer(
         std::max(maxMiniSock, miniSock->ssdpReqSock6 == INVALID_SOCKET
                                   ? 0
                                   : miniSock->ssdpReqSock6);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
     ++maxMiniSock;
 
     gMServState = MSERV_RUNNING;
@@ -688,10 +686,10 @@ void RunMiniServer(
         fdset_if_valid(miniSock->ssdpSock4, &rdSet);
         fdset_if_valid(miniSock->ssdpSock6, &rdSet);
         fdset_if_valid(miniSock->ssdpSock6UlaGua, &rdSet);
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
         fdset_if_valid(miniSock->ssdpReqSock4, &rdSet);
         fdset_if_valid(miniSock->ssdpReqSock6, &rdSet);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
 
         /* select() */
         int ret = umock::sys_socket_h.select(static_cast<int>(maxMiniSock),
@@ -731,10 +729,10 @@ void RunMiniServer(
             web_server_accept(miniSock->miniServerSock6, rdSet);
         [[maybe_unused]] int ret3 =
             web_server_accept(miniSock->miniServerSock6UlaGua, rdSet);
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
         ssdp_read(&miniSock->ssdpReqSock4, &rdSet);
         ssdp_read(&miniSock->ssdpReqSock6, &rdSet);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
         ssdp_read(&miniSock->ssdpSock4, &rdSet);
         ssdp_read(&miniSock->ssdpSock6, &rdSet);
         ssdp_read(&miniSock->ssdpSock6UlaGua, &rdSet);
@@ -753,10 +751,10 @@ void RunMiniServer(
     sock_close(miniSock->ssdpSock4);
     sock_close(miniSock->ssdpSock6);
     sock_close(miniSock->ssdpSock6UlaGua);
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
     sock_close(miniSock->ssdpReqSock4);
     sock_close(miniSock->ssdpReqSock6);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
     /* Free minisock. */
     umock::stdlib_h.free(miniSock);
     gMServState = MSERV_IDLE;
@@ -797,7 +795,7 @@ int get_port(
     return 0;
 }
 
-#if defined(INTERNAL_WEB_SERVER) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_WEBSERVER
 /*!
  * \brief Get valid sockets.
  *
@@ -904,7 +902,7 @@ error:
  * **s->port** will be one more than the used port in the end. This is
  * important, in case this function is called again. It is expected to have a
  * prechecked valid parameter.\n
- * Only available with INTERNAL_WEB_SERVER compiled in.
+ * Only available with the webserver compiled in.
  *
  * \returns
  *  On success: UPNP_E_SUCCESS\n
@@ -987,7 +985,7 @@ error:
 /*!
  * \brief Listen on a local network interface to incomming requests.
  *
- * Only available with INTERNAL_WEB_SERVER compiled in.
+ * Only available with the webserver compiled in.
  *
  * \returns
  *  On success: UPNP_E_SUCCESS\n
@@ -1029,7 +1027,7 @@ error:
 /*!
  * \brief Close and (re)initialize a socket.
  *
- * Only available with INTERNAL_WEB_SERVER compiled in.
+ * Only available with the webserver compiled in.
  *
  * \returns
  *  On success: UPNP_E_SUCCESS\n
@@ -1047,7 +1045,7 @@ int do_reinit(       //
 /*!
  * \brief Bind and listen to a socket address.
  *
- * Only available with INTERNAL_WEB_SERVER compiled in.
+ * Only available with the webserver compiled in.
  *
  * \returns
  *  On success: UPNP_E_SUCCESS\n
@@ -1098,7 +1096,7 @@ error:
  * Returns the actual port which the sockets sub-system returned. Also creates a
  * DGRAM socket, binds to the loop back address and returns the port allocated
  * by the socket sub-system.\n
- * Only available with INTERNAL_WEB_SERVER compiled in.
+ * Only available with the webserver compiled in.
  *
  * \returns
  *  On success: UPNP_E_SUCCESS\n
@@ -1217,7 +1215,7 @@ error:
 
     return ret_val;
 }
-#endif /* INTERNAL_WEB_SERVER */
+#endif /* COMPA_HAVE_WEBSERVER */
 
 /*!
  * \brief Creates the miniserver STOP socket. This socket is created and
@@ -1285,38 +1283,33 @@ void InitMiniServerSockArray(
     miniSocket->miniServerPort4 = 0u;
     miniSocket->miniServerPort6 = 0u;
     miniSocket->miniServerPort6UlaGua = 0u;
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
     miniSocket->ssdpReqSock4 = INVALID_SOCKET;
     miniSocket->ssdpReqSock6 = INVALID_SOCKET;
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
 }
 
 /// @} // Functions (scope restricted to file)
 } // anonymous namespace
 
 
-#if defined(INTERNAL_WEB_SERVER) || defined(DOXYGEN_RUN)
-void SetHTTPGetCallback(MiniServerCallback callback) {
-    TRACE("Executing SetHTTPGetCallback()");
-    gGetCallback = callback;
-}
-
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
 void SetSoapCallback(MiniServerCallback callback) {
     TRACE("Executing SetSoapCallback()");
     gSoapCallback = callback;
 }
-#endif /* INCLUDE_DEVICE_APIS */
+#endif /* COMPA_HAVE_DEVICE_SSDP */
 
+#ifdef COMPA_HAVE_WEBSERVER
 void SetGenaCallback(MiniServerCallback callback) {
     TRACE("Executing SetGenaCallback()");
     gGenaCallback = callback;
 }
-#endif
+#endif // COMPA_HAVE_WEBSERVER
 
 int StartMiniServer(
-    // The three parameter only used if the INTERNAL_WEB_SERVER is enabled.
-    // The miniserver does not need them.
+    // The three parameter only used if COMPA_HAVE_WEBSERVER. The miniserver
+    // does not need them.
     //
     /*! [in,out] Port on which the server listens for incoming IPv4
      * connections. */
@@ -1348,7 +1341,7 @@ int StartMiniServer(
         return UPNP_E_OUTOF_MEMORY;
     }
     InitMiniServerSockArray(miniSocket);
-#ifdef INTERNAL_WEB_SERVER
+#ifdef COMPA_HAVE_WEBSERVER
     /* V4 and V6 http listeners. */
     ret_code = get_miniserver_sockets(miniSocket, *listen_port4, *listen_port6,
                                       *listen_port6UlaGua);
@@ -1366,7 +1359,7 @@ int StartMiniServer(
         free(miniSocket);
         return ret_code;
     }
-#if defined(INCLUDE_CLIENT_APIS) || defined(INCLUDE_DEVICE_APIS)
+#if defined(COMPA_HAVE_CTRLPT_SSDP) || defined(COMPA_HAVE_DEVICE_SSDP)
     /* SSDP socket for discovery/advertising. */
     ret_code = get_ssdp_sockets(miniSocket);
     if (ret_code != UPNP_E_SUCCESS) {
@@ -1390,10 +1383,10 @@ int StartMiniServer(
         sock_close(miniSocket->ssdpSock4);
         sock_close(miniSocket->ssdpSock6);
         sock_close(miniSocket->ssdpSock6UlaGua);
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
         sock_close(miniSocket->ssdpReqSock4);
         sock_close(miniSocket->ssdpReqSock6);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
         free(miniSocket);
         return UPNP_E_OUTOF_MEMORY;
     }
@@ -1413,13 +1406,13 @@ int StartMiniServer(
         sock_close(miniSocket->ssdpSock4);
         sock_close(miniSocket->ssdpSock6);
         sock_close(miniSocket->ssdpSock6UlaGua);
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
         sock_close(miniSocket->ssdpReqSock4);
         sock_close(miniSocket->ssdpReqSock6);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
         return UPNP_E_INTERNAL_ERROR;
     }
-#ifdef INTERNAL_WEB_SERVER
+#ifdef COMPA_HAVE_WEBSERVER
     *listen_port4 = miniSocket->miniServerPort4;
     *listen_port6 = miniSocket->miniServerPort6;
     *listen_port6UlaGua = miniSocket->miniServerPort6UlaGua;

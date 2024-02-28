@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-21
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -52,8 +52,6 @@
 #ifndef COMPA_INTERNAL_CONFIG_HPP
 #error "No or wrong config.hpp header file included."
 #endif
-
-#if defined(INCLUDE_DEVICE_APIS) || defined(INCLUDE_CLIENT_APIS)
 
 /// \cond
 #if UPNPLIB_WITH_TRACE
@@ -185,11 +183,11 @@ inline void ssdp_event_handler_thread(
     if (hmsg->method == (http_method_t)HTTPMETHOD_NOTIFY ||
         hmsg->request_method == (http_method_t)HTTPMETHOD_MSEARCH) {
 /// \todo Make utests and split function to separate handle ctrlpt and service.
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
         ssdp_handle_ctrlpt_msg(hmsg, &data->dest_addr, 0);
 #endif
     } else {
-#ifdef INCLUDE_DEVICE_APIS
+#ifdef COMPA_HAVE_DEVICE_SSDP
         ssdp_handle_device_request(hmsg, &data->dest_addr);
 #endif
     }
@@ -722,7 +720,7 @@ int readFromSSDPSocket(SOCKET socket) {
     data = (ssdp_thread_data*)malloc(sizeof(ssdp_thread_data));
     if (data) {
         /* initialize parser */
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
         if (socket == gSsdpReqSocket4
 #ifdef UPNP_ENABLE_IPV6
             || socket == gSsdpReqSocket6
@@ -731,9 +729,9 @@ int readFromSSDPSocket(SOCKET socket) {
             parser_response_init(&data->parser, HTTPMETHOD_MSEARCH);
         else
             parser_request_init(&data->parser);
-#else  /* INCLUDE_CLIENT_APIS */
+#else  /* COMPA_HAVE_CTRLPT_SSDP */
         parser_request_init(&data->parser);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif /* COMPA_HAVE_CTRLPT_SSDP */
         /* set size of parser buffer */
         if (membuffer_set_size(&data->parser.msg.msg, BUFSIZE) == 0)
             /* use this as the buffer for recv */
@@ -793,7 +791,7 @@ int readFromSSDPSocket(SOCKET socket) {
 int get_ssdp_sockets(MiniServerSockArray* out) {
     int retVal;
 
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
     out->ssdpReqSock4 = INVALID_SOCKET;
     out->ssdpReqSock6 = INVALID_SOCKET;
     /* Create the IPv4 socket for SSDP REQUESTS */
@@ -818,15 +816,15 @@ int get_ssdp_sockets(MiniServerSockArray* out) {
     } else
         out->ssdpReqSock6 = INVALID_SOCKET;
 #endif /* IPv6 */
-#endif /* INCLUDE_CLIENT_APIS */
+#endif /* COMPA_HAVE_CTRLPT_SSDP */
     /* Create the IPv4 socket for SSDP */
     if (strlen(gIF_IPV4) > (size_t)0) {
         retVal = create_ssdp_sock_v4(&out->ssdpSock4);
         if (retVal != UPNP_E_SUCCESS) {
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
             UpnpCloseSocket(out->ssdpReqSock4);
             UpnpCloseSocket(out->ssdpReqSock6);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
             return retVal;
         }
     } else
@@ -837,10 +835,10 @@ int get_ssdp_sockets(MiniServerSockArray* out) {
         retVal = create_ssdp_sock_v6(&out->ssdpSock6);
         if (retVal != UPNP_E_SUCCESS) {
             UpnpCloseSocket(out->ssdpSock4);
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
             UpnpCloseSocket(out->ssdpReqSock4);
             UpnpCloseSocket(out->ssdpReqSock6);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
             return retVal;
         }
     } else
@@ -850,10 +848,10 @@ int get_ssdp_sockets(MiniServerSockArray* out) {
         if (retVal != UPNP_E_SUCCESS) {
             UpnpCloseSocket(out->ssdpSock4);
             UpnpCloseSocket(out->ssdpSock6);
-#ifdef INCLUDE_CLIENT_APIS
+#ifdef COMPA_HAVE_CTRLPT_SSDP
             UpnpCloseSocket(out->ssdpReqSock4);
             UpnpCloseSocket(out->ssdpReqSock6);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
             return retVal;
         }
     } else
@@ -862,5 +860,3 @@ int get_ssdp_sockets(MiniServerSockArray* out) {
 
     return UPNP_E_SUCCESS;
 }
-
-#endif /* INCLUDE_DEVICE|CLIENT_APIS */

@@ -5,7 +5,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-02
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -145,7 +145,7 @@ UPNPLIB_API void genaCallback(
  * \return UPNP_E_SUCCESS if service response is OK, otherwise returns the
  *  appropriate error code
  */
-#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_CTRLPT_SSDP
 UPNPLIB_API int genaSubscribe(
     /*! [in] The client handle. */
     UpnpClient_Handle client_handle,
@@ -158,7 +158,7 @@ UPNPLIB_API int genaSubscribe(
     int* TimeOut,
     /*! [out] sid of subscription, memory passed in by caller. */
     UpnpString* out_sid);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
 
 /*!
  * \brief Unsubscribes a SID.
@@ -170,13 +170,13 @@ UPNPLIB_API int genaSubscribe(
  * \return UPNP_E_SUCCESS if service response is OK, otherwise returns the
  *  appropriate error code.
  */
-#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_CTRLPT_SSDP
 UPNPLIB_API int genaUnSubscribe(
     /*! [in] UPnP client handle. */
     UpnpClient_Handle client_handle,
     /*! [in] The subscription ID. */
     const UpnpString* in_sid);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
 
 /*!
  * \brief Unsubcribes all the outstanding subscriptions and cleans the
@@ -187,11 +187,11 @@ UPNPLIB_API int genaUnSubscribe(
  * \returns UPNP_E_SUCCESS if successful, otherwise returns the appropriate
  *  error code.
  */
-#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_CTRLPT_SSDP
 UPNPLIB_API int genaUnregisterClient(
     /*! [in] Handle containing all the control point related information. */
     UpnpClient_Handle client_handle);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
 
 /*
  * DEVICE
@@ -202,11 +202,11 @@ UPNPLIB_API int genaUnregisterClient(
  *
  * \return UPNP_E_SUCCESS if successful, otherwise returns GENA_E_BAD_HANDLE
  */
-#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_DEVICE_SSDP
 int genaUnregisterDevice(
     /*! [in] Handle of the root device */
     UpnpDevice_Handle device_handle);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
 
 /*!
  * \brief Renews a SID.
@@ -218,7 +218,7 @@ int genaUnregisterDevice(
  * \return UPNP_E_SUCCESS if service response is OK, otherwise the
  *  appropriate error code.
  */
-#if defined(INCLUDE_CLIENT_APIS) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_CTRLPT_SSDP
 UPNPLIB_API int genaRenewSubscription(
     /*! [in] Client handle. */
     UpnpClient_Handle client_handle,
@@ -227,7 +227,7 @@ UPNPLIB_API int genaRenewSubscription(
     /*! [in,out] requested Duration, if -1, then "infinite". In the OUT case:
      * actual Duration granted by Service, -1 for infinite. */
     int* TimeOut);
-#endif /* INCLUDE_CLIENT_APIS */
+#endif
 
 /*!
  * \brief Sends a notification to all the subscribed control points.
@@ -237,7 +237,7 @@ UPNPLIB_API int genaRenewSubscription(
  * \note This function is similar to the genaNotifyAllExt. The only difference
  *  is it takes event variable array instead of xml document.
  */
-#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_DEVICE_SSDP
 int genaNotifyAll(
     /*! [in] Device handle. */
     UpnpDevice_Handle device_handle,
@@ -251,7 +251,7 @@ int genaNotifyAll(
     char** VarValues,
     /*! [in] Number of variables. */
     int var_count);
-#endif /* INCLUDE_DEVICE_APIS */
+#endif
 
 /*!
  * \brief Sends a notification to all the subscribed control points.
@@ -261,7 +261,7 @@ int genaNotifyAll(
  * \note This function is similar to the genaNotifyAll. the only difference
  *  is it takes the document instead of event variable array.
  */
-#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_DEVICE_SSDP
 int genaNotifyAllExt(
     /*! [in] Device handle. */
     UpnpDevice_Handle device_handle,
@@ -271,7 +271,7 @@ int genaNotifyAllExt(
     char* servId,
     /*! [in] XML document Event varible property set. */
     IXML_Document* PropSet);
-#endif /* INCLUDE_DEVICE_APIS */
+#endif
 
 /*!
  * \brief Sends the intial state table dump to newly subscribed control point.
@@ -281,7 +281,7 @@ int genaNotifyAllExt(
  * \note  No other event will be sent to this control point before the
  *  intial state table dump.
  */
-#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_DEVICE_SSDP
 int genaInitNotify(
     /*! [in] Device handle. */
     UpnpDevice_Handle device_handle,
@@ -297,7 +297,7 @@ int genaInitNotify(
     int var_count,
     /*! [in] Subscription ID. */
     const Upnp_SID sid);
-#endif /* INCLUDE_DEVICE_APIS */
+#endif
 
 /*!
  * \brief Similar to the genaInitNofity. The only difference is that it
@@ -309,7 +309,7 @@ int genaInitNotify(
  * \note No other event will be sent to this control point before the
  *  intial state table dump.
  */
-#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_DEVICE_SSDP
 int genaInitNotifyExt(
     /*! [in] Device handle. */
     UpnpDevice_Handle device_handle,
@@ -321,7 +321,7 @@ int genaInitNotifyExt(
     IXML_Document* PropSet,
     /*! [in] subscription ID. */
     const Upnp_SID sid);
-#endif /* INCLUDE_DEVICE_APIS */
+#endif
 
 /*!
  * \brief Sends an error message to the control point in the case of incorrect

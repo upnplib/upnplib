@@ -1,7 +1,7 @@
 /**************************************************************************
  *
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-11-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-02-29
  * Copyright (c) 1990- 1993, 1996 Open Software Foundation, Inc.
  * Copyright (c) 1989 by Hewlett-Packard Company, Palo Alto, Ca. &
  * Digital Equipment Corporation, Maynard, Mass.
@@ -20,9 +20,10 @@
  * this software for any purpose.
  *
  **************************************************************************/
-
 /*!
  * \file
+ * \todo Remove COMPA_DEF_OPTION_SSDP. Make it always available with
+ * COMPA_DEF_DEVICE_GENA.
  */
 
 #include <config.hpp>

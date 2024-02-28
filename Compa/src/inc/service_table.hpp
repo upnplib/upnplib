@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-20
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -84,7 +84,7 @@ struct service_info {
     /// @}
 };
 
-#if defined(INCLUDE_DEVICE_APIS) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_DEVICE_SSDP
 
 /// \brief ???
 void freeSubscriptionQueuedEvents(subscription* sub);
@@ -101,11 +101,11 @@ struct service_table {
 
 /* Functions for Subscriptions */
 
-#if (EXCLUDE_GENA == 0) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_DEVICE_GENA
 /*!
  * \brief Makes a copy of the subscription.
  * \ingroup Eventing
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  *
  * \returns
  *  On success: HTTP_SUCCESS\n
@@ -120,7 +120,7 @@ int copy_subscription(
 /*!
  * \brief Remove the subscription from the service table and update it.
  * \ingroup Eventing
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  */
 void RemoveSubscriptionSID(
     /*! [in] Subscription ID. */
@@ -132,7 +132,7 @@ void RemoveSubscriptionSID(
  * \brief Return the subscription from the service table that matches const
  * Upnp_SID sid value.
  * \ingroup Eventing
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  *
  * \return Pointer to the matching subscription node.
  */
@@ -145,7 +145,7 @@ subscription* GetSubscriptionSID(
 /*!
  * \brief Gets pointer to the first subscription node in the service table.
  * \ingroup Eventing
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  *
  * \return Pointer to the first subscription node.
  */
@@ -156,7 +156,7 @@ subscription* GetFirstSubscription(
 /*!
  * \brief Get current and valid subscription from the service table.
  * \ingroup Eventing
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  *
  * \return Pointer to the next subscription node.
  */
@@ -169,7 +169,7 @@ subscription* GetNextSubscription(
 /*!
  * \brief Free's the memory allocated for storing the URL of the subscription.
  * \ingroup Eventing
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  */
 void freeSubscription(
     /*! [in] Subscription object to be freed. */
@@ -179,7 +179,7 @@ void freeSubscription(
  * \brief Free's memory allocated for all the subscriptions in the service
  * table.
  * \ingroup Eventing
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  */
 void freeSubscriptionList(
     /*! [in] Head of the subscription list. */
@@ -192,7 +192,7 @@ void freeSubscriptionList(
  * Returns a pointer to the service node that matches a known service id and a
  * known UDN.
  *
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  *
  * \returns Pointer to the matching service_info node.
  */
@@ -206,7 +206,7 @@ service_info* FindServiceId(
      * table. */
     const char* UDN);
 
-#endif /* EXCLUDE_GENA */
+#endif /* COMPA_HAVE_DEVICE_GENA */
 
 /*!
  * \brief Traverses the service table and finds the node whose event URL Path
@@ -221,12 +221,10 @@ service_info* FindServiceEventURLPath(
     /*! [in] Event URL path used to find a service from the table. */
     const char* eventURLPath);
 
-#if (EXCLUDE_SOAP == 0) || (INCLUDE_DEVICE_APIS == 1) || defined(DOXYGEN_RUN)
 /*!
  * \brief Traverses the service table and finds the node whose control URL Path
  * matches a known value.
  * \ingroup Control
- * \note Only available with the SOAP module compiled in.
  *
  * \returns Pointer to the service list node from the service table whose
  * control URL Path matches a known value.
@@ -237,13 +235,11 @@ service_info* FindServiceControlURLPath(
     /*! [in] Control URL path used to find a service from the table. */
     const char* controlURLPath);
 
-#endif /* EXCLUDE_SOAP */
-
 /*!
  * \brief prints information from the service passed into the function.
  * \note Only available if DEBUG was selected on compiling.
  */
-#if defined(DEBUG) || defined(DOXYGEN_RUN)
+#ifdef DEBUG
 void printService(
     /*! [in] Service whose information is to be printed. */
     service_info* service,
@@ -262,7 +258,7 @@ void printService(
  * the function.
  * \note Only available if DEBUG was selected on compiling.
  */
-#if defined(DEBUG) || defined(DOXYGEN_RUN)
+#ifdef DEBUG
 void printServiceList(
     /*! [in] Service whose information is to be printed. */
     service_info* service,
@@ -281,7 +277,7 @@ void printServiceList(
  * the service table.
  * \note Only available if DEBUG was selected on compiling.
  */
-#if defined(DEBUG) || defined(DOXYGEN_RUN)
+#ifdef DEBUG
 void printServiceTable(
     /*! [in] Service table to be printed. */
     service_table* table,
@@ -295,12 +291,12 @@ void printServiceTable(
     } while (0)
 #endif
 
-#if (EXCLUDE_GENA == 0) || defined(DOXYGEN_RUN)
+#ifdef COMPA_HAVE_DEVICE_GENA
 /*!
  * \brief Free's memory allocated for the various components of the service
  * entry in the service table.
  * \ingroup Eventing
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  */
 void freeService(
     /*! [in] Service information that is to be freed. */
@@ -310,7 +306,7 @@ void freeService(
  * \brief Free's memory allocated for the various components of each service
  * entry in the service table.
  * \ingroup Eventing
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  */
 void freeServiceList(
     /*! [in] Head of the service list to be freed. */
@@ -320,7 +316,7 @@ void freeServiceList(
  * \brief Free's dynamic memory in table (does not free table, only memory
  * within the structure).
  * \ingroup Eventing
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  */
 void freeServiceTable(
     /*! [in] Service table whose internal memory needs to be freed. */
@@ -329,7 +325,7 @@ void freeServiceTable(
 /*!
  * \brief Remove all services for a root device.
  * \ingroup Eventing
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  *
  * This function assumes that services for a particular root device are
  * placed linearly in the service table, and in the order in which they are
@@ -347,7 +343,7 @@ int removeServiceTable(
 /*!
  * \brief Add Service to the table.
  * \ingroup Eventing
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  */
 int addServiceTable(
     /*! [in] XML node information. */
@@ -361,7 +357,7 @@ int addServiceTable(
 /*!
  * \brief Retrieve service from the table.
  * \ingroup Eventing
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  *
  * \returns An integer
  */
@@ -379,7 +375,7 @@ int getServiceTable(
  * \brief Returns the clone of the element value.
  * \ingroup Eventing
  * \note Value must be freed with DOMString_free.
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  *
  * \returns DOMString
  */
@@ -391,7 +387,7 @@ DOMString getElementValue(
  * \brief Traverses through a list of XML nodes to find the node with the
  * known element name.
  * \ingroup Eventing
- * \note Only available with the GENA module compiled in.
+ * \note Only available with the Device GENA module compiled in.
  *
  * \returns
  *  On success: 1\n
@@ -405,8 +401,6 @@ int getSubElement(
     /*! [out] Ouput node to which the matched child node is returned. */
     IXML_Node** out);
 
-#endif /* EXCLUDE_GENA */
-
-#endif /* INCLUDE_DEVICE_APIS */
-
+#endif /* COMPA_HAVE_DEVICE_GENA */
+#endif /* COMPA_HAVE_DEVICE_SSDP */
 #endif /* COMPA_SERVICE_TABLE_HPP */
