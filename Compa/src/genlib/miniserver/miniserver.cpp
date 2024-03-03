@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-28
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-03
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,16 +44,11 @@
  *   - The SSDP sockets for discovery.
  */
 
-#include <config.hpp>
-
+#include <miniserver.hpp>
 #include <httpreadwrite.hpp>
 #include <ssdp_common.hpp>
 #include <statcodes.hpp>
 #include <upnpapi.hpp>
-
-#ifndef COMPA_MINISERVER_HPP
-#error "No or wrong miniserver.hpp header file included."
-#endif
 
 #include <upnplib/socket.hpp>
 #include <upnplib/global.hpp>
@@ -1305,7 +1300,7 @@ void SetGenaCallback(MiniServerCallback callback) {
     TRACE("Executing SetGenaCallback()");
     gGenaCallback = callback;
 }
-#endif // COMPA_HAVE_WEBSERVER
+#endif
 
 int StartMiniServer(
     // The three parameter only used if COMPA_HAVE_WEBSERVER. The miniserver

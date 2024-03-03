@@ -1,3 +1,5 @@
+#ifdef COMPA_HAVE_CTRLPT_SSDP
+
 #ifndef COMPA_SSDPRESULTDATA_HPP
 #define COMPA_SSDPRESULTDATA_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
@@ -10,11 +12,8 @@
  * \author Marcelo Roberto Jimenez
  */
 
-#include <config.hpp>
 #include <UpnpDiscovery.hpp>
 #include <Callback.hpp>
-
-#ifdef COMPA_HAVE_CTRLPT_SSDP
 
 /// \cond
 #include <cstdlib> /* for size_t */

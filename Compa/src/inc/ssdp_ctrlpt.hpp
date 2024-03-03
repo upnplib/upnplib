@@ -1,3 +1,5 @@
+#ifdef COMPA_HAVE_CTRLPT_SSDP
+
 #ifndef COMPA_SSDP_CTRLPT_HPP
 #define COMPA_SSDP_CTRLPT_HPP
 /**************************************************************************
@@ -6,7 +8,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-29
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,11 +46,6 @@
 
 #include <httpparser.hpp>
 
-#ifndef COMPA_INTERNAL_CONFIG_HPP
-#error "No or wrong config.hpp header file included."
-#endif
-
-#ifdef COMPA_HAVE_CTRLPT_SSDP
 
 /*! @{
  * \ingroup SSDP-ctrlpt_functions */
@@ -128,5 +125,5 @@ int create_ssdp_sock_reqv6(
 
 /// @} // SSDP Control Point Functions
 
-#endif // COMPA_HAVE_CTRLPT_SSDP
 #endif // COMPA_SSDP_CTRLPT_HPP
+#endif // COMPA_HAVE_CTRLPT_SSDP

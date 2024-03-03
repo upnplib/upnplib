@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-01
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,11 +45,13 @@
 #include <upnpapi.hpp>
 
 #include <httpreadwrite.hpp>
-#include <soap_device.hpp>
-#include <soap_ctrlpt.hpp>
+#include <uuid.hpp>
+#include <miniserver.hpp>
+#include <ssdp_common.hpp>
 #include <ssdp_ctrlpt.hpp>
 #include <ssdp_device.hpp>
-#include <uuid.hpp>
+#include <soap_device.hpp>
+#include <soap_ctrlpt.hpp>
 
 #include <upnplib/global.hpp>
 #include <compa/globalvars.hpp>
@@ -3962,12 +3964,6 @@ int UpnpSetMaxContentLength(size_t contentLength) {
     } while (0);
 
     return errCode;
-}
-
-int UpnpSetEventQueueLimits(int maxLen, int maxAge) {
-    g_UpnpSdkEQMaxLen = maxLen;
-    g_UpnpSdkEQMaxAge = maxAge;
-    return UPNP_E_SUCCESS;
 }
 
 /// @} UPnPAPI

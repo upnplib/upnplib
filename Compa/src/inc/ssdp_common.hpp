@@ -1,3 +1,5 @@
+#if defined(COMPA_HAVE_CTRLPT_SSDP) || defined(COMPA_HAVE_DEVICE_SSDP)
+
 #ifndef COMPA_SSDP_COMMON_HPP
 #define COMPA_SSDP_COMMON_HPP
 /**************************************************************************
@@ -6,7 +8,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-29
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,12 +43,6 @@
  */
 
 #include <miniserver.hpp>
-
-#ifndef COMPA_INTERNAL_CONFIG_HPP
-#error "No or wrong config.hpp header file included."
-#endif
-
-#if defined(COMPA_HAVE_CTRLPT_SSDP) || defined(COMPA_HAVE_DEVICE_SSDP)
 
 
 /// \brief Enumeration to define all different types of ssdp searches.
@@ -253,5 +249,5 @@ UPNPLIB_API int get_ssdp_sockets(
 
 /// @} SSDP Common Functions
 
-#endif // defined(COMPA_HAVE_CTRLPT_SSDP) || defined(COMPA_HAVE_DEVICE_SSDP)
 #endif /* COMPA_SSDP_COMMON_HPP */
+#endif // defined(COMPA_HAVE_CTRLPT_SSDP) || defined(COMPA_HAVE_DEVICE_SSDP)

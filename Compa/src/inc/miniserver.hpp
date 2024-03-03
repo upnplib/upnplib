@@ -7,7 +7,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-28
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-03
  * Copied from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,8 +39,6 @@
  * \file
  * \brief Manage "Step 0: Addressing" of the UPnP+™ specification.
  */
-
-#include <config.hpp>
 
 #include <httpparser.hpp>
 #include <sock.hpp>
@@ -78,6 +76,7 @@ struct MiniServerSockArray {
     uint16_t miniServerPort6UlaGua;
 #ifdef COMPA_HAVE_CTRLPT_SSDP
     /*! \name Only with Client (control point) Module.
+     * \todo Move this to control point SSDP
      * @{ */
     /*! \brief IPv4 SSDP socket for sending search requests and receiving search
      * replies */
@@ -99,6 +98,7 @@ inline MiniServerCallback gGetCallback{nullptr};
 #ifdef COMPA_HAVE_WEBSERVER
 /*!
  * \brief Set SOAP Callback.
+ * \todo Move this to UPnP Device SSDP and to GENA.
  */
 #ifdef COMPA_HAVE_DEVICE_SSDP
 UPNPLIB_API void SetSoapCallback(

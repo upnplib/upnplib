@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-01
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,8 +36,6 @@
  * \file
  * \brief Manage GENA control point
  */
-
-#include <config.hpp>
 
 #include <gena.hpp>
 #include <httpreadwrite.hpp>
@@ -456,7 +454,6 @@ exit_function:
     return return_code;
 }
 
-#ifdef COMPA_HAVE_CTRLPT_SSDP
 int genaUnSubscribe(UpnpClient_Handle client_handle, const UpnpString* in_sid) {
     GenlibClientSubscription* sub = NULL;
     int return_code = GENA_SUCCESS;
@@ -501,9 +498,7 @@ exit_function:
     GenlibClientSubscription_delete(sub_copy);
     return return_code;
 }
-#endif /* COMPA_HAVE_CTRLPT_SSDP */
 
-#ifdef COMPA_HAVE_CTRLPT_SSDP
 int genaSubscribe(UpnpClient_Handle client_handle,
                   const UpnpString* PublisherURL, int* TimeOut,
                   UpnpString* out_sid) {
@@ -590,7 +585,6 @@ error_handler:
 
     return return_code;
 }
-#endif /* COMPA_HAVE_CTRLPT_SSDP */
 
 int genaRenewSubscription(UpnpClient_Handle client_handle,
                           const UpnpString* in_sid, int* TimeOut) {

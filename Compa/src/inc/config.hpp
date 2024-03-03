@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-29
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -256,13 +256,11 @@
  * default everything is included inside the SDK.  By setting any of
  * the values below to 0, that component will not be included in the final
  * SDK.
- *   - `EXCLUDE_DOM [0,1]`
  *   - `EXCLUDE_JNI[0,1]`
  */
 /// @{
 /*! This setting has no effect due to compiler defines (for internal purpose
  * only). */
-#define EXCLUDE_DOM 0
 #ifdef USE_JNI
 #define EXCLUDE_JNI 0
 #else

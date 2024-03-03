@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-28
+// Redistribution only with this Copyright remark. Last modified: 2024-03-03
 /*!
  * \file
  * \brief Source file for SSDPResultData methods.
@@ -9,10 +9,6 @@
  */
 
 #include "SSDPResultData.hpp"
-
-#ifndef COMPA_INTERNAL_CONFIG_HPP
-#error "No or wrong config.hpp header file included."
-#endif
 
 /// \cond
 #include <cstring> /* for strlen(), strdup() */

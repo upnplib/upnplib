@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-28
+// Redistribution only with this Copyright remark. Last modified: 2024-03-03
 // Also Copyright by other contributor as noted below.
 // Last compare with pupnp original source file on 2023-04-25, ver 1.14.15
 /*!
@@ -8,7 +8,6 @@
  * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 
-#include <config.hpp>
 #include <UpnpFileInfo.hpp>
 #ifndef COMPA_UPNPFILEINFO_HPP
 #error "Wrong UpnpFileInfo.hpp header file included."

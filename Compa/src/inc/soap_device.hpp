@@ -1,7 +1,9 @@
+#ifdef COMPA_HAVE_DEVICE_SOAP
+
 #ifndef COMPA_SOAP_DEVICE_HPP
 #define COMPA_SOAP_DEVICE_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-15
+// Redistribution only with this Copyright remark. Last modified: 2024-03-03
 /*!
  * \file
  * \brief SOAP declarations for UPnP Devices using SOAP.
@@ -10,11 +12,6 @@
 #include <httpparser.hpp>
 #include <sock.hpp>
 
-#ifndef COMPA_INTERNAL_CONFIG_HPP
-#error "No or wrong config.hpp header file included."
-#endif
-
-#ifdef COMPA_HAVE_DEVICE_SOAP
 
 /*!
  * \brief This is a callback called by minisever.
@@ -31,5 +28,5 @@ void soap_device_callback(
     /*! [in,out] Socket info. */
     SOCKINFO* info);
 
-#endif /* COMPA_HAVE_DEVICE_SOAP */
 #endif // COMPA_SOAP_DEVICE_HPP
+#endif /* COMPA_HAVE_DEVICE_SOAP */

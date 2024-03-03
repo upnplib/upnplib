@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-11-25
+// Redistribution only with this Copyright remark. Last modified: 2024-03-02
 
 #include "umock/pupnp_httprw.hpp"
 
@@ -9,7 +9,7 @@ int private_connect(SOCKET sockfd, const struct sockaddr* serv_addr,
 
 namespace umock {
 
-#ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
+#ifndef COMPA_ENABLE_BLOCKING_TCP_CONNECTIONS
 int PupnpHttpRwReal::Check_Connect_And_Wait_Connection(SOCKET sock,
                                                        int connect_res) {
     return ::Check_Connect_And_Wait_Connection(sock, connect_res);
@@ -36,7 +36,7 @@ PupnpHttpRw::PupnpHttpRw(PupnpHttpRwInterface* a_ptr_mockObj) {
 PupnpHttpRw::~PupnpHttpRw() { m_ptr_workerObj = m_ptr_oldObj; }
 
 // Methods
-#ifndef UPNP_ENABLE_BLOCKING_TCP_CONNECTIONS
+#ifndef COMPA_ENABLE_BLOCKING_TCP_CONNECTIONS
 int PupnpHttpRw::Check_Connect_And_Wait_Connection(SOCKET sock,
                                                    int connect_res) {
     return m_ptr_workerObj->Check_Connect_And_Wait_Connection(sock,

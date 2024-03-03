@@ -4,7 +4,7 @@
  * Digital Equipment Corporation, Maynard, Mass.
  * Copyright (c) 1998 Microsoft.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-18
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-03
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty: permission to use, copy,
  * modify, and distribute this file for any purpose is hereby
@@ -24,14 +24,11 @@
  * \file
  */
 
-#include "config.hpp"
-
 #ifdef _WIN32
 #define _CRT_RAND_S
 #endif
 
 #include "sysdep.hpp"
-
 #include "UpnpInet.hpp"
 
 #include <stdio.h>

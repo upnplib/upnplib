@@ -40,6 +40,7 @@
  * \ingroup compa-Discovery
  */
 
+#include <ssdp_common.hpp>
 #include <ssdp_device.hpp>
 #include <ssdp_ctrlpt.hpp>
 

@@ -1,3 +1,5 @@
+#ifdef COMPA_HAVE_CTRLPT_SOAP
+
 #ifndef COMPA_SOAP_CTRLPT_HPP
 #define COMPA_SOAP_CTRLPT_HPP
 /**************************************************************************
@@ -5,7 +7,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-15
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,11 +42,6 @@
 
 #include <ixml.hpp>
 
-#ifndef COMPA_INTERNAL_CONFIG_HPP
-#error "No or wrong config.hpp header file included."
-#endif
-
-#ifdef COMPA_HAVE_CTRLPT_SOAP
 
 /*!
  * \brief This function is called by UPnP API to send the SOAP action request.
@@ -138,5 +135,5 @@ int SoapGetServiceVarStatus(
     DOMString* var_value ///< [out] Output value.
 );
 
-#endif /* COMPA_HAVE_CTRLPT_SOAP */
 #endif /* COMPA_SOAP_CTRLPT_HPP */
+#endif /* COMPA_HAVE_CTRLPT_SOAP */

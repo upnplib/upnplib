@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-01-28
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-02
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,10 +37,6 @@
  * \brief Additional, optional utility API that can be helpful in writing
  * applications.
  */
-
-#include <config.hpp> // for EXCLUDE_DOM
-
-#if EXCLUDE_DOM == 0
 
 #include <upnp.hpp>
 #include <upnptools.hpp>
@@ -445,5 +441,3 @@ int UpnpAddToPropertySet(IXML_Document** PropSet, const char* ArgName,
 
     return UPNP_E_SUCCESS;
 }
-
-#endif /* EXCLUDE_DOM == 0 */

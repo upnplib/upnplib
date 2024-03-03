@@ -41,7 +41,7 @@
   #define SHUT_WR SD_SEND
   #define SHUT_RDWR SD_BOTH
 
-#else
+#else // not _MSC_VER
 
   #include <sys/socket.h>
   #include <sys/select.h>
@@ -60,7 +60,7 @@
   #define INVALID_SOCKET (-1)
   // some functions return SOCKET_ERROR on win32.
   #define SOCKET_ERROR (-1)
-#endif
+#endif // _MSC_VER
 
 
 // This a bit flag to disable SIGPIPE on socket connections. With 0 it do
