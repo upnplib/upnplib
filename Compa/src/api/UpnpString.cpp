@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-03-03
+// Redistribution only with this Copyright remark. Last modified: 2024-03-04
 // Also Copyright by other contributor who haven't made a note.
 // Last compare with pupnp original source file on 2023-04-26, ver 1.14.15
 /*!
@@ -28,8 +28,6 @@
 
 #include <umock/stdlib.hpp>
 #include <umock/stringh.hpp>
-
-#include <posix_overwrites.hpp>
 
 #ifndef UPNP_USE_MSVCPP
 #ifdef UPNP_USE_BCBPP

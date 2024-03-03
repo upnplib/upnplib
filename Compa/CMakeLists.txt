@@ -1,7 +1,7 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-29
+# Redistribution only with this Copyright remark. Last modified: 2024-03-04
 
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
 
 project(COMPA VERSION 0008

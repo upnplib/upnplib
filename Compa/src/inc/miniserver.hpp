@@ -95,27 +95,23 @@ typedef void (*MiniServerCallback)(http_parser_t* parser,
 /// \brief HTTP server callback
 inline MiniServerCallback gGetCallback{nullptr};
 
-#ifdef COMPA_HAVE_WEBSERVER
 /*!
  * \brief Set SOAP Callback.
- * \todo Move this to UPnP Device SSDP and to GENA.
  */
-#ifdef COMPA_HAVE_DEVICE_SSDP
+#ifdef COMPA_HAVE_DEVICE_SOAP
 UPNPLIB_API void SetSoapCallback(
     /*! [in] SOAP Callback to be invoked. */
     MiniServerCallback callback);
-#else
-static UPNP_INLINE void
-SetSoapCallback([[maybe_unused]] MiniServerCallback callback) {}
 #endif
 
 /*!
  * \brief Set GENA Callback.
  */
+#ifdef COMPA_HAVE_DEVICE_GENA
 UPNPLIB_API void SetGenaCallback(
     /*! [in] GENA Callback to be invoked. */
     MiniServerCallback callback);
-#endif // COMPA_HAVE_WEBSERVER
+#endif
 
 /*!
  * \brief Initialize the sockets functionality for the Miniserver.

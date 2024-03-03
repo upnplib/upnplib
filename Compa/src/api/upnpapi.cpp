@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-03
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-04
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -57,6 +57,7 @@
 #include <compa/globalvars.hpp>
 
 #ifdef _WIN32
+#include <upnplib/port.hpp>
 #include <umock/iphlpapi.hpp>
 #else
 #include <umock/ifaddrs.hpp>
@@ -80,8 +81,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
-
-#include <posix_overwrites.hpp>
 
 #ifdef _WIN32
 /* Do not include these files */
@@ -461,7 +460,7 @@ static int UpnpInitPreamble() {
     SetSoapCallback(soap_device_callback);
 #endif
 
-#if defined(COMPA_HAVE_CTRLPT_GENA) || defined(COMPA_HAVE_DEVICE_GENA)
+#ifdef COMPA_HAVE_DEVICE_GENA
     SetGenaCallback(genaCallback);
 #endif
 

@@ -102,9 +102,9 @@ in_port_t miniStopSockPort;
 MiniServerState gMServState = MSERV_IDLE;
 #ifdef COMPA_HAVE_WEBSERVER
 /// \brief SOAP callback
-MiniServerCallback gSoapCallback = NULL;
+MiniServerCallback gSoapCallback = nullptr;
 /// \brief GENA callback
-MiniServerCallback gGenaCallback = NULL;
+MiniServerCallback gGenaCallback = nullptr;
 
 /*! \brief Flag if to immediately reuse the network address of a just broken
  * connetion. */
@@ -1288,14 +1288,14 @@ void InitMiniServerSockArray(
 } // anonymous namespace
 
 
-#ifdef COMPA_HAVE_DEVICE_SSDP
+#ifdef COMPA_HAVE_DEVICE_SOAP
 void SetSoapCallback(MiniServerCallback callback) {
     TRACE("Executing SetSoapCallback()");
     gSoapCallback = callback;
 }
-#endif /* COMPA_HAVE_DEVICE_SSDP */
+#endif
 
-#ifdef COMPA_HAVE_WEBSERVER
+#ifdef COMPA_HAVE_DEVICE_GENA
 void SetGenaCallback(MiniServerCallback callback) {
     TRACE("Executing SetGenaCallback()");
     gGenaCallback = callback;

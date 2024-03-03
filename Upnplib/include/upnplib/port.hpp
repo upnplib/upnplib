@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_HPP
 #define UPNPLIB_INCLUDE_PORT_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-14
+// Redistribution only with this Copyright remark. Last modified: 2024-03-04
 /*!
  * \file
  * \brief Specifications to be portable between different platforms.
@@ -68,6 +68,7 @@
 #ifdef _MSC_VER
   // POSIX names for functions
   #define strcasecmp _stricmp
+  #define strncasecmp strnicmp
 #endif
 
 

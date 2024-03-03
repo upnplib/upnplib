@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-22
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,11 +47,10 @@
 #include <upnpdebug.hpp>
 
 #include <upnplib/global.hpp>
+#include <upnplib/port.hpp>
 
 #include <cassert>
 #include <iostream>
-
-#include <posix_overwrites.hpp>
 
 #define DEFAULT_WEB_DIR "./sample/web"
 #define DESC_URL_SIZE 200
