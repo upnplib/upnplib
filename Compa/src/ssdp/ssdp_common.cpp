@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-03
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,18 +40,20 @@
  * \ingroup compa-Discovery
  */
 
-#include <ssdp_common.hpp>
 #include <ssdp_ctrlpt.hpp>
 #include <ssdp_device.hpp>
 #include <upnpapi.hpp>
 
-#include <upnplib/global.hpp> // for TRACE
-#include <umock/sys_socket.hpp>
-#include <umock/winsock2.hpp>
-
+#ifndef COMPA_SSDP_COMMON_HPP
+#error "No or wrong ssdp_common.hpp header file included."
+#endif
 #ifndef COMPA_INTERNAL_CONFIG_HPP
 #error "No or wrong config.hpp header file included."
 #endif
+
+#include <upnplib/global.hpp> // for TRACE
+#include <umock/sys_socket.hpp>
+#include <umock/winsock2.hpp>
 
 /// \cond
 #if UPNPLIB_WITH_TRACE

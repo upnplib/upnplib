@@ -1,9 +1,11 @@
+#ifndef COMPA_FREE_LIST_HPP
+#define COMPA_FREE_LIST_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-26
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,97 +32,98 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
-#ifndef FREE_LIST_H
-#define FREE_LIST_H
-
 /*!
  * \file
+ * \ingroup threadutil
+ * \brief Manage a free list (for internal use only).
+ *
+ * Because this is for internal use, parameters are NOT checked for validity.
+ * The caller must ensure valid parameters.
  */
 
-#include "ithread.hpp"
-
-#include <errno.h>
+#include <ithread.hpp>
+/// \cond
+#include <cerrno>
+/// \endcond
 
 /*!
- * Free list node. points to next free item.
+ * \brief Free list node. points to next free item.
+ *
  * Memory for node is borrowed from allocated items.
  * \internal
  */
-typedef struct FREELISTNODE {
-    struct FREELISTNODE* next;
-} FreeListNode;
+struct FreeListNode {
+    struct FreeListNode* next;
+};
 
 /*!
- * Stores head and size of free list, as well as mutex for protection.
+ * \brief Stores head and size of free list, as well as mutex for protection.
  * \internal
  */
-typedef struct FREELIST {
+struct FreeList {
     FreeListNode* head;
     size_t element_size;
     int maxFreeListLength;
     int freeListLength;
-} FreeList;
+};
 
 /*!
  * \brief Initializes Free List.
  *
  * Must be called first and only once for FreeList.
  *
- * \return:
- *	\li \c 0 on success.
- *	\li \c EINVAL on failure.
+ * \returns
+ *  On success: **0**\n
+ *  On error: EINVAL
  */
-// Don't export function symbol; only used library intern.
 int FreeListInit(
-    /*! Must be valid, non null, pointer to a linked list. */
+    /*! [in] Must be valid, non null, pointer to a linked list. */
     FreeList* free_list,
-    /*! Size of elements to store in free list. */
+    /*! [in] Size of elements to store in free list. */
     size_t elementSize,
-    /*! Max size that the free list can grow to before returning
-     * memory to O.S. */
+    /*! [in] Max size that the free list can grow to before returning memory to
+       the operating system */
     int maxFreeListLength);
 
 /*!
  * \brief Allocates chunk of set size.
  *
  * If a free item is available in the list, returnes the stored item,
- * otherwise calls the O.S. to allocate memory.
+ * otherwise calls the operating system to allocate memory.
  *
- * \return Non NULL on success. NULL on failure.
+ * \returns
+ *  On success: Non nullptr\n
+ *  On error: nullptr
  */
-// Don't export function symbol; only used library intern.
 void* FreeListAlloc(
-    /*! Must be valid, non null, pointer to a linked list. */
+    /*! [in] Must be valid, non null, pointer to a linked list. */
     FreeList* free_list);
 
 /*!
  * \brief Returns an item to the Free List.
  *
  * If the free list is smaller than the max size then adds the item to the
- * free list, otherwise returns the item to the O.S.
+ * free list, otherwise returns the item to the operating system.
  *
- * \return:
- *	\li \c 0 on success.
- *	\li \c EINVAL on failure.
+ * \returns
+ *  On success: **0**\n
+ *  On error: EINVAL
  */
-// Don't export function symbol; only used library intern.
 int FreeListFree(
-    /*! Must be valid, non null, pointer to a free list. */
+    /*! [in] Must be valid, non null, pointer to a free list. */
     FreeList* free_list,
-    /*! Must be a pointer allocated by FreeListAlloc. */
+    /*! [in] Must be a pointer allocated by FreeListAlloc. */
     void* element);
 
 /*!
  * \brief Releases the resources stored with the free list.
  *
- * \return:
- *	\li \c 0 on success.
- *	\li \c EINVAL on failure.
+ * \returns
+ *  On success: **0**\n
+ *  On error: EINVAL
  */
-// Don't export function symbol; only used library intern.
 int FreeListDestroy(
-    /*! Must be valid, non null, pointer to a linked list. */
+    /*! [in] Must be valid, non null, pointer to a linked list. */
     FreeList* free_list);
 
-#endif /* FREE_LIST_H */
+#endif /* COMPA_FREE_LIST_HPP */

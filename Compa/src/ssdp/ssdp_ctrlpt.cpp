@@ -6,7 +6,7 @@
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-03
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-06
  *
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
@@ -40,7 +40,6 @@
  */
 
 #include <ssdp_ctrlpt.hpp>
-#include <ssdp_common.hpp>
 #include "SSDPResultDataCallback.hpp"
 #include <statcodes.hpp>
 #include <upnpapi.hpp>

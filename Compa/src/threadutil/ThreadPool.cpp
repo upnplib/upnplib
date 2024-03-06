@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-12-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,62 +31,69 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
 /*!
  * \file
+ * \ingroup threadutil
+ * \brief Manage a threadpool (for internal use only).
+ *
+ * Because this is for internal use, parameters are NOT checked for validity.
+ * The caller must ensure valid parameters.
  */
-
-#if !defined(_WIN32)
-// #include <sys/param.h>
-#endif
 
 #include <ThreadPool.hpp>
 
-// #include "FreeList.h"
-
 #include <upnplib/global.hpp>
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h> /* for memset()*/
+/// \cond
+#include <cassert>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring> /* for memset()*/
 #ifdef UPNPLIB_WITH_TRACE
 #include <iostream>
 #endif
+/// \endcond
+
+/*! Size of job free list. */
+constexpr int JOBFREELISTSIZE{100};
+/*! Infinite threads. */
+constexpr int INFINITE_THREADS{-1};
+/*! Error: maximun threads. */
+#define EMAXTHREADS (-8 & 1 << 29)
+/*! Invalid Policy */
+#define INVALID_POLICY (-9 & 1 << 29)
+
+
+namespace {
+/*! \name Scope restricted to file
+ * @{
+ */
 
 /*!
  * \brief Returns the difference in milliseconds between two timeval structures.
  *
- * \internal
- *
- * \return The difference in milliseconds, time1-time2.
+ * \returns The difference in milliseconds, time1-time2.
  */
-static long DiffMillis(
-    /*! . */
-    struct timeval* time1,
-    /*! . */
-    struct timeval* time2) {
+long DiffMillis(timeval* time1, timeval* time2) {
     double temp = 0.0;
 
-    temp = (double)time1->tv_sec - (double)time2->tv_sec;
+    temp = time1->tv_sec - time2->tv_sec;
     /* convert to milliseconds */
     temp *= 1000.0;
 
     /* convert microseconds to milliseconds and add to temp */
     /* implicit flooring of unsigned long data type */
-    temp += ((double)time1->tv_usec - (double)time2->tv_usec) / 1000.0;
+    temp += (time1->tv_usec - time2->tv_usec) / 1000.0;
 
-    return (long)temp;
+    return temp;
 }
 
-#ifdef STATS
+#if defined(STATS) || defined(DOXYGEN_RUN)
 /*!
  * \brief Initializes the statistics structure.
- *
- * \internal
  */
-static void StatsInit(
-    /*! Must be valid non null stats structure. */
+void StatsInit(
+    /*! Valid non null stats structure. */
     ThreadPoolStats* stats) {
     stats->totalIdleTime = 0.0;
     stats->totalJobsHQ = 0;
@@ -108,45 +115,39 @@ static void StatsInit(
 }
 
 /*!
- * \brief
- *
- * \internal
+ * \brief StatsAccountLQ
  */
-static void StatsAccountLQ(
-    /*! . */
+void StatsAccountLQ(
+    /*! [in] Valid, non null, pointer to ThreadPool. */
     ThreadPool* tp,
     /*! . */
     long diffTime) {
     tp->stats.totalJobsLQ++;
-    tp->stats.totalTimeLQ += (double)diffTime;
+    tp->stats.totalTimeLQ += diffTime;
 }
 
 /*!
- * \brief
- *
- * \internal
+ * \brief StatsAccountMQ
  */
-static void StatsAccountMQ(
-    /*! . */
+void StatsAccountMQ(
+    /*! [in] Valid, non null, pointer to ThreadPool. */
     ThreadPool* tp,
     /*! . */
     long diffTime) {
     tp->stats.totalJobsMQ++;
-    tp->stats.totalTimeMQ += (double)diffTime;
+    tp->stats.totalTimeMQ += diffTime;
 }
 
 /*!
- * \brief
- *
- * \internal
+ * \brief StatsAccountHQ
  */
-static void StatsAccountHQ(
-    /*! . */
+void StatsAccountHQ(
+    /*! [in] Valid, non null, pointer to ThreadPool. */
     ThreadPool* tp,
     /*! . */
     long diffTime) {
     tp->stats.totalJobsHQ++;
-    tp->stats.totalTimeHQ += (double)diffTime;
+    tp->stats.totalTimeHQ += diffTime;
 }
 
 /*!
@@ -155,15 +156,13 @@ static void StatsAccountHQ(
  *
  * Adds to the totalTime and totalJobs kept in the thread pool statistics
  * structure.
- *
- * \internal
  */
-static void CalcWaitTime(
-    /*! . */
+void CalcWaitTime(
+    /*! [in] Valid, non null, pointer to ThreadPool. */
     ThreadPool* tp,
-    /*! . */
+    /*! [in] Thread priority. */
     ThreadPriority p,
-    /*! . */
+    /*! [in] Valid thread pool job. */
     ThreadPoolJob* job) {
     struct timeval now;
     long diff;
@@ -189,11 +188,9 @@ static void CalcWaitTime(
 }
 
 /*!
- * \brief
- *
- * \internal
+ * \brief StatsTime
  */
-static time_t StatsTime(
+time_t StatsTime(
     /*! . */
     time_t* t) {
     struct timeval tv;
@@ -205,21 +202,19 @@ static time_t StatsTime(
     return tv.tv_sec;
 }
 #else  /* STATS */
-static UPNP_INLINE void StatsInit(ThreadPoolStats* stats) {}
-static UPNP_INLINE void StatsAccountLQ(ThreadPool* tp, long diffTime) {}
-static UPNP_INLINE void StatsAccountMQ(ThreadPool* tp, long diffTime) {}
-static UPNP_INLINE void StatsAccountHQ(ThreadPool* tp, long diffTime) {}
-static UPNP_INLINE void CalcWaitTime(ThreadPool* tp, ThreadPriority p,
-                                     ThreadPoolJob* job) {}
-static UPNP_INLINE time_t StatsTime(time_t* t) { return 0; }
+inline void StatsInit(ThreadPoolStats* stats) {}
+inline void StatsAccountLQ(ThreadPool* tp, long diffTime) {}
+inline void StatsAccountMQ(ThreadPool* tp, long diffTime) {}
+inline void StatsAccountHQ(ThreadPool* tp, long diffTime) {}
+inline void CalcWaitTime(ThreadPool* tp, ThreadPriority p, ThreadPoolJob* job) {
+}
+inline time_t StatsTime(time_t* t) { return 0; }
 #endif /* STATS */
 
 /*!
  * \brief Compares thread pool jobs.
- *
- * \internal
  */
-static int CmpThreadPoolJob(void* jobA, void* jobB) {
+int CmpThreadPoolJob(void* jobA, void* jobB) {
     ThreadPoolJob* a = (ThreadPoolJob*)jobA;
     ThreadPoolJob* b = (ThreadPoolJob*)jobB;
 
@@ -228,13 +223,11 @@ static int CmpThreadPoolJob(void* jobA, void* jobB) {
 
 /*!
  * \brief Deallocates a dynamically allocated ThreadPoolJob.
- *
- * \internal
  */
-static void FreeThreadPoolJob(
-    /*! . */
+void FreeThreadPoolJob(
+    /*! [in] Valid, non null, pointer to ThreadPool. */
     ThreadPool* tp,
-    /*! Must be allocated with CreateThreadPoolJob. */
+    /*! [in] Must be allocated with CreateThreadPoolJob. */
     ThreadPoolJob* tpj) {
     FreeListFree(&tp->jobFreeList, tpj);
 }
@@ -242,19 +235,16 @@ static void FreeThreadPoolJob(
 /*!
  * \brief Sets the scheduling policy of the current process.
  *
- * \internal
- *
- * \return
- * 	\li \c 0 on success.
- *      \li \c result of GetLastError() on failure.
- *
+ * \returns
+ *  On success: **0**\n
+ *  On error: result of GetLastError() on failure.
  */
-static int SetPolicyType(
+int SetPolicyType(
     /*! . */
     [[maybe_unused]] PolicyType in) {
     int retVal = 0;
 #ifdef __CYGWIN__
-    /* TODO not currently working... */
+    /*! \todo not currently working... */
     (void)in;
     retVal = 0;
 #elif defined(__APPLE__) || defined(__NetBSD__)
@@ -281,14 +271,12 @@ static int SetPolicyType(
 /*!
  * \brief Sets the priority of the currently running thread.
  *
- * \internal
- *
- * \return
- *	\li \c 0 on success.
- *      \li \c EINVAL invalid priority or the result of GerLastError.
+ * \returns
+ *  On success: **0**\n
+ *  On error: EINVAL invalid priority or the result of GerLastError.
  */
-static int SetPriority(
-    /*! . */
+int SetPriority(
+    /*! [in] Thread priority */
     ThreadPriority priority) {
 #if defined(_POSIX_PRIORITY_SCHEDULING) && _POSIX_PRIORITY_SCHEDULING > 0
     int retVal = 0;
@@ -337,13 +325,9 @@ exit_function:
  * and bumps them.
  *
  * tp->mutex must be locked.
- *
- * \internal
- *
- * \return
  */
-static void BumpPriority(
-    /*! . */
+void BumpPriority(
+    /*! [in] Valid, non null, pointer to ThreadPool. */
     ThreadPool* tp) {
     int done = 0;
     struct timeval now;
@@ -356,9 +340,8 @@ static void BumpPriority(
             tempJob = (ThreadPoolJob*)tp->medJobQ.head.next->item;
             diffTime = DiffMillis(&now, &tempJob->requestTime);
             if (diffTime >= tp->attr.starvationTime) {
-                /* If job has waited longer than the starvation
-                 * time
-                 * bump priority (add to higher priority Q) */
+                /* If job has waited longer than the starvation time, bump
+                 * priority (add to higher priority Q) */
                 StatsAccountMQ(tp, diffTime);
                 ListDelNode(&tp->medJobQ, tp->medJobQ.head.next, 0);
                 ListAddTail(&tp->highJobQ, tempJob);
@@ -369,9 +352,8 @@ static void BumpPriority(
             tempJob = (ThreadPoolJob*)tp->lowJobQ.head.next->item;
             diffTime = DiffMillis(&now, &tempJob->requestTime);
             if (diffTime >= tp->attr.maxIdleTime) {
-                /* If job has waited longer than the starvation
-                 * time
-                 * bump priority (add to higher priority Q) */
+                /* If job has waited longer than the starvation time, bump
+                 * priority (add to higher priority Q) */
                 StatsAccountLQ(tp, diffTime);
                 ListDelNode(&tp->lowJobQ, tp->lowJobQ.head.next, 0);
                 ListAddTail(&tp->medJobQ, tempJob);
@@ -385,15 +367,13 @@ static void BumpPriority(
 /*!
  * \brief Sets the fields of the passed in timespec to be relMillis
  * milliseconds in the future.
- *
- * \internal
  */
-static void SetRelTimeout(
+void SetRelTimeout(
     /*! . */
-    struct timespec* time,
+    timespec* time,
     /*! milliseconds in the future. */
     int relMillis) {
-    struct timeval now;
+    timeval now;
     int sec = relMillis / 1000;
     int milliSeconds = relMillis % 1000;
 
@@ -403,18 +383,17 @@ static void SetRelTimeout(
 }
 
 /*!
- * \brief Sets seed for random number generator. Each thread sets the seed
- * random number generator.
+ * \brief Sets seed for random number generator.
+ *
+ * Each thread sets the seed random number generator.
  *
  * \todo Solve problem with type casts.
- * \internal
  */
-static void SetSeed(void) {
+void SetSeed(void) {
     struct timeval t;
 
     gettimeofday(&t, NULL);
-#if defined(__PTW32_DLLPORT)
-    // There is pthreads4w on Microsoft Windows available.
+#if defined(__PTW32_DLLPORT) // pthreads4w on Microsoft Windows available.
     srand(
         (unsigned int)t.tv_usec +
         (unsigned int)((unsigned long long)ithread_get_current_thread_id().p));
@@ -439,15 +418,13 @@ static void SetSeed(void) {
 }
 
 /*!
- * \brief Implements a thread pool worker. Worker waits for a job to become
- * available. Worker picks up persistent jobs first, high priority,
- * med priority, then low priority.
+ * \brief Implements a thread pool worker.
  *
- * If worker remains idle for more than specified max, the worker is released.
- *
- * \internal
+ * Worker waits for a job to become available. Worker picks up persistent jobs
+ * first, high priority, med priority, then low priority. If worker remains
+ * idle for more than specified max, the worker is released.
  */
-static void* WorkerThread(
+void* WorkerThread(
     /*! arg -> is cast to (ThreadPool *). */
     void* arg) {
     time_t start = 0;
@@ -455,7 +432,7 @@ static void* WorkerThread(
     ThreadPoolJob* job = NULL;
     ListNode* head = NULL;
 
-    struct timespec timeout;
+    timespec timeout;
     int retCode = 0;
     int persistent = -1;
     ThreadPool* tp = (ThreadPool*)arg;
@@ -591,18 +568,18 @@ exit_function:
 /*!
  * \brief Creates a Thread Pool Job. (Dynamically allocated)
  *
- * \internal
- *
- * \return ThreadPoolJob *on success, NULL on failure.
+ * \returns
+ *  On success: Pointer to a ThreadPoolJob\n
+ *  On error: nullptr
  */
-static ThreadPoolJob* CreateThreadPoolJob(
+ThreadPoolJob* CreateThreadPoolJob(
     /*! job is copied. */
     ThreadPoolJob* job,
     /*! id of job. */
     int id,
-    /*! . */
+    /*! [in] Valid, non null, pointer to ThreadPool. */
     ThreadPool* tp) {
-    ThreadPoolJob* newJob = NULL;
+    ThreadPoolJob* newJob{nullptr};
 
     newJob = (ThreadPoolJob*)FreeListAlloc(&tp->jobFreeList);
     if (newJob) {
@@ -621,15 +598,14 @@ static ThreadPoolJob* CreateThreadPoolJob(
  * \remark The ThreadPool object mutex must be locked prior to calling this
  * function.
  *
- * \internal
- *
- * \return
- *	\li \c 0 on success, < 0 on failure.
- *	\li \c EMAXTHREADS if already max threads reached.
- *	\li \c EAGAIN if system can not create thread.
+ * \returns
+ *  On success: **0**\n
+ *  On error: **< 0**
+ *  - EMAXTHREADS if already max threads reached.
+ *  - EAGAIN if system can not create thread.
  */
-static int CreateWorker(
-    /*! A pointer to the ThreadPool object. */
+int CreateWorker(
+    /*! [in] Valid, non null, pointer to ThreadPool. */
     ThreadPool* tp) {
     ithread_t temp;
     int rc = 0;
@@ -666,15 +642,15 @@ static int CreateWorker(
 
 /*!
  * \brief Determines whether or not a thread should be added based on the
- * jobsPerThread ratio. Adds a thread if appropriate.
+ * jobsPerThread ratio.
+ *
+ * Adds a thread if appropriate.
  *
  * \remark The ThreadPool object mutex must be locked prior to calling this
  * function.
- *
- * \internal
  */
-static void AddWorker(
-    /*! A pointer to the ThreadPool object. */
+void AddWorker(
+    /*! [in] Valid, non null, pointer to ThreadPool. */
     ThreadPool* tp) {
     long jobs = 0;
     int threads = 0;
@@ -689,6 +665,10 @@ static void AddWorker(
         threads++;
     }
 }
+
+/// @} // Functions (scope restricted to file)
+} // anonymous namespace
+
 
 int ThreadPoolInit(ThreadPool* tp, ThreadPoolAttr* attr) {
     TRACE2("Executing ThreadPoolInit() for ThreadPool ", tp)
@@ -1159,7 +1139,7 @@ int TPAttrSetMaxJobsTotal(ThreadPoolAttr* attr, int maxJobsTotal) {
     return 0;
 }
 
-#ifdef STATS
+#if defined(STATS) || defined(DOXYGEN_RUN)
 void ThreadPoolPrintStats(ThreadPoolStats* stats) {
     if (!stats)
         return;

@@ -43,7 +43,6 @@
 #include <client_table.hpp>
 #include <httpparser.hpp>
 #include <sock.hpp>
-#include <ThreadPool.hpp>
 
 /*! \brief XML version comment. Not used because it is not interoperable with
  * other UPnP vendors. */

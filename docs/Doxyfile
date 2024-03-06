@@ -954,16 +954,16 @@ INPUT                  = README.md \
                          Compa/src/genlib \
                          Compa/src/inc \
                          Compa/src/soap \
-                         Compa/src/ssdp
+                         Compa/src/ssdp \
+                         Compa/src/threadutil/FreeList.cpp \
+                         Compa/src/threadutil/FreeList.hpp \
+                         Compa/src/threadutil/LinkedList.cpp \
+                         Compa/src/threadutil/LinkedList.hpp \
+                         Compa/src/threadutil/ThreadPool.cpp \
+                         Compa/src/threadutil/ThreadPool.hpp \
+                         Compa/src/threadutil/TimerThread.cpp \
+                         Compa/src/threadutil/TimerThread.hpp
 
-#Compa/src/threadutil/FreeList.cpp
-#Compa/src/threadutil/FreeList.hpp
-#Compa/src/threadutil/LinkedList.cpp
-#Compa/src/threadutil/LinkedList.hpp
-#Compa/src/threadutil/ThreadPool.cpp
-#Compa/src/threadutil/ThreadPool.hpp
-#Compa/src/threadutil/TimerThread.cpp
-#Compa/src/threadutil/TimerThread.hpp
 #Compa/src/urlconfig/urlconfig.cpp
 #Compa/src/uuid/md5.cpp
 #Compa/src/uuid/sysdep.cpp
@@ -971,7 +971,6 @@ INPUT                  = README.md \
 #Compa/src/globalvars.cpp
 #Compa/src/init.cpp
 #
-#delete posix_overwrites.hpp
 #delete Compa/inc/UpnpGlobal.hpp
 #delete Compa/inc/UpnpInet.hpp
 #delete Compa/inc/UpnpIntTypes.hpp
@@ -1456,7 +1455,7 @@ HTML_DYNAMIC_MENUS     = YES
 # The default value is: NO.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_DYNAMIC_SECTIONS  = NO
+HTML_DYNAMIC_SECTIONS  = YES
 
 # If the HTML_CODE_FOLDING tag is set to YES then classes and functions can be
 # dynamically folded and expanded in the generated HTML source code.

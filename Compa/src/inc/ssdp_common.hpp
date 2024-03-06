@@ -8,7 +8,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-03
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,16 +44,6 @@
 
 #include <miniserver.hpp>
 
-
-/// \brief Enumeration to define all different types of ssdp searches.
-enum SsdpSearchType {
-    SSDP_SERROR = -1, ///< Unknown search command.
-    SSDP_ALL,         ///< Part of SType.
-    SSDP_ROOTDEVICE,  ///< Part of SType.
-    SSDP_DEVICEUDN,   ///< Part of SType.
-    SSDP_DEVICETYPE,  ///< Part of SType.
-    SSDP_SERVICE      ///< Part of SType.
-};
 
 /*! \name SSDP constants.
  * @{ */
@@ -92,6 +82,16 @@ enum SsdpSearchType {
 
 /// timeout
 #define RQST_TIMEOUT 20
+
+/// \brief Enumeration to define all different types of ssdp searches.
+enum SsdpSearchType {
+    SSDP_SERROR = -1, ///< Unknown search command.
+    SSDP_ALL,         ///< Part of SType.
+    SSDP_ROOTDEVICE,  ///< Part of SType.
+    SSDP_DEVICEUDN,   ///< Part of SType.
+    SSDP_DEVICETYPE,  ///< Part of SType.
+    SSDP_SERVICE      ///< Part of SType.
+};
 
 /// \brief Structure to store the SSDP information.
 struct SsdpEvent {
@@ -137,17 +137,6 @@ struct SsdpSearchReply {
     UpnpDevice_Handle handle;
     struct sockaddr_storage dest_addr;
     SsdpEvent event;
-    /// @}
-};
-
-/// \brief SSDP search argument.
-struct SsdpSearchArg {
-    /// @{
-    /// \brief part of search argument
-    int timeoutEventId;
-    char* searchTarget;
-    void* cookie;
-    enum SsdpSearchType requestType;
     /// @}
 };
 

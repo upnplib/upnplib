@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-24
+// Redistribution only with this Copyright remark. Last modified: 2024-03-04
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <Pupnp/upnp/src/genlib/net/http/httpparser.cpp>
@@ -128,7 +128,7 @@ TEST(HttpparserTestSuite, map_int_to_str) {
 TEST(HttpparserTestSuite, httpmsg_init_and_destroy) {
     http_message_t msg;
     memset(&msg, 0xff, sizeof(msg));
-    EXPECT_EQ(msg.headers.head.next, (LISTNODE*)0xffffffffffffffff);
+    EXPECT_EQ(msg.headers.head.next, (ListNode*)0xffffffffffffffff);
     Chttpparser httparsObj;
 
     if (old_code) {
@@ -149,7 +149,7 @@ TEST(HttpparserTestSuite, httpmsg_init_and_destroy) {
     EXPECT_EQ(msg.entity.buf, nullptr);
     EXPECT_EQ(msg.entity.length, (size_t)0);
     EXPECT_EQ(msg.headers.head.prev, nullptr);
-    EXPECT_NE(msg.headers.head.next, (LISTNODE*)0xffffffffffffffff);
+    EXPECT_NE(msg.headers.head.next, (ListNode*)0xffffffffffffffff);
     EXPECT_EQ(msg.msg.buf, nullptr);
     EXPECT_EQ(msg.msg.length, (size_t)0);
     EXPECT_EQ(msg.msg.capacity, (size_t)0);

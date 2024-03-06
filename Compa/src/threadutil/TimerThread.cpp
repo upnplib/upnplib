@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft,  Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-18
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,21 +34,84 @@
 
 /*!
  * \file
+ * \ingroup threadutil
+ * \brief Manage threads that start at a given time (for internal use only).
+ *
+ * Because this is for internal use, parameters are NOT checked for validity.
+ * The caller must ensure valid parameters.
  */
 
 #include "TimerThread.hpp"
 
 #include <assert.h>
 
+/// \brief Invalid event ID.
+#define INVALID_EVENT_ID (-10 & 1 << 29)
+
+namespace {
+
+/*!
+ * \brief Structure to contain information for a timer event.
+ *
+ * Internal to the TimerThread.
+ */
+struct TimerEvent {
+    ThreadPoolJob job;
+    /*! Absolute time for event in seconds since Jan 1, 1970. */
+    time_t eventTime;
+    /*! Long term or short term job. */
+    Duration persistent;
+    /*! Id of timer event. (can be null?). */
+    int id;
+};
+
+
+/*! \name Scope restricted to file
+ * @{ */
+
+/*!
+ * \brief Creates a Timer Event.
+ *
+ * \returns
+ *  On success: Pointer to dynamically allocated TimerEvent.\n
+ *  On error: nullptr
+ */
+inline TimerEvent* CreateTimerEvent(
+    /*! [in] Valid timer thread pointer. */
+    TimerThread* timer,
+    /*! [in] . */
+    ThreadPoolJob* job,
+    /*! [in] . */
+    Duration persistent,
+    /*! [in] The absoule time of the event in seconds from Jan, 1970. */
+    time_t eventTime,
+    /*! [in] Id of job. */
+    int id) {
+    TimerEvent* temp = NULL;
+
+    assert(timer != NULL);
+    assert(job != NULL);
+
+    temp = (TimerEvent*)FreeListAlloc(&timer->freeEvents);
+    if (temp == NULL)
+        return temp;
+    temp->job = (*job);
+    temp->persistent = persistent;
+    temp->eventTime = eventTime;
+    temp->id = id;
+
+    return temp;
+}
+
 /*!
  * \brief Deallocates a dynamically allocated TimerEvent.
  */
-static void FreeTimerEvent(
+void FreeTimerEvent(
     /*! [in] Valid timer thread pointer. */
     TimerThread* timer,
-    /*! [in] Must be allocated with CreateTimerEvent*/
+    /*! [in] Must be allocated with CreateTimerEvent. */
     TimerEvent* event) {
-    assert(timer != NULL);
+    assert(timer != nullptr);
 
     FreeListFree(&timer->freeEvents, event);
 }
@@ -58,18 +121,18 @@ static void FreeTimerEvent(
  *
  * Waits for next event to occur and schedules associated job into threadpool.
  */
-static void TimerThreadWorker(
+void TimerThreadWorker(
     /*! [in] arg is cast to (TimerThread *). */
     void* arg) {
     TimerThread* timer = (TimerThread*)arg;
-    ListNode* head = NULL;
-    TimerEvent* nextEvent = NULL;
+    ListNode* head{nullptr};
+    TimerEvent* nextEvent{nullptr};
     time_t currentTime = 0;
     time_t nextEventTime = 0;
-    struct timespec timeToWait;
+    timespec timeToWait;
     int tempId;
 
-    assert(timer != NULL);
+    assert(timer != nullptr);
 
     ithread_mutex_lock(&timer->mutex);
     while (1) {
@@ -127,19 +190,19 @@ static void TimerThreadWorker(
 }
 
 /*!
- * \brief Calculates the appropriate timeout in absolute seconds
- * since Jan 1, 1970.
+ * \brief Calculates the appropriate timeout in absolute seconds since Jan 1,
+ * 1970.
  *
- * \return
+ * \returns Always **0**
  */
-static int CalculateEventTime(
-    /*! [in] Timeout. */
+inline int CalculateEventTime(
+    /*! [out] Timeout. */
     time_t* timeout,
     /*! [in] Timeout type. */
     TimeoutType type) {
     time_t now;
 
-    assert(timeout != NULL);
+    assert(timeout != nullptr);
 
     switch (type) {
     case ABS_SEC:
@@ -151,37 +214,9 @@ static int CalculateEventTime(
     }
 }
 
-/*!
- * \brief Creates a Timer Event. (Dynamically allocated).
- *
- * \return (TimerEvent *) on success, NULL on failure.
- */
-static TimerEvent* CreateTimerEvent(
-    /*! [in] Valid timer thread pointer. */
-    TimerThread* timer,
-    /*! [in] . */
-    ThreadPoolJob* job,
-    /*! [in] . */
-    Duration persistent,
-    /*! [in] The absoule time of the event in seconds from Jan, 1970. */
-    time_t eventTime,
-    /*! [in] Id of job. */
-    int id) {
-    TimerEvent* temp = NULL;
+/// @} // Functions (scope restricted to file)
+} // anonymous namespace
 
-    assert(timer != NULL);
-    assert(job != NULL);
-
-    temp = (TimerEvent*)FreeListAlloc(&timer->freeEvents);
-    if (temp == NULL)
-        return temp;
-    temp->job = (*job);
-    temp->persistent = persistent;
-    temp->eventTime = eventTime;
-    temp->id = id;
-
-    return temp;
-}
 
 int TimerThreadInit(TimerThread* timer, ThreadPool* tp) {
 

@@ -1,9 +1,11 @@
+#ifndef COMPA_TIMERTHREAD_HPP
+#define COMPA_TIMERTHREAD_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-26
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,69 +32,49 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
-#ifndef TIMERTHREAD_H
-#define TIMERTHREAD_H
-
 /*!
  * \file
+ * \ingroup threadutil
+ * \brief Manage threads that start at a given time (for internal use only).
+ *
+ * Because this is for internal use, parameters are NOT checked for validity.
+ * The caller must ensure valid parameters.
  */
 
-// #include "FreeList.h"
-// #include "LinkedList.h"
 #include "ThreadPool.hpp"
-// #include "ithread.hpp"
 
-#define INVALID_EVENT_ID (-10 & 1 << 29)
-
-/*! Timeout Types. */
-typedef enum timeoutType {
-    /*! seconds from Jan 1, 1970. */
-    ABS_SEC,
-    /*! seconds from current time. */
-    REL_SEC
-} TimeoutType;
+/*! \brief Timeout Types. */
+enum TimeoutType {
+    ABS_SEC, ///< seconds from Jan 1, 1970.
+    REL_SEC  ///< seconds from current time.
+};
 
 /*!
- * A timer thread similar to the one in the Upnp SDK that allows
- * the scheduling of a job to run at a specified time in the future.
+ * \brief A timer thread that allows the scheduling of a job to run at a
+ * specified time in the future.
  *
- * Because the timer thread uses the thread pool there is no
- * gurantee of timing, only approximate timing.
+ * Because the timer thread uses the thread pool there is no gurantee of
+ * timing, only approximate timing.
  *
  * Uses ThreadPool, Mutex, Condition, Thread.
  */
-typedef struct TIMERTHREAD {
-    ithread_mutex_t mutex;
-    ithread_cond_t condition;
-    int lastEventId;
-    LinkedList eventQ;
-    int shutdown;
-    FreeList freeEvents;
-    ThreadPool* tp;
-} TimerThread;
-
-/*!
- * Struct to contain information for a timer event.
- *
- * Internal to the TimerThread.
- */
-typedef struct TIMEREVENT {
-    ThreadPoolJob job;
-    /*! [in] Absolute time for event in seconds since Jan 1, 1970. */
-    time_t eventTime;
-    /*! [in] Long term or short term job. */
-    Duration persistent;
-    int id;
-} TimerEvent;
+struct TimerThread {
+    ithread_mutex_t mutex;    ///< [in]
+    ithread_cond_t condition; ///< [in]
+    int lastEventId;          ///< [in]
+    LinkedList eventQ;        ///< [in]
+    int shutdown;             ///< [in]
+    FreeList freeEvents;      ///< [in]
+    ThreadPool* tp;           ///< [in]
+};
 
 /*!
  * \brief Initializes and starts timer thread.
  *
- * \return 0 on success, nonzero on failure. Returns error from
- * 	ThreadPoolAddPersistent on failure.
+ * \returns
+ *  On success: **0**\n
+ *  On error: nonzero, returns error from ThreadPoolAddPersistent().
  */
-// Don't export function symbol; only used library intern.
 int TimerThreadInit(
     /*! [in] Valid timer thread pointer. */
     TimerThread* timer,
@@ -103,24 +85,24 @@ int TimerThreadInit(
 /*!
  * \brief Schedules an event to run at a specified time.
  *
- * \return 0 on success, nonzero on failure, EOUTOFMEM if not enough memory
- * 	to schedule job.
+ * \returns
+ *  On success: **0**\n
+ *  On error: nonzero
+ *  - EOUTOFMEM if not enough memory to schedule job.
  */
-// Don't export function symbol; only used library intern.
 int TimerThreadSchedule(
     /*! [in] Valid timer thread pointer. */
     TimerThread* timer,
-    /*! [in] time of event. Either in absolute seconds, or relative
-     * seconds in the future. */
-    time_t time,
-    /*! [in] either ABS_SEC, or REL_SEC. If REL_SEC, then the event
-     * will be scheduled at the current time + REL_SEC. */
+    /*! [in] time of event. Either in absolute seconds, or relative seconds in
+     * the future. */
+    time_t timeout,
+    /*! [in] either ABS_SEC, or REL_SEC. If REL_SEC, then the event will be
+     * scheduled at the current time + REL_SEC. */
     TimeoutType type,
     /*! [in] Valid Thread pool job with following fields. */
     ThreadPoolJob* job,
-    /*! [in] . */
-    Duration duration,
-    /*! [in] Id of timer event. (out, can be null). */
+    Duration duration, ///< [in]
+    /*! [out] Id of timer event. (can be null). */
     int* id);
 
 /*!
@@ -128,7 +110,9 @@ int TimerThreadSchedule(
  *
  * Events can only be removed before they have been placed in the thread pool.
  *
- * \return 0 on success, INVALID_EVENT_ID on failure.
+ * \returns
+ *  On success: **0**\n
+ *  On error: INVALID_EVENT_ID
  */
 // Don't export function symbol; only used library intern.
 int TimerThreadRemove(
@@ -136,21 +120,19 @@ int TimerThreadRemove(
     TimerThread* timer,
     /*! [in] Id of event to remove. */
     int id,
-    /*! [in] Space for thread pool job. */
+    /*! [out] Thread pool job. */
     ThreadPoolJob* out);
 
 /*!
  * \brief Shutdown the timer thread.
  *
- * Events scheduled in the future will NOT be run.
+ * Events scheduled in the future will NOT be run. Timer thread should be
+ * shutdown BEFORE it's associated thread pool.
  *
- * Timer thread should be shutdown BEFORE it's associated thread pool.
- *
- * \return 0 if succesfull, nonzero otherwise. Always returns 0.
+ * \returns Always **0**
  */
-// Don't export function symbol; only used library intern.
 int TimerThreadShutdown(
     /*! [in] Valid timer thread pointer. */
     TimerThread* timer);
 
-#endif /* TIMER_THREAD_H */
+#endif /* COMPA_TIMERTHREAD_HPP */

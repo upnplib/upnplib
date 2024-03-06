@@ -8,7 +8,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-03
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,8 +44,19 @@
  * \ingroup compa-Discovery
  */
 
-#include <httpparser.hpp>
+#include <ssdp_common.hpp>
 
+
+/// \brief SSDP search argument.
+struct SsdpSearchArg {
+    /// @{
+    /// \brief part of search argument
+    int timeoutEventId;
+    char* searchTarget;
+    void* cookie;
+    enum SsdpSearchType requestType;
+    /// @}
+};
 
 /*! @{
  * \ingroup SSDP-ctrlpt_functions */

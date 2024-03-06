@@ -3,8 +3,8 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-01-02
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,23 +31,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
+/*!
+ * \file
+ * \ingroup threadutil
+ * \brief Manage a linked list (for internal use only).
+ *
+ * Because this is for internal use, parameters are NOT checked for validity.
+ * The caller must ensure valid parameters.
+ */
 
 #include "LinkedList.hpp"
 
-#ifndef _WIN32
-/* Do not #include <sys/param.h> on Windows */
-// #include <sys/param.h>
-#endif
+/// \brief Size of a free list.
+constexpr int FREELISTSIZE{100};
 
-#if (defined(BSD) && BSD >= 199306) || defined(__APPLE__)
-// #include <stdlib.h>
-#else
-// #include <malloc.h>
-#endif
+/// \cond
+#include <cassert>
+/// \endcond
 
-#include <assert.h>
+namespace {
+/*! \name Scope restricted to file
+ * @{
+ */
 
-static int freeListNode(ListNode* node, LinkedList* list) {
+/*!
+ * \brief Free list node
+ */
+int freeListNode(ListNode* node, LinkedList* list) {
     assert(list != NULL);
 
     return FreeListFree(&list->freeNodeList, node);
@@ -56,15 +66,14 @@ static int freeListNode(ListNode* node, LinkedList* list) {
 /*!
  * \brief Dynamically creates a list node.
  *
- *  Parameters:
- *      void * item - the item to store
- *  Returns:
- *      The new node, NULL on failure.
+ * \returns
+ *  On success: The new node\n
+ *  On error: nullptr
  */
-static ListNode* CreateListNode(
-    /*! the item to store. */
+ListNode* CreateListNode(
+    /*! [in] the item to store. */
     void* item,
-    /*! The list to add it to. */
+    /*! [in] The list to add it to. */
     LinkedList* list) {
     ListNode* temp = NULL;
 
@@ -79,6 +88,9 @@ static ListNode* CreateListNode(
 
     return temp;
 }
+
+/// @} // Functions (scope restricted to file)
+} // anonymous namespace
 
 int ListInit(LinkedList* list, cmp_routine cmp_func, free_function free_func) {
     int retCode = 0;

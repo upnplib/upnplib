@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-20
+// Redistribution only with this Copyright remark. Last modified: 2024-03-06
 /*!
  * \file
  * \brief Definition of the documentation topics.
@@ -149,6 +149,16 @@
  * viewing device status. Presentation is complementary to control (Step 3)
  * where control points send actions to devices, and eventing (Step 4) where
  * control points listen to state changes in device(s).
+ *
+ *
+ * \defgroup compa-Operating general local operating
+ * \ingroup compa
+ * \brief Items for general local operating that is used for all UPnP Steps to
+ * manage internal structures.
+ *
+ * \defgroup threadutil Manage threads
+ * \ingroup compa-Operating
+ * \brief Functions to manage threads for a thread pool.
  */
 
 // Topics for the object oriented UPnPlib library

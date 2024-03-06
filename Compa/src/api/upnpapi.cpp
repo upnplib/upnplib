@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-04
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-06
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,10 +44,9 @@
 
 #include <upnpapi.hpp>
 
-#include <httpreadwrite.hpp>
 #include <uuid.hpp>
 #include <miniserver.hpp>
-#include <ssdp_common.hpp>
+#include <httpreadwrite.hpp>
 #include <ssdp_ctrlpt.hpp>
 #include <ssdp_device.hpp>
 #include <soap_device.hpp>
@@ -69,7 +68,6 @@
 #include <gena.hpp>
 
 #ifdef COMPA_HAVE_WEBSERVER
-#include <VirtualDir.hpp>
 #include <urlconfig.hpp>
 #include <webserver.hpp>
 #endif /* COMPA_HAVE_WEBSERVER */

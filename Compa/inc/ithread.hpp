@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-01-26
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-04
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,6 +36,7 @@
 /*!
  * \file
  * \brief Deprecated ithread functions redirected to pthread. Internal use Only.
+ * \todo Remove ithread and use pthread direct.
  */
 
 #include <UpnpGlobal.hpp> /* For UPNP_INLINE, EXPORT_SPEC */
