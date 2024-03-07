@@ -1,3 +1,5 @@
+#ifdef COMPA_HAVE_DEVICE_DESCRIPTION
+
 #ifndef COMPA_URLCONFIG_HPP
 #define COMPA_URLCONFIG_HPP
 /* ************************************************************************
@@ -5,7 +7,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-02
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,8 +37,11 @@
 // Last compare with pupnp original source file on 2022-11-10, ver 1.14.14
 /*!
  * \file
- * \brief Configure_urlbase.
+ * \brief Configure the full URL for the description document.
+ * \ingroup Description-device
  */
+
+#include <upnp.hpp>
 
 /*!
  * \brief Configure the full URL for the description document.
@@ -52,12 +57,19 @@
  *  On error: UPNP_E_OUTOF_MEMORY - Default Error
  */
 int configure_urlbase(
-    IXML_Document* doc,                ///< [in,out] IXML Description document
-    const struct sockaddr* serverAddr, /*!< [in] Socket address object providing
-                                          the IP address and port information */
-    const char* alias,                 ///< [in] String containing the alias
-    time_t last_modified,  ///< [in] Time when the XML document was downloaded
-    char docURL[LINE_SIZE] ///< [out] Buffer to hold the URL of the document
-);
+    /*! [in,out] IXML Description document (dom document whose urlbase is to be
+                 modified). */
+    IXML_Document* doc,
+    /*! [in] Socket address object providing the IP address and port information
+             (ip address and port of the miniserver). */
+    const sockaddr* serverAddr,
+    /*! [in] String containing the alias (a name to be used for the temp,
+             e.g.:"foo.xml"). */
+    const char* alias,
+    /*! [in] Time when the XML document was downloaded. */
+    time_t last_modified,
+    /*! [out] Buffer to hold the URL of the document. */
+    char docURL[LINE_SIZE]);
 
 #endif /* COMPA_URLCONFIG_HPP */
+#endif // COMPA_HAVE_DEVICE_DESCRIPTION

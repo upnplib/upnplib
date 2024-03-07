@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-26
+# Redistribution only with this Copyright remark. Last modified: 2024-03-07
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -24,6 +24,8 @@ option(UPNPLIB_WITH_WEBSERVER "Provide a webserver." OFF)
 option(UPNPLIB_WITH_CTRLPT_SSDP "Providing control point functionality to manage a remote UPnP device." OFF)
 option(UPNPLIB_WITH_DEVICE_SSDP "Providing UPnP device functionality so remote control points can connect to it." OFF)
 option(UPNPLIB_WITH_OPTION_SSDP "Enable optional SSDP headers." OFF)
+option(UPNPLIB_WITH_CTRLPT_DESCRIPTION "Enable requesting from a control point for a devices UPnP description." OFF)
+option(UPNPLIB_WITH_DEVICE_DESCRIPTION "Enable responding from a device to a control points UPnP description request." OFF)
 option(UPNPLIB_WITH_CTRLPT_SOAP "Enable SOAP, the Simple Object Access Protocol." OFF)
 option(UPNPLIB_WITH_DEVICE_SOAP "Enable SOAP, the Simple Object Access Protocol." OFF)
 option(UPNPLIB_WITH_CTRLPT_GENA "Enable GENA, the General Event Notification Architecture." OFF)

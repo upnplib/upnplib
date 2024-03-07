@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-03
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,54 +32,43 @@
  *
  **************************************************************************/
 // Last compare with pupnp original source file on 2022-11-10, ver 1.14.14
-
 /*!
  * \file
+ * \ingroup Description-device
+ * \brief Configure the full URL for the description document.
  */
 
-#include "UpnpInet.hpp"
-// #include "membuffer.hpp"
-#include "unixutil.hpp"
-#include "upnp.hpp"
-#include "upnpdebug.hpp"
-#include "upnp.hpp"
-#include "uri.hpp"
-#include "urlconfig.hpp"
-#include "webserver.hpp"
+#include <urlconfig.hpp>
 
-#include <assert.h>
-#include <stdio.h>
+#include <unixutil.hpp>
+#include <upnpdebug.hpp>
+#include <uri.hpp>
+#include <webserver.hpp>
 
-#ifdef _WIN32
-#if defined(_MSC_VER) && _MSC_VER < 1900
-#define snprintf _snprintf
-#endif
-#else
-#include <sys/types.h>
-#endif
+/// \cond
+#include <cassert>
+#include <cstdio>
+/// \endcond
 
-/************************************************************************
- *  Function :  addrToString
+
+namespace {
+/*! \name Scope restricted to file
+ * @{ */
+
+/*!
+ * \brief Converts an Internet address to a string and stores it in a buffer.
  *
- *  Parameters :
- *      IN const struct sockaddr* addr ;    socket address object
- *with the IP Address and port information
- *      OUT char ipaddr_port ;  character array which will hold the
- *                  IP Address  in a string format.
- *      IN size_t ipaddr_port_size ;    ipaddr_port buffer size
- *
- *  Description : Converts an Internet address to a string and stores it
- *      a buffer.
- *
- *  Return : int ;
- *      UPNP_E_SUCCESS - On Success.
- *      UPNP_E_BUFFER_TOO_SMALL - Given buffer doesn't have enough size.
- *
- *  Note :
- ************************************************************************/
-static UPNP_INLINE int addrToString(const struct sockaddr* addr,
-                                    char* ipaddr_port,
-                                    size_t ipaddr_port_size) {
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error: UPNP_E_BUFFER_TOO_SMALL - Given buffer doesn't have enough size.
+ */
+inline int addrToString(  //
+    const sockaddr* addr, /*!< [in] Pointer to socket address with the IP
+                                    Address and port information. */
+    char* ipaddr_port, /*!< [out] Character array which will hold the IP Address
+                                  in a string format. */
+    size_t ipaddr_port_size) ///< [in] Ipaddr_port buffer size.
+{
     char buf_ntop[INET6_ADDRSTRLEN];
     int rc = 0;
 
@@ -94,31 +83,28 @@ static UPNP_INLINE int addrToString(const struct sockaddr* addr,
         rc = snprintf(ipaddr_port, ipaddr_port_size, "[%s]:%d", buf_ntop,
                       (int)ntohs(sa6->sin6_port));
     }
-    // TODO: Check bugfix with gtest
+    /// \todo Check bugfix with gtest.
     // if (rc < 0 || (unsigned int)rc >= ipaddr_port_size)
     if (rc < 0 || (unsigned int)rc > ipaddr_port_size)
         return UPNP_E_BUFFER_TOO_SMALL;
     return UPNP_E_SUCCESS;
 }
 
-/************************************************************************
- *       Function :      calc_alias
+/*!
+ * \brief Determine alias based urlbase's root path.
  *
- *       Parameters :
- *          IN const char* alias ;  String containing the alias
- *          IN const char* rootPath ;  String containing the root path
- *          OUT char** newAlias ;  String pointer to hold the modified new alias
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error: UPNP_E_OUTOF_MEMORY - On Failure to allocate memory for new *alias
  *
- *       Description : Determine alias based urlbase's root path.
- *
- *       Return : int ;
- *          UPNP_E_SUCCESS - On Success.
- *          UPNP_E_OUTOF_MEMORY - On Failure to allocate memory for new *alias
- *
- *       Note : 'newAlias' should be freed using free()
- ************************************************************************/
-static UPNP_INLINE int calc_alias(const char* alias, const char* rootPath,
-                                  char** newAlias) {
+ *  \note Parameter 'newAlias' should be freed after use with using free().
+ */
+inline int calc_alias(    //
+    const char* alias,    ///< [in] String containing the alias.
+    const char* rootPath, ///< [in] String containing the root path.
+    char** newAlias /*!< [out] String pointer to hold the modified new alias.
+                               After use it should be freed using free(). */
+) {
     const char* aliasPtr;
     size_t root_len;
     const char* temp_str;
@@ -150,26 +136,20 @@ static UPNP_INLINE int calc_alias(const char* alias, const char* rootPath,
     return UPNP_E_SUCCESS;
 }
 
-/************************************************************************
- * Function :      calc_descURL
+/*!
+ * \brief Determines the description URL.
  *
- * Parameters :
- *    IN const char* ipPortStr ;      String containing the portnumber
- *    IN const char* alias ;          String containing the alias
- *    OUT char descURL[LINE_SIZE] ;   buffer to hold the calculated description
- *                                    URL
- *
- * Description : Determines the description URL
- *
- * Return : int ;
- *         UPNP_E_SUCCESS - On Success
- *         UPNP_E_URL_TOO_BIG - length of the URL is determined to be to
- *         exceeding the limit.
- *
- * Note :
- ************************************************************************/
-static UPNP_INLINE int calc_descURL(const char* ipPortStr, const char* alias,
-                                    char descURL[LINE_SIZE]) {
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error: UPNP_E_URL_TOO_BIG - length of the URL is determined to be to
+ *            exceeding the limit.
+ */
+inline int calc_descURL(    //
+    const char* ipPortStr,  ///< [in] String containing the portnumber.
+    const char* alias,      ///< [in] String containing the alias.
+    char descURL[LINE_SIZE] /*!< [out] Buffer to hold the calculated description
+                                       URL. */
+) {
     size_t len;
     const char* http_scheme = "http://";
 
@@ -185,33 +165,27 @@ static UPNP_INLINE int calc_descURL(const char* ipPortStr, const char* alias,
     return UPNP_E_SUCCESS;
 }
 
-/************************************************************************
- *  Function :  config_description_doc
+/*!
+ * \brief Configure the description document.
  *
- *  Parameters :
- *      INOUT IXML_Document *doc ;IMXL description document to be
- *                              configured
- *      IN const char* ip_str ; string containing the IP port number
- *      OUT char** root_path_str ;      buffer to hold the root path
- *                              of the configured description document
- *      INOUT IXML_Document *doc :      Description document
- *      IN const char* ip_str : ipaddress string
- *      OUT char** root_path_str :      root path string
+ * Add the standard format and then add information from the root device and any
+ * child nodes.
  *
- *  Description : Configure the description document. Add the standard
- *      format and then add information from the root device and any
- *      child nodes.
- *
- *  Return : int ;
- *      UPNP_E_SUCCESS - On Success
- *      UPNP_E_OUTOF_MEMORY - Default Error
- *      UPNP_E_INVALID_DESC - Invalid child node
- *      UPNP_E_INVALID_URL - Invalid node information
- *
- *  Note :
- ************************************************************************/
-static int config_description_doc(IXML_Document* doc, const char* ip_str,
-                                  char** root_path_str) {
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_OUTOF_MEMORY - Default Error
+ *  - UPNP_E_INVALID_DESC - Invalid child node
+ *  - UPNP_E_INVALID_URL - Invalid node information
+ */
+inline int config_description_doc(
+    /// [in,out] IMXL description document to be configured.
+    IXML_Document* doc,
+    /// [in] ipaddress string.
+    const char* ip_str,
+    /*! [out] buffer to hold the root path of the configured description
+              document. */
+    char** root_path_str) {
     IXML_NodeList* baseList;
     IXML_Element* element = NULL;
     IXML_Node* textNode = NULL;
@@ -324,37 +298,10 @@ error_handler:
     return err_code;
 }
 
-// clang-format off
-/************************************************************************
- *  Function :  configure_urlbase
- *
- *  Parameters :
- *      INOUT IXML_Document* doc :
- *                  IXML Description document (dom document whose urlbase is to be modified)
- *      IN    const struct sockaddr* serverAddr :
- *                  socket address object providing the IP address and port
- *                  information (ip address and port of the miniserver)
- *      IN    const char* alias :
- *                  string containing the alias (a name to be used for the temp,
- *                  e.g.:"foo.xml")
- *      IN    time_t* last_modified :
- *                  time when the XML document was downloaded
- *      OUT   char* docURL[LINE_SIZE] :
- *                  buffer to hold the URL of the document.
- *
- *  Description : Configure the full URL for the description document.
- *      Create the URL document and add alias, description information.
- *      The doc is added to the web server to be served using the given
- *      alias.
- *
- *  Return : int ;
- *      UPNP_E_SUCCESS - On Success
- *      UPNP_E_OUTOF_MEMORY - Default Error
- *
- *  Note :
- ************************************************************************/
-// clang-format on
-int configure_urlbase(IXML_Document* doc, const struct sockaddr* serverAddr,
+/// @} // Functions (scope restricted to file)
+} // anonymous namespace
+
+int configure_urlbase(IXML_Document* doc, const sockaddr* serverAddr,
                       const char* alias, time_t last_modified,
                       char docURL[LINE_SIZE]) {
     char* root_path = NULL;

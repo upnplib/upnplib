@@ -17,9 +17,20 @@
  * will fill a supplied 16-byte array with the digest.
  */
 
-#include "md5.hpp"
+/*!
+ * \file
+ * \ingroup uuid
+ * \brief This code implements the MD5 message-digest algorithm.
+ *
+ * The algorithm is due to Ron Rivest. This code was
+ * written by Colin Plumb in 1993, no copyright is claimed.
+ * This code is in the public domain; do with it what you wish.
+ */
 
-#include <string.h>
+#include <md5.hpp>
+
+/// \cond
+#include <cstring>
 
 #define PUT_BIT_LE(i, cp, value)                                               \
     do {                                                                       \
@@ -50,6 +61,7 @@ static uint8_t PADDING[MD5_BLOCK_LENGTH] = {
     0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+/// \endcond
 
 /*
  * Start MD5 accumulation.  Set bit count to 0 and buffer to mysterious
@@ -124,6 +136,7 @@ void MD5Final(unsigned char digest[MD5_DIGEST_LENGTH], MD5_CTX* ctx) {
     memset(ctx, 0, sizeof(*ctx)); /* in case it's sensitive */
 }
 
+/// \cond
 /* The four core functions - F1 is optimized somewhat */
 
 /* #define F1(x, y, z) (x & y | ~x & z) */
@@ -135,6 +148,7 @@ void MD5Final(unsigned char digest[MD5_DIGEST_LENGTH], MD5_CTX* ctx) {
 /* This is the central step in the MD5 algorithm. */
 #define MD5STEP(f, w, x, y, z, data, s)                                        \
     (w += f(x, y, z) + data, w = w << s | w >> (32 - s), w += x)
+/// \endcond
 
 /*
  * The core of the MD5 algorithm, this alters an existing MD5 hash to

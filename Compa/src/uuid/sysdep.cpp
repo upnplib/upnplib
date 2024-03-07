@@ -4,7 +4,7 @@
  * Digital Equipment Corporation, Maynard, Mass.
  * Copyright (c) 1998 Microsoft.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-03
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-08
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty: permission to use, copy,
  * modify, and distribute this file for any purpose is hereby
@@ -22,23 +22,22 @@
 
 /*!
  * \file
+ * \ingroup uuid
+ * \brief Get some system dependent information.
  */
 
 #ifdef _WIN32
 #define _CRT_RAND_S
 #endif
 
-#include "sysdep.hpp"
-#include "UpnpInet.hpp"
+#include <sysdep.hpp>
+#include <UpnpInet.hpp>
 
-#include <stdio.h>
-#include <string.h>
+/// \cond
+#include <cstdio>
+#include <cstring>
+/// \endcond
 
-/*!
- * \brief System dependent call to get IEEE node ID.
- *
- * This sample implementation generates a random node ID.
- */
 void get_ieee_node_identifier(uuid_node_t* node) {
     unsigned char seed[16];
     static int inited = 0;
@@ -52,13 +51,6 @@ void get_ieee_node_identifier(uuid_node_t* node) {
     };
     *node = saved_node;
 }
-
-/*!
- * \brief System dependent call to get the current system time.
- *
- * Returned as 100ns ticks since Oct 15, 1582, but resolution may be
- * less than 100ns.
- */
 
 #ifdef _WIN32
 
@@ -80,7 +72,7 @@ void get_system_time(uuid_time_t* uuid_time) {
 };
 
 void get_random_info(unsigned char seed[16]) {
-    // TODO: Get a real random unsigned char, not a truncated int. --Ingo
+    /// \todo Optimize function. --Ingo
     int i;
     for (i = 0; i < 16; i++) {
         unsigned int number;

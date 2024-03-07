@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -949,7 +949,9 @@ exit_function:
 
     return retVal;
 }
+#endif /* COMPA_HAVE_DEVICE_SSDP */
 
+#ifdef COMPA_HAVE_DEVICE_DESCRIPTION
 /*!
  * \brief Fills the sockadr_in with miniserver information.
  */
@@ -1110,7 +1112,7 @@ exit_function:
 
     return retVal;
 }
-#endif /* COMPA_HAVE_DEVICE_SSDP */
+#endif // COMPA_HAVE_DEVICE_DESCRIPTION
 
 #ifdef COMPA_HAVE_DEVICE_SSDP
 /* For compatibility also available as alias
@@ -1442,7 +1444,7 @@ int UpnpUnRegisterClient(UpnpClient_Handle Hnd) {
 }
 #endif /* COMPA_HAVE_CTRLPT_SSDP */
 
-#ifdef COMPA_HAVE_DEVICE_SSDP
+#ifdef COMPA_HAVE_DEVICE_DESCRIPTION
 /*!
  * \brief Determines alias for given name which is a file name or URL.
  *
@@ -1641,7 +1643,7 @@ static int GetDescDocumentAndURL(Upnp_DescType descriptionType,
 
     return UPNP_E_SUCCESS;
 }
-#endif /* COMPA_HAVE_DEVICE_SSDP */
+#endif // COMPA_HAVE_DEVICE_DESCRIPTION
 
 /*******************************************************************************
  *

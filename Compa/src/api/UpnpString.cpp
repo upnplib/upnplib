@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-03-04
+// Redistribution only with this Copyright remark. Last modified: 2024-03-07
 // Also Copyright by other contributor who haven't made a note.
 // Last compare with pupnp original source file on 2023-04-26, ver 1.14.15
 /*!
@@ -160,12 +160,14 @@ void UpnpString_set_Length(UpnpString* p, size_t n) {
     }
 }
 
+/// \hidecallergraph
 const char* UpnpString_get_String(const UpnpString* p) {
     if (!p)
         return nullptr;
     return ((UpnpString*)p)->m_string;
 }
 
+/// \hidecallergraph
 int UpnpString_set_String(UpnpString* p, const char* s) {
     if (!p || !s)
         return 0;

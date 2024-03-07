@@ -7,7 +7,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-03
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-07
  * Copied from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,6 +37,7 @@
  **************************************************************************/
 /*!
  * \file
+ * \ingroup compa-Addressing
  * \brief Manage "Step 0: Addressing" of the UPnP+™ specification.
  */
 

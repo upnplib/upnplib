@@ -1,7 +1,7 @@
 #ifndef COMPA_UPNPSTRING_HPP
 #define COMPA_UPNPSTRING_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-03
+// Redistribution only with this Copyright remark. Last modified: 2024-03-07
 // Also Copyright by other contributor as noted below.
 // Last compare with pupnp original source file on 2023-04-26, ver 1.14.15
 /*!
@@ -87,6 +87,7 @@ UPNPLIB_API void UpnpString_set_Length(
  * \brief Returns the pointer to char.
  *
  * \return The pointer to char.
+ * \hidecallergraph
  */
 UPNPLIB_API const char* UpnpString_get_String(
     /*! [in] The \em \b this pointer. */
@@ -94,6 +95,7 @@ UPNPLIB_API const char* UpnpString_get_String(
 
 /*!
  * \brief Sets the string from a pointer to char.
+ * \hidecallergraph
  */
 UPNPLIB_API int UpnpString_set_String(
     /*! [in] The \em \b this pointer. */

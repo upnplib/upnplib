@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-07
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,6 +35,7 @@
 // Last compare with ./pupnp source file on 2023-08-25, ver 1.14.18
 /*!
  * \file
+ * \ingroup compa-Addressing
  * \brief Implements the functionality and utility functions used by the
  * Miniserver module.
  *

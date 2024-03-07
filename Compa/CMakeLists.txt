@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-03-04
+# Redistribution only with this Copyright remark. Last modified: 2024-03-08
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -19,6 +19,8 @@ set(COMPA_DEF_WEBSERVER ${UPNPLIB_WITH_WEBSERVER})
 set(COMPA_DEF_CTRLPT_SSDP ${UPNPLIB_WITH_CTRLPT_SSDP})  # client -> UPNP_ENABLE_CLIENT_API
 set(COMPA_DEF_DEVICE_SSDP ${UPNPLIB_WITH_DEVICE_SSDP})
 set(COMPA_DEF_OPTION_SSDP ${UPNPLIB_WITH_OPTION_SSDP}) # optssdp -> UPNP_ENABLE_OPTIONAL_SSDP_HEADERS
+set(COMPA_DEF_CTRLPT_DESCRIPTION ${UPNPLIB_WITH_CTRLPT_DESCRIPTION})
+set(COMPA_DEF_DEVICE_DESCRIPTION ${UPNPLIB_WITH_DEVICE_DESCRIPTION})
 set(COMPA_DEF_CTRLPT_SOAP ${UPNPLIB_WITH_CTRLPT_SOAP})
 set(COMPA_DEF_DEVICE_SOAP ${UPNPLIB_WITH_DEVICE_SOAP})
 set(COMPA_DEF_CTRLPT_GENA ${UPNPLIB_WITH_CTRLPT_GENA})
@@ -62,10 +64,18 @@ if(COMPA_DEF_DEVICE_GENA)
 endif()
 
 if(COMPA_DEF_CTRLPT_SOAP)
-    set(COMPA_DEF_CTRLPT_SSDP YES)
+    set(COMPA_DEF_CTRLPT_DESCRIPTION YES)
 endif()
 
 if(COMPA_DEF_DEVICE_SOAP)
+    set(COMPA_DEF_DEVICE_DESCRIPTION YES)
+endif()
+
+if(COMPA_DEF_CTRLPT_DESCRIPTION)
+    set(COMPA_DEF_CTRLPT_SSDP YES)
+endif()
+
+if(COMPA_DEF_DEVICE_DESCRIPTION)
     set(COMPA_DEF_DEVICE_SSDP YES)
 endif()
 
@@ -82,8 +92,8 @@ endif()
 # =================================
 
 set(COMPA_SOURCE_FILES
-    src/init.cpp
     src/globalvars.cpp
+    src/lib_info.cpp
 
     src/genlib/util/membuffer.cpp
     src/genlib/util/list.cpp
@@ -144,7 +154,8 @@ set(COMPA_SOURCE_FILES
     # SSDP
     $<$<BOOL:${COMPA_DEF_DEVICE_SSDP}>:src/ssdp/ssdp_device.cpp>
     $<$<BOOL:${COMPA_DEF_DEVICE_SSDP}>:src/genlib/service-table/service_table.cpp>
-    $<$<BOOL:${COMPA_DEF_DEVICE_SSDP}>:src/urlconfig/urlconfig.cpp>
+    # Description
+    $<$<BOOL:${COMPA_DEF_DEVICE_DESCRIPTION}>:src/urlconfig/urlconfig.cpp>
     # SOAP
     $<$<BOOL:${COMPA_DEF_DEVICE_SOAP}>:src/soap/soap_device.cpp>
     $<$<BOOL:${COMPA_DEF_DEVICE_SOAP}>:src/api/UpnpActionRequest.cpp>
@@ -189,6 +200,9 @@ set(COMPA_COMPILE_DEFINITIONS
         $<$<BOOL:${COMPA_DEF_CTRLPT_SSDP}>:COMPA_HAVE_CTRLPT_SSDP>
         $<$<BOOL:${COMPA_DEF_DEVICE_SSDP}>:COMPA_HAVE_DEVICE_SSDP>
         $<$<BOOL:${COMPA_DEF_OPTION_SSDP}>:COMPA_HAVE_OPTION_SSDP>
+
+        $<$<BOOL:${COMPA_DEF_CTRLPT_DESCRIPTION}>:COMPA_HAVE_CTRLPT_DESCRIPTION>
+        $<$<BOOL:${COMPA_DEF_DEVICE_DESCRIPTION}>:COMPA_HAVE_DEVICE_DESCRIPTION>
 
         $<$<BOOL:${COMPA_DEF_CTRLPT_SOAP}>:COMPA_HAVE_CTRLPT_SOAP>
         $<$<BOOL:${COMPA_DEF_DEVICE_SOAP}>:COMPA_HAVE_DEVICE_SOAP>

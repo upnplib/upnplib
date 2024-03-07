@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-04
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -239,6 +239,7 @@ static void UpnpDisplayFileAndLine(FILE* a_fp, const char* DbgFileName,
             DbgFileName, DbgLineNo);
 }
 
+/// \hidecallergraph
 void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
                 const char* DbgFileName, int DbgLineNo, const char* FmtStr,
                 ...) {

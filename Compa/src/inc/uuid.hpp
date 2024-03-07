@@ -6,7 +6,7 @@
  * Digital Equipment Corporation, Maynard, Mass.
  * Copyright (c) 1998 Microsoft.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-02
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-08
  *
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty: permission to use, copy,
@@ -23,6 +23,7 @@
  */
 /*!
  * \file
+ * \ingroup uuid
  * \brief Manage UUIDs
  */
 
@@ -43,40 +44,42 @@ struct uuid_upnp {
 
 /*!
  * \brief Generate a UUID.
+ *
+ * \returns Always **1**.
  */
-UPNPLIB_API int uuid_create( //
-    uuid_upnp* id            ///< {in]
+int uuid_create(   //
+    uuid_upnp* uid ///< [out] Pointer to a place for the created uuid.
 );
 
 /*!
  * \brief Unpack a UUID.
  */
-UPNPLIB_API void upnp_uuid_unpack( //
-    uuid_upnp* u,                  ///< [in] Packed UUID.
-    char* out ///< [out] Will be xxxx-xx-xx-xx-xxxxxx format.
+void upnp_uuid_unpack( //
+    uuid_upnp* u,      ///< [in] Packed UUID.
+    char* out          ///< [out] Will be xxxx-xx-xx-xx-xxxxxx format.
 );
 
 /*!
- * \brief Create a UUID using a "name" from a "name space"
+ * \brief Create a UUID using a "name" from a "name space".
  */
 void uuid_create_from_name(
-    /*! Resulting UUID. */
+    /*! [out] Resulting UUID. */
     uuid_upnp* uid,
-    /*! UUID to serve as context, so identical names from different name
+    /*! [in] UUID to serve as context, so identical names from different name
      * spaces generate different UUIDs. */
     uuid_upnp nsid,
-    /*! The name from which to generate a UUID. */
+    /*! [in] The name from which to generate a UUID. */
     void* name,
-    /*! The length of the name. */
+    /*! [in] The length of the name. */
     int namelen);
 
 /*!
  * \brief Compare two UUID's "lexically".
  *
  * \returns
- *  -      -1 ... u1 is lexically before u2
- *  - &nbsp;0 ... u1 is equal to u2
- *  - &nbsp;1 ... u1 is lexically after u2
+ *  -      **-1**: u1 is lexically before u2
+ *  - &nbsp;**0**: u1 is equal to u2
+ *  - &nbsp;**1**: u1 is lexically after u2
  *
  * \note Lexical ordering is not temporal ordering!
  */

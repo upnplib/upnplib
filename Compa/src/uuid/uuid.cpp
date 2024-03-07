@@ -1,7 +1,7 @@
 /**************************************************************************
  *
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-03
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-08
  * Copyright (c) 1990- 1993, 1996 Open Software Foundation, Inc.
  * Copyright (c) 1989 by Hewlett-Packard Company, Palo Alto, Ca. &
  * Digital Equipment Corporation, Maynard, Mass.
@@ -22,6 +22,9 @@
  **************************************************************************/
 /*!
  * \file
+ * \ingroup uuid
+ * \brief Manage UUIDs
+ *
  * \todo Remove COMPA_DEF_OPTION_SSDP. Make it always available with
  * COMPA_DEF_DEVICE_GENA.
  */
@@ -35,20 +38,158 @@
 #include <string.h>
 #include <time.h>
 
-/* various forward declarations. */
-static int read_state(uint16_t* clockseq, uuid_time_t* timestamp,
-                      uuid_node_t* node);
-static void write_state(uint16_t clockseq, uuid_time_t timestamp,
-                        uuid_node_t node);
-static void format_uuid_v1(uuid_upnp* uid, uint16_t clockseq,
-                           uuid_time_t timestamp, uuid_node_t node);
-static void format_uuid_v3(uuid_upnp* uid, unsigned char hash[16]);
-static void get_current_time(uuid_time_t* timestamp);
-static uint16_t true_random(void);
+namespace {
+
+/*! \brief Data type for UUID generator persistent state. */
+struct uuid_state {
+    /*! Saved timestamp. */
+    uuid_time_t ts;
+    /*! Saved node ID. */
+    uuid_node_t node;
+    /*! Saved clock sequence. */
+    uint16_t cs;
+};
+
+/// \brief UUID generator persistent state.
+uuid_state st;
+/// \brief Flag if UUID generator persistent state is initiated.
+int stateInited{0};
 
 /*!
- * \brief Generator of a UUID.
+ * \brief Make a UUID from the timestamp, clockseq, and node ID.
  */
+inline void format_uuid_v1(uuid_upnp* uid, uint16_t clock_seq,
+                           uuid_time_t timestamp, uuid_node_t node) {
+    /* Construct a version 1 uuid with the information we've gathered
+     * plus a few constants. */
+    uid->time_low = (uint32_t)(timestamp & 0xFFFFFFFF);
+    uid->time_mid = (uint16_t)((timestamp >> 32) & 0xFFFF);
+    uid->time_hi_and_version = (uint16_t)((timestamp >> 48) & 0x0FFF);
+    uid->time_hi_and_version |= (1 << 12);
+    uid->clock_seq_low = (uint8_t)(clock_seq & 0xFF);
+    uid->clock_seq_hi_and_reserved = (uint8_t)((clock_seq & 0x3F00) >> 8);
+    uid->clock_seq_hi_and_reserved |= 0x80;
+    memcpy(&uid->node, &node, sizeof uid->node);
+}
+
+/*!
+ * \brief Read UUID generator state from non-volatile store.
+ *
+ * \returns
+ *  - **0**: State not initiated.
+ *  - **1**: State is initiated.
+ */
+inline int read_state(uint16_t* clockseq, uuid_time_t* timestamp,
+                      uuid_node_t* node) {
+    if (!stateInited)
+        return 0;
+    *clockseq = st.cs;
+    *timestamp = st.ts;
+    *node = st.node;
+
+    return 1;
+}
+
+/*!
+ * \brief Save UUID generator state back to non-volatile storage.
+ */
+inline void write_state(uint16_t clockseq, uuid_time_t timestamp,
+                        uuid_node_t node) {
+    static uuid_time_t next_save;
+
+    if (!stateInited) {
+        next_save = timestamp;
+        stateInited = 1;
+    };
+    /* always save state to volatile shared state. */
+    st.cs = clockseq;
+    st.ts = timestamp;
+    st.node = node;
+    if (timestamp >= next_save) {
+        /* schedule next save for 10 seconds from now. */
+        next_save = timestamp + (10 * 10 * 1000 * 1000);
+    };
+}
+
+/*!
+ * \brief Get time as 60 bit 100ns ticks since whenever.
+ *
+ * Compensate for the fact that real clock resolution is less than 100ns.
+ */
+inline void get_current_time(uuid_time_t* timestamp) {
+    uuid_time_t time_now;
+    static uuid_time_t time_last;
+    static uint16_t uuids_this_tick;
+    static int inited = 0;
+
+    if (!inited) {
+        uuids_this_tick = UUIDS_PER_TICK;
+        inited = 1;
+    };
+    while (1) {
+        get_system_time(&time_now);
+        /* if clock reading changed since last UUID generated... */
+        if (time_last != time_now) {
+            /* reset count of uuids gen'd with this clock reading.
+             */
+            uuids_this_tick = 0;
+            break;
+        };
+        if (uuids_this_tick < UUIDS_PER_TICK) {
+            uuids_this_tick++;
+            break;
+        };
+        /* going too fast for our clock; spin. */
+    };
+    /* add the count of uuids to low order bits of the clock reading. */
+    *timestamp = time_now + uuids_this_tick;
+    time_last = *timestamp;
+}
+
+/*!
+ * \brief generate a crypto-quality random number.
+ * This sample doesn't do that.
+ */
+inline uint16_t true_random() {
+    static int inited = 0;
+    uuid_time_t time_now;
+
+    if (!inited) {
+        get_system_time(&time_now);
+        time_now = time_now / UUIDS_PER_TICK;
+        srand((unsigned int)(((time_now >> 32) ^ time_now) & 0xffffffff));
+        inited = 1;
+    };
+
+    return (uint16_t)(rand());
+}
+
+/*!
+ * \brief Make a UUID from a (pseudo)random 128 bit number.
+ */
+inline void format_uuid_v3(uuid_upnp* uid, unsigned char hash[16]) {
+    /* Construct a version 3 uuid with the (pseudo-)random number plus a few
+     * constants. */
+    memcpy(uid, hash, sizeof(uuid_upnp));
+    /* convert UUID to local byte order. */
+    uid->time_low = ntohl(uid->time_low);
+    uid->time_mid = ntohs(uid->time_mid);
+    uid->time_hi_and_version = ntohs(uid->time_hi_and_version);
+    /* put in the variant and version bits. */
+    uid->time_hi_and_version &= 0x0FFF;
+    uid->time_hi_and_version |= (3 << 12);
+    uid->clock_seq_hi_and_reserved &= 0x3F;
+    uid->clock_seq_hi_and_reserved |= 0x80;
+}
+
+/// \brief Macro to compare times.
+#define CHECK(f1, f2)                                                          \
+    if (f1 != f2)                                                              \
+        return f1 < f2 ? -1 : 1;
+
+} // anonymous namespace
+
+
 int uuid_create(uuid_upnp* uid) {
     uuid_time_t timestamp;
     uuid_time_t last_time;
@@ -88,125 +229,6 @@ void upnp_uuid_unpack(uuid_upnp* u, char* out) {
              u->node[1], u->node[2], u->node[3], u->node[4], u->node[5]);
 }
 
-/*!
- * \brief Make a UUID from the timestamp, clockseq, and node ID.
- */
-void format_uuid_v1(uuid_upnp* uid, uint16_t clock_seq, uuid_time_t timestamp,
-                    uuid_node_t node) {
-    /* Construct a version 1 uuid with the information we've gathered
-     * plus a few constants. */
-    uid->time_low = (uint32_t)(timestamp & 0xFFFFFFFF);
-    uid->time_mid = (uint16_t)((timestamp >> 32) & 0xFFFF);
-    uid->time_hi_and_version = (uint16_t)((timestamp >> 48) & 0x0FFF);
-    uid->time_hi_and_version |= (1 << 12);
-    uid->clock_seq_low = (uint8_t)(clock_seq & 0xFF);
-    uid->clock_seq_hi_and_reserved = (uint8_t)((clock_seq & 0x3F00) >> 8);
-    uid->clock_seq_hi_and_reserved |= 0x80;
-    memcpy(&uid->node, &node, sizeof uid->node);
-}
-
-/*! Data type for UUID generator persistent state. */
-typedef struct {
-    /*! Saved timestamp. */
-    uuid_time_t ts;
-    /*! Saved node ID. */
-    uuid_node_t node;
-    /*! Saved clock sequence. */
-    uint16_t cs;
-} uuid_state;
-
-static uuid_state st;
-static int stateInited = 0;
-
-/*!
- * \brief Read UUID generator state from non-volatile store.
- */
-int read_state(uint16_t* clockseq, uuid_time_t* timestamp, uuid_node_t* node) {
-    if (!stateInited)
-        return 0;
-    *clockseq = st.cs;
-    *timestamp = st.ts;
-    *node = st.node;
-
-    return 1;
-}
-
-/*!
- * \brief Save UUID generator state back to non-volatile storage.
- */
-void write_state(uint16_t clockseq, uuid_time_t timestamp, uuid_node_t node) {
-    static uuid_time_t next_save;
-
-    if (!stateInited) {
-        next_save = timestamp;
-        stateInited = 1;
-    };
-    /* always save state to volatile shared state. */
-    st.cs = clockseq;
-    st.ts = timestamp;
-    st.node = node;
-    if (timestamp >= next_save) {
-        /* schedule next save for 10 seconds from now. */
-        next_save = timestamp + (10 * 10 * 1000 * 1000);
-    };
-}
-
-/*!
- * \brief Get time as 60 bit 100ns ticks since whenever.
- *
- * Compensate for the fact that real clock resolution is less than 100ns.
- */
-void get_current_time(uuid_time_t* timestamp) {
-    uuid_time_t time_now;
-    static uuid_time_t time_last;
-    static uint16_t uuids_this_tick;
-    static int inited = 0;
-
-    if (!inited) {
-        uuids_this_tick = UUIDS_PER_TICK;
-        inited = 1;
-    };
-    while (1) {
-        get_system_time(&time_now);
-        /* if clock reading changed since last UUID generated... */
-        if (time_last != time_now) {
-            /* reset count of uuids gen'd with this clock reading.
-             */
-            uuids_this_tick = 0;
-            break;
-        };
-        if (uuids_this_tick < UUIDS_PER_TICK) {
-            uuids_this_tick++;
-            break;
-        };
-        /* going too fast for our clock; spin. */
-    };
-    /* add the count of uuids to low order bits of the clock reading. */
-    *timestamp = time_now + uuids_this_tick;
-    time_last = *timestamp;
-}
-
-/*!
- * \brief generate a crypto-quality random number.
- * This sample doesn't do that.
- */
-static uint16_t true_random(void) {
-    static int inited = 0;
-    uuid_time_t time_now;
-
-    if (!inited) {
-        get_system_time(&time_now);
-        time_now = time_now / UUIDS_PER_TICK;
-        srand((unsigned int)(((time_now >> 32) ^ time_now) & 0xffffffff));
-        inited = 1;
-    };
-
-    return (uint16_t)(rand());
-}
-
-/*!
- * \brief Create a UUID using a "name" from a "name space".
- */
 void uuid_create_from_name(
     /*! resulting UUID. */
     uuid_upnp* uid,
@@ -235,37 +257,6 @@ void uuid_create_from_name(
     format_uuid_v3(uid, hash);
 }
 
-/*!
- * \brief Make a UUID from a (pseudo)random 128 bit number.
- */
-void format_uuid_v3(uuid_upnp* uid, unsigned char hash[16]) {
-    /* Construct a version 3 uuid with the (pseudo-)random number plus a few
-     * constants. */
-    memcpy(uid, hash, sizeof(uuid_upnp));
-    /* convert UUID to local byte order. */
-    uid->time_low = ntohl(uid->time_low);
-    uid->time_mid = ntohs(uid->time_mid);
-    uid->time_hi_and_version = ntohs(uid->time_hi_and_version);
-    /* put in the variant and version bits. */
-    uid->time_hi_and_version &= 0x0FFF;
-    uid->time_hi_and_version |= (3 << 12);
-    uid->clock_seq_hi_and_reserved &= 0x3F;
-    uid->clock_seq_hi_and_reserved |= 0x80;
-}
-
-#define CHECK(f1, f2)                                                          \
-    if (f1 != f2)                                                              \
-        return f1 < f2 ? -1 : 1;
-
-/*!
- * \brief Compare two UUID's "lexically" and return.
- *
- * \li -1: u1 is lexically before u2
- * \li  0: u1 is equal to u2
- * \li  1: u1 is lexically after u2
- *
- * Note: Lexical ordering is not temporal ordering!
- */
 int uuid_compare(uuid_upnp* u1, uuid_upnp* u2) {
     int i;
 
