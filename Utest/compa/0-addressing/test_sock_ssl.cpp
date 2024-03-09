@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-15
+// Redistribution only with this Copyright remark. Last modified: 2024-03-09
 
 #include <upnp.hpp>
 #include <sock.hpp>
@@ -16,7 +16,9 @@
 
 #include <utest/utest.hpp>
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
 UPNPLIB_EXTERN SSL_CTX* gSslCtx;
+#endif
 
 
 namespace utest {
@@ -32,6 +34,7 @@ using upnplib::errStrEx;
 // I use these simple classes to ensure that we always free resources also in
 // case of aborted tests without extra error checking. --Ingo
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
 // Provide the global SSL Context
 class CGsslCtx {
   public:
@@ -46,8 +49,25 @@ class CGsslCtx {
     virtual ~CGsslCtx() {
         TRACE("destruct CGsslCtx");
         SSL_CTX_free(gSslCtx);
+        gSslCtx = nullptr;
     }
 };
+#else
+class CGsslCtx {
+  public:
+    CGsslCtx() {
+        TRACE("construct CGsslCtx");
+        if (::UpnpInitSslContext(0, TLS_method()) != UPNP_E_SUCCESS) {
+            throw std::runtime_error(
+                std::string("Failed to initialize the global SSL Context."));
+        }
+    }
+    virtual ~CGsslCtx() {
+        TRACE("destruct CGsslCtx");
+        ::freeSslCtx();
+    }
+};
+#endif
 
 
 // OpenSSL TestSuite
@@ -179,6 +199,7 @@ TEST(SockDeathTest, sock_ssl_connect_signal_broken_pipe) {
 }
 
 } // namespace utest
+
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);

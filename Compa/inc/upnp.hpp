@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-15
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -399,6 +399,7 @@
 #include <UpnpEventSubscribe.hpp>
 #include <UpnpFileInfo.hpp>
 #include <UpnpStateVarComplete.hpp>
+#include <sock_api.hpp>
 
 /*!
  * \name Constants and Types
@@ -534,30 +535,6 @@ UPNPLIB_API int UpnpInit2(
     /*!  Local Port to listen for incoming connections.
      * \c NULL will pick an arbitrary free port. */
     unsigned short DestPort);
-
-/*!
- * \brief Initializes the OpenSSL library, and the OpenSSL context for use
- * with pupnp
- *
- * \note This method is only enabled if pupnp is compiled with open-ssl support.
- *
- * \return An integer representing one of the following:
- *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
- *     \li \c UPNP_E_INIT: The SDK is already initialized.
- *     \li \c UPNP_E_INIT_FAILED: The SDK initialization
- *             failed for an unknown reason.
- */
-#ifdef UPNP_ENABLE_OPEN_SSL
-UPNPLIB_API int UpnpInitSslContext(
-    /*! If set to 1 initializes the OpenSSL library. Otherwise the
-     * application is responsible for initializing it. If set to 1, then
-     * OpenSSL is intialized
-     *  with all error strings, and all ciphers loaded. */
-    int initOpenSslLib,
-    /*! The SSL_METHOD to use to create the context. See OpenSSL docs
-     * for more info */
-    const SSL_METHOD* sslMethod);
-#endif
 
 /*!
  * \brief Terminates the Linux SDK for UPnP Devices.

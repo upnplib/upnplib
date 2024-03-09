@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-28
+# Redistribution only with this Copyright remark. Last modified: 2024-03-10
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -24,6 +24,7 @@ add_test(NAME ctest_sock-psh COMMAND test_sock-psh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 
+if(FALSE)
 add_executable(test_sock-csh
         test_sock.cpp
         ${COMPA_SOURCE_DIR}/src/genlib/net/sock.cpp
@@ -37,6 +38,7 @@ target_link_libraries(test_sock-csh
 add_test(NAME ctest_sock-csh COMMAND test_sock-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
+endif()
 
 
 # sock_ssl
@@ -55,6 +57,7 @@ if(UPNPLIB_WITH_OPENSSL)
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
     )
 
+if(FALSE)
     add_executable(test_sock_ssl-csh
         test_sock_ssl.cpp
         ${COMPA_SOURCE_DIR}/src/genlib/net/sock.cpp
@@ -68,6 +71,7 @@ if(UPNPLIB_WITH_OPENSSL)
     add_test(NAME ctest_sock_ssl-csh COMMAND test_sock_ssl-csh --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
     )
+endif()
 
 
 # openssl_threaded

@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-03-08
+# Redistribution only with this Copyright remark. Last modified: 2024-03-10
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -92,21 +92,19 @@ endif()
 # =================================
 
 set(COMPA_SOURCE_FILES
-    src/globalvars.cpp
     src/lib_info.cpp
 
     src/genlib/util/membuffer.cpp
     src/genlib/util/list.cpp
     src/genlib/util/strintmap.cpp
     src/api/UpnpString.cpp
+    src/genlib/net/sock.cpp
     src/api/upnpapi.cpp
 
     src/threadutil/FreeList.cpp # Only for LinkedList, ThreadPool, TimerThread
     src/threadutil/LinkedList.cpp
     src/threadutil/ThreadPool.cpp
     src/threadutil/TimerThread.cpp
-
-    src/genlib/net/sock.cpp
 
     # Miniserver
     $<$<BOOL:${COMPA_DEF_MINISERVER}>:src/genlib/miniserver/miniserver.cpp>

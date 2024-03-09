@@ -21,5 +21,5 @@ order | module     | part of
 
 The order shows the dependency. Each module depends on its predecessor. For example if selecting SSDP on configuring to compile, this selects also automatically the webserver (only that) and the webserver selects miniserver. If you select GENA for compiling you have a full featured configuration with all main modules. There is no need to select previous moduls. Also the abstraction will increase with the order. For example no module except miniserver will handle network sockets.
 
-\note This order is an important implicit dependency. It is always expected that it is respected. No internal checks are made about this. The compiler will fail if you forget it.
+\note This order is an important implicit dependency. It is always expected that it is respected. No internal checks are made about this. The compiler will remind you if you forget it.
 */

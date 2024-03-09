@@ -164,13 +164,13 @@
  * \brief Items for general local operating that is used for all UPnP Steps to
  * manage internal structures.
  *
- * \defgroup uuid UUID and MD5
- * \ingroup compa-Operating
- * \brief Functions to get uuids and md5 sums.
- *
  * \defgroup threadutil Manage threads
  * \ingroup compa-Operating
  * \brief Functions to manage threads for a thread pool.
+ *
+ * \defgroup uuid UUID and MD5
+ * \ingroup compa-Operating
+ * \brief Functions to get uuids and md5 sums.
  */
 
 // Topics for the object oriented UPnPlib library

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-07
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,8 +44,8 @@
 
 #include <upnpapi.hpp>
 
-#include <uuid.hpp>
 #include <miniserver.hpp>
+#include <uuid.hpp>
 #include <httpreadwrite.hpp>
 #include <ssdp_ctrlpt.hpp>
 #include <ssdp_device.hpp>
@@ -53,7 +53,6 @@
 #include <soap_ctrlpt.hpp>
 
 #include <upnplib/global.hpp>
-#include <compa/globalvars.hpp>
 
 #ifdef _WIN32
 #include <upnplib/port.hpp>
@@ -567,23 +566,6 @@ exit_function:
     return retVal;
 }
 
-#ifdef UPNP_ENABLE_OPEN_SSL
-int UpnpInitSslContext(int initOpenSslLib, const SSL_METHOD* sslMethod) {
-    if (gSslCtx)
-        return UPNP_E_INIT;
-    if (initOpenSslLib) {
-        SSL_load_error_strings();
-        SSL_library_init();
-        OpenSSL_add_all_algorithms();
-    }
-    gSslCtx = SSL_CTX_new(sslMethod);
-    if (!gSslCtx) {
-        return UPNP_E_INIT_FAILED;
-    }
-    return UPNP_E_SUCCESS;
-}
-#endif
-
 #ifdef DEBUG
 /*!
  * \anchor PrintThreadPoolStats_dbg
@@ -638,10 +620,7 @@ int UpnpFinish() {
 #endif
     [[maybe_unused]] struct Handle_Info* temp;
 #ifdef UPNP_ENABLE_OPEN_SSL
-    if (gSslCtx) {
-        SSL_CTX_free(gSslCtx);
-        gSslCtx = NULL;
-    }
+    freeSslCtx();
 #endif
     if (UpnpSdkInit != 1)
         return UPNP_E_FINISH;

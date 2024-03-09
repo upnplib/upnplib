@@ -1,12 +1,12 @@
-#ifndef COMPA_GENLIB_NET_SOCK_HPP
-#define COMPA_GENLIB_NET_SOCK_HPP
+#ifndef COMPA_SOCK_HPP
+#define COMPA_SOCK_HPP
 /**************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-26
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,15 +39,13 @@
 // a01e0186bc0dcb8dc243f6d313ca8527535648fd:compa/inc/compa/sock.hpp
 /*!
  * \file
- * \brief \copybrief Sock
- *
- * \defgroup Sock Network Socket Library
+ * \ingroup compa-Addressing
  * \brief Manage network sockets and connections.
- * @{
  */
 
 #include <UpnpInet.hpp> /* for SOCKET, netinet/in */
-#if defined(UPNP_ENABLE_OPEN_SSL) || defined(DOXYGEN_RUN)
+
+#ifdef UPNP_ENABLE_OPEN_SSL
 #include <openssl/ssl.h>
 #endif
 
@@ -64,16 +62,15 @@
 
 /// \brief Additional socket information for connections and ssl.
 struct SOCKINFO {
-    /// \brief Handle/descriptor to a socket.
+    /// Handle/descriptor to a socket.
     SOCKET socket;
-    /*! \brief Socket address of the remote node only filled in incoming
-     * requests. */
+    /// Socket address of the remote node only filled in incoming requests.
     sockaddr_storage foreign_sockaddr;
-#if defined(UPNP_ENABLE_OPEN_SSL) || defined(DOXYGEN_RUN)
-    /*! \brief information about an ssl connection only filled in incoming
-     * requests. */
+#ifdef UPNP_ENABLE_OPEN_SSL
+    /// Information about an ssl connection only filled in incoming requests.
     SSL* ssl;
 #else
+    /// Alternative unused member if OpenSSL isn't compiled in.
     void* ssl;
 #endif
 };
@@ -217,6 +214,4 @@ int sock_make_no_blocking(
     /* [in] socket. */
     SOCKET sock);
 
-/// @} // Sock Network Socket Library
-
-#endif /* COMPA_GENLIB_NET_SOCK_HPP */
+#endif /* COMPA_SOCK_HPP */

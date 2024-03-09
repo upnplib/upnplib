@@ -1,14 +1,13 @@
 #ifndef COMPA_UPNPINET_HPP
 #define COMPA_UPNPINET_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-03
+// Redistribution only with this Copyright remark. Last modified: 2024-03-09
 // Taken from authors who haven't made a note.
 /*!
  * \file
+ * \ingroup compa-Addressing
  * \brief Provides a platform independent way to include TCP/IP types and
  * functions.
- * \addtogroup Sock
- * @{
  */
 
 #include <UpnpUniStd.hpp> /* for close() */
@@ -58,7 +57,5 @@ typedef int SOCKET;
 /*! Alias to close() to make code more WIN32 tolerant. */
 #define UpnpCloseSocket umock::unistd_h.close
 #endif /* _WIN32 */
-
-/// @}
 
 #endif /* COMPA_UPNPINET_HPP */

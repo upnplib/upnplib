@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-07-06
+# Redistribution only with this Copyright remark. Last modified: 2024-03-10
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -103,3 +103,21 @@ IF(UPNPLIB_DEF_SAMPLE_DEVICE)
         PRIVATE upnplib_shared
     )
 ENDIF()
+
+
+if(UPNPLIB_WITH_NATIVE_PUPNP)
+add_executable(api_samples-psh
+    api_samples.cpp
+)
+target_link_libraries(api_samples-psh
+    PRIVATE pupnp_shared
+)
+endif()
+
+add_executable(api_samples-csh
+    api_samples.cpp
+)
+target_link_libraries(api_samples-csh
+    PRIVATE compa_shared
+    PRIVATE upnplib_shared
+)

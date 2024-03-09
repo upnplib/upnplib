@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-27
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-09
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,16 +34,12 @@
 // Last compare with ./pupnp source file on 2023-09-13, ver 1.14.18
 /*!
  * \file
- * \brief Implements the sockets functionality.
- *
- * \addtogroup Sock
- * @{
+ * \ingroup compa-Addressing
+ * \brief Manage network sockets and connections.
  */
 
 #include <sock.hpp>
 #include <upnp.hpp>
-
-#include <compa/globalvars.hpp>
 
 #include <upnplib/global.hpp>
 #include <upnplib/connection.hpp>
@@ -60,6 +56,15 @@
 
 
 namespace {
+
+#ifdef UPNP_ENABLE_OPEN_SSL
+/*! \brief Pointer to an SSL Context.
+ *
+ * Only this one is supported. With the given functions there is no way to use
+ * more than this SSL Context. */
+SSL_CTX* gSslCtx{nullptr};
+#endif
+
 /*! \name Scope restricted to file
  * @{
  */
@@ -405,7 +410,7 @@ int sock_write_unprotected(
 }
 
 
-#if defined(UPNP_ENABLE_OPEN_SSL) || defined(DOXYGEN_RUN)
+#ifdef UPNP_ENABLE_OPEN_SSL
 /*!
  * \brief Read from an SSL protected socket.
  *
@@ -739,4 +744,31 @@ int sock_make_no_blocking(SOCKET sock) {
 #endif /* _WIN32 */
 }
 
-/// @} // Sock
+#ifdef UPNP_ENABLE_OPEN_SSL
+int UpnpInitSslContext([[maybe_unused]] int initOpenSslLib,
+                       const SSL_METHOD* sslMethod) {
+    if (gSslCtx)
+        return UPNP_E_INIT;
+#if 0 // next three OpenSSL functions are deprecated due to its man pages and
+      // should not be used since OpenSSL 1.1.0. Initialization is done
+      // automatically now. --Ingo
+    if (initOpenSslLib) {
+        SSL_load_error_strings();
+        SSL_library_init();
+        OpenSSL_add_all_algorithms();
+    }
+#endif
+    gSslCtx = SSL_CTX_new(sslMethod);
+    if (!gSslCtx) {
+        return UPNP_E_INIT_FAILED;
+    }
+    return UPNP_E_SUCCESS;
+}
+
+void freeSslCtx() {
+    if (gSslCtx) {
+        SSL_CTX_free(gSslCtx);
+        gSslCtx = nullptr;
+    }
+}
+#endif
