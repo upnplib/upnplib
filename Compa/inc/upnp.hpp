@@ -36,16 +36,9 @@
 // Last compare with pupnp original source file on 2023-02-03, ver 1.14.15
 
 /*!
- * \defgroup UPnPAPI old pUPnP API
- * @{
- *
  * \file
- * \brief old pUPnP API
+ * \brief UPnPlib API
  */
-
-#ifdef UPNP_ENABLE_OPEN_SSL
-#include <openssl/ssl.h>
-#endif
 
 /// @{
 /// Program constant
@@ -677,7 +670,7 @@ UPNPLIB_API int UpnpRegisterRootDevice(
     const char* const DescUrl,
     /*! [in] Pointer to the callback function for receiving asynchronous
        events. */
-    const Upnp_FunPtr Callback,
+    const Upnp_FunPtr Fun,
     /*! [in] Pointer to user data returned with the callback function when
        invoked. */
     const void* const Cookie,
@@ -757,7 +750,7 @@ UPNPLIB_API int UpnpRegisterRootDevice2(
     const Upnp_DescType descriptionType,
     /*! [in] Treated as a URL, file name or memory buffer depending on
      * description type. */
-    const char* const description,
+    const char* const description_const,
     /*! [in] The length of memory buffer if passing a description in a
      * buffer, otherwise it is ignored. */
     const size_t bufferLen,
@@ -815,7 +808,7 @@ UPNPLIB_API int UpnpRegisterRootDevice3(
     const char* const DescUrl,
     /*! [in] Pointer to the callback function for receiving asynchronous
        events. */
-    const Upnp_FunPtr Callback,
+    const Upnp_FunPtr Fun,
     /*! [in] Pointer to user data returned with the callback function when
        invoked. */
     const void* const Cookie,
@@ -901,7 +894,7 @@ UPNPLIB_API int UpnpUnRegisterRootDeviceLowPower(
  */
 UPNPLIB_API int UpnpRegisterClient(
     /*! [in] Pointer to a function for receiving asynchronous events. */
-    Upnp_FunPtr Callback,
+    Upnp_FunPtr Fun,
     /*! [in] Pointer to user data returned with the callback function when
        invoked. */
     const void* Cookie,
@@ -1011,7 +1004,7 @@ UPNPLIB_API int UpnpSearchAsync(
     int Mx,
     /*! The search target as defined in the UPnP Device Architecture v1.0
      * specification. */
-    const char* TTarget_constarget_const,
+    const char* Target_const,
     /*! The user data to pass when the callback function is invoked. */
     const void* Cookie_const);
 
@@ -1118,13 +1111,13 @@ UPNPLIB_API int UpnpGetServiceVarStatus(
     /*! [in] The handle of the control point. */
     UpnpClient_Handle Hnd,
     /*! [in] The URL of the service. */
-    const char* ActionURL,
+    const char* ActionURL_const,
     /*! [in] The name of the variable to query. */
-    const char* VarName,
+    const char* VarName_const,
     /*! [out] The pointer to store the value for \b VarName. The SDK
      * allocates this string and the caller needs to free it using \b
      * ixmlFreeDOMString. */
-    DOMString* StVarVal);
+    DOMString* StVar);
 
 /*!
  * \brief Queries the state of a variable of a service, generating a callback
@@ -1147,15 +1140,15 @@ UPNPLIB_API int UpnpGetServiceVarStatusAsync(
     /*! [in] The handle of the control point. */
     UpnpClient_Handle Hnd,
     /*! [in] The URL of the service. */
-    const char* ActionURL,
+    const char* ActionURL_const,
     /*! [in] The name of the variable to query. */
-    const char* VarName,
+    const char* VarName_const,
     /*! [in] Pointer to a callback function to be invoked when the operation
      * is complete. */
     Upnp_FunPtr Fun,
     /*! [in] Pointer to user data to pass to the callback function when
        invoked. */
-    const void* Cookie);
+    const void* Cookie_const);
 
 /*!
  * \brief Sends a message to change a state variable in a service.
@@ -1184,16 +1177,16 @@ UPNPLIB_API int UpnpSendAction(
     /*! [in] The handle of the control point sending the action. */
     UpnpClient_Handle Hnd,
     /*! [in] The action URL of the service. */
-    const char* ActionURL,
+    const char* ActionURL_const,
     /*! [in] The type of the service. */
-    const char* ServiceType,
+    const char* ServiceType_const,
     /*! [in] This parameter is ignored and must be \c NULL. */
-    const char* DevUDN,
+    const char* DevUDN_const,
     /*! [in] The DOM document for the action. */
     IXML_Document* Action,
     /*! [out] The DOM document for the response to the action. The SDK
      * allocates this document and the caller needs to free it. */
-    IXML_Document** RespNode);
+    IXML_Document** RespNodePtr);
 
 /*!
  * \brief Sends a message to change a state variable in a service.
@@ -1222,11 +1215,11 @@ UPNPLIB_API int UpnpSendActionEx(
     /*! [in] The handle of the control point sending the action. */
     UpnpClient_Handle Hnd,
     /*! [in] The action URL of the service. */
-    const char* ActionURL,
+    const char* ActionURL_const,
     /*! [in] The type of the service. */
-    const char* ServiceType,
+    const char* ServiceType_const,
     /*! [in] This parameter is ignored and must be \c NULL. */
-    const char* DevUDN,
+    const char* DevUDN_const,
     /*! [in] The DOM document for the SOAP header. This may be \c NULL if
      * the header is not required. */
     IXML_Document* Header,
@@ -1234,7 +1227,7 @@ UPNPLIB_API int UpnpSendActionEx(
     IXML_Document* Action,
     /*! [out] The DOM document for the response to the action. The SDK
      * allocates this document and the caller needs to free it. */
-    IXML_Document** RespNode);
+    IXML_Document** RespNodePtr);
 
 /*!
  * \brief Sends a message to change a state variable in a service, generating a
@@ -1261,19 +1254,19 @@ UPNPLIB_API int UpnpSendActionAsync(
     /*! [in] The handle of the control point sending the action. */
     UpnpClient_Handle Hnd,
     /*! [in] The action URL of the service. */
-    const char* ActionURL,
+    const char* ActionURL_const,
     /*! [in] The type of the service. */
-    const char* ServiceType,
+    const char* ServiceType_const,
     /*! [in] This parameter is ignored and must be \c NULL. */
-    const char* DevUDN,
+    const char* DevUDN_const,
     /*! [in] The DOM document for the action to perform on this device. */
-    IXML_Document* Action,
+    IXML_Document* Act,
     /*! [in] Pointer to a callback function to be invoked when the operation
      * completes. */
     Upnp_FunPtr Fun,
     /*! [in] Pointer to user data that to be passed to the callback when
      * invoked. */
-    const void* Cookie);
+    const void* Cookie_const);
 
 /*!
  * \brief Sends a message to change a state variable in a service, generating a
@@ -1300,22 +1293,22 @@ UPNPLIB_API int UpnpSendActionExAsync(
     /*! [in] The handle of the control point sending the action. */
     UpnpClient_Handle Hnd,
     /*! [in] The action URL of the service. */
-    const char* ActionURL,
+    const char* ActionURL_const,
     /*! [in] The type of the service. */
-    const char* ServiceType,
+    const char* ServiceType_const,
     /*! [in] This parameter is ignored and must be \c NULL. */
-    const char* DevUDN,
+    const char* DevUDN_const,
     /*! [in] The DOM document for the SOAP header. This may be \c NULL if
      * the header is not required. */
     IXML_Document* Header,
     /*! [in] The DOM document for the action to perform on this device. */
-    IXML_Document* Action,
+    IXML_Document* Act,
     /*! [in] Pointer to a callback function to be invoked when the operation
      * completes. */
     Upnp_FunPtr Fun,
     /*! [in] Pointer to user data that to be passed to the callback when
      * invoked. */
-    const void* Cookie);
+    const void* Cookie_const);
 
 /// @} Control
 
@@ -1362,14 +1355,14 @@ UPNPLIB_API int UpnpAcceptSubscription(
     UpnpDevice_Handle Hnd,
     /*! [in] The device ID of the subdevice of the service generating the
        event. */
-    const char* DevID,
+    const char* DevID_const,
     /*! [in] The unique service identifier of the service generating the
        event. */
-    const char* ServID,
+    const char* ServName_const,
     /*! [in] Pointer to an array of event variables. */
-    const char** VarName,
+    const char** VarName_const,
     /*! [in] Pointer to an array of values for the event variables. */
-    const char** NewVal,
+    const char** NewVal_const,
     /*! [in] The number of event variables in \b VarName. */
     int cVariables,
     /*! [in] The subscription ID of the newly registered control point. */
@@ -1402,10 +1395,10 @@ UPNPLIB_API int UpnpAcceptSubscriptionExt(
     UpnpDevice_Handle Hnd,
     /*! [in] The device ID of the subdevice of the service generating the
        event. */
-    const char* DevID,
+    const char* DevID_const,
     /*! [in] The unique service identifier of the service generating the
        event. */
-    const char* ServID,
+    const char* ServName_const,
     /*! [in] The DOM document for the property set. Property set documents
      * must conform to the XML schema defined in section 4.3 of the
      * Universal Plug and Play Device Architecture specification. */
@@ -1436,16 +1429,16 @@ UPNPLIB_API int UpnpAcceptSubscriptionExt(
  */
 UPNPLIB_API int UpnpNotify(
     /*! [in] The handle to the device sending the event. */
-    UpnpDevice_Handle,
+    UpnpDevice_Handle Hnd,
     /*! [in] The device ID of the subdevice of the service generating the
        event. */
-    const char* DevID,
+    const char* DevID_const,
     /*! [in] The unique identifier of the service generating the event. */
-    const char* ServID,
+    const char* ServName_const,
     /*! [in] Pointer to an array of variables that have changed. */
-    const char** VarName,
+    const char** VarName_const,
     /*! [in] Pointer to an array of new values for those variables. */
-    const char** NewVal,
+    const char** NewVal_const,
     /*! [in] The count of variables included in this notification. */
     int cVariables);
 
@@ -1472,12 +1465,12 @@ UPNPLIB_API int UpnpNotify(
  */
 UPNPLIB_API int UpnpNotifyExt(
     /*! [in] The handle to the device sending the event. */
-    UpnpDevice_Handle,
+    UpnpDevice_Handle Hnd,
     /*! [in] The device ID of the subdevice of the service generating the
        event. */
-    const char* DevID,
+    const char* DevID_const,
     /*! [in] The unique identifier of the service generating the event. */
-    const char* ServID,
+    const char* ServName_const,
     /*! [in] The DOM document for the property set. Property set documents
      * must conform to the XML schema defined in section 4.3 of the
      * Universal Plug and Play Device Architecture specification. */
@@ -1582,7 +1575,7 @@ UPNPLIB_API int UpnpRenewSubscriptionAsync(
     Upnp_FunPtr Fun,
     /*! [in] Pointer to user data passed to the callback function when
        invoked. */
-    const void* Cookie);
+    const void* Cookie_const);
 
 /*!
  * \brief Sets the maximum number of subscriptions accepted per service.
@@ -1658,7 +1651,7 @@ UPNPLIB_API int UpnpSubscribe(
     /*! [in] The handle of the control point. */
     UpnpClient_Handle Hnd,
     /*! [in] The URL of the service to subscribe to. */
-    const char* PublisherUrl,
+    const char* EvtUrl_const,
     /*! [in,out]Pointer to a variable containing the requested subscription
      * time. Upon return, it contains the actual subscription time returned
      * from the service. */
@@ -1718,14 +1711,14 @@ UPNPLIB_API int UpnpSubscribeAsync(
     /*! The handle of the control point that is subscribing. */
     UpnpClient_Handle Hnd,
     /*! The URL of the service to subscribe to. */
-    const char* PublisherUrl,
+    const char* EvtUrl_const,
     /*! The requested subscription time. Upon return, it contains the actual
      * subscription time returned from the service. */
     int TimeOut,
     /*! Pointer to the callback function for this subscribe request. */
     Upnp_FunPtr Fun,
     /*! A user data value passed to the callback function when invoked. */
-    const void* Cookie);
+    const void* Cookie_const);
 
 /*!
  * \brief Removes the subscription of a control point from a service previously
@@ -1822,7 +1815,7 @@ UPNPLIB_API int UpnpUnSubscribeAsync(
     Upnp_FunPtr Fun,
     /*! [in] Pointer to user data to pass to the callback function when
        invoked. */
-    const void* Cookie);
+    const void* Cookie_const);
 
 /// @} Eventing
 
@@ -2015,9 +2008,9 @@ UPNPLIB_API int UpnpOpenHttpGetProxy(
  */
 UPNPLIB_API int UpnpOpenHttpGetEx(
     /*! [in] The URL of the item to get. */
-    const char* url,
+    const char* url_str,
     /*! [in,out] A pointer to store the handle for this connection. */
-    void** handle,
+    void** Handle,
     /*! [in,out] A buffer to store the media type of the item. */
     char** contentType,
     /*! [in,out] A buffer to store the length of the item. */
@@ -2055,7 +2048,7 @@ UPNPLIB_API int UpnpOpenHttpGetEx(
  */
 UPNPLIB_API int UpnpReadHttpGet(
     /*! [in] The token created by the call to \b UpnpOpenHttpGet. */
-    void* handle,
+    void* Handle,
     /*! [in,out] The buffer to store the read item. */
     char* buf,
     /*! [in,out] The size of the buffer to be read. */
@@ -2076,7 +2069,7 @@ UPNPLIB_API int UpnpReadHttpGet(
  */
 UPNPLIB_API int UpnpHttpGetProgress(
     /*! [in] The token created by the call to \b UpnpOpenHttpGet. */
-    void* handle,
+    void* Handle,
     /*! [out] The number of bytes received. */
     size_t* length,
     /*! [out] The content length. */
@@ -2092,7 +2085,7 @@ UPNPLIB_API int UpnpHttpGetProgress(
 UPNPLIB_API int UpnpCancelHttpGet(
     /*! [in] The handle of the connection created by the call to
      * \b UpnpOpenHttpGet. */
-    void* handle);
+    void* Handle);
 
 /*!
  * \brief Closes the connection and frees memory that was allocated for the
@@ -2105,7 +2098,7 @@ UPNPLIB_API int UpnpCancelHttpGet(
 UPNPLIB_API int UpnpCloseHttpGet(
     /*! [in] The handle of the connection created by the call to
      * \b UpnpOpenHttpGet. */
-    void* handle);
+    void* Handle);
 
 /*!
  * \brief Makes an HTTP POST request message, opens a connection to the server
@@ -2729,7 +2722,7 @@ UPNPLIB_API void UpnpSetAllowLiteralHostRedirection(int enable);
  */
 UPNPLIB_API int UpnpAddVirtualDir(
     /*! [in] The name of the new directory mapping to add. */
-    const char* dirName,
+    const char* newDirName,
     /*! [in] The cookie to associated with this virtual directory */
     const void* cookie,
     /*! [out] The cookie previously associated, if mapping is already
@@ -2753,7 +2746,5 @@ UPNPLIB_API int UpnpRemoveVirtualDir(
 UPNPLIB_API void UpnpRemoveAllVirtualDirs(void);
 
 /// @} Web Server API
-
-/// @} UPnPAPI UPnP API
 
 #endif // COMPA_UPNP_HPP

@@ -34,12 +34,8 @@
 // Last compare with pupnp original source file on 2023-07-08, ver 1.14.17
 /*!
  * \file
+ * \ingroup compa-Addressing
  * \brief Inititalize the compatible library before it can be used.
- */
-
-/*!
- * \addtogroup UPnPAPI
- * @{
  */
 
 #include <upnpapi.hpp>
@@ -3943,5 +3939,3 @@ int UpnpSetMaxContentLength(size_t contentLength) {
 
     return errCode;
 }
-
-/// @} UPnPAPI
