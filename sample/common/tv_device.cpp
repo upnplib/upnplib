@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-05
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1264,9 +1264,11 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
     int address_family{AF_INET};
 
     pthread_mutex_init(&TVDevMutex, NULL);
-    // UpnpSetLogFileNames(NULL, NULL); // DEBUG! Comment for no logging.
-    // UpnpSetLogLevel(UPNP_INFO); // DEBUG! Comment for no logging.
-    // UpnpInitLog(); // DEBUG! Comment for no logging.
+    if (upnplib::g_dbug) {
+        UpnpSetLogFileNames(NULL, NULL);
+        UpnpSetLogLevel(UPNP_INFO);
+        UpnpInitLog();
+    }
     SampleUtil_Initialize(pfunc);
     SampleUtil_Print("UpnpInit2 started, initializing UPnP Sdk with interface "
                      "= \"%s\", port = %u\n",
@@ -1427,7 +1429,9 @@ int device_main(const int argc, char* argv[]) {
     char* desc_doc_name{};
     char* web_dir_path{};
     unsigned short port{};
-    int ip_mode{IP_MODE_IPV4};
+    // int ip_mode{IP_MODE_IPV4};
+    int ip_mode{IP_MODE_IPV6_LLA};
+    // int ip_mode{IP_MODE_IPV6_ULA_GUA};
     int i{};
 
     if (!argc)
@@ -1454,28 +1458,27 @@ int device_main(const int argc, char* argv[]) {
 #else
             sscanf(argv[++i], "%d", &ip_mode);
 #endif
+        } else if (strcmp(argv[i], "--verbose") == 0) {
+            upnplib::g_dbug = true;
         } else if (strcmp(argv[i], "--help") == 0) {
             SampleUtil_Print("Usage: %s -i interface --port port"
                              " --desc desc_doc_name --webdir web_dir_path"
-                             " -m ip_mode --help (this message)\n",
+                             " -m ip_mode --verbose --help (this message)\n",
                              argv[0]);
-            SampleUtil_Print("\tinterface:     interface address of the "
-                             "device"
-                             " (must match desc. doc)\n"
-                             "\t\te.g.: eth0\n"
-                             "\tport:          Port number to use for"
-                             " receiving UPnP messages (must match desc. "
-                             "doc)\n"
-                             "\t\te.g.: 5431\n"
-                             "\tdesc_doc_name: name of device description "
-                             "document\n"
-                             "\t\te.g.: tvdevicedesc.xml\n"
-                             "\tweb_dir_path:  Filesystem path where web "
-                             "files"
-                             " related to the device are stored\n"
-                             "\t\te.g.: /upnp/sample/tvdevice/web\n"
-                             "\tip_mode:       set to 1 for IPv4 (default), "
-                             "2 for IPv6 LLA and 3 for IPv6 ULA or GUA\n");
+            SampleUtil_Print(
+                "\tinterface:     interface address of the device (must match "
+                "desc. doc)\n"
+                "\t\te.g.: eth0\n"
+                "\tport:          Port number to use for receiving UPnP "
+                "messages (must match desc. doc)\n"
+                "\t\te.g.: 5431\n"
+                "\tdesc_doc_name: name of device description document\n"
+                "\t\te.g.: tvdevicedesc.xml\n"
+                "\tweb_dir_path:  Filesystem path where web files related to "
+                "the device are stored\n"
+                "\t\te.g.: /upnp/sample/tvdevice/web\n"
+                "\tip_mode:       set to 1 for IPv4, 2 for IPv6 LLA (default) "
+                "and 3 for IPv6 ULA or GUA\n");
             return UPNP_E_INVALID_ARGUMENT;
         }
     }

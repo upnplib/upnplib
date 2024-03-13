@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-07
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-13
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,6 +62,7 @@
 /// \cond
 #include <cstring>
 #include <iostream>
+#include <random>
 /// \endcond
 
 
@@ -786,8 +787,7 @@ int get_port(
     default:
         return -1;
     }
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "sockfd = %d, .... port = %d\n", sockfd, (int)*port);
+    UPNPLIB_LOGINFO "MSG1063: sockfd=" << sockfd << ", port=" << *port << ".\n";
 
     return 0;
 }
@@ -802,8 +802,8 @@ int get_port(
  * \return 1 or WSANOTINITIALISED on error, 0 if successful.
  */
 int init_socket_suff(s_SocketStuff* s, const char* text_addr, int ip_version) {
-    TRACE("Executing init_socket_suff() for IPv" + std::to_string(ip_version) +
-          ".")
+    UPNPLIB_LOGINFO "MSG1067: Executing with text_addr=\""
+        << text_addr << "\", ip_version=" << ip_version << ".\n";
     int sockError;
     sa_family_t domain;
     void* addr; // This holds a pointer to sin_addr, not a value
@@ -834,7 +834,8 @@ int init_socket_suff(s_SocketStuff* s, const char* text_addr, int ip_version) {
     }
 
     if (inet_pton(domain, text_addr, addr) <= 0) {
-        UPNPLIB_LOGCRIT "MSG1051: Invalid ip address: " << text_addr << ".\n";
+        UPNPLIB_LOGERR "MSG1051: Invalid ip address: \"" << text_addr
+                                                         << "\".\n";
         goto error;
     }
     s->fd = umock::sys_socket_h.socket(domain, SOCK_STREAM, 0);
@@ -911,7 +912,7 @@ int do_bind(         //
     s_SocketStuff* s ///< [in] Information for the socket.
 ) {
     TRACE("Executing do_bind()")
-    int ret_val = UPNP_E_SUCCESS;
+    int ret_val{UPNP_E_SUCCESS};
     int bind_error;
     uint16_t original_listen_port = s->try_port;
 
@@ -1055,9 +1056,7 @@ int do_reinit(       //
 int do_bind_listen(  //
     s_SocketStuff* s ///< [in] Information for the socket.
 ) {
-    TRACE("Executing do_bind_listen()")
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "Inside do_bind_listen()\n");
+    UPNPLIB_LOGINFO "MSG1062: Executing...\n";
 
     int ret_val;
     int ok = 0;
@@ -1115,7 +1114,7 @@ int get_miniserver_sockets(
     /*! [in] port on which the server is listening for incoming
      * IPv6 ULA or GUA connections. */
     uint16_t listen_port6UlaGua) {
-    TRACE("Executing get_miniserver_sockets()")
+    UPNPLIB_LOGINFO "MSG1064: Executing...\n";
     int ret_val{UPNP_E_INTERNAL_ERROR};
     int err_init_4;
     int err_init_6;
@@ -1187,9 +1186,7 @@ int get_miniserver_sockets(
     }
     // BUG! the following condition may be wrong, e.g. with ss4.fd ==
     // INVALID_SOCKET and ENABLE_IPV6 disabled but also others. --Ingo
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               // "get_miniserver_sockets: bind successful\n");
-               "get_miniserver_sockets: finished\n");
+    UPNPLIB_LOGINFO "MSG1065: Finished.\n";
     out->miniServerPort4 = ss4.actual_port;
     out->miniServerPort6 = ss6.actual_port;
     out->miniServerPort6UlaGua = ss6UlaGua.actual_port;
@@ -1304,20 +1301,10 @@ void SetGenaCallback(MiniServerCallback callback) {
 }
 #endif
 
-int StartMiniServer(
-    // The three parameter only used if COMPA_HAVE_WEBSERVER. The miniserver
-    // does not need them.
-    //
-    /*! [in,out] Port on which the server listens for incoming IPv4
-     * connections. */
-    [[maybe_unused]] uint16_t* listen_port4,
-    /*! [in,out] Port on which the server listens for incoming IPv6
-     * LLA connections. */
-    [[maybe_unused]] uint16_t* listen_port6,
-    /*! [in,out] Port on which the server listens for incoming
-     * IPv6 ULA or GUA connections. */
-    [[maybe_unused]] uint16_t* listen_port6UlaGua) {
-    TRACE("Executing StartMiniServer()")
+int StartMiniServer([[maybe_unused]] in_port_t* listen_port4,
+                    [[maybe_unused]] in_port_t* listen_port6,
+                    [[maybe_unused]] in_port_t* listen_port6UlaGua) {
+    UPNPLIB_LOGINFO "MSG1068: Executing...\n";
     int ret_code;
     int count;
     int max_count = 10000;
@@ -1338,7 +1325,27 @@ int StartMiniServer(
         return UPNP_E_OUTOF_MEMORY;
     }
     InitMiniServerSockArray(miniSocket);
+
 #ifdef COMPA_HAVE_WEBSERVER
+    if (*listen_port4 == 0 || *listen_port6 == 0 || *listen_port6UlaGua == 0) {
+        // Create a simple random number generator for port numbers. We need
+        // this because we do not reuse addresses before TIME_WAIT has expired
+        // (socket option SO_REUSEADDR = false). We need to use different
+        // socket addresses and that is already given with different port
+        // numbers.
+        std::random_device rd;         // obtain a random number from hardware
+        std::minstd_rand random(rd()); // seed the generator
+        std::uniform_int_distribution<in_port_t> portno(
+            APPLICATION_LISTENING_PORT, 65535); // used range
+
+        in_port_t listen_port = portno(random);
+        if (*listen_port4 == 0)
+            *listen_port4 = listen_port;
+        if (*listen_port6 == 0)
+            *listen_port6 = listen_port;
+        if (*listen_port6UlaGua == 0)
+            *listen_port6UlaGua = listen_port;
+    }
     /* V4 and V6 http listeners. */
     ret_code = get_miniserver_sockets(miniSocket, *listen_port4, *listen_port6,
                                       *listen_port6UlaGua);
@@ -1347,6 +1354,7 @@ int StartMiniServer(
         return ret_code;
     }
 #endif
+
     /* Stop socket (To end miniserver processing). */
     ret_code = get_miniserver_stopsock(miniSocket);
     if (ret_code != UPNP_E_SUCCESS) {

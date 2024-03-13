@@ -7,7 +7,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-07
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-13
  * Copied from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -100,7 +100,7 @@ inline MiniServerCallback gGetCallback{nullptr};
  * \brief Set SOAP Callback.
  */
 #ifdef COMPA_HAVE_DEVICE_SOAP
-UPNPLIB_API void SetSoapCallback(
+void SetSoapCallback(
     /*! [in] SOAP Callback to be invoked. */
     MiniServerCallback callback);
 #endif
@@ -109,7 +109,7 @@ UPNPLIB_API void SetSoapCallback(
  * \brief Set GENA Callback.
  */
 #ifdef COMPA_HAVE_DEVICE_GENA
-UPNPLIB_API void SetGenaCallback(
+void SetGenaCallback(
     /*! [in] GENA Callback to be invoked. */
     MiniServerCallback callback);
 #endif
@@ -117,32 +117,41 @@ UPNPLIB_API void SetGenaCallback(
 /*!
  * \brief Initialize the sockets functionality for the Miniserver.
  *
- * Initialize a thread pool job to run the MiniServer and the job to the
- * thread pool. If **listen_port?** is 0, then the port number is dynamically
- * picked. Use timer mechanism to start the MiniServer, failure to meet the
- * allowed delay aborts the attempt to launch the MiniServer.
+ * Initialize a thread pool job to run the MiniServer and the job to the thread
+ * pool. If a listening port is specified to 0, then the port number is
+ * dynamically picked. Use timer mechanism to start the MiniServer, failure to
+ * meet the allowed delay aborts the attempt to launch the MiniServer.
+ *
+ * The three parameter are only used if we have also a webserver built in. The
+ * miniserver does not need them.
+ *
+ * I use a simple random number generator for unspecified port numbers. This is
+ * needed because I do not reuse addresses before TIME_WAIT has expired (socket
+ * option SO_REUSEADDR = false). I must use different socket addresses to be
+ * able to restart a device immediately without TIME_WAIT and that is already
+ * given with different port numbers on the same ip address.
  *
  * \returns
- *  - On success: UPNP_E_SUCCESS.
- *  - On error: UPNP_E_XXX.
+ *  - On success: UPNP_E_SUCCESS\n
+ *  - On error: UPNP_E_XXX
  */
-UPNPLIB_API int StartMiniServer(
+int StartMiniServer(
     /*! [in,out] Port on which the server listens for incoming IPv4
      * connections. */
-    uint16_t* listen_port4,
+    in_port_t* listen_port4,
     /*! [in,out] Port on which the server listens for incoming IPv6 LLA
        connections. */
-    uint16_t* listen_port6,
+    in_port_t* listen_port6,
     /*! [in,out] Port on which the server listens for incoming IPv6 ULA or GUA
        connections. */
-    uint16_t* listen_port6UlaGua);
+    in_port_t* listen_port6UlaGua);
 
 /*!
  * \brief Stop and Shutdown the MiniServer and free socket resources.
  *
  * \returns Always returns 0.
  */
-UPNPLIB_API int StopMiniServer();
+int StopMiniServer();
 
 #endif /* COMPA_MINISERVER_HPP */
 #endif // COMPA_HAVE_MINISERVER

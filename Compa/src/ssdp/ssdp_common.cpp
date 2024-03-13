@@ -172,7 +172,7 @@ error_handler:
 /*!
  * \brief This function is a thread that handles SSDP requests.
  */
-inline void ssdp_event_handler_thread(
+void ssdp_event_handler_thread(
     /*! [] Ssdp_thread_data structure. This structure contains SSDP request
        message. */
     void* the_data) {

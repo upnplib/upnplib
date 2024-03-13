@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-05
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,6 +46,7 @@
 #include "tv_ctrlpt.hpp"
 #include "upnp.hpp"
 #include <upnplib/port.hpp>
+#include <upnplib/global.hpp>
 
 #ifdef _WIN32
 #define isleep(x) Sleep((x) * 1000)
@@ -1135,8 +1136,8 @@ void* TvCtrlPointTimerLoop(void* args) {
 
 /*!
  * \brief Call this function to initialize the UPnP library and start the TV
- * Control Point.  This function creates a timer thread and provides a
- * callback handler to process any UPnP events that are received.
+ * Control Point. This function creates a timer thread and provides a callback
+ * handler to process any UPnP events that are received.
  *
  * \return TV_SUCCESS if everything went well, else TV_ERROR.
  */
@@ -1206,6 +1207,7 @@ void TvCtrlPointPrintShortHelp(void) {
     SampleUtil_Print("Commands:\n"
                      "  Help\n"
                      "  HelpFull\n"
+                     "  ToggleVerbose\n"
                      "  ListDev\n"
                      "  Refresh\n"
                      "  PrintDev      <devnum>\n"
@@ -1232,31 +1234,28 @@ void TvCtrlPointPrintLongHelp(void) {
         "******************************\n"
         "\n"
         "This sample control point application automatically searches\n"
-        "for and subscribes to the services of television device "
-        "emulator\n"
-        "devices, described in the tvdevicedesc.xml description "
-        "document.\n"
+        "for and subscribes to the services of television device emulator\n"
+        "devices, described in the tvdevicedesc.xml description document.\n"
         "It also registers itself as a tv device.\n"
         "\n"
         "Commands:\n"
         "  Help\n"
-        "       Print this help info.\n"
+        "       Print a short help info.\n"
+        "  HelpFull\n"
+        "       Print this extended help info.\n"
+        "  ToggleVerbose\n"
+        "       Toggle (on/off) verbose debug output.\n"
         "  ListDev\n"
-        "       Print the current list of TV Device Emulators that "
-        "this\n"
-        "         control point is aware of.  Each device is preceded "
-        "by a\n"
-        "         device number which corresponds to the devnum "
-        "argument of\n"
+        "       Print the current list of TV Device Emulators that this\n"
+        "         control point is aware of. Each device is preceded by a\n"
+        "         device number which corresponds to the devnum argument of\n"
         "         commands listed below.\n"
         "  Refresh\n"
-        "       Delete all of the devices from the device list and "
-        "issue new\n"
+        "       Delete all of the devices from the device list and issue new\n"
         "         search request to rebuild the list from scratch.\n"
         "  PrintDev       <devnum>\n"
         "       Print the state table for the device <devnum>.\n"
-        "         e.g., 'PrintDev 1' prints the state table for the "
-        "first\n"
+        "         e.g., 'PrintDev 1' prints the state table for the first\n"
         "         device in the device list.\n"
         "  PowerOn        <devnum>\n"
         "       Sends the PowerOn action to the Control Service of\n"
@@ -1266,13 +1265,11 @@ void TvCtrlPointPrintLongHelp(void) {
         "         device <devnum>.\n"
         "  SetChannel     <devnum> <channel>\n"
         "       Sends the SetChannel action to the Control Service of\n"
-        "         device <devnum>, requesting the channel to be "
-        "changed\n"
+        "         device <devnum>, requesting the channel to be changed\n"
         "         to <channel>.\n"
         "  SetVolume      <devnum> <volume>\n"
         "       Sends the SetVolume action to the Control Service of\n"
-        "         device <devnum>, requesting the volume to be "
-        "changed\n"
+        "         device <devnum>, requesting the volume to be changed\n"
         "         to <volume>.\n"
         "  SetColor       <devnum> <color>\n"
         "       Sends the SetColor action to the Control Service of\n"
@@ -1283,40 +1280,30 @@ void TvCtrlPointPrintLongHelp(void) {
         "         device <devnum>, requesting the tint to be changed\n"
         "         to <tint>.\n"
         "  SetContrast    <devnum> <contrast>\n"
-        "       Sends the SetContrast action to the Control Service "
-        "of\n"
-        "         device <devnum>, requesting the contrast to be "
-        "changed\n"
+        "       Sends the SetContrast action to the Control Service of\n"
+        "         device <devnum>, requesting the contrast to be changed\n"
         "         to <contrast>.\n"
         "  SetBrightness  <devnum> <brightness>\n"
-        "       Sends the SetBrightness action to the Control Service "
-        "of\n"
-        "         device <devnum>, requesting the brightness to be "
-        "changed\n"
+        "       Sends the SetBrightness action to the Control Service of\n"
+        "         device <devnum>, requesting the brightness to be changed\n"
         "         to <brightness>.\n"
         "  CtrlAction     <devnum> <action>\n"
-        "       Sends an action request specified by the string "
-        "<action>\n"
-        "         to the Control Service of device <devnum>.  This "
-        "command\n"
+        "       Sends an action request specified by the string <action>\n"
+        "         to the Control Service of device <devnum>.  This command\n"
         "         only works for actions that have no arguments.\n"
         "         (e.g., \"CtrlAction 1 IncreaseChannel\")\n"
         "  PictAction     <devnum> <action>\n"
-        "       Sends an action request specified by the string "
-        "<action>\n"
-        "         to the Picture Service of device <devnum>.  This "
-        "command\n"
+        "       Sends an action request specified by the string <action>\n"
+        "         to the Picture Service of device <devnum>.  This command\n"
         "         only works for actions that have no arguments.\n"
         "         (e.g., \"PictAction 1 DecreaseContrast\")\n"
         "  CtrlGetVar     <devnum> <varname>\n"
-        "       Requests the value of a variable specified by the "
-        "string <varname>\n"
-        "         from the Control Service of device <devnum>.\n"
+        "       Requests the value of a variable specified by the string\n"
+        "         <varname> from the Control Service of device <devnum>.\n"
         "         (e.g., \"CtrlGetVar 1 Volume\")\n"
         "  PictGetVar     <devnum> <action>\n"
-        "       Requests the value of a variable specified by the "
-        "string <varname>\n"
-        "         from the Picture Service of device <devnum>.\n"
+        "       Requests the value of a variable specified by the string\n"
+        "         <varname> from the Picture Service of device <devnum>.\n"
         "         (e.g., \"PictGetVar 1 Tint\")\n"
         "  Exit\n"
         "       Exits the control point application.\n");
@@ -1326,6 +1313,7 @@ void TvCtrlPointPrintLongHelp(void) {
 enum cmdloop_tvcmds {
     PRTHELP = 0,
     PRTFULLHELP,
+    VERBOSE,
     POWON,
     POWOFF,
     SETCHAN,
@@ -1362,6 +1350,7 @@ struct cmdloop_commands {
 static struct cmdloop_commands cmdloop_cmdlist[] = {
     {"Help", PRTHELP, 1, ""},
     {"HelpFull", PRTFULLHELP, 1, ""},
+    {"ToggleVerbose", VERBOSE, 1, ""},
     {"ListDev", LSTDEV, 1, ""},
     {"Refresh", REFRESH, 1, ""},
     {"PrintDev", PRTDEV, 2, "<devnum>"},
@@ -1402,6 +1391,21 @@ void* TvCtrlPointCommandLoop(void* args) {
         if (!s)
             break;
         TvCtrlPointProcessCommand(cmdline);
+#if 0
+        // TODO: instead; work in progress.
+        int c = std::getchar();
+        if (c == EOF)
+            break;
+        if (c == '\n') {
+            SampleUtil_Print(":");
+            // gPrintFun = nullptr;
+            s = fgets(cmdline, sizeof(cmdline), stdin);
+            if (!s)
+                break;
+            TvCtrlPointProcessCommand(cmdline);
+            // gPrintFun = linux_print;
+        }
+#endif
     }
 
     return NULL;
@@ -1450,6 +1454,9 @@ int TvCtrlPointProcessCommand(char* cmdline) {
         break;
     case PRTFULLHELP:
         TvCtrlPointPrintLongHelp();
+        break;
+    case VERBOSE:
+        upnplib::g_dbug = !upnplib::g_dbug;
         break;
     case POWON:
         TvCtrlPointSendPowerOn(arg1);

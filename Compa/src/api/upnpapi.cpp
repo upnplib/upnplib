@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-10
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-12
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -421,7 +421,7 @@ static int UpnpInitPreamble() {
         return UPNP_E_INIT_FAILED;
     }
 
-    UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__, "Inside UpnpInitPreamble\n");
+    UPNPLIB_LOGINFO "MSG1058: Executing...\n";
 
     /* Initialize SDK global mutexes. */
     retVal = UpnpInitMutexes();
@@ -479,9 +479,7 @@ static int UpnpInitPreamble() {
 static int UpnpInitStartServers(
     /*! [in] Local Port to listen for incoming connections. */
     [[maybe_unused]] unsigned short DestPort) {
-    TRACE("Executing UpnpInitStartServers()")
-    UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-               "Entering UpnpInitStartServers\n");
+    UPNPLIB_LOGINFO "MSG1061: Executing...\n";
 
 #ifdef COMPA_HAVE_MINISERVER
     LOCAL_PORT_V4 = DestPort;
@@ -506,9 +504,7 @@ static int UpnpInitStartServers(
     }
 #endif
 
-    UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-               "Exiting UpnpInitStartServers\n");
-
+    UPNPLIB_LOGINFO "MSG1066: Finished.\n";
     return UPNP_E_SUCCESS;
 }
 
@@ -537,9 +533,8 @@ int UpnpInit2(const char* IfName, unsigned short DestPort) {
         goto exit_function;
     }
 
-    UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-               "UpnpInit2 with IfName=%s, DestPort=%d.\n",
-               IfName ? IfName : "NULL", DestPort);
+    UPNPLIB_LOGINFO "MSG1059: IfName=\""
+        << IfName << "\", DestPort=" << DestPort << ".\n";
 
     /* Retrieve interface information (Addresses, index, etc). */
     retVal = UpnpGetIfInfo(IfName);
@@ -3353,9 +3348,10 @@ int UpnpGetIfInfo(const char* IfName) {
     }
 #endif // _WIN32
 
-    UpnpPrintf(UPNP_INFO, API, __FILE__, __LINE__,
-               "Interface name=%s, index=%d, v4=%s, v6=%s, ULA or GUA v6=%s\n",
-               gIF_NAME, gIF_INDEX, gIF_IPV4, gIF_IPV6, gIF_IPV6_ULA_GUA);
+    UPNPLIB_LOGINFO "MSG1060: Interface name=\""
+        << gIF_NAME << "\", index=" << gIF_INDEX << ", IPv4=\"" << gIF_IPV4
+        << "\", IPv6=\"[" << gIF_IPV6 << "]\", ULA or GUA IPv6=\"["
+        << gIF_IPV6_ULA_GUA << "]\".\n";
 
     return UPNP_E_SUCCESS;
 }

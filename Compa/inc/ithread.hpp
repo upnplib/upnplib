@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-04
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-11
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,8 +39,7 @@
  * \todo Remove ithread and use pthread direct.
  */
 
-#include <UpnpGlobal.hpp> /* For UPNP_INLINE, EXPORT_SPEC */
-#include "pthread.h"      // To find pthreads4w don't use <pthread.h>
+#include "pthread.h" // To find pthreads4w don't use <pthread.h>
 
 /// \cond
 
@@ -178,7 +177,7 @@ typedef ithread_mutex_t ithread_rwlock_t;
  *  Returns:
  *      0 on success, Nonzero on failure.
  ***************************************************************************/
-static UPNP_INLINE int ithread_initialize_library(void) {
+static inline int ithread_initialize_library() {
     int ret = 0;
 
     return ret;
@@ -195,7 +194,7 @@ static UPNP_INLINE int ithread_initialize_library(void) {
  *  Returns:
  *      0 on success, Nonzero on failure.
  ***************************************************************************/
-static UPNP_INLINE int ithread_cleanup_library(void) {
+static inline int ithread_cleanup_library() {
     int ret = 0;
 
     return ret;
@@ -212,7 +211,7 @@ static UPNP_INLINE int ithread_cleanup_library(void) {
  *  Returns:
  *      0 on success, Nonzero on failure.
  ***************************************************************************/
-static UPNP_INLINE int ithread_initialize_thread(void) {
+static inline int ithread_initialize_thread() {
     int ret = 0;
 
 #if defined(_WIN32) && defined(PTW32_STATIC_LIB)
@@ -233,7 +232,7 @@ static UPNP_INLINE int ithread_initialize_thread(void) {
  *  Returns:
  *      0 on success, Nonzero on failure.
  ***************************************************************************/
-static UPNP_INLINE int ithread_cleanup_thread(void) {
+static inline int ithread_cleanup_thread() {
     int ret = 0;
 
 #if defined(_WIN32) && defined(PTW32_STATIC_LIB)

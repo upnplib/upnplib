@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-03-07
+# Redistribution only with this Copyright remark. Last modified: 2024-03-12
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
@@ -402,6 +402,10 @@ if(UPNPLIB_WITH_GOOGLETEST)
         GIT_SHALLOW       ON # comment if using GIT_TAG hash below
         #GIT_TAG           2057566e4e16c88f1fea4d6c96b2e2bfb87507a6
     )
+    # We have googletest embedded so we turn installation off.
+    set (INSTALL_GTEST OFF CACHE BOOL
+    "Enable installation of googletest. (Projects embedding googletest may want to turn this OFF.)" FORCE)
+
     if(WIN32)
 
         # Reference: build/_deps/googletest-src/googletest/README.md

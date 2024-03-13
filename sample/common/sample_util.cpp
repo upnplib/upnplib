@@ -2,8 +2,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-04
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-11
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -232,9 +232,9 @@ char* SampleUtil_GetFirstDocumentItem(IXML_Document* doc, const char* item) {
             SampleUtil_Print("%s(%d): ixmlNodeList_item(nodeList, "
                              "0) returned NULL\n",
                              __FILE__, __LINE__);
-    } else
-        SampleUtil_Print("%s(%d): Error finding %s in XML Node\n", __FILE__,
-                         __LINE__, item);
+    } // else
+      //   SampleUtil_Print("%s(%d): Error finding %s in XML Node\n", __FILE__,
+      //                    __LINE__, item);
 
 epilogue:
     if (nodeList)
