@@ -264,9 +264,11 @@ class UPNPLIB_API CWSAStartup {
 
 // Portable handling of socket errors
 // ==================================
-// There is a problem that Winsock2 on the Microsoft Windows platform does not
-// support detailed error information given in the global variable 'errno'.
-// Instead it returns them with calling 'WSAGetLastError()'. This class
+// Only usable to catch socket errors, that is WSAGetLastError() on win32.
+//
+// There is a problem that Winsock2 on the Microsoft Windows platform
+// does not support detailed error information given in the global variable
+// 'errno'. Instead it returns them with calling 'WSAGetLastError()'. This class
 // encapsulates this difference so there is no need to always check the platform
 // to get the error information.
 class UPNPLIB_API CSocketError {

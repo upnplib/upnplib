@@ -67,14 +67,15 @@ struct MiniServerSockArray {
     /*! \brief IPv6 ULA or GUA SSDP Socket for incoming advertisments and search
      * requests. */
     SOCKET ssdpSock6UlaGua;
-    /*! \brief Corresponding port to miniServerStopSock */
-    uint16_t stopPort;
+    /*! \brief Corresponding port to miniServerStopSock. This is set with
+     * miniStopSockPort but never used. */
+    in_port_t stopPort;
     /*! \brief Corresponding port to miniServerSock4 */
-    uint16_t miniServerPort4;
+    in_port_t miniServerPort4;
     /*! \brief Corresponding port to miniServerSock6 */
-    uint16_t miniServerPort6;
+    in_port_t miniServerPort6;
     /*! \brief Corresponding port to miniServerSock6UlaGua */
-    uint16_t miniServerPort6UlaGua;
+    in_port_t miniServerPort6UlaGua;
 #ifdef COMPA_HAVE_CTRLPT_SSDP
     /*! \name Only with Client (control point) Module.
      * \todo Move this to control point SSDP

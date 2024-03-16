@@ -6,7 +6,7 @@
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-18
  *
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
@@ -45,6 +45,7 @@
 #include <upnpapi.hpp>
 
 #include <upnplib/global.hpp> // for TRACE
+#include <upnplib/socket.hpp>
 #include <umock/sys_socket.hpp>
 #include <umock/pupnp_sock.hpp>
 
@@ -53,9 +54,7 @@
 #endif
 
 /// \cond
-#if UPNPLIB_WITH_TRACE
 #include <iostream>
-#endif
 /// \endcond
 
 
@@ -721,15 +720,15 @@ int SearchByTarget(int Hnd, int Mx, char* St, void* Cookie) {
 int create_ssdp_sock_reqv4(
     /*! [out] SSDP IPv4 request socket to be created. */
     SOCKET* ssdpReqSock) {
-    TRACE("Executing create_ssdp_sock_reqv4()")
-    char errorBuffer[ERROR_BUFFER_LEN];
+    UPNPLIB_LOGINFO "MSG1071: Executing...\n";
     u_char ttl = 4;
 
+    upnplib::CSocketError sockerrObj;
     *ssdpReqSock = umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (*ssdpReqSock == INVALID_SOCKET) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
-        UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
-                   "Error in socket(): %s\n", errorBuffer);
+        sockerrObj.catch_error();
+        UPNPLIB_LOGCRIT "MSG1072: Error in socket(): "
+            << sockerrObj.get_error_str() << ".\n";
         return UPNP_E_OUTOF_SOCKET;
     }
     umock::sys_socket_h.setsockopt(*ssdpReqSock, IPPROTO_IP, IP_MULTICAST_TTL,
@@ -744,14 +743,15 @@ int create_ssdp_sock_reqv4(
 int create_ssdp_sock_reqv6(
     /*! [out] SSDP IPv6 request socket to be created. */
     SOCKET* ssdpReqSock) {
-    char errorBuffer[ERROR_BUFFER_LEN];
+    UPNPLIB_LOGINFO "MSG1073: Executing...\n";
     char hops = 1;
 
+    upnplib::CSocketError sockerrObj;
     *ssdpReqSock = umock::sys_socket_h.socket(AF_INET6, SOCK_DGRAM, 0);
     if (*ssdpReqSock == INVALID_SOCKET) {
-        strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
-        UpnpPrintf(UPNP_CRITICAL, SSDP, __FILE__, __LINE__,
-                   "Error in socket(): %s\n", errorBuffer);
+        sockerrObj.catch_error();
+        UPNPLIB_LOGCRIT "MSG1074: Error in socket(): "
+            << sockerrObj.get_error_str() << ".\n";
         return UPNP_E_OUTOF_SOCKET;
     }
     /* MUST use scoping of IPv6 addresses to control the propagation os SSDP

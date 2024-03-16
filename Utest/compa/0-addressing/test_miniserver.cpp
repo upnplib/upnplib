@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-24
+// Redistribution only with this Copyright remark. Last modified: 2024-03-20
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -18,9 +18,9 @@
 #include <upnplib/global.hpp>
 #include <upnplib/upnptools.hpp> // for errStrEx
 #include <upnplib/socket.hpp>
-#include <upnplib/sockaddr.hpp>
 
 #include <pupnp/upnpdebug.hpp>
+#include <pupnp/threadpool_init.hpp>
 
 #include <utest/utest.hpp>
 #include <umock/sys_socket_mock.hpp>
@@ -32,6 +32,7 @@ namespace utest {
 using ::testing::_;
 using ::testing::DoAll;
 using ::testing::Ge;
+using ::testing::InSequence;
 using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
@@ -45,6 +46,7 @@ using ::upnplib::g_dbug;
 using ::upnplib::SSockaddr;
 
 using ::pupnp::CLogging;
+using ::pupnp::CThreadPoolInit;
 
 
 // The miniserver call stack to get a server socket
@@ -138,6 +140,8 @@ TEST(StartMiniServerTestSuite, StartMiniServer_real) {
     // LOCAL_PORT_V6 = 0;
     // LOCAL_PORT_V6_ULA_GUA = 0;
 
+    ASSERT_FALSE(MINISERVER_REUSEADDR);
+
     // Perform initialization preamble.
     int ret_UpnpInitPreamble = UpnpInitPreamble();
     ASSERT_EQ(ret_UpnpInitPreamble, UPNP_E_SUCCESS)
@@ -150,7 +154,6 @@ TEST(StartMiniServerTestSuite, StartMiniServer_real) {
 
     // Due to initialization by components it should not have flagged to be
     // initialized. That will we do now.
-    ASSERT_FALSE(MINISERVER_REUSEADDR);
     ASSERT_EQ(UpnpSdkInit, 0);
     ASSERT_STRNE(gIF_IPV4, "");
     UpnpSdkInit = 1;
@@ -161,7 +164,6 @@ TEST(StartMiniServerTestSuite, StartMiniServer_real) {
     EXPECT_EQ(ret_StartMiniServer, UPNP_E_SUCCESS)
         << errStrEx(ret_StartMiniServer, UPNP_E_SUCCESS);
 
-    ASSERT_FALSE(MINISERVER_REUSEADDR);
     EXPECT_EQ(UpnpSdkInit, 1);
     EXPECT_EQ(LOCAL_PORT_V4, APPLICATION_LISTENING_PORT);
     EXPECT_EQ(LOCAL_PORT_V6, 0);
@@ -178,8 +180,203 @@ TEST(StartMiniServerTestSuite, StartMiniServer_real) {
 #endif
 
 
+TEST(StartMiniServerTestSuite, start_miniserver_with_no_ip_addr) {
+    CLogging logObj; // Output only with build type DEBUG.
+    if (g_dbug)
+        logObj.enable(UPNP_ALL);
+
+    gMServState = MSERV_IDLE;
+
+    // Not having a valid local ip_address on all interfaces will fail to start
+    // the miniserver.
+    gIF_IPV4[0] = '\0';
+    gIF_IPV6[0] = '\0';
+    gIF_IPV6_ULA_GUA[0] = '\0';
+    LOCAL_PORT_V4 = 0;
+    LOCAL_PORT_V6 = 0;
+    LOCAL_PORT_V6_ULA_GUA = 0;
+
+    // Test Unit
+    int ret_StartMiniServer =
+        StartMiniServer(&LOCAL_PORT_V4, &LOCAL_PORT_V6, &LOCAL_PORT_V6_ULA_GUA);
+    EXPECT_EQ(ret_StartMiniServer, UPNP_E_OUTOF_SOCKET)
+        << errStrEx(ret_StartMiniServer, UPNP_E_OUTOF_SOCKET);
+}
+
+TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv4_addr) {
+    GTEST_SKIP() << "TODO: Test must be created.";
+
+    gMServState = MSERV_IDLE;
+
+    std::strcpy(gIF_IPV4, "192.168.47.11");
+    gIF_IPV6[0] = '\0';
+    gIF_IPV6_ULA_GUA[0] = '\0';
+    LOCAL_PORT_V4 = 50071;
+    LOCAL_PORT_V6 = 0;
+    LOCAL_PORT_V6_ULA_GUA = 0;
+}
+
+TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv6_lla_addr) {
+    GTEST_SKIP() << "TODO: Test must be created.";
+
+    gMServState = MSERV_IDLE;
+
+    gIF_IPV4[0] = '\0';
+    std::strcpy(gIF_IPV6, "fe80::fedc:0:0:1");
+    gIF_IPV6_ULA_GUA[0] = '\0';
+    LOCAL_PORT_V4 = 0;
+    LOCAL_PORT_V6 = 50072;
+    LOCAL_PORT_V6_ULA_GUA = 0;
+}
+
+TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv6_ula_gua_addr) {
+#ifdef _MSC_VER
+    if (github_actions)
+        GTEST_SKIP() << "             TODO: Rework needed for MS Windowws.";
+#endif
+
+    CLogging logObj; // Output only with build type DEBUG.
+    if (g_dbug)
+        logObj.enable(UPNP_ALL);
+
+    gMServState = MSERV_IDLE;
+
+    // Prevent to shedule a thread with 'RunMiniServer()'. I only test to start
+    // the miniserver. Testing 'RunMiniServer()' only is done isolated.
+    CThreadPoolInit tp(gMiniServerThreadPool);
+    TPAttrSetMaxThreads(&gMiniServerThreadPool.attr, 0);
+
+    gIF_IPV4[0] = '\0';
+    gIF_IPV6[0] = '\0';
+    std::strcpy(gIF_IPV6_ULA_GUA, "2001:db8::4");
+    LOCAL_PORT_V4 = 0;
+    LOCAL_PORT_V6 = 0;
+    LOCAL_PORT_V6_ULA_GUA = 50073;
+    gMServState = MSERV_IDLE;
+
+    const std::string listen_port_str{"50010"};
+    constexpr SOCKET listen_sockfd{umock::sfd_base + 66};
+    [[maybe_unused]] constexpr SOCKET stop_sockfd{umock::sfd_base + 67};
+    [[maybe_unused]] constexpr SOCKET ssdp_sockfd{umock::sfd_base + 68};
+
+    SSockaddr listen_ssObj; // for getsockname() return sockaddr & port
+    listen_ssObj = "[" + std::string(gIF_IPV6_ULA_GUA) +
+                   "]:" + std::to_string(LOCAL_PORT_V6_ULA_GUA);
+    SSockaddr stop_ssObj;
+    stop_ssObj = "127.0.0.1:55547";
+
+    // Set default socket object values
+    ON_CALL(m_sys_socketObj, socket(_, _, _))
+        .WillByDefault(SetErrnoAndReturn(EACCES, SOCKET_ERROR));
+    ON_CALL(m_sys_socketObj, bind(_, _, _))
+        .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+    ON_CALL(m_sys_socketObj, listen(_, _))
+        .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+    ON_CALL(m_sys_socketObj, getsockopt(_, _, _, _, _))
+        .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+    ON_CALL(m_sys_socketObj, setsockopt(_, _, _, _, _))
+        .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+    ON_CALL(m_sys_socketObj, getsockname(_, _, _))
+        .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+
+    { // begin scope InSequence
+        InSequence seq;
+
+        // Provide a socket id for listening.
+        EXPECT_CALL(m_sys_socketObj, socket(AF_INET6, SOCK_STREAM, 0))
+            .WillOnce(Return(listen_sockfd));
+        // Mock setsockopt()
+        EXPECT_CALL(m_sys_socketObj, setsockopt(listen_sockfd, _, _, _, _))
+            .WillOnce(Return(0));
+
+#ifndef UPNPLIB_WITH_NATIVE_PUPNP
+        // Bind socket to an ip address for listening
+        EXPECT_CALL(m_sys_socketObj, bind(listen_sockfd, _, _))
+            .WillOnce(Return(0));
+        // Listen on a socket
+        EXPECT_CALL(m_sys_socketObj, listen(listen_sockfd, SOMAXCONN))
+            .WillOnce(Return(0));
+        // getsockname() for listening
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockname(listen_sockfd, _,
+                                Pointee(Ge(static_cast<socklen_t>(
+                                    sizeof(sockaddr_in6))))))
+            .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&listen_ssObj.ss),
+                            Return(0)));
+
+        // Provide a socket id for the stop socket.
+        EXPECT_CALL(m_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+            .WillOnce(Return(stop_sockfd));
+        // Bind socket to an ip address for the stop socket
+        EXPECT_CALL(m_sys_socketObj, bind(stop_sockfd, _, _))
+            .WillOnce(Return(0));
+        // getsockname() for stop socket
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockname(stop_sockfd, _,
+                                Pointee(Ge(static_cast<socklen_t>(
+                                    sizeof(sockaddr_in))))))
+            .WillOnce(
+                DoAll(SetArgPointee<1>(*(sockaddr*)&stop_ssObj.ss), Return(0)));
+
+        // Manage create_ssdp_sock_v6_ula_gua().
+        EXPECT_CALL(m_sys_socketObj, socket(AF_INET6, SOCK_DGRAM, 0))
+            .WillOnce(Return(ssdp_sockfd));
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(ssdp_sockfd, SOL_SOCKET, SO_REUSEADDR, _, _))
+            .WillOnce(Return(0));
+#if (defined(BSD) && !defined(__GNU__)) || defined(__APPLE__)
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(ssdp_sockfd, SOL_SOCKET, SO_REUSEPORT, _, _))
+            .WillOnce(Return(0));
+#endif /* BSD, __APPLE__ */
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(ssdp_sockfd, IPPROTO_IPV6, IPV6_V6ONLY, _, _))
+            .WillOnce(Return(0));
+        EXPECT_CALL(m_sys_socketObj, bind(ssdp_sockfd, _, _))
+            .WillOnce(Return(0));
+        EXPECT_CALL(m_sys_socketObj, setsockopt(ssdp_sockfd, IPPROTO_IPV6,
+                                                IPV6_JOIN_GROUP, _, _))
+            .WillOnce(Return(0));
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(ssdp_sockfd, SOL_SOCKET, SO_BROADCAST, _, _))
+            .WillOnce(Return(0));
+#endif
+    } // end scope InSequence
+
+    // Test Unit
+    int ret_StartMiniServer =
+        StartMiniServer(&LOCAL_PORT_V4, &LOCAL_PORT_V6, &LOCAL_PORT_V6_ULA_GUA);
+
+    // Because I have suppressed the thread with executing 'RunMiniServer()'
+    // UPNP_E_OUTOF_MEMORY error message is expected.
+    if (old_code) {
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+                  << ": Having only one IPv6 address (Lla or UlaGua) should "
+                     "not fail StartMiniServer().\n";
+        EXPECT_EQ(ret_StartMiniServer, UPNP_E_OUTOF_SOCKET)
+            << errStrEx(ret_StartMiniServer, UPNP_E_OUTOF_SOCKET); // Wrong!
+
+    } else {
+
+        EXPECT_EQ(ret_StartMiniServer, UPNP_E_OUTOF_MEMORY)
+            << errStrEx(ret_StartMiniServer, UPNP_E_OUTOF_MEMORY);
+    }
+}
+
+TEST_F(StartMiniServerFTestSuite, start_miniserver_with_ipv4_and_ipv6_addr) {
+    GTEST_SKIP() << "TODO: Test must be created.";
+
+    gMServState = MSERV_IDLE;
+
+    gIF_IPV4[0] = '\0';
+    gIF_IPV6[0] = '\0';
+    std::strcpy(gIF_IPV6_ULA_GUA, "2001:db8::5");
+    LOCAL_PORT_V4 = 0;
+    LOCAL_PORT_V6 = 0;
+    LOCAL_PORT_V6_ULA_GUA = 50074;
+}
+
 TEST(StartMiniServerTestSuite, start_miniserver_already_running) {
-    MINISERVER_REUSEADDR = false;
     gMServState = MSERV_RUNNING;
 
     // Test Unit
@@ -210,8 +407,10 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets) {
     WINSOCK_INIT
 
     // Initialize needed structure
-    MINISERVER_REUSEADDR = false;
     strcpy(gIF_IPV4, "192.168.245.254");
+    gIF_IPV6[0] = '\0';
+    gIF_IPV6_ULA_GUA[0] = '\0';
+
     constexpr SOCKET sockfd{umock::sfd_base + 10};
     SSockaddr saddrObj;
     saddrObj = std::string(gIF_IPV4) + ":" +
@@ -225,8 +424,10 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets) {
     // Bind socket to an ip address (gIF_IPV4)
     EXPECT_CALL(m_sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
     // Query port from socket
-    EXPECT_CALL(m_sys_socketObj,
-                getsockname(sockfd, _, Pointee(Ge(saddrObj.sizeof_ss()))))
+    EXPECT_CALL(
+        m_sys_socketObj,
+        getsockname(sockfd, _,
+                    Pointee(Ge(static_cast<socklen_t>(saddrObj.sizeof_ss())))))
         .WillOnce(DoAll(SetArgPointee<1>(saddrObj.sa), Return(0)));
     // Listen on the socket
     EXPECT_CALL(m_sys_socketObj, listen(sockfd, _)).WillOnce(Return(0));
@@ -253,7 +454,8 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_with_empty_ip_address) {
     // socket. TODO: With address 0, it would successful bind to all local ip
     // addresses. If this is intended then gIF_IPV4 should be set to "0.0.0.0".
     gIF_IPV4[0] = '\0'; // Empty ip address
-    MINISERVER_REUSEADDR = false;
+    gIF_IPV6[0] = '\0';
+    gIF_IPV6_ULA_GUA[0] = '\0';
 
     // Initialize needed structure
     MiniServerSockArray miniSocket{};
@@ -304,7 +506,8 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_with_empty_ip_address) {
 TEST(StartMiniServerTestSuite, get_miniserver_sockets_with_invalid_ip_address) {
     WINSOCK_INIT
     strcpy(gIF_IPV4, "192.168.129.XXX"); // Invalid ip address
-    MINISERVER_REUSEADDR = false;
+    gIF_IPV6[0] = '\0';
+    gIF_IPV6_ULA_GUA[0] = '\0';
 
     // Initialize needed structure
     MiniServerSockArray miniSocket{};
@@ -358,8 +561,9 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_uninitialized) {
     }
 
 #ifdef _MSC_VER
-    MINISERVER_REUSEADDR = false;
     strcpy(gIF_IPV4, "192.168.200.199");
+    gIF_IPV6[0] = '\0';
+    gIF_IPV6_ULA_GUA[0] = '\0';
 
     // Initialize needed structure
     MiniServerSockArray miniSocket{};
@@ -395,8 +599,9 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets_with_invalid_socket) {
     if (g_dbug)
         logObj.enable(UPNP_ALL);
 
-    MINISERVER_REUSEADDR = false;
     strcpy(gIF_IPV4, "192.168.12.9");
+    gIF_IPV6[0] = '\0';
+    gIF_IPV6_ULA_GUA[0] = '\0';
 
     // Initialize needed structure
     MiniServerSockArray miniSocket{};
@@ -447,70 +652,70 @@ TEST_F(StartMiniServerFTestSuite, get_miniserver_sockets_with_invalid_socket) {
     }
 }
 
-TEST(StartMiniServerTestSuite, init_socket_suff) {
+TEST(StartMiniServerTestSuite, init_socket_suff_successful) {
     WINSOCK_INIT
-    MINISERVER_REUSEADDR = false;
 
     // Set ip address and needed structure
-    constexpr char text_addr[]{"192.168.54.85"};
-    char addrbuf[INET_ADDRSTRLEN];
-    s_SocketStuff ss4;
-    memset(&ss4, 0xAA, sizeof(ss4));
+    constexpr char text_addr[]{"2001:db8::1"};
+    char addrbuf[INET6_ADDRSTRLEN];
+    s_SocketStuff ss6;
+    memset(&ss6, 0xAA, sizeof(ss6));
 
     // Test Unit, needs initialized sockets on MS Windows
-    EXPECT_EQ(init_socket_suff(&ss4, text_addr, 4), 0);
+    EXPECT_EQ(init_socket_suff(&ss6, text_addr, 6), 0);
 
-    EXPECT_EQ(ss4.ip_version, 4);
-    EXPECT_STREQ(ss4.text_addr, text_addr);
-    EXPECT_EQ(ss4.serverAddr4->sin_family, AF_INET);
-    EXPECT_STREQ(inet_ntop(AF_INET, &ss4.serverAddr4->sin_addr, addrbuf,
+    EXPECT_EQ(ss6.ip_version, 6);
+    EXPECT_STREQ(ss6.text_addr, text_addr);
+    EXPECT_EQ(ss6.serverAddr6->sin6_family, AF_INET6);
+    EXPECT_STREQ(inet_ntop(AF_INET6, &ss6.serverAddr6->sin6_addr, addrbuf,
                            sizeof(addrbuf)),
                  text_addr);
     // Valid real socket
-    EXPECT_NE(ss4.fd, INVALID_SOCKET);
-    EXPECT_EQ(ss4.try_port, 0);
-    EXPECT_EQ(ss4.actual_port, 0);
-    EXPECT_EQ(ss4.address_len,
-              static_cast<socklen_t>(sizeof(*ss4.serverAddr4)));
+    EXPECT_NE(ss6.fd, INVALID_SOCKET);
+    EXPECT_EQ(ss6.try_port, 0);
+    EXPECT_EQ(ss6.actual_port, 0);
+    EXPECT_EQ(ss6.address_len,
+              static_cast<socklen_t>(sizeof(*ss6.serverAddr6)));
 
     char reuseaddr;
     socklen_t optlen{sizeof(reuseaddr)};
     EXPECT_EQ(
-        ::getsockopt(ss4.fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, &optlen), 0);
+        ::getsockopt(ss6.fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, &optlen), 0);
     EXPECT_FALSE(reuseaddr);
 
     // Close real socket
-    EXPECT_EQ(CLOSE_SOCKET_P(ss4.fd), 0);
+    EXPECT_EQ(CLOSE_SOCKET_P(ss6.fd), 0);
 }
 
 TEST(StartMiniServerTestSuite, init_socket_suff_reuseaddr) {
+    // This isn't supported anymore.
+    EXPECT_FALSE(MINISERVER_REUSEADDR);
+
     WINSOCK_INIT
-    MINISERVER_REUSEADDR = true;
 
     // Set ip address and needed structure
-    constexpr char text_addr[]{"192.168.24.85"};
-    s_SocketStuff ss4;
+    constexpr char text_addr[]{"2001:db8::2"};
+    s_SocketStuff ss6;
 
     // Test Unit, needs initialized sockets on MS Windows
-    EXPECT_EQ(init_socket_suff(&ss4, text_addr, 4), 0);
+    EXPECT_EQ(init_socket_suff(&ss6, text_addr, 6), 0);
 
     char reuseaddr;
     socklen_t optlen{sizeof(reuseaddr)};
     EXPECT_EQ(
-        ::getsockopt(ss4.fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, &optlen), 0);
-    EXPECT_TRUE(reuseaddr);
+        ::getsockopt(ss6.fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, &optlen), 0);
+    // The socket option should never be set.
+    EXPECT_FALSE(reuseaddr);
 
     // Important! Otherwise repeated tests will fail later because all file
     // descriptors for the process are consumed.
-    EXPECT_EQ(CLOSE_SOCKET_P(ss4.fd), 0) << std::strerror(errno);
+    EXPECT_EQ(CLOSE_SOCKET_P(ss6.fd), 0) << std::strerror(errno);
 }
 
 TEST_F(StartMiniServerFTestSuite, init_socket_suff_with_invalid_socket) {
     CLogging logObj; // Output only with build type DEBUG.
     if (g_dbug)
         logObj.enable(UPNP_ALL);
-
-    MINISERVER_REUSEADDR = false;
 
     // Set ip address and needed structure
     constexpr char text_addr[]{"192.168.99.85"};
@@ -533,36 +738,41 @@ TEST_F(StartMiniServerFTestSuite, init_socket_suff_with_invalid_socket) {
     EXPECT_EQ(ss4.ip_version, 4);
     EXPECT_STREQ(ss4.text_addr, text_addr);
     EXPECT_EQ(ss4.serverAddr4->sin_family, AF_INET);
-    EXPECT_EQ(ss4.address_len, 16);
+    EXPECT_EQ(ss4.address_len, sizeof(sockaddr_in));
     EXPECT_STREQ(inet_ntop(AF_INET, &ss4.serverAddr4->sin_addr, addrbuf,
                            sizeof(addrbuf)),
                  "192.168.99.85");
 }
 
 TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_ip_address) {
-    MINISERVER_REUSEADDR = false;
-
     // Set ip address and needed structure
-    constexpr char text_addr[]{
-        "192.168.255.256"}; // invalid ip address with .256
-    char addrbuf[INET_ADDRSTRLEN];
-    s_SocketStuff ss4;
+    constexpr char text_addr[]{"2001:db8::1::2"}; // invalid ip address
+    char addrbuf[INET6_ADDRSTRLEN];
+    s_SocketStuff ss6;
 
     // Test Unit, needs initialized sockets on MS Windows
-    EXPECT_EQ(init_socket_suff(&ss4, text_addr, 4), 1);
-    EXPECT_STREQ(ss4.text_addr, text_addr);
-    EXPECT_EQ(ss4.fd, INVALID_SOCKET);
-    EXPECT_EQ(ss4.ip_version, 4);
-    EXPECT_EQ(ss4.serverAddr4->sin_family, AF_INET);
-    EXPECT_EQ(ss4.address_len, 16);
-    EXPECT_STREQ(inet_ntop(AF_INET, &ss4.serverAddr4->sin_addr, addrbuf,
+    EXPECT_EQ(init_socket_suff(&ss6, text_addr, 6), 1);
+
+    EXPECT_STREQ(ss6.text_addr, text_addr);
+    EXPECT_EQ(ss6.fd, INVALID_SOCKET);
+    EXPECT_EQ(ss6.ip_version, 6);
+    EXPECT_EQ(ss6.serverAddr6->sin6_family, AF_INET6);
+    EXPECT_EQ(ss6.address_len, sizeof(sockaddr_in6));
+#ifdef _MSC_VER
+    // Microsft Windows Visual Studio does not detect the invalid ip address.
+    // Instead it cut the invalid part of the address.
+    EXPECT_STREQ(inet_ntop(AF_INET6, &ss6.serverAddr6->sin6_addr, addrbuf,
                            sizeof(addrbuf)),
-                 "0.0.0.0");
+                 "2001:db8::1");
+#else
+    EXPECT_STREQ(inet_ntop(AF_INET6, &ss6.serverAddr6->sin6_addr, addrbuf,
+                           sizeof(addrbuf)),
+                 "::");
+#endif
 }
 
 TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_ip_version) {
-    // Set ip address and needed structure. There is no real network adapter on
-    // this host with this ip address.
+    // Set ip address and needed structure.
     constexpr char text_addr[]{"192.168.24.85"};
     char addrbuf[INET_ADDRSTRLEN];
     s_SocketStuff ss4;
@@ -589,7 +799,6 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_successful) {
     //   port
     WINSOCK_INIT
 
-    MINISERVER_REUSEADDR = false;
     SSockaddr saddrObj;
     saddrObj = "192.168.54.188:50020";
     const char* text_addr = saddrObj.get_addr_str().c_str();
@@ -618,8 +827,10 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_successful) {
     // Mock system functions
     EXPECT_CALL(m_sys_socketObj, bind(sockfd, _, _)).Times(1);
     EXPECT_CALL(m_sys_socketObj, listen(sockfd, SOMAXCONN)).Times(1);
-    EXPECT_CALL(m_sys_socketObj,
-                getsockname(sockfd, _, Pointee(Ge(saddrObj.sizeof_ss()))))
+    EXPECT_CALL(
+        m_sys_socketObj,
+        getsockname(sockfd, _,
+                    Pointee(Ge(static_cast<socklen_t>(saddrObj.sizeof_ss())))))
         .WillOnce(DoAll(SetArgPointee<1>(saddrObj.sa), Return(0)));
 
     // Test Unit
@@ -645,8 +856,6 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_successful) {
 
 TEST(StartMiniServerTestSuite, do_bind_listen_with_wrong_socket) {
     WINSOCK_INIT
-
-    MINISERVER_REUSEADDR = false;
     constexpr char text_addr[]{"0.0.0.0"};
 
     s_SocketStuff s;
@@ -669,7 +878,6 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_with_failed_listen) {
     // * Mocked bind() returns successful
     // * Mocked listen() returns error
 
-    MINISERVER_REUSEADDR = false;
     SSockaddr saddrObj;
     saddrObj = "192.168.54.188";
     const char* text_addr = saddrObj.get_addr_str().c_str();
@@ -719,7 +927,6 @@ TEST_F(StartMiniServerFTestSuite, do_bind_listen_address_in_use) {
 
         WINSOCK_INIT
 
-        MINISERVER_REUSEADDR = false;
         constexpr char text_addr[]{"192.168.54.188"};
         char addrbuf[INET_ADDRSTRLEN];
         constexpr int actual_port{50024};
@@ -851,10 +1058,15 @@ TEST_F(DoBindFTestSuite, bind_successful) {
 
 TEST_F(DoBindFTestSuite, bind_with_invalid_argument) {
     // Configure expected system calls:
-    // * Use fictive socket file descriptor 512
+    // * Use fictive socket file descriptor
     // * Actual used port is 56890
     // * Next port to try is 56891
     // * Mocked bind() returns EINVAL
+
+#ifdef _MSC_VER
+    if (github_actions && !old_code)
+        GTEST_SKIP() << "             TODO: Rework needed for MS Windowws.";
+#endif
 
     CLogging logObj; // Output only with build type DEBUG.
     if (g_dbug)
@@ -864,8 +1076,8 @@ TEST_F(DoBindFTestSuite, bind_with_invalid_argument) {
     constexpr SOCKET sockfd{umock::sfd_base + 16};
     constexpr char text_addr[]{"192.168.202.233"};
     char addrbuf[16];
-    constexpr uint16_t actual_port{56890};
-    constexpr uint16_t try_port{56891};
+    constexpr in_port_t actual_port{56890};
+    constexpr in_port_t try_port{56891};
 
     s_SocketStuff s;
     // Fill all fields of struct s_SocketStuff
@@ -885,6 +1097,7 @@ TEST_F(DoBindFTestSuite, bind_with_invalid_argument) {
 #ifdef _MSC_VER
         // We have calls in a loop with failed binding. See next note.
         EXPECT_CALL(m_winsock2Obj, WSAGetLastError())
+            .Times(2)
             .WillRepeatedly(Return(WSAEINVAL));
 #endif
         // If bind() always returns failure due to unchanged invalid argument

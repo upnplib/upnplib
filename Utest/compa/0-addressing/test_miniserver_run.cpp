@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-21
+// Redistribution only with this Copyright remark. Last modified: 2024-03-17
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -86,7 +86,8 @@ class RunMiniServerFuncFTestSuite : public RunMiniServerMockFTestSuite {
     RunMiniServerFuncFTestSuite() {
         TRACE2(this, " Construct RunMiniServerFuncFTestSuite()")
         // We need this on the heap because it is freed by 'RunMiniServer()'.
-        m_minisock = (MiniServerSockArray*)malloc(sizeof(MiniServerSockArray));
+        m_minisock = static_cast<MiniServerSockArray*>(
+            malloc(sizeof(MiniServerSockArray)));
         if (m_minisock == nullptr)
             throw std::runtime_error("Failed to allocate memory.");
         InitMiniServerSockArray(m_minisock);
@@ -104,9 +105,9 @@ TEST_F(RunMiniServerFuncFTestSuite, RunMiniServer_successful) {
     // must test with this limited socket file descriptors. Otherwise we may
     // get segfaults with 'FD_SET()'. For details have a look at 'man select'.
     //
-    // This would start some other threads. We run into dynamic problems with
-    // parallel running threads here. For example running the miniserver with
-    // schedule_request_job() in a new thread cannot be finished before the
+    // This would start some other threads. We run into dynamic runtime problems
+    // with parallel running threads here. For example running the miniserver
+    // with schedule_request_job() in a new thread cannot be finished before the
     // mocked miniserver shutdown in the calling thread has been executed at
     // Unit end. This is why I prevent starting other threads. We only test
     // initialize running the miniserver and stopping it.
@@ -1582,7 +1583,7 @@ TEST(RunMiniServerTestSuite, do_reinit) {
     // descriptor is requested. Mostly it is the same but it is possible that
     // it changes when other socket fds are requested.
 
-    MINISERVER_REUSEADDR = false;
+    ASSERT_FALSE(MINISERVER_REUSEADDR);
     SSockaddr saddrObj;
     saddrObj = "192.168.202.244";
 

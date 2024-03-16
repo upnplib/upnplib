@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+// Redistribution only with this Copyright remark. Last modified: 2024-03-17
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -133,11 +133,12 @@ CSocket_basic::CSocket_basic(SOCKET a_sfd) {
     int so_option{-1};
     socklen_t optlen{sizeof(so_option)}; // May be modified
     // Type cast (char*)&so_option is needed for Microsoft Windows.
-    TRACE2(this, " Calling system funtion ::getsockopt().")
+    TRACE2(this, " Calling system function ::getsockopt().")
     if (umock::sys_socket_h.getsockopt(a_sfd, SOL_SOCKET, SO_ERROR,
                                        reinterpret_cast<char*>(&so_option),
                                        &optlen) != 0)
-        throw_error("MSG1014: Failed to create socket:");
+        throw_error(
+            "MSG1014: Failed to create socket=" + std::to_string(a_sfd) + ":");
 
     m_sfd = a_sfd;
 }

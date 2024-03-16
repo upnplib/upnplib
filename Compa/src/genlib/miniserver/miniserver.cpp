@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-13
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-20
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -97,24 +97,23 @@ enum MiniServerState {
  *  \details With starting the miniserver there is also this port registered.
  * Its socket is listing for a "ShutDown" message from a local network address
  * (localhost). This is used to stop the miniserver from another thread.
- * \todo It is unclear for what MiniServerSockArray::stopPort is used and need
- * to be checked. */
+ */
 in_port_t miniStopSockPort;
 
 /// \brief miniserver state
-MiniServerState gMServState = MSERV_IDLE;
+MiniServerState gMServState{MSERV_IDLE};
 #ifdef COMPA_HAVE_WEBSERVER
 /// \brief SOAP callback
-MiniServerCallback gSoapCallback = nullptr;
+MiniServerCallback gSoapCallback{nullptr};
 /// \brief GENA callback
-MiniServerCallback gGenaCallback = nullptr;
+MiniServerCallback gGenaCallback{nullptr};
 
-/*! \brief Flag if to immediately reuse the network address of a just broken
- * connetion. */
+/*! \brief Flag if to immediately reuse the netaddress of a just broken
+ * connetion. Reuse address is not supported. */
 #if !defined(UPNP_MINISERVER_REUSEADDR) || defined(DOXYGEN_RUN)
-int MINISERVER_REUSEADDR = 0;
+constexpr bool MINISERVER_REUSEADDR{false};
 #else
-int MINISERVER_REUSEADDR = 1;
+constexpr bool MINISERVER_REUSEADDR{true};
 #endif
 
 /// \brief additional management information to a socket.
@@ -141,15 +140,19 @@ struct s_SocketStuff {
 
 
 /*! \name Scope restricted to file
- * @{
+ * @{ */
+
+/*!
+ * \brief Check if a network address is numeric.
+ *
+ * An empty netaddress or an unspecified one ("[::]", "0.0.0.0") is not valid.
  */
-/// Check if a network address is numeric.
+// No unit test needed. It's tested with SSockaddr.
 int host_header_is_numeric(
     char* a_host_port,     ///< network address
     size_t a_host_port_len ///< length of a_host_port excl. terminating '\0'.
 ) {
     TRACE("Executing host_header_is_numeric()");
-    // An empty netaddress or an unspecified one is not valid.
     if (a_host_port_len == 0 || strncmp(a_host_port, "[::]", 4) == 0 ||
         strncmp(a_host_port, "0.0.0.0", 7) == 0)
         return 0;
@@ -173,6 +176,7 @@ int host_header_is_numeric(
  *   On success: **true**\n
  *   On error: **false**, The result buffer remains unmodified.
  */
+// No unit test needed. It's tested with SSockaddr.
 int getNumericHostRedirection(
     SOCKET a_socket,   ///< [in] Socket file descriptor.
     char* a_host_port, ///< [out] Pointer to buffer that will be filled.
@@ -439,7 +443,7 @@ void fdset_if_valid( //
                      \p \::select(). The structure is modified as documented for
                      \p \::select(). */
 ) {
-    TRACE("Executing fdset_if_valid()")
+    UPNPLIB_LOGINFO "MSG1086: Check sockfd=" << a_sock << ".\n";
     if (a_sock == INVALID_SOCKET)
         // This is a defined state and we return silently.
         return;
@@ -615,13 +619,19 @@ int receive_from_stopSock(
  * \brief Run the miniserver.
  *
  * The MiniServer accepts a new request and schedules a thread to handle the
- * new request. Checks for socket state and invokes appropriate read and
- * shutdown actions for the Miniserver and SSDP sockets.
+ * new request. It checks for socket state and invokes appropriate read and
+ * shutdown actions for the Miniserver and SSDP sockets. This function itself
+ * runs in its own thread.
+ *
+ * \attention The miniSock parameter must be allocated on the heap before
+ * calling the function because it is freed by it.
  */
 void RunMiniServer(
-    /*! [in] Pointer to a Socket Array. */
+    /*! [in] Pointer to an Array containing valid sockets associated with
+       different tasks like listen on a local interface for requests from
+       control points or handle ssdp communication to a remote UPnP node. */
     MiniServerSockArray* miniSock) {
-    TRACE("Executing RunMiniServer()")
+    UPNPLIB_LOGINFO "MSG1085: Executing...\n";
     fd_set expSet;
     fd_set rdSet;
     int stopSock = 0;
@@ -770,7 +780,7 @@ int get_port(
     SOCKET sockfd,
     /*! [out] The port value if successful, otherwise, untouched. */
     uint16_t* port) {
-    TRACE("Executing get_port(), calls system getsockname()")
+    TRACE("Executing get_port(), calls system ::getsockname()")
     upnplib::sockaddr_t sockinfo{};
     socklen_t len(sizeof sockinfo); // May be modified by getsockname()
 
@@ -796,24 +806,24 @@ int get_port(
 /*!
  * \brief Get valid sockets.
  *
- * An empty text_addr will be translated to a valid sock addr = 0 that
- * binds to all local ip addresses.
- *
- * \return 1 or WSANOTINITIALISED on error, 0 if successful.
+ * \returns
+ *  On success: **0**\n
+ *  On error: **1**
  */
 int init_socket_suff(s_SocketStuff* s, const char* text_addr, int ip_version) {
-    UPNPLIB_LOGINFO "MSG1067: Executing with text_addr=\""
+    UPNPLIB_LOGINFO "MSG1067: Executing with ip_address=\""
         << text_addr << "\", ip_version=" << ip_version << ".\n";
     int sockError;
-    sa_family_t domain;
-    void* addr; // This holds a pointer to sin_addr, not a value
+    sa_family_t domain{0};
+    void* addr; // This holds a pointer to sin_addr
     int reuseaddr_on = MINISERVER_REUSEADDR;
+    upnplib::CSocketError sockerrObj;
 
     memset(s, 0, sizeof *s);
     s->fd = INVALID_SOCKET;
     s->ip_version = ip_version;
     s->text_addr = text_addr;
-    s->serverAddr = (struct sockaddr*)&s->ss;
+    s->serverAddr = (sockaddr*)&s->ss;
     switch (ip_version) {
     case 4:
         domain = AF_INET;
@@ -834,35 +844,29 @@ int init_socket_suff(s_SocketStuff* s, const char* text_addr, int ip_version) {
     }
 
     if (inet_pton(domain, text_addr, addr) <= 0) {
-        UPNPLIB_LOGERR "MSG1051: Invalid ip address: \"" << text_addr
+        UPNPLIB_LOGERR "MSG1051: Invalid ip_address: \"" << text_addr
                                                          << "\".\n";
+        // Here we also meet an empty ("") ip_address.
         goto error;
     }
     s->fd = umock::sys_socket_h.socket(domain, SOCK_STREAM, 0);
 
     if (s->fd == INVALID_SOCKET) {
-#ifdef _WIN32
-        int errval = umock::winsock2_h.WSAGetLastError();
-        if (errval == WSANOTINITIALISED)
-            UPNPLIB_LOGCRIT "MSG1052: WSAStartup() wasn't called to initialize "
-                            "use of sockets.\n";
-        else
-            UPNPLIB_LOGCRIT "MSG1053: WSAGetLastError() returned " << errval
-                                                                   << ".\n";
-#else
-        UPNPLIB_LOGERR "MSG1054: IPv"
-            << ip_version << " socket not available: " << std::strerror(errno)
-            << ".\n";
-#endif
+        sockerrObj.catch_error();
+        UPNPLIB_LOGCRIT "MSG1054: IPv"
+            << ip_version
+            << " socket not available: " << sockerrObj.get_error_str() << ".\n";
         goto error;
+
     } else if (ip_version == 6) {
         int onOff = 1;
 
         sockError = umock::sys_socket_h.setsockopt(
             s->fd, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&onOff, sizeof(onOff));
         if (sockError == SOCKET_ERROR) {
-            UPNPLIB_LOGERR "MSG1055: unable to set IPv6 socket protocol: "
-                << std::strerror(errno) << ".\n";
+            sockerrObj.catch_error();
+            UPNPLIB_LOGCRIT "MSG1055: unable to set IPv6 socket protocol: "
+                << sockerrObj.get_error_str() << ".\n";
             goto error;
         }
     }
@@ -876,8 +880,9 @@ int init_socket_suff(s_SocketStuff* s, const char* text_addr, int ip_version) {
             s->fd, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuseaddr_on,
             sizeof(int));
         if (sockError == SOCKET_ERROR) {
+            sockerrObj.catch_error();
             UPNPLIB_LOGERR "MSG1056: unable to set SO_REUSEADDR: "
-                << std::strerror(errno) << ".\n";
+                << sockerrObj.get_error_str() << ".\n";
             goto error;
         }
     }
@@ -911,7 +916,7 @@ error:
 int do_bind(         //
     s_SocketStuff* s ///< [in] Information for the socket.
 ) {
-    TRACE("Executing do_bind()")
+    UPNPLIB_LOGINFO "MSG1026: Executing...\n";
     int ret_val{UPNP_E_SUCCESS};
     int bind_error;
     uint16_t original_listen_port = s->try_port;
@@ -959,16 +964,15 @@ int do_bind(         //
     } while (repeat_do && s->try_port >= original_listen_port);
 
     if (bind_error != 0) {
-        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                   "do_bind(): "
 #ifdef _MSC_VER
-                   "Error with IPv%d returned from ::bind() = %d.\n",
-                   s->ip_version, umock::winsock2_h.WSAGetLastError()
+        UPNPLIB_LOGERR "MSG1029: Error with IPv"
+            << s->ip_version << " returned from ::bind() = "
+            << umock::winsock2_h.WSAGetLastError() << ".\n";
 #else
-                   "Error with IPv%d returned from ::bind() = %s.\n",
-                   s->ip_version, std::strerror(errno)
+        UPNPLIB_LOGERR "MSG1032: Error with IPv"
+            << s->ip_version
+            << " returned from ::bind() = " << std::strerror(errno) << ".\n";
 #endif
-        );
         /* Bind failed. */
         ret_val = UPNP_E_SOCKET_BIND;
         goto error;
@@ -994,7 +998,7 @@ error:
 int do_listen(       //
     s_SocketStuff* s ///< [in] Information for the socket.
 ) {
-    TRACE("Executing do_listen()")
+    UPNPLIB_LOGINFO "MSG1052: Executing...\n";
     int ret_val;
     int listen_error;
     int port_error;
@@ -1029,7 +1033,7 @@ error:
  *
  * \returns
  *  On success: UPNP_E_SUCCESS\n
- *  On error: 1 or WSANOTINITIALISED
+ *  On error: 1
  */
 int do_reinit(       //
     s_SocketStuff* s ///< [in] Information for the socket.
@@ -1087,7 +1091,7 @@ error:
 
 /*!
  * \brief Creates a STREAM socket, binds to INADDR_ANY and listens for incoming
- * connecttions.
+ * connections.
  *
  * Returns the actual port which the sockets sub-system returned. Also creates a
  * DGRAM socket, binds to the loop back address and returns the port allocated
@@ -1103,18 +1107,20 @@ error:
  *  - UPNP_E_INTERNAL_ERROR - Port returned by the socket layer is < 0.
  */
 int get_miniserver_sockets(
-    /*! [in] Socket Array. */
+    /*! [out] Pointer to a Socket Array that will be filled. */
     MiniServerSockArray* out,
     /*! [in] port on which the server is listening for incoming IPv4
      * connections. */
-    uint16_t listen_port4,
+    in_port_t listen_port4,
     /*! [in] port on which the server is listening for incoming IPv6
      * ULA connections. */
-    uint16_t listen_port6,
+    in_port_t listen_port6,
     /*! [in] port on which the server is listening for incoming
      * IPv6 ULA or GUA connections. */
-    uint16_t listen_port6UlaGua) {
-    UPNPLIB_LOGINFO "MSG1064: Executing...\n";
+    in_port_t listen_port6UlaGua) {
+    UPNPLIB_LOGINFO "MSG1064: Executing with listen_port4="
+        << listen_port4 << ", listen_port6=" << listen_port6
+        << ", listen_port6UlaGua=" << listen_port6UlaGua << ".\n";
     int ret_val{UPNP_E_INTERNAL_ERROR};
     int err_init_4;
     int err_init_6;
@@ -1137,9 +1143,8 @@ int get_miniserver_sockets(
         goto error;
     }
 #endif
-    if (err_init_4 && (err_init_6 || err_init_6UlaGua)) {
-        UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
-                   "get_miniserver_sockets: no protocols available\n");
+    if (err_init_4 && err_init_6 && err_init_6UlaGua) {
+        UPNPLIB_LOGERR "MSG1070: No suitable ip protocol stack available.\n";
         ret_val = UPNP_E_OUTOF_SOCKET;
         goto error;
     }
@@ -1159,12 +1164,14 @@ int get_miniserver_sockets(
     ss6.try_port = listen_port6;
     ss6UlaGua.try_port = listen_port6UlaGua;
     if (MINISERVER_REUSEADDR) {
-        /* THIS IS ALLOWS US TO BIND AGAIN IMMEDIATELY
-         * AFTER OUR SERVER HAS BEEN CLOSED
-         * THIS MAY CAUSE TCP TO BECOME LESS RELIABLE
-         * HOWEVER IT HAS BEEN SUGESTED FOR TCP SERVERS. */
-        UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-                   "get_miniserver_sockets: resuseaddr is set.\n");
+        /* THIS ALLOWS US TO BIND AGAIN IMMEDIATELY AFTER OUR SERVER HAS BEEN
+         * CLOSED THIS MAY CAUSE TCP TO BECOME LESS RELIABLE HOWEVER IT HAS BEEN
+         * SUGESTED FOR TCP SERVERS. On UPnPlib I do not REUSEADDR in general
+         * due to security issues. Instead I use another netaddress that is
+         * already given by another port on the same ip_address. --Ingo */
+        UPNPLIB_LOGCRIT "MSG1069: REUSEADDR is set. This is not supported.\n";
+        ret_val = UPNP_E_OUTOF_SOCKET;
+        goto error;
     }
     if (ss4.fd != INVALID_SOCKET) {
         ret_val = do_bind_listen(&ss4);
@@ -1224,10 +1231,10 @@ error:
 int get_miniserver_stopsock(
     /*! [in] Miniserver Socket Array. */
     MiniServerSockArray* out) {
-    TRACE("Executing get_miniserver_stopsock()")
+    UPNPLIB_LOGINFO "MSG1053: Executing...\n";
     struct sockaddr_in stop_sockaddr;
-    SOCKET miniServerStopSock = 0;
-    int ret = 0;
+    SOCKET miniServerStopSock{INVALID_SOCKET};
+    int ret{0};
 
     miniServerStopSock = umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (miniServerStopSock == INVALID_SOCKET) {
@@ -1265,7 +1272,7 @@ int get_miniserver_stopsock(
 void InitMiniServerSockArray(
     MiniServerSockArray* miniSocket ///< Pointer to a miniserver Socket Array.
 ) {
-    TRACE("Executing InitMiniServerSockArray()")
+    TRACE("Executing InitMiniServerSockArray()");
     miniSocket->miniServerSock4 = INVALID_SOCKET;
     miniSocket->miniServerSock6 = INVALID_SOCKET;
     miniSocket->miniServerSock6UlaGua = INVALID_SOCKET;
@@ -1305,19 +1312,16 @@ int StartMiniServer([[maybe_unused]] in_port_t* listen_port4,
                     [[maybe_unused]] in_port_t* listen_port6,
                     [[maybe_unused]] in_port_t* listen_port6UlaGua) {
     UPNPLIB_LOGINFO "MSG1068: Executing...\n";
-    int ret_code;
-    int count;
-    int max_count = 10000;
+    constexpr int max_count{10000};
     MiniServerSockArray* miniSocket;
     ThreadPoolJob job;
+    int ret_code{UPNP_E_INTERNAL_ERROR};
 
     memset(&job, 0, sizeof(job));
 
-    switch (gMServState) {
-    case MSERV_IDLE:
-        break;
-    default:
+    if (gMServState != MSERV_IDLE) {
         /* miniserver running. */
+        UPNPLIB_LOGERR "MSG1087: Cannot start. Miniserver is running.\n";
         return UPNP_E_INTERNAL_ERROR;
     }
     miniSocket = (MiniServerSockArray*)malloc(sizeof(MiniServerSockArray));
@@ -1380,7 +1384,7 @@ int StartMiniServer([[maybe_unused]] in_port_t* listen_port4,
     TPJobSetPriority(&job, MED_PRIORITY);
     TPJobSetFreeFunction(&job, (free_routine)free);
     ret_code = ThreadPoolAddPersistent(&gMiniServerThreadPool, &job, NULL);
-    if (ret_code < 0) {
+    if (ret_code != 0) {
         sock_close(miniSocket->miniServerSock4);
         sock_close(miniSocket->miniServerSock6);
         sock_close(miniSocket->miniServerSock6UlaGua);
@@ -1396,7 +1400,7 @@ int StartMiniServer([[maybe_unused]] in_port_t* listen_port4,
         return UPNP_E_OUTOF_MEMORY;
     }
     /* Wait for miniserver to start. */
-    count = 0;
+    int count{0};
     while (gMServState != (MiniServerState)MSERV_RUNNING && count < max_count) {
         /* 0.05s */
         imillisleep(50);

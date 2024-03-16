@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-12
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-18
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -174,16 +174,16 @@ char gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN] = {'\0'};
 unsigned gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
 
 /*! \brief Contains network interface index. */
-unsigned gIF_INDEX = (unsigned)-1;
+unsigned gIF_INDEX = ~0u; // Use complement of 0 because 0 is a valid if_index.
 
 /*! \brief local IPv4 port for the mini-server */
-unsigned short LOCAL_PORT_V4;
+in_port_t LOCAL_PORT_V4;
 
 /*! \brief IPv6 LLA port for the mini-server */
-unsigned short LOCAL_PORT_V6;
+in_port_t LOCAL_PORT_V6;
 
 /*! \brief IPv6 ULA or GUA port for the mini-server */
-unsigned short LOCAL_PORT_V6_ULA_GUA;
+in_port_t LOCAL_PORT_V6_ULA_GUA;
 
 /*! \brief UPnP device and control point handle table  */
 static Handle_Info* HandleTable[NUM_HANDLE];
