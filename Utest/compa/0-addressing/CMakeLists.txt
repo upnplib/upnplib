@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-03-10
+# Redistribution only with this Copyright remark. Last modified: 2024-03-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -120,6 +120,10 @@ add_executable(test_miniserver-pst
 )
 target_include_directories(test_miniserver-pst
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+)
+target_compile_definitions(test_miniserver-pst
+    PRIVATE INCLUDE_DEVICE_APIS
+    PRIVATE INCLUDE_CLIENT_APIS
 )
 target_link_libraries(test_miniserver-pst
     PRIVATE

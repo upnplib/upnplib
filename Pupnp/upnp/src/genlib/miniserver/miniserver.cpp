@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-09-26
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-20
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -70,8 +70,9 @@
 #include <algorithm> // for std::max()
 
 #include <umock/sys_socket.hpp>
-#include <umock/stdlib.hpp>
 #include <umock/winsock2.hpp>
+#include <umock/stdlib.hpp>
+#include <umock/pupnp_miniserver.hpp>
 
 /*! . */
 #define APPLICATION_LISTENING_PORT 49152
@@ -630,6 +631,11 @@ static void RunMiniServer(
     return;
 }
 
+void RunMiniServer_f(MiniServerSockArray* miniSock) {
+    umock::pupnp_miniserver.RunMiniServer(miniSock);
+}
+
+
 /*!
  * \brief Returns port to which socket, sockfd, is bound.
  *
@@ -1133,7 +1139,7 @@ int StartMiniServer(
         free(miniSocket);
         return ret_code;
     }
-    TPJobInit(&job, (start_routine)RunMiniServer, (void*)miniSocket);
+    TPJobInit(&job, (start_routine)RunMiniServer_f, (void*)miniSocket);
     TPJobSetPriority(&job, MED_PRIORITY);
     TPJobSetFreeFunction(&job, (free_routine)free);
     ret_code = ThreadPoolAddPersistent(&gMiniServerThreadPool, &job, NULL);

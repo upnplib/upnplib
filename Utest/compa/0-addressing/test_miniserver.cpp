@@ -5,6 +5,9 @@
 // tests are skipped and must be completed when missed information is
 // available.
 
+#include <miniserver.hpp>
+#include <umock/pupnp_miniserver_mock.hpp>
+
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
@@ -229,22 +232,15 @@ TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv6_lla_addr) {
     LOCAL_PORT_V6_ULA_GUA = 0;
 }
 
-TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv6_ula_gua_addr) {
-#ifdef _MSC_VER
-    if (github_actions)
-        GTEST_SKIP() << "             TODO: Rework needed for MS Windowws.";
-#endif
+ACTION_P(set_gMServState, value) { gMServState = value; }
 
+TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv6_ula_gua_addr) {
     CLogging logObj; // Output only with build type DEBUG.
     if (g_dbug)
         logObj.enable(UPNP_ALL);
 
-    gMServState = MSERV_IDLE;
-
-    // Prevent to shedule a thread with 'RunMiniServer()'. I only test to start
-    // the miniserver. Testing 'RunMiniServer()' only is done isolated.
     CThreadPoolInit tp(gMiniServerThreadPool);
-    TPAttrSetMaxThreads(&gMiniServerThreadPool.attr, 0);
+    // TPAttrSetMaxThreads(&gMiniServerThreadPool.attr, 0);
 
     gIF_IPV4[0] = '\0';
     gIF_IPV6[0] = '\0';
@@ -272,12 +268,18 @@ TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv6_ula_gua_addr) {
         .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
     ON_CALL(m_sys_socketObj, listen(_, _))
         .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+    ON_CALL(m_sys_socketObj, select(_, _, _, _, _))
+        .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
     ON_CALL(m_sys_socketObj, getsockopt(_, _, _, _, _))
         .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
     ON_CALL(m_sys_socketObj, setsockopt(_, _, _, _, _))
         .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
     ON_CALL(m_sys_socketObj, getsockname(_, _, _))
         .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+
+    StrictMock<umock::PupnpMiniServerMock> miniserverObj;
+    umock::PupnpMiniServer miniserver_injectObj =
+        umock::PupnpMiniServer(&miniserverObj);
 
     { // begin scope InSequence
         InSequence seq;
@@ -340,6 +342,10 @@ TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv6_ula_gua_addr) {
         EXPECT_CALL(m_sys_socketObj,
                     setsockopt(ssdp_sockfd, SOL_SOCKET, SO_BROADCAST, _, _))
             .WillOnce(Return(0));
+
+        EXPECT_CALL(miniserverObj, RunMiniServer(_))
+            .WillOnce(set_gMServState(MSERV_RUNNING));
+
 #endif
     } // end scope InSequence
 
@@ -358,8 +364,8 @@ TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv6_ula_gua_addr) {
 
     } else {
 
-        EXPECT_EQ(ret_StartMiniServer, UPNP_E_OUTOF_MEMORY)
-            << errStrEx(ret_StartMiniServer, UPNP_E_OUTOF_MEMORY);
+        EXPECT_EQ(ret_StartMiniServer, UPNP_E_SUCCESS)
+            << errStrEx(ret_StartMiniServer, UPNP_E_SUCCESS);
     }
 }
 

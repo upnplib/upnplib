@@ -58,6 +58,8 @@
 #include <umock/sys_socket.hpp>
 #include <umock/winsock2.hpp>
 #include <umock/stdlib.hpp>
+#include <umock/pupnp_miniserver.hpp>
+
 
 /// \cond
 #include <cstring>
@@ -631,7 +633,6 @@ void RunMiniServer(
        different tasks like listen on a local interface for requests from
        control points or handle ssdp communication to a remote UPnP node. */
     MiniServerSockArray* miniSock) {
-    UPNPLIB_LOGINFO "MSG1085: Executing...\n";
     fd_set expSet;
     fd_set rdSet;
     int stopSock = 0;
@@ -769,6 +770,12 @@ void RunMiniServer(
 
     return;
 }
+
+void RunMiniServer_f(MiniServerSockArray* miniSock) {
+    UPNPLIB_LOGINFO "MSG1085: Executing...\n";
+    umock::pupnp_miniserver.RunMiniServer(miniSock);
+}
+
 
 /*!
  * \brief Returns port to which socket, sockfd, is bound.
@@ -1380,7 +1387,7 @@ int StartMiniServer([[maybe_unused]] in_port_t* listen_port4,
         return ret_code;
     }
 #endif
-    TPJobInit(&job, (start_routine)RunMiniServer, (void*)miniSocket);
+    TPJobInit(&job, (start_routine)RunMiniServer_f, (void*)miniSocket);
     TPJobSetPriority(&job, MED_PRIORITY);
     TPJobSetFreeFunction(&job, (free_routine)free);
     ret_code = ThreadPoolAddPersistent(&gMiniServerThreadPool, &job, NULL);
