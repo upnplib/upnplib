@@ -947,7 +947,8 @@ INPUT                  = README.md \
                          Pupnp/directory.dox \
                          docs \
                          Upnplib \
-                         Compa
+                         Compa \
+                         sample/api_samples.cpp
 #
 # delete Compa/inc/UpnpGlobal.hpp
 # delete Compa/inc/UpnpInet.hpp

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-20
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-21
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,6 +59,7 @@
 #include <umock/winsock2.hpp>
 #include <umock/stdlib.hpp>
 #include <umock/pupnp_miniserver.hpp>
+#include <umock/pupnp_ssdp.hpp>
 
 
 /// \cond
@@ -1377,7 +1378,7 @@ int StartMiniServer([[maybe_unused]] in_port_t* listen_port4,
     }
 #if defined(COMPA_HAVE_CTRLPT_SSDP) || defined(COMPA_HAVE_DEVICE_SSDP)
     /* SSDP socket for discovery/advertising. */
-    ret_code = get_ssdp_sockets(miniSocket);
+    ret_code = umock::pupnp_ssdp.get_ssdp_sockets(miniSocket);
     if (ret_code != UPNP_E_SUCCESS) {
         sock_close(miniSocket->miniServerSock4);
         sock_close(miniSocket->miniServerSock6);

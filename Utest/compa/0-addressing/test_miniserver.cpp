@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-03-20
+// Redistribution only with this Copyright remark. Last modified: 2024-03-21
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -7,6 +7,7 @@
 
 #include <miniserver.hpp>
 #include <umock/pupnp_miniserver_mock.hpp>
+#include <umock/pupnp_ssdp_mock.hpp>
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -115,6 +116,63 @@ be recieved by select() so it will always enable a blocking (waiting) select().
 
 // Miniserver TestSuite
 // ====================
+ACTION_P(set_gMServState, value) { gMServState = value; }
+ACTION_P(debugCoutMsg, msg) {
+    if (g_dbug)
+        std::cout << msg << std::flush;
+}
+
+class StartMiniServerMockFTestSuite : public ::testing::Test {
+  protected:
+    CLogging logObj; // Output only with build type DEBUG.
+
+    // clang-format off
+    // Instantiate mocking objects.
+    StrictMock<umock::Sys_socketMock> m_sys_socketObj;
+    // Inject the mocking objects into the tested code.
+    umock::Sys_socket sys_socket_injectObj = umock::Sys_socket(&m_sys_socketObj);
+
+    StrictMock<umock::PupnpMiniServerMock> miniserverObj;
+    umock::PupnpMiniServer miniserver_injectObj = umock::PupnpMiniServer(&miniserverObj);
+#ifdef _MSC_VER
+    StrictMock<umock::Winsock2Mock> m_winsock2Obj;
+    umock::Winsock2 winsock2_injectObj = umock::Winsock2(&m_winsock2Obj);
+#endif
+    // clang-format on
+
+    // Constructor
+    StartMiniServerMockFTestSuite() {
+        if (g_dbug)
+            logObj.enable(UPNP_ALL);
+
+        gIF_IPV4[0] = '\0';
+        gIF_IPV6[0] = '\0';
+        gIF_IPV6_ULA_GUA[0] = '\0';
+        LOCAL_PORT_V4 = 0;
+        LOCAL_PORT_V6 = 0;
+        LOCAL_PORT_V6_ULA_GUA = 0;
+        gMServState = MSERV_IDLE;
+
+        // Set default socket object values
+        ON_CALL(m_sys_socketObj, socket(_, _, _))
+            .WillByDefault(SetErrnoAndReturn(EACCES, SOCKET_ERROR));
+        ON_CALL(m_sys_socketObj, bind(_, _, _))
+            .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+        ON_CALL(m_sys_socketObj, listen(_, _))
+            .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+        ON_CALL(m_sys_socketObj, select(_, _, _, _, _))
+            .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+        ON_CALL(m_sys_socketObj, getsockopt(_, _, _, _, _))
+            .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+        ON_CALL(m_sys_socketObj, setsockopt(_, _, _, _, _))
+            .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+        ON_CALL(m_sys_socketObj, getsockname(_, _, _))
+            .WillByDefault(SetErrnoAndReturn(EBADF, SOCKET_ERROR));
+        ON_CALL(miniserverObj, RunMiniServer(_))
+            .WillByDefault(set_gMServState(MSERV_IDLE));
+    }
+};
+
 class MiniServerFTestSuite : public ::testing::Test {
   protected:
     // clang-format off
@@ -183,21 +241,9 @@ TEST(StartMiniServerTestSuite, StartMiniServer_real) {
 #endif
 
 
-TEST(StartMiniServerTestSuite, start_miniserver_with_no_ip_addr) {
-    CLogging logObj; // Output only with build type DEBUG.
-    if (g_dbug)
-        logObj.enable(UPNP_ALL);
-
-    gMServState = MSERV_IDLE;
-
+TEST_F(StartMiniServerMockFTestSuite, start_miniserver_with_no_ip_addr) {
     // Not having a valid local ip_address on all interfaces will fail to start
     // the miniserver.
-    gIF_IPV4[0] = '\0';
-    gIF_IPV6[0] = '\0';
-    gIF_IPV6_ULA_GUA[0] = '\0';
-    LOCAL_PORT_V4 = 0;
-    LOCAL_PORT_V6 = 0;
-    LOCAL_PORT_V6_ULA_GUA = 0;
 
     // Test Unit
     int ret_StartMiniServer =
@@ -206,17 +252,76 @@ TEST(StartMiniServerTestSuite, start_miniserver_with_no_ip_addr) {
         << errStrEx(ret_StartMiniServer, UPNP_E_OUTOF_SOCKET);
 }
 
-TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv4_addr) {
-    GTEST_SKIP() << "TODO: Test must be created.";
-
-    gMServState = MSERV_IDLE;
-
+TEST_F(StartMiniServerMockFTestSuite, start_miniserver_with_one_ipv4_addr) {
     std::strcpy(gIF_IPV4, "192.168.47.11");
-    gIF_IPV6[0] = '\0';
-    gIF_IPV6_ULA_GUA[0] = '\0';
     LOCAL_PORT_V4 = 50071;
-    LOCAL_PORT_V6 = 0;
-    LOCAL_PORT_V6_ULA_GUA = 0;
+    constexpr SOCKET listen_sockfd{umock::sfd_base + 86};
+    constexpr SOCKET stop_sockfd{umock::sfd_base + 87};
+
+    SSockaddr listen_ssObj; // for getsockname() return sockaddr & port
+    listen_ssObj = std::string(gIF_IPV4) + ":" + std::to_string(LOCAL_PORT_V4);
+    SSockaddr stop_ssObj;
+    stop_ssObj = "127.0.0.1:54347";
+
+    StrictMock<umock::PupnpSsdpMock> ssdpObj;
+    umock::PupnpSsdp ssdp_injectObj = umock::PupnpSsdp(&ssdpObj);
+
+    { // begin scope InSequence
+        InSequence seq;
+
+        // Provide a socket id for listening.
+        EXPECT_CALL(m_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
+            .WillOnce(Return(listen_sockfd));
+        // Bind socket to an ip address for listening
+        EXPECT_CALL(m_sys_socketObj, bind(listen_sockfd, _, _))
+            .WillOnce(Return(0));
+        // Listen on a socket
+        EXPECT_CALL(m_sys_socketObj, listen(listen_sockfd, SOMAXCONN))
+            .WillOnce(Return(0));
+        // getsockname() for listening
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockname(listen_sockfd, _,
+                                Pointee(Ge(static_cast<socklen_t>(
+                                    sizeof(sockaddr_in))))))
+            .WillOnce(DoAll(SetArgPointee<1>(
+                                *reinterpret_cast<sockaddr*>(&listen_ssObj.ss)),
+                            Return(0)));
+
+        // Provide a socket id for the stop socket.
+        EXPECT_CALL(m_sys_socketObj, socket(AF_INET, SOCK_DGRAM, 0))
+            .WillOnce(Return(stop_sockfd));
+        // Bind socket to an ip address for the stop socket
+        EXPECT_CALL(m_sys_socketObj, bind(stop_sockfd, _, _))
+            .WillOnce(Return(0));
+        // getsockname() for stop socket
+        EXPECT_CALL(m_sys_socketObj,
+                    getsockname(stop_sockfd, _,
+                                Pointee(Ge(static_cast<socklen_t>(
+                                    sizeof(sockaddr_in))))))
+            .WillOnce(DoAll(
+                SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&stop_ssObj.ss)),
+                Return(0)));
+
+        // Mock get_ssdp_sockets
+        EXPECT_CALL(ssdpObj, get_ssdp_sockets(_))
+            .WillOnce(DoAll(debugCoutMsg("UPnPlib [int get_ssdp_sockets()] "
+                                         "MOCK MSG1088: Executing...\n"),
+                            Return(UPNP_E_SUCCESS)));
+
+        // Mock RunMiniServer
+        EXPECT_CALL(miniserverObj, RunMiniServer(_))
+            .WillOnce(set_gMServState(MSERV_RUNNING));
+    } // end scope InSequence
+
+    // We need the threadpool to RunMiniServer().
+    CThreadPoolInit tp(gMiniServerThreadPool);
+    // TPAttrSetMaxThreads(&gMiniServerThreadPool.attr, 0);
+
+    // Test Unit
+    int ret_StartMiniServer =
+        StartMiniServer(&LOCAL_PORT_V4, &LOCAL_PORT_V6, &LOCAL_PORT_V6_ULA_GUA);
+    EXPECT_EQ(ret_StartMiniServer, UPNP_E_SUCCESS)
+        << errStrEx(ret_StartMiniServer, UPNP_E_SUCCESS);
 }
 
 TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv6_lla_addr) {
@@ -232,15 +337,10 @@ TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv6_lla_addr) {
     LOCAL_PORT_V6_ULA_GUA = 0;
 }
 
-ACTION_P(set_gMServState, value) { gMServState = value; }
-
 TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv6_ula_gua_addr) {
     CLogging logObj; // Output only with build type DEBUG.
     if (g_dbug)
         logObj.enable(UPNP_ALL);
-
-    CThreadPoolInit tp(gMiniServerThreadPool);
-    // TPAttrSetMaxThreads(&gMiniServerThreadPool.attr, 0);
 
     gIF_IPV4[0] = '\0';
     gIF_IPV6[0] = '\0';
@@ -303,7 +403,8 @@ TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv6_ula_gua_addr) {
                     getsockname(listen_sockfd, _,
                                 Pointee(Ge(static_cast<socklen_t>(
                                     sizeof(sockaddr_in6))))))
-            .WillOnce(DoAll(SetArgPointee<1>(*(sockaddr*)&listen_ssObj.ss),
+            .WillOnce(DoAll(SetArgPointee<1>(
+                                *reinterpret_cast<sockaddr*>(&listen_ssObj.ss)),
                             Return(0)));
 
         // Provide a socket id for the stop socket.
@@ -317,8 +418,9 @@ TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv6_ula_gua_addr) {
                     getsockname(stop_sockfd, _,
                                 Pointee(Ge(static_cast<socklen_t>(
                                     sizeof(sockaddr_in))))))
-            .WillOnce(
-                DoAll(SetArgPointee<1>(*(sockaddr*)&stop_ssObj.ss), Return(0)));
+            .WillOnce(DoAll(
+                SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&stop_ssObj.ss)),
+                Return(0)));
 
         // Manage create_ssdp_sock_v6_ula_gua().
         EXPECT_CALL(m_sys_socketObj, socket(AF_INET6, SOCK_DGRAM, 0))
@@ -343,11 +445,15 @@ TEST_F(StartMiniServerFTestSuite, start_miniserver_with_one_ipv6_ula_gua_addr) {
                     setsockopt(ssdp_sockfd, SOL_SOCKET, SO_BROADCAST, _, _))
             .WillOnce(Return(0));
 
+        // Mock RunMiniServer
         EXPECT_CALL(miniserverObj, RunMiniServer(_))
             .WillOnce(set_gMServState(MSERV_RUNNING));
-
 #endif
     } // end scope InSequence
+
+    // We need the threadpool to RunMiniServer().
+    CThreadPoolInit tp(gMiniServerThreadPool);
+    // TPAttrSetMaxThreads(&gMiniServerThreadPool.attr, 0);
 
     // Test Unit
     int ret_StartMiniServer =

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-20
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -73,6 +73,7 @@
 #include <umock/winsock2.hpp>
 #include <umock/stdlib.hpp>
 #include <umock/pupnp_miniserver.hpp>
+#include <umock/pupnp_ssdp.hpp>
 
 /*! . */
 #define APPLICATION_LISTENING_PORT 49152
@@ -1130,7 +1131,7 @@ int StartMiniServer(
         return ret_code;
     }
     /* SSDP socket for discovery/advertising. */
-    ret_code = get_ssdp_sockets(miniSocket);
+    ret_code = umock::pupnp_ssdp.get_ssdp_sockets(miniSocket);
     if (ret_code != UPNP_E_SUCCESS) {
         sock_close(miniSocket->miniServerSock4);
         sock_close(miniSocket->miniServerSock6);

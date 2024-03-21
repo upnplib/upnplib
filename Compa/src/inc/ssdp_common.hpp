@@ -8,7 +8,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-06
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -232,7 +232,7 @@ UPNPLIB_API int readFromSSDPSocket(
  *  - UPNP_E_SOCKET_BIND
  *  - UPNP_E_NETWORK_ERROR
  */
-UPNPLIB_API int get_ssdp_sockets(
+int get_ssdp_sockets(
     /*! [out] Array of SSDP sockets. */
     MiniServerSockArray* out);
 
