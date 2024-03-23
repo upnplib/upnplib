@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-21
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-24
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -634,6 +634,7 @@ void RunMiniServer(
        different tasks like listen on a local interface for requests from
        control points or handle ssdp communication to a remote UPnP node. */
     MiniServerSockArray* miniSock) {
+    UPNPLIB_LOGINFO "MSG1085: Executing...\n";
     fd_set expSet;
     fd_set rdSet;
     int stopSock = 0;
@@ -773,7 +774,6 @@ void RunMiniServer(
 }
 
 void RunMiniServer_f(MiniServerSockArray* miniSock) {
-    UPNPLIB_LOGINFO "MSG1085: Executing...\n";
     umock::pupnp_miniserver.RunMiniServer(miniSock);
 }
 
@@ -861,9 +861,9 @@ int init_socket_suff(s_SocketStuff* s, const char* text_addr, int ip_version) {
 
     if (s->fd == INVALID_SOCKET) {
         sockerrObj.catch_error();
-        UPNPLIB_LOGCRIT "MSG1054: IPv"
+        UPNPLIB_LOGERR "MSG1054: IPv"
             << ip_version
-            << " socket not available: " << sockerrObj.get_error_str() << ".\n";
+            << " socket not available: " << sockerrObj.get_error_str() << "\n";
         goto error;
 
     } else if (ip_version == 6) {
@@ -874,7 +874,7 @@ int init_socket_suff(s_SocketStuff* s, const char* text_addr, int ip_version) {
         if (sockError == SOCKET_ERROR) {
             sockerrObj.catch_error();
             UPNPLIB_LOGCRIT "MSG1055: unable to set IPv6 socket protocol: "
-                << sockerrObj.get_error_str() << ".\n";
+                << sockerrObj.get_error_str() << "\n";
             goto error;
         }
     }
@@ -890,7 +890,7 @@ int init_socket_suff(s_SocketStuff* s, const char* text_addr, int ip_version) {
         if (sockError == SOCKET_ERROR) {
             sockerrObj.catch_error();
             UPNPLIB_LOGERR "MSG1056: unable to set SO_REUSEADDR: "
-                << sockerrObj.get_error_str() << ".\n";
+                << sockerrObj.get_error_str() << "\n";
             goto error;
         }
     }
@@ -1145,14 +1145,9 @@ int get_miniserver_sockets(
     err_init_6UlaGua = init_socket_suff(&ss6UlaGua, gIF_IPV6_ULA_GUA, 6);
     ss6.serverAddr6->sin6_scope_id = gIF_INDEX;
     /* Check what happened. */
-#ifdef _WIN32
-    if (err_init_4 == WSANOTINITIALISED) {
-        ret_val = UPNP_E_INIT_FAILED;
-        goto error;
-    }
-#endif
     if (err_init_4 && err_init_6 && err_init_6UlaGua) {
-        UPNPLIB_LOGERR "MSG1070: No suitable ip protocol stack available.\n";
+        UPNPLIB_LOGCRIT
+        "MSG1070: No suitable IPv4 or IPv6 protocol stack available.\n";
         ret_val = UPNP_E_OUTOF_SOCKET;
         goto error;
     }
@@ -1227,39 +1222,47 @@ error:
 #endif /* COMPA_HAVE_WEBSERVER */
 
 /*!
- * \brief Creates the miniserver STOP socket. This socket is created and
- *  listened on to know when it is time to stop the Miniserver.
+ * \brief Creates the miniserver STOP socket, usable to listen for stopping the
+ * miniserver.
  *
- * \return
- * \li \c UPNP_E_OUTOF_SOCKET: Failed to create a socket.
- * \li \c UPNP_E_SOCKET_BIND: Bind() failed.
- * \li \c UPNP_E_INTERNAL_ERROR: Port returned by the socket layer is < 0.
- * \li \c UPNP_E_SUCCESS: Success.
+ * This datagram socket is created and bound to "localhost". It does not listen
+ * now but will later be used to listen on to know when it is time to stop the
+ * Miniserver.
+ *
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_OUTOF_SOCKET: Failed to create a socket.
+ *  - UPNP_E_SOCKET_BIND: Bind() failed.
+ *  - UPNP_E_INTERNAL_ERROR: Port returned by the socket layer is < 0.
  */
 int get_miniserver_stopsock(
-    /*! [in] Miniserver Socket Array. */
+    /*! [out] Fills the socket file descriptor and the port it is bound to into
+       the structure. */
     MiniServerSockArray* out) {
-    UPNPLIB_LOGINFO "MSG1053: Executing...\n";
-    struct sockaddr_in stop_sockaddr;
-    SOCKET miniServerStopSock{INVALID_SOCKET};
-    int ret{0};
+    TRACE("Executing get_miniserver_stopsock()");
+    sockaddr_in stop_sockaddr;
 
-    miniServerStopSock = umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
+    upnplib::CSocketError sockerrObj;
+    SOCKET miniServerStopSock =
+        umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (miniServerStopSock == INVALID_SOCKET) {
-        UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
-                   "Error in socket(): %s\n", std::strerror(errno));
+        sockerrObj.catch_error();
+        UPNPLIB_LOGCRIT "MSG1094: Error in socket(): "
+            << sockerrObj.get_error_str() << "\n";
         return UPNP_E_OUTOF_SOCKET;
     }
     /* Bind to local socket. */
     memset(&stop_sockaddr, 0, sizeof(stop_sockaddr));
-    stop_sockaddr.sin_family = (sa_family_t)AF_INET;
+    stop_sockaddr.sin_family = AF_INET;
     inet_pton(AF_INET, "127.0.0.1", &stop_sockaddr.sin_addr);
-    ret = umock::sys_socket_h.bind(miniServerStopSock,
-                                   (struct sockaddr*)&stop_sockaddr,
-                                   sizeof(stop_sockaddr));
+    int ret = umock::sys_socket_h.bind(
+        miniServerStopSock, reinterpret_cast<sockaddr*>(&stop_sockaddr),
+        sizeof(stop_sockaddr));
     if (ret == SOCKET_ERROR) {
-        UpnpPrintf(UPNP_CRITICAL, MSERV, __FILE__, __LINE__,
-                   "Error in binding localhost: %s.\n,", std::strerror(errno));
+        sockerrObj.catch_error();
+        UPNPLIB_LOGCRIT "MSG1095: Error in binding localhost: "
+            << sockerrObj.get_error_str() << "\n";
         sock_close(miniServerStopSock);
         return UPNP_E_SOCKET_BIND;
     }
@@ -1270,6 +1273,10 @@ int get_miniserver_stopsock(
     }
     out->miniServerStopSock = miniServerStopSock;
     out->stopPort = miniStopSockPort;
+
+    UPNPLIB_LOGINFO "MSG1053: Bound stop socket="
+        << miniServerStopSock << " to \"127.0.0.1:" << miniStopSockPort
+        << "\".\n";
 
     return UPNP_E_SUCCESS;
 }

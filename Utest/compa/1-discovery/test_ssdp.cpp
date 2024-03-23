@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-28
+// Redistribution only with this Copyright remark. Last modified: 2024-03-22
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -30,6 +30,7 @@ namespace utest {
 using ::upnplib::errStrEx;
 
 using ::testing::_;
+using ::testing::InSequence;
 using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetErrnoAndReturn;
@@ -230,6 +231,46 @@ TEST_F(CreateSSDPsockReqV4FTestSuite, set_socket_no_blocking_fails) {
     }
 }
 #endif
+
+TEST(SsdpTestSuite, get_ssdp_sockets) {
+    GTEST_SKIP() << "TODO: Test must be completed.";
+#if 0
+    { // begin scope InSequence
+        InSequence seq;
+
+        // Manage create_ssdp_sock_v6_ula_gua().
+        EXPECT_CALL(m_sys_socketObj, socket(AF_INET6, SOCK_DGRAM, 0))
+            .WillOnce(Return(ssdp_sockfd));
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(ssdp_sockfd, SOL_SOCKET, SO_REUSEADDR, _, _))
+            .WillOnce(Return(0));
+#if (defined(BSD) && !defined(__GNU__)) || defined(__APPLE__)
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(ssdp_sockfd, SOL_SOCKET, SO_REUSEPORT, _, _))
+            .WillOnce(Return(0));
+#endif /* BSD, __APPLE__ */
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(ssdp_sockfd, IPPROTO_IPV6, IPV6_V6ONLY, _, _))
+            .WillOnce(Return(0));
+        EXPECT_CALL(m_sys_socketObj, bind(ssdp_sockfd, _, _))
+            .WillOnce(Return(0));
+        EXPECT_CALL(m_sys_socketObj, setsockopt(ssdp_sockfd, IPPROTO_IPV6,
+                                                IPV6_JOIN_GROUP, _, _))
+            .WillOnce(Return(0));
+        EXPECT_CALL(m_sys_socketObj,
+                    setsockopt(ssdp_sockfd, SOL_SOCKET, SO_BROADCAST, _, _))
+            .WillOnce(Return(0));
+
+    } // end scope InSequence
+#endif
+    // Provide needed data.
+    MiniServerSockArray mini_sock{};
+
+    // Test Unit
+    int ret_get_ssdp_socket = get_ssdp_sockets(&mini_sock);
+    EXPECT_EQ(ret_get_ssdp_socket, UPNP_E_SUCCESS)
+        << errStrEx(ret_get_ssdp_socket, UPNP_E_SUCCESS);
+}
 
 } // namespace utest
 
