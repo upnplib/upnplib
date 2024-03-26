@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-03-17
+// Redistribution only with this Copyright remark. Last modified: 2024-03-24
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -502,12 +502,11 @@ std::string CSocketError::get_error_str() {
     // TRACE not usable with chained output, e.g.
     // std::cerr << "Error: " << sockerrObj.get_error_str();
     // TRACE2(this, " Executing CSocketError::get_error_str()")
-#ifdef _MSC_VER
+
+    // Portable C++ statement
     return std::system_category().message(m_errno);
-#else
     // return std::generic_category().message(m_errno);
-    return std::strerror(m_errno);
-#endif
+    // return std::strerror(m_errno); // Alternative for Unix platforms
 }
 
 } // namespace upnplib

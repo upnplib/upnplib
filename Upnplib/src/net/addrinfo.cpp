@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+// Redistribution only with this Copyright remark. Last modified: 2024-03-26
 /*!
  * \file
  * \brief Definition of the Addrinfo class and free helper functions.
@@ -61,6 +61,9 @@ namespace upnplib {
 
 // CAddrinfo class to wrap ::addrinfo system calls
 // ===============================================
+// On Microsoft Windows this needs to have Windows Sockets initialized with
+// WSAStartup().
+
 // Constructor for getting an address information with port number string.
 CAddrinfo::CAddrinfo(const std::string& a_node, const std::string& a_service,
                      const int a_family, const int a_socktype,

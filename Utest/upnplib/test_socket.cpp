@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-06
+// Redistribution only with this Copyright remark. Last modified: 2024-03-24
 
 #include <upnplib/global.hpp>
 #include <upnplib/socket.hpp>
@@ -117,12 +117,15 @@ TEST(SocketErrorTestSuite, get_socket_error_successful) {
     // This returns a real error of an invalid socket file descriptor number.
     char so_opt;
     socklen_t optlen{sizeof(so_opt)};
-    EXPECT_NE(::getsockopt(55555, SOL_SOCKET, SO_ERROR, &so_opt, &optlen), 0);
-
+    int ret_getsockopt =
+        ::getsockopt(55555, SOL_SOCKET, SO_ERROR, &so_opt, &optlen);
     sockerrObj.catch_error();
+    EXPECT_NE(ret_getsockopt, 0);
+
     EXPECT_EQ(static_cast<int>(sockerrObj), EBADFP);
     // Don't know what exact message is given. It depends on the platform.
     EXPECT_GE(sockerrObj.get_error_str().size(), 10);
+    std::cout << sockerrObj.get_error_str() << "\n";
 }
 
 TEST(SocketBasicTestSuite, instantiate_socket_successful) {

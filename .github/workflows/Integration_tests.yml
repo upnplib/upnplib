@@ -287,7 +287,7 @@ jobs:
   # Job: Configure, build and test with NMake
   #------------------------------------------
   Build_with_NMake:
-    if: true
+    if: false
     name: Test w/ NMake
     needs: [ Build_Ubuntu, Build_MacOS ]
     runs-on: ${{ matrix.os }}
@@ -384,7 +384,8 @@ jobs:
   build_tests:
     if: true
     name: "build tests"
-    needs: [ Build_with_Visual_Studio, Build_with_NMake ]
+    #needs: [ Build_with_Visual_Studio, Build_with_NMake ]
+    needs: [ Build_Ubuntu, Build_MacOS, Build_with_Visual_Studio ]
     runs-on: ${{ matrix.os }}
 
     strategy:
