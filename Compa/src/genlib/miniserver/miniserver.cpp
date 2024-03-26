@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-24
+ * Redistribution only with this Copyright remark. Last modified: 2024-03-27
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -135,8 +135,8 @@ struct s_SocketStuff {
         /// @}
     };
     SOCKET fd;
-    uint16_t try_port;
-    uint16_t actual_port;
+    in_port_t try_port;
+    in_port_t actual_port;
     socklen_t address_len;
     /// @}
 };
@@ -781,7 +781,9 @@ void RunMiniServer_f(MiniServerSockArray* miniSock) {
 /*!
  * \brief Returns port to which socket, sockfd, is bound.
  *
- * \return -1 on error; check errno. 0 if successful.
+ * \returns
+ *  On success: **0**
+ *  On error: **-1** with unmodified system error (errno or WSAGetLastError()).
  */
 int get_port(
     /*! [in] Socket descriptor. */
@@ -793,6 +795,7 @@ int get_port(
     socklen_t len(sizeof sockinfo); // May be modified by getsockname()
 
     if (umock::sys_socket_h.getsockname(sockfd, &sockinfo.sa, &len) == -1)
+        // system error (errno etc.) is expected to be unmodified on return.
         return -1;
 
     switch (sockinfo.ss.ss_family) {
@@ -803,6 +806,7 @@ int get_port(
         *port = ntohs(sockinfo.sin6.sin6_port);
         break;
     default:
+        // system error (errno etc.) is expected to be unmodified on return.
         return -1;
     }
     UPNPLIB_LOGINFO "MSG1063: sockfd=" << sockfd << ", port=" << *port << ".\n";
@@ -817,8 +821,15 @@ int get_port(
  * \returns
  *  On success: **0**\n
  *  On error: **1**
+ *
+ *  \todo Detect wrong ip address, e.g. "2001:db8::1::2" on Microsoft Windows.
  */
-int init_socket_suff(s_SocketStuff* s, const char* text_addr, int ip_version) {
+int init_socket_suff(
+    s_SocketStuff* s,      /*!< [in] Socket file descriptor with additional
+                              management information. */
+    const char* text_addr, /*!< [in] IP address as character string. */
+    int ip_version /*!< [in] Version number 4 or 6 for the used ip stack. */
+) {
     UPNPLIB_LOGINFO "MSG1067: Executing with ip_address=\""
         << text_addr << "\", ip_version=" << ip_version << ".\n";
     int sockError;
@@ -927,7 +938,7 @@ int do_bind(         //
     UPNPLIB_LOGINFO "MSG1026: Executing...\n";
     int ret_val{UPNP_E_SUCCESS};
     int bind_error;
-    uint16_t original_listen_port = s->try_port;
+    in_port_t original_listen_port = s->try_port;
 
     bool repeat_do{false};
     do {
@@ -1010,20 +1021,23 @@ int do_listen(       //
     int ret_val;
     int listen_error;
     int port_error;
+    upnplib::CSocketError sockerrObj;
 
     listen_error = umock::sys_socket_h.listen(s->fd, SOMAXCONN);
     if (listen_error == -1) {
-        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                   "do_listen(): Error in IPv%d listen(): %s.\n", s->ip_version,
-                   std::strerror(errno));
+        sockerrObj.catch_error();
+        UPNPLIB_LOGERR "MSG1096: Netaddress=\""
+            << s->text_addr << ":" << s->actual_port << "\", "
+            << sockerrObj.get_error_str() << "\n";
         ret_val = UPNP_E_LISTEN;
         goto error;
     }
     port_error = get_port(s->fd, &s->actual_port);
     if (port_error < 0) {
-        UpnpPrintf(UPNP_ERROR, MSERV, __FILE__, __LINE__,
-                   "do_listen(): Error in IPv%d get_port(): %s.\n",
-                   s->ip_version, std::strerror(errno));
+        sockerrObj.catch_error();
+        UPNPLIB_LOGERR "MSG1097: Error in IPv"
+            << s->ip_version << " get_port(): " << sockerrObj.get_error_str()
+            << "\n";
         ret_val = UPNP_E_INTERNAL_ERROR;
         goto error;
     }
