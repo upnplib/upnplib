@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-03-24
+// Redistribution only with this Copyright remark. Last modified: 2024-04-07
 
 #include <upnplib/global.hpp>
 #include <upnplib/socket.hpp>
@@ -28,7 +28,8 @@ using ::testing::ThrowsMessage;
 
 using ::upnplib::CSocket;
 using ::upnplib::CSocket_basic;
-using ::upnplib::CSocketError;
+using ::upnplib::CSocketErr;
+using ::upnplib::CSocketErrService;
 using ::upnplib::g_dbug;
 
 // Create a simple random number generator for port numbers.
@@ -58,7 +59,7 @@ TEST(SockTestSuite, sock_connect_to_host) {
         std::cout << "IP addrees to connect = " << addrinfo.get_addrp_str() << ".\n";
 
     // Connect to the remote host
-    upnplib::CSocketError sockerrObj;
+    upnplib::CSocketErr sockerrObj;
     if (::connect(sockObj, &addrinfo.sa, addrinfo.sizeof_saddr()) == SOCKET_ERROR) {
         sockerrObj.catch_error();
         std::cout << "WSA error number = " << sockerrObj << ".\n";
@@ -111,7 +112,9 @@ TEST(SocketErrorTestSuite, check_WSA_errorcode_compatibillity) {
 
 TEST(SocketErrorTestSuite, get_socket_error_successful) {
     WINSOCK_INIT
-    CSocketError sockerrObj;
+
+    // Create a di-client object with default di-service.
+    CSocketErr socket_errObj;
 
     // Test Unit
     // This returns a real error of an invalid socket file descriptor number.
@@ -119,14 +122,50 @@ TEST(SocketErrorTestSuite, get_socket_error_successful) {
     socklen_t optlen{sizeof(so_opt)};
     int ret_getsockopt =
         ::getsockopt(55555, SOL_SOCKET, SO_ERROR, &so_opt, &optlen);
-    sockerrObj.catch_error();
+    socket_errObj.catch_error();
     EXPECT_NE(ret_getsockopt, 0);
 
-    EXPECT_EQ(static_cast<int>(sockerrObj), EBADFP);
+    EXPECT_EQ(static_cast<int>(socket_errObj), EBADFP);
     // Don't know what exact message is given. It depends on the platform.
-    EXPECT_GE(sockerrObj.get_error_str().size(), 10);
-    std::cout << sockerrObj.get_error_str() << "\n";
+    EXPECT_GE(socket_errObj.get_error_str().size(), 10);
+    std::cout << socket_errObj.get_error_str() << "\n";
 }
+
+
+class CSocketErrMock : public upnplib::ISocketErr {
+  public:
+    CSocketErrMock() = default;
+    virtual ~CSocketErrMock() override = default;
+    MOCK_METHOD(int, sock_err_ref, ());
+    virtual operator const int&() override {
+        m_errno = sock_err_ref();
+        return m_errno;
+    }
+    MOCK_METHOD(void, catch_error, (), (override));
+    MOCK_METHOD(std::string, get_error_str, (), (const, override));
+
+  private:
+    int m_errno{};
+};
+
+TEST(SocketErrorTestSuite, mock_sockerr_successful) {
+    // Create mocking di-service object and get the smart pointer to it.
+    auto socket_err_mockPtr = std::make_shared<CSocketErrMock>();
+
+    // Mock the di-service.
+    EXPECT_CALL(*socket_err_mockPtr, sock_err_ref()).WillOnce(Return(123));
+    EXPECT_CALL(*socket_err_mockPtr, catch_error()).Times(1);
+    EXPECT_CALL(*socket_err_mockPtr, get_error_str())
+        .WillOnce(Return("Mocked error string."));
+
+    // Create a di-client object and inject the mock di-service.
+    CSocketErr socketerrObj(socket_err_mockPtr);
+
+    EXPECT_EQ(static_cast<int>(socketerrObj), 123);
+    socketerrObj.catch_error();
+    EXPECT_EQ(socketerrObj.get_error_str(), "Mocked error string.");
+}
+
 
 TEST(SocketBasicTestSuite, instantiate_socket_successful) {
     SOCKET sfd = ::socket(AF_INET6, SOCK_STREAM, 0);

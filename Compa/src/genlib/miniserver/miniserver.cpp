@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-27
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-07
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -836,7 +836,7 @@ int init_socket_suff(
     sa_family_t domain{0};
     void* addr; // This holds a pointer to sin_addr
     int reuseaddr_on = MINISERVER_REUSEADDR;
-    upnplib::CSocketError sockerrObj;
+    upnplib::CSocketErr sockerrObj;
 
     memset(s, 0, sizeof *s);
     s->fd = INVALID_SOCKET;
@@ -1021,7 +1021,7 @@ int do_listen(       //
     int ret_val;
     int listen_error;
     int port_error;
-    upnplib::CSocketError sockerrObj;
+    upnplib::CSocketErr sockerrObj;
 
     listen_error = umock::sys_socket_h.listen(s->fd, SOMAXCONN);
     if (listen_error == -1) {
@@ -1257,7 +1257,7 @@ int get_miniserver_stopsock(
     TRACE("Executing get_miniserver_stopsock()");
     sockaddr_in stop_sockaddr;
 
-    upnplib::CSocketError sockerrObj;
+    upnplib::CSocketErr sockerrObj;
     SOCKET miniServerStopSock =
         umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (miniServerStopSock == INVALID_SOCKET) {

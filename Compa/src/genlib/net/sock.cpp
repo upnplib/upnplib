@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-09
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-07
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -143,7 +143,7 @@ static int sock_read_write(
     int timeout_secs =
         (timeoutSecs == nullptr) ? upnplib::g_response_timeout : *timeoutSecs;
 
-    upnplib::CSocketError sockerrObj;
+    upnplib::CSocketErr sockerrObj;
     while (true) {
         // Due to 'man select' timeout should be considered to be undefined
         // after select() returns so we must set it on every loop.
@@ -270,7 +270,7 @@ int sock_read_unprotected(
     int timeout_secs = (a_timeoutSecs == nullptr) ? upnplib::g_response_timeout
                                                   : *a_timeoutSecs;
 
-    upnplib::CSocketError sockerrObj;
+    upnplib::CSocketErr sockerrObj;
     while (true) {
         // Due to 'man select' timeout should be considered to be undefined
         // after select() returns so we must set it on every loop.
@@ -355,7 +355,7 @@ int sock_write_unprotected(
     int timeout_secs = (a_timeoutSecs == nullptr) ? upnplib::g_response_timeout
                                                   : *a_timeoutSecs;
 
-    upnplib::CSocketError sockerrObj;
+    upnplib::CSocketErr sockerrObj;
     while (true) {
         // Due to 'man select' timeout should be considered to be undefined
         // after select() returns so we must set it on every loop.
@@ -455,7 +455,7 @@ int sock_read_ssl(
     int timeout_secs = (a_timeoutSecs == nullptr) ? upnplib::g_response_timeout
                                                   : *a_timeoutSecs;
 
-    upnplib::CSocketError sockerrObj;
+    upnplib::CSocketErr sockerrObj;
     while (true) {
         // Due to 'man select' timeout should be considered to be undefined
         // after select() returns so we must set it on every loop.
@@ -542,7 +542,7 @@ int sock_write_ssl(
     int timeout_secs = (a_timeoutSecs == nullptr) ? upnplib::g_response_timeout
                                                   : *a_timeoutSecs;
 
-    upnplib::CSocketError sockerrObj;
+    upnplib::CSocketErr sockerrObj;
     while (true) {
         // Due to 'man select' timeout should be considered to be undefined
         // after select() returns so we must set it on every loop.
@@ -659,7 +659,7 @@ int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
             info->ssl = NULL;
         }
 #endif
-        upnplib::CSocketError sockerrObj;
+        upnplib::CSocketErr sockerrObj;
         if (umock::sys_socket_h.shutdown(info->socket, ShutdownMethod) ==
             SOCKET_ERROR) {
             sockerrObj.catch_error();

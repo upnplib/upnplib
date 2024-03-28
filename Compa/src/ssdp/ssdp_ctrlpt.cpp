@@ -6,7 +6,7 @@
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-18
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-07
  *
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
@@ -723,7 +723,7 @@ int create_ssdp_sock_reqv4(
     UPNPLIB_LOGINFO "MSG1071: Executing...\n";
     u_char ttl = 4;
 
-    upnplib::CSocketError sockerrObj;
+    upnplib::CSocketErr sockerrObj;
     *ssdpReqSock = umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (*ssdpReqSock == INVALID_SOCKET) {
         sockerrObj.catch_error();
@@ -746,7 +746,7 @@ int create_ssdp_sock_reqv6(
     UPNPLIB_LOGINFO "MSG1073: Executing...\n";
     char hops = 1;
 
-    upnplib::CSocketError sockerrObj;
+    upnplib::CSocketErr sockerrObj;
     *ssdpReqSock = umock::sys_socket_h.socket(AF_INET6, SOCK_DGRAM, 0);
     if (*ssdpReqSock == INVALID_SOCKET) {
         sockerrObj.catch_error();

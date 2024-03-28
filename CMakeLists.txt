@@ -397,10 +397,11 @@ if(UPNPLIB_WITH_GOOGLETEST)
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY    https://github.com/google/googletest.git
-        GIT_TAG           origin/main
+        #GIT_TAG           origin/main
         #GIT_TAG           release-1.11.0
-        GIT_SHALLOW       ON # comment if using GIT_TAG hash below
+        #GIT_SHALLOW       ON # comment if using GIT_TAG hash below
         #GIT_TAG           2057566e4e16c88f1fea4d6c96b2e2bfb87507a6
+        GIT_TAG           77afe8e0149c207edd9561c28de6d2226673b51f
     )
     # We have googletest embedded so we turn installation off.
     set (INSTALL_GTEST OFF CACHE BOOL

@@ -6,12 +6,12 @@ General information to the library, its structure and specifications.
 
 The library has two parts, handling Control Points or UPnP Devices. They are largely independent of each other. You can compile both parts separately so you have a library that only handle Control Points or UPnP Devices. That make sense for installations that are only a Control Point or only a UPnP Device and is of particular interest for embedded devices. Of course you can also have both parts for hybrid applications.
 
-\section main_modules Main Modules
+\section main_modules Main Components
 
-The <b>S</b>oftware <b>D</b>evelopment <b>K</b>it contains some main modules that are associated with a specific step of the <a href="UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf">UPnP™ Device Architecture 2.0</a>.\n
-These modules are:
+The <b>S</b>oftware <b>D</b>evelopment <b>K</b>it contains some main components that are associated with a specific step of the <a href="UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf">UPnP™ Device Architecture 2.0</a>.\n
+These components are:
 
-order | module     | part of
+order | component  | part of
 :---: | ---------- | ------------------
   1   | miniserver | Step 0: Addressing
   2   | webserver  | (common)
@@ -19,7 +19,17 @@ order | module     | part of
   4   | SOAP       | Step 3: Control
   5   | GENA       | Step 4: Eventing
 
-The order shows the dependency. Each module depends on its predecessor. For example if selecting SSDP on configuring to compile, this selects also automatically the webserver (only that) and the webserver selects miniserver. If you select GENA for compiling you have a full featured configuration with all main modules. There is no need to select previous moduls. Also the abstraction will increase with the order. For example no module except miniserver will handle network sockets.
+The order shows the dependency. Each component depends on its predecessor. For example if selecting SSDP on configuring to compile, this selects also automatically the webserver (only that) and the webserver selects miniserver. If you select GENA for compiling you have a full featured configuration with all main components. There is no need to select previous moduls. Also the abstraction will increase with the order. For example no component except miniserver will handle network sockets.
 
 \note This order is an important implicit dependency. It is always expected that it is respected. No internal checks are made about this. The compiler will remind you if you forget it.
+
+\section dependency_injection Dependency Injection
+
+Because Dependency Injection is used by GoogleMock for our Unit Tests I note its four roles for unique nomenclature.
+- The **di-service** object to be injected.
+- The **di-client** object which depends on the service(s) being injected.
+- The **di-interface** through which the client object uses the service(s).
+- The **di-injector** which injects the service(s) into the client.
+
+The services that a client requires are the client's **dependencies**.
 */

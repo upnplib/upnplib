@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-03-24
+// Redistribution only with this Copyright remark. Last modified: 2024-04-06
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -476,32 +476,58 @@ bool CSocket::is_listen() const {
 }
 
 
+// Socket Error di-interface
+ISocketErr::ISocketErr() = default;
+ISocketErr::~ISocketErr() = default;
+
+// Socket Error di-client
+CSocketErr::CSocketErr(PSocketErr a_socket_errObj)
+    : m_socket_errObj(a_socket_errObj) {
+    TRACE2(this, " Construct CSocketErr()") //
+}
+CSocketErr::~CSocketErr() {
+    TRACE2(this, " Destruct CSocketErr()") //
+}
+CSocketErr::operator const int&() { //
+    return *m_socket_errObj;
+}
+void CSocketErr::catch_error() { //
+    m_socket_errObj->catch_error();
+}
+std::string CSocketErr::get_error_str() const {
+    return m_socket_errObj->get_error_str();
+}
+
+
 // Portable handling of socket errors
 // ==================================
-CSocketError::CSocketError(){TRACE2(this, " Construct CSocketError()")}
+CSocketErrService::CSocketErrService(){
+    TRACE2(this, " Construct CSocketErrService()")}
 
-CSocketError::~CSocketError(){TRACE2(this, " Destruct CSocketError()")}
+CSocketErrService::~CSocketErrService(){
+    TRACE2(this, " Destruct CSocketErrService()")}
 
-CSocketError::operator const int&() const {
+CSocketErrService::operator const int&() {
     // TRACE not usable with chained output.
     // TRACE2(this,
-    //     " Executing CSocketError::operator int&() (get socket error number)")
+    //     " Executing CSocketErrService::operator int&() (get socket error
+    //     number)")
     return m_errno;
 }
 
-void CSocketError::catch_error() {
+void CSocketErrService::catch_error() {
 #ifdef _MSC_VER
     m_errno = umock::winsock2_h.WSAGetLastError();
 #else
     m_errno = errno;
 #endif
-    TRACE2(this, " Executing CSocketError::catch_error()")
+    TRACE2(this, " Executing CSocketErrService::catch_error()")
 }
 
-std::string CSocketError::get_error_str() {
+std::string CSocketErrService::get_error_str() const {
     // TRACE not usable with chained output, e.g.
     // std::cerr << "Error: " << sockerrObj.get_error_str();
-    // TRACE2(this, " Executing CSocketError::get_error_str()")
+    // TRACE2(this, " Executing CSocketErrService::get_error_str()")
 
     // Portable C++ statement
     return std::system_category().message(m_errno);
