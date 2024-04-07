@@ -30,6 +30,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+/*!
+ * \file
+ * \brief The main() program entry.
+ */
 
 #include "sample_util.hpp"
 #include "tv_ctrlpt.hpp"

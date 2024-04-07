@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-13
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-09
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,17 +30,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
 /*!
- * \addtogroup UpnpSamples
- *
- * @{
- *
- * \name Device Sample Module
- *
- * @{
- *
  * \file
+ * \ingroup UPnPsamples
+ * \brief Definitions for a simple UPnP device console application.
  */
 
 #include "tv_device.hpp"
@@ -52,22 +45,28 @@
 #include <cassert>
 #include <iostream>
 
+/// \cond
 #define DEFAULT_WEB_DIR "./sample/web"
 #define DESC_URL_SIZE 200
+/// \endcond
 
 /*! Global arrays for storing Tv Control Service variable names, values,
  * and defaults. */
 const char* tvc_varname[] = {"Power", "Channel", "Volume"};
 
+/// \cond
 char tvc_varval[TV_CONTROL_VARCOUNT][TV_MAX_VAL_LEN];
 const char* tvc_varval_def[] = {"1", "1", "5"};
+/// \endcond
 
 /*! Global arrays for storing Tv Picture Service variable names, values,
  * and defaults. */
 const char* tvp_varname[] = {"Color", "Tint", "Contrast", "Brightness"};
 
+/// \cond
 char tvp_varval[TV_PICTURE_VARCOUNT][TV_MAX_VAL_LEN];
 const char* tvp_varval_def[] = {"5", "5", "5", "5"};
+/// \endcond
 
 /*! The amount of time (in seconds) before advertisements will expire. */
 int default_advr_expire = 100;
@@ -84,6 +83,7 @@ UpnpDevice_Handle device_handle = -1;
  * or writing the state table data. */
 pthread_mutex_t TVDevMutex;
 
+/// \cond
 /*! Color constants */
 #define MAX_COLOR 10
 #define MIN_COLOR 1
@@ -111,6 +111,7 @@ pthread_mutex_t TVDevMutex;
 /*! Channel constants */
 #define MAX_CHANNEL 100
 #define MIN_CHANNEL 1
+/// \endcond
 
 /*!
  * \brief Initializes the service table for the specified service.
@@ -608,6 +609,9 @@ int TvDeviceSetChannel(IXML_Document* in, IXML_Document** out,
     }
 }
 
+/*!
+ * \brief Increment channel
+ */
 int IncrementChannel(int incr, IXML_Document* in, IXML_Document** out,
                      const char** errorString) {
     int curchannel;
@@ -904,22 +908,18 @@ int TvDeviceSetTint(IXML_Document* in, IXML_Document** out,
     }
 }
 
-/******************************************************************************
- * IncrementTint
+/*!
+ * \brief Increment the tint.
  *
- * Description:
- *       Increment the tint.  Read the current tint from the state
- *       table, add the increment, and then change the tint.
- *
- * Parameters:
- *   incr -- The increment by which to change the tint.
- *
- *    [in] IXML_Document * in -  action request document
- *    [out] IXML_Document **out - action result document
- *    [out] char **errorString - errorString (in case action was unsuccessful)
- *****************************************************************************/
-int IncrementTint(int incr, IXML_Document* in, IXML_Document** out,
-                  const char** errorString) {
+ * Read the current tint from the state table, add the increment, and then
+ * change the tint.
+ */
+int IncrementTint(int incr, ///< [in] The increment by which to change the tint.
+                  IXML_Document* in,       ///< [in] Action request document
+                  IXML_Document** out,     ///< [out] Action result document
+                  const char** errorString /*!< [out] ErrorString (in case
+                                                action was unsuccessful) */
+) {
     int curtint;
     int newtint;
     const char* actionName = NULL;
@@ -1266,7 +1266,7 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
     pthread_mutex_init(&TVDevMutex, NULL);
     if (upnplib::g_dbug) {
         UpnpSetLogFileNames(NULL, NULL);
-        UpnpSetLogLevel(UPNP_INFO);
+        UpnpSetLogLevel(UPNP_ALL);
         UpnpInitLog();
     }
     SampleUtil_Initialize(pfunc);
@@ -1367,7 +1367,9 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
     TvDeviceStateTableInit(desc_doc_url);
     SampleUtil_Print("State Table Initialized.\n");
 
+    // std::cerr << "DEBUG! Tracepoint 1\n";
     ret = UpnpSendAdvertisement(device_handle, default_advr_expire);
+    // std::cerr << "DEBUG! Tracepoint 3\n";
     if (ret != UPNP_E_SUCCESS) {
         SampleUtil_Print("Error sending advertisements: %s(%d)\n",
                          UpnpGetErrorMessage(ret), ret);
@@ -1486,7 +1488,3 @@ int device_main(const int argc, char* argv[]) {
     return TvDeviceStart(iface, port, desc_doc_name, web_dir_path, ip_mode,
                          linux_print, 0);
 }
-
-/*! @} Device Sample Module */
-
-/*! @} UpnpSamples */

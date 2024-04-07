@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-03-07
+// Redistribution only with this Copyright remark. Last modified: 2024-04-09
 /*!
  * \file
  * \brief Definition of the documentation topics.
@@ -189,6 +189,14 @@
  * \defgroup upnplib-Addressing Step 0: Addressing
  * \ingroup upnplib
  * \copydoc compa-Addressing
+ */
+
+// Topics for the UPnP sample programs
+// -----------------------------------
+/*!
+ * \defgroup UPnPsamples UPnP sample programs
+ * \brief Sample programs for a simple UPnP device and a simple UPnP control
+ * point
  */
 
 // vim: filetype=cpp

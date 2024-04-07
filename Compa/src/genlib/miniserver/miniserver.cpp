@@ -863,8 +863,8 @@ int init_socket_suff(
     }
 
     if (inet_pton(domain, text_addr, addr) <= 0) {
-        UPNPLIB_LOGERR "MSG1051: Invalid ip_address: \"" << text_addr
-                                                         << "\".\n";
+        UPNPLIB_LOGINFO "MSG1051: Invalid ip_address: \"" << text_addr
+                                                          << "\".\n";
         // Here we also meet an empty ("") ip_address.
         goto error;
     }

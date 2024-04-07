@@ -1,10 +1,10 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-07
+// Redistribution only with this Copyright remark. Last modified: 2024-04-09
 /*!
  * \file
- * \brief Declaration of the 'class Socket'.
+ * \brief Declaration of classes and functions that manage network sockets.
  */
 
 // Helpful link for ip address structures:
@@ -269,75 +269,48 @@ class UPNPLIB_API CWSAStartup {
 
 
 /*!
- * \brief "Handling Socket Error" is specified by this dependency injection
- * interface.
+ * \brief Responsibility: portable catch **one** network socket error from the
+ * operating system, and provide information about it.
+ *
+ * This is a C++ interface for dependency injection of different di-services,
+ * e.g. for production or Unit Tests (mocking).
  */
 class UPNPLIB_API ISocketErr {
   public:
     ISocketErr();
     virtual ~ISocketErr();
+    /// Get error number.
     virtual operator const int&() = 0;
+    /// Catch error for later use.
     virtual void catch_error() = 0;
+    /// Get human readable error description of the catched error.
     virtual std::string get_error_str() const = 0;
 };
 
 /*!
- * \brief Smart pointer to services that handle Socket Errors and used to inject
- * the services.
+ * \brief Smart pointer to di-service objects that handle network socket errors
+ * and used to inject the objects.
  */
 using PSocketErr = std::shared_ptr<ISocketErr>;
 
-
 /*!
- * \brief Portable handling of socket errors.
+ * \brief di-service for portable handling of network socket errors.
  *
- * There is a problem that Winsock2 on the Microsoft Windows platform does not
- * support detailed error information given in the global variable 'errno' that
- * is used by POSIX. Instead it returns them with calling 'WSAGetLastError()'.
- * This class encapsulates this difference so there is no need to always check
- * the platform to get the error information.
- *
- * \note This is only useful to catch errors belonging to sockets.
+ * There is a compatibility problem with Winsock2 on the Microsoft Windows
+ * platform that does not support detailed error information given in the global
+ * variable 'errno' that is used by POSIX. Instead it returns them with calling
+ * 'WSAGetLastError()'. This class encapsulates differences so there is no need
+ * to always check the platform to get the error information.
  */
 class UPNPLIB_API CSocketErrService : public ISocketErr {
   public:
     CSocketErrService();
     virtual ~CSocketErrService() override;
-
-    /*! Get the catched error number, e.g.:
-     * \code
-     * CSocketErrService sockerrObj;
-     * int sock_err = sockerrObj;
-     * std::cout << "Error = " << static_cast<int>(sockerrObj) << "\n";
-     * \endcode */
+    /// Get error number.
     virtual operator const int&() override;
-
-    /*! Setter: catch an error, e.g.:
-     * \code
-     * CSocketErrService sockerrObj;
-     * int ret = some_function_1();
-     * if (ret != 0) {
-     *     sockerrObj.catch_error();
-     *     std::cout << "Error function_1\n";
-     * }
-     * ret = some_function_2();
-     * if (ret != 0) {
-     *     sockerrObj.catch_error();
-     *     std::cout << "Error function_2\n";
-     * }
-     * \endcode */
+    /// Catch error for later use.
     virtual void catch_error() override;
-
-    /*! Getter: get the text from the operating system that explains the catched
-     * error, e.g.:
-     * \code
-     * CSocketErrService sockerrObj;
-     * int ret = some_function_1();
-     * if (ret != 0) {
-     *     sockerrObj.catch_error();
-     *     std::cout << "Error: " << sockerrObj.get_error_str() << "\n";
-     * }
-     * \endcode */
+    /// Get human readable error description of the catched error.
     virtual std::string get_error_str() const override;
 
   private:
@@ -345,8 +318,26 @@ class UPNPLIB_API CSocketErrService : public ISocketErr {
 };
 
 /*!
- * \brief "Handling Socket Error" dependency injection client that will use the
+ * \brief di-client for portable handling of network socket errors with
  * injected di-service.
+ *
+ * Usage of the class:
+ * \code
+ * CSocketErrService sockerrObj;
+ * int ret = some_function_1();
+ * if (ret != 0) {
+ *     sockerrObj.catch_error();
+ *     int errid = sockerrObj;
+ *     std::cout << "Error " << errid << ": "
+ *               << sockerrObj.get_error_str() << "\n";
+ * }
+ * ret = some_function_2();
+ * if (ret != 0) {
+ *     sockerrObj.catch_error();
+ *     std::cout << "Error " << static_cast<int>(sockerrObj) << ": "
+ *               << sockerrObj.get_error_str() << "\n";
+ * }
+ * \endcode
  */
 class CSocketErr {
     // Due to warning C4251 "'type' : class 'type1' needs to have dll-interface
@@ -354,13 +345,29 @@ class CSocketErr {
     // function needs to be decorated with UPNPLIB_API instead of just only the
     // class. The reason is 'm_socket_errObj'.
   public:
+    /*! \brief Constructor */
     UPNPLIB_API CSocketErr(
+        /*! [in] Inject the used di-service object that is by default the
+           productive one but may also be a mocked object for Unit Tests. */
         PSocketErr a_socket_errObj = std::make_shared<CSocketErrService>());
+
+    /* \brief Destructor */
     UPNPLIB_API virtual ~CSocketErr();
 
-    // Methods
+    /*! \brief Get the catched error number.
+     * \details The error number is that from the operating system, for example
+     * **errno** on Posix platforms or from WSAGetLastError() on Microroft
+     * Windows. */
     UPNPLIB_API virtual operator const int&();
+
+    /*! \brief Catches detailed error information.
+     *  \details Because error information from the operating system is very
+     * volatile this method should be called as early as possible after the
+     * error was detected. */
     UPNPLIB_API virtual void catch_error();
+
+    /*! \brief Gets a human readable error description from the operating
+     * system that explains the catched error. */
     UPNPLIB_API virtual std::string get_error_str() const;
 
   private:

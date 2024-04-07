@@ -4,8 +4,8 @@
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
- * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-02
+ * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-09
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,52 +32,18 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-
 /*!
- * \addtogroup UpnpSamples
- *
- * @{
- *
- * \name Device Sample API
- *
- * @{
- *
  * \file
+ * \ingroup UPnPsamples
+ * \brief Declarations for a simple UPnP device console application.
  */
 
 #include "sample_util.hpp"
-#include "UpnpSubscriptionRequest.hpp"
-#include "UpnpStateVarRequest.hpp"
+#include <UpnpSubscriptionRequest.hpp>
+#include <UpnpStateVarRequest.hpp>
 
+/// \cond
 #include "pthread.h" // To find pthreads4w don't use <pthread.h>
-
-/*! Color constants */
-#define MAX_COLOR 10
-#define MIN_COLOR 1
-
-/*! Brightness constants */
-#define MAX_BRIGHTNESS 10
-#define MIN_BRIGHTNESS 1
-
-/*! Power constants */
-#define POWER_ON 1
-#define POWER_OFF 0
-
-/*! Tint constants */
-#define MAX_TINT 10
-#define MIN_TINT 1
-
-/*! Volume constants */
-#define MAX_VOLUME 10
-#define MIN_VOLUME 1
-
-/*! Contrast constants */
-#define MAX_CONTRAST 10
-#define MIN_CONTRAST 1
-
-/*! Channel constants */
-#define MAX_CHANNEL 100
-#define MIN_CHANNEL 1
 
 /*! Number of services. */
 #define TV_SERVICE_SERVCOUNT 2
@@ -127,6 +93,7 @@
 #define IP_MODE_IPV4 1
 #define IP_MODE_IPV6_LLA 2
 #define IP_MODE_IPV6_ULA_GUA 3
+/// \endcond
 
 /*!
  * \brief Prototype for all actions. For each action that a service
@@ -150,19 +117,12 @@ typedef int (*upnp_action)(
 struct TvService {
     /*! Universally Unique Device Name. */
     char UDN[NAME_SIZE];
-    /*! . */
     char ServiceId[NAME_SIZE];
-    /*! . */
     char ServiceType[NAME_SIZE];
-    /*! . */
     const char* VariableName[TV_MAXVARS];
-    /*! . */
     char* VariableStrVal[TV_MAXVARS];
-    /*! . */
     const char* ActionNames[TV_MAXACTIONS];
-    /*! . */
     upnp_action actions[TV_MAXACTIONS];
-    /*! . */
     int VariableCount;
 };
 
@@ -559,9 +519,5 @@ void* TvDeviceCommandLoop(void* args);
  *  \li \c -help
  */
 int device_main(int argc, char* argv[]);
-
-/*! @} Control Point Sample API */
-
-/*! @} UpnpSamples */
 
 #endif /* UPNPLIB_TV_DEVICE_HPP */

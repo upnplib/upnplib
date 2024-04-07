@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-03-14
+// Redistribution only with this Copyright remark. Last modified: 2024-04-08
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
@@ -34,7 +34,6 @@ UPNPLIB_API char* strndup(const char* __string, size_t __n);
 // clog output.
 
 #ifdef UPNPLIB_WITH_TRACE
-// We first flush std::cout to have a sequential output.
   #define TRACE(s) std::cout<<"TRACE["<<(static_cast<const char*>(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)<<":"<<__LINE__<<"] "<<(s)<<"\n";
   #define TRACE2(a, b) std::cout<<"TRACE["<<(static_cast<const char*>(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)<<":"<<__LINE__<<"] "<<(a)<<(b)<<"\n";
 #else
