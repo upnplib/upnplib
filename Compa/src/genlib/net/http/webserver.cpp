@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-04
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-11
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -842,9 +842,10 @@ int CheckOtherHTTPHeaders(
     while (node != NULL) {
         header = (http_header_t*)node->item;
         /* find header type. */
-        index =
-            map_str_to_int((const char*)header->name.buf, header->name.length,
-                           &Http_Header_Names[0], Http_Header_Names.size(), 0);
+        /// \todo map_str_to_int: fix type_cast array.size()
+        index = map_str_to_int((const char*)header->name.buf,
+                               header->name.length, &Http_Header_Names[0],
+                               static_cast<int>(Http_Header_Names.size()), 0);
         if (header->value.length >= TmpBufSize) {
             umock::stdlib_h.free(TmpBuf);
             TmpBufSize = header->value.length + 1;
@@ -976,9 +977,10 @@ int ExtraHTTPHeaders(
     while (node != NULL) {
         header = (http_header_t*)node->item;
         /* find header type. */
-        index =
-            map_str_to_int((const char*)header->name.buf, header->name.length,
-                           &Http_Header_Names[0], Http_Header_Names.size(), 0);
+        /// \todo map_str_to_int: fix type_cast array.size()
+        index = map_str_to_int((const char*)header->name.buf,
+                               header->name.length, &Http_Header_Names[0],
+                               static_cast<int>(Http_Header_Names.size()), 0);
         if (index < 0) {
             extraHeader = UpnpExtraHeaders_new();
             if (!extraHeader) {

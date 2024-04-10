@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-09
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1348,7 +1348,7 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
     ret =
         UpnpRegisterRootDevice3(desc_doc_url, TvDeviceCallbackEventHandler,
                                 &device_handle, &device_handle, address_family);
-#if 0 // DEBUG! Instead use next for existing unit test.
+#if 0 // DEBUG: Instead use next for existing unit test.
     ret = UPNP_E_SUCCESS;
     //     UpnpRegisterRootDevice3(desc_doc_url, TvDeviceCallbackEventHandler,
     //                             &device_handle, &device_handle,
@@ -1361,15 +1361,13 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
         return ret;
     }
 
-    // return UPNP_E_SUCCESS; // DEBUG! Uncomment for existing unit test.
+    // return UPNP_E_SUCCESS; // DEBUG: Uncomment for existing unit test.
 
     SampleUtil_Print("RootDevice Registered, initializing State Table ...\n");
     TvDeviceStateTableInit(desc_doc_url);
     SampleUtil_Print("State Table Initialized.\n");
 
-    // std::cerr << "DEBUG! Tracepoint 1\n";
     ret = UpnpSendAdvertisement(device_handle, default_advr_expire);
-    // std::cerr << "DEBUG! Tracepoint 3\n";
     if (ret != UPNP_E_SUCCESS) {
         SampleUtil_Print("Error sending advertisements: %s(%d)\n",
                          UpnpGetErrorMessage(ret), ret);
@@ -1383,7 +1381,7 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
 
 int TvDeviceStop(void) {
     UpnpUnRegisterRootDevice(device_handle);
-    UpnpFinish(); // DEBUG! Comment for existing unit test.
+    UpnpFinish(); // DEBUG: Comment for existing unit test.
     SampleUtil_Finish();
     pthread_mutex_destroy(&TVDevMutex);
 

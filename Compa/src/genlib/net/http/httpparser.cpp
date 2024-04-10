@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-02
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-11
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1472,8 +1472,9 @@ parse_status_t parser_parse_headers(http_parser_t* parser) {
         }
         /* add header */
         /* find header */
+        /// \todo map_str_to_int: fix type_cast array.size()
         index = map_str_to_int(token.buf, token.length, &Http_Header_Names[0],
-                               Http_Header_Names.size(), 0);
+                               static_cast<int>(Http_Header_Names.size()), 0);
         if (index >= 0) {
             /*Check if it is a soap header */
             // No problem with type_cast to 'long unsigned int', index is

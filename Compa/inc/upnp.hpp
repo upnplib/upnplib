@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-10
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -483,10 +483,17 @@ typedef enum Upnp_DescType_e Upnp_DescType;
 
 /// @} Constants and Types
 
-/*!
- * \name Initialization and Registration
- * @{
- */
+/******************************************************************************
+ ******************************************************************************
+ *                                                                            *
+ *                        A D D R E S S I N G                                 *
+ *                                                                            *
+ ******************************************************************************
+ ******************************************************************************/
+
+/*! \name Step 0: Addressing
+ * @{ */
+/// \ingroup compaAPI
 
 /*!
  * \brief Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6).
@@ -548,7 +555,7 @@ UPNPLIB_API int UpnpInit2(
  *      \li \c UPNP_E_FINISH: The SDK is already terminated or
  *      it is not initialized.
  */
-UPNPLIB_API int UpnpFinish(void);
+UPNPLIB_API int UpnpFinish();
 
 /*!
  * \brief Returns the internal server IPv4 UPnP listening port.
@@ -561,7 +568,7 @@ UPNPLIB_API int UpnpFinish(void);
  *      IPv4 UPnP related requests.
  *  \li On error: 0 is returned if \b UpnpInit2 has not succeeded.
  */
-UPNPLIB_API unsigned short UpnpGetServerPort(void);
+UPNPLIB_API unsigned short UpnpGetServerPort();
 
 /*!
  * \brief Returns the internal server IPv6 link-local (LLA) UPnP listening port.
@@ -574,7 +581,7 @@ UPNPLIB_API unsigned short UpnpGetServerPort(void);
  *      IPv6 link-local (LLA) UPnP related requests.
  *  \li On error: 0 is returned if \b UpnpInit2 has not succeeded.
  */
-UPNPLIB_API unsigned short UpnpGetServerPort6(void);
+UPNPLIB_API unsigned short UpnpGetServerPort6();
 
 /*!
  * \brief Returns the internal server IPv6 ULA or GUA UPnP listening port.
@@ -587,7 +594,7 @@ UPNPLIB_API unsigned short UpnpGetServerPort6(void);
  *      IPv6 ULA or GUA UPnP related requests.
  *  \li On error: 0 is returned if \b UpnpInit2 has not succeeded.
  */
-UPNPLIB_API unsigned short UpnpGetServerUlaGuaPort6(void);
+UPNPLIB_API unsigned short UpnpGetServerUlaGuaPort6();
 
 /*!
  * \brief Returns the local IPv4 listening ip address.
@@ -600,7 +607,7 @@ UPNPLIB_API unsigned short UpnpGetServerUlaGuaPort6(void);
  *      listening for UPnP related requests.
  *  \li On error: \c NULL is returned if \b UpnpInit2 has not succeeded.
  */
-UPNPLIB_API char* UpnpGetServerIpAddress(void);
+UPNPLIB_API char* UpnpGetServerIpAddress();
 
 /*!
  * \brief Returns the IPv6 link-local listening ip address.
@@ -613,7 +620,7 @@ UPNPLIB_API char* UpnpGetServerIpAddress(void);
  *      server is listening for UPnP related requests.
  *  \li On error: \c NULL is returned if \b UpnpInit2 has not succeeded.
  */
-UPNPLIB_API char* UpnpGetServerIp6Address(void);
+UPNPLIB_API char* UpnpGetServerIp6Address();
 
 /*!
  * \brief Returns the IPv6 unique-local or globally-unique listening ip address.
@@ -627,7 +634,8 @@ UPNPLIB_API char* UpnpGetServerIp6Address(void);
  *      related requests.
  *  \li On error: \c NULL is returned if \b UpnpInit2 has not succeeded.
  */
-UPNPLIB_API char* UpnpGetServerUlaGuaIp6Address(void);
+UPNPLIB_API char* UpnpGetServerUlaGuaIp6Address();
+
 /*!
  * \brief Registers a device application with the UPnP Library.
  *
@@ -822,7 +830,8 @@ UPNPLIB_API int UpnpRegisterRootDevice3(
      * root device instance. */
     const char* const LowerDescUrl = nullptr);
 
-// Set alias for compatibility
+/*! \brief Set alias for compatibility
+ * \ingroup compaAPI */
 #define UpnpRegisterRootDevice4 UpnpRegisterRootDevice3
 
 /*!
@@ -956,7 +965,7 @@ UPNPLIB_API int UpnpSetMaxContentLength(
      * actions, in bytes. */
     size_t contentLength);
 
-/// @} Initialization and Registration
+/// @} Step 0: Addressing
 
 /******************************************************************************
  ******************************************************************************
@@ -965,11 +974,9 @@ UPNPLIB_API int UpnpSetMaxContentLength(
  *                                                                            *
  ******************************************************************************
  ******************************************************************************/
-
-/*!
- * \name Discovery
- * @{
- */
+/*! \name Step 1: Discovery
+ * @{ */
+/// \ingroup compaAPI
 
 /*!
  * \brief Searches for devices matching the given search target.
@@ -1067,7 +1074,22 @@ UPNPLIB_API int UpnpSendAdvertisementLowPower(
     /*! RegistrationState as defined by UPnP Low Power. */
     int RegistrationState);
 
-/// @} Discovery
+/// @} Step 1: Discovery
+
+/******************************************************************************
+ ******************************************************************************
+ *                                                                            *
+ *                          D E S C R I P T I O N                             *
+ *                                                                            *
+ ******************************************************************************
+ ******************************************************************************/
+/*! \name Step 2: Description
+ * @{ */
+/// \ingroup compaAPI
+
+// Nothing available?
+
+/// @} Step 2: Description
 
 /******************************************************************************
  ******************************************************************************
@@ -1076,11 +1098,9 @@ UPNPLIB_API int UpnpSendAdvertisementLowPower(
  *                                                                            *
  ******************************************************************************
  ******************************************************************************/
-
-/*!
- * \name Control
- * @{
- */
+/*! \name Step 3: Control
+ * @{ */
+/// \ingroup compaAPI
 
 /*!
  * \brief Queries the state of a state variable of a service on another device.
@@ -1310,7 +1330,7 @@ UPNPLIB_API int UpnpSendActionExAsync(
      * invoked. */
     const void* Cookie_const);
 
-/// @} Control
+/// @} Step 3: Control
 
 /******************************************************************************
  ******************************************************************************
@@ -1319,11 +1339,9 @@ UPNPLIB_API int UpnpSendActionExAsync(
  *                                                                            *
  ******************************************************************************
  ******************************************************************************/
-
-/*!
- * \name Eventing
- * @{
- */
+/*! \name Step 4: Eventing
+ * @{ */
+/// \ingroup compaAPI
 
 /*!
  * \brief Accepts a subscription request and sends out the current state of the
@@ -1817,7 +1835,22 @@ UPNPLIB_API int UpnpUnSubscribeAsync(
        invoked. */
     const void* Cookie_const);
 
-/// @} Eventing
+/// @} Step 4: Eventing
+
+/******************************************************************************
+ ******************************************************************************
+ *                                                                            *
+ *                        P R E S E N T A T I O N                             *
+ *                                                                            *
+ ******************************************************************************
+ ******************************************************************************/
+/*! \name Step 5: Presentation
+ * @{ */
+/// \ingroup compaAPI
+
+// Nothing available?
+
+/// @} Step 5: Presentation
 
 /******************************************************************************
  ******************************************************************************
@@ -1826,11 +1859,8 @@ UPNPLIB_API int UpnpUnSubscribeAsync(
  *                                                                            *
  ******************************************************************************
  ******************************************************************************/
-
-/*!
- * \name Control Point HTTP API
- * @{
- */
+/*! \name Control Point HTTP API
+ * @{ */
 
 /*!
  * \brief Different HTTP methods.
@@ -2471,11 +2501,8 @@ UPNPLIB_API int UpnpDownloadXmlDoc(
  *                                                                            *
  ******************************************************************************
  ******************************************************************************/
-
-/*!
- * \name Web Server API
- * @{
- */
+/*! \name Web Server API
+ * @{ */
 
 /*!
  * \brief Sets the document root directory for the internal web server.
@@ -2675,7 +2702,7 @@ UPNPLIB_API int UpnpEnableWebserver(
  *       \li \c 1: The webserver is enabled.
  *       \li \c 0: The webserver is not enabled
  */
-UPNPLIB_API int UpnpIsWebserverEnabled(void);
+UPNPLIB_API int UpnpIsWebserverEnabled();
 
 /*!
  * \brief Callback for validating HTTP requests HOST header values.
@@ -2743,7 +2770,7 @@ UPNPLIB_API int UpnpRemoveVirtualDir(
 /*!
  * \brief Removes all virtual directory mappings.
  */
-UPNPLIB_API void UpnpRemoveAllVirtualDirs(void);
+UPNPLIB_API void UpnpRemoveAllVirtualDirs();
 
 /// @} Web Server API
 

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-01-25
+// Redistribution only with this Copyright remark. Last modified: 2024-04-11
 /*!
  * \file
  * \brief Definations to manage the builtin Webserver
@@ -7,7 +7,9 @@
 
 #include <upnplib/webserver.hpp>
 #include <upnplib/port.hpp>
+/// \cond
 #include <array>
+/// \endcond
 
 namespace {
 
@@ -95,6 +97,7 @@ const std::array<upnplib::Document_meta, 70> mediatype_list{
 
 namespace upnplib {
 
+/// \todo Rework to use reference instead of pointer and use exception.
 const Document_meta* select_filetype(std::string_view a_extension) {
 
     ssize_t top = 0;

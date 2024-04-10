@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-04
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-10
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -104,7 +104,7 @@ namespace {
 /*!
  * \brief Initialize the buffer.
  */
-static UPNP_INLINE void membuffer_initialize(
+UPNP_INLINE void membuffer_initialize(
     /*! [in,out] Buffer to be initialized. */
     membuffer* m) {
     m->buf = NULL;

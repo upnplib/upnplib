@@ -5,7 +5,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-27
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-11
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,7 +42,6 @@
  * must be sorted by the key.
  */
 
-#include <upnplib/visibility.hpp>
 /// \cond
 #include <cstddef> // for size_t
 /// \endcond
@@ -65,9 +64,9 @@ int map_str_to_int(
     const char* name, ///< [in] String containing the name to be matched.
     size_t name_len,  ///< [in] Size of the string to be matched.
     const str_int_entry*
-        table,          ///< [in] Table of entries that need to be matched.
-    size_t num_entries, /*!< [in] Number of entries in the table that need to be
-                                  searched. */
+        table,         ///< [in] Table of entries that need to be matched.
+    int num_entries,   /*!< [in] Number of entries in the table that need to be
+                                 searched. */
     int case_sensitive ///< [in] Whether search should be case sensitive or not.
 );
 

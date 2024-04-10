@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-11
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-11
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,22 +35,20 @@
  * \brief String to integer and integer to string conversion functions.
  */
 
-/* **********************************************************************
- * Purpose: This file contains string to integer and integer to string
- * conversion functions
- * **********************************************************************/
-
+#include <upnplib/global.hpp>
 #include <strintmap.hpp>
 #include <membuffer.hpp>
-/// \cond
-#include <limits>
-/// \endcond
+#include <iostream>
 
 
 int map_str_to_int(const char* name, size_t name_len,
-                   const str_int_entry* table, size_t num_entries,
+                   const str_int_entry* table, int num_entries,
                    int case_sensitive) {
-    size_t top, mid, bot;
+    TRACE("Executing map_str_to_int()");
+    if (name == nullptr || table == nullptr)
+        return -1;
+
+    int top, mid, bot;
     int cmp;
     memptr name_ptr;
 
@@ -74,21 +72,20 @@ int map_str_to_int(const char* name, size_t name_len,
             top = mid + 1; /* look below mid */
         } else if (cmp < 0) {
             bot = mid - 1; /* look above mid */
-        } else             /* cmp == 0 */
-            if (mid <=
-                static_cast<size_t>(
-                    std::numeric_limits<int>::max())) { // Protect type cast
-                return static_cast<int>(mid); /* match; return table index */
-            }
+        } else {           /* cmp == 0 */
+            return mid;    /* match; return table index */
+        }
     }
 
     return -1; /* header name not found */
 }
 
 int map_int_to_str(int id, const str_int_entry* table, int num_entries) {
-    int i;
+    TRACE("Executing map_int_to_str()");
+    if (table == nullptr)
+        return -1;
 
-    for (i = 0; i < num_entries; i++) {
+    for (int i = 0; i < num_entries; i++) {
         if (table[i].id == id) {
             return i;
         }
