@@ -1,11 +1,13 @@
 #ifndef UPNPLIB_HTTPREADWRITE_HPP
 #define UPNPLIB_HTTPREADWRITE_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-27
+// Redistribution only with this Copyright remark. Last modified: 2024-04-12
 /*!
  * \file
- * \brief C++ Interface class httpreadwrite and declaration class Uri
+ * \brief Declaration of class Uri
  */
+
+#include <string>
 
 namespace upnplib {
 
@@ -26,6 +28,7 @@ namespace upnplib {
 // `http_OpenHttpGetEx(char const*, void**, char**, int*, int*, int, int, int)'
 // `http_ReadHttpResponse(void*, char*, unsigned long*, int)'
 
+#if 0
 /*!
  * \brief C++ Interface for http read and write
  */
@@ -174,6 +177,7 @@ class Chttpreadwrite_old : Ihttpreadwrite {
     void get_sdk_info(char* info, size_t infoSize) override {
         return ::get_sdk_info(info, infoSize); }
 };
+#endif
 
 #if 0
 class Chttpreadwrite: Chttpreadwrite_old {

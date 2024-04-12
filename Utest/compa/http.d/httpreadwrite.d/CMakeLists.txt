@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-12-26
+# Redistribution only with this Copyright remark. Last modified: 2024-04-13
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../../cmake/project-header.cmake)
@@ -60,9 +60,6 @@ target_compile_options(test_httpreadwrite-pst
         # disable warning: 'sprintf' (and others) is deprecated: This function is
         # provided for compatibility reasons only.
         $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-declarations>
-        # disable warning C4505: 'upnplib::Check_Connect_And_Wait_Connection':
-        # unreferenced local function has been removed
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
         # disable warning C4706: assignment within conditional expression
         $<$<CXX_COMPILER_ID:MSVC>:/wd4706>
 )
@@ -73,6 +70,23 @@ target_link_libraries(test_httpreadwrite-pst
         utest_static
 )
 add_test(NAME ctest_httpreadwrite-pst COMMAND test_httpreadwrite-pst --gtest_shuffle
+    WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
+add_executable(test_httpreadwrite-cst
+#------------------------------------
+    ./test_httpreadwrite.cpp
+)
+target_include_directories(test_httpreadwrite-cst
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+)
+target_link_libraries(test_httpreadwrite-cst
+    PRIVATE
+        compa_static
+        upnplib_static
+        utest_static
+)
+add_test(NAME ctest_httpreadwrite-cst COMMAND test_httpreadwrite-cst --gtest_shuffle
     WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 

@@ -8,7 +8,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-03
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -263,11 +263,8 @@ UPNPLIB_API int http_OpenHttpConnection(
     /*! [in,out] A pointer in which to store the handle for this connection.
      * This handle is required for futher operations over this connection. */
     void** Handle,
-    /*! [in] The time out value sent with the request during which a response
-     * is expected from the receiver, failing which, an error is reported.
-     * If value is negative, timeout is infinite.\n
-     * **This argument isn't used anymore** and only available for downstream
-     * compatibility. It can be set to 0.*/
+    /*! [in] This argument isn't used anymore and only available for
+       downstream compatibility. It can be set to any value. */
     int timeout);
 
 /*!

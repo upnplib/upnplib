@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-10
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1865,15 +1865,13 @@ UPNPLIB_API int UpnpUnSubscribeAsync(
 /*!
  * \brief Different HTTP methods.
  */
-enum Upnp_HttpMethod_e {
+enum Upnp_HttpMethod {
     UPNP_HTTPMETHOD_PUT = 0,
     UPNP_HTTPMETHOD_DELETE = 1,
     UPNP_HTTPMETHOD_GET = 2,
     UPNP_HTTPMETHOD_HEAD = 3,
     UPNP_HTTPMETHOD_POST = 4
 };
-
-typedef enum Upnp_HttpMethod_e Upnp_HttpMethod;
 
 /*!
  * \brief Downloads a file specified in a URL.

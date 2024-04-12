@@ -1,15 +1,19 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-21
+// Redistribution only with this Copyright remark. Last modified: 2024-04-14
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
 #include <Pupnp/upnp/src/genlib/net/http/httpreadwrite.cpp>
-#include <Upnplib/src/net/http/httpreadwrite.cpp>
+#else
+#include <Compa/src/genlib/net/http/httpreadwrite.cpp>
+#endif
 
 #include <upnplib/global.hpp>
 #include <upnplib/upnptools.hpp>
 #include <upnplib/uri.hpp>
 #include <upnplib/socket.hpp>
+#include <upnplib/httpreadwrite.hpp>
 
 #include <utest/utest.hpp>
 #include <umock/netdb_mock.hpp>
@@ -28,7 +32,6 @@ using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
 using ::testing::StrEq;
 
-using ::upnplib::Chttpreadwrite_old;
 using ::upnplib::CUri;
 using ::upnplib::Curi;
 using ::upnplib::errStr;
@@ -58,7 +61,6 @@ class Mock_netv4info : public umock::NetdbMock {
     struct addrinfo m_res {};
 
   public:
-    // Save and restore the old pointer to the production function
     Mock_netv4info() {
         m_sa.sin_family = AF_INET;
         m_res.ai_family = AF_INET;
@@ -68,7 +70,7 @@ class Mock_netv4info : public umock::NetdbMock {
         inet_pton(m_sa.sin_family, a_ipaddr, &m_sa.sin_addr);
         m_sa.sin_port = htons(a_port);
 
-        m_res.ai_addrlen = sizeof(struct sockaddr);
+        m_res.ai_addrlen = sizeof(sockaddr);
         m_res.ai_addr = (sockaddr*)&m_sa;
 
         return &m_res;
@@ -111,20 +113,19 @@ TEST(OpenHttpConnectionTestSuite, open_http_connection_to_localhost) {
     memset(&phandle, 0xaa, sizeof(phandle));
 
     // Test Unit
-    Chttpreadwrite_old httprw_oObj;
     int returned =
-        httprw_oObj.http_OpenHttpConnection(serverurl, (void**)&phandle, 0);
+        http_OpenHttpConnection(serverurl, (void**)&phandle, 0);
 
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
     // Close connection
-    returned = httprw_oObj.http_CloseHttpConnection(phandle);
+    returned = http_CloseHttpConnection(phandle);
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 }
 #endif
 
 class Curi_type_testurl {
-    // This is a fixed test uri structure. It is set exactly to the output of
+    // This is a fix test uri structure. It is set exactly to the output of
     // parse_uri() incl. possible bugs. This is mainly made to understand the
     // structure and to have a valid uri_type url structure for testing.
 
@@ -132,7 +133,8 @@ class Curi_type_testurl {
     // To have access to these properties by pointing to the object (like
     // pointing to a C structure) they must be the first declarations. So we can
     // cast a pointer to the instantiation to uri_type* and use it as C
-    // structure, for example:
+    // structure. Please note that this only works if we do not have any virtual
+    // declatation. An example:
     //
     // Curi_type_testurl testurlObj;
     // uri_type* url = (uri_type*)&testurlObj;
@@ -290,18 +292,17 @@ TEST(ParseUriIp4TestSuite, verify_testurl) {
     EXPECT_EQ(test_url->fragment.size, out.fragment.size);
 }
 
-class OpenHttpConnectionIp4FTestSuite : public ::testing::Test {
+class HttpIp4FTestSuite : public ::testing::Test {
   protected:
     // Provide mocked objects
     Mock_netv4info m_mock_netdbObj;
     umock::PupnpHttpRwMock m_mock_pupnpHttpRwObj;
     umock::Sys_socketMock m_mock_socketObj;
-    Chttpreadwrite_old m_httprw_oObj;
 
     // Dummy socket, if we do not need a real one due to mocking
     const ::SOCKET m_socketfd{514};
 
-    OpenHttpConnectionIp4FTestSuite() {
+    HttpIp4FTestSuite() {
         // Set default return values for getaddrinfo in case we get an
         // unexpected call but it should not occur.
         ON_CALL(m_mock_netdbObj, getaddrinfo(_, _, _, _))
@@ -310,6 +311,7 @@ class OpenHttpConnectionIp4FTestSuite : public ::testing::Test {
     }
 };
 
+typedef HttpIp4FTestSuite OpenHttpConnectionIp4FTestSuite;
 
 TEST_F(OpenHttpConnectionIp4FTestSuite, open_close_connection_successful) {
     // Expectations:
@@ -320,12 +322,12 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_close_connection_successful) {
     // - connect to network server succeeds
 
     // A connection handle will be allocated on memory by the function and the
-    // pointer to it is returned here. As documented we must free it. We can use
+    // pointer to it is returned here. As documented we must free it. I can use
     // a generic pointer because the function needs it:
     // void* phandle;
-    // But that is bad for type-save C++. So we use the correct type with type
+    // But that is bad for type-save C++. So I use the correct type with type
     // cast on the argument (void**)&phandle (see Test Unit below).
-    // We initialize it to an invalid pointer.
+    // I initialize it to an invalid pointer.
     http_connection_handle_t* phandle;
     memset(&phandle, 0xaa, sizeof(phandle));
 
@@ -357,8 +359,8 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_close_connection_successful) {
         .WillOnce(Return(0));
 
     // Test Unit
-    int returned = m_httprw_oObj.http_OpenHttpConnection(
-        ("http://" + servername).c_str(), (void**)&phandle, 0);
+    int returned = http_OpenHttpConnection(("http://" + servername).c_str(),
+                                           (void**)&phandle, 0);
 
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
@@ -376,7 +378,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_close_connection_successful) {
 
     // Close connection
     // Will call socket_h->shutdown and unistd_h->close
-    returned = m_httprw_oObj.http_CloseHttpConnection(phandle);
+    returned = http_CloseHttpConnection(phandle);
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 }
 
@@ -403,8 +405,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, nullptr_to_url) {
     http_connection_handle_t* phandle_bak{phandle};
 
     // Test Unit
-    int returned =
-        m_httprw_oObj.http_OpenHttpConnection(nullptr, (void**)&phandle, 0);
+    int returned = http_OpenHttpConnection(nullptr, (void**)&phandle, 0);
 
     EXPECT_EQ(returned, UPNP_E_INVALID_PARAM)
         << errStrEx(returned, UPNP_E_INVALID_PARAM);
@@ -437,8 +438,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, empty_url) {
     memset(&phandle, 0xaa, sizeof(phandle));
 
     // Test Unit
-    int returned =
-        m_httprw_oObj.http_OpenHttpConnection("", (void**)&phandle, 0);
+    int returned = http_OpenHttpConnection("", (void**)&phandle, 0);
 
     EXPECT_EQ(returned, UPNP_E_INVALID_URL)
         << errStrEx(returned, UPNP_E_INVALID_URL);
@@ -455,7 +455,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_address_info_fails) {
     // - freeing network socket not called
     // - connect to network server not called
 
-    // For details look at test "open_connection_successful".
+    // For details look at test "open_close_connection_successful".
     addrinfo* res{};
     const ::std::string servername{"upnplib.net"};
 
@@ -487,8 +487,8 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_address_info_fails) {
     memset(&phandle, 0xaa, sizeof(phandle));
 
     // Test Unit
-    int returned = m_httprw_oObj.http_OpenHttpConnection(
-        ("http://" + servername).c_str(), (void**)&phandle, 0);
+    int returned = http_OpenHttpConnection(("http://" + servername).c_str(),
+                                           (void**)&phandle, 0);
 
     EXPECT_EQ(returned, UPNP_E_INVALID_URL)
         << errStrEx(returned, UPNP_E_INVALID_URL);
@@ -503,18 +503,18 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_socket_fails) {
     // very specific environment that causes this error. I will try to isolate
     // the error step by step when doing other work.
 #ifdef __APPLE__
-    GTEST_SKIP() << "Test randomly only fails with 'Bus error***Exception' on "
-                    "MacOS Release with openssl. That's hard to find.";
+    // GTEST_SKIP() << "Test randomly only fails with 'Bus error***Exception' on
+    // MacOS Release with openssl. That's hard to find.";
 #endif
 
     // Expectations:
-    // - get address info for url (DNS name resolution) succeeds
+    // - get address info for url (name resolution) succeeds
     // - free address info is called
     // - get network socket fails
     // - freeing network socket fails
     // - connect to network server not called
 
-    // For details look at test "open_connection_successful".
+    // For details look at test "open_close_connection_successful".
 
     addrinfo* res = m_mock_netdbObj.get("192.168.10.10", 80);
     const ::std::string servername{"upnplib.net"};
@@ -533,24 +533,39 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_socket_fails) {
     EXPECT_CALL(sys_socketObj, socket(_, _, _))
         .WillOnce(SetErrnoAndReturn(EINVAL, -1));
 
-    // Shutdown socket will fail with "The file descriptor sockfd does not refer
-    // to a socket."
-    EXPECT_CALL(sys_socketObj, shutdown(_, _))
+    if (old_code) {
+        // This old_code part is because the Unit under test
+        // (http_OpenHttpConnection()) does not set the INVALID_SOCKET status
+        // in the socket info structure returned to the calling program.
+
+        // Shutdown socket will fail with "The file descriptor sockfd does not
+        // refer to a socket."
+        EXPECT_CALL(sys_socketObj, shutdown(_, _))
 #ifndef UPNP_ENABLE_OPEN_SSL
-        .WillOnce(SetErrnoAndReturn(EBADFP, -1));
+            .WillOnce(SetErrnoAndReturn(EBADFP, -1));
 #else
-        .Times(0);
+            .Times(0);
 #endif
 
-    // Close socket will fail with "fd isn't a valid open file descriptor."
-    umock::UnistdMock unistdObj;
-    umock::Unistd unistd_injectObj(&unistdObj);
-    EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(_))
-#ifndef UPNP_ENABLE_OPEN_SSL
-        .WillOnce(SetErrnoAndReturn(EBADF, -1));
-#else
-        .Times(0);
-#endif
+        // Close socket will fail with "fd isn't a valid open file descriptor."
+        umock::UnistdMock unistdObj;
+        umock::Unistd unistd_injectObj(&unistdObj);
+        EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(_)).Times(0);
+        // #ifndef UPNP_ENABLE_OPEN_SSL
+        //             .WillOnce(SetErrnoAndReturn(EBADF, -1));
+        // #else
+        //             .Times(0);
+        // #endif
+
+    } else {
+
+        // Guard shutdown and close socket. They should not be called with
+        // failing to get a socket.
+        EXPECT_CALL(sys_socketObj, shutdown(_, _)).Times(0);
+        umock::UnistdMock unistdObj;
+        umock::Unistd unistd_injectObj(&unistdObj);
+        EXPECT_CALL(unistdObj, CLOSE_SOCKET_P(_)).Times(0);
+    }
 
     // Don't expect a connection to a network server
     umock::PupnpHttpRw pupnp_httprw_injectObj(&m_mock_pupnpHttpRwObj);
@@ -562,14 +577,14 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_socket_fails) {
     http_connection_handle_t* phandle{invalid_ptr};
 
     // Test Unit
-    int returned = m_httprw_oObj.http_OpenHttpConnection(
-        ("http://" + servername).c_str(), (void**)&phandle, 0);
+    int returned = http_OpenHttpConnection(("http://" + servername).c_str(),
+                                           (void**)&phandle, 0);
 
     EXPECT_EQ(returned, UPNP_E_SOCKET_ERROR)
         << errStrEx(returned, UPNP_E_SOCKET_ERROR);
 
     if (old_code) {
-        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": Failing to get a socket must return INVALID_SOCKET.\n";
         EXPECT_NE((*phandle).sock_info.socket, INVALID_SOCKET); // Wrong!
 
@@ -582,7 +597,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_socket_fails) {
     // Will call socket_h->shutdown and unistd_h->close
     // Must not segfault with OpenSSL enabled, needs rework.
 #ifndef UPNP_ENABLE_OPEN_SSL
-    returned = m_httprw_oObj.http_CloseHttpConnection(phandle);
+    returned = http_CloseHttpConnection(phandle);
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 #endif
 }
@@ -595,7 +610,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, connect_to_server_fails) {
     // - freeing network socket succeeds
     // - connect to network server fails
 
-    // For details look at test "open_connection_successful".
+    // For details look at test "open_close_connection_successful".
 
     addrinfo* res = m_mock_netdbObj.get("192.168.10.10", 80);
     const ::std::string servername{"upnplib.net"};
@@ -629,8 +644,8 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, connect_to_server_fails) {
     memset(&phandle, 0xaa, sizeof(phandle));
 
     // Test Unit
-    int returned = m_httprw_oObj.http_OpenHttpConnection(
-        ("http://" + servername).c_str(), (void**)&phandle, 0);
+    int returned = http_OpenHttpConnection(("http://" + servername).c_str(),
+                                           (void**)&phandle, 0);
 
     EXPECT_EQ(returned, UPNP_E_SOCKET_CONNECT)
         << errStrEx(returned, UPNP_E_SOCKET_CONNECT);
@@ -638,7 +653,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, connect_to_server_fails) {
     // Close connection
     // This does not call socket_h->shutdown or unistd_h->close. Seems it is
     // already done before because both are called Times(1).
-    returned = m_httprw_oObj.http_CloseHttpConnection(phandle);
+    returned = http_CloseHttpConnection(phandle);
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 }
 
@@ -650,7 +665,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_connection_with_ip_address) {
     // - freeing network socket succeeds
     // - connect to network server succeeds
 
-    // For details look at test "open_connection_successful".
+    // For details look at test "open_close_connection_successful".
 
     constexpr char serverip[]{"http://192.168.168.168"};
 
@@ -680,8 +695,7 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_connection_with_ip_address) {
     memset(&phandle, 0xaa, sizeof(phandle));
 
     // Test Unit
-    int returned =
-        m_httprw_oObj.http_OpenHttpConnection(serverip, (void**)&phandle, 0);
+    int returned = http_OpenHttpConnection(serverip, (void**)&phandle, 0);
 
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 
@@ -699,11 +713,11 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, open_connection_with_ip_address) {
 
     // Close connection
     // Will call socket_h->shutdown and unistd_h->close
-    returned = m_httprw_oObj.http_CloseHttpConnection(phandle);
+    returned = http_CloseHttpConnection(phandle);
     EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
 }
 
-typedef OpenHttpConnectionIp4FTestSuite CloseHttpConnectionIp4FTestSuite;
+typedef HttpIp4FTestSuite CloseHttpConnectionIp4FTestSuite;
 
 TEST_F(CloseHttpConnectionIp4FTestSuite, close_nullptr_handle) {
     // TODO: Improve tests which use http_CloseHttpConnection() to match the
@@ -716,7 +730,7 @@ TEST_F(CloseHttpConnectionIp4FTestSuite, close_nullptr_handle) {
     http_connection_handle_t* phandle{nullptr};
 
     // Test Unit
-    int returned = m_httprw_oObj.http_CloseHttpConnection(phandle);
+    int returned = http_CloseHttpConnection(phandle);
     if (old_code) {
         EXPECT_EQ(returned, UPNP_E_INVALID_PARAM)
             << errStrEx(returned, UPNP_E_INVALID_PARAM);
@@ -726,7 +740,7 @@ TEST_F(CloseHttpConnectionIp4FTestSuite, close_nullptr_handle) {
     }
 }
 
-typedef OpenHttpConnectionIp4FTestSuite HttpConnectIp4FTestSuite;
+typedef HttpIp4FTestSuite HttpConnectIp4FTestSuite;
 
 TEST_F(HttpConnectIp4FTestSuite, successful_connect) {
     // Expect socket allocation
@@ -821,6 +835,19 @@ TEST_F(HttpConnectIp4FTestSuite, low_level_net_connect_fails) {
         << ") but not " << errStr((int)sockfd);
 }
 
+TEST(HttpIp4TestSuite, make_http_request) {
+    // Simple compile test. Test needs to be improved.
+
+    // Test Unit
+    int ret_http_MakeHttpRequest = http_MakeHttpRequest(
+        UPNP_HTTPMETHOD_POST,
+        "http://www.upnplib.net:80/dest/path/?key=value#fragment", 0, NULL,
+        NULL, UPNP_UNTIL_CLOSE, 30);
+
+    EXPECT_EQ(ret_http_MakeHttpRequest, UPNP_E_INVALID_PARAM)
+        << errStrEx(ret_http_MakeHttpRequest, UPNP_E_INVALID_PARAM);
+}
+
 TEST(HttpFixUrl, check_http_FixStrUrl_successful) {
     if (github_actions)
         GTEST_SKIP() << "             known failing test on Github Actions";
@@ -877,8 +904,7 @@ TEST(HttpFixUrl, empty_url_structure) {
     memset(&fixed_url, 0xaa, sizeof(uri_type));
 
     // Test Unit
-    Chttpreadwrite_old httprw_oObj;
-    EXPECT_EQ(httprw_oObj.http_FixUrl(&url, &fixed_url), UPNP_E_INVALID_URL);
+    EXPECT_EQ(http_FixUrl(&url, &fixed_url), UPNP_E_INVALID_URL);
 
     // The input url structure isn't modified
     uri_type ref_url{};
@@ -906,8 +932,7 @@ TEST(HttpFixUrl, fix_url_no_path_and_query_successful) {
 
     // Test Unit
     uri_type fixed_url;
-    Chttpreadwrite_old httprw_oObj;
-    EXPECT_EQ(httprw_oObj.http_FixUrl(&url, &fixed_url), UPNP_E_SUCCESS);
+    EXPECT_EQ(http_FixUrl(&url, &fixed_url), UPNP_E_SUCCESS);
 
     // The relevant part (e.g. "http") in the token buffer is specified by the
     // token size. But it is no problem to compare the whole buffer because it
@@ -937,12 +962,10 @@ TEST(HttpFixUrl, nullptr_to_url) {
 
     } else {
 
-        Chttpreadwrite_old httprw_oObj;
-        ASSERT_EXIT((httprw_oObj.http_FixUrl(nullptr, &fixed_url), exit(0)),
+        ASSERT_EXIT((http_FixUrl(nullptr, &fixed_url), exit(0)),
                     ::testing::ExitedWithCode(0), ".*")
             << "  BUG! A nullptr to the input url must not segfault.";
-        EXPECT_EQ(httprw_oObj.http_FixUrl(nullptr, &fixed_url),
-                  UPNP_E_INVALID_URL);
+        EXPECT_EQ(http_FixUrl(nullptr, &fixed_url), UPNP_E_INVALID_URL);
     }
 }
 
@@ -960,11 +983,10 @@ TEST(HttpFixUrl, nullptr_to_fixed_url) {
 
     } else {
 
-        Chttpreadwrite_old httprw_oObj;
-        ASSERT_EXIT((httprw_oObj.http_FixUrl(url, nullptr), exit(0)),
+        ASSERT_EXIT((http_FixUrl(url, nullptr), exit(0)),
                     ::testing::ExitedWithCode(0), ".*")
             << "  BUG! A nullptr to the fixed url must not segfault.";
-        EXPECT_EQ(httprw_oObj.http_FixUrl(url, nullptr), UPNP_E_INVALID_URL);
+        EXPECT_EQ(http_FixUrl(url, nullptr), UPNP_E_INVALID_URL);
     }
 }
 
@@ -982,8 +1004,7 @@ TEST(HttpFixUrl, wrong_scheme_ftp) {
 
     // Test Unit
     uri_type fixed_url;
-    Chttpreadwrite_old httprw_oObj;
-    EXPECT_EQ(httprw_oObj.http_FixUrl(&url, &fixed_url), UPNP_E_INVALID_URL);
+    EXPECT_EQ(http_FixUrl(&url, &fixed_url), UPNP_E_INVALID_URL);
 
     EXPECT_STREQ(fixed_url.scheme.buff, "ftp://192.168.169.170:80#fragment");
     EXPECT_EQ(fixed_url.scheme.size, (size_t)3);
@@ -1000,8 +1021,7 @@ TEST(HttpFixUrl, no_fragment) {
 
     // Test Unit
     uri_type fixed_url;
-    Chttpreadwrite_old httprw_oObj;
-    EXPECT_EQ(httprw_oObj.http_FixUrl(&url, &fixed_url), UPNP_E_SUCCESS);
+    EXPECT_EQ(http_FixUrl(&url, &fixed_url), UPNP_E_SUCCESS);
 
     EXPECT_STREQ(url.scheme.buff, "http://192.168.169.170:80/path/?key=value");
     EXPECT_EQ(url.scheme.size, (size_t)4);
@@ -1011,55 +1031,81 @@ TEST(HttpFixUrl, no_fragment) {
 
 TEST(GetHostaddr, valid_url_str) {
     const char url_str[]{"https://www.sample.net:49152/tvdevicedesc.xml"};
-    const char* hoststr;
-    memset(&hoststr, 0xaa, sizeof(hoststr));
-    size_t hostlen{0xaa};
+    const char* hoststr{reinterpret_cast<const char*>(~0)};
+    size_t hostlen{~0u};
 
-    int returned = get_hoststr(url_str, &hoststr, &hostlen);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
+    // Test Unit
+    int ret_get_hoststr = get_hoststr(url_str, &hoststr, &hostlen);
+
+    EXPECT_EQ(ret_get_hoststr, UPNP_E_SUCCESS)
+        << errStrEx(ret_get_hoststr, UPNP_E_SUCCESS);
+    EXPECT_EQ(hoststr, &url_str[0] + 8);
     EXPECT_STREQ(hoststr, "www.sample.net:49152/tvdevicedesc.xml");
-    EXPECT_EQ(hostlen, (size_t)20);
+    EXPECT_EQ(hostlen, 20u);
 }
 
 TEST(GetHostaddr, wrong_url_str) {
     const char url_str[]{"www.sample.net:49152"};
-    const char* hoststr;
-    memset(&hoststr, 0xaa, sizeof(hoststr));
-    size_t hostlen{0xaa};
+    const char* hoststr{reinterpret_cast<const char*>(~0)};
+    size_t hostlen{~0u};
 
-    int returned = get_hoststr(url_str, &hoststr, &hostlen);
-    EXPECT_EQ(returned, UPNP_E_INVALID_URL)
-        << errStrEx(returned, UPNP_E_INVALID_URL);
-    const char* refptr;
-    memset(&refptr, 0xaa, sizeof(refptr));
-    EXPECT_EQ(hoststr, refptr);
-    EXPECT_EQ(hostlen, (size_t)0xaa);
+    // Test Unit
+    int ret_get_hoststr = get_hoststr(url_str, &hoststr, &hostlen);
+
+    EXPECT_EQ(ret_get_hoststr, UPNP_E_INVALID_URL)
+        << errStrEx(ret_get_hoststr, UPNP_E_INVALID_URL);
+    EXPECT_EQ(hoststr, reinterpret_cast<const char*>(~0));
+    EXPECT_EQ(hostlen, ~0u);
 }
 
-TEST(GetHostaddr, short_url_str) {
-    const char url_str[]{"https://"};
-    const char* hoststr;
-    memset(&hoststr, 0xaa, sizeof(hoststr));
-    size_t hostlen{0xaa};
+TEST(GetHostaddr, wrong_short_url_strings) {
+    const char url_str1[]{"//"};
+    const char* hoststr{reinterpret_cast<const char*>(~0)};
+    size_t hostlen{~0u};
 
-    int returned = get_hoststr(url_str, &hoststr, &hostlen);
-    EXPECT_EQ(returned, UPNP_E_SUCCESS) << errStrEx(returned, UPNP_E_SUCCESS);
+    // Test Unit
+    int ret_get_hoststr = get_hoststr(url_str1, &hoststr, &hostlen);
+    EXPECT_EQ(ret_get_hoststr, UPNP_E_SUCCESS)
+        << errStrEx(ret_get_hoststr, UPNP_E_SUCCESS);
+    EXPECT_EQ(hoststr, &url_str1[0] + 2);
     EXPECT_STREQ(hoststr, "");
-    EXPECT_EQ(hostlen, (size_t)0);
+    EXPECT_EQ(hostlen, 0u);
+
+    const char url_str2[]{"///"};
+    hoststr = reinterpret_cast<const char*>(~0);
+    hostlen = ~0u;
+
+    // Test Unit
+    ret_get_hoststr = get_hoststr(url_str2, &hoststr, &hostlen);
+    EXPECT_EQ(ret_get_hoststr, UPNP_E_SUCCESS)
+        << errStrEx(ret_get_hoststr, UPNP_E_SUCCESS);
+    EXPECT_EQ(hoststr, &url_str2[0] + 2);
+    EXPECT_STREQ(hoststr,
+                 "/"); // Better it would point to "", but hostlen is 0.
+    EXPECT_EQ(hostlen, 0u);
+
+    const char url_str3[]{"https://"};
+    hoststr = reinterpret_cast<const char*>(~0);
+    hostlen = ~0u;
+
+    // Test Unit
+    ret_get_hoststr = get_hoststr(url_str3, &hoststr, &hostlen);
+    EXPECT_EQ(ret_get_hoststr, UPNP_E_SUCCESS)
+        << errStrEx(ret_get_hoststr, UPNP_E_SUCCESS);
+    EXPECT_EQ(hoststr, &url_str3[0] + 8);
+    EXPECT_STREQ(hoststr, "");
+    EXPECT_EQ(hostlen, 0u);
 }
 
-TEST(GetHostaddr, empty_url_str) {
-    const char url_str[]{""};
-    const char* hoststr;
-    memset(&hoststr, 0xaa, sizeof(hoststr));
-    size_t hostlen{0xaa};
-
-    int retval{UPNP_E_INVALID_URL};
+TEST(GetHostaddr, url_str_with_0_or_1_char) {
+    const char* hoststr{reinterpret_cast<const char*>(~0)};
+    size_t hostlen{~0u};
+    int ret_get_hoststr{UPNP_E_INVALID_URL};
 
     if (old_code) {
-        // Does not compile with error:
-        // retval = get_hoststr(url_str, &hoststr, &hostlen);
-        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+        // Compiles with error complaining boundary violation.:
+        // ret_get_hoststr = get_hoststr(url_str, &hoststr, &hostlen);
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": Will fail to compile with: reading 1 or more bytes "
                      "from a region of size 0.\n";
         if (!github_actions)
@@ -1067,15 +1113,20 @@ TEST(GetHostaddr, empty_url_str) {
 
     } else {
 
-        retval = get_hoststr(url_str, &hoststr, &hostlen);
-    }
+        // Test Unit
+        const char url_str1[]{""};
+        ret_get_hoststr = get_hoststr(url_str1, &hoststr, &hostlen);
+        EXPECT_EQ(ret_get_hoststr, UPNP_E_INVALID_URL)
+            << errStrEx(ret_get_hoststr, UPNP_E_INVALID_URL);
+        EXPECT_EQ(hoststr, reinterpret_cast<const char*>(~0));
+        EXPECT_EQ(hostlen, ~0u);
 
-    EXPECT_EQ(retval, UPNP_E_INVALID_URL)
-        << errStrEx(retval, UPNP_E_INVALID_URL);
-    const char* refptr;
-    memset(&refptr, 0xaa, sizeof(refptr));
-    EXPECT_EQ(hoststr, refptr);
-    EXPECT_EQ(hostlen, (size_t)0xaa);
+        ret_get_hoststr = get_hoststr("/", &hoststr, &hostlen);
+        EXPECT_EQ(ret_get_hoststr, UPNP_E_INVALID_URL)
+            << errStrEx(ret_get_hoststr, UPNP_E_INVALID_URL);
+        EXPECT_EQ(hoststr, reinterpret_cast<const char*>(~0));
+        EXPECT_EQ(hostlen, ~0u);
+    }
 }
 
 TEST(GetHostaddr, nullptr_url_str) {
@@ -1083,7 +1134,7 @@ TEST(GetHostaddr, nullptr_url_str) {
         GTEST_SKIP() << "             known failing test on Github Actions";
 
     if (old_code) {
-        std::cout << CRED "[ BUG      ] " CRES << __LINE__
+        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": A nullptr to the url string must not segfault.\n";
 
     } else {
@@ -1194,8 +1245,7 @@ TEST(HttpreadwriteIp6TestSuite, open_http_connection_with_ip_address) {
     memset(&phandle, 0xaa, sizeof(phandle));
 
     // Test the Unit
-    Chttpreadwrite_old httprw_oObj;
-    int returned = httprw_oObj.http_OpenHttpConnection(
+    int returned = http_OpenHttpConnection(
         // This is the ip address from http://google.com
         "http://2a00:1450:4001:80e::200e", (void**)&phandle, 3);
 

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-19
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-14
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -158,7 +158,7 @@ bool unblock_tcp_connections{true};
 /// \endcond
 
 /*!
- * \brief Extract hostname from URL.
+ * \brief Point to the hostname within a URL C-string.
  *
  * \returns
  *  On success: UPNP_E_SUCCESS\n
@@ -167,22 +167,31 @@ bool unblock_tcp_connections{true};
  * \todo Check if this can be taken from the httpparser.
  */
 int get_hoststr(
-    const char* url_str,  ///< [in] Pointer to URL string.
-    const char** hoststr, ///< [out] Pointer to pointer to the host string.
-    size_t* hostlen       ///< [in] Pointer to max length of the host string.
+    const char* url_str, ///< [in] Pointer to URL string.
+    const char**
+        hoststr,    /*!< [out] Filled with a pointer to the start of the host
+                       string within url_str. On error this remains untouched. */
+    size_t* hostlen /*!< [out] Filled with the length (without terminating '\0')
+                       of the host string. On error this remains untouched. */
 ) {
+    TRACE("Executing get_hoststr()")
     const char* start;
     const char* finish;
     int ret_code = UPNP_E_INVALID_URL;
 
-    start = strstr(url_str, "//");
-    if (!start) {
+    // strlen() must be at least 2 char otherwise compiler complains boundary
+    // error with next strstr() statement.
+    if (strlen(url_str) < 2)
         goto end_function;
-    }
+
+    start = strstr(url_str, "//");
+    if (!start)
+        goto end_function;
+
     start += 2;
     finish = strchr(start, '/');
     if (finish) {
-        *hostlen = (size_t)(finish - start);
+        *hostlen = static_cast<size_t>(finish - start);
     } else {
         *hostlen = strlen(start);
     }
@@ -1101,14 +1110,15 @@ int http_CancelHttpGet(void* Handle) {
     return UPNP_E_SUCCESS;
 }
 
-int http_OpenHttpConnection(const char* url_str, void** Handle, int timeout) {
+int http_OpenHttpConnection(const char* url_str, void** Handle,
+                            [[maybe_unused]] int timeout) {
+    TRACE("Executing http_OpenHttpConnection()")
     int ret_code;
     size_t sockaddr_len;
     SOCKET tcp_connection;
-    http_connection_handle_t* handle = NULL;
+    http_connection_handle_t* handle = nullptr;
     uri_type url;
-    (void)timeout; /* Unused parameter */
-    // BUG! *Handle should be initialized here, otherwise possible segfault
+    // BUG! *Handle should be initialized here? Otherwise possible segfault.
     // *Handle = handle;
     if (!url_str || !Handle)
         return UPNP_E_INVALID_PARAM;
@@ -1117,7 +1127,7 @@ int http_OpenHttpConnection(const char* url_str, void** Handle, int timeout) {
     ret_code = http_FixStrUrl(url_str, strlen(url_str), &url);
     if (ret_code != UPNP_E_SUCCESS)
         return ret_code;
-    /* create the handle */
+    /* create the connection handle */
     handle =
         (http_connection_handle_t*)malloc(sizeof(http_connection_handle_t));
     if (!handle) {
@@ -1129,6 +1139,7 @@ int http_OpenHttpConnection(const char* url_str, void** Handle, int timeout) {
     tcp_connection = umock::sys_socket_h.socket(
         url.hostport.IPaddress.ss_family, SOCK_STREAM, 0);
     if (tcp_connection == INVALID_SOCKET) {
+        handle->sock_info.socket = INVALID_SOCKET;
         ret_code = UPNP_E_SOCKET_ERROR;
         goto errorHandler;
     }
