@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-10-20
+// Redistribution only with this Copyright remark. Last modified: 2024-04-14
 
 #include <upnplib/port.hpp> // needed for _MSC_VER
 #include <upnplib/sockaddr.hpp>
@@ -157,15 +157,6 @@ TEST(FileModTimeTestSuite, get_modification_time_from_empty_filename) {
 
 TEST(FileModTimeTestSuite, get_modification_time_from_invalid_filename) {
     EXPECT_THROW(file_mod_time("unknown.file"), std::invalid_argument);
-}
-
-TEST(FileModTimeTestSuite, get_modification_time_from_nullptr) {
-#ifdef __unix__
-    EXPECT_THROW(file_mod_time(nullptr), std::logic_error);
-#else
-    // This expects segfault from the std::string object of the argument.
-    EXPECT_DEATH(file_mod_time(nullptr), ".*");
-#endif
 }
 
 TEST(DISABLED_ClosedFdsTestSuite, check_closed_fds) {

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+// Redistribution only with this Copyright remark. Last modified: 2024-04-14
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -486,7 +486,8 @@ TEST(AddrinfoTestSuite, is_numeric_node_fails) {
         std::cout << CYEL "[ TODO     ] " CRES << __LINE__
                   << ": Check if using a nullptr to a std::string is detected "
                      "by the compiler now.\n";
-        EXPECT_FALSE(is_numeric_node(nullptr));
+        // Does not compile anymore since C++23:
+        // EXPECT_FALSE(is_numeric_node(nullptr));
     }
 }
 

@@ -498,15 +498,6 @@ TEST_F(OpenHttpConnectionIp4FTestSuite, get_address_info_fails) {
 }
 
 TEST_F(OpenHttpConnectionIp4FTestSuite, get_socket_fails) {
-    // This test randomly fails with "Bus error***Exception" on Github Actions
-    // running on MacOS config type "Release" and openssl enabled. Seems it is a
-    // very specific environment that causes this error. I will try to isolate
-    // the error step by step when doing other work.
-#ifdef __APPLE__
-    // GTEST_SKIP() << "Test randomly only fails with 'Bus error***Exception' on
-    // MacOS Release with openssl. That's hard to find.";
-#endif
-
     // Expectations:
     // - get address info for url (name resolution) succeeds
     // - free address info is called
