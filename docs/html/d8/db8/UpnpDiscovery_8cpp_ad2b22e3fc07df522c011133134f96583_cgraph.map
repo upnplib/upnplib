@@ -1,0 +1,7 @@
+<map id="UpnpDiscovery_get_Ext_cstr" name="UpnpDiscovery_get_Ext_cstr">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,213,56"/>
+<area shape="rect" id="Node000002" href="$d8/db8/UpnpDiscovery_8cpp.html#a01e1526557f4085cb439829b4b067a44" title=" " alt="" coords="261,5,439,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="213,30,247,26,248,31,214,35"/>
+<area shape="rect" id="Node000003" href="$d1/d03/group__UpnpString.html#ga52a429bf778bf8c0a44a779d9446116c" title="Returns the pointer to char." alt="" coords="267,55,433,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="214,51,254,55,253,60,213,56"/>
+</map>

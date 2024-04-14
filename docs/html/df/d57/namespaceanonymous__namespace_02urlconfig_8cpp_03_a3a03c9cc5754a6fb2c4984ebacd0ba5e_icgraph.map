@@ -1,0 +1,9 @@
+<map id="anonymous_namespace{urlconfig::cpp}::addrToString" name="anonymous_namespace{urlconfig::cpp}::addrToString">
+<area shape="rect" id="Node000001" title="Converts an Internet address to a string and stores it in a buffer." alt="" coords="675,5,889,45"/>
+<area shape="rect" id="Node000002" href="$d1/d4a/urlconfig_8cpp.html#a2fa72177f842afa6e0b87182387aac88" title="Configure the full URL for the description document." alt="" coords="489,13,627,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="661,28,627,28,627,23,661,23"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a9300edc4f96f8f3e563bcaf49bffd514" title="Fills the sockadr_in with miniserver information." alt="" coords="247,13,441,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="476,28,441,28,441,23,476,23"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers a device application with the UPnP Library. Similar to UpnpRegisterRootDevice,..." alt="" coords="5,13,199,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="233,28,199,28,199,23,233,23"/>
+</map>

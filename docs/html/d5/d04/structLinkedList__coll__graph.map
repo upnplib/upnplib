@@ -1,0 +1,11 @@
+<map id="LinkedList" name="LinkedList">
+<area shape="rect" id="Node000001" title="Linked list (no protection)." alt="" coords="80,200,167,225"/>
+<area shape="rect" id="Node000002" href="$de/dd1/LinkedList_8hpp.html#dd/d2d/structListNode" title="Linked list node. Stores generic item and pointers to next and prev." alt="" coords="5,95,84,121"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,131,117,198,112,201,60,134"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="98,98,107,101,111,108,102,117,85,119,84,114,100,112,105,108,103,106,97,103"/>
+<area shape="rect" id="Node000003" href="$d8/d1c/FreeList_8hpp.html#d4/da5/structFreeList" title="Stores head and size of free list, as well as mutex for protection." alt="" coords="165,95,239,121"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="187,134,134,201,130,198,182,131"/>
+<area shape="rect" id="Node000004" href="$d8/d1c/FreeList_8hpp.html#d4/d35/structFreeListNode" title="Free list node. points to next free item." alt="" coords="149,5,255,31"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="205,44,205,95,199,95,199,44"/>
+<area shape="poly" id="edge5_Node000004_Node000004" title=" " alt="" coords="270,9,282,18,274,26,256,29,255,23,271,21,277,18,268,14"/>
+</map>

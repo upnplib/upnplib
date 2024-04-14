@@ -1,0 +1,7 @@
+<map id="http_ReadHttpResponse" name="http_ReadHttpResponse">
+<area shape="rect" id="Node000001" title="Reads the content of a response using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="233,31,412,56"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a9a9e154689d46093284e7d8633f642dc" title="Gets specified number of bytes from a file specified in a URL." alt="" coords="25,5,165,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,35,165,28,166,23,220,29"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a4dbd1e1309d1b6d86c082ebf4c3a78d0" title="Reads the content of a response using a connection previously created by UpnpOpenHttpConnection." alt="" coords="5,55,185,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="220,57,186,60,185,55,220,52"/>
+</map>

@@ -1,0 +1,24 @@
+<map id="TimerThread" name="TimerThread">
+<area shape="rect" id="Node000001" title="A timer thread that allows the scheduling of a job to run at a specified time in the future." alt="" coords="325,405,431,431"/>
+<area shape="rect" id="Node000002" href="$de/dd1/LinkedList_8hpp.html#de/d4b/structLinkedList" title="Linked list (no protection)." alt="" coords="60,200,147,225"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,239,105,266,115,292,136,316,160,337,216,369,274,392,326,405,324,410,272,397,213,374,157,341,132,320,110,295,99,267,98,239"/>
+<area shape="rect" id="Node000006" href="$d5/d91/ThreadPool_8hpp.html#d0/d41/structThreadPool" title="A thread pool." alt="" coords="331,317,425,343"/>
+<area shape="poly" id="edge10_Node000006_Node000002" title=" " alt="" coords="111,238,121,267,141,291,174,305,223,315,330,324,330,330,223,320,172,310,138,295,117,270,106,240"/>
+<area shape="rect" id="Node000003" href="$de/dd1/LinkedList_8hpp.html#dd/d2d/structListNode" title="Linked list node. Stores generic item and pointers to next and prev." alt="" coords="5,95,84,121"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="42,134,42,155,48,175,60,188,75,198,72,202,56,192,44,177,37,156,37,134"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="98,98,107,101,111,108,102,117,85,119,84,114,100,112,105,108,103,106,97,103"/>
+<area shape="rect" id="Node000004" href="$d8/d1c/FreeList_8hpp.html#d4/da5/structFreeList" title="Stores head and size of free list, as well as mutex for protection." alt="" coords="184,95,257,121"/>
+<area shape="poly" id="edge7_Node000001_Node000004" title=" " alt="" coords="271,108,387,113,530,127,600,138,662,154,712,173,731,185,745,198,759,220,765,241,763,260,755,279,740,296,721,312,670,340,610,364,546,384,431,410,430,405,544,379,608,359,668,335,718,307,736,292,750,276,758,259,760,241,755,222,741,202,728,189,709,178,660,159,598,144,529,132,387,118,271,113"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="171,124,137,136,116,149,109,160,106,174,105,200,99,200,100,173,104,158,112,145,135,131,170,119"/>
+<area shape="poly" id="edge9_Node000006_Node000004" title=" " alt="" coords="220,135,221,179,226,202,235,224,259,255,290,280,322,300,351,315,348,320,319,305,287,285,255,259,230,227,221,204,216,179,215,135"/>
+<area shape="rect" id="Node000005" href="$d8/d1c/FreeList_8hpp.html#d4/d35/structFreeListNode" title="Free list node. points to next free item." alt="" coords="167,5,274,31"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="223,44,223,95,218,95,218,44"/>
+<area shape="poly" id="edge6_Node000005_Node000005" title=" " alt="" coords="289,9,301,18,292,26,275,29,274,23,290,21,295,18,286,14"/>
+<area shape="poly" id="edge8_Node000001_Node000006" title=" " alt="" coords="381,357,381,405,375,405,375,357"/>
+<area shape="rect" id="Node000007" href="$d5/d91/ThreadPool_8hpp.html#d8/d7a/structThreadPoolJob" title="Internal ThreadPool Job." alt="" coords="321,200,435,225"/>
+<area shape="poly" id="edge11_Node000006_Node000007" title=" " alt="" coords="381,239,381,317,375,317,375,239"/>
+<area shape="rect" id="Node000008" href="$d5/d91/ThreadPool_8hpp.html#dd/dfc/structThreadPoolAttr" title="Attributes for thread pool." alt="" coords="460,200,579,225"/>
+<area shape="poly" id="edge12_Node000006_Node000008" title=" " alt="" coords="513,239,497,268,474,295,451,310,427,320,425,315,449,305,471,291,493,265,508,237"/>
+<area shape="rect" id="Node000009" href="$d5/d91/ThreadPool_8hpp.html#dd/d84/structThreadPoolStats" title="Structure to hold statistics." alt="" coords="603,200,731,225"/>
+<area shape="poly" id="edge13_Node000006_Node000009" title=" " alt="" coords="643,236,596,267,539,296,481,314,426,325,425,320,480,309,537,291,593,262,640,231"/>
+</map>

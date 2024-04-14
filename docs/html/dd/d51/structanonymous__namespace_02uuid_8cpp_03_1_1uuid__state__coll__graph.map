@@ -1,0 +1,5 @@
+<map id="anonymous_namespace{uuid.cpp}::uuid_state" name="anonymous_namespace{uuid.cpp}::uuid_state">
+<area shape="rect" id="Node000001" title="Data type for UUID generator persistent state." alt="" coords="5,93,185,133"/>
+<area shape="rect" id="Node000002" href="$d5/de9/sysdep_8hpp.html#da/ded/structuuid__node__t" title="node ID" alt="" coords="45,5,146,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,44,98,93,93,93,93,44"/>
+</map>

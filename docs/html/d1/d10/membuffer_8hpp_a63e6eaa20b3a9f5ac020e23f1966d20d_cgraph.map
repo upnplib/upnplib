@@ -1,0 +1,7 @@
+<map id="membuffer_append" name="membuffer_append">
+<area shape="rect" id="Node000001" title="Invokes function to appends data from a constant buffer to the buffer." alt="" coords="5,5,155,31"/>
+<area shape="rect" id="Node000002" href="$da/dd9/membuffer_8cpp.html#ad2b10e589712efb648a8f86bfe3b5975" title="Allocates memory for the new data to be inserted. Does memory management by moving the data from the ..." alt="" coords="203,5,341,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,15,189,15,189,21,155,21"/>
+<area shape="rect" id="Node000003" href="$da/dd9/membuffer_8cpp.html#a353b8c4e33ef3f9b64dbe56b7866746b" title="Increases or decreases buffer cap so that at least &#39;new_length&#39; bytes can be stored." alt="" coords="389,5,544,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="342,15,375,15,375,21,342,21"/>
+</map>

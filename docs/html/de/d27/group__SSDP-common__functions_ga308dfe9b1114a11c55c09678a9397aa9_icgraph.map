@@ -1,0 +1,7 @@
+<map id="readFromSSDPSocket" name="readFromSSDPSocket">
+<area shape="rect" id="Node000001" title="This function reads the data from the ssdp socket." alt="" coords="515,20,676,45"/>
+<area shape="rect" id="Node000002" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a02379f09474a96b3590cadd8ca82ecf1" title="Read data from the SSDP socket." alt="" coords="253,13,467,53"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="501,35,467,35,467,30,501,30"/>
+<area shape="rect" id="Node000003" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76" title="Run the miniserver." alt="" coords="5,5,205,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="240,35,206,35,206,30,240,30"/>
+</map>

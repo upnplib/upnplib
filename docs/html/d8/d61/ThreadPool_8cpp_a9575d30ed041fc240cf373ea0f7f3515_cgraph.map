@@ -1,0 +1,5 @@
+<map id="ThreadPoolGetStats" name="ThreadPoolGetStats">
+<area shape="rect" id="Node000001" title="Returns various statistics about the thread pool." alt="" coords="5,5,156,31"/>
+<area shape="rect" id="Node000002" href="$df/db8/LinkedList_8cpp.html#a13e9c21886d19bb76341f1d2a1aefc12" title="Returns the size of the list." alt="" coords="204,5,276,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,15,190,15,190,21,156,21"/>
+</map>

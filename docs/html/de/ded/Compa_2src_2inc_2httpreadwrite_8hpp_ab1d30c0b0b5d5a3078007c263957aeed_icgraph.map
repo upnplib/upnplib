@@ -1,0 +1,9 @@
+<map id="http_CloseHttpConnection" name="http_CloseHttpConnection">
+<area shape="rect" id="Node000001" title="Closes the connection created with UpnpOpenHttpConnection() and frees any memory associated with the ..." alt="" coords="437,31,629,56"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a865d9b116a6028d1fd1f1ad2377dca35" title="Closes the connection created with UpnpOpenHttpConnection and frees any memory associated with the co..." alt="" coords="196,5,389,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="424,34,389,31,390,26,424,29"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a32b6a961a76abcb37fcd7f6e3de10ee7" title="Sends and receives any pending data, closes the connection with the server, and frees memory allocate..." alt="" coords="219,55,367,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="424,57,367,63,367,57,424,52"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a016d21ff4d92fd6367469cf7f0d4e562" title="Closes the connection and frees memory that was allocated for the handle parameter." alt="" coords="5,5,148,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="182,21,148,21,148,15,182,15"/>
+</map>

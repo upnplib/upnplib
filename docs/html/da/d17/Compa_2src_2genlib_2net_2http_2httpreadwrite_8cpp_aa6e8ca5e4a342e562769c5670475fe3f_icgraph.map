@@ -1,0 +1,5 @@
+<map id="http_OpenHttpGetEx" name="http_OpenHttpGetEx">
+<area shape="rect" id="Node000001" title="Makes the HTTP GET message, connects to the peer, sends the HTTP GET request, gets the response and p..." alt="" coords="211,5,367,31"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a68e366bcfaed3559025fa8ac04c2885c" title="Gets specified number of bytes from a file specified in the URL." alt="" coords="5,5,163,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,21,163,21,163,15,197,15"/>
+</map>

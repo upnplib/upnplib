@@ -1,0 +1,18 @@
+<map id="anonymous_namespace{httpparser::cpp}::httpmsg_init" name="anonymous_namespace{httpparser::cpp}::httpmsg_init">
+<area shape="rect" id="Node000001" title="Initialize and allocate memory for http message." alt="" coords="5,96,232,136"/>
+<area shape="rect" id="Node000002" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a472f47cc97a610abe220a7c66c9e8716" title="Free memory allocated for the http header." alt="" coords="280,5,528,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,93,279,61,325,47,326,52,281,67,182,99"/>
+<area shape="rect" id="Node000004" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="775,43,897,69"/>
+<area shape="poly" id="edge8_Node000001_Node000004" title=" " alt="" coords="232,104,761,60,761,65,232,109"/>
+<area shape="rect" id="Node000006" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a5fe49d48f5940fb1131359fe8fca2b9d" title="Compares name id in the http headers." alt="" coords="305,121,503,175"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="232,126,291,133,291,138,232,131"/>
+<area shape="rect" id="Node000007" href="$df/db8/LinkedList_8cpp.html#acafc3d2a391f494afc5947668191cc0e" title="Initializes LinkedList. Must be called first and only once for List." alt="" coords="371,199,437,225"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="159,134,216,160,281,185,357,203,356,208,279,191,214,165,157,138"/>
+<area shape="rect" id="Node000003" href="$da/dd9/membuffer_8cpp.html#a132a367b6d8baf0d9de4b6e1f0fffe14" title="Free&#39;s memory allocated for membuffer* m." alt="" coords="576,17,727,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="528,25,562,25,562,31,528,30"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="727,38,762,43,761,48,726,43"/>
+<area shape="rect" id="Node000005" href="$d8/d45/namespaceanonymous__namespace_02membuffer_8cpp_03.html#aa81aeb90fb3c8389c7eb0a77b847101e" title="Initialize the buffer." alt="" coords="945,29,1167,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="898,53,931,53,931,59,898,59"/>
+<area shape="rect" id="Node000008" href="$d7/d20/FreeList_8cpp.html#a2a1bcf0da31489886910109d5f45ee89" title="Initializes Free List." alt="" coords="604,199,699,225"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="438,209,590,209,590,215,438,215"/>
+</map>

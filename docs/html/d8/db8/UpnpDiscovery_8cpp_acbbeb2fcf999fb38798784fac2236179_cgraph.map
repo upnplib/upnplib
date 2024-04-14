@@ -1,0 +1,7 @@
+<map id="UpnpDiscovery_get_Date_Length" name="UpnpDiscovery_get_Date_Length">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,23,192,63"/>
+<area shape="rect" id="Node000002" href="$d8/db8/UpnpDiscovery_8cpp.html#a5de74442ce2e4ab1cc5051d0efdcea97" title=" " alt="" coords="240,5,427,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,31,226,27,227,32,192,36"/>
+<area shape="rect" id="Node000003" href="$d1/d03/group__UpnpString.html#ga33ac65c54233d98e057c755c095fe152" title="Returns the length of the string." alt="" coords="247,55,420,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="192,50,233,54,233,60,192,56"/>
+</map>

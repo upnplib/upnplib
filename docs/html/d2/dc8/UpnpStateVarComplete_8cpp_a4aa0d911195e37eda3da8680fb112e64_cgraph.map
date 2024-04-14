@@ -1,0 +1,5 @@
+<map id="UpnpStateVarComplete_strncpy_StateVarName" name="UpnpStateVarComplete_strncpy_StateVarName">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,184,45"/>
+<area shape="rect" id="Node000002" href="$d1/d03/group__UpnpString.html#ga06963479e44d90a5de680861e2180e0b" title="Sets the string from a pointer to char using a maximum of N chars." alt="" coords="232,13,408,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,23,218,23,218,28,184,28"/>
+</map>

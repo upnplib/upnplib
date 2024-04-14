@@ -1,0 +1,7 @@
+<map id="UpnpOpenHttpConnection" name="UpnpOpenHttpConnection">
+<area shape="rect" id="Node000001" title="Opens a connection to the server." alt="" coords="232,31,423,56"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a14067069cf3e1f0dc9ac25867a4ca83d" title="Gets a file specified in a URL." alt="" coords="24,5,165,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="218,34,165,28,166,23,218,29"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a5f069548a767baef4623774d7bb3ce9f" title="Gets a file specified in a URL through the specified proxy." alt="" coords="5,55,184,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="219,57,184,61,184,55,218,52"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="anonymous_namespace{webserver::cpp}::xml_alias_t::clear" name="anonymous_namespace{webserver::cpp}::xml_alias_t::clear">
+<area shape="rect" id="Node000001" title="Clear the XML object." alt="" coords="5,5,185,60"/>
+<area shape="rect" id="Node000002" href="$da/dd9/membuffer_8cpp.html#a132a367b6d8baf0d9de4b6e1f0fffe14" title="Free&#39;s memory allocated for membuffer* m." alt="" coords="233,20,384,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,30,219,30,219,35,185,35"/>
+<area shape="rect" id="Node000003" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="432,20,555,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="384,30,418,30,418,35,384,35"/>
+<area shape="rect" id="Node000004" href="$d8/d45/namespaceanonymous__namespace_02membuffer_8cpp_03.html#aa81aeb90fb3c8389c7eb0a77b847101e" title="Initialize the buffer." alt="" coords="603,5,824,60"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="555,30,589,30,589,35,555,35"/>
+</map>

@@ -1,0 +1,17 @@
+<map id="anonymous_namespace{httpreadwrite::cpp}::ReadResponseLineAndHeaders" name="anonymous_namespace{httpreadwrite::cpp}::ReadResponseLineAndHeaders">
+<area shape="rect" id="Node000001" title="Parses already exiting data." alt="" coords="668,65,900,120"/>
+<area shape="rect" id="Node000002" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#ab8095d987290dfdc4f151dc8e3d7c40f" title="Gets the response from the server using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="451,55,620,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="654,82,620,79,620,73,655,77"/>
+<area shape="rect" id="Node000007" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#aa6e8ca5e4a342e562769c5670475fe3f" title="Makes the HTTP GET message, connects to the peer, sends the HTTP GET request, gets the response and p..." alt="" coords="457,104,613,129"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="655,108,614,112,613,107,654,103"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a32b6a961a76abcb37fcd7f6e3de10ee7" title="Sends and receives any pending data, closes the connection with the server, and frees memory allocate..." alt="" coords="243,5,391,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="465,54,374,33,375,28,466,49"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#afca845cb73300ed7cbd96849c9ae137c" title="Gets the response from the server using a connection previously created by UpnpOpenHttpConnection." alt="" coords="232,55,403,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="437,70,403,70,403,65,437,65"/>
+<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a14067069cf3e1f0dc9ac25867a4ca83d" title="Gets a file specified in a URL." alt="" coords="24,31,165,56"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="218,59,165,54,166,48,218,54"/>
+<area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#a5f069548a767baef4623774d7bb3ce9f" title="Gets a file specified in a URL through the specified proxy." alt="" coords="5,80,184,105"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="218,81,185,85,184,80,218,76"/>
+<area shape="rect" id="Node000008" href="$d4/d99/upnpapi_8cpp.html#a68e366bcfaed3559025fa8ac04c2885c" title="Gets specified number of bytes from a file specified in the URL." alt="" coords="239,104,396,129"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="443,119,396,119,396,114,443,114"/>
+</map>

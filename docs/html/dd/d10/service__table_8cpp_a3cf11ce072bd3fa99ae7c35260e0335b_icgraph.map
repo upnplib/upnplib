@@ -1,0 +1,125 @@
+<map id="GetSubscriptionSID" name="GetSubscriptionSID">
+<area shape="rect" id="Node000001" title="Return the subscription from the service table that matches const Upnp_SID sid value." alt="" coords="1875,106,2021,131"/>
+<area shape="rect" id="Node000002" href="$dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="1629,5,1827,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1911,102,1826,60,1794,48,1796,43,1828,55,1913,97"/>
+<area shape="rect" id="Node000008" href="$dd/de6/gena__device_8cpp.html#a4b03afbfa4cbf8c318857a43bbf92d8e" title="Handles a subscription cancellation request from a ctrl point. The connection is not destroyed on ret..." alt="" coords="1630,69,1826,109"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1861,110,1826,105,1826,100,1861,104"/>
+<area shape="rect" id="Node000009" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a2cfe3543fad246a253ed6379e1fc0bf4" title="We take ownership of propertySet and will free it." alt="" coords="1401,119,1581,174"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="1861,127,1582,144,1581,139,1861,121"/>
+<area shape="rect" id="Node000016" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae2ea03f611c00f8ca5691e59f7e988c6" title="Thread job to Notify a control point." alt="" coords="1638,185,1818,239"/>
+<area shape="poly" id="edge18_Node000001_Node000016" title=" " alt="" coords="1906,139,1794,187,1792,182,1904,134"/>
+<area shape="rect" id="Node000003" href="$dc/d02/gena__callback2_8cpp.html#a6f658b4eab5786398a00a53b87e7c622" title="This is the callback function called by the miniserver to handle incoming GENA requests." alt="" coords="1436,21,1547,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1615,32,1547,34,1547,29,1615,26"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="1215,21,1353,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1422,36,1353,36,1353,31,1422,31"/>
+<area shape="rect" id="Node000005" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="770,21,855,46"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1201,36,856,36,856,31,1201,31"/>
+<area shape="rect" id="Node000006" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="221,21,336,46"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="756,36,336,36,336,31,756,31"/>
+<area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="12,21,117,46"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="208,36,118,36,118,31,208,31"/>
+<area shape="poly" id="edge8_Node000008_Node000003" title=" " alt="" coords="1629,69,1545,49,1546,43,1630,64"/>
+<area shape="rect" id="Node000010" href="$dd/de6/gena__device_8cpp.html#afe08f0a722cafb84faa9def7850da596" title="Sends the intial state table dump to newly subscribed control point." alt="" coords="1227,85,1341,110"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="1387,125,1338,113,1339,108,1388,119"/>
+<area shape="rect" id="Node000014" href="$dd/de6/gena__device_8cpp.html#aadf54fcafc02a512a76124ab8bf938f6" title="Similar to the genaInitNofity. The only difference is that it takes the xml document for the state ta..." alt="" coords="1217,134,1351,159"/>
+<area shape="poly" id="edge15_Node000009_Node000014" title=" " alt="" coords="1387,149,1351,149,1351,144,1387,144"/>
+<area shape="rect" id="Node000011" href="$d9/d54/group__compaAPI.html#ga19f65dc15aaf56d2f9390c4d3b13a5c8" title="Accepts a subscription request and sends out the current state of the eventable variables for a servi..." alt="" coords="976,85,1156,110"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="1213,100,1156,100,1156,95,1213,95"/>
+<area shape="rect" id="Node000012" href="$d9/d09/tv__device_8cpp.html#a236a906cc1d589cb1655d8ce6b0623bc" title="Called during a subscription request callback." alt="" coords="708,77,917,117"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="962,100,918,100,918,95,962,95"/>
+<area shape="rect" id="Node000013" href="$d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b" title="The callback handler registered with the SDK while registering root device." alt="" coords="433,71,660,97"/>
+<area shape="poly" id="edge13_Node000012_Node000013" title=" " alt="" coords="694,94,660,92,660,87,694,89"/>
+<area shape="poly" id="edge14_Node000013_Node000006" title=" " alt="" coords="465,71,336,47,337,41,466,66"/>
+<area shape="rect" id="Node000015" href="$d4/d99/upnpapi_8cpp.html#ab7f67326e349b9025ac62d0b8ae8ae43" title="Similar to UpnpAcceptSubscription() except that it takes a DOM document for the variables to event ra..." alt="" coords="965,134,1167,159"/>
+<area shape="poly" id="edge16_Node000014_Node000015" title=" " alt="" coords="1203,149,1167,149,1167,144,1203,144"/>
+<area shape="poly" id="edge17_Node000015_Node000012" title=" " alt="" coords="986,134,915,120,916,115,987,129"/>
+<area shape="poly" id="edge19_Node000016_Node000009" title=" " alt="" coords="1624,186,1581,174,1582,169,1625,181"/>
+<area shape="rect" id="Node000017" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ac1a38d06cf74cd21f7f8ac40f00efb11" title="We take ownership of propertySet and will free it." alt="" coords="1401,574,1581,629"/>
+<area shape="poly" id="edge20_Node000016_Node000017" title=" " alt="" coords="1705,253,1511,575,1507,573,1701,250"/>
+<area shape="rect" id="Node000018" href="$dd/de6/gena__device_8cpp.html#a3300ba366cae7db4f8c21b0119cdacd9" title="Sends a notification to all the subscribed control points." alt="" coords="1229,589,1339,614"/>
+<area shape="poly" id="edge21_Node000017_Node000018" title=" " alt="" coords="1387,604,1339,604,1339,599,1387,599"/>
+<area shape="rect" id="Node000051" href="$dd/de6/gena__device_8cpp.html#a8f2185f7e2ef6345535174b920c6e86b" title="Sends a notification to all the subscribed control points." alt="" coords="1219,638,1349,663"/>
+<area shape="poly" id="edge71_Node000017_Node000051" title=" " alt="" coords="1388,629,1339,640,1338,635,1387,623"/>
+<area shape="rect" id="Node000019" href="$d4/d99/upnpapi_8cpp.html#a889522712799600d91e157c50e8bcd38" title="Sends out an event change notification to all control points subscribed to a particular service." alt="" coords="1019,589,1113,614"/>
+<area shape="poly" id="edge22_Node000018_Node000019" title=" " alt="" coords="1215,604,1114,604,1114,599,1215,599"/>
+<area shape="rect" id="Node000020" href="$d9/d09/tv__device_8cpp.html#a89eb472ed3be65eb2673397c4ba249e4" title="Update the TvDevice service state table, and notify all subscribed control points of the updated stat..." alt="" coords="709,638,916,663"/>
+<area shape="poly" id="edge23_Node000019_Node000020" title=" " alt="" coords="1005,616,879,641,878,635,1004,611"/>
+<area shape="rect" id="Node000021" href="$d9/d09/tv__device_8cpp.html#a2b54a19b2502396c57917899baa9bad5" title="Increment the brightness. Read the current brightness from the state table, add the increment,..." alt="" coords="468,121,625,146"/>
+<area shape="poly" id="edge24_Node000020_Node000021" title=" " alt="" coords="806,625,794,547,768,438,748,378,724,318,694,260,658,207,640,188,619,172,577,148,580,144,622,168,644,184,662,204,698,258,729,316,753,377,773,437,799,546,811,624"/>
+<area shape="rect" id="Node000027" href="$d9/d09/tv__device_8cpp.html#aeabcf1d104de9f6682c8e05696327dec" title="Increment channel." alt="" coords="476,218,617,243"/>
+<area shape="poly" id="edge29_Node000020_Node000027" title=" " alt="" coords="803,626,786,564,756,481,714,391,688,347,658,307,639,288,617,271,574,246,577,241,620,267,642,284,662,304,692,344,719,388,761,479,791,563,808,624"/>
+<area shape="rect" id="Node000030" href="$d9/d09/tv__device_8cpp.html#a688d04f668882488eb61ec130132a646" title="Increment the color. Read the current color from the state table, add the increment,..." alt="" coords="485,317,608,342"/>
+<area shape="poly" id="edge34_Node000020_Node000030" title=" " alt="" coords="798,626,745,524,705,463,658,406,615,370,572,344,575,340,618,366,662,402,709,460,749,521,803,624"/>
+<area shape="rect" id="Node000033" href="$d9/d09/tv__device_8cpp.html#a9f334dc37b526a1742c73c6be4d8c222" title="Increment the contrast. Read the current contrast from the state table, add the increment,..." alt="" coords="475,415,618,441"/>
+<area shape="poly" id="edge39_Node000020_Node000033" title=" " alt="" coords="789,630,732,571,658,505,611,470,568,443,571,439,614,466,662,501,735,567,793,626"/>
+<area shape="rect" id="Node000036" href="$d9/d09/tv__device_8cpp.html#a991e3dcd4c0cfa4fba843a49b5cd26d6" title="Increment the tint." alt="" coords="490,514,603,539"/>
+<area shape="poly" id="edge44_Node000020_Node000036" title=" " alt="" coords="771,635,574,542,576,537,773,630"/>
+<area shape="rect" id="Node000039" href="$d9/d09/tv__device_8cpp.html#a4601185f247ee07edac0aad0f73074b9" title="Increment the volume. Read the current volume from the state table, add the increment,..." alt="" coords="478,613,615,638"/>
+<area shape="poly" id="edge49_Node000020_Node000039" title=" " alt="" coords="696,642,615,634,616,629,696,637"/>
+<area shape="rect" id="Node000042" href="$d9/d09/tv__device_8cpp.html#a77123bac1bbefeb2dac640461c5f02ed" title="Change the brightness, update the TvDevice picture service state table, and notify all subscribed con..." alt="" coords="460,663,633,689"/>
+<area shape="poly" id="edge54_Node000020_Node000042" title=" " alt="" coords="696,664,634,670,633,665,695,659"/>
+<area shape="rect" id="Node000043" href="$d9/d09/tv__device_8cpp.html#ab980bd8535216da103d058ad04c9ef5b" title="Change the channel, update the TvDevice control service state table, and notify all subscribed contro..." alt="" coords="468,713,625,738"/>
+<area shape="poly" id="edge56_Node000020_Node000043" title=" " alt="" coords="765,671,661,704,614,715,613,710,659,699,763,666"/>
+<area shape="rect" id="Node000044" href="$d9/d09/tv__device_8cpp.html#ae8b836792cbe96ab39c49055ecfed95c" title="Change the color, update the TvDevice picture service state table, and notify all subscribed control ..." alt="" coords="477,763,616,789"/>
+<area shape="poly" id="edge58_Node000020_Node000044" title=" " alt="" coords="787,674,731,715,661,753,617,767,615,762,659,748,728,710,784,670"/>
+<area shape="rect" id="Node000045" href="$d9/d09/tv__device_8cpp.html#a1acc6c9b217bd1d69d9bfacc9afcb22b" title="Change the contrast, update the TvDevice picture service state table, and notify all subscribed contr..." alt="" coords="467,814,626,839"/>
+<area shape="poly" id="edge60_Node000020_Node000045" title=" " alt="" coords="796,676,741,741,704,775,661,804,628,817,626,812,659,799,700,771,738,737,792,673"/>
+<area shape="rect" id="Node000046" href="$d9/d09/tv__device_8cpp.html#ae66c84568a6ebd8d2d0bc573fde133cd" title="Turn the power on/off, update the TvDevice control service state table, and notify all subscribed con..." alt="" coords="475,866,619,891"/>
+<area shape="poly" id="edge62_Node000020_Node000046" title=" " alt="" coords="802,677,781,717,750,765,710,813,661,854,620,872,618,867,659,850,706,810,746,762,776,714,797,675"/>
+<area shape="rect" id="Node000049" href="$d9/d09/tv__device_8cpp.html#abe544b3fec6c58b75a5de45bd4d4b40a" title="Change the tint, update the TvDevice picture service state table, and notify all subscribed control p..." alt="" coords="482,929,611,954"/>
+<area shape="poly" id="edge67_Node000020_Node000049" title=" " alt="" coords="805,677,786,726,756,787,715,851,690,880,662,906,638,921,613,931,611,926,636,916,658,902,686,877,710,848,752,785,781,724,800,676"/>
+<area shape="rect" id="Node000050" href="$d9/d09/tv__device_8cpp.html#a49f479f22cb086c07ffc6196e1015d19" title="Change the volume, update the TvDevice control service state table, and notify all subscribed control..." alt="" coords="470,1003,623,1029"/>
+<area shape="poly" id="edge69_Node000020_Node000050" title=" " alt="" coords="808,677,792,735,763,813,720,895,693,934,662,969,631,991,597,1006,595,1001,628,986,658,965,689,931,715,892,758,811,786,734,803,676"/>
+<area shape="rect" id="Node000022" href="$d9/d09/tv__device_8cpp.html#a86dc6af7fc4480b25ecb736c6ead63b8" title="Decrease brightnesss." alt="" coords="172,70,385,95"/>
+<area shape="poly" id="edge25_Node000021_Node000022" title=" " alt="" coords="465,121,346,98,347,93,466,115"/>
+<area shape="rect" id="Node000026" href="$d9/d09/tv__device_8cpp.html#ac005622631a7a2a9acde0cf794aca1d1" title="Increase brightnesss." alt="" coords="175,119,382,145"/>
+<area shape="poly" id="edge27_Node000021_Node000026" title=" " alt="" coords="454,136,382,135,382,130,454,130"/>
+<area shape="rect" id="Node000023" href="$d9/d09/tv__device_8cpp.html#aae7c6a0d30a838eca4e073c7da59147d" title="Initializes the action table for the specified service." alt="" coords="5,538,124,563"/>
+<area shape="poly" id="edge26_Node000022_Node000023" title=" " alt="" coords="178,105,174,108,152,142,132,192,115,254,101,322,80,452,70,538,65,537,75,451,96,321,110,253,127,191,147,139,170,105,174,101"/>
+<area shape="poly" id="edge28_Node000026_Node000023" title=" " alt="" coords="178,154,174,158,154,187,135,231,104,345,82,461,70,538,65,538,77,460,99,344,130,230,149,185,170,154,174,150"/>
+<area shape="rect" id="Node000028" href="$d9/d09/tv__device_8cpp.html#af3b4a94c1bbc29ba033224f809f3b305" title="Decrease the channel." alt="" coords="180,169,377,194"/>
+<area shape="poly" id="edge30_Node000027_Node000028" title=" " alt="" coords="463,218,348,197,349,191,464,213"/>
+<area shape="rect" id="Node000029" href="$d9/d09/tv__device_8cpp.html#acbd67e02c335286bb777c7965343832f" title="Increase the channel." alt="" coords="183,218,374,243"/>
+<area shape="poly" id="edge32_Node000027_Node000029" title=" " alt="" coords="463,233,374,233,374,228,463,228"/>
+<area shape="poly" id="edge31_Node000028_Node000023" title=" " alt="" coords="178,203,174,207,141,246,115,291,96,339,83,388,71,478,68,538,63,538,65,477,78,387,91,338,110,289,136,243,170,203,175,199"/>
+<area shape="poly" id="edge33_Node000029_Node000023" title=" " alt="" coords="181,252,174,258,144,290,121,328,103,369,90,410,74,486,69,538,64,537,69,485,85,408,98,367,116,326,140,287,170,254,178,248"/>
+<area shape="rect" id="Node000031" href="$d9/d09/tv__device_8cpp.html#ac6a199e274ecf7d464ce06f686c0fb2f" title="Decrease the color." alt="" coords="189,267,368,293"/>
+<area shape="poly" id="edge35_Node000030_Node000031" title=" " alt="" coords="471,318,348,295,349,290,472,313"/>
+<area shape="rect" id="Node000032" href="$d9/d09/tv__device_8cpp.html#a53da4246a9802e83d0ec47e15969f96e" title="Increase the color." alt="" coords="193,317,365,342"/>
+<area shape="poly" id="edge37_Node000030_Node000032" title=" " alt="" coords="471,332,365,332,365,327,471,327"/>
+<area shape="poly" id="edge36_Node000031_Node000023" title=" " alt="" coords="182,301,174,307,148,334,127,364,110,397,96,431,78,494,70,538,65,537,73,492,91,429,105,395,122,361,144,330,170,303,179,297"/>
+<area shape="poly" id="edge38_Node000032_Node000023" title=" " alt="" coords="183,350,174,357,152,377,132,401,102,453,83,502,72,539,66,537,77,500,98,450,128,397,148,373,170,353,181,346"/>
+<area shape="rect" id="Node000034" href="$d9/d09/tv__device_8cpp.html#ad571eaebc11f744084341040b8972201" title="Decrease the contrast." alt="" coords="179,366,378,391"/>
+<area shape="poly" id="edge40_Node000033_Node000034" title=" " alt="" coords="463,415,348,394,349,389,464,410"/>
+<area shape="rect" id="Node000035" href="$d9/d09/tv__device_8cpp.html#a734dd7066af72c3daa9a97e4e07445cd" title="Increase the contrast." alt="" coords="182,415,375,441"/>
+<area shape="poly" id="edge42_Node000033_Node000035" title=" " alt="" coords="462,431,375,431,375,425,462,425"/>
+<area shape="poly" id="edge41_Node000034_Node000023" title=" " alt="" coords="186,399,174,406,138,437,109,475,74,539,69,536,105,472,134,434,170,402,183,395"/>
+<area shape="poly" id="edge43_Node000035_Node000023" title=" " alt="" coords="191,448,173,456,144,475,117,498,78,540,74,536,113,494,141,471,171,451,189,443"/>
+<area shape="rect" id="Node000037" href="$d9/d09/tv__device_8cpp.html#a2f3ddf0b2801bb4239076e9243e1870a" title="Decrease tint." alt="" coords="194,465,363,490"/>
+<area shape="poly" id="edge45_Node000036_Node000037" title=" " alt="" coords="476,516,348,493,349,487,477,511"/>
+<area shape="rect" id="Node000038" href="$d9/d09/tv__device_8cpp.html#a15b49e0bc7631e4c783bec7eb44148b2" title="Increase tint." alt="" coords="197,514,360,539"/>
+<area shape="poly" id="edge47_Node000036_Node000038" title=" " alt="" coords="476,529,360,529,360,524,476,524"/>
+<area shape="poly" id="edge46_Node000037_Node000023" title=" " alt="" coords="204,496,173,505,92,540,90,535,171,500,202,491"/>
+<area shape="poly" id="edge48_Node000038_Node000023" title=" " alt="" coords="183,540,125,547,124,541,183,535"/>
+<area shape="rect" id="Node000040" href="$d9/d09/tv__device_8cpp.html#a438c91f835e445cdab43cd635c38c84a" title="Decrease the volume." alt="" coords="182,563,375,589"/>
+<area shape="poly" id="edge50_Node000039_Node000040" title=" " alt="" coords="464,613,348,591,349,586,465,608"/>
+<area shape="rect" id="Node000041" href="$d9/d09/tv__device_8cpp.html#a1049c9672c366b2f7a13dbe02b4641dc" title="Increase the volume." alt="" coords="185,613,372,638"/>
+<area shape="poly" id="edge52_Node000039_Node000041" title=" " alt="" coords="464,628,372,628,372,623,464,623"/>
+<area shape="poly" id="edge51_Node000040_Node000023" title=" " alt="" coords="168,566,124,560,125,555,169,560"/>
+<area shape="poly" id="edge53_Node000041_Node000023" title=" " alt="" coords="197,612,171,604,126,585,88,566,90,561,128,580,173,599,199,607"/>
+<area shape="poly" id="edge55_Node000042_Node000023" title=" " alt="" coords="446,690,383,691,312,687,240,676,171,653,139,634,111,610,73,565,77,562,115,606,142,630,173,648,241,670,313,682,383,686,446,684"/>
+<area shape="poly" id="edge57_Node000043_Node000023" title=" " alt="" coords="454,740,389,743,316,739,241,724,205,712,171,696,133,666,104,629,82,593,69,565,73,562,87,590,108,626,137,662,173,691,207,707,242,719,316,733,389,737,454,735"/>
+<area shape="poly" id="edge59_Node000044_Node000023" title=" " alt="" coords="464,793,396,797,320,794,242,779,205,765,171,746,147,727,127,704,96,652,76,601,66,564,71,563,81,600,101,650,131,701,150,723,173,742,207,760,244,774,320,789,396,792,463,787"/>
+<area shape="poly" id="edge61_Node000045_Node000023" title=" " alt="" coords="476,844,407,852,327,852,286,847,245,838,206,823,170,802,142,777,119,746,101,712,88,677,71,611,64,564,70,564,76,610,93,675,106,710,124,743,146,773,174,798,209,818,247,833,287,842,327,847,407,847,476,839"/>
+<area shape="rect" id="Node000047" href="$d9/d09/tv__device_8cpp.html#a97e155689ed9b86d9296bc3451091dc3" title="Turn the power off." alt="" coords="207,866,350,891"/>
+<area shape="poly" id="edge63_Node000046_Node000047" title=" " alt="" coords="461,881,350,881,350,876,461,876"/>
+<area shape="rect" id="Node000048" href="$d9/d09/tv__device_8cpp.html#aadafba761882dcc4c5f3331cd3cddc6a" title="Turn the power on." alt="" coords="208,915,349,941"/>
+<area shape="poly" id="edge65_Node000046_Node000048" title=" " alt="" coords="464,896,349,918,348,913,463,891"/>
+<area shape="poly" id="edge64_Node000047_Node000023" title=" " alt="" coords="193,864,170,849,141,814,117,776,99,734,86,692,70,616,64,564,69,563,75,615,91,691,104,732,122,773,145,811,174,845,196,860"/>
+<area shape="poly" id="edge66_Node000048_Node000023" title=" " alt="" coords="194,921,170,906,136,865,109,819,90,768,77,717,65,625,63,564,68,564,70,625,82,716,95,767,114,816,140,862,174,902,196,916"/>
+<area shape="poly" id="edge68_Node000049_Node000023" title=" " alt="" coords="502,961,432,983,390,991,345,997,299,998,253,992,210,979,170,955,147,926,127,881,110,825,95,764,75,644,65,564,70,563,80,644,100,763,115,824,132,879,151,923,174,951,212,974,254,987,299,992,345,992,389,986,431,977,501,956"/>
+<area shape="poly" id="edge70_Node000050_Node000023" title=" " alt="" coords="491,1035,420,1049,335,1054,291,1051,248,1042,207,1026,170,1002,157,988,145,969,124,918,107,855,93,786,73,652,64,564,70,563,78,652,98,785,112,853,129,916,150,966,161,985,174,998,210,1021,249,1037,292,1046,335,1049,420,1043,490,1029"/>
+<area shape="rect" id="Node000052" href="$d4/d99/upnpapi_8cpp.html#a2244040bbe493e66273b8b53a61a1959" title="Similar to UpnpNotify except that it takes a DOM document for the event rather than an array of strin..." alt="" coords="1008,638,1124,663"/>
+<area shape="poly" id="edge72_Node000051_Node000052" title=" " alt="" coords="1205,653,1124,653,1124,648,1205,648"/>
+<area shape="poly" id="edge73_Node000052_Node000020" title=" " alt="" coords="994,653,916,653,916,648,994,648"/>
+</map>

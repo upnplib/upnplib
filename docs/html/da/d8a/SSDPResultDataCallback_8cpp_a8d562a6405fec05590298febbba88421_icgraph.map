@@ -1,0 +1,15 @@
+<map id="SSDPResultData_Callback" name="SSDPResultData_Callback">
+<area shape="rect" id="Node000001" title="SSDP result data callback function." alt="" coords="1428,20,1619,45"/>
+<area shape="rect" id="Node000002" href="$df/d70/namespaceanonymous__namespace_02ssdp__ctrlpt_8cpp_03.html#ae815d4edb19407d383527e148a99b682" title="Sends a callback to the control point application with a SEARCH result." alt="" coords="1200,5,1380,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1414,35,1380,35,1380,30,1414,30"/>
+<area shape="rect" id="Node000003" href="$d7/d5e/group__SSDP-ctrlpt__functions.html#ga07ee8d9e5104cbeb9949ec23e0d4113b" title="This function handles the ssdp messages from the devices." alt="" coords="973,20,1152,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1187,35,1152,35,1152,30,1187,30"/>
+<area shape="rect" id="Node000004" href="$db/daf/namespaceanonymous__namespace_02ssdp__common_8cpp_03.html#a73ff71f907e2bf442c51b304f877d07a" title="This function is a thread that handles SSDP requests." alt="" coords="724,5,925,60"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="959,35,925,35,925,30,959,30"/>
+<area shape="rect" id="Node000005" href="$df/d13/ssdp__common_8cpp.html#af3e17308ebc31e7e81c476624487614c" title="This function reads the data from the ssdp socket." alt="" coords="515,20,676,45"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="710,35,676,35,676,30,710,30"/>
+<area shape="rect" id="Node000006" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a02379f09474a96b3590cadd8ca82ecf1" title="Read data from the SSDP socket." alt="" coords="253,13,467,53"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="501,35,467,35,467,30,501,30"/>
+<area shape="rect" id="Node000007" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76" title="Run the miniserver." alt="" coords="5,5,205,60"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="240,35,206,35,206,30,240,30"/>
+</map>

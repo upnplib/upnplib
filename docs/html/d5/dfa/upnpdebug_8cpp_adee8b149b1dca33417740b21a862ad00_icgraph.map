@@ -1,0 +1,7 @@
+<map id="DebugAtThisLevel" name="DebugAtThisLevel">
+<area shape="rect" id="Node000001" title="Check Debug level." alt="" coords="197,31,337,56"/>
+<area shape="rect" id="Node000002" href="$d5/dfa/upnpdebug_8cpp.html#a82e5807006fc908b77e8340544391026" title="Check if the module is turned on for debug and returns the file descriptor corresponding to the debug..." alt="" coords="5,5,149,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,35,150,30,150,25,184,30"/>
+<area shape="rect" id="Node000003" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="32,55,123,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="184,57,123,64,123,59,183,51"/>
+</map>

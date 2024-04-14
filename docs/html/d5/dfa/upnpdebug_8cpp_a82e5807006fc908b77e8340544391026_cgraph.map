@@ -1,0 +1,5 @@
+<map id="UpnpGetDebugFile" name="UpnpGetDebugFile">
+<area shape="rect" id="Node000001" title="Check if the module is turned on for debug and returns the file descriptor corresponding to the debug..." alt="" coords="5,5,149,31"/>
+<area shape="rect" id="Node000002" href="$d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00" title="Check Debug level." alt="" coords="197,5,337,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,15,183,15,183,21,149,21"/>
+</map>

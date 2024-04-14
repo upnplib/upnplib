@@ -1,0 +1,108 @@
+<map id="ssdp_handle_ctrlpt_msg" name="ssdp_handle_ctrlpt_msg">
+<area shape="rect" id="Node000001" title="This function handles the ssdp messages from the devices." alt="" coords="5,904,184,929"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#af1c7fa6eff1380708c436bad3d4843d2" title="Get client handle info." alt="" coords="262,5,417,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,903,99,748,106,626,118,490,135,353,159,226,173,170,190,120,209,79,230,48,248,34,251,38,234,52,213,82,195,122,178,171,164,227,140,354,123,491,112,626,104,748,99,904"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a276f608a72d2b223bb429ba31c32f64b" title="Get handle information." alt="" coords="556,49,672,75"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="93,904,97,753,104,636,115,506,132,376,155,255,170,203,188,157,208,120,230,92,253,78,284,68,366,57,458,54,542,55,542,61,458,59,367,62,286,73,255,83,234,96,212,123,193,159,176,204,161,257,137,376,120,507,109,636,103,754,99,904"/>
+<area shape="rect" id="Node000007" href="$dd/d1d/httpparser_8cpp.html#a7b6226c9c3c9bfe3ea0808c5402c96f4" title="Finds header from a list, with the given &#39;name_id&#39;." alt="" coords="272,107,407,132"/>
+<area shape="poly" id="edge5_Node000001_Node000007" title=" " alt="" coords="94,904,101,762,121,532,139,410,162,297,192,204,210,169,230,141,257,124,260,128,234,145,215,171,197,206,167,299,144,411,127,533,106,763,99,904"/>
+<area shape="rect" id="Node000009" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="300,156,379,181"/>
+<area shape="poly" id="edge7_Node000001_Node000009" title=" " alt="" coords="94,904,102,771,124,555,142,441,165,336,194,250,211,216,230,191,256,174,285,166,287,171,258,179,234,195,216,219,199,252,170,338,147,442,129,556,107,771,99,904"/>
+<area shape="rect" id="Node000010" href="$df/db8/LinkedList_8cpp.html#a83123d7868ce3aba2cf9d5c066fb7eb4" title="Returns the next item in the list." alt="" coords="301,205,377,231"/>
+<area shape="poly" id="edge8_Node000001_Node000010" title=" " alt="" coords="94,904,104,778,127,578,145,472,168,375,196,294,212,263,230,240,257,223,287,215,289,221,259,228,234,244,217,266,201,297,173,376,150,473,132,579,109,779,99,904"/>
+<area shape="rect" id="Node000011" href="$dd/d1d/httpparser_8cpp.html#adb6f04b4682aae5e4690b672025b6856" title="Matches a variable parameter list with a string and takes actions based on the data type specified." alt="" coords="299,255,379,280"/>
+<area shape="poly" id="edge9_Node000001_Node000011" title=" " alt="" coords="94,903,105,786,130,601,148,503,171,413,198,339,213,311,230,289,256,273,285,265,286,270,258,278,234,293,218,314,203,342,176,415,154,504,135,602,111,787,100,904"/>
+<area shape="rect" id="Node000039" href="$da/dd9/membuffer_8cpp.html#a0ebdc3494e3cb774b96ee021f7ae6c3b" title="Compares characters of strings passed for number of bytes. If equal for the number of bytes,..." alt="" coords="285,304,394,329"/>
+<area shape="poly" id="edge14_Node000001_Node000039" title=" " alt="" coords="95,903,107,794,133,624,152,534,174,452,200,385,214,358,230,339,249,326,270,318,272,323,251,330,234,343,219,361,205,387,179,454,157,536,138,625,112,795,100,904"/>
+<area shape="rect" id="Node000040" href="$df/d70/namespaceanonymous__namespace_02ssdp__ctrlpt_8cpp_03.html#ae815d4edb19407d383527e148a99b682" title="Sends a callback to the control point application with a SEARCH result." alt="" coords="249,353,429,408"/>
+<area shape="poly" id="edge15_Node000001_Node000040" title=" " alt="" coords="93,904,96,825,102,766,112,699,129,627,153,556,186,487,230,426,242,414,246,418,234,429,191,490,158,558,134,629,118,700,107,766,101,825,98,904"/>
+<area shape="rect" id="Node000045" href="$da/db6/SSDPResultData_8cpp.html#abee23a01947f1247c3563e1a82071b4d" title="Destructor." alt="" coords="526,433,702,459"/>
+<area shape="poly" id="edge23_Node000001_Node000045" title=" " alt="" coords="95,903,110,816,139,683,158,615,180,553,204,502,230,469,251,458,279,449,351,439,433,436,512,438,512,443,433,442,351,445,280,455,253,463,234,473,208,505,185,555,163,617,144,685,116,817,101,904"/>
+<area shape="rect" id="Node000046" href="$d8/db8/UpnpDiscovery_8cpp.html#a58aca6889f6bde70985000c65814601f" title=" " alt="" coords="781,585,951,611"/>
+<area shape="poly" id="edge42_Node000001_Node000046" title=" " alt="" coords="95,903,104,849,126,770,144,728,167,688,195,651,231,621,272,603,329,590,398,582,473,579,630,580,768,587,767,593,630,585,473,584,398,588,330,595,274,608,233,626,199,655,171,691,149,731,131,772,109,850,100,904"/>
+<area shape="rect" id="Node000048" href="$df/d13/ssdp__common_8cpp.html#a3096b77d16b0ab09d3d0ec540fb09016" title="Starts filling the SSDP event structure based upon the request received." alt="" coords="267,484,411,509"/>
+<area shape="poly" id="edge20_Node000001_Node000048" title=" " alt="" coords="94,903,100,837,120,736,137,680,161,625,191,572,230,527,253,511,256,516,234,531,196,576,165,627,142,682,125,738,105,838,99,904"/>
+<area shape="rect" id="Node000050" href="$de/d27/group__SSDP-common__functions.html#gae3e29279280d276d05762d9dbeffe31d" title="Fills the fields of the event structure like DeviceType, Device UDN and Service Type." alt="" coords="532,533,696,559"/>
+<area shape="poly" id="edge41_Node000001_Node000050" title=" " alt="" coords="94,903,101,843,121,753,138,704,162,656,192,613,230,577,266,556,305,540,345,529,387,523,468,522,538,529,538,534,468,527,387,529,346,535,306,545,268,560,234,581,196,617,166,659,143,706,126,754,106,844,99,904"/>
+<area shape="rect" id="Node000051" href="$de/d27/group__SSDP-common__functions.html#ga46870802a16adadb9cd145c80345e4ec" title="Constructor." alt="" coords="533,736,695,761"/>
+<area shape="poly" id="edge24_Node000001_Node000051" title=" " alt="" coords="98,903,115,867,142,820,181,772,205,752,231,736,254,728,284,723,358,721,441,726,520,734,519,739,441,731,358,727,284,729,255,733,233,740,208,756,185,776,147,823,119,870,103,905"/>
+<area shape="rect" id="Node000052" href="$d8/db8/UpnpDiscovery_8cpp.html#ac9d98236e3bb52b39af7552866d7b5a8" title=" " alt="" coords="789,736,943,761"/>
+<area shape="poly" id="edge45_Node000001_Node000052" title=" " alt="" coords="184,905,308,888,446,863,650,812,812,763,814,768,651,817,447,869,309,893,184,910"/>
+<area shape="rect" id="Node000054" href="$da/db6/SSDPResultData_8cpp.html#a4a6ec1b9df80788a02a3275d81f8d527" title="SSDPResultData_set_Cookie." alt="" coords="262,750,417,790"/>
+<area shape="poly" id="edge27_Node000001_Node000054" title=" " alt="" coords="106,902,157,853,192,824,231,800,248,791,250,796,233,804,195,829,161,857,110,906"/>
+<area shape="rect" id="Node000055" href="$da/db6/SSDPResultData_8cpp.html#a9700a50158642674bfbc15477144ef28" title="SSDPResultData_set_CtrlptCallback." alt="" coords="262,814,417,854"/>
+<area shape="poly" id="edge28_Node000001_Node000055" title=" " alt="" coords="132,901,265,856,267,861,134,906"/>
+<area shape="rect" id="Node000056" href="$da/db6/SSDPResultData_8cpp.html#adaeacbf423cd4a4852b5bbd059ab7938" title="SSDPResultData_set_Param." alt="" coords="262,635,417,675"/>
+<area shape="poly" id="edge29_Node000001_Node000056" title=" " alt="" coords="98,903,114,862,141,806,180,745,204,717,230,692,249,679,252,684,234,696,208,721,184,748,146,808,119,864,103,904"/>
+<area shape="rect" id="Node000083" href="$d8/d61/ThreadPool_8cpp.html#a088cce76603a00ba4755257ff96d60c3" title="Adds a job to the thread pool." alt="" coords="279,929,399,955"/>
+<area shape="poly" id="edge33_Node000001_Node000083" title=" " alt="" coords="184,923,266,932,265,937,184,929"/>
+<area shape="rect" id="Node000107" href="$d8/d61/ThreadPool_8cpp.html#a52970195b2e114427c2b456773bce4c3" title="Initializes thread pool job." alt="" coords="300,979,379,1004"/>
+<area shape="poly" id="edge38_Node000001_Node000107" title=" " alt="" coords="129,927,233,963,287,978,286,983,231,969,127,932"/>
+<area shape="rect" id="Node000108" href="$d8/d61/ThreadPool_8cpp.html#a249dd5d52ce5559d123f3c53651667c7" title="Sets the jobs free function." alt="" coords="258,1028,421,1053"/>
+<area shape="poly" id="edge39_Node000001_Node000108" title=" " alt="" coords="111,927,162,970,197,993,233,1013,256,1022,254,1027,231,1018,194,998,159,974,108,931"/>
+<area shape="rect" id="Node000109" href="$d8/d61/ThreadPool_8cpp.html#a7317f4409e514c2c01e31c9f66fd7da5" title="Sets the priority of the threadpool job." alt="" coords="276,1077,403,1103"/>
+<area shape="poly" id="edge40_Node000001_Node000109" title=" " alt="" coords="106,928,154,993,191,1031,233,1062,264,1075,262,1080,231,1067,187,1035,150,997,102,931"/>
+<area shape="rect" id="Node000064" href="$d8/db8/UpnpDiscovery_8cpp.html#ae0e60f167dc50439337c4275f493481c" title=" " alt="" coords="237,1127,441,1152"/>
+<area shape="poly" id="edge43_Node000001_Node000064" title=" " alt="" coords="103,928,119,965,147,1016,185,1069,208,1093,234,1113,243,1119,240,1123,230,1118,204,1097,181,1072,142,1019,115,968,98,930"/>
+<area shape="rect" id="Node000066" href="$d8/db8/UpnpDiscovery_8cpp.html#a7d8b6d2df7380247c161f7391273dc5a" title=" " alt="" coords="234,1176,445,1201"/>
+<area shape="poly" id="edge44_Node000001_Node000066" title=" " alt="" coords="102,929,115,974,140,1038,179,1106,205,1136,234,1163,241,1168,238,1172,230,1167,201,1140,175,1109,136,1040,110,976,96,930"/>
+<area shape="rect" id="Node000073" href="$d8/db8/UpnpDiscovery_8cpp.html#a89fff177d01b792b6038ecb6e2e1b3da" title=" " alt="" coords="232,1225,447,1251"/>
+<area shape="poly" id="edge46_Node000001_Node000073" title=" " alt="" coords="100,929,111,982,134,1059,152,1101,174,1142,201,1180,234,1212,240,1217,237,1221,230,1216,197,1183,169,1145,147,1103,129,1061,106,984,95,930"/>
+<area shape="rect" id="Node000076" href="$d8/db8/UpnpDiscovery_8cpp.html#a935674aa8d6ff0dac5b0fbb7aa79c561" title=" " alt="" coords="236,1275,443,1300"/>
+<area shape="poly" id="edge47_Node000001_Node000076" title=" " alt="" coords="100,929,107,990,128,1080,145,1129,168,1178,197,1223,234,1261,239,1266,236,1270,230,1265,193,1226,164,1180,140,1131,123,1081,102,991,94,930"/>
+<area shape="rect" id="Node000077" href="$d8/db8/UpnpDiscovery_8cpp.html#a57f2fc8bf6d3087bc62e5a86b2604c41" title=" " alt="" coords="238,1324,441,1349"/>
+<area shape="poly" id="edge48_Node000001_Node000077" title=" " alt="" coords="99,929,104,997,122,1101,139,1158,163,1214,194,1266,234,1311,238,1315,235,1319,230,1315,190,1269,158,1216,134,1160,117,1102,98,998,94,930"/>
+<area shape="rect" id="Node000110" href="$d8/db8/UpnpDiscovery_8cpp.html#a766f4658eef3f1876a57850e241059ce" title=" " alt="" coords="236,1373,443,1399"/>
+<area shape="poly" id="edge49_Node000001_Node000110" title=" " alt="" coords="98,930,101,1005,106,1060,116,1121,133,1186,157,1250,190,1309,234,1360,238,1364,235,1368,230,1364,186,1312,152,1252,128,1187,111,1122,101,1060,95,1005,93,930"/>
+<area shape="rect" id="Node000111" href="$d8/db8/UpnpDiscovery_8cpp.html#ac16c1ce0c11f58734ea941d65635f194" title=" " alt="" coords="255,1423,423,1463"/>
+<area shape="poly" id="edge50_Node000001_Node000111" title=" " alt="" coords="98,929,99,1011,103,1071,113,1139,129,1211,153,1283,188,1350,209,1381,234,1409,245,1419,242,1423,230,1413,205,1385,183,1353,149,1285,124,1213,107,1140,98,1072,93,1011,93,930"/>
+<area shape="rect" id="Node000112" href="$d8/db8/UpnpDiscovery_8cpp.html#aa7224f6ce32f4ebb27a7a5d26d1c62f6" title=" " alt="" coords="255,1487,423,1527"/>
+<area shape="poly" id="edge51_Node000001_Node000112" title=" " alt="" coords="100,929,114,1035,141,1199,160,1285,181,1365,206,1430,220,1455,234,1474,245,1483,241,1487,230,1477,215,1458,201,1432,176,1366,154,1287,136,1200,108,1036,95,930"/>
+<area shape="rect" id="Node000113" href="$d8/db8/UpnpDiscovery_8cpp.html#a59a37074e02f03fbd3e1b4ee8dc7a149" title=" " alt="" coords="255,1551,423,1591"/>
+<area shape="poly" id="edge52_Node000001_Node000113" title=" " alt="" coords="100,929,111,1045,137,1229,155,1326,178,1415,204,1488,218,1516,234,1538,245,1547,242,1551,230,1541,214,1519,199,1490,173,1416,150,1327,132,1230,106,1046,94,930"/>
+<area shape="rect" id="Node000114" href="$d8/db8/UpnpDiscovery_8cpp.html#a9664ff1acca2c5974f51374791e4fcb8" title=" " alt="" coords="237,1616,441,1641"/>
+<area shape="poly" id="edge53_Node000001_Node000114" title=" " alt="" coords="99,930,109,1057,132,1260,150,1368,173,1466,201,1548,217,1578,234,1602,239,1606,235,1610,230,1605,212,1581,196,1550,168,1468,145,1369,127,1261,104,1057,94,930"/>
+<area shape="rect" id="Node000116" href="$d8/db8/UpnpDiscovery_8cpp.html#a999784a89cf00994e04cd74eb1b3c668" title=" " alt="" coords="251,1666,427,1706"/>
+<area shape="poly" id="edge54_Node000001_Node000116" title=" " alt="" coords="99,929,108,1064,130,1282,148,1398,171,1505,200,1593,216,1627,234,1652,241,1659,238,1663,230,1656,211,1629,195,1595,166,1506,143,1399,125,1283,103,1065,94,930"/>
+<area shape="rect" id="Node000117" href="$d8/db8/UpnpDiscovery_8cpp.html#a0c411cf401940584ce04b130b76fd7ad" title=" " alt="" coords="239,1731,439,1756"/>
+<area shape="poly" id="edge55_Node000001_Node000117" title=" " alt="" coords="99,929,105,1075,125,1313,143,1439,166,1556,196,1652,214,1689,234,1716,239,1721,235,1725,230,1720,210,1692,191,1654,161,1558,137,1440,120,1314,100,1075,94,930"/>
+<area shape="rect" id="Node000118" href="$d1/d03/group__UpnpString.html#ga33ac65c54233d98e057c755c095fe152" title="Returns the length of the string." alt="" coords="253,1780,426,1805"/>
+<area shape="poly" id="edge56_Node000001_Node000118" title=" " alt="" coords="99,930,104,1084,111,1204,122,1337,139,1472,163,1596,177,1651,194,1699,213,1738,234,1767,243,1774,239,1778,230,1770,208,1740,189,1701,172,1653,157,1598,134,1473,117,1338,105,1204,98,1084,93,930"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="417,28,543,48,542,53,416,33"/>
+<area shape="rect" id="Node000004" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="821,49,911,75"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="673,59,807,59,807,65,673,65"/>
+<area shape="rect" id="Node000008" href="$df/db8/LinkedList_8cpp.html#acaab477429a2d1e57eb1b24ee616be3a" title="Finds the specified item in the list." alt="" coords="578,99,650,124"/>
+<area shape="poly" id="edge6_Node000007_Node000008" title=" " alt="" coords="407,115,564,110,564,115,407,120"/>
+<area shape="rect" id="Node000012" href="$da/dd9/membuffer_8cpp.html#a4bd06d73513179f6154430fea704a265" title="Free existing memory in membuffer and assign the new buffer in its place." alt="" coords="543,327,685,352"/>
+<area shape="poly" id="edge10_Node000011_Node000012" title=" " alt="" coords="380,271,448,289,472,300,496,312,530,321,528,326,494,316,470,305,446,294,379,277"/>
+<area shape="rect" id="Node000014" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="553,148,675,173"/>
+<area shape="poly" id="edge11_Node000011_Node000014" title=" " alt="" coords="379,261,413,254,445,240,460,227,468,213,477,198,493,184,538,166,540,171,496,188,481,201,473,215,464,230,448,244,414,259,380,267"/>
+<area shape="rect" id="Node000016" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a7291f055b4c8c2c7f50fb5ebe4599d01" title="Initialize scanner." alt="" coords="503,198,725,238"/>
+<area shape="poly" id="edge12_Node000011_Node000016" title=" " alt="" coords="379,258,488,238,489,243,380,263"/>
+<area shape="rect" id="Node000017" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#aead0dcbbc1374db7713e44a0e409ff9e" title="Extracts variable parameters depending on the passed in format parameter." alt="" coords="515,262,713,302"/>
+<area shape="poly" id="edge13_Node000011_Node000017" title=" " alt="" coords="380,267,501,273,501,279,379,272"/>
+<area shape="rect" id="Node000041" href="$da/d8a/SSDPResultDataCallback_8cpp.html#a8d562a6405fec05590298febbba88421" title="SSDP result data callback function." alt="" coords="519,376,709,401"/>
+<area shape="poly" id="edge16_Node000040_Node000041" title=" " alt="" coords="429,381,505,383,505,388,429,386"/>
+<area shape="poly" id="edge17_Node000040_Node000045" title=" " alt="" coords="430,399,547,428,546,433,429,405"/>
+<area shape="poly" id="edge18_Node000045_Node000046" title=" " alt="" coords="703,456,735,469,770,492,802,520,849,573,845,576,798,524,767,496,732,474,701,461"/>
+<area shape="rect" id="Node000047" href="$d1/d03/group__UpnpString.html#ga8877a4f1ad605a508a31942527f0ce9f" title="Destructor." alt="" coords="999,585,1141,611"/>
+<area shape="poly" id="edge19_Node000046_Node000047" title=" " alt="" coords="951,595,985,595,985,601,951,601"/>
+<area shape="rect" id="Node000049" href="$df/d13/ssdp__common_8cpp.html#a813e243c5a6ea133ef0803838244766b" title="This function figures out the type of the SSDP search in the request." alt="" coords="538,484,690,509"/>
+<area shape="poly" id="edge21_Node000048_Node000049" title=" " alt="" coords="411,494,524,494,524,499,411,499"/>
+<area shape="poly" id="edge22_Node000048_Node000050" title=" " alt="" coords="411,507,530,528,529,533,410,512"/>
+<area shape="poly" id="edge25_Node000051_Node000052" title=" " alt="" coords="696,746,775,746,775,751,696,751"/>
+<area shape="rect" id="Node000053" href="$d1/d03/group__UpnpString.html#gab66dcdfe778dd5e2e8d16e1131ef9ac1" title="Constructor." alt="" coords="1006,736,1134,761"/>
+<area shape="poly" id="edge26_Node000052_Node000053" title=" " alt="" coords="943,746,992,746,992,751,943,751"/>
+<area shape="poly" id="edge30_Node000056_Node000046" title=" " alt="" coords="417,646,733,614,767,610,768,615,734,619,417,651"/>
+<area shape="rect" id="Node000057" href="$d8/db8/UpnpDiscovery_8cpp.html#a6f39eceff3b9c00e1294111c73352b55" title=" " alt="" coords="538,687,690,712"/>
+<area shape="poly" id="edge31_Node000056_Node000057" title=" " alt="" coords="417,665,525,682,524,688,416,670"/>
+<area shape="poly" id="edge32_Node000057_Node000052" title=" " alt="" coords="680,709,787,731,786,736,679,715"/>
+<area shape="rect" id="Node000084" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#af2c5c202798ffef6d50277b0ee80c155" title="Determines whether or not a thread should be added based on the jobsPerThread ratio." alt="" coords="504,1122,724,1162"/>
+<area shape="poly" id="edge34_Node000083_Node000084" title=" " alt="" coords="400,942,426,950,448,964,463,982,471,1000,474,1037,476,1074,483,1091,497,1108,501,1112,498,1116,493,1112,478,1094,471,1075,468,1038,466,1002,459,985,445,968,424,955,399,947"/>
+<area shape="rect" id="Node000106" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a46f849090972378290838f067b7d80a4" title="Creates a Thread Pool Job. (Dynamically allocated)" alt="" coords="495,915,733,969"/>
+<area shape="poly" id="edge35_Node000083_Node000106" title=" " alt="" coords="399,939,481,939,481,945,399,945"/>
+<area shape="rect" id="Node000101" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a7a528d1b1b1733d0139ea70befee0691" title="Deallocates a dynamically allocated ThreadPoolJob." alt="" coords="503,993,725,1048"/>
+<area shape="poly" id="edge36_Node000083_Node000101" title=" " alt="" coords="400,952,447,963,520,986,518,991,446,969,399,957"/>
+<area shape="rect" id="Node000090" href="$df/db8/LinkedList_8cpp.html#aa7da62b5d05e226e1908bb0ab26f4420" title="Adds a node to the tail of the list. Node gets added immediately before list.tail." alt="" coords="568,1072,660,1097"/>
+<area shape="poly" id="edge37_Node000083_Node000090" title=" " alt="" coords="400,944,425,951,448,964,460,975,467,988,473,1012,479,1036,486,1047,496,1057,524,1072,555,1080,554,1085,522,1077,493,1061,481,1050,474,1038,468,1013,462,990,456,979,445,968,423,956,399,949"/>
+</map>

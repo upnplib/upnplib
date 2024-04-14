@@ -1,0 +1,5 @@
+<map id="membuffer_delete" name="membuffer_delete">
+<area shape="rect" id="Node000001" title="Shrink the size of the buffer depending on the current size of the buffer and the input parameters...." alt="" coords="5,5,148,31"/>
+<area shape="rect" id="Node000002" href="$da/dd9/membuffer_8cpp.html#a353b8c4e33ef3f9b64dbe56b7866746b" title="Increases or decreases buffer cap so that at least &#39;new_length&#39; bytes can be stored." alt="" coords="196,5,351,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,15,182,15,182,21,148,21"/>
+</map>

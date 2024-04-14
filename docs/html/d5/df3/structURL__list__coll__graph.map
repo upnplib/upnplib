@@ -1,0 +1,10 @@
+<map id="URL_list" name="URL_list">
+<area shape="rect" id="Node000001" title="Represents a list of URLs as in the &quot;callback&quot; header of SUBSCRIBE message in GENA." alt="" coords="5,288,80,313"/>
+<area shape="rect" id="Node000002" href="$de/dd0/Compa_2src_2inc_2uri_8hpp.html#d4/d48/structuri__type" title="Represents a URI used in parse_uri and elsewhere." alt="" coords="5,200,80,225"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="45,239,45,287,40,287,40,239"/>
+<area shape="rect" id="Node000003" href="$de/dd0/Compa_2src_2inc_2uri_8hpp.html#d4/df4/structtoken" title="Buffer used in parsinghttp messages, urls, etc. Generally this simply holds a pointer into a larger a..." alt="" coords="13,5,72,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="41,44,36,93,36,137,43,200,38,200,31,137,31,93,36,44"/>
+<area shape="rect" id="Node000004" href="$de/dd0/Compa_2src_2inc_2uri_8hpp.html#db/d73/structhostport__type" title="Represents a host port, e.g. &quot;127.127.0.1:80&quot;." alt="" coords="112,103,224,128"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="70,37,155,100,151,105,67,41"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="144,138,59,202,56,198,140,134"/>
+</map>

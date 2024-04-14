@@ -1,0 +1,7 @@
+<map id="UpnpDiscovery_get_DeviceType_cstr" name="UpnpDiscovery_get_DeviceType_cstr">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,23,207,63"/>
+<area shape="rect" id="Node000002" href="$d8/db8/UpnpDiscovery_8cpp.html#ae7bb7d2f2e9c71027d1a586b63b752da" title=" " alt="" coords="255,5,485,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,31,241,28,241,33,207,36"/>
+<area shape="rect" id="Node000003" href="$d1/d03/group__UpnpString.html#ga52a429bf778bf8c0a44a779d9446116c" title="Returns the pointer to char." alt="" coords="287,55,453,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="207,50,273,56,272,61,207,55"/>
+</map>

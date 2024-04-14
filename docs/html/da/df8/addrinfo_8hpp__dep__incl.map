@@ -1,0 +1,22 @@
+<map id="Upnplib/include/upnplib/addrinfo.hpp" name="Upnplib/include/upnplib/addrinfo.hpp">
+<area shape="rect" id="Node000001" title="Declaration of the Addrinfo class." alt="" coords="480,5,655,45"/>
+<area shape="rect" id="Node000002" href="$da/dfc/socket_8hpp.html" title="Declaration of classes and functions that manage network sockets." alt="" coords="373,93,548,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="535,56,486,95,483,91,531,52"/>
+<area shape="rect" id="Node000010" href="$dc/d59/addrinfo_8cpp.html" title="Definition of the Addrinfo class and free helper functions." alt="" coords="573,101,778,126"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="603,52,662,98,659,102,600,56"/>
+<area shape="rect" id="Node000003" href="$d5/db2/miniserver_8cpp.html" title="Implements the functionality and utility functions used by the Miniserver module." alt="" coords="5,181,215,221"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="371,139,187,184,186,179,370,134"/>
+<area shape="rect" id="Node000004" href="$d5/d78/sock_8cpp.html" title="Manage network sockets and connections." alt="" coords="310,269,470,309"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="361,131,316,151,296,165,280,183,274,201,280,220,305,247,336,267,333,271,301,252,276,223,268,201,276,180,293,161,313,146,359,126"/>
+<area shape="rect" id="Node000005" href="$df/d13/ssdp__common_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for common SSDP usage." alt="" coords="291,181,449,221"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="433,145,392,183,388,179,429,141"/>
+<area shape="rect" id="Node000006" href="$d4/d99/ssdp__ctrlpt_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for Control Points with SSDP." alt="" coords="473,181,632,221"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="493,141,534,179,530,183,489,145"/>
+<area shape="rect" id="Node000007" href="$dd/d42/connection_8hpp.html" title="Declaration of classes and functions that manage network connections." alt="" coords="656,181,831,221"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="537,135,682,179,681,184,535,140"/>
+<area shape="rect" id="Node000009" href="$d8/d81/socket_8cpp.html" title="Definition of the &#39;class Socket&#39;." alt="" coords="855,189,1048,214"/>
+<area shape="poly" id="edge9_Node000002_Node000009" title=" " alt="" coords="562,131,844,179,886,186,885,191,843,184,561,136"/>
+<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="653,227,468,272,467,267,652,222"/>
+<area shape="rect" id="Node000008" href="$df/db6/connection_8cpp.html" title="Definition of classes and functions that manage connections." alt="" coords="632,277,855,302"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="746,235,746,276,741,276,741,235"/>
+</map>

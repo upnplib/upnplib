@@ -1,0 +1,29 @@
+<map id="free_client_subscription" name="free_client_subscription">
+<area shape="rect" id="Node000001" title="Free memory allocated for client subscription data." alt="" coords="5,141,183,166"/>
+<area shape="rect" id="Node000002" href="$dc/d2f/GenlibClientSubscription_8cpp.html#ae9234a9ed3f11f3488f17a26f1dec161" title=" " alt="" coords="231,5,413,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,139,160,98,229,55,244,48,246,53,232,60,163,103,112,143"/>
+<area shape="rect" id="Node000003" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a17a26bf0d0fbec95f50f7322f6cb4649" title=" " alt="" coords="231,69,413,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="140,138,236,110,238,116,141,143"/>
+<area shape="rect" id="Node000004" href="$dc/d2f/GenlibClientSubscription_8cpp.html#aa54142cfd95d2c226fb0d4a27de24dc5" title=" " alt="" coords="231,133,413,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="183,151,217,151,217,156,183,156"/>
+<area shape="rect" id="Node000006" href="$dc/d2f/GenlibClientSubscription_8cpp.html#acdc433fd326f354773aad5eb95a255c3" title=" " alt="" coords="231,197,413,237"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="141,164,238,191,236,196,140,169"/>
+<area shape="rect" id="Node000007" href="$dd/d9f/TimerThread_8cpp.html#ade2e04bd2b36abd89c399610a894d68e" title="Removes an event from the timer Q." alt="" coords="243,262,401,287"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="111,164,163,205,196,227,232,247,252,255,250,260,230,252,193,232,159,209,108,168"/>
+<area shape="rect" id="Node000005" href="$d1/d03/group__UpnpString.html#ga0db13228160adbc4e7ad7f52157f987e" title="Sets the string from a pointer to char." alt="" coords="461,143,628,169"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="413,152,448,152,447,158,413,157"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="395,195,484,170,485,175,396,200"/>
+<area shape="rect" id="Node000008" href="$da/d04/namespaceanonymous__namespace_02TimerThread_8cpp_03.html#ab40f4f1217f62d380736126fec2ae82e" title="Deallocates a dynamically allocated TimerEvent." alt="" coords="699,179,879,234"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="384,259,461,245,685,215,685,221,462,251,385,265"/>
+<area shape="rect" id="Node000010" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="494,259,595,285"/>
+<area shape="poly" id="edge10_Node000007_Node000010" title=" " alt="" coords="401,271,480,270,480,275,402,276"/>
+<area shape="rect" id="Node000012" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="505,309,584,334"/>
+<area shape="poly" id="edge13_Node000007_Node000012" title=" " alt="" coords="384,285,492,308,491,313,383,290"/>
+<area shape="rect" id="Node000013" href="$df/db8/LinkedList_8cpp.html#a83123d7868ce3aba2cf9d5c066fb7eb4" title="Returns the next item in the list." alt="" coords="507,358,583,383"/>
+<area shape="poly" id="edge14_Node000007_Node000013" title=" " alt="" coords="346,285,398,314,462,344,495,355,493,360,460,349,396,319,343,290"/>
+<area shape="rect" id="Node000009" href="$d7/d20/FreeList_8cpp.html#a559c475ea4c5850cd427740512512df0" title="Returns an item to the Free List." alt="" coords="949,230,1051,255"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="880,219,936,229,935,234,879,225"/>
+<area shape="rect" id="Node000011" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="676,259,901,299"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="595,271,662,273,662,278,595,276"/>
+<area shape="poly" id="edge12_Node000011_Node000009" title=" " alt="" coords="901,257,935,251,936,256,902,262"/>
+</map>

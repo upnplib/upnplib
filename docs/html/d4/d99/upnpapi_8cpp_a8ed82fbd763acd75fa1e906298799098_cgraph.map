@@ -1,0 +1,12 @@
+<map id="UpnpSetMaxSubscriptionTimeOut" name="UpnpSetMaxSubscriptionTimeOut">
+<area shape="rect" id="Node000001" title="Sets the maximum time&#45;out accepted for a subscription request or renewal." alt="" coords="5,31,247,56"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a276f608a72d2b223bb429ba31c32f64b" title="Get handle information." alt="" coords="295,5,411,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="240,28,281,23,282,29,240,33"/>
+<area shape="rect" id="Node000003" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="459,31,549,56"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="247,41,445,41,445,46,247,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="412,25,446,31,445,36,411,30"/>
+<area shape="rect" id="Node000004" href="$d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00" title="Check Debug level." alt="" coords="617,5,757,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="549,34,603,27,604,32,550,40"/>
+<area shape="rect" id="Node000005" href="$d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d" title="Display File and Line." alt="" coords="597,55,777,80"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="550,47,584,51,583,56,549,52"/>
+</map>

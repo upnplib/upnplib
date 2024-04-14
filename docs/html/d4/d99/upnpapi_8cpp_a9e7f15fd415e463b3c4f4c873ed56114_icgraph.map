@@ -1,0 +1,12 @@
+<map id="UpnpSendAdvertisement" name="UpnpSendAdvertisement">
+<area shape="rect" id="Node000001" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="427,56,611,81"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#abb1ab3d0ba145286005284d447110fce" title="This function is a timer thread scheduled by UpnpSendAdvertisement to the send advetisement again." alt="" coords="264,5,379,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="455,55,371,33,372,28,456,50"/>
+<area shape="rect" id="Node000004" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="264,107,379,132"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="456,87,372,109,371,104,455,82"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="5,21,216,61"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="250,28,216,32,216,27,250,23"/>
+<area shape="poly" id="edge3_Node000003_Node000001" title=" " alt="" coords="230,46,427,60,426,65,230,51"/>
+<area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="58,107,163,132"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="250,122,163,122,163,117,250,117"/>
+</map>

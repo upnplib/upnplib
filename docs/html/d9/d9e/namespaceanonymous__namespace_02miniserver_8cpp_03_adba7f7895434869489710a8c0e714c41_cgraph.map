@@ -1,0 +1,9 @@
+<map id="anonymous_namespace{miniserver::cpp}::do_listen" name="anonymous_namespace{miniserver::cpp}::do_listen">
+<area shape="rect" id="Node000001" title="Listen on a local network interface to incomming requests." alt="" coords="5,62,185,117"/>
+<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="260,5,408,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,63,246,46,247,51,186,68"/>
+<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#afd9d96e3eb59a49103c3ed0080baf613" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="260,69,408,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="186,87,246,87,246,92,186,92"/>
+<area shape="rect" id="Node000004" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aec7d02e7e42098f68ed2d85b931106df" title="Returns port to which socket, sockfd, is bound." alt="" coords="233,133,435,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="186,111,246,127,245,132,185,116"/>
+</map>

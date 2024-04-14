@@ -1,0 +1,26 @@
+<map id="sample/common/tv_device.hpp" name="sample/common/tv_device.hpp">
+<area shape="rect" id="Node000001" title="Declarations for a simple UPnP device console application." alt="" coords="151,5,378,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,132,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="234,33,114,76,113,71,232,28"/>
+<area shape="rect" id="Node000003" href="$dd/d6d/UpnpSubscriptionRequest_8hpp.html" title="Header file for UpnpSubscriptionRequest methods." alt="" coords="156,79,373,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="267,31,267,65,262,65,262,31"/>
+<area shape="rect" id="Node000008" href="$d6/d72/UpnpStateVarRequest_8hpp.html" title="Header file for UpnpStateVarRequest methods." alt="" coords="427,79,619,104"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="307,28,469,72,468,78,306,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="92,152,163,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="244,106,163,148,161,143,241,102"/>
+<area shape="rect" id="Node000005" href="$d8/df6/UpnpGlobal_8hpp.html" title="Defines constants that for some reason are not defined on some systems." alt="" coords="187,152,313,177"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="265,105,258,139,253,138,260,104"/>
+<area shape="rect" id="Node000006" href="$d3/dd1/UpnpString_8hpp.html" title="UpnpString object declaration." alt="" coords="338,152,461,177"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="288,102,366,143,364,148,285,106"/>
+<area shape="rect" id="Node000007" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="296,225,452,251"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="398,179,385,213,380,212,393,177"/>
+<area shape="poly" id="edge8_Node000008_Node000006" title=" " alt="" coords="505,106,433,147,430,143,502,102"/>
+<area shape="rect" id="Node000009" href="$da/dc0/UpnpInet_8hpp.html" title="Provides a platform independent way to include TCP/IP types and functions." alt="" coords="485,152,594,177"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="529,104,536,138,531,139,523,105"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="619,152,697,177"/>
+<area shape="poly" id="edge12_Node000008_Node000012" title=" " alt="" coords="546,102,625,143,623,148,544,106"/>
+<area shape="rect" id="Node000010" href="$da/df8/UpnpUniStd_8hpp.html" title="Do not #include &lt;unistd.h&gt; on WIN32." alt="" coords="476,225,603,251"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="542,178,542,212,537,212,537,178"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="627,225,766,251"/>
+<area shape="poly" id="edge11_Node000009_Node000011" title=" " alt="" coords="566,175,660,217,658,222,564,180"/>
+</map>

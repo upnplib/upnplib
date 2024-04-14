@@ -1,0 +1,18 @@
+<map id="web_server_set_root_dir" name="web_server_set_root_dir">
+<area shape="rect" id="Node000001" title="Assign the path to the global Document root directory." alt="" coords="5,44,187,69"/>
+<area shape="rect" id="Node000002" href="$da/dd9/membuffer_8cpp.html#a6e41eb5e1e1635dfa932c5fbb2228133" title="Wrapper function for membuffer_assign()." alt="" coords="235,19,401,44"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,44,221,40,221,45,187,49"/>
+<area shape="rect" id="Node000008" href="$da/dd9/membuffer_8cpp.html#aee72bc5a9c58a849f2e41503500a773d" title="Shrink the size of the buffer depending on the current size of the buffer and the input parameters...." alt="" coords="449,69,592,95"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="187,59,436,74,435,80,187,65"/>
+<area shape="rect" id="Node000003" href="$da/dd9/membuffer_8cpp.html#aed25d99b33ce20bd0dd819f64252eb6f" title="Allocate memory to membuffer *m and copy the contents of the in parameter const void *buf." alt="" coords="449,20,592,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="402,29,436,29,436,35,402,35"/>
+<area shape="rect" id="Node000004" href="$da/dd9/membuffer_8cpp.html#a132a367b6d8baf0d9de4b6e1f0fffe14" title="Free&#39;s memory allocated for membuffer* m." alt="" coords="642,20,793,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="592,30,628,30,628,35,592,35"/>
+<area shape="rect" id="Node000007" href="$da/dd9/membuffer_8cpp.html#a353b8c4e33ef3f9b64dbe56b7866746b" title="Increases or decreases buffer cap so that at least &#39;new_length&#39; bytes can be stored." alt="" coords="640,69,795,95"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="573,43,654,63,652,69,571,48"/>
+<area shape="rect" id="Node000005" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="843,20,965,45"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="793,30,829,30,829,35,793,35"/>
+<area shape="rect" id="Node000006" href="$d8/d45/namespaceanonymous__namespace_02membuffer_8cpp_03.html#aa81aeb90fb3c8389c7eb0a77b847101e" title="Initialize the buffer." alt="" coords="1013,5,1235,60"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="966,30,999,30,999,35,966,35"/>
+<area shape="poly" id="edge8_Node000008_Node000007" title=" " alt="" coords="592,79,626,79,626,85,592,85"/>
+</map>

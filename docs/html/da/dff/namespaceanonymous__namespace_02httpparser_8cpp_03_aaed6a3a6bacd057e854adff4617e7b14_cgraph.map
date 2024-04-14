@@ -1,0 +1,12 @@
+<map id="anonymous_namespace{httpparser::cpp}::scanner_get_token" name="anonymous_namespace{httpparser::cpp}::scanner_get_token">
+<area shape="rect" id="Node000001" title="Reads next token from the input stream." alt="" coords="5,117,200,172"/>
+<area shape="rect" id="Node000002" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#abf87c2390f505c362f987888532ff366" title="Determines if the passed value is a control character." alt="" coords="248,5,428,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,115,247,69,259,63,261,68,249,74,157,120"/>
+<area shape="rect" id="Node000003" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a397ada9472b0ce782d9636144528c8cf" title="Determines if the passed value is permissible in token." alt="" coords="248,84,428,139"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="200,128,234,123,235,129,201,134"/>
+<area shape="rect" id="Node000004" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a119ec2e9ed02e25cb1dfd3cbba91ab0c" title="Determines if the passed value is a separator." alt="" coords="476,117,656,172"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="200,146,248,147,428,147,462,146,462,152,428,153,248,153,200,151"/>
+<area shape="rect" id="Node000005" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#aa8849fbe55dcefa7ab2465ea8aabd214" title="Determines if the passed value is permissible in qdtext." alt="" coords="248,215,428,269"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="170,170,260,207,258,212,168,174"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="429,122,463,127,462,132,428,127"/>
+</map>

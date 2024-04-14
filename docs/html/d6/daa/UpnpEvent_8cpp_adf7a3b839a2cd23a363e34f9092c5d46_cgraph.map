@@ -1,0 +1,25 @@
+<map id="UpnpEvent_dup" name="UpnpEvent_dup">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,228,129,253"/>
+<area shape="rect" id="Node000002" href="$d6/daa/UpnpEvent_8cpp.html#ae83a58e639b452fb145f0b1de5771b1d" title=" " alt="" coords="177,153,320,179"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,225,203,182,205,186,100,230"/>
+<area shape="rect" id="Node000011" href="$d6/daa/UpnpEvent_8cpp.html#a5669fee4cff109237315ba1aacff0e2f" title=" " alt="" coords="185,252,312,277"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="130,246,172,252,171,257,129,252"/>
+<area shape="rect" id="Node000003" href="$d6/daa/UpnpEvent_8cpp.html#a039433b7db97f217bf5ca74e3f4704ae" title=" " alt="" coords="368,5,613,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="256,151,298,97,330,65,367,40,381,33,383,38,369,44,334,70,302,100,260,155"/>
+<area shape="rect" id="Node000004" href="$d6/daa/UpnpEvent_8cpp.html#a5294834d2d3c7ce4e0833e63e744c512" title=" " alt="" coords="396,55,585,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="264,151,309,120,367,89,390,81,392,86,369,94,312,124,267,155"/>
+<area shape="rect" id="Node000005" href="$d6/daa/UpnpEvent_8cpp.html#a9edd5999f29495efc5518ecf575f0ee3" title=" " alt="" coords="415,104,566,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="308,151,367,138,410,129,411,135,369,143,309,156"/>
+<area shape="rect" id="Node000006" href="$d6/daa/UpnpEvent_8cpp.html#a4a300e10c4ed82cb1805e3156a79e53e" title=" " alt="" coords="369,153,613,179"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="321,163,355,163,355,169,321,169"/>
+<area shape="rect" id="Node000007" href="$d6/daa/UpnpEvent_8cpp.html#a0c8ba7bb178071b4fb636748dd2f2142" title=" " alt="" coords="397,203,585,228"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="312,176,415,197,414,202,311,181"/>
+<area shape="rect" id="Node000008" href="$d6/daa/UpnpEvent_8cpp.html#a8db41cd22c54afa5369cbff39c2591bc" title=" " alt="" coords="416,252,565,277"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="268,177,312,207,369,237,403,248,402,253,367,242,310,212,265,181"/>
+<area shape="rect" id="Node000009" href="$d1/d03/group__UpnpString.html#ga52a429bf778bf8c0a44a779d9446116c" title="Returns the pointer to char." alt="" coords="661,228,828,253"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="565,255,647,247,648,252,566,260"/>
+<area shape="rect" id="Node000010" href="$d1/d03/group__UpnpString.html#ga0db13228160adbc4e7ad7f52157f987e" title="Sets the string from a pointer to char." alt="" coords="661,277,828,303"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="566,269,648,278,647,283,565,275"/>
+<area shape="rect" id="Node000012" href="$d1/d03/group__UpnpString.html#gab66dcdfe778dd5e2e8d16e1131ef9ac1" title="Constructor." alt="" coords="427,301,555,327"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="312,275,415,296,414,301,311,280"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="http_WriteHttpRequest" name="http_WriteHttpRequest">
+<area shape="rect" id="Node000001" title="Writes the content of a HTTP request initiated by a UpnpMakeHttpRequest() call. The end of the conten..." alt="" coords="225,31,396,56"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a6794b5f98e814417967fc8fe1c44c6f5" title="Sends a request to a server to copy the contents of a buffer to the URI specified in the UpnpOpenHttp..." alt="" coords="18,5,165,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,35,165,29,165,24,212,29"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#accbd92c541367e88598a5126fa97b2fb" title="Writes the content of a HTTP request initiated by a UpnpMakeHttpRequest call. The end of the content ..." alt="" coords="5,55,177,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,57,178,61,177,55,211,52"/>
+</map>

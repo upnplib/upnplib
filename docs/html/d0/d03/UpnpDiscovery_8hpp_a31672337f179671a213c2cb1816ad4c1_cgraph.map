@@ -1,0 +1,5 @@
+<map id="UpnpDiscovery_strncpy_Os" name="UpnpDiscovery_strncpy_Os">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,205,31"/>
+<area shape="rect" id="Node000002" href="$d1/d03/group__UpnpString.html#ga06963479e44d90a5de680861e2180e0b" title="Sets the string from a pointer to char using a maximum of N chars." alt="" coords="253,5,429,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,15,240,15,240,21,206,21"/>
+</map>

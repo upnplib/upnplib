@@ -33,22 +33,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install Doxygen
-        run: |
-          sudo apt install doxygen graphviz
-          doxygen -l docs/DoxygenLayout.xml
-          sed -i 's/<groupgraph visible="\$GROUP_GRAPHS"\/>/<groupgraph visible="no"\/>/' docs/DoxygenLayout.xml
-          mkdir -p build/docs
-      - name: Run Doxygen
-        run: doxygen docs/Doxyfile
-
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Set upload directory with documentation
-          path: 'build/docs/html'
+          path: 'docs/html'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

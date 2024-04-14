@@ -1,0 +1,5 @@
+<map id="UpnpHttpGetProgress" name="UpnpHttpGetProgress">
+<area shape="rect" id="Node000001" title="Retrieve progress information of a http&#45;get transfer." alt="" coords="5,5,168,31"/>
+<area shape="rect" id="Node000002" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#acb7d22a386e10fd581c81eadc29249fe" title="Extracts information from the Handle to the HTTP get object." alt="" coords="216,5,379,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,15,202,15,202,21,168,21"/>
+</map>

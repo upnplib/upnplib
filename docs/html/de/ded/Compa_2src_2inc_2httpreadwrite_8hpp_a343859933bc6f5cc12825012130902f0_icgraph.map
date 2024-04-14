@@ -1,0 +1,11 @@
+<map id="http_MakeHttpRequest" name="http_MakeHttpRequest">
+<area shape="rect" id="Node000001" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="452,55,623,80"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a534218b5a1c6cdcc1094a58449019882" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection." alt="" coords="232,29,404,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="438,59,404,55,405,49,439,53"/>
+<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a45850f990fe110e26f9b093a88e3e8a0" title="Makes an HTTP POST request message, opens a connection to the server and sends the POST request to th..." alt="" coords="245,79,391,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="438,81,392,86,391,81,438,76"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a14067069cf3e1f0dc9ac25867a4ca83d" title="Gets a file specified in a URL." alt="" coords="24,5,165,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="218,34,165,28,166,23,219,29"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a5f069548a767baef4623774d7bb3ce9f" title="Gets a file specified in a URL through the specified proxy." alt="" coords="5,55,184,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="219,56,184,60,184,55,218,51"/>
+</map>

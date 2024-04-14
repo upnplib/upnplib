@@ -1,0 +1,11 @@
+<map id="Upnplib/include/upnplib/addrinfo.hpp" name="Upnplib/include/upnplib/addrinfo.hpp">
+<area shape="rect" id="Node000001" title="Declaration of the Addrinfo class." alt="" coords="163,5,337,45"/>
+<area shape="rect" id="Node000002" href="$d7/d1b/sockaddr_8hpp.html" title="Declaration of the Sockaddr class and some free helper functions." alt="" coords="171,93,329,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="253,46,253,79,247,79,247,46"/>
+<area shape="rect" id="Node000003" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,167,161,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="224,121,124,164,122,159,222,116"/>
+<area shape="rect" id="Node000004" href="$d1/d42/port_8hpp.html" title="Specifications to be portable between different platforms." alt="" coords="186,167,314,192"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="253,119,253,153,247,153,247,119"/>
+<area shape="rect" id="Node000005" href="$d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="338,167,503,192"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="278,116,381,159,379,164,276,121"/>
+</map>

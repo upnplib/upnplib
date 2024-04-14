@@ -1,0 +1,9 @@
+<map id="anonymous_namespace{ssdp_device::cpp}::NewRequestHandler" name="anonymous_namespace{ssdp_device::cpp}::NewRequestHandler">
+<area shape="rect" id="Node000001" title="Works as a request handler which passes the HTTP request string to multicast channel." alt="" coords="5,16,185,71"/>
+<area shape="rect" id="Node000002" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="233,31,324,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,41,220,41,220,46,185,46"/>
+<area shape="rect" id="Node000003" href="$d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00" title="Check Debug level." alt="" coords="392,5,532,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="324,34,378,27,379,32,325,40"/>
+<area shape="rect" id="Node000004" href="$d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d" title="Display File and Line." alt="" coords="372,55,552,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="325,47,359,51,358,56,324,52"/>
+</map>

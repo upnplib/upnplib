@@ -1,0 +1,11 @@
+<map id="Compa/src/ssdp/SSDPResultData.hpp" name="Compa/src/ssdp/SSDPResultData.hpp">
+<area shape="rect" id="Node000001" title="Header file for SSDPResultData methods." alt="" coords="119,5,323,45"/>
+<area shape="rect" id="Node000002" href="$da/db6/SSDPResultData_8cpp.html" title="Source file for SSDPResultData methods." alt="" coords="5,93,209,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,56,134,95,131,91,183,52"/>
+<area shape="rect" id="Node000003" href="$d2/d0b/SSDPResultDataCallback_8hpp.html" title="SSDPResultData object declararion." alt="" coords="233,93,437,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="259,52,312,91,308,95,255,56"/>
+<area shape="rect" id="Node000004" href="$da/d8a/SSDPResultDataCallback_8cpp.html" title="SSDPResultDataCallback." alt="" coords="131,181,335,221"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="304,144,257,183,254,179,300,140"/>
+<area shape="rect" id="Node000005" href="$d4/d99/ssdp__ctrlpt_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for Control Points with SSDP." alt="" coords="359,181,517,221"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="370,140,417,179,414,183,367,144"/>
+</map>

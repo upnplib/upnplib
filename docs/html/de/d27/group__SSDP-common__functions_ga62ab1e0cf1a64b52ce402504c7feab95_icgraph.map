@@ -1,0 +1,17 @@
+<map id="SSDPResultData_set_Param" name="SSDPResultData_set_Param">
+<area shape="rect" id="Node000001" title="SSDPResultData_set_Param." alt="" coords="1200,46,1355,86"/>
+<area shape="rect" id="Node000002" href="$d7/d5e/group__SSDP-ctrlpt__functions.html#ga07ee8d9e5104cbeb9949ec23e0d4113b" title="This function handles the ssdp messages from the devices." alt="" coords="973,24,1152,49"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1186,56,1152,52,1153,46,1186,51"/>
+<area shape="rect" id="Node000007" href="$da/db6/SSDPResultData_8cpp.html#aac929dce7640f599c20ca77d356e3791" title="Assignment operator." alt="" coords="974,77,1151,103"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1186,79,1152,83,1151,77,1186,74"/>
+<area shape="rect" id="Node000003" href="$db/daf/namespaceanonymous__namespace_02ssdp__common_8cpp_03.html#a73ff71f907e2bf442c51b304f877d07a" title="This function is a thread that handles SSDP requests." alt="" coords="724,5,925,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="959,38,925,37,926,32,959,32"/>
+<area shape="rect" id="Node000004" href="$df/d13/ssdp__common_8cpp.html#af3e17308ebc31e7e81c476624487614c" title="This function reads the data from the ssdp socket." alt="" coords="515,20,676,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="710,35,676,35,676,30,710,30"/>
+<area shape="rect" id="Node000005" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a02379f09474a96b3590cadd8ca82ecf1" title="Read data from the SSDP socket." alt="" coords="253,13,467,53"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="501,35,467,35,467,30,501,30"/>
+<area shape="rect" id="Node000006" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76" title="Run the miniserver." alt="" coords="5,5,205,60"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="240,35,206,35,206,30,240,30"/>
+<area shape="rect" id="Node000008" href="$da/db6/SSDPResultData_8cpp.html#ab390f080062b234eceaa13d26f91aff9" title="Copy Constructor." alt="" coords="745,84,904,109"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="960,96,904,97,904,92,960,90"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="http_get_code_text" name="http_get_code_text">
+<area shape="rect" id="Node000001" title="Return the right status message based on the passed in int statusCode input parameter." alt="" coords="5,20,152,45"/>
+<area shape="rect" id="Node000002" href="$df/dd2/namespaceanonymous__namespace_02statcodes_8cpp_03.html#a67ec6f35b83046df716768cadc353e39" title="Initializing tables with HTTP strings and different HTTP codes." alt="" coords="200,5,380,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,30,186,30,186,35,152,35"/>
+<area shape="rect" id="Node000003" href="$df/dd2/namespaceanonymous__namespace_02statcodes_8cpp_03.html#aa8720c71e46ee6041f745bc51190be1a" title="Initializing table representing an array of string pointers." alt="" coords="428,13,629,53"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="380,30,414,30,414,35,380,35"/>
+</map>

@@ -1,0 +1,14 @@
+<map id="ThreadPoolRemove" name="ThreadPoolRemove">
+<area shape="rect" id="Node000001" title="Removes a job from the thread pool." alt="" coords="5,87,155,112"/>
+<area shape="rect" id="Node000002" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a7a528d1b1b1733d0139ea70befee0691" title="Deallocates a dynamically allocated ThreadPoolJob." alt="" coords="353,5,576,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,84,202,73,339,49,340,55,203,78,144,89"/>
+<area shape="rect" id="Node000004" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="203,87,304,112"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="155,97,189,97,189,102,155,102"/>
+<area shape="rect" id="Node000006" href="$df/db8/LinkedList_8cpp.html#acaab477429a2d1e57eb1b24ee616be3a" title="Finds the specified item in the list." alt="" coords="217,136,289,161"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="126,109,204,132,203,137,125,115"/>
+<area shape="rect" id="Node000003" href="$d7/d20/FreeList_8cpp.html#a559c475ea4c5850cd427740512512df0" title="Returns an item to the Free List." alt="" coords="625,56,727,81"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="577,49,612,55,611,60,576,54"/>
+<area shape="rect" id="Node000005" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="352,85,577,125"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="304,98,338,99,338,104,304,103"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="577,83,611,77,612,82,578,88"/>
+</map>

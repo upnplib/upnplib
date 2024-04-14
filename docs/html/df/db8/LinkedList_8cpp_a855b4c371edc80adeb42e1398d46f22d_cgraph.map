@@ -1,0 +1,7 @@
+<map id="ListAddAfter" name="ListAddAfter">
+<area shape="rect" id="Node000001" title="Adds a node after the specified node. Node gets added immediately after bnode." alt="" coords="5,13,107,38"/>
+<area shape="rect" id="Node000002" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#ad21845c4b35a0cd2530fea3c4b0b788f" title="Dynamically creates a list node." alt="" coords="155,5,397,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,23,141,23,141,28,107,28"/>
+<area shape="rect" id="Node000003" href="$d7/d20/FreeList_8cpp.html#a63cf965052240dbc6fec792326bf6719" title="Allocates chunk of set size." alt="" coords="445,13,551,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="398,23,431,23,431,28,398,28"/>
+</map>

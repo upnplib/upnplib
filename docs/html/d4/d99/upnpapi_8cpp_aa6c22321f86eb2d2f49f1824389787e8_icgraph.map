@@ -1,0 +1,7 @@
+<map id="get_server_addr" name="get_server_addr">
+<area shape="rect" id="Node000001" title="Fill the sockadr with IPv4 miniserver information." alt="" coords="489,5,616,31"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a9300edc4f96f8f3e563bcaf49bffd514" title="Fills the sockadr_in with miniserver information." alt="" coords="247,5,441,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="475,21,442,21,442,15,475,15"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers a device application with the UPnP Library. Similar to UpnpRegisterRootDevice,..." alt="" coords="5,5,199,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="233,21,199,21,199,15,233,15"/>
+</map>

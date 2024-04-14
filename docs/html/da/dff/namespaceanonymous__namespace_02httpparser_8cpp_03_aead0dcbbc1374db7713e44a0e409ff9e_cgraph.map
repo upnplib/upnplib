@@ -1,0 +1,53 @@
+<map id="anonymous_namespace{httpparser::cpp}::vfmatch" name="anonymous_namespace{httpparser::cpp}::vfmatch">
+<area shape="rect" id="Node000001" title="Extracts variable parameters depending on the passed in format parameter." alt="" coords="5,220,204,260"/>
+<area shape="rect" id="Node000002" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#afee60e57107525eaabc058d19ddcc5fe" title="Compares a character to the next char in the scanner." alt="" coords="252,5,472,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,218,168,143,206,100,250,62,273,49,276,53,254,66,210,103,172,146,120,221"/>
+<area shape="rect" id="Node000003" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a5b3dfe007aad1e53c4fd62cc4e992b52" title="Matches an unsigned integer value in the input." alt="" coords="257,120,467,160"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="144,217,251,170,273,162,275,167,253,174,146,222"/>
+<area shape="rect" id="Node000004" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#aaed6a3a6bacd057e854adff4617e7b14" title="Reads next token from the input stream." alt="" coords="520,186,715,241"/>
+<area shape="poly" id="edge27_Node000001_Node000004" title=" " alt="" coords="118,218,140,191,171,159,208,128,251,106,311,86,361,81,412,88,473,105,504,119,533,136,581,174,578,178,530,140,501,123,471,111,411,93,361,86,312,92,253,110,211,133,175,163,144,194,122,222"/>
+<area shape="rect" id="Node000009" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#aa1d5aab18be103f845c04d36c5acd7e7" title="Match a string without whitespace or CRLF (S)" alt="" coords="269,249,455,303"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="204,251,256,259,255,264,204,257"/>
+<area shape="rect" id="Node000011" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a3541fd5283453b838ee19e9cd757bd24" title="Matches a raw value in a the input." alt="" coords="269,327,455,382"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="143,258,253,314,268,320,266,325,251,318,140,263"/>
+<area shape="rect" id="Node000012" href="$d8/dd2/uri_8cpp.html#ae59095a3e023c16f4dd68bc60e21f7c7" title="Parses a uri as defined in RFC 2396 (explaining URIs)." alt="" coords="321,485,403,510"/>
+<area shape="poly" id="edge15_Node000001_Node000012" title=" " alt="" coords="115,259,132,304,161,362,201,421,226,448,253,471,279,484,308,491,306,497,278,489,251,476,222,452,197,425,156,364,127,306,110,261"/>
+<area shape="rect" id="Node000021" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#aa804ee20accda01aae4a8967b2ce9904" title="Reads data until end of line." alt="" coords="272,406,452,461"/>
+<area shape="poly" id="edge24_Node000001_Node000021" title=" " alt="" coords="122,259,176,324,212,361,254,392,261,397,258,402,250,397,209,365,172,328,118,262"/>
+<area shape="rect" id="Node000022" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a8690442d05125c5459620ebf71b6000f" title="Skip linear whitespace." alt="" coords="262,184,462,224"/>
+<area shape="poly" id="edge28_Node000001_Node000022" title=" " alt="" coords="204,223,248,217,249,223,204,229"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="433,157,509,180,508,185,432,163"/>
+<area shape="rect" id="Node000005" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#abf87c2390f505c362f987888532ff366" title="Determines if the passed value is a control character." alt="" coords="765,117,945,171"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="711,183,752,171,753,177,712,188"/>
+<area shape="rect" id="Node000006" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a397ada9472b0ce782d9636144528c8cf" title="Determines if the passed value is permissible in token." alt="" coords="765,195,945,250"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="715,214,752,216,751,221,715,220"/>
+<area shape="rect" id="Node000007" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a119ec2e9ed02e25cb1dfd3cbba91ab0c" title="Determines if the passed value is a separator." alt="" coords="996,229,1176,283"/>
+<area shape="poly" id="edge8_Node000004_Node000007" title=" " alt="" coords="685,238,723,251,763,260,819,267,876,269,982,265,982,270,876,274,818,272,762,265,722,256,683,243"/>
+<area shape="rect" id="Node000008" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#aa8849fbe55dcefa7ab2465ea8aabd214" title="Determines if the passed value is permissible in qdtext." alt="" coords="765,38,945,93"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="649,184,700,143,761,102,771,96,774,101,764,106,703,147,652,188"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="946,233,983,238,982,244,945,238"/>
+<area shape="poly" id="edge11_Node000009_Node000004" title=" " alt="" coords="454,251,506,238,507,243,456,256"/>
+<area shape="rect" id="Node000010" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a95b9f2d9c206cb56daa5b61001f5b320" title="Get pointer to next character in string." alt="" coords="520,327,715,382"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="452,301,516,321,514,326,451,306"/>
+<area shape="poly" id="edge14_Node000011_Node000004" title=" " alt="" coords="447,325,471,314,524,282,570,247,574,252,527,286,473,318,449,330"/>
+<area shape="poly" id="edge13_Node000011_Node000010" title=" " alt="" coords="455,352,506,352,506,357,455,357"/>
+<area shape="rect" id="Node000013" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#afb6a0fce453e470360da2b0d0d5f8a8b" title="Parses a string with host and port and fills a hostport structure." alt="" coords="522,528,713,568"/>
+<area shape="poly" id="edge16_Node000012_Node000013" title=" " alt="" coords="404,503,509,524,508,529,403,508"/>
+<area shape="rect" id="Node000014" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab8f57212a00e026034f1864f0239bad9" title="parses a uri scheme starting at in[0]." alt="" coords="523,592,711,632"/>
+<area shape="poly" id="edge17_Node000012_Node000014" title=" " alt="" coords="386,508,446,541,521,578,539,585,537,590,519,582,444,546,384,513"/>
+<area shape="rect" id="Node000015" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab0786f41a45f36864383bcca2f4f2658" title="Parses a string of uric characters starting at in[0]." alt="" coords="527,413,707,453"/>
+<area shape="poly" id="edge18_Node000012_Node000015" title=" " alt="" coords="403,486,471,471,533,454,534,460,473,476,404,492"/>
+<area shape="rect" id="Node000020" href="$d8/dd2/uri_8cpp.html#a8f32e8ba916b944b37e9f23e1fc60ec9" title="Compares buffer in the token object with the buffer in in2 case insensitive." alt="" coords="534,478,701,503"/>
+<area shape="poly" id="edge23_Node000012_Node000020" title=" " alt="" coords="403,494,520,491,520,496,403,499"/>
+<area shape="rect" id="Node000016" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a4666c8d916f7397270c5cc93734482d3" title="Check that a char[3] sequence is ESCAPED." alt="" coords="765,349,945,389"/>
+<area shape="poly" id="edge19_Node000015_Node000016" title=" " alt="" coords="692,411,767,390,768,395,693,416"/>
+<area shape="rect" id="Node000017" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a72aa299b86ca4486b62de1ac2e11b649" title="Check for a RESERVED character." alt="" coords="765,413,945,453"/>
+<area shape="poly" id="edge20_Node000015_Node000017" title=" " alt="" coords="708,431,752,431,752,436,708,436"/>
+<area shape="rect" id="Node000018" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#abb4b2d5f48da8f6aaa405da333b3ab45" title="Check for an UNRESERVED character." alt="" coords="763,477,948,517"/>
+<area shape="poly" id="edge21_Node000015_Node000018" title=" " alt="" coords="693,451,768,471,767,476,692,456"/>
+<area shape="rect" id="Node000019" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a1425dfc37b98f61a0b49a36ac07660d1" title="Check for a MARK character." alt="" coords="996,477,1176,517"/>
+<area shape="poly" id="edge22_Node000018_Node000019" title=" " alt="" coords="948,495,982,495,982,500,948,500"/>
+<area shape="poly" id="edge26_Node000021_Node000004" title=" " alt="" coords="451,405,470,393,487,375,496,357,504,337,518,314,576,249,580,252,522,318,509,340,501,359,492,378,474,397,454,410"/>
+<area shape="poly" id="edge25_Node000021_Node000010" title=" " alt="" coords="451,403,514,384,516,389,452,408"/>
+<area shape="poly" id="edge29_Node000022_Node000004" title=" " alt="" coords="462,205,506,207,506,212,462,210"/>
+</map>

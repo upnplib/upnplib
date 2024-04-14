@@ -1,0 +1,15 @@
+<map id="freeSubscriptionQueuedEvents" name="freeSubscriptionQueuedEvents">
+<area shape="rect" id="Node000001" title="???" alt="" coords="5,109,228,135"/>
+<area shape="rect" id="Node000002" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae0ca4bdec01c3edef6b166d0641c9038" title="Frees memory used in notify_threads if the reference count is 0, otherwise decrements the refrence co..." alt="" coords="276,5,456,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,107,275,62,277,67,154,112"/>
+<area shape="rect" id="Node000003" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="315,84,417,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="228,108,301,100,302,106,229,113"/>
+<area shape="rect" id="Node000006" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="327,133,405,159"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="229,130,313,138,313,144,228,135"/>
+<area shape="rect" id="Node000007" href="$df/db8/LinkedList_8cpp.html#a13e9c21886d19bb76341f1d2a1aefc12" title="Returns the size of the list." alt="" coords="330,183,402,208"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="160,132,277,167,317,179,316,184,275,173,159,137"/>
+<area shape="rect" id="Node000004" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="504,77,729,117"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="417,94,490,94,490,99,417,99"/>
+<area shape="rect" id="Node000005" href="$d7/d20/FreeList_8cpp.html#a559c475ea4c5850cd427740512512df0" title="Returns an item to the Free List." alt="" coords="777,84,879,109"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="730,94,764,94,764,99,730,99"/>
+</map>

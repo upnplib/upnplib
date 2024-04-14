@@ -1,0 +1,13 @@
+<map id="SetHTTPGetCallback" name="SetHTTPGetCallback">
+<area shape="rect" id="Node000001" title="Set HTTP Get Callback." alt="" coords="877,5,1033,31"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a3c6309a98eb5281fbbfa45644c06fc34" title="Enables or disables the webserver." alt="" coords="660,5,829,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="864,21,830,21,830,15,864,15"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="455,5,612,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="646,21,612,21,612,15,646,15"/>
+<area shape="rect" id="Node000004" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,5,407,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="441,21,407,21,407,15,441,15"/>
+<area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
+<area shape="rect" id="Node000006" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
+</map>

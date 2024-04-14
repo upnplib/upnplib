@@ -1,0 +1,13 @@
+<map id="anonymous_namespace{ThreadPool::cpp}::CalcWaitTime" name="anonymous_namespace{ThreadPool::cpp}::CalcWaitTime">
+<area shape="rect" id="Node000001" title="Calculates the time the job has been waiting at the specified priority." alt="" coords="5,120,245,160"/>
+<area shape="rect" id="Node000002" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a09e7140e6d8041eccf860f635f4192b1" title="Returns the difference in milliseconds between two timeval structures." alt="" coords="318,5,526,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,118,221,86,292,55,317,47,318,52,294,60,223,91,163,122"/>
+<area shape="rect" id="Node000003" href="$d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3" title="Get time of day." alt="" coords="367,70,477,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="229,117,353,93,354,98,230,123"/>
+<area shape="rect" id="Node000004" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#acb4208b0e756eea76976875cb5d964c0" title="StatsAccountHQ." alt="" coords="295,120,549,160"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="245,137,281,137,281,143,245,143"/>
+<area shape="rect" id="Node000005" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#aade852aa8a4ca84e59d89d78eb56c98d" title="StatsAccountLQ." alt="" coords="296,184,548,224"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="219,157,316,178,315,184,218,163"/>
+<area shape="rect" id="Node000006" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a65b5010c910021206ec26201fb074f93" title="StatsAccountMQ." alt="" coords="293,248,551,288"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="158,158,219,196,294,234,316,242,315,247,292,238,217,201,155,163"/>
+</map>

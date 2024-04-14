@@ -1,0 +1,24 @@
+<map id="http_FixStrUrl" name="http_FixStrUrl">
+<area shape="rect" id="Node000001" title="Parses URL and then validates URL." alt="" coords="5,39,116,64"/>
+<area shape="rect" id="Node000002" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a502852e9caf9d74374e83f8e9bf42acb" title="Validates URL." alt="" coords="164,9,257,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,38,150,31,151,36,117,43"/>
+<area shape="rect" id="Node000004" href="$d8/dd2/uri_8cpp.html#ae59095a3e023c16f4dd68bc60e21f7c7" title="Parses a uri as defined in RFC 2396 (explaining URIs)." alt="" coords="169,63,252,88"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="116,58,156,64,155,69,116,63"/>
+<area shape="rect" id="Node000003" href="$d8/dd2/uri_8cpp.html#a8f32e8ba916b944b37e9f23e1fc60ec9" title="Compares buffer in the token object with the buffer in in2 case insensitive." alt="" coords="317,5,484,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="257,18,303,17,304,23,257,24"/>
+<area shape="poly" id="edge11_Node000004_Node000003" title=" " alt="" coords="246,60,305,41,336,32,337,37,306,46,248,65"/>
+<area shape="rect" id="Node000005" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#afb6a0fce453e470360da2b0d0d5f8a8b" title="Parses a string with host and port and fills a hostport structure." alt="" coords="305,55,496,95"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="252,73,292,73,292,78,252,78"/>
+<area shape="rect" id="Node000006" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab8f57212a00e026034f1864f0239bad9" title="parses a uri scheme starting at in[0]." alt="" coords="307,119,495,159"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="250,86,306,105,328,112,326,117,304,110,248,91"/>
+<area shape="rect" id="Node000007" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab0786f41a45f36864383bcca2f4f2658" title="Parses a string of uric characters starting at in[0]." alt="" coords="311,183,491,223"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="223,87,258,127,281,150,307,169,317,175,315,180,304,174,277,154,254,131,219,90"/>
+<area shape="rect" id="Node000008" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a4666c8d916f7397270c5cc93734482d3" title="Check that a char[3] sequence is ESCAPED." alt="" coords="547,119,727,159"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="474,181,549,160,550,165,476,186"/>
+<area shape="rect" id="Node000009" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a72aa299b86ca4486b62de1ac2e11b649" title="Check for a RESERVED character." alt="" coords="547,183,727,223"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="491,201,533,201,533,206,491,206"/>
+<area shape="rect" id="Node000010" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#abb4b2d5f48da8f6aaa405da333b3ab45" title="Check for an UNRESERVED character." alt="" coords="544,247,729,287"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="476,221,550,241,549,246,474,226"/>
+<area shape="rect" id="Node000011" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a1425dfc37b98f61a0b49a36ac07660d1" title="Check for a MARK character." alt="" coords="777,247,957,287"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="729,265,764,265,764,270,729,270"/>
+</map>

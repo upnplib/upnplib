@@ -1,0 +1,11 @@
+<map id="sock_init_with_ip" name="sock_init_with_ip">
+<area shape="rect" id="Node000001" title="Calls the sock_init function and assigns the passed in IP address and port to the IP address and port..." alt="" coords="973,20,1108,45"/>
+<area shape="rect" id="Node000002" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a9b4b32cfbe825a3f7cc9906b33d50872" title="Receive the request and dispatch it for handling." alt="" coords="735,5,925,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="960,35,926,35,926,30,960,30"/>
+<area shape="rect" id="Node000003" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a4a107199de415d50f725a5c6a327c1be" title="Initilize the thread pool to handle a request, sets priority for the job and adds the job to the thre..." alt="" coords="481,5,687,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="721,35,687,35,687,30,721,30"/>
+<area shape="rect" id="Node000004" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a34abbc6e410d0cfd24057c79c9f1b9c3" title="Accept requested connection from a remote control point and run it in a new thread." alt="" coords="253,5,433,60"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="468,35,434,35,434,30,468,30"/>
+<area shape="rect" id="Node000005" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76" title="Run the miniserver." alt="" coords="5,5,205,60"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="239,35,206,35,206,30,239,30"/>
+</map>

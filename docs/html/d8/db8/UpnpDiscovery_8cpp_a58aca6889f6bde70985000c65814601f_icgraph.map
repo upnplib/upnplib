@@ -1,0 +1,26 @@
+<map id="UpnpDiscovery_delete" name="UpnpDiscovery_delete">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1652,32,1821,57"/>
+<area shape="rect" id="Node000002" href="$d7/d5e/group__SSDP-ctrlpt__functions.html#ga07ee8d9e5104cbeb9949ec23e0d4113b" title="This function handles the ssdp messages from the devices." alt="" coords="973,32,1152,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1668,32,1604,22,1490,12,1402,8,1314,11,1200,21,1117,34,1116,29,1200,15,1313,6,1402,3,1491,7,1604,17,1669,27"/>
+<area shape="rect" id="Node000007" href="$da/db6/SSDPResultData_8cpp.html#abee23a01947f1247c3563e1a82071b4d" title="Destructor." alt="" coords="1428,32,1604,57"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1638,47,1604,47,1604,42,1638,42"/>
+<area shape="rect" id="Node000009" href="$da/db6/SSDPResultData_8cpp.html#adaeacbf423cd4a4852b5bbd059ab7938" title="SSDPResultData_set_Param." alt="" coords="1439,122,1593,162"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="1695,65,1564,124,1561,119,1693,60"/>
+<area shape="rect" id="Node000003" href="$db/daf/namespaceanonymous__namespace_02ssdp__common_8cpp_03.html#a73ff71f907e2bf442c51b304f877d07a" title="This function is a thread that handles SSDP requests." alt="" coords="724,17,925,72"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="959,47,925,47,925,42,959,42"/>
+<area shape="rect" id="Node000004" href="$df/d13/ssdp__common_8cpp.html#af3e17308ebc31e7e81c476624487614c" title="This function reads the data from the ssdp socket." alt="" coords="515,32,676,57"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="710,47,676,47,676,42,710,42"/>
+<area shape="rect" id="Node000005" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a02379f09474a96b3590cadd8ca82ecf1" title="Read data from the SSDP socket." alt="" coords="253,25,467,65"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="501,47,467,47,467,42,501,42"/>
+<area shape="rect" id="Node000006" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76" title="Run the miniserver." alt="" coords="5,17,205,72"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="240,47,206,47,206,42,240,42"/>
+<area shape="poly" id="edge9_Node000007_Node000002" title=" " alt="" coords="1414,41,1380,39,1200,39,1152,41,1152,36,1200,34,1380,34,1414,35"/>
+<area shape="rect" id="Node000008" href="$df/d70/namespaceanonymous__namespace_02ssdp__ctrlpt_8cpp_03.html#ae815d4edb19407d383527e148a99b682" title="Sends a callback to the control point application with a SEARCH result." alt="" coords="1200,49,1380,104"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1415,62,1381,66,1380,61,1414,56"/>
+<area shape="poly" id="edge8_Node000008_Node000002" title=" " alt="" coords="1186,65,1152,60,1153,55,1187,59"/>
+<area shape="poly" id="edge11_Node000009_Node000002" title=" " alt="" coords="1424,146,1316,140,1257,131,1199,118,1133,90,1081,60,1084,55,1135,85,1201,113,1258,126,1316,134,1425,141"/>
+<area shape="rect" id="Node000010" href="$da/db6/SSDPResultData_8cpp.html#aac929dce7640f599c20ca77d356e3791" title="Assignment operator." alt="" coords="1201,180,1379,205"/>
+<area shape="poly" id="edge12_Node000009_Node000010" title=" " alt="" coords="1426,165,1348,182,1347,177,1425,160"/>
+<area shape="rect" id="Node000011" href="$da/db6/SSDPResultData_8cpp.html#ab390f080062b234eceaa13d26f91aff9" title="Copy Constructor." alt="" coords="983,180,1142,205"/>
+<area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="1188,195,1142,195,1142,190,1188,190"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="ListInit" name="ListInit">
+<area shape="rect" id="Node000001" title="Initializes LinkedList. Must be called first and only once for List." alt="" coords="5,5,72,31"/>
+<area shape="rect" id="Node000002" href="$d7/d20/FreeList_8cpp.html#a2a1bcf0da31489886910109d5f45ee89" title="Initializes Free List." alt="" coords="120,5,215,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,15,106,15,106,21,72,21"/>
+</map>

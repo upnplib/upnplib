@@ -1,0 +1,9 @@
+<map id="Compa/src/inc/ssdp_device.hpp" name="Compa/src/inc/ssdp_device.hpp">
+<area shape="rect" id="Node000001" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for UPnP Devices with SSDP." alt="" coords="233,5,381,45"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="5,101,204,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="251,53,133,103,131,98,249,48"/>
+<area shape="rect" id="Node000003" href="$df/d13/ssdp__common_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for common SSDP usage." alt="" coords="228,93,387,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="310,59,310,93,305,93,305,59"/>
+<area shape="rect" id="Node000004" href="$db/db9/ssdp__device_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for UPnP Devices with SSDP." alt="" coords="411,93,569,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="361,49,451,91,449,96,359,54"/>
+</map>

@@ -1,0 +1,18 @@
+<map id="UpnpDownloadXmlDoc" name="UpnpDownloadXmlDoc">
+<area shape="rect" id="Node000001" title="Downloads an XML document specified in a URL." alt="" coords="643,80,815,105"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a9300edc4f96f8f3e563bcaf49bffd514" title="Fills the sockadr_in with miniserver information." alt="" coords="400,5,595,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="684,77,594,45,554,33,555,28,595,39,685,72"/>
+<area shape="rect" id="Node000004" href="$d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="411,55,583,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="628,84,583,79,584,74,629,79"/>
+<area shape="rect" id="Node000007" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers a device application with the UPnP Library." alt="" coords="405,104,590,129"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="629,106,590,110,590,104,629,100"/>
+<area shape="rect" id="Node000008" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="401,153,594,179"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="683,113,595,143,551,156,549,151,594,138,681,108"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers a device application with the UPnP Library. Similar to UpnpRegisterRootDevice,..." alt="" coords="159,5,352,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="386,21,352,21,352,15,386,15"/>
+<area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="198,104,313,129"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="422,85,313,108,312,102,421,80"/>
+<area shape="rect" id="Node000006" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,104,111,129"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="184,119,111,119,111,114,184,114"/>
+<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="421,153,312,131,313,126,422,148"/>
+</map>

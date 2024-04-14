@@ -1,0 +1,33 @@
+<map id="UpnpExtraHeaders_dup" name="UpnpExtraHeaders_dup">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,333,180,359"/>
+<area shape="rect" id="Node000002" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#ad3bf8d69a4656ef36a95f17e3ee75fcb" title=" " alt="" coords="228,235,421,260"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,331,280,263,282,268,125,336"/>
+<area shape="rect" id="Node000013" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#a4654fcbbd9b882100e25453af2950456" title=" " alt="" coords="235,432,414,457"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="125,356,282,424,280,429,122,361"/>
+<area shape="rect" id="Node000003" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#a27bb1ee6941cfdc9d37e07501500b92b" title=" " alt="" coords="469,333,685,359"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="348,258,402,289,470,320,495,327,493,332,468,324,400,293,345,263"/>
+<area shape="rect" id="Node000004" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#a7e8084f8b1ad34db39030a736e05c974" title=" " alt="" coords="472,383,683,408"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="339,258,392,312,429,343,471,369,486,376,484,381,468,374,426,348,388,316,335,262"/>
+<area shape="rect" id="Node000005" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#a786a0c272065b81af91b9f4ea969eadf" title=" " alt="" coords="474,5,681,31"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="329,233,346,195,376,143,416,88,441,63,468,41,480,34,483,39,471,46,444,67,420,91,380,146,351,197,334,235"/>
+<area shape="rect" id="Node000006" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#a654d29c6103591e04e2c89988521de11" title=" " alt="" coords="491,55,663,95"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="334,233,386,172,425,136,468,105,480,98,483,103,471,110,428,140,390,176,338,236"/>
+<area shape="rect" id="Node000007" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#aba5088bea09d927c2e0365ae0646d292" title=" " alt="" coords="470,120,685,145"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="341,232,396,194,468,156,494,146,496,151,470,160,399,199,344,237"/>
+<area shape="rect" id="Node000010" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#ad012153df5becfc9795352b861d4c439" title=" " alt="" coords="472,235,683,260"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="422,245,458,245,458,250,422,250"/>
+<area shape="rect" id="Node000011" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#ae715b61eb98ae585a4bc3e4f9f95eecd" title=" " alt="" coords="474,284,681,309"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="391,257,498,279,497,284,390,263"/>
+<area shape="rect" id="Node000012" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#ac3880238881f17090ea4557065690c99" title=" " alt="" coords="492,170,663,210"/>
+<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="381,232,478,210,479,215,382,237"/>
+<area shape="rect" id="Node000008" href="$d1/d03/group__UpnpString.html#ga52a429bf778bf8c0a44a779d9446116c" title="Returns the pointer to char." alt="" coords="733,123,900,148"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="685,131,720,132,720,137,685,137"/>
+<area shape="rect" id="Node000009" href="$d1/d03/group__UpnpString.html#ga0db13228160adbc4e7ad7f52157f987e" title="Sets the string from a pointer to char." alt="" coords="733,173,900,199"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="636,143,747,168,745,173,635,148"/>
+<area shape="poly" id="edge12_Node000012_Node000008" title=" " alt="" coords="662,168,746,149,748,154,663,173"/>
+<area shape="poly" id="edge13_Node000012_Node000009" title=" " alt="" coords="663,186,720,185,720,190,663,191"/>
+<area shape="rect" id="Node000014" href="$d1/dd9/list_8cpp.html#a4896c23626b95e35ab284f5239467fd2" title="Initialize empty list." alt="" coords="527,432,627,457"/>
+<area shape="poly" id="edge15_Node000013_Node000014" title=" " alt="" coords="414,442,513,442,513,447,414,447"/>
+<area shape="rect" id="Node000015" href="$d1/d03/group__UpnpString.html#gab66dcdfe778dd5e2e8d16e1131ef9ac1" title="Constructor." alt="" coords="513,481,641,507"/>
+<area shape="poly" id="edge16_Node000013_Node000015" title=" " alt="" coords="391,455,501,476,500,482,390,460"/>
+</map>

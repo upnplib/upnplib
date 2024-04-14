@@ -1,0 +1,7 @@
+<map id="UpnpDiscovery_set_ServiceVer" name="UpnpDiscovery_set_ServiceVer">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,229,56"/>
+<area shape="rect" id="Node000002" href="$d1/d03/group__UpnpString.html#ga52a429bf778bf8c0a44a779d9446116c" title="Returns the pointer to char." alt="" coords="277,5,444,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="229,29,263,25,264,31,230,34"/>
+<area shape="rect" id="Node000003" href="$d1/d03/group__UpnpString.html#ga0db13228160adbc4e7ad7f52157f987e" title="Sets the string from a pointer to char." alt="" coords="277,55,444,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="230,52,264,55,263,60,229,57"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="membuffer_destroy" name="membuffer_destroy">
+<area shape="rect" id="Node000001" title="Free&#39;s memory allocated for membuffer* m." alt="" coords="5,20,156,45"/>
+<area shape="rect" id="Node000002" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="204,20,327,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,30,190,30,190,35,156,35"/>
+<area shape="rect" id="Node000003" href="$d8/d45/namespaceanonymous__namespace_02membuffer_8cpp_03.html#aa81aeb90fb3c8389c7eb0a77b847101e" title="Initialize the buffer." alt="" coords="375,5,596,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="327,30,361,30,361,35,327,35"/>
+</map>

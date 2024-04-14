@@ -1,0 +1,20 @@
+<map id="anonymous_namespace{gena_device::cpp}::genaInitNotifyCommon" name="anonymous_namespace{gena_device::cpp}::genaInitNotifyCommon">
+<area shape="rect" id="Node000001" title="We take ownership of propertySet and will free it." alt="" coords="1285,16,1465,71"/>
+<area shape="rect" id="Node000002" href="$dd/de6/gena__device_8cpp.html#afe08f0a722cafb84faa9def7850da596" title="Sends the intial state table dump to newly subscribed control point." alt="" coords="1113,5,1227,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1271,33,1227,28,1228,22,1272,28"/>
+<area shape="rect" id="Node000008" href="$dd/de6/gena__device_8cpp.html#aadf54fcafc02a512a76124ab8bf938f6" title="Similar to the genaInitNofity. The only difference is that it takes the xml document for the state ta..." alt="" coords="1103,55,1237,80"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1272,58,1238,62,1237,57,1271,53"/>
+<area shape="rect" id="Node000003" href="$d9/d54/group__compaAPI.html#ga19f65dc15aaf56d2f9390c4d3b13a5c8" title="Accepts a subscription request and sends out the current state of the eventable variables for a servi..." alt="" coords="864,5,1044,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1099,21,1044,21,1044,15,1099,15"/>
+<area shape="rect" id="Node000004" href="$d9/d09/tv__device_8cpp.html#a236a906cc1d589cb1655d8ce6b0623bc" title="Called during a subscription request callback." alt="" coords="596,23,805,63"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="851,31,806,36,805,30,850,26"/>
+<area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b" title="The callback handler registered with the SDK while registering root device." alt="" coords="321,31,548,56"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="582,46,548,46,548,41,582,41"/>
+<area shape="rect" id="Node000006" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,31,273,56"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="308,46,274,46,274,41,308,41"/>
+<area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,31,111,56"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="145,46,111,46,111,41,145,41"/>
+<area shape="rect" id="Node000009" href="$d4/d99/upnpapi_8cpp.html#ab7f67326e349b9025ac62d0b8ae8ae43" title="Similar to UpnpAcceptSubscription() except that it takes a DOM document for the variables to event ra..." alt="" coords="853,55,1055,80"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="1089,70,1055,70,1055,65,1089,65"/>
+<area shape="poly" id="edge9_Node000009_Node000004" title=" " alt="" coords="840,59,805,56,806,51,840,54"/>
+</map>

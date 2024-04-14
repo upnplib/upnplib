@@ -1,0 +1,9 @@
+<map id="anonymous_namespace{urlconfig::cpp}::calc_descURL" name="anonymous_namespace{urlconfig::cpp}::calc_descURL">
+<area shape="rect" id="Node000001" title="Determines the description URL." alt="" coords="675,5,855,60"/>
+<area shape="rect" id="Node000002" href="$d1/d4a/urlconfig_8cpp.html#a2fa72177f842afa6e0b87182387aac88" title="Configure the full URL for the description document." alt="" coords="489,20,627,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="661,35,627,35,627,30,661,30"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a9300edc4f96f8f3e563bcaf49bffd514" title="Fills the sockadr_in with miniserver information." alt="" coords="247,20,441,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="476,35,441,35,441,30,476,30"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers a device application with the UPnP Library. Similar to UpnpRegisterRootDevice,..." alt="" coords="5,20,199,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="233,35,199,35,199,30,233,30"/>
+</map>

@@ -1,0 +1,22 @@
+<map id="TimerThreadShutdown" name="TimerThreadShutdown">
+<area shape="rect" id="Node000001" title="Shutdown the timer thread." alt="" coords="5,139,175,164"/>
+<area shape="rect" id="Node000002" href="$d7/d20/FreeList_8cpp.html#ae64c10055f937a33eff150f678303b7f" title="Releases the resources stored with the free list." alt="" coords="367,63,491,88"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,136,166,117,222,99,289,86,353,78,354,83,290,92,223,105,168,122,120,141"/>
+<area shape="rect" id="Node000003" href="$da/d04/namespaceanonymous__namespace_02TimerThread_8cpp_03.html#ab40f4f1217f62d380736126fec2ae82e" title="Deallocates a dynamically allocated TimerEvent." alt="" coords="561,5,741,60"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="107,136,157,103,222,72,305,48,391,34,474,27,547,26,547,31,474,33,392,39,306,53,224,76,159,108,110,141"/>
+<area shape="rect" id="Node000005" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="378,113,479,139"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="175,153,245,153,318,149,369,139,370,145,319,154,245,159,175,159"/>
+<area shape="rect" id="Node000007" href="$df/db8/LinkedList_8cpp.html#a28e5dc6ff4a189982c97ae5780d360fd" title="Removes all memory associated with list nodes. Does not free LinkedList *list." alt="" coords="223,113,319,139"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="175,137,209,132,209,137,175,142"/>
+<area shape="rect" id="Node000008" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="231,215,310,240"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="122,162,228,207,226,212,120,167"/>
+<area shape="rect" id="Node000009" href="$df/db8/LinkedList_8cpp.html#a83123d7868ce3aba2cf9d5c066fb7eb4" title="Returns the next item in the list." alt="" coords="233,264,309,289"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="108,162,158,203,224,250,232,255,229,260,221,255,155,207,104,166"/>
+<area shape="rect" id="Node000004" href="$d7/d20/FreeList_8cpp.html#a559c475ea4c5850cd427740512512df0" title="Returns an item to the Free List." alt="" coords="812,63,913,88"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="742,48,799,60,798,65,741,53"/>
+<area shape="rect" id="Node000006" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="539,91,764,131"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="479,120,525,117,525,122,480,125"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="764,89,798,84,799,89,765,95"/>
+<area shape="poly" id="edge8_Node000007_Node000002" title=" " alt="" coords="310,111,374,90,376,95,312,116"/>
+<area shape="poly" id="edge9_Node000007_Node000005" title=" " alt="" coords="319,123,364,123,364,129,319,129"/>
+</map>

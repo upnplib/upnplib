@@ -1,0 +1,26 @@
+<map id="anonymous_namespace{miniserver::cpp}::get_miniserver_sockets" name="anonymous_namespace{miniserver::cpp}::get_miniserver_sockets">
+<area shape="rect" id="Node000001" title="Creates a STREAM socket, binds to INADDR_ANY and listens for incoming connections." alt="" coords="5,6,185,61"/>
+<area shape="rect" id="Node000002" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a224e924519197fa3cf06a4480b2fb464" title="Bind and listen to a socket address." alt="" coords="233,108,413,162"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,59,250,100,248,104,157,63"/>
+<area shape="rect" id="Node000009" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a45702c57e08f4fbfcfa43dfdceb5390c" title="Get valid sockets." alt="" coords="708,72,888,126"/>
+<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="186,29,403,33,532,42,660,58,699,66,698,71,660,63,531,47,402,38,186,34"/>
+<area shape="rect" id="Node000010" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="990,21,1083,46"/>
+<area shape="poly" id="edge14_Node000001_Node000010" title=" " alt="" coords="185,16,233,11,448,3,659,6,843,16,976,26,976,31,843,21,659,12,448,8,234,16,186,21"/>
+<area shape="rect" id="Node000003" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#acc6658fce5f76c1ea6dab7a41f9d2d27" title="Bind a socket address to a local network interface." alt="" coords="461,151,660,191"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="414,146,448,151,447,156,413,151"/>
+<area shape="rect" id="Node000004" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#adba7f7895434869489710a8c0e714c41" title="Listen on a local network interface to incomming requests." alt="" coords="708,176,888,230"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="368,160,412,183,462,200,521,210,581,215,694,212,694,218,581,220,520,216,461,206,410,188,366,165"/>
+<area shape="rect" id="Node000008" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a53f43c64b3353019b7bcc301ff1073a3" title="Close and (re)initialize a socket." alt="" coords="471,72,651,126"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="413,119,457,112,458,117,414,124"/>
+<area shape="rect" id="Node000005" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="963,79,1111,119"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="845,173,935,129,953,121,955,126,937,133,848,178"/>
+<area shape="rect" id="Node000006" href="$d2/dd2/classupnplib_1_1CSocketErr.html#afd9d96e3eb59a49103c3ed0080baf613" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="963,143,1111,183"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="888,185,948,175,949,180,889,191"/>
+<area shape="rect" id="Node000007" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aec7d02e7e42098f68ed2d85b931106df" title="Returns port to which socket, sockfd, is bound." alt="" coords="936,207,1137,247"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="888,209,923,213,922,218,888,215"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="651,96,694,96,694,102,651,102"/>
+<area shape="poly" id="edge12_Node000008_Node000010" title=" " alt="" coords="650,70,708,58,852,40,976,33,976,38,852,45,708,63,652,75"/>
+<area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="888,96,949,96,949,102,888,102"/>
+<area shape="poly" id="edge10_Node000009_Node000006" title=" " alt="" coords="889,120,950,137,949,142,888,126"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="888,72,976,47,977,52,889,77"/>
+</map>

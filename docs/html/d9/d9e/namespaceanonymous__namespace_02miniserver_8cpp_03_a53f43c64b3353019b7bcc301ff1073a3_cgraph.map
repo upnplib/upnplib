@@ -1,0 +1,12 @@
+<map id="anonymous_namespace{miniserver::cpp}::do_reinit" name="anonymous_namespace{miniserver::cpp}::do_reinit">
+<area shape="rect" id="Node000001" title="Close and (re)initialize a socket." alt="" coords="5,93,185,147"/>
+<area shape="rect" id="Node000002" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a45702c57e08f4fbfcfa43dfdceb5390c" title="Get valid sockets." alt="" coords="233,59,413,114"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,104,220,99,220,104,186,109"/>
+<area shape="rect" id="Node000005" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="489,135,582,161"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="186,123,475,142,475,147,186,128"/>
+<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="461,5,609,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="413,58,452,47,453,52,414,63"/>
+<area shape="rect" id="Node000004" href="$d2/dd2/classupnplib_1_1CSocketErr.html#afd9d96e3eb59a49103c3ed0080baf613" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="461,69,609,109"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="413,85,447,86,447,91,413,90"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="414,110,478,129,477,134,413,115"/>
+</map>

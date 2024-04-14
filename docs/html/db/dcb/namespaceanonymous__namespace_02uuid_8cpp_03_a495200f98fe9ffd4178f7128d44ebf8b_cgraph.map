@@ -1,0 +1,7 @@
+<map id="anonymous_namespace{uuid::cpp}::true_random" name="anonymous_namespace{uuid::cpp}::true_random">
+<area shape="rect" id="Node000001" title="generate a crypto&#45;quality random number. This sample doesn&#39;t do that." alt="" coords="5,5,193,45"/>
+<area shape="rect" id="Node000002" href="$d6/d4b/sysdep_8cpp.html#a6b9dabae04c2b47b7aacaf5d1741cbd3" title="System dependent call to get the current system time." alt="" coords="241,13,376,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,23,227,23,227,28,194,28"/>
+<area shape="rect" id="Node000003" href="$d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3" title="Get time of day." alt="" coords="424,13,535,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="376,23,411,23,411,28,376,28"/>
+</map>

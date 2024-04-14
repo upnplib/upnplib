@@ -1,0 +1,11 @@
+<map id="anonymous_namespace{uri::cpp}::parse_uric" name="anonymous_namespace{uri::cpp}::parse_uric">
+<area shape="rect" id="Node000001" title="Parses a string of uric characters starting at in[0]." alt="" coords="5,69,185,109"/>
+<area shape="rect" id="Node000002" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a4666c8d916f7397270c5cc93734482d3" title="Check that a char[3] sequence is ESCAPED." alt="" coords="236,5,416,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,67,240,46,241,52,169,72"/>
+<area shape="rect" id="Node000003" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a72aa299b86ca4486b62de1ac2e11b649" title="Check for a RESERVED character." alt="" coords="236,69,416,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,87,222,87,222,92,185,92"/>
+<area shape="rect" id="Node000004" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#abb4b2d5f48da8f6aaa405da333b3ab45" title="Check for an UNRESERVED character." alt="" coords="233,133,419,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="169,107,241,127,240,132,167,112"/>
+<area shape="rect" id="Node000005" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a1425dfc37b98f61a0b49a36ac07660d1" title="Check for a MARK character." alt="" coords="467,133,647,173"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="419,151,453,151,453,156,419,156"/>
+</map>

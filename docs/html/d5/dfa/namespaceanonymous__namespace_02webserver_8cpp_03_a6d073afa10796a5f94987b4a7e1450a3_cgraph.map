@@ -1,0 +1,44 @@
+<map id="anonymous_namespace{webserver::cpp}::ExtraHTTPHeaders" name="anonymous_namespace{webserver::cpp}::ExtraHTTPHeaders">
+<area shape="rect" id="Node000001" title="Build an array of unrecognized headers." alt="" coords="5,303,272,343"/>
+<area shape="rect" id="Node000002" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#aabc35282bb480b964b00d540e05bf4ff" title="Free extra HTTP headers." alt="" coords="338,56,545,111"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,301,218,219,265,171,318,128,341,115,344,119,322,132,269,175,222,222,156,305"/>
+<area shape="rect" id="Node000007" href="$d1/dd9/list_8cpp.html#a4b1675d58cb9f452893e6d6b7fbb83ae" title="Return end of list sentinel iterator (not an element)" alt="" coords="655,153,758,179"/>
+<area shape="poly" id="edge21_Node000001_Node000007" title=" " alt="" coords="154,301,182,270,220,234,267,198,319,172,361,159,404,150,491,143,573,145,641,152,641,157,573,150,491,148,405,155,362,164,321,176,270,203,224,238,186,274,158,305"/>
+<area shape="rect" id="Node000009" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="402,187,481,212"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="168,301,236,260,319,221,388,203,389,209,321,226,238,265,171,305"/>
+<area shape="rect" id="Node000010" href="$df/db8/LinkedList_8cpp.html#a83123d7868ce3aba2cf9d5c066fb7eb4" title="Returns the next item in the list." alt="" coords="403,236,479,261"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="206,301,319,270,389,255,390,260,321,275,207,306"/>
+<area shape="rect" id="Node000011" href="$d6/d0f/strintmap_8cpp.html#a3d400a234d1f0486e70e22ce27070e46" title="Match the given name with names from the entries in the table." alt="" coords="382,285,501,311"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="272,310,368,301,369,307,272,315"/>
+<area shape="rect" id="Node000014" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#a7e8084f8b1ad34db39030a736e05c974" title=" " alt="" coords="336,335,547,360"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="272,331,322,335,322,341,272,337"/>
+<area shape="rect" id="Node000015" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#a4654fcbbd9b882100e25453af2950456" title=" " alt="" coords="352,384,531,409"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="210,341,321,370,359,379,358,384,319,375,208,346"/>
+<area shape="rect" id="Node000017" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#af73e2e53973503fa1a9bbda322d609f9" title=" " alt="" coords="320,433,563,459"/>
+<area shape="poly" id="edge17_Node000001_Node000017" title=" " alt="" coords="171,341,238,381,321,420,347,428,345,433,319,424,236,386,168,346"/>
+<area shape="rect" id="Node000019" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#abce00101ec59dcd7c90497c2e7233119" title=" " alt="" coords="342,483,541,523"/>
+<area shape="poly" id="edge19_Node000001_Node000019" title=" " alt="" coords="161,342,228,405,273,439,321,469,337,476,334,481,319,474,270,444,224,409,157,346"/>
+<area shape="rect" id="Node000020" href="$d1/dd9/list_8cpp.html#a64fa76ca5ca237ef28de01797990467d" title="Insert element before pos, returns iterator pointing to inserted element." alt="" coords="383,548,499,573"/>
+<area shape="poly" id="edge22_Node000001_Node000020" title=" " alt="" coords="153,342,178,383,216,435,264,489,292,513,321,533,345,544,370,551,369,556,343,549,319,538,289,517,260,493,212,439,174,386,149,345"/>
+<area shape="rect" id="Node000003" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#a3c9276f0998b1a3ac4b4262728147456" title=" " alt="" coords="611,5,803,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="544,55,640,31,642,37,546,60"/>
+<area shape="rect" id="Node000006" href="$d1/dd9/list_8cpp.html#aadf0be10df4c503872328aaff45aa52d" title="Return iterator pointing to the first list element, or UpnpListEnd(list) if the list is empty." alt="" coords="649,55,765,80"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="545,74,635,69,635,74,545,80"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="520,108,611,138,643,147,641,152,610,143,518,113"/>
+<area shape="rect" id="Node000008" href="$d1/dd9/list_8cpp.html#a76264289963aec70ff71ddbd87c51d99" title="Erase element at pos, return next one, or end()" alt="" coords="649,104,764,129"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="545,94,636,105,636,111,545,99"/>
+<area shape="rect" id="Node000004" href="$d1/dd9/list_8cpp.html#a4896c23626b95e35ab284f5239467fd2" title="Initialize empty list." alt="" coords="872,187,972,212"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="782,28,804,40,840,70,870,106,911,173,906,175,866,109,836,74,801,44,779,33"/>
+<area shape="rect" id="Node000005" href="$d1/d03/group__UpnpString.html#ga8877a4f1ad605a508a31942527f0ce9f" title="Destructor." alt="" coords="851,5,993,31"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="803,15,837,15,837,21,803,21"/>
+<area shape="rect" id="Node000012" href="$da/dd9/membuffer_8cpp.html#a0ebdc3494e3cb774b96ee021f7ae6c3b" title="Compares characters of strings passed for number of bytes. If equal for the number of bytes,..." alt="" coords="652,236,761,261"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="500,284,638,259,639,264,501,290"/>
+<area shape="rect" id="Node000013" href="$da/dd9/membuffer_8cpp.html#acc25b821b69d506631865b53f8307b3a" title="Compares characters of 2 strings irrespective of the case for a specific count of bytes." alt="" coords="625,285,788,311"/>
+<area shape="poly" id="edge12_Node000011_Node000013" title=" " alt="" coords="501,295,612,295,612,301,501,301"/>
+<area shape="poly" id="edge15_Node000015_Node000004" title=" " alt="" coords="531,382,683,355,753,338,801,320,833,298,860,272,902,222,907,225,864,276,836,302,804,324,755,343,684,360,531,387"/>
+<area shape="rect" id="Node000016" href="$d1/d03/group__UpnpString.html#gab66dcdfe778dd5e2e8d16e1131ef9ac1" title="Constructor." alt="" coords="643,387,771,412"/>
+<area shape="poly" id="edge16_Node000015_Node000016" title=" " alt="" coords="531,395,629,396,629,401,531,400"/>
+<area shape="rect" id="Node000018" href="$d1/d03/group__UpnpString.html#ga06963479e44d90a5de680861e2180e0b" title="Sets the string from a pointer to char using a maximum of N chars." alt="" coords="619,463,795,488"/>
+<area shape="poly" id="edge18_Node000017_Node000018" title=" " alt="" coords="557,456,605,461,604,467,556,461"/>
+<area shape="poly" id="edge20_Node000019_Node000018" title=" " alt="" coords="541,490,605,483,605,489,541,496"/>
+</map>

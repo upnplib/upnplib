@@ -1,0 +1,7 @@
+<map id="http_header_t" name="http_header_t">
+<area shape="rect" id="Node000001" title="Structure of an HTTP header object." alt="" coords="41,108,153,133"/>
+<area shape="rect" id="Node000002" href="$d1/d10/membuffer_8hpp.html#d4/d89/structmemptr" title="pointer to a chunk of memory." alt="" coords="5,5,80,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,42,93,107,89,109,53,44"/>
+<area shape="rect" id="Node000003" href="$d1/d10/membuffer_8hpp.html#d8/d52/structmembuffer" title="Maintains a block of dynamically allocated memory." alt="" coords="105,5,199,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="145,45,125,85,109,109,104,106,120,83,140,42"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="create_ssdp_sock_reqv6" name="create_ssdp_sock_reqv6">
+<area shape="rect" id="Node000001" title="Creates the SSDP IPv6 socket to be used by the control point." alt="" coords="5,45,187,70"/>
+<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="235,5,383,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,42,221,36,221,41,181,47"/>
+<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#afd9d96e3eb59a49103c3ed0080baf613" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="235,69,383,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="181,67,221,74,221,79,181,73"/>
+</map>

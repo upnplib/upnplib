@@ -1,0 +1,13 @@
+<map id="anonymous_namespace{httpreadwrite::cpp}::copy_msg_headers" name="anonymous_namespace{httpreadwrite::cpp}::copy_msg_headers">
+<area shape="rect" id="Node000001" title="Dummy function. It do nothing since years. Do we need it?" alt="" coords="668,16,848,71"/>
+<area shape="rect" id="Node000002" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#ab8095d987290dfdc4f151dc8e3d7c40f" title="Gets the response from the server using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="451,31,620,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="654,46,620,46,620,41,654,41"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a32b6a961a76abcb37fcd7f6e3de10ee7" title="Sends and receives any pending data, closes the connection with the server, and frees memory allocate..." alt="" coords="243,5,391,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="437,35,391,29,392,24,437,29"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#afca845cb73300ed7cbd96849c9ae137c" title="Gets the response from the server using a connection previously created by UpnpOpenHttpConnection." alt="" coords="232,55,403,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="437,57,403,61,403,55,436,52"/>
+<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a14067069cf3e1f0dc9ac25867a4ca83d" title="Gets a file specified in a URL." alt="" coords="24,29,165,55"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="218,59,165,53,166,47,218,53"/>
+<area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#a5f069548a767baef4623774d7bb3ce9f" title="Gets a file specified in a URL through the specified proxy." alt="" coords="5,79,184,104"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="218,81,185,84,184,79,218,75"/>
+</map>

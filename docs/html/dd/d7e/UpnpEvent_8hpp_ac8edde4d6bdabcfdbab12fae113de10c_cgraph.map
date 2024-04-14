@@ -1,0 +1,19 @@
+<map id="UpnpEvent_assign" name="UpnpEvent_assign">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,129,148,155"/>
+<area shape="rect" id="Node000002" href="$d6/daa/UpnpEvent_8cpp.html#a039433b7db97f217bf5ca74e3f4704ae" title=" " alt="" coords="196,5,441,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,127,131,84,161,60,195,40,212,32,214,37,197,44,164,64,134,88,91,131"/>
+<area shape="rect" id="Node000003" href="$d6/daa/UpnpEvent_8cpp.html#a5294834d2d3c7ce4e0833e63e744c512" title=" " alt="" coords="224,55,413,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="103,127,145,107,195,89,226,80,228,86,197,94,147,112,105,132"/>
+<area shape="rect" id="Node000004" href="$d6/daa/UpnpEvent_8cpp.html#a9edd5999f29495efc5518ecf575f0ee3" title=" " alt="" coords="243,104,394,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="148,132,230,123,230,129,149,137"/>
+<area shape="rect" id="Node000005" href="$d6/daa/UpnpEvent_8cpp.html#a4a300e10c4ed82cb1805e3156a79e53e" title=" " alt="" coords="197,153,441,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="149,146,183,150,183,155,148,152"/>
+<area shape="rect" id="Node000006" href="$d6/daa/UpnpEvent_8cpp.html#a0c8ba7bb178071b4fb636748dd2f2142" title=" " alt="" coords="225,203,413,228"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="106,152,197,187,233,197,232,202,195,193,104,157"/>
+<area shape="rect" id="Node000007" href="$d6/daa/UpnpEvent_8cpp.html#a8db41cd22c54afa5369cbff39c2591bc" title=" " alt="" coords="244,252,393,277"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="91,153,135,195,165,218,197,237,232,249,230,254,195,242,162,222,131,199,87,157"/>
+<area shape="rect" id="Node000008" href="$d1/d03/group__UpnpString.html#ga52a429bf778bf8c0a44a779d9446116c" title="Returns the pointer to char." alt="" coords="489,227,656,252"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="393,255,475,246,476,252,394,260"/>
+<area shape="rect" id="Node000009" href="$d1/d03/group__UpnpString.html#ga0db13228160adbc4e7ad7f52157f987e" title="Sets the string from a pointer to char." alt="" coords="489,276,656,301"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="394,269,476,277,475,282,393,274"/>
+</map>

@@ -1,0 +1,19 @@
+<map id="httpmsg_destroy" name="httpmsg_destroy">
+<area shape="rect" id="Node000001" title="Free memory allocated for the http message." alt="" coords="5,80,137,105"/>
+<area shape="rect" id="Node000002" href="$df/db8/LinkedList_8cpp.html#a28e5dc6ff4a189982c97ae5780d360fd" title="Removes all memory associated with list nodes. Does not free LinkedList *list." alt="" coords="213,55,309,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,81,199,73,199,78,138,87"/>
+<area shape="rect" id="Node000007" href="$da/dd9/membuffer_8cpp.html#a132a367b6d8baf0d9de4b6e1f0fffe14" title="Free&#39;s memory allocated for membuffer* m." alt="" coords="185,104,336,129"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="138,98,172,103,171,108,137,104"/>
+<area shape="rect" id="Node000003" href="$d7/d20/FreeList_8cpp.html#ae64c10055f937a33eff150f678303b7f" title="Releases the resources stored with the free list." alt="" coords="384,5,508,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="308,52,383,32,385,37,310,57"/>
+<area shape="rect" id="Node000004" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="395,55,497,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="309,65,382,65,382,70,309,70"/>
+<area shape="rect" id="Node000005" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="556,41,781,81"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="497,63,542,62,542,67,497,69"/>
+<area shape="rect" id="Node000006" href="$d7/d20/FreeList_8cpp.html#a559c475ea4c5850cd427740512512df0" title="Returns an item to the Free List." alt="" coords="829,48,931,73"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="782,58,816,58,816,63,782,63"/>
+<area shape="rect" id="Node000008" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="385,109,507,135"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="336,116,371,117,371,123,336,122"/>
+<area shape="rect" id="Node000009" href="$d8/d45/namespaceanonymous__namespace_02membuffer_8cpp_03.html#aa81aeb90fb3c8389c7eb0a77b847101e" title="Initialize the buffer." alt="" coords="558,105,779,160"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="508,122,545,124,544,129,507,128"/>
+</map>

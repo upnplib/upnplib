@@ -1,0 +1,7 @@
+<map id="UpnpEvent_get_SID_Length" name="UpnpEvent_get_SID_Length">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,207,56"/>
+<area shape="rect" id="Node000002" href="$d6/daa/UpnpEvent_8cpp.html#a9edd5999f29495efc5518ecf575f0ee3" title=" " alt="" coords="266,5,417,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,30,252,25,253,30,207,35"/>
+<area shape="rect" id="Node000003" href="$d1/d03/group__UpnpString.html#ga33ac65c54233d98e057c755c095fe152" title="Returns the length of the string." alt="" coords="255,55,428,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="207,51,242,54,241,60,206,56"/>
+</map>
