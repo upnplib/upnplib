@@ -1,9 +1,9 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-06
+// Redistribution only with this Copyright remark. Last modified: 2024-04-17
 
 #include <pupnp/threadpool_init.hpp>
 #include <upnplib/global.hpp>
-#include <iostream>
+#include <upnplib/synclog.hpp>
 
 namespace pupnp {
 

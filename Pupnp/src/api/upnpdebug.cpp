@@ -1,11 +1,10 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-06
+// Redistribution only with this Copyright remark. Last modified: 2024-04-17
 
 #include <pupnp/upnpdebug.hpp>
 
-#include <upnplib/global.hpp>
+#include <upnplib/synclog.hpp>
 #include <stdexcept>
-#include <string>
 
 namespace pupnp {
 

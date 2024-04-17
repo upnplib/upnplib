@@ -13,10 +13,6 @@
 #include <upnplib/visibility.hpp>
 /// \cond
 #include <string>
-#include <iostream>
-#ifndef __APPLE__
-#include <syncstream>
-#endif
 
 
 // strndup() is a GNU extension.
@@ -44,31 +40,6 @@ UPNPLIB_API char* strndup(const char* __string, size_t __n);
   #define TRACE(s)
   #define TRACE2(a, b)
 #endif
-
-
-// Debug output messages with some that can be enabled during runtime.
-// -------------------------------------------------------------------
-#ifdef _MSC_VER
-#define __PRETTY_FUNCTION__ __FUNCTION__
-// or more verbose: #define __PRETTY_FUNCTION__ __FUNCSIG__
-#endif
-
-// This is intended to be used as:
-// throw(UPNPLIB_LOGEXCEPT + "MSG1nnn: exception message.\n");
-#define UPNPLIB_LOGEXCEPT "UPnPlib ["+::std::string(__PRETTY_FUNCTION__)+"] EXCEPTION "
-
-#ifdef __APPLE__
-#define UPNPLIB_LOG std::cout.flush()&&std::clog<<"UPnPlib ["<<__PRETTY_FUNCTION__
-#else
-#define UPNPLIB_LOG std::cout.flush()&&std::osyncstream(std::clog)<<"UPnPlib ["<<__PRETTY_FUNCTION__
-#endif
-// This is for future expansion and not to loose information.
-// Critical messages are always output.
-#define UPNPLIB_LOGCRIT UPNPLIB_LOG<<"] CRITICAL "
-#define UPNPLIB_LOGERR if(upnplib::g_dbug) UPNPLIB_LOG<<"] ERROR "
-#define UPNPLIB_LOGCATCH if(upnplib::g_dbug) UPNPLIB_LOG<<"] CATCH "
-#define UPNPLIB_LOGINFO if(upnplib::g_dbug) UPNPLIB_LOG<<"] INFO "
-
 
 namespace upnplib {
 

@@ -42,6 +42,7 @@
 
 #include <httpreadwrite.hpp>
 #include <upnplib/global.hpp>
+#include <upnplib/synclog.hpp>
 #include <upnplib/sockaddr.hpp>
 
 #include <UpnpExtraHeaders.hpp>
@@ -54,8 +55,6 @@
 #include <cassert>
 #include <cstdarg>
 #include <cstring>
-#include <string>
-#include <iostream>
 /// \endcond
 
 #ifdef _WIN32

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-12
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-17
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,6 +54,7 @@
 
 #include <upnplib/socket.hpp>
 #include <upnplib/global.hpp>
+#include <upnplib/synclog.hpp>
 
 #include <umock/sys_socket.hpp>
 #include <umock/winsock2.hpp>
@@ -64,7 +65,6 @@
 
 /// \cond
 #include <cstring>
-#include <iostream>
 #include <random>
 /// \endcond
 

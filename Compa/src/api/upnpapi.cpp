@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-15
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,6 +49,7 @@
 #include <soap_ctrlpt.hpp>
 
 #include <upnplib/global.hpp>
+#include <upnplib/synclog.hpp>
 
 #ifdef _WIN32
 #include <upnplib/port.hpp>
@@ -73,7 +74,6 @@
 #include <csignal>
 #include <cstdlib>
 #include <cstring>
-#include <iostream>
 
 #ifdef _WIN32
 /* Do not include these files */

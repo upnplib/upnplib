@@ -1,18 +1,17 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-06
+// Redistribution only with this Copyright remark. Last modified: 2024-04-17
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
  */
 
 #include <upnplib/socket.hpp>
+#include <upnplib/synclog.hpp>
 #include <umock/sys_socket.hpp>
 #include <umock/stringh.hpp>
 #ifdef _MSC_VER
 #include <umock/winsock2.hpp>
 #endif
-
-#include <iostream>
 
 /// \cond
 namespace upnplib {
