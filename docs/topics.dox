@@ -195,8 +195,8 @@
 // -----------------------------------
 /*!
  * \defgroup UPnPsamples UPnP sample programs
- * \brief This is test entry 6. Sample programs for a simple UPnP device and a
- * simple UPnP control point
+ * \brief Sample programs for a simple UPnP device and a simple UPnP control
+ * point
  */
 
 // vim: filetype=cpp

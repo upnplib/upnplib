@@ -34,13 +34,13 @@
 <area shape="poly" id="edge11_Node000020_Node000021" title=" " alt="" coords="1188,129,1116,125,1116,120,1188,123"/>
 <area shape="rect" id="Node000022" href="$dd/d10/service__table_8cpp.html#a93dca6df0d19011183259fe98fafce8e" title="Retrieve service from the table." alt="" coords="989,156,1115,181"/>
 <area shape="poly" id="edge12_Node000020_Node000022" title=" " alt="" coords="1188,150,1115,162,1115,156,1188,145"/>
-<area shape="rect" id="Node000023" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers a device application with the UPnP Library." alt="" coords="709,103,894,128"/>
+<area shape="rect" id="Node000023" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="709,103,894,128"/>
 <area shape="poly" id="edge13_Node000022_Node000023" title=" " alt="" coords="977,156,861,131,862,125,979,150"/>
-<area shape="rect" id="Node000024" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers a device application with the UPnP Library. Similar to UpnpRegisterRootDevice,..." alt="" coords="705,152,898,177"/>
+<area shape="rect" id="Node000024" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="705,152,898,177"/>
 <area shape="poly" id="edge14_Node000022_Node000024" title=" " alt="" coords="975,170,898,169,898,164,975,165"/>
-<area shape="rect" id="Node000025" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="451,203,644,228"/>
+<area shape="rect" id="Node000025" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="451,203,644,228"/>
 <area shape="poly" id="edge15_Node000022_Node000025" title=" " alt="" coords="976,182,903,191,644,212,644,207,902,186,975,177"/>
-<area shape="rect" id="Node000013" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="5,253,120,279"/>
+<area shape="rect" id="Node000013" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="5,253,120,279"/>
 <area shape="poly" id="edge16_Node000025_Node000013" title=" " alt="" coords="437,225,308,235,168,250,121,258,120,252,168,245,308,229,437,219"/>
 <area shape="rect" id="Node000027" href="$dc/d02/gena__callback2_8cpp.html#a6f658b4eab5786398a00a53b87e7c622" title="This is the callback function called by the miniserver to handle incoming GENA requests." alt="" coords="1236,245,1347,271"/>
 <area shape="poly" id="edge18_Node000026_Node000027" title=" " alt="" coords="1661,221,1549,217,1430,225,1378,235,1331,248,1330,243,1377,230,1429,219,1549,212,1661,216"/>

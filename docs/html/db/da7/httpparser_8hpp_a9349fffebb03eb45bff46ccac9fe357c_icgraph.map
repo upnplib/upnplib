@@ -75,9 +75,9 @@
 <area shape="poly" id="edge35_Node000045_Node000046" title=" " alt="" coords="969,447,878,471,828,484,827,479,877,466,968,442"/>
 <area shape="rect" id="Node000048" href="$d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="688,333,860,359"/>
 <area shape="poly" id="edge36_Node000045_Node000048" title=" " alt="" coords="966,414,924,399,900,385,876,372,841,361,842,356,878,368,903,381,926,394,968,409"/>
-<area shape="rect" id="Node000049" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers a device application with the UPnP Library." alt="" coords="681,383,867,408"/>
+<area shape="rect" id="Node000049" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="681,383,867,408"/>
 <area shape="poly" id="edge37_Node000045_Node000049" title=" " alt="" coords="930,418,866,410,867,405,931,413"/>
-<area shape="rect" id="Node000050" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="677,432,871,457"/>
+<area shape="rect" id="Node000050" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="677,432,871,457"/>
 <area shape="poly" id="edge38_Node000045_Node000050" title=" " alt="" coords="931,438,871,441,871,436,931,432"/>
 <area shape="rect" id="Node000052" href="$d9/dd1/soap__ctrlpt_8cpp.html#a05e899b6e0c3bc1b2964ac01c37c15d7" title="This function creates a status variable query message send it to the specified URL...." alt="" coords="436,297,623,323"/>
 <area shape="poly" id="edge40_Node000051_Node000052" title=" " alt="" coords="657,298,623,302,623,297,657,293"/>

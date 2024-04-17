@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-14
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,6 +42,7 @@
 
 #include <httpreadwrite.hpp>
 #include <upnplib/global.hpp>
+#include <upnplib/sockaddr.hpp>
 
 #include <UpnpExtraHeaders.hpp>
 #include <UpnpIntTypes.hpp>
@@ -658,7 +659,7 @@ int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
             case PARSE_SUCCESS:
                 UPNPLIB_LOGINFO << "MSG1031: <<< (RECVD) <<<\n"
                                 << parser->msg.msg.buf
-                                << "\n-----------------\n";
+                                << "UPnPlib -----------------\n";
                 print_http_headers(&parser->msg);
                 if (g_maxContentLength > (size_t)0 &&
                     parser->content_length > (unsigned int)g_maxContentLength) {
@@ -860,7 +861,7 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                     nw = sock_write(info, file_buf - strlen(Chunk_Header),
                                     num_read + strlen(Chunk_Header) + (size_t)2,
                                     TimeOut);
-                    num_written = (size_t)nw;
+                    num_written = static_cast<size_t>(nw);
                     if (nw <= 0 || num_written != num_read +
                                                       strlen(Chunk_Header) +
                                                       (size_t)2)
@@ -870,10 +871,9 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                 } else {
                     /* write data */
                     nw = sock_write(info, file_buf, num_read, TimeOut);
-                    UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                               ">>> (SENT) "
-                               ">>>\n%.*s\n------------\n",
-                               nw, file_buf);
+                    UPNPLIB_LOGINFO "MSG1104: >>> (SENT) >>>\n"
+                        << std::string(file_buf, static_cast<size_t>(nw))
+                        << "UPnPlib ------------\n";
                     /* Send error nothing we can do */
                     num_written = (size_t)nw;
                     if (nw <= 0 || num_written != num_read) {
@@ -898,12 +898,20 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                 if (buf_length > (size_t)0) {
                     nw = sock_write(info, buf, buf_length, TimeOut);
                     num_written = (size_t)nw;
-                    UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                               ">>> (SENT) >>>\n"
-                               "%.*s\nbuf_length=%" PRIzd
-                               ", num_written=%" PRIzd "\n"
-                               "------------\n",
-                               (int)buf_length, buf, buf_length, num_written);
+
+                    // std::cerr << "DEBUG! info->foreign_sockaddr.ss_family="
+                    //           << info->foreign_sockaddr.ss_family << "\n";
+                    if (upnplib::g_dbug) {
+                        upnplib::SSockaddr saObj;
+                        memcpy(&saObj.ss, &info->foreign_sockaddr,
+                               saObj.sizeof_ss());
+                        UPNPLIB_LOGINFO "MSG1105: \""
+                            << saObj.get_addrp_str() << "\" >>> (SENT) >>>\n"
+                            << std::string(buf, buf_length)
+                            << "UPnPlib buf_length=" << buf_length
+                            << ", num_written=" << num_written
+                            << ".\nUPnPlib ------------\n";
+                    }
                     if (nw < 0) {
                         RetVal = nw;
                         goto ExitFunction;
@@ -994,8 +1002,7 @@ int http_Download(const char* url_str, int timeout_secs, char** document,
 
     url_str_len = strlen(url_str);
     /*ret_code = parse_uri( (char*)url_str, url_str_len, &url ); */
-    UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__, "DOWNLOAD URL : %s\n",
-               url_str);
+    UPNPLIB_LOGINFO "MSG1098: DOWNLOAD URL=\"" << url_str << "\"\n";
     ret_code = http_FixStrUrl((char*)url_str, url_str_len, &url);
     if (ret_code != UPNP_E_SUCCESS) {
         return ret_code;
@@ -1006,8 +1013,8 @@ int http_Download(const char* url_str, int timeout_secs, char** document,
     if (ret_code != UPNP_E_SUCCESS) {
         return ret_code;
     }
-    UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-               "HOSTNAME : %s Length : %" PRIzu "\n", hoststr, hostlen);
+    UPNPLIB_LOGINFO "MSG1099: HOSTNAME=\"" << hoststr
+                                           << "\", Length=" << hostlen << "\n";
     ret_code = http_MakeMessage(&request, 1, 1,
                                 "Q"
                                 "s"
@@ -1015,15 +1022,12 @@ int http_Download(const char* url_str, int timeout_secs, char** document,
                                 HTTPMETHOD_GET, url.pathquery.buff,
                                 url.pathquery.size, "HOST: ", hoststr, hostlen);
     if (ret_code != 0) {
-        UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                   "HTTP Makemessage failed\n");
+        UPNPLIB_LOGINFO "MSG1100: HTTP Makemessage failed.\n";
         membuffer_destroy(&request);
         return ret_code;
     }
-    UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-               "HTTP Buffer:\n%s\n"
-               "----------END--------\n",
-               request.buf);
+    UPNPLIB_LOGINFO "MSG1101: HTTP Buffer...\n"
+        << request.buf << "UPnPlib ----------END--------\n";
     /* get doc msg */
     ret_code = http_RequestAndResponse(&url, request.buf, request.length,
                                        HTTPMETHOD_GET, timeout_secs, &response);
@@ -1033,7 +1037,7 @@ int http_Download(const char* url_str, int timeout_secs, char** document,
         membuffer_destroy(&request);
         return ret_code;
     }
-    UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__, "Response\n");
+    UPNPLIB_LOGINFO "MSG1102: Response...\n";
     print_http_headers(&response.msg);
     /* optional content-type */
     if (content_type) {
@@ -1070,10 +1074,9 @@ int http_Download(const char* url_str, int timeout_secs, char** document,
         assert(msg_length > *doc_length);
         assert(*document != NULL);
         if (msg_length <= *doc_length || *document == NULL)
-            UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                       "msg_length(%" PRIzu ") <= *doc_length(%" PRIzu
-                       ") or document is NULL",
-                       msg_length, *doc_length);
+            UPNPLIB_LOGINFO "MSG1103: msg_length("
+                << msg_length << ") <= *doc_length(" << *doc_length
+                << ") or document is NULL.\n";
     }
     if (response.msg.status_code == HTTP_OK) {
         ret_code = 0; /* success */

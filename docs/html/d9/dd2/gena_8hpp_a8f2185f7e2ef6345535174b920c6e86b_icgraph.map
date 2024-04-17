@@ -40,7 +40,7 @@
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="548,490,513,490,513,485,548,485"/>
 <area shape="rect" id="Node000008" href="$d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="168,475,340,500"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="374,490,340,490,340,485,374,485"/>
-<area shape="rect" id="Node000009" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="5,475,120,500"/>
+<area shape="rect" id="Node000009" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="5,475,120,500"/>
 <area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="154,490,120,490,120,485,154,485"/>
 <area shape="poly" id="edge10_Node000011_Node000006" title=" " alt="" coords="734,90,730,93,710,123,691,167,660,281,638,397,626,475,621,474,633,396,655,280,686,165,705,120,726,90,730,86"/>
 <area shape="rect" id="Node000013" href="$d9/d09/tv__device_8cpp.html#af3b4a94c1bbc29ba033224f809f3b305" title="Decrease the channel." alt="" coords="736,104,933,129"/>

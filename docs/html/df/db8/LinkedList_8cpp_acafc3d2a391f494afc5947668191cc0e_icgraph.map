@@ -14,11 +14,11 @@
 <area shape="poly" id="edge51_Node000001_Node000117" title=" " alt="" coords="1490,338,1138,319,1138,313,1490,333"/>
 <area shape="rect" id="Node000118" href="$d4/d99/upnpapi_8cpp.html#a12e523b91dfe443b56ab3c99ef4c1c65" title="Registers a control point application with the UPnP Library." alt="" coords="1269,401,1417,427"/>
 <area shape="poly" id="edge53_Node000001_Node000118" title=" " alt="" coords="1505,360,1457,384,1399,404,1397,399,1455,380,1503,355"/>
-<area shape="rect" id="Node000097" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers a device application with the UPnP Library." alt="" coords="1250,451,1435,476"/>
+<area shape="rect" id="Node000097" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="1250,451,1435,476"/>
 <area shape="poly" id="edge54_Node000001_Node000097" title=" " alt="" coords="1525,364,1498,404,1479,425,1457,442,1434,453,1431,448,1455,437,1476,421,1494,401,1521,361"/>
-<area shape="rect" id="Node000096" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers a device application with the UPnP Library. Similar to UpnpRegisterRootDevice,..." alt="" coords="1246,500,1439,525"/>
+<area shape="rect" id="Node000096" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="1246,500,1439,525"/>
 <area shape="poly" id="edge55_Node000001_Node000096" title=" " alt="" coords="1532,365,1522,394,1507,429,1486,462,1458,491,1438,502,1435,497,1454,487,1482,459,1502,426,1517,392,1527,363"/>
-<area shape="rect" id="Node000098" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="978,352,1171,377"/>
+<area shape="rect" id="Node000098" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="978,352,1171,377"/>
 <area shape="poly" id="edge56_Node000001_Node000098" title=" " alt="" coords="1490,343,1172,362,1172,356,1490,338"/>
 <area shape="rect" id="Node000003" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#ab8095d987290dfdc4f151dc8e3d7c40f" title="Gets the response from the server using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="522,55,691,80"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="970,71,691,70,691,65,970,66"/>
@@ -58,7 +58,7 @@
 <area shape="poly" id="edge21_Node000056_Node000057" title=" " alt="" coords="1007,228,969,239,921,262,862,288,860,283,919,257,967,234,1005,223"/>
 <area shape="rect" id="Node000058" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="564,301,649,327"/>
 <area shape="poly" id="edge22_Node000057_Node000058" title=" " alt="" coords="747,307,650,314,650,308,747,301"/>
-<area shape="rect" id="Node000015" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="309,301,424,327"/>
+<area shape="rect" id="Node000015" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="309,301,424,327"/>
 <area shape="poly" id="edge23_Node000058_Node000015" title=" " alt="" coords="550,317,424,317,424,311,550,311"/>
 <area shape="rect" id="Node000060" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#afdf0b2d4ea832f287ca5fb9aca2aff2d" title="Initializes the parser object." alt="" coords="968,549,1181,589"/>
 <area shape="poly" id="edge25_Node000059_Node000060" title=" " alt="" coords="1216,572,1181,572,1181,567,1216,567"/>

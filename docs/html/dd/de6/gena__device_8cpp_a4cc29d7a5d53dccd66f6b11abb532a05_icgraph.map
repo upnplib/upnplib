@@ -4,14 +4,14 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1519,97,1486,97,1486,91,1519,91"/>
 <area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#abb1c47010971d19ecd2b46ee842871ec" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="1032,81,1235,107"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1269,97,1235,97,1235,91,1269,91"/>
-<area shape="rect" id="Node000004" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the sdk." alt="" coords="707,5,819,31"/>
+<area shape="rect" id="Node000004" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="707,5,819,31"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1057,81,819,32,820,27,1058,76"/>
 <area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="889,107,984,132"/>
 <area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="1021,111,984,116,984,111,1021,106"/>
 <area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#ad3a78c1a3b2b7ebeca7dd92f1ed27de1" title="Function that receives commands from the user at the command prompt during the lifetime of the device..." alt="" coords="455,5,636,31"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="693,21,636,21,636,15,693,15"/>
 <area shape="poly" id="edge8_Node000006_Node000004" title=" " alt="" coords="908,100,876,76,840,52,799,33,801,28,843,48,879,71,911,96"/>
-<area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,107,273,132"/>
+<area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,107,273,132"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="875,114,841,111,680,106,520,108,274,118,274,113,520,103,680,101,841,106,876,109"/>
 <area shape="rect" id="Node000009" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,132,407,157"/>
 <area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="876,125,407,145,407,140,876,119"/>

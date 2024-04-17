@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-12
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-15
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -839,8 +839,6 @@ int UpnpRegisterRootDevice(const char* const DescUrl, const Upnp_FunPtr Fun,
     HInfo->ServiceList = NULL;
     HInfo->DescDocument = NULL;
 #ifdef COMPA_HAVE_CTRLPT_SSDP
-    /*! \todo Check if it is intended that this and the following is only
-     * compiled in if we have also Device SSDP enabled. */
     ListInit(&HInfo->SsdpSearchList, NULL, NULL);
     HInfo->ClientSubList = NULL;
 #endif
@@ -1014,8 +1012,6 @@ int UpnpRegisterRootDevice2(const Upnp_DescType descriptionType,
     HInfo->DeviceList = NULL;
     HInfo->ServiceList = NULL;
 #ifdef COMPA_HAVE_CTRLPT_SSDP
-    /*! \todo Check if it is intended that this and the following is only
-     * compiled in if we have also Device SSDP enabled. */
     ListInit(&HInfo->SsdpSearchList, NULL, NULL);
     HInfo->ClientSubList = NULL;
 #endif
@@ -1145,8 +1141,6 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
     HInfo->ServiceList = nullptr;
     HInfo->DescDocument = nullptr;
 #ifdef COMPA_HAVE_CTRLPT_SSDP
-    /*! \todo Check if it is intended that this and the following is only
-     * compiled in if we have also Device SSDP enabled. */
     ListInit(&HInfo->SsdpSearchList, NULL, NULL);
     HInfo->ClientSubList = nullptr;
 #endif
@@ -1282,8 +1276,6 @@ int UpnpUnRegisterRootDeviceLowPower(UpnpDevice_Handle Hnd, int PowerState,
     ixmlNodeList_free(HInfo->ServiceList);
     ixmlDocument_free(HInfo->DescDocument);
 #ifdef COMPA_HAVE_CTRLPT_SSDP
-    /*! \todo Check if it is intended that this and the following is only
-     * compiled in if we have also Device SSDP enabled. */
     ListDestroy(&HInfo->SsdpSearchList, 0);
 #endif
 #ifdef COMPA_HAVE_WEBSERVER
@@ -1344,8 +1336,6 @@ int UpnpRegisterClient(Upnp_FunPtr Fun, const void* Cookie,
     HInfo->ClientSubList = NULL;
     ListInit(&HInfo->SsdpSearchList, NULL, NULL);
 #ifdef COMPA_HAVE_DEVICE_SSDP
-    /*! \todo Check if it is intended that this and the following is only
-     * compiled in if we have also Ctrlpt SSDP enabled. */
     HInfo->MaxAge = 0;
     HInfo->MaxSubscriptions = UPNP_INFINITE;
     HInfo->MaxSubscriptionTimeOut = UPNP_INFINITE;
@@ -2964,7 +2954,7 @@ int UpnpDownloadUrlItem(const char* url, char** outBuf, char* contentType) {
     int ret_code;
     size_t doc_length;
 
-    if (url == NULL || outBuf == NULL || contentType == NULL)
+    if (url == nullptr || outBuf == nullptr || contentType == nullptr)
         return UPNP_E_INVALID_PARAM;
     ret_code = http_Download(url, HTTP_DEFAULT_TIMEOUT, outBuf, &doc_length,
                              contentType);
@@ -3565,8 +3555,8 @@ Upnp_Handle_Type GetHandleInfo(UpnpClient_Handle Hnd, Handle_Info** HndInfo) {
     // nullptr.
     Upnp_Handle_Type ret = HND_INVALID;
 
-    UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-               "GetHandleInfo: entering, Handle is %d\n", Hnd);
+    // UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
+    //            "GetHandleInfo: entering, Handle is %d\n", Hnd);
 
     if (HndInfo == nullptr) {
         UpnpPrintf(
@@ -3576,15 +3566,16 @@ Upnp_Handle_Type GetHandleInfo(UpnpClient_Handle Hnd, Handle_Info** HndInfo) {
     } else if (Hnd < 1 || Hnd >= NUM_HANDLE) {
         UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                    "GetHandleInfo: Handle out of range\n");
-    } else if (HandleTable[Hnd] == nullptr) {
-        UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
-                   "GetHandleInfo: HandleTable[%d] is NULL\n", Hnd);
+        // } else if (HandleTable[Hnd] == nullptr) {
+        // UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
+        //            "GetHandleInfo: HandleTable[%d] is NULL\n", Hnd);
     } else if (HandleTable[Hnd] != nullptr) {
         *HndInfo = (Handle_Info*)HandleTable[Hnd];
         ret = ((Handle_Info*)*HndInfo)->HType;
     }
 
-    UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__, "GetHandleInfo: exiting\n");
+    // UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__, "GetHandleInfo:
+    // exiting\n");
 
     return ret;
 }

@@ -1,6 +1,6 @@
 <map id="UpnpInitLog" name="UpnpInitLog">
 <area shape="rect" id="Node000001" title="Initialize the log files." alt="" coords="641,5,741,31"/>
-<area shape="rect" id="Node000002" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" id="Node000002" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="628,21,274,21,274,15,628,15"/>
 <area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="455,31,593,56"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="628,30,594,35,594,30,627,25"/>

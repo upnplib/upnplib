@@ -17,9 +17,9 @@
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1610,242,1596,235,1580,223,1571,210,1562,198,1548,187,1522,176,1524,171,1551,182,1566,194,1575,207,1584,219,1599,230,1612,237"/>
 <area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="1149,148,1243,173"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1347,163,1244,163,1244,158,1347,158"/>
-<area shape="rect" id="Node000006" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="193,157,308,183"/>
+<area shape="rect" id="Node000006" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="193,157,308,183"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1158,182,1109,201,1054,217,948,231,839,237,731,236,627,229,441,208,308,185,309,179,442,203,627,224,731,230,839,231,947,225,1053,211,1108,196,1156,177"/>
-<area shape="rect" id="Node000008" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the sdk." alt="" coords="919,277,1031,303"/>
+<area shape="rect" id="Node000008" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="919,277,1031,303"/>
 <area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="1169,184,1117,221,1055,260,1012,280,1010,275,1052,256,1114,217,1166,180"/>
 <area shape="rect" id="Node000010" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="462,121,547,147"/>
 <area shape="poly" id="edge9_Node000005_Node000010" title=" " alt="" coords="1171,140,1119,99,1087,79,1053,65,1023,61,974,60,846,64,667,77,594,99,534,124,532,119,592,94,666,71,846,59,974,55,1024,55,1054,59,1089,74,1122,94,1174,136"/>

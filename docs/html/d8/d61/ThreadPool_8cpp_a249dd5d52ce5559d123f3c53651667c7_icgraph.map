@@ -30,7 +30,7 @@
 <area shape="poly" id="edge50_Node000001_Node000069" title=" " alt="" coords="1711,519,1697,470,1673,407,1637,342,1615,313,1589,287,1561,270,1563,265,1592,283,1619,309,1642,339,1678,405,1702,468,1716,518"/>
 <area shape="rect" id="Node000070" href="$d5/db2/miniserver_8cpp.html#a85c0b17d965bdb9430a9ce2e6931770a" title="Initialize the sockets functionality for the Miniserver." alt="" coords="1424,980,1547,1005"/>
 <area shape="poly" id="edge52_Node000001_Node000070" title=" " alt="" coords="1722,571,1718,649,1712,701,1702,757,1685,815,1663,872,1632,925,1592,971,1571,984,1548,992,1546,987,1569,980,1589,967,1628,922,1658,869,1680,813,1696,756,1707,700,1713,649,1717,571"/>
-<area shape="rect" id="Node000073" href="$d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="1380,1030,1591,1070"/>
+<area shape="rect" id="Node000073" href="$d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="1380,1030,1591,1070"/>
 <area shape="poly" id="edge60_Node000001_Node000073" title=" " alt="" coords="1722,571,1721,656,1715,713,1705,776,1689,841,1666,906,1634,966,1593,1020,1577,1032,1574,1028,1589,1016,1630,963,1661,904,1684,840,1700,775,1710,713,1715,656,1717,571"/>
 <area shape="rect" id="Node000003" href="$dd/de6/gena__device_8cpp.html#afe08f0a722cafb84faa9def7850da596" title="Sends the intial state table dump to newly subscribed control point." alt="" coords="1174,1131,1289,1156"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1382,1146,1289,1146,1289,1141,1382,1141"/>
@@ -42,7 +42,7 @@
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="873,1146,815,1146,815,1141,873,1141"/>
 <area shape="rect" id="Node000006" href="$d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b" title="The callback handler registered with the SDK while registering root device." alt="" coords="321,1105,548,1131"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="591,1135,548,1131,548,1126,592,1130"/>
-<area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,1029,273,1055"/>
+<area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,1029,273,1055"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="383,1103,253,1057,254,1052,385,1098"/>
 <area shape="rect" id="Node000008" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,1029,111,1055"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="145,1045,111,1045,111,1039,145,1039"/>
@@ -109,7 +109,7 @@
 <area shape="rect" id="Node000072" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="392,979,477,1004"/>
 <area shape="poly" id="edge54_Node000071_Node000072" title=" " alt="" coords="1139,995,478,994,478,989,1139,990"/>
 <area shape="poly" id="edge55_Node000072_Node000007" title=" " alt="" coords="379,1007,272,1032,271,1027,378,1002"/>
-<area shape="rect" id="Node000074" href="$d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="1139,1029,1323,1055"/>
+<area shape="rect" id="Node000074" href="$d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="1139,1029,1323,1055"/>
 <area shape="poly" id="edge61_Node000073_Node000074" title=" " alt="" coords="1366,1049,1323,1048,1323,1042,1366,1044"/>
 <area shape="poly" id="edge64_Node000074_Node000007" title=" " alt="" coords="1126,1045,274,1045,274,1039,1126,1039"/>
 <area shape="rect" id="Node000075" href="$d4/d99/upnpapi_8cpp.html#abb1ab3d0ba145286005284d447110fce" title="This function is a timer thread scheduled by UpnpSendAdvertisement to the send advetisement again." alt="" coords="920,1080,1035,1105"/>

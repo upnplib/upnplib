@@ -62,9 +62,9 @@
 <area shape="poly" id="edge28_Node000039_Node000040" title=" " alt="" coords="931,237,924,232,912,220,905,207,899,181,893,155,887,143,876,132,857,121,860,116,879,128,891,140,898,153,904,179,909,205,916,217,927,228,934,233"/>
 <area shape="rect" id="Node000042" href="$d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="688,143,860,168"/>
 <area shape="poly" id="edge29_Node000039_Node000042" title=" " alt="" coords="938,239,924,232,908,220,899,206,890,193,876,182,851,171,853,166,879,177,894,190,904,203,912,216,927,228,940,234"/>
-<area shape="rect" id="Node000043" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers a device application with the UPnP Library." alt="" coords="681,192,867,217"/>
+<area shape="rect" id="Node000043" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="681,192,867,217"/>
 <area shape="poly" id="edge30_Node000039_Node000043" title=" " alt="" coords="950,241,840,220,841,215,951,236"/>
-<area shape="rect" id="Node000044" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="677,241,871,267"/>
+<area shape="rect" id="Node000044" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="677,241,871,267"/>
 <area shape="poly" id="edge31_Node000039_Node000044" title=" " alt="" coords="931,257,871,257,871,251,931,251"/>
 <area shape="rect" id="Node000046" href="$d9/dd1/soap__ctrlpt_8cpp.html#a05e899b6e0c3bc1b2964ac01c37c15d7" title="This function creates a status variable query message send it to the specified URL...." alt="" coords="436,675,623,700"/>
 <area shape="poly" id="edge33_Node000045_Node000046" title=" " alt="" coords="657,723,578,703,580,698,658,718"/>

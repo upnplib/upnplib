@@ -291,10 +291,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:aed1cafead3fb83e9101a11c24b346a3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The callback handler registered with the SDK while registering root device.  <br /></td></tr>
 <tr class="separator:aed1cafead3fb83e9101a11c24b346a3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c0e03102826b6b41c6146d18619aa25" id="r_a3c0e03102826b6b41c6146d18619aa25"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25">TvDeviceStart</a> (const char *iface, in_port_t port, const char *desc_doc_name, const char *web_dir_path, const int ip_mode, const print_string pfunc, const int combo)</td></tr>
-<tr class="memdesc:a3c0e03102826b6b41c6146d18619aa25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCESS or other UPnPlib error code.  <br /></td></tr>
+<tr class="memdesc:a3c0e03102826b6b41c6146d18619aa25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the UPnP SDK, registers the root-device, and sends out advertisements.  <br /></td></tr>
 <tr class="separator:a3c0e03102826b6b41c6146d18619aa25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9d9e95e2f4d533ed860ae40c9b3353b" id="r_ae9d9e95e2f4d533ed860ae40c9b3353b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b">TvDeviceStop</a> (void)</td></tr>
-<tr class="memdesc:ae9d9e95e2f4d533ed860ae40c9b3353b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the device. Uninitializes the sdk.  <br /></td></tr>
+<tr class="memdesc:ae9d9e95e2f4d533ed860ae40c9b3353b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the device. Uninitializes the SDK.  <br /></td></tr>
 <tr class="separator:ae9d9e95e2f4d533ed860ae40c9b3353b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3a78c1a3b2b7ebeca7dd92f1ed27de1" id="r_ad3a78c1a3b2b7ebeca7dd92f1ed27de1"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d09/tv__device_8cpp.html#ad3a78c1a3b2b7ebeca7dd92f1ed27de1">TvDeviceCommandLoop</a> (void *args)</td></tr>
 <tr class="memdesc:ad3a78c1a3b2b7ebeca7dd92f1ed27de1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function that receives commands from the user at the command prompt during the lifetime of the device, and calls the appropriate functions for those commands. Only one command, exit, is currently defined.  <br /></td></tr>
@@ -350,7 +350,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Main entry point for tv device application. </p>
-<p>Initializes and registers with the sdk. Initializes the state stables of the service. Starts the command loop.</p>
+<p>Initializes and registers with the SDK. Initializes the state stables of the service. Starts the command loop.</p>
 <p>Accepts the following optional arguments: </p><ul>
 <li><code>-ip</code> ipaddress </li>
 <li><code>-port</code> port </li>
@@ -368,7 +368,7 @@ Variables</h2></td></tr>
 <div class="center"><img src="../../d9/d09/tv__device_8cpp_ad0dc5c3600aa2ebd4ffdc90e741607e7_cgraph.png" border="0" usemap="#ad9/d09/tv__device_8cpp_ad0dc5c3600aa2ebd4ffdc90e741607e7_cgraph" alt=""/></div>
 <map name="ad9/d09/tv__device_8cpp_ad0dc5c3600aa2ebd4ffdc90e741607e7_cgraph" id="ad9/d09/tv__device_8cpp_ad0dc5c3600aa2ebd4ffdc90e741607e7_cgraph">
 <area shape="rect" title="Main entry point for tv device application." alt="" coords="5,1021,111,1047"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,1021,273,1047"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,1021,273,1047"/>
 <area shape="poly" title=" " alt="" coords="111,1031,145,1031,145,1037,111,1037"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b" title="The callback handler registered with the SDK while registering root device." alt="" coords="329,315,555,340"/>
 <area shape="poly" title=" " alt="" coords="215,1021,219,897,233,699,246,593,264,496,288,416,303,384,319,360,339,344,343,348,323,364,308,387,293,417,270,497,252,594,239,699,224,897,220,1021"/>
@@ -394,9 +394,9 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="224,1019,262,969,289,940,320,913,355,891,391,874,393,879,357,896,323,917,293,944,266,973,228,1023"/>
 <area shape="rect" href="../../d5/dfa/upnpdebug_8cpp.html#acb989a0182d5595b14f2dc3de64225b9" title="Initialize the log files." alt="" coords="925,945,1025,971"/>
 <area shape="poly" title=" " alt="" coords="228,1019,267,987,293,970,320,958,401,938,484,925,568,919,650,918,798,928,911,943,911,949,798,933,649,924,568,924,485,930,402,943,322,963,295,975,270,991,232,1023"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="1113,369,1307,395"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="1113,369,1307,395"/>
 <area shape="poly" title=" " alt="" coords="216,1021,224,974,242,906,273,832,294,797,319,766,365,721,410,684,453,653,495,627,579,590,663,564,844,523,947,493,1063,448,1169,398,1171,403,1065,452,949,498,846,528,664,570,581,595,498,632,456,657,413,688,369,725,323,769,298,800,277,834,247,908,229,975,221,1021"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="1118,171,1302,196"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="1118,171,1302,196"/>
 <area shape="poly" title=" " alt="" coords="215,1021,217,959,231,865,244,812,262,759,287,708,319,663,353,629,385,604,417,587,450,576,522,559,610,533,839,470,981,429,1033,411,1062,397,1109,353,1148,300,1177,249,1196,207,1201,210,1182,252,1152,303,1113,356,1066,402,1035,416,983,434,841,475,611,538,523,564,452,581,420,592,388,609,357,633,323,666,292,711,267,761,249,813,236,866,223,960,220,1021"/>
 <area shape="rect" href="../../d5/dfa/upnpdebug_8cpp.html#a4ebb59b43fc90ee9676d06a07f5f5345" title="Set the name for the log file. There used to be 2 separate files. The second parameter has been kept ..." alt="" coords="357,1367,527,1392"/>
 <area shape="poly" title=" " alt="" coords="220,1047,223,1103,236,1187,249,1232,267,1277,292,1318,323,1353,346,1367,343,1372,320,1357,287,1321,262,1279,244,1234,231,1188,217,1104,215,1047"/>
@@ -482,7 +482,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="1307,379,1380,379,1380,385,1307,385"/>
 <area shape="poly" title=" " alt="" coords="1527,392,1568,412,1594,434,1616,459,1648,508,1644,511,1612,462,1590,437,1565,416,1525,397"/>
 <area shape="poly" title=" " alt="" coords="1302,176,1377,175,1454,178,1522,187,1549,196,1568,207,1586,228,1602,261,1627,346,1646,436,1658,507,1653,508,1641,437,1622,347,1597,263,1581,231,1565,211,1547,201,1521,193,1454,183,1377,180,1302,181"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="1356,55,1567,95"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="1356,55,1567,95"/>
 <area shape="poly" title=" " alt="" coords="1275,168,1307,154,1321,143,1330,131,1339,118,1355,105,1366,99,1369,103,1357,110,1343,121,1334,134,1325,146,1309,159,1277,173"/>
 <area shape="poly" title=" " alt="" coords="1554,93,1569,106,1588,137,1605,183,1632,298,1650,418,1659,508,1654,508,1644,419,1627,299,1600,184,1584,139,1565,109,1551,97"/>
 <area shape="poly" title=" " alt="" coords="506,995,563,1007,718,1046,837,1080,957,1111,1112,1142,1249,1161,1372,1172,1372,1178,1248,1166,1112,1147,956,1116,836,1085,716,1051,562,1013,505,1000"/>
@@ -714,7 +714,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,46,667,46,667,41,701,41"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,31,493,56"/>
 <area shape="poly" title=" " alt="" coords="528,46,493,46,493,41,528,41"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,31,273,56"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,31,273,56"/>
 <area shape="poly" title=" " alt="" coords="307,46,274,46,274,41,307,41"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,31,111,56"/>
 <area shape="poly" title=" " alt="" coords="145,46,111,46,111,41,145,41"/>
@@ -928,7 +928,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,46,667,46,667,41,701,41"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,31,493,56"/>
 <area shape="poly" title=" " alt="" coords="528,46,493,46,493,41,528,41"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,31,273,56"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,31,273,56"/>
 <area shape="poly" title=" " alt="" coords="307,46,274,46,274,41,307,41"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,31,111,56"/>
 <area shape="poly" title=" " alt="" coords="145,46,111,46,111,41,145,41"/>
@@ -1159,7 +1159,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,46,667,46,667,41,701,41"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,31,493,56"/>
 <area shape="poly" title=" " alt="" coords="528,46,493,46,493,41,528,41"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,31,273,56"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,31,273,56"/>
 <area shape="poly" title=" " alt="" coords="307,46,274,46,274,41,307,41"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,31,111,56"/>
 <area shape="poly" title=" " alt="" coords="145,46,111,46,111,41,145,41"/>
@@ -1390,7 +1390,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,46,667,46,667,41,701,41"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,31,493,56"/>
 <area shape="poly" title=" " alt="" coords="528,46,493,46,493,41,528,41"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,31,273,56"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,31,273,56"/>
 <area shape="poly" title=" " alt="" coords="307,46,274,46,274,41,307,41"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,31,111,56"/>
 <area shape="poly" title=" " alt="" coords="145,46,111,46,111,41,145,41"/>
@@ -1614,7 +1614,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,46,667,46,667,41,701,41"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,31,493,56"/>
 <area shape="poly" title=" " alt="" coords="528,46,493,46,493,41,528,41"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,31,273,56"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,31,273,56"/>
 <area shape="poly" title=" " alt="" coords="307,46,274,46,274,41,307,41"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,31,111,56"/>
 <area shape="poly" title=" " alt="" coords="145,46,111,46,111,41,145,41"/>
@@ -1845,7 +1845,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,46,667,46,667,41,701,41"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,31,493,56"/>
 <area shape="poly" title=" " alt="" coords="528,46,493,46,493,41,528,41"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,31,273,56"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,31,273,56"/>
 <area shape="poly" title=" " alt="" coords="307,46,274,46,274,41,307,41"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,31,111,56"/>
 <area shape="poly" title=" " alt="" coords="145,46,111,46,111,41,145,41"/>
@@ -2062,7 +2062,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -2302,7 +2302,7 @@ Variables</h2></td></tr>
 <area shape="rect" title="Initializes the service table for the specified service." alt="" coords="541,5,667,31"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -2495,7 +2495,7 @@ Variables</h2></td></tr>
 <div class="center"><img src="../../d9/d09/tv__device_8cpp_aed1cafead3fb83e9101a11c24b346a3b_icgraph.png" border="0" usemap="#ad9/d09/tv__device_8cpp_aed1cafead3fb83e9101a11c24b346a3b_icgraph" alt=""/></div>
 <map name="ad9/d09/tv__device_8cpp_aed1cafead3fb83e9101a11c24b346a3b_icgraph" id="ad9/d09/tv__device_8cpp_aed1cafead3fb83e9101a11c24b346a3b_icgraph">
 <area shape="rect" title="The callback handler registered with the SDK while registering root device." alt="" coords="321,5,548,31"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="308,21,274,21,274,15,308,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -2531,7 +2531,7 @@ Variables</h2></td></tr>
 <div class="center"><img src="../../d9/d09/tv__device_8cpp_ad3a78c1a3b2b7ebeca7dd92f1ed27de1_cgraph.png" border="0" usemap="#ad9/d09/tv__device_8cpp_ad3a78c1a3b2b7ebeca7dd92f1ed27de1_cgraph" alt=""/></div>
 <map name="ad9/d09/tv__device_8cpp_ad3a78c1a3b2b7ebeca7dd92f1ed27de1_cgraph" id="ad9/d09/tv__device_8cpp_ad3a78c1a3b2b7ebeca7dd92f1ed27de1_cgraph">
 <area shape="rect" title="Function that receives commands from the user at the command prompt during the lifetime of the device..." alt="" coords="5,1472,187,1497"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the sdk." alt="" coords="235,1472,347,1497"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="235,1472,347,1497"/>
 <area shape="poly" title=" " alt="" coords="187,1482,221,1482,221,1487,187,1487"/>
 <area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="395,1321,489,1347"/>
 <area shape="poly" title=" " alt="" coords="303,1470,416,1355,420,1359,307,1474"/>
@@ -2873,7 +2873,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -3082,7 +3082,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -3291,7 +3291,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -3500,7 +3500,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -3709,7 +3709,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -3918,7 +3918,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -3993,7 +3993,7 @@ Variables</h2></td></tr>
 <area shape="rect" title="Called during an action request callback." alt="" coords="596,5,819,31"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b" title="The callback handler registered with the SDK while registering root device." alt="" coords="321,5,548,31"/>
 <area shape="poly" title=" " alt="" coords="582,21,548,21,548,15,582,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="308,21,274,21,274,15,308,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -4066,7 +4066,7 @@ Variables</h2></td></tr>
 <area shape="rect" title="Called during a get variable request callback." alt="" coords="596,5,823,31"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b" title="The callback handler registered with the SDK while registering root device." alt="" coords="321,5,548,31"/>
 <area shape="poly" title=" " alt="" coords="582,21,548,21,548,15,582,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="308,21,274,21,274,15,308,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -4252,7 +4252,7 @@ Variables</h2></td></tr>
 <area shape="rect" title="Called during a subscription request callback." alt="" coords="596,5,805,45"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b" title="The callback handler registered with the SDK while registering root device." alt="" coords="321,13,548,38"/>
 <area shape="poly" title=" " alt="" coords="582,28,548,28,548,23,582,23"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,13,273,38"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,13,273,38"/>
 <area shape="poly" title=" " alt="" coords="308,28,274,28,274,23,308,23"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,13,111,38"/>
 <area shape="poly" title=" " alt="" coords="145,28,111,28,111,23,145,23"/>
@@ -4461,7 +4461,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -4670,7 +4670,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -4879,7 +4879,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -5088,7 +5088,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -5297,7 +5297,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -5506,7 +5506,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -5715,7 +5715,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -5924,7 +5924,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -6135,7 +6135,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -6346,7 +6346,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -6557,7 +6557,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -6768,7 +6768,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -6973,7 +6973,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,46,667,46,667,41,701,41"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,31,493,56"/>
 <area shape="poly" title=" " alt="" coords="528,46,493,46,493,41,528,41"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,31,273,56"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,31,273,56"/>
 <area shape="poly" title=" " alt="" coords="307,46,274,46,274,41,307,41"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,31,111,56"/>
 <area shape="poly" title=" " alt="" coords="145,46,111,46,111,41,145,41"/>
@@ -7216,7 +7216,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,490,667,490,667,485,701,485"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,475,493,500"/>
 <area shape="poly" title=" " alt="" coords="528,490,493,490,493,485,528,485"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,475,273,500"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,475,273,500"/>
 <area shape="poly" title=" " alt="" coords="307,490,274,490,274,485,307,485"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,475,111,500"/>
 <area shape="poly" title=" " alt="" coords="145,490,111,490,111,485,145,485"/>
@@ -7470,7 +7470,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -7681,7 +7681,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,21,667,21,667,15,701,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
 <area shape="poly" title=" " alt="" coords="528,21,493,21,493,15,528,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -7746,14 +7746,16 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCESS or other UPnPlib error code. </p>
+<p>Initializes the UPnP SDK, registers the root-device, and sends out advertisements. </p>
+<dl class="section return"><dt>Returns</dt><dd>On success: UPNPLIB_E_SUCCESS<br  />
+ On error:&amp;#9; Other UPnPlib error code. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">iface</td><td>interface to initialize the sdk (may be NULL) if null, then the first non null interface is used.  </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">port</td><td>port number to initialize the sdk (may be 0) if zero, then a random number is used.  </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">desc_doc_name</td><td>name of description document. may be NULL. Default is tvdevicedesc.xml.  </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">web_dir_path</td><td>path of web directory. may be NULL. Default is ./web (for Linux) or ../tvdevice/web.  </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">ip_mode</td><td>IP mode: IP_MODE_IPV4, IP_MODE_IPV6_LLA or IP_MODE_IPV6_ULA_GUA. Default is IP_MODE_IPV4.  </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">iface</td><td>Network interface to initialize the SDK (may be a nullptr) if nullptr, then the first interface (specified by its index) except localhost is used.  </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">port</td><td>Port number to initialize the SDK (may be 0) if zero, then a random number is used.  </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">desc_doc_name</td><td>name of description document. may be a nullptr. Default is tvdevicedesc.xml.  </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">web_dir_path</td><td>path of web directory. may be a nullptr. Default is ./sample/web (for Linux).  </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ip_mode</td><td>IP mode: IP_MODE_IPV4, IP_MODE_IPV6_LLA or IP_MODE_IPV6_ULA_GUA. Default is IP_MODE_IPV6_LLA.  </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">pfunc</td><td>print function to use.  </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">combo</td><td>Non-zero if called from the combo application. </td></tr>
   </table>
@@ -7768,7 +7770,7 @@ Variables</h2></td></tr>
 <div id="dynsection-71-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d09/tv__device_8cpp_a3c0e03102826b6b41c6146d18619aa25_cgraph.png" border="0" usemap="#ad9/d09/tv__device_8cpp_a3c0e03102826b6b41c6146d18619aa25_cgraph" alt=""/></div>
 <map name="ad9/d09/tv__device_8cpp_a3c0e03102826b6b41c6146d18619aa25_cgraph" id="ad9/d09/tv__device_8cpp_a3c0e03102826b6b41c6146d18619aa25_cgraph">
-<area shape="rect" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="5,1059,120,1084"/>
+<area shape="rect" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="5,1059,120,1084"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b" title="The callback handler registered with the SDK while registering root device." alt="" coords="175,416,402,441"/>
 <area shape="poly" title=" " alt="" coords="62,1058,71,952,90,784,104,695,121,612,142,543,166,494,196,464,232,444,235,449,199,469,170,497,147,545,126,614,109,696,95,785,76,952,67,1059"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="971,55,1143,80"/>
@@ -7793,9 +7795,9 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="68,1057,107,988,166,899,217,838,263,788,267,792,221,841,170,902,112,991,73,1060"/>
 <area shape="rect" href="../../d5/dfa/upnpdebug_8cpp.html#acb989a0182d5595b14f2dc3de64225b9" title="Initialize the log files." alt="" coords="771,856,871,881"/>
 <area shape="poly" title=" " alt="" coords="109,1056,168,1045,683,1043,706,1030,726,1013,762,972,789,929,807,893,812,895,794,932,766,975,730,1016,709,1034,685,1049,168,1050,110,1061"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="960,157,1153,183"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="960,157,1153,183"/>
 <area shape="poly" title=" " alt="" coords="63,1058,74,978,95,859,126,740,145,693,166,662,200,632,233,612,266,601,298,596,370,593,411,590,457,583,502,578,560,577,694,576,761,573,823,566,874,552,893,542,909,531,926,511,937,491,944,471,947,451,944,409,935,366,925,323,921,280,923,258,929,236,940,214,957,192,960,189,964,193,961,196,945,217,934,238,928,259,926,280,930,322,940,365,949,408,952,451,949,472,942,493,930,514,912,535,896,547,875,557,824,571,762,578,694,581,560,582,503,584,458,589,411,595,370,598,299,601,267,606,235,617,203,636,170,665,150,696,131,742,101,860,79,979,68,1059"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="965,1008,1149,1033"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="965,1008,1149,1033"/>
 <area shape="poly" title=" " alt="" coords="67,1057,81,1031,103,999,131,967,167,942,224,919,284,902,345,891,407,884,469,882,531,885,653,898,767,921,868,949,952,977,1014,1000,1012,1005,950,982,866,954,766,927,652,904,531,890,469,888,407,890,345,896,285,907,226,924,169,947,135,971,107,1002,86,1034,72,1060"/>
 <area shape="rect" href="../../d5/dfa/upnpdebug_8cpp.html#a4ebb59b43fc90ee9676d06a07f5f5345" title="Set the name for the log file. There used to be 2 separate files. The second parameter has been kept ..." alt="" coords="204,1404,373,1429"/>
 <area shape="poly" title=" " alt="" coords="67,1084,69,1141,83,1224,96,1269,114,1314,138,1355,170,1391,192,1405,190,1409,166,1395,134,1358,109,1316,90,1271,78,1225,64,1141,61,1084"/>
@@ -7883,7 +7885,7 @@ Variables</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="1117,155,1234,130,1235,135,1118,160"/>
 <area shape="poly" title=" " alt="" coords="1376,118,1397,126,1415,139,1436,170,1453,215,1468,270,1480,331,1497,451,1506,541,1501,541,1492,451,1474,331,1462,271,1448,217,1431,172,1411,143,1395,130,1375,123"/>
 <area shape="poly" title=" " alt="" coords="1098,1031,1165,1046,1249,1055,1293,1053,1335,1045,1376,1030,1412,1007,1433,978,1451,932,1466,876,1478,813,1494,688,1501,594,1507,594,1499,688,1483,814,1471,877,1456,934,1438,980,1415,1011,1378,1035,1337,1050,1293,1058,1249,1060,1164,1051,1097,1036"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="1203,957,1413,997"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="1203,957,1413,997"/>
 <area shape="poly" title=" " alt="" coords="1129,1005,1189,995,1189,1000,1130,1011"/>
 <area shape="poly" title=" " alt="" coords="1387,955,1411,936,1428,910,1443,872,1469,774,1488,672,1499,593,1505,594,1493,673,1474,776,1448,874,1432,913,1415,940,1391,959"/>
 <area shape="poly" title=" " alt="" coords="386,964,537,954,731,933,836,917,944,896,1051,871,1154,839,1217,813,1272,786,1274,790,1219,818,1156,845,1052,876,945,901,837,922,731,938,538,960,387,970"/>
@@ -7898,7 +7900,7 @@ Variables</h2></td></tr>
 <div id="dynsection-72-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d09/tv__device_8cpp_a3c0e03102826b6b41c6146d18619aa25_icgraph.png" border="0" usemap="#ad9/d09/tv__device_8cpp_a3c0e03102826b6b41c6146d18619aa25_icgraph" alt=""/></div>
 <map name="ad9/d09/tv__device_8cpp_a3c0e03102826b6b41c6146d18619aa25_icgraph" id="ad9/d09/tv__device_8cpp_a3c0e03102826b6b41c6146d18619aa25_icgraph">
-<area shape="rect" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
 </map>
@@ -8089,7 +8091,7 @@ Variables</h2></td></tr>
 <div class="center"><img src="../../d9/d09/tv__device_8cpp_a98b53df920f1c3bbe4124e44b1cf8ce1_icgraph.png" border="0" usemap="#ad9/d09/tv__device_8cpp_a98b53df920f1c3bbe4124e44b1cf8ce1_icgraph" alt=""/></div>
 <map name="ad9/d09/tv__device_8cpp_a98b53df920f1c3bbe4124e44b1cf8ce1_icgraph" id="ad9/d09/tv__device_8cpp_a98b53df920f1c3bbe4124e44b1cf8ce1_icgraph">
 <area shape="rect" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,5,493,31"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -8114,7 +8116,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Stops the device. Uninitializes the sdk. </p>
+<p>Stops the device. Uninitializes the SDK. </p>
 
 <p class="definition">Definition at line <a class="el" href="../../d9/d09/tv__device_8cpp_source.html#l01382">1382</a> of file <a class="el" href="../../d9/d09/tv__device_8cpp_source.html">tv_device.cpp</a>.</p>
 <div id="dynsection-75" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -8124,7 +8126,7 @@ Variables</h2></td></tr>
 <div id="dynsection-75-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d09/tv__device_8cpp_ae9d9e95e2f4d533ed860ae40c9b3353b_cgraph.png" border="0" usemap="#ad9/d09/tv__device_8cpp_ae9d9e95e2f4d533ed860ae40c9b3353b_cgraph" alt=""/></div>
 <map name="ad9/d09/tv__device_8cpp_ae9d9e95e2f4d533ed860ae40c9b3353b_cgraph" id="ad9/d09/tv__device_8cpp_ae9d9e95e2f4d533ed860ae40c9b3353b_cgraph">
-<area shape="rect" title="Stops the device. Uninitializes the sdk." alt="" coords="5,1479,117,1504"/>
+<area shape="rect" title="Stops the device. Uninitializes the SDK." alt="" coords="5,1479,117,1504"/>
 <area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="165,1353,260,1379"/>
 <area shape="poly" title=" " alt="" coords="76,1476,184,1385,188,1389,80,1480"/>
 <area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#abb1c47010971d19ecd2b46ee842871ec" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="308,1681,511,1707"/>
@@ -8272,7 +8274,7 @@ Variables</h2></td></tr>
 <div id="dynsection-76-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d09/tv__device_8cpp_ae9d9e95e2f4d533ed860ae40c9b3353b_icgraph.png" border="0" usemap="#ad9/d09/tv__device_8cpp_ae9d9e95e2f4d533ed860ae40c9b3353b_icgraph" alt=""/></div>
 <map name="ad9/d09/tv__device_8cpp_ae9d9e95e2f4d533ed860ae40c9b3353b_icgraph" id="ad9/d09/tv__device_8cpp_ae9d9e95e2f4d533ed860ae40c9b3353b_icgraph">
-<area shape="rect" title="Stops the device. Uninitializes the sdk." alt="" coords="235,5,347,31"/>
+<area shape="rect" title="Stops the device. Uninitializes the SDK." alt="" coords="235,5,347,31"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad3a78c1a3b2b7ebeca7dd92f1ed27de1" title="Function that receives commands from the user at the command prompt during the lifetime of the device..." alt="" coords="5,5,187,31"/>
 <area shape="poly" title=" " alt="" coords="221,21,187,21,187,15,221,15"/>
 </map>

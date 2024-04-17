@@ -6,7 +6,7 @@
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="646,35,612,35,612,30,646,30"/>
 <area shape="rect" id="Node000004" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,20,407,45"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="441,35,407,35,407,30,441,30"/>
-<area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,20,273,45"/>
+<area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,20,273,45"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="307,35,274,35,274,30,307,30"/>
 <area shape="rect" id="Node000006" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,20,111,45"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="145,35,111,35,111,30,145,30"/>

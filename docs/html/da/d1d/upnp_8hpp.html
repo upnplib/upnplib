@@ -451,10 +451,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga810abb461cd6402c903fac8976b9ff54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for devices matching the given search target.  <br /></td></tr>
 <tr class="separator:ga810abb461cd6402c903fac8976b9ff54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga006926ac8691521ecefa3234429dcd9c" id="r_ga006926ac8691521ecefa3234429dcd9c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#ga006926ac8691521ecefa3234429dcd9c">UpnpSendAdvertisement</a> (<a class="el" href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> Hnd, int Exp)</td></tr>
-<tr class="memdesc:ga006926ac8691521ecefa3234429dcd9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends out the discovery announcements for all devices and services for a device.  <br /></td></tr>
+<tr class="memdesc:ga006926ac8691521ecefa3234429dcd9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends out the discovery announcements for all devices and services contained within one root device.  <br /></td></tr>
 <tr class="separator:ga006926ac8691521ecefa3234429dcd9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf3e99499514b953c9e50972873f5bdec" id="r_gaf3e99499514b953c9e50972873f5bdec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#gaf3e99499514b953c9e50972873f5bdec">UpnpSendAdvertisementLowPower</a> (<a class="el" href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> Hnd, int Exp, int PowerState, int SleepPeriod, int RegistrationState)</td></tr>
-<tr class="memdesc:gaf3e99499514b953c9e50972873f5bdec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends out the discovery announcements for all devices and services for a device.  <br /></td></tr>
+<tr class="memdesc:gaf3e99499514b953c9e50972873f5bdec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends out the discovery announcements for all devices and services contained within one root device.  <br /></td></tr>
 <tr class="separator:gaf3e99499514b953c9e50972873f5bdec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Step 3: Control</div></td></tr>
 <tr class="memitem:ga3433d9e5cfeaff0b318eef1f4f2e65ea" id="r_ga3433d9e5cfeaff0b318eef1f4f2e65ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#ga3433d9e5cfeaff0b318eef1f4f2e65ea">UpnpGetServiceVarStatus</a> (<a class="el" href="../../da/d1d/upnp_8hpp.html#a84542bc42a4adba31063aacbca481cba">UpnpClient_Handle</a> Hnd, const char *ActionURL_const, const char *VarName_const, DOMString *StVar)</td></tr>
@@ -542,19 +542,19 @@ Functions</h2></td></tr>
 <tr class="memdesc:gacc7d1a693256aa89a1220ce332f04ccf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the IPv6 unique-local or globally-unique listening ip address.  <br /></td></tr>
 <tr class="separator:gacc7d1a693256aa89a1220ce332f04ccf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae0590b35f18fae06bac1562c30f626a8" id="r_gae0590b35f18fae06bac1562c30f626a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#gae0590b35f18fae06bac1562c30f626a8">UpnpRegisterRootDevice</a> (const char *const DescUrl, const <a class="el" href="../../df/da3/Callback_8hpp.html#a8671624da6b11009452bbda70803c663">Upnp_FunPtr</a> Fun, const void *const Cookie, <a class="el" href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> *const Hnd)</td></tr>
-<tr class="memdesc:gae0590b35f18fae06bac1562c30f626a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a device application with the UPnP Library.  <br /></td></tr>
+<tr class="memdesc:gae0590b35f18fae06bac1562c30f626a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers one root- or logical-device object with the UPnP Library to get a handle for it.  <br /></td></tr>
 <tr class="separator:gae0590b35f18fae06bac1562c30f626a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaee0fda0db04cb93e26cc27e88a5f4542" id="r_gaee0fda0db04cb93e26cc27e88a5f4542"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#gaee0fda0db04cb93e26cc27e88a5f4542">UpnpRegisterRootDevice2</a> (const <a class="el" href="../../da/d1d/upnp_8hpp.html#adf79944b9ca9709bd229c05afb07ffb1">Upnp_DescType</a> descriptionType, const char *const description_const, const size_t bufferLen, const int config_baseURL, const <a class="el" href="../../df/da3/Callback_8hpp.html#a8671624da6b11009452bbda70803c663">Upnp_FunPtr</a> Fun, const void *const Cookie, <a class="el" href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> *const Hnd)</td></tr>
-<tr class="memdesc:gaee0fda0db04cb93e26cc27e88a5f4542"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a device application with the UPnP Library. Similar to <b>UpnpRegisterRootDevice</b>, except that it also allows the description document to be specified as a file or a memory buffer.  <br /></td></tr>
+<tr class="memdesc:gaee0fda0db04cb93e26cc27e88a5f4542"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers one root- or logical-device object with the UPnP Library with additional description and get a handle for it.  <br /></td></tr>
 <tr class="separator:gaee0fda0db04cb93e26cc27e88a5f4542"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2affaa74c16d9973f812ad0dbb95d05c" id="r_ga2affaa74c16d9973f812ad0dbb95d05c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#ga2affaa74c16d9973f812ad0dbb95d05c">UpnpRegisterRootDevice3</a> (const char *const DescUrl, const <a class="el" href="../../df/da3/Callback_8hpp.html#a8671624da6b11009452bbda70803c663">Upnp_FunPtr</a> Fun, const void *const Cookie, <a class="el" href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> *const Hnd, const int AddressFamily, const char *const LowerDescUrl=nullptr)</td></tr>
-<tr class="memdesc:ga2affaa74c16d9973f812ad0dbb95d05c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a device application for a specific address family with the UPnP library. This function can optional also be used to specify a dedicated description URL to be returned for legacy CPs.  <br /></td></tr>
+<tr class="memdesc:ga2affaa74c16d9973f812ad0dbb95d05c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers one root- or logical-device object for a specific address family with the UPnP library and get a handle for it.  <br /></td></tr>
 <tr class="separator:ga2affaa74c16d9973f812ad0dbb95d05c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga92dc985c553a7467b62bbfa68f928078" id="r_ga92dc985c553a7467b62bbfa68f928078"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#ga92dc985c553a7467b62bbfa68f928078">UpnpUnRegisterRootDevice</a> (<a class="el" href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> Hnd)</td></tr>
 <tr class="memdesc:ga92dc985c553a7467b62bbfa68f928078"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unregisters a root device registered with <b>UpnpRegisterRootDevice</b>, <b>UpnpRegisterRootDevice2</b>, <b>UpnpRegisterRootDevice3</b> or <b>UpnpRegisterRootDevice4</b>.  <br /></td></tr>
 <tr class="separator:ga92dc985c553a7467b62bbfa68f928078"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4a59ae26094e02ac14abf7b501ad8673" id="r_ga4a59ae26094e02ac14abf7b501ad8673"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#ga4a59ae26094e02ac14abf7b501ad8673">UpnpUnRegisterRootDeviceLowPower</a> (<a class="el" href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> Hnd, int PowerState, int SleepPeriod, int RegistrationState)</td></tr>
-<tr class="memdesc:ga4a59ae26094e02ac14abf7b501ad8673"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unregisters a root device registered with <b>UpnpRegisterRootDevice</b>, <b>UpnpRegisterRootDevice2</b>, <b>UpnpRegisterRootDevice3</b> or <b>UpnpRegisterRootDevice4</b>.  <br /></td></tr>
+<tr class="memdesc:ga4a59ae26094e02ac14abf7b501ad8673"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unregisters a root device registered with <b>UpnpRegisterRootDevice</b>, <b>UpnpRegisterRootDevice2</b>, <b>UpnpRegisterRootDevice2</b> or <b>UpnpRegisterRootDevice4</b>.  <br /></td></tr>
 <tr class="separator:ga4a59ae26094e02ac14abf7b501ad8673"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1319736779330f90922b807607d8eb63" id="r_ga1319736779330f90922b807607d8eb63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#ga1319736779330f90922b807607d8eb63">UpnpRegisterClient</a> (<a class="el" href="../../df/da3/Callback_8hpp.html#a8671624da6b11009452bbda70803c663">Upnp_FunPtr</a> Fun, const void *Cookie, <a class="el" href="../../da/d1d/upnp_8hpp.html#a84542bc42a4adba31063aacbca481cba">UpnpClient_Handle</a> *Hnd)</td></tr>
 <tr class="memdesc:ga1319736779330f90922b807607d8eb63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a control point application with the UPnP Library.  <br /></td></tr>
@@ -1970,7 +1970,7 @@ Functions</h2></td></tr>
 
 <p>The type of handle returned by the web server for open requests. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02530">2530</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02531">2531</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
 
 </div>
 </div>
@@ -1996,7 +1996,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02664">2664</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02665">2665</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
 
 </div>
 </div>
@@ -2023,7 +2023,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02535">2535</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02536">2536</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
 
 </div>
 </div>
@@ -2050,7 +2050,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02560">2560</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02561">2561</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
 
 </div>
 </div>
@@ -2078,7 +2078,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02584">2584</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02585">2585</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
 
 </div>
 </div>
@@ -2106,7 +2106,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02634">2634</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02635">2635</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
 
 </div>
 </div>
@@ -2134,7 +2134,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02609">2609</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02610">2610</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
 
 </div>
 </div>
@@ -2164,7 +2164,7 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02716">2716</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l02717">2717</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
 
 </div>
 </div>
@@ -2210,7 +2210,7 @@ Functions</h2></td></tr>
 
 <p>Different HTTP methods. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l01868">1868</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l01869">1869</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
 
 </div>
 </div>
@@ -2313,7 +2313,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03640">3640</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03630">3630</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 
 </div>
 </div>
@@ -2346,7 +2346,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02916">2916</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02906">2906</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -2393,7 +2393,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02957">2957</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02947">2947</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
@@ -2476,7 +2476,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02918">2918</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02908">2908</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-5-summary" class="dynsummary" style="display:block;">
@@ -2569,7 +2569,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02864">2864</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02854">2854</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-6-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-6-summary" class="dynsummary" style="display:block;">
@@ -2753,7 +2753,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02963">2963</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02953">2953</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-7-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-7-summary" class="dynsummary" style="display:block;">
@@ -2891,13 +2891,13 @@ Functions</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="684,77,594,45,554,33,555,28,595,39,685,72"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="411,55,583,80"/>
 <area shape="poly" title=" " alt="" coords="628,84,583,79,584,74,629,79"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers a device application with the UPnP Library." alt="" coords="405,104,590,129"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="405,104,590,129"/>
 <area shape="poly" title=" " alt="" coords="629,106,590,110,590,104,629,100"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="401,153,594,179"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="401,153,594,179"/>
 <area shape="poly" title=" " alt="" coords="683,113,595,143,551,156,549,151,594,138,681,108"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers a device application with the UPnP Library. Similar to UpnpRegisterRootDevice,..." alt="" coords="159,5,352,31"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="159,5,352,31"/>
 <area shape="poly" title=" " alt="" coords="386,21,352,21,352,15,386,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="198,104,313,129"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="198,104,313,129"/>
 <area shape="poly" title=" " alt="" coords="422,85,313,108,312,102,421,80"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,104,111,129"/>
 <area shape="poly" title=" " alt="" coords="184,119,111,119,111,114,184,114"/>
@@ -2957,7 +2957,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02985">2985</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02975">2975</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-9-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-9-summary" class="dynsummary" style="display:block;">
@@ -3094,13 +3094,13 @@ Functions</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="684,77,594,45,554,33,555,28,595,39,685,72"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="411,55,583,80"/>
 <area shape="poly" title=" " alt="" coords="628,84,583,79,584,74,629,79"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers a device application with the UPnP Library." alt="" coords="405,104,590,129"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="405,104,590,129"/>
 <area shape="poly" title=" " alt="" coords="629,106,590,110,590,104,629,100"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="401,153,594,179"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="401,153,594,179"/>
 <area shape="poly" title=" " alt="" coords="683,113,595,143,551,156,549,151,594,138,681,108"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers a device application with the UPnP Library. Similar to UpnpRegisterRootDevice,..." alt="" coords="159,5,352,31"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="159,5,352,31"/>
 <area shape="poly" title=" " alt="" coords="386,21,352,21,352,15,386,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="198,104,313,129"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="198,104,313,129"/>
 <area shape="poly" title=" " alt="" coords="422,85,313,108,312,102,421,80"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,104,111,129"/>
 <area shape="poly" title=" " alt="" coords="184,119,111,119,111,114,184,114"/>
@@ -3140,7 +3140,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03781">3781</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03771">3771</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-11-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-11-summary" class="dynsummary" style="display:block;">
@@ -3290,7 +3290,7 @@ Functions</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="646,21,612,21,612,15,646,15"/>
 <area shape="rect" href="../../d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,5,407,31"/>
 <area shape="poly" title=" " alt="" coords="441,21,407,21,407,15,441,15"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -3344,7 +3344,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02943">2943</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02933">2933</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-13" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-13-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-13-summary" class="dynsummary" style="display:block;">
@@ -3454,7 +3454,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02947">2947</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02937">2937</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-15" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-15-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-15-summary" class="dynsummary" style="display:block;">
@@ -3643,7 +3643,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02924">2924</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02914">2914</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-17" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-17-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-17-summary" class="dynsummary" style="display:block;">
@@ -3683,7 +3683,7 @@ Returns <code>1</code> if the webserver is enabled, or <code>0</code> if it is n
 <dd>
 1, if webserver is enabled or 0, if webserver is disabled. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03811">3811</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03801">3801</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 
 </div>
 </div>
@@ -3769,7 +3769,7 @@ Returns <code>1</code> if the webserver is enabled, or <code>0</code> if it is n
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02932">2932</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02922">2922</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-18" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-18-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-18-summary" class="dynsummary" style="display:block;">
@@ -3961,7 +3961,7 @@ Returns <code>1</code> if the webserver is enabled, or <code>0</code> if it is n
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02928">2928</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02918">2918</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-20" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-20-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-20-summary" class="dynsummary" style="display:block;">
@@ -4110,7 +4110,7 @@ Returns <code>1</code> if the webserver is enabled, or <code>0</code> if it is n
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02874">2874</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02864">2864</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-22" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-22-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-22-summary" class="dynsummary" style="display:block;">
@@ -4334,7 +4334,7 @@ Returns <code>1</code> if the webserver is enabled, or <code>0</code> if it is n
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02909">2909</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02899">2899</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-23" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-23-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-23-summary" class="dynsummary" style="display:block;">
@@ -4550,7 +4550,7 @@ Returns <code>1</code> if the webserver is enabled, or <code>0</code> if it is n
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02891">2891</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02881">2881</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-24" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-24-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-24-summary" class="dynsummary" style="display:block;">
@@ -4750,7 +4750,7 @@ Returns <code>1</code> if the webserver is enabled, or <code>0</code> if it is n
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02850">2850</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02840">2840</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-25" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-25-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-25-summary" class="dynsummary" style="display:block;">
@@ -4931,7 +4931,7 @@ Note: In case of return values, the status code parameter of the passed in handl
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02920">2920</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02910">2910</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-26" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-26-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-26-summary" class="dynsummary" style="display:block;">
@@ -5125,7 +5125,7 @@ Note: In case of return values, the status code parameter of the passed in handl
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02953">2953</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02943">2943</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-27" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-27-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-27-summary" class="dynsummary" style="display:block;">
@@ -5279,7 +5279,7 @@ Note: In case of return values, the status code parameter of the passed in handl
 
 <p>Removes all virtual directory mappings. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03761">3761</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03751">3751</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-28" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-28-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-28-summary" class="dynsummary" style="display:block;">
@@ -5290,9 +5290,9 @@ Note: In case of return values, the status code parameter of the passed in handl
 <area shape="rect" title="Removes all virtual directory mappings." alt="" coords="1032,134,1228,159"/>
 <area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="889,134,984,159"/>
 <area shape="poly" title=" " alt="" coords="1018,149,984,149,984,144,1018,144"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,83,273,108"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,83,273,108"/>
 <area shape="poly" title=" " alt="" coords="919,123,887,82,865,62,840,47,800,32,759,21,673,10,587,10,503,19,424,33,353,51,250,85,248,80,352,46,422,28,502,13,587,4,674,4,760,16,802,27,842,42,868,58,891,78,923,120"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the sdk." alt="" coords="707,58,819,83"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="707,58,819,83"/>
 <area shape="poly" title=" " alt="" coords="895,130,840,105,795,85,797,81,842,100,898,125"/>
 <area shape="rect" href="../../d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,134,407,159"/>
 <area shape="poly" title=" " alt="" coords="875,144,841,142,595,141,407,147,407,142,595,136,841,137,876,139"/>
@@ -5344,7 +5344,7 @@ Note: In case of return values, the status code parameter of the passed in handl
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03715">3715</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03705">3705</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 
 </div>
 </div>
@@ -5372,7 +5372,7 @@ Note: In case of return values, the status code parameter of the passed in handl
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03825">3825</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03815">3815</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 
 </div>
 </div>
@@ -5411,7 +5411,7 @@ Note: In case of return values, the status code parameter of the passed in handl
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03819">3819</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03809">3809</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 
 </div>
 </div>
@@ -5449,7 +5449,7 @@ Note: In case of return values, the status code parameter of the passed in handl
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03626">3626</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03616">3616</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-29" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-29-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-29-summary" class="dynsummary" style="display:block;">
@@ -5486,7 +5486,7 @@ Note: In case of return values, the status code parameter of the passed in handl
 <div class="center"><img src="../../da/d1d/upnp_8hpp_a5a6bb3d66f5808e0f1df5e69456c6627_icgraph.png" border="0" usemap="#ada/d1d/upnp_8hpp_a5a6bb3d66f5808e0f1df5e69456c6627_icgraph" alt=""/></div>
 <map name="ada/d1d/upnp_8hpp_a5a6bb3d66f5808e0f1df5e69456c6627_icgraph" id="ada/d1d/upnp_8hpp_a5a6bb3d66f5808e0f1df5e69456c6627_icgraph">
 <area shape="rect" title="Sets the document root directory for the internal web server." alt="" coords="321,5,517,31"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="308,21,274,21,274,15,308,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -5518,7 +5518,7 @@ Note: In case of return values, the status code parameter of the passed in handl
 </ul>
 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03884">3884</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03874">3874</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 
 </div>
 </div>
@@ -5545,7 +5545,7 @@ Note: In case of return values, the status code parameter of the passed in handl
 </ul>
 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03829">3829</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03819">3819</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 
 </div>
 </div>
@@ -5572,7 +5572,7 @@ Note: In case of return values, the status code parameter of the passed in handl
 </ul>
 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03840">3840</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03830">3830</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 
 </div>
 </div>
@@ -5599,7 +5599,7 @@ Note: In case of return values, the status code parameter of the passed in handl
 </ul>
 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03851">3851</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03841">3841</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 
 </div>
 </div>
@@ -5626,7 +5626,7 @@ Note: In case of return values, the status code parameter of the passed in handl
 </ul>
 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03873">3873</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03863">3863</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 
 </div>
 </div>
@@ -5653,7 +5653,7 @@ Note: In case of return values, the status code parameter of the passed in handl
 </ul>
 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03862">3862</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03852">3852</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 
 </div>
 </div>
@@ -5713,7 +5713,7 @@ Note: In case of return values, the status code parameter of the passed in handl
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02860">2860</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02850">2850</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-31" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-31-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-31-summary" class="dynsummary" style="display:block;">
@@ -5787,7 +5787,7 @@ Note: In case of return values, the status code parameter of the passed in handl
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02939">2939</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02929">2929</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-32" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-32-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-32-summary" class="dynsummary" style="display:block;">

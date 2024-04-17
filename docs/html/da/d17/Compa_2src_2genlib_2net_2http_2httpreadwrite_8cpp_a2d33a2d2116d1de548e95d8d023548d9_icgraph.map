@@ -54,9 +54,9 @@
 <area shape="poly" id="edge21_Node000017_Node000018" title=" " alt="" coords="1451,502,1380,502,1380,497,1451,497"/>
 <area shape="rect" id="Node000019" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="1001,539,1095,564"/>
 <area shape="poly" id="edge22_Node000018_Node000019" title=" " alt="" coords="1222,518,1096,544,1095,539,1221,513"/>
-<area shape="rect" id="Node000020" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="45,615,159,640"/>
+<area shape="rect" id="Node000020" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="45,615,159,640"/>
 <area shape="poly" id="edge23_Node000019_Node000020" title=" " alt="" coords="987,545,905,536,719,522,643,519,573,520,503,526,429,537,247,580,188,598,136,617,134,612,186,593,246,574,428,532,502,521,573,515,643,514,719,516,906,530,987,540"/>
-<area shape="rect" id="Node000022" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the sdk." alt="" coords="771,438,883,463"/>
+<area shape="rect" id="Node000022" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="771,438,883,463"/>
 <area shape="poly" id="edge24_Node000019_Node000022" title=" " alt="" coords="1009,535,904,485,859,466,861,461,906,480,1011,530"/>
 <area shape="rect" id="Node000024" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="318,590,403,615"/>
 <area shape="poly" id="edge25_Node000019_Node000024" title=" " alt="" coords="987,559,404,602,404,597,987,553"/>
@@ -81,11 +81,11 @@
 <area shape="poly" id="edge39_Node000032_Node000033" title=" " alt="" coords="511,753,458,753,458,748,511,748"/>
 <area shape="rect" id="Node000035" href="$d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="275,639,447,664"/>
 <area shape="poly" id="edge41_Node000032_Node000035" title=" " alt="" coords="578,732,530,704,474,678,436,667,438,662,476,673,533,699,581,728"/>
-<area shape="rect" id="Node000036" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers a device application with the UPnP Library." alt="" coords="268,787,453,812"/>
+<area shape="rect" id="Node000036" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="268,787,453,812"/>
 <area shape="poly" id="edge43_Node000032_Node000036" title=" " alt="" coords="533,768,427,790,426,784,532,763"/>
-<area shape="rect" id="Node000037" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="264,688,457,714"/>
+<area shape="rect" id="Node000037" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="264,688,457,714"/>
 <area shape="poly" id="edge44_Node000032_Node000037" title=" " alt="" coords="532,738,426,716,427,711,533,732"/>
-<area shape="rect" id="Node000034" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers a device application with the UPnP Library. Similar to UpnpRegisterRootDevice,..." alt="" coords="5,738,199,763"/>
+<area shape="rect" id="Node000034" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="5,738,199,763"/>
 <area shape="poly" id="edge40_Node000033_Node000034" title=" " alt="" coords="250,753,199,753,199,748,250,748"/>
 <area shape="poly" id="edge42_Node000035_Node000020" title=" " alt="" coords="261,645,159,636,160,630,261,640"/>
 <area shape="poly" id="edge45_Node000037_Node000020" title=" " alt="" coords="284,688,246,678,138,643,139,638,247,673,285,683"/>

@@ -50,7 +50,6 @@
 
 /// \cond
 #include <fcntl.h> /* for F_GETFL, F_SETFL, O_NONBLOCK */
-#include <iostream>
 #include <cstring>
 /// \endcond
 

@@ -8,9 +8,9 @@
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1628,227,1488,185,1489,180,1630,222"/>
 <area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="1149,111,1243,136"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1362,157,1243,135,1244,129,1363,152"/>
-<area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="193,135,308,160"/>
+<area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="193,135,308,160"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1167,146,1116,175,1086,189,1054,199,946,219,836,227,725,226,619,218,520,206,431,191,299,163,300,157,432,186,520,201,619,213,726,221,836,221,946,213,1053,194,1084,184,1114,171,1165,141"/>
-<area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the sdk." alt="" coords="919,160,1031,185"/>
+<area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="919,160,1031,185"/>
 <area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="1135,139,1031,163,1030,158,1134,134"/>
 <area shape="rect" id="Node000009" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="462,84,547,109"/>
 <area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="1171,103,1119,62,1087,43,1053,29,980,13,904,8,829,12,756,23,687,38,627,55,537,86,536,81,625,50,686,33,755,18,828,7,904,3,980,7,1054,23,1089,38,1122,58,1174,99"/>

@@ -16,13 +16,13 @@
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="659,913,562,933,561,928,658,908"/>
 <area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="411,832,583,857"/>
 <area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="661,882,557,860,558,855,662,877"/>
-<area shape="rect" id="Node000010" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers a device application with the UPnP Library." alt="" coords="405,980,590,1005"/>
+<area shape="rect" id="Node000010" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="405,980,590,1005"/>
 <area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="704,917,654,945,596,971,560,983,558,977,594,966,651,940,701,913"/>
-<area shape="rect" id="Node000011" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="401,881,594,907"/>
+<area shape="rect" id="Node000011" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="401,881,594,907"/>
 <area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="636,897,594,897,594,892,636,892"/>
-<area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers a device application with the UPnP Library. Similar to UpnpRegisterRootDevice,..." alt="" coords="159,931,352,956"/>
+<area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="159,931,352,956"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="386,946,352,946,352,941,386,941"/>
-<area shape="rect" id="Node000008" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="198,808,313,833"/>
+<area shape="rect" id="Node000008" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="198,808,313,833"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="397,837,313,829,313,824,398,832"/>
 <area shape="rect" id="Node000009" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,808,111,833"/>
 <area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="184,823,111,823,111,818,184,818"/>

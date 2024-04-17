@@ -62,9 +62,9 @@
 <area shape="poly" id="edge29_Node000040_Node000041" title=" " alt="" coords="931,380,872,386,871,380,931,374"/>
 <area shape="rect" id="Node000043" href="$d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="688,429,860,455"/>
 <area shape="poly" id="edge30_Node000040_Node000043" title=" " alt="" coords="973,387,926,402,878,421,836,432,835,427,877,415,924,397,972,381"/>
-<area shape="rect" id="Node000044" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers a device application with the UPnP Library." alt="" coords="681,281,867,307"/>
+<area shape="rect" id="Node000044" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="681,281,867,307"/>
 <area shape="poly" id="edge31_Node000040_Node000044" title=" " alt="" coords="978,353,877,322,829,309,830,304,878,317,979,348"/>
-<area shape="rect" id="Node000045" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="677,331,871,356"/>
+<area shape="rect" id="Node000045" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="677,331,871,356"/>
 <area shape="poly" id="edge32_Node000040_Node000045" title=" " alt="" coords="931,361,870,355,871,350,931,355"/>
 <area shape="rect" id="Node000047" href="$d9/dd1/soap__ctrlpt_8cpp.html#a05e899b6e0c3bc1b2964ac01c37c15d7" title="This function creates a status variable query message send it to the specified URL...." alt="" coords="436,232,623,257"/>
 <area shape="poly" id="edge34_Node000046_Node000047" title=" " alt="" coords="657,240,623,242,623,236,657,234"/>

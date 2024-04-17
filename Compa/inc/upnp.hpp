@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-13
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-16
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -637,14 +637,13 @@ UPNPLIB_API char* UpnpGetServerIp6Address();
 UPNPLIB_API char* UpnpGetServerUlaGuaIp6Address();
 
 /*!
- * \brief Registers a device application with the UPnP Library.
+ * \brief Registers one root- or logical-device object with the UPnP Library to
+ * get a handle for it.
  *
- * A device application cannot make any other API calls until it registers
- * using this function.
- *
- * Device applications can also register as control points (see
- * \b UpnpRegisterClient to get a control point handle to perform control
- * point functionality).
+ * A root- or logical-device object cannot make any other API calls until it
+ * registers using this function. To register a control point see \b
+ * UpnpRegisterClient to get a control point handle to perform control point
+ * functionality.
  *
  * This is a synchronous call and does not generate any callbacks. Callbacks
  * can occur as soon as this function returns.
@@ -686,19 +685,19 @@ UPNPLIB_API int UpnpRegisterRootDevice(
     UpnpDevice_Handle* const Hnd);
 
 /*!
- * \brief Registers a device application with the UPnP Library. Similar to
- * \b UpnpRegisterRootDevice, except that it also allows the description
- * document to be specified as a file or a memory buffer.
+ * \brief Registers one root- or logical-device object with the UPnP Library
+ * with additional description and get a handle for it.
  *
- * The description can also be configured to have the correct IP and port
- * address.
+ * Similar to \b UpnpRegisterRootDevice, except that it also allows the
+ * description document to be specified as a file or a memory buffer. The
+ * description can also be configured to have the correct IP and port address.
  *
- * NOTE: For the configuration to be functional, the internal web server
- * MUST be present. In addition, the web server MUST be activated
- * (using \b UpnpSetWebServerRootDir) before calling this function.
- * The only condition where the web server can be absent is if the
- * description document is specified as a URL and no configuration is
- * required (i.e. <tt>config_baseURL = 0</tt>.)
+ * For the configuration to be functional, the internal web server MUST be
+ * present. In addition, the web server MUST be activated (using \b
+ * UpnpSetWebServerRootDir) before calling this function. The only condition
+ * where the web server can be absent is if the description document is
+ * specified as a URL and no configuration is required (i.e. <tt>config_baseURL
+ * = 0</tt>.)
  *
  * This is a synchronous call and does not generate any callbacks. Callbacks
  * can occur as soon as this function returns.
@@ -775,17 +774,19 @@ UPNPLIB_API int UpnpRegisterRootDevice2(
     UpnpDevice_Handle* const Hnd);
 
 /*!
- * \brief Registers a device application for a specific address family with
- * the UPnP library. This function can optional also be used to specify a
- * dedicated description URL to be returned for legacy CPs.
+ * \brief Registers one root- or logical-device object for a specific address
+ * family with the UPnP library and get a handle for it.
  *
- * A device application cannot make any other API calls until it registers
- * using this function. Device applications can also register as control
- * points (see \b UpnpRegisterClient to get a control point handle to perform
- * control point functionality).
+ * This function can optional also be used to specify a dedicated description
+ * URL to be returned for legacy control points.
  *
- * This is synchronous and does not generate any callbacks. Callbacks can occur
- * as soon as this function returns.
+ * A root- or logical-device object cannot make any other API calls until it
+ * registers using this function. To register a control point see \b
+ * UpnpRegisterClient to get a control point handle to perform control point
+ * functionality.
+ *
+ * This is a synchronous call and does not generate any callbacks. Callbacks
+ * can occur as soon as this function returns.
  *
  * \return An integer representing one of the following:
  *     \li \c UPNP_E_SUCCESS: The operation completed successfully.
@@ -856,7 +857,7 @@ UPNPLIB_API int UpnpUnRegisterRootDevice(
 
 /*!
  * \brief Unregisters a root device registered with \b UpnpRegisterRootDevice,
- * \b UpnpRegisterRootDevice2, \b UpnpRegisterRootDevice3 or
+ * \b UpnpRegisterRootDevice2, \b UpnpRegisterRootDevice2 or
  * \b UpnpRegisterRootDevice4.
  *
  * After this call, the \b UpnpDevice_Handle is no longer valid. For all
@@ -1017,7 +1018,7 @@ UPNPLIB_API int UpnpSearchAsync(
 
 /*!
  * \brief Sends out the discovery announcements for all devices and services
- * for a device.
+ * contained within one root device.
  *
  * Each announcement is made with the same expiration time.
  *
@@ -1042,7 +1043,7 @@ UPNPLIB_API int UpnpSendAdvertisement(
 
 /*!
  * \brief Sends out the discovery announcements for all devices and services
- * for a device.
+ * contained within one root device.
  *
  * Each announcement is made with the same expiration time.
  *

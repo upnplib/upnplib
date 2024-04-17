@@ -48,7 +48,7 @@
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="704,615,653,620,652,614,703,609"/>
 <area shape="rect" id="Node000009" href="$d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b" title="The callback handler registered with the SDK while registering root device." alt="" coords="168,615,395,640"/>
 <area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="429,630,395,630,395,625,429,625"/>
-<area shape="rect" id="Node000010" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="5,392,120,417"/>
+<area shape="rect" id="Node000010" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="5,392,120,417"/>
 <area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="173,610,166,605,144,585,124,560,94,507,75,456,64,419,69,417,80,454,99,505,128,557,147,581,170,601,176,606"/>
 <area shape="rect" id="Node000013" href="$d4/d99/upnpapi_8cpp.html#ab7f67326e349b9025ac62d0b8ae8ae43" title="Similar to UpnpAcceptSubscription() except that it takes a DOM document for the variables to event ra..." alt="" coords="706,639,907,664"/>
 <area shape="poly" id="edge11_Node000012_Node000013" title=" " alt="" coords="961,654,908,654,908,649,961,649"/>

@@ -5,7 +5,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-09
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-16
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -129,7 +129,7 @@ struct TvService {
 /*! Array of service structures */
 extern struct TvService tv_service_table[];
 
-/*! Device handle returned from sdk */
+/*! Device handle returned from SDK */
 extern UpnpDevice_Handle device_handle;
 
 /*! Mutex for protecting the global state table data
@@ -466,35 +466,39 @@ int TvDeviceDecreaseBrightness(
     const char** errorString);
 
 /*!
- * \brief Initializes the UPnP Sdk, registers the device, and sends out
+ * \brief Initializes the UPnP SDK, registers the root-device, and sends out
  * advertisements.
- * Returns UPNPLIB_E_SUCCESS or other UPnPlib error code.
+ *
+ * \returns
+ *  On success: UPNPLIB_E_SUCCESS\n
+ *  On error: Other UPnPlib error code.
  */
 int TvDeviceStart(
-    /*! [in] interface to initialize the sdk (may be NULL)
-     * if null, then the first non null interface is used. */
+    /*! [in] Network interface to initialize the SDK (may be a nullptr) if
+     * nullptr, then the first interface (specified by its index) except
+     * localhost is used. */
     const char* iface,
-    /*! [in] port number to initialize the sdk (may be 0)
-     * if zero, then a random number is used. */
+    /*! [in] Port number to initialize the SDK (may be 0) if zero, then a
+     * random number is used. */
     in_port_t port,
     /*! [in] name of description document.
-     * may be NULL. Default is tvdevicedesc.xml. */
+     * may be a nullptr. Default is tvdevicedesc.xml. */
     const char* desc_doc_name,
     /*! [in] path of web directory.
-     * may be NULL. Default is ./web (for Linux) or ../tvdevice/web. */
+     * may be a nullptr. Default is ./sample/web (for Linux). */
     const char* web_dir_path,
     /*! [in] IP mode: IP_MODE_IPV4, IP_MODE_IPV6_LLA or
-     * IP_MODE_IPV6_ULA_GUA. Default is IP_MODE_IPV4. */
+     * IP_MODE_IPV6_ULA_GUA. Default is IP_MODE_IPV6_LLA. */
     const int ip_mode,
     /*! [in] print function to use. */
-    const print_string pfun,
+    const print_string pfunc,
     /*! [in] Non-zero if called from the combo application. */
     const int combo);
 
 /*!
- * \brief Stops the device. Uninitializes the sdk.
+ * \brief Stops the device. Uninitializes the SDK.
  */
-int TvDeviceStop(void);
+int TvDeviceStop();
 
 /*!
  * \brief Function that receives commands from the user at the command prompt
@@ -507,7 +511,7 @@ void* TvDeviceCommandLoop(void* args);
 /*!
  * \brief Main entry point for tv device application.
  *
- * Initializes and registers with the sdk.
+ * Initializes and registers with the SDK.
  * Initializes the state stables of the service.
  * Starts the command loop.
  *

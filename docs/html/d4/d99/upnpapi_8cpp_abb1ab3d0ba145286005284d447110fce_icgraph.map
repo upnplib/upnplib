@@ -1,11 +1,11 @@
 <map id="AutoAdvertise" name="AutoAdvertise">
 <area shape="rect" id="Node000001" title="This function is a timer thread scheduled by UpnpSendAdvertisement to the send advetisement again." alt="" coords="812,42,927,67"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="553,5,764,45"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="553,5,764,45"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="798,48,764,43,764,37,799,42"/>
-<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="321,42,505,67"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="321,42,505,67"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="540,42,506,46,505,41,539,37"/>
 <area shape="poly" id="edge3_Node000003_Node000001" title=" " alt="" coords="519,54,553,55,764,55,812,54,812,59,764,60,553,60,519,60"/>
-<area shape="rect" id="Node000004" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,42,273,67"/>
+<area shape="rect" id="Node000004" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,42,273,67"/>
 <area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="307,57,273,57,273,52,307,52"/>
 <area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,42,111,67"/>
 <area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="145,57,111,57,111,52,145,52"/>

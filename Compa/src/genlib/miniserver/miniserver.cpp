@@ -242,8 +242,8 @@ int dispatch_request(
         callback = gGetCallback;
         host_validate_callback = gWebCallback_HostValidate;
         cookie = gWebCallback_HostValidateCookie;
-        UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-                   "miniserver %d: got WEB server msg\n", info->socket);
+        UPNPLIB_LOGINFO "MSG1107: miniserver socket="
+            << info->socket << ": got WEB server msg.\n";
         break;
     default:
         callback = 0;
@@ -354,8 +354,8 @@ void handle_request(
         goto error_handler;
     }
 
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "miniserver %d: PROCESSING...\n", connfd);
+    UPNPLIB_LOGINFO "MSG1106: miniserver socket=" << connfd
+                                                  << ": PROCESSING...\n";
     /* dispatch */
     http_error_code = dispatch_request(&info, &parser);
     if (http_error_code != 0) {

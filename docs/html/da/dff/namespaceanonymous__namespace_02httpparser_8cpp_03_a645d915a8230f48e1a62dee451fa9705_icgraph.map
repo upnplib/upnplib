@@ -64,7 +64,7 @@
 <area shape="poly" id="edge29_Node000040_Node000041" title=" " alt="" coords="931,825,871,819,872,814,931,819"/>
 <area shape="rect" id="Node000043" href="$d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="688,844,860,869"/>
 <area shape="poly" id="edge30_Node000040_Node000043" title=" " alt="" coords="931,844,860,851,860,846,931,839"/>
-<area shape="rect" id="Node000044" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers a device application with the UPnP Library." alt="" coords="681,893,867,919"/>
+<area shape="rect" id="Node000044" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="681,893,867,919"/>
 <area shape="poly" id="edge31_Node000040_Node000044" title=" " alt="" coords="982,851,878,885,834,896,833,891,877,879,980,846"/>
 <area shape="rect" id="Node000047" href="$d9/dd1/soap__ctrlpt_8cpp.html#a05e899b6e0c3bc1b2964ac01c37c15d7" title="This function creates a status variable query message send it to the specified URL...." alt="" coords="436,716,623,741"/>
 <area shape="poly" id="edge33_Node000046_Node000047" title=" " alt="" coords="657,739,623,737,623,732,657,734"/>

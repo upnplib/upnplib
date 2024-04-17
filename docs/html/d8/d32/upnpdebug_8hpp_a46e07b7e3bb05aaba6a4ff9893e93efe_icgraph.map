@@ -2,9 +2,9 @@
 <area shape="rect" id="Node000001" title="Closes the log files." alt="" coords="1032,134,1147,159"/>
 <area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="889,134,984,159"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1018,149,984,149,984,144,1018,144"/>
-<area shape="rect" id="Node000003" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,83,273,108"/>
+<area shape="rect" id="Node000003" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,83,273,108"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="919,123,887,82,865,62,840,47,800,32,759,21,673,10,587,10,503,19,424,33,353,51,250,85,248,80,352,46,422,28,502,13,587,4,674,4,760,16,802,27,842,42,868,58,891,78,923,120"/>
-<area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the sdk." alt="" coords="707,58,819,83"/>
+<area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="707,58,819,83"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="895,130,840,105,795,85,797,81,842,100,898,125"/>
 <area shape="rect" id="Node000007" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,134,407,159"/>
 <area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="875,144,841,142,595,141,407,147,407,142,595,136,841,137,876,139"/>

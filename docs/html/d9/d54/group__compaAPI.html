@@ -111,19 +111,19 @@ Files</h2></td></tr>
 <tr class="memdesc:gacc7d1a693256aa89a1220ce332f04ccf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the IPv6 unique-local or globally-unique listening ip address.  <br /></td></tr>
 <tr class="separator:gacc7d1a693256aa89a1220ce332f04ccf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae0590b35f18fae06bac1562c30f626a8" id="r_gae0590b35f18fae06bac1562c30f626a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#gae0590b35f18fae06bac1562c30f626a8">UpnpRegisterRootDevice</a> (const char *const DescUrl, const <a class="el" href="../../df/da3/Callback_8hpp.html#a8671624da6b11009452bbda70803c663">Upnp_FunPtr</a> Fun, const void *const Cookie, <a class="el" href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> *const Hnd)</td></tr>
-<tr class="memdesc:gae0590b35f18fae06bac1562c30f626a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a device application with the UPnP Library.  <br /></td></tr>
+<tr class="memdesc:gae0590b35f18fae06bac1562c30f626a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers one root- or logical-device object with the UPnP Library to get a handle for it.  <br /></td></tr>
 <tr class="separator:gae0590b35f18fae06bac1562c30f626a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaee0fda0db04cb93e26cc27e88a5f4542" id="r_gaee0fda0db04cb93e26cc27e88a5f4542"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#gaee0fda0db04cb93e26cc27e88a5f4542">UpnpRegisterRootDevice2</a> (const <a class="el" href="../../da/d1d/upnp_8hpp.html#adf79944b9ca9709bd229c05afb07ffb1">Upnp_DescType</a> descriptionType, const char *const description_const, const size_t bufferLen, const int config_baseURL, const <a class="el" href="../../df/da3/Callback_8hpp.html#a8671624da6b11009452bbda70803c663">Upnp_FunPtr</a> Fun, const void *const Cookie, <a class="el" href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> *const Hnd)</td></tr>
-<tr class="memdesc:gaee0fda0db04cb93e26cc27e88a5f4542"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a device application with the UPnP Library. Similar to <b>UpnpRegisterRootDevice</b>, except that it also allows the description document to be specified as a file or a memory buffer.  <br /></td></tr>
+<tr class="memdesc:gaee0fda0db04cb93e26cc27e88a5f4542"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers one root- or logical-device object with the UPnP Library with additional description and get a handle for it.  <br /></td></tr>
 <tr class="separator:gaee0fda0db04cb93e26cc27e88a5f4542"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2affaa74c16d9973f812ad0dbb95d05c" id="r_ga2affaa74c16d9973f812ad0dbb95d05c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#ga2affaa74c16d9973f812ad0dbb95d05c">UpnpRegisterRootDevice3</a> (const char *const DescUrl, const <a class="el" href="../../df/da3/Callback_8hpp.html#a8671624da6b11009452bbda70803c663">Upnp_FunPtr</a> Fun, const void *const Cookie, <a class="el" href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> *const Hnd, const int AddressFamily, const char *const LowerDescUrl=nullptr)</td></tr>
-<tr class="memdesc:ga2affaa74c16d9973f812ad0dbb95d05c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a device application for a specific address family with the UPnP library. This function can optional also be used to specify a dedicated description URL to be returned for legacy CPs.  <br /></td></tr>
+<tr class="memdesc:ga2affaa74c16d9973f812ad0dbb95d05c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers one root- or logical-device object for a specific address family with the UPnP library and get a handle for it.  <br /></td></tr>
 <tr class="separator:ga2affaa74c16d9973f812ad0dbb95d05c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga92dc985c553a7467b62bbfa68f928078" id="r_ga92dc985c553a7467b62bbfa68f928078"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#ga92dc985c553a7467b62bbfa68f928078">UpnpUnRegisterRootDevice</a> (<a class="el" href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> Hnd)</td></tr>
 <tr class="memdesc:ga92dc985c553a7467b62bbfa68f928078"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unregisters a root device registered with <b>UpnpRegisterRootDevice</b>, <b>UpnpRegisterRootDevice2</b>, <b>UpnpRegisterRootDevice3</b> or <b>UpnpRegisterRootDevice4</b>.  <br /></td></tr>
 <tr class="separator:ga92dc985c553a7467b62bbfa68f928078"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4a59ae26094e02ac14abf7b501ad8673" id="r_ga4a59ae26094e02ac14abf7b501ad8673"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#ga4a59ae26094e02ac14abf7b501ad8673">UpnpUnRegisterRootDeviceLowPower</a> (<a class="el" href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> Hnd, int PowerState, int SleepPeriod, int RegistrationState)</td></tr>
-<tr class="memdesc:ga4a59ae26094e02ac14abf7b501ad8673"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unregisters a root device registered with <b>UpnpRegisterRootDevice</b>, <b>UpnpRegisterRootDevice2</b>, <b>UpnpRegisterRootDevice3</b> or <b>UpnpRegisterRootDevice4</b>.  <br /></td></tr>
+<tr class="memdesc:ga4a59ae26094e02ac14abf7b501ad8673"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unregisters a root device registered with <b>UpnpRegisterRootDevice</b>, <b>UpnpRegisterRootDevice2</b>, <b>UpnpRegisterRootDevice2</b> or <b>UpnpRegisterRootDevice4</b>.  <br /></td></tr>
 <tr class="separator:ga4a59ae26094e02ac14abf7b501ad8673"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1319736779330f90922b807607d8eb63" id="r_ga1319736779330f90922b807607d8eb63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#ga1319736779330f90922b807607d8eb63">UpnpRegisterClient</a> (<a class="el" href="../../df/da3/Callback_8hpp.html#a8671624da6b11009452bbda70803c663">Upnp_FunPtr</a> Fun, const void *Cookie, <a class="el" href="../../da/d1d/upnp_8hpp.html#a84542bc42a4adba31063aacbca481cba">UpnpClient_Handle</a> *Hnd)</td></tr>
 <tr class="memdesc:ga1319736779330f90922b807607d8eb63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a control point application with the UPnP Library.  <br /></td></tr>
@@ -145,10 +145,10 @@ Files</h2></td></tr>
 <tr class="memdesc:ga810abb461cd6402c903fac8976b9ff54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for devices matching the given search target.  <br /></td></tr>
 <tr class="separator:ga810abb461cd6402c903fac8976b9ff54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga006926ac8691521ecefa3234429dcd9c" id="r_ga006926ac8691521ecefa3234429dcd9c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#ga006926ac8691521ecefa3234429dcd9c">UpnpSendAdvertisement</a> (<a class="el" href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> Hnd, int Exp)</td></tr>
-<tr class="memdesc:ga006926ac8691521ecefa3234429dcd9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends out the discovery announcements for all devices and services for a device.  <br /></td></tr>
+<tr class="memdesc:ga006926ac8691521ecefa3234429dcd9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends out the discovery announcements for all devices and services contained within one root device.  <br /></td></tr>
 <tr class="separator:ga006926ac8691521ecefa3234429dcd9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf3e99499514b953c9e50972873f5bdec" id="r_gaf3e99499514b953c9e50972873f5bdec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d54/group__compaAPI.html#gaf3e99499514b953c9e50972873f5bdec">UpnpSendAdvertisementLowPower</a> (<a class="el" href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a> Hnd, int Exp, int PowerState, int SleepPeriod, int RegistrationState)</td></tr>
-<tr class="memdesc:gaf3e99499514b953c9e50972873f5bdec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends out the discovery announcements for all devices and services for a device.  <br /></td></tr>
+<tr class="memdesc:gaf3e99499514b953c9e50972873f5bdec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends out the discovery announcements for all devices and services contained within one root device.  <br /></td></tr>
 <tr class="separator:gaf3e99499514b953c9e50972873f5bdec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Step 3: Control</h2></td></tr>
@@ -228,7 +228,7 @@ Files</h2></td></tr>
 
 <p>Set alias for compatibility. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l00835">835</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/d1d/upnp_8hpp_source.html#l00836">836</a> of file <a class="el" href="../../da/d1d/upnp_8hpp_source.html">upnp.hpp</a>.</p>
 
 </div>
 </div>
@@ -315,7 +315,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02292">2292</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02282">2282</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
@@ -464,7 +464,7 @@ Files</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="840,28,806,28,806,23,840,23"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b" title="The callback handler registered with the SDK while registering root device." alt="" coords="321,13,548,38"/>
 <area shape="poly" title=" " alt="" coords="582,28,548,28,548,23,582,23"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,13,273,38"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,13,273,38"/>
 <area shape="poly" title=" " alt="" coords="308,28,274,28,274,23,308,23"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,13,111,38"/>
 <area shape="poly" title=" " alt="" coords="145,28,111,28,111,23,145,23"/>
@@ -540,7 +540,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02367">2367</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02357">2357</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -689,7 +689,7 @@ Files</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="840,28,805,28,805,23,840,23"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b" title="The callback handler registered with the SDK while registering root device." alt="" coords="321,13,548,38"/>
 <area shape="poly" title=" " alt="" coords="582,28,548,28,548,23,582,23"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,13,273,38"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,13,273,38"/>
 <area shape="poly" title=" " alt="" coords="308,28,274,28,274,23,308,23"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,13,111,38"/>
 <area shape="poly" title=" " alt="" coords="145,28,111,28,111,23,145,23"/>
@@ -886,9 +886,9 @@ Files</h2></td></tr>
 <div class="center"><img src="../../d9/d54/group__compaAPI_gad231ed489e49a4c1aae7e3747ed00393_icgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_gad231ed489e49a4c1aae7e3747ed00393_icgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_gad231ed489e49a4c1aae7e3747ed00393_icgraph" id="ad9/d54/group__compaAPI_gad231ed489e49a4c1aae7e3747ed00393_icgraph">
 <area shape="rect" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="889,134,984,159"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,83,273,108"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,83,273,108"/>
 <area shape="poly" title=" " alt="" coords="919,123,887,82,865,62,840,47,800,32,759,21,673,10,587,10,503,19,424,33,353,51,250,85,248,80,352,46,422,28,502,13,587,4,674,4,760,16,802,27,842,42,868,58,891,78,923,120"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the sdk." alt="" coords="707,58,819,83"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="707,58,819,83"/>
 <area shape="poly" title=" " alt="" coords="895,130,840,105,795,85,797,81,842,100,898,125"/>
 <area shape="rect" href="../../d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,134,407,159"/>
 <area shape="poly" title=" " alt="" coords="875,144,841,142,595,141,407,147,407,142,595,136,841,137,876,139"/>
@@ -943,7 +943,7 @@ Files</h2></td></tr>
 <div class="center"><img src="../../d9/d54/group__compaAPI_gae674e61728812bc23de134a2667af3ff_icgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_gae674e61728812bc23de134a2667af3ff_icgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_gae674e61728812bc23de134a2667af3ff_icgraph" id="ad9/d54/group__compaAPI_gae674e61728812bc23de134a2667af3ff_icgraph">
 <area shape="rect" title="Returns the IPv6 link&#45;local listening ip address." alt="" coords="321,5,515,31"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -984,7 +984,7 @@ Files</h2></td></tr>
 <div class="center"><img src="../../d9/d54/group__compaAPI_gaa06b3ab7a61f1e62099942f04cc98377_icgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_gaa06b3ab7a61f1e62099942f04cc98377_icgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_gaa06b3ab7a61f1e62099942f04cc98377_icgraph" id="ad9/d54/group__compaAPI_gaa06b3ab7a61f1e62099942f04cc98377_icgraph">
 <area shape="rect" title="Returns the local IPv4 listening ip address." alt="" coords="321,5,507,31"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="308,21,274,21,274,15,308,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -1025,7 +1025,7 @@ Files</h2></td></tr>
 <div class="center"><img src="../../d9/d54/group__compaAPI_gae5ebefbfe67a8aee25d2b61879655a95_icgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_gae5ebefbfe67a8aee25d2b61879655a95_icgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_gae5ebefbfe67a8aee25d2b61879655a95_icgraph" id="ad9/d54/group__compaAPI_gae5ebefbfe67a8aee25d2b61879655a95_icgraph">
 <area shape="rect" title="Returns the internal server IPv4 UPnP listening port." alt="" coords="321,5,468,31"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="308,21,273,21,273,15,308,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -1066,7 +1066,7 @@ Files</h2></td></tr>
 <div class="center"><img src="../../d9/d54/group__compaAPI_gaf327c5830713e871ac74f0a2956069a2_icgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_gaf327c5830713e871ac74f0a2956069a2_icgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_gaf327c5830713e871ac74f0a2956069a2_icgraph" id="ad9/d54/group__compaAPI_gaf327c5830713e871ac74f0a2956069a2_icgraph">
 <area shape="rect" title="Returns the internal server IPv6 link&#45;local (LLA) UPnP listening port." alt="" coords="321,5,476,31"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -1107,7 +1107,7 @@ Files</h2></td></tr>
 <div class="center"><img src="../../d9/d54/group__compaAPI_gacc7d1a693256aa89a1220ce332f04ccf_icgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_gacc7d1a693256aa89a1220ce332f04ccf_icgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_gacc7d1a693256aa89a1220ce332f04ccf_icgraph" id="ad9/d54/group__compaAPI_gacc7d1a693256aa89a1220ce332f04ccf_icgraph">
 <area shape="rect" title="Returns the IPv6 unique&#45;local or globally&#45;unique listening ip address." alt="" coords="321,5,563,31"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="308,21,274,21,274,15,308,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -1148,7 +1148,7 @@ Files</h2></td></tr>
 <div class="center"><img src="../../d9/d54/group__compaAPI_gadef19902fe8f3517c2029bbc7fcacd83_icgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_gadef19902fe8f3517c2029bbc7fcacd83_icgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_gadef19902fe8f3517c2029bbc7fcacd83_icgraph" id="ad9/d54/group__compaAPI_gadef19902fe8f3517c2029bbc7fcacd83_icgraph">
 <area shape="rect" title="Returns the internal server IPv6 ULA or GUA UPnP listening port." alt="" coords="321,5,524,31"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="308,21,274,21,274,15,308,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -1219,7 +1219,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02801">2801</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02791">2791</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-12-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-12-summary" class="dynsummary" style="display:block;">
@@ -1412,7 +1412,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02738">2738</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02728">2728</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-13" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-13-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-13-summary" class="dynsummary" style="display:block;">
@@ -1744,7 +1744,7 @@ Files</h2></td></tr>
 <div class="center"><img src="../../d9/d54/group__compaAPI_gae97edbe124fd36c523d890c664409df1_icgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_gae97edbe124fd36c523d890c664409df1_icgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_gae97edbe124fd36c523d890c664409df1_icgraph" id="ad9/d54/group__compaAPI_gae97edbe124fd36c523d890c664409df1_icgraph">
 <area shape="rect" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,5,407,31"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -1826,7 +1826,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02207">2207</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02197">2197</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-16" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-16-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-16-summary" class="dynsummary" style="display:block;">
@@ -2015,7 +2015,7 @@ Files</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,490,667,490,667,485,701,485"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,475,493,500"/>
 <area shape="poly" title=" " alt="" coords="528,490,493,490,493,485,528,485"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,475,273,500"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,475,273,500"/>
 <area shape="poly" title=" " alt="" coords="307,490,274,490,274,485,307,485"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,475,111,500"/>
 <area shape="poly" title=" " alt="" coords="145,490,111,490,111,485,145,485"/>
@@ -2126,7 +2126,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02252">2252</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02242">2242</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-18" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-18-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-18-summary" class="dynsummary" style="display:block;">
@@ -2315,7 +2315,7 @@ Files</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="701,490,667,490,667,485,701,485"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1" title="Initialize the device state table for this TvDevice, pulling identifier info from the description Doc..." alt="" coords="321,475,493,500"/>
 <area shape="poly" title=" " alt="" coords="528,490,493,490,493,485,528,485"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,475,273,500"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,475,273,500"/>
 <area shape="poly" title=" " alt="" coords="307,490,274,490,274,485,307,485"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,475,111,500"/>
 <area shape="poly" title=" " alt="" coords="145,490,111,490,111,485,145,485"/>
@@ -2409,7 +2409,6 @@ Files</h2></td></tr>
 <li><code>UPNP_E_OUTOF_MEMORY:</code> Insufficient resources exist to register this control point. </li>
 </ul>
 </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000007">Todo:</a></b></dt><dd>Check if it is intended that this and the following is only compiled in if we have also Ctrlpt SSDP enabled. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">Fun</td><td>Pointer to a function for receiving asynchronous events.  </td></tr>
@@ -2419,7 +2418,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01314">1314</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01306">1306</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-20" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-20-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-20-summary" class="dynsummary" style="display:block;">
@@ -2483,9 +2482,8 @@ Files</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Registers a device application with the UPnP Library. </p>
-<p>A device application cannot make any other API calls until it registers using this function.</p>
-<p>Device applications can also register as control points (see <b>UpnpRegisterClient</b> to get a control point handle to perform control point functionality).</p>
+<p>Registers one root- or logical-device object with the UPnP Library to get a handle for it. </p>
+<p>A root- or logical-device object cannot make any other API calls until it registers using this function. To register a control point see <b>UpnpRegisterClient</b> to get a control point handle to perform control point functionality.</p>
 <p>This is a synchronous call and does not generate any callbacks. Callbacks can occur as soon as this function returns.</p>
 <dl class="section return"><dt>Returns</dt><dd>An integer representing one of the following: <ul>
 <li><code>UPNP_E_SUCCESS:</code> The operation completed successfully. </li>
@@ -2502,7 +2500,6 @@ Files</h2></td></tr>
 <li><code>UPNP_E_OUTOF_MEMORY:</code> There are insufficient resources to register this root device. </li>
 </ul>
 </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000003">Todo:</a></b></dt><dd>Check if it is intended that this and the following is only compiled in if we have also Device SSDP enabled. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">DescUrl</td><td>Pointer to a string containing the description URL for this root device instance.  </td></tr>
@@ -2521,7 +2518,7 @@ Files</h2></td></tr>
 <div id="dynsection-21-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d54/group__compaAPI_gae0590b35f18fae06bac1562c30f626a8_cgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_gae0590b35f18fae06bac1562c30f626a8_cgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_gae0590b35f18fae06bac1562c30f626a8_cgraph" id="ad9/d54/group__compaAPI_gae0590b35f18fae06bac1562c30f626a8_cgraph">
-<area shape="rect" title="Registers a device application with the UPnP Library." alt="" coords="5,1139,191,1165"/>
+<area shape="rect" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="5,1139,191,1165"/>
 <area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#adede929017553d41a13e25f2aa4c9c98" title="Free handle." alt="" coords="729,59,825,85"/>
 <area shape="poly" title=" " alt="" coords="97,1139,111,939,139,606,159,433,182,280,207,164,222,125,237,102,272,81,323,68,386,59,455,55,597,57,715,64,715,69,597,62,455,61,386,64,324,73,274,86,241,106,226,128,213,166,187,281,164,434,144,606,116,939,103,1139"/>
 <area shape="rect" href="../../d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="1619,237,1709,262"/>
@@ -2701,9 +2698,9 @@ Files</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Registers a device application with the UPnP Library. Similar to <b>UpnpRegisterRootDevice</b>, except that it also allows the description document to be specified as a file or a memory buffer. </p>
-<p>The description can also be configured to have the correct IP and port address.</p>
-<p>NOTE: For the configuration to be functional, the internal web server MUST be present. In addition, the web server MUST be activated (using <b>UpnpSetWebServerRootDir</b>) before calling this function. The only condition where the web server can be absent is if the description document is specified as a URL and no configuration is required (i.e. <code>config_baseURL = 0</code>.)</p>
+<p>Registers one root- or logical-device object with the UPnP Library with additional description and get a handle for it. </p>
+<p>Similar to <b>UpnpRegisterRootDevice</b>, except that it also allows the description document to be specified as a file or a memory buffer. The description can also be configured to have the correct IP and port address.</p>
+<p>For the configuration to be functional, the internal web server MUST be present. In addition, the web server MUST be activated (using <b>UpnpSetWebServerRootDir</b>) before calling this function. The only condition where the web server can be absent is if the description document is specified as a URL and no configuration is required (i.e. <code>config_baseURL = 0</code>.)</p>
 <p>This is a synchronous call and does not generate any callbacks. Callbacks can occur as soon as this function returns.</p>
 <p>Examples of using different types of description documents: </p><pre class="fragment">1) Description specified as a URL:
       descriptionType == UPNPREG_URL_DESC
@@ -2737,7 +2734,6 @@ Files</h2></td></tr>
 <li><code>UPNP_E_NO_WEB_SERVER:</code> The internal web server has been compiled out; the SDK cannot configure itself from the description document. </li>
 </ul>
 </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000004">Todo:</a></b></dt><dd>Check if it is intended that this and the following is only compiled in if we have also Device SSDP enabled. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">descriptionType</td><td>The type of the description document.  </td></tr>
@@ -2751,7 +2747,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l00942">942</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l00940">940</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-22" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-22-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-22-summary" class="dynsummary" style="display:block;">
@@ -2759,7 +2755,7 @@ Files</h2></td></tr>
 <div id="dynsection-22-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d54/group__compaAPI_gaee0fda0db04cb93e26cc27e88a5f4542_cgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_gaee0fda0db04cb93e26cc27e88a5f4542_cgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_gaee0fda0db04cb93e26cc27e88a5f4542_cgraph" id="ad9/d54/group__compaAPI_gaee0fda0db04cb93e26cc27e88a5f4542_cgraph">
-<area shape="rect" title="Registers a device application with the UPnP Library. Similar to UpnpRegisterRootDevice,..." alt="" coords="5,545,199,571"/>
+<area shape="rect" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="5,545,199,571"/>
 <area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#adede929017553d41a13e25f2aa4c9c98" title="Free handle." alt="" coords="296,64,392,89"/>
 <area shape="poly" title=" " alt="" coords="102,545,111,476,134,369,153,308,177,246,207,187,245,132,269,110,296,93,299,98,272,114,249,136,212,189,182,248,158,310,139,370,116,477,107,546"/>
 <area shape="rect" href="../../d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="1260,232,1351,257"/>
@@ -2936,9 +2932,10 @@ Files</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Registers a device application for a specific address family with the UPnP library. This function can optional also be used to specify a dedicated description URL to be returned for legacy CPs. </p>
-<p>A device application cannot make any other API calls until it registers using this function. Device applications can also register as control points (see <b>UpnpRegisterClient</b> to get a control point handle to perform control point functionality).</p>
-<p>This is synchronous and does not generate any callbacks. Callbacks can occur as soon as this function returns.</p>
+<p>Registers one root- or logical-device object for a specific address family with the UPnP library and get a handle for it. </p>
+<p>This function can optional also be used to specify a dedicated description URL to be returned for legacy control points.</p>
+<p>A root- or logical-device object cannot make any other API calls until it registers using this function. To register a control point see <b>UpnpRegisterClient</b> to get a control point handle to perform control point functionality.</p>
+<p>This is a synchronous call and does not generate any callbacks. Callbacks can occur as soon as this function returns.</p>
 <dl class="section return"><dt>Returns</dt><dd>An integer representing one of the following: <ul>
 <li><code>UPNP_E_SUCCESS:</code> The operation completed successfully. </li>
 <li><code>UPNP_E_FINISH:</code> The SDK is already terminated or is not initialized. </li>
@@ -2954,7 +2951,6 @@ Files</h2></td></tr>
 <li><code>UPNP_E_OUTOF_MEMORY:</code> There are insufficient resources to register this root device. </li>
 </ul>
 </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000005">Todo:</a></b></dt><dd>Check if it is intended that this and the following is only compiled in if we have also Device SSDP enabled. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">DescUrl</td><td>Pointer to a string containing the description URL for this root device instance.  </td></tr>
@@ -2967,7 +2963,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01090">1090</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01086">1086</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-23" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-23-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-23-summary" class="dynsummary" style="display:block;">
@@ -2975,7 +2971,7 @@ Files</h2></td></tr>
 <div id="dynsection-23-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d54/group__compaAPI_ga2affaa74c16d9973f812ad0dbb95d05c_cgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_ga2affaa74c16d9973f812ad0dbb95d05c_cgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_ga2affaa74c16d9973f812ad0dbb95d05c_cgraph" id="ad9/d54/group__compaAPI_ga2affaa74c16d9973f812ad0dbb95d05c_cgraph">
-<area shape="rect" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="5,1139,199,1165"/>
+<area shape="rect" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="5,1139,199,1165"/>
 <area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#adede929017553d41a13e25f2aa4c9c98" title="Free handle." alt="" coords="737,59,833,85"/>
 <area shape="poly" title=" " alt="" coords="101,1139,115,939,145,606,166,433,189,280,215,164,230,125,245,102,280,81,331,68,394,59,463,55,605,56,723,64,723,69,605,62,463,61,394,64,332,73,282,86,248,106,234,128,220,166,194,281,171,434,151,606,121,939,107,1139"/>
 <area shape="rect" href="../../d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="1627,237,1717,262"/>
@@ -3103,8 +3099,8 @@ Files</h2></td></tr>
 <div id="dynsection-24-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d54/group__compaAPI_ga2affaa74c16d9973f812ad0dbb95d05c_icgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_ga2affaa74c16d9973f812ad0dbb95d05c_icgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_ga2affaa74c16d9973f812ad0dbb95d05c_icgraph" id="ad9/d54/group__compaAPI_ga2affaa74c16d9973f812ad0dbb95d05c_icgraph">
-<area shape="rect" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="321,5,515,31"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,5,273,31"/>
+<area shape="rect" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="321,5,515,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="307,21,274,21,274,15,307,15"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
 <area shape="poly" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
@@ -3172,7 +3168,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02089">2089</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02079">2079</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-25" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-25-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-25-summary" class="dynsummary" style="display:block;">
@@ -3405,7 +3401,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02142">2142</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02132">2132</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-26" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-26-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-26-summary" class="dynsummary" style="display:block;">
@@ -3595,7 +3591,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01730">1730</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01720">1720</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-27" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-27-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-27-summary" class="dynsummary" style="display:block;">
@@ -3744,7 +3740,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02445">2445</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02435">2435</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-28" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-28-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-28-summary" class="dynsummary" style="display:block;">
@@ -3970,7 +3966,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02541">2541</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02531">2531</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-30" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-30-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-30-summary" class="dynsummary" style="display:block;">
@@ -4197,7 +4193,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02493">2493</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02483">2483</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-32" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-32-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-32-summary" class="dynsummary" style="display:block;">
@@ -4431,7 +4427,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02627">2627</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02617">2617</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-33" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-33-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-33-summary" class="dynsummary" style="display:block;">
@@ -4597,7 +4593,7 @@ Files</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sends out the discovery announcements for all devices and services for a device. </p>
+<p>Sends out the discovery announcements for all devices and services contained within one root device. </p>
 <p>Each announcement is made with the same expiration time.</p>
 <p>This is a synchronous call.</p>
 <dl class="section return"><dt>Returns</dt><dd>An integer representing one of the following: <ul>
@@ -4614,7 +4610,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01625">1625</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01615">1615</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-34" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-34-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-34-summary" class="dynsummary" style="display:block;">
@@ -4622,10 +4618,10 @@ Files</h2></td></tr>
 <div id="dynsection-34-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d54/group__compaAPI_ga006926ac8691521ecefa3234429dcd9c_cgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_ga006926ac8691521ecefa3234429dcd9c_cgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_ga006926ac8691521ecefa3234429dcd9c_cgraph" id="ad9/d54/group__compaAPI_ga006926ac8691521ecefa3234429dcd9c_cgraph">
-<area shape="rect" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="5,208,189,233"/>
+<area shape="rect" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="5,208,189,233"/>
 <area shape="rect" href="../../d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="1513,485,1603,511"/>
 <area shape="poly" title=" " alt="" coords="123,231,197,268,307,314,371,335,439,352,508,364,577,369,1027,369,1135,367,1220,366,1304,375,1408,403,1443,418,1477,437,1532,475,1529,479,1474,441,1441,423,1406,409,1303,381,1220,371,1135,372,1027,374,577,374,507,370,437,358,369,340,305,319,195,273,121,236"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="237,201,448,241"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="237,201,448,241"/>
 <area shape="poly" title=" " alt="" coords="189,218,224,218,224,223,189,223"/>
 <area shape="rect" href="../../d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00" title="Check Debug level." alt="" coords="1729,461,1869,487"/>
 <area shape="poly" title=" " alt="" coords="1603,491,1715,480,1716,485,1604,496"/>
@@ -4764,12 +4760,12 @@ Files</h2></td></tr>
 <div id="dynsection-35-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d54/group__compaAPI_ga006926ac8691521ecefa3234429dcd9c_icgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_ga006926ac8691521ecefa3234429dcd9c_icgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_ga006926ac8691521ecefa3234429dcd9c_icgraph" id="ad9/d54/group__compaAPI_ga006926ac8691521ecefa3234429dcd9c_icgraph">
-<area shape="rect" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="427,56,611,81"/>
+<area shape="rect" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="427,56,611,81"/>
 <area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#abb1ab3d0ba145286005284d447110fce" title="This function is a timer thread scheduled by UpnpSendAdvertisement to the send advetisement again." alt="" coords="264,5,379,31"/>
 <area shape="poly" title=" " alt="" coords="455,55,371,33,372,28,456,50"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="264,107,379,132"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="264,107,379,132"/>
 <area shape="poly" title=" " alt="" coords="456,87,372,109,371,104,455,82"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="5,21,216,61"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="5,21,216,61"/>
 <area shape="poly" title=" " alt="" coords="250,28,216,32,216,27,250,23"/>
 <area shape="poly" title=" " alt="" coords="230,46,427,60,426,65,230,51"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="58,107,163,132"/>
@@ -4823,7 +4819,7 @@ Files</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sends out the discovery announcements for all devices and services for a device. </p>
+<p>Sends out the discovery announcements for all devices and services contained within one root device. </p>
 <p>Each announcement is made with the same expiration time.</p>
 <p>This is a synchronous call.</p>
 <p>This function allow a device to specify the SSDP extensions defined by UPnP Low Power.</p>
@@ -4844,7 +4840,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01631">1631</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01621">1621</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-36" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-36-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-36-summary" class="dynsummary" style="display:block;">
@@ -4852,7 +4848,7 @@ Files</h2></td></tr>
 <div id="dynsection-36-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d54/group__compaAPI_gaf3e99499514b953c9e50972873f5bdec_cgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_gaf3e99499514b953c9e50972873f5bdec_cgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_gaf3e99499514b953c9e50972873f5bdec_cgraph" id="ad9/d54/group__compaAPI_gaf3e99499514b953c9e50972873f5bdec_cgraph">
-<area shape="rect" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="5,1227,216,1267"/>
+<area shape="rect" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="5,1227,216,1267"/>
 <area shape="rect" href="../../d0/dc4/group__SSDP-device__functions.html#gaa9d18b0afb046c657893b11e88eb857b" title="Sends SSDP advertisements, replies and shutdown messages." alt="" coords="273,857,419,883"/>
 <area shape="poly" title=" " alt="" coords="122,1226,327,893,332,896,127,1228"/>
 <area shape="rect" href="../../d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="1285,1032,1375,1057"/>
@@ -4959,7 +4955,7 @@ Files</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="635,817,953,815,954,820,635,823"/>
 <area shape="poly" title=" " alt="" coords="615,805,659,793,700,780,701,785,661,798,617,811"/>
 <area shape="poly" title=" " alt="" coords="354,806,426,690,438,663,445,639,454,618,474,596,482,590,485,595,478,600,459,621,450,641,443,665,430,693,358,809"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="476,1159,660,1184"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="476,1159,660,1184"/>
 <area shape="poly" title=" " alt="" coords="405,828,430,843,451,885,488,970,559,1145,554,1147,483,972,447,887,426,846,402,833"/>
 <area shape="poly" title=" " alt="" coords="476,1179,374,1189,265,1206,186,1226,184,1221,263,1201,373,1184,476,1174"/>
 <area shape="poly" title=" " alt="" coords="660,1178,768,1183,898,1182,1040,1168,1110,1155,1178,1137,1214,1122,1247,1103,1302,1064,1305,1068,1250,1108,1216,1127,1180,1142,1111,1160,1040,1173,899,1187,767,1189,660,1183"/>
@@ -4994,12 +4990,12 @@ Files</h2></td></tr>
 <div id="dynsection-37-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d54/group__compaAPI_gaf3e99499514b953c9e50972873f5bdec_icgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_gaf3e99499514b953c9e50972873f5bdec_icgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_gaf3e99499514b953c9e50972873f5bdec_icgraph" id="ad9/d54/group__compaAPI_gaf3e99499514b953c9e50972873f5bdec_icgraph">
-<area shape="rect" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="553,22,764,62"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="321,55,505,80"/>
+<area shape="rect" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="553,22,764,62"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="321,55,505,80"/>
 <area shape="poly" title=" " alt="" coords="540,57,506,60,505,55,539,52"/>
 <area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#abb1ab3d0ba145286005284d447110fce" title="This function is a timer thread scheduled by UpnpSendAdvertisement to the send advetisement again." alt="" coords="159,5,273,31"/>
 <area shape="poly" title=" " alt="" coords="348,54,267,33,268,28,350,49"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,55,273,80"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,55,273,80"/>
 <area shape="poly" title=" " alt="" coords="307,70,273,70,273,65,307,65"/>
 <area shape="poly" title=" " alt="" coords="287,19,553,34,553,39,287,24"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,55,111,80"/>
@@ -5044,7 +5040,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03895">3895</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03885">3885</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-38" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-38-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-38-summary" class="dynsummary" style="display:block;">
@@ -5097,7 +5093,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03925">3925</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03915">3915</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 
 </div>
 </div>
@@ -5142,7 +5138,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01776">1776</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01766">1766</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-39" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-39-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-39-summary" class="dynsummary" style="display:block;">
@@ -5206,7 +5202,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01809">1809</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01799">1799</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-40" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-40-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-40-summary" class="dynsummary" style="display:block;">
@@ -5295,7 +5291,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01912">1912</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01902">1902</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-41" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-41-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-41-summary" class="dynsummary" style="display:block;">
@@ -5515,7 +5511,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01846">1846</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01836">1836</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-42" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-42-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-42-summary" class="dynsummary" style="display:block;">
@@ -5678,7 +5674,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01365">1365</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01355">1355</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-43" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-43-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-43-summary" class="dynsummary" style="display:block;">
@@ -5833,9 +5829,9 @@ Files</h2></td></tr>
 <area shape="rect" title="Unregisters a control point application, unsubscribing all active subscriptions." alt="" coords="1032,134,1199,159"/>
 <area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="889,134,984,159"/>
 <area shape="poly" title=" " alt="" coords="1018,149,984,149,984,144,1018,144"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,83,273,108"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,83,273,108"/>
 <area shape="poly" title=" " alt="" coords="919,123,887,82,865,62,840,47,800,32,759,21,673,10,587,10,503,19,424,33,353,51,250,85,248,80,352,46,422,28,502,13,587,4,674,4,760,16,802,27,842,42,868,58,891,78,923,120"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the sdk." alt="" coords="707,58,819,83"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="707,58,819,83"/>
 <area shape="poly" title=" " alt="" coords="895,130,840,105,795,85,797,81,842,100,898,125"/>
 <area shape="rect" href="../../d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,134,407,159"/>
 <area shape="poly" title=" " alt="" coords="875,144,841,142,595,141,407,147,407,142,595,136,841,137,876,139"/>
@@ -5889,7 +5885,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01234">1234</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01228">1228</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-45" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-45-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-45-summary" class="dynsummary" style="display:block;">
@@ -6045,14 +6041,14 @@ Files</h2></td></tr>
 <div class="center"><img src="../../d9/d54/group__compaAPI_ga92dc985c553a7467b62bbfa68f928078_icgraph.png" border="0" usemap="#ad9/d54/group__compaAPI_ga92dc985c553a7467b62bbfa68f928078_icgraph" alt=""/></div>
 <map name="ad9/d54/group__compaAPI_ga92dc985c553a7467b62bbfa68f928078_icgraph" id="ad9/d54/group__compaAPI_ga92dc985c553a7467b62bbfa68f928078_icgraph">
 <area shape="rect" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="1032,81,1235,107"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the sdk." alt="" coords="707,5,819,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="707,5,819,31"/>
 <area shape="poly" title=" " alt="" coords="1057,81,819,32,820,27,1058,76"/>
 <area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="889,107,984,132"/>
 <area shape="poly" title=" " alt="" coords="1021,111,984,116,984,111,1021,106"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad3a78c1a3b2b7ebeca7dd92f1ed27de1" title="Function that receives commands from the user at the command prompt during the lifetime of the device..." alt="" coords="455,5,636,31"/>
 <area shape="poly" title=" " alt="" coords="693,21,636,21,636,15,693,15"/>
 <area shape="poly" title=" " alt="" coords="908,100,876,76,840,52,799,33,801,28,843,48,879,71,911,96"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,107,273,132"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,107,273,132"/>
 <area shape="poly" title=" " alt="" coords="875,114,841,111,680,106,520,108,274,118,274,113,520,103,680,101,841,106,876,109"/>
 <area shape="rect" href="../../d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,132,407,157"/>
 <area shape="poly" title=" " alt="" coords="876,125,407,145,407,140,876,119"/>
@@ -6111,7 +6107,7 @@ Files</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Unregisters a root device registered with <b>UpnpRegisterRootDevice</b>, <b>UpnpRegisterRootDevice2</b>, <b>UpnpRegisterRootDevice3</b> or <b>UpnpRegisterRootDevice4</b>. </p>
+<p>Unregisters a root device registered with <b>UpnpRegisterRootDevice</b>, <b>UpnpRegisterRootDevice2</b>, <b>UpnpRegisterRootDevice2</b> or <b>UpnpRegisterRootDevice4</b>. </p>
 <p>After this call, the <b>UpnpDevice_Handle</b> is no longer valid. For all advertisements that have not yet expired, the SDK sends a device unavailable message automatically.</p>
 <p>This is a synchronous call and generates no callbacks. Once this call returns, the SDK will no longer generate callbacks to the application.</p>
 <p>This function allow a device to specify the SSDP extensions defined by UPnP Low Power.</p>
@@ -6120,7 +6116,6 @@ Files</h2></td></tr>
 <li><code>UPNP_E_INVALID_HANDLE:</code> The handle is not a valid device handle. </li>
 </ul>
 </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000006">Todo:</a></b></dt><dd>Check if it is intended that this and the following is only compiled in if we have also Device SSDP enabled. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">Hnd</td><td>The handle of the root device instance to unregister.  </td></tr>
@@ -6131,7 +6126,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01240">1240</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01234">1234</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-47" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-47-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-47-summary" class="dynsummary" style="display:block;">
@@ -6288,14 +6283,14 @@ Files</h2></td></tr>
 <area shape="rect" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="1283,74,1485,114"/>
 <area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#abb1c47010971d19ecd2b46ee842871ec" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="1032,81,1235,107"/>
 <area shape="poly" title=" " alt="" coords="1269,97,1235,97,1235,91,1269,91"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the sdk." alt="" coords="707,5,819,31"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="707,5,819,31"/>
 <area shape="poly" title=" " alt="" coords="1057,81,819,32,820,27,1058,76"/>
 <area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="889,107,984,132"/>
 <area shape="poly" title=" " alt="" coords="1021,111,984,116,984,111,1021,106"/>
 <area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad3a78c1a3b2b7ebeca7dd92f1ed27de1" title="Function that receives commands from the user at the command prompt during the lifetime of the device..." alt="" coords="455,5,636,31"/>
 <area shape="poly" title=" " alt="" coords="693,21,636,21,636,15,693,15"/>
 <area shape="poly" title=" " alt="" coords="908,100,876,76,840,52,799,33,801,28,843,48,879,71,911,96"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,107,273,132"/>
+<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,107,273,132"/>
 <area shape="poly" title=" " alt="" coords="875,114,841,111,680,106,520,108,274,118,274,113,520,103,680,101,841,106,876,109"/>
 <area shape="rect" href="../../d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,132,407,157"/>
 <area shape="poly" title=" " alt="" coords="876,125,407,145,407,140,876,119"/>
@@ -6367,7 +6362,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01978">1978</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l01968">1968</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-49" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-49-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-49-summary" class="dynsummary" style="display:block;">
@@ -6580,7 +6575,7 @@ Files</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02024">2024</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l02014">2014</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-50" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-50-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-50-summary" class="dynsummary" style="display:block;">

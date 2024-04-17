@@ -18,9 +18,9 @@
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1381,378,1316,385,1315,380,1380,373"/>
 <area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="937,389,1031,415"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1135,398,1032,403,1031,397,1135,393"/>
-<area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,464,273,489"/>
+<area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,464,273,489"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="955,425,904,455,874,469,842,479,763,495,682,504,601,508,522,509,380,501,273,488,274,483,380,495,522,503,601,503,682,499,762,490,841,474,872,464,902,450,953,420"/>
-<area shape="rect" id="Node000009" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the sdk." alt="" coords="707,540,819,565"/>
+<area shape="rect" id="Node000009" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="707,540,819,565"/>
 <area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="962,427,910,474,843,523,802,542,800,537,840,518,906,470,959,423"/>
 <area shape="rect" id="Node000011" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,413,407,439"/>
 <area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="939,387,892,371,841,359,732,344,646,341,561,351,456,379,417,396,385,415,382,411,414,391,454,374,560,346,646,335,733,339,842,354,894,366,941,382"/>

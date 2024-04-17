@@ -1,6 +1,6 @@
 <map id="TvDeviceCommandLoop" name="TvDeviceCommandLoop">
 <area shape="rect" id="Node000001" title="Function that receives commands from the user at the command prompt during the lifetime of the device..." alt="" coords="5,1472,187,1497"/>
-<area shape="rect" id="Node000002" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the sdk." alt="" coords="235,1472,347,1497"/>
+<area shape="rect" id="Node000002" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="235,1472,347,1497"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,1482,221,1482,221,1487,187,1487"/>
 <area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="395,1321,489,1347"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="303,1470,416,1355,420,1359,307,1474"/>

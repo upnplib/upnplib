@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-10-18
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-17
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -92,14 +92,12 @@ int FreeListFree(FreeList* free_list, void* element) {
 
 int FreeListDestroy(FreeList* free_list) {
     FreeListNode* temp = NULL;
-    int i = 0;
 
     assert(free_list != NULL);
 
     if (!free_list)
         return EINVAL;
     while (free_list->head) {
-        i++;
         temp = free_list->head->next;
         umock::stdlib_h.free(free_list->head);
         free_list->head = temp;

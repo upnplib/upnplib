@@ -18,7 +18,7 @@
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="748,185,678,185,678,179,748,179"/>
 <area shape="rect" id="Node000007" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="304,169,389,195"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="507,185,389,185,389,179,507,179"/>
-<area shape="rect" id="Node000008" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="41,169,156,195"/>
+<area shape="rect" id="Node000008" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="41,169,156,195"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="290,185,156,185,156,179,290,179"/>
 <area shape="poly" id="edge9_Node000010_Node000003" title=" " alt="" coords="1995,159,1881,128,1882,122,1996,154"/>
 <area shape="rect" id="Node000012" href="$dd/d1d/httpparser_8cpp.html#a4eff37cf0315cb3beccc9e9d03e834c7" title="The parser function." alt="" coords="1259,372,1366,397"/>

@@ -1,5 +1,5 @@
 <map id="UpnpSendAdvertisementLowPower" name="UpnpSendAdvertisementLowPower">
-<area shape="rect" id="Node000001" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="5,1227,216,1267"/>
+<area shape="rect" id="Node000001" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="5,1227,216,1267"/>
 <area shape="rect" id="Node000002" href="$d0/dc4/group__SSDP-device__functions.html#gaa9d18b0afb046c657893b11e88eb857b" title="Sends SSDP advertisements, replies and shutdown messages." alt="" coords="273,857,419,883"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,1226,327,893,332,896,127,1228"/>
 <area shape="rect" id="Node000026" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="1285,1032,1375,1057"/>
@@ -106,7 +106,7 @@
 <area shape="poly" id="edge56_Node000039_Node000029" title=" " alt="" coords="635,817,953,815,954,820,635,823"/>
 <area shape="poly" id="edge57_Node000039_Node000032" title=" " alt="" coords="615,805,659,793,700,780,701,785,661,798,617,811"/>
 <area shape="poly" id="edge61_Node000040_Node000041" title=" " alt="" coords="354,806,426,690,438,663,445,639,454,618,474,596,482,590,485,595,478,600,459,621,450,641,443,665,430,693,358,809"/>
-<area shape="rect" id="Node000042" href="$d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services for a device." alt="" coords="476,1159,660,1184"/>
+<area shape="rect" id="Node000042" href="$d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="476,1159,660,1184"/>
 <area shape="poly" id="edge62_Node000040_Node000042" title=" " alt="" coords="405,828,430,843,451,885,488,970,559,1145,554,1147,483,972,447,887,426,846,402,833"/>
 <area shape="poly" id="edge64_Node000042_Node000001" title=" " alt="" coords="476,1179,374,1189,265,1206,186,1226,184,1221,263,1201,373,1184,476,1174"/>
 <area shape="poly" id="edge63_Node000042_Node000026" title=" " alt="" coords="660,1178,768,1183,898,1182,1040,1168,1110,1155,1178,1137,1214,1122,1247,1103,1302,1064,1305,1068,1250,1108,1216,1127,1180,1142,1111,1160,1040,1173,899,1187,767,1189,660,1183"/>

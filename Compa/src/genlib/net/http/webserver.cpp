@@ -481,12 +481,11 @@ int get_file_info(
     UpnpFileInfo_set_LastModified(info, s.st_mtime);
     rc = get_content_type(filename, info);
     aux_LastModified = UpnpFileInfo_get_LastModified(info);
-    UpnpPrintf(
-        UPNP_INFO, HTTP, __FILE__, __LINE__,
-        "file info: %s, length: %" PRId64 ", last_mod=%s readable=%d\n",
-        filename, (int64_t)UpnpFileInfo_get_FileLength(info),
-        web_server_asctime_r(http_gmtime_r(&aux_LastModified, &date), buffer),
-        UpnpFileInfo_get_IsReadable(info));
+    UPNPLIB_LOGINFO "MSG1108: webserver file info=\""
+        << filename << "\", length=" << UpnpFileInfo_get_FileLength(info)
+        << ", last_mod=\""
+        << web_server_asctime_r(http_gmtime_r(&aux_LastModified, &date), buffer)
+        << "\", readable=" << UpnpFileInfo_get_IsReadable(info) << ".\n";
 
 exit_function:
     if (fp) {

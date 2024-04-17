@@ -12,9 +12,9 @@
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="664,35,620,35,620,30,664,30"/>
 <area shape="rect" id="Node000006" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76" title="Run the miniserver." alt="" coords="159,5,359,60"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="393,35,359,35,359,30,393,30"/>
-<area shape="rect" id="Node000008" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="201,148,316,173"/>
+<area shape="rect" id="Node000008" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="201,148,316,173"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1195,180,1152,150,1125,136,1098,126,986,102,871,91,756,89,644,96,540,107,447,122,310,151,308,145,446,116,540,102,644,90,756,84,872,85,987,97,1099,121,1128,131,1154,145,1198,176"/>
-<area shape="rect" id="Node000010" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the sdk." alt="" coords="942,136,1054,161"/>
+<area shape="rect" id="Node000010" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="942,136,1054,161"/>
 <area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="1162,188,1053,164,1055,159,1163,183"/>
 <area shape="rect" id="Node000012" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="471,212,556,237"/>
 <area shape="poly" id="edge11_Node000007_Node000012" title=" " alt="" coords="1162,204,556,226,556,221,1162,199"/>

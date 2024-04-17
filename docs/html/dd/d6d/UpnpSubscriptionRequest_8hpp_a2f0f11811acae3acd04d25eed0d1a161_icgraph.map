@@ -12,7 +12,7 @@
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="850,92,811,92,811,87,850,87"/>
 <area shape="rect" id="Node000006" href="$d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b" title="The callback handler registered with the SDK while registering root device." alt="" coords="321,77,548,102"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="588,92,548,92,548,87,588,87"/>
-<area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP Sdk, registers the device, and sends out advertisements. Returns UPNPLIB_E_SUCCE..." alt="" coords="159,77,273,102"/>
+<area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,77,273,102"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="308,92,274,92,274,87,308,87"/>
 <area shape="rect" id="Node000008" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,77,111,102"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="145,92,111,92,111,87,145,87"/>

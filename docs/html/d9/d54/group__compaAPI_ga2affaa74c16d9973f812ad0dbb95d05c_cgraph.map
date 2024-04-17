@@ -1,5 +1,5 @@
 <map id="UpnpRegisterRootDevice3" name="UpnpRegisterRootDevice3">
-<area shape="rect" id="Node000001" title="Registers a device application for a specific address family with the UPnP library...." alt="" coords="5,1139,199,1165"/>
+<area shape="rect" id="Node000001" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="5,1139,199,1165"/>
 <area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#adede929017553d41a13e25f2aa4c9c98" title="Free handle." alt="" coords="737,59,833,85"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,1139,115,939,145,606,166,433,189,280,215,164,230,125,245,102,280,81,331,68,394,59,463,55,605,56,723,64,723,69,605,62,463,61,394,64,332,73,282,86,248,106,234,128,220,166,194,281,171,434,151,606,121,939,107,1139"/>
 <area shape="rect" id="Node000003" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="1627,237,1717,262"/>
