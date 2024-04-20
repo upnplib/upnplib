@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-09
+// Redistribution only with this Copyright remark. Last modified: 2024-04-21
 /*!
  * \file
  * \brief Definition of the documentation topics.
@@ -180,6 +180,9 @@
  * \brief Well defined Application Programming Interface of the **object
  * oriented** part  of the library.
  *
+ * \defgroup upnplibAPI-socket Socket module
+ * \ingroup upnplibAPI
+ * \brief The socket module contains all classes and free functions to manage network sockets.
  *
  * \defgroup upnplib * * object oriented UPnP library
  * \brief Detailed documentation of this part of the library. Not of interest

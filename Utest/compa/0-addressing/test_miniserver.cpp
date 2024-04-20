@@ -21,6 +21,7 @@
 
 #include <upnplib/global.hpp>
 #include <upnplib/upnptools.hpp> // for errStrEx
+#include <upnplib/addrinfo.hpp>
 #include <upnplib/socket.hpp>
 
 #include <pupnp/upnpdebug.hpp>

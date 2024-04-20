@@ -22,14 +22,14 @@
 <area shape="poly" id="edge66_Node000001_Node000045" title=" " alt="" coords="200,1302,248,1295,415,1279,569,1268,569,1273,416,1284,248,1301,201,1307"/>
 <area shape="rect" id="Node000041" href="$dd/da6/UpnpFileInfo_8cpp.html#a7524c9edad2266425f46231128592c2f" title=" " alt="" coords="585,1300,803,1325"/>
 <area shape="poly" id="edge68_Node000001_Node000041" title=" " alt="" coords="201,1317,571,1312,571,1317,201,1322"/>
-<area shape="rect" id="Node000050" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a5d87c4e85f958f11c3009471743d4a4e" title="Calculate HTTP response versions based on the request versions." alt="" coords="284,1333,479,1359"/>
-<area shape="poly" id="edge41_Node000001_Node000050" title=" " alt="" coords="200,1327,270,1333,270,1339,200,1332"/>
-<area shape="rect" id="Node000051" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#af5981cc2f7cc76c3e6b6700c5f27c472" title="Generate an HTTP message based on the format that is specified in the input parameters." alt="" coords="307,835,455,860"/>
-<area shape="poly" id="edge42_Node000001_Node000051" title=" " alt="" coords="102,1293,108,1211,116,1158,128,1099,146,1039,171,980,204,925,246,877,268,862,293,852,295,857,271,867,250,881,209,928,176,983,151,1041,133,1101,121,1159,113,1212,107,1293"/>
-<area shape="rect" id="Node000061" href="$da/dd9/membuffer_8cpp.html#ab76ad780ccbf0233d6e2b756b259fc53" title="Invokes function to appends data from a constant string to the buffer." alt="" coords="607,856,781,881"/>
-<area shape="poly" id="edge51_Node000001_Node000061" title=" " alt="" coords="102,1293,110,1218,132,1119,150,1066,175,1015,207,968,246,928,272,913,307,901,397,884,498,873,593,868,594,873,499,879,398,889,308,906,274,918,250,932,211,971,180,1017,155,1068,137,1120,115,1219,108,1293"/>
-<area shape="rect" id="Node000062" href="$da/dd9/membuffer_8cpp.html#a132a367b6d8baf0d9de4b6e1f0fffe14" title="Free&#39;s memory allocated for membuffer* m." alt="" coords="619,905,769,931"/>
-<area shape="poly" id="edge54_Node000001_Node000062" title=" " alt="" coords="104,1293,114,1226,138,1138,156,1091,180,1047,210,1006,246,972,273,957,310,946,404,929,509,920,605,916,605,922,509,925,405,935,311,951,275,962,250,976,214,1010,185,1050,161,1094,143,1139,119,1227,109,1293"/>
+<area shape="rect" id="Node000047" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a5d87c4e85f958f11c3009471743d4a4e" title="Calculate HTTP response versions based on the request versions." alt="" coords="284,1333,479,1359"/>
+<area shape="poly" id="edge41_Node000001_Node000047" title=" " alt="" coords="200,1327,270,1333,270,1339,200,1332"/>
+<area shape="rect" id="Node000048" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#af5981cc2f7cc76c3e6b6700c5f27c472" title="Generate an HTTP message based on the format that is specified in the input parameters." alt="" coords="307,835,455,860"/>
+<area shape="poly" id="edge42_Node000001_Node000048" title=" " alt="" coords="102,1293,108,1211,116,1158,128,1099,146,1039,171,980,204,925,246,877,268,862,293,852,295,857,271,867,250,881,209,928,176,983,151,1041,133,1101,121,1159,113,1212,107,1293"/>
+<area shape="rect" id="Node000058" href="$da/dd9/membuffer_8cpp.html#ab76ad780ccbf0233d6e2b756b259fc53" title="Invokes function to appends data from a constant string to the buffer." alt="" coords="607,856,781,881"/>
+<area shape="poly" id="edge51_Node000001_Node000058" title=" " alt="" coords="102,1293,110,1218,132,1119,150,1066,175,1015,207,968,246,928,272,913,307,901,397,884,498,873,593,868,594,873,499,879,398,889,308,906,274,918,250,932,211,971,180,1017,155,1068,137,1120,115,1219,108,1293"/>
+<area shape="rect" id="Node000059" href="$da/dd9/membuffer_8cpp.html#a132a367b6d8baf0d9de4b6e1f0fffe14" title="Free&#39;s memory allocated for membuffer* m." alt="" coords="619,905,769,931"/>
+<area shape="poly" id="edge54_Node000001_Node000059" title=" " alt="" coords="104,1293,114,1226,138,1138,156,1091,180,1047,210,1006,246,972,273,957,310,946,404,929,509,920,605,916,605,922,509,925,405,935,311,951,275,962,250,976,214,1010,185,1050,161,1094,143,1139,119,1227,109,1293"/>
 <area shape="rect" id="Node000069" href="$dd/d1d/httpparser_8cpp.html#a7b6226c9c3c9bfe3ea0808c5402c96f4" title="Finds header from a list, with the given &#39;name_id&#39;." alt="" coords="314,1383,449,1408"/>
 <area shape="poly" id="edge48_Node000001_Node000069" title=" " alt="" coords="176,1346,249,1369,301,1380,300,1386,247,1374,174,1351"/>
 <area shape="rect" id="Node000071" href="$d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html#a074baa084148665199a21a35990877f9" title="Returns if the XML object contains a valid XML document." alt="" coords="291,1432,471,1487"/>
@@ -112,11 +112,11 @@
 <area shape="poly" id="edge34_Node000036_Node000044" title=" " alt="" coords="420,1103,485,1146,524,1168,564,1186,592,1196,591,1201,562,1191,521,1173,482,1151,417,1108"/>
 <area shape="poly" id="edge35_Node000036_Node000045" title=" " alt="" coords="407,1104,473,1171,516,1206,564,1236,584,1244,582,1249,561,1240,513,1211,469,1175,403,1107"/>
 <area shape="poly" id="edge36_Node000036_Node000041" title=" " alt="" coords="400,1104,426,1146,463,1196,509,1246,536,1268,564,1286,576,1293,574,1297,561,1291,533,1272,506,1249,459,1199,421,1149,395,1107"/>
-<area shape="poly" id="edge46_Node000051_Node000021" title=" " alt="" coords="425,832,635,766,746,725,824,689,861,662,895,632,947,575,951,579,899,636,864,667,827,694,748,730,637,771,427,837"/>
-<area shape="poly" id="edge47_Node000051_Node000022" title=" " alt="" coords="455,842,626,825,726,808,825,783,883,760,934,734,936,739,886,765,826,789,727,813,627,830,456,847"/>
-<area shape="poly" id="edge43_Node000051_Node000051" title=" " alt="" coords="337,836,327,826,332,816,350,810,381,808,422,812,432,817,436,824,431,826,429,821,420,817,381,813,351,815,335,820,332,826,340,833"/>
-<area shape="poly" id="edge44_Node000051_Node000061" title=" " alt="" coords="456,850,594,859,593,865,455,855"/>
-<area shape="poly" id="edge45_Node000051_Node000062" title=" " alt="" coords="431,857,563,890,611,900,610,905,562,895,430,863"/>
+<area shape="poly" id="edge46_Node000048_Node000021" title=" " alt="" coords="425,832,635,766,746,725,824,689,861,662,895,632,947,575,951,579,899,636,864,667,827,694,748,730,637,771,427,837"/>
+<area shape="poly" id="edge47_Node000048_Node000022" title=" " alt="" coords="455,842,626,825,726,808,825,783,883,760,934,734,936,739,886,765,826,789,727,813,627,830,456,847"/>
+<area shape="poly" id="edge43_Node000048_Node000048" title=" " alt="" coords="337,836,327,826,332,816,350,810,381,808,422,812,432,817,436,824,431,826,429,821,420,817,381,813,351,815,335,820,332,826,340,833"/>
+<area shape="poly" id="edge44_Node000048_Node000058" title=" " alt="" coords="456,850,594,859,593,865,455,855"/>
+<area shape="poly" id="edge45_Node000048_Node000059" title=" " alt="" coords="431,857,563,890,611,900,610,905,562,895,430,863"/>
 <area shape="poly" id="edge56_Node000076_Node000011" title=" " alt="" coords="453,313,640,283,641,288,454,318"/>
 <area shape="poly" id="edge57_Node000076_Node000012" title=" " alt="" coords="453,319,484,312,513,300,528,288,536,275,546,262,561,249,602,234,642,227,643,232,603,239,564,254,549,265,541,278,532,292,516,304,486,317,454,325"/>
 </map>

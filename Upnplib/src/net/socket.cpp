@@ -1,11 +1,12 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-17
+// Redistribution only with this Copyright remark. Last modified: 2024-04-18
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
  */
 
 #include <upnplib/socket.hpp>
+#include <upnplib/addrinfo.hpp>
 #include <upnplib/synclog.hpp>
 #include <umock/sys_socket.hpp>
 #include <umock/stringh.hpp>
@@ -39,24 +40,6 @@ CWSAStartup::~CWSAStartup() {
 
 // Free helper functions
 // =====================
-
-// Free function to get socket type string (eg. "SOCK_STREAM") from value
-// ----------------------------------------------------------------------
-#if 0 // When used then tests are needed.
-std::string to_socktype_str(const int socktype) {
-    switch (socktype) {
-    case AF_INET6:
-        return "AF_INET6";
-    case AF_INET:
-        return "AF_INET";
-    case AF_UNSPEC:
-        return "AF_UNSPEC";
-    default:
-        return "AF_" + std::to_string(socktype);
-    }
-}
-#endif
-
 
 // Helper inline function to throw an exeption with additional information.
 // ------------------------------------------------------------------------

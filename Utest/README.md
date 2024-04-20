@@ -8,6 +8,7 @@ use its shared libraries without additional limitations because they point also
 to the installed project. Here is a compare of file sizes from 5 Unit Tests:
 
 ###linked with static gtest/gmock libraries
+
     -rwxr-xr-x 1 ingo ingo  957704 2021-08-21 16:24 build/test_template
     -rwxr-xr-x 1 ingo ingo 1138496 2021-08-21 16:24 build/test_threadutil
     -rwxr-xr-x 1 ingo ingo 1672400 2021-08-21 16:24 build/test_upnpapi
@@ -15,6 +16,7 @@ to the installed project. Here is a compare of file sizes from 5 Unit Tests:
     -rwxr-xr-x 1 ingo ingo 1002416 2021-08-21 16:23 build/test_upnpdebug_nomock
 
 ###linked with shared gtest/gmock libraries
+
     -rwxr-xr-x 1 ingo ingo  26936 2021-08-22 02:10 build/test_template
     -rwxr-xr-x 1 ingo ingo 205136 2021-08-22 02:10 build/test_threadutil
     -rwxr-xr-x 1 ingo ingo 504832 2021-08-22 02:10 build/test_upnpapi
@@ -44,7 +46,13 @@ To run all tests local from the projects root directory with GITHUB_ACTIONS I us
 There are some values that must be unique system wide. To find all used values
 here are some pattern using grep.
 
-All error messages have a unique nummber so the number does not only specify the associated message text but also its location in the source code. This also means that messages with the same text but a different location in the source have different numbers. Or with other words, each message have a unique index number, no matter what it is meaning. By default the message numbers start with 1000. Numbers below are reservered for special use. You can find already used message numbers with:
+All error messages have a unique nummber so the number does not only specify
+the associated message text but also its location in the source code. This also
+means that messages with the same text but a different location in the source
+have different numbers. Or with other words, each message have a unique index
+number, no matter what it is meaning. By default the message numbers start with
+1000. Numbers below are reservered for special use. You can find already used
+message numbers with:
 
     ~$ # Get used error message numbers
     ~$ grep -Pnor --color=never --exclude-dir={build,html,} --include='*.[chi]*' '...MSG\d\d\d\d...' | sort -t: -k3.4
@@ -75,5 +83,5 @@ getting a delay to re-use an ip address. I start with test port number 50000
 
 <br /><pre>
 // Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  &#60;Ingo&#64;Hoeft-online.de&#62;
-// Redistribution only with this Copyright remark. Last modified: 2024-04-16
+// Redistribution only with this Copyright remark. Last modified: 2024-04-21
 </pre>

@@ -385,9 +385,9 @@ int sock_write_unprotected(
     ssize_t byte_left{static_cast<ssize_t>(a_bufsize)};
     ssize_t bytes_sent{};
 
+    TRACE("Write data with syscall ::send().")
     UPNPLIB_SCOPED_NO_SIGPIPE
     while (byte_left != 0) {
-        TRACE("Write data with syscall ::send().")
         ssize_t num_written = umock::sys_socket_h.send(
             sockfd, a_writebuf + bytes_sent, static_cast<SIZEP_T>(byte_left),
             MSG_DONTROUTE);

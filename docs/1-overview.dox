@@ -1,0 +1,44 @@
+// Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-04-21
+
+/*!
+\page Overview
+\brief General information to the library, its structure and requirements
+\tableofcontents
+\section overview Overview
+___
+
+\subsection parts Parts 'Control Point' and 'UPnP Device'
+
+The library has two parts, handling Control Points or UPnP Devices. They are largely independent of each other. You can compile both parts separately so you have a library that only handle Control Points or UPnP Devices. That make sense for installations that are only a Control Point or only a UPnP Device and is of particular interest for embedded devices. Of course you can also have both parts for hybrid applications.
+
+\subsection overview_comp Main Components
+
+The <b>S</b>oftware <b>D</b>evelopment <b>K</b>it contains some main components that are associated with a specific step of the <a href="UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf">UPnP™ Device Architecture 2.0</a>.\n These components are:
+
+order | component  | part of
+:---: | ---------- | ------------------
+  1   | miniserver | Step 0: Addressing
+  2   | webserver  | Step 1: Discovery
+  3   | SSDP       | Step 1: Discovery
+  4   | SOAP       | Step 3: Control
+  5   | GENA       | Step 4: Eventing
+
+The order shows the dependency. Each component depends on its predecessor. For example if selecting SSDP on configuring to compile, this selects also automatically the webserver (only that) and the webserver selects miniserver. If you select GENA for compiling you have a full featured configuration with all main components. There is no need to select previous moduls. Also the abstraction will increase with the order. For example no component except miniserver will handle network sockets.
+
+\note This order is an important implicit dependency. It is always expected that it is respected. No internal checks are made about this. The compiler will remind you if you forget it.
+
+\subsection overview_reuseaddr Socket option "reuse address"
+
+There is an issue when a network connection unexpectedly dies. The port then has normaly to `TIME_WAIT` util it can use its old netaddress again. This may not be acceptable for certain applications. So there is a socket option `SO_REUSEADDR` to immediately reuse a given netaddress, but with the risk of network errors and security issues. For more details have a look at <!--REF:-->[Bind: Address Already in Use](https://hea-www.harvard.edu/~fine/Tech/addrinuse.html).
+
+I don't set the option to immediately reuse an address of a local connected socket after the connection closed unexpectedly. Instead I respect the `TIME_WAIT`. For an immediate reconnection I use a new address. A new [netaddress](\ref glossary_netaddr) is already given with a changed port so I just use the same ip address with another port. I always reset `SO_REUSEADDR` with constructing a socket object on all platforms.
+
+A TIME_WAIT is not necessary if the remote control point closes the connection. Upnplib uses the protocol to signal the remote control point to shutdown the connection if it support it.
+
+This is unclear on Microsoft Windows. **THERE WE HAVE AN IMPORTANT SECURITY ISSUE!**\n
+In the past Windows had a very bad network security on low level socket handling as documented at [Using SO_REUSEADDR and SO_EXCLUSIVEADDRUSE](https://learn.microsoft.com/en-us/windows/win32/winsock/using-so-reuseaddr-and-so-exclusiveaddruse). Microsoft has fixed this since Windows Server 2003. The network stack now behaves like it does by default on other platforms. Strangely, they call it advanced security, which is standard on other major operating systems. But this isn't done by default. The developer has to take this into account by using the socket option SO_EXCLUSIVEADDRUSE. I always set this option with constructing a socket object on a WIN32 platform.
+*/
+// clang-format on
+
+// vim: filetype=cpp

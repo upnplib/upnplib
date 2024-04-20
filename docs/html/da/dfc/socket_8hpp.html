@@ -77,14 +77,15 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle"><div class="title">socket.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Declaration of classes and functions that manage network sockets.  
+<p><b>Socket Module:</b> manage properties and methods but not connections of ONE network socket to handle IPv4 and IPv6 streams and datagrams.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;<a class="el" href="../../d6/dbf/addrinfo_8hpp_source.html">upnplib/addrinfo.hpp</a>&gt;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="../../d7/d1b/sockaddr_8hpp_source.html">upnplib/sockaddr.hpp</a>&gt;</code><br />
 </div><div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Include dependency graph for socket.hpp:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
@@ -92,17 +93,15 @@ $(function() {
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d7/d6e/socket_8hpp__incl.png" border="0" usemap="#aUpnplib_2include_2upnplib_2socket_8hpp" alt=""/></div>
 <map name="aUpnplib_2include_2upnplib_2socket_8hpp" id="aUpnplib_2include_2upnplib_2socket_8hpp">
-<area shape="rect" title="Declaration of classes and functions that manage network sockets." alt="" coords="163,5,337,45"/>
-<area shape="rect" href="../../d6/dbf/addrinfo_8hpp.html" title="Declaration of the Addrinfo class." alt="" coords="172,93,328,119"/>
+<area shape="rect" title="Socket Module: manage properties and methods but not connections of ONE network socket to handle IPv4..." alt="" coords="163,5,337,45"/>
+<area shape="rect" href="../../d7/d1b/sockaddr_8hpp.html" title="Declaration of the Sockaddr class and some free helper functions." alt="" coords="171,93,329,119"/>
 <area shape="poly" title=" " alt="" coords="253,46,253,79,247,79,247,46"/>
-<area shape="rect" href="../../d7/d1b/sockaddr_8hpp.html" title="Declaration of the Sockaddr class and some free helper functions." alt="" coords="171,167,329,192"/>
+<area shape="rect" href="../../d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,167,161,192"/>
+<area shape="poly" title=" " alt="" coords="224,121,124,164,122,159,222,116"/>
+<area shape="rect" href="../../d1/d42/port_8hpp.html" title="Specifications to be portable between different platforms." alt="" coords="186,167,314,192"/>
 <area shape="poly" title=" " alt="" coords="253,119,253,153,247,153,247,119"/>
-<area shape="rect" href="../../d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,240,161,265"/>
-<area shape="poly" title=" " alt="" coords="224,194,124,237,122,232,222,190"/>
-<area shape="rect" href="../../d1/d42/port_8hpp.html" title="Specifications to be portable between different platforms." alt="" coords="186,240,314,265"/>
-<area shape="poly" title=" " alt="" coords="253,192,253,226,247,226,247,192"/>
-<area shape="rect" href="../../d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="338,240,503,265"/>
-<area shape="poly" title=" " alt="" coords="278,190,381,232,379,237,276,194"/>
+<area shape="rect" href="../../d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="338,167,503,192"/>
+<area shape="poly" title=" " alt="" coords="278,116,381,159,379,164,276,121"/>
 </map>
 </div>
 </div><div class="textblock"><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -112,7 +111,7 @@ $(function() {
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d3/d0d/socket_8hpp__dep__incl.png" border="0" usemap="#aUpnplib_2include_2upnplib_2socket_8hppdep" alt=""/></div>
 <map name="aUpnplib_2include_2upnplib_2socket_8hppdep" id="aUpnplib_2include_2upnplib_2socket_8hppdep">
-<area shape="rect" title="Declaration of classes and functions that manage network sockets." alt="" coords="373,5,548,45"/>
+<area shape="rect" title="Socket Module: manage properties and methods but not connections of ONE network socket to handle IPv4..." alt="" coords="373,5,548,45"/>
 <area shape="rect" href="../../d5/db2/miniserver_8cpp.html" title="Implements the functionality and utility functions used by the Miniserver module." alt="" coords="5,93,215,133"/>
 <area shape="poly" title=" " alt="" coords="371,51,187,96,186,91,370,46"/>
 <area shape="rect" href="../../d5/d78/sock_8cpp.html" title="Manage network sockets and connections." alt="" coords="310,181,470,221"/>
@@ -135,14 +134,20 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d84/classupnplib_1_1CSocket__basic.html">upnplib::CSocket_basic</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manage basic issues of a network socket.  <a href="../../db/d84/classupnplib_1_1CSocket__basic.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d73/classupnplib_1_1CSocket.html">upnplib::CSocket</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manage all aspects of a network socket.  <a href="../../d8/d73/classupnplib_1_1CSocket.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">upnplib::ISocketErr</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Responsibility: portable catch <b>one</b> network socket error from the operating system, and provide information about it.  <a href="../../d9/dd8/classupnplib_1_1ISocketErr.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Portable catch <b>one</b> network socket error from the operating system, and provide information about it.  <a href="../../d9/dd8/classupnplib_1_1ISocketErr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d16/classupnplib_1_1CSocketErrService.html">upnplib::CSocketErrService</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">di-service for portable handling of network socket errors.  <a href="../../d1/d16/classupnplib_1_1CSocketErrService.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a> for portable handling of network socket errors.  <a href="../../d1/d16/classupnplib_1_1CSocketErrService.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dd2/classupnplib_1_1CSocketErr.html">upnplib::CSocketErr</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">di-client for portable handling of network socket errors with injected di-service.  <a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-client</a> for portable handling of network socket errors with injected <a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a>.  <a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -153,15 +158,32 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a5738af1c9e42dc87957952b00e67f080" id="r_a5738af1c9e42dc87957952b00e67f080"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d6d/namespaceupnplib.html#a5738af1c9e42dc87957952b00e67f080">upnplib::PSocketErr</a> = std::shared_ptr&lt; <a class="el" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a> &gt;</td></tr>
-<tr class="memdesc:a5738af1c9e42dc87957952b00e67f080"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smart pointer to di-service objects that handle network socket errors and used to inject the objects.  <br /></td></tr>
-<tr class="separator:a5738af1c9e42dc87957952b00e67f080"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5738af1c9e42dc87957952b00e67f080" id="r_ga5738af1c9e42dc87957952b00e67f080"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/ddf/group__upnplibAPI-socket.html#ga5738af1c9e42dc87957952b00e67f080">upnplib::PSocketErr</a> = std::shared_ptr&lt; <a class="el" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a> &gt;</td></tr>
+<tr class="memdesc:ga5738af1c9e42dc87957952b00e67f080"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smart pointer to <a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a> objects that handle network socket errors and used to inject the objects.  <br /></td></tr>
+<tr class="separator:ga5738af1c9e42dc87957952b00e67f080"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Declaration of classes and functions that manage network sockets. </p>
+<div class="textblock"><p><b>Socket Module:</b> manage properties and methods but not connections of ONE network socket to handle IPv4 and IPv6 streams and datagrams. </p>
 
 <p class="definition">Definition in file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="aa9494d0f2750c611339d1336ae8183d8" name="aa9494d0f2750c611339d1336ae8183d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9494d0f2750c611339d1336ae8183d8">&#9670;&#160;</a></span>WINSOCK_INIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define WINSOCK_INIT</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00300">300</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8

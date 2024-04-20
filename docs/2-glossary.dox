@@ -1,0 +1,155 @@
+// Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-04-20
+
+/*!
+\page Glossary
+\brief Basic specifications and definitions
+___
+
+\anchor glossary_af ***address family***
+
+The address family is one of
+- AF_UNSPEC for an unspecified or unknown address family
+- AF_INET6 for the IPv6 protocol stack, that is default used
+- AF_INET for the IPv4 protocol stack
+
+No other address family is supported.
+
+\anchor glossary_conn ***connection***
+
+A connection is an object that describes a network communication between UPnP™ nodes. It is a [unicast link](\ref glossary_ulink) or a [multicast link](\ref glossary_mlink). One of the connections properties is either socket type `SOCK_STREAM` or `SOCK_DGRAM`. Other types are not supported. A connection is a member of the [connections](\ref glossary_conns) container.
+
+\anchor glossary_conns ***connections***
+
+This is a C++ container object that contains [connection](\ref glossary_conn)s.
+
+\anchor glossary_cp ***control point***
+
+Retrieves [UPnP device](\ref glossary_upnpdev) and [service](\ref glossary_serv) descriptions, sends actions to services, polls for service state variables, and receives events from services.
+
+\anchor glossary_depinj ***dependency injection***
+
+Because Dependency Injection is used by GoogleMock for the Unit Tests I will note its four roles for unique nomenclature.
+- The **di-service** object to be injected.
+- The **di-client** object which depends on the service(s) being injected.
+- The **di-interface** through which the client object uses the service(s).
+- The **di-injector** which injects the service(s) into the client.
+
+The services that a client requires are the client's **dependencies**.
+
+\anchor glossary_logdev ***logical device***
+
+A C++ container object that embeds one or more [service](\ref glossary_serv)s and advertises its presence on network(s). It may also embed other logical devices.
+
+\anchor glossary_mlink ***multicast link***
+
+This is a [connection](\ref glossary_conn) that follows the network multicast specification. It has one local [socket](\ref glossary_sock) and a number of remote sockets that are interested to receive UPnP™ messages. It uses stateless UDP datagrams as given by its sockets of type `SOCK_DGRAM`.
+
+\anchor glossary_netaddr ***netaddress***
+
+This is a string of an IPv4 or IPv6 internet network address as described at [Wikipedia IP address](https://en.wikipedia.org/wiki/IP_address). A complete netaddress consists of ip address and [port](\ref glossary_port) number. A netaddress without port has the port number 0. Examples are
+\verbatim
+"[2001:db8:1234:5678:9abc:def0:1234:5678]:56789"
+"[2001:db8::1]:59877"
+"[2001:db8::2]"` same as "[2001:db8::2]:" and "[2001:db8::2]:0"
+"192.168.123.234:56789"
+"192.168.1.2" same as "192.168.1.2:" and "192.168.1.2:0"
+\endverbatim
+The IPv6 address part must always be surrounded by **[]** otherwise it cannot be unique with a port number. A netaddress and a [socket address](\ref glossary_saddr) are equivalent, contain the same information and can be converted into one another.
+
+\anchor glossary_port ***port***
+
+The port number is part of the [netaddress](\ref glossary_netaddr). It specifies a specific service provided by a host with the ip address as defined by the POSIX standard. Port 0 has a special meaning and represents the **unknown port**. A not given port number is coded with the zero port number.
+
+\anchor glossary_rtout ***response timeout***
+
+The default response timeout is 30 seconds.
+
+The <a href="https://upnplib.github.io/upnplib/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf">UPnP™ Device Architecture 2.0</a> specifies for several different responses a default timeout of 30 seconds. In summary, this SDK uses a timeout of 30 seconds by default for responses if nothing others noted.
+
+<!--
+These are the specifications from The UPnP™ Device Architecture 1.1 Document
+Revision Date: October 15, 2008:
+
+2.11 Retrieving a description using HTTP, page 64: After a control point
+sends a request, the device takes the second step and responds with a copy
+of its description. Including expected transmission time, a device MUST
+respond within 30 seconds. If it fails to respond within this time, the
+control point SHOULD re-send the request.
+
+3.2.2 Action Response, page 76: The service MUST complete invoking the
+action and respond within 30 seconds, including expected transmission time
+[..]. Actions that take longer than this SHOULD be defined to return early
+and send an event when complete. If the service fails to respond within this
+time, what the control point SHOULD do is application-specific.
+
+3.2.5 Action error response, page 79: If the service encounters an error
+while invoking the action sent by a control point, the service MUST send a
+response within 30 seconds, including expected transmission time.
+
+4.1.2 SUBSCRIBE with NT and CALLBACK, page 90: To accept a subscription
+request, a publisher MUST send a response in the following format within 30
+seconds, including expected transmission time.
+
+4.1.2 SUBSCRIBE with NT and CALLBACK, page 91 and 92: If a publisher cannot
+accept the subscription/renewal request, or if there is an error with the
+subscription in request/renewal request, the publisher MUST send a response
+with one of the following errors. The response MUST be sent within 30
+seconds, including expected transmission time.
+
+4.1.4 Canceling a subscription with UNSUBSCRIBE, page 94: o cancel a
+subscription, a publisher MUST send a response in the following format
+within 30 seconds, including expected transmission time. and If there is an
+error with the cancellation request, the publisher MUST send a response with
+one of the following errors. The response MUST be sent within 30 seconds,
+including expected transmission time.
+
+4.3.2 Unicast eventing: Event messages: NOTIFY, page 100: To acknowledge
+receipt of this event message, a subscriber MUST respond within 30 seconds,
+including expected transmission time. and If there is an error with the
+event message, the subscriber MUST respond with one of the following errors.
+The response MUST be sent within 30 seconds, including expected transmission
+time.
+-->
+
+\anchor glossary_rootdev ***root device***
+
+A [logical device](\ref glossary_logdev) that is not embedded in any other logical device.
+
+\anchor glossary_serv ***service***
+
+Logical functional unit. Smallest units of control. Exposes actions and models the state of a [UPnP device](\ref glossary_upnpdev) with state variables.
+
+\anchor glossary_sock ***socket***
+
+If nothing others said, with socket I mean a network socket. It is an endpoint for a network communication as given by the POSIX specification and in the library it is an object. One of its properties is either `AF_INET6` or `AF_INET` or `AF_UNSPEC` (if unbound). Other types are not supported. A free socket will bind to the ip address of a local network interface and must have the same socket type `SOCK_STREAM` or `SOCK_DGRAM` as given by the [connection](\ref glossary_conn) it will be get part of. A local socket can be managed with objects from SSockaddr, a remote socket can be managed with objects from CAddrinfo.
+
+\anchor glossary_saddr ***socket address, sockaddr***
+
+These are trivial address structures used by sockets and defined by the POSIX standard, depending on the address family. The structures are summarized in a union:
+\code
+union sockaddr_t {
+::sockaddr_storage ss;
+::sockaddr_in6 sin6;
+::sockaddr_in sin;
+::sockaddr sa;
+};
+\endcode
+
+The socket address is the union `sockaddr_t` and has always the <code>sizeof(::sockaddr_storage)</code> that is able to hold all other structures. For further information about ussage of this union have a look at <a href="https://stackoverflow.com/a/76548581/5014688">sockaddr structures as union</a>. A socket address and a [netaddress](\ref glossary_netaddr) are equivalent, contain the same information and can be converted into one another.
+
+\anchor glossary_socktype ***socket type, socktype***
+
+This is a main property of a [connection](\ref glossary_conn). It is either `SOCK_STREAM` for a stateful TCP connection or `SOCK_DGRAM` for a stateless UDP datagram connection. A socket as endpoint of a connection must have the same socket type property as the connection.
+
+\anchor glossary_ulink ***unicast link***
+
+This is a [connection](\ref glossary_conn) with exactly two [sockets](\ref glossary_sock), each on its endpoints, a local and a remote one. The local socket will bind to a local network interface socket address, the remote one will be accepted. It uses a stateful TCP stream as given by its sockets of type `SOCK_STREAM`.
+
+\anchor glossary_upnpdev ***UPnP device***
+
+Any physical network node that serves at least a [root device](\ref glossary_rootdev).
+ */
+// clang-format on
+
+// vim: filetype=cpp

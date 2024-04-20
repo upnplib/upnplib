@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>UPnPlib: UPnPlib</title>
+<title>UPnPlib: The UPnP Library</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,43 +70,76 @@ $(function() {
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">UPnPlib </div></div>
+  <div class="headertitle"><div class="title">The UPnP Library </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>General information to the library, its structure and specifications.</p>
-<h1><a class="anchor" id="parts"></a>
-Parts 'Control Point' and 'UPnP Device'</h1>
-<p>The library has two parts, handling Control Points or UPnP Devices. They are largely independent of each other. You can compile both parts separately so you have a library that only handle Control Points or UPnP Devices. That make sense for installations that are only a Control Point or only a UPnP Device and is of particular interest for embedded devices. Of course you can also have both parts for hybrid applications.</p>
-<h1><a class="anchor" id="main_modules"></a>
-Main Components</h1>
-<p>The <b>S</b>oftware <b>D</b>evelopment <b>K</b>it contains some main components that are associated with a specific step of the <a href="UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf">UPnP™ Device Architecture 2.0</a>.<br  />
-These components are:</p>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadCenter">order   </th><th class="markdownTableHeadNone">component   </th><th class="markdownTableHeadNone">part of    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyCenter">1   </td><td class="markdownTableBodyNone">miniserver   </td><td class="markdownTableBodyNone">Step 0: Addressing    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyCenter">2   </td><td class="markdownTableBodyNone">webserver   </td><td class="markdownTableBodyNone">(common)    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyCenter">3   </td><td class="markdownTableBodyNone">SSDP   </td><td class="markdownTableBodyNone">Step 1: Discovery    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyCenter">4   </td><td class="markdownTableBodyNone">SOAP   </td><td class="markdownTableBodyNone">Step 3: Control    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyCenter">5   </td><td class="markdownTableBodyNone">GENA   </td><td class="markdownTableBodyNone">Step 4: Eventing   </td></tr>
-</table>
-<p>The order shows the dependency. Each component depends on its predecessor. For example if selecting SSDP on configuring to compile, this selects also automatically the webserver (only that) and the webserver selects miniserver. If you select GENA for compiling you have a full featured configuration with all main components. There is no need to select previous moduls. Also the abstraction will increase with the order. For example no component except miniserver will handle network sockets.</p>
-<dl class="section note"><dt>Note</dt><dd>This order is an important implicit dependency. It is always expected that it is respected. No internal checks are made about this. The compiler will remind you if you forget it.</dd></dl>
-<h1><a class="anchor" id="dependency_injection"></a>
-Dependency Injection</h1>
-<p>Because Dependency Injection is used by GoogleMock for our Unit Tests I note its four roles for unique nomenclature.</p><ul>
-<li>The <b>di-service</b> object to be injected.</li>
-<li>The <b>di-client</b> object which depends on the service(s) being injected.</li>
-<li>The <b>di-interface</b> through which the client object uses the service(s).</li>
-<li>The <b>di-injector</b> which injects the service(s) into the client.</li>
+<div class="textblock"><p><a class="anchor" id="md_README"></a><b>Under developement!</b> Not usable at time. README.md only as draft, work in progress.</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+1. Overview</h1>
+<p>This is a fork of the <a href="https://github.com/pupnp/">Portable SDK for UPnP Devices (pupnp)</a> with the aim of a complete re-engeneering based on <a href="UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf">UPnP™ Device Architecture 2.0</a>. The following general goals are in progress or planned:</p><ul>
+<li>Drop in compatibillity with the old pupnp library</li>
+<li>Continue optimization for embedded devices</li>
+<li>Based on C++ instead of C</li>
+<li>Object oriented programming</li>
+<li>Unit-Test driven developement</li>
+<li>Using CMake for managing the code</li>
+<li>Focus on IPv6 support</li>
 </ul>
-<p>The services that a client requires are the client's <b>dependencies</b>. </p>
-</div></div><!-- PageDoc -->
+<h1><a class="anchor" id="autotoc_md2"></a>
+2. Technical Documentation</h1>
+<p>Here you can find the <a href="pages.html"><b>Technical Documentation</b></a>.<br  />
+If you want to be compatible with the classic pUPnP library here you find the <a class="el" href="d9/d54/group__compaAPI.html">Compatible API</a>.<br  />
+To use the new written object oriented part of the library here you find its <a class="el" href="d6/d14/group__upnplibAPI.html">UPnPlib API</a>.</p>
+<h1><a class="anchor" id="autotoc_md4"></a>
+3. Milestones</h1>
+<ul>
+<li>Ongoing: create extensive Unit Tests without modification of the old source code</li>
+<li>Ongoing: define C++ interfaces for the API</li>
+<li>Ongoing: change old C program to C++ objects but preserve drop in compatibility</li>
+<li>Ongoing: support IP6</li>
+<li>Ongoing: support OpenSSL</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md6"></a>
+4. Build Instructions</h1>
+<p>If nothing others said we are always staying at the root directory of the project (CMAKE_SOURCE_DIR), that is <b>upnplib_project/</b> if you don't changed the name.</p>
+<h2><a class="anchor" id="autotoc_md7"></a>
+4.1. Linux and MacOS build</h2>
+<p>First configure then build: </p><pre class="fragment">upnplib_project$ cmake -S . -B build -D UPNPLIB_WITH_SAMPLES=YES
+upnplib_project$ cmake --build build
+</pre><p> To clean up a build just delete the build folder: </p><pre class="fragment">upnplib_project$ rm -rf build
+</pre> <h2><a class="anchor" id="autotoc_md8"></a>
+4.2. Microsoft Windows build</h2>
+<p>The developement of this UPnP Library has started on Linux. So for historical reasons it uses POSIX threads (pthreads) as specified by <a href="http://get.posixcertified.ieee.org/certification_guide.html">The Open Group</a>. Unfortunately Microsoft Windows does not support it so I have to use a third party library. I use the well known and well supported <a href="https://sourceforge.net/p/pthreads4w">pthreads4w library</a>. It will be downloaded on Microsoft Windows and compiled with building the project and should do out of the box. To build the UPnPlib you need a Developer Command Prompt. How to install it is out of scope of this description. Microsoft has good documentation about it. For example this is the prompt I used: </p><pre class="fragment">**********************************************************************
+** Visual Studio 2019 Developer Command Prompt v16.9.5
+** Copyright (c) 2021 Microsoft Corporation
+**********************************************************************
+[vcvarsall.bat] Environment initialized for: 'x64'
+
+ingo@WIN10-DEVEL C:\Users\ingo&gt; pwsh
+PowerShell 7.4.1
+PS C:\Users\ingo&gt;
+</pre><p> First configure then build: </p><pre class="fragment">PS C: upnplib_project&gt; cmake -S . -B build -D UPNPLIB_WITH_SAMPLES=YES
+PS C: upnplib_project&gt; cmake --build build --config Release
+</pre><p> After build don't forget to copy the needed <code>./build/_deps/pthreads4w-build/pthread*.dll</code> library file to a location where your program can find it. Copying it to your programs directory or to the system directory <code>Windows\System32</code> will always do. Within the project developement directory tree (default root upnplib_project/) built programs and libraries find its dll files. There is nothing to do.</p>
+<p>To clean up a build just delete the build folder: </p><pre class="fragment">PS C: upnplib_project&gt; rm -rf build
+</pre><p> If you need more details about installation of POSIX threads on Microsoft Windows I have made an example at <a href="https://github.com/upnplib/pthreadsWinLin.git">github pthreadsWinLin</a>.</p>
+<h2><a class="anchor" id="autotoc_md9"></a>
+4.3 Googletest build</h2>
+<p>I strongly recommend to use shared gtest libraries for this project because there are situations where static and shared libraries are linked together. Using static linked Googletest libraries may fail then. If you know what you ar doing and you are able to manage possible linker errors you can try to use static built Googletest libraries. </p><pre class="fragment"># strongly recommended shared libs
+upnplib_project$ cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D UPNPLIB_WITH_GOOGLETEST=ON
+upnplib_project$ cmake --build build --config Debug
+
+# or alternative static libs
+upnplib_project$ cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D UPNPLIB_WITH_GOOGLETEST=ON -D GTESTS_WITH_SHARED_LIBS=OFF
+upnplib_project$ cmake --build build --config Debug
+</pre><p> Using build type "Debug" is not necessary for Googletest but it will enable additional debug messages from the library. if you don't need it you can just use "Release" instead of "Debug" above as option.</p>
+<h1><a class="anchor" id="autotoc_md11"></a>
+5. Limitations</h1>
+<p>No limits documented so far.</p>
+<pre><sup>
+Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, &lt;<a href="#" onclick="location.href='mai'+'lto:'+'Ing'+'o@'+'Hoe'+'ft'+'-on'+'li'+'ne.'+'de'; return false;">Ingo@<span class="obfuscator">.nosp@m.</span>Hoef<span class="obfuscator">.nosp@m.</span>t-onl<span class="obfuscator">.nosp@m.</span>ine.<span class="obfuscator">.nosp@m.</span>de</a>&gt;
+Redistribution only with this Copyright remark. Last modified: 2024-04-21
+</sup></pre> </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

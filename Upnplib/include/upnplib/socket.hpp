@@ -1,80 +1,73 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-09
+// Redistribution only with this Copyright remark. Last modified: 2024-04-22
 /*!
  * \file
- * \brief Declaration of classes and functions that manage network sockets.
+ * \brief **Socket Module:** manage properties and methods but not connections
+ * of ONE network socket to handle IPv4 and IPv6 streams and datagrams.
  */
 
-// Helpful link for ip address structures:
-// REF: [sockaddr structures as union]
-// (https://stackoverflow.com/a/76548581/5014688)
+/*!
+ * \addtogroup upnplibAPI-socket
+* Helpful link for ip address structures:
+<!--REF:-->[sockaddr&#20;structures&#20;as&#20;union](https://stackoverflow.com/a/76548581/5014688).
 
+* This module mainly consists of the CSocket class but also provides free
+* functions to manage a socket. The problem is that socket handling isn't very
+* good portable. There is different behavior on the supported platforms Unix,
+* MacOS and Microsoft Windows. The CSocket class atempts to be consistent
+* portable on all three platforms by using common behavior or by emulating
+* missing functions on a platform.
+*
+* Specification for CSocket
+* =========================
+* The class encapsulates and manages one raw socket file descriptor. The file
+* descriptor of a valid socket object cannot be changed but the object with
+* its immutable file descriptor can be moved and assigned to another socket
+* object. Copying a socket object isn't supported because having two objects
+* with the same file descriptor may be very error prone in particular with
+* multithreading. Effort has been taken to do not cache any socket information
+* outside the socket file descriptor. All socket informations are direct set
+* and get to/from the operating system with the file descriptor. The socket
+* file descriptor is always valid except on an empty socket object.
+*
+* empty socket object
+* -------------------
+* An empty socket object can be instantiated with the default constructor,
+* e.g. `CSocket sockObj;`. It is a valid object and should be destructed. When
+* moving a socket object, the left over source object is also empty. An empty
+* socket object has an `INVALID_SOCKET` defined and no valid content. It
+* throws an exception if using any of its Setter and Getter. Moving and
+* assigning it is possible.
+*
+* address family
+* --------------
+* Only address family `AF_INET6` and `AF_INET` is supported. Any other address
+* family throws an exception.
+*
+* socket type
+* -----------
+* Only `SOCK_STREAM` and `SOCK_DGRAM` is supported. Any other type throws an
+* exception.
+*
+* valid socket file descriptor
+* ----------------------------
+* I get this from the C standard library function:
+* `int ::%socket(address_family, socket_type, protocol)`.
+* Other arguments than address family and socket type do not instantiate a
+* valid socket object and throw an exception. For the protocol argument is
+* always the default one used that is internal hard coded with argument 0.
+*
+* options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE
+* --------------------------------------------
+* I don't set the option to immediately reuse an address and I always set the
+* option `SO_EXCLUSIVEADDRUSE` on Microsoft Windows. For more details of this
+* have a look at
+[Socket&#20;option&#20;"reuse&#20;address"](\ref&#20;overview_reuseaddr).
+*/
 
-// Socket module
-// =============
-// Responsibility: Manage ONE network IPv4 and IPv6 stream or datagram socket.
-//
-// This module mainly consists of the CSocket class but also provides free
-// functions to manage a socket. The problem is that socket handling isn't very
-// good portable. There is different behavior on the supported platforms Unix,
-// MacOS and Microsoft Windows. The CSocket class atempts to be consistent
-// portable on all three platforms by using common behavior or by emulating
-// missing functions on a platform.
-//
-// Specification for CSocket
-// -------------------------
-// The class encapsulates and manages one raw socket file descriptor. The file
-// descriptor of a valid socket object cannot be changed but the object with
-// its immutable file descriptor can be moved and assigned to another socket
-// object. Copying a socket object isn't supported because having two objects
-// with the same file descriptor may be very error prone in particular with
-// multithreading. Effort has been taken to do not cache any socket information
-// outside the socket file descriptor. All socket informations are direct set
-// and get to/from the operating system with the file descriptor. The socket
-// file descriptor is always valid except on an empty socket object.
-//
-// --- empty socket object ---
-// An empty socket object can be instantiated with the default constructor,
-// e.g. 'CSocket sockObj;'. It is a valid object and should be destructed. When
-// moving a socket object, the left over source object is also empty. An empty
-// socket object has an INVALID_SOCKET defined and no valid content. It throws
-// an exception if using any of its Setter and Getter. Moving and assigning it
-// is possible.
-//
-// --- address family ---
-// Only address family AF_INET6 and AF_INET is supported. Any other address
-// family throws an exception.
-//
-// --- socket type ---
-// Only SOCK_STREAM and SOCK_DGRAM is supported. Any other type throws an
-// exception.
-//
-// --- valid socket file descriptor ---
-// I get this from the C standard library function
-// int ::socket(address_family, socket_type, protocol).
-// Other arguments than address family and socket type do not instantiate a
-// valid socket object and throw an exception. For the protocol argument is
-// always the default one used that is internal hard coded with argument 0.
-//
-// --- option SO_REUSEADDR ---
-// I don't set the option to immediately reuse an address of a local listening
-// socket after it was closed. Instead I respect the 'TIME_WAIT'. This is a
-// security issue as described at
-// REF:_[Bind:_Address_Already_in_Use](https://hea-www.harvard.edu/~fine/Tech/addrinuse.html).
-// I reset SO_REUSEADDR with constructing a socket object on all platforms if
-// it should be set by default. This is unclear on WIN32. See next note.
-//
-// --- option SO_EXCLUSIVEADDRUSE on Microsoft Windows ---
-// THIS IS AN IMPORTANT SECURITY ISSUE! Lock at
-// REF:_[Using_SO_REUSEADDR_and_SO_EXCLUSIVEADDRUSE](https://learn.microsoft.com/en-us/windows/win32/winsock/using-so-reuseaddr-and-so-exclusiveaddruse#application-strategies)
-// I always set this option with constructing a socket object on a WIN32
-// platform.
-// --Ingo
-
-
-#include <upnplib/addrinfo.hpp>
+#include <upnplib/sockaddr.hpp>
 /// \cond
 #include <mutex>
 #include <memory>
@@ -97,30 +90,30 @@
 /// \endcond
 
 namespace upnplib {
-/// \cond
 
-// Free function to get socket type string (eg. "SOCK_STREAM") from value
-// ----------------------------------------------------------------------
-UPNPLIB_API std::string to_socktype_str(const int socktype);
-
-
-// CSocket_basic class
-// ===================
-// This class takes the resources and results as given by the platform. It does
-// not perform any emulations for unification. The behavior can be different on
-// different platforms.
+/*!
+ * \brief Manage basic issues of a network socket
+ * \ingroup upnplibAPI-socket
+ *
+ * This class takes the resources and results as given by the platform (Unix,
+ * MacOS, MS Windows). It does not perform any emulations for unification. The
+ * behavior can be different on different platforms.
+ */
 class UPNPLIB_API CSocket_basic : private SSockaddr {
   protected:
-    // Default constructor for an empty socket object
+    /*! \brief Default constructor for an empty socket object, but only provided
+     * for derived classes. */
     CSocket_basic();
 
   public:
-    // Constructor with given file desciptor
-    // This instantiate a socket object from a raw socket file descriptor. It
-    // throws an exception if the raw socket argument is invalid. It does not
-    // close the socket. This is in the response of the user who created the
-    // socket.
-    // Throws exception std::runtime_error.
+    /*! \brief Constructor with given file desciptor
+     *
+     * This instantiate a socket object from a raw socket file descriptor. It
+     * throws an exception if the raw socket argument is invalid. It does not
+     * take ownership of the socket file descriptor and will never close it.
+     * This is in the responsibility of the caller who created the socket.
+     *
+     * Throws exception std::runtime_error. */
     CSocket_basic(SOCKET);
 
     // Copy constructor
@@ -131,40 +124,71 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
     // Destructor
     virtual ~CSocket_basic();
 
-    // Get raw socket file descriptor, e.g.:
-    // CSocket_basic sockObj; SOCKET sfd = sockObj;
+    /*! \brief Get raw socket file descriptor.
+     * \code
+     * // usage:
+     * CSocket_basic sockObj(valid_socket_fd);
+     * SOCKET sfd = sockObj;
+     * \endcode */
     operator const SOCKET&() const;
 
     // Getter
     // ------
+    /*! \brief Get socket [address family](\ref glossary_af)
+     *
+     * Throws no exception. */
     sa_family_t get_family() const;
 
+    /*! \brief Get [netaddress](\ref glossary_netaddr) without port.
+     *
+     * Throws no exception. */
     const std::string& get_addr_str() override;
 
+    /*! \brief Get [netaddress](\ref glossary_netaddr) with port.
+     *
+     * Throws no exception. */
     const std::string& get_addrp_str() override;
 
+    /*! \brief Get the [port](\ref glossary_port) number.
+     *
+     * Throws no exception. */
     in_port_t get_port() const override;
 
-    // Get the socket connection type, e.g. SOCK_STREAM or SOCK_DGRAM, but also
-    // others. Throws exception std::runtime_error.
+    /*! \brief Get the [socket type](\ref glossary_socktype) `SOCK_STREAM` or
+     * `SOCK_DGRAM`.
+     *
+     * Throws exception std::runtime_error if query option fails. */
     int get_socktype() const;
 
+    /*! \brief Get the error that is given from the socket as option.
+     *
+     * This is not a system error from the operating system (with POSIX
+     * returned in errno). It is the more specific error that can be queried as
+     * option from the socket.
+     *
+     * Throws exception std::runtime_error if query option fails. */
     int get_sockerr() const;
 
+    /*! \brief Get status if reusing address is enabled.
+     *
+     * Throws exception std::runtime_error if query option fails. */
     bool is_reuse_addr() const;
 
-    // I assume that a valid socket file descriptor with unknown address (all
-    // zero) and port 0 is not bound.
-    // Throws exception std::runtime_error.
+    /*! \brief Get status if socket is bound to a local netaddress.
+     *
+     * I assume that a valid socket file descriptor with unknown address (all
+     * zero) and port 0 is not bound. */
     bool is_bound();
 
   protected:
-    // This is the raw socket file descriptor
+    /// \brief This is the raw socket file descriptor
     SOCKET m_sfd{INVALID_SOCKET};
 
     // Mutex to protect concurrent binding a socket.
+    /// \cond
     SUPPRESS_MSVC_WARN_4251_NEXT_LINE
     mutable std::mutex m_bound_mutex;
+    /// \endcond
 
   private:
     // Helper method
@@ -172,74 +196,84 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
 };
 
 
-// CSocket class
-// =============
+/*!
+ * \brief Manage all aspects of a network socket.
+ * \ingroup upnplibAPI-socket
+ */
 class UPNPLIB_API CSocket : public CSocket_basic {
   public:
-    // Default constructor for an empty socket object
+    /// \brief Default constructor for an empty socket object
     CSocket();
 
-    // Constructor for new socket file descriptor
+    /// \brief Constructor for a socket with file descriptor
     CSocket(sa_family_t a_family, int a_socktype);
 
-    // Move constructor
+    /// \brief Move constructor
     CSocket(CSocket&&);
 
-    // Assignment operator
-    // With parameter as value this is used as copy- and move-assignment
-    // operator. The correct usage (move) is evaluated by the compiler. Here
-    // only the move constructor can be used (there is no copy constructor) to
-    // move the parameter to the function body.
+    /*! \brief Assignment operator
+     *
+     * With parameter as value this is used as copy- and move-assignment
+     * operator. The correct usage (move) is evaluated by the compiler. Here
+     * only the move constructor can be used (there is no copy constructor) to
+     * move the parameter to the function body. */
     CSocket& operator=(CSocket);
 
-    // Destructor
+    /// \brief Destructor
     virtual ~CSocket();
 
     // Setter
     // ------
-    // Set socket to bind.
-    // I use a string argument for a_port to be able to use service names
-    // instead of only numbers.
+    /*! \brief Set socket to bind
+     *
+     * I use a string argument for a_port to be able to use service names
+     * instead of only numbers. */
     void bind(const std::string& a_node, const std::string& a_port,
               const int a_flags = 0);
 
-    // Set socket to listen.
-    // On Linux there is a socket option SO_ACCEPTCONN that can be get with
-    // system function ::getsockopt(). This option shows if the socket is set to
-    // passive listen. But it is not portable. MacOS does not support it. So
-    // this flag has to be managed here. Look for details at
-    // REF:_[How_to_get_option_on_MacOS_if_a_socket_is_set_to_listen?](https://stackoverflow.com/q/75942911/5014688)
+    /*! \brief Set socket to listen
+     *
+     * On Linux there is a socket option SO_ACCEPTCONN that can be get with
+     * system function ::%getsockopt(). This option shows if the socket is set
+     * to passive listen. But it is not portable. MacOS does not support it. So
+     * this flag has to be managed here. Look for details at
+     * <!--REF:-->[How_to_get_option_on_MacOS_if_a_socket_is_set_to_listen?](https://stackoverflow.com/q/75942911/5014688)
+     */
     void listen();
 
-    // Set IPV6_V6ONLY
-    // * This flag can only be set on sockets of address family AF_INET6.
-    // * It is always false on a socket with address family AF_INET.
-    // * It is always true on Unix platforms after binding a socket to an
-    //   address of family AF_INET6 if passive mode isn't set on the address
-    //   info (flag AI_PASSIVE).
-    // * With an address info set to passive listen on local addresses (flag
-    //   AI_PASSIVE) IPV6_V6ONLY can be modified before binding it to an
-    //   address. After bind it hasn't changed. This means the socket can
-    //   listen to IPv6 and IPv4 connections if IPV6_V6ONLY is set to false.
-    // * It can never be modified on a sochet that is bound to an address.
-    //
-    // If one of the conditions above doesn't match, the setter silently
-    // ignores the request and will not modify the socket. Other system errors
-    // may throw an exception (e.g. using an invalid socket etc.).
-    //
-    // To get the current setting use CSocket::is_v6only().
+    /*! \brief Set IPV6_V6ONLY
+     * - IPV6_V6ONLY = false means allowing IPv4 and IPv6.
+     * - This flag can only be set on sockets of address family AF_INET6.
+     * - It is always false on a socket with address family AF_INET.
+     * - It is always true on Unix platforms after binding a socket to an
+     *   address of family AF_INET6 if passive mode isn't set on the address
+     *   info (flag AI_PASSIVE).
+     * - With an address info set to passive listen on local addresses (flag
+     *   AI_PASSIVE) IPV6_V6ONLY can be modified before binding it to an
+     *   address. After bind it hasn't changed. This means the socket can
+     *   listen to IPv6 and IPv4 connections if IPV6_V6ONLY is set to false.
+     * - It can never be modified on a sochet that is bound to an address.
+     *
+     * If one of the conditions above doesn't match, the setter silently
+     * ignores the request and will not modify the socket. Other system errors
+     * may throw an exception (e.g. using an invalid socket etc.).
+     *
+     * To get the current setting use CSocket::is_v6only(). */
     void set_v6only(const bool);
 
 
     // Getter
     // ------
-    // IPV6_V6ONLY = false means allowing IPv4 and IPv6.
+    /*! \brief Get status of IPV6_V6ONLY flag
+     *
+     * IPV6_V6ONLY == false means allowing IPv4 and IPv6. */
     bool is_v6only() const;
 
+    /// \brief Get status if the socket is listen to incomming network packets.
     bool is_listen() const;
 
   private:
-    // Mutex to protect concurrent listen a socket.
+    /// \brief Mutex to protect concurrent listen a socket.
     SUPPRESS_MSVC_WARN_4251_NEXT_LINE
     mutable std::mutex m_listen_mutex;
     bool m_listen{false}; // Protected by a mutex.
@@ -265,15 +299,15 @@ class UPNPLIB_API CWSAStartup {
 #else
 #define WINSOCK_INIT
 #endif // _MSC_VER
-/// \endcond
 
 
 /*!
- * \brief Responsibility: portable catch **one** network socket error from the
- * operating system, and provide information about it.
+ * \brief Portable catch **one** network socket error from the operating
+ * system, and provide information about it.
+ * \ingroup upnplibAPI-socket
  *
- * This is a C++ interface for dependency injection of different di-services,
- * e.g. for production or Unit Tests (mocking).
+ * This is a C++ interface for dependency injection of different
+ * \glos{depinj,di-services}, e.g. for production or Unit Tests (mocking).
  */
 class UPNPLIB_API ISocketErr {
   public:
@@ -288,13 +322,16 @@ class UPNPLIB_API ISocketErr {
 };
 
 /*!
- * \brief Smart pointer to di-service objects that handle network socket errors
- * and used to inject the objects.
+ * \brief Smart pointer to \glos{depinj,di-service} objects that handle network
+ * socket errors and used to inject the objects.
+ * \ingroup upnplibAPI-socket
  */
 using PSocketErr = std::shared_ptr<ISocketErr>;
 
 /*!
- * \brief di-service for portable handling of network socket errors.
+ * \brief \glos{depinj,di-service} for portable handling of network socket
+ * errors.
+ * \ingroup upnplibAPI-socket
  *
  * There is a compatibility problem with Winsock2 on the Microsoft Windows
  * platform that does not support detailed error information given in the global
@@ -318,8 +355,9 @@ class UPNPLIB_API CSocketErrService : public ISocketErr {
 };
 
 /*!
- * \brief di-client for portable handling of network socket errors with
- * injected di-service.
+ * \brief \glos{depinj,di-client} for portable handling of network socket
+ * errors with injected \glos{depinj,di-service}.
+ * \ingroup upnplibAPI-socket
  *
  * Usage of the class:
  * \code
@@ -347,8 +385,9 @@ class CSocketErr {
   public:
     /*! \brief Constructor */
     UPNPLIB_API CSocketErr(
-        /*! [in] Inject the used di-service object that is by default the
-           productive one but may also be a mocked object for Unit Tests. */
+        /*! [in] Inject the used \glos{depinj,di-service} object that is by
+         * default the productive one but may also be a mocked object for Unit
+         * Tests. */
         PSocketErr a_socket_errObj = std::make_shared<CSocketErrService>());
 
     /* \brief Destructor */

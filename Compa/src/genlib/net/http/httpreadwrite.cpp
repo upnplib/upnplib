@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-21
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -743,9 +743,9 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
     int RetVal = UPNP_E_SUCCESS;
     size_t buf_length;
     size_t num_written;
-    [[maybe_unused]] int I_fmt_processed = 0;
 
 #ifdef COMPA_HAVE_WEBSERVER
+    int I_fmt_processed = 0;
     memset(Chunk_Header, 0, sizeof(Chunk_Header));
 #endif
     va_start(argp, fmt);
@@ -904,8 +904,8 @@ int http_SendMessage(SOCKINFO* info, int* TimeOut, const char* fmt, ...) {
                         upnplib::SSockaddr saObj;
                         memcpy(&saObj.ss, &info->foreign_sockaddr,
                                saObj.sizeof_ss());
-                        UPNPLIB_LOGINFO "MSG1105: \""
-                            << saObj.get_addrp_str() << "\" >>> (SENT) >>>\n"
+                        UPNPLIB_LOGINFO "MSG1105: >>> (SENT) >>> to \""
+                            << saObj.get_addrp_str() << "\"\n"
                             << std::string(buf, buf_length)
                             << "UPnPlib buf_length=" << buf_length
                             << ", num_written=" << num_written

@@ -1,5 +1,5 @@
 <map id="Upnplib/include/upnplib/socket.hpp" name="Upnplib/include/upnplib/socket.hpp">
-<area shape="rect" id="Node000001" title="Declaration of classes and functions that manage network sockets." alt="" coords="373,5,548,45"/>
+<area shape="rect" id="Node000001" title="Socket Module: manage properties and methods but not connections of ONE network socket to handle IPv4..." alt="" coords="373,5,548,45"/>
 <area shape="rect" id="Node000002" href="$d5/db2/miniserver_8cpp.html" title="Implements the functionality and utility functions used by the Miniserver module." alt="" coords="5,93,215,133"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="371,51,187,96,186,91,370,46"/>
 <area shape="rect" id="Node000003" href="$d5/d78/sock_8cpp.html" title="Manage network sockets and connections." alt="" coords="310,181,470,221"/>

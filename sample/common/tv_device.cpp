@@ -1269,6 +1269,7 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
         UpnpSetLogLevel(UPNP_INFO);
         UpnpInitLog();
     }
+
     SampleUtil_Initialize(pfunc);
     SampleUtil_Print("UpnpInit2 started, initializing UPnP Sdk with interface "
                      "= \"%s\", port = %u\n",

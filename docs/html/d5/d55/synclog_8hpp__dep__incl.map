@@ -1,0 +1,23 @@
+<map id="Upnplib/include/upnplib/synclog.hpp" name="Upnplib/include/upnplib/synclog.hpp">
+<area shape="rect" id="Node000001" title="Define macro for synced logging to the console for detailed info and debug." alt="" coords="925,5,1100,45"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="5,101,204,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="912,35,600,57,408,75,216,96,167,103,166,98,215,91,408,69,600,52,912,30"/>
+<area shape="rect" id="Node000003" href="$d5/db2/miniserver_8cpp.html" title="Implements the functionality and utility functions used by the Miniserver module." alt="" coords="228,93,437,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="912,40,699,64,450,96,438,98,437,92,450,91,699,59,912,35"/>
+<area shape="rect" id="Node000004" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html" title="This file defines the functionality making use of the http." alt="" coords="462,93,633,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="912,47,645,96,633,98,632,93,644,91,911,42"/>
+<area shape="rect" id="Node000005" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html" title="Internal Web Server and functions to carry out operations of it." alt="" coords="657,93,817,133"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="940,52,798,96,796,91,939,47"/>
+<area shape="rect" id="Node000006" href="$d5/d78/sock_8cpp.html" title="Manage network sockets and connections." alt="" coords="841,93,1001,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="984,57,943,95,939,91,981,53"/>
+<area shape="rect" id="Node000007" href="$df/d13/ssdp__common_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for common SSDP usage." alt="" coords="1025,93,1184,133"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1045,53,1086,91,1082,95,1041,57"/>
+<area shape="rect" id="Node000008" href="$d4/d99/ssdp__ctrlpt_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for Control Points with SSDP." alt="" coords="1208,93,1367,133"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1087,47,1228,91,1226,96,1085,52"/>
+<area shape="rect" id="Node000009" href="$dc/d59/addrinfo_8cpp.html" title="Definition of the Addrinfo class and free helper functions." alt="" coords="1391,101,1597,126"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1114,42,1430,98,1429,103,1113,47"/>
+<area shape="rect" id="Node000010" href="$d7/def/sockaddr_8cpp.html" title="Definition of the Sockaddr class and some free helper functions." alt="" coords="1621,101,1829,126"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="1114,34,1341,58,1609,91,1658,98,1657,103,1608,96,1340,63,1113,39"/>
+<area shape="rect" id="Node000011" href="$d8/d81/socket_8cpp.html" title="Definition of the &#39;class Socket&#39;." alt="" coords="1853,101,2047,126"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1114,29,1439,51,1639,69,1841,91,1889,98,1888,103,1840,96,1639,74,1438,56,1114,35"/>
+</map>

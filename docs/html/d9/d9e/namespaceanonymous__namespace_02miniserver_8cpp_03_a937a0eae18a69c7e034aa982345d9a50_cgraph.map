@@ -1,0 +1,5 @@
+<map id="anonymous_namespace{miniserver::cpp}::fdset_if_valid" name="anonymous_namespace{miniserver::cpp}::fdset_if_valid">
+<area shape="rect" id="Node000001" title="Add a socket file descriptor to an &#39;fd_set&#39; structure as needed for ::select()." alt="" coords="5,5,185,60"/>
+<area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html#a0bfd8447aeb0fce2841c5ea90234c37d" title="Get status if socket is bound to a local netaddress." alt="" coords="233,13,404,53"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,30,220,30,220,35,186,35"/>
+</map>

@@ -1,5 +1,5 @@
 <map id="upnplib::ISocketErr" name="upnplib::ISocketErr">
-<area shape="rect" id="Node000001" title="Responsibility: portable catch one network socket error from the operating system,..." alt="" coords="32,5,175,31"/>
+<area shape="rect" id="Node000001" title="Portable catch one network socket error from the operating system, and provide information about it." alt="" coords="32,5,175,31"/>
 <area shape="rect" id="Node000002" href="$d1/d16/classupnplib_1_1CSocketErrService.html" title="di&#45;service for portable handling of network socket errors." alt="" coords="5,79,201,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,44,106,79,101,79,101,44"/>
 </map>

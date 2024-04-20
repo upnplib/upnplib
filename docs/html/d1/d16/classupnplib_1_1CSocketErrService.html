@@ -77,11 +77,11 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="../../d9/dbd/classupnplib_1_1CSocketErrService-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">upnplib::CSocketErrService Class Reference</div></div>
+  <div class="headertitle"><div class="title">upnplib::CSocketErrService Class Reference<div class="ingroups"><a class="el" href="../../d6/d14/group__upnplibAPI.html">* UPNPLIB API</a> &raquo; <a class="el" href="../../db/ddf/group__upnplibAPI-socket.html">Socket module</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>di-service for portable handling of network socket errors.  
+<p><a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a> for portable handling of network socket errors.  
  <a href="../../d1/d16/classupnplib_1_1CSocketErrService.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>&gt;</code></p>
@@ -93,7 +93,7 @@ $(function() {
 <div class="center"><img src="../../d7/d43/classupnplib_1_1CSocketErrService__inherit__graph.png" border="0" usemap="#aupnplib_1_1CSocketErrService_inherit__map" alt="Inheritance graph"/></div>
 <map name="aupnplib_1_1CSocketErrService_inherit__map" id="aupnplib_1_1CSocketErrService_inherit__map">
 <area shape="rect" title="di&#45;service for portable handling of network socket errors." alt="" coords="5,79,201,104"/>
-<area shape="rect" href="../../d9/dd8/classupnplib_1_1ISocketErr.html" title="Responsibility: portable catch one network socket error from the operating system,..." alt="" coords="32,5,175,31"/>
+<area shape="rect" href="../../d9/dd8/classupnplib_1_1ISocketErr.html" title="Portable catch one network socket error from the operating system, and provide information about it." alt="" coords="32,5,175,31"/>
 <area shape="poly" title=" " alt="" coords="106,44,106,79,101,79,101,44"/>
 </map>
 <center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
@@ -105,7 +105,7 @@ $(function() {
 <div class="center"><img src="../../d4/d87/classupnplib_1_1CSocketErrService__coll__graph.png" border="0" usemap="#aupnplib_1_1CSocketErrService_coll__map" alt="Collaboration graph"/></div>
 <map name="aupnplib_1_1CSocketErrService_coll__map" id="aupnplib_1_1CSocketErrService_coll__map">
 <area shape="rect" title="di&#45;service for portable handling of network socket errors." alt="" coords="5,79,201,104"/>
-<area shape="rect" href="../../d9/dd8/classupnplib_1_1ISocketErr.html" title="Responsibility: portable catch one network socket error from the operating system,..." alt="" coords="32,5,175,31"/>
+<area shape="rect" href="../../d9/dd8/classupnplib_1_1ISocketErr.html" title="Portable catch one network socket error from the operating system, and provide information about it." alt="" coords="32,5,175,31"/>
 <area shape="poly" title=" " alt="" coords="106,44,106,79,101,79,101,44"/>
 </map>
 <center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
@@ -123,10 +123,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a96488ae3eb7c3d1808cfb0d7a5f4e9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>di-service for portable handling of network socket errors. </p>
+<div class="textblock"><p><a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a> for portable handling of network socket errors. </p>
 <p>There is a compatibility problem with Winsock2 on the Microsoft Windows platform that does not support detailed error information given in the global variable 'errno' that is used by POSIX. Instead it returns them with calling 'WSAGetLastError()'. This class encapsulates differences so there is no need to always check the platform to get the error information. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00305">305</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00342">342</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a0d6af73c9bf73e698ac22d83ad14d487" name="a0d6af73c9bf73e698ac22d83ad14d487"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0d6af73c9bf73e698ac22d83ad14d487">&#9670;&#160;</a></span>catch_error()</h2>

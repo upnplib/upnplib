@@ -1337,229 +1337,231 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l01269" name="l01269"></a><span class="lineno"> 1269</span>        <a class="code hl_function" href="../../d8/d32/upnpdebug_8hpp.html#a3751794182ea49ea472c0b8efb6e6806">UpnpSetLogLevel</a>(UPNP_INFO);</div>
 <div class="line"><a id="l01270" name="l01270"></a><span class="lineno"> 1270</span>        <a class="code hl_function" href="../../d8/d32/upnpdebug_8hpp.html#a0bd1a35974602e8428fd53ff4b424c46">UpnpInitLog</a>();</div>
 <div class="line"><a id="l01271" name="l01271"></a><span class="lineno"> 1271</span>    }</div>
-<div class="line"><a id="l01272" name="l01272"></a><span class="lineno"> 1272</span>    SampleUtil_Initialize(pfunc);</div>
-<div class="line"><a id="l01273" name="l01273"></a><span class="lineno"> 1273</span>    SampleUtil_Print(<span class="stringliteral">&quot;UpnpInit2 started, initializing UPnP Sdk with interface &quot;</span></div>
-<div class="line"><a id="l01274" name="l01274"></a><span class="lineno"> 1274</span>                     <span class="stringliteral">&quot;= \&quot;%s\&quot;, port = %u\n&quot;</span>,</div>
-<div class="line"><a id="l01275" name="l01275"></a><span class="lineno"> 1275</span>                     iface, port);</div>
-<div class="line"><a id="l01276" name="l01276"></a><span class="lineno"> 1276</span>    ret = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1">UpnpInit2</a>(iface, port);</div>
-<div class="line"><a id="l01277" name="l01277"></a><span class="lineno"> 1277</span>    <span class="keywordflow">if</span> (ret != <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>) {</div>
-<div class="line"><a id="l01278" name="l01278"></a><span class="lineno"> 1278</span>        SampleUtil_Print(<span class="stringliteral">&quot;Error with UpnpInit2 -- %s(%d)\n&quot;</span>,</div>
-<div class="line"><a id="l01279" name="l01279"></a><span class="lineno"> 1279</span>                         <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#gae9d8b5118d3a88f678be2b05125fd137">UpnpGetErrorMessage</a>(ret), ret);</div>
-<div class="line"><a id="l01280" name="l01280"></a><span class="lineno"> 1280</span>        <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gad231ed489e49a4c1aae7e3747ed00393">UpnpFinish</a>();</div>
-<div class="line"><a id="l01281" name="l01281"></a><span class="lineno"> 1281</span>        <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a id="l01282" name="l01282"></a><span class="lineno"> 1282</span>    }</div>
-<div class="line"><a id="l01283" name="l01283"></a><span class="lineno"> 1283</span> </div>
-<div class="line"><a id="l01284" name="l01284"></a><span class="lineno"> 1284</span>    <span class="keywordflow">switch</span> (ip_mode) {</div>
-<div class="line"><a id="l01285" name="l01285"></a><span class="lineno"> 1285</span>    <span class="keywordflow">case</span> IP_MODE_IPV4:</div>
-<div class="line"><a id="l01286" name="l01286"></a><span class="lineno"> 1286</span>        ip_address = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gaa06b3ab7a61f1e62099942f04cc98377">UpnpGetServerIpAddress</a>();</div>
-<div class="line"><a id="l01287" name="l01287"></a><span class="lineno"> 1287</span>        port = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gae5ebefbfe67a8aee25d2b61879655a95">UpnpGetServerPort</a>();</div>
-<div class="line"><a id="l01288" name="l01288"></a><span class="lineno"> 1288</span>        address_family = AF_INET;</div>
-<div class="line"><a id="l01289" name="l01289"></a><span class="lineno"> 1289</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l01290" name="l01290"></a><span class="lineno"> 1290</span>    <span class="keywordflow">case</span> IP_MODE_IPV6_LLA:</div>
-<div class="line"><a id="l01291" name="l01291"></a><span class="lineno"> 1291</span>        ip_address = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gae674e61728812bc23de134a2667af3ff">UpnpGetServerIp6Address</a>();</div>
-<div class="line"><a id="l01292" name="l01292"></a><span class="lineno"> 1292</span>        port = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gaf327c5830713e871ac74f0a2956069a2">UpnpGetServerPort6</a>();</div>
-<div class="line"><a id="l01293" name="l01293"></a><span class="lineno"> 1293</span>        address_family = AF_INET6;</div>
-<div class="line"><a id="l01294" name="l01294"></a><span class="lineno"> 1294</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l01295" name="l01295"></a><span class="lineno"> 1295</span>    <span class="keywordflow">case</span> IP_MODE_IPV6_ULA_GUA:</div>
-<div class="line"><a id="l01296" name="l01296"></a><span class="lineno"> 1296</span>        ip_address = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gacc7d1a693256aa89a1220ce332f04ccf">UpnpGetServerUlaGuaIp6Address</a>();</div>
-<div class="line"><a id="l01297" name="l01297"></a><span class="lineno"> 1297</span>        port = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gadef19902fe8f3517c2029bbc7fcacd83">UpnpGetServerUlaGuaPort6</a>();</div>
-<div class="line"><a id="l01298" name="l01298"></a><span class="lineno"> 1298</span>        address_family = AF_INET6;</div>
-<div class="line"><a id="l01299" name="l01299"></a><span class="lineno"> 1299</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l01300" name="l01300"></a><span class="lineno"> 1300</span>    <span class="keywordflow">default</span>:</div>
-<div class="line"><a id="l01301" name="l01301"></a><span class="lineno"> 1301</span>        SampleUtil_Print(<span class="stringliteral">&quot;Invalid ip_mode : %d\n&quot;</span>, ip_mode);</div>
-<div class="line"><a id="l01302" name="l01302"></a><span class="lineno"> 1302</span>        <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gad231ed489e49a4c1aae7e3747ed00393">UpnpFinish</a>();</div>
-<div class="line"><a id="l01303" name="l01303"></a><span class="lineno"> 1303</span>        <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#ae794b2114cb13823dd1d7d5726cc6b29">UPNP_E_INTERNAL_ERROR</a>;</div>
-<div class="line"><a id="l01304" name="l01304"></a><span class="lineno"> 1304</span>    }</div>
-<div class="line"><a id="l01305" name="l01305"></a><span class="lineno"> 1305</span> </div>
-<div class="line"><a id="l01306" name="l01306"></a><span class="lineno"> 1306</span>    SampleUtil_Print(<span class="stringliteral">&quot;UpnpInit2 finished, UPnP Initialized, &quot;</span></div>
-<div class="line"><a id="l01307" name="l01307"></a><span class="lineno"> 1307</span>                     <span class="stringliteral">&quot;ipaddress = %s, port = %u\n&quot;</span>,</div>
-<div class="line"><a id="l01308" name="l01308"></a><span class="lineno"> 1308</span>                     ip_address ? ip_address : <span class="stringliteral">&quot;{NULL}&quot;</span>, port);</div>
-<div class="line"><a id="l01309" name="l01309"></a><span class="lineno"> 1309</span> </div>
-<div class="line"><a id="l01310" name="l01310"></a><span class="lineno"> 1310</span>    <span class="keywordflow">if</span> (!desc_doc_name) {</div>
-<div class="line"><a id="l01311" name="l01311"></a><span class="lineno"> 1311</span>        <span class="keywordflow">if</span> (combo) {</div>
-<div class="line"><a id="l01312" name="l01312"></a><span class="lineno"> 1312</span>            desc_doc_name = <span class="stringliteral">&quot;tvcombodesc.xml&quot;</span>;</div>
-<div class="line"><a id="l01313" name="l01313"></a><span class="lineno"> 1313</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01314" name="l01314"></a><span class="lineno"> 1314</span>            desc_doc_name = <span class="stringliteral">&quot;tvdevicedesc.xml&quot;</span>;</div>
-<div class="line"><a id="l01315" name="l01315"></a><span class="lineno"> 1315</span>        }</div>
-<div class="line"><a id="l01316" name="l01316"></a><span class="lineno"> 1316</span>    }</div>
-<div class="line"><a id="l01317" name="l01317"></a><span class="lineno"> 1317</span>    <span class="keywordflow">if</span> (!web_dir_path) {</div>
-<div class="line"><a id="l01318" name="l01318"></a><span class="lineno"> 1318</span>        web_dir_path = DEFAULT_WEB_DIR;</div>
-<div class="line"><a id="l01319" name="l01319"></a><span class="lineno"> 1319</span>    }</div>
-<div class="line"><a id="l01320" name="l01320"></a><span class="lineno"> 1320</span>    <span class="keywordflow">switch</span> (address_family) {</div>
-<div class="line"><a id="l01321" name="l01321"></a><span class="lineno"> 1321</span>    <span class="keywordflow">case</span> AF_INET:</div>
-<div class="line"><a id="l01322" name="l01322"></a><span class="lineno"> 1322</span>        snprintf(desc_doc_url, DESC_URL_SIZE, <span class="stringliteral">&quot;http://%s:%d/%s&quot;</span>, ip_address,</div>
-<div class="line"><a id="l01323" name="l01323"></a><span class="lineno"> 1323</span>                 port, desc_doc_name);</div>
-<div class="line"><a id="l01324" name="l01324"></a><span class="lineno"> 1324</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l01325" name="l01325"></a><span class="lineno"> 1325</span>    <span class="keywordflow">case</span> AF_INET6:</div>
-<div class="line"><a id="l01326" name="l01326"></a><span class="lineno"> 1326</span>        snprintf(desc_doc_url, DESC_URL_SIZE, <span class="stringliteral">&quot;http://[%s]:%d/%s&quot;</span>, ip_address,</div>
-<div class="line"><a id="l01327" name="l01327"></a><span class="lineno"> 1327</span>                 port, desc_doc_name);</div>
-<div class="line"><a id="l01328" name="l01328"></a><span class="lineno"> 1328</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l01329" name="l01329"></a><span class="lineno"> 1329</span>    <span class="keywordflow">default</span>:</div>
-<div class="line"><a id="l01330" name="l01330"></a><span class="lineno"> 1330</span>        <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gad231ed489e49a4c1aae7e3747ed00393">UpnpFinish</a>();</div>
-<div class="line"><a id="l01331" name="l01331"></a><span class="lineno"> 1331</span>        <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#ae794b2114cb13823dd1d7d5726cc6b29">UPNP_E_INTERNAL_ERROR</a>;</div>
-<div class="line"><a id="l01332" name="l01332"></a><span class="lineno"> 1332</span>    }</div>
-<div class="line"><a id="l01333" name="l01333"></a><span class="lineno"> 1333</span> </div>
-<div class="line"><a id="l01334" name="l01334"></a><span class="lineno"> 1334</span>    SampleUtil_Print(<span class="stringliteral">&quot;Specifying the webserver root directory -- %s\n&quot;</span>,</div>
-<div class="line"><a id="l01335" name="l01335"></a><span class="lineno"> 1335</span>                     web_dir_path);</div>
-<div class="line"><a id="l01336" name="l01336"></a><span class="lineno"> 1336</span>    ret = <a class="code hl_function" href="../../da/d1d/upnp_8hpp.html#a5a6bb3d66f5808e0f1df5e69456c6627">UpnpSetWebServerRootDir</a>(web_dir_path);</div>
-<div class="line"><a id="l01337" name="l01337"></a><span class="lineno"> 1337</span>    <span class="keywordflow">if</span> (ret != <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>) {</div>
-<div class="line"><a id="l01338" name="l01338"></a><span class="lineno"> 1338</span>        SampleUtil_Print(</div>
-<div class="line"><a id="l01339" name="l01339"></a><span class="lineno"> 1339</span>            <span class="stringliteral">&quot;Error specifying webserver root directory -- %s: %s(%d)\n&quot;</span>,</div>
-<div class="line"><a id="l01340" name="l01340"></a><span class="lineno"> 1340</span>            web_dir_path, <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#gae9d8b5118d3a88f678be2b05125fd137">UpnpGetErrorMessage</a>(ret), ret);</div>
-<div class="line"><a id="l01341" name="l01341"></a><span class="lineno"> 1341</span> </div>
-<div class="line"><a id="l01342" name="l01342"></a><span class="lineno"> 1342</span>        <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gad231ed489e49a4c1aae7e3747ed00393">UpnpFinish</a>();</div>
-<div class="line"><a id="l01343" name="l01343"></a><span class="lineno"> 1343</span>        <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a id="l01344" name="l01344"></a><span class="lineno"> 1344</span>    }</div>
-<div class="line"><a id="l01345" name="l01345"></a><span class="lineno"> 1345</span> </div>
-<div class="line"><a id="l01346" name="l01346"></a><span class="lineno"> 1346</span>    SampleUtil_Print(<span class="stringliteral">&quot;Registering the RootDevice with desc_doc_url: %s\n&quot;</span>,</div>
-<div class="line"><a id="l01347" name="l01347"></a><span class="lineno"> 1347</span>                     desc_doc_url);</div>
-<div class="line"><a id="l01348" name="l01348"></a><span class="lineno"> 1348</span>    ret =</div>
-<div class="line"><a id="l01349" name="l01349"></a><span class="lineno"> 1349</span>        <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#ga2affaa74c16d9973f812ad0dbb95d05c">UpnpRegisterRootDevice3</a>(desc_doc_url, <a class="code hl_function" href="../../d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b">TvDeviceCallbackEventHandler</a>,</div>
-<div class="line"><a id="l01350" name="l01350"></a><span class="lineno"> 1350</span>                                &amp;<a class="code hl_variable" href="../../d9/d09/tv__device_8cpp.html#abcf4f9fc3b7faad1f729b04e08fbafeb">device_handle</a>, &amp;<a class="code hl_variable" href="../../d9/d09/tv__device_8cpp.html#abcf4f9fc3b7faad1f729b04e08fbafeb">device_handle</a>, address_family);</div>
-<div class="line"><a id="l01351" name="l01351"></a><span class="lineno"> 1351</span><span class="preprocessor">#if 0 </span><span class="comment">// DEBUG: Instead use next for existing unit test.</span></div>
-<div class="line"><a id="l01352" name="l01352"></a><span class="lineno"> 1352</span>    ret = <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>;</div>
-<div class="line"><a id="l01353" name="l01353"></a><span class="lineno"> 1353</span>    <span class="comment">//     UpnpRegisterRootDevice3(desc_doc_url, TvDeviceCallbackEventHandler,</span></div>
-<div class="line"><a id="l01354" name="l01354"></a><span class="lineno"> 1354</span>    <span class="comment">//                             &amp;device_handle, &amp;device_handle,</span></div>
-<div class="line"><a id="l01355" name="l01355"></a><span class="lineno"> 1355</span>    <span class="comment">//                             address_family);</span></div>
-<div class="line"><a id="l01356" name="l01356"></a><span class="lineno"> 1356</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l01357" name="l01357"></a><span class="lineno"> 1357</span>    <span class="keywordflow">if</span> (ret != <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>) {</div>
-<div class="line"><a id="l01358" name="l01358"></a><span class="lineno"> 1358</span>        SampleUtil_Print(<span class="stringliteral">&quot;Error registering the rootdevice: %s(%d)\n&quot;</span>,</div>
-<div class="line"><a id="l01359" name="l01359"></a><span class="lineno"> 1359</span>                         <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#gae9d8b5118d3a88f678be2b05125fd137">UpnpGetErrorMessage</a>(ret), ret);</div>
-<div class="line"><a id="l01360" name="l01360"></a><span class="lineno"> 1360</span>        <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gad231ed489e49a4c1aae7e3747ed00393">UpnpFinish</a>();</div>
-<div class="line"><a id="l01361" name="l01361"></a><span class="lineno"> 1361</span>        <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a id="l01362" name="l01362"></a><span class="lineno"> 1362</span>    }</div>
-<div class="line"><a id="l01363" name="l01363"></a><span class="lineno"> 1363</span> </div>
-<div class="line"><a id="l01364" name="l01364"></a><span class="lineno"> 1364</span>    <span class="comment">// return UPNP_E_SUCCESS; // DEBUG: Uncomment for existing unit test.</span></div>
-<div class="line"><a id="l01365" name="l01365"></a><span class="lineno"> 1365</span> </div>
-<div class="line"><a id="l01366" name="l01366"></a><span class="lineno"> 1366</span>    SampleUtil_Print(<span class="stringliteral">&quot;RootDevice Registered, initializing State Table ...\n&quot;</span>);</div>
-<div class="line"><a id="l01367" name="l01367"></a><span class="lineno"> 1367</span>    <a class="code hl_function" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1">TvDeviceStateTableInit</a>(desc_doc_url);</div>
-<div class="line"><a id="l01368" name="l01368"></a><span class="lineno"> 1368</span>    SampleUtil_Print(<span class="stringliteral">&quot;State Table Initialized.\n&quot;</span>);</div>
-<div class="line"><a id="l01369" name="l01369"></a><span class="lineno"> 1369</span> </div>
-<div class="line"><a id="l01370" name="l01370"></a><span class="lineno"> 1370</span>    ret = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#ga006926ac8691521ecefa3234429dcd9c">UpnpSendAdvertisement</a>(<a class="code hl_variable" href="../../d9/d09/tv__device_8cpp.html#abcf4f9fc3b7faad1f729b04e08fbafeb">device_handle</a>, <a class="code hl_variable" href="../../d9/d09/tv__device_8cpp.html#a08bd75d00c20529616ae2124dc7de463">default_advr_expire</a>);</div>
-<div class="line"><a id="l01371" name="l01371"></a><span class="lineno"> 1371</span>    <span class="keywordflow">if</span> (ret != <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>) {</div>
-<div class="line"><a id="l01372" name="l01372"></a><span class="lineno"> 1372</span>        SampleUtil_Print(<span class="stringliteral">&quot;Error sending advertisements: %s(%d)\n&quot;</span>,</div>
-<div class="line"><a id="l01373" name="l01373"></a><span class="lineno"> 1373</span>                         <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#gae9d8b5118d3a88f678be2b05125fd137">UpnpGetErrorMessage</a>(ret), ret);</div>
-<div class="line"><a id="l01374" name="l01374"></a><span class="lineno"> 1374</span>        <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gad231ed489e49a4c1aae7e3747ed00393">UpnpFinish</a>();</div>
-<div class="line"><a id="l01375" name="l01375"></a><span class="lineno"> 1375</span>        <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a id="l01376" name="l01376"></a><span class="lineno"> 1376</span>    }</div>
-<div class="line"><a id="l01377" name="l01377"></a><span class="lineno"> 1377</span>    SampleUtil_Print(<span class="stringliteral">&quot;Advertisements Sent.\n&quot;</span>);</div>
-<div class="line"><a id="l01378" name="l01378"></a><span class="lineno"> 1378</span> </div>
-<div class="line"><a id="l01379" name="l01379"></a><span class="lineno"> 1379</span>    <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>;</div>
-<div class="line"><a id="l01380" name="l01380"></a><span class="lineno"> 1380</span>}</div>
+<div class="line"><a id="l01272" name="l01272"></a><span class="lineno"> 1272</span> </div>
+<div class="line"><a id="l01273" name="l01273"></a><span class="lineno"> 1273</span>    SampleUtil_Initialize(pfunc);</div>
+<div class="line"><a id="l01274" name="l01274"></a><span class="lineno"> 1274</span>    SampleUtil_Print(<span class="stringliteral">&quot;UpnpInit2 started, initializing UPnP Sdk with interface &quot;</span></div>
+<div class="line"><a id="l01275" name="l01275"></a><span class="lineno"> 1275</span>                     <span class="stringliteral">&quot;= \&quot;%s\&quot;, port = %u\n&quot;</span>,</div>
+<div class="line"><a id="l01276" name="l01276"></a><span class="lineno"> 1276</span>                     iface, port);</div>
+<div class="line"><a id="l01277" name="l01277"></a><span class="lineno"> 1277</span>    ret = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1">UpnpInit2</a>(iface, port);</div>
+<div class="line"><a id="l01278" name="l01278"></a><span class="lineno"> 1278</span>    <span class="keywordflow">if</span> (ret != <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>) {</div>
+<div class="line"><a id="l01279" name="l01279"></a><span class="lineno"> 1279</span>        SampleUtil_Print(<span class="stringliteral">&quot;Error with UpnpInit2 -- %s(%d)\n&quot;</span>,</div>
+<div class="line"><a id="l01280" name="l01280"></a><span class="lineno"> 1280</span>                         <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#gae9d8b5118d3a88f678be2b05125fd137">UpnpGetErrorMessage</a>(ret), ret);</div>
+<div class="line"><a id="l01281" name="l01281"></a><span class="lineno"> 1281</span>        <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gad231ed489e49a4c1aae7e3747ed00393">UpnpFinish</a>();</div>
+<div class="line"><a id="l01282" name="l01282"></a><span class="lineno"> 1282</span>        <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a id="l01283" name="l01283"></a><span class="lineno"> 1283</span>    }</div>
+<div class="line"><a id="l01284" name="l01284"></a><span class="lineno"> 1284</span> </div>
+<div class="line"><a id="l01285" name="l01285"></a><span class="lineno"> 1285</span>    <span class="keywordflow">switch</span> (ip_mode) {</div>
+<div class="line"><a id="l01286" name="l01286"></a><span class="lineno"> 1286</span>    <span class="keywordflow">case</span> IP_MODE_IPV4:</div>
+<div class="line"><a id="l01287" name="l01287"></a><span class="lineno"> 1287</span>        ip_address = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gaa06b3ab7a61f1e62099942f04cc98377">UpnpGetServerIpAddress</a>();</div>
+<div class="line"><a id="l01288" name="l01288"></a><span class="lineno"> 1288</span>        port = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gae5ebefbfe67a8aee25d2b61879655a95">UpnpGetServerPort</a>();</div>
+<div class="line"><a id="l01289" name="l01289"></a><span class="lineno"> 1289</span>        address_family = AF_INET;</div>
+<div class="line"><a id="l01290" name="l01290"></a><span class="lineno"> 1290</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l01291" name="l01291"></a><span class="lineno"> 1291</span>    <span class="keywordflow">case</span> IP_MODE_IPV6_LLA:</div>
+<div class="line"><a id="l01292" name="l01292"></a><span class="lineno"> 1292</span>        ip_address = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gae674e61728812bc23de134a2667af3ff">UpnpGetServerIp6Address</a>();</div>
+<div class="line"><a id="l01293" name="l01293"></a><span class="lineno"> 1293</span>        port = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gaf327c5830713e871ac74f0a2956069a2">UpnpGetServerPort6</a>();</div>
+<div class="line"><a id="l01294" name="l01294"></a><span class="lineno"> 1294</span>        address_family = AF_INET6;</div>
+<div class="line"><a id="l01295" name="l01295"></a><span class="lineno"> 1295</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l01296" name="l01296"></a><span class="lineno"> 1296</span>    <span class="keywordflow">case</span> IP_MODE_IPV6_ULA_GUA:</div>
+<div class="line"><a id="l01297" name="l01297"></a><span class="lineno"> 1297</span>        ip_address = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gacc7d1a693256aa89a1220ce332f04ccf">UpnpGetServerUlaGuaIp6Address</a>();</div>
+<div class="line"><a id="l01298" name="l01298"></a><span class="lineno"> 1298</span>        port = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gadef19902fe8f3517c2029bbc7fcacd83">UpnpGetServerUlaGuaPort6</a>();</div>
+<div class="line"><a id="l01299" name="l01299"></a><span class="lineno"> 1299</span>        address_family = AF_INET6;</div>
+<div class="line"><a id="l01300" name="l01300"></a><span class="lineno"> 1300</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l01301" name="l01301"></a><span class="lineno"> 1301</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><a id="l01302" name="l01302"></a><span class="lineno"> 1302</span>        SampleUtil_Print(<span class="stringliteral">&quot;Invalid ip_mode : %d\n&quot;</span>, ip_mode);</div>
+<div class="line"><a id="l01303" name="l01303"></a><span class="lineno"> 1303</span>        <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gad231ed489e49a4c1aae7e3747ed00393">UpnpFinish</a>();</div>
+<div class="line"><a id="l01304" name="l01304"></a><span class="lineno"> 1304</span>        <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#ae794b2114cb13823dd1d7d5726cc6b29">UPNP_E_INTERNAL_ERROR</a>;</div>
+<div class="line"><a id="l01305" name="l01305"></a><span class="lineno"> 1305</span>    }</div>
+<div class="line"><a id="l01306" name="l01306"></a><span class="lineno"> 1306</span> </div>
+<div class="line"><a id="l01307" name="l01307"></a><span class="lineno"> 1307</span>    SampleUtil_Print(<span class="stringliteral">&quot;UpnpInit2 finished, UPnP Initialized, &quot;</span></div>
+<div class="line"><a id="l01308" name="l01308"></a><span class="lineno"> 1308</span>                     <span class="stringliteral">&quot;ipaddress = %s, port = %u\n&quot;</span>,</div>
+<div class="line"><a id="l01309" name="l01309"></a><span class="lineno"> 1309</span>                     ip_address ? ip_address : <span class="stringliteral">&quot;{NULL}&quot;</span>, port);</div>
+<div class="line"><a id="l01310" name="l01310"></a><span class="lineno"> 1310</span> </div>
+<div class="line"><a id="l01311" name="l01311"></a><span class="lineno"> 1311</span>    <span class="keywordflow">if</span> (!desc_doc_name) {</div>
+<div class="line"><a id="l01312" name="l01312"></a><span class="lineno"> 1312</span>        <span class="keywordflow">if</span> (combo) {</div>
+<div class="line"><a id="l01313" name="l01313"></a><span class="lineno"> 1313</span>            desc_doc_name = <span class="stringliteral">&quot;tvcombodesc.xml&quot;</span>;</div>
+<div class="line"><a id="l01314" name="l01314"></a><span class="lineno"> 1314</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l01315" name="l01315"></a><span class="lineno"> 1315</span>            desc_doc_name = <span class="stringliteral">&quot;tvdevicedesc.xml&quot;</span>;</div>
+<div class="line"><a id="l01316" name="l01316"></a><span class="lineno"> 1316</span>        }</div>
+<div class="line"><a id="l01317" name="l01317"></a><span class="lineno"> 1317</span>    }</div>
+<div class="line"><a id="l01318" name="l01318"></a><span class="lineno"> 1318</span>    <span class="keywordflow">if</span> (!web_dir_path) {</div>
+<div class="line"><a id="l01319" name="l01319"></a><span class="lineno"> 1319</span>        web_dir_path = DEFAULT_WEB_DIR;</div>
+<div class="line"><a id="l01320" name="l01320"></a><span class="lineno"> 1320</span>    }</div>
+<div class="line"><a id="l01321" name="l01321"></a><span class="lineno"> 1321</span>    <span class="keywordflow">switch</span> (address_family) {</div>
+<div class="line"><a id="l01322" name="l01322"></a><span class="lineno"> 1322</span>    <span class="keywordflow">case</span> AF_INET:</div>
+<div class="line"><a id="l01323" name="l01323"></a><span class="lineno"> 1323</span>        snprintf(desc_doc_url, DESC_URL_SIZE, <span class="stringliteral">&quot;http://%s:%d/%s&quot;</span>, ip_address,</div>
+<div class="line"><a id="l01324" name="l01324"></a><span class="lineno"> 1324</span>                 port, desc_doc_name);</div>
+<div class="line"><a id="l01325" name="l01325"></a><span class="lineno"> 1325</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l01326" name="l01326"></a><span class="lineno"> 1326</span>    <span class="keywordflow">case</span> AF_INET6:</div>
+<div class="line"><a id="l01327" name="l01327"></a><span class="lineno"> 1327</span>        snprintf(desc_doc_url, DESC_URL_SIZE, <span class="stringliteral">&quot;http://[%s]:%d/%s&quot;</span>, ip_address,</div>
+<div class="line"><a id="l01328" name="l01328"></a><span class="lineno"> 1328</span>                 port, desc_doc_name);</div>
+<div class="line"><a id="l01329" name="l01329"></a><span class="lineno"> 1329</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l01330" name="l01330"></a><span class="lineno"> 1330</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><a id="l01331" name="l01331"></a><span class="lineno"> 1331</span>        <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gad231ed489e49a4c1aae7e3747ed00393">UpnpFinish</a>();</div>
+<div class="line"><a id="l01332" name="l01332"></a><span class="lineno"> 1332</span>        <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#ae794b2114cb13823dd1d7d5726cc6b29">UPNP_E_INTERNAL_ERROR</a>;</div>
+<div class="line"><a id="l01333" name="l01333"></a><span class="lineno"> 1333</span>    }</div>
+<div class="line"><a id="l01334" name="l01334"></a><span class="lineno"> 1334</span> </div>
+<div class="line"><a id="l01335" name="l01335"></a><span class="lineno"> 1335</span>    SampleUtil_Print(<span class="stringliteral">&quot;Specifying the webserver root directory -- %s\n&quot;</span>,</div>
+<div class="line"><a id="l01336" name="l01336"></a><span class="lineno"> 1336</span>                     web_dir_path);</div>
+<div class="line"><a id="l01337" name="l01337"></a><span class="lineno"> 1337</span>    ret = <a class="code hl_function" href="../../da/d1d/upnp_8hpp.html#a5a6bb3d66f5808e0f1df5e69456c6627">UpnpSetWebServerRootDir</a>(web_dir_path);</div>
+<div class="line"><a id="l01338" name="l01338"></a><span class="lineno"> 1338</span>    <span class="keywordflow">if</span> (ret != <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>) {</div>
+<div class="line"><a id="l01339" name="l01339"></a><span class="lineno"> 1339</span>        SampleUtil_Print(</div>
+<div class="line"><a id="l01340" name="l01340"></a><span class="lineno"> 1340</span>            <span class="stringliteral">&quot;Error specifying webserver root directory -- %s: %s(%d)\n&quot;</span>,</div>
+<div class="line"><a id="l01341" name="l01341"></a><span class="lineno"> 1341</span>            web_dir_path, <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#gae9d8b5118d3a88f678be2b05125fd137">UpnpGetErrorMessage</a>(ret), ret);</div>
+<div class="line"><a id="l01342" name="l01342"></a><span class="lineno"> 1342</span> </div>
+<div class="line"><a id="l01343" name="l01343"></a><span class="lineno"> 1343</span>        <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gad231ed489e49a4c1aae7e3747ed00393">UpnpFinish</a>();</div>
+<div class="line"><a id="l01344" name="l01344"></a><span class="lineno"> 1344</span>        <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a id="l01345" name="l01345"></a><span class="lineno"> 1345</span>    }</div>
+<div class="line"><a id="l01346" name="l01346"></a><span class="lineno"> 1346</span> </div>
+<div class="line"><a id="l01347" name="l01347"></a><span class="lineno"> 1347</span>    SampleUtil_Print(<span class="stringliteral">&quot;Registering the RootDevice with desc_doc_url: %s\n&quot;</span>,</div>
+<div class="line"><a id="l01348" name="l01348"></a><span class="lineno"> 1348</span>                     desc_doc_url);</div>
+<div class="line"><a id="l01349" name="l01349"></a><span class="lineno"> 1349</span>    ret =</div>
+<div class="line"><a id="l01350" name="l01350"></a><span class="lineno"> 1350</span>        <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#ga2affaa74c16d9973f812ad0dbb95d05c">UpnpRegisterRootDevice3</a>(desc_doc_url, <a class="code hl_function" href="../../d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b">TvDeviceCallbackEventHandler</a>,</div>
+<div class="line"><a id="l01351" name="l01351"></a><span class="lineno"> 1351</span>                                &amp;<a class="code hl_variable" href="../../d9/d09/tv__device_8cpp.html#abcf4f9fc3b7faad1f729b04e08fbafeb">device_handle</a>, &amp;<a class="code hl_variable" href="../../d9/d09/tv__device_8cpp.html#abcf4f9fc3b7faad1f729b04e08fbafeb">device_handle</a>, address_family);</div>
+<div class="line"><a id="l01352" name="l01352"></a><span class="lineno"> 1352</span><span class="preprocessor">#if 0 </span><span class="comment">// DEBUG: Instead use next for existing unit test.</span></div>
+<div class="line"><a id="l01353" name="l01353"></a><span class="lineno"> 1353</span>    ret = <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>;</div>
+<div class="line"><a id="l01354" name="l01354"></a><span class="lineno"> 1354</span>    <span class="comment">//     UpnpRegisterRootDevice3(desc_doc_url, TvDeviceCallbackEventHandler,</span></div>
+<div class="line"><a id="l01355" name="l01355"></a><span class="lineno"> 1355</span>    <span class="comment">//                             &amp;device_handle, &amp;device_handle,</span></div>
+<div class="line"><a id="l01356" name="l01356"></a><span class="lineno"> 1356</span>    <span class="comment">//                             address_family);</span></div>
+<div class="line"><a id="l01357" name="l01357"></a><span class="lineno"> 1357</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l01358" name="l01358"></a><span class="lineno"> 1358</span>    <span class="keywordflow">if</span> (ret != <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>) {</div>
+<div class="line"><a id="l01359" name="l01359"></a><span class="lineno"> 1359</span>        SampleUtil_Print(<span class="stringliteral">&quot;Error registering the rootdevice: %s(%d)\n&quot;</span>,</div>
+<div class="line"><a id="l01360" name="l01360"></a><span class="lineno"> 1360</span>                         <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#gae9d8b5118d3a88f678be2b05125fd137">UpnpGetErrorMessage</a>(ret), ret);</div>
+<div class="line"><a id="l01361" name="l01361"></a><span class="lineno"> 1361</span>        <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gad231ed489e49a4c1aae7e3747ed00393">UpnpFinish</a>();</div>
+<div class="line"><a id="l01362" name="l01362"></a><span class="lineno"> 1362</span>        <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a id="l01363" name="l01363"></a><span class="lineno"> 1363</span>    }</div>
+<div class="line"><a id="l01364" name="l01364"></a><span class="lineno"> 1364</span> </div>
+<div class="line"><a id="l01365" name="l01365"></a><span class="lineno"> 1365</span>    <span class="comment">// return UPNP_E_SUCCESS; // DEBUG: Uncomment for existing unit test.</span></div>
+<div class="line"><a id="l01366" name="l01366"></a><span class="lineno"> 1366</span> </div>
+<div class="line"><a id="l01367" name="l01367"></a><span class="lineno"> 1367</span>    SampleUtil_Print(<span class="stringliteral">&quot;RootDevice Registered, initializing State Table ...\n&quot;</span>);</div>
+<div class="line"><a id="l01368" name="l01368"></a><span class="lineno"> 1368</span>    <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#ae794b2114cb13823dd1d7d5726cc6b29">UPNP_E_INTERNAL_ERROR</a>; <span class="comment">// DEBUG!</span></div>
+<div class="line"><a id="l01369" name="l01369"></a><span class="lineno"> 1369</span>    <a class="code hl_function" href="../../d9/d09/tv__device_8cpp.html#a98b53df920f1c3bbe4124e44b1cf8ce1">TvDeviceStateTableInit</a>(desc_doc_url);</div>
+<div class="line"><a id="l01370" name="l01370"></a><span class="lineno"> 1370</span>    SampleUtil_Print(<span class="stringliteral">&quot;State Table Initialized.\n&quot;</span>);</div>
+<div class="line"><a id="l01371" name="l01371"></a><span class="lineno"> 1371</span> </div>
+<div class="line"><a id="l01372" name="l01372"></a><span class="lineno"> 1372</span>    ret = <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#ga006926ac8691521ecefa3234429dcd9c">UpnpSendAdvertisement</a>(<a class="code hl_variable" href="../../d9/d09/tv__device_8cpp.html#abcf4f9fc3b7faad1f729b04e08fbafeb">device_handle</a>, <a class="code hl_variable" href="../../d9/d09/tv__device_8cpp.html#a08bd75d00c20529616ae2124dc7de463">default_advr_expire</a>);</div>
+<div class="line"><a id="l01373" name="l01373"></a><span class="lineno"> 1373</span>    <span class="keywordflow">if</span> (ret != <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>) {</div>
+<div class="line"><a id="l01374" name="l01374"></a><span class="lineno"> 1374</span>        SampleUtil_Print(<span class="stringliteral">&quot;Error sending advertisements: %s(%d)\n&quot;</span>,</div>
+<div class="line"><a id="l01375" name="l01375"></a><span class="lineno"> 1375</span>                         <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#gae9d8b5118d3a88f678be2b05125fd137">UpnpGetErrorMessage</a>(ret), ret);</div>
+<div class="line"><a id="l01376" name="l01376"></a><span class="lineno"> 1376</span>        <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gad231ed489e49a4c1aae7e3747ed00393">UpnpFinish</a>();</div>
+<div class="line"><a id="l01377" name="l01377"></a><span class="lineno"> 1377</span>        <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a id="l01378" name="l01378"></a><span class="lineno"> 1378</span>    }</div>
+<div class="line"><a id="l01379" name="l01379"></a><span class="lineno"> 1379</span>    SampleUtil_Print(<span class="stringliteral">&quot;Advertisements Sent.\n&quot;</span>);</div>
+<div class="line"><a id="l01380" name="l01380"></a><span class="lineno"> 1380</span> </div>
+<div class="line"><a id="l01381" name="l01381"></a><span class="lineno"> 1381</span>    <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>;</div>
+<div class="line"><a id="l01382" name="l01382"></a><span class="lineno"> 1382</span>}</div>
 </div>
-<div class="line"><a id="l01381" name="l01381"></a><span class="lineno"> 1381</span> </div>
-<div class="foldopen" id="foldopen01382" data-start="{" data-end="}">
-<div class="line"><a id="l01382" name="l01382"></a><span class="lineno"><a class="line" href="../../d0/daf/tv__device_8hpp.html#a8cc640a6fdb3a2c3c1cb6bc067e34ddb"> 1382</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b">TvDeviceStop</a>(<span class="keywordtype">void</span>) {</div>
-<div class="line"><a id="l01383" name="l01383"></a><span class="lineno"> 1383</span>    <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#ga92dc985c553a7467b62bbfa68f928078">UpnpUnRegisterRootDevice</a>(<a class="code hl_variable" href="../../d9/d09/tv__device_8cpp.html#abcf4f9fc3b7faad1f729b04e08fbafeb">device_handle</a>);</div>
-<div class="line"><a id="l01384" name="l01384"></a><span class="lineno"> 1384</span>    <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gad231ed489e49a4c1aae7e3747ed00393">UpnpFinish</a>(); <span class="comment">// DEBUG: Comment for existing unit test.</span></div>
-<div class="line"><a id="l01385" name="l01385"></a><span class="lineno"> 1385</span>    SampleUtil_Finish();</div>
-<div class="line"><a id="l01386" name="l01386"></a><span class="lineno"> 1386</span>    pthread_mutex_destroy(&amp;<a class="code hl_variable" href="../../d9/d09/tv__device_8cpp.html#a63cb6f6a5f2f35252581b6384adcb27f">TVDevMutex</a>);</div>
-<div class="line"><a id="l01387" name="l01387"></a><span class="lineno"> 1387</span> </div>
-<div class="line"><a id="l01388" name="l01388"></a><span class="lineno"> 1388</span>    <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>;</div>
-<div class="line"><a id="l01389" name="l01389"></a><span class="lineno"> 1389</span>}</div>
+<div class="line"><a id="l01383" name="l01383"></a><span class="lineno"> 1383</span> </div>
+<div class="foldopen" id="foldopen01384" data-start="{" data-end="}">
+<div class="line"><a id="l01384" name="l01384"></a><span class="lineno"><a class="line" href="../../d0/daf/tv__device_8hpp.html#a8cc640a6fdb3a2c3c1cb6bc067e34ddb"> 1384</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b">TvDeviceStop</a>(<span class="keywordtype">void</span>) {</div>
+<div class="line"><a id="l01385" name="l01385"></a><span class="lineno"> 1385</span>    <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#ga92dc985c553a7467b62bbfa68f928078">UpnpUnRegisterRootDevice</a>(<a class="code hl_variable" href="../../d9/d09/tv__device_8cpp.html#abcf4f9fc3b7faad1f729b04e08fbafeb">device_handle</a>);</div>
+<div class="line"><a id="l01386" name="l01386"></a><span class="lineno"> 1386</span>    <a class="code hl_function" href="../../d9/d54/group__compaAPI.html#gad231ed489e49a4c1aae7e3747ed00393">UpnpFinish</a>(); <span class="comment">// DEBUG: Comment for existing unit test.</span></div>
+<div class="line"><a id="l01387" name="l01387"></a><span class="lineno"> 1387</span>    SampleUtil_Finish();</div>
+<div class="line"><a id="l01388" name="l01388"></a><span class="lineno"> 1388</span>    pthread_mutex_destroy(&amp;<a class="code hl_variable" href="../../d9/d09/tv__device_8cpp.html#a63cb6f6a5f2f35252581b6384adcb27f">TVDevMutex</a>);</div>
+<div class="line"><a id="l01389" name="l01389"></a><span class="lineno"> 1389</span> </div>
+<div class="line"><a id="l01390" name="l01390"></a><span class="lineno"> 1390</span>    <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>;</div>
+<div class="line"><a id="l01391" name="l01391"></a><span class="lineno"> 1391</span>}</div>
 </div>
-<div class="line"><a id="l01390" name="l01390"></a><span class="lineno"> 1390</span> </div>
-<div class="foldopen" id="foldopen01391" data-start="{" data-end="}">
-<div class="line"><a id="l01391" name="l01391"></a><span class="lineno"><a class="line" href="../../d0/daf/tv__device_8hpp.html#ad3a78c1a3b2b7ebeca7dd92f1ed27de1"> 1391</a></span><span class="keywordtype">void</span>* <a class="code hl_function" href="../../d9/d09/tv__device_8cpp.html#ad3a78c1a3b2b7ebeca7dd92f1ed27de1">TvDeviceCommandLoop</a>(<span class="keywordtype">void</span>* args) {</div>
-<div class="line"><a id="l01392" name="l01392"></a><span class="lineno"> 1392</span>    <span class="keywordtype">int</span> stoploop = 0;</div>
-<div class="line"><a id="l01393" name="l01393"></a><span class="lineno"> 1393</span>    <span class="keywordtype">char</span> cmdline[100];</div>
-<div class="line"><a id="l01394" name="l01394"></a><span class="lineno"> 1394</span>    <span class="keywordtype">char</span> cmd[100];</div>
-<div class="line"><a id="l01395" name="l01395"></a><span class="lineno"> 1395</span>    <span class="keywordtype">char</span>* s;</div>
-<div class="line"><a id="l01396" name="l01396"></a><span class="lineno"> 1396</span>    (void)args;</div>
-<div class="line"><a id="l01397" name="l01397"></a><span class="lineno"> 1397</span> </div>
-<div class="line"><a id="l01398" name="l01398"></a><span class="lineno"> 1398</span>    <span class="keywordflow">while</span> (!stoploop) {</div>
-<div class="line"><a id="l01399" name="l01399"></a><span class="lineno"> 1399</span>        snprintf(cmdline, <span class="keyword">sizeof</span>(cmdline), <span class="stringliteral">&quot; &quot;</span>);</div>
-<div class="line"><a id="l01400" name="l01400"></a><span class="lineno"> 1400</span>        snprintf(cmd, <span class="keyword">sizeof</span>(cmd), <span class="stringliteral">&quot; &quot;</span>);</div>
-<div class="line"><a id="l01401" name="l01401"></a><span class="lineno"> 1401</span>        SampleUtil_Print(<span class="stringliteral">&quot;\n&gt;&gt; &quot;</span>);</div>
-<div class="line"><a id="l01402" name="l01402"></a><span class="lineno"> 1402</span>        <span class="comment">/* Get a command line */</span></div>
-<div class="line"><a id="l01403" name="l01403"></a><span class="lineno"> 1403</span>        s = fgets(cmdline, 100, stdin);</div>
-<div class="line"><a id="l01404" name="l01404"></a><span class="lineno"> 1404</span>        <span class="keywordflow">if</span> (!s)</div>
-<div class="line"><a id="l01405" name="l01405"></a><span class="lineno"> 1405</span>            <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l01406" name="l01406"></a><span class="lineno"> 1406</span><span class="preprocessor">#ifdef _WIN32</span></div>
-<div class="line"><a id="l01407" name="l01407"></a><span class="lineno"> 1407</span>        sscanf_s(cmdline, <span class="stringliteral">&quot;%s&quot;</span>, cmd, (<span class="keywordtype">unsigned</span>)_countof(cmd));</div>
-<div class="line"><a id="l01408" name="l01408"></a><span class="lineno"> 1408</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l01409" name="l01409"></a><span class="lineno"> 1409</span>        sscanf(cmdline, <span class="stringliteral">&quot;%s&quot;</span>, cmd);</div>
-<div class="line"><a id="l01410" name="l01410"></a><span class="lineno"> 1410</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l01411" name="l01411"></a><span class="lineno"> 1411</span>        <span class="keywordflow">if</span> (strcasecmp(cmd, <span class="stringliteral">&quot;exit&quot;</span>) == 0) {</div>
-<div class="line"><a id="l01412" name="l01412"></a><span class="lineno"> 1412</span>            SampleUtil_Print(<span class="stringliteral">&quot;Shutting down...\n&quot;</span>);</div>
-<div class="line"><a id="l01413" name="l01413"></a><span class="lineno"> 1413</span>            <a class="code hl_function" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b">TvDeviceStop</a>();</div>
-<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>            exit(0);</div>
-<div class="line"><a id="l01415" name="l01415"></a><span class="lineno"> 1415</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01416" name="l01416"></a><span class="lineno"> 1416</span>            SampleUtil_Print(<span class="stringliteral">&quot;\n   Unknown command: %s\n\n&quot;</span>, cmd);</div>
-<div class="line"><a id="l01417" name="l01417"></a><span class="lineno"> 1417</span>            SampleUtil_Print(<span class="stringliteral">&quot;   Valid Commands:\n&quot;</span></div>
-<div class="line"><a id="l01418" name="l01418"></a><span class="lineno"> 1418</span>                             <span class="stringliteral">&quot;     Exit\n\n&quot;</span>);</div>
-<div class="line"><a id="l01419" name="l01419"></a><span class="lineno"> 1419</span>        }</div>
-<div class="line"><a id="l01420" name="l01420"></a><span class="lineno"> 1420</span>    }</div>
-<div class="line"><a id="l01421" name="l01421"></a><span class="lineno"> 1421</span> </div>
-<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span>    <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a id="l01423" name="l01423"></a><span class="lineno"> 1423</span>}</div>
+<div class="line"><a id="l01392" name="l01392"></a><span class="lineno"> 1392</span> </div>
+<div class="foldopen" id="foldopen01393" data-start="{" data-end="}">
+<div class="line"><a id="l01393" name="l01393"></a><span class="lineno"><a class="line" href="../../d0/daf/tv__device_8hpp.html#ad3a78c1a3b2b7ebeca7dd92f1ed27de1"> 1393</a></span><span class="keywordtype">void</span>* <a class="code hl_function" href="../../d9/d09/tv__device_8cpp.html#ad3a78c1a3b2b7ebeca7dd92f1ed27de1">TvDeviceCommandLoop</a>(<span class="keywordtype">void</span>* args) {</div>
+<div class="line"><a id="l01394" name="l01394"></a><span class="lineno"> 1394</span>    <span class="keywordtype">int</span> stoploop = 0;</div>
+<div class="line"><a id="l01395" name="l01395"></a><span class="lineno"> 1395</span>    <span class="keywordtype">char</span> cmdline[100];</div>
+<div class="line"><a id="l01396" name="l01396"></a><span class="lineno"> 1396</span>    <span class="keywordtype">char</span> cmd[100];</div>
+<div class="line"><a id="l01397" name="l01397"></a><span class="lineno"> 1397</span>    <span class="keywordtype">char</span>* s;</div>
+<div class="line"><a id="l01398" name="l01398"></a><span class="lineno"> 1398</span>    (void)args;</div>
+<div class="line"><a id="l01399" name="l01399"></a><span class="lineno"> 1399</span> </div>
+<div class="line"><a id="l01400" name="l01400"></a><span class="lineno"> 1400</span>    <span class="keywordflow">while</span> (!stoploop) {</div>
+<div class="line"><a id="l01401" name="l01401"></a><span class="lineno"> 1401</span>        snprintf(cmdline, <span class="keyword">sizeof</span>(cmdline), <span class="stringliteral">&quot; &quot;</span>);</div>
+<div class="line"><a id="l01402" name="l01402"></a><span class="lineno"> 1402</span>        snprintf(cmd, <span class="keyword">sizeof</span>(cmd), <span class="stringliteral">&quot; &quot;</span>);</div>
+<div class="line"><a id="l01403" name="l01403"></a><span class="lineno"> 1403</span>        SampleUtil_Print(<span class="stringliteral">&quot;\n&gt;&gt; &quot;</span>);</div>
+<div class="line"><a id="l01404" name="l01404"></a><span class="lineno"> 1404</span>        <span class="comment">/* Get a command line */</span></div>
+<div class="line"><a id="l01405" name="l01405"></a><span class="lineno"> 1405</span>        s = fgets(cmdline, 100, stdin);</div>
+<div class="line"><a id="l01406" name="l01406"></a><span class="lineno"> 1406</span>        <span class="keywordflow">if</span> (!s)</div>
+<div class="line"><a id="l01407" name="l01407"></a><span class="lineno"> 1407</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l01408" name="l01408"></a><span class="lineno"> 1408</span><span class="preprocessor">#ifdef _WIN32</span></div>
+<div class="line"><a id="l01409" name="l01409"></a><span class="lineno"> 1409</span>        sscanf_s(cmdline, <span class="stringliteral">&quot;%s&quot;</span>, cmd, (<span class="keywordtype">unsigned</span>)_countof(cmd));</div>
+<div class="line"><a id="l01410" name="l01410"></a><span class="lineno"> 1410</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l01411" name="l01411"></a><span class="lineno"> 1411</span>        sscanf(cmdline, <span class="stringliteral">&quot;%s&quot;</span>, cmd);</div>
+<div class="line"><a id="l01412" name="l01412"></a><span class="lineno"> 1412</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l01413" name="l01413"></a><span class="lineno"> 1413</span>        <span class="keywordflow">if</span> (strcasecmp(cmd, <span class="stringliteral">&quot;exit&quot;</span>) == 0) {</div>
+<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>            SampleUtil_Print(<span class="stringliteral">&quot;Shutting down...\n&quot;</span>);</div>
+<div class="line"><a id="l01415" name="l01415"></a><span class="lineno"> 1415</span>            <a class="code hl_function" href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b">TvDeviceStop</a>();</div>
+<div class="line"><a id="l01416" name="l01416"></a><span class="lineno"> 1416</span>            exit(0);</div>
+<div class="line"><a id="l01417" name="l01417"></a><span class="lineno"> 1417</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l01418" name="l01418"></a><span class="lineno"> 1418</span>            SampleUtil_Print(<span class="stringliteral">&quot;\n   Unknown command: %s\n\n&quot;</span>, cmd);</div>
+<div class="line"><a id="l01419" name="l01419"></a><span class="lineno"> 1419</span>            SampleUtil_Print(<span class="stringliteral">&quot;   Valid Commands:\n&quot;</span></div>
+<div class="line"><a id="l01420" name="l01420"></a><span class="lineno"> 1420</span>                             <span class="stringliteral">&quot;     Exit\n\n&quot;</span>);</div>
+<div class="line"><a id="l01421" name="l01421"></a><span class="lineno"> 1421</span>        }</div>
+<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span>    }</div>
+<div class="line"><a id="l01423" name="l01423"></a><span class="lineno"> 1423</span> </div>
+<div class="line"><a id="l01424" name="l01424"></a><span class="lineno"> 1424</span>    <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a id="l01425" name="l01425"></a><span class="lineno"> 1425</span>}</div>
 </div>
-<div class="line"><a id="l01424" name="l01424"></a><span class="lineno"> 1424</span> </div>
-<div class="foldopen" id="foldopen01425" data-start="{" data-end="}">
-<div class="line"><a id="l01425" name="l01425"></a><span class="lineno"><a class="line" href="../../d0/daf/tv__device_8hpp.html#a8ac6063406bd7a370e329299802fedd5"> 1425</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7">device_main</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]) {</div>
-<div class="line"><a id="l01426" name="l01426"></a><span class="lineno"> 1426</span>    TRACE(<span class="stringliteral">&quot;Executing device_main()&quot;</span>);</div>
-<div class="line"><a id="l01427" name="l01427"></a><span class="lineno"> 1427</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> portTemp{};</div>
-<div class="line"><a id="l01428" name="l01428"></a><span class="lineno"> 1428</span>    <span class="keywordtype">char</span>* iface{};</div>
-<div class="line"><a id="l01429" name="l01429"></a><span class="lineno"> 1429</span>    <span class="keywordtype">char</span>* desc_doc_name{};</div>
-<div class="line"><a id="l01430" name="l01430"></a><span class="lineno"> 1430</span>    <span class="keywordtype">char</span>* web_dir_path{};</div>
-<div class="line"><a id="l01431" name="l01431"></a><span class="lineno"> 1431</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> port{};</div>
-<div class="line"><a id="l01432" name="l01432"></a><span class="lineno"> 1432</span>    <span class="comment">// int ip_mode{IP_MODE_IPV4};</span></div>
-<div class="line"><a id="l01433" name="l01433"></a><span class="lineno"> 1433</span>    <span class="keywordtype">int</span> ip_mode{IP_MODE_IPV6_LLA};</div>
-<div class="line"><a id="l01434" name="l01434"></a><span class="lineno"> 1434</span>    <span class="comment">// int ip_mode{IP_MODE_IPV6_ULA_GUA};</span></div>
-<div class="line"><a id="l01435" name="l01435"></a><span class="lineno"> 1435</span>    <span class="keywordtype">int</span> i{};</div>
-<div class="line"><a id="l01436" name="l01436"></a><span class="lineno"> 1436</span> </div>
-<div class="line"><a id="l01437" name="l01437"></a><span class="lineno"> 1437</span>    <span class="keywordflow">if</span> (!argc)</div>
-<div class="line"><a id="l01438" name="l01438"></a><span class="lineno"> 1438</span>        <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a38ef88025a7adeff42a4893c2367f4e9">UPNP_E_INVALID_ARGUMENT</a>;</div>
-<div class="line"><a id="l01439" name="l01439"></a><span class="lineno"> 1439</span> </div>
-<div class="line"><a id="l01440" name="l01440"></a><span class="lineno"> 1440</span>    SampleUtil_Initialize(linux_print);</div>
-<div class="line"><a id="l01441" name="l01441"></a><span class="lineno"> 1441</span>    <span class="comment">/* Parse options */</span></div>
-<div class="line"><a id="l01442" name="l01442"></a><span class="lineno"> 1442</span>    <span class="keywordflow">for</span> (i = 1; i &lt; argc; i++) {</div>
-<div class="line"><a id="l01443" name="l01443"></a><span class="lineno"> 1443</span>        <span class="keywordflow">if</span> (strcmp(argv[i], <span class="stringliteral">&quot;-i&quot;</span>) == 0) {</div>
-<div class="line"><a id="l01444" name="l01444"></a><span class="lineno"> 1444</span>            iface = argv[++i];</div>
-<div class="line"><a id="l01445" name="l01445"></a><span class="lineno"> 1445</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strcmp(argv[i], <span class="stringliteral">&quot;--port&quot;</span>) == 0) {</div>
-<div class="line"><a id="l01446" name="l01446"></a><span class="lineno"> 1446</span><span class="preprocessor">#ifdef WIN32</span></div>
-<div class="line"><a id="l01447" name="l01447"></a><span class="lineno"> 1447</span>            sscanf_s(argv[++i], <span class="stringliteral">&quot;%u&quot;</span>, &amp;portTemp);</div>
-<div class="line"><a id="l01448" name="l01448"></a><span class="lineno"> 1448</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span>            sscanf(argv[++i], <span class="stringliteral">&quot;%u&quot;</span>, &amp;portTemp);</div>
-<div class="line"><a id="l01450" name="l01450"></a><span class="lineno"> 1450</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l01451" name="l01451"></a><span class="lineno"> 1451</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strcmp(argv[i], <span class="stringliteral">&quot;--desc&quot;</span>) == 0) {</div>
-<div class="line"><a id="l01452" name="l01452"></a><span class="lineno"> 1452</span>            desc_doc_name = argv[++i];</div>
-<div class="line"><a id="l01453" name="l01453"></a><span class="lineno"> 1453</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strcmp(argv[i], <span class="stringliteral">&quot;--webdir&quot;</span>) == 0) {</div>
-<div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span>            web_dir_path = argv[++i];</div>
-<div class="line"><a id="l01455" name="l01455"></a><span class="lineno"> 1455</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strcmp(argv[i], <span class="stringliteral">&quot;-m&quot;</span>) == 0) {</div>
-<div class="line"><a id="l01456" name="l01456"></a><span class="lineno"> 1456</span><span class="preprocessor">#ifdef _WIN32</span></div>
-<div class="line"><a id="l01457" name="l01457"></a><span class="lineno"> 1457</span>            sscanf_s(argv[++i], <span class="stringliteral">&quot;%d&quot;</span>, &amp;ip_mode);</div>
-<div class="line"><a id="l01458" name="l01458"></a><span class="lineno"> 1458</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l01459" name="l01459"></a><span class="lineno"> 1459</span>            sscanf(argv[++i], <span class="stringliteral">&quot;%d&quot;</span>, &amp;ip_mode);</div>
-<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"> 1460</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l01461" name="l01461"></a><span class="lineno"> 1461</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strcmp(argv[i], <span class="stringliteral">&quot;--verbose&quot;</span>) == 0) {</div>
-<div class="line"><a id="l01462" name="l01462"></a><span class="lineno"> 1462</span>            <a class="code hl_variable" href="../../dc/d6d/namespaceupnplib.html#abb655e9ee43d62c83cb0ec065e6d3429">upnplib::g_dbug</a> = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l01463" name="l01463"></a><span class="lineno"> 1463</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strcmp(argv[i], <span class="stringliteral">&quot;--help&quot;</span>) == 0) {</div>
-<div class="line"><a id="l01464" name="l01464"></a><span class="lineno"> 1464</span>            SampleUtil_Print(<span class="stringliteral">&quot;Usage: %s -i interface --port port&quot;</span></div>
-<div class="line"><a id="l01465" name="l01465"></a><span class="lineno"> 1465</span>                             <span class="stringliteral">&quot; --desc desc_doc_name --webdir web_dir_path&quot;</span></div>
-<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"> 1466</span>                             <span class="stringliteral">&quot; -m ip_mode --verbose --help (this message)\n&quot;</span>,</div>
-<div class="line"><a id="l01467" name="l01467"></a><span class="lineno"> 1467</span>                             argv[0]);</div>
-<div class="line"><a id="l01468" name="l01468"></a><span class="lineno"> 1468</span>            SampleUtil_Print(</div>
-<div class="line"><a id="l01469" name="l01469"></a><span class="lineno"> 1469</span>                <span class="stringliteral">&quot;\tinterface:     interface address of the device (must match &quot;</span></div>
-<div class="line"><a id="l01470" name="l01470"></a><span class="lineno"> 1470</span>                <span class="stringliteral">&quot;desc. doc)\n&quot;</span></div>
-<div class="line"><a id="l01471" name="l01471"></a><span class="lineno"> 1471</span>                <span class="stringliteral">&quot;\t\te.g.: eth0\n&quot;</span></div>
-<div class="line"><a id="l01472" name="l01472"></a><span class="lineno"> 1472</span>                <span class="stringliteral">&quot;\tport:          Port number to use for receiving UPnP &quot;</span></div>
-<div class="line"><a id="l01473" name="l01473"></a><span class="lineno"> 1473</span>                <span class="stringliteral">&quot;messages (must match desc. doc)\n&quot;</span></div>
-<div class="line"><a id="l01474" name="l01474"></a><span class="lineno"> 1474</span>                <span class="stringliteral">&quot;\t\te.g.: 5431\n&quot;</span></div>
-<div class="line"><a id="l01475" name="l01475"></a><span class="lineno"> 1475</span>                <span class="stringliteral">&quot;\tdesc_doc_name: name of device description document\n&quot;</span></div>
-<div class="line"><a id="l01476" name="l01476"></a><span class="lineno"> 1476</span>                <span class="stringliteral">&quot;\t\te.g.: tvdevicedesc.xml\n&quot;</span></div>
-<div class="line"><a id="l01477" name="l01477"></a><span class="lineno"> 1477</span>                <span class="stringliteral">&quot;\tweb_dir_path:  Filesystem path where web files related to &quot;</span></div>
-<div class="line"><a id="l01478" name="l01478"></a><span class="lineno"> 1478</span>                <span class="stringliteral">&quot;the device are stored\n&quot;</span></div>
-<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span>                <span class="stringliteral">&quot;\t\te.g.: /upnp/sample/tvdevice/web\n&quot;</span></div>
-<div class="line"><a id="l01480" name="l01480"></a><span class="lineno"> 1480</span>                <span class="stringliteral">&quot;\tip_mode:       set to 1 for IPv4, 2 for IPv6 LLA (default) &quot;</span></div>
-<div class="line"><a id="l01481" name="l01481"></a><span class="lineno"> 1481</span>                <span class="stringliteral">&quot;and 3 for IPv6 ULA or GUA\n&quot;</span>);</div>
-<div class="line"><a id="l01482" name="l01482"></a><span class="lineno"> 1482</span>            <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a38ef88025a7adeff42a4893c2367f4e9">UPNP_E_INVALID_ARGUMENT</a>;</div>
-<div class="line"><a id="l01483" name="l01483"></a><span class="lineno"> 1483</span>        }</div>
-<div class="line"><a id="l01484" name="l01484"></a><span class="lineno"> 1484</span>    }</div>
-<div class="line"><a id="l01485" name="l01485"></a><span class="lineno"> 1485</span>    port = (<span class="keywordtype">unsigned</span> short)portTemp;</div>
-<div class="line"><a id="l01486" name="l01486"></a><span class="lineno"> 1486</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25">TvDeviceStart</a>(iface, port, desc_doc_name, web_dir_path, ip_mode,</div>
-<div class="line"><a id="l01487" name="l01487"></a><span class="lineno"> 1487</span>                         linux_print, 0);</div>
-<div class="line"><a id="l01488" name="l01488"></a><span class="lineno"> 1488</span>}</div>
+<div class="line"><a id="l01426" name="l01426"></a><span class="lineno"> 1426</span> </div>
+<div class="foldopen" id="foldopen01427" data-start="{" data-end="}">
+<div class="line"><a id="l01427" name="l01427"></a><span class="lineno"><a class="line" href="../../d0/daf/tv__device_8hpp.html#a8ac6063406bd7a370e329299802fedd5"> 1427</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7">device_main</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]) {</div>
+<div class="line"><a id="l01428" name="l01428"></a><span class="lineno"> 1428</span>    TRACE(<span class="stringliteral">&quot;Executing device_main()&quot;</span>);</div>
+<div class="line"><a id="l01429" name="l01429"></a><span class="lineno"> 1429</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> portTemp{};</div>
+<div class="line"><a id="l01430" name="l01430"></a><span class="lineno"> 1430</span>    <span class="keywordtype">char</span>* iface{};</div>
+<div class="line"><a id="l01431" name="l01431"></a><span class="lineno"> 1431</span>    <span class="keywordtype">char</span>* desc_doc_name{};</div>
+<div class="line"><a id="l01432" name="l01432"></a><span class="lineno"> 1432</span>    <span class="keywordtype">char</span>* web_dir_path{};</div>
+<div class="line"><a id="l01433" name="l01433"></a><span class="lineno"> 1433</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> port{};</div>
+<div class="line"><a id="l01434" name="l01434"></a><span class="lineno"> 1434</span>    <span class="comment">// int ip_mode{IP_MODE_IPV4};</span></div>
+<div class="line"><a id="l01435" name="l01435"></a><span class="lineno"> 1435</span>    <span class="keywordtype">int</span> ip_mode{IP_MODE_IPV6_LLA};</div>
+<div class="line"><a id="l01436" name="l01436"></a><span class="lineno"> 1436</span>    <span class="comment">// int ip_mode{IP_MODE_IPV6_ULA_GUA};</span></div>
+<div class="line"><a id="l01437" name="l01437"></a><span class="lineno"> 1437</span>    <span class="keywordtype">int</span> i{};</div>
+<div class="line"><a id="l01438" name="l01438"></a><span class="lineno"> 1438</span> </div>
+<div class="line"><a id="l01439" name="l01439"></a><span class="lineno"> 1439</span>    <span class="keywordflow">if</span> (!argc)</div>
+<div class="line"><a id="l01440" name="l01440"></a><span class="lineno"> 1440</span>        <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a38ef88025a7adeff42a4893c2367f4e9">UPNP_E_INVALID_ARGUMENT</a>;</div>
+<div class="line"><a id="l01441" name="l01441"></a><span class="lineno"> 1441</span> </div>
+<div class="line"><a id="l01442" name="l01442"></a><span class="lineno"> 1442</span>    SampleUtil_Initialize(linux_print);</div>
+<div class="line"><a id="l01443" name="l01443"></a><span class="lineno"> 1443</span>    <span class="comment">/* Parse options */</span></div>
+<div class="line"><a id="l01444" name="l01444"></a><span class="lineno"> 1444</span>    <span class="keywordflow">for</span> (i = 1; i &lt; argc; i++) {</div>
+<div class="line"><a id="l01445" name="l01445"></a><span class="lineno"> 1445</span>        <span class="keywordflow">if</span> (strcmp(argv[i], <span class="stringliteral">&quot;-i&quot;</span>) == 0) {</div>
+<div class="line"><a id="l01446" name="l01446"></a><span class="lineno"> 1446</span>            iface = argv[++i];</div>
+<div class="line"><a id="l01447" name="l01447"></a><span class="lineno"> 1447</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strcmp(argv[i], <span class="stringliteral">&quot;--port&quot;</span>) == 0) {</div>
+<div class="line"><a id="l01448" name="l01448"></a><span class="lineno"> 1448</span><span class="preprocessor">#ifdef WIN32</span></div>
+<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span>            sscanf_s(argv[++i], <span class="stringliteral">&quot;%u&quot;</span>, &amp;portTemp);</div>
+<div class="line"><a id="l01450" name="l01450"></a><span class="lineno"> 1450</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l01451" name="l01451"></a><span class="lineno"> 1451</span>            sscanf(argv[++i], <span class="stringliteral">&quot;%u&quot;</span>, &amp;portTemp);</div>
+<div class="line"><a id="l01452" name="l01452"></a><span class="lineno"> 1452</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l01453" name="l01453"></a><span class="lineno"> 1453</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strcmp(argv[i], <span class="stringliteral">&quot;--desc&quot;</span>) == 0) {</div>
+<div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span>            desc_doc_name = argv[++i];</div>
+<div class="line"><a id="l01455" name="l01455"></a><span class="lineno"> 1455</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strcmp(argv[i], <span class="stringliteral">&quot;--webdir&quot;</span>) == 0) {</div>
+<div class="line"><a id="l01456" name="l01456"></a><span class="lineno"> 1456</span>            web_dir_path = argv[++i];</div>
+<div class="line"><a id="l01457" name="l01457"></a><span class="lineno"> 1457</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strcmp(argv[i], <span class="stringliteral">&quot;-m&quot;</span>) == 0) {</div>
+<div class="line"><a id="l01458" name="l01458"></a><span class="lineno"> 1458</span><span class="preprocessor">#ifdef _WIN32</span></div>
+<div class="line"><a id="l01459" name="l01459"></a><span class="lineno"> 1459</span>            sscanf_s(argv[++i], <span class="stringliteral">&quot;%d&quot;</span>, &amp;ip_mode);</div>
+<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"> 1460</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l01461" name="l01461"></a><span class="lineno"> 1461</span>            sscanf(argv[++i], <span class="stringliteral">&quot;%d&quot;</span>, &amp;ip_mode);</div>
+<div class="line"><a id="l01462" name="l01462"></a><span class="lineno"> 1462</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l01463" name="l01463"></a><span class="lineno"> 1463</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strcmp(argv[i], <span class="stringliteral">&quot;--verbose&quot;</span>) == 0) {</div>
+<div class="line"><a id="l01464" name="l01464"></a><span class="lineno"> 1464</span>            <a class="code hl_variable" href="../../dc/d6d/namespaceupnplib.html#abb655e9ee43d62c83cb0ec065e6d3429">upnplib::g_dbug</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l01465" name="l01465"></a><span class="lineno"> 1465</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strcmp(argv[i], <span class="stringliteral">&quot;--help&quot;</span>) == 0) {</div>
+<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"> 1466</span>            SampleUtil_Print(<span class="stringliteral">&quot;Usage: %s -i interface --port port&quot;</span></div>
+<div class="line"><a id="l01467" name="l01467"></a><span class="lineno"> 1467</span>                             <span class="stringliteral">&quot; --desc desc_doc_name --webdir web_dir_path&quot;</span></div>
+<div class="line"><a id="l01468" name="l01468"></a><span class="lineno"> 1468</span>                             <span class="stringliteral">&quot; -m ip_mode --verbose --help (this message)\n&quot;</span>,</div>
+<div class="line"><a id="l01469" name="l01469"></a><span class="lineno"> 1469</span>                             argv[0]);</div>
+<div class="line"><a id="l01470" name="l01470"></a><span class="lineno"> 1470</span>            SampleUtil_Print(</div>
+<div class="line"><a id="l01471" name="l01471"></a><span class="lineno"> 1471</span>                <span class="stringliteral">&quot;\tinterface:     interface address of the device (must match &quot;</span></div>
+<div class="line"><a id="l01472" name="l01472"></a><span class="lineno"> 1472</span>                <span class="stringliteral">&quot;desc. doc)\n&quot;</span></div>
+<div class="line"><a id="l01473" name="l01473"></a><span class="lineno"> 1473</span>                <span class="stringliteral">&quot;\t\te.g.: eth0\n&quot;</span></div>
+<div class="line"><a id="l01474" name="l01474"></a><span class="lineno"> 1474</span>                <span class="stringliteral">&quot;\tport:          Port number to use for receiving UPnP &quot;</span></div>
+<div class="line"><a id="l01475" name="l01475"></a><span class="lineno"> 1475</span>                <span class="stringliteral">&quot;messages (must match desc. doc)\n&quot;</span></div>
+<div class="line"><a id="l01476" name="l01476"></a><span class="lineno"> 1476</span>                <span class="stringliteral">&quot;\t\te.g.: 5431\n&quot;</span></div>
+<div class="line"><a id="l01477" name="l01477"></a><span class="lineno"> 1477</span>                <span class="stringliteral">&quot;\tdesc_doc_name: name of device description document\n&quot;</span></div>
+<div class="line"><a id="l01478" name="l01478"></a><span class="lineno"> 1478</span>                <span class="stringliteral">&quot;\t\te.g.: tvdevicedesc.xml\n&quot;</span></div>
+<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span>                <span class="stringliteral">&quot;\tweb_dir_path:  Filesystem path where web files related to &quot;</span></div>
+<div class="line"><a id="l01480" name="l01480"></a><span class="lineno"> 1480</span>                <span class="stringliteral">&quot;the device are stored\n&quot;</span></div>
+<div class="line"><a id="l01481" name="l01481"></a><span class="lineno"> 1481</span>                <span class="stringliteral">&quot;\t\te.g.: /upnp/sample/tvdevice/web\n&quot;</span></div>
+<div class="line"><a id="l01482" name="l01482"></a><span class="lineno"> 1482</span>                <span class="stringliteral">&quot;\tip_mode:       set to 1 for IPv4, 2 for IPv6 LLA (default) &quot;</span></div>
+<div class="line"><a id="l01483" name="l01483"></a><span class="lineno"> 1483</span>                <span class="stringliteral">&quot;and 3 for IPv6 ULA or GUA\n&quot;</span>);</div>
+<div class="line"><a id="l01484" name="l01484"></a><span class="lineno"> 1484</span>            <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a38ef88025a7adeff42a4893c2367f4e9">UPNP_E_INVALID_ARGUMENT</a>;</div>
+<div class="line"><a id="l01485" name="l01485"></a><span class="lineno"> 1485</span>        }</div>
+<div class="line"><a id="l01486" name="l01486"></a><span class="lineno"> 1486</span>    }</div>
+<div class="line"><a id="l01487" name="l01487"></a><span class="lineno"> 1487</span>    port = (<span class="keywordtype">unsigned</span> short)portTemp;</div>
+<div class="line"><a id="l01488" name="l01488"></a><span class="lineno"> 1488</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25">TvDeviceStart</a>(iface, port, desc_doc_name, web_dir_path, ip_mode,</div>
+<div class="line"><a id="l01489" name="l01489"></a><span class="lineno"> 1489</span>                         linux_print, 0);</div>
+<div class="line"><a id="l01490" name="l01490"></a><span class="lineno"> 1490</span>}</div>
 </div>
 <div class="ttc" id="aCallback_8hpp_html_a1c45f84a01cb0270762a0d8252d233f1"><div class="ttname"><a href="../../df/da3/Callback_8hpp.html#a1c45f84a01cb0270762a0d8252d233f1">Upnp_EventType</a></div><div class="ttdeci">enum Upnp_EventType_e Upnp_EventType</div><div class="ttdoc">Old C stile quirks to make a symbol protected. Look at Upnp_EventType_e.</div><div class="ttdef"><b>Definition</b> <a href="../../df/da3/Callback_8hpp_source.html#l00119">Callback.hpp:119</a></div></div>
 <div class="ttc" id="aCallback_8hpp_html_a751d2422ae0051f6d15da3c924f8cbb9a000325ae78c96e2f0760172242c63681"><div class="ttname"><a href="../../df/da3/Callback_8hpp.html#a751d2422ae0051f6d15da3c924f8cbb9a000325ae78c96e2f0760172242c63681">UPNP_EVENT_RENEWAL_COMPLETE</a></div><div class="ttdeci">@ UPNP_EVENT_RENEWAL_COMPLETE</div><div class="ttdef"><b>Definition</b> <a href="../../df/da3/Callback_8hpp_source.html#l00092">Callback.hpp:92</a></div></div>
@@ -1657,14 +1659,14 @@ $(document).ready(function() { init_codefold(1); });
 <div class="ttc" id="atv__device_8cpp_html_ac005622631a7a2a9acde0cf794aca1d1"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#ac005622631a7a2a9acde0cf794aca1d1">TvDeviceIncreaseBrightness</a></div><div class="ttdeci">int TvDeviceIncreaseBrightness(IXML_Document *in, IXML_Document **out, const char **errorString)</div><div class="ttdoc">Increase brightnesss.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l01211">tv_device.cpp:1211</a></div></div>
 <div class="ttc" id="atv__device_8cpp_html_ac6a199e274ecf7d464ce06f686c0fb2f"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#ac6a199e274ecf7d464ce06f686c0fb2f">TvDeviceDecreaseColor</a></div><div class="ttdeci">int TvDeviceDecreaseColor(IXML_Document *in, IXML_Document **out, const char **errorString)</div><div class="ttdoc">Decrease the color.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l00863">tv_device.cpp:863</a></div></div>
 <div class="ttc" id="atv__device_8cpp_html_acbd67e02c335286bb777c7965343832f"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#acbd67e02c335286bb777c7965343832f">TvDeviceIncreaseChannel</a></div><div class="ttdeci">int TvDeviceIncreaseChannel(IXML_Document *in, IXML_Document **out, const char **errorString)</div><div class="ttdoc">Increase the channel.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l00664">tv_device.cpp:664</a></div></div>
-<div class="ttc" id="atv__device_8cpp_html_ad0dc5c3600aa2ebd4ffdc90e741607e7"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7">device_main</a></div><div class="ttdeci">int device_main(const int argc, char *argv[])</div><div class="ttdoc">Main entry point for tv device application.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l01425">tv_device.cpp:1425</a></div></div>
-<div class="ttc" id="atv__device_8cpp_html_ad3a78c1a3b2b7ebeca7dd92f1ed27de1"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#ad3a78c1a3b2b7ebeca7dd92f1ed27de1">TvDeviceCommandLoop</a></div><div class="ttdeci">void * TvDeviceCommandLoop(void *args)</div><div class="ttdoc">Function that receives commands from the user at the command prompt during the lifetime of the device...</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l01391">tv_device.cpp:1391</a></div></div>
+<div class="ttc" id="atv__device_8cpp_html_ad0dc5c3600aa2ebd4ffdc90e741607e7"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7">device_main</a></div><div class="ttdeci">int device_main(const int argc, char *argv[])</div><div class="ttdoc">Main entry point for tv device application.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l01427">tv_device.cpp:1427</a></div></div>
+<div class="ttc" id="atv__device_8cpp_html_ad3a78c1a3b2b7ebeca7dd92f1ed27de1"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#ad3a78c1a3b2b7ebeca7dd92f1ed27de1">TvDeviceCommandLoop</a></div><div class="ttdeci">void * TvDeviceCommandLoop(void *args)</div><div class="ttdoc">Function that receives commands from the user at the command prompt during the lifetime of the device...</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l01393">tv_device.cpp:1393</a></div></div>
 <div class="ttc" id="atv__device_8cpp_html_ad4acb47d707e82781af672f747f5888a"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#ad4acb47d707e82781af672f747f5888a">tvp_varname</a></div><div class="ttdeci">const char * tvp_varname[]</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l00064">tv_device.cpp:64</a></div></div>
 <div class="ttc" id="atv__device_8cpp_html_ad571eaebc11f744084341040b8972201"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#ad571eaebc11f744084341040b8972201">TvDeviceDecreaseContrast</a></div><div class="ttdeci">int TvDeviceDecreaseContrast(IXML_Document *in, IXML_Document **out, const char **errorString)</div><div class="ttdoc">Decrease the contrast.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l01113">tv_device.cpp:1113</a></div></div>
 <div class="ttc" id="atv__device_8cpp_html_addfcabbaf8182bc3110e55044d5580b7"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#addfcabbaf8182bc3110e55044d5580b7">tv_service_table</a></div><div class="ttdeci">struct TvService tv_service_table[2]</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l00075">tv_device.cpp:75</a></div></div>
 <div class="ttc" id="atv__device_8cpp_html_ae66c84568a6ebd8d2d0bc573fde133cd"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#ae66c84568a6ebd8d2d0bc573fde133cd">TvDeviceSetPower</a></div><div class="ttdeci">static int TvDeviceSetPower(int on)</div><div class="ttdoc">Turn the power on/off, update the TvDevice control service state table, and notify all subscribed con...</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l00509">tv_device.cpp:509</a></div></div>
 <div class="ttc" id="atv__device_8cpp_html_ae8b836792cbe96ab39c49055ecfed95c"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#ae8b836792cbe96ab39c49055ecfed95c">TvDeviceSetColor</a></div><div class="ttdeci">int TvDeviceSetColor(IXML_Document *in, IXML_Document **out, const char **errorString)</div><div class="ttdoc">Change the color, update the TvDevice picture service state table, and notify all subscribed control ...</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l00771">tv_device.cpp:771</a></div></div>
-<div class="ttc" id="atv__device_8cpp_html_ae9d9e95e2f4d533ed860ae40c9b3353b"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b">TvDeviceStop</a></div><div class="ttdeci">int TvDeviceStop(void)</div><div class="ttdoc">Stops the device. Uninitializes the SDK.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l01382">tv_device.cpp:1382</a></div></div>
+<div class="ttc" id="atv__device_8cpp_html_ae9d9e95e2f4d533ed860ae40c9b3353b"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b">TvDeviceStop</a></div><div class="ttdeci">int TvDeviceStop(void)</div><div class="ttdoc">Stops the device. Uninitializes the SDK.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l01384">tv_device.cpp:1384</a></div></div>
 <div class="ttc" id="atv__device_8cpp_html_aeabcf1d104de9f6682c8e05696327dec"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#aeabcf1d104de9f6682c8e05696327dec">IncrementChannel</a></div><div class="ttdeci">int IncrementChannel(int incr, IXML_Document *in, IXML_Document **out, const char **errorString)</div><div class="ttdoc">Increment channel.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l00615">tv_device.cpp:615</a></div></div>
 <div class="ttc" id="atv__device_8cpp_html_aed1cafead3fb83e9101a11c24b346a3b"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b">TvDeviceCallbackEventHandler</a></div><div class="ttdeci">int TvDeviceCallbackEventHandler(Upnp_EventType EventType, const void *Event, void *Cookie)</div><div class="ttdoc">The callback handler registered with the SDK while registering root device.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l01221">tv_device.cpp:1221</a></div></div>
 <div class="ttc" id="atv__device_8cpp_html_af3b4a94c1bbc29ba033224f809f3b305"><div class="ttname"><a href="../../d9/d09/tv__device_8cpp.html#af3b4a94c1bbc29ba033224f809f3b305">TvDeviceDecreaseChannel</a></div><div class="ttdeci">int TvDeviceDecreaseChannel(IXML_Document *in, IXML_Document **out, const char **errorString)</div><div class="ttdoc">Decrease the channel.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d09/tv__device_8cpp_source.html#l00659">tv_device.cpp:659</a></div></div>
@@ -1672,7 +1674,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="ttc" id="atv__device_8hpp_html"><div class="ttname"><a href="../../d0/daf/tv__device_8hpp.html">tv_device.hpp</a></div><div class="ttdoc">Declarations for a simple UPnP device console application.</div></div>
 <div class="ttc" id="atv__device_8hpp_html_a1cd959cf489d5fb077a99a93dceeb072"><div class="ttname"><a href="../../d0/daf/tv__device_8hpp.html#a1cd959cf489d5fb077a99a93dceeb072">TvService::UDN</a></div><div class="ttdeci">char UDN[NAME_SIZE]</div><div class="ttdef"><b>Definition</b> <a href="../../d0/daf/tv__device_8hpp_source.html#l00119">tv_device.hpp:119</a></div></div>
 <div class="ttc" id="atv__device_8hpp_html_d4/db0/structTvService"><div class="ttname"><a href="../../d0/daf/tv__device_8hpp.html#d4/db0/structTvService">TvService</a></div><div class="ttdef"><b>Definition</b> <a href="../../d0/daf/tv__device_8hpp_source.html#l00117">tv_device.hpp:117</a></div></div>
-<div class="ttc" id="aupnp_8hpp_html_a5a6bb3d66f5808e0f1df5e69456c6627"><div class="ttname"><a href="../../da/d1d/upnp_8hpp.html#a5a6bb3d66f5808e0f1df5e69456c6627">UpnpSetWebServerRootDir</a></div><div class="ttdeci">UPNPLIB_API int UpnpSetWebServerRootDir(const char *rootDir)</div><div class="ttdoc">Sets the document root directory for the internal web server.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/upnpapi_8cpp_source.html#l03616">upnpapi.cpp:3616</a></div></div>
+<div class="ttc" id="aupnp_8hpp_html_a5a6bb3d66f5808e0f1df5e69456c6627"><div class="ttname"><a href="../../da/d1d/upnp_8hpp.html#a5a6bb3d66f5808e0f1df5e69456c6627">UpnpSetWebServerRootDir</a></div><div class="ttdeci">UPNPLIB_API int UpnpSetWebServerRootDir(const char *rootDir)</div><div class="ttdoc">Sets the document root directory for the internal web server.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/upnpapi_8cpp_source.html#l03617">upnpapi.cpp:3617</a></div></div>
 <div class="ttc" id="aupnp_8hpp_html_aa704d80f194d9aab9a6f59fe10463729"><div class="ttname"><a href="../../da/d1d/upnp_8hpp.html#aa704d80f194d9aab9a6f59fe10463729">UpnpDownloadXmlDoc</a></div><div class="ttdeci">UPNPLIB_API int UpnpDownloadXmlDoc(const char *url, IXML_Document **xmlDoc)</div><div class="ttdoc">Downloads an XML document specified in a URL.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/upnpapi_8cpp_source.html#l02975">upnpapi.cpp:2975</a></div></div>
 <div class="ttc" id="aupnp_8hpp_html_aa90371a4578eb8a96a2e0d21ced90960"><div class="ttname"><a href="../../da/d1d/upnp_8hpp.html#aa90371a4578eb8a96a2e0d21ced90960">UpnpDevice_Handle</a></div><div class="ttdeci">int UpnpDevice_Handle</div><div class="ttdoc">Returned when a device application registers with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,...</div><div class="ttdef"><b>Definition</b> <a href="../../da/d1d/upnp_8hpp_source.html#l00424">upnp.hpp:424</a></div></div>
 <div class="ttc" id="aupnpdebug_8hpp_html"><div class="ttname"><a href="../../d8/d32/upnpdebug_8hpp.html">upnpdebug.hpp</a></div><div class="ttdoc">Manage Debug messages with levels &quot;critical&quot; to &quot;all&quot;.</div></div>
