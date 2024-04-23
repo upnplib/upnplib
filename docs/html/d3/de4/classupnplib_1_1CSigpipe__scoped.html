@@ -76,23 +76,23 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="../../d4/d4b/classupnplib_1_1CSigpipe__scoped-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">upnplib::CSigpipe_scoped Class Reference</div></div>
+  <div class="headertitle"><div class="title">upnplib::CSigpipe_scoped Class Reference<div class="ingroups"><a class="el" href="../../d4/d32/group__upnplib.html">* * object oriented UPnP library</a> &raquo; <a class="el" href="../../dd/df8/group__upnplib-Addressing.html">Step 0: Addressing</a> &raquo; <a class="el" href="../../dd/dbe/group__upnplib-connection.html">Connection module</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Responsibility: portable handle SIGPIPE on failed write to a remote closed network socket.  
+<p>Portable handle SIGPIPE on failed write to a remote closed network socket.  
  <a href="../../d3/de4/classupnplib_1_1CSigpipe__scoped.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="../../dd/d42/connection_8hpp_source.html">connection.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="../../dd/d74/connection__common_8hpp_source.html">connection_common.hpp</a>&gt;</code></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Responsibility: portable handle SIGPIPE on failed write to a remote closed network socket. </p>
+<div class="textblock"><p>Portable handle SIGPIPE on failed write to a remote closed network socket. </p>
 <p>This is a general solution, for when you are not in full control of the program’s signal handling and want to write data to an actual pipe or use write(2) on a socket. To control SIGPIPE on send(2) There can be used option MSG_NOSIGNAL on Linux and SO_NOSIGPIPE on MacOS. But with SSL function calls we have to use this class because it does not use syscall send() but write() and that doesn't have the options. To simplify things I will use this solution on all supported platforms.</p>
 <p>For more details have a look at: <a href="https://stackoverflow.com/a/77688810/5014688">C++ &amp; OpenSSL: SIGPIPE when writing in closed pipe</a>.<br  />
 Taking the idea and example from <a href="https://stackoverflow.com/a/2347848/5014688">SIGPIPE_handler</a> and adapt it. Thanks to kroki. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dd/d42/connection_8hpp_source.html#l00042">42</a> of file <a class="el" href="../../dd/d42/connection_8hpp_source.html">connection.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dd/d74/connection__common_8hpp_source.html#l00044">44</a> of file <a class="el" href="../../dd/d74/connection__common_8hpp_source.html">connection_common.hpp</a>.</p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
-<li>Upnplib/include/upnplib/<a class="el" href="../../dd/d42/connection_8hpp_source.html">connection.hpp</a></li>
+<li>Upnplib/include/upnplib/<a class="el" href="../../dd/d74/connection__common_8hpp_source.html">connection_common.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -1,5 +1,12 @@
 <map id="http_SendMessage" name="http_SendMessage">
-<area shape="rect" id="Node000001" title="Sends a message to the destination based on the format parameter." alt="" coords="5,5,151,31"/>
-<area shape="rect" id="Node000002" href="$d5/d78/sock_8cpp.html#ad1241b973fa76980eef882848fb535c3" title="Writes data on the socket in sockinfo." alt="" coords="199,5,291,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,15,185,15,185,21,151,21"/>
+<area shape="rect" id="Node000001" title="Sends a message to the destination based on the format parameter." alt="" coords="5,49,151,74"/>
+<area shape="rect" id="Node000002" href="$d5/d78/sock_8cpp.html#ad1241b973fa76980eef882848fb535c3" title="Writes data on the socket in sockinfo." alt="" coords="199,49,291,74"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,59,185,59,185,64,151,64"/>
+<area shape="rect" id="Node000003" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a2356245ef3089394fee85fd3f34be80f" title="Write to an SSL protected socket." alt="" coords="339,5,541,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="290,50,325,44,326,49,291,56"/>
+<area shape="rect" id="Node000005" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a64de72048c9ed20f9673c4d9564d5457" title="Write to a not SSL protected socket." alt="" coords="350,70,530,125"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="291,67,337,76,336,81,290,72"/>
+<area shape="rect" id="Node000004" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="589,41,737,81"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="542,39,576,45,575,50,541,44"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="530,80,575,73,576,78,531,85"/>
 </map>

@@ -1,6 +1,6 @@
 <map id="UpnpRegisterClient" name="UpnpRegisterClient">
 <area shape="rect" id="Node000001" title="Registers a control point application with the UPnP Library." alt="" coords="5,55,153,80"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#aa4ab1ae2a32c6a33118b4a872cebf131" title="Get a free handle." alt="" coords="201,5,320,31"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#aa4ab1ae2a32c6a33118b4a872cebf131" title="Get a free UPnP Unit handle." alt="" coords="201,5,320,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,52,199,32,201,37,127,57"/>
 <area shape="rect" id="Node000003" href="$df/db8/LinkedList_8cpp.html#acafc3d2a391f494afc5947668191cc0e" title="Initializes LinkedList. Must be called first and only once for List." alt="" coords="227,55,294,80"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="153,65,214,65,214,70,153,70"/>

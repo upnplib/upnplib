@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-16
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -406,7 +406,7 @@ enum UpnpOpenFileMode { UPNP_READ, UPNP_WRITE };
 
 /*!
  * \brief Returned when a control point application registers with
- * \b UpnpRegisterClient.
+ * \b UpnpRegisterClient().
  *
  * Client handles can only be used with functions that operate with a client
  * handle.
@@ -415,8 +415,8 @@ typedef int UpnpClient_Handle;
 
 /*!
  * \brief Returned when a device application registers with
- * \b UpnpRegisterRootDevice, \b UpnpRegisterRootDevice2,
- * \b UpnpRegisterRootDevice3 or \b UpnpRegisterRootDevice4.
+ * \b UpnpRegisterRootDevice(),\b UpnpRegisterRootDevice2(),
+ * \b UpnpRegisterRootDevice3() or \b UpnpRegisterRootDevice4().
  *
  * Device handles can only be used with functions that operate with a device
  * handle.
@@ -774,15 +774,15 @@ UPNPLIB_API int UpnpRegisterRootDevice2(
     UpnpDevice_Handle* const Hnd);
 
 /*!
- * \brief Registers one root- or logical-device object for a specific address
+ * \brief Registers one \glos{upnpdev,UPnP device} object for a specific address
  * family with the UPnP library and get a handle for it.
  *
  * This function can optional also be used to specify a dedicated description
  * URL to be returned for legacy control points.
  *
- * A root- or logical-device object cannot make any other API calls until it
+ * A \glos{upnpdev,UPnP device} object cannot make any other API calls until it
  * registers using this function. To register a control point see \b
- * UpnpRegisterClient to get a control point handle to perform control point
+ * UpnpRegisterClient() to get a control point handle to perform control point
  * functionality.
  *
  * This is a synchronous call and does not generate any callbacks. Callbacks
@@ -827,8 +827,8 @@ UPNPLIB_API int UpnpRegisterRootDevice3(
      * device, or AF_INET6 for an IPv6 device. Defaults to AF_INET. */
     const int AddressFamily,
     /*! [in] Optional argument: if specified it is a pointer to a string
-     * containing the description URL to be returned for legacy CPs for this
-     * root device instance. */
+     * containing the description URL to be returned for legacy control points
+     * for this root device instance. */
     const char* const LowerDescUrl = nullptr);
 
 /*! \brief Set alias for compatibility

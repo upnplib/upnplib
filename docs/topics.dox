@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-21
+// Redistribution only with this Copyright remark. Last modified: 2024-04-23
 /*!
  * \file
  * \brief Definition of the documentation topics.
@@ -182,16 +182,33 @@
  *
  * \defgroup upnplibAPI-socket Socket module
  * \ingroup upnplibAPI
- * \brief The socket module contains all classes and free functions to manage network sockets.
+ * \brief The socket module contains all classes and free functions to manage
+ * network sockets.
+ *
  *
  * \defgroup upnplib * * object oriented UPnP library
  * \brief Detailed documentation of this part of the library. Not of interest
  * for only using the SDK.
  *
- *
  * \defgroup upnplib-Addressing Step 0: Addressing
  * \ingroup upnplib
  * \copydoc compa-Addressing
+ *
+ * \defgroup upnplib-socket Socket module
+ * \ingroup upnplib-Addressing
+ * \copybrief upnplibAPI-socket
+ *
+ * \defgroup upnplib-connection Connection module
+ * \ingroup upnplib-Addressing
+ * \brief The connection module contains all classes and free functions to
+ * manage network connections.
+ *
+ * \image html netio.png
+ * source: <a href="https://stackoverflow.com/a/27017691/5014688">socket
+ * connect() vs bind()</a>
+ *
+ * The **Server** side is coded in connection_device.cpp, the **Client** side is
+ * coded in connection_ctrlpt.cpp.
  */
 
 // Topics for the UPnP sample programs

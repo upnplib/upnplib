@@ -1,7 +1,14 @@
 <map id="UpnpWriteHttpPost" name="UpnpWriteHttpPost">
-<area shape="rect" id="Node000001" title="Sends a request to a server to copy the contents of a buffer to the URI specified in the UpnpOpenHttp..." alt="" coords="5,5,152,31"/>
-<area shape="rect" id="Node000002" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a55e7bd2e48918bcaf6b101f174e0b355" title="Writes the content of a HTTP request initiated by a UpnpMakeHttpRequest() call. The end of the conten..." alt="" coords="200,5,371,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,15,187,15,187,21,152,21"/>
-<area shape="rect" id="Node000003" href="$d5/d78/sock_8cpp.html#ad1241b973fa76980eef882848fb535c3" title="Writes data on the socket in sockinfo." alt="" coords="419,5,511,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="371,15,405,15,405,21,371,21"/>
+<area shape="rect" id="Node000001" title="Sends a request to a server to copy the contents of a buffer to the URI specified in the UpnpOpenHttp..." alt="" coords="5,49,152,74"/>
+<area shape="rect" id="Node000002" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a55e7bd2e48918bcaf6b101f174e0b355" title="Writes the content of a HTTP request initiated by a UpnpMakeHttpRequest() call. The end of the conten..." alt="" coords="200,49,371,74"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,59,187,59,187,64,152,64"/>
+<area shape="rect" id="Node000003" href="$d5/d78/sock_8cpp.html#ad1241b973fa76980eef882848fb535c3" title="Writes data on the socket in sockinfo." alt="" coords="419,49,511,74"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="371,59,405,59,405,64,371,64"/>
+<area shape="rect" id="Node000004" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a2356245ef3089394fee85fd3f34be80f" title="Write to an SSL protected socket." alt="" coords="559,5,761,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="510,50,545,44,546,49,511,56"/>
+<area shape="rect" id="Node000006" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a64de72048c9ed20f9673c4d9564d5457" title="Write to a not SSL protected socket." alt="" coords="570,70,750,125"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="511,67,557,76,556,81,510,72"/>
+<area shape="rect" id="Node000005" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="809,41,957,81"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="762,39,796,45,795,50,761,44"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="750,80,795,73,796,78,751,85"/>
 </map>

@@ -1,6 +1,5 @@
 <map id="anonymous_namespace{sock::cpp}::sock_read_ssl" name="anonymous_namespace{sock::cpp}::sock_read_ssl">
-<area shape="rect" id="Node000001" title="Read from an SSL protected socket." alt="" coords="5,29,204,69"/>
-<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="64,30,61,20,68,10,82,5,105,3,130,6,144,13,142,18,129,11,105,8,84,10,71,15,66,21,69,28"/>
-<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="252,29,400,69"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,47,238,47,238,52,204,52"/>
+<area shape="rect" id="Node000001" title="Read from an SSL protected socket." alt="" coords="5,5,204,45"/>
+<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="252,5,400,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,23,238,23,238,28,204,28"/>
 </map>

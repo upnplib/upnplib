@@ -1,12 +1,12 @@
 <map id="GetFreeHandle" name="GetFreeHandle">
-<area shape="rect" id="Node000001" title="Get a free handle." alt="" coords="563,80,681,105"/>
+<area shape="rect" id="Node000001" title="Get a free UPnP Unit handle." alt="" coords="563,80,681,105"/>
 <area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a12e523b91dfe443b56ab3c99ef4c1c65" title="Registers a control point application with the UPnP Library." alt="" coords="344,5,492,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="584,76,514,44,477,33,479,28,516,40,586,71"/>
 <area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="325,55,511,80"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="549,86,510,81,511,76,549,81"/>
 <area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="321,104,515,129"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="549,104,515,108,515,103,549,99"/>
-<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="321,153,515,179"/>
+<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one UPnP device object for a specific address family with the UPnP library and get a handle..." alt="" coords="321,153,515,179"/>
 <area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="584,114,516,143,475,156,473,151,514,138,582,109"/>
 <area shape="rect" id="Node000006" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,153,273,179"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="307,169,274,169,274,163,307,163"/>

@@ -34,7 +34,7 @@
 <area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="570,104,476,83,477,77,571,98"/>
 <area shape="rect" id="Node000016" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="321,104,515,129"/>
 <area shape="poly" id="edge15_Node000014_Node000016" title=" " alt="" coords="565,119,515,119,515,114,565,114"/>
-<area shape="rect" id="Node000017" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="321,153,515,179"/>
+<area shape="rect" id="Node000017" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one UPnP device object for a specific address family with the UPnP library and get a handle..." alt="" coords="321,153,515,179"/>
 <area shape="poly" id="edge16_Node000014_Node000017" title=" " alt="" coords="571,135,477,156,476,151,570,130"/>
 <area shape="poly" id="edge17_Node000017_Node000008" title=" " alt="" coords="345,152,320,144,240,108,242,103,322,140,347,147"/>
 </map>

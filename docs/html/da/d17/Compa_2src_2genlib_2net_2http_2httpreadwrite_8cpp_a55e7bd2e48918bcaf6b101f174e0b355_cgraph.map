@@ -1,5 +1,12 @@
 <map id="http_WriteHttpRequest" name="http_WriteHttpRequest">
-<area shape="rect" id="Node000001" title="Writes the content of a HTTP request initiated by a UpnpMakeHttpRequest() call. The end of the conten..." alt="" coords="5,5,176,31"/>
-<area shape="rect" id="Node000002" href="$d5/d78/sock_8cpp.html#ad1241b973fa76980eef882848fb535c3" title="Writes data on the socket in sockinfo." alt="" coords="224,5,316,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,15,210,15,210,21,176,21"/>
+<area shape="rect" id="Node000001" title="Writes the content of a HTTP request initiated by a UpnpMakeHttpRequest() call. The end of the conten..." alt="" coords="5,49,176,74"/>
+<area shape="rect" id="Node000002" href="$d5/d78/sock_8cpp.html#ad1241b973fa76980eef882848fb535c3" title="Writes data on the socket in sockinfo." alt="" coords="224,49,316,74"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,59,210,59,210,64,176,64"/>
+<area shape="rect" id="Node000003" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a2356245ef3089394fee85fd3f34be80f" title="Write to an SSL protected socket." alt="" coords="364,5,567,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="316,50,350,44,351,49,317,56"/>
+<area shape="rect" id="Node000005" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a64de72048c9ed20f9673c4d9564d5457" title="Write to a not SSL protected socket." alt="" coords="375,70,555,125"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="317,67,362,76,361,81,316,72"/>
+<area shape="rect" id="Node000004" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="615,41,763,81"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="567,39,601,45,600,50,566,44"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="555,80,601,73,601,78,556,85"/>
 </map>

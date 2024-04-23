@@ -1,6 +1,5 @@
 <map id="anonymous_namespace{sock::cpp}::sock_write_unprotected" name="anonymous_namespace{sock::cpp}::sock_write_unprotected">
-<area shape="rect" id="Node000001" title="Write to a not SSL protected socket." alt="" coords="5,29,185,84"/>
-<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="54,29,54,19,62,10,75,5,95,3,119,6,133,14,130,18,118,11,95,8,77,10,65,15,59,21,59,29"/>
-<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="233,37,381,77"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,54,219,54,219,59,185,59"/>
+<area shape="rect" id="Node000001" title="Write to a not SSL protected socket." alt="" coords="5,5,185,60"/>
+<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="233,13,381,53"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,30,219,30,219,35,185,35"/>
 </map>

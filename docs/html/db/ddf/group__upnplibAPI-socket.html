@@ -71,8 +71,7 @@ $(function() {
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle"><div class="title">Socket module<div class="ingroups"><a class="el" href="../../d6/d14/group__upnplibAPI.html">* UPNPLIB API</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -97,12 +96,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dd2/classupnplib_1_1CSocketErr.html">upnplib::CSocketErr</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-client</a> for portable handling of network socket errors with injected <a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a>.  <a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:ga5738af1c9e42dc87957952b00e67f080" id="r_ga5738af1c9e42dc87957952b00e67f080"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/ddf/group__upnplibAPI-socket.html#ga5738af1c9e42dc87957952b00e67f080">upnplib::PSocketErr</a> = std::shared_ptr&lt; <a class="el" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a> &gt;</td></tr>
-<tr class="memdesc:ga5738af1c9e42dc87957952b00e67f080"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smart pointer to <a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a> objects that handle network socket errors and used to inject the objects.  <br /></td></tr>
-<tr class="separator:ga5738af1c9e42dc87957952b00e67f080"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>The socket module contains all classes and free functions to manage network sockets. </p>
@@ -126,25 +119,6 @@ valid socket file descriptor</h2>
 <h2><a class="anchor" id="autotoc_md17"></a>
 options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE</h2>
 <p>I don't set the option to immediately reuse an address and I always set the option <code>SO_EXCLUSIVEADDRUSE</code> on Microsoft Windows. For more details of this have a look at <a href="../../\ref&#20;overview_reuseaddr">Socket&amp;#20;option&amp;#20;"reuse&amp;#20;address"</a>. </p>
-<h2 class="groupheader">Typedef Documentation</h2>
-<a id="ga5738af1c9e42dc87957952b00e67f080" name="ga5738af1c9e42dc87957952b00e67f080"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5738af1c9e42dc87957952b00e67f080">&#9670;&#160;</a></span>PSocketErr</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="../../db/ddf/group__upnplibAPI-socket.html#ga5738af1c9e42dc87957952b00e67f080">upnplib::PSocketErr</a> = typedef std::shared_ptr&lt;<a class="el" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a>&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Smart pointer to <a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a> objects that handle network socket errors and used to inject the objects. </p>
-
-<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00329">329</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
-
-</div>
-</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

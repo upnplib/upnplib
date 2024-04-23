@@ -66,7 +66,7 @@
 <area shape="poly" id="edge31_Node000039_Node000042" title=" " alt="" coords="957,122,924,113,877,94,835,83,836,77,878,89,926,107,959,117"/>
 <area shape="rect" id="Node000043" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="681,104,867,129"/>
 <area shape="poly" id="edge33_Node000039_Node000043" title=" " alt="" coords="931,131,867,126,867,121,931,125"/>
-<area shape="rect" id="Node000044" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="677,153,871,179"/>
+<area shape="rect" id="Node000044" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one UPnP device object for a specific address family with the UPnP library and get a handle..." alt="" coords="677,153,871,179"/>
 <area shape="poly" id="edge34_Node000039_Node000044" title=" " alt="" coords="931,150,871,157,870,152,931,145"/>
 <area shape="poly" id="edge32_Node000042_Node000027" title=" " alt="" coords="695,86,672,94,605,125,552,155,549,151,603,120,670,89,693,81"/>
 <area shape="poly" id="edge35_Node000044_Node000027" title=" " alt="" coords="664,169,587,169,587,163,664,163"/>

@@ -1,10 +1,11 @@
 #ifndef UPNPP_0_ADDRESSING_CONNECTION_HPP
 #define UPNPP_0_ADDRESSING_CONNECTION_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-09
+// Redistribution only with this Copyright remark. Last modified: 2024-04-23
 /*!
  * \file
- * \brief Declaration of classes and functions that manage network connections.
+ * \brief Declaration of common used classes and free functions for network
+ * connections.
  */
 
 #ifndef _MSC_VER
@@ -18,8 +19,9 @@
 namespace upnplib {
 
 /*!
- * \brief Responsibility: portable handle SIGPIPE on failed write to a remote
- * closed network socket.
+ * \ingroup upnplib-connection
+ * \brief Portable handle SIGPIPE on failed write to a remote closed network
+ * socket.
  *
  * This is a general solution, for when you are not in full control of the
  * program’s signal handling and want to write data to an actual pipe or use

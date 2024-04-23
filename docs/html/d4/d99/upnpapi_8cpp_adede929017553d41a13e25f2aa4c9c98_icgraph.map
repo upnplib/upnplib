@@ -4,7 +4,7 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1556,97,1524,69,1484,44,1455,33,1457,28,1487,40,1527,65,1560,93"/>
 <area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="1287,55,1481,80"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1519,105,1433,83,1435,77,1520,100"/>
-<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="1037,32,1230,57"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one UPnP device object for a specific address family with the UPnP library and get a handle..." alt="" coords="1037,32,1230,57"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1520,119,1409,112,1282,94,1221,78,1167,60,1169,55,1222,73,1283,89,1409,106,1520,114"/>
 <area shape="rect" id="Node000007" href="$d4/d99/upnpapi_8cpp.html#aead9c1aad0998507f66cf7f0749013d3" title="Unregisters a control point application, unsubscribing all active subscriptions." alt="" coords="1050,160,1217,185"/>
 <area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1520,133,1486,139,1344,157,1217,169,1217,164,1343,152,1485,134,1519,128"/>

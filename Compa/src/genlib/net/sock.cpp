@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-23
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,7 +43,7 @@
 
 #include <upnplib/global.hpp>
 #include <upnplib/synclog.hpp>
-#include <upnplib/connection.hpp>
+#include <upnplib/connection_common.hpp>
 #include <upnplib/socket.hpp> // needed for compiling on win32.
 
 #include <umock/sys_socket.hpp>
@@ -68,165 +68,6 @@ SSL_CTX* gSslCtx{nullptr};
 /*! \name Scope restricted to file
  * @{
  */
-
-#if 0
-// This is defined on MacOS
-#if defined(SO_NOSIGPIPE) || defined(DOXYGEN_RUN)
-/// \brief Helper class to unravel the code.
-class CNosigpipe {
-  public:
-    CNosigpipe(SOCKET a_sockfd) : m_sockfd(a_sockfd) {
-        // Save old option settings and set SO_NOSIGPIPE
-        TRACE2(this, " Construct CNosigpipe()")
-        int set{1};
-        socklen_t olen{sizeof(old)};
-        umock::sys_socket_h.getsockopt(m_sockfd, SOL_SOCKET, SO_NOSIGPIPE, &old,
-                                       &olen);
-        umock::sys_socket_h.setsockopt(m_sockfd, SOL_SOCKET, SO_NOSIGPIPE, &set,
-                                       sizeof(set));
-    }
-    ~CNosigpipe() {
-        // Restore old option settings
-        TRACE2(this, " Destruct CNosigpipe()")
-        umock::sys_socket_h.setsockopt(m_sockfd, SOL_SOCKET, SO_NOSIGPIPE, &old,
-                                       sizeof(old));
-    }
-
-  private:
-    SOCKET m_sockfd;
-    int old{};
-};
-#endif
-
-/*!
- * \brief Receives or sends data on one unicast link. That means the Unit
- * manages only one socket file descriptor. Also returns the time taken to
- * receive or send data.
- *
- * \return
- *	\li \c numBytes - On Success, number of bytes received or sent or
- *	\li \c UPNP_E_TIMEDOUT - Timeout
- *	\li \c UPNP_E_SOCKET_ERROR - Error on socket calls
- *	\li \c UPNP_E_SOCKET_WRITE - Error on send data
- */
-static int sock_read_write(
-    /*! [in] Socket Information Object. */
-    SOCKINFO* info,
-    /*! [out] Buffer to get data to or send data from. */
-    char* buffer,
-    /*! [in] Size of the buffer. */
-    size_t bufsize,
-    /*! [in] timeout value: < 0 blocks indefinitely waiting for a file
-                                descriptor to become ready. */
-    int* timeoutSecs,
-    /*! [in] Boolean value specifying read or write option. */
-    bool bRead) {
-    TRACE("Executing sock_read_write()")
-    if (info == nullptr || buffer == nullptr)
-        return UPNP_E_SOCKET_ERROR;
-    if (bufsize == 0)
-        return 0;
-
-    int retCode;
-    fd_set readSet;
-    fd_set writeSet;
-    long numBytes;
-    time_t start_time{time(NULL)};
-    SOCKET sockfd{info->socket};
-    ssize_t num_written;
-
-    FD_ZERO(&readSet);
-    FD_ZERO(&writeSet);
-    FD_SET(sockfd, bRead ? &readSet : &writeSet);
-
-    // timeoutSecs == nullptr means default timeout to use.
-    int timeout_secs =
-        (timeoutSecs == nullptr) ? upnplib::g_response_timeout : *timeoutSecs;
-
-    upnplib::CSocketErr sockerrObj;
-    while (true) {
-        // Due to 'man select' timeout should be considered to be undefined
-        // after select() returns so we must set it on every loop.
-        timeval timeout;
-        timeout.tv_sec = timeout_secs;
-        timeout.tv_usec = 0;
-
-        // select monitors only one socket file descriptor.
-        retCode = umock::sys_socket_h.select(
-            static_cast<int>(sockfd + 1), &readSet, &writeSet, NULL,
-            (timeout_secs < 0) ? NULL : &timeout);
-
-        if (retCode == 0)
-            return UPNP_E_TIMEDOUT;
-        if (retCode == SOCKET_ERROR) {
-            sockerrObj.catch_error();
-            if (sockerrObj == EINTRP)
-                // Signal catched by select(). It is not for us so we
-                continue;
-            return UPNP_E_SOCKET_ERROR;
-        } else
-            /* read or write. */
-            break;
-    }
-
-    if (bRead) {
-#ifdef UPNP_ENABLE_OPEN_SSL
-        if (info->ssl) {
-            // Typecasts are needed to call the SSL function and should not
-            // be an issue.
-            TRACE("Read data with syscall ::SSL_read().")
-            numBytes =
-                SSL_read(info->ssl, buffer, static_cast<SIZEP_T>(bufsize));
-        } else {
-#endif
-            TRACE("Read data with syscall ::recv().")
-            numBytes = umock::sys_socket_h.recv(
-                sockfd, buffer, static_cast<SIZEP_T>(bufsize), 0);
-#ifdef UPNP_ENABLE_OPEN_SSL
-        }
-#endif
-
-    } else { // write network data
-
-        size_t byte_left{bufsize};
-        long bytes_sent{};
-#ifdef SO_NOSIGPIPE // This is defined on MacOS
-        CNosigpipe nosigpipe(sockfd); // Save, set and restore option settings.
-#endif
-        while (byte_left != static_cast<size_t>(0)) {
-#ifdef UPNP_ENABLE_OPEN_SSL
-            if (info->ssl) {
-                TRACE("Write data with syscall ::SSL_write().")
-                num_written = SSL_write(info->ssl, buffer + bytes_sent,
-                                        static_cast<int>(byte_left));
-            } else {
-#endif
-                TRACE("Write data with syscall ::send().")
-                num_written =
-                    umock::sys_socket_h.send(sockfd, buffer + bytes_sent,
-                                             static_cast<SIZEP_T>(byte_left),
-                                             MSG_DONTROUTE | MSG_NOSIGNAL);
-#ifdef UPNP_ENABLE_OPEN_SSL
-            }
-#endif
-            if (num_written == -1) {
-                return UPNP_E_SOCKET_WRITE;
-            }
-            byte_left -= static_cast<size_t>(num_written);
-            bytes_sent += static_cast<long>(num_written);
-        }
-        numBytes = bytes_sent;
-    }
-    if (numBytes < 0)
-        return UPNP_E_SOCKET_ERROR;
-
-    /* subtract time used for reading/writing. */
-    if (timeoutSecs != nullptr && timeout_secs != 0)
-        *timeoutSecs -= static_cast<int>(time(NULL) - start_time);
-
-    return numBytes;
-}
-#endif // #if 0
 
 /*!
  * \brief Read from a not SSL protected socket.

@@ -1,0 +1,10 @@
+<map id="sock_write" name="sock_write">
+<area shape="rect" id="Node000001" title="Writes data on the socket in sockinfo." alt="" coords="5,49,97,74"/>
+<area shape="rect" id="Node000002" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a2356245ef3089394fee85fd3f34be80f" title="Write to an SSL protected socket." alt="" coords="145,5,348,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,50,131,44,132,49,98,56"/>
+<area shape="rect" id="Node000004" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a64de72048c9ed20f9673c4d9564d5457" title="Write to a not SSL protected socket." alt="" coords="157,70,337,125"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="98,67,144,76,143,81,97,72"/>
+<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="396,41,544,81"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="348,39,382,45,382,50,348,44"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="337,80,382,73,383,78,338,85"/>
+</map>

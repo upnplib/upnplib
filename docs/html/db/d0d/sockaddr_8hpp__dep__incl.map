@@ -15,15 +15,15 @@
 <area shape="poly" id="edge13_Node000006_Node000005" title=" " alt="" coords="551,140,372,191,371,186,549,135"/>
 <area shape="rect" id="Node000007" href="$d5/db2/miniserver_8cpp.html" title="Implements the functionality and utility functions used by the Miniserver module." alt="" coords="453,181,662,221"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="606,146,575,183,571,179,602,142"/>
-<area shape="rect" id="Node000008" href="$d5/d78/sock_8cpp.html" title="Manage network sockets and connections." alt="" coords="757,269,917,309"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="653,143,687,181,727,219,764,246,801,267,798,272,761,250,724,223,683,185,649,146"/>
+<area shape="rect" id="Node000008" href="$d5/d78/sock_8cpp.html" title="Manage network sockets and connections." alt="" coords="769,269,929,309"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="652,142,686,181,727,219,767,246,807,267,805,271,764,250,724,223,682,185,648,146"/>
 <area shape="rect" id="Node000009" href="$df/d13/ssdp__common_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for common SSDP usage." alt="" coords="738,181,897,221"/>
 <area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="683,137,777,179,775,184,681,141"/>
 <area shape="rect" id="Node000010" href="$d4/d99/ssdp__ctrlpt_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for Control Points with SSDP." alt="" coords="921,181,1079,221"/>
 <area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="723,134,921,179,920,184,722,139"/>
-<area shape="rect" id="Node000011" href="$dd/d42/connection_8hpp.html" title="Declaration of classes and functions that manage network connections." alt="" coords="1103,181,1278,221"/>
-<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="730,131,913,155,1092,179,1103,181,1103,186,1092,184,912,160,729,136"/>
-<area shape="poly" id="edge11_Node000011_Node000008" title=" " alt="" coords="1101,227,915,272,914,267,1099,222"/>
-<area shape="rect" id="Node000012" href="$df/db6/connection_8cpp.html" title="Definition of classes and functions that manage connections." alt="" coords="1079,277,1302,302"/>
-<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="1193,235,1193,276,1188,276,1188,235"/>
+<area shape="rect" id="Node000011" href="$dd/d74/connection__common_8hpp.html" title="Declaration of common used classes and functions for network connections." alt="" coords="1104,181,1293,221"/>
+<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="730,131,913,155,1092,179,1104,181,1103,186,1092,184,912,161,729,136"/>
+<area shape="poly" id="edge11_Node000011_Node000008" title=" " alt="" coords="1109,227,926,272,925,267,1108,222"/>
+<area shape="rect" id="Node000012" href="$dc/df7/connection__common_8cpp.html" title="Definition of classes and functions that manage connections." alt="" coords="1101,269,1296,309"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="1201,235,1201,269,1196,269,1196,235"/>
 </map>

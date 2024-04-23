@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-22
+// Redistribution only with this Copyright remark. Last modified: 2024-04-23
 /*!
  * \file
  * \brief **Socket Module:** manage properties and methods but not connections
@@ -94,6 +94,7 @@ namespace upnplib {
 /*!
  * \brief Manage basic issues of a network socket
  * \ingroup upnplibAPI-socket
+ * \ingroup upnplib-socket
  *
  * This class takes the resources and results as given by the platform (Unix,
  * MacOS, MS Windows). It does not perform any emulations for unification. The
@@ -199,6 +200,7 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
 /*!
  * \brief Manage all aspects of a network socket.
  * \ingroup upnplibAPI-socket
+ * \ingroup upnplib-socket
  */
 class UPNPLIB_API CSocket : public CSocket_basic {
   public:
@@ -305,6 +307,7 @@ class UPNPLIB_API CWSAStartup {
  * \brief Portable catch **one** network socket error from the operating
  * system, and provide information about it.
  * \ingroup upnplibAPI-socket
+ * \ingroup upnplib-socket
  *
  * This is a C++ interface for dependency injection of different
  * \glos{depinj,di-services}, e.g. for production or Unit Tests (mocking).
@@ -324,7 +327,7 @@ class UPNPLIB_API ISocketErr {
 /*!
  * \brief Smart pointer to \glos{depinj,di-service} objects that handle network
  * socket errors and used to inject the objects.
- * \ingroup upnplibAPI-socket
+ * \ingroup upnplib-socket
  */
 using PSocketErr = std::shared_ptr<ISocketErr>;
 
@@ -332,6 +335,7 @@ using PSocketErr = std::shared_ptr<ISocketErr>;
  * \brief \glos{depinj,di-service} for portable handling of network socket
  * errors.
  * \ingroup upnplibAPI-socket
+ * \ingroup upnplib-socket
  *
  * There is a compatibility problem with Winsock2 on the Microsoft Windows
  * platform that does not support detailed error information given in the global
@@ -358,6 +362,7 @@ class UPNPLIB_API CSocketErrService : public ISocketErr {
  * \brief \glos{depinj,di-client} for portable handling of network socket
  * errors with injected \glos{depinj,di-service}.
  * \ingroup upnplibAPI-socket
+ * \ingroup upnplib-socket
  *
  * Usage of the class:
  * \code

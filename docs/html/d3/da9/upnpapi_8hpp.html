@@ -244,9 +244,6 @@ Macros</h2></td></tr>
 <tr class="memitem:af0947c94106f7bfe82e7d54067612c9b" id="r_af0947c94106f7bfe82e7d54067612c9b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/da9/upnpapi_8hpp.html#af0947c94106f7bfe82e7d54067612c9b">MAX_SOAP_CONTENT_LENGTH</a>&#160;&#160;&#160;(size_t)32000</td></tr>
 <tr class="memdesc:af0947c94106f7bfe82e7d54067612c9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">MAX_SOAP_CONTENT_LENGTH.  <br /></td></tr>
 <tr class="separator:af0947c94106f7bfe82e7d54067612c9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fbb6567e521cd68050ebaba20ba946a" id="r_a4fbb6567e521cd68050ebaba20ba946a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/da9/upnpapi_8hpp.html#a4fbb6567e521cd68050ebaba20ba946a">NUM_HANDLE</a>&#160;&#160;&#160;200</td></tr>
-<tr class="memdesc:a4fbb6567e521cd68050ebaba20ba946a"><td class="mdescLeft">&#160;</td><td class="mdescRight">NUM_HANDLE.  <br /></td></tr>
-<tr class="separator:a4fbb6567e521cd68050ebaba20ba946a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a880724c6b595eb9468fe98a1a2c22085" id="r_a880724c6b595eb9468fe98a1a2c22085"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/da9/upnpapi_8hpp.html#a880724c6b595eb9468fe98a1a2c22085">UPNP_TIMEOUT</a>&#160;&#160;&#160;30</td></tr>
 <tr class="memdesc:a880724c6b595eb9468fe98a1a2c22085"><td class="mdescLeft">&#160;</td><td class="mdescRight">UPNP_TIMEOUT.  <br /></td></tr>
 <tr class="separator:a880724c6b595eb9468fe98a1a2c22085"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -272,7 +269,6 @@ Enumerations</h2></td></tr>
 , <b>HND_CLIENT</b>
 , <b>HND_DEVICE</b>
  }</td></tr>
-<tr class="memdesc:a2b57a2af79ca49c62e0994e4e5989e04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies if a device, or client has to be handled for a connection.  <a href="../../d3/da9/upnpapi_8hpp.html#a2b57a2af79ca49c62e0994e4e5989e04">More...</a><br /></td></tr>
 <tr class="separator:a2b57a2af79ca49c62e0994e4e5989e04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd0e7f62f90e8c2b6d9f10de04cdfde4" id="r_abd0e7f62f90e8c2b6d9f10de04cdfde4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/da9/upnpapi_8hpp.html#abd0e7f62f90e8c2b6d9f10de04cdfde4">UpnpFunName</a> { <br />
 &#160;&#160;<b>SUBSCRIBE</b>
@@ -326,6 +322,9 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:ac4d94c3e0ec4dfa5640f42fda313c5f4" id="r_ac4d94c3e0ec4dfa5640f42fda313c5f4"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/da9/upnpapi_8hpp.html#ac4d94c3e0ec4dfa5640f42fda313c5f4">NUM_HANDLE</a> {200}</td></tr>
+<tr class="memdesc:ac4d94c3e0ec4dfa5640f42fda313c5f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximal number of available <a class="el" href="../../d5/d67/Glossary.html#glossary_unit">UPnP Unit</a> handles.  <br /></td></tr>
+<tr class="separator:ac4d94c3e0ec4dfa5640f42fda313c5f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b23201fb250f9f61c0f0b4dc9055b8e" id="r_a7b23201fb250f9f61c0f0b4dc9055b8e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/da9/upnpapi_8hpp.html#a7b23201fb250f9f61c0f0b4dc9055b8e">g_maxContentLength</a></td></tr>
 <tr class="memdesc:a7b23201fb250f9f61c0f0b4dc9055b8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum content-length (in bytes) that the SDK will process on an incoming packet.  <br /></td></tr>
 <tr class="separator:a7b23201fb250f9f61c0f0b4dc9055b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -423,7 +422,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <div class="textblock"><p>Data to be stored in handle table for Handle Info. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00078">78</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00079">79</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
 </div><div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for Handle_Info:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -606,7 +605,7 @@ Active SSDP searches. </td></tr>
 </div><div class="memdoc">
 <div class="textblock"><p><a class="el" href="../../d3/da9/upnpapi_8hpp.html#d8/db0/structUpnpNonblockParam" title="UpnpNonblockParam.">UpnpNonblockParam</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00250">250</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00251">251</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
 </div><table class="fieldtable">
 <tr><th colspan="3">Class Members</th></tr>
 <tr><td class="fieldtype">
@@ -796,7 +795,7 @@ UpnpNonblockParam </td></tr>
 
 <p>E_HTTP_SYNTAX. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00279">279</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00280">280</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
 
 </div>
 </div>
@@ -817,7 +816,7 @@ UpnpNonblockParam </td></tr>
 
 <p>HandleLock. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00132">132</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00133">133</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
 
 </div>
 </div>
@@ -838,7 +837,7 @@ UpnpNonblockParam </td></tr>
 
 <p>HandleReadLock. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00138">138</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00139">139</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
 
 </div>
 </div>
@@ -859,7 +858,7 @@ UpnpNonblockParam </td></tr>
 
 <p>HandleUnlock. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00141">141</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00142">142</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
 
 </div>
 </div>
@@ -880,7 +879,7 @@ UpnpNonblockParam </td></tr>
 
 <p>HandleWriteLock. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00135">135</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00136">136</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
 
 </div>
 </div>
@@ -920,24 +919,6 @@ UpnpNonblockParam </td></tr>
 
 </div>
 </div>
-<a id="a4fbb6567e521cd68050ebaba20ba946a" name="a4fbb6567e521cd68050ebaba20ba946a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4fbb6567e521cd68050ebaba20ba946a">&#9670;&#160;</a></span>NUM_HANDLE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define NUM_HANDLE&#160;&#160;&#160;200</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>NUM_HANDLE. </p>
-
-<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00064">64</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
-
-</div>
-</div>
 <a id="a880724c6b595eb9468fe98a1a2c22085" name="a880724c6b595eb9468fe98a1a2c22085"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a880724c6b595eb9468fe98a1a2c22085">&#9670;&#160;</a></span>UPNP_TIMEOUT</h2>
 
@@ -968,10 +949,9 @@ UpnpNonblockParam </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Specifies if a UPnP Device, or a control point has to be handled for a connection. </p>
 
-<p>Specifies if a device, or client has to be handled for a connection. </p>
-
-<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00074">74</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00075">75</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
 
 </div>
 </div>
@@ -989,7 +969,7 @@ UpnpNonblockParam </td></tr>
 
 <p>UpnpFunName. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00236">236</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00237">237</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1007,7 +987,7 @@ UpnpNonblockParam </td></tr>
 
 <p>Possible status of the internal webserver. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00276">276</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00277">277</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
 
 </div>
 </div>
@@ -1036,7 +1016,7 @@ UpnpNonblockParam </td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03608">3608</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03614">3614</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
@@ -1238,7 +1218,7 @@ UpnpNonblockParam </td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03459">3459</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03465">3465</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-5-summary" class="dynsummary" style="display:block;">
@@ -1357,7 +1337,7 @@ UpnpNonblockParam </td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03479">3479</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03485">3485</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-7-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-7-summary" class="dynsummary" style="display:block;">
@@ -1478,7 +1458,7 @@ UpnpNonblockParam </td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03516">3516</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03522">3522</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-9-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-9-summary" class="dynsummary" style="display:block;">
@@ -1595,7 +1575,7 @@ UpnpNonblockParam </td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03553">3553</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03559">3559</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-11-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-11-summary" class="dynsummary" style="display:block;">
@@ -1780,7 +1760,7 @@ UpnpNonblockParam </td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03583">3583</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03589">3589</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-13" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-13-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-13-summary" class="dynsummary" style="display:block;">
@@ -1838,7 +1818,7 @@ UpnpNonblockParam </td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03058">3058</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03064">3064</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-14" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-14-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-14-summary" class="dynsummary" style="display:block;">
@@ -1895,7 +1875,7 @@ UpnpNonblockParam </td></tr>
 <p>UpnpThreadDistribution. </p>
 <p>UpnpThreadDistribution. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03353">3353</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l03359">3359</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
 <div id="dynsection-16" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-16-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-16-summary" class="dynsummary" style="display:block;">
@@ -2709,6 +2689,32 @@ UpnpNonblockParam </td></tr>
 <p>IPv6 ULA or GUA port for the mini-server. </p>
 
 <p class="definition">Definition at line <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html#l00186">186</a> of file <a class="el" href="../../d4/d99/upnpapi_8cpp_source.html">upnpapi.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ac4d94c3e0ec4dfa5640f42fda313c5f4" name="ac4d94c3e0ec4dfa5640f42fda313c5f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4d94c3e0ec4dfa5640f42fda313c5f4">&#9670;&#160;</a></span>NUM_HANDLE</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int NUM_HANDLE {200}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Maximal number of available <a class="el" href="../../d5/d67/Glossary.html#glossary_unit">UPnP Unit</a> handles. </p>
+
+<p class="definition">Definition at line <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html#l00064">64</a> of file <a class="el" href="../../d3/da9/upnpapi_8hpp_source.html">upnpapi.hpp</a>.</p>
 
 </div>
 </div>

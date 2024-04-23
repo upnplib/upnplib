@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-22
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -60,8 +60,8 @@
 /// MAX_SOAP_CONTENT_LENGTH
 #define MAX_SOAP_CONTENT_LENGTH (size_t)32000
 
-/// NUM_HANDLE
-#define NUM_HANDLE 200
+/// Maximal number of available \glos{unit,UPnP Unit} handles.
+constexpr int NUM_HANDLE{200};
 
 extern size_t g_maxContentLength;
 extern int g_UpnpSdkEQMaxLen;
@@ -70,7 +70,8 @@ extern int g_UpnpSdkEQMaxAge;
 /// UPNP_TIMEOUT
 #define UPNP_TIMEOUT 30
 
-/// Specifies if a device, or client has to be handled for a connection.
+/*! Specifies if a UPnP Device, or a control point has to be handled for a
+ * connection. */
 typedef enum { HND_INVALID = -1, HND_CLIENT, HND_DEVICE } Upnp_Handle_Type;
 
 

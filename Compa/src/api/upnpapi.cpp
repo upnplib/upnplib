@@ -185,7 +185,7 @@ in_port_t LOCAL_PORT_V6;
 /*! \brief IPv6 ULA or GUA port for the mini-server */
 in_port_t LOCAL_PORT_V6_ULA_GUA;
 
-/*! \brief UPnP device and control point handle table  */
+/*! \brief UPnP Device and control point handle table  */
 static Handle_Info* HandleTable[NUM_HANDLE];
 
 /*! \brief Maximum content-length (in bytes) that the SDK will process on an
@@ -733,15 +733,15 @@ char* UpnpGetServerUlaGuaIp6Address() {
 }
 
 /*!
- * \brief Get a free handle.
+ * \brief Get a free \glos{unit,UPnP Unit} handle.
  *
- * \return On success, an integer greater than zero or UPNP_E_OUTOF_HANDLE on
- *  failure.
+ * \returns
+ *  On success: an integer greater than zero\n
+ *  On error: UPNP_E_OUTOF_HANDLE
  */
 #if defined(COMPA_HAVE_DEVICE_SSDP) || defined(COMPA_HAVE_CTRLPT_SSDP)
 static int GetFreeHandle() {
-    /* Handle 0 is not used as NULL translates to 0 when passed as a handle
-     */
+    // Handle 0 is not used as NULL translates to 0 when passed as a handle
     int i = 1;
 
     while (i < NUM_HANDLE && HandleTable[i] != NULL)
@@ -1095,6 +1095,7 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
 #endif
     HandleLock();
 
+    // Do some basic parameter checks.
     UpnpPrintf(
         UPNP_ALL, API, __FILE__, __LINE__,
         "Inside UpnpRegisterRootDevice3 (same as UpnpRegisterRootDevice4)\n");
@@ -1108,6 +1109,8 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
         retVal = UPNP_E_INVALID_PARAM;
         goto exit_function;
     }
+
+    // Get a UPnP Unit handle and initialize handle info for a UPnP Device.
     *Hnd = GetFreeHandle();
     if (*Hnd == UPNP_E_OUTOF_HANDLE) {
         retVal = UPNP_E_OUTOF_MEMORY;
@@ -1123,7 +1126,9 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__, "Root device URL is %s\n",
                DescUrl);
     HInfo->aliasInstalled = 0;
-    HInfo->HType = HND_DEVICE;
+
+    HInfo->HType = HND_DEVICE; // Set handle info to UPnP Device.
+
     strncpy(HInfo->DescURL, DescUrl, sizeof(HInfo->DescURL) - 1);
     if (LowerDescUrl == nullptr)
         strncpy(HInfo->LowerDescURL, DescUrl, sizeof(HInfo->LowerDescURL) - 1);
@@ -1132,7 +1137,7 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
                 sizeof(HInfo->LowerDescURL) - 1);
     UpnpPrintf(UPNP_ALL, API, __FILE__, __LINE__,
                "Following Root Device URL will be used when answering to "
-               "legacy CPs %s\n",
+               "legacy control points %s\n",
                HInfo->LowerDescURL);
     HInfo->Callback = Fun;
     HInfo->Cookie = (char*)Cookie;
@@ -1148,6 +1153,7 @@ int UpnpRegisterRootDevice3(const char* const DescUrl, const Upnp_FunPtr Fun,
     HInfo->MaxSubscriptionTimeOut = UPNP_INFINITE;
     HInfo->DeviceAf = AddressFamily;
 
+    // Get own device description from local XML file.
     retVal = UpnpDownloadXmlDoc(HInfo->DescURL, &(HInfo->DescDocument));
     if (retVal != UPNP_E_SUCCESS) {
 #ifdef COMPA_HAVE_CTRLPT_SSDP

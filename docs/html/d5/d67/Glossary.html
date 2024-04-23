@@ -96,8 +96,6 @@ $(function() {
 <li>The <b>di-injector</b> which injects the service(s) into the client.</li>
 </ul>
 <p>The services that a client requires are the client's <b>dependencies</b>.</p>
-<p><a class="anchor" id="glossary_logdev"></a><em><b>logical device</b></em></p>
-<p>A C++ container object that embeds one or more <a class="el" href="../../d5/d67/Glossary.html#glossary_serv">service</a>s and advertises its presence on network(s). It may also embed other logical devices.</p>
 <p><a class="anchor" id="glossary_mlink"></a><em><b>multicast link</b></em></p>
 <p>This is a <a class="el" href="../../d5/d67/Glossary.html#glossary_conn">connection</a> that follows the network multicast specification. It has one local <a class="el" href="../../d5/d67/Glossary.html#glossary_sock">socket</a> and a number of remote sockets that are interested to receive UPnP™ messages. It uses stateless UDP datagrams as given by its sockets of type <code>SOCK_DGRAM</code>.</p>
 <p><a class="anchor" id="glossary_netaddr"></a><em><b>netaddress</b></em></p>
@@ -113,7 +111,7 @@ $(function() {
 <p>The default response timeout is 30 seconds.</p>
 <p>The <a href="https://upnplib.github.io/upnplib/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf">UPnP™ Device Architecture 2.0</a> specifies for several different responses a default timeout of 30 seconds. In summary, this SDK uses a timeout of 30 seconds by default for responses if nothing others noted.</p>
 <p><a class="anchor" id="glossary_rootdev"></a><em><b>root device</b></em></p>
-<p>A <a class="el" href="../../d5/d67/Glossary.html#glossary_logdev">logical device</a> that is not embedded in any other logical device.</p>
+<p>A <a class="el" href="../../d5/d67/Glossary.html#glossary_upnpdev">UPnP device</a> that is not embedded in any other UPnP device.</p>
 <p><a class="anchor" id="glossary_serv"></a><em><b>service</b></em></p>
 <p>Logical functional unit. Smallest units of control. Exposes actions and models the state of a <a class="el" href="../../d5/d67/Glossary.html#glossary_upnpdev">UPnP device</a> with state variables.</p>
 <p><a class="anchor" id="glossary_sock"></a><em><b>socket</b></em></p>
@@ -130,8 +128,10 @@ $(function() {
 <p>This is a main property of a <a class="el" href="../../d5/d67/Glossary.html#glossary_conn">connection</a>. It is either <code>SOCK_STREAM</code> for a stateful TCP connection or <code>SOCK_DGRAM</code> for a stateless UDP datagram connection. A socket as endpoint of a connection must have the same socket type property as the connection.</p>
 <p><a class="anchor" id="glossary_ulink"></a><em><b>unicast link</b></em></p>
 <p>This is a <a class="el" href="../../d5/d67/Glossary.html#glossary_conn">connection</a> with exactly two <a class="el" href="../../d5/d67/Glossary.html#glossary_sock">sockets</a>, each on its endpoints, a local and a remote one. The local socket will bind to a local network interface socket address, the remote one will be accepted. It uses a stateful TCP stream as given by its sockets of type <code>SOCK_STREAM</code>.</p>
-<p><a class="anchor" id="glossary_upnpdev"></a><em><b>UPnP device</b></em></p>
-<p>Any physical network node that serves at least a <a class="el" href="../../d5/d67/Glossary.html#glossary_rootdev">root device</a>. </p>
+<p><a class="anchor" id="glossary_upnpdev"></a><em><b>UPnP Device</b></em></p>
+<p>A C++ container object that embeds one or more <a class="el" href="../../d5/d67/Glossary.html#glossary_serv">service</a>s and advertises its presence on network(s). It may also embed other UPnP devices. It may also represent a network node that serves at least a <a class="el" href="../../d5/d67/Glossary.html#glossary_rootdev">root device</a>.</p>
+<p><a class="anchor" id="glossary_unit"></a><em><b>UPnP Unit</b></em></p>
+<p>This is a <a class="el" href="../../d5/d67/Glossary.html#glossary_upnpdev">UPnP device</a> or a <a class="el" href="../../d5/d67/Glossary.html#glossary_cp">control point</a>. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->

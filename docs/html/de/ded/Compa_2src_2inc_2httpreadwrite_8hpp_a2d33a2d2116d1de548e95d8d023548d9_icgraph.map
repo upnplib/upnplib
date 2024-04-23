@@ -83,7 +83,7 @@
 <area shape="poly" id="edge41_Node000032_Node000035" title=" " alt="" coords="578,732,530,704,474,678,436,667,438,662,476,673,533,699,581,728"/>
 <area shape="rect" id="Node000036" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="268,787,453,812"/>
 <area shape="poly" id="edge43_Node000032_Node000036" title=" " alt="" coords="533,768,427,790,426,784,532,763"/>
-<area shape="rect" id="Node000037" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one root&#45; or logical&#45;device object for a specific address family with the UPnP library and ..." alt="" coords="264,688,457,714"/>
+<area shape="rect" id="Node000037" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one UPnP device object for a specific address family with the UPnP library and get a handle..." alt="" coords="264,688,457,714"/>
 <area shape="poly" id="edge44_Node000032_Node000037" title=" " alt="" coords="532,738,426,716,427,711,533,732"/>
 <area shape="rect" id="Node000034" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="5,738,199,763"/>
 <area shape="poly" id="edge40_Node000033_Node000034" title=" " alt="" coords="250,753,199,753,199,748,250,748"/>

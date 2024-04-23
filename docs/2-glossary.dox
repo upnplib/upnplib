@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-20
+// Redistribution only with this Copyright remark. Last modified: 2024-04-22
 
 /*!
 \page Glossary
@@ -36,10 +36,6 @@ Because Dependency Injection is used by GoogleMock for the Unit Tests I will not
 - The **di-injector** which injects the service(s) into the client.
 
 The services that a client requires are the client's **dependencies**.
-
-\anchor glossary_logdev ***logical device***
-
-A C++ container object that embeds one or more [service](\ref glossary_serv)s and advertises its presence on network(s). It may also embed other logical devices.
 
 \anchor glossary_mlink ***multicast link***
 
@@ -114,7 +110,7 @@ time.
 
 \anchor glossary_rootdev ***root device***
 
-A [logical device](\ref glossary_logdev) that is not embedded in any other logical device.
+A [UPnP device](\ref glossary_upnpdev) that is not embedded in any other UPnP device.
 
 \anchor glossary_serv ***service***
 
@@ -146,9 +142,13 @@ This is a main property of a [connection](\ref glossary_conn). It is either `SOC
 
 This is a [connection](\ref glossary_conn) with exactly two [sockets](\ref glossary_sock), each on its endpoints, a local and a remote one. The local socket will bind to a local network interface socket address, the remote one will be accepted. It uses a stateful TCP stream as given by its sockets of type `SOCK_STREAM`.
 
-\anchor glossary_upnpdev ***UPnP device***
+\anchor glossary_upnpdev ***UPnP Device***
 
-Any physical network node that serves at least a [root device](\ref glossary_rootdev).
+A C++ container object that embeds one or more [service](\ref glossary_serv)s and advertises its presence on network(s). It may also embed other UPnP devices. It may also represent a network node that serves at least a [root device](\ref glossary_rootdev).
+
+\anchor glossary_unit ***UPnP Unit***
+
+This is a [UPnP device](\ref glossary_upnpdev) or a [control point](\ref glossary_cp).
  */
 // clang-format on
 

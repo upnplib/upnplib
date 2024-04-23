@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-04-12
+# Redistribution only with this Copyright remark. Last modified: 2024-04-23
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -18,7 +18,7 @@ set(UPNPLIB_SOURCE_FILES
     src/net/addrinfo.cpp
     src/net/sockaddr.cpp
     src/net/socket.cpp
-    src/net/connection.cpp
+    src/net/connection_common.cpp
     src/net/http/webserver.cpp
     src/net/http/httpreadwrite.cpp
 )
