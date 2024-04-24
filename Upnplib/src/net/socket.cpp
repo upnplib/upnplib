@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-18
+// Redistribution only with this Copyright remark. Last modified: 2024-04-24
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -103,13 +103,13 @@ static int getsockname(SOCKET a_sockfd, sockaddr* a_addr,
 // CSocket_basic class
 // ===================
 // Default constructor for an empty socket object
-CSocket_basic::CSocket_basic(){
+CSocket_basic::CSocket_basic() {
     TRACE2(this, " Construct default CSocket_basic()") //
 }
 
-// Constructor with given file desciptor
-CSocket_basic::CSocket_basic(SOCKET a_sfd) {
-    TRACE2(this, " Construct CSocket_basic(SOCKET)")
+// Setter with given file desciptor
+void CSocket_basic::set(SOCKET a_sfd) {
+    TRACE2(this, " Executing CSocket_basic::set(SOCKET)")
 
     // Check if we have a valid socket file descriptor
     int so_option{-1};
@@ -242,75 +242,6 @@ CSocket::CSocket(){
     TRACE2(this, " Construct default CSocket()") //
 }
 
-// Constructor for new socket file descriptor
-CSocket::CSocket(sa_family_t a_family, int a_socktype) {
-    TRACE2(this, " Construct CSocket(af, socktype)")
-
-    if (a_family != AF_INET6 && a_family != AF_INET)
-        throw std::invalid_argument(
-            UPNPLIB_LOGEXCEPT +
-            "MSG1015: Failed to create socket: invalid address family " +
-            std::to_string(a_family));
-    if (a_socktype != SOCK_STREAM && a_socktype != SOCK_DGRAM)
-        throw std::invalid_argument(
-            UPNPLIB_LOGEXCEPT +
-            "MSG1016: Failed to create socket: invalid socket type " +
-            std::to_string(a_socktype));
-
-    // Get new socket file descriptor.
-    SOCKET sfd = ::socket(a_family, a_socktype, 0);
-    if (sfd == INVALID_SOCKET)
-        throw_error("MSG1017: Failed to create socket:");
-
-    int so_option{0};
-    constexpr socklen_t optlen{sizeof(so_option)};
-
-    // Reset SO_REUSEADDR on all platforms if it should be set by default. This
-    // is unclear on WIN32. See note below.
-    // Type cast (char*)&so_option is needed for Microsoft Windows.
-    if (::setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR,
-                     reinterpret_cast<char*>(&so_option), optlen) != 0) {
-        CLOSE_SOCKET_P(sfd);
-        throw_error("MSG1018: Failed to set socket option SO_REUSEADDR:");
-    }
-
-#ifdef _MSC_VER
-    // Set socket option SO_EXCLUSIVEADDRUSE on Microsoft Windows.
-    // THIS IS AN IMPORTANT SECURITY ISSUE! Lock at
-    // REF: [Using SO_REUSEADDR and SO_EXCLUSIVEADDRUSE]
-    // (https://learn.microsoft.com/en-us/windows/win32/winsock/using-so-reuseaddr-and-so-exclusiveaddruse#application-strategies)
-    so_option = 1; // Set SO_EXCLUSIVEADDRUSE
-    // Type cast (char*)&so_option is needed for Microsoft Windows.
-    if (::setsockopt(sfd, SOL_SOCKET, SO_EXCLUSIVEADDRUSE,
-                     reinterpret_cast<char*>(&so_option), optlen) != 0) {
-        CLOSE_SOCKET_P(sfd);
-        throw_error(
-            "MSG1019: Failed to set socket option SO_EXCLUSIVEADDRUSE:");
-    }
-#endif
-
-    // Try to set socket option IPV6_V6ONLY to false if possible, means
-    // allowing IPv4 and IPv6. Although it makes no sense to enable
-    // IPV6_V6ONLY on an interface that can only use IPv4 we must reset it on
-    // Microsoft Windows because it is set there.
-#ifndef _MSC_VER
-    if (a_family == AF_INET6) {
-#endif
-        so_option = 0;
-        // Type cast (char*)&so_option is needed for Microsoft Windows.
-        if (::setsockopt(sfd, IPPROTO_IPV6, IPV6_V6ONLY,
-                         reinterpret_cast<char*>(&so_option), optlen) != 0) {
-            CLOSE_SOCKET_P(sfd);
-            throw_error("MSG1020: Failed to set socket option IPV6_V6ONLY:");
-        }
-#ifndef _MSC_VER
-    }
-#endif
-
-    // Store socket file descriptor
-    m_sfd = sfd;
-}
-
 // Move constructor
 CSocket::CSocket(CSocket&& that) {
     TRACE2(this, " Construct move CSocket()")
@@ -337,13 +268,95 @@ CSocket& CSocket::operator=(CSocket that) {
 
 // Destructor
 CSocket::~CSocket() {
-    TRACE2(this, " Destruct CSocket()")
+    TRACE2(this,
+           " Destruct CSocket(), shutdown and close socket file descriptor")
     ::shutdown(m_sfd, SHUT_RDWR);
     CLOSE_SOCKET_P(m_sfd);
 }
 
 // Setter
 // ------
+// Setter for new socket file descriptor
+void CSocket::set(sa_family_t a_family, int a_socktype) {
+    TRACE2(this, " Executing CSocket::set(af, socktype)")
+
+    if (a_family != AF_INET6 && a_family != AF_INET)
+        throw std::invalid_argument(
+            UPNPLIB_LOGEXCEPT +
+            "MSG1015: Failed to create socket: invalid address family " +
+            std::to_string(a_family));
+    if (a_socktype != SOCK_STREAM && a_socktype != SOCK_DGRAM)
+        throw std::invalid_argument(
+            UPNPLIB_LOGEXCEPT +
+            "MSG1016: Failed to create socket: invalid socket type " +
+            std::to_string(a_socktype));
+
+    // Get new socket file descriptor.
+    SOCKET sfd = umock::sys_socket_h.socket(a_family, a_socktype, 0);
+    if (sfd == INVALID_SOCKET)
+        throw_error("MSG1017: Failed to create socket:");
+
+    int so_option{0};
+    constexpr socklen_t optlen{sizeof(so_option)};
+
+    // Reset SO_REUSEADDR on all platforms if it should be set by default. This
+    // is unclear on WIN32. See note below.
+    // Type cast (char*)&so_option is needed for Microsoft Windows.
+    if (::setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR,
+                     reinterpret_cast<char*>(&so_option), optlen) != 0) {
+        throw_error("MSG1018: Failed to set socket option SO_REUSEADDR:");
+    }
+
+#ifdef _MSC_VER
+    // Set socket option SO_EXCLUSIVEADDRUSE on Microsoft Windows.
+    // THIS IS AN IMPORTANT SECURITY ISSUE! Lock at
+    // REF: [Using SO_REUSEADDR and SO_EXCLUSIVEADDRUSE]
+    // (https://learn.microsoft.com/en-us/windows/win32/winsock/using-so-reuseaddr-and-so-exclusiveaddruse#application-strategies)
+    so_option = 1; // Set SO_EXCLUSIVEADDRUSE
+    // Type cast (char*)&so_option is needed for Microsoft Windows.
+    if (::setsockopt(sfd, SOL_SOCKET, SO_EXCLUSIVEADDRUSE,
+                     reinterpret_cast<char*>(&so_option), optlen) != 0) {
+        throw_error(
+            "MSG1019: Failed to set socket option SO_EXCLUSIVEADDRUSE:");
+    }
+#endif
+
+    // Try to set socket option IPV6_V6ONLY to false if possible, means
+    // allowing IPv4 and IPv6. Although it makes no sense to enable
+    // IPV6_V6ONLY on an interface that can only use IPv4 we must reset it on
+    // Microsoft Windows because it is set there.
+#ifndef _MSC_VER
+    if (a_family == AF_INET6) {
+#endif
+        so_option = 0;
+        // Type cast (char*)&so_option is needed for Microsoft Windows.
+        if (::setsockopt(sfd, IPPROTO_IPV6, IPV6_V6ONLY,
+                         reinterpret_cast<char*>(&so_option), optlen) != 0) {
+            throw_error("MSG1020: Failed to set socket option IPV6_V6ONLY:");
+        }
+#ifndef _MSC_VER
+    }
+#endif
+
+    // Store socket file descriptor
+    m_sfd = sfd;
+}
+
+// Set IPV6_V6ONLY
+void CSocket::set_v6only(const bool a_opt) {
+    TRACE2(this, " Executing CSocket::set_ipv6_v6only()")
+
+    // Needed to have a valid argument for setsockopt()
+    const int so_option{a_opt};
+
+    // Type cast (char*)&so_option is needed for Microsoft Windows.
+    if (this->get_family() == AF_INET6 && !this->is_bound() &&
+        ::setsockopt(m_sfd, IPPROTO_IPV6, IPV6_V6ONLY,
+                     reinterpret_cast<const char*>(&so_option),
+                     sizeof(so_option)) != 0)
+        throw_error("MSG1006: Failed to set socket option IPV6_V6ONLY:");
+}
+
 #if 0
 void CSocket::set_reuse_addr(bool a_reuse) {
     // Set socket option SO_REUSEADDR on other platforms.
@@ -376,7 +389,7 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
     // set the flag before binding.
     if (addr_family == AF_INET6 && (a_flags & AI_PASSIVE) == 0) {
         // Don't use 'this->set_v6only(true)' because binding is protected with
-        // a mutex and we will get a deadlock because of using
+        // a mutex and we will get a deadlock due to using
         // 'this->is_bound()' in 'this->set_v6only(true)'.
         constexpr int so_option{1}; // true
         // Type cast (char*)&so_option is needed for Microsoft Windows.
@@ -410,21 +423,6 @@ void CSocket::listen() {
         throw_error("MSG1034: Failed to set socket to listen:");
 
     m_listen = true;
-}
-
-// Set IPV6_V6ONLY
-void CSocket::set_v6only(const bool a_opt) {
-    TRACE2(this, " Executing CSocket::set_ipv6_v6only()")
-
-    // Needed to have a valid argument for setsockopt()
-    const int so_option{a_opt};
-
-    // Type cast (char*)&so_option is needed for Microsoft Windows.
-    if (this->get_family() == AF_INET6 && !this->is_bound() &&
-        ::setsockopt(m_sfd, IPPROTO_IPV6, IPV6_V6ONLY,
-                     reinterpret_cast<const char*>(&so_option),
-                     sizeof(so_option)) != 0)
-        throw_error("MSG1006: Failed to set socket option IPV6_V6ONLY:");
 }
 
 // Getter

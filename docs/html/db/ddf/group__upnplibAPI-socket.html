@@ -82,7 +82,7 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d84/classupnplib_1_1CSocket__basic.html">upnplib::CSocket_basic</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manage basic issues of a network socket.  <a href="../../db/d84/classupnplib_1_1CSocket__basic.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get information from a raw network socket file descriptor.  <a href="../../db/d84/classupnplib_1_1CSocket__basic.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d73/classupnplib_1_1CSocket.html">upnplib::CSocket</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manage all aspects of a network socket.  <a href="../../d8/d73/classupnplib_1_1CSocket.html#details">More...</a><br /></td></tr>
@@ -104,6 +104,7 @@ Classes</h2></td></tr>
 <h1><a class="anchor" id="autotoc_md12"></a>
 Specification for CSocket</h1>
 <p>The class encapsulates and manages one raw socket file descriptor. The file descriptor of a valid socket object cannot be changed but the object with its immutable file descriptor can be moved and assigned to another socket object. Copying a socket object isn't supported because having two objects with the same file descriptor may be very error prone in particular with multithreading. Effort has been taken to do not cache any socket information outside the socket file descriptor. All socket informations are direct set and get to/from the operating system with the file descriptor. The socket file descriptor is always valid except on an empty socket object.</p>
+<p><a class="anchor" id="empty_socket"></a></p>
 <h2><a class="anchor" id="autotoc_md13"></a>
 empty socket object</h2>
 <p>An empty socket object can be instantiated with the default constructor, e.g. <code>CSocket sockObj;</code>. It is a valid object and should be destructed. When moving a socket object, the left over source object is also empty. An empty socket object has an <code>INVALID_SOCKET</code> defined and no valid content. It throws an exception if using any of its Setter and Getter. Moving and assigning it is possible.</p>
@@ -118,7 +119,7 @@ valid socket file descriptor</h2>
 <p>I get this from the C standard library function: <code>int ::socket(address_family, socket_type, protocol)</code>. Other arguments than address family and socket type do not instantiate a valid socket object and throw an exception. For the protocol argument is always the default one used that is internal hard coded with argument 0.</p>
 <h2><a class="anchor" id="autotoc_md17"></a>
 options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE</h2>
-<p>I don't set the option to immediately reuse an address and I always set the option <code>SO_EXCLUSIVEADDRUSE</code> on Microsoft Windows. For more details of this have a look at <a href="../../\ref&#20;overview_reuseaddr">Socket&amp;#20;option&amp;#20;"reuse&amp;#20;address"</a>. </p>
+<p>I don't set the option to immediately reuse an address and I always set the option <code>SO_EXCLUSIVEADDRUSE</code> on Microsoft Windows. For more details of this have a look at <a class="el" href="../../d2/d59/Overview.html#overview_reuseaddr">Socket option &quot;reuse address&quot;</a>. </p>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -35,9 +35,9 @@
 <area shape="poly" id="edge13_Node000011_Node000014" title=" " alt="" coords="1078,225,1172,267,1169,272,1075,229"/>
 <area shape="rect" id="Node000015" href="$d4/d99/ssdp__ctrlpt_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for Control Points with SSDP." alt="" coords="1315,269,1474,309"/>
 <area shape="poly" id="edge14_Node000011_Node000015" title=" " alt="" coords="1118,222,1316,267,1315,272,1117,227"/>
-<area shape="rect" id="Node000016" href="$dd/d74/connection__common_8hpp.html" title="Declaration of common used classes and functions for network connections." alt="" coords="1499,269,1688,309"/>
+<area shape="rect" id="Node000016" href="$dd/d74/connection__common_8hpp.html" title="Declaration of common used classes and free functions for network connections." alt="" coords="1499,269,1688,309"/>
 <area shape="poly" id="edge15_Node000011_Node000016" title=" " alt="" coords="1124,219,1308,243,1487,267,1499,269,1498,274,1486,272,1307,249,1124,224"/>
 <area shape="poly" id="edge16_Node000016_Node000013" title=" " alt="" coords="1504,315,1321,360,1320,355,1503,310"/>
-<area shape="rect" id="Node000017" href="$dc/df7/connection__common_8cpp.html" title="Definition of classes and functions that manage connections." alt="" coords="1496,357,1691,397"/>
+<area shape="rect" id="Node000017" href="$dc/df7/connection__common_8cpp.html" title="Definition of common used classes and free functions for network connections." alt="" coords="1496,357,1691,397"/>
 <area shape="poly" id="edge17_Node000016_Node000017" title=" " alt="" coords="1596,323,1596,357,1591,357,1591,323"/>
 </map>

@@ -1,5 +1,7 @@
 <map id="anonymous_namespace{miniserver::cpp}::getNumericHostRedirection" name="anonymous_namespace{miniserver::cpp}::getNumericHostRedirection">
-<area shape="rect" id="Node000001" title="Returns the ip address with port as text that is bound to a socket." alt="" coords="5,5,228,60"/>
-<area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html#ab4704f8034f614a4600fb1a39ea32756" title="Get netaddress with port." alt="" coords="276,13,447,53"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,30,262,30,262,35,228,35"/>
+<area shape="rect" id="Node000001" title="Returns the ip address with port as text that is bound to a socket." alt="" coords="5,27,228,82"/>
+<area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html#ab4704f8034f614a4600fb1a39ea32756" title="Get netaddress with port." alt="" coords="290,5,461,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,39,276,34,277,39,228,45"/>
+<area shape="rect" id="Node000003" href="$db/d84/classupnplib_1_1CSocket__basic.html#ace0bfd26996eead61ac1bb5b18bd8276" title="Set a given raw socket file descriptor to the object." alt="" coords="276,70,475,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="228,64,263,68,262,73,228,69"/>
 </map>

@@ -1,0 +1,11 @@
+<map id="anonymous_namespace{miniserver::cpp}::get_miniserver_sockets2" name="anonymous_namespace{miniserver::cpp}::get_miniserver_sockets2">
+<area shape="rect" id="Node000001" title="Check if a network address is numeric." alt="" coords="5,77,185,132"/>
+<area shape="rect" id="Node000002" href="$d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="237,5,404,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,75,232,41,258,32,260,37,234,46,154,80"/>
+<area shape="rect" id="Node000003" href="$db/d84/classupnplib_1_1CSocket__basic.html#a70afe9ed6de1c17bb59f6c0bcc5bba00" title="Get the port number." alt="" coords="235,55,406,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="186,90,221,86,222,91,186,96"/>
+<area shape="rect" id="Node000004" href="$d8/d73/classupnplib_1_1CSocket.html#aab92e4ef9b21e3e1381eb80ce9abfffe" title="Set socket to listen." alt="" coords="233,120,408,145"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="186,113,220,117,219,123,186,119"/>
+<area shape="rect" id="Node000005" href="$d8/d73/classupnplib_1_1CSocket.html#a2df0469543e9e14fe465242c6ba122a2" title="Set arguments to get a socket file descriptor." alt="" coords="241,169,400,195"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="166,130,234,154,261,163,260,168,232,159,165,135"/>
+</map>

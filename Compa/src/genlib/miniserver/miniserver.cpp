@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-24
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -187,7 +187,8 @@ int getNumericHostRedirection(
 ) {
     TRACE("Executing getNumericHostRedirection()")
     try {
-        upnplib::CSocket_basic socketObj(a_socket);
+        upnplib::CSocket_basic socketObj;
+        socketObj.set(a_socket);
         std::string host_port = socketObj.get_addrp_str();
         memcpy(a_host_port, host_port.c_str(), a_hp_size);
         return true;
@@ -460,7 +461,8 @@ void fdset_if_valid( //
     }
     // Check if socket is valid and bound
     try {
-        upnplib::CSocket_basic sockObj(a_sock);
+        upnplib::CSocket_basic sockObj;
+        sockObj.set(a_sock);
         if (sockObj.is_bound())
 
             FD_SET(a_sock, a_set);
@@ -825,11 +827,13 @@ int get_port(
  *  \todo Detect wrong ip address, e.g. "2001:db8::1::2" on Microsoft Windows.
  */
 int init_socket_suff(
-    s_SocketStuff* s,      /*!< [in] Socket file descriptor with additional
-                              management information. */
-    const char* text_addr, /*!< [in] IP address as character string. */
-    int ip_version /*!< [in] Version number 4 or 6 for the used ip stack. */
-) {
+    /*! [out] Pointer to a structure that will be filled with a valid socket
+       file descriptor and additional management information. */
+    s_SocketStuff* s,
+    /*! [in] IP address as character string. */
+    const char* text_addr,
+    /*! [in] Version number 4 or 6 for the used ip stack. */
+    int ip_version) {
     UPNPLIB_LOGINFO "MSG1067: Executing with ip_address=\""
         << text_addr << "\", ip_version=" << ip_version << ".\n";
     int sockError;
@@ -1128,7 +1132,7 @@ error:
  *  - UPNP_E_LISTEN - Listen() failed.
  *  - UPNP_E_INTERNAL_ERROR - Port returned by the socket layer is < 0.
  */
-int get_miniserver_sockets(
+[[maybe_unused]] int get_miniserver_sockets(
     /*! [out] Pointer to a Socket Array that will be filled. */
     MiniServerSockArray* out,
     /*! [in] port on which the server is listening for incoming IPv4
@@ -1232,6 +1236,53 @@ error:
     }
 
     return ret_val;
+}
+
+[[maybe_unused]] int get_miniserver_sockets2(
+    /*! [out] Pointer to a Socket Array that will be filled. */
+    MiniServerSockArray* out,
+    /*! [in] port on which the server is listening for incoming IPv4
+     * connections. */
+    in_port_t listen_port4,
+    /*! [in] port on which the server is listening for incoming IPv6
+     * ULA connections. */
+    in_port_t listen_port6,
+    /*! [in] port on which the server is listening for incoming
+     * IPv6 ULA or GUA connections. */
+    in_port_t listen_port6UlaGua) {
+    UPNPLIB_LOGINFO "MSG1109: Executing with listen_port4="
+        << listen_port4 << ", listen_port6=" << listen_port6
+        << ", listen_port6UlaGua=" << listen_port6UlaGua << ".\n";
+
+    static upnplib::CSocket ss4Obj;
+    ss4Obj.set(AF_INET, SOCK_STREAM);
+    ss4Obj.bind(gIF_IPV4, std::to_string(listen_port4));
+    ss4Obj.listen();
+
+    static upnplib::CSocket ss6Obj;
+    ss6Obj.set(AF_INET6, SOCK_STREAM);
+    ss6Obj.bind(gIF_IPV6, std::to_string(listen_port6));
+    ss6Obj.listen();
+    // TODO: Check what's with
+    // ss6.serverAddr6->sin6_scope_id = gIF_INDEX;
+    // It is never copied to 'out'.
+
+    static upnplib::CSocket ss6UlaGuaObj;
+    ss6UlaGuaObj.set(AF_INET6, SOCK_STREAM);
+    ss6UlaGuaObj.bind(gIF_IPV6_ULA_GUA, std::to_string(listen_port6UlaGua));
+    ss6UlaGuaObj.listen();
+
+    // TODO: Check what's with the SOCK_DGRAM socket as noted in the doku.
+
+    out->miniServerPort4 = ss4Obj.get_port();
+    out->miniServerPort6 = ss6Obj.get_port();
+    out->miniServerPort6UlaGua = ss6UlaGuaObj.get_port();
+    out->miniServerSock4 = ss4Obj;
+    out->miniServerSock6 = ss6Obj;
+    out->miniServerSock6UlaGua = ss6UlaGuaObj;
+    UPNPLIB_LOGINFO "MSG1065: Finished.\n";
+
+    return UPNP_E_SUCCESS;
 }
 #endif /* COMPA_HAVE_WEBSERVER */
 

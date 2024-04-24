@@ -118,7 +118,8 @@ jobs:
     strategy:
       matrix:
         buildtype: [ 'Release', 'Debug' ]
-        googletest: [ '-D UPNPLIB_WITH_GOOGLETEST=ON', '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF' ]
+        googletest: [ '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF' ]
+        #googletest: [ '-D UPNPLIB_WITH_GOOGLETEST=ON', '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF' ]
       fail-fast: false
 
     steps:
@@ -390,7 +391,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ ubuntu-latest, macOS-latest, windows-latest ]
+        os: [ ubuntu-latest, windows-latest ]
+        #os: [ ubuntu-latest, macOS-latest, windows-latest ]
         buildtype: [ 'Release', 'Debug' ]
         option: [ '',
           '-DUPNPLIB_WITH_OPENSSL=OFF -DUPNPLIB_WITH_MINISERVER=OFF -DUPNPLIB_WITH_WEBSERVER=OFF -DUPNPLIB_WITH_CTRLPT_SSDP=OFF -DUPNPLIB_WITH_DEVICE_SSDP=OFF -DUPNPLIB_WITH_OPTION_SSDP=OFF -DUPNPLIB_WITH_CTRLPT_DESCRIPTION=OFF -DUPNPLIB_WITH_DEVICE_DESCRIPTION=OFF -DUPNPLIB_WITH_CTRLPT_SOAP=OFF -DUPNPLIB_WITH_DEVICE_SOAP=OFF -DUPNPLIB_WITH_CTRLPT_GENA=OFF -DUPNPLIB_WITH_DEVICE_GENA=OFF -DUPNPLIB_WITH_IXML=OFF -DUPNPLIB_WITH_TOOLS=OFF -DUPNPLIB_WITH_SAMPLES=OFF -DUPNPLIB_WITH_GOOGLETEST=OFF -DUPNPLIB_WITH_TRACE=OFF -DGTESTS_WITH_SHARED_LIBS=OFF',

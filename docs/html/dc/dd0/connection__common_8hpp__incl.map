@@ -1,5 +1,5 @@
 <map id="Upnplib/include/upnplib/connection_common.hpp" name="Upnplib/include/upnplib/connection_common.hpp">
-<area shape="rect" id="Node000001" title="Declaration of common used classes and functions for network connections." alt="" coords="155,5,345,45"/>
+<area shape="rect" id="Node000001" title="Declaration of common used classes and free functions for network connections." alt="" coords="155,5,345,45"/>
 <area shape="rect" id="Node000002" href="$da/dfc/socket_8hpp.html" title="Socket Module: manage properties and methods but not connections of ONE network socket to handle IPv4..." alt="" coords="178,93,322,119"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="253,46,253,79,247,79,247,46"/>
 <area shape="rect" id="Node000003" href="$d7/d1b/sockaddr_8hpp.html" title="Declaration of the Sockaddr class and some free helper functions." alt="" coords="171,167,329,192"/>

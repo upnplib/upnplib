@@ -196,7 +196,7 @@
  *
  * \defgroup upnplib-socket Socket module
  * \ingroup upnplib-Addressing
- * \copybrief upnplibAPI-socket
+ * \copydoc upnplibAPI-socket
  *
  * \defgroup upnplib-connection Connection module
  * \ingroup upnplib-Addressing

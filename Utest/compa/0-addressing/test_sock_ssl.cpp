@@ -160,7 +160,8 @@ TEST(SockDeathTest, sock_ssl_connect_signal_broken_pipe) {
     ::SOCKINFO info{};
     // b) a socket in the info structure that is expected to have a valid
     //    connection to a remote server. Here it hasn't.
-    CSocket sock(AF_INET6, SOCK_STREAM);
+    CSocket sock;
+    sock.set(AF_INET6, SOCK_STREAM);
     info.socket = sock;
     // c) initialize the global SSL Context in global variable gSslCtx;
     CGsslCtx gSslCtxObj;
