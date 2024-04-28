@@ -105,12 +105,12 @@
 <area shape="poly" id="edge50_Node000096_Node000072" title=" " alt="" coords="833,573,968,596,967,601,832,578"/>
 <area shape="rect" id="Node000098" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#ad0c68e095264a6c6a0bdc68974f6ae18" title="Read from an SSL protected socket." alt="" coords="919,383,1118,423"/>
 <area shape="poly" id="edge53_Node000097_Node000098" title=" " alt="" coords="805,411,906,406,906,411,805,416"/>
-<area shape="rect" id="Node000099" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="1212,308,1360,348"/>
+<area shape="rect" id="Node000099" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="1212,308,1360,348"/>
 <area shape="poly" id="edge54_Node000098_Node000099" title=" " alt="" coords="1090,380,1200,349,1201,354,1092,385"/>
 <area shape="rect" id="Node000102" href="$d5/d78/sock_8cpp.html#ad1241b973fa76980eef882848fb535c3" title="Writes data on the socket in sockinfo." alt="" coords="715,853,807,878"/>
 <area shape="poly" id="edge56_Node000101_Node000102" title=" " alt="" coords="593,825,702,849,700,855,592,830"/>
 <area shape="poly" id="edge61_Node000105_Node000099" title=" " alt="" coords="563,345,608,319,621,307,630,295,640,284,656,275,731,253,809,242,888,240,965,246,1039,256,1107,270,1217,301,1216,306,1106,276,1038,261,964,251,887,245,809,247,732,258,658,280,643,288,634,299,625,311,611,323,566,350"/>
-<area shape="rect" id="Node000106" href="$d2/dd2/classupnplib_1_1CSocketErr.html#afd9d96e3eb59a49103c3ed0080baf613" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="687,289,835,329"/>
+<area shape="rect" id="Node000106" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="687,289,835,329"/>
 <area shape="poly" id="edge62_Node000105_Node000106" title=" " alt="" coords="589,345,673,326,674,332,590,351"/>
 <area shape="rect" id="Node000107" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="714,354,807,379"/>
 <area shape="poly" id="edge63_Node000105_Node000107" title=" " alt="" coords="590,359,700,362,700,368,589,364"/>

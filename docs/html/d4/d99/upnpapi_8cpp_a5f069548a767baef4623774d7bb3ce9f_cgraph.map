@@ -16,7 +16,7 @@
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1112,95,1230,55,1253,47,1255,52,1232,60,1114,100"/>
 <area shape="rect" id="Node000007" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a64de72048c9ed20f9673c4d9564d5457" title="Write to a not SSL protected socket." alt="" coords="1242,70,1422,125"/>
 <area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="1122,106,1228,100,1228,105,1122,111"/>
-<area shape="rect" id="Node000006" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="1491,77,1639,117"/>
+<area shape="rect" id="Node000006" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="1491,77,1639,117"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1398,43,1487,71,1485,76,1397,48"/>
 <area shape="poly" id="edge7_Node000007_Node000006" title=" " alt="" coords="1422,95,1477,95,1477,100,1422,100"/>
 <area shape="rect" id="Node000009" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#ab8095d987290dfdc4f151dc8e3d7c40f" title="Gets the response from the server using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="471,1177,641,1202"/>
@@ -117,6 +117,6 @@
 <area shape="rect" id="Node000104" href="$d6/d58/namespaceanonymous__namespace_02httpreadwrite_8cpp_03.html#a54d65a1040bec3ce5cd1653277714254" title="Checks socket connection and wait if it is not connected." alt="" coords="1233,264,1431,333"/>
 <area shape="poly" id="edge64_Node000103_Node000104" title=" " alt="" coords="1140,275,1219,284,1218,289,1140,280"/>
 <area shape="poly" id="edge66_Node000105_Node000006" title=" " alt="" coords="1130,225,1193,230,1270,229,1353,220,1393,211,1432,199,1462,184,1489,166,1535,125,1538,129,1493,170,1465,189,1434,204,1395,217,1353,226,1270,235,1193,235,1130,231"/>
-<area shape="rect" id="Node000106" href="$d2/dd2/classupnplib_1_1CSocketErr.html#afd9d96e3eb59a49103c3ed0080baf613" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="1258,149,1406,189"/>
+<area shape="rect" id="Node000106" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="1258,149,1406,189"/>
 <area shape="poly" id="edge67_Node000105_Node000106" title=" " alt="" coords="1130,208,1244,184,1245,190,1131,213"/>
 </map>

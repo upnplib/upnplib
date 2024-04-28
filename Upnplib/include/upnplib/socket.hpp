@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-23
+// Redistribution only with this Copyright remark. Last modified: 2024-04-26
 /*!
  * \file
  * \brief **Socket Module:** manage properties and methods but not connections
@@ -128,7 +128,7 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
      * CSocket_basic sockObj();
      * try {
      *     sockObj.set(valid_socket_fd);
-     * } catch { // handle error };
+     * } catch(xcp) { // handle error };
      * SOCKET sfd = sockObj;
      * \endcode */
     operator const SOCKET&() const;
@@ -246,7 +246,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * ~$ CSocket sock1Obj;
      * ~$ try {
      * ~$     sock1Obj.set(AF_INET6, SOCK_STREAM);
-     * ~$ } catch { // handle error }
+     * ~$ } catch(xcp) { // handle error }
      * ~$ CSocket sock2Obj{std::move(sock1Obj)};
      * \endcode
      * */
@@ -267,7 +267,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * ~$ CSocket sock1Obj;
      * ~$ try {
      * ~$     sock1Obj.set(AF_INET6, SOCK_STREAM);
-     * ~$ } catch { // handle error }
+     * ~$ } catch(xcp) { // handle error }
      * ~$ CSocket sock2Obj;
      * ~$ sock2Obj = std::move(sock1Obj);
      * \endcode */
@@ -286,7 +286,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * ~$ CSocket sockObj;
      * ~$ try {
      * ~$     sockObj.set(AF_INET6, SOCK_STREAM);
-     * ~$ } catch { // handle error }
+     * ~$ } catch(xcp) { // handle error }
      * \endcode */
     void set(
         /*! [in] `AF_INET6` or `AF_INET` */
@@ -295,17 +295,18 @@ class UPNPLIB_API CSocket : public CSocket_basic {
         int a_socktype);
 
     /*! \brief Set IPV6_V6ONLY
-     * - IPV6_V6ONLY = false means allowing IPv4 and IPv6.
+     * - IPV6_V6ONLY = false means allowing IPv4 and IPv6 on one interface.
      * - This flag can only be set on sockets of address family AF_INET6.
      * - It is always false on a socket with address family AF_INET.
-     * - It is always true on Unix platforms after binding a socket to an
-     *   address of family AF_INET6 if passive mode isn't set on the address
-     *   info (flag AI_PASSIVE).
-     * - With an address info set to passive listen on local addresses (flag
-     *   AI_PASSIVE) IPV6_V6ONLY can be modified before binding it to an
-     *   address. After bind it hasn't changed. This means the socket can
+     * - It can never be modified on a sochet that is already bound to a local
+     *   address.
+     * - If Flag AI_PASSIVE **is** set (passive mode for listening on local
+     *   addresses): IPV6_V6ONLY can be modified before binding it to an
+     *   address. The setting persists after bind(). This means the socket can
      *   listen to IPv6 and IPv4 connections if IPV6_V6ONLY is set to false.
-     * - It can never be modified on a sochet that is bound to an address.
+     * - If Flag AI_PASSIVE **not** set (passive mode isn't set): IPV6_V6ONLY
+     *   will always be set to true no matter what it should be set. More
+     *   details at note to bind().
      *
      * If one of the conditions above doesn't match, the setter silently
      * ignores the request and will not modify the socket. Other system errors
@@ -317,8 +318,52 @@ class UPNPLIB_API CSocket : public CSocket_basic {
     /*! \brief Bind socket to a local interface address
      * \code
      * ~$ // Usage e.g.:
-     * ~$ sockObj.bind("[::1]", "8080");
-     * \endcode */
+     * ~$ CSocket sockObj;
+     * ~$ try {
+     * ~$     sockObj.set(AF_INET6, SOCK_STREAM);
+     * ~$     sockObj.bind("[::1]", "8080");
+     * ~$ } catch(xcp) { // handle error }
+     * \endcode
+     *
+     * If the AI_PASSIVE flag is specified, and **a_node** is empty (""), then
+     * the selected local socket addresses will be suitble for **binding** a
+     * socket that will **accept** connections. The selected local socket
+     * address will contain the "wildcard address" (INADDR_ANY for IPv4
+     * addresses, IN6ADDR_ANY_INIT for IPv6 address). The wildcard address is
+     * used by applications (typically servers) that intend to accept
+     * connections on any of the host's network addresses. If **a_node** is not
+     * empty (""), then the AI_PASSIVE flag is ignored.
+     * \code
+     * // typical for server listening
+     * ~$ sockObj.bind("", "54839", AI_PASSIVE);
+     * \endcode
+     *
+     * If the AI_PASSIVE flag is not set, then the selected local socket
+     * addresses will be suitable for use with **connect**, **sendto**, or
+     * **sendmsg** (typically clients). If **a_node** is empty ("") and flag
+     * AI_NUMERICHOST not set then you will get an exception: no address for
+     * hostname "". With AI_NUMERICHOST the unknown address "[::]" or "0.0.0.0"
+     * is used.
+     * \code
+     * ~$ // typical for client connect
+     * ~$ sockObj.bind("[2001:db8::1]", "49123");
+     * ~$ // or
+     * ~$ sockObj.bind("", "51593"); // uses "[::1]:51593" or "127.0.0.1:51593"
+     * \endcode
+     *
+     * There is additional information at <a
+     * href="https://www.man7.org/linux/man-pages/man3/getaddrinfo.3.html">getaddrinfo(3)
+     * — Linux manual page</a>.
+     *
+     * With address family AF_INET6 and not passive mode (**a_flags** not set
+     * to AI_PASSIVE) I internally always set IPV6_V6ONLY to true no matter
+     * what is given with **a_flags**. This is the behavior on Unix platforms
+     * when binding the address and cannot be modified. MacOS does not modify
+     * IPV6_V6ONLY with binding. On Microsoft Windows IPV6_V6ONLY is already
+     * set by default. To be portable with same behavior on all platforms I
+     * always set IPV6_V6ONLY before binding and cannot be modified afterwards.
+     *
+     * There is additional information at set_v6only() */
     void bind(
         /*! [in] local interface address */
         const std::string& a_node,
@@ -329,7 +374,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
          * described at <a
          * href="https://www.man7.org/linux/man-pages/man3/getaddrinfo.3.html">getaddrinfo(3)
          * — Linux manual page</a>. Multiple flags are specified by bitwise
-         * OR-ing them together. Examples are: `AI_PASSIVE | AI_NUMERICHOST |
+         * OR-ing them together. Example is: `AI_PASSIVE | AI_NUMERICHOST |
          * AI_NUMERICSERV` */
         const int a_flags = 0);
 

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-24
+// Redistribution only with this Copyright remark. Last modified: 2024-04-29
 
 #include <upnplib/global.hpp>
 #include <upnplib/socket.hpp>
@@ -205,8 +205,8 @@ TEST(SocketBasicTestSuite, instantiate_with_bound_socket_fd) {
     EXPECT_EQ((SOCKET)sockObj, bound_sock);
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_addr_str(), "[::1]");
-    EXPECT_EQ(sockObj.get_addrp_str(), "[::1]:8080");
+    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
+    EXPECT_EQ(sockObj.get_addrp_str(), "[::]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -810,17 +810,18 @@ TEST(SocketBindTestSuite, bind_to_next_free_port_successful) {
     EXPECT_FALSE(sockObj.is_listen());
 }
 
-TEST(SocketBindTestSuite, bind_only_service_successful) {
+TEST(SocketBindTestSuite, bind_only_service_passive_successful) {
     // Create an unbind socket object.
     CSocket sockObj;
     sockObj.set(AF_INET6, SOCK_STREAM);
+    sockObj.set_v6only(false);
 
     // Test Unit.
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    // With ai passive setting (for listening) the presented address is the
+    // With AI_PASSIVE setting (for listening) the presented address is the
     // unknown address. When using this to listen, it will listen on all local
     // network interfaces.
     EXPECT_EQ(sockObj.get_addr_str(), "[::]");
@@ -828,15 +829,38 @@ TEST(SocketBindTestSuite, bind_only_service_successful) {
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    // v6only is always false from the operating system, no matter what domain
-    // (AF_INET6) is set if we request a passive address information (flag
-    // AI_PASSIVE).
+    // With passive mode the preset IPV6_V6ONLY value isn't modified by the
+    // operating system.
     EXPECT_FALSE(sockObj.is_v6only());
     EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
-TEST(SocketBindTestSuite, bind_with_wrong_address) {
+TEST(SocketBindTestSuite, bind_only_service_not_passive_successful) {
+    // Create an unbind socket object.
+    CSocket sockObj;
+    sockObj.set(AF_INET6, SOCK_STREAM);
+    sockObj.set_v6only(false);
+
+    // Test Unit.
+    ASSERT_NO_THROW(sockObj.bind("", "8080"));
+
+    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
+    // With empty node the loopback address is selected.
+    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
+    EXPECT_EQ(sockObj.get_addrp_str(), "[::]:8080");
+    EXPECT_EQ(sockObj.get_port(), 8080);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    // v6only is always set true with AF_INET6 and active mode (AI_PASSIVE not
+    // set).
+    EXPECT_TRUE(sockObj.is_v6only());
+    EXPECT_TRUE(sockObj.is_bound());
+    EXPECT_FALSE(sockObj.is_listen());
+}
+
+TEST(SocketBindTestSuite, bind_with_empty_socket_fails) {
     // Test Unit. Binding an empty socket object will fail.
     EXPECT_THAT(
         []() {

@@ -4,7 +4,7 @@ var searchData=
   ['calc_5fdescurl_1',['calc_descURL',['../df/d57/namespaceanonymous__namespace_02urlconfig_8cpp_03.html#a2ba70b2d33be0858aae4a1f4920b7423',1,'anonymous_namespace{urlconfig.cpp}']]],
   ['calculateeventtime_2',['CalculateEventTime',['../da/d04/namespaceanonymous__namespace_02TimerThread_8cpp_03.html#abe6357a7e5da57a153a5110fa4a94411',1,'anonymous_namespace{TimerThread.cpp}']]],
   ['calcwaittime_3',['CalcWaitTime',['../dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a17e5932702163dfb5c09193a069959be',1,'anonymous_namespace{ThreadPool.cpp}']]],
-  ['catch_5ferror_4',['catch_error',['../d1/d16/classupnplib_1_1CSocketErrService.html#a0d6af73c9bf73e698ac22d83ad14d487',1,'upnplib::CSocketErrService::catch_error()'],['../d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed',1,'upnplib::CSocketErr::catch_error()'],['../d9/dd8/classupnplib_1_1ISocketErr.html#a10f1cf48751ab7c4ab7def92f8980031',1,'upnplib::ISocketErr::catch_error()']]],
+  ['catch_5ferror_4',['catch_error',['../d1/d16/classupnplib_1_1CSocketErrService.html#a7489a6ba4dae830e687a2a919e99a295',1,'upnplib::CSocketErrService::catch_error()'],['../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3',1,'upnplib::CSocketErr::catch_error()'],['../d9/dd8/classupnplib_1_1ISocketErr.html#a10f1cf48751ab7c4ab7def92f8980031',1,'upnplib::ISocketErr::catch_error()']]],
   ['check_5fconnect_5fand_5fwait_5fconnection_5',['Check_Connect_And_Wait_Connection',['../d6/d58/namespaceanonymous__namespace_02httpreadwrite_8cpp_03.html#a54d65a1040bec3ce5cd1653277714254',1,'anonymous_namespace{httpreadwrite.cpp}']]],
   ['check_5fsoap_5frequest_6',['check_soap_request',['../d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#aa5042e5194d138c6794ed0d42407bf3c',1,'anonymous_namespace{soap_device.cpp}']]],
   ['check_5fsoapaction_5fhdr_7',['check_soapaction_hdr',['../d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#a861d745204c74350296327193bf1d2e5',1,'anonymous_namespace{soap_device.cpp}']]],
@@ -33,6 +33,6 @@ var searchData=
   ['createworker_30',['CreateWorker',['../dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#ac4a17fd416d9ffc3692f99834066d1c3',1,'anonymous_namespace{ThreadPool.cpp}']]],
   ['csocket_31',['csocket',['../d8/d73/classupnplib_1_1CSocket.html#abea09f4baf9e720499481b69965c04c6',1,'upnplib::CSocket::CSocket()'],['../d8/d73/classupnplib_1_1CSocket.html#afb0a190da0318af5ac70a4a38347127e',1,'upnplib::CSocket::CSocket(CSocket &amp;&amp;)']]],
   ['csocket_5fbasic_32',['CSocket_basic',['../db/d84/classupnplib_1_1CSocket__basic.html#a07e859ed163d5b040c51bc69955db924',1,'upnplib::CSocket_basic']]],
-  ['csocketerr_33',['CSocketErr',['../d2/dd2/classupnplib_1_1CSocketErr.html#af9d81e182ae3c40a3bd76ba657dc8c4e',1,'upnplib::CSocketErr']]],
+  ['csocketerr_33',['CSocketErr',['../d2/dd2/classupnplib_1_1CSocketErr.html#aa26c6b3c19727370e22473e70cbe898e',1,'upnplib::CSocketErr']]],
   ['curi_34',['CUri',['../dd/db5/classupnplib_1_1CUri.html#aa0bd5796ad47818a282392e1cf7f7d7c',1,'upnplib::CUri']]]
 ];

@@ -112,24 +112,43 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a47613d40d03a2307b26626dedb93f7b3" id="r_a47613d40d03a2307b26626dedb93f7b3"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d16/classupnplib_1_1CSocketErrService.html#a47613d40d03a2307b26626dedb93f7b3">operator const int &amp;</a> () override</td></tr>
-<tr class="memdesc:a47613d40d03a2307b26626dedb93f7b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get error number.  <br /></td></tr>
-<tr class="separator:a47613d40d03a2307b26626dedb93f7b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d6af73c9bf73e698ac22d83ad14d487" id="r_a0d6af73c9bf73e698ac22d83ad14d487"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d16/classupnplib_1_1CSocketErrService.html#a0d6af73c9bf73e698ac22d83ad14d487">catch_error</a> () override</td></tr>
-<tr class="memdesc:a0d6af73c9bf73e698ac22d83ad14d487"><td class="mdescLeft">&#160;</td><td class="mdescRight">Catch error for later use.  <br /></td></tr>
-<tr class="separator:a0d6af73c9bf73e698ac22d83ad14d487"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96488ae3eb7c3d1808cfb0d7a5f4e9b9" id="r_a96488ae3eb7c3d1808cfb0d7a5f4e9b9"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d16/classupnplib_1_1CSocketErrService.html#a96488ae3eb7c3d1808cfb0d7a5f4e9b9">get_error_str</a> () const override</td></tr>
-<tr class="memdesc:a96488ae3eb7c3d1808cfb0d7a5f4e9b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get human readable error description of the catched error.  <br /></td></tr>
-<tr class="separator:a96488ae3eb7c3d1808cfb0d7a5f4e9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac22535eada62b982c8733979080d79e3" id="r_ac22535eada62b982c8733979080d79e3"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d16/classupnplib_1_1CSocketErrService.html#ac22535eada62b982c8733979080d79e3">operator const int &amp;</a> () override</td></tr>
+<tr class="memdesc:ac22535eada62b982c8733979080d79e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get error number.  <br /></td></tr>
+<tr class="separator:ac22535eada62b982c8733979080d79e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7489a6ba4dae830e687a2a919e99a295" id="r_a7489a6ba4dae830e687a2a919e99a295"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d16/classupnplib_1_1CSocketErrService.html#a7489a6ba4dae830e687a2a919e99a295">catch_error</a> () override</td></tr>
+<tr class="memdesc:a7489a6ba4dae830e687a2a919e99a295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Catch error for later use.  <br /></td></tr>
+<tr class="separator:a7489a6ba4dae830e687a2a919e99a295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88561a11496e6bb3edc009e82a585a31" id="r_a88561a11496e6bb3edc009e82a585a31"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d16/classupnplib_1_1CSocketErrService.html#a88561a11496e6bb3edc009e82a585a31">get_error_str</a> () const override</td></tr>
+<tr class="memdesc:a88561a11496e6bb3edc009e82a585a31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get human readable error description of the catched error.  <br /></td></tr>
+<tr class="separator:a88561a11496e6bb3edc009e82a585a31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a> for portable handling of network socket errors. </p>
 <p>There is a compatibility problem with Winsock2 on the Microsoft Windows platform that does not support detailed error information given in the global variable 'errno' that is used by POSIX. Instead it returns them with calling 'WSAGetLastError()'. This class encapsulates differences so there is no need to always check the platform to get the error information. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00428">428</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a0d6af73c9bf73e698ac22d83ad14d487" name="a0d6af73c9bf73e698ac22d83ad14d487"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d6af73c9bf73e698ac22d83ad14d487">&#9670;&#160;</a></span>catch_error()</h2>
+<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00474">474</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a344b33ef97d50cf2a0d811fa998a8b33" name="a344b33ef97d50cf2a0d811fa998a8b33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a344b33ef97d50cf2a0d811fa998a8b33">&#9670;&#160;</a></span>CSocketErrService()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">upnplib::CSocketErrService::CSocketErrService </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00491">491</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a22d5b83cc22a223d86f5cabb6831cd64" name="a22d5b83cc22a223d86f5cabb6831cd64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22d5b83cc22a223d86f5cabb6831cd64">&#9670;&#160;</a></span>~CSocketErrService()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -138,7 +157,35 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void upnplib::CSocketErrService::catch_error </td>
+          <td class="memname">upnplib::CSocketErrService::~CSocketErrService </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00494">494</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a7489a6ba4dae830e687a2a919e99a295" name="a7489a6ba4dae830e687a2a919e99a295"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7489a6ba4dae830e687a2a919e99a295">&#9670;&#160;</a></span>catch_error()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void upnplib::CSocketErrService::catch_error </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -155,10 +202,12 @@ Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="../../d9/dd8/classupnplib_1_1ISocketErr.html#a10f1cf48751ab7c4ab7def92f8980031">upnplib::ISocketErr</a>.</p>
 
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00505">505</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+
 </div>
 </div>
-<a id="a96488ae3eb7c3d1808cfb0d7a5f4e9b9" name="a96488ae3eb7c3d1808cfb0d7a5f4e9b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96488ae3eb7c3d1808cfb0d7a5f4e9b9">&#9670;&#160;</a></span>get_error_str()</h2>
+<a id="a88561a11496e6bb3edc009e82a585a31" name="a88561a11496e6bb3edc009e82a585a31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88561a11496e6bb3edc009e82a585a31">&#9670;&#160;</a></span>get_error_str()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -167,7 +216,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::string upnplib::CSocketErrService::get_error_str </td>
+          <td class="memname">std::string upnplib::CSocketErrService::get_error_str </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -184,10 +233,12 @@ Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="../../d9/dd8/classupnplib_1_1ISocketErr.html#aaf25fcde573d7dadfd88d2ffd14b7fa6">upnplib::ISocketErr</a>.</p>
 
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00514">514</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+
 </div>
 </div>
-<a id="a47613d40d03a2307b26626dedb93f7b3" name="a47613d40d03a2307b26626dedb93f7b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47613d40d03a2307b26626dedb93f7b3">&#9670;&#160;</a></span>operator const int &amp;()</h2>
+<a id="ac22535eada62b982c8733979080d79e3" name="ac22535eada62b982c8733979080d79e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac22535eada62b982c8733979080d79e3">&#9670;&#160;</a></span>operator const int &amp;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -196,7 +247,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual upnplib::CSocketErrService::operator const int &amp; </td>
+          <td class="memname">upnplib::CSocketErrService::operator const int &amp; </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -213,10 +264,13 @@ Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="../../d9/dd8/classupnplib_1_1ISocketErr.html#a3bb576a05d858fcdb20fe7e03a2bd6e3">upnplib::ISocketErr</a>.</p>
 
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00497">497</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>Upnplib/include/upnplib/<a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a></li>
+<li>Upnplib/src/net/<a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

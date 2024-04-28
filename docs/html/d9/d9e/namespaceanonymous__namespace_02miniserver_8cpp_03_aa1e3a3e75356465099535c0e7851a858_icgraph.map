@@ -1,5 +1,5 @@
 <map id="anonymous_namespace{miniserver::cpp}::get_miniserver_sockets2" name="anonymous_namespace{miniserver::cpp}::get_miniserver_sockets2">
-<area shape="rect" id="Node000001" title="Check if a network address is numeric." alt="" coords="831,5,1011,60"/>
+<area shape="rect" id="Node000001" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="831,5,1011,60"/>
 <area shape="rect" id="Node000002" href="$d5/db2/miniserver_8cpp.html#a85c0b17d965bdb9430a9ce2e6931770a" title="Initialize the sockets functionality for the Miniserver." alt="" coords="660,20,783,45"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="817,35,783,35,783,30,817,30"/>
 <area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="455,20,612,45"/>

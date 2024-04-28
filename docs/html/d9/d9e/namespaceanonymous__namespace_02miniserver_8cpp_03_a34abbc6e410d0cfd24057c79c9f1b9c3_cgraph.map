@@ -89,9 +89,9 @@
 <area shape="rect" id="Node000109" href="$df/db8/LinkedList_8cpp.html#a28e5dc6ff4a189982c97ae5780d360fd" title="Removes all memory associated with list nodes. Does not free LinkedList *list." alt="" coords="1083,591,1179,616"/>
 <area shape="poly" id="edge41_Node000108_Node000109" title=" " alt="" coords="911,601,1069,601,1069,606,911,606"/>
 <area shape="poly" id="edge46_Node000114_Node000004" title=" " alt="" coords="898,122,931,110,962,93,977,80,985,67,995,54,1011,41,1040,28,1071,21,1072,26,1042,33,1013,46,999,57,990,70,981,84,966,98,933,115,900,127"/>
-<area shape="rect" id="Node000014" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="1057,55,1205,95"/>
+<area shape="rect" id="Node000014" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="1057,55,1205,95"/>
 <area shape="poly" id="edge44_Node000114_Node000014" title=" " alt="" coords="898,123,1044,91,1045,96,899,128"/>
-<area shape="rect" id="Node000115" href="$d2/dd2/classupnplib_1_1CSocketErr.html#afd9d96e3eb59a49103c3ed0080baf613" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="1057,119,1205,159"/>
+<area shape="rect" id="Node000115" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="1057,119,1205,159"/>
 <area shape="poly" id="edge45_Node000114_Node000115" title=" " alt="" coords="899,134,1044,136,1043,141,899,140"/>
 <area shape="rect" id="Node000117" href="$d5/d78/sock_8cpp.html#af13a5f56b9850283b5813dff5592149a" title="Assign the passed in socket descriptor to socket descriptor in the SOCKINFO structure." alt="" coords="1091,939,1171,964"/>
 <area shape="poly" id="edge48_Node000116_Node000117" title=" " alt="" coords="910,904,1078,938,1077,943,909,909"/>

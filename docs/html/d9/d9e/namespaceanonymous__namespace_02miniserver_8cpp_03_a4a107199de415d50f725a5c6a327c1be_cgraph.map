@@ -91,9 +91,9 @@
 <area shape="rect" id="Node000108" href="$df/db8/LinkedList_8cpp.html#a28e5dc6ff4a189982c97ae5780d360fd" title="Removes all memory associated with list nodes. Does not free LinkedList *list." alt="" coords="855,591,951,616"/>
 <area shape="poly" id="edge43_Node000107_Node000108" title=" " alt="" coords="683,601,841,601,841,606,683,606"/>
 <area shape="poly" id="edge48_Node000113_Node000003" title=" " alt="" coords="670,122,703,110,734,93,749,80,757,67,767,54,783,41,812,28,843,21,844,26,814,33,785,46,771,57,762,70,753,84,738,98,705,115,672,127"/>
-<area shape="rect" id="Node000013" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="829,55,977,95"/>
+<area shape="rect" id="Node000013" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="829,55,977,95"/>
 <area shape="poly" id="edge46_Node000113_Node000013" title=" " alt="" coords="670,123,816,91,817,96,671,128"/>
-<area shape="rect" id="Node000114" href="$d2/dd2/classupnplib_1_1CSocketErr.html#afd9d96e3eb59a49103c3ed0080baf613" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="829,119,977,159"/>
+<area shape="rect" id="Node000114" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="829,119,977,159"/>
 <area shape="poly" id="edge47_Node000113_Node000114" title=" " alt="" coords="671,134,816,136,815,141,671,140"/>
 <area shape="rect" id="Node000116" href="$d5/d78/sock_8cpp.html#af13a5f56b9850283b5813dff5592149a" title="Assign the passed in socket descriptor to socket descriptor in the SOCKINFO structure." alt="" coords="863,939,943,964"/>
 <area shape="poly" id="edge50_Node000115_Node000116" title=" " alt="" coords="684,949,850,949,850,954,684,954"/>

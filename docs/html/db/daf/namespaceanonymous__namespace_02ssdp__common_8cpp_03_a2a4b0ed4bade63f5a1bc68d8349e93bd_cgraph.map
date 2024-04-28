@@ -1,7 +1,7 @@
 <map id="anonymous_namespace{ssdp_common::cpp}::create_ssdp_sock_v4" name="anonymous_namespace{ssdp_common::cpp}::create_ssdp_sock_v4">
 <area shape="rect" id="Node000001" title="Create an SSDP IPv4 socket." alt="" coords="5,30,185,85"/>
-<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="233,5,381,45"/>
+<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="233,5,381,45"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,41,219,36,220,41,186,46"/>
-<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#afd9d96e3eb59a49103c3ed0080baf613" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="233,69,381,109"/>
+<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="233,69,381,109"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="186,68,220,73,219,79,185,74"/>
 </map>

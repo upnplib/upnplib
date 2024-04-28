@@ -22,9 +22,9 @@
 <area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="818,126,852,126,852,132,818,131"/>
 <area shape="rect" id="Node000011" href="$d8/d45/namespaceanonymous__namespace_02membuffer_8cpp_03.html#aa81aeb90fb3c8389c7eb0a77b847101e" title="Initialize the buffer." alt="" coords="1039,108,1261,163"/>
 <area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="989,129,1026,130,1026,135,989,134"/>
-<area shape="rect" id="Node000013" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="668,165,816,205"/>
+<area shape="rect" id="Node000013" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="668,165,816,205"/>
 <area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="607,205,654,197,655,202,607,210"/>
-<area shape="rect" id="Node000014" href="$d2/dd2/classupnplib_1_1CSocketErr.html#afd9d96e3eb59a49103c3ed0080baf613" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="668,229,816,269"/>
+<area shape="rect" id="Node000014" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="668,229,816,269"/>
 <area shape="poly" id="edge13_Node000012_Node000014" title=" " alt="" coords="607,223,655,231,654,236,607,228"/>
 <area shape="rect" id="Node000015" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="695,293,789,319"/>
 <area shape="poly" id="edge14_Node000012_Node000015" title=" " alt="" coords="575,227,617,252,668,278,687,286,685,291,666,283,614,257,572,232"/>

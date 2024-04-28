@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-17
+// Redistribution only with this Copyright remark. Last modified: 2024-04-29
 /*!
  * \file
  * \brief Definition of the Addrinfo class and free helper functions.
@@ -154,34 +154,48 @@ CAddrinfo::~CAddrinfo() {
 addrinfo* CAddrinfo::get_addrinfo() const {
     TRACE2(this, " Executing CAddrinfo::get_addrinfo)")
 
-    // Check surounding brackets for AF_INET6 node address string.
-    std::string node;
+    std::string node; // Corrected node to use for getaddrinfo()
+
     if (!m_node.empty() && m_hints.ai_family == AF_INET6 &&
-        (m_hints.ai_flags & AI_NUMERICHOST))
+        (m_hints.ai_flags & AI_NUMERICHOST)) {
         // Here we have only ipv6 node strings representing a numeric ip
-        // address.
-        if (m_node.front() == '[' && m_node.back() == ']')
+        // address. Check surounding brackets for AF_INET6 node address string.
+        if (m_node.front() == '[' && m_node.back() == ']') {
             // remove surounding brackets for ::getaddrinfo()
             node = m_node.substr(1, m_node.length() - 2);
-        else
+        } else {
             // An ipv6 node string without enclosing brackets is never numeric
             // but we ask to be numeric. This is a failed condition for an
             // alphanumeric address string and we ask ::getaddrinfo() for an
             // unknown address info.
             node = "::";
-    else
-        node = m_node;
 
-    // Very helpful for debugging to see what is given to ::getaddrinfo()
-    // std::clog << "DEBUG: m_node = \"" << m_node << "\", node = \"" << node
-    //           << "\", m_service = \"" << m_service
-    //           << "\", m_hints.ai_flags = " << m_hints.ai_flags
-    //           << ", m_hints.ai_family = " << m_hints.ai_family << "\n";
+            /*! \todo **Next:** Throw exception for numeric host name without
+             * brackets. */
+            // throw std::invalid_argument(UPNPLIB_LOGEXCEPT +
+            //                             "MSG1113: AF_INET6 AI_NUMERICHOST "
+            //                             "without brackets '[]'. Nodename=\""
+            //                             + m_node + "\"\n");
+        }
+    } else if (m_node.empty() && !(m_hints.ai_flags & AI_PASSIVE)) {
+        // With an active empty node we get different results from
+        // getaddrinfo() depending on the platform. Ubuntu and MacOs return
+        // info of the loopback device, Debian returns info about an unknown
+        // address and Microsoft Windows returns the first real interface
+        // address. Therefore this SDK defines to return info about an unknown
+        // addrsss with an empty node and the loopback device with asking for
+        // it.
+        node = m_hints.ai_family == AF_INET6 ? "::" : "0.0.0.0";
+    } else {
+        node = m_node;
+    }
+
+    addrinfo* new_res{nullptr};
 
     // ::getaddrinfo()
-    addrinfo* new_res{nullptr};
     int ret = umock::netdb_h.getaddrinfo(
-        node.empty() ? nullptr : node.c_str(),
+        node.empty() && (m_hints.ai_flags & AI_PASSIVE) ? nullptr
+                                                        : node.c_str(),
         m_service.empty() ? nullptr : m_service.c_str(), &m_hints, &new_res);
 
     if (ret == EAI_NONAME && new_res == nullptr) {
@@ -200,12 +214,31 @@ addrinfo* CAddrinfo::get_addrinfo() const {
                 &new_res);
         }
     }
-    if (ret != 0)
-        throw std::runtime_error(
+    // Very helpful for debugging to see what is given to ::getaddrinfo()
+    // clang-format off
+    UPNPLIB_LOGINFO << "MSG1114: syscall ::getaddrinfo("
+        << (node.empty() && (m_hints.ai_flags & AI_PASSIVE)
+            ? "nullptr"
+            : "\"" + node + "\"") << ", "
+        << (m_service.empty()
+            ? "nullptr"
+            : "\"" + m_service + "\"") << ", "
+        << &m_hints << ", " << &new_res << ") using node=\""
+        << m_node << "\", hints.ai_flags="
+        << m_hints.ai_flags << ", hints.ai_family="
+        << m_hints.ai_family
+        << (ret != 0
+            ? ", get ERROR"
+            : ", get \"" + to_addrp_str(reinterpret_cast
+              <const sockaddr_storage*>(new_res->ai_addr)) + "\"") << "\n";
+    // clang-format on
+
+    if (ret != 0) {
+        throw std::invalid_argument(
             UPNPLIB_LOGEXCEPT +
             "MSG1037: Failed to get address information: errid(" +
             std::to_string(ret) + ")=\"" + ::gai_strerror(ret) + "\"");
-
+    }
     // Different on platforms: man getsockaddr says "Specifying 0 in
     // hints.ai_socktype indicates that socket addresses of any type can be
     // returned". Linux returns SOCK_STREAM, MacOS returns SOCK_DGRAM and win32

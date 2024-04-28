@@ -28,7 +28,7 @@
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="642,102,749,102,749,107,642,107"/>
 <area shape="rect" id="Node000006" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a64de72048c9ed20f9673c4d9564d5457" title="Write to a not SSL protected socket." alt="" coords="774,5,954,60"/>
 <area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="642,90,760,58,761,63,643,95"/>
-<area shape="rect" id="Node000005" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a5661a626ca485c2d6f3749791c9d27ed" title="Catches detailed error information." alt="" coords="1041,85,1189,125"/>
+<area shape="rect" id="Node000005" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="1041,85,1189,125"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="965,102,1028,102,1028,107,965,107"/>
 <area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="955,56,1032,78,1031,83,953,61"/>
 <area shape="rect" id="Node000008" href="$df/db8/LinkedList_8cpp.html#acaab477429a2d1e57eb1b24ee616be3a" title="Finds the specified item in the list." alt="" coords="1079,377,1151,403"/>
@@ -113,7 +113,7 @@
 <area shape="rect" id="Node000060" href="$dd/d1d/httpparser_8cpp.html#a203e4a83e2a55a4ae005374ef3bc98c0" title="Compares the header name with the header names stored in the linked list of messages." alt="" coords="785,1120,943,1145"/>
 <area shape="poly" id="edge57_Node000059_Node000060" title=" " alt="" coords="653,1043,704,1062,728,1081,752,1098,791,1114,789,1119,749,1103,725,1085,701,1067,651,1048"/>
 <area shape="poly" id="edge65_Node000089_Node000005" title=" " alt="" coords="354,248,415,223,489,199,624,172,732,161,840,153,977,134,1027,124,1029,129,978,139,840,159,732,167,625,177,490,205,417,228,356,253"/>
-<area shape="rect" id="Node000090" href="$d2/dd2/classupnplib_1_1CSocketErr.html#afd9d96e3eb59a49103c3ed0080baf613" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="522,214,670,254"/>
+<area shape="rect" id="Node000090" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="522,214,670,254"/>
 <area shape="poly" id="edge66_Node000089_Node000090" title=" " alt="" coords="379,255,508,241,508,246,380,260"/>
 <area shape="rect" id="Node000091" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="549,279,643,304"/>
 <area shape="poly" id="edge67_Node000089_Node000091" title=" " alt="" coords="380,266,535,282,535,288,379,272"/>

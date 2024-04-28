@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-24
+ * Redistribution only with this Copyright remark. Last modified: 2024-04-28
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -164,8 +164,7 @@ int host_header_is_numeric(
     try {
         saddrObj = std::string(a_host_port, a_host_port_len);
     } catch (const std::exception& e) {
-        UPNPLIB_LOGINFO "MSG1049: catched next message ...\n"
-            << e.what() << "\n";
+        UPNPLIB_LOGCATCH "MSG1049: " << e.what() << "\n";
         return 0;
     }
     return 1;
@@ -1238,51 +1237,104 @@ error:
     return ret_val;
 }
 
+/*!
+ * \brief Create STREAM sockets, binds to INADDR_ANY and listens for incoming
+ * connections.
+ *
+ * Returns the actual port which the sockets sub-system returned.
+ *
+ * Only available with the webserver compiled in.
+ *
+ * \returns
+ *  On success: UPNP_E_SUCCESS\n
+ *  On error:
+ *  - UPNP_E_OUTOF_SOCKET - Failed to create a socket.
+ *  - UPNP_E_SOCKET_BIND - Bind() failed.
+ *  - UPNP_E_LISTEN - Listen() failed.
+ *  - UPNP_E_INTERNAL_ERROR - Port returned by the socket layer is < 0.
+ */
 [[maybe_unused]] int get_miniserver_sockets2(
-    /*! [out] Pointer to a Socket Array that will be filled. */
+    /*! [in,out] [in]Pointer to a Socket Array that following members will be
+     * filled:
+     *      - .miniServerSock6
+     *      - .miniServerPort6
+     *      - .miniServerSock6UlaGua
+     *      - .miniServerPort6UlaGua
+     *      - .miniServerSock4
+     *      - .miniServerPort4 */
     MiniServerSockArray* out,
-    /*! [in] port on which the server is listening for incoming IPv4
-     * connections. */
+    /*! [in] port on which the UPnP Device shall listen for incoming IPv4
+       connections. If **0** then a random port number is returned in **out**.
+     */
     in_port_t listen_port4,
-    /*! [in] port on which the server is listening for incoming IPv6
-     * ULA connections. */
+    /*! [in] port on which the UPnP Device shall listen for incoming IPv6 ULA
+     * connections. If **0** then a random port number is returned in **out**.
+     */
     in_port_t listen_port6,
-    /*! [in] port on which the server is listening for incoming
-     * IPv6 ULA or GUA connections. */
+    /*! [in] port on which the UPnP Device shall listen for incoming IPv6 ULA or
+     *GUA connections. If **0** then a random port number is returned in
+     ***out**.
+     */
     in_port_t listen_port6UlaGua) {
     UPNPLIB_LOGINFO "MSG1109: Executing with listen_port4="
         << listen_port4 << ", listen_port6=" << listen_port6
         << ", listen_port6UlaGua=" << listen_port6UlaGua << ".\n";
 
-    static upnplib::CSocket ss4Obj;
-    ss4Obj.set(AF_INET, SOCK_STREAM);
-    ss4Obj.bind(gIF_IPV4, std::to_string(listen_port4));
-    ss4Obj.listen();
+    int retval{UPNP_E_OUTOF_SOCKET};
 
-    static upnplib::CSocket ss6Obj;
-    ss6Obj.set(AF_INET6, SOCK_STREAM);
-    ss6Obj.bind(gIF_IPV6, std::to_string(listen_port6));
-    ss6Obj.listen();
+    if (gIF_IPV6[0] != '\0') {
+        static upnplib::CSocket ss6Obj;
+        try {
+            ss6Obj.set(AF_INET6, SOCK_STREAM);
+            ss6Obj.bind('[' + std::string(gIF_IPV6) + ']',
+                        std::to_string(listen_port6));
+            ss6Obj.listen();
+            out->miniServerSock6 = ss6Obj;
+            out->miniServerPort6 = ss6Obj.get_port();
+            retval = UPNP_E_SUCCESS;
+        } catch (const std::exception& e) {
+            UPNPLIB_LOGCATCH "MSG1110: catched next line...\n" << e.what();
+        }
+    }
+
     // TODO: Check what's with
     // ss6.serverAddr6->sin6_scope_id = gIF_INDEX;
     // It is never copied to 'out'.
 
-    static upnplib::CSocket ss6UlaGuaObj;
-    ss6UlaGuaObj.set(AF_INET6, SOCK_STREAM);
-    ss6UlaGuaObj.bind(gIF_IPV6_ULA_GUA, std::to_string(listen_port6UlaGua));
-    ss6UlaGuaObj.listen();
+    if (gIF_IPV6_ULA_GUA[0] != '\0') {
+        static upnplib::CSocket ss6UlaGuaObj;
+        try {
+            ss6UlaGuaObj.set(AF_INET6, SOCK_STREAM);
+            ss6UlaGuaObj.bind('[' + std::string(gIF_IPV6_ULA_GUA) + ']',
+                              std::to_string(listen_port6UlaGua));
+            ss6UlaGuaObj.listen();
+            out->miniServerSock6UlaGua = ss6UlaGuaObj;
+            out->miniServerPort6UlaGua = ss6UlaGuaObj.get_port();
+            retval = UPNP_E_SUCCESS;
+        } catch (const std::exception& e) {
+            UPNPLIB_LOGCATCH "MSG1111: catched next line...\n" << e.what();
+        }
+    }
+
+    if (gIF_IPV4[0] != '\0') {
+        static upnplib::CSocket ss4Obj;
+        try {
+            ss4Obj.set(AF_INET, SOCK_STREAM);
+            ss4Obj.bind('[' + std::string(gIF_IPV4) + ']',
+                        std::to_string(listen_port4));
+            ss4Obj.listen();
+            out->miniServerPort4 = ss4Obj.get_port();
+            out->miniServerSock4 = ss4Obj;
+            retval = UPNP_E_SUCCESS;
+        } catch (const std::exception& e) {
+            UPNPLIB_LOGCATCH "MSG1112: catched next line...\n" << e.what();
+        }
+    }
 
     // TODO: Check what's with the SOCK_DGRAM socket as noted in the doku.
 
-    out->miniServerPort4 = ss4Obj.get_port();
-    out->miniServerPort6 = ss6Obj.get_port();
-    out->miniServerPort6UlaGua = ss6UlaGuaObj.get_port();
-    out->miniServerSock4 = ss4Obj;
-    out->miniServerSock6 = ss6Obj;
-    out->miniServerSock6UlaGua = ss6UlaGuaObj;
     UPNPLIB_LOGINFO "MSG1065: Finished.\n";
-
-    return UPNP_E_SUCCESS;
+    return retval;
 }
 #endif /* COMPA_HAVE_WEBSERVER */
 

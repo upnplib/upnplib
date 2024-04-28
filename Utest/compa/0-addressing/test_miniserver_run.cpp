@@ -1577,6 +1577,7 @@ TEST(RunMiniServerTestSuite, set_gena_callback) {
     EXPECT_EQ(gGenaCallback, static_cast<MiniServerCallback>(nullptr));
 }
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
 TEST(RunMiniServerTestSuite, do_reinit) {
     WINSOCK_INIT
     // On reinit the socket file descriptor will be closed and a new file
@@ -1615,6 +1616,7 @@ TEST(RunMiniServerTestSuite, do_reinit) {
     EXPECT_EQ(s.actual_port, 0);
     EXPECT_EQ(s.address_len, sizeof(*s.serverAddr4));
 }
+#endif
 
 TEST(StopMiniServerTestSuite, sock_close) {
     WINSOCK_INIT

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-14
+// Redistribution only with this Copyright remark. Last modified: 2024-04-29
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -153,9 +153,7 @@ TEST(AddrinfoTestSuite, get_unknown_host) {
     EXPECT_EQ(ai3.get_port(), 50053);
 
     // Test Unit
-    // An alphanumeric node with enclosing brackets may be valid if
-    // defined anywhere (/etc/hosts file, DNS lookup, etc.) but here it
-    // shouldn't.
+    // An alphanumeric node name with starting '[' is not valid.
     CAddrinfo ai4("[localhost]", "50055", AF_UNSPEC, SOCK_DGRAM,
                   AI_NUMERICHOST);
 
@@ -188,12 +186,13 @@ TEST(AddrinfoTestSuite, get_passive_addressinfo) {
     EXPECT_EQ(ai1.get_port(), 50006);
 }
 
-TEST(AddrinfoTestSuite, get_info_loopback_interface) {
-    // To get info of the loopback interface, node must be empty without
-    // AI_PASSIVE flag set. The value AF_UNSPEC indicates that getaddrinfo()
-    // should return socket addresses for any address family (either IPv4 or
-    // IPv6) that can be used with node and service.
-    // Node "" or "[]" are always equivalent.
+TEST(AddrinfoTestSuite, get_info_for_empty_node_address) {
+    // Getting info with an empty node address is only possible for AF_PASSIVE
+    // unset and AI_NUMERICHOST set. With no AI_NUMERICHOST flag set we get an
+    // EXCEPTION, see test below.
+    // The value AF_UNSPEC indicates that getaddrinfo() should return socket
+    // addresses for any address family (either IPv4 or IPv6) that can be used
+    // with node and service. Node "" or "[]" are equivalent.
 
     // Test Unit
     CAddrinfo ai1("", "50007", AF_UNSPEC, SOCK_STREAM, AI_NUMERICHOST);
@@ -204,33 +203,33 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai1.get_port(), 50007);
     switch (ai1->ai_family) {
     case AF_INET6:
-        EXPECT_EQ(ai1.get_addr_str(), "[::1]");
+        EXPECT_EQ(ai1.get_addr_str(), "[::]");
         break;
     case AF_INET:
-        EXPECT_EQ(ai1.get_addr_str(), "127.0.0.1");
+        EXPECT_EQ(ai1.get_addr_str(), "0.0.0.0");
         break;
     default:
         FAIL() << "invalid address family " << ai1->ai_family;
     }
 
     // Test Unit
-    CAddrinfo ai2("", "50056", AF_INET6);
+    CAddrinfo ai2("", "50056", AF_INET6, 0, AI_NUMERICHOST);
 
     EXPECT_EQ(ai2->ai_family, AF_INET6);
     EXPECT_EQ(ai2->ai_socktype, 0);
     EXPECT_EQ(ai2->ai_protocol, 0);
-    EXPECT_EQ(ai2->ai_flags, 0);
-    EXPECT_EQ(ai2.get_addr_str(), "[::1]");
+    EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai2.get_addr_str(), "[::]");
     EXPECT_EQ(ai2.get_port(), 50056);
 
     // Test Unit
-    CAddrinfo ai3("", "50057", AF_INET);
+    CAddrinfo ai3("", "50057", AF_INET, 0, AI_NUMERICHOST);
 
     EXPECT_EQ(ai3->ai_family, AF_INET);
     EXPECT_EQ(ai3->ai_socktype, 0);
     EXPECT_EQ(ai3->ai_protocol, 0);
-    EXPECT_EQ(ai3->ai_flags, 0);
-    EXPECT_EQ(ai3.get_addr_str(), "127.0.0.1");
+    EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai3.get_addr_str(), "0.0.0.0");
     EXPECT_EQ(ai3.get_port(), 50057);
 
     // Test Unit
@@ -241,8 +240,75 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai4->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai4->ai_protocol, 0);
     EXPECT_EQ(ai4->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
-    EXPECT_EQ(ai4.get_addr_str(), "[::1]");
+    EXPECT_EQ(ai4.get_addr_str(), "[::]");
     EXPECT_EQ(ai4.get_port(), 50058);
+
+    // Test Unit
+    CAddrinfo ai5("", "50084", AF_INET6, SOCK_STREAM);
+
+    EXPECT_EQ(ai5->ai_family, AF_INET6);
+    EXPECT_EQ(ai5->ai_socktype, SOCK_STREAM);
+    EXPECT_EQ(ai5->ai_protocol, 0);
+    EXPECT_EQ(ai5->ai_flags, 0);
+    EXPECT_EQ(ai5.get_addr_str(), "[::]");
+    EXPECT_EQ(ai5.get_port(), 50084);
+
+    // Test Unit
+    // With no AI_NUMERICHOST we get an exception:
+    // EXCEPTION MSG1037: Failed to get address information: errid(-5)="No
+    // address associated with hostname"".
+    // EXPECT_THROW(CAddrinfo ai5("", "50084", AF_INET6, SOCK_STREAM),
+    //              std::runtime_error);
+}
+
+TEST(AddrinfoTestSuite, get_info_loopback_interface) {
+    // Test Unit
+    CAddrinfo ai1("[::1]", "50085", AF_INET6, SOCK_STREAM);
+
+    EXPECT_EQ(ai1->ai_family, AF_INET6);
+    EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
+    EXPECT_EQ(ai1->ai_protocol, 0);
+    EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai1.get_addr_str(), "[::1]");
+    EXPECT_EQ(ai1.get_port(), 50085);
+
+    // Test Unit
+    CAddrinfo ai2("127.0.0.1", "50086", AF_INET, SOCK_DGRAM);
+
+    EXPECT_EQ(ai2->ai_family, AF_INET);
+    EXPECT_EQ(ai2->ai_socktype, SOCK_DGRAM);
+    EXPECT_EQ(ai2->ai_protocol, 0);
+    EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai2.get_addr_str(), "127.0.0.1");
+    EXPECT_EQ(ai2.get_port(), 50086);
+
+    // Test Unit
+    CAddrinfo ai3("[::1]", "50087", AF_INET6);
+
+    EXPECT_EQ(ai3->ai_family, AF_INET6);
+    EXPECT_EQ(ai3->ai_socktype, 0);
+    EXPECT_EQ(ai3->ai_protocol, 0);
+    EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai3.get_addr_str(), "[::1]");
+    EXPECT_EQ(ai3.get_port(), 50087);
+
+    // Test Unit
+    CAddrinfo ai4("localhost", "50088");
+
+    EXPECT_EQ(ai4->ai_socktype, 0);
+    EXPECT_EQ(ai4->ai_protocol, 0);
+    EXPECT_EQ(ai4->ai_flags, 0);
+    EXPECT_EQ(ai4.get_port(), 50088);
+    switch (ai1->ai_family) {
+    case AF_INET6:
+        EXPECT_EQ(ai4.get_addr_str(), "[::1]");
+        break;
+    case AF_INET:
+        EXPECT_EQ(ai4.get_addr_str(), "127.0.0.1");
+        break;
+    default:
+        FAIL() << "invalid address family " << ai1->ai_family;
+    }
 }
 
 TEST(AddrinfoTestSuite, invalid_ipv6_node_address) {

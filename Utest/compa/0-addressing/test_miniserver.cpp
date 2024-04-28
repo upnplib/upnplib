@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-24
+// Redistribution only with this Copyright remark. Last modified: 2024-04-29
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -126,10 +126,28 @@ ACTION_P(debugCoutMsg, msg) {
         std::cout << msg << std::flush;
 }
 
-class StartMiniServerMockFTestSuite : public ::testing::Test {
+class StartMiniServerFTestSuite : public ::testing::Test {
   protected:
     CLogging logObj; // Output only with build type DEBUG.
 
+    // Constructor
+    StartMiniServerFTestSuite() {
+        if (g_dbug)
+            logObj.enable(UPNP_ALL);
+
+        // Clean up needed global environment
+        gIF_IPV4[0] = '\0';
+        gIF_IPV6[0] = '\0';
+        gIF_IPV6_ULA_GUA[0] = '\0';
+        LOCAL_PORT_V4 = 0;
+        LOCAL_PORT_V6 = 0;
+        LOCAL_PORT_V6_ULA_GUA = 0;
+        gMServState = MSERV_IDLE;
+    }
+};
+
+class StartMiniServerMockFTestSuite : public StartMiniServerFTestSuite {
+  protected:
     // clang-format off
     // Instantiate mocking objects.
     StrictMock<umock::Sys_socketMock> m_sys_socketObj;
@@ -149,18 +167,6 @@ class StartMiniServerMockFTestSuite : public ::testing::Test {
 
     // Constructor
     StartMiniServerMockFTestSuite() {
-        if (g_dbug)
-            logObj.enable(UPNP_ALL);
-
-        // Clean up needed global environment
-        gIF_IPV4[0] = '\0';
-        gIF_IPV6[0] = '\0';
-        gIF_IPV6_ULA_GUA[0] = '\0';
-        LOCAL_PORT_V4 = 0;
-        LOCAL_PORT_V6 = 0;
-        LOCAL_PORT_V6_ULA_GUA = 0;
-        gMServState = MSERV_IDLE;
-
         // Set default socket object values
         ON_CALL(m_sys_socketObj, socket(_, _, _))
             .WillByDefault(SetErrnoAndReturn(EACCES, SOCKET_ERROR));
@@ -238,9 +244,10 @@ TEST(StartMiniServerTestSuite, StartMiniServer_real) {
 #endif
 
 
-TEST_F(StartMiniServerMockFTestSuite, start_miniserver_with_no_ip_addr) {
+TEST_F(StartMiniServerFTestSuite, start_miniserver_with_no_ip_addr) {
     // Not having a valid local ip_address on all interfaces will fail to start
-    // the miniserver.
+    // the miniserver. The global ip address variables gIF_IPV4, gIF_IPV6,
+    // gIF_IPV6_ULA_GUA are used and cleared by the fixture.
 
     // Test Unit
     int ret_StartMiniServer =
@@ -920,6 +927,43 @@ TEST_F(StartMiniServerMockFTestSuite,
     // mocked.
 }
 
+#ifndef UPNPLIB_WITH_NATIVE_PUPNP
+TEST_F(StartMiniServerFTestSuite,
+       get_miniserver_sockets2_with_one_ipv6_lla_addr) {
+    WINSOCK_INIT
+
+    // Initialize needed structure
+    SSockaddr llaObj;
+    llaObj = "[::1]"; // Get gIF_IPV6 and strip surounding brackets
+    std::strcpy(gIF_IPV6, llaObj.get_addr_str().c_str() + 1);
+    gIF_IPV6[strlen(gIF_IPV6) - 1] = '\0';
+    LOCAL_PORT_V6 = llaObj.get_port();
+    MiniServerSockArray miniSocket;
+    InitMiniServerSockArray(&miniSocket);
+
+    // Test Unit, needs initialized sockets on MS Windows
+    int ret_get_miniserver_sockets2 =
+        get_miniserver_sockets2(&miniSocket, 0, 0, 0);
+
+    EXPECT_EQ(ret_get_miniserver_sockets2, UPNP_E_SUCCESS)
+        << errStrEx(ret_get_miniserver_sockets2, UPNP_E_SUCCESS);
+
+    EXPECT_GE(miniSocket.miniServerSock6, 3);
+    EXPECT_GE(miniSocket.miniServerPort6, 32768u);
+    EXPECT_GE(miniSocket.miniServerSock6UlaGua, INVALID_SOCKET);
+    EXPECT_GE(miniSocket.miniServerPort6UlaGua, 0u);
+    EXPECT_GE(miniSocket.miniServerSock4, INVALID_SOCKET);
+    EXPECT_GE(miniSocket.miniServerPort4, 0u);
+    EXPECT_EQ(miniSocket.ssdpSock6, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.ssdpSock6UlaGua, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.ssdpSock4, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.ssdpReqSock6, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.ssdpReqSock4, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.miniServerStopSock, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.stopPort, 0u);
+}
+#endif
+
 TEST(StartMiniServerTestSuite, get_miniserver_sockets_with_invalid_ip_address) {
     strcpy(gIF_IPV4, "192.168.129.XXX"); // Invalid ip address
     gIF_IPV6[0] = '\0';
@@ -1047,6 +1091,7 @@ TEST_F(StartMiniServerMockFTestSuite,
     }
 }
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
 TEST(StartMiniServerTestSuite, init_socket_suff_successful) {
     WINSOCK_INIT
 
@@ -1934,6 +1979,7 @@ TEST_F(StartMiniServerMockFTestSuite, do_listen_insufficient_resources) {
     EXPECT_EQ(s.try_port, 0); // not used
     EXPECT_EQ(s.address_len, (socklen_t)sizeof(*s.serverAddr4));
 }
+#endif
 
 TEST_F(StartMiniServerMockFTestSuite, get_port_successful) {
     // Configure expected system calls:

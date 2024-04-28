@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-24
+// Redistribution only with this Copyright remark. Last modified: 2024-04-28
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -14,7 +14,6 @@
 #include <umock/winsock2.hpp>
 #endif
 
-/// \cond
 namespace upnplib {
 
 // Initialize and cleanup Microsoft Windows Sockets
@@ -41,6 +40,7 @@ CWSAStartup::~CWSAStartup() {
 // Free helper functions
 // =====================
 
+/// \cond
 // Helper inline function to throw an exeption with additional information.
 // ------------------------------------------------------------------------
 // error number given by WSAGetLastError(), resp. contained in errno is used to
@@ -57,10 +57,13 @@ static inline void throw_error(const std::string& a_errmsg) {
                              umock::string_h.strerror(errno) + "\"\n");
 #endif
 }
+/// \endcond
 
 
-// upnplib wrapper for the ::getsockname() system function
-// -------------------------------------------------------
+/*!
+ * \brief upnplib wrapper for the ::getsockname() system function
+ * <!--   --------------------------------------------------- -->
+ */
 static int getsockname(SOCKET a_sockfd, sockaddr* a_addr,
                        socklen_t* a_addrlen) {
     TRACE("Executing getsockname()");
@@ -108,6 +111,7 @@ CSocket_basic::CSocket_basic() {
 }
 
 // Setter with given file desciptor
+/// \todo **Next:** Silently ignore second attempt to set().
 void CSocket_basic::set(SOCKET a_sfd) {
     TRACE2(this, " Executing CSocket_basic::set(SOCKET)")
 
@@ -277,6 +281,7 @@ CSocket::~CSocket() {
 // Setter
 // ------
 // Setter for new socket file descriptor
+/// \todo **Next:** Silently ignore second attempt to set().
 void CSocket::set(sa_family_t a_family, int a_socktype) {
     TRACE2(this, " Executing CSocket::set(af, socktype)")
 
@@ -302,8 +307,9 @@ void CSocket::set(sa_family_t a_family, int a_socktype) {
     // Reset SO_REUSEADDR on all platforms if it should be set by default. This
     // is unclear on WIN32. See note below.
     // Type cast (char*)&so_option is needed for Microsoft Windows.
-    if (::setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR,
-                     reinterpret_cast<char*>(&so_option), optlen) != 0) {
+    if (umock::sys_socket_h.setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR,
+                                       reinterpret_cast<char*>(&so_option),
+                                       optlen) != 0) {
         throw_error("MSG1018: Failed to set socket option SO_REUSEADDR:");
     }
 
@@ -314,8 +320,9 @@ void CSocket::set(sa_family_t a_family, int a_socktype) {
     // (https://learn.microsoft.com/en-us/windows/win32/winsock/using-so-reuseaddr-and-so-exclusiveaddruse#application-strategies)
     so_option = 1; // Set SO_EXCLUSIVEADDRUSE
     // Type cast (char*)&so_option is needed for Microsoft Windows.
-    if (::setsockopt(sfd, SOL_SOCKET, SO_EXCLUSIVEADDRUSE,
-                     reinterpret_cast<char*>(&so_option), optlen) != 0) {
+    if (umock::sys_socket_h.setsockopt(sfd, SOL_SOCKET, SO_EXCLUSIVEADDRUSE,
+                                       reinterpret_cast<char*>(&so_option),
+                                       optlen) != 0) {
         throw_error(
             "MSG1019: Failed to set socket option SO_EXCLUSIVEADDRUSE:");
     }
@@ -330,8 +337,9 @@ void CSocket::set(sa_family_t a_family, int a_socktype) {
 #endif
         so_option = 0;
         // Type cast (char*)&so_option is needed for Microsoft Windows.
-        if (::setsockopt(sfd, IPPROTO_IPV6, IPV6_V6ONLY,
-                         reinterpret_cast<char*>(&so_option), optlen) != 0) {
+        if (umock::sys_socket_h.setsockopt(sfd, IPPROTO_IPV6, IPV6_V6ONLY,
+                                           reinterpret_cast<char*>(&so_option),
+                                           optlen) != 0) {
             throw_error("MSG1020: Failed to set socket option IPV6_V6ONLY:");
         }
 #ifndef _MSC_VER
@@ -351,9 +359,9 @@ void CSocket::set_v6only(const bool a_opt) {
 
     // Type cast (char*)&so_option is needed for Microsoft Windows.
     if (this->get_family() == AF_INET6 && !this->is_bound() &&
-        ::setsockopt(m_sfd, IPPROTO_IPV6, IPV6_V6ONLY,
-                     reinterpret_cast<const char*>(&so_option),
-                     sizeof(so_option)) != 0)
+        umock::sys_socket_h.setsockopt(
+            m_sfd, IPPROTO_IPV6, IPV6_V6ONLY,
+            reinterpret_cast<const char*>(&so_option), sizeof(so_option)) != 0)
         throw_error("MSG1006: Failed to set socket option IPV6_V6ONLY:");
 }
 
@@ -365,7 +373,7 @@ void CSocket::set_reuse_addr(bool a_reuse) {
     // (https://stackoverflow.com/a/14388707/5014688)
     so_option = a_reuse_addr ? 1 : 0;
     // Type cast (char*)&so_reuseaddr is needed for Microsoft Windows.
-    if (::setsockopt(m_listen_sfd, SOL_SOCKET, SO_REUSEADDR,
+    if (umock::sys_socket_h.setsockopt(m_listen_sfd, SOL_SOCKET, SO_REUSEADDR,
                      reinterpret_cast<char*>(&so_option), optlen) != 0)
         throw_error("MSG1004: Failed to set socket option SO_REUSEADDR:");
 }
@@ -383,28 +391,39 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
     const sa_family_t addr_family = this->get_family();
 
     // With address family AF_INET6 and not passive mode we always set
-    // IPV6_V6ONLY to true. This is the behavior on Unix platforms when binding
-    // the address and cannot be modified afterwards. MacOS does not modify the
-    // flag with binding. To be portable with same behavior on all platforms we
-    // set the flag before binding.
+    // IPV6_V6ONLY to true. See also note to bind() in the header file.
     if (addr_family == AF_INET6 && (a_flags & AI_PASSIVE) == 0) {
         // Don't use 'this->set_v6only(true)' because binding is protected with
         // a mutex and we will get a deadlock due to using
         // 'this->is_bound()' in 'this->set_v6only(true)'.
         constexpr int so_option{1}; // true
         // Type cast (char*)&so_option is needed for Microsoft Windows.
-        if (::setsockopt(m_sfd, IPPROTO_IPV6, IPV6_V6ONLY,
-                         reinterpret_cast<const char*>(&so_option),
-                         sizeof(so_option)) != 0)
+        if (umock::sys_socket_h.setsockopt(
+                m_sfd, IPPROTO_IPV6, IPV6_V6ONLY,
+                reinterpret_cast<const char*>(&so_option),
+                sizeof(so_option)) != 0)
             throw_error("MSG1007: Failed to set socket option IPV6_V6ONLY:");
     }
 
-    // Here we bind the socket to an address
-    const CAddrinfo ai(a_node, a_port, addr_family, this->get_socktype(),
-                       AI_NUMERICHOST | AI_NUMERICSERV | a_flags);
+    // Get an adress info to bind.
+    CAddrinfo ai(a_node, a_port, addr_family, this->get_socktype(),
+                 AI_NUMERICHOST | AI_NUMERICSERV | a_flags);
+
+    // Here we bind the socket to an address.
+    /// \todo **Next:** Improve CSocketErr for specific ::bind() error messages.
     // Type cast socklen_t is needed for Microsoft Windows.
-    if (::bind(m_sfd, ai->ai_addr, static_cast<socklen_t>(ai->ai_addrlen)) != 0)
+    int ret = umock::sys_socket_h.bind(m_sfd, ai->ai_addr,
+                                       static_cast<socklen_t>(ai->ai_addrlen));
+    int err_no = errno;
+
+    UPNPLIB_LOGINFO << "MSG1115: syscall ::bind(" << m_sfd << ", "
+                    << ai->ai_addr << ", " << ai->ai_addrlen << ") using \""
+                    << ai.get_addr_str() << ":" << ai.get_port() << "\", get "
+                    << (ret != 0 ? "ERROR" : this->get_addrp_str()) << "\n";
+    if (ret != 0) {
+        errno = err_no;
         throw_error("MSG1008: Failed to bind socket to an address:");
+    }
 }
 
 // Set socket to listen
@@ -516,4 +535,3 @@ std::string CSocketErrService::get_error_str() const {
 }
 
 } // namespace upnplib
-/// \endcond
