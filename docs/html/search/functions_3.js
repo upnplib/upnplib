@@ -7,7 +7,11 @@ var searchData=
   ['deviceshutdown_4',['deviceshutdown',['../d0/dc4/group__SSDP-device__functions.html#ga65d1171e5dcab19e9b7848773650eaf7',1,'DeviceShutdown(char *DevType, int RootDev, char *Udn, char *Location, int Duration, int AddressFamily, int PowerState, int SleepPeriod, int RegistrationState):&#160;ssdp_device.cpp'],['../db/db9/ssdp__device_8cpp.html#a65d1171e5dcab19e9b7848773650eaf7',1,'DeviceShutdown(char *DevType, int RootDev, char *Udn, char *Location, int Duration, int AddressFamily, int PowerState, int SleepPeriod, int RegistrationState):&#160;ssdp_device.cpp']]],
   ['diffmillis_5',['DiffMillis',['../dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a09e7140e6d8041eccf860f635f4192b1',1,'anonymous_namespace{ThreadPool.cpp}']]],
   ['dispatch_5frequest_6',['dispatch_request',['../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a54d3ff9589278aff8765d7a64df23587',1,'anonymous_namespace{miniserver.cpp}']]],
-  ['dom_5fcmp_5fname_7',['dom_cmp_name',['../d0/d7c/namespaceanonymous__namespace_02soap__ctrlpt_8cpp_03.html#a6962c73d5dca9f8577188bece68c806c',1,'anonymous_namespace{soap_ctrlpt.cpp}']]],
-  ['dom_5ffind_5fdeep_5fnode_8',['dom_find_deep_node',['../d0/d7c/namespaceanonymous__namespace_02soap__ctrlpt_8cpp_03.html#a507d0652d5f4792b6b33a299a239ec90',1,'anonymous_namespace{soap_ctrlpt.cpp}']]],
-  ['dom_5ffind_5fnode_9',['dom_find_node',['../d0/d7c/namespaceanonymous__namespace_02soap__ctrlpt_8cpp_03.html#a7078c15558ea1b34edb5887718d7d21a',1,'anonymous_namespace{soap_ctrlpt.cpp}']]]
+  ['do_5fbind_7',['do_bind',['../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#acc6658fce5f76c1ea6dab7a41f9d2d27',1,'anonymous_namespace{miniserver.cpp}']]],
+  ['do_5fbind_5flisten_8',['do_bind_listen',['../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a224e924519197fa3cf06a4480b2fb464',1,'anonymous_namespace{miniserver.cpp}']]],
+  ['do_5flisten_9',['do_listen',['../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#adba7f7895434869489710a8c0e714c41',1,'anonymous_namespace{miniserver.cpp}']]],
+  ['do_5freinit_10',['do_reinit',['../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a53f43c64b3353019b7bcc301ff1073a3',1,'anonymous_namespace{miniserver.cpp}']]],
+  ['dom_5fcmp_5fname_11',['dom_cmp_name',['../d0/d7c/namespaceanonymous__namespace_02soap__ctrlpt_8cpp_03.html#a6962c73d5dca9f8577188bece68c806c',1,'anonymous_namespace{soap_ctrlpt.cpp}']]],
+  ['dom_5ffind_5fdeep_5fnode_12',['dom_find_deep_node',['../d0/d7c/namespaceanonymous__namespace_02soap__ctrlpt_8cpp_03.html#a507d0652d5f4792b6b33a299a239ec90',1,'anonymous_namespace{soap_ctrlpt.cpp}']]],
+  ['dom_5ffind_5fnode_13',['dom_find_node',['../d0/d7c/namespaceanonymous__namespace_02soap__ctrlpt_8cpp_03.html#a7078c15558ea1b34edb5887718d7d21a',1,'anonymous_namespace{soap_ctrlpt.cpp}']]]
 ];

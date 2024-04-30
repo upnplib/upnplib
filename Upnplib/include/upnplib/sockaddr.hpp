@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCKADDR_HPP
 #define UPNPLIB_NET_SOCKADDR_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-03
+// Redistribution only with this Copyright remark. Last modified: 2024-05-09
 /*!
  * \file
  * \brief Declaration of the Sockaddr class and some free helper functions.
@@ -51,7 +51,7 @@ UPNPLIB_API uint16_t to_port(const std::string& a_port_str);
 // To have a logical equal socket address we compare the address family, the ip
 // address and the port.
 UPNPLIB_API bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
-                             const ::sockaddr_storage* a_ss2);
+                             const ::sockaddr_storage* a_ss2) noexcept;
 
 
 // Specialized sockaddr structure

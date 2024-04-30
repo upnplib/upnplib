@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-29
+// Redistribution only with this Copyright remark. Last modified: 2024-05-06
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -1997,17 +1997,20 @@ TEST_F(StartMiniServerMockFTestSuite, get_port_successful) {
 
     // Provide a sockaddr structure that will be returned by mocked
     // getsockname().
-    const CAddrinfo ai(std::string(text_addr), std::to_string(actual_port),
-                       AF_INET, SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
+    CAddrinfo ai(std::string(text_addr), std::to_string(actual_port), AF_INET,
+                 SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
+    ai.get_addrinfo();
 
     // Mock system functions
     EXPECT_CALL(
         m_sys_socketObj,
         getsockname(sockfd, _,
                     Pointee(Ge(static_cast<socklen_t>(ai->ai_addrlen)))))
-        .WillOnce(DoAll(SetArgPointee<1>(*ai->ai_addr),
-                        SetArgPointee<2>((socklen_t)ai->ai_addrlen),
-                        Return(0)));
+        .WillOnce(
+            DoAll(SetArgPointee<1>(*ai->ai_addr),
+                  SetArgPointee<2>(static_cast<socklen_t>(ai->ai_addrlen)),
+                  Return(0)));
+
 
     // Test Unit
     EXPECT_EQ(get_port(sockfd, &port), 0);

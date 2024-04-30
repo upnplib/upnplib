@@ -1,0 +1,9 @@
+<map id="upnplib::CAddrinfo::set_addrinfo" name="upnplib::CAddrinfo::set_addrinfo">
+<area shape="rect" id="Node000001" title="Set address info to the object that is given by syscall ::getaddrinfo()" alt="" coords="448,35,591,75"/>
+<area shape="rect" id="Node000002" href="$da/dad/classupnplib_1_1CAddrinfo.html#a6604a31aaed5e891f3f6eb152671ed24" title="copy constructor" alt="" coords="245,5,388,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="434,45,388,38,389,33,435,40"/>
+<area shape="rect" id="Node000003" href="$d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="233,70,400,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="434,69,401,74,400,69,434,64"/>
+<area shape="rect" id="Node000004" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aa1e3a3e75356465099535c0e7851a858" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="5,55,185,110"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="220,85,185,85,185,80,220,80"/>
+</map>

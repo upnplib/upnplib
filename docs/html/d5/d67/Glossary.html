@@ -98,13 +98,18 @@ $(function() {
 <p>The services that a client requires are the client's <b>dependencies</b>.</p>
 <p><a class="anchor" id="glossary_mlink"></a><em><b>multicast link</b></em></p>
 <p>This is a <a class="el" href="../../d5/d67/Glossary.html#glossary_conn">connection</a> that follows the network multicast specification. It has one local <a class="el" href="../../d5/d67/Glossary.html#glossary_sock">socket</a> and a number of remote sockets that are interested to receive UPnP™ messages. It uses stateless UDP datagrams as given by its sockets of type <code>SOCK_DGRAM</code>.</p>
-<p><a class="anchor" id="glossary_netaddr"></a><em><b>netaddress</b></em></p>
+<p><a class="anchor" id="glossary_netaddr"></a><em><b>netaddress, netaddr</b></em></p>
 <p>This is a string of an IPv4 or IPv6 internet network address as described at <a href="https://en.wikipedia.org/wiki/IP_address">Wikipedia IP address</a>. A complete netaddress consists of ip address and <a class="el" href="../../d5/d67/Glossary.html#glossary_port">port</a> number. A netaddress without port has the port number 0. Examples are </p><pre class="fragment">"[2001:db8:1234:5678:9abc:def0:1234:5678]:56789"
 "[2001:db8::1]:59877"
-"[2001:db8::2]"` same as "[2001:db8::2]:" and "[2001:db8::2]:0"
+"[2001:db8::2]" same as "[2001:db8::2]:" and "[2001:db8::2]:0"
 "192.168.123.234:56789"
 "192.168.1.2" same as "192.168.1.2:" and "192.168.1.2:0"
-</pre><p> The IPv6 address part must always be surrounded by <b>[]</b> otherwise it cannot be unique with a port number. A netaddress and a <a class="el" href="../../d5/d67/Glossary.html#glossary_saddr">socket address</a> are equivalent, contain the same information and can be converted into one another.</p>
+</pre><p> Surounding brackets define a numeric IPv6 (AF_INET6) address. The numeric IPv6 address part must always be surrounded by <b>[]</b> otherwise it cannot be unique with a port number. Without brackets an address will be treated as alphanumeric (if no hints given to be numeric), even if it looks like a valid IPv6 numeric address. Then it may trigger an expensive DNS lookup.</p>
+<p>Special cases are:</p><ul>
+<li><b>"[]"</b> - This is an invalid numeric or alphanumeric IPv6 address name because there is already a well defined unspecified numeric IPv6 (AF_INET6) network address given with <b>"[::]"</b> and an alphanumeric name cannot start with <b>'</b>['. And of course it is never any kind of IPv4 address. Long story short it's general an invalid network address.</li>
+<li><b>""</b> - This is an unspecified (AF_UNSPEC) network address with all attributes unspecified. It may be <b>"[::]:0"</b> or <b>"0.0.0.0:0"</b>.</li>
+</ul>
+<p>A netaddress and a <a class="el" href="../../d5/d67/Glossary.html#glossary_saddr">socket address</a> are equivalent, contain the same information and can be converted into one another.</p>
 <p><a class="anchor" id="glossary_port"></a><em><b>port</b></em></p>
 <p>The port number is part of the <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>. It specifies a specific service provided by a host with the ip address as defined by the POSIX standard. Port 0 has a special meaning and represents the <b>unknown port</b>. A not given port number is coded with the zero port number.</p>
 <p><a class="anchor" id="glossary_rtout"></a><em><b>response timeout</b></em></p>

@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-28
+// Redistribution only with this Copyright remark. Last modified: 2024-05-07
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -408,17 +408,18 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
     // Get an adress info to bind.
     CAddrinfo ai(a_node, a_port, addr_family, this->get_socktype(),
                  AI_NUMERICHOST | AI_NUMERICSERV | a_flags);
+    ai.get_addrinfo();
 
     // Here we bind the socket to an address.
-    /// \todo **Next:** Improve CSocketErr for specific ::bind() error messages.
+    /// \todo Improve CSocketErr for specific ::bind() error messages.
     // Type cast socklen_t is needed for Microsoft Windows.
     int ret = umock::sys_socket_h.bind(m_sfd, ai->ai_addr,
                                        static_cast<socklen_t>(ai->ai_addrlen));
     int err_no = errno;
 
     UPNPLIB_LOGINFO << "MSG1115: syscall ::bind(" << m_sfd << ", "
-                    << ai->ai_addr << ", " << ai->ai_addrlen << ") using \""
-                    << ai.get_addr_str() << ":" << ai.get_port() << "\", get "
+                    << ai->ai_addr << ", " << ai->ai_addrlen << ") Using \""
+                    << ai.get_addr_str() << ":" << ai.get_port() << "\". Get "
                     << (ret != 0 ? "ERROR" : this->get_addrp_str()) << "\n";
     if (ret != 0) {
         errno = err_no;

@@ -58,11 +58,15 @@ var searchData=
   ['dirname_55',['dirName',['../d6/d92/VirtualDir_8hpp.html#a383d2d238d851d433f6d3972e7b8d784',1,'virtual_Dir_List']]],
   ['discovery_56',['Step 1: Discovery',['../d1/d95/group__compa-Discovery.html',1,'']]],
   ['dispatch_5frequest_57',['dispatch_request',['../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a54d3ff9589278aff8765d7a64df23587',1,'anonymous_namespace{miniserver.cpp}']]],
-  ['doc_58',['doc',['../d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html#a9e5b18b4867b6c0c1909ea75826db4a1',1,'anonymous_namespace{webserver.cpp}::xml_alias_t']]],
-  ['document_5fmeta_59',['Document_meta',['../dc/d6d/namespaceupnplib.html#d8/d3d/structupnplib_1_1Document__meta',1,'upnplib']]],
-  ['documentation_60',['2. Technical Documentation',['../index.html#autotoc_md2',1,'']]],
-  ['dom_5fcmp_5fname_61',['dom_cmp_name',['../d0/d7c/namespaceanonymous__namespace_02soap__ctrlpt_8cpp_03.html#a6962c73d5dca9f8577188bece68c806c',1,'anonymous_namespace{soap_ctrlpt.cpp}']]],
-  ['dom_5ffind_5fdeep_5fnode_62',['dom_find_deep_node',['../d0/d7c/namespaceanonymous__namespace_02soap__ctrlpt_8cpp_03.html#a507d0652d5f4792b6b33a299a239ec90',1,'anonymous_namespace{soap_ctrlpt.cpp}']]],
-  ['dom_5ffind_5fnode_63',['dom_find_node',['../d0/d7c/namespaceanonymous__namespace_02soap__ctrlpt_8cpp_03.html#a7078c15558ea1b34edb5887718d7d21a',1,'anonymous_namespace{soap_ctrlpt.cpp}']]],
-  ['duration_64',['Duration',['../d5/d91/ThreadPool_8hpp.html#a8318f4a102968ced04ab2b96b7ddc91f',1,'ThreadPool.hpp']]]
+  ['do_5fbind_58',['do_bind',['../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#acc6658fce5f76c1ea6dab7a41f9d2d27',1,'anonymous_namespace{miniserver.cpp}']]],
+  ['do_5fbind_5flisten_59',['do_bind_listen',['../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a224e924519197fa3cf06a4480b2fb464',1,'anonymous_namespace{miniserver.cpp}']]],
+  ['do_5flisten_60',['do_listen',['../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#adba7f7895434869489710a8c0e714c41',1,'anonymous_namespace{miniserver.cpp}']]],
+  ['do_5freinit_61',['do_reinit',['../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a53f43c64b3353019b7bcc301ff1073a3',1,'anonymous_namespace{miniserver.cpp}']]],
+  ['doc_62',['doc',['../d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html#a9e5b18b4867b6c0c1909ea75826db4a1',1,'anonymous_namespace{webserver.cpp}::xml_alias_t']]],
+  ['document_5fmeta_63',['Document_meta',['../dc/d6d/namespaceupnplib.html#d8/d3d/structupnplib_1_1Document__meta',1,'upnplib']]],
+  ['documentation_64',['2. Technical Documentation',['../index.html#autotoc_md2',1,'']]],
+  ['dom_5fcmp_5fname_65',['dom_cmp_name',['../d0/d7c/namespaceanonymous__namespace_02soap__ctrlpt_8cpp_03.html#a6962c73d5dca9f8577188bece68c806c',1,'anonymous_namespace{soap_ctrlpt.cpp}']]],
+  ['dom_5ffind_5fdeep_5fnode_66',['dom_find_deep_node',['../d0/d7c/namespaceanonymous__namespace_02soap__ctrlpt_8cpp_03.html#a507d0652d5f4792b6b33a299a239ec90',1,'anonymous_namespace{soap_ctrlpt.cpp}']]],
+  ['dom_5ffind_5fnode_67',['dom_find_node',['../d0/d7c/namespaceanonymous__namespace_02soap__ctrlpt_8cpp_03.html#a7078c15558ea1b34edb5887718d7d21a',1,'anonymous_namespace{soap_ctrlpt.cpp}']]],
+  ['duration_68',['Duration',['../d5/d91/ThreadPool_8hpp.html#a8318f4a102968ced04ab2b96b7ddc91f',1,'ThreadPool.hpp']]]
 ];

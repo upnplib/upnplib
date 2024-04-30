@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-17
+// Redistribution only with this Copyright remark. Last modified: 2024-05-08
 /*!
  * \file
  * \brief Definition of the Sockaddr class and some free helper functions.
@@ -98,9 +98,10 @@ throw_exit:
 // Free function to logical compare two sockaddr structures
 // --------------------------------------------------------
 bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
-                 const ::sockaddr_storage* a_ss2) {
+                 const ::sockaddr_storage* a_ss2) noexcept {
     // To have a logical equal socket address we compare the address family, the
     // ip address and the port.
+    // Throws no exception.
     if (a_ss1 == nullptr && a_ss2 == nullptr)
         return true;
     if (a_ss1 == nullptr || a_ss2 == nullptr)

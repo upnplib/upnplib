@@ -205,8 +205,8 @@ TEST(SocketBasicTestSuite, instantiate_with_bound_socket_fd) {
     EXPECT_EQ((SOCKET)sockObj, bound_sock);
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
-    EXPECT_EQ(sockObj.get_addrp_str(), "[::]:8080");
+    EXPECT_EQ(sockObj.get_addr_str(), "[::1]");
+    EXPECT_EQ(sockObj.get_addrp_str(), "[::1]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -848,8 +848,8 @@ TEST(SocketBindTestSuite, bind_only_service_not_passive_successful) {
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     // With empty node the loopback address is selected.
-    EXPECT_EQ(sockObj.get_addr_str(), "[::]");
-    EXPECT_EQ(sockObj.get_addrp_str(), "[::]:8080");
+    EXPECT_EQ(sockObj.get_addr_str(), "[::1]");
+    EXPECT_EQ(sockObj.get_addrp_str(), "[::1]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
