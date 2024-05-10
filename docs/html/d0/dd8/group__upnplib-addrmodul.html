@@ -72,6 +72,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">Address module<div class="ingroups"><a class="el" href="../../d4/d32/group__upnplib.html">* * object oriented UPnP library</a> &raquo; <a class="el" href="../../dd/df8/group__upnplib-Addressing.html">Step 0: Addressing</a></div></div></div>
 </div><!--header-->
@@ -83,17 +84,106 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dad/classupnplib_1_1CAddrinfo.html">upnplib::CAddrinfo</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrap C style ::addrinfo() function with a class.  <a href="../../da/dad/classupnplib_1_1CAddrinfo.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrap C style ::addrinfo() structure with a class.  <a href="../../da/dad/classupnplib_1_1CAddrinfo.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:d6/d2c/unionupnplib_1_1sockaddr__t" id="r_d6/d2c/unionupnplib_1_1sockaddr__t"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#d6/d2c/unionupnplib_1_1sockaddr__t">upnplib::sockaddr_t</a></td></tr>
+<tr class="memdesc:d6/d2c/unionupnplib_1_1sockaddr__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helpful union of the different socket address structures.  <a href="../../d0/dd8/group__upnplib-addrmodul.html#d6/d2c/unionupnplib_1_1sockaddr__t">More...</a><br /></td></tr>
+<tr class="separator:d6/d2c/unionupnplib_1_1sockaddr__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">upnplib::SSockaddr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trivial ::sockaddr structures enhanced with methods.  <a href="../../d1/dc2/structupnplib_1_1SSockaddr.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:gadef130d04ab9d2b882ce089fd5e1d03a" id="r_gadef130d04ab9d2b882ce089fd5e1d03a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#gadef130d04ab9d2b882ce089fd5e1d03a">upnplib::netaddr_t</a> = std::string</td></tr>
+<tr class="memdesc:gadef130d04ab9d2b882ce089fd5e1d03a"><td class="mdescLeft">&#160;</td><td class="mdescRight">type of a <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>  <br /></td></tr>
+<tr class="separator:gadef130d04ab9d2b882ce089fd5e1d03a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:gac72d6be0ff0796c507b86b0bc717fb7e" id="r_gac72d6be0ff0796c507b86b0bc717fb7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#gac72d6be0ff0796c507b86b0bc717fb7e">upnplib::to_netaddr</a> (const ::sockaddr_storage *const a_sockaddr)</td></tr>
+<tr class="memdesc:gac72d6be0ff0796c507b86b0bc717fb7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the netaddress without port from a sockaddr structure.  <br /></td></tr>
+<tr class="separator:gac72d6be0ff0796c507b86b0bc717fb7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad117a3a17a651d54528d6d36bc318ada" id="r_gad117a3a17a651d54528d6d36bc318ada"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#gad117a3a17a651d54528d6d36bc318ada">upnplib::to_netaddrp</a> (const ::sockaddr_storage *const a_sockaddr)</td></tr>
+<tr class="memdesc:gad117a3a17a651d54528d6d36bc318ada"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the netaddress with port from a sockaddr structure.  <br /></td></tr>
+<tr class="separator:gad117a3a17a651d54528d6d36bc318ada"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5302a7054fc539b5dbc7dd8c1cbc6145" id="r_ga5302a7054fc539b5dbc7dd8c1cbc6145"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> in_port_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#ga5302a7054fc539b5dbc7dd8c1cbc6145">upnplib::to_port</a> (const std::string &amp;a_port_str)</td></tr>
+<tr class="memdesc:ga5302a7054fc539b5dbc7dd8c1cbc6145"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the port number from a string.  <br /></td></tr>
+<tr class="separator:ga5302a7054fc539b5dbc7dd8c1cbc6145"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga29eb40e51c94d8cba8cac175f6731fb7" id="r_ga29eb40e51c94d8cba8cac175f6731fb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#ga29eb40e51c94d8cba8cac175f6731fb7">upnplib::sockaddrcmp</a> (const ::sockaddr_storage *a_ss1, const ::sockaddr_storage *a_ss2) noexcept</td></tr>
+<tr class="memdesc:ga29eb40e51c94d8cba8cac175f6731fb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">logical compare two sockaddr structures  <br /></td></tr>
+<tr class="separator:ga29eb40e51c94d8cba8cac175f6731fb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3c4ba3cf1bd3098e01569ffc7dc20bff" id="r_ga3c4ba3cf1bd3098e01569ffc7dc20bff"><td class="memItemLeft" align="right" valign="top">sa_family_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#ga3c4ba3cf1bd3098e01569ffc7dc20bff">anonymous_namespace{addrinfo.cpp}::is_netaddr</a> (const std::string &amp;a_node, const int a_addr_family=AF_UNSPEC) noexcept</td></tr>
 <tr class="memdesc:ga3c4ba3cf1bd3098e01569ffc7dc20bff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for a numeric netaddress and return its address family.  <br /></td></tr>
 <tr class="separator:ga3c4ba3cf1bd3098e01569ffc7dc20bff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>The address module contains all classes and free functions to manage network addresses. </p>
+<hr/><h2 class="groupheader">Class Documentation</h2>
+<a name="d6/d2c/unionupnplib_1_1sockaddr__t" id="d6/d2c/unionupnplib_1_1sockaddr__t"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#d6/d2c/unionupnplib_1_1sockaddr__t">&#9670;&#160;</a></span>upnplib::sockaddr_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">union upnplib::sockaddr_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"><p>Helpful union of the different socket address structures. </p>
+<p>Never need to use type casts with pointer to different socket address structures. For details about using this helpful union have a look at <a href="https://stackoverflow.com/a/76548581/5014688">sockaddr structures as union</a> </p>
+
+<p class="definition">Definition at line <a class="el" href="../../d7/d1b/sockaddr_8hpp_source.html#l00035">35</a> of file <a class="el" href="../../d7/d1b/sockaddr_8hpp_source.html">sockaddr.hpp</a>.</p>
+</div><table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="a4e9371e9ae9a28074e492a9488fd6a06" name="a4e9371e9ae9a28074e492a9488fd6a06"></a>::sockaddr</td>
+<td class="fieldname">
+sa</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a8decf3ca528a594269b73ab169d2e3f9" name="a8decf3ca528a594269b73ab169d2e3f9"></a>::sockaddr_in</td>
+<td class="fieldname">
+sin</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a39d62d34fa4f7a5234b28f0ecb3b9964" name="a39d62d34fa4f7a5234b28f0ecb3b9964"></a>::sockaddr_in6</td>
+<td class="fieldname">
+sin6</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="acb9de15fbc1bdb490200985049838488" name="acb9de15fbc1bdb490200985049838488"></a>::sockaddr_storage</td>
+<td class="fieldname">
+ss</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="gadef130d04ab9d2b882ce089fd5e1d03a" name="gadef130d04ab9d2b882ce089fd5e1d03a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadef130d04ab9d2b882ce089fd5e1d03a">&#9670;&#160;</a></span>netaddr_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#gadef130d04ab9d2b882ce089fd5e1d03a">upnplib::netaddr_t</a> = typedef std::string</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>type of a <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a> </p>
+
+<p class="definition">Definition at line <a class="el" href="../../d7/d1b/sockaddr_8hpp_source.html#l00024">24</a> of file <a class="el" href="../../d7/d1b/sockaddr_8hpp_source.html">sockaddr.hpp</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga3c4ba3cf1bd3098e01569ffc7dc20bff" name="ga3c4ba3cf1bd3098e01569ffc7dc20bff"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga3c4ba3cf1bd3098e01569ffc7dc20bff">&#9670;&#160;</a></span>is_netaddr()</h2>
@@ -132,15 +222,453 @@ Functions</h2></td></tr>
 <p>Check for a numeric netaddress and return its address family. </p>
 <p>Checks if a string represents a numeric IPv6 or IPv4 address without port and determines its address family.</p>
 <dl class="section return"><dt>Returns</dt><dd>On success: Address family AF_INET6 or AF_INET the address belongs to<br  />
- On error: AF_UNSPEC, the address is alphanumeric (maybe a DNS name?)</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
+ On error: AF_UNSPEC, the address is alphanumeric (maybe a DNS name?) </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00031">31</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_ga3c4ba3cf1bd3098e01569ffc7dc20bff_cgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_ga3c4ba3cf1bd3098e01569ffc7dc20bff_cgraph" alt=""/></div>
+<map name="ad0/dd8/group__upnplib-addrmodul_ga3c4ba3cf1bd3098e01569ffc7dc20bff_cgraph" id="ad0/dd8/group__upnplib-addrmodul_ga3c4ba3cf1bd3098e01569ffc7dc20bff_cgraph">
+<area shape="rect" title="Check for a numeric netaddress and return its address family." alt="" coords="5,29,185,84"/>
+<area shape="poly" title=" " alt="" coords="60,29,60,19,66,10,78,5,95,3,116,6,127,13,124,18,114,11,95,8,80,10,70,15,65,21,65,29"/>
+</map>
+</div>
+<div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-1-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-1-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_ga3c4ba3cf1bd3098e01569ffc7dc20bff_icgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_ga3c4ba3cf1bd3098e01569ffc7dc20bff_icgraph" alt=""/></div>
+<map name="ad0/dd8/group__upnplib-addrmodul_ga3c4ba3cf1bd3098e01569ffc7dc20bff_icgraph" id="ad0/dd8/group__upnplib-addrmodul_ga3c4ba3cf1bd3098e01569ffc7dc20bff_icgraph">
+<area shape="rect" title="Check for a numeric netaddress and return its address family." alt="" coords="5,29,185,84"/>
+<area shape="poly" title=" " alt="" coords="124,18,114,11,95,8,80,10,70,15,65,21,65,29,60,29,60,19,66,10,78,5,95,3,116,6,127,13"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ga29eb40e51c94d8cba8cac175f6731fb7" name="ga29eb40e51c94d8cba8cac175f6731fb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga29eb40e51c94d8cba8cac175f6731fb7">&#9670;&#160;</a></span>sockaddrcmp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool upnplib::sockaddrcmp </td>
+          <td>(</td>
+          <td class="paramtype">const ::sockaddr_storage *&#160;</td>
+          <td class="paramname"><em>a_ss1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::sockaddr_storage *&#160;</td>
+          <td class="paramname"><em>a_ss2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>logical compare two sockaddr structures </p>
+<p>To have a logical equal socket address we compare the address family, the ip address and the port.</p>
+<dl class="section return"><dt>Returns</dt><dd><b>true</b> if socket addresses are logical equal<br  />
+ <b>false</b> otherwise </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00099">99</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-2-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_ga29eb40e51c94d8cba8cac175f6731fb7_icgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_ga29eb40e51c94d8cba8cac175f6731fb7_icgraph" alt=""/></div>
+<map name="ad0/dd8/group__upnplib-addrmodul_ga29eb40e51c94d8cba8cac175f6731fb7_icgraph" id="ad0/dd8/group__upnplib-addrmodul_ga29eb40e51c94d8cba8cac175f6731fb7_icgraph">
+<area shape="rect" title="logical compare two sockaddr structures" alt="" coords="199,45,363,70"/>
+<area shape="rect" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#a8cdabffed735d05133da7304c1b304f4" title="Test if another socket address is logical equal to this." alt="" coords="5,5,151,45"/>
+<area shape="poly" title=" " alt="" coords="186,45,150,39,151,34,187,40"/>
+<area shape="rect" href="../../da/dad/classupnplib_1_1CAddrinfo.html#a689fa416eabea21a39dd0eee081a742e" title="Compare operator to test if another address info is equal to this." alt="" coords="7,69,149,109"/>
+<area shape="poly" title=" " alt="" coords="187,75,150,81,149,75,186,70"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="gac72d6be0ff0796c507b86b0bc717fb7e" name="gac72d6be0ff0796c507b86b0bc717fb7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac72d6be0ff0796c507b86b0bc717fb7e">&#9670;&#160;</a></span>to_netaddr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string upnplib::to_netaddr </td>
+          <td>(</td>
+          <td class="paramtype">const ::sockaddr_storage *const&#160;</td>
+          <td class="paramname"><em>a_sockaddr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the netaddress without port from a sockaddr structure. </p>
+<div class="fragment"><div class="line">~$ <span class="comment">// Usage e.g.:</span></div>
+<div class="line">~$ sockaddr_storage saddr{};</div>
+<div class="line">~$ std::cout &lt;&lt; <span class="stringliteral">&quot;netaddress is &quot;</span> &lt;&lt; <a class="code hl_function" href="../../d0/dd8/group__upnplib-addrmodul.html#gac72d6be0ff0796c507b86b0bc717fb7e">to_netaddr</a>(&amp;saddr) &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="ttc" id="agroup__upnplib-addrmodul_html_gac72d6be0ff0796c507b86b0bc717fb7e"><div class="ttname"><a href="../../d0/dd8/group__upnplib-addrmodul.html#gac72d6be0ff0796c507b86b0bc717fb7e">upnplib::to_netaddr</a></div><div class="ttdeci">UPNPLIB_API std::string to_netaddr(const ::sockaddr_storage *const a_sockaddr)</div><div class="ttdoc">Get the netaddress without port from a sockaddr structure.</div><div class="ttdef"><b>Definition</b> <a href="../../d7/def/sockaddr_8cpp_source.html#l00017">sockaddr.cpp:17</a></div></div>
+</div><!-- fragment --> <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">...</td><td>None, function is declared 'noexcept' </td></tr>
+    <tr><td class="paramname">std::invalid_argument</td><td>Unsupported address family. Supported is only AF_INET6 and AF_INET. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00033">33</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00017">17</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-3-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-3-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_gac72d6be0ff0796c507b86b0bc717fb7e_icgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_gac72d6be0ff0796c507b86b0bc717fb7e_icgraph" alt=""/></div>
+<map name="ad0/dd8/group__upnplib-addrmodul_gac72d6be0ff0796c507b86b0bc717fb7e_icgraph" id="ad0/dd8/group__upnplib-addrmodul_gac72d6be0ff0796c507b86b0bc717fb7e_icgraph">
+<area shape="rect" title="Get the netaddress without port from a sockaddr structure." alt="" coords="2169,150,2317,175"/>
+<area shape="rect" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#a04f79b920c405df595b8a845fed5063a" title="Get the assosiated netaddress without port." alt="" coords="1971,113,2116,153"/>
+<area shape="poly" title=" " alt="" coords="2155,152,2116,147,2117,141,2156,147"/>
+<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#gad117a3a17a651d54528d6d36bc318ada" title="Get the netaddress with port from a sockaddr structure." alt="" coords="1965,178,2121,203"/>
+<area shape="poly" title=" " alt="" coords="2156,178,2122,182,2122,177,2155,172"/>
+<area shape="rect" href="../../d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="1285,153,1452,178"/>
+<area shape="poly" title=" " alt="" coords="1957,140,1452,164,1452,159,1957,135"/>
+<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a5f7fd6b4ebb71a582453fa9941208758" title="Get netaddress without port." alt="" coords="1747,5,1917,45"/>
+<area shape="poly" title=" " alt="" coords="1995,109,1916,66,1877,48,1880,43,1919,62,1997,104"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aa1e3a3e75356465099535c0e7851a858" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="1018,121,1198,175"/>
+<area shape="poly" title=" " alt="" coords="1271,162,1198,157,1198,151,1272,156"/>
+<area shape="rect" href="../../da/dad/classupnplib_1_1CAddrinfo.html#adec90cab1b85914a4fe0a14316d05083" title="Get address information that is given by syscall ::getaddrinfo()" alt="" coords="1761,171,1903,211"/>
+<area shape="poly" title=" " alt="" coords="1952,193,1904,193,1904,188,1952,188"/>
+<area shape="rect" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="1759,285,1905,325"/>
+<area shape="poly" title=" " alt="" coords="2008,212,1871,288,1869,283,2006,208"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a4a107199de415d50f725a5c6a327c1be" title="Initilize the thread pool to handle a request, sets priority for the job and adds the job to the thre..." alt="" coords="499,171,704,226"/>
+<area shape="poly" title=" " alt="" coords="1989,176,1792,119,1690,95,1614,85,1107,85,1047,88,987,94,868,117,761,146,675,174,674,169,760,140,867,112,986,89,1047,82,1107,80,1615,80,1691,90,1794,114,1990,171"/>
+<area shape="poly" title=" " alt="" coords="1746,189,1452,173,1452,167,1747,183"/>
+<area shape="rect" href="../../da/dad/classupnplib_1_1CAddrinfo.html#a6604a31aaed5e891f3f6eb152671ed24" title="Copy constructor." alt="" coords="1542,221,1685,261"/>
+<area shape="poly" title=" " alt="" coords="1748,213,1685,227,1684,222,1747,208"/>
+<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a6e83bff4e6d004f48f8d0d947bad74a7" title="Get netaddress with port." alt="" coords="1528,285,1699,325"/>
+<area shape="poly" title=" " alt="" coords="1745,308,1699,308,1699,303,1745,303"/>
+<area shape="rect" href="../../da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a333b21037bc6fd869e0b0b91cc073bbe" title="Sends a message to the destination based on the format parameter." alt="" coords="1296,650,1441,675"/>
+<area shape="poly" title=" " alt="" coords="1796,336,1388,652,1385,648,1792,332"/>
+<area shape="poly" title=" " alt="" coords="1540,282,1527,276,1502,259,1478,241,1388,180,1391,176,1482,237,1505,255,1529,271,1542,277"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a6f40d51e41632f61e7147d7a42dea58e" title="Returns the ip address with port as text that is bound to a socket." alt="" coords="1257,315,1480,370"/>
+<area shape="poly" title=" " alt="" coords="1515,323,1481,328,1480,323,1514,318"/>
+<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a0bfd8447aeb0fce2841c5ea90234c37d" title="Get status if socket is bound to a local netaddress." alt="" coords="1283,251,1454,291"/>
+<area shape="poly" title=" " alt="" coords="1514,294,1454,285,1455,280,1515,289"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a54d3ff9589278aff8765d7a64df23587" title="Based on the type of message, appropriate callback is issued." alt="" coords="1007,315,1209,370"/>
+<area shape="poly" title=" " alt="" coords="1244,345,1210,345,1210,340,1244,340"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a9b4b32cfbe825a3f7cc9906b33d50872" title="Receive the request and dispatch it for handling." alt="" coords="760,315,951,370"/>
+<area shape="poly" title=" " alt="" coords="993,345,951,345,951,340,993,340"/>
+<area shape="poly" title=" " alt="" coords="793,311,649,229,652,224,796,306"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a34abbc6e410d0cfd24057c79c9f1b9c3" title="Accept requested connection from a remote control point and run it in a new thread." alt="" coords="262,171,442,226"/>
+<area shape="poly" title=" " alt="" coords="485,201,442,201,442,196,485,196"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76" title="Run the miniserver." alt="" coords="5,211,205,266"/>
+<area shape="poly" title=" " alt="" coords="249,218,206,225,205,220,248,213"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a937a0eae18a69c7e034aa982345d9a50" title="Add a socket file descriptor to an &#39;fd_set&#39; structure as needed for ::select()." alt="" coords="262,250,442,305"/>
+<area shape="poly" title=" " alt="" coords="1269,274,442,279,442,274,1269,269"/>
+<area shape="rect" href="../../d8/d73/classupnplib_1_1CSocket.html#a558451398ca27e8a0311df14e3441e6b" title="Set IPV6_V6ONLY." alt="" coords="1029,200,1187,240"/>
+<area shape="poly" title=" " alt="" coords="1270,254,1187,238,1188,233,1271,249"/>
+<area shape="poly" title=" " alt="" coords="248,264,205,257,206,252,249,259"/>
+<area shape="poly" title=" " alt="" coords="1356,638,1336,587,1304,522,1261,453,1236,420,1208,391,1181,372,1184,368,1211,387,1240,417,1266,450,1309,519,1341,585,1361,636"/>
+<area shape="rect" href="../../da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#ab8610e8aea3346f682ca91fe37b21bf8" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="1023,1091,1193,1117"/>
+<area shape="poly" title=" " alt="" coords="1355,689,1212,939,1119,1092,1115,1090,1207,936,1351,687"/>
+<area shape="rect" href="../../da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#aa6e8ca5e4a342e562769c5670475fe3f" title="Makes the HTTP GET message, connects to the peer, sends the HTTP GET request, gets the response and p..." alt="" coords="1030,1153,1186,1178"/>
+<area shape="poly" title=" " alt="" coords="1369,689,1360,773,1350,829,1336,891,1316,955,1289,1018,1254,1078,1211,1131,1193,1145,1173,1155,1170,1150,1190,1141,1207,1127,1250,1075,1284,1016,1311,953,1331,889,1345,828,1355,772,1363,689"/>
+<area shape="rect" href="../../da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a1ef899831c9f04897982b56dfcbfff1a" title="Initiates socket, connects to the remote host, sends a request and waits for the response from the re..." alt="" coords="1010,899,1206,925"/>
+<area shape="poly" title=" " alt="" coords="1346,687,1125,901,1121,897,1342,683"/>
+<area shape="rect" href="../../da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a992c9ac44a3720d238e012d0fe0a0707" title="Generate a response message for the status query and send the status response." alt="" coords="1013,495,1203,521"/>
+<area shape="poly" title=" " alt="" coords="1342,642,1284,592,1247,566,1208,542,1160,523,1162,518,1211,538,1250,561,1287,588,1346,638"/>
+<area shape="rect" href="../../d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a11f6b8370b141ab90b844dbf1092265c" title="Returns OK message in the case of a subscription request." alt="" coords="511,366,691,421"/>
+<area shape="poly" title=" " alt="" coords="1351,639,1327,604,1295,562,1255,521,1208,486,1144,455,1076,431,1005,413,935,401,802,390,692,390,692,385,802,385,936,396,1007,408,1077,426,1146,450,1211,482,1258,517,1299,559,1332,601,1355,636"/>
+<area shape="rect" href="../../d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#abb77fc2cfdf0dfbd97e5b3880c4b18d1" title="Main entry point into web server." alt="" coords="776,547,935,573"/>
+<area shape="poly" title=" " alt="" coords="1334,645,1277,614,1209,588,1137,573,1065,564,935,560,935,554,1065,559,1138,568,1210,583,1279,609,1337,640"/>
+<area shape="rect" href="../../d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae1781a5b638d50bd7626b3ea925492cb" title="Sends the notify message and returns a reply." alt="" coords="1018,1226,1198,1281"/>
+<area shape="poly" title=" " alt="" coords="1369,690,1359,780,1334,911,1314,984,1287,1057,1253,1127,1211,1192,1192,1212,1170,1228,1167,1224,1189,1208,1207,1189,1249,1125,1282,1055,1309,982,1329,910,1354,780,1363,689"/>
+<area shape="rect" href="../../d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#a06c8e12369d9db67a834d961dc914563" title="Sends the SOAP action response." alt="" coords="765,727,945,782"/>
+<area shape="poly" title=" " alt="" coords="1339,685,1281,718,1246,733,1210,745,1142,758,1072,765,945,765,945,759,1071,760,1141,753,1209,740,1244,728,1279,713,1336,681"/>
+<area shape="rect" href="../../d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#af2aff493a97adf72193dc9ff26413171" title="Sends SOAP error response." alt="" coords="1018,675,1198,730"/>
+<area shape="poly" title=" " alt="" coords="1283,678,1198,692,1198,686,1282,673"/>
+<area shape="rect" href="../../d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#ac97fc275f79e926d35c691d839489b07" title="Sends response of get var status." alt="" coords="1013,597,1203,651"/>
+<area shape="poly" title=" " alt="" coords="1282,653,1203,641,1204,636,1283,647"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a534218b5a1c6cdcc1094a58449019882" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection." alt="" coords="769,1141,941,1166"/>
+<area shape="poly" title=" " alt="" coords="1029,1122,922,1143,921,1138,1028,1117"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a45850f990fe110e26f9b093a88e3e8a0" title="Makes an HTTP POST request message, opens a connection to the server and sends the POST request to th..." alt="" coords="782,1091,929,1117"/>
+<area shape="poly" title=" " alt="" coords="1009,1107,929,1107,929,1101,1009,1101"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a14067069cf3e1f0dc9ac25867a4ca83d" title="Gets a file specified in a URL." alt="" coords="531,1117,672,1142"/>
+<area shape="poly" title=" " alt="" coords="755,1147,672,1139,672,1133,756,1141"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a5f069548a767baef4623774d7bb3ce9f" title="Gets a file specified in a URL through the specified proxy." alt="" coords="512,1166,691,1191"/>
+<area shape="poly" title=" " alt="" coords="756,1166,691,1172,691,1167,755,1161"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a68e366bcfaed3559025fa8ac04c2885c" title="Gets specified number of bytes from a file specified in the URL." alt="" coords="777,1190,934,1215"/>
+<area shape="poly" title=" " alt="" coords="1017,1181,934,1194,934,1188,1016,1176"/>
+<area shape="rect" href="../../d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#aab6385b3da2410ba5921c203635b7e28" title="Subscribes or renew subscription." alt="" coords="765,885,945,939"/>
+<area shape="poly" title=" " alt="" coords="996,915,945,915,945,909,996,909"/>
+<area shape="rect" href="../../d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#af298d2d7e5a94605b0b284718e20cdc9" title="Sends the UNSUBCRIBE gena request and recieves the response from the device and returns it as a param..." alt="" coords="765,1013,945,1067"/>
+<area shape="poly" title=" " alt="" coords="1078,935,1024,969,960,1004,935,1015,933,1010,957,999,1021,964,1075,930"/>
+<area shape="rect" href="../../da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a4c4ffc89743a422ff2ad243e9ab14892" title="Download the document message and extract the document from the message." alt="" coords="795,963,915,989"/>
+<area shape="poly" title=" " alt="" coords="1048,931,959,955,913,966,912,961,958,949,1047,926"/>
+<area shape="rect" href="../../d0/d7c/namespaceanonymous__namespace_02soap__ctrlpt_8cpp_03.html#a19db19e25ca9e8e52017abd97190db81" title="This function sends the control point&#39;s request to the device and receives a response from it." alt="" coords="752,806,959,861"/>
+<area shape="poly" title=" " alt="" coords="1052,898,943,863,945,858,1054,893"/>
+<area shape="rect" href="../../d6/de3/gena__ctrlpt_8cpp.html#ac18ff86dd814e974314f13e3f4b12316" title="Renews a SID." alt="" coords="512,925,691,950"/>
+<area shape="poly" title=" " alt="" coords="752,925,691,931,691,926,751,920"/>
+<area shape="rect" href="../../d6/de3/gena__ctrlpt_8cpp.html#a8fa71879823e3dc936bac4847ca1fcc5" title="This function subscribes to a PublisherURL (also mentioned as EventURL in some places)." alt="" coords="543,875,660,901"/>
+<area shape="poly" title=" " alt="" coords="751,905,660,896,660,891,752,900"/>
+<area shape="rect" href="../../d6/de3/gena__ctrlpt_8cpp.html#a1061c296a8e1902dfa6e17e105d46121" title="Unsubcribes all the outstanding subscriptions and cleans the subscription list." alt="" coords="521,1027,681,1053"/>
+<area shape="poly" title=" " alt="" coords="751,1043,681,1043,681,1037,751,1037"/>
+<area shape="poly" title=" " alt="" coords="1074,490,897,372,900,368,1077,485"/>
+<area shape="rect" href="../../dc/d02/gena__callback2_8cpp.html#abb1570eae1e832145e2ae85cf1b5ad75" title="Sends an error message to the control point in the case of incorrect GENA requests." alt="" coords="799,446,911,471"/>
+<area shape="poly" title=" " alt="" coords="1029,495,911,472,912,467,1030,490"/>
+<area shape="rect" href="../../d6/d92/soap__device_8cpp.html#a4b5104845d73b836d6365a306fba1679" title="This is a callback called by minisever." alt="" coords="270,611,434,637"/>
+<area shape="poly" title=" " alt="" coords="999,500,892,495,766,497,631,510,564,522,499,539,461,554,425,574,370,613,367,609,422,570,459,549,498,533,563,517,630,504,766,491,892,490,999,495"/>
+<area shape="poly" title=" " alt="" coords="1033,526,918,550,917,545,1032,521"/>
+<area shape="rect" href="../../dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="253,439,451,479"/>
+<area shape="poly" title=" " alt="" coords="785,461,451,461,451,456,785,456"/>
+<area shape="rect" href="../../dd/de6/gena__device_8cpp.html#a25ad1852d4d32c6f34a87b92225202fd" title="Handles a subscription request from a ctrl point. The socket is not closed on return." alt="" coords="253,352,451,392"/>
+<area shape="poly" title=" " alt="" coords="824,440,754,389,703,357,635,343,564,340,497,345,437,355,436,349,496,340,564,335,635,338,705,352,757,385,827,436"/>
+<area shape="poly" title=" " alt="" coords="791,445,691,419,692,414,793,440"/>
+<area shape="poly" title=" " alt="" coords="499,423,430,441,428,436,497,418"/>
+<area shape="poly" title=" " alt="" coords="498,387,451,383,451,378,498,382"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a3c6309a98eb5281fbbfa45644c06fc34" title="Enables or disables the webserver." alt="" coords="517,547,686,573"/>
+<area shape="poly" title=" " alt="" coords="762,563,686,563,686,557,762,557"/>
+<area shape="rect" href="../../d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a951778f34697a8cc0a0e9dd7da2b66ca" title="Function to Notify a particular subscription of a particular event." alt="" coords="765,1239,945,1294"/>
+<area shape="poly" title=" " alt="" coords="1005,1261,946,1265,946,1259,1004,1256"/>
+<area shape="rect" href="../../d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#aef9e66b433f64923b1142779a4cdced6" title="Handles the SOAP action request." alt="" coords="511,662,691,717"/>
+<area shape="poly" title=" " alt="" coords="751,731,691,715,692,710,753,726"/>
+<area shape="poly" title=" " alt="" coords="497,665,401,639,402,634,499,660"/>
+<area shape="poly" title=" " alt="" coords="1005,727,946,739,945,734,1004,721"/>
+<area shape="poly" title=" " alt="" coords="1004,703,691,694,692,689,1004,697"/>
+<area shape="rect" href="../../d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#ade7f137927ec56c6a4c47b57ac6fc3a5" title="Handles the SOAP requests to querry the state variables." alt="" coords="765,597,945,651"/>
+<area shape="poly" title=" " alt="" coords="1006,674,943,654,945,649,1008,669"/>
+<area shape="poly" title=" " alt="" coords="752,627,434,627,434,621,752,621"/>
+<area shape="poly" title=" " alt="" coords="999,627,945,627,945,621,999,621"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="gad117a3a17a651d54528d6d36bc318ada" name="gad117a3a17a651d54528d6d36bc318ada"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad117a3a17a651d54528d6d36bc318ada">&#9670;&#160;</a></span>to_netaddrp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string upnplib::to_netaddrp </td>
+          <td>(</td>
+          <td class="paramtype">const ::sockaddr_storage *const&#160;</td>
+          <td class="paramname"><em>a_sockaddr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the netaddress with port from a sockaddr structure. </p>
+<div class="fragment"><div class="line">~$ <span class="comment">// Usage e.g.:</span></div>
+<div class="line">~$ sockaddr_storage saddr{};</div>
+<div class="line">~$ std::cout &lt;&lt; <span class="stringliteral">&quot;netaddress is &quot;</span> &lt;&lt; <a class="code hl_function" href="../../d0/dd8/group__upnplib-addrmodul.html#gad117a3a17a651d54528d6d36bc318ada">to_netaddrp</a>(&amp;saddr) &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="ttc" id="agroup__upnplib-addrmodul_html_gad117a3a17a651d54528d6d36bc318ada"><div class="ttname"><a href="../../d0/dd8/group__upnplib-addrmodul.html#gad117a3a17a651d54528d6d36bc318ada">upnplib::to_netaddrp</a></div><div class="ttdeci">UPNPLIB_API std::string to_netaddrp(const ::sockaddr_storage *const a_sockaddr)</div><div class="ttdoc">Get the netaddress with port from a sockaddr structure.</div><div class="ttdef"><b>Definition</b> <a href="../../d7/def/sockaddr_8cpp_source.html#l00051">sockaddr.cpp:51</a></div></div>
+</div><!-- fragment --> <dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::invalid_argument</td><td>Unsupported address family. Supported is only AF_INET6 and AF_INET. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00051">51</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-4-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_gad117a3a17a651d54528d6d36bc318ada_cgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_gad117a3a17a651d54528d6d36bc318ada_cgraph" alt=""/></div>
+<map name="ad0/dd8/group__upnplib-addrmodul_gad117a3a17a651d54528d6d36bc318ada_cgraph" id="ad0/dd8/group__upnplib-addrmodul_gad117a3a17a651d54528d6d36bc318ada_cgraph">
+<area shape="rect" title="Get the netaddress with port from a sockaddr structure." alt="" coords="5,5,161,31"/>
+<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#gac72d6be0ff0796c507b86b0bc717fb7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="209,5,357,31"/>
+<area shape="poly" title=" " alt="" coords="162,15,195,15,195,21,162,21"/>
+</map>
+</div>
+<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-5-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-5-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_gad117a3a17a651d54528d6d36bc318ada_icgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_gad117a3a17a651d54528d6d36bc318ada_icgraph" alt=""/></div>
+<map name="ad0/dd8/group__upnplib-addrmodul_gad117a3a17a651d54528d6d36bc318ada_icgraph" id="ad0/dd8/group__upnplib-addrmodul_gad117a3a17a651d54528d6d36bc318ada_icgraph">
+<area shape="rect" title="Get the netaddress with port from a sockaddr structure." alt="" coords="1940,841,2096,867"/>
+<area shape="rect" href="../../da/dad/classupnplib_1_1CAddrinfo.html#adec90cab1b85914a4fe0a14316d05083" title="Get address information that is given by syscall ::getaddrinfo()" alt="" coords="1748,646,1891,686"/>
+<area shape="poly" title=" " alt="" coords="1992,834,1840,688,1844,684,1995,830"/>
+<area shape="rect" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="1747,834,1892,874"/>
+<area shape="poly" title=" " alt="" coords="1926,857,1892,857,1892,851,1926,851"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a4a107199de415d50f725a5c6a327c1be" title="Initilize the thread pool to handle a request, sets priority for the job and adds the job to the thre..." alt="" coords="499,1075,704,1129"/>
+<area shape="poly" title=" " alt="" coords="2002,880,1946,949,1905,992,1858,1036,1804,1076,1745,1109,1681,1132,1648,1138,1615,1141,1107,1141,999,1138,891,1132,704,1116,705,1111,891,1127,999,1133,1107,1135,1615,1135,1648,1133,1680,1127,1743,1105,1801,1071,1854,1032,1902,988,1942,946,1998,876"/>
+<area shape="rect" href="../../da/dad/classupnplib_1_1CAddrinfo.html#a6604a31aaed5e891f3f6eb152671ed24" title="Copy constructor." alt="" coords="1542,646,1685,686"/>
+<area shape="poly" title=" " alt="" coords="1734,669,1685,669,1685,663,1734,663"/>
+<area shape="rect" href="../../d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="1285,555,1452,580"/>
+<area shape="poly" title=" " alt="" coords="1734,646,1698,637,1438,583,1439,577,1699,631,1735,640"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aa1e3a3e75356465099535c0e7851a858" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="1018,20,1198,75"/>
+<area shape="poly" title=" " alt="" coords="1364,541,1355,456,1346,398,1332,335,1312,269,1285,204,1250,142,1207,88,1194,77,1198,73,1211,84,1255,140,1290,202,1317,267,1337,333,1351,397,1360,455,1369,541"/>
+<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a6e83bff4e6d004f48f8d0d947bad74a7" title="Get netaddress with port." alt="" coords="1528,913,1699,953"/>
+<area shape="poly" title=" " alt="" coords="1755,881,1667,915,1665,910,1753,876"/>
+<area shape="rect" href="../../da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a333b21037bc6fd869e0b0b91cc073bbe" title="Sends a message to the destination based on the format parameter." alt="" coords="1296,604,1441,629"/>
+<area shape="poly" title=" " alt="" coords="1767,830,1393,632,1396,627,1769,825"/>
+<area shape="poly" title=" " alt="" coords="1598,901,1531,719,1497,633,1478,593,1451,578,1454,573,1482,590,1502,631,1536,717,1603,899"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a6f40d51e41632f61e7147d7a42dea58e" title="Returns the ip address with port as text that is bound to a socket." alt="" coords="1257,917,1480,972"/>
+<area shape="poly" title=" " alt="" coords="1514,940,1481,942,1480,937,1514,935"/>
+<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a0bfd8447aeb0fce2841c5ea90234c37d" title="Get status if socket is bound to a local netaddress." alt="" coords="1283,1003,1454,1043"/>
+<area shape="poly" title=" " alt="" coords="1550,960,1481,987,1429,1006,1427,1001,1479,982,1549,955"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a54d3ff9589278aff8765d7a64df23587" title="Based on the type of message, appropriate callback is issued." alt="" coords="1007,931,1209,985"/>
+<area shape="poly" title=" " alt="" coords="1244,954,1210,955,1210,950,1244,948"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a9b4b32cfbe825a3f7cc9906b33d50872" title="Receive the request and dispatch it for handling." alt="" coords="760,931,951,985"/>
+<area shape="poly" title=" " alt="" coords="993,961,951,961,951,955,993,955"/>
+<area shape="poly" title=" " alt="" coords="796,995,652,1077,649,1072,793,990"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a34abbc6e410d0cfd24057c79c9f1b9c3" title="Accept requested connection from a remote control point and run it in a new thread." alt="" coords="262,1075,442,1129"/>
+<area shape="poly" title=" " alt="" coords="485,1105,442,1105,442,1099,485,1099"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76" title="Run the miniserver." alt="" coords="5,1036,205,1091"/>
+<area shape="poly" title=" " alt="" coords="248,1088,205,1082,206,1076,249,1083"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a937a0eae18a69c7e034aa982345d9a50" title="Add a socket file descriptor to an &#39;fd_set&#39; structure as needed for ::select()." alt="" coords="262,996,442,1051"/>
+<area shape="poly" title=" " alt="" coords="1269,1026,442,1026,442,1021,1269,1021"/>
+<area shape="rect" href="../../d8/d73/classupnplib_1_1CSocket.html#a558451398ca27e8a0311df14e3441e6b" title="Set IPV6_V6ONLY." alt="" coords="1029,1061,1187,1101"/>
+<area shape="poly" title=" " alt="" coords="1271,1048,1188,1066,1187,1061,1269,1042"/>
+<area shape="poly" title=" " alt="" coords="249,1043,206,1050,205,1044,248,1037"/>
+<area shape="poly" title=" " alt="" coords="1362,644,1343,698,1312,770,1268,845,1241,881,1211,913,1184,933,1181,928,1208,909,1237,878,1263,842,1307,767,1338,696,1357,642"/>
+<area shape="rect" href="../../da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#ab8610e8aea3346f682ca91fe37b21bf8" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="1023,335,1193,360"/>
+<area shape="poly" title=" " alt="" coords="1281,610,1256,593,1237,569,1228,545,1226,521,1228,496,1229,448,1222,423,1207,398,1183,377,1154,363,1156,358,1186,373,1211,395,1227,421,1234,447,1233,497,1232,521,1234,544,1242,567,1259,589,1284,605"/>
+<area shape="rect" href="../../da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#aa6e8ca5e4a342e562769c5670475fe3f" title="Makes the HTTP GET message, connects to the peer, sends the HTTP GET request, gets the response and p..." alt="" coords="1030,488,1186,513"/>
+<area shape="poly" title=" " alt="" coords="1283,603,1256,594,1181,554,1125,516,1128,511,1184,550,1258,589,1284,598"/>
+<area shape="rect" href="../../da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a1ef899831c9f04897982b56dfcbfff1a" title="Initiates socket, connects to the remote host, sends a request and waits for the response from the re..." alt="" coords="1010,604,1206,629"/>
+<area shape="poly" title=" " alt="" coords="1282,619,1206,619,1206,614,1282,614"/>
+<area shape="rect" href="../../da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a992c9ac44a3720d238e012d0fe0a0707" title="Generate a response message for the status query and send the status response." alt="" coords="1013,829,1203,855"/>
+<area shape="poly" title=" " alt="" coords="1356,643,1333,680,1300,726,1259,772,1211,812,1170,832,1167,827,1208,808,1255,768,1295,722,1328,677,1351,640"/>
+<area shape="rect" href="../../d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a11f6b8370b141ab90b844dbf1092265c" title="Returns OK message in the case of a subscription request." alt="" coords="511,829,691,884"/>
+<area shape="poly" title=" " alt="" coords="1315,636,691,832,690,827,1313,631"/>
+<area shape="rect" href="../../d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#abb77fc2cfdf0dfbd97e5b3880c4b18d1" title="Main entry point into web server." alt="" coords="776,880,935,905"/>
+<area shape="poly" title=" " alt="" coords="1362,643,1344,694,1313,757,1293,789,1269,819,1242,847,1211,870,1177,887,1140,899,1065,912,991,913,928,908,928,903,992,908,1064,907,1139,894,1175,882,1208,865,1238,843,1265,816,1288,786,1308,754,1339,692,1357,642"/>
+<area shape="rect" href="../../d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae1781a5b638d50bd7626b3ea925492cb" title="Sends the notify message and returns a reply." alt="" coords="1018,99,1198,153"/>
+<area shape="poly" title=" " alt="" coords="1282,611,1255,593,1235,566,1221,539,1213,513,1210,486,1214,433,1227,381,1240,328,1245,275,1244,248,1237,221,1225,194,1207,166,1197,155,1200,152,1211,163,1230,192,1242,220,1249,248,1251,275,1245,329,1232,382,1220,434,1215,486,1218,511,1226,537,1239,563,1259,589,1285,607"/>
+<area shape="rect" href="../../d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#a06c8e12369d9db67a834d961dc914563" title="Sends the SOAP action response." alt="" coords="765,313,945,368"/>
+<area shape="poly" title=" " alt="" coords="1282,608,1256,593,1242,579,1235,564,1230,535,1225,506,1219,491,1208,477,1163,449,1096,419,945,368,947,363,1098,414,1166,444,1211,473,1223,489,1230,504,1235,534,1240,563,1247,576,1259,589,1284,604"/>
+<area shape="rect" href="../../d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#af2aff493a97adf72193dc9ff26413171" title="Sends SOAP error response." alt="" coords="1018,256,1198,311"/>
+<area shape="poly" title=" " alt="" coords="1281,610,1255,593,1232,559,1223,526,1223,492,1228,458,1234,425,1235,392,1228,358,1207,324,1196,313,1200,309,1211,320,1233,356,1240,391,1239,425,1234,459,1228,492,1228,525,1237,557,1259,589,1284,606"/>
+<area shape="rect" href="../../d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#ac97fc275f79e926d35c691d839489b07" title="Sends response of get var status." alt="" coords="1013,177,1203,232"/>
+<area shape="poly" title=" " alt="" coords="1281,611,1256,593,1238,571,1226,549,1216,506,1219,463,1228,419,1237,376,1240,333,1232,290,1222,267,1207,245,1196,234,1200,230,1211,242,1227,265,1237,288,1246,333,1242,377,1233,421,1224,463,1222,505,1231,547,1243,568,1259,589,1284,606"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a534218b5a1c6cdcc1094a58449019882" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection." alt="" coords="769,163,941,188"/>
+<area shape="poly" title=" " alt="" coords="1017,331,1005,324,988,307,978,290,971,272,957,253,916,217,876,190,879,186,919,213,961,250,975,270,983,288,992,304,1008,320,1020,327"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a45850f990fe110e26f9b093a88e3e8a0" title="Makes an HTTP POST request message, opens a connection to the server and sends the POST request to th..." alt="" coords="782,264,929,289"/>
+<area shape="poly" title=" " alt="" coords="1036,334,1006,324,958,303,918,292,920,287,960,298,1008,320,1037,329"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a14067069cf3e1f0dc9ac25867a4ca83d" title="Gets a file specified in a URL." alt="" coords="531,209,672,235"/>
+<area shape="poly" title=" " alt="" coords="773,193,672,212,671,207,772,188"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a5f069548a767baef4623774d7bb3ce9f" title="Gets a file specified in a URL through the specified proxy." alt="" coords="512,160,691,185"/>
+<area shape="poly" title=" " alt="" coords="755,177,691,176,691,171,755,172"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a68e366bcfaed3559025fa8ac04c2885c" title="Gets specified number of bytes from a file specified in the URL." alt="" coords="777,392,934,417"/>
+<area shape="poly" title=" " alt="" coords="1071,484,1018,457,958,431,920,420,921,415,960,426,1021,452,1073,479"/>
+<area shape="rect" href="../../d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#aab6385b3da2410ba5921c203635b7e28" title="Subscribes or renew subscription." alt="" coords="765,520,945,575"/>
+<area shape="poly" title=" " alt="" coords="1047,603,945,575,946,569,1049,598"/>
+<area shape="rect" href="../../d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#af298d2d7e5a94605b0b284718e20cdc9" title="Sends the UNSUBCRIBE gena request and recieves the response from the device and returns it as a param..." alt="" coords="765,599,945,653"/>
+<area shape="poly" title=" " alt="" coords="996,623,946,625,945,620,996,618"/>
+<area shape="rect" href="../../da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a4c4ffc89743a422ff2ad243e9ab14892" title="Download the document message and extract the document from the message." alt="" coords="795,677,915,703"/>
+<area shape="poly" title=" " alt="" coords="1058,636,959,667,912,680,910,675,958,662,1056,631"/>
+<area shape="rect" href="../../d0/d7c/namespaceanonymous__namespace_02soap__ctrlpt_8cpp_03.html#a19db19e25ca9e8e52017abd97190db81" title="This function sends the control point&#39;s request to the device and receives a response from it." alt="" coords="752,441,959,496"/>
+<area shape="poly" title=" " alt="" coords="1080,597,1026,554,957,510,934,498,937,494,960,505,1029,550,1084,593"/>
+<area shape="rect" href="../../d6/de3/gena__ctrlpt_8cpp.html#ac18ff86dd814e974314f13e3f4b12316" title="Renews a SID." alt="" coords="512,529,691,555"/>
+<area shape="poly" title=" " alt="" coords="751,548,691,547,691,541,751,542"/>
+<area shape="rect" href="../../d6/de3/gena__ctrlpt_8cpp.html#a8fa71879823e3dc936bac4847ca1fcc5" title="This function subscribes to a PublisherURL (also mentioned as EventURL in some places)." alt="" coords="543,480,660,505"/>
+<area shape="poly" title=" " alt="" coords="751,528,660,508,661,503,752,522"/>
+<area shape="rect" href="../../d6/de3/gena__ctrlpt_8cpp.html#a1061c296a8e1902dfa6e17e105d46121" title="Unsubcribes all the outstanding subscriptions and cleans the subscription list." alt="" coords="521,628,681,653"/>
+<area shape="poly" title=" " alt="" coords="752,635,682,639,681,633,751,629"/>
+<area shape="rect" href="../../d6/de3/gena__ctrlpt_8cpp.html#a4dba8a0501a7a608f03e9d92555c98b1" title="Unsubscribes a SID." alt="" coords="534,579,669,604"/>
+<area shape="poly" title=" " alt="" coords="751,615,669,603,669,598,752,609"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a475c51dac06a22d937da76a5dbde80c6" title="Downloads a file specified in a URL." alt="" coords="516,677,687,703"/>
+<area shape="poly" title=" " alt="" coords="781,693,687,693,687,687,781,687"/>
+<area shape="rect" href="../../d9/dd1/soap__ctrlpt_8cpp.html#a05e899b6e0c3bc1b2964ac01c37c15d7" title="This function creates a status variable query message send it to the specified URL...." alt="" coords="508,431,695,456"/>
+<area shape="poly" title=" " alt="" coords="738,460,694,455,695,450,739,454"/>
+<area shape="poly" title=" " alt="" coords="1073,864,960,920,931,933,928,928,958,916,1070,859"/>
+<area shape="rect" href="../../dc/d02/gena__callback2_8cpp.html#abb1570eae1e832145e2ae85cf1b5ad75" title="Sends an error message to the control point in the case of incorrect GENA requests." alt="" coords="799,829,911,855"/>
+<area shape="poly" title=" " alt="" coords="999,845,912,845,912,839,999,839"/>
+<area shape="rect" href="../../d6/d92/soap__device_8cpp.html#a4b5104845d73b836d6365a306fba1679" title="This is a callback called by minisever." alt="" coords="270,301,434,327"/>
+<area shape="poly" title=" " alt="" coords="1024,829,708,768,566,737,520,725,497,716,455,670,422,617,396,560,378,502,365,446,357,396,351,327,356,327,363,395,371,445,383,500,401,558,426,615,459,667,500,712,521,720,567,732,709,763,1025,824"/>
+<area shape="poly" title=" " alt="" coords="1031,860,920,883,919,877,1030,855"/>
+<area shape="rect" href="../../dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="253,902,451,942"/>
+<area shape="poly" title=" " alt="" coords="787,859,753,871,730,886,705,899,640,915,573,924,451,929,451,924,573,919,639,910,703,894,727,881,751,866,785,854"/>
+<area shape="rect" href="../../dd/de6/gena__device_8cpp.html#a25ad1852d4d32c6f34a87b92225202fd" title="Handles a subscription request from a ctrl point. The socket is not closed on return." alt="" coords="253,805,451,845"/>
+<area shape="poly" title=" " alt="" coords="785,831,704,819,572,815,451,820,451,814,572,810,704,814,786,825"/>
+<area shape="poly" title=" " alt="" coords="786,849,692,854,692,849,785,843"/>
+<area shape="poly" title=" " alt="" coords="499,886,430,905,428,899,497,881"/>
+<area shape="poly" title=" " alt="" coords="497,846,451,840,451,835,498,841"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a3c6309a98eb5281fbbfa45644c06fc34" title="Enables or disables the webserver." alt="" coords="517,960,686,985"/>
+<area shape="poly" title=" " alt="" coords="786,912,753,922,705,943,648,962,646,957,703,938,751,917,785,906"/>
+<area shape="rect" href="../../d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a951778f34697a8cc0a0e9dd7da2b66ca" title="Function to Notify a particular subscription of a particular event." alt="" coords="765,5,945,60"/>
+<area shape="poly" title=" " alt="" coords="1020,96,929,63,931,58,1021,91"/>
+<area shape="rect" href="../../d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#aef9e66b433f64923b1142779a4cdced6" title="Handles the SOAP action request." alt="" coords="511,287,691,341"/>
+<area shape="poly" title=" " alt="" coords="751,332,691,326,692,321,752,327"/>
+<area shape="poly" title=" " alt="" coords="498,317,434,317,434,311,498,311"/>
+<area shape="poly" title=" " alt="" coords="1005,309,946,323,945,318,1004,304"/>
+<area shape="poly" title=" " alt="" coords="1004,261,946,252,883,246,817,246,753,254,702,269,655,289,653,284,700,264,751,249,817,241,883,241,947,247,1005,256"/>
+<area shape="rect" href="../../d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#ade7f137927ec56c6a4c47b57ac6fc3a5" title="Handles the SOAP requests to querry the state variables." alt="" coords="765,84,945,139"/>
+<area shape="poly" title=" " alt="" coords="1010,250,1005,245,987,221,980,197,974,174,957,152,942,141,945,137,961,148,978,172,985,196,992,219,1009,242,1014,246"/>
+<area shape="poly" title=" " alt="" coords="752,105,692,105,627,112,562,126,500,150,475,165,452,184,412,227,382,270,362,302,358,300,377,267,408,224,448,180,472,161,497,145,560,120,626,106,692,100,752,100"/>
+<area shape="poly" title=" " alt="" coords="1020,175,929,141,931,136,1021,170"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ga5302a7054fc539b5dbc7dd8c1cbc6145" name="ga5302a7054fc539b5dbc7dd8c1cbc6145"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5302a7054fc539b5dbc7dd8c1cbc6145">&#9670;&#160;</a></span>to_port()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">in_port_t upnplib::to_port </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>a_port_str</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the port number from a string. </p>
+<div class="fragment"><div class="line">~$ <span class="comment">// Usage e.g.:</span></div>
+<div class="line">~$ in_port_t port = <a class="code hl_function" href="../../d0/dd8/group__upnplib-addrmodul.html#ga5302a7054fc539b5dbc7dd8c1cbc6145">to_port</a>(<span class="stringliteral">&quot;55555&quot;</span>);</div>
+<div class="ttc" id="agroup__upnplib-addrmodul_html_ga5302a7054fc539b5dbc7dd8c1cbc6145"><div class="ttname"><a href="../../d0/dd8/group__upnplib-addrmodul.html#ga5302a7054fc539b5dbc7dd8c1cbc6145">upnplib::to_port</a></div><div class="ttdeci">UPNPLIB_API in_port_t to_port(const std::string &amp;a_port_str)</div><div class="ttdoc">Get the port number from a string.</div><div class="ttdef"><b>Definition</b> <a href="../../d7/def/sockaddr_8cpp_source.html#l00067">sockaddr.cpp:67</a></div></div>
+</div><!-- fragment --><p>Checks if the given string represents a numeric value between 0 and 65535. </p><dl class="section return"><dt>Returns</dt><dd>On success: Value of the port number</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::invalid_argument</td><td>Invalid port number </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00067">67</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-6-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_ga5302a7054fc539b5dbc7dd8c1cbc6145_icgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_ga5302a7054fc539b5dbc7dd8c1cbc6145_icgraph" alt=""/></div>
+<map name="ad0/dd8/group__upnplib-addrmodul_ga5302a7054fc539b5dbc7dd8c1cbc6145_icgraph" id="ad0/dd8/group__upnplib-addrmodul_ga5302a7054fc539b5dbc7dd8c1cbc6145_icgraph">
+<area shape="rect" title="Get the port number from a string." alt="" coords="199,13,323,38"/>
+<area shape="rect" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#a3e36d37f1d4004cebe4e29a89a674a58" title="Set socket address from a netaddress." alt="" coords="5,5,151,45"/>
+<area shape="poly" title=" " alt="" coords="185,28,151,28,151,23,185,23"/>
+</map>
+</div>
 
 </div>
 </div>

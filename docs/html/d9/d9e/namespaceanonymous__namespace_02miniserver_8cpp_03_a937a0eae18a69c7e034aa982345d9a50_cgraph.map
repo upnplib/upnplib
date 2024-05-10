@@ -2,8 +2,14 @@
 <area shape="rect" id="Node000001" title="Add a socket file descriptor to an &#39;fd_set&#39; structure as needed for ::select()." alt="" coords="5,27,185,82"/>
 <area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html#a0bfd8447aeb0fce2841c5ea90234c37d" title="Get status if socket is bound to a local netaddress." alt="" coords="247,5,418,45"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,41,233,35,234,40,186,46"/>
-<area shape="rect" id="Node000004" href="$db/d84/classupnplib_1_1CSocket__basic.html#ace0bfd26996eead61ac1bb5b18bd8276" title="Set a given raw socket file descriptor to the object." alt="" coords="233,70,432,95"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="186,63,220,67,219,72,185,68"/>
-<area shape="rect" id="Node000003" href="$db/d84/classupnplib_1_1CSocket__basic.html#ab4704f8034f614a4600fb1a39ea32756" title="Get netaddress with port." alt="" coords="480,5,651,45"/>
+<area shape="rect" id="Node000007" href="$db/d84/classupnplib_1_1CSocket__basic.html#ace0bfd26996eead61ac1bb5b18bd8276" title="Set a given raw socket file descriptor to the object." alt="" coords="233,70,432,95"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="186,63,220,67,219,72,185,68"/>
+<area shape="rect" id="Node000003" href="$db/d84/classupnplib_1_1CSocket__basic.html#a6e83bff4e6d004f48f8d0d947bad74a7" title="Get netaddress with port." alt="" coords="480,5,651,45"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="418,23,466,23,466,28,418,28"/>
+<area shape="rect" id="Node000004" href="$d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="699,5,844,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="651,23,685,23,685,28,651,28"/>
+<area shape="rect" id="Node000005" href="$d0/dd8/group__upnplib-addrmodul.html#gad117a3a17a651d54528d6d36bc318ada" title="Get the netaddress with port from a sockaddr structure." alt="" coords="892,13,1048,38"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="845,23,878,23,878,28,845,28"/>
+<area shape="rect" id="Node000006" href="$d0/dd8/group__upnplib-addrmodul.html#gac72d6be0ff0796c507b86b0bc717fb7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="1096,13,1244,38"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1048,23,1082,23,1082,28,1048,28"/>
 </map>

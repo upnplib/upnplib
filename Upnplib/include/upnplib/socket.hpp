@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-26
+// Redistribution only with this Copyright remark. Last modified: 2024-05-10
 /*!
  * \file
  * \brief **Socket Module:** manage properties and methods but not connections
@@ -161,12 +161,12 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
     /*! \brief Get [netaddress](\ref glossary_netaddr) without port.
      *
      * Throws no exception. */
-    const std::string& get_addr_str() override;
+    const netaddr_t& get_netaddr() override;
 
     /*! \brief Get [netaddress](\ref glossary_netaddr) with port.
      *
      * Throws no exception. */
-    const std::string& get_addrp_str() override;
+    const netaddr_t& get_netaddrp() override;
 
     /*! \brief Get the [port](\ref glossary_port) number.
      *

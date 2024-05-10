@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-08
+// Redistribution only with this Copyright remark. Last modified: 2024-05-10
 /*!
  * \file
  * \brief Definition of the Sockaddr class and some free helper functions.
@@ -10,13 +10,12 @@
 #include <upnplib/synclog.hpp>
 #include <cstring>
 
-/// \cond
 namespace upnplib {
 
 // Free function to get the address string from a sockaddr structure
 // -----------------------------------------------------------------
-std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr) {
-    // TRACE("Executing to_addr_str()") // not usable in chained output.
+std::string to_netaddr(const ::sockaddr_storage* const a_sockaddr) {
+    // TRACE("Executing to_netaddr()") // not usable in chained output.
     char addrbuf[INET6_ADDRSTRLEN]{};
 
     switch (a_sockaddr->ss_family) {
@@ -49,14 +48,14 @@ std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr) {
 
 // Free function to get the address string with port from a sockaddr structure
 // ---------------------------------------------------------------------------
-std::string to_addrp_str(const ::sockaddr_storage* const a_sockaddr) {
+std::string to_netaddrp(const ::sockaddr_storage* const a_sockaddr) {
     // TRACE("Executing to_addrport_str()") // not usable in chained output.
     //
     // sin_port and sin6_port are on the same memory location (union of the
     // structures) so I can use it for AF_INET and AF_INET6.
     return (a_sockaddr->ss_family == AF_UNSPEC)
                ? ""
-               : to_addr_str(a_sockaddr) + ":" +
+               : to_netaddr(a_sockaddr) + ":" +
                      std::to_string(ntohs(
                          reinterpret_cast<const ::sockaddr_in6*>(a_sockaddr)
                              ->sin6_port));
@@ -249,26 +248,26 @@ bool SSockaddr::operator==(const ::sockaddr_storage& a_ss) const {
 // Getter for the assosiated ip address without port
 // -------------------------------------------------
 // e.g. "[2001:db8::2]" or "192.168.254.253".
-const std::string& SSockaddr::get_addr_str() {
+const netaddr_t& SSockaddr::get_netaddr() {
     // TRACE not usable with chained output.
-    // TRACE2(this, " Executing SSockaddr::get_addr_str()")
+    // TRACE2(this, " Executing SSockaddr::get_netaddr()")
     //
     // It is important to have the string available as long as the object lives,
     // otherwise you may get dangling pointer, e.g. with getting .c_str().
-    m_netaddr = to_addr_str(&ss);
+    m_netaddr = to_netaddr(&ss);
     return m_netaddr;
 }
 
 // Getter for the assosiated ip address with port
 // ----------------------------------------------
 // e.g. "[2001:db8::2]:50001" or "192.168.254.253:50001".
-const std::string& SSockaddr::get_addrp_str() {
+const netaddr_t& SSockaddr::get_netaddrp() {
     // TRACE not usable with chained output.
-    // TRACE2(this, " Executing SSockaddr::get_addrp_str()")
+    // TRACE2(this, " Executing SSockaddr::get_netaddrp()")
     //
     // It is important to have the string available as long as the object lives,
     // otherwise you may get dangling pointer, e.g. with getting .c_str().
-    m_netaddrp = to_addrp_str(&ss);
+    m_netaddrp = to_netaddrp(&ss);
     return m_netaddrp;
 }
 
@@ -332,4 +331,3 @@ void SSockaddr::handle_ipv4(const std::string& a_addr_str) {
 }
 
 } // namespace upnplib
-/// \endcond

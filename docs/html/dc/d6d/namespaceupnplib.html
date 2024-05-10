@@ -85,7 +85,7 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dad/classupnplib_1_1CAddrinfo.html">CAddrinfo</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrap C style ::addrinfo() function with a class.  <a href="../../da/dad/classupnplib_1_1CAddrinfo.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrap C style ::addrinfo() structure with a class.  <a href="../../da/dad/classupnplib_1_1CAddrinfo.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/de4/classupnplib_1_1CSigpipe__scoped.html">CSigpipe_scoped</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Portable handle SIGPIPE on failed write to a remote closed network socket.  <a href="../../d3/de4/classupnplib_1_1CSigpipe__scoped.html#details">More...</a><br /></td></tr>
@@ -111,15 +111,36 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Portable catch <b>one</b> network socket error from the operating system, and provide information about it.  <a href="../../d9/dd8/classupnplib_1_1ISocketErr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:d6/d2c/unionupnplib_1_1sockaddr__t" id="r_d6/d2c/unionupnplib_1_1sockaddr__t"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#d6/d2c/unionupnplib_1_1sockaddr__t">sockaddr_t</a></td></tr>
+<tr class="memdesc:d6/d2c/unionupnplib_1_1sockaddr__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helpful union of the different socket address structures.  <a href="../../d0/dd8/group__upnplib-addrmodul.html#d6/d2c/unionupnplib_1_1sockaddr__t">More...</a><br /></td></tr>
+<tr class="separator:d6/d2c/unionupnplib_1_1sockaddr__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trivial ::sockaddr structures enhanced with methods.  <a href="../../d1/dc2/structupnplib_1_1SSockaddr.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:gadef130d04ab9d2b882ce089fd5e1d03a" id="r_gadef130d04ab9d2b882ce089fd5e1d03a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#gadef130d04ab9d2b882ce089fd5e1d03a">netaddr_t</a> = std::string</td></tr>
+<tr class="memdesc:gadef130d04ab9d2b882ce089fd5e1d03a"><td class="mdescLeft">&#160;</td><td class="mdescRight">type of a <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>  <br /></td></tr>
+<tr class="separator:gadef130d04ab9d2b882ce089fd5e1d03a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5738af1c9e42dc87957952b00e67f080" id="r_ga5738af1c9e42dc87957952b00e67f080"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">PSocketErr</a> = std::shared_ptr&lt; <a class="el" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a> &gt;</td></tr>
 <tr class="memdesc:ga5738af1c9e42dc87957952b00e67f080"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smart pointer to <a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a> objects that handle network socket errors and used to inject the objects.  <br /></td></tr>
 <tr class="separator:ga5738af1c9e42dc87957952b00e67f080"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:gac72d6be0ff0796c507b86b0bc717fb7e" id="r_gac72d6be0ff0796c507b86b0bc717fb7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#gac72d6be0ff0796c507b86b0bc717fb7e">to_netaddr</a> (const ::sockaddr_storage *const a_sockaddr)</td></tr>
+<tr class="memdesc:gac72d6be0ff0796c507b86b0bc717fb7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the netaddress without port from a sockaddr structure.  <br /></td></tr>
+<tr class="separator:gac72d6be0ff0796c507b86b0bc717fb7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad117a3a17a651d54528d6d36bc318ada" id="r_gad117a3a17a651d54528d6d36bc318ada"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#gad117a3a17a651d54528d6d36bc318ada">to_netaddrp</a> (const ::sockaddr_storage *const a_sockaddr)</td></tr>
+<tr class="memdesc:gad117a3a17a651d54528d6d36bc318ada"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the netaddress with port from a sockaddr structure.  <br /></td></tr>
+<tr class="separator:gad117a3a17a651d54528d6d36bc318ada"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5302a7054fc539b5dbc7dd8c1cbc6145" id="r_ga5302a7054fc539b5dbc7dd8c1cbc6145"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> in_port_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#ga5302a7054fc539b5dbc7dd8c1cbc6145">to_port</a> (const std::string &amp;a_port_str)</td></tr>
+<tr class="memdesc:ga5302a7054fc539b5dbc7dd8c1cbc6145"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the port number from a string.  <br /></td></tr>
+<tr class="separator:ga5302a7054fc539b5dbc7dd8c1cbc6145"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga29eb40e51c94d8cba8cac175f6731fb7" id="r_ga29eb40e51c94d8cba8cac175f6731fb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#ga29eb40e51c94d8cba8cac175f6731fb7">sockaddrcmp</a> (const ::sockaddr_storage *a_ss1, const ::sockaddr_storage *a_ss2) noexcept</td></tr>
+<tr class="memdesc:ga29eb40e51c94d8cba8cac175f6731fb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">logical compare two sockaddr structures  <br /></td></tr>
+<tr class="separator:ga29eb40e51c94d8cba8cac175f6731fb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d1c50145ab351b5bfcb723c637201cd" id="r_a1d1c50145ab351b5bfcb723c637201cd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d6d/namespaceupnplib.html#a1d1c50145ab351b5bfcb723c637201cd">errStr</a> (int error)</td></tr>
 <tr class="memdesc:a1d1c50145ab351b5bfcb723c637201cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get error name string.  <br /></td></tr>
 <tr class="separator:a1d1c50145ab351b5bfcb723c637201cd"><td class="memSeparator" colspan="2">&#160;</td></tr>

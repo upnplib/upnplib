@@ -4,8 +4,8 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,585,150,585,150,591,116,591"/>
 <area shape="rect" id="Node000004" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="1487,119,1578,145"/>
 <area shape="poly" id="edge81_Node000001_Node000004" title=" " alt="" coords="62,575,93,450,124,357,167,257,194,208,223,162,257,119,294,80,334,48,379,24,428,8,481,3,969,3,1084,4,1174,10,1263,26,1374,56,1441,82,1498,110,1496,115,1439,87,1373,61,1262,32,1173,16,1084,9,969,8,481,8,429,13,381,29,337,53,297,84,261,122,228,165,198,211,172,260,129,358,98,451,67,576"/>
-<area shape="rect" id="Node000149" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ab42270564152589e9dbbb90d6a5c0e01" title="Generates XML property set for notifications." alt="" coords="164,639,344,694"/>
-<area shape="poly" id="edge80_Node000001_Node000149" title=" " alt="" coords="94,598,175,632,173,637,92,603"/>
+<area shape="rect" id="Node000153" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ab42270564152589e9dbbb90d6a5c0e01" title="Generates XML property set for notifications." alt="" coords="164,639,344,694"/>
+<area shape="poly" id="edge80_Node000001_Node000153" title=" " alt="" coords="94,598,175,632,173,637,92,603"/>
 <area shape="rect" id="Node000003" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a67ce80ee42131a36b7acf96bb9066403" title="Allocates the GENA header." alt="" coords="392,261,572,315"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="273,559,390,401,448,325,453,328,394,404,278,562"/>
 <area shape="poly" id="edge79_Node000002_Node000004" title=" " alt="" coords="256,560,268,497,292,413,309,369,331,325,358,284,390,247,451,197,518,155,589,122,664,96,742,77,821,64,900,56,979,53,1132,59,1271,74,1388,95,1475,114,1473,119,1386,100,1270,80,1131,64,979,59,901,62,821,69,743,82,666,101,591,127,521,160,454,201,394,251,362,287,336,327,314,371,297,415,273,498,261,561"/>
@@ -17,24 +17,24 @@
 <area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="324,613,346,626,404,675,451,725,448,729,400,679,342,630,322,618"/>
 <area shape="rect" id="Node000022" href="$df/db8/LinkedList_8cpp.html#a13e9c21886d19bb76341f1d2a1aefc12" title="Returns the size of the list." alt="" coords="1746,973,1818,998"/>
 <area shape="poly" id="edge69_Node000002_Node000022" title=" " alt="" coords="334,614,346,626,359,651,367,682,374,757,372,844,365,939,359,1032,359,1118,362,1156,369,1189,379,1217,394,1238,419,1260,444,1273,468,1278,494,1279,551,1273,584,1271,620,1272,835,1294,923,1299,1005,1299,1086,1291,1171,1273,1264,1245,1372,1204,1484,1153,1591,1097,1748,1003,1751,1007,1593,1102,1486,1158,1374,1209,1266,1250,1172,1278,1087,1296,1005,1304,923,1305,835,1299,620,1277,584,1276,551,1278,494,1284,468,1284,442,1278,416,1265,390,1242,375,1219,364,1190,357,1156,354,1118,354,1032,360,938,367,844,369,757,362,683,354,653,342,630,330,617"/>
-<area shape="rect" id="Node000122" href="$d4/d99/upnpapi_8cpp.html#a276f608a72d2b223bb429ba31c32f64b" title="Get handle information." alt="" coords="652,370,768,395"/>
-<area shape="poly" id="edge66_Node000002_Node000122" title=" " alt="" coords="288,558,336,524,391,491,453,461,503,442,619,405,648,397,649,402,621,411,504,447,455,466,393,496,339,529,291,563"/>
-<area shape="rect" id="Node000126" href="$d8/d61/ThreadPool_8cpp.html#a088cce76603a00ba4755257ff96d60c3" title="Adds a job to the thread pool." alt="" coords="650,1123,770,1149"/>
-<area shape="poly" id="edge75_Node000002_Node000126" title=" " alt="" coords="334,614,346,626,363,653,374,679,380,705,383,730,379,779,369,827,359,875,355,923,358,947,365,971,377,996,394,1021,418,1046,446,1067,477,1085,510,1099,576,1118,637,1129,636,1134,575,1124,508,1104,475,1090,443,1072,415,1050,390,1024,372,998,360,973,353,948,350,923,353,874,363,826,373,779,377,730,375,706,369,681,358,656,342,630,330,617"/>
+<area shape="rect" id="Node000126" href="$d4/d99/upnpapi_8cpp.html#a276f608a72d2b223bb429ba31c32f64b" title="Get handle information." alt="" coords="652,370,768,395"/>
+<area shape="poly" id="edge66_Node000002_Node000126" title=" " alt="" coords="288,558,336,524,391,491,453,461,503,442,619,405,648,397,649,402,621,411,504,447,455,466,393,496,339,529,291,563"/>
+<area shape="rect" id="Node000130" href="$d8/d61/ThreadPool_8cpp.html#a088cce76603a00ba4755257ff96d60c3" title="Adds a job to the thread pool." alt="" coords="650,1123,770,1149"/>
+<area shape="poly" id="edge75_Node000002_Node000130" title=" " alt="" coords="334,614,346,626,363,653,374,679,380,705,383,730,379,779,369,827,359,875,355,923,358,947,365,971,377,996,394,1021,418,1046,446,1067,477,1085,510,1099,576,1118,637,1129,636,1134,575,1124,508,1104,475,1090,443,1072,415,1050,390,1024,372,998,360,973,353,948,350,923,353,874,363,826,373,779,377,730,375,706,369,681,358,656,342,630,330,617"/>
 <area shape="rect" id="Node000089" href="$df/db8/LinkedList_8cpp.html#aa7da62b5d05e226e1908bb0ab26f4420" title="Adds a node to the tail of the list. Node gets added immediately before list.tail." alt="" coords="921,1250,1013,1275"/>
 <area shape="poly" id="edge68_Node000002_Node000089" title=" " alt="" coords="334,614,346,626,357,646,364,671,371,732,371,803,368,879,365,954,366,1024,374,1082,383,1104,394,1122,420,1149,449,1172,513,1209,583,1236,655,1253,728,1264,796,1268,907,1266,908,1271,796,1273,727,1269,654,1259,581,1241,510,1214,446,1176,416,1153,390,1126,378,1107,369,1083,360,1024,359,954,362,878,366,802,366,732,359,672,352,648,342,630,330,617"/>
-<area shape="rect" id="Node000143" href="$dd/d10/service__table_8cpp.html#a3bcd2c5b6fa23fb7a7bd8fb30df6b40e" title="Gets pointer to the first subscription node in the service table." alt="" coords="405,842,559,867"/>
-<area shape="poly" id="edge63_Node000002_Node000143" title=" " alt="" coords="332,614,346,626,362,650,369,672,372,716,373,759,380,781,394,804,412,821,433,834,430,838,409,825,390,807,375,783,368,760,366,716,364,673,357,652,342,630,329,618"/>
-<area shape="rect" id="Node000144" href="$dd/d10/service__table_8cpp.html#aedf09f505f0e859795d2a676fc48b989" title="Get current and valid subscription from the service table." alt="" coords="632,1055,788,1081"/>
-<area shape="poly" id="edge67_Node000002_Node000144" title=" " alt="" coords="333,614,346,626,366,660,375,691,376,722,374,752,371,782,371,813,377,845,394,879,420,911,449,940,483,966,518,989,589,1024,651,1049,649,1054,586,1029,515,993,480,971,446,944,416,915,390,881,372,846,365,813,365,782,368,752,371,722,370,692,361,662,342,630,329,617"/>
-<area shape="rect" id="Node000145" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a74609494846be8d91321eafb29dc55eb" title="This gets called before queuing a new event." alt="" coords="1443,757,1623,811"/>
-<area shape="poly" id="edge70_Node000002_Node000145" title=" " alt="" coords="344,580,392,579,572,579,686,578,737,579,800,587,980,620,1157,664,1315,710,1440,750,1438,755,1313,715,1155,669,979,626,800,592,736,585,686,583,572,584,392,584,344,586"/>
-<area shape="rect" id="Node000146" href="$d8/d61/ThreadPool_8cpp.html#a52970195b2e114427c2b456773bce4c3" title="Initializes thread pool job." alt="" coords="443,1351,521,1377"/>
-<area shape="poly" id="edge76_Node000002_Node000146" title=" " alt="" coords="334,614,346,626,361,655,371,690,379,775,376,874,369,982,362,1088,360,1187,363,1231,369,1270,379,1304,394,1330,410,1345,431,1354,428,1359,407,1349,390,1334,374,1306,364,1272,358,1232,355,1187,356,1088,363,981,371,874,373,775,365,691,356,657,342,630,330,617"/>
-<area shape="rect" id="Node000147" href="$d8/d61/ThreadPool_8cpp.html#a249dd5d52ce5559d123f3c53651667c7" title="Sets the jobs free function." alt="" coords="401,43,563,69"/>
-<area shape="poly" id="edge77_Node000002_Node000147" title=" " alt="" coords="257,560,273,455,302,311,321,238,341,172,365,117,390,80,396,74,400,78,394,83,369,119,346,173,326,239,307,312,279,456,262,561"/>
-<area shape="rect" id="Node000148" href="$d8/d61/ThreadPool_8cpp.html#a7317f4409e514c2c01e31c9f66fd7da5" title="Sets the priority of the threadpool job." alt="" coords="419,93,545,118"/>
-<area shape="poly" id="edge78_Node000002_Node000148" title=" " alt="" coords="253,560,259,479,278,366,295,304,319,244,350,186,390,135,407,122,410,126,394,139,355,189,324,246,300,306,283,367,264,480,258,561"/>
+<area shape="rect" id="Node000147" href="$dd/d10/service__table_8cpp.html#a3bcd2c5b6fa23fb7a7bd8fb30df6b40e" title="Gets pointer to the first subscription node in the service table." alt="" coords="405,842,559,867"/>
+<area shape="poly" id="edge63_Node000002_Node000147" title=" " alt="" coords="332,614,346,626,362,650,369,672,372,716,373,759,380,781,394,804,412,821,433,834,430,838,409,825,390,807,375,783,368,760,366,716,364,673,357,652,342,630,329,618"/>
+<area shape="rect" id="Node000148" href="$dd/d10/service__table_8cpp.html#aedf09f505f0e859795d2a676fc48b989" title="Get current and valid subscription from the service table." alt="" coords="632,1055,788,1081"/>
+<area shape="poly" id="edge67_Node000002_Node000148" title=" " alt="" coords="333,614,346,626,366,660,375,691,376,722,374,752,371,782,371,813,377,845,394,879,420,911,449,940,483,966,518,989,589,1024,651,1049,649,1054,586,1029,515,993,480,971,446,944,416,915,390,881,372,846,365,813,365,782,368,752,371,722,370,692,361,662,342,630,329,617"/>
+<area shape="rect" id="Node000149" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a74609494846be8d91321eafb29dc55eb" title="This gets called before queuing a new event." alt="" coords="1443,757,1623,811"/>
+<area shape="poly" id="edge70_Node000002_Node000149" title=" " alt="" coords="344,580,392,579,572,579,686,578,737,579,800,587,980,620,1157,664,1315,710,1440,750,1438,755,1313,715,1155,669,979,626,800,592,736,585,686,583,572,584,392,584,344,586"/>
+<area shape="rect" id="Node000150" href="$d8/d61/ThreadPool_8cpp.html#a52970195b2e114427c2b456773bce4c3" title="Initializes thread pool job." alt="" coords="443,1351,521,1377"/>
+<area shape="poly" id="edge76_Node000002_Node000150" title=" " alt="" coords="334,614,346,626,361,655,371,690,379,775,376,874,369,982,362,1088,360,1187,363,1231,369,1270,379,1304,394,1330,410,1345,431,1354,428,1359,407,1349,390,1334,374,1306,364,1272,358,1232,355,1187,356,1088,363,981,371,874,373,775,365,691,356,657,342,630,330,617"/>
+<area shape="rect" id="Node000151" href="$d8/d61/ThreadPool_8cpp.html#a249dd5d52ce5559d123f3c53651667c7" title="Sets the jobs free function." alt="" coords="401,43,563,69"/>
+<area shape="poly" id="edge77_Node000002_Node000151" title=" " alt="" coords="257,560,273,455,302,311,321,238,341,172,365,117,390,80,396,74,400,78,394,83,369,119,346,173,326,239,307,312,279,456,262,561"/>
+<area shape="rect" id="Node000152" href="$d8/d61/ThreadPool_8cpp.html#a7317f4409e514c2c01e31c9f66fd7da5" title="Sets the priority of the threadpool job." alt="" coords="419,93,545,118"/>
+<area shape="poly" id="edge78_Node000002_Node000152" title=" " alt="" coords="253,560,259,479,278,366,295,304,319,244,350,186,390,135,407,122,410,126,394,139,355,189,324,246,300,306,283,367,264,480,258,561"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="537,258,675,198,760,167,847,143,935,127,1025,116,1114,111,1201,109,1358,114,1474,123,1473,128,1358,119,1201,114,1114,116,1025,122,936,132,849,148,762,172,677,202,539,263"/>
 <area shape="rect" id="Node000005" href="$d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00" title="Check Debug level." alt="" coords="1712,95,1852,121"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1578,125,1698,113,1699,119,1578,130"/>
@@ -53,12 +53,12 @@
 <area shape="poly" id="edge51_Node000009_Node000022" title=" " alt="" coords="534,791,555,808,574,829,587,852,592,875,593,917,593,937,596,956,605,974,622,991,664,1020,704,1035,742,1041,780,1039,863,1025,912,1018,966,1015,1255,1015,1391,1012,1525,1004,1732,988,1733,993,1525,1010,1391,1017,1255,1020,966,1020,912,1023,864,1030,781,1044,742,1046,702,1040,662,1024,618,995,601,977,591,958,588,938,588,917,587,876,582,854,570,832,552,812,530,795"/>
 <area shape="rect" id="Node000023" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a951778f34697a8cc0a0e9dd7da2b66ca" title="Function to Notify a particular subscription of a particular event." alt="" coords="620,419,800,474"/>
 <area shape="poly" id="edge25_Node000009_Node000023" title=" " alt="" coords="501,736,679,484,684,487,505,739"/>
-<area shape="poly" id="edge44_Node000009_Node000122" title=" " alt="" coords="483,738,493,671,516,581,533,534,556,487,584,444,618,406,637,393,640,398,622,410,588,447,560,490,538,536,521,583,498,672,488,738"/>
-<area shape="rect" id="Node000123" href="$dd/d10/service__table_8cpp.html#a3cf11ce072bd3fa99ae7c35260e0335b" title="Return the subscription from the service table that matches const Upnp_SID sid value." alt="" coords="637,854,783,879"/>
-<area shape="poly" id="edge46_Node000009_Node000123" title=" " alt="" coords="535,790,621,832,659,847,657,852,619,837,533,795"/>
-<area shape="rect" id="Node000125" href="$dd/d10/service__table_8cpp.html#a83dcd33a616a1b22a5794229c40c31f2" title="Remove the subscription from the service table and update it." alt="" coords="621,903,799,929"/>
-<area shape="poly" id="edge52_Node000009_Node000125" title=" " alt="" coords="527,791,574,829,588,846,597,862,606,876,622,890,632,896,629,900,618,894,602,879,592,865,584,849,570,833,524,795"/>
-<area shape="poly" id="edge54_Node000009_Node000126" title=" " alt="" coords="536,791,557,808,574,829,592,866,599,901,599,933,595,965,592,995,594,1026,602,1058,622,1092,635,1105,652,1115,649,1120,632,1109,618,1095,597,1060,588,1027,587,995,590,964,593,933,593,901,587,868,570,832,553,812,532,795"/>
+<area shape="poly" id="edge44_Node000009_Node000126" title=" " alt="" coords="483,738,493,671,516,581,533,534,556,487,584,444,618,406,637,393,640,398,622,410,588,447,560,490,538,536,521,583,498,672,488,738"/>
+<area shape="rect" id="Node000127" href="$dd/d10/service__table_8cpp.html#a3cf11ce072bd3fa99ae7c35260e0335b" title="Return the subscription from the service table that matches const Upnp_SID sid value." alt="" coords="637,854,783,879"/>
+<area shape="poly" id="edge46_Node000009_Node000127" title=" " alt="" coords="535,790,621,832,659,847,657,852,619,837,533,795"/>
+<area shape="rect" id="Node000129" href="$dd/d10/service__table_8cpp.html#a83dcd33a616a1b22a5794229c40c31f2" title="Remove the subscription from the service table and update it." alt="" coords="621,903,799,929"/>
+<area shape="poly" id="edge52_Node000009_Node000129" title=" " alt="" coords="527,791,574,829,588,846,597,862,606,876,622,890,632,896,629,900,618,894,602,879,592,865,584,849,570,833,524,795"/>
+<area shape="poly" id="edge54_Node000009_Node000130" title=" " alt="" coords="536,791,557,808,574,829,592,866,599,901,599,933,595,965,592,995,594,1026,602,1058,622,1092,635,1105,652,1115,649,1120,632,1109,618,1095,597,1060,588,1027,587,995,590,964,593,933,593,901,587,868,570,832,553,812,532,795"/>
 <area shape="rect" id="Node000011" href="$d8/dd2/uri_8cpp.html#a374e6c139790318fbeeb52f69574f491" title="Copies one URL_list into another." alt="" coords="911,753,1024,778"/>
 <area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="780,763,897,763,897,768,780,768"/>
 <area shape="rect" id="Node000013" href="$df/db8/LinkedList_8cpp.html#acafc3d2a391f494afc5947668191cc0e" title="Initializes LinkedList. Must be called first and only once for List." alt="" coords="934,802,1001,827"/>
@@ -105,29 +105,29 @@
 <area shape="poly" id="edge41_Node000048_Node000036" title=" " alt="" coords="1058,349,1443,379,1443,384,1058,355"/>
 <area shape="poly" id="edge42_Node000048_Node000037" title=" " alt="" coords="1057,339,1707,310,1707,315,1058,344"/>
 <area shape="poly" id="edge40_Node000048_Node000045" title=" " alt="" coords="1058,363,1185,392,1184,398,1057,368"/>
-<area shape="poly" id="edge45_Node000122_Node000004" title=" " alt="" coords="713,369,729,331,757,281,796,229,820,206,847,187,899,167,970,152,1054,141,1146,134,1329,128,1473,128,1473,133,1329,133,1146,139,1054,146,970,157,900,172,849,192,823,210,800,232,761,284,734,334,718,371"/>
-<area shape="rect" id="Node000124" href="$dd/d10/service__table_8cpp.html#a9f501c03d21e7c4135ddaa8e9303eacb" title="Free&#39;s memory allocated for all the subscriptions in the service table." alt="" coords="892,903,1043,929"/>
-<area shape="poly" id="edge47_Node000123_Node000124" title=" " alt="" coords="777,877,887,898,886,903,776,882"/>
-<area shape="poly" id="edge48_Node000124_Node000015" title=" " alt="" coords="1043,913,1176,913,1176,919,1043,919"/>
-<area shape="poly" id="edge53_Node000125_Node000124" title=" " alt="" coords="800,913,878,913,878,919,800,919"/>
-<area shape="rect" id="Node000127" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#af2c5c202798ffef6d50277b0ee80c155" title="Determines whether or not a thread should be added based on the jobsPerThread ratio." alt="" coords="857,1135,1077,1175"/>
-<area shape="poly" id="edge55_Node000126_Node000127" title=" " alt="" coords="771,1138,844,1143,844,1148,770,1143"/>
-<area shape="rect" id="Node000142" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a46f849090972378290838f067b7d80a4" title="Creates a Thread Pool Job. (Dynamically allocated)" alt="" coords="848,1055,1087,1110"/>
-<area shape="poly" id="edge57_Node000126_Node000142" title=" " alt="" coords="770,1121,834,1108,835,1113,771,1126"/>
-<area shape="rect" id="Node000137" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a7a528d1b1b1733d0139ea70befee0691" title="Deallocates a dynamically allocated ThreadPoolJob." alt="" coords="1921,1058,2144,1113"/>
-<area shape="poly" id="edge60_Node000126_Node000137" title=" " alt="" coords="740,1146,790,1167,849,1184,928,1198,990,1202,1135,1204,1254,1209,1373,1204,1517,1187,1661,1163,1907,1112,1908,1118,1662,1168,1518,1192,1374,1209,1254,1214,1135,1209,990,1208,927,1203,847,1189,788,1172,738,1151"/>
-<area shape="poly" id="edge62_Node000126_Node000089" title=" " alt="" coords="728,1147,780,1187,813,1209,849,1228,909,1249,907,1254,847,1233,811,1214,777,1191,725,1151"/>
-<area shape="rect" id="Node000128" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#ac4a17fd416d9ffc3692f99834066d1c3" title="Creates a worker thread, if the thread pool does not already have max threads." alt="" coords="1135,1155,1373,1195"/>
-<area shape="poly" id="edge56_Node000127_Node000128" title=" " alt="" coords="1078,1160,1121,1163,1121,1168,1077,1165"/>
+<area shape="poly" id="edge45_Node000126_Node000004" title=" " alt="" coords="713,369,729,331,757,281,796,229,820,206,847,187,899,167,970,152,1054,141,1146,134,1329,128,1473,128,1473,133,1329,133,1146,139,1054,146,970,157,900,172,849,192,823,210,800,232,761,284,734,334,718,371"/>
+<area shape="rect" id="Node000128" href="$dd/d10/service__table_8cpp.html#a9f501c03d21e7c4135ddaa8e9303eacb" title="Free&#39;s memory allocated for all the subscriptions in the service table." alt="" coords="892,903,1043,929"/>
+<area shape="poly" id="edge47_Node000127_Node000128" title=" " alt="" coords="777,877,887,898,886,903,776,882"/>
+<area shape="poly" id="edge48_Node000128_Node000015" title=" " alt="" coords="1043,913,1176,913,1176,919,1043,919"/>
+<area shape="poly" id="edge53_Node000129_Node000128" title=" " alt="" coords="800,913,878,913,878,919,800,919"/>
+<area shape="rect" id="Node000131" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#af2c5c202798ffef6d50277b0ee80c155" title="Determines whether or not a thread should be added based on the jobsPerThread ratio." alt="" coords="857,1135,1077,1175"/>
+<area shape="poly" id="edge55_Node000130_Node000131" title=" " alt="" coords="771,1138,844,1143,844,1148,770,1143"/>
+<area shape="rect" id="Node000146" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a46f849090972378290838f067b7d80a4" title="Creates a Thread Pool Job. (Dynamically allocated)" alt="" coords="848,1055,1087,1110"/>
+<area shape="poly" id="edge57_Node000130_Node000146" title=" " alt="" coords="770,1121,834,1108,835,1113,771,1126"/>
+<area shape="rect" id="Node000141" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a7a528d1b1b1733d0139ea70befee0691" title="Deallocates a dynamically allocated ThreadPoolJob." alt="" coords="1921,1058,2144,1113"/>
+<area shape="poly" id="edge60_Node000130_Node000141" title=" " alt="" coords="740,1146,790,1167,849,1184,928,1198,990,1202,1135,1204,1254,1209,1373,1204,1517,1187,1661,1163,1907,1112,1908,1118,1662,1168,1518,1192,1374,1209,1254,1214,1135,1209,990,1208,927,1203,847,1189,788,1172,738,1151"/>
+<area shape="poly" id="edge62_Node000130_Node000089" title=" " alt="" coords="728,1147,780,1187,813,1209,849,1228,909,1249,907,1254,847,1233,811,1214,777,1191,725,1151"/>
+<area shape="rect" id="Node000132" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#ac4a17fd416d9ffc3692f99834066d1c3" title="Creates a worker thread, if the thread pool does not already have max threads." alt="" coords="1135,1155,1373,1195"/>
+<area shape="poly" id="edge56_Node000131_Node000132" title=" " alt="" coords="1078,1160,1121,1163,1121,1168,1077,1165"/>
 <area shape="rect" id="Node000092" href="$d7/d20/FreeList_8cpp.html#a63cf965052240dbc6fec792326bf6719" title="Allocates chunk of set size." alt="" coords="1201,1105,1307,1130"/>
-<area shape="poly" id="edge58_Node000142_Node000092" title=" " alt="" coords="1087,1094,1188,1107,1188,1112,1087,1100"/>
-<area shape="rect" id="Node000132" href="$d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3" title="Get time of day." alt="" coords="1199,1055,1309,1081"/>
-<area shape="poly" id="edge59_Node000142_Node000132" title=" " alt="" coords="1087,1074,1185,1069,1185,1074,1087,1079"/>
-<area shape="poly" id="edge61_Node000137_Node000020" title=" " alt="" coords="2144,1064,2179,1058,2180,1063,2145,1069"/>
-<area shape="poly" id="edge64_Node000143_Node000144" title=" " alt="" coords="502,865,537,896,574,936,589,964,596,988,604,1011,622,1034,642,1047,639,1052,618,1038,599,1014,591,990,584,966,570,939,534,899,499,869"/>
-<area shape="poly" id="edge65_Node000144_Node000124" title=" " alt="" coords="731,1053,931,934,934,938,734,1058"/>
-<area shape="poly" id="edge71_Node000145_Node000008" title=" " alt="" coords="1596,754,1704,707,1706,711,1598,759"/>
-<area shape="poly" id="edge72_Node000145_Node000018" title=" " alt="" coords="1592,809,1743,882,1741,886,1590,814"/>
-<area shape="poly" id="edge73_Node000145_Node000021" title=" " alt="" coords="1623,781,1729,781,1729,787,1623,787"/>
-<area shape="poly" id="edge74_Node000145_Node000022" title=" " alt="" coords="1602,809,1625,824,1646,841,1663,863,1671,884,1679,904,1694,926,1718,947,1744,964,1741,968,1715,951,1690,930,1674,907,1666,886,1658,866,1642,845,1622,828,1599,814"/>
+<area shape="poly" id="edge58_Node000146_Node000092" title=" " alt="" coords="1087,1094,1188,1107,1188,1112,1087,1100"/>
+<area shape="rect" id="Node000136" href="$d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3" title="Get time of day." alt="" coords="1199,1055,1309,1081"/>
+<area shape="poly" id="edge59_Node000146_Node000136" title=" " alt="" coords="1087,1074,1185,1069,1185,1074,1087,1079"/>
+<area shape="poly" id="edge61_Node000141_Node000020" title=" " alt="" coords="2144,1064,2179,1058,2180,1063,2145,1069"/>
+<area shape="poly" id="edge64_Node000147_Node000148" title=" " alt="" coords="502,865,537,896,574,936,589,964,596,988,604,1011,622,1034,642,1047,639,1052,618,1038,599,1014,591,990,584,966,570,939,534,899,499,869"/>
+<area shape="poly" id="edge65_Node000148_Node000128" title=" " alt="" coords="731,1053,931,934,934,938,734,1058"/>
+<area shape="poly" id="edge71_Node000149_Node000008" title=" " alt="" coords="1596,754,1704,707,1706,711,1598,759"/>
+<area shape="poly" id="edge72_Node000149_Node000018" title=" " alt="" coords="1592,809,1743,882,1741,886,1590,814"/>
+<area shape="poly" id="edge73_Node000149_Node000021" title=" " alt="" coords="1623,781,1729,781,1729,787,1623,787"/>
+<area shape="poly" id="edge74_Node000149_Node000022" title=" " alt="" coords="1602,809,1625,824,1646,841,1663,863,1671,884,1679,904,1694,926,1718,947,1744,964,1741,968,1715,951,1690,930,1674,907,1666,886,1658,866,1642,845,1622,828,1599,814"/>
 </map>

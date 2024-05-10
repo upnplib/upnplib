@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-07
+// Redistribution only with this Copyright remark. Last modified: 2024-05-10
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -150,16 +150,16 @@ sa_family_t CSocket_basic::get_family() const {
     return this->ss.ss_family;
 }
 
-const std::string& CSocket_basic::get_addr_str() {
-    TRACE2(this, " Executing CSocket_basic::get_addr_str()")
+const netaddr_t& CSocket_basic::get_netaddr() {
+    TRACE2(this, " Executing CSocket_basic::get_netaddr()")
     m_get_addr_from_socket(__LINE__);
-    return SSockaddr::get_addr_str();
+    return SSockaddr::get_netaddr();
 }
 
-const std::string& CSocket_basic::get_addrp_str() {
-    TRACE2(this, " Executing CSocket_basic::get_addrp_str()")
+const netaddr_t& CSocket_basic::get_netaddrp() {
+    TRACE2(this, " Executing CSocket_basic::get_netaddrp()")
     m_get_addr_from_socket(__LINE__);
-    return SSockaddr::get_addrp_str();
+    return SSockaddr::get_netaddrp();
 }
 
 in_port_t CSocket_basic::get_port() const {
@@ -218,7 +218,7 @@ bool CSocket_basic::is_bound() {
     // binding is protected.
     std::scoped_lock lock(m_bound_mutex);
 
-    const std::string& netaddr = this->get_addrp_str();
+    const netaddr_t& netaddr = this->get_netaddrp();
     return (netaddr.empty() || netaddr.compare("[::]:0") == 0 ||
             netaddr.compare("0.0.0.0:0") == 0)
                ? false
@@ -419,8 +419,8 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
 
     UPNPLIB_LOGINFO << "MSG1115: syscall ::bind(" << m_sfd << ", "
                     << ai->ai_addr << ", " << ai->ai_addrlen << ") Using \""
-                    << ai.get_addr_str() << ":" << ai.get_port() << "\". Get "
-                    << (ret != 0 ? "ERROR" : this->get_addrp_str()) << "\n";
+                    << ai.get_netaddr() << ":" << ai.get_port() << "\". Get "
+                    << (ret != 0 ? "ERROR" : this->get_netaddrp()) << "\n";
     if (ret != 0) {
         errno = err_no;
         throw_error("MSG1008: Failed to bind socket to an address:");

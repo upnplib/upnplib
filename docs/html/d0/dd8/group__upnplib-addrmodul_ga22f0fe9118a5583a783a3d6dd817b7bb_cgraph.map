@@ -1,0 +1,5 @@
+<map id="upnplib::to_addrp_str" name="upnplib::to_addrp_str">
+<area shape="rect" id="Node000001" title="Get the netaddress with port from a sockaddr structure." alt="" coords="5,5,164,31"/>
+<area shape="rect" id="Node000002" href="$d0/dd8/group__upnplib-addrmodul.html#ga02b953348b1e50f916479ddc56ce50df" title="Get the netaddress without port from a sockaddr structure." alt="" coords="212,5,363,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,15,198,15,198,21,164,21"/>
+</map>

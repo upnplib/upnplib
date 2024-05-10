@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-06
+// Redistribution only with this Copyright remark. Last modified: 2024-05-10
 
 #include <upnplib/global.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -16,8 +16,8 @@ using ::testing::ThrowsMessage;
 using ::upnplib::CSocket;
 using ::upnplib::sockaddrcmp;
 using ::upnplib::SSockaddr;
-using ::upnplib::to_addr_str;
-using ::upnplib::to_addrp_str;
+using ::upnplib::to_netaddr;
+using ::upnplib::to_netaddrp;
 using ::upnplib::to_port;
 
 
@@ -38,8 +38,8 @@ TEST_P(SetAddrPortTest, set_address_and_port) {
     SSockaddr saddr;
     saddr = netaddr;
     EXPECT_EQ(saddr.ss.ss_family, family);
-    EXPECT_EQ(saddr.get_addr_str(), addr_str);
-    EXPECT_EQ(saddr.get_addrp_str(), addr_str + ":" + std::to_string(port));
+    EXPECT_EQ(saddr.get_netaddr(), addr_str);
+    EXPECT_EQ(saddr.get_netaddrp(), addr_str + ":" + std::to_string(port));
     EXPECT_EQ(saddr.get_port(), port);
 }
 
@@ -82,18 +82,18 @@ TEST(SockaddrStorageTestSuite, pattern_for_checking_bind) {
     SSockaddr saddr;
 
     EXPECT_EQ(saddr.ss.ss_family, AF_UNSPEC);
-    EXPECT_EQ(saddr.get_addr_str(), "");
-    EXPECT_EQ(saddr.get_addrp_str(), "");
+    EXPECT_EQ(saddr.get_netaddr(), "");
+    EXPECT_EQ(saddr.get_netaddrp(), "");
     EXPECT_EQ(saddr.get_port(), 0);
 
     saddr.ss.ss_family = AF_INET6;
-    EXPECT_EQ(saddr.get_addr_str(), "[::]");
-    EXPECT_EQ(saddr.get_addrp_str(), "[::]:0");
+    EXPECT_EQ(saddr.get_netaddr(), "[::]");
+    EXPECT_EQ(saddr.get_netaddrp(), "[::]:0");
     EXPECT_EQ(saddr.get_port(), 0);
 
     saddr.ss.ss_family = AF_INET;
-    EXPECT_EQ(saddr.get_addr_str(), "0.0.0.0");
-    EXPECT_EQ(saddr.get_addrp_str(), "0.0.0.0:0");
+    EXPECT_EQ(saddr.get_netaddr(), "0.0.0.0");
+    EXPECT_EQ(saddr.get_netaddrp(), "0.0.0.0:0");
     EXPECT_EQ(saddr.get_port(), 0);
 }
 
@@ -102,45 +102,45 @@ TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
 
     saddr = "";
     EXPECT_EQ(saddr.ss.ss_family, AF_UNSPEC);
-    EXPECT_EQ(saddr.get_addr_str(), "");
-    EXPECT_EQ(saddr.get_addrp_str(), "");
+    EXPECT_EQ(saddr.get_netaddr(), "");
+    EXPECT_EQ(saddr.get_netaddrp(), "");
     EXPECT_EQ(saddr.get_port(), 0);
 
     // Setting address and port in two steps
     saddr.ss.ss_family = AF_INET;
     saddr = "[2001:db8::3]:";
     EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
-    EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::3]");
-    EXPECT_EQ(saddr.get_addrp_str(), "[2001:db8::3]:0");
+    EXPECT_EQ(saddr.get_netaddr(), "[2001:db8::3]");
+    EXPECT_EQ(saddr.get_netaddrp(), "[2001:db8::3]:0");
     EXPECT_EQ(saddr.get_port(), 0);
     saddr = "50021";
     EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
-    EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::3]");
-    EXPECT_EQ(saddr.get_addrp_str(), "[2001:db8::3]:50021");
+    EXPECT_EQ(saddr.get_netaddr(), "[2001:db8::3]");
+    EXPECT_EQ(saddr.get_netaddrp(), "[2001:db8::3]:50021");
     EXPECT_EQ(saddr.get_port(), 50021);
     saddr = ":50022";
     EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
-    EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::3]");
-    EXPECT_EQ(saddr.get_addrp_str(), "[2001:db8::3]:50022");
+    EXPECT_EQ(saddr.get_netaddr(), "[2001:db8::3]");
+    EXPECT_EQ(saddr.get_netaddrp(), "[2001:db8::3]:50022");
     EXPECT_EQ(saddr.get_port(), 50022);
 
     saddr = 0;
     EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
-    EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::3]");
-    EXPECT_EQ(saddr.get_addrp_str(), "[2001:db8::3]:0");
+    EXPECT_EQ(saddr.get_netaddr(), "[2001:db8::3]");
+    EXPECT_EQ(saddr.get_netaddrp(), "[2001:db8::3]:0");
     EXPECT_EQ(saddr.get_port(), 0);
 
     saddr = 65535;
     EXPECT_EQ(saddr.ss.ss_family, AF_INET6);
-    EXPECT_EQ(saddr.get_addr_str(), "[2001:db8::3]");
-    EXPECT_EQ(saddr.get_addrp_str(), "[2001:db8::3]:65535");
+    EXPECT_EQ(saddr.get_netaddr(), "[2001:db8::3]");
+    EXPECT_EQ(saddr.get_netaddrp(), "[2001:db8::3]:65535");
     EXPECT_EQ(saddr.get_port(), 65535);
 
     // This will not modify the port
     saddr = "192.168.47.48";
     EXPECT_EQ(saddr.ss.ss_family, AF_INET);
-    EXPECT_EQ(saddr.get_addr_str(), "192.168.47.48");
-    EXPECT_EQ(saddr.get_addrp_str(), "192.168.47.48:65535");
+    EXPECT_EQ(saddr.get_netaddr(), "192.168.47.48");
+    EXPECT_EQ(saddr.get_netaddrp(), "192.168.47.48:65535");
     EXPECT_EQ(saddr.get_port(), 65535);
 
     // Check that a failing call does not modify old settings.
@@ -148,8 +148,8 @@ TEST(SockaddrStorageTestSuite, set_address_and_port_successful) {
                 ThrowsMessage<std::invalid_argument>(
                     HasSubstr("] EXCEPTION MSG1033: ")));
     EXPECT_EQ(saddr.ss.ss_family, AF_INET);
-    EXPECT_EQ(saddr.get_addr_str(), "192.168.47.48");
-    EXPECT_EQ(saddr.get_addrp_str(), "192.168.47.48:65535");
+    EXPECT_EQ(saddr.get_netaddr(), "192.168.47.48");
+    EXPECT_EQ(saddr.get_netaddrp(), "192.168.47.48:65535");
     EXPECT_EQ(saddr.get_port(), 65535);
 }
 
@@ -292,7 +292,7 @@ TEST(SockaddrStorageTestSuite, copy_and_assign_structure) {
     // default copy constructor is used here.
     SSockaddr saddr2 = saddr1;
     EXPECT_EQ(saddr2.ss.ss_family, AF_INET6);
-    EXPECT_EQ(saddr2.get_addr_str(), "[2001:db8::1]");
+    EXPECT_EQ(saddr2.get_netaddr(), "[2001:db8::1]");
     EXPECT_EQ(saddr2.get_port(), 50001);
 
     // Test Unit assign
@@ -300,7 +300,7 @@ TEST(SockaddrStorageTestSuite, copy_and_assign_structure) {
     SSockaddr saddr3;
     saddr3 = saddr1;
     EXPECT_EQ(saddr3.ss.ss_family, AF_INET);
-    EXPECT_EQ(saddr3.get_addr_str(), "192.168.251.252");
+    EXPECT_EQ(saddr3.get_netaddr(), "192.168.251.252");
     EXPECT_EQ(saddr3.get_port(), 50002);
 }
 
@@ -457,25 +457,25 @@ TEST(ToPortTestSuite, str_to_port) {
 TEST(ToAddrStrTestSuite, sockaddr_to_address_string) {
     SSockaddr saddr;
 
-    EXPECT_EQ(to_addr_str(&saddr.ss), "");
+    EXPECT_EQ(to_netaddr(&saddr.ss), "");
 
     saddr.ss.ss_family = AF_UNSPEC;
-    EXPECT_EQ(to_addr_str(&saddr.ss), "");
+    EXPECT_EQ(to_netaddr(&saddr.ss), "");
 
     saddr.ss.ss_family = AF_INET6;
-    EXPECT_EQ(to_addr_str(&saddr.ss), "[::]");
+    EXPECT_EQ(to_netaddr(&saddr.ss), "[::]");
 
     saddr.ss.ss_family = AF_INET;
-    EXPECT_EQ(to_addr_str(&saddr.ss), "0.0.0.0");
+    EXPECT_EQ(to_netaddr(&saddr.ss), "0.0.0.0");
 
     saddr = "[2001:db8::4]";
-    EXPECT_EQ(to_addr_str(&saddr.ss), "[2001:db8::4]");
+    EXPECT_EQ(to_netaddr(&saddr.ss), "[2001:db8::4]");
 
     saddr = "192.168.88.99";
-    EXPECT_EQ(to_addr_str(&saddr.ss), "192.168.88.99");
+    EXPECT_EQ(to_netaddr(&saddr.ss), "192.168.88.99");
 
     saddr.ss.ss_family = AF_UNIX;
-    EXPECT_THAT([&saddr]() { to_addr_str(&saddr.ss); },
+    EXPECT_THAT([&saddr]() { to_netaddr(&saddr.ss); },
                 ThrowsMessage<std::invalid_argument>(HasSubstr(
                     "] EXCEPTION MSG1036: Unsupported address family 1")));
 }
@@ -483,31 +483,31 @@ TEST(ToAddrStrTestSuite, sockaddr_to_address_string) {
 TEST(ToAddrStrTestSuite, sockaddr_to_address_port_string) {
     SSockaddr saddr;
 
-    EXPECT_EQ(to_addrp_str(&saddr.ss), "");
+    EXPECT_EQ(to_netaddrp(&saddr.ss), "");
 
     saddr.ss.ss_family = AF_UNSPEC;
-    EXPECT_EQ(to_addrp_str(&saddr.ss), "");
+    EXPECT_EQ(to_netaddrp(&saddr.ss), "");
 
     saddr.ss.ss_family = AF_INET6;
-    EXPECT_EQ(to_addrp_str(&saddr.ss), "[::]:0");
+    EXPECT_EQ(to_netaddrp(&saddr.ss), "[::]:0");
 
     saddr.ss.ss_family = AF_INET;
-    EXPECT_EQ(to_addrp_str(&saddr.ss), "0.0.0.0:0");
+    EXPECT_EQ(to_netaddrp(&saddr.ss), "0.0.0.0:0");
 
     saddr = "[2001:db8::4]";
-    EXPECT_EQ(to_addrp_str(&saddr.ss), "[2001:db8::4]:0");
+    EXPECT_EQ(to_netaddrp(&saddr.ss), "[2001:db8::4]:0");
 
     saddr = "192.168.88.100";
-    EXPECT_EQ(to_addrp_str(&saddr.ss), "192.168.88.100:0");
+    EXPECT_EQ(to_netaddrp(&saddr.ss), "192.168.88.100:0");
 
     saddr = "[2001:db8::5]:56789";
-    EXPECT_EQ(to_addrp_str(&saddr.ss), "[2001:db8::5]:56789");
+    EXPECT_EQ(to_netaddrp(&saddr.ss), "[2001:db8::5]:56789");
 
     saddr = "192.168.88.101:54321";
-    EXPECT_EQ(to_addrp_str(&saddr.ss), "192.168.88.101:54321");
+    EXPECT_EQ(to_netaddrp(&saddr.ss), "192.168.88.101:54321");
 
     saddr.ss.ss_family = AF_UNIX;
-    EXPECT_THAT([&saddr]() { to_addrp_str(&saddr.ss); },
+    EXPECT_THAT([&saddr]() { to_netaddrp(&saddr.ss); },
                 ThrowsMessage<std::invalid_argument>(HasSubstr(
                     "] EXCEPTION MSG1036: Unsupported address family 1")));
 }

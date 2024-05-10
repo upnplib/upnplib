@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-09
+// Redistribution only with this Copyright remark. Last modified: 2024-05-10
 /*!
  * \file
  * \brief Definition of the Addrinfo class and free helper functions.
@@ -25,8 +25,6 @@ namespace {
  * \returns
  *  On success: Address family AF_INET6 or AF_INET the address belongs to\n
  *  On error: AF_UNSPEC, the address is alphanumeric (maybe a DNS name?)
- *
- * \exception ... None, function is declared 'noexcept'
  */
 // I simply use the system function %inet_pton() to check if the node string is
 // accepted.
@@ -259,7 +257,7 @@ void CAddrinfo::get_addrinfo() {
         << m_hints.ai_family
         << (ret != 0
             ? ". Get ERROR"
-            : ". Get \"" + to_addrp_str(reinterpret_cast
+            : ". Get \"" + to_netaddrp(reinterpret_cast
               <const sockaddr_storage*>(new_res->ai_addr)) + "\"") << "\n";
 
     if (ret == EAI_NONAME || ret == EAI_AGAIN) {

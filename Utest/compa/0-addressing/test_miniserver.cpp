@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-06
+// Redistribution only with this Copyright remark. Last modified: 2024-05-10
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -808,7 +808,7 @@ TEST_F(StartMiniServerMockFTestSuite,
     SSockaddr saddrObj;
     saddrObj = "192.168.22.33:50080";
     // Get gIF_IPV4
-    std::strcpy(gIF_IPV4, saddrObj.get_addr_str().c_str());
+    std::strcpy(gIF_IPV4, saddrObj.get_netaddr().c_str());
     LOCAL_PORT_V4 = saddrObj.get_port();
     MiniServerSockArray miniSocket{};
     InitMiniServerSockArray(&miniSocket);
@@ -863,7 +863,7 @@ TEST_F(StartMiniServerMockFTestSuite,
     SSockaddr saddrObj;
     saddrObj = "[fe80::fedc:0:0:3]:50079";
     // Get gIF_IPV6 and strip surounding brackets
-    std::strcpy(gIF_IPV6, saddrObj.get_addr_str().c_str() + 1);
+    std::strcpy(gIF_IPV6, saddrObj.get_netaddr().c_str() + 1);
     gIF_IPV6[strlen(gIF_IPV6) - 1] = '\0';
     LOCAL_PORT_V6 = saddrObj.get_port();
     MiniServerSockArray miniSocket{};
@@ -935,7 +935,7 @@ TEST_F(StartMiniServerFTestSuite,
     // Initialize needed structure
     SSockaddr llaObj;
     llaObj = "[::1]"; // Get gIF_IPV6 and strip surounding brackets
-    std::strcpy(gIF_IPV6, llaObj.get_addr_str().c_str() + 1);
+    std::strcpy(gIF_IPV6, llaObj.get_netaddr().c_str() + 1);
     gIF_IPV6[strlen(gIF_IPV6) - 1] = '\0';
     LOCAL_PORT_V6 = llaObj.get_port();
     MiniServerSockArray miniSocket;
@@ -1236,7 +1236,7 @@ TEST_F(StartMiniServerMockFTestSuite, do_bind_listen_successful) {
     //   port
     SSockaddr saddrObj;
     saddrObj = "192.168.54.188:50020";
-    const char* text_addr = saddrObj.get_addr_str().c_str();
+    const char* text_addr = saddrObj.get_netaddr().c_str();
     char addrbuf[INET_ADDRSTRLEN];
     constexpr SOCKET sockfd{umock::sfd_base + 11};
 
@@ -1315,7 +1315,7 @@ TEST_F(StartMiniServerMockFTestSuite, do_bind_listen_with_failed_listen) {
 
     SSockaddr saddrObj;
     saddrObj = "192.168.54.188";
-    const char* text_addr = saddrObj.get_addr_str().c_str();
+    const char* text_addr = saddrObj.get_netaddr().c_str();
     constexpr SOCKET sockfd{umock::sfd_base + 12};
 
     s_SocketStuff s;
@@ -1366,7 +1366,7 @@ TEST_F(StartMiniServerMockFTestSuite, do_bind_listen_address_in_use) {
 
         SSockaddr saddrObj;
         saddrObj = "192.168.54.188:50024";
-        const char* text_addr = saddrObj.get_addr_str().c_str();
+        const char* text_addr = saddrObj.get_netaddr().c_str();
         const in_port_t actual_port(saddrObj.get_port());
         char addrbuf[INET_ADDRSTRLEN];
         constexpr SOCKET sockfd_inuse{umock::sfd_base + 13};
@@ -1829,7 +1829,7 @@ TEST_F(StartMiniServerMockFTestSuite, do_listen_successful) {
     // Provide needed data for the Unit
     SSockaddr saddrObj;
     saddrObj = "192.168.202.233:50083";
-    const char* text_addr = saddrObj.get_addr_str().c_str();
+    const char* text_addr = saddrObj.get_netaddr().c_str();
     constexpr SOCKET sockfd{umock::sfd_base + 20};
     char addrbuf[INET_ADDRSTRLEN];
     constexpr in_port_t try_port{0}; // not used
@@ -2102,7 +2102,7 @@ TEST(StartMiniServerTestSuite, get_miniserver_stopsock) {
     // and verify its settings
     EXPECT_EQ(sockObj.get_family(), AF_INET);
     EXPECT_EQ(sockObj.get_port(), miniStopSockPort);
-    EXPECT_EQ(sockObj.get_addr_str(), "127.0.0.1");
+    EXPECT_EQ(sockObj.get_netaddr(), "127.0.0.1");
 
     // Close socket
     EXPECT_EQ(sock_close(out.miniServerStopSock), 0);

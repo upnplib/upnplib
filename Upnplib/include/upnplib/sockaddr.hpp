@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCKADDR_HPP
 #define UPNPLIB_NET_SOCKADDR_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-09
+// Redistribution only with this Copyright remark. Last modified: 2024-05-10
 /*!
  * \file
  * \brief Declaration of the Sockaddr class and some free helper functions.
@@ -15,12 +15,23 @@
 #include <upnplib/port_sock.hpp>
 /// \cond
 #include <string>
+/// \endcond
 
 namespace upnplib {
 
-// Never need to use type casts with pointer to different socket address
-// structures. For details about using this helpful union have a look at
-// REF:_[sockaddr_structures_as_union](https://stackoverflow.com/a/76548581/5014688)
+/*! \brief type of a [netaddress](\ref glossary_netaddr)
+ * \ingroup upnplib-addrmodul */
+using netaddr_t = std::string;
+
+/*!
+ * \brief Helpful union of the different socket address structures
+ * \ingroup upnplib-addrmodul
+ *
+ * Never need to use type casts with pointer to different socket address
+ * structures. For details about using this helpful union have a look at
+ * <!--REF:--> <a href="https://stackoverflow.com/a/76548581/5014688">sockaddr
+ * structures as union</a>
+ */
 union sockaddr_t {
     ::sockaddr_storage ss;
     ::sockaddr_in6 sin6;
@@ -28,40 +39,94 @@ union sockaddr_t {
     ::sockaddr sa;
 };
 
-// Free function to get the address string from a sockaddr structure
-// -----------------------------------------------------------------
-// Throws exception 'invalid argument' with unsupported address family.
-// Supported is only AF_INET6 and AF_INET.
-UPNPLIB_API std::string to_addr_str(const ::sockaddr_storage* const a_sockaddr);
 
-// Free function to get the address string with port from a sockaddr structure
-// ---------------------------------------------------------------------------
-// Throws exception 'invalid argument' with unsupported address family.
-// Supported is only AF_INET6 and AF_INET.
-UPNPLIB_API std::string
-to_addrp_str(const ::sockaddr_storage* const a_sockaddr);
+// Free function
+/*! \brief Get the netaddress without port from a sockaddr structure
+ * <!-- ------------------------------------------------------- -->
+ * \ingroup upnplib-addrmodul
+ * \code
+ * ~$ // Usage e.g.:
+ * ~$ sockaddr_storage saddr{};
+ * ~$ std::cout << "netaddress is " << to_netaddr(&saddr) << "\n";
+ * \endcode
+ * \exception std::invalid_argument Unsupported address family. Supported is
+ * only AF_INET6 and AF_INET.
+ */
+UPNPLIB_API std::string to_netaddr(const ::sockaddr_storage* const a_sockaddr);
 
-// Free function to get the port number from a string
-// --------------------------------------------------
-// Throws exception 'invalid argument' with invalid port number.
-UPNPLIB_API uint16_t to_port(const std::string& a_port_str);
 
-// Free function to logical compare two sockaddr structures
-// --------------------------------------------------------
-// To have a logical equal socket address we compare the address family, the ip
-// address and the port.
+// Free function
+/*! \brief Get the netaddress with port from a sockaddr structure
+ * <!-- ---------------------------------------------------- -->
+ * \ingroup upnplib-addrmodul
+ * \code
+ * ~$ // Usage e.g.:
+ * ~$ sockaddr_storage saddr{};
+ * ~$ std::cout << "netaddress is " << to_netaddrp(&saddr) << "\n";
+ * \endcode
+ * \exception std::invalid_argument Unsupported address family. Supported is
+ * only AF_INET6 and AF_INET.
+ */
+UPNPLIB_API std::string to_netaddrp(const ::sockaddr_storage* const a_sockaddr);
+
+
+// Free function
+/*! \brief Get the port number from a string
+ * <!-- ------------------------------- -->
+ * \ingroup upnplib-addrmodul
+ * \code
+ * ~$ // Usage e.g.:
+ * ~$ in_port_t port = to_port("55555");
+ * \endcode
+ *
+ * Checks if the given string represents a numeric value between 0 and 65535.
+ * \returns
+ *  On success: Value of the port number
+ *  <!-- On error: **0** -->
+ * \exception std::invalid_argument Invalid port number
+ */
+UPNPLIB_API in_port_t to_port(const std::string& a_port_str);
+
+
+// Free function
+/*! \brief logical compare two sockaddr structures
+ * <!-- ------------------------------------- -->
+ * \ingroup upnplib-addrmodul
+ *
+ * To have a logical equal socket address we compare the address family, the ip
+ * address and the port.
+ *
+ * \returns
+ *  \b true if socket addresses are logical equal\n
+ *  \b false otherwise
+ */
 UPNPLIB_API bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
                              const ::sockaddr_storage* a_ss2) noexcept;
 
 
-// Specialized sockaddr structure
-// ==============================
+/*!
+ * \brief Trivial ::%sockaddr structures enhanced with methods
+ * <!--   ==================================================== -->
+ * \ingroup upnplib-addrmodul
+\code
+~$ // Usage e.g.:
+~$ ::sockaddr_storage saddr{};
+~$ SSockaddr saObj;
+~$ ::memcpy(&saObj.ss, &saddr, saObj.sizeof_ss());
+~$ std::cout << "netaddress of saObj is " << saObj.get_netaddr() << "\n";
+\endcode
+ *
+ * This structure should be usable on a low level like the trival C `struct
+ * ::%sockaddr_storage` but provides additional methods to manage its data.
+ */
 struct UPNPLIB_API SSockaddr {
-    // References to have direct access to the trival structures in the private
-    // union.
+    /// Reference to sockaddr_storage struct
     sockaddr_storage& ss = m_sa_union.ss;
+    /// Reference to sockaddr_in6 struct
     sockaddr_in6& sin6 = m_sa_union.sin6;
+    /// Reference to sockaddr_in struct
     sockaddr_in& sin = m_sa_union.sin;
+    /// Reference to sockaddr struct
     sockaddr& sa = m_sa_union.sa;
 
     // Constructor
@@ -76,47 +141,88 @@ struct UPNPLIB_API SSockaddr {
     // member structure.
     // operator const ::sockaddr_storage&() const;
 
-    // copy constructor: needed for copy assignment operator.
-    // Example: SSockaddr saddr2 = saddr1; // saddr1 is an instantiated object,
-    // or       SSockaddr saddr2{saddr1};
+    /*! \brief Copy constructor, also needed for copy assignment operator.
+     * \code
+     * ~$ // Usage e.g.:
+     * ~$ SSockaddr saddr2 = saddr1; // saddr1 is an instantiated object.
+     * ~$ // or
+     * ~$ SSockaddr saddr2{saddr1};
+     * \endcode */
     SSockaddr(const SSockaddr&);
-    //
-    // copy assignment operator, needs user defined copy contructor.
-    // Provides strong exception guarantee with value argument.
-    // Example: saddr2 = saddr1; // saddr? are instantiated valid objects.
+
+    /*! \brief Copy assignment operator, needs user defined copy contructor
+     * \code
+     * ~$ // Usage e.g.:
+     * ~$ saddr2 = saddr1; // saddr? are two instantiated valid objects.
+     * \endcode */
+    // Strong exception guarantee with value argument as given.
     SSockaddr& operator=(SSockaddr); // value argument
 
-    // Assignment operator= to set socket address from string,
-    // e.g.: SSockaddr ss; ss = "[2001:db8::1]";
-    // Input examples: "[2001:db8::1]", "[2001:db8::1]:50001",
-    //                 "192.168.1.1", "192.168.1.1:50001".
-    // An empty netaddress "" clears the address storage.
-    // An invalid netaddress throws an exception 'std::invalid_argument'.
+    /*! \name Setter
+     * *************
+     * @{ */
+    // Assignment operator
+    /*! \brief Set socket address from a [netaddress](\ref glossary_netaddr)
+     * \code
+     * ~$ // Usage e.g.:
+     * ~$ SSockaddr saObj;
+     * ~$ saObj = "[2001:db8::1]";
+     * ~$ saObj = "[2001:db8::1]:50001";
+     * ~$ saObj = "192.168.1.1";
+     * ~$ saObj = "192.168.1.1:50001";
+     *  \endcode
+     * An empty netaddress "" clears the address storage.
+     * \exception std::invalid_argument Invalid netaddress */
     void operator=(const std::string& a_addr_str);
-    // To set the port number from an integer.
-    void operator=(const in_port_t a_port);
 
-    // Compare operator== to test if another socket address is equal to this.
-    // It only supports AF_INET6 and AF_INET. For all other address families it
-    // returns false.
+    // Assignment operator
+    /*! \brief Set [port number](\ref glossary_port) from integer
+     * \code
+     * ~$ // Usage e.g.:
+     * ~$ SSockaddr saObj;
+     * ~$ saObj = 50001;
+     * \endcode */
+    void operator=(const in_port_t a_port);
+    /// @} Setter
+
+    /*! \name Getter
+     * *************
+     * @{ */
+    /*! \brief Test if another socket address is logical equal to this
+     * \returns
+     *  \b true if socket addresses are logical equal\n
+     *  \b false otherwise
+     *
+     * It only supports AF_INET6 and AF_INET. For all other address families it
+     * returns false. */
     bool operator==(const ::sockaddr_storage&) const;
 
-    // Getter for the assosiated ip address without port, e.g.
-    // "[2001:db8::2]" or "192.168.254.253".
-    virtual const std::string& get_addr_str();
+    /*! \brief Get the assosiated [netaddress](\ref glossary_netaddr) without
+     * port
+     * \code
+     * ~$ // Usage e.g.:
+     * ~$ SSockaddr saObj;
+     * ~$ if (saObj.get_netaddr() == "[::1]") { manage_localhost(); }
+     * \endcode */
+    virtual const netaddr_t& get_netaddr();
 
-    // Getter for the assosiated ip address with port, e.g.
-    // "[2001:db8::2]:50001" or "192.168.254.253:50001".
-    virtual const std::string& get_addrp_str();
+    /*! \brief Get the assosiated [netaddress](\ref glossary_netaddr) with port
+     * \code
+     * ~$ // Usage e.g.:
+     * ~$ SSockaddr saObj;
+     * ~$ if (saObj.get_netaddrp() == "[::1]:49494") { manage_localhost(); }
+     * \endcode */
+    virtual const netaddr_t& get_netaddrp();
 
-    // Getter for the numeric port.
+    /// \brief Get the numeric port
     virtual in_port_t get_port() const;
 
-    // Getter for sizeof the Sockaddr Structure.
+    /// \brief Get sizeof the Sockaddr Structure
     socklen_t sizeof_ss() const;
 
-    // Getter for sizeof the current (sin6 or sin) Sockaddr Structure.
+    /// Get sizeof the current (sin6 or sin) Sockaddr Structure
     socklen_t sizeof_saddr() const;
+    /// @} Getter
 
   private:
     sockaddr_t m_sa_union{}; // this is the union of trivial sockaddr structures
@@ -135,6 +241,5 @@ struct UPNPLIB_API SSockaddr {
 };
 
 } // namespace upnplib
-/// \endcond
 
 #endif // UPNPLIB_NET_SOCKADDR_HPP

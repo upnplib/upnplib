@@ -1,7 +1,13 @@
 <map id="anonymous_namespace{miniserver::cpp}::getNumericHostRedirection" name="anonymous_namespace{miniserver::cpp}::getNumericHostRedirection">
 <area shape="rect" id="Node000001" title="Returns the ip address with port as text that is bound to a socket." alt="" coords="5,27,228,82"/>
-<area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html#ab4704f8034f614a4600fb1a39ea32756" title="Get netaddress with port." alt="" coords="290,5,461,45"/>
+<area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html#a6e83bff4e6d004f48f8d0d947bad74a7" title="Get netaddress with port." alt="" coords="290,5,461,45"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,39,276,34,277,39,228,45"/>
-<area shape="rect" id="Node000003" href="$db/d84/classupnplib_1_1CSocket__basic.html#ace0bfd26996eead61ac1bb5b18bd8276" title="Set a given raw socket file descriptor to the object." alt="" coords="276,70,475,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="228,64,263,68,262,73,228,69"/>
+<area shape="rect" id="Node000006" href="$db/d84/classupnplib_1_1CSocket__basic.html#ace0bfd26996eead61ac1bb5b18bd8276" title="Set a given raw socket file descriptor to the object." alt="" coords="276,70,475,95"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="228,64,263,68,262,73,228,69"/>
+<area shape="rect" id="Node000003" href="$d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="523,5,668,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="461,23,509,23,509,28,461,28"/>
+<area shape="rect" id="Node000004" href="$d0/dd8/group__upnplib-addrmodul.html#gad117a3a17a651d54528d6d36bc318ada" title="Get the netaddress with port from a sockaddr structure." alt="" coords="716,13,872,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="669,23,702,23,702,28,669,28"/>
+<area shape="rect" id="Node000005" href="$d0/dd8/group__upnplib-addrmodul.html#gac72d6be0ff0796c507b86b0bc717fb7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="920,13,1068,38"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="872,23,906,23,906,28,872,28"/>
 </map>

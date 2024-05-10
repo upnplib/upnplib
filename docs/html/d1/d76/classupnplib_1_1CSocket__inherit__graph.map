@@ -2,6 +2,6 @@
 <area shape="rect" id="Node000001" title="Manage all aspects of a network socket." alt="" coords="25,152,156,177"/>
 <area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html" title="Get information from a raw network socket file descriptor." alt="" coords="5,79,176,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,118,93,152,88,152,88,118"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="46,5,135,31"/>
+<area shape="rect" id="Node000003" href="$d1/dc2/structupnplib_1_1SSockaddr.html" title="Trivial ::sockaddr structures enhanced with methods." alt="" coords="18,5,163,31"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="93,44,93,79,88,79,88,44"/>
 </map>

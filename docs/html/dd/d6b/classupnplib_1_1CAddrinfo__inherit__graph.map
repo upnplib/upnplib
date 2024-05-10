@@ -1,5 +1,5 @@
 <map id="upnplib::CAddrinfo" name="upnplib::CAddrinfo">
-<area shape="rect" id="Node000001" title="Wrap C style ::addrinfo() function with a class." alt="" coords="5,79,148,104"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="32,5,121,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,44,79,79,74,79,74,44"/>
+<area shape="rect" id="Node000001" title="Wrap C style ::addrinfo() structure with a class." alt="" coords="7,79,149,104"/>
+<area shape="rect" id="Node000002" href="$d1/dc2/structupnplib_1_1SSockaddr.html" title="Trivial ::sockaddr structures enhanced with methods." alt="" coords="5,5,151,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,44,81,79,75,79,75,44"/>
 </map>

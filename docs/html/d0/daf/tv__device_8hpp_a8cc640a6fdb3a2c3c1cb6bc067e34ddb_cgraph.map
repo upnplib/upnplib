@@ -2,8 +2,8 @@
 <area shape="rect" id="Node000001" title="Stops the device. Uninitializes the SDK." alt="" coords="5,1479,117,1504"/>
 <area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="165,1353,260,1379"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,1476,184,1385,188,1389,80,1480"/>
-<area shape="rect" id="Node000155" href="$d4/d99/upnpapi_8cpp.html#abb1c47010971d19ecd2b46ee842871ec" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="308,1681,511,1707"/>
-<area shape="poly" id="edge89_Node000001_Node000155" title=" " alt="" coords="86,1502,376,1672,373,1677,83,1506"/>
+<area shape="rect" id="Node000159" href="$d4/d99/upnpapi_8cpp.html#abb1c47010971d19ecd2b46ee842871ec" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="308,1681,511,1707"/>
+<area shape="poly" id="edge89_Node000001_Node000159" title=" " alt="" coords="86,1502,376,1672,373,1677,83,1506"/>
 <area shape="rect" id="Node000003" href="$d5/d78/sock_8cpp.html#aa1c16c9b2701dab6728c2b7e2efacf7b" title="Free the OpenSSL context." alt="" coords="365,143,454,168"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="212,1353,216,1133,230,760,243,566,259,393,280,259,292,214,306,186,326,169,350,159,352,164,329,173,310,189,297,216,285,260,264,393,248,566,236,761,221,1133,217,1353"/>
 <area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#af1c7fa6eff1380708c436bad3d4843d2" title="Get client handle info." alt="" coords="583,1479,737,1504"/>
@@ -26,9 +26,9 @@
 <area shape="poly" id="edge38_Node000002_Node000027" title=" " alt="" coords="221,1378,232,1406,251,1444,276,1482,310,1514,321,1521,318,1526,306,1519,272,1485,246,1446,227,1409,216,1380"/>
 <area shape="rect" id="Node000028" href="$d4/d99/upnpapi_8cpp.html#aead9c1aad0998507f66cf7f0749013d3" title="Unregisters a control point application, unsubscribing all active subscriptions." alt="" coords="326,983,493,1008"/>
 <area shape="poly" id="edge39_Node000002_Node000028" title=" " alt="" coords="218,1352,393,1019,397,1021,223,1354"/>
-<area shape="poly" id="edge70_Node000002_Node000155" title=" " alt="" coords="221,1378,267,1505,293,1572,310,1610,342,1644,377,1671,374,1676,339,1648,306,1613,288,1574,262,1507,216,1380"/>
-<area shape="rect" id="Node000182" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#aba5685f22e83826b14771e59d0edbc05" title="Release memory allocated for the global web server root directory and the global XML document." alt="" coords="841,399,994,424"/>
-<area shape="poly" id="edge84_Node000002_Node000182" title=" " alt="" coords="213,1353,221,1291,238,1195,265,1082,284,1024,306,969,358,853,405,765,433,725,466,686,557,597,635,538,719,490,799,452,865,426,867,431,801,457,721,495,638,543,560,601,470,689,437,728,410,767,362,855,310,971,289,1026,271,1083,243,1196,226,1292,218,1353"/>
+<area shape="poly" id="edge70_Node000002_Node000159" title=" " alt="" coords="221,1378,267,1505,293,1572,310,1610,342,1644,377,1671,374,1676,339,1648,306,1613,288,1574,262,1507,216,1380"/>
+<area shape="rect" id="Node000186" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#aba5685f22e83826b14771e59d0edbc05" title="Release memory allocated for the global web server root directory and the global XML document." alt="" coords="841,399,994,424"/>
+<area shape="poly" id="edge84_Node000002_Node000186" title=" " alt="" coords="213,1353,221,1291,238,1195,265,1082,284,1024,306,969,358,853,405,765,433,725,466,686,557,597,635,538,719,490,799,452,865,426,867,431,801,457,721,495,638,543,560,601,470,689,437,728,410,767,362,855,310,971,289,1026,271,1083,243,1196,226,1292,218,1353"/>
 <area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a276f608a72d2b223bb429ba31c32f64b" title="Get handle information." alt="" coords="1107,1491,1223,1516"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="738,1490,1093,1499,1092,1504,738,1496"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1224,1513,1337,1538,1336,1544,1222,1518"/>
@@ -90,52 +90,52 @@
 <area shape="poly" id="edge56_Node000030_Node000039" title=" " alt="" coords="664,864,683,827,713,778,755,729,780,708,808,691,875,667,945,653,1016,648,1087,650,1155,657,1219,669,1324,695,1322,700,1218,674,1154,663,1087,655,1016,653,945,658,876,672,810,696,783,712,759,733,717,781,687,830,669,866"/>
 <area shape="rect" id="Node000042" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#af298d2d7e5a94605b0b284718e20cdc9" title="Sends the UNSUBCRIBE gena request and recieves the response from the device and returns it as a param..." alt="" coords="827,525,1007,580"/>
 <area shape="poly" id="edge47_Node000030_Node000042" title=" " alt="" coords="666,863,720,770,761,708,807,648,870,587,873,590,811,652,765,711,725,773,671,866"/>
-<area shape="rect" id="Node000140" href="$dd/d1d/httpparser_8cpp.html#aae19f051c772e39575e48ddb2615f6b5" title="Free memory allocated for the http message." alt="" coords="1099,504,1231,529"/>
-<area shape="poly" id="edge62_Node000030_Node000140" title=" " alt="" coords="659,865,666,799,674,752,687,700,705,646,731,594,765,548,808,510,829,501,858,495,930,491,1010,495,1085,503,1085,508,1010,501,930,497,858,500,831,506,811,515,769,552,736,597,710,648,692,701,679,753,671,799,664,865"/>
-<area shape="rect" id="Node000143" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a9714aabbe76de81410a7cb4435ce009f" title=" " alt="" coords="826,858,1009,898"/>
-<area shape="poly" id="edge52_Node000030_Node000143" title=" " alt="" coords="740,875,812,875,812,881,740,881"/>
-<area shape="rect" id="Node000144" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a40eb3122f64bdb5bb8dc15437be1562d" title=" " alt="" coords="1073,806,1256,846"/>
-<area shape="poly" id="edge57_Node000030_Node000144" title=" " alt="" coords="710,863,809,843,939,831,1060,825,1060,830,940,836,810,848,711,868"/>
-<area shape="rect" id="Node000145" href="$dc/d2f/GenlibClientSubscription_8cpp.html#ad12eb5fa4b8a4ef2d1925af529a75ffa" title=" " alt="" coords="1073,875,1256,915"/>
-<area shape="poly" id="edge58_Node000030_Node000145" title=" " alt="" coords="709,888,757,899,810,907,874,912,940,912,1060,905,1060,910,940,917,874,917,809,913,756,904,708,893"/>
-<area shape="rect" id="Node000146" href="$dc/d2f/GenlibClientSubscription_8cpp.html#ae7bf9e395bd62bafe6e4bdf3e163b2a8" title=" " alt="" coords="1073,951,1256,991"/>
-<area shape="poly" id="edge59_Node000030_Node000146" title=" " alt="" coords="701,888,810,918,940,941,1060,958,1059,963,939,947,809,923,699,893"/>
-<area shape="rect" id="Node000151" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a49ee4ea642d0133e084a87e2caba01f0" title=" " alt="" coords="809,1075,1025,1100"/>
-<area shape="poly" id="edge60_Node000030_Node000151" title=" " alt="" coords="671,889,691,922,722,967,763,1013,811,1053,840,1068,838,1072,808,1057,759,1017,718,970,686,925,666,892"/>
-<area shape="rect" id="Node000153" href="$da/d8f/client__table_8cpp.html#ab7a53a7faf0819bb588f19a08ca56dc9" title="Remove the client subscription matching the subscritpion id represented by the const Upnp_SID sid par..." alt="" coords="818,707,1017,732"/>
-<area shape="poly" id="edge63_Node000030_Node000153" title=" " alt="" coords="671,863,726,808,765,777,808,749,844,734,846,739,811,754,768,781,730,812,675,867"/>
+<area shape="rect" id="Node000144" href="$dd/d1d/httpparser_8cpp.html#aae19f051c772e39575e48ddb2615f6b5" title="Free memory allocated for the http message." alt="" coords="1099,504,1231,529"/>
+<area shape="poly" id="edge62_Node000030_Node000144" title=" " alt="" coords="659,865,666,799,674,752,687,700,705,646,731,594,765,548,808,510,829,501,858,495,930,491,1010,495,1085,503,1085,508,1010,501,930,497,858,500,831,506,811,515,769,552,736,597,710,648,692,701,679,753,671,799,664,865"/>
+<area shape="rect" id="Node000147" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a9714aabbe76de81410a7cb4435ce009f" title=" " alt="" coords="826,858,1009,898"/>
+<area shape="poly" id="edge52_Node000030_Node000147" title=" " alt="" coords="740,875,812,875,812,881,740,881"/>
+<area shape="rect" id="Node000148" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a40eb3122f64bdb5bb8dc15437be1562d" title=" " alt="" coords="1073,806,1256,846"/>
+<area shape="poly" id="edge57_Node000030_Node000148" title=" " alt="" coords="710,863,809,843,939,831,1060,825,1060,830,940,836,810,848,711,868"/>
+<area shape="rect" id="Node000149" href="$dc/d2f/GenlibClientSubscription_8cpp.html#ad12eb5fa4b8a4ef2d1925af529a75ffa" title=" " alt="" coords="1073,875,1256,915"/>
+<area shape="poly" id="edge58_Node000030_Node000149" title=" " alt="" coords="709,888,757,899,810,907,874,912,940,912,1060,905,1060,910,940,917,874,917,809,913,756,904,708,893"/>
+<area shape="rect" id="Node000150" href="$dc/d2f/GenlibClientSubscription_8cpp.html#ae7bf9e395bd62bafe6e4bdf3e163b2a8" title=" " alt="" coords="1073,951,1256,991"/>
+<area shape="poly" id="edge59_Node000030_Node000150" title=" " alt="" coords="701,888,810,918,940,941,1060,958,1059,963,939,947,809,923,699,893"/>
+<area shape="rect" id="Node000155" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a49ee4ea642d0133e084a87e2caba01f0" title=" " alt="" coords="809,1075,1025,1100"/>
+<area shape="poly" id="edge60_Node000030_Node000155" title=" " alt="" coords="671,889,691,922,722,967,763,1013,811,1053,840,1068,838,1072,808,1057,759,1017,718,970,686,925,666,892"/>
+<area shape="rect" id="Node000157" href="$da/d8f/client__table_8cpp.html#ab7a53a7faf0819bb588f19a08ca56dc9" title="Remove the client subscription matching the subscritpion id represented by the const Upnp_SID sid par..." alt="" coords="818,707,1017,732"/>
+<area shape="poly" id="edge63_Node000030_Node000157" title=" " alt="" coords="671,863,726,808,765,777,808,749,844,734,846,739,811,754,768,781,730,812,675,867"/>
 <area shape="poly" id="edge45_Node000038_Node000031" title=" " alt="" coords="1220,776,1257,791,1292,813,1324,838,1374,884,1371,888,1320,842,1288,817,1255,796,1218,781"/>
 <area shape="poly" id="edge46_Node000038_Node000039" title=" " alt="" coords="1231,751,1290,739,1291,744,1232,756"/>
-<area shape="poly" id="edge48_Node000042_Node000140" title=" " alt="" coords="1007,537,1085,525,1085,531,1008,542"/>
+<area shape="poly" id="edge48_Node000042_Node000144" title=" " alt="" coords="1007,537,1085,525,1085,531,1008,542"/>
 <area shape="rect" id="Node000064" href="$da/dd9/membuffer_8cpp.html#a132a367b6d8baf0d9de4b6e1f0fffe14" title="Free&#39;s memory allocated for membuffer* m." alt="" coords="1320,475,1471,500"/>
 <area shape="poly" id="edge51_Node000042_Node000064" title=" " alt="" coords="1007,555,1126,553,1191,548,1255,538,1308,522,1355,503,1357,508,1310,528,1257,543,1192,553,1126,559,1007,560"/>
-<area shape="poly" id="edge49_Node000140_Node000021" title=" " alt="" coords="1220,501,1255,489,1279,475,1303,460,1360,425,1363,429,1305,464,1282,480,1257,494,1222,506"/>
-<area shape="poly" id="edge50_Node000140_Node000064" title=" " alt="" coords="1230,506,1306,496,1307,501,1231,511"/>
-<area shape="poly" id="edge53_Node000143_Node000144" title=" " alt="" coords="1008,856,1059,845,1060,851,1009,861"/>
-<area shape="poly" id="edge54_Node000143_Node000145" title=" " alt="" coords="1009,882,1060,885,1059,890,1009,887"/>
-<area shape="poly" id="edge55_Node000143_Node000146" title=" " alt="" coords="972,895,1099,944,1097,949,970,900"/>
-<area shape="poly" id="edge64_Node000153_Node000038" title=" " alt="" coords="986,729,1085,748,1084,753,985,735"/>
-<area shape="poly" id="edge71_Node000155_Node000006" title=" " alt="" coords="428,1705,486,1749,576,1811,688,1873,749,1899,810,1919,869,1932,917,1936,965,1931,1025,1919,1096,1904,1150,1888,1199,1862,1254,1817,1280,1789,1303,1758,1341,1692,1368,1629,1384,1579,1389,1581,1373,1630,1346,1694,1308,1761,1284,1793,1258,1821,1202,1867,1152,1893,1097,1909,1026,1924,965,1936,917,1941,869,1938,809,1924,747,1904,686,1878,573,1816,483,1754,424,1709"/>
-<area shape="rect" id="Node000156" href="$d4/d99/upnpapi_8cpp.html#ab04dfc9206cdac78f584e6d208ba9c72" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="559,1699,761,1739"/>
-<area shape="poly" id="edge72_Node000155_Node000156" title=" " alt="" coords="511,1701,545,1705,545,1710,511,1707"/>
-<area shape="poly" id="edge80_Node000156_Node000005" title=" " alt="" coords="702,1697,864,1622,1072,1533,1112,1518,1113,1523,1074,1538,866,1627,705,1701"/>
-<area shape="poly" id="edge82_Node000156_Node000006" title=" " alt="" coords="683,1737,738,1781,773,1802,810,1818,869,1832,916,1833,1025,1818,1147,1804,1197,1789,1254,1756,1299,1714,1335,1666,1363,1617,1382,1578,1386,1580,1368,1620,1340,1669,1303,1718,1258,1760,1199,1794,1148,1810,1026,1823,916,1839,868,1837,809,1823,770,1807,735,1785,680,1741"/>
-<area shape="poly" id="edge81_Node000156_Node000021" title=" " alt="" coords="762,1734,822,1740,889,1740,958,1734,1024,1717,1082,1686,1151,1635,1214,1577,1238,1550,1254,1526,1270,1482,1281,1428,1287,1367,1288,1300,1283,1151,1272,992,1261,833,1258,684,1261,617,1269,557,1282,504,1302,460,1320,439,1343,424,1346,428,1323,443,1306,463,1287,506,1274,558,1266,618,1263,685,1266,832,1277,991,1288,1150,1294,1300,1292,1368,1286,1429,1275,1483,1258,1528,1242,1553,1218,1581,1155,1639,1085,1690,1026,1722,959,1739,890,1746,822,1745,761,1740"/>
-<area shape="poly" id="edge76_Node000156_Node000029" title=" " alt="" coords="675,1697,896,1412,900,1415,679,1701"/>
-<area shape="rect" id="Node000157" href="$d0/dc4/group__SSDP-device__functions.html#gaa9d18b0afb046c657893b11e88eb857b" title="Sends SSDP advertisements, replies and shutdown messages." alt="" coords="844,1681,991,1707"/>
-<area shape="poly" id="edge73_Node000156_Node000157" title=" " alt="" coords="761,1707,830,1700,831,1705,762,1712"/>
-<area shape="rect" id="Node000170" href="$dd/de6/gena__device_8cpp.html#a4cc29d7a5d53dccd66f6b11abb532a05" title="Cleans the service table of the device." alt="" coords="834,1783,1001,1808"/>
-<area shape="poly" id="edge77_Node000156_Node000170" title=" " alt="" coords="729,1737,861,1776,859,1781,728,1742"/>
-<area shape="rect" id="Node000178" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#aa4514a73581ffd12c050da5ad4998da4" title="Replaces current alias with the given alias." alt="" coords="836,1884,999,1909"/>
-<area shape="poly" id="edge83_Node000156_Node000178" title=" " alt="" coords="678,1737,733,1799,770,1833,811,1862,843,1877,841,1882,808,1867,766,1837,729,1803,674,1741"/>
-<area shape="poly" id="edge74_Node000157_Node000005" title=" " alt="" coords="990,1680,1008,1671,1024,1660,1036,1645,1043,1630,1047,1599,1051,1566,1058,1550,1072,1533,1093,1518,1096,1523,1075,1537,1063,1552,1056,1568,1052,1599,1048,1631,1041,1648,1027,1664,1011,1676,992,1684"/>
-<area shape="poly" id="edge75_Node000157_Node000006" title=" " alt="" coords="991,1682,1116,1659,1186,1642,1255,1621,1311,1597,1360,1571,1362,1576,1314,1602,1257,1626,1188,1647,1117,1664,992,1687"/>
-<area shape="poly" id="edge78_Node000170_Node000005" title=" " alt="" coords="940,1780,981,1754,1023,1717,1064,1668,1100,1616,1149,1527,1154,1529,1104,1618,1068,1671,1027,1721,984,1758,943,1785"/>
-<area shape="poly" id="edge79_Node000170_Node000006" title=" " alt="" coords="975,1780,1035,1764,1107,1740,1182,1710,1255,1673,1289,1650,1320,1624,1371,1575,1375,1579,1324,1628,1292,1654,1257,1677,1185,1715,1109,1745,1037,1769,976,1785"/>
-<area shape="poly" id="edge88_Node000182_Node000064" title=" " alt="" coords="994,398,1052,394,1118,393,1188,398,1257,410,1306,432,1363,465,1360,470,1303,437,1255,415,1187,403,1118,399,1052,400,994,404"/>
-<area shape="rect" id="Node000183" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a54e6c7136fbfff4ed5b5e2e447d19446" title="Release the XML document referred to by the input parameter." alt="" coords="1075,295,1255,349"/>
-<area shape="poly" id="edge85_Node000182_Node000183" title=" " alt="" coords="953,396,1074,352,1076,357,955,401"/>
-<area shape="rect" id="Node000185" href="$d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html#a29029bffc2a9680f4b946e77d569e323" title="Clear the XML object." alt="" coords="1075,425,1255,480"/>
-<area shape="poly" id="edge86_Node000182_Node000185" title=" " alt="" coords="994,421,1062,433,1061,438,993,426"/>
-<area shape="poly" id="edge87_Node000185_Node000064" title=" " alt="" coords="1255,463,1307,471,1306,477,1254,469"/>
+<area shape="poly" id="edge49_Node000144_Node000021" title=" " alt="" coords="1220,501,1255,489,1279,475,1303,460,1360,425,1363,429,1305,464,1282,480,1257,494,1222,506"/>
+<area shape="poly" id="edge50_Node000144_Node000064" title=" " alt="" coords="1230,506,1306,496,1307,501,1231,511"/>
+<area shape="poly" id="edge53_Node000147_Node000148" title=" " alt="" coords="1008,856,1059,845,1060,851,1009,861"/>
+<area shape="poly" id="edge54_Node000147_Node000149" title=" " alt="" coords="1009,882,1060,885,1059,890,1009,887"/>
+<area shape="poly" id="edge55_Node000147_Node000150" title=" " alt="" coords="972,895,1099,944,1097,949,970,900"/>
+<area shape="poly" id="edge64_Node000157_Node000038" title=" " alt="" coords="986,729,1085,748,1084,753,985,735"/>
+<area shape="poly" id="edge71_Node000159_Node000006" title=" " alt="" coords="428,1705,486,1749,576,1811,688,1873,749,1899,810,1919,869,1932,917,1936,965,1931,1025,1919,1096,1904,1150,1888,1199,1862,1254,1817,1280,1789,1303,1758,1341,1692,1368,1629,1384,1579,1389,1581,1373,1630,1346,1694,1308,1761,1284,1793,1258,1821,1202,1867,1152,1893,1097,1909,1026,1924,965,1936,917,1941,869,1938,809,1924,747,1904,686,1878,573,1816,483,1754,424,1709"/>
+<area shape="rect" id="Node000160" href="$d4/d99/upnpapi_8cpp.html#ab04dfc9206cdac78f584e6d208ba9c72" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="559,1699,761,1739"/>
+<area shape="poly" id="edge72_Node000159_Node000160" title=" " alt="" coords="511,1701,545,1705,545,1710,511,1707"/>
+<area shape="poly" id="edge80_Node000160_Node000005" title=" " alt="" coords="702,1697,864,1622,1072,1533,1112,1518,1113,1523,1074,1538,866,1627,705,1701"/>
+<area shape="poly" id="edge82_Node000160_Node000006" title=" " alt="" coords="683,1737,738,1781,773,1802,810,1818,869,1832,916,1833,1025,1818,1147,1804,1197,1789,1254,1756,1299,1714,1335,1666,1363,1617,1382,1578,1386,1580,1368,1620,1340,1669,1303,1718,1258,1760,1199,1794,1148,1810,1026,1823,916,1839,868,1837,809,1823,770,1807,735,1785,680,1741"/>
+<area shape="poly" id="edge81_Node000160_Node000021" title=" " alt="" coords="762,1734,822,1740,889,1740,958,1734,1024,1717,1082,1686,1151,1635,1214,1577,1238,1550,1254,1526,1270,1482,1281,1428,1287,1367,1288,1300,1283,1151,1272,992,1261,833,1258,684,1261,617,1269,557,1282,504,1302,460,1320,439,1343,424,1346,428,1323,443,1306,463,1287,506,1274,558,1266,618,1263,685,1266,832,1277,991,1288,1150,1294,1300,1292,1368,1286,1429,1275,1483,1258,1528,1242,1553,1218,1581,1155,1639,1085,1690,1026,1722,959,1739,890,1746,822,1745,761,1740"/>
+<area shape="poly" id="edge76_Node000160_Node000029" title=" " alt="" coords="675,1697,896,1412,900,1415,679,1701"/>
+<area shape="rect" id="Node000161" href="$d0/dc4/group__SSDP-device__functions.html#gaa9d18b0afb046c657893b11e88eb857b" title="Sends SSDP advertisements, replies and shutdown messages." alt="" coords="844,1681,991,1707"/>
+<area shape="poly" id="edge73_Node000160_Node000161" title=" " alt="" coords="761,1707,830,1700,831,1705,762,1712"/>
+<area shape="rect" id="Node000174" href="$dd/de6/gena__device_8cpp.html#a4cc29d7a5d53dccd66f6b11abb532a05" title="Cleans the service table of the device." alt="" coords="834,1783,1001,1808"/>
+<area shape="poly" id="edge77_Node000160_Node000174" title=" " alt="" coords="729,1737,861,1776,859,1781,728,1742"/>
+<area shape="rect" id="Node000182" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#aa4514a73581ffd12c050da5ad4998da4" title="Replaces current alias with the given alias." alt="" coords="836,1884,999,1909"/>
+<area shape="poly" id="edge83_Node000160_Node000182" title=" " alt="" coords="678,1737,733,1799,770,1833,811,1862,843,1877,841,1882,808,1867,766,1837,729,1803,674,1741"/>
+<area shape="poly" id="edge74_Node000161_Node000005" title=" " alt="" coords="990,1680,1008,1671,1024,1660,1036,1645,1043,1630,1047,1599,1051,1566,1058,1550,1072,1533,1093,1518,1096,1523,1075,1537,1063,1552,1056,1568,1052,1599,1048,1631,1041,1648,1027,1664,1011,1676,992,1684"/>
+<area shape="poly" id="edge75_Node000161_Node000006" title=" " alt="" coords="991,1682,1116,1659,1186,1642,1255,1621,1311,1597,1360,1571,1362,1576,1314,1602,1257,1626,1188,1647,1117,1664,992,1687"/>
+<area shape="poly" id="edge78_Node000174_Node000005" title=" " alt="" coords="940,1780,981,1754,1023,1717,1064,1668,1100,1616,1149,1527,1154,1529,1104,1618,1068,1671,1027,1721,984,1758,943,1785"/>
+<area shape="poly" id="edge79_Node000174_Node000006" title=" " alt="" coords="975,1780,1035,1764,1107,1740,1182,1710,1255,1673,1289,1650,1320,1624,1371,1575,1375,1579,1324,1628,1292,1654,1257,1677,1185,1715,1109,1745,1037,1769,976,1785"/>
+<area shape="poly" id="edge88_Node000186_Node000064" title=" " alt="" coords="994,398,1052,394,1118,393,1188,398,1257,410,1306,432,1363,465,1360,470,1303,437,1255,415,1187,403,1118,399,1052,400,994,404"/>
+<area shape="rect" id="Node000187" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a54e6c7136fbfff4ed5b5e2e447d19446" title="Release the XML document referred to by the input parameter." alt="" coords="1075,295,1255,349"/>
+<area shape="poly" id="edge85_Node000186_Node000187" title=" " alt="" coords="953,396,1074,352,1076,357,955,401"/>
+<area shape="rect" id="Node000189" href="$d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html#a29029bffc2a9680f4b946e77d569e323" title="Clear the XML object." alt="" coords="1075,425,1255,480"/>
+<area shape="poly" id="edge86_Node000186_Node000189" title=" " alt="" coords="994,421,1062,433,1061,438,993,426"/>
+<area shape="poly" id="edge87_Node000189_Node000064" title=" " alt="" coords="1255,463,1307,471,1306,477,1254,469"/>
 </map>

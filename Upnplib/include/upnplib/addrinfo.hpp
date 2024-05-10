@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_ADDRINFO_HPP
 #define UPNPLIB_INCLUDE_ADDRINFO_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-09
+// Redistribution only with this Copyright remark. Last modified: 2024-05-10
 /*!
  * \file
  * \brief Declaration of the Addrinfo class.
@@ -12,8 +12,8 @@
 namespace upnplib {
 
 /*!
- * \brief Wrap C style ::%addrinfo() function with a class
- * <!--   ================================================ -->
+ * \brief Wrap C style ::%addrinfo() structure with a class
+ * <!--   ================================================= -->
  * \ingroup upnplib-addrmodul
  *
  * We need a copy constructor and a copy assignment operator. For details see
@@ -61,7 +61,9 @@ class UPNPLIB_API CAddrinfo : public SSockaddr {
      * It only supports AF_INET6 and AF_INET. For all other address families it
      * returns false.
      *
-     * \returns **true** if addresses are equal, otherwise **false** */
+     * \returns
+     *  \b true if addresses are logical equal\n
+     *  \b false otherwise */
     bool operator==(const CAddrinfo&) const noexcept;
 
     /*! \brief Read access to members of the addrinfo structure
