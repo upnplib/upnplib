@@ -8,7 +8,7 @@
 <area shape="poly" id="edge51_Node000002_Node000004" title=" " alt="" coords="336,862,345,705,354,595,368,475,388,357,413,249,445,162,464,129,485,104,518,78,553,57,590,39,630,26,711,9,795,3,876,6,952,14,1073,38,1072,43,951,19,876,11,795,8,712,14,631,31,592,44,555,61,521,83,489,108,468,132,450,164,418,251,393,358,374,476,360,595,350,706,341,863"/>
 <area shape="rect" id="Node000005" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a9b4b32cfbe825a3f7cc9906b33d50872" title="Receive the request and dispatch it for handling." alt="" coords="487,765,677,820"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="405,860,499,823,501,828,407,865"/>
-<area shape="rect" id="Node000010" href="$d0/dd8/group__upnplib-addrmodul.html#gad117a3a17a651d54528d6d36bc318ada" title="Get the netaddress with port from a sockaddr structure." alt="" coords="2009,208,2165,233"/>
+<area shape="rect" id="Node000010" href="$d0/dd8/group__upnplib-addrmodul.html#gac193ec8b0d5cf6c70e2282814ef77c05" title="Get the netaddress with port from a sockaddr structure." alt="" coords="2009,208,2165,233"/>
 <area shape="poly" id="edge61_Node000002_Node000010" title=" " alt="" coords="359,860,454,757,605,609,697,528,796,449,902,375,1011,312,1074,282,1140,256,1207,235,1276,218,1416,195,1554,183,1686,181,1807,185,1912,194,1996,204,1995,209,1911,199,1807,191,1686,186,1555,189,1417,200,1278,224,1209,241,1141,261,1076,287,1013,316,905,380,800,453,700,532,609,613,458,761,363,864"/>
 <area shape="rect" id="Node000122" href="$d8/d61/ThreadPool_8cpp.html#a088cce76603a00ba4755257ff96d60c3" title="Adds a job to the thread pool." alt="" coords="522,1005,642,1031"/>
 <area shape="poly" id="edge52_Node000002_Node000122" title=" " alt="" coords="391,915,545,996,543,1001,388,920"/>
@@ -55,7 +55,7 @@
 <area shape="rect" id="Node000009" href="$d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="1816,229,1961,269"/>
 <area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="1739,341,1767,329,1811,303,1851,275,1854,279,1814,307,1769,334,1741,346"/>
 <area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="1961,236,1995,231,1996,236,1962,241"/>
-<area shape="rect" id="Node000011" href="$d0/dd8/group__upnplib-addrmodul.html#gac72d6be0ff0796c507b86b0bc717fb7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="2213,208,2361,233"/>
+<area shape="rect" id="Node000011" href="$d0/dd8/group__upnplib-addrmodul.html#ga860ec0f90ae3b8fc2a00507c38213d7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="2213,208,2361,233"/>
 <area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="2166,218,2199,218,2199,223,2166,223"/>
 <area shape="poly" id="edge14_Node000014_Node000009" title=" " alt="" coords="1483,240,1802,245,1802,250,1483,246"/>
 <area shape="rect" id="Node000015" href="$d1/dc2/structupnplib_1_1SSockaddr.html#a776aae84b82e1268df7ef75b39a6f528" title="Get sizeof the Sockaddr Structure." alt="" coords="1596,279,1741,319"/>

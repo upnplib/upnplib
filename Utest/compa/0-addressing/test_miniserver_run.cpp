@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-10
+// Redistribution only with this Copyright remark. Last modified: 2024-05-13
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -1214,16 +1214,18 @@ TEST_F(RunMiniServerMockFTestSuite,
 
         std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
                   << ": A wrong but accepted address family AF_UNIX should "
-                     "return an error.\n";
-        EXPECT_TRUE(ret_getNumericHostRedirection); // Wrong!
-        EXPECT_STREQ(host_port, "0.0.0.0:0");       // Wrong!
+                     "set host_port to unknown netaddress.\n";
+        EXPECT_TRUE(ret_getNumericHostRedirection); // Doesn't matter because it
+                                                    // is never ussed.
+        EXPECT_STREQ(host_port, "0.0.0.0:0");       // Wrong! Should be ""
 
     } else {
 
         // Mock check on CSocket_basic constructor if raw sochet is valid.
         EXPECT_CALL(m_sys_socketObj,
                     getsockopt(sockfd, SOL_SOCKET, SO_ERROR, _, _))
-            .WillOnce(Return(0));
+            .Times(2)
+            .WillRepeatedly(Return(0));
 
         // Mock on CSocket_basic to get address (1 time) and port (1 time).
         EXPECT_CALL(m_sys_socketObj, getsockname(sockfd, _, _))
@@ -1233,19 +1235,33 @@ TEST_F(RunMiniServerMockFTestSuite,
 
         // Capture output to stderr
         CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
-        captureObj.start();
+        bool g_dbug_old = g_dbug;
 
         // Test Unit
+        captureObj.start();
+        g_dbug = false;
         bool ret_getNumericHostRedirection =
             getNumericHostRedirection(sockfd, host_port, sizeof(host_port));
 
         // Get captured output
-        EXPECT_THAT(
-            captureObj.str(),
-            HasSubstr("] EXCEPTION MSG1036: Unsupported address family 1"));
+        EXPECT_EQ(captureObj.str(), "");
+        EXPECT_TRUE(ret_getNumericHostRedirection); // Doesn't matter because it
+                                                    // is never used.
+        EXPECT_STREQ(host_port, ""); // Set to an unknown netaddress.
 
-        EXPECT_FALSE(ret_getNumericHostRedirection);
-        EXPECT_STREQ(host_port, "<no message>");
+        // Test Unit
+        captureObj.start();
+        g_dbug = true;
+        ret_getNumericHostRedirection =
+            getNumericHostRedirection(sockfd, host_port, sizeof(host_port));
+
+        g_dbug = g_dbug_old;
+        // Get captured output
+        EXPECT_THAT(captureObj.str(),
+                    HasSubstr("] ERROR MSG1036: Unsupported address family 1"));
+        EXPECT_TRUE(ret_getNumericHostRedirection); // Doesn't matter because it
+                                                    // is never used.
+        EXPECT_STREQ(host_port, ""); // Set to an unknown netaddress.
     }
 }
 
@@ -1432,6 +1448,21 @@ TEST_F(RunMiniServerMockFTestSuite, handle_request_with_failing_select) {
     // Test Unit
     handle_request(&reqest_in);
 #endif
+}
+
+TEST(RunMiniServerTestSuite, dispatch_request_fails) {
+    // Provide resources
+    SOCKINFO sockinfo{};
+
+    http_message_t httpmsg{};
+
+    http_parser_t hparser{};
+    hparser.msg = httpmsg;
+
+    // Test Unit
+    int ret_dispatch_request = dispatch_request(&sockinfo, &hparser);
+    EXPECT_EQ(ret_dispatch_request, HTTP_INTERNAL_SERVER_ERROR)
+        << errStrEx(ret_dispatch_request, HTTP_INTERNAL_SERVER_ERROR);
 }
 
 TEST(RunMiniServerTestSuite, dispatch_request) {

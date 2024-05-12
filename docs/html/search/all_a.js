@@ -32,9 +32,10 @@ var searchData=
   ['eventq_29',['eventQ',['../d0/d87/TimerThread_8hpp.html#a0c36e689ce91cfd55ddeb906686b294e',1,'TimerThread']]],
   ['eventtime_30',['eventTime',['../da/d04/namespaceanonymous__namespace_02TimerThread_8cpp_03.html#ac378e020c1cf74dbcd785cc07ad306f8',1,'anonymous_namespace{TimerThread.cpp}::TimerEvent']]],
   ['eventurl_31',['eventURL',['../db/d74/service__table_8hpp.html#a4afdb3f4df60e5444ef990e863049044',1,'service_info']]],
-  ['expiretime_32',['expireTime',['../db/d74/service__table_8hpp.html#ad73ffd704fa8b2cb120bb9a3a1076317',1,'subscription']]],
-  ['ext_33',['Ext',['../d0/d19/ssdp__common_8hpp.html#a48356018c4f34304b0dd89be24c3821e',1,'SsdpEvent']]],
-  ['extension_34',['extension',['../dc/d6d/namespaceupnplib.html#ad7b6e3d42d6157e76f537fb101d49e16',1,'upnplib::Document_meta']]],
-  ['extractipv6address_35',['extractIPv6address',['../d3/d1d/namespaceanonymous__namespace_02ssdp__device_8cpp_03.html#a544bef3ce1cf26739e5bc6b45bf608a7',1,'anonymous_namespace{ssdp_device.cpp}']]],
-  ['extrahttpheaders_36',['ExtraHTTPHeaders',['../d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a6d073afa10796a5f94987b4a7e1450a3',1,'anonymous_namespace{webserver.cpp}']]]
+  ['exception_32',['Promise to throw &quot;no exception&quot;',['../d2/d59/Overview.html#noexcept',1,'']]],
+  ['expiretime_33',['expireTime',['../db/d74/service__table_8hpp.html#ad73ffd704fa8b2cb120bb9a3a1076317',1,'subscription']]],
+  ['ext_34',['Ext',['../d0/d19/ssdp__common_8hpp.html#a48356018c4f34304b0dd89be24c3821e',1,'SsdpEvent']]],
+  ['extension_35',['extension',['../dc/d6d/namespaceupnplib.html#ad7b6e3d42d6157e76f537fb101d49e16',1,'upnplib::Document_meta']]],
+  ['extractipv6address_36',['extractIPv6address',['../d3/d1d/namespaceanonymous__namespace_02ssdp__device_8cpp_03.html#a544bef3ce1cf26739e5bc6b45bf608a7',1,'anonymous_namespace{ssdp_device.cpp}']]],
+  ['extrahttpheaders_37',['ExtraHTTPHeaders',['../d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a6d073afa10796a5f94987b4a7e1450a3',1,'anonymous_namespace{webserver.cpp}']]]
 ];

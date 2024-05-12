@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-10
+// Redistribution only with this Copyright remark. Last modified: 2024-05-12
 
 #include <upnplib/global.hpp>
 #include <upnplib/socket.hpp>
@@ -9,7 +9,7 @@
 
 #include <random>
 
-#include <gmock/gmock.h>
+#include <utest/utest.hpp>
 
 
 namespace utest {
@@ -224,9 +224,19 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_stream) {
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    EXPECT_THAT([&sockObj]() { sockObj.get_netaddr(); },
-                ThrowsMessage<std::invalid_argument>(EndsWith(
-                    "] EXCEPTION MSG1036: Unsupported address family 1.")));
+
+    bool g_dbug_old = g_dbug;
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    g_dbug = false;
+    captureObj.start();
+    EXPECT_EQ(sockObj.get_netaddr(), "");
+    EXPECT_EQ(captureObj.str(), "");
+    g_dbug = true;
+    captureObj.start();
+    EXPECT_EQ(sockObj.get_netaddr(), "");
+    EXPECT_THAT(captureObj.str(),
+                HasSubstr("] ERROR MSG1036: Unsupported address family 1"));
+    g_dbug = g_dbug_old;
 
     CLOSE_SOCKET_P(sfd);
 }
@@ -711,22 +721,37 @@ TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
     // Mock system function
     umock::Sys_socketMock sys_socketObj;
     umock::Sys_socket sys_socket_injectObj(&sys_socketObj);
-    EXPECT_CALL(sys_socketObj,
-                getsockname((SOCKET)sockObj, _,
-                            Pointee((int)sizeof(::sockaddr_storage))))
-        // 1 time get_netaddr(), 2 times get_netaddrp(),
-        // different on MacOS with 2 times.
-        .Times(Between(2, 3))
+    EXPECT_CALL(
+        sys_socketObj,
+        getsockname(static_cast<SOCKET>(sockObj), _,
+                    Pointee(static_cast<int>(sizeof(::sockaddr_storage)))))
+        .Times(4)
         .WillRepeatedly(DoAll(
             SetArgPointee<1>(*reinterpret_cast<sockaddr*>(&ss)), Return(0)));
 
     // Test Unit
-    EXPECT_THAT([&sockObj]() { sockObj.get_netaddr(); },
-                ThrowsMessage<std::invalid_argument>(EndsWith(
-                    "] EXCEPTION MSG1036: Unsupported address family 255.")));
-    EXPECT_THAT([&sockObj]() { sockObj.get_netaddrp(); },
-                ThrowsMessage<std::invalid_argument>(EndsWith(
-                    "] EXCEPTION MSG1036: Unsupported address family 255.")));
+    bool g_dbug_old = g_dbug;
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    g_dbug = false;
+    captureObj.start();
+    EXPECT_EQ(sockObj.get_netaddr(), "");
+    EXPECT_EQ(captureObj.str(), "");
+    g_dbug = true;
+    captureObj.start();
+    EXPECT_EQ(sockObj.get_netaddr(), "");
+    EXPECT_THAT(captureObj.str(),
+                EndsWith("] ERROR MSG1036: Unsupported address family 255.\n"));
+
+    g_dbug = false;
+    captureObj.start();
+    EXPECT_EQ(sockObj.get_netaddrp(), "");
+    EXPECT_EQ(captureObj.str(), "");
+    g_dbug = true;
+    captureObj.start();
+    EXPECT_EQ(sockObj.get_netaddrp(), "");
+    EXPECT_THAT(captureObj.str(),
+                EndsWith("] ERROR MSG1036: Unsupported address family 255.\n"));
+    g_dbug = g_dbug_old;
 }
 
 TEST(SocketBindTestSuite, bind_ipv6_successful) {

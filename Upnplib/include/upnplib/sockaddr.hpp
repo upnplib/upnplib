@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCKADDR_HPP
 #define UPNPLIB_NET_SOCKADDR_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-10
+// Redistribution only with this Copyright remark. Last modified: 2024-05-12
 /*!
  * \file
  * \brief Declaration of the Sockaddr class and some free helper functions.
@@ -41,33 +41,33 @@ union sockaddr_t {
 
 
 // Free function
-/*! \brief Get the netaddress without port from a sockaddr structure
- * <!-- ------------------------------------------------------- -->
+/*! \brief Get the [netaddress](\ref glossary_netaddr) without port from a
+ * sockaddr structure
+ * <!-- -------------------------------------------------------------- -->
  * \ingroup upnplib-addrmodul
  * \code
  * ~$ // Usage e.g.:
- * ~$ sockaddr_storage saddr{};
+ * ~$ ::sockaddr_storage saddr{};
  * ~$ std::cout << "netaddress is " << to_netaddr(&saddr) << "\n";
  * \endcode
- * \exception std::invalid_argument Unsupported address family. Supported is
- * only AF_INET6 and AF_INET.
  */
-UPNPLIB_API std::string to_netaddr(const ::sockaddr_storage* const a_sockaddr);
+UPNPLIB_API netaddr_t
+to_netaddr(const ::sockaddr_storage* const a_sockaddr) noexcept;
 
 
 // Free function
-/*! \brief Get the netaddress with port from a sockaddr structure
- * <!-- ---------------------------------------------------- -->
+/*! \brief Get the [netaddress](\ref glossary_netaddr) with port from a sockaddr
+ * structure
+ * <!-- -------------------------------------------------------------------- -->
  * \ingroup upnplib-addrmodul
  * \code
  * ~$ // Usage e.g.:
- * ~$ sockaddr_storage saddr{};
+ * ~$ ::sockaddr_storage saddr{};
  * ~$ std::cout << "netaddress is " << to_netaddrp(&saddr) << "\n";
  * \endcode
- * \exception std::invalid_argument Unsupported address family. Supported is
- * only AF_INET6 and AF_INET.
  */
-UPNPLIB_API std::string to_netaddrp(const ::sockaddr_storage* const a_sockaddr);
+UPNPLIB_API netaddr_t
+to_netaddrp(const ::sockaddr_storage* const a_sockaddr) noexcept;
 
 
 // Free function

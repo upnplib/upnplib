@@ -92,9 +92,9 @@
 <area shape="poly" id="edge47_Node000080_Node000084" title=" " alt="" coords="395,999,455,991,456,996,395,1005"/>
 <area shape="rect" id="Node000085" href="$d5/d78/sock_8cpp.html#ad1241b973fa76980eef882848fb535c3" title="Writes data on the socket in sockinfo." alt="" coords="496,911,588,936"/>
 <area shape="poly" id="edge48_Node000080_Node000085" title=" " alt="" coords="342,997,387,972,442,946,482,933,483,938,444,951,390,977,345,1002"/>
-<area shape="rect" id="Node000082" href="$d0/dd8/group__upnplib-addrmodul.html#gad117a3a17a651d54528d6d36bc318ada" title="Get the netaddress with port from a sockaddr structure." alt="" coords="718,1140,874,1165"/>
+<area shape="rect" id="Node000082" href="$d0/dd8/group__upnplib-addrmodul.html#gac193ec8b0d5cf6c70e2282814ef77c05" title="Get the netaddress with port from a sockaddr structure." alt="" coords="718,1140,874,1165"/>
 <area shape="poly" id="edge45_Node000081_Node000082" title=" " alt="" coords="591,1062,754,1132,752,1137,589,1067"/>
-<area shape="rect" id="Node000083" href="$d0/dd8/group__upnplib-addrmodul.html#gac72d6be0ff0796c507b86b0bc717fb7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="990,1140,1138,1165"/>
+<area shape="rect" id="Node000083" href="$d0/dd8/group__upnplib-addrmodul.html#ga860ec0f90ae3b8fc2a00507c38213d7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="990,1140,1138,1165"/>
 <area shape="poly" id="edge46_Node000082_Node000083" title=" " alt="" coords="874,1150,976,1150,976,1155,874,1155"/>
 <area shape="rect" id="Node000086" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a2356245ef3089394fee85fd3f34be80f" title="Write to an SSL protected socket." alt="" coords="695,1025,897,1065"/>
 <area shape="poly" id="edge49_Node000085_Node000086" title=" " alt="" coords="589,926,617,934,643,946,659,962,668,978,676,994,691,1009,703,1016,700,1021,688,1013,672,997,663,981,655,965,640,951,615,939,588,931"/>

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-17
+// Redistribution only with this Copyright remark. Last modified: 2024-05-13
 
 // There is no include guard '#ifndef ...' because this file shouln't be
 // included more than two times as given.
@@ -25,14 +25,6 @@ UPNPLIB_API char* strndup(const char* __string, size_t __n);
 
 // Trace messages
 // --------------
-// This compiles tracing into the source code. Once compiled in with std::clog
-// (I currently use std::cout) to output you could disable TRACE with
-// std::clog.setstate(std::ios_base::failbit);
-// and enable with
-// std::clog.clear();
-// But it is not really an option because it also modifies the users program
-// clog output.
-
 #ifdef UPNPLIB_WITH_TRACE
   #define TRACE(s) std::cout<<"TRACE["<<(static_cast<const char*>(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)<<":"<<__LINE__<<"] "<<(s)<<"\n";
   #define TRACE2(a, b) std::cout<<"TRACE["<<(static_cast<const char*>(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)<<":"<<__LINE__<<"] "<<(a)<<(b)<<"\n";

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-05-10
+ * Redistribution only with this Copyright remark. Last modified: 2024-05-11
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -177,7 +177,6 @@ int host_header_is_numeric(
  *   On success: **true**\n
  *   On error: **false**, The result buffer remains unmodified.
  */
-// No unit test needed. It's tested with SSockaddr.
 int getNumericHostRedirection(
     SOCKET a_socket,   ///< [in] Socket file descriptor.
     char* a_host_port, ///< [out] Pointer to buffer that will be filled.
@@ -200,7 +199,9 @@ int getNumericHostRedirection(
 /*!
  * \brief Based on the type of message, appropriate callback is issued.
  *
- * \return 0 on Success or HTTP_INTERNAL_SERVER_ERROR if Callback is NULL.
+ * \returns
+ *  On success: **0**\n
+ *  On error: HTTP_INTERNAL_SERVER_ERROR if Callback is NULL.
  */
 int dispatch_request(
     /*! [in] Socket Information object. */
@@ -252,12 +253,11 @@ int dispatch_request(
         goto ExitFunction;
     }
     request = &hparser->msg;
-#ifdef DEBUG_REDIRECT
-    getNumericHostRedirection(info->socket, host_port, sizeof host_port);
-    UpnpPrintf(UPNP_INFO, MSERV, __FILE__, __LINE__,
-               "DEBUG TEST: Redirect host_port = %s.\n", host_port);
-#endif
-    /* chech HOST header for an IP number -- prevents DNS rebinding. */
+    if (upnplib::g_dbug) {
+        getNumericHostRedirection(info->socket, host_port, sizeof host_port);
+        UPNPLIB_LOGINFO "MSG1113: Redirect host_port=\"" << host_port << "\"\n";
+    }
+    /* check HOST header for an IP number -- prevents DNS rebinding. */
     if (!httpmsg_find_hdr(request, HDR_HOST, &header)) {
         rc = UPNP_E_BAD_HTTPMSG;
         goto ExitFunction;

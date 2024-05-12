@@ -1365,7 +1365,7 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
     // return UPNP_E_SUCCESS; // DEBUG: Uncomment for existing unit test.
 
     SampleUtil_Print("RootDevice Registered, initializing State Table ...\n");
-    return UPNP_E_INTERNAL_ERROR; // DEBUG!
+    // return UPNP_E_INTERNAL_ERROR; // DEBUG!
     TvDeviceStateTableInit(desc_doc_url);
     SampleUtil_Print("State Table Initialized.\n");
 

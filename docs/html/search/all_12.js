@@ -9,13 +9,14 @@ var searchData=
   ['newrequesthandler_6',['NewRequestHandler',['../d3/d1d/namespaceanonymous__namespace_02ssdp__device_8cpp_03.html#a3355aacf8ea50cef6cd089fc6f7c9e13',1,'anonymous_namespace{ssdp_device.cpp}']]],
   ['newval_7',['NewVal',['../d3/da9/upnpapi_8hpp.html#acace7e13a28e2f87d8bb2aea8d6335e7',1,'UpnpNonblockParam']]],
   ['next_8',['next',['../dc/d1d/list_8hpp.html#ad9117acc2cfb1847063f7bc506e3c47d',1,'UpnpListHead::next'],['../db/d74/service__table_8hpp.html#a4d63c90d28d3eed58eba17715b1d7ee7',1,'subscription::next'],['../db/d74/service__table_8hpp.html#a69daf22b958b3c2dd0c790102a950d7a',1,'service_info::next'],['../d6/d92/VirtualDir_8hpp.html#ac2772de7be82c11b2e3a5e26fd6181e6',1,'virtual_Dir_List::next']]],
-  ['no_5ferror_5ffound_9',['NO_ERROR_FOUND',['../d0/d19/ssdp__common_8hpp.html#adf7ff19f3278306e0618d4028de25e22',1,'ssdp_common.hpp']]],
-  ['node_10',['node',['../db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html#a96381025f604800422f05d23c7b50b00',1,'anonymous_namespace{uuid.cpp}::uuid_state::node'],['../d7/db4/uuid_8hpp.html#ab8ffe0cceb6221c46cb2f64e73796b3b',1,'uuid_upnp::node']]],
-  ['nodeid_11',['nodeID',['../d5/de9/sysdep_8hpp.html#a2ae3e3ed4a729cea03cec65ee98ff0e7',1,'uuid_node_t']]],
-  ['not_5fimplemented_12',['NOT_IMPLEMENTED',['../d9/dd2/gena_8hpp.html#aec2bcbab7ad208b42215cf4225e259e1',1,'gena.hpp']]],
-  ['notify_5fsend_5fand_5frecv_13',['notify_send_and_recv',['../d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae1781a5b638d50bd7626b3ea925492cb',1,'anonymous_namespace{gena_device.cpp}']]],
-  ['notify_5fthread_5fstruct_14',['notify_thread_struct',['../d9/dd2/gena_8hpp.html#d5/d37/structNOTIFY__THREAD__STRUCT',1,'NOTIFY_THREAD_STRUCT'],['../d9/dd2/gena_8hpp.html#a05d519a30da1d0bef9ff4b9239f5f631',1,'notify_thread_struct:&#160;gena.hpp']]],
-  ['num_5fhandle_15',['NUM_HANDLE',['../d3/da9/upnpapi_8hpp.html#ac4d94c3e0ec4dfa5640f42fda313c5f4',1,'upnpapi.hpp']]],
-  ['num_5fssdp_5fcopy_16',['NUM_SSDP_COPY',['../d8/dfd/config_8hpp.html#a18f105512fc7505d70e3809afaa32e62',1,'config.hpp']]],
-  ['num_5ftry_17',['NUM_TRY',['../d0/d19/ssdp__common_8hpp.html#adcc65d241a5754fbc106f0d30aa08b96',1,'ssdp_common.hpp']]]
+  ['no_20exception_9',['Promise to throw &quot;no exception&quot;',['../d2/d59/Overview.html#noexcept',1,'']]],
+  ['no_5ferror_5ffound_10',['NO_ERROR_FOUND',['../d0/d19/ssdp__common_8hpp.html#adf7ff19f3278306e0618d4028de25e22',1,'ssdp_common.hpp']]],
+  ['node_11',['node',['../db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html#a96381025f604800422f05d23c7b50b00',1,'anonymous_namespace{uuid.cpp}::uuid_state::node'],['../d7/db4/uuid_8hpp.html#ab8ffe0cceb6221c46cb2f64e73796b3b',1,'uuid_upnp::node']]],
+  ['nodeid_12',['nodeID',['../d5/de9/sysdep_8hpp.html#a2ae3e3ed4a729cea03cec65ee98ff0e7',1,'uuid_node_t']]],
+  ['not_5fimplemented_13',['NOT_IMPLEMENTED',['../d9/dd2/gena_8hpp.html#aec2bcbab7ad208b42215cf4225e259e1',1,'gena.hpp']]],
+  ['notify_5fsend_5fand_5frecv_14',['notify_send_and_recv',['../d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae1781a5b638d50bd7626b3ea925492cb',1,'anonymous_namespace{gena_device.cpp}']]],
+  ['notify_5fthread_5fstruct_15',['notify_thread_struct',['../d9/dd2/gena_8hpp.html#a05d519a30da1d0bef9ff4b9239f5f631',1,'notify_thread_struct:&#160;gena.hpp'],['../d9/dd2/gena_8hpp.html#d5/d37/structNOTIFY__THREAD__STRUCT',1,'NOTIFY_THREAD_STRUCT']]],
+  ['num_5fhandle_16',['NUM_HANDLE',['../d3/da9/upnpapi_8hpp.html#ac4d94c3e0ec4dfa5640f42fda313c5f4',1,'upnpapi.hpp']]],
+  ['num_5fssdp_5fcopy_17',['NUM_SSDP_COPY',['../d8/dfd/config_8hpp.html#a18f105512fc7505d70e3809afaa32e62',1,'config.hpp']]],
+  ['num_5ftry_18',['NUM_TRY',['../d0/d19/ssdp__common_8hpp.html#adcc65d241a5754fbc106f0d30aa08b96',1,'ssdp_common.hpp']]]
 ];

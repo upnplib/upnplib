@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-10
+// Redistribution only with this Copyright remark. Last modified: 2024-05-12
 /*!
  * \file
  * \brief **Socket Module:** manage properties and methods but not connections
@@ -153,24 +153,16 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
     /*! \name Getter
      * *************
      * @{ */
-    /*! \brief Get socket [address family](\ref glossary_af)
-     *
-     * Throws no exception. */
+    /*! \brief Get socket [address family](\ref glossary_af) */
     sa_family_t get_family() const;
 
-    /*! \brief Get [netaddress](\ref glossary_netaddr) without port.
-     *
-     * Throws no exception. */
+    /*! \brief Get [netaddress](\ref glossary_netaddr) without port. */
     const netaddr_t& get_netaddr() override;
 
-    /*! \brief Get [netaddress](\ref glossary_netaddr) with port.
-     *
-     * Throws no exception. */
+    /*! \brief Get [netaddress](\ref glossary_netaddr) with port. */
     const netaddr_t& get_netaddrp() override;
 
-    /*! \brief Get the [port](\ref glossary_port) number.
-     *
-     * Throws no exception. */
+    /*! \brief Get the [port](\ref glossary_port) number. */
     in_port_t get_port() const override;
 
     /*! \brief Get the [socket type](\ref glossary_socktype) `SOCK_STREAM` or

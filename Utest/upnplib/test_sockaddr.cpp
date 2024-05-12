@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-10
+// Redistribution only with this Copyright remark. Last modified: 2024-05-12
 
 #include <upnplib/global.hpp>
 #include <upnplib/sockaddr.hpp>
@@ -14,6 +14,7 @@ using ::testing::HasSubstr;
 using ::testing::ThrowsMessage;
 
 using ::upnplib::CSocket;
+using ::upnplib::g_dbug;
 using ::upnplib::sockaddrcmp;
 using ::upnplib::SSockaddr;
 using ::upnplib::to_netaddr;
@@ -475,9 +476,18 @@ TEST(ToAddrStrTestSuite, sockaddr_to_address_string) {
     EXPECT_EQ(to_netaddr(&saddr.ss), "192.168.88.99");
 
     saddr.ss.ss_family = AF_UNIX;
-    EXPECT_THAT([&saddr]() { to_netaddr(&saddr.ss); },
-                ThrowsMessage<std::invalid_argument>(HasSubstr(
-                    "] EXCEPTION MSG1036: Unsupported address family 1")));
+    bool g_dbug_old = g_dbug;
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    g_dbug = false;
+    captureObj.start();
+    EXPECT_EQ(to_netaddr(&saddr.ss), "");
+    EXPECT_EQ(captureObj.str(), "");
+    g_dbug = true;
+    captureObj.start();
+    EXPECT_EQ(to_netaddr(&saddr.ss), "");
+    EXPECT_THAT(captureObj.str(),
+                HasSubstr("] ERROR MSG1036: Unsupported address family 1"));
+    g_dbug = g_dbug_old;
 }
 
 TEST(ToAddrStrTestSuite, sockaddr_to_address_port_string) {
@@ -507,9 +517,18 @@ TEST(ToAddrStrTestSuite, sockaddr_to_address_port_string) {
     EXPECT_EQ(to_netaddrp(&saddr.ss), "192.168.88.101:54321");
 
     saddr.ss.ss_family = AF_UNIX;
-    EXPECT_THAT([&saddr]() { to_netaddrp(&saddr.ss); },
-                ThrowsMessage<std::invalid_argument>(HasSubstr(
-                    "] EXCEPTION MSG1036: Unsupported address family 1")));
+    bool g_dbug_old = g_dbug;
+    CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
+    g_dbug = false;
+    captureObj.start();
+    EXPECT_EQ(to_netaddrp(&saddr.ss), "");
+    EXPECT_EQ(captureObj.str(), "");
+    g_dbug = true;
+    captureObj.start();
+    EXPECT_EQ(to_netaddrp(&saddr.ss), "");
+    EXPECT_THAT(captureObj.str(),
+                HasSubstr("] ERROR MSG1036: Unsupported address family 1"));
+    g_dbug = g_dbug_old;
 }
 
 } // namespace utest

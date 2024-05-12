@@ -76,6 +76,7 @@ $(function() {
 <div class="toc"><h3>Table of Contents</h3>
 <ul><li class="level1"><a href="#overview">Overview</a><ul><li class="level2"><a href="#parts">Parts &#39;Control Point&#39; and &#39;UPnP Device&#39;</a></li>
 <li class="level2"><a href="#overview_comp">Main Components</a></li>
+<li class="level2"><a href="#noexcept">Promise to throw &quot;no exception&quot;</a></li>
 <li class="level2"><a href="#overview_reuseaddr">Socket option &quot;reuse address&quot;</a></li>
 </ul>
 </li>
@@ -108,6 +109,9 @@ Main Components</h2>
 </table>
 <p>The order shows the dependency. Each component depends on its predecessor. For example if selecting SSDP on configuring to compile, this selects also automatically the webserver (only that) and the webserver selects miniserver. If you select GENA for compiling you have a full featured configuration with all main components. There is no need to select previous moduls. Also the abstraction will increase with the order. For example no component except miniserver will handle network sockets.</p>
 <dl class="section note"><dt>Note</dt><dd>This order is an important implicit dependency. It is always expected that it is respected. No internal checks are made about this. The compiler will remind you if you forget it.</dd></dl>
+<h2><a class="anchor" id="noexcept"></a>
+Promise to throw "no exception"</h2>
+<p>There are several functions and methods that are specified to <a href="https://en.cppreference.com/w/cpp/language/noexcept_spec"><b>noexcept</b></a>. This may not always be true with debugging or TRACE enabled because there we have extended use of std::string objects for output to std::cerr. Both may throw exceptions in rare cases like exceeding max. length of a std::string or error on memory allocation or modified output flags of the std::cerr output stream by the program using the library. The result of such an unexpected exception is the immediate termination of the program as specified for <b>noexcept</b>. But I assume that this is only a temporary setting and is under special observation by the developer so that he can evaluate these exceptions.</p>
 <h2><a class="anchor" id="overview_reuseaddr"></a>
 Socket option "reuse address"</h2>
 <p>There is an issue when a network connection unexpectedly dies. The port then has normaly to <code>TIME_WAIT</code> util it can use its old <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a> again. This may not be acceptable for certain server applications. So there is a socket option <code>SO_REUSEADDR</code> to immediately reuse a given netaddress, but with the risk of network errors and security issues. For more details have a look at <a href="https://hea-www.harvard.edu/~fine/Tech/addrinuse.html">Bind: Address Already in Use</a>.</p>

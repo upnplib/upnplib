@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-21
+// Redistribution only with this Copyright remark. Last modified: 2024-05-12
 
 /*!
 \page Overview
@@ -27,6 +27,10 @@ order | component  | part of
 The order shows the dependency. Each component depends on its predecessor. For example if selecting SSDP on configuring to compile, this selects also automatically the webserver (only that) and the webserver selects miniserver. If you select GENA for compiling you have a full featured configuration with all main components. There is no need to select previous moduls. Also the abstraction will increase with the order. For example no component except miniserver will handle network sockets.
 
 \note This order is an important implicit dependency. It is always expected that it is respected. No internal checks are made about this. The compiler will remind you if you forget it.
+
+\subsection noexcept Promise to throw "no exception"
+
+There are several functions and methods that are specified to <a href="https://en.cppreference.com/w/cpp/language/noexcept_spec">**noexcept**</a>. This may not always be true with debugging or TRACE enabled because there we have extended use of std::string objects for output to std::cerr. Both may throw exceptions in rare cases like exceeding max. length of a std::string or error on memory allocation or modified output flags of the std::cerr output stream by the program using the library. The result of such an unexpected exception is the immediate termination of the program as specified for **noexcept**. But I assume that this is only a temporary setting and is under special observation by the developer so that he can evaluate these exceptions.
 
 \subsection overview_reuseaddr Socket option "reuse address"
 

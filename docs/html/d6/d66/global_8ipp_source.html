@@ -83,7 +83,7 @@ $(document).ready(function() { init_codefold(1); });
 </div><!--header-->
 <div class="contents">
 <a href="../../d6/d66/global_8ipp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, &lt;Ingo@Hoeft-online.de&gt;</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Redistribution only with this Copyright remark. Last modified: 2024-04-17</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Redistribution only with this Copyright remark. Last modified: 2024-05-13</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// There is no include guard &#39;#ifndef ...&#39; because this file shouln&#39;t be</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// included more than two times as given.</span></div>
@@ -103,37 +103,29 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">// Trace messages</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">// --------------</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">// This compiles tracing into the source code. Once compiled in with std::clog</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">// (I currently use std::cout) to output you could disable TRACE with</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">// std::clog.setstate(std::ios_base::failbit);</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">// and enable with</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">// std::clog.clear();</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment">// But it is not really an option because it also modifies the users program</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment">// clog output.</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#ifdef UPNPLIB_WITH_TRACE</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">  #define TRACE(s) std::cout&lt;&lt;&quot;TRACE[&quot;&lt;&lt;(static_cast&lt;const char*&gt;(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)&lt;&lt;&quot;:&quot;&lt;&lt;__LINE__&lt;&lt;&quot;] &quot;&lt;&lt;(s)&lt;&lt;&quot;\n&quot;;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">  #define TRACE2(a, b) std::cout&lt;&lt;&quot;TRACE[&quot;&lt;&lt;(static_cast&lt;const char*&gt;(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)&lt;&lt;&quot;:&quot;&lt;&lt;__LINE__&lt;&lt;&quot;] &quot;&lt;&lt;(a)&lt;&lt;(b)&lt;&lt;&quot;\n&quot;;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">  #define TRACE(s)</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">  #define TRACE2(a, b)</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#ifdef UPNPLIB_WITH_TRACE</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">  #define TRACE(s) std::cout&lt;&lt;&quot;TRACE[&quot;&lt;&lt;(static_cast&lt;const char*&gt;(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)&lt;&lt;&quot;:&quot;&lt;&lt;__LINE__&lt;&lt;&quot;] &quot;&lt;&lt;(s)&lt;&lt;&quot;\n&quot;;</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">  #define TRACE2(a, b) std::cout&lt;&lt;&quot;TRACE[&quot;&lt;&lt;(static_cast&lt;const char*&gt;(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)&lt;&lt;&quot;:&quot;&lt;&lt;__LINE__&lt;&lt;&quot;] &quot;&lt;&lt;(a)&lt;&lt;(b)&lt;&lt;&quot;\n&quot;;</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">  #define TRACE(s)</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">  #define TRACE2(a, b)</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../dc/d6d/namespaceupnplib.html">upnplib</a> {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">// Global constants</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment">// ================</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment">// Default response timeout for UPnP messages as given by The UPnP™ Device</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment">// Architecture 2.0, Document Revision Date: April 17, 2020.</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> g_response_timeout{30};</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../dc/d6d/namespaceupnplib.html">upnplib</a> {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment">// Global constants</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">// ================</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">// Default response timeout for UPnP messages as given by The UPnP™ Device</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">// Architecture 2.0, Document Revision Date: April 17, 2020.</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> g_response_timeout{30};</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">// Info message about the library</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> std::string_view libinfo{</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="stringliteral">&quot;upnplib library version = under developement&quot;</span>};</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>} <span class="comment">// namespace upnplib</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">// clang-format on</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">// Info message about the library</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> std::string_view libinfo{</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="stringliteral">&quot;upnplib library version = under developement&quot;</span>};</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>} <span class="comment">// namespace upnplib</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">// clang-format on</span></div>
 <div class="ttc" id="anamespaceupnplib_html"><div class="ttname"><a href="../../dc/d6d/namespaceupnplib.html">upnplib</a></div><div class="ttdoc">Reengineered Object Oriented UPnP+ program code.</div></div>
 <div class="ttc" id="avisibility_8hpp_html"><div class="ttname"><a href="../../d0/d21/visibility_8hpp.html">visibility.hpp</a></div><div class="ttdoc">Macros to support visibility of external symbols.</div></div>
 <div class="ttc" id="avisibility_8hpp_html_a596de2c742b413e26eddc6d1751753c0"><div class="ttname"><a href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a></div><div class="ttdeci">#define UPNPLIB_API</div><div class="ttdoc">Prefix to export symbol for external use.</div><div class="ttdef"><b>Definition</b> <a href="../../d0/d21/visibility_8hpp_source.html#l00061">visibility.hpp:61</a></div></div>
