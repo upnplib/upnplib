@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-05-11
+ * Redistribution only with this Copyright remark. Last modified: 2024-05-13
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -184,8 +184,8 @@ int getNumericHostRedirection(
 ) {
     TRACE("Executing getNumericHostRedirection()")
     try {
-        upnplib::CSocket_basic socketObj;
-        socketObj.set(a_socket);
+        upnplib::CSocket_basic socketObj(a_socket);
+        socketObj.set();
         upnplib::netaddr_t host_port = socketObj.get_netaddrp();
         memcpy(a_host_port, host_port.c_str(), a_hp_size);
         return true;
@@ -459,8 +459,8 @@ void fdset_if_valid( //
     }
     // Check if socket is valid and bound
     try {
-        upnplib::CSocket_basic sockObj;
-        sockObj.set(a_sock);
+        upnplib::CSocket_basic sockObj(a_sock);
+        sockObj.set();
         if (sockObj.is_bound())
 
             FD_SET(a_sock, a_set);

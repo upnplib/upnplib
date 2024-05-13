@@ -11,5 +11,5 @@ var searchData=
   ['registrationstate_8',['RegistrationState',['../d3/da9/upnpapi_8hpp.html#a7ee8e6accb8db1354a823bebf72dc560',1,'Handle_Info']]],
   ['request_5fmethod_9',['request_method',['../db/da7/httpparser_8hpp.html#a8ad4b5caee28078c616859bf127846a5',1,'http_message_t']]],
   ['requestcookie_10',['RequestCookie',['../d9/d36/Compa_2src_2inc_2webserver_8hpp.html#a7edd1d50cc56be53dddbf790b8fab0a2',1,'SendInstruction']]],
-  ['requesttype_11',['requesttype',['../d0/d19/ssdp__common_8hpp.html#abecb3878ad71167cfa70174e5226ec6d',1,'SsdpEvent::RequestType'],['../da/db2/ssdp__ctrlpt_8hpp.html#a1adf765df19b966120d281efa7c3fdaf',1,'SsdpSearchArg::requestType']]]
+  ['requesttype_11',['requesttype',['../da/db2/ssdp__ctrlpt_8hpp.html#a1adf765df19b966120d281efa7c3fdaf',1,'SsdpSearchArg::requestType'],['../d0/d19/ssdp__common_8hpp.html#abecb3878ad71167cfa70174e5226ec6d',1,'SsdpEvent::RequestType']]]
 ];

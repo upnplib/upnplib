@@ -14,8 +14,9 @@ var searchData=
   ['webserver_2ehpp_11',['webserver.hpp',['../d4/d0a/Upnplib_2include_2upnplib_2webserver_8hpp.html',1,'(Global Namespace)'],['../d9/d36/Compa_2src_2inc_2webserver_8hpp.html',1,'(Global Namespace)']]],
   ['webserverstate_12',['WebServerState',['../d3/da9/upnpapi_8hpp.html#ab99d7af73b3898a672966e7f986abe5d',1,'upnpapi.hpp']]],
   ['windows_20build_13',['4.2. Microsoft Windows build',['../index.html#autotoc_md8',1,'']]],
-  ['winsockinit_14',['WinsockInit',['../d4/d99/upnpapi_8cpp.html#afa9a02a6a9dc20f16c191c563c61f53d',1,'upnpapi.cpp']]],
-  ['workerthread_15',['WorkerThread',['../dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#acb1e63ee2190ce68f1e523af9f27a831',1,'anonymous_namespace{ThreadPool.cpp}']]],
-  ['write_16',['write',['../d6/d92/VirtualDir_8hpp.html#a8deb56db69743da06dd9603aa2285b71',1,'VirtualDirCallbacks']]],
-  ['write_5fstate_17',['write_state',['../db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html#a5856485880e62a9196cb264231c67bf8',1,'anonymous_namespace{uuid.cpp}']]]
+  ['winsock_5finit_14',['WINSOCK_INIT',['../db/d86/group__upnplib-socket.html#gaa9494d0f2750c611339d1336ae8183d8',1,'socket.hpp']]],
+  ['winsockinit_15',['WinsockInit',['../d4/d99/upnpapi_8cpp.html#afa9a02a6a9dc20f16c191c563c61f53d',1,'upnpapi.cpp']]],
+  ['workerthread_16',['WorkerThread',['../dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#acb1e63ee2190ce68f1e523af9f27a831',1,'anonymous_namespace{ThreadPool.cpp}']]],
+  ['write_17',['write',['../d6/d92/VirtualDir_8hpp.html#a8deb56db69743da06dd9603aa2285b71',1,'VirtualDirCallbacks']]],
+  ['write_5fstate_18',['write_state',['../db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html#a5856485880e62a9196cb264231c67bf8',1,'anonymous_namespace{uuid.cpp}']]]
 ];

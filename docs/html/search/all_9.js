@@ -34,7 +34,7 @@ var searchData=
   ['descdocument_31',['DescDocument',['../d3/da9/upnpapi_8hpp.html#aa3907b7ec3a6f44bdb21ef9619540148',1,'Handle_Info']]],
   ['description_32',['Step 2: Description',['../db/d20/group__compa-Description.html',1,'']]],
   ['description_20from_20device_33',['Description from device',['../d9/dba/group__Description-device.html',1,'']]],
-  ['descriptor_34',['valid socket file descriptor',['../db/ddf/group__upnplibAPI-socket.html#autotoc_md16',1,'']]],
+  ['descriptor_34',['valid socket file descriptor',['../db/d86/group__upnplib-socket.html#autotoc_md16',1,'']]],
   ['descurl_35',['DescURL',['../d3/da9/upnpapi_8hpp.html#a8a9c62ae413bbc35649e138a324dff9f',1,'Handle_Info']]],
   ['descxml_36',['DescXML',['../d3/da9/upnpapi_8hpp.html#a43c004240513523ff5261d1446ab8fed',1,'Handle_Info']]],
   ['dest_5faddr_37',['dest_addr',['../d0/d19/ssdp__common_8hpp.html#a341c4bb02473288a98b376aab8e8ff7d',1,'SsdpSearchReply::dest_addr'],['../d0/d19/ssdp__common_8hpp.html#a3234b6997421670793db7d2460a98a44',1,'ssdp_thread_data::dest_addr']]],

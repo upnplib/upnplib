@@ -72,12 +72,14 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">Socket module<div class="ingroups"><a class="el" href="../../d4/d32/group__upnplib.html">* * object oriented UPnP library</a> &raquo; <a class="el" href="../../dd/df8/group__upnplib-Addressing.html">Step 0: Addressing</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>The socket module contains all classes and free functions to manage network sockets.    
+<p>The socket module contains all classes and free functions to manage network sockets.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -98,15 +100,26 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-client</a> for portable handling of network socket errors with injected <a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a>.  <a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:gaa9494d0f2750c611339d1336ae8183d8" id="r_gaa9494d0f2750c611339d1336ae8183d8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d86/group__upnplib-socket.html#gaa9494d0f2750c611339d1336ae8183d8">WINSOCK_INIT</a></td></tr>
+<tr class="memdesc:gaa9494d0f2750c611339d1336ae8183d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize and cleanup Microsoft Windows Sockets.  <br /></td></tr>
+<tr class="separator:gaa9494d0f2750c611339d1336ae8183d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ga5738af1c9e42dc87957952b00e67f080" id="r_ga5738af1c9e42dc87957952b00e67f080"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">upnplib::PSocketErr</a> = std::shared_ptr&lt; <a class="el" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a> &gt;</td></tr>
 <tr class="memdesc:ga5738af1c9e42dc87957952b00e67f080"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smart pointer to <a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a> objects that handle network socket errors and used to inject the objects.  <br /></td></tr>
 <tr class="separator:ga5738af1c9e42dc87957952b00e67f080"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga99c7777de5a847f201f6d2f66540a535" id="r_ga99c7777de5a847f201f6d2f66540a535"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d86/group__upnplib-socket.html#ga99c7777de5a847f201f6d2f66540a535">upnplib::anonymous_namespace{socket.cpp}::getsockname</a> (<a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> a_sockfd, sockaddr *a_addr, socklen_t *a_addrlen)</td></tr>
+<tr class="memdesc:ga99c7777de5a847f201f6d2f66540a535"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapper for the ::getsockname() system function.  <br /></td></tr>
+<tr class="separator:ga99c7777de5a847f201f6d2f66540a535"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>The socket module contains all classes and free functions to manage network sockets.   </p>
-<p>Helpful link for ip address structures: <a href="https://stackoverflow.com/a/76548581/5014688">sockaddr&amp;#20;structures&amp;#20;as&amp;#20;union</a>.</p>
+<p>The socket module contains all classes and free functions to manage network sockets. </p>
 <p>This module mainly consists of the CSocket class but also provides free functions to manage a socket. The problem is that socket handling isn't very good portable. There is different behavior on the supported platforms Unix, MacOS and Microsoft Windows. The CSocket class atempts to be consistent portable on all three platforms by using common behavior or by emulating missing functions on a platform.</p>
 <h1><a class="anchor" id="autotoc_md12"></a>
 Specification for CSocket</h1>
@@ -126,7 +139,31 @@ valid socket file descriptor</h2>
 <p>I get this from the C standard library function: <code>int ::socket(address_family, socket_type, protocol)</code>. Other arguments than address family and socket type do not instantiate a valid socket object and throw an exception. For the protocol argument is always the default one used that is internal hard coded with argument 0.</p>
 <h2><a class="anchor" id="autotoc_md17"></a>
 options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE</h2>
-<p>I don't set the option to immediately reuse an address and I always set the option <code>SO_EXCLUSIVEADDRUSE</code> on Microsoft Windows. For more details of this have a look at <a class="el" href="../../d2/d59/Overview.html#overview_reuseaddr">Socket option &quot;reuse address&quot;</a>.   </p>
+<p>I don't set the option to immediately reuse an address and I always set the option <code>SO_EXCLUSIVEADDRUSE</code> on Microsoft Windows. For more details of this have a look at <a class="el" href="../../d2/d59/Overview.html#overview_reuseaddr">Socket option &quot;reuse address&quot;</a>. </p>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="gaa9494d0f2750c611339d1336ae8183d8" name="gaa9494d0f2750c611339d1336ae8183d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa9494d0f2750c611339d1336ae8183d8">&#9670;&#160;</a></span>WINSOCK_INIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define WINSOCK_INIT</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialize and cleanup Microsoft Windows Sockets. </p>
+<div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
+<div class="line"><a class="code hl_define" href="../../db/d86/group__upnplib-socket.html#gaa9494d0f2750c611339d1336ae8183d8">WINSOCK_INIT</a></div>
+<div class="line"><span class="comment">// Do Microsoft Windows socket stuff</span></div>
+<div class="ttc" id="agroup__upnplib-socket_html_gaa9494d0f2750c611339d1336ae8183d8"><div class="ttname"><a href="../../db/d86/group__upnplib-socket.html#gaa9494d0f2750c611339d1336ae8183d8">WINSOCK_INIT</a></div><div class="ttdeci">#define WINSOCK_INIT</div><div class="ttdoc">Initialize and cleanup Microsoft Windows Sockets.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00449">socket.hpp:449</a></div></div>
+</div><!-- fragment --><p>Winsock needs to be initialized before using it and it needs to be freed. I do that with a class, following the RAII paradigm. Multiple initialization doesn't matter. This is managed by the operating system with a counter. It ensures that winsock is initialzed only one time and freed with the last free call. To be portable this macro can be used on all platforms. It ensures that the Winsock initialization is only done on Microsoft Windows. </p>
+
+<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00449">449</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="ga5738af1c9e42dc87957952b00e67f080" name="ga5738af1c9e42dc87957952b00e67f080"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga5738af1c9e42dc87957952b00e67f080">&#9670;&#160;</a></span>PSocketErr</h2>
@@ -142,7 +179,69 @@ options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE</h2>
 
 <p>Smart pointer to <a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a> objects that handle network socket errors and used to inject the objects. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00452">452</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00479">479</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ga99c7777de5a847f201f6d2f66540a535" name="ga99c7777de5a847f201f6d2f66540a535"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga99c7777de5a847f201f6d2f66540a535">&#9670;&#160;</a></span>getsockname()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int upnplib::anonymous_namespace{socket.cpp}::getsockname </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramname"><em>a_sockfd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">sockaddr *&#160;</td>
+          <td class="paramname"><em>a_addr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">socklen_t *&#160;</td>
+          <td class="paramname"><em>a_addrlen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Wrapper for the ::getsockname() system function. </p>
+<p>The system function ::getsockname() behaves different on different platforms in particular with error handling on Microsoft Windows. This function provides a portable version. The calling options are the same as documented for the system function. </p>
+
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00053">53</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../db/d86/group__upnplib-socket_ga99c7777de5a847f201f6d2f66540a535_cgraph.png" border="0" usemap="#adb/d86/group__upnplib-socket_ga99c7777de5a847f201f6d2f66540a535_cgraph" alt=""/></div>
+<map name="adb/d86/group__upnplib-socket_ga99c7777de5a847f201f6d2f66540a535_cgraph" id="adb/d86/group__upnplib-socket_ga99c7777de5a847f201f6d2f66540a535_cgraph">
+<area shape="rect" title="Wrapper for the ::getsockname() system function." alt="" coords="5,29,199,84"/>
+<area shape="poly" title=" " alt="" coords="64,29,64,19,71,10,84,5,102,3,124,6,136,14,134,18,122,11,102,8,85,10,74,15,69,21,69,29"/>
+</map>
+</div>
+<div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-1-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-1-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../db/d86/group__upnplib-socket_ga99c7777de5a847f201f6d2f66540a535_icgraph.png" border="0" usemap="#adb/d86/group__upnplib-socket_ga99c7777de5a847f201f6d2f66540a535_icgraph" alt=""/></div>
+<map name="adb/d86/group__upnplib-socket_ga99c7777de5a847f201f6d2f66540a535_icgraph" id="adb/d86/group__upnplib-socket_ga99c7777de5a847f201f6d2f66540a535_icgraph">
+<area shape="rect" title="Wrapper for the ::getsockname() system function." alt="" coords="5,29,199,84"/>
+<area shape="poly" title=" " alt="" coords="134,18,122,11,102,8,85,10,74,15,69,21,69,29,64,29,64,19,71,10,84,5,102,3,124,6,136,14"/>
+</map>
+</div>
 
 </div>
 </div>

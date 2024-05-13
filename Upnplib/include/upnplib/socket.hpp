@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-12
+// Redistribution only with this Copyright remark. Last modified: 2024-05-13
 /*!
  * \file
  * \brief **Socket Module:** manage properties and methods but not connections
@@ -9,63 +9,63 @@
  */
 
 /*!
- * \addtogroup upnplibAPI-socket
-* Helpful link for ip address structures:
-<!--REF:-->[sockaddr&#20;structures&#20;as&#20;union](https://stackoverflow.com/a/76548581/5014688).
-
-* This module mainly consists of the CSocket class but also provides free
-* functions to manage a socket. The problem is that socket handling isn't very
-* good portable. There is different behavior on the supported platforms Unix,
-* MacOS and Microsoft Windows. The CSocket class atempts to be consistent
-* portable on all three platforms by using common behavior or by emulating
-* missing functions on a platform.
-*
-* Specification for CSocket
-* =========================
-* The class encapsulates and manages one raw socket file descriptor. The file
-* descriptor of a valid socket object cannot be changed but the object with
-* its immutable file descriptor can be moved and assigned to another socket
-* object. Copying a socket object isn't supported because having two objects
-* with the same file descriptor may be very error prone in particular with
-* multithreading. Effort has been taken to do not cache any socket information
-* outside the socket file descriptor. All socket informations are direct set
-* and get to/from the operating system with the file descriptor. The socket
-* file descriptor is always valid except on an empty socket object.
-*
-* \anchor empty_socket
-* empty socket object
-* -------------------
-* An empty socket object can be instantiated with the default constructor,
-* e.g. `CSocket sockObj;`. It is a valid object and should be destructed. When
-* moving a socket object, the left over source object is also empty. An empty
-* socket object has an `INVALID_SOCKET` defined and no valid content. It
-* throws an exception if using any of its Setter and Getter. Moving and
-* assigning it is possible.
-*
-* address family
-* --------------
-* Only address family `AF_INET6` and `AF_INET` is supported. Any other address
-* family throws an exception.
-*
-* socket type
-* -----------
-* Only `SOCK_STREAM` and `SOCK_DGRAM` is supported. Any other type throws an
-* exception.
-*
-* valid socket file descriptor
-* ----------------------------
-* I get this from the C standard library function:
-* `int ::%socket(address_family, socket_type, protocol)`.
-* Other arguments than address family and socket type do not instantiate a
-* valid socket object and throw an exception. For the protocol argument is
-* always the default one used that is internal hard coded with argument 0.
-*
-* options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE
-* --------------------------------------------
-* I don't set the option to immediately reuse an address and I always set the
-* option `SO_EXCLUSIVEADDRUSE` on Microsoft Windows. For more details of this
-* have a look at [Socket option "reuse address"](\ref overview_reuseaddr).
-*/
+ * \brief The socket module contains all classes and free functions to manage
+ * network sockets.
+ * \addtogroup upnplib-socket
+ *
+ * This module mainly consists of the CSocket class but
+ * also provides free functions to manage a socket. The problem is that socket
+ * handling isn't very good portable. There is different behavior on the
+ * supported platforms Unix, MacOS and Microsoft Windows. The CSocket class
+ * atempts to be consistent portable on all three platforms by using common
+ * behavior or by emulating missing functions on a platform.
+ *
+ * Specification for CSocket
+ * =========================
+ * The class encapsulates and manages one raw socket file descriptor. The file
+ * descriptor of a valid socket object cannot be changed but the object with
+ * its immutable file descriptor can be moved and assigned to another socket
+ * object. Copying a socket object isn't supported because having two objects
+ * with the same file descriptor may be very error prone in particular with
+ * multithreading. Effort has been taken to do not cache any socket information
+ * outside the socket file descriptor. All socket informations are direct set
+ * and get to/from the operating system with the file descriptor. The socket
+ * file descriptor is always valid except on an empty socket object.
+ *
+ * \anchor empty_socket
+ * empty socket object
+ * -------------------
+ * An empty socket object can be instantiated with the default constructor,
+ * e.g. `CSocket sockObj;`. It is a valid object and should be destructed. When
+ * moving a socket object, the left over source object is also empty. An empty
+ * socket object has an `INVALID_SOCKET` defined and no valid content. It
+ * throws an exception if using any of its Setter and Getter. Moving and
+ * assigning it is possible.
+ *
+ * address family
+ * --------------
+ * Only address family `AF_INET6` and `AF_INET` is supported. Any other address
+ * family throws an exception.
+ *
+ * socket type
+ * -----------
+ * Only `SOCK_STREAM` and `SOCK_DGRAM` is supported. Any other type throws an
+ * exception.
+ *
+ * valid socket file descriptor
+ * ----------------------------
+ * I get this from the C standard library function:
+ * `int ::%socket(address_family, socket_type, protocol)`.
+ * Other arguments than address family and socket type do not instantiate a
+ * valid socket object and throw an exception. For the protocol argument is
+ * always the default one used that is internal hard coded with argument 0.
+ *
+ * options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE
+ * --------------------------------------------
+ * I don't set the option to immediately reuse an address and I always set the
+ * option `SO_EXCLUSIVEADDRUSE` on Microsoft Windows. For more details of this
+ * have a look at [Socket option "reuse address"](\ref overview_reuseaddr).
+ */
 
 #include <upnplib/sockaddr.hpp>
 /// \cond
@@ -110,9 +110,12 @@ namespace upnplib {
  */
 class UPNPLIB_API CSocket_basic : private SSockaddr {
   public:
-    /*! \brief Default constructor for an \ref empty_socket
-     * "empty socket object". */
+    // Default constructor
     CSocket_basic();
+
+    /*! \brief Constructor for the socket file descriptor. Before use, it must
+     * be set(). */
+    CSocket_basic(SOCKET a_sfd);
 
     // Copy constructor
     // not generated by default with custom move constructor. I want to
@@ -125,10 +128,10 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
     /*! \brief Get raw socket file descriptor.
      * \code
      * // Usage e.g.:
-     * CSocket_basic sockObj();
+     * CSocket_basic sockObj;
      * try {
      *     sockObj.set(valid_socket_fd);
-     * } catch(xcp) { // handle error };
+     * } catch(xcp) { handle_error(); };
      * SOCKET sfd = sockObj;
      * \endcode */
     operator const SOCKET&() const;
@@ -138,15 +141,27 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
      * *************
      * @{ */
     /*! \brief Set a given raw socket file descriptor to the object
+     * \code
+     * // Usage e.g.:
+     * SOCKET sfd = ::socket(AF_INET6, SOCK_STREAM);
+     * {   // Scope for sockObj, sfd must longer exist than sockObj
+     *     CSocket_basic sockObj(sfd);
+     *     try {
+     *         sockObj.set();
+     *     } catch(xcp) { handle_error(); };
+     *     // Use the getter from sockObj
+     * }
+     * ::close(sfd);
+     * \endcode
      *
-     * It throws an exception if the raw socket argument is invalid. It does
-     * not take ownership of the socket file descriptor and will never close
-     * it. Closing is in the responsibility of the caller who created the
-     * socket.
+     * The socket file descriptor was given with the constructor. This object
+     * does not take ownership of the socket file descriptor and will never
+     * close it. Closing is in the responsibility of the caller who created the
+     * socket. Setting it again is possible but doesn't make sense. The result
+     * is the same as before.
      *
-     * Throws exception std::runtime_error with an error getting a file
-     * descriptor. */
-    void set(SOCKET);
+     * \exception std::runtime_error Given socket file descriptor is invalid. */
+    void set();
     /// @} Setter
 
 
@@ -209,6 +224,9 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
     /// \endcond
 
   private:
+    // Hint from the constructor what socket file descriptor to use.
+    const SOCKET m_sfd_hint{INVALID_SOCKET};
+
     // Helper method
     void m_get_addr_from_socket(int line) const;
 };
@@ -402,14 +420,23 @@ class UPNPLIB_API CSocket : public CSocket_basic {
 };
 
 
-// Initialize and cleanup Microsoft Windows Sockets
-// ================================================
-// Winsock needs to be initialized before using it and it needs to be freed. I
-// do that with a class, following the RAII paradigm. Multiple initialization
-// doesn't matter. This is managed by the operating system with a counter. It
-// ensures that winsock is initialzed only one time and freed with the last
-// free call. --Ingo
-
+/*!
+ * \brief Initialize and cleanup Microsoft Windows Sockets
+ * <!--   ================================================ -->
+ * \ingroup upnplib-socket
+ * \code
+ * // Usage e.g.:
+ * WINSOCK_INIT
+ * // Do Microsoft Windows socket stuff
+ * \endcode
+ *
+ * Winsock needs to be initialized before using it and it needs to be freed. I
+ * do that with a class, following the RAII paradigm. Multiple initialization
+ * doesn't matter. This is managed by the operating system with a counter. It
+ * ensures that winsock is initialzed only one time and freed with the last
+ * free call. To be portable this macro can be used on all platforms. It
+ * ensures that the Winsock initialization is only done on Microsoft Windows.
+ */
 #ifdef _MSC_VER
 class UPNPLIB_API CWSAStartup {
   public:
@@ -486,19 +513,19 @@ class UPNPLIB_API CSocketErrService : public ISocketErr {
  *
  * Usage of the class:
  * \code
- * CSocketErrService sockerrObj;
+ * CSocketErr serrObj;
  * int ret = some_function_1();
  * if (ret != 0) {
- *     sockerrObj.catch_error();
- *     int errid = sockerrObj;
+ *     serrObj.catch_error();
+ *     int errid = serrObj;
  *     std::cout << "Error " << errid << ": "
- *               << sockerrObj.get_error_str() << "\n";
+ *               << serrObj.get_error_str() << "\n";
  * }
  * ret = some_function_2();
  * if (ret != 0) {
- *     sockerrObj.catch_error();
- *     std::cout << "Error " << static_cast<int>(sockerrObj) << ": "
- *               << sockerrObj.get_error_str() << "\n";
+ *     serrObj.catch_error();
+ *     std::cout << "Error " << static_cast<int>(serrObj) << ": "
+ *               << serrObj.get_error_str() << "\n";
  * }
  * \endcode
  */

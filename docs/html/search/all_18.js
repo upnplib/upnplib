@@ -112,7 +112,7 @@ var searchData=
   ['tvdevmutex_109',['tvdevmutex',['../d0/daf/tv__device_8hpp.html#a63cb6f6a5f2f35252581b6384adcb27f',1,'TVDevMutex:&#160;tv_device.cpp'],['../d9/d09/tv__device_8cpp.html#a63cb6f6a5f2f35252581b6384adcb27f',1,'TVDevMutex:&#160;tv_device.cpp']]],
   ['tvp_5fvarname_110',['tvp_varname',['../d9/d09/tv__device_8cpp.html#ad4acb47d707e82781af672f747f5888a',1,'tv_device.cpp']]],
   ['tvservice_111',['TvService',['../d0/daf/tv__device_8hpp.html#d4/db0/structTvService',1,'']]],
-  ['type_112',['type',['../db/ddf/group__upnplibAPI-socket.html#autotoc_md15',1,'socket type'],['../dc/d6d/namespaceupnplib.html#ab28b46e87d7d69fdcace8eca7db3cb4d',1,'upnplib::Document_meta::type'],['../de/dd0/Compa_2src_2inc_2uri_8hpp.html#ac20a8bda3795e43b035eb6253e4e1f14',1,'uri_type::type']]],
+  ['type_112',['type',['../db/d86/group__upnplib-socket.html#autotoc_md15',1,'socket type'],['../dc/d6d/namespaceupnplib.html#ab28b46e87d7d69fdcace8eca7db3cb4d',1,'upnplib::Document_meta::type'],['../de/dd0/Compa_2src_2inc_2uri_8hpp.html#ac20a8bda3795e43b035eb6253e4e1f14',1,'uri_type::type']]],
   ['tz_5fdsttime_113',['tz_dsttime',['../d5/d91/ThreadPool_8hpp.html#a85259977aeb63b17e6ce94f19afdfd99',1,'timezone']]],
   ['tz_5fminuteswest_114',['tz_minuteswest',['../d5/d91/ThreadPool_8hpp.html#a3042f7eff6e1b980728def76b1fa0eb7',1,'timezone']]]
 ];

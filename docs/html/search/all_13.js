@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['object_0',['empty socket object',['../db/ddf/group__upnplibAPI-socket.html#autotoc_md13',1,'']]],
+  ['object_0',['empty socket object',['../db/d86/group__upnplib-socket.html#autotoc_md13',1,'']]],
   ['object_20oriented_20upnp_20library_1',['* * object oriented UPnP library',['../d4/d32/group__upnplib.html',1,'']]],
   ['open_2',['open',['../d6/d92/VirtualDir_8hpp.html#a4c883b1191946a96a03e9609a4ca9885',1,'VirtualDirCallbacks']]],
   ['operating_3',['general local operating',['../dc/df0/group__compa-Operating.html',1,'']]],
@@ -11,7 +11,7 @@ var searchData=
   ['operator_3d_3d_8',['operator==',['../d1/dc2/structupnplib_1_1SSockaddr.html#a8cdabffed735d05133da7304c1b304f4',1,'upnplib::SSockaddr::operator==()'],['../da/dad/classupnplib_1_1CAddrinfo.html#a689fa416eabea21a39dd0eee081a742e',1,'upnplib::CAddrinfo::operator==()']]],
   ['option_20reuse_20address_9',['Socket option &quot;reuse address&quot;',['../d2/d59/Overview.html#overview_reuseaddr',1,'']]],
   ['optional_20tool_20api_10',['Optional Tool API',['../d3/d57/group__UPnPTools.html',1,'']]],
-  ['options_20so_5freuseaddr_20and_20so_5fexclusiveaddruse_11',['options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE',['../db/ddf/group__upnplibAPI-socket.html#autotoc_md17',1,'']]],
+  ['options_20so_5freuseaddr_20and_20so_5fexclusiveaddruse_11',['options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE',['../db/d86/group__upnplib-socket.html#autotoc_md17',1,'']]],
   ['oriented_20upnp_20library_12',['* * object oriented UPnP library',['../d4/d32/group__upnplib.html',1,'']]],
   ['os_13',['Os',['../d0/d19/ssdp__common_8hpp.html#ab3050a65f930d005d25a17804b2304e6',1,'SsdpEvent']]],
   ['outgoing_14',['outgoing',['../db/d74/service__table_8hpp.html#a8043871a87822b2ceb4ff081ce5734b9',1,'subscription']]],

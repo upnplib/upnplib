@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-10
+// Redistribution only with this Copyright remark. Last modified: 2024-05-13
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -16,26 +16,7 @@
 
 namespace upnplib {
 
-// Initialize and cleanup Microsoft Windows Sockets
-// ------------------------------------------------
-#ifdef _MSC_VER
-CWSAStartup::CWSAStartup() {
-    TRACE2(this, " Construct CWSAStartup")
-    WSADATA wsaData;
-    int rc = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (rc != 0)
-        throw std::runtime_error(UPNPLIB_LOGEXCEPT +
-                                 "MSG1003: Failed to initialize Windows "
-                                 "sockets: WSAStartup() returns " +
-                                 std::to_string(rc));
-}
-
-CWSAStartup::~CWSAStartup() {
-    TRACE2(this, " Destruct CWSAStartup")
-    ::WSACleanup();
-}
-#endif // _MSC_VER
-
+namespace {
 
 // Free helper functions
 // =====================
@@ -46,7 +27,7 @@ CWSAStartup::~CWSAStartup() {
 // error number given by WSAGetLastError(), resp. contained in errno is used to
 // specify details of the error. It is important that these error numbers
 // hasn't been modified by executing other statements.
-static inline void throw_error(const std::string& a_errmsg) {
+inline void throw_error(const std::string& a_errmsg) {
 #ifdef _MSC_VER
     throw std::runtime_error(
         UPNPLIB_LOGEXCEPT + a_errmsg + " WSAGetLastError()=" +
@@ -59,13 +40,17 @@ static inline void throw_error(const std::string& a_errmsg) {
 }
 /// \endcond
 
-
 /*!
- * \brief upnplib wrapper for the ::getsockname() system function
- * <!--   --------------------------------------------------- -->
+ * \brief Wrapper for the ::%getsockname() system function
+ * <!--   ------------------------------------------------ -->
+ * \ingroup upnplib-socket
+ *
+ * The system function ::%getsockname() behaves different on different
+ * platforms in particular with error handling on Microsoft Windows. This
+ * function provides a portable version. The calling options are the same as
+ * documented for the system function.
  */
-static int getsockname(SOCKET a_sockfd, sockaddr* a_addr,
-                       socklen_t* a_addrlen) {
+int getsockname(SOCKET a_sockfd, sockaddr* a_addr, socklen_t* a_addrlen) {
     TRACE("Executing getsockname()");
 
     int ret = umock::sys_socket_h.getsockname(a_sockfd, a_addr, a_addrlen);
@@ -102,31 +87,63 @@ static int getsockname(SOCKET a_sockfd, sockaddr* a_addr,
 #endif
 }
 
+} // anonymous namespace
+
+
+// Initialize and cleanup Microsoft Windows Sockets
+// ------------------------------------------------
+#ifdef _MSC_VER
+CWSAStartup::CWSAStartup() {
+    TRACE2(this, " Construct CWSAStartup")
+    WSADATA wsaData;
+    int rc = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (rc != 0)
+        throw std::runtime_error(UPNPLIB_LOGEXCEPT +
+                                 "MSG1003: Failed to initialize Windows "
+                                 "sockets: WSAStartup() returns " +
+                                 std::to_string(rc));
+}
+
+CWSAStartup::~CWSAStartup() {
+    TRACE2(this, " Destruct CWSAStartup")
+    ::WSACleanup();
+}
+#endif // _MSC_VER
+
 
 // CSocket_basic class
 // ===================
 // Default constructor for an empty socket object
-CSocket_basic::CSocket_basic() {
+CSocket_basic::CSocket_basic(){
     TRACE2(this, " Construct default CSocket_basic()") //
+}
+
+// Constructor for the socket file descriptor. Before use, it must be set().
+CSocket_basic::CSocket_basic(SOCKET a_sfd)
+    : m_sfd_hint(a_sfd) {
+    TRACE2(this, " Construct CSocket_basic(SOCKET)") //
 }
 
 // Setter with given file desciptor
 /// \todo **Next:** Silently ignore second attempt to set().
-void CSocket_basic::set(SOCKET a_sfd) {
-    TRACE2(this, " Executing CSocket_basic::set(SOCKET)")
+void CSocket_basic::set() {
+    TRACE2(this, " Executing CSocket_basic::set()")
 
+    CSocketErr serrObj;
     // Check if we have a valid socket file descriptor
     int so_option{-1};
     socklen_t optlen{sizeof(so_option)}; // May be modified
     // Type cast (char*)&so_option is needed for Microsoft Windows.
     TRACE2(this, " Calling system function ::getsockopt().")
-    if (umock::sys_socket_h.getsockopt(a_sfd, SOL_SOCKET, SO_ERROR,
+    if (umock::sys_socket_h.getsockopt(m_sfd_hint, SOL_SOCKET, SO_ERROR,
                                        reinterpret_cast<char*>(&so_option),
-                                       &optlen) != 0)
-        throw_error(
-            "MSG1014: Failed to create socket=" + std::to_string(a_sfd) + ":");
-
-    m_sfd = a_sfd;
+                                       &optlen) != 0) {
+        serrObj.catch_error();
+        throw std::runtime_error(
+            UPNPLIB_LOGEXCEPT + "MSG1014: Failed to create socket=" +
+            std::to_string(m_sfd_hint) + ": " + serrObj.get_error_str());
+    }
+    m_sfd = m_sfd_hint;
 }
 
 // Destructor

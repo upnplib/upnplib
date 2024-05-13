@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-12
+// Redistribution only with this Copyright remark. Last modified: 2024-05-13
 
 #include <upnplib/global.hpp>
 #include <upnplib/socket.hpp>
@@ -174,8 +174,8 @@ TEST(SocketBasicTestSuite, instantiate_socket_successful) {
     ASSERT_NE(sfd, INVALID_SOCKET);
 
     // Test Unit
-    CSocket_basic sockObj;
-    sockObj.set(sfd);
+    CSocket_basic sockObj(sfd);
+    sockObj.set();
 
     EXPECT_EQ((SOCKET)sockObj, sfd);
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
@@ -199,8 +199,8 @@ TEST(SocketBasicTestSuite, instantiate_with_bound_socket_fd) {
     SOCKET bound_sock = bound_sockObj;
 
     // Test Unit with a bound socket.
-    CSocket_basic sockObj;
-    sockObj.set(bound_sock);
+    CSocket_basic sockObj(bound_sock);
+    sockObj.set();
 
     EXPECT_EQ((SOCKET)sockObj, bound_sock);
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
@@ -216,8 +216,8 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_stream) {
     SOCKET sfd = ::socket(AF_UNIX, SOCK_STREAM, 0);
     ASSERT_NE(sfd, INVALID_SOCKET);
 
-    CSocket_basic sockObj;
-    sockObj.set(sfd);
+    CSocket_basic sockObj(sfd);
+    sockObj.set();
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_family(), AF_UNIX);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
@@ -247,8 +247,8 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_dgram) {
 // Seems this isn't supported on Microsoft Windows
 #ifndef _MSC_VER
     ASSERT_NE(sfd, INVALID_SOCKET);
-    CSocket_basic sockObj;
-    sockObj.set(sfd);
+    CSocket_basic sockObj(sfd);
+    sockObj.set();
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_family(), AF_UNIX);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_DGRAM);
@@ -271,8 +271,8 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_raw) {
 // Seems this is only supported by the GCC compiler
 #if defined(__GNUC__) && !defined(__clang__)
     ASSERT_NE(sfd, INVALID_SOCKET);
-    CSocket_basic sockObj;
-    sockObj.set(sfd);
+    CSocket_basic sockObj(sfd);
+    sockObj.set();
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_family(), AF_UNIX);
     // Silently changed
@@ -296,8 +296,8 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_seqpacket) {
 // Seems this is only supported by the GCC compiler
 #if defined(__GNUC__) && !defined(__clang__)
     ASSERT_NE(sfd, INVALID_SOCKET);
-    CSocket_basic sockObj;
-    sockObj.set(sfd);
+    CSocket_basic sockObj(sfd);
+    sockObj.set();
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
@@ -305,6 +305,34 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_seqpacket) {
 #else
     EXPECT_EQ(sfd, INVALID_SOCKET);
 #endif
+
+    CLOSE_SOCKET_P(sfd);
+}
+
+TEST(SocketBasicTestSuite, set_invalid_socket_fd) {
+    CSocket_basic sockObj(INVALID_SOCKET);
+
+    // Test Unit
+    EXPECT_THAT(
+        [&sockObj]() { sockObj.set(); },
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1014: ")));
+}
+
+TEST(SocketBasicTestSuite, set_object_two_times) {
+    SOCKET sfd = ::socket(AF_INET6, SOCK_STREAM, 0);
+    ASSERT_NE(sfd, INVALID_SOCKET);
+
+    // Test Unit
+    CSocket_basic sockObj(sfd);
+    sockObj.set();
+    sockObj.set();
+
+    EXPECT_EQ(static_cast<SOCKET>(sockObj), sfd);
+    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
+    EXPECT_EQ(sockObj.get_netaddrp(), "[::]:0");
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
 
     CLOSE_SOCKET_P(sfd);
 }

@@ -2096,8 +2096,8 @@ TEST(StartMiniServerTestSuite, get_miniserver_stopsock) {
     EXPECT_EQ(out.stopPort, miniStopSockPort);
 
     // Get socket object from the bound socket
-    CSocket_basic sockObj;
-    sockObj.set(out.miniServerStopSock);
+    CSocket_basic sockObj(out.miniServerStopSock);
+    sockObj.set();
 
     // and verify its settings
     EXPECT_EQ(sockObj.get_family(), AF_INET);

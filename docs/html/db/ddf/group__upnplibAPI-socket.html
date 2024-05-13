@@ -76,7 +76,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>The socket module contains all classes and free functions to manage network sockets.  
+<p>The socket module contains all classes and free functions to manage network sockets.    
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -98,8 +98,7 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>The socket module contains all classes and free functions to manage network sockets. </p>
-<p>Helpful link for ip address structures: <a href="https://stackoverflow.com/a/76548581/5014688">sockaddr&amp;#20;structures&amp;#20;as&amp;#20;union</a>.</p>
+<p>The socket module contains all classes and free functions to manage network sockets.   </p>
 <p>This module mainly consists of the CSocket class but also provides free functions to manage a socket. The problem is that socket handling isn't very good portable. There is different behavior on the supported platforms Unix, MacOS and Microsoft Windows. The CSocket class atempts to be consistent portable on all three platforms by using common behavior or by emulating missing functions on a platform.</p>
 <h1><a class="anchor" id="autotoc_md12"></a>
 Specification for CSocket</h1>
@@ -119,7 +118,7 @@ valid socket file descriptor</h2>
 <p>I get this from the C standard library function: <code>int ::socket(address_family, socket_type, protocol)</code>. Other arguments than address family and socket type do not instantiate a valid socket object and throw an exception. For the protocol argument is always the default one used that is internal hard coded with argument 0.</p>
 <h2><a class="anchor" id="autotoc_md17"></a>
 options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE</h2>
-<p>I don't set the option to immediately reuse an address and I always set the option <code>SO_EXCLUSIVEADDRUSE</code> on Microsoft Windows. For more details of this have a look at <a class="el" href="../../d2/d59/Overview.html#overview_reuseaddr">Socket option &quot;reuse address&quot;</a>. </p>
+<p>I don't set the option to immediately reuse an address and I always set the option <code>SO_EXCLUSIVEADDRUSE</code> on Microsoft Windows. For more details of this have a look at <a class="el" href="../../d2/d59/Overview.html#overview_reuseaddr">Socket option &quot;reuse address&quot;</a>.   </p>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
