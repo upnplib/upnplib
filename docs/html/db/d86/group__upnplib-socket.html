@@ -157,10 +157,10 @@ options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE</h2>
 <div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
 <div class="line"><a class="code hl_define" href="../../db/d86/group__upnplib-socket.html#gaa9494d0f2750c611339d1336ae8183d8">WINSOCK_INIT</a></div>
 <div class="line"><span class="comment">// Do Microsoft Windows socket stuff</span></div>
-<div class="ttc" id="agroup__upnplib-socket_html_gaa9494d0f2750c611339d1336ae8183d8"><div class="ttname"><a href="../../db/d86/group__upnplib-socket.html#gaa9494d0f2750c611339d1336ae8183d8">WINSOCK_INIT</a></div><div class="ttdeci">#define WINSOCK_INIT</div><div class="ttdoc">Initialize and cleanup Microsoft Windows Sockets.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00449">socket.hpp:449</a></div></div>
+<div class="ttc" id="agroup__upnplib-socket_html_gaa9494d0f2750c611339d1336ae8183d8"><div class="ttname"><a href="../../db/d86/group__upnplib-socket.html#gaa9494d0f2750c611339d1336ae8183d8">WINSOCK_INIT</a></div><div class="ttdeci">#define WINSOCK_INIT</div><div class="ttdoc">Initialize and cleanup Microsoft Windows Sockets.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00456">socket.hpp:456</a></div></div>
 </div><!-- fragment --><p>Winsock needs to be initialized before using it and it needs to be freed. I do that with a class, following the RAII paradigm. Multiple initialization doesn't matter. This is managed by the operating system with a counter. It ensures that winsock is initialzed only one time and freed with the last free call. To be portable this macro can be used on all platforms. It ensures that the Winsock initialization is only done on Microsoft Windows. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00449">449</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00456">456</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
 
 </div>
 </div>
@@ -179,7 +179,7 @@ options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE</h2>
 
 <p>Smart pointer to <a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a> objects that handle network socket errors and used to inject the objects. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00479">479</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00486">486</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
 
 </div>
 </div>

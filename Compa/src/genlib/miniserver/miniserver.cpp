@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-05-13
+ * Redistribution only with this Copyright remark. Last modified: 2024-05-14
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1282,9 +1282,9 @@ error:
     int retval{UPNP_E_OUTOF_SOCKET};
 
     if (gIF_IPV6[0] != '\0') {
-        static upnplib::CSocket ss6Obj;
+        static upnplib::CSocket ss6Obj(AF_INET6, SOCK_STREAM);
         try {
-            ss6Obj.set(AF_INET6, SOCK_STREAM);
+            ss6Obj.init();
             ss6Obj.bind('[' + std::string(gIF_IPV6) + ']',
                         std::to_string(listen_port6));
             ss6Obj.listen();
@@ -1301,9 +1301,9 @@ error:
     // It is never copied to 'out'.
 
     if (gIF_IPV6_ULA_GUA[0] != '\0') {
-        static upnplib::CSocket ss6UlaGuaObj;
+        static upnplib::CSocket ss6UlaGuaObj(AF_INET6, SOCK_STREAM);
         try {
-            ss6UlaGuaObj.set(AF_INET6, SOCK_STREAM);
+            ss6UlaGuaObj.init();
             ss6UlaGuaObj.bind('[' + std::string(gIF_IPV6_ULA_GUA) + ']',
                               std::to_string(listen_port6UlaGua));
             ss6UlaGuaObj.listen();
@@ -1316,9 +1316,9 @@ error:
     }
 
     if (gIF_IPV4[0] != '\0') {
-        static upnplib::CSocket ss4Obj;
+        static upnplib::CSocket ss4Obj(AF_INET, SOCK_STREAM);
         try {
-            ss4Obj.set(AF_INET, SOCK_STREAM);
+            ss4Obj.init();
             ss4Obj.bind('[' + std::string(gIF_IPV4) + ']',
                         std::to_string(listen_port4));
             ss4Obj.listen();

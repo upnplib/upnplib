@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-13
+// Redistribution only with this Copyright remark. Last modified: 2024-05-14
 /*!
  * \file
  * \brief **Socket Module:** manage properties and methods but not connections
@@ -128,9 +128,9 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
     /*! \brief Get raw socket file descriptor.
      * \code
      * // Usage e.g.:
-     * CSocket_basic sockObj;
+     * CSocket_basic sockObj(valid_socket_fd);
      * try {
-     *     sockObj.set(valid_socket_fd);
+     *     sockObj.set();
      * } catch(xcp) { handle_error(); };
      * SOCKET sfd = sockObj;
      * \endcode */
@@ -157,8 +157,8 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
      * The socket file descriptor was given with the constructor. This object
      * does not take ownership of the socket file descriptor and will never
      * close it. Closing is in the responsibility of the caller who created the
-     * socket. Setting it again is possible but doesn't make sense. The result
-     * is the same as before.
+     * socket. Setting it again is possible but is only waste of resources. The
+     * result is the same as before.
      *
      * \exception std::runtime_error Given socket file descriptor is invalid. */
     void set();
@@ -240,8 +240,13 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
 class UPNPLIB_API CSocket : public CSocket_basic {
   public:
     /*! \brief Default constructor for an
-     * [empty socket object](\ref empty_socket), needs to be set() */
+     * [empty socket object](\ref empty_socket) */
     CSocket();
+
+    /*! \brief Constructor for a new socket file descriptor that must be init()
+     * \todo **Next:** Test for AF_UNSPEC */
+    CSocket(sa_family_t a_family, ///< [in] AF_INET6, AF_INET, or AF_UNSPEC
+            int a_socktype /*!<        [in] SOCK_STREAM or SOCK_DGRAM */);
 
     /*! \brief Move constructor
      *
@@ -252,12 +257,12 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * throw exceptions. But you can assign (operator=()) another socket object
      * to it again.
      * \code
-     * ~$ // Usage e.g.:
-     * ~$ CSocket sock1Obj;
-     * ~$ try {
-     * ~$     sock1Obj.set(AF_INET6, SOCK_STREAM);
-     * ~$ } catch(xcp) { // handle error }
-     * ~$ CSocket sock2Obj{std::move(sock1Obj)};
+     * // Usage e.g.:
+     * CSocket sock1Obj(AF_INET6, SOCK_STREAM);
+     * try {
+     *     sock1Obj.init();
+     * } catch(xcp) { // handle error }
+     * CSocket sock2Obj{std::move(sock1Obj)};
      * \endcode
      * */
     CSocket(CSocket&&);
@@ -273,13 +278,13 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * is still valid but empty with an INVALID_SOCKET. Using its methods will
      * throw exceptions.
      * \code
-     * ~$ // Usage e.g.:
-     * ~$ CSocket sock1Obj;
-     * ~$ try {
-     * ~$     sock1Obj.set(AF_INET6, SOCK_STREAM);
-     * ~$ } catch(xcp) { // handle error }
-     * ~$ CSocket sock2Obj;
-     * ~$ sock2Obj = std::move(sock1Obj);
+     * // Usage e.g.:
+     * CSocket sock1Obj(AF_INET6, SOCK_STREAM);
+     * try {
+     *     sock1Obj.init();
+     * } catch(xcp) { // handle error }
+     * CSocket sock2Obj;
+     * sock2Obj = std::move(sock1Obj);
      * \endcode */
     CSocket& operator=(CSocket);
 
@@ -290,19 +295,15 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * *************
      * @{ */
 
-    /*! \brief Set arguments to get a socket file descriptor
+    /*! \brief Initialize the object with the hints given by the constructor
      * \code
-     * ~$ // Usage e.g.:
-     * ~$ CSocket sockObj;
-     * ~$ try {
-     * ~$     sockObj.set(AF_INET6, SOCK_STREAM);
-     * ~$ } catch(xcp) { // handle error }
+     * // Usage e.g.:
+     * CSocket sockObj(AF_INET6, SOCK_STREAM);
+     * try {
+     *     sockObj.init();
+     * } catch(xcp) { handle_error(); }
      * \endcode */
-    void set(
-        /*! [in] `AF_INET6` or `AF_INET` */
-        sa_family_t a_family,
-        /*! [in] `SOCK_STREAM` or `SOCK_DGRAM` */
-        int a_socktype);
+    void init();
 
     /*! \brief Set IPV6_V6ONLY
      * - IPV6_V6ONLY = false means allowing IPv4 and IPv6 on one interface.
@@ -327,12 +328,12 @@ class UPNPLIB_API CSocket : public CSocket_basic {
 
     /*! \brief Bind socket to a local interface address
      * \code
-     * ~$ // Usage e.g.:
-     * ~$ CSocket sockObj;
-     * ~$ try {
-     * ~$     sockObj.set(AF_INET6, SOCK_STREAM);
-     * ~$     sockObj.bind("[::1]", "8080");
-     * ~$ } catch(xcp) { // handle error }
+     * // Usage e.g.:
+     * CSocket sockObj(AF_INET6, SOCK_STREAM);
+     * try {
+     *     sockObj.init();
+     *     sockObj.bind("[::1]", "8080");
+     * } catch(xcp) { // handle error }
      * \endcode
      *
      * If the AI_PASSIVE flag is specified, and **a_node** is empty (""), then
@@ -345,7 +346,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * empty (""), then the AI_PASSIVE flag is ignored.
      * \code
      * // typical for server listening
-     * ~$ sockObj.bind("", "54839", AI_PASSIVE);
+     * sockObj.bind("", "54839", AI_PASSIVE);
      * \endcode
      *
      * If the AI_PASSIVE flag is not set, then the selected local socket
@@ -355,10 +356,10 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * hostname "". With AI_NUMERICHOST the unknown address "[::]" or "0.0.0.0"
      * is used.
      * \code
-     * ~$ // typical for client connect
-     * ~$ sockObj.bind("[2001:db8::1]", "49123");
-     * ~$ // or
-     * ~$ sockObj.bind("", "51593"); // uses "[::1]:51593" or "127.0.0.1:51593"
+     * // typical for client connect
+     * sockObj.bind("[2001:db8::1]", "49123");
+     * // or
+     * sockObj.bind("", "51593"); // uses "[::1]:51593" or "127.0.0.1:51593"
      * \endcode
      *
      * There is additional information at <a
@@ -413,6 +414,12 @@ class UPNPLIB_API CSocket : public CSocket_basic {
     /// @} Getter
 
   private:
+    /// \brief Address family to use
+    const sa_family_t m_af_hint{AF_UNSPEC};
+
+    /// \brief Socket type to use
+    const int m_socktype_hint{};
+
     /// \brief Mutex to protect concurrent listen a socket.
     SUPPRESS_MSVC_WARN_4251_NEXT_LINE
     mutable std::mutex m_listen_mutex;

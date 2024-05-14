@@ -1,5 +1,6 @@
 <map id="upnplib::CSocket::listen" name="upnplib::CSocket::listen">
-<area shape="rect" id="Node000001" title="Set socket to listen." alt="" coords="233,20,408,45"/>
-<area shape="rect" id="Node000002" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aa1e3a3e75356465099535c0e7851a858" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="5,5,185,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,35,185,35,185,30,220,30"/>
+<area shape="rect" id="Node000001" title="Set socket to listen." alt="" coords="233,29,408,55"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="361,20,350,11,321,8,297,10,284,15,281,20,288,27,284,31,276,21,280,11,296,5,321,3,352,7,364,16"/>
+<area shape="rect" id="Node000002" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aa1e3a3e75356465099535c0e7851a858" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="5,15,185,69"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,45,185,45,185,39,220,39"/>
 </map>

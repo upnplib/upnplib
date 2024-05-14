@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-13
+// Redistribution only with this Copyright remark. Last modified: 2024-05-14
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -125,7 +125,6 @@ CSocket_basic::CSocket_basic(SOCKET a_sfd)
 }
 
 // Setter with given file desciptor
-/// \todo **Next:** Silently ignore second attempt to set().
 void CSocket_basic::set() {
     TRACE2(this, " Executing CSocket_basic::set()")
 
@@ -263,8 +262,15 @@ CSocket::CSocket(){
     TRACE2(this, " Construct default CSocket()") //
 }
 
+// clang-format off
+// \brief Constructor for a new socket file descriptor that must be init()
+CSocket::CSocket(sa_family_t a_family, int a_socktype)
+    : m_af_hint(a_family), m_socktype_hint(a_socktype) {
+    TRACE2(this, " Construct CSocket() for socket fd") //
+}
+
 // Move constructor
-CSocket::CSocket(CSocket&& that) {
+CSocket::CSocket(CSocket && that) {
     TRACE2(this, " Construct move CSocket()")
     m_sfd = that.m_sfd;
     that.m_sfd = INVALID_SOCKET;
@@ -274,6 +280,7 @@ CSocket::CSocket(CSocket&& that) {
     m_listen = that.m_listen;
     that.m_listen = false;
 }
+// clang-format on
 
 // Assignment operator (parameter as value)
 CSocket& CSocket::operator=(CSocket that) {
@@ -297,24 +304,24 @@ CSocket::~CSocket() {
 
 // Setter
 // ------
-// Setter for new socket file descriptor
+// Setter to initialize the object with the hints given by the constructor
 /// \todo **Next:** Silently ignore second attempt to set().
-void CSocket::set(sa_family_t a_family, int a_socktype) {
+void CSocket::init() {
     TRACE2(this, " Executing CSocket::set(af, socktype)")
 
-    if (a_family != AF_INET6 && a_family != AF_INET)
+    if (m_af_hint != AF_INET6 && m_af_hint != AF_INET)
         throw std::invalid_argument(
             UPNPLIB_LOGEXCEPT +
             "MSG1015: Failed to create socket: invalid address family " +
-            std::to_string(a_family));
-    if (a_socktype != SOCK_STREAM && a_socktype != SOCK_DGRAM)
+            std::to_string(m_af_hint));
+    if (m_socktype_hint != SOCK_STREAM && m_socktype_hint != SOCK_DGRAM)
         throw std::invalid_argument(
             UPNPLIB_LOGEXCEPT +
             "MSG1016: Failed to create socket: invalid socket type " +
-            std::to_string(a_socktype));
+            std::to_string(m_socktype_hint));
 
     // Get new socket file descriptor.
-    SOCKET sfd = umock::sys_socket_h.socket(a_family, a_socktype, 0);
+    SOCKET sfd = umock::sys_socket_h.socket(m_af_hint, m_socktype_hint, 0);
     if (sfd == INVALID_SOCKET)
         throw_error("MSG1017: Failed to create socket:");
 
@@ -350,7 +357,7 @@ void CSocket::set(sa_family_t a_family, int a_socktype) {
     // IPV6_V6ONLY on an interface that can only use IPv4 we must reset it on
     // Microsoft Windows because it is set there.
 #ifndef _MSC_VER
-    if (a_family == AF_INET6) {
+    if (m_af_hint == AF_INET6) {
 #endif
         so_option = 0;
         // Type cast (char*)&so_option is needed for Microsoft Windows.
