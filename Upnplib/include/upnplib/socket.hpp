@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-14
+// Redistribution only with this Copyright remark. Last modified: 2024-05-15
 /*!
  * \file
  * \brief **Socket Module:** manage properties and methods but not connections
@@ -80,12 +80,14 @@
 #define EINTRP WSAEINTR
 #define EFAULTP WSAEFAULT
 #define ENOMEMP WSA_NOT_ENOUGH_MEMORY
+#define EINVALP WSAEINVAL
 #else
 #define EBADFP EBADF
 #define ENOTCONNP ENOTCONN
 #define EINTRP EINTR
 #define EFAULTP EFAULT
 #define ENOMEMP ENOMEM
+#define EINVALP EINVAL
 #endif
 /// \endcond
 
@@ -228,7 +230,7 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
     const SOCKET m_sfd_hint{INVALID_SOCKET};
 
     // Helper method
-    void m_get_addr_from_socket(int line) const;
+    void m_get_addr_from_socket() const;
 };
 
 
@@ -337,7 +339,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * \endcode
      *
      * If the AI_PASSIVE flag is specified, and **a_node** is empty (""), then
-     * the selected local socket addresses will be suitble for **binding** a
+     * the selected local socket addresses will be suitable for **binding** a
      * socket that will **accept** connections. The selected local socket
      * address will contain the "wildcard address" (INADDR_ANY for IPv4
      * addresses, IN6ADDR_ANY_INIT for IPv6 address). The wildcard address is
@@ -374,7 +376,8 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * set by default. To be portable with same behavior on all platforms I
      * always set IPV6_V6ONLY before binding and cannot be modified afterwards.
      *
-     * There is additional information at set_v6only() */
+     * There is additional information at set_v6only()
+     * \todo **Next:** Make Setter with using a netaddress with port */
     void bind(
         /*! [in] local interface address */
         const std::string& a_node,
@@ -384,9 +387,11 @@ class UPNPLIB_API CSocket : public CSocket_basic {
         /*! [in] Optional: this field specifies additional options, as
          * described at <a
          * href="https://www.man7.org/linux/man-pages/man3/getaddrinfo.3.html">getaddrinfo(3)
-         * — Linux manual page</a>. Multiple flags are specified by bitwise
-         * OR-ing them together. Example is: `AI_PASSIVE | AI_NUMERICHOST |
-         * AI_NUMERICSERV` */
+         * — Linux manual page</a> or at <a
+         * href="https://learn.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfo">Microsoft
+         * Build — getaddrinfo function</a>. Multiple flags are specified by
+         * bitwise OR-ing them together. Example is: `AI_PASSIVE |
+         * AI_NUMERICHOST | AI_NUMERICSERV` */
         const int a_flags = 0);
 
     /*! \brief Set socket to listen

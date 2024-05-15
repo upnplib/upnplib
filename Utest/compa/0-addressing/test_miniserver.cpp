@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-10
+// Redistribution only with this Copyright remark. Last modified: 2024-05-15
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -148,22 +148,20 @@ class StartMiniServerFTestSuite : public ::testing::Test {
 
 class StartMiniServerMockFTestSuite : public StartMiniServerFTestSuite {
   protected:
-    // clang-format off
     // Instantiate mocking objects.
     StrictMock<umock::Sys_socketMock> m_sys_socketObj;
     // Inject the mocking objects into the tested code.
-    umock::Sys_socket sys_socket_injectObj = umock::Sys_socket(&m_sys_socketObj);
+    umock::Sys_socket sys_socket_injectObj{&m_sys_socketObj};
 
     StrictMock<umock::PupnpMiniServerMock> miniserverObj;
-    umock::PupnpMiniServer miniserver_injectObj = umock::PupnpMiniServer(&miniserverObj);
+    umock::PupnpMiniServer miniserver_injectObj{&miniserverObj};
 
     StrictMock<umock::PupnpSsdpMock> ssdpObj;
-    umock::PupnpSsdp ssdp_injectObj = umock::PupnpSsdp(&ssdpObj);
+    umock::PupnpSsdp ssdp_injectObj{&ssdpObj};
 #ifdef _MSC_VER
     StrictMock<umock::Winsock2Mock> m_winsock2Obj;
-    umock::Winsock2 winsock2_injectObj = umock::Winsock2(&m_winsock2Obj);
+    umock::Winsock2 winsock2_injectObj{&m_winsock2Obj};
 #endif
-    // clang-format on
 
     // Constructor
     StartMiniServerMockFTestSuite() {

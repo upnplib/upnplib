@@ -1,4 +1,8 @@
 <map id="upnplib::CSocket::listen" name="upnplib::CSocket::listen">
-<area shape="rect" id="Node000001" title="Set socket to listen." alt="" coords="5,29,180,55"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="64,31,58,21,61,11,73,5,93,3,117,6,127,15,123,19,114,11,93,8,74,10,65,15,63,20,68,28"/>
+<area shape="rect" id="Node000001" title="Set socket to listen." alt="" coords="5,45,180,70"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="59,46,51,36,55,26,69,20,93,18,122,22,133,31,130,35,120,27,93,23,71,25,59,30,56,36,63,43"/>
+<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="228,5,376,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,42,214,36,214,41,177,47"/>
+<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="228,69,376,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,67,214,73,214,79,176,73"/>
 </map>

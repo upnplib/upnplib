@@ -1,0 +1,7 @@
+<map id="upnplib::CSocket_basic::get_sockerr" name="upnplib::CSocket_basic::get_sockerr">
+<area shape="rect" id="Node000001" title="Get the error that is given from the socket as option." alt="" coords="5,37,176,77"/>
+<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="224,5,372,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,41,210,36,211,42,177,47"/>
+<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="224,69,372,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,68,211,73,210,78,176,73"/>
+</map>

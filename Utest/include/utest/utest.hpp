@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_UTEST_HPP
 #define UPNPLIB_UTEST_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-14
+// Redistribution only with this Copyright remark. Last modified: 2024-04-16
 
 #include <upnplib/visibility.hpp>
 #include <upnplib/port.hpp>
@@ -163,6 +163,7 @@ MATCHER_P(PointeeVoidToConstInt, expected, "") {
 /* Example:
     using ::utest::SetArgPtrIntValue
 
+    // Here the parameter count is zero based     0    1  2  3  4
     EXPECT_CALL(mock_sys_socketObj, getsockopt(sockfd, _, _, _, _))
         .WillOnce(DoAll(SetArgPtrIntValue<3>(1), Return(0)));
 */

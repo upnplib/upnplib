@@ -193,7 +193,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Manage all aspects of a network socket. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00240">240</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00242">242</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="abea09f4baf9e720499481b69965c04c6" name="abea09f4baf9e720499481b69965c04c6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abea09f4baf9e720499481b69965c04c6">&#9670;&#160;</a></span>CSocket() <span class="overload">[1/3]</span></h2>
@@ -212,7 +212,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Default constructor for an <a class="el" href="../../db/d86/group__upnplib-socket.html#empty_socket">empty socket object</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00261">261</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00260">260</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 
 </div>
 </div>
@@ -252,7 +252,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00267">267</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00266">266</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 
 </div>
 </div>
@@ -279,9 +279,9 @@ Public Member Functions</h2></td></tr>
 <div class="line">    sock1Obj.init();</div>
 <div class="line">} <span class="keywordflow">catch</span>(xcp) { <span class="comment">// handle error }</span></div>
 <div class="line"><a class="code hl_class" href="../../d8/d73/classupnplib_1_1CSocket.html">CSocket</a> sock2Obj{std::move(sock1Obj)};</div>
-<div class="ttc" id="aclassupnplib_1_1CSocket_html"><div class="ttname"><a href="../../d8/d73/classupnplib_1_1CSocket.html">upnplib::CSocket</a></div><div class="ttdoc">Manage all aspects of a network socket.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00240">socket.hpp:240</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CSocket_html"><div class="ttname"><a href="../../d8/d73/classupnplib_1_1CSocket.html">upnplib::CSocket</a></div><div class="ttdoc">Manage all aspects of a network socket.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00242">socket.hpp:242</a></div></div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00273">273</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00272">272</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 
 </div>
 </div>
@@ -310,7 +310,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Destructor. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00298">298</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00297">297</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 
 </div>
 </div>
@@ -354,7 +354,7 @@ Public Member Functions</h2></td></tr>
 <div class="line">    sockObj.init();</div>
 <div class="line">    sockObj.bind(<span class="stringliteral">&quot;[::1]&quot;</span>, <span class="stringliteral">&quot;8080&quot;</span>);</div>
 <div class="line">} <span class="keywordflow">catch</span>(xcp) { <span class="comment">// handle error }</span></div>
-</div><!-- fragment --><p>If the AI_PASSIVE flag is specified, and <b>a_node</b> is empty (""), then the selected local socket addresses will be suitble for <b>binding</b> a socket that will <b>accept</b> connections. The selected local socket address will contain the "wildcard address" (INADDR_ANY for IPv4 addresses, IN6ADDR_ANY_INIT for IPv6 address). The wildcard address is used by applications (typically servers) that intend to accept connections on any of the host's network addresses. If <b>a_node</b> is not empty (""), then the AI_PASSIVE flag is ignored. </p><div class="fragment"><div class="line"><span class="comment">// typical for server listening</span></div>
+</div><!-- fragment --><p>If the AI_PASSIVE flag is specified, and <b>a_node</b> is empty (""), then the selected local socket addresses will be suitable for <b>binding</b> a socket that will <b>accept</b> connections. The selected local socket address will contain the "wildcard address" (INADDR_ANY for IPv4 addresses, IN6ADDR_ANY_INIT for IPv6 address). The wildcard address is used by applications (typically servers) that intend to accept connections on any of the host's network addresses. If <b>a_node</b> is not empty (""), then the AI_PASSIVE flag is ignored. </p><div class="fragment"><div class="line"><span class="comment">// typical for server listening</span></div>
 <div class="line">sockObj.bind(<span class="stringliteral">&quot;&quot;</span>, <span class="stringliteral">&quot;54839&quot;</span>, AI_PASSIVE);</div>
 </div><!-- fragment --><p>If the AI_PASSIVE flag is not set, then the selected local socket addresses will be suitable for use with <b>connect</b>, <b>sendto</b>, or <b>sendmsg</b> (typically clients). If <b>a_node</b> is empty ("") and flag AI_NUMERICHOST not set then you will get an exception: no address for hostname "". With AI_NUMERICHOST the unknown address "[::]" or "0.0.0.0" is used. </p><div class="fragment"><div class="line"><span class="comment">// typical for client connect</span></div>
 <div class="line">sockObj.bind(<span class="stringliteral">&quot;[2001:db8::1]&quot;</span>, <span class="stringliteral">&quot;49123&quot;</span>);</div>
@@ -362,18 +362,18 @@ Public Member Functions</h2></td></tr>
 <div class="line">sockObj.bind(<span class="stringliteral">&quot;&quot;</span>, <span class="stringliteral">&quot;51593&quot;</span>); <span class="comment">// uses &quot;[::1]:51593&quot; or &quot;127.0.0.1:51593&quot;</span></div>
 </div><!-- fragment --><p>There is additional information at <a href="https://www.man7.org/linux/man-pages/man3/getaddrinfo.3.html">getaddrinfo(3) — Linux manual page</a>.</p>
 <p>With address family AF_INET6 and not passive mode (<b>a_flags</b> not set to AI_PASSIVE) I internally always set IPV6_V6ONLY to true no matter what is given with <b>a_flags</b>. This is the behavior on Unix platforms when binding the address and cannot be modified. MacOS does not modify IPV6_V6ONLY with binding. On Microsoft Windows IPV6_V6ONLY is already set by default. To be portable with same behavior on all platforms I always set IPV6_V6ONLY before binding and cannot be modified afterwards.</p>
-<p>There is additional information at <a class="el" href="../../d8/d73/classupnplib_1_1CSocket.html#a558451398ca27e8a0311df14e3441e6b" title="Set IPV6_V6ONLY.">set_v6only()</a> </p>
+<p>There is additional information at <a class="el" href="../../d8/d73/classupnplib_1_1CSocket.html#a558451398ca27e8a0311df14e3441e6b" title="Set IPV6_V6ONLY.">set_v6only()</a> </p><dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000003">Todo:</a></b></dt><dd><b>Next:</b> Make Setter with using a netaddress with port </dd></dl>
 <dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000005">Todo:</a></b></dt><dd>Improve <a class="el" href="../../d2/dd2/classupnplib_1_1CSocketErr.html" title="di-client for portable handling of network socket errors with injected di-service.">CSocketErr</a> for specific <a class="el" href="../../d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address.">bind()</a> error messages. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">a_node</td><td>local interface address  </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">a_port</td><td>Port of the local interface address. This is a string argument to be able to use service names instead of only numbers.  </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">a_flags</td><td>Optional: this field specifies additional options, as described at <a href="https://www.man7.org/linux/man-pages/man3/getaddrinfo.3.html">getaddrinfo(3) — Linux manual page</a>. Multiple flags are specified by bitwise OR-ing them together. Example is: <code>AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV</code> </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">a_flags</td><td>Optional: this field specifies additional options, as described at <a href="https://www.man7.org/linux/man-pages/man3/getaddrinfo.3.html">getaddrinfo(3) — Linux manual page</a> or at <a href="https://learn.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfo">Microsoft Build — getaddrinfo function</a>. Multiple flags are specified by bitwise OR-ing them together. Example is: <code>AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV</code> </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00408">408</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00436">436</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -381,27 +381,33 @@ Public Member Functions</h2></td></tr>
 <div id="dynsection-2-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d8/d73/classupnplib_1_1CSocket_a7548ff82d122192ae5ee7855b7dec846_cgraph.png" border="0" usemap="#ad8/d73/classupnplib_1_1CSocket_a7548ff82d122192ae5ee7855b7dec846_cgraph" alt=""/></div>
 <map name="ad8/d73/classupnplib_1_1CSocket_a7548ff82d122192ae5ee7855b7dec846_cgraph" id="ad8/d73/classupnplib_1_1CSocket_a7548ff82d122192ae5ee7855b7dec846_cgraph">
-<area shape="rect" title="Bind socket to a local interface address." alt="" coords="5,159,172,185"/>
-<area shape="rect" href="../../da/dad/classupnplib_1_1CAddrinfo.html#adec90cab1b85914a4fe0a14316d05083" title="Get address information that is given by syscall ::getaddrinfo()" alt="" coords="440,120,583,160"/>
-<area shape="poly" title=" " alt="" coords="172,163,426,144,427,149,173,168"/>
-<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a6878fbfcf7704d59f18dea2a350773bd" title="Get socket address family." alt="" coords="220,69,391,109"/>
-<area shape="poly" title=" " alt="" coords="122,157,238,112,240,117,124,162"/>
-<area shape="rect" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#a04f79b920c405df595b8a845fed5063a" title="Get the assosiated netaddress without port." alt="" coords="637,177,783,217"/>
-<area shape="poly" title=" " alt="" coords="172,173,624,191,623,197,172,178"/>
+<area shape="rect" title="Bind socket to a local interface address." alt="" coords="5,210,172,235"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="439,180,587,220"/>
+<area shape="poly" title=" " alt="" coords="107,208,156,180,187,166,219,156,267,147,305,145,391,156,452,173,451,178,390,161,305,150,268,152,221,161,189,171,159,185,110,212"/>
+<area shape="rect" href="../../da/dad/classupnplib_1_1CAddrinfo.html#adec90cab1b85914a4fe0a14316d05083" title="Get address information that is given by syscall ::getaddrinfo()" alt="" coords="441,69,584,109"/>
+<area shape="poly" title=" " alt="" coords="103,208,152,169,184,149,219,132,271,115,326,103,427,90,428,95,327,108,273,120,221,137,187,154,155,174,106,212"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="439,268,587,308"/>
+<area shape="poly" title=" " alt="" coords="110,233,159,261,189,274,221,284,273,293,326,297,425,295,425,300,326,302,272,298,219,289,187,279,156,266,107,238"/>
+<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a6878fbfcf7704d59f18dea2a350773bd" title="Get socket address family." alt="" coords="220,171,391,211"/>
+<area shape="poly" title=" " alt="" coords="172,208,206,203,207,208,173,213"/>
+<area shape="rect" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#a04f79b920c405df595b8a845fed5063a" title="Get the assosiated netaddress without port." alt="" coords="640,267,785,307"/>
+<area shape="poly" title=" " alt="" coords="97,234,112,270,138,316,174,363,196,383,221,399,250,411,281,420,343,426,407,420,470,405,529,384,584,359,669,312,672,316,586,364,531,389,471,410,408,425,343,431,280,425,249,416,219,404,193,387,170,367,133,319,107,272,92,236"/>
 <area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a6e83bff4e6d004f48f8d0d947bad74a7" title="Get netaddress with port." alt="" coords="220,5,391,45"/>
-<area shape="poly" title=" " alt="" coords="99,157,148,109,182,80,219,55,230,49,232,54,221,60,185,85,152,113,103,161"/>
-<area shape="rect" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#aa966e76a6a766c6cef08e8c638934d6d" title="Get the numeric port." alt="" coords="233,235,378,275"/>
-<area shape="poly" title=" " alt="" coords="124,182,240,227,238,232,122,187"/>
-<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a41cf15ed4d81fb0f237d8a6b69f72d8a" title="Get the socket type SOCK_STREAM or SOCK_DGRAM." alt="" coords="220,299,391,339"/>
-<area shape="poly" title=" " alt="" coords="103,183,152,231,185,259,221,284,232,290,230,295,219,289,182,264,148,235,99,187"/>
-<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#gac193ec8b0d5cf6c70e2282814ef77c05" title="Get the netaddress with port from a sockaddr structure." alt="" coords="632,127,788,153"/>
-<area shape="poly" title=" " alt="" coords="583,137,619,137,619,143,583,143"/>
-<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#ga860ec0f90ae3b8fc2a00507c38213d7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="836,157,984,182"/>
-<area shape="poly" title=" " alt="" coords="789,149,823,154,822,159,788,154"/>
-<area shape="poly" title=" " alt="" coords="783,185,822,179,823,184,784,190"/>
-<area shape="rect" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="439,31,584,71"/>
-<area shape="poly" title=" " alt="" coords="391,33,425,37,425,43,391,39"/>
-<area shape="poly" title=" " alt="" coords="558,68,669,119,667,124,556,73"/>
+<area shape="poly" title=" " alt="" coords="95,208,142,141,178,99,218,62,237,49,240,54,222,66,181,103,146,144,100,211"/>
+<area shape="rect" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#aa966e76a6a766c6cef08e8c638934d6d" title="Get the numeric port." alt="" coords="233,349,378,389"/>
+<area shape="poly" title=" " alt="" coords="105,234,154,278,221,328,244,341,241,346,219,333,151,282,101,238"/>
+<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a41cf15ed4d81fb0f237d8a6b69f72d8a" title="Get the socket type SOCK_STREAM or SOCK_DGRAM." alt="" coords="220,235,391,275"/>
+<area shape="poly" title=" " alt="" coords="173,232,207,237,206,243,172,238"/>
+<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#gac193ec8b0d5cf6c70e2282814ef77c05" title="Get the netaddress with port from a sockaddr structure." alt="" coords="635,77,791,102"/>
+<area shape="poly" title=" " alt="" coords="584,87,621,87,621,92,584,92"/>
+<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#ga860ec0f90ae3b8fc2a00507c38213d7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="839,246,987,271"/>
+<area shape="poly" title=" " alt="" coords="731,100,888,235,884,239,727,104"/>
+<area shape="poly" title=" " alt="" coords="785,274,825,268,825,274,786,279"/>
+<area shape="rect" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="440,5,585,45"/>
+<area shape="poly" title=" " alt="" coords="391,23,426,23,426,28,391,28"/>
+<area shape="poly" title=" " alt="" coords="577,43,660,70,658,75,575,48"/>
+<area shape="poly" title=" " alt="" coords="381,232,425,220,426,226,382,237"/>
+<area shape="poly" title=" " alt="" coords="392,266,425,271,424,277,391,271"/>
 </map>
 </div>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -440,14 +446,27 @@ Public Member Functions</h2></td></tr>
 <div class="line"><span class="keywordflow">try</span> {</div>
 <div class="line">    sockObj.init();</div>
 <div class="line">} <span class="keywordflow">catch</span>(xcp) { handle_error(); }</div>
-</div><!-- fragment --><dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000004">Todo:</a></b></dt><dd><b>Next:</b> Silently ignore second attempt to <a class="el" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a2ec0921d9cbae0360d737a1d6e49417a" title="Set a given raw socket file descriptor to the object.">set()</a>. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00309">309</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+</div><!-- fragment --> 
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00307">307</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 <div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-4-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+  <img id="dynsection-4-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-4-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../d8/d73/classupnplib_1_1CSocket_af4e7af61b6999fdfb49a97d9ceecf9db_cgraph.png" border="0" usemap="#ad8/d73/classupnplib_1_1CSocket_af4e7af61b6999fdfb49a97d9ceecf9db_cgraph" alt=""/></div>
+<map name="ad8/d73/classupnplib_1_1CSocket_af4e7af61b6999fdfb49a97d9ceecf9db_cgraph" id="ad8/d73/classupnplib_1_1CSocket_af4e7af61b6999fdfb49a97d9ceecf9db_cgraph">
+<area shape="rect" title="Initialize the object with the hints given by the constructor." alt="" coords="5,45,164,70"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="212,5,360,45"/>
+<area shape="poly" title=" " alt="" coords="164,42,198,37,199,42,165,47"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="212,69,360,109"/>
+<area shape="poly" title=" " alt="" coords="165,67,199,73,198,78,164,73"/>
+</map>
+</div>
+<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-5-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-5-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d8/d73/classupnplib_1_1CSocket_af4e7af61b6999fdfb49a97d9ceecf9db_icgraph.png" border="0" usemap="#ad8/d73/classupnplib_1_1CSocket_af4e7af61b6999fdfb49a97d9ceecf9db_icgraph" alt=""/></div>
 <map name="ad8/d73/classupnplib_1_1CSocket_af4e7af61b6999fdfb49a97d9ceecf9db_icgraph" id="ad8/d73/classupnplib_1_1CSocket_af4e7af61b6999fdfb49a97d9ceecf9db_icgraph">
 <area shape="rect" title="Initialize the object with the hints given by the constructor." alt="" coords="233,20,392,45"/>
@@ -475,7 +494,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Get status if the socket is listen to incomming network packets. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00490">490</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00531">531</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 
 </div>
 </div>
@@ -497,7 +516,7 @@ Public Member Functions</h2></td></tr>
 <p>Get status of IPV6_V6ONLY flag. </p>
 <p>IPV6_V6ONLY == false means allowing IPv4 and IPv6. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00474">474</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00515">515</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 
 </div>
 </div>
@@ -519,23 +538,27 @@ Public Member Functions</h2></td></tr>
 <p>Set socket to listen. </p>
 <p>On Linux there is a socket option SO_ACCEPTCONN that can be get with system function ::getsockopt(). This option shows if the socket is set to passive listen. But it is not portable. MacOS does not support it. So this flag has to be managed here. Look for details at <a href="https://stackoverflow.com/q/75942911/5014688">How to get option on MacOS if a socket is set to listen?</a> </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00455">455</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
-<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-5-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-5-content" class="dyncontent" style="display:none;">
-<div class="center"><img src="../../d8/d73/classupnplib_1_1CSocket_aab92e4ef9b21e3e1381eb80ce9abfffe_cgraph.png" border="0" usemap="#ad8/d73/classupnplib_1_1CSocket_aab92e4ef9b21e3e1381eb80ce9abfffe_cgraph" alt=""/></div>
-<map name="ad8/d73/classupnplib_1_1CSocket_aab92e4ef9b21e3e1381eb80ce9abfffe_cgraph" id="ad8/d73/classupnplib_1_1CSocket_aab92e4ef9b21e3e1381eb80ce9abfffe_cgraph">
-<area shape="rect" title="Set socket to listen." alt="" coords="5,29,180,55"/>
-<area shape="poly" title=" " alt="" coords="64,31,58,21,61,11,73,5,93,3,117,6,127,15,123,19,114,11,93,8,74,10,65,15,63,20,68,28"/>
-</map>
-</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00491">491</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 <div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-6-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+  <img id="dynsection-6-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-6-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../d8/d73/classupnplib_1_1CSocket_aab92e4ef9b21e3e1381eb80ce9abfffe_cgraph.png" border="0" usemap="#ad8/d73/classupnplib_1_1CSocket_aab92e4ef9b21e3e1381eb80ce9abfffe_cgraph" alt=""/></div>
+<map name="ad8/d73/classupnplib_1_1CSocket_aab92e4ef9b21e3e1381eb80ce9abfffe_cgraph" id="ad8/d73/classupnplib_1_1CSocket_aab92e4ef9b21e3e1381eb80ce9abfffe_cgraph">
+<area shape="rect" title="Set socket to listen." alt="" coords="5,45,180,70"/>
+<area shape="poly" title=" " alt="" coords="59,46,51,36,55,26,69,20,93,18,122,22,133,31,130,35,120,27,93,23,71,25,59,30,56,36,63,43"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="228,5,376,45"/>
+<area shape="poly" title=" " alt="" coords="176,42,214,36,214,41,177,47"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="228,69,376,109"/>
+<area shape="poly" title=" " alt="" coords="177,67,214,73,214,79,176,73"/>
+</map>
+</div>
+<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-7-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-7-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d8/d73/classupnplib_1_1CSocket_aab92e4ef9b21e3e1381eb80ce9abfffe_icgraph.png" border="0" usemap="#ad8/d73/classupnplib_1_1CSocket_aab92e4ef9b21e3e1381eb80ce9abfffe_icgraph" alt=""/></div>
 <map name="ad8/d73/classupnplib_1_1CSocket_aab92e4ef9b21e3e1381eb80ce9abfffe_icgraph" id="ad8/d73/classupnplib_1_1CSocket_aab92e4ef9b21e3e1381eb80ce9abfffe_icgraph">
 <area shape="rect" title="Set socket to listen." alt="" coords="233,29,408,55"/>
@@ -572,7 +595,7 @@ Public Member Functions</h2></td></tr>
 <div class="line"><a class="code hl_class" href="../../d8/d73/classupnplib_1_1CSocket.html">CSocket</a> sock2Obj;</div>
 <div class="line">sock2Obj = std::move(sock1Obj);</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00286">286</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00285">285</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 
 </div>
 </div>
@@ -604,27 +627,31 @@ Public Member Functions</h2></td></tr>
 <p>If one of the conditions above doesn't match, the setter silently ignores the request and will not modify the socket. Other system errors may throw an exception (e.g. using an invalid socket etc.).</p>
 <p>To get the current setting use <a class="el" href="../../d8/d73/classupnplib_1_1CSocket.html#ae40bf513421208aad66d50d7bcf07229" title="Get status of IPV6_V6ONLY flag.">CSocket::is_v6only()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00378">378</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
-<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-7-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00399">399</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-8-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-7-content" class="dyncontent" style="display:none;">
+<div id="dynsection-8-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d8/d73/classupnplib_1_1CSocket_a558451398ca27e8a0311df14e3441e6b_cgraph.png" border="0" usemap="#ad8/d73/classupnplib_1_1CSocket_a558451398ca27e8a0311df14e3441e6b_cgraph" alt=""/></div>
 <map name="ad8/d73/classupnplib_1_1CSocket_a558451398ca27e8a0311df14e3441e6b_cgraph" id="ad8/d73/classupnplib_1_1CSocket_a558451398ca27e8a0311df14e3441e6b_cgraph">
-<area shape="rect" title="Set IPV6_V6ONLY." alt="" coords="5,37,164,77"/>
-<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a6878fbfcf7704d59f18dea2a350773bd" title="Get socket address family." alt="" coords="212,5,383,45"/>
-<area shape="poly" title=" " alt="" coords="164,43,198,38,199,43,165,48"/>
-<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a0bfd8447aeb0fce2841c5ea90234c37d" title="Get status if socket is bound to a local netaddress." alt="" coords="212,69,383,109"/>
-<area shape="poly" title=" " alt="" coords="165,67,199,72,198,77,164,72"/>
-<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a6e83bff4e6d004f48f8d0d947bad74a7" title="Get netaddress with port." alt="" coords="431,69,601,109"/>
-<area shape="poly" title=" " alt="" coords="383,87,417,87,417,92,383,92"/>
-<area shape="rect" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="649,69,795,109"/>
-<area shape="poly" title=" " alt="" coords="602,87,636,87,636,92,602,92"/>
-<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#gac193ec8b0d5cf6c70e2282814ef77c05" title="Get the netaddress with port from a sockaddr structure." alt="" coords="843,77,999,102"/>
-<area shape="poly" title=" " alt="" coords="795,87,829,87,829,92,795,92"/>
-<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#ga860ec0f90ae3b8fc2a00507c38213d7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="1047,77,1195,102"/>
-<area shape="poly" title=" " alt="" coords="999,87,1033,87,1033,92,999,92"/>
+<area shape="rect" title="Set IPV6_V6ONLY." alt="" coords="5,101,164,141"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="223,5,371,45"/>
+<area shape="poly" title=" " alt="" coords="122,99,211,55,227,48,229,53,213,60,124,104"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="223,69,371,109"/>
+<area shape="poly" title=" " alt="" coords="164,107,209,100,210,105,165,112"/>
+<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a6878fbfcf7704d59f18dea2a350773bd" title="Get socket address family." alt="" coords="212,133,383,173"/>
+<area shape="poly" title=" " alt="" coords="165,131,199,136,198,141,164,136"/>
+<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a0bfd8447aeb0fce2841c5ea90234c37d" title="Get status if socket is bound to a local netaddress." alt="" coords="212,197,383,237"/>
+<area shape="poly" title=" " alt="" coords="124,139,213,183,229,190,227,195,211,188,122,144"/>
+<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a6e83bff4e6d004f48f8d0d947bad74a7" title="Get netaddress with port." alt="" coords="431,197,601,237"/>
+<area shape="poly" title=" " alt="" coords="383,215,417,215,417,220,383,220"/>
+<area shape="rect" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="649,197,795,237"/>
+<area shape="poly" title=" " alt="" coords="602,215,636,215,636,220,602,220"/>
+<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#gac193ec8b0d5cf6c70e2282814ef77c05" title="Get the netaddress with port from a sockaddr structure." alt="" coords="843,205,999,230"/>
+<area shape="poly" title=" " alt="" coords="795,215,829,215,829,220,795,220"/>
+<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#ga860ec0f90ae3b8fc2a00507c38213d7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="1047,205,1195,230"/>
+<area shape="poly" title=" " alt="" coords="999,215,1033,215,1033,220,999,220"/>
 </map>
 </div>
 

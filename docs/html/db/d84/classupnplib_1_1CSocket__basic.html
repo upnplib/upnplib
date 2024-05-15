@@ -159,7 +159,7 @@ Public Member Functions</h2></td></tr>
 <p>This class takes the resources and results as given by the platform (Unix, MacOS, MS Windows). It does not perform any emulations for unification. The behavior can be different on different platforms.</p>
 <p>An object of this class does not take ownership of the raw socket file descriptor and will never close it. This is also the reason why you cannot modify the socket and only have getter available (except the setter for the raw socket file descriptor itself). But it is helpful to easily get information about an existing raw socket file descriptor. Closing the file descriptor is in the responsibility of the caller who created the socket. If you need to manage a socket you must use <a class="el" href="../../d8/d73/classupnplib_1_1CSocket.html" title="Manage all aspects of a network socket.">CSocket</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00111">111</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00113">113</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a07e859ed163d5b040c51bc69955db924" name="a07e859ed163d5b040c51bc69955db924"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a07e859ed163d5b040c51bc69955db924">&#9670;&#160;</a></span>CSocket_basic() <span class="overload">[1/2]</span></h2>
@@ -176,7 +176,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00117">117</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00097">97</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 
 </div>
 </div>
@@ -198,7 +198,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Constructor for the socket file descriptor. Before use, it must be <a class="el" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a2ec0921d9cbae0360d737a1d6e49417a" title="Set a given raw socket file descriptor to the object.">set()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00122">122</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00102">102</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 
 </div>
 </div>
@@ -225,7 +225,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00149">149</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00129">129</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 
 </div>
 </div>
@@ -247,7 +247,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Get socket <a class="el" href="../../d5/d67/Glossary.html#glossary_af">address family</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00163">163</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00143">143</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -294,7 +294,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#a04f79b920c405df595b8a845fed5063a">upnplib::SSockaddr</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00169">169</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00149">149</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
@@ -339,7 +339,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703">upnplib::SSockaddr</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00175">175</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00155">155</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 <div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-4-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-4-summary" class="dynsummary" style="display:block;">
@@ -419,7 +419,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#aa966e76a6a766c6cef08e8c638934d6d">upnplib::SSockaddr</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00181">181</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00161">161</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 <div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-6-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-6-summary" class="dynsummary" style="display:block;">
@@ -466,7 +466,21 @@ Public Member Functions</h2></td></tr>
 <p>This is not a system error from the operating system (with POSIX returned in errno). It is the more specific error that can be queried as option from the socket.</p>
 <p>Throws exception std::runtime_error if query option fails. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00200">200</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00185">185</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-8-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-8-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../db/d84/classupnplib_1_1CSocket__basic_a96827a5b7033ee5a457c77005c5de467_cgraph.png" border="0" usemap="#adb/d84/classupnplib_1_1CSocket__basic_a96827a5b7033ee5a457c77005c5de467_cgraph" alt=""/></div>
+<map name="adb/d84/classupnplib_1_1CSocket__basic_a96827a5b7033ee5a457c77005c5de467_cgraph" id="adb/d84/classupnplib_1_1CSocket__basic_a96827a5b7033ee5a457c77005c5de467_cgraph">
+<area shape="rect" title="Get the error that is given from the socket as option." alt="" coords="5,37,176,77"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="224,5,372,45"/>
+<area shape="poly" title=" " alt="" coords="176,41,210,36,211,42,177,47"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="224,69,372,109"/>
+<area shape="poly" title=" " alt="" coords="177,68,211,73,210,78,176,73"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -489,12 +503,26 @@ Public Member Functions</h2></td></tr>
 <p>Throws exception std::runtime_error if query option fails.</p>
 <dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000001">Todo:</a></b></dt><dd>Check if SOCK_UNDEF is also possible, maybe with an empty socket </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00187">187</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
-<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-8-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00167">167</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-9-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-9-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-8-content" class="dyncontent" style="display:none;">
+<div id="dynsection-9-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../db/d84/classupnplib_1_1CSocket__basic_a41cf15ed4d81fb0f237d8a6b69f72d8a_cgraph.png" border="0" usemap="#adb/d84/classupnplib_1_1CSocket__basic_a41cf15ed4d81fb0f237d8a6b69f72d8a_cgraph" alt=""/></div>
+<map name="adb/d84/classupnplib_1_1CSocket__basic_a41cf15ed4d81fb0f237d8a6b69f72d8a_cgraph" id="adb/d84/classupnplib_1_1CSocket__basic_a41cf15ed4d81fb0f237d8a6b69f72d8a_cgraph">
+<area shape="rect" title="Get the socket type SOCK_STREAM or SOCK_DGRAM." alt="" coords="5,37,176,77"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="224,5,372,45"/>
+<area shape="poly" title=" " alt="" coords="176,41,210,36,211,42,177,47"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="224,69,372,109"/>
+<area shape="poly" title=" " alt="" coords="177,68,211,73,210,78,176,73"/>
+</map>
+</div>
+<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-10-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-10-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../db/d84/classupnplib_1_1CSocket__basic_a41cf15ed4d81fb0f237d8a6b69f72d8a_icgraph.png" border="0" usemap="#adb/d84/classupnplib_1_1CSocket__basic_a41cf15ed4d81fb0f237d8a6b69f72d8a_icgraph" alt=""/></div>
 <map name="adb/d84/classupnplib_1_1CSocket__basic_a41cf15ed4d81fb0f237d8a6b69f72d8a_icgraph" id="adb/d84/classupnplib_1_1CSocket__basic_a41cf15ed4d81fb0f237d8a6b69f72d8a_icgraph">
 <area shape="rect" title="Get the socket type SOCK_STREAM or SOCK_DGRAM." alt="" coords="448,13,619,53"/>
@@ -525,12 +553,12 @@ Public Member Functions</h2></td></tr>
 <p>Get status if socket is bound to a local <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>. </p>
 <p>I assume that a valid socket file descriptor with unknown address (all zero) and port 0 is not bound. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00226">226</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
-<div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-9-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-9-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00221">221</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-11-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-9-content" class="dyncontent" style="display:none;">
+<div id="dynsection-11-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../db/d84/classupnplib_1_1CSocket__basic_a0bfd8447aeb0fce2841c5ea90234c37d_cgraph.png" border="0" usemap="#adb/d84/classupnplib_1_1CSocket__basic_a0bfd8447aeb0fce2841c5ea90234c37d_cgraph" alt=""/></div>
 <map name="adb/d84/classupnplib_1_1CSocket__basic_a0bfd8447aeb0fce2841c5ea90234c37d_cgraph" id="adb/d84/classupnplib_1_1CSocket__basic_a0bfd8447aeb0fce2841c5ea90234c37d_cgraph">
 <area shape="rect" title="Get status if socket is bound to a local netaddress." alt="" coords="5,5,176,45"/>
@@ -544,11 +572,11 @@ Public Member Functions</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="792,23,826,23,826,28,792,28"/>
 </map>
 </div>
-<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-10-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-12-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-12-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-10-content" class="dyncontent" style="display:none;">
+<div id="dynsection-12-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../db/d84/classupnplib_1_1CSocket__basic_a0bfd8447aeb0fce2841c5ea90234c37d_icgraph.png" border="0" usemap="#adb/d84/classupnplib_1_1CSocket__basic_a0bfd8447aeb0fce2841c5ea90234c37d_icgraph" alt=""/></div>
 <map name="adb/d84/classupnplib_1_1CSocket__basic_a0bfd8447aeb0fce2841c5ea90234c37d_icgraph" id="adb/d84/classupnplib_1_1CSocket__basic_a0bfd8447aeb0fce2841c5ea90234c37d_icgraph">
 <area shape="rect" title="Get status if socket is bound to a local netaddress." alt="" coords="481,49,652,89"/>
@@ -582,7 +610,21 @@ Public Member Functions</h2></td></tr>
 <p>For details to this option have a look at <a class="el" href="../../d2/d59/Overview.html#overview_reuseaddr">option &quot;reuse address&quot;</a>.</p>
 <p>Throws exception std::runtime_error if query option fails. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00213">213</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00203">203</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<div id="dynsection-13" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-13-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-13-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-13-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../db/d84/classupnplib_1_1CSocket__basic_ac0efc89243d210568f8021f38d1783bd_cgraph.png" border="0" usemap="#adb/d84/classupnplib_1_1CSocket__basic_ac0efc89243d210568f8021f38d1783bd_cgraph" alt=""/></div>
+<map name="adb/d84/classupnplib_1_1CSocket__basic_ac0efc89243d210568f8021f38d1783bd_cgraph" id="adb/d84/classupnplib_1_1CSocket__basic_ac0efc89243d210568f8021f38d1783bd_cgraph">
+<area shape="rect" title="Get status if reusing address is enabled." alt="" coords="5,37,176,77"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="224,5,372,45"/>
+<area shape="poly" title=" " alt="" coords="176,41,210,36,211,42,177,47"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="224,69,372,109"/>
+<area shape="poly" title=" " alt="" coords="177,68,211,73,210,78,176,73"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -609,9 +651,9 @@ Public Member Functions</h2></td></tr>
 <div class="line">} <span class="keywordflow">catch</span>(xcp) { handle_error(); };</div>
 <div class="line"><a class="code hl_typedef" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> sfd = sockObj;</div>
 <div class="ttc" id="aUpnpInet_8hpp_html_a8dc8083897335125630f1af5dafd5831"><div class="ttname"><a href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a></div><div class="ttdeci">int SOCKET</div><div class="ttdef"><b>Definition</b> <a href="../../da/dc0/UpnpInet_8hpp_source.html#l00049">UpnpInet.hpp:49</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1CSocket__basic_html"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html">upnplib::CSocket_basic</a></div><div class="ttdoc">Get information from a raw network socket file descriptor.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00111">socket.hpp:111</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CSocket__basic_html"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html">upnplib::CSocket_basic</a></div><div class="ttdoc">Get information from a raw network socket file descriptor.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00113">socket.hpp:113</a></div></div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00154">154</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00134">134</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 
 </div>
 </div>
@@ -649,12 +691,12 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00128">128</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
-<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-11-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00108">108</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
+<div id="dynsection-14" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-14-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-14-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-11-content" class="dyncontent" style="display:none;">
+<div id="dynsection-14-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../db/d84/classupnplib_1_1CSocket__basic_a2ec0921d9cbae0360d737a1d6e49417a_cgraph.png" border="0" usemap="#adb/d84/classupnplib_1_1CSocket__basic_a2ec0921d9cbae0360d737a1d6e49417a_cgraph" alt=""/></div>
 <map name="adb/d84/classupnplib_1_1CSocket__basic_a2ec0921d9cbae0360d737a1d6e49417a_cgraph" id="adb/d84/classupnplib_1_1CSocket__basic_a2ec0921d9cbae0360d737a1d6e49417a_cgraph">
 <area shape="rect" title="Set a given raw socket file descriptor to the object." alt="" coords="5,45,204,70"/>
@@ -664,11 +706,11 @@ Public Member Functions</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="193,67,239,74,238,79,193,73"/>
 </map>
 </div>
-<div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-12-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-12-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-15" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-15-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-15-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-12-content" class="dyncontent" style="display:none;">
+<div id="dynsection-15-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../db/d84/classupnplib_1_1CSocket__basic_a2ec0921d9cbae0360d737a1d6e49417a_icgraph.png" border="0" usemap="#adb/d84/classupnplib_1_1CSocket__basic_a2ec0921d9cbae0360d737a1d6e49417a_icgraph" alt=""/></div>
 <map name="adb/d84/classupnplib_1_1CSocket__basic_a2ec0921d9cbae0360d737a1d6e49417a_icgraph" id="adb/d84/classupnplib_1_1CSocket__basic_a2ec0921d9cbae0360d737a1d6e49417a_icgraph">
 <area shape="rect" title="Set a given raw socket file descriptor to the object." alt="" coords="1495,60,1693,85"/>

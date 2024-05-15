@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-24
+// Redistribution only with this Copyright remark. Last modified: 2024-05-16
 
 #include <Pupnp/upnp/src/genlib/util/membuffer.cpp>
 
@@ -132,9 +132,13 @@ TEST(MembufferDeathTest, destroy_with_nullptr_to_membuf) {
                 ::testing::ExitedWithCode(0), ".*");
 }
 
+#ifdef DEBUG
+// Does not compile build type "Release" anymore with updated g++ compiler on
+// github actions, see error message below.
 TEST(MembufferTestSuite, str_alloc_nullptr) {
     Cmembuffer mbObj{};
     char* strclone{};
+    // error: argument 2 null where non-null expected [-Werror=nonnull]
     strclone = mbObj.str_alloc(nullptr, 0);
 
     if (old_code) {
@@ -149,6 +153,7 @@ TEST(MembufferTestSuite, str_alloc_nullptr) {
         EXPECT_EQ(strclone, nullptr);
     }
 }
+#endif
 
 TEST(MembufferDeathTest, str_alloc_nullptr_with_string_size) {
     Cmembuffer mbObj{};

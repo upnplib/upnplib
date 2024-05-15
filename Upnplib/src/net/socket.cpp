@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-14
+// Redistribution only with this Copyright remark. Last modified: 2024-05-16
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -20,26 +20,6 @@ namespace {
 
 // Free helper functions
 // =====================
-
-/// \cond
-// Helper inline function to throw an exeption with additional information.
-// ------------------------------------------------------------------------
-// error number given by WSAGetLastError(), resp. contained in errno is used to
-// specify details of the error. It is important that these error numbers
-// hasn't been modified by executing other statements.
-inline void throw_error(const std::string& a_errmsg) {
-#ifdef _MSC_VER
-    throw std::runtime_error(
-        UPNPLIB_LOGEXCEPT + a_errmsg + " WSAGetLastError()=" +
-        std::to_string(umock::winsock2_h.WSAGetLastError()));
-#else
-    throw std::runtime_error(UPNPLIB_LOGEXCEPT + a_errmsg + " errno(" +
-                             std::to_string(errno) + ")=\"" +
-                             umock::string_h.strerror(errno) + "\"\n");
-#endif
-}
-/// \endcond
-
 /*!
  * \brief Wrapper for the ::%getsockname() system function
  * <!--   ------------------------------------------------ -->
@@ -162,25 +142,25 @@ CSocket_basic::operator const SOCKET&() const {
 // ------
 sa_family_t CSocket_basic::get_family() const {
     TRACE2(this, " Executing CSocket_basic::get_family()")
-    m_get_addr_from_socket(__LINE__);
+    m_get_addr_from_socket();
     return this->ss.ss_family;
 }
 
 const netaddr_t& CSocket_basic::get_netaddr() {
     TRACE2(this, " Executing CSocket_basic::get_netaddr()")
-    m_get_addr_from_socket(__LINE__);
+    m_get_addr_from_socket();
     return SSockaddr::get_netaddr();
 }
 
 const netaddr_t& CSocket_basic::get_netaddrp() {
     TRACE2(this, " Executing CSocket_basic::get_netaddrp()")
-    m_get_addr_from_socket(__LINE__);
+    m_get_addr_from_socket();
     return SSockaddr::get_netaddrp();
 }
 
 in_port_t CSocket_basic::get_port() const {
     TRACE2(this, " Executing CSocket_basic::get_port()")
-    m_get_addr_from_socket(__LINE__);
+    m_get_addr_from_socket();
     return SSockaddr::get_port();
 }
 
@@ -188,12 +168,17 @@ int CSocket_basic::get_socktype() const {
     TRACE2(this, " Executing CSocket_basic::get_socktype()")
     int so_option{-1};
     socklen_t len{sizeof(so_option)}; // May be modified
+    CSocketErr serrObj;
     // Type cast (char*)&so_option is needed for Microsoft Windows.
     if (umock::sys_socket_h.getsockopt(m_sfd, SOL_SOCKET, SO_TYPE,
                                        reinterpret_cast<char*>(&so_option),
-                                       &len) != 0)
-        throw_error("MSG1030: Failed to get socket option SO_TYPE:");
-
+                                       &len) != 0) {
+        serrObj.catch_error();
+        throw std::runtime_error(
+            UPNPLIB_LOGEXCEPT +
+            "MSG1030: Failed to get socket option SO_TYPE: " +
+            serrObj.get_error_str());
+    }
     return so_option;
 }
 
@@ -201,12 +186,17 @@ int CSocket_basic::get_sockerr() const {
     TRACE2(this, " Executing CSocket_basic::get_sockerr()")
     int so_option{-1};
     socklen_t len{sizeof(so_option)}; // May be modified
+    CSocketErr serrObj;
     // Type cast (char*)&so_option is needed for Microsoft Windows.
     if (umock::sys_socket_h.getsockopt(m_sfd, SOL_SOCKET, SO_ERROR,
                                        reinterpret_cast<char*>(&so_option),
-                                       &len) != 0)
-        throw_error("MSG1011: Failed to get socket option SO_ERROR:");
-
+                                       &len) != 0) {
+        serrObj.catch_error();
+        throw std::runtime_error(
+            UPNPLIB_LOGEXCEPT +
+            "MSG1011: Failed to get socket option SO_ERROR: " +
+            serrObj.get_error_str());
+    }
     return so_option;
 }
 
@@ -214,12 +204,17 @@ bool CSocket_basic::is_reuse_addr() const {
     TRACE2(this, " Executing CSocket_basic::is_reuse_addr()")
     int so_option{-1};
     socklen_t len{sizeof(so_option)}; // May be modified
+    CSocketErr serrObj;
     // Type cast (char*)&so_option is needed for Microsoft Windows.
     if (umock::sys_socket_h.getsockopt(m_sfd, SOL_SOCKET, SO_REUSEADDR,
                                        reinterpret_cast<char*>(&so_option),
-                                       &len) != 0)
-        throw_error("MSG1013: Failed to get socket option SO_REUSEADDR:");
-
+                                       &len) != 0) {
+        serrObj.catch_error();
+        throw std::runtime_error(
+            UPNPLIB_LOGEXCEPT +
+            "MSG1013: Failed to get socket option SO_REUSEADDR: " +
+            serrObj.get_error_str());
+    }
     return so_option;
 }
 
@@ -243,15 +238,19 @@ bool CSocket_basic::is_bound() {
 
 // Private methods
 // ---------------
-void CSocket_basic::m_get_addr_from_socket(int line) const {
+void CSocket_basic::m_get_addr_from_socket() const {
     TRACE2(this, " Executing CSocket_basic::m_get_addr_from_socket()")
 
     // Get address from socket file descriptor and fill in the inherited
     // sockaddr structure from SSockaddr.
     socklen_t len = this->sizeof_ss(); // May be modified
-    if (upnplib::getsockname(m_sfd, &this->sa, &len) != 0)
-        throw_error("MSG1001: [" + std::to_string(line) +
-                    "] Failed to get address from socket:");
+    CSocketErr serrObj;
+    if (upnplib::getsockname(m_sfd, &this->sa, &len) != 0) {
+        serrObj.catch_error();
+        throw std::runtime_error(
+            UPNPLIB_LOGEXCEPT + "MSG1001: Failed to get address from socket: " +
+            serrObj.get_error_str());
+    }
 }
 
 
@@ -305,10 +304,11 @@ CSocket::~CSocket() {
 // Setter
 // ------
 // Setter to initialize the object with the hints given by the constructor
-/// \todo **Next:** Silently ignore second attempt to set().
 void CSocket::init() {
-    TRACE2(this, " Executing CSocket::set(af, socktype)")
+    TRACE2(this, " Executing CSocket::init(af, socktype)")
 
+    // Do some general checks that must always be fulfilled according to the
+    // specification.
     if (m_af_hint != AF_INET6 && m_af_hint != AF_INET)
         throw std::invalid_argument(
             UPNPLIB_LOGEXCEPT +
@@ -320,11 +320,21 @@ void CSocket::init() {
             "MSG1016: Failed to create socket: invalid socket type " +
             std::to_string(m_socktype_hint));
 
-    // Get new socket file descriptor.
-    SOCKET sfd = umock::sys_socket_h.socket(m_af_hint, m_socktype_hint, 0);
-    if (sfd == INVALID_SOCKET)
-        throw_error("MSG1017: Failed to create socket:");
+    // Do nothing if there is already a valid socket file descriptor from a
+    // previous init().
+    if (m_sfd != INVALID_SOCKET)
+        return;
 
+    CSocketErr serrObj;
+
+    // Syscall socket(): get new socket file descriptor.
+    SOCKET sfd = umock::sys_socket_h.socket(m_af_hint, m_socktype_hint, 0);
+    if (sfd == INVALID_SOCKET) {
+        serrObj.catch_error();
+        throw std::runtime_error(
+            UPNPLIB_LOGEXCEPT +
+            "MSG1017: Failed to create socket: " + serrObj.get_error_str());
+    }
     int so_option{0};
     constexpr socklen_t optlen{sizeof(so_option)};
 
@@ -334,7 +344,11 @@ void CSocket::init() {
     if (umock::sys_socket_h.setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR,
                                        reinterpret_cast<char*>(&so_option),
                                        optlen) != 0) {
-        throw_error("MSG1018: Failed to set socket option SO_REUSEADDR:");
+        serrObj.catch_error();
+        throw std::runtime_error(
+            UPNPLIB_LOGEXCEPT +
+            "MSG1018: Failed to set socket option SO_REUSEADDR: " +
+            serrObj.get_error_str());
     }
 
 #ifdef _MSC_VER
@@ -347,8 +361,11 @@ void CSocket::init() {
     if (umock::sys_socket_h.setsockopt(sfd, SOL_SOCKET, SO_EXCLUSIVEADDRUSE,
                                        reinterpret_cast<char*>(&so_option),
                                        optlen) != 0) {
-        throw_error(
-            "MSG1019: Failed to set socket option SO_EXCLUSIVEADDRUSE:");
+        serrObj.catch_error();
+        throw std::runtime_error(
+            UPNPLIB_LOGEXCEPT +
+            "MSG1019: Failed to set socket option SO_EXCLUSIVEADDRUSE: " +
+            serrObj.get_error_str());
     }
 #endif
 
@@ -364,7 +381,11 @@ void CSocket::init() {
         if (umock::sys_socket_h.setsockopt(sfd, IPPROTO_IPV6, IPV6_V6ONLY,
                                            reinterpret_cast<char*>(&so_option),
                                            optlen) != 0) {
-            throw_error("MSG1020: Failed to set socket option IPV6_V6ONLY:");
+            serrObj.catch_error();
+            throw std::runtime_error(
+                UPNPLIB_LOGEXCEPT +
+                "MSG1020: Failed to set socket option IPV6_V6ONLY: " +
+                serrObj.get_error_str());
         }
 #ifndef _MSC_VER
     }
@@ -377,6 +398,7 @@ void CSocket::init() {
 // Set IPV6_V6ONLY
 void CSocket::set_v6only(const bool a_opt) {
     TRACE2(this, " Executing CSocket::set_ipv6_v6only()")
+    CSocketErr serrObj;
 
     // Needed to have a valid argument for setsockopt()
     const int so_option{a_opt};
@@ -385,8 +407,14 @@ void CSocket::set_v6only(const bool a_opt) {
     if (this->get_family() == AF_INET6 && !this->is_bound() &&
         umock::sys_socket_h.setsockopt(
             m_sfd, IPPROTO_IPV6, IPV6_V6ONLY,
-            reinterpret_cast<const char*>(&so_option), sizeof(so_option)) != 0)
-        throw_error("MSG1006: Failed to set socket option IPV6_V6ONLY:");
+            reinterpret_cast<const char*>(&so_option),
+            sizeof(so_option)) != 0) {
+        serrObj.catch_error();
+        throw std::runtime_error(
+            UPNPLIB_LOGEXCEPT +
+            "MSG1006: Failed to set socket option IPV6_V6ONLY: " +
+            serrObj.get_error_str());
+    }
 }
 
 #if 0
@@ -413,6 +441,7 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
     std::scoped_lock lock(m_bound_mutex);
 
     const sa_family_t addr_family = this->get_family();
+    CSocketErr serrObj;
 
     // With address family AF_INET6 and not passive mode we always set
     // IPV6_V6ONLY to true. See also note to bind() in the header file.
@@ -425,29 +454,36 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
         if (umock::sys_socket_h.setsockopt(
                 m_sfd, IPPROTO_IPV6, IPV6_V6ONLY,
                 reinterpret_cast<const char*>(&so_option),
-                sizeof(so_option)) != 0)
-            throw_error("MSG1007: Failed to set socket option IPV6_V6ONLY:");
+                sizeof(so_option)) != 0) {
+            serrObj.catch_error();
+            throw std::runtime_error(
+                UPNPLIB_LOGEXCEPT +
+                "MSG1007: Failed to set socket option IPV6_V6ONLY: " +
+                serrObj.get_error_str());
+        }
     }
 
     // Get an adress info to bind.
     CAddrinfo ai(a_node, a_port, addr_family, this->get_socktype(),
                  AI_NUMERICHOST | AI_NUMERICSERV | a_flags);
-    ai.get_addrinfo();
+    ai.get_addrinfo(); // may throw exception
 
     // Here we bind the socket to an address.
     /// \todo Improve CSocketErr for specific ::bind() error messages.
     // Type cast socklen_t is needed for Microsoft Windows.
     int ret = umock::sys_socket_h.bind(m_sfd, ai->ai_addr,
                                        static_cast<socklen_t>(ai->ai_addrlen));
-    int err_no = errno;
+    serrObj.catch_error();
 
     UPNPLIB_LOGINFO << "MSG1115: syscall ::bind(" << m_sfd << ", "
                     << ai->ai_addr << ", " << ai->ai_addrlen << ") Using \""
                     << ai.get_netaddr() << ":" << ai.get_port() << "\". Get "
                     << (ret != 0 ? "ERROR" : this->get_netaddrp()) << "\n";
     if (ret != 0) {
-        errno = err_no;
-        throw_error("MSG1008: Failed to bind socket to an address:");
+        throw std::runtime_error(
+            UPNPLIB_LOGEXCEPT +
+            "MSG1008: Failed to bind socket to an address: " +
+            serrObj.get_error_str());
     }
 }
 
@@ -461,10 +497,15 @@ void CSocket::listen() {
     if (m_listen)
         return;
 
+    CSocketErr serrObj;
     // Second argument backlog (maximum length of the queue for pending
     // connections) is hard coded set to 1 for now.
-    if (::listen(m_sfd, 1) != 0)
-        throw_error("MSG1034: Failed to set socket to listen:");
+    if (umock::sys_socket_h.listen(m_sfd, 1) != 0) {
+        serrObj.catch_error();
+        throw std::runtime_error(UPNPLIB_LOGEXCEPT +
+                                 "MSG1034: Failed to set socket to listen: " +
+                                 serrObj.get_error_str());
+    }
 
     m_listen = true;
 }
