@@ -53,7 +53,7 @@ var searchData=
   ['anonymous_5fnamespace_7burlconfig_2ecpp_7d_50',['anonymous_namespace{urlconfig.cpp}',['../df/d57/namespaceanonymous__namespace_02urlconfig_8cpp_03.html',1,'']]],
   ['anonymous_5fnamespace_7buuid_2ecpp_7d_51',['anonymous_namespace{uuid.cpp}',['../db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html',1,'']]],
   ['anonymous_5fnamespace_7bwebserver_2ecpp_7d_52',['anonymous_namespace{webserver.cpp}',['../d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html',1,'']]],
-  ['api_53',['api',['../d9/d54/group__compaAPI.html',1,'* COMPATIBLE API'],['../d6/d14/group__upnplibAPI.html',1,'* UPNPLIB API'],['../d3/d57/group__UPnPTools.html',1,'Optional Tool API']]],
+  ['api_53',['api',['../d9/d54/group__compaAPI.html',1,'COMPATIBLE API'],['../d3/d57/group__UPnPTools.html',1,'Optional Tool API'],['../d6/d14/group__upnplibAPI.html',1,'UPNPLIB API']]],
   ['api_5fsamples_2ecpp_54',['api_samples.cpp',['../d1/d2d/api__samples_8cpp.html',1,'']]],
   ['application_5findex_55',['APPLICATION_INDEX',['../d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a88511668d2ac33aa85c57ce1a2658971',1,'anonymous_namespace{webserver.cpp}']]],
   ['application_5flistening_5fport_56',['APPLICATION_LISTENING_PORT',['../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a8c30f2dba4e55fe57b72c5e3b545301d',1,'anonymous_namespace{miniserver.cpp}']]],

@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-16
+// Redistribution only with this Copyright remark. Last modified: 2024-05-17
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -98,15 +98,15 @@ CSocket_basic::CSocket_basic(){
     TRACE2(this, " Construct default CSocket_basic()") //
 }
 
-// Constructor for the socket file descriptor. Before use, it must be set().
+// Constructor for the socket file descriptor. Before use, it must be init().
 CSocket_basic::CSocket_basic(SOCKET a_sfd)
     : m_sfd_hint(a_sfd) {
     TRACE2(this, " Construct CSocket_basic(SOCKET)") //
 }
 
 // Setter with given file desciptor
-void CSocket_basic::set() {
-    TRACE2(this, " Executing CSocket_basic::set()")
+void CSocket_basic::init() {
+    TRACE2(this, " Executing CSocket_basic::init()")
 
     CSocketErr serrObj;
     // Check if we have a valid socket file descriptor
@@ -219,7 +219,7 @@ bool CSocket_basic::is_reuse_addr() const {
 }
 
 bool CSocket_basic::is_bound() {
-    // We get the socket address from the file descriptor and check if its
+    // I get the socket address from the file descriptor and check if its
     // address is unspecified or if the address and port are all zero. This
     // replaces the method with direct compare of the socket addresses with a
     // 16 byte AF_INET6 compare which last version can be found at commit
@@ -466,7 +466,7 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
     // Get an adress info to bind.
     CAddrinfo ai(a_node, a_port, addr_family, this->get_socktype(),
                  AI_NUMERICHOST | AI_NUMERICSERV | a_flags);
-    ai.get_addrinfo(); // may throw exception
+    ai.init(); // may throw exception
 
     // Here we bind the socket to an address.
     /// \todo Improve CSocketErr for specific ::bind() error messages.

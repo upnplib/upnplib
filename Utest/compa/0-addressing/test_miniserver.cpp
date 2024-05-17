@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-15
+// Redistribution only with this Copyright remark. Last modified: 2024-05-17
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -1997,7 +1997,7 @@ TEST_F(StartMiniServerMockFTestSuite, get_port_successful) {
     // getsockname().
     CAddrinfo ai(std::string(text_addr), std::to_string(actual_port), AF_INET,
                  SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
-    ai.get_addrinfo();
+    ai.init();
 
     // Mock system functions
     EXPECT_CALL(
@@ -2095,7 +2095,7 @@ TEST(StartMiniServerTestSuite, get_miniserver_stopsock) {
 
     // Get socket object from the bound socket
     CSocket_basic sockObj(out.miniServerStopSock);
-    sockObj.set();
+    sockObj.init();
 
     // and verify its settings
     EXPECT_EQ(sockObj.get_family(), AF_INET);

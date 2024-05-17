@@ -7,14 +7,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>UPnPlib: Topics</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">var page_layout=1;</script>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(document).ready(function() { init_search(); });
+/* @license-end */
+</script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
@@ -26,6 +37,18 @@
    <div id="projectbrief">&#39;Universal Plug and Play plus&#39; System Developement Kit</div>
   </td>
  </tr>
+   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td></tr>
  </tbody>
 </table>
 </div>
@@ -36,18 +59,22 @@
 var searchBox = new SearchBox("searchBox", "search/",'.html');
 /* @license-end */
 </script>
-<script type="text/javascript" src="menudata.js"></script>
-<script type="text/javascript" src="menu.js"></script>
+</div><!-- top -->
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function() {
-  initMenu('',true,false,'search.php','Search');
-  $(document).ready(function() { init_search(); });
-});
+$(document).ready(function(){initNavTree('topics.html',''); initResizable(); });
 /* @license-end */
 </script>
-<div id="main-nav"></div>
-</div><!-- top -->
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -75,8 +102,8 @@ $(function() {
 <div class="contents">
 <div class="textblock">Here is a list of all topics with brief descriptions:</div><div class="directory">
 <div class="levels">[detail level <span onclick="javascript:toggleLevel(1);">1</span><span onclick="javascript:toggleLevel(2);">2</span><span onclick="javascript:toggleLevel(3);">3</span>]</div><table class="directory">
-<tr id="row_0_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="d9/d54/group__compaAPI.html" target="_self">* COMPATIBLE API</a></td><td class="desc">Well defined Application Programming Interface of the <b>compatible</b> part of the library </td></tr>
-<tr id="row_1_" class="odd"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_1_" class="arrow" onclick="toggleFolder('1_')">&#9658;</span><a class="el" href="d5/dbb/group__compa.html" target="_self">* * compatible UPnP library</a></td><td class="desc">Detailed documentation of this part of the library. Not of interest for only using the SDK </td></tr>
+<tr id="row_0_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="d9/d54/group__compaAPI.html" target="_self">COMPATIBLE API</a></td><td class="desc">Well defined Application Programming Interface of the <b>compatible</b> part of the library </td></tr>
+<tr id="row_1_" class="odd"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_1_" class="arrow" onclick="toggleFolder('1_')">&#9658;</span><a class="el" href="d5/dbb/group__compa.html" target="_self">compatible UPnP library</a></td><td class="desc">Detailed documentation of this part of the library. Not of interest for only using the SDK </td></tr>
 <tr id="row_1_0_" class="even" style="display:none;"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="d3/d94/group__compa-Addressing.html" target="_self">Step 0: Addressing</a></td><td class="desc">Items to get a network address for UPnP devices and control points </td></tr>
 <tr id="row_1_1_" class="even" style="display:none;"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_1_1_" class="arrow" onclick="toggleFolder('1_1_')">&#9658;</span><a class="el" href="d1/d95/group__compa-Discovery.html" target="_self">Step 1: Discovery</a></td><td class="desc">Items for control points to find UPnP device(s) with <b>SSDP</b> the <em>Simple Service Discovery Protocol</em> </td></tr>
 <tr id="row_1_1_0_" class="even" style="display:none;"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="d7/da5/group__SSDP-Data.html" target="_self">SSDP Data</a></td><td class="desc">Constants, variables, trivial structures to manage SSDP discovery </td></tr>
@@ -92,9 +119,9 @@ $(function() {
 <tr id="row_1_6_" class="even" style="display:none;"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_1_6_" class="arrow" onclick="toggleFolder('1_6_')">&#9658;</span><a class="el" href="dc/df0/group__compa-Operating.html" target="_self">general local operating</a></td><td class="desc">Items for general local operating that is used for all UPnP Steps to manage internal structures </td></tr>
 <tr id="row_1_6_0_" class="even" style="display:none;"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="d0/d9a/group__threadutil.html" target="_self">Manage threads</a></td><td class="desc">Functions to manage threads for a thread pool </td></tr>
 <tr id="row_1_6_1_" class="even" style="display:none;"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="d1/d07/group__uuid.html" target="_self">UUID and MD5</a></td><td class="desc">Functions to get uuids and md5 sums </td></tr>
-<tr id="row_2_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_2_" class="arrow" onclick="toggleFolder('2_')">&#9658;</span><a class="el" href="d6/d14/group__upnplibAPI.html" target="_self">* UPNPLIB API</a></td><td class="desc">Well defined Application Programming Interface of the <b>object oriented</b> part of the library </td></tr>
+<tr id="row_2_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_2_" class="arrow" onclick="toggleFolder('2_')">&#9658;</span><a class="el" href="d6/d14/group__upnplibAPI.html" target="_self">UPNPLIB API</a></td><td class="desc">Well defined Application Programming Interface of the <b>object oriented</b> part of the library </td></tr>
 <tr id="row_2_0_" class="odd" style="display:none;"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="db/ddf/group__upnplibAPI-socket.html" target="_self">Socket module</a></td><td class="desc">The socket module contains all classes and free functions to manage network sockets.   </td></tr>
-<tr id="row_3_" class="odd"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_3_" class="arrow" onclick="toggleFolder('3_')">&#9658;</span><a class="el" href="d4/d32/group__upnplib.html" target="_self">* * object oriented UPnP library</a></td><td class="desc">Detailed documentation of this part of the library. Not of interest for only using the SDK </td></tr>
+<tr id="row_3_" class="odd"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_3_" class="arrow" onclick="toggleFolder('3_')">&#9658;</span><a class="el" href="d4/d32/group__upnplib.html" target="_self">object oriented UPnP library</a></td><td class="desc">Detailed documentation of this part of the library. Not of interest for only using the SDK </td></tr>
 <tr id="row_3_0_" class="even" style="display:none;"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_3_0_" class="arrow" onclick="toggleFolder('3_0_')">&#9658;</span><a class="el" href="dd/df8/group__upnplib-Addressing.html" target="_self">Step 0: Addressing</a></td><td class="desc">Items to get a network address for UPnP devices and control points.   </td></tr>
 <tr id="row_3_0_0_" class="even" style="display:none;"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="d0/dd8/group__upnplib-addrmodul.html" target="_self">Address module</a></td><td class="desc">The address module contains all classes and free functions to manage network addresses </td></tr>
 <tr id="row_3_0_1_" class="even" style="display:none;"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="db/d86/group__upnplib-socket.html" target="_self">Socket module</a></td><td class="desc">The socket module contains all classes and free functions to manage network sockets </td></tr>
@@ -105,9 +132,12 @@ $(function() {
 </table>
 </div><!-- directory -->
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
 </body>
 </html>

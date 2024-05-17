@@ -6,7 +6,7 @@ var searchData=
   ['length_3',['length',['../d1/d10/membuffer_8hpp.html#acaa22842001c377190f4dba6d54430ff',1,'memptr::length'],['../d1/d10/membuffer_8hpp.html#a44f3b6407c4490964fbb7f831b55e996',1,'membuffer::length']]],
   ['lib_5finfo_2ecpp_4',['lib_info.cpp',['../d3/d3b/lib__info_8cpp.html',1,'']]],
   ['lib_5finfo_2ehpp_5',['lib_info.hpp',['../de/d5b/lib__info_8hpp.html',1,'']]],
-  ['library_6',['library',['../d5/dbb/group__compa.html',1,'* * compatible UPnP library'],['../d4/d32/group__upnplib.html',1,'* * object oriented UPnP library'],['../index.html',1,'The UPnP Library']]],
+  ['library_6',['library',['../d5/dbb/group__compa.html',1,'compatible UPnP library'],['../d4/d32/group__upnplib.html',1,'object oriented UPnP library'],['../index.html',1,'The UPnP Library']]],
   ['libversion_7',['libversion',['../d3/d3b/lib__info_8cpp.html#a200645db4378672dfe71a3dda085e177',1,'libversion():&#160;lib_info.cpp'],['../de/d5b/lib__info_8hpp.html#a0a01d8cd5935dde38ac086186eef0f98',1,'libversion():&#160;lib_info.cpp']]],
   ['limitations_8',['5. Limitations',['../index.html#autotoc_md11',1,'']]],
   ['line_5fsize_9',['LINE_SIZE',['../da/d1d/upnp_8hpp.html#aba889888734a8b272a51d444d70ad2fa',1,'upnp.hpp']]],

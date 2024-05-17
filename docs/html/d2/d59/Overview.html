@@ -7,14 +7,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>UPnPlib: Overview</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">var page_layout=1;</script>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
+<link href="../../navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../resize.js"></script>
+<script type="text/javascript" src="../../navtreedata.js"></script>
+<script type="text/javascript" src="../../navtree.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(document).ready(function() { init_search(); });
+/* @license-end */
+</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
@@ -26,6 +37,18 @@
    <div id="projectbrief">&#39;Universal Plug and Play plus&#39; System Developement Kit</div>
   </td>
  </tr>
+   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td></tr>
  </tbody>
 </table>
 </div>
@@ -36,17 +59,22 @@
 var searchBox = new SearchBox("searchBox", "../../search/",'.html');
 /* @license-end */
 </script>
-<script type="text/javascript" src="../../menudata.js"></script>
-<script type="text/javascript" src="../../menu.js"></script>
+</div><!-- top -->
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function() {
-  initMenu('../../',true,false,'search.php','Search');
-  $(document).ready(function() { init_search(); });
-});
+$(document).ready(function(){initNavTree('d2/d59/Overview.html','../../'); initResizable(); });
 /* @license-end */
 </script>
-<div id="main-nav"></div>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -68,7 +96,6 @@ $(function() {
 </div>
 </div>
 
-</div><!-- top -->
 <div><div class="header">
   <div class="headertitle"><div class="title">Overview</div></div>
 </div><!--header-->
@@ -115,15 +142,18 @@ Promise to throw "no exception"</h2>
 <h2><a class="anchor" id="overview_reuseaddr"></a>
 Socket option "reuse address"</h2>
 <p>There is an issue when a network connection unexpectedly dies. The port then has normaly to <code>TIME_WAIT</code> util it can use its old <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a> again. This may not be acceptable for certain server applications. So there is a socket option <code>SO_REUSEADDR</code> to immediately reuse a given netaddress, but with the risk of network errors and security issues. For more details have a look at <a href="https://hea-www.harvard.edu/~fine/Tech/addrinuse.html">Bind: Address Already in Use</a>.</p>
-<p>I don't set the option to immediately reuse an address of a local connected socket after the connection closed unexpectedly. Instead I respect the <code>TIME_WAIT</code>. For an immediate reconnection I use a new address. A new <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a> is already given with a changed port so I just use the same ip address with another port. I always reset <code>SO_REUSEADDR</code> with constructing a socket object on all platforms.</p>
+<p>I don't set the option to immediately reuse an address of a local connected socket after the connection closed unexpectedly. Instead I respect the <code>TIME_WAIT</code>. For an immediate reconnection I use a new address. A new <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a> is already given with a changed port so I just use the same ip address with another port. I always reset socket option <code>SO_REUSEADDR</code> with constructing a socket object on all platforms.</p>
 <p>A TIME_WAIT is not necessary if the remote control point closes the connection. Upnplib uses the protocol to signal the remote control point to shutdown the connection if it support it.</p>
 <p>This is unclear on Microsoft Windows. <b>THERE WE HAVE AN IMPORTANT SECURITY ISSUE!</b><br  />
 In the past Windows had a very bad network security on low level socket handling as documented at <a href="https://learn.microsoft.com/en-us/windows/win32/winsock/using-so-reuseaddr-and-so-exclusiveaddruse">Using SO_REUSEADDR and SO_EXCLUSIVEADDRUSE</a>. Microsoft has fixed this since Windows Server 2003. The network stack now behaves like it does by default on other platforms. Strangely, they call it advanced security, which is standard on other major operating systems. But this isn't done by default. The developer has to take this into account by using the socket option SO_EXCLUSIVEADDRUSE. I always set this option with constructing a socket object on a WIN32 platform. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
 </body>
 </html>

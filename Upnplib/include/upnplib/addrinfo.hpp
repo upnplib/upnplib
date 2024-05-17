@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_ADDRINFO_HPP
 #define UPNPLIB_INCLUDE_ADDRINFO_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-10
+// Redistribution only with this Copyright remark. Last modified: 2024-05-17
 /*!
  * \file
  * \brief Declaration of the Addrinfo class.
@@ -55,6 +55,52 @@ class UPNPLIB_API CAddrinfo : public SSockaddr {
     /*! \brief Destructor */
     virtual ~CAddrinfo();
 
+
+    /*! \name Setter
+     * *************
+     * @{ */
+    /*! \brief Initialize address information that is given by syscall
+     * ::%getaddrinfo()
+     *
+     * \code
+~$ // Usage e.g.:
+~$ CAddrinfo ai("[2001:db8::1]", 50050, AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
+~$ try {
+~$     ai.init();
+~$ } catch (const std::runtime_error& e) { handle_failed_address_info();
+~$ } catch (const std::invalid_argument& e) { handle_other_error();
+~$ }
+~$ normal_execution();
+     * \endcode
+     *
+     * Usually this setter is called one time after constructing the object.
+     * This gets an address information from the operating system that may also
+     * use its internal name resolver inclusive contacting external DNS server.
+     * If you use the flag **AI_NUMERICHOST** with the constructor then a
+     * possible expensive name resolution to DNS server is suppressed.
+     *
+     * Because always the same cached hints given with the constructor are used
+     * we also get the same information but with new allocated memory. So it
+     * doesn't make much sense to call it more than one time, but doesn't hurt
+     * except waste of resources. But calling init() again is very important
+     * for internal use within the copy constructor.
+     *
+     * \exception std::runtime_error Failed to get address information, node or
+     * service not known. Maybe an alphanumeric node name that cannot be
+     * resolved. Or the DNS server is temporary not available.
+     * \exception std::invalid_argument Other system error, e.g. address family
+     * or socket type not supported, etc.
+     *
+     * Provides strong exception guarantee. It should be noted that are
+     * different error messages returned by different platforms.
+     */
+    void init();
+    /// @} Setter
+
+
+    /*! \name Getter
+     * *************
+     * @{ */
     /*! \brief Compare operator to test if another address info is equal to
      * this.
      *
@@ -66,58 +112,20 @@ class UPNPLIB_API CAddrinfo : public SSockaddr {
      *  \b false otherwise */
     bool operator==(const CAddrinfo&) const noexcept;
 
+
     /*! \brief Read access to members of the addrinfo structure
      * \code
      * ~$ // Usage e.g.:
      * ~$ CAddrinfo ai("localhost", 50001, AF_UNSPEC, SOCK_STREAM);
      * ~$ try {
-     * ~$     ai.get_addrinfo();
+     * ~$     ai.init();
      * ~$ } catch (xcp) { handle_error(); }
      * ~$ if(ai->ai_socktype == SOCK_DGRAM) {} // is SOCK_STREAM;
      * ~$ if(ai->ai_family == AF_INET6) { do_this(); };
      * \endcode */
     // REF:_<a_href="https://stackoverflow.com/a/8782794/5014688">Overloading_member_access_operators_->,_.*</a>
     ::addrinfo* operator->() const noexcept;
-
-
-    // Getter
-    // ------
-    /*! \brief Get address information that is given by syscall
-     * ::%getaddrinfo()
-     *
-     * \code
-~$ // Usage e.g.:
-~$ CAddrinfo ai("[2001:db8::1]", 50050, AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
-~$ try {
-~$     ai.get_addrinfo();
-~$ } catch (const std::runtime_error& e) { handle_failed_address_info();
-~$ } catch (const std::invalid_argument& e) { handle_other_error();
-~$ }
-~$ continue_normal_execution();
-     * \endcode
-     *
-     * Usually this getter is called one time after constructing the object.
-     * This gets an address information from the operating system that may also
-     * use its internal name resolver inclusive contacting external DNS server.
-     * If you use the flag **AI_NUMERICHOST** with the constructor then a
-     * possible expensive name resolution to DNS server is suppressed.
-     *
-     * Because always the same cached hints given with the constructor are used
-     * we also get the same information but with new allocated memory. So it
-     * doesn't make much sense to call it more than one time, but doesn't hurt
-     * except waste of resources. But this is very important for internal use
-     * within the copy constructor.
-     *
-     * \exception std::runtime_error Failed to get address information, node or
-     * service not known. Maybe an alphanumeric node name that cannot be
-     * resolved. Or the DNS server is temporary not available.
-     * \exception std::invalid_argument Error not belonging to dynamic name
-     * resolution.
-     *
-     * Provides strong exception guarantee. It should be noted that are
-     * different error messages returned by different platforms.
-     */
-    void get_addrinfo();
+    /// @} Getter
 
 
   private:

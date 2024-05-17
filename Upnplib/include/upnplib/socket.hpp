@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-15
+// Redistribution only with this Copyright remark. Last modified: 2024-05-17
 /*!
  * \file
  * \brief **Socket Module:** manage properties and methods but not connections
@@ -104,8 +104,8 @@ namespace upnplib {
  *
  * An object of this class does not take ownership of the raw socket file
  * descriptor and will never close it. This is also the reason why you cannot
- * modify the socket and only have getter available (except the setter for the
- * raw socket file descriptor itself). But it is helpful to easily get
+ * modify the socket and only have getter available (except the setter 'init()'
+ * for the raw socket file descriptor itself). But it is helpful to easily get
  * information about an existing raw socket file descriptor. Closing the file
  * descriptor is in the responsibility of the caller who created the socket. If
  * you need to manage a socket you must use CSocket.
@@ -116,7 +116,7 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
     CSocket_basic();
 
     /*! \brief Constructor for the socket file descriptor. Before use, it must
-     * be set(). */
+     * be init(). */
     CSocket_basic(SOCKET a_sfd);
 
     // Copy constructor
@@ -132,7 +132,7 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
      * // Usage e.g.:
      * CSocket_basic sockObj(valid_socket_fd);
      * try {
-     *     sockObj.set();
+     *     sockObj.init();
      * } catch(xcp) { handle_error(); };
      * SOCKET sfd = sockObj;
      * \endcode */
@@ -142,14 +142,14 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
     /*! \name Setter
      * *************
      * @{ */
-    /*! \brief Set a given raw socket file descriptor to the object
+    /*! \brief Initialize a given raw socket file descriptor to the object
      * \code
      * // Usage e.g.:
      * SOCKET sfd = ::socket(AF_INET6, SOCK_STREAM);
      * {   // Scope for sockObj, sfd must longer exist than sockObj
      *     CSocket_basic sockObj(sfd);
      *     try {
-     *         sockObj.set();
+     *         sockObj.init();
      *     } catch(xcp) { handle_error(); };
      *     // Use the getter from sockObj
      * }
@@ -159,11 +159,11 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
      * The socket file descriptor was given with the constructor. This object
      * does not take ownership of the socket file descriptor and will never
      * close it. Closing is in the responsibility of the caller who created the
-     * socket. Setting it again is possible but is only waste of resources. The
-     * result is the same as before.
+     * socket. Initializing it again is possible but is only waste of
+     * resources. The result is the same as before.
      *
      * \exception std::runtime_error Given socket file descriptor is invalid. */
-    void set();
+    void init();
     /// @} Setter
 
 
@@ -245,10 +245,10 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * [empty socket object](\ref empty_socket) */
     CSocket();
 
-    /*! \brief Constructor for a new socket file descriptor that must be init()
-     * \todo **Next:** Test for AF_UNSPEC */
-    CSocket(sa_family_t a_family, ///< [in] AF_INET6, AF_INET, or AF_UNSPEC
-            int a_socktype /*!<        [in] SOCK_STREAM or SOCK_DGRAM */);
+    /// \brief Constructor for a new socket file descriptor that must be init()
+    CSocket(sa_family_t a_family, /*!<  [in] AF_INET6 or AF_INET. AF_UNSPEC is
+                                             not accepted */
+            int a_socktype /*!<         [in] SOCK_STREAM or SOCK_DGRAM */);
 
     /*! \brief Move constructor
      *

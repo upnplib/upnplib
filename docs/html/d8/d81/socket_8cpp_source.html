@@ -7,14 +7,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>UPnPlib: Upnplib/src/net/socket.cpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">var page_layout=1;</script>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
+<link href="../../navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../resize.js"></script>
+<script type="text/javascript" src="../../navtreedata.js"></script>
+<script type="text/javascript" src="../../navtree.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(document).ready(function() { init_search(); });
+/* @license-end */
+</script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
@@ -26,6 +37,18 @@
    <div id="projectbrief">&#39;Universal Plug and Play plus&#39; System Developement Kit</div>
   </td>
  </tr>
+   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td></tr>
  </tbody>
 </table>
 </div>
@@ -36,22 +59,22 @@
 var searchBox = new SearchBox("searchBox", "../../search/",'.html');
 /* @license-end */
 </script>
-<script type="text/javascript" src="../../menudata.js"></script>
-<script type="text/javascript" src="../../menu.js"></script>
+</div><!-- top -->
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function() {
-  initMenu('../../',true,false,'search.php','Search');
-  $(document).ready(function() { init_search(); });
-});
+$(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../../'); initResizable(); });
 /* @license-end */
 </script>
-<div id="main-nav"></div>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function() { init_codefold(1); });
-/* @license-end */
-</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -73,17 +96,12 @@ $(document).ready(function() { init_codefold(1); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="../../dir_676c01f5c5afcbac5294f5bfc98838d8.html">Upnplib</a></li><li class="navelem"><a class="el" href="../../dir_9c33e43f7fb6ce119111c51e76c4e051.html">src</a></li><li class="navelem"><a class="el" href="../../dir_0314db59fdc4c2edc3bf00b432c5a155.html">net</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle"><div class="title">socket.cpp</div></div>
 </div><!--header-->
 <div class="contents">
 <a href="../../d8/d81/socket_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, &lt;Ingo@Hoeft-online.de&gt;</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Redistribution only with this Copyright remark. Last modified: 2024-05-16</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Redistribution only with this Copyright remark. Last modified: 2024-05-17</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="../../da/dfc/socket_8hpp.html">upnplib/socket.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="../../d6/dbf/addrinfo_8hpp.html">upnplib/addrinfo.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="../../d1/d3b/synclog_8hpp.html">upnplib/synclog.hpp</a>&gt;</span></div>
@@ -171,7 +189,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    TRACE2(<span class="keyword">this</span>, <span class="stringliteral">&quot; Construct default CSocket_basic()&quot;</span>) <span class="comment">//</span></div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>}</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment">// Constructor for the socket file descriptor. Before use, it must be set().</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment">// Constructor for the socket file descriptor. Before use, it must be init().</span></div>
 <div class="foldopen" id="foldopen00102" data-start="{" data-end="}">
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a4fdb4cb6e33b65d1f55497b8de1f27ca">  102</a></span>CSocket_basic::CSocket_basic(<a class="code hl_typedef" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> a_sfd)</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    : m_sfd_hint(a_sfd) {</div>
@@ -181,8 +199,8 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="comment">// Setter with given file desciptor</span></div>
 <div class="foldopen" id="foldopen00108" data-start="{" data-end="}">
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a2ec0921d9cbae0360d737a1d6e49417a">  108</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a2ec0921d9cbae0360d737a1d6e49417a">CSocket_basic::set</a>() {</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    TRACE2(<span class="keyword">this</span>, <span class="stringliteral">&quot; Executing CSocket_basic::set()&quot;</span>)</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a669306da2efd858996bd66fc3de5c621">  108</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a669306da2efd858996bd66fc3de5c621">CSocket_basic::init</a>() {</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    TRACE2(<span class="keyword">this</span>, <span class="stringliteral">&quot; Executing CSocket_basic::init()&quot;</span>)</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <a class="code hl_class" href="../../d2/dd2/classupnplib_1_1CSocketErr.html">CSocketErr</a> serrObj;</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="comment">// Check if we have a valid socket file descriptor</span></div>
@@ -313,7 +331,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
 <div class="foldopen" id="foldopen00221" data-start="{" data-end="}">
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno"><a class="line" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a0bfd8447aeb0fce2841c5ea90234c37d">  221</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a0bfd8447aeb0fce2841c5ea90234c37d">CSocket_basic::is_bound</a>() {</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <span class="comment">// We get the socket address from the file descriptor and check if its</span></div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <span class="comment">// I get the socket address from the file descriptor and check if its</span></div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    <span class="comment">// address is unspecified or if the address and port are all zero. This</span></div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <span class="comment">// replaces the method with direct compare of the socket addresses with a</span></div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <span class="comment">// 16 byte AF_INET6 compare which last version can be found at commit</span></div>
@@ -576,7 +594,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>    <span class="comment">// Get an adress info to bind.</span></div>
 <div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>    <a class="code hl_class" href="../../da/dad/classupnplib_1_1CAddrinfo.html">CAddrinfo</a> ai(a_node, a_port, addr_family, this-&gt;<a class="code hl_function" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a41cf15ed4d81fb0f237d8a6b69f72d8a">get_socktype</a>(),</div>
 <div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>                 AI_NUMERICHOST | AI_NUMERICSERV | a_flags);</div>
-<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span>    ai.<a class="code hl_function" href="../../da/dad/classupnplib_1_1CAddrinfo.html#adec90cab1b85914a4fe0a14316d05083">get_addrinfo</a>(); <span class="comment">// may throw exception</span></div>
+<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span>    ai.<a class="code hl_function" href="../../da/dad/classupnplib_1_1CAddrinfo.html#a307094d37736d609bde57f810f7b8ba5">init</a>(); <span class="comment">// may throw exception</span></div>
 <div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span> </div>
 <div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>    <span class="comment">// Here we bind the socket to an address.</span></div>
 <div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>    <span class="comment">// Type cast socklen_t is needed for Microsoft Windows.</span></div>
@@ -735,7 +753,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="ttc" id="aUpnpInet_8hpp_html_a8dc8083897335125630f1af5dafd5831"><div class="ttname"><a href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a></div><div class="ttdeci">int SOCKET</div><div class="ttdef"><b>Definition</b> <a href="../../da/dc0/UpnpInet_8hpp_source.html#l00049">UpnpInet.hpp:49</a></div></div>
 <div class="ttc" id="aaddrinfo_8hpp_html"><div class="ttname"><a href="../../d6/dbf/addrinfo_8hpp.html">addrinfo.hpp</a></div><div class="ttdoc">Declaration of the Addrinfo class.</div></div>
 <div class="ttc" id="aclassupnplib_1_1CAddrinfo_html"><div class="ttname"><a href="../../da/dad/classupnplib_1_1CAddrinfo.html">upnplib::CAddrinfo</a></div><div class="ttdoc">Wrap C style ::addrinfo() structure with a class.</div><div class="ttdef"><b>Definition</b> <a href="../../d6/dbf/addrinfo_8hpp_source.html#l00024">addrinfo.hpp:24</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1CAddrinfo_html_adec90cab1b85914a4fe0a14316d05083"><div class="ttname"><a href="../../da/dad/classupnplib_1_1CAddrinfo.html#adec90cab1b85914a4fe0a14316d05083">upnplib::CAddrinfo::get_addrinfo</a></div><div class="ttdeci">void get_addrinfo()</div><div class="ttdoc">Get address information that is given by syscall ::getaddrinfo()</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d59/addrinfo_8cpp_source.html#l00213">addrinfo.cpp:213</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CAddrinfo_html_a307094d37736d609bde57f810f7b8ba5"><div class="ttname"><a href="../../da/dad/classupnplib_1_1CAddrinfo.html#a307094d37736d609bde57f810f7b8ba5">upnplib::CAddrinfo::init</a></div><div class="ttdeci">void init()</div><div class="ttdoc">Initialize address information that is given by syscall ::getaddrinfo()</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d59/addrinfo_8cpp_source.html#l00213">addrinfo.cpp:213</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocketErrService_html_a7489a6ba4dae830e687a2a919e99a295"><div class="ttname"><a href="../../d1/d16/classupnplib_1_1CSocketErrService.html#a7489a6ba4dae830e687a2a919e99a295">upnplib::CSocketErrService::catch_error</a></div><div class="ttdeci">virtual void catch_error() override</div><div class="ttdoc">Catch error for later use.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00583">socket.cpp:583</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocketErrService_html_a88561a11496e6bb3edc009e82a585a31"><div class="ttname"><a href="../../d1/d16/classupnplib_1_1CSocketErrService.html#a88561a11496e6bb3edc009e82a585a31">upnplib::CSocketErrService::get_error_str</a></div><div class="ttdeci">virtual std::string get_error_str() const override</div><div class="ttdoc">Get human readable error description of the catched error.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00592">socket.cpp:592</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocketErr_html"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html">upnplib::CSocketErr</a></div><div class="ttdoc">di-client for portable handling of network socket errors with injected di-service.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00544">socket.hpp:544</a></div></div>
@@ -743,9 +761,9 @@ $(document).ready(function() { init_codefold(1); });
 <div class="ttc" id="aclassupnplib_1_1CSocketErr_html_aa26c6b3c19727370e22473e70cbe898e"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#aa26c6b3c19727370e22473e70cbe898e">upnplib::CSocketErr::CSocketErr</a></div><div class="ttdeci">UPNPLIB_API CSocketErr(PSocketErr a_socket_errObj=std::make_shared&lt; CSocketErrService &gt;())</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00549">socket.cpp:549</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocketErr_html_ac45e6b23d19a77a13392e22e1230876f"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">upnplib::CSocketErr::get_error_str</a></div><div class="ttdeci">virtual UPNPLIB_API std::string get_error_str() const</div><div class="ttdoc">Gets a human readable error description from the operating system that explains the catched error.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00562">socket.cpp:562</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocket__basic_html_a0bfd8447aeb0fce2841c5ea90234c37d"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html#a0bfd8447aeb0fce2841c5ea90234c37d">upnplib::CSocket_basic::is_bound</a></div><div class="ttdeci">bool is_bound()</div><div class="ttdoc">Get status if socket is bound to a local netaddress.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00221">socket.cpp:221</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1CSocket__basic_html_a2ec0921d9cbae0360d737a1d6e49417a"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html#a2ec0921d9cbae0360d737a1d6e49417a">upnplib::CSocket_basic::set</a></div><div class="ttdeci">void set()</div><div class="ttdoc">Set a given raw socket file descriptor to the object.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00108">socket.cpp:108</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocket__basic_html_a41cf15ed4d81fb0f237d8a6b69f72d8a"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html#a41cf15ed4d81fb0f237d8a6b69f72d8a">upnplib::CSocket_basic::get_socktype</a></div><div class="ttdeci">int get_socktype() const</div><div class="ttdoc">Get the socket type SOCK_STREAM or SOCK_DGRAM.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00167">socket.cpp:167</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocket__basic_html_a5f7fd6b4ebb71a582453fa9941208758"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html#a5f7fd6b4ebb71a582453fa9941208758">upnplib::CSocket_basic::get_netaddr</a></div><div class="ttdeci">const netaddr_t &amp; get_netaddr() override</div><div class="ttdoc">Get netaddress without port.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00149">socket.cpp:149</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CSocket__basic_html_a669306da2efd858996bd66fc3de5c621"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html#a669306da2efd858996bd66fc3de5c621">upnplib::CSocket_basic::init</a></div><div class="ttdeci">void init()</div><div class="ttdoc">Initialize a given raw socket file descriptor to the object.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00108">socket.cpp:108</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocket__basic_html_a6878fbfcf7704d59f18dea2a350773bd"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html#a6878fbfcf7704d59f18dea2a350773bd">upnplib::CSocket_basic::get_family</a></div><div class="ttdeci">sa_family_t get_family() const</div><div class="ttdoc">Get socket address family.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00143">socket.cpp:143</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocket__basic_html_a6e83bff4e6d004f48f8d0d947bad74a7"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html#a6e83bff4e6d004f48f8d0d947bad74a7">upnplib::CSocket_basic::get_netaddrp</a></div><div class="ttdeci">const netaddr_t &amp; get_netaddrp() override</div><div class="ttdoc">Get netaddress with port.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00155">socket.cpp:155</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocket__basic_html_a70afe9ed6de1c17bb59f6c0bcc5bba00"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html#a70afe9ed6de1c17bb59f6c0bcc5bba00">upnplib::CSocket_basic::get_port</a></div><div class="ttdeci">in_port_t get_port() const override</div><div class="ttdoc">Get the port number.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00161">socket.cpp:161</a></div></div>
@@ -774,9 +792,13 @@ $(document).ready(function() { init_codefold(1); });
 <div class="ttc" id="astructupnplib_1_1SSockaddr_html_acfbc17691472b42667e7deb1bf023703"><div class="ttname"><a href="../../d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703">upnplib::SSockaddr::get_netaddrp</a></div><div class="ttdeci">virtual const netaddr_t &amp; get_netaddrp()</div><div class="ttdoc">Get the assosiated netaddress with port.</div><div class="ttdef"><b>Definition</b> <a href="../../d7/def/sockaddr_8cpp_source.html#l00275">sockaddr.cpp:275</a></div></div>
 <div class="ttc" id="asynclog_8hpp_html"><div class="ttname"><a href="../../d1/d3b/synclog_8hpp.html">synclog.hpp</a></div><div class="ttdoc">Define macro for synced logging to the console for detailed info and debug.</div></div>
 </div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="../../dir_676c01f5c5afcbac5294f5bfc98838d8.html">Upnplib</a></li><li class="navelem"><a class="el" href="../../dir_9c33e43f7fb6ce119111c51e76c4e051.html">src</a></li><li class="navelem"><a class="el" href="../../dir_0314db59fdc4c2edc3bf00b432c5a155.html">net</a></li><li class="navelem"><a class="el" href="../../d8/d81/socket_8cpp.html">socket.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
 </body>
 </html>

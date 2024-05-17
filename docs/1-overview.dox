@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-12
+// Redistribution only with this Copyright remark. Last modified: 2024-05-16
 
 /*!
 \page Overview
@@ -36,7 +36,7 @@ There are several functions and methods that are specified to <a href="https://e
 
 There is an issue when a network connection unexpectedly dies. The port then has normaly to `TIME_WAIT` util it can use its old \glos{netaddr,netaddress} again. This may not be acceptable for certain server applications. So there is a socket option `SO_REUSEADDR` to immediately reuse a given netaddress, but with the risk of network errors and security issues. For more details have a look at <!--REF:-->[Bind: Address Already in Use](https://hea-www.harvard.edu/~fine/Tech/addrinuse.html).
 
-I don't set the option to immediately reuse an address of a local connected socket after the connection closed unexpectedly. Instead I respect the `TIME_WAIT`. For an immediate reconnection I use a new address. A new \glos{netaddr,netaddress} is already given with a changed port so I just use the same ip address with another port. I always reset `SO_REUSEADDR` with constructing a socket object on all platforms.
+I don't set the option to immediately reuse an address of a local connected socket after the connection closed unexpectedly. Instead I respect the `TIME_WAIT`. For an immediate reconnection I use a new address. A new \glos{netaddr,netaddress} is already given with a changed port so I just use the same ip address with another port. I always reset socket option `SO_REUSEADDR` with constructing a socket object on all platforms.
 
 A TIME_WAIT is not necessary if the remote control point closes the connection. Upnplib uses the protocol to signal the remote control point to shutdown the connection if it support it.
 

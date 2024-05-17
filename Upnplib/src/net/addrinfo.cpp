@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-10
+// Redistribution only with this Copyright remark. Last modified: 2024-05-17
 /*!
  * \file
  * \brief Definition of the Addrinfo class and free helper functions.
@@ -138,7 +138,7 @@ CAddrinfo::CAddrinfo(const CAddrinfo& that) : SSockaddr() {
     // The call was already successful done with initializing the object.
     // Calling it again with unmodified hints should also always succeed.
     if (that.m_res != &that.m_hints)
-        this->get_addrinfo();
+        this->init();
 }
 
 
@@ -207,11 +207,11 @@ bool CAddrinfo::operator==(const CAddrinfo& a_ai) const noexcept {
 ::addrinfo* CAddrinfo::operator->() const noexcept { return m_res; }
 
 
-// Getter to get an addrinfo and set it to the object
-// --------------------------------------------------
+// Setter to initialize an addrinfo and set it to the object
+// ---------------------------------------------------------
 // Get address information with cached hints.
-void CAddrinfo::get_addrinfo() {
-    TRACE2(this, " Executing CAddrinfo::get_addrinfo()")
+void CAddrinfo::init() {
+    TRACE2(this, " Executing CAddrinfo::init()")
 
     // Temporary working copies: modified node and hints to use for syscall
     // ::getaddrinfo().

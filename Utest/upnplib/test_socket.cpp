@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-14
+// Redistribution only with this Copyright remark. Last modified: 2024-05-17
 
 #include <upnplib/global.hpp>
 #include <upnplib/socket.hpp>
@@ -31,7 +31,6 @@ using ::testing::ThrowsMessage;
 using ::upnplib::CSocket;
 using ::upnplib::CSocket_basic;
 using ::upnplib::CSocketErr;
-using ::upnplib::CSocketErrService;
 using ::upnplib::g_dbug;
 using ::upnplib::SSockaddr;
 
@@ -83,7 +82,7 @@ TEST(SockTestSuite, sock_connect_to_host) {
     WINSOCK_INIT
     // Get a socket
     upnplib::CSocket sockObj;
-    sockObj.set(AF_INET6, SOCK_STREAM);
+    sockObj.init(AF_INET6, SOCK_STREAM);
 
     // Get the remote host socket address
     // upnplib::CAddrinfo addrinfo("[2001:db8::1]", "80"); // gives WSAETIMEDOUT
@@ -206,7 +205,7 @@ TEST(SocketBasicTestSuite, instantiate_socket_successful) {
 
     // Test Unit
     CSocket_basic sockObj(sfd);
-    sockObj.set();
+    sockObj.init();
 
     EXPECT_EQ((SOCKET)sockObj, sfd);
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
@@ -231,7 +230,7 @@ TEST(SocketBasicTestSuite, instantiate_with_bound_socket_fd) {
 
     // Test Unit with a bound socket.
     CSocket_basic sockObj(bound_sock);
-    sockObj.set();
+    sockObj.init();
 
     EXPECT_EQ((SOCKET)sockObj, bound_sock);
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
@@ -248,7 +247,7 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_stream) {
     ASSERT_NE(sfd, INVALID_SOCKET);
 
     CSocket_basic sockObj(sfd);
-    sockObj.set();
+    sockObj.init();
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_family(), AF_UNIX);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
@@ -279,7 +278,7 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_dgram) {
 #ifndef _MSC_VER
     ASSERT_NE(sfd, INVALID_SOCKET);
     CSocket_basic sockObj(sfd);
-    sockObj.set();
+    sockObj.init();
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_family(), AF_UNIX);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_DGRAM);
@@ -303,7 +302,7 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_raw) {
 #if defined(__GNUC__) && !defined(__clang__)
     ASSERT_NE(sfd, INVALID_SOCKET);
     CSocket_basic sockObj(sfd);
-    sockObj.set();
+    sockObj.init();
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_family(), AF_UNIX);
     // Silently changed
@@ -328,7 +327,7 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_seqpacket) {
 #if defined(__GNUC__) && !defined(__clang__)
     ASSERT_NE(sfd, INVALID_SOCKET);
     CSocket_basic sockObj(sfd);
-    sockObj.set();
+    sockObj.init();
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
@@ -345,7 +344,7 @@ TEST(SocketBasicTestSuite, set_invalid_socket_fd) {
 
     // Test Unit
     EXPECT_THAT(
-        [&sockObj]() { sockObj.set(); },
+        [&sockObj]() { sockObj.init(); },
         ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1014: ")));
 }
 
@@ -355,8 +354,8 @@ TEST(SocketBasicTestSuite, set_object_two_times) {
 
     // Test Unit
     CSocket_basic sockObj(sfd);
-    sockObj.set();
-    sockObj.set();
+    sockObj.init();
+    sockObj.init();
 
     EXPECT_EQ(static_cast<SOCKET>(sockObj), sfd);
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
@@ -1171,7 +1170,7 @@ TEST(SocketBindTestSuite, check_binding_passive_all_free_ports) {
     std::cout << "DEBUG\! start port = " << port << "\n";
     for (; port < 65535; port++) {
         CSocket sockObj;
-        sockObj.set(AF_INET6, SOCK_STREAM);
+        sockObj.init(AF_INET6, SOCK_STREAM);
         try {
             sockObj.bind("", std::to_string(port), AI_PASSIVE);
         } catch (const std::runtime_error& e) {

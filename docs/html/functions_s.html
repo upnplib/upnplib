@@ -7,14 +7,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>UPnPlib: Class Members</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">var page_layout=1;</script>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(document).ready(function() { init_search(); });
+/* @license-end */
+</script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
@@ -26,6 +37,18 @@
    <div id="projectbrief">&#39;Universal Plug and Play plus&#39; System Developement Kit</div>
   </td>
  </tr>
+   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td></tr>
  </tbody>
 </table>
 </div>
@@ -36,18 +59,22 @@
 var searchBox = new SearchBox("searchBox", "search/",'.html');
 /* @license-end */
 </script>
-<script type="text/javascript" src="menudata.js"></script>
-<script type="text/javascript" src="menu.js"></script>
+</div><!-- top -->
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function() {
-  initMenu('',true,false,'search.php','Search');
-  $(document).ready(function() { init_search(); });
-});
+$(document).ready(function(){initNavTree('functions_s.html',''); initResizable(); });
 /* @license-end */
 </script>
-<div id="main-nav"></div>
-</div><!-- top -->
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -91,7 +118,7 @@ $(function() {
 <li>ServiceType&#160;:&#160;<a class="el" href="d0/d19/ssdp__common_8hpp.html#a606f9ecc0623cf90d105e8b3fea36771">SsdpEvent</a>, <a class="el" href="d3/da9/upnpapi_8hpp.html#af26d07dbeb0311a1c0135e2434dc8502">UpnpNonblockParam</a></li>
 <li>ServiceVer&#160;:&#160;<a class="el" href="d3/da9/upnpapi_8hpp.html#a8e9d52f6ff4940f156f4cba1e15a8699">UpnpNonblockParam</a></li>
 <li>servId&#160;:&#160;<a class="el" href="d9/dd2/gena_8hpp.html#ad1af1741e32001292c9abb3aeab78664">NOTIFY_THREAD_STRUCT</a></li>
-<li>set()&#160;:&#160;<a class="el" href="d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html#a56be3d34f34993c965ace22a5e2b6319">anonymous_namespace{webserver.cpp}::xml_alias_t</a>, <a class="el" href="db/d84/classupnplib_1_1CSocket__basic.html#a2ec0921d9cbae0360d737a1d6e49417a">upnplib::CSocket_basic</a></li>
+<li>set()&#160;:&#160;<a class="el" href="d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html#a56be3d34f34993c965ace22a5e2b6319">anonymous_namespace{webserver.cpp}::xml_alias_t</a></li>
 <li>set_v6only()&#160;:&#160;<a class="el" href="d8/d73/classupnplib_1_1CSocket.html#a558451398ca27e8a0311df14e3441e6b">upnplib::CSocket</a></li>
 <li>shutdown&#160;:&#160;<a class="el" href="d5/d91/ThreadPool_8hpp.html#a45093fe249a5816ad25cc10536c48483">ThreadPool</a>, <a class="el" href="d0/d87/TimerThread_8hpp.html#ae09bc9978db365fd46e77eafd592abc7">TimerThread</a></li>
 <li>sid&#160;:&#160;<a class="el" href="d9/dd2/gena_8hpp.html#a2cd56ffe5b429b065559139363ff7baa">NOTIFY_THREAD_STRUCT</a>, <a class="el" href="db/d74/service__table_8hpp.html#a73a4c05fab1040e56c77a04dda6bddfb">subscription</a></li>
@@ -124,9 +151,12 @@ $(function() {
 <li>subtype&#160;:&#160;<a class="el" href="dc/d6d/namespaceupnplib.html#a46af4bf0bba66fea9883ef10b27b8000">upnplib::Document_meta</a></li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -1,17 +1,17 @@
 <map id="anonymous_namespace{miniserver::cpp}::getNumericHostRedirection" name="anonymous_namespace{miniserver::cpp}::getNumericHostRedirection">
-<area shape="rect" id="Node000001" title="Returns the ip address with port as text that is bound to a socket." alt="" coords="5,34,228,89"/>
-<area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html#a6e83bff4e6d004f48f8d0d947bad74a7" title="Get netaddress with port." alt="" coords="290,9,461,49"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,45,276,39,277,44,228,50"/>
-<area shape="rect" id="Node000006" href="$db/d84/classupnplib_1_1CSocket__basic.html#a2ec0921d9cbae0360d737a1d6e49417a" title="Set a given raw socket file descriptor to the object." alt="" coords="276,77,475,102"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="228,71,263,74,262,80,228,76"/>
-<area shape="rect" id="Node000003" href="$d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="524,5,669,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="461,25,510,24,510,30,461,30"/>
-<area shape="rect" id="Node000004" href="$d0/dd8/group__upnplib-addrmodul.html#gac193ec8b0d5cf6c70e2282814ef77c05" title="Get the netaddress with port from a sockaddr structure." alt="" coords="719,13,875,38"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="670,23,705,23,705,28,670,28"/>
-<area shape="rect" id="Node000005" href="$d0/dd8/group__upnplib-addrmodul.html#ga860ec0f90ae3b8fc2a00507c38213d7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="923,13,1071,38"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="875,23,909,23,909,28,875,28"/>
-<area shape="rect" id="Node000007" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="523,69,671,109"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="475,87,509,87,509,92,475,92"/>
-<area shape="rect" id="Node000008" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="523,133,671,173"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="421,100,515,127,513,132,420,105"/>
+<area shape="rect" id="Node000001" title="Returns the ip address with port as text that is bound to a socket." alt="" coords="5,30,228,85"/>
+<area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html#a6e83bff4e6d004f48f8d0d947bad74a7" title="Get netaddress with port." alt="" coords="276,5,447,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,40,262,36,263,41,228,45"/>
+<area shape="rect" id="Node000006" href="$db/d84/classupnplib_1_1CSocket__basic.html#a669306da2efd858996bd66fc3de5c621" title="Initialize a given raw socket file descriptor to the object." alt="" coords="276,69,447,109"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="228,69,263,74,262,79,228,75"/>
+<area shape="rect" id="Node000003" href="$d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="496,5,641,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="447,23,482,23,482,28,447,28"/>
+<area shape="rect" id="Node000004" href="$d0/dd8/group__upnplib-addrmodul.html#gac193ec8b0d5cf6c70e2282814ef77c05" title="Get the netaddress with port from a sockaddr structure." alt="" coords="691,13,847,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="642,23,677,23,677,28,642,28"/>
+<area shape="rect" id="Node000005" href="$d0/dd8/group__upnplib-addrmodul.html#ga860ec0f90ae3b8fc2a00507c38213d7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="895,13,1043,38"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="847,23,881,23,881,28,847,28"/>
+<area shape="rect" id="Node000007" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="495,69,643,109"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="447,87,481,87,481,92,447,92"/>
+<area shape="rect" id="Node000008" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="495,133,643,173"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="428,107,491,127,490,132,426,112"/>
 </map>

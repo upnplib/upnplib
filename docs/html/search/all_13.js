@@ -1,7 +1,7 @@
 var searchData=
 [
   ['object_0',['empty socket object',['../db/d86/group__upnplib-socket.html#autotoc_md13',1,'']]],
-  ['object_20oriented_20upnp_20library_1',['* * object oriented UPnP library',['../d4/d32/group__upnplib.html',1,'']]],
+  ['object_20oriented_20upnp_20library_1',['object oriented UPnP library',['../d4/d32/group__upnplib.html',1,'']]],
   ['open_2',['open',['../d6/d92/VirtualDir_8hpp.html#a4c883b1191946a96a03e9609a4ca9885',1,'VirtualDirCallbacks']]],
   ['operating_3',['general local operating',['../dc/df0/group__compa-Operating.html',1,'']]],
   ['operator_20const_20int_20_26_4',['operator const int &amp;',['../d9/dd8/classupnplib_1_1ISocketErr.html#a3bb576a05d858fcdb20fe7e03a2bd6e3',1,'upnplib::ISocketErr::operator const int &amp;()'],['../d1/d16/classupnplib_1_1CSocketErrService.html#ac22535eada62b982c8733979080d79e3',1,'upnplib::CSocketErrService::operator const int &amp;()'],['../d2/dd2/classupnplib_1_1CSocketErr.html#aadada5820c5ed14f1e777fbbfb50bcf4',1,'upnplib::CSocketErr::operator const int &amp;()']]],
@@ -12,7 +12,7 @@ var searchData=
   ['option_20reuse_20address_9',['Socket option &quot;reuse address&quot;',['../d2/d59/Overview.html#overview_reuseaddr',1,'']]],
   ['optional_20tool_20api_10',['Optional Tool API',['../d3/d57/group__UPnPTools.html',1,'']]],
   ['options_20so_5freuseaddr_20and_20so_5fexclusiveaddruse_11',['options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE',['../db/d86/group__upnplib-socket.html#autotoc_md17',1,'']]],
-  ['oriented_20upnp_20library_12',['* * object oriented UPnP library',['../d4/d32/group__upnplib.html',1,'']]],
+  ['oriented_20upnp_20library_12',['object oriented UPnP library',['../d4/d32/group__upnplib.html',1,'']]],
   ['os_13',['Os',['../d0/d19/ssdp__common_8hpp.html#ab3050a65f930d005d25a17804b2304e6',1,'SsdpEvent']]],
   ['outgoing_14',['outgoing',['../db/d74/service__table_8hpp.html#a8043871a87822b2ceb4ff081ce5734b9',1,'subscription']]],
   ['overview_15',['overview',['../index.html#autotoc_md1',1,'1. Overview'],['../d2/d59/Overview.html',1,'Overview'],['../d2/d59/Overview.html#overview',1,'Overview']]]
