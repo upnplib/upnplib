@@ -131,7 +131,7 @@ $(document).ready(function(){initNavTree('d5/d67/Glossary.html','../../'); initR
 "[2001:db8::2]" same as "[2001:db8::2]:" and "[2001:db8::2]:0"
 "192.168.123.234:56789"
 "192.168.1.2" same as "192.168.1.2:" and "192.168.1.2:0"
-</pre><p> Surounding brackets define a numeric IPv6 (AF_INET6) address. The numeric IPv6 address part must always be surrounded by <b>[]</b> otherwise it cannot be unique with a port number. Without brackets an address will be treated as alphanumeric (if no hints given to be numeric), even if it looks like a valid IPv6 numeric address. Then it may trigger an expensive DNS lookup.</p>
+</pre><p> Surounding brackets define a numeric IPv6 (AF_INET6) address. The numeric IPv6 address part must always be surrounded by <b>[]</b> otherwise it cannot be unique with a port number. Without brackets an address will be treated as alphanumeric (if no hints given to be numeric), even if it looks like an IPv6 numeric address. Then it may trigger an expensive DNS lookup.</p>
 <p>Special cases are:</p><ul>
 <li><b>"[]"</b> - This is an invalid numeric or alphanumeric IPv6 address name because there is already a well defined unspecified numeric IPv6 (AF_INET6) network address given with <b>"[::]"</b> and an alphanumeric name cannot start with <b>'</b>['. And of course it is never any kind of IPv4 address. Long story short it's general an invalid network address.</li>
 <li><b>""</b> - This is an unspecified (AF_UNSPEC) network address with all attributes unspecified. It may be <b>"[::]:0"</b> or <b>"0.0.0.0:0"</b>.</li>

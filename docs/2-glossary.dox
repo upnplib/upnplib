@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-09
+// Redistribution only with this Copyright remark. Last modified: 2024-05-19
 
 /*!
 \page Glossary
@@ -51,7 +51,7 @@ This is a string of an IPv4 or IPv6 internet network address as described at [Wi
 "192.168.123.234:56789"
 "192.168.1.2" same as "192.168.1.2:" and "192.168.1.2:0"
 \endverbatim
-Surounding brackets define a numeric IPv6 (AF_INET6) address. The numeric IPv6 address part must always be surrounded by **[]** otherwise it cannot be unique with a port number. Without brackets an address will be treated as alphanumeric (if no hints given to be numeric), even if it looks like a valid IPv6 numeric address. Then it may trigger an expensive DNS lookup.
+Surounding brackets define a numeric IPv6 (AF_INET6) address. The numeric IPv6 address part must always be surrounded by **[]** otherwise it cannot be unique with a port number. Without brackets an address will be treated as alphanumeric (if no hints given to be numeric), even if it looks like an IPv6 numeric address. Then it may trigger an expensive DNS lookup.
 
 Special cases are:
     - \b "[]" - This is an invalid numeric or alphanumeric IPv6 address name because there is already a well defined unspecified numeric IPv6 (AF_INET6) network address given with \b "[::]" and an alphanumeric name cannot start with \b '['. And of course it is never any kind of IPv4 address. Long story short it's general an invalid network address.

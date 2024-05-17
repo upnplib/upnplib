@@ -91,13 +91,13 @@
 <area shape="rect" id="Node000092" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="982,1161,1130,1201"/>
 <area shape="poly" id="edge42_Node000091_Node000092" title=" " alt="" coords="867,1054,899,1068,966,1108,1022,1150,1019,1154,963,1112,896,1072,865,1059"/>
 <area shape="poly" id="edge44_Node000093_Node000092" title=" " alt="" coords="882,1130,970,1155,968,1160,880,1136"/>
-<area shape="rect" id="Node000095" href="$d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="460,1286,605,1326"/>
+<area shape="rect" id="Node000095" href="$d1/dc2/structupnplib_1_1SSockaddr.html#ab819d6e1cb68c5c177382497680cb1ce" title="Get the assosiated netaddress with port." alt="" coords="460,1286,605,1326"/>
 <area shape="poly" id="edge46_Node000094_Node000095" title=" " alt="" coords="332,1222,430,1270,453,1279,451,1284,428,1275,330,1227"/>
 <area shape="rect" id="Node000098" href="$d1/dc2/structupnplib_1_1SSockaddr.html#a776aae84b82e1268df7ef75b39a6f528" title="Get sizeof the Sockaddr Structure." alt="" coords="460,1221,605,1261"/>
 <area shape="poly" id="edge48_Node000094_Node000098" title=" " alt="" coords="381,1218,447,1227,446,1232,380,1223"/>
 <area shape="rect" id="Node000099" href="$d5/d78/sock_8cpp.html#ad1241b973fa76980eef882848fb535c3" title="Writes data on the socket in sockinfo." alt="" coords="487,1171,579,1196"/>
 <area shape="poly" id="edge49_Node000094_Node000099" title=" " alt="" coords="380,1200,473,1188,473,1193,381,1205"/>
-<area shape="rect" id="Node000096" href="$d0/dd8/group__upnplib-addrmodul.html#gac193ec8b0d5cf6c70e2282814ef77c05" title="Get the netaddress with port from a sockaddr structure." alt="" coords="713,1304,869,1329"/>
+<area shape="rect" id="Node000096" href="$d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="713,1304,869,1329"/>
 <area shape="poly" id="edge47_Node000095_Node000096" title=" " alt="" coords="606,1306,699,1310,699,1316,605,1312"/>
 <area shape="rect" id="Node000100" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a2356245ef3089394fee85fd3f34be80f" title="Write to an SSL protected socket." alt="" coords="689,1161,892,1201"/>
 <area shape="poly" id="edge50_Node000099_Node000100" title=" " alt="" coords="579,1180,676,1179,676,1185,579,1186"/>

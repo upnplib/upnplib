@@ -65,7 +65,7 @@
 <area shape="rect" id="Node000078" href="$d5/d78/sock_8cpp.html#ab733aa6edb595cdca40bf10b12bb9c11" title="Reads data on socket in sockinfo." alt="" coords="761,152,849,177"/>
 <area shape="poly" id="edge27_Node000030_Node000078" title=" " alt="" coords="617,140,748,156,748,161,617,146"/>
 <area shape="poly" id="edge26_Node000077_Node000027" title=" " alt="" coords="877,259,909,249,937,232,950,216,957,200,960,166,963,132,971,114,985,97,1006,84,1030,76,1032,81,1009,88,988,101,975,117,969,133,965,167,962,202,955,219,940,236,911,254,878,264"/>
-<area shape="rect" id="Node000083" href="$d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="1017,111,1163,151"/>
+<area shape="rect" id="Node000083" href="$d1/dc2/structupnplib_1_1SSockaddr.html#ab819d6e1cb68c5c177382497680cb1ce" title="Get the assosiated netaddress with port." alt="" coords="1017,111,1163,151"/>
 <area shape="poly" id="edge30_Node000082_Node000083" title=" " alt="" coords="878,312,909,304,937,288,950,274,957,259,961,227,965,194,972,178,985,161,1003,148,1006,153,988,165,976,180,970,196,966,228,962,260,954,277,940,292,911,309,879,317"/>
 <area shape="rect" id="Node000086" href="$d1/dc2/structupnplib_1_1SSockaddr.html#a776aae84b82e1268df7ef75b39a6f528" title="Get sizeof the Sockaddr Structure." alt="" coords="1017,175,1163,215"/>
 <area shape="poly" id="edge31_Node000082_Node000086" title=" " alt="" coords="878,309,909,301,937,288,953,274,961,258,969,241,985,225,1003,215,1006,219,988,229,973,245,965,261,957,277,940,292,910,306,879,314"/>

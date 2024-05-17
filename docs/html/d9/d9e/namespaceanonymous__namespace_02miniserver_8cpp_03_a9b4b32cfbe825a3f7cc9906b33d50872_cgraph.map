@@ -29,11 +29,11 @@
 <area shape="rect" id="Node000023" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="1055,361,1178,387"/>
 <area shape="poly" id="edge20_Node000002_Node000023" title=" " alt="" coords="367,655,420,599,455,570,493,546,525,533,554,525,606,522,657,518,685,511,716,498,730,488,739,478,749,466,764,456,815,436,888,417,1041,385,1042,390,889,422,817,441,767,460,753,470,743,481,734,492,719,503,686,517,658,524,606,527,555,531,527,538,496,551,458,575,424,603,371,659"/>
 <area shape="poly" id="edge21_Node000002_Node000025" title=" " alt="" coords="358,711,377,755,406,808,445,860,469,882,496,900,535,917,577,929,619,935,663,938,744,934,813,924,813,929,745,939,662,943,619,941,575,934,533,922,493,904,466,886,441,863,401,811,372,758,353,713"/>
-<area shape="rect" id="Node000004" href="$db/d84/classupnplib_1_1CSocket__basic.html#a6e83bff4e6d004f48f8d0d947bad74a7" title="Get netaddress with port." alt="" coords="787,835,957,875"/>
+<area shape="rect" id="Node000004" href="$db/d84/classupnplib_1_1CSocket__basic.html#a7ad704758966aca93da75e14c617b174" title="Get netaddress with port." alt="" coords="787,835,957,875"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="717,857,773,855,773,860,718,862"/>
 <area shape="rect" id="Node000008" href="$db/d84/classupnplib_1_1CSocket__basic.html#a669306da2efd858996bd66fc3de5c621" title="Initialize a given raw socket file descriptor to the object." alt="" coords="787,950,957,990"/>
 <area shape="poly" id="edge5_Node000003_Node000008" title=" " alt="" coords="660,887,766,936,787,943,785,948,764,940,658,892"/>
-<area shape="rect" id="Node000005" href="$d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="1044,731,1189,771"/>
+<area shape="rect" id="Node000005" href="$d1/dc2/structupnplib_1_1SSockaddr.html#ab819d6e1cb68c5c177382497680cb1ce" title="Get the assosiated netaddress with port." alt="" coords="1044,731,1189,771"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="945,833,978,821,1068,776,1071,781,980,826,947,838"/>
 <area shape="rect" id="Node000009" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="1043,1065,1191,1105"/>
 <area shape="poly" id="edge6_Node000008_Node000009" title=" " alt="" coords="953,988,980,1001,995,1014,1005,1026,1014,1038,1028,1050,1038,1056,1035,1061,1025,1055,1010,1042,1001,1029,992,1017,977,1006,951,992"/>

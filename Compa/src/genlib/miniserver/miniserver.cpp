@@ -186,7 +186,7 @@ int getNumericHostRedirection(
     try {
         upnplib::CSocket_basic socketObj(a_socket);
         socketObj.init();
-        upnplib::netaddr_t host_port = socketObj.get_netaddrp();
+        std::string host_port = socketObj.get_netaddrp();
         memcpy(a_host_port, host_port.c_str(), a_hp_size);
         return true;
 

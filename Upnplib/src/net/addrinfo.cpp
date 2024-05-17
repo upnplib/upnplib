@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-17
+// Redistribution only with this Copyright remark. Last modified: 2024-05-19
 /*!
  * \file
  * \brief Definition of the Addrinfo class and free helper functions.
@@ -11,6 +11,8 @@
 #include <umock/netdb.hpp>
 
 #include <cstring>
+
+namespace upnplib {
 
 namespace {
 
@@ -68,9 +70,8 @@ sa_family_t is_netaddr(const std::string& a_node,
     return AF_UNSPEC;
 }
 
-} // namespace
+} // anonymous namespace
 
-namespace upnplib {
 
 // CAddrinfo class to wrap ::addrinfo() system calls
 // =================================================
@@ -78,7 +79,7 @@ namespace upnplib {
 // WSAStartup().
 
 // Constructor for getting an address information with port number string.
-CAddrinfo::CAddrinfo(const std::string& a_node, const std::string& a_service,
+CAddrinfo::CAddrinfo(std::string_view a_node, std::string_view a_service,
                      const int a_family, const int a_socktype,
                      const int a_flags, const int a_protocol)
     : m_node(a_node), m_service(a_service) {
@@ -92,10 +93,6 @@ CAddrinfo::CAddrinfo(const std::string& a_node, const std::string& a_service,
     m_hints.ai_family = a_family;
     m_hints.ai_socktype = a_socktype;
     m_hints.ai_protocol = a_protocol;
-    m_hints.ai_addrlen = sizeof(this->ss);
-    m_hints.ai_addr = &this->sa;
-    m_hints.ai_canonname = m_empty_c_str;
-    m_hints.ai_next = nullptr;
 
     // Correct weak hints:
     // Always call is_netaddr() with AF_UNSPEC (default argument) to check
@@ -103,9 +100,9 @@ CAddrinfo::CAddrinfo(const std::string& a_node, const std::string& a_service,
     // 'a_family' was reqested by the caller. But if AF_UNSPEC was requested,
     // the found address family will also be set.
     const sa_family_t addr_family = is_netaddr(m_node);
-    if (addr_family != AF_UNSPEC) {
+    if (addr_family != AF_UNSPEC) { // Here we have a numeric netaddress
         m_hints.ai_flags |= AI_NUMERICHOST;
-        if (m_hints.ai_family == AF_UNSPEC) {
+        if (m_hints.ai_family == AF_UNSPEC) { // Correct ai_family, we know it
             m_hints.ai_family = addr_family;
         }
     }
@@ -113,58 +110,17 @@ CAddrinfo::CAddrinfo(const std::string& a_node, const std::string& a_service,
 
 // Constructor for getting an address information with numeric port number.
 // ------------------------------------------------------------------------
-CAddrinfo::CAddrinfo(const std::string& a_node, in_port_t a_service,
+CAddrinfo::CAddrinfo(std::string_view a_node, in_port_t a_service,
                      const int a_family, const int a_socktype,
                      const int a_flags, const int a_protocol)
     : CAddrinfo(a_node, std::to_string(a_service), a_family, a_socktype,
                 a_flags, a_protocol) {}
 
 
-// Copy constructor
-// ----------------
-CAddrinfo::CAddrinfo(const CAddrinfo& that) : SSockaddr() {
-    // I cannot just copy the structure that m_res pointed to (*m_res =
-    // *that.m_res;). Copy works but MS Windows failed to destruct it with
-    // freeaddrinfo(m_res);. It throws an exception "A non-recoverable error
-    // occurred during a database lookup.". Seems there are also pointer within
-    // the addrinfo structure that are not deeply copied. So we have to go the
-    // hard way with getaddrinfo() and free it with freeaddrinfo(),
-
-    TRACE2(this, " Construct copy CAddrinfo()")
-    m_node = that.m_node;
-    m_service = that.m_service;
-    m_hints = that.m_hints;
-    // Next call is capable to throw exceptions but will not do in this case.
-    // The call was already successful done with initializing the object.
-    // Calling it again with unmodified hints should also always succeed.
-    if (that.m_res != &that.m_hints)
-        this->init();
-}
-
-
-// Copy assignment operator
-// ------------------------
-CAddrinfo& CAddrinfo::operator=(CAddrinfo that) noexcept {
-    TRACE2(this, " Executing CAddrinfo::operator=()")
-    // The argument by value ('that') was copied to the stack by the copy
-    // constructor. It contains also a pointer (m_res) to a new allocated
-    // addrinfo.
-    if (m_res != &m_hints && that.m_res != &that.m_hints)
-        std::swap(m_res, that.m_res);
-    else
-        this->free_addrinfo(); // noexcept
-    // The no longer needed current m_res pointer has been swapped to the
-    // stack and its resource will be deallocated by the destructor of the
-    // 'that' object when leaving this function.
-
-    std::swap(m_node, that.m_node);
-    std::swap(m_service, that.m_service);
-    std::swap(m_hints, that.m_hints);
-    std::swap(this->ss, that.ss);
-
-    // by convention, always return *this
-    return *this;
-}
+// Constructor for getting an address information from only a netaddress.
+// ----------------------------------------------------------------------
+CAddrinfo::CAddrinfo(std::string_view a_node)
+    : CAddrinfo(a_node, "0", AF_UNSPEC, 0, 0, 0) {}
 
 
 // Destructor
@@ -181,24 +137,7 @@ void CAddrinfo::free_addrinfo() noexcept {
         TRACE2("syscall ::freeaddrinfo() with m_res = ", m_res)
         umock::netdb_h.freeaddrinfo(m_res);
         m_res = &m_hints;
-        memset(&this->ss, 0, sizeof(this->ss));
     }
-}
-
-
-// Compare operator ==
-// -------------------
-bool CAddrinfo::operator==(const CAddrinfo& a_ai) const noexcept {
-    if (a_ai.m_res->ai_flags == m_res->ai_flags &&
-        a_ai.m_res->ai_family == m_res->ai_family &&
-        a_ai.m_res->ai_socktype == m_res->ai_socktype &&
-        a_ai.m_res->ai_protocol == m_res->ai_protocol &&
-        a_ai.m_res->ai_addrlen == m_res->ai_addrlen &&
-        sockaddrcmp(reinterpret_cast<sockaddr_storage*>(a_ai.m_res->ai_addr),
-                    reinterpret_cast<sockaddr_storage*>(m_res->ai_addr)))
-        return true;
-
-    return false;
 }
 
 
@@ -217,10 +156,6 @@ void CAddrinfo::init() {
     // ::getaddrinfo().
     std::string node;
     addrinfo hints = m_hints;
-    hints.ai_addrlen = 0;
-    hints.ai_addr = nullptr;
-    hints.ai_canonname = nullptr;
-    hints.ai_next = nullptr;
 
     if (is_netaddr(m_node, AF_INET6) == AF_INET6) {
         // Here we have only ipv6 node strings representing a numeric ip
@@ -232,8 +167,9 @@ void CAddrinfo::init() {
         // ::getaddrinfo(). So I make it also invalid for it.
         node = "::1(no_brackets)";
     } else {
-        // Here we have a non numeric node name (no netaddress). Is it a valid
-        // alphanumeric node name? ::getaddrinfo() shall decide it.
+        // Here we have an ipv4 netaddress or a non numeric node name (no
+        // netaddress). Is it a valid (maybe alphanumeric) node name?
+        // ::getaddrinfo() shall decide it.
         node = m_node;
     }
     const char* c_node = node.empty() ? nullptr : node.c_str();
@@ -306,12 +242,25 @@ void CAddrinfo::init() {
         reinterpret_cast<sockaddr_in6*>(new_res->ai_addr)->sin6_port = 0;
 
     TRACE2("syscall ::getaddrinfo() with new_res = ", new_res)
-    // finaly store the address information from the operating system.
+    // If init() is called the second time then m_res still points to the
+    // previous allocated memory. To avoid a memory leak it must be freed
+    // before pointing to the new allocated memory.
     this->free_addrinfo();
+    // finaly point to the new address information from the operating system.
     m_res = new_res;
-    // Copy socket address from the address info to this socket address:
-    std::memcpy(&this->ss, m_res->ai_addr, m_res->ai_addrlen);
 }
 
+// Getter for the assosiated ip address with port
+// ----------------------------------------------
+// e.g. "[2001:db8::2]:50001" or "192.168.254.253:50001".
+const std::string CAddrinfo::netaddrp() const noexcept {
+    // TRACE not usable with chained output.
+    // TRACE2(this, " Executing SSockaddr::get_netaddrp()")
+    if (m_res == &m_hints)
+        return ""; // no information available
+
+    return to_netaddrp( // noexcept
+        reinterpret_cast<sockaddr_storage*>(m_res->ai_addr));
+}
 
 } // namespace upnplib

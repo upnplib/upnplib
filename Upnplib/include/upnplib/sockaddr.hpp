@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCKADDR_HPP
 #define UPNPLIB_NET_SOCKADDR_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-13
+// Redistribution only with this Copyright remark. Last modified: 2024-05-17
 /*!
  * \file
  * \brief Declaration of the Sockaddr class and some free helper functions.
@@ -15,10 +15,6 @@
 /// \endcond
 
 namespace upnplib {
-
-/*! \brief type of a [netaddress](\ref glossary_netaddr)
- * \ingroup upnplib-addrmodul */
-using netaddr_t = std::string;
 
 /*!
  * \brief Helpful union of the different socket address structures
@@ -48,7 +44,7 @@ union sockaddr_t {
  * ~$ std::cout << "netaddress is " << to_netaddr(&saddr) << "\n";
  * \endcode
  */
-UPNPLIB_API netaddr_t
+UPNPLIB_API std::string
 to_netaddr(const ::sockaddr_storage* const a_sockaddr) noexcept;
 
 
@@ -63,7 +59,7 @@ to_netaddr(const ::sockaddr_storage* const a_sockaddr) noexcept;
  * ~$ std::cout << "netaddress is " << to_netaddrp(&saddr) << "\n";
  * \endcode
  */
-UPNPLIB_API netaddr_t
+UPNPLIB_API std::string
 to_netaddrp(const ::sockaddr_storage* const a_sockaddr) noexcept;
 
 
@@ -201,7 +197,7 @@ struct UPNPLIB_API SSockaddr {
      * ~$ SSockaddr saObj;
      * ~$ if (saObj.get_netaddr() == "[::1]") { manage_localhost(); }
      * \endcode */
-    virtual const netaddr_t& get_netaddr();
+    virtual const std::string& get_netaddr();
 
     /*! \brief Get the assosiated [netaddress](\ref glossary_netaddr) with port
      * \code
@@ -209,7 +205,7 @@ struct UPNPLIB_API SSockaddr {
      * ~$ SSockaddr saObj;
      * ~$ if (saObj.get_netaddrp() == "[::1]:49494") { manage_localhost(); }
      * \endcode */
-    virtual const netaddr_t& get_netaddrp();
+    virtual const std::string& get_netaddrp();
 
     /// \brief Get the numeric port
     virtual in_port_t get_port() const;

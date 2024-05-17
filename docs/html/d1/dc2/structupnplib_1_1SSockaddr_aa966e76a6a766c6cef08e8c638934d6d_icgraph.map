@@ -1,10 +1,7 @@
 <map id="upnplib::SSockaddr::get_port" name="upnplib::SSockaddr::get_port">
-<area shape="rect" id="Node000001" title="Get the numeric port." alt="" coords="452,27,597,67"/>
-<area shape="rect" id="Node000002" href="$d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="235,5,402,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="438,38,402,32,403,27,439,32"/>
-<area shape="rect" id="Node000004" href="$db/d84/classupnplib_1_1CSocket__basic.html#a70afe9ed6de1c17bb59f6c0bcc5bba00" title="Get the port number." alt="" coords="233,55,404,95"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="439,62,405,66,404,61,438,56"/>
-<area shape="rect" id="Node000003" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aa1e3a3e75356465099535c0e7851a858" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="5,20,185,75"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="222,33,186,38,185,33,221,28"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="220,66,185,61,186,56,220,60"/>
+<area shape="rect" id="Node000001" title="Get the numeric port." alt="" coords="452,13,597,53"/>
+<area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html#a70afe9ed6de1c17bb59f6c0bcc5bba00" title="Get the port number." alt="" coords="233,13,404,53"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="438,35,404,35,404,30,438,30"/>
+<area shape="rect" id="Node000003" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aa1e3a3e75356465099535c0e7851a858" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="5,5,185,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="220,35,186,35,186,30,220,30"/>
 </map>

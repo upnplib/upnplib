@@ -8,6 +8,7 @@ var dir_80023e064d24958bf48d92ff505d1ef6 =
     [ "global.ipp", "d6/d66/global_8ipp.html", null ],
     [ "httpreadwrite.hpp", "dd/dad/Upnplib_2include_2upnplib_2httpreadwrite_8hpp.html", "dd/dad/Upnplib_2include_2upnplib_2httpreadwrite_8hpp" ],
     [ "messages.hpp", "d4/d64/messages_8hpp.html", "d4/d64/messages_8hpp" ],
+    [ "netaddr.hpp", "d1/d2b/netaddr_8hpp.html", null ],
     [ "port.hpp", "d1/d42/port_8hpp.html", null ],
     [ "port_sock.hpp", "d8/d43/port__sock_8hpp.html", null ],
     [ "sockaddr.hpp", "d7/d1b/sockaddr_8hpp.html", "d7/d1b/sockaddr_8hpp" ],

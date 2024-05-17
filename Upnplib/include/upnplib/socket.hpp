@@ -174,10 +174,10 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
     sa_family_t get_family() const;
 
     /*! \brief Get [netaddress](\ref glossary_netaddr) without port. */
-    const netaddr_t& get_netaddr() override;
+    const std::string& get_netaddr() override;
 
     /*! \brief Get [netaddress](\ref glossary_netaddr) with port. */
-    const netaddr_t& get_netaddrp() override;
+    const std::string& get_netaddrp() override;
 
     /*! \brief Get the [port](\ref glossary_port) number. */
     in_port_t get_port() const override;

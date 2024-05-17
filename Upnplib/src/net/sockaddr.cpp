@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-13
+// Redistribution only with this Copyright remark. Last modified: 2024-05-18
 /*!
  * \file
  * \brief Definition of the Sockaddr class and some free helper functions.
@@ -14,7 +14,7 @@ namespace upnplib {
 
 // Free function to get the address string from a sockaddr structure
 // -----------------------------------------------------------------
-netaddr_t to_netaddr(const ::sockaddr_storage* const a_sockaddr) noexcept {
+std::string to_netaddr(const ::sockaddr_storage* const a_sockaddr) noexcept {
     // TRACE("Executing to_netaddr()") // not usable in chained output.
     char addrbuf[INET6_ADDRSTRLEN]{};
 
@@ -54,7 +54,7 @@ netaddr_t to_netaddr(const ::sockaddr_storage* const a_sockaddr) noexcept {
 
 // Free function to get the address string with port from a sockaddr structure
 // ---------------------------------------------------------------------------
-netaddr_t to_netaddrp(const ::sockaddr_storage* const a_sockaddr) noexcept {
+std::string to_netaddrp(const ::sockaddr_storage* const a_sockaddr) noexcept {
     // TRACE("Executing to_addrport_str()") // not usable in chained output.
     //
     // sin_port and sin6_port are on the same memory location (union of the
@@ -65,7 +65,7 @@ netaddr_t to_netaddrp(const ::sockaddr_storage* const a_sockaddr) noexcept {
     // error cannot be handled.
     return (a_sockaddr->ss_family != AF_INET6 &&
             a_sockaddr->ss_family != AF_INET)
-               ? to_netaddr(a_sockaddr)
+               ? to_netaddr(a_sockaddr) // let it handle the error.
                : to_netaddr(a_sockaddr) + ":" +
                      std::to_string(ntohs(
                          reinterpret_cast<const ::sockaddr_in6*>(a_sockaddr)
@@ -197,7 +197,7 @@ SSockaddr& SSockaddr::operator=(SSockaddr that) {
 // Assignment operator= to set socket address from string,
 // -------------------------------------------------------
 // For port conversion:
-// Don't use '::htons' instead of 'htons', MacOS don't like it.
+// Don't use '::htons' (with colons) instead of 'htons', MacOS don't like it.
 // 'sin6_port' is also 'sin_port' due to union.
 void SSockaddr::operator=(const std::string& a_addr_str) {
     // Valid input examles: "[2001:db8::1]", "[2001:db8::1]:50001",
@@ -259,7 +259,7 @@ bool SSockaddr::operator==(const ::sockaddr_storage& a_ss) const {
 // Getter for the assosiated ip address without port
 // -------------------------------------------------
 // e.g. "[2001:db8::2]" or "192.168.254.253".
-const netaddr_t& SSockaddr::get_netaddr() {
+const std::string& SSockaddr::get_netaddr() {
     // TRACE not usable with chained output.
     // TRACE2(this, " Executing SSockaddr::get_netaddr()")
     //
@@ -272,7 +272,7 @@ const netaddr_t& SSockaddr::get_netaddr() {
 // Getter for the assosiated ip address with port
 // ----------------------------------------------
 // e.g. "[2001:db8::2]:50001" or "192.168.254.253:50001".
-const netaddr_t& SSockaddr::get_netaddrp() {
+const std::string& SSockaddr::get_netaddrp() {
     // TRACE not usable with chained output.
     // TRACE2(this, " Executing SSockaddr::get_netaddrp()")
     //

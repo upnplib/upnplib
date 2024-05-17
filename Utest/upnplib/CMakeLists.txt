@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-05-12
+# Redistribution only with this Copyright remark. Last modified: 2024-05-18
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -34,6 +34,19 @@ add_test(NAME ctest_upnptools-ust COMMAND test_upnptools-ust --gtest_shuffle
 )
 
 
+# netaddr
+# =======
+add_executable(test_netaddr-ush
+        ./test_netaddr.cpp
+)
+target_link_libraries(test_netaddr-ush
+    PRIVATE upnplib_shared
+)
+add_test(NAME ctest_netaddr-ush COMMAND test_netaddr-ush --gtest_shuffle
+        WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
+)
+
+
 # sockaddr
 # ========
 add_executable(test_sockaddr-ush
@@ -50,27 +63,17 @@ add_test(NAME ctest_sockaddr-ush COMMAND test_sockaddr-ush --gtest_shuffle
 
 # CAddrinfo
 # =========
-# disable warning C4273: inconsistent dll linkage.
-# This warning on Microsoft Windows (MSVC) is because the source code is
-# included into the test code to be able to test static functions. The compiled
-# function in the link library is exported and it is also decorated to export
-# with the included code. That's the warning. Because I know what I'm doing, I
-# suppress it. It's not productive code. --Ingo
-add_executable(test_addrinfo-ush
+add_executable(test_addrinfo-ust
     ./test_addrinfo.cpp
 )
-target_include_directories(test_addrinfo-ush
+target_include_directories(test_addrinfo-ust
     PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
-target_compile_options(test_addrinfo-ush
-        # disable warning C4273: inconsistent dll linkage.
-        PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/wd4273>
+target_link_libraries(test_addrinfo-ust
+    PRIVATE upnplib_static
+    PRIVATE utest_static
 )
-target_link_libraries(test_addrinfo-ush
-    PRIVATE upnplib_shared
-    PRIVATE utest_shared
-)
-add_test(NAME ctest_addrinfo-ush COMMAND test_addrinfo-ush --gtest_shuffle
+add_test(NAME ctest_addrinfo-ust COMMAND test_addrinfo-ust --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 

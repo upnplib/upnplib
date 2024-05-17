@@ -1,5 +1,7 @@
 var hierarchy =
 [
+    [ "upnplib::CAddrinfo", "da/dad/classupnplib_1_1CAddrinfo.html", null ],
+    [ "upnplib::CNetaddr", "d1/d8c/classupnplib_1_1CNetaddr.html", null ],
     [ "upnplib::CSigpipe_scoped", "d3/de4/classupnplib_1_1CSigpipe__scoped.html", null ],
     [ "upnplib::CSocketErr", "d2/dd2/classupnplib_1_1CSocketErr.html", null ],
     [ "upnplib::CUri", "dd/db5/classupnplib_1_1CUri.html", null ],
@@ -55,7 +57,6 @@ var hierarchy =
     [ "SsdpSearchExpArg", "d0/d19/ssdp__common_8hpp.html#d2/d52/structSsdpSearchExpArg", null ],
     [ "SsdpSearchReply", "d0/d19/ssdp__common_8hpp.html#df/dd8/structSsdpSearchReply", null ],
     [ "upnplib::SSockaddr", "d1/dc2/structupnplib_1_1SSockaddr.html", [
-      [ "upnplib::CAddrinfo", "da/dad/classupnplib_1_1CAddrinfo.html", null ],
       [ "upnplib::CSocket_basic", "db/d84/classupnplib_1_1CSocket__basic.html", [
         [ "upnplib::CSocket", "d8/d73/classupnplib_1_1CSocket.html", null ]
       ] ]

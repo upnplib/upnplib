@@ -1,9 +1,7 @@
 <map id="upnplib::SSockaddr" name="upnplib::SSockaddr">
-<area shape="rect" id="Node000001" title="Trivial ::sockaddr structures enhanced with methods." alt="" coords="95,5,240,31"/>
-<area shape="rect" id="Node000002" href="$da/dad/classupnplib_1_1CAddrinfo.html" title="Wrap C style ::addrinfo() structure with a class." alt="" coords="5,79,148,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,41,93,81,90,76,140,37"/>
-<area shape="rect" id="Node000003" href="$db/d84/classupnplib_1_1CSocket__basic.html" title="Get information from a raw network socket file descriptor." alt="" coords="173,79,343,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="194,37,245,76,242,81,191,41"/>
-<area shape="rect" id="Node000004" href="$d8/d73/classupnplib_1_1CSocket.html" title="Manage all aspects of a network socket." alt="" coords="193,152,323,177"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="261,118,261,152,255,152,255,118"/>
+<area shape="rect" id="Node000001" title="Trivial ::sockaddr structures enhanced with methods." alt="" coords="18,5,163,31"/>
+<area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html" title="Get information from a raw network socket file descriptor." alt="" coords="5,79,176,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,44,93,79,88,79,88,44"/>
+<area shape="rect" id="Node000003" href="$d8/d73/classupnplib_1_1CSocket.html" title="Manage all aspects of a network socket." alt="" coords="25,152,156,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="93,118,93,152,88,152,88,118"/>
 </map>

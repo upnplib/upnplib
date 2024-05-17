@@ -1,0 +1,9 @@
+<map id="upnplib::CAddrinfo::get_netaddrp" name="upnplib::CAddrinfo::get_netaddrp">
+<area shape="rect" id="Node000001" title="Get the assosiated netaddress with port." alt="" coords="448,38,591,78"/>
+<area shape="rect" id="Node000002" href="$d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="233,20,400,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="434,50,400,46,401,40,434,45"/>
+<area shape="rect" id="Node000004" href="$d1/d8c/classupnplib_1_1CNetaddr.html#ab3635e111d7ae65cadbbc24c3788a8c1" title="Set a netaddress." alt="" coords="233,69,400,95"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="434,71,401,75,400,69,434,65"/>
+<area shape="rect" id="Node000003" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aa1e3a3e75356465099535c0e7851a858" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="5,5,185,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="220,35,185,35,185,30,220,30"/>
+</map>

@@ -1,8 +1,8 @@
 var structupnplib_1_1SSockaddr =
 [
     [ "SSockaddr", "d1/dc2/structupnplib_1_1SSockaddr.html#a530e6456b6a2035c2c8db41ff0e37834", null ],
-    [ "get_netaddr", "d1/dc2/structupnplib_1_1SSockaddr.html#a04f79b920c405df595b8a845fed5063a", null ],
-    [ "get_netaddrp", "d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703", null ],
+    [ "get_netaddr", "d1/dc2/structupnplib_1_1SSockaddr.html#a4b68ff3cbc7008bf628a8d0d34db8ef4", null ],
+    [ "get_netaddrp", "d1/dc2/structupnplib_1_1SSockaddr.html#ab819d6e1cb68c5c177382497680cb1ce", null ],
     [ "get_port", "d1/dc2/structupnplib_1_1SSockaddr.html#aa966e76a6a766c6cef08e8c638934d6d", null ],
     [ "operator=", "d1/dc2/structupnplib_1_1SSockaddr.html#a6b3d9cc620995bb0b08303e8291d527b", null ],
     [ "operator=", "d1/dc2/structupnplib_1_1SSockaddr.html#a3e36d37f1d4004cebe4e29a89a674a58", null ],

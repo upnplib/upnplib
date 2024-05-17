@@ -8,7 +8,7 @@
 <area shape="poly" id="edge53_Node000002_Node000004" title=" " alt="" coords="334,1063,335,865,340,721,351,565,369,409,396,268,413,206,434,153,457,109,485,78,520,52,558,32,598,18,640,8,683,4,727,3,815,11,899,29,977,52,1093,98,1091,103,975,57,898,34,814,17,727,8,684,9,641,14,600,23,560,37,523,56,488,81,462,112,438,155,418,208,401,269,374,410,356,566,345,722,340,865,339,1063"/>
 <area shape="rect" id="Node000005" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a9b4b32cfbe825a3f7cc9906b33d50872" title="Receive the request and dispatch it for handling." alt="" coords="487,957,677,1012"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="400,1060,504,1015,506,1020,402,1065"/>
-<area shape="rect" id="Node000010" href="$d0/dd8/group__upnplib-addrmodul.html#gac193ec8b0d5cf6c70e2282814ef77c05" title="Get the netaddress with port from a sockaddr structure." alt="" coords="1748,273,1904,299"/>
+<area shape="rect" id="Node000010" href="$d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="1748,273,1904,299"/>
 <area shape="poly" id="edge63_Node000002_Node000010" title=" " alt="" coords="337,1062,344,998,358,905,382,790,417,663,467,532,498,467,533,404,573,344,618,289,668,238,724,193,777,162,825,145,871,139,916,141,1012,157,1067,164,1130,167,1387,167,1476,166,1547,167,1616,177,1701,202,1756,230,1801,263,1798,267,1754,235,1699,207,1615,182,1546,172,1476,172,1387,173,1130,173,1067,170,1011,162,915,147,871,145,826,150,779,167,727,198,672,242,622,292,577,347,538,407,503,469,472,534,422,665,387,791,363,905,349,999,342,1063"/>
 <area shape="rect" id="Node000122" href="$d8/d61/ThreadPool_8cpp.html#a088cce76603a00ba4755257ff96d60c3" title="Adds a job to the thread pool." alt="" coords="522,1209,642,1235"/>
 <area shape="poly" id="edge54_Node000002_Node000122" title=" " alt="" coords="389,1115,546,1200,544,1205,386,1120"/>
@@ -48,14 +48,14 @@
 <area shape="rect" id="Node000027" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="1549,771,1671,796"/>
 <area shape="poly" id="edge22_Node000006_Node000027" title=" " alt="" coords="929,601,1042,574,1109,563,1181,556,1256,555,1331,561,1404,577,1473,604,1497,618,1518,636,1555,677,1582,720,1601,757,1596,759,1577,723,1550,680,1515,640,1494,622,1471,609,1402,582,1330,567,1256,560,1182,562,1110,569,1043,580,930,607"/>
 <area shape="poly" id="edge23_Node000006_Node000029" title=" " alt="" coords="860,658,883,705,917,764,961,826,1014,880,1045,904,1073,920,1126,941,1182,957,1252,982,1346,1026,1344,1031,1250,987,1181,962,1124,946,1071,925,1042,908,1010,884,957,829,912,767,878,707,855,660"/>
-<area shape="rect" id="Node000008" href="$db/d84/classupnplib_1_1CSocket__basic.html#a6e83bff4e6d004f48f8d0d947bad74a7" title="Get netaddress with port." alt="" coords="1300,381,1471,421"/>
+<area shape="rect" id="Node000008" href="$db/d84/classupnplib_1_1CSocket__basic.html#a7ad704758966aca93da75e14c617b174" title="Get netaddress with port." alt="" coords="1300,381,1471,421"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1243,391,1287,393,1286,398,1243,396"/>
 <area shape="rect" id="Node000012" href="$db/d84/classupnplib_1_1CSocket__basic.html#a669306da2efd858996bd66fc3de5c621" title="Initialize a given raw socket file descriptor to the object." alt="" coords="1300,266,1471,306"/>
 <area shape="poly" id="edge11_Node000007_Node000012" title=" " alt="" coords="1200,358,1321,309,1323,314,1202,363"/>
-<area shape="rect" id="Node000009" href="$d1/dc2/structupnplib_1_1SSockaddr.html#acfbc17691472b42667e7deb1bf023703" title="Get the assosiated netaddress with port." alt="" coords="1537,381,1683,421"/>
+<area shape="rect" id="Node000009" href="$d1/dc2/structupnplib_1_1SSockaddr.html#ab819d6e1cb68c5c177382497680cb1ce" title="Get the assosiated netaddress with port." alt="" coords="1537,381,1683,421"/>
 <area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="1471,398,1523,398,1523,403,1471,403"/>
 <area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="1648,378,1787,303,1790,308,1650,383"/>
-<area shape="rect" id="Node000011" href="$d0/dd8/group__upnplib-addrmodul.html#ga860ec0f90ae3b8fc2a00507c38213d7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="1952,273,2100,299"/>
+<area shape="rect" id="Node000011" href="$d0/dd8/group__upnplib-addrmodul.html#gac07aeb101956f1edbd3e0ee07e0dd4d2" title="Get the netaddress without port from a sockaddr structure." alt="" coords="1952,273,2100,299"/>
 <area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="1904,283,1938,283,1938,289,1904,289"/>
 <area shape="rect" id="Node000013" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="1536,299,1684,339"/>
 <area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="1472,296,1523,304,1522,309,1471,301"/>

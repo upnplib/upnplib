@@ -6,6 +6,7 @@ var dir_0314db59fdc4c2edc3bf00b432c5a155 =
     [ "connection_common.cpp", "dc/df7/connection__common_8cpp.html", null ],
     [ "connection_ctrlpt.cpp", "d0/dbb/connection__ctrlpt_8cpp.html", null ],
     [ "connection_device.cpp", "dd/df9/connection__device_8cpp.html", null ],
+    [ "netaddr.cpp", "d5/dd7/netaddr_8cpp.html", null ],
     [ "sockaddr.cpp", "d7/def/sockaddr_8cpp.html", "d7/def/sockaddr_8cpp" ],
     [ "socket.cpp", "d8/d81/socket_8cpp.html", "d8/d81/socket_8cpp" ]
 ];

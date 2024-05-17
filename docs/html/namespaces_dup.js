@@ -1,8 +1,5 @@
 var namespaces_dup =
 [
-    [ "anonymous_namespace{addrinfo.cpp}", "dc/df7/namespaceanonymous__namespace_02addrinfo_8cpp_03.html", [
-      [ "is_netaddr", "d0/dd8/group__upnplib-addrmodul.html#ga3c4ba3cf1bd3098e01569ffc7dc20bff", null ]
-    ] ],
     [ "anonymous_namespace{gena_ctrlpt.cpp}", "d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html", [
       [ "free_subscribe_arg", "d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#a6e5186d8db02472afdfc99808723b754", null ],
       [ "gena_subscribe", "d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#aab6385b3da2410ba5921c203635b7e28", null ],

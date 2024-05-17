@@ -25,6 +25,7 @@ var annotated_dup =
     ] ],
     [ "upnplib", "dc/d6d/namespaceupnplib.html", [
       [ "CAddrinfo", "da/dad/classupnplib_1_1CAddrinfo.html", "da/dad/classupnplib_1_1CAddrinfo" ],
+      [ "CNetaddr", "d1/d8c/classupnplib_1_1CNetaddr.html", "d1/d8c/classupnplib_1_1CNetaddr" ],
       [ "CSigpipe_scoped", "d3/de4/classupnplib_1_1CSigpipe__scoped.html", null ],
       [ "CSocket", "d8/d73/classupnplib_1_1CSocket.html", "d8/d73/classupnplib_1_1CSocket" ],
       [ "CSocket_basic", "db/d84/classupnplib_1_1CSocket__basic.html", "db/d84/classupnplib_1_1CSocket__basic" ],
