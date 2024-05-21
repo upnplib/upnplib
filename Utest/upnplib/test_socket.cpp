@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-17
+// Redistribution only with this Copyright remark. Last modified: 2024-05-20
 
 #include <upnplib/global.hpp>
 #include <upnplib/socket.hpp>
@@ -88,7 +88,7 @@ TEST(SockTestSuite, sock_connect_to_host) {
     // upnplib::CAddrinfo addrinfo("[2001:db8::1]", "80"); // gives WSAETIMEDOUT
     upnplib::CAddrinfo addrinfo("example.com", "80", AF_INET6); // succeeds
     if (g_dbug)
-        std::cout << "IP addrees to connect = " << addrinfo.get_netaddrp() << ".\n";
+        std::cout << "IP addrees to connect = " << addrinfo.netaddrp() << ".\n";
 
     // Connect to the remote host
     upnplib::CSocketErr sockerrObj;
@@ -101,7 +101,7 @@ TEST(SockTestSuite, sock_connect_to_host) {
 
     if (g_dbug) {
         // The unbound socket has bin bound to a local address by ::connect().
-        const std::string_view locnetaddr = sockObj.get_netaddrp();
+        const std::string_view locnetaddr = sockObj.netaddrp();
         std::cout << "local IP address of the socket = " << locnetaddr << ".\n";
         }
 }
@@ -210,8 +210,8 @@ TEST(SocketBasicTestSuite, instantiate_socket_successful) {
     EXPECT_EQ((SOCKET)sockObj, sfd);
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "[::]");
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::]:0");
+    EXPECT_EQ(sockObj.netaddr(), "[::]");
+    EXPECT_EQ(sockObj.netaddrp(), "[::]:0");
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -235,8 +235,8 @@ TEST(SocketBasicTestSuite, instantiate_with_bound_socket_fd) {
     EXPECT_EQ((SOCKET)sockObj, bound_sock);
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "[::1]");
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::1]:8080");
+    EXPECT_EQ(sockObj.netaddr(), "[::1]");
+    EXPECT_EQ(sockObj.netaddrp(), "[::1]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -259,11 +259,11 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_stream) {
     CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     g_dbug = false;
     captureObj.start();
-    EXPECT_EQ(sockObj.get_netaddr(), "");
+    EXPECT_EQ(sockObj.netaddr(), "");
     EXPECT_EQ(captureObj.str(), "");
     g_dbug = true;
     captureObj.start();
-    EXPECT_EQ(sockObj.get_netaddr(), "");
+    EXPECT_EQ(sockObj.netaddr(), "");
     EXPECT_THAT(captureObj.str(),
                 HasSubstr("] ERROR MSG1036: Unsupported address family 1"));
     g_dbug = g_dbug_old;
@@ -360,7 +360,7 @@ TEST(SocketBasicTestSuite, set_object_two_times) {
     EXPECT_EQ(static_cast<SOCKET>(sockObj), sfd);
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::]:0");
+    EXPECT_EQ(sockObj.netaddrp(), "[::]:0");
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
 
@@ -432,8 +432,8 @@ TEST(SocketTestSuite, get_unbound_ipv6_stream_socket_successful) {
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "[::]");
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::]:0");
+    EXPECT_EQ(sockObj.netaddr(), "[::]");
+    EXPECT_EQ(sockObj.netaddrp(), "[::]:0");
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -452,8 +452,8 @@ TEST(SocketTestSuite, get_socket_two_times_init_successful) {
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "[::]");
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::]:0");
+    EXPECT_EQ(sockObj.netaddr(), "[::]");
+    EXPECT_EQ(sockObj.netaddrp(), "[::]:0");
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -471,8 +471,8 @@ TEST(SocketTestSuite, get_unbound_ipv6_dgram_socket_successful) {
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_DGRAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "[::]");
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::]:0");
+    EXPECT_EQ(sockObj.netaddr(), "[::]");
+    EXPECT_EQ(sockObj.netaddrp(), "[::]:0");
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -490,8 +490,8 @@ TEST(SocketTestSuite, get_unbound_ipv4_stream_socket_successful) {
     // An unbound socket returns the unknown ip address and port 0
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_family(), AF_INET);
-    EXPECT_EQ(sockObj.get_netaddr(), "0.0.0.0");
-    EXPECT_EQ(sockObj.get_netaddrp(), "0.0.0.0:0");
+    EXPECT_EQ(sockObj.netaddr(), "0.0.0.0");
+    EXPECT_EQ(sockObj.netaddrp(), "0.0.0.0:0");
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
@@ -508,8 +508,8 @@ TEST(SocketTestSuite, get_unbound_ipv4_dgram_socket_successful) {
 
     // An unbound socket returns the unknown ip address and port 0
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
-    EXPECT_EQ(sockObj.get_netaddr(), "0.0.0.0");
-    EXPECT_EQ(sockObj.get_netaddrp(), "0.0.0.0:0");
+    EXPECT_EQ(sockObj.netaddr(), "0.0.0.0");
+    EXPECT_EQ(sockObj.netaddrp(), "0.0.0.0:0");
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_family(), AF_INET);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_DGRAM);
@@ -568,9 +568,9 @@ TEST(SocketTestSuite, instantiate_empty_socket) {
     EXPECT_EQ(static_cast<SOCKET>(sockObj), INVALID_SOCKET);
     // All getter from an INVALID_SOCKET throw an exception.
     EXPECT_THAT(
-        [&sockObj]() { sockObj.get_netaddr(); },
+        [&sockObj]() { sockObj.netaddr(); },
         ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1001: ")));
-    EXPECT_THAT([&sockObj]() { sockObj.get_netaddrp(); },
+    EXPECT_THAT([&sockObj]() { sockObj.netaddrp(); },
                 ThrowsMessage<std::runtime_error>(
                     // Different on MacOS with MSG1001.
                     AnyOf(HasSubstr("] EXCEPTION MSG1057: "),
@@ -629,8 +629,8 @@ TEST(SocketTestSuite, move_socket_successful) {
     // Check if new socket is valid.
     EXPECT_EQ(sock2.get_family(), AF_INET);
     EXPECT_EQ(sock2.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sock2.get_netaddr(), "0.0.0.0");
-    EXPECT_EQ(sock2.get_netaddrp(), "0.0.0.0:8080");
+    EXPECT_EQ(sock2.netaddr(), "0.0.0.0");
+    EXPECT_EQ(sock2.netaddrp(), "0.0.0.0:8080");
     EXPECT_EQ(sock2.get_port(), 8080);
     EXPECT_EQ(sock2.get_sockerr(), 0);
     EXPECT_FALSE(sock2.is_reuse_addr());
@@ -666,8 +666,8 @@ TEST(SocketTestSuite, assign_socket_successful) {
     // Check if new socket is valid.
     EXPECT_EQ(sock2.get_family(), AF_INET6);
     EXPECT_EQ(sock2.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sock2.get_netaddr(), "[::]");
-    EXPECT_EQ(sock2.get_netaddrp(), "[::]:8080");
+    EXPECT_EQ(sock2.netaddr(), "[::]");
+    EXPECT_EQ(sock2.netaddrp(), "[::]:8080");
     EXPECT_EQ(sock2.get_port(), 8080);
     EXPECT_EQ(sock2.get_sockerr(), 0);
     EXPECT_FALSE(sock2.is_reuse_addr());
@@ -804,8 +804,8 @@ TEST(SocketTestSuite, get_addr_str_ipv6_successful) {
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
     // Test Unit
-    EXPECT_EQ(sockObj.get_netaddr(), "[::]");
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::]:8080");
+    EXPECT_EQ(sockObj.netaddr(), "[::]");
+    EXPECT_EQ(sockObj.netaddrp(), "[::]:8080");
 }
 
 TEST(SocketTestSuite, get_addr_str_ipv4_successful) {
@@ -815,17 +815,17 @@ TEST(SocketTestSuite, get_addr_str_ipv4_successful) {
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
     // Test Unit
-    EXPECT_EQ(sockObj.get_netaddr(), "0.0.0.0");
-    EXPECT_EQ(sockObj.get_netaddrp(), "0.0.0.0:8080");
+    EXPECT_EQ(sockObj.netaddr(), "0.0.0.0");
+    EXPECT_EQ(sockObj.netaddrp(), "0.0.0.0:8080");
 }
 
 TEST(SocketTestSuite, get_addr_str_from_invalid_socket) {
     // Test Unit wit empty socket.
     CSocket sockObj;
     EXPECT_THAT(
-        [&sockObj]() { sockObj.get_netaddr(); },
+        [&sockObj]() { sockObj.netaddr(); },
         ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1001: ")));
-    EXPECT_THAT([&sockObj]() { sockObj.get_netaddrp(); },
+    EXPECT_THAT([&sockObj]() { sockObj.netaddrp(); },
                 ThrowsMessage<std::runtime_error>(
                     // Different on MacOS with MSG1001.
                     AnyOf(HasSubstr("] EXCEPTION MSG1057: "),
@@ -836,8 +836,8 @@ TEST(SocketTestSuite, get_addr_str_from_unbound_socket) {
     // Get a valid socket but do not bind it to an address.
     CSocket sockObj(AF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
-    EXPECT_EQ(sockObj.get_netaddr(), "[::]");
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::]:0");
+    EXPECT_EQ(sockObj.netaddr(), "[::]");
+    EXPECT_EQ(sockObj.netaddrp(), "[::]:0");
     EXPECT_EQ(sockObj.get_port(), 0);
 }
 
@@ -859,9 +859,9 @@ TEST(SocketTestSuite, get_addr_str_syscall_fail) {
 
     // Test Unit
     EXPECT_THAT(
-        [&sockObj]() { sockObj.get_netaddr(); },
+        [&sockObj]() { sockObj.netaddr(); },
         ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1001: ")));
-    EXPECT_THAT([&sockObj]() { sockObj.get_netaddrp(); },
+    EXPECT_THAT([&sockObj]() { sockObj.netaddrp(); },
                 ThrowsMessage<std::runtime_error>(
                     // Different on MacOS with MSG1001.
                     AnyOf(HasSubstr("] EXCEPTION MSG1057: "),
@@ -894,21 +894,21 @@ TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
     CaptureStdOutErr captureObj(STDERR_FILENO); // or STDOUT_FILENO
     g_dbug = false;
     captureObj.start();
-    EXPECT_EQ(sockObj.get_netaddr(), "");
+    EXPECT_EQ(sockObj.netaddr(), "");
     EXPECT_EQ(captureObj.str(), "");
     g_dbug = true;
     captureObj.start();
-    EXPECT_EQ(sockObj.get_netaddr(), "");
+    EXPECT_EQ(sockObj.netaddr(), "");
     EXPECT_THAT(captureObj.str(),
                 EndsWith("] ERROR MSG1036: Unsupported address family 255.\n"));
 
     g_dbug = false;
     captureObj.start();
-    EXPECT_EQ(sockObj.get_netaddrp(), "");
+    EXPECT_EQ(sockObj.netaddrp(), "");
     EXPECT_EQ(captureObj.str(), "");
     g_dbug = true;
     captureObj.start();
-    EXPECT_EQ(sockObj.get_netaddrp(), "");
+    EXPECT_EQ(sockObj.netaddrp(), "");
     EXPECT_THAT(captureObj.str(),
                 EndsWith("] ERROR MSG1036: Unsupported address family 255.\n"));
     g_dbug = g_dbug_old;
@@ -934,8 +934,8 @@ TEST(SocketBindTestSuite, bind_ipv6_successful) {
 
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "[::1]");
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::1]:8080");
+    EXPECT_EQ(sockObj.netaddr(), "[::1]");
+    EXPECT_EQ(sockObj.netaddrp(), "[::1]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -962,8 +962,8 @@ TEST(SocketBindTestSuite, bind_ipv4_successful) {
 
     EXPECT_EQ(sockObj.get_family(), AF_INET);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "127.0.0.1");
-    EXPECT_EQ(sockObj.get_netaddrp(), "127.0.0.1:8080");
+    EXPECT_EQ(sockObj.netaddr(), "127.0.0.1");
+    EXPECT_EQ(sockObj.netaddrp(), "127.0.0.1:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -1001,8 +1001,7 @@ TEST_F(SocketMockFTestSuite, bind_set_v6only_fails) {
     // Test Unit
     EXPECT_THAT(
         ([&sockObj, &ss6Obj]() {
-            sockObj.bind(ss6Obj.get_netaddr(),
-                         std::to_string(ss6Obj.get_port()));
+            sockObj.bind(ss6Obj.netaddr(), std::to_string(ss6Obj.get_port()));
         }),
         ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1007: ")));
 }
@@ -1018,7 +1017,7 @@ TEST(SocketBindTestSuite, bind_to_next_free_port_successful) {
 
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "[::1]");
+    EXPECT_EQ(sockObj.netaddr(), "[::1]");
     // Next free port number but never 0.
     EXPECT_GT(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
@@ -1043,8 +1042,8 @@ TEST(SocketBindTestSuite, bind_only_service_passive_successful) {
     // With AI_PASSIVE setting (for listening) the presented address is the
     // unknown address. When using this to listen, it will listen on all local
     // network interfaces.
-    EXPECT_EQ(sockObj.get_netaddr(), "[::]");
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::]:8080");
+    EXPECT_EQ(sockObj.netaddr(), "[::]");
+    EXPECT_EQ(sockObj.netaddrp(), "[::]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -1067,8 +1066,8 @@ TEST(SocketBindTestSuite, bind_only_service_not_passive_successful) {
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     // With empty node the loopback address is selected.
-    EXPECT_EQ(sockObj.get_netaddr(), "[::1]");
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::1]:8080");
+    EXPECT_EQ(sockObj.netaddr(), "[::1]");
+    EXPECT_EQ(sockObj.netaddrp(), "[::1]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -1142,8 +1141,7 @@ TEST_F(SocketMockFTestSuite, bind_to_address_fails) {
     // Test Unit
     EXPECT_THAT(
         ([&sockObj, &ss6Obj]() {
-            sockObj.bind(ss6Obj.get_netaddr(),
-                         std::to_string(ss6Obj.get_port()));
+            sockObj.bind(ss6Obj.netaddr(), std::to_string(ss6Obj.get_port()));
         }),
         ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1008: ")));
 }
@@ -1390,8 +1388,8 @@ TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet6_stream_socket) {
     // Nothing has changed, the socket is valid.
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "[::1]");
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::1]:8080");
+    EXPECT_EQ(sockObj.netaddr(), "[::1]");
+    EXPECT_EQ(sockObj.netaddrp(), "[::1]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -1418,8 +1416,8 @@ TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet6_dgram_socket) {
     // Nothing has changed, the socket is valid.
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_DGRAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "[::1]");
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::1]:8080");
+    EXPECT_EQ(sockObj.netaddr(), "[::1]");
+    EXPECT_EQ(sockObj.netaddrp(), "[::1]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -1447,8 +1445,8 @@ TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet_stream_socket) {
     // Nothing has changed, the socket is valid.
     EXPECT_EQ(sockObj.get_family(), AF_INET);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "127.0.0.1");
-    EXPECT_EQ(sockObj.get_netaddrp(), "127.0.0.1:8080");
+    EXPECT_EQ(sockObj.netaddr(), "127.0.0.1");
+    EXPECT_EQ(sockObj.netaddrp(), "127.0.0.1:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -1476,8 +1474,8 @@ TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet_dgram_socket) {
     // Nothing has changed, the socket is valid.
     EXPECT_EQ(sockObj.get_family(), AF_INET);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_DGRAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "127.0.0.1");
-    EXPECT_EQ(sockObj.get_netaddrp(), "127.0.0.1:8080");
+    EXPECT_EQ(sockObj.netaddr(), "127.0.0.1");
+    EXPECT_EQ(sockObj.netaddrp(), "127.0.0.1:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -1506,8 +1504,8 @@ TEST(SocketV6onlyTestSuite, unset_v6only_on_passive_af_inet6_stream_socket) {
     // Nothing has changed, the socket is valid.
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "[::]");
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::]:8080");
+    EXPECT_EQ(sockObj.netaddr(), "[::]");
+    EXPECT_EQ(sockObj.netaddrp(), "[::]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -1539,8 +1537,8 @@ TEST(SocketV6onlyTestSuite, set_v6only_on_passive_af_inet6_stream_socket) {
     // Nothing has changed, the socket is valid.
     EXPECT_EQ(sockObj.get_family(), AF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "[::]");
-    EXPECT_EQ(sockObj.get_netaddrp(), "[::]:8080");
+    EXPECT_EQ(sockObj.netaddr(), "[::]");
+    EXPECT_EQ(sockObj.netaddrp(), "[::]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
@@ -1572,8 +1570,8 @@ TEST(SocketV6onlyTestSuite, modify_v6only_on_passive_af_inet_dgram_socket) {
     // Nothing has changed, the socket is valid.
     EXPECT_EQ(sockObj.get_family(), AF_INET);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_DGRAM);
-    EXPECT_EQ(sockObj.get_netaddr(), "0.0.0.0");
-    EXPECT_EQ(sockObj.get_netaddrp(), "0.0.0.0:8080");
+    EXPECT_EQ(sockObj.netaddr(), "0.0.0.0");
+    EXPECT_EQ(sockObj.netaddrp(), "0.0.0.0:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());

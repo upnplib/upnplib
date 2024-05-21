@@ -6,16 +6,16 @@
 <area shape="poly" id="edge71_Node000001_Node000003" title=" " alt="" coords="115,579,198,508,262,458,338,403,424,347,517,294,615,249,717,214,798,199,881,195,958,198,1022,205,1021,210,958,204,881,200,799,205,718,219,617,254,519,299,426,352,341,407,265,462,201,513,119,583"/>
 <area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#a9300edc4f96f8f3e563bcaf49bffd514" title="Fills the sockadr_in with miniserver information." alt="" coords="247,507,441,532"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="144,579,288,533,290,539,145,584"/>
-<area shape="rect" id="Node000134" href="$d4/d99/upnpapi_8cpp.html#aa4ab1ae2a32c6a33118b4a872cebf131" title="Get a free UPnP Unit handle." alt="" coords="285,680,403,705"/>
-<area shape="poly" id="edge50_Node000001_Node000134" title=" " alt="" coords="126,604,180,634,248,665,274,674,272,679,246,670,178,639,123,609"/>
-<area shape="rect" id="Node000135" href="$dd/d10/service__table_8cpp.html#a93dca6df0d19011183259fe98fafce8e" title="Retrieve service from the table." alt="" coords="281,631,407,656"/>
-<area shape="poly" id="edge51_Node000001_Node000135" title=" " alt="" coords="166,604,268,625,267,631,164,609"/>
-<area shape="rect" id="Node000129" href="$df/db8/LinkedList_8cpp.html#a28e5dc6ff4a189982c97ae5780d360fd" title="Removes all memory associated with list nodes. Does not free LinkedList *list." alt="" coords="296,771,392,796"/>
-<area shape="poly" id="edge62_Node000001_Node000129" title=" " alt="" coords="119,605,175,654,248,715,313,761,310,765,245,719,171,658,115,609"/>
+<area shape="rect" id="Node000133" href="$d4/d99/upnpapi_8cpp.html#aa4ab1ae2a32c6a33118b4a872cebf131" title="Get a free UPnP Unit handle." alt="" coords="285,680,403,705"/>
+<area shape="poly" id="edge50_Node000001_Node000133" title=" " alt="" coords="126,604,180,634,248,665,274,674,272,679,246,670,178,639,123,609"/>
+<area shape="rect" id="Node000134" href="$dd/d10/service__table_8cpp.html#a93dca6df0d19011183259fe98fafce8e" title="Retrieve service from the table." alt="" coords="281,631,407,656"/>
+<area shape="poly" id="edge51_Node000001_Node000134" title=" " alt="" coords="166,604,268,625,267,631,164,609"/>
+<area shape="rect" id="Node000128" href="$df/db8/LinkedList_8cpp.html#a28e5dc6ff4a189982c97ae5780d360fd" title="Removes all memory associated with list nodes. Does not free LinkedList *list." alt="" coords="296,771,392,796"/>
+<area shape="poly" id="edge62_Node000001_Node000128" title=" " alt="" coords="119,605,175,654,248,715,313,761,310,765,245,719,171,658,115,609"/>
 <area shape="rect" id="Node000105" href="$df/db8/LinkedList_8cpp.html#acafc3d2a391f494afc5947668191cc0e" title="Initializes LinkedList. Must be called first and only once for List." alt="" coords="311,820,377,845"/>
 <area shape="poly" id="edge66_Node000001_Node000105" title=" " alt="" coords="111,606,128,645,157,699,197,757,221,783,248,805,272,818,298,825,296,830,270,822,245,810,218,787,193,760,152,702,123,647,106,608"/>
-<area shape="rect" id="Node000150" href="$dd/d10/service__table_8cpp.html#a144c8550ac47fa81c9565b37455bfd3d" title="Prints the URL base of the table and information of each service from the service table." alt="" coords="512,119,647,144"/>
-<area shape="poly" id="edge67_Node000001_Node000150" title=" " alt="" coords="100,581,103,506,109,451,120,391,138,327,163,266,199,209,220,184,245,161,274,142,305,128,339,119,373,113,441,109,501,114,501,119,440,115,373,118,340,124,307,133,276,147,248,165,224,187,203,212,168,268,143,329,125,392,114,452,108,506,106,581"/>
+<area shape="rect" id="Node000149" href="$dd/d10/service__table_8cpp.html#a144c8550ac47fa81c9565b37455bfd3d" title="Prints the URL base of the table and information of each service from the service table." alt="" coords="512,119,647,144"/>
+<area shape="poly" id="edge67_Node000001_Node000149" title=" " alt="" coords="100,581,103,506,109,451,120,391,138,327,163,266,199,209,220,184,245,161,274,142,305,128,339,119,373,113,441,109,501,114,501,119,440,115,373,118,340,124,307,133,276,147,248,165,224,187,203,212,168,268,143,329,125,392,114,452,108,506,106,581"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="392,40,496,19,563,10,636,4,714,4,793,10,870,26,944,53,987,81,1022,118,1050,157,1069,190,1065,193,1046,160,1018,121,983,85,941,58,869,31,792,16,714,9,636,9,563,15,497,24,393,45"/>
 <area shape="rect" id="Node000004" href="$d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00" title="Check Debug level." alt="" coords="1239,156,1379,181"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1126,205,1234,182,1235,187,1127,210"/>
@@ -94,30 +94,30 @@
 <area shape="poly" id="edge46_Node000039_Node000017" title=" " alt="" coords="1551,610,1584,582,1618,546,1632,518,1638,493,1646,469,1666,445,1674,440,1677,444,1670,449,1651,472,1643,495,1637,520,1622,549,1588,586,1554,614"/>
 <area shape="poly" id="edge48_Node000039_Node000018" title=" " alt="" coords="1594,619,1909,601,1909,606,1594,624"/>
 <area shape="poly" id="edge47_Node000039_Node000020" title=" " alt="" coords="1593,635,1692,657,1691,662,1591,640"/>
-<area shape="rect" id="Node000136" href="$d9/da9/namespaceanonymous__namespace_02service__table_8cpp_03.html#a7359ea5e4d70db0a82faa1cdd447b5d5" title="Returns pointer to service info after getting the sub&#45;elements of the service info." alt="" coords="489,681,669,736"/>
-<area shape="poly" id="edge52_Node000135_Node000136" title=" " alt="" coords="399,653,442,665,477,675,476,680,441,670,398,659"/>
-<area shape="rect" id="Node000145" href="$dd/d10/service__table_8cpp.html#af7f28a46c4ebae33f7e351f621c17570" title="Returns the clone of the element value." alt="" coords="1014,631,1147,656"/>
-<area shape="poly" id="edge60_Node000135_Node000145" title=" " alt="" coords="407,641,1000,641,1000,646,407,646"/>
-<area shape="rect" id="Node000146" href="$dd/d10/service__table_8cpp.html#a174b2e13ecbe601b9b1c20fedaef147e" title="Traverses through a list of XML nodes to find the node with the known element name." alt="" coords="1020,781,1141,807"/>
-<area shape="poly" id="edge61_Node000135_Node000146" title=" " alt="" coords="408,649,443,665,460,686,467,708,474,728,491,745,531,762,587,775,654,784,727,790,879,795,1006,794,1006,799,879,800,727,795,653,789,586,780,529,767,488,750,469,730,462,709,456,688,440,669,406,654"/>
-<area shape="rect" id="Node000137" href="$d9/da9/namespaceanonymous__namespace_02service__table_8cpp_03.html#a75316464db9843014fb2e2311ad6f0b4" title="Returns pointer to service info after getting the sub&#45;elements of the service info." alt="" coords="740,681,920,736"/>
-<area shape="poly" id="edge53_Node000136_Node000137" title=" " alt="" coords="669,706,726,706,726,711,669,711"/>
-<area shape="poly" id="edge59_Node000137_Node000003" title=" " alt="" coords="877,679,912,651,940,615,959,577,967,542,970,509,969,477,968,411,974,373,988,332,1020,279,1055,237,1059,241,1024,282,993,334,979,375,973,411,974,477,975,509,973,542,964,578,945,618,915,655,880,683"/>
-<area shape="rect" id="Node000138" href="$dd/d10/service__table_8cpp.html#a6b3dbe041f246ff64f7464036778ae62" title="Free&#39;s memory allocated for the various components of each service entry in the service table." alt="" coords="1021,732,1140,757"/>
-<area shape="poly" id="edge54_Node000137_Node000138" title=" " alt="" coords="921,719,1008,732,1007,737,920,724"/>
-<area shape="poly" id="edge55_Node000137_Node000145" title=" " alt="" coords="919,683,1017,657,1019,662,921,688"/>
-<area shape="poly" id="edge56_Node000137_Node000146" title=" " alt="" coords="901,734,992,766,1020,775,1018,780,990,771,899,739"/>
-<area shape="rect" id="Node000147" href="$d8/dd2/uri_8cpp.html#a108ec7fc0704f362d70140d838e6e356" title="Resolves a relative url with a base url." alt="" coords="1249,723,1368,748"/>
-<area shape="poly" id="edge57_Node000137_Node000147" title=" " alt="" coords="920,707,1039,710,1171,717,1236,723,1236,728,1170,722,1039,715,920,712"/>
-<area shape="poly" id="edge58_Node000147_Node000021" title=" " alt="" coords="1369,740,1479,755,1478,760,1368,746"/>
-<area shape="rect" id="Node000130" href="$d7/d20/FreeList_8cpp.html#ae64c10055f937a33eff150f678303b7f" title="Releases the resources stored with the free list." alt="" coords="517,812,641,837"/>
-<area shape="poly" id="edge63_Node000129_Node000130" title=" " alt="" coords="393,789,505,809,504,814,392,794"/>
-<area shape="rect" id="Node000131" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="529,861,630,887"/>
-<area shape="poly" id="edge64_Node000129_Node000131" title=" " alt="" coords="393,788,443,805,458,816,467,827,477,837,491,848,516,859,514,863,488,852,473,841,463,830,454,820,440,810,392,793"/>
-<area shape="rect" id="Node000132" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="717,854,943,894"/>
-<area shape="poly" id="edge65_Node000131_Node000132" title=" " alt="" coords="630,871,704,871,704,877,630,877"/>
-<area shape="poly" id="edge70_Node000150_Node000003" title=" " alt="" coords="647,129,785,136,864,146,943,161,996,177,1042,196,1040,201,994,182,942,166,864,151,784,142,647,134"/>
-<area shape="rect" id="Node000151" href="$dd/d10/service__table_8cpp.html#a32c36a8ef50698c158e3baf35d307753" title="Prints information of each service from the service table passed into the function." alt="" coords="769,68,891,93"/>
-<area shape="poly" id="edge68_Node000150_Node000151" title=" " alt="" coords="643,116,754,93,756,98,644,121"/>
-<area shape="poly" id="edge69_Node000151_Node000003" title=" " alt="" coords="892,91,944,110,1008,151,1058,193,1055,197,1005,155,941,115,890,96"/>
+<area shape="rect" id="Node000135" href="$d9/da9/namespaceanonymous__namespace_02service__table_8cpp_03.html#a7359ea5e4d70db0a82faa1cdd447b5d5" title="Returns pointer to service info after getting the sub&#45;elements of the service info." alt="" coords="489,681,669,736"/>
+<area shape="poly" id="edge52_Node000134_Node000135" title=" " alt="" coords="399,653,442,665,477,675,476,680,441,670,398,659"/>
+<area shape="rect" id="Node000144" href="$dd/d10/service__table_8cpp.html#af7f28a46c4ebae33f7e351f621c17570" title="Returns the clone of the element value." alt="" coords="1014,631,1147,656"/>
+<area shape="poly" id="edge60_Node000134_Node000144" title=" " alt="" coords="407,641,1000,641,1000,646,407,646"/>
+<area shape="rect" id="Node000145" href="$dd/d10/service__table_8cpp.html#a174b2e13ecbe601b9b1c20fedaef147e" title="Traverses through a list of XML nodes to find the node with the known element name." alt="" coords="1020,781,1141,807"/>
+<area shape="poly" id="edge61_Node000134_Node000145" title=" " alt="" coords="408,649,443,665,460,686,467,708,474,728,491,745,531,762,587,775,654,784,727,790,879,795,1006,794,1006,799,879,800,727,795,653,789,586,780,529,767,488,750,469,730,462,709,456,688,440,669,406,654"/>
+<area shape="rect" id="Node000136" href="$d9/da9/namespaceanonymous__namespace_02service__table_8cpp_03.html#a75316464db9843014fb2e2311ad6f0b4" title="Returns pointer to service info after getting the sub&#45;elements of the service info." alt="" coords="740,681,920,736"/>
+<area shape="poly" id="edge53_Node000135_Node000136" title=" " alt="" coords="669,706,726,706,726,711,669,711"/>
+<area shape="poly" id="edge59_Node000136_Node000003" title=" " alt="" coords="877,679,912,651,940,615,959,577,967,542,970,509,969,477,968,411,974,373,988,332,1020,279,1055,237,1059,241,1024,282,993,334,979,375,973,411,974,477,975,509,973,542,964,578,945,618,915,655,880,683"/>
+<area shape="rect" id="Node000137" href="$dd/d10/service__table_8cpp.html#a6b3dbe041f246ff64f7464036778ae62" title="Free&#39;s memory allocated for the various components of each service entry in the service table." alt="" coords="1021,732,1140,757"/>
+<area shape="poly" id="edge54_Node000136_Node000137" title=" " alt="" coords="921,719,1008,732,1007,737,920,724"/>
+<area shape="poly" id="edge55_Node000136_Node000144" title=" " alt="" coords="919,683,1017,657,1019,662,921,688"/>
+<area shape="poly" id="edge56_Node000136_Node000145" title=" " alt="" coords="901,734,992,766,1020,775,1018,780,990,771,899,739"/>
+<area shape="rect" id="Node000146" href="$d8/dd2/uri_8cpp.html#a108ec7fc0704f362d70140d838e6e356" title="Resolves a relative url with a base url." alt="" coords="1249,723,1368,748"/>
+<area shape="poly" id="edge57_Node000136_Node000146" title=" " alt="" coords="920,707,1039,710,1171,717,1236,723,1236,728,1170,722,1039,715,920,712"/>
+<area shape="poly" id="edge58_Node000146_Node000021" title=" " alt="" coords="1369,740,1479,755,1478,760,1368,746"/>
+<area shape="rect" id="Node000129" href="$d7/d20/FreeList_8cpp.html#ae64c10055f937a33eff150f678303b7f" title="Releases the resources stored with the free list." alt="" coords="517,812,641,837"/>
+<area shape="poly" id="edge63_Node000128_Node000129" title=" " alt="" coords="393,789,505,809,504,814,392,794"/>
+<area shape="rect" id="Node000130" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="529,861,630,887"/>
+<area shape="poly" id="edge64_Node000128_Node000130" title=" " alt="" coords="393,788,443,805,458,816,467,827,477,837,491,848,516,859,514,863,488,852,473,841,463,830,454,820,440,810,392,793"/>
+<area shape="rect" id="Node000131" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="717,854,943,894"/>
+<area shape="poly" id="edge65_Node000130_Node000131" title=" " alt="" coords="630,871,704,871,704,877,630,877"/>
+<area shape="poly" id="edge70_Node000149_Node000003" title=" " alt="" coords="647,129,785,136,864,146,943,161,996,177,1042,196,1040,201,994,182,942,166,864,151,784,142,647,134"/>
+<area shape="rect" id="Node000150" href="$dd/d10/service__table_8cpp.html#a32c36a8ef50698c158e3baf35d307753" title="Prints information of each service from the service table passed into the function." alt="" coords="769,68,891,93"/>
+<area shape="poly" id="edge68_Node000149_Node000150" title=" " alt="" coords="643,116,754,93,756,98,644,121"/>
+<area shape="poly" id="edge69_Node000150_Node000003" title=" " alt="" coords="892,91,944,110,1008,151,1058,193,1055,197,1005,155,941,115,890,96"/>
 </map>

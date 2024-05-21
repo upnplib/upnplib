@@ -1,5 +1,6 @@
 var NAVTREEINDEX8 =
 {
+"dc/d2f/GenlibClientSubscription_8cpp.html#a5da909b119c685cd28157e341ca64964":[8,0,0,1,2,0,1,23],
 "dc/d2f/GenlibClientSubscription_8cpp.html#a5fa5ba7e28950fe768e0cfcd8aacfc78":[8,0,0,1,2,0,1,26],
 "dc/d2f/GenlibClientSubscription_8cpp.html#a6c6c8e5ccedde33cad9c81dd83aa17b4":[8,0,0,1,2,0,1,11],
 "dc/d2f/GenlibClientSubscription_8cpp.html#a73223f539a2d862eab64ae6f0c01c324":[8,0,0,1,2,0,1,4],
@@ -23,12 +24,12 @@ var NAVTREEINDEX8 =
 "dc/d59/addrinfo_8cpp.html":[8,0,3,1,1,2],
 "dc/d59/addrinfo_8cpp_source.html":[8,0,3,1,1,2],
 "dc/d6d/namespaceupnplib.html":[6,0,24],
-"dc/d6d/namespaceupnplib.html#a1b07641cbe43d7d273439a6c03cb1de4":[6,0,24,17],
-"dc/d6d/namespaceupnplib.html#a1d1c50145ab351b5bfcb723c637201cd":[6,0,24,15],
+"dc/d6d/namespaceupnplib.html#a1b07641cbe43d7d273439a6c03cb1de4":[6,0,24,18],
+"dc/d6d/namespaceupnplib.html#a1d1c50145ab351b5bfcb723c637201cd":[6,0,24,16],
 "dc/d6d/namespaceupnplib.html#a46af4bf0bba66fea9883ef10b27b8000":[8,0,3,0,0,19,0,1],
 "dc/d6d/namespaceupnplib.html#ab28b46e87d7d69fdcace8eca7db3cb4d":[8,0,3,0,0,19,0,2],
-"dc/d6d/namespaceupnplib.html#ab9e5d2a23dfa5b2d5b3db3ff934af7ae":[6,0,24,16],
-"dc/d6d/namespaceupnplib.html#abb655e9ee43d62c83cb0ec065e6d3429":[6,0,24,22],
+"dc/d6d/namespaceupnplib.html#ab9e5d2a23dfa5b2d5b3db3ff934af7ae":[6,0,24,17],
+"dc/d6d/namespaceupnplib.html#abb655e9ee43d62c83cb0ec065e6d3429":[6,0,24,20],
 "dc/d6d/namespaceupnplib.html#ad7b6e3d42d6157e76f537fb101d49e16":[8,0,3,0,0,19,0,0],
 "dc/d6d/namespaceupnplib.html#d8/d3d/structupnplib_1_1Document__meta":[8,0,3,0,0,19,0],
 "dc/d80/namespaceanonymous__namespace_02upnptools_8cpp_03.html":[6,0,17],
@@ -240,14 +241,13 @@ var NAVTREEINDEX8 =
 "dd/da6/UpnpFileInfo_8cpp_source.html":[8,0,0,1,0,8],
 "dd/dad/Upnplib_2include_2upnplib_2httpreadwrite_8hpp.html":[8,0,3,0,0,6],
 "dd/dad/Upnplib_2include_2upnplib_2httpreadwrite_8hpp_source.html":[8,0,3,0,0,6],
-"dd/db5/classupnplib_1_1CUri.html":[6,0,24,9],
+"dd/db5/classupnplib_1_1CUri.html":[6,0,24,10],
 "dd/db5/classupnplib_1_1CUri.html":[7,0,7,7],
-"dd/db5/classupnplib_1_1CUri.html#aa0bd5796ad47818a282392e1cf7f7d7c":[6,0,24,9,0],
+"dd/db5/classupnplib_1_1CUri.html#aa0bd5796ad47818a282392e1cf7f7d7c":[6,0,24,10,0],
 "dd/db5/classupnplib_1_1CUri.html#aa0bd5796ad47818a282392e1cf7f7d7c":[7,0,7,7,0],
-"dd/db5/classupnplib_1_1CUri.html#aac477637704d2107135ff0cac185f954":[6,0,24,9,1],
+"dd/db5/classupnplib_1_1CUri.html#aac477637704d2107135ff0cac185f954":[6,0,24,10,1],
 "dd/db5/classupnplib_1_1CUri.html#aac477637704d2107135ff0cac185f954":[7,0,7,7,1],
-"dd/db5/classupnplib_1_1CUri.html#ae59cb0be0f7f79a7da3ee09dfda75803":[6,0,24,9,2],
+"dd/db5/classupnplib_1_1CUri.html#ae59cb0be0f7f79a7da3ee09dfda75803":[6,0,24,10,2],
 "dd/db5/classupnplib_1_1CUri.html#ae59cb0be0f7f79a7da3ee09dfda75803":[7,0,7,7,2],
-"dd/dbe/group__upnplib-connection.html":[5,3,0,2],
-"dd/de6/gena__device_8cpp.html":[8,0,0,1,1,2]
+"dd/dbe/group__upnplib-connection.html":[5,3,0,2]
 };

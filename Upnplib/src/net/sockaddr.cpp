@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-18
+// Redistribution only with this Copyright remark. Last modified: 2024-05-21
 /*!
  * \file
  * \brief Definition of the Sockaddr class and some free helper functions.
@@ -12,8 +12,19 @@
 
 namespace upnplib {
 
+namespace {
+
 // Free function to get the address string from a sockaddr structure
 // -----------------------------------------------------------------
+/*! \brief Get the [netaddress](\ref glossary_netaddr) without port from a
+ * sockaddr structure
+ * \ingroup upnplib-addrmodul
+ * \code
+ * ~$ // Usage e.g.:
+ * ~$ ::sockaddr_storage saddr{};
+ * ~$ std::cout << "netaddress is " << to_netaddr(&saddr) << "\n";
+ * \endcode
+ */
 std::string to_netaddr(const ::sockaddr_storage* const a_sockaddr) noexcept {
     // TRACE("Executing to_netaddr()") // not usable in chained output.
     char addrbuf[INET6_ADDRSTRLEN]{};
@@ -52,29 +63,21 @@ std::string to_netaddr(const ::sockaddr_storage* const a_sockaddr) noexcept {
 }
 
 
-// Free function to get the address string with port from a sockaddr structure
-// ---------------------------------------------------------------------------
-std::string to_netaddrp(const ::sockaddr_storage* const a_sockaddr) noexcept {
-    // TRACE("Executing to_addrport_str()") // not usable in chained output.
-    //
-    // sin_port and sin6_port are on the same memory location (union of the
-    // structures) so I can use it for AF_INET and AF_INET6.
-    // 'std::to_string()' may throw 'std::bad_alloc' from the std::string
-    // constructor. It is a fatal error that violates the promise to noexcpt
-    // and immediately terminates the prpgram. This is intentional because the
-    // error cannot be handled.
-    return (a_sockaddr->ss_family != AF_INET6 &&
-            a_sockaddr->ss_family != AF_INET)
-               ? to_netaddr(a_sockaddr) // let it handle the error.
-               : to_netaddr(a_sockaddr) + ":" +
-                     std::to_string(ntohs(
-                         reinterpret_cast<const ::sockaddr_in6*>(a_sockaddr)
-                             ->sin6_port));
-}
-
-
 // Free function to get the port number from a string
 // --------------------------------------------------
+/*! \brief Get the port number from a string
+ * \ingroup upnplib-addrmodul
+ * \code
+ * ~$ // Usage e.g.:
+ * ~$ in_port_t port = to_port("55555");
+ * \endcode
+ *
+ * Checks if the given string represents a numeric value between 0 and 65535.
+ * \returns
+ *  On success: Value of the port number
+ *  <!-- On error: **0** -->
+ * \exception std::invalid_argument Invalid port number
+ */
 in_port_t to_port(const std::string& a_port_str) {
     TRACE("Executing to_port()")
 
@@ -88,8 +91,8 @@ in_port_t to_port(const std::string& a_port_str) {
         goto throw_exit;
 
     // Now we check if the string are all digit characters
-    for (unsigned char ch : a_port_str) {
-        if (!::isdigit(ch))
+    for (char ch : a_port_str) {
+        if (!::isdigit(static_cast<unsigned char>(ch)))
             goto throw_exit;
     }
     // Valid positive number but is it within the port range (uint16_t)?
@@ -107,6 +110,16 @@ throw_exit:
 
 // Free function to logical compare two sockaddr structures
 // --------------------------------------------------------
+/*! \brief logical compare two sockaddr structures
+ * \ingroup upnplib-addrmodul
+ *
+ * To have a logical equal socket address we compare the address family, the ip
+ * address and the port.
+ *
+ * \returns
+ *  \b true if socket addresses are logical equal\n
+ *  \b false otherwise
+ */
 bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
                  const ::sockaddr_storage* a_ss2) noexcept {
     // To have a logical equal socket address we compare the address family, the
@@ -154,6 +167,29 @@ bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
     }
 
     return true;
+}
+
+} // anonymous namespace
+
+
+// Free function to get the address string with port from a sockaddr structure
+// ---------------------------------------------------------------------------
+std::string to_netaddrp(const ::sockaddr_storage* const a_sockaddr) noexcept {
+    // TRACE("Executing to_addrport_str()") // not usable in chained output.
+    //
+    // sin_port and sin6_port are on the same memory location (union of the
+    // structures) so I can use it for AF_INET and AF_INET6.
+    // 'std::to_string()' may throw 'std::bad_alloc' from the std::string
+    // constructor. It is a fatal error that violates the promise to noexcpt
+    // and immediately terminates the propgram. This is intentional because the
+    // error cannot be handled.
+    return (a_sockaddr->ss_family != AF_INET6 &&
+            a_sockaddr->ss_family != AF_INET)
+               ? to_netaddr(a_sockaddr) // let it handle the error.
+               : to_netaddr(a_sockaddr) + ":" +
+                     std::to_string(ntohs(
+                         reinterpret_cast<const ::sockaddr_in6*>(a_sockaddr)
+                             ->sin6_port));
 }
 
 
@@ -259,9 +295,9 @@ bool SSockaddr::operator==(const ::sockaddr_storage& a_ss) const {
 // Getter for the assosiated ip address without port
 // -------------------------------------------------
 // e.g. "[2001:db8::2]" or "192.168.254.253".
-const std::string& SSockaddr::get_netaddr() {
+const std::string& SSockaddr::netaddr() {
     // TRACE not usable with chained output.
-    // TRACE2(this, " Executing SSockaddr::get_netaddr()")
+    // TRACE2(this, " Executing SSockaddr::netaddr()")
     //
     // It is important to have the string available as long as the object lives,
     // otherwise you may get dangling pointer, e.g. with getting .c_str().
@@ -272,9 +308,9 @@ const std::string& SSockaddr::get_netaddr() {
 // Getter for the assosiated ip address with port
 // ----------------------------------------------
 // e.g. "[2001:db8::2]:50001" or "192.168.254.253:50001".
-const std::string& SSockaddr::get_netaddrp() {
+const std::string& SSockaddr::netaddrp() {
     // TRACE not usable with chained output.
-    // TRACE2(this, " Executing SSockaddr::get_netaddrp()")
+    // TRACE2(this, " Executing SSockaddr::netaddrp()")
     //
     // It is important to have the string available as long as the object lives,
     // otherwise you may get dangling pointer, e.g. with getting .c_str().

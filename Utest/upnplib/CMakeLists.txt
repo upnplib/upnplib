@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-05-18
+# Redistribution only with this Copyright remark. Last modified: 2024-05-20
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -49,14 +49,17 @@ add_test(NAME ctest_netaddr-ush COMMAND test_netaddr-ush --gtest_shuffle
 
 # sockaddr
 # ========
-add_executable(test_sockaddr-ush
+add_executable(test_sockaddr-ust
         ./test_sockaddr.cpp
 )
-target_link_libraries(test_sockaddr-ush
-    PRIVATE upnplib_shared
-    PRIVATE utest_shared
+target_include_directories(test_sockaddr-ust
+    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
 )
-add_test(NAME ctest_sockaddr-ush COMMAND test_sockaddr-ush --gtest_shuffle
+target_link_libraries(test_sockaddr-ust
+    PRIVATE upnplib_static
+    PRIVATE utest_static
+)
+add_test(NAME ctest_sockaddr-ust COMMAND test_sockaddr-ust --gtest_shuffle
         WORKING_DIRECTORY ${UPNPLIB_RUNTIME_OUTPUT_DIRECTORY}
 )
 

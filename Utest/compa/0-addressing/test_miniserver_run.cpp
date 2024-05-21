@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-13
+// Redistribution only with this Copyright remark. Last modified: 2024-05-20
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -1627,7 +1627,7 @@ TEST(RunMiniServerTestSuite, do_reinit) {
     s.ss.ss_family = saddrObj.ss.ss_family;
     s.serverAddr = &saddrObj.sa;
     s.ip_version = 4;
-    s.text_addr = saddrObj.get_netaddr().c_str();
+    s.text_addr = saddrObj.netaddr().c_str();
     s.serverAddr4->sin_port = saddrObj.get_port(); // not used
     s.serverAddr4->sin_addr = saddrObj.sin.sin_addr;
     s.fd = sockObj;
@@ -1638,7 +1638,7 @@ TEST(RunMiniServerTestSuite, do_reinit) {
     // Test Unit
     EXPECT_EQ(do_reinit(&s), 0);
 
-    EXPECT_STREQ(s.text_addr, saddrObj.get_netaddr().c_str());
+    EXPECT_STREQ(s.text_addr, saddrObj.netaddr().c_str());
     EXPECT_EQ(s.serverAddr4->sin_addr.s_addr, saddrObj.sin.sin_addr.s_addr);
     // Valid real socket
     // EXPECT_EQ(s.fd, sockfd); This is an invalid condition. The fd may change.

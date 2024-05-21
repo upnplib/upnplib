@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_SOCKADDR_HPP
 #define UPNPLIB_NET_SOCKADDR_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-17
+// Redistribution only with this Copyright remark. Last modified: 2024-05-21
 /*!
  * \file
  * \brief Declaration of the Sockaddr class and some free helper functions.
@@ -33,25 +33,10 @@ union sockaddr_t {
 };
 
 
-// Free function
-/*! \brief Get the [netaddress](\ref glossary_netaddr) without port from a
- * sockaddr structure
- * <!-- -------------------------------------------------------------- -->
- * \ingroup upnplib-addrmodul
- * \code
- * ~$ // Usage e.g.:
- * ~$ ::sockaddr_storage saddr{};
- * ~$ std::cout << "netaddress is " << to_netaddr(&saddr) << "\n";
- * \endcode
- */
-UPNPLIB_API std::string
-to_netaddr(const ::sockaddr_storage* const a_sockaddr) noexcept;
-
-
-// Free function
+// Free function to get the address string with port from a sockaddr structure
+// ---------------------------------------------------------------------------
 /*! \brief Get the [netaddress](\ref glossary_netaddr) with port from a sockaddr
  * structure
- * <!-- -------------------------------------------------------------------- -->
  * \ingroup upnplib-addrmodul
  * \code
  * ~$ // Usage e.g.:
@@ -63,40 +48,6 @@ UPNPLIB_API std::string
 to_netaddrp(const ::sockaddr_storage* const a_sockaddr) noexcept;
 
 
-// Free function
-/*! \brief Get the port number from a string
- * <!-- ------------------------------- -->
- * \ingroup upnplib-addrmodul
- * \code
- * ~$ // Usage e.g.:
- * ~$ in_port_t port = to_port("55555");
- * \endcode
- *
- * Checks if the given string represents a numeric value between 0 and 65535.
- * \returns
- *  On success: Value of the port number
- *  <!-- On error: **0** -->
- * \exception std::invalid_argument Invalid port number
- */
-UPNPLIB_API in_port_t to_port(const std::string& a_port_str);
-
-
-// Free function
-/*! \brief logical compare two sockaddr structures
- * <!-- ------------------------------------- -->
- * \ingroup upnplib-addrmodul
- *
- * To have a logical equal socket address we compare the address family, the ip
- * address and the port.
- *
- * \returns
- *  \b true if socket addresses are logical equal\n
- *  \b false otherwise
- */
-UPNPLIB_API bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
-                             const ::sockaddr_storage* a_ss2) noexcept;
-
-
 /*!
  * \brief Trivial ::%sockaddr structures enhanced with methods
  * <!--   ==================================================== -->
@@ -106,7 +57,7 @@ UPNPLIB_API bool sockaddrcmp(const ::sockaddr_storage* a_ss1,
 ~$ ::sockaddr_storage saddr{};
 ~$ SSockaddr saObj;
 ~$ ::memcpy(&saObj.ss, &saddr, saObj.sizeof_ss());
-~$ std::cout << "netaddress of saObj is " << saObj.get_netaddr() << "\n";
+~$ std::cout << "netaddress of saObj is " << saObj.netaddr() << "\n";
 \endcode
  *
  * This structure should be usable on a low level like the trival C `struct
@@ -123,9 +74,11 @@ struct UPNPLIB_API SSockaddr {
     sockaddr& sa = m_sa_union.sa;
 
     // Constructor
+    // -----------
     SSockaddr();
 
     // Destructor
+    // ----------
     virtual ~SSockaddr();
 
     // Get reference to the sockaddr_storage structure.
@@ -134,7 +87,10 @@ struct UPNPLIB_API SSockaddr {
     // member structure.
     // operator const ::sockaddr_storage&() const;
 
+
+    // Copy constructor
     /*! \brief Copy constructor, also needed for copy assignment operator.
+     * <-- ----------------------------------------------------------- -->
      * \code
      * ~$ // Usage e.g.:
      * ~$ SSockaddr saddr2 = saddr1; // saddr1 is an instantiated object.
@@ -143,7 +99,10 @@ struct UPNPLIB_API SSockaddr {
      * \endcode */
     SSockaddr(const SSockaddr&);
 
+
+    // Copy assignment operator
     /*! \brief Copy assignment operator, needs user defined copy contructor
+     * <-- ------------------------------------------------------------ -->
      * \code
      * ~$ // Usage e.g.:
      * ~$ saddr2 = saddr1; // saddr? are two instantiated valid objects.
@@ -151,11 +110,13 @@ struct UPNPLIB_API SSockaddr {
     // Strong exception guarantee with value argument as given.
     SSockaddr& operator=(SSockaddr); // value argument
 
+
     /*! \name Setter
      * *************
      * @{ */
     // Assignment operator
     /*! \brief Set socket address from a [netaddress](\ref glossary_netaddr)
+     * <-- ------------------------------------------------------------- -->
      * \code
      * ~$ // Usage e.g.:
      * ~$ SSockaddr saObj;
@@ -168,8 +129,10 @@ struct UPNPLIB_API SSockaddr {
      * \exception std::invalid_argument Invalid netaddress */
     void operator=(const std::string& a_addr_str);
 
+
     // Assignment operator
     /*! \brief Set [port number](\ref glossary_port) from integer
+     * <-- -------------------------------------------------- -->
      * \code
      * ~$ // Usage e.g.:
      * ~$ SSockaddr saObj;
@@ -178,10 +141,13 @@ struct UPNPLIB_API SSockaddr {
     void operator=(const in_port_t a_port);
     /// @} Setter
 
+
     /*! \name Getter
      * *************
      * @{ */
+    // Compare operator
     /*! \brief Test if another socket address is logical equal to this
+     * <-- ------------------------------------------------------- -->
      * \returns
      *  \b true if socket addresses are logical equal\n
      *  \b false otherwise
@@ -190,22 +156,28 @@ struct UPNPLIB_API SSockaddr {
      * returns false. */
     bool operator==(const ::sockaddr_storage&) const;
 
+
+    // Getter method
     /*! \brief Get the assosiated [netaddress](\ref glossary_netaddr) without
      * port
+     * <-- -------------------------------------------------------------- -->
      * \code
      * ~$ // Usage e.g.:
      * ~$ SSockaddr saObj;
-     * ~$ if (saObj.get_netaddr() == "[::1]") { manage_localhost(); }
+     * ~$ if (saObj.netaddr() == "[::1]") { manage_localhost(); }
      * \endcode */
-    virtual const std::string& get_netaddr();
+    virtual const std::string& netaddr();
 
+
+    // Getter method
     /*! \brief Get the assosiated [netaddress](\ref glossary_netaddr) with port
+     * <-- ---------------------------------------------------------------- -->
      * \code
      * ~$ // Usage e.g.:
      * ~$ SSockaddr saObj;
-     * ~$ if (saObj.get_netaddrp() == "[::1]:49494") { manage_localhost(); }
+     * ~$ if (saObj.netaddrp() == "[::1]:49494") { manage_localhost(); }
      * \endcode */
-    virtual const std::string& get_netaddrp();
+    virtual const std::string& netaddrp();
 
     /// \brief Get the numeric port
     virtual in_port_t get_port() const;

@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-19
+// Redistribution only with this Copyright remark. Last modified: 2024-05-20
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -146,16 +146,16 @@ sa_family_t CSocket_basic::get_family() const {
     return this->ss.ss_family;
 }
 
-const std::string& CSocket_basic::get_netaddr() {
-    TRACE2(this, " Executing CSocket_basic::get_netaddr()")
+const std::string& CSocket_basic::netaddr() {
+    TRACE2(this, " Executing CSocket_basic::netaddr()")
     m_get_addr_from_socket();
-    return SSockaddr::get_netaddr();
+    return SSockaddr::netaddr();
 }
 
-const std::string& CSocket_basic::get_netaddrp() {
-    TRACE2(this, " Executing CSocket_basic::get_netaddrp()")
+const std::string& CSocket_basic::netaddrp() {
+    TRACE2(this, " Executing CSocket_basic::netaddrp()")
     m_get_addr_from_socket();
-    return SSockaddr::get_netaddrp();
+    return SSockaddr::netaddrp();
 }
 
 in_port_t CSocket_basic::get_port() const {
@@ -229,7 +229,7 @@ bool CSocket_basic::is_bound() {
     // binding is protected.
     std::scoped_lock lock(m_bound_mutex);
 
-    const std::string& netaddr = this->get_netaddrp();
+    const std::string& netaddr = this->netaddrp();
     return (netaddr.empty() || netaddr.compare("[::]:0") == 0 ||
             netaddr.compare("0.0.0.0:0") == 0)
                ? false
@@ -478,7 +478,7 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
     UPNPLIB_LOGINFO << "MSG1115: syscall ::bind(" << m_sfd << ", "
                     << ai->ai_addr << ", " << ai->ai_addrlen << ") Using \""
                     << ai.netaddrp() << "\". Get "
-                    << (ret != 0 ? "ERROR" : this->get_netaddrp()) << "\n";
+                    << (ret != 0 ? "ERROR" : this->netaddrp()) << "\n";
     if (ret != 0) {
         throw std::runtime_error(
             UPNPLIB_LOGEXCEPT +

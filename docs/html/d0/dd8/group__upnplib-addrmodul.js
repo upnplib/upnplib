@@ -17,9 +17,9 @@ var group__upnplib_addrmodul =
     [ "upnplib::sockaddr_t", "d0/dd8/group__upnplib-addrmodul.html#d6/d2c/unionupnplib_1_1sockaddr__t", null ],
     [ "upnplib::SSockaddr", "d1/dc2/structupnplib_1_1SSockaddr.html", [
       [ "SSockaddr", "d1/dc2/structupnplib_1_1SSockaddr.html#a530e6456b6a2035c2c8db41ff0e37834", null ],
-      [ "get_netaddr", "d1/dc2/structupnplib_1_1SSockaddr.html#a4b68ff3cbc7008bf628a8d0d34db8ef4", null ],
-      [ "get_netaddrp", "d1/dc2/structupnplib_1_1SSockaddr.html#ab819d6e1cb68c5c177382497680cb1ce", null ],
       [ "get_port", "d1/dc2/structupnplib_1_1SSockaddr.html#aa966e76a6a766c6cef08e8c638934d6d", null ],
+      [ "netaddr", "d1/dc2/structupnplib_1_1SSockaddr.html#a7177ca7af8e89e62f3a9ace32d429a0b", null ],
+      [ "netaddrp", "d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8", null ],
       [ "operator=", "d1/dc2/structupnplib_1_1SSockaddr.html#a6b3d9cc620995bb0b08303e8291d527b", null ],
       [ "operator=", "d1/dc2/structupnplib_1_1SSockaddr.html#a3e36d37f1d4004cebe4e29a89a674a58", null ],
       [ "operator=", "d1/dc2/structupnplib_1_1SSockaddr.html#a0f2bee3b03e038e8a6fc565895ea4e36", null ],
@@ -32,8 +32,8 @@ var group__upnplib_addrmodul =
       [ "ss", "d1/dc2/structupnplib_1_1SSockaddr.html#a5b29bed63c23e462546178e4e76c974d", null ]
     ] ],
     [ "upnplib::anonymous_namespace{addrinfo.cpp}::is_netaddr", "d0/dd8/group__upnplib-addrmodul.html#ga2ab80e8c2f6204620fc33961150c223b", null ],
-    [ "upnplib::sockaddrcmp", "d0/dd8/group__upnplib-addrmodul.html#ga29eb40e51c94d8cba8cac175f6731fb7", null ],
-    [ "upnplib::to_netaddr", "d0/dd8/group__upnplib-addrmodul.html#gac07aeb101956f1edbd3e0ee07e0dd4d2", null ],
+    [ "upnplib::anonymous_namespace{sockaddr.cpp}::sockaddrcmp", "d0/dd8/group__upnplib-addrmodul.html#ga4e7da7df74d9c304cc3c8661f7313e6e", null ],
+    [ "upnplib::anonymous_namespace{sockaddr.cpp}::to_netaddr", "d0/dd8/group__upnplib-addrmodul.html#ga4bd3c5a8241ac74e3a45595123ad81e8", null ],
     [ "upnplib::to_netaddrp", "d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8", null ],
-    [ "upnplib::to_port", "d0/dd8/group__upnplib-addrmodul.html#ga5302a7054fc539b5dbc7dd8c1cbc6145", null ]
+    [ "upnplib::anonymous_namespace{sockaddr.cpp}::to_port", "d0/dd8/group__upnplib-addrmodul.html#gae717eb4b8c4749ec70fcf88294e826ee", null ]
 ];

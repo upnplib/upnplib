@@ -1,0 +1,13 @@
+<map id="upnplib::SSockaddr::netaddr" name="upnplib::SSockaddr::netaddr">
+<area shape="rect" id="Node000001" title="Get the assosiated netaddress without port &lt;– &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;..." alt="" coords="919,49,1064,89"/>
+<area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html#a9e771b73cb9373e1b1f09ffca79dc9b3" title="Get netaddress without port." alt="" coords="700,49,871,89"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="905,71,871,71,871,66,905,66"/>
+<area shape="rect" id="Node000003" href="$db/d84/classupnplib_1_1CSocket__basic.html#a0bfd8447aeb0fce2841c5ea90234c37d" title="Get status if socket is bound to a local netaddress." alt="" coords="481,49,652,89"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="686,71,652,71,652,66,686,66"/>
+<area shape="rect" id="Node000004" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a937a0eae18a69c7e034aa982345d9a50" title="Add a socket file descriptor to an &#39;fd_set&#39; structure as needed for ::select()." alt="" coords="253,5,433,60"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="468,55,433,50,434,45,468,50"/>
+<area shape="rect" id="Node000006" href="$d8/d73/classupnplib_1_1CSocket.html#a558451398ca27e8a0311df14e3441e6b" title="Set IPV6_V6ONLY." alt="" coords="264,85,423,125"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="468,87,423,95,422,89,468,82"/>
+<area shape="rect" id="Node000005" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76" title="Run the miniserver." alt="" coords="5,5,205,60"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="239,35,206,35,206,30,239,30"/>
+</map>

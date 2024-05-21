@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-05-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-05-20
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -186,7 +186,7 @@ int getNumericHostRedirection(
     try {
         upnplib::CSocket_basic socketObj(a_socket);
         socketObj.init();
-        std::string host_port = socketObj.get_netaddrp();
+        std::string host_port = socketObj.netaddrp();
         memcpy(a_host_port, host_port.c_str(), a_hp_size);
         return true;
 
