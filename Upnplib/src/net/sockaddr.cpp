@@ -8,6 +8,7 @@
 #include <upnplib/sockaddr.hpp>
 #include <upnplib/global.hpp>
 #include <upnplib/synclog.hpp>
+#include <upnplib/netaddr.hpp>
 #include <cstring>
 
 namespace upnplib {
@@ -74,34 +75,19 @@ std::string to_netaddr(const ::sockaddr_storage* const a_sockaddr) noexcept {
  *
  * Checks if the given string represents a numeric value between 0 and 65535.
  * \returns
- *  On success: Value of the port number
- *  <!-- On error: **0** -->
+ *  On success: Value of the port number, an empty string returns 0.
  * \exception std::invalid_argument Invalid port number
  */
 in_port_t to_port(const std::string& a_port_str) {
-    TRACE("Executing to_port()")
-
+    TRACE("Executing SSockaddr::this->to_port() with port=\"" + a_port_str +
+          "\"")
     if (a_port_str.empty())
         return 0;
 
-    int port;
-
-    // Only strings with max. 5 characters are valid (uint16_t has max. 65535)
-    if (a_port_str.length() > 5)
-        goto throw_exit;
-
-    // Now we check if the string are all digit characters
-    for (char ch : a_port_str) {
-        if (!::isdigit(static_cast<unsigned char>(ch)))
-            goto throw_exit;
+    if (is_port(a_port_str)) {
+        int port = std::stoi(a_port_str);
+        return static_cast<in_port_t>(port);
     }
-    // Valid positive number but is it within the port range (uint16_t)?
-    port = std::stoi(a_port_str);
-    if (port <= 65535)
-
-        return static_cast<uint16_t>(port);
-
-throw_exit:
     throw std::invalid_argument(UPNPLIB_LOGEXCEPT +
                                 "MSG1033: Failed to get port number for \"" +
                                 a_port_str + "\".");

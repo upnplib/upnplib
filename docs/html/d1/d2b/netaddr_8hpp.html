@@ -99,7 +99,8 @@ $(document).ready(function(){initNavTree('d1/d2b/netaddr_8hpp.html','../../'); i
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">netaddr.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -108,6 +109,7 @@ $(document).ready(function(){initNavTree('d1/d2b/netaddr_8hpp.html','../../'); i
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="../../d0/d21/visibility_8hpp_source.html">upnplib/visibility.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="../../d1/d42/port_8hpp_source.html">upnplib/port.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="../../d8/d43/port__sock_8hpp_source.html">upnplib/port_sock.hpp</a>&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 </div><div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Include dependency graph for netaddr.hpp:</div>
@@ -116,13 +118,15 @@ $(document).ready(function(){initNavTree('d1/d2b/netaddr_8hpp.html','../../'); i
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d2/de5/netaddr_8hpp__incl.png" border="0" usemap="#aUpnplib_2include_2upnplib_2netaddr_8hpp" alt=""/></div>
 <map name="aUpnplib_2include_2upnplib_2netaddr_8hpp" id="aUpnplib_2include_2upnplib_2netaddr_8hpp">
-<area shape="rect" title="Declaration of the Netaddr class." alt="" coords="163,5,337,45"/>
+<area shape="rect" title="Declaration of the Netaddr class." alt="" coords="248,5,423,45"/>
 <area shape="rect" href="../../d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,93,161,119"/>
-<area shape="poly" title=" " alt="" coords="211,48,121,90,119,85,209,43"/>
+<area shape="poly" title=" " alt="" coords="276,48,134,92,133,87,274,43"/>
 <area shape="rect" href="../../d1/d42/port_8hpp.html" title="Specifications to be portable between different platforms." alt="" coords="186,93,314,119"/>
-<area shape="poly" title=" " alt="" coords="253,46,253,79,247,79,247,46"/>
-<area shape="rect" title=" " alt="" coords="338,93,397,119"/>
-<area shape="poly" title=" " alt="" coords="280,43,340,84,337,88,277,48"/>
+<area shape="poly" title=" " alt="" coords="316,48,275,86,271,82,313,44"/>
+<area shape="rect" href="../../d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="338,93,503,119"/>
+<area shape="poly" title=" " alt="" coords="358,44,400,82,396,86,354,48"/>
+<area shape="rect" title=" " alt="" coords="527,93,586,119"/>
+<area shape="poly" title=" " alt="" coords="389,43,515,87,513,92,387,48"/>
 </map>
 </div>
 </div><div class="textblock"><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -132,9 +136,13 @@ $(document).ready(function(){initNavTree('d1/d2b/netaddr_8hpp.html','../../'); i
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../dc/dc1/netaddr_8hpp__dep__incl.png" border="0" usemap="#aUpnplib_2include_2upnplib_2netaddr_8hppdep" alt=""/></div>
 <map name="aUpnplib_2include_2upnplib_2netaddr_8hppdep" id="aUpnplib_2include_2upnplib_2netaddr_8hppdep">
-<area shape="rect" title="Declaration of the Netaddr class." alt="" coords="18,5,193,45"/>
-<area shape="rect" href="../../d5/dd7/netaddr_8cpp.html" title="Definition of the Netaddr class." alt="" coords="5,93,205,119"/>
-<area shape="poly" title=" " alt="" coords="108,59,108,93,103,93,103,59"/>
+<area shape="rect" title="Declaration of the Netaddr class." alt="" coords="247,5,422,45"/>
+<area shape="rect" href="../../dc/d59/addrinfo_8cpp.html" title="Definition of the Addrinfo class and free helper functions." alt="" coords="5,93,211,119"/>
+<area shape="poly" title=" " alt="" coords="268,52,142,96,141,91,266,47"/>
+<area shape="rect" href="../../d5/dd7/netaddr_8cpp.html" title="Definition of the Netaddr class." alt="" coords="235,93,435,119"/>
+<area shape="poly" title=" " alt="" coords="337,59,337,93,332,93,332,59"/>
+<area shape="rect" href="../../d7/def/sockaddr_8cpp.html" title="Definition of the Sockaddr class and some free helper functions." alt="" coords="459,93,667,119"/>
+<area shape="poly" title=" " alt="" coords="403,47,530,91,528,96,401,52"/>
 </map>
 </div>
 </div>
@@ -142,8 +150,8 @@ $(document).ready(function(){initNavTree('d1/d2b/netaddr_8hpp.html','../../'); i
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d8c/classupnplib_1_1CNetaddr.html">upnplib::CNetaddr</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Netaddress class to handle <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>es.  <a href="../../d1/d8c/classupnplib_1_1CNetaddr.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d44/classupnplib_1_1Netaddr.html">upnplib::Netaddr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Netaddress class to handle <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>es.  <a href="../../d8/d44/classupnplib_1_1Netaddr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -151,6 +159,15 @@ Namespaces</h2></td></tr>
 <tr class="memitem:dc/d6d/namespaceupnplib" id="r_dc/d6d/namespaceupnplib"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d6d/namespaceupnplib.html">upnplib</a></td></tr>
 <tr class="memdesc:dc/d6d/namespaceupnplib"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reengineered Object Oriented UPnP+ program code. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga8f3bd5579e056ae4b668789de4ef12b3" id="r_ga8f3bd5579e056ae4b668789de4ef12b3"><td class="memItemLeft" align="right" valign="top">sa_family_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3">upnplib::is_netaddr</a> (const std::string &amp;a_node, const int a_addr_family=AF_UNSPEC) noexcept</td></tr>
+<tr class="memdesc:ga8f3bd5579e056ae4b668789de4ef12b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for a <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a> and return its address family.  <br /></td></tr>
+<tr class="separator:ga8f3bd5579e056ae4b668789de4ef12b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga94539c3b024819362409a8421756bc58" id="r_ga94539c3b024819362409a8421756bc58"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#ga94539c3b024819362409a8421756bc58">upnplib::is_port</a> (const std::string &amp;a_port_str) noexcept</td></tr>
+<tr class="memdesc:ga94539c3b024819362409a8421756bc58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given string represents a port number.  <br /></td></tr>
+<tr class="separator:ga94539c3b024819362409a8421756bc58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Declaration of the Netaddr class. </p>

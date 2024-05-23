@@ -1,7 +1,6 @@
 var hierarchy =
 [
     [ "upnplib::CAddrinfo", "da/dad/classupnplib_1_1CAddrinfo.html", null ],
-    [ "upnplib::CNetaddr", "d1/d8c/classupnplib_1_1CNetaddr.html", null ],
     [ "upnplib::CSigpipe_scoped", "d3/de4/classupnplib_1_1CSigpipe__scoped.html", null ],
     [ "upnplib::CSocketErr", "d2/dd2/classupnplib_1_1CSocketErr.html", null ],
     [ "upnplib::CUri", "dd/db5/classupnplib_1_1CUri.html", null ],
@@ -28,6 +27,7 @@ var hierarchy =
     [ "memptr", "d1/d10/membuffer_8hpp.html#d4/d89/structmemptr", null ],
     [ "MiniServerSockArray", "d3/d8b/miniserver_8hpp.html#d2/d37/structMiniServerSockArray", null ],
     [ "anonymous_namespace{miniserver.cpp}::mserv_request_t", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#dd/d1f/structanonymous__namespace_02miniserver_8cpp_03_1_1mserv__request__t", null ],
+    [ "upnplib::Netaddr", "d8/d44/classupnplib_1_1Netaddr.html", null ],
     [ "NOTIFY_THREAD_STRUCT", "d9/dd2/gena_8hpp.html#d5/d37/structNOTIFY__THREAD__STRUCT", null ],
     [ "s_GenlibClientSubscription", "dc/d2f/GenlibClientSubscription_8cpp.html#d7/d22/structs__GenlibClientSubscription", null ],
     [ "anonymous_namespace{miniserver.cpp}::s_SocketStuff", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#dd/d37/structanonymous__namespace_02miniserver_8cpp_03_1_1s__SocketStuff", null ],

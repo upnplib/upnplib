@@ -1,5 +1,5 @@
 <map id="upnplib::SSockaddr::netaddr" name="upnplib::SSockaddr::netaddr">
-<area shape="rect" id="Node000001" title="Get the assosiated netaddress without port &lt;– &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;..." alt="" coords="919,49,1064,89"/>
+<area shape="rect" id="Node000001" title="Get the assosiated netaddress without port." alt="" coords="919,49,1064,89"/>
 <area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html#a9e771b73cb9373e1b1f09ffca79dc9b3" title="Get netaddress without port." alt="" coords="700,49,871,89"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="905,71,871,71,871,66,905,66"/>
 <area shape="rect" id="Node000003" href="$db/d84/classupnplib_1_1CSocket__basic.html#a0bfd8447aeb0fce2841c5ea90234c37d" title="Get status if socket is bound to a local netaddress." alt="" coords="481,49,652,89"/>

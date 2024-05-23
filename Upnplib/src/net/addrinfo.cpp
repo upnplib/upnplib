@@ -6,72 +6,15 @@
  */
 
 #include <upnplib/addrinfo.hpp>
+
 #include <upnplib/global.hpp>
 #include <upnplib/synclog.hpp>
+#include <upnplib/netaddr.hpp>
 #include <umock/netdb.hpp>
 
 #include <cstring>
 
 namespace upnplib {
-
-namespace {
-
-/*!
- * \brief Check for a numeric netaddress and return its address family
- * <!--   ------------------------------------------------------------ -->
- * \ingroup upnplib-addrmodul
- *
- * Checks if a string represents a numeric IPv6 or IPv4 address without port and
- * determines its address family.
- *
- * \returns
- *  On success: Address family AF_INET6 or AF_INET the address belongs to\n
- *  On error: AF_UNSPEC, the address is alphanumeric (maybe a DNS name?)
- */
-// I simply use the system function %inet_pton() to check if the node string is
-// accepted.
-sa_family_t is_netaddr(const std::string& a_node,
-                       const int a_addr_family = AF_UNSPEC) noexcept {
-    // clang-format off
-    TRACE("Executing is_netaddr(\"" + a_node + "\", " +
-          (a_addr_family == AF_INET6 ? "AF_INET6" :
-          (a_addr_family == AF_INET ? "AF_INET" : "AF_UNSPEC")) + ")")
-    // clang-format on
-
-    // The shortest numeric netaddress is "[::]".
-    if (a_node.size() < 4) // noexcept
-        return AF_UNSPEC;
-
-    unsigned char buf[sizeof(in6_addr)];
-    switch (a_addr_family) {
-    case AF_INET6: {
-        // front() and back() have undefined behavior with an empty string.
-        // Here its size() is at least 4.
-        if (a_node.front() != '[' || a_node.back() != ']')
-            return AF_UNSPEC;
-        // Remove surounding brackets for inet_pton().
-        // substr() throws exception std::out_of_range if pos > size(), but that
-        // cannot occur due to the guard above, size() is at least 4 here and
-        // pos is fix 1.
-        const std::string node{a_node.substr(1, a_node.size() - 2)};
-        return ::inet_pton(AF_INET6, node.c_str(), buf) == 1 ? AF_INET6
-                                                             : AF_UNSPEC;
-    }
-    case AF_INET:
-        return ::inet_pton(AF_INET, a_node.c_str(), buf) == 1 ? AF_INET
-                                                              : AF_UNSPEC;
-    case AF_UNSPEC:
-        // Recursive call
-        // clang-format off
-        return is_netaddr(a_node, AF_INET6) ? AF_INET6 : false ||
-               is_netaddr(a_node, AF_INET) ? AF_INET : AF_UNSPEC;
-        // clang-format on
-    }
-    return AF_UNSPEC;
-}
-
-} // anonymous namespace
-
 
 // CAddrinfo class to wrap ::addrinfo() system calls
 // =================================================

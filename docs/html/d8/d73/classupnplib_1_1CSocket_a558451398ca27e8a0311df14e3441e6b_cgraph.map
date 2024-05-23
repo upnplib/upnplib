@@ -12,9 +12,9 @@
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="382,202,417,197,417,202,383,208"/>
 <area shape="rect" id="Node000008" href="$db/d84/classupnplib_1_1CSocket__basic.html#a24406f0340da2352557ad1ea301410c5" title="Get netaddress with port." alt="" coords="431,229,601,269"/>
 <area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="383,227,417,232,417,238,382,232"/>
-<area shape="rect" id="Node000007" href="$d1/dc2/structupnplib_1_1SSockaddr.html#a7177ca7af8e89e62f3a9ace32d429a0b" title="Get the assosiated netaddress without port &lt;– &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;..." alt="" coords="649,165,795,205"/>
+<area shape="rect" id="Node000007" href="$d1/dc2/structupnplib_1_1SSockaddr.html#a7177ca7af8e89e62f3a9ace32d429a0b" title="Get the assosiated netaddress without port." alt="" coords="649,165,795,205"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="602,183,636,183,636,188,602,188"/>
-<area shape="rect" id="Node000009" href="$d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8" title="Get the assosiated netaddress with port &lt;– &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;..." alt="" coords="649,229,795,269"/>
+<area shape="rect" id="Node000009" href="$d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8" title="Get the assosiated netaddress with port." alt="" coords="649,229,795,269"/>
 <area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="602,247,636,247,636,252,602,252"/>
 <area shape="rect" id="Node000010" href="$d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="843,237,999,262"/>
 <area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="795,247,829,247,829,252,795,252"/>

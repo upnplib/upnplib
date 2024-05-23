@@ -74,7 +74,7 @@
 <area shape="rect" id="Node000098" href="$dd/d1d/httpparser_8cpp.html#a95aa14b5e06a3b635c73810fdbcb9de5" title="Initializes parser object for a response." alt="" coords="689,949,847,974"/>
 <area shape="poly" id="edge58_Node000076_Node000098" title=" " alt="" coords="586,924,688,944,687,949,585,929"/>
 <area shape="poly" id="edge38_Node000077_Node000004" title=" " alt="" coords="835,1128,861,1137,886,1150,901,1164,910,1179,919,1192,933,1205,956,1215,980,1222,978,1228,954,1220,931,1209,915,1196,906,1181,897,1168,882,1154,859,1142,833,1133"/>
-<area shape="rect" id="Node000078" href="$d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8" title="Get the assosiated netaddress with port &lt;– &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;..." alt="" coords="966,1155,1111,1195"/>
+<area shape="rect" id="Node000078" href="$d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8" title="Get the assosiated netaddress with port." alt="" coords="966,1155,1111,1195"/>
 <area shape="poly" id="edge36_Node000077_Node000078" title=" " alt="" coords="829,1128,953,1154,952,1159,828,1133"/>
 <area shape="rect" id="Node000080" href="$d1/dc2/structupnplib_1_1SSockaddr.html#a776aae84b82e1268df7ef75b39a6f528" title="Get sizeof the Sockaddr Structure." alt="" coords="966,1040,1111,1080"/>
 <area shape="poly" id="edge37_Node000077_Node000080" title=" " alt="" coords="828,1102,952,1076,953,1081,829,1108"/>

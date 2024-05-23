@@ -59,7 +59,7 @@
 <area shape="poly" id="edge26_Node000024_Node000025" title=" " alt="" coords="853,700,976,719,975,724,852,705"/>
 <area shape="rect" id="Node000026" href="$d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d" title="Display File and Line." alt="" coords="970,672,1150,698"/>
 <area shape="poly" id="edge27_Node000024_Node000026" title=" " alt="" coords="853,691,956,687,956,692,853,696"/>
-<area shape="rect" id="Node000028" href="$d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8" title="Get the assosiated netaddress with port &lt;– &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;..." alt="" coords="735,877,880,917"/>
+<area shape="rect" id="Node000028" href="$d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8" title="Get the assosiated netaddress with port." alt="" coords="735,877,880,917"/>
 <area shape="poly" id="edge29_Node000027_Node000028" title=" " alt="" coords="583,763,761,868,759,872,580,768"/>
 <area shape="rect" id="Node000030" href="$d1/dc2/structupnplib_1_1SSockaddr.html#a776aae84b82e1268df7ef75b39a6f528" title="Get sizeof the Sockaddr Structure." alt="" coords="735,733,880,773"/>
 <area shape="poly" id="edge31_Node000027_Node000030" title=" " alt="" coords="632,750,721,750,721,756,632,756"/>

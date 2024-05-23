@@ -1,5 +1,0 @@
-<map id="upnplib::SSockaddr::operator==" name="upnplib::SSockaddr::operator==">
-<area shape="rect" id="Node000001" title="Test if another socket address is logical equal to this." alt="" coords="5,5,151,45"/>
-<area shape="rect" id="Node000002" href="$d0/dd8/group__upnplib-addrmodul.html#ga29eb40e51c94d8cba8cac175f6731fb7" title="logical compare two sockaddr structures" alt="" coords="199,13,363,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,23,185,23,185,28,151,28"/>
-</map>

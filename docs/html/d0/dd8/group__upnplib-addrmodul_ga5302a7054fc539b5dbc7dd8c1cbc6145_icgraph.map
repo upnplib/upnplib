@@ -1,5 +1,0 @@
-<map id="upnplib::to_port" name="upnplib::to_port">
-<area shape="rect" id="Node000001" title="Get the port number from a string." alt="" coords="199,13,323,38"/>
-<area shape="rect" id="Node000002" href="$d1/dc2/structupnplib_1_1SSockaddr.html#a3e36d37f1d4004cebe4e29a89a674a58" title="Set socket address from a netaddress." alt="" coords="5,5,151,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,28,151,28,151,23,185,23"/>
-</map>

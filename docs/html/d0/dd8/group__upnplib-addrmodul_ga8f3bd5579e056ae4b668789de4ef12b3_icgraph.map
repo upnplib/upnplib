@@ -1,0 +1,14 @@
+<map id="upnplib::is_netaddr" name="upnplib::is_netaddr">
+<area shape="rect" id="Node000001" title="Check for a netaddress and return its address family." alt="" coords="700,77,847,102"/>
+<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="813,67,802,59,773,55,750,57,737,62,735,68,741,75,737,78,729,68,733,58,748,52,773,50,804,54,816,63"/>
+<area shape="rect" id="Node000002" href="$da/dad/classupnplib_1_1CAddrinfo.html#aa140ffe42a20d383475c106297164415" title="Constructor for getting an address information with port number string." alt="" coords="479,5,621,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="714,75,620,48,621,43,715,70"/>
+<area shape="rect" id="Node000003" href="$da/dad/classupnplib_1_1CAddrinfo.html#a307094d37736d609bde57f810f7b8ba5" title="Initialize address information that is returned by syscall ::getaddrinfo()" alt="" coords="479,69,621,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="686,92,621,92,621,87,686,87"/>
+<area shape="rect" id="Node000006" href="$d8/d44/classupnplib_1_1Netaddr.html#a708035c6099832d99f9b81025a962fd7" title="Assign a netaddress." alt="" coords="448,134,652,159"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="712,108,653,124,603,137,602,131,651,119,711,103"/>
+<area shape="rect" id="Node000004" href="$d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="233,77,400,102"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="465,92,400,92,400,87,465,87"/>
+<area shape="rect" id="Node000005" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aa1e3a3e75356465099535c0e7851a858" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="5,62,185,117"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="220,92,185,92,185,87,220,87"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="upnplib::Netaddr::operator=" name="upnplib::Netaddr::operator=">
+<area shape="rect" id="Node000001" title="Assign a netaddress." alt="" coords="5,55,209,80"/>
+<area shape="rect" id="Node000002" href="$d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3" title="Check for a netaddress and return its address family." alt="" coords="257,29,404,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="210,53,243,49,244,54,210,58"/>
+<area shape="rect" id="Node000003" href="$d0/dd8/group__upnplib-addrmodul.html#ga94539c3b024819362409a8421756bc58" title="Check if a given string represents a port number." alt="" coords="269,79,392,104"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="210,76,256,81,255,86,210,81"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="295,31,287,21,291,11,306,5,331,3,361,6,374,15,370,20,359,11,331,8,307,10,294,15,292,20,299,28"/>
+</map>

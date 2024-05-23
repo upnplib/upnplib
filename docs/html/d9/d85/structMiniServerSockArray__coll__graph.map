@@ -1,9 +1,0 @@
-<map id="MiniServerSockArray" name="MiniServerSockArray">
-<area shape="rect" id="Node000001" title="Provides sockets for all network communications." alt="" coords="11,243,170,268"/>
-<area shape="rect" id="Node000002" href="$d8/d73/classupnplib_1_1CSocket.html" title="Manage all aspects of a network socket." alt="" coords="25,155,156,180"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,194,93,242,88,242,88,194"/>
-<area shape="rect" id="Node000003" href="$db/d84/classupnplib_1_1CSocket__basic.html" title="Manage basic issues of a network socket." alt="" coords="5,80,176,105"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="93,120,93,154,88,154,88,120"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="46,5,135,31"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="93,45,93,80,88,80,88,45"/>
-</map>

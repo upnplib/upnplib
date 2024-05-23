@@ -1,9 +1,0 @@
-<map id="upnplib::CAddrinfo::CAddrinfo" name="upnplib::CAddrinfo::CAddrinfo">
-<area shape="rect" id="Node000001" title="Copy constructor." alt="" coords="5,5,148,45"/>
-<area shape="rect" id="Node000002" href="$da/dad/classupnplib_1_1CAddrinfo.html#a307094d37736d609bde57f810f7b8ba5" title="Initialize address information that is given by syscall ::getaddrinfo()" alt="" coords="196,5,339,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,23,183,23,183,28,148,28"/>
-<area shape="rect" id="Node000003" href="$d0/dd8/group__upnplib-addrmodul.html#gac193ec8b0d5cf6c70e2282814ef77c05" title="Get the netaddress with port from a sockaddr structure." alt="" coords="387,13,543,38"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="339,23,373,23,373,28,339,28"/>
-<area shape="rect" id="Node000004" href="$d0/dd8/group__upnplib-addrmodul.html#ga860ec0f90ae3b8fc2a00507c38213d7e" title="Get the netaddress without port from a sockaddr structure." alt="" coords="591,13,739,38"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="543,23,577,23,577,28,543,28"/>
-</map>

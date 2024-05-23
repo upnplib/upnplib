@@ -114,9 +114,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dad/classupnplib_1_1CAddrinfo.html">CAddrinfo</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get information from the operating system about a <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>.  <a href="../../da/dad/classupnplib_1_1CAddrinfo.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d8c/classupnplib_1_1CNetaddr.html">CNetaddr</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Netaddress class to handle <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>es.  <a href="../../d1/d8c/classupnplib_1_1CNetaddr.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/de4/classupnplib_1_1CSigpipe__scoped.html">CSigpipe_scoped</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Portable handle SIGPIPE on failed write to a remote closed network socket.  <a href="../../d3/de4/classupnplib_1_1CSigpipe__scoped.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,6 +138,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Portable catch <b>one</b> network socket error from the operating system, and provide information about it.  <a href="../../d9/dd8/classupnplib_1_1ISocketErr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d44/classupnplib_1_1Netaddr.html">Netaddr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Netaddress class to handle <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>es.  <a href="../../d8/d44/classupnplib_1_1Netaddr.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:d6/d2c/unionupnplib_1_1sockaddr__t" id="r_d6/d2c/unionupnplib_1_1sockaddr__t"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#d6/d2c/unionupnplib_1_1sockaddr__t">sockaddr_t</a></td></tr>
 <tr class="memdesc:d6/d2c/unionupnplib_1_1sockaddr__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helpful union of the different socket address structures.  <a href="../../d0/dd8/group__upnplib-addrmodul.html#d6/d2c/unionupnplib_1_1sockaddr__t">More...</a><br /></td></tr>
 <tr class="separator:d6/d2c/unionupnplib_1_1sockaddr__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -156,6 +156,12 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ga8f3bd5579e056ae4b668789de4ef12b3" id="r_ga8f3bd5579e056ae4b668789de4ef12b3"><td class="memItemLeft" align="right" valign="top">sa_family_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3">is_netaddr</a> (const std::string &amp;a_node, const int a_addr_family=AF_UNSPEC) noexcept</td></tr>
+<tr class="memdesc:ga8f3bd5579e056ae4b668789de4ef12b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for a <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a> and return its address family.  <br /></td></tr>
+<tr class="separator:ga8f3bd5579e056ae4b668789de4ef12b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga94539c3b024819362409a8421756bc58" id="r_ga94539c3b024819362409a8421756bc58"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#ga94539c3b024819362409a8421756bc58">is_port</a> (const std::string &amp;a_port_str) noexcept</td></tr>
+<tr class="memdesc:ga94539c3b024819362409a8421756bc58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given string represents a port number.  <br /></td></tr>
+<tr class="separator:ga94539c3b024819362409a8421756bc58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafd74ac6303ebfad050c64d52458125a8" id="r_gafd74ac6303ebfad050c64d52458125a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8">to_netaddrp</a> (const ::sockaddr_storage *const a_sockaddr) noexcept</td></tr>
 <tr class="memdesc:gafd74ac6303ebfad050c64d52458125a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a> with port from a sockaddr structure.  <br /></td></tr>
 <tr class="separator:gafd74ac6303ebfad050c64d52458125a8"><td class="memSeparator" colspan="2">&#160;</td></tr>

@@ -1,5 +1,0 @@
-<map id="TvDeviceStop" name="TvDeviceStop">
-<area shape="rect" id="Node000001" title="Stops the device. Uninitializes the sdk." alt="" coords="235,5,347,31"/>
-<area shape="rect" id="Node000002" href="$d9/d09/tv__device_8cpp.html#ad3a78c1a3b2b7ebeca7dd92f1ed27de1" title="Function that receives commands from the user at the command prompt during the lifetime of the device..." alt="" coords="5,5,187,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="221,21,187,21,187,15,221,15"/>
-</map>

@@ -24,7 +24,7 @@
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="703,146,832,162,977,189,1033,205,1031,210,975,195,831,168,702,151"/>
 <area shape="rect" id="Node000005" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="791,89,939,129"/>
 <area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="702,127,778,117,778,123,703,132"/>
-<area shape="rect" id="Node000007" href="$d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8" title="Get the assosiated netaddress with port &lt;– &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;..." alt="" coords="793,16,938,56"/>
+<area shape="rect" id="Node000007" href="$d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8" title="Get the assosiated netaddress with port." alt="" coords="793,16,938,56"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="702,26,779,30,779,35,702,32"/>
 <area shape="rect" id="Node000008" href="$d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="1024,23,1180,49"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="938,33,1010,33,1010,39,938,39"/>

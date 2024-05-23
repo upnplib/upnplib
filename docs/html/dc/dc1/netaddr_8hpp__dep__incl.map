@@ -1,5 +1,9 @@
 <map id="Upnplib/include/upnplib/netaddr.hpp" name="Upnplib/include/upnplib/netaddr.hpp">
-<area shape="rect" id="Node000001" title="Declaration of the Netaddr class." alt="" coords="18,5,193,45"/>
-<area shape="rect" id="Node000002" href="$d5/dd7/netaddr_8cpp.html" title="Definition of the Netaddr class." alt="" coords="5,93,205,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,59,108,93,103,93,103,59"/>
+<area shape="rect" id="Node000001" title="Declaration of the Netaddr class." alt="" coords="247,5,422,45"/>
+<area shape="rect" id="Node000002" href="$dc/d59/addrinfo_8cpp.html" title="Definition of the Addrinfo class and free helper functions." alt="" coords="5,93,211,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="268,52,142,96,141,91,266,47"/>
+<area shape="rect" id="Node000003" href="$d5/dd7/netaddr_8cpp.html" title="Definition of the Netaddr class." alt="" coords="235,93,435,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="337,59,337,93,332,93,332,59"/>
+<area shape="rect" id="Node000004" href="$d7/def/sockaddr_8cpp.html" title="Definition of the Sockaddr class and some free helper functions." alt="" coords="459,93,667,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="403,47,530,91,528,96,401,52"/>
 </map>

@@ -114,9 +114,9 @@ struct UPNPLIB_API SSockaddr {
     /*! \name Setter
      * *************
      * @{ */
-    // Assignment operator
+    // Assignment operator to set a netaddress
+    // ---------------------------------------
     /*! \brief Set socket address from a [netaddress](\ref glossary_netaddr)
-     * <-- ------------------------------------------------------------- -->
      * \code
      * ~$ // Usage e.g.:
      * ~$ SSockaddr saObj;
@@ -130,9 +130,9 @@ struct UPNPLIB_API SSockaddr {
     void operator=(const std::string& a_addr_str);
 
 
-    // Assignment operator
+    // Assignment operator to set a port
+    // ---------------------------------
     /*! \brief Set [port number](\ref glossary_port) from integer
-     * <-- -------------------------------------------------- -->
      * \code
      * ~$ // Usage e.g.:
      * ~$ SSockaddr saObj;
@@ -146,8 +146,8 @@ struct UPNPLIB_API SSockaddr {
      * *************
      * @{ */
     // Compare operator
+    // ----------------
     /*! \brief Test if another socket address is logical equal to this
-     * <-- ------------------------------------------------------- -->
      * \returns
      *  \b true if socket addresses are logical equal\n
      *  \b false otherwise
@@ -157,10 +157,10 @@ struct UPNPLIB_API SSockaddr {
     bool operator==(const ::sockaddr_storage&) const;
 
 
-    // Getter method
+    // Getter for a netaddress
+    // -----------------------
     /*! \brief Get the assosiated [netaddress](\ref glossary_netaddr) without
      * port
-     * <-- -------------------------------------------------------------- -->
      * \code
      * ~$ // Usage e.g.:
      * ~$ SSockaddr saObj;
@@ -169,9 +169,9 @@ struct UPNPLIB_API SSockaddr {
     virtual const std::string& netaddr();
 
 
-    // Getter method
+    // Getter for a netaddress with port
+    // ---------------------------------
     /*! \brief Get the assosiated [netaddress](\ref glossary_netaddr) with port
-     * <-- ---------------------------------------------------------------- -->
      * \code
      * ~$ // Usage e.g.:
      * ~$ SSockaddr saObj;

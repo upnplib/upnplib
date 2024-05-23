@@ -1,5 +1,0 @@
-<map id="upnplib::sockaddrcmp" name="upnplib::sockaddrcmp">
-<area shape="rect" id="Node000001" title="logical compare two sockaddr structures" alt="" coords="199,13,363,38"/>
-<area shape="rect" id="Node000002" href="$d1/dc2/structupnplib_1_1SSockaddr.html#a8cdabffed735d05133da7304c1b304f4" title="Test if another socket address is logical equal to this." alt="" coords="5,5,151,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,28,151,28,151,23,185,23"/>
-</map>

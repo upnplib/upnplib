@@ -25,7 +25,6 @@ var annotated_dup =
     ] ],
     [ "upnplib", "dc/d6d/namespaceupnplib.html", [
       [ "CAddrinfo", "da/dad/classupnplib_1_1CAddrinfo.html", "da/dad/classupnplib_1_1CAddrinfo" ],
-      [ "CNetaddr", "d1/d8c/classupnplib_1_1CNetaddr.html", "d1/d8c/classupnplib_1_1CNetaddr" ],
       [ "CSigpipe_scoped", "d3/de4/classupnplib_1_1CSigpipe__scoped.html", null ],
       [ "CSocket", "d8/d73/classupnplib_1_1CSocket.html", "d8/d73/classupnplib_1_1CSocket" ],
       [ "CSocket_basic", "db/d84/classupnplib_1_1CSocket__basic.html", "db/d84/classupnplib_1_1CSocket__basic" ],
@@ -34,6 +33,7 @@ var annotated_dup =
       [ "CUri", "dd/db5/classupnplib_1_1CUri.html", "dd/db5/classupnplib_1_1CUri" ],
       [ "Document_meta", "dc/d6d/namespaceupnplib.html#d8/d3d/structupnplib_1_1Document__meta", "dc/d6d/namespaceupnplib_d8/d3d/structupnplib_1_1Document__meta_dup" ],
       [ "ISocketErr", "d9/dd8/classupnplib_1_1ISocketErr.html", "d9/dd8/classupnplib_1_1ISocketErr" ],
+      [ "Netaddr", "d8/d44/classupnplib_1_1Netaddr.html", "d8/d44/classupnplib_1_1Netaddr" ],
       [ "sockaddr_t", "d0/dd8/group__upnplib-addrmodul.html#d6/d2c/unionupnplib_1_1sockaddr__t", null ],
       [ "SSockaddr", "d1/dc2/structupnplib_1_1SSockaddr.html", "d1/dc2/structupnplib_1_1SSockaddr" ]
     ] ],

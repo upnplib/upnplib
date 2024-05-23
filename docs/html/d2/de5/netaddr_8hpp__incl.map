@@ -1,9 +1,11 @@
 <map id="Upnplib/include/upnplib/netaddr.hpp" name="Upnplib/include/upnplib/netaddr.hpp">
-<area shape="rect" id="Node000001" title="Declaration of the Netaddr class." alt="" coords="163,5,337,45"/>
+<area shape="rect" id="Node000001" title="Declaration of the Netaddr class." alt="" coords="248,5,423,45"/>
 <area shape="rect" id="Node000002" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,93,161,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,48,121,90,119,85,209,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="276,48,134,92,133,87,274,43"/>
 <area shape="rect" id="Node000003" href="$d1/d42/port_8hpp.html" title="Specifications to be portable between different platforms." alt="" coords="186,93,314,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="253,46,253,79,247,79,247,46"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="338,93,397,119"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="280,43,340,84,337,88,277,48"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="316,48,275,86,271,82,313,44"/>
+<area shape="rect" id="Node000004" href="$d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="338,93,503,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="358,44,400,82,396,86,354,48"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="527,93,586,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="389,43,515,87,513,92,387,48"/>
 </map>

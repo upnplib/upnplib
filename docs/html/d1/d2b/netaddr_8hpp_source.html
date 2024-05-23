@@ -103,34 +103,66 @@ $(document).ready(function(){initNavTree('d1/d2b/netaddr_8hpp_source.html','../.
 <a href="../../d1/d2b/netaddr_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef UPNPLIB_NET_NETADDR_HPP</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define UPNPLIB_NET_NETADDR_HPP</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, &lt;Ingo@Hoeft-online.de&gt;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// Redistribution only with this Copyright remark. Last modified: 2024-05-20</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// Redistribution only with this Copyright remark. Last modified: 2024-05-23</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="../../d0/d21/visibility_8hpp.html">upnplib/visibility.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;<a class="code" href="../../d1/d42/port_8hpp.html">upnplib/port.hpp</a>&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../dc/d6d/namespaceupnplib.html">upnplib</a> {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="foldopen" id="foldopen00020" data-start="{" data-end="};">
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="../../d1/d8c/classupnplib_1_1CNetaddr.html">   20</a></span><span class="keyword">class </span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <a class="code hl_class" href="../../d1/d8c/classupnplib_1_1CNetaddr.html">CNetaddr</a> {</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <a class="code hl_class" href="../../d1/d8c/classupnplib_1_1CNetaddr.html">CNetaddr</a>();</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <a class="code hl_class" href="../../d1/d8c/classupnplib_1_1CNetaddr.html">~CNetaddr</a>();</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordtype">void</span> set(std::string_view a_node, std::string_view a_service);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    SUPPRESS_MSVC_WARN_4251_NEXT_LINE</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    std::string m_netaddrp;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>};</div>
-</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>} <span class="comment">// namespace upnplib</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;<a class="code" href="../../d8/d43/port__sock_8hpp.html">upnplib/port_sock.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../dc/d6d/namespaceupnplib.html">upnplib</a> {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">// Free function to check for a netaddress without port</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">// ----------------------------------------------------</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>sa_family_t <a class="code hl_function" href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3">is_netaddr</a>(</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">const</span> std::string&amp; a_node,</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> a_addr_family = AF_UNSPEC) <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#endif </span><span class="comment">// UPNPLIB_NET_NETADDR_HPP</span></div>
-<div class="ttc" id="aclassupnplib_1_1CNetaddr_html"><div class="ttname"><a href="../../d1/d8c/classupnplib_1_1CNetaddr.html">upnplib::CNetaddr</a></div><div class="ttdoc">Netaddress class to handle netaddresses.</div><div class="ttdef"><b>Definition</b> <a href="../../d1/d2b/netaddr_8hpp_source.html#l00020">netaddr.hpp:20</a></div></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment">// Free function to check if a string is a valid port number</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">// ---------------------------------------------------------</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keywordtype">bool</span> <a class="code hl_function" href="../../d0/dd8/group__upnplib-addrmodul.html#ga94539c3b024819362409a8421756bc58">is_port</a>(<span class="keyword">const</span> std::string&amp; a_port_str) <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">// Netaddress class</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">// ================</span></div>
+<div class="foldopen" id="foldopen00066" data-start="{" data-end="};">
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="../../d8/d44/classupnplib_1_1Netaddr.html">   66</a></span><span class="keyword">class </span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <a class="code hl_class" href="../../d8/d44/classupnplib_1_1Netaddr.html">Netaddr</a> {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="comment">// Default Constructor</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <a class="code hl_class" href="../../d8/d44/classupnplib_1_1Netaddr.html">Netaddr</a>();</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">// Destructor</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="../../d8/d44/classupnplib_1_1Netaddr.html">~Netaddr</a>();</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="comment">// Assignment operator to set a netaddress</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="comment">// ---------------------------------------</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordtype">void</span> operator=(</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="keyword">const</span> std::string&amp; a_addr_str) <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="comment">// Getter for a netaddress string</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="comment">// ------------------------------</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    std::string&amp; str();</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    SUPPRESS_MSVC_WARN_4251_NEXT_LINE</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    std::string m_netaddrp;</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>};</div>
+</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="comment">// Getter of the netaddress to output stream</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="comment">// -----------------------------------------</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>UPNPLIB_API ::std::ostream&amp; operator&lt;&lt;(::std::ostream&amp; os, <a class="code hl_class" href="../../d8/d44/classupnplib_1_1Netaddr.html">Netaddr</a>&amp; nap);</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>} <span class="comment">// namespace upnplib</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="preprocessor">#endif </span><span class="comment">// UPNPLIB_NET_NETADDR_HPP</span></div>
+<div class="ttc" id="aclassupnplib_1_1Netaddr_html"><div class="ttname"><a href="../../d8/d44/classupnplib_1_1Netaddr.html">upnplib::Netaddr</a></div><div class="ttdoc">Netaddress class to handle netaddresses.</div><div class="ttdef"><b>Definition</b> <a href="../../d1/d2b/netaddr_8hpp_source.html#l00066">netaddr.hpp:66</a></div></div>
+<div class="ttc" id="agroup__upnplib-addrmodul_html_ga8f3bd5579e056ae4b668789de4ef12b3"><div class="ttname"><a href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3">upnplib::is_netaddr</a></div><div class="ttdeci">sa_family_t is_netaddr(const std::string &amp;a_node, const int a_addr_family=AF_UNSPEC) noexcept</div><div class="ttdoc">Check for a netaddress and return its address family.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dd7/netaddr_8cpp_source.html#l00021">netaddr.cpp:21</a></div></div>
+<div class="ttc" id="agroup__upnplib-addrmodul_html_ga94539c3b024819362409a8421756bc58"><div class="ttname"><a href="../../d0/dd8/group__upnplib-addrmodul.html#ga94539c3b024819362409a8421756bc58">upnplib::is_port</a></div><div class="ttdeci">bool is_port(const std::string &amp;a_port_str) noexcept</div><div class="ttdoc">Check if a given string represents a port number.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dd7/netaddr_8cpp_source.html#l00064">netaddr.cpp:64</a></div></div>
 <div class="ttc" id="anamespaceupnplib_html"><div class="ttname"><a href="../../dc/d6d/namespaceupnplib.html">upnplib</a></div><div class="ttdoc">Reengineered Object Oriented UPnP+ program code.</div></div>
 <div class="ttc" id="aport_8hpp_html"><div class="ttname"><a href="../../d1/d42/port_8hpp.html">port.hpp</a></div><div class="ttdoc">Specifications to be portable between different platforms.</div></div>
+<div class="ttc" id="aport__sock_8hpp_html"><div class="ttname"><a href="../../d8/d43/port__sock_8hpp.html">port_sock.hpp</a></div><div class="ttdoc">Specifications to be portable with sockets between different platforms.</div></div>
 <div class="ttc" id="avisibility_8hpp_html"><div class="ttname"><a href="../../d0/d21/visibility_8hpp.html">visibility.hpp</a></div><div class="ttdoc">Macros to support visibility of external symbols.</div></div>
 <div class="ttc" id="avisibility_8hpp_html_a596de2c742b413e26eddc6d1751753c0"><div class="ttname"><a href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a></div><div class="ttdeci">#define UPNPLIB_API</div><div class="ttdoc">Prefix to export symbol for external use.</div><div class="ttdef"><b>Definition</b> <a href="../../d0/d21/visibility_8hpp_source.html#l00061">visibility.hpp:61</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -1,5 +1,0 @@
-<map id="upnplib::SSockaddr::get_netaddr" name="upnplib::SSockaddr::get_netaddr">
-<area shape="rect" id="Node000001" title="Get the assosiated netaddress without port." alt="" coords="224,5,369,45"/>
-<area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html#aa87b381fdc37ed487cafac6f237d58e8" title="Get netaddress without port." alt="" coords="5,5,176,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="210,28,176,28,176,23,210,23"/>
-</map>
