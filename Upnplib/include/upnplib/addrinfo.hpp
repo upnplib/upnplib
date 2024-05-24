@@ -1,12 +1,13 @@
 #ifndef UPNPLIB_INCLUDE_ADDRINFO_HPP
 #define UPNPLIB_INCLUDE_ADDRINFO_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-20
+// Redistribution only with this Copyright remark. Last modified: 2024-05-24
 /*!
  * \file
  * \brief Declaration of the Addrinfo class.
  */
 
+#include <upnplib/netaddr.hpp>
 #include <upnplib/sockaddr.hpp>
 
 namespace upnplib {
@@ -123,18 +124,18 @@ normal_execution();
     // REF:_<a_href="https://stackoverflow.com/a/8782794/5014688">Overloading_member_access_operators_->,_.*</a>
     ::addrinfo* operator->() const noexcept;
 
-    /*! \brief Get the assosiated [netaddress](\ref glossary_netaddr) with port
+    /*! \brief Get the assosiated [netaddress](\ref glossary_netaddr)
      * \code
      * // Usage e.g.:
      * CAddrinfo ai("localhost", 50001, AF_UNSPEC, SOCK_STREAM);
      * try {
      *     ai.init();
      * } catch (xcp) { handle_error(); }
-     * std::string netaddrp = ai.netaddrp();
+     * std::string netaddrp = ai.netaddr().str();
      * if (netaddrp == "[::1]:50001") { manage_ipv6_interface();
      * } else if (netaddrp == "127.0.0.1:50001") { manage_ipv4_interface(); }
      * \endcode */
-    virtual const std::string netaddrp() const noexcept;
+    virtual Netaddr netaddr() const noexcept;
     /// @} Getter
 
   private:

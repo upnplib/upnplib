@@ -135,15 +135,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abe3d30cae8c8464fd580373cb8704386" id="r_abe3d30cae8c8464fd580373cb8704386"><td class="memItemLeft" align="right" valign="top">::addrinfo *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dad/classupnplib_1_1CAddrinfo.html#abe3d30cae8c8464fd580373cb8704386">operator-&gt;</a> () const noexcept</td></tr>
 <tr class="memdesc:abe3d30cae8c8464fd580373cb8704386"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read access to members of the <a href="https://www.man7.org/linux/man-pages/man3/getaddrinfo.3.html#DESCRIPTION">addrinfo structure</a>  <br /></td></tr>
 <tr class="separator:abe3d30cae8c8464fd580373cb8704386"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96f197ab46c7736ab8331d9daccd8281" id="r_a96f197ab46c7736ab8331d9daccd8281"><td class="memItemLeft" align="right" valign="top">virtual const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dad/classupnplib_1_1CAddrinfo.html#a96f197ab46c7736ab8331d9daccd8281">netaddrp</a> () const noexcept</td></tr>
-<tr class="memdesc:a96f197ab46c7736ab8331d9daccd8281"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the assosiated <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a> with port.  <br /></td></tr>
-<tr class="separator:a96f197ab46c7736ab8331d9daccd8281"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a938842ec8b629bc03581116942327aab" id="r_a938842ec8b629bc03581116942327aab"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d8/d44/classupnplib_1_1Netaddr.html">Netaddr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dad/classupnplib_1_1CAddrinfo.html#a938842ec8b629bc03581116942327aab">netaddr</a> () const noexcept</td></tr>
+<tr class="memdesc:a938842ec8b629bc03581116942327aab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the assosiated <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>.  <br /></td></tr>
+<tr class="separator:a938842ec8b629bc03581116942327aab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Get information from the operating system about a <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>. </p>
 <p>This is a stripped version. It is only used in a snapshot to get information about a netaddress. There is no need to copy the object. The last full featured version with copy constructor, copy asignment operator, compare operator, additional getter and its unit tests can be found at Github commit e2ffc0c46a2d8f15390f2816e1a18782e500fd09 </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d6/dbf/addrinfo_8hpp_source.html#l00026">26</a> of file <a class="el" href="../../d6/dbf/addrinfo_8hpp_source.html">addrinfo.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d6/dbf/addrinfo_8hpp_source.html#l00027">27</a> of file <a class="el" href="../../d6/dbf/addrinfo_8hpp_source.html">addrinfo.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa140ffe42a20d383475c106297164415" name="aa140ffe42a20d383475c106297164415"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa140ffe42a20d383475c106297164415">&#9670;&#160;</a></span>CAddrinfo() <span class="overload">[1/3]</span></h2>
@@ -346,7 +346,7 @@ Public Member Functions</h2></td></tr>
 <div class="line">} <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::invalid_argument&amp; e) { handle_other_error();</div>
 <div class="line">}</div>
 <div class="line">normal_execution();</div>
-<div class="ttc" id="aclassupnplib_1_1CAddrinfo_html"><div class="ttname"><a href="../../da/dad/classupnplib_1_1CAddrinfo.html">upnplib::CAddrinfo</a></div><div class="ttdoc">Get information from the operating system about a netaddress.</div><div class="ttdef"><b>Definition</b> <a href="../../d6/dbf/addrinfo_8hpp_source.html#l00026">addrinfo.hpp:26</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CAddrinfo_html"><div class="ttname"><a href="../../da/dad/classupnplib_1_1CAddrinfo.html">upnplib::CAddrinfo</a></div><div class="ttdoc">Get information from the operating system about a netaddress.</div><div class="ttdef"><b>Definition</b> <a href="../../d6/dbf/addrinfo_8hpp_source.html#l00027">addrinfo.hpp:27</a></div></div>
 </div><!-- fragment --> <dl class="section note"><dt>Note</dt><dd>It is important to careful check the error situation because this initialization depends on the real environment over which we have no influence. Name resolution may fail because to be unspecified, DNS server may be temporary down, etc.</dd></dl>
 <p>Usually this setter is called one time after constructing the object. This gets an address information from the operating system that may also use its internal name resolver inclusive contacting external DNS server. If you use the flag <b>AI_NUMERICHOST</b> with the constructor then a possible expensive name resolution to DNS server is suppressed.</p>
 <p>Because always the same cached hints given with the constructor are used we also get the same information but with new allocated memory. So it doesn't make much sense to call it more than one time, but doesn't hurt except waste of resources.</p>
@@ -392,8 +392,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a96f197ab46c7736ab8331d9daccd8281" name="a96f197ab46c7736ab8331d9daccd8281"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96f197ab46c7736ab8331d9daccd8281">&#9670;&#160;</a></span>netaddrp()</h2>
+<a id="a938842ec8b629bc03581116942327aab" name="a938842ec8b629bc03581116942327aab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a938842ec8b629bc03581116942327aab">&#9670;&#160;</a></span>netaddr()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -402,7 +402,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string upnplib::CAddrinfo::netaddrp </td>
+          <td class="memname"><a class="el" href="../../d8/d44/classupnplib_1_1Netaddr.html">Netaddr</a> upnplib::CAddrinfo::netaddr </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -415,16 +415,15 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Get the assosiated <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a> with port. </p>
+<p>Get the assosiated <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>. </p>
 <div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
 <div class="line"><a class="code hl_class" href="../../da/dad/classupnplib_1_1CAddrinfo.html">CAddrinfo</a> ai(<span class="stringliteral">&quot;localhost&quot;</span>, 50001, AF_UNSPEC, SOCK_STREAM);</div>
 <div class="line"><span class="keywordflow">try</span> {</div>
 <div class="line">    ai.init();</div>
 <div class="line">} <span class="keywordflow">catch</span> (xcp) { handle_error(); }</div>
-<div class="line">std::string <a class="code hl_function" href="../../da/dad/classupnplib_1_1CAddrinfo.html#a96f197ab46c7736ab8331d9daccd8281">netaddrp</a> = ai.netaddrp();</div>
-<div class="line"><span class="keywordflow">if</span> (<a class="code hl_function" href="../../da/dad/classupnplib_1_1CAddrinfo.html#a96f197ab46c7736ab8331d9daccd8281">netaddrp</a> == <span class="stringliteral">&quot;[::1]:50001&quot;</span>) { manage_ipv6_interface();</div>
-<div class="line">} <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="../../da/dad/classupnplib_1_1CAddrinfo.html#a96f197ab46c7736ab8331d9daccd8281">netaddrp</a> == <span class="stringliteral">&quot;127.0.0.1:50001&quot;</span>) { manage_ipv4_interface(); }</div>
-<div class="ttc" id="aclassupnplib_1_1CAddrinfo_html_a96f197ab46c7736ab8331d9daccd8281"><div class="ttname"><a href="../../da/dad/classupnplib_1_1CAddrinfo.html#a96f197ab46c7736ab8331d9daccd8281">upnplib::CAddrinfo::netaddrp</a></div><div class="ttdeci">virtual const std::string netaddrp() const noexcept</div><div class="ttdoc">Get the assosiated netaddress with port.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d59/addrinfo_8cpp_source.html#l00199">addrinfo.cpp:199</a></div></div>
+<div class="line">std::string netaddrp = ai.netaddr().str();</div>
+<div class="line"><span class="keywordflow">if</span> (netaddrp == <span class="stringliteral">&quot;[::1]:50001&quot;</span>) { manage_ipv6_interface();</div>
+<div class="line">} <span class="keywordflow">else</span> <span class="keywordflow">if</span> (netaddrp == <span class="stringliteral">&quot;127.0.0.1:50001&quot;</span>) { manage_ipv4_interface(); }</div>
 </div><!-- fragment --> 
 <p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00199">199</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -432,11 +431,12 @@ Public Member Functions</h2></td></tr>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-3-content" class="dyncontent" style="display:none;">
-<div class="center"><img src="../../da/dad/classupnplib_1_1CAddrinfo_a96f197ab46c7736ab8331d9daccd8281_cgraph.png" border="0" usemap="#ada/dad/classupnplib_1_1CAddrinfo_a96f197ab46c7736ab8331d9daccd8281_cgraph" alt=""/></div>
-<map name="ada/dad/classupnplib_1_1CAddrinfo_a96f197ab46c7736ab8331d9daccd8281_cgraph" id="ada/dad/classupnplib_1_1CAddrinfo_a96f197ab46c7736ab8331d9daccd8281_cgraph">
-<area shape="rect" title="Get the assosiated netaddress with port." alt="" coords="5,5,148,45"/>
-<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="196,13,352,38"/>
-<area shape="poly" title=" " alt="" coords="148,23,183,23,183,28,148,28"/>
+<div class="center"><img src="../../da/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_cgraph.png" border="0" usemap="#ada/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_cgraph" alt=""/></div>
+<map name="ada/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_cgraph" id="ada/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_cgraph">
+<area shape="rect" title="Get the assosiated netaddress." alt="" coords="5,29,148,69"/>
+<area shape="poly" title=" " alt="" coords="39,30,37,20,43,11,56,5,77,3,100,6,113,13,110,18,98,11,77,8,58,10,47,15,42,21,45,28"/>
+<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="196,37,352,62"/>
+<area shape="poly" title=" " alt="" coords="148,47,183,47,183,52,148,52"/>
 </map>
 </div>
 <div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -444,13 +444,14 @@ Public Member Functions</h2></td></tr>
 <div id="dynsection-4-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-4-content" class="dyncontent" style="display:none;">
-<div class="center"><img src="../../da/dad/classupnplib_1_1CAddrinfo_a96f197ab46c7736ab8331d9daccd8281_icgraph.png" border="0" usemap="#ada/dad/classupnplib_1_1CAddrinfo_a96f197ab46c7736ab8331d9daccd8281_icgraph" alt=""/></div>
-<map name="ada/dad/classupnplib_1_1CAddrinfo_a96f197ab46c7736ab8331d9daccd8281_icgraph" id="ada/dad/classupnplib_1_1CAddrinfo_a96f197ab46c7736ab8331d9daccd8281_icgraph">
-<area shape="rect" title="Get the assosiated netaddress with port." alt="" coords="448,13,591,53"/>
-<area shape="rect" href="../../d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="233,20,400,45"/>
-<area shape="poly" title=" " alt="" coords="434,35,400,35,400,30,434,30"/>
-<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aa1e3a3e75356465099535c0e7851a858" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="5,5,185,60"/>
-<area shape="poly" title=" " alt="" coords="220,35,185,35,185,30,220,30"/>
+<div class="center"><img src="../../da/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_icgraph.png" border="0" usemap="#ada/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_icgraph" alt=""/></div>
+<map name="ada/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_icgraph" id="ada/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_icgraph">
+<area shape="rect" title="Get the assosiated netaddress." alt="" coords="448,29,591,69"/>
+<area shape="poly" title=" " alt="" coords="553,18,541,11,519,8,500,10,488,15,484,21,486,28,481,30,479,20,485,11,499,5,519,3,543,6,556,13"/>
+<area shape="rect" href="../../d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="233,37,400,62"/>
+<area shape="poly" title=" " alt="" coords="434,52,400,52,400,47,434,47"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aa1e3a3e75356465099535c0e7851a858" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="5,22,185,77"/>
+<area shape="poly" title=" " alt="" coords="220,52,185,52,185,47,220,47"/>
 </map>
 </div>
 

@@ -1,0 +1,7 @@
+<map id="upnplib::Netaddr::str" name="upnplib::Netaddr::str">
+<area shape="rect" id="Node000001" title="Get netaddress string." alt="" coords="448,20,603,45"/>
+<area shape="rect" id="Node000002" href="$d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="233,20,400,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="434,35,400,35,400,30,434,30"/>
+<area shape="rect" id="Node000003" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aa1e3a3e75356465099535c0e7851a858" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="5,5,185,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="220,35,185,35,185,30,220,30"/>
+</map>

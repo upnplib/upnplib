@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-20
+// Redistribution only with this Copyright remark. Last modified: 2024-05-24
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -52,7 +52,7 @@ TEST(AddrinfoTestSuite, instantiate_ipv6_addrinfo_successful) {
     EXPECT_EQ(ai1->ai_canonname, nullptr);
     EXPECT_EQ(ai1->ai_next, nullptr);
     // There is no address information
-    EXPECT_EQ(ai1.netaddrp(), "");
+    EXPECT_EQ(ai1.netaddr().str(), "");
 }
 
 TEST(AddrinfoTestSuite, instantiate_ipv4_addrinfo_successful) {
@@ -69,7 +69,7 @@ TEST(AddrinfoTestSuite, instantiate_ipv4_addrinfo_successful) {
     EXPECT_EQ(ai1->ai_canonname, nullptr);
     EXPECT_EQ(ai1->ai_next, nullptr);
     // There is no address information
-    EXPECT_EQ(ai1.netaddrp(), "");
+    EXPECT_EQ(ai1.netaddr().str(), "");
 }
 
 TEST(AddrinfoTestSuite, init_ipv6_addrinfo_successful) {
@@ -85,7 +85,7 @@ TEST(AddrinfoTestSuite, init_ipv6_addrinfo_successful) {
     EXPECT_NE(ai1->ai_addr, nullptr);
     EXPECT_EQ(ai1->ai_canonname, nullptr);
     // EXPECT_NE(ai1->ai_next, nullptr); // Depends on available interfaces
-    EXPECT_EQ(ai1.netaddrp(), "[2001:db8::13]:0");
+    EXPECT_EQ(ai1.netaddr().str(), "[2001:db8::13]:0");
 }
 
 TEST(AddrinfoTestSuite, init_ipv4_addrinfo_successful) {
@@ -101,7 +101,7 @@ TEST(AddrinfoTestSuite, init_ipv4_addrinfo_successful) {
     EXPECT_NE(ai1->ai_addr, nullptr);
     EXPECT_EQ(ai1->ai_canonname, nullptr);
     // EXPECT_NE(ai1->ai_next, nullptr); // Depends on available interfaces
-    EXPECT_EQ(ai1.netaddrp(), "192.168.200.202:0");
+    EXPECT_EQ(ai1.netaddr().str(), "192.168.200.202:0");
 }
 
 TEST(AddrinfoTestSuite, double_set_addrinfo_successful) {
@@ -125,7 +125,7 @@ TEST(AddrinfoTestSuite, double_set_addrinfo_successful) {
     // We just return that what was requested by the user.
     EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
     // Returns what ::getaddrinfo() returns.
-    EXPECT_EQ(ai2.netaddrp(), "[2001:db8::2]:50048");
+    EXPECT_EQ(ai2.netaddr().str(), "[2001:db8::2]:50048");
     // Returns what ::getaddrinfo() returns.
 
     // Test Unit
@@ -140,7 +140,7 @@ TEST(AddrinfoTestSuite, double_set_addrinfo_successful) {
     EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai2->ai_protocol, 0);
     EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
-    EXPECT_EQ(ai2.netaddrp(), "[2001:db8::2]:50048");
+    EXPECT_EQ(ai2.netaddr().str(), "[2001:db8::2]:50048");
 }
 
 TEST(AddrinfoTestSuite, instantiate_not_init_numeric_host_successful) {
@@ -163,7 +163,7 @@ TEST(AddrinfoTestSuite, instantiate_not_init_numeric_host_successful) {
     EXPECT_EQ(ai1->ai_canonname, nullptr);
     EXPECT_EQ(ai1->ai_next, nullptr);
     // There is no address information
-    EXPECT_EQ(ai1.netaddrp(), "");
+    EXPECT_EQ(ai1.netaddr().str(), "");
 }
 
 TEST(AddrinfoTestSuite, get_implicit_address_family) {
@@ -180,7 +180,7 @@ TEST(AddrinfoTestSuite, get_implicit_address_family) {
     EXPECT_EQ(ai1->ai_socktype, 0);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST); // set by syscal ::getaddrinfo
-    EXPECT_EQ(ai1.netaddrp(), "[2001:db8::5]:50051");
+    EXPECT_EQ(ai1.netaddr().str(), "[2001:db8::5]:50051");
 
     // Test Unit
     CAddrinfo ai2("192.168.9.10", "50096");
@@ -190,7 +190,7 @@ TEST(AddrinfoTestSuite, get_implicit_address_family) {
     EXPECT_EQ(ai2->ai_socktype, 0);
     EXPECT_EQ(ai2->ai_protocol, 0);
     EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST); // set by syscal ::getaddrinfo
-    EXPECT_EQ(ai2.netaddrp(), "192.168.9.10:50096");
+    EXPECT_EQ(ai2.netaddr().str(), "192.168.9.10:50096");
 
     // Test Unit, does not trigger a DNS query
     CAddrinfo ai3("localhost", "50049");
@@ -200,7 +200,7 @@ TEST(AddrinfoTestSuite, get_implicit_address_family) {
     EXPECT_EQ(ai3->ai_socktype, 0);
     EXPECT_EQ(ai3->ai_protocol, 0);
     EXPECT_EQ(ai3->ai_flags, 0);
-    EXPECT_EQ(ai3.netaddrp(), "[::1]:50049");
+    EXPECT_EQ(ai3.netaddr().str(), "[::1]:50049");
 }
 
 TEST(AddrinfoTestSuite, get_unknown_numeric_host_fails) {
@@ -262,7 +262,7 @@ TEST(AddrinfoTestSuite, get_unknown_node_address) {
     EXPECT_EQ(ai3->ai_socktype, 0);
     EXPECT_EQ(ai3->ai_protocol, 0);
     EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
-    EXPECT_EQ(ai3.netaddrp(), "[::]:0");
+    EXPECT_EQ(ai3.netaddr().str(), "[::]:0");
 
     // Test Unit with unspecified ipv4 address
     CAddrinfo ai4("0.0.0.0", 0, AF_INET, 0, AI_NUMERICHOST | AI_NUMERICSERV);
@@ -272,7 +272,7 @@ TEST(AddrinfoTestSuite, get_unknown_node_address) {
     EXPECT_EQ(ai4->ai_socktype, 0);
     EXPECT_EQ(ai4->ai_protocol, 0);
     EXPECT_EQ(ai4->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
-    EXPECT_EQ(ai4.netaddrp(), "0.0.0.0:0");
+    EXPECT_EQ(ai4.netaddr().str(), "0.0.0.0:0");
 }
 
 TEST(AddrinfoTestSuite, get_active_empty_node_address) {
@@ -290,7 +290,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
         EXPECT_EQ(ai1->ai_socktype, 0);
         EXPECT_EQ(ai1->ai_protocol, 0);
         EXPECT_EQ(ai1->ai_flags, 0);
-        EXPECT_THAT(ai1.netaddrp(), "[::1]:50007");
+        EXPECT_THAT(ai1.netaddr().str(), "[::1]:50007");
 
         // Test Unit for AF_UNSPEC
         CAddrinfo ai2("", "50099", AF_UNSPEC, 0, AI_NUMERICHOST);
@@ -300,7 +300,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
         EXPECT_EQ(ai2->ai_socktype, 0);
         EXPECT_EQ(ai2->ai_protocol, 0);
         EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
-        EXPECT_THAT(ai2.netaddrp(), "[::1]:50099");
+        EXPECT_THAT(ai2.netaddr().str(), "[::1]:50099");
 
         // Test Unit for AF_INET6
         CAddrinfo ai3("", "50084", AF_INET6, SOCK_STREAM);
@@ -310,7 +310,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
         EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
         EXPECT_EQ(ai3->ai_protocol, 0);
         EXPECT_EQ(ai3->ai_flags, 0);
-        EXPECT_EQ(ai3.netaddrp(), "[::1]:50084");
+        EXPECT_EQ(ai3.netaddr().str(), "[::1]:50084");
 
         // Test Unit for AF_INET6
         CAddrinfo ai4("", "50058", AF_INET6, SOCK_STREAM,
@@ -321,7 +321,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
         EXPECT_EQ(ai4->ai_socktype, SOCK_STREAM);
         EXPECT_EQ(ai4->ai_protocol, 0);
         EXPECT_EQ(ai4->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
-        EXPECT_EQ(ai4.netaddrp(), "[::1]:50058");
+        EXPECT_EQ(ai4.netaddr().str(), "[::1]:50058");
 
         // Test Unit for AF_INET
         CAddrinfo ai5("", "50057", AF_INET);
@@ -331,7 +331,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
         EXPECT_EQ(ai5->ai_socktype, 0);
         EXPECT_EQ(ai5->ai_protocol, 0);
         EXPECT_EQ(ai5->ai_flags, 0);
-        EXPECT_EQ(ai5.netaddrp(), "127.0.0.1:50057");
+        EXPECT_EQ(ai5.netaddr().str(), "127.0.0.1:50057");
 
         // Test Unit for AF_INET
         CAddrinfo ai6("", "50100", AF_INET, 0, AI_NUMERICHOST);
@@ -341,7 +341,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
         EXPECT_EQ(ai6->ai_socktype, 0);
         EXPECT_EQ(ai6->ai_protocol, 0);
         EXPECT_EQ(ai6->ai_flags, AI_NUMERICHOST);
-        EXPECT_EQ(ai6.netaddrp(), "127.0.0.1:50100");
+        EXPECT_EQ(ai6.netaddr().str(), "127.0.0.1:50100");
     }
 
     { // Scoped to reduce memory usage for testing with node "[]".
@@ -373,7 +373,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
         EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
         EXPECT_EQ(ai1->ai_protocol, 0);
         EXPECT_EQ(ai1->ai_flags, AI_PASSIVE);
-        EXPECT_THAT(ai1.netaddrp(), AnyOf("[::]:50106", "0.0.0.0:50106"));
+        EXPECT_THAT(ai1.netaddr().str(), AnyOf("[::]:50106", "0.0.0.0:50106"));
 
         // Test Unit for AF_UNSPEC
         CAddrinfo ai2("", "50107", AF_UNSPEC, 0, AI_PASSIVE | AI_NUMERICHOST);
@@ -384,7 +384,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
         EXPECT_EQ(ai2->ai_socktype, 0);
         EXPECT_EQ(ai2->ai_protocol, 0);
         EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
-        EXPECT_THAT(ai2.netaddrp(), AnyOf("[::]:50107", "0.0.0.0:50107"));
+        EXPECT_THAT(ai2.netaddr().str(), AnyOf("[::]:50107", "0.0.0.0:50107"));
 
         // Test Unit for AF_INET6
         CAddrinfo ai3("", "50108", AF_INET6, 0, AI_PASSIVE);
@@ -394,7 +394,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
         EXPECT_EQ(ai3->ai_socktype, 0);
         EXPECT_EQ(ai3->ai_protocol, 0);
         EXPECT_EQ(ai3->ai_flags, AI_PASSIVE);
-        EXPECT_EQ(ai3.netaddrp(), "[::]:50108");
+        EXPECT_EQ(ai3.netaddr().str(), "[::]:50108");
 
         // Test Unit for AF_INET6
         CAddrinfo ai4("", "50109", AF_INET6, 0, AI_PASSIVE | AI_NUMERICHOST);
@@ -404,7 +404,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
         EXPECT_EQ(ai4->ai_socktype, 0);
         EXPECT_EQ(ai4->ai_protocol, 0);
         EXPECT_EQ(ai4->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
-        EXPECT_EQ(ai4.netaddrp(), "[::]:50109");
+        EXPECT_EQ(ai4.netaddr().str(), "[::]:50109");
 
         // Test Unit for AF_INET
         CAddrinfo ai5("", "50110", AF_INET, 0, AI_PASSIVE);
@@ -414,7 +414,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
         EXPECT_EQ(ai5->ai_socktype, 0);
         EXPECT_EQ(ai5->ai_protocol, 0);
         EXPECT_EQ(ai5->ai_flags, AI_PASSIVE);
-        EXPECT_EQ(ai5.netaddrp(), "0.0.0.0:50110");
+        EXPECT_EQ(ai5.netaddr().str(), "0.0.0.0:50110");
 
         // Test Unit for AF_INET
         CAddrinfo ai6("", "50111", AF_INET, 0, AI_PASSIVE | AI_NUMERICHOST);
@@ -427,7 +427,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
         // This will listen on all local network interfaces.
         EXPECT_EQ(reinterpret_cast<sockaddr_in*>(ai6->ai_addr)->sin_addr.s_addr,
                   INADDR_ANY); // or
-        EXPECT_EQ(ai6.netaddrp(), "0.0.0.0:50111");
+        EXPECT_EQ(ai6.netaddr().str(), "0.0.0.0:50111");
     }
 
     { // Scoped to reduce memory usage for testing with node "[]".
@@ -462,7 +462,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
     // This will listen on all local network interfaces.
-    EXPECT_EQ(ai1.netaddrp(), "[::]:50006");
+    EXPECT_EQ(ai1.netaddr().str(), "[::]:50006");
 
     // Test Unit
     // Using explicit the unknown netaddress should definetly return the
@@ -476,7 +476,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
     EXPECT_EQ(ai2->ai_protocol, 0);
     EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
     // This will listen on all local network interfaces.
-    EXPECT_EQ(ai2.netaddrp(), "0.0.0.0:50032");
+    EXPECT_EQ(ai2.netaddr().str(), "0.0.0.0:50032");
 }
 
 TEST_F(AddrinfoMockFTestSuite, get_two_brackets_alphanum_node_address) {
@@ -529,7 +529,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
-    EXPECT_EQ(ai1.netaddrp(), "[::1]:50001");
+    EXPECT_EQ(ai1.netaddr().str(), "[::1]:50001");
 
     // Test Unit
     CAddrinfo ai5("[::1]", "50085", AF_INET6, SOCK_STREAM);
@@ -539,7 +539,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai5->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai5->ai_protocol, 0);
     EXPECT_EQ(ai5->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai5.netaddrp(), "[::1]:50085");
+    EXPECT_EQ(ai5.netaddr().str(), "[::1]:50085");
 
     // Test Unit
     CAddrinfo ai2("127.0.0.1", "50086", AF_INET, SOCK_DGRAM);
@@ -549,7 +549,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai2->ai_socktype, SOCK_DGRAM);
     EXPECT_EQ(ai2->ai_protocol, 0);
     EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai2.netaddrp(), "127.0.0.1:50086");
+    EXPECT_EQ(ai2.netaddr().str(), "127.0.0.1:50086");
 
     // Test Unit
     CAddrinfo ai3("[::1]", "50087", AF_INET6);
@@ -559,7 +559,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai3->ai_socktype, 0);
     EXPECT_EQ(ai3->ai_protocol, 0);
     EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai3.netaddrp(), "[::1]:50087");
+    EXPECT_EQ(ai3.netaddr().str(), "[::1]:50087");
 
     // Test Unit, does not trigger a DNS query
     CAddrinfo ai4("localhost", "50088");
@@ -568,7 +568,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai4->ai_socktype, 0);
     EXPECT_EQ(ai4->ai_protocol, 0);
     EXPECT_EQ(ai4->ai_flags, 0);
-    EXPECT_THAT(ai4.netaddrp(), AnyOf("[::1]:50088", "127.0.0.1:50088"));
+    EXPECT_THAT(ai4.netaddr().str(), AnyOf("[::1]:50088", "127.0.0.1:50088"));
 }
 
 TEST(AddrinfoTestSuite, empty_service) {
@@ -583,7 +583,7 @@ TEST(AddrinfoTestSuite, empty_service) {
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
-    EXPECT_EQ(ai1.netaddrp(), "[2001:db8::8]:0");
+    EXPECT_EQ(ai1.netaddr().str(), "[2001:db8::8]:0");
 }
 
 TEST(AddrinfoTestSuite, get_fails) {

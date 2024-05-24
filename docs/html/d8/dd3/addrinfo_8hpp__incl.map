@@ -1,11 +1,18 @@
 <map id="Upnplib/include/upnplib/addrinfo.hpp" name="Upnplib/include/upnplib/addrinfo.hpp">
-<area shape="rect" id="Node000001" title="Declaration of the Addrinfo class." alt="" coords="163,5,337,45"/>
-<area shape="rect" id="Node000002" href="$d7/d1b/sockaddr_8hpp.html" title="Declaration of the Sockaddr class and some free helper functions." alt="" coords="171,93,329,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="253,46,253,79,247,79,247,46"/>
+<area shape="rect" id="Node000001" title="Declaration of the Addrinfo class." alt="" coords="244,5,419,45"/>
+<area shape="rect" id="Node000002" href="$d1/d2b/netaddr_8hpp.html" title="Declaration of the Netaddr class." alt="" coords="345,93,496,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="355,44,399,82,395,86,351,48"/>
+<area shape="rect" id="Node000007" href="$d7/d1b/sockaddr_8hpp.html" title="Declaration of the Sockaddr class and some free helper functions." alt="" coords="163,93,321,119"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="311,48,267,86,264,82,308,44"/>
 <area shape="rect" id="Node000003" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,167,161,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="224,121,124,164,122,159,222,116"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="367,121,152,166,151,161,366,116"/>
 <area shape="rect" id="Node000004" href="$d1/d42/port_8hpp.html" title="Specifications to be portable between different platforms." alt="" coords="186,167,314,192"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="253,119,253,153,247,153,247,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="394,121,291,164,289,159,392,116"/>
 <area shape="rect" id="Node000005" href="$d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="338,167,503,192"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="278,116,381,159,379,164,276,121"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="423,119,423,153,418,153,418,119"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="527,167,586,192"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="444,116,524,158,521,163,441,121"/>
+<area shape="poly" id="edge7_Node000007_Node000003" title=" " alt="" coords="218,121,123,163,121,159,215,116"/>
+<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="246,119,250,153,245,153,241,119"/>
+<area shape="poly" id="edge9_Node000007_Node000005" title=" " alt="" coords="272,116,380,159,378,164,270,121"/>
 </map>

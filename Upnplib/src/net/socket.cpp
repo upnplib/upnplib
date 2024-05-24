@@ -477,7 +477,7 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
 
     UPNPLIB_LOGINFO << "MSG1115: syscall ::bind(" << m_sfd << ", "
                     << ai->ai_addr << ", " << ai->ai_addrlen << ") Using \""
-                    << ai.netaddrp() << "\". Get "
+                    << ai.netaddr().str() << "\". Get "
                     << (ret != 0 ? "ERROR" : this->netaddrp()) << "\n";
     if (ret != 0) {
         throw std::runtime_error(

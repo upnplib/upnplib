@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-20
+// Redistribution only with this Copyright remark. Last modified: 2024-05-24
 /*!
  * \file
  * \brief **Socket Module:** manage properties and methods but not connections
@@ -376,8 +376,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * set by default. To be portable with same behavior on all platforms I
      * always set IPV6_V6ONLY before binding and cannot be modified afterwards.
      *
-     * There is additional information at set_v6only()
-     * \todo **Next:** Make Setter with using a netaddress with port */
+     * There is additional information at set_v6only() */
     void bind(
         /*! [in] local interface address */
         const std::string& a_node,

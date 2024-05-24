@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-19
+// Redistribution only with this Copyright remark. Last modified: 2024-05-23
 /*!
  * \file
  * \brief Definition of the Addrinfo class and free helper functions.
@@ -196,14 +196,17 @@ void CAddrinfo::init() {
 // Getter for the assosiated ip address with port
 // ----------------------------------------------
 // e.g. "[2001:db8::2]:50001" or "192.168.254.253:50001".
-const std::string CAddrinfo::netaddrp() const noexcept {
+Netaddr CAddrinfo::netaddr() const noexcept {
     // TRACE not usable with chained output.
     // TRACE2(this, " Executing SSockaddr::get_netaddrp()")
+    Netaddr netaddr;
     if (m_res == &m_hints)
-        return ""; // no information available
+        return netaddr; // no information available
 
-    return to_netaddrp( // noexcept
+    netaddr = to_netaddrp( // noexcept
         reinterpret_cast<sockaddr_storage*>(m_res->ai_addr));
+
+    return netaddr;
 }
 
 } // namespace upnplib
