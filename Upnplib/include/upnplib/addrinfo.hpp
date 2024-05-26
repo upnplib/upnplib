@@ -18,10 +18,10 @@ namespace upnplib {
 <!-- ====================================================== -->
  * \ingroup upnplib-addrmodul
  *
- * This is a stripped version. It is only used in a snapshot to get information
- * about a netaddress. There is no need to copy the object. The last full
- * featured version with copy constructor, copy asignment operator, compare
- * operator, additional getter and its unit tests can be found at
+ * This is a stripped version. It is only as snapshot to get information about
+ * a netaddress. There is no need to copy the object. The last full featured
+ * version with copy constructor, copy asignment operator, compare operator,
+ * additional getter and its unit tests can be found at
  * Github commit e2ffc0c46a2d8f15390f2816e1a18782e500fd09
  * */
 class UPNPLIB_API CAddrinfo {

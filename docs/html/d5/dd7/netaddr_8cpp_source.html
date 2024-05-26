@@ -101,7 +101,7 @@ $(document).ready(function(){initNavTree('d5/dd7/netaddr_8cpp_source.html','../.
 </div><!--header-->
 <div class="contents">
 <a href="../../d5/dd7/netaddr_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, &lt;Ingo@Hoeft-online.de&gt;</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Redistribution only with this Copyright remark. Last modified: 2024-05-23</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Redistribution only with this Copyright remark. Last modified: 2024-05-25</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="../../d1/d2b/netaddr_8hpp.html">upnplib/netaddr.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="../../d9/d3a/global_8hpp.html">upnplib/global.hpp</a>&gt;</span></div>
@@ -221,11 +221,11 @@ $(document).ready(function(){initNavTree('d5/dd7/netaddr_8cpp_source.html','../.
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <span class="comment">// pos is 0-based, size() is 1-based so with &quot;:&quot; is size()==1, pos==0,</span></div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="comment">// pos+1==size() does not throw.</span></div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        std::string netaddr = a_addr_str.substr(0, pos);</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        std::string port = a_addr_str.substr(pos + 1);</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3">is_netaddr</a>(netaddr) == AF_UNSPEC) {</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            <span class="comment">// Unspecified netaddress</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            netaddr.clear();</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        }</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3">is_netaddr</a>(netaddr) == AF_UNSPEC) {</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>            <span class="comment">// Unspecified netaddress</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        }</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        std::string port = a_addr_str.substr(pos + 1);</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="keywordflow">if</span> (!<a class="code hl_function" href="../../d0/dd8/group__upnplib-addrmodul.html#ga94539c3b024819362409a8421756bc58">is_port</a>(port)) { <span class="comment">// noexcept</span></div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            <span class="comment">// Unspecified port</span></div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            port = <span class="stringliteral">&quot;0&quot;</span>;</div>

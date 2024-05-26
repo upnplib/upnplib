@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-23
+// Redistribution only with this Copyright remark. Last modified: 2024-05-25
 /*!
  * \file
  * \brief Definition of the Netaddr class.
@@ -119,11 +119,11 @@ void Netaddr::operator=(const std::string& a_addr_str) noexcept {
         // pos is 0-based, size() is 1-based so with ":" is size()==1, pos==0,
         // pos+1==size() does not throw.
         std::string netaddr = a_addr_str.substr(0, pos);
-        std::string port = a_addr_str.substr(pos + 1);
         if (is_netaddr(netaddr) == AF_UNSPEC) {
             // Unspecified netaddress
-            netaddr.clear();
+            return;
         }
+        std::string port = a_addr_str.substr(pos + 1);
         if (!is_port(port)) { // noexcept
             // Unspecified port
             port = "0";

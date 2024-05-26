@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-20
+// Redistribution only with this Copyright remark. Last modified: 2024-05-28
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -254,6 +254,7 @@ TEST_F(StartMiniServerFTestSuite, start_miniserver_with_no_ip_addr) {
         << errStrEx(ret_StartMiniServer, UPNP_E_OUTOF_SOCKET);
 }
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
 TEST_F(StartMiniServerMockFTestSuite, start_miniserver_with_one_ipv4_addr) {
     std::strcpy(gIF_IPV4, "192.168.47.11");
     LOCAL_PORT_V4 = 50071;
@@ -716,6 +717,7 @@ TEST_F(StartMiniServerMockFTestSuite,
     EXPECT_EQ(ret_StartMiniServer, UPNP_E_SUCCESS)
         << errStrEx(ret_StartMiniServer, UPNP_E_SUCCESS);
 }
+#endif
 
 TEST(StartMiniServerTestSuite, start_miniserver_already_running) {
     gMServState = MSERV_RUNNING;
@@ -801,6 +803,8 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_with_no_ip_addr) {
 
 TEST_F(StartMiniServerMockFTestSuite,
        get_miniserver_sockets_with_one_ipv4_addr) {
+    WINSOCK_INIT
+
     // Initialize needed structure
     constexpr SOCKET sockfd{umock::sfd_base + 71};
     SSockaddr saddrObj;
@@ -815,6 +819,8 @@ TEST_F(StartMiniServerMockFTestSuite,
     EXPECT_CALL(m_sys_socketObj, socket(saddrObj.ss.ss_family, SOCK_STREAM, 0))
         .WillOnce(Return(sockfd));
 
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+
     // Bind socket to an ip address
     EXPECT_CALL(m_sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
     // Query port from socket
@@ -825,6 +831,40 @@ TEST_F(StartMiniServerMockFTestSuite,
         .WillOnce(DoAll(SetArgPointee<1>(saddrObj.sa), Return(0)));
     // Listen on the socket
     EXPECT_CALL(m_sys_socketObj, listen(sockfd, _)).WillOnce(Return(0));
+
+#else // new code
+
+    // Instantiate a socket object and point to it in miniSocket().
+    upnplib::CSocket Sock4Obj(saddrObj.ss.ss_family, SOCK_STREAM);
+    miniSocket.MiniSvrSock4Obj = &Sock4Obj;
+
+    // Mock socket object initialization
+    EXPECT_CALL(m_sys_socketObj,
+                setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, _, _))
+        .WillOnce(Return(0));
+#ifdef _MSC_VER
+    EXPECT_CALL(m_sys_socketObj,
+                setsockopt(sockfd, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, _, _))
+        .WillOnce(Return(0));
+    // This option RESET! IPV6_V6ONLY
+    EXPECT_CALL(m_sys_socketObj,
+                setsockopt(sockfd, IPPROTO_IPV6, IPV6_V6ONLY, _, _))
+        .WillOnce(Return(0));
+#endif
+    // Provide socket address from the socket file descriptor
+    EXPECT_CALL(
+        m_sys_socketObj,
+        getsockname(sockfd, _,
+                    Pointee(Ge(static_cast<socklen_t>(saddrObj.sizeof_ss())))))
+        .Times(g_dbug ? 3 : 2) // additional call with debug output
+        .WillRepeatedly(DoAll(SetArgPointee<1>(saddrObj.sa), Return(0)));
+    EXPECT_CALL(m_sys_socketObj, getsockopt(sockfd, SOL_SOCKET, SO_TYPE, _, _))
+        .WillOnce(DoAll(SetArgPtrIntValue<3>(SOCK_STREAM), Return(0)));
+    // Bind socket to an ip address
+    EXPECT_CALL(m_sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
+    // Listen on the socket
+    EXPECT_CALL(m_sys_socketObj, listen(sockfd, _)).WillOnce(Return(0));
+#endif
 
     // Test Unit
     int ret_get_miniserver_sockets =
@@ -848,14 +888,12 @@ TEST_F(StartMiniServerMockFTestSuite,
     EXPECT_EQ(miniSocket.miniServerPort6UlaGua, 0u);
     EXPECT_EQ(miniSocket.ssdpReqSock4, INVALID_SOCKET);
     EXPECT_EQ(miniSocket.ssdpReqSock6, INVALID_SOCKET);
-
-    // Close socket
-    // No need to close a socket because we haven't got a real socket. It was
-    // mocked.
 }
 
 TEST_F(StartMiniServerMockFTestSuite,
        get_miniserver_sockets_with_one_ipv6_lla_addr) {
+    WINSOCK_INIT
+
     // Initialize needed structure
     constexpr SOCKET sockfd{umock::sfd_base + 10};
     SSockaddr saddrObj;
@@ -867,98 +905,85 @@ TEST_F(StartMiniServerMockFTestSuite,
     MiniServerSockArray miniSocket{};
     InitMiniServerSockArray(&miniSocket);
 
-    // Provide a socket id
+    // Provide a socket file descriptor
     EXPECT_CALL(m_sys_socketObj, socket(saddrObj.ss.ss_family, SOCK_STREAM, 0))
         .WillOnce(Return(sockfd));
+
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+
     // Mock setsockopt()
     EXPECT_CALL(m_sys_socketObj, setsockopt(sockfd, _, _, _, _))
         .WillOnce(Return(0));
-
-#ifndef UPNPLIB_WITH_NATIVE_PUPNP
-    // Bind socket to an ip address
-    EXPECT_CALL(m_sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
-    // Query port from socket
-    EXPECT_CALL(
-        m_sys_socketObj,
-        getsockname(sockfd, _,
-                    Pointee(Ge(static_cast<socklen_t>(saddrObj.sizeof_ss())))))
-        .WillOnce(DoAll(SetArgPointee<1>(saddrObj.sa), Return(0)));
-    // Listen on the socket
-    EXPECT_CALL(m_sys_socketObj, listen(sockfd, _)).WillOnce(Return(0));
-#endif
 
     // Test Unit, needs initialized sockets on MS Windows
     int ret_get_miniserver_sockets =
         get_miniserver_sockets(&miniSocket, 0, 0, 0);
 
-    if (old_code) {
-        std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
-                  << ": Having only one IPv6 address should not fail.\n";
-        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET) << errStrEx(
-            ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET);  // Wrong!
-        EXPECT_EQ(miniSocket.miniServerSock6, INVALID_SOCKET); // Wrong!
-        EXPECT_EQ(miniSocket.miniServerPort6, 0);              // Wrong!
-
-    } else {
-
-        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
-            << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS);
-
-        EXPECT_EQ(miniSocket.miniServerSock4, INVALID_SOCKET);
-        EXPECT_EQ(miniSocket.miniServerPort4, 0u);
-        // EXPECT_EQ(miniSocket.miniServerSock6, INVALID_SOCKET);
-        EXPECT_EQ(miniSocket.miniServerSock6, sockfd);
-        EXPECT_EQ(miniSocket.miniServerSock6UlaGua, INVALID_SOCKET);
-        EXPECT_EQ(miniSocket.miniServerStopSock, INVALID_SOCKET);
-        EXPECT_EQ(miniSocket.ssdpSock4, INVALID_SOCKET);
-        EXPECT_EQ(miniSocket.ssdpSock6, INVALID_SOCKET);
-        EXPECT_EQ(miniSocket.ssdpSock6UlaGua, INVALID_SOCKET);
-        EXPECT_EQ(miniSocket.stopPort, 0u);
-        // EXPECT_EQ(miniSocket.miniServerPort6, 0u);
-        EXPECT_EQ(miniSocket.miniServerPort6, saddrObj.get_port());
-        EXPECT_EQ(miniSocket.miniServerPort6UlaGua, 0u);
-        EXPECT_EQ(miniSocket.ssdpReqSock4, INVALID_SOCKET);
-        EXPECT_EQ(miniSocket.ssdpReqSock6, INVALID_SOCKET);
-    }
-    // Close socket
-    // No need to close a socket because we haven't got a real socket. It was
-    // mocked.
+    // ===== result; should be same as with new code =====
+    std::cout << CYEL "[ BUGFIX   ] " CRES << __LINE__
+              << ": Having only one IPv6 address should not fail.\n";
+    EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET)
+        << errStrEx(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET); // Wrong!
+    EXPECT_EQ(miniSocket.miniServerSock6, INVALID_SOCKET);            // Wrong!
+    EXPECT_EQ(miniSocket.miniServerPort6, 0);                         // Wrong!
 }
 
-#ifndef UPNPLIB_WITH_NATIVE_PUPNP
-TEST_F(StartMiniServerFTestSuite,
-       get_miniserver_sockets2_with_one_ipv6_lla_addr) {
-    WINSOCK_INIT
+#else // new_code
 
-    // Initialize needed structure
-    SSockaddr llaObj;
-    llaObj = "[::1]"; // Get gIF_IPV6 and strip surounding brackets
-    std::strcpy(gIF_IPV6, llaObj.netaddr().c_str() + 1);
-    gIF_IPV6[strlen(gIF_IPV6) - 1] = '\0';
-    LOCAL_PORT_V6 = llaObj.get_port();
-    MiniServerSockArray miniSocket;
-    InitMiniServerSockArray(&miniSocket);
+    // Instantiate a socket object and point to it in miniSocket().
+    upnplib::CSocket Sock6LlaObj(saddrObj.ss.ss_family, SOCK_STREAM);
+    miniSocket.MiniSvrSock6LlaObj = &Sock6LlaObj;
+
+    // Mock socket object initialization
+    EXPECT_CALL(m_sys_socketObj,
+                setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, _, _))
+        .WillOnce(Return(0));
+#ifdef _MSC_VER
+    EXPECT_CALL(m_sys_socketObj,
+                setsockopt(sockfd, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, _, _))
+        .WillOnce(Return(0));
+#endif
+    // This option RESET! IPV6_V6ONLY
+    EXPECT_CALL(m_sys_socketObj,
+                setsockopt(sockfd, IPPROTO_IPV6, IPV6_V6ONLY, _, _))
+        .Times(2)
+        .WillRepeatedly(Return(0));
+    // Provide socket address from the socket file descriptor
+    EXPECT_CALL(
+        m_sys_socketObj,
+        getsockname(sockfd, _,
+                    Pointee(Ge(static_cast<socklen_t>(saddrObj.sizeof_ss())))))
+        .Times(g_dbug ? 3 : 2) // additional call with debug output
+        .WillRepeatedly(DoAll(SetArgPointee<1>(saddrObj.sa), Return(0)));
+    EXPECT_CALL(m_sys_socketObj, getsockopt(sockfd, SOL_SOCKET, SO_TYPE, _, _))
+        .WillOnce(DoAll(SetArgPtrIntValue<3>(SOCK_STREAM), Return(0)));
+    // Bind socket to an ip address
+    EXPECT_CALL(m_sys_socketObj, bind(sockfd, _, _)).WillOnce(Return(0));
+    // Listen on the socket
+    EXPECT_CALL(m_sys_socketObj, listen(sockfd, _)).WillOnce(Return(0));
 
     // Test Unit, needs initialized sockets on MS Windows
-    int ret_get_miniserver_sockets2 =
-        get_miniserver_sockets2(&miniSocket, 0, 0, 0);
+    int ret_get_miniserver_sockets =
+        get_miniserver_sockets(&miniSocket, 0, 0, 0);
 
-    EXPECT_EQ(ret_get_miniserver_sockets2, UPNP_E_SUCCESS)
-        << errStrEx(ret_get_miniserver_sockets2, UPNP_E_SUCCESS);
-
-    EXPECT_GE(miniSocket.miniServerSock6, 3);
-    EXPECT_GE(miniSocket.miniServerPort6, 32768u);
-    EXPECT_GE(miniSocket.miniServerSock6UlaGua, INVALID_SOCKET);
-    EXPECT_GE(miniSocket.miniServerPort6UlaGua, 0u);
-    EXPECT_GE(miniSocket.miniServerSock4, INVALID_SOCKET);
-    EXPECT_GE(miniSocket.miniServerPort4, 0u);
+    // ===== result with fixes =====
+    EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
+        << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS);
+    EXPECT_EQ(miniSocket.miniServerSock4, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.miniServerPort4, 0u);
+    // EXPECT_EQ(miniSocket.miniServerSock6, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.miniServerSock6, sockfd);
+    EXPECT_EQ(miniSocket.miniServerSock6UlaGua, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.miniServerStopSock, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.ssdpSock4, INVALID_SOCKET);
     EXPECT_EQ(miniSocket.ssdpSock6, INVALID_SOCKET);
     EXPECT_EQ(miniSocket.ssdpSock6UlaGua, INVALID_SOCKET);
-    EXPECT_EQ(miniSocket.ssdpSock4, INVALID_SOCKET);
-    EXPECT_EQ(miniSocket.ssdpReqSock6, INVALID_SOCKET);
-    EXPECT_EQ(miniSocket.ssdpReqSock4, INVALID_SOCKET);
-    EXPECT_EQ(miniSocket.miniServerStopSock, INVALID_SOCKET);
     EXPECT_EQ(miniSocket.stopPort, 0u);
+    // EXPECT_EQ(miniSocket.miniServerPort6, 0u);
+    EXPECT_EQ(miniSocket.miniServerPort6, saddrObj.get_port());
+    EXPECT_EQ(miniSocket.miniServerPort6UlaGua, 0u);
+    EXPECT_EQ(miniSocket.ssdpReqSock4, INVALID_SOCKET);
+    EXPECT_EQ(miniSocket.ssdpReqSock6, INVALID_SOCKET);
 }
 #endif
 
@@ -1041,7 +1066,7 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_uninitialized) {
 
 TEST_F(StartMiniServerMockFTestSuite,
        get_miniserver_sockets_with_invalid_socket) {
-    strcpy(gIF_IPV4, "192.168.12.9");
+    std::strcpy(gIF_IPV4, "192.168.12.9");
     // Initialize needed structure
     MiniServerSockArray miniSocket{};
     InitMiniServerSockArray(&miniSocket);
@@ -1049,40 +1074,41 @@ TEST_F(StartMiniServerMockFTestSuite,
     // Mock to get an invalid socket id
     EXPECT_CALL(m_sys_socketObj, socket(AF_INET, SOCK_STREAM, 0))
         .WillOnce(SetErrnoAndReturn(EINVAL, INVALID_SOCKET));
-#ifdef _MSC_VER
-    if (!old_code)
-        EXPECT_CALL(m_winsock2Obj, WSAGetLastError())
-            .WillOnce(Return(WSAEINVAL));
-#endif
 
-    if (old_code) {
+#ifdef UPNPLIB_WITH_NATIVE_PUPNP
+    // Test Unit
+    int ret_get_miniserver_sockets =
+        get_miniserver_sockets(&miniSocket, 0, 0, 0);
 
-        // Test Unit
-        int ret_get_miniserver_sockets =
-            get_miniserver_sockets(&miniSocket, 0, 0, 0);
-
-        std::cout << CRED "[ BUG      ] " CRES << __LINE__
-                  << ": Getting an invalid socket for IPv4 address with "
-                     "disabled IPv6 stack must not succeed.\n";
+    std::cout << CRED "[ BUG      ] " CRES << __LINE__
+              << ": Getting an invalid socket for IPv4 address with "
+                 "disabled IPv6 stack must not succeed.\n";
 #ifndef UPNP_ENABLE_IPV6
-        // This isn't relevant for new code because there is IPv6 always
-        // available.
-        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
-            << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS); // Wrong!
+    // This isn't relevant for new code because there is IPv6 always
+    // available.
+    EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_SUCCESS)
+        << errStrEx(ret_get_miniserver_sockets, UPNP_E_SUCCESS); // Wrong!
 #else
-        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET)
-            << errStrEx(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET);
+    EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET)
+        << errStrEx(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET);
 #endif
 
-    } else {
+#else // new code
+      // Instantiate a socket object and point to it in miniSocket().
+    upnplib::CSocket Sock4Obj(AF_INET, SOCK_STREAM);
+    miniSocket.MiniSvrSock4Obj = &Sock4Obj;
 
-        // Test Unit
-        int ret_get_miniserver_sockets =
-            get_miniserver_sockets(&miniSocket, 0, 0, 0);
+#ifdef _MSC_VER
+    EXPECT_CALL(m_winsock2Obj, WSAGetLastError()).WillOnce(Return(WSAEINVAL));
+#endif
 
-        EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET)
-            << errStrEx(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET);
-    }
+    // Test Unit
+    int ret_get_miniserver_sockets =
+        get_miniserver_sockets(&miniSocket, 0, 0, 0);
+
+    EXPECT_EQ(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET)
+        << errStrEx(ret_get_miniserver_sockets, UPNP_E_OUTOF_SOCKET);
+#endif
     {
         SCOPED_TRACE("");
         chk_minisocket(miniSocket);

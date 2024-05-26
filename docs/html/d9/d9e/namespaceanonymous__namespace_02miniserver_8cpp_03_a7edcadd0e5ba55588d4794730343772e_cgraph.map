@@ -1,26 +1,46 @@
 <map id="anonymous_namespace{miniserver::cpp}::get_miniserver_sockets" name="anonymous_namespace{miniserver::cpp}::get_miniserver_sockets">
-<area shape="rect" id="Node000001" title="Creates a STREAM socket, binds to INADDR_ANY and listens for incoming connections." alt="" coords="5,6,185,61"/>
-<area shape="rect" id="Node000002" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a224e924519197fa3cf06a4480b2fb464" title="Bind and listen to a socket address." alt="" coords="233,108,413,162"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,59,250,100,248,104,157,63"/>
-<area shape="rect" id="Node000009" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a45702c57e08f4fbfcfa43dfdceb5390c" title="Get valid sockets." alt="" coords="708,72,888,126"/>
-<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="186,29,403,33,532,42,660,58,699,66,698,71,660,63,531,47,402,38,186,34"/>
-<area shape="rect" id="Node000010" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="990,21,1083,46"/>
-<area shape="poly" id="edge14_Node000001_Node000010" title=" " alt="" coords="185,16,233,11,448,3,659,6,843,16,976,26,976,31,843,21,659,12,448,8,234,16,186,21"/>
-<area shape="rect" id="Node000003" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#acc6658fce5f76c1ea6dab7a41f9d2d27" title="Bind a socket address to a local network interface." alt="" coords="461,151,660,191"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="414,146,448,151,447,156,413,151"/>
-<area shape="rect" id="Node000004" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#adba7f7895434869489710a8c0e714c41" title="Listen on a local network interface to incomming requests." alt="" coords="708,176,888,230"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="368,160,412,183,462,200,521,210,581,215,694,212,694,218,581,220,520,216,461,206,410,188,366,165"/>
-<area shape="rect" id="Node000008" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a53f43c64b3353019b7bcc301ff1073a3" title="Close and (re)initialize a socket." alt="" coords="471,72,651,126"/>
-<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="413,119,457,112,458,117,414,124"/>
-<area shape="rect" id="Node000005" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="963,79,1111,119"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="845,173,935,129,953,121,955,126,937,133,848,178"/>
-<area shape="rect" id="Node000006" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="963,143,1111,183"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="888,185,948,175,949,180,889,191"/>
-<area shape="rect" id="Node000007" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aec7d02e7e42098f68ed2d85b931106df" title="Returns port to which socket, sockfd, is bound." alt="" coords="936,207,1137,247"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="888,209,923,213,922,218,888,215"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="651,96,694,96,694,102,651,102"/>
-<area shape="poly" id="edge12_Node000008_Node000010" title=" " alt="" coords="650,70,708,58,852,40,976,33,976,38,852,45,708,63,652,75"/>
-<area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="888,96,949,96,949,102,888,102"/>
-<area shape="poly" id="edge10_Node000009_Node000006" title=" " alt="" coords="889,120,950,137,949,142,888,126"/>
-<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="888,72,976,47,977,52,889,77"/>
+<area shape="rect" id="Node000001" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="5,541,185,596"/>
+<area shape="rect" id="Node000002" href="$d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="235,279,402,304"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,539,296,314,300,317,121,543"/>
+<area shape="rect" id="Node000014" href="$db/d84/classupnplib_1_1CSocket__basic.html#a70afe9ed6de1c17bb59f6c0bcc5bba00" title="Get the port number." alt="" coords="233,631,404,671"/>
+<area shape="poly" id="edge19_Node000001_Node000014" title=" " alt="" coords="171,594,252,624,250,629,169,599"/>
+<area shape="rect" id="Node000016" href="$d8/d73/classupnplib_1_1CSocket.html#af4e7af61b6999fdfb49a97d9ceecf9db" title="Initialize the object with the hints given by the constructor." alt="" coords="460,581,619,607"/>
+<area shape="poly" id="edge21_Node000001_Node000016" title=" " alt="" coords="186,571,446,586,446,591,185,576"/>
+<area shape="rect" id="Node000017" href="$d8/d73/classupnplib_1_1CSocket.html#aab92e4ef9b21e3e1381eb80ce9abfffe" title="Set socket to listen." alt="" coords="452,532,627,557"/>
+<area shape="poly" id="edge24_Node000001_Node000017" title=" " alt="" coords="185,561,438,547,439,553,186,567"/>
+<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="675,426,823,466"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="402,280,455,279,513,283,572,294,628,314,660,335,688,360,730,413,726,416,684,364,657,339,625,319,570,299,512,288,455,284,402,285"/>
+<area shape="rect" id="Node000004" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="675,507,823,547"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="330,303,376,370,412,409,453,442,529,466,662,502,661,507,528,471,451,447,408,413,372,373,325,306"/>
+<area shape="rect" id="Node000005" href="$db/d84/classupnplib_1_1CSocket__basic.html#a6878fbfcf7704d59f18dea2a350773bd" title="Get socket address family." alt="" coords="454,329,625,369"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="369,301,450,323,448,328,368,307"/>
+<area shape="rect" id="Node000006" href="$db/d84/classupnplib_1_1CSocket__basic.html#a41cf15ed4d81fb0f237d8a6b69f72d8a" title="Get the socket type SOCK_STREAM or SOCK_DGRAM." alt="" coords="454,393,625,433"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="338,302,388,339,453,378,467,385,465,390,451,383,385,343,335,306"/>
+<area shape="rect" id="Node000007" href="$da/dad/classupnplib_1_1CAddrinfo.html#a307094d37736d609bde57f810f7b8ba5" title="Initialize address information that is returned by syscall ::getaddrinfo()" alt="" coords="468,49,611,89"/>
+<area shape="poly" id="edge8_Node000002_Node000007" title=" " alt="" coords="323,277,340,242,368,194,405,143,450,99,458,93,461,98,454,103,409,147,372,197,345,244,328,279"/>
+<area shape="rect" id="Node000010" href="$da/dad/classupnplib_1_1CAddrinfo.html#a938842ec8b629bc03581116942327aab" title="Get the assosiated netaddress." alt="" coords="677,154,820,194"/>
+<area shape="poly" id="edge12_Node000002_Node000010" title=" " alt="" coords="332,276,382,237,415,216,451,199,505,184,560,175,663,168,664,174,561,180,506,189,453,205,418,221,385,241,335,281"/>
+<area shape="rect" id="Node000011" href="$db/d84/classupnplib_1_1CSocket__basic.html#a24406f0340da2352557ad1ea301410c5" title="Get netaddress with port." alt="" coords="454,214,625,254"/>
+<area shape="poly" id="edge15_Node000002_Node000011" title=" " alt="" coords="368,276,448,255,450,260,369,281"/>
+<area shape="rect" id="Node000013" href="$d8/d44/classupnplib_1_1Netaddr.html#a37ca073aaa586afc48b9f94162468227" title="Get netaddress string." alt="" coords="462,113,617,139"/>
+<area shape="poly" id="edge18_Node000002_Node000013" title=" " alt="" coords="327,277,376,220,411,186,451,156,478,141,481,146,453,160,415,190,380,223,332,280"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="625,424,662,429,661,435,624,429"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="590,430,628,449,708,497,705,502,625,454,587,435"/>
+<area shape="rect" id="Node000008" href="$d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3" title="Check for a netaddress and return its address family." alt="" coords="675,29,822,55"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="611,57,661,50,662,56,612,62"/>
+<area shape="rect" id="Node000009" href="$d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="871,161,1027,187"/>
+<area shape="poly" id="edge11_Node000007_Node000009" title=" " alt="" coords="611,73,712,89,823,115,871,133,913,153,911,158,869,138,822,121,711,94,610,79"/>
+<area shape="poly" id="edge10_Node000008_Node000008" title=" " alt="" coords="716,31,709,21,712,11,726,5,749,3,777,6,788,16,784,20,774,11,749,8,727,10,716,15,714,20,720,28"/>
+<area shape="poly" id="edge14_Node000010_Node000009" title=" " alt="" coords="820,171,857,171,857,177,820,177"/>
+<area shape="poly" id="edge13_Node000010_Node000010" title=" " alt="" coords="711,154,709,144,715,135,728,129,749,127,772,130,785,138,782,142,770,135,749,133,730,135,718,139,714,145,716,153"/>
+<area shape="rect" id="Node000012" href="$d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8" title="Get the assosiated netaddress with port." alt="" coords="676,218,821,258"/>
+<area shape="poly" id="edge16_Node000011_Node000012" title=" " alt="" coords="625,233,663,234,663,239,625,238"/>
+<area shape="poly" id="edge17_Node000012_Node000009" title=" " alt="" coords="811,215,894,188,896,193,813,220"/>
+<area shape="rect" id="Node000015" href="$d1/dc2/structupnplib_1_1SSockaddr.html#aa966e76a6a766c6cef08e8c638934d6d" title="Get the numeric port." alt="" coords="467,631,612,671"/>
+<area shape="poly" id="edge20_Node000014_Node000015" title=" " alt="" coords="404,649,453,649,453,654,404,654"/>
+<area shape="poly" id="edge22_Node000016_Node000003" title=" " alt="" coords="605,579,625,568,641,551,650,533,658,514,673,494,698,472,702,476,677,497,662,517,655,536,646,554,628,572,607,584"/>
+<area shape="poly" id="edge23_Node000016_Node000004" title=" " alt="" coords="588,579,626,567,679,550,681,555,627,573,589,584"/>
+<area shape="poly" id="edge25_Node000017_Node000003" title=" " alt="" coords="566,530,692,470,694,474,568,534"/>
+<area shape="poly" id="edge26_Node000017_Node000004" title=" " alt="" coords="627,535,661,532,661,537,627,540"/>
+<area shape="poly" id="edge27_Node000017_Node000017" title=" " alt="" coords="505,534,498,524,502,514,516,508,539,505,568,509,580,518,576,522,566,514,539,511,517,513,505,517,503,523,509,530"/>
 </map>

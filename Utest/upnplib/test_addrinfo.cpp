@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-24
+// Redistribution only with this Copyright remark. Last modified: 2024-05-25
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -20,7 +20,6 @@ using ::testing::Return;
 using ::testing::StrictMock;
 
 using ::upnplib::CAddrinfo;
-using ::upnplib::is_netaddr;
 
 
 class AddrinfoMockFTestSuite : public ::testing::Test {
@@ -596,35 +595,6 @@ TEST(AddrinfoTestSuite, get_fails) {
 #else
     EXPECT_THROW(ai1.init(), std::runtime_error);
 #endif
-}
-
-TEST(AddrinfoTestSuite, is_numeric_node) {
-    EXPECT_EQ(is_netaddr("[2001:db8::4]", AF_INET6), AF_INET6);
-    EXPECT_EQ(is_netaddr("192.168.47.9", AF_INET), AF_INET);
-    EXPECT_EQ(is_netaddr("192.168.47.8"), AF_INET);
-    EXPECT_EQ(is_netaddr("[2001:db8::5]"), AF_INET6);
-    EXPECT_EQ(is_netaddr("[::1]"), AF_INET6);
-    EXPECT_EQ(is_netaddr("127.0.0.1"), AF_INET);
-    EXPECT_EQ(is_netaddr("[::]"), AF_INET6);
-    EXPECT_EQ(is_netaddr("0.0.0.0"), AF_INET);
-    EXPECT_EQ(is_netaddr("::1"), AF_UNSPEC);
-    EXPECT_EQ(is_netaddr(" ::1"), AF_UNSPEC);
-    EXPECT_EQ(is_netaddr(":::1"), AF_UNSPEC);
-    EXPECT_EQ(is_netaddr("[::1"), AF_UNSPEC);
-    EXPECT_EQ(is_netaddr("::1]"), AF_UNSPEC);
-    EXPECT_EQ(is_netaddr("["), AF_UNSPEC);
-    EXPECT_EQ(is_netaddr("]"), AF_UNSPEC);
-    EXPECT_EQ(is_netaddr(":"), AF_UNSPEC);
-    EXPECT_EQ(is_netaddr("[]"), AF_UNSPEC);
-    EXPECT_EQ(is_netaddr("::"), AF_UNSPEC);
-    EXPECT_EQ(is_netaddr("[:]"), AF_UNSPEC);
-    EXPECT_EQ(is_netaddr(""), AF_UNSPEC);
-    // This should be an invalid address family
-    EXPECT_EQ(is_netaddr("[2001:db8::99]", 67890), AF_UNSPEC);
-    // Next are never numeric addresses
-    EXPECT_EQ(is_netaddr("localhost", AF_INET6), AF_UNSPEC);
-    EXPECT_EQ(is_netaddr("localhost", AF_INET), AF_UNSPEC);
-    EXPECT_EQ(is_netaddr("example.com"), AF_UNSPEC);
 }
 
 } // namespace utest

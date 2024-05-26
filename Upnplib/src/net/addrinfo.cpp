@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-23
+// Redistribution only with this Copyright remark. Last modified: 2024-05-25
 /*!
  * \file
  * \brief Definition of the Addrinfo class and free helper functions.
@@ -127,13 +127,16 @@ void CAddrinfo::init() {
 
     // Very helpful for debugging to see what is given to ::getaddrinfo()
     // clang-format off
-    UPNPLIB_LOGINFO << "MSG1114: syscall ::getaddrinfo("
-        << node_out << ", "
-        << "\"" + m_service + "\", "
-        << &hints << ", " << &new_res << ") Using node=\""
-        << m_node << "\", hints.ai_flags="
-        << m_hints.ai_flags << ", hints.ai_family="
-        << m_hints.ai_family
+    UPNPLIB_LOGINFO << "MSG1114: syscall ::getaddrinfo(" << node_out
+        << ", " << "\"" << m_service << "\", "
+        << &hints << ", " << &new_res
+        << ") node=\"" << m_node << "\", "
+        << (hints.ai_flags & AI_NUMERICHOST ? "AI_NUMERICHOST, " : "")
+        << (hints.ai_flags & AI_NUMERICSERV ? "AI_NUMERICSERV, " : "")
+        << (hints.ai_flags & AI_PASSIVE ? "AI_PASSIVE, " : "")
+        << (m_hints.ai_family == AF_INET6 ? "AF_INET6" :
+                (m_hints.ai_family == AF_INET ? "AF_INET" :
+                    "hints.ai_family=" + std::to_string(m_hints.ai_family)))
         << (ret != 0
             ? ". Get ERROR"
             : ". Get \"" + to_netaddrp(reinterpret_cast
@@ -162,7 +165,7 @@ void CAddrinfo::init() {
         throw std::invalid_argument(
             UPNPLIB_LOGEXCEPT +
             "MSG1037: Failed to get address information: errid(" +
-            std::to_string(ret) + ")=\"" + ::gai_strerror(ret) + "\"");
+            std::to_string(ret) + ")=\"" + ::gai_strerror(ret) + "\"\n");
     }
     // Different on platforms: man getsockaddr says "Specifying 0 in
     // hints.ai_socktype indicates that socket addresses of any type can be

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-05-20
+ * Redistribution only with this Copyright remark. Last modified: 2024-05-28
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -109,14 +109,6 @@ MiniServerState gMServState{MSERV_IDLE};
 MiniServerCallback gSoapCallback{nullptr};
 /// \brief GENA callback
 MiniServerCallback gGenaCallback{nullptr};
-
-/*! \brief Flag if to immediately reuse the netaddress of a just broken
- * connetion. Reuse address is not supported. */
-#if !defined(UPNP_MINISERVER_REUSEADDR) || defined(DOXYGEN_RUN)
-constexpr bool MINISERVER_REUSEADDR{false};
-#else
-constexpr bool MINISERVER_REUSEADDR{true};
-#endif
 
 /// \brief additional management information to a socket.
 struct s_SocketStuff {
@@ -815,6 +807,7 @@ int get_port(
 }
 
 #ifdef COMPA_HAVE_WEBSERVER
+#if 0
 /*!
  * \brief Get valid sockets.
  *
@@ -1130,7 +1123,7 @@ error:
  *  - UPNP_E_LISTEN - Listen() failed.
  *  - UPNP_E_INTERNAL_ERROR - Port returned by the socket layer is < 0.
  */
-[[maybe_unused]] int get_miniserver_sockets(
+int get_miniserver_sockets(
     /*! [out] Pointer to a Socket Array that will be filled. */
     MiniServerSockArray* out,
     /*! [in] port on which the server is listening for incoming IPv4
@@ -1235,6 +1228,7 @@ error:
 
     return ret_val;
 }
+#endif
 
 /*!
  * \brief Create STREAM sockets, binds to INADDR_ANY and listens for incoming
@@ -1252,7 +1246,7 @@ error:
  *  - UPNP_E_LISTEN - Listen() failed.
  *  - UPNP_E_INTERNAL_ERROR - Port returned by the socket layer is < 0.
  */
-[[maybe_unused]] int get_miniserver_sockets2(
+int get_miniserver_sockets(
     /*! [in,out] [in]Pointer to a Socket Array that following members will be
      * filled:
      *      - .miniServerSock6
@@ -1281,15 +1275,14 @@ error:
 
     int retval{UPNP_E_OUTOF_SOCKET};
 
-    if (gIF_IPV6[0] != '\0') {
-        static upnplib::CSocket ss6Obj(AF_INET6, SOCK_STREAM);
+    if (out->MiniSvrSock6LlaObj != nullptr && gIF_IPV6[0] != '\0') {
         try {
-            ss6Obj.init();
-            ss6Obj.bind('[' + std::string(gIF_IPV6) + ']',
-                        std::to_string(listen_port6));
-            ss6Obj.listen();
-            out->miniServerSock6 = ss6Obj;
-            out->miniServerPort6 = ss6Obj.get_port();
+            out->MiniSvrSock6LlaObj->init();
+            out->MiniSvrSock6LlaObj->bind('[' + std::string(gIF_IPV6) + ']',
+                                          std::to_string(listen_port6));
+            out->MiniSvrSock6LlaObj->listen();
+            out->miniServerSock6 = *out->MiniSvrSock6LlaObj;
+            out->miniServerPort6 = out->MiniSvrSock6LlaObj->get_port();
             retval = UPNP_E_SUCCESS;
         } catch (const std::exception& e) {
             UPNPLIB_LOGCATCH "MSG1110: catched next line...\n" << e.what();
@@ -1300,37 +1293,34 @@ error:
     // ss6.serverAddr6->sin6_scope_id = gIF_INDEX;
     // It is never copied to 'out'.
 
-    if (gIF_IPV6_ULA_GUA[0] != '\0') {
-        static upnplib::CSocket ss6UlaGuaObj(AF_INET6, SOCK_STREAM);
+    if (out->MiniSvrSock6UadObj != nullptr && gIF_IPV6_ULA_GUA[0] != '\0') {
         try {
-            ss6UlaGuaObj.init();
-            ss6UlaGuaObj.bind('[' + std::string(gIF_IPV6_ULA_GUA) + ']',
-                              std::to_string(listen_port6UlaGua));
-            ss6UlaGuaObj.listen();
-            out->miniServerSock6UlaGua = ss6UlaGuaObj;
-            out->miniServerPort6UlaGua = ss6UlaGuaObj.get_port();
+            out->MiniSvrSock6UadObj->init();
+            out->MiniSvrSock6UadObj->bind('[' + std::string(gIF_IPV6_ULA_GUA) +
+                                              ']',
+                                          std::to_string(listen_port6UlaGua));
+            out->MiniSvrSock6UadObj->listen();
+            out->miniServerSock6UlaGua = *out->MiniSvrSock6UadObj;
+            out->miniServerPort6UlaGua = out->MiniSvrSock6UadObj->get_port();
             retval = UPNP_E_SUCCESS;
         } catch (const std::exception& e) {
             UPNPLIB_LOGCATCH "MSG1117: catched next line...\n" << e.what();
         }
     }
 
-    if (gIF_IPV4[0] != '\0') {
-        static upnplib::CSocket ss4Obj(AF_INET, SOCK_STREAM);
+    if (out->MiniSvrSock4Obj != nullptr && gIF_IPV4[0] != '\0') {
         try {
-            ss4Obj.init();
-            ss4Obj.bind('[' + std::string(gIF_IPV4) + ']',
-                        std::to_string(listen_port4));
-            ss4Obj.listen();
-            out->miniServerPort4 = ss4Obj.get_port();
-            out->miniServerSock4 = ss4Obj;
+            out->MiniSvrSock4Obj->init();
+            out->MiniSvrSock4Obj->bind(std::string(gIF_IPV4),
+                                       std::to_string(listen_port4));
+            out->MiniSvrSock4Obj->listen();
+            out->miniServerSock4 = *out->MiniSvrSock4Obj;
+            out->miniServerPort4 = out->MiniSvrSock4Obj->get_port();
             retval = UPNP_E_SUCCESS;
         } catch (const std::exception& e) {
             UPNPLIB_LOGCATCH "MSG1112: catched next line...\n" << e.what();
         }
     }
-
-    // TODO: Check what's with the SOCK_DGRAM socket as noted in the doku.
 
     UPNPLIB_LOGINFO "MSG1065: Finished.\n";
     return retval;
@@ -1460,6 +1450,14 @@ int StartMiniServer([[maybe_unused]] in_port_t* listen_port4,
         return UPNP_E_OUTOF_MEMORY;
     }
     InitMiniServerSockArray(miniSocket);
+
+    // Instantiate socket objects and point to them in miniSocket
+    upnplib::CSocket Sock6LlaObj(AF_INET6, SOCK_STREAM);
+    miniSocket->MiniSvrSock6LlaObj = &Sock6LlaObj;
+    upnplib::CSocket Sock6UadObj(AF_INET6, SOCK_STREAM);
+    miniSocket->MiniSvrSock6UadObj = &Sock6UadObj;
+    upnplib::CSocket Sock4Obj(AF_INET, SOCK_STREAM);
+    miniSocket->MiniSvrSock4Obj = &Sock4Obj;
 
 #ifdef COMPA_HAVE_WEBSERVER
     if (*listen_port4 == 0 || *listen_port6 == 0 || *listen_port6UlaGua == 0) {

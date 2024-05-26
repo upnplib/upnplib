@@ -1,11 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"dc/d2f/GenlibClientSubscription_8cpp.html#a5fa5ba7e28950fe768e0cfcd8aacfc78":[8,0,0,1,2,0,1,26],
-"dc/d2f/GenlibClientSubscription_8cpp.html#a6c6c8e5ccedde33cad9c81dd83aa17b4":[8,0,0,1,2,0,1,11],
-"dc/d2f/GenlibClientSubscription_8cpp.html#a73223f539a2d862eab64ae6f0c01c324":[8,0,0,1,2,0,1,4],
-"dc/d2f/GenlibClientSubscription_8cpp.html#a9714aabbe76de81410a7cb4435ce009f":[8,0,0,1,2,0,1,1],
-"dc/d2f/GenlibClientSubscription_8cpp.html#aa2d2b286134b5383e545245b9d1f4305":[8,0,0,1,2,0,1,0,4],
-"dc/d2f/GenlibClientSubscription_8cpp.html#aa54142cfd95d2c226fb0d4a27de24dc5":[8,0,0,1,2,0,1,24],
 "dc/d2f/GenlibClientSubscription_8cpp.html#aa6d005590751a7df6f4906a6e5a90ebc":[8,0,0,1,2,0,1,0,3],
 "dc/d2f/GenlibClientSubscription_8cpp.html#abaec6e7bbaa07745323f752d4eaa7c14":[8,0,0,1,2,0,1,6],
 "dc/d2f/GenlibClientSubscription_8cpp.html#acdc433fd326f354773aad5eb95a255c3":[8,0,0,1,2,0,1,25],
@@ -249,5 +243,11 @@ var NAVTREEINDEX8 =
 "dd/db5/classupnplib_1_1CUri.html#ae59cb0be0f7f79a7da3ee09dfda75803":[6,0,24,8,2],
 "dd/db5/classupnplib_1_1CUri.html#ae59cb0be0f7f79a7da3ee09dfda75803":[7,0,7,6,2],
 "dd/dbe/group__upnplib-connection.html":[5,3,0,2],
-"dd/de6/gena__device_8cpp.html":[8,0,0,1,1,2]
+"dd/de6/gena__device_8cpp.html":[8,0,0,1,1,2],
+"dd/de6/gena__device_8cpp.html#a11f6b8370b141ab90b844dbf1092265c":[8,0,0,1,1,2,21],
+"dd/de6/gena__device_8cpp.html#a1503915b6cd3d0ea5adc7b5493b589ab":[8,0,0,1,1,2,4],
+"dd/de6/gena__device_8cpp.html#a25ad1852d4d32c6f34a87b92225202fd":[8,0,0,1,1,2,6],
+"dd/de6/gena__device_8cpp.html#a2cfe3543fad246a253ed6379e1fc0bf4":[8,0,0,1,1,2,10],
+"dd/de6/gena__device_8cpp.html#a3300ba366cae7db4f8c21b0119cdacd9":[8,0,0,1,1,2,13],
+"dd/de6/gena__device_8cpp.html#a4b03afbfa4cbf8c318857a43bbf92d8e":[8,0,0,1,1,2,7]
 };

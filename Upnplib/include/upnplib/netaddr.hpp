@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_NETADDR_HPP
 #define UPNPLIB_NET_NETADDR_HPP
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-23
+// Redistribution only with this Copyright remark. Last modified: 2024-05-26
 /*!
  * \file
  * \brief Declaration of the Netaddr class
@@ -85,6 +85,26 @@ class UPNPLIB_API Netaddr {
      * std::string na_str = netaddr.str();
      * std::cout << netaddr << "\n"; // output "[2001:db8::1]:56789"
      * \endcode
+     *
+     * Assign rules are:\n
+     * a netaddress consists of two parts, ip address and port. A netaddress
+     * has always a port. With an invalid ip address the whole netaddress is
+     * unspecified and results to "". Valid special cases are these well
+     * defined unspecified addresses:
+\verbatim
+"[::]"          results to  "[::]:0"
+"[::]:"         results to  "[::]:0"
+"[::]:0"        results to  "[::]:0"
+"[::]:65535"    results to  "[::]:65535" // port 0 to 65535
+"0.0.0.0"       results to  "0.0.0.0:0"
+"0.0.0.0:"      results to  "0.0.0.0:0"
+"0.0.0.0:0"     results to  "0.0.0.0:0"
+"0.0.0.0:65535" results to  "0.0.0.0:65535" // port 0 to 65535
+\endverbatim
+     * A valid address with an invalid port results to port 0, for example\n
+\verbatim
+"[2001:db8::51]:98765" results to "[2001:db8::51]:0"
+\endverbatim
      */
     void operator=(
         /// [in] String with a possible netaddress
