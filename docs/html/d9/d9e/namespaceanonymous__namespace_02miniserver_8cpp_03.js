@@ -28,6 +28,5 @@ var namespaceanonymous__namespace_02miniserver_8cpp_03 =
     [ "gGenaCallback", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a6f4c2792aee1e2df9b5ebe874b89760d", null ],
     [ "gMServState", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#ae413745d69678061574e39ce1949af43", null ],
     [ "gSoapCallback", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a49eca2fd8ae56a32b6c866db4b5dcb47", null ],
-    [ "MINISERVER_REUSEADDR", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aa6b5fe31700275e3b8ce35c3cc8b7b9d", null ],
     [ "miniStopSockPort", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a6ab69017b8af0de7bc0bfec810bbe9fb", null ]
 ];

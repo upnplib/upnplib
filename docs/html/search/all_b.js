@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['family_0',['address family',['../db/d86/group__upnplib-socket.html#autotoc_md14',1,'']]],
+  ['family_0',['protocol family',['../db/d86/group__upnplib-socket.html#autotoc_md14',1,'']]],
   ['fd_1',['fd',['../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a719431eea7a56c1d9a35b390d60b472b',1,'anonymous_namespace{miniserver.cpp}::s_SocketStuff']]],
   ['fdset_5fif_5fvalid_2',['fdset_if_valid',['../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a937a0eae18a69c7e034aa982345d9a50',1,'anonymous_namespace{miniserver.cpp}']]],
   ['file_20descriptor_3',['valid socket file descriptor',['../db/d86/group__upnplib-socket.html#autotoc_md16',1,'']]],

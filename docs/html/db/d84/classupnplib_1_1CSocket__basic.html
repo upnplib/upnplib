@@ -480,7 +480,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Initialize a given raw socket file descriptor to the object. </p>
 <div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
-<div class="line"><a class="code hl_typedef" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> sfd = ::socket(AF_INET6, SOCK_STREAM);</div>
+<div class="line"><a class="code hl_typedef" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> sfd = ::socket(PF_INET6, SOCK_STREAM);</div>
 <div class="line">{   <span class="comment">// Scope for sockObj, sfd must longer exist than sockObj</span></div>
 <div class="line">    <a class="code hl_class" href="../../db/d84/classupnplib_1_1CSocket__basic.html">CSocket_basic</a> sockObj(sfd);</div>
 <div class="line">    <span class="keywordflow">try</span> {</div>

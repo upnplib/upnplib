@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-25
+// Redistribution only with this Copyright remark. Last modified: 2024-06-02
 /*!
  * \file
  * \brief Definition of the Addrinfo class and free helper functions.
@@ -136,7 +136,8 @@ void CAddrinfo::init() {
         << (hints.ai_flags & AI_PASSIVE ? "AI_PASSIVE, " : "")
         << (m_hints.ai_family == AF_INET6 ? "AF_INET6" :
                 (m_hints.ai_family == AF_INET ? "AF_INET" :
-                    "hints.ai_family=" + std::to_string(m_hints.ai_family)))
+                    (m_hints.ai_family == AF_UNSPEC ? "AF_UNSPEC" :
+                        "hints.ai_family=" + std::to_string(m_hints.ai_family))))
         << (ret != 0
             ? ". Get ERROR"
             : ". Get \"" + to_netaddrp(reinterpret_cast

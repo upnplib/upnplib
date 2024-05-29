@@ -135,8 +135,8 @@ Specification for CSocket</h1>
 empty socket object</h2>
 <p>An empty socket object can be instantiated with the default constructor, e.g. <code>CSocket sockObj;</code>. It is a valid object and should be destructed. When moving a socket object, the left over source object is also empty. An empty socket object has an <code>INVALID_SOCKET</code> defined and no valid content. It throws an exception if using any of its Setter and Getter. Moving and assigning it is possible.</p>
 <h2><a class="anchor" id="autotoc_md14"></a>
-address family</h2>
-<p>Only address family <code>AF_INET6</code> and <code>AF_INET</code> is supported. Any other address family throws an exception.</p>
+protocol family</h2>
+<p>Only protocol family <code>PF_INET6</code> and <code>PF_INET</code> is supported. Any other address family throws an exception.</p>
 <h2><a class="anchor" id="autotoc_md15"></a>
 socket type</h2>
 <p>Only <code>SOCK_STREAM</code> and <code>SOCK_DGRAM</code> is supported. Any other type throws an exception.</p>

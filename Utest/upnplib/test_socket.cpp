@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-20
+// Redistribution only with this Copyright remark. Last modified: 2024-06-02
 
 #include <upnplib/global.hpp>
 #include <upnplib/socket.hpp>
@@ -80,30 +80,29 @@ TEST(SockTestSuite, sock_connect_to_host) {
 // slow down this gtest dramatically or block the test until timeout expires if
 // no connection is possible.
     WINSOCK_INIT
-    // Get a socket
-    upnplib::CSocket sockObj;
-    sockObj.init(AF_INET6, SOCK_STREAM);
 
     // Get the remote host socket address
-    // upnplib::CAddrinfo addrinfo("[2001:db8::1]", "80"); // gives WSAETIMEDOUT
-    upnplib::CAddrinfo addrinfo("example.com", "80", AF_INET6); // succeeds
-    if (g_dbug)
-        std::cout << "IP addrees to connect = " << addrinfo.netaddrp() << ".\n";
+    upnplib::CAddrinfo ai("example.com", "http", AF_UNSPEC, SOCK_STREAM);
+    ASSERT_NO_THROW(ai.init());
+    std::cout << "Remote IP addrees to connect = \"" << ai.netaddr().str()
+              << "\".\n";
+
+    // Get a socket
+    upnplib::CSocket sockObj(ai->ai_addr->sa_family, ai->ai_socktype);
+    ASSERT_NO_THROW(sockObj.init());
 
     // Connect to the remote host
     upnplib::CSocketErr sockerrObj;
-    if (::connect(sockObj, &addrinfo.sa, addrinfo.sizeof_saddr()) == SOCKET_ERROR) {
+    if (::connect(sockObj, ai->ai_addr, ai->ai_addrlen) == SOCKET_ERROR) {
         sockerrObj.catch_error();
-        std::cout << "WSA error number = " << sockerrObj << ".\n";
-        std::cout << sockerrObj.get_error_str() << ".\n";
+        std::cerr << "Error on connect socket: " << sockerrObj.get_error_str()
+                  << ".\n";
         GTEST_FAIL();
     }
 
-    if (g_dbug) {
-        // The unbound socket has bin bound to a local address by ::connect().
-        const std::string_view locnetaddr = sockObj.netaddrp();
-        std::cout << "local IP address of the socket = " << locnetaddr << ".\n";
-        }
+    // The unbound socket has bin bound to a local address by ::connect().
+    const std::string_view locnetaddr = sockObj.netaddrp();
+    std::cout << "local IP address of the socket = \"" << locnetaddr << "\".\n";
 }
 #endif
 
@@ -200,15 +199,15 @@ TEST(SocketErrorTestSuite, mock_sockerr_successful) {
 
 
 TEST(SocketBasicTestSuite, instantiate_socket_successful) {
-    SOCKET sfd = ::socket(AF_INET6, SOCK_STREAM, 0);
+    SOCKET sfd = ::socket(PF_INET6, SOCK_STREAM, 0);
     ASSERT_NE(sfd, INVALID_SOCKET);
 
     // Test Unit
     CSocket_basic sockObj(sfd);
     sockObj.init();
 
-    EXPECT_EQ((SOCKET)sockObj, sfd);
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(static_cast<SOCKET>(sockObj), sfd);
+    EXPECT_EQ(sockObj.get_family(), PF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sockObj.netaddr(), "[::]");
     EXPECT_EQ(sockObj.netaddrp(), "[::]:0");
@@ -221,9 +220,11 @@ TEST(SocketBasicTestSuite, instantiate_socket_successful) {
 
 TEST(SocketBasicTestSuite, instantiate_with_bound_socket_fd) {
     // and bind it to a socket.
-    CSocket bound_sockObj(AF_INET6, SOCK_STREAM);
+    CSocket bound_sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(bound_sockObj.init());
-    EXPECT_FALSE(bound_sockObj.is_v6only());
+    // Default IPV6_V6ONLY setting is different on different platforms but
+    // doesn't matter; will be set before binding.
+    // EXPECT_FALSE(bound_sockObj.is_v6only());
     ASSERT_NO_THROW(bound_sockObj.bind("", "8080"));
     EXPECT_TRUE(bound_sockObj.is_v6only());
     SOCKET bound_sock = bound_sockObj;
@@ -233,7 +234,7 @@ TEST(SocketBasicTestSuite, instantiate_with_bound_socket_fd) {
     sockObj.init();
 
     EXPECT_EQ((SOCKET)sockObj, bound_sock);
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_family(), PF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sockObj.netaddr(), "[::1]");
     EXPECT_EQ(sockObj.netaddrp(), "[::1]:8080");
@@ -349,7 +350,7 @@ TEST(SocketBasicTestSuite, set_invalid_socket_fd) {
 }
 
 TEST(SocketBasicTestSuite, set_object_two_times) {
-    SOCKET sfd = ::socket(AF_INET6, SOCK_STREAM, 0);
+    SOCKET sfd = ::socket(PF_INET6, SOCK_STREAM, 0);
     ASSERT_NE(sfd, INVALID_SOCKET);
 
     // Test Unit
@@ -358,7 +359,7 @@ TEST(SocketBasicTestSuite, set_object_two_times) {
     sockObj.init();
 
     EXPECT_EQ(static_cast<SOCKET>(sockObj), sfd);
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_family(), PF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sockObj.netaddrp(), "[::]:0");
     EXPECT_EQ(sockObj.get_sockerr(), 0);
@@ -379,34 +380,34 @@ TEST(SocketTestSuite, verify_system_socket_function) {
 
     SOCKET sfd{INVALID_SOCKET};
 #ifdef _MSC_VER
-    sfd = ::socket(AF_INET, 0, 0);
+    sfd = ::socket(PF_INET, 0, 0);
     EXPECT_NE(sfd, INVALID_SOCKET);
     CLOSE_SOCKET_P(sfd);
-    sfd = ::socket(AF_INET6, 0, 0);
+    sfd = ::socket(PF_INET6, 0, 0);
     EXPECT_NE(sfd, INVALID_SOCKET);
     CLOSE_SOCKET_P(sfd);
 #else
-    EXPECT_EQ(::socket(AF_INET, 0, 0), INVALID_SOCKET);
-    EXPECT_EQ(::socket(AF_INET6, 0, 0), INVALID_SOCKET);
+    EXPECT_EQ(::socket(PF_INET, 0, 0), INVALID_SOCKET);
+    EXPECT_EQ(::socket(PF_INET6, 0, 0), INVALID_SOCKET);
 #endif
 
-    sfd = ::socket(AF_INET, SOCK_STREAM, 0);
+    sfd = ::socket(PF_INET, SOCK_STREAM, 0);
     EXPECT_NE(sfd, INVALID_SOCKET);
     CLOSE_SOCKET_P(sfd);
-    sfd = ::socket(AF_INET, SOCK_DGRAM, 0);
+    sfd = ::socket(PF_INET, SOCK_DGRAM, 0);
     EXPECT_NE(sfd, INVALID_SOCKET);
     CLOSE_SOCKET_P(sfd);
-    sfd = ::socket(AF_INET6, SOCK_STREAM, 0);
+    sfd = ::socket(PF_INET6, SOCK_STREAM, 0);
     EXPECT_NE(sfd, INVALID_SOCKET);
     CLOSE_SOCKET_P(sfd);
-    sfd = ::socket(AF_INET6, SOCK_DGRAM, 0);
+    sfd = ::socket(PF_INET6, SOCK_DGRAM, 0);
     EXPECT_NE(sfd, INVALID_SOCKET);
     CLOSE_SOCKET_P(sfd);
 }
 
 TEST(SocketTestSuite, verify_system_getsockname_function) {
     // int getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
-    SOCKET sfd = ::socket(AF_INET6, SOCK_STREAM, 0);
+    SOCKET sfd = ::socket(PF_INET6, SOCK_STREAM, 0);
     ASSERT_NE(sfd, INVALID_SOCKET);
 
     ::sockaddr_storage ss{};
@@ -425,85 +426,96 @@ TEST(SocketTestSuite, verify_system_getsockname_function) {
 
 TEST(SocketTestSuite, get_unbound_ipv6_stream_socket_successful) {
     // Test Unit
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
 
     // An unbound socket returns the unknown ip address and port 0
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_family(), PF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sockObj.netaddr(), "[::]");
     EXPECT_EQ(sockObj.netaddrp(), "[::]:0");
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    EXPECT_FALSE(sockObj.is_v6only());
+    // Default IPV6_V6ONLY setting is different on different platforms but
+    // doesn't matter; will be set before binding.
+    // EXPECT_FALSE(sockObj.is_v6only());
     EXPECT_FALSE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
 TEST(SocketTestSuite, get_socket_two_times_init_successful) {
     // Test Unit
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     ASSERT_NO_THROW(sockObj.init());
 
     // An unbound socket returns the unknown ip address and port 0
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_family(), PF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sockObj.netaddr(), "[::]");
     EXPECT_EQ(sockObj.netaddrp(), "[::]:0");
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    EXPECT_FALSE(sockObj.is_v6only());
+    // Default IPV6_V6ONLY setting is different on different platforms but
+    // doesn't matter; will be set before binding.
+    // EXPECT_FALSE(sockObj.is_v6only());
     EXPECT_FALSE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
 TEST(SocketTestSuite, get_unbound_ipv6_dgram_socket_successful) {
     // Test Unit
-    CSocket sockObj(AF_INET6, SOCK_DGRAM);
+    CSocket sockObj(PF_INET6, SOCK_DGRAM);
     ASSERT_NO_THROW(sockObj.init());
 
     // An unbound socket returns the unknown ip address and port 0
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_family(), PF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_DGRAM);
     EXPECT_EQ(sockObj.netaddr(), "[::]");
     EXPECT_EQ(sockObj.netaddrp(), "[::]:0");
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    // This is always true on win32, any setting is ignored?
-    EXPECT_FALSE(sockObj.is_v6only());
+    // Default IPV6_V6ONLY setting is different on different platforms but
+    // doesn't matter; will be set before binding.
+    // EXPECT_FALSE(sockObj.is_v6only());
     EXPECT_FALSE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
 TEST(SocketTestSuite, get_unbound_ipv4_stream_socket_successful) {
     // Test Unit
-    CSocket sockObj(AF_INET, SOCK_STREAM);
+    CSocket sockObj(PF_INET, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
 
     // An unbound socket returns the unknown ip address and port 0
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
-    EXPECT_EQ(sockObj.get_family(), AF_INET);
+    EXPECT_EQ(sockObj.get_family(), PF_INET);
     EXPECT_EQ(sockObj.netaddr(), "0.0.0.0");
     EXPECT_EQ(sockObj.netaddrp(), "0.0.0.0:0");
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
+    // Default IPV6_V6ONLY setting is different on different platforms but
+    // doesn't matter; will be set before binding.
+#ifdef _MSC_VER
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
     EXPECT_FALSE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
 TEST(SocketTestSuite, get_unbound_ipv4_dgram_socket_successful) {
     // Test Unit
-    CSocket sockObj(AF_INET, SOCK_DGRAM);
+    CSocket sockObj(PF_INET, SOCK_DGRAM);
     ASSERT_NO_THROW(sockObj.init());
 
     // An unbound socket returns the unknown ip address and port 0
@@ -511,11 +523,17 @@ TEST(SocketTestSuite, get_unbound_ipv4_dgram_socket_successful) {
     EXPECT_EQ(sockObj.netaddr(), "0.0.0.0");
     EXPECT_EQ(sockObj.netaddrp(), "0.0.0.0:0");
     EXPECT_EQ(sockObj.get_port(), 0);
-    EXPECT_EQ(sockObj.get_family(), AF_INET);
+    EXPECT_EQ(sockObj.get_family(), PF_INET);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_DGRAM);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
+    // Default IPV6_V6ONLY setting is different on different platforms but
+    // doesn't matter; will be set before binding.
+#ifdef _MSC_VER
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
     EXPECT_FALSE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
@@ -547,7 +565,7 @@ TEST(SocketTestSuite, try_to_instantiate_invalid_sockets) {
 
     EXPECT_THAT(
         []() {
-            CSocket sockObj(AF_INET6, SOCK_RAW);
+            CSocket sockObj(PF_INET6, SOCK_RAW);
             sockObj.init();
         },
         ThrowsMessage<std::invalid_argument>(
@@ -555,7 +573,7 @@ TEST(SocketTestSuite, try_to_instantiate_invalid_sockets) {
 
     EXPECT_THAT(
         []() {
-            CSocket sockObj(AF_INET, 0);
+            CSocket sockObj(PF_INET, 0);
             sockObj.init();
         },
         ThrowsMessage<std::invalid_argument>(
@@ -603,7 +621,7 @@ TEST(SocketTestSuite, instantiate_empty_socket) {
 
 TEST(SocketTestSuite, move_socket_successful) {
     // Provide a socket object
-    CSocket sock1(AF_INET, SOCK_STREAM);
+    CSocket sock1(PF_INET, SOCK_STREAM);
     ASSERT_NO_THROW(sock1.init());
     SOCKET old_fd_sock1 = sock1;
 
@@ -621,27 +639,32 @@ TEST(SocketTestSuite, move_socket_successful) {
     CSocket sock2{std::move(sock1)};
 
     // The socket file descriptor has been moved to the new object.
-    EXPECT_EQ((SOCKET)sock2, old_fd_sock1);
+    EXPECT_EQ(static_cast<SOCKET>(sock2), old_fd_sock1);
     // The old object has now an invalid socket file descriptor.
-    EXPECT_EQ((SOCKET)sock1, INVALID_SOCKET);
+    EXPECT_EQ(static_cast<SOCKET>(sock1), INVALID_SOCKET);
 
     // Tests of socket object (sock1) with INVALID_SOCKET see later test.
     // Check if new socket is valid.
-    EXPECT_EQ(sock2.get_family(), AF_INET);
+    EXPECT_EQ(sock2.get_family(), PF_INET);
     EXPECT_EQ(sock2.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sock2.netaddr(), "0.0.0.0");
     EXPECT_EQ(sock2.netaddrp(), "0.0.0.0:8080");
     EXPECT_EQ(sock2.get_port(), 8080);
     EXPECT_EQ(sock2.get_sockerr(), 0);
     EXPECT_FALSE(sock2.is_reuse_addr());
+    // Default IPV6_V6ONLY setting is different on different platforms.
+#ifdef _MSC_VER
+    EXPECT_TRUE(sock2.is_v6only());
+#else
     EXPECT_FALSE(sock2.is_v6only());
+#endif
     EXPECT_TRUE(sock2.is_bound());
     EXPECT_TRUE(sock2.is_listen());
 }
 
 TEST(SocketTestSuite, assign_socket_successful) {
     // Provide first of two socket objects.
-    CSocket sock1(AF_INET6, SOCK_STREAM);
+    CSocket sock1(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sock1.init());
     SOCKET old_fd_sock1 = sock1;
 
@@ -664,14 +687,14 @@ TEST(SocketTestSuite, assign_socket_successful) {
 
     // Tests of socket object (sock1) with INVALID_SOCKET see later test.
     // Check if new socket is valid.
-    EXPECT_EQ(sock2.get_family(), AF_INET6);
+    EXPECT_EQ(sock2.get_family(), PF_INET6);
     EXPECT_EQ(sock2.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sock2.netaddr(), "[::]");
     EXPECT_EQ(sock2.netaddrp(), "[::]:8080");
     EXPECT_EQ(sock2.get_port(), 8080);
     EXPECT_EQ(sock2.get_sockerr(), 0);
     EXPECT_FALSE(sock2.is_reuse_addr());
-    EXPECT_FALSE(sock2.is_v6only());
+    EXPECT_TRUE(sock2.is_v6only());
     EXPECT_TRUE(sock2.is_bound());
     EXPECT_TRUE(sock2.is_listen());
 }
@@ -689,7 +712,7 @@ TEST(SocketTestSuite, set_wrong_arguments) {
     // Test Unit. Set wrong socket type.
     EXPECT_THAT(
         []() {
-            CSocket sockObj(AF_INET6, -1);
+            CSocket sockObj(PF_INET6, -1);
             sockObj.init();
         },
         ThrowsMessage<std::invalid_argument>(
@@ -697,12 +720,12 @@ TEST(SocketTestSuite, set_wrong_arguments) {
 }
 
 TEST_F(SocketMockFTestSuite, get_socket_fails) {
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     // Inject the mocking objects into the tested code.
     umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
 
     // Mock to get an invalid socket id
-    EXPECT_CALL(m_sys_socketObj, socket(AF_INET6, SOCK_STREAM, 0))
+    EXPECT_CALL(m_sys_socketObj, socket(PF_INET6, SOCK_STREAM, 0))
         .Times(Between(1, 2)) // EXPECT_THAT calls second time if fails
         .WillRepeatedly(SetErrnoAndReturn(EINVALP, INVALID_SOCKET));
 
@@ -714,14 +737,14 @@ TEST_F(SocketMockFTestSuite, get_socket_fails) {
 
 TEST_F(SocketMockFTestSuite, set_option_reuseaddr_fails) {
     // sfd is given to the Unit and it will close it.
-    SOCKET sfd = socket(AF_INET6, SOCK_STREAM, 0);
+    SOCKET sfd = socket(PF_INET6, SOCK_STREAM, 0);
     ASSERT_NE(sfd, INVALID_SOCKET);
 
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
 
     // Mock system function.
-    EXPECT_CALL(m_sys_socketObj, socket(AF_INET6, SOCK_STREAM, 0))
+    EXPECT_CALL(m_sys_socketObj, socket(PF_INET6, SOCK_STREAM, 0))
         .Times(Between(1, 2)) // EXPECT_THAT calls a second time if it fails
         .WillRepeatedly(Return(sfd));
     EXPECT_CALL(m_sys_socketObj,
@@ -738,14 +761,14 @@ TEST_F(SocketMockFTestSuite, set_option_reuseaddr_fails) {
 #ifdef _MSC_VER
 TEST_F(SocketMockFTestSuite, set_win32_option_exl_addr_use_fails) {
     // sfd is given to the Unit and it will close it.
-    SOCKET sfd = socket(AF_INET6, SOCK_STREAM, 0);
+    SOCKET sfd = socket(PF_INET6, SOCK_STREAM, 0);
     ASSERT_NE(sfd, INVALID_SOCKET);
 
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
 
     // Mock system function.
-    EXPECT_CALL(m_sys_socketObj, socket(AF_INET6, SOCK_STREAM, 0))
+    EXPECT_CALL(m_sys_socketObj, socket(PF_INET6, SOCK_STREAM, 0))
         .Times(Between(1, 2)) // EXPECT_THAT calls a second time if it fails
         .WillRepeatedly(Return(sfd));
     EXPECT_CALL(m_sys_socketObj,
@@ -764,42 +787,9 @@ TEST_F(SocketMockFTestSuite, set_win32_option_exl_addr_use_fails) {
 }
 #endif
 
-TEST_F(SocketMockFTestSuite, set_option_ipv6_only_fails) {
-    // sfd is given to the Unit and it will close it.
-    SOCKET sfd = socket(AF_INET6, SOCK_STREAM, 0);
-    ASSERT_NE(sfd, INVALID_SOCKET);
-
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
-    umock::Sys_socket sys_socket_injectObj(&m_sys_socketObj);
-
-    // Mock system function.
-    EXPECT_CALL(m_sys_socketObj, socket(AF_INET6, SOCK_STREAM, 0))
-        .Times(Between(1, 2)) // EXPECT_THAT calls additional time if fails
-        .WillRepeatedly(Return(sfd));
-    EXPECT_CALL(m_sys_socketObj,
-                setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR, _, _))
-        .Times(Between(1, 2)) // EXPECT_THAT calls additional time if fails
-        .WillRepeatedly(Return(0));
-#ifdef _MSC_VER
-    EXPECT_CALL(m_sys_socketObj,
-                setsockopt(sfd, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, _, _))
-        .Times(Between(1, 2)) // EXPECT_THAT calls additional time if fails
-        .WillRepeatedly(Return(0));
-#endif
-    EXPECT_CALL(m_sys_socketObj,
-                setsockopt(sfd, IPPROTO_IPV6, IPV6_V6ONLY, _, _))
-        .Times(Between(1, 2)) // EXPECT_THAT calls additional time if fails
-        .WillRepeatedly(SetErrnoAndReturn(EBADFP, SOCKET_ERROR));
-
-    // Test Unit
-    EXPECT_THAT(
-        [&sockObj]() { sockObj.init(); },
-        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1020: ")));
-}
-
 TEST(SocketTestSuite, get_addr_str_ipv6_successful) {
     // Get a socket and bind it to the local address.
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
@@ -810,7 +800,7 @@ TEST(SocketTestSuite, get_addr_str_ipv6_successful) {
 
 TEST(SocketTestSuite, get_addr_str_ipv4_successful) {
     // Get a socket and bind it to the local address.
-    CSocket sockObj(AF_INET, SOCK_DGRAM);
+    CSocket sockObj(PF_INET, SOCK_DGRAM);
     ASSERT_NO_THROW(sockObj.init());
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
@@ -834,7 +824,7 @@ TEST(SocketTestSuite, get_addr_str_from_invalid_socket) {
 
 TEST(SocketTestSuite, get_addr_str_from_unbound_socket) {
     // Get a valid socket but do not bind it to an address.
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     EXPECT_EQ(sockObj.netaddr(), "[::]");
     EXPECT_EQ(sockObj.netaddrp(), "[::]:0");
@@ -843,7 +833,7 @@ TEST(SocketTestSuite, get_addr_str_from_unbound_socket) {
 
 TEST(SocketTestSuite, get_addr_str_syscall_fail) {
     // Get a socket and bind it to the local address.
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
@@ -870,7 +860,7 @@ TEST(SocketTestSuite, get_addr_str_syscall_fail) {
 
 TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
     // Get a socket and bind it to the local address.
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
@@ -916,14 +906,23 @@ TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
 
 TEST(SocketBindTestSuite, bind_ipv6_successful) {
     // Create an unbound socket object
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
+    // Default IPV6_V6ONLY setting is different on different platforms but
+    // doesn't matter; will be set before binding.
+#ifdef _MSC_VER
+    EXPECT_TRUE(sockObj.is_v6only());
+    // Can be modified with PF_INET6 and before binding
+    EXPECT_NO_THROW(sockObj.set_v6only(false));
     EXPECT_FALSE(sockObj.is_v6only());
-    // Can be modified with AF_INET6 and before binding
+#else
+    EXPECT_FALSE(sockObj.is_v6only());
+    // Can be modified with PF_INET6 and before binding
     EXPECT_NO_THROW(sockObj.set_v6only(true));
     EXPECT_TRUE(sockObj.is_v6only());
     EXPECT_NO_THROW(sockObj.set_v6only(false));
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
 
     // Test Unit.
     // This binds the local address to the socket and sets IPV6_V6ONLY always
@@ -931,50 +930,88 @@ TEST(SocketBindTestSuite, bind_ipv6_successful) {
     ASSERT_NO_THROW(sockObj.bind("[::1]", "8080"));
     EXPECT_TRUE(sockObj.is_v6only());
     EXPECT_NO_THROW(sockObj.set_v6only(false));
+    // v6only is true because it is a socket property that's of domain PF_INET6.
+    EXPECT_TRUE(sockObj.is_v6only());
 
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_family(), PF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sockObj.netaddr(), "[::1]");
     EXPECT_EQ(sockObj.netaddrp(), "[::1]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    // v6only is true because it is a socket property that's of domain AF_INET6.
-    EXPECT_TRUE(sockObj.is_v6only());
     EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
+#ifndef _MSC_VER
 TEST(SocketBindTestSuite, bind_ipv4_successful) {
     // Create an unbound socket object
-    CSocket sockObj(AF_INET, SOCK_STREAM);
+    CSocket sockObj(PF_INET, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
+    // Default setting
     EXPECT_FALSE(sockObj.is_v6only());
-    // Cannot be set on AF_INET
+    // Cannot be set on PF_INET
     EXPECT_NO_THROW(sockObj.set_v6only(true));
     EXPECT_FALSE(sockObj.is_v6only());
 
     // Test Unit.
     // This binds the local address to the socket.
     ASSERT_NO_THROW(sockObj.bind("127.0.0.1", "8080"));
+    EXPECT_FALSE(sockObj.is_v6only());
     // Can never be set after binding
     EXPECT_NO_THROW(sockObj.set_v6only(true));
+    EXPECT_FALSE(sockObj.is_v6only());
 
-    EXPECT_EQ(sockObj.get_family(), AF_INET);
+    EXPECT_EQ(sockObj.get_family(), PF_INET);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sockObj.netaddr(), "127.0.0.1");
     EXPECT_EQ(sockObj.netaddrp(), "127.0.0.1:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    // v6only is false because it is a socket property that's of domain AF_INET.
-    EXPECT_FALSE(sockObj.is_v6only());
     EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
-TEST_F(SocketMockFTestSuite, bind_set_v6only_fails) {
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+#else // bind on win32
+TEST(SocketBindTestSuite, bind_ipv4_successful) {
+    // On win32 option IPV6_V6ONLY is set by default and can never be modified
+    // when using PF_INET. This is also accepted by bind and means that you
+    // find an IPv4 socket with IPV6_V6ONLY option set, that doesn't make
+    // sense. I think win32 ignores the option in this case.
+
+    // Create an unbound socket object
+    CSocket sockObj(PF_INET, SOCK_STREAM);
+    ASSERT_NO_THROW(sockObj.init());
+    // Default setting
+    EXPECT_TRUE(sockObj.is_v6only());
+    // Option cannot be modified
+    EXPECT_NO_THROW(sockObj.set_v6only(false));
+    EXPECT_TRUE(sockObj.is_v6only());
+
+    // Test Unit.
+    // This binds the local address to the socket.
+    ASSERT_NO_THROW(sockObj.bind("127.0.0.1", "8080"));
+    EXPECT_TRUE(sockObj.is_v6only()); // Doesn't make sense
+    // Can never be mondified after binding
+    EXPECT_NO_THROW(sockObj.set_v6only(false));
+    EXPECT_TRUE(sockObj.is_v6only());
+
+    EXPECT_EQ(sockObj.get_family(), PF_INET);
+    EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
+    EXPECT_EQ(sockObj.netaddr(), "127.0.0.1");
+    EXPECT_EQ(sockObj.netaddrp(), "127.0.0.1:8080");
+    EXPECT_EQ(sockObj.get_port(), 8080);
+    EXPECT_EQ(sockObj.get_sockerr(), 0);
+    EXPECT_FALSE(sockObj.is_reuse_addr());
+    EXPECT_TRUE(sockObj.is_bound());
+    EXPECT_FALSE(sockObj.is_listen());
+}
+#endif
+
+TEST_F(SocketMockFTestSuite, v6only_set_with_bind_fails) {
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     SOCKET sfd = sockObj;
 
@@ -1009,20 +1046,20 @@ TEST_F(SocketMockFTestSuite, bind_set_v6only_fails) {
 TEST(SocketBindTestSuite, bind_to_next_free_port_successful) {
     // With empty service the operating system returns next free port number.
     // Create an unbound socket object
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
 
     // Test Unit.
     ASSERT_NO_THROW(sockObj.bind("[::1]", ""));
 
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_family(), PF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sockObj.netaddr(), "[::1]");
     // Next free port number but never 0.
     EXPECT_GT(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    // v6only is true because it is a socket property that's of domain AF_INET6.
+    // v6only is true because it is a socket property that's of domain PF_INET6.
     EXPECT_TRUE(sockObj.is_v6only());
     EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
@@ -1030,14 +1067,14 @@ TEST(SocketBindTestSuite, bind_to_next_free_port_successful) {
 
 TEST(SocketBindTestSuite, bind_only_service_passive_successful) {
     // Create an unbind socket object.
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     sockObj.set_v6only(false);
 
     // Test Unit.
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_family(), PF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     // With AI_PASSIVE setting (for listening) the presented address is the
     // unknown address. When using this to listen, it will listen on all local
@@ -1049,21 +1086,21 @@ TEST(SocketBindTestSuite, bind_only_service_passive_successful) {
     EXPECT_FALSE(sockObj.is_reuse_addr());
     // With passive mode the preset IPV6_V6ONLY value isn't modified by the
     // operating system.
-    EXPECT_FALSE(sockObj.is_v6only());
+    EXPECT_TRUE(sockObj.is_v6only());
     EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
 TEST(SocketBindTestSuite, bind_only_service_not_passive_successful) {
     // Create an unbind socket object.
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     sockObj.set_v6only(false);
 
     // Test Unit.
     ASSERT_NO_THROW(sockObj.bind("", "8080"));
 
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_family(), PF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     // With empty node the loopback address is selected.
     EXPECT_EQ(sockObj.netaddr(), "[::1]");
@@ -1071,7 +1108,7 @@ TEST(SocketBindTestSuite, bind_only_service_not_passive_successful) {
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    // v6only is always set true with AF_INET6 and active mode (AI_PASSIVE not
+    // v6only is always set true with PF_INET6 and active mode (AI_PASSIVE not
     // set).
     EXPECT_TRUE(sockObj.is_v6only());
     EXPECT_TRUE(sockObj.is_bound());
@@ -1092,7 +1129,7 @@ TEST(SocketBindTestSuite, bind_two_times_different_addresses_fail) {
     // Binding a socket two times isn't possible. The socket must be
     // shutdown/closed before bind it again.
     // Provide a socket object
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
 
     // Test Unit.
@@ -1101,11 +1138,11 @@ TEST(SocketBindTestSuite, bind_two_times_different_addresses_fail) {
     // Try to bind the socket a second time to another address.
     EXPECT_THAT(
         ([&sockObj]() { sockObj.bind("", "8081", AI_PASSIVE); }),
-        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1008: ")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1007: ")));
 }
 
 TEST_F(SocketMockFTestSuite, bind_to_address_fails) {
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     SOCKET sfd = sockObj;
 
@@ -1168,7 +1205,7 @@ TEST(SocketBindTestSuite, check_binding_passive_all_free_ports) {
     std::cout << "DEBUG\! start port = " << port << "\n";
     for (; port < 65535; port++) {
         CSocket sockObj;
-        sockObj.init(AF_INET6, SOCK_STREAM);
+        sockObj.init(PF_INET6, SOCK_STREAM);
         try {
             sockObj.bind("", std::to_string(port), AI_PASSIVE);
         } catch (const std::runtime_error& e) {
@@ -1193,7 +1230,7 @@ TEST(SocketBindTestSuite, set_unset_bind_win32_same_address_multiple_times) {
 
     // Test Unit
     for (int i{0}; i < 2; i++) {
-        CSocket sockObj(AF_INET6, SOCK_STREAM);
+        CSocket sockObj(PF_INET6, SOCK_STREAM);
         ASSERT_NO_THROW(sockObj.init());
         try {
             sockObj.bind("", std::to_string(port), AI_PASSIVE);
@@ -1207,7 +1244,7 @@ TEST(SocketBindTestSuite, set_unset_bind_win32_same_address_multiple_times) {
     }
 
     // std::cout << "DEBUG\! Success port " << port << "\n";
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     ASSERT_NO_THROW(sockObj.bind("", std::to_string(port), AI_PASSIVE));
 }
@@ -1220,16 +1257,16 @@ TEST(SocketBindTestSuite, set_unset_bind_unix_same_address_multiple_times) {
 
     // Test Unit
     {
-        CSocket sockObj(AF_INET6, SOCK_STREAM);
+        CSocket sockObj(PF_INET6, SOCK_STREAM);
         ASSERT_NO_THROW(sockObj.init());
         ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
     }
     {
-        CSocket sockObj(AF_INET6, SOCK_STREAM);
+        CSocket sockObj(PF_INET6, SOCK_STREAM);
         ASSERT_NO_THROW(sockObj.init());
         ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
     }
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 }
@@ -1237,14 +1274,14 @@ TEST(SocketBindTestSuite, set_unset_bind_unix_same_address_multiple_times) {
 
 TEST(SocketBindTestSuite, bind_same_address_fails) {
     // Test Unit
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
     // Doing the same again will fail.
     EXPECT_THAT(
         [&sockObj]() { sockObj.bind("", "8080", AI_PASSIVE); },
-        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1008: ")));
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1007: ")));
 }
 
 TEST(SocketBindTestSuite, listen_to_same_address_multiple_times) {
@@ -1252,7 +1289,7 @@ TEST(SocketBindTestSuite, listen_to_same_address_multiple_times) {
     // do nothing.
 
     // Test Unit
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
     ASSERT_NO_THROW(sockObj.listen());
@@ -1261,7 +1298,7 @@ TEST(SocketBindTestSuite, listen_to_same_address_multiple_times) {
 }
 
 TEST_F(SocketMockFTestSuite, listen_fails) {
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     SOCKET sfd = sockObj;
 
@@ -1278,13 +1315,12 @@ TEST_F(SocketMockFTestSuite, listen_fails) {
         ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1034: ")));
 }
 
-TEST(SocketV6onlyTestSuite, modify_v6only_af_inet6_stream_successful) {
+TEST(SocketV6onlyTestSuite, v6only_modify_pf_inet6_stream_successful) {
     // Get socket
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
-    EXPECT_FALSE(sockObj.is_v6only());
 
-    // Set option IPV6_V6ONLY. Of course this can only be done with AF_INET6 on
+    // Set option IPV6_V6ONLY. Of course this can only be done with PF_INET6 on
     // an unbound socket.
     // Test Unit
     ASSERT_NO_THROW(sockObj.set_v6only(true));
@@ -1293,12 +1329,12 @@ TEST(SocketV6onlyTestSuite, modify_v6only_af_inet6_stream_successful) {
     EXPECT_FALSE(sockObj.is_v6only());
 }
 
-TEST_F(SocketMockFTestSuite, modify_v6only_fails) {
+TEST_F(SocketMockFTestSuite, v6only_modify_fails) {
     // Try to set option IPV6_V6ONLY. Of course this can only be done with
-    // AF_INET6 on an unbound socket.
+    // PF_INET6 on an unbound socket.
 
     // Get socket
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
     SOCKET sfd = sockObj;
 
@@ -1327,13 +1363,20 @@ TEST_F(SocketMockFTestSuite, modify_v6only_fails) {
         ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1006: ")));
 }
 
-TEST(SocketV6onlyTestSuite, modify_v6only_af_inet6_dgram) {
-    // With AF_INET6 and SOCK_DGRAM the flag IP6_V6ONLY can be modified.
+TEST(SocketV6onlyTestSuite, v6only_af_inet6_dgram) {
+    // With PF_INET6 and SOCK_DGRAM the flag IP6_V6ONLY can be modified.
 
     // Get socket
-    CSocket sockObj(AF_INET6, SOCK_DGRAM);
+    CSocket sockObj(PF_INET6, SOCK_DGRAM);
     ASSERT_NO_THROW(sockObj.init());
+    // Default IPV6_V6ONLY setting is different on different platforms but
+    // doesn't matter; will be set before binding.
+#ifdef _MSC_VER
+    EXPECT_TRUE(sockObj.is_v6only());
+    ASSERT_NO_THROW(sockObj.set_v6only(false));
+#else
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
 
     // Set option IPV6_V6ONLY. This is always ignored.
     // Test Unit
@@ -1341,44 +1384,64 @@ TEST(SocketV6onlyTestSuite, modify_v6only_af_inet6_dgram) {
     EXPECT_TRUE(sockObj.is_v6only());
 }
 
-TEST(SocketV6onlyTestSuite, modify_v6only_af_inet_stream) {
-    // With AF_INET the flag IP6_V6ONLY can not be modified, no matter what type
-    // is used (e.g. SOCK_STREAM).
+TEST(SocketV6onlyTestSuite, v6only_af_inet_stream) {
+    // With PF_INET the default setting of flag IP6_V6ONLY can not be modified.
 
     // Get socket
-    CSocket sockObj(AF_INET, SOCK_STREAM);
+    CSocket sockObj(PF_INET, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
-    EXPECT_FALSE(sockObj.is_v6only());
 
-    // Test Unit
-    // Set option IPV6_V6ONLY. This is always ignored.
-    ASSERT_NO_THROW(sockObj.set_v6only(true));
+#ifdef _MSC_VER
+    // Default setting
+    EXPECT_TRUE(sockObj.is_v6only());
+    EXPECT_NO_THROW(sockObj.set_v6only(false));
+    // But cannot be modified with PF_INET
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
+    // Default setting
     EXPECT_FALSE(sockObj.is_v6only());
+    EXPECT_NO_THROW(sockObj.set_v6only(true));
+    // But cannot be modified with PF_INET
+    EXPECT_FALSE(sockObj.is_v6only());
+#endif
 }
 
-TEST(SocketV6onlyTestSuite, modify_v6only_af_inet_dgram) {
-    // With AF_INET the flag IP6_V6ONLY can not be modified, no matter what type
-    // is used (e.g. SOCK_DGRAM).
+TEST(SocketV6onlyTestSuite, v6only_af_inet_dgram) {
+    // With PF_INET the default setting of flag IP6_V6ONLY can not be modified.
 
     // Get socket
-    CSocket sockObj(AF_INET, SOCK_DGRAM);
+    CSocket sockObj(PF_INET, SOCK_DGRAM);
     ASSERT_NO_THROW(sockObj.init());
-    EXPECT_FALSE(sockObj.is_v6only());
 
-    // Set option IPV6_V6ONLY. This is always ignored.
-    // Test Unit
-    ASSERT_NO_THROW(sockObj.set_v6only(true));
+#ifdef _MSC_VER
+    // Default setting
+    EXPECT_TRUE(sockObj.is_v6only());
+    EXPECT_NO_THROW(sockObj.set_v6only(false));
+    // But cannot be modified with PF_INET
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
+    // Default setting
     EXPECT_FALSE(sockObj.is_v6only());
+    EXPECT_NO_THROW(sockObj.set_v6only(true));
+    // But cannot be modified with PF_INET
+    EXPECT_FALSE(sockObj.is_v6only());
+#endif
 }
 
-TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet6_stream_socket) {
+TEST(SocketV6onlyTestSuite, v6only_on_bound_af_inet6_stream_socket) {
     // Create an unbound socket object
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
+    // Default IPV6_V6ONLY setting is different on different platforms but
+    // doesn't matter; will be set before binding.
+#ifdef _MSC_VER
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
 
     // This binds the local address to the socket and always sets ipv6_v6only
-    // because we bind to an AF_INET6 address/socket.
+    // because we bind to an PF_INET6 protocol/socket.
     ASSERT_NO_THROW(sockObj.bind("[::1]", "8080"));
     EXPECT_TRUE(sockObj.is_v6only());
 
@@ -1386,27 +1449,32 @@ TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet6_stream_socket) {
     EXPECT_NO_THROW(sockObj.set_v6only(false));
 
     // Nothing has changed, the socket is valid.
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_family(), PF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sockObj.netaddr(), "[::1]");
     EXPECT_EQ(sockObj.netaddrp(), "[::1]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    // Not set to false because the socket is already bound to an AF_INET6.
+    // Not set to false because the socket is already bound to an PF_INET6.
     EXPECT_TRUE(sockObj.is_v6only());
     EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
-TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet6_dgram_socket) {
+TEST(SocketV6onlyTestSuite, v6only_on_bound_af_inet6_dgram_socket) {
     // Create an unbound socket object
-    CSocket sockObj(AF_INET6, SOCK_DGRAM);
+    CSocket sockObj(PF_INET6, SOCK_DGRAM);
     ASSERT_NO_THROW(sockObj.init());
+    // Default IPV6_V6ONLY setting is different on different platforms.
+#ifdef _MSC_VER
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
 
     // This binds the local address to the socket and always sets ipv6_v6only
-    // because we bind to an AF_INET6 address/socket.
+    // because we bind to an PF_INET6 protocol/socket.
     ASSERT_NO_THROW(sockObj.bind("[::1]", "8080"));
     EXPECT_TRUE(sockObj.is_v6only());
 
@@ -1414,170 +1482,225 @@ TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet6_dgram_socket) {
     EXPECT_NO_THROW(sockObj.set_v6only(false));
 
     // Nothing has changed, the socket is valid.
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_family(), PF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_DGRAM);
     EXPECT_EQ(sockObj.netaddr(), "[::1]");
     EXPECT_EQ(sockObj.netaddrp(), "[::1]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    // Not set to false because the socket is already bound to an AF_INET6.
+    // Not set to false because the socket is already bound to an PF_INET6.
     EXPECT_TRUE(sockObj.is_v6only());
     EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
-TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet_stream_socket) {
-    // Create an unbound socket object
-    CSocket sockObj(AF_INET, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
-    EXPECT_FALSE(sockObj.is_v6only());
+TEST(SocketV6onlyTestSuite, v6only_on_bound_pf_inet_stream_socket) {
+    // The IPV6_V6ONLY option isn't touched with binding to PF_INET. The
+    // default setting of the platform was retained.
 
-    // This binds the local address to the socket and never sets ipv6_v6only
-    // because we bind to an AF_INET address/socket.
-    ASSERT_NO_THROW(sockObj.bind("127.0.0.1", "8080"));
+    // Create an unbound socket object
+    CSocket sockObj(PF_INET, SOCK_STREAM);
+    ASSERT_NO_THROW(sockObj.init());
+    // Default IPV6_V6ONLY setting is different on different platforms.
+#ifdef _MSC_VER
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
+
+    // This binds the local address to the socket and never modify ipv6_v6only
+    // because we bind to an PF_INET protocol/socket.
+    ASSERT_NO_THROW(sockObj.bind("127.0.0.1", "8080"));
+#ifdef _MSC_VER
+    // The default setting hasn't changed but should be ignored by the
+    // operating system with PF_INET.
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
+    EXPECT_FALSE(sockObj.is_v6only());
+#endif
 
     // Test Unit
     // This is silently ignored.
     EXPECT_NO_THROW(sockObj.set_v6only(true));
 
     // Nothing has changed, the socket is valid.
-    EXPECT_EQ(sockObj.get_family(), AF_INET);
+    EXPECT_EQ(sockObj.get_family(), PF_INET);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sockObj.netaddr(), "127.0.0.1");
     EXPECT_EQ(sockObj.netaddrp(), "127.0.0.1:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    // Never set to true because it is an AF_INET socket.
-    EXPECT_FALSE(sockObj.is_v6only());
     EXPECT_TRUE(sockObj.is_bound());
-    EXPECT_FALSE(sockObj.is_listen());
+#ifdef _MSC_VER
+    // The default setting hasn't changed but should be ignored by the
+    // operating system with PF_INET.
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
+    EXPECT_FALSE(sockObj.is_v6only());
+#endif
 }
 
-TEST(SocketV6onlyTestSuite, modify_v6only_on_bound_af_inet_dgram_socket) {
+TEST(SocketV6onlyTestSuite, v6only_on_bound_af_inet_dgram_socket) {
     // Create an unbound socket object
-    CSocket sockObj(AF_INET, SOCK_DGRAM);
+    CSocket sockObj(PF_INET, SOCK_DGRAM);
     ASSERT_NO_THROW(sockObj.init());
+    // Default IPV6_V6ONLY setting is different on different platforms but
+    // doesn't matter; will be set before binding.
+#ifdef _MSC_VER
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
 
-    // This binds the local address to the socket and never sets ipv6_v6only
-    // because we bind to an AF_INET address/socket.
+    // This binds the local address to the socket but doesn't touch default
+    // ipv6_v6only because we bind to an PF_INET protocol/socket.
     ASSERT_NO_THROW(sockObj.bind("127.0.0.1", "8080"));
+#ifdef _MSC_VER
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
 
     // Test Unit
     // This is silently ignored.
     EXPECT_NO_THROW(sockObj.set_v6only(true));
 
     // Nothing has changed, the socket is valid.
-    EXPECT_EQ(sockObj.get_family(), AF_INET);
+    EXPECT_EQ(sockObj.get_family(), PF_INET);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_DGRAM);
     EXPECT_EQ(sockObj.netaddr(), "127.0.0.1");
     EXPECT_EQ(sockObj.netaddrp(), "127.0.0.1:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    // Never set to true because it is an AF_INET socket.
+    // Setting should be ignored by the operating system with PF_INET.
+#ifdef _MSC_VER
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
     EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
-TEST(SocketV6onlyTestSuite, unset_v6only_on_passive_af_inet6_stream_socket) {
+TEST(SocketV6onlyTestSuite, v6only_default_on_passive_af_inet6_stream_socket) {
     // Create an unbound socket object
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
+    // Default IPV6_V6ONLY setting is different on different platforms but
+    // doesn't matter; will be set before binding.
+#ifdef _MSC_VER
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
 
     // Test Unit
-    // This binds the local address to the socket but does not modify
-    // IPV6_V6ONLY because we bind to a passive AF_INET6 address/socket.
+    // This binds the local address to the socket. It sets IPV6_V6ONLY by
+    // default with PF_INET6 before binding.
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
-    // Even with AF_INET6 the flag is still unset.
-    EXPECT_FALSE(sockObj.is_v6only());
+    EXPECT_TRUE(sockObj.is_v6only());
 
-    // It cannot be set afer binding.
-    EXPECT_NO_THROW(sockObj.set_v6only(true));
+    // It cannot be modified after binding.
+    EXPECT_NO_THROW(sockObj.set_v6only(false));
+    EXPECT_TRUE(sockObj.is_v6only());
 
     // Nothing has changed, the socket is valid.
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_family(), PF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sockObj.netaddr(), "[::]");
     EXPECT_EQ(sockObj.netaddrp(), "[::]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    // Not set to true because the socket is already bound to an AF_INET6
-    // address.
-    EXPECT_FALSE(sockObj.is_v6only());
     EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
-TEST(SocketV6onlyTestSuite, set_v6only_on_passive_af_inet6_stream_socket) {
+TEST(SocketV6onlyTestSuite, v6only_unset_on_passive_af_inet6_stream_socket) {
     // Create an unbound socket object
-    CSocket sockObj(AF_INET6, SOCK_STREAM);
+    CSocket sockObj(PF_INET6, SOCK_STREAM);
     ASSERT_NO_THROW(sockObj.init());
+    // Default IPV6_V6ONLY setting is different on different platforms but
+    // doesn't matter; will be set before binding.
+#ifdef _MSC_VER
+    EXPECT_TRUE(sockObj.is_v6only());
+    EXPECT_NO_THROW(sockObj.set_v6only(false));
+#endif
     EXPECT_FALSE(sockObj.is_v6only());
 
-    EXPECT_NO_THROW(sockObj.set_v6only(true));
-    EXPECT_TRUE(sockObj.is_v6only());
-
     // Test Unit
-    // This binds the local address to the socket but does not modify
-    // IPV6_V6ONLY because we bind to a passive AF_INET6 address/socket.
+    // This binds the local address to the socket. It sets IPV6_V6ONLY by
+    // default with PF_INET6 before binding.
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
     EXPECT_TRUE(sockObj.is_v6only());
 
     // It cannot be modified afer binding.
     EXPECT_NO_THROW(sockObj.set_v6only(false));
+    EXPECT_TRUE(sockObj.is_v6only());
 
     // Nothing has changed, the socket is valid.
-    EXPECT_EQ(sockObj.get_family(), AF_INET6);
+    EXPECT_EQ(sockObj.get_family(), PF_INET6);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
     EXPECT_EQ(sockObj.netaddr(), "[::]");
     EXPECT_EQ(sockObj.netaddrp(), "[::]:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    // Not set to false because the socket is already bound.
-    EXPECT_TRUE(sockObj.is_v6only());
     EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }
 
-TEST(SocketV6onlyTestSuite, modify_v6only_on_passive_af_inet_dgram_socket) {
+TEST(SocketV6onlyTestSuite, v6only_on_passive_af_inet_dgram_socket) {
     // Create an unbound socket object
-    CSocket sockObj(AF_INET, SOCK_DGRAM);
+    CSocket sockObj(PF_INET, SOCK_DGRAM);
     ASSERT_NO_THROW(sockObj.init());
+#ifdef _MSC_VER
+    // This is set on win32 by default but should not matter with PF_INET.
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
 
-    // v6only can never be set on an address family AF_INET.
+    // v6only can never be set on a protocol family PF_INET.
     EXPECT_NO_THROW(sockObj.set_v6only(true));
+#ifdef _MSC_VER
+    // This is set on win32 by default but should not matter with PF_INET.
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
 
     // Test Unit
     // This binds the local address to the socket and always resets ipv6_v6only
-    // even with passive mode because we bind to an AF_INET address/socket.
+    // even with passive mode because we bind to an PF_INET protocol/socket.
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
+#ifdef _MSC_VER
+    // This is set on win32 by default but should not matter with PF_INET.
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
 
     // It cannot be set afer binding.
     EXPECT_NO_THROW(sockObj.set_v6only(true));
 
     // Nothing has changed, the socket is valid.
-    EXPECT_EQ(sockObj.get_family(), AF_INET);
+    EXPECT_EQ(sockObj.get_family(), PF_INET);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_DGRAM);
     EXPECT_EQ(sockObj.netaddr(), "0.0.0.0");
     EXPECT_EQ(sockObj.netaddrp(), "0.0.0.0:8080");
     EXPECT_EQ(sockObj.get_port(), 8080);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
     EXPECT_FALSE(sockObj.is_reuse_addr());
-    // Not set to true because the socket is already bound to an AF_INET
-    // address.
+#ifdef _MSC_VER
+    // This is set on win32 by default but should not matter with PF_INET.
+    EXPECT_TRUE(sockObj.is_v6only());
+#else
     EXPECT_FALSE(sockObj.is_v6only());
+#endif
     EXPECT_TRUE(sockObj.is_bound());
     EXPECT_FALSE(sockObj.is_listen());
 }

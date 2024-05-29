@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-19
+// Redistribution only with this Copyright remark. Last modified: 2024-06-02
 
 /*!
 \page Glossary
@@ -124,7 +124,7 @@ Logical functional unit. Smallest units of control. Exposes actions and models t
 
 \anchor glossary_sock ***socket***
 
-If nothing others said, with socket I mean a network socket. It is an endpoint for a network communication as given by the POSIX specification and in the library it is an object. One of its properties is either `AF_INET6` or `AF_INET` or `AF_UNSPEC` (if unbound). Other types are not supported. A free socket will bind to the ip address of a local network interface and must have the same socket type `SOCK_STREAM` or `SOCK_DGRAM` as given by the [connection](\ref glossary_conn) it will be get part of. A local socket can be managed with objects from SSockaddr, a remote socket can be managed with objects from CAddrinfo.
+If nothing others said, with socket I mean a network socket. It is an endpoint for a network communication as given by the POSIX specification and in the library it is an object. One of its properties is a protocol family either `PF_INET6` or `PF_INET` or `PF_UNSPEC` (if unbound). Other types are not supported. A free socket will bind to the ip address of a local network interface and must have the same socket type `SOCK_STREAM` or `SOCK_DGRAM` as given by the [connection](\ref glossary_conn) it will be get part of. A socket must have only one of these two types and is mainly instantiated with information from CAddrinfo.
 
 \anchor glossary_saddr ***socket address, sockaddr***
 

@@ -144,6 +144,7 @@ MATCHER_P(ContainsStdRegex, pattern, "") {
 // Void pointer must be type casted
 // --------------------------------
 MATCHER_P(PointeeVoidToConstInt, expected, "") {
+    static_cast<void>(*result_listener); // To suppress warning "unused param"
     return *static_cast<const int*>(arg) == expected;
 }
 

@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-24
+// Redistribution only with this Copyright remark. Last modified: 2024-06-01
 /*!
  * \file
  * \brief **Socket Module:** manage properties and methods but not connections
@@ -42,10 +42,10 @@
  * throws an exception if using any of its Setter and Getter. Moving and
  * assigning it is possible.
  *
- * address family
- * --------------
- * Only address family `AF_INET6` and `AF_INET` is supported. Any other address
- * family throws an exception.
+ * protocol family
+ * ---------------
+ * Only protocol family `PF_INET6` and `PF_INET` is supported. Any other
+ * address family throws an exception.
  *
  * socket type
  * -----------
@@ -145,7 +145,7 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
     /*! \brief Initialize a given raw socket file descriptor to the object
      * \code
      * // Usage e.g.:
-     * SOCKET sfd = ::socket(AF_INET6, SOCK_STREAM);
+     * SOCKET sfd = ::socket(PF_INET6, SOCK_STREAM);
      * {   // Scope for sockObj, sfd must longer exist than sockObj
      *     CSocket_basic sockObj(sfd);
      *     try {
@@ -246,7 +246,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
     CSocket();
 
     /// \brief Constructor for a new socket file descriptor that must be init()
-    CSocket(sa_family_t a_family, /*!<  [in] AF_INET6 or AF_INET. AF_UNSPEC is
+    CSocket(sa_family_t a_family, /*!<  [in] PF_INET6 or PF_INET. PF_UNSPEC is
                                              not accepted */
             int a_socktype /*!<         [in] SOCK_STREAM or SOCK_DGRAM */);
 
@@ -260,7 +260,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * to it again.
      * \code
      * // Usage e.g.:
-     * CSocket sock1Obj(AF_INET6, SOCK_STREAM);
+     * CSocket sock1Obj(PF_INET6, SOCK_STREAM);
      * try {
      *     sock1Obj.init();
      * } catch(xcp) { // handle error }
@@ -281,7 +281,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * throw exceptions.
      * \code
      * // Usage e.g.:
-     * CSocket sock1Obj(AF_INET6, SOCK_STREAM);
+     * CSocket sock1Obj(PF_INET6, SOCK_STREAM);
      * try {
      *     sock1Obj.init();
      * } catch(xcp) { // handle error }
@@ -300,7 +300,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
     /*! \brief Initialize the object with the hints given by the constructor
      * \code
      * // Usage e.g.:
-     * CSocket sockObj(AF_INET6, SOCK_STREAM);
+     * CSocket sockObj(PF_INET6, SOCK_STREAM);
      * try {
      *     sockObj.init();
      * } catch(xcp) { handle_error(); }
@@ -308,22 +308,27 @@ class UPNPLIB_API CSocket : public CSocket_basic {
     void init();
 
     /*! \brief Set IPV6_V6ONLY
-     * - IPV6_V6ONLY = false means allowing IPv4 and IPv6 on one interface.
-     * - This flag can only be set on sockets of address family AF_INET6.
-     * - It is always false on a socket with address family AF_INET.
-     * - It can never be modified on a sochet that is already bound to a local
-     *   address.
-     * - If Flag AI_PASSIVE **is** set (passive mode for listening on local
-     *   addresses): IPV6_V6ONLY can be modified before binding it to an
-     *   address. The setting persists after bind(). This means the socket can
-     *   listen to IPv6 and IPv4 connections if IPV6_V6ONLY is set to false.
-     * - If Flag AI_PASSIVE **not** set (passive mode isn't set): IPV6_V6ONLY
-     *   will always be set to true no matter what it should be set. More
-     *   details at note to bind().
+     * - IPV6_V6ONLY = **true**: the socket is restricted to sending and
+     *   receiving IPv6 packets only. In this case, an IPv4 and an IPv6
+     *   application can bind to a single port at the same time.
+     * - IPV6_V6ONLY = **false**: the socket can be used to send and receive
+     *   packets to and from an IPv6 address or an IPv4-mapped IPv6 address.
+     * - Bind a socket for PF_INET6 to a local address will always set its
+     *   option IPV6_V6ONLY.
+     * - On Unix platforms IPV6_V6ONLY is false by default and cannot be
+     *   modified on sockets for PF_INET. Binding this to a local address
+     *   results in a IPv4 socket with IPV6_V6ONLY **unset**.
+     * - On Microsoft Windows IPV6_V6ONLY is true by default and cannot be
+     *   modified on sockets for PF_INET. Binding it to a local address results
+     *   in a IPv4 socket with IPV6_V6ONLY **set**. This does not make sense
+     *   and I assume that the option is ignored by the underlaying ip stack in
+     *   this case.
+     * - The option IPV6_V6ONLY can never be modified on a sochet that is
+     *   already bound to a local address.
      *
-     * If one of the conditions above doesn't match, the setter silently
-     * ignores the request and will not modify the socket. Other system errors
-     * may throw an exception (e.g. using an invalid socket etc.).
+     * If the setter cannot fulfill the request it silently ignores it and does
+     * not modify the socket. Other system errors may throw an exception (e.g.
+     * using an invalid socket etc.).
      *
      * To get the current setting use CSocket::is_v6only(). */
     void set_v6only(const bool);
@@ -331,15 +336,18 @@ class UPNPLIB_API CSocket : public CSocket_basic {
     /*! \brief Bind socket to a local interface address
      * \code
      * // Usage e.g.:
-     * CSocket sockObj(AF_INET6, SOCK_STREAM);
+     * CSocket sockObj(PF_INET6, SOCK_STREAM);
      * try {
      *     sockObj.init();
      *     sockObj.bind("[::1]", "8080");
      * } catch(xcp) { // handle error }
      * \endcode
      *
-     * If the AI_PASSIVE flag is specified, and **a_node** is empty (""), then
-     * the selected local socket addresses will be suitable for **binding** a
+     * This method uses internally the system function <a
+     * href="https://www.man7.org/linux/man-pages/man3/getaddrinfo.3.html">::%getaddrinfo()</a>
+     * to provide possible local socket addresses. If the AI_PASSIVE flag is
+     * specified with **a_flags**, and **a_node** is empty (""), then the
+     * selected local socket addresses will be suitable for **binding** a
      * socket that will **accept** connections. The selected local socket
      * address will contain the "wildcard address" (INADDR_ANY for IPv4
      * addresses, IN6ADDR_ANY_INIT for IPv6 address). The wildcard address is
@@ -364,17 +372,11 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * sockObj.bind("", "51593"); // uses "[::1]:51593" or "127.0.0.1:51593"
      * \endcode
      *
-     * There is additional information at <a
-     * href="https://www.man7.org/linux/man-pages/man3/getaddrinfo.3.html">getaddrinfo(3)
-     * — Linux manual page</a>.
-     *
-     * With address family AF_INET6 and not passive mode (**a_flags** not set
-     * to AI_PASSIVE) I internally always set IPV6_V6ONLY to true no matter
-     * what is given with **a_flags**. This is the behavior on Unix platforms
-     * when binding the address and cannot be modified. MacOS does not modify
-     * IPV6_V6ONLY with binding. On Microsoft Windows IPV6_V6ONLY is already
-     * set by default. To be portable with same behavior on all platforms I
-     * always set IPV6_V6ONLY before binding and cannot be modified afterwards.
+     * With protocol family PF_INET6 I internally always set IPV6_V6ONLY to
+     * true to be portable with same behavior on all platforms. This is default
+     * on Unix platforms when binding the address and cannot be modified. MacOS
+     * does not modify IPV6_V6ONLY with binding. On Microsoft Windows
+     * IPV6_V6ONLY is already set by default.
      *
      * There is additional information at set_v6only() */
     void bind(
@@ -418,8 +420,8 @@ class UPNPLIB_API CSocket : public CSocket_basic {
     /// @} Getter
 
   private:
-    /// \brief Address family to use
-    const sa_family_t m_af_hint{AF_UNSPEC};
+    /// \brief Protocol family to use
+    const sa_family_t m_pf_hint{PF_UNSPEC};
 
     /// \brief Socket type to use
     const int m_socktype_hint{};

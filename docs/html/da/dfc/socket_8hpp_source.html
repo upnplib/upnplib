@@ -103,7 +103,7 @@ $(document).ready(function(){initNavTree('da/dfc/socket_8hpp_source.html','../..
 <a href="../../da/dfc/socket_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef UPNPLIB_SOCKET_HPP</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define UPNPLIB_SOCKET_HPP</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, &lt;Ingo@Hoeft-online.de&gt;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// Redistribution only with this Copyright remark. Last modified: 2024-05-24</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// Redistribution only with this Copyright remark. Last modified: 2024-06-01</span></div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#include &lt;<a class="code" href="../../d7/d1b/sockaddr_8hpp.html">upnplib/sockaddr.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#include &lt;mutex&gt;</span></div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
@@ -200,111 +200,111 @@ $(document).ready(function(){initNavTree('da/dfc/socket_8hpp_source.html','../..
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>    <span class="keywordtype">void</span> init();</div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span> </div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    <span class="keywordtype">void</span> set_v6only(<span class="keyword">const</span> <span class="keywordtype">bool</span>);</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span> </div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    <span class="keywordtype">void</span> bind(</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>        <span class="keyword">const</span> std::string&amp; a_node,</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>        <span class="keyword">const</span> std::string&amp; a_port,</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>        <span class="keyword">const</span> <span class="keywordtype">int</span> a_flags = 0);</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span> </div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    <span class="keywordtype">void</span> listen();</div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span> </div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span> </div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    <span class="keywordtype">bool</span> is_v6only() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span> </div>
-<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    <span class="keywordtype">bool</span> is_listen() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span> </div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>    <span class="keyword">const</span> sa_family_t m_af_hint{AF_UNSPEC};</div>
-<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span> </div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> m_socktype_hint{};</div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span> </div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>    SUPPRESS_MSVC_WARN_4251_NEXT_LINE</div>
-<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>    <span class="keyword">mutable</span> std::mutex m_listen_mutex;</div>
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>    <span class="keywordtype">bool</span> m_listen{<span class="keyword">false</span>}; <span class="comment">// Protected by a mutex.</span></div>
-<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>};</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>    <span class="keywordtype">void</span> set_v6only(<span class="keyword">const</span> <span class="keywordtype">bool</span>);</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span> </div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="keywordtype">void</span> bind(</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>        <span class="keyword">const</span> std::string&amp; a_node,</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>        <span class="keyword">const</span> std::string&amp; a_port,</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>        <span class="keyword">const</span> <span class="keywordtype">int</span> a_flags = 0);</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span> </div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    <span class="keywordtype">void</span> listen();</div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span> </div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span> </div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>    <span class="keywordtype">bool</span> is_v6only() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span> </div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    <span class="keywordtype">bool</span> is_listen() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span> </div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>    <span class="keyword">const</span> sa_family_t m_pf_hint{PF_UNSPEC};</div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span> </div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> m_socktype_hint{};</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span> </div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>    SUPPRESS_MSVC_WARN_4251_NEXT_LINE</div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>    <span class="keyword">mutable</span> std::mutex m_listen_mutex;</div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>    <span class="keywordtype">bool</span> m_listen{<span class="keyword">false</span>}; <span class="comment">// Protected by a mutex.</span></div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>};</div>
 </div>
-<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span> </div>
-<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span> </div>
-<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span><span class="preprocessor">#ifdef _MSC_VER</span></div>
-<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span><span class="keyword">class </span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> CWSAStartup {</div>
-<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>    CWSAStartup();</div>
-<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>    <span class="keyword">virtual</span> ~CWSAStartup();</div>
-<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>};</div>
-<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span> </div>
-<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span><span class="preprocessor">#define WINSOCK_INIT upnplib::CWSAStartup winsock_init;</span></div>
-<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00460" name="l00460"></a><span class="lineno"><a class="line" href="../../db/d86/group__upnplib-socket.html#gaa9494d0f2750c611339d1336ae8183d8">  460</a></span><span class="preprocessor">#define WINSOCK_INIT</span></div>
-<div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span><span class="preprocessor">#endif </span><span class="comment">// _MSC_VER</span></div>
-<div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span> </div>
-<div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span> </div>
-<div class="foldopen" id="foldopen00473" data-start="{" data-end="};">
-<div class="line"><a id="l00473" name="l00473"></a><span class="lineno"><a class="line" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">  473</a></span><span class="keyword">class </span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <a class="code hl_class" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a> {</div>
-<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span>    <a class="code hl_class" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a>();</div>
-<div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">~ISocketErr</a>();</div>
-<div class="line"><a id="l00478" name="l00478"></a><span class="lineno"><a class="line" href="../../d9/dd8/classupnplib_1_1ISocketErr.html#a3bb576a05d858fcdb20fe7e03a2bd6e3">  478</a></span>    <span class="keyword">virtual</span> <span class="keyword">operator</span> <span class="keyword">const</span> <span class="keywordtype">int</span>&amp;() = 0;</div>
-<div class="line"><a id="l00480" name="l00480"></a><span class="lineno"><a class="line" href="../../d9/dd8/classupnplib_1_1ISocketErr.html#a10f1cf48751ab7c4ab7def92f8980031">  480</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d9/dd8/classupnplib_1_1ISocketErr.html#a10f1cf48751ab7c4ab7def92f8980031">catch_error</a>() = 0;</div>
-<div class="line"><a id="l00482" name="l00482"></a><span class="lineno"><a class="line" href="../../d9/dd8/classupnplib_1_1ISocketErr.html#aaf25fcde573d7dadfd88d2ffd14b7fa6">  482</a></span>    <span class="keyword">virtual</span> std::string <a class="code hl_function" href="../../d9/dd8/classupnplib_1_1ISocketErr.html#aaf25fcde573d7dadfd88d2ffd14b7fa6">get_error_str</a>() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a id="l00483" name="l00483"></a><span class="lineno">  483</span>};</div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span> </div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span> </div>
+<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span><span class="preprocessor">#ifdef _MSC_VER</span></div>
+<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span><span class="keyword">class </span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> CWSAStartup {</div>
+<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>    CWSAStartup();</div>
+<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>    <span class="keyword">virtual</span> ~CWSAStartup();</div>
+<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>};</div>
+<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span> </div>
+<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span><span class="preprocessor">#define WINSOCK_INIT upnplib::CWSAStartup winsock_init;</span></div>
+<div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00462" name="l00462"></a><span class="lineno"><a class="line" href="../../db/d86/group__upnplib-socket.html#gaa9494d0f2750c611339d1336ae8183d8">  462</a></span><span class="preprocessor">#define WINSOCK_INIT</span></div>
+<div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span><span class="preprocessor">#endif </span><span class="comment">// _MSC_VER</span></div>
+<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span> </div>
+<div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span> </div>
+<div class="foldopen" id="foldopen00475" data-start="{" data-end="};">
+<div class="line"><a id="l00475" name="l00475"></a><span class="lineno"><a class="line" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">  475</a></span><span class="keyword">class </span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <a class="code hl_class" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a> {</div>
+<div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span>    <a class="code hl_class" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a>();</div>
+<div class="line"><a id="l00478" name="l00478"></a><span class="lineno">  478</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">~ISocketErr</a>();</div>
+<div class="line"><a id="l00480" name="l00480"></a><span class="lineno"><a class="line" href="../../d9/dd8/classupnplib_1_1ISocketErr.html#a3bb576a05d858fcdb20fe7e03a2bd6e3">  480</a></span>    <span class="keyword">virtual</span> <span class="keyword">operator</span> <span class="keyword">const</span> <span class="keywordtype">int</span>&amp;() = 0;</div>
+<div class="line"><a id="l00482" name="l00482"></a><span class="lineno"><a class="line" href="../../d9/dd8/classupnplib_1_1ISocketErr.html#a10f1cf48751ab7c4ab7def92f8980031">  482</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d9/dd8/classupnplib_1_1ISocketErr.html#a10f1cf48751ab7c4ab7def92f8980031">catch_error</a>() = 0;</div>
+<div class="line"><a id="l00484" name="l00484"></a><span class="lineno"><a class="line" href="../../d9/dd8/classupnplib_1_1ISocketErr.html#aaf25fcde573d7dadfd88d2ffd14b7fa6">  484</a></span>    <span class="keyword">virtual</span> std::string <a class="code hl_function" href="../../d9/dd8/classupnplib_1_1ISocketErr.html#aaf25fcde573d7dadfd88d2ffd14b7fa6">get_error_str</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a id="l00485" name="l00485"></a><span class="lineno">  485</span>};</div>
 </div>
-<div class="line"><a id="l00484" name="l00484"></a><span class="lineno">  484</span> </div>
-<div class="line"><a id="l00490" name="l00490"></a><span class="lineno"><a class="line" href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">  490</a></span><span class="keyword">using </span><a class="code hl_typedef" href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">PSocketErr</a> = std::shared_ptr&lt;ISocketErr&gt;;</div>
-<div class="line"><a id="l00491" name="l00491"></a><span class="lineno">  491</span> </div>
-<div class="foldopen" id="foldopen00504" data-start="{" data-end="};">
-<div class="line"><a id="l00504" name="l00504"></a><span class="lineno"><a class="line" href="../../d1/d16/classupnplib_1_1CSocketErrService.html">  504</a></span><span class="keyword">class </span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <a class="code hl_class" href="../../d1/d16/classupnplib_1_1CSocketErrService.html">CSocketErrService</a> : <span class="keyword">public</span> <a class="code hl_class" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a> {</div>
-<div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>    <a class="code hl_class" href="../../d1/d16/classupnplib_1_1CSocketErrService.html">CSocketErrService</a>();</div>
-<div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="../../d1/d16/classupnplib_1_1CSocketErrService.html">~CSocketErrService</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>    <span class="keyword">virtual</span> <span class="keyword">operator</span> <span class="keyword">const</span> <span class="keywordtype">int</span>&amp;() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> catch_error() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span>    <span class="keyword">virtual</span> std::string get_error_str() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span> </div>
-<div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>    <span class="keywordtype">int</span> m_errno{}; <span class="comment">// Cached error number</span></div>
-<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>};</div>
+<div class="line"><a id="l00486" name="l00486"></a><span class="lineno">  486</span> </div>
+<div class="line"><a id="l00492" name="l00492"></a><span class="lineno"><a class="line" href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">  492</a></span><span class="keyword">using </span><a class="code hl_typedef" href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">PSocketErr</a> = std::shared_ptr&lt;ISocketErr&gt;;</div>
+<div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span> </div>
+<div class="foldopen" id="foldopen00506" data-start="{" data-end="};">
+<div class="line"><a id="l00506" name="l00506"></a><span class="lineno"><a class="line" href="../../d1/d16/classupnplib_1_1CSocketErrService.html">  506</a></span><span class="keyword">class </span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <a class="code hl_class" href="../../d1/d16/classupnplib_1_1CSocketErrService.html">CSocketErrService</a> : <span class="keyword">public</span> <a class="code hl_class" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a> {</div>
+<div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span>    <a class="code hl_class" href="../../d1/d16/classupnplib_1_1CSocketErrService.html">CSocketErrService</a>();</div>
+<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="../../d1/d16/classupnplib_1_1CSocketErrService.html">~CSocketErrService</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span>    <span class="keyword">virtual</span> <span class="keyword">operator</span> <span class="keyword">const</span> <span class="keywordtype">int</span>&amp;() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> catch_error() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span>    <span class="keyword">virtual</span> std::string get_error_str() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span> </div>
+<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span>    <span class="keywordtype">int</span> m_errno{}; <span class="comment">// Cached error number</span></div>
+<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>};</div>
 </div>
-<div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span> </div>
-<div class="foldopen" id="foldopen00543" data-start="{" data-end="};">
-<div class="line"><a id="l00543" name="l00543"></a><span class="lineno"><a class="line" href="../../d2/dd2/classupnplib_1_1CSocketErr.html">  543</a></span><span class="keyword">class </span><a class="code hl_class" href="../../d2/dd2/classupnplib_1_1CSocketErr.html">CSocketErr</a> {</div>
-<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>    <span class="comment">// Due to warning C4251 &quot;&#39;type&#39; : class &#39;type1&#39; needs to have dll-interface</span></div>
-<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>    <span class="comment">// to be used by clients of class &#39;type2&#39;&quot; on Microsoft Windows each member</span></div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>    <span class="comment">// function needs to be decorated with UPNPLIB_API instead of just only the</span></div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>    <span class="comment">// class. The reason is &#39;m_socket_errObj&#39;.</span></div>
-<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>    <a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <a class="code hl_class" href="../../d2/dd2/classupnplib_1_1CSocketErr.html">CSocketErr</a>(</div>
-<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>        <a class="code hl_typedef" href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">PSocketErr</a> a_socket_errObj = std::make_shared&lt;CSocketErrService&gt;());</div>
-<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span> </div>
-<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>    <span class="comment">/* \brief Destructor */</span></div>
-<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>    <a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keyword">virtual</span> <a class="code hl_class" href="../../d2/dd2/classupnplib_1_1CSocketErr.html">~CSocketErr</a>();</div>
-<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span> </div>
-<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>    <a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keyword">virtual</span> <span class="keyword">operator</span> <span class="keyword">const</span> <span class="keywordtype">int</span>&amp;();</div>
-<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span> </div>
-<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>    <a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3">catch_error</a>();</div>
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span> </div>
-<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>    <a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keyword">virtual</span> std::string <a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">get_error_str</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span> </div>
-<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>    <a class="code hl_typedef" href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">PSocketErr</a> m_socket_errObj;</div>
-<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>};</div>
+<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span> </div>
+<div class="foldopen" id="foldopen00545" data-start="{" data-end="};">
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno"><a class="line" href="../../d2/dd2/classupnplib_1_1CSocketErr.html">  545</a></span><span class="keyword">class </span><a class="code hl_class" href="../../d2/dd2/classupnplib_1_1CSocketErr.html">CSocketErr</a> {</div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>    <span class="comment">// Due to warning C4251 &quot;&#39;type&#39; : class &#39;type1&#39; needs to have dll-interface</span></div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>    <span class="comment">// to be used by clients of class &#39;type2&#39;&quot; on Microsoft Windows each member</span></div>
+<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>    <span class="comment">// function needs to be decorated with UPNPLIB_API instead of just only the</span></div>
+<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>    <span class="comment">// class. The reason is &#39;m_socket_errObj&#39;.</span></div>
+<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>    <a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <a class="code hl_class" href="../../d2/dd2/classupnplib_1_1CSocketErr.html">CSocketErr</a>(</div>
+<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>        <a class="code hl_typedef" href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">PSocketErr</a> a_socket_errObj = std::make_shared&lt;CSocketErrService&gt;());</div>
+<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span> </div>
+<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>    <span class="comment">/* \brief Destructor */</span></div>
+<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>    <a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keyword">virtual</span> <a class="code hl_class" href="../../d2/dd2/classupnplib_1_1CSocketErr.html">~CSocketErr</a>();</div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span> </div>
+<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>    <a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keyword">virtual</span> <span class="keyword">operator</span> <span class="keyword">const</span> <span class="keywordtype">int</span>&amp;();</div>
+<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span> </div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>    <a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3">catch_error</a>();</div>
+<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span> </div>
+<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>    <a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keyword">virtual</span> std::string <a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">get_error_str</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span> </div>
+<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>    <a class="code hl_typedef" href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">PSocketErr</a> m_socket_errObj;</div>
+<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>};</div>
 </div>
-<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span> </div>
-<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>} <span class="comment">// namespace upnplib</span></div>
 <div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span> </div>
-<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span><span class="preprocessor">#endif </span><span class="comment">// UPNPLIB_SOCKET_HPP</span></div>
+<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>} <span class="comment">// namespace upnplib</span></div>
+<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span> </div>
+<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span><span class="preprocessor">#endif </span><span class="comment">// UPNPLIB_SOCKET_HPP</span></div>
 <div class="ttc" id="aUpnpInet_8hpp_html_a26769957ec1a2beaf223f33b66ee64ab"><div class="ttname"><a href="../../da/dc0/UpnpInet_8hpp.html#a26769957ec1a2beaf223f33b66ee64ab">INVALID_SOCKET</a></div><div class="ttdeci">#define INVALID_SOCKET</div><div class="ttdef"><b>Definition</b> <a href="../../da/dc0/UpnpInet_8hpp_source.html#l00052">UpnpInet.hpp:52</a></div></div>
 <div class="ttc" id="aUpnpInet_8hpp_html_a8dc8083897335125630f1af5dafd5831"><div class="ttname"><a href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a></div><div class="ttdeci">int SOCKET</div><div class="ttdef"><b>Definition</b> <a href="../../da/dc0/UpnpInet_8hpp_source.html#l00049">UpnpInet.hpp:49</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1CSocketErrService_html"><div class="ttname"><a href="../../d1/d16/classupnplib_1_1CSocketErrService.html">upnplib::CSocketErrService</a></div><div class="ttdoc">di-service for portable handling of network socket errors.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00504">socket.hpp:504</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1CSocketErr_html"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html">upnplib::CSocketErr</a></div><div class="ttdoc">di-client for portable handling of network socket errors with injected di-service.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00543">socket.hpp:543</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1CSocketErr_html_a8142e787e3e0f3e190b2541ebfc13ef3"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3">upnplib::CSocketErr::catch_error</a></div><div class="ttdeci">virtual UPNPLIB_API void catch_error()</div><div class="ttdoc">Catches detailed error information.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00564">socket.cpp:564</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1CSocketErr_html_ac45e6b23d19a77a13392e22e1230876f"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">upnplib::CSocketErr::get_error_str</a></div><div class="ttdeci">virtual UPNPLIB_API std::string get_error_str() const</div><div class="ttdoc">Gets a human readable error description from the operating system that explains the catched error.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00567">socket.cpp:567</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CSocketErrService_html"><div class="ttname"><a href="../../d1/d16/classupnplib_1_1CSocketErrService.html">upnplib::CSocketErrService</a></div><div class="ttdoc">di-service for portable handling of network socket errors.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00506">socket.hpp:506</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CSocketErr_html"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html">upnplib::CSocketErr</a></div><div class="ttdoc">di-client for portable handling of network socket errors with injected di-service.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00545">socket.hpp:545</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CSocketErr_html_a8142e787e3e0f3e190b2541ebfc13ef3"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3">upnplib::CSocketErr::catch_error</a></div><div class="ttdeci">virtual UPNPLIB_API void catch_error()</div><div class="ttdoc">Catches detailed error information.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00537">socket.cpp:537</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CSocketErr_html_ac45e6b23d19a77a13392e22e1230876f"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">upnplib::CSocketErr::get_error_str</a></div><div class="ttdeci">virtual UPNPLIB_API std::string get_error_str() const</div><div class="ttdoc">Gets a human readable error description from the operating system that explains the catched error.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00540">socket.cpp:540</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocket__basic_html"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html">upnplib::CSocket_basic</a></div><div class="ttdoc">Get information from a raw network socket file descriptor.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00113">socket.hpp:113</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocket_html"><div class="ttname"><a href="../../d8/d73/classupnplib_1_1CSocket.html">upnplib::CSocket</a></div><div class="ttdoc">Manage all aspects of a network socket.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00242">socket.hpp:242</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1ISocketErr_html"><div class="ttname"><a href="../../d9/dd8/classupnplib_1_1ISocketErr.html">upnplib::ISocketErr</a></div><div class="ttdoc">Portable catch one network socket error from the operating system, and provide information about it.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00473">socket.hpp:473</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1ISocketErr_html"><div class="ttname"><a href="../../d9/dd8/classupnplib_1_1ISocketErr.html">upnplib::ISocketErr</a></div><div class="ttdoc">Portable catch one network socket error from the operating system, and provide information about it.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00475">socket.hpp:475</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1ISocketErr_html_a10f1cf48751ab7c4ab7def92f8980031"><div class="ttname"><a href="../../d9/dd8/classupnplib_1_1ISocketErr.html#a10f1cf48751ab7c4ab7def92f8980031">upnplib::ISocketErr::catch_error</a></div><div class="ttdeci">virtual void catch_error()=0</div><div class="ttdoc">Catch error for later use.</div></div>
 <div class="ttc" id="aclassupnplib_1_1ISocketErr_html_aaf25fcde573d7dadfd88d2ffd14b7fa6"><div class="ttname"><a href="../../d9/dd8/classupnplib_1_1ISocketErr.html#aaf25fcde573d7dadfd88d2ffd14b7fa6">upnplib::ISocketErr::get_error_str</a></div><div class="ttdeci">virtual std::string get_error_str() const =0</div><div class="ttdoc">Get human readable error description of the catched error.</div></div>
-<div class="ttc" id="agroup__upnplib-socket_html_ga5738af1c9e42dc87957952b00e67f080"><div class="ttname"><a href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">upnplib::PSocketErr</a></div><div class="ttdeci">std::shared_ptr&lt; ISocketErr &gt; PSocketErr</div><div class="ttdoc">Smart pointer to di-service objects that handle network socket errors and used to inject the objects.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00490">socket.hpp:490</a></div></div>
+<div class="ttc" id="agroup__upnplib-socket_html_ga5738af1c9e42dc87957952b00e67f080"><div class="ttname"><a href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">upnplib::PSocketErr</a></div><div class="ttdeci">std::shared_ptr&lt; ISocketErr &gt; PSocketErr</div><div class="ttdoc">Smart pointer to di-service objects that handle network socket errors and used to inject the objects.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00492">socket.hpp:492</a></div></div>
 <div class="ttc" id="anamespaceupnplib_html"><div class="ttname"><a href="../../dc/d6d/namespaceupnplib.html">upnplib</a></div><div class="ttdoc">Reengineered Object Oriented UPnP+ program code.</div></div>
 <div class="ttc" id="asockaddr_8hpp_html"><div class="ttname"><a href="../../d7/d1b/sockaddr_8hpp.html">sockaddr.hpp</a></div><div class="ttdoc">Declaration of the Sockaddr class and some free helper functions.</div></div>
 <div class="ttc" id="astructupnplib_1_1SSockaddr_html"><div class="ttname"><a href="../../d1/dc2/structupnplib_1_1SSockaddr.html">upnplib::SSockaddr</a></div><div class="ttdoc">Trivial ::sockaddr structures enhanced with methods.</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d1b/sockaddr_8hpp_source.html#l00066">sockaddr.hpp:66</a></div></div>

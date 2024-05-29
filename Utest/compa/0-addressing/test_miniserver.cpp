@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-28
+// Redistribution only with this Copyright remark. Last modified: 2024-05-30
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -846,10 +846,6 @@ TEST_F(StartMiniServerMockFTestSuite,
     EXPECT_CALL(m_sys_socketObj,
                 setsockopt(sockfd, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, _, _))
         .WillOnce(Return(0));
-    // This option RESET! IPV6_V6ONLY
-    EXPECT_CALL(m_sys_socketObj,
-                setsockopt(sockfd, IPPROTO_IPV6, IPV6_V6ONLY, _, _))
-        .WillOnce(Return(0));
 #endif
     // Provide socket address from the socket file descriptor
     EXPECT_CALL(
@@ -943,11 +939,10 @@ TEST_F(StartMiniServerMockFTestSuite,
                 setsockopt(sockfd, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, _, _))
         .WillOnce(Return(0));
 #endif
-    // This option RESET! IPV6_V6ONLY
-    EXPECT_CALL(m_sys_socketObj,
-                setsockopt(sockfd, IPPROTO_IPV6, IPV6_V6ONLY, _, _))
-        .Times(2)
-        .WillRepeatedly(Return(0));
+    // Expect setting IPV6_V6ONLY
+    EXPECT_CALL(m_sys_socketObj, setsockopt(sockfd, IPPROTO_IPV6, IPV6_V6ONLY,
+                                            PointeeVoidToConstInt(1), _))
+        .WillOnce(Return(0));
     // Provide socket address from the socket file descriptor
     EXPECT_CALL(
         m_sys_socketObj,

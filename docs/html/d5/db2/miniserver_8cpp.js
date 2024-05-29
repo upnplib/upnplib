@@ -47,6 +47,5 @@ var miniserver_8cpp =
     [ "gGenaCallback", "d5/db2/miniserver_8cpp.html#a6f4c2792aee1e2df9b5ebe874b89760d", null ],
     [ "gMServState", "d5/db2/miniserver_8cpp.html#ae413745d69678061574e39ce1949af43", null ],
     [ "gSoapCallback", "d5/db2/miniserver_8cpp.html#a49eca2fd8ae56a32b6c866db4b5dcb47", null ],
-    [ "MINISERVER_REUSEADDR", "d5/db2/miniserver_8cpp.html#aa6b5fe31700275e3b8ce35c3cc8b7b9d", null ],
     [ "miniStopSockPort", "d5/db2/miniserver_8cpp.html#a6ab69017b8af0de7bc0bfec810bbe9fb", null ]
 ];

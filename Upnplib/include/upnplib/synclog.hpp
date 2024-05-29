@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SYNCLOG_HPP
 #define UPNPLIB_SYNCLOG_HPP
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-12
+// Redistribution only with this Copyright remark. Last modified: 2024-06-01
 /*!
  * \file
  * \brief Define macro for synced logging to the console for detailed info and
@@ -12,6 +12,9 @@
 /// \cond
 #include <string>
 #include <iostream>
+#if !defined(_MSC_VER) && !defined(__APPLE__)
+#include <syncstream>
+#endif
 
 namespace upnplib {
 UPNPLIB_EXTERN bool g_dbug;
@@ -33,7 +36,11 @@ UPNPLIB_EXTERN bool g_dbug;
 // throw(UPNPLIB_LOGEXCEPT + "MSG1nnn: exception message.\n");
 #define UPNPLIB_LOGEXCEPT "UPnPlib ["+::std::string(__PRETTY_FUNCTION__)+"] EXCEPTION "
 
+#if defined(_MSC_VER) || defined(__APPLE__)
 #define UPNPLIB_LOG std::cerr<<"UPnPlib ["<<__PRETTY_FUNCTION__
+#else
+#define UPNPLIB_LOG std::osyncstream(std::cerr)<<"UPnPlib ["<<__PRETTY_FUNCTION__
+#endif
 // Critical messages are always output.
 #define UPNPLIB_LOGCRIT UPNPLIB_LOG<<"] CRITICAL "
 #define UPNPLIB_LOGERR if(upnplib::g_dbug) UPNPLIB_LOG<<"] ERROR "

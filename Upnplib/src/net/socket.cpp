@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-28
+// Redistribution only with this Copyright remark. Last modified: 2024-06-01
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -264,7 +264,7 @@ CSocket::CSocket(){
 // clang-format off
 // \brief Constructor for a new socket file descriptor that must be init()
 CSocket::CSocket(sa_family_t a_family, int a_socktype)
-    : m_af_hint(a_family), m_socktype_hint(a_socktype) {
+    : m_pf_hint(a_family), m_socktype_hint(a_socktype) {
     TRACE2(this, " Construct CSocket() for socket fd") //
 }
 
@@ -309,11 +309,11 @@ void CSocket::init() {
 
     // Do some general checks that must always be fulfilled according to the
     // specification.
-    if (m_af_hint != AF_INET6 && m_af_hint != AF_INET)
+    if (m_pf_hint != PF_INET6 && m_pf_hint != PF_INET)
         throw std::invalid_argument(
             UPNPLIB_LOGEXCEPT +
             "MSG1015: Failed to create socket: invalid address family " +
-            std::to_string(m_af_hint) + "\n");
+            std::to_string(m_pf_hint) + "\n");
     if (m_socktype_hint != SOCK_STREAM && m_socktype_hint != SOCK_DGRAM)
         throw std::invalid_argument(
             UPNPLIB_LOGEXCEPT +
@@ -328,7 +328,7 @@ void CSocket::init() {
     CSocketErr serrObj;
 
     // Syscall socket(): get new socket file descriptor.
-    SOCKET sfd = umock::sys_socket_h.socket(m_af_hint, m_socktype_hint, 0);
+    SOCKET sfd = umock::sys_socket_h.socket(m_pf_hint, m_socktype_hint, 0);
     if (sfd == INVALID_SOCKET) {
         serrObj.catch_error();
         throw std::runtime_error(UPNPLIB_LOGEXCEPT +
@@ -369,28 +369,6 @@ void CSocket::init() {
     }
 #endif
 
-    // Try to set socket option IPV6_V6ONLY to false if possible, means
-    // allowing IPv4 and IPv6. Although it makes no sense to enable
-    // IPV6_V6ONLY on an interface that can only use IPv4 we must reset it on
-    // Microsoft Windows because it is set there.
-#ifndef _MSC_VER
-    if (m_af_hint == AF_INET6) {
-#endif
-        so_option = 0;
-        // Type cast (char*)&so_option is needed for Microsoft Windows.
-        if (umock::sys_socket_h.setsockopt(sfd, IPPROTO_IPV6, IPV6_V6ONLY,
-                                           reinterpret_cast<char*>(&so_option),
-                                           optlen) != 0) {
-            serrObj.catch_error();
-            throw std::runtime_error(
-                UPNPLIB_LOGEXCEPT +
-                "MSG1020: Failed to set socket option IPV6_V6ONLY: " +
-                serrObj.get_error_str() + "\n");
-        }
-#ifndef _MSC_VER
-    }
-#endif
-
     // Store socket file descriptor
     m_sfd = sfd;
 }
@@ -404,7 +382,7 @@ void CSocket::set_v6only(const bool a_opt) {
     const int so_option{a_opt};
 
     // Type cast (char*)&so_option is needed for Microsoft Windows.
-    if (this->get_family() == AF_INET6 && !this->is_bound() &&
+    if (this->get_family() == PF_INET6 && !this->is_bound() &&
         umock::sys_socket_h.setsockopt(
             m_sfd, IPPROTO_IPV6, IPV6_V6ONLY,
             reinterpret_cast<const char*>(&so_option),
@@ -443,9 +421,9 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
     const sa_family_t addr_family = this->get_family();
     CSocketErr serrObj;
 
-    // With address family AF_INET6 and not passive mode we always set
-    // IPV6_V6ONLY to true. See also note to bind() in the header file.
-    if (addr_family == AF_INET6 && (a_flags & AI_PASSIVE) == 0) {
+    // With protocol family PF_INET6 we always set IPV6_V6ONLY to true. See also
+    // note to bind() in the header file.
+    if (addr_family == PF_INET6) {
         // Don't use 'this->set_v6only(true)' because binding is protected with
         // a mutex and we will get a deadlock due to using
         // 'this->is_bound()' in 'this->set_v6only(true)'.
