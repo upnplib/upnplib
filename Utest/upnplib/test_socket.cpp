@@ -73,6 +73,8 @@ std::uniform_int_distribution<in_port_t> portno(49152, 65535); // define range
 
 
 #if 0
+#include <syncstream>
+
 TEST(SockTestSuite, sock_connect_to_host) {
 // This is for humans only to check how 'connect()' to a remote host exactly
 // works so we can mock it the right way. Don't enable this test permanently
@@ -82,10 +84,10 @@ TEST(SockTestSuite, sock_connect_to_host) {
     WINSOCK_INIT
 
     // Get the remote host socket address
-    upnplib::CAddrinfo ai("example.com", "http", AF_UNSPEC, SOCK_STREAM);
+    upnplib::CAddrinfo ai("example.com", "http");
     ASSERT_NO_THROW(ai.init());
-    std::cout << "Remote IP addrees to connect = \"" << ai.netaddr().str()
-              << "\".\n";
+    std::osyncstream(std::cout)
+        << "Remote IP addrees to connect = \"" << ai.netaddr().str() << "\".\n";
 
     // Get a socket
     upnplib::CSocket sockObj(ai->ai_addr->sa_family, ai->ai_socktype);
@@ -102,7 +104,8 @@ TEST(SockTestSuite, sock_connect_to_host) {
 
     // The unbound socket has bin bound to a local address by ::connect().
     const std::string_view locnetaddr = sockObj.netaddrp();
-    std::cout << "local IP address of the socket = \"" << locnetaddr << "\".\n";
+    std::osyncstream(std::cout)
+        << "local IP address of the socket = \"" << locnetaddr << "\".\n";
 }
 #endif
 

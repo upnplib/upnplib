@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-01
+// Redistribution only with this Copyright remark. Last modified: 2024-06-02
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -312,7 +312,7 @@ void CSocket::init() {
     if (m_pf_hint != PF_INET6 && m_pf_hint != PF_INET)
         throw std::invalid_argument(
             UPNPLIB_LOGEXCEPT +
-            "MSG1015: Failed to create socket: invalid address family " +
+            "MSG1015: Failed to create socket: invalid protocol family " +
             std::to_string(m_pf_hint) + "\n");
     if (m_socktype_hint != SOCK_STREAM && m_socktype_hint != SOCK_DGRAM)
         throw std::invalid_argument(

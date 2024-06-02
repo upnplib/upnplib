@@ -29,14 +29,16 @@ class UPNPLIB_API CAddrinfo {
     /*! \brief Constructor for getting an address information with port number
      * string. */
     CAddrinfo(std::string_view a_node, std::string_view a_service,
-              const int a_family = AF_UNSPEC, const int a_socktype = 0,
-              const int a_flags = 0, const int protocol = 0);
+              const int a_family = AF_UNSPEC,
+              const int a_socktype = SOCK_STREAM, const int a_flags = 0,
+              const int protocol = 0);
 
     /*! \brief Constructor for getting an address information with numeric port
      * number. */
     CAddrinfo(std::string_view a_node, in_port_t a_service,
-              const int a_family = AF_UNSPEC, const int a_socktype = 0,
-              const int a_flags = 0, const int protocol = 0);
+              const int a_family = AF_UNSPEC,
+              const int a_socktype = SOCK_STREAM, const int a_flags = 0,
+              const int protocol = 0);
 
     /*! \brief Constructor for getting an address information from only a
      * netaddress */

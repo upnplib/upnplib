@@ -101,7 +101,7 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 </div><!--header-->
 <div class="contents">
 <a href="../../d8/d81/socket_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, &lt;Ingo@Hoeft-online.de&gt;</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Redistribution only with this Copyright remark. Last modified: 2024-06-01</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Redistribution only with this Copyright remark. Last modified: 2024-06-02</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="../../da/dfc/socket_8hpp.html">upnplib/socket.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="../../d6/dbf/addrinfo_8hpp.html">upnplib/addrinfo.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="../../d1/d3b/synclog_8hpp.html">upnplib/synclog.hpp</a>&gt;</span></div>
@@ -436,7 +436,7 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 <div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>    <span class="keywordflow">if</span> (m_pf_hint != PF_INET6 &amp;&amp; m_pf_hint != PF_INET)</div>
 <div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        <span class="keywordflow">throw</span> std::invalid_argument(</div>
 <div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>            UPNPLIB_LOGEXCEPT +</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>            <span class="stringliteral">&quot;MSG1015: Failed to create socket: invalid address family &quot;</span> +</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>            <span class="stringliteral">&quot;MSG1015: Failed to create socket: invalid protocol family &quot;</span> +</div>
 <div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>            std::to_string(m_pf_hint) + <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    <span class="keywordflow">if</span> (m_socktype_hint != SOCK_STREAM &amp;&amp; m_socktype_hint != SOCK_DGRAM)</div>
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        <span class="keywordflow">throw</span> std::invalid_argument(</div>

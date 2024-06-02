@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-25
+// Redistribution only with this Copyright remark. Last modified: 2024-06-02
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -172,11 +172,11 @@ TEST(AddrinfoTestSuite, get_implicit_address_family) {
     // Test Unit
     CAddrinfo ai1("[2001:db8::5]", "50051");
     // Same as
-    // CAddrinfo ai1("[2001:db8::5]", "50051", AF_UNSPEC);
+    // CAddrinfo ai1("[2001:db8::5]", "50051", AF_UNSPEC, SOCK_STREAM);
     ASSERT_NO_THROW(ai1.init());
 
     EXPECT_EQ(ai1->ai_family, AF_INET6); // set by syscal ::getaddrinfo
-    EXPECT_EQ(ai1->ai_socktype, 0);
+    EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST); // set by syscal ::getaddrinfo
     EXPECT_EQ(ai1.netaddr().str(), "[2001:db8::5]:50051");
@@ -186,7 +186,7 @@ TEST(AddrinfoTestSuite, get_implicit_address_family) {
     ASSERT_NO_THROW(ai2.init());
 
     EXPECT_EQ(ai2->ai_family, AF_INET); // set by syscal ::getaddrinfo
-    EXPECT_EQ(ai2->ai_socktype, 0);
+    EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai2->ai_protocol, 0);
     EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST); // set by syscal ::getaddrinfo
     EXPECT_EQ(ai2.netaddr().str(), "192.168.9.10:50096");
@@ -196,7 +196,7 @@ TEST(AddrinfoTestSuite, get_implicit_address_family) {
     ASSERT_NO_THROW(ai3.init());
 
     EXPECT_EQ(ai3->ai_family, AF_INET6); // set by syscal ::getaddrinfo
-    EXPECT_EQ(ai3->ai_socktype, 0);
+    EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai3->ai_protocol, 0);
     EXPECT_EQ(ai3->ai_flags, 0);
     EXPECT_EQ(ai3.netaddr().str(), "[::1]:50049");
@@ -286,7 +286,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
         // Address family set by syscal ::getaddrinfo(). Maybe interface with
         // index number 1 is used and its address_family is returned?
         EXPECT_EQ(ai1->ai_family, AF_INET6);
-        EXPECT_EQ(ai1->ai_socktype, 0);
+        EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
         EXPECT_EQ(ai1->ai_protocol, 0);
         EXPECT_EQ(ai1->ai_flags, 0);
         EXPECT_THAT(ai1.netaddr().str(), "[::1]:50007");
@@ -327,7 +327,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
         ASSERT_NO_THROW(ai5.init());
 
         EXPECT_EQ(ai5->ai_family, AF_INET);
-        EXPECT_EQ(ai5->ai_socktype, 0);
+        EXPECT_EQ(ai5->ai_socktype, SOCK_STREAM);
         EXPECT_EQ(ai5->ai_protocol, 0);
         EXPECT_EQ(ai5->ai_flags, 0);
         EXPECT_EQ(ai5.netaddr().str(), "127.0.0.1:50057");
@@ -555,7 +555,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     ASSERT_NO_THROW(ai3.init());
 
     EXPECT_EQ(ai3->ai_family, AF_INET6);
-    EXPECT_EQ(ai3->ai_socktype, 0);
+    EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai3->ai_protocol, 0);
     EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST);
     EXPECT_EQ(ai3.netaddr().str(), "[::1]:50087");
@@ -564,7 +564,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     CAddrinfo ai4("localhost", "50088");
     ASSERT_NO_THROW(ai4.init());
 
-    EXPECT_EQ(ai4->ai_socktype, 0);
+    EXPECT_EQ(ai4->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai4->ai_protocol, 0);
     EXPECT_EQ(ai4->ai_flags, 0);
     EXPECT_THAT(ai4.netaddr().str(), AnyOf("[::1]:50088", "127.0.0.1:50088"));
