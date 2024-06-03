@@ -26,20 +26,9 @@ var group__upnplibAPI_socket =
       [ "operator=", "d8/d73/classupnplib_1_1CSocket.html#aef1d81f9a455343bae3be87def1d23bb", null ],
       [ "set_v6only", "d8/d73/classupnplib_1_1CSocket.html#a558451398ca27e8a0311df14e3441e6b", null ]
     ] ],
-    [ "upnplib::ISocketErr", "d9/dd8/classupnplib_1_1ISocketErr.html", [
-      [ "catch_error", "d9/dd8/classupnplib_1_1ISocketErr.html#a10f1cf48751ab7c4ab7def92f8980031", null ],
-      [ "get_error_str", "d9/dd8/classupnplib_1_1ISocketErr.html#aaf25fcde573d7dadfd88d2ffd14b7fa6", null ],
-      [ "operator const int &", "d9/dd8/classupnplib_1_1ISocketErr.html#a3bb576a05d858fcdb20fe7e03a2bd6e3", null ]
-    ] ],
-    [ "upnplib::CSocketErrService", "d1/d16/classupnplib_1_1CSocketErrService.html", [
-      [ "catch_error", "d1/d16/classupnplib_1_1CSocketErrService.html#a7489a6ba4dae830e687a2a919e99a295", null ],
-      [ "get_error_str", "d1/d16/classupnplib_1_1CSocketErrService.html#a88561a11496e6bb3edc009e82a585a31", null ],
-      [ "operator const int &", "d1/d16/classupnplib_1_1CSocketErrService.html#ac22535eada62b982c8733979080d79e3", null ]
-    ] ],
     [ "upnplib::CSocketErr", "d2/dd2/classupnplib_1_1CSocketErr.html", [
-      [ "CSocketErr", "d2/dd2/classupnplib_1_1CSocketErr.html#aa26c6b3c19727370e22473e70cbe898e", null ],
       [ "catch_error", "d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3", null ],
-      [ "get_error_str", "d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f", null ],
+      [ "error_str", "d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4", null ],
       [ "operator const int &", "d2/dd2/classupnplib_1_1CSocketErr.html#aadada5820c5ed14f1e777fbbfb50bcf4", null ]
     ] ]
 ];

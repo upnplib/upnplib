@@ -101,7 +101,7 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 </div><!--header-->
 <div class="contents">
 <a href="../../d8/d81/socket_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, &lt;Ingo@Hoeft-online.de&gt;</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Redistribution only with this Copyright remark. Last modified: 2024-06-02</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Redistribution only with this Copyright remark. Last modified: 2024-06-03</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="../../da/dfc/socket_8hpp.html">upnplib/socket.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="../../d6/dbf/addrinfo_8hpp.html">upnplib/addrinfo.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="../../d1/d3b/synclog_8hpp.html">upnplib/synclog.hpp</a>&gt;</span></div>
@@ -214,7 +214,7 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3">catch_error</a>();</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="keywordflow">throw</span> std::runtime_error(</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            UPNPLIB_LOGEXCEPT + <span class="stringliteral">&quot;MSG1014: Failed to create socket=&quot;</span> +</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>            std::to_string(m_sfd_hint) + <span class="stringliteral">&quot;: &quot;</span> + serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">get_error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>            std::to_string(m_sfd_hint) + <span class="stringliteral">&quot;: &quot;</span> + serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    }</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    m_sfd = m_sfd_hint;</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>}</div>
@@ -283,7 +283,7 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        <span class="keywordflow">throw</span> std::runtime_error(UPNPLIB_LOGEXCEPT +</div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                                 <span class="stringliteral">&quot;MSG1030: Failed to get socket option SO_TYPE &quot;</span></div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                                 <span class="stringliteral">&quot;(SOCK_STREAM, or SOCK_DGRAM): &quot;</span> +</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                                 serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">get_error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                                 serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    }</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <span class="keywordflow">return</span> so_option;</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>}</div>
@@ -303,7 +303,7 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        <span class="keywordflow">throw</span> std::runtime_error(</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            UPNPLIB_LOGEXCEPT +</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>            <span class="stringliteral">&quot;MSG1011: Failed to get socket option SO_ERROR: &quot;</span> +</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">get_error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    }</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordflow">return</span> so_option;</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>}</div>
@@ -323,7 +323,7 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        <span class="keywordflow">throw</span> std::runtime_error(</div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            UPNPLIB_LOGEXCEPT +</div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>            <span class="stringliteral">&quot;MSG1013: Failed to get socket option SO_REUSEADDR: &quot;</span> +</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>            serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">get_error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>            serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    }</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <span class="keywordflow">return</span> so_option;</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>}</div>
@@ -362,7 +362,7 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3">catch_error</a>();</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="keywordflow">throw</span> std::runtime_error(</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            UPNPLIB_LOGEXCEPT + <span class="stringliteral">&quot;MSG1001: Failed to get address from socket: &quot;</span> +</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">get_error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    }</div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>}</div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
@@ -455,9 +455,9 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    <a class="code hl_typedef" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> sfd = umock::sys_socket_h.socket(m_pf_hint, m_socktype_hint, 0);</div>
 <div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    <span class="keywordflow">if</span> (sfd == <a class="code hl_define" href="../../da/dc0/UpnpInet_8hpp.html#a26769957ec1a2beaf223f33b66ee64ab">INVALID_SOCKET</a>) {</div>
 <div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3">catch_error</a>();</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        <span class="keywordflow">throw</span> std::runtime_error(UPNPLIB_LOGEXCEPT +</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>                                 <span class="stringliteral">&quot;MSG1017: Failed to create socket: &quot;</span> +</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>                                 serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">get_error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        <span class="keywordflow">throw</span> std::runtime_error(</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>            UPNPLIB_LOGEXCEPT +</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>            <span class="stringliteral">&quot;MSG1017: Failed to create socket: &quot;</span> + serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>    }</div>
 <div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>    <span class="keywordtype">int</span> so_option{0};</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    <span class="keyword">constexpr</span> socklen_t optlen{<span class="keyword">sizeof</span>(so_option)};</div>
@@ -472,7 +472,7 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>        <span class="keywordflow">throw</span> std::runtime_error(</div>
 <div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>            UPNPLIB_LOGEXCEPT +</div>
 <div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>            <span class="stringliteral">&quot;MSG1018: Failed to set socket option SO_REUSEADDR: &quot;</span> +</div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>            serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">get_error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>            serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>    }</div>
 <div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span> </div>
 <div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span><span class="preprocessor">#ifdef _MSC_VER</span></div>
@@ -489,7 +489,7 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>        <span class="keywordflow">throw</span> std::runtime_error(</div>
 <div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>            UPNPLIB_LOGEXCEPT +</div>
 <div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>            <span class="stringliteral">&quot;MSG1019: Failed to set socket option SO_EXCLUSIVEADDRUSE: &quot;</span> +</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>            serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">get_error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>            serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    }</div>
 <div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span> </div>
@@ -517,7 +517,7 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 <div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>        <span class="keywordflow">throw</span> std::runtime_error(</div>
 <div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>            UPNPLIB_LOGEXCEPT +</div>
 <div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>            <span class="stringliteral">&quot;MSG1006: Failed to set socket option IPV6_V6ONLY: &quot;</span> +</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>            serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">get_error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>            serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    }</div>
 <div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>}</div>
 </div>
@@ -565,7 +565,7 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 <div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>            <span class="keywordflow">throw</span> std::runtime_error(</div>
 <div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>                UPNPLIB_LOGEXCEPT +</div>
 <div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>                <span class="stringliteral">&quot;MSG1007: Failed to set socket option IPV6_V6ONLY: &quot;</span> +</div>
-<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>                serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">get_error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>                serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>        }</div>
 <div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>    }</div>
 <div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span> </div>
@@ -588,7 +588,7 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 <div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span>        <span class="keywordflow">throw</span> std::runtime_error(</div>
 <div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span>            UPNPLIB_LOGEXCEPT +</div>
 <div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span>            <span class="stringliteral">&quot;MSG1008: Failed to bind socket to an address: &quot;</span> +</div>
-<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>            serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">get_error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>            serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span>    }</div>
 <div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>}</div>
 </div>
@@ -611,7 +611,7 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 <div class="line"><a id="l00482" name="l00482"></a><span class="lineno">  482</span>        serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3">catch_error</a>();</div>
 <div class="line"><a id="l00483" name="l00483"></a><span class="lineno">  483</span>        <span class="keywordflow">throw</span> std::runtime_error(UPNPLIB_LOGEXCEPT +</div>
 <div class="line"><a id="l00484" name="l00484"></a><span class="lineno">  484</span>                                 <span class="stringliteral">&quot;MSG1034: Failed to set socket to listen: &quot;</span> +</div>
-<div class="line"><a id="l00485" name="l00485"></a><span class="lineno">  485</span>                                 serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">get_error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a id="l00485" name="l00485"></a><span class="lineno">  485</span>                                 serrObj.<a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">error_str</a>() + <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00486" name="l00486"></a><span class="lineno">  486</span>    }</div>
 <div class="line"><a id="l00487" name="l00487"></a><span class="lineno">  487</span> </div>
 <div class="line"><a id="l00488" name="l00488"></a><span class="lineno">  488</span>    m_listen = <span class="keyword">true</span>;</div>
@@ -653,92 +653,55 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 </div>
 <div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span> </div>
 <div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span> </div>
-<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span><span class="comment">// Socket Error di-interface</span></div>
-<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>ISocketErr::ISocketErr() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span>ISocketErr::~ISocketErr() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span><span class="comment">// Portable handling of socket errors</span></div>
+<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span><span class="comment">// ==================================</span></div>
+<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span>CSocketErr::CSocketErr() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span> </div>
-<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span><span class="comment">// Socket Error di-client</span></div>
-<div class="foldopen" id="foldopen00527" data-start="{" data-end="}">
-<div class="line"><a id="l00527" name="l00527"></a><span class="lineno"><a class="line" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#aa26c6b3c19727370e22473e70cbe898e">  527</a></span><a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#aa26c6b3c19727370e22473e70cbe898e">CSocketErr::CSocketErr</a>(<a class="code hl_typedef" href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">PSocketErr</a> a_socket_errObj)</div>
-<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>    : m_socket_errObj(a_socket_errObj) {</div>
-<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>    TRACE2(<span class="keyword">this</span>, <span class="stringliteral">&quot; Construct CSocketErr()&quot;</span>) <span class="comment">//</span></div>
-<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>}</div>
-</div>
-<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>CSocketErr::~CSocketErr() {</div>
-<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>    TRACE2(<span class="keyword">this</span>, <span class="stringliteral">&quot; Destruct CSocketErr()&quot;</span>) <span class="comment">//</span></div>
+<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>CSocketErr::~CSocketErr() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span> </div>
+<div class="foldopen" id="foldopen00528" data-start="{" data-end="}">
+<div class="line"><a id="l00528" name="l00528"></a><span class="lineno"><a class="line" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#aadada5820c5ed14f1e777fbbfb50bcf4">  528</a></span>CSocketErr::operator <span class="keyword">const</span> <span class="keywordtype">int</span>&amp;() {</div>
+<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>    <span class="comment">// TRACE not usable with chained output.</span></div>
+<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>    <span class="comment">// TRACE2(this, &quot; Executing CSocketErr::operator int&amp;() (get socket error</span></div>
+<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>    <span class="comment">// number)&quot;)</span></div>
+<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>    <span class="keywordflow">return</span> m_errno;</div>
 <div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>}</div>
-<div class="foldopen" id="foldopen00534" data-start="{" data-end="}">
-<div class="line"><a id="l00534" name="l00534"></a><span class="lineno"><a class="line" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#aadada5820c5ed14f1e777fbbfb50bcf4">  534</a></span>CSocketErr::operator <span class="keyword">const</span> <span class="keywordtype">int</span>&amp;() { <span class="comment">//</span></div>
-<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>    <span class="keywordflow">return</span> *m_socket_errObj;</div>
-<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>}</div>
 </div>
-<div class="foldopen" id="foldopen00537" data-start="{" data-end="}">
-<div class="line"><a id="l00537" name="l00537"></a><span class="lineno"><a class="line" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3">  537</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3">CSocketErr::catch_error</a>() { <span class="comment">//</span></div>
-<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>    m_socket_errObj-&gt;catch_error();</div>
-<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>}</div>
-</div>
-<div class="foldopen" id="foldopen00540" data-start="{" data-end="}">
-<div class="line"><a id="l00540" name="l00540"></a><span class="lineno"><a class="line" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">  540</a></span>std::string <a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">CSocketErr::get_error_str</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>    <span class="keywordflow">return</span> m_socket_errObj-&gt;get_error_str();</div>
+<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span> </div>
+<div class="foldopen" id="foldopen00535" data-start="{" data-end="}">
+<div class="line"><a id="l00535" name="l00535"></a><span class="lineno"><a class="line" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3">  535</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3">CSocketErr::catch_error</a>() {</div>
+<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span><span class="preprocessor">#ifdef _MSC_VER</span></div>
+<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>    m_errno = umock::winsock2_h.WSAGetLastError();</div>
+<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>    m_errno = errno;</div>
+<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>    TRACE2(<span class="keyword">this</span>, <span class="stringliteral">&quot; Executing CSocketErr::catch_error()&quot;</span>)</div>
 <div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>}</div>
 </div>
 <div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span> </div>
-<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span> </div>
-<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span><span class="comment">// Portable handling of socket errors</span></div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span><span class="comment">// ==================================</span></div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>CSocketErrService::CSocketErrService(){</div>
-<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>    TRACE2(<span class="keyword">this</span>, <span class="stringliteral">&quot; Construct CSocketErrService()&quot;</span>)}</div>
-<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span> </div>
-<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>CSocketErrService::~CSocketErrService(){</div>
-<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>    TRACE2(<span class="keyword">this</span>, <span class="stringliteral">&quot; Destruct CSocketErrService()&quot;</span>)}</div>
-<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span> </div>
-<div class="foldopen" id="foldopen00553" data-start="{" data-end="}">
-<div class="line"><a id="l00553" name="l00553"></a><span class="lineno"><a class="line" href="../../d1/d16/classupnplib_1_1CSocketErrService.html#ac22535eada62b982c8733979080d79e3">  553</a></span>CSocketErrService::operator <span class="keyword">const</span> <span class="keywordtype">int</span>&amp;() {</div>
-<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>    <span class="comment">// TRACE not usable with chained output.</span></div>
-<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>    <span class="comment">// TRACE2(this,</span></div>
-<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>    <span class="comment">//     &quot; Executing CSocketErrService::operator int&amp;() (get socket error</span></div>
-<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>    <span class="comment">//     number)&quot;)</span></div>
-<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>    <span class="keywordflow">return</span> m_errno;</div>
-<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>}</div>
+<div class="foldopen" id="foldopen00544" data-start="{" data-end="}">
+<div class="line"><a id="l00544" name="l00544"></a><span class="lineno"><a class="line" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">  544</a></span>std::string <a class="code hl_function" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">CSocketErr::error_str</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>    <span class="comment">// TRACE not usable with chained output, e.g.</span></div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>    <span class="comment">// std::cerr &lt;&lt; &quot;Error: &quot; &lt;&lt; sockerrObj.error_str();</span></div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>    <span class="comment">// TRACE2(this, &quot; Executing CSocketErr::error_str()&quot;)</span></div>
+<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span> </div>
+<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>    <span class="comment">// Portable C++ statement</span></div>
+<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>    <span class="keywordflow">return</span> std::system_category().message(m_errno);</div>
+<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>    <span class="comment">// return std::generic_category().message(m_errno);</span></div>
+<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>    <span class="comment">// return std::strerror(m_errno); // Alternative for Unix platforms</span></div>
+<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>}</div>
 </div>
-<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span> </div>
-<div class="foldopen" id="foldopen00561" data-start="{" data-end="}">
-<div class="line"><a id="l00561" name="l00561"></a><span class="lineno"><a class="line" href="../../d1/d16/classupnplib_1_1CSocketErrService.html#a7489a6ba4dae830e687a2a919e99a295">  561</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d1/d16/classupnplib_1_1CSocketErrService.html#a7489a6ba4dae830e687a2a919e99a295">CSocketErrService::catch_error</a>() {</div>
-<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span><span class="preprocessor">#ifdef _MSC_VER</span></div>
-<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>    m_errno = umock::winsock2_h.WSAGetLastError();</div>
-<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>    m_errno = errno;</div>
-<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>    TRACE2(<span class="keyword">this</span>, <span class="stringliteral">&quot; Executing CSocketErrService::catch_error()&quot;</span>)</div>
-<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>}</div>
-</div>
-<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span> </div>
-<div class="foldopen" id="foldopen00570" data-start="{" data-end="}">
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno"><a class="line" href="../../d1/d16/classupnplib_1_1CSocketErrService.html#a88561a11496e6bb3edc009e82a585a31">  570</a></span>std::string <a class="code hl_function" href="../../d1/d16/classupnplib_1_1CSocketErrService.html#a88561a11496e6bb3edc009e82a585a31">CSocketErrService::get_error_str</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>    <span class="comment">// TRACE not usable with chained output, e.g.</span></div>
-<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>    <span class="comment">// std::cerr &lt;&lt; &quot;Error: &quot; &lt;&lt; sockerrObj.get_error_str();</span></div>
-<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>    <span class="comment">// TRACE2(this, &quot; Executing CSocketErrService::get_error_str()&quot;)</span></div>
-<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span> </div>
-<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>    <span class="comment">// Portable C++ statement</span></div>
-<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>    <span class="keywordflow">return</span> std::system_category().message(m_errno);</div>
-<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>    <span class="comment">// return std::generic_category().message(m_errno);</span></div>
-<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>    <span class="comment">// return std::strerror(m_errno); // Alternative for Unix platforms</span></div>
-<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>}</div>
-</div>
-<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span> </div>
-<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>} <span class="comment">// namespace upnplib</span></div>
+<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span> </div>
+<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>} <span class="comment">// namespace upnplib</span></div>
 <div class="ttc" id="aUpnpInet_8hpp_html_a26769957ec1a2beaf223f33b66ee64ab"><div class="ttname"><a href="../../da/dc0/UpnpInet_8hpp.html#a26769957ec1a2beaf223f33b66ee64ab">INVALID_SOCKET</a></div><div class="ttdeci">#define INVALID_SOCKET</div><div class="ttdef"><b>Definition</b> <a href="../../da/dc0/UpnpInet_8hpp_source.html#l00052">UpnpInet.hpp:52</a></div></div>
 <div class="ttc" id="aUpnpInet_8hpp_html_a8dc8083897335125630f1af5dafd5831"><div class="ttname"><a href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a></div><div class="ttdeci">int SOCKET</div><div class="ttdef"><b>Definition</b> <a href="../../da/dc0/UpnpInet_8hpp_source.html#l00049">UpnpInet.hpp:49</a></div></div>
 <div class="ttc" id="aaddrinfo_8hpp_html"><div class="ttname"><a href="../../d6/dbf/addrinfo_8hpp.html">addrinfo.hpp</a></div><div class="ttdoc">Declaration of the Addrinfo class.</div></div>
 <div class="ttc" id="aclassupnplib_1_1CAddrinfo_html"><div class="ttname"><a href="../../da/dad/classupnplib_1_1CAddrinfo.html">upnplib::CAddrinfo</a></div><div class="ttdoc">Get information from the operating system about a netaddress.</div><div class="ttdef"><b>Definition</b> <a href="../../d6/dbf/addrinfo_8hpp_source.html#l00027">addrinfo.hpp:27</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CAddrinfo_html_a307094d37736d609bde57f810f7b8ba5"><div class="ttname"><a href="../../da/dad/classupnplib_1_1CAddrinfo.html#a307094d37736d609bde57f810f7b8ba5">upnplib::CAddrinfo::init</a></div><div class="ttdeci">void init()</div><div class="ttdoc">Initialize address information that is returned by syscall ::getaddrinfo()</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d59/addrinfo_8cpp_source.html#l00095">addrinfo.cpp:95</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CAddrinfo_html_a938842ec8b629bc03581116942327aab"><div class="ttname"><a href="../../da/dad/classupnplib_1_1CAddrinfo.html#a938842ec8b629bc03581116942327aab">upnplib::CAddrinfo::netaddr</a></div><div class="ttdeci">virtual Netaddr netaddr() const noexcept</div><div class="ttdoc">Get the assosiated netaddress.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d59/addrinfo_8cpp_source.html#l00203">addrinfo.cpp:203</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1CSocketErrService_html_a7489a6ba4dae830e687a2a919e99a295"><div class="ttname"><a href="../../d1/d16/classupnplib_1_1CSocketErrService.html#a7489a6ba4dae830e687a2a919e99a295">upnplib::CSocketErrService::catch_error</a></div><div class="ttdeci">virtual void catch_error() override</div><div class="ttdoc">Catch error for later use.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00561">socket.cpp:561</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1CSocketErrService_html_a88561a11496e6bb3edc009e82a585a31"><div class="ttname"><a href="../../d1/d16/classupnplib_1_1CSocketErrService.html#a88561a11496e6bb3edc009e82a585a31">upnplib::CSocketErrService::get_error_str</a></div><div class="ttdeci">virtual std::string get_error_str() const override</div><div class="ttdoc">Get human readable error description of the catched error.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00570">socket.cpp:570</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1CSocketErr_html"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html">upnplib::CSocketErr</a></div><div class="ttdoc">di-client for portable handling of network socket errors with injected di-service.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00545">socket.hpp:545</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1CSocketErr_html_a8142e787e3e0f3e190b2541ebfc13ef3"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3">upnplib::CSocketErr::catch_error</a></div><div class="ttdeci">virtual UPNPLIB_API void catch_error()</div><div class="ttdoc">Catches detailed error information.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00537">socket.cpp:537</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1CSocketErr_html_aa26c6b3c19727370e22473e70cbe898e"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#aa26c6b3c19727370e22473e70cbe898e">upnplib::CSocketErr::CSocketErr</a></div><div class="ttdeci">UPNPLIB_API CSocketErr(PSocketErr a_socket_errObj=std::make_shared&lt; CSocketErrService &gt;())</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00527">socket.cpp:527</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1CSocketErr_html_ac45e6b23d19a77a13392e22e1230876f"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f">upnplib::CSocketErr::get_error_str</a></div><div class="ttdeci">virtual UPNPLIB_API std::string get_error_str() const</div><div class="ttdoc">Gets a human readable error description from the operating system that explains the catched error.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00540">socket.cpp:540</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CSocketErr_html"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html">upnplib::CSocketErr</a></div><div class="ttdoc">Class for portable handling of network socket errors.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00498">socket.hpp:498</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CSocketErr_html_a8142e787e3e0f3e190b2541ebfc13ef3"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3">upnplib::CSocketErr::catch_error</a></div><div class="ttdeci">void catch_error()</div><div class="ttdoc">Catch error for later use.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00535">socket.cpp:535</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CSocketErr_html_ae8d893eda87328bf1e475378f6b8a8f4"><div class="ttname"><a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4">upnplib::CSocketErr::error_str</a></div><div class="ttdeci">std::string error_str() const</div><div class="ttdoc">Get human readable error description of the catched error.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00544">socket.cpp:544</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocket__basic_html_a0bfd8447aeb0fce2841c5ea90234c37d"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html#a0bfd8447aeb0fce2841c5ea90234c37d">upnplib::CSocket_basic::is_bound</a></div><div class="ttdeci">bool is_bound()</div><div class="ttdoc">Get status if socket is bound to a local netaddress.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00221">socket.cpp:221</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocket__basic_html_a24406f0340da2352557ad1ea301410c5"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html#a24406f0340da2352557ad1ea301410c5">upnplib::CSocket_basic::netaddrp</a></div><div class="ttdeci">const std::string &amp; netaddrp() override</div><div class="ttdoc">Get netaddress with port.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00155">socket.cpp:155</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocket__basic_html_a41cf15ed4d81fb0f237d8a6b69f72d8a"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html#a41cf15ed4d81fb0f237d8a6b69f72d8a">upnplib::CSocket_basic::get_socktype</a></div><div class="ttdeci">int get_socktype() const</div><div class="ttdoc">Get the socket type SOCK_STREAM or SOCK_DGRAM.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00167">socket.cpp:167</a></div></div>
@@ -759,7 +722,6 @@ $(document).ready(function(){initNavTree('d8/d81/socket_8cpp_source.html','../..
 <div class="ttc" id="aclassupnplib_1_1CSocket_html_aef1d81f9a455343bae3be87def1d23bb"><div class="ttname"><a href="../../d8/d73/classupnplib_1_1CSocket.html#aef1d81f9a455343bae3be87def1d23bb">upnplib::CSocket::operator=</a></div><div class="ttdeci">CSocket &amp; operator=(CSocket)</div><div class="ttdoc">Assignment operator.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00285">socket.cpp:285</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1CSocket_html_af4e7af61b6999fdfb49a97d9ceecf9db"><div class="ttname"><a href="../../d8/d73/classupnplib_1_1CSocket.html#af4e7af61b6999fdfb49a97d9ceecf9db">upnplib::CSocket::init</a></div><div class="ttdeci">void init()</div><div class="ttdoc">Initialize the object with the hints given by the constructor.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00307">socket.cpp:307</a></div></div>
 <div class="ttc" id="aclassupnplib_1_1Netaddr_html_a37ca073aaa586afc48b9f94162468227"><div class="ttname"><a href="../../d8/d44/classupnplib_1_1Netaddr.html#a37ca073aaa586afc48b9f94162468227">upnplib::Netaddr::str</a></div><div class="ttdeci">std::string &amp; str()</div><div class="ttdoc">Get netaddress string.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dd7/netaddr_8cpp_source.html#l00147">netaddr.cpp:147</a></div></div>
-<div class="ttc" id="agroup__upnplib-socket_html_ga5738af1c9e42dc87957952b00e67f080"><div class="ttname"><a href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">upnplib::PSocketErr</a></div><div class="ttdeci">std::shared_ptr&lt; ISocketErr &gt; PSocketErr</div><div class="ttdoc">Smart pointer to di-service objects that handle network socket errors and used to inject the objects.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00492">socket.hpp:492</a></div></div>
 <div class="ttc" id="agroup__upnplib-socket_html_ga99c7777de5a847f201f6d2f66540a535"><div class="ttname"><a href="../../db/d86/group__upnplib-socket.html#ga99c7777de5a847f201f6d2f66540a535">upnplib::anonymous_namespace{socket.cpp}::getsockname</a></div><div class="ttdeci">int getsockname(SOCKET a_sockfd, sockaddr *a_addr, socklen_t *a_addrlen)</div><div class="ttdoc">Wrapper for the ::getsockname() system function.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d81/socket_8cpp_source.html#l00033">socket.cpp:33</a></div></div>
 <div class="ttc" id="anamespaceupnplib_html"><div class="ttname"><a href="../../dc/d6d/namespaceupnplib.html">upnplib</a></div><div class="ttdoc">Reengineered Object Oriented UPnP+ program code.</div></div>
 <div class="ttc" id="asocket_8hpp_html"><div class="ttname"><a href="../../da/dfc/socket_8hpp.html">socket.hpp</a></div><div class="ttdoc">Socket Module: manage properties and methods but not connections of ONE network socket to handle IPv4...</div></div>

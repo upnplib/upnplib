@@ -8,9 +8,9 @@
 <area shape="poly" id="edge21_Node000001_Node000016" title=" " alt="" coords="186,571,446,586,446,591,185,576"/>
 <area shape="rect" id="Node000017" href="$d8/d73/classupnplib_1_1CSocket.html#aab92e4ef9b21e3e1381eb80ce9abfffe" title="Set socket to listen." alt="" coords="452,532,627,557"/>
 <area shape="poly" id="edge24_Node000001_Node000017" title=" " alt="" coords="185,561,438,547,439,553,186,567"/>
-<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="675,426,823,466"/>
+<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="675,426,823,466"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="402,280,455,279,513,283,572,294,628,314,660,335,688,360,730,413,726,416,684,364,657,339,625,319,570,299,512,288,455,284,402,285"/>
-<area shape="rect" id="Node000004" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="675,507,823,547"/>
+<area shape="rect" id="Node000004" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="675,507,823,547"/>
 <area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="330,303,376,370,412,409,453,442,529,466,662,502,661,507,528,471,451,447,408,413,372,373,325,306"/>
 <area shape="rect" id="Node000005" href="$db/d84/classupnplib_1_1CSocket__basic.html#a6878fbfcf7704d59f18dea2a350773bd" title="Get socket address family." alt="" coords="454,329,625,369"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="369,301,450,323,448,328,368,307"/>

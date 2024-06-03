@@ -1,8 +1,8 @@
 <map id="upnplib::CSocket::bind" name="upnplib::CSocket::bind">
 <area shape="rect" id="Node000001" title="Bind socket to a local interface address." alt="" coords="5,205,172,231"/>
-<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="439,6,587,46"/>
+<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="439,6,587,46"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,204,107,168,133,120,170,71,193,50,219,33,269,14,323,5,376,3,425,7,425,12,376,9,323,10,271,19,221,38,196,54,174,75,138,123,112,171,97,206"/>
-<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="439,74,587,114"/>
+<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="439,74,587,114"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="172,209,278,192,335,179,390,161,414,148,437,132,461,119,463,123,440,136,417,152,392,166,336,184,279,198,173,214"/>
 <area shape="rect" id="Node000004" href="$db/d84/classupnplib_1_1CSocket__basic.html#a6878fbfcf7704d59f18dea2a350773bd" title="Get socket address family." alt="" coords="220,111,391,151"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="121,203,241,154,243,159,123,208"/>

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-05-28
+ * Redistribution only with this Copyright remark. Last modified: 2024-06-03
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -869,7 +869,7 @@ int init_socket_suff(
         sockerrObj.catch_error();
         UPNPLIB_LOGERR "MSG1054: IPv"
             << ip_version
-            << " socket not available: " << sockerrObj.get_error_str() << "\n";
+            << " socket not available: " << sockerrObj.error_str() << "\n";
         goto error;
 
     } else if (ip_version == 6) {
@@ -880,7 +880,7 @@ int init_socket_suff(
         if (sockError == SOCKET_ERROR) {
             sockerrObj.catch_error();
             UPNPLIB_LOGCRIT "MSG1055: unable to set IPv6 socket protocol: "
-                << sockerrObj.get_error_str() << "\n";
+                << sockerrObj.error_str() << "\n";
             goto error;
         }
     }
@@ -896,7 +896,7 @@ int init_socket_suff(
         if (sockError == SOCKET_ERROR) {
             sockerrObj.catch_error();
             UPNPLIB_LOGERR "MSG1056: unable to set SO_REUSEADDR: "
-                << sockerrObj.get_error_str() << "\n";
+                << sockerrObj.error_str() << "\n";
             goto error;
         }
     }
@@ -1023,7 +1023,7 @@ int do_listen(       //
         sockerrObj.catch_error();
         UPNPLIB_LOGERR "MSG1096: Netaddress=\""
             << s->text_addr << ":" << s->actual_port << "\", "
-            << sockerrObj.get_error_str() << "\n";
+            << sockerrObj.error_str() << "\n";
         ret_val = UPNP_E_LISTEN;
         goto error;
     }
@@ -1031,7 +1031,7 @@ int do_listen(       //
     if (port_error < 0) {
         sockerrObj.catch_error();
         UPNPLIB_LOGERR "MSG1097: Error in IPv"
-            << s->ip_version << " get_port(): " << sockerrObj.get_error_str()
+            << s->ip_version << " get_port(): " << sockerrObj.error_str()
             << "\n";
         ret_val = UPNP_E_INTERNAL_ERROR;
         goto error;
@@ -1354,8 +1354,8 @@ int get_miniserver_stopsock(
         umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (miniServerStopSock == INVALID_SOCKET) {
         sockerrObj.catch_error();
-        UPNPLIB_LOGCRIT "MSG1094: Error in socket(): "
-            << sockerrObj.get_error_str() << "\n";
+        UPNPLIB_LOGCRIT "MSG1094: Error in socket(): " << sockerrObj.error_str()
+                                                       << "\n";
         return UPNP_E_OUTOF_SOCKET;
     }
     /* Bind to local socket. */
@@ -1368,7 +1368,7 @@ int get_miniserver_stopsock(
     if (ret == SOCKET_ERROR) {
         sockerrObj.catch_error();
         UPNPLIB_LOGCRIT "MSG1095: Error in binding localhost: "
-            << sockerrObj.get_error_str() << "\n";
+            << sockerrObj.error_str() << "\n";
         sock_close(miniServerStopSock);
         return UPNP_E_SOCKET_BIND;
     }

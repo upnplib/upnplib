@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-07
+// Redistribution only with this Copyright remark. Last modified: 2024-06-03
 
 #include <upnplib/global.hpp>
 #include <upnplib/cmake_vars.hpp>
@@ -263,7 +263,7 @@ int simple_TLS_client() {
         sockerrObj.catch_error();
         std::clog << "[Client:" << __LINE__
                   << "] Error - creating socket: error-id(" << sockerrObj
-                  << ")=\"" << sockerrObj.get_error_str() << "\"\n";
+                  << ")=\"" << sockerrObj.error_str() << "\"\n";
         return -1;
     }
 

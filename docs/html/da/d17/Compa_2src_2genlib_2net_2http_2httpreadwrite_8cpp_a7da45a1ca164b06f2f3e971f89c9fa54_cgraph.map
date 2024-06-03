@@ -6,7 +6,7 @@
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="305,50,339,44,340,49,306,56"/>
 <area shape="rect" id="Node000005" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a64de72048c9ed20f9673c4d9564d5457" title="Write to a not SSL protected socket." alt="" coords="365,70,545,125"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="306,67,352,76,351,81,305,72"/>
-<area shape="rect" id="Node000004" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="604,41,752,81"/>
+<area shape="rect" id="Node000004" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="604,41,752,81"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="556,39,590,45,590,50,556,44"/>
 <area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="545,80,590,73,591,78,546,85"/>
 </map>

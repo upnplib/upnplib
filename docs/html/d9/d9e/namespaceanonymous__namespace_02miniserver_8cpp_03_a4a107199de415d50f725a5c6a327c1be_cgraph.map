@@ -50,9 +50,9 @@
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1015,381,1058,380,1059,385,1015,387"/>
 <area shape="rect" id="Node000010" href="$db/d84/classupnplib_1_1CSocket__basic.html#a24406f0340da2352557ad1ea301410c5" title="Get netaddress with port." alt="" coords="1072,423,1243,463"/>
 <area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="1015,409,1059,419,1058,424,1014,415"/>
-<area shape="rect" id="Node000008" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="1308,349,1456,389"/>
+<area shape="rect" id="Node000008" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="1308,349,1456,389"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1243,373,1294,370,1295,376,1243,378"/>
-<area shape="rect" id="Node000009" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="1308,273,1456,313"/>
+<area shape="rect" id="Node000009" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="1308,273,1456,313"/>
 <area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="1209,357,1316,315,1317,320,1211,362"/>
 <area shape="rect" id="Node000011" href="$d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8" title="Get the assosiated netaddress with port." alt="" coords="1309,423,1455,463"/>
 <area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="1243,441,1295,441,1295,446,1243,446"/>

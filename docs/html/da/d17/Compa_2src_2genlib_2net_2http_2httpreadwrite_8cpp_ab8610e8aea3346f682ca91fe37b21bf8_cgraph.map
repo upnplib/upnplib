@@ -22,7 +22,7 @@
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="582,151,689,153,689,158,582,157"/>
 <area shape="rect" id="Node000009" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a64de72048c9ed20f9673c4d9564d5457" title="Write to a not SSL protected socket." alt="" coords="714,58,894,113"/>
 <area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="582,140,642,125,700,110,701,116,643,131,583,145"/>
-<area shape="rect" id="Node000008" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="1015,101,1163,141"/>
+<area shape="rect" id="Node000008" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="1015,101,1163,141"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="905,142,1002,130,1002,135,906,147"/>
 <area shape="poly" id="edge9_Node000009_Node000008" title=" " alt="" coords="895,94,1002,108,1001,113,894,99"/>
 <area shape="rect" id="Node000011" href="$df/db8/LinkedList_8cpp.html#a28e5dc6ff4a189982c97ae5780d360fd" title="Removes all memory associated with list nodes. Does not free LinkedList *list." alt="" coords="488,251,584,277"/>

@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-02
+// Redistribution only with this Copyright remark. Last modified: 2024-06-03
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -120,7 +120,7 @@ void CSocket_basic::init() {
         serrObj.catch_error();
         throw std::runtime_error(
             UPNPLIB_LOGEXCEPT + "MSG1014: Failed to create socket=" +
-            std::to_string(m_sfd_hint) + ": " + serrObj.get_error_str() + "\n");
+            std::to_string(m_sfd_hint) + ": " + serrObj.error_str() + "\n");
     }
     m_sfd = m_sfd_hint;
 }
@@ -177,7 +177,7 @@ int CSocket_basic::get_socktype() const {
         throw std::runtime_error(UPNPLIB_LOGEXCEPT +
                                  "MSG1030: Failed to get socket option SO_TYPE "
                                  "(SOCK_STREAM, or SOCK_DGRAM): " +
-                                 serrObj.get_error_str() + "\n");
+                                 serrObj.error_str() + "\n");
     }
     return so_option;
 }
@@ -195,7 +195,7 @@ int CSocket_basic::get_sockerr() const {
         throw std::runtime_error(
             UPNPLIB_LOGEXCEPT +
             "MSG1011: Failed to get socket option SO_ERROR: " +
-            serrObj.get_error_str() + "\n");
+            serrObj.error_str() + "\n");
     }
     return so_option;
 }
@@ -213,7 +213,7 @@ bool CSocket_basic::is_reuse_addr() const {
         throw std::runtime_error(
             UPNPLIB_LOGEXCEPT +
             "MSG1013: Failed to get socket option SO_REUSEADDR: " +
-            serrObj.get_error_str() + "\n");
+            serrObj.error_str() + "\n");
     }
     return so_option;
 }
@@ -249,7 +249,7 @@ void CSocket_basic::m_get_addr_from_socket() const {
         serrObj.catch_error();
         throw std::runtime_error(
             UPNPLIB_LOGEXCEPT + "MSG1001: Failed to get address from socket: " +
-            serrObj.get_error_str() + "\n");
+            serrObj.error_str() + "\n");
     }
 }
 
@@ -331,9 +331,9 @@ void CSocket::init() {
     SOCKET sfd = umock::sys_socket_h.socket(m_pf_hint, m_socktype_hint, 0);
     if (sfd == INVALID_SOCKET) {
         serrObj.catch_error();
-        throw std::runtime_error(UPNPLIB_LOGEXCEPT +
-                                 "MSG1017: Failed to create socket: " +
-                                 serrObj.get_error_str() + "\n");
+        throw std::runtime_error(
+            UPNPLIB_LOGEXCEPT +
+            "MSG1017: Failed to create socket: " + serrObj.error_str() + "\n");
     }
     int so_option{0};
     constexpr socklen_t optlen{sizeof(so_option)};
@@ -348,7 +348,7 @@ void CSocket::init() {
         throw std::runtime_error(
             UPNPLIB_LOGEXCEPT +
             "MSG1018: Failed to set socket option SO_REUSEADDR: " +
-            serrObj.get_error_str() + "\n");
+            serrObj.error_str() + "\n");
     }
 
 #ifdef _MSC_VER
@@ -365,7 +365,7 @@ void CSocket::init() {
         throw std::runtime_error(
             UPNPLIB_LOGEXCEPT +
             "MSG1019: Failed to set socket option SO_EXCLUSIVEADDRUSE: " +
-            serrObj.get_error_str() + "\n");
+            serrObj.error_str() + "\n");
     }
 #endif
 
@@ -391,7 +391,7 @@ void CSocket::set_v6only(const bool a_opt) {
         throw std::runtime_error(
             UPNPLIB_LOGEXCEPT +
             "MSG1006: Failed to set socket option IPV6_V6ONLY: " +
-            serrObj.get_error_str() + "\n");
+            serrObj.error_str() + "\n");
     }
 }
 
@@ -437,7 +437,7 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
             throw std::runtime_error(
                 UPNPLIB_LOGEXCEPT +
                 "MSG1007: Failed to set socket option IPV6_V6ONLY: " +
-                serrObj.get_error_str() + "\n");
+                serrObj.error_str() + "\n");
         }
     }
 
@@ -461,7 +461,7 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
         throw std::runtime_error(
             UPNPLIB_LOGEXCEPT +
             "MSG1008: Failed to bind socket to an address: " +
-            serrObj.get_error_str() + "\n");
+            serrObj.error_str() + "\n");
     }
 }
 
@@ -482,7 +482,7 @@ void CSocket::listen() {
         serrObj.catch_error();
         throw std::runtime_error(UPNPLIB_LOGEXCEPT +
                                  "MSG1034: Failed to set socket to listen: " +
-                                 serrObj.get_error_str() + "\n");
+                                 serrObj.error_str() + "\n");
     }
 
     m_listen = true;
@@ -519,58 +519,32 @@ bool CSocket::is_listen() const {
 }
 
 
-// Socket Error di-interface
-ISocketErr::ISocketErr() = default;
-ISocketErr::~ISocketErr() = default;
-
-// Socket Error di-client
-CSocketErr::CSocketErr(PSocketErr a_socket_errObj)
-    : m_socket_errObj(a_socket_errObj) {
-    TRACE2(this, " Construct CSocketErr()") //
-}
-CSocketErr::~CSocketErr() {
-    TRACE2(this, " Destruct CSocketErr()") //
-}
-CSocketErr::operator const int&() { //
-    return *m_socket_errObj;
-}
-void CSocketErr::catch_error() { //
-    m_socket_errObj->catch_error();
-}
-std::string CSocketErr::get_error_str() const {
-    return m_socket_errObj->get_error_str();
-}
-
-
 // Portable handling of socket errors
 // ==================================
-CSocketErrService::CSocketErrService(){
-    TRACE2(this, " Construct CSocketErrService()")}
+CSocketErr::CSocketErr() = default;
 
-CSocketErrService::~CSocketErrService(){
-    TRACE2(this, " Destruct CSocketErrService()")}
+CSocketErr::~CSocketErr() = default;
 
-CSocketErrService::operator const int&() {
+CSocketErr::operator const int&() {
     // TRACE not usable with chained output.
-    // TRACE2(this,
-    //     " Executing CSocketErrService::operator int&() (get socket error
-    //     number)")
+    // TRACE2(this, " Executing CSocketErr::operator int&() (get socket error
+    // number)")
     return m_errno;
 }
 
-void CSocketErrService::catch_error() {
+void CSocketErr::catch_error() {
 #ifdef _MSC_VER
     m_errno = umock::winsock2_h.WSAGetLastError();
 #else
     m_errno = errno;
 #endif
-    TRACE2(this, " Executing CSocketErrService::catch_error()")
+    TRACE2(this, " Executing CSocketErr::catch_error()")
 }
 
-std::string CSocketErrService::get_error_str() const {
+std::string CSocketErr::error_str() const {
     // TRACE not usable with chained output, e.g.
-    // std::cerr << "Error: " << sockerrObj.get_error_str();
-    // TRACE2(this, " Executing CSocketErrService::get_error_str()")
+    // std::cerr << "Error: " << sockerrObj.error_str();
+    // TRACE2(this, " Executing CSocketErr::error_str()")
 
     // Portable C++ statement
     return std::system_category().message(m_errno);

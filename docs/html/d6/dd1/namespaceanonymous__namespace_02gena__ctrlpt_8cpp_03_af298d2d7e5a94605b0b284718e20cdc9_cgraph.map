@@ -102,9 +102,9 @@
 <area shape="poly" id="edge46_Node000095_Node000099" title=" " alt="" coords="654,1144,772,1157,771,1163,653,1149"/>
 <area shape="rect" id="Node000103" href="$d6/d58/namespaceanonymous__namespace_02httpreadwrite_8cpp_03.html#a54d65a1040bec3ce5cd1653277714254" title="Checks socket connection and wait if it is not connected." alt="" coords="732,1396,931,1465"/>
 <area shape="poly" id="edge49_Node000102_Node000103" title=" " alt="" coords="645,1293,666,1301,686,1311,703,1329,711,1346,719,1364,734,1382,739,1386,735,1390,730,1386,714,1367,706,1349,698,1332,682,1315,664,1305,644,1298"/>
-<area shape="rect" id="Node000093" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catches detailed error information." alt="" coords="757,1268,905,1308"/>
+<area shape="rect" id="Node000093" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="757,1268,905,1308"/>
 <area shape="poly" id="edge51_Node000104_Node000093" title=" " alt="" coords="636,1247,745,1268,744,1274,635,1252"/>
-<area shape="rect" id="Node000105" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ac45e6b23d19a77a13392e22e1230876f" title="Gets a human readable error description from the operating system that explains the catched error." alt="" coords="757,1332,905,1372"/>
+<area shape="rect" id="Node000105" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="757,1332,905,1372"/>
 <area shape="poly" id="edge52_Node000104_Node000105" title=" " alt="" coords="636,1243,661,1250,685,1262,701,1276,711,1290,719,1304,734,1318,746,1325,744,1330,730,1322,715,1308,706,1293,697,1279,683,1266,659,1255,634,1248"/>
 <area shape="poly" id="edge56_Node000108_Node000023" title=" " alt="" coords="394,841,504,818,505,823,395,846"/>
 <area shape="rect" id="Node000109" href="$df/db8/LinkedList_8cpp.html#a28e5dc6ff4a189982c97ae5780d360fd" title="Removes all memory associated with list nodes. Does not free LinkedList *list." alt="" coords="533,843,629,869"/>

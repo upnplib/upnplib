@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-01
+// Redistribution only with this Copyright remark. Last modified: 2024-06-03
 /*!
  * \file
  * \brief **Socket Module:** manage properties and methods but not connections
@@ -463,119 +463,55 @@ class UPNPLIB_API CWSAStartup {
 #endif // _MSC_VER
 
 
-/*!
- * \brief Portable catch **one** network socket error from the operating
- * system, and provide information about it.
+// Portable handling of socket errors
+// ==================================
+/*! \brief Class for portable handling of network socket errors.
  * \ingroup upnplibAPI-socket
  * \ingroup upnplib-socket
- *
- * This is a C++ interface for dependency injection of different
- * \glos{depinj,di-services}, e.g. for production or Unit Tests (mocking).
- */
-class UPNPLIB_API ISocketErr {
-  public:
-    ISocketErr();
-    virtual ~ISocketErr();
-    /// Get error number.
-    virtual operator const int&() = 0;
-    /// Catch error for later use.
-    virtual void catch_error() = 0;
-    /// Get human readable error description of the catched error.
-    virtual std::string get_error_str() const = 0;
-};
-
-/*!
- * \brief Smart pointer to \glos{depinj,di-service} objects that handle network
- * socket errors and used to inject the objects.
- * \ingroup upnplib-socket
- */
-using PSocketErr = std::shared_ptr<ISocketErr>;
-
-/*!
- * \brief \glos{depinj,di-service} for portable handling of network socket
- * errors.
- * \ingroup upnplibAPI-socket
- * \ingroup upnplib-socket
- *
- * There is a compatibility problem with Winsock2 on the Microsoft Windows
- * platform that does not support detailed error information given in the global
- * variable 'errno' that is used by POSIX. Instead it returns them with calling
- * 'WSAGetLastError()'. This class encapsulates differences so there is no need
- * to always check the platform to get the error information.
- */
-class UPNPLIB_API CSocketErrService : public ISocketErr {
-  public:
-    CSocketErrService();
-    virtual ~CSocketErrService() override;
-    /// Get error number.
-    virtual operator const int&() override;
-    /// Catch error for later use.
-    virtual void catch_error() override;
-    /// Get human readable error description of the catched error.
-    virtual std::string get_error_str() const override;
-
-  private:
-    int m_errno{}; // Cached error number
-};
-
-/*!
- * \brief \glos{depinj,di-client} for portable handling of network socket
- * errors with injected \glos{depinj,di-service}.
- * \ingroup upnplibAPI-socket
- * \ingroup upnplib-socket
- *
- * Usage of the class:
  * \code
+ * // Usage e.g.:
  * CSocketErr serrObj;
  * int ret = some_function_1();
  * if (ret != 0) {
  *     serrObj.catch_error();
  *     int errid = serrObj;
  *     std::cout << "Error " << errid << ": "
- *               << serrObj.get_error_str() << "\n";
+ *               << serrObj.error_str() << "\n";
  * }
  * ret = some_function_2();
  * if (ret != 0) {
  *     serrObj.catch_error();
  *     std::cout << "Error " << static_cast<int>(serrObj) << ": "
- *               << serrObj.get_error_str() << "\n";
+ *               << serrObj.error_str() << "\n";
  * }
  * \endcode
+ *
+ * There is a compatibility problem with Winsock2 on the Microsoft Windows
+ * platform that does not support detailed error information given in the global
+ * variable 'errno' that is used by POSIX. Instead it returns them with calling
+ * 'WSAGetLastError()'. This class encapsulates differences so there is no need
+ * to always check the platform to get the error information.
+ *
+ * This class is optimized for frequent short-term use. It's a simple class
+ * without inheritence and virtual methods.
  */
-class CSocketErr {
-    // Due to warning C4251 "'type' : class 'type1' needs to have dll-interface
-    // to be used by clients of class 'type2'" on Microsoft Windows each member
-    // function needs to be decorated with UPNPLIB_API instead of just only the
-    // class. The reason is 'm_socket_errObj'.
+class UPNPLIB_API CSocketErr {
   public:
-    /*! \brief Constructor */
-    UPNPLIB_API CSocketErr(
-        /*! [in] Inject the used \glos{depinj,di-service} object that is by
-         * default the productive one but may also be a mocked object for Unit
-         * Tests. */
-        PSocketErr a_socket_errObj = std::make_shared<CSocketErrService>());
-
-    /* \brief Destructor */
-    UPNPLIB_API virtual ~CSocketErr();
-
-    /*! \brief Get the catched error number.
-     * \details The error number is that from the operating system, for example
-     * **errno** on Posix platforms or from WSAGetLastError() on Microroft
-     * Windows. */
-    UPNPLIB_API virtual operator const int&();
-
-    /*! \brief Catches detailed error information.
-     *  \details Because error information from the operating system is very
-     * volatile this method should be called as early as possible after the
-     * error was detected. */
-    UPNPLIB_API virtual void catch_error();
-
-    /*! \brief Gets a human readable error description from the operating
-     * system that explains the catched error. */
-    UPNPLIB_API virtual std::string get_error_str() const;
+    CSocketErr();
+    ~CSocketErr();
+    // Delete copy constructor
+    CSocketErr(const CSocketErr&) = delete;
+    // Delete assignment operator
+    CSocketErr& operator=(const CSocketErr&) = delete;
+    /// Get error number.
+    operator const int&();
+    /// Catch error for later use.
+    void catch_error();
+    /// Get human readable error description of the catched error.
+    std::string error_str() const;
 
   private:
-    PSocketErr m_socket_errObj;
+    int m_errno{}; // Cached error number
 };
 
 } // namespace upnplib

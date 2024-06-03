@@ -15,9 +15,6 @@ var hierarchy =
     [ "http_header_t", "db/da7/httpparser_8hpp.html#df/d1d/structhttp__header__t", null ],
     [ "http_message_t", "db/da7/httpparser_8hpp.html#de/d66/structhttp__message__t", null ],
     [ "http_parser_t", "db/da7/httpparser_8hpp.html#d7/ddd/structhttp__parser__t", null ],
-    [ "upnplib::ISocketErr", "d9/dd8/classupnplib_1_1ISocketErr.html", [
-      [ "upnplib::CSocketErrService", "d1/d16/classupnplib_1_1CSocketErrService.html", null ]
-    ] ],
     [ "job_arg", "d6/de3/gena__ctrlpt_8cpp.html#dd/d20/unionjob__arg", null ],
     [ "job_arg.advertise", "d4/d99/upnpapi_8cpp.html#de/da3/structjob__arg_8advertise", null ],
     [ "LinkedList", "de/dd1/LinkedList_8hpp.html#de/d4b/structLinkedList", null ],

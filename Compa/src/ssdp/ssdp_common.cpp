@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-06-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -222,8 +222,8 @@ inline int create_ssdp_sock_v4(
     *ssdpSock = umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (*ssdpSock == INVALID_SOCKET) {
         sockerrObj.catch_error();
-        UPNPLIB_LOGCRIT "MSG1076: Error in socket(): "
-            << sockerrObj.get_error_str() << ".\n";
+        UPNPLIB_LOGCRIT "MSG1076: Error in socket(): " << sockerrObj.error_str()
+                                                       << ".\n";
         return UPNP_E_OUTOF_SOCKET;
     }
     onOff = 1;
@@ -232,7 +232,7 @@ inline int create_ssdp_sock_v4(
     if (ret == -1) {
         sockerrObj.catch_error();
         UPNPLIB_LOGCRIT "MSG1077: Error in setsockopt() SO_REUSEADDR: "
-            << sockerrObj.get_error_str() << ".\n";
+            << sockerrObj.error_str() << ".\n";
         ret = UPNP_E_SOCKET_ERROR;
         goto error_handler;
     }
@@ -243,7 +243,7 @@ inline int create_ssdp_sock_v4(
     if (ret == -1) {
         sockerrObj.catch_error();
         UPNPLIB_LOGCRIT "MSG1078: Error in setsockopt() SO_REUSEP: "
-            << sockerrObj.get_error_str() << ".\n";
+            << sockerrObj.error_str() << ".\n";
         ret = UPNP_E_SOCKET_ERROR;
         goto error_handler;
     }
@@ -258,7 +258,7 @@ inline int create_ssdp_sock_v4(
         sockerrObj.catch_error();
         UPNPLIB_LOGCRIT "MSG1079: Error in bind(), addr="
             << INADDR_ANY << ", port=" << SSDP_PORT << ": "
-            << sockerrObj.get_error_str() << ".\n";
+            << sockerrObj.error_str() << ".\n";
         ret = UPNP_E_SOCKET_BIND;
         goto error_handler;
     }
@@ -289,7 +289,7 @@ inline int create_ssdp_sock_v4(
         sockerrObj.catch_error();
         UPNPLIB_LOGCRIT "MSG1080: Error in setsockopt() IP_ADD_MEMBERSHIP "
                         "(join multicast group): "
-            << sockerrObj.get_error_str() << ".\n";
+            << sockerrObj.error_str() << ".\n";
         ret = UPNP_E_SOCKET_ERROR;
         goto error_handler;
     }
@@ -306,7 +306,7 @@ inline int create_ssdp_sock_v4(
         sockerrObj.catch_error();
         UPNPLIB_LOGINFO "MSG1081: Error in setsockopt() IP_MULTICAST_IF (set "
                         "multicast interface): "
-            << sockerrObj.get_error_str() << ".\n";
+            << sockerrObj.error_str() << ".\n";
         /* This is probably not a critical error, so let's continue. */
     }
     /* result is not checked becuase it will fail in WinMe and Win9x. */
@@ -319,7 +319,7 @@ inline int create_ssdp_sock_v4(
         sockerrObj.catch_error();
         UPNPLIB_LOGCRIT
         "MSG1082: Error in setsockopt() SO_BROADCAST (set broadcast): "
-            << sockerrObj.get_error_str() << ".\n";
+            << sockerrObj.error_str() << ".\n";
         ret = UPNP_E_NETWORK_ERROR;
         goto error_handler;
     }

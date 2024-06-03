@@ -6,7 +6,7 @@
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-17
+ * Redistribution only with this Copyright remark. Last modified: 2024-06-03
  *
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
@@ -723,8 +723,8 @@ int create_ssdp_sock_reqv4(
     *ssdpReqSock = umock::sys_socket_h.socket(AF_INET, SOCK_DGRAM, 0);
     if (*ssdpReqSock == INVALID_SOCKET) {
         sockerrObj.catch_error();
-        UPNPLIB_LOGCRIT "MSG1072: Error in socket(): "
-            << sockerrObj.get_error_str() << ".\n";
+        UPNPLIB_LOGCRIT "MSG1072: Error in socket(): " << sockerrObj.error_str()
+                                                       << ".\n";
         return UPNP_E_OUTOF_SOCKET;
     }
     umock::sys_socket_h.setsockopt(*ssdpReqSock, IPPROTO_IP, IP_MULTICAST_TTL,
@@ -746,8 +746,8 @@ int create_ssdp_sock_reqv6(
     *ssdpReqSock = umock::sys_socket_h.socket(AF_INET6, SOCK_DGRAM, 0);
     if (*ssdpReqSock == INVALID_SOCKET) {
         sockerrObj.catch_error();
-        UPNPLIB_LOGCRIT "MSG1074: Error in socket(): "
-            << sockerrObj.get_error_str() << ".\n";
+        UPNPLIB_LOGCRIT "MSG1074: Error in socket(): " << sockerrObj.error_str()
+                                                       << ".\n";
         return UPNP_E_OUTOF_SOCKET;
     }
     /* MUST use scoping of IPv6 addresses to control the propagation os SSDP

@@ -59,7 +59,7 @@ var searchData=
   ['prev_56',['prev',['../dc/d1d/list_8hpp.html#a4ec45a2d47d4a19965579cace80ad9d8',1,'UpnpListHead']]],
   ['print_5fhttp_5fheaders_57',['print_http_headers',['../dd/d1d/httpparser_8cpp.html#a88108a123fa11bbcd3c5b3ebd13f50c8',1,'print_http_headers(http_message_t *hmsg):&#160;httpparser.cpp'],['../db/da7/httpparser_8hpp.html#a779cc41615042d7c56e4df25fb4c4a3e',1,'print_http_headers(http_message_t *hmsg):&#160;httpparser.cpp']]],
   ['print_5ftoken_58',['print_token',['../d8/dd2/uri_8cpp.html#ad94a05e4418a628c9ac63dc80af0a281',1,'print_token(token *in):&#160;uri.cpp'],['../de/dd0/Compa_2src_2inc_2uri_8hpp.html#ad94a05e4418a628c9ac63dc80af0a281',1,'print_token(token *in):&#160;uri.cpp']]],
-  ['print_5furi_59',['print_uri',['../de/dd0/Compa_2src_2inc_2uri_8hpp.html#acd9ad3e6df399d6ebf98d35ad3704e3e',1,'print_uri(uri_type *in):&#160;uri.cpp'],['../d8/dd2/uri_8cpp.html#acd9ad3e6df399d6ebf98d35ad3704e3e',1,'print_uri(uri_type *in):&#160;uri.cpp']]],
+  ['print_5furi_59',['print_uri',['../d8/dd2/uri_8cpp.html#acd9ad3e6df399d6ebf98d35ad3704e3e',1,'print_uri(uri_type *in):&#160;uri.cpp'],['../de/dd0/Compa_2src_2inc_2uri_8hpp.html#acd9ad3e6df399d6ebf98d35ad3704e3e',1,'print_uri(uri_type *in):&#160;uri.cpp']]],
   ['printhandleinfo_60',['printhandleinfo',['../d4/d99/upnpapi_8cpp.html#a5a17761f7fc97c277b8385bdb989e6e5',1,'PrintHandleInfo(UpnpClient_Handle Hnd):&#160;upnpapi.cpp'],['../d3/da9/upnpapi_8hpp.html#a5a17761f7fc97c277b8385bdb989e6e5',1,'PrintHandleInfo(UpnpClient_Handle Hnd):&#160;upnpapi.cpp']]],
   ['printservice_61',['printservice',['../db/d74/service__table_8hpp.html#a12f4652e118d472732a64989602ee54e',1,'printService(service_info *service, Upnp_LogLevel level, Dbg_Module module):&#160;service_table.cpp'],['../dd/d10/service__table_8cpp.html#a12f4652e118d472732a64989602ee54e',1,'printService(service_info *service, Upnp_LogLevel level, Dbg_Module module):&#160;service_table.cpp']]],
   ['printservicelist_62',['printservicelist',['../dd/d10/service__table_8cpp.html#a32c36a8ef50698c158e3baf35d307753',1,'printServiceList(service_info *service, Upnp_LogLevel level, Dbg_Module module):&#160;service_table.cpp'],['../db/d74/service__table_8hpp.html#a32c36a8ef50698c158e3baf35d307753',1,'printServiceList(service_info *service, Upnp_LogLevel level, Dbg_Module module):&#160;service_table.cpp']]],
@@ -74,7 +74,6 @@ var searchData=
   ['promise_20to_20throw_20no_20exception_71',['Promise to throw &quot;no exception&quot;',['../d2/d59/Overview.html#noexcept',1,'']]],
   ['propertyset_72',['propertySet',['../d9/dd2/gena_8hpp.html#aaecdd97f28c110caa2874f8a10126857',1,'NOTIFY_THREAD_STRUCT']]],
   ['protocol_20family_73',['protocol family',['../db/d86/group__upnplib-socket.html#autotoc_md14',1,'']]],
-  ['psocketerr_74',['PSocketErr',['../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080',1,'upnplib']]],
-  ['pupnp_75',['pupnp',['../dc/d9a/namespacepupnp.html',1,'']]],
-  ['pvirtualdirlist_76',['pvirtualdirlist',['../d3/da9/upnpapi_8hpp.html#a85ec286c63778e7aa2c8013917312713',1,'pVirtualDirList:&#160;upnpapi.cpp'],['../d4/d99/upnpapi_8cpp.html#a85ec286c63778e7aa2c8013917312713',1,'pVirtualDirList:&#160;upnpapi.cpp']]]
+  ['pupnp_74',['pupnp',['../dc/d9a/namespacepupnp.html',1,'']]],
+  ['pvirtualdirlist_75',['pvirtualdirlist',['../d3/da9/upnpapi_8hpp.html#a85ec286c63778e7aa2c8013917312713',1,'pVirtualDirList:&#160;upnpapi.cpp'],['../d4/d99/upnpapi_8cpp.html#a85ec286c63778e7aa2c8013917312713',1,'pVirtualDirList:&#160;upnpapi.cpp']]]
 ];

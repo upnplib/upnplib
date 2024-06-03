@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-23
+ * Redistribution only with this Copyright remark. Last modified: 2024-06-03
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -505,7 +505,7 @@ int sock_destroy(SOCKINFO* info, int ShutdownMethod) {
             SOCKET_ERROR) {
             sockerrObj.catch_error();
             std::string msg = "MSG1010: syscall ::shutdown() returned \"" +
-                              sockerrObj.get_error_str() + "\".\n";
+                              sockerrObj.error_str() + "\".\n";
             if (sockerrObj == ENOTCONNP) {
                 // shutdown a not connected connection is not an error.
                 UPNPLIB_LOGINFO << msg;

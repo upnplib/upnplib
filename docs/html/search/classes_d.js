@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['virtual_5fdir_5flist_0',['virtual_Dir_List',['../d6/d92/VirtualDir_8hpp.html#d1/dec/structvirtual__Dir__List',1,'']]],
-  ['virtualdircallbacks_1',['VirtualDirCallbacks',['../d6/d92/VirtualDir_8hpp.html#d1/d09/structVirtualDirCallbacks',1,'']]]
+  ['xml_5falias_5ft_0',['xml_alias_t',['../d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html',1,'anonymous_namespace{webserver.cpp}']]]
 ];

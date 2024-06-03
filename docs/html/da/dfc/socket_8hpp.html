@@ -100,8 +100,7 @@ $(document).ready(function(){initNavTree('da/dfc/socket_8hpp.html','../../'); in
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#define-members">Macros</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle"><div class="title">socket.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -190,14 +189,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d73/classupnplib_1_1CSocket.html">upnplib::CSocket</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manage all aspects of a network socket.  <a href="../../d8/d73/classupnplib_1_1CSocket.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">upnplib::ISocketErr</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Portable catch <b>one</b> network socket error from the operating system, and provide information about it.  <a href="../../d9/dd8/classupnplib_1_1ISocketErr.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d16/classupnplib_1_1CSocketErrService.html">upnplib::CSocketErrService</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a> for portable handling of network socket errors.  <a href="../../d1/d16/classupnplib_1_1CSocketErrService.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dd2/classupnplib_1_1CSocketErr.html">upnplib::CSocketErr</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-client</a> for portable handling of network socket errors with injected <a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a>.  <a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class for portable handling of network socket errors.  <a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -211,12 +204,6 @@ Macros</h2></td></tr>
 <tr class="memitem:gaa9494d0f2750c611339d1336ae8183d8" id="r_gaa9494d0f2750c611339d1336ae8183d8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d86/group__upnplib-socket.html#gaa9494d0f2750c611339d1336ae8183d8">WINSOCK_INIT</a></td></tr>
 <tr class="memdesc:gaa9494d0f2750c611339d1336ae8183d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize and cleanup Microsoft Windows Sockets.  <br /></td></tr>
 <tr class="separator:gaa9494d0f2750c611339d1336ae8183d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:ga5738af1c9e42dc87957952b00e67f080" id="r_ga5738af1c9e42dc87957952b00e67f080"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d86/group__upnplib-socket.html#ga5738af1c9e42dc87957952b00e67f080">upnplib::PSocketErr</a> = std::shared_ptr&lt; <a class="el" href="../../d9/dd8/classupnplib_1_1ISocketErr.html">ISocketErr</a> &gt;</td></tr>
-<tr class="memdesc:ga5738af1c9e42dc87957952b00e67f080"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smart pointer to <a class="el" href="../../d5/d67/Glossary.html#glossary_depinj">di-service</a> objects that handle network socket errors and used to inject the objects.  <br /></td></tr>
-<tr class="separator:ga5738af1c9e42dc87957952b00e67f080"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><b>Socket Module:</b> manage properties and methods but not connections of ONE network socket to handle IPv4 and IPv6 streams and datagrams. </p>
