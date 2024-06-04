@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SYNCLOG_HPP
 #define UPNPLIB_SYNCLOG_HPP
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-01
+// Redistribution only with this Copyright remark. Last modified: 2024-06-05
 /*!
  * \file
  * \brief Define macro for synced logging to the console for detailed info and
@@ -9,6 +9,7 @@
  */
 
 #include <upnplib/visibility.hpp>
+#include <upnplib/cmake_vars.hpp>
 /// \cond
 #include <string>
 #include <iostream>
@@ -22,6 +23,27 @@ UPNPLIB_EXTERN bool g_dbug;
 
 
 // clang-format off
+
+// Usage: SYNC(std::cout) << "Message\n";
+// Usage: SYNC(std::cerr) << "Error\n";
+#if defined(_MSC_VER) || defined(__APPLE__)
+  #define SYNC(s) (s)
+#else
+  #define SYNC(s) std::osyncstream((s))
+#endif
+
+
+// Trace messages
+// --------------
+#ifdef UPNPLIB_WITH_TRACE
+  #define TRACE(s) SYNC(std::cout)<<"TRACE["<<(static_cast<const char*>(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)<<":"<<__LINE__<<"] "<<(s)<<"\n";
+  #define TRACE2(a, b) SYNC(std::cout)<<"TRACE["<<(static_cast<const char*>(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)<<":"<<__LINE__<<"] "<<(a)<<(b)<<"\n";
+#else // no UPNPLIB_WITH_TRACE
+  #define TRACE(s)
+  #define TRACE2(a, b)
+#endif
+
+
 // Debug output messages with some that can be enabled during runtime.
 // -------------------------------------------------------------------
 // __PRETTY_FUNCTION__ is defined for POSIX so we have it there for the
@@ -36,11 +58,7 @@ UPNPLIB_EXTERN bool g_dbug;
 // throw(UPNPLIB_LOGEXCEPT + "MSG1nnn: exception message.\n");
 #define UPNPLIB_LOGEXCEPT "UPnPlib ["+::std::string(__PRETTY_FUNCTION__)+"] EXCEPTION "
 
-#if defined(_MSC_VER) || defined(__APPLE__)
-#define UPNPLIB_LOG std::cerr<<"UPnPlib ["<<__PRETTY_FUNCTION__
-#else
-#define UPNPLIB_LOG std::osyncstream(std::cerr)<<"UPnPlib ["<<__PRETTY_FUNCTION__
-#endif
+#define UPNPLIB_LOG SYNC(std::cerr)<<"UPnPlib ["<<__PRETTY_FUNCTION__
 // Critical messages are always output.
 #define UPNPLIB_LOGCRIT UPNPLIB_LOG<<"] CRITICAL "
 #define UPNPLIB_LOGERR if(upnplib::g_dbug) UPNPLIB_LOG<<"] ERROR "

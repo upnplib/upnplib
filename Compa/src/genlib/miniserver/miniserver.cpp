@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-06-03
+ * Redistribution only with this Copyright remark. Last modified: 2024-06-04
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -807,7 +807,7 @@ int get_port(
 }
 
 #ifdef COMPA_HAVE_WEBSERVER
-#if 0
+#if false
 /*!
  * \brief Get valid sockets.
  *
@@ -1231,10 +1231,8 @@ error:
 #endif
 
 /*!
- * \brief Create STREAM sockets, binds to INADDR_ANY and listens for incoming
- * connections.
- *
- * Returns the actual port which the sockets sub-system returned.
+ * \brief Create STREAM sockets, binds to local network interfaces and listens
+ * for incoming connections.
  *
  * Only available with the webserver compiled in.
  *
@@ -1260,14 +1258,13 @@ int get_miniserver_sockets(
        connections. If **0** then a random port number is returned in **out**.
      */
     in_port_t listen_port4,
-    /*! [in] port on which the UPnP Device shall listen for incoming IPv6 ULA
-     * connections. If **0** then a random port number is returned in **out**.
-     */
+    /*! [in] port on which the UPnP Device shall listen for incoming IPv6
+       [LLA](\ref glossary_ipv6addr) connections. If **0** then a random port
+       number is returned in **out**. */
     in_port_t listen_port6,
-    /*! [in] port on which the UPnP Device shall listen for incoming IPv6 ULA or
-     *GUA connections. If **0** then a random port number is returned in
-     ***out**.
-     */
+    /*! [in] port on which the UPnP Device shall listen for incoming IPv6
+       [UAD](\ref glossary_ipv6addr) connections. If **0** then a random port
+       number is returned in ***out**. */
     in_port_t listen_port6UlaGua) {
     UPNPLIB_LOGINFO "MSG1109: Executing with listen_port4="
         << listen_port4 << ", listen_port6=" << listen_port6
@@ -1289,9 +1286,9 @@ int get_miniserver_sockets(
         }
     }
 
-    // TODO: Check what's with
     // ss6.serverAddr6->sin6_scope_id = gIF_INDEX;
-    // It is never copied to 'out'.
+    // I could not find where sin6_scope_id is read elsewhere to use it.
+    // It is never copied to 'out'. --Ingo
 
     if (out->MiniSvrSock6UadObj != nullptr && gIF_IPV6_ULA_GUA[0] != '\0') {
         try {

@@ -331,7 +331,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:aec7d02e7e42098f68ed2d85b931106df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns port to which socket, sockfd, is bound.  <br /></td></tr>
 <tr class="separator:aec7d02e7e42098f68ed2d85b931106df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7edcadd0e5ba55588d4794730343772e" id="r_a7edcadd0e5ba55588d4794730343772e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e">anonymous_namespace{miniserver.cpp}::get_miniserver_sockets</a> (<a class="el" href="../../d3/d8b/miniserver_8hpp.html#d2/d37/structMiniServerSockArray">MiniServerSockArray</a> *out, in_port_t listen_port4, in_port_t listen_port6, in_port_t listen_port6UlaGua)</td></tr>
-<tr class="memdesc:a7edcadd0e5ba55588d4794730343772e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections.  <br /></td></tr>
+<tr class="memdesc:a7edcadd0e5ba55588d4794730343772e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create STREAM sockets, binds to local network interfaces and listens for incoming connections.  <br /></td></tr>
 <tr class="separator:a7edcadd0e5ba55588d4794730343772e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1eecc466ef68bcf35458b9b5c5ff4d63" id="r_a1eecc466ef68bcf35458b9b5c5ff4d63"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a1eecc466ef68bcf35458b9b5c5ff4d63">anonymous_namespace{miniserver.cpp}::get_miniserver_stopsock</a> (<a class="el" href="../../d3/d8b/miniserver_8hpp.html#d2/d37/structMiniServerSockArray">MiniServerSockArray</a> *out)</td></tr>
 <tr class="memdesc:a1eecc466ef68bcf35458b9b5c5ff4d63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the miniserver STOP socket, usable to listen for stopping the miniserver.  <br /></td></tr>
@@ -531,7 +531,7 @@ member variable </td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/db2/miniserver_8cpp_source.html#l01426">1426</a> of file <a class="el" href="../../d5/db2/miniserver_8cpp_source.html">miniserver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/db2/miniserver_8cpp_source.html#l01423">1423</a> of file <a class="el" href="../../d5/db2/miniserver_8cpp_source.html">miniserver.cpp</a>.</p>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
@@ -577,7 +577,7 @@ member variable </td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/db2/miniserver_8cpp_source.html#l01419">1419</a> of file <a class="el" href="../../d5/db2/miniserver_8cpp_source.html">miniserver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/db2/miniserver_8cpp_source.html#l01416">1416</a> of file <a class="el" href="../../d5/db2/miniserver_8cpp_source.html">miniserver.cpp</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -650,7 +650,7 @@ member variable </td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/db2/miniserver_8cpp_source.html#l01432">1432</a> of file <a class="el" href="../../d5/db2/miniserver_8cpp_source.html">miniserver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/db2/miniserver_8cpp_source.html#l01429">1429</a> of file <a class="el" href="../../d5/db2/miniserver_8cpp_source.html">miniserver.cpp</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
@@ -659,7 +659,7 @@ member variable </td></tr>
 <div class="center"><img src="../../d5/db2/miniserver_8cpp_a85c0b17d965bdb9430a9ce2e6931770a_cgraph.png" border="0" usemap="#ad5/db2/miniserver_8cpp_a85c0b17d965bdb9430a9ce2e6931770a_cgraph" alt=""/></div>
 <map name="ad5/db2/miniserver_8cpp_a85c0b17d965bdb9430a9ce2e6931770a_cgraph" id="ad5/db2/miniserver_8cpp_a85c0b17d965bdb9430a9ce2e6931770a_cgraph">
 <area shape="rect" title="Initialize the sockets functionality for the Miniserver." alt="" coords="5,1003,128,1029"/>
-<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="186,586,366,641"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e" title="Create STREAM sockets, binds to local network interfaces and listens for incoming connections." alt="" coords="186,586,366,641"/>
 <area shape="poly" title=" " alt="" coords="70,1002,110,903,174,765,210,704,245,651,249,654,214,707,178,768,115,905,75,1004"/>
 <area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a1eecc466ef68bcf35458b9b5c5ff4d63" title="Creates the miniserver STOP socket, usable to listen for stopping the miniserver." alt="" coords="186,779,366,834"/>
 <area shape="poly" title=" " alt="" coords="71,1002,108,933,138,890,174,851,191,839,194,843,178,855,142,893,113,935,76,1005"/>
@@ -823,7 +823,7 @@ member variable </td></tr>
 <p>Stop and Shutdown the MiniServer and free socket resources. </p>
 <dl class="section return"><dt>Returns</dt><dd>Always returns 0. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/db2/miniserver_8cpp_source.html#l01562">1562</a> of file <a class="el" href="../../d5/db2/miniserver_8cpp_source.html">miniserver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/db2/miniserver_8cpp_source.html#l01559">1559</a> of file <a class="el" href="../../d5/db2/miniserver_8cpp_source.html">miniserver.cpp</a>.</p>
 <div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-5-summary" class="dynsummary" style="display:block;">

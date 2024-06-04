@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-25
+// Redistribution only with this Copyright remark. Last modified: 2024-06-04
 
 #include <upnplib/netaddr.hpp>
 
@@ -48,6 +48,7 @@ TEST(NetaddrTestSuite, is_numeric_node) {
     EXPECT_EQ(is_netaddr("192.168.47.9", AF_INET), AF_INET);
     EXPECT_EQ(is_netaddr("192.168.47.8"), AF_INET);
     EXPECT_EQ(is_netaddr("[2001:db8::5]"), AF_INET6);
+    EXPECT_EQ(is_netaddr("[2001::db8::6]"), AF_UNSPEC); // double double colon
     EXPECT_EQ(is_netaddr("[12.168.88.93]"), AF_UNSPEC);
     EXPECT_EQ(is_netaddr("[12.168.88.94]", AF_INET6), AF_UNSPEC);
     EXPECT_EQ(is_netaddr("[12.168.88.95]", AF_INET), AF_UNSPEC);

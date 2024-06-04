@@ -168,7 +168,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:aec7d02e7e42098f68ed2d85b931106df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns port to which socket, sockfd, is bound.  <br /></td></tr>
 <tr class="separator:aec7d02e7e42098f68ed2d85b931106df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7edcadd0e5ba55588d4794730343772e" id="r_a7edcadd0e5ba55588d4794730343772e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e">get_miniserver_sockets</a> (<a class="el" href="../../d3/d8b/miniserver_8hpp.html#d2/d37/structMiniServerSockArray">MiniServerSockArray</a> *out, in_port_t listen_port4, in_port_t listen_port6, in_port_t listen_port6UlaGua)</td></tr>
-<tr class="memdesc:a7edcadd0e5ba55588d4794730343772e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections.  <br /></td></tr>
+<tr class="memdesc:a7edcadd0e5ba55588d4794730343772e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create STREAM sockets, binds to local network interfaces and listens for incoming connections.  <br /></td></tr>
 <tr class="separator:a7edcadd0e5ba55588d4794730343772e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1eecc466ef68bcf35458b9b5c5ff4d63" id="r_a1eecc466ef68bcf35458b9b5c5ff4d63"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a1eecc466ef68bcf35458b9b5c5ff4d63">get_miniserver_stopsock</a> (<a class="el" href="../../d3/d8b/miniserver_8hpp.html#d2/d37/structMiniServerSockArray">MiniServerSockArray</a> *out)</td></tr>
 <tr class="memdesc:a1eecc466ef68bcf35458b9b5c5ff4d63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the miniserver STOP socket, usable to listen for stopping the miniserver.  <br /></td></tr>
@@ -662,8 +662,7 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
       </table>
 </div><div class="memdoc">
 
-<p>Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections. </p>
-<p>Returns the actual port which the sockets sub-system returned.</p>
+<p>Create STREAM sockets, binds to local network interfaces and listens for incoming connections. </p>
 <p>Only available with the webserver compiled in.</p>
 <dl class="section return"><dt>Returns</dt><dd>On success: UPNP_E_SUCCESS<br  />
  On error:<ul>
@@ -685,13 +684,13 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
 </ul>
 </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">listen_port4</td><td>port on which the UPnP Device shall listen for incoming IPv4 connections. If <b>0</b> then a random port number is returned in <b>out</b>.  </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">listen_port6</td><td>port on which the UPnP Device shall listen for incoming IPv6 ULA connections. If <b>0</b> then a random port number is returned in <b>out</b>.  </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">listen_port6UlaGua</td><td>port on which the UPnP Device shall listen for incoming IPv6 ULA or *GUA connections. If <b>0</b> then a random port number is returned in ***out**. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">listen_port6</td><td>port on which the UPnP Device shall listen for incoming IPv6 <a class="el" href="../../d5/d67/Glossary.html#glossary_ipv6addr">LLA</a> connections. If <b>0</b> then a random port number is returned in <b>out</b>.  </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">listen_port6UlaGua</td><td>port on which the UPnP Device shall listen for incoming IPv6 <a class="el" href="../../d5/d67/Glossary.html#glossary_ipv6addr">UAD</a> connections. If <b>0</b> then a random port number is returned in ***out**. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/db2/miniserver_8cpp_source.html#l01249">1249</a> of file <a class="el" href="../../d5/db2/miniserver_8cpp_source.html">miniserver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/db2/miniserver_8cpp_source.html#l01247">1247</a> of file <a class="el" href="../../d5/db2/miniserver_8cpp_source.html">miniserver.cpp</a>.</p>
 <div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-6-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-6-summary" class="dynsummary" style="display:block;">
@@ -699,7 +698,7 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
 <div id="dynsection-6-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_a7edcadd0e5ba55588d4794730343772e_cgraph.png" border="0" usemap="#ad9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_a7edcadd0e5ba55588d4794730343772e_cgraph" alt=""/></div>
 <map name="ad9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_a7edcadd0e5ba55588d4794730343772e_cgraph" id="ad9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_a7edcadd0e5ba55588d4794730343772e_cgraph">
-<area shape="rect" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="5,541,185,596"/>
+<area shape="rect" title="Create STREAM sockets, binds to local network interfaces and listens for incoming connections." alt="" coords="5,541,185,596"/>
 <area shape="rect" href="../../d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="235,279,402,304"/>
 <area shape="poly" title=" " alt="" coords="117,539,296,314,300,317,121,543"/>
 <area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a70afe9ed6de1c17bb59f6c0bcc5bba00" title="Get the port number." alt="" coords="233,631,404,671"/>
@@ -752,7 +751,7 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
 <div id="dynsection-7-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_a7edcadd0e5ba55588d4794730343772e_icgraph.png" border="0" usemap="#ad9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_a7edcadd0e5ba55588d4794730343772e_icgraph" alt=""/></div>
 <map name="ad9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_a7edcadd0e5ba55588d4794730343772e_icgraph" id="ad9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_a7edcadd0e5ba55588d4794730343772e_icgraph">
-<area shape="rect" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="831,5,1011,60"/>
+<area shape="rect" title="Create STREAM sockets, binds to local network interfaces and listens for incoming connections." alt="" coords="831,5,1011,60"/>
 <area shape="rect" href="../../d5/db2/miniserver_8cpp.html#a85c0b17d965bdb9430a9ce2e6931770a" title="Initialize the sockets functionality for the Miniserver." alt="" coords="660,20,783,45"/>
 <area shape="poly" title=" " alt="" coords="817,35,783,35,783,30,817,30"/>
 <area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="455,20,612,45"/>
@@ -800,7 +799,7 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/db2/miniserver_8cpp_source.html#l01345">1345</a> of file <a class="el" href="../../d5/db2/miniserver_8cpp_source.html">miniserver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/db2/miniserver_8cpp_source.html#l01342">1342</a> of file <a class="el" href="../../d5/db2/miniserver_8cpp_source.html">miniserver.cpp</a>.</p>
 <div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-8-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-8-summary" class="dynsummary" style="display:block;">
@@ -1250,7 +1249,7 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/db2/miniserver_8cpp_source.html#l01393">1393</a> of file <a class="el" href="../../d5/db2/miniserver_8cpp_source.html">miniserver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/db2/miniserver_8cpp_source.html#l01390">1390</a> of file <a class="el" href="../../d5/db2/miniserver_8cpp_source.html">miniserver.cpp</a>.</p>
 <div id="dynsection-16" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-16-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-16-summary" class="dynsummary" style="display:block;">

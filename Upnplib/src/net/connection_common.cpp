@@ -1,7 +1,7 @@
 #ifndef _MSC_VER
 
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-23
+// Redistribution only with this Copyright remark. Last modified: 2024-06-04
 /*!
  * \file
  * \brief Definition of common used classes and free functions for network
@@ -9,8 +9,7 @@
  */
 
 #include <upnplib/connection_common.hpp>
-#include <iostream>
-#include <upnplib/global.hpp>
+#include <upnplib/synclog.hpp>
 
 /// \cond
 namespace upnplib {

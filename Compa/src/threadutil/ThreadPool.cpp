@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-18
+ * Redistribution only with this Copyright remark. Last modified: 2024-06-04
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,16 +42,13 @@
 
 #include <ThreadPool.hpp>
 
-#include <upnplib/global.hpp>
+#include <upnplib/synclog.hpp>
 
 /// \cond
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring> /* for memset()*/
-#ifdef UPNPLIB_WITH_TRACE
-#include <iostream>
-#endif
 /// \endcond
 
 /*! Size of job free list. */

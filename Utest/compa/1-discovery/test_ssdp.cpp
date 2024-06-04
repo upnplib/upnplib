@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-03-22
+// Redistribution only with this Copyright remark. Last modified: 2024-06-04
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -15,6 +15,9 @@
 #include <upnp.hpp> // for UPNP_E_* constants
 
 #include <upnplib/global.hpp>
+#ifdef _MSC_VER
+#include <upnplib/synclog.hpp>
+#endif
 #include <upnplib/upnptools.hpp> // for errStrEx
 
 #include <utest/utest.hpp>
@@ -79,7 +82,7 @@ clang-format on */
 class SSDPserverFTestSuite : public ::testing::Test {
   protected:
     SSDPserverFTestSuite() {
-#ifdef _WIN32
+#ifdef _MSC_VER
         // Initialize Windows sockets
         TRACE("SSDPserverFTestSuite: initialize Windows sockets")
         WSADATA wsaData;

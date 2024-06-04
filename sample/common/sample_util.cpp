@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-16
+ * Redistribution only with this Copyright remark. Last modified: 2024-06-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -50,14 +50,13 @@
 #include "UpnpEvent.hpp"
 #include "UpnpEventSubscribe.hpp"
 
-#include <upnplib/global.hpp>
+#include <upnplib/synclog.hpp>
 
 #include <umock/stdio.hpp>
 
 #include "pthread.h" // To find pthreads4w don't use <pthread.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include <iostream>
 
 static int initialize_init = 1;
 static int initialize_register = 1;
@@ -678,10 +677,11 @@ void SampleUtil_StateUpdate(const char* varName, const char* varValue,
  */
 void linux_print(const char* format, ...) {
     va_list argList;
+    char buf[MAX_BUF];
 
     va_start(argList, format);
-    vfprintf(stdout, format, argList);
-    umock::stdio_h.fflush(stdout);
+    vsnprintf(buf, MAX_BUF, format, argList);
+    SYNC(std::cout) << buf;
     va_end(argList);
 }
 

@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-11
+ * Redistribution only with this Copyright remark. Last modified: 2024-06-04
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,10 +35,9 @@
  * \brief String to integer and integer to string conversion functions.
  */
 
-#include <upnplib/global.hpp>
+#include <upnplib/synclog.hpp>
 #include <strintmap.hpp>
 #include <membuffer.hpp>
-#include <iostream>
 
 
 int map_str_to_int(const char* name, size_t name_len,

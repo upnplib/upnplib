@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-02
+// Redistribution only with this Copyright remark. Last modified: 2024-06-04
 
 /*!
 \page Glossary
@@ -36,6 +36,11 @@ Because Dependency Injection is used by GoogleMock for the Unit Tests I will not
 - The **di-injector** which injects the service(s) into the client.
 
 The services that a client requires are the client's **dependencies**.
+
+\anchor glossary_ipv6addr ***IPv6 addresses***
+
+- LLA: Link Local Addresses
+- UAD: Unique Addresses are ULA (Unique Local Addresses) or GUA (Globally Unique Addresses). They are handled together because GUA and ULA should be treated with equal weight, with address selection performed according to IETF guidance.
 
 \anchor glossary_mlink ***multicast link***
 

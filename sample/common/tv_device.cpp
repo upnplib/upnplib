@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-15
+ * Redistribution only with this Copyright remark. Last modified: 2024-06-04
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,13 +39,12 @@
 #include "tv_device.hpp"
 #include <upnpdebug.hpp>
 
-#include <upnplib/global.hpp>
+#include <upnplib/synclog.hpp>
 #include <upnplib/port.hpp>
 
-#include <cassert>
-#include <iostream>
-
 /// \cond
+#include <cassert>
+
 #define DEFAULT_WEB_DIR "./sample/web"
 #define DESC_URL_SIZE 200
 /// \endcond

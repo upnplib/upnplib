@@ -34,7 +34,7 @@
 <area shape="poly" id="edge59_Node000001_Node000138" title=" " alt="" coords="1375,509,1363,563,1341,630,1307,700,1285,732,1259,761,1232,780,1229,775,1256,757,1281,729,1302,697,1336,628,1357,561,1370,508"/>
 <area shape="rect" id="Node000162" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a64de72048c9ed20f9673c4d9564d5457" title="Write to a not SSL protected socket." alt="" coords="1066,842,1246,897"/>
 <area shape="poly" id="edge63_Node000001_Node000162" title=" " alt="" coords="1378,509,1370,575,1350,661,1334,706,1314,751,1290,794,1259,831,1244,844,1240,840,1255,828,1285,790,1310,749,1329,704,1345,659,1364,574,1373,508"/>
-<area shape="rect" id="Node000003" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="530,101,710,156"/>
+<area shape="rect" id="Node000003" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e" title="Create STREAM sockets, binds to local network interfaces and listens for incoming connections." alt="" coords="530,101,710,156"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="798,129,710,130,710,125,798,124"/>
 <area shape="rect" id="Node000004" href="$d5/db2/miniserver_8cpp.html#a85c0b17d965bdb9430a9ce2e6931770a" title="Initialize the sockets functionality for the Miniserver." alt="" coords="297,201,419,226"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="523,162,399,203,397,198,521,157"/>

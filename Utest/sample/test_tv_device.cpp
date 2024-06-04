@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-22
+// Redistribution only with this Copyright remark. Last modified: 2024-06-04
 
 // -----------------------------------------------------------------------------
 // This testsuite starts the sample TV Device with general command line
@@ -17,7 +17,6 @@
 #include <pupnp/upnpdebug.hpp>
 
 #include <upnplib/upnptools.hpp>
-#include <upnplib/cmake_vars.hpp>
 #include <upnplib/sockaddr.hpp>
 
 #include <utest/utest_unix.hpp>

@@ -1,6 +1,6 @@
 <map id="StartMiniServer" name="StartMiniServer">
 <area shape="rect" id="Node000001" title="Initialize the sockets functionality for the Miniserver." alt="" coords="5,1003,128,1029"/>
-<area shape="rect" id="Node000002" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="186,586,366,641"/>
+<area shape="rect" id="Node000002" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e" title="Create STREAM sockets, binds to local network interfaces and listens for incoming connections." alt="" coords="186,586,366,641"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,1002,110,903,174,765,210,704,245,651,249,654,214,707,178,768,115,905,75,1004"/>
 <area shape="rect" id="Node000019" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a1eecc466ef68bcf35458b9b5c5ff4d63" title="Creates the miniserver STOP socket, usable to listen for stopping the miniserver." alt="" coords="186,779,366,834"/>
 <area shape="poly" id="edge29_Node000001_Node000019" title=" " alt="" coords="71,1002,108,933,138,890,174,851,191,839,194,843,178,855,142,893,113,935,76,1005"/>

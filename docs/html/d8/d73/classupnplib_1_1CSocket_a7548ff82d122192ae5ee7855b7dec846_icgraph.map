@@ -1,6 +1,6 @@
 <map id="upnplib::CSocket::bind" name="upnplib::CSocket::bind">
 <area shape="rect" id="Node000001" title="Bind socket to a local interface address." alt="" coords="1059,20,1225,45"/>
-<area shape="rect" id="Node000002" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e" title="Create STREAM sockets, binds to INADDR_ANY and listens for incoming connections." alt="" coords="831,5,1011,60"/>
+<area shape="rect" id="Node000002" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e" title="Create STREAM sockets, binds to local network interfaces and listens for incoming connections." alt="" coords="831,5,1011,60"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1045,35,1011,35,1011,30,1045,30"/>
 <area shape="rect" id="Node000003" href="$d5/db2/miniserver_8cpp.html#a85c0b17d965bdb9430a9ce2e6931770a" title="Initialize the sockets functionality for the Miniserver." alt="" coords="660,20,783,45"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="817,35,783,35,783,30,817,30"/>
