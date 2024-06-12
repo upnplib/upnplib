@@ -22,8 +22,6 @@ jobs:
 
   # Job: Configure, build and test Ubuntu
   # -------------------------------------
-  # ubuntu-18.04 isn't used for tests because it doesn't support open standard
-  # ISO C++20 that we declared to use for UPnPlib.
   Build_Ubuntu:
     if: true
     name: Test Ubuntu
@@ -201,7 +199,6 @@ jobs:
     strategy:
       matrix:
         buildtype: [ 'Release', 'Debug' ]
-        #buildtype: [ 'Release', 'Release', 'Release', 'Debug', 'Debug', 'Debug' ]
         os: [ windows-2019, windows-2022 ]
         googletest: [ '-D UPNPLIB_WITH_GOOGLETEST=ON', '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF' ]
       fail-fast: false

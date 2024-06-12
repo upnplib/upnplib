@@ -4,9 +4,7 @@ var annotated_dup =
       [ "http_connection_handle_t", "d6/d58/namespaceanonymous__namespace_02httpreadwrite_8cpp_03.html#d4/d8a/structanonymous__namespace_02httpreadwrite_8cpp_03_1_1http__connection__handle__t", null ]
     ] ],
     [ "anonymous_namespace{miniserver.cpp}", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html", [
-      [ "mserv_request_t", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#dd/d1f/structanonymous__namespace_02miniserver_8cpp_03_1_1mserv__request__t", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_dd/d1f/structanonymous__namespace_02miniserver_8cpp_03_1_1mserv__request__t_dup" ],
-      [ "s_SocketStuff", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#dd/d37/structanonymous__namespace_02miniserver_8cpp_03_1_1s__SocketStuff", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_dd/d37/structanonymous__namespace_02miniserver_8cpp_03_1_1s__SocketStuff_dup" ],
-      [ "s_SocketStuff.__unnamed2__", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#d5/da1/unionanonymous__namespace_02miniserver_8cpp_03_1_1s__SocketStuff_8____unnamed2____", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_d5/da1/unionanonymous__namespace_02miniserver_8cpp_03_1_1s__SocketStuff_8____unnamed2_____dup" ]
+      [ "mserv_request_t", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#dd/d1f/structanonymous__namespace_02miniserver_8cpp_03_1_1mserv__request__t", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_dd/d1f/structanonymous__namespace_02miniserver_8cpp_03_1_1mserv__request__t_dup" ]
     ] ],
     [ "anonymous_namespace{soap_device.cpp}", "d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html", [
       [ "soap_devserv_t", "d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#d5/d88/structanonymous__namespace_02soap__device_8cpp_03_1_1soap__devserv__t", null ]

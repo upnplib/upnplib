@@ -105,7 +105,7 @@ $(document).ready(function(){initNavTree('d5/dfa/upnpdebug_8cpp_source.html','..
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * Copyright (c) 2000-2003 Intel Corporation</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * All rights reserved.</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, &lt;Ingo@Hoeft-online.de&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * Redistribution only with this Copyright remark. Last modified: 2024-03-10</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * Redistribution only with this Copyright remark. Last modified: 2024-06-04</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * Redistribution and use in source and binary forms, with or without</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * modification, are permitted provided that the following conditions are met:</span></div>
@@ -142,249 +142,247 @@ $(document).ready(function(){initNavTree('d5/dfa/upnpdebug_8cpp_source.html','..
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#include &lt;cerrno&gt;</span></div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#include &lt;cstdarg&gt;</span></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#include &lt;cstring&gt;</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#include &lt;upnplib/cmake_vars.hpp&gt;</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#include &lt;<a class="code" href="../../d9/d3a/global_8hpp.html">upnplib/global.hpp</a>&gt;</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">#include &lt;umock/pthread.hpp&gt;</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">#include &lt;umock/stdio.hpp&gt;</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">   56</a></span><span class="keyword">static</span> ithread_mutex_t <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#a23857cfd98cddfdf1730d2e5447ae1d8">   59</a></span><span class="keyword">static</span> <a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#ac9d220584af8668d158b172d81e956b8">Upnp_LogLevel</a> <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a23857cfd98cddfdf1730d2e5447ae1d8">g_log_level</a> = <a class="code hl_define" href="../../d8/d32/upnpdebug_8hpp.html#a3aa5b762a9e5a4ad3d71a3ab9799fecb">UPNP_DEFAULT_LOG_LEVEL</a>;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">   62</a></span><span class="keyword">static</span> FILE* <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a>;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#aeabeb8d99f1c6c8a9ec7c36db16a14ff">   65</a></span><span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#aeabeb8d99f1c6c8a9ec7c36db16a14ff">setlogwascalled</a>;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">   67</a></span><span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a>;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">   69</a></span><span class="keyword">static</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a>;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="comment">/* This is called from UpnpInit2(). So the user must call UpnpSetLogFileNames()</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment"> * before. This can be called again, for example to rotate the log</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment"> * file, and we try to avoid multiple calls to the mutex init, with a</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="comment"> * risk of race, probably not a problem, and not worth fixing. */</span></div>
-<div class="foldopen" id="foldopen00075" data-start="{" data-end="}">
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="../../d8/d32/upnpdebug_8hpp.html#a0bd1a35974602e8428fd53ff4b424c46">   75</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#acb989a0182d5595b14f2dc3de64225b9">UpnpInitLog</a>() {</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    TRACE(<span class="stringliteral">&quot;Executing UpnpInitLog()&quot;</span>)</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a>) {</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        umock::pthread_h.pthread_mutex_init(&amp;<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>, NULL);</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a> = 1;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    }</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="comment">/* If the user did not ask for logging do nothing */</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#aeabeb8d99f1c6c8a9ec7c36db16a14ff">setlogwascalled</a> == 0) {</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    }</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> != <span class="keyword">nullptr</span> &amp;&amp; <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> != stderr) {</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        umock::stdio_h.fclose(<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a>);</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    }</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a>) {</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> = umock::stdio_h.fopen(<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a>, <span class="stringliteral">&quot;a&quot;</span>);</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            fprintf(stderr,</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                    <span class="stringliteral">&quot;UPnPlib Error: failed to open filename \&quot;%s\&quot;: %s. &quot;</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                    <span class="stringliteral">&quot;Fallback to stderr.\n&quot;</span>,</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                    <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a>, std::strerror(errno));</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        }</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    }</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="comment">// If not set, always set to stderr, also as fallback for a wrong fileName.</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> == <span class="keyword">nullptr</span>)</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> = stderr;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>}</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#include &lt;<a class="code" href="../../d1/d3b/synclog_8hpp.html">upnplib/synclog.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#include &lt;umock/pthread.hpp&gt;</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#include &lt;umock/stdio.hpp&gt;</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">   54</a></span><span class="keyword">static</span> ithread_mutex_t <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#a23857cfd98cddfdf1730d2e5447ae1d8">   57</a></span><span class="keyword">static</span> <a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#ac9d220584af8668d158b172d81e956b8">Upnp_LogLevel</a> <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a23857cfd98cddfdf1730d2e5447ae1d8">g_log_level</a> = <a class="code hl_define" href="../../d8/d32/upnpdebug_8hpp.html#a3aa5b762a9e5a4ad3d71a3ab9799fecb">UPNP_DEFAULT_LOG_LEVEL</a>;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">   60</a></span><span class="keyword">static</span> FILE* <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#aeabeb8d99f1c6c8a9ec7c36db16a14ff">   63</a></span><span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#aeabeb8d99f1c6c8a9ec7c36db16a14ff">setlogwascalled</a>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">   65</a></span><span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a>;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">   67</a></span><span class="keyword">static</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="comment">/* This is called from UpnpInit2(). So the user must call UpnpSetLogFileNames()</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment"> * before. This can be called again, for example to rotate the log</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="comment"> * file, and we try to avoid multiple calls to the mutex init, with a</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment"> * risk of race, probably not a problem, and not worth fixing. */</span></div>
+<div class="foldopen" id="foldopen00073" data-start="{" data-end="}">
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="../../d8/d32/upnpdebug_8hpp.html#a0bd1a35974602e8428fd53ff4b424c46">   73</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#acb989a0182d5595b14f2dc3de64225b9">UpnpInitLog</a>() {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    TRACE(<span class="stringliteral">&quot;Executing UpnpInitLog()&quot;</span>)</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a>) {</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        umock::pthread_h.pthread_mutex_init(&amp;<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>, NULL);</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a> = 1;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    }</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="comment">/* If the user did not ask for logging do nothing */</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#aeabeb8d99f1c6c8a9ec7c36db16a14ff">setlogwascalled</a> == 0) {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    }</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> != <span class="keyword">nullptr</span> &amp;&amp; <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> != stderr) {</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        umock::stdio_h.fclose(<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a>);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    }</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a>) {</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> = umock::stdio_h.fopen(<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a>, <span class="stringliteral">&quot;a&quot;</span>);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            fprintf(stderr,</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                    <span class="stringliteral">&quot;UPnPlib Error: failed to open filename \&quot;%s\&quot;: %s. &quot;</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                    <span class="stringliteral">&quot;Fallback to stderr.\n&quot;</span>,</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                    <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a>, std::strerror(errno));</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        }</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    }</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="comment">// If not set, always set to stderr, also as fallback for a wrong fileName.</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> == <span class="keyword">nullptr</span>)</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> = stderr;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keywordflow">return</span> <a class="code hl_define" href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a>;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>}</div>
 </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="foldopen" id="foldopen00108" data-start="{" data-end="}">
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="../../d8/d32/upnpdebug_8hpp.html#a3751794182ea49ea472c0b8efb6e6806">  108</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#a0cdf7c9694c11533df8a671a2013db4f">UpnpSetLogLevel</a>(<a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#ac9d220584af8668d158b172d81e956b8">Upnp_LogLevel</a> log_level) {</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    TRACE(<span class="stringliteral">&quot;Executing UpnpSetLogLevel()&quot;</span>)</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a23857cfd98cddfdf1730d2e5447ae1d8">g_log_level</a> = log_level;</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#aeabeb8d99f1c6c8a9ec7c36db16a14ff">setlogwascalled</a> = 1;</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>}</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="foldopen" id="foldopen00106" data-start="{" data-end="}">
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="../../d8/d32/upnpdebug_8hpp.html#a3751794182ea49ea472c0b8efb6e6806">  106</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#a0cdf7c9694c11533df8a671a2013db4f">UpnpSetLogLevel</a>(<a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#ac9d220584af8668d158b172d81e956b8">Upnp_LogLevel</a> log_level) {</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    TRACE(<span class="stringliteral">&quot;Executing UpnpSetLogLevel()&quot;</span>)</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a23857cfd98cddfdf1730d2e5447ae1d8">g_log_level</a> = log_level;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#aeabeb8d99f1c6c8a9ec7c36db16a14ff">setlogwascalled</a> = 1;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>}</div>
 </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="foldopen" id="foldopen00114" data-start="{" data-end="}">
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="../../d8/d32/upnpdebug_8hpp.html#a46e07b7e3bb05aaba6a4ff9893e93efe">  114</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#aef83a39b0da5868966600f99163cce38">UpnpCloseLog</a>() {</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    TRACE(<span class="stringliteral">&quot;Executing UpnpCloseLog()&quot;</span>)</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="comment">/* Calling lock() assumes that someone called UpnpInitLog(), but</span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="comment">     * this is reasonable as it is called from UpnpInit2(). We risk a</span></div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="comment">     * crash if we do this without a lock.*/</span></div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a>)</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        umock::pthread_h.pthread_mutex_lock(&amp;<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>);</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> != <span class="keyword">nullptr</span> &amp;&amp; <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> != stderr) {</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        umock::stdio_h.fclose(<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a>);</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    }</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#aeabeb8d99f1c6c8a9ec7c36db16a14ff">setlogwascalled</a> = 0;</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keywordtype">int</span> init_called = <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a>;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a> = 0;</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="keywordflow">if</span> (init_called) {</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        umock::pthread_h.pthread_mutex_unlock(&amp;<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>);</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        umock::pthread_h.pthread_mutex_destroy(&amp;<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>);</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    }</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>}</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="foldopen" id="foldopen00112" data-start="{" data-end="}">
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="../../d8/d32/upnpdebug_8hpp.html#a46e07b7e3bb05aaba6a4ff9893e93efe">  112</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#aef83a39b0da5868966600f99163cce38">UpnpCloseLog</a>() {</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    TRACE(<span class="stringliteral">&quot;Executing UpnpCloseLog()&quot;</span>)</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="comment">/* Calling lock() assumes that someone called UpnpInitLog(), but</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="comment">     * this is reasonable as it is called from UpnpInit2(). We risk a</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="comment">     * crash if we do this without a lock.*/</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a>)</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        umock::pthread_h.pthread_mutex_lock(&amp;<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>);</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> != <span class="keyword">nullptr</span> &amp;&amp; <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> != stderr) {</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        umock::stdio_h.fclose(<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a>);</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    }</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#aeabeb8d99f1c6c8a9ec7c36db16a14ff">setlogwascalled</a> = 0;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keywordtype">int</span> init_called = <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a>;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a> = 0;</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keywordflow">if</span> (init_called) {</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        umock::pthread_h.pthread_mutex_unlock(&amp;<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>);</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        umock::pthread_h.pthread_mutex_destroy(&amp;<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    }</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>}</div>
 </div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
-<div class="foldopen" id="foldopen00136" data-start="{" data-end="}">
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno"><a class="line" href="../../d8/d32/upnpdebug_8hpp.html#a09fd59e3af30d46efb0e464419e9ab41">  136</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#a4ebb59b43fc90ee9676d06a07f5f5345">UpnpSetLogFileNames</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* newFileName,</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                         [[maybe_unused]] <span class="keyword">const</span> <span class="keywordtype">char</span>* ignored) {</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    TRACE(<span class="stringliteral">&quot;Executing UpnpSetLogFileNames()&quot;</span>)</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a>) {</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        free(<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a>);</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a> = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    }</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="keywordflow">if</span> (newFileName &amp;&amp; *newFileName != <span class="charliteral">&#39;\0&#39;</span>) {</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>        <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a> = strdup(newFileName);</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    }</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#aeabeb8d99f1c6c8a9ec7c36db16a14ff">setlogwascalled</a> = 1;</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>}</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
+<div class="foldopen" id="foldopen00134" data-start="{" data-end="}">
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno"><a class="line" href="../../d8/d32/upnpdebug_8hpp.html#a09fd59e3af30d46efb0e464419e9ab41">  134</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#a4ebb59b43fc90ee9676d06a07f5f5345">UpnpSetLogFileNames</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* newFileName,</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                         [[maybe_unused]] <span class="keyword">const</span> <span class="keywordtype">char</span>* ignored) {</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    TRACE(<span class="stringliteral">&quot;Executing UpnpSetLogFileNames()&quot;</span>)</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a>) {</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>        free(<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a>);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a> = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    }</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="keywordflow">if</span> (newFileName &amp;&amp; *newFileName != <span class="charliteral">&#39;\0&#39;</span>) {</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a> = strdup(newFileName);</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    }</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#aeabeb8d99f1c6c8a9ec7c36db16a14ff">setlogwascalled</a> = 1;</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>}</div>
 </div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
-<div class="foldopen" id="foldopen00151" data-start="{" data-end="}">
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00">  151</a></span><span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00">DebugAtThisLevel</a>(<a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#ac9d220584af8668d158b172d81e956b8">Upnp_LogLevel</a> DLevel, <a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#a0e8c631f547ccdd59b6e2f16b149cb1c">Dbg_Module</a> Module) {</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="keywordflow">return</span> (DLevel &lt;= <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a23857cfd98cddfdf1730d2e5447ae1d8">g_log_level</a>) &amp;&amp;</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>           (<a class="code hl_define" href="../../d8/dfd/config_8hpp.html#a41d588ee907c299c7a790964deeef02d">DEBUG_ALL</a> || (Module == SSDP &amp;&amp; <a class="code hl_define" href="../../d8/dfd/config_8hpp.html#abb4ce8530ffdf8e65f809b1215d48ebe">DEBUG_SSDP</a>) ||</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            (Module == SOAP &amp;&amp; <a class="code hl_define" href="../../d8/dfd/config_8hpp.html#ab36a551696d310ffa3daf4853da4b990">DEBUG_SOAP</a>) || (Module == GENA &amp;&amp; <a class="code hl_define" href="../../d8/dfd/config_8hpp.html#aaffd9918ff65427eecf8845f25ad23a8">DEBUG_GENA</a>) ||</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            (Module == TPOOL &amp;&amp; <a class="code hl_define" href="../../d8/dfd/config_8hpp.html#ab35ab7780d481e9235a7715336f9d1f4">DEBUG_TPOOL</a>) ||</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            (Module == MSERV &amp;&amp; <a class="code hl_define" href="../../d8/dfd/config_8hpp.html#a8f7797ae630255a0369553fcd70c85a6">DEBUG_MSERV</a>) || (Module == DOM &amp;&amp; <a class="code hl_define" href="../../d8/dfd/config_8hpp.html#afda1de6a62e1a99bd26f3dc9dc7148c1">DEBUG_DOM</a>) ||</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            (Module == HTTP &amp;&amp; <a class="code hl_define" href="../../d8/dfd/config_8hpp.html#ae3248ebf89f7b4059c3401f01b99f154">DEBUG_HTTP</a>));</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>}</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
+<div class="foldopen" id="foldopen00149" data-start="{" data-end="}">
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00">  149</a></span><span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00">DebugAtThisLevel</a>(<a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#ac9d220584af8668d158b172d81e956b8">Upnp_LogLevel</a> DLevel, <a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#a0e8c631f547ccdd59b6e2f16b149cb1c">Dbg_Module</a> Module) {</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keywordflow">return</span> (DLevel &lt;= <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a23857cfd98cddfdf1730d2e5447ae1d8">g_log_level</a>) &amp;&amp;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>           (<a class="code hl_define" href="../../d8/dfd/config_8hpp.html#a41d588ee907c299c7a790964deeef02d">DEBUG_ALL</a> || (Module == SSDP &amp;&amp; <a class="code hl_define" href="../../d8/dfd/config_8hpp.html#abb4ce8530ffdf8e65f809b1215d48ebe">DEBUG_SSDP</a>) ||</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            (Module == SOAP &amp;&amp; <a class="code hl_define" href="../../d8/dfd/config_8hpp.html#ab36a551696d310ffa3daf4853da4b990">DEBUG_SOAP</a>) || (Module == GENA &amp;&amp; <a class="code hl_define" href="../../d8/dfd/config_8hpp.html#aaffd9918ff65427eecf8845f25ad23a8">DEBUG_GENA</a>) ||</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            (Module == TPOOL &amp;&amp; <a class="code hl_define" href="../../d8/dfd/config_8hpp.html#ab35ab7780d481e9235a7715336f9d1f4">DEBUG_TPOOL</a>) ||</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            (Module == MSERV &amp;&amp; <a class="code hl_define" href="../../d8/dfd/config_8hpp.html#a8f7797ae630255a0369553fcd70c85a6">DEBUG_MSERV</a>) || (Module == DOM &amp;&amp; <a class="code hl_define" href="../../d8/dfd/config_8hpp.html#afda1de6a62e1a99bd26f3dc9dc7148c1">DEBUG_DOM</a>) ||</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            (Module == HTTP &amp;&amp; <a class="code hl_define" href="../../d8/dfd/config_8hpp.html#ae3248ebf89f7b4059c3401f01b99f154">DEBUG_HTTP</a>));</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>}</div>
 </div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
-<div class="foldopen" id="foldopen00161" data-start="{" data-end="}">
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d">  161</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d">UpnpDisplayFileAndLine</a>(FILE* a_fp, <span class="keyword">const</span> <span class="keywordtype">char</span>* DbgFileName,</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                                   <span class="keywordtype">int</span> DbgLineNo, <a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#ac9d220584af8668d158b172d81e956b8">Upnp_LogLevel</a> DLevel,</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                                   <a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#a0e8c631f547ccdd59b6e2f16b149cb1c">Dbg_Module</a> Module) {</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keywordtype">char</span> timebuf[26];</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    time_t now = time(NULL);</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* smod;</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span><span class="preprocessor">#if 0</span></div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="keywordtype">char</span> *slev;</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="comment">/* Code kept around in case, but I think it&#39;s actually more convenient</span></div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span><span class="comment">       to display a numeric level */</span></div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    <span class="keywordflow">switch</span> (DLevel) {</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="keywordflow">case</span> UPNP_CRITICAL: slev=<span class="stringliteral">&quot;CRI&quot;</span>;<span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="keywordflow">case</span> UPNP_ERROR: slev=<span class="stringliteral">&quot;ERR&quot;</span>;<span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keywordflow">case</span> UPNP_INFO: slev=<span class="stringliteral">&quot;INF&quot;</span>;<span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="keywordflow">case</span> UPNP_ALL: slev=<span class="stringliteral">&quot;ALL&quot;</span>;<span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="keywordflow">default</span>: slev=<span class="stringliteral">&quot;UNK&quot;</span>;<span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    }</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <span class="keywordtype">char</span> slev[25];</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    snprintf(slev, 25, <span class="stringliteral">&quot;%d&quot;</span>, DLevel);</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="keywordflow">switch</span> (Module) {</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="keywordflow">case</span> SSDP:</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        smod = <span class="stringliteral">&quot;SSDP&quot;</span>;</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="keywordflow">case</span> SOAP:</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        smod = <span class="stringliteral">&quot;SOAP&quot;</span>;</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="keywordflow">case</span> GENA:</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        smod = <span class="stringliteral">&quot;GENA&quot;</span>;</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="keywordflow">case</span> TPOOL:</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        smod = <span class="stringliteral">&quot;TPOL&quot;</span>;</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="keywordflow">case</span> MSERV:</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        smod = <span class="stringliteral">&quot;MSER&quot;</span>;</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keywordflow">case</span> DOM:</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        smod = <span class="stringliteral">&quot;DOM_&quot;</span>;</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="keywordflow">case</span> API:</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        smod = <span class="stringliteral">&quot;API_&quot;</span>;</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordflow">case</span> HTTP:</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        smod = <span class="stringliteral">&quot;HTTP&quot;</span>;</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordflow">default</span>:</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        smod = <span class="stringliteral">&quot;UNKN&quot;</span>;</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    }</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span><span class="preprocessor">#ifdef _WIN32</span></div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    <span class="keyword">struct </span>tm timeinfo = {.tm_sec = 0,</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                          .tm_min = 0,</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>                          .tm_hour = 0,</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>                          .tm_mday = 0,</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                          .tm_mon = 0,</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                          .tm_year = 0,</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                          .tm_wday = 0,</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                          .tm_yday = 0,</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                          .tm_isdst = 0};</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    localtime_s(&amp;timeinfo, &amp;now);</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    strftime(timebuf, 26, <span class="stringliteral">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, &amp;timeinfo);</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    <span class="keyword">struct </span>tm* timeinfo;</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    timeinfo = localtime(&amp;now);</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    strftime(timebuf, 26, <span class="stringliteral">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, timeinfo);</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    fprintf(a_fp, <span class="stringliteral">&quot;%s UPNP-%s-%s: Thread:0x%llX [%s:%d]: &quot;</span>, timebuf, smod, slev,</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>#ifdef __PTW32_DLLPORT</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>            *(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span>*)ithread_self().p</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>#<span class="keywordflow">else</span></div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>            (<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span>)ithread_self()</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>#endif</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>            ,</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>            DbgFileName, DbgLineNo);</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>}</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
+<div class="foldopen" id="foldopen00159" data-start="{" data-end="}">
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno"><a class="line" href="../../d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d">  159</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d">UpnpDisplayFileAndLine</a>(FILE* a_fp, <span class="keyword">const</span> <span class="keywordtype">char</span>* DbgFileName,</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                                   <span class="keywordtype">int</span> DbgLineNo, <a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#ac9d220584af8668d158b172d81e956b8">Upnp_LogLevel</a> DLevel,</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                                   <a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#a0e8c631f547ccdd59b6e2f16b149cb1c">Dbg_Module</a> Module) {</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keywordtype">char</span> timebuf[26];</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    time_t now = time(NULL);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* smod;</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="preprocessor">#if 0</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="keywordtype">char</span> *slev;</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="comment">/* Code kept around in case, but I think it&#39;s actually more convenient</span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span><span class="comment">       to display a numeric level */</span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="keywordflow">switch</span> (DLevel) {</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="keywordflow">case</span> UPNP_CRITICAL: slev=<span class="stringliteral">&quot;CRI&quot;</span>;<span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    <span class="keywordflow">case</span> UPNP_ERROR: slev=<span class="stringliteral">&quot;ERR&quot;</span>;<span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="keywordflow">case</span> UPNP_INFO: slev=<span class="stringliteral">&quot;INF&quot;</span>;<span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="keywordflow">case</span> UPNP_ALL: slev=<span class="stringliteral">&quot;ALL&quot;</span>;<span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keywordflow">default</span>: slev=<span class="stringliteral">&quot;UNK&quot;</span>;<span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    }</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="keywordtype">char</span> slev[25];</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    snprintf(slev, 25, <span class="stringliteral">&quot;%d&quot;</span>, DLevel);</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="keywordflow">switch</span> (Module) {</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <span class="keywordflow">case</span> SSDP:</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        smod = <span class="stringliteral">&quot;SSDP&quot;</span>;</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="keywordflow">case</span> SOAP:</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        smod = <span class="stringliteral">&quot;SOAP&quot;</span>;</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="keywordflow">case</span> GENA:</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        smod = <span class="stringliteral">&quot;GENA&quot;</span>;</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="keywordflow">case</span> TPOOL:</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        smod = <span class="stringliteral">&quot;TPOL&quot;</span>;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="keywordflow">case</span> MSERV:</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        smod = <span class="stringliteral">&quot;MSER&quot;</span>;</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keywordflow">case</span> DOM:</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        smod = <span class="stringliteral">&quot;DOM_&quot;</span>;</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordflow">case</span> API:</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        smod = <span class="stringliteral">&quot;API_&quot;</span>;</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="keywordflow">case</span> HTTP:</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        smod = <span class="stringliteral">&quot;HTTP&quot;</span>;</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        smod = <span class="stringliteral">&quot;UNKN&quot;</span>;</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    }</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span><span class="preprocessor">#ifdef _WIN32</span></div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <span class="keyword">struct </span>tm timeinfo = {.tm_sec = 0,</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                          .tm_min = 0,</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                          .tm_hour = 0,</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                          .tm_mday = 0,</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>                          .tm_mon = 0,</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>                          .tm_year = 0,</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                          .tm_wday = 0,</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                          .tm_yday = 0,</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                          .tm_isdst = 0};</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    localtime_s(&amp;timeinfo, &amp;now);</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    strftime(timebuf, 26, <span class="stringliteral">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, &amp;timeinfo);</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <span class="keyword">struct </span>tm* timeinfo;</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    timeinfo = localtime(&amp;now);</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    strftime(timebuf, 26, <span class="stringliteral">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, timeinfo);</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    fprintf(a_fp, <span class="stringliteral">&quot;%s UPNP-%s-%s: Thread:0x%llX [%s:%d]: &quot;</span>, timebuf, smod, slev,</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>#ifdef __PTW32_DLLPORT</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>            *(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span>*)ithread_self().p</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>#<span class="keywordflow">else</span></div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>            (<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span>)ithread_self()</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>#endif</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>            ,</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            DbgFileName, DbgLineNo);</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>}</div>
 </div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
-<div class="foldopen" id="foldopen00242" data-start="{" data-end="}">
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno"><a class="line" href="../../d8/d32/upnpdebug_8hpp.html#a186bccdd3cab13ada1bdc46ee95c7d37">  242</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3">UpnpPrintf</a>(<a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#ac9d220584af8668d158b172d81e956b8">Upnp_LogLevel</a> DLevel, <a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#a0e8c631f547ccdd59b6e2f16b149cb1c">Dbg_Module</a> Module,</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>                <span class="keyword">const</span> <span class="keywordtype">char</span>* DbgFileName, <span class="keywordtype">int</span> DbgLineNo, <span class="keyword">const</span> <span class="keywordtype">char</span>* FmtStr,</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                ...) {</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    <span class="comment">/*fprintf(stderr, &quot;UpnpPrintf: filed %p level %d glev %d mod %d DEBUG_ALL</span></div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span><span class="comment">      %d\n&quot;, filed, DLevel, g_log_level, Module, DEBUG_ALL);*/</span></div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    va_list ArgList;</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a>) {</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    }</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    <span class="keywordflow">if</span> (!<a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00">DebugAtThisLevel</a>(DLevel, Module))</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    umock::pthread_h.pthread_mutex_lock(&amp;<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>);</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        umock::pthread_h.pthread_mutex_unlock(&amp;<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>);</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    }</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    va_start(ArgList, FmtStr);</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    <span class="keywordflow">if</span> (DbgFileName) {</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        <span class="comment">// flush stdout to have a sequencial output with stderr on screen.</span></div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        fflush(stdout); <span class="comment">// Don&#39;t mock this because we use it for debuging.</span></div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d">UpnpDisplayFileAndLine</a>(<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a>, DbgFileName + UPNPLIB_PROJECT_PATH_LENGTH,</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>                               DbgLineNo, DLevel, Module);</div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        vfprintf(<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a>, FmtStr, ArgList);</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> != <span class="keyword">nullptr</span> &amp;&amp; <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> != stderr)</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>            fflush(<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a>); <span class="comment">// Don&#39;t mock this because we use it for debuging.</span></div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    }</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    va_end(ArgList);</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    umock::pthread_h.pthread_mutex_unlock(&amp;<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>);</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>}</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
+<div class="foldopen" id="foldopen00240" data-start="{" data-end="}">
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno"><a class="line" href="../../d8/d32/upnpdebug_8hpp.html#a186bccdd3cab13ada1bdc46ee95c7d37">  240</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3">UpnpPrintf</a>(<a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#ac9d220584af8668d158b172d81e956b8">Upnp_LogLevel</a> DLevel, <a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#a0e8c631f547ccdd59b6e2f16b149cb1c">Dbg_Module</a> Module,</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                <span class="keyword">const</span> <span class="keywordtype">char</span>* DbgFileName, <span class="keywordtype">int</span> DbgLineNo, <span class="keyword">const</span> <span class="keywordtype">char</span>* FmtStr,</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>                ...) {</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    <span class="comment">/*fprintf(stderr, &quot;UpnpPrintf: filed %p level %d glev %d mod %d DEBUG_ALL</span></div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span><span class="comment">      %d\n&quot;, filed, DLevel, g_log_level, Module, DEBUG_ALL);*/</span></div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    va_list ArgList;</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a>) {</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    }</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    <span class="keywordflow">if</span> (!<a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00">DebugAtThisLevel</a>(DLevel, Module))</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    umock::pthread_h.pthread_mutex_lock(&amp;<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>);</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        umock::pthread_h.pthread_mutex_unlock(&amp;<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>);</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    }</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    va_start(ArgList, FmtStr);</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    <span class="keywordflow">if</span> (DbgFileName) {</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        <span class="comment">// flush stdout to have a sequencial output with stderr on screen.</span></div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        fflush(stdout); <span class="comment">// Don&#39;t mock this because we use it for debuging.</span></div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d">UpnpDisplayFileAndLine</a>(<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a>, DbgFileName + UPNPLIB_PROJECT_PATH_LENGTH,</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>                               DbgLineNo, DLevel, Module);</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        vfprintf(<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a>, FmtStr, ArgList);</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> != <span class="keyword">nullptr</span> &amp;&amp; <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a> != stderr)</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>            fflush(<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a>); <span class="comment">// Don&#39;t mock this because we use it for debuging.</span></div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    }</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    va_end(ArgList);</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    umock::pthread_h.pthread_mutex_unlock(&amp;<a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a>);</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>}</div>
 </div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span> </div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span><span class="comment">/* No locking here, the app should be careful about not calling</span></div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span><span class="comment">   closelog from a separate thread... */</span></div>
-<div class="foldopen" id="foldopen00277" data-start="{" data-end="}">
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno"><a class="line" href="../../d8/d32/upnpdebug_8hpp.html#a984374760513d195b0e8f102886e9115">  277</a></span>FILE* <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#a82e5807006fc908b77e8340544391026">UpnpGetDebugFile</a>(<a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#ac9d220584af8668d158b172d81e956b8">Upnp_LogLevel</a> DLevel, <a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#a0e8c631f547ccdd59b6e2f16b149cb1c">Dbg_Module</a> Module) {</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    <span class="keywordflow">if</span> (!<a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00">DebugAtThisLevel</a>(DLevel, Module)) {</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a>;</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    }</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>}</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span> </div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span><span class="comment">/* No locking here, the app should be careful about not calling</span></div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><span class="comment">   closelog from a separate thread... */</span></div>
+<div class="foldopen" id="foldopen00275" data-start="{" data-end="}">
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno"><a class="line" href="../../d8/d32/upnpdebug_8hpp.html#a984374760513d195b0e8f102886e9115">  275</a></span>FILE* <a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#a82e5807006fc908b77e8340544391026">UpnpGetDebugFile</a>(<a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#ac9d220584af8668d158b172d81e956b8">Upnp_LogLevel</a> DLevel, <a class="code hl_typedef" href="../../d8/d32/upnpdebug_8hpp.html#a0e8c631f547ccdd59b6e2f16b149cb1c">Dbg_Module</a> Module) {</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    <span class="keywordflow">if</span> (!<a class="code hl_function" href="../../d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00">DebugAtThisLevel</a>(DLevel, Module)) {</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a>;</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    }</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>}</div>
 </div>
 <div class="ttc" id="aconfig_8hpp_html"><div class="ttname"><a href="../../d8/dfd/config_8hpp.html">config.hpp</a></div><div class="ttdoc">Main program configuration file.</div></div>
 <div class="ttc" id="aconfig_8hpp_html_a41d588ee907c299c7a790964deeef02d"><div class="ttname"><a href="../../d8/dfd/config_8hpp.html#a41d588ee907c299c7a790964deeef02d">DEBUG_ALL</a></div><div class="ttdeci">#define DEBUG_ALL</div><div class="ttdoc">Debug feature.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/dfd/config_8hpp_source.html#l00279">config.hpp:279</a></div></div>
@@ -395,23 +393,23 @@ $(document).ready(function(){initNavTree('d5/dfa/upnpdebug_8cpp_source.html','..
 <div class="ttc" id="aconfig_8hpp_html_abb4ce8530ffdf8e65f809b1215d48ebe"><div class="ttname"><a href="../../d8/dfd/config_8hpp.html#abb4ce8530ffdf8e65f809b1215d48ebe">DEBUG_SSDP</a></div><div class="ttdeci">#define DEBUG_SSDP</div><div class="ttdoc">Debug feature.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/dfd/config_8hpp_source.html#l00280">config.hpp:280</a></div></div>
 <div class="ttc" id="aconfig_8hpp_html_ae3248ebf89f7b4059c3401f01b99f154"><div class="ttname"><a href="../../d8/dfd/config_8hpp.html#ae3248ebf89f7b4059c3401f01b99f154">DEBUG_HTTP</a></div><div class="ttdeci">#define DEBUG_HTTP</div><div class="ttdoc">Debug feature.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/dfd/config_8hpp_source.html#l00286">config.hpp:286</a></div></div>
 <div class="ttc" id="aconfig_8hpp_html_afda1de6a62e1a99bd26f3dc9dc7148c1"><div class="ttname"><a href="../../d8/dfd/config_8hpp.html#afda1de6a62e1a99bd26f3dc9dc7148c1">DEBUG_DOM</a></div><div class="ttdeci">#define DEBUG_DOM</div><div class="ttdoc">Debug feature.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/dfd/config_8hpp_source.html#l00285">config.hpp:285</a></div></div>
-<div class="ttc" id="aglobal_8hpp_html"><div class="ttname"><a href="../../d9/d3a/global_8hpp.html">global.hpp</a></div><div class="ttdoc">Global used constants and variables.</div></div>
 <div class="ttc" id="aithread_8hpp_html"><div class="ttname"><a href="../../d4/d0f/ithread_8hpp.html">ithread.hpp</a></div><div class="ttdoc">Deprecated ithread functions redirected to pthread. Internal use Only.</div></div>
 <div class="ttc" id="amessages_8hpp_html_a8496dde0ca68f0cd92b58db8563b73b7"><div class="ttname"><a href="../../d4/d64/messages_8hpp.html#a8496dde0ca68f0cd92b58db8563b73b7">UPNP_E_SUCCESS</a></div><div class="ttdeci">#define UPNP_E_SUCCESS</div><div class="ttdoc">The operation completed successfully.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d64/messages_8hpp_source.html#l00027">messages.hpp:27</a></div></div>
-<div class="ttc" id="aupnpdebug_8cpp_html_a0cdf7c9694c11533df8a671a2013db4f"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a0cdf7c9694c11533df8a671a2013db4f">UpnpSetLogLevel</a></div><div class="ttdeci">void UpnpSetLogLevel(Upnp_LogLevel log_level)</div><div class="ttdoc">Set the log level (see Upnp_LogLevel).</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00108">upnpdebug.cpp:108</a></div></div>
-<div class="ttc" id="aupnpdebug_8cpp_html_a23857cfd98cddfdf1730d2e5447ae1d8"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a23857cfd98cddfdf1730d2e5447ae1d8">g_log_level</a></div><div class="ttdeci">static Upnp_LogLevel g_log_level</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00059">upnpdebug.cpp:59</a></div></div>
-<div class="ttc" id="aupnpdebug_8cpp_html_a25c8761bc1f523fe6a53db546ae83add"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a></div><div class="ttdeci">static char * fileName</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00069">upnpdebug.cpp:69</a></div></div>
-<div class="ttc" id="aupnpdebug_8cpp_html_a4190a252f156f35bad0781b542cea98d"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d">UpnpDisplayFileAndLine</a></div><div class="ttdeci">static void UpnpDisplayFileAndLine(FILE *a_fp, const char *DbgFileName, int DbgLineNo, Upnp_LogLevel DLevel, Dbg_Module Module)</div><div class="ttdoc">Display File and Line.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00161">upnpdebug.cpp:161</a></div></div>
-<div class="ttc" id="aupnpdebug_8cpp_html_a4ebb59b43fc90ee9676d06a07f5f5345"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a4ebb59b43fc90ee9676d06a07f5f5345">UpnpSetLogFileNames</a></div><div class="ttdeci">void UpnpSetLogFileNames(const char *newFileName, const char *ignored)</div><div class="ttdoc">Set the name for the log file. There used to be 2 separate files. The second parameter has been kept ...</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00136">upnpdebug.cpp:136</a></div></div>
-<div class="ttc" id="aupnpdebug_8cpp_html_a6d11cb0aa6401985ffa944896ee166d3"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a></div><div class="ttdeci">static ithread_mutex_t GlobalDebugMutex</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00056">upnpdebug.cpp:56</a></div></div>
-<div class="ttc" id="aupnpdebug_8cpp_html_a82e5807006fc908b77e8340544391026"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a82e5807006fc908b77e8340544391026">UpnpGetDebugFile</a></div><div class="ttdeci">FILE * UpnpGetDebugFile(Upnp_LogLevel DLevel, Dbg_Module Module)</div><div class="ttdoc">Check if the module is turned on for debug and returns the file descriptor corresponding to the debug...</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00277">upnpdebug.cpp:277</a></div></div>
-<div class="ttc" id="aupnpdebug_8cpp_html_a9b02b558982f2aa57155dc5357991fa7"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a></div><div class="ttdeci">static int initwascalled</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00067">upnpdebug.cpp:67</a></div></div>
-<div class="ttc" id="aupnpdebug_8cpp_html_acb989a0182d5595b14f2dc3de64225b9"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#acb989a0182d5595b14f2dc3de64225b9">UpnpInitLog</a></div><div class="ttdeci">int UpnpInitLog()</div><div class="ttdoc">Initialize the log files.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00075">upnpdebug.cpp:75</a></div></div>
-<div class="ttc" id="aupnpdebug_8cpp_html_adee8b149b1dca33417740b21a862ad00"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00">DebugAtThisLevel</a></div><div class="ttdeci">static int DebugAtThisLevel(Upnp_LogLevel DLevel, Dbg_Module Module)</div><div class="ttdoc">Check Debug level.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00151">upnpdebug.cpp:151</a></div></div>
-<div class="ttc" id="aupnpdebug_8cpp_html_aeabeb8d99f1c6c8a9ec7c36db16a14ff"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#aeabeb8d99f1c6c8a9ec7c36db16a14ff">setlogwascalled</a></div><div class="ttdeci">static int setlogwascalled</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00065">upnpdebug.cpp:65</a></div></div>
-<div class="ttc" id="aupnpdebug_8cpp_html_aef83a39b0da5868966600f99163cce38"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#aef83a39b0da5868966600f99163cce38">UpnpCloseLog</a></div><div class="ttdeci">void UpnpCloseLog()</div><div class="ttdoc">Closes the log files.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00114">upnpdebug.cpp:114</a></div></div>
-<div class="ttc" id="aupnpdebug_8cpp_html_af6eb7ea2e0117c6da234532c9ca3edae"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a></div><div class="ttdeci">static FILE * filed</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00062">upnpdebug.cpp:62</a></div></div>
-<div class="ttc" id="aupnpdebug_8cpp_html_afe489651d95ecf91dd452cdb2d5497c3"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3">UpnpPrintf</a></div><div class="ttdeci">void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module, const char *DbgFileName, int DbgLineNo, const char *FmtStr,...)</div><div class="ttdoc">Prints the debug statement.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00242">upnpdebug.cpp:242</a></div></div>
+<div class="ttc" id="asynclog_8hpp_html"><div class="ttname"><a href="../../d1/d3b/synclog_8hpp.html">synclog.hpp</a></div><div class="ttdoc">Define macro for synced logging to the console for detailed info and debug.</div></div>
+<div class="ttc" id="aupnpdebug_8cpp_html_a0cdf7c9694c11533df8a671a2013db4f"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a0cdf7c9694c11533df8a671a2013db4f">UpnpSetLogLevel</a></div><div class="ttdeci">void UpnpSetLogLevel(Upnp_LogLevel log_level)</div><div class="ttdoc">Set the log level (see Upnp_LogLevel).</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00106">upnpdebug.cpp:106</a></div></div>
+<div class="ttc" id="aupnpdebug_8cpp_html_a23857cfd98cddfdf1730d2e5447ae1d8"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a23857cfd98cddfdf1730d2e5447ae1d8">g_log_level</a></div><div class="ttdeci">static Upnp_LogLevel g_log_level</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00057">upnpdebug.cpp:57</a></div></div>
+<div class="ttc" id="aupnpdebug_8cpp_html_a25c8761bc1f523fe6a53db546ae83add"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a25c8761bc1f523fe6a53db546ae83add">fileName</a></div><div class="ttdeci">static char * fileName</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00067">upnpdebug.cpp:67</a></div></div>
+<div class="ttc" id="aupnpdebug_8cpp_html_a4190a252f156f35bad0781b542cea98d"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d">UpnpDisplayFileAndLine</a></div><div class="ttdeci">static void UpnpDisplayFileAndLine(FILE *a_fp, const char *DbgFileName, int DbgLineNo, Upnp_LogLevel DLevel, Dbg_Module Module)</div><div class="ttdoc">Display File and Line.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00159">upnpdebug.cpp:159</a></div></div>
+<div class="ttc" id="aupnpdebug_8cpp_html_a4ebb59b43fc90ee9676d06a07f5f5345"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a4ebb59b43fc90ee9676d06a07f5f5345">UpnpSetLogFileNames</a></div><div class="ttdeci">void UpnpSetLogFileNames(const char *newFileName, const char *ignored)</div><div class="ttdoc">Set the name for the log file. There used to be 2 separate files. The second parameter has been kept ...</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00134">upnpdebug.cpp:134</a></div></div>
+<div class="ttc" id="aupnpdebug_8cpp_html_a6d11cb0aa6401985ffa944896ee166d3"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a6d11cb0aa6401985ffa944896ee166d3">GlobalDebugMutex</a></div><div class="ttdeci">static ithread_mutex_t GlobalDebugMutex</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00054">upnpdebug.cpp:54</a></div></div>
+<div class="ttc" id="aupnpdebug_8cpp_html_a82e5807006fc908b77e8340544391026"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a82e5807006fc908b77e8340544391026">UpnpGetDebugFile</a></div><div class="ttdeci">FILE * UpnpGetDebugFile(Upnp_LogLevel DLevel, Dbg_Module Module)</div><div class="ttdoc">Check if the module is turned on for debug and returns the file descriptor corresponding to the debug...</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00275">upnpdebug.cpp:275</a></div></div>
+<div class="ttc" id="aupnpdebug_8cpp_html_a9b02b558982f2aa57155dc5357991fa7"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#a9b02b558982f2aa57155dc5357991fa7">initwascalled</a></div><div class="ttdeci">static int initwascalled</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00065">upnpdebug.cpp:65</a></div></div>
+<div class="ttc" id="aupnpdebug_8cpp_html_acb989a0182d5595b14f2dc3de64225b9"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#acb989a0182d5595b14f2dc3de64225b9">UpnpInitLog</a></div><div class="ttdeci">int UpnpInitLog()</div><div class="ttdoc">Initialize the log files.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00073">upnpdebug.cpp:73</a></div></div>
+<div class="ttc" id="aupnpdebug_8cpp_html_adee8b149b1dca33417740b21a862ad00"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00">DebugAtThisLevel</a></div><div class="ttdeci">static int DebugAtThisLevel(Upnp_LogLevel DLevel, Dbg_Module Module)</div><div class="ttdoc">Check Debug level.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00149">upnpdebug.cpp:149</a></div></div>
+<div class="ttc" id="aupnpdebug_8cpp_html_aeabeb8d99f1c6c8a9ec7c36db16a14ff"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#aeabeb8d99f1c6c8a9ec7c36db16a14ff">setlogwascalled</a></div><div class="ttdeci">static int setlogwascalled</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00063">upnpdebug.cpp:63</a></div></div>
+<div class="ttc" id="aupnpdebug_8cpp_html_aef83a39b0da5868966600f99163cce38"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#aef83a39b0da5868966600f99163cce38">UpnpCloseLog</a></div><div class="ttdeci">void UpnpCloseLog()</div><div class="ttdoc">Closes the log files.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00112">upnpdebug.cpp:112</a></div></div>
+<div class="ttc" id="aupnpdebug_8cpp_html_af6eb7ea2e0117c6da234532c9ca3edae"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#af6eb7ea2e0117c6da234532c9ca3edae">filed</a></div><div class="ttdeci">static FILE * filed</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00060">upnpdebug.cpp:60</a></div></div>
+<div class="ttc" id="aupnpdebug_8cpp_html_afe489651d95ecf91dd452cdb2d5497c3"><div class="ttname"><a href="../../d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3">UpnpPrintf</a></div><div class="ttdeci">void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module, const char *DbgFileName, int DbgLineNo, const char *FmtStr,...)</div><div class="ttdoc">Prints the debug statement.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dfa/upnpdebug_8cpp_source.html#l00240">upnpdebug.cpp:240</a></div></div>
 <div class="ttc" id="aupnpdebug_8hpp_html"><div class="ttname"><a href="../../d8/d32/upnpdebug_8hpp.html">upnpdebug.hpp</a></div><div class="ttdoc">Manage Debug messages with levels &quot;critical&quot; to &quot;all&quot;.</div></div>
 <div class="ttc" id="aupnpdebug_8hpp_html_a0e8c631f547ccdd59b6e2f16b149cb1c"><div class="ttname"><a href="../../d8/d32/upnpdebug_8hpp.html#a0e8c631f547ccdd59b6e2f16b149cb1c">Dbg_Module</a></div><div class="ttdeci">enum Upnp_Module Dbg_Module</div><div class="ttdoc">Only debug messages from this program module.</div></div>
 <div class="ttc" id="aupnpdebug_8hpp_html_a3aa5b762a9e5a4ad3d71a3ab9799fecb"><div class="ttname"><a href="../../d8/d32/upnpdebug_8hpp.html#a3aa5b762a9e5a4ad3d71a3ab9799fecb">UPNP_DEFAULT_LOG_LEVEL</a></div><div class="ttdeci">#define UPNP_DEFAULT_LOG_LEVEL</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d32/upnpdebug_8hpp_source.html#l00098">upnpdebug.hpp:98</a></div></div>

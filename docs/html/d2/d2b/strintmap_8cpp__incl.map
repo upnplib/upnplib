@@ -1,17 +1,13 @@
 <map id="Compa/src/genlib/util/strintmap.cpp" name="Compa/src/genlib/util/strintmap.cpp">
-<area shape="rect" id="Node000001" title="String to integer and integer to string conversion functions." alt="" coords="334,5,494,45"/>
-<area shape="rect" id="Node000002" href="$d9/d3a/global_8hpp.html" title="Global used constants and variables." alt="" coords="120,93,263,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="362,48,238,91,236,86,360,43"/>
-<area shape="rect" id="Node000006" href="$df/df3/strintmap_8hpp.html" title="String to integer and integer to string conversion functions." alt="" coords="287,93,400,119"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="399,47,365,85,361,81,395,44"/>
-<area shape="rect" id="Node000007" href="$d1/d10/membuffer_8hpp.html" title="Manage blocks of dynamically allocated memory." alt="" coords="424,93,545,119"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="433,44,467,81,463,85,429,47"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="570,93,650,119"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="462,43,569,86,567,91,460,48"/>
-<area shape="rect" id="Node000003" href="$d6/d66/global_8ipp.html" title="Global used constants, variables, functions and macros." alt="" coords="122,167,261,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="194,119,194,153,189,153,189,119"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="5,240,185,265"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="177,194,124,234,121,229,174,190"/>
-<area shape="rect" id="Node000005" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="209,240,365,265"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="208,190,262,229,259,234,205,194"/>
+<area shape="rect" id="Node000001" title="String to integer and integer to string conversion functions." alt="" coords="257,5,417,45"/>
+<area shape="rect" id="Node000002" href="$d1/d3b/synclog_8hpp.html" title="Define macro for synced logging to the console for detailed info and debug." alt="" coords="103,93,255,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="300,48,216,89,214,85,298,43"/>
+<area shape="rect" id="Node000005" href="$df/df3/strintmap_8hpp.html" title="String to integer and integer to string conversion functions." alt="" coords="280,93,393,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="339,46,339,79,334,79,334,46"/>
+<area shape="rect" id="Node000006" href="$d1/d10/membuffer_8hpp.html" title="Manage blocks of dynamically allocated memory." alt="" coords="417,93,539,119"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="372,43,446,84,444,89,369,48"/>
+<area shape="rect" id="Node000003" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,167,161,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="165,121,112,160,109,156,162,117"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="185,167,365,192"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="196,117,250,156,247,160,193,121"/>
 </map>

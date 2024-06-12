@@ -4,20 +4,6 @@ var miniserver_8cpp =
       [ "connfd", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a1f7d64c469da025cbad2503f1d808de9", null ],
       [ "foreign_sockaddr", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a950798bbf6c64b21a4c10cae2251929e", null ]
     ] ],
-    [ "anonymous_namespace{miniserver.cpp}::s_SocketStuff", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#dd/d37/structanonymous__namespace_02miniserver_8cpp_03_1_1s__SocketStuff", [
-      [ "actual_port", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a53a1c475a473bda4d08f508b5965b2a6", null ],
-      [ "address_len", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a41ad064b3763fd9a90a42215747a3c11", null ],
-      [ "fd", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a719431eea7a56c1d9a35b390d60b472b", null ],
-      [ "ip_version", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#af0c8632385807341f1291f94d9245f45", null ],
-      [ "ss", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aad6cbd5847cf8ef9f9800b14e3f8ff05", null ],
-      [ "text_addr", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#ad964a53a49f438b78b52d2ed1d071649", null ],
-      [ "try_port", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a5bd1458d403954ac85d0500adfe0d239", null ]
-    ] ],
-    [ "anonymous_namespace{miniserver.cpp}::s_SocketStuff.__unnamed2__", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#d5/da1/unionanonymous__namespace_02miniserver_8cpp_03_1_1s__SocketStuff_8____unnamed2____", [
-      [ "serverAddr", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a3545bca7585a63de97c30a1e6cd8992b", null ],
-      [ "serverAddr4", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#ad30bf92a1154563639eeeedabf3fc268", null ],
-      [ "serverAddr6", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a0fde93e78d931ed4420181f1b4b64c8b", null ]
-    ] ],
     [ "MiniServerState", "d5/db2/miniserver_8cpp.html#a9b0e6da1017a752fb8bc9546a048afff", [
       [ "MSERV_IDLE", "d5/db2/miniserver_8cpp.html#a9b0e6da1017a752fb8bc9546a048afffa5c1b6c12e057bcaf7187b7a3d9765b15", null ],
       [ "MSERV_RUNNING", "d5/db2/miniserver_8cpp.html#a9b0e6da1017a752fb8bc9546a048afffa23b6f8b180edd0e4c6259a63f610bb71", null ],

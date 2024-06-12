@@ -27,8 +27,6 @@ var hierarchy =
     [ "upnplib::Netaddr", "d8/d44/classupnplib_1_1Netaddr.html", null ],
     [ "NOTIFY_THREAD_STRUCT", "d9/dd2/gena_8hpp.html#d5/d37/structNOTIFY__THREAD__STRUCT", null ],
     [ "s_GenlibClientSubscription", "dc/d2f/GenlibClientSubscription_8cpp.html#d7/d22/structs__GenlibClientSubscription", null ],
-    [ "anonymous_namespace{miniserver.cpp}::s_SocketStuff", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#dd/d37/structanonymous__namespace_02miniserver_8cpp_03_1_1s__SocketStuff", null ],
-    [ "anonymous_namespace{miniserver.cpp}::s_SocketStuff.__unnamed2__", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#d5/da1/unionanonymous__namespace_02miniserver_8cpp_03_1_1s__SocketStuff_8____unnamed2____", null ],
     [ "s_SSDPResultData", "d7/da5/group__SSDP-Data.html#d4/dcc/structs__SSDPResultData", null ],
     [ "s_UpnpActionComplete", "d4/d18/UpnpActionComplete_8cpp.html#d0/d66/structs__UpnpActionComplete", null ],
     [ "s_UpnpActionRequest", "d4/d6b/UpnpActionRequest_8cpp.html#d4/de9/structs__UpnpActionRequest", null ],

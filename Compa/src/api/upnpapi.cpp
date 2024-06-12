@@ -166,15 +166,18 @@ char gIF_IPV6[INET6_ADDRSTRLEN] = {'\0'};
 /*! \brief IPv6 LLA prefix length. (extern'ed in upnp.h) */
 unsigned gIF_IPV6_PREFIX_LENGTH = 0;
 
+/*! \brief Contains network interface index of the link local address gIF_IPV6
+ * that is used as its scope_id. */
+unsigned gIF_INDEX;
+// unsigned gIF_INDEX = ~0u; // Use complement of 0 because 0 may be a used
+// index.
+
 /*! \brief Static buffer to contain interface IPv6 unique-local or
  * globally-unique address (ULA or GUA). (extern'ed in upnp.h) */
 char gIF_IPV6_ULA_GUA[INET6_ADDRSTRLEN] = {'\0'};
 
 /*! \brief IPv6 ULA or GUA prefix length. (extern'ed in upnp.h) */
 unsigned gIF_IPV6_ULA_GUA_PREFIX_LENGTH = 0;
-
-/*! \brief Contains network interface index. */
-unsigned gIF_INDEX = ~0u; // Use complement of 0 because 0 may be a valid index
 
 /*! \brief local IPv4 port for the mini-server */
 in_port_t LOCAL_PORT_V4;

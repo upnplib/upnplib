@@ -105,7 +105,7 @@ $(document).ready(function(){initNavTree('d6/d0f/strintmap_8cpp_source.html','..
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * Copyright (c) 2000-2003 Intel Corporation</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * All rights reserved.</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, &lt;Ingo@Hoeft-online.de&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * Redistribution only with this Copyright remark. Last modified: 2024-04-11</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * Redistribution only with this Copyright remark. Last modified: 2024-06-04</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * Redistribution and use in source and binary forms, with or without</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * modification, are permitted provided that the following conditions are met:</span></div>
@@ -132,78 +132,77 @@ $(document).ready(function(){initNavTree('d6/d0f/strintmap_8cpp_source.html','..
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment"> * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment"> * ****************************************************************************/</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &lt;<a class="code" href="../../d9/d3a/global_8hpp.html">upnplib/global.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &lt;<a class="code" href="../../d1/d3b/synclog_8hpp.html">upnplib/synclog.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &lt;<a class="code" href="../../df/df3/strintmap_8hpp.html">strintmap.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &lt;<a class="code" href="../../d1/d10/membuffer_8hpp.html">membuffer.hpp</a>&gt;</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="foldopen" id="foldopen00044" data-start="{" data-end="}">
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="../../d6/d0f/strintmap_8cpp.html#a3d400a234d1f0486e70e22ce27070e46">   44</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="../../d6/d0f/strintmap_8cpp.html#a3d400a234d1f0486e70e22ce27070e46">map_str_to_int</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* name, <span class="keywordtype">size_t</span> name_len,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                   <span class="keyword">const</span> <a class="code hl_struct" href="../../df/df3/strintmap_8hpp.html#d7/d2f/structstr__int__entry">str_int_entry</a>* table, <span class="keywordtype">int</span> num_entries,</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                   <span class="keywordtype">int</span> case_sensitive) {</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    TRACE(<span class="stringliteral">&quot;Executing map_str_to_int()&quot;</span>);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordflow">if</span> (name == <span class="keyword">nullptr</span> || table == <span class="keyword">nullptr</span>)</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">int</span> top, mid, bot;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">int</span> cmp;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <a class="code hl_struct" href="../../d1/d10/membuffer_8hpp.html#d4/d89/structmemptr">memptr</a> name_ptr;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    name_ptr.<a class="code hl_variable" href="../../d1/d10/membuffer_8hpp.html#ae3089c9df96fc059185fec2d6bed61aa">buf</a> = (<span class="keywordtype">char</span>*)name;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    name_ptr.<a class="code hl_variable" href="../../d1/d10/membuffer_8hpp.html#acaa22842001c377190f4dba6d54430ff">length</a> = name_len;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    top = 0;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    bot = num_entries - 1;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordflow">while</span> (top &lt;= bot) {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        mid = (top + bot) / 2;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keywordflow">if</span> (case_sensitive) {</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            <span class="comment">/*cmp = strcmp( name, table[mid].name ); */</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            cmp = <a class="code hl_function" href="../../da/dd9/membuffer_8cpp.html#a0ebdc3494e3cb774b96ee021f7ae6c3b">memptr_cmp</a>(&amp;name_ptr, table[mid].name);</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            <span class="comment">/*cmp = strcasecmp( name, table[mid].name ); */</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            cmp = <a class="code hl_function" href="../../da/dd9/membuffer_8cpp.html#acc25b821b69d506631865b53f8307b3a">memptr_cmp_nocase</a>(&amp;name_ptr, table[mid].name);</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        }</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="keywordflow">if</span> (cmp &gt; 0) {</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            top = mid + 1; <span class="comment">/* look below mid */</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (cmp &lt; 0) {</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>            bot = mid - 1; <span class="comment">/* look above mid */</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        } <span class="keywordflow">else</span> {           <span class="comment">/* cmp == 0 */</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            <span class="keywordflow">return</span> mid;    <span class="comment">/* match; return table index */</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        }</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    }</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordflow">return</span> -1; <span class="comment">/* header name not found */</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>}</div>
+<div class="foldopen" id="foldopen00043" data-start="{" data-end="}">
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="../../d6/d0f/strintmap_8cpp.html#a3d400a234d1f0486e70e22ce27070e46">   43</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="../../d6/d0f/strintmap_8cpp.html#a3d400a234d1f0486e70e22ce27070e46">map_str_to_int</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* name, <span class="keywordtype">size_t</span> name_len,</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                   <span class="keyword">const</span> <a class="code hl_struct" href="../../df/df3/strintmap_8hpp.html#d7/d2f/structstr__int__entry">str_int_entry</a>* table, <span class="keywordtype">int</span> num_entries,</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                   <span class="keywordtype">int</span> case_sensitive) {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    TRACE(<span class="stringliteral">&quot;Executing map_str_to_int()&quot;</span>);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordflow">if</span> (name == <span class="keyword">nullptr</span> || table == <span class="keyword">nullptr</span>)</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">int</span> top, mid, bot;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">int</span> cmp;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <a class="code hl_struct" href="../../d1/d10/membuffer_8hpp.html#d4/d89/structmemptr">memptr</a> name_ptr;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    name_ptr.<a class="code hl_variable" href="../../d1/d10/membuffer_8hpp.html#ae3089c9df96fc059185fec2d6bed61aa">buf</a> = (<span class="keywordtype">char</span>*)name;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    name_ptr.<a class="code hl_variable" href="../../d1/d10/membuffer_8hpp.html#acaa22842001c377190f4dba6d54430ff">length</a> = name_len;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    top = 0;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    bot = num_entries - 1;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">while</span> (top &lt;= bot) {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        mid = (top + bot) / 2;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordflow">if</span> (case_sensitive) {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            <span class="comment">/*cmp = strcmp( name, table[mid].name ); */</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            cmp = <a class="code hl_function" href="../../da/dd9/membuffer_8cpp.html#a0ebdc3494e3cb774b96ee021f7ae6c3b">memptr_cmp</a>(&amp;name_ptr, table[mid].name);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            <span class="comment">/*cmp = strcasecmp( name, table[mid].name ); */</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            cmp = <a class="code hl_function" href="../../da/dd9/membuffer_8cpp.html#acc25b821b69d506631865b53f8307b3a">memptr_cmp_nocase</a>(&amp;name_ptr, table[mid].name);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        }</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="keywordflow">if</span> (cmp &gt; 0) {</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            top = mid + 1; <span class="comment">/* look below mid */</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (cmp &lt; 0) {</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>            bot = mid - 1; <span class="comment">/* look above mid */</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        } <span class="keywordflow">else</span> {           <span class="comment">/* cmp == 0 */</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>            <span class="keywordflow">return</span> mid;    <span class="comment">/* match; return table index */</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        }</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    }</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keywordflow">return</span> -1; <span class="comment">/* header name not found */</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>}</div>
 </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="foldopen" id="foldopen00083" data-start="{" data-end="}">
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="../../d6/d0f/strintmap_8cpp.html#a3451764616b6b8846efab5e787fe900a">   83</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="../../d6/d0f/strintmap_8cpp.html#a3451764616b6b8846efab5e787fe900a">map_int_to_str</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <a class="code hl_struct" href="../../df/df3/strintmap_8hpp.html#d7/d2f/structstr__int__entry">str_int_entry</a>* table, <span class="keywordtype">int</span> num_entries) {</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    TRACE(<span class="stringliteral">&quot;Executing map_int_to_str()&quot;</span>);</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordflow">if</span> (table == <span class="keyword">nullptr</span>)</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; num_entries; i++) {</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keywordflow">if</span> (table[i].<span class="keywordtype">id</span> == <span class="keywordtype">id</span>) {</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>            <span class="keywordflow">return</span> i;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        }</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    }</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>}</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="foldopen" id="foldopen00082" data-start="{" data-end="}">
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="../../d6/d0f/strintmap_8cpp.html#a3451764616b6b8846efab5e787fe900a">   82</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="../../d6/d0f/strintmap_8cpp.html#a3451764616b6b8846efab5e787fe900a">map_int_to_str</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <a class="code hl_struct" href="../../df/df3/strintmap_8hpp.html#d7/d2f/structstr__int__entry">str_int_entry</a>* table, <span class="keywordtype">int</span> num_entries) {</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    TRACE(<span class="stringliteral">&quot;Executing map_int_to_str()&quot;</span>);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordflow">if</span> (table == <span class="keyword">nullptr</span>)</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; num_entries; i++) {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keywordflow">if</span> (table[i].<span class="keywordtype">id</span> == <span class="keywordtype">id</span>) {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            <span class="keywordflow">return</span> i;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        }</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    }</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>}</div>
 </div>
-<div class="ttc" id="aglobal_8hpp_html"><div class="ttname"><a href="../../d9/d3a/global_8hpp.html">global.hpp</a></div><div class="ttdoc">Global used constants and variables.</div></div>
-<div class="ttc" id="amembuffer_8cpp_html_a0ebdc3494e3cb774b96ee021f7ae6c3b"><div class="ttname"><a href="../../da/dd9/membuffer_8cpp.html#a0ebdc3494e3cb774b96ee021f7ae6c3b">memptr_cmp</a></div><div class="ttdeci">int memptr_cmp(memptr *m, const char *s)</div><div class="ttdoc">Compares characters of strings passed for number of bytes. If equal for the number of bytes,...</div><div class="ttdef"><b>Definition</b> <a href="../../da/dd9/membuffer_8cpp_source.html#l00073">membuffer.cpp:73</a></div></div>
-<div class="ttc" id="amembuffer_8cpp_html_acc25b821b69d506631865b53f8307b3a"><div class="ttname"><a href="../../da/dd9/membuffer_8cpp.html#acc25b821b69d506631865b53f8307b3a">memptr_cmp_nocase</a></div><div class="ttdeci">int memptr_cmp_nocase(memptr *m, const char *s)</div><div class="ttdoc">Compares characters of 2 strings irrespective of the case for a specific count of bytes.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dd9/membuffer_8cpp_source.html#l00087">membuffer.cpp:87</a></div></div>
+<div class="ttc" id="amembuffer_8cpp_html_a0ebdc3494e3cb774b96ee021f7ae6c3b"><div class="ttname"><a href="../../da/dd9/membuffer_8cpp.html#a0ebdc3494e3cb774b96ee021f7ae6c3b">memptr_cmp</a></div><div class="ttdeci">int memptr_cmp(memptr *m, const char *s)</div><div class="ttdoc">Compares characters of strings passed for number of bytes. If equal for the number of bytes,...</div><div class="ttdef"><b>Definition</b> <a href="../../da/dd9/membuffer_8cpp_source.html#l00070">membuffer.cpp:70</a></div></div>
+<div class="ttc" id="amembuffer_8cpp_html_acc25b821b69d506631865b53f8307b3a"><div class="ttname"><a href="../../da/dd9/membuffer_8cpp.html#acc25b821b69d506631865b53f8307b3a">memptr_cmp_nocase</a></div><div class="ttdeci">int memptr_cmp_nocase(memptr *m, const char *s)</div><div class="ttdoc">Compares characters of 2 strings irrespective of the case for a specific count of bytes.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dd9/membuffer_8cpp_source.html#l00084">membuffer.cpp:84</a></div></div>
 <div class="ttc" id="amembuffer_8hpp_html"><div class="ttname"><a href="../../d1/d10/membuffer_8hpp.html">membuffer.hpp</a></div><div class="ttdoc">Manage blocks of dynamically allocated memory.</div></div>
 <div class="ttc" id="amembuffer_8hpp_html_acaa22842001c377190f4dba6d54430ff"><div class="ttname"><a href="../../d1/d10/membuffer_8hpp.html#acaa22842001c377190f4dba6d54430ff">memptr::length</a></div><div class="ttdeci">size_t length</div><div class="ttdoc">length of memory (read-only).</div><div class="ttdef"><b>Definition</b> <a href="../../d1/d10/membuffer_8hpp_source.html#l00054">membuffer.hpp:54</a></div></div>
 <div class="ttc" id="amembuffer_8hpp_html_ae3089c9df96fc059185fec2d6bed61aa"><div class="ttname"><a href="../../d1/d10/membuffer_8hpp.html#ae3089c9df96fc059185fec2d6bed61aa">memptr::buf</a></div><div class="ttdeci">char * buf</div><div class="ttdoc">start of memory (read/write).</div><div class="ttdef"><b>Definition</b> <a href="../../d1/d10/membuffer_8hpp_source.html#l00052">membuffer.hpp:52</a></div></div>
 <div class="ttc" id="amembuffer_8hpp_html_d4/d89/structmemptr"><div class="ttname"><a href="../../d1/d10/membuffer_8hpp.html#d4/d89/structmemptr">memptr</a></div><div class="ttdoc">pointer to a chunk of memory.</div><div class="ttdef"><b>Definition</b> <a href="../../d1/d10/membuffer_8hpp_source.html#l00050">membuffer.hpp:50</a></div></div>
-<div class="ttc" id="astrintmap_8cpp_html_a3451764616b6b8846efab5e787fe900a"><div class="ttname"><a href="../../d6/d0f/strintmap_8cpp.html#a3451764616b6b8846efab5e787fe900a">map_int_to_str</a></div><div class="ttdeci">int map_int_to_str(int id, const str_int_entry *table, int num_entries)</div><div class="ttdoc">Returns the index from the table where the id matches the entry from the table.</div><div class="ttdef"><b>Definition</b> <a href="../../d6/d0f/strintmap_8cpp_source.html#l00083">strintmap.cpp:83</a></div></div>
-<div class="ttc" id="astrintmap_8cpp_html_a3d400a234d1f0486e70e22ce27070e46"><div class="ttname"><a href="../../d6/d0f/strintmap_8cpp.html#a3d400a234d1f0486e70e22ce27070e46">map_str_to_int</a></div><div class="ttdeci">int map_str_to_int(const char *name, size_t name_len, const str_int_entry *table, int num_entries, int case_sensitive)</div><div class="ttdoc">Match the given name with names from the entries in the table.</div><div class="ttdef"><b>Definition</b> <a href="../../d6/d0f/strintmap_8cpp_source.html#l00044">strintmap.cpp:44</a></div></div>
+<div class="ttc" id="astrintmap_8cpp_html_a3451764616b6b8846efab5e787fe900a"><div class="ttname"><a href="../../d6/d0f/strintmap_8cpp.html#a3451764616b6b8846efab5e787fe900a">map_int_to_str</a></div><div class="ttdeci">int map_int_to_str(int id, const str_int_entry *table, int num_entries)</div><div class="ttdoc">Returns the index from the table where the id matches the entry from the table.</div><div class="ttdef"><b>Definition</b> <a href="../../d6/d0f/strintmap_8cpp_source.html#l00082">strintmap.cpp:82</a></div></div>
+<div class="ttc" id="astrintmap_8cpp_html_a3d400a234d1f0486e70e22ce27070e46"><div class="ttname"><a href="../../d6/d0f/strintmap_8cpp.html#a3d400a234d1f0486e70e22ce27070e46">map_str_to_int</a></div><div class="ttdeci">int map_str_to_int(const char *name, size_t name_len, const str_int_entry *table, int num_entries, int case_sensitive)</div><div class="ttdoc">Match the given name with names from the entries in the table.</div><div class="ttdef"><b>Definition</b> <a href="../../d6/d0f/strintmap_8cpp_source.html#l00043">strintmap.cpp:43</a></div></div>
 <div class="ttc" id="astrintmap_8hpp_html"><div class="ttname"><a href="../../df/df3/strintmap_8hpp.html">strintmap.hpp</a></div><div class="ttdoc">String to integer and integer to string conversion functions.</div></div>
 <div class="ttc" id="astrintmap_8hpp_html_d7/d2f/structstr__int__entry"><div class="ttname"><a href="../../df/df3/strintmap_8hpp.html#d7/d2f/structstr__int__entry">str_int_entry</a></div><div class="ttdoc">String to integer map entry.</div><div class="ttdef"><b>Definition</b> <a href="../../df/df3/strintmap_8hpp_source.html#l00050">strintmap.hpp:50</a></div></div>
+<div class="ttc" id="asynclog_8hpp_html"><div class="ttname"><a href="../../d1/d3b/synclog_8hpp.html">synclog.hpp</a></div><div class="ttdoc">Define macro for synced logging to the console for detailed info and debug.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

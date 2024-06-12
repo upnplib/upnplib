@@ -1,8 +1,6 @@
 var namespaceanonymous__namespace_02miniserver_8cpp_03 =
 [
     [ "mserv_request_t", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#dd/d1f/structanonymous__namespace_02miniserver_8cpp_03_1_1mserv__request__t", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_dd/d1f/structanonymous__namespace_02miniserver_8cpp_03_1_1mserv__request__t_dup" ],
-    [ "s_SocketStuff", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#dd/d37/structanonymous__namespace_02miniserver_8cpp_03_1_1s__SocketStuff", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_dd/d37/structanonymous__namespace_02miniserver_8cpp_03_1_1s__SocketStuff_dup" ],
-    [ "s_SocketStuff.__unnamed2__", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#d5/da1/unionanonymous__namespace_02miniserver_8cpp_03_1_1s__SocketStuff_8____unnamed2____", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_d5/da1/unionanonymous__namespace_02miniserver_8cpp_03_1_1s__SocketStuff_8____unnamed2_____dup" ],
     [ "MiniServerState", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a9b0e6da1017a752fb8bc9546a048afff", [
       [ "MSERV_IDLE", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a9b0e6da1017a752fb8bc9546a048afffa5c1b6c12e057bcaf7187b7a3d9765b15", null ],
       [ "MSERV_RUNNING", "d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a9b0e6da1017a752fb8bc9546a048afffa23b6f8b180edd0e4c6259a63f610bb71", null ],

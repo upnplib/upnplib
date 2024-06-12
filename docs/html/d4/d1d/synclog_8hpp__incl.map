@@ -1,5 +1,7 @@
 <map id="Upnplib/include/upnplib/synclog.hpp" name="Upnplib/include/upnplib/synclog.hpp">
-<area shape="rect" id="Node000001" title="Define macro for synced logging to the console for detailed info and debug." alt="" coords="5,5,180,45"/>
-<area shape="rect" id="Node000002" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="15,93,171,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,46,95,79,90,79,90,46"/>
+<area shape="rect" id="Node000001" title="Define macro for synced logging to the console for detailed info and debug." alt="" coords="92,5,267,45"/>
+<area shape="rect" id="Node000002" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,93,161,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,48,110,87,106,82,154,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="185,93,365,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="204,43,252,82,249,87,201,48"/>
 </map>

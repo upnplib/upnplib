@@ -1,9 +1,7 @@
 <map id="Upnplib/src/global.cpp" name="Upnplib/src/global.cpp">
-<area shape="rect" id="Node000001" title="Global used flag and emulated system function." alt="" coords="108,5,275,31"/>
-<area shape="rect" id="Node000002" href="$d6/d66/global_8ipp.html" title="Global used constants, variables, functions and macros." alt="" coords="122,79,261,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,31,194,65,189,65,189,31"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,185,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="177,106,124,146,121,141,174,102"/>
-<area shape="rect" id="Node000004" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="209,152,365,177"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="208,102,262,141,259,146,205,106"/>
+<area shape="rect" id="Node000001" title="Global used flag and emulated system function." alt="" coords="5,5,172,31"/>
+<area shape="rect" id="Node000002" href="$d6/d66/global_8ipp.html" title="Global used constants, variables, functions and macros." alt="" coords="19,79,158,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,31,91,65,86,65,86,31"/>
+<area shape="rect" id="Node000003" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="11,152,167,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,104,91,138,86,138,86,104"/>
 </map>
